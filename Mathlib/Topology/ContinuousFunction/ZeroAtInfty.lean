@@ -352,8 +352,8 @@ protected theorem bounded (f : F) : ∃ C, ∀ x y : α, dist ((f : α → β) x
   have : ∀ x, f x ∈ closedBall (0 : β) (max C 1)
   intro x
   by_cases hx : x ∈ K
-  · exact (mem_closedBall.mp <| hC ⟨x, hx, rfl⟩).trans (le_max_left _ _)
-  · exact (mem_closedBall.mp <| mem_preimage.mp (hK₂ hx)).trans (le_max_right _ _)
+  exact (mem_closedBall.mp <| hC ⟨x, hx, rfl⟩).trans (le_max_left _ _)
+  exact (mem_closedBall.mp <| mem_preimage.mp (hK₂ hx)).trans (le_max_right _ _)
   exact (dist_triangle (f x) 0 (f y)).trans
     (add_le_add (mem_closedBall.mp <| this x) (mem_closedBall'.mp <| this y))
 

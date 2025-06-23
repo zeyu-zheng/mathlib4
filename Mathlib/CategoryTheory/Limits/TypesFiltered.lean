@@ -47,8 +47,8 @@ theorem rel_of_quot_rel (x y : Σ j, F.obj j) :
 theorem eqvGen_quot_rel_of_rel (x y : Σ j, F.obj j) :
     FilteredColimit.Rel.{v, u} F x y → EqvGen (Quot.Rel F) x y := fun ⟨k, f, g, h⟩ => by
   refine EqvGen.trans _ ⟨k, F.map f x.2⟩ _ ?_ ?_
-  · exact (EqvGen.rel _ _ ⟨f, rfl⟩)
-  · exact (EqvGen.symm _ _ (EqvGen.rel _ _ ⟨g, h⟩))
+  exact (EqvGen.rel _ _ ⟨f, rfl⟩)
+  exact (EqvGen.symm _ _ (EqvGen.rel _ _ ⟨g, h⟩))
 
 /-- Recognizing filtered colimits of types. -/
 noncomputable def isColimitOf (t : Cocone F) (hsurj : ∀ x : t.pt, ∃ i xi, x = t.ι.app i xi)
@@ -96,9 +96,9 @@ protected theorem rel_eq_eqvGen_quot_rel :
     FilteredColimit.Rel.{v, u} F = EqvGen (Quot.Rel F) := by
   ext ⟨j, x⟩ ⟨j', y⟩
   constructor
-  · apply eqvGen_quot_rel_of_rel
-  · rw [← (FilteredColimit.rel_equiv F).eqvGen_iff]
-    exact EqvGen.mono (rel_of_quot_rel F)
+  apply eqvGen_quot_rel_of_rel
+  rw [← (FilteredColimit.rel_equiv F).eqvGen_iff]
+  exact EqvGen.mono (rel_of_quot_rel F)
 
 variable [HasColimit F]
 
@@ -114,10 +114,10 @@ theorem isColimit_eq_iff {t : Cocone F} (ht : IsColimit t) {i j : J} {xi : F.obj
   refine Iff.trans ?_ (colimit_eq_iff_aux F)
   rw [← (IsColimit.coconePointUniqueUpToIso ht (colimitCoconeIsColimit F)).toEquiv.injective.eq_iff]
   convert Iff.rfl
-  · exact (congrFun
-      (IsColimit.comp_coconePointUniqueUpToIso_hom ht (colimitCoconeIsColimit F) _) xi).symm
-  · exact (congrFun
-      (IsColimit.comp_coconePointUniqueUpToIso_hom ht (colimitCoconeIsColimit F) _) xj).symm
+  exact (congrFun
+    (IsColimit.comp_coconePointUniqueUpToIso_hom ht (colimitCoconeIsColimit F) _) xi).symm
+  exact (congrFun
+    (IsColimit.comp_coconePointUniqueUpToIso_hom ht (colimitCoconeIsColimit F) _) xj).symm
 
 theorem colimit_eq_iff {i j : J} {xi : F.obj i} {xj : F.obj j} :
     colimit.ι F i xi = colimit.ι F j xj ↔

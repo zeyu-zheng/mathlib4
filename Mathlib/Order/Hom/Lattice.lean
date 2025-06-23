@@ -1026,12 +1026,12 @@ instance (priority := 100) toLatticeHomClass : LatticeHomClass F α β :=
   { ‹OrderHomClass F α β› with
     map_sup := fun f a b => by
       obtain h | h := le_total a b
-      · rw [sup_eq_right.2 h, sup_eq_right.2 (OrderHomClass.mono f h : f a ≤ f b)]
-      · rw [sup_eq_left.2 h, sup_eq_left.2 (OrderHomClass.mono f h : f b ≤ f a)]
+      rw [sup_eq_right.2 h, sup_eq_right.2 (OrderHomClass.mono f h : f a ≤ f b)]
+      rw [sup_eq_left.2 h, sup_eq_left.2 (OrderHomClass.mono f h : f b ≤ f a)]
     map_inf := fun f a b => by
       obtain h | h := le_total a b
-      · rw [inf_eq_left.2 h, inf_eq_left.2 (OrderHomClass.mono f h : f a ≤ f b)]
-      · rw [inf_eq_right.2 h, inf_eq_right.2 (OrderHomClass.mono f h : f b ≤ f a)] }
+      rw [inf_eq_left.2 h, inf_eq_left.2 (OrderHomClass.mono f h : f a ≤ f b)]
+      rw [inf_eq_right.2 h, inf_eq_right.2 (OrderHomClass.mono f h : f b ≤ f a)] }
 
 /-- Reinterpret an order homomorphism to a linear order as a `LatticeHom`. -/
 def toLatticeHom (f : F) : LatticeHom α β := f

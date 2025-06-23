@@ -96,7 +96,7 @@ theorem fourierIntegral_eq_half_sub_half_period_translate {w : V} (hw : w ≠ 0)
   simp_rw [smul_sub]
   rw [integral_sub, fourierIntegral_half_period_translate hw, sub_eq_add_neg, neg_neg, ←
     two_smul ℂ _, ← @smul_assoc _ _ _ _ _ _ (IsScalarTower.left ℂ), smul_eq_mul]
-  · norm_num
+  norm_num
   exacts [(Real.fourierIntegral_convergent_iff w).2 hf,
     (Real.fourierIntegral_convergent_iff w).2 (hf.comp_add_right _)]
 
@@ -153,15 +153,15 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
     dsimp only [A] at hv
     simp only [mem_setOf, not_le] at hv
     rw [hR_bd v _, hR_bd (v + i w) _, sub_zero, norm_zero]
-    · rw [← sub_neg_eq_add]
-      refine le_trans ?_ (norm_sub_norm_le _ _)
-      rw [le_sub_iff_add_le, norm_neg]
-      refine le_trans ?_ hv.le
-      rw [add_le_add_iff_left, hw'_nm, ← div_div]
-      refine (div_le_one <| norm_pos_iff.mpr hw_ne).mpr ?_
-      refine le_trans (le_add_of_nonneg_right <| one_div_nonneg.mpr <| ?_) hw_bd
-      exact (mul_pos (zero_lt_two' ℝ) hδ1).le
-    · exact (le_add_of_nonneg_right zero_le_one).trans hv.le
+    rw [← sub_neg_eq_add]
+    refine le_trans ?_ (norm_sub_norm_le _ _)
+    rw [le_sub_iff_add_le, norm_neg]
+    refine le_trans ?_ hv.le
+    rw [add_le_add_iff_left, hw'_nm, ← div_div]
+    refine (div_le_one <| norm_pos_iff.mpr hw_ne).mpr ?_
+    refine le_trans (le_add_of_nonneg_right <| one_div_nonneg.mpr <| ?_) hw_bd
+    exact (mul_pos (zero_lt_two' ℝ) hδ1).le
+    exact (le_add_of_nonneg_right zero_le_one).trans hv.le
   rw [int_A]; clear int_A
   --* Bound integral using fact that `‖f v - f (v + w')‖` is small.
   have bdA : ∀ v : V, v ∈ A → ‖‖f v - f (v + i w)‖‖ ≤ ε / B := by
@@ -173,10 +173,10 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
     exact (lt_add_of_pos_left _ one_half_pos).trans_le hw_bd
   have bdA2 := norm_setIntegral_le_of_norm_le_const (hB_vol.trans_lt ENNReal.coe_lt_top) bdA ?_
   swap
-  · apply Continuous.aestronglyMeasurable
-    exact
-      continuous_norm.comp <|
-        Continuous.sub hf1 <| Continuous.comp hf1 <| continuous_id'.add continuous_const
+  apply Continuous.aestronglyMeasurable
+  exact
+    continuous_norm.comp <|
+      Continuous.sub hf1 <| Continuous.comp hf1 <| continuous_id'.add continuous_const
   have : ‖_‖ = ∫ v : V in A, ‖f v - f (v + i w)‖ :=
     Real.norm_of_nonneg (setIntegral_nonneg mA fun x _ => norm_nonneg _)
   rw [this] at bdA2
@@ -184,9 +184,9 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
   rw [div_mul_eq_mul_div, div_lt_iff (NNReal.coe_pos.mpr hB_pos), mul_comm (2 : ℝ), mul_assoc,
     mul_lt_mul_left hε]
   rw [← ENNReal.toReal_le_toReal] at hB_vol
-  · refine hB_vol.trans_lt ?_
-    rw [(by rfl : (↑B : ENNReal).toReal = ↑B), two_mul]
-    exact lt_add_of_pos_left _ hB_pos
+  refine hB_vol.trans_lt ?_
+  rw [(by rfl : (↑B : ENNReal).toReal = ↑B), two_mul]
+  exact lt_add_of_pos_left _ hB_pos
   exacts [(hB_vol.trans_lt ENNReal.coe_lt_top).ne, ENNReal.coe_lt_top.ne]
 
 variable (f)
@@ -196,9 +196,9 @@ variable (f)
 theorem tendsto_integral_exp_inner_smul_cocompact :
     Tendsto (fun w : V => ∫ v, 𝐞 (-⟪v, w⟫) • f v) (cocompact V) (𝓝 0) := by
   by_cases hfi : Integrable f; swap
-  · convert tendsto_const_nhds (x := (0 : E)) with w
-    apply integral_undef
-    rwa [Real.fourierIntegral_convergent_iff]
+  convert tendsto_const_nhds (x := (0 : E)) with w
+  apply integral_undef
+  rwa [Real.fourierIntegral_convergent_iff]
   refine Metric.tendsto_nhds.mpr fun ε hε => ?_
   obtain ⟨g, hg_supp, hfg, hg_cont, -⟩ :=
     hfi.exists_hasCompactSupport_integral_sub_le (div_pos hε two_pos)
@@ -305,10 +305,10 @@ theorem tendsto_integral_exp_smul_cocompact (μ : Measure V) [μ.IsAddHaarMeasur
   rw [Function.comp_apply, integral_map_equiv]
   congr 1 with v : 1
   congr
-  · -- Porting note: added `congr_arg`
-    apply congr_arg w
-    exact (ContinuousLinearEquiv.symm_apply_apply A v).symm
-  · exact (ContinuousLinearEquiv.symm_apply_apply A v).symm
+  -- Porting note: added `congr_arg`
+  apply congr_arg w
+  exact (ContinuousLinearEquiv.symm_apply_apply A v).symm
+  exact (ContinuousLinearEquiv.symm_apply_apply A v).symm
 
 /-- The Riemann-Lebesgue lemma, formulated in terms of `VectorFourier.fourierIntegral` (with the
 pairing in the definition of `fourier_integral` taken to be the canonical pairing between `V` and

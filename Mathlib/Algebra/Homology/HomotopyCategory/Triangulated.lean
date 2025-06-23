@@ -201,12 +201,12 @@ noncomputable instance : IsTriangulated (HomotopyCategory C (ComplexShape.up ℤ
     let β := CochainComplex.mappingCone.triangleMap (u₁₂ ≫ u₂₃) u₂₃ u₁₂ (𝟙 X₃) (by rw [comp_id])
     refine Triangulated.Octahedron.mk ((HomotopyCategory.quotient _ _).map α.hom₃)
       ((HomotopyCategory.quotient _ _).map β.hom₃) ?_ ?_ ?_ ?_ ?_
-    · exact ((quotient _ _).mapTriangle.map α).comm₂
-    · exact ((quotient _ _).mapTriangle.map α).comm₃.symm.trans (by simp [α])
-    · exact ((quotient _ _).mapTriangle.map β).comm₂.trans (by simp [β])
-    · exact ((quotient _ _).mapTriangle.map β).comm₃
-    · refine isomorphic_distinguished _ (mappingConeCompTriangleh_distinguished u₁₂ u₂₃) _ ?_
-      exact Triangle.isoMk _ _ (Iso.refl _) (Iso.refl _) (Iso.refl _)
-        (by aesop_cat) (by aesop_cat) (by simp [CochainComplex.mappingConeCompTriangleh]))
+    exact ((quotient _ _).mapTriangle.map α).comm₂
+    exact ((quotient _ _).mapTriangle.map α).comm₃.symm.trans (by simp [α])
+    exact ((quotient _ _).mapTriangle.map β).comm₂.trans (by simp [β])
+    exact ((quotient _ _).mapTriangle.map β).comm₃
+    refine isomorphic_distinguished _ (mappingConeCompTriangleh_distinguished u₁₂ u₂₃) _ ?_
+    exact Triangle.isoMk _ _ (Iso.refl _) (Iso.refl _) (Iso.refl _)
+      (by aesop_cat) (by aesop_cat) (by simp [CochainComplex.mappingConeCompTriangleh]))
 
 end HomotopyCategory

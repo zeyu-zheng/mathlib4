@@ -114,8 +114,8 @@ lemma eventually_zero_of_frequently_zero (hf : GrowsPolynomially f) (hf' : ∃�
       case ineq =>
         rw [Set.left_mem_Icc]
         gcongr
-        · norm_num
-        · linarith
+        norm_num
+        linarith
       simp only [ih, mul_zero, Set.Icc_self, Set.mem_singleton_iff] at hx
       refine hx ⟨?lb₁, ?ub₁⟩
       case lb₁ =>
@@ -348,13 +348,13 @@ protected lemma GrowsPolynomially.mul {f g : ℝ → ℝ} (hf : GrowsPolynomiall
     c₁ * c₃ * (|f x| * |g x|) = (c₁ * |f x|) * (c₃ * |g x|) := by ring
     _ ≤ |f u| * |g u| := by
            gcongr
-           · exact (hf u hu).1
-           · exact (hg u hu).1
+           exact (hf u hu).1
+           exact (hg u hu).1
   case ub => calc
     |f u| * |g u| ≤ (c₂ * |f x|) * (c₄ * |g x|) := by
            gcongr
-           · exact (hf u hu).2
-           · exact (hg u hu).2
+           exact (hf u hu).2
+           exact (hg u hu).2
     _ = c₂ * c₄ * (|f x| * |g x|) := by ring
 
 lemma GrowsPolynomially.const_mul {f : ℝ → ℝ} {c : ℝ} (hf : GrowsPolynomially f) :
@@ -386,20 +386,20 @@ protected lemma GrowsPolynomially.add {f g : ℝ → ℝ} (hf : GrowsPolynomiall
     min c₁ c₃ * (f x + g x) = min c₁ c₃ * f x + min c₁ c₃ * g x := by simp only [mul_add]
       _ ≤ c₁ * f x + c₃ * g x := by
               gcongr
-              · exact min_le_left _ _
-              · exact min_le_right _ _
+              exact min_le_left _ _
+              exact min_le_right _ _
       _ ≤ f u + g u := by
               gcongr
-              · exact (hf u hu).1
-              · exact (hg u hu).1
+              exact (hf u hu).1
+              exact (hg u hu).1
   case ub => calc
     max c₂ c₄ * (f x + g x) = max c₂ c₄ * f x + max c₂ c₄ * g x := by simp only [mul_add]
       _ ≥ c₂ * f x + c₄ * g x := by gcongr
-                                    · exact le_max_left _ _
-                                    · exact le_max_right _ _
+                                    exact le_max_left _ _
+                                    exact le_max_right _ _
       _ ≥ f u + g u := by gcongr
-                          · exact (hf u hu).2
-                          · exact (hg u hu).2
+                          exact (hf u hu).2
+                          exact (hg u hu).2
 
 lemma GrowsPolynomially.add_isLittleO {f g : ℝ → ℝ} (hf : GrowsPolynomially f)
     (hfg : g =o[atTop] f) : GrowsPolynomially fun x => f x + g x := by
@@ -661,9 +661,9 @@ lemma growsPolynomially_log : GrowsPolynomially Real.log := by
   case ub =>
     rw [one_mul]
     gcongr
-    · calc 0 < b * x := by positivity
-         _ ≤ u := by exact hu.1
-    · exact hu.2
+    calc 0 < b * x := by positivity
+       _ ≤ u := by exact hu.1
+    exact hu.2
 
 lemma GrowsPolynomially.of_isTheta {f g : ℝ → ℝ} (hg : GrowsPolynomially g) (hf : f =Θ[atTop] g)
     (hf' : ∀ᶠ x in atTop, 0 ≤ f x) : GrowsPolynomially f := by

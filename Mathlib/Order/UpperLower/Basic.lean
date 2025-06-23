@@ -423,8 +423,8 @@ theorem IsUpperSet.total (hs : IsUpperSet s) (ht : IsUpperSet t) : s ⊆ t ∨ t
   simp_rw [Set.not_subset] at h
   obtain ⟨⟨a, has, hat⟩, b, hbt, hbs⟩ := h
   obtain hab | hba := le_total a b
-  · exact hbs (hs hab has)
-  · exact hat (ht hba hbt)
+  exact hbs (hs hab has)
+  exact hat (ht hba hbt)
 
 theorem IsLowerSet.total (hs : IsLowerSet s) (ht : IsLowerSet t) : s ⊆ t ∨ t ⊆ s :=
   hs.toDual.total ht.toDual
@@ -1517,10 +1517,10 @@ lemma sdiff_sup_lowerClosure (hts : t ⊆ s) (hst : ∀ b ∈ s, ∀ c ∈ t, c 
     s.sdiff t ⊔ lowerClosure t = s := by
   refine le_antisymm (sup_le sdiff_le_left <| lowerClosure_le.2 hts) fun a ha ↦ ?_
   obtain hat | hat := em (a ∈ t)
-  · exact subset_union_right (subset_lowerClosure hat)
-  · refine subset_union_left ⟨ha, ?_⟩
-    rintro ⟨b, hb, hba⟩
-    exact hat <| hst _ ha _ hb hba
+  exact subset_union_right (subset_lowerClosure hat)
+  refine subset_union_left ⟨ha, ?_⟩
+  rintro ⟨b, hb, hba⟩
+  exact hat <| hst _ ha _ hb hba
 
 lemma lowerClosure_sup_sdiff (hts : t ⊆ s) (hst : ∀ b ∈ s, ∀ c ∈ t, c ≤ b → b ∈ t) :
     lowerClosure t ⊔ s.sdiff t = s := by rw [sup_comm, sdiff_sup_lowerClosure hts hst]
@@ -1578,10 +1578,10 @@ lemma sdiff_inf_upperClosure (hts : t ⊆ s) (hst : ∀ b ∈ s, ∀ c ∈ t, b 
     s.sdiff t ⊓ upperClosure t = s := by
   refine ge_antisymm (le_inf le_sdiff_left <| le_upperClosure.2 hts) fun a ha ↦ ?_
   obtain hat | hat := em (a ∈ t)
-  · exact subset_union_right (subset_upperClosure hat)
-  · refine subset_union_left ⟨ha, ?_⟩
-    rintro ⟨b, hb, hab⟩
-    exact hat <| hst _ ha _ hb hab
+  exact subset_union_right (subset_upperClosure hat)
+  refine subset_union_left ⟨ha, ?_⟩
+  rintro ⟨b, hb, hab⟩
+  exact hat <| hst _ ha _ hb hab
 
 lemma upperClosure_inf_sdiff (hts : t ⊆ s) (hst : ∀ b ∈ s, ∀ c ∈ t, b ≤ c → b ∈ t) :
     upperClosure t ⊓ s.sdiff t = s := by rw [inf_comm, sdiff_inf_upperClosure hts hst]

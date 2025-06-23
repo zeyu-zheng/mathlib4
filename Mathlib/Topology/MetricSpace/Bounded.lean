@@ -266,9 +266,9 @@ theorem exists_isOpen_isBounded_image_of_isCompact_of_continuousOn [TopologicalS
 theorem isCompact_of_isClosed_isBounded [ProperSpace α] (hc : IsClosed s) (hb : IsBounded s) :
     IsCompact s := by
   rcases eq_empty_or_nonempty s with (rfl | ⟨x, -⟩)
-  · exact isCompact_empty
-  · rcases hb.subset_closedBall x with ⟨r, hr⟩
-    exact (isCompact_closedBall x r).of_isClosed_subset hc hr
+  exact isCompact_empty
+  rcases hb.subset_closedBall x with ⟨r, hr⟩
+  exact (isCompact_closedBall x r).of_isClosed_subset hc hr
 
 /-- The **Heine–Borel theorem**: In a proper space, the closure of a bounded set is compact. -/
 theorem _root_.Bornology.IsBounded.isCompact_closure [ProperSpace α] (h : IsBounded s) :
@@ -443,9 +443,9 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) :
   simp only [diam, dist_edist]
   refine (ENNReal.toReal_le_add' (EMetric.diam_union xs yt) ?_ ?_).trans
     (add_le_add_right ENNReal.toReal_add_le _)
-  · simp only [ENNReal.add_eq_top, edist_ne_top, or_false]
-    exact fun h ↦ top_unique <| h ▸ EMetric.diam_mono subset_union_left
-  · exact fun h ↦ top_unique <| h ▸ EMetric.diam_mono subset_union_right
+  simp only [ENNReal.add_eq_top, edist_ne_top, or_false]
+  exact fun h ↦ top_unique <| h ▸ EMetric.diam_mono subset_union_left
+  exact fun h ↦ top_unique <| h ▸ EMetric.diam_mono subset_union_right
 
 /-- If two sets intersect, the diameter of the union is bounded by the sum of the diameters. -/
 theorem diam_union' {t : Set α} (h : (s ∩ t).Nonempty) : diam (s ∪ t) ≤ diam s + diam t := by
@@ -543,5 +543,5 @@ theorem tendsto_cocompact_of_tendsto_dist_comp_atTop {f : β → α} {l : Filter
 theorem Metric.finite_isBounded_inter_isClosed [ProperSpace α] {K s : Set α} [DiscreteTopology s]
     (hK : IsBounded K) (hs : IsClosed s) : Set.Finite (K ∩ s) := by
   refine Set.Finite.subset (IsCompact.finite ?_ ?_) (Set.inter_subset_inter_left s subset_closure)
-  · exact hK.isCompact_closure.inter_right hs
-  · exact DiscreteTopology.of_subset inferInstance Set.inter_subset_right
+  exact hK.isCompact_closure.inter_right hs
+  exact DiscreteTopology.of_subset inferInstance Set.inter_subset_right

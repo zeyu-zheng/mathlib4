@@ -125,17 +125,17 @@ theorem _root_.TensorPower.list_prod_gradedMonoid_mk_single (n : ℕ) (x : Fin n
             GradedMonoid fun n => ⨂[R]^n M)).prod =
       GradedMonoid.mk n (PiTensorProduct.tprod R x) := by
   refine Fin.consInduction ?_ ?_ x <;> clear x
-  · rw [List.finRange_zero, List.map_nil, List.prod_nil]
-    rfl
-  · intro n x₀ x ih
-    rw [List.finRange_succ_eq_map, List.map_cons, List.prod_cons, List.map_map]
-    simp_rw [Function.comp, Fin.cons_zero, Fin.cons_succ]
-    rw [ih, GradedMonoid.mk_mul_mk, TensorPower.tprod_mul_tprod]
-    refine TensorPower.gradedMonoid_eq_of_cast (add_comm _ _) ?_
-    dsimp only [GradedMonoid.mk]
-    rw [TensorPower.cast_tprod]
-    simp_rw [Fin.append_left_eq_cons, Function.comp]
-    congr 1 with i
+  rw [List.finRange_zero, List.map_nil, List.prod_nil]
+  rfl
+  intro n x₀ x ih
+  rw [List.finRange_succ_eq_map, List.map_cons, List.prod_cons, List.map_map]
+  simp_rw [Function.comp, Fin.cons_zero, Fin.cons_succ]
+  rw [ih, GradedMonoid.mk_mul_mk, TensorPower.tprod_mul_tprod]
+  refine TensorPower.gradedMonoid_eq_of_cast (add_comm _ _) ?_
+  dsimp only [GradedMonoid.mk]
+  rw [TensorPower.cast_tprod]
+  simp_rw [Fin.append_left_eq_cons, Function.comp]
+  congr 1 with i
 
 theorem toDirectSum_tensorPower_tprod {n} (x : Fin n → M) :
     toDirectSum (tprod R M n x) = DirectSum.of _ n (PiTensorProduct.tprod R x) := by

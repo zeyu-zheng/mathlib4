@@ -112,12 +112,12 @@ lemma not_tendsto_diracProba_of_not_tendsto [CompletelyRegularSpace X] {x : X} (
 lemma tendsto_diracProba_iff_tendsto [CompletelyRegularSpace X] {x : X} (L : Filter X) :
     Tendsto diracProba L (𝓝 (diracProba x)) ↔ Tendsto id L (𝓝 x) := by
   constructor
-  · contrapose
-    exact not_tendsto_diracProba_of_not_tendsto L
-  · intro h
-    have aux := (@continuous_diracProba X _ _ _).continuousAt (x := x)
-    simp only [ContinuousAt] at aux
-    exact aux.comp h
+  contrapose
+  exact not_tendsto_diracProba_of_not_tendsto L
+  intro h
+  have aux := (@continuous_diracProba X _ _ _).continuousAt (x := x)
+  simp only [ContinuousAt] at aux
+  exact aux.comp h
 
 /-- An inverse function to `diracProba` (only really an inverse under hypotheses that
 guarantee injectivity of `diracProba`). -/

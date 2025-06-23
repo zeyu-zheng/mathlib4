@@ -148,12 +148,12 @@ theorem sqrt_mul_self (h : 0 ≤ x) : √(x * x) = x :=
 
 theorem sqrt_eq_cases : √x = y ↔ y * y = x ∧ 0 ≤ y ∨ x < 0 ∧ y = 0 := by
   constructor
-  · rintro rfl
-    rcases le_or_lt 0 x with hle | hlt
-    · exact Or.inl ⟨mul_self_sqrt hle, sqrt_nonneg x⟩
-    · exact Or.inr ⟨hlt, sqrt_eq_zero_of_nonpos hlt.le⟩
-  · rintro (⟨rfl, hy⟩ | ⟨hx, rfl⟩)
-    exacts [sqrt_mul_self hy, sqrt_eq_zero_of_nonpos hx.le]
+  rintro rfl
+  rcases le_or_lt 0 x with hle | hlt
+  exact Or.inl ⟨mul_self_sqrt hle, sqrt_nonneg x⟩
+  exact Or.inr ⟨hlt, sqrt_eq_zero_of_nonpos hlt.le⟩
+  rintro (⟨rfl, hy⟩ | ⟨hx, rfl⟩)
+  exacts [sqrt_mul_self hy, sqrt_eq_zero_of_nonpos hx.le]
 
 theorem sqrt_eq_iff_mul_self_eq (hx : 0 ≤ x) (hy : 0 ≤ y) : √x = y ↔ y * y = x :=
   ⟨fun h => by rw [← h, mul_self_sqrt hx], fun h => by rw [← h, sqrt_mul_self hy]⟩
@@ -234,9 +234,9 @@ theorem abs_le_sqrt (h : x ^ 2 ≤ y) : |x| ≤ √y := by
 
 theorem sq_le (h : 0 ≤ y) : x ^ 2 ≤ y ↔ -√y ≤ x ∧ x ≤ √y := by
   constructor
-  · simpa only [abs_le] using abs_le_sqrt
-  · rw [← abs_le, ← sq_abs]
-    exact (le_sqrt (abs_nonneg x) h).mp
+  simpa only [abs_le] using abs_le_sqrt
+  rw [← abs_le, ← sq_abs]
+  exact (le_sqrt (abs_nonneg x) h).mp
 
 theorem neg_sqrt_le_of_sq_le (h : x ^ 2 ≤ y) : -√y ≤ x :=
   ((sq_le ((sq_nonneg x).trans h)).mp h).1
@@ -266,9 +266,9 @@ alias ⟨_, sqrt_pos_of_pos⟩ := sqrt_pos
 
 lemma sqrt_le_sqrt_iff' (hx : 0 < x) : √x ≤ √y ↔ x ≤ y := by
   obtain hy | hy := le_total y 0
-  · exact iff_of_false ((sqrt_eq_zero_of_nonpos hy).trans_lt $ sqrt_pos.2 hx).not_le
-      (hy.trans_lt hx).not_le
-  · exact sqrt_le_sqrt_iff hy
+  exact iff_of_false ((sqrt_eq_zero_of_nonpos hy).trans_lt $ sqrt_pos.2 hx).not_le
+    (hy.trans_lt hx).not_le
+  exact sqrt_le_sqrt_iff hy
 
 @[simp] lemma one_le_sqrt : 1 ≤ √x ↔ 1 ≤ x := by
   rw [← sqrt_one, sqrt_le_sqrt_iff' zero_lt_one, sqrt_one]
@@ -339,8 +339,8 @@ variable {x y : ℝ}
 @[simp]
 theorem div_sqrt : x / √x = √x := by
   rcases le_or_lt x 0 with h | h
-  · rw [sqrt_eq_zero'.mpr h, div_zero]
-  · rw [div_eq_iff (sqrt_ne_zero'.mpr h), mul_self_sqrt h.le]
+  rw [sqrt_eq_zero'.mpr h, div_zero]
+  rw [div_eq_iff (sqrt_ne_zero'.mpr h), mul_self_sqrt h.le]
 
 theorem sqrt_div_self' : √x / x = 1 / √x := by rw [← div_sqrt, one_div_div, div_sqrt]
 
@@ -371,8 +371,8 @@ theorem nat_sqrt_le_real_sqrt {a : ℕ} : ↑(Nat.sqrt a) ≤ √(a : ℝ) := by
 /-- The real square root is less than the natural square root plus one -/
 theorem real_sqrt_lt_nat_sqrt_succ {a : ℕ} : √(a : ℝ) < Nat.sqrt a + 1 := by
   rw [sqrt_lt (by simp)] <;> norm_cast
-  · exact Nat.lt_succ_sqrt' a
-  · exact Nat.le_add_left 0 (Nat.sqrt a + 1)
+  exact Nat.lt_succ_sqrt' a
+  exact Nat.le_add_left 0 (Nat.sqrt a + 1)
 
 /-- The real square root is at most the natural square root plus one -/
 theorem real_sqrt_le_nat_sqrt_succ {a : ℕ} : √(a : ℝ) ≤ Nat.sqrt a + 1 :=

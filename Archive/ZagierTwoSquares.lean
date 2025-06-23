@@ -44,8 +44,8 @@ lemma zagierSet_lower_bound {x y z : ℕ} (h : (x, y, z) ∈ zagierSet k) : 0 < 
     by_contra q
     rw [not_lt, nonpos_iff_eq_zero] at q
     simp only [q, mul_zero, zero_mul, zero_add, add_zero] at h
-  · apply_fun (· % 4) at h
-    simp [mul_assoc, Nat.add_mod] at h
+  apply_fun (· % 4) at h
+  simp [mul_assoc, Nat.add_mod] at h
   all_goals
     cases' (Nat.dvd_prime hk.out).1 (dvd_of_mul_left_eq _ h) with e e
     all_goals
@@ -119,23 +119,23 @@ theorem complexInvo_sq : complexInvo k ^ 2 = 1 := by
   obtain ⟨xb, _, _⟩ := zagierSet_lower_bound k h
   conv_lhs => arg 2; simp only [complexInvo]
   split_ifs with less more <;> rw [complexInvo, Subtype.mk.injEq, id_eq]
-  · -- less
-    simp only [show ¬(x + 2 * z + (y - x - z) < z) by linarith [less], ite_false,
-      lt_add_iff_pos_left, xb, add_tsub_cancel_right, ite_true]
-    rw [Nat.sub_sub, two_mul, ← tsub_add_eq_add_tsub (by linarith), ← add_assoc,
-      Nat.add_sub_cancel, add_comm (x + z), Nat.sub_add_cancel less.le]
-  · -- more
-    push_neg at less
-    simp only [show x - 2 * y + y < x + z - y by zify [less, more.le]; linarith, ite_true]
-    rw [Nat.sub_add_cancel more.le, Nat.sub_right_comm, Nat.sub_sub _ _ y, ← two_mul, add_comm,
-      Nat.add_sub_assoc more.le, Nat.add_sub_cancel]
-  · -- middle
-    push_neg at less more
-    simp only [show ¬(2 * y - x + (x + z - y) < y) by zify [less, more]; linarith,
-      show ¬(2 * y < 2 * y - x) by zify [more]; linarith, ite_false]
-    rw [tsub_tsub_assoc (2 * y).le_refl more, tsub_self, zero_add,
-      ← Nat.add_sub_assoc less, ← add_assoc, Nat.sub_add_cancel more, Nat.sub_sub _ _ y,
-      ← two_mul, add_comm, Nat.add_sub_cancel]
+  -- less
+  simp only [show ¬(x + 2 * z + (y - x - z) < z) by linarith [less], ite_false,
+    lt_add_iff_pos_left, xb, add_tsub_cancel_right, ite_true]
+  rw [Nat.sub_sub, two_mul, ← tsub_add_eq_add_tsub (by linarith), ← add_assoc,
+    Nat.add_sub_cancel, add_comm (x + z), Nat.sub_add_cancel less.le]
+  -- more
+  push_neg at less
+  simp only [show x - 2 * y + y < x + z - y by zify [less, more.le]; linarith, ite_true]
+  rw [Nat.sub_add_cancel more.le, Nat.sub_right_comm, Nat.sub_sub _ _ y, ← two_mul, add_comm,
+    Nat.add_sub_assoc more.le, Nat.add_sub_cancel]
+  -- middle
+  push_neg at less more
+  simp only [show ¬(2 * y - x + (x + z - y) < y) by zify [less, more]; linarith,
+    show ¬(2 * y < 2 * y - x) by zify [more]; linarith, ite_false]
+  rw [tsub_tsub_assoc (2 * y).le_refl more, tsub_self, zero_add,
+    ← Nat.add_sub_assoc less, ← add_assoc, Nat.sub_add_cancel more, Nat.sub_sub _ _ y,
+    ← two_mul, add_comm, Nat.add_sub_cancel]
 
 /-- Any fixed point of `complexInvo k` must be `(1, 1, k)`. -/
 theorem eq_of_mem_fixedPoints {t : zagierSet k} (mem : t ∈ fixedPoints (complexInvo k)) :
@@ -147,21 +147,21 @@ theorem eq_of_mem_fixedPoints {t : zagierSet k} (mem : t ∈ fixedPoints (comple
     -- less (completely handled by the pre-applied `simp_all only`)
     simp_all only [not_lt, Prod.mk.injEq, add_right_eq_self, mul_eq_zero, false_or,
       lt_self_iff_false]
-  · -- more
-    obtain ⟨_, _, _⟩ := mem; simp_all
-  · -- middle (the one fixed point falls under this case)
-    simp only [zagierSet, Set.mem_setOf_eq] at h
-    replace mem := mem.1
-    rw [tsub_eq_iff_eq_add_of_le more, ← two_mul] at mem
-    replace mem := (mul_left_cancel₀ two_ne_zero mem).symm
-    subst mem
-    rw [show x * x + 4 * x * z = x * (x + 4 * z) by linarith] at h
-    cases' (Nat.dvd_prime hk.out).1 (dvd_of_mul_left_eq _ h) with e e
-    · rw [e, mul_one] at h
-      simp_all [h, show z = 0 by linarith [e]]
-    · simp only [e, mul_left_eq_self₀, add_eq_zero, and_false, or_false] at h
-      simp only [h, true_and]
-      linarith [e]
+  -- more
+  obtain ⟨_, _, _⟩ := mem; simp_all
+  -- middle (the one fixed point falls under this case)
+  simp only [zagierSet, Set.mem_setOf_eq] at h
+  replace mem := mem.1
+  rw [tsub_eq_iff_eq_add_of_le more, ← two_mul] at mem
+  replace mem := (mul_left_cancel₀ two_ne_zero mem).symm
+  subst mem
+  rw [show x * x + 4 * x * z = x * (x + 4 * z) by linarith] at h
+  cases' (Nat.dvd_prime hk.out).1 (dvd_of_mul_left_eq _ h) with e e
+  rw [e, mul_one] at h
+  simp_all [h, show z = 0 by linarith [e]]
+  simp only [e, mul_left_eq_self₀, add_eq_zero, and_false, or_false] at h
+  simp only [h, true_and]
+  linarith [e]
 
 /-- The singleton containing `(1, 1, k)`. -/
 def singletonFixedPoint : Finset (zagierSet k) :=
@@ -173,11 +173,11 @@ theorem card_fixedPoints_eq_one : Fintype.card (fixedPoints (complexInvo k)) = 1
   congr
   rw [singletonFixedPoint, Finset.eq_singleton_iff_unique_mem]
   constructor
-  · simp [IsFixedPt, complexInvo]
-  · intro _ mem
-    simp only [Set.mem_toFinset] at mem
-    replace mem := eq_of_mem_fixedPoints k mem
-    congr!
+  simp [IsFixedPt, complexInvo]
+  intro _ mem
+  simp only [Set.mem_toFinset] at mem
+  replace mem := eq_of_mem_fixedPoints k mem
+  congr!
 
 end Involutions
 

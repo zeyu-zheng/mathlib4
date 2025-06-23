@@ -72,8 +72,8 @@ theorem mem_unitaryGroup_iff' : A ∈ Matrix.unitaryGroup n α ↔ star A * A = 
 theorem det_of_mem_unitary {A : Matrix n n α} (hA : A ∈ Matrix.unitaryGroup n α) :
     A.det ∈ unitary α := by
   constructor
-  · simpa [star, det_transpose] using congr_arg det hA.1
-  · simpa [star, det_transpose] using congr_arg det hA.2
+  simpa [star, det_transpose] using congr_arg det hA.1
+  simpa [star, det_transpose] using congr_arg det hA.2
 
 namespace UnitaryGroup
 

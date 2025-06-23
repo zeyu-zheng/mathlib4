@@ -117,12 +117,12 @@ lemma covBy_iff_exists_insert : s ⋖ t ↔ ∃ a ∉ s, insert a s = t := by
 lemma covBy_iff_card_sdiff_eq_one : t ⋖ s ↔ t ⊆ s ∧ (s \ t).card = 1 := by
   rw [covBy_iff_exists_insert]
   constructor
-  · rintro ⟨a, ha, rfl⟩
-    simp [*]
-  · simp_rw [card_eq_one]
-    rintro ⟨hts, a, ha⟩
-    refine ⟨a, (mem_sdiff.1 <| superset_of_eq ha <| mem_singleton_self _).2, ?_⟩
-    rw [insert_eq, ← ha, sdiff_union_of_subset hts]
+  rintro ⟨a, ha, rfl⟩
+  simp [*]
+  simp_rw [card_eq_one]
+  rintro ⟨hts, a, ha⟩
+  refine ⟨a, (mem_sdiff.1 <| superset_of_eq ha <| mem_singleton_self _).2, ?_⟩
+  rw [insert_eq, ← ha, sdiff_union_of_subset hts]
 
 lemma covBy_iff_exists_erase : s ⋖ t ↔ ∃ a ∈ t, t.erase a = s := by
   simp only [← coe_covBy_coe, Set.covBy_iff_exists_sdiff_singleton, ← coe_inj, coe_erase, mem_coe]

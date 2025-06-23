@@ -43,9 +43,9 @@ theorem Pairwise.forall_of_forall (H : Symmetric R) (H₁ : ∀ x ∈ l, R x x) 
 theorem Pairwise.forall (hR : Symmetric R) (hl : l.Pairwise R) :
     ∀ ⦃a⦄, a ∈ l → ∀ ⦃b⦄, b ∈ l → a ≠ b → R a b := by
   apply Pairwise.forall_of_forall
-  · exact fun a b h hne => hR (h hne.symm)
-  · exact fun _ _ hx => (hx rfl).elim
-  · exact hl.imp (@fun a b h _ => by exact h)
+  exact fun a b h hne => hR (h hne.symm)
+  exact fun _ _ hx => (hx rfl).elim
+  exact hl.imp (@fun a b h _ => by exact h)
 
 theorem Pairwise.set_pairwise (hl : Pairwise R l) (hr : Symmetric R) : { x | x ∈ l }.Pairwise R :=
   hl.forall hr
@@ -62,7 +62,7 @@ theorem pairwise_pmap {p : β → Prop} {f : ∀ b, p b → α} {l : List β} (h
     Pairwise R (l.pmap f h) ↔
       Pairwise (fun b₁ b₂ => ∀ (h₁ : p b₁) (h₂ : p b₂), R (f b₁ h₁) (f b₂ h₂)) l := by
   induction' l with a l ihl
-  · simp
+  simp
   obtain ⟨_, hl⟩ : p a ∧ ∀ b, b ∈ l → p b := by simpa using h
   simp only [ihl hl, pairwise_cons, exists₂_imp, pmap, and_congr_left_iff, mem_pmap]
   refine fun _ => ⟨fun H b hb _ hpb => H _ _ hb rfl, ?_⟩

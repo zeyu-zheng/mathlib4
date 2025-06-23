@@ -88,33 +88,33 @@ instance graphFunctor_essSurj : graphFunctor.EssSurj :=
 theorem rel_iso_iff {X Y : RelCat} (r : X ⟶ Y) :
     IsIso (C := RelCat) r ↔ ∃ f : (Iso (C := Type) X Y), graphFunctor.map f.hom = r := by
   constructor
-  · intro h
-    have h1 := congr_fun₂ h.hom_inv_id
-    have h2 := congr_fun₂ h.inv_hom_id
-    simp only [RelCat.Hom.rel_comp_apply₂, RelCat.Hom.rel_id_apply₂, eq_iff_iff] at h1 h2
-    obtain ⟨f, hf⟩ := Classical.axiomOfChoice (fun a => (h1 a a).mpr rfl)
-    obtain ⟨g, hg⟩ := Classical.axiomOfChoice (fun a => (h2 a a).mpr rfl)
-    suffices hif : IsIso (C := Type) f by
-      use asIso f
-      ext x y
-      simp only [asIso_hom, graphFunctor_map]
-      constructor
-      · rintro rfl
-        exact (hf x).1
-      · intro hr
-        specialize h2 (f x) y
-        rw [← h2]
-        use x, (hf x).2, hr
-    use g
+  intro h
+  have h1 := congr_fun₂ h.hom_inv_id
+  have h2 := congr_fun₂ h.inv_hom_id
+  simp only [RelCat.Hom.rel_comp_apply₂, RelCat.Hom.rel_id_apply₂, eq_iff_iff] at h1 h2
+  obtain ⟨f, hf⟩ := Classical.axiomOfChoice (fun a => (h1 a a).mpr rfl)
+  obtain ⟨g, hg⟩ := Classical.axiomOfChoice (fun a => (h2 a a).mpr rfl)
+  suffices hif : IsIso (C := Type) f by
+    use asIso f
+    ext x y
+    simp only [asIso_hom, graphFunctor_map]
     constructor
-    · ext x
-      apply (h1 _ _).mp
-      use f x, (hg _).2, (hf _).2
-    · ext y
-      apply (h2 _ _).mp
-      use g y, (hf (g y)).2, (hg y).2
-  · rintro ⟨f, rfl⟩
-    apply graphFunctor.map_isIso
+    rintro rfl
+    exact (hf x).1
+    intro hr
+    specialize h2 (f x) y
+    rw [← h2]
+    use x, (hf x).2, hr
+  use g
+  constructor
+  ext x
+  apply (h1 _ _).mp
+  use f x, (hg _).2, (hf _).2
+  ext y
+  apply (h2 _ _).mp
+  use g y, (hf (g y)).2, (hg y).2
+  rintro ⟨f, rfl⟩
+  apply graphFunctor.map_isIso
 
 section Opposite
 open Opposite

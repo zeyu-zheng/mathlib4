@@ -56,8 +56,8 @@ lemma angle_one_right (hx : x ≠ 0) : angle x 1 = |x.arg| := by simp [angle_eq_
 
 lemma angle_div_left_eq_angle_mul_right (a x y : ℂ) : angle (x / a) y = angle x (y * a) := by
   obtain rfl | ha := eq_or_ne a 0
-  · simp
-  · rw [← angle_mul_right ha, div_mul_cancel₀ _ ha]
+  simp
+  rw [← angle_mul_right ha, div_mul_cancel₀ _ ha]
 
 lemma angle_div_right_eq_angle_mul_left (a x y : ℂ) : angle x (y / a) = angle (x * a) y := by
   rw [angle_comm, angle_div_left_eq_angle_mul_right, angle_comm]
@@ -82,31 +82,31 @@ lemma norm_sub_mem_Icc_angle (hx : ‖x‖ = 1) (hy : ‖y‖ = 1) :
     ‖x - y‖ ∈ Icc (2 / π * angle x y) (angle x y) := by
   clear a
   wlog h : y = 1
-  · have := @this (x / y) 1 (by simp only [norm_div, hx, hy, div_one]) norm_one rfl
-    rwa [angle_div_left_eq_angle_mul_right, div_sub_one, norm_div, hy, div_one, one_mul]
-      at this
-    rintro rfl
-    simp at hy
+  have := @this (x / y) 1 (by simp only [norm_div, hx, hy, div_one]) norm_one rfl
+  rwa [angle_div_left_eq_angle_mul_right, div_sub_one, norm_div, hy, div_one, one_mul]
+    at this
+  rintro rfl
+  simp at hy
   subst y
   rw [norm_eq_abs, abs_eq_one_iff'] at hx
   obtain ⟨θ, hθ, rfl⟩ := hx
   rw [angle_exp_one, exp_mul_I, add_sub_right_comm, (toIocMod_eq_self _).2]
-  · norm_cast
-    rw [norm_eq_abs, abs_add_mul_I]
-    refine ⟨Real.le_sqrt_of_sq_le ?_, ?_⟩
-    · rw [mul_pow, ← _root_.abs_pow, abs_sq]
-      calc
-        _ = 2 * (1 - (1 - 2 / π ^ 2 * θ ^ 2)) := by ring
-        _ ≤ 2 * (1 - θ.cos) := by
-            gcongr; exact Real.cos_quadratic_upper_bound <| abs_le.2 <| Ioc_subset_Icc_self hθ
-        _  = _ := by linear_combination -θ.cos_sq_add_sin_sq
-    · rw [Real.sqrt_le_left (by positivity), ← _root_.abs_pow, abs_sq]
-      calc
-        _ = 2 * (1 - θ.cos) := by linear_combination θ.cos_sq_add_sin_sq
-        _ ≤ 2 * (1 - (1 - θ ^ 2 / 2)) := by gcongr; exact Real.one_sub_sq_div_two_le_cos
-        _ = _ := by ring
-  · convert hθ
-    ring
+  norm_cast
+  rw [norm_eq_abs, abs_add_mul_I]
+  refine ⟨Real.le_sqrt_of_sq_le ?_, ?_⟩
+  rw [mul_pow, ← _root_.abs_pow, abs_sq]
+  calc
+    _ = 2 * (1 - (1 - 2 / π ^ 2 * θ ^ 2)) := by ring
+    _ ≤ 2 * (1 - θ.cos) := by
+        gcongr; exact Real.cos_quadratic_upper_bound <| abs_le.2 <| Ioc_subset_Icc_self hθ
+    _  = _ := by linear_combination -θ.cos_sq_add_sin_sq
+  rw [Real.sqrt_le_left (by positivity), ← _root_.abs_pow, abs_sq]
+  calc
+    _ = 2 * (1 - θ.cos) := by linear_combination θ.cos_sq_add_sin_sq
+    _ ≤ 2 * (1 - (1 - θ ^ 2 / 2)) := by gcongr; exact Real.one_sub_sq_div_two_le_cos
+    _ = _ := by ring
+  convert hθ
+  ring
 
 /-- Chord-length is always less than arc-length. -/
 lemma norm_sub_le_angle (hx : ‖x‖ = 1) (hy : ‖y‖ = 1) : ‖x - y‖ ≤ angle x y :=

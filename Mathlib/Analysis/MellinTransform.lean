@@ -112,9 +112,9 @@ theorem mellin_comp_rpow (f : ℝ → E) (s : ℂ) (a : ℝ) :
   /- This is true for `a = 0` as all sides are undefined but turn out to vanish thanks to our
   convention. The interesting case is `a ≠ 0` -/
   rcases eq_or_ne a 0 with rfl|ha
-  · by_cases hE : CompleteSpace E
-    · simp [integral_smul_const, mellin, setIntegral_Ioi_zero_cpow]
-    · simp [integral, mellin, hE]
+  by_cases hE : CompleteSpace E
+  simp [integral_smul_const, mellin, setIntegral_Ioi_zero_cpow]
+  simp [integral, mellin, hE]
   simp_rw [mellin]
   conv_rhs => rw [← integral_comp_rpow_Ioi _ ha, ← integral_smul]
   refine setIntegral_congr measurableSet_Ioi fun t ht => ?_
@@ -197,19 +197,19 @@ theorem mellin_convergent_top_of_isBigO {f : ℝ → ℝ}
   obtain ⟨e, he⟩ := hd'
   have he' : 0 < max e 1 := zero_lt_one.trans_le (le_max_right _ _)
   refine ⟨max e 1, he', ?_, ?_⟩
-  · refine AEStronglyMeasurable.mul ?_ (hfc.mono_set (Ioi_subset_Ioi he'.le))
-    refine (ContinuousAt.continuousOn fun t ht => ?_).aestronglyMeasurable measurableSet_Ioi
-    exact continuousAt_rpow_const _ _ (Or.inl <| (he'.trans ht).ne')
-  · have : ∀ᵐ t : ℝ ∂volume.restrict (Ioi <| max e 1),
-        ‖t ^ (s - 1) * f t‖ ≤ t ^ (s - 1 + -a) * d := by
-      refine (ae_restrict_mem measurableSet_Ioi).mono fun t ht => ?_
-      have ht' : 0 < t := he'.trans ht
-      rw [norm_mul, rpow_add ht', ← norm_of_nonneg (rpow_nonneg ht'.le (-a)), mul_assoc,
-        mul_comm _ d, norm_of_nonneg (rpow_nonneg ht'.le _)]
-      gcongr
-      exact he t ((le_max_left e 1).trans_lt ht).le
-    refine (HasFiniteIntegral.mul_const ?_ _).mono' this
-    exact (integrableOn_Ioi_rpow_of_lt (by linarith) he').hasFiniteIntegral
+  refine AEStronglyMeasurable.mul ?_ (hfc.mono_set (Ioi_subset_Ioi he'.le))
+  refine (ContinuousAt.continuousOn fun t ht => ?_).aestronglyMeasurable measurableSet_Ioi
+  exact continuousAt_rpow_const _ _ (Or.inl <| (he'.trans ht).ne')
+  have : ∀ᵐ t : ℝ ∂volume.restrict (Ioi <| max e 1),
+      ‖t ^ (s - 1) * f t‖ ≤ t ^ (s - 1 + -a) * d := by
+    refine (ae_restrict_mem measurableSet_Ioi).mono fun t ht => ?_
+    have ht' : 0 < t := he'.trans ht
+    rw [norm_mul, rpow_add ht', ← norm_of_nonneg (rpow_nonneg ht'.le (-a)), mul_assoc,
+      mul_comm _ d, norm_of_nonneg (rpow_nonneg ht'.le _)]
+    gcongr
+    exact he t ((le_max_left e 1).trans_lt ht).le
+  refine (HasFiniteIntegral.mul_const ?_ _).mono' this
+  exact (integrableOn_Ioi_rpow_of_lt (by linarith) he').hasFiniteIntegral
 
 /-- If `f` is a locally integrable real-valued function which is `O(x ^ (-b))` at `0`, then for any
 `b < s`, its Mellin transform converges on some right neighbourhood of `0`. -/
@@ -221,26 +221,26 @@ theorem mellin_convergent_zero_of_isBigO {b : ℝ} {f : ℝ → ℝ}
   simp_rw [IsBigOWith, eventually_nhdsWithin_iff, Metric.eventually_nhds_iff, gt_iff_lt] at hd'
   obtain ⟨ε, hε, hε'⟩ := hd'
   refine ⟨ε, hε, integrableOn_Ioc_iff_integrableOn_Ioo.mpr ⟨?_, ?_⟩⟩
-  · refine AEStronglyMeasurable.mul ?_ (hfc.mono_set Ioo_subset_Ioi_self)
-    refine (ContinuousAt.continuousOn fun t ht => ?_).aestronglyMeasurable measurableSet_Ioo
-    exact continuousAt_rpow_const _ _ (Or.inl ht.1.ne')
-  · apply HasFiniteIntegral.mono'
-    · show HasFiniteIntegral (fun t => d * t ^ (s - b - 1)) _
-      refine (Integrable.hasFiniteIntegral ?_).const_mul _
-      rw [← IntegrableOn, ← integrableOn_Ioc_iff_integrableOn_Ioo, ←
-        intervalIntegrable_iff_integrableOn_Ioc_of_le hε.le]
-      exact intervalIntegral.intervalIntegrable_rpow' (by linarith)
-    · refine (ae_restrict_iff' measurableSet_Ioo).mpr (eventually_of_forall fun t ht => ?_)
-      rw [mul_comm, norm_mul]
-      specialize hε' _ ht.1
-      · rw [dist_eq_norm, sub_zero, norm_of_nonneg (le_of_lt ht.1)]
-        exact ht.2
-      · calc _ ≤ d * ‖t ^ (-b)‖ * ‖t ^ (s - 1)‖ := by gcongr
-          _ = d * t ^ (s - b - 1) := ?_
-        simp_rw [norm_of_nonneg (rpow_nonneg (le_of_lt ht.1) _), mul_assoc]
-        rw [← rpow_add ht.1]
-        congr 2
-        abel
+  refine AEStronglyMeasurable.mul ?_ (hfc.mono_set Ioo_subset_Ioi_self)
+  refine (ContinuousAt.continuousOn fun t ht => ?_).aestronglyMeasurable measurableSet_Ioo
+  exact continuousAt_rpow_const _ _ (Or.inl ht.1.ne')
+  apply HasFiniteIntegral.mono'
+  show HasFiniteIntegral (fun t => d * t ^ (s - b - 1)) _
+  refine (Integrable.hasFiniteIntegral ?_).const_mul _
+  rw [← IntegrableOn, ← integrableOn_Ioc_iff_integrableOn_Ioo, ←
+    intervalIntegrable_iff_integrableOn_Ioc_of_le hε.le]
+  exact intervalIntegral.intervalIntegrable_rpow' (by linarith)
+  refine (ae_restrict_iff' measurableSet_Ioo).mpr (eventually_of_forall fun t ht => ?_)
+  rw [mul_comm, norm_mul]
+  specialize hε' _ ht.1
+  rw [dist_eq_norm, sub_zero, norm_of_nonneg (le_of_lt ht.1)]
+  exact ht.2
+  calc _ ≤ d * ‖t ^ (-b)‖ * ‖t ^ (s - 1)‖ := by gcongr
+    _ = d * t ^ (s - b - 1) := ?_
+  simp_rw [norm_of_nonneg (rpow_nonneg (le_of_lt ht.1) _), mul_assoc]
+  rw [← rpow_add ht.1]
+  congr 2
+  abel
 
 /-- If `f` is a locally integrable real-valued function on `Ioi 0` which is `O(x ^ (-a))` at `∞`
 and `O(x ^ (-b))` at `0`, then its Mellin transform integral converges for `b < s < a`. -/
@@ -293,9 +293,9 @@ theorem isBigO_rpow_zero_log_smul [NormedSpace ℝ E] {a b : ℝ} {f : ℝ → E
         tendsto_inv_zero_atTop).congr'
     (eventually_nhdsWithin_iff.mpr <| eventually_of_forall fun t ht => ?_)
     (eventually_nhdsWithin_iff.mpr <| eventually_of_forall fun t ht => ?_)
-  · simp_rw [Function.comp_apply, ← one_div, log_div one_ne_zero (ne_of_gt ht), Real.log_one,
-      zero_sub, neg_neg]
-  · simp_rw [Function.comp_apply, inv_rpow (le_of_lt ht), ← rpow_neg (le_of_lt ht), neg_sub]
+  simp_rw [Function.comp_apply, ← one_div, log_div one_ne_zero (ne_of_gt ht), Real.log_one,
+    zero_sub, neg_neg]
+  simp_rw [Function.comp_apply, inv_rpow (le_of_lt ht), ← rpow_neg (le_of_lt ht), neg_sub]
   refine (this.isBigO.smul hf).congr' (eventually_of_forall fun t => by rfl)
       (eventually_nhdsWithin_iff.mpr (eventually_of_forall fun t ht => ?_))
   simp_rw [smul_eq_mul, ← rpow_add ht]
@@ -329,9 +329,9 @@ theorem mellin_hasDerivAt_of_isBigO_rpow [NormedSpace ℂ E] {a b : ℝ}
   have h3 : AEStronglyMeasurable (F' s) (volume.restrict <| Ioi 0)
   apply LocallyIntegrableOn.aestronglyMeasurable
   refine hfc.continuousOn_smul isOpen_Ioi ((ContinuousAt.continuousOn fun t ht => ?_).mul ?_)
-  · exact continuousAt_ofReal_cpow_const _ _ (Or.inr <| ne_of_gt ht)
-  · refine continuous_ofReal.comp_continuousOn ?_
-    exact continuousOn_log.mono (subset_compl_singleton_iff.mpr not_mem_Ioi_self)
+  exact continuousAt_ofReal_cpow_const _ _ (Or.inr <| ne_of_gt ht)
+  refine continuous_ofReal.comp_continuousOn ?_
+  exact continuousOn_log.mono (subset_compl_singleton_iff.mpr not_mem_Ioi_self)
   have h4 : ∀ᵐ t : ℝ ∂volume.restrict (Ioi 0),
       ∀ z : ℂ, z ∈ Metric.ball s v → ‖F' z t‖ ≤ bound t := by
     refine (ae_restrict_mem measurableSet_Ioi).mono fun t ht z hz => ?_
@@ -340,36 +340,36 @@ theorem mellin_hasDerivAt_of_isBigO_rpow [NormedSpace ℂ E] {a b : ℝ}
     gcongr
     rw [Complex.norm_eq_abs, abs_cpow_eq_rpow_re_of_pos ht]
     rcases le_or_lt 1 t with h | h
-    · refine le_add_of_le_of_nonneg (rpow_le_rpow_of_exponent_le h ?_)
-        (rpow_nonneg (zero_le_one.trans h) _)
-      rw [sub_re, one_re, sub_le_sub_iff_right]
-      rw [mem_ball_iff_norm, Complex.norm_eq_abs] at hz
-      have hz' := (re_le_abs _).trans hz.le
-      rwa [sub_re, sub_le_iff_le_add'] at hz'
-    · refine
-        le_add_of_nonneg_of_le (rpow_pos_of_pos ht _).le (rpow_le_rpow_of_exponent_ge ht h.le ?_)
-      rw [sub_re, one_re, sub_le_iff_le_add, sub_add_cancel]
-      rw [mem_ball_iff_norm', Complex.norm_eq_abs] at hz
-      have hz' := (re_le_abs _).trans hz.le
-      rwa [sub_re, sub_le_iff_le_add, ← sub_le_iff_le_add'] at hz'
+    refine le_add_of_le_of_nonneg (rpow_le_rpow_of_exponent_le h ?_)
+      (rpow_nonneg (zero_le_one.trans h) _)
+    rw [sub_re, one_re, sub_le_sub_iff_right]
+    rw [mem_ball_iff_norm, Complex.norm_eq_abs] at hz
+    have hz' := (re_le_abs _).trans hz.le
+    rwa [sub_re, sub_le_iff_le_add'] at hz'
+    refine
+      le_add_of_nonneg_of_le (rpow_pos_of_pos ht _).le (rpow_le_rpow_of_exponent_ge ht h.le ?_)
+    rw [sub_re, one_re, sub_le_iff_le_add, sub_add_cancel]
+    rw [mem_ball_iff_norm', Complex.norm_eq_abs] at hz
+    have hz' := (re_le_abs _).trans hz.le
+    rwa [sub_re, sub_le_iff_le_add, ← sub_le_iff_le_add'] at hz'
   have h5 : IntegrableOn bound (Ioi 0)
   simp_rw [bound, add_mul, mul_assoc]
   suffices ∀ {j : ℝ}, b < j → j < a →
       IntegrableOn (fun t : ℝ => t ^ (j - 1) * (|log t| * ‖f t‖)) (Ioi 0) volume by
     refine Integrable.add (this ?_ ?_) (this ?_ ?_)
     all_goals linarith
-  · intro j hj hj'
-    obtain ⟨w, hw1, hw2⟩ := exists_between hj
-    obtain ⟨w', hw1', hw2'⟩ := exists_between hj'
-    refine mellin_convergent_of_isBigO_scalar ?_ ?_ hw1' ?_ hw2
-    · simp_rw [mul_comm]
-      refine hfc.norm.mul_continuousOn ?_ isOpen_Ioi
-      refine Continuous.comp_continuousOn _root_.continuous_abs (continuousOn_log.mono ?_)
-      exact subset_compl_singleton_iff.mpr not_mem_Ioi_self
-    · refine (isBigO_rpow_top_log_smul hw2' hf_top).norm_left.congr_left fun t ↦ ?_
-      simp only [norm_smul, Real.norm_eq_abs]
-    · refine (isBigO_rpow_zero_log_smul hw1 hf_bot).norm_left.congr_left fun t ↦ ?_
-      simp only [norm_smul, Real.norm_eq_abs]
+  intro j hj hj'
+  obtain ⟨w, hw1, hw2⟩ := exists_between hj
+  obtain ⟨w', hw1', hw2'⟩ := exists_between hj'
+  refine mellin_convergent_of_isBigO_scalar ?_ ?_ hw1' ?_ hw2
+  simp_rw [mul_comm]
+  refine hfc.norm.mul_continuousOn ?_ isOpen_Ioi
+  refine Continuous.comp_continuousOn _root_.continuous_abs (continuousOn_log.mono ?_)
+  exact subset_compl_singleton_iff.mpr not_mem_Ioi_self
+  refine (isBigO_rpow_top_log_smul hw2' hf_top).norm_left.congr_left fun t ↦ ?_
+  simp only [norm_smul, Real.norm_eq_abs]
+  refine (isBigO_rpow_zero_log_smul hw1 hf_bot).norm_left.congr_left fun t ↦ ?_
+  simp only [norm_smul, Real.norm_eq_abs]
   have h6 : ∀ᵐ t : ℝ ∂volume.restrict (Ioi 0),
       ∀ y : ℂ, y ∈ Metric.ball s v → HasDerivAt (fun z : ℂ => F z t) (F' y t) y := by
     refine (ae_restrict_mem measurableSet_Ioi).mono fun t ht y _ => ?_

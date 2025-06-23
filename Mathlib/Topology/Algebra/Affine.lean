@@ -34,12 +34,12 @@ variable [Ring R] [Module R E] [Module R F]
 `AffineMap.continuous_linear_iff`. -/
 theorem continuous_iff {f : E →ᵃ[R] F} : Continuous f ↔ Continuous f.linear := by
   constructor
-  · intro hc
-    rw [decomp' f]
-    exact hc.sub continuous_const
-  · intro hc
-    rw [decomp f]
-    exact hc.add continuous_const
+  intro hc
+  rw [decomp' f]
+  exact hc.sub continuous_const
+  intro hc
+  rw [decomp f]
+  exact hc.add continuous_const
 
 /-- The line map is continuous. -/
 @[continuity]

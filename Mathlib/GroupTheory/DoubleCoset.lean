@@ -83,22 +83,22 @@ theorem bot_rel_eq_leftRel (H : Subgroup G) :
   ext a b
   rw [rel_iff, Setoid.Rel, QuotientGroup.leftRel_apply]
   constructor
-  · rintro ⟨a, rfl : a = 1, b, hb, rfl⟩
-    change a⁻¹ * (1 * a * b) ∈ H
-    rwa [one_mul, inv_mul_cancel_left]
-  · rintro (h : a⁻¹ * b ∈ H)
-    exact ⟨1, rfl, a⁻¹ * b, h, by rw [one_mul, mul_inv_cancel_left]⟩
+  rintro ⟨a, rfl : a = 1, b, hb, rfl⟩
+  change a⁻¹ * (1 * a * b) ∈ H
+  rwa [one_mul, inv_mul_cancel_left]
+  rintro (h : a⁻¹ * b ∈ H)
+  exact ⟨1, rfl, a⁻¹ * b, h, by rw [one_mul, mul_inv_cancel_left]⟩
 
 theorem rel_bot_eq_right_group_rel (H : Subgroup G) :
     (setoid ↑H ↑(⊥ : Subgroup G)).Rel = (QuotientGroup.rightRel H).Rel := by
   ext a b
   rw [rel_iff, Setoid.Rel, QuotientGroup.rightRel_apply]
   constructor
-  · rintro ⟨b, hb, a, rfl : a = 1, rfl⟩
-    change b * a * 1 * a⁻¹ ∈ H
-    rwa [mul_one, mul_inv_cancel_right]
-  · rintro (h : b * a⁻¹ ∈ H)
-    exact ⟨b * a⁻¹, h, 1, rfl, by rw [mul_one, inv_mul_cancel_right]⟩
+  rintro ⟨b, hb, a, rfl : a = 1, rfl⟩
+  change b * a * 1 * a⁻¹ ∈ H
+  rwa [mul_one, mul_inv_cancel_right]
+  rintro (h : b * a⁻¹ ∈ H)
+  exact ⟨b * a⁻¹, h, 1, rfl, by rw [mul_one, inv_mul_cancel_right]⟩
 
 /-- Create a doset out of an element of `H \ G / K`-/
 def quotToDoset (H K : Subgroup G) (q : Quotient (H : Set G) K) : Set G :=
@@ -153,24 +153,24 @@ theorem doset_union_rightCoset (H K : Subgroup G) (a : G) :
   simp only [mem_rightCoset_iff, exists_prop, mul_inv_rev, Set.mem_iUnion, mem_doset,
     Subgroup.mem_carrier, SetLike.mem_coe]
   constructor
-  · rintro ⟨y, h_h⟩
-    refine ⟨x * (y⁻¹ * a⁻¹), h_h, y, y.2, ?_⟩
-    simp only [← mul_assoc, Subgroup.coe_mk, inv_mul_cancel_right, InvMemClass.coe_inv]
-  · rintro ⟨x, hx, y, hy, hxy⟩
-    refine ⟨⟨y, hy⟩, ?_⟩
-    simp only [hxy, ← mul_assoc, hx, mul_inv_cancel_right, Subgroup.coe_mk]
+  rintro ⟨y, h_h⟩
+  refine ⟨x * (y⁻¹ * a⁻¹), h_h, y, y.2, ?_⟩
+  simp only [← mul_assoc, Subgroup.coe_mk, inv_mul_cancel_right, InvMemClass.coe_inv]
+  rintro ⟨x, hx, y, hy, hxy⟩
+  refine ⟨⟨y, hy⟩, ?_⟩
+  simp only [hxy, ← mul_assoc, hx, mul_inv_cancel_right, Subgroup.coe_mk]
 
 theorem doset_union_leftCoset (H K : Subgroup G) (a : G) :
     ⋃ h : H, (h * a : G) • ↑K = doset a H K := by
   ext x
   simp only [mem_leftCoset_iff, mul_inv_rev, Set.mem_iUnion, mem_doset]
   constructor
-  · rintro ⟨y, h_h⟩
-    refine ⟨y, y.2, a⁻¹ * y⁻¹ * x, h_h, ?_⟩
-    simp only [← mul_assoc, one_mul, mul_right_inv, mul_inv_cancel_right, InvMemClass.coe_inv]
-  · rintro ⟨x, hx, y, hy, hxy⟩
-    refine ⟨⟨x, hx⟩, ?_⟩
-    simp only [hxy, ← mul_assoc, hy, one_mul, mul_left_inv, Subgroup.coe_mk, inv_mul_cancel_right]
+  rintro ⟨y, h_h⟩
+  refine ⟨y, y.2, a⁻¹ * y⁻¹ * x, h_h, ?_⟩
+  simp only [← mul_assoc, one_mul, mul_right_inv, mul_inv_cancel_right, InvMemClass.coe_inv]
+  rintro ⟨x, hx, y, hy, hxy⟩
+  refine ⟨⟨x, hx⟩, ?_⟩
+  simp only [hxy, ← mul_assoc, hy, one_mul, mul_left_inv, Subgroup.coe_mk, inv_mul_cancel_right]
 
 theorem left_bot_eq_left_quot (H : Subgroup G) :
     Quotient (⊥ : Subgroup G).1 (H : Set G) = (G ⧸ H) := by

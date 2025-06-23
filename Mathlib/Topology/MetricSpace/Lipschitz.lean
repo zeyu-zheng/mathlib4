@@ -167,10 +167,10 @@ lemma cauchySeq_comp (hf : LipschitzWith K f) {u : ℕ → α} (hu : CauchySeq u
     CauchySeq (f ∘ u) := by
   rcases cauchySeq_iff_le_tendsto_0.1 hu with ⟨b, b_nonneg, hb, blim⟩
   refine cauchySeq_iff_le_tendsto_0.2 ⟨fun n ↦ K * b n, ?_, ?_, ?_⟩
-  · exact fun n ↦ mul_nonneg (by positivity) (b_nonneg n)
-  · exact fun n m N hn hm ↦ hf.dist_le_mul_of_le (hb n m N hn hm)
-  · rw [← mul_zero (K : ℝ)]
-    exact blim.const_mul _
+  exact fun n ↦ mul_nonneg (by positivity) (b_nonneg n)
+  exact fun n m N hn hm ↦ hf.dist_le_mul_of_le (hb n m N hn hm)
+  rw [← mul_zero (K : ℝ)]
+  exact blim.const_mul _
 
 end Metric
 
@@ -270,13 +270,13 @@ lemma cauchySeq_comp (hf : LipschitzOnWith K f s)
     CauchySeq (f ∘ u) := by
   rcases cauchySeq_iff_le_tendsto_0.1 hu with ⟨b, b_nonneg, hb, blim⟩
   refine cauchySeq_iff_le_tendsto_0.2 ⟨fun n ↦ K * b n, ?_, ?_, ?_⟩
-  · exact fun n ↦ mul_nonneg (by positivity) (b_nonneg n)
-  · intro n m N hn hm
-    have A n : u n ∈ s := h'u (mem_range_self _)
-    apply (hf.dist_le_mul _ (A n) _ (A m)).trans
-    exact mul_le_mul_of_nonneg_left (hb n m N hn hm) K.2
-  · rw [← mul_zero (K : ℝ)]
-    exact blim.const_mul _
+  exact fun n ↦ mul_nonneg (by positivity) (b_nonneg n)
+  intro n m N hn hm
+  have A n : u n ∈ s := h'u (mem_range_self _)
+  apply (hf.dist_le_mul _ (A n) _ (A m)).trans
+  exact mul_le_mul_of_nonneg_left (hb n m N hn hm) K.2
+  rw [← mul_zero (K : ℝ)]
+  exact blim.const_mul _
 
 end Metric
 
@@ -336,7 +336,7 @@ theorem LipschitzOnWith.extend_real {f : α → ℝ} {s : Set α} {K : ℝ≥0} 
     can not counterbalance the growth of `K * dist y x`. One readily checks from the formula that
     the extended function is also `K`-Lipschitz. -/
   rcases eq_empty_or_nonempty s with (rfl | hs)
-  · exact ⟨fun _ => 0, (LipschitzWith.const _).weaken (zero_le _), eqOn_empty _ _⟩
+  exact ⟨fun _ => 0, (LipschitzWith.const _).weaken (zero_le _), eqOn_empty _ _⟩
   have : Nonempty s
   simp only [hs, nonempty_coe_sort]
   let g := fun y : α => iInf fun x : s => f x + K * dist y x
@@ -375,6 +375,6 @@ theorem LipschitzOnWith.extend_pi [Fintype ι] {f : α → ι → ℝ} {s : Set 
     exact this.extend_real
   choose g hg using this
   refine ⟨fun x i => g i x, LipschitzWith.of_dist_le_mul fun x y => ?_, fun x hx ↦ ?_⟩
-  · exact (dist_pi_le_iff (mul_nonneg K.2 dist_nonneg)).2 fun i => (hg i).1.dist_le_mul x y
-  · ext1 i
-    exact (hg i).2 hx
+  exact (dist_pi_le_iff (mul_nonneg K.2 dist_nonneg)).2 fun i => (hg i).1.dist_le_mul x y
+  ext1 i
+  exact (hg i).2 hx

@@ -230,10 +230,10 @@ theorem ι_eq_iff (i j : D.J) (x : (D.U i).carrier) (y : (D.U j).carrier) :
       D.toLocallyRingedSpaceGlueData.toSheafedSpaceGlueData.toPresheafedSpaceGlueData.toTopGlueData
       i j x y)
   rw [← ((TopCat.mono_iff_injective D.isoCarrier.inv).mp _).eq_iff]
-  · erw [← comp_apply] -- now `erw` after #13170
-    simp_rw [← D.ι_isoCarrier_inv]
-    rfl -- `rfl` was not needed before #13170
-  · infer_instance
+  erw [← comp_apply] -- now `erw` after #13170
+  simp_rw [← D.ι_isoCarrier_inv]
+  rfl -- `rfl` was not needed before #13170
+  infer_instance
 
 theorem isOpen_iff (U : Set D.glued.carrier) : IsOpen U ↔ ∀ i, IsOpen ((D.ι i).1.base ⁻¹' U) := by
   rw [← (TopCat.homeoOfIso D.isoCarrier.symm).isOpen_preimage]
@@ -306,8 +306,8 @@ theorem glued_cover_cocycle_snd (x y z : 𝒰.J) :
 theorem glued_cover_cocycle (x y z : 𝒰.J) :
     gluedCoverT' 𝒰 x y z ≫ gluedCoverT' 𝒰 y z x ≫ gluedCoverT' 𝒰 z x y = 𝟙 _ := by
   apply pullback.hom_ext <;> simp_rw [Category.id_comp, Category.assoc]
-  · apply glued_cover_cocycle_fst
-  · apply glued_cover_cocycle_snd
+  apply glued_cover_cocycle_fst
+  apply glued_cover_cocycle_snd
 
 /-- The glue data associated with an open cover.
 The canonical isomorphism `𝒰.gluedCover.glued ⟶ X` is provided by `𝒰.fromGlued`. -/
@@ -353,10 +353,10 @@ theorem fromGlued_injective : Function.Injective 𝒰.fromGlued.1.base := by
   right
   use e.hom ⟨⟨x, y⟩, h⟩
   constructor
-  · erw [← comp_apply e.hom, IsLimit.conePointUniqueUpToIso_hom_comp _ _ WalkingCospan.left]; rfl
-  · erw [← comp_apply e.hom, pullbackSymmetry_hom_comp_fst,
-      IsLimit.conePointUniqueUpToIso_hom_comp _ _ WalkingCospan.right]
-    rfl
+  erw [← comp_apply e.hom, IsLimit.conePointUniqueUpToIso_hom_comp _ _ WalkingCospan.left]; rfl
+  erw [← comp_apply e.hom, pullbackSymmetry_hom_comp_fst,
+    IsLimit.conePointUniqueUpToIso_hom_comp _ _ WalkingCospan.right]
+  rfl
 
 instance fromGlued_stalk_iso (x : 𝒰.gluedCover.glued.carrier) :
     IsIso (𝒰.fromGlued.stalkMap x) := by
@@ -375,13 +375,13 @@ theorem fromGlued_open_map : IsOpenMap 𝒰.fromGlued.1.base := by
   use 𝒰.fromGlued.val.base '' U ∩ Set.range (𝒰.map (𝒰.f x)).1.base
   use Set.inter_subset_left
   constructor
-  · rw [← Set.image_preimage_eq_inter_range]
-    apply (show IsOpenImmersion (𝒰.map (𝒰.f x)) from inferInstance).base_open.isOpenMap
-    convert hU (𝒰.f x) using 1
-    rw [← ι_fromGlued]; erw [coe_comp]; rw [Set.preimage_comp]
-    congr! 1
-    exact Set.preimage_image_eq _ 𝒰.fromGlued_injective
-  · exact ⟨hx, 𝒰.covers x⟩
+  rw [← Set.image_preimage_eq_inter_range]
+  apply (show IsOpenImmersion (𝒰.map (𝒰.f x)) from inferInstance).base_open.isOpenMap
+  convert hU (𝒰.f x) using 1
+  rw [← ι_fromGlued]; erw [coe_comp]; rw [Set.preimage_comp]
+  congr! 1
+  exact Set.preimage_image_eq _ 𝒰.fromGlued_injective
+  exact ⟨hx, 𝒰.covers x⟩
 
 theorem fromGlued_openEmbedding : OpenEmbedding 𝒰.fromGlued.1.base :=
   openEmbedding_of_continuous_injective_open

@@ -56,10 +56,10 @@ variable (S)
 lemma exact_iff_isZero_homology [S.HasHomology] :
     S.Exact ↔ IsZero S.homology := by
   constructor
-  · rintro ⟨⟨h', z⟩⟩
-    exact IsZero.of_iso z h'.left.homologyIso
-  · intro h
-    exact ⟨⟨_, h⟩⟩
+  rintro ⟨⟨h', z⟩⟩
+  exact IsZero.of_iso z h'.left.homologyIso
+  intro h
+  exact ⟨⟨_, h⟩⟩
 
 variable {S}
 
@@ -103,10 +103,10 @@ lemma exact_iff_homology_iso_zero [S.HasHomology] [HasZeroObject C] :
     S.Exact ↔ Nonempty (S.homology ≅ 0) := by
   rw [exact_iff_isZero_homology]
   constructor
-  · intro h
-    exact ⟨h.isoZero⟩
-  · rintro ⟨e⟩
-    exact IsZero.of_iso (isZero_zero C) e
+  intro h
+  exact ⟨h.isoZero⟩
+  rintro ⟨e⟩
+  exact IsZero.of_iso (isZero_zero C) e
 
 lemma exact_of_iso (e : S₁ ≅ S₂) (h : S₁.Exact) : S₂.Exact := by
   obtain ⟨⟨h, z⟩⟩ := h
@@ -136,10 +136,10 @@ lemma exact_of_isZero_X₂ (h : IsZero S.X₂) : S.Exact := by
 lemma exact_iff_of_epi_of_isIso_of_mono (φ : S₁ ⟶ S₂) [Epi φ.τ₁] [IsIso φ.τ₂] [Mono φ.τ₃] :
     S₁.Exact ↔ S₂.Exact := by
   constructor
-  · rintro ⟨h₁, z₁⟩
-    exact ⟨HomologyData.ofEpiOfIsIsoOfMono φ h₁, z₁⟩
-  · rintro ⟨h₂, z₂⟩
-    exact ⟨HomologyData.ofEpiOfIsIsoOfMono' φ h₂, z₂⟩
+  rintro ⟨h₁, z₁⟩
+  exact ⟨HomologyData.ofEpiOfIsIsoOfMono φ h₁, z₁⟩
+  rintro ⟨h₂, z₂⟩
+  exact ⟨HomologyData.ofEpiOfIsIsoOfMono' φ h₂, z₂⟩
 
 variable {S}
 
@@ -148,11 +148,11 @@ lemma HomologyData.exact_iff_i_p_zero (h : S.HomologyData) :
   haveI := HasHomology.mk' h
   rw [h.left.exact_iff, ← h.comm]
   constructor
-  · intro z
-    rw [IsZero.eq_of_src z h.iso.hom 0, zero_comp, comp_zero]
-  · intro eq
-    simp only [IsZero.iff_id_eq_zero, ← cancel_mono h.iso.hom, id_comp, ← cancel_mono h.right.ι,
-      ← cancel_epi h.left.π, eq, zero_comp, comp_zero]
+  intro z
+  rw [IsZero.eq_of_src z h.iso.hom 0, zero_comp, comp_zero]
+  intro eq
+  simp only [IsZero.iff_id_eq_zero, ← cancel_mono h.iso.hom, id_comp, ← cancel_mono h.right.ι,
+    ← cancel_epi h.left.π, eq, zero_comp, comp_zero]
 
 variable (S)
 
@@ -234,14 +234,14 @@ lemma exact_map_iff_of_faithful [S.HasHomology]
     [F.PreservesRightHomologyOf S] [F.Faithful] :
     (S.map F).Exact ↔ S.Exact := by
   constructor
-  · intro h
-    rw [S.leftHomologyData.exact_iff, IsZero.iff_id_eq_zero]
-    rw [(S.leftHomologyData.map F).exact_iff, IsZero.iff_id_eq_zero,
-      LeftHomologyData.map_H] at h
-    apply F.map_injective
-    rw [F.map_id, F.map_zero, h]
-  · intro h
-    exact h.map F
+  intro h
+  rw [S.leftHomologyData.exact_iff, IsZero.iff_id_eq_zero]
+  rw [(S.leftHomologyData.map F).exact_iff, IsZero.iff_id_eq_zero,
+    LeftHomologyData.map_H] at h
+  apply F.map_injective
+  rw [F.map_id, F.map_zero, h]
+  intro h
+  exact h.map F
 
 variable {S}
 
@@ -267,34 +267,34 @@ variable [Preadditive C] [Preadditive D] (S : ShortComplex C)
 lemma exact_iff_mono [HasZeroObject C] (hf : S.f = 0) :
     S.Exact ↔ Mono S.g := by
   constructor
-  · intro h
-    have := h.hasHomology
-    simp only [exact_iff_isZero_homology] at h
-    have := S.isIso_pOpcycles hf
-    have := mono_of_isZero_kernel' _ S.homologyIsKernel h
-    rw [← S.p_fromOpcycles]
-    apply mono_comp
-  · intro
-    rw [(HomologyData.ofIsLimitKernelFork S hf _
-      (KernelFork.IsLimit.ofMonoOfIsZero (KernelFork.ofι (0 : 0 ⟶ S.X₂) zero_comp)
-        inferInstance (isZero_zero C))).exact_iff]
-    exact isZero_zero C
+  intro h
+  have := h.hasHomology
+  simp only [exact_iff_isZero_homology] at h
+  have := S.isIso_pOpcycles hf
+  have := mono_of_isZero_kernel' _ S.homologyIsKernel h
+  rw [← S.p_fromOpcycles]
+  apply mono_comp
+  intro
+  rw [(HomologyData.ofIsLimitKernelFork S hf _
+    (KernelFork.IsLimit.ofMonoOfIsZero (KernelFork.ofι (0 : 0 ⟶ S.X₂) zero_comp)
+      inferInstance (isZero_zero C))).exact_iff]
+  exact isZero_zero C
 
 lemma exact_iff_epi [HasZeroObject C] (hg : S.g = 0) :
     S.Exact ↔ Epi S.f := by
   constructor
-  · intro h
-    have := h.hasHomology
-    simp only [exact_iff_isZero_homology] at h
-    haveI := S.isIso_iCycles hg
-    haveI : Epi S.toCycles := epi_of_isZero_cokernel' _ S.homologyIsCokernel h
-    rw [← S.toCycles_i]
-    apply epi_comp
-  · intro
-    rw [(HomologyData.ofIsColimitCokernelCofork S hg _
-      (CokernelCofork.IsColimit.ofEpiOfIsZero (CokernelCofork.ofπ (0 : S.X₂ ⟶ 0) comp_zero)
-        inferInstance (isZero_zero C))).exact_iff]
-    exact isZero_zero C
+  intro h
+  have := h.hasHomology
+  simp only [exact_iff_isZero_homology] at h
+  haveI := S.isIso_iCycles hg
+  haveI : Epi S.toCycles := epi_of_isZero_cokernel' _ S.homologyIsCokernel h
+  rw [← S.toCycles_i]
+  apply epi_comp
+  intro
+  rw [(HomologyData.ofIsColimitCokernelCofork S hg _
+    (CokernelCofork.IsColimit.ofEpiOfIsZero (CokernelCofork.ofπ (0 : S.X₂ ⟶ 0) comp_zero)
+      inferInstance (isZero_zero C))).exact_iff]
+  exact isZero_zero C
 
 variable {S}
 
@@ -319,20 +319,20 @@ lemma Exact.mono_fromOpcycles (hS : S.Exact) [S.HasRightHomology] : Mono S.fromO
 lemma LeftHomologyData.exact_iff_epi_f' [S.HasHomology] (h : LeftHomologyData S) :
     S.Exact ↔ Epi h.f' := by
   constructor
-  · intro hS
-    exact hS.epi_f' h
-  · intro
-    simp only [h.exact_iff, IsZero.iff_id_eq_zero, ← cancel_epi h.π, ← cancel_epi h.f',
-      comp_id, h.f'_π, comp_zero]
+  intro hS
+  exact hS.epi_f' h
+  intro
+  simp only [h.exact_iff, IsZero.iff_id_eq_zero, ← cancel_epi h.π, ← cancel_epi h.f',
+    comp_id, h.f'_π, comp_zero]
 
 lemma RightHomologyData.exact_iff_mono_g' [S.HasHomology] (h : RightHomologyData S) :
     S.Exact ↔ Mono h.g' := by
   constructor
-  · intro hS
-    exact hS.mono_g' h
-  · intro
-    simp only [h.exact_iff, IsZero.iff_id_eq_zero, ← cancel_mono h.ι, ← cancel_mono h.g',
-      id_comp, h.ι_g', zero_comp]
+  intro hS
+  exact hS.mono_g' h
+  intro
+  simp only [h.exact_iff, IsZero.iff_id_eq_zero, ← cancel_mono h.ι, ← cancel_mono h.g',
+    id_comp, h.ι_g', zero_comp]
 
 /-- Given an exact short complex `S` and a limit kernel fork `kf` for `S.g`, this is the
 left homology data for `S` with `K := kf.pt` and `H := 0`. -/
@@ -445,15 +445,15 @@ lemma Exact.epi_f (hS : S.Exact) (hg : S.g = 0) : Epi S.f := by
 
 lemma Exact.mono_g_iff (hS : S.Exact) : Mono S.g ↔ S.f = 0 := by
   constructor
-  · intro
-    rw [← cancel_mono S.g, zero, zero_comp]
-  · exact hS.mono_g
+  intro
+  rw [← cancel_mono S.g, zero, zero_comp]
+  exact hS.mono_g
 
 lemma Exact.epi_f_iff (hS : S.Exact) : Epi S.f ↔ S.g = 0 := by
   constructor
-  · intro
-    rw [← cancel_epi S.f, zero, comp_zero]
-  · exact hS.epi_f
+  intro
+  rw [← cancel_epi S.f, zero, comp_zero]
+  exact hS.epi_f
 
 lemma Exact.isZero_X₂ (hS : S.Exact) (hf : S.f = 0) (hg : S.g = 0) : IsZero S.X₂ := by
   have := hS.mono_g hf
@@ -461,10 +461,10 @@ lemma Exact.isZero_X₂ (hS : S.Exact) (hf : S.f = 0) (hg : S.g = 0) : IsZero S.
 
 lemma Exact.isZero_X₂_iff (hS : S.Exact) : IsZero S.X₂ ↔ S.f = 0 ∧ S.g = 0 := by
   constructor
-  · intro h
-    exact ⟨h.eq_of_tgt _ _, h.eq_of_src _ _⟩
-  · rintro ⟨hf, hg⟩
-    exact hS.isZero_X₂ hf hg
+  intro h
+  exact ⟨h.eq_of_tgt _ _, h.eq_of_src _ _⟩
+  rintro ⟨hf, hg⟩
+  exact hS.isZero_X₂ hf hg
 
 variable (S)
 
@@ -815,18 +815,18 @@ variable (S)
 lemma exact_and_mono_f_iff_f_is_kernel [S.HasHomology] :
     S.Exact ∧ Mono S.f ↔ Nonempty (IsLimit (KernelFork.ofι S.f S.zero)) := by
   constructor
-  · intro ⟨hS, _⟩
-    exact ⟨hS.fIsKernel⟩
-  · intro ⟨hS⟩
-    exact ⟨S.exact_of_f_is_kernel hS, mono_of_isLimit_fork hS⟩
+  intro ⟨hS, _⟩
+  exact ⟨hS.fIsKernel⟩
+  intro ⟨hS⟩
+  exact ⟨S.exact_of_f_is_kernel hS, mono_of_isLimit_fork hS⟩
 
 lemma exact_and_epi_g_iff_g_is_cokernel [S.HasHomology] :
     S.Exact ∧ Epi S.g ↔ Nonempty (IsColimit (CokernelCofork.ofπ S.g S.zero)) := by
   constructor
-  · intro ⟨hS, _⟩
-    exact ⟨hS.gIsCokernel⟩
-  · intro ⟨hS⟩
-    exact ⟨S.exact_of_g_is_cokernel hS, epi_of_isColimit_cofork hS⟩
+  intro ⟨hS, _⟩
+  exact ⟨hS.gIsCokernel⟩
+  intro ⟨hS⟩
+  exact ⟨S.exact_of_g_is_cokernel hS, epi_of_isColimit_cofork hS⟩
 
 end Balanced
 
@@ -848,18 +848,18 @@ lemma quasiIso_iff_of_zeros {S₁ S₂ : ShortComplex C} (φ : S₁ ⟶ S₂)
   rw [φ.comm₂₃, hg₁, zero_comp]
   rw [quasiIso_iff_isIso_liftCycles φ hf₁ hg₁ hf₂]
   constructor
-  · intro h
-    have : Mono φ.τ₂
-    rw [← S₂.liftCycles_i φ.τ₂ w]
-    apply mono_comp
-    refine ⟨?_, this⟩
-    apply exact_of_f_is_kernel
-    exact IsLimit.ofIsoLimit S₂.cyclesIsKernel
-      (Fork.ext (asIso (S₂.liftCycles φ.τ₂ w)).symm (by simp))
-  · rintro ⟨h₁, h₂⟩
-    refine ⟨⟨h₁.lift S₂.iCycles (by simp), ?_, ?_⟩⟩
-    · rw [← cancel_mono φ.τ₂, assoc, h₁.lift_f, liftCycles_i, id_comp]
-    · rw [← cancel_mono S₂.iCycles, assoc, liftCycles_i, h₁.lift_f, id_comp]
+  intro h
+  have : Mono φ.τ₂
+  rw [← S₂.liftCycles_i φ.τ₂ w]
+  apply mono_comp
+  refine ⟨?_, this⟩
+  apply exact_of_f_is_kernel
+  exact IsLimit.ofIsoLimit S₂.cyclesIsKernel
+    (Fork.ext (asIso (S₂.liftCycles φ.τ₂ w)).symm (by simp))
+  rintro ⟨h₁, h₂⟩
+  refine ⟨⟨h₁.lift S₂.iCycles (by simp), ?_, ?_⟩⟩
+  rw [← cancel_mono φ.τ₂, assoc, h₁.lift_f, liftCycles_i, id_comp]
+  rw [← cancel_mono S₂.iCycles, assoc, liftCycles_i, h₁.lift_f, id_comp]
 
 /-- Given a morphism of short complexes `φ : S₁ ⟶ S₂` in an abelian category, if `S₁.g = 0`
 (e.g when `S₁` is of the form `S₁.X₁ ⟶ S₁.X₂ ⟶ 0`) and both `S₂.f` and `S₂.g` are zero
@@ -871,12 +871,12 @@ lemma quasiIso_iff_of_zeros' {S₁ S₂ : ShortComplex C} (φ : S₁ ⟶ S₂)
       (ShortComplex.mk S₁.f φ.τ₂ (by rw [← φ.comm₁₂, hf₂, comp_zero])).Exact ∧ Epi φ.τ₂ := by
   rw [← quasiIso_opMap_iff, quasiIso_iff_of_zeros]
   rotate_left
-  · dsimp
-    rw [hg₂, op_zero]
-  · dsimp
-    rw [hf₂, op_zero]
-  · dsimp
-    rw [hg₁, op_zero]
+  dsimp
+  rw [hg₂, op_zero]
+  dsimp
+  rw [hf₂, op_zero]
+  dsimp
+  rw [hg₁, op_zero]
   rw [← exact_unop_iff]
   have : Mono φ.τ₂.op ↔ Epi φ.τ₂ :=
     ⟨fun _ => unop_epi_of_mono φ.τ₂.op, fun _ => op_mono_of_epi _⟩

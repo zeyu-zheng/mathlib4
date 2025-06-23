@@ -120,8 +120,8 @@ noncomputable instance geodesicArborescence : Arborescence (geodesicSubtree r) :
     (by
       intro b
       rcases hp : shortestPath r b with (_ | ⟨p, e⟩)
-      · exact Or.inl rfl
-      · exact Or.inr ⟨_, ⟨⟨e, p, hp⟩⟩⟩)
+      exact Or.inl rfl
+      exact Or.inr ⟨_, ⟨⟨e, p, hp⟩⟩⟩)
 
 end GeodesicSubtree
 

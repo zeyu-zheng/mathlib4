@@ -97,9 +97,9 @@ theorem elim_of_mem (hl : (i :: l).Nodup) (hj : j ∈ l) (v : TProd α (i :: l))
 theorem elim_mk : ∀ (l : List ι) (f : ∀ i, α i) {i : ι} (hi : i ∈ l), (TProd.mk l f).elim hi = f i
   | i :: is, f, j, hj => by
     by_cases hji : j = i
-    · subst hji
-      simp
-    · rw [TProd.elim_of_ne _ hji, snd_mk, elim_mk is]
+    subst hji
+    simp
+    rw [TProd.elim_of_ne _ hji, snd_mk, elim_mk is]
 
 @[ext]
 theorem ext :
@@ -108,7 +108,7 @@ theorem ext :
   | [], _, v, w, _ => PUnit.ext v w
   | i :: is, hl, v, w, hvw => by
     apply Prod.ext
-    · rw [← elim_self v, hvw, elim_self]
+    rw [← elim_self v, hvw, elim_self]
     refine ext (nodup_cons.mp hl).2 fun j hj => ?_
     rw [← elim_of_mem hl, hvw, elim_of_mem hl]
 

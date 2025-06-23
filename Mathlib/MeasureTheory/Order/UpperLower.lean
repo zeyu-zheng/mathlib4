@@ -116,8 +116,8 @@ private lemma aux₁
       ENNReal.div_self _ ENNReal.ofReal_ne_top, ← ENNReal.ofReal_div_of_pos, ← div_pow,
       mul_div_mul_left _ _ (two_ne_zero' ℝ), div_right_comm, div_self, one_div]
   all_goals try positivity
-  · simp_all
-  · measurability
+  simp_all
+  measurability
 
 theorem IsUpperSet.null_frontier (hs : IsUpperSet s) : volume (frontier s) = 0 := by
   refine measure_mono_null (fun x hx ↦ ?_)
@@ -126,9 +126,9 @@ theorem IsUpperSet.null_frontier (hs : IsUpperSet s) : volume (frontier s) = 0 :
   by_cases h : x ∈ closure s <;>
     simp only [mem_compl_iff, mem_setOf, h, not_false_eq_true, indicator_of_not_mem,
       indicator_of_mem, Pi.one_apply]
-  · refine aux₁ fun _ ↦ hs.compl.exists_subset_ball $ frontier_subset_closure ?_
-    rwa [frontier_compl]
-  · exact aux₀ fun _ ↦ hs.exists_subset_ball $ frontier_subset_closure hx
+  refine aux₁ fun _ ↦ hs.compl.exists_subset_ball $ frontier_subset_closure ?_
+  rwa [frontier_compl]
+  exact aux₀ fun _ ↦ hs.exists_subset_ball $ frontier_subset_closure hx
 
 theorem IsLowerSet.null_frontier (hs : IsLowerSet s) : volume (frontier s) = 0 := by
   refine measure_mono_null (fun x hx ↦ ?_)
@@ -137,9 +137,9 @@ theorem IsLowerSet.null_frontier (hs : IsLowerSet s) : volume (frontier s) = 0 :
   by_cases h : x ∈ closure s <;>
     simp only [mem_compl_iff, mem_setOf, h, not_false_eq_true, indicator_of_not_mem,
       indicator_of_mem, Pi.one_apply]
-  · refine aux₁ fun _ ↦ hs.compl.exists_subset_ball $ frontier_subset_closure ?_
-    rwa [frontier_compl]
-  · exact aux₀ fun _ ↦ hs.exists_subset_ball $ frontier_subset_closure hx
+  refine aux₁ fun _ ↦ hs.compl.exists_subset_ball $ frontier_subset_closure ?_
+  rwa [frontier_compl]
+  exact aux₀ fun _ ↦ hs.exists_subset_ball $ frontier_subset_closure hx
 
 theorem Set.OrdConnected.null_frontier (hs : s.OrdConnected) : volume (frontier s) = 0 := by
   rw [← hs.upperClosure_inter_lowerClosure]

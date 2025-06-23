@@ -109,11 +109,11 @@ theorem eq_eqv_class_of_mem {c : Set (Set α)} (H : ∀ a, ∃! b ∈ c, a ∈ b
     (hs : s ∈ c) (hy : y ∈ s) : s = { x | (mkClasses c H).Rel x y } := by
   ext x
   constructor
-  · intro hx _s' hs' hx'
-    rwa [eq_of_mem_eqv_class H hs' hx' hs hx]
-  · intro hx
-    obtain ⟨b', ⟨hc, hb'⟩, _⟩ := H x
-    rwa [eq_of_mem_eqv_class H hs hy hc (hx b' hc hb')]
+  intro hx _s' hs' hx'
+  rwa [eq_of_mem_eqv_class H hs' hx' hs hx]
+  intro hx
+  obtain ⟨b', ⟨hc, hb'⟩, _⟩ := H x
+  rwa [eq_of_mem_eqv_class H hs hy hc (hx b' hc hb')]
 
 /-- The equivalence classes of the equivalence relation defined by a set of sets
     partitioning α are elements of the set of sets. -/
@@ -228,10 +228,10 @@ theorem classes_mkClasses (c : Set (Set α)) (hc : IsPartition c) :
     (mkClasses c hc.2).classes = c := by
   ext s
   constructor
-  · rintro ⟨y, rfl⟩
-    obtain ⟨b, ⟨hb, hy⟩, _⟩ := hc.2 y
-    rwa [← eq_eqv_class_of_mem _ hb hy]
-  · exact exists_of_mem_partition hc
+  rintro ⟨y, rfl⟩
+  obtain ⟨b, ⟨hb, hy⟩, _⟩ := hc.2 y
+  rwa [← eq_eqv_class_of_mem _ hb hy]
+  exact exists_of_mem_partition hc
 
 /-- Defining `≤` on partitions as the `≤` defined on their induced equivalence relations. -/
 instance Partition.le : LE (Subtype (@IsPartition α)) :=

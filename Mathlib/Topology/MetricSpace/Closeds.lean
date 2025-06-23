@@ -201,32 +201,32 @@ instance Closeds.compactSpace [CompactSpace α] : CompactSpace (Closeds α) :=
       let v := { x : α | x ∈ s ∧ ∃ y ∈ u, edist x y < δ }
       exists v, (fun x hx => hx.1 : v ⊆ s)
       refine hausdorffEdist_le_of_mem_edist ?_ ?_
-      · intro x hx
-        have : x ∈ ⋃ y ∈ s, ball y δ := hs (by simp)
-        rcases mem_iUnion₂.1 this with ⟨y, ys, dy⟩
-        have : edist y x < δ := by simpa [edist_comm]
-        exact ⟨y, ⟨ys, ⟨x, hx, this⟩⟩, le_of_lt dy⟩
-      · rintro x ⟨_, ⟨y, yu, hy⟩⟩
-        exact ⟨y, yu, le_of_lt hy⟩
+      intro x hx
+      have : x ∈ ⋃ y ∈ s, ball y δ := hs (by simp)
+      rcases mem_iUnion₂.1 this with ⟨y, ys, dy⟩
+      have : edist y x < δ := by simpa [edist_comm]
+      exact ⟨y, ⟨ys, ⟨x, hx, this⟩⟩, le_of_lt dy⟩
+      rintro x ⟨_, ⟨y, yu, hy⟩⟩
+      exact ⟨y, yu, le_of_lt hy⟩
     -- introduce the set F of all subsets of `s` (seen as members of `Closeds α`).
     let F := { f : Closeds α | (f : Set α) ⊆ s }
     refine ⟨F, ?_, fun u _ => ?_⟩
     -- `F` is finite
-    · apply @Finite.of_finite_image _ _ F _
-      · apply fs.finite_subsets.subset fun b => _
-        · exact fun s => (s : Set α)
-        simp only [F, and_imp, Set.mem_image, Set.mem_setOf_eq, exists_imp]
-        intro _ x hx hx'
-        rwa [hx'] at hx
-      · exact SetLike.coe_injective.injOn
+    apply @Finite.of_finite_image _ _ F _
+    apply fs.finite_subsets.subset fun b => _
+    exact fun s => (s : Set α)
+    simp only [F, and_imp, Set.mem_image, Set.mem_setOf_eq, exists_imp]
+    intro _ x hx hx'
+    rwa [hx'] at hx
+    exact SetLike.coe_injective.injOn
     -- `F` is ε-dense
-    · obtain ⟨t0, t0s, Dut0⟩ := main u
-      have : IsClosed t0 := (fs.subset t0s).isCompact.isClosed
-      let t : Closeds α := ⟨t0, this⟩
-      have : t ∈ F := t0s
-      have : edist u t < ε := lt_of_le_of_lt Dut0 δlt
-      apply mem_iUnion₂.2
-      exact ⟨t, ‹t ∈ F›, this⟩⟩
+    obtain ⟨t0, t0s, Dut0⟩ := main u
+    have : IsClosed t0 := (fs.subset t0s).isCompact.isClosed
+    let t : Closeds α := ⟨t0, this⟩
+    have : t ∈ F := t0s
+    have : edist u t < ε := lt_of_le_of_lt Dut0 δlt
+    apply mem_iUnion₂.2
+    exact ⟨t, ‹t ∈ F›, this⟩⟩
 
 /-- In an emetric space, the type of non-empty compact subsets is an emetric space,
 where the edistance is the Hausdorff edistance -/
@@ -256,31 +256,31 @@ theorem NonemptyCompacts.isClosed_in_closeds [CompleteSpace α] :
     exact ⟨s.nonempty, s.isCompact⟩
   rw [this]
   refine isClosed_of_closure_subset fun s hs => ⟨?_, ?_⟩
-  · -- take a set t which is nonempty and at a finite distance of s
-    rcases mem_closure_iff.1 hs ⊤ ENNReal.coe_lt_top with ⟨t, ht, Dst⟩
-    rw [edist_comm] at Dst
-    -- since `t` is nonempty, so is `s`
-    exact nonempty_of_hausdorffEdist_ne_top ht.1 (ne_of_lt Dst)
-  · refine isCompact_iff_totallyBounded_isComplete.2 ⟨?_, s.closed.isComplete⟩
-    refine totallyBounded_iff.2 fun ε (εpos : 0 < ε) => ?_
-    -- we have to show that s is covered by finitely many eballs of radius ε
-    -- pick a nonempty compact set t at distance at most ε/2 of s
-    rcases mem_closure_iff.1 hs (ε / 2) (ENNReal.half_pos εpos.ne') with ⟨t, ht, Dst⟩
-    -- cover this space with finitely many balls of radius ε/2
-    rcases totallyBounded_iff.1 (isCompact_iff_totallyBounded_isComplete.1 ht.2).1 (ε / 2)
-        (ENNReal.half_pos εpos.ne') with
-      ⟨u, fu, ut⟩
-    refine ⟨u, ⟨fu, fun x hx => ?_⟩⟩
-    -- u : set α, fu : u.finite, ut : t ⊆ ⋃ (y : α) (H : y ∈ u), eball y (ε / 2)
-    -- then s is covered by the union of the balls centered at u of radius ε
-    rcases exists_edist_lt_of_hausdorffEdist_lt hx Dst with ⟨z, hz, Dxz⟩
-    rcases mem_iUnion₂.1 (ut hz) with ⟨y, hy, Dzy⟩
-    have : edist x y < ε :=
-      calc
-        edist x y ≤ edist x z + edist z y := edist_triangle _ _ _
-        _ < ε / 2 + ε / 2 := ENNReal.add_lt_add Dxz Dzy
-        _ = ε := ENNReal.add_halves _
-    exact mem_biUnion hy this
+  -- take a set t which is nonempty and at a finite distance of s
+  rcases mem_closure_iff.1 hs ⊤ ENNReal.coe_lt_top with ⟨t, ht, Dst⟩
+  rw [edist_comm] at Dst
+  -- since `t` is nonempty, so is `s`
+  exact nonempty_of_hausdorffEdist_ne_top ht.1 (ne_of_lt Dst)
+  refine isCompact_iff_totallyBounded_isComplete.2 ⟨?_, s.closed.isComplete⟩
+  refine totallyBounded_iff.2 fun ε (εpos : 0 < ε) => ?_
+  -- we have to show that s is covered by finitely many eballs of radius ε
+  -- pick a nonempty compact set t at distance at most ε/2 of s
+  rcases mem_closure_iff.1 hs (ε / 2) (ENNReal.half_pos εpos.ne') with ⟨t, ht, Dst⟩
+  -- cover this space with finitely many balls of radius ε/2
+  rcases totallyBounded_iff.1 (isCompact_iff_totallyBounded_isComplete.1 ht.2).1 (ε / 2)
+      (ENNReal.half_pos εpos.ne') with
+    ⟨u, fu, ut⟩
+  refine ⟨u, ⟨fu, fun x hx => ?_⟩⟩
+  -- u : set α, fu : u.finite, ut : t ⊆ ⋃ (y : α) (H : y ∈ u), eball y (ε / 2)
+  -- then s is covered by the union of the balls centered at u of radius ε
+  rcases exists_edist_lt_of_hausdorffEdist_lt hx Dst with ⟨z, hz, Dxz⟩
+  rcases mem_iUnion₂.1 (ut hz) with ⟨y, hy, Dzy⟩
+  have : edist x y < ε :=
+    calc
+      edist x y ≤ edist x z + edist z y := edist_triangle _ _ _
+      _ < ε / 2 + ε / 2 := ENNReal.add_lt_add Dxz Dzy
+      _ = ε := ENNReal.add_halves _
+  exact mem_biUnion hy this
 
 /-- In a complete space, the type of nonempty compact subsets is complete. This follows
 from the same statement for closed subsets -/
@@ -310,66 +310,66 @@ instance NonemptyCompacts.secondCountableTopology [SecondCountableTopology α] :
     let v0 := { t : Set α | t.Finite ∧ t ⊆ s }
     let v : Set (NonemptyCompacts α) := { t : NonemptyCompacts α | (t : Set α) ∈ v0 }
     refine ⟨⟨v, ?_, ?_⟩⟩
-    · have : v0.Countable := countable_setOf_finite_subset cs
-      exact this.preimage SetLike.coe_injective
-    · refine fun t => mem_closure_iff.2 fun ε εpos => ?_
-      -- t is a compact nonempty set, that we have to approximate uniformly by a a set in `v`.
-      rcases exists_between εpos with ⟨δ, δpos, δlt⟩
-      have δpos' : 0 < δ / 2 := ENNReal.half_pos δpos.ne'
-      -- construct a map F associating to a point in α an approximating point in s, up to δ/2.
-      have Exy : ∀ x, ∃ y, y ∈ s ∧ edist x y < δ / 2 := by
-        intro x
-        rcases mem_closure_iff.1 (s_dense x) (δ / 2) δpos' with ⟨y, ys, hy⟩
-        exact ⟨y, ⟨ys, hy⟩⟩
-      let F x := (Exy x).choose
-      have Fspec : ∀ x, F x ∈ s ∧ edist x (F x) < δ / 2 := fun x => (Exy x).choose_spec
-      -- cover `t` with finitely many balls. Their centers form a set `a`
-      have : TotallyBounded (t : Set α) := t.isCompact.totallyBounded
-      obtain ⟨a : Set α, af : Set.Finite a, ta : (t : Set α) ⊆ ⋃ y ∈ a, ball y (δ / 2)⟩ :=
-        totallyBounded_iff.1 this (δ / 2) δpos'
-      -- replace each center by a nearby approximation in `s`, giving a new set `b`
-      let b := F '' a
-      have : b.Finite := af.image _
-      have tb : ∀ x ∈ t, ∃ y ∈ b, edist x y < δ := by
-        intro x hx
-        rcases mem_iUnion₂.1 (ta hx) with ⟨z, za, Dxz⟩
-        exists F z, mem_image_of_mem _ za
+    have : v0.Countable := countable_setOf_finite_subset cs
+    exact this.preimage SetLike.coe_injective
+    refine fun t => mem_closure_iff.2 fun ε εpos => ?_
+    -- t is a compact nonempty set, that we have to approximate uniformly by a a set in `v`.
+    rcases exists_between εpos with ⟨δ, δpos, δlt⟩
+    have δpos' : 0 < δ / 2 := ENNReal.half_pos δpos.ne'
+    -- construct a map F associating to a point in α an approximating point in s, up to δ/2.
+    have Exy : ∀ x, ∃ y, y ∈ s ∧ edist x y < δ / 2 := by
+      intro x
+      rcases mem_closure_iff.1 (s_dense x) (δ / 2) δpos' with ⟨y, ys, hy⟩
+      exact ⟨y, ⟨ys, hy⟩⟩
+    let F x := (Exy x).choose
+    have Fspec : ∀ x, F x ∈ s ∧ edist x (F x) < δ / 2 := fun x => (Exy x).choose_spec
+    -- cover `t` with finitely many balls. Their centers form a set `a`
+    have : TotallyBounded (t : Set α) := t.isCompact.totallyBounded
+    obtain ⟨a : Set α, af : Set.Finite a, ta : (t : Set α) ⊆ ⋃ y ∈ a, ball y (δ / 2)⟩ :=
+      totallyBounded_iff.1 this (δ / 2) δpos'
+    -- replace each center by a nearby approximation in `s`, giving a new set `b`
+    let b := F '' a
+    have : b.Finite := af.image _
+    have tb : ∀ x ∈ t, ∃ y ∈ b, edist x y < δ := by
+      intro x hx
+      rcases mem_iUnion₂.1 (ta hx) with ⟨z, za, Dxz⟩
+      exists F z, mem_image_of_mem _ za
+      calc
+        edist x (F z) ≤ edist x z + edist z (F z) := edist_triangle _ _ _
+        _ < δ / 2 + δ / 2 := ENNReal.add_lt_add Dxz (Fspec z).2
+        _ = δ := ENNReal.add_halves _
+    -- keep only the points in `b` that are close to point in `t`, yielding a new set `c`
+    let c := { y ∈ b | ∃ x ∈ t, edist x y < δ }
+    have : c.Finite := ‹b.Finite›.subset fun x hx => hx.1
+    -- points in `t` are well approximated by points in `c`
+    have tc : ∀ x ∈ t, ∃ y ∈ c, edist x y ≤ δ := by
+      intro x hx
+      rcases tb x hx with ⟨y, yv, Dxy⟩
+      have : y ∈ c := by simpa [c, -mem_image] using ⟨yv, ⟨x, hx, Dxy⟩⟩
+      exact ⟨y, this, le_of_lt Dxy⟩
+    -- points in `c` are well approximated by points in `t`
+    have ct : ∀ y ∈ c, ∃ x ∈ t, edist y x ≤ δ := by
+      rintro y ⟨_, x, xt, Dyx⟩
+      have : edist y x ≤ δ :=
         calc
-          edist x (F z) ≤ edist x z + edist z (F z) := edist_triangle _ _ _
-          _ < δ / 2 + δ / 2 := ENNReal.add_lt_add Dxz (Fspec z).2
-          _ = δ := ENNReal.add_halves _
-      -- keep only the points in `b` that are close to point in `t`, yielding a new set `c`
-      let c := { y ∈ b | ∃ x ∈ t, edist x y < δ }
-      have : c.Finite := ‹b.Finite›.subset fun x hx => hx.1
-      -- points in `t` are well approximated by points in `c`
-      have tc : ∀ x ∈ t, ∃ y ∈ c, edist x y ≤ δ := by
-        intro x hx
-        rcases tb x hx with ⟨y, yv, Dxy⟩
-        have : y ∈ c := by simpa [c, -mem_image] using ⟨yv, ⟨x, hx, Dxy⟩⟩
-        exact ⟨y, this, le_of_lt Dxy⟩
-      -- points in `c` are well approximated by points in `t`
-      have ct : ∀ y ∈ c, ∃ x ∈ t, edist y x ≤ δ := by
-        rintro y ⟨_, x, xt, Dyx⟩
-        have : edist y x ≤ δ :=
-          calc
-            edist y x = edist x y := edist_comm _ _
-            _ ≤ δ := le_of_lt Dyx
-        exact ⟨x, xt, this⟩
-      -- it follows that their Hausdorff distance is small
-      have : hausdorffEdist (t : Set α) c ≤ δ := hausdorffEdist_le_of_mem_edist tc ct
-      have Dtc : hausdorffEdist (t : Set α) c < ε := this.trans_lt δlt
-      -- the set `c` is not empty, as it is well approximated by a nonempty set
-      have hc : c.Nonempty := nonempty_of_hausdorffEdist_ne_top t.nonempty (ne_top_of_lt Dtc)
-      -- let `d` be the version of `c` in the type `NonemptyCompacts α`
-      let d : NonemptyCompacts α := ⟨⟨c, ‹c.Finite›.isCompact⟩, hc⟩
-      have : c ⊆ s := by
-        intro x hx
-        rcases (mem_image _ _ _).1 hx.1 with ⟨y, ⟨_, yx⟩⟩
-        rw [← yx]
-        exact (Fspec y).1
-      have : d ∈ v := ⟨‹c.Finite›, this⟩
-      -- we have proved that `d` is a good approximation of `t` as requested
-      exact ⟨d, ‹d ∈ v›, Dtc⟩
+          edist y x = edist x y := edist_comm _ _
+          _ ≤ δ := le_of_lt Dyx
+      exact ⟨x, xt, this⟩
+    -- it follows that their Hausdorff distance is small
+    have : hausdorffEdist (t : Set α) c ≤ δ := hausdorffEdist_le_of_mem_edist tc ct
+    have Dtc : hausdorffEdist (t : Set α) c < ε := this.trans_lt δlt
+    -- the set `c` is not empty, as it is well approximated by a nonempty set
+    have hc : c.Nonempty := nonempty_of_hausdorffEdist_ne_top t.nonempty (ne_top_of_lt Dtc)
+    -- let `d` be the version of `c` in the type `NonemptyCompacts α`
+    let d : NonemptyCompacts α := ⟨⟨c, ‹c.Finite›.isCompact⟩, hc⟩
+    have : c ⊆ s := by
+      intro x hx
+      rcases (mem_image _ _ _).1 hx.1 with ⟨y, ⟨_, yx⟩⟩
+      rw [← yx]
+      exact (Fspec y).1
+    have : d ∈ v := ⟨‹c.Finite›, this⟩
+    -- we have proved that `d` is a good approximation of `t` as requested
+    exact ⟨d, ‹d ∈ v›, Dtc⟩
   UniformSpace.secondCountable_of_separable (NonemptyCompacts α)
 
 end

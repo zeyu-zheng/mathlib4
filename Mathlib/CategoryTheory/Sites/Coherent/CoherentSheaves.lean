@@ -30,14 +30,14 @@ lemma isSheaf_coherent (P : Cᵒᵖ ⥤ Type w) :
     (∀ (B : C) (α : Type) [Finite α] (X : α → C) (π : (a : α) → (X a ⟶ B)),
       EffectiveEpiFamily X π → (Presieve.ofArrows X π).IsSheafFor P) := by
   constructor
-  · intro hP B α _ X π h
-    simp only [coherentTopology, Presieve.isSheaf_coverage] at hP
-    apply hP
-    exact ⟨α, inferInstance, X, π, rfl, h⟩
-  · intro h
-    simp only [coherentTopology, Presieve.isSheaf_coverage]
-    rintro B S ⟨α, _, X, π, rfl, hS⟩
-    exact h _ _ _ _ hS
+  intro hP B α _ X π h
+  simp only [coherentTopology, Presieve.isSheaf_coverage] at hP
+  apply hP
+  exact ⟨α, inferInstance, X, π, rfl, h⟩
+  intro h
+  simp only [coherentTopology, Presieve.isSheaf_coverage]
+  rintro B S ⟨α, _, X, π, rfl, hS⟩
+  exact h _ _ _ _ hS
 
 namespace coherentTopology
 
@@ -54,9 +54,9 @@ theorem isSheaf_yoneda_obj (W : C) : Presieve.IsSheaf (coherentTopology C) (yone
   obtain ⟨t, t_amalg, t_uniq⟩ : ∃! t, x_ext.IsAmalgamation t :=
     (Sieve.forallYonedaIsSheaf_iff_colimit S).mpr ⟨h_colim⟩ W x_ext hx_ext
   refine ⟨t, ?_, ?_⟩
-  · convert Presieve.isAmalgamation_restrict (Sieve.le_generate (Presieve.ofArrows Y π)) _ _ t_amalg
-    exact (Presieve.restrict_extend hx).symm
-  · exact fun y hy ↦ t_uniq y <| Presieve.isAmalgamation_sieveExtend x y hy
+  convert Presieve.isAmalgamation_restrict (Sieve.le_generate (Presieve.ofArrows Y π)) _ _ t_amalg
+  exact (Presieve.restrict_extend hx).symm
+  exact fun y hy ↦ t_uniq y <| Presieve.isAmalgamation_sieveExtend x y hy
 
 variable (C) in
 /-- The coherent topology on a precoherent category is subcanonical. -/

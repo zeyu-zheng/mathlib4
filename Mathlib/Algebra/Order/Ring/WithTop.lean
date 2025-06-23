@@ -132,9 +132,9 @@ instance instSemigroupWithZero [SemigroupWithZero α] [NoZeroDivisors α] :
     induction' a with a; · simp [hb, hc]
     induction' b with b; · simp [mul_top ha, top_mul hc]
     induction' c with c
-    · rw [mul_top hb, mul_top ha]
-      rw [← coe_zero, ne_eq, coe_eq_coe] at ha hb
-      simp [ha, hb]
+    rw [mul_top hb, mul_top ha]
+    rw [← coe_zero, ne_eq, coe_eq_coe] at ha hb
+    simp [ha, hb]
     simp only [← coe_mul, mul_assoc]
 
 section MonoidWithZero
@@ -167,12 +167,12 @@ variable [CanonicallyOrderedCommSemiring α]
 
 private theorem distrib' (a b c : WithTop α) : (a + b) * c = a * c + b * c := by
   induction' c with c
-  · by_cases ha : a = 0 <;> simp [ha]
-  · by_cases hc : c = 0
-    · simp [hc]
-    simp only [mul_coe_eq_bind hc]
-    cases a <;> cases b
-    repeat' first | rfl |exact congr_arg some (add_mul _ _ _)
+  by_cases ha : a = 0 <;> simp [ha]
+  by_cases hc : c = 0
+  simp [hc]
+  simp only [mul_coe_eq_bind hc]
+  cases a <;> cases b
+  repeat' first | rfl |exact congr_arg some (add_mul _ _ _)
 
 /-- This instance requires `CanonicallyOrderedCommSemiring` as it is the smallest class
 that derives from both `NonAssocNonUnitalSemiring` and `CanonicallyOrderedAddCommMonoid`, both
@@ -282,14 +282,14 @@ instance [MulZeroClass α] [Preorder α] [PosMulMono α] : PosMulMono (WithBot �
     intro ⟨x, x0⟩ a b h
     simp only [Subtype.coe_mk]
     rcases eq_or_ne x 0 with rfl | x0'
-    · simp
+    simp
     lift x to α
-    · rintro rfl
-      exact (WithBot.bot_lt_coe (0 : α)).not_le x0
+    rintro rfl
+    exact (WithBot.bot_lt_coe (0 : α)).not_le x0
     induction a
-    · simp_rw [mul_bot x0', bot_le]
+    simp_rw [mul_bot x0', bot_le]
     induction b
-    · exact absurd h (bot_lt_coe _).not_le
+    exact absurd h (bot_lt_coe _).not_le
     simp only [← coe_mul, coe_le_coe] at *
     norm_cast at x0
     exact mul_le_mul_of_nonneg_left h x0 ⟩
@@ -299,14 +299,14 @@ instance [MulZeroClass α] [Preorder α] [MulPosMono α] : MulPosMono (WithBot �
     intro ⟨x, x0⟩ a b h
     simp only [Subtype.coe_mk]
     rcases eq_or_ne x 0 with rfl | x0'
-    · simp
+    simp
     lift x to α
-    · rintro rfl
-      exact (WithBot.bot_lt_coe (0 : α)).not_le x0
+    rintro rfl
+    exact (WithBot.bot_lt_coe (0 : α)).not_le x0
     induction a
-    · simp_rw [bot_mul x0', bot_le]
+    simp_rw [bot_mul x0', bot_le]
     induction b
-    · exact absurd h (bot_lt_coe _).not_le
+    exact absurd h (bot_lt_coe _).not_le
     simp only [← coe_mul, coe_le_coe] at *
     norm_cast at x0
     exact mul_le_mul_of_nonneg_right h x0 ⟩
@@ -317,9 +317,9 @@ instance [MulZeroClass α] [Preorder α] [PosMulStrictMono α] : PosMulStrictMon
     simp only [Subtype.coe_mk]
     lift x to α using x0.ne_bot
     induction b
-    · exact absurd h not_lt_bot
+    exact absurd h not_lt_bot
     induction a
-    · simp_rw [mul_bot x0.ne.symm, ← coe_mul, bot_lt_coe]
+    simp_rw [mul_bot x0.ne.symm, ← coe_mul, bot_lt_coe]
     simp only [← coe_mul, coe_lt_coe] at *
     norm_cast at x0
     exact mul_lt_mul_of_pos_left h x0 ⟩
@@ -330,9 +330,9 @@ instance [MulZeroClass α] [Preorder α] [MulPosStrictMono α] : MulPosStrictMon
     simp only [Subtype.coe_mk]
     lift x to α using x0.ne_bot
     induction b
-    · exact absurd h not_lt_bot
+    exact absurd h not_lt_bot
     induction a
-    · simp_rw [bot_mul x0.ne.symm, ← coe_mul, bot_lt_coe]
+    simp_rw [bot_mul x0.ne.symm, ← coe_mul, bot_lt_coe]
     simp only [← coe_mul, coe_lt_coe] at *
     norm_cast at x0
     exact mul_lt_mul_of_pos_right h x0 ⟩
@@ -342,15 +342,15 @@ instance [MulZeroClass α] [Preorder α] [PosMulReflectLT α] : PosMulReflectLT 
     intro ⟨x, x0⟩ a b h
     simp only [Subtype.coe_mk] at h
     rcases eq_or_ne x 0 with rfl | x0'
-    · simp at h
+    simp at h
     lift x to α
-    · rintro rfl
-      exact (WithBot.bot_lt_coe (0 : α)).not_le x0
+    rintro rfl
+    exact (WithBot.bot_lt_coe (0 : α)).not_le x0
     induction b
-    · rw [mul_bot x0'] at h
-      exact absurd h bot_le.not_lt
+    rw [mul_bot x0'] at h
+    exact absurd h bot_le.not_lt
     induction a
-    · exact WithBot.bot_lt_coe _
+    exact WithBot.bot_lt_coe _
     simp only [← coe_mul, coe_lt_coe] at *
     norm_cast at x0
     exact lt_of_mul_lt_mul_left h x0 ⟩
@@ -360,15 +360,15 @@ instance [MulZeroClass α] [Preorder α] [MulPosReflectLT α] : MulPosReflectLT 
     intro ⟨x, x0⟩ a b h
     simp only [Subtype.coe_mk] at h
     rcases eq_or_ne x 0 with rfl | x0'
-    · simp at h
+    simp at h
     lift x to α
-    · rintro rfl
-      exact (WithBot.bot_lt_coe (0 : α)).not_le x0
+    rintro rfl
+    exact (WithBot.bot_lt_coe (0 : α)).not_le x0
     induction b
-    · rw [bot_mul x0'] at h
-      exact absurd h bot_le.not_lt
+    rw [bot_mul x0'] at h
+    exact absurd h bot_le.not_lt
     induction a
-    · exact WithBot.bot_lt_coe _
+    exact WithBot.bot_lt_coe _
     simp only [← coe_mul, coe_lt_coe] at *
     norm_cast at x0
     exact lt_of_mul_lt_mul_right h x0 ⟩
@@ -379,10 +379,10 @@ instance [MulZeroClass α] [Preorder α] [PosMulReflectLE α] : PosMulReflectLE 
     simp only [Subtype.coe_mk] at h
     lift x to α using x0.ne_bot
     induction a
-    · exact bot_le
+    exact bot_le
     induction b
-    · rw [mul_bot x0.ne.symm, ← coe_mul] at h
-      exact absurd h (bot_lt_coe _).not_le
+    rw [mul_bot x0.ne.symm, ← coe_mul] at h
+    exact absurd h (bot_lt_coe _).not_le
     simp only [← coe_mul, coe_le_coe] at *
     norm_cast at x0
     exact le_of_mul_le_mul_left h x0 ⟩
@@ -393,10 +393,10 @@ instance [MulZeroClass α] [Preorder α] [MulPosReflectLE α] : MulPosReflectLE 
     simp only [Subtype.coe_mk] at h
     lift x to α using x0.ne_bot
     induction a
-    · exact bot_le
+    exact bot_le
     induction b
-    · rw [bot_mul x0.ne.symm, ← coe_mul] at h
-      exact absurd h (bot_lt_coe _).not_le
+    rw [bot_mul x0.ne.symm, ← coe_mul] at h
+    exact absurd h (bot_lt_coe _).not_le
     simp only [← coe_mul, coe_le_coe] at *
     norm_cast at x0
     exact le_of_mul_le_mul_right h x0 ⟩

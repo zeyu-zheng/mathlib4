@@ -149,14 +149,14 @@ theorem arrow_mk_iso_iff (P : MorphismProperty C) [RespectsIso P] {W X Y Z : C}
 theorem RespectsIso.of_respects_arrow_iso (P : MorphismProperty C)
     (hP : ∀ (f g : Arrow C) (_ : f ≅ g) (_ : P f.hom), P g.hom) : RespectsIso P := by
   constructor
-  · intro X Y Z e f hf
-    refine hP (Arrow.mk f) (Arrow.mk (e.hom ≫ f)) (Arrow.isoMk e.symm (Iso.refl _) ?_) hf
-    dsimp
-    simp only [Iso.inv_hom_id_assoc, Category.comp_id]
-  · intro X Y Z e f hf
-    refine hP (Arrow.mk f) (Arrow.mk (f ≫ e.hom)) (Arrow.isoMk (Iso.refl _) e ?_) hf
-    dsimp
-    simp only [Category.id_comp]
+  intro X Y Z e f hf
+  refine hP (Arrow.mk f) (Arrow.mk (e.hom ≫ f)) (Arrow.isoMk e.symm (Iso.refl _) ?_) hf
+  dsimp
+  simp only [Iso.inv_hom_id_assoc, Category.comp_id]
+  intro X Y Z e f hf
+  refine hP (Arrow.mk f) (Arrow.mk (f ≫ e.hom)) (Arrow.isoMk (Iso.refl _) e ?_) hf
+  dsimp
+  simp only [Category.id_comp]
 
 lemma isoClosure_eq_iff (P : MorphismProperty C) :
     P.isoClosure = P ↔ P.RespectsIso := by
@@ -175,9 +175,9 @@ lemma isoClosure_isoClosure (P : MorphismProperty C) :
 lemma isoClosure_le_iff (P Q : MorphismProperty C) [Q.RespectsIso] :
     P.isoClosure ≤ Q ↔ P ≤ Q := by
   constructor
-  · exact P.le_isoClosure.trans
-  · intro h
-    exact (monotone_isoClosure h).trans (by rw [Q.isoClosure_eq_self])
+  exact P.le_isoClosure.trans
+  intro h
+  exact (monotone_isoClosure h).trans (by rw [Q.isoClosure_eq_self])
 
 instance map_respectsIso (P : MorphismProperty C) (F : C ⥤ D) :
     (P.map F).RespectsIso := by
@@ -189,28 +189,28 @@ lemma map_le_iff (P : MorphismProperty C) {F : C ⥤ D} (Q : MorphismProperty D)
     [RespectsIso Q] :
     P.map F ≤ Q ↔ P ≤ Q.inverseImage F := by
   constructor
-  · intro h X Y f hf
-    exact h (F.map f) (map_mem_map P F f hf)
-  · intro h X Y f ⟨X', Y', f', hf', ⟨e⟩⟩
-    exact (Q.arrow_mk_iso_iff e).1 (h _ hf')
+  intro h X Y f hf
+  exact h (F.map f) (map_mem_map P F f hf)
+  intro h X Y f ⟨X', Y', f', hf', ⟨e⟩⟩
+  exact (Q.arrow_mk_iso_iff e).1 (h _ hf')
 
 @[simp]
 lemma map_isoClosure (P : MorphismProperty C) (F : C ⥤ D) :
     P.isoClosure.map F = P.map F := by
   apply le_antisymm
-  · rw [map_le_iff]
-    intro X Y f ⟨X', Y', f', hf', ⟨e⟩⟩
-    exact ⟨_, _, f', hf', ⟨F.mapArrow.mapIso e⟩⟩
-  · exact monotone_map _ (le_isoClosure P)
+  rw [map_le_iff]
+  intro X Y f ⟨X', Y', f', hf', ⟨e⟩⟩
+  exact ⟨_, _, f', hf', ⟨F.mapArrow.mapIso e⟩⟩
+  exact monotone_map _ (le_isoClosure P)
 
 lemma map_id_eq_isoClosure (P : MorphismProperty C) :
     P.map (𝟭 _) = P.isoClosure := by
   apply le_antisymm
-  · rw [map_le_iff]
-    intro X Y f hf
-    exact P.le_isoClosure _ hf
-  · intro X Y f hf
-    exact hf
+  rw [map_le_iff]
+  intro X Y f hf
+  exact P.le_isoClosure _ hf
+  intro X Y f hf
+  exact hf
 
 lemma map_id (P : MorphismProperty C) [RespectsIso P] :
     P.map (𝟭 _) = P := by
@@ -220,12 +220,12 @@ lemma map_id (P : MorphismProperty C) [RespectsIso P] :
 lemma map_map (P : MorphismProperty C) (F : C ⥤ D) {E : Type*} [Category E] (G : D ⥤ E) :
     (P.map F).map G = P.map (F ⋙ G) := by
   apply le_antisymm
-  · rw [map_le_iff]
-    intro X Y f ⟨X', Y', f', hf', ⟨e⟩⟩
-    exact ⟨X', Y', f', hf', ⟨G.mapArrow.mapIso e⟩⟩
-  · rw [map_le_iff]
-    intro X Y f hf
-    exact map_mem_map _ _ _ (map_mem_map _ _ _ hf)
+  rw [map_le_iff]
+  intro X Y f ⟨X', Y', f', hf', ⟨e⟩⟩
+  exact ⟨X', Y', f', hf', ⟨G.mapArrow.mapIso e⟩⟩
+  rw [map_le_iff]
+  intro X Y f hf
+  exact map_mem_map _ _ _ (map_mem_map _ _ _ hf)
 
 instance RespectsIso.inverseImage (P : MorphismProperty D) [RespectsIso P] (F : C ⥤ D) :
     RespectsIso (P.inverseImage F) := by
@@ -251,13 +251,13 @@ lemma inverseImage_equivalence_inverse_eq_map_functor
     (P : MorphismProperty D) [RespectsIso P] (E : C ≌ D) :
     P.inverseImage E.functor = P.map E.inverse := by
   apply le_antisymm
-  · intro X Y f hf
-    refine ⟨_, _, _, hf, ⟨?_⟩⟩
-    exact ((Functor.mapArrowFunctor _ _).mapIso E.unitIso.symm).app (Arrow.mk f)
-  · rw [map_le_iff]
-    intro X Y f hf
-    exact (P.arrow_mk_iso_iff
-      (((Functor.mapArrowFunctor _ _).mapIso E.counitIso).app (Arrow.mk f))).2 hf
+  intro X Y f hf
+  refine ⟨_, _, _, hf, ⟨?_⟩⟩
+  exact ((Functor.mapArrowFunctor _ _).mapIso E.unitIso.symm).app (Arrow.mk f)
+  rw [map_le_iff]
+  intro X Y f hf
+  exact (P.arrow_mk_iso_iff
+    (((Functor.mapArrowFunctor _ _).mapIso E.counitIso).app (Arrow.mk f))).2 hf
 
 lemma inverseImage_equivalence_functor_eq_map_inverse
     (Q : MorphismProperty C) [RespectsIso Q] (E : C ≌ D) :

@@ -397,8 +397,8 @@ theorem linearIndependent_mul_of_flat (H : M.LinearDisjoint N)
     {κ ι : Type*} {m : κ → M} {n : ι → N} (hm : LinearIndependent R m)
     (hn : LinearIndependent R n) : LinearIndependent R fun (i : κ × ι) ↦ (m i.1).1 * (n i.2).1 := by
   rcases hf with _ | _
-  · exact H.linearIndependent_mul_of_flat_left hm hn
-  · exact H.linearIndependent_mul_of_flat_right hm hn
+  exact H.linearIndependent_mul_of_flat_left hm hn
+  exact H.linearIndependent_mul_of_flat_right hm hn
 
 /-- If `{ m_i }` is an `R`-basis of `M`, if `{ n_i }` is an `R`-basis of `N`,
 such that the family `{ m_i * n_j }` in `S` is `R`-linearly independent,
@@ -505,8 +505,8 @@ elements of `↥(M ⊓ N)` are not `R`-linearly independent (namely, their span 
 theorem not_linearIndependent_pair_of_commute_of_flat (hf : Module.Flat R M ∨ Module.Flat R N)
     (a b : ↥(M ⊓ N)) (hc : Commute a.1 b.1) : ¬LinearIndependent R ![a, b] := by
   rcases hf with _ | _
-  · exact H.not_linearIndependent_pair_of_commute_of_flat_left a b hc
-  · exact H.not_linearIndependent_pair_of_commute_of_flat_right a b hc
+  exact H.not_linearIndependent_pair_of_commute_of_flat_left a b hc
+  exact H.not_linearIndependent_pair_of_commute_of_flat_right a b hc
 
 end
 
@@ -522,10 +522,10 @@ theorem rank_inf_le_one_of_commute_of_flat (hf : Module.Flat R M ∨ Module.Flat
   refine H.not_linearIndependent_pair_of_commute_of_flat hf a.1 b.1 (hc a.1 b.1) ?_
   have := h.comp ![a, b] fun i j hij ↦ by
     fin_cases i <;> fin_cases j
-    · rfl
-    · simp [hab] at hij
-    · simp [hab.symm] at hij
-    · rfl
+    rfl
+    simp [hab] at hij
+    simp [hab.symm] at hij
+    rfl
   convert this
   ext i
   fin_cases i <;> simp

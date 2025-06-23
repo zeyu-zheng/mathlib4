@@ -197,8 +197,8 @@ lemma coe_injective [Nontrivial α] : Injective ((⇑) : Line α ι → α → �
   obtain ⟨b, hba⟩ := exists_ne a
   simp only [Option.mem_def, funext_iff] at hlm ⊢
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · cases hi : idxFun m i <;> simpa [@eq_comm _ a, hi, h, hba] using hlm b i
-  · cases hi : idxFun l i <;> simpa [@eq_comm _ a, hi, h, hba] using hlm b i
+  cases hi : idxFun m i <;> simpa [@eq_comm _ a, hi, h, hba] using hlm b i
+  cases hi : idxFun l i <;> simpa [@eq_comm _ a, hi, h, hba] using hlm b i
 
 /-- A line is monochromatic if all its points are the same color. -/
 def IsMono {α ι κ} (C : (ι → α) → κ) (l : Line α ι) : Prop :=
@@ -351,8 +351,8 @@ private theorem exists_mono_in_high_dimension' :
     -- This deals with the degenerate case where `α` is empty.
     intro κ _
     by_cases h : Nonempty κ
-    · refine ⟨Unit, inferInstance, fun C => ⟨default, Classical.arbitrary _, PEmpty.rec⟩⟩
-    · exact ⟨Empty, inferInstance, fun C => (h ⟨C (Empty.rec)⟩).elim⟩)
+    refine ⟨Unit, inferInstance, fun C => ⟨default, Classical.arbitrary _, PEmpty.rec⟩⟩
+    exact ⟨Empty, inferInstance, fun C => (h ⟨C (Empty.rec)⟩).elim⟩)
   (by
     -- Now we have to show that the theorem holds for `Option α` if it holds for `α`.
     intro α _ ihα κ _
@@ -364,8 +364,8 @@ private theorem exists_mono_in_high_dimension' :
     case neg =>
       refine ⟨Unit, inferInstance, fun C => ⟨diagonal _ Unit, C fun _ => none, ?_⟩⟩
       rintro (_ | ⟨a⟩)
-      · rfl
-      · exact (h ⟨a⟩).elim
+      rfl
+      exact (h ⟨a⟩).elim
     -- The key idea is to show that for every `r`, in high dimension we can either find
     -- `r` color focused lines or a monochromatic line.
     suffices key :
@@ -385,7 +385,7 @@ private theorem exists_mono_in_high_dimension' :
     intro r
     induction' r with r ihr
     -- The base case `r = 0` is trivial as the empty collection is color-focused.
-    · exact ⟨Empty, inferInstance, fun C => Or.inl ⟨default, Multiset.card_zero⟩⟩
+    exact ⟨Empty, inferInstance, fun C => Or.inl ⟨default, Multiset.card_zero⟩⟩
     -- Supposing the key claim holds for `r`, we need to show it for `r+1`. First pick a high
     -- enough dimension `ι` for `r`.
     obtain ⟨ι, _inst, hι⟩ := ihr
@@ -414,31 +414,31 @@ private theorem exists_mono_in_high_dimension' :
     -- one of these `r` lines has the same color as the focus point.
     by_cases h : ∃ p ∈ s.lines, (p : AlmostMono _).color = C' s.focus
     -- If so then this is a `C'`-monochromatic line and we are done.
-    · obtain ⟨p, p_mem, hp⟩ := h
-      refine Or.inr (mono_of_mono ⟨p.line, p.color, ?_⟩)
-      rintro (_ | _)
-      · rw [hp, s.is_focused p p_mem]
-      · apply p.has_color
+    obtain ⟨p, p_mem, hp⟩ := h
+    refine Or.inr (mono_of_mono ⟨p.line, p.color, ?_⟩)
+    rintro (_ | _)
+    rw [hp, s.is_focused p p_mem]
+    apply p.has_color
     -- If not, we get `r+1` color focused lines by taking the product of the `r` lines with `l'`
     -- and adding to this the vertical line obtained by the focus point and `l`.
     refine Or.inl ⟨⟨(s.lines.map ?_).cons ⟨(l'.map some).vertical s.focus, C' s.focus, fun x => ?_⟩,
             Sum.elim s.focus (l'.map some none), ?_, ?_⟩, ?_⟩
     -- Porting note: Needed to reorder the following two goals
     -- The product lines are almost monochromatic.
-    · refine fun p => ⟨p.line.prod (l'.map some), p.color, fun x => ?_⟩
-      rw [Line.prod_apply, Line.map_apply, ← p.has_color, ← congr_fun (hl' x)]
+    refine fun p => ⟨p.line.prod (l'.map some), p.color, fun x => ?_⟩
+    rw [Line.prod_apply, Line.map_apply, ← p.has_color, ← congr_fun (hl' x)]
     -- The vertical line is almost monochromatic.
-    · rw [vertical_apply, ← congr_fun (hl' x), Line.map_apply]
+    rw [vertical_apply, ← congr_fun (hl' x), Line.map_apply]
     -- Our `r+1` lines have the same endpoint.
-    · simp_rw [Multiset.mem_cons, Multiset.mem_map]
-      rintro _ (rfl | ⟨q, hq, rfl⟩)
-      · simp only [vertical_apply]
-      · simp only [prod_apply, s.is_focused q hq]
+    simp_rw [Multiset.mem_cons, Multiset.mem_map]
+    rintro _ (rfl | ⟨q, hq, rfl⟩)
+    simp only [vertical_apply]
+    simp only [prod_apply, s.is_focused q hq]
     -- Our `r+1` lines have distinct colors (this is why we needed to split into cases above).
-    · rw [Multiset.map_cons, Multiset.map_map, Multiset.nodup_cons, Multiset.mem_map]
-      exact ⟨fun ⟨q, hq, he⟩ => h ⟨q, hq, he⟩, s.distinct_colors⟩
+    rw [Multiset.map_cons, Multiset.map_map, Multiset.nodup_cons, Multiset.mem_map]
+    exact ⟨fun ⟨q, hq, he⟩ => h ⟨q, hq, he⟩, s.distinct_colors⟩
     -- Finally, we really do have `r+1` lines!
-    · rw [Multiset.card_cons, Multiset.card_map, sr])
+    rw [Multiset.card_cons, Multiset.card_map, sr])
 
 /-- The **Hales-Jewett theorem**: For any finite types `α` and `κ`, there exists a finite type `ι`
 such that whenever the hypercube `ι → α` is `κ`-colored, there is a monochromatic combinatorial
@@ -463,24 +463,24 @@ theorem exists_mono_homothetic_copy {M κ : Type*} [AddCommMonoid M] (S : Finset
   refine
     ⟨s.card, Finset.card_pos.mpr ⟨l.proper.choose, ?_⟩, ∑ i ∈ sᶜ, ((l.idxFun i).map ?_).getD 0,
       c, ?_⟩
-  · rw [hs, Finset.mem_filter]
-    exact ⟨Finset.mem_univ _, l.proper.choose_spec⟩
-  · exact fun m => m
+  rw [hs, Finset.mem_filter]
+  exact ⟨Finset.mem_univ _, l.proper.choose_spec⟩
+  exact fun m => m
   intro x xs
   rw [← hl ⟨x, xs⟩]
   clear hl; congr
   rw [← Finset.sum_add_sum_compl s]
   congr 1
-  · rw [← Finset.sum_const]
-    apply Finset.sum_congr rfl
-    intro i hi
-    rw [hs, Finset.mem_filter] at hi
-    rw [l.apply_none _ _ hi.right, Subtype.coe_mk]
-  · apply Finset.sum_congr rfl
-    intro i hi
-    rw [hs, Finset.compl_filter, Finset.mem_filter] at hi
-    obtain ⟨y, hy⟩ := Option.ne_none_iff_exists.mp hi.right
-    simp_rw [← hy, Option.map_some', Option.getD]
+  rw [← Finset.sum_const]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [hs, Finset.mem_filter] at hi
+  rw [l.apply_none _ _ hi.right, Subtype.coe_mk]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [hs, Finset.compl_filter, Finset.mem_filter] at hi
+  obtain ⟨y, hy⟩ := Option.ne_none_iff_exists.mp hi.right
+  simp_rw [← hy, Option.map_some', Option.getD]
 
 namespace Subspace
 

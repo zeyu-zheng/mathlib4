@@ -226,8 +226,8 @@ variable [PartialOrder α] [AddCommSemigroup α] [Sub α] [OrderedSub α] {a b c
 
 theorem tsub_tsub (b a c : α) : b - a - c = b - (a + c) := by
   apply le_antisymm
-  · rw [tsub_le_iff_left, tsub_le_iff_left, ← add_assoc, ← tsub_le_iff_left]
-  · rw [tsub_le_iff_left, add_assoc, ← tsub_le_iff_left, ← tsub_le_iff_left]
+  rw [tsub_le_iff_left, tsub_le_iff_left, ← add_assoc, ← tsub_le_iff_left]
+  rw [tsub_le_iff_left, add_assoc, ← tsub_le_iff_left, ← tsub_le_iff_left]
 
 theorem tsub_add_eq_tsub_tsub (a b c : α) : a - (b + c) = a - b - c :=
   (tsub_tsub _ _ _).symm

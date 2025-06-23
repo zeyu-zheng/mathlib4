@@ -974,7 +974,7 @@ private theorem natEmbeddingAux_injective (α : Type*) [Infinite α] :
   rintro m n h
   letI := Classical.decEq α
   wlog hmlen : m ≤ n generalizing m n
-  · exact (this h.symm <| le_of_not_le hmlen).symm
+  exact (this h.symm <| le_of_not_le hmlen).symm
   by_contra hmn
   have hmn : m < n := lt_of_le_of_ne hmlen hmn
   refine (Classical.choose_spec (exists_not_mem_finset
@@ -997,13 +997,13 @@ theorem exists_subset_card_eq (α : Type*) [Infinite α] (n : ℕ) : ∃ s : Fin
 theorem exists_superset_card_eq [Infinite α] (s : Finset α) (n : ℕ) (hn : s.card ≤ n) :
     ∃ t : Finset α, s ⊆ t ∧ t.card = n := by
   induction' n with n IH generalizing s
-  · exact ⟨s, subset_refl _, Nat.eq_zero_of_le_zero hn⟩
-  · rcases hn.eq_or_lt with hn' | hn'
-    · exact ⟨s, subset_refl _, hn'⟩
-    obtain ⟨t, hs, ht⟩ := IH _ (Nat.le_of_lt_succ hn')
-    obtain ⟨x, hx⟩ := exists_not_mem_finset t
-    refine ⟨Finset.cons x t hx, hs.trans (Finset.subset_cons _), ?_⟩
-    simp [hx, ht]
+  exact ⟨s, subset_refl _, Nat.eq_zero_of_le_zero hn⟩
+  rcases hn.eq_or_lt with hn' | hn'
+  exact ⟨s, subset_refl _, hn'⟩
+  obtain ⟨t, hs, ht⟩ := IH _ (Nat.le_of_lt_succ hn')
+  obtain ⟨x, hx⟩ := exists_not_mem_finset t
+  refine ⟨Finset.cons x t hx, hs.trans (Finset.subset_cons _), ?_⟩
+  simp [hx, ht]
 
 end Infinite
 
@@ -1081,29 +1081,29 @@ theorem List.exists_pw_disjoint_with_card {α : Type*} [Fintype α]
     simp only [Fin.valEmbedding_apply, Fin.val_mk, List.pmap_eq_map, List.map_id', List.map_id]
   use l.map (List.map (Fintype.equivFin α).symm)
   constructor
-  · -- length
-    rw [← ranges_length c]
-    simp only [l, klift', map_map, map_pmap, Function.comp_apply, length_map, length_pmap,
-      pmap_eq_map]
+  -- length
+  rw [← ranges_length c]
+  simp only [l, klift', map_map, map_pmap, Function.comp_apply, length_map, length_pmap,
+    pmap_eq_map]
   constructor
-  · -- nodup
-    intro s
-    rw [mem_map]
-    rintro ⟨t, ht, rfl⟩
-    apply Nodup.map (Equiv.injective _)
-    obtain ⟨u, hu, rfl⟩ := mem_pmap.mp ht
-    apply Nodup.of_map
-    rw [hl u hu]
-    exact ranges_nodup hu
-  · -- pairwise disjoint
-    refine Pairwise.map _ (fun s t ↦ disjoint_map (Equiv.injective _)) ?_
-    -- List.Pairwise List.disjoint l
-    apply Pairwise.pmap (List.ranges_disjoint c)
-    intro u hu v hv huv
-    apply disjoint_pmap
-    · intro a a' ha ha' h
-      simpa only [klift, Fin.mk_eq_mk] using h
-    exact huv
+  -- nodup
+  intro s
+  rw [mem_map]
+  rintro ⟨t, ht, rfl⟩
+  apply Nodup.map (Equiv.injective _)
+  obtain ⟨u, hu, rfl⟩ := mem_pmap.mp ht
+  apply Nodup.of_map
+  rw [hl u hu]
+  exact ranges_nodup hu
+  -- pairwise disjoint
+  refine Pairwise.map _ (fun s t ↦ disjoint_map (Equiv.injective _)) ?_
+  -- List.Pairwise List.disjoint l
+  apply Pairwise.pmap (List.ranges_disjoint c)
+  intro u hu v hv huv
+  apply disjoint_pmap
+  intro a a' ha ha' h
+  simpa only [klift, Fin.mk_eq_mk] using h
+  exact huv
 
 end Ranges
 
@@ -1133,8 +1133,8 @@ theorem Fintype.induction_subsingleton_or_nontrivial {P : ∀ (α) [Fintype α],
   obtain ⟨n, hn⟩ : ∃ n, Fintype.card α = n := ⟨Fintype.card α, rfl⟩
   induction' n using Nat.strong_induction_on with n ih generalizing α
   cases' subsingleton_or_nontrivial α with hsing hnontriv
-  · apply hbase
-  · apply hstep
-    intro β _ hlt
-    rw [hn] at hlt
-    exact ih (Fintype.card β) hlt _ rfl
+  apply hbase
+  apply hstep
+  intro β _ hlt
+  rw [hn] at hlt
+  exact ih (Fintype.card β) hlt _ rfl

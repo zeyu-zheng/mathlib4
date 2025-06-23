@@ -227,30 +227,30 @@ protected theorem map_mul {A'} [Semiring A'] [Algebra R A'] (f : A →ₐ[R] A')
       apply congr_arg sSup
       ext S
       constructor <;> rintro ⟨y, hy⟩
-      · use ⟨f y, mem_map.mpr ⟨y.1, y.2, rfl⟩⟩  -- Porting note: added `⟨⟩`
-        refine Eq.trans ?_ hy
-        ext
-        simp
-      · obtain ⟨y', hy', fy_eq⟩ := mem_map.mp y.2
-        use ⟨y', hy'⟩  -- Porting note: added `⟨⟩`
-        refine Eq.trans ?_ hy
-        rw [f.toLinearMap_apply] at fy_eq
-        ext
-        simp [fy_eq]
+      use ⟨f y, mem_map.mpr ⟨y.1, y.2, rfl⟩⟩  -- Porting note: added `⟨⟩`
+      refine Eq.trans ?_ hy
+      ext
+      simp
+      obtain ⟨y', hy', fy_eq⟩ := mem_map.mp y.2
+      use ⟨y', hy'⟩  -- Porting note: added `⟨⟩`
+      refine Eq.trans ?_ hy
+      rw [f.toLinearMap_apply] at fy_eq
+      ext
+      simp [fy_eq]
 
 theorem map_op_mul :
     map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) (M * N) =
       map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) N *
         map (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ) : A →ₗ[R] Aᵐᵒᵖ) M := by
   apply le_antisymm
-  · simp_rw [map_le_iff_le_comap]
-    refine mul_le.2 fun m hm n hn => ?_
-    rw [mem_comap, map_equiv_eq_comap_symm, map_equiv_eq_comap_symm]
-    show op n * op m ∈ _
-    exact mul_mem_mul hn hm
-  · refine mul_le.2 (MulOpposite.rec' fun m hm => MulOpposite.rec' fun n hn => ?_)
-    rw [Submodule.mem_map_equiv] at hm hn ⊢
-    exact mul_mem_mul hn hm
+  simp_rw [map_le_iff_le_comap]
+  refine mul_le.2 fun m hm n hn => ?_
+  rw [mem_comap, map_equiv_eq_comap_symm, map_equiv_eq_comap_symm]
+  show op n * op m ∈ _
+  exact mul_mem_mul hn hm
+  refine mul_le.2 (MulOpposite.rec' fun m hm => MulOpposite.rec' fun n hn => ?_)
+  rw [Submodule.mem_map_equiv] at hm hn ⊢
+  exact mul_mem_mul hn hm
 
 theorem comap_unop_mul :
     comap (↑(opLinearEquiv R : A ≃ₗ[R] Aᵐᵒᵖ).symm : Aᵐᵒᵖ →ₗ[R] A) (M * N) =
@@ -278,11 +278,11 @@ lemma restrictScalars_mul {A B C} [CommSemiring A] [CommSemiring B] [Semiring C]
     [Algebra A B] [Algebra A C] [Algebra B C] [IsScalarTower A B C] {I J : Submodule B C} :
   (I * J).restrictScalars A = I.restrictScalars A * J.restrictScalars A := by
   apply le_antisymm
-  · intro x (hx : x ∈ I * J)
-    refine Submodule.mul_induction_on hx ?_ ?_
-    · exact fun m hm n hn ↦ mul_mem_mul hm hn
-    · exact fun _ _ ↦ add_mem
-  · exact mul_le.mpr (fun _ hm _ hn ↦ mul_mem_mul hm hn)
+  intro x (hx : x ∈ I * J)
+  refine Submodule.mul_induction_on hx ?_ ?_
+  exact fun m hm n hn ↦ mul_mem_mul hm hn
+  exact fun _ _ ↦ add_mem
+  exact mul_le.mpr (fun _ hm _ hn ↦ mul_mem_mul hm hn)
 
 section
 
@@ -346,8 +346,8 @@ lemma span_singleton_mul {x : A} {p : Submodule R A} :
 lemma mem_smul_iff_inv_mul_mem {S} [Field S] [Algebra R S] {x : S} {p : Submodule R S} {y : S}
     (hx : x ≠ 0) : y ∈ x • p ↔ x⁻¹ * y ∈ p := by
   constructor
-  · rintro ⟨a, ha : a ∈ p, rfl⟩; simpa [inv_mul_cancel_left₀ hx]
-  · exact fun h ↦ ⟨_, h, by simp [mul_inv_cancel_left₀ hx]⟩
+  rintro ⟨a, ha : a ∈ p, rfl⟩; simpa [inv_mul_cancel_left₀ hx]
+  exact fun h ↦ ⟨_, h, by simp [mul_inv_cancel_left₀ hx]⟩
 
 lemma mul_mem_smul_iff {S} [CommRing S] [Algebra R S] {x : S} {p : Submodule R S} {y : S}
     (hx : x ∈ nonZeroDivisors S) :
@@ -358,16 +358,16 @@ variable (M N) in
 theorem mul_smul_mul_eq_smul_mul_smul (x y : R) : (x * y) • (M * N) = (x • M) * (y • N) := by
   ext
   refine ⟨?_, fun hx ↦ Submodule.mul_induction_on hx ?_ fun _ _ hx hy ↦ Submodule.add_mem _ hx hy⟩
-  · rintro ⟨_, hx, rfl⟩
-    rw [DistribMulAction.toLinearMap_apply]
-    refine Submodule.mul_induction_on hx (fun m hm n hn ↦ ?_) (fun _ _ hn hm ↦ ?_)
-    · rw [← smul_mul_smul x y m n]
-      exact mul_mem_mul (smul_mem_pointwise_smul m x M hm) (smul_mem_pointwise_smul n y N hn)
-    · rw [smul_add]
-      exact Submodule.add_mem _ hn hm
-  · rintro _ ⟨m, hm, rfl⟩ _ ⟨n, hn, rfl⟩
-    erw [smul_mul_smul x y m n]
-    exact smul_mem_pointwise_smul _ _ _ (mul_mem_mul hm hn)
+  rintro ⟨_, hx, rfl⟩
+  rw [DistribMulAction.toLinearMap_apply]
+  refine Submodule.mul_induction_on hx (fun m hm n hn ↦ ?_) (fun _ _ hn hm ↦ ?_)
+  rw [← smul_mul_smul x y m n]
+  exact mul_mem_mul (smul_mem_pointwise_smul m x M hm) (smul_mem_pointwise_smul n y N hn)
+  rw [smul_add]
+  exact Submodule.add_mem _ hn hm
+  rintro _ ⟨m, hm, rfl⟩ _ ⟨n, hn, rfl⟩
+  erw [smul_mul_smul x y m n]
+  exact smul_mem_pointwise_smul _ _ _ (mul_mem_mul hm hn)
 
 /-- Sub-R-modules of an R-algebra form an idempotent semiring. -/
 instance idemSemiring : IdemSemiring (Submodule R A) :=
@@ -401,17 +401,17 @@ theorem pow_mem_pow {x : A} (hx : x ∈ M) (n : ℕ) : x ^ n ∈ M ^ n :=
 
 theorem pow_toAddSubmonoid {n : ℕ} (h : n ≠ 0) : (M ^ n).toAddSubmonoid = M.toAddSubmonoid ^ n := by
   induction' n with n ih
-  · exact (h rfl).elim
-  · rw [pow_succ, pow_succ, mul_toAddSubmonoid]
-    cases n with
-    | zero => rw [pow_zero, pow_zero, one_mul, ← mul_toAddSubmonoid, one_mul]
-    | succ n => rw [ih n.succ_ne_zero]
+  exact (h rfl).elim
+  rw [pow_succ, pow_succ, mul_toAddSubmonoid]
+  cases n with
+  | zero => rw [pow_zero, pow_zero, one_mul, ← mul_toAddSubmonoid, one_mul]
+  | succ n => rw [ih n.succ_ne_zero]
 
 theorem le_pow_toAddSubmonoid {n : ℕ} : M.toAddSubmonoid ^ n ≤ (M ^ n).toAddSubmonoid := by
   obtain rfl | hn := Decidable.eq_or_ne n 0
-  · rw [pow_zero, pow_zero]
-    exact le_one_toAddSubmonoid
-  · exact (pow_toAddSubmonoid M hn).ge
+  rw [pow_zero, pow_zero]
+  exact le_one_toAddSubmonoid
+  exact (pow_toAddSubmonoid M hn).ge
 
 /-- Dependent version of `Submodule.pow_induction_on_left`. -/
 @[elab_as_elim]
@@ -424,9 +424,9 @@ protected theorem pow_induction_on_left' {C : ∀ (n : ℕ) (x), x ∈ M ^ n →
     {n : ℕ} {x : A}
     (hx : x ∈ M ^ n) : C n x hx := by
   induction' n with n n_ih generalizing x
-  · rw [pow_zero] at hx
-    obtain ⟨r, rfl⟩ := hx
-    exact algebraMap r
+  rw [pow_zero] at hx
+  obtain ⟨r, rfl⟩ := hx
+  exact algebraMap r
   revert hx
   simp_rw [pow_succ']
   intro hx
@@ -445,9 +445,9 @@ protected theorem pow_induction_on_right' {C : ∀ (n : ℕ) (x), x ∈ M ^ n �
     -- Porting note: swapped argument order to match order of `C`
     {n : ℕ} {x : A} (hx : x ∈ M ^ n) : C n x hx := by
   induction' n with n n_ih generalizing x
-  · rw [pow_zero] at hx
-    obtain ⟨r, rfl⟩ := hx
-    exact algebraMap r
+  rw [pow_zero] at hx
+  obtain ⟨r, rfl⟩ := hx
+  exact algebraMap r
   revert hx
   simp_rw [pow_succ]
   intro hx
@@ -576,9 +576,9 @@ theorem prod_span {ι : Type*} (s : Finset ι) (M : ι → Set A) :
     (∏ i ∈ s, Submodule.span R (M i)) = Submodule.span R (∏ i ∈ s, M i) := by
   letI := Classical.decEq ι
   refine Finset.induction_on s ?_ ?_
-  · simp [one_eq_span, Set.singleton_one]
-  · intro _ _ H ih
-    rw [Finset.prod_insert H, Finset.prod_insert H, ih, span_mul_span]
+  simp [one_eq_span, Set.singleton_one]
+  intro _ _ H ih
+  rw [Finset.prod_insert H, Finset.prod_insert H, ih, span_mul_span]
 
 theorem prod_span_singleton {ι : Type*} (s : Finset ι) (x : ι → A) :
     (∏ i ∈ s, span R ({x i} : Set A)) = span R {∏ i ∈ s, x i} := by
@@ -659,8 +659,8 @@ theorem le_div_iff_mul_le {I J K : Submodule R A} : I ≤ J / K ↔ I * K ≤ J 
 @[simp]
 theorem one_le_one_div {I : Submodule R A} : 1 ≤ 1 / I ↔ I ≤ 1 := by
   constructor; all_goals intro hI
-  · rwa [le_div_iff_mul_le, one_mul] at hI
-  · rwa [le_div_iff_mul_le, one_mul]
+  rwa [le_div_iff_mul_le, one_mul] at hI
+  rwa [le_div_iff_mul_le, one_mul]
 
 theorem le_self_mul_one_div {I : Submodule R A} (hI : I ≤ 1) : I ≤ I * (1 / I) := by
   refine (mul_one I).symm.trans_le ?_  -- Porting note: drop `rw {occs := _}` in favor of `refine`
@@ -679,14 +679,14 @@ protected theorem map_div {B : Type*} [CommSemiring B] [Algebra R B] (I J : Subm
   ext x
   simp only [mem_map, mem_div_iff_forall_mul_mem]
   constructor
-  · rintro ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
-    exact ⟨x * y, hx _ hy, map_mul h x y⟩
-  · rintro hx
-    refine ⟨h.symm x, fun z hz => ?_, h.apply_symm_apply x⟩
-    obtain ⟨xz, xz_mem, hxz⟩ := hx (h z) ⟨z, hz, rfl⟩
-    convert xz_mem
-    apply h.injective
-    erw [map_mul, h.apply_symm_apply, hxz]
+  rintro ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩
+  exact ⟨x * y, hx _ hy, map_mul h x y⟩
+  rintro hx
+  refine ⟨h.symm x, fun z hz => ?_, h.apply_symm_apply x⟩
+  obtain ⟨xz, xz_mem, hxz⟩ := hx (h z) ⟨z, hz, rfl⟩
+  convert xz_mem
+  apply h.injective
+  erw [map_mul, h.apply_symm_apply, hxz]
 
 end Quotient
 

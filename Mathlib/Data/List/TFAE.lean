@@ -37,10 +37,10 @@ theorem tfae_cons_of_mem {a b} {l : List Prop} (h : b ∈ l) : TFAE (a :: l) ↔
     fun p hp q hq => H _ (Mem.tail a hp) _ (Mem.tail a hq)⟩,
       by
         rintro ⟨ab, H⟩ p (_ | ⟨_, hp⟩) q (_ | ⟨_, hq⟩)
-        · rfl
-        · exact ab.trans (H _ h _ hq)
-        · exact (ab.trans (H _ h _ hp)).symm
-        · exact H _ hp _ hq⟩
+        rfl
+        exact ab.trans (H _ h _ hq)
+        exact (ab.trans (H _ h _ hp)).symm
+        exact H _ hp _ hq⟩
 
 theorem tfae_cons_cons {a b} {l : List Prop} : TFAE (a :: b :: l) ↔ (a ↔ b) ∧ TFAE (b :: l) :=
   tfae_cons_of_mem (Mem.head _)

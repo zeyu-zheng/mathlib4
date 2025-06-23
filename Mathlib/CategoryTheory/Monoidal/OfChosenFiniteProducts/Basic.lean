@@ -222,15 +222,15 @@ abbrev tensorHom {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) : tensorObj ℬ W Y �
 theorem tensor_id (X₁ X₂ : C) : tensorHom ℬ (𝟙 X₁) (𝟙 X₂) = 𝟙 (tensorObj ℬ X₁ X₂) := by
   apply IsLimit.hom_ext (ℬ _ _).isLimit
   rintro ⟨⟨⟩⟩ <;>
-    · dsimp [tensorHom]
-      simp
+  · dsimp [tensorHom]
+    simp
 
 theorem tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : C} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : Y₁ ⟶ Z₁)
     (g₂ : Y₂ ⟶ Z₂) : tensorHom ℬ (f₁ ≫ g₁) (f₂ ≫ g₂) = tensorHom ℬ f₁ f₂ ≫ tensorHom ℬ g₁ g₂ := by
   apply IsLimit.hom_ext (ℬ _ _).isLimit
   rintro ⟨⟨⟩⟩ <;>
-    · dsimp [tensorHom]
-      simp
+  · dsimp [tensorHom]
+    simp
 
 theorem pentagon (W X Y Z : C) :
     tensorHom ℬ (BinaryFan.associatorOfLimitCone ℬ W X Y).hom (𝟙 Z) ≫
@@ -240,14 +240,14 @@ theorem pentagon (W X Y Z : C) :
         (BinaryFan.associatorOfLimitCone ℬ W X (tensorObj ℬ Y Z)).hom := by
   dsimp [tensorHom]
   apply IsLimit.hom_ext (ℬ _ _).isLimit; rintro ⟨⟨⟩⟩
-  · simp
-  · apply IsLimit.hom_ext (ℬ _ _).isLimit
-    rintro ⟨⟨⟩⟩
-    · simp
-    apply IsLimit.hom_ext (ℬ _ _).isLimit
-    rintro ⟨⟨⟩⟩
-    · simp
-    · simp
+  simp
+  apply IsLimit.hom_ext (ℬ _ _).isLimit
+  rintro ⟨⟨⟩⟩
+  simp
+  apply IsLimit.hom_ext (ℬ _ _).isLimit
+  rintro ⟨⟨⟩⟩
+  simp
+  simp
 
 theorem triangle (X Y : C) :
     (BinaryFan.associatorOfLimitCone ℬ X 𝒯.cone.pt Y).hom ≫
@@ -273,11 +273,11 @@ theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : C} (f₁ : X₁ �
       (BinaryFan.associatorOfLimitCone ℬ X₁ X₂ X₃).hom ≫ tensorHom ℬ f₁ (tensorHom ℬ f₂ f₃) := by
   dsimp [tensorHom]
   apply IsLimit.hom_ext (ℬ _ _).isLimit; rintro ⟨⟨⟩⟩
-  · simp
-  · apply IsLimit.hom_ext (ℬ _ _).isLimit
-    rintro ⟨⟨⟩⟩
-    · simp
-    · simp
+  simp
+  apply IsLimit.hom_ext (ℬ _ _).isLimit
+  rintro ⟨⟨⟩⟩
+  simp
+  simp
 
 end MonoidalOfChosenFiniteProducts
 

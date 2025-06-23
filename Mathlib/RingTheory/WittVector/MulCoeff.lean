@@ -70,16 +70,16 @@ theorem wittPolyProdRemainder_vars (n : ℕ) :
   intro x hx
   apply Subset.trans (vars_mul _ _)
   refine union_subset ?_ ?_
-  · apply Subset.trans (vars_pow _ _)
-    have : (p : 𝕄) = C (p : ℤ)
-    simp only [Int.cast_natCast, eq_intCast]
-    rw [this, vars_C]
-    apply empty_subset
-  · apply Subset.trans (vars_pow _ _)
-    apply Subset.trans (wittMul_vars _ _)
-    apply product_subset_product (Subset.refl _)
-    simp only [mem_range, range_subset] at hx ⊢
-    exact hx
+  apply Subset.trans (vars_pow _ _)
+  have : (p : 𝕄) = C (p : ℤ)
+  simp only [Int.cast_natCast, eq_intCast]
+  rw [this, vars_C]
+  apply empty_subset
+  apply Subset.trans (vars_pow _ _)
+  apply Subset.trans (wittMul_vars _ _)
+  apply product_subset_product (Subset.refl _)
+  simp only [mem_range, range_subset] at hx ⊢
+  exact hx
 
 /-- `remainder p n` represents the remainder term from `mul_polyOfInterest_aux3`.
 `wittPolyProd p (n+1)` will have variables up to `n+1`,
@@ -99,10 +99,10 @@ theorem remainder_vars (n : ℕ) : (remainder p n).vars ⊆ univ ×ˢ range (n +
     rw [biUnion_subset]
     intro x hx
     rw [rename_monomial, vars_monomial, Finsupp.mapDomain_single]
-    · apply Subset.trans Finsupp.support_single_subset
-      simpa using mem_range.mp hx
-    · apply pow_ne_zero
-      exact mod_cast hp.out.ne_zero
+    apply Subset.trans Finsupp.support_single_subset
+    simpa using mem_range.mp hx
+    apply pow_ne_zero
+    exact mod_cast hp.out.ne_zero
 
 /-- This is the polynomial whose degree we want to get a handle on. -/
 def polyOfInterest (n : ℕ) : 𝕄 :=
@@ -114,18 +114,18 @@ theorem mul_polyOfInterest_aux1 (n : ℕ) :
     ∑ i ∈ range (n + 1), (p : 𝕄) ^ i * wittMul p i ^ p ^ (n - i) = wittPolyProd p n := by
   simp only [wittPolyProd]
   convert wittStructureInt_prop p (X (0 : Fin 2) * X 1) n using 1
-  · simp only [wittPolynomial, wittMul]
-    rw [map_sum]
-    congr 1 with i
-    congr 1
-    have hsupp : (Finsupp.single i (p ^ (n - i))).support = {i}
-    rw [Finsupp.support_eq_singleton]
-    simp only [and_true_iff, Finsupp.single_eq_same, eq_self_iff_true, Ne]
-    exact pow_ne_zero _ hp.out.ne_zero
-    simp only [bind₁_monomial, hsupp, Int.cast_natCast, prod_singleton, eq_intCast,
-      Finsupp.single_eq_same, C_pow, mul_eq_mul_left_iff, true_or_iff, eq_self_iff_true,
-      Int.cast_pow]
-  · simp only [map_mul, bind₁_X_right]
+  simp only [wittPolynomial, wittMul]
+  rw [map_sum]
+  congr 1 with i
+  congr 1
+  have hsupp : (Finsupp.single i (p ^ (n - i))).support = {i}
+  rw [Finsupp.support_eq_singleton]
+  simp only [and_true_iff, Finsupp.single_eq_same, eq_self_iff_true, Ne]
+  exact pow_ne_zero _ hp.out.ne_zero
+  simp only [bind₁_monomial, hsupp, Int.cast_natCast, prod_singleton, eq_intCast,
+    Finsupp.single_eq_same, C_pow, mul_eq_mul_left_iff, true_or_iff, eq_self_iff_true,
+    Int.cast_pow]
+  simp only [map_mul, bind₁_X_right]
 
 theorem mul_polyOfInterest_aux2 (n : ℕ) :
     (p : 𝕄) ^ n * wittMul p n + wittPolyProdRemainder p n = wittPolyProd p n := by
@@ -187,8 +187,8 @@ theorem mul_polyOfInterest_vars (n : ℕ) :
   rw [mul_polyOfInterest_aux5]
   apply Subset.trans (vars_sub_subset _)
   refine union_subset ?_ ?_
-  · apply remainder_vars
-  · apply wittPolyProdRemainder_vars
+  apply remainder_vars
+  apply wittPolyProdRemainder_vars
 
 theorem polyOfInterest_vars_eq (n : ℕ) : (polyOfInterest p n).vars =
     ((p : 𝕄) ^ (n + 1) * (wittMul p (n + 1) + (p : 𝕄) ^ (n + 1) * X (0, n + 1) * X (1, n + 1) -

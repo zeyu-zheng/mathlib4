@@ -285,14 +285,14 @@ theorem angle_eq_pi_iff_sbtw {p₁ p₂ p₃ : P} : ∠ p₁ p₂ p₃ = π ↔ 
   refine ⟨⟨1 / (1 - r), ⟨div_nonneg zero_le_one (sub_nonneg.2 (hr.le.trans zero_le_one)),
     (div_le_one (sub_pos.2 (hr.trans zero_lt_one))).2 ((le_sub_self_iff 1).2 hr.le)⟩, ?_⟩,
     (vsub_ne_zero.1 hp₁p₂).symm, ?_⟩
-  · rw [← eq_vadd_iff_vsub_eq] at hp₃p₂
-    rw [AffineMap.lineMap_apply, hp₃p₂, vadd_vsub_assoc, ← neg_vsub_eq_vsub_rev p₂ p₁, smul_neg, ←
-      neg_smul, smul_add, smul_smul, ← add_smul, eq_comm, eq_vadd_iff_vsub_eq]
-    convert (one_smul ℝ (p₂ -ᵥ p₁)).symm
-    field_simp [(sub_pos.2 (hr.trans zero_lt_one)).ne.symm]
-    ring
-  · rw [ne_comm, ← @vsub_ne_zero V, hp₃p₂, smul_ne_zero_iff]
-    exact ⟨hr.ne, hp₁p₂⟩
+  rw [← eq_vadd_iff_vsub_eq] at hp₃p₂
+  rw [AffineMap.lineMap_apply, hp₃p₂, vadd_vsub_assoc, ← neg_vsub_eq_vsub_rev p₂ p₁, smul_neg, ←
+    neg_smul, smul_add, smul_smul, ← add_smul, eq_comm, eq_vadd_iff_vsub_eq]
+  convert (one_smul ℝ (p₂ -ᵥ p₁)).symm
+  field_simp [(sub_pos.2 (hr.trans zero_lt_one)).ne.symm]
+  ring
+  rw [ne_comm, ← @vsub_ne_zero V, hp₃p₂, smul_ne_zero_iff]
+  exact ⟨hr.ne, hp₁p₂⟩
 
 /-- If the second of three points is weakly between the other two, and not equal to the first,
 the angle at the first point is zero. -/
@@ -350,19 +350,19 @@ weakly between the other two, and not equal to the second. -/
 theorem angle_eq_zero_iff_ne_and_wbtw {p₁ p₂ p₃ : P} :
     ∠ p₁ p₂ p₃ = 0 ↔ p₁ ≠ p₂ ∧ Wbtw ℝ p₂ p₁ p₃ ∨ p₃ ≠ p₂ ∧ Wbtw ℝ p₂ p₃ p₁ := by
   constructor
-  · rw [angle, angle_eq_zero_iff]
-    rintro ⟨hp₁p₂, r, hr0, hp₃p₂⟩
-    rcases le_or_lt 1 r with (hr1 | hr1)
-    · refine Or.inl ⟨vsub_ne_zero.1 hp₁p₂, r⁻¹, ⟨(inv_pos.2 hr0).le, inv_le_one hr1⟩, ?_⟩
-      rw [AffineMap.lineMap_apply, hp₃p₂, smul_smul, inv_mul_cancel hr0.ne.symm, one_smul,
-        vsub_vadd]
-    · refine Or.inr ⟨?_, r, ⟨hr0.le, hr1.le⟩, ?_⟩
-      · rw [← @vsub_ne_zero V, hp₃p₂, smul_ne_zero_iff]
-        exact ⟨hr0.ne.symm, hp₁p₂⟩
-      · rw [AffineMap.lineMap_apply, ← hp₃p₂, vsub_vadd]
-  · rintro (⟨hp₁p₂, h⟩ | ⟨hp₃p₂, h⟩)
-    · exact h.angle₂₁₃_eq_zero_of_ne hp₁p₂
-    · exact h.angle₃₁₂_eq_zero_of_ne hp₃p₂
+  rw [angle, angle_eq_zero_iff]
+  rintro ⟨hp₁p₂, r, hr0, hp₃p₂⟩
+  rcases le_or_lt 1 r with (hr1 | hr1)
+  refine Or.inl ⟨vsub_ne_zero.1 hp₁p₂, r⁻¹, ⟨(inv_pos.2 hr0).le, inv_le_one hr1⟩, ?_⟩
+  rw [AffineMap.lineMap_apply, hp₃p₂, smul_smul, inv_mul_cancel hr0.ne.symm, one_smul,
+    vsub_vadd]
+  refine Or.inr ⟨?_, r, ⟨hr0.le, hr1.le⟩, ?_⟩
+  rw [← @vsub_ne_zero V, hp₃p₂, smul_ne_zero_iff]
+  exact ⟨hr0.ne.symm, hp₁p₂⟩
+  rw [AffineMap.lineMap_apply, ← hp₃p₂, vsub_vadd]
+  rintro (⟨hp₁p₂, h⟩ | ⟨hp₃p₂, h⟩)
+  exact h.angle₂₁₃_eq_zero_of_ne hp₁p₂
+  exact h.angle₃₁₂_eq_zero_of_ne hp₃p₂
 
 /-- The angle between three points is zero if and only if one of the first and third points is
 strictly between the other two, or those two points are equal but not equal to the second. -/
@@ -379,27 +379,27 @@ angle between them is 0 or π. -/
 theorem collinear_iff_eq_or_eq_or_angle_eq_zero_or_angle_eq_pi {p₁ p₂ p₃ : P} :
     Collinear ℝ ({p₁, p₂, p₃} : Set P) ↔ p₁ = p₂ ∨ p₃ = p₂ ∨ ∠ p₁ p₂ p₃ = 0 ∨ ∠ p₁ p₂ p₃ = π := by
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · replace h := h.wbtw_or_wbtw_or_wbtw
-    by_cases h₁₂ : p₁ = p₂
-    · exact Or.inl h₁₂
-    by_cases h₃₂ : p₃ = p₂
-    · exact Or.inr (Or.inl h₃₂)
-    rw [or_iff_right h₁₂, or_iff_right h₃₂]
-    rcases h with (h | h | h)
-    · exact Or.inr (angle_eq_pi_iff_sbtw.2 ⟨h, Ne.symm h₁₂, Ne.symm h₃₂⟩)
-    · exact Or.inl (h.angle₃₁₂_eq_zero_of_ne h₃₂)
-    · exact Or.inl (h.angle₂₃₁_eq_zero_of_ne h₁₂)
-  · rcases h with (rfl | rfl | h | h)
-    · simpa using collinear_pair ℝ p₁ p₃
-    · simpa using collinear_pair ℝ p₁ p₃
-    · rw [angle_eq_zero_iff_ne_and_wbtw] at h
-      rcases h with (⟨-, h⟩ | ⟨-, h⟩)
-      · rw [Set.insert_comm]
-        exact h.collinear
-      · rw [Set.insert_comm, Set.pair_comm]
-        exact h.collinear
-    · rw [angle_eq_pi_iff_sbtw] at h
-      exact h.wbtw.collinear
+  replace h := h.wbtw_or_wbtw_or_wbtw
+  by_cases h₁₂ : p₁ = p₂
+  exact Or.inl h₁₂
+  by_cases h₃₂ : p₃ = p₂
+  exact Or.inr (Or.inl h₃₂)
+  rw [or_iff_right h₁₂, or_iff_right h₃₂]
+  rcases h with (h | h | h)
+  exact Or.inr (angle_eq_pi_iff_sbtw.2 ⟨h, Ne.symm h₁₂, Ne.symm h₃₂⟩)
+  exact Or.inl (h.angle₃₁₂_eq_zero_of_ne h₃₂)
+  exact Or.inl (h.angle₂₃₁_eq_zero_of_ne h₁₂)
+  rcases h with (rfl | rfl | h | h)
+  simpa using collinear_pair ℝ p₁ p₃
+  simpa using collinear_pair ℝ p₁ p₃
+  rw [angle_eq_zero_iff_ne_and_wbtw] at h
+  rcases h with (⟨-, h⟩ | ⟨-, h⟩)
+  rw [Set.insert_comm]
+  exact h.collinear
+  rw [Set.insert_comm, Set.pair_comm]
+  exact h.collinear
+  rw [angle_eq_pi_iff_sbtw] at h
+  exact h.wbtw.collinear
 
 /-- If the angle between three points is 0, they are collinear. -/
 theorem collinear_of_angle_eq_zero {p₁ p₂ p₃ : P} (h : ∠ p₁ p₂ p₃ = 0) :

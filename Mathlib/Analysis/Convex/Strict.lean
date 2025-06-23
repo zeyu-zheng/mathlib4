@@ -216,11 +216,11 @@ theorem StrictConvex.add (hs : StrictConvex 𝕜 s) (ht : StrictConvex 𝕜 t) :
   rintro _ ⟨v, hv, w, hw, rfl⟩ _ ⟨x, hx, y, hy, rfl⟩ h a b ha hb hab
   rw [smul_add, smul_add, add_add_add_comm]
   obtain rfl | hvx := eq_or_ne v x
-  · refine interior_mono (add_subset_add (singleton_subset_iff.2 hv) Subset.rfl) ?_
-    rw [Convex.combo_self hab, singleton_add]
-    exact
-      (isOpenMap_add_left _).image_interior_subset _
-        (mem_image_of_mem _ <| ht hw hy (ne_of_apply_ne _ h) ha hb hab)
+  refine interior_mono (add_subset_add (singleton_subset_iff.2 hv) Subset.rfl) ?_
+  rw [Convex.combo_self hab, singleton_add]
+  exact
+    (isOpenMap_add_left _).image_interior_subset _
+      (mem_image_of_mem _ <| ht hw hy (ne_of_apply_ne _ h) ha hb hab)
   exact
     subset_interior_add_left
       (add_mem_add (hs hv hx hvx ha hb hab) <| ht.convex hw hy ha.le hb.le hab)
@@ -245,8 +245,8 @@ variable [LinearOrderedField 𝕝] [Module 𝕝 E] [ContinuousConstSMul 𝕝 E]
 
 theorem StrictConvex.smul (hs : StrictConvex 𝕜 s) (c : 𝕝) : StrictConvex 𝕜 (c • s) := by
   obtain rfl | hc := eq_or_ne c 0
-  · exact (subsingleton_zero_smul_set _).strictConvex
-  · exact hs.linear_image (LinearMap.lsmul _ _ c) (isOpenMap_smul₀ hc)
+  exact (subsingleton_zero_smul_set _).strictConvex
+  exact hs.linear_image (LinearMap.lsmul _ _ c) (isOpenMap_smul₀ hc)
 
 theorem StrictConvex.affinity [ContinuousAdd E] (hs : StrictConvex 𝕜 s) (z : E) (c : 𝕝) :
     StrictConvex 𝕜 (z +ᵥ c • s) :=
@@ -271,10 +271,10 @@ open Classical in
 theorem StrictConvex.preimage_smul (hs : StrictConvex 𝕜 s) (c : 𝕜) :
     StrictConvex 𝕜 ((fun z => c • z) ⁻¹' s) := by
     obtain rfl | hc := eq_or_ne c 0
-    · simp_rw [zero_smul, preimage_const]
-      split_ifs
-      · exact strictConvex_univ
-      · exact strictConvex_empty
+    simp_rw [zero_smul, preimage_const]
+    split_ifs
+    exact strictConvex_univ
+    exact strictConvex_empty
     refine hs.linear_preimage (LinearMap.lsmul _ _ c) ?_ (smul_right_injective E hc)
     unfold LinearMap.lsmul LinearMap.mk₂ LinearMap.mk₂' LinearMap.mk₂'ₛₗ
     exact continuous_const_smul _

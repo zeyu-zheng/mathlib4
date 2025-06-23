@@ -21,10 +21,10 @@ variable {ι ι' : Type*} {α β : ι → Type*} {s s₁ s₂ : Set ι} {t t₁ 
 @[simp]
 theorem range_sigmaMk (i : ι) : range (Sigma.mk i : α i → Sigma α) = Sigma.fst ⁻¹' {i} := by
   apply Subset.antisymm
-  · rintro _ ⟨b, rfl⟩
-    simp
-  · rintro ⟨x, y⟩ (rfl | _)
-    exact mem_range_self y
+  rintro _ ⟨b, rfl⟩
+  simp
+  rintro ⟨x, y⟩ (rfl | _)
+  exact mem_range_self y
 
 theorem preimage_image_sigmaMk_of_ne (h : i ≠ j) (s : Set (α j)) :
     Sigma.mk i ⁻¹' (Sigma.mk j '' s) = ∅ := by
@@ -87,11 +87,11 @@ theorem sigma_univ : s.sigma (fun _ ↦ univ : ∀ i, Set (α i)) = Sigma.fst �
 theorem singleton_sigma : ({i} : Set ι).sigma t = Sigma.mk i '' t i :=
   ext fun x ↦ by
     constructor
-    · obtain ⟨j, a⟩ := x
-      rintro ⟨rfl : j = i, ha⟩
-      exact mem_image_of_mem _ ha
-    · rintro ⟨b, hb, rfl⟩
-      exact ⟨rfl, hb⟩
+    obtain ⟨j, a⟩ := x
+    rintro ⟨rfl : j = i, ha⟩
+    exact mem_image_of_mem _ ha
+    rintro ⟨b, hb, rfl⟩
+    exact ⟨rfl, hb⟩
 
 @[simp]
 theorem sigma_singleton {a : ∀ i, α i} :

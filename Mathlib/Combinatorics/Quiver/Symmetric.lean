@@ -61,10 +61,10 @@ theorem reverse_reverse [h : HasInvolutiveReverse V] {a b : V} (f : a ⟶ b) :
 theorem reverse_inj [h : HasInvolutiveReverse V] {a b : V}
     (f g : a ⟶ b) : reverse f = reverse g ↔ f = g := by
   constructor
-  · rintro h
-    simpa using congr_arg Quiver.reverse h
-  · rintro h
-    congr
+  rintro h
+  simpa using congr_arg Quiver.reverse h
+  rintro h
+  congr
 
 theorem eq_reverse_iff [h : HasInvolutiveReverse V] {a b : V} (f : a ⟶ b)
     (g : b ⟶ a) : f = reverse g ↔ reverse f = g := by
@@ -134,16 +134,16 @@ theorem Path.reverse_toPath [HasReverse V] {a b : V} (f : a ⟶ b) :
 theorem Path.reverse_comp [HasReverse V] {a b c : V} (p : Path a b) (q : Path b c) :
     (p.comp q).reverse = q.reverse.comp p.reverse := by
   induction' q with _ _ _ _ h
-  · simp
-  · simp [h]
+  simp
+  simp [h]
 
 @[simp]
 theorem Path.reverse_reverse [h : HasInvolutiveReverse V] {a b : V} (p : Path a b) :
     p.reverse.reverse = p := by
   induction' p with _ _ _ _ h
-  · simp
-  · rw [Path.reverse, Path.reverse_comp, h, Path.reverse_toPath, Quiver.reverse_reverse]
-    rfl
+  simp
+  rw [Path.reverse, Path.reverse_comp, h, Path.reverse_toPath, Quiver.reverse_reverse]
+  rfl
 
 end Paths
 
@@ -168,19 +168,19 @@ def lift [HasReverse V'] (φ : Prefunctor V V') :
 theorem lift_spec [HasReverse V'] (φ : Prefunctor V V') :
     Symmetrify.of.comp (Symmetrify.lift φ) = φ := by
   fapply Prefunctor.ext
-  · rintro X
-    rfl
-  · rintro X Y f
-    rfl
+  rintro X
+  rfl
+  rintro X Y f
+  rfl
 
 theorem lift_reverse [h : HasInvolutiveReverse V']
     (φ : Prefunctor V V') {X Y : Symmetrify V} (f : X ⟶ Y) :
     (Symmetrify.lift φ).map (Quiver.reverse f) = Quiver.reverse ((Symmetrify.lift φ).map f) := by
   dsimp [Symmetrify.lift]; cases f
-  · simp only
-    rfl
-  · simp only [reverse_reverse]
-    rfl
+  simp only
+  rfl
+  simp only [reverse_reverse]
+  rfl
 
 /-- `lift φ` is the only prefunctor extending `φ` and preserving reverses. -/
 theorem lift_unique [HasReverse V'] (φ : V ⥤q V') (Φ : Symmetrify V ⥤q V') (hΦ : (of ⋙q Φ) = φ)
@@ -189,12 +189,12 @@ theorem lift_unique [HasReverse V'] (φ : V ⥤q V') (Φ : Symmetrify V ⥤q V')
     Φ = Symmetrify.lift φ := by
   subst_vars
   fapply Prefunctor.ext
-  · rintro X
-    rfl
-  · rintro X Y f
-    cases f
-    · rfl
-    · exact hΦinv (Sum.inl _)
+  rintro X
+  rfl
+  rintro X Y f
+  cases f
+  rfl
+  exact hΦinv (Sum.inl _)
 
 /-- A prefunctor canonically defines a prefunctor of the symmetrifications. -/
 @[simps]

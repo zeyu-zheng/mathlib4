@@ -130,8 +130,8 @@ theorem isoRestrict_hom_ofRestrict : (isoRestrict f).hom ≫ Y.ofRestrict _ = f 
     ofRestrict_c_app, Category.assoc, whiskerRight_id']
   erw [Category.comp_id, comp_c_app, f.c.naturality_assoc, ← X.presheaf.map_comp]
   trans f.c.app x ≫ X.presheaf.map (𝟙 _)
-  · congr 1
-  · erw [X.presheaf.map_id, Category.comp_id]
+  congr 1
+  erw [X.presheaf.map_id, Category.comp_id]
 
 @[reassoc (attr := simp)]
 theorem isoRestrict_inv_ofRestrict : (isoRestrict f).inv ≫ f = Y.ofRestrict _ := by
@@ -154,14 +154,14 @@ instance comp {Z : PresheafedSpace C} (g : Y ⟶ Z) [hg : IsOpenImmersion g] :
     dsimp only [AlgebraicGeometry.PresheafedSpace.comp_c_app, unop_op, Functor.op, comp_base,
       Opens.map_comp_obj]
     apply (config := { allowSynthFailures := true }) IsIso.comp_isIso
-    · exact c_iso' g ((opensFunctor f).obj U) (by ext; simp)
-    · apply c_iso' f U
-      ext1
-      dsimp only [Opens.map_coe, IsOpenMap.functor_obj_coe, comp_base]
-      -- Porting note: slightly more hand holding here: `g ∘ f` and `fun x => g (f x)`
-      erw [coe_comp, show g.base ∘ f.base = fun x => g.base (f.base x) from rfl,
-        ← Set.image_image g.base f.base, Set.preimage_image_eq _ hg.base_open.inj]
-         -- now `erw` after #13170
+    exact c_iso' g ((opensFunctor f).obj U) (by ext; simp)
+    apply c_iso' f U
+    ext1
+    dsimp only [Opens.map_coe, IsOpenMap.functor_obj_coe, comp_base]
+    -- Porting note: slightly more hand holding here: `g ∘ f` and `fun x => g (f x)`
+    erw [coe_comp, show g.base ∘ f.base = fun x => g.base (f.base x) from rfl,
+      ← Set.image_image g.base f.base, Set.preimage_image_eq _ hg.base_open.inj]
+       -- now `erw` after #13170
 
 /-- For an open immersion `f : X ⟶ Y` and an open set `U ⊆ X`, we have the map `X(U) ⟶ Y(U)`. -/
 noncomputable def invApp (U : Opens X) :
@@ -235,15 +235,15 @@ instance ofRestrict {X : TopCat} (Y : PresheafedSpace C) {f : X ⟶ Y.carrier}
     ext1
     exact Set.preimage_image_eq _ hf.inj
     convert_to IsIso (Y.presheaf.map (𝟙 _))
-    · congr
-    · -- Porting note: was `apply Subsingleton.helim; rw [this]`
-      -- See https://github.com/leanprover/lean4/issues/2273
-      congr
-      · simp only [unop_op]
-        congr
-      apply Subsingleton.helim
-      rw [this]
-    · infer_instance
+    congr
+    -- Porting note: was `apply Subsingleton.helim; rw [this]`
+    -- See https://github.com/leanprover/lean4/issues/2273
+    congr
+    simp only [unop_op]
+    congr
+    apply Subsingleton.helim
+    rw [this]
+    infer_instance
 
 @[elementwise, simp]
 theorem ofRestrict_invApp {C : Type*} [Category C] (X : PresheafedSpace C) {Y : TopCat}
@@ -336,17 +336,17 @@ def pullbackConeOfLeftFst :
 theorem pullback_cone_of_left_condition : pullbackConeOfLeftFst f g ≫ f = Y.ofRestrict _ ≫ g := by
   -- Porting note: `ext` did not pick up `NatTrans.ext`
   refine PresheafedSpace.Hom.ext _ _ ?_ <| NatTrans.ext _ _ <| funext fun U => ?_
-  · simpa using pullback.condition
-  · induction U using Opposite.rec'
-    -- Porting note: `NatTrans.comp_app` is not picked up by `dsimp`
-    -- Perhaps see : https://github.com/leanprover-community/mathlib4/issues/5026
-    rw [NatTrans.comp_app]
-    dsimp only [comp_c_app, unop_op, whiskerRight_app, pullbackConeOfLeftFst]
-    -- simp only [ofRestrict_c_app, NatTrans.comp_app]
-    simp only [app_invApp_assoc,
-      eqToHom_app, Category.assoc, NatTrans.naturality_assoc]
-    erw [← Y.presheaf.map_comp, ← Y.presheaf.map_comp]
-    congr 1
+  simpa using pullback.condition
+  induction U using Opposite.rec'
+  -- Porting note: `NatTrans.comp_app` is not picked up by `dsimp`
+  -- Perhaps see : https://github.com/leanprover-community/mathlib4/issues/5026
+  rw [NatTrans.comp_app]
+  dsimp only [comp_c_app, unop_op, whiskerRight_app, pullbackConeOfLeftFst]
+  -- simp only [ofRestrict_c_app, NatTrans.comp_app]
+  simp only [app_invApp_assoc,
+    eqToHom_app, Category.assoc, NatTrans.naturality_assoc]
+  erw [← Y.presheaf.map_comp, ← Y.presheaf.map_comp]
+  congr 1
 
 /-- We construct the pullback along an open immersion via restricting along the pullback of the
 maps of underlying spaces (which is also an open embedding).
@@ -394,34 +394,34 @@ theorem pullbackConeOfLeftLift_fst :
     pullbackConeOfLeftLift f g s ≫ (pullbackConeOfLeft f g).fst = s.fst := by
   -- Porting note: `ext` did not pick up `NatTrans.ext`
   refine PresheafedSpace.Hom.ext _ _ ?_ <| NatTrans.ext _ _ <| funext fun x => ?_
-  · change pullback.lift _ _ _ ≫ pullback.fst _ _ = _
-    simp
-  · induction x using Opposite.rec' with | h x => ?_
-    change ((_ ≫ _) ≫ _ ≫ _) ≫ _ = _
-    simp_rw [Category.assoc]
-    erw [← s.pt.presheaf.map_comp]
-    erw [s.snd.c.naturality_assoc]
-    have := congr_app s.condition (op (opensFunctor f |>.obj x))
-    dsimp only [comp_c_app, unop_op] at this
-    rw [← IsIso.comp_inv_eq] at this
-    replace this := reassoc_of% this
-    erw [← this, hf.invApp_app_assoc, s.fst.c.naturality_assoc]
-    simp [eqToHom_map]
+  change pullback.lift _ _ _ ≫ pullback.fst _ _ = _
+  simp
+  induction x using Opposite.rec' with | h x => ?_
+  change ((_ ≫ _) ≫ _ ≫ _) ≫ _ = _
+  simp_rw [Category.assoc]
+  erw [← s.pt.presheaf.map_comp]
+  erw [s.snd.c.naturality_assoc]
+  have := congr_app s.condition (op (opensFunctor f |>.obj x))
+  dsimp only [comp_c_app, unop_op] at this
+  rw [← IsIso.comp_inv_eq] at this
+  replace this := reassoc_of% this
+  erw [← this, hf.invApp_app_assoc, s.fst.c.naturality_assoc]
+  simp [eqToHom_map]
 
 -- this lemma is not a `simp` lemma, because it is an implementation detail
 theorem pullbackConeOfLeftLift_snd :
     pullbackConeOfLeftLift f g s ≫ (pullbackConeOfLeft f g).snd = s.snd := by
   -- Porting note: `ext` did not pick up `NatTrans.ext`
   refine PresheafedSpace.Hom.ext _ _ ?_ <| NatTrans.ext _ _ <| funext fun x => ?_
-  · change pullback.lift _ _ _ ≫ pullback.snd _ _ = _
-    simp
-  · change (_ ≫ _ ≫ _) ≫ _ = _
-    simp_rw [Category.assoc]
-    erw [s.snd.c.naturality_assoc]
-    erw [← s.pt.presheaf.map_comp, ← s.pt.presheaf.map_comp]
-    trans s.snd.c.app x ≫ s.pt.presheaf.map (𝟙 _)
-    · congr 1
-    · rw [s.pt.presheaf.map_id]; erw [Category.comp_id]
+  change pullback.lift _ _ _ ≫ pullback.snd _ _ = _
+  simp
+  change (_ ≫ _ ≫ _) ≫ _ = _
+  simp_rw [Category.assoc]
+  erw [s.snd.c.naturality_assoc]
+  erw [← s.pt.presheaf.map_comp, ← s.pt.presheaf.map_comp]
+  trans s.snd.c.app x ≫ s.pt.presheaf.map (𝟙 _)
+  congr 1
+  rw [s.pt.presheaf.map_id]; erw [Category.comp_id]
 
 instance pullbackConeSndIsOpenImmersion : IsOpenImmersion (pullbackConeOfLeft f g).snd := by
   erw [CategoryTheory.Limits.PullbackCone.mk_snd]
@@ -466,14 +466,14 @@ instance forgetPreservesLimitsOfLeft : PreservesLimit (cospan f g) (forget C) :=
       apply (IsLimit.postcomposeHomEquiv (diagramIsoCospan _) _).toFun
       refine (IsLimit.equivIsoLimit ?_).toFun (limit.isLimit (cospan f.base g.base))
       fapply Cones.ext
-      · exact Iso.refl _
+      exact Iso.refl _
       change ∀ j, _ = 𝟙 _ ≫ _ ≫ _
       simp_rw [Category.id_comp]
       rintro (_ | _ | _) <;> symm
-      · erw [Category.comp_id]
-        exact limit.w (cospan f.base g.base) WalkingCospan.Hom.inl
-      · exact Category.comp_id _
-      · exact Category.comp_id _)
+      erw [Category.comp_id]
+      exact limit.w (cospan f.base g.base) WalkingCospan.Hom.inl
+      exact Category.comp_id _
+      exact Category.comp_id _)
 
 instance forgetPreservesLimitsOfRight : PreservesLimit (cospan g f) (forget C) :=
   preservesPullbackSymmetry (forget C) f g
@@ -909,7 +909,7 @@ instance sigma_ι_isOpenImmersion [HasStrictTerminalObjects C] :
                   (preservesColimitIso SheafedSpace.forgetToPresheafedSpace F).inv.base).obj
               (unop <| op <| H.isOpenMap.functor.obj U)))
           (op i))
-    · infer_instance
+    infer_instance
     apply limit_π_isIso_of_is_strict_terminal
     intro j hj
     induction j using Opposite.rec' with | h j => ?_
@@ -1122,15 +1122,15 @@ theorem lift_range (H' : Set.range g.1.base ⊆ Set.range f.1.base) :
    -- now `erw` after #13170
   rw [Set.range_comp, Set.range_iff_surjective.mpr, Set.image_univ]
   -- Porting note (#11224): change `rw` to `erw` on this lemma
-  · erw [TopCat.pullback_fst_range]
-    ext
-    constructor
-    · rintro ⟨y, eq⟩; exact ⟨y, eq.symm⟩
-    · rintro ⟨y, eq⟩; exact ⟨y, eq.symm⟩
-  · erw [← TopCat.epi_iff_surjective] -- now `erw` after #13170
-    rw [show (inv (pullback.snd f g)).val.base = _ from
-        (LocallyRingedSpace.forgetToSheafedSpace ⋙ SheafedSpace.forget _).map_inv _]
-    infer_instance
+  erw [TopCat.pullback_fst_range]
+  ext
+  constructor
+  rintro ⟨y, eq⟩; exact ⟨y, eq.symm⟩
+  rintro ⟨y, eq⟩; exact ⟨y, eq.symm⟩
+  erw [← TopCat.epi_iff_surjective] -- now `erw` after #13170
+  rw [show (inv (pullback.snd f g)).val.base = _ from
+      (LocallyRingedSpace.forgetToSheafedSpace ⋙ SheafedSpace.forget _).map_inv _]
+  infer_instance
 
 end Pullback
 

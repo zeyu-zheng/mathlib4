@@ -359,10 +359,10 @@ lemma of_iso (h : IsPullback fst snd f g)
         (cospanExt e₂ e₃ e₄ commf.symm commg.symm) _).1
           (IsLimit.ofIsoLimit h.isLimit (by
             refine PullbackCone.ext e₁ ?_ ?_
-            · change fst = e₁.hom ≫ fst' ≫ e₂.inv
-              rw [← reassoc_of% commfst, e₂.hom_inv_id, Category.comp_id]
-            · change snd = e₁.hom ≫ snd' ≫ e₃.inv
-              rw [← reassoc_of% commsnd, e₃.hom_inv_id, Category.comp_id]))⟩
+            change fst = e₁.hom ≫ fst' ≫ e₂.inv
+            rw [← reassoc_of% commfst, e₂.hom_inv_id, Category.comp_id]
+            change snd = e₁.hom ≫ snd' ≫ e₃.inv
+            rw [← reassoc_of% commsnd, e₃.hom_inv_id, Category.comp_id]))⟩
 
 end IsPullback
 
@@ -1271,9 +1271,9 @@ theorem Functor.map_isPullback [PreservesLimit (cospan h i) F] (s : IsPullback f
     IsPullback.of_isLimit' (F.map_commSq s.toCommSq)
       (IsLimit.equivOfNatIsoOfIso (cospanCompIso F h i) _ _ (WalkingCospan.ext ?_ ?_ ?_)
         (isLimitOfPreserves F s.isLimit))
-  · rfl
-  · simp
-  · simp
+  rfl
+  simp
+  simp
 
 theorem Functor.map_isPushout [PreservesColimit (span f g) F] (s : IsPushout f g h i) :
     IsPushout (F.map f) (F.map g) (F.map h) (F.map i) := by
@@ -1281,9 +1281,9 @@ theorem Functor.map_isPushout [PreservesColimit (span f g) F] (s : IsPushout f g
     IsPushout.of_isColimit' (F.map_commSq s.toCommSq)
       (IsColimit.equivOfNatIsoOfIso (spanCompIso F f g) _ _ (WalkingSpan.ext ?_ ?_ ?_)
         (isColimitOfPreserves F s.isColimit))
-  · rfl
-  · simp
-  · simp
+  rfl
+  simp
+  simp
 
 alias IsPullback.map := Functor.map_isPullback
 

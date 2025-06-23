@@ -124,13 +124,13 @@ theorem mul_invOfUnit (φ : MvPowerSeries σ R) (u : Rˣ) (h : constantCoeff σ 
       suffices (0 : _) + j < i + j by simpa
       apply add_lt_add_right
       constructor
-      · intro s
-        exact Nat.zero_le _
-      · intro H
-        apply h₁
-        suffices i = 0 by simp [this]
-        ext1 s
-        exact Nat.eq_zero_of_le_zero (H s)
+      intro s
+      exact Nat.zero_le _
+      intro H
+      apply h₁
+      suffices i = 0 by simp [this]
+      ext1 s
+      exact Nat.eq_zero_of_le_zero (H s)
 
 -- TODO : can one prove equivalence?
 @[simp]
@@ -144,9 +144,9 @@ theorem invOfUnit_mul (φ : MvPowerSeries σ R) (u : Rˣ) (h : constantCoeff σ 
 theorem isUnit_iff_constantCoeff {φ : MvPowerSeries σ R} :
     IsUnit φ ↔ IsUnit (constantCoeff σ R φ) := by
   constructor
-  · exact IsUnit.map _
-  · intro ⟨u, hu⟩
-    exact ⟨⟨_, φ.invOfUnit u, mul_invOfUnit φ u hu.symm, invOfUnit_mul φ u hu.symm⟩, rfl⟩
+  exact IsUnit.map _
+  intro ⟨u, hu⟩
+  exact ⟨⟨_, φ.invOfUnit u, mul_invOfUnit φ u hu.symm, invOfUnit_mul φ u hu.symm⟩, rfl⟩
 
 end Ring
 
@@ -262,14 +262,14 @@ protected theorem inv_eq_iff_mul_eq_one {φ ψ : MvPowerSeries σ k} (h : consta
 protected theorem mul_inv_rev (φ ψ : MvPowerSeries σ k) :
     (φ * ψ)⁻¹ = ψ⁻¹ * φ⁻¹ := by
   by_cases h : constantCoeff σ k (φ * ψ) = 0
-  · rw [inv_eq_zero.mpr h]
-    simp only [map_mul, mul_eq_zero] at h
-    -- we don't have `NoZeroDivisors (MvPowerSeries σ k)` yet,
-    cases' h with h h <;> simp [inv_eq_zero.mpr h]
-  · rw [MvPowerSeries.inv_eq_iff_mul_eq_one h]
-    simp only [not_or, map_mul, mul_eq_zero] at h
-    rw [← mul_assoc, mul_assoc _⁻¹, MvPowerSeries.inv_mul_cancel _ h.left, mul_one,
-      MvPowerSeries.inv_mul_cancel _ h.right]
+  rw [inv_eq_zero.mpr h]
+  simp only [map_mul, mul_eq_zero] at h
+  -- we don't have `NoZeroDivisors (MvPowerSeries σ k)` yet,
+  cases' h with h h <;> simp [inv_eq_zero.mpr h]
+  rw [MvPowerSeries.inv_eq_iff_mul_eq_one h]
+  simp only [not_or, map_mul, mul_eq_zero] at h
+  rw [← mul_assoc, mul_assoc _⁻¹, MvPowerSeries.inv_mul_cancel _ h.left, mul_one,
+    MvPowerSeries.inv_mul_cancel _ h.right]
 
 instance : InvOneClass (MvPowerSeries σ k) :=
   { inferInstanceAs (One (MvPowerSeries σ k)),
@@ -281,7 +281,7 @@ instance : InvOneClass (MvPowerSeries σ k) :=
 @[simp]
 theorem C_inv (r : k) : (C σ k r)⁻¹ = C σ k r⁻¹ := by
   rcases eq_or_ne r 0 with (rfl | hr)
-  · simp
+  simp
   rw [MvPowerSeries.inv_eq_iff_mul_eq_one, ← map_mul, inv_mul_cancel hr, map_one]
   simpa using hr
 

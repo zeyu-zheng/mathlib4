@@ -44,20 +44,20 @@ protected theorem tfae (f : X → Y) :
       ∀ y, IsOpen (f ⁻¹' {y}),
       ∀ x, ∃ U : Set X, IsOpen U ∧ x ∈ U ∧ ∀ x' ∈ U, f x' = f x] := by
   tfae_have 1 → 4
-  · exact fun h y => h {y}
+  exact fun h y => h {y}
   tfae_have 4 → 3
-  · exact fun h x => h (f x)
+  exact fun h x => h (f x)
   tfae_have 3 → 2
-  · exact fun h x => IsOpen.mem_nhds (h x) rfl
+  exact fun h x => IsOpen.mem_nhds (h x) rfl
   tfae_have 2 → 5
-  · intro h x
-    rcases mem_nhds_iff.1 (h x) with ⟨U, eq, hU, hx⟩
-    exact ⟨U, hU, hx, eq⟩
+  intro h x
+  rcases mem_nhds_iff.1 (h x) with ⟨U, eq, hU, hx⟩
+  exact ⟨U, hU, hx, eq⟩
   tfae_have 5 → 1
-  · intro h s
-    refine isOpen_iff_forall_mem_open.2 fun x hx ↦ ?_
-    rcases h x with ⟨U, hU, hxU, eq⟩
-    exact ⟨U, fun x' hx' => mem_preimage.2 <| (eq x' hx').symm ▸ hx, hU, hxU⟩
+  intro h s
+  refine isOpen_iff_forall_mem_open.2 fun x hx ↦ ?_
+  rcases h x with ⟨U, hU, hxU, eq⟩
+  exact ⟨U, fun x' hx' => mem_preimage.2 <| (eq x' hx').symm ▸ hx, hU, hxU⟩
   tfae_finish
 
 @[nontriviality]
@@ -134,8 +134,8 @@ theorem apply_eq_of_isPreconnected {f : X → Y} (hf : IsLocallyConstant f) {s :
   suffices x ∉ Uᶜ from Classical.not_not.1 this
   intro hxV
   specialize hs U Uᶜ (hf {f y}) (hf {f y}ᶜ) _ ⟨y, ⟨hy, rfl⟩⟩ ⟨x, ⟨hx, hxV⟩⟩
-  · simp only [union_compl_self, subset_univ]
-  · simp only [inter_empty, Set.not_nonempty_empty, inter_compl_self] at hs
+  simp only [union_compl_self, subset_univ]
+  simp only [inter_empty, Set.not_nonempty_empty, inter_compl_self] at hs
 
 theorem apply_eq_of_preconnectedSpace [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f)
     (x y : X) : f x = f y :=
@@ -148,8 +148,8 @@ theorem eq_const [PreconnectedSpace X] {f : X → Y} (hf : IsLocallyConstant f) 
 theorem exists_eq_const [PreconnectedSpace X] [Nonempty Y] {f : X → Y} (hf : IsLocallyConstant f) :
     ∃ y, f = Function.const X y := by
   cases' isEmpty_or_nonempty X with h h
-  · exact ⟨Classical.arbitrary Y, funext <| h.elim⟩
-  · exact ⟨f (Classical.arbitrary X), hf.eq_const _⟩
+  exact ⟨Classical.arbitrary Y, funext <| h.elim⟩
+  exact ⟨f (Classical.arbitrary X), hf.eq_const _⟩
 
 theorem iff_is_const [PreconnectedSpace X] {f : X → Y} : IsLocallyConstant f ↔ ∀ x y, f x = f y :=
   ⟨fun h _ _ => h.apply_eq_of_isPreconnected isPreconnected_univ trivial trivial, of_constant _⟩
@@ -336,8 +336,8 @@ theorem eq_const [PreconnectedSpace X] (f : LocallyConstant X Y) (x : X) : f = c
 theorem exists_eq_const [PreconnectedSpace X] [Nonempty Y] (f : LocallyConstant X Y) :
     ∃ y, f = const X y := by
   rcases Classical.em (Nonempty X) with (⟨⟨x⟩⟩ | hX)
-  · exact ⟨f x, f.eq_const x⟩
-  · exact ⟨Classical.arbitrary Y, ext fun x => (hX ⟨x⟩).elim⟩
+  exact ⟨f x, f.eq_const x⟩
+  exact ⟨Classical.arbitrary Y, ext fun x => (hX ⟨x⟩).elim⟩
 
 /-- Push forward of locally constant maps under any map, by post-composition. -/
 def map (f : Y → Z) (g : LocallyConstant X Y) : LocallyConstant X Z :=
@@ -560,8 +560,8 @@ lemma piecewise_apply_right {C₁ C₂ : Set X} (h₁ : IsClosed C₁) (h₂ : I
   simp only [piecewise, Set.mem_preimage, continuous_subtype_val.restrictPreimage,
     coe_comap, Function.comp_apply, coe_mk]
   split_ifs with h
-  · exact hfg x ⟨h, hx⟩
-  · rfl
+  exact hfg x ⟨h, hx⟩
+  rfl
 
 /-- A variant of `LocallyConstant.piecewise` where the two closed sets cover a subset.
 

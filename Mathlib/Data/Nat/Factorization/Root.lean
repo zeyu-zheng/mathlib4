@@ -75,7 +75,7 @@ lemma floorRoot_ne_zero : floorRoot n a ≠ 0 ↔ n ≠ 0 ∧ a ≠ 0 := by
     (floorRoot n a).factorization = a.factorization ⌊/⌋ n := by
   rw [floorRoot_def]
   split_ifs with h
-  · obtain rfl | rfl := h <;> simp
+  obtain rfl | rfl := h <;> simp
   refine prod_pow_factorization_eq_self fun p hp ↦ ?_
   have : p.Prime ∧ p ∣ a ∧ ¬a = 0
   simpa using support_floorDiv_subset hp
@@ -85,11 +85,11 @@ lemma floorRoot_ne_zero : floorRoot n a ≠ 0 ↔ n ≠ 0 ∧ a ≠ 0 := by
 by divisibility. -/
 lemma pow_dvd_iff_dvd_floorRoot : a ^ n ∣ b ↔ a ∣ floorRoot n b := by
   obtain rfl | hn := eq_or_ne n 0
-  · simp
+  simp
   obtain rfl | hb := eq_or_ne b 0
-  · simp
+  simp
   obtain rfl | ha := eq_or_ne a 0
-  · simp [hn]
+  simp [hn]
   rw [← factorization_le_iff_dvd (pow_ne_zero _ ha) hb,
     ← factorization_le_iff_dvd ha (floorRoot_ne_zero.2 ⟨hn, hb⟩), factorization_pow,
     factorization_floorRoot, le_floorDiv_iff_smul_le (β := ℕ →₀ ℕ) (pos_iff_ne_zero.2 hn)]
@@ -138,7 +138,7 @@ lemma ceilRoot_ne_zero : ceilRoot n a ≠ 0 ↔ n ≠ 0 ∧ a ≠ 0 := by
     (ceilRoot n a).factorization = a.factorization ⌈/⌉ n := by
   rw [ceilRoot_def]
   split_ifs with h
-  · obtain rfl | rfl := h <;> simp
+  obtain rfl | rfl := h <;> simp
   refine prod_pow_factorization_eq_self fun p hp ↦ ?_
   have : p.Prime ∧ p ∣ a ∧ ¬a = 0
   simpa using support_ceilDiv_subset hp
@@ -152,9 +152,9 @@ the statement reduces to `a = 1 ↔ ceilRoot 0 a ∣ b`, which is false for eg `
 `b = ceilRoot 0 a`. -/
 lemma dvd_pow_iff_ceilRoot_dvd (hn : n ≠ 0) : a ∣ b ^ n ↔ ceilRoot n a ∣ b := by
   obtain rfl | ha := eq_or_ne a 0
-  · aesop
+  aesop
   obtain rfl | hb := eq_or_ne b 0
-  · simp [hn]
+  simp [hn]
   rw [← factorization_le_iff_dvd ha (pow_ne_zero _ hb),
     ← factorization_le_iff_dvd (ceilRoot_ne_zero.2 ⟨hn, ha⟩) hb, factorization_pow,
     factorization_ceilRoot, ceilDiv_le_iff_le_smul (β := ℕ →₀ ℕ) (pos_iff_ne_zero.2 hn)]

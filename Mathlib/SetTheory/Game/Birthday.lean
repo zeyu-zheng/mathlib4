@@ -61,16 +61,16 @@ theorem lt_birthday_iff {x : PGame} {o : Ordinal} :
       (∃ i : x.LeftMoves, o ≤ (x.moveLeft i).birthday) ∨
         ∃ i : x.RightMoves, o ≤ (x.moveRight i).birthday := by
   constructor
-  · rw [birthday_def]
-    intro h
-    cases' lt_max_iff.1 h with h' h'
-    · left
-      rwa [lt_lsub_iff] at h'
-    · right
-      rwa [lt_lsub_iff] at h'
-  · rintro (⟨i, hi⟩ | ⟨i, hi⟩)
-    · exact hi.trans_lt (birthday_moveLeft_lt i)
-    · exact hi.trans_lt (birthday_moveRight_lt i)
+  rw [birthday_def]
+  intro h
+  cases' lt_max_iff.1 h with h' h'
+  left
+  rwa [lt_lsub_iff] at h'
+  right
+  rwa [lt_lsub_iff] at h'
+  rintro (⟨i, hi⟩ | ⟨i, hi⟩)
+  exact hi.trans_lt (birthday_moveLeft_lt i)
+  exact hi.trans_lt (birthday_moveRight_lt i)
 
 theorem Relabelling.birthday_congr : ∀ {x y : PGame.{u}}, x ≡r y → birthday x = birthday y
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, r => by
@@ -80,10 +80,10 @@ theorem Relabelling.birthday_congr : ∀ {x y : PGame.{u}}, x ≡r y → birthda
       apply lsub_eq_of_range_eq.{u, u, u}
       ext i; constructor
     all_goals rintro ⟨j, rfl⟩
-    · exact ⟨_, (r.moveLeft j).birthday_congr.symm⟩
-    · exact ⟨_, (r.moveLeftSymm j).birthday_congr⟩
-    · exact ⟨_, (r.moveRight j).birthday_congr.symm⟩
-    · exact ⟨_, (r.moveRightSymm j).birthday_congr⟩
+    exact ⟨_, (r.moveLeft j).birthday_congr.symm⟩
+    exact ⟨_, (r.moveLeftSymm j).birthday_congr⟩
+    exact ⟨_, (r.moveRight j).birthday_congr.symm⟩
+    exact ⟨_, (r.moveRightSymm j).birthday_congr⟩
 termination_by x y => (x, y)
 
 @[simp]
@@ -152,10 +152,10 @@ theorem birthday_add : ∀ x y : PGame.{u}, (x + y).birthday = x.birthday ♯ y.
     all_goals
       refine blsub_le_iff.2 fun i hi => ?_
       rcases lt_birthday_iff.1 hi with (⟨j, hj⟩ | ⟨j, hj⟩)
-    · exact lt_max_of_lt_left ((nadd_le_nadd_right hj _).trans_lt (lt_lsub _ _))
-    · exact lt_max_of_lt_right ((nadd_le_nadd_right hj _).trans_lt (lt_lsub _ _))
-    · exact lt_max_of_lt_left ((nadd_le_nadd_left hj _).trans_lt (lt_lsub _ _))
-    · exact lt_max_of_lt_right ((nadd_le_nadd_left hj _).trans_lt (lt_lsub _ _))
+    exact lt_max_of_lt_left ((nadd_le_nadd_right hj _).trans_lt (lt_lsub _ _))
+    exact lt_max_of_lt_right ((nadd_le_nadd_right hj _).trans_lt (lt_lsub _ _))
+    exact lt_max_of_lt_left ((nadd_le_nadd_left hj _).trans_lt (lt_lsub _ _))
+    exact lt_max_of_lt_right ((nadd_le_nadd_left hj _).trans_lt (lt_lsub _ _))
 termination_by a b => (a, b)
 
 theorem birthday_add_zero : (a + 0).birthday = a.birthday := by simp

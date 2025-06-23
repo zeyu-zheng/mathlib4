@@ -135,13 +135,13 @@ theorem compatible_iff (x : FirstObj P S) :
     ((firstObjEqFamily P S).hom x).Compatible ↔ firstMap P S x = secondMap P S x := by
   rw [Presieve.compatible_iff_sieveCompatible]
   constructor
-  · intro t
-    apply SecondObj.ext
-    intros Y Z g f hf
-    simpa [firstMap, secondMap] using t _ g hf
-  · intro t Y Z f g hf
-    rw [Types.limit_ext_iff'] at t
-    simpa [firstMap, secondMap] using t ⟨⟨Y, Z, g, f, hf⟩⟩
+  intro t
+  apply SecondObj.ext
+  intros Y Z g f hf
+  simpa [firstMap, secondMap] using t _ g hf
+  intro t Y Z f g hf
+  rw [Types.limit_ext_iff'] at t
+  simpa [firstMap, secondMap] using t ⟨⟨Y, Z, g, f, hf⟩⟩
 
 /-- `P` is a sheaf for `S`, iff the fork given by `w` is an equalizer. -/
 theorem equalizer_sheaf_condition :
@@ -157,12 +157,12 @@ theorem equalizer_sheaf_condition :
   rw [← Iso.toEquiv_symm_fun]
   rw [Equiv.eq_symm_apply]
   constructor
-  · intro q
-    funext Y f hf
-    simpa [firstObjEqFamily, forkMap] using q _ _
-  · intro q Y f hf
-    rw [← q]
-    simp [firstObjEqFamily, forkMap]
+  intro q
+  funext Y f hf
+  simpa [firstObjEqFamily, forkMap] using q _ _
+  intro q Y f hf
+  rw [← q]
+  simp [firstObjEqFamily, forkMap]
 
 end Sieve
 
@@ -217,13 +217,13 @@ theorem compatible_iff (x : FirstObj P R) :
     ((firstObjEqFamily P R).hom x).Compatible ↔ firstMap P R x = secondMap P R x := by
   rw [Presieve.pullbackCompatible_iff]
   constructor
-  · intro t
-    apply Limits.Types.limit_ext
-    rintro ⟨⟨Y, f, hf⟩, Z, g, hg⟩
-    simpa [firstMap, secondMap] using t hf hg
-  · intro t Y Z f g hf hg
-    rw [Types.limit_ext_iff'] at t
-    simpa [firstMap, secondMap] using t ⟨⟨⟨Y, f, hf⟩, Z, g, hg⟩⟩
+  intro t
+  apply Limits.Types.limit_ext
+  rintro ⟨⟨Y, f, hf⟩, Z, g, hg⟩
+  simpa [firstMap, secondMap] using t hf hg
+  intro t Y Z f g hf hg
+  rw [Types.limit_ext_iff'] at t
+  simpa [firstMap, secondMap] using t ⟨⟨⟨Y, f, hf⟩, Z, g, hg⟩⟩
 
 /-- `P` is a sheaf for `R`, iff the fork given by `w` is an equalizer.
 See <https://stacks.math.columbia.edu/tag/00VM>.
@@ -238,12 +238,12 @@ theorem sheaf_condition : R.IsSheafFor P ↔ Nonempty (IsLimit (Fork.ofι _ (w P
   intro t
   rw [Equiv.eq_symm_apply]
   constructor
-  · intro q
-    funext Y f hf
-    simpa [forkMap] using q _ _
-  · intro q Y f hf
-    rw [← q]
-    simp [forkMap]
+  intro q
+  funext Y f hf
+  simpa [forkMap] using q _ _
+  intro q Y f hf
+  rw [← q]
+  simp [forkMap]
 
 namespace Arrows
 
@@ -316,12 +316,12 @@ theorem compatible_iff (x : FirstObj P X) : (Arrows.Compatible P π ((Types.prod
     firstMap P X π x = secondMap P X π x := by
   rw [Arrows.pullbackCompatible_iff]
   constructor
-  · intro t
-    ext ij
-    simpa [firstMap, secondMap] using t ij.1 ij.2
-  · intro t i j
-    apply_fun Pi.π (fun (ij : I × I) ↦ P.obj (op (pullback (π ij.1) (π ij.2)))) ⟨i, j⟩ at t
-    simpa [firstMap, secondMap] using t
+  intro t
+  ext ij
+  simpa [firstMap, secondMap] using t ij.1 ij.2
+  intro t i j
+  apply_fun Pi.π (fun (ij : I × I) ↦ P.obj (op (pullback (π ij.1) (π ij.2)))) ⟨i, j⟩ at t
+  simpa [firstMap, secondMap] using t
 
 /--
 `P` is a sheaf for `Presieve.ofArrows X π`, iff the fork given by `w` is an equalizer.
@@ -338,12 +338,12 @@ theorem sheaf_condition : (Presieve.ofArrows X π).IsSheafFor P ↔
   intro t
   erw [Equiv.eq_symm_apply]
   constructor
-  · intro q
-    funext i
-    simpa [forkMap] using q i
-  · intro q i
-    rw [← q]
-    simp [forkMap]
+  intro q
+  funext i
+  simpa [forkMap] using q i
+  intro q i
+  rw [← q]
+  simp [forkMap]
 
 end Arrows
 

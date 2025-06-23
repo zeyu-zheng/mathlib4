@@ -511,9 +511,9 @@ theorem summable_ofReal {f : α → ℝ} : (Summable fun x => (f x : 𝕜)) ↔ 
 @[norm_cast]
 theorem ofReal_tsum (f : α → ℝ) : (↑(∑' a, f a) : 𝕜) = ∑' a, (f a : 𝕜) := by
   by_cases h : Summable f
-  · exact ContinuousLinearMap.map_tsum ofRealCLM h
-  · rw [tsum_eq_zero_of_not_summable h,
-      tsum_eq_zero_of_not_summable ((summable_ofReal _).not.mpr h), ofReal_zero]
+  exact ContinuousLinearMap.map_tsum ofRealCLM h
+  rw [tsum_eq_zero_of_not_summable h,
+    tsum_eq_zero_of_not_summable ((summable_ofReal _).not.mpr h), ofReal_zero]
 
 theorem hasSum_re {f : α → 𝕜} {x : 𝕜} (h : HasSum f x) : HasSum (fun x => re (f x)) (re x) :=
   reCLM.hasSum h

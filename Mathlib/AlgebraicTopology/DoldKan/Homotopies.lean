@@ -107,9 +107,9 @@ theorem hσ'_eq {q n a m : ℕ} (ha : n = a + q) (hnm : c.Rel m n) :
         eqToHom (by congr) := by
   simp only [hσ', hσ]
   split_ifs
-  · omega
-  · have h' := tsub_eq_of_eq_add ha
-    congr
+  omega
+  have h' := tsub_eq_of_eq_add ha
+  congr
 
 theorem hσ'_eq' {q n a : ℕ} (ha : n = a + q) :
     (hσ' q n (n + 1) rfl : X _[n] ⟶ X _[n + 1]) =
@@ -129,13 +129,13 @@ theorem Hσ_eq_zero (q : ℕ) : (Hσ q : K[X] ⟶ K[X]).f 0 = 0 := by
   unfold Hσ
   rw [nullHomotopicMap'_f_of_not_rel_left (c_mk 1 0 rfl) cs_down_0_not_rel_left]
   rcases q with (_|q)
-  · rw [hσ'_eq (show 0 = 0 + 0 by rfl) (c_mk 1 0 rfl)]
-    simp only [pow_zero, Fin.mk_zero, one_zsmul, eqToHom_refl, Category.comp_id]
-    erw [ChainComplex.of_d]
-    rw [AlternatingFaceMapComplex.objD, Fin.sum_univ_two, Fin.val_zero, Fin.val_one, pow_zero,
-      pow_one, one_smul, neg_smul, one_smul, comp_add, comp_neg, add_neg_eq_zero]
-    erw [δ_comp_σ_self, δ_comp_σ_succ]
-  · rw [hσ'_eq_zero (Nat.succ_pos q) (c_mk 1 0 rfl), zero_comp]
+  rw [hσ'_eq (show 0 = 0 + 0 by rfl) (c_mk 1 0 rfl)]
+  simp only [pow_zero, Fin.mk_zero, one_zsmul, eqToHom_refl, Category.comp_id]
+  erw [ChainComplex.of_d]
+  rw [AlternatingFaceMapComplex.objD, Fin.sum_univ_two, Fin.val_zero, Fin.val_one, pow_zero,
+    pow_one, one_smul, neg_smul, one_smul, comp_add, comp_neg, add_neg_eq_zero]
+  erw [δ_comp_σ_self, δ_comp_σ_succ]
+  rw [hσ'_eq_zero (Nat.succ_pos q) (c_mk 1 0 rfl), zero_comp]
 
 /-- The maps `hσ' q n m hnm` are natural on the simplicial object -/
 theorem hσ'_naturality (q : ℕ) (n m : ℕ) (hnm : c.Rel m n) {X Y : SimplicialObject C} (f : X ⟶ Y) :
@@ -145,10 +145,10 @@ theorem hσ'_naturality (q : ℕ) (n m : ℕ) (hnm : c.Rel m n) {X Y : Simplicia
   simp only [hσ', eqToHom_refl, comp_id]
   unfold hσ
   split_ifs
-  · rw [zero_comp, comp_zero]
-  · simp only [zsmul_comp, comp_zsmul]
-    erw [f.naturality]
-    rfl
+  rw [zero_comp, comp_zero]
+  simp only [zsmul_comp, comp_zsmul]
+  erw [f.naturality]
+  rfl
 
 /-- For each q, `Hσ q` is a natural transformation. -/
 def natTransHσ (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapComplex C where
@@ -167,9 +167,9 @@ theorem map_hσ' {D : Type*} [Category D] [Preadditive D] (G : C ⥤ D) [G.Addit
       G.map (hσ' q n m hnm : K[X].X n ⟶ _) := by
   unfold hσ' hσ
   split_ifs
-  · simp only [Functor.map_zero, zero_comp]
-  · simp only [eqToHom_map, Functor.map_comp, Functor.map_zsmul]
-    rfl
+  simp only [Functor.map_zero, zero_comp]
+  simp only [eqToHom_map, Functor.map_comp, Functor.map_zsmul]
+  rfl
 
 /-- The null homotopic maps `Hσ` are compatible with the application of additive functors. -/
 theorem map_Hσ {D : Type*} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive]

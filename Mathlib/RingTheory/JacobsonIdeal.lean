@@ -128,8 +128,8 @@ theorem eq_jacobson_iff_sInf_maximal :
   rw [hInf, mem_sInf]
   intro I hI
   cases' hM I hI with is_max is_top
-  · exact (mem_sInf.1 hx) ⟨le_sInf_iff.1 (le_of_eq hInf) I hI, is_max⟩
-  · exact is_top.symm ▸ Submodule.mem_top
+  exact (mem_sInf.1 hx) ⟨le_sInf_iff.1 (le_of_eq hInf) I hI, is_max⟩
+  exact is_top.symm ▸ Submodule.mem_top
 
 theorem eq_jacobson_iff_sInf_maximal' :
     I.jacobson = I ↔ ∃ M : Set (Ideal R), (∀ J ∈ M, ∀ (K : Ideal R), J < K → K = ⊤) ∧ I = sInf M :=
@@ -152,15 +152,15 @@ also lies outside of a maximal ideal containing `I`. -/
 theorem eq_jacobson_iff_not_mem :
     I.jacobson = I ↔ ∀ (x) (_ : x ∉ I), ∃ M : Ideal R, (I ≤ M ∧ M.IsMaximal) ∧ x ∉ M := by
   constructor
-  · intro h x hx
-    erw [← h, mem_sInf] at hx
-    push_neg at hx
-    exact hx
-  · refine fun h => le_antisymm (fun x hx => ?_) le_jacobson
-    contrapose hx
-    erw [mem_sInf]
-    push_neg
-    exact h x hx
+  intro h x hx
+  erw [← h, mem_sInf] at hx
+  push_neg at hx
+  exact hx
+  refine fun h => le_antisymm (fun x hx => ?_) le_jacobson
+  contrapose hx
+  erw [mem_sInf]
+  push_neg
+  exact h x hx
 
 theorem map_jacobson_of_surjective {f : R →+* S} (hf : Function.Surjective f) :
     RingHom.ker f ≤ I → map f I.jacobson = (map f I).jacobson := by
@@ -170,16 +170,16 @@ theorem map_jacobson_of_surjective {f : R →+* S} (hf : Function.Surjective f) 
   have : ∀ J ∈ { J : Ideal R | I ≤ J ∧ J.IsMaximal }, RingHom.ker f ≤ J :=
     fun J hJ => le_trans h hJ.left
   refine Trans.trans (map_sInf hf this) (le_antisymm ?_ ?_)
-  · refine
-      sInf_le_sInf fun J hJ =>
-        ⟨comap f J, ⟨⟨le_comap_of_map_le hJ.1, ?_⟩, map_comap_of_surjective f hf J⟩⟩
-    haveI : J.IsMaximal := hJ.right
-    exact comap_isMaximal_of_surjective f hf
-  · refine sInf_le_sInf_of_subset_insert_top fun j hj => hj.recOn fun J hJ => ?_
-    rw [← hJ.2]
-    cases' map_eq_top_or_isMaximal_of_surjective f hf hJ.left.right with htop hmax
-    · exact htop.symm ▸ Set.mem_insert ⊤ _
-    · exact Set.mem_insert_of_mem ⊤ ⟨map_mono hJ.1.1, hmax⟩
+  refine
+    sInf_le_sInf fun J hJ =>
+      ⟨comap f J, ⟨⟨le_comap_of_map_le hJ.1, ?_⟩, map_comap_of_surjective f hf J⟩⟩
+  haveI : J.IsMaximal := hJ.right
+  exact comap_isMaximal_of_surjective f hf
+  refine sInf_le_sInf_of_subset_insert_top fun j hj => hj.recOn fun J hJ => ?_
+  rw [← hJ.2]
+  cases' map_eq_top_or_isMaximal_of_surjective f hf hJ.left.right with htop hmax
+  exact htop.symm ▸ Set.mem_insert ⊤ _
+  exact Set.mem_insert_of_mem ⊤ ⟨map_mono hJ.1.1, hmax⟩
 
 theorem map_jacobson_of_bijective {f : R →+* S} (hf : Function.Bijective f) :
     map f I.jacobson = (map f I).jacobson :=
@@ -194,20 +194,20 @@ theorem comap_jacobson_of_surjective {f : R →+* S} (hf : Function.Surjective f
     comap f K.jacobson = (comap f K).jacobson := by
   unfold Ideal.jacobson
   refine le_antisymm ?_ ?_
-  · rw [← top_inf_eq (sInf _), ← sInf_insert, comap_sInf', sInf_eq_iInf]
-    refine iInf_le_iInf_of_subset fun J hJ => ?_
-    have : comap f (map f J) = J :=
-      Trans.trans (comap_map_of_surjective f hf J)
-        (le_antisymm (sup_le_iff.2 ⟨le_of_eq rfl, le_trans (comap_mono bot_le) hJ.left⟩)
-          le_sup_left)
-    cases' map_eq_top_or_isMaximal_of_surjective _ hf hJ.right with htop hmax
-    · exact ⟨⊤, Set.mem_insert ⊤ _, htop ▸ this⟩
-    · exact ⟨map f J, Set.mem_insert_of_mem _ ⟨le_map_of_comap_le_of_surjective f hf hJ.1, hmax⟩,
-        this⟩
-  · simp_rw [comap_sInf, le_iInf_iff]
-    intros J hJ
-    haveI : J.IsMaximal := hJ.right
-    exact sInf_le ⟨comap_mono hJ.left, comap_isMaximal_of_surjective _ hf⟩
+  rw [← top_inf_eq (sInf _), ← sInf_insert, comap_sInf', sInf_eq_iInf]
+  refine iInf_le_iInf_of_subset fun J hJ => ?_
+  have : comap f (map f J) = J :=
+    Trans.trans (comap_map_of_surjective f hf J)
+      (le_antisymm (sup_le_iff.2 ⟨le_of_eq rfl, le_trans (comap_mono bot_le) hJ.left⟩)
+        le_sup_left)
+  cases' map_eq_top_or_isMaximal_of_surjective _ hf hJ.right with htop hmax
+  exact ⟨⊤, Set.mem_insert ⊤ _, htop ▸ this⟩
+  exact ⟨map f J, Set.mem_insert_of_mem _ ⟨le_map_of_comap_le_of_surjective f hf hJ.1, hmax⟩,
+    this⟩
+  simp_rw [comap_sInf, le_iInf_iff]
+  intros J hJ
+  haveI : J.IsMaximal := hJ.right
+  exact sInf_le ⟨comap_mono hJ.left, comap_isMaximal_of_surjective _ hf⟩
 
 @[mono]
 theorem jacobson_mono {I J : Ideal R} : I ≤ J → I.jacobson ≤ J.jacobson := by
@@ -250,14 +250,14 @@ theorem jacobson_eq_iff_jacobson_quotient_eq_bot :
     I.jacobson = I ↔ jacobson (⊥ : Ideal (R ⧸ I)) = ⊥ := by
   have hf : Function.Surjective (Ideal.Quotient.mk I) := Submodule.Quotient.mk_surjective I
   constructor
-  · intro h
-    replace h := congr_arg (Ideal.map (Ideal.Quotient.mk I)) h
-    rw [map_jacobson_of_surjective hf (le_of_eq mk_ker)] at h
-    simpa using h
-  · intro h
-    replace h := congr_arg (comap (Ideal.Quotient.mk I)) h
-    rw [comap_jacobson_of_surjective hf, ← RingHom.ker_eq_comap_bot (Ideal.Quotient.mk I)] at h
-    simpa using h
+  intro h
+  replace h := congr_arg (Ideal.map (Ideal.Quotient.mk I)) h
+  rw [map_jacobson_of_surjective hf (le_of_eq mk_ker)] at h
+  simpa using h
+  intro h
+  replace h := congr_arg (comap (Ideal.Quotient.mk I)) h
+  rw [comap_jacobson_of_surjective hf, ← RingHom.ker_eq_comap_bot (Ideal.Quotient.mk I)] at h
+  simpa using h
 
 /-- The standard radical and Jacobson radical of an ideal `I` of `R` are equal if and only if
 the nilradical and Jacobson radical of the quotient ring `R/I` coincide -/
@@ -266,16 +266,16 @@ theorem radical_eq_jacobson_iff_radical_quotient_eq_jacobson_bot :
     I.radical = I.jacobson ↔ radical (⊥ : Ideal (R ⧸ I)) = jacobson ⊥ := by
   have hf : Function.Surjective (Ideal.Quotient.mk I) := Submodule.Quotient.mk_surjective I
   constructor
-  · intro h
-    have := congr_arg (map (Ideal.Quotient.mk I)) h
-    rw [map_radical_of_surjective hf (le_of_eq mk_ker),
-      map_jacobson_of_surjective hf (le_of_eq mk_ker)] at this
-    simpa using this
-  · intro h
-    have := congr_arg (comap (Ideal.Quotient.mk I)) h
-    rw [comap_radical, comap_jacobson_of_surjective hf,
-      ← RingHom.ker_eq_comap_bot (Ideal.Quotient.mk I)] at this
-    simpa using this
+  intro h
+  have := congr_arg (map (Ideal.Quotient.mk I)) h
+  rw [map_radical_of_surjective hf (le_of_eq mk_ker),
+    map_jacobson_of_surjective hf (le_of_eq mk_ker)] at this
+  simpa using this
+  intro h
+  have := congr_arg (comap (Ideal.Quotient.mk I)) h
+  rw [comap_radical, comap_jacobson_of_surjective hf,
+    ← RingHom.ker_eq_comap_bot (Ideal.Quotient.mk I)] at this
+  simpa using this
 
 theorem jacobson_radical_eq_jacobson : I.radical.jacobson = I.jacobson :=
   le_antisymm

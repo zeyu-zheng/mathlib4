@@ -145,15 +145,15 @@ theorem ofSet_mem_analyticGroupoid {s : Set H} (hs : IsOpen s) :
     rw [← I.right_inv (interior_subset hx.right)] at hx
     exact hx.right
   apply And.intro
-  · have : AnalyticOn 𝕜 (1 : E →L[𝕜] E) (univ : Set E) := (fun x _ => (1 : E →L[𝕜] E).analyticAt x)
-    exact (this.mono (subset_univ (s.preimage (I.symm) ∩ interior (range I)))).congr
-      ((hs.preimage I.continuous_symm).inter isOpen_interior)
-      fun z hz => (I.right_inv (interior_subset hz.right)).symm
-  · intro x hx
-    simp only [comp_apply, mem_image] at hx
-    rcases hx with ⟨y, hy⟩
-    rw [← hy.right, I.right_inv (interior_subset hy.left.right)]
-    exact hy.left.right
+  have : AnalyticOn 𝕜 (1 : E →L[𝕜] E) (univ : Set E) := (fun x _ => (1 : E →L[𝕜] E).analyticAt x)
+  exact (this.mono (subset_univ (s.preimage (I.symm) ∩ interior (range I)))).congr
+    ((hs.preimage I.continuous_symm).inter isOpen_interior)
+    fun z hz => (I.right_inv (interior_subset hz.right)).symm
+  intro x hx
+  simp only [comp_apply, mem_image] at hx
+  rcases hx with ⟨y, hy⟩
+  rw [← hy.right, I.right_inv (interior_subset hy.left.right)]
+  exact hy.left.right
 
 /-- The composition of a partial homeomorphism from `H` to `M` and its inverse belongs to
 the analytic groupoid. -/
@@ -179,15 +179,15 @@ theorem mem_analyticGroupoid_of_boundaryless [CompleteSpace E] [I.Boundaryless]
     e ∈ analyticGroupoid I ↔ AnalyticOn 𝕜 (I ∘ e ∘ I.symm) (I '' e.source) ∧
     AnalyticOn 𝕜 (I ∘ e.symm ∘ I.symm) (I '' e.target) := by
   apply Iff.intro
-  · intro he
-    have := mem_groupoid_of_pregroupoid.mp he.right
-    simp only [I.image_eq, I.range_eq_univ, interior_univ, subset_univ, and_true] at this ⊢
-    exact this
-  · intro he
-    apply And.intro
-    all_goals apply mem_groupoid_of_pregroupoid.mpr; simp only [I.image_eq, I.range_eq_univ,
-      interior_univ, subset_univ, and_true, contDiffPregroupoid] at he ⊢
-    · exact ⟨he.left.contDiffOn, he.right.contDiffOn⟩
-    · exact he
+  intro he
+  have := mem_groupoid_of_pregroupoid.mp he.right
+  simp only [I.image_eq, I.range_eq_univ, interior_univ, subset_univ, and_true] at this ⊢
+  exact this
+  intro he
+  apply And.intro
+  all_goals apply mem_groupoid_of_pregroupoid.mpr; simp only [I.image_eq, I.range_eq_univ,
+    interior_univ, subset_univ, and_true, contDiffPregroupoid] at he ⊢
+  exact ⟨he.left.contDiffOn, he.right.contDiffOn⟩
+  exact he
 
 end analyticGroupoid

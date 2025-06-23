@@ -228,7 +228,7 @@ theorem tendsto_of_no_upcrossings [DenselyOrdered α] {f : Filter β} {u : β �
     (h' : f.IsBoundedUnder (· ≥ ·) u := by isBoundedDefault) :
     ∃ c : α, Tendsto u f (𝓝 c) := by
   rcases f.eq_or_neBot with rfl | hbot
-  · exact ⟨sInf ∅, tendsto_bot⟩
+  exact ⟨sInf ∅, tendsto_bot⟩
   refine ⟨limsup u f, ?_⟩
   apply tendsto_of_le_liminf_of_limsup_le _ le_rfl h h'
   by_contra! hlt
@@ -246,20 +246,20 @@ variable [FirstCountableTopology α] {f : Filter β} [CountableInterFilter f] {u
 theorem eventually_le_limsup (hf : IsBoundedUnder (· ≤ ·) f u := by isBoundedDefault) :
     ∀ᶠ b in f, u b ≤ f.limsup u := by
   obtain ha | ha := isTop_or_exists_gt (f.limsup u)
-  · exact eventually_of_forall fun _ => ha _
+  exact eventually_of_forall fun _ => ha _
   by_cases H : IsGLB (Set.Ioi (f.limsup u)) (f.limsup u)
-  · obtain ⟨u, -, -, hua, hu⟩ := H.exists_seq_antitone_tendsto ha
-    have := fun n => eventually_lt_of_limsup_lt (hu n) hf
-    exact
-      (eventually_countable_forall.2 this).mono fun b hb =>
-        ge_of_tendsto hua <| eventually_of_forall fun n => (hb _).le
-  · obtain ⟨x, hx, xa⟩ : ∃ x, (∀ ⦃b⦄, f.limsup u < b → x ≤ b) ∧ f.limsup u < x := by
-      simp only [IsGLB, IsGreatest, lowerBounds, upperBounds, Set.mem_Ioi, Set.mem_setOf_eq,
-        not_and, not_forall, not_le, exists_prop] at H
-      exact H fun x => le_of_lt
-    filter_upwards [eventually_lt_of_limsup_lt xa hf] with y hy
-    contrapose! hy
-    exact hx hy
+  obtain ⟨u, -, -, hua, hu⟩ := H.exists_seq_antitone_tendsto ha
+  have := fun n => eventually_lt_of_limsup_lt (hu n) hf
+  exact
+    (eventually_countable_forall.2 this).mono fun b hb =>
+      ge_of_tendsto hua <| eventually_of_forall fun n => (hb _).le
+  obtain ⟨x, hx, xa⟩ : ∃ x, (∀ ⦃b⦄, f.limsup u < b → x ≤ b) ∧ f.limsup u < x := by
+    simp only [IsGLB, IsGreatest, lowerBounds, upperBounds, Set.mem_Ioi, Set.mem_setOf_eq,
+      not_and, not_forall, not_le, exists_prop] at H
+    exact H fun x => le_of_lt
+  filter_upwards [eventually_lt_of_limsup_lt xa hf] with y hy
+  contrapose! hy
+  exact hx hy
 
 theorem eventually_liminf_le (hf : IsBoundedUnder (· ≥ ·) f u := by isBoundedDefault) :
     ∀ᶠ b in f, f.liminf u ≤ u b :=
@@ -304,47 +304,47 @@ theorem Antitone.map_limsSup_of_continuousAt {F : Filter R} [NeBot F] {f : R →
     (cobdd : F.IsCobounded (· ≤ ·) := by isBoundedDefault) :
     f F.limsSup = F.liminf f := by
   apply le_antisymm
-  · rw [limsSup, f_decr.map_sInf_of_continuousAt' f_cont bdd_above cobdd]
-    apply le_of_forall_lt
-    intro c hc
-    simp only [liminf, limsInf, eventually_map] at hc ⊢
-    obtain ⟨d, hd, h'd⟩ :=
-      exists_lt_of_lt_csSup (bdd_above.recOn fun x hx ↦ ⟨f x, Set.mem_image_of_mem f hx⟩) hc
-    apply lt_csSup_of_lt ?_ ?_ h'd
-    · simpa only [BddAbove, upperBounds]
-        using Antitone.isCoboundedUnder_ge_of_isCobounded f_decr cobdd
-    · rcases hd with ⟨e, ⟨he, fe_eq_d⟩⟩
-      filter_upwards [he] with x hx using (fe_eq_d.symm ▸ f_decr hx)
-  · by_cases h' : ∃ c, c < F.limsSup ∧ Set.Ioo c F.limsSup = ∅
-    · rcases h' with ⟨c, c_lt, hc⟩
-      have B : ∃ᶠ n in F, F.limsSup ≤ n := by
-        apply (frequently_lt_of_lt_limsSup cobdd c_lt).mono
-        intro x hx
-        by_contra!
-        have : (Set.Ioo c F.limsSup).Nonempty := ⟨x, ⟨hx, this⟩⟩
-        simp only [hc, Set.not_nonempty_empty] at this
-      apply liminf_le_of_frequently_le _ (bdd_above.isBoundedUnder f_decr)
-      exact B.mono fun x hx ↦ f_decr hx
-    push_neg at h'
-    by_contra! H
-    have not_bot : ¬ IsBot F.limsSup := fun maybe_bot ↦
-      lt_irrefl (F.liminf f) <| lt_of_le_of_lt
-        (liminf_le_of_frequently_le (frequently_of_forall (fun r ↦ f_decr (maybe_bot r)))
-          (bdd_above.isBoundedUnder f_decr)) H
-    obtain ⟨l, l_lt, h'l⟩ :
-        ∃ l < F.limsSup, Set.Ioc l F.limsSup ⊆ { x : R | f x < F.liminf f } := by
-      apply exists_Ioc_subset_of_mem_nhds ((tendsto_order.1 f_cont.tendsto).2 _ H)
-      simpa [IsBot] using not_bot
-    obtain ⟨m, l_m, m_lt⟩ : (Set.Ioo l F.limsSup).Nonempty := by
-      contrapose! h'
-      exact ⟨l, l_lt, h'⟩
-    have B : F.liminf f ≤ f m := by
-      apply liminf_le_of_frequently_le _ _
-      · apply (frequently_lt_of_lt_limsSup cobdd m_lt).mono
-        exact fun x hx ↦ f_decr hx.le
-      · exact IsBounded.isBoundedUnder f_decr bdd_above
-    have I : f m < F.liminf f := h'l ⟨l_m, m_lt.le⟩
-    exact lt_irrefl _ (B.trans_lt I)
+  rw [limsSup, f_decr.map_sInf_of_continuousAt' f_cont bdd_above cobdd]
+  apply le_of_forall_lt
+  intro c hc
+  simp only [liminf, limsInf, eventually_map] at hc ⊢
+  obtain ⟨d, hd, h'd⟩ :=
+    exists_lt_of_lt_csSup (bdd_above.recOn fun x hx ↦ ⟨f x, Set.mem_image_of_mem f hx⟩) hc
+  apply lt_csSup_of_lt ?_ ?_ h'd
+  simpa only [BddAbove, upperBounds]
+    using Antitone.isCoboundedUnder_ge_of_isCobounded f_decr cobdd
+  rcases hd with ⟨e, ⟨he, fe_eq_d⟩⟩
+  filter_upwards [he] with x hx using (fe_eq_d.symm ▸ f_decr hx)
+  by_cases h' : ∃ c, c < F.limsSup ∧ Set.Ioo c F.limsSup = ∅
+  rcases h' with ⟨c, c_lt, hc⟩
+  have B : ∃ᶠ n in F, F.limsSup ≤ n := by
+    apply (frequently_lt_of_lt_limsSup cobdd c_lt).mono
+    intro x hx
+    by_contra!
+    have : (Set.Ioo c F.limsSup).Nonempty := ⟨x, ⟨hx, this⟩⟩
+    simp only [hc, Set.not_nonempty_empty] at this
+  apply liminf_le_of_frequently_le _ (bdd_above.isBoundedUnder f_decr)
+  exact B.mono fun x hx ↦ f_decr hx
+  push_neg at h'
+  by_contra! H
+  have not_bot : ¬ IsBot F.limsSup := fun maybe_bot ↦
+    lt_irrefl (F.liminf f) <| lt_of_le_of_lt
+      (liminf_le_of_frequently_le (frequently_of_forall (fun r ↦ f_decr (maybe_bot r)))
+        (bdd_above.isBoundedUnder f_decr)) H
+  obtain ⟨l, l_lt, h'l⟩ :
+      ∃ l < F.limsSup, Set.Ioc l F.limsSup ⊆ { x : R | f x < F.liminf f } := by
+    apply exists_Ioc_subset_of_mem_nhds ((tendsto_order.1 f_cont.tendsto).2 _ H)
+    simpa [IsBot] using not_bot
+  obtain ⟨m, l_m, m_lt⟩ : (Set.Ioo l F.limsSup).Nonempty := by
+    contrapose! h'
+    exact ⟨l, l_lt, h'⟩
+  have B : F.liminf f ≤ f m := by
+    apply liminf_le_of_frequently_le _ _
+    apply (frequently_lt_of_lt_limsSup cobdd m_lt).mono
+    exact fun x hx ↦ f_decr hx.le
+    exact IsBounded.isBoundedUnder f_decr bdd_above
+  have I : f m < F.liminf f := h'l ⟨l_m, m_lt.le⟩
+  exact lt_irrefl _ (B.trans_lt I)
 
 /-- A continuous antitone function between (conditionally) complete linear ordered spaces sends a
 `Filter.limsup` to the `Filter.liminf` of the images (if the filter is bounded from above and
@@ -461,54 +461,54 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
   simp only [limsup_eq_iInf_iSup_of_nat, Set.iSup_eq_iUnion, Set.iInf_eq_iInter,
     Set.mem_iInter, Set.mem_iUnion, exists_prop]
   constructor
-  · intro hω
-    refine tendsto_atTop_atTop_of_monotone' (fun n m hnm ↦ Finset.sum_mono_set_of_nonneg
-      (fun i ↦ Set.indicator_nonneg (fun _ _ ↦ zero_le_one) _) (Finset.range_mono hnm)) ?_
-    rintro ⟨i, h⟩
-    simp only [mem_upperBounds, Set.mem_range, forall_exists_index, forall_apply_eq_imp_iff] at h
-    induction' i with k hk
-    · obtain ⟨j, hj₁, hj₂⟩ := hω 1
-      refine not_lt.2 (h <| j + 1)
-        (lt_of_le_of_lt (Finset.sum_const_zero.symm : 0 = ∑ k ∈ Finset.range (j + 1), 0).le ?_)
-      refine Finset.sum_lt_sum (fun m _ ↦ Set.indicator_nonneg (fun _ _ ↦ zero_le_one) _)
-        ⟨j - 1, Finset.mem_range.2 (lt_of_le_of_lt (Nat.sub_le _ _) j.lt_succ_self), ?_⟩
-      rw [Nat.sub_add_cancel hj₁, Set.indicator_of_mem hj₂]
-      exact zero_lt_one
-    · rw [imp_false] at hk
-      push_neg at hk
-      obtain ⟨i, hi⟩ := hk
-      obtain ⟨j, hj₁, hj₂⟩ := hω (i + 1)
-      replace hi : (∑ k ∈ Finset.range i, (s (k + 1)).indicator 1 ω) = k + 1 :=
-        le_antisymm (h i) hi
-      refine not_lt.2 (h <| j + 1) ?_
-      rw [← Finset.sum_range_add_sum_Ico _ (i.le_succ.trans (hj₁.trans j.le_succ)), hi]
-      refine lt_add_of_pos_right _ ?_
-      rw [(Finset.sum_const_zero.symm : 0 = ∑ k ∈ Finset.Ico i (j + 1), 0)]
-      refine Finset.sum_lt_sum (fun m _ ↦ Set.indicator_nonneg (fun _ _ ↦ zero_le_one) _)
-        ⟨j - 1, Finset.mem_Ico.2 ⟨(Nat.le_sub_iff_add_le (le_trans ((le_add_iff_nonneg_left _).2
-          zero_le') hj₁)).2 hj₁, lt_of_le_of_lt (Nat.sub_le _ _) j.lt_succ_self⟩, ?_⟩
-      rw [Nat.sub_add_cancel (le_trans ((le_add_iff_nonneg_left _).2 zero_le') hj₁),
-        Set.indicator_of_mem hj₂]
-      exact zero_lt_one
-  · rintro hω i
-    rw [Set.mem_setOf_eq, tendsto_atTop_atTop] at hω
-    by_contra! hcon
-    obtain ⟨j, h⟩ := hω (i + 1)
-    have : (∑ k ∈ Finset.range j, (s (k + 1)).indicator 1 ω) ≤ i := by
-      have hle : ∀ j ≤ i, (∑ k ∈ Finset.range j, (s (k + 1)).indicator 1 ω) ≤ i := by
-        refine fun j hij ↦
-          (Finset.sum_le_card_nsmul _ _ _ ?_ : _ ≤ (Finset.range j).card • 1).trans ?_
-        · exact fun m _ ↦ Set.indicator_apply_le' (fun _ ↦ le_rfl) fun _ ↦ zero_le_one
-        · simpa only [Finset.card_range, smul_eq_mul, mul_one]
-      by_cases hij : j < i
-      · exact hle _ hij.le
-      · rw [← Finset.sum_range_add_sum_Ico _ (not_lt.1 hij)]
-        suffices (∑ k ∈ Finset.Ico i j, (s (k + 1)).indicator 1 ω) = 0 by
-          rw [this, add_zero]
-          exact hle _ le_rfl
-        refine Finset.sum_eq_zero fun m hm ↦ ?_
-        exact Set.indicator_of_not_mem (hcon _ <| (Finset.mem_Ico.1 hm).1.trans m.le_succ) _
-    exact not_le.2 (lt_of_lt_of_le i.lt_succ_self <| h _ le_rfl) this
+  intro hω
+  refine tendsto_atTop_atTop_of_monotone' (fun n m hnm ↦ Finset.sum_mono_set_of_nonneg
+    (fun i ↦ Set.indicator_nonneg (fun _ _ ↦ zero_le_one) _) (Finset.range_mono hnm)) ?_
+  rintro ⟨i, h⟩
+  simp only [mem_upperBounds, Set.mem_range, forall_exists_index, forall_apply_eq_imp_iff] at h
+  induction' i with k hk
+  obtain ⟨j, hj₁, hj₂⟩ := hω 1
+  refine not_lt.2 (h <| j + 1)
+    (lt_of_le_of_lt (Finset.sum_const_zero.symm : 0 = ∑ k ∈ Finset.range (j + 1), 0).le ?_)
+  refine Finset.sum_lt_sum (fun m _ ↦ Set.indicator_nonneg (fun _ _ ↦ zero_le_one) _)
+    ⟨j - 1, Finset.mem_range.2 (lt_of_le_of_lt (Nat.sub_le _ _) j.lt_succ_self), ?_⟩
+  rw [Nat.sub_add_cancel hj₁, Set.indicator_of_mem hj₂]
+  exact zero_lt_one
+  rw [imp_false] at hk
+  push_neg at hk
+  obtain ⟨i, hi⟩ := hk
+  obtain ⟨j, hj₁, hj₂⟩ := hω (i + 1)
+  replace hi : (∑ k ∈ Finset.range i, (s (k + 1)).indicator 1 ω) = k + 1 :=
+    le_antisymm (h i) hi
+  refine not_lt.2 (h <| j + 1) ?_
+  rw [← Finset.sum_range_add_sum_Ico _ (i.le_succ.trans (hj₁.trans j.le_succ)), hi]
+  refine lt_add_of_pos_right _ ?_
+  rw [(Finset.sum_const_zero.symm : 0 = ∑ k ∈ Finset.Ico i (j + 1), 0)]
+  refine Finset.sum_lt_sum (fun m _ ↦ Set.indicator_nonneg (fun _ _ ↦ zero_le_one) _)
+    ⟨j - 1, Finset.mem_Ico.2 ⟨(Nat.le_sub_iff_add_le (le_trans ((le_add_iff_nonneg_left _).2
+      zero_le') hj₁)).2 hj₁, lt_of_le_of_lt (Nat.sub_le _ _) j.lt_succ_self⟩, ?_⟩
+  rw [Nat.sub_add_cancel (le_trans ((le_add_iff_nonneg_left _).2 zero_le') hj₁),
+    Set.indicator_of_mem hj₂]
+  exact zero_lt_one
+  rintro hω i
+  rw [Set.mem_setOf_eq, tendsto_atTop_atTop] at hω
+  by_contra! hcon
+  obtain ⟨j, h⟩ := hω (i + 1)
+  have : (∑ k ∈ Finset.range j, (s (k + 1)).indicator 1 ω) ≤ i := by
+    have hle : ∀ j ≤ i, (∑ k ∈ Finset.range j, (s (k + 1)).indicator 1 ω) ≤ i := by
+      refine fun j hij ↦
+        (Finset.sum_le_card_nsmul _ _ _ ?_ : _ ≤ (Finset.range j).card • 1).trans ?_
+      exact fun m _ ↦ Set.indicator_apply_le' (fun _ ↦ le_rfl) fun _ ↦ zero_le_one
+      simpa only [Finset.card_range, smul_eq_mul, mul_one]
+    by_cases hij : j < i
+    exact hle _ hij.le
+    rw [← Finset.sum_range_add_sum_Ico _ (not_lt.1 hij)]
+    suffices (∑ k ∈ Finset.Ico i j, (s (k + 1)).indicator 1 ω) = 0 by
+      rw [this, add_zero]
+      exact hle _ le_rfl
+    refine Finset.sum_eq_zero fun m hm ↦ ?_
+    exact Set.indicator_of_not_mem (hcon _ <| (Finset.mem_Ico.1 hm).1.trans m.le_succ) _
+  exact not_le.2 (lt_of_lt_of_le i.lt_succ_self <| h _ le_rfl) this
 
 theorem limsup_eq_tendsto_sum_indicator_atTop (R : Type*) [StrictOrderedSemiring R] [Archimedean R]
     (s : ℕ → Set α) : limsup s atTop = { ω | Tendsto
@@ -518,9 +518,9 @@ theorem limsup_eq_tendsto_sum_indicator_atTop (R : Type*) [StrictOrderedSemiring
   simp only [Set.mem_setOf_eq]
   rw [(_ : (fun n ↦ ∑ k ∈ Finset.range n, (s (k + 1)).indicator (1 : α → R) ω) = fun n ↦
     ↑(∑ k ∈ Finset.range n, (s (k + 1)).indicator (1 : α → ℕ) ω))]
-  · exact tendsto_natCast_atTop_iff.symm
-  · ext n
-    simp only [Set.indicator, Pi.one_apply, Finset.sum_boole, Nat.cast_id]
+  exact tendsto_natCast_atTop_iff.symm
+  ext n
+  simp only [Set.indicator, Pi.one_apply, Finset.sum_boole, Nat.cast_id]
 
 end Indicator
 

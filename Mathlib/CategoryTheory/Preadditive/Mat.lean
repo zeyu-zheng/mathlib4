@@ -192,11 +192,11 @@ instance hasFiniteBiproducts : HasFiniteBiproducts (Mat_ C) where
               simp only [if_congr, if_true, dif_ctx_congr, Finset.sum_dite_irrel, Finset.mem_univ,
                 Finset.sum_const_zero, Finset.sum_congr, Finset.sum_dite_eq']
               split_ifs with h h'
-              · substs h h'
-                simp only [CategoryTheory.eqToHom_refl, CategoryTheory.Mat_.id_apply_self]
-              · subst h
-                rw [eqToHom_refl, id_apply_of_ne _ _ _ h']
-              · rfl }
+              substs h h'
+              simp only [CategoryTheory.eqToHom_refl, CategoryTheory.Mat_.id_apply_self]
+              subst h
+              rw [eqToHom_refl, id_apply_of_ne _ _ _ h']
+              rfl }
           (by
             dsimp
             ext1 ⟨i, j⟩
@@ -204,31 +204,31 @@ instance hasFiniteBiproducts : HasFiniteBiproducts (Mat_ C) where
             rw [Finset.sum_apply, Finset.sum_apply]
             dsimp
             rw [Finset.sum_eq_single i]; rotate_left
-            · intro b _ hb
-              apply Finset.sum_eq_zero
-              intro x _
-              rw [dif_neg hb.symm, zero_comp]
-            · intro hi
-              simp at hi
+            intro b _ hb
+            apply Finset.sum_eq_zero
+            intro x _
+            rw [dif_neg hb.symm, zero_comp]
+            intro hi
+            simp at hi
             rw [Finset.sum_eq_single j]; rotate_left
-            · intro b _ hb
-              rw [dif_pos rfl, dif_neg, zero_comp]
-              simp only
-              tauto
-            · intro hj
-              simp at hj
+            intro b _ hb
+            rw [dif_pos rfl, dif_neg, zero_comp]
+            simp only
+            tauto
+            intro hj
+            simp at hj
             simp only [eqToHom_refl, dite_eq_ite, ite_true, Category.id_comp, ne_eq,
               Sigma.mk.inj_iff, not_and, id_def]
             by_cases h : i' = i
-            · subst h
-              rw [dif_pos rfl]
-              simp only [heq_eq_eq, true_and]
-              by_cases h : j' = j
-              · subst h
-                simp
-              · rw [dif_neg h, dif_neg (Ne.symm h)]
-            · rw [dif_neg h, dif_neg]
-              tauto) }
+            subst h
+            rw [dif_pos rfl]
+            simp only [heq_eq_eq, true_and]
+            by_cases h : j' = j
+            subst h
+            simp
+            rw [dif_neg h, dif_neg (Ne.symm h)]
+            rw [dif_neg h, dif_neg]
+            tauto) }
 
 end Mat_
 

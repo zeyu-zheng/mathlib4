@@ -136,13 +136,13 @@ and the homogeneous `linearYonedaObjResolution`. -/
     diagonalHomEquiv_symm_apply f (Fin.partialProd g ∘ @Fin.succ (n + 1)), Function.comp_apply,
     Fin.partialProd_succ, Fin.castSucc_zero, Fin.partialProd_zero, one_mul]
   congr 1
-  · congr
-    ext
-    have := Fin.partialProd_right_inv g (Fin.castSucc x)
-    simp only [mul_inv_rev, Fin.castSucc_fin_succ] at *
-    rw [mul_assoc, ← mul_assoc _ _ (g x.succ), this, inv_mul_cancel_left]
-  · exact Finset.sum_congr rfl fun j hj => by
-      rw [diagonalHomEquiv_symm_partialProd_succ, Fin.val_succ] -/
+  congr
+  ext
+  have := Fin.partialProd_right_inv g (Fin.castSucc x)
+  simp only [mul_inv_rev, Fin.castSucc_fin_succ] at *
+  rw [mul_assoc, ← mul_assoc _ _ (g x.succ), this, inv_mul_cancel_left]
+  exact Finset.sum_congr rfl fun j hj => by
+    rw [diagonalHomEquiv_symm_partialProd_succ, Fin.val_succ] -/
   -- https://github.com/leanprover-community/mathlib4/issues/5026
   -- https://github.com/leanprover-community/mathlib4/issues/5164
   change d n A f g = diagonalHomEquiv (n + 1) A
@@ -158,11 +158,11 @@ and the homogeneous `linearYonedaObjResolution`. -/
   simp_rw [Function.comp_apply, Fin.partialProd_succ, Fin.castSucc_zero,
     Fin.partialProd_zero, one_mul]
   rcongr x
-  · have := Fin.partialProd_right_inv g (Fin.castSucc x)
-    simp only [mul_inv_rev, Fin.castSucc_fin_succ] at this ⊢
-    rw [mul_assoc, ← mul_assoc _ _ (g x.succ), this, inv_mul_cancel_left]
-  · -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [map_smul, diagonalHomEquiv_symm_partialProd_succ, Fin.val_succ]
+  have := Fin.partialProd_right_inv g (Fin.castSucc x)
+  simp only [mul_inv_rev, Fin.castSucc_fin_succ] at this ⊢
+  rw [mul_assoc, ← mul_assoc _ _ (g x.succ), this, inv_mul_cancel_left]
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [map_smul, diagonalHomEquiv_symm_partialProd_succ, Fin.val_succ]
 
 end inhomogeneousCochains
 

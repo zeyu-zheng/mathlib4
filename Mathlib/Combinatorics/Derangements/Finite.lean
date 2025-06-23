@@ -81,17 +81,17 @@ theorem numDerangements_add_two (n : ℕ) :
 theorem numDerangements_succ (n : ℕ) :
     (numDerangements (n + 1) : ℤ) = (n + 1) * (numDerangements n : ℤ) - (-1) ^ n := by
   induction' n with n hn
-  · rfl
-  · simp only [numDerangements_add_two, hn, pow_succ, Int.ofNat_mul, Int.ofNat_add, Int.ofNat_succ]
-    ring
+  rfl
+  simp only [numDerangements_add_two, hn, pow_succ, Int.ofNat_mul, Int.ofNat_add, Int.ofNat_succ]
+  ring
 
 theorem card_derangements_fin_eq_numDerangements {n : ℕ} :
     card (derangements (Fin n)) = numDerangements n := by
   induction' n using Nat.strong_induction_on with n hyp
   rcases n with _ | _ | n
   -- knock out cases 0 and 1
-  · rfl
-  · rfl
+  rfl
+  rfl
   -- now we have n ≥ 2. rewrite everything in terms of card_derangements, so that we can use
   -- `card_derangements_fin_add_two`
   rw [numDerangements_add_two, card_derangements_fin_add_two, mul_add, hyp, hyp] <;> omega

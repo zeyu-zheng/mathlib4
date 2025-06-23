@@ -49,9 +49,9 @@ theorem irreducible_iff_roots_eq_zero_of_degree_le_three
   rw [← irreducible_mul_leadingCoeff_inv,
       (monic_mul_leadingCoeff_inv hp0).irreducible_iff_roots_eq_zero_of_degree_le_three,
       mul_comm, roots_C_mul]
-  · exact inv_ne_zero (leadingCoeff_ne_zero.mpr hp0)
-  · rwa [natDegree_mul_leadingCoeff_inv _ hp0]
-  · rwa [natDegree_mul_leadingCoeff_inv _ hp0]
+  exact inv_ne_zero (leadingCoeff_ne_zero.mpr hp0)
+  rwa [natDegree_mul_leadingCoeff_inv _ hp0]
+  rwa [natDegree_mul_leadingCoeff_inv _ hp0]
 
 end Field
 

@@ -163,16 +163,16 @@ variable [Fintype p] [Fintype q]
 
 theorem pso_inv {i : R} (hi : i * i = -1) : Pso p q R i * Pso p q R (-i) = 1 := by
   ext (x y); rcases x with ⟨x⟩|⟨x⟩ <;> rcases y with ⟨y⟩|⟨y⟩
-  · -- x y : p
-    by_cases h : x = y <;>
-    simp [Pso, indefiniteDiagonal, h, one_apply]
-  · -- x : p, y : q
-    simp [Pso, indefiniteDiagonal]
-  · -- x : q, y : p
-    simp [Pso, indefiniteDiagonal]
-  · -- x y : q
-    by_cases h : x = y <;>
-    simp [Pso, indefiniteDiagonal, h, hi, one_apply]
+  -- x y : p
+  by_cases h : x = y <;>
+  simp [Pso, indefiniteDiagonal, h, one_apply]
+  -- x : p, y : q
+  simp [Pso, indefiniteDiagonal]
+  -- x : q, y : p
+  simp [Pso, indefiniteDiagonal]
+  -- x y : q
+  by_cases h : x = y <;>
+  simp [Pso, indefiniteDiagonal, h, hi, one_apply]
 
 /-- There is a constructive inverse of `Pso p q R i`. -/
 def invertiblePso {i : R} (hi : i * i = -1) : Invertible (Pso p q R i) :=
@@ -181,16 +181,16 @@ def invertiblePso {i : R} (hi : i * i = -1) : Invertible (Pso p q R i) :=
 theorem indefiniteDiagonal_transform {i : R} (hi : i * i = -1) :
     (Pso p q R i)ᵀ * indefiniteDiagonal p q R * Pso p q R i = 1 := by
   ext (x y); rcases x with ⟨x⟩|⟨x⟩ <;> rcases y with ⟨y⟩|⟨y⟩
-  · -- x y : p
-    by_cases h : x = y <;>
-    simp [Pso, indefiniteDiagonal, h, one_apply]
-  · -- x : p, y : q
-    simp [Pso, indefiniteDiagonal]
-  · -- x : q, y : p
-    simp [Pso, indefiniteDiagonal]
-  · -- x y : q
-    by_cases h : x = y <;>
-    simp [Pso, indefiniteDiagonal, h, hi, one_apply]
+  -- x y : p
+  by_cases h : x = y <;>
+  simp [Pso, indefiniteDiagonal, h, one_apply]
+  -- x : p, y : q
+  simp [Pso, indefiniteDiagonal]
+  -- x : q, y : p
+  simp [Pso, indefiniteDiagonal]
+  -- x y : q
+  by_cases h : x = y <;>
+  simp [Pso, indefiniteDiagonal, h, hi, one_apply]
 
 /-- An equivalence between the indefinite and definite orthogonal Lie algebras, over a ring
 containing a square root of -1. -/

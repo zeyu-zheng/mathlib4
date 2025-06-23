@@ -71,8 +71,8 @@ theorem foldr_mul (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) (a b : CliffordAl
 theorem foldr_prod_map_ι (l : List M) (f : M →ₗ[R] N →ₗ[R] N) (hf) (n : N) :
     foldr Q f hf n (l.map <| ι Q).prod = List.foldr (fun m n => f m n) n l := by
   induction' l with hd tl ih
-  · rw [List.map_nil, List.prod_nil, List.foldr_nil, foldr_one]
-  · rw [List.map_cons, List.prod_cons, List.foldr_cons, foldr_mul, foldr_ι, ih]
+  rw [List.map_nil, List.prod_nil, List.foldr_nil, foldr_one]
+  rw [List.map_cons, List.prod_cons, List.foldr_cons, foldr_mul, foldr_ι, ih]
 
 end Foldr
 
@@ -147,9 +147,9 @@ theorem left_induction {P : CliffordAlgebra Q → Prop} (algebraMap : ∀ r : R,
   refine reverse_involutive.surjective.forall.2 ?_
   intro x
   induction' x using CliffordAlgebra.right_induction with r x y hx hy m x hx
-  · simpa only [reverse.commutes] using algebraMap r
-  · simpa only [map_add] using add _ _ hx hy
-  · simpa only [reverse.map_mul, reverse_ι] using ι_mul _ _ hx
+  simpa only [reverse.commutes] using algebraMap r
+  simpa only [map_add] using add _ _ hx hy
+  simpa only [reverse.map_mul, reverse_ι] using ι_mul _ _ hx
 
 /-! ### Versions with extra state -/
 

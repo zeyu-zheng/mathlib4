@@ -90,9 +90,9 @@ instance Nat.orderedSMul [LinearOrderedCancelAddCommMonoid M] : OrderedSMul ℕ 
 instance Int.orderedSMul [LinearOrderedAddCommGroup M] : OrderedSMul ℤ M :=
   OrderedSMul.mk'' fun n hn => by
     cases n
-    · simp only [Int.ofNat_eq_coe, Int.natCast_pos, natCast_zsmul] at hn ⊢
-      exact strictMono_smul_left_of_pos hn
-    · cases (Int.negSucc_not_pos _).1 hn
+    simp only [Int.ofNat_eq_coe, Int.natCast_pos, natCast_zsmul] at hn ⊢
+    exact strictMono_smul_left_of_pos hn
+    cases (Int.negSucc_not_pos _).1 hn
 
 section LinearOrderedSemiring
 variable [LinearOrderedSemiring R] [LinearOrderedAddCommMonoid M] [SMulWithZero R M]

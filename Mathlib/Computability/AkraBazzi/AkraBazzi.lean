@@ -392,12 +392,12 @@ lemma isLittleO_deriv_smoothingFn : deriv ε =o[atTop] fun x => x⁻¹ := calc
             simp_rw [neg_div, div_eq_mul_inv, ← mul_inv, neg_inv, neg_mul]
     _ =o[atTop] fun x => (x * 1)⁻¹ := by
             refine IsLittleO.inv_rev ?_ ?_
-            · refine IsBigO.mul_isLittleO
-                (by rw [isBigO_neg_right]; aesop (add safe isBigO_refl)) ?_
-              rw [isLittleO_one_left_iff]
-              exact Tendsto.comp tendsto_norm_atTop_atTop
-                <| Tendsto.comp (tendsto_pow_atTop (by norm_num)) tendsto_log_atTop
-            · exact Filter.eventually_of_forall (fun x hx => by rw [mul_one] at hx; simp [hx])
+            refine IsBigO.mul_isLittleO
+              (by rw [isBigO_neg_right]; aesop (add safe isBigO_refl)) ?_
+            rw [isLittleO_one_left_iff]
+            exact Tendsto.comp tendsto_norm_atTop_atTop
+              <| Tendsto.comp (tendsto_pow_atTop (by norm_num)) tendsto_log_atTop
+            exact Filter.eventually_of_forall (fun x hx => by rw [mul_one] at hx; simp [hx])
     _ = fun x => x⁻¹ := by simp
 
 lemma eventually_deriv_one_sub_smoothingFn :
@@ -712,12 +712,12 @@ lemma eventually_atTop_sumTransform_ge :
                           _ ≤ u     := by exact_mod_cast hu'.1
          _ ≥ n ^ (p a b) * (∑ _u ∈ Finset.Ico (r i n) n, c₂ * g n / n ^ ((p a b) + 1)) := by
                 gcongr with u hu
-                · rw [Finset.mem_Ico] at hu
-                  have := calc 0 < r i n := hrpos_i
-                              _ ≤ u := hu.1
-                  positivity
-                · rw [Finset.mem_Ico] at hu
-                  exact le_of_lt hu.2
+                rw [Finset.mem_Ico] at hu
+                have := calc 0 < r i n := hrpos_i
+                            _ ≤ u := hu.1
+                positivity
+                rw [Finset.mem_Ico] at hu
+                exact le_of_lt hu.2
          _ ≥ n ^ (p a b) * (Finset.Ico (r i n) n).card • (c₂ * g n / n ^ ((p a b) + 1)) := by
                 gcongr; exact Finset.card_nsmul_le_sum _ _ _ (fun x _ => by rfl)
          _ = n ^ (p a b) * (Finset.Ico (r i n) n).card * (c₂ * g n / n ^ ((p a b) + 1)) := by
@@ -746,13 +746,13 @@ lemma eventually_atTop_sumTransform_ge :
                        _ ≤ u := by exact_mod_cast hu'.1
       _ ≥ n ^ (p a b) * (∑ _u ∈ Finset.Ico (r i n) n, c₂ * g n / (r i n) ^ ((p a b) + 1)) := by
              gcongr n^(p a b) * (Finset.Ico (r i n) n).sum (fun _ => c₂ * g n / ?_) with u hu
-             · rw [Finset.mem_Ico] at hu
-               have := calc 0 < r i n := hrpos_i
-                           _ ≤ u := hu.1
-               positivity
-             · rw [Finset.mem_Ico] at hu
-               exact rpow_le_rpow_of_exponent_nonpos (by positivity)
-                 (by exact_mod_cast hu.1) (le_of_lt hp)
+             rw [Finset.mem_Ico] at hu
+             have := calc 0 < r i n := hrpos_i
+                         _ ≤ u := hu.1
+             positivity
+             rw [Finset.mem_Ico] at hu
+             exact rpow_le_rpow_of_exponent_nonpos (by positivity)
+               (by exact_mod_cast hu.1) (le_of_lt hp)
       _ ≥ n ^ (p a b) * (Finset.Ico (r i n) n).card • (c₂ * g n / (r i n) ^ ((p a b) + 1)) := by
              gcongr; exact Finset.card_nsmul_le_sum _ _ _ (fun x _ => by rfl)
       _ = n ^ (p a b) * (Finset.Ico (r i n) n).card * (c₂ * g n / (r i n) ^ ((p a b) + 1)) := by
@@ -822,8 +822,8 @@ lemma eventually_deriv_rpow_p_mul_one_sub_smoothingFn (p : ℝ) :
     =ᶠ[atTop] fun x => deriv (· ^ p) x * (1 - ε x) + x ^ p * deriv (1 - ε ·) x := by
             filter_upwards [eventually_gt_atTop 1] with x hx
             rw [deriv_mul]
-            · exact differentiableAt_rpow_const_of_ne _ (by positivity)
-            · exact differentiableAt_one_sub_smoothingFn hx
+            exact differentiableAt_rpow_const_of_ne _ (by positivity)
+            exact differentiableAt_one_sub_smoothingFn hx
   _ =ᶠ[atTop] fun x => p * x ^ (p-1) * (1 - ε x) + x ^ p * (x⁻¹ / (log x ^ 2)) := by
             filter_upwards [eventually_gt_atTop 1, eventually_deriv_one_sub_smoothingFn]
               with x hx hderiv
@@ -839,8 +839,8 @@ lemma eventually_deriv_rpow_p_mul_one_add_smoothingFn (p : ℝ) :
     =ᶠ[atTop] fun x => deriv (· ^ p) x * (1 + ε x) + x ^ p * deriv (1 + ε ·) x := by
             filter_upwards [eventually_gt_atTop 1] with x hx
             rw [deriv_mul]
-            · exact differentiableAt_rpow_const_of_ne _ (by positivity)
-            · exact differentiableAt_one_add_smoothingFn hx
+            exact differentiableAt_rpow_const_of_ne _ (by positivity)
+            exact differentiableAt_one_add_smoothingFn hx
   _ =ᶠ[atTop] fun x => p * x ^ (p-1) * (1 + ε x) - x ^ p * (x⁻¹ / (log x ^ 2)) := by
             filter_upwards [eventually_gt_atTop 1, eventually_deriv_one_add_smoothingFn]
               with x hx hderiv
@@ -1230,16 +1230,16 @@ lemma T_isBigO_smoothingFn_mul_asympBound :
         _ ≤ (∑ i, a i * (C * ((1 - ε (r i n)) * asympBound g a b (r i n)))) + g n := by
             -- Apply the induction hypothesis, or use the base case depending on how large n is
             gcongr (∑ i, a i * ?_) + g n with i _
-            · exact le_of_lt <| R.a_pos _
-            · if ri_lt_n₀ : r i n < n₀ then
-                exact h_base _ <| by
-                  simp_all only [gt_iff_lt, Nat.ofNat_pos, div_pos_iff_of_pos_right,
-                    eventually_atTop, sub_pos, one_div, mem_Ico, and_imp,
-                    forall_true_left, mem_univ, and_self, b', C, base_max]
-              else
-                push_neg at ri_lt_n₀
-                exact h_ind (r i n) (R.r_lt_n _ _ (n₀_ge_Rn₀.trans hn)) ri_lt_n₀
-                  (h_asympBound_r_pos _ hn _) (h_smoothing_r_pos n hn i)
+            exact le_of_lt <| R.a_pos _
+            if ri_lt_n₀ : r i n < n₀ then
+              exact h_base _ <| by
+                simp_all only [gt_iff_lt, Nat.ofNat_pos, div_pos_iff_of_pos_right,
+                  eventually_atTop, sub_pos, one_div, mem_Ico, and_imp,
+                  forall_true_left, mem_univ, and_self, b', C, base_max]
+            else
+              push_neg at ri_lt_n₀
+              exact h_ind (r i n) (R.r_lt_n _ _ (n₀_ge_Rn₀.trans hn)) ri_lt_n₀
+                (h_asympBound_r_pos _ hn _) (h_smoothing_r_pos n hn i)
         _ = (∑ i, a i * (C * ((1 - ε (r i n)) * ((r i n) ^ (p a b)
                 * (1 + (∑ u ∈ range (r i n), g u / u ^ ((p a b) + 1))))))) + g n := by
             simp_rw [asympBound_def']
@@ -1250,12 +1250,12 @@ lemma T_isBigO_smoothingFn_mul_asympBound :
                 * ((1 + (∑ u ∈ range (r i n), g u / u ^ ((p a b) + 1)))))) + g n := by
             gcongr (∑ i, C * a i * (?_
                 * ((1 + (∑ u ∈ range (r i n), g u / u ^ ((p a b) + 1)))))) + g n with i
-            · have := R.a_pos i
-              positivity
-            · refine add_nonneg zero_le_one <| Finset.sum_nonneg fun j _ => ?_
-              rw [div_nonneg_iff]
-              exact Or.inl ⟨R.g_nonneg j (by positivity), by positivity⟩
-            · exact bound1 n hn i
+            have := R.a_pos i
+            positivity
+            refine add_nonneg zero_le_one <| Finset.sum_nonneg fun j _ => ?_
+            rw [div_nonneg_iff]
+            exact Or.inl ⟨R.g_nonneg j (by positivity), by positivity⟩
+            exact bound1 n hn i
         _ = (∑ i, C * a i * ((b i) ^ (p a b) * n ^ (p a b) * (1 - ε n)
                 * ((1 + ((∑ u ∈ range n, g u / u ^ ((p a b) + 1))
                 - (∑ u ∈ Finset.Ico (r i n) n, g u / u ^ ((p a b) + 1))))))) + g n := by
@@ -1275,11 +1275,11 @@ lemma T_isBigO_smoothingFn_mul_asympBound :
         _ ≤ (∑ i, C * a i * ((b i) ^ (p a b) * (1 - ε n)
                 * ((asympBound g a b n - c₁ * g n)))) + g n := by
             gcongr with i
-            · have := R.a_pos i
-              positivity
-            · have := R.b_pos i
-              positivity
-            · exact h_sumTransform n hn i
+            have := R.a_pos i
+            positivity
+            have := R.b_pos i
+            positivity
+            exact h_sumTransform n hn i
         _ = (∑ i, C * (1 - ε n) * ((asympBound g a b n - c₁ * g n))
                 * (a i * (b i) ^ (p a b))) + g n := by
             congr; ext; ring
@@ -1294,8 +1294,8 @@ lemma T_isBigO_smoothingFn_mul_asympBound :
                     rw [inv_mul_cancel (by positivity : c₁ ≠ 0)]; norm_num
                  _ = (2 * c₁⁻¹) * c₁ * (1/2) := by ring
                  _ ≤ C * c₁ * (1 - ε n) := by gcongr
-                                              · rw [hC]; exact le_max_left _ _
-                                              · exact le_of_lt <| h_smoothing_gt_half n hn
+                                              rw [hC]; exact le_max_left _ _
+                                              exact le_of_lt <| h_smoothing_gt_half n hn
         _ = C * ((1 - ε n) * asympBound g a b n) := by ring
 
 /-- The main proof of the lower bound part of the Akra-Bazzi theorem. The factor
@@ -1379,12 +1379,12 @@ lemma smoothingFn_mul_asympBound_isBigO_T :
         _ ≥ (∑ i, a i * (C * ((1 + ε (r i n)) * asympBound g a b (r i n)))) + g n := by
             -- Apply the induction hypothesis, or use the base case depending on how large `n` is
               gcongr (∑ i, a i * ?_) + g n with i _
-              · exact le_of_lt <| R.a_pos _
-              · cases lt_or_le (r i n) n₀ with
-                | inl ri_lt_n₀ => exact h_base _ <| Finset.mem_Ico.mpr ⟨b_mul_n₀_le_ri i, ri_lt_n₀⟩
-                | inr n₀_le_ri =>
-                  exact h_ind (r i n) (R.r_lt_n _ _ (n₀_ge_Rn₀.trans hn)) n₀_le_ri
-                    (h_asympBound_r_pos _ hn _) (h_smoothing_r_pos n hn i)
+              exact le_of_lt <| R.a_pos _
+              cases lt_or_le (r i n) n₀ with
+              | inl ri_lt_n₀ => exact h_base _ <| Finset.mem_Ico.mpr ⟨b_mul_n₀_le_ri i, ri_lt_n₀⟩
+              | inr n₀_le_ri =>
+                exact h_ind (r i n) (R.r_lt_n _ _ (n₀_ge_Rn₀.trans hn)) n₀_le_ri
+                  (h_asympBound_r_pos _ hn _) (h_smoothing_r_pos n hn i)
         _ = (∑ i, a i * (C * ((1 + ε (r i n)) * ((r i n) ^ (p a b)
                   * (1 + (∑ u ∈ range (r i n), g u / u ^ ((p a b) + 1))))))) + g n := by
               simp_rw [asympBound_def']
@@ -1395,12 +1395,12 @@ lemma smoothingFn_mul_asympBound_isBigO_T :
                   * ((1 + (∑ u ∈ range (r i n), g u / u ^ ((p a b) + 1)))))) + g n := by
               gcongr (∑ i, C * a i * (?_ *
                   ((1 + (∑ u ∈ range (r i n), g u / u ^ ((p a b) + 1)))))) + g n with i
-              · have := R.a_pos i
-                positivity
-              · refine add_nonneg zero_le_one <| Finset.sum_nonneg fun j _ => ?_
-                rw [div_nonneg_iff]
-                exact Or.inl ⟨R.g_nonneg j (by positivity), by positivity⟩
-              · exact bound2 n hn i
+              have := R.a_pos i
+              positivity
+              refine add_nonneg zero_le_one <| Finset.sum_nonneg fun j _ => ?_
+              rw [div_nonneg_iff]
+              exact Or.inl ⟨R.g_nonneg j (by positivity), by positivity⟩
+              exact bound2 n hn i
         _ = (∑ i, C * a i * ((b i) ^ (p a b) * n ^ (p a b) * (1 + ε n)
                   * ((1 + ((∑ u ∈ range n, g u / u ^ ((p a b) + 1))
                   - (∑ u ∈ Finset.Ico (r i n) n, g u / u ^ ((p a b) + 1))))))) + g n := by
@@ -1420,11 +1420,11 @@ lemma smoothingFn_mul_asympBound_isBigO_T :
         _ ≥ (∑ i, C * a i * ((b i) ^ (p a b) * (1 + ε n)
                   * ((asympBound g a b n - c₁ * g n)))) + g n := by
               gcongr with i
-              · have := R.a_pos i
-                positivity
-              · have := R.b_pos i
-                positivity
-              · exact h_sumTransform n hn i
+              have := R.a_pos i
+              positivity
+              have := R.b_pos i
+              positivity
+              exact h_sumTransform n hn i
         _ = (∑ i, C * (1 + ε n) * ((asympBound g a b n - c₁ * g n))
                   * (a i * (b i) ^ (p a b))) + g n := by congr; ext; ring
         _ = C * (1 + ε n) * (asympBound g a b n - c₁ * g n) + g n := by

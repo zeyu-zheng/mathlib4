@@ -96,15 +96,15 @@ theorem eq_mk_of_is_sol_of_eq_init {u : ℕ → α} {init : Fin E.order → α} 
   intro n
   rw [mkSol]
   split_ifs with h'
-  · exact mod_cast heq ⟨n, h'⟩
+  exact mod_cast heq ⟨n, h'⟩
   simp only
   rw [← tsub_add_cancel_of_le (le_of_not_lt h'), h (n - E.order)]
   congr with k
   have : n - E.order + k < n
   rw [add_comm, ← add_tsub_assoc_of_le (not_lt.mp h'), tsub_lt_iff_left]
-  · exact add_lt_add_right k.is_lt n
-  · convert add_le_add (zero_le (k : ℕ)) (not_lt.mp h')
-    simp only [zero_add]
+  exact add_lt_add_right k.is_lt n
+  convert add_le_add (zero_le (k : ℕ)) (not_lt.mp h')
+  simp only [zero_add]
   rw [eq_mk_of_is_sol_of_eq_init h heq (n - E.order + k)]
   simp
 
@@ -205,11 +205,11 @@ theorem geom_sol_iff_root_charPoly (q : α) :
   simp only [Polynomial.eval₂_finset_sum, one_mul, RingHom.id_apply, Polynomial.eval₂_monomial,
     Polynomial.eval₂_sub]
   constructor
-  · intro h
-    simpa [sub_eq_zero] using h 0
-  · intro h n
-    simp only [pow_add, sub_eq_zero.mp h, mul_sum]
-    exact sum_congr rfl fun _ _ ↦ by ring
+  intro h
+  simpa [sub_eq_zero] using h 0
+  intro h n
+  simp only [pow_add, sub_eq_zero.mp h, mul_sum]
+  exact sum_congr rfl fun _ _ ↦ by ring
 
 end CommRing
 

@@ -101,9 +101,9 @@ theorem normed_le_div_measure_closedBall_rIn (x : E) :
     f.normed μ x ≤ 1 / (μ (closedBall c f.rIn)).toReal := by
   rw [normed_def]
   gcongr
-  · exact ENNReal.toReal_pos (measure_closedBall_pos _ _ f.rIn_pos).ne' measure_closedBall_lt_top.ne
-  · exact f.le_one
-  · exact f.measure_closedBall_le_integral μ
+  exact ENNReal.toReal_pos (measure_closedBall_pos _ _ f.rIn_pos).ne' measure_closedBall_lt_top.ne
+  exact f.le_one
+  exact f.measure_closedBall_le_integral μ
 
 theorem integral_le_measure_closedBall : ∫ x, f x ∂μ ≤ (μ (closedBall c f.rOut)).toReal := by calc
   ∫ x, f x ∂μ = ∫ x in closedBall c f.rOut, f x ∂μ := by
@@ -135,12 +135,12 @@ theorem normed_le_div_measure_closedBall_rOut [IsAddHaarMeasure μ] (K : ℝ) (h
   simpa [f.rIn_pos, not_lt.2 f.rIn_pos.le] using mul_pos_iff.1 (f.rOut_pos.trans_le h)
   have : f x / ∫ y, f y ∂μ ≤ 1 / ∫ y, f y ∂μ
   gcongr
-  · exact f.integral_pos.le
-  · exact f.le_one
+  exact f.integral_pos.le
+  exact f.le_one
   apply this.trans
   rw [div_le_div_iff f.integral_pos, one_mul, ← div_le_iff' (pow_pos K_pos _)]
-  · exact f.measure_closedBall_div_le_integral μ K h
-  · exact ENNReal.toReal_pos (measure_closedBall_pos _ _ f.rOut_pos).ne'
-      measure_closedBall_lt_top.ne
+  exact f.measure_closedBall_div_le_integral μ K h
+  exact ENNReal.toReal_pos (measure_closedBall_pos _ _ f.rOut_pos).ne'
+    measure_closedBall_lt_top.ne
 
 end ContDiffBump

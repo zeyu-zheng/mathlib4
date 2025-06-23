@@ -109,33 +109,33 @@ theorem exists_ne_zero_mem_lattice_of_measure_mul_two_pow_le_measure [NormedAddC
   have h_zero : 0 ∈ K := K.zero_mem_of_symmetric h_symm
   suffices Set.Nonempty (⋂ n, Z n) by
     erw [← Set.iInter_inter, K.iInter_smul_eq_self h_zero] at this
-    · obtain ⟨x, hx⟩ := this
-      exact ⟨⟨x, by aesop⟩, by aesop⟩
-    · exact (exists_seq_strictAnti_tendsto (0 : ℝ≥0)).choose_spec.2.2
+    obtain ⟨x, hx⟩ := this
+    exact ⟨⟨x, by aesop⟩, by aesop⟩
+    exact (exists_seq_strictAnti_tendsto (0 : ℝ≥0)).choose_spec.2.2
   have h_clos : IsClosed ((L : Set E) \ {0}) := by
     rsuffices ⟨U, hU⟩ : ∃ U : Set E, IsOpen U ∧  U ∩ L = {0}
-    · rw [sdiff_eq_sdiff_iff_inf_eq_inf (z := U).mpr (by simp [Set.inter_comm .. ▸ hU.2, zero_mem])]
-      exact AddSubgroup.isClosed_of_discrete.sdiff hU.1
+    rw [sdiff_eq_sdiff_iff_inf_eq_inf (z := U).mpr (by simp [Set.inter_comm .. ▸ hU.2, zero_mem])]
+    exact AddSubgroup.isClosed_of_discrete.sdiff hU.1
     exact isOpen_inter_eq_singleton_of_mem_discrete (zero_mem L)
   refine IsCompact.nonempty_iInter_of_sequence_nonempty_isCompact_isClosed Z (fun n => ?_)
     (fun n => ?_) ((S 0).isCompact.inter_right h_clos) (fun n => (S n).isClosed.inter h_clos)
-  · refine Set.inter_subset_inter_left _ (SetLike.coe_subset_coe.mpr ?_)
-    refine ConvexBody.smul_le_of_le K h_zero ?_
-    rw [add_le_add_iff_left]
-    exact le_of_lt <| (exists_seq_strictAnti_tendsto (0 : ℝ≥0)).choose_spec.1 (Nat.lt.base n)
-  · suffices μ F * 2 ^ finrank ℝ E < μ (S n : Set E) by
-      have h_symm' : ∀ x ∈ S n, -x ∈ S n
-      rintro _ ⟨y, hy, rfl⟩
-      exact ⟨-y, h_symm _ hy, by simp⟩
-      obtain ⟨x, hx_nz, hx_mem⟩ := exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
-        fund h_symm' (S n).convex this
-      exact ⟨x, hx_mem, by aesop⟩
-    refine lt_of_le_of_lt h ?_
-    rw [ConvexBody.coe_smul', NNReal.smul_def, addHaar_smul_of_nonneg _ (NNReal.coe_nonneg _)]
-    rw [show μ s < _ ↔ 1 * μ s < _ by rw [one_mul]]
-    refine (mul_lt_mul_right h_mes (ne_of_lt h_cpt.measure_lt_top)).mpr ?_
-    rw [ofReal_pow (NNReal.coe_nonneg _)]
-    refine one_lt_pow ?_ (ne_of_gt finrank_pos)
-    simp [(exists_seq_strictAnti_tendsto (0 : ℝ≥0)).choose_spec.2.1 n]
+  refine Set.inter_subset_inter_left _ (SetLike.coe_subset_coe.mpr ?_)
+  refine ConvexBody.smul_le_of_le K h_zero ?_
+  rw [add_le_add_iff_left]
+  exact le_of_lt <| (exists_seq_strictAnti_tendsto (0 : ℝ≥0)).choose_spec.1 (Nat.lt.base n)
+  suffices μ F * 2 ^ finrank ℝ E < μ (S n : Set E) by
+    have h_symm' : ∀ x ∈ S n, -x ∈ S n
+    rintro _ ⟨y, hy, rfl⟩
+    exact ⟨-y, h_symm _ hy, by simp⟩
+    obtain ⟨x, hx_nz, hx_mem⟩ := exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
+      fund h_symm' (S n).convex this
+    exact ⟨x, hx_mem, by aesop⟩
+  refine lt_of_le_of_lt h ?_
+  rw [ConvexBody.coe_smul', NNReal.smul_def, addHaar_smul_of_nonneg _ (NNReal.coe_nonneg _)]
+  rw [show μ s < _ ↔ 1 * μ s < _ by rw [one_mul]]
+  refine (mul_lt_mul_right h_mes (ne_of_lt h_cpt.measure_lt_top)).mpr ?_
+  rw [ofReal_pow (NNReal.coe_nonneg _)]
+  refine one_lt_pow ?_ (ne_of_gt finrank_pos)
+  simp [(exists_seq_strictAnti_tendsto (0 : ℝ≥0)).choose_spec.2.1 n]
 
 end MeasureTheory

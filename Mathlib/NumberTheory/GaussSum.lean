@@ -93,12 +93,12 @@ private theorem gaussSum_mul_aux {χ : MulChar R R'} (hχ : χ ≠ 1) (ψ : AddC
     (b : R) :
     ∑ a, χ (a * b⁻¹) * ψ (a - b) = ∑ c, χ c * ψ (b * (c - 1)) := by
   rcases eq_or_ne b 0 with hb | hb
-  · -- case `b = 0`
-    simp only [hb, inv_zero, mul_zero, MulChar.map_zero, zero_mul,
-      Finset.sum_const_zero, map_zero_eq_one, mul_one, χ.sum_eq_zero_of_ne_one hχ]
-  · -- case `b ≠ 0`
-    refine (Fintype.sum_bijective _ (mulLeft_bijective₀ b hb) _ _ fun x ↦ ?_).symm
-    rw [mul_assoc, mul_comm x, ← mul_assoc, mul_inv_cancel hb, one_mul, mul_sub, mul_one]
+  -- case `b = 0`
+  simp only [hb, inv_zero, mul_zero, MulChar.map_zero, zero_mul,
+    Finset.sum_const_zero, map_zero_eq_one, mul_one, χ.sum_eq_zero_of_ne_one hχ]
+  -- case `b ≠ 0`
+  refine (Fintype.sum_bijective _ (mulLeft_bijective₀ b hb) _ _ fun x ↦ ?_).symm
+  rw [mul_assoc, mul_comm x, ← mul_assoc, mul_inv_cancel hb, one_mul, mul_sub, mul_one]
 
 /-- We have `gaussSum χ ψ * gaussSum χ⁻¹ ψ⁻¹ = Fintype.card R`
 when `χ` is nontrivial and `ψ` is primitive (and `R` is a field). -/
@@ -166,9 +166,9 @@ theorem MulChar.IsQuadratic.gaussSum_frob_iter (n : ℕ) (hp : IsUnit (p : R)) {
     (hχ : IsQuadratic χ) (ψ : AddChar R R') :
     gaussSum χ ψ ^ p ^ n = χ ((p : R) ^ n) * gaussSum χ ψ := by
   induction' n with n ih
-  · rw [pow_zero, pow_one, pow_zero, MulChar.map_one, one_mul]
-  · rw [pow_succ, pow_mul, ih, mul_pow, hχ.gaussSum_frob _ hp, ← mul_assoc, pow_succ, map_mul,
-      ← pow_apply' χ fp.1.ne_zero ((p : R) ^ n), hχ.pow_char p]
+  rw [pow_zero, pow_one, pow_zero, MulChar.map_one, one_mul]
+  rw [pow_succ, pow_mul, ih, mul_pow, hχ.gaussSum_frob _ hp, ← mul_assoc, pow_succ, map_mul,
+    ← pow_apply' χ fp.1.ne_zero ((p : R) ^ n), hχ.pow_char p]
 
 end gaussSum_frob
 
@@ -267,10 +267,10 @@ theorem FiniteField.two_pow_card {F : Type*} [Fintype F] [Field F] (hF : ringCha
   have τ_spec : τ ^ 4 = -1
   rw [show τ = ψ₈.char 1 from rfl] -- to make `rw [ψ₈.prim.zmod_char_eq_one_iff]` work
   refine (sq_eq_one_iff.1 ?_).resolve_left ?_
-  · rw [← pow_mul, ← map_nsmul_eq_pow ψ₈.char, ψ₈.prim.zmod_char_eq_one_iff]
-    decide
-  · rw [← map_nsmul_eq_pow ψ₈.char, ψ₈.prim.zmod_char_eq_one_iff]
-    decide
+  rw [← pow_mul, ← map_nsmul_eq_pow ψ₈.char, ψ₈.prim.zmod_char_eq_one_iff]
+  decide
+  rw [← map_nsmul_eq_pow ψ₈.char, ψ₈.prim.zmod_char_eq_one_iff]
+  decide
 
   -- we consider `χ₈` as a multiplicative character `ℤ/8ℤ → FF`
   let χ := χ₈.ringHomComp (Int.castRingHom FF)
@@ -302,8 +302,8 @@ theorem FiniteField.two_pow_card {F : Type*} [Fintype F] [Field F] (hF : ringCha
 
   -- finally, we change `2` to `8` on the left hand side
   convert_to (8 : F) ^ (Fintype.card F / 2) = _
-  · rw [(by norm_num : (8 : F) = 2 ^ 2 * 2), mul_pow,
-      (FiniteField.isSquare_iff hF <| hp2 2).mp ⟨2, pow_two 2⟩, one_mul]
+  rw [(by norm_num : (8 : F) = 2 ^ 2 * 2), mul_pow,
+    (FiniteField.isSquare_iff hF <| hp2 2).mp ⟨2, pow_two 2⟩, one_mul]
   apply (algebraMap F FF).injective
   simpa only [map_pow, map_ofNat, map_intCast, Nat.cast_ofNat] using h
 

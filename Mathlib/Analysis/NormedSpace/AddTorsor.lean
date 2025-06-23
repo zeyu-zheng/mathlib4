@@ -215,8 +215,8 @@ theorem eventually_homothety_mem_of_mem_interior (x : Q) {s : Set Q} {y : Q} (hy
     ∀ᶠ δ in 𝓝 (1 : 𝕜), homothety x δ y ∈ s := by
   rw [(NormedAddCommGroup.nhds_basis_norm_lt (1 : 𝕜)).eventually_iff]
   rcases eq_or_ne y x with h | h
-  · use 1
-    simp [h.symm, interior_subset hy]
+  use 1
+  simp [h.symm, interior_subset hy]
   have hxy : 0 < ‖y -ᵥ x‖
   rwa [norm_pos_iff, vsub_ne_zero]
   obtain ⟨u, hu₁, hu₂, hu₃⟩ := mem_interior.mp hy

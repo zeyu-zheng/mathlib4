@@ -25,16 +25,16 @@ variable {M : Type*} [CommMonoidWithZero M]
 /-- Prime `p` divides the product of a list `L` iff it divides some `a ∈ L` -/
 theorem Prime.dvd_prod_iff {p : M} {L : List M} (pp : Prime p) : p ∣ L.prod ↔ ∃ a ∈ L, p ∣ a := by
   constructor
-  · intro h
-    induction' L with L_hd L_tl L_ih
-    · rw [prod_nil] at h
-      exact absurd h pp.not_dvd_one
-    · rw [prod_cons] at h
-      cases' pp.dvd_or_dvd h with hd hd
-      · exact ⟨L_hd, mem_cons_self L_hd L_tl, hd⟩
-      · obtain ⟨x, hx1, hx2⟩ := L_ih hd
-        exact ⟨x, mem_cons_of_mem L_hd hx1, hx2⟩
-  · exact fun ⟨a, ha1, ha2⟩ => dvd_trans ha2 (dvd_prod ha1)
+  intro h
+  induction' L with L_hd L_tl L_ih
+  rw [prod_nil] at h
+  exact absurd h pp.not_dvd_one
+  rw [prod_cons] at h
+  cases' pp.dvd_or_dvd h with hd hd
+  exact ⟨L_hd, mem_cons_self L_hd L_tl, hd⟩
+  obtain ⟨x, hx1, hx2⟩ := L_ih hd
+  exact ⟨x, mem_cons_of_mem L_hd hx1, hx2⟩
+  exact fun ⟨a, ha1, ha2⟩ => dvd_trans ha2 (dvd_prod ha1)
 
 theorem Prime.not_dvd_prod {p : M} {L : List M} (pp : Prime p) (hL : ∀ a ∈ L, ¬p ∣ a) :
     ¬p ∣ L.prod :=

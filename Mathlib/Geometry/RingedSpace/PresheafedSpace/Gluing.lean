@@ -143,7 +143,7 @@ theorem pullback_base (i j k : D.J) (S : Set (D.V (i, j)).carrier) :
   erw [coe_comp]
   erw [Set.preimage_comp, Set.image_preimage_eq, TopCat.pullback_snd_image_fst_preimage]
    -- now `erw` after #13170
-  · rfl
+  rfl
   erw [← TopCat.epi_iff_surjective] -- now `erw` after #13170
   infer_instance
 
@@ -184,46 +184,46 @@ theorem snd_invApp_t_app' (i j k : D.J) (U : Opens (pullback (D.f i j) (D.f i k)
         (D.t' k i j).c.app _ ≫ (π₁⁻¹ k, j, i) (unop _) := by
   fconstructor
   -- Porting note: I don't know what the magic was in Lean3 proof, it just skipped the proof of `eq`
-  · delta IsOpenImmersion.opensFunctor
-    dsimp only [Functor.op, Opens.map, IsOpenMap.functor, unop_op, Opens.coe_mk]
-    congr
-    have := (𝖣.t_fac k i j).symm
-    rw [← IsIso.inv_comp_eq] at this
-    replace this := (congr_arg ((PresheafedSpace.Hom.base ·)) this).symm
-    replace this := congr_arg (ContinuousMap.toFun ·) this
-    dsimp at this
-    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [coe_comp, coe_comp] at this
-    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [this, Set.image_comp, Set.image_comp, Set.preimage_image_eq]
-    swap
-    · refine Function.HasLeftInverse.injective ⟨(D.t i k).base, fun x => ?_⟩
-      erw [← comp_apply, ← comp_base, D.t_inv, id_base, id_apply] -- now `erw` after #13170
-    refine congr_arg (_ '' ·) ?_
-    refine congr_fun ?_ _
-    refine Set.image_eq_preimage_of_inverse ?_ ?_
-    · intro x
-      erw [← comp_apply, ← comp_base, IsIso.inv_hom_id, id_base, id_apply] -- now `erw` after #13170
-    · intro x
-      erw [← comp_apply, ← comp_base, IsIso.hom_inv_id, id_base, id_apply] -- now `erw` after #13170
-  · rw [← IsIso.eq_inv_comp, IsOpenImmersion.inv_invApp, Category.assoc,
-      (D.t' k i j).c.naturality_assoc]
-    simp_rw [← Category.assoc]
-    erw [← comp_c_app]
-    rw [congr_app (D.t_fac k i j), comp_c_app]
-    simp_rw [Category.assoc]
-    erw [IsOpenImmersion.inv_naturality, IsOpenImmersion.inv_naturality_assoc,
-      IsOpenImmersion.app_inv_app'_assoc]
-    · simp_rw [← (𝖣.V (k, i)).presheaf.map_comp]; rfl
-    rintro x ⟨y, -, eq⟩
-    replace eq := ConcreteCategory.congr_arg (𝖣.t i k).base eq
-    change ((π₂ i, j, k) ≫ D.t i k).base y = (D.t k i ≫ D.t i k).base x at eq
-    rw [𝖣.t_inv, id_base, TopCat.id_app] at eq
-    subst eq
-    use (inv (D.t' k i j)).base y
-    change (inv (D.t' k i j) ≫ π₁ k, i, j).base y = _
-    congr 2
-    rw [IsIso.inv_comp_eq, 𝖣.t_fac_assoc, 𝖣.t_inv, Category.comp_id]
+  delta IsOpenImmersion.opensFunctor
+  dsimp only [Functor.op, Opens.map, IsOpenMap.functor, unop_op, Opens.coe_mk]
+  congr
+  have := (𝖣.t_fac k i j).symm
+  rw [← IsIso.inv_comp_eq] at this
+  replace this := (congr_arg ((PresheafedSpace.Hom.base ·)) this).symm
+  replace this := congr_arg (ContinuousMap.toFun ·) this
+  dsimp at this
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [coe_comp, coe_comp] at this
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [this, Set.image_comp, Set.image_comp, Set.preimage_image_eq]
+  swap
+  refine Function.HasLeftInverse.injective ⟨(D.t i k).base, fun x => ?_⟩
+  erw [← comp_apply, ← comp_base, D.t_inv, id_base, id_apply] -- now `erw` after #13170
+  refine congr_arg (_ '' ·) ?_
+  refine congr_fun ?_ _
+  refine Set.image_eq_preimage_of_inverse ?_ ?_
+  intro x
+  erw [← comp_apply, ← comp_base, IsIso.inv_hom_id, id_base, id_apply] -- now `erw` after #13170
+  intro x
+  erw [← comp_apply, ← comp_base, IsIso.hom_inv_id, id_base, id_apply] -- now `erw` after #13170
+  rw [← IsIso.eq_inv_comp, IsOpenImmersion.inv_invApp, Category.assoc,
+    (D.t' k i j).c.naturality_assoc]
+  simp_rw [← Category.assoc]
+  erw [← comp_c_app]
+  rw [congr_app (D.t_fac k i j), comp_c_app]
+  simp_rw [Category.assoc]
+  erw [IsOpenImmersion.inv_naturality, IsOpenImmersion.inv_naturality_assoc,
+    IsOpenImmersion.app_inv_app'_assoc]
+  simp_rw [← (𝖣.V (k, i)).presheaf.map_comp]; rfl
+  rintro x ⟨y, -, eq⟩
+  replace eq := ConcreteCategory.congr_arg (𝖣.t i k).base eq
+  change ((π₂ i, j, k) ≫ D.t i k).base y = (D.t k i ≫ D.t i k).base x at eq
+  rw [𝖣.t_inv, id_base, TopCat.id_app] at eq
+  subst eq
+  use (inv (D.t' k i j)).base y
+  change (inv (D.t' k i j) ≫ π₁ k, i, j).base y = _
+  congr 2
+  rw [IsIso.inv_comp_eq, 𝖣.t_fac_assoc, 𝖣.t_inv, Category.comp_id]
 
 set_option backward.isDefEq.lazyWhnfCore false in -- See https://github.com/leanprover-community/mathlib4/issues/12534
 /-- The red and the blue arrows in ![this diagram](https://i.imgur.com/q6X1GJ9.png) commute. -/
@@ -252,18 +252,18 @@ theorem ι_image_preimage_eq (i j : D.J) (U : Opens (D.U i).carrier) :
   erw [coe_comp, coe_comp, coe_comp]
   rw [Set.image_comp, Set.preimage_comp]
   erw [Set.preimage_image_eq]
-  · refine Eq.trans (D.toTopGlueData.preimage_image_eq_image' _ _ _) ?_
-    dsimp
-    rw [Set.image_comp]
-    refine congr_arg (_ '' ·) ?_
-    rw [Set.eq_preimage_iff_image_eq, ← Set.image_comp]
-    swap
-    · exact CategoryTheory.ConcreteCategory.bijective_of_isIso (C := TopCat) _
-    change (D.t i j ≫ D.t j i).base '' _ = _
-    rw [𝖣.t_inv]
-    simp
-  · erw [← coe_comp, ← TopCat.mono_iff_injective] -- now `erw` after #13170
-    infer_instance
+  refine Eq.trans (D.toTopGlueData.preimage_image_eq_image' _ _ _) ?_
+  dsimp
+  rw [Set.image_comp]
+  refine congr_arg (_ '' ·) ?_
+  rw [Set.eq_preimage_iff_image_eq, ← Set.image_comp]
+  swap
+  exact CategoryTheory.ConcreteCategory.bijective_of_isIso (C := TopCat) _
+  change (D.t i j ≫ D.t j i).base '' _ = _
+  rw [𝖣.t_inv]
+  simp
+  erw [← coe_comp, ← TopCat.mono_iff_injective] -- now `erw` after #13170
+  infer_instance
 
 /-- (Implementation). The map `Γ(𝒪_{U_i}, U) ⟶ Γ(𝒪_{U_j}, 𝖣.ι j ⁻¹' (𝖣.ι i '' U))` -/
 def opensImagePreimageMap (i j : D.J) (U : Opens (D.U i).carrier) :
@@ -281,16 +281,16 @@ theorem opensImagePreimageMap_app' (i j k : D.J) (U : Opens (D.U i).carrier) :
         ((π₁ j, i, k) ≫ D.t j i ≫ D.f i j).c.app (op U) ≫
           (π₂⁻¹ j, i, k) (unop _) ≫ (D.V (j, k)).presheaf.map (eqToHom eq) := by
   constructor
-  · delta opensImagePreimageMap
-    simp_rw [Category.assoc]
-    rw [(D.f j k).c.naturality, f_invApp_f_app_assoc]
-    · erw [← (D.V (j, k)).presheaf.map_comp]
-      · simp_rw [← Category.assoc]
-        erw [← comp_c_app, ← comp_c_app]
-        · simp_rw [Category.assoc]
-          dsimp only [Functor.op, unop_op, Quiver.Hom.unop_op]
-          rw [eqToHom_map (Opens.map _), eqToHom_op, eqToHom_trans]
-          congr
+  delta opensImagePreimageMap
+  simp_rw [Category.assoc]
+  rw [(D.f j k).c.naturality, f_invApp_f_app_assoc]
+  erw [← (D.V (j, k)).presheaf.map_comp]
+  simp_rw [← Category.assoc]
+  erw [← comp_c_app, ← comp_c_app]
+  simp_rw [Category.assoc]
+  dsimp only [Functor.op, unop_op, Quiver.Hom.unop_op]
+  rw [eqToHom_map (Opens.map _), eqToHom_op, eqToHom_trans]
+  congr
 
 /-- The red and the blue arrows in ![this diagram](https://i.imgur.com/mBzV1Rx.png) commute. -/
 theorem opensImagePreimageMap_app (i j k : D.J) (U : Opens (D.U i).carrier) :
@@ -402,32 +402,32 @@ theorem ιInvApp_π {i : D.J} (U : Opens (D.U i).carrier) :
     ∃ eq, D.ιInvApp U ≫ D.diagramOverOpenπ U i = (D.U i).presheaf.map (eqToHom eq) := by
   fconstructor
   -- Porting note: I don't know what the magic was in Lean3 proof, it just skipped the proof of `eq`
-  · congr; ext1; change _ = _ ⁻¹' (_ '' _); ext1 x
-    simp only [SetLike.mem_coe, diagram_l, diagram_r, unop_op, Set.mem_preimage, Set.mem_image]
-    refine ⟨fun h => ⟨_, h, rfl⟩, ?_⟩
-    rintro ⟨y, h1, h2⟩
-    convert h1 using 1
-    delta ι Multicoequalizer.π at h2
-    apply_fun (D.ι _).base
-    · exact h2.symm
-    · have := D.ι_gluedIso_inv (PresheafedSpace.forget _) i
-      dsimp at this
-      erw [← this, coe_comp] -- now `erw` after #13170
-      refine Function.Injective.comp ?_ (TopCat.GlueData.ι_injective D.toTopGlueData i)
-      erw [← TopCat.mono_iff_injective] -- now `erw` after #13170
-      infer_instance
+  congr; ext1; change _ = _ ⁻¹' (_ '' _); ext1 x
+  simp only [SetLike.mem_coe, diagram_l, diagram_r, unop_op, Set.mem_preimage, Set.mem_image]
+  refine ⟨fun h => ⟨_, h, rfl⟩, ?_⟩
+  rintro ⟨y, h1, h2⟩
+  convert h1 using 1
+  delta ι Multicoequalizer.π at h2
+  apply_fun (D.ι _).base
+  exact h2.symm
+  have := D.ι_gluedIso_inv (PresheafedSpace.forget _) i
+  dsimp at this
+  erw [← this, coe_comp] -- now `erw` after #13170
+  refine Function.Injective.comp ?_ (TopCat.GlueData.ι_injective D.toTopGlueData i)
+  erw [← TopCat.mono_iff_injective] -- now `erw` after #13170
+  infer_instance
   delta ιInvApp
   rw [limit.lift_π]
   change D.opensImagePreimageMap i i U = _
   dsimp [opensImagePreimageMap]
   rw [congr_app (D.t_id _), id_c_app, ← Functor.map_comp]
   erw [IsOpenImmersion.inv_naturality_assoc, IsOpenImmersion.app_inv_app'_assoc]
-  · simp only [eqToHom_op, eqToHom_trans, eqToHom_map (Functor.op _), ← Functor.map_comp]
-    rfl
-  · rw [Set.range_iff_surjective.mpr _]
-    · simp
-    · rw [← TopCat.epi_iff_surjective]
-      infer_instance
+  simp only [eqToHom_op, eqToHom_trans, eqToHom_map (Functor.op _), ← Functor.map_comp]
+  rfl
+  rw [Set.range_iff_surjective.mpr _]
+  simp
+  rw [← TopCat.epi_iff_surjective]
+  infer_instance
 
 /-- The `eqToHom` given by `ιInvApp_π`. -/
 abbrev ιInvAppπEqMap {i : D.J} (U : Opens (D.U i).carrier) :=
@@ -446,10 +446,10 @@ theorem π_ιInvApp_π (i j : D.J) (U : Opens (D.U i).carrier) :
     change Mono ((_ ≫ D.f j i).c.app _)
     rw [comp_c_app]
     apply (config := { allowSynthFailures := true }) mono_comp
-    · erw [D.ι_image_preimage_eq i j U]
-      infer_instance
-    · have : IsIso (D.t i j).c := by apply c_isIso_of_iso
-      infer_instance)]
+    erw [D.ι_image_preimage_eq i j U]
+    infer_instance
+    have : IsIso (D.t i j).c := by apply c_isIso_of_iso
+    infer_instance)]
   simp_rw [Category.assoc]
   rw [limit.w_assoc]
   erw [limit.lift_π_assoc]
@@ -474,23 +474,23 @@ theorem π_ιInvApp_eq_id (i : D.J) (U : Opens (D.U i).carrier) :
   ext j
   induction j using Opposite.rec' with | h j => ?_
   rcases j with (⟨j, k⟩ | ⟨j⟩)
-  · rw [← limit.w (componentwiseDiagram 𝖣.diagram.multispan _)
-        (Quiver.Hom.op (WalkingMultispan.Hom.fst (j, k))),
-      ← Category.assoc, Category.id_comp]
-    congr 1
-    simp_rw [Category.assoc]
-    apply π_ιInvApp_π
-  · simp_rw [Category.assoc]
-    rw [Category.id_comp]
-    apply π_ιInvApp_π
+  rw [← limit.w (componentwiseDiagram 𝖣.diagram.multispan _)
+      (Quiver.Hom.op (WalkingMultispan.Hom.fst (j, k))),
+    ← Category.assoc, Category.id_comp]
+  congr 1
+  simp_rw [Category.assoc]
+  apply π_ιInvApp_π
+  simp_rw [Category.assoc]
+  rw [Category.id_comp]
+  apply π_ιInvApp_π
 
 instance componentwise_diagram_π_isIso (i : D.J) (U : Opens (D.U i).carrier) :
     IsIso (D.diagramOverOpenπ U i) := by
   use D.ιInvAppπEqMap U ≫ D.ιInvApp U
   constructor
-  · apply π_ιInvApp_eq_id
-  · rw [Category.assoc, (D.ιInvApp_π _).choose_spec]
-    exact Iso.inv_hom_id ((D.U i).presheaf.mapIso (eqToIso _))
+  apply π_ιInvApp_eq_id
+  rw [Category.assoc, (D.ιInvApp_π _).choose_spec]
+  exact Iso.inv_hom_id ((D.U i).presheaf.mapIso (eqToIso _))
 
 instance ιIsOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) where
   base_open := D.ι_openEmbedding i

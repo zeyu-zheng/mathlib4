@@ -144,13 +144,13 @@ lemma abel_aux (h : Tendsto (fun n ↦ ∑ i ∈ range n, f i) atTop (𝓝 l)) {
     rwa [mul_zero, zero_add] at this
   rw [← zero_mul (-1 / (z - 1))]
   apply Tendsto.mul
-  · simpa only [neg_zero, neg_sub] using (tendsto_sub_nhds_zero_iff.mpr h).neg
-  · conv =>
-      enter [1, n]
-      rw [geom_sum_eq (by contrapose! hz; simp [hz]), sub_div, sub_eq_add_neg, ← neg_div]
-    rw [← zero_add (-1 / (z - 1)), ← zero_div (z - 1)]
-    apply Tendsto.add (Tendsto.div_const (tendsto_pow_atTop_nhds_zero_of_norm_lt_one hz) (z - 1))
-    simp only [zero_div, zero_add, tendsto_const_nhds_iff]
+  simpa only [neg_zero, neg_sub] using (tendsto_sub_nhds_zero_iff.mpr h).neg
+  conv =>
+    enter [1, n]
+    rw [geom_sum_eq (by contrapose! hz; simp [hz]), sub_div, sub_eq_add_neg, ← neg_div]
+  rw [← zero_add (-1 / (z - 1)), ← zero_div (z - 1)]
+  apply Tendsto.add (Tendsto.div_const (tendsto_pow_atTop_nhds_zero_of_norm_lt_one hz) (z - 1))
+  simp only [zero_div, zero_add, tendsto_const_nhds_iff]
 
 /-- **Abel's limit theorem**. Given a power series converging at 1, the corresponding function
 is continuous at 1 when approaching 1 within a fixed Stolz set. -/
@@ -159,7 +159,7 @@ theorem tendsto_tsum_powerSeries_nhdsWithin_stolzSet
     Tendsto (fun z ↦ ∑' n, f n * z ^ n) (𝓝[stolzSet M] 1) (𝓝 l) := by
   -- If `M ≤ 1` the Stolz set is empty and the statement is trivial
   cases' le_or_lt M 1 with hM hM
-  · simp_rw [stolzSet_empty hM, nhdsWithin_empty, tendsto_bot]
+  simp_rw [stolzSet_empty hM, nhdsWithin_empty, tendsto_bot]
   -- Abbreviations
   let s := fun n ↦ ∑ i ∈ range n, f i
   let g := fun z ↦ ∑' n, f n * z ^ n

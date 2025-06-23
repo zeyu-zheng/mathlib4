@@ -121,10 +121,10 @@ alias int_valuation_zero_le := intValuation_zero_le
 theorem intValuation_le_one (x : R) : v.intValuationDef x ≤ 1 := by
   rw [intValuationDef]
   by_cases hx : x = 0
-  · rw [if_pos hx]; exact WithZero.zero_le 1
-  · rw [if_neg hx, ← WithZero.coe_one, ← ofAdd_zero, WithZero.coe_le_coe, ofAdd_le,
-      Right.neg_nonpos_iff]
-    exact Int.natCast_nonneg _
+  rw [if_pos hx]; exact WithZero.zero_le 1
+  rw [if_neg hx, ← WithZero.coe_one, ← ofAdd_zero, WithZero.coe_le_coe, ofAdd_le,
+    Right.neg_nonpos_iff]
+  exact Int.natCast_nonneg _
 
 @[deprecated (since := "2024-07-09")]
 alias int_valuation_le_one := intValuation_le_one
@@ -134,13 +134,13 @@ theorem intValuation_lt_one_iff_dvd (r : R) :
     v.intValuationDef r < 1 ↔ v.asIdeal ∣ Ideal.span {r} := by
   rw [intValuationDef]
   split_ifs with hr
-  · simp [hr]
-  · rw [← WithZero.coe_one, ← ofAdd_zero, WithZero.coe_lt_coe, ofAdd_lt, neg_lt_zero, ←
-      Int.ofNat_zero, Int.ofNat_lt, zero_lt_iff]
-    have h : (Ideal.span {r} : Ideal R) ≠ 0
-    rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
-    exact hr
-    apply Associates.count_ne_zero_iff_dvd h (by apply v.irreducible)
+  simp [hr]
+  rw [← WithZero.coe_one, ← ofAdd_zero, WithZero.coe_lt_coe, ofAdd_lt, neg_lt_zero, ←
+    Int.ofNat_zero, Int.ofNat_lt, zero_lt_iff]
+  have h : (Ideal.span {r} : Ideal R) ≠ 0
+  rw [Ne, Ideal.zero_eq_bot, Ideal.span_singleton_eq_bot]
+  exact hr
+  apply Associates.count_ne_zero_iff_dvd h (by apply v.irreducible)
 
 @[deprecated (since := "2024-07-09")]
 alias int_valuation_lt_one_iff_dvd := intValuation_lt_one_iff_dvd
@@ -151,11 +151,11 @@ theorem intValuation_le_pow_iff_dvd (r : R) (n : ℕ) :
     v.intValuationDef r ≤ Multiplicative.ofAdd (-(n : ℤ)) ↔ v.asIdeal ^ n ∣ Ideal.span {r} := by
   rw [intValuationDef]
   split_ifs with hr
-  · simp_rw [hr, Ideal.dvd_span_singleton, zero_le', Submodule.zero_mem]
-  · rw [WithZero.coe_le_coe, ofAdd_le, neg_le_neg_iff, Int.ofNat_le, Ideal.dvd_span_singleton, ←
-      Associates.le_singleton_iff,
-      Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero'.mpr hr)
-        (by apply v.associates_irreducible)]
+  simp_rw [hr, Ideal.dvd_span_singleton, zero_le', Submodule.zero_mem]
+  rw [WithZero.coe_le_coe, ofAdd_le, neg_le_neg_iff, Int.ofNat_le, Ideal.dvd_span_singleton, ←
+    Associates.le_singleton_iff,
+    Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero'.mpr hr)
+      (by apply v.associates_irreducible)]
 
 @[deprecated (since := "2024-07-09")]
 alias int_valuation_le_pow_iff_dvd := intValuation_le_pow_iff_dvd
@@ -182,14 +182,14 @@ theorem intValuation.map_mul' (x y : R) :
     v.intValuationDef (x * y) = v.intValuationDef x * v.intValuationDef y := by
   simp only [intValuationDef]
   by_cases hx : x = 0
-  · rw [hx, zero_mul, if_pos (Eq.refl _), zero_mul]
-  · by_cases hy : y = 0
-    · rw [hy, mul_zero, if_pos (Eq.refl _), mul_zero]
-    · rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithZero.coe_mul, WithZero.coe_inj, ←
-        ofAdd_add, ← Ideal.span_singleton_mul_span_singleton, ← Associates.mk_mul_mk, ← neg_add,
-        Associates.count_mul (by apply Associates.mk_ne_zero'.mpr hx)
-          (by apply Associates.mk_ne_zero'.mpr hy) (by apply v.associates_irreducible)]
-      rfl
+  rw [hx, zero_mul, if_pos (Eq.refl _), zero_mul]
+  by_cases hy : y = 0
+  rw [hy, mul_zero, if_pos (Eq.refl _), mul_zero]
+  rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithZero.coe_mul, WithZero.coe_inj, ←
+    ofAdd_add, ← Ideal.span_singleton_mul_span_singleton, ← Associates.mk_mul_mk, ← neg_add,
+    Associates.count_mul (by apply Associates.mk_ne_zero'.mpr hx)
+      (by apply Associates.mk_ne_zero'.mpr hy) (by apply v.associates_irreducible)]
+  rfl
 
 @[deprecated (since := "2024-07-09")]
 alias IntValuation.map_mul' := intValuation.map_mul'
@@ -208,36 +208,36 @@ alias IntValuation.le_max_iff_min_le := intValuation.le_max_iff_min_le
 theorem intValuation.map_add_le_max' (x y : R) :
     v.intValuationDef (x + y) ≤ max (v.intValuationDef x) (v.intValuationDef y) := by
   by_cases hx : x = 0
-  · rw [hx, zero_add]
-    conv_rhs => rw [intValuationDef, if_pos (Eq.refl _)]
-    rw [max_eq_right (WithZero.zero_le (v.intValuationDef y))]
-  · by_cases hy : y = 0
-    · rw [hy, add_zero]
-      conv_rhs => rw [max_comm, intValuationDef, if_pos (Eq.refl _)]
-      rw [max_eq_right (WithZero.zero_le (v.intValuationDef x))]
-    · by_cases hxy : x + y = 0
-      · rw [intValuationDef, if_pos hxy]; exact zero_le'
-      · rw [v.intValuationDef_if_neg hxy, v.intValuationDef_if_neg hx, v.intValuationDef_if_neg hy,
-          WithZero.le_max_iff, intValuation.le_max_iff_min_le]
-        set nmin :=
-          min ((Associates.mk v.asIdeal).count (Associates.mk (Ideal.span { x })).factors)
-            ((Associates.mk v.asIdeal).count (Associates.mk (Ideal.span { y })).factors)
-        have h_dvd_x : x ∈ v.asIdeal ^ nmin := by
-          rw [← Associates.le_singleton_iff x nmin _,
-            Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero'.mpr hx) _]
-          · exact min_le_left _ _
-          apply v.associates_irreducible
-        have h_dvd_y : y ∈ v.asIdeal ^ nmin := by
-          rw [← Associates.le_singleton_iff y nmin _,
-            Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero'.mpr hy) _]
-          · exact min_le_right _ _
-          apply v.associates_irreducible
-        have h_dvd_xy : Associates.mk v.asIdeal ^ nmin ≤ Associates.mk (Ideal.span {x + y}) := by
-          rw [Associates.le_singleton_iff]
-          exact Ideal.add_mem (v.asIdeal ^ nmin) h_dvd_x h_dvd_y
-        rw [Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero'.mpr hxy) _] at h_dvd_xy
-        · exact h_dvd_xy
-        apply v.associates_irreducible
+  rw [hx, zero_add]
+  conv_rhs => rw [intValuationDef, if_pos (Eq.refl _)]
+  rw [max_eq_right (WithZero.zero_le (v.intValuationDef y))]
+  by_cases hy : y = 0
+  rw [hy, add_zero]
+  conv_rhs => rw [max_comm, intValuationDef, if_pos (Eq.refl _)]
+  rw [max_eq_right (WithZero.zero_le (v.intValuationDef x))]
+  by_cases hxy : x + y = 0
+  rw [intValuationDef, if_pos hxy]; exact zero_le'
+  rw [v.intValuationDef_if_neg hxy, v.intValuationDef_if_neg hx, v.intValuationDef_if_neg hy,
+    WithZero.le_max_iff, intValuation.le_max_iff_min_le]
+  set nmin :=
+    min ((Associates.mk v.asIdeal).count (Associates.mk (Ideal.span { x })).factors)
+      ((Associates.mk v.asIdeal).count (Associates.mk (Ideal.span { y })).factors)
+  have h_dvd_x : x ∈ v.asIdeal ^ nmin := by
+    rw [← Associates.le_singleton_iff x nmin _,
+      Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero'.mpr hx) _]
+    exact min_le_left _ _
+    apply v.associates_irreducible
+  have h_dvd_y : y ∈ v.asIdeal ^ nmin := by
+    rw [← Associates.le_singleton_iff y nmin _,
+      Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero'.mpr hy) _]
+    exact min_le_right _ _
+    apply v.associates_irreducible
+  have h_dvd_xy : Associates.mk v.asIdeal ^ nmin ≤ Associates.mk (Ideal.span {x + y}) := by
+    rw [Associates.le_singleton_iff]
+    exact Ideal.add_mem (v.asIdeal ^ nmin) h_dvd_x h_dvd_y
+  rw [Associates.prime_pow_dvd_iff_le (Associates.mk_ne_zero'.mpr hxy) _] at h_dvd_xy
+  exact h_dvd_xy
+  apply v.associates_irreducible
 
 @[deprecated (since := "2024-07-09")]
 alias IntValuation.map_add_le_max' := intValuation.map_add_le_max'
@@ -518,27 +518,27 @@ variable {R K} in
 lemma adicCompletion.mul_nonZeroDivisor_mem_adicCompletionIntegers (v : HeightOneSpectrum R)
     (a : v.adicCompletion K) : ∃ b ∈ R⁰, a * b ∈ v.adicCompletionIntegers K := by
   by_cases ha : a ∈ v.adicCompletionIntegers K
-  · use 1
-    simp [ha, Submonoid.one_mem]
-  · rw [not_mem_adicCompletionIntegers] at ha
-    -- Let the additive valuation of a be -d with d>0
-    obtain ⟨d, hd⟩ : ∃ d : ℤ, Valued.v a = ofAdd d :=
-      Option.ne_none_iff_exists'.mp <| (lt_trans zero_lt_one ha).ne'
-    rw [hd, WithZero.one_lt_coe, ← ofAdd_zero, ofAdd_lt] at ha
-    -- let ϖ be a uniformiser
-    obtain ⟨ϖ, hϖ⟩ := intValuation_exists_uniformizer v
-    have hϖ0 : ϖ ≠ 0 := by rintro rfl; simp at hϖ
-    -- use ϖ^d
-    refine ⟨ϖ^d.natAbs, pow_mem (mem_nonZeroDivisors_of_ne_zero hϖ0) _, ?_⟩
-    -- now manually translate the goal (an inequality in ℤₘ₀) to an inequality in ℤ
-    rw [mem_adicCompletionIntegers, algebraMap.coe_pow, map_mul, hd, map_pow,
-      valuedAdicCompletion_eq_valuation, valuation_eq_intValuationDef, hϖ, ← WithZero.coe_pow,
-      ← WithZero.coe_mul, WithZero.coe_le_one, ← toAdd_le, toAdd_mul, toAdd_ofAdd, toAdd_pow,
-      toAdd_ofAdd, toAdd_one,
-      show d.natAbs • (-1) = (d.natAbs : ℤ) • (-1) by simp only [nsmul_eq_mul,
-        Int.natCast_natAbs, smul_eq_mul],
-      ← Int.eq_natAbs_of_zero_le ha.le, smul_eq_mul]
-    -- and now it's easy
-    linarith
+  use 1
+  simp [ha, Submonoid.one_mem]
+  rw [not_mem_adicCompletionIntegers] at ha
+  -- Let the additive valuation of a be -d with d>0
+  obtain ⟨d, hd⟩ : ∃ d : ℤ, Valued.v a = ofAdd d :=
+    Option.ne_none_iff_exists'.mp <| (lt_trans zero_lt_one ha).ne'
+  rw [hd, WithZero.one_lt_coe, ← ofAdd_zero, ofAdd_lt] at ha
+  -- let ϖ be a uniformiser
+  obtain ⟨ϖ, hϖ⟩ := intValuation_exists_uniformizer v
+  have hϖ0 : ϖ ≠ 0 := by rintro rfl; simp at hϖ
+  -- use ϖ^d
+  refine ⟨ϖ^d.natAbs, pow_mem (mem_nonZeroDivisors_of_ne_zero hϖ0) _, ?_⟩
+  -- now manually translate the goal (an inequality in ℤₘ₀) to an inequality in ℤ
+  rw [mem_adicCompletionIntegers, algebraMap.coe_pow, map_mul, hd, map_pow,
+    valuedAdicCompletion_eq_valuation, valuation_eq_intValuationDef, hϖ, ← WithZero.coe_pow,
+    ← WithZero.coe_mul, WithZero.coe_le_one, ← toAdd_le, toAdd_mul, toAdd_ofAdd, toAdd_pow,
+    toAdd_ofAdd, toAdd_one,
+    show d.natAbs • (-1) = (d.natAbs : ℤ) • (-1) by simp only [nsmul_eq_mul,
+      Int.natCast_natAbs, smul_eq_mul],
+    ← Int.eq_natAbs_of_zero_le ha.le, smul_eq_mul]
+  -- and now it's easy
+  linarith
 
 end IsDedekindDomain.HeightOneSpectrum

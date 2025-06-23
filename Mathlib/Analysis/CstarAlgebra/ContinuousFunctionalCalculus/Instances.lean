@@ -97,8 +97,8 @@ lemma spec_cfcₙAux (f : C(σₙ 𝕜 a, 𝕜)₀) : σ 𝕜 (cfcₙAux hp₁ a
   ext x
   constructor
   all_goals rintro ⟨x, rfl⟩
-  · exact ⟨⟨x, (Unitization.quasispectrum_eq_spectrum_inr' 𝕜 𝕜 a).symm ▸ x.property⟩, rfl⟩
-  · exact ⟨⟨x, Unitization.quasispectrum_eq_spectrum_inr' 𝕜 𝕜 a ▸ x.property⟩, rfl⟩
+  exact ⟨⟨x, (Unitization.quasispectrum_eq_spectrum_inr' 𝕜 𝕜 a).symm ▸ x.property⟩, rfl⟩
+  exact ⟨⟨x, Unitization.quasispectrum_eq_spectrum_inr' 𝕜 𝕜 a ▸ x.property⟩, rfl⟩
 
 lemma cfcₙAux_mem_range_inr (f : C(σₙ 𝕜 a, 𝕜)₀) :
     cfcₙAux hp₁ a ha f ∈ NonUnitalStarAlgHom.range (Unitization.inrNonUnitalStarAlgHom 𝕜 A) := by
@@ -106,16 +106,16 @@ lemma cfcₙAux_mem_range_inr (f : C(σₙ 𝕜 a, 𝕜)₀) :
     (ContinuousMapZero.adjoin_id_dense (s := σₙ 𝕜 a) rfl) ⟨f, rfl⟩
   rw [← SetLike.mem_coe]
   refine closure_minimal ?_ ?_ h₁
-  · rw [← NonUnitalStarSubalgebra.coe_map, SetLike.coe_subset_coe, NonUnitalStarSubalgebra.map_le]
-    apply NonUnitalStarAlgebra.adjoin_le
-    apply Set.singleton_subset_iff.mpr
-    rw [SetLike.mem_coe, NonUnitalStarSubalgebra.mem_comap, cfcₙAux_id hp₁ a ha]
-    exact ⟨a, rfl⟩
-  · have : Continuous (Unitization.fst (R := 𝕜) (A := A)) :=
-      Unitization.uniformEquivProd.continuous.fst
-    simp only [NonUnitalStarAlgHom.coe_range]
-    convert IsClosed.preimage this (isClosed_singleton (x := 0))
-    aesop
+  rw [← NonUnitalStarSubalgebra.coe_map, SetLike.coe_subset_coe, NonUnitalStarSubalgebra.map_le]
+  apply NonUnitalStarAlgebra.adjoin_le
+  apply Set.singleton_subset_iff.mpr
+  rw [SetLike.mem_coe, NonUnitalStarSubalgebra.mem_comap, cfcₙAux_id hp₁ a ha]
+  exact ⟨a, rfl⟩
+  have : Continuous (Unitization.fst (R := 𝕜) (A := A)) :=
+    Unitization.uniformEquivProd.continuous.fst
+  simp only [NonUnitalStarAlgHom.coe_range]
+  convert IsClosed.preimage this (isClosed_singleton (x := 0))
+  aesop
 
 open Unitization NonUnitalStarAlgHom in
 theorem RCLike.nonUnitalContinuousFunctionalCalculus :
@@ -189,10 +189,10 @@ instance IsStarNormal.cfc_map {R A : Type*} {p : A → Prop} [CommSemiring R] [S
   star_comm_self := by
     rw [Commute, SemiconjBy]
     by_cases h : ContinuousOn f (spectrum R a)
-    · rw [← cfc_star, ← cfc_mul .., ← cfc_mul ..]
-      congr! 2
-      exact mul_comm _ _
-    · simp [cfc_apply_of_not_continuousOn a h]
+    rw [← cfc_star, ← cfc_mul .., ← cfc_mul ..]
+    congr! 2
+    exact mul_comm _ _
+    simp [cfc_apply_of_not_continuousOn a h]
 end Normal
 
 /-!
@@ -210,16 +210,16 @@ quasispectrum is contained in `ℝ`. -/
 lemma isSelfAdjoint_iff_isStarNormal_and_quasispectrumRestricts {a : A} :
     IsSelfAdjoint a ↔ IsStarNormal a ∧ QuasispectrumRestricts a Complex.reCLM := by
   refine ⟨fun ha ↦ ⟨ha.isStarNormal, ⟨fun x hx ↦ ?_, Complex.ofReal_re⟩⟩, ?_⟩
-  · have := eqOn_of_cfcₙ_eq_cfcₙ <|
-      (cfcₙ_star (id : ℂ → ℂ) a).symm ▸ (cfcₙ_id ℂ a).symm ▸ ha.star_eq
-    exact Complex.conj_eq_iff_re.mp (by simpa using this hx)
-  · rintro ⟨ha₁, ha₂⟩
-    rw [isSelfAdjoint_iff]
-    nth_rw 2 [← cfcₙ_id ℂ a]
-    rw [← cfcₙ_star_id a (R := ℂ)]
-    refine cfcₙ_congr fun x hx ↦ ?_
-    obtain ⟨x, -, rfl⟩ := ha₂.algebraMap_image.symm ▸ hx
-    exact Complex.conj_ofReal _
+  have := eqOn_of_cfcₙ_eq_cfcₙ <|
+    (cfcₙ_star (id : ℂ → ℂ) a).symm ▸ (cfcₙ_id ℂ a).symm ▸ ha.star_eq
+  exact Complex.conj_eq_iff_re.mp (by simpa using this hx)
+  rintro ⟨ha₁, ha₂⟩
+  rw [isSelfAdjoint_iff]
+  nth_rw 2 [← cfcₙ_id ℂ a]
+  rw [← cfcₙ_star_id a (R := ℂ)]
+  refine cfcₙ_congr fun x hx ↦ ?_
+  obtain ⟨x, -, rfl⟩ := ha₂.algebraMap_image.symm ▸ hx
+  exact Complex.conj_ofReal _
 
 alias ⟨IsSelfAdjoint.quasispectrumRestricts, _⟩ :=
   isSelfAdjoint_iff_isStarNormal_and_quasispectrumRestricts
@@ -256,15 +256,15 @@ contained in `ℝ`. -/
 lemma isSelfAdjoint_iff_isStarNormal_and_spectrumRestricts {a : A} :
     IsSelfAdjoint a ↔ IsStarNormal a ∧ SpectrumRestricts a Complex.reCLM := by
   refine ⟨fun ha ↦ ⟨ha.isStarNormal, .of_rightInvOn Complex.ofReal_re fun x hx ↦ ?_⟩, ?_⟩
-  · have := eqOn_of_cfc_eq_cfc <| (cfc_star (id : ℂ → ℂ) a).symm ▸ (cfc_id ℂ a).symm ▸ ha.star_eq
-    exact Complex.conj_eq_iff_re.mp (by simpa using this hx)
-  · rintro ⟨ha₁, ha₂⟩
-    rw [isSelfAdjoint_iff]
-    nth_rw 2 [← cfc_id ℂ a]
-    rw [← cfc_star_id a (R := ℂ)]
-    refine cfc_congr fun x hx ↦ ?_
-    obtain ⟨x, -, rfl⟩ := ha₂.algebraMap_image.symm ▸ hx
-    exact Complex.conj_ofReal _
+  have := eqOn_of_cfc_eq_cfc <| (cfc_star (id : ℂ → ℂ) a).symm ▸ (cfc_id ℂ a).symm ▸ ha.star_eq
+  exact Complex.conj_eq_iff_re.mp (by simpa using this hx)
+  rintro ⟨ha₁, ha₂⟩
+  rw [isSelfAdjoint_iff]
+  nth_rw 2 [← cfc_id ℂ a]
+  rw [← cfc_star_id a (R := ℂ)]
+  refine cfc_congr fun x hx ↦ ?_
+  obtain ⟨x, -, rfl⟩ := ha₂.algebraMap_image.symm ▸ hx
+  exact Complex.conj_ofReal _
 
 -- TODO: REMOVE (duplicate; see comment on `isSelfAdjoint_iff_isStarNormal_and_spectrumRestricts`)
 lemma IsSelfAdjoint.spectrumRestricts {a : A} (ha : IsSelfAdjoint a) :
@@ -299,15 +299,15 @@ lemma CFC.exists_sqrt_of_isSelfAdjoint_of_quasispectrumRestricts {A : Type*} [No
     ∃ x : A, IsSelfAdjoint x ∧ QuasispectrumRestricts x ContinuousMap.realToNNReal ∧ x * x = a := by
   use cfcₙ Real.sqrt a, cfcₙ_predicate Real.sqrt a
   constructor
-  · simpa only [QuasispectrumRestricts.nnreal_iff, cfcₙ_map_quasispectrum Real.sqrt a,
-      Set.mem_image, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
-        using fun x _ ↦ Real.sqrt_nonneg x
-  · rw [← cfcₙ_mul ..]
-    nth_rw 2 [← cfcₙ_id ℝ a]
-    apply cfcₙ_congr fun x hx ↦ ?_
-    rw [QuasispectrumRestricts.nnreal_iff] at ha₂
-    apply ha₂ x at hx
-    simp [← sq, Real.sq_sqrt hx]
+  simpa only [QuasispectrumRestricts.nnreal_iff, cfcₙ_map_quasispectrum Real.sqrt a,
+    Set.mem_image, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
+      using fun x _ ↦ Real.sqrt_nonneg x
+  rw [← cfcₙ_mul ..]
+  nth_rw 2 [← cfcₙ_id ℝ a]
+  apply cfcₙ_congr fun x hx ↦ ?_
+  rw [QuasispectrumRestricts.nnreal_iff] at ha₂
+  apply ha₂ x at hx
+  simp [← sq, Real.sq_sqrt hx]
 
 variable {A : Type*} [NonUnitalRing A] [PartialOrder A] [StarRing A] [StarOrderedRing A]
 variable [TopologicalSpace A] [Module ℝ A] [IsScalarTower ℝ A A] [SMulCommClass ℝ A A]
@@ -341,14 +341,14 @@ lemma CFC.exists_sqrt_of_isSelfAdjoint_of_spectrumRestricts {A : Type*} [Ring A]
     ∃ x : A, IsSelfAdjoint x ∧ SpectrumRestricts x ContinuousMap.realToNNReal ∧ x ^ 2 = a := by
   use cfc Real.sqrt a, cfc_predicate Real.sqrt a
   constructor
-  · simpa only [SpectrumRestricts.nnreal_iff, cfc_map_spectrum Real.sqrt a, Set.mem_image,
-      forall_exists_index, and_imp, forall_apply_eq_imp_iff₂] using fun x _ ↦ Real.sqrt_nonneg x
-  · rw [← cfc_pow ..]
-    nth_rw 2 [← cfc_id ℝ a]
-    apply cfc_congr fun x hx ↦ ?_
-    rw [SpectrumRestricts.nnreal_iff] at ha₂
-    apply ha₂ x at hx
-    simp [Real.sq_sqrt hx]
+  simpa only [SpectrumRestricts.nnreal_iff, cfc_map_spectrum Real.sqrt a, Set.mem_image,
+    forall_exists_index, and_imp, forall_apply_eq_imp_iff₂] using fun x _ ↦ Real.sqrt_nonneg x
+  rw [← cfc_pow ..]
+  nth_rw 2 [← cfc_id ℝ a]
+  apply cfc_congr fun x hx ↦ ?_
+  rw [SpectrumRestricts.nnreal_iff] at ha₂
+  apply ha₂ x at hx
+  simp [Real.sq_sqrt hx]
 
 variable {A : Type*} [Ring A] [PartialOrder A] [StarRing A] [StarOrderedRing A] [TopologicalSpace A]
 variable [Algebra ℝ A] [ContinuousFunctionalCalculus ℝ (IsSelfAdjoint : A → Prop)]
@@ -387,7 +387,7 @@ lemma SpectrumRestricts.nnreal_iff_nnnorm {a : A} {t : ℝ≥0} (ha : IsSelfAdjo
   have : IsSelfAdjoint (algebraMap ℝ A t - a) := IsSelfAdjoint.algebraMap A (.all (t : ℝ)) |>.sub ha
   rw [← ENNReal.coe_le_coe, ← IsSelfAdjoint.spectralRadius_eq_nnnorm,
     ← SpectrumRestricts.spectralRadius_eq (f := Complex.reCLM)] at ht ⊢
-  · exact SpectrumRestricts.nnreal_iff_spectralRadius_le ht
+  exact SpectrumRestricts.nnreal_iff_spectralRadius_le ht
   all_goals
     try apply IsSelfAdjoint.spectrumRestricts
     assumption
@@ -429,12 +429,12 @@ lemma SpectrumRestricts.smul_of_nonneg {A : Type*} [Ring A] [Algebra ℝ A] {a :
   nontriviality A
   intro x hx
   by_cases hr' : r = 0
-  · simp [hr'] at hx ⊢
-    exact hx.symm.le
-  · lift r to ℝˣ using IsUnit.mk0 r hr'
-    rw [← Units.smul_def, spectrum.unit_smul_eq_smul, Set.mem_smul_set_iff_inv_smul_mem] at hx
-    refine le_of_smul_le_smul_left ?_ (inv_pos.mpr <| lt_of_le_of_ne hr <| ne_comm.mpr hr')
-    simpa [Units.smul_def] using ha _ hx
+  simp [hr'] at hx ⊢
+  exact hx.symm.le
+  lift r to ℝˣ using IsUnit.mk0 r hr'
+  rw [← Units.smul_def, spectrum.unit_smul_eq_smul, Set.mem_smul_set_iff_inv_smul_mem] at hx
+  refine le_of_smul_le_smul_left ?_ (inv_pos.mpr <| lt_of_le_of_ne hr <| ne_comm.mpr hr')
+  simpa [Units.smul_def] using ha _ hx
 
 lemma spectrum_star_mul_self_nonneg {b : A} : ∀ x ∈ spectrum ℝ (star b * b), 0 ≤ x := by
   set a := star b * b
@@ -558,25 +558,25 @@ lemma CstarRing.spectralOrderedRing : @StarOrderedRing A _ (CstarRing.spectralOr
   { le_iff := by
       intro x y
       constructor
-      · intro h
-        obtain ⟨s, hs₁, _, hs₂⟩ := CFC.exists_sqrt_of_isSelfAdjoint_of_spectrumRestricts h.1 h.2
-        refine ⟨s ^ 2, ?_, by rwa [eq_sub_iff_add_eq', eq_comm] at hs₂⟩
-        exact AddSubmonoid.subset_closure ⟨s, by simp [hs₁.star_eq, sq]⟩
-      · rintro ⟨p, hp, rfl⟩
-        suffices IsSelfAdjoint p ∧ SpectrumRestricts p ContinuousMap.realToNNReal from
-          ⟨by simpa using this.1, by simpa using this.2⟩
-        induction hp using AddSubmonoid.closure_induction' with
-        | mem x hx =>
-          obtain ⟨s, rfl⟩ := hx
-          refine ⟨IsSelfAdjoint.star_mul_self s, ?_⟩
-          rw [SpectrumRestricts.nnreal_iff]
-          exact spectrum_star_mul_self_nonneg
-        | one =>
-          rw [SpectrumRestricts.nnreal_iff]
-          nontriviality A
-          simp
-        | mul x _ y _ hx hy =>
-          exact ⟨hx.1.add hy.1, hx.2.nnreal_add hx.1 hy.1 hy.2⟩ }
+      intro h
+      obtain ⟨s, hs₁, _, hs₂⟩ := CFC.exists_sqrt_of_isSelfAdjoint_of_spectrumRestricts h.1 h.2
+      refine ⟨s ^ 2, ?_, by rwa [eq_sub_iff_add_eq', eq_comm] at hs₂⟩
+      exact AddSubmonoid.subset_closure ⟨s, by simp [hs₁.star_eq, sq]⟩
+      rintro ⟨p, hp, rfl⟩
+      suffices IsSelfAdjoint p ∧ SpectrumRestricts p ContinuousMap.realToNNReal from
+        ⟨by simpa using this.1, by simpa using this.2⟩
+      induction hp using AddSubmonoid.closure_induction' with
+      | mem x hx =>
+        obtain ⟨s, rfl⟩ := hx
+        refine ⟨IsSelfAdjoint.star_mul_self s, ?_⟩
+        rw [SpectrumRestricts.nnreal_iff]
+        exact spectrum_star_mul_self_nonneg
+      | one =>
+        rw [SpectrumRestricts.nnreal_iff]
+        nontriviality A
+        simp
+      | mul x _ y _ hx hy =>
+        exact ⟨hx.1.add hy.1, hx.2.nnreal_add hx.1 hy.1 hy.2⟩ }
 
 end SpectralOrder
 

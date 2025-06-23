@@ -262,11 +262,11 @@ instance comp [IsStronglyCartesian p f φ] [IsStronglyCartesian p g ψ] :
     intro a' h τ hτ
     use map p f φ (f' := h ≫ f) rfl (map p g ψ (assoc h f g).symm τ)
     refine ⟨⟨inferInstance, ?_⟩, ?_⟩
-    · rw [← assoc, fac, fac]
-    · intro π' ⟨hπ'₁, hπ'₂⟩
-      apply map_uniq
-      apply map_uniq
-      simp only [assoc, hπ'₂]
+    rw [← assoc, fac, fac]
+    intro π' ⟨hπ'₁, hπ'₂⟩
+    apply map_uniq
+    apply map_uniq
+    simp only [assoc, hπ'₂]
 
 /-- Given two commutative squares
 ```
@@ -288,11 +288,11 @@ protected lemma of_comp [IsStronglyCartesian p g ψ] [IsStronglyCartesian p (f �
     refine ⟨⟨inferInstance, ?_⟩, ?_⟩
     /- The fact that `π ≫ φ = τ` follows from `π ≫ φ ≫ ψ = τ ≫ ψ` and the universal property of
     `ψ`. -/
-    · apply IsStronglyCartesian.ext p g ψ (h ≫ f) (by simp)
+    apply IsStronglyCartesian.ext p g ψ (h ≫ f) (by simp)
     -- Finally, the uniqueness of `π` comes from the universal property of `φ ≫ ψ`.
-    · intro π' ⟨hπ'₁, hπ'₂⟩
-      apply map_uniq
-      simp [hπ'₂.symm]
+    intro π' ⟨hπ'₁, hπ'₂⟩
+    apply map_uniq
+    simp [hπ'₂.symm]
 
 end
 

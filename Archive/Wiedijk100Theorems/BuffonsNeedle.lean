@@ -153,10 +153,10 @@ lemma stronglyMeasurable_needleCrossesIndicator :
   rw [IsClosed.closure_eq range_finite.isClosed, Set.subset_def, Set.range]
   intro x ⟨p, hxp⟩
   by_cases hp : 0 ∈ needleProjX l p.1 p.2
-  · simp_rw [needleCrossesIndicator, Set.indicator_of_mem hp, Pi.one_apply] at hxp
-    apply Or.inr hxp.symm
-  · simp_rw [needleCrossesIndicator, Set.indicator_of_not_mem hp] at hxp
-    apply Or.inl hxp.symm
+  simp_rw [needleCrossesIndicator, Set.indicator_of_mem hp, Pi.one_apply] at hxp
+  apply Or.inr hxp.symm
+  simp_rw [needleCrossesIndicator, Set.indicator_of_not_mem hp] at hxp
+  apply Or.inl hxp.symm
 
 lemma integrable_needleCrossesIndicator :
     MeasureTheory.Integrable (needleCrossesIndicator l)
@@ -169,8 +169,8 @@ lemma integrable_needleCrossesIndicator :
   have needleCrossesIndicator_le_one p : needleCrossesIndicator l p ≤ 1
   unfold needleCrossesIndicator
   by_cases hp : 0 ∈ needleProjX l p.1 p.2
-  · simp_rw [Set.indicator_of_mem hp, Pi.one_apply, le_refl]
-  · simp_rw [Set.indicator_of_not_mem hp, zero_le_one]
+  simp_rw [Set.indicator_of_mem hp, Pi.one_apply, le_refl]
+  simp_rw [Set.indicator_of_not_mem hp, zero_le_one]
   refine And.intro
     (stronglyMeasurable_needleCrossesIndicator l).aestronglyMeasurable
     ((MeasureTheory.hasFiniteIntegral_iff_norm (needleCrossesIndicator l)).mpr ?_)
@@ -227,8 +227,8 @@ lemma buffon_integral :
         -(Real.sin θ * l) / 2 ≤ x ∧ x ≤ Real.sin θ * l / 2 := by
       rw [neg_div, and_comm, ← tsub_le_iff_right, zero_sub]
     by_cases h : x ≤ Real.sin θ * l / 2 ∧ 0 ≤ x + Real.sin θ * l / 2
-    · rw [if_pos h, if_pos (this.mp h)]
-    · rw [if_neg h, if_neg (this.not.mp h)]
+    rw [if_pos h, if_pos (this.mp h)]
+    rw [if_neg h, if_neg (this.not.mp h)]
   simp_rw [indicator_eq, MeasureTheory.setIntegral_indicator measurableSet_Icc, Pi.one_apply]
 
 /--
@@ -285,9 +285,9 @@ lemma integral_min_eq_two_mul :
     ∫ θ in (0)..π, min d (θ.sin * l) = 2 * ∫ θ in (0)..π / 2, min d (θ.sin * l) := by
   rw [← intervalIntegral.integral_add_adjacent_intervals (b := π / 2) (c := π)]
   conv => lhs; arg 2; arg 1; intro θ; rw [← neg_neg θ, Real.sin_neg]
-  · simp_rw [intervalIntegral.integral_comp_neg fun θ => min d (-θ.sin * l), ← Real.sin_add_pi,
-      intervalIntegral.integral_comp_add_right (fun θ => min d (θ.sin * l)), add_left_neg,
-      (by ring : -(π / 2) + π = π / 2), two_mul]
+  simp_rw [intervalIntegral.integral_comp_neg fun θ => min d (-θ.sin * l), ← Real.sin_add_pi,
+    intervalIntegral.integral_comp_add_right (fun θ => min d (θ.sin * l)), add_left_neg,
+    (by ring : -(π / 2) + π = π / 2), two_mul]
   all_goals exact intervalIntegrable_min_const_sin_mul d l _ _
 
 /--
@@ -316,8 +316,8 @@ lemma integral_arcsin_to_pi_div_two_min (h : d ≤ l) :
   have : Set.EqOn (fun θ => min d (θ.sin * l)) (fun _ => d) (Set.uIcc (d / l).arcsin (π / 2))
   intro θ ⟨hθ₁, hθ₂⟩
   wlog hθ_ne_pi_div_two : θ ≠ π / 2
-  · simp only [ne_eq, not_not] at hθ_ne_pi_div_two
-    simp only [hθ_ne_pi_div_two, Real.sin_pi_div_two, one_mul, min_eq_left h]
+  simp only [ne_eq, not_not] at hθ_ne_pi_div_two
+  simp only [hθ_ne_pi_div_two, Real.sin_pi_div_two, one_mul, min_eq_left h]
   simp only [sup_eq_max, inf_eq_min, min_eq_left (d / l).arcsin_le_pi_div_two,
     max_eq_right (d / l).arcsin_le_pi_div_two] at hθ₁ hθ₂
   have hθ_mem : θ ∈ Set.Ico (-(π / 2)) (π / 2)
@@ -341,8 +341,8 @@ theorem buffon_long (h : d ≤ l) :
       ENNReal.toReal (ENNReal.ofReal (min d (θ.sin * l))) = min d (θ.sin * l) := by
     have (θ : ℝ) (hθ : θ ∈ Set.Icc 0 π) : 0 ≤ min d (θ.sin * l) := by
       by_cases h : d ≤ θ.sin * l
-      · rw [min_eq_left h]; exact hd.le
-      · rw [min_eq_right (not_le.mp h).le]; exact mul_nonneg (Real.sin_nonneg_of_mem_Icc hθ) hl.le
+      rw [min_eq_left h]; exact hd.le
+      rw [min_eq_right (not_le.mp h).le]; exact mul_nonneg (Real.sin_nonneg_of_mem_Icc hθ) hl.le
     simp_rw [ENNReal.toReal_ofReal_eq_iff, MeasureTheory.ae_of_all _ this]
   rw [MeasureTheory.setIntegral_congr_ae measurableSet_Icc this,
     MeasureTheory.integral_Icc_eq_integral_Ioc,

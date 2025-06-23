@@ -106,8 +106,8 @@ lemma isUnit_eq_or_eq_neg (hu : IsUnit u) (hv : IsUnit v) : u = v ∨ u = -v :=
 lemma isUnit_iff : IsUnit u ↔ u = 1 ∨ u = -1 := by
   refine ⟨fun h ↦ isUnit_eq_one_or h, fun h ↦ ?_⟩
   rcases h with (rfl | rfl)
-  · exact isUnit_one
-  · exact ⟨⟨-1, -1, by decide, by decide⟩, rfl⟩
+  exact isUnit_one
+  exact ⟨⟨-1, -1, by decide, by decide⟩, rfl⟩
 
 lemma eq_one_or_neg_one_of_mul_eq_one (h : u * v = 1) : u = 1 ∨ u = -1 :=
   isUnit_iff.1 (isUnit_of_mul_eq_one u v h)
@@ -127,8 +127,8 @@ lemma mul_eq_one_iff_eq_one_or_neg_one : u * v = 1 ↔ u = 1 ∧ v = 1 ∨ u = -
 
 lemma eq_one_or_neg_one_of_mul_eq_neg_one' (h : u * v = -1) : u = 1 ∧ v = -1 ∨ u = -1 ∧ v = 1 := by
   obtain rfl | rfl := isUnit_eq_one_or (IsUnit.mul_iff.mp (Int.isUnit_iff.mpr (Or.inr h))).1
-  · exact Or.inl ⟨rfl, one_mul v ▸ h⟩
-  · simpa [Int.neg_mul] using h
+  exact Or.inl ⟨rfl, one_mul v ▸ h⟩
+  simpa [Int.neg_mul] using h
 
 lemma mul_eq_neg_one_iff_eq_one_or_neg_one : u * v = -1 ↔ u = 1 ∧ v = -1 ∨ u = -1 ∧ v = 1 := by
   refine ⟨eq_one_or_neg_one_of_mul_eq_neg_one', fun h ↦ Or.elim h (fun H ↦ ?_) fun H ↦ ?_⟩ <;>

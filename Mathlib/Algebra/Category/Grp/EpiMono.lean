@@ -46,11 +46,11 @@ variable [CommGroup A] [CommGroup B]
 theorem range_eq_top_of_cancel {f : A →* B}
     (h : ∀ u v : B →* B ⧸ f.range, u.comp f = v.comp f → u = v) : f.range = ⊤ := by
   specialize h 1 (QuotientGroup.mk' _) _
-  · ext1 x
-    simp only [one_apply, coe_comp, coe_mk', Function.comp_apply]
-    rw [show (1 : B ⧸ f.range) = (1 : B) from QuotientGroup.mk_one _, QuotientGroup.eq, inv_one,
-      one_mul]
-    exact ⟨x, rfl⟩
+  ext1 x
+  simp only [one_apply, coe_comp, coe_mk', Function.comp_apply]
+  rw [show (1 : B ⧸ f.range) = (1 : B) from QuotientGroup.mk_one _, QuotientGroup.eq, inv_one,
+    one_mul]
+  exact ⟨x, rfl⟩
   replace h : (QuotientGroup.mk' f.range).ker = (1 : B →* B ⧸ f.range).ker := by rw [h]
   rwa [ker_one, QuotientGroup.ker_mk'] at h
 
@@ -258,25 +258,25 @@ theorem h_apply_fromCoset_nin_range (x : B) (hx : x ∈ f.range) (b : B) (hb : b
 
 theorem agree : f.range = { x | h x = g x } := by
   refine Set.ext fun b => ⟨?_, fun hb : h b = g b => by_contradiction fun r => ?_⟩
-  · rintro ⟨a, rfl⟩
-    change h (f a) = g (f a)
-    ext ⟨⟨_, ⟨y, rfl⟩⟩⟩
-    · rw [g_apply_fromCoset]
-      by_cases m : y ∈ f.range
-      · rw [h_apply_fromCoset' _ _ _ m, fromCoset_eq_of_mem_range _ m]
-        change fromCoset _ = fromCoset ⟨f a • (y • _), _⟩
-        simp only [← fromCoset_eq_of_mem_range _ (Subgroup.mul_mem _ ⟨a, rfl⟩ m), smul_smul]
-      · rw [h_apply_fromCoset_nin_range f (f a) ⟨_, rfl⟩ _ m]
-        simp only [leftCoset_assoc]
-    · rw [g_apply_infinity, h_apply_infinity f (f a) ⟨_, rfl⟩]
-  · have eq1 : (h b) (fromCoset ⟨f.range, 1, one_leftCoset _⟩) =
-        fromCoset ⟨f.range, 1, one_leftCoset _⟩ := by
-      change ((τ).symm.trans (g b)).trans τ _ = _
-      dsimp [tau]
-      simp [g_apply_infinity f]
-    have eq2 :
-      g b (fromCoset ⟨f.range, 1, one_leftCoset _⟩) = fromCoset ⟨b • ↑f.range, b, rfl⟩ := rfl
-    exact (fromCoset_ne_of_nin_range _ r).symm (by rw [← eq1, ← eq2, DFunLike.congr_fun hb])
+  rintro ⟨a, rfl⟩
+  change h (f a) = g (f a)
+  ext ⟨⟨_, ⟨y, rfl⟩⟩⟩
+  rw [g_apply_fromCoset]
+  by_cases m : y ∈ f.range
+  rw [h_apply_fromCoset' _ _ _ m, fromCoset_eq_of_mem_range _ m]
+  change fromCoset _ = fromCoset ⟨f a • (y • _), _⟩
+  simp only [← fromCoset_eq_of_mem_range _ (Subgroup.mul_mem _ ⟨a, rfl⟩ m), smul_smul]
+  rw [h_apply_fromCoset_nin_range f (f a) ⟨_, rfl⟩ _ m]
+  simp only [leftCoset_assoc]
+  rw [g_apply_infinity, h_apply_infinity f (f a) ⟨_, rfl⟩]
+  have eq1 : (h b) (fromCoset ⟨f.range, 1, one_leftCoset _⟩) =
+      fromCoset ⟨f.range, 1, one_leftCoset _⟩ := by
+    change ((τ).symm.trans (g b)).trans τ _ = _
+    dsimp [tau]
+    simp [g_apply_infinity f]
+  have eq2 :
+    g b (fromCoset ⟨f.range, 1, one_leftCoset _⟩) = fromCoset ⟨b • ↑f.range, b, rfl⟩ := rfl
+  exact (fromCoset_ne_of_nin_range _ r).symm (by rw [← eq1, ← eq2, DFunLike.congr_fun hb])
 
 theorem comp_eq : (f ≫ show B ⟶ Grp.of SX' from g) = f ≫ show B ⟶ Grp.of SX' from h := by
   ext a

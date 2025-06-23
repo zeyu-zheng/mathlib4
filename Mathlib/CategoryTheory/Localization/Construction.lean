@@ -174,21 +174,21 @@ theorem fac : W.Q ⋙ lift G hG = G :=
 theorem uniq (G₁ G₂ : W.Localization ⥤ D) (h : W.Q ⋙ G₁ = W.Q ⋙ G₂) : G₁ = G₂ := by
   suffices h' : Quotient.functor _ ⋙ G₁ = Quotient.functor _ ⋙ G₂ by
     refine Functor.ext ?_ ?_
-    · rintro ⟨⟨X⟩⟩
-      apply Functor.congr_obj h
-    · rintro ⟨⟨X⟩⟩ ⟨⟨Y⟩⟩ ⟨f⟩
-      apply Functor.congr_hom h'
-  refine Paths.ext_functor ?_ ?_
-  · ext X
-    cases X
+    rintro ⟨⟨X⟩⟩
     apply Functor.congr_obj h
-  · rintro ⟨X⟩ ⟨Y⟩ (f | ⟨w, hw⟩)
-    · simpa only using Functor.congr_hom h f
-    · have hw : W.Q.map w = (wIso w hw).hom := rfl
-      have hw' := Functor.congr_hom h w
-      simp only [Functor.comp_map, hw] at hw'
-      refine Functor.congr_inv_of_congr_hom _ _ _ ?_ ?_ hw'
-      all_goals apply Functor.congr_obj h
+    rintro ⟨⟨X⟩⟩ ⟨⟨Y⟩⟩ ⟨f⟩
+    apply Functor.congr_hom h'
+  refine Paths.ext_functor ?_ ?_
+  ext X
+  cases X
+  apply Functor.congr_obj h
+  rintro ⟨X⟩ ⟨Y⟩ (f | ⟨w, hw⟩)
+  simpa only using Functor.congr_hom h f
+  have hw : W.Q.map w = (wIso w hw).hom := rfl
+  have hw' := Functor.congr_hom h w
+  simp only [Functor.comp_map, hw] at hw'
+  refine Functor.congr_inv_of_congr_hom _ _ _ ?_ ?_ hw'
+  all_goals apply Functor.congr_obj h
 
 variable (W)
 
@@ -216,24 +216,24 @@ theorem morphismProperty_is_top (P : MorphismProperty W.Localization)
   funext X Y f
   ext
   constructor
-  · intro
-    apply MorphismProperty.top_apply
-  · intro
-    let G : _ ⥤ W.Localization := Quotient.functor _
-    haveI : G.Full := Quotient.full_functor _
-    suffices ∀ (X₁ X₂ : Paths (LocQuiver W)) (f : X₁ ⟶ X₂), P (G.map f) by
-      rcases X with ⟨⟨X⟩⟩
-      rcases Y with ⟨⟨Y⟩⟩
-      simpa only [Functor.map_preimage] using this _ _ (G.preimage f)
-    intros X₁ X₂ p
-    induction' p with X₂ X₃ p g hp
-    · simpa only [Functor.map_id] using hP₁ (𝟙 X₁.obj)
-    · let p' : X₁ ⟶X₂ := p
-      rw [show p'.cons g = p' ≫ Quiver.Hom.toPath g by rfl, G.map_comp]
-      refine P.comp_mem _ _ hp ?_
-      rcases g with (g | ⟨g, hg⟩)
-      · apply hP₁
-      · apply hP₂
+  intro
+  apply MorphismProperty.top_apply
+  intro
+  let G : _ ⥤ W.Localization := Quotient.functor _
+  haveI : G.Full := Quotient.full_functor _
+  suffices ∀ (X₁ X₂ : Paths (LocQuiver W)) (f : X₁ ⟶ X₂), P (G.map f) by
+    rcases X with ⟨⟨X⟩⟩
+    rcases Y with ⟨⟨Y⟩⟩
+    simpa only [Functor.map_preimage] using this _ _ (G.preimage f)
+  intros X₁ X₂ p
+  induction' p with X₂ X₃ p g hp
+  simpa only [Functor.map_id] using hP₁ (𝟙 X₁.obj)
+  let p' : X₁ ⟶X₂ := p
+  rw [show p'.cons g = p' ≫ Quiver.Hom.toPath g by rfl, G.map_comp]
+  refine P.comp_mem _ _ hp ?_
+  rcases g with (g | ⟨g, hg⟩)
+  apply hP₁
+  apply hP₂
 
 /-- A `MorphismProperty` in `W.Localization` is satisfied by all
 morphisms in the localized category if it contains the image of the

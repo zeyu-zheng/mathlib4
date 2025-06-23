@@ -170,14 +170,14 @@ theorem StrictMonoOn.Iic_id_le [SuccOrder α] [IsSuccArchimedean α] [OrderBot �
       (fun _ _ hm => hm.trans bot_le) ?_ _
   rintro k ih hφ m hm
   by_cases hk : IsMax k
-  · rw [succ_eq_iff_isMax.2 hk] at hm
-    exact ih (hφ.mono <| Iic_subset_Iic.2 (le_succ _)) _ hm
+  rw [succ_eq_iff_isMax.2 hk] at hm
+  exact ih (hφ.mono <| Iic_subset_Iic.2 (le_succ _)) _ hm
   obtain rfl | h := le_succ_iff_eq_or_le.1 hm
-  · specialize ih (StrictMonoOn.mono hφ fun x hx => le_trans hx (le_succ _)) k le_rfl
-    refine le_trans (succ_mono ih) (succ_le_of_lt (hφ (le_succ _) le_rfl ?_))
-    rw [lt_succ_iff_eq_or_lt_of_not_isMax hk]
-    exact Or.inl rfl
-  · exact ih (StrictMonoOn.mono hφ fun x hx => le_trans hx (le_succ _)) _ h
+  specialize ih (StrictMonoOn.mono hφ fun x hx => le_trans hx (le_succ _)) k le_rfl
+  refine le_trans (succ_mono ih) (succ_le_of_lt (hφ (le_succ _) le_rfl ?_))
+  rw [lt_succ_iff_eq_or_lt_of_not_isMax hk]
+  exact Or.inl rfl
+  exact ih (StrictMonoOn.mono hφ fun x hx => le_trans hx (le_succ _)) _ h
 
 theorem StrictMonoOn.Ici_le_id [PredOrder α] [IsPredArchimedean α] [OrderTop α] {n : α} {φ : α → α}
     (hφ : StrictMonoOn φ (Set.Ici n)) : ∀ m, n ≤ m → φ m ≤ m :=
@@ -192,17 +192,17 @@ theorem strictMonoOn_Iic_of_lt_succ [SuccOrder α] [IsSuccArchimedean α] {n : �
   intro x hx y hy hxy
   obtain ⟨i, rfl⟩ := hxy.le.exists_succ_iterate
   induction' i with k ih
-  · simp at hxy
+  simp at hxy
   cases' k with k
-  · exact hψ _ (lt_of_lt_of_le hxy hy)
+  exact hψ _ (lt_of_lt_of_le hxy hy)
   rw [Set.mem_Iic] at *
   simp only [Function.iterate_succ', Function.comp_apply] at ih hxy hy ⊢
   by_cases hmax : IsMax (succ^[k] x)
-  · rw [succ_eq_iff_isMax.2 hmax] at hxy ⊢
-    exact ih (le_trans (le_succ _) hy) hxy
+  rw [succ_eq_iff_isMax.2 hmax] at hxy ⊢
+  exact ih (le_trans (le_succ _) hy) hxy
   by_cases hmax' : IsMax (succ (succ^[k] x))
-  · rw [succ_eq_iff_isMax.2 hmax'] at hxy ⊢
-    exact ih (le_trans (le_succ _) hy) hxy
+  rw [succ_eq_iff_isMax.2 hmax'] at hxy ⊢
+  exact ih (le_trans (le_succ _) hy) hxy
   refine
     lt_trans
       (ih (le_trans (le_succ _) hy)

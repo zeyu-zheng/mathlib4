@@ -46,7 +46,7 @@ variable [LinearOrder α] [OrderTopology α]
 
 theorem continuousAt_sign_of_ne_zero {a : α} (h : a ≠ 0) : ContinuousAt SignType.sign a := by
   rcases h.lt_or_lt with (h_neg | h_pos)
-  · exact continuousAt_sign_of_neg h_neg
-  · exact continuousAt_sign_of_pos h_pos
+  exact continuousAt_sign_of_neg h_neg
+  exact continuousAt_sign_of_pos h_pos
 
 end LinearOrder

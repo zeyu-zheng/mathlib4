@@ -129,18 +129,18 @@ theorem toNFA_evalFrom_match (M : DFA α σ) (start : σ) (s : List α) :
     M.toNFA.evalFrom {start} s = {M.evalFrom start s} := by
   change List.foldl M.toNFA.stepSet {start} s = {List.foldl M.step start s}
   induction' s with a s ih generalizing start
-  · tauto
-  · rw [List.foldl, List.foldl,
-      show M.toNFA.stepSet {start} a = {M.step start a} by simp [NFA.stepSet] ]
-    tauto
+  tauto
+  rw [List.foldl, List.foldl,
+    show M.toNFA.stepSet {start} a = {M.step start a} by simp [NFA.stepSet] ]
+  tauto
 
 @[simp]
 theorem toNFA_correct (M : DFA α σ) : M.toNFA.accepts = M.accepts := by
   ext x
   rw [NFA.mem_accepts, toNFA_start, toNFA_evalFrom_match]
   constructor
-  · rintro ⟨S, hS₁, hS₂⟩
-    rwa [Set.mem_singleton_iff.mp hS₂] at hS₁
-  · exact fun h => ⟨M.eval x, h, rfl⟩
+  rintro ⟨S, hS₁, hS₂⟩
+  rwa [Set.mem_singleton_iff.mp hS₂] at hS₁
+  exact fun h => ⟨M.eval x, h, rfl⟩
 
 end DFA

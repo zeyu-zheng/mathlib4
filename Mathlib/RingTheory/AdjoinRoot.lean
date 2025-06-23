@@ -228,11 +228,11 @@ theorem of.injective_of_degree_ne_zero [IsDomain R] (hf : f.degree ≠ 0) :
   intro p hp
   rw [AdjoinRoot.of, RingHom.comp_apply, AdjoinRoot.mk_eq_zero] at hp
   by_cases h : f = 0
-  · exact C_eq_zero.mp (eq_zero_of_zero_dvd (by rwa [h] at hp))
-  · contrapose! hf with h_contra
-    rw [← degree_C h_contra]
-    apply le_antisymm (degree_le_of_dvd hp (by rwa [Ne, C_eq_zero])) _
-    rwa [degree_C h_contra, zero_le_degree_iff]
+  exact C_eq_zero.mp (eq_zero_of_zero_dvd (by rwa [h] at hp))
+  contrapose! hf with h_contra
+  rw [← degree_C h_contra]
+  apply le_antisymm (degree_le_of_dvd hp (by rwa [Ne, C_eq_zero])) _
+  rwa [degree_C h_contra, zero_le_degree_iff]
 
 variable [CommRing S]
 
@@ -483,20 +483,20 @@ theorem isIntegral_root (hf : f ≠ 0) : IsIntegral K (root f) :=
 theorem minpoly_root (hf : f ≠ 0) : minpoly K (root f) = f * C f.leadingCoeff⁻¹ := by
   have f'_monic : Monic _ := monic_mul_leadingCoeff_inv hf
   refine (minpoly.unique K _ f'_monic ?_ ?_).symm
-  · rw [_root_.map_mul, aeval_eq, mk_self, zero_mul]
+  rw [_root_.map_mul, aeval_eq, mk_self, zero_mul]
   intro q q_monic q_aeval
   have commutes : (lift (algebraMap K (AdjoinRoot f)) (root f) q_aeval).comp (mk q) = mk f
   ext
-  · simp only [RingHom.comp_apply, mk_C, lift_of]
-    rfl
-  · simp only [RingHom.comp_apply, mk_X, lift_root]
+  simp only [RingHom.comp_apply, mk_C, lift_of]
+  rfl
+  simp only [RingHom.comp_apply, mk_X, lift_root]
   rw [degree_eq_natDegree f'_monic.ne_zero, degree_eq_natDegree q_monic.ne_zero,
     Nat.cast_le, natDegree_mul hf, natDegree_C, add_zero]
-  · apply natDegree_le_of_dvd
-    · have : mk f q = 0 := by rw [← commutes, RingHom.comp_apply, mk_self, RingHom.map_zero]
-      exact mk_eq_zero.1 this
-    · exact q_monic.ne_zero
-  · rwa [Ne, C_eq_zero, inv_eq_zero, leadingCoeff_eq_zero]
+  apply natDegree_le_of_dvd
+  have : mk f q = 0 := by rw [← commutes, RingHom.comp_apply, mk_self, RingHom.map_zero]
+  exact mk_eq_zero.1 this
+  exact q_monic.ne_zero
+  rwa [Ne, C_eq_zero, inv_eq_zero, leadingCoeff_eq_zero]
 
 /-- The elements `1, root f, ..., root f ^ (d - 1)` form a basis for `AdjoinRoot f`,
 where `f` is an irreducible polynomial over a field of degree `d`. -/

@@ -103,25 +103,25 @@ unsafe def run : Computation α → α
 theorem destruct_eq_pure {s : Computation α} {a : α} : destruct s = Sum.inl a → s = pure a := by
   dsimp [destruct]
   induction' f0 : s.1 0 with _ <;> intro h
-  · contradiction
-  · apply Subtype.eq
-    funext n
-    induction' n with n IH
-    · injection h with h'
-      rwa [h'] at f0
-    · exact s.2 IH
+  contradiction
+  apply Subtype.eq
+  funext n
+  induction' n with n IH
+  injection h with h'
+  rwa [h'] at f0
+  exact s.2 IH
 
 theorem destruct_eq_think {s : Computation α} {s'} : destruct s = Sum.inr s' → s = think s' := by
   dsimp [destruct]
   induction' f0 : s.1 0 with a' <;> intro h
-  · injection h with h'
-    rw [← h']
-    cases' s with f al
-    apply Subtype.eq
-    dsimp [think, tail]
-    rw [← f0]
-    exact (Stream'.eta f).symm
-  · contradiction
+  injection h with h'
+  rw [← h']
+  cases' s with f al
+  apply Subtype.eq
+  dsimp [think, tail]
+  rw [← f0]
+  exact (Stream'.eta f).symm
+  contradiction
 
 @[simp]
 theorem destruct_pure (a : α) : destruct (pure a) = Sum.inl a :=
@@ -256,25 +256,25 @@ def IsBisimulation :=
 theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s₁ = s₂ := by
   apply Subtype.eq
   apply Stream'.eq_of_bisim fun x y => ∃ s s' : Computation α, s.1 = x ∧ s'.1 = y ∧ R s s'
-  · dsimp [Stream'.IsBisimulation]
-    intro t₁ t₂ e
-    match t₁, t₂, e with
-    | _, _, ⟨s, s', rfl, rfl, r⟩ =>
-      suffices head s = head s' ∧ R (tail s) (tail s') from
-        And.imp id (fun r => ⟨tail s, tail s', by cases s; rfl, by cases s'; rfl, r⟩) this
-      have h := bisim r; revert r h
-      apply recOn s _ _ <;> intro r' <;> apply recOn s' _ _ <;> intro a' r h
-      · constructor <;> dsimp at h
-        · rw [h]
-        · rw [h] at r
-          rw [tail_pure, tail_pure,h]
-          assumption
-      · rw [destruct_pure, destruct_think] at h
-        exact False.elim h
-      · rw [destruct_pure, destruct_think] at h
-        exact False.elim h
-      · simp_all
-  · exact ⟨s₁, s₂, rfl, rfl, r⟩
+  dsimp [Stream'.IsBisimulation]
+  intro t₁ t₂ e
+  match t₁, t₂, e with
+  | _, _, ⟨s, s', rfl, rfl, r⟩ =>
+    suffices head s = head s' ∧ R (tail s) (tail s') from
+      And.imp id (fun r => ⟨tail s, tail s', by cases s; rfl, by cases s'; rfl, r⟩) this
+    have h := bisim r; revert r h
+    apply recOn s _ _ <;> intro r' <;> apply recOn s' _ _ <;> intro a' r h
+    constructor <;> dsimp at h
+    rw [h]
+    rw [h] at r
+    rw [tail_pure, tail_pure,h]
+    assumption
+    rw [destruct_pure, destruct_think] at h
+    exact False.elim h
+    rw [destruct_pure, destruct_think] at h
+    exact False.elim h
+    simp_all
+  exact ⟨s₁, s₂, rfl, rfl, r⟩
 
 end Bisim
 
@@ -337,8 +337,8 @@ instance think_terminates (s : Computation α) : ∀ [Terminates s], Terminates 
 theorem of_think_mem {s : Computation α} {a} : a ∈ think s → a ∈ s
   | ⟨n, h⟩ => by
     cases' n with n'
-    · contradiction
-    · exact ⟨n', h⟩
+    contradiction
+    exact ⟨n', h⟩
 
 theorem of_think_terminates {s : Computation α} : Terminates (think s) → Terminates s
   | ⟨⟨a, h⟩⟩ => ⟨⟨a, of_think_mem h⟩⟩
@@ -506,15 +506,15 @@ theorem length_thinkN (s : Computation α) [_h : Terminates s] (n) :
 theorem eq_thinkN {s : Computation α} {a n} (h : Results s a n) : s = thinkN (pure a) n := by
   revert s
   induction' n with n IH <;> intro s <;> apply recOn s (fun a' => _) fun s => _ <;> intro a h
-  · rw [← eq_of_pure_mem h.mem]
-    rfl
-  · cases' of_results_think h with n h
-    cases h
-    contradiction
-  · have := h.len_unique (results_pure _)
-    contradiction
-  · rw [IH (results_think_iff.1 h)]
-    rfl
+  rw [← eq_of_pure_mem h.mem]
+  rfl
+  cases' of_results_think h with n h
+  cases h
+  contradiction
+  have := h.len_unique (results_pure _)
+  contradiction
+  rw [IH (results_think_iff.1 h)]
+  rfl
 
 theorem eq_thinkN' (s : Computation α) [_h : Terminates s] :
     s = thinkN (pure (get s)) (length s) :=
@@ -604,15 +604,15 @@ theorem map_comp (f : α → β) (g : β → γ) : ∀ s : Computation α, map (
 theorem ret_bind (a) (f : α → Computation β) : bind (pure a) f = f a := by
   apply
     eq_of_bisim fun c₁ c₂ => c₁ = bind (pure a) f ∧ c₂ = f a ∨ c₁ = corec (Bind.f f) (Sum.inr c₂)
-  · intro c₁ c₂ h
-    match c₁, c₂, h with
-    | _, _, Or.inl ⟨rfl, rfl⟩ =>
-      simp only [BisimO, bind, Bind.f, corec_eq, rmap, destruct_pure]
-      cases' destruct (f a) with b cb <;> simp [Bind.g]
-    | _, c, Or.inr rfl =>
-      simp only [BisimO, Bind.f, corec_eq, rmap]
-      cases' destruct c with b cb <;> simp [Bind.g]
-  · simp
+  intro c₁ c₂ h
+  match c₁, c₂, h with
+  | _, _, Or.inl ⟨rfl, rfl⟩ =>
+    simp only [BisimO, bind, Bind.f, corec_eq, rmap, destruct_pure]
+    cases' destruct (f a) with b cb <;> simp [Bind.g]
+  | _, c, Or.inr rfl =>
+    simp only [BisimO, Bind.f, corec_eq, rmap]
+    cases' destruct c with b cb <;> simp [Bind.g]
+  simp
 
 @[simp]
 theorem think_bind (c) (f : α → Computation β) : bind (think c) f = think (bind c f) :=
@@ -621,25 +621,25 @@ theorem think_bind (c) (f : α → Computation β) : bind (think c) f = think (b
 @[simp]
 theorem bind_pure (f : α → β) (s) : bind s (pure ∘ f) = map f s := by
   apply eq_of_bisim fun c₁ c₂ => c₁ = c₂ ∨ ∃ s, c₁ = bind s (pure ∘ f) ∧ c₂ = map f s
-  · intro c₁ c₂ h
-    match c₁, c₂, h with
-    | _, c₂, Or.inl (Eq.refl _) => cases' destruct c₂ with b cb <;> simp
-    | _, _, Or.inr ⟨s, rfl, rfl⟩ =>
-      apply recOn s <;> intro s
-      · simp
-      · simpa using Or.inr ⟨s, rfl, rfl⟩
-  · exact Or.inr ⟨s, rfl, rfl⟩
+  intro c₁ c₂ h
+  match c₁, c₂, h with
+  | _, c₂, Or.inl (Eq.refl _) => cases' destruct c₂ with b cb <;> simp
+  | _, _, Or.inr ⟨s, rfl, rfl⟩ =>
+    apply recOn s <;> intro s
+    simp
+    simpa using Or.inr ⟨s, rfl, rfl⟩
+  exact Or.inr ⟨s, rfl, rfl⟩
 
 -- Porting note: used to use `rw [bind_pure]`
 @[simp]
 theorem bind_pure' (s : Computation α) : bind s pure = s := by
   apply eq_of_bisim fun c₁ c₂ => c₁ = c₂ ∨ ∃ s, c₁ = bind s pure ∧ c₂ = s
-  · intro c₁ c₂ h
-    match c₁, c₂, h with
-    | _, c₂, Or.inl (Eq.refl _) => cases' destruct c₂ with b cb <;> simp
-    | _, _, Or.inr ⟨s, rfl, rfl⟩ =>
-      apply recOn s <;> intro s <;> simp
-  · exact Or.inr ⟨s, rfl, rfl⟩
+  intro c₁ c₂ h
+  match c₁, c₂, h with
+  | _, c₂, Or.inl (Eq.refl _) => cases' destruct c₂ with b cb <;> simp
+  | _, _, Or.inr ⟨s, rfl, rfl⟩ =>
+    apply recOn s <;> intro s <;> simp
+  exact Or.inr ⟨s, rfl, rfl⟩
 
 @[simp]
 theorem bind_assoc (s : Computation α) (f : α → Computation β) (g : β → Computation γ) :
@@ -647,31 +647,31 @@ theorem bind_assoc (s : Computation α) (f : α → Computation β) (g : β → 
   apply
     eq_of_bisim fun c₁ c₂ =>
       c₁ = c₂ ∨ ∃ s, c₁ = bind (bind s f) g ∧ c₂ = bind s fun x : α => bind (f x) g
-  · intro c₁ c₂ h
-    match c₁, c₂, h with
-    | _, c₂, Or.inl (Eq.refl _) => cases' destruct c₂ with b cb <;> simp
-    | _, _, Or.inr ⟨s, rfl, rfl⟩ =>
-      apply recOn s <;> intro s
-      · simp only [BisimO, ret_bind]; generalize f s = fs
-        apply recOn fs <;> intro t <;> simp
-        · cases' destruct (g t) with b cb <;> simp
-      · simpa  [BisimO] using Or.inr ⟨s, rfl, rfl⟩
-  · exact Or.inr ⟨s, rfl, rfl⟩
+  intro c₁ c₂ h
+  match c₁, c₂, h with
+  | _, c₂, Or.inl (Eq.refl _) => cases' destruct c₂ with b cb <;> simp
+  | _, _, Or.inr ⟨s, rfl, rfl⟩ =>
+    apply recOn s <;> intro s
+    simp only [BisimO, ret_bind]; generalize f s = fs
+    apply recOn fs <;> intro t <;> simp
+    cases' destruct (g t) with b cb <;> simp
+    simpa  [BisimO] using Or.inr ⟨s, rfl, rfl⟩
+  exact Or.inr ⟨s, rfl, rfl⟩
 
 theorem results_bind {s : Computation α} {f : α → Computation β} {a b m n} (h1 : Results s a m)
     (h2 : Results (f a) b n) : Results (bind s f) b (n + m) := by
   have := h1.mem; revert m
   apply memRecOn this _ fun s IH => _
-  · intro _ h1
-    rw [ret_bind]
-    rw [h1.len_unique (results_pure _)]
-    exact h2
-  · intro _ h3 _ h1
-    rw [think_bind]
-    cases' of_results_think h1 with m' h
-    cases' h with h1 e
-    rw [e]
-    exact results_think (h3 h1)
+  intro _ h1
+  rw [ret_bind]
+  rw [h1.len_unique (results_pure _)]
+  exact h2
+  intro _ h3 _ h1
+  rw [think_bind]
+  cases' of_results_think h1 with m' h
+  cases' h with h1 e
+  rw [e]
+  exact results_think (h3 h1)
 
 theorem mem_bind {s : Computation α} {f : α → Computation β} {a b} (h1 : a ∈ s) (h2 : b ∈ f a) :
     b ∈ bind s f :=
@@ -697,16 +697,16 @@ theorem length_bind (s : Computation α) (f : α → Computation β) [_T1 : Term
 theorem of_results_bind {s : Computation α} {f : α → Computation β} {b k} :
     Results (bind s f) b k → ∃ a m n, Results s a m ∧ Results (f a) b n ∧ k = n + m := by
   induction' k with n IH generalizing s <;> apply recOn s (fun a => _) fun s' => _ <;> intro e h
-  · simp only [ret_bind, Nat.zero_eq] at h
-    exact ⟨e, _, _, results_pure _, h, rfl⟩
-  · have := congr_arg head (eq_thinkN h)
-    contradiction
-  · simp only [ret_bind] at h
-    exact ⟨e, _, n + 1, results_pure _, h, rfl⟩
-  · simp only [think_bind, results_think_iff] at h
-    let ⟨a, m, n', h1, h2, e'⟩ := IH h
-    rw [e']
-    exact ⟨a, m.succ, n', results_think h1, h2, rfl⟩
+  simp only [ret_bind, Nat.zero_eq] at h
+  exact ⟨e, _, _, results_pure _, h, rfl⟩
+  have := congr_arg head (eq_thinkN h)
+  contradiction
+  simp only [ret_bind] at h
+  exact ⟨e, _, n + 1, results_pure _, h, rfl⟩
+  simp only [think_bind, results_think_iff] at h
+  let ⟨a, m, n', h1, h2, e'⟩ := IH h
+  rw [e']
+  exact ⟨a, m.succ, n', results_think h1, h2, rfl⟩
 
 theorem exists_of_mem_bind {s : Computation α} {f : α → Computation β} {b} (h : b ∈ bind s f) :
     ∃ a ∈ s, b ∈ f a :=
@@ -1072,12 +1072,12 @@ variable {R : α → β → Prop} {C : Computation α → Computation β → Pro
 theorem LiftRelAux.ret_left (R : α → β → Prop) (C : Computation α → Computation β → Prop) (a cb) :
     LiftRelAux R C (Sum.inl a) (destruct cb) ↔ ∃ b, b ∈ cb ∧ R a b := by
   apply cb.recOn (fun b => _) fun cb => _
-  · intro b
-    exact
-      ⟨fun h => ⟨_, ret_mem _, h⟩, fun ⟨b', mb, h⟩ => by rw [mem_unique (ret_mem _) mb]; exact h⟩
-  · intro
-    rw [destruct_think]
-    exact ⟨fun ⟨b, h, r⟩ => ⟨b, think_mem h, r⟩, fun ⟨b, h, r⟩ => ⟨b, of_think_mem h, r⟩⟩
+  intro b
+  exact
+    ⟨fun h => ⟨_, ret_mem _, h⟩, fun ⟨b', mb, h⟩ => by rw [mem_unique (ret_mem _) mb]; exact h⟩
+  intro
+  rw [destruct_think]
+  exact ⟨fun ⟨b, h, r⟩ => ⟨b, think_mem h, r⟩, fun ⟨b, h, r⟩ => ⟨b, of_think_mem h, r⟩⟩
 
 theorem LiftRelAux.swap (R : α → β → Prop) (C) (a b) :
     LiftRelAux (swap R) (swap C) b a = LiftRelAux R C a b := by
@@ -1094,13 +1094,13 @@ theorem LiftRelRec.lem {R : α → β → Prop} (C : Computation α → Computat
   revert cb
   refine memRecOn (C := (fun ca ↦ ∀ (cb : Computation β), C ca cb → LiftRel R ca cb))
     ha ?_ (fun ca' IH => ?_) <;> intro cb Hc <;> have h := H Hc
-  · simp only [destruct_pure, LiftRelAux.ret_left] at h
-    simp [h]
-  · simp only [liftRel_think_left]
-    revert h
-    apply cb.recOn (fun b => _) fun cb' => _ <;> intros _ h
-    · simpa using h
-    · simpa [h] using IH _ h
+  simp only [destruct_pure, LiftRelAux.ret_left] at h
+  simp [h]
+  simp only [liftRel_think_left]
+  revert h
+  apply cb.recOn (fun b => _) fun cb' => _ <;> intros _ h
+  simpa using h
+  simpa [h] using IH _ h
 
 theorem liftRel_rec {R : α → β → Prop} (C : Computation α → Computation β → Prop)
     (H : ∀ {ca cb}, C ca cb → LiftRelAux R C (destruct ca) (destruct cb)) (ca cb) (Hc : C ca cb) :

@@ -91,11 +91,11 @@ theorem hasBasis_nhds_zero_adic (I : Ideal R) :
     intro U
     rw [I.ringFilterBasis.toAddGroupFilterBasis.nhds_zero_hasBasis.mem_iff]
     constructor
-    · rintro ⟨-, ⟨i, rfl⟩, h⟩
-      replace h : ↑(I ^ i) ⊆ U := by simpa using h
-      exact ⟨i, trivial, h⟩
-    · rintro ⟨i, -, h⟩
-      exact ⟨(I ^ i : Ideal R), ⟨i, by simp⟩, h⟩⟩
+    rintro ⟨-, ⟨i, rfl⟩, h⟩
+    replace h : ↑(I ^ i) ⊆ U := by simpa using h
+    exact ⟨i, trivial, h⟩
+    rintro ⟨i, -, h⟩
+    exact ⟨(I ^ i : Ideal R), ⟨i, by simp⟩, h⟩⟩
 
 theorem hasBasis_nhds_adic (I : Ideal R) (x : R) :
     HasBasis (@nhds R I.adicTopology x) (fun _n : ℕ => True) fun n =>
@@ -149,61 +149,61 @@ theorem isAdic_iff [top : TopologicalSpace R] [TopologicalRing R] {J : Ideal R} 
       (∀ n : ℕ, IsOpen ((J ^ n : Ideal R) : Set R)) ∧
         ∀ s ∈ 𝓝 (0 : R), ∃ n : ℕ, ((J ^ n : Ideal R) : Set R) ⊆ s := by
   constructor
-  · intro H
-    change _ = _ at H
-    rw [H]
-    letI := J.adicTopology
-    constructor
-    · intro n
-      exact (J.openAddSubgroup n).isOpen'
-    · intro s hs
-      simpa using J.hasBasis_nhds_zero_adic.mem_iff.mp hs
-  · rintro ⟨H₁, H₂⟩
-    apply TopologicalAddGroup.ext
-    · apply @TopologicalRing.to_topologicalAddGroup
-    · apply (RingSubgroupsBasis.toRingFilterBasis _).toAddGroupFilterBasis.isTopologicalAddGroup
-    · ext s
-      letI := Ideal.adic_basis J
-      rw [J.hasBasis_nhds_zero_adic.mem_iff]
-      constructor <;> intro H
-      · rcases H₂ s H with ⟨n, h⟩
-        exact ⟨n, trivial, h⟩
-      · rcases H with ⟨n, -, hn⟩
-        rw [mem_nhds_iff]
-        exact ⟨_, hn, H₁ n, (J ^ n).zero_mem⟩
+  intro H
+  change _ = _ at H
+  rw [H]
+  letI := J.adicTopology
+  constructor
+  intro n
+  exact (J.openAddSubgroup n).isOpen'
+  intro s hs
+  simpa using J.hasBasis_nhds_zero_adic.mem_iff.mp hs
+  rintro ⟨H₁, H₂⟩
+  apply TopologicalAddGroup.ext
+  apply @TopologicalRing.to_topologicalAddGroup
+  apply (RingSubgroupsBasis.toRingFilterBasis _).toAddGroupFilterBasis.isTopologicalAddGroup
+  ext s
+  letI := Ideal.adic_basis J
+  rw [J.hasBasis_nhds_zero_adic.mem_iff]
+  constructor <;> intro H
+  rcases H₂ s H with ⟨n, h⟩
+  exact ⟨n, trivial, h⟩
+  rcases H with ⟨n, -, hn⟩
+  rw [mem_nhds_iff]
+  exact ⟨_, hn, H₁ n, (J ^ n).zero_mem⟩
 
 variable [TopologicalSpace R] [TopologicalRing R]
 
 theorem is_ideal_adic_pow {J : Ideal R} (h : IsAdic J) {n : ℕ} (hn : 0 < n) : IsAdic (J ^ n) := by
   rw [isAdic_iff] at h ⊢
   constructor
-  · intro m
-    rw [← pow_mul]
-    apply h.left
-  · intro V hV
-    cases' h.right V hV with m hm
-    use m
-    refine Set.Subset.trans ?_ hm
-    cases n
-    · exfalso
-      exact Nat.not_succ_le_zero 0 hn
-    rw [← pow_mul, Nat.succ_mul]
-    apply Ideal.pow_le_pow_right
-    apply Nat.le_add_left
+  intro m
+  rw [← pow_mul]
+  apply h.left
+  intro V hV
+  cases' h.right V hV with m hm
+  use m
+  refine Set.Subset.trans ?_ hm
+  cases n
+  exfalso
+  exact Nat.not_succ_le_zero 0 hn
+  rw [← pow_mul, Nat.succ_mul]
+  apply Ideal.pow_le_pow_right
+  apply Nat.le_add_left
 
 theorem is_bot_adic_iff {A : Type*} [CommRing A] [TopologicalSpace A] [TopologicalRing A] :
     IsAdic (⊥ : Ideal A) ↔ DiscreteTopology A := by
   rw [isAdic_iff]
   constructor
-  · rintro ⟨h, _h'⟩
-    rw [discreteTopology_iff_isOpen_singleton_zero]
-    simpa using h 1
-  · intros
-    constructor
-    · simp
-    · intro U U_nhds
-      use 1
-      simp [mem_of_mem_nhds U_nhds]
+  rintro ⟨h, _h'⟩
+  rw [discreteTopology_iff_isOpen_singleton_zero]
+  simpa using h 1
+  intros
+  constructor
+  simp
+  intro U U_nhds
+  use 1
+  simp [mem_of_mem_nhds U_nhds]
 
 end IsAdic
 

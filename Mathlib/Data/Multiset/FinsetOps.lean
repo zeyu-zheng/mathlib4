@@ -93,12 +93,12 @@ theorem attach_ndinsert (a : α) (s : Multiset α) :
       (s.attach.map fun p => ⟨p.1, eq ▸ mem_ndinsert_of_mem p.2⟩) := by
     intro t ht
     by_cases h : a ∈ s
-    · rw [ndinsert_of_mem h] at ht
-      subst ht
-      rw [eq, map_id, ndinsert_of_mem (mem_attach _ _)]
-    · rw [ndinsert_of_not_mem h] at ht
-      subst ht
-      simp [attach_cons, h]
+    rw [ndinsert_of_mem h] at ht
+    subst ht
+    rw [eq, map_id, ndinsert_of_mem (mem_attach _ _)]
+    rw [ndinsert_of_not_mem h] at ht
+    subst ht
+    simp [attach_cons, h]
   this _ rfl
 
 @[simp]

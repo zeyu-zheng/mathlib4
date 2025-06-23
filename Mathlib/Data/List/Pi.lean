@@ -86,12 +86,12 @@ def pi : ∀ l : List ι, (∀ i, List (α i)) → List (∀ i, i ∈ l → α i
 lemma _root_.Multiset.pi_coe (l : List ι) (fs : ∀ i, List (α i)) :
     (l : Multiset ι).pi (fs ·) = (↑(pi l fs) : Multiset (∀ i ∈ l, α i)) := by
   induction' l with i l ih
-  · change Multiset.pi 0 _ = _
-    simp only [Multiset.coe_singleton, Multiset.pi_zero, pi_nil, Multiset.singleton_inj]
-    ext i hi
-    simp at hi
-  · change Multiset.pi (i ::ₘ ↑l) _ = _
-    simp [ih, Multiset.coe_bind, - Multiset.cons_coe]
+  change Multiset.pi 0 _ = _
+  simp only [Multiset.coe_singleton, Multiset.pi_zero, pi_nil, Multiset.singleton_inj]
+  ext i hi
+  simp at hi
+  change Multiset.pi (i ::ₘ ↑l) _ = _
+  simp [ih, Multiset.coe_bind, - Multiset.cons_coe]
 
 lemma mem_pi {l : List ι} (fs : ∀ i, List (α i)) :
     ∀ f : ∀ i ∈ l, α i, (f ∈ pi l fs) ↔ (∀ i (hi : i ∈ l), f i hi ∈ fs i) := by

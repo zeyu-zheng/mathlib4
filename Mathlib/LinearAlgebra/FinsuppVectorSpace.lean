@@ -34,20 +34,20 @@ theorem linearIndependent_single {φ : ι → Type*} {f : ∀ ι, φ ι → M}
     (hf : ∀ i, LinearIndependent R (f i)) :
     LinearIndependent R fun ix : Σi, φ i => single ix.1 (f ix.1 ix.2) := by
   apply @linearIndependent_iUnion_finite R _ _ _ _ ι φ fun i x => single i (f i x)
-  · intro i
-    have h_disjoint : Disjoint (span R (range (f i))) (ker (lsingle i))
-    rw [ker_lsingle]
-    exact disjoint_bot_right
-    apply (hf i).map h_disjoint
-  · intro i t _ hit
-    refine (disjoint_lsingle_lsingle {i} t (disjoint_singleton_left.2 hit)).mono ?_ ?_
-    · rw [span_le]
-      simp only [iSup_singleton]
-      rw [range_coe]
-      apply range_comp_subset_range _ (lsingle i)
-    · refine iSup₂_mono fun i hi => ?_
-      rw [span_le, range_coe]
-      apply range_comp_subset_range _ (lsingle i)
+  intro i
+  have h_disjoint : Disjoint (span R (range (f i))) (ker (lsingle i))
+  rw [ker_lsingle]
+  exact disjoint_bot_right
+  apply (hf i).map h_disjoint
+  intro i t _ hit
+  refine (disjoint_lsingle_lsingle {i} t (disjoint_singleton_left.2 hit)).mono ?_ ?_
+  rw [span_le]
+  simp only [iSup_singleton]
+  rw [range_coe]
+  apply range_comp_subset_range _ (lsingle i)
+  refine iSup₂_mono fun i hi => ?_
+  rw [span_le, range_coe]
+  apply range_comp_subset_range _ (lsingle i)
 
 end Ring
 
@@ -106,13 +106,13 @@ theorem coe_basis {φ : ι → Type*} (b : ∀ i, Basis (φ i) R M) :
     Basis.apply_eq_iff.mpr <| by
       ext ⟨j, y⟩
       by_cases h : i = j
-      · cases h
-        simp only [basis_repr, single_eq_same, Basis.repr_self,
-          Finsupp.single_apply_left sigma_mk_injective]
-      · have : Sigma.mk i x ≠ Sigma.mk j y := fun h' => h <| congrArg (fun s => s.fst) h'
-        -- Porting note: previously `this` not needed
-        simp only [basis_repr, single_apply, h, this, false_and_iff, if_false, LinearEquiv.map_zero,
-        zero_apply]
+      cases h
+      simp only [basis_repr, single_eq_same, Basis.repr_self,
+        Finsupp.single_apply_left sigma_mk_injective]
+      have : Sigma.mk i x ≠ Sigma.mk j y := fun h' => h <| congrArg (fun s => s.fst) h'
+      -- Porting note: previously `this` not needed
+      simp only [basis_repr, single_apply, h, this, false_and_iff, if_false, LinearEquiv.map_zero,
+      zero_apply]
 
 /-- The basis on `ι →₀ M` with basis vectors `fun i ↦ single i 1`. -/
 @[simps]

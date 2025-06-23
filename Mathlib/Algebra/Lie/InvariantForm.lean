@@ -54,13 +54,13 @@ def _root_.LinearMap.BilinForm.lieInvariant : Prop :=
 lemma _root_.LinearMap.BilinForm.lieInvariant_iff [LieModule R L M] :
     Φ.lieInvariant L ↔ Φ ∈ LieModule.maxTrivSubmodule R L (LinearMap.BilinForm R M) := by
   refine ⟨fun h x ↦ ?_, fun h x y z ↦ ?_⟩
-  · ext y z
-    rw [LieHom.lie_apply, LinearMap.sub_apply, Module.Dual.lie_apply, LinearMap.zero_apply,
-      LinearMap.zero_apply, h, sub_self]
-  · replace h := LinearMap.congr_fun₂ (h x) y z
-    simp only [LieHom.lie_apply, LinearMap.sub_apply, Module.Dual.lie_apply,
-      LinearMap.zero_apply, sub_eq_zero] at h
-    simp [← h]
+  ext y z
+  rw [LieHom.lie_apply, LinearMap.sub_apply, Module.Dual.lie_apply, LinearMap.zero_apply,
+    LinearMap.zero_apply, h, sub_self]
+  replace h := LinearMap.congr_fun₂ (h x) y z
+  simp only [LieHom.lie_apply, LinearMap.sub_apply, Module.Dual.lie_apply,
+    LinearMap.zero_apply, sub_eq_zero] at h
+  simp [← h]
 
 variable (hΦ_inv : Φ.lieInvariant L)
 
@@ -151,17 +151,17 @@ open FiniteDimensional Submodule in
 lemma atomistic : ∀ I : LieIdeal K L, sSup {J : LieIdeal K L | IsAtom J ∧ J ≤ I} = I := by
   intro I
   apply le_antisymm
-  · apply sSup_le
-    rintro J ⟨-, hJ'⟩
-    exact hJ'
+  apply sSup_le
+  rintro J ⟨-, hJ'⟩
+  exact hJ'
   by_cases hI : I = ⊥
-  · exact hI.le.trans bot_le
+  exact hI.le.trans bot_le
   obtain ⟨J, hJ, hJI⟩ := (eq_bot_or_exists_atom_le I).resolve_left hI
   let J' := orthogonal Φ hΦ_inv J
   suffices I ≤ J ⊔ (J' ⊓ I) by
     refine this.trans ?_
     apply sup_le
-    · exact le_sSup ⟨hJ, hJI⟩
+    exact le_sSup ⟨hJ, hJI⟩
     rw [← atomistic (J' ⊓ I)]
     apply sSup_le_sSup
     simp only [le_inf_iff, Set.setOf_subset_setOf, and_imp]
@@ -186,7 +186,7 @@ Here a form is *invariant* if it is compatible with the Lie bracket: `Φ ⁅x, y
 -/
 theorem isSemisimple_of_nondegenerate : IsSemisimple K L := by
   refine ⟨?_, ?_, hL⟩
-  · simpa using atomistic Φ hΦ_nondeg hΦ_inv hΦ_refl hL ⊤
+  simpa using atomistic Φ hΦ_nondeg hΦ_inv hΦ_refl hL ⊤
   intro I hI
   apply (orthogonal_disjoint Φ hΦ_nondeg hΦ_inv hL I hI).mono_right
   apply sSup_le

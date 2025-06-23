@@ -62,9 +62,9 @@ theorem lt_length_right_of_zip {i : ℕ} {l : List α} {l' : List β} (h : i < (
 theorem mem_zip {a b} : ∀ {l₁ : List α} {l₂ : List β}, (a, b) ∈ zip l₁ l₂ → a ∈ l₁ ∧ b ∈ l₂
   | _ :: l₁, _ :: l₂, h => by
     cases' h with _ _ _ h
-    · simp
-    · have := mem_zip h
-      exact ⟨Mem.tail _ this.1, Mem.tail _ this.2⟩
+    simp
+    have := mem_zip h
+    exact ⟨Mem.tail _ this.1, Mem.tail _ this.2⟩
 
 theorem unzip_eq_map : ∀ l : List (α × β), unzip l = (l.map Prod.fst, l.map Prod.snd)
   | [] => rfl
@@ -123,8 +123,8 @@ theorem zipWith_comm (f : α → β → γ) :
 theorem zipWith_congr (f g : α → β → γ) (la : List α) (lb : List β)
     (h : List.Forall₂ (fun a b => f a b = g a b) la lb) : zipWith f la lb = zipWith g la lb := by
   induction' h with a b as bs hfg _ ih
-  · rfl
-  · exact congr_arg₂ _ hfg ih
+  rfl
+  exact congr_arg₂ _ hfg ih
 
 theorem zipWith_comm_of_comm (f : α → α → β) (comm : ∀ x y : α, f x y = f y x) (l l' : List α) :
     zipWith f l l' = zipWith f l' l := by
@@ -201,10 +201,10 @@ theorem revzip_swap (l : List α) : (revzip l).map Prod.swap = revzip l.reverse 
 theorem getElem?_zipWith' (f : α → β → γ) (l₁ : List α) (l₂ : List β) (i : ℕ) :
     (zipWith f l₁ l₂)[i]? = (l₁[i]?.map f).bind fun g => l₂[i]?.map g := by
   induction' l₁ with head tail generalizing l₂ i
-  · rw [zipWith] <;> simp
-  · cases l₂
-    · simp
-    · cases i <;> simp_all
+  rw [zipWith] <;> simp
+  cases l₂
+  simp
+  cases i <;> simp_all
 
 @[deprecated (since := "2024-07-29")] alias getElem?_zip_with := getElem?_zipWith'
 
@@ -218,8 +218,8 @@ theorem getElem?_zipWith_eq_some (f : α → β → γ) (l₁ : List α) (l₂ :
     (zipWith f l₁ l₂)[i]? = some z ↔
       ∃ x y, l₁[i]? = some x ∧ l₂[i]? = some y ∧ f x y = z := by
   induction l₁ generalizing l₂ i
-  · simp
-  · cases l₂ <;> cases i <;> simp_all
+  simp
+  cases l₂ <;> cases i <;> simp_all
 
 @[deprecated (since := "2024-07-29")] alias getElem?_zip_with_eq_some := getElem?_zipWith_eq_some
 
@@ -234,10 +234,10 @@ theorem getElem?_zip_eq_some (l₁ : List α) (l₂ : List β) (z : α × β) (i
     (zip l₁ l₂)[i]? = some z ↔ l₁[i]? = some z.1 ∧ l₂[i]? = some z.2 := by
   cases z
   rw [zip, getElem?_zipWith_eq_some]; constructor
-  · rintro ⟨x, y, h₀, h₁, h₂⟩
-    simpa [h₀, h₁] using h₂
-  · rintro ⟨h₀, h₁⟩
-    exact ⟨_, _, h₀, h₁, rfl⟩
+  rintro ⟨x, y, h₀, h₁, h₂⟩
+  simpa [h₀, h₁] using h₂
+  rintro ⟨h₀, h₁⟩
+  exact ⟨_, _, h₀, h₁, rfl⟩
 
 theorem get?_zip_eq_some (l₁ : List α) (l₂ : List β) (z : α × β) (i : ℕ) :
     (zip l₁ l₂).get? i = some z ↔ l₁.get? i = some z.1 ∧ l₂.get? i = some z.2 := by
@@ -291,27 +291,27 @@ theorem nthLe_zip {l : List α} {l' : List β} {i : ℕ} {h : i < (zip l l').len
 theorem mem_zip_inits_tails {l : List α} {init tail : List α} :
     (init, tail) ∈ zip l.inits l.tails ↔ init ++ tail = l := by
   induction' l with hd tl ih generalizing init tail <;> simp_rw [tails, inits, zip_cons_cons]
-  · simp
-  · constructor <;> rw [mem_cons, zip_map_left, mem_map, Prod.exists]
-    · rintro (⟨rfl, rfl⟩ | ⟨_, _, h, rfl, rfl⟩)
-      · simp
-      · simp [ih.mp h]
-    · cases' init with hd' tl'
-      · rintro rfl
-        simp
-      · intro h
-        right
-        use tl', tail
-        simp_all
+  simp
+  constructor <;> rw [mem_cons, zip_map_left, mem_map, Prod.exists]
+  rintro (⟨rfl, rfl⟩ | ⟨_, _, h, rfl, rfl⟩)
+  simp
+  simp [ih.mp h]
+  cases' init with hd' tl'
+  rintro rfl
+  simp
+  intro h
+  right
+  use tl', tail
+  simp_all
 
 theorem map_uncurry_zip_eq_zipWith (f : α → β → γ) (l : List α) (l' : List β) :
     map (Function.uncurry f) (l.zip l') = zipWith f l l' := by
   rw [zip]
   induction' l with hd tl hl generalizing l'
-  · simp
-  · cases' l' with hd' tl'
-    · simp
-    · simp [hl]
+  simp
+  cases' l' with hd' tl'
+  simp
+  simp [hl]
 
 section Distrib
 
@@ -323,13 +323,13 @@ variable (f : α → β → γ) (l : List α) (l' : List β) (n : ℕ)
 theorem zipWith_distrib_reverse (h : l.length = l'.length) :
     (zipWith f l l').reverse = zipWith f l.reverse l'.reverse := by
   induction' l with hd tl hl generalizing l'
-  · simp
-  · cases' l' with hd' tl'
-    · simp
-    · simp only [Nat.add_left_inj, length] at h
-      have : tl.reverse.length = tl'.reverse.length
-      simp [h]
-      simp [hl _ h, zipWith_append _ _ _ _ _ this]
+  simp
+  cases' l' with hd' tl'
+  simp
+  simp only [Nat.add_left_inj, length] at h
+  have : tl.reverse.length = tl'.reverse.length
+  simp [h]
+  simp [hl _ h, zipWith_append _ _ _ _ _ this]
 
 end Distrib
 

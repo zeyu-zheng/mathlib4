@@ -87,13 +87,13 @@ theorem firstMap_eq_secondMap : Equalizer.Presieve.Arrows.firstMap F X c.inj =
   simp only [Equalizer.Presieve.Arrows.firstMap, Types.pi_lift_π_apply, types_comp_apply,
     Equalizer.Presieve.Arrows.secondMap]
   by_cases hi : i = j
-  · rw [hi, Mono.right_cancellation _ _ pullback.condition]
-  · have := preservesTerminalOfIsSheafForEmpty F hF hI
-    apply_fun (F.mapIso ((hd hi).isoPullback).op ≪≫ F.mapIso (terminalIsoIsTerminal
-      (terminalOpOfInitial initialIsInitial)).symm ≪≫ (PreservesTerminal.iso F)).hom using
-      injective_of_mono _
-    ext ⟨i⟩
-    exact i.elim
+  rw [hi, Mono.right_cancellation _ _ pullback.condition]
+  have := preservesTerminalOfIsSheafForEmpty F hF hI
+  apply_fun (F.mapIso ((hd hi).isoPullback).op ≪≫ F.mapIso (terminalIsoIsTerminal
+    (terminalOpOfInitial initialIsInitial)).symm ≪≫ (PreservesTerminal.iso F)).hom using
+    injective_of_mono _
+  ext ⟨i⟩
+  exact i.elim
 
 theorem piComparison_fac :
     have : HasCoproduct X := ⟨⟨c, hc⟩⟩

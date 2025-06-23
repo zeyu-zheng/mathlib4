@@ -56,7 +56,7 @@ noncomputable abbrev rayleighQuotient (x : E) := T.reApplyInnerSelf x / ‖(x : 
 theorem rayleigh_smul (x : E) {c : 𝕜} (hc : c ≠ 0) :
     rayleighQuotient T (c • x) = rayleighQuotient T x := by
   by_cases hx : x = 0
-  · simp [hx]
+  simp [hx]
   have : ‖c‖ ≠ 0
   simp [hc]
   have : ‖x‖ ≠ 0
@@ -68,18 +68,18 @@ theorem image_rayleigh_eq_image_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     rayleighQuotient T '' {0}ᶜ = rayleighQuotient T '' sphere 0 r := by
   ext a
   constructor
-  · rintro ⟨x, hx : x ≠ 0, hxT⟩
-    have : ‖x‖ ≠ 0
-    simp [hx]
-    let c : 𝕜 := ↑‖x‖⁻¹ * r
-    have : c ≠ 0
-    simp [c, hx, hr.ne']
-    refine ⟨c • x, ?_, ?_⟩
-    · field_simp [c, norm_smul, abs_of_pos hr]
-    · rw [T.rayleigh_smul x this]
-      exact hxT
-  · rintro ⟨x, hx, hxT⟩
-    exact ⟨x, ne_zero_of_mem_sphere hr.ne' ⟨x, hx⟩, hxT⟩
+  rintro ⟨x, hx : x ≠ 0, hxT⟩
+  have : ‖x‖ ≠ 0
+  simp [hx]
+  let c : 𝕜 := ↑‖x‖⁻¹ * r
+  have : c ≠ 0
+  simp [c, hx, hr.ne']
+  refine ⟨c • x, ?_, ?_⟩
+  field_simp [c, norm_smul, abs_of_pos hr]
+  rw [T.rayleigh_smul x this]
+  exact hxT
+  rintro ⟨x, hx, hxT⟩
+  exact ⟨x, ne_zero_of_mem_sphere hr.ne' ⟨x, hx⟩, hxT⟩
 
 theorem iSup_rayleigh_eq_iSup_rayleigh_sphere {r : ℝ} (hr : 0 < r) :
     ⨆ x : { x : E // x ≠ 0 }, rayleighQuotient T x =
@@ -140,12 +140,12 @@ theorem eq_smul_self_of_isLocalExtrOn_real (hT : IsSelfAdjoint T) {x₀ : F}
     T x₀ = T.rayleighQuotient x₀ • x₀ := by
   obtain ⟨a, b, h₁, h₂⟩ := hT.linearly_dependent_of_isLocalExtrOn hextr
   by_cases hx₀ : x₀ = 0
-  · simp [hx₀]
+  simp [hx₀]
   by_cases hb : b = 0
-  · have : a ≠ 0 := by simpa [hb] using h₁
-    refine absurd ?_ hx₀
-    apply smul_right_injective F this
-    simpa [hb] using h₂
+  have : a ≠ 0 := by simpa [hb] using h₁
+  refine absurd ?_ hx₀
+  apply smul_right_injective F this
+  simpa [hb] using h₂
   let c : ℝ := -b⁻¹ * a
   have hc : T x₀ = c • x₀
   have : b * (b⁻¹ * a) = a

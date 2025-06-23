@@ -132,11 +132,11 @@ lemma compl_prod_eq_union {α β : Type*} (s : Set α) (t : Set β) :
   ext p
   simp only [mem_compl_iff, mem_prod, not_and, mem_union, mem_univ, and_true, true_and]
   constructor <;> intro h
-  · by_cases fst_in_s : p.fst ∈ s
-    · exact Or.inr (h fst_in_s)
-    · exact Or.inl fst_in_s
-  · intro fst_in_s
-    simpa only [fst_in_s, not_true, false_or] using h
+  by_cases fst_in_s : p.fst ∈ s
+  exact Or.inr (h fst_in_s)
+  exact Or.inl fst_in_s
+  intro fst_in_s
+  simpa only [fst_in_s, not_true, false_or] using h
 
 @[simp]
 theorem disjoint_prod : Disjoint (s₁ ×ˢ t₁) (s₂ ×ˢ t₂) ↔ Disjoint s₁ s₂ ∨ Disjoint t₁ t₂ := by
@@ -161,12 +161,12 @@ theorem prod_insert : s ×ˢ insert b t = (fun a => (a, b)) '' s ∪ s ×ˢ t :=
   -- was `simp (config := { contextual := true }) [image, iff_def, or_imp, Imp.swap]`
   simp only [mem_prod, mem_insert_iff, image, mem_union, mem_setOf_eq, Prod.mk.injEq]
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · obtain ⟨hx, rfl|hy⟩ := h
-    · exact Or.inl ⟨x, hx, rfl, rfl⟩
-    · exact Or.inr ⟨hx, hy⟩
-  · obtain ⟨x, hx, rfl, rfl⟩|⟨hx, hy⟩ := h
-    · exact ⟨hx, Or.inl rfl⟩
-    · exact ⟨hx, Or.inr hy⟩
+  obtain ⟨hx, rfl|hy⟩ := h
+  exact Or.inl ⟨x, hx, rfl, rfl⟩
+  exact Or.inr ⟨hx, hy⟩
+  obtain ⟨x, hx, rfl, rfl⟩|⟨hx, hy⟩ := h
+  exact ⟨hx, Or.inl rfl⟩
+  exact ⟨hx, Or.inr hy⟩
 
 theorem prod_preimage_eq {f : γ → α} {g : δ → β} :
     (f ⁻¹' s) ×ˢ (g ⁻¹' t) = (fun p : γ × δ => (f p.1, g p.2)) ⁻¹' s ×ˢ t :=
@@ -319,38 +319,38 @@ theorem prod_diff_prod : s ×ˢ t \ s₁ ×ˢ t₁ = s ×ˢ (t \ t₁) ∪ (s \ 
 first set is empty. -/
 theorem prod_subset_prod_iff : s ×ˢ t ⊆ s₁ ×ˢ t₁ ↔ s ⊆ s₁ ∧ t ⊆ t₁ ∨ s = ∅ ∨ t = ∅ := by
   rcases (s ×ˢ t).eq_empty_or_nonempty with h | h
-  · simp [h, prod_eq_empty_iff.1 h]
+  simp [h, prod_eq_empty_iff.1 h]
   have st : s.Nonempty ∧ t.Nonempty
   rwa [prod_nonempty_iff] at h
   refine ⟨fun H => Or.inl ⟨?_, ?_⟩, ?_⟩
-  · have := image_subset (Prod.fst : α × β → α) H
-    rwa [fst_image_prod _ st.2, fst_image_prod _ (h.mono H).snd] at this
-  · have := image_subset (Prod.snd : α × β → β) H
-    rwa [snd_image_prod st.1, snd_image_prod (h.mono H).fst] at this
-  · intro H
-    simp only [st.1.ne_empty, st.2.ne_empty, or_false_iff] at H
-    exact prod_mono H.1 H.2
+  have := image_subset (Prod.fst : α × β → α) H
+  rwa [fst_image_prod _ st.2, fst_image_prod _ (h.mono H).snd] at this
+  have := image_subset (Prod.snd : α × β → β) H
+  rwa [snd_image_prod st.1, snd_image_prod (h.mono H).fst] at this
+  intro H
+  simp only [st.1.ne_empty, st.2.ne_empty, or_false_iff] at H
+  exact prod_mono H.1 H.2
 
 theorem prod_eq_prod_iff_of_nonempty (h : (s ×ˢ t).Nonempty) :
     s ×ˢ t = s₁ ×ˢ t₁ ↔ s = s₁ ∧ t = t₁ := by
   constructor
-  · intro heq
-    have h₁ : (s₁ ×ˢ t₁ : Set _).Nonempty
-    rwa [← heq]
-    rw [prod_nonempty_iff] at h h₁
-    rw [← fst_image_prod s h.2, ← fst_image_prod s₁ h₁.2, heq, eq_self_iff_true, true_and_iff, ←
-      snd_image_prod h.1 t, ← snd_image_prod h₁.1 t₁, heq]
-  · rintro ⟨rfl, rfl⟩
-    rfl
+  intro heq
+  have h₁ : (s₁ ×ˢ t₁ : Set _).Nonempty
+  rwa [← heq]
+  rw [prod_nonempty_iff] at h h₁
+  rw [← fst_image_prod s h.2, ← fst_image_prod s₁ h₁.2, heq, eq_self_iff_true, true_and_iff, ←
+    snd_image_prod h.1 t, ← snd_image_prod h₁.1 t₁, heq]
+  rintro ⟨rfl, rfl⟩
+  rfl
 
 theorem prod_eq_prod_iff :
     s ×ˢ t = s₁ ×ˢ t₁ ↔ s = s₁ ∧ t = t₁ ∨ (s = ∅ ∨ t = ∅) ∧ (s₁ = ∅ ∨ t₁ = ∅) := by
   symm
   rcases eq_empty_or_nonempty (s ×ˢ t) with h | h
-  · simp_rw [h, @eq_comm _ ∅, prod_eq_empty_iff, prod_eq_empty_iff.mp h, true_and_iff,
-      or_iff_right_iff_imp]
-    rintro ⟨rfl, rfl⟩
-    exact prod_eq_empty_iff.mp h
+  simp_rw [h, @eq_comm _ ∅, prod_eq_empty_iff, prod_eq_empty_iff.mp h, true_and_iff,
+    or_iff_right_iff_imp]
+  rintro ⟨rfl, rfl⟩
+  exact prod_eq_empty_iff.mp h
   rw [prod_eq_prod_iff_of_nonempty h]
   rw [nonempty_iff_ne_empty, Ne, prod_eq_empty_iff] at h
   simp_rw [h, false_and_iff, or_false_iff]
@@ -440,8 +440,8 @@ theorem range_const_eq_diagonal {α β : Type*} [hβ : Nonempty β] :
     range (const α) = {f : α → β | ∀ x y, f x = f y} := by
   refine (range_eq_iff _ _).mpr ⟨fun _ _ _ ↦ rfl, fun f hf ↦ ?_⟩
   rcases isEmpty_or_nonempty α with h|⟨⟨a⟩⟩
-  · exact hβ.elim fun b ↦ ⟨b, Subsingleton.elim _ _⟩
-  · exact ⟨f a, funext fun x ↦ hf _ _⟩
+  exact hβ.elim fun b ↦ ⟨b, Subsingleton.elim _ _⟩
+  exact ⟨f a, funext fun x ↦ hf _ _⟩
 
 end Set
 
@@ -510,11 +510,11 @@ theorem image_toPullbackDiag (f : X → Y) (s : Set X) :
     toPullbackDiag f '' s = pullbackDiagonal f ∩ Subtype.val ⁻¹' s ×ˢ s := by
   ext x
   constructor
-  · rintro ⟨x, hx, rfl⟩
-    exact ⟨rfl, hx, hx⟩
-  · obtain ⟨⟨x, y⟩, h⟩ := x
-    rintro ⟨rfl : x = y, h2x⟩
-    exact mem_image_of_mem _ h2x.1
+  rintro ⟨x, hx, rfl⟩
+  exact ⟨rfl, hx, hx⟩
+  obtain ⟨⟨x, y⟩, h⟩ := x
+  rintro ⟨rfl : x = y, h2x⟩
+  exact mem_image_of_mem _ h2x.1
 
 theorem range_toPullbackDiag (f : X → Y) : range (toPullbackDiag f) = pullbackDiagonal f := by
   rw [← image_univ, image_toPullbackDiag, univ_prod_univ, preimage_univ, inter_univ]
@@ -582,14 +582,14 @@ theorem offDiag_union (h : Disjoint s t) :
   ext x
   simp only [mem_offDiag, mem_union, ne_eq, mem_prod]
   constructor
-  · rintro ⟨h0|h0, h1|h1, h2⟩ <;> simp [h0, h1, h2]
-  · rintro (((⟨h0, h1, h2⟩|⟨h0, h1, h2⟩)|⟨h0, h1⟩)|⟨h0, h1⟩) <;> simp [*]
-    · rintro h3
-      rw [h3] at h0
-      exact Set.disjoint_left.mp h h0 h1
-    · rintro h3
-      rw [h3] at h0
-      exact (Set.disjoint_right.mp h h0 h1).elim
+  rintro ⟨h0|h0, h1|h1, h2⟩ <;> simp [h0, h1, h2]
+  rintro (((⟨h0, h1, h2⟩|⟨h0, h1, h2⟩)|⟨h0, h1⟩)|⟨h0, h1⟩) <;> simp [*]
+  rintro h3
+  rw [h3] at h0
+  exact Set.disjoint_left.mp h h0 h1
+  rintro h3
+  rw [h3] at h0
+  exact (Set.disjoint_right.mp h h0 h1).elim
 
 theorem offDiag_insert (ha : a ∉ s) : (insert a s).offDiag = s.offDiag ∪ {a} ×ˢ s ∪ s ×ˢ {a} := by
   rw [insert_eq, union_comm, offDiag_union, offDiag_singleton, union_empty, union_right_comm]
@@ -686,10 +686,10 @@ end Nonempty
 theorem range_dcomp (f : ∀ i, α i → β i) :
     (range fun g : ∀ i, α i => fun i => f i (g i)) = pi univ fun i => range (f i) := by
   refine Subset.antisymm ?_ fun x hx => ?_
-  · rintro _ ⟨x, rfl⟩ i -
-    exact ⟨x i, rfl⟩
-  · choose y hy using hx
-    exact ⟨fun i => y i trivial, funext fun i => hy i trivial⟩
+  rintro _ ⟨x, rfl⟩ i -
+  exact ⟨x i, rfl⟩
+  choose y hy using hx
+  exact ⟨fun i => y i trivial, funext fun i => hy i trivial⟩
 
 @[simp]
 theorem insert_pi (i : ι) (s : Set ι) (t : ∀ i, Set (α i)) :
@@ -717,11 +717,11 @@ theorem pi_if {p : ι → Prop} [h : DecidablePred p] (s : Set ι) (t₁ t₂ : 
       pi ({ i ∈ s | p i }) t₁ ∩ pi ({ i ∈ s | ¬p i }) t₂ := by
   ext f
   refine ⟨fun h => ?_, ?_⟩
-  · constructor <;>
-      · rintro i ⟨his, hpi⟩
-        simpa [*] using h i
-  · rintro ⟨ht₁, ht₂⟩ i his
-    by_cases p i <;> simp_all
+  constructor <;>
+  · rintro i ⟨his, hpi⟩
+    simpa [*] using h i
+  rintro ⟨ht₁, ht₂⟩ i his
+  by_cases p i <;> simp_all
 
 theorem union_pi : (s₁ ∪ s₂).pi t = s₁.pi t ∩ s₂.pi t := by
   simp [pi, or_imp, forall_and, setOf_and]
@@ -734,16 +734,16 @@ theorem union_pi_inter
   refine ⟨fun h ↦ ⟨fun i his₁ ↦ (h i (Or.inl his₁)).1, fun i his₂ ↦ (h i (Or.inr his₂)).2⟩,
     fun h i hi ↦ ?_⟩
   cases' hi with hi hi
-  · by_cases hi2 : i ∈ s₂
-    · exact ⟨h.1 i hi, h.2 i hi2⟩
-    · refine ⟨h.1 i hi, ?_⟩
-      rw [ht₂ i hi2]
-      exact mem_univ _
-  · by_cases hi1 : i ∈ s₁
-    · exact ⟨h.1 i hi1, h.2 i hi⟩
-    · refine ⟨?_, h.2 i hi⟩
-      rw [ht₁ i hi1]
-      exact mem_univ _
+  by_cases hi2 : i ∈ s₂
+  exact ⟨h.1 i hi, h.2 i hi2⟩
+  refine ⟨h.1 i hi, ?_⟩
+  rw [ht₂ i hi2]
+  exact mem_univ _
+  by_cases hi1 : i ∈ s₁
+  exact ⟨h.1 i hi1, h.2 i hi⟩
+  refine ⟨?_, h.2 i hi⟩
+  rw [ht₁ i hi1]
+  exact mem_univ _
 
 @[simp]
 theorem pi_inter_compl (s : Set ι) : pi s t ∩ pi sᶜ t = pi univ t := by
@@ -794,11 +794,11 @@ lemma eval_image_pi_of_not_mem [Decidable (s.pi t).Nonempty] (hi : i ∉ s) :
   ext xᵢ
   simp only [eval, mem_image, mem_pi, Set.Nonempty, mem_ite_empty_right, mem_univ, and_true]
   constructor
-  · rintro ⟨x, hx, rfl⟩
-    exact ⟨x, hx⟩
-  · rintro ⟨x, hx⟩
-    refine ⟨Function.update x i xᵢ, ?_⟩
-    simpa (config := { contextual := true }) [(ne_of_mem_of_not_mem · hi)]
+  rintro ⟨x, hx, rfl⟩
+  exact ⟨x, hx⟩
+  rintro ⟨x, hx⟩
+  refine ⟨Function.update x i xᵢ, ?_⟩
+  simpa (config := { contextual := true }) [(ne_of_mem_of_not_mem · hi)]
 
 @[simp]
 theorem eval_image_univ_pi (ht : (pi univ t).Nonempty) :
@@ -830,12 +830,12 @@ theorem update_preimage_pi [DecidableEq ι] {f : ∀ i, α i} (hi : i ∈ s)
     (hf : ∀ j ∈ s, j ≠ i → f j ∈ t j) : update f i ⁻¹' s.pi t = t i := by
   ext x
   refine ⟨fun h => ?_, fun hx j hj => ?_⟩
-  · convert h i hi
-    simp
-  · obtain rfl | h := eq_or_ne j i
-    · simpa
-    · rw [update_noteq h]
-      exact hf j hj h
+  convert h i hi
+  simp
+  obtain rfl | h := eq_or_ne j i
+  simpa
+  rw [update_noteq h]
+  exact hf j hj h
 
 theorem update_image [DecidableEq ι] (x : (i : ι) → β i) (i : ι) (s : Set (β i)) :
     update x i '' s = Set.univ.pi (update (fun j ↦ {x j}) i s) := by
@@ -889,7 +889,7 @@ theorem sumPiEquivProdPi_symm_preimage_univ_pi (π : ι ⊕ ι' → Type*) (t : 
   ext
   simp_rw [mem_preimage, mem_prod, mem_univ_pi, sumPiEquivProdPi_symm_apply]
   constructor
-  · intro h; constructor <;> intro i <;> apply h
-  · rintro ⟨h₁, h₂⟩ (i|i) <;> simp <;> apply_assumption
+  intro h; constructor <;> intro i <;> apply h
+  rintro ⟨h₁, h₂⟩ (i|i) <;> simp <;> apply_assumption
 
 end Equiv

@@ -117,11 +117,11 @@ lemma isRightKanExtension_iff_of_iso {F' F'' : D ⥤ H} (e : F' ≅ F'') {L : C 
     (α : L ⋙ F' ⟶ F) (α' : L ⋙ F'' ⟶ F) (comm : whiskerLeft L e.hom ≫ α' = α) :
     F'.IsRightKanExtension α ↔ F''.IsRightKanExtension α' := by
   constructor
-  · intro
-    exact isRightKanExtension_of_iso e α α' comm
-  · intro
-    refine isRightKanExtension_of_iso e.symm α' α ?_
-    rw [← comm, ← whiskerLeft_comp_assoc, Iso.symm_hom, e.inv_hom_id, whiskerLeft_id', id_comp]
+  intro
+  exact isRightKanExtension_of_iso e α α' comm
+  intro
+  refine isRightKanExtension_of_iso e.symm α' α ?_
+  rw [← comm, ← whiskerLeft_comp_assoc, Iso.symm_hom, e.inv_hom_id, whiskerLeft_id', id_comp]
 
 /-- Right Kan extensions of isomorphic functors are isomorphic. -/
 @[simps]
@@ -144,13 +144,13 @@ lemma isRightKanExtension_iff_isIso {F' : D ⥤ H} {F'' : D ⥤ H} (φ : F'' ⟶
     (comm : whiskerLeft L φ ≫ α = α') [F'.IsRightKanExtension α] :
     F''.IsRightKanExtension α' ↔ IsIso φ := by
   constructor
-  · intro
-    rw [F'.hom_ext_of_isRightKanExtension α φ (rightKanExtensionUnique _ α' _ α).hom
-      (by simp [comm])]
-    infer_instance
-  · intro
-    rw [isRightKanExtension_iff_of_iso (asIso φ) α' α comm]
-    infer_instance
+  intro
+  rw [F'.hom_ext_of_isRightKanExtension α φ (rightKanExtensionUnique _ α' _ α).hom
+    (by simp [comm])]
+  infer_instance
+  intro
+  rw [isRightKanExtension_iff_of_iso (asIso φ) α' α comm]
+  infer_instance
 end
 
 section
@@ -210,11 +210,11 @@ lemma isLeftKanExtension_iff_of_iso {F' F'' : D ⥤ H} (e : F' ≅ F'')
     (comm : α ≫ whiskerLeft L e.hom = α') :
     F'.IsLeftKanExtension α ↔ F''.IsLeftKanExtension α' := by
   constructor
-  · intro
-    exact isLeftKanExtension_of_iso e α α' comm
-  · intro
-    refine isLeftKanExtension_of_iso e.symm α' α ?_
-    rw [← comm, assoc, ← whiskerLeft_comp, Iso.symm_hom, e.hom_inv_id, whiskerLeft_id', comp_id]
+  intro
+  exact isLeftKanExtension_of_iso e α α' comm
+  intro
+  refine isLeftKanExtension_of_iso e.symm α' α ?_
+  rw [← comm, assoc, ← whiskerLeft_comp, Iso.symm_hom, e.hom_inv_id, whiskerLeft_id', comp_id]
 
 /-- Left Kan extensions of isomorphic functors are isomorphic. -/
 @[simps]
@@ -236,12 +236,12 @@ lemma isLeftKanExtension_iff_isIso {F' : D ⥤ H} {F'' : D ⥤ H} (φ : F' ⟶ F
     (comm : α ≫ whiskerLeft L φ = α') [F'.IsLeftKanExtension α] :
     F''.IsLeftKanExtension α' ↔ IsIso φ := by
   constructor
-  · intro
-    rw [F'.hom_ext_of_isLeftKanExtension α φ (leftKanExtensionUnique _ α _ α').hom
-      (by simp [comm])]
-    infer_instance
-  · intro
-    exact isLeftKanExtension_of_iso (asIso φ) α α' comm
+  intro
+  rw [F'.hom_ext_of_isLeftKanExtension α φ (leftKanExtensionUnique _ α _ α').hom
+    (by simp [comm])]
+  infer_instance
+  intro
+  exact isLeftKanExtension_of_iso (asIso φ) α α' comm
 
 end
 
@@ -371,8 +371,8 @@ lemma isLeftKanExtension_iff_postcomp₁ (α : F ⟶ L' ⋙ F') :
     (LeftExtension.isUniversalPostcomp₁Equiv G e F _).trans
     (IsInitial.equivOfIso (StructuredArrow.isoMk (Iso.refl _)))
   constructor
-  · exact fun _ => ⟨⟨eq (isUniversalOfIsLeftKanExtension _ _)⟩⟩
-  · exact fun _ => ⟨⟨eq.symm (isUniversalOfIsLeftKanExtension _ _)⟩⟩
+  exact fun _ => ⟨⟨eq (isUniversalOfIsLeftKanExtension _ _)⟩⟩
+  exact fun _ => ⟨⟨eq.symm (isUniversalOfIsLeftKanExtension _ _)⟩⟩
 
 lemma isRightKanExtension_iff_postcomp₁ (α : L' ⋙ F' ⟶ F) :
     F'.IsRightKanExtension α ↔ (G ⋙ F').IsRightKanExtension
@@ -383,8 +383,8 @@ lemma isRightKanExtension_iff_postcomp₁ (α : L' ⋙ F' ⟶ F) :
   (RightExtension.isUniversalPostcomp₁Equiv G e F _).trans
     (IsTerminal.equivOfIso (CostructuredArrow.isoMk (Iso.refl _)))
   constructor
-  · exact fun _ => ⟨⟨eq (isUniversalOfIsRightKanExtension _ _)⟩⟩
-  · exact fun _ => ⟨⟨eq.symm (isUniversalOfIsRightKanExtension _ _)⟩⟩
+  exact fun _ => ⟨⟨eq (isUniversalOfIsRightKanExtension _ _)⟩⟩
+  exact fun _ => ⟨⟨eq.symm (isUniversalOfIsRightKanExtension _ _)⟩⟩
 
 end
 
@@ -434,8 +434,8 @@ lemma isLeftKanExtension_iff_precomp (α : F ⟶ L ⋙ F') :
     (LeftExtension.isUniversalPrecompEquiv L F G _).trans
     (IsInitial.equivOfIso (StructuredArrow.isoMk (Iso.refl _)))
   constructor
-  · exact fun _ => ⟨⟨eq (isUniversalOfIsLeftKanExtension _ _)⟩⟩
-  · exact fun _ => ⟨⟨eq.symm (isUniversalOfIsLeftKanExtension _ _)⟩⟩
+  exact fun _ => ⟨⟨eq (isUniversalOfIsLeftKanExtension _ _)⟩⟩
+  exact fun _ => ⟨⟨eq.symm (isUniversalOfIsLeftKanExtension _ _)⟩⟩
 
 lemma isRightKanExtension_iff_precomp (α : L ⋙ F' ⟶ F) :
     F'.IsRightKanExtension α ↔
@@ -445,8 +445,8 @@ lemma isRightKanExtension_iff_precomp (α : L ⋙ F' ⟶ F) :
     (RightExtension.isUniversalPrecompEquiv L F G _).trans
     (IsTerminal.equivOfIso (CostructuredArrow.isoMk (Iso.refl _)))
   constructor
-  · exact fun _ => ⟨⟨eq (isUniversalOfIsRightKanExtension _ _)⟩⟩
-  · exact fun _ => ⟨⟨eq.symm (isUniversalOfIsRightKanExtension _ _)⟩⟩
+  exact fun _ => ⟨⟨eq (isUniversalOfIsRightKanExtension _ _)⟩⟩
+  exact fun _ => ⟨⟨eq.symm (isUniversalOfIsRightKanExtension _ _)⟩⟩
 
 end
 
@@ -516,8 +516,8 @@ lemma isLeftKanExtension_iff_of_iso₂ {F₁' F₂' : D ⥤ H} (α₁ : F₁ ⟶
   let eq := LeftExtension.isUniversalEquivOfIso₂ (LeftExtension.mk _ α₁)
     (LeftExtension.mk _ α₂) e e' h
   constructor
-  · exact fun _ => ⟨⟨eq.1 (isUniversalOfIsLeftKanExtension F₁' α₁)⟩⟩
-  · exact fun _ => ⟨⟨eq.2 (isUniversalOfIsLeftKanExtension F₂' α₂)⟩⟩
+  exact fun _ => ⟨⟨eq.1 (isUniversalOfIsLeftKanExtension F₁' α₁)⟩⟩
+  exact fun _ => ⟨⟨eq.2 (isUniversalOfIsLeftKanExtension F₂' α₂)⟩⟩
 
 /-- When two right extensions `α₁ : RightExtension L F₁` and `α₂ : RightExtension L F₂`
 are essentially the same via an isomorphism of functors `F₁ ≅ F₂`,
@@ -537,8 +537,8 @@ lemma isRightKanExtension_iff_of_iso₂ {F₁' F₂' : D ⥤ H} (α₁ : L ⋙ F
   let eq := RightExtension.isUniversalEquivOfIso₂ (RightExtension.mk _ α₁)
     (RightExtension.mk _ α₂) e e' h
   constructor
-  · exact fun _ => ⟨⟨eq.1 (isUniversalOfIsRightKanExtension F₁' α₁)⟩⟩
-  · exact fun _ => ⟨⟨eq.2 (isUniversalOfIsRightKanExtension F₂' α₂)⟩⟩
+  exact fun _ => ⟨⟨eq.1 (isUniversalOfIsRightKanExtension F₁' α₁)⟩⟩
+  exact fun _ => ⟨⟨eq.2 (isUniversalOfIsRightKanExtension F₂' α₂)⟩⟩
 
 end
 

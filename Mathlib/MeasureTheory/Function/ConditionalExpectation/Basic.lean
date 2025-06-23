@@ -115,8 +115,8 @@ theorem condexp_of_sigmaFinite (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)]
   rw [condexp, dif_pos hm]
   simp only [hμm, Ne, true_and_iff]
   by_cases hf : Integrable f μ
-  · rw [dif_pos hf, if_pos hf]
-  · rw [dif_neg hf, if_neg hf]
+  rw [dif_pos hf, if_pos hf]
+  rw [dif_neg hf, if_neg hf]
 
 theorem condexp_of_stronglyMeasurable (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)] {f : α → F'}
     (hf : StronglyMeasurable[m] f) (hfi : Integrable f μ) : μ[f|m] = f := by
@@ -130,13 +130,13 @@ theorem condexp_ae_eq_condexpL1 (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)
     μ[f|m] =ᵐ[μ] condexpL1 hm μ f := by
   rw [condexp_of_sigmaFinite hm]
   by_cases hfi : Integrable f μ
-  · rw [if_pos hfi]
-    by_cases hfm : StronglyMeasurable[m] f
-    · rw [if_pos hfm]
-      exact (condexpL1_of_aestronglyMeasurable' (StronglyMeasurable.aeStronglyMeasurable' hfm)
-        hfi).symm
-    · rw [if_neg hfm]
-      exact (AEStronglyMeasurable'.ae_eq_mk aestronglyMeasurable'_condexpL1).symm
+  rw [if_pos hfi]
+  by_cases hfm : StronglyMeasurable[m] f
+  rw [if_pos hfm]
+  exact (condexpL1_of_aestronglyMeasurable' (StronglyMeasurable.aeStronglyMeasurable' hfm)
+    hfi).symm
+  rw [if_neg hfm]
+  exact (AEStronglyMeasurable'.ae_eq_mk aestronglyMeasurable'_condexpL1).symm
   rw [if_neg hfi, condexpL1_undef hfi]
   exact (coeFn_zero _ _ _).symm
 
@@ -171,9 +171,9 @@ theorem stronglyMeasurable_condexp : StronglyMeasurable[m] (μ[f|m]) := by
   haveI : SigmaFinite (μ.trim hm) := hμm
   rw [condexp_of_sigmaFinite hm]
   split_ifs with hfi hfm
-  · exact hfm
-  · exact AEStronglyMeasurable'.stronglyMeasurable_mk _
-  · exact stronglyMeasurable_zero
+  exact hfm
+  exact AEStronglyMeasurable'.stronglyMeasurable_mk _
+  exact stronglyMeasurable_zero
 
 theorem condexp_congr_ae (h : f =ᵐ[μ] g) : μ[f|m] =ᵐ[μ] μ[g|m] := by
   by_cases hm : m ≤ m0
@@ -211,9 +211,9 @@ theorem setIntegral_condexp (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (hf : Int
 theorem integral_condexp (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)] :
     ∫ x, (μ[f|m]) x ∂μ = ∫ x, f x ∂μ := by
   by_cases hf : Integrable f μ
-  · suffices ∫ x in Set.univ, (μ[f|m]) x ∂μ = ∫ x in Set.univ, f x ∂μ by
-      simp_rw [integral_univ] at this; exact this
-    exact setIntegral_condexp hm hf (@MeasurableSet.univ _ m)
+  suffices ∫ x in Set.univ, (μ[f|m]) x ∂μ = ∫ x in Set.univ, f x ∂μ by
+    simp_rw [integral_univ] at this; exact this
+  exact setIntegral_condexp hm hf (@MeasurableSet.univ _ m)
   simp only [condexp_undef hf, Pi.zero_apply, integral_zero, integral_undef hf]
 
 /-- Total probability law using `condexp` as conditional probability. -/
@@ -242,11 +242,11 @@ theorem condexp_bot' [hμ : NeZero μ] (f : α → F') :
     μ[f|⊥] = fun _ => (μ Set.univ).toReal⁻¹ • ∫ x, f x ∂μ := by
   by_cases hμ_finite : IsFiniteMeasure μ
   swap
-  · have h : ¬SigmaFinite (μ.trim bot_le) := by rwa [sigmaFinite_trim_bot_iff]
-    rw [not_isFiniteMeasure_iff] at hμ_finite
-    rw [condexp_of_not_sigmaFinite bot_le h]
-    simp only [hμ_finite, ENNReal.top_toReal, inv_zero, zero_smul]
-    rfl
+  have h : ¬SigmaFinite (μ.trim bot_le) := by rwa [sigmaFinite_trim_bot_iff]
+  rw [not_isFiniteMeasure_iff] at hμ_finite
+  rw [condexp_of_not_sigmaFinite bot_le h]
+  simp only [hμ_finite, ENNReal.top_toReal, inv_zero, zero_smul]
+  rfl
   have h_meas : StronglyMeasurable[⊥] (μ[f|⊥]) := stronglyMeasurable_condexp
   obtain ⟨c, h_eq⟩ := stronglyMeasurable_bot_iff.mp h_meas
   rw [h_eq]
@@ -259,8 +259,8 @@ theorem condexp_bot' [hμ : NeZero μ] (f : α → F') :
 theorem condexp_bot_ae_eq (f : α → F') :
     μ[f|⊥] =ᵐ[μ] fun _ => (μ Set.univ).toReal⁻¹ • ∫ x, f x ∂μ := by
   rcases eq_zero_or_neZero μ with rfl | hμ
-  · rw [ae_zero]; exact eventually_bot
-  · exact eventually_of_forall <| congr_fun (condexp_bot' f)
+  rw [ae_zero]; exact eventually_bot
+  exact eventually_of_forall <| congr_fun (condexp_bot' f)
 
 theorem condexp_bot [IsProbabilityMeasure μ] (f : α → F') : μ[f|⊥] = fun _ => ∫ x, f x ∂μ := by
   refine (condexp_bot' f).trans ?_; rw [measure_univ, ENNReal.one_toReal, inv_one, one_smul]
@@ -280,11 +280,11 @@ theorem condexp_add (hf : Integrable f μ) (hg : Integrable g μ) :
 theorem condexp_finset_sum {ι : Type*} {s : Finset ι} {f : ι → α → F'}
     (hf : ∀ i ∈ s, Integrable (f i) μ) : μ[∑ i ∈ s, f i|m] =ᵐ[μ] ∑ i ∈ s, μ[f i|m] := by
   induction' s using Finset.induction_on with i s his heq hf
-  · rw [Finset.sum_empty, Finset.sum_empty, condexp_zero]
-  · rw [Finset.sum_insert his, Finset.sum_insert his]
-    exact (condexp_add (hf i <| Finset.mem_insert_self i s) <|
-      integrable_finset_sum' _ fun j hmem => hf j <| Finset.mem_insert_of_mem hmem).trans
-        ((EventuallyEq.refl _ _).add (heq fun j hmem => hf j <| Finset.mem_insert_of_mem hmem))
+  rw [Finset.sum_empty, Finset.sum_empty, condexp_zero]
+  rw [Finset.sum_insert his, Finset.sum_insert his]
+  exact (condexp_add (hf i <| Finset.mem_insert_self i s) <|
+    integrable_finset_sum' _ fun j hmem => hf j <| Finset.mem_insert_of_mem hmem).trans
+      ((EventuallyEq.refl _ _).add (heq fun j hmem => hf j <| Finset.mem_insert_of_mem hmem))
 
 theorem condexp_smul (c : 𝕜) (f : α → F') : μ[c • f|m] =ᵐ[μ] c • μ[f|m] := by
   by_cases hm : m ≤ m0
@@ -340,15 +340,15 @@ theorem condexp_mono {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [Normed
 theorem condexp_nonneg {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E]
     [OrderedSMul ℝ E] {f : α → E} (hf : 0 ≤ᵐ[μ] f) : 0 ≤ᵐ[μ] μ[f|m] := by
   by_cases hfint : Integrable f μ
-  · rw [(condexp_zero.symm : (0 : α → E) = μ[0|m])]
-    exact condexp_mono (integrable_zero _ _ _) hfint hf
+  rw [(condexp_zero.symm : (0 : α → E) = μ[0|m])]
+  exact condexp_mono (integrable_zero _ _ _) hfint hf
   · rw [condexp_undef hfint]
 
 theorem condexp_nonpos {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E]
     [OrderedSMul ℝ E] {f : α → E} (hf : f ≤ᵐ[μ] 0) : μ[f|m] ≤ᵐ[μ] 0 := by
   by_cases hfint : Integrable f μ
-  · rw [(condexp_zero.symm : (0 : α → E) = μ[0|m])]
-    exact condexp_mono hfint (integrable_zero _ _ _) hf
+  rw [(condexp_zero.symm : (0 : α → E) = μ[0|m])]
+  exact condexp_mono hfint (integrable_zero _ _ _) hf
   · rw [condexp_undef hfint]
 
 /-- **Lebesgue dominated convergence theorem**: sufficient conditions under which almost

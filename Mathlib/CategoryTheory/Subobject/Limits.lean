@@ -205,8 +205,8 @@ theorem kernelSubobject_comp_mono (f : X ⟶ Y) [HasKernel f] {Z : C} (h : Y ⟶
 instance kernelSubobject_comp_mono_isIso (f : X ⟶ Y) [HasKernel f] {Z : C} (h : Y ⟶ Z) [Mono h] :
     IsIso (Subobject.ofLE _ _ (kernelSubobject_comp_le f h)) := by
   rw [ofLE_mk_le_mk_of_comm (kernelCompMono f h).inv]
-  · infer_instance
-  · simp
+  infer_instance
+  simp
 
 /-- Taking cokernels is an order-reversing map from the subobjects of `X` to the quotient objects
     of `X`. -/
@@ -344,8 +344,8 @@ although it will when the ambient category is abelian.
 instance imageSubobject_comp_le_epi_of_epi {X' : C} (h : X' ⟶ X) [Epi h] (f : X ⟶ Y) [HasImage f]
     [HasImage (h ≫ f)] : Epi (Subobject.ofLE _ _ (imageSubobject_comp_le h f)) := by
   rw [ofLE_mk_le_mk_of_comm (image.preComp h f)]
-  · infer_instance
-  · simp
+  infer_instance
+  simp
 
 end
 

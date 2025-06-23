@@ -239,12 +239,12 @@ theorem isBasis_basicOpen (X : Scheme) [IsAffine X] :
   ext
   simp only [Set.mem_image, exists_exists_eq_and]
   constructor
-  · rintro ⟨_, ⟨x, rfl⟩, rfl⟩
-    refine ⟨_, ⟨_, ⟨x, rfl⟩, rfl⟩, ?_⟩
-    exact congr_arg Opens.carrier (ΓSpec.adjunction_unit_map_basicOpen _ _)
-  · rintro ⟨_, ⟨_, ⟨x, rfl⟩, rfl⟩, rfl⟩
-    refine ⟨_, ⟨x, rfl⟩, ?_⟩
-    exact congr_arg Opens.carrier (ΓSpec.adjunction_unit_map_basicOpen _ _).symm
+  rintro ⟨_, ⟨x, rfl⟩, rfl⟩
+  refine ⟨_, ⟨_, ⟨x, rfl⟩, rfl⟩, ?_⟩
+  exact congr_arg Opens.carrier (ΓSpec.adjunction_unit_map_basicOpen _ _)
+  rintro ⟨_, ⟨_, ⟨x, rfl⟩, rfl⟩, rfl⟩
+  refine ⟨_, ⟨x, rfl⟩, ?_⟩
+  exact congr_arg Opens.carrier (ΓSpec.adjunction_unit_map_basicOpen _ _).symm
 
 namespace IsAffineOpen
 
@@ -267,7 +267,7 @@ theorem range_fromSpec :
     Set.range hU.fromSpec.1.base = (U : Set X) := by
   delta IsAffineOpen.fromSpec; dsimp
   rw [Function.comp.assoc, Set.range_comp, Set.range_iff_surjective.mpr, Set.image_univ]
-  · exact Subtype.range_coe
+  exact Subtype.range_coe
   erw [← coe_comp, ← TopCat.epi_iff_surjective] -- now `erw` after #13170
   infer_instance
 
@@ -310,11 +310,11 @@ theorem _root_.AlgebraicGeometry.Scheme.Hom.isAffineOpen_iff_of_isOpenImmersion
   refine ⟨fun hU => @isAffine_of_isIso _ _
     (IsOpenImmersion.isoOfRangeEq (X.ofRestrict U.openEmbedding ≫ f) (Y.ofRestrict _) ?_).hom ?_ hU,
     fun hU => hU.image_of_isOpenImmersion f⟩
-  · erw [Scheme.comp_val_base, coe_comp, Set.range_comp] -- now `erw` after #13170
-    dsimp [Opens.coe_inclusion, Scheme.restrict]
-    erw [Subtype.range_coe, Subtype.range_coe] -- now `erw` after #13170
-    rfl
-  · infer_instance
+  erw [Scheme.comp_val_base, coe_comp, Set.range_comp] -- now `erw` after #13170
+  dsimp [Opens.coe_inclusion, Scheme.restrict]
+  erw [Subtype.range_coe, Subtype.range_coe] -- now `erw` after #13170
+  rfl
+  infer_instance
 
 /-- The affine open sets of an open subscheme corresponds to
 the affine open sets containing in the image. -/
@@ -574,30 +574,30 @@ See `iSup_basicOpen_of_span_eq_top` for the inverse direction without the affine
 theorem basicOpen_union_eq_self_iff (s : Set Γ(X, U)) :
     ⨆ f : s, X.basicOpen (f : Γ(X, U)) = U ↔ Ideal.span s = ⊤ := by
   trans ⋃ i : s, (PrimeSpectrum.basicOpen i.1).1 = Set.univ
-  · trans
-      hU.fromSpec.1.base ⁻¹' (⨆ f : s, X.basicOpen (f : Γ(X, U))).1 =
-        hU.fromSpec.1.base ⁻¹' U.1
-    · refine ⟨fun h => by rw [h], ?_⟩
-      intro h
-      apply_fun Set.image hU.fromSpec.1.base at h
-      rw [Set.image_preimage_eq_inter_range, Set.image_preimage_eq_inter_range, hU.range_fromSpec]
-        at h
-      simp only [Set.inter_self, Opens.carrier_eq_coe, Set.inter_eq_right] at h
-      ext1
-      refine Set.Subset.antisymm ?_ h
-      simp only [Set.iUnion_subset_iff, SetCoe.forall, Opens.coe_iSup]
-      intro x _
-      exact X.basicOpen_le x
-    · simp only [Opens.iSup_def, Subtype.coe_mk, Set.preimage_iUnion]
-      congr! 1
-      · refine congr_arg (Set.iUnion ·) ?_
-        ext1 x
-        exact congr_arg Opens.carrier (hU.fromSpec_preimage_basicOpen _)
-      · exact congr_arg Opens.carrier hU.fromSpec_preimage_self
-  · simp only [Opens.carrier_eq_coe, PrimeSpectrum.basicOpen_eq_zeroLocus_compl]
-    rw [← Set.compl_iInter, Set.compl_univ_iff, ← PrimeSpectrum.zeroLocus_iUnion, ←
-      PrimeSpectrum.zeroLocus_empty_iff_eq_top, PrimeSpectrum.zeroLocus_span]
-    simp only [Set.iUnion_singleton_eq_range, Subtype.range_val_subtype, Set.setOf_mem_eq]
+  trans
+    hU.fromSpec.1.base ⁻¹' (⨆ f : s, X.basicOpen (f : Γ(X, U))).1 =
+      hU.fromSpec.1.base ⁻¹' U.1
+  refine ⟨fun h => by rw [h], ?_⟩
+  intro h
+  apply_fun Set.image hU.fromSpec.1.base at h
+  rw [Set.image_preimage_eq_inter_range, Set.image_preimage_eq_inter_range, hU.range_fromSpec]
+    at h
+  simp only [Set.inter_self, Opens.carrier_eq_coe, Set.inter_eq_right] at h
+  ext1
+  refine Set.Subset.antisymm ?_ h
+  simp only [Set.iUnion_subset_iff, SetCoe.forall, Opens.coe_iSup]
+  intro x _
+  exact X.basicOpen_le x
+  simp only [Opens.iSup_def, Subtype.coe_mk, Set.preimage_iUnion]
+  congr! 1
+  refine congr_arg (Set.iUnion ·) ?_
+  ext1 x
+  exact congr_arg Opens.carrier (hU.fromSpec_preimage_basicOpen _)
+  exact congr_arg Opens.carrier hU.fromSpec_preimage_self
+  simp only [Opens.carrier_eq_coe, PrimeSpectrum.basicOpen_eq_zeroLocus_compl]
+  rw [← Set.compl_iInter, Set.compl_univ_iff, ← PrimeSpectrum.zeroLocus_iUnion, ←
+    PrimeSpectrum.zeroLocus_empty_iff_eq_top, PrimeSpectrum.zeroLocus_span]
+  simp only [Set.iUnion_singleton_eq_range, Subtype.range_val_subtype, Set.setOf_mem_eq]
 
 theorem self_le_basicOpen_union_iff (s : Set Γ(X, U)) :
     (U ≤ ⨆ f : s, X.basicOpen f.1) ↔ Ideal.span s = ⊤ := by
@@ -616,18 +616,18 @@ See `IsAffineOpen.basicOpen_union_eq_self_iff` for the inverse direction for aff
 lemma iSup_basicOpen_of_span_eq_top {X : Scheme} (U) (s : Set Γ(X, U))
     (hs : Ideal.span s = ⊤) : (⨆ i ∈ s, X.basicOpen i) = U := by
   apply le_antisymm
-  · rw [iSup₂_le_iff]
-    exact fun i _ ↦ X.basicOpen_le i
-  · intro x hx
-    obtain ⟨_, ⟨V, hV, rfl⟩, hxV, hVU⟩ := (isBasis_affine_open X).exists_subset_of_mem_open hx U.2
-    refine SetLike.mem_of_subset ?_ hxV
-    rw [← (hV.basicOpen_union_eq_self_iff (X.presheaf.map (homOfLE hVU).op '' s)).mpr
-      (by rw [← Ideal.map_span, hs, Ideal.map_top])]
-    simp only [Opens.iSup_mk, Opens.carrier_eq_coe, Set.iUnion_coe_set, Set.mem_image,
-      Set.iUnion_exists, Set.biUnion_and', Set.iUnion_iUnion_eq_right, Scheme.basicOpen_res,
-      Opens.coe_inf, Opens.coe_mk, Set.iUnion_subset_iff]
-    exact fun i hi ↦ (Set.inter_subset_right.trans
-      (Set.subset_iUnion₂ (s := fun x _ ↦ (X.basicOpen x : Set X)) i hi))
+  rw [iSup₂_le_iff]
+  exact fun i _ ↦ X.basicOpen_le i
+  intro x hx
+  obtain ⟨_, ⟨V, hV, rfl⟩, hxV, hVU⟩ := (isBasis_affine_open X).exists_subset_of_mem_open hx U.2
+  refine SetLike.mem_of_subset ?_ hxV
+  rw [← (hV.basicOpen_union_eq_self_iff (X.presheaf.map (homOfLE hVU).op '' s)).mpr
+    (by rw [← Ideal.map_span, hs, Ideal.map_top])]
+  simp only [Opens.iSup_mk, Opens.carrier_eq_coe, Set.iUnion_coe_set, Set.mem_image,
+    Set.iUnion_exists, Set.biUnion_and', Set.iUnion_iUnion_eq_right, Scheme.basicOpen_res,
+    Opens.coe_inf, Opens.coe_mk, Set.iUnion_subset_iff]
+  exact fun i hi ↦ (Set.inter_subset_right.trans
+    (Set.subset_iUnion₂ (s := fun x _ ↦ (X.basicOpen x : Set X)) i hi))
 
 /-- Let `P` be a predicate on the affine open sets of `X` satisfying
 1. If `P` holds on `U`, then `P` holds on the basic open set of every section on `U`.
@@ -691,14 +691,14 @@ of a set of global sections. -/
 lemma Scheme.eq_zeroLocus_of_isClosed_of_isAffine (X : Scheme.{u}) [IsAffine X] (s : Set X) :
     IsClosed s ↔ ∃ I : Ideal (Γ(X, ⊤)), s = X.zeroLocus (I : Set Γ(X, ⊤)) := by
   refine ⟨fun hs ↦ ?_, ?_⟩
-  · let Z : Set (Spec <| Γ(X, ⊤)) := X.toΓSpecFun '' s
-    have hZ : IsClosed Z := (X.isoSpec.hom.homeomorph).isClosedMap _ hs
-    obtain ⟨I, (hI : Z = _)⟩ := (PrimeSpectrum.isClosed_iff_zeroLocus_ideal _).mp hZ
-    use I
-    simp only [← Scheme.toΓSpec_preimage_zeroLocus_eq, ← hI, Z]
-    erw [Set.preimage_image_eq _ (bijective_of_isIso X.isoSpec.hom.val.base).injective]
-  · rintro ⟨I, rfl⟩
-    exact zeroLocus_isClosed X I.carrier
+  let Z : Set (Spec <| Γ(X, ⊤)) := X.toΓSpecFun '' s
+  have hZ : IsClosed Z := (X.isoSpec.hom.homeomorph).isClosedMap _ hs
+  obtain ⟨I, (hI : Z = _)⟩ := (PrimeSpectrum.isClosed_iff_zeroLocus_ideal _).mp hZ
+  use I
+  simp only [← Scheme.toΓSpec_preimage_zeroLocus_eq, ← hI, Z]
+  erw [Set.preimage_image_eq _ (bijective_of_isIso X.isoSpec.hom.val.base).injective]
+  rintro ⟨I, rfl⟩
+  exact zeroLocus_isClosed X I.carrier
 
 end ZeroLocus
 

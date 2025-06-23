@@ -57,8 +57,8 @@ theorem approx_mono' {i : ℕ} : Fix.approx f i ≤ Fix.approx f (succ i) := by
 
 theorem approx_mono ⦃i j : ℕ⦄ (hij : i ≤ j) : approx f i ≤ approx f j := by
   induction' j with j ih
-  · cases hij
-    exact le_rfl
+  cases hij
+  exact le_rfl
   cases hij; · exact le_rfl
   exact le_trans (ih ‹_›) (approx_mono' f)
 
@@ -90,18 +90,18 @@ theorem approx_le_fix (i : ℕ) : approx f i ≤ Part.fix f := fun a b hh ↦ by
 
 theorem exists_fix_le_approx (x : α) : ∃ i, Part.fix f x ≤ approx f i x := by
   by_cases hh : ∃ i b, b ∈ approx f i x
-  · rcases hh with ⟨i, b, hb⟩
-    exists i
-    intro b' h'
-    have hb' := approx_le_fix f i _ _ hb
-    obtain rfl := Part.mem_unique h' hb'
-    exact hb
-  · simp only [not_exists] at hh
-    exists 0
-    intro b' h'
-    simp only [mem_iff f] at h'
-    cases' h' with i h'
-    cases hh _ _ h'
+  rcases hh with ⟨i, b, hb⟩
+  exists i
+  intro b' h'
+  have hb' := approx_le_fix f i _ _ hb
+  obtain rfl := Part.mem_unique h' hb'
+  exact hb
+  simp only [not_exists] at hh
+  exists 0
+  intro b' h'
+  simp only [mem_iff f] at h'
+  cases' h' with i h'
+  cases hh _ _ h'
 
 /-- The series of approximations of `fix f` (see `approx`) as a `Chain` -/
 def approxChain : Chain ((a : _) → Part <| β a) :=
@@ -132,19 +132,19 @@ open Nat.Upto OmegaCompletePartialOrder
 
 theorem fix_eq_ωSup : Part.fix f = ωSup (approxChain f) := by
   apply le_antisymm
-  · intro x
-    cases' exists_fix_le_approx f x with i hx
-    trans approx f i.succ x
-    · trans
-      · apply hx
-      · apply approx_mono' f
-    apply le_ωSup_of_le i.succ
-    dsimp [approx]
-    rfl
-  · apply ωSup_le _ _ _
-    simp only [Fix.approxChain, OrderHom.coe_mk]
-    intro y x
-    apply approx_le_fix f
+  intro x
+  cases' exists_fix_le_approx f x with i hx
+  trans approx f i.succ x
+  trans
+  apply hx
+  apply approx_mono' f
+  apply le_ωSup_of_le i.succ
+  dsimp [approx]
+  rfl
+  apply ωSup_le _ _ _
+  simp only [Fix.approxChain, OrderHom.coe_mk]
+  intro y x
+  apply approx_le_fix f
 
 theorem fix_le {X : (a : _) → Part <| β a} (hX : f X ≤ X) : Part.fix f ≤ X := by
   rw [fix_eq_ωSup f]
@@ -155,23 +155,23 @@ theorem fix_le {X : (a : _) → Part <| β a} (hX : f X ≤ X) : Part.fix f ≤ 
   | zero => dsimp [Fix.approx]; apply bot_le
   | succ _ i_ih =>
     trans f X
-    · apply f.monotone i_ih
-    · apply hX
+    apply f.monotone i_ih
+    apply hX
 
 variable {f}
 
 theorem fix_eq (hc : Continuous f) : Part.fix f = f (Part.fix f) := by
   rw [fix_eq_ωSup f, hc]
   apply le_antisymm
-  · apply ωSup_le_ωSup_of_le _
-    intro i
-    exists i
-    intro x
-    -- intros x y hx,
-    apply le_f_of_mem_approx _ ⟨i, rfl⟩
-  · apply ωSup_le_ωSup_of_le _
-    intro i
-    exists i.succ
+  apply ωSup_le_ωSup_of_le _
+  intro i
+  exists i
+  intro x
+  -- intros x y hx,
+  apply le_f_of_mem_approx _ ⟨i, rfl⟩
+  apply ωSup_le_ωSup_of_le _
+  intro i
+  exists i.succ
 
 end Part
 

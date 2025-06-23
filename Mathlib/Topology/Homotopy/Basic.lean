@@ -239,18 +239,18 @@ theorem symm_trans {f₀ f₁ f₂ : C(X, Y)} (F : Homotopy f₀ f₁) (G : Homo
   rw [trans_apply, symm_apply, trans_apply]
   simp only [coe_symm_eq, symm_apply]
   split_ifs with h₁ h₂ h₂
-  · have ht : (t : ℝ) = 1 / 2 := by linarith
-    norm_num [ht]
-  · congr 2
-    apply Subtype.ext
-    simp only [coe_symm_eq]
-    linarith
-  · congr 2
-    apply Subtype.ext
-    simp only [coe_symm_eq]
-    linarith
-  · exfalso
-    linarith
+  have ht : (t : ℝ) = 1 / 2 := by linarith
+  norm_num [ht]
+  congr 2
+  apply Subtype.ext
+  simp only [coe_symm_eq]
+  linarith
+  congr 2
+  apply Subtype.ext
+  simp only [coe_symm_eq]
+  linarith
+  exfalso
+  linarith
 
 /-- Casting a `Homotopy f₀ f₁` to a `Homotopy g₀ g₁` where `f₀ = g₀` and `f₁ = g₁`.
 -/

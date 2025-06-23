@@ -228,16 +228,16 @@ variable (α)
 theorem uniformity_eq_comap_nhds_one : 𝓤 α = comap (fun x : α × α => x.2 / x.1) (𝓝 (1 : α)) := by
   rw [nhds_eq_comap_uniformity, Filter.comap_comap]
   refine le_antisymm (Filter.map_le_iff_le_comap.1 ?_) ?_
-  · intro s hs
-    rcases mem_uniformity_of_uniformContinuous_invariant uniformContinuous_div hs with ⟨t, ht, hts⟩
-    refine mem_map.2 (mem_of_superset ht ?_)
-    rintro ⟨a, b⟩
-    simpa [subset_def] using hts a b a
-  · intro s hs
-    rcases mem_uniformity_of_uniformContinuous_invariant uniformContinuous_mul hs with ⟨t, ht, hts⟩
-    refine ⟨_, ht, ?_⟩
-    rintro ⟨a, b⟩
-    simpa [subset_def] using hts 1 (b / a) a
+  intro s hs
+  rcases mem_uniformity_of_uniformContinuous_invariant uniformContinuous_div hs with ⟨t, ht, hts⟩
+  refine mem_map.2 (mem_of_superset ht ?_)
+  rintro ⟨a, b⟩
+  simpa [subset_def] using hts a b a
+  intro s hs
+  rcases mem_uniformity_of_uniformContinuous_invariant uniformContinuous_mul hs with ⟨t, ht, hts⟩
+  refine ⟨_, ht, ?_⟩
+  rintro ⟨a, b⟩
+  simpa [subset_def] using hts 1 (b / a) a
 
 @[to_additive]
 theorem uniformity_eq_comap_nhds_one_swapped :
@@ -348,10 +348,10 @@ theorem UniformGroup.uniformContinuous_iff_open_ker {hom : Type*} [UniformSpace 
     {f : hom} :
     UniformContinuous f ↔ IsOpen ((f : α →* β).ker : Set α) := by
   refine ⟨fun hf => ?_, fun hf => ?_⟩
-  · apply (isOpen_discrete ({1} : Set β)).preimage hf.continuous
-  · apply uniformContinuous_of_continuousAt_one
-    rw [ContinuousAt, nhds_discrete β, map_one, tendsto_pure]
-    exact hf.mem_nhds (map_one f)
+  apply (isOpen_discrete ({1} : Set β)).preimage hf.continuous
+  apply uniformContinuous_of_continuousAt_one
+  rw [ContinuousAt, nhds_discrete β, map_one, tendsto_pure]
+  exact hf.mem_nhds (map_one f)
 
 @[to_additive]
 theorem uniformContinuous_monoidHom_of_continuous {hom : Type*} [UniformSpace β] [Group β]
@@ -705,36 +705,36 @@ theorem extend_Z_bilin : Continuous (extend (de.prod df) (fun p : β × δ => φ
   refine continuous_extend_of_cauchy _ ?_
   rintro ⟨x₀, y₀⟩
   constructor
-  · apply NeBot.map
-    apply comap_neBot
-    intro U h
-    rcases mem_closure_iff_nhds.1 ((de.prod df).dense (x₀, y₀)) U h with ⟨x, x_in, ⟨z, z_x⟩⟩
-    exists z
-    aesop
-  · suffices map (fun p : (β × δ) × β × δ => (fun p : β × δ => φ p.1 p.2) p.2 -
-      (fun p : β × δ => φ p.1 p.2) p.1)
-        (comap (fun p : (β × δ) × β × δ => ((e p.1.1, f p.1.2), (e p.2.1, f p.2.2)))
-        (𝓝 (x₀, y₀) ×ˢ 𝓝 (x₀, y₀))) ≤ 𝓝 0 by
-      rwa [uniformity_eq_comap_nhds_zero G, prod_map_map_eq, ← map_le_iff_le_comap, Filter.map_map,
-        prod_comap_comap_eq]
-    intro W' W'_nhd
-    have key := extend_Z_bilin_key de df hφ W'_nhd x₀ y₀
-    rcases key with ⟨U, U_nhd, V, V_nhd, h⟩
-    rw [mem_comap] at U_nhd
-    rcases U_nhd with ⟨U', U'_nhd, U'_sub⟩
-    rw [mem_comap] at V_nhd
-    rcases V_nhd with ⟨V', V'_nhd, V'_sub⟩
-    rw [mem_map, mem_comap, nhds_prod_eq]
-    exists (U' ×ˢ V') ×ˢ U' ×ˢ V'
-    rw [mem_prod_same_iff]
-    simp only [exists_prop]
-    constructor
-    · have := prod_mem_prod U'_nhd V'_nhd
-      tauto
-    · intro p h'
-      simp only [Set.mem_preimage, Set.prod_mk_mem_set_prod_eq] at h'
-      rcases p with ⟨⟨x, y⟩, ⟨x', y'⟩⟩
-      apply h <;> tauto
+  apply NeBot.map
+  apply comap_neBot
+  intro U h
+  rcases mem_closure_iff_nhds.1 ((de.prod df).dense (x₀, y₀)) U h with ⟨x, x_in, ⟨z, z_x⟩⟩
+  exists z
+  aesop
+  suffices map (fun p : (β × δ) × β × δ => (fun p : β × δ => φ p.1 p.2) p.2 -
+    (fun p : β × δ => φ p.1 p.2) p.1)
+      (comap (fun p : (β × δ) × β × δ => ((e p.1.1, f p.1.2), (e p.2.1, f p.2.2)))
+      (𝓝 (x₀, y₀) ×ˢ 𝓝 (x₀, y₀))) ≤ 𝓝 0 by
+    rwa [uniformity_eq_comap_nhds_zero G, prod_map_map_eq, ← map_le_iff_le_comap, Filter.map_map,
+      prod_comap_comap_eq]
+  intro W' W'_nhd
+  have key := extend_Z_bilin_key de df hφ W'_nhd x₀ y₀
+  rcases key with ⟨U, U_nhd, V, V_nhd, h⟩
+  rw [mem_comap] at U_nhd
+  rcases U_nhd with ⟨U', U'_nhd, U'_sub⟩
+  rw [mem_comap] at V_nhd
+  rcases V_nhd with ⟨V', V'_nhd, V'_sub⟩
+  rw [mem_map, mem_comap, nhds_prod_eq]
+  exists (U' ×ˢ V') ×ˢ U' ×ˢ V'
+  rw [mem_prod_same_iff]
+  simp only [exists_prop]
+  constructor
+  have := prod_mem_prod U'_nhd V'_nhd
+  tauto
+  intro p h'
+  simp only [Set.mem_preimage, Set.prod_mk_mem_set_prod_eq] at h'
+  rcases p with ⟨⟨x, y⟩, ⟨x', y'⟩⟩
+  apply h <;> tauto
 
 end DenseInducing
 

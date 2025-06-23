@@ -197,12 +197,12 @@ theorem IsConnected.of_induct {j₀ : J}
 /-- Lifting the universe level of morphisms and objects preserves connectedness. -/
 instance [hc : IsConnected J] : IsConnected (ULiftHom.{v₂} (ULift.{u₂} J)) := by
   apply IsConnected.of_induct
-  · rintro p hj₀ h ⟨j⟩
-    let p' : Set J := {j : J | p ⟨j⟩}
-    have hj₀' : Classical.choice hc.is_nonempty ∈ p'
-    simp only [p', (eq_self p')]
-    exact hj₀
-    apply induct_on_objects p' hj₀' fun f => h ((ULiftHomULiftCategory.equiv J).functor.map f)
+  rintro p hj₀ h ⟨j⟩
+  let p' : Set J := {j : J | p ⟨j⟩}
+  have hj₀' : Classical.choice hc.is_nonempty ∈ p'
+  simp only [p', (eq_self p')]
+  exact hj₀
+  apply induct_on_objects p' hj₀' fun f => h ((ULiftHomULiftCategory.equiv J).functor.map f)
 
 /-- Another induction principle for `IsPreconnected J`:
 given a type family `Z : J → Sort*` and
@@ -358,10 +358,10 @@ theorem zigzag_isPreconnected (h : ∀ j₁ j₂ : J, Zigzag j₁ j₂) : IsPrec
   intro α F hF j j'
   specialize h j j'
   induction' h with j₁ j₂ _ hj ih
-  · rfl
-  · rw [ih]
-    rcases hj with (⟨⟨hj⟩⟩|⟨⟨hj⟩⟩)
-    exacts [hF hj, (hF hj).symm]
+  rfl
+  rw [ih]
+  rcases hj with (⟨⟨hj⟩⟩|⟨⟨hj⟩⟩)
+  exacts [hF hj, (hF hj).symm]
 
 /-- If any two objects in a nonempty category are related by `Zigzag`, the category is connected.
 -/

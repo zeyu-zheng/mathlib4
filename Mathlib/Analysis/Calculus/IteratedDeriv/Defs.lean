@@ -119,8 +119,8 @@ theorem contDiffOn_of_continuousOn_differentiableOn_deriv {n : ℕ∞}
     (Hdiff : ∀ m : ℕ, (m : ℕ∞) < n → DifferentiableOn 𝕜 (fun x => iteratedDerivWithin m f s x) s) :
     ContDiffOn 𝕜 n f s := by
   apply contDiffOn_of_continuousOn_differentiableOn
-  · simpa only [iteratedFDerivWithin_eq_equiv_comp, LinearIsometryEquiv.comp_continuousOn_iff]
-  · simpa only [iteratedFDerivWithin_eq_equiv_comp, LinearIsometryEquiv.comp_differentiableOn_iff]
+  simpa only [iteratedFDerivWithin_eq_equiv_comp, LinearIsometryEquiv.comp_continuousOn_iff]
+  simpa only [iteratedFDerivWithin_eq_equiv_comp, LinearIsometryEquiv.comp_differentiableOn_iff]
 
 /-- To check that a function is `n` times continuously differentiable, it suffices to check that its
 first `n` derivatives are differentiable. This is slightly too strong as the condition we
@@ -178,9 +178,9 @@ iterating `n` times the differentiation operation. -/
 theorem iteratedDerivWithin_eq_iterate {x : 𝕜} (hs : UniqueDiffOn 𝕜 s) (hx : x ∈ s) :
     iteratedDerivWithin n f s x = (fun g : 𝕜 → F => derivWithin g s)^[n] f x := by
   induction' n with n IH generalizing x
-  · simp
-  · rw [iteratedDerivWithin_succ (hs x hx), Function.iterate_succ']
-    exact derivWithin_congr (fun y hy => IH hy) (IH hx)
+  simp
+  rw [iteratedDerivWithin_succ (hs x hx), Function.iterate_succ']
+  exact derivWithin_congr (fun y hy => IH hy) (IH hx)
 
 /-- The `n+1`-th iterated derivative within a set with unique derivatives can be obtained by
 taking the `n`-th derivative of the derivative. -/

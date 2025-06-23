@@ -27,10 +27,10 @@ theorem IsLUB.frequently_mem {a : α} {s : Set α} (ha : IsLUB s a) (hs : s.None
   rcases hs with ⟨a', ha'⟩
   intro h
   rcases (ha.1 ha').eq_or_lt with (rfl | ha'a)
-  · exact h.self_of_nhdsWithin le_rfl ha'
-  · rcases (mem_nhdsWithin_Iic_iff_exists_Ioc_subset' ha'a).1 h with ⟨b, hba, hb⟩
-    rcases ha.exists_between hba with ⟨b', hb's, hb'⟩
-    exact hb hb' hb's
+  exact h.self_of_nhdsWithin le_rfl ha'
+  rcases (mem_nhdsWithin_Iic_iff_exists_Ioc_subset' ha'a).1 h with ⟨b, hba, hb⟩
+  rcases ha.exists_between hba with ⟨b', hb's, hb'⟩
+  exact hb hb' hb's
 
 theorem IsLUB.frequently_nhds_mem {a : α} {s : Set α} (ha : IsLUB s a) (hs : s.Nonempty) :
     ∃ᶠ x in 𝓝 a, x ∈ s :=
@@ -156,16 +156,16 @@ theorem IsLUB.exists_seq_strictMono_tendsto_of_not_mem {t : Set α} {x : α}
   choose N hN hvN using fun k => ((eventually_gt_atTop k).and (this k)).exists
   refine ⟨fun k => v (N^[k] 0), strictMono_nat_of_lt_succ fun _ => ?_, fun _ => hvx',
     hvx.comp (strictMono_nat_of_lt_succ fun _ => ?_).tendsto_atTop, fun _ => hvt _⟩
-  · rw [iterate_succ_apply']; exact hvN _
-  · rw [iterate_succ_apply']; exact hN _
+  rw [iterate_succ_apply']; exact hvN _
+  rw [iterate_succ_apply']; exact hN _
 
 theorem IsLUB.exists_seq_monotone_tendsto {t : Set α} {x : α} [IsCountablyGenerated (𝓝 x)]
     (htx : IsLUB t x) (ht : t.Nonempty) :
     ∃ u : ℕ → α, Monotone u ∧ (∀ n, u n ≤ x) ∧ Tendsto u atTop (𝓝 x) ∧ ∀ n, u n ∈ t := by
   by_cases h : x ∈ t
-  · exact ⟨fun _ => x, monotone_const, fun n => le_rfl, tendsto_const_nhds, fun _ => h⟩
-  · rcases htx.exists_seq_strictMono_tendsto_of_not_mem h ht with ⟨u, hu⟩
-    exact ⟨u, hu.1.monotone, fun n => (hu.2.1 n).le, hu.2.2⟩
+  exact ⟨fun _ => x, monotone_const, fun n => le_rfl, tendsto_const_nhds, fun _ => h⟩
+  rcases htx.exists_seq_strictMono_tendsto_of_not_mem h ht with ⟨u, hu⟩
+  exact ⟨u, hu.1.monotone, fun n => (hu.2.1 n).le, hu.2.2⟩
 
 theorem exists_seq_strictMono_tendsto' {α : Type*} [LinearOrder α] [TopologicalSpace α]
     [DenselyOrdered α] [OrderTopology α] [FirstCountableTopology α] {x y : α} (hy : y < x) :

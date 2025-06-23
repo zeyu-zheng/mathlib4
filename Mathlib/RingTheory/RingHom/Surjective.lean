@@ -52,17 +52,17 @@ theorem surjective_ofLocalizationSpan : OfLocalizationSpan surjective := by
   fapply
     Subalgebra.mem_of_finset_sum_eq_one_of_pow_smul_mem _ l.support (fun x : s => f x) fun x : s =>
       f (l x)
-  · simp_rw [← _root_.map_mul, ← map_sum, ← f.map_one]; exact f.congr_arg hl
-  · exact fun _ => Set.mem_range_self _
-  · exact fun _ => Set.mem_range_self _
-  · intro r
-    obtain ⟨y, hy⟩ := H r (IsLocalization.mk' _ x (1 : Submonoid.powers (f r)))
-    obtain ⟨z, ⟨_, n, rfl⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers (r : R)) y
-    erw [IsLocalization.map_mk', IsLocalization.eq] at hy
-    obtain ⟨⟨_, m, rfl⟩, hm⟩ := hy
-    refine ⟨m + n, ?_⟩
-    dsimp at hm ⊢
-    simp_rw [_root_.one_mul, ← _root_.mul_assoc, ← map_pow, ← f.map_mul, ← pow_add, map_pow] at hm
-    exact ⟨_, hm⟩
+  simp_rw [← _root_.map_mul, ← map_sum, ← f.map_one]; exact f.congr_arg hl
+  exact fun _ => Set.mem_range_self _
+  exact fun _ => Set.mem_range_self _
+  intro r
+  obtain ⟨y, hy⟩ := H r (IsLocalization.mk' _ x (1 : Submonoid.powers (f r)))
+  obtain ⟨z, ⟨_, n, rfl⟩, rfl⟩ := IsLocalization.mk'_surjective (Submonoid.powers (r : R)) y
+  erw [IsLocalization.map_mk', IsLocalization.eq] at hy
+  obtain ⟨⟨_, m, rfl⟩, hm⟩ := hy
+  refine ⟨m + n, ?_⟩
+  dsimp at hm ⊢
+  simp_rw [_root_.one_mul, ← _root_.mul_assoc, ← map_pow, ← f.map_mul, ← pow_add, map_pow] at hm
+  exact ⟨_, hm⟩
 
 end RingHom

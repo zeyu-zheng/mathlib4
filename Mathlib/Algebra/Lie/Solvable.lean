@@ -75,19 +75,19 @@ local notation "D" => derivedSeriesOfIdeal R L
 
 theorem derivedSeriesOfIdeal_add (k l : ℕ) : D (k + l) I = D k (D l I) := by
   induction' k with k ih
-  · rw [Nat.zero_add, derivedSeriesOfIdeal_zero]
-  · rw [Nat.succ_add k l, derivedSeriesOfIdeal_succ, derivedSeriesOfIdeal_succ, ih]
+  rw [Nat.zero_add, derivedSeriesOfIdeal_zero]
+  rw [Nat.succ_add k l, derivedSeriesOfIdeal_succ, derivedSeriesOfIdeal_succ, ih]
 
 @[mono]
 theorem derivedSeriesOfIdeal_le {I J : LieIdeal R L} {k l : ℕ} (h₁ : I ≤ J) (h₂ : l ≤ k) :
     D k I ≤ D l J := by
   revert l; induction' k with k ih <;> intro l h₂
-  · rw [le_zero_iff] at h₂; rw [h₂, derivedSeriesOfIdeal_zero]; exact h₁
-  · have h : l = k.succ ∨ l ≤ k := by rwa [le_iff_eq_or_lt, Nat.lt_succ_iff] at h₂
-    cases' h with h h
-    · rw [h, derivedSeriesOfIdeal_succ, derivedSeriesOfIdeal_succ]
-      exact LieSubmodule.mono_lie (ih (le_refl k)) (ih (le_refl k))
-    · rw [derivedSeriesOfIdeal_succ]; exact le_trans (LieSubmodule.lie_le_left _ _) (ih h)
+  rw [le_zero_iff] at h₂; rw [h₂, derivedSeriesOfIdeal_zero]; exact h₁
+  have h : l = k.succ ∨ l ≤ k := by rwa [le_iff_eq_or_lt, Nat.lt_succ_iff] at h₂
+  cases' h with h h
+  rw [h, derivedSeriesOfIdeal_succ, derivedSeriesOfIdeal_succ]
+  exact LieSubmodule.mono_lie (ih (le_refl k)) (ih (le_refl k))
+  rw [derivedSeriesOfIdeal_succ]; exact le_trans (LieSubmodule.lie_le_left _ _) (ih h)
 
 theorem derivedSeriesOfIdeal_succ_le (k : ℕ) : D (k + 1) I ≤ D k I :=
   derivedSeriesOfIdeal_le (le_refl I) k.le_succ
@@ -133,10 +133,10 @@ variable {R L}
 theorem derivedSeries_eq_derivedSeriesOfIdeal_comap (k : ℕ) :
     derivedSeries R I k = (derivedSeriesOfIdeal R L k I).comap I.incl := by
   induction' k with k ih
-  · simp only [Nat.zero_eq, derivedSeries_def, comap_incl_self, derivedSeriesOfIdeal_zero]
-  · simp only [derivedSeries_def, derivedSeriesOfIdeal_succ] at ih ⊢; rw [ih]
-    exact comap_bracket_incl_of_le I
-      (derivedSeriesOfIdeal_le_self I k) (derivedSeriesOfIdeal_le_self I k)
+  simp only [Nat.zero_eq, derivedSeries_def, comap_incl_self, derivedSeriesOfIdeal_zero]
+  simp only [derivedSeries_def, derivedSeriesOfIdeal_succ] at ih ⊢; rw [ih]
+  exact comap_bracket_incl_of_le I
+    (derivedSeriesOfIdeal_le_self I k) (derivedSeriesOfIdeal_le_self I k)
 
 theorem derivedSeries_eq_derivedSeriesOfIdeal_map (k : ℕ) :
     (derivedSeries R I k).map I.incl = derivedSeriesOfIdeal R L k I := by
@@ -158,17 +158,17 @@ theorem derivedSeries_add_eq_bot {k l : ℕ} {I J : LieIdeal R L} (hI : derivedS
 
 theorem derivedSeries_map_le (k : ℕ) : (derivedSeries R L' k).map f ≤ derivedSeries R L k := by
   induction' k with k ih
-  · simp only [Nat.zero_eq, derivedSeries_def, derivedSeriesOfIdeal_zero, le_top]
-  · simp only [derivedSeries_def, derivedSeriesOfIdeal_succ] at ih ⊢
-    exact le_trans (map_bracket_le f) (LieSubmodule.mono_lie ih ih)
+  simp only [Nat.zero_eq, derivedSeries_def, derivedSeriesOfIdeal_zero, le_top]
+  simp only [derivedSeries_def, derivedSeriesOfIdeal_succ] at ih ⊢
+  exact le_trans (map_bracket_le f) (LieSubmodule.mono_lie ih ih)
 
 theorem derivedSeries_map_eq (k : ℕ) (h : Function.Surjective f) :
     (derivedSeries R L' k).map f = derivedSeries R L k := by
   induction' k with k ih
-  · change (⊤ : LieIdeal R L').map f = ⊤
-    rw [← f.idealRange_eq_map]
-    exact f.idealRange_eq_top_of_surjective h
-  · simp only [derivedSeries_def, map_bracket_eq f h, ih, derivedSeriesOfIdeal_succ]
+  change (⊤ : LieIdeal R L').map f = ⊤
+  rw [← f.idealRange_eq_map]
+  exact f.idealRange_eq_top_of_surjective h
+  simp only [derivedSeries_def, map_bracket_eq f h, ih, derivedSeriesOfIdeal_succ]
 
 theorem derivedSeries_succ_eq_top_iff (n : ℕ) :
     derivedSeries R L (n + 1) = ⊤ ↔ derivedSeries R L 1 = ⊤ := by
@@ -183,8 +183,8 @@ theorem derivedSeries_succ_eq_top_iff (n : ℕ) :
 theorem derivedSeries_eq_top (n : ℕ) (h : derivedSeries R L 1 = ⊤) :
     derivedSeries R L n = ⊤ := by
   cases n
-  · rfl
-  · rwa [derivedSeries_succ_eq_top_iff]
+  rfl
+  rwa [derivedSeries_succ_eq_top_iff]
 
 end LieIdeal
 
@@ -242,8 +242,8 @@ namespace LieAlgebra
 
 theorem solvable_iff_equiv_solvable (e : L' ≃ₗ⁅R⁆ L) : IsSolvable R L' ↔ IsSolvable R L := by
   constructor <;> intro h
-  · exact e.symm.injective.lieAlgebra_isSolvable
-  · exact e.injective.lieAlgebra_isSolvable
+  exact e.symm.injective.lieAlgebra_isSolvable
+  exact e.injective.lieAlgebra_isSolvable
 
 theorem le_solvable_ideal_solvable {I J : LieIdeal R L} (h₁ : I ≤ J) (_ : IsSolvable R J) :
     IsSolvable R I :=
@@ -265,9 +265,9 @@ instance radicalIsSolvable [IsNoetherian R L] : IsSolvable R (radical R L) := by
   have hwf := LieSubmodule.wellFounded_of_noetherian R L L
   rw [← CompleteLattice.isSupClosedCompact_iff_wellFounded] at hwf
   refine hwf { I : LieIdeal R L | IsSolvable R I } ⟨⊥, ?_⟩ fun I hI J hJ => ?_
-  · exact LieAlgebra.isSolvableBot R L
-  · rw [Set.mem_setOf_eq] at hI hJ ⊢
-    apply LieAlgebra.isSolvableAdd R L
+  exact LieAlgebra.isSolvableBot R L
+  rw [Set.mem_setOf_eq] at hI hJ ⊢
+  apply LieAlgebra.isSolvableAdd R L
 
 /-- The `→` direction of this lemma is actually true without the `IsNoetherian` assumption. -/
 theorem LieIdeal.solvable_iff_le_radical [IsNoetherian R L] (I : LieIdeal R L) :
@@ -333,8 +333,8 @@ theorem abelian_derivedAbelianOfIdeal (I : LieIdeal R L) :
     IsLieAbelian (derivedAbelianOfIdeal I) := by
   dsimp only [derivedAbelianOfIdeal]
   cases' h : derivedLengthOfIdeal R L I with k
-  · infer_instance
-  · rw [derivedSeries_of_derivedLength_succ] at h; exact h.1
+  infer_instance
+  rw [derivedSeries_of_derivedLength_succ] at h; exact h.1
 
 theorem derivedLength_zero (I : LieIdeal R L) [hI : IsSolvable R I] :
     derivedLengthOfIdeal R L I = 0 ↔ I = ⊥ := by
@@ -350,13 +350,13 @@ theorem abelian_of_solvable_ideal_eq_bot_iff (I : LieIdeal R L) [h : IsSolvable 
     derivedAbelianOfIdeal I = ⊥ ↔ I = ⊥ := by
   dsimp only [derivedAbelianOfIdeal]
   split -- Porting note: Original tactic was `cases' h : derivedAbelianOfIdeal R L I with k`
-  · rename_i h
-    rw [derivedLength_zero] at h
-    rw [h]
-  · rename_i k h
-    obtain ⟨_, h₂⟩ := (derivedSeries_of_derivedLength_succ R L I k).mp h
-    have h₃ : I ≠ ⊥
-    intro contra; apply h₂; rw [contra]; apply derivedSeries_of_bot_eq_bot
-    simp only [h₂, h₃]
+  rename_i h
+  rw [derivedLength_zero] at h
+  rw [h]
+  rename_i k h
+  obtain ⟨_, h₂⟩ := (derivedSeries_of_derivedLength_succ R L I k).mp h
+  have h₃ : I ≠ ⊥
+  intro contra; apply h₂; rw [contra]; apply derivedSeries_of_bot_eq_bot
+  simp only [h₂, h₃]
 
 end LieAlgebra

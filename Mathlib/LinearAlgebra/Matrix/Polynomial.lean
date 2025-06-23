@@ -46,8 +46,8 @@ theorem natDegree_det_X_add_C_le (A B : Matrix n n α) :
     natDegree (sign g • ∏ i : n, (X • A.map C + B.map C : Matrix n n α[X]) (g i) i) ≤
         natDegree (∏ i : n, (X • A.map C + B.map C : Matrix n n α[X]) (g i) i) := by
       cases' Int.units_eq_one_or (sign g) with sg sg
-      · rw [sg, one_smul]
-      · rw [sg, Units.neg_smul, one_smul, natDegree_neg]
+      rw [sg, one_smul]
+      rw [sg, Units.neg_smul, one_smul, natDegree_neg]
     _ ≤ ∑ i : n, natDegree (((X : α[X]) • A.map C + B.map C : Matrix n n α[X]) (g i) i) :=
       (natDegree_prod_le (Finset.univ : Finset n) fun i : n =>
         (X • A.map C + B.map C : Matrix n n α[X]) (g i) i)
@@ -76,24 +76,24 @@ theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
   convert coeff_smul (R := α) (sign g) _ _
   rw [← mul_one (Fintype.card n)]
   convert (coeff_prod_of_natDegree_le (R := α) _ _ _ _).symm
-  · simp [coeff_C]
-  · rintro p -
-    dsimp only [add_apply, smul_apply, map_apply, smul_eq_mul]
-    compute_degree
+  simp [coeff_C]
+  rintro p -
+  dsimp only [add_apply, smul_apply, map_apply, smul_eq_mul]
+  compute_degree
 
 theorem leadingCoeff_det_X_one_add_C (A : Matrix n n α) :
     leadingCoeff (det ((X : α[X]) • (1 : Matrix n n α[X]) + A.map C)) = 1 := by
   cases subsingleton_or_nontrivial α
-  · simp [eq_iff_true_of_subsingleton]
+  simp [eq_iff_true_of_subsingleton]
   rw [← @det_one n, ← coeff_det_X_add_C_card _ A, leadingCoeff]
   simp only [Matrix.map_one, C_eq_zero, RingHom.map_one]
   rcases (natDegree_det_X_add_C_le 1 A).eq_or_lt with h | h
-  · simp only [RingHom.map_one, Matrix.map_one, C_eq_zero] at h
-    rw [h]
-  · -- contradiction. we have a hypothesis that the degree is less than |n|
-    -- but we know that coeff _ n = 1
-    have H := coeff_eq_zero_of_natDegree_lt h
-    rw [coeff_det_X_add_C_card] at H
-    simp at H
+  simp only [RingHom.map_one, Matrix.map_one, C_eq_zero] at h
+  rw [h]
+  -- contradiction. we have a hypothesis that the degree is less than |n|
+  -- but we know that coeff _ n = 1
+  have H := coeff_eq_zero_of_natDegree_lt h
+  rw [coeff_det_X_add_C_card] at H
+  simp at H
 
 end Polynomial

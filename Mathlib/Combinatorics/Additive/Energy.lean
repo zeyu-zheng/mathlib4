@@ -122,13 +122,13 @@ variable {s t}
   rw [← card_disjiUnion]
   -- The `swap`, `ext` and `simp` calls significantly reduce heartbeats
   swap
-  · simp only [Set.PairwiseDisjoint, Set.Pairwise, coe_mul, ne_eq, disjoint_left, mem_product,
-      mem_filter, not_and, and_imp, Prod.forall]
-    aesop
-  · congr
-    ext
-    simp only [mem_filter, mem_product, disjiUnion_eq_biUnion, mem_biUnion]
-    aesop (add unsafe mul_mem_mul)
+  simp only [Set.PairwiseDisjoint, Set.Pairwise, coe_mul, ne_eq, disjoint_left, mem_product,
+    mem_filter, not_and, and_imp, Prod.forall]
+  aesop
+  congr
+  ext
+  simp only [mem_filter, mem_product, disjiUnion_eq_biUnion, mem_biUnion]
+  aesop (add unsafe mul_mem_mul)
 
 @[to_additive] lemma mulEnergy_eq_sum_sq [Fintype α] (s t : Finset α) :
     Eₘ[s, t] = ∑ a, ((s ×ˢ t).filter fun (x, y) ↦ x * y = a).card ^ 2 := by

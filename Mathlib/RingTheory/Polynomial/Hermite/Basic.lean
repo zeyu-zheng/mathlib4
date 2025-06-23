@@ -55,8 +55,8 @@ theorem hermite_succ (n : ℕ) : hermite (n + 1) = X * hermite n - derivative (h
 
 theorem hermite_eq_iterate (n : ℕ) : hermite n = (fun p => X * p - derivative p)^[n] 1 := by
   induction' n with n ih
-  · rfl
-  · rw [Function.iterate_succ_apply', ← ih, hermite_succ]
+  rfl
+  rw [Function.iterate_succ_apply', ← ih, hermite_succ]
 
 @[simp]
 theorem hermite_zero : hermite 0 = C 1 :=
@@ -85,25 +85,25 @@ theorem coeff_hermite_of_lt {n k : ℕ} (hnk : n < k) : coeff (hermite n) k = 0 
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_lt hnk
   clear hnk
   induction' n with n ih generalizing k
-  · apply coeff_C
-  · have : n + k + 1 + 2 = n + (k + 2) + 1 := by ring
-    rw [coeff_hermite_succ_succ, add_right_comm, this, ih k, ih (k + 2),
-      mul_zero, sub_zero]
+  apply coeff_C
+  have : n + k + 1 + 2 = n + (k + 2) + 1 := by ring
+  rw [coeff_hermite_succ_succ, add_right_comm, this, ih k, ih (k + 2),
+    mul_zero, sub_zero]
 
 @[simp]
 theorem coeff_hermite_self (n : ℕ) : coeff (hermite n) n = 1 := by
   induction' n with n ih
-  · apply coeff_C
-  · rw [coeff_hermite_succ_succ, ih, coeff_hermite_of_lt, mul_zero, sub_zero]
-    simp
+  apply coeff_C
+  rw [coeff_hermite_succ_succ, ih, coeff_hermite_of_lt, mul_zero, sub_zero]
+  simp
 
 @[simp]
 theorem degree_hermite (n : ℕ) : (hermite n).degree = n := by
   rw [degree_eq_of_le_of_coeff_ne_zero]
-  · simp_rw [degree_le_iff_coeff_zero, Nat.cast_lt]
-    rintro m hnm
-    exact coeff_hermite_of_lt hnm
-  · simp [coeff_hermite_self n]
+  simp_rw [degree_le_iff_coeff_zero, Nat.cast_lt]
+  rintro m hnm
+  exact coeff_hermite_of_lt hnm
+  simp [coeff_hermite_self n]
 
 @[simp]
 theorem natDegree_hermite {n : ℕ} : (hermite n).natDegree = n :=
@@ -118,15 +118,15 @@ theorem hermite_monic (n : ℕ) : (hermite n).Monic :=
 
 theorem coeff_hermite_of_odd_add {n k : ℕ} (hnk : Odd (n + k)) : coeff (hermite n) k = 0 := by
   induction' n with n ih generalizing k
-  · rw [zero_add k] at hnk
-    exact coeff_hermite_of_lt hnk.pos
-  · cases' k with k
-    · rw [Nat.succ_add_eq_add_succ] at hnk
-      rw [coeff_hermite_succ_zero, ih hnk, neg_zero]
-    · rw [coeff_hermite_succ_succ, ih, ih, mul_zero, sub_zero]
-      · rwa [Nat.succ_add_eq_add_succ] at hnk
-      · rw [(by rw [Nat.succ_add, Nat.add_succ] : n.succ + k.succ = n + k + 2)] at hnk
-        exact (Nat.odd_add.mp hnk).mpr even_two
+  rw [zero_add k] at hnk
+  exact coeff_hermite_of_lt hnk.pos
+  cases' k with k
+  rw [Nat.succ_add_eq_add_succ] at hnk
+  rw [coeff_hermite_succ_zero, ih hnk, neg_zero]
+  rw [coeff_hermite_succ_succ, ih, ih, mul_zero, sub_zero]
+  rwa [Nat.succ_add_eq_add_succ] at hnk
+  rw [(by rw [Nat.succ_add, Nat.add_succ] : n.succ + k.succ = n + k + 2)] at hnk
+  exact (Nat.odd_add.mp hnk).mpr even_two
 
 end coeff
 
@@ -176,25 +176,25 @@ theorem coeff_hermite_explicit :
     change _ = hermite_explicit _ _
     rw [← add_assoc, coeff_hermite_succ_succ, hermite_explicit_recur]
     congr
-    · rw [coeff_hermite_explicit (n + 1) k]
-    · rw [(by ring : 2 * (n + 1) + k = 2 * n + (k + 2)), coeff_hermite_explicit n (k + 2)]
+    rw [coeff_hermite_explicit (n + 1) k]
+    rw [(by ring : 2 * (n + 1) + k = 2 * n + (k + 2)), coeff_hermite_explicit n (k + 2)]
 
 theorem coeff_hermite_of_even_add {n k : ℕ} (hnk : Even (n + k)) :
     coeff (hermite n) k = (-1) ^ ((n - k) / 2) * (n - k - 1)‼ * Nat.choose n k := by
   rcases le_or_lt k n with h_le | h_lt
-  · rw [Nat.even_add, ← Nat.even_sub h_le] at hnk
-    obtain ⟨m, hm⟩ := hnk
-    -- Porting note: linarith failed to find a contradiction by itself
-    rw [(by omega : n = 2 * m + k),
-      Nat.add_sub_cancel, Nat.mul_div_cancel_left _ (Nat.succ_pos 1), coeff_hermite_explicit]
-  · simp [Nat.choose_eq_zero_of_lt h_lt, coeff_hermite_of_lt h_lt]
+  rw [Nat.even_add, ← Nat.even_sub h_le] at hnk
+  obtain ⟨m, hm⟩ := hnk
+  -- Porting note: linarith failed to find a contradiction by itself
+  rw [(by omega : n = 2 * m + k),
+    Nat.add_sub_cancel, Nat.mul_div_cancel_left _ (Nat.succ_pos 1), coeff_hermite_explicit]
+  simp [Nat.choose_eq_zero_of_lt h_lt, coeff_hermite_of_lt h_lt]
 
 theorem coeff_hermite (n k : ℕ) :
     coeff (hermite n) k =
       if Even (n + k) then (-1 : ℤ) ^ ((n - k) / 2) * (n - k - 1)‼ * Nat.choose n k else 0 := by
   split_ifs with h
-  · exact coeff_hermite_of_even_add h
-  · exact coeff_hermite_of_odd_add (Nat.odd_iff_not_even.mpr h)
+  exact coeff_hermite_of_even_add h
+  exact coeff_hermite_of_odd_add (Nat.odd_iff_not_even.mpr h)
 
 end CoeffExplicit
 

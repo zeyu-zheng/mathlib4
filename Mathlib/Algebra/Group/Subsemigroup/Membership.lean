@@ -118,9 +118,9 @@ theorem iSup_induction' (S : ι → Subsemigroup M) {C : ∀ x, (x ∈ ⨆ i, S 
   refine Exists.elim ?_ fun (hx₁' : x₁ ∈ ⨆ i, S i) (hc : C x₁ hx₁') => hc
   refine @iSup_induction _ _ _ S (fun x' => ∃ hx'', C x' hx'') _ hx₁
       (fun i x₂ hx₂ => ?_) fun x₃ y => ?_
-  · exact ⟨_, mem _ _ hx₂⟩
-  · rintro ⟨_, Cx⟩ ⟨_, Cy⟩
-    exact ⟨_, mul _ _ _ _ Cx Cy⟩
+  exact ⟨_, mem _ _ hx₂⟩
+  rintro ⟨_, Cx⟩ ⟨_, Cy⟩
+  exact ⟨_, mul _ _ _ _ Cx Cy⟩
 
 end Subsemigroup
 

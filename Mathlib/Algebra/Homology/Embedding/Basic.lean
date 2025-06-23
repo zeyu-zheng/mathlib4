@@ -79,8 +79,8 @@ class IsRelIff : Prop where
 
 lemma rel_iff [e.IsRelIff] (i₁ i₂ : ι) : c'.Rel (e.f i₁) (e.f i₂) ↔ c.Rel i₁ i₂ := by
   constructor
-  · apply IsRelIff.rel'
-  · exact e.rel
+  apply IsRelIff.rel'
+  exact e.rel
 
 section
 
@@ -146,11 +146,11 @@ lemma r_eq_none (i' : ι') (hi : ∀ i, e.f i ≠ i') :
 lemma f_eq_of_r_eq_some {i : ι} {i' : ι'} (hi : e.r i' = some i) :
     e.f i = i' := by
   by_cases h : ∃ (k : ι), e.f k = i'
-  · obtain ⟨k, rfl⟩ := h
-    rw [r_f] at hi
-    congr 1
-    simpa using hi.symm
-  · simp [e.r_eq_none i' (by simpa using h)] at hi
+  obtain ⟨k, rfl⟩ := h
+  rw [r_f] at hi
+  congr 1
+  simpa using hi.symm
+  simp [e.r_eq_none i' (by simpa using h)] at hi
 
 end Embedding
 

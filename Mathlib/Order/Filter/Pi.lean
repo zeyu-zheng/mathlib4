@@ -71,12 +71,12 @@ theorem pi_mem_pi {I : Set ι} (hI : I.Finite) (h : ∀ i ∈ I, s i ∈ f i) : 
 theorem mem_pi {s : Set (∀ i, α i)} :
     s ∈ pi f ↔ ∃ I : Set ι, I.Finite ∧ ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ I.pi t ⊆ s := by
   constructor
-  · simp only [pi, mem_iInf', mem_comap, pi_def]
-    rintro ⟨I, If, V, hVf, -, rfl, -⟩
-    choose t htf htV using hVf
-    exact ⟨I, If, t, htf, iInter₂_mono fun i _ => htV i⟩
-  · rintro ⟨I, If, t, htf, hts⟩
-    exact mem_of_superset (pi_mem_pi If fun i _ => htf i) hts
+  simp only [pi, mem_iInf', mem_comap, pi_def]
+  rintro ⟨I, If, V, hVf, -, rfl, -⟩
+  choose t htf htV using hVf
+  exact ⟨I, If, t, htf, iInter₂_mono fun i _ => htV i⟩
+  rintro ⟨I, If, t, htf, hts⟩
+  exact mem_of_superset (pi_mem_pi If fun i _ => htf i) hts
 
 theorem mem_pi' {s : Set (∀ i, α i)} :
     s ∈ pi f ↔ ∃ I : Finset ι, ∃ t : ∀ i, Set (α i), (∀ i, t i ∈ f i) ∧ Set.pi (↑I) t ⊆ s :=
@@ -126,15 +126,15 @@ theorem pi_pure [Finite ι] (f : (i : ι) → α i) : pi (pure <| f ·) = pure f
 theorem pi_inf_principal_univ_pi_eq_bot :
     pi f ⊓ 𝓟 (Set.pi univ s) = ⊥ ↔ ∃ i, f i ⊓ 𝓟 (s i) = ⊥ := by
   constructor
-  · simp only [inf_principal_eq_bot, mem_pi]
-    contrapose!
-    rintro (hsf : ∀ i, ∃ᶠ x in f i, x ∈ s i) I - t htf hts
-    have : ∀ i, (s i ∩ t i).Nonempty := fun i => ((hsf i).and_eventually (htf i)).exists
-    choose x hxs hxt using this
-    exact hts (fun i _ => hxt i) (mem_univ_pi.2 hxs)
-  · simp only [inf_principal_eq_bot]
-    rintro ⟨i, hi⟩
-    filter_upwards [mem_pi_of_mem i hi] with x using mt fun h => h i trivial
+  simp only [inf_principal_eq_bot, mem_pi]
+  contrapose!
+  rintro (hsf : ∀ i, ∃ᶠ x in f i, x ∈ s i) I - t htf hts
+  have : ∀ i, (s i ∩ t i).Nonempty := fun i => ((hsf i).and_eventually (htf i)).exists
+  choose x hxs hxt using this
+  exact hts (fun i _ => hxt i) (mem_univ_pi.2 hxs)
+  simp only [inf_principal_eq_bot]
+  rintro ⟨i, hi⟩
+  filter_upwards [mem_pi_of_mem i hi] with x using mt fun h => h i trivial
 
 @[simp]
 theorem pi_inf_principal_pi_eq_bot [∀ i, NeBot (f i)] {I : Set ι} :

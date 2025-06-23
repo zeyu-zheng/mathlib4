@@ -39,14 +39,14 @@ theorem inv_symm_left₀ (h : SemiconjBy a x y) : SemiconjBy a⁻¹ y x :=
 
 theorem inv_right₀ (h : SemiconjBy a x y) : SemiconjBy a x⁻¹ y⁻¹ := by
   by_cases ha : a = 0
-  · simp only [ha, zero_left]
+  simp only [ha, zero_left]
   by_cases hx : x = 0
-  · subst x
-    simp only [SemiconjBy, mul_zero, @eq_comm _ _ (y * a), mul_eq_zero] at h
-    simp [h.resolve_right ha]
-  · have := mul_ne_zero ha hx
-    rw [h.eq, mul_ne_zero_iff] at this
-    exact @units_inv_right _ _ _ (Units.mk0 x hx) (Units.mk0 y this.1) h
+  subst x
+  simp only [SemiconjBy, mul_zero, @eq_comm _ _ (y * a), mul_eq_zero] at h
+  simp [h.resolve_right ha]
+  have := mul_ne_zero ha hx
+  rw [h.eq, mul_ne_zero_iff] at this
+  exact @units_inv_right _ _ _ (Units.mk0 x hx) (Units.mk0 y this.1) h
 
 @[simp]
 theorem inv_right_iff₀ : SemiconjBy a x⁻¹ y⁻¹ ↔ SemiconjBy a x y :=

@@ -70,22 +70,22 @@ theorem Metric.uniformCauchySeqOn_iff {γ : Type*} {F : β → γ → α} {s : S
     UniformCauchySeqOn F atTop s ↔ ∀ ε > (0 : ℝ),
       ∃ N : β, ∀ m ≥ N, ∀ n ≥ N, ∀ x ∈ s, dist (F m x) (F n x) < ε := by
   constructor
-  · intro h ε hε
-    let u := { a : α × α | dist a.fst a.snd < ε }
-    have hu : u ∈ 𝓤 α := Metric.mem_uniformity_dist.mpr ⟨ε, hε, by simp [u]⟩
-    rw [← @Filter.eventually_atTop_prod_self' _ _ _ fun m =>
-      ∀ x ∈ s, dist (F m.fst x) (F m.snd x) < ε]
-    specialize h u hu
-    rw [prod_atTop_atTop_eq] at h
-    exact h.mono fun n h x hx => h x hx
-  · intro h u hu
-    rcases Metric.mem_uniformity_dist.mp hu with ⟨ε, hε, hab⟩
-    rcases h ε hε with ⟨N, hN⟩
-    rw [prod_atTop_atTop_eq, eventually_atTop]
-    use (N, N)
-    intro b hb x hx
-    rcases hb with ⟨hbl, hbr⟩
-    exact hab (hN b.fst hbl.ge b.snd hbr.ge x hx)
+  intro h ε hε
+  let u := { a : α × α | dist a.fst a.snd < ε }
+  have hu : u ∈ 𝓤 α := Metric.mem_uniformity_dist.mpr ⟨ε, hε, by simp [u]⟩
+  rw [← @Filter.eventually_atTop_prod_self' _ _ _ fun m =>
+    ∀ x ∈ s, dist (F m.fst x) (F m.snd x) < ε]
+  specialize h u hu
+  rw [prod_atTop_atTop_eq] at h
+  exact h.mono fun n h x hx => h x hx
+  intro h u hu
+  rcases Metric.mem_uniformity_dist.mp hu with ⟨ε, hε, hab⟩
+  rcases h ε hε with ⟨N, hN⟩
+  rw [prod_atTop_atTop_eq, eventually_atTop]
+  use (N, N)
+  intro b hb x hx
+  rcases hb with ⟨hbl, hbr⟩
+  exact hab (hN b.fst hbl.ge b.snd hbr.ge x hx)
 
 /-- If the distance between `s n` and `s m`, `n ≤ m` is bounded above by `b n`
 and `b` converges to zero, then `s` is a Cauchy sequence.  -/
@@ -107,14 +107,14 @@ theorem cauchySeq_of_le_tendsto_0 {s : β → α} (b : β → ℝ)
 theorem cauchySeq_bdd {u : ℕ → α} (hu : CauchySeq u) : ∃ R > 0, ∀ m n, dist (u m) (u n) < R := by
   rcases Metric.cauchySeq_iff'.1 hu 1 zero_lt_one with ⟨N, hN⟩
   rsuffices ⟨R, R0, H⟩ : ∃ R > 0, ∀ n, dist (u n) (u N) < R
-  · exact ⟨_, add_pos R0 R0, fun m n =>
-      lt_of_le_of_lt (dist_triangle_right _ _ _) (add_lt_add (H m) (H n))⟩
+  exact ⟨_, add_pos R0 R0, fun m n =>
+    lt_of_le_of_lt (dist_triangle_right _ _ _) (add_lt_add (H m) (H n))⟩
   let R := Finset.sup (Finset.range N) fun n => nndist (u n) (u N)
   refine ⟨↑R + 1, add_pos_of_nonneg_of_pos R.2 zero_lt_one, fun n => ?_⟩
   rcases le_or_lt N n with h | h
-  · exact lt_of_lt_of_le (hN _ h) (le_add_of_nonneg_left R.2)
-  · have : _ ≤ R := Finset.le_sup (Finset.mem_range.2 h)
-    exact lt_of_le_of_lt this (lt_add_of_pos_right _ zero_lt_one)
+  exact lt_of_lt_of_le (hN _ h) (le_add_of_nonneg_left R.2)
+  have : _ ≤ R := Finset.le_sup (Finset.mem_range.2 h)
+  exact lt_of_le_of_lt this (lt_add_of_pos_right _ zero_lt_one)
 
 /-- Yet another metric characterization of Cauchy sequences on integers. This one is often the
 most efficient. -/

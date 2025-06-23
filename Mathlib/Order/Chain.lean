@@ -192,8 +192,8 @@ private theorem chainClosure_succ_total_aux (hc₁ : ChainClosure r c₁)
   induction hc₁ with
   | @succ c₃ hc₃ ih =>
     cases' ih with ih ih
-    · exact Or.inl (ih.trans subset_succChain)
-    · exact (h hc₃ ih).imp_left fun (h : c₂ = c₃) => h ▸ Subset.rfl
+    exact Or.inl (ih.trans subset_succChain)
+    exact (h hc₃ ih).imp_left fun (h : c₂ = c₃) => h ▸ Subset.rfl
   | union _ ih =>
     refine or_iff_not_imp_left.2 fun hn => sUnion_subset fun a ha => ?_
     exact (ih a ha).resolve_left fun h => hn <| h.trans <| subset_sUnion_of_mem ha
@@ -204,18 +204,18 @@ private theorem chainClosure_succ_total (hc₁ : ChainClosure r c₁) (hc₂ : C
   | succ _ ih =>
     refine ((chainClosure_succ_total_aux hc₁) fun c₁ => ih).imp h.antisymm' fun h₁ => ?_
     obtain rfl | h₂ := ih hc₁ h₁
-    · exact Subset.rfl
-    · exact h₂.trans subset_succChain
+    exact Subset.rfl
+    exact h₂.trans subset_succChain
   | union _ ih =>
     apply Or.imp_left h.antisymm'
     apply by_contradiction
     simp only [sUnion_subset_iff, not_or, not_forall, exists_prop, and_imp, forall_exists_index]
     intro c₃ hc₃ h₁ h₂
     obtain h | h := chainClosure_succ_total_aux hc₁ fun c₄ => ih _ hc₃
-    · exact h₁ (subset_succChain.trans h)
+    exact h₁ (subset_succChain.trans h)
     obtain h' | h' := ih c₃ hc₃ hc₁ h
-    · exact h₁ h'.subset
-    · exact h₂ (h'.trans <| subset_sUnion_of_mem hc₃)
+    exact h₁ h'.subset
+    exact h₂ (h'.trans <| subset_sUnion_of_mem hc₃)
 
 theorem ChainClosure.total (hc₁ : ChainClosure r c₁) (hc₂ : ChainClosure r c₂) :
     c₁ ⊆ c₂ ∨ c₂ ⊆ c₁ :=

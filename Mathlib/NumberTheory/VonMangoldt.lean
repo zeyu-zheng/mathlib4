@@ -77,7 +77,7 @@ theorem vonMangoldt_apply_one : Λ 1 = 0 := by simp [vonMangoldt_apply]
 theorem vonMangoldt_nonneg {n : ℕ} : 0 ≤ Λ n := by
   rw [vonMangoldt_apply]
   split_ifs
-  · exact Real.log_nonneg (one_le_cast.2 (Nat.minFac_pos n))
+  exact Real.log_nonneg (one_le_cast.2 (Nat.minFac_pos n))
   rfl
 
 theorem vonMangoldt_apply_pow {n k : ℕ} (hk : k ≠ 0) : Λ (n ^ k) = Λ n := by
@@ -98,11 +98,11 @@ theorem vonMangoldt_eq_zero_iff {n : ℕ} : Λ n = 0 ↔ ¬IsPrimePow n :=
 
 theorem vonMangoldt_sum {n : ℕ} : ∑ i ∈ n.divisors, Λ i = Real.log n := by
   refine recOnPrimeCoprime ?_ ?_ ?_ n
-  · simp
-  · intro p k hp
-    rw [sum_divisors_prime_pow hp, cast_pow, Real.log_pow, Finset.sum_range_succ', Nat.pow_zero,
-      vonMangoldt_apply_one]
-    simp [vonMangoldt_apply_pow (Nat.succ_ne_zero _), vonMangoldt_apply_prime hp]
+  simp
+  intro p k hp
+  rw [sum_divisors_prime_pow hp, cast_pow, Real.log_pow, Finset.sum_range_succ', Nat.pow_zero,
+    vonMangoldt_apply_one]
+  simp [vonMangoldt_apply_pow (Nat.succ_ne_zero _), vonMangoldt_apply_prime hp]
   intro a b ha' hb' hab ha hb
   simp only [vonMangoldt_apply, ← sum_filter] at ha hb ⊢
   rw [mul_divisors_filter_prime_pow hab, filter_union,

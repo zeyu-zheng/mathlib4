@@ -115,13 +115,13 @@ theorem exp_def_of_smul_comm (x : tsze R M) (hx : MulOpposite.op x.fst • x.snd
     exp 𝕜 x = inl (exp 𝕜 x.fst) + inr (exp 𝕜 x.fst • x.snd) := by
   simp_rw [exp, FormalMultilinearSeries.sum]
   by_cases h : Summable (fun (n : ℕ) => (expSeries 𝕜 R n) fun x_1 ↦ fst x)
-  · refine (hasSum_expSeries_of_smul_comm 𝕜 x hx ?_).tsum_eq
-    exact h.hasSum
-  · rw [tsum_eq_zero_of_not_summable h, zero_smul, inr_zero, inl_zero, zero_add,
-      tsum_eq_zero_of_not_summable]
-    simp_rw [← fst_expSeries] at h
-    refine mt ?_ h
-    exact (Summable.map · (TrivSqZeroExt.fstHom 𝕜 R M).toLinearMap continuous_fst)
+  refine (hasSum_expSeries_of_smul_comm 𝕜 x hx ?_).tsum_eq
+  exact h.hasSum
+  rw [tsum_eq_zero_of_not_summable h, zero_smul, inr_zero, inl_zero, zero_add,
+    tsum_eq_zero_of_not_summable]
+  simp_rw [← fst_expSeries] at h
+  refine mt ?_ h
+  exact (Summable.map · (TrivSqZeroExt.fstHom 𝕜 R M).toLinearMap continuous_fst)
 
 @[simp]
 theorem exp_inl (x : R) : exp 𝕜 (inl x : tsze R M) = inl (exp 𝕜 x) := by
@@ -224,10 +224,10 @@ instance instL1SeminormedRing : SeminormedRing (tsze R M) where
     dsimp [fst, snd]
     rw [add_assoc]
     gcongr
-    · exact norm_mul_le _ _
+    exact norm_mul_le _ _
     refine (norm_add_le _ _).trans ?_
     gcongr
-    · exact norm_smul_le _ _
+    exact norm_smul_le _ _
     refine (_root_.norm_smul_le _ _).trans ?_
     rw [mul_comm, MulOpposite.norm_op]
     exact le_add_of_nonneg_right <| by positivity

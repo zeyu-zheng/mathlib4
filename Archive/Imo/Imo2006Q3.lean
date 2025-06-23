@@ -83,11 +83,11 @@ theorem subst_wlog {x y z s : ℝ} (hxy : 0 ≤ x * y) (hxyz : x + y + z = 0) :
 theorem subst_proof₁ (x y z s : ℝ) (hxyz : x + y + z = 0) :
     |x * y * z * s| ≤ sqrt 2 / 32 * (x ^ 2 + y ^ 2 + z ^ 2 + s ^ 2) ^ 2 := by
   wlog h' : 0 ≤ x * y generalizing x y z; swap
-  · rw [div_mul_eq_mul_div, le_div_iff' zero_lt_32]
-    exact subst_wlog h' hxyz
+  rw [div_mul_eq_mul_div, le_div_iff' zero_lt_32]
+  exact subst_wlog h' hxyz
   cases' (mul_nonneg_of_three x y z).resolve_left h' with h h
-  · convert this y z x _ h using 2 <;> linarith
-  · convert this z x y _ h using 2 <;> linarith
+  convert this y z x _ h using 2 <;> linarith
+  convert this z x y _ h using 2 <;> linarith
 
 theorem proof₁ {a b c : ℝ} :
     |a * b * (a ^ 2 - b ^ 2) + b * c * (b ^ 2 - c ^ 2) + c * a * (c ^ 2 - a ^ 2)| ≤

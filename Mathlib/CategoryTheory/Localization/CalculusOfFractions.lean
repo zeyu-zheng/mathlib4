@@ -254,10 +254,10 @@ lemma trans {X Y : C} {z₁ z₂ z₃ : W.LeftFraction X Y}
   obtain ⟨Z₇, w, hw, fac'⟩ := HasLeftCalculusOfFractions.ext _ _ _ z₂.hs eq
   simp only [Category.assoc] at fac'
   refine ⟨Z₇, t₁ ≫ v₄ ≫ w, u₃ ≫ v₅ ≫ w, ?_, ?_, ?_⟩
-  · rw [reassoc_of% fac]
-  · rw [reassoc_of% hft, ← fac', reassoc_of% hfu]
-  · rw [← reassoc_of% fac, ← reassoc_of% hsu, ← Category.assoc]
-    exact W.comp_mem _ _ hu (W.comp_mem _ _ hv₅ hw)
+  rw [reassoc_of% fac]
+  rw [reassoc_of% hft, ← fac', reassoc_of% hfu]
+  rw [← reassoc_of% fac, ← reassoc_of% hsu, ← Category.assoc]
+  exact W.comp_mem _ _ hu (W.comp_mem _ _ hv₅ hw)
 
 end LeftFractionRel
 
@@ -297,10 +297,10 @@ lemma comp₀_rel {X Y Z : C} (z₁ : W.LeftFraction X Y) (z₂ : W.LeftFraction
   obtain ⟨Y, t, ht, fac'⟩ := HasLeftCalculusOfFractions.ext _ _ _ z₁.hs eq
   simp only [assoc] at fac'
   refine ⟨Y, z₄.f ≫ t, z₄.s ≫ t, ?_, ?_, ?_⟩
-  · simp only [comp₀, assoc, reassoc_of% fac]
-  · simp only [comp₀, assoc, fac']
-  · simp only [comp₀, assoc, ← reassoc_of% fac]
-    exact W.comp_mem _ _ z₂.hs (W.comp_mem _ _ z₃'.hs (W.comp_mem _ _ z₄.hs ht))
+  simp only [comp₀, assoc, reassoc_of% fac]
+  simp only [comp₀, assoc, fac']
+  simp only [comp₀, assoc, ← reassoc_of% fac]
+  exact W.comp_mem _ _ z₂.hs (W.comp_mem _ _ z₃'.hs (W.comp_mem _ _ z₄.hs ht))
 
 variable (W)
 
@@ -658,12 +658,12 @@ lemma map_eq_iff {X Y : C} (f g : LeftFraction W X Y) :
       LeftFractionRel f g := by
   simp only [← Hom.map_mk _ (Q W)]
   constructor
-  · intro h
-    rw [← homMk_eq_iff_leftFractionRel, homMk_eq, homMk_eq]
-    exact h
-  · intro h
-    congr 1
-    exact Quot.sound h
+  intro h
+  rw [← homMk_eq_iff_leftFractionRel, homMk_eq, homMk_eq]
+  exact h
+  intro h
+  congr 1
+  exact Quot.sound h
 
 end Localization
 
@@ -742,28 +742,28 @@ lemma MorphismProperty.LeftFraction.map_eq_iff
     φ.map L (Localization.inverts _ _) = ψ.map L (Localization.inverts _ _) ↔
       LeftFractionRel φ ψ := by
   constructor
-  · intro h
-    rw [← MorphismProperty.LeftFraction.Localization.map_eq_iff]
-    apply map_eq_of_map_eq _ _ _ _ h
-  · intro h
-    simp only [← Localization.Hom.map_mk _ L (Localization.inverts _ _)]
-    congr 1
-    exact Quot.sound h
+  intro h
+  rw [← MorphismProperty.LeftFraction.Localization.map_eq_iff]
+  apply map_eq_of_map_eq _ _ _ _ h
+  intro h
+  simp only [← Localization.Hom.map_mk _ L (Localization.inverts _ _)]
+  congr 1
+  exact Quot.sound h
 
 lemma MorphismProperty.map_eq_iff_postcomp {X Y : C} (f₁ f₂ : X ⟶ Y) :
     L.map f₁ = L.map f₂ ↔ ∃ (Z : C) (s : Y ⟶ Z) (_ : W s), f₁ ≫ s = f₂ ≫ s := by
   constructor
-  · intro h
-    rw [← LeftFraction.map_ofHom W _ L (Localization.inverts _ _),
-      ← LeftFraction.map_ofHom W _ L (Localization.inverts _ _),
-      LeftFraction.map_eq_iff] at h
-    obtain ⟨Z, t₁, t₂, hst, hft, ht⟩ := h
-    dsimp at t₁ t₂ hst hft ht
-    simp only [id_comp] at hst
-    exact ⟨Z, t₁, by simpa using ht, by rw [hft, hst]⟩
-  · rintro ⟨Z, s, hs, fac⟩
-    simp only [← cancel_mono (Localization.isoOfHom L W s hs).hom,
-      Localization.isoOfHom_hom, ← L.map_comp, fac]
+  intro h
+  rw [← LeftFraction.map_ofHom W _ L (Localization.inverts _ _),
+    ← LeftFraction.map_ofHom W _ L (Localization.inverts _ _),
+    LeftFraction.map_eq_iff] at h
+  obtain ⟨Z, t₁, t₂, hst, hft, ht⟩ := h
+  dsimp at t₁ t₂ hst hft ht
+  simp only [id_comp] at hst
+  exact ⟨Z, t₁, by simpa using ht, by rw [hft, hst]⟩
+  rintro ⟨Z, s, hs, fac⟩
+  simp only [← cancel_mono (Localization.isoOfHom L W s hs).hom,
+    Localization.isoOfHom_hom, ← L.map_comp, fac]
 
 lemma Localization.essSurj_mapArrow :
     L.mapArrow.EssSurj where
@@ -955,23 +955,23 @@ lemma MorphismProperty.RightFraction.map_eq_iff
   rw [← leftFractionRel_op_iff, ← LeftFraction.map_eq_iff L.op W.op φ.op ψ.op,
     ← φ.op_map L (Localization.inverts _ _), ← ψ.op_map L (Localization.inverts _ _)]
   constructor
-  · apply Quiver.Hom.unop_inj
-  · apply Quiver.Hom.op_inj
+  apply Quiver.Hom.unop_inj
+  apply Quiver.Hom.op_inj
 
 lemma MorphismProperty.map_eq_iff_precomp {Y Z : C} (f₁ f₂ : Y ⟶ Z) :
     L.map f₁ = L.map f₂ ↔ ∃ (X : C) (s : X ⟶ Y) (_ : W s), s ≫ f₁ = s ≫ f₂ := by
   constructor
-  · intro h
-    rw [← RightFraction.map_ofHom W _ L (Localization.inverts _ _),
-      ← RightFraction.map_ofHom W _ L (Localization.inverts _ _),
-      RightFraction.map_eq_iff] at h
-    obtain ⟨Z, t₁, t₂, hst, hft, ht⟩ := h
-    dsimp at t₁ t₂ hst hft ht
-    simp only [comp_id] at hst
-    exact ⟨Z, t₁, by simpa using ht, by rw [hft, hst]⟩
-  · rintro ⟨Z, s, hs, fac⟩
-    simp only [← cancel_epi (Localization.isoOfHom L W s hs).hom,
-      Localization.isoOfHom_hom, ← L.map_comp, fac]
+  intro h
+  rw [← RightFraction.map_ofHom W _ L (Localization.inverts _ _),
+    ← RightFraction.map_ofHom W _ L (Localization.inverts _ _),
+    RightFraction.map_eq_iff] at h
+  obtain ⟨Z, t₁, t₂, hst, hft, ht⟩ := h
+  dsimp at t₁ t₂ hst hft ht
+  simp only [comp_id] at hst
+  exact ⟨Z, t₁, by simpa using ht, by rw [hft, hst]⟩
+  rintro ⟨Z, s, hs, fac⟩
+  simp only [← cancel_epi (Localization.isoOfHom L W s hs).hom,
+    Localization.isoOfHom_hom, ← L.map_comp, fac]
 
 lemma Localization.essSurj_mapArrow_of_hasRightCalculusOfFractions :
     L.mapArrow.EssSurj where

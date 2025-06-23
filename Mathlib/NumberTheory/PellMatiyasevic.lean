@@ -600,8 +600,8 @@ theorem eq_of_xn_modEq_lem3 {i n} (npos : 0 < n) :
         lt_of_add_lt_add_right <|
           show 2 * n - k + k < n + k by
             rw [tsub_add_cancel_of_le]
-            · rw [two_mul]
-              exact add_lt_add_left kn n
+            rw [two_mul]
+            exact add_lt_add_left kn n
             exact k2n
       have xle : xn a1 (2 * n - k) ≤ xn a1 n := le_of_lt <| strictMono_x a1 k2nl
       suffices xn a1 k % xn a1 n = xn a1 n - xn a1 (2 * n - k) by rw [this, Int.ofNat_sub xle]
@@ -622,31 +622,31 @@ theorem eq_of_xn_modEq_lem3 {i n} (npos : 0 < n) :
               rw [two_mul, tsub_add_eq_tsub_tsub, add_tsub_cancel_right]]
           refine lt_sub_left_of_add_lt (Int.ofNat_lt_ofNat_of_lt ?_)
           rcases lt_or_eq_of_le <| Nat.le_of_succ_le_succ ij with lin | ein
-          · rw [Nat.mod_eq_of_lt (strictMono_x _ lin)]
-            have ll : xn a1 (n - 1) + xn a1 (n - 1) ≤ xn a1 n := by
-              rw [← two_mul, mul_comm,
-                show xn a1 n = xn a1 (n - 1 + 1) by rw [tsub_add_cancel_of_le (succ_le_of_lt npos)],
-                xn_succ]
-              exact le_trans (Nat.mul_le_mul_left _ a1) (Nat.le_add_right _ _)
-            have npm : (n - 1).succ = n := Nat.succ_pred_eq_of_pos npos
-            have il : i ≤ n - 1 := by
-              apply Nat.le_of_succ_le_succ
-              rw [npm]
-              exact lin
-            rcases lt_or_eq_of_le il with ill | ile
-            · exact lt_of_lt_of_le (Nat.add_lt_add_left (strictMono_x a1 ill) _) ll
-            · rw [ile]
-              apply lt_of_le_of_ne ll
-              rw [← two_mul]
-              exact fun e =>
-                ntriv <| by
-                  let ⟨a2, s1⟩ :=
-                    @eq_of_xn_modEq_lem2 _ a1 (n - 1)
-                      (by rwa [tsub_add_cancel_of_le (succ_le_of_lt npos)])
-                  have n1 : n = 1 := le_antisymm (tsub_eq_zero_iff_le.mp s1) npos
-                  rw [ile, a2, n1]; exact ⟨rfl, rfl, rfl, rfl⟩
-          · rw [ein, Nat.mod_self, add_zero]
-            exact strictMono_x _ (Nat.pred_lt npos.ne'))
+          rw [Nat.mod_eq_of_lt (strictMono_x _ lin)]
+          have ll : xn a1 (n - 1) + xn a1 (n - 1) ≤ xn a1 n := by
+            rw [← two_mul, mul_comm,
+              show xn a1 n = xn a1 (n - 1 + 1) by rw [tsub_add_cancel_of_le (succ_le_of_lt npos)],
+              xn_succ]
+            exact le_trans (Nat.mul_le_mul_left _ a1) (Nat.le_add_right _ _)
+          have npm : (n - 1).succ = n := Nat.succ_pred_eq_of_pos npos
+          have il : i ≤ n - 1 := by
+            apply Nat.le_of_succ_le_succ
+            rw [npm]
+            exact lin
+          rcases lt_or_eq_of_le il with ill | ile
+          exact lt_of_lt_of_le (Nat.add_lt_add_left (strictMono_x a1 ill) _) ll
+          rw [ile]
+          apply lt_of_le_of_ne ll
+          rw [← two_mul]
+          exact fun e =>
+            ntriv <| by
+              let ⟨a2, s1⟩ :=
+                @eq_of_xn_modEq_lem2 _ a1 (n - 1)
+                  (by rwa [tsub_add_cancel_of_le (succ_le_of_lt npos)])
+              have n1 : n = 1 := le_antisymm (tsub_eq_zero_iff_le.mp s1) npos
+              rw [ile, a2, n1]; exact ⟨rfl, rfl, rfl, rfl⟩
+          rw [ein, Nat.mod_self, add_zero]
+          exact strictMono_x _ (Nat.pred_lt npos.ne'))
         fun jn : j > n =>
         have lem1 : j ≠ n → xn a1 j % xn a1 n < xn a1 (j + 1) % xn a1 n →
             xn a1 i % xn a1 n < xn a1 (j + 1) % xn a1 n :=
@@ -679,7 +679,7 @@ theorem eq_of_xn_modEq_le {i j n} (ij : i ≤ j) (j2n : j ≤ 2 * n)
           rw [Nat.mod_eq_of_lt (strictMono_x a1 (Nat.pos_of_ne_zero npos))]
           exact Nat.succ_pos _
         cases' i with i
-        · exact x0
+        exact x0
         rw [jn] at ij'
         exact
           x0.trans
@@ -728,7 +728,7 @@ theorem modEq_of_xn_modEq {i j n} (ipos : 0 < i) (hin : i ≤ n)
   have jj : j ≡ j' [MOD 4 * n] := by delta ModEq; rw [Nat.mod_eq_of_lt jl]
   have : ∀ j q, xn a1 (j + 4 * n * q) ≡ xn a1 j [MOD xn a1 n] := by
     intro j q; induction' q with q IH
-    · simp [ModEq.refl]
+    simp [ModEq.refl]
     rw [Nat.mul_succ, ← add_assoc, add_comm]
     exact (xn_modEq_x4n_add _ _ _).trans IH
   Or.imp (fun ji : j' = i => by rwa [← ji])
@@ -863,69 +863,69 @@ theorem eq_pow_of_pell {m n k} :
       2 * a * n = t + (n * n + 1) ∧ m < t ∧
       n ≤ w ∧ k ≤ w ∧ a * a - ((w + 1) * (w + 1) - 1) * (w * z) * (w * z) = 1) := by
   constructor
-  · rintro rfl
-    refine k.eq_zero_or_pos.imp (fun k0 : k = 0 => k0.symm ▸ ⟨rfl, rfl⟩) fun hk => ⟨hk, ?_⟩
-    refine n.eq_zero_or_pos.imp (fun n0 : n = 0 ↦ n0.symm ▸ ⟨rfl, zero_pow hk.ne'⟩)
-      fun hn ↦ ⟨hn, ?_⟩
-    set w := max n k
-    have nw : n ≤ w := le_max_left _ _
-    have kw : k ≤ w := le_max_right _ _
-    have wpos : 0 < w := hn.trans_le nw
-    have w1 : 1 < w + 1 := Nat.succ_lt_succ wpos
-    set a := xn w1 w
-    have a1 : 1 < a := strictMono_x w1 wpos
-    have na : n ≤ a := nw.trans (n_lt_xn w1 w).le
-    set x := xn a1 k
-    set y := yn a1 k
-    obtain ⟨z, ze⟩ : w ∣ yn w1 w :=
-      modEq_zero_iff_dvd.1 ((yn_modEq_a_sub_one w1 w).trans dvd_rfl.modEq_zero_nat)
-    have nt : (↑(n ^ k) : ℤ) < 2 * a * n - n * n - 1 := by
-      refine eq_pow_of_pell_lem hn.ne' hk.ne' ?_
-      calc
-        n ^ k ≤ n ^ w := Nat.pow_le_pow_of_le_right hn kw
-        _ < (w + 1) ^ w := Nat.pow_lt_pow_left (Nat.lt_succ_of_le nw) wpos.ne'
-        _ ≤ a := xn_ge_a_pow w1 w
-    lift (2 * a * n - n * n - 1 : ℤ) to ℕ using (Nat.cast_nonneg _).trans nt.le with t te
-    have tm : x ≡ y * (a - n) + n ^ k [MOD t] := by
-      apply modEq_of_dvd
-      rw [Int.ofNat_add, Int.ofNat_mul, Int.ofNat_sub na, te]
-      exact x_sub_y_dvd_pow a1 n k
-    have ta : 2 * a * n = t + (n * n + 1) := by
-      zify
-      rw [te]
-      ring_nf
-    have zp : a * a - ((w + 1) * (w + 1) - 1) * (w * z) * (w * z) = 1 := ze ▸ pell_eq w1 w
-    exact ⟨w, a, t, z, a1, tm, ta, Nat.cast_lt.1 nt, nw, kw, zp⟩
-  · rintro (⟨rfl, rfl⟩ | ⟨hk0, ⟨rfl, rfl⟩ | ⟨hn0, w, a, t, z, a1, tm, ta, mt, nw, kw, zp⟩⟩)
-    · exact _root_.pow_zero n
-    · exact zero_pow hk0.ne'
-    have hw0 : 0 < w := hn0.trans_le nw
-    have hw1 : 1 < w + 1 := Nat.succ_lt_succ hw0
-    rcases eq_pell hw1 zp with ⟨j, rfl, yj⟩
-    have hj0 : 0 < j := by
-      apply Nat.pos_of_ne_zero
-      rintro rfl
-      exact lt_irrefl 1 a1
-    have wj : w ≤ j :=
-      Nat.le_of_dvd hj0
-        (modEq_zero_iff_dvd.1 <|
-          (yn_modEq_a_sub_one hw1 j).symm.trans <| modEq_zero_iff_dvd.2 ⟨z, yj.symm⟩)
-    have hnka : n ^ k < xn hw1 j := calc
-      n ^ k ≤ n ^ j := Nat.pow_le_pow_of_le_right hn0 (le_trans kw wj)
-      _ < (w + 1) ^ j := Nat.pow_lt_pow_left (Nat.lt_succ_of_le nw) hj0.ne'
-      _ ≤ xn hw1 j := xn_ge_a_pow hw1 j
-    have nt : (↑(n ^ k) : ℤ) < 2 * xn hw1 j * n - n * n - 1 :=
-      eq_pow_of_pell_lem hn0.ne' hk0.ne' hnka
-    have na : n ≤ xn hw1 j := (Nat.le_self_pow hk0.ne' _).trans hnka.le
-    have te : (t : ℤ) = 2 * xn hw1 j * n - n * n - 1 := by
-      rw [sub_sub, eq_sub_iff_add_eq]
-      exact mod_cast ta.symm
-    have : xn a1 k ≡ yn a1 k * (xn hw1 j - n) + n ^ k [MOD t] := by
-      apply modEq_of_dvd
-      rw [te, Nat.cast_add, Nat.cast_mul, Int.ofNat_sub na]
-      exact x_sub_y_dvd_pow a1 n k
-    have : n ^ k % t = m % t := (this.symm.trans tm).add_left_cancel' _
-    rw [← te] at nt
-    rwa [Nat.mod_eq_of_lt (Nat.cast_lt.1 nt), Nat.mod_eq_of_lt mt] at this
+  rintro rfl
+  refine k.eq_zero_or_pos.imp (fun k0 : k = 0 => k0.symm ▸ ⟨rfl, rfl⟩) fun hk => ⟨hk, ?_⟩
+  refine n.eq_zero_or_pos.imp (fun n0 : n = 0 ↦ n0.symm ▸ ⟨rfl, zero_pow hk.ne'⟩)
+    fun hn ↦ ⟨hn, ?_⟩
+  set w := max n k
+  have nw : n ≤ w := le_max_left _ _
+  have kw : k ≤ w := le_max_right _ _
+  have wpos : 0 < w := hn.trans_le nw
+  have w1 : 1 < w + 1 := Nat.succ_lt_succ wpos
+  set a := xn w1 w
+  have a1 : 1 < a := strictMono_x w1 wpos
+  have na : n ≤ a := nw.trans (n_lt_xn w1 w).le
+  set x := xn a1 k
+  set y := yn a1 k
+  obtain ⟨z, ze⟩ : w ∣ yn w1 w :=
+    modEq_zero_iff_dvd.1 ((yn_modEq_a_sub_one w1 w).trans dvd_rfl.modEq_zero_nat)
+  have nt : (↑(n ^ k) : ℤ) < 2 * a * n - n * n - 1 := by
+    refine eq_pow_of_pell_lem hn.ne' hk.ne' ?_
+    calc
+      n ^ k ≤ n ^ w := Nat.pow_le_pow_of_le_right hn kw
+      _ < (w + 1) ^ w := Nat.pow_lt_pow_left (Nat.lt_succ_of_le nw) wpos.ne'
+      _ ≤ a := xn_ge_a_pow w1 w
+  lift (2 * a * n - n * n - 1 : ℤ) to ℕ using (Nat.cast_nonneg _).trans nt.le with t te
+  have tm : x ≡ y * (a - n) + n ^ k [MOD t] := by
+    apply modEq_of_dvd
+    rw [Int.ofNat_add, Int.ofNat_mul, Int.ofNat_sub na, te]
+    exact x_sub_y_dvd_pow a1 n k
+  have ta : 2 * a * n = t + (n * n + 1) := by
+    zify
+    rw [te]
+    ring_nf
+  have zp : a * a - ((w + 1) * (w + 1) - 1) * (w * z) * (w * z) = 1 := ze ▸ pell_eq w1 w
+  exact ⟨w, a, t, z, a1, tm, ta, Nat.cast_lt.1 nt, nw, kw, zp⟩
+  rintro (⟨rfl, rfl⟩ | ⟨hk0, ⟨rfl, rfl⟩ | ⟨hn0, w, a, t, z, a1, tm, ta, mt, nw, kw, zp⟩⟩)
+  exact _root_.pow_zero n
+  exact zero_pow hk0.ne'
+  have hw0 : 0 < w := hn0.trans_le nw
+  have hw1 : 1 < w + 1 := Nat.succ_lt_succ hw0
+  rcases eq_pell hw1 zp with ⟨j, rfl, yj⟩
+  have hj0 : 0 < j := by
+    apply Nat.pos_of_ne_zero
+    rintro rfl
+    exact lt_irrefl 1 a1
+  have wj : w ≤ j :=
+    Nat.le_of_dvd hj0
+      (modEq_zero_iff_dvd.1 <|
+        (yn_modEq_a_sub_one hw1 j).symm.trans <| modEq_zero_iff_dvd.2 ⟨z, yj.symm⟩)
+  have hnka : n ^ k < xn hw1 j := calc
+    n ^ k ≤ n ^ j := Nat.pow_le_pow_of_le_right hn0 (le_trans kw wj)
+    _ < (w + 1) ^ j := Nat.pow_lt_pow_left (Nat.lt_succ_of_le nw) hj0.ne'
+    _ ≤ xn hw1 j := xn_ge_a_pow hw1 j
+  have nt : (↑(n ^ k) : ℤ) < 2 * xn hw1 j * n - n * n - 1 :=
+    eq_pow_of_pell_lem hn0.ne' hk0.ne' hnka
+  have na : n ≤ xn hw1 j := (Nat.le_self_pow hk0.ne' _).trans hnka.le
+  have te : (t : ℤ) = 2 * xn hw1 j * n - n * n - 1 := by
+    rw [sub_sub, eq_sub_iff_add_eq]
+    exact mod_cast ta.symm
+  have : xn a1 k ≡ yn a1 k * (xn hw1 j - n) + n ^ k [MOD t] := by
+    apply modEq_of_dvd
+    rw [te, Nat.cast_add, Nat.cast_mul, Int.ofNat_sub na]
+    exact x_sub_y_dvd_pow a1 n k
+  have : n ^ k % t = m % t := (this.symm.trans tm).add_left_cancel' _
+  rw [← te] at nt
+  rwa [Nat.mod_eq_of_lt (Nat.cast_lt.1 nt), Nat.mod_eq_of_lt mt] at this
 
 end Pell

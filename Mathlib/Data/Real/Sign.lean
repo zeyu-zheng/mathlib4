@@ -45,9 +45,9 @@ theorem sign_one : sign 1 = 1 :=
 
 theorem sign_apply_eq (r : ℝ) : sign r = -1 ∨ sign r = 0 ∨ sign r = 1 := by
   obtain hn | rfl | hp := lt_trichotomy r (0 : ℝ)
-  · exact Or.inl <| sign_of_neg hn
-  · exact Or.inr <| Or.inl <| sign_zero
-  · exact Or.inr <| Or.inr <| sign_of_pos hp
+  exact Or.inl <| sign_of_neg hn
+  exact Or.inr <| Or.inl <| sign_zero
+  exact Or.inr <| Or.inr <| sign_of_pos hp
 
 /-- This lemma is useful for working with `ℝˣ` -/
 theorem sign_apply_eq_of_ne_zero (r : ℝ) (h : r ≠ 0) : sign r = -1 ∨ sign r = 1 :=
@@ -57,35 +57,35 @@ theorem sign_apply_eq_of_ne_zero (r : ℝ) (h : r ≠ 0) : sign r = -1 ∨ sign 
 theorem sign_eq_zero_iff {r : ℝ} : sign r = 0 ↔ r = 0 := by
   refine ⟨fun h => ?_, fun h => h.symm ▸ sign_zero⟩
   obtain hn | rfl | hp := lt_trichotomy r (0 : ℝ)
-  · rw [sign_of_neg hn, neg_eq_zero] at h
-    exact (one_ne_zero h).elim
-  · rfl
-  · rw [sign_of_pos hp] at h
-    exact (one_ne_zero h).elim
+  rw [sign_of_neg hn, neg_eq_zero] at h
+  exact (one_ne_zero h).elim
+  rfl
+  rw [sign_of_pos hp] at h
+  exact (one_ne_zero h).elim
 
 theorem sign_intCast (z : ℤ) : sign (z : ℝ) = ↑(Int.sign z) := by
   obtain hn | rfl | hp := lt_trichotomy z (0 : ℤ)
-  · rw [sign_of_neg (Int.cast_lt_zero.mpr hn), Int.sign_eq_neg_one_of_neg hn, Int.cast_neg,
-      Int.cast_one]
-  · rw [Int.cast_zero, sign_zero, Int.sign_zero, Int.cast_zero]
-  · rw [sign_of_pos (Int.cast_pos.mpr hp), Int.sign_eq_one_of_pos hp, Int.cast_one]
+  rw [sign_of_neg (Int.cast_lt_zero.mpr hn), Int.sign_eq_neg_one_of_neg hn, Int.cast_neg,
+    Int.cast_one]
+  rw [Int.cast_zero, sign_zero, Int.sign_zero, Int.cast_zero]
+  rw [sign_of_pos (Int.cast_pos.mpr hp), Int.sign_eq_one_of_pos hp, Int.cast_one]
 
 @[deprecated (since := "2024-04-17")]
 alias sign_int_cast := sign_intCast
 
 theorem sign_neg {r : ℝ} : sign (-r) = -sign r := by
   obtain hn | rfl | hp := lt_trichotomy r (0 : ℝ)
-  · rw [sign_of_neg hn, sign_of_pos (neg_pos.mpr hn), neg_neg]
-  · rw [sign_zero, neg_zero, sign_zero]
-  · rw [sign_of_pos hp, sign_of_neg (neg_lt_zero.mpr hp)]
+  rw [sign_of_neg hn, sign_of_pos (neg_pos.mpr hn), neg_neg]
+  rw [sign_zero, neg_zero, sign_zero]
+  rw [sign_of_pos hp, sign_of_neg (neg_lt_zero.mpr hp)]
 
 theorem sign_mul_nonneg (r : ℝ) : 0 ≤ sign r * r := by
   obtain hn | rfl | hp := lt_trichotomy r (0 : ℝ)
-  · rw [sign_of_neg hn]
-    exact mul_nonneg_of_nonpos_of_nonpos (by norm_num) hn.le
-  · rw [mul_zero]
-  · rw [sign_of_pos hp, one_mul]
-    exact hp.le
+  rw [sign_of_neg hn]
+  exact mul_nonneg_of_nonpos_of_nonpos (by norm_num) hn.le
+  rw [mul_zero]
+  rw [sign_of_pos hp, one_mul]
+  exact hp.le
 
 theorem sign_mul_pos_of_ne_zero (r : ℝ) (hr : r ≠ 0) : 0 < sign r * r := by
   refine lt_of_le_of_ne (sign_mul_nonneg r) fun h => hr ?_
@@ -95,18 +95,18 @@ theorem sign_mul_pos_of_ne_zero (r : ℝ) (hr : r ≠ 0) : 0 < sign r * r := by
 @[simp]
 theorem inv_sign (r : ℝ) : (sign r)⁻¹ = sign r := by
   obtain hn | hz | hp := sign_apply_eq r
-  · rw [hn]
-    norm_num
-  · rw [hz]
-    exact inv_zero
-  · rw [hp]
-    exact inv_one
+  rw [hn]
+  norm_num
+  rw [hz]
+  exact inv_zero
+  rw [hp]
+  exact inv_one
 
 @[simp]
 theorem sign_inv (r : ℝ) : sign r⁻¹ = sign r := by
   obtain hn | rfl | hp := lt_trichotomy r (0 : ℝ)
-  · rw [sign_of_neg hn, sign_of_neg (inv_lt_zero (α := ℝ) |>.mpr hn)]
-  · rw [sign_zero, inv_zero, sign_zero]
-  · rw [sign_of_pos hp, sign_of_pos (inv_pos (α := ℝ) |>.mpr hp)]
+  rw [sign_of_neg hn, sign_of_neg (inv_lt_zero (α := ℝ) |>.mpr hn)]
+  rw [sign_zero, inv_zero, sign_zero]
+  rw [sign_of_pos hp, sign_of_pos (inv_pos (α := ℝ) |>.mpr hp)]
 
 end Real

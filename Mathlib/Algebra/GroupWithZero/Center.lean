@@ -38,8 +38,8 @@ lemma center_units_subset : center G₀ˣ ⊆ ((↑) : G₀ˣ → G₀) ⁻¹' c
   simp_rw [subset_def, mem_preimage, _root_.Semigroup.mem_center_iff]
   intro u hu a
   obtain rfl | ha := eq_or_ne a 0
-  · rw [zero_mul, mul_zero]
-  · exact congr_arg Units.val $ hu $ Units.mk0 a ha
+  rw [zero_mul, mul_zero]
+  exact congr_arg Units.val $ hu $ Units.mk0 a ha
 
 /-- In a group with zero, the center of the units is the preimage of the center. -/
 lemma center_units_eq : center G₀ˣ = ((↑) : G₀ˣ → G₀) ⁻¹' center G₀ :=
@@ -47,10 +47,10 @@ lemma center_units_eq : center G₀ˣ = ((↑) : G₀ˣ → G₀) ⁻¹' center 
 
 @[simp] lemma inv_mem_centralizer₀ (ha : a ∈ centralizer s) : a⁻¹ ∈ centralizer s := by
   obtain rfl | ha₀ := eq_or_ne a 0
-  · rw [inv_zero]
-    exact zero_mem_centralizer
-  · rintro c hc
-    rw [mul_inv_eq_iff_eq_mul₀ ha₀, mul_assoc, eq_inv_mul_iff_mul_eq₀ ha₀, ha c hc]
+  rw [inv_zero]
+  exact zero_mem_centralizer
+  rintro c hc
+  rw [mul_inv_eq_iff_eq_mul₀ ha₀, mul_assoc, eq_inv_mul_iff_mul_eq₀ ha₀, ha c hc]
 
 @[simp] lemma div_mem_centralizer₀ (ha : a ∈ centralizer s) (hb : b ∈ centralizer s) :
     a / b ∈ centralizer s := by

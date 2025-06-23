@@ -68,13 +68,13 @@ theorem Subsingleton.conformalAt [Subsingleton X] (f : X → Y) (x : X) : Confor
 theorem conformalAt_iff_isConformalMap_fderiv {f : X → Y} {x : X} :
     ConformalAt f x ↔ IsConformalMap (fderiv ℝ f x) := by
   constructor
-  · rintro ⟨f', hf, hf'⟩
-    rwa [hf.fderiv]
-  · intro H
-    by_cases h : DifferentiableAt ℝ f x
-    · exact ⟨fderiv ℝ f x, h.hasFDerivAt, H⟩
-    · nontriviality X
-      exact absurd (fderiv_zero_of_not_differentiableAt h) H.ne_zero
+  rintro ⟨f', hf, hf'⟩
+  rwa [hf.fderiv]
+  intro H
+  by_cases h : DifferentiableAt ℝ f x
+  exact ⟨fderiv ℝ f x, h.hasFDerivAt, H⟩
+  nontriviality X
+  exact absurd (fderiv_zero_of_not_differentiableAt h) H.ne_zero
 
 namespace ConformalAt
 

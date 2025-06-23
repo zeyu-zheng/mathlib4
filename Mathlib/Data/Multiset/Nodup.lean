@@ -81,8 +81,8 @@ theorem count_eq_one_of_mem [DecidableEq α] {a : α} {s : Multiset α} (d : Nod
 theorem count_eq_of_nodup [DecidableEq α] {a : α} {s : Multiset α} (d : Nodup s) :
     count a s = if a ∈ s then 1 else 0 := by
   split_ifs with h
-  · exact count_eq_one_of_mem d h
-  · exact count_eq_zero_of_not_mem h
+  exact count_eq_one_of_mem d h
+  exact count_eq_zero_of_not_mem h
 
 theorem nodup_iff_pairwise {α} {s : Multiset α} : Nodup s ↔ Pairwise (· ≠ ·) s :=
   Quotient.inductionOn s fun _ => (pairwise_coe_iff_pairwise fun _ _ => Ne.symm).symm
@@ -205,8 +205,8 @@ theorem map_eq_map_of_bij_of_nodup (f : α → γ) (g : β → γ) {s : Multiset
     (i_surj : ∀ b ∈ t, ∃ a ha, i a ha = b) (h : ∀ a ha, f a = g (i a ha)) : s.map f = t.map g := by
   have : t = s.attach.map fun x => i x.1 x.2
   rw [ht.ext]
-  · aesop
-  · exact hs.attach.map fun x y hxy ↦ Subtype.ext <| i_inj _ x.2 _ y.2 hxy
+  aesop
+  exact hs.attach.map fun x y hxy ↦ Subtype.ext <| i_inj _ x.2 _ y.2 hxy
   calc
     s.map f = s.pmap (fun x _ => f x) fun _ => id := by rw [pmap_eq_map]
     _ = s.attach.map fun x => f x.1 := by rw [pmap_eq_map_attach]

@@ -71,7 +71,7 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
     det (vandermonde v) = ∏ i : Fin n, ∏ j ∈ Ioi i, (v j - v i) := by
   unfold vandermonde
   induction' n with n ih
-  · exact det_eq_one_of_card_eq_zero (Fintype.card_fin 0)
+  exact det_eq_one_of_card_eq_zero (Fintype.card_fin 0)
   calc
     det (of fun i j : Fin n.succ => v i ^ (j : ℕ)) =
         det
@@ -110,36 +110,36 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
       unfold Function.comp at h
       rw [h]
 
-  · intro i j
-    simp_rw [of_apply]
-    rw [Matrix.cons_val_zero]
-    refine Fin.cases ?_ (fun i => ?_) i
-    · simp
-    rw [Matrix.cons_val_succ, Matrix.cons_val_succ, Pi.one_apply]
-    ring
-  · cases n
-    · rw [det_eq_one_of_card_eq_zero (Fintype.card_fin 0),
-      det_eq_one_of_card_eq_zero (Fintype.card_fin 0)]
-    apply det_eq_of_forall_col_eq_smul_add_pred fun _ => v 0
-    · intro j
-      simp
-    · intro i j
-      simp only [smul_eq_mul, Pi.add_apply, Fin.val_succ, Fin.coe_castSucc, Pi.smul_apply]
-      rw [Finset.sum_range_succ, add_comm, tsub_self, pow_zero, mul_one, Finset.mul_sum]
-      congr 1
-      refine Finset.sum_congr rfl fun i' hi' => ?_
-      rw [mul_left_comm (v 0), Nat.succ_sub, pow_succ']
-      exact Nat.lt_succ_iff.mp (Finset.mem_range.mp hi')
+  intro i j
+  simp_rw [of_apply]
+  rw [Matrix.cons_val_zero]
+  refine Fin.cases ?_ (fun i => ?_) i
+  simp
+  rw [Matrix.cons_val_succ, Matrix.cons_val_succ, Pi.one_apply]
+  ring
+  cases n
+  rw [det_eq_one_of_card_eq_zero (Fintype.card_fin 0),
+  det_eq_one_of_card_eq_zero (Fintype.card_fin 0)]
+  apply det_eq_of_forall_col_eq_smul_add_pred fun _ => v 0
+  intro j
+  simp
+  intro i j
+  simp only [smul_eq_mul, Pi.add_apply, Fin.val_succ, Fin.coe_castSucc, Pi.smul_apply]
+  rw [Finset.sum_range_succ, add_comm, tsub_self, pow_zero, mul_one, Finset.mul_sum]
+  congr 1
+  refine Finset.sum_congr rfl fun i' hi' => ?_
+  rw [mul_left_comm (v 0), Nat.succ_sub, pow_succ']
+  exact Nat.lt_succ_iff.mp (Finset.mem_range.mp hi')
 
 theorem det_vandermonde_eq_zero_iff [IsDomain R] {n : ℕ} {v : Fin n → R} :
     det (vandermonde v) = 0 ↔ ∃ i j : Fin n, v i = v j ∧ i ≠ j := by
   constructor
-  · simp only [det_vandermonde v, Finset.prod_eq_zero_iff, sub_eq_zero, forall_exists_index]
-    rintro i ⟨_, j, h₁, h₂⟩
-    exact ⟨j, i, h₂, (mem_Ioi.mp h₁).ne'⟩
-  · simp only [Ne, forall_exists_index, and_imp]
-    refine fun i j h₁ h₂ => Matrix.det_zero_of_row_eq h₂ (funext fun k => ?_)
-    rw [vandermonde_apply, vandermonde_apply, h₁]
+  simp only [det_vandermonde v, Finset.prod_eq_zero_iff, sub_eq_zero, forall_exists_index]
+  rintro i ⟨_, j, h₁, h₂⟩
+  exact ⟨j, i, h₂, (mem_Ioi.mp h₁).ne'⟩
+  simp only [Ne, forall_exists_index, and_imp]
+  refine fun i j h₁ h₂ => Matrix.det_zero_of_row_eq h₂ (funext fun k => ?_)
+  rw [vandermonde_apply, vandermonde_apply, h₁]
 
 theorem det_vandermonde_ne_zero_iff [IsDomain R] {n : ℕ} {v : Fin n → R} :
     det (vandermonde v) ≠ 0 ↔ Function.Injective v := by

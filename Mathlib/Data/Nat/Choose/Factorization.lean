@@ -34,7 +34,7 @@ variable {p n k : ℕ}
 /-- A logarithmic upper bound on the multiplicity of a prime in a binomial coefficient. -/
 theorem factorization_choose_le_log : (choose n k).factorization p ≤ log p n := by
   by_cases h : (choose n k).factorization p = 0
-  · simp [h]
+  simp [h]
   have hp : p.Prime := Not.imp_symm (choose n k).factorization_eq_zero_of_non_prime h
   have hkn : k ≤ n
   refine le_of_not_lt fun hnk => h ?_
@@ -57,9 +57,9 @@ theorem factorization_choose_le_one (p_large : n < p ^ 2) : (choose n k).factori
 theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk' : p ≤ n - k)
     (hn : n < 3 * p) : (choose n k).factorization p = 0 := by
   cases' em' p.Prime with hp hp
-  · exact factorization_eq_zero_of_non_prime (choose n k) hp
+  exact factorization_eq_zero_of_non_prime (choose n k) hp
   cases' lt_or_le n k with hnk hkn
-  · simp [choose_eq_zero_of_lt hnk]
+  simp [choose_eq_zero_of_lt hnk]
   rw [factorization_def _ hp, @padicValNat_def _ ⟨hp⟩ _ (choose_pos hkn)]
   simp only [hp.multiplicity_choose hkn (lt_add_one _), PartENat.get_natCast, Finset.card_eq_zero,
     Finset.filter_eq_empty_iff, not_le]
@@ -88,8 +88,8 @@ theorem factorization_choose_of_lt_three_mul (hp' : p ≠ 2) (hk : p ≤ k) (hk'
 theorem factorization_centralBinom_of_two_mul_self_lt_three_mul (n_big : 2 < n) (p_le_n : p ≤ n)
     (big : 2 * n < 3 * p) : (centralBinom n).factorization p = 0 := by
   refine factorization_choose_of_lt_three_mul ?_ p_le_n (p_le_n.trans ?_) big
-  · omega
-  · rw [two_mul, add_tsub_cancel_left]
+  omega
+  rw [two_mul, add_tsub_cancel_left]
 
 theorem factorization_factorial_eq_zero_of_lt (h : n < p) : (factorial n).factorization p = 0 := by
   induction' n with n hn; · simp
@@ -121,12 +121,12 @@ theorem prod_pow_factorization_choose (n k : ℕ) (hkn : k ≤ n) :
     rw [← factorization_prod_pow_eq_self (choose_pos hkn).ne']
   rw [eq_comm]
   apply Finset.prod_subset
-  · intro p hp
-    rw [Finset.mem_range]
-    contrapose! hp
-    rw [Finsupp.mem_support_iff, Classical.not_not, factorization_choose_eq_zero_of_lt hp]
-  · intro p _ h2
-    simp [Classical.not_not.1 (mt Finsupp.mem_support_iff.2 h2)]
+  intro p hp
+  rw [Finset.mem_range]
+  contrapose! hp
+  rw [Finsupp.mem_support_iff, Classical.not_not, factorization_choose_eq_zero_of_lt hp]
+  intro p _ h2
+  simp [Classical.not_not.1 (mt Finsupp.mem_support_iff.2 h2)]
 
 /-- The `n`th central binomial coefficient is the product of its prime factors, which are
 at most `2n`. -/

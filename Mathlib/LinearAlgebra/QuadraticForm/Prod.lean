@@ -138,38 +138,38 @@ theorem anisotropic_of_prod
     Q₁.Anisotropic ∧ Q₂.Anisotropic := by
   simp_rw [Anisotropic, prod_apply, Prod.forall, Prod.mk_eq_zero] at h
   constructor
-  · intro x hx
-    refine (h x 0 ?_).1
-    rw [hx, zero_add, map_zero]
-  · intro x hx
-    refine (h 0 x ?_).2
-    rw [hx, add_zero, map_zero]
+  intro x hx
+  refine (h x 0 ?_).1
+  rw [hx, zero_add, map_zero]
+  intro x hx
+  refine (h 0 x ?_).2
+  rw [hx, add_zero, map_zero]
 
 theorem nonneg_prod_iff [Preorder P] [CovariantClass P P (· + ·) (· ≤ ·)]
     {Q₁ : QuadraticMap R M₁ P} {Q₂ : QuadraticMap R M₂ P} :
     (∀ x, 0 ≤ (Q₁.prod Q₂) x) ↔ (∀ x, 0 ≤ Q₁ x) ∧ ∀ x, 0 ≤ Q₂ x := by
   simp_rw [Prod.forall, prod_apply]
   constructor
-  · intro h
-    constructor
-    · intro x; simpa only [add_zero, map_zero] using h x 0
-    · intro x; simpa only [zero_add, map_zero] using h 0 x
-  · rintro ⟨h₁, h₂⟩ x₁ x₂
-    exact add_nonneg (h₁ x₁) (h₂ x₂)
+  intro h
+  constructor
+  intro x; simpa only [add_zero, map_zero] using h x 0
+  intro x; simpa only [zero_add, map_zero] using h 0 x
+  rintro ⟨h₁, h₂⟩ x₁ x₂
+  exact add_nonneg (h₁ x₁) (h₂ x₂)
 
 theorem posDef_prod_iff [PartialOrder P] [CovariantClass P P (· + ·) (· ≤ ·)]
     {Q₁ : QuadraticMap R M₁ P} {Q₂ : QuadraticMap R M₂ P} :
     (Q₁.prod Q₂).PosDef ↔ Q₁.PosDef ∧ Q₂.PosDef := by
   simp_rw [posDef_iff_nonneg, nonneg_prod_iff]
   constructor
-  · rintro ⟨⟨hle₁, hle₂⟩, ha⟩
-    obtain ⟨ha₁, ha₂⟩ := anisotropic_of_prod ha
-    exact ⟨⟨hle₁, ha₁⟩, ⟨hle₂, ha₂⟩⟩
-  · rintro ⟨⟨hle₁, ha₁⟩, ⟨hle₂, ha₂⟩⟩
-    refine ⟨⟨hle₁, hle₂⟩, ?_⟩
-    rintro ⟨x₁, x₂⟩ (hx : Q₁ x₁ + Q₂ x₂ = 0)
-    rw [add_eq_zero_iff' (hle₁ x₁) (hle₂ x₂), ha₁.eq_zero_iff, ha₂.eq_zero_iff] at hx
-    rwa [Prod.mk_eq_zero]
+  rintro ⟨⟨hle₁, hle₂⟩, ha⟩
+  obtain ⟨ha₁, ha₂⟩ := anisotropic_of_prod ha
+  exact ⟨⟨hle₁, ha₁⟩, ⟨hle₂, ha₂⟩⟩
+  rintro ⟨⟨hle₁, ha₁⟩, ⟨hle₂, ha₂⟩⟩
+  refine ⟨⟨hle₁, hle₂⟩, ?_⟩
+  rintro ⟨x₁, x₂⟩ (hx : Q₁ x₁ + Q₂ x₂ = 0)
+  rw [add_eq_zero_iff' (hle₁ x₁) (hle₂ x₂), ha₁.eq_zero_iff, ha₂.eq_zero_iff] at hx
+  rwa [Prod.mk_eq_zero]
 
 theorem PosDef.prod [PartialOrder P] [CovariantClass P P (· + ·) (· ≤ ·)]
     {Q₁ : QuadraticMap R M₁ P} {Q₂ : QuadraticMap R M₂ P} (h₁ : Q₁.PosDef) (h₂ : Q₂.PosDef) :
@@ -308,13 +308,13 @@ theorem anisotropic_of_pi [Fintype ι]
   simp_rw [Anisotropic, pi_apply, Function.funext_iff, Pi.zero_apply] at h
   intro i x hx
   have := h (Pi.single i x) ?_ i
-  · rw [Pi.single_eq_same] at this
-    exact this
+  rw [Pi.single_eq_same] at this
+  exact this
   apply Finset.sum_eq_zero
   intro j _
   by_cases hji : j = i
-  · subst hji; rw [Pi.single_eq_same, hx]
-  · rw [Pi.single_eq_of_ne hji, map_zero]
+  subst hji; rw [Pi.single_eq_same, hx]
+  rw [Pi.single_eq_of_ne hji, map_zero]
 
 open Classical in
 theorem nonneg_pi_iff {P} [Fintype ι] [OrderedAddCommMonoid P] [Module R P]
@@ -322,25 +322,25 @@ theorem nonneg_pi_iff {P} [Fintype ι] [OrderedAddCommMonoid P] [Module R P]
   simp_rw [pi, sum_apply, comp_apply, LinearMap.proj_apply]
   constructor
   -- TODO: does this generalize to a useful lemma independent of `QuadraticMap`?
-  · intro h i x
-    convert h (Pi.single i x) using 1
-    rw [Finset.sum_eq_single_of_mem i (Finset.mem_univ _) fun j _ hji => ?_, Pi.single_eq_same]
-    rw [Pi.single_eq_of_ne hji, map_zero]
-  · rintro h x
-    exact Finset.sum_nonneg fun i _ => h i (x i)
+  intro h i x
+  convert h (Pi.single i x) using 1
+  rw [Finset.sum_eq_single_of_mem i (Finset.mem_univ _) fun j _ hji => ?_, Pi.single_eq_same]
+  rw [Pi.single_eq_of_ne hji, map_zero]
+  rintro h x
+  exact Finset.sum_nonneg fun i _ => h i (x i)
 
 theorem posDef_pi_iff {P} [Fintype ι] [OrderedAddCommMonoid P] [Module R P]
     {Q : ∀ i, QuadraticMap R (Mᵢ i) P} : (pi Q).PosDef ↔ ∀ i, (Q i).PosDef := by
   simp_rw [posDef_iff_nonneg, nonneg_pi_iff]
   constructor
-  · rintro ⟨hle, ha⟩
-    intro i
-    exact ⟨hle i, anisotropic_of_pi ha i⟩
-  · intro h
-    refine ⟨fun i => (h i).1, fun x hx => funext fun i => (h i).2 _ ?_⟩
-    rw [pi_apply, Finset.sum_eq_zero_iff_of_nonneg fun j _ => ?_] at hx
-    · exact hx _ (Finset.mem_univ _)
-    exact (h j).1 _
+  rintro ⟨hle, ha⟩
+  intro i
+  exact ⟨hle i, anisotropic_of_pi ha i⟩
+  intro h
+  refine ⟨fun i => (h i).1, fun x hx => funext fun i => (h i).2 _ ?_⟩
+  rw [pi_apply, Finset.sum_eq_zero_iff_of_nonneg fun j _ => ?_] at hx
+  exact hx _ (Finset.mem_univ _)
+  exact (h j).1 _
 
 end Semiring
 

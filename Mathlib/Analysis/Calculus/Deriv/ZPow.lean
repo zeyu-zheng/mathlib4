@@ -44,17 +44,17 @@ theorem hasStrictDerivAt_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) :
     rw [← Int.ofNat_one, ← Int.ofNat_sub, zpow_natCast]
     norm_cast at hm
   rcases lt_trichotomy m 0 with (hm | hm | hm)
-  · have hx : x ≠ 0 := h.resolve_right hm.not_le
-    have := (hasStrictDerivAt_inv ?_).scomp _ (this (-m) (neg_pos.2 hm)) <;>
-      [skip; exact zpow_ne_zero _ hx]
-    simp only [(· ∘ ·), zpow_neg, one_div, inv_inv, smul_eq_mul] at this
-    convert this using 1
-    rw [sq, mul_inv, inv_inv, Int.cast_neg, neg_mul, neg_mul_neg, ← zpow_add₀ hx, mul_assoc, ←
-      zpow_add₀ hx]
-    congr
-    abel
-  · simp only [hm, zpow_zero, Int.cast_zero, zero_mul, hasStrictDerivAt_const]
-  · exact this m hm
+  have hx : x ≠ 0 := h.resolve_right hm.not_le
+  have := (hasStrictDerivAt_inv ?_).scomp _ (this (-m) (neg_pos.2 hm)) <;>
+    [skip; exact zpow_ne_zero _ hx]
+  simp only [(· ∘ ·), zpow_neg, one_div, inv_inv, smul_eq_mul] at this
+  convert this using 1
+  rw [sq, mul_inv, inv_inv, Int.cast_neg, neg_mul, neg_mul_neg, ← zpow_add₀ hx, mul_assoc, ←
+    zpow_add₀ hx]
+  congr
+  abel
+  simp only [hm, zpow_zero, Int.cast_zero, zero_mul, hasStrictDerivAt_const]
+  exact this m hm
 
 theorem hasDerivAt_zpow (m : ℤ) (x : 𝕜) (h : x ≠ 0 ∨ 0 ≤ m) :
     HasDerivAt (fun x => x ^ m) ((m : 𝕜) * x ^ (m - 1)) x :=
@@ -78,11 +78,11 @@ theorem differentiableOn_zpow (m : ℤ) (s : Set 𝕜) (h : (0 : 𝕜) ∉ s ∨
 
 theorem deriv_zpow (m : ℤ) (x : 𝕜) : deriv (fun x => x ^ m) x = m * x ^ (m - 1) := by
   by_cases H : x ≠ 0 ∨ 0 ≤ m
-  · exact (hasDerivAt_zpow m x H).deriv
-  · rw [deriv_zero_of_not_differentiableAt (mt differentiableAt_zpow.1 H)]
-    push_neg at H
-    rcases H with ⟨rfl, hm⟩
-    rw [zero_zpow _ ((sub_one_lt _).trans hm).ne, mul_zero]
+  exact (hasDerivAt_zpow m x H).deriv
+  rw [deriv_zero_of_not_differentiableAt (mt differentiableAt_zpow.1 H)]
+  push_neg at H
+  rcases H with ⟨rfl, hm⟩
+  rw [zero_zpow _ ((sub_one_lt _).trans hm).ne, mul_zero]
 
 @[simp]
 theorem deriv_zpow' (m : ℤ) : (deriv fun x : 𝕜 => x ^ m) = fun x => (m : 𝕜) * x ^ (m - 1) :=
@@ -97,10 +97,10 @@ theorem iter_deriv_zpow' (m : ℤ) (k : ℕ) :
     (deriv^[k] fun x : 𝕜 => x ^ m) =
       fun x => (∏ i ∈ Finset.range k, ((m : 𝕜) - i)) * x ^ (m - k) := by
   induction' k with k ihk
-  · simp only [Nat.zero_eq, one_mul, Int.ofNat_zero, id, sub_zero, Finset.prod_range_zero,
-      Function.iterate_zero]
-  · simp only [Function.iterate_succ_apply', ihk, deriv_const_mul_field', deriv_zpow',
-      Finset.prod_range_succ, Int.ofNat_succ, ← sub_sub, Int.cast_sub, Int.cast_natCast, mul_assoc]
+  simp only [Nat.zero_eq, one_mul, Int.ofNat_zero, id, sub_zero, Finset.prod_range_zero,
+    Function.iterate_zero]
+  simp only [Function.iterate_succ_apply', ihk, deriv_const_mul_field', deriv_zpow',
+    Finset.prod_range_succ, Int.ofNat_succ, ← sub_sub, Int.cast_sub, Int.cast_natCast, mul_assoc]
 
 theorem iter_deriv_zpow (m : ℤ) (x : 𝕜) (k : ℕ) :
     deriv^[k] (fun y => y ^ m) x = (∏ i ∈ Finset.range k, ((m : 𝕜) - i)) * x ^ (m - k) :=
@@ -110,10 +110,10 @@ theorem iter_deriv_pow (n : ℕ) (x : 𝕜) (k : ℕ) :
     deriv^[k] (fun x : 𝕜 => x ^ n) x = (∏ i ∈ Finset.range k, ((n : 𝕜) - i)) * x ^ (n - k) := by
   simp only [← zpow_natCast, iter_deriv_zpow, Int.cast_natCast]
   rcases le_or_lt k n with hkn | hnk
-  · rw [Int.ofNat_sub hkn]
-  · have : (∏ i ∈ Finset.range k, (n - i : 𝕜)) = 0 :=
-      Finset.prod_eq_zero (Finset.mem_range.2 hnk) (sub_self _)
-    simp only [this, zero_mul]
+  rw [Int.ofNat_sub hkn]
+  have : (∏ i ∈ Finset.range k, (n - i : 𝕜)) = 0 :=
+    Finset.prod_eq_zero (Finset.mem_range.2 hnk) (sub_self _)
+  simp only [this, zero_mul]
 
 @[simp]
 theorem iter_deriv_pow' (n k : ℕ) :

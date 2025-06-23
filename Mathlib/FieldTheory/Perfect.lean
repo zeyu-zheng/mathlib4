@@ -183,11 +183,11 @@ class PerfectField (K : Type*) [Field K] : Prop where
 lemma PerfectRing.toPerfectField (K : Type*) (p : ℕ)
     [Field K] [ExpChar K p] [PerfectRing K p] : PerfectField K := by
   obtain hp | ⟨hp⟩ := ‹ExpChar K p›
-  · exact ⟨Irreducible.separable⟩
+  exact ⟨Irreducible.separable⟩
   refine PerfectField.mk fun hf ↦ ?_
   rcases separable_or p hf with h | ⟨-, g, -, rfl⟩
-  · assumption
-  · exfalso; revert hf; haveI := Fact.mk hp; simp
+  assumption
+  exfalso; revert hf; haveI := Fact.mk hp; simp
 
 namespace PerfectField
 
@@ -268,10 +268,10 @@ theorem roots_expand_pow_map_iterateFrobenius_le :
     (expand R (p ^ n) f).roots.map (iterateFrobenius R p n) ≤ p ^ n • f.roots := by
   refine le_iff_count.2 fun r ↦ ?_
   by_cases h : ∃ s, r = s ^ p ^ n
-  · obtain ⟨s, rfl⟩ := h
-    simp_rw [count_nsmul, count_roots, ← rootMultiplicity_expand_pow, ← count_roots, count_map,
-      count_eq_card_filter_eq]
-    exact card_le_card (monotone_filter_right _ fun _ h ↦ iterateFrobenius_inj R p n h)
+  obtain ⟨s, rfl⟩ := h
+  simp_rw [count_nsmul, count_roots, ← rootMultiplicity_expand_pow, ← count_roots, count_map,
+    count_eq_card_filter_eq]
+  exact card_le_card (monotone_filter_right _ fun _ h ↦ iterateFrobenius_inj R p n h)
   convert Nat.zero_le _
   simp_rw [count_map, card_eq_zero]
   exact ext' fun t ↦ count_zero t ▸ count_filter_of_neg fun h' ↦ h ⟨t, h'⟩

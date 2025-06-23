@@ -149,8 +149,8 @@ theorem Ideal.mul_homogeneous_element_mem_of_mem {I : Ideal A} (r x : A) (hx₁ 
     GradedMul.mul_mem (SetLike.coe_mem _) hi
   erw [GradedRing.proj_apply, DirectSum.decompose_of_mem 𝒜 mem₁, coe_of_apply]
   split_ifs
-  · exact I.mul_mem_left _ hx₂
-  · exact I.zero_mem
+  exact I.mul_mem_left _ hx₂
+  exact I.zero_mem
 
 theorem Ideal.homogeneous_span (s : Set A) (h : ∀ x ∈ s, Homogeneous 𝒜 x) :
     (Ideal.span s).IsHomogeneous 𝒜 := by
@@ -164,9 +164,9 @@ theorem Ideal.homogeneous_span (s : Set A) (h : ∀ x ∈ s, Homogeneous 𝒜 x)
   rintro z hz1
   rw [smul_eq_mul]
   refine Ideal.mul_homogeneous_element_mem_of_mem 𝒜 (s z) z ?_ ?_ i
-  · rcases z with ⟨z, hz2⟩
-    apply h _ hz2
-  · exact Ideal.subset_span z.2
+  rcases z with ⟨z, hz2⟩
+  apply h _ hz2
+  exact Ideal.subset_span z.2
 
 /-- For any `I : Ideal A`, not necessarily homogeneous, `I.homogeneousCore' 𝒜`
 is the largest homogeneous ideal of `A` contained in `I`. -/

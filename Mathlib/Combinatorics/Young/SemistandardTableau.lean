@@ -118,14 +118,14 @@ theorem zeros {μ : YoungDiagram} (T : SemistandardYoungTableau μ) {i j : ℕ}
 theorem row_weak_of_le {μ : YoungDiagram} (T : SemistandardYoungTableau μ) {i j1 j2 : ℕ}
     (hj : j1 ≤ j2) (cell : (i, j2) ∈ μ) : T i j1 ≤ T i j2 := by
   cases' eq_or_lt_of_le hj with h h
-  · rw [h]
-  · exact T.row_weak h cell
+  rw [h]
+  exact T.row_weak h cell
 
 theorem col_weak {μ : YoungDiagram} (T : SemistandardYoungTableau μ) {i1 i2 j : ℕ} (hi : i1 ≤ i2)
     (cell : (i2, j) ∈ μ) : T i1 j ≤ T i2 j := by
   cases' eq_or_lt_of_le hi with h h
-  · rw [h]
-  · exact le_of_lt (T.col_strict h cell)
+  rw [h]
+  exact le_of_lt (T.col_strict h cell)
 
 /-- The "highest weight" SSYT of a given shape has all i's in row i, for each i. -/
 def highestWeight (μ : YoungDiagram) : SemistandardYoungTableau μ where

@@ -105,13 +105,13 @@ open Classical in
 theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 𝕜 E, ‖f x‖ ≤ M * ‖f‖) :
     ‖x‖ ≤ M := by
     by_cases h : x = 0
-    · simp only [h, hMp, norm_zero]
-    · obtain ⟨f, hf₁, hfx⟩ : ∃ f : E →L[𝕜] 𝕜, ‖f‖ = 1 ∧ f x = ‖x‖ := exists_dual_vector 𝕜 x h
-      calc
-        ‖x‖ = ‖(‖x‖ : 𝕜)‖ := RCLike.norm_coe_norm.symm
-        _ = ‖f x‖ := by rw [hfx]
-        _ ≤ M * ‖f‖ := hM f
-        _ = M := by rw [hf₁, mul_one]
+    simp only [h, hMp, norm_zero]
+    obtain ⟨f, hf₁, hfx⟩ : ∃ f : E →L[𝕜] 𝕜, ‖f‖ = 1 ∧ f x = ‖x‖ := exists_dual_vector 𝕜 x h
+    calc
+      ‖x‖ = ‖(‖x‖ : 𝕜)‖ := RCLike.norm_coe_norm.symm
+      _ = ‖f x‖ := by rw [hfx]
+      _ ≤ M * ‖f‖ := hM f
+      _ = M := by rw [hf₁, mul_one]
 
 theorem eq_zero_of_forall_dual_eq_zero {x : E} (h : ∀ f : Dual 𝕜 E, f x = (0 : 𝕜)) : x = 0 :=
   norm_le_zero_iff.mp (norm_le_dual_bound 𝕜 x le_rfl fun f => by simp [h f])
@@ -181,8 +181,8 @@ small scalar multiple of `x'` is in `polar 𝕜 s`. -/
 theorem smul_mem_polar {s : Set E} {x' : Dual 𝕜 E} {c : 𝕜} (hc : ∀ z, z ∈ s → ‖x' z‖ ≤ ‖c‖) :
     c⁻¹ • x' ∈ polar 𝕜 s := by
   by_cases c_zero : c = 0
-  · simp only [c_zero, inv_zero, zero_smul]
-    exact (dualPairing 𝕜 E).flip.zero_mem_polar _
+  simp only [c_zero, inv_zero, zero_smul]
+  exact (dualPairing 𝕜 E).flip.zero_mem_polar _
   have eq : ∀ z, ‖c⁻¹ • x' z‖ = ‖c⁻¹‖ * ‖x' z‖ := fun z => norm_smul c⁻¹ _
   have le : ∀ z, z ∈ s → ‖c⁻¹ • x' z‖ ≤ ‖c⁻¹‖ * ‖c‖
   intro z hzs

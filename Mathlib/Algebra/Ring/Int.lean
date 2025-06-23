@@ -55,12 +55,12 @@ instance instMulDivCancelClass : MulDivCancelClass ℤ where mul_div_cancel _ _ 
 @[simp, norm_cast]
 lemma cast_mul {α : Type*} [NonAssocRing α] : ∀ m n, ((m * n : ℤ) : α) = m * n := fun m => by
   obtain ⟨m, rfl | rfl⟩ := Int.eq_nat_or_neg m
-  · induction m with
-    | zero => simp
-    | succ m ih => simp_all [add_mul]
-  · induction m with
-    | zero => simp
-    | succ m ih => simp_all [add_mul]
+  induction m with
+  | zero => simp
+  | succ m ih => simp_all [add_mul]
+  induction m with
+  | zero => simp
+  | succ m ih => simp_all [add_mul]
 
 @[simp, norm_cast] lemma cast_pow {R : Type*} [Ring R] (n : ℤ) (m : ℕ) :
     ↑(n ^ m) = (n ^ m : R) := by
@@ -114,10 +114,10 @@ lemma even_xor'_odd (n : ℤ) : Xor' (Even n) (Odd n) := by
 
 lemma even_xor'_odd' (n : ℤ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) := by
   rcases even_or_odd n with (⟨k, rfl⟩ | ⟨k, rfl⟩) <;> use k
-  · simpa only [← two_mul, Xor', true_and_iff, eq_self_iff_true, not_true, or_false_iff,
-      and_false_iff] using (succ_ne_self (2 * k)).symm
-  · simp only [Xor', add_right_eq_self, false_or_iff, eq_self_iff_true, not_true, not_false_iff,
-      one_ne_zero, and_self_iff]
+  simpa only [← two_mul, Xor', true_and_iff, eq_self_iff_true, not_true, or_false_iff,
+    and_false_iff] using (succ_ne_self (2 * k)).symm
+  simp only [Xor', add_right_eq_self, false_or_iff, eq_self_iff_true, not_true, not_false_iff,
+    one_ne_zero, and_self_iff]
 
 instance : DecidablePred (Odd : ℤ → Prop) := fun _ => decidable_of_iff _ odd_iff_not_even.symm
 
@@ -190,19 +190,19 @@ lemma four_dvd_add_or_sub_of_odd {a b : ℤ} (ha : Odd a) (hb : Odd b) :
   obtain ⟨m, rfl⟩ := ha
   obtain ⟨n, rfl⟩ := hb
   obtain h | h := Int.even_or_odd (m + n)
-  · right
-    rw [Int.even_add, ← Int.even_sub] at h
-    obtain ⟨k, hk⟩ := h
-    convert dvd_mul_right 4 k using 1
-    rw [eq_add_of_sub_eq hk, mul_add, add_assoc, add_sub_cancel_right, ← two_mul, ← mul_assoc]
-    rfl
-  · left
-    obtain ⟨k, hk⟩ := h
-    convert dvd_mul_right 4 (k + 1) using 1
-    rw [eq_sub_of_add_eq hk, add_right_comm, ← add_sub, mul_add, mul_sub, add_assoc, add_assoc,
-      sub_add, add_assoc, ← sub_sub (2 * n), sub_self, zero_sub, sub_neg_eq_add, ← mul_assoc,
-      mul_add]
-    rfl
+  right
+  rw [Int.even_add, ← Int.even_sub] at h
+  obtain ⟨k, hk⟩ := h
+  convert dvd_mul_right 4 k using 1
+  rw [eq_add_of_sub_eq hk, mul_add, add_assoc, add_sub_cancel_right, ← two_mul, ← mul_assoc]
+  rfl
+  left
+  obtain ⟨k, hk⟩ := h
+  convert dvd_mul_right 4 (k + 1) using 1
+  rw [eq_sub_of_add_eq hk, add_right_comm, ← add_sub, mul_add, mul_sub, add_assoc, add_assoc,
+    sub_add, add_assoc, ← sub_sub (2 * n), sub_self, zero_sub, sub_neg_eq_add, ← mul_assoc,
+    mul_add]
+  rfl
 
 lemma two_mul_ediv_two_add_one_of_odd : Odd n → 2 * (n / 2) + 1 = n := by
   rintro ⟨c, rfl⟩
@@ -227,8 +227,8 @@ lemma two_mul_ediv_two_of_odd (h : Odd n) : 2 * (n / 2) = n - 1 :=
 @[norm_cast, simp]
 theorem isSquare_natCast_iff {n : ℕ} : IsSquare (n : ℤ) ↔ IsSquare n := by
   constructor <;> rintro ⟨x, h⟩
-  · exact ⟨x.natAbs, (natAbs_mul_natAbs_eq h.symm).symm⟩
-  · exact ⟨x, mod_cast h⟩
+  exact ⟨x.natAbs, (natAbs_mul_natAbs_eq h.symm).symm⟩
+  exact ⟨x, mod_cast h⟩
 
 -- See note [no_index around OfNat.ofNat]
 @[simp]

@@ -232,7 +232,7 @@ theorem mk_zero_zero : mk K p (0, 0) = 0 :=
 -- Porting note: improved proof structure
 theorem mk_zero (n : ℕ) : mk K p (n, 0) = 0 := by
   induction' n with n ih
-  · rfl
+  rfl
   rw [← ih]
   symm
   apply Quot.sound
@@ -244,7 +244,7 @@ theorem R.sound (m n : ℕ) (x y : K) (H : (frobenius K p)^[m] x = y) :
     mk K p (n, x) = mk K p (m + n, y) := by
   subst H
   induction' m with m ih
-  · simp only [Nat.zero_eq, zero_add, iterate_zero_apply]
+  simp only [Nat.zero_eq, zero_add, iterate_zero_apply]
   rw [ih, Nat.succ_add, iterate_succ']
   apply Quot.sound
   apply R.intro
@@ -312,20 +312,20 @@ instance instCommRing : CommRing (PerfectClosure K p) :=
 theorem mk_eq_iff (x y : ℕ × K) :
     mk K p x = mk K p y ↔ ∃ z, (frobenius K p)^[y.1 + z] x.2 = (frobenius K p)^[x.1 + z] y.2 := by
   constructor
-  · intro H
-    replace H := Quot.exact _ H
-    induction H with
-    | rel x y H => cases' H with n x; exact ⟨0, rfl⟩
-    | refl H => exact ⟨0, rfl⟩
-    | symm x y H ih => cases' ih with w ih; exact ⟨w, ih.symm⟩
-    | trans x y z H1 H2 ih1 ih2 =>
-      cases' ih1 with z1 ih1
-      cases' ih2 with z2 ih2
-      exists z2 + (y.1 + z1)
-      rw [← add_assoc, iterate_add_apply, ih1]
-      rw [← iterate_add_apply, add_comm, iterate_add_apply, ih2]
-      rw [← iterate_add_apply]
-      simp only [add_comm, add_left_comm]
+  intro H
+  replace H := Quot.exact _ H
+  induction H with
+  | rel x y H => cases' H with n x; exact ⟨0, rfl⟩
+  | refl H => exact ⟨0, rfl⟩
+  | symm x y H ih => cases' ih with w ih; exact ⟨w, ih.symm⟩
+  | trans x y z H1 H2 ih1 ih2 =>
+    cases' ih1 with z1 ih1
+    cases' ih2 with z2 ih2
+    exists z2 + (y.1 + z1)
+    rw [← add_assoc, iterate_add_apply, ih1]
+    rw [← iterate_add_apply, add_comm, iterate_add_apply, ih2]
+    rw [← iterate_add_apply]
+    simp only [add_comm, add_left_comm]
   intro H
   cases' x with m x
   cases' y with n y
@@ -346,10 +346,10 @@ theorem mk_pow (x : ℕ × K) (n : ℕ) : mk K p x ^ n = mk K p (x.1, x.2 ^ n) :
 
 theorem natCast (n x : ℕ) : (x : PerfectClosure K p) = mk K p (n, x) := by
   induction' n with n ih
-  · induction' x with x ih
-    · simp
-    rw [Nat.cast_succ, Nat.cast_succ, ih]
-    rfl
+  induction' x with x ih
+  simp
+  rw [Nat.cast_succ, Nat.cast_succ, ih]
+  rfl
   rw [ih]; apply Quot.sound
   -- Porting note: was `conv`
   suffices R K p (n, (x : K)) (Nat.succ n, frobenius K p (x : K)) by
@@ -368,9 +368,9 @@ alias int_cast := intCast
 
 theorem natCast_eq_iff (x y : ℕ) : (x : PerfectClosure K p) = y ↔ (x : K) = y := by
   constructor <;> intro H
-  · rw [natCast K p 0, natCast K p 0, mk_eq_iff] at H
-    cases' H with z H
-    simpa only [zero_add, iterate_fixed (frobenius_natCast K p _)] using H
+  rw [natCast K p 0, natCast K p 0, mk_eq_iff] at H
+  cases' H with z H
+  simpa only [zero_add, iterate_fixed (frobenius_natCast K p _)] using H
   rw [natCast K p 0, natCast K p 0, H]
 
 @[deprecated (since := "2024-04-17")]
@@ -420,7 +420,7 @@ instance instPerfectRing : PerfectRing (PerfectClosure K p) p where
 theorem iterate_frobenius_mk (n : ℕ) (x : K) :
     (frobenius (PerfectClosure K p) p)^[n] (mk K p ⟨n, x⟩) = of K p x := by
   induction' n with n ih
-  · rfl
+  rfl
   rw [iterate_succ_apply, ← ih, frobenius_mk, mk_succ_pow]
 
 /-- Given a ring `K` of characteristic `p` and a perfect ring `L` of the same characteristic,

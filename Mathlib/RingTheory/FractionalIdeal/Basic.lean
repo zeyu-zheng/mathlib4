@@ -415,10 +415,10 @@ theorem _root_.IsFractional.sup {I J : Submodule R P} :
       rcases mem_sup.mp hb with ⟨bI, hbI, bJ, hbJ, rfl⟩
       rw [smul_add]
       apply isInteger_add
-      · rw [mul_smul, smul_comm]
-        exact isInteger_smul (hI bI hbI)
-      · rw [mul_smul]
-        exact isInteger_smul (hJ bJ hbJ)⟩
+      rw [mul_smul, smul_comm]
+      exact isInteger_smul (hI bI hbI)
+      rw [mul_smul]
+      exact isInteger_smul (hJ bJ hbJ)⟩
 
 theorem _root_.IsFractional.inf_right {I : Submodule R P} :
     IsFractional S I → ∀ J, IsFractional S (I ⊓ J)
@@ -488,14 +488,14 @@ theorem _root_.IsFractional.mul {I J : Submodule R P} :
   | ⟨aI, haI, hI⟩, ⟨aJ, haJ, hJ⟩ =>
     ⟨aI * aJ, S.mul_mem haI haJ, fun b hb => by
       refine Submodule.mul_induction_on hb ?_ ?_
-      · intro m hm n hn
-        obtain ⟨n', hn'⟩ := hJ n hn
-        rw [mul_smul, mul_comm m, ← smul_mul_assoc, ← hn', ← Algebra.smul_def]
-        apply hI
-        exact Submodule.smul_mem _ _ hm
-      · intro x y hx hy
-        rw [smul_add]
-        apply isInteger_add hx hy⟩
+      intro m hm n hn
+      obtain ⟨n', hn'⟩ := hJ n hn
+      rw [mul_smul, mul_comm m, ← smul_mul_assoc, ← hn', ← Algebra.smul_def]
+      apply hI
+      exact Submodule.smul_mem _ _ hm
+      intro x y hx hy
+      rw [smul_add]
+      apply isInteger_add hx hy⟩
 
 theorem _root_.IsFractional.pow {I : Submodule R P} (h : IsFractional S I) :
     ∀ n : ℕ, IsFractional S (I ^ n : Submodule R P)
@@ -620,26 +620,26 @@ theorem coeIdeal_le_one {I : Ideal R} : (I : FractionalIdeal S P) ≤ 1 := fun _
 theorem le_one_iff_exists_coeIdeal {J : FractionalIdeal S P} :
     J ≤ (1 : FractionalIdeal S P) ↔ ∃ I : Ideal R, ↑I = J := by
   constructor
-  · intro hJ
-    refine ⟨⟨⟨⟨{ x : R | algebraMap R P x ∈ J }, ?_⟩, ?_⟩, ?_⟩, ?_⟩
-    · intro a b ha hb
-      rw [mem_setOf, RingHom.map_add]
-      exact J.val.add_mem ha hb
-    · rw [mem_setOf, RingHom.map_zero]
-      exact J.zero_mem
-    · intro c x hx
-      rw [smul_eq_mul, mem_setOf, RingHom.map_mul, ← Algebra.smul_def]
-      exact J.val.smul_mem c hx
-    · ext x
-      constructor
-      · rintro ⟨y, hy, eq_y⟩
-        rwa [← eq_y]
-      · intro hx
-        obtain ⟨y, rfl⟩ := (mem_one_iff S).mp (hJ hx)
-        exact mem_setOf.mpr ⟨y, hx, rfl⟩
-  · rintro ⟨I, hI⟩
-    rw [← hI]
-    apply coeIdeal_le_one
+  intro hJ
+  refine ⟨⟨⟨⟨{ x : R | algebraMap R P x ∈ J }, ?_⟩, ?_⟩, ?_⟩, ?_⟩
+  intro a b ha hb
+  rw [mem_setOf, RingHom.map_add]
+  exact J.val.add_mem ha hb
+  rw [mem_setOf, RingHom.map_zero]
+  exact J.zero_mem
+  intro c x hx
+  rw [smul_eq_mul, mem_setOf, RingHom.map_mul, ← Algebra.smul_def]
+  exact J.val.smul_mem c hx
+  ext x
+  constructor
+  rintro ⟨y, hy, eq_y⟩
+  rwa [← eq_y]
+  intro hx
+  obtain ⟨y, rfl⟩ := (mem_one_iff S).mp (hJ hx)
+  exact mem_setOf.mpr ⟨y, hx, rfl⟩
+  rintro ⟨I, hI⟩
+  rw [← hI]
+  apply coeIdeal_le_one
 
 @[simp]
 theorem one_le {I : FractionalIdeal S P} : 1 ≤ I ↔ (1 : P) ∈ I := by

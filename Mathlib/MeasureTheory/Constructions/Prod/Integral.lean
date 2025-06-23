@@ -96,27 +96,27 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SFinite ν] ⦃f :
   have h2f' : Tendsto f' atTop (𝓝 fun x : α => ∫ y : β, f x y ∂ν) := by
     rw [tendsto_pi_nhds]; intro x
     by_cases hfx : Integrable (f x) ν
-    · have (n) : Integrable (s' n x) ν := by
-        apply (hfx.norm.add hfx.norm).mono' (s' n x).aestronglyMeasurable
-        filter_upwards with y
-        simp_rw [s', SimpleFunc.coe_comp]; exact SimpleFunc.norm_approxOn_zero_le _ _ (x, y) n
-      simp only [f', hfx, SimpleFunc.integral_eq_integral _ (this _), indicator_of_mem,
-        mem_setOf_eq]
-      refine
-        tendsto_integral_of_dominated_convergence (fun y => ‖f x y‖ + ‖f x y‖)
-          (fun n => (s' n x).aestronglyMeasurable) (hfx.norm.add hfx.norm) ?_ ?_
-      · refine fun n => eventually_of_forall fun y =>
-          SimpleFunc.norm_approxOn_zero_le ?_ ?_ (x, y) n
-        -- Porting note: Lean 3 solved the following two subgoals on its own
-        · exact hf.measurable
-        · simp
-      · refine eventually_of_forall fun y => SimpleFunc.tendsto_approxOn ?_ ?_ ?_
-        -- Porting note: Lean 3 solved the following two subgoals on its own
-        · exact hf.measurable.of_uncurry_left
-        · simp
-        apply subset_closure
-        simp [-uncurry_apply_pair]
-    · simp [f', hfx, integral_undef]
+    have (n) : Integrable (s' n x) ν := by
+      apply (hfx.norm.add hfx.norm).mono' (s' n x).aestronglyMeasurable
+      filter_upwards with y
+      simp_rw [s', SimpleFunc.coe_comp]; exact SimpleFunc.norm_approxOn_zero_le _ _ (x, y) n
+    simp only [f', hfx, SimpleFunc.integral_eq_integral _ (this _), indicator_of_mem,
+      mem_setOf_eq]
+    refine
+      tendsto_integral_of_dominated_convergence (fun y => ‖f x y‖ + ‖f x y‖)
+        (fun n => (s' n x).aestronglyMeasurable) (hfx.norm.add hfx.norm) ?_ ?_
+    refine fun n => eventually_of_forall fun y =>
+      SimpleFunc.norm_approxOn_zero_le ?_ ?_ (x, y) n
+    -- Porting note: Lean 3 solved the following two subgoals on its own
+    exact hf.measurable
+    simp
+    refine eventually_of_forall fun y => SimpleFunc.tendsto_approxOn ?_ ?_ ?_
+    -- Porting note: Lean 3 solved the following two subgoals on its own
+    exact hf.measurable.of_uncurry_left
+    simp
+    apply subset_closure
+    simp [-uncurry_apply_pair]
+    simp [f', hfx, integral_undef]
   exact stronglyMeasurable_of_tendsto _ hf' h2f'
 
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
@@ -231,10 +231,10 @@ theorem hasFiniteIntegral_prod_iff ⦃f : α × β → E⦄ (h1f : StronglyMeasu
   have : ∀ {p q r : Prop} (_ : r → p), (r ↔ p ∧ q) ↔ p → (r ↔ q) := fun {p q r} h1 => by
     rw [← and_congr_right_iff, and_iff_right_of_imp h1]
   rw [this]
-  · intro h2f; rw [lintegral_congr_ae]
-    filter_upwards [h2f] with x hx
-    rw [ofReal_toReal]; rw [← lt_top_iff_ne_top]; exact hx
-  · intro h2f; refine ae_lt_top ?_ h2f.ne; exact h1f.ennnorm.lintegral_prod_right'
+  intro h2f; rw [lintegral_congr_ae]
+  filter_upwards [h2f] with x hx
+  rw [ofReal_toReal]; rw [← lt_top_iff_ne_top]; exact hx
+  intro h2f; refine ae_lt_top ?_ h2f.ne; exact h1f.ennnorm.lintegral_prod_right'
 
 theorem hasFiniteIntegral_prod_iff' ⦃f : α × β → E⦄ (h1f : AEStronglyMeasurable f (μ.prod ν)) :
     HasFiniteIntegral f (μ.prod ν) ↔
@@ -243,13 +243,13 @@ theorem hasFiniteIntegral_prod_iff' ⦃f : α × β → E⦄ (h1f : AEStronglyMe
   rw [hasFiniteIntegral_congr h1f.ae_eq_mk,
     hasFiniteIntegral_prod_iff h1f.stronglyMeasurable_mk]
   apply and_congr
-  · apply eventually_congr
-    filter_upwards [ae_ae_of_ae_prod h1f.ae_eq_mk.symm]
-    intro x hx
-    exact hasFiniteIntegral_congr hx
-  · apply hasFiniteIntegral_congr
-    filter_upwards [ae_ae_of_ae_prod h1f.ae_eq_mk.symm] with _ hx using
-      integral_congr_ae (EventuallyEq.fun_comp hx _)
+  apply eventually_congr
+  filter_upwards [ae_ae_of_ae_prod h1f.ae_eq_mk.symm]
+  intro x hx
+  exact hasFiniteIntegral_congr hx
+  apply hasFiniteIntegral_congr
+  filter_upwards [ae_ae_of_ae_prod h1f.ae_eq_mk.symm] with _ hx using
+    integral_congr_ae (EventuallyEq.fun_comp hx _)
 
 /-- A binary function is integrable if the function `y ↦ f (x, y)` is integrable for almost every
   `x` and the function `x ↦ ∫ ‖f (x, y)‖ dy` is integrable. -/
@@ -288,9 +288,9 @@ theorem Integrable.prod_smul {𝕜 : Type*} [NontriviallyNormedField 𝕜] [Norm
     {f : α → 𝕜} {g : β → E} (hf : Integrable f μ) (hg : Integrable g ν) :
     Integrable (fun z : α × β => f z.1 • g z.2) (μ.prod ν) := by
   refine (integrable_prod_iff ?_).2 ⟨?_, ?_⟩
-  · exact hf.1.fst.smul hg.1.snd
-  · exact eventually_of_forall fun x => hg.smul (f x)
-  · simpa only [norm_smul, integral_mul_left] using hf.norm.mul_const _
+  exact hf.1.fst.smul hg.1.snd
+  exact eventually_of_forall fun x => hg.smul (f x)
+  simpa only [norm_smul, integral_mul_left] using hf.norm.mul_const _
 
 theorem Integrable.prod_mul {L : Type*} [RCLike L] {f : α → L} {g : β → L} (hf : Integrable f μ)
     (hg : Integrable g ν) : Integrable (fun z : α × β => f z.1 * g z.2) (μ.prod ν) :=
@@ -395,7 +395,7 @@ theorem continuous_integral_integral :
     lintegral_fn_integral_sub (fun x => (‖x‖₊ : ℝ≥0∞)) (L1.integrable_coeFn _)
       (L1.integrable_coeFn g)]
   apply tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds _ (fun i => zero_le _) _
-  · exact fun i => ∫⁻ x, ∫⁻ y, ‖i (x, y) - g (x, y)‖₊ ∂ν ∂μ
+  exact fun i => ∫⁻ x, ∫⁻ y, ‖i (x, y) - g (x, y)‖₊ ∂ν ∂μ
   swap; · exact fun i => lintegral_mono fun x => ennnorm_integral_le_lintegral_ennnorm _
   show
     Tendsto (fun i : α × β →₁[μ.prod ν] E => ∫⁻ x, ∫⁻ y : β, ‖i (x, y) - g (x, y)‖₊ ∂ν ∂μ) (𝓝 g)
@@ -423,20 +423,20 @@ theorem integral_prod (f : α × β → E) (hf : Integrable f (μ.prod ν)) :
   by_cases hE : CompleteSpace E; swap; · simp only [integral, dif_neg hE]
   revert f
   apply Integrable.induction
-  · intro c s hs h2s
-    simp_rw [integral_indicator hs, ← indicator_comp_right, Function.comp,
-      integral_indicator (measurable_prod_mk_left hs), setIntegral_const, integral_smul_const,
-      integral_toReal (measurable_measure_prod_mk_left hs).aemeasurable
-        (ae_measure_lt_top hs h2s.ne)]
-    -- Porting note: was `simp_rw`
-    rw [prod_apply hs]
-  · rintro f g - i_f i_g hf hg
-    simp_rw [integral_add' i_f i_g, integral_integral_add' i_f i_g, hf, hg]
-  · exact isClosed_eq continuous_integral continuous_integral_integral
-  · rintro f g hfg - hf; convert hf using 1
-    · exact integral_congr_ae hfg.symm
-    · apply integral_congr_ae
-      filter_upwards [ae_ae_of_ae_prod hfg] with x hfgx using integral_congr_ae (ae_eq_symm hfgx)
+  intro c s hs h2s
+  simp_rw [integral_indicator hs, ← indicator_comp_right, Function.comp,
+    integral_indicator (measurable_prod_mk_left hs), setIntegral_const, integral_smul_const,
+    integral_toReal (measurable_measure_prod_mk_left hs).aemeasurable
+      (ae_measure_lt_top hs h2s.ne)]
+  -- Porting note: was `simp_rw`
+  rw [prod_apply hs]
+  rintro f g - i_f i_g hf hg
+  simp_rw [integral_add' i_f i_g, integral_integral_add' i_f i_g, hf, hg]
+  exact isClosed_eq continuous_integral continuous_integral_integral
+  rintro f g hfg - hf; convert hf using 1
+  exact integral_congr_ae hfg.symm
+  apply integral_congr_ae
+  filter_upwards [ae_ae_of_ae_prod hfg] with x hfgx using integral_congr_ae (ae_eq_symm hfgx)
 
 /-- Symmetric version of **Fubini's Theorem**: For integrable functions on `α × β`,
   the Bochner integral of `f` is equal to the iterated Bochner integral.
@@ -473,8 +473,8 @@ theorem integral_prod_smul {𝕜 : Type*} [RCLike 𝕜] [NormedSpace 𝕜 E] (f 
     ∫ z, f z.1 • g z.2 ∂μ.prod ν = (∫ x, f x ∂μ) • ∫ y, g y ∂ν := by
   by_cases hE : CompleteSpace E; swap; · simp [integral, hE]
   by_cases h : Integrable (fun z : α × β => f z.1 • g z.2) (μ.prod ν)
-  · rw [integral_prod _ h]
-    simp_rw [integral_smul, integral_smul_const]
+  rw [integral_prod _ h]
+  simp_rw [integral_smul, integral_smul_const]
   have H : ¬Integrable f μ ∨ ¬Integrable g ν
   contrapose! h
   exact h.1.prod_smul h.2

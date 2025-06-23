@@ -108,9 +108,9 @@ theorem IsClosable.graph_closure_eq_closure_graph {f : E →ₗ.[R] F} (hf : f.I
 /-- A `LinearPMap` is contained in its closure. -/
 theorem le_closure (f : E →ₗ.[R] F) : f ≤ f.closure := by
   by_cases hf : f.IsClosable
-  · refine le_of_le_graph ?_
-    rw [← hf.graph_closure_eq_closure_graph]
-    exact (graph f).le_topologicalClosure
+  refine le_of_le_graph ?_
+  rw [← hf.graph_closure_eq_closure_graph]
+  exact (graph f).le_topologicalClosure
   rw [closure_def' hf]
 
 theorem IsClosable.closure_mono {f g : E →ₗ.[R] F} (hg : g.IsClosable) (h : f ≤ g) :
@@ -153,9 +153,9 @@ theorem closureHasCore (f : E →ₗ.[R] F) : f.closure.HasCore f.domain := by
   refine ⟨f.le_closure.1, ?_⟩
   congr
   ext x y hxy
-  · simp only [domRestrict_domain, Submodule.mem_inf, and_iff_left_iff_imp]
-    intro hx
-    exact f.le_closure.1 hx
+  simp only [domRestrict_domain, Submodule.mem_inf, and_iff_left_iff_imp]
+  intro hx
+  exact f.le_closure.1 hx
   let z : f.closure.domain := ⟨y.1, f.le_closure.1 y.2⟩
   have hyz : (y : E) = z
   simp
@@ -190,22 +190,22 @@ if the inverse of `f` is closable. -/
 theorem inverse_isClosable_iff (hf : LinearMap.ker f.toFun = ⊥) (hf' : f.IsClosable) :
     f.inverse.IsClosable ↔ LinearMap.ker f.closure.toFun = ⊥ := by
   constructor
-  · intro ⟨f', h⟩
-    rw [LinearMap.ker_eq_bot']
-    intro ⟨x, hx⟩ hx'
-    simp only [Submodule.mk_eq_zero]
-    rw [toFun_eq_coe, eq_comm, image_iff] at hx'
-    have : (0, x) ∈ graph f'
-    rw [← h, inverse_graph hf]
-    rw [← hf'.graph_closure_eq_closure_graph, ← SetLike.mem_coe,
-      Submodule.topologicalClosure_coe] at hx'
-    apply image_closure_subset_closure_image continuous_swap
-    simp only [Set.mem_image, Prod.exists, Prod.swap_prod_mk, Prod.mk.injEq]
-    exact ⟨x, 0, hx', rfl, rfl⟩
-    exact graph_fst_eq_zero_snd f' this rfl
-  · intro h
-    use f.closure.inverse
-    exact (closure_inverse_graph hf hf' h).symm
+  intro ⟨f', h⟩
+  rw [LinearMap.ker_eq_bot']
+  intro ⟨x, hx⟩ hx'
+  simp only [Submodule.mk_eq_zero]
+  rw [toFun_eq_coe, eq_comm, image_iff] at hx'
+  have : (0, x) ∈ graph f'
+  rw [← h, inverse_graph hf]
+  rw [← hf'.graph_closure_eq_closure_graph, ← SetLike.mem_coe,
+    Submodule.topologicalClosure_coe] at hx'
+  apply image_closure_subset_closure_image continuous_swap
+  simp only [Set.mem_image, Prod.exists, Prod.swap_prod_mk, Prod.mk.injEq]
+  exact ⟨x, 0, hx', rfl, rfl⟩
+  exact graph_fst_eq_zero_snd f' this rfl
+  intro h
+  use f.closure.inverse
+  exact (closure_inverse_graph hf hf' h).symm
 
 /-- If `f` is invertible and closable, then taking the closure and the inverse commute. -/
 theorem inverse_closure (hf : LinearMap.ker f.toFun = ⊥) (hf' : f.IsClosable)

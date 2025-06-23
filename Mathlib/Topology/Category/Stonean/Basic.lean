@@ -244,13 +244,13 @@ lemma lift_lifts {X Y : CompHaus} {Z : Stonean} (e : Z.compHaus ⟶ Y) (f : X �
 lemma Gleason (X : CompHaus.{u}) :
     Projective X ↔ ExtremallyDisconnected X := by
   constructor
-  · intro h
-    show ExtremallyDisconnected X.toStonean
-    infer_instance
-  · intro h
-    let X' : Stonean := ⟨X.toTop, inferInstance⟩
-    show Projective X'.compHaus
-    apply Stonean.instProjectiveCompHausCompHaus
+  intro h
+  show ExtremallyDisconnected X.toStonean
+  infer_instance
+  intro h
+  let X' : Stonean := ⟨X.toTop, inferInstance⟩
+  show Projective X'.compHaus
+  apply Stonean.instProjectiveCompHausCompHaus
 
 end CompHaus
 

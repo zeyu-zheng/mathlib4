@@ -55,16 +55,16 @@ theorem bot_topologicalSpace_eq_generateFrom_of_pred_succOrder [PartialOrder α]
   rw [h_singleton_eq_inter]
   letI := Preorder.topology α
   apply IsOpen.inter
-  · exact isOpen_generateFrom_of_mem ⟨succ a, Or.inr rfl⟩
-  · exact isOpen_generateFrom_of_mem ⟨pred a, Or.inl rfl⟩
+  exact isOpen_generateFrom_of_mem ⟨succ a, Or.inr rfl⟩
+  exact isOpen_generateFrom_of_mem ⟨pred a, Or.inl rfl⟩
 
 theorem discreteTopology_iff_orderTopology_of_pred_succ' [PartialOrder α] [PredOrder α]
     [SuccOrder α] [NoMinOrder α] [NoMaxOrder α] : DiscreteTopology α ↔ OrderTopology α := by
   refine ⟨fun h => ⟨?_⟩, fun h => ⟨?_⟩⟩
-  · rw [h.eq_bot]
-    exact bot_topologicalSpace_eq_generateFrom_of_pred_succOrder
-  · rw [h.topology_eq_generate_intervals]
-    exact bot_topologicalSpace_eq_generateFrom_of_pred_succOrder.symm
+  rw [h.eq_bot]
+  exact bot_topologicalSpace_eq_generateFrom_of_pred_succOrder
+  rw [h.topology_eq_generate_intervals]
+  exact bot_topologicalSpace_eq_generateFrom_of_pred_succOrder.symm
 
 instance (priority := 100) DiscreteTopology.orderTopology_of_pred_succ' [h : DiscreteTopology α]
     [PartialOrder α] [PredOrder α] [SuccOrder α] [NoMinOrder α] [NoMaxOrder α] : OrderTopology α :=
@@ -76,38 +76,38 @@ theorem LinearOrder.bot_topologicalSpace_eq_generateFrom [LinearOrder α] [PredO
   have h_singleton_eq_inter : {a} = Iic a ∩ Ici a
   rw [inter_comm, Ici_inter_Iic, Icc_self a]
   by_cases ha_top : IsTop a
-  · rw [ha_top.Iic_eq, inter_comm, inter_univ] at h_singleton_eq_inter
-    by_cases ha_bot : IsBot a
-    · rw [ha_bot.Ici_eq] at h_singleton_eq_inter
-      rw [h_singleton_eq_inter]
-      -- Porting note: Specified instance for `isOpen_univ` explicitly to fix an error.
-      apply @isOpen_univ _ (generateFrom { s | ∃ a, s = Ioi a ∨ s = Iio a })
-    · rw [isBot_iff_isMin] at ha_bot
-      rw [← Ioi_pred_of_not_isMin ha_bot] at h_singleton_eq_inter
-      rw [h_singleton_eq_inter]
-      exact isOpen_generateFrom_of_mem ⟨pred a, Or.inl rfl⟩
-  · rw [isTop_iff_isMax] at ha_top
-    rw [← Iio_succ_of_not_isMax ha_top] at h_singleton_eq_inter
-    by_cases ha_bot : IsBot a
-    · rw [ha_bot.Ici_eq, inter_univ] at h_singleton_eq_inter
-      rw [h_singleton_eq_inter]
-      exact isOpen_generateFrom_of_mem ⟨succ a, Or.inr rfl⟩
-    · rw [isBot_iff_isMin] at ha_bot
-      rw [← Ioi_pred_of_not_isMin ha_bot] at h_singleton_eq_inter
-      rw [h_singleton_eq_inter]
-      -- Porting note: Specified instance for `IsOpen.inter` explicitly to fix an error.
-      letI := Preorder.topology α
-      apply IsOpen.inter
-      · exact isOpen_generateFrom_of_mem ⟨succ a, Or.inr rfl⟩
-      · exact isOpen_generateFrom_of_mem ⟨pred a, Or.inl rfl⟩
+  rw [ha_top.Iic_eq, inter_comm, inter_univ] at h_singleton_eq_inter
+  by_cases ha_bot : IsBot a
+  rw [ha_bot.Ici_eq] at h_singleton_eq_inter
+  rw [h_singleton_eq_inter]
+  -- Porting note: Specified instance for `isOpen_univ` explicitly to fix an error.
+  apply @isOpen_univ _ (generateFrom { s | ∃ a, s = Ioi a ∨ s = Iio a })
+  rw [isBot_iff_isMin] at ha_bot
+  rw [← Ioi_pred_of_not_isMin ha_bot] at h_singleton_eq_inter
+  rw [h_singleton_eq_inter]
+  exact isOpen_generateFrom_of_mem ⟨pred a, Or.inl rfl⟩
+  rw [isTop_iff_isMax] at ha_top
+  rw [← Iio_succ_of_not_isMax ha_top] at h_singleton_eq_inter
+  by_cases ha_bot : IsBot a
+  rw [ha_bot.Ici_eq, inter_univ] at h_singleton_eq_inter
+  rw [h_singleton_eq_inter]
+  exact isOpen_generateFrom_of_mem ⟨succ a, Or.inr rfl⟩
+  rw [isBot_iff_isMin] at ha_bot
+  rw [← Ioi_pred_of_not_isMin ha_bot] at h_singleton_eq_inter
+  rw [h_singleton_eq_inter]
+  -- Porting note: Specified instance for `IsOpen.inter` explicitly to fix an error.
+  letI := Preorder.topology α
+  apply IsOpen.inter
+  exact isOpen_generateFrom_of_mem ⟨succ a, Or.inr rfl⟩
+  exact isOpen_generateFrom_of_mem ⟨pred a, Or.inl rfl⟩
 
 theorem discreteTopology_iff_orderTopology_of_pred_succ [LinearOrder α] [PredOrder α]
     [SuccOrder α] : DiscreteTopology α ↔ OrderTopology α := by
   refine ⟨fun h => ⟨?_⟩, fun h => ⟨?_⟩⟩
-  · rw [h.eq_bot]
-    exact LinearOrder.bot_topologicalSpace_eq_generateFrom
-  · rw [h.topology_eq_generate_intervals]
-    exact LinearOrder.bot_topologicalSpace_eq_generateFrom.symm
+  rw [h.eq_bot]
+  exact LinearOrder.bot_topologicalSpace_eq_generateFrom
+  rw [h.topology_eq_generate_intervals]
+  exact LinearOrder.bot_topologicalSpace_eq_generateFrom.symm
 
 instance (priority := 100) DiscreteTopology.orderTopology_of_pred_succ [h : DiscreteTopology α]
     [LinearOrder α] [PredOrder α] [SuccOrder α] : OrderTopology α :=

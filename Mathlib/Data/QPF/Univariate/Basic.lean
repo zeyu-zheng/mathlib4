@@ -96,14 +96,14 @@ open Functor
 theorem liftp_iff {α : Type u} (p : α → Prop) (x : F α) :
     Liftp p x ↔ ∃ a f, x = abs ⟨a, f⟩ ∧ ∀ i, p (f i) := by
   constructor
-  · rintro ⟨y, hy⟩
-    cases' h : repr y with a f
-    use a, fun i => (f i).val
-    constructor
-    · rw [← hy, ← abs_repr y, h, ← abs_map]
-      rfl
-    intro i
-    apply (f i).property
+  rintro ⟨y, hy⟩
+  cases' h : repr y with a f
+  use a, fun i => (f i).val
+  constructor
+  rw [← hy, ← abs_repr y, h, ← abs_map]
+  rfl
+  intro i
+  apply (f i).property
   rintro ⟨a, f, h₀, h₁⟩
   use abs ⟨a, fun i => ⟨f i, h₁ i⟩⟩
   rw [← abs_map, h₀]; rfl
@@ -111,15 +111,15 @@ theorem liftp_iff {α : Type u} (p : α → Prop) (x : F α) :
 theorem liftp_iff' {α : Type u} (p : α → Prop) (x : F α) :
     Liftp p x ↔ ∃ u : q.P α, abs u = x ∧ ∀ i, p (u.snd i) := by
   constructor
-  · rintro ⟨y, hy⟩
-    cases' h : repr y with a f
-    use ⟨a, fun i => (f i).val⟩
-    dsimp
-    constructor
-    · rw [← hy, ← abs_repr y, h, ← abs_map]
-      rfl
-    intro i
-    apply (f i).property
+  rintro ⟨y, hy⟩
+  cases' h : repr y with a f
+  use ⟨a, fun i => (f i).val⟩
+  dsimp
+  constructor
+  rw [← hy, ← abs_repr y, h, ← abs_map]
+  rfl
+  intro i
+  apply (f i).property
   rintro ⟨⟨a, f⟩, h₀, h₁⟩; dsimp at *
   use abs ⟨a, fun i => ⟨f i, h₁ i⟩⟩
   rw [← abs_map, ← h₀]; rfl
@@ -127,22 +127,22 @@ theorem liftp_iff' {α : Type u} (p : α → Prop) (x : F α) :
 theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : F α) :
     Liftr r x y ↔ ∃ a f₀ f₁, x = abs ⟨a, f₀⟩ ∧ y = abs ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) := by
   constructor
-  · rintro ⟨u, xeq, yeq⟩
-    cases' h : repr u with a f
-    use a, fun i => (f i).val.fst, fun i => (f i).val.snd
-    constructor
-    · rw [← xeq, ← abs_repr u, h, ← abs_map]
-      rfl
-    constructor
-    · rw [← yeq, ← abs_repr u, h, ← abs_map]
-      rfl
-    intro i
-    exact (f i).property
+  rintro ⟨u, xeq, yeq⟩
+  cases' h : repr u with a f
+  use a, fun i => (f i).val.fst, fun i => (f i).val.snd
+  constructor
+  rw [← xeq, ← abs_repr u, h, ← abs_map]
+  rfl
+  constructor
+  rw [← yeq, ← abs_repr u, h, ← abs_map]
+  rfl
+  intro i
+  exact (f i).property
   rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
   use abs ⟨a, fun i => ⟨(f₀ i, f₁ i), h i⟩⟩
   constructor
-  · rw [xeq, ← abs_map]
-    rfl
+  rw [xeq, ← abs_map]
+  rfl
   rw [yeq, ← abs_map]; rfl
 
 end
@@ -205,11 +205,11 @@ def Wrepr : q.P.W → q.P.W :=
 theorem Wrepr_equiv (x : q.P.W) : Wequiv (Wrepr x) x := by
   induction' x with a f ih
   apply Wequiv.trans
-  · change Wequiv (Wrepr ⟨a, f⟩) (PFunctor.W.mk (q.P.map Wrepr ⟨a, f⟩))
-    apply Wequiv.abs'
-    have : Wrepr ⟨a, f⟩ = PFunctor.W.mk (repr (abs (q.P.map Wrepr ⟨a, f⟩))) := rfl
-    rw [this, PFunctor.W.dest_mk, abs_repr]
-    rfl
+  change Wequiv (Wrepr ⟨a, f⟩) (PFunctor.W.mk (q.P.map Wrepr ⟨a, f⟩))
+  apply Wequiv.abs'
+  have : Wrepr ⟨a, f⟩ = PFunctor.W.mk (repr (abs (q.P.map Wrepr ⟨a, f⟩))) := rfl
+  rw [this, PFunctor.W.dest_mk, abs_repr]
+  rfl
   apply Wequiv.ind; exact ih
 
 /-- Define the fixed point as the quotient of trees under the equivalence relation `Wequiv`. -/
@@ -405,17 +405,17 @@ theorem Cofix.bisim_rel (r : Cofix F → Cofix F → Prop)
   let r' (x y) := x = y ∨ r x y
   intro x y rxy
   apply Cofix.bisim_aux r'
-  · intro x
-    left
-    rfl
-  · intro x y r'xy
-    cases' r'xy with r'xy r'xy
-    · rw [r'xy]
-    have : ∀ x y, r x y → r' x y := fun x y h => Or.inr h
-    rw [← Quot.factor_mk_eq _ _ this]
-    dsimp [r']
-    rw [@comp_map _ q _ _ _ (Quot.mk r), @comp_map _ q _ _ _ (Quot.mk r)]
-    rw [h _ _ r'xy]
+  intro x
+  left
+  rfl
+  intro x y r'xy
+  cases' r'xy with r'xy r'xy
+  rw [r'xy]
+  have : ∀ x y, r x y → r' x y := fun x y h => Or.inr h
+  rw [← Quot.factor_mk_eq _ _ this]
+  dsimp [r']
+  rw [@comp_map _ q _ _ _ (Quot.mk r), @comp_map _ q _ _ _ (Quot.mk r)]
+  rw [h _ _ r'xy]
   right; exact rxy
 
 theorem Cofix.bisim (r : Cofix F → Cofix F → Prop)
@@ -534,11 +534,11 @@ open Set
 theorem mem_supp {α : Type u} (x : F α) (u : α) :
     u ∈ supp x ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f '' univ := by
   rw [supp]; dsimp; constructor
-  · intro h a f haf
-    have : Liftp (fun u => u ∈ f '' univ) x
-    rw [liftp_iff]
-    exact ⟨a, f, haf.symm, fun i => mem_image_of_mem _ (mem_univ _)⟩
-    exact h this
+  intro h a f haf
+  have : Liftp (fun u => u ∈ f '' univ) x
+  rw [liftp_iff]
+  exact ⟨a, f, haf.symm, fun i => mem_image_of_mem _ (mem_univ _)⟩
+  exact h this
   intro h p; rw [liftp_iff]
   rintro ⟨a, f, xeq, h'⟩
   rcases h a f xeq.symm with ⟨i, _, hi⟩
@@ -553,22 +553,22 @@ theorem has_good_supp_iff {α : Type u} (x : F α) :
     (∀ p, Liftp p x ↔ ∀ u ∈ supp x, p u) ↔
       ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ a' f', abs ⟨a', f'⟩ = x → f '' univ ⊆ f' '' univ := by
   constructor
-  · intro h
-    have : Liftp (supp x) x
-    rw [h]; intro u; exact id
-    rw [liftp_iff] at this
-    rcases this with ⟨a, f, xeq, h'⟩
-    refine ⟨a, f, xeq.symm, ?_⟩
-    intro a' f' h''
-    rintro u ⟨i, _, hfi⟩
-    have : u ∈ supp x
-    rw [← hfi]; apply h'
-    exact (mem_supp x u).mp this _ _ h''
+  intro h
+  have : Liftp (supp x) x
+  rw [h]; intro u; exact id
+  rw [liftp_iff] at this
+  rcases this with ⟨a, f, xeq, h'⟩
+  refine ⟨a, f, xeq.symm, ?_⟩
+  intro a' f' h''
+  rintro u ⟨i, _, hfi⟩
+  have : u ∈ supp x
+  rw [← hfi]; apply h'
+  exact (mem_supp x u).mp this _ _ h''
   rintro ⟨a, f, xeq, h⟩ p; rw [liftp_iff]; constructor
-  · rintro ⟨a', f', xeq', h'⟩ u usuppx
-    rcases (mem_supp x u).mp usuppx a' f' xeq'.symm with ⟨i, _, f'ieq⟩
-    rw [← f'ieq]
-    apply h'
+  rintro ⟨a', f', xeq', h'⟩ u usuppx
+  rcases (mem_supp x u).mp usuppx a' f' xeq'.symm with ⟨i, _, f'ieq⟩
+  rw [← f'ieq]
+  apply h'
   intro h'
   refine ⟨a, f, xeq.symm, ?_⟩; intro i
   apply h'; rw [mem_supp]
@@ -593,8 +593,8 @@ def SuppPreservation : Prop :=
 theorem supp_eq_of_isUniform (h : q.IsUniform) {α : Type u} (a : q.P.A) (f : q.P.B a → α) :
     supp (abs ⟨a, f⟩) = f '' univ := by
   ext u; rw [mem_supp]; constructor
-  · intro h'
-    apply h' _ _ rfl
+  intro h'
+  apply h' _ _ rfl
   intro h' a' f' e
   rw [← h _ _ _ _ e.symm]; apply h'
 
@@ -602,11 +602,11 @@ theorem liftp_iff_of_isUniform (h : q.IsUniform) {α : Type u} (x : F α) (p : �
     Liftp p x ↔ ∀ u ∈ supp x, p u := by
   rw [liftp_iff, ← abs_repr x]
   cases' repr x with a f; constructor
-  · rintro ⟨a', f', abseq, hf⟩ u
-    rw [supp_eq_of_isUniform h, h _ _ _ _ abseq]
-    rintro ⟨i, _, hi⟩
-    rw [← hi]
-    apply hf
+  rintro ⟨a', f', abseq, hf⟩ u
+  rw [supp_eq_of_isUniform h, h _ _ _ _ abseq]
+  rintro ⟨i, _, hi⟩
+  rw [← hi]
+  apply hf
   intro h'
   refine ⟨a, f, rfl, fun i => h' _ ?_⟩
   rw [supp_eq_of_isUniform h]
@@ -619,23 +619,23 @@ theorem supp_map (h : q.IsUniform) {α β : Type u} (g : α → β) (x : F α) :
 
 theorem suppPreservation_iff_uniform : q.SuppPreservation ↔ q.IsUniform := by
   constructor
-  · intro h α a a' f f' h'
-    rw [← PFunctor.supp_eq, ← PFunctor.supp_eq, ← h, h', h]
-  · rintro h α ⟨a, f⟩
-    rwa [supp_eq_of_isUniform, PFunctor.supp_eq]
+  intro h α a a' f f' h'
+  rw [← PFunctor.supp_eq, ← PFunctor.supp_eq, ← h, h', h]
+  rintro h α ⟨a, f⟩
+  rwa [supp_eq_of_isUniform, PFunctor.supp_eq]
 
 theorem suppPreservation_iff_liftpPreservation : q.SuppPreservation ↔ q.LiftpPreservation := by
   constructor <;> intro h
-  · rintro α p ⟨a, f⟩
-    have h' := h
-    rw [suppPreservation_iff_uniform] at h'
-    dsimp only [SuppPreservation, supp] at h
-    rw [liftp_iff_of_isUniform h', supp_eq_of_isUniform h', PFunctor.liftp_iff']
-    simp only [image_univ, mem_range, exists_imp]
-    constructor <;> intros <;> subst_vars <;> solve_by_elim
-  · rintro α ⟨a, f⟩
-    simp only [LiftpPreservation] at h
-    simp only [supp, h]
+  rintro α p ⟨a, f⟩
+  have h' := h
+  rw [suppPreservation_iff_uniform] at h'
+  dsimp only [SuppPreservation, supp] at h
+  rw [liftp_iff_of_isUniform h', supp_eq_of_isUniform h', PFunctor.liftp_iff']
+  simp only [image_univ, mem_range, exists_imp]
+  constructor <;> intros <;> subst_vars <;> solve_by_elim
+  rintro α ⟨a, f⟩
+  simp only [LiftpPreservation] at h
+  simp only [supp, h]
 
 theorem liftpPreservation_iff_uniform : q.LiftpPreservation ↔ q.IsUniform := by
   rw [← suppPreservation_iff_liftpPreservation, suppPreservation_iff_uniform]

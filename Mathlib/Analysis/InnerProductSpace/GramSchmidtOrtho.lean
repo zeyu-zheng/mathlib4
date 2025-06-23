@@ -78,9 +78,9 @@ theorem gramSchmidt_orthogonal (f : ι → E) {a b : ι} (h₀ : a ≠ b) :
     ⟪gramSchmidt 𝕜 f a, gramSchmidt 𝕜 f b⟫ = 0 := by
   suffices ∀ a b : ι, a < b → ⟪gramSchmidt 𝕜 f a, gramSchmidt 𝕜 f b⟫ = 0 by
     cases' h₀.lt_or_lt with ha hb
-    · exact this _ _ ha
-    · rw [inner_eq_zero_symm]
-      exact this _ _ hb
+    exact this _ _ ha
+    rw [inner_eq_zero_symm]
+    exact this _ _ hb
   clear h₀ a b
   intro a b h₀
   revert a
@@ -112,7 +112,7 @@ theorem gramSchmidt_inv_triangular (v : ι → E) {i j : ι} (hij : i < j) :
   simp only [inner_add_right, inner_sum, inner_smul_right]
   set b : ι → E := gramSchmidt 𝕜 v
   convert zero_add (0 : 𝕜)
-  · exact gramSchmidt_orthogonal 𝕜 v hij.ne'
+  exact gramSchmidt_orthogonal 𝕜 v hij.ne'
   apply Finset.sum_eq_zero
   rintro k hki'
   have hki : k < i
@@ -166,20 +166,20 @@ theorem gramSchmidt_of_orthogonal {f : ι → E} (hf : Pairwise fun i j => ⟪f 
   ext i
   rw [gramSchmidt_def]
   trans f i - 0
-  · congr
-    apply Finset.sum_eq_zero
-    intro j hj
-    rw [Submodule.coe_eq_zero]
-    suffices span 𝕜 (f '' Set.Iic j) ⟂ 𝕜 ∙ f i by
-      apply orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero
-      rw [mem_orthogonal_singleton_iff_inner_left]
-      rw [← mem_orthogonal_singleton_iff_inner_right]
-      exact this (gramSchmidt_mem_span 𝕜 f (le_refl j))
-    rw [isOrtho_span]
-    rintro u ⟨k, hk, rfl⟩ v (rfl : v = f i)
-    apply hf
-    exact (lt_of_le_of_lt hk (Finset.mem_Iio.mp hj)).ne
-  · simp
+  congr
+  apply Finset.sum_eq_zero
+  intro j hj
+  rw [Submodule.coe_eq_zero]
+  suffices span 𝕜 (f '' Set.Iic j) ⟂ 𝕜 ∙ f i by
+    apply orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero
+    rw [mem_orthogonal_singleton_iff_inner_left]
+    rw [← mem_orthogonal_singleton_iff_inner_right]
+    exact this (gramSchmidt_mem_span 𝕜 f (le_refl j))
+  rw [isOrtho_span]
+  rintro u ⟨k, hk, rfl⟩ v (rfl : v = f i)
+  apply hf
+  exact (lt_of_le_of_lt hk (Finset.mem_Iio.mp hj)).ne
+  simp
 
 variable {𝕜}
 
@@ -262,12 +262,12 @@ theorem gramSchmidt_orthonormal {f : ι → E} (h₀ : LinearIndependent 𝕜 f)
     Orthonormal 𝕜 (gramSchmidtNormed 𝕜 f) := by
   unfold Orthonormal
   constructor
-  · simp only [gramSchmidtNormed_unit_length, h₀, eq_self_iff_true, imp_true_iff]
-  · intro i j hij
-    simp only [gramSchmidtNormed, inner_smul_left, inner_smul_right, RCLike.conj_inv,
-      RCLike.conj_ofReal, mul_eq_zero, inv_eq_zero, RCLike.ofReal_eq_zero, norm_eq_zero]
-    repeat' right
-    exact gramSchmidt_orthogonal 𝕜 f hij
+  simp only [gramSchmidtNormed_unit_length, h₀, eq_self_iff_true, imp_true_iff]
+  intro i j hij
+  simp only [gramSchmidtNormed, inner_smul_left, inner_smul_right, RCLike.conj_inv,
+    RCLike.conj_ofReal, mul_eq_zero, inv_eq_zero, RCLike.ofReal_eq_zero, norm_eq_zero]
+  repeat' right
+  exact gramSchmidt_orthogonal 𝕜 f hij
 
 /-- **Gram-Schmidt Orthonormalization**:
 `gramSchmidtNormed` produces an orthornormal system of vectors after removing the vectors which
@@ -287,9 +287,9 @@ theorem span_gramSchmidtNormed (f : ι → E) (s : Set ι) :
       span_mono (image_subset _ <| singleton_subset_set_iff.2 hi) ?_)
   simp only [coe_singleton, Set.image_singleton]
   by_cases h : gramSchmidt 𝕜 f i = 0
-  · simp [h]
-  · refine mem_span_singleton.2 ⟨‖gramSchmidt 𝕜 f i‖, smul_inv_smul₀ ?_ _⟩
-    exact mod_cast norm_ne_zero_iff.2 h
+  simp [h]
+  refine mem_span_singleton.2 ⟨‖gramSchmidt 𝕜 f i‖, smul_inv_smul₀ ?_ _⟩
+  exact mod_cast norm_ne_zero_iff.2 h
 
 theorem span_gramSchmidtNormed_range (f : ι → E) :
     span 𝕜 (range (gramSchmidtNormed 𝕜 f)) = span 𝕜 (range (gramSchmidt 𝕜 f)) := by
@@ -330,7 +330,7 @@ theorem inner_gramSchmidtOrthonormalBasis_eq_zero {f : ι → E} {i : ι}
   rw [isOrtho_span]
   rintro u ⟨k, _, rfl⟩ v (rfl : v = _)
   by_cases hk : gramSchmidtNormed 𝕜 f k = 0
-  · rw [hk, inner_zero_left]
+  rw [hk, inner_zero_left]
   rw [← gramSchmidtOrthonormalBasis_apply h hk]
   have : k ≠ i
   rintro rfl
@@ -340,9 +340,9 @@ theorem inner_gramSchmidtOrthonormalBasis_eq_zero {f : ι → E} {i : ι}
 theorem gramSchmidtOrthonormalBasis_inv_triangular {i j : ι} (hij : i < j) :
     ⟪gramSchmidtOrthonormalBasis h f j, f i⟫ = 0 := by
   by_cases hi : gramSchmidtNormed 𝕜 f j = 0
-  · rw [inner_gramSchmidtOrthonormalBasis_eq_zero h hi]
-  · simp [gramSchmidtOrthonormalBasis_apply h hi, gramSchmidtNormed, inner_smul_left,
-      gramSchmidt_inv_triangular 𝕜 f hij]
+  rw [inner_gramSchmidtOrthonormalBasis_eq_zero h hi]
+  simp [gramSchmidtOrthonormalBasis_apply h hi, gramSchmidtNormed, inner_smul_left,
+    gramSchmidt_inv_triangular 𝕜 f hij]
 
 theorem gramSchmidtOrthonormalBasis_inv_triangular' {i j : ι} (hij : i < j) :
     (gramSchmidtOrthonormalBasis h f).repr (f i) j = 0 := by

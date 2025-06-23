@@ -36,8 +36,8 @@ example (p : ℕ) (h2 : 2 < p) (h5 : p < 5) : p = 3 ∨ p = 4 := by
   have hp : ?_ := ?foo
   case foo => exact (Finset.mem_Ioo).2 ⟨h2, h5⟩
   fin_cases hp
-  · norm_num
-  · norm_num
+  norm_num
+  norm_num
 
 -- TODO Restore the remaining tests from mathlib3:
 -- Some of these test the `with` and `using` clauses which haven't been re-implemented.

@@ -176,7 +176,7 @@ theorem append_insert (a : α) (t : Vector3 α m) (v : Vector3 α n) (i : Fin2 (
     (e : (n + 1) + m = (n + m) + 1) :
     insert a (t +-+ v) (Eq.recOn e (i.add m)) = Eq.recOn e (t +-+ insert a v i) := by
   refine Vector3.recOn t (fun e => ?_) (@fun k b t IH _ => ?_) e
-  · rfl
+  rfl
   have e' : (n + 1) + k = (n + k) + 1
   omega
   change
@@ -243,15 +243,15 @@ theorem vectorAllP_cons (p : α → Prop) (x : α) (v : Vector3 α n) :
 theorem vectorAllP_iff_forall (p : α → Prop) (v : Vector3 α n) :
     VectorAllP p v ↔ ∀ i, p (v i) := by
   refine v.recOn ?_ ?_
-  · exact ⟨fun _ => Fin2.elim0, fun _ => trivial⟩
-  · simp only [vectorAllP_cons]
-    refine fun {n} a v IH =>
-      (and_congr_right fun _ => IH).trans
-        ⟨fun ⟨pa, h⟩ i => by
-          refine i.cases' ?_ ?_
-          exacts [pa, h], fun h => ⟨?_, fun i => ?_⟩⟩
-    · simpa using h fz
-    · simpa using h (fs i)
+  exact ⟨fun _ => Fin2.elim0, fun _ => trivial⟩
+  simp only [vectorAllP_cons]
+  refine fun {n} a v IH =>
+    (and_congr_right fun _ => IH).trans
+      ⟨fun ⟨pa, h⟩ i => by
+        refine i.cases' ?_ ?_
+        exacts [pa, h], fun h => ⟨?_, fun i => ?_⟩⟩
+  simpa using h fz
+  simpa using h (fs i)
 
 theorem VectorAllP.imp {p q : α → Prop} (h : ∀ x, p x → q x) {v : Vector3 α n}
     (al : VectorAllP p v) : VectorAllP q v :=

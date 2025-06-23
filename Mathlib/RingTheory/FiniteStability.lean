@@ -33,8 +33,8 @@ theorem baseChangeAux_surj {σ : Type*} {f : MvPolynomial σ R →ₐ[R] A} (hf 
     Function.Surjective (Algebra.TensorProduct.map (AlgHom.id B B) f) := by
   show Function.Surjective (TensorProduct.map (AlgHom.id R B) f)
   apply TensorProduct.map_surjective
-  · exact Function.RightInverse.surjective (congrFun rfl)
-  · exact hf
+  exact Function.RightInverse.surjective (congrFun rfl)
+  exact hf
 
 instance baseChange [hfa : FiniteType R A] : Algebra.FiniteType B (B ⊗[R] A) := by
   rw [iff_quotient_mvPolynomial''] at *
@@ -62,11 +62,11 @@ instance baseChange [FinitePresentation R A] : FinitePresentation B (B ⊗[R] A)
   let g' : MvPolynomial (Fin n) B →ₐ[B] B ⊗[R] A :=
     AlgHom.comp g (MvPolynomial.algebraTensorAlgEquiv R B).symm.toAlgHom
   refine ⟨n, g', ?_, Ideal.fg_ker_comp _ _ ?_ hfgg ?_⟩
-  · simp_all [g, g']
-  · show Ideal.FG (RingHom.ker (AlgEquiv.symm (MvPolynomial.algebraTensorAlgEquiv R B)))
-    simp only [RingHom.ker_equiv]
-    exact Submodule.fg_bot
-  · simpa using EquivLike.surjective _
+  simp_all [g, g']
+  show Ideal.FG (RingHom.ker (AlgEquiv.symm (MvPolynomial.algebraTensorAlgEquiv R B)))
+  simp only [RingHom.ker_equiv]
+  exact Submodule.fg_bot
+  simpa using EquivLike.surjective _
 
 end FinitePresentation
 

@@ -64,11 +64,11 @@ theorem order_zero : order (0 : R⟦X⟧) = ⊤ :=
 theorem order_finite_iff_ne_zero : (order φ).Dom ↔ φ ≠ 0 := by
   simp only [order]
   constructor
-  · split_ifs with h <;> intro H
-    · simp only [PartENat.top_eq_none, Part.not_none_dom] at H
-    · exact h
-  · intro h
-    simp [h]
+  split_ifs with h <;> intro H
+  simp only [PartENat.top_eq_none, Part.not_none_dom] at H
+  exact h
+  intro h
+  simp [h]
 
 open Classical in
 /-- If the order of a formal power series is finite,
@@ -83,9 +83,9 @@ open Classical in
 then the order of the power series is less than or equal to `n`. -/
 theorem order_le (n : ℕ) (h : coeff R n φ ≠ 0) : order φ ≤ n := by
   rw [order, dif_neg]
-  · simp only [PartENat.coe_le_coe]
-    exact Nat.find_le h
-  · exact exists_coeff_ne_zero_iff_ne_zero.mp ⟨n, h⟩
+  simp only [PartENat.coe_le_coe]
+  exact Nat.find_le h
+  exact exists_coeff_ne_zero_iff_ne_zero.mp ⟨n, h⟩
 
 /-- The `n`th coefficient of a formal power series is `0` if `n` is strictly
 smaller than the order of the power series. -/
@@ -111,12 +111,12 @@ the `i`th coefficient is `0` for all `i < n`. -/
 theorem le_order (φ : R⟦X⟧) (n : PartENat) (h : ∀ i : ℕ, ↑i < n → coeff R i φ = 0) :
     n ≤ order φ := by
   induction n using PartENat.casesOn
-  · show _ ≤ _
-    rw [top_le_iff, order_eq_top]
-    ext i
-    exact h _ (PartENat.natCast_lt_top i)
-  · apply nat_le_order
-    simpa only [PartENat.coe_lt_coe] using h
+  show _ ≤ _
+  rw [top_le_iff, order_eq_top]
+  ext i
+  exact h _ (PartENat.natCast_lt_top i)
+  apply nat_le_order
+  simpa only [PartENat.coe_lt_coe] using h
 
 open Classical in
 /-- The order of a formal power series is exactly `n` if the `n`th coefficient is nonzero,
@@ -124,7 +124,7 @@ and the `i`th coefficient is `0` for all `i < n`. -/
 theorem order_eq_nat {φ : R⟦X⟧} {n : ℕ} :
     order φ = n ↔ coeff R n φ ≠ 0 ∧ ∀ i, i < n → coeff R i φ = 0 := by
   rcases eq_or_ne φ 0 with (rfl | hφ)
-  · simpa [(coeff R _).map_zero] using (PartENat.natCast_ne_top _).symm
+  simpa [(coeff R _).map_zero] using (PartENat.natCast_ne_top _).symm
   simp [order, dif_neg hφ, Nat.find_eq_iff]
 
 /-- The order of a formal power series is exactly `n` if the `n`th coefficient is nonzero,
@@ -132,17 +132,17 @@ and the `i`th coefficient is `0` for all `i < n`. -/
 theorem order_eq {φ : R⟦X⟧} {n : PartENat} :
     order φ = n ↔ (∀ i : ℕ, ↑i = n → coeff R i φ ≠ 0) ∧ ∀ i : ℕ, ↑i < n → coeff R i φ = 0 := by
   induction n using PartENat.casesOn
-  · rw [order_eq_top]
-    constructor
-    · rintro rfl
-      constructor <;> intros
-      · exfalso
-        exact PartENat.natCast_ne_top ‹_› ‹_›
-      · exact (coeff _ _).map_zero
-    · rintro ⟨_h₁, h₂⟩
-      ext i
-      exact h₂ i (PartENat.natCast_lt_top i)
-  · simpa [PartENat.natCast_inj] using order_eq_nat
+  rw [order_eq_top]
+  constructor
+  rintro rfl
+  constructor <;> intros
+  exfalso
+  exact PartENat.natCast_ne_top ‹_› ‹_›
+  exact (coeff _ _).map_zero
+  rintro ⟨_h₁, h₂⟩
+  ext i
+  exact h₂ i (PartENat.natCast_lt_top i)
+  simpa [PartENat.natCast_inj] using order_eq_nat
 
 /-- The order of the sum of two formal power series
  is at least the minimum of their orders. -/
@@ -157,13 +157,13 @@ private theorem order_add_of_order_eq.aux (φ ψ : R⟦X⟧) (_h : order φ ≠ 
     exact ⟨le_rfl, le_of_lt H⟩
   rw [order_eq]
   constructor
-  · intro i hi
-    rw [← hi] at H
-    rw [(coeff _ _).map_add, coeff_of_lt_order i H, add_zero]
-    exact (order_eq_nat.1 hi.symm).1
-  · intro i hi
-    rw [(coeff _ _).map_add, coeff_of_lt_order i hi, coeff_of_lt_order i (lt_trans hi H),
-      zero_add]
+  intro i hi
+  rw [← hi] at H
+  rw [(coeff _ _).map_add, coeff_of_lt_order i H, add_zero]
+  exact (order_eq_nat.1 hi.symm).1
+  intro i hi
+  rw [(coeff _ _).map_add, coeff_of_lt_order i hi, coeff_of_lt_order i (lt_trans hi H),
+    zero_add]
 
 /-- The order of the sum of two formal power series
  is the minimum of their orders if their orders differ. -/
@@ -171,9 +171,9 @@ theorem order_add_of_order_eq (φ ψ : R⟦X⟧) (h : order φ ≠ order ψ) :
     order (φ + ψ) = order φ ⊓ order ψ := by
   refine le_antisymm ?_ (le_order_add _ _)
   by_cases H₁ : order φ < order ψ
-  · apply order_add_of_order_eq.aux _ _ h H₁
+  apply order_add_of_order_eq.aux _ _ h H₁
   by_cases H₂ : order ψ < order φ
-  · simpa only [add_comm, inf_comm] using order_add_of_order_eq.aux _ _ h.symm H₂
+  simpa only [add_comm, inf_comm] using order_add_of_order_eq.aux _ _ h.symm H₂
   exfalso; exact h (le_antisymm (not_lt.1 H₂) (not_lt.1 H₁))
 
 /-- The order of the product of two formal power series
@@ -183,9 +183,9 @@ theorem order_mul_ge (φ ψ : R⟦X⟧) : order φ + order ψ ≤ order (φ * ψ
   intro n hn; rw [coeff_mul, Finset.sum_eq_zero]
   rintro ⟨i, j⟩ hij
   by_cases hi : ↑i < order φ
-  · rw [coeff_of_lt_order i hi, zero_mul]
+  rw [coeff_of_lt_order i hi, zero_mul]
   by_cases hj : ↑j < order ψ
-  · rw [coeff_of_lt_order j hj, mul_zero]
+  rw [coeff_of_lt_order j hj, mul_zero]
   rw [not_lt] at hi hj; rw [mem_antidiagonal] at hij
   exfalso
   apply ne_of_lt (lt_of_lt_of_le hn <| add_le_add hi hj)
@@ -195,14 +195,14 @@ theorem order_mul_ge (φ ψ : R⟦X⟧) : order φ + order ψ ≤ order (φ * ψ
 theorem order_monomial (n : ℕ) (a : R) [Decidable (a = 0)] :
     order (monomial R n a) = if a = 0 then (⊤ : PartENat) else n := by
   split_ifs with h
-  · rw [h, order_eq_top, LinearMap.map_zero]
-  · rw [order_eq]
-    constructor <;> intro i hi
-    · rw [PartENat.natCast_inj] at hi
-      rwa [hi, coeff_monomial_same]
-    · rw [PartENat.coe_lt_coe] at hi
-      rw [coeff_monomial, if_neg]
-      exact ne_of_lt hi
+  rw [h, order_eq_top, LinearMap.map_zero]
+  rw [order_eq]
+  constructor <;> intro i hi
+  rw [PartENat.natCast_inj] at hi
+  rwa [hi, coeff_monomial_same]
+  rw [PartENat.coe_lt_coe] at hi
+  rw [coeff_monomial, if_neg]
+  exact ne_of_lt hi
 
 open Classical in
 /-- The order of the monomial `a*X^n` is `n` if `a ≠ 0`. -/
@@ -231,11 +231,11 @@ theorem coeff_mul_prod_one_sub_of_lt_order {R ι : Type*} [CommRing R] (k : ℕ)
     (φ : R⟦X⟧) (f : ι → R⟦X⟧) :
     (∀ i ∈ s, ↑k < (f i).order) → coeff R k (φ * ∏ i ∈ s, (1 - f i)) = coeff R k φ := by
   induction' s using Finset.induction_on with a s ha ih t
-  · simp
-  · intro t
-    simp only [Finset.mem_insert, forall_eq_or_imp] at t
-    rw [Finset.prod_insert ha, ← mul_assoc, mul_right_comm, coeff_mul_one_sub_of_lt_order _ t.1]
-    exact ih t.2
+  simp
+  intro t
+  simp only [Finset.mem_insert, forall_eq_or_imp] at t
+  rw [Finset.prod_insert ha, ← mul_assoc, mul_right_comm, coeff_mul_one_sub_of_lt_order _ t.1]
+  exact ih t.2
 
 -- TODO: link with `X_pow_dvd_iff`
 theorem X_pow_order_dvd (h : (order φ).Dom) : X ^ (order φ).get h ∣ φ := by
@@ -245,18 +245,18 @@ theorem X_pow_order_dvd (h : (order φ).Dom) : X ^ (order φ).get h ∣ φ := by
     Finset.sum_const_zero, add_zero]
   rw [Finset.filter_fst_eq_antidiagonal n (Part.get (order φ) h)]
   split_ifs with hn
-  · simp [tsub_add_cancel_of_le hn]
-  · simp only [Finset.sum_empty]
-    refine coeff_of_lt_order _ ?_
-    simpa [PartENat.coe_lt_iff] using fun _ => hn
+  simp [tsub_add_cancel_of_le hn]
+  simp only [Finset.sum_empty]
+  refine coeff_of_lt_order _ ?_
+  simpa [PartENat.coe_lt_iff] using fun _ => hn
 
 open Classical in
 theorem order_eq_multiplicity_X {R : Type*} [Semiring R] [@DecidableRel R⟦X⟧ (· ∣ ·)] (φ : R⟦X⟧) :
     order φ = multiplicity X φ := by
   rcases eq_or_ne φ 0 with (rfl | hφ)
-  · simp
+  simp
   induction' ho : order φ using PartENat.casesOn with n
-  · simp [hφ] at ho
+  simp [hφ] at ho
   have hn : φ.order.get (order_finite_iff_ne_zero.mpr hφ) = n
   simp [ho]
   rw [← hn]
@@ -266,12 +266,12 @@ theorem order_eq_multiplicity_X {R : Type*} [Semiring R] [@DecidableRel R⟦X⟧
   rintro ⟨ψ, H⟩
   have := congr_arg (coeff R n) H
   rw [← (ψ.commute_X.pow_right _).eq, coeff_mul_of_lt_order, ← hn] at this
-  · exact coeff_order _ this
-  · rw [X_pow_eq, order_monomial]
-    split_ifs
-    · exact PartENat.natCast_lt_top _
-    · rw [← hn, PartENat.coe_lt_coe]
-      exact Nat.lt_succ_self _
+  exact coeff_order _ this
+  rw [X_pow_eq, order_monomial]
+  split_ifs
+  exact PartENat.natCast_lt_top _
+  rw [← hn, PartENat.coe_lt_coe]
+  exact Nat.lt_succ_self _
 
 /-- Given a non-zero power series `f`, `divided_by_X_pow_order f` is the power series obtained by
   dividing out the largest power of X that divides `f`, that is its order-/

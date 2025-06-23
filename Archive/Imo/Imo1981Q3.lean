@@ -67,9 +67,9 @@ theorem eq_imp_1 {n : ℤ} (h1 : ProblemPredicate N n n) : n = 1 :=
 theorem reduction {m n : ℤ} (h1 : ProblemPredicate N m n) (h2 : 1 < n) :
     ProblemPredicate N (n - m) m := by
   obtain (rfl : m = n) | (h3 : m < n) := h1.m_le_n.eq_or_lt
-  · have h4 : m = 1
-    apply h1.eq_imp_1
-    exact absurd h4.symm h2.ne
+  have h4 : m = 1
+  apply h1.eq_imp_1
+  exact absurd h4.symm h2.ne
   exact
     { n_range := h1.m_range
       m_range := by
@@ -119,17 +119,17 @@ theorem imp_fib {n : ℕ} : ∀ m : ℕ, NatPredicate N m n → ∃ k : ℕ, m =
   have h3 : m ≤ n
   apply h2.m_le_n
   obtain (rfl : 1 = n) | (h4 : 1 < n) := (succ_le_iff.mpr h2.n_pos).eq_or_lt
-  · use 1
-    have h5 : 1 ≤ m
-    apply succ_le_iff.mpr h2.m_pos
-    simpa [fib_one, fib_two, (by decide : 1 + 1 = 2)] using (h3.antisymm h5 : m = 1)
-  · obtain (rfl : m = n) | (h6 : m < n) := h3.eq_or_lt
-    · exact absurd h2.eq_imp_1 (Nat.ne_of_gt h4)
-    · have h7 : NatPredicate N (n - m) m
-      apply h2.reduction h4
-      obtain ⟨k : ℕ, hnm : n - m = fib k, rfl : m = fib (k + 1)⟩ := h1 m h6 (n - m) h7
-      use k + 1, rfl
-      rw [fib_add_two, ← hnm, tsub_add_cancel_of_le h3]
+  use 1
+  have h5 : 1 ≤ m
+  apply succ_le_iff.mpr h2.m_pos
+  simpa [fib_one, fib_two, (by decide : 1 + 1 = 2)] using (h3.antisymm h5 : m = 1)
+  obtain (rfl : m = n) | (h6 : m < n) := h3.eq_or_lt
+  exact absurd h2.eq_imp_1 (Nat.ne_of_gt h4)
+  have h7 : NatPredicate N (n - m) m
+  apply h2.reduction h4
+  obtain ⟨k : ℕ, hnm : n - m = fib k, rfl : m = fib (k + 1)⟩ := h1 m h6 (n - m) h7
+  use k + 1, rfl
+  rw [fib_add_two, ← hnm, tsub_add_cancel_of_le h3]
 
 end NatPredicate
 
@@ -142,27 +142,27 @@ variable {K : ℕ} (HK : N < fib K + fib (K + 1)) {N}
 theorem m_n_bounds {m n : ℕ} (h1 : NatPredicate N m n) : m ≤ fib K ∧ n ≤ fib (K + 1) := by
   obtain ⟨k : ℕ, hm : m = fib k, hn : n = fib (k + 1)⟩ := h1.imp_fib m
   by_cases h2 : k < K + 1
-  · have h3 : k ≤ K
-    apply Nat.lt_succ_iff.mp h2
-    constructor
-    · calc
-        m = fib k := hm
-        _ ≤ fib K := fib_mono h3
-    · have h6 : k + 1 ≤ K + 1
-      apply succ_le_succ h3
-      calc
-        n = fib (k + 1) := hn
-        _ ≤ fib (K + 1) := fib_mono h6
-  · have h7 : N < n
-    have h8 : K + 2 ≤ k + 1
-    apply succ_le_succ (not_lt.mp h2)
-    rw [← fib_add_two] at HK
-    calc
-      N < fib (K + 2) := HK
-      _ ≤ fib (k + 1) := fib_mono h8
-      _ = n := hn.symm
-    have h9 : n ≤ N := h1.n_le_N
-    exact absurd h7 h9.not_lt
+  have h3 : k ≤ K
+  apply Nat.lt_succ_iff.mp h2
+  constructor
+  calc
+    m = fib k := hm
+    _ ≤ fib K := fib_mono h3
+  have h6 : k + 1 ≤ K + 1
+  apply succ_le_succ h3
+  calc
+    n = fib (k + 1) := hn
+    _ ≤ fib (K + 1) := fib_mono h6
+  have h7 : N < n
+  have h8 : K + 2 ≤ k + 1
+  apply succ_le_succ (not_lt.mp h2)
+  rw [← fib_add_two] at HK
+  calc
+    N < fib (K + 2) := HK
+    _ ≤ fib (k + 1) := fib_mono h8
+    _ = n := hn.symm
+  have h9 : n ≤ N := h1.n_le_N
+  exact absurd h7 h9.not_lt
 
 /-
 We spell out the consequences of this result for `specifiedSet N` here.
@@ -201,6 +201,6 @@ theorem imo1981_q3 : IsGreatest (specifiedSet 1981) 3524578 := by
   have := fun h => @solution_greatest 1981 16 h 3524578
   norm_num at this
   apply this
-  · decide
-  · decide
-  · norm_num [problemPredicate_iff]; decide
+  decide
+  decide
+  norm_num [problemPredicate_iff]; decide

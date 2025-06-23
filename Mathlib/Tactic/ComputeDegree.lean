@@ -108,23 +108,23 @@ theorem coeff_mul_add_of_le_natDegree_of_eq_ite {d df dg : ℕ} {a b : R} {f g :
     (h_mul_left : f.coeff df = a) (h_mul_right : g.coeff dg = b) (ddf : df + dg ≤ d) :
     (f * g).coeff d = if d = df + dg then a * b else 0 := by
   split_ifs with h
-  · subst h_mul_left h_mul_right h
-    exact coeff_mul_of_natDegree_le ‹_› ‹_›
-  · apply coeff_eq_zero_of_natDegree_lt
-    apply lt_of_le_of_lt ?_ (lt_of_le_of_ne ddf ?_)
-    · exact natDegree_mul_le_of_le ‹_› ‹_›
-    · exact ne_comm.mp h
+  subst h_mul_left h_mul_right h
+  exact coeff_mul_of_natDegree_le ‹_› ‹_›
+  apply coeff_eq_zero_of_natDegree_lt
+  apply lt_of_le_of_lt ?_ (lt_of_le_of_ne ddf ?_)
+  exact natDegree_mul_le_of_le ‹_› ‹_›
+  exact ne_comm.mp h
 
 theorem coeff_pow_of_natDegree_le_of_eq_ite' {m n o : ℕ} {a : R} {p : R[X]}
     (h_pow : natDegree p ≤ n) (h_exp : m * n ≤ o) (h_pow_bas : coeff p n = a) :
     coeff (p ^ m) o = if o = m * n then a ^ m else 0 := by
   split_ifs with h
-  · subst h h_pow_bas
-    exact coeff_pow_of_natDegree_le ‹_›
-  · apply coeff_eq_zero_of_natDegree_lt
-    apply lt_of_le_of_lt ?_ (lt_of_le_of_ne ‹_› ?_)
-    · exact natDegree_pow_le_of_le m ‹_›
-    · exact Iff.mp ne_comm h
+  subst h h_pow_bas
+  exact coeff_pow_of_natDegree_le ‹_›
+  apply coeff_eq_zero_of_natDegree_lt
+  apply lt_of_le_of_lt ?_ (lt_of_le_of_ne ‹_› ?_)
+  exact natDegree_pow_le_of_le m ‹_›
+  exact Iff.mp ne_comm h
 
 theorem natDegree_smul_le_of_le {n : ℕ} {a : R} {f : R[X]} (hf : natDegree f ≤ n) :
     natDegree (a • f) ≤ n :=
@@ -161,9 +161,9 @@ theorem degree_eq_of_le_of_coeff_ne_zero' {deg m o : WithBot ℕ} {c : R} {p : R
     degree p = deg := by
   subst coeff_eq coeff_eq_deg deg_eq_deg
   rcases eq_or_ne m ⊥ with rfl|hh
-  · exact bot_unique h_deg_le
-  · obtain ⟨m, rfl⟩ := WithBot.ne_bot_iff_exists.mp hh
-    exact degree_eq_of_le_of_coeff_ne_zero ‹_› ‹_›
+  exact bot_unique h_deg_le
+  obtain ⟨m, rfl⟩ := WithBot.ne_bot_iff_exists.mp hh
+  exact degree_eq_of_le_of_coeff_ne_zero ‹_› ‹_›
 
 variable {m n : ℕ} {f : R[X]} {r : R} (h : coeff f m = r) (natDeg_eq_coeff : m = n)
 

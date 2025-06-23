@@ -112,8 +112,8 @@ theorem card_aut_eq_finrank [FiniteDimensional F E] [IsGalois F E] :
   rw [← IntermediateField.AdjoinSimple.card_aut_eq_finrank F E H h_sep h_splits]
   apply Fintype.card_congr
   apply Equiv.mk (fun ϕ => iso.trans (ϕ.trans iso.symm)) fun ϕ => iso.symm.trans (ϕ.trans iso)
-  · intro ϕ; ext1; simp only [trans_apply, apply_symm_apply]
-  · intro ϕ; ext1; simp only [trans_apply, symm_apply_apply]
+  intro ϕ; ext1; simp only [trans_apply, apply_symm_apply]
+  intro ϕ; ext1; simp only [trans_apply, symm_apply_apply]
 
 end IsGalois
 
@@ -137,9 +137,9 @@ instance (priority := 100) IsGalois.tower_top_intermediateField (K : Intermediat
 
 theorem isGalois_iff_isGalois_bot : IsGalois (⊥ : IntermediateField F E) E ↔ IsGalois F E := by
   constructor
-  · intro h
-    exact IsGalois.tower_top_of_isGalois (⊥ : IntermediateField F E) F E
-  · intro h; infer_instance
+  intro h
+  exact IsGalois.tower_top_of_isGalois (⊥ : IntermediateField F E) F E
+  intro h; infer_instance
 
 theorem IsGalois.of_algEquiv [IsGalois F E] (f : E ≃ₐ[F] E') : IsGalois F E' :=
   { to_isSeparable := Algebra.IsSeparable.of_algHom F E f.symm
@@ -346,12 +346,12 @@ theorem of_separable_splitting_field_aux [hFE : FiniteDimensional F E] [sp : p.I
   apply Finset.sum_const_nat
   intro f _
   rw [← @IntermediateField.card_algHom_adjoin_integral K _ E _ _ x E _ (RingHom.toAlgebra f) h]
-  · congr!
-  · exact Polynomial.Separable.of_dvd ((Polynomial.separable_map (algebraMap F K)).mpr hp) h2
-  · refine Polynomial.splits_of_splits_of_dvd _ (Polynomial.map_ne_zero h1) ?_ h2
-    -- Porting note: use unification instead of synthesis for one argument of `algebraMap_eq`
-    rw [Polynomial.splits_map_iff, ← @IsScalarTower.algebraMap_eq _ _ _ _ _ _ _ (_) _ _]
-    exact sp.splits
+  congr!
+  exact Polynomial.Separable.of_dvd ((Polynomial.separable_map (algebraMap F K)).mpr hp) h2
+  refine Polynomial.splits_of_splits_of_dvd _ (Polynomial.map_ne_zero h1) ?_ h2
+  -- Porting note: use unification instead of synthesis for one argument of `algebraMap_eq`
+  rw [Polynomial.splits_map_iff, ← @IsScalarTower.algebraMap_eq _ _ _ _ _ _ _ (_) _ _]
+  exact sp.splits
 
 theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separable) :
     IsGalois F E := by
@@ -370,15 +370,15 @@ theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separ
     exact Fintype.card_congr ((algEquivEquivAlgHom F E).toEquiv.trans
       (IntermediateField.topEquiv.symm.arrowCongr AlgEquiv.refl))
   apply IntermediateField.induction_on_adjoin_finset _ P
-  · have key := IntermediateField.card_algHom_adjoin_integral F (K := E)
-      (show IsIntegral F (0 : E) from isIntegral_zero)
-    rw [IsSeparable, minpoly.zero, Polynomial.natDegree_X] at key
-    specialize key Polynomial.separable_X (Polynomial.splits_X (algebraMap F E))
-    rw [← @Subalgebra.finrank_bot F E _ _ _, ← IntermediateField.bot_toSubalgebra] at key
-    refine Eq.trans ?_ key
-    -- Porting note: use unification instead of synthesis for one argument of `card_congr`
-    apply @Fintype.card_congr _ _ _ (_) _
-    rw [IntermediateField.adjoin_zero]
+  have key := IntermediateField.card_algHom_adjoin_integral F (K := E)
+    (show IsIntegral F (0 : E) from isIntegral_zero)
+  rw [IsSeparable, minpoly.zero, Polynomial.natDegree_X] at key
+  specialize key Polynomial.separable_X (Polynomial.splits_X (algebraMap F E))
+  rw [← @Subalgebra.finrank_bot F E _ _ _, ← IntermediateField.bot_toSubalgebra] at key
+  refine Eq.trans ?_ key
+  -- Porting note: use unification instead of synthesis for one argument of `card_congr`
+  apply @Fintype.card_congr _ _ _ (_) _
+  rw [IntermediateField.adjoin_zero]
   intro K x hx hK
   simp only [P] at *
   -- Porting note: need to specify two implicit arguments of `finrank_mul_finrank`
@@ -396,17 +396,17 @@ theorem tfae [FiniteDimensional F E] : List.TFAE [
     Fintype.card (E ≃ₐ[F] E) = finrank F E,
     ∃ p : F[X], p.Separable ∧ p.IsSplittingField F E] := by
   tfae_have 1 → 2
-  · exact fun h => OrderIso.map_bot (@intermediateFieldEquivSubgroup F _ E _ _ _ h).symm
+  exact fun h => OrderIso.map_bot (@intermediateFieldEquivSubgroup F _ E _ _ _ h).symm
   tfae_have 1 → 3
-  · intro; exact card_aut_eq_finrank F E
+  intro; exact card_aut_eq_finrank F E
   tfae_have 1 → 4
-  · intro; exact is_separable_splitting_field F E
+  intro; exact is_separable_splitting_field F E
   tfae_have 2 → 1
-  · exact of_fixedField_eq_bot F E
+  exact of_fixedField_eq_bot F E
   tfae_have 3 → 1
-  · exact of_card_aut_eq_finrank F E
+  exact of_card_aut_eq_finrank F E
   tfae_have 4 → 1
-  · rintro ⟨h, hp1, _⟩; exact of_separable_splitting_field hp1
+  rintro ⟨h, hp1, _⟩; exact of_separable_splitting_field hp1
   tfae_finish
 
 end IsGalois

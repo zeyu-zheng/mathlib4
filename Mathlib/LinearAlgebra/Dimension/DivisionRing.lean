@@ -89,22 +89,22 @@ theorem rank_add_rank_split (db : V₂ →ₗ[K] V) (eb : V₃ →ₗ[K] V) (cd 
   apply LinearEquiv.rank_eq
   let L : V₁ →ₗ[K] ker (coprod db eb) := by -- Porting note: this is needed to avoid a timeout
     refine LinearMap.codRestrict _ (prod cd (-ce)) ?_
-    · intro c
-      simp only [add_eq_zero_iff_eq_neg, LinearMap.prod_apply, mem_ker, Pi.prod, coprod_apply,
-        neg_neg, map_neg, neg_apply]
-      exact LinearMap.ext_iff.1 eq c
+    intro c
+    simp only [add_eq_zero_iff_eq_neg, LinearMap.prod_apply, mem_ker, Pi.prod, coprod_apply,
+      neg_neg, map_neg, neg_apply]
+    exact LinearMap.ext_iff.1 eq c
   refine LinearEquiv.ofBijective L ⟨?_, ?_⟩
-  · rw [← ker_eq_bot, ker_codRestrict, ker_prod, hgd, bot_inf_eq]
-  · rw [← range_eq_top, eq_top_iff, range_codRestrict, ← map_le_iff_le_comap, Submodule.map_top,
-      range_subtype]
-    rintro ⟨d, e⟩
-    have h := eq₂ d (-e)
-    simp only [add_eq_zero_iff_eq_neg, LinearMap.prod_apply, mem_ker, SetLike.mem_coe,
-      Prod.mk.inj_iff, coprod_apply, map_neg, neg_apply, LinearMap.mem_range, Pi.prod] at h ⊢
-    intro hde
-    rcases h hde with ⟨c, h₁, h₂⟩
-    refine ⟨c, h₁, ?_⟩
-    rw [h₂, _root_.neg_neg]
+  rw [← ker_eq_bot, ker_codRestrict, ker_prod, hgd, bot_inf_eq]
+  rw [← range_eq_top, eq_top_iff, range_codRestrict, ← map_le_iff_le_comap, Submodule.map_top,
+    range_subtype]
+  rintro ⟨d, e⟩
+  have h := eq₂ d (-e)
+  simp only [add_eq_zero_iff_eq_neg, LinearMap.prod_apply, mem_ker, SetLike.mem_coe,
+    Prod.mk.inj_iff, coprod_apply, map_neg, neg_apply, LinearMap.mem_range, Pi.prod] at h ⊢
+  intro hde
+  rcases h hde with ⟨c, h₁, h₂⟩
+  refine ⟨c, h₁, ?_⟩
+  rw [h₂, _root_.neg_neg]
 
 end
 
@@ -128,13 +128,13 @@ theorem linearIndependent_of_top_le_span_of_card_eq_finrank {ι : Type*} [Fintyp
     -- spans a vector space of dimension `n`.
     refine not_le_of_gt (span_lt_top_of_card_lt_finrank
       (show (b '' (Set.univ \ {i})).toFinset.card < finrank K V from ?_)) ?_
-    · calc
-        (b '' (Set.univ \ {i})).toFinset.card = ((Set.univ \ {i}).toFinset.image b).card := by
-          rw [Set.toFinset_card, Fintype.card_ofFinset]
-        _ ≤ (Set.univ \ {i}).toFinset.card := Finset.card_image_le
-        _ = (Finset.univ.erase i).card := (congr_arg Finset.card (Finset.ext (by simp [and_comm])))
-        _ < Finset.univ.card := Finset.card_erase_lt_of_mem (Finset.mem_univ i)
-        _ = finrank K V := card_eq
+    calc
+      (b '' (Set.univ \ {i})).toFinset.card = ((Set.univ \ {i}).toFinset.image b).card := by
+        rw [Set.toFinset_card, Fintype.card_ofFinset]
+      _ ≤ (Set.univ \ {i}).toFinset.card := Finset.card_image_le
+      _ = (Finset.univ.erase i).card := (congr_arg Finset.card (Finset.ext (by simp [and_comm])))
+      _ < Finset.univ.card := Finset.card_erase_lt_of_mem (Finset.mem_univ i)
+      _ = finrank K V := card_eq
     -- We already have that `b '' univ` spans the whole space,
     -- so we only need to show that the span of `b '' (univ \ {i})` contains each `b j`.
     refine spans.trans (span_le.mpr ?_)
@@ -142,15 +142,15 @@ theorem linearIndependent_of_top_le_span_of_card_eq_finrank {ι : Type*} [Fintyp
     -- The case that `j ≠ i` is easy because `b j ∈ b '' (univ \ {i})`.
     by_cases j_eq : j = i
     swap
-    · refine subset_span ⟨j, (Set.mem_diff _).mpr ⟨Set.mem_univ _, ?_⟩, rfl⟩
-      exact mt Set.mem_singleton_iff.mp j_eq
+    refine subset_span ⟨j, (Set.mem_diff _).mpr ⟨Set.mem_univ _, ?_⟩, rfl⟩
+    exact mt Set.mem_singleton_iff.mp j_eq
     -- To show `b i ∈ span (b '' (univ \ {i}))`, we use that it's a weighted sum
     -- of the other `b j`s.
     rw [j_eq, SetLike.mem_coe, show b i = -((g i)⁻¹ • (s.erase i).sum fun j => g j • b j) from _]
-    · refine neg_mem (smul_mem _ _ (sum_mem fun k hk => ?_))
-      obtain ⟨k_ne_i, _⟩ := Finset.mem_erase.mp hk
-      refine smul_mem _ _ (subset_span ⟨k, ?_, rfl⟩)
-      simp_all only [Set.mem_univ, Set.mem_diff, Set.mem_singleton_iff, and_self, not_false_eq_true]
+    refine neg_mem (smul_mem _ _ (sum_mem fun k hk => ?_))
+    obtain ⟨k_ne_i, _⟩ := Finset.mem_erase.mp hk
+    refine smul_mem _ _ (subset_span ⟨k, ?_, rfl⟩)
+    simp_all only [Set.mem_univ, Set.mem_diff, Set.mem_singleton_iff, and_self, not_false_eq_true]
     -- To show `b i` is a weighted sum of the other `b j`s, we'll rewrite this sum
     -- to have the form of the assumption `dependent`.
     apply eq_neg_of_add_eq_zero_left
@@ -168,26 +168,26 @@ its cardinality equals the dimension of its span. -/
 theorem linearIndependent_iff_card_eq_finrank_span {ι : Type*} [Fintype ι] {b : ι → V} :
     LinearIndependent K b ↔ Fintype.card ι = (Set.range b).finrank K := by
   constructor
-  · intro h
-    exact (finrank_span_eq_card h).symm
-  · intro hc
-    let f := Submodule.subtype (span K (Set.range b))
-    let b' : ι → span K (Set.range b) := fun i =>
-      ⟨b i, mem_span.2 fun p hp => hp (Set.mem_range_self _)⟩
-    have hs : ⊤ ≤ span K (Set.range b') := by
-      intro x
-      have h : span K (f '' Set.range b') = map f (span K (Set.range b')) := span_image f
-      have hf : f '' Set.range b' = Set.range b := by
-        ext x
-        simp [f, Set.mem_image, Set.mem_range]
-      rw [hf] at h
-      have hx : (x : V) ∈ span K (Set.range b) := x.property
-      conv at hx =>
-        arg 2
-        rw [h]
-      simpa [f, mem_map] using hx
-    have hi : LinearMap.ker f = ⊥ := ker_subtype _
-    convert (linearIndependent_of_top_le_span_of_card_eq_finrank hs hc).map' _ hi
+  intro h
+  exact (finrank_span_eq_card h).symm
+  intro hc
+  let f := Submodule.subtype (span K (Set.range b))
+  let b' : ι → span K (Set.range b) := fun i =>
+    ⟨b i, mem_span.2 fun p hp => hp (Set.mem_range_self _)⟩
+  have hs : ⊤ ≤ span K (Set.range b') := by
+    intro x
+    have h : span K (f '' Set.range b') = map f (span K (Set.range b')) := span_image f
+    have hf : f '' Set.range b' = Set.range b := by
+      ext x
+      simp [f, Set.mem_image, Set.mem_range]
+    rw [hf] at h
+    have hx : (x : V) ∈ span K (Set.range b) := x.property
+    conv at hx =>
+      arg 2
+      rw [h]
+    simpa [f, mem_map] using hx
+  have hi : LinearMap.ker f = ⊥ := ker_subtype _
+  convert (linearIndependent_of_top_le_span_of_card_eq_finrank hs hc).map' _ hi
 
 theorem linearIndependent_iff_card_le_finrank_span {ι : Type*} [Fintype ι] {b : ι → V} :
     LinearIndependent K b ↔ Fintype.card ι ≤ (Set.range b).finrank K := by
@@ -232,7 +232,7 @@ theorem max_aleph0_card_le_rank_fun_nat : max ℵ₀ #K ≤ Module.rank K (ℕ �
     (Finsupp.lcoeFun.rank_le_of_injective <| by exact DFunLike.coe_injective)
   refine max_le aleph0_le ?_
   obtain card_K | card_K := le_or_lt #K ℵ₀
-  · exact card_K.trans aleph0_le
+  exact card_K.trans aleph0_le
   by_contra!
   obtain ⟨⟨ιK, bK⟩⟩ := Module.Free.exists_basis (R := K) (M := ℕ → K)
   let L := Subfield.closure (Set.range (fun i : ιK × ℕ ↦ bK i.1 i.2))

@@ -58,61 +58,58 @@ theorem Complex.uniformContinuous_ringHom_eq_id_or_conj (K : Subfield ℂ) {ψ :
       erw [uniformity_subtype, uniformity_subtype, Filter.comap_comap]
       congr ⟩
   let di := ui.denseInducing (?_ : DenseRange ι)
-  · -- extψ : closure(K) →+* ℂ is the extension of ψ : K →+* ℂ
-    let extψ := DenseInducing.extendRingHom ui di.dense hc
-    haveI hψ := (uniformContinuous_uniformly_extend ui di.dense hc).continuous
-    cases' Complex.subfield_eq_of_closed (Subfield.isClosed_topologicalClosure K) with h h
-    · left
-      let j := RingEquiv.subfieldCongr h
-      -- ψ₁ is the continuous ring hom `ℝ →+* ℂ` constructed from `j : closure (K) ≃+* ℝ`
-      -- and `extψ : closure (K) →+* ℂ`
-      let ψ₁ := RingHom.comp extψ (RingHom.comp j.symm.toRingHom ofReal.rangeRestrict)
-      -- Porting note: was `by continuity!` and was used inline
-      have hψ₁ : Continuous ψ₁ := by
-        simpa only [RingHom.coe_comp] using hψ.comp ((continuous_algebraMap ℝ ℂ).subtype_mk _)
-      ext1 x
-      rsuffices ⟨r, hr⟩ : ∃ r : ℝ, ofReal.rangeRestrict r = j (ι x)
-      · have :=
-          RingHom.congr_fun (ringHom_eq_ofReal_of_continuous hψ₁) r
-        -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-        erw [RingHom.comp_apply, RingHom.comp_apply, hr, RingEquiv.toRingHom_eq_coe] at this
-        convert this using 1
-        · exact (DenseInducing.extend_eq di hc.continuous _).symm
-        · rw [← ofReal.coe_rangeRestrict, hr]
-          rfl
-      obtain ⟨r, hr⟩ := SetLike.coe_mem (j (ι x))
-      exact ⟨r, Subtype.ext hr⟩
-    · -- ψ₁ is the continuous ring hom `ℂ →+* ℂ` constructed from `closure (K) ≃+* ℂ`
-      -- and `extψ : closure (K) →+* ℂ`
-      let ψ₁ :=
-        RingHom.comp extψ
-          (RingHom.comp (RingEquiv.subfieldCongr h).symm.toRingHom
-            (@Subfield.topEquiv ℂ _).symm.toRingHom)
-      -- Porting note: was `by continuity!` and was used inline
-      have hψ₁ : Continuous ψ₁ := by
-        simpa only [RingHom.coe_comp] using hψ.comp (continuous_id.subtype_mk _)
-      cases' ringHom_eq_id_or_conj_of_continuous hψ₁ with h h
-      · left
-        ext1 z
-        convert RingHom.congr_fun h z using 1
-        exact (DenseInducing.extend_eq di hc.continuous z).symm
-      · right
-        ext1 z
-        convert RingHom.congr_fun h z using 1
-        exact (DenseInducing.extend_eq di hc.continuous z).symm
-  · let j : { x // x ∈ closure (id '' { x | (K : Set ℂ) x }) } → (K.topologicalClosure : Set ℂ) :=
-      fun x =>
-      ⟨x, by
-        convert x.prop
-        simp only [id, Set.image_id']
-        rfl ⟩
-    convert DenseRange.comp (Function.Surjective.denseRange _)
-        (DenseEmbedding.subtype denseEmbedding_id (K : Set ℂ)).dense (by continuity : Continuous j)
-    rintro ⟨y, hy⟩
-    use
-      ⟨y, by
-        convert hy
-        simp only [id, Set.image_id']
-        rfl ⟩
+  let extψ := DenseInducing.extendRingHom ui di.dense hc
+  haveI hψ := (uniformContinuous_uniformly_extend ui di.dense hc).continuous
+  cases' Complex.subfield_eq_of_closed (Subfield.isClosed_topologicalClosure K) with h h
+  · left
+    let j := RingEquiv.subfieldCongr h
+    -- ψ₁ is the continuous ring hom `ℝ →+* ℂ` constructed from `j : closure (K) ≃+* ℝ`
+    -- and `extψ : closure (K) →+* ℂ`
+    let ψ₁ := RingHom.comp extψ (RingHom.comp j.symm.toRingHom ofReal.rangeRestrict)
+    -- Porting note: was `by continuity!` and was used inline
+    have hψ₁ : Continuous ψ₁ := by
+      simpa only [RingHom.coe_comp] using hψ.comp ((continuous_algebraMap ℝ ℂ).subtype_mk _)
+    ext1 x
+    rsuffices ⟨r, hr⟩ : ∃ r : ℝ, ofReal.rangeRestrict r = j (ι x)
+    have :=
+      RingHom.congr_fun (ringHom_eq_ofReal_of_continuous hψ₁) r
+    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+    erw [RingHom.comp_apply, RingHom.comp_apply, hr, RingEquiv.toRingHom_eq_coe] at this
+    convert this using 1
+    exact (DenseInducing.extend_eq di hc.continuous _).symm
+    rw [← ofReal.coe_rangeRestrict, hr]
+    rfl
+    obtain ⟨r, hr⟩ := SetLike.coe_mem (j (ι x))
+    exact ⟨r, Subtype.ext hr⟩
+  let ψ₁ :=
+    RingHom.comp extψ
+      (RingHom.comp (RingEquiv.subfieldCongr h).symm.toRingHom
+        (@Subfield.topEquiv ℂ _).symm.toRingHom)
+  -- Porting note: was `by continuity!` and was used inline
+  have hψ₁ : Continuous ψ₁
+  simpa only [RingHom.coe_comp] using hψ.comp (continuous_id.subtype_mk _)
+  cases' ringHom_eq_id_or_conj_of_continuous hψ₁ with h h
+  left
+  ext1 z
+  convert RingHom.congr_fun h z using 1
+  exact (DenseInducing.extend_eq di hc.continuous z).symm
+  right
+  ext1 z
+  convert RingHom.congr_fun h z using 1
+  exact (DenseInducing.extend_eq di hc.continuous z).symm
+  let j : { x // x ∈ closure (id '' { x | (K : Set ℂ) x }) } → (K.topologicalClosure : Set ℂ) :=
+    fun x =>
+    ⟨x, by
+      convert x.prop
+      simp only [id, Set.image_id']
+      rfl ⟩
+  convert DenseRange.comp (Function.Surjective.denseRange _)
+      (DenseEmbedding.subtype denseEmbedding_id (K : Set ℂ)).dense (by continuity : Continuous j)
+  rintro ⟨y, hy⟩
+  use
+    ⟨y, by
+      convert hy
+      simp only [id, Set.image_id']
+      rfl ⟩
 
 end ComplexSubfield

@@ -55,26 +55,26 @@ theorem tendsto_measure_symmDiff_preimage_nhds_zero
   intro ε hε
   -- Without loss of generality, `s` is an open set.
   wlog hso : IsOpen s generalizing s ε
-  · have H : 0 < ε / 3 := ENNReal.div_pos hε.ne' ENNReal.coe_ne_top
-    -- Indeed, we can choose an open set `U` such that `ν (U ∆ s) < ε / 3`,
-    -- apply the lemma to `U`, then use the triangle inequality for `μ (_ ∆ _)`.
-    rcases hs.exists_isOpen_symmDiff_lt hνs H.ne' with ⟨U, hUo, hU, hUs⟩
-    have hmU : MeasurableSet U := hUo.measurableSet
-    replace hUs := hUs.le
-    filter_upwards [hf, this hmU hU.ne _ H hUo] with a hfa ha
-    calc
-      μ ((f a ⁻¹' s) ∆ (g ⁻¹' s))
-        ≤ μ ((f a ⁻¹' s) ∆ (f a ⁻¹' U)) + μ ((f a ⁻¹' U) ∆ (g ⁻¹' U))
-          + μ ((g ⁻¹' U) ∆ (g ⁻¹' s)) := by
-        refine (measure_symmDiff_le _ (g ⁻¹' U) _).trans ?_
-        gcongr
-        apply measure_symmDiff_le
-      _ ≤ ε / 3 + ε / 3 + ε / 3 := by
-        gcongr
-        · rwa [← preimage_symmDiff, hfa.measure_preimage (hs.symmDiff hmU).nullMeasurableSet,
-            symmDiff_comm]
-        · rwa [← preimage_symmDiff, hg.measure_preimage (hmU.symmDiff hs).nullMeasurableSet]
-      _ = ε := by simp
+  have H : 0 < ε / 3 := ENNReal.div_pos hε.ne' ENNReal.coe_ne_top
+  -- Indeed, we can choose an open set `U` such that `ν (U ∆ s) < ε / 3`,
+  -- apply the lemma to `U`, then use the triangle inequality for `μ (_ ∆ _)`.
+  rcases hs.exists_isOpen_symmDiff_lt hνs H.ne' with ⟨U, hUo, hU, hUs⟩
+  have hmU : MeasurableSet U := hUo.measurableSet
+  replace hUs := hUs.le
+  filter_upwards [hf, this hmU hU.ne _ H hUo] with a hfa ha
+  calc
+    μ ((f a ⁻¹' s) ∆ (g ⁻¹' s))
+      ≤ μ ((f a ⁻¹' s) ∆ (f a ⁻¹' U)) + μ ((f a ⁻¹' U) ∆ (g ⁻¹' U))
+        + μ ((g ⁻¹' U) ∆ (g ⁻¹' s)) := by
+      refine (measure_symmDiff_le _ (g ⁻¹' U) _).trans ?_
+      gcongr
+      apply measure_symmDiff_le
+    _ ≤ ε / 3 + ε / 3 + ε / 3 := by
+      gcongr
+      rwa [← preimage_symmDiff, hfa.measure_preimage (hs.symmDiff hmU).nullMeasurableSet,
+        symmDiff_comm]
+      rwa [← preimage_symmDiff, hg.measure_preimage (hmU.symmDiff hs).nullMeasurableSet]
+    _ = ε := by simp
   -- Take a compact closed subset `K ⊆ g ⁻¹' s` of almost full measure,
   -- `μ (g ⁻¹' s \ K) < ε / 2`.
   have hνs' : μ (g ⁻¹' s) ≠ ∞

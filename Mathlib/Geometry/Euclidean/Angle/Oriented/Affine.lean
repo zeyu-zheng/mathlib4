@@ -286,9 +286,9 @@ theorem oangle_eq_pi_sub_two_zsmul_oangle_of_dist_eq {p₁ p₂ p₃ : P} (hn : 
   simp_rw [dist_eq_norm_vsub V] at h
   rw [oangle, oangle]
   convert o.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq _ h using 1
-  · rw [← neg_vsub_eq_vsub_rev p₁ p₃, ← neg_vsub_eq_vsub_rev p₁ p₂, o.oangle_neg_neg]
-  · rw [← o.oangle_sub_eq_oangle_sub_rev_of_norm_eq h]; simp
-  · simpa using hn
+  rw [← neg_vsub_eq_vsub_rev p₁ p₃, ← neg_vsub_eq_vsub_rev p₁ p₂, o.oangle_neg_neg]
+  rw [← o.oangle_sub_eq_oangle_sub_rev_of_norm_eq h]; simp
+  simpa using hn
 
 /-- A base angle of an isosceles triangle is acute, oriented angle-at-point form. -/
 theorem abs_oangle_right_toReal_lt_pi_div_two_of_dist_eq {p₁ p₂ p₃ : P}
@@ -554,10 +554,10 @@ theorem _root_.Collinear.two_zsmul_oangle_eq_left {p₁ p₁' p₂ p₃ : P}
     (2 : ℤ) • ∡ p₁ p₂ p₃ = (2 : ℤ) • ∡ p₁' p₂ p₃ := by
   by_cases hp₃p₂ : p₃ = p₂; · simp [hp₃p₂]
   rcases h.wbtw_or_wbtw_or_wbtw with (hw | hw | hw)
-  · have hw' : Sbtw ℝ p₁ p₂ p₁' := ⟨hw, hp₁p₂.symm, hp₁'p₂.symm⟩
-    rw [hw'.oangle_eq_add_pi_left hp₃p₂, smul_add, Real.Angle.two_zsmul_coe_pi, add_zero]
-  · rw [hw.oangle_eq_left hp₁'p₂]
-  · rw [hw.symm.oangle_eq_left hp₁p₂]
+  have hw' : Sbtw ℝ p₁ p₂ p₁' := ⟨hw, hp₁p₂.symm, hp₁'p₂.symm⟩
+  rw [hw'.oangle_eq_add_pi_left hp₃p₂, smul_add, Real.Angle.two_zsmul_coe_pi, add_zero]
+  rw [hw.oangle_eq_left hp₁'p₂]
+  rw [hw.symm.oangle_eq_left hp₁p₂]
 
 /-- Replacing the third point by one on the same line does not change twice the oriented angle. -/
 theorem _root_.Collinear.two_zsmul_oangle_eq_right {p₁ p₂ p₃ p₃' : P}
@@ -572,23 +572,23 @@ theorem dist_eq_iff_eq_smul_rotation_pi_div_two_vadd_midpoint {p₁ p₂ p : P} 
     dist p₁ p = dist p₂ p ↔
       ∃ r : ℝ, r • o.rotation (π / 2 : ℝ) (p₂ -ᵥ p₁) +ᵥ midpoint ℝ p₁ p₂ = p := by
   refine ⟨fun hd => ?_, fun hr => ?_⟩
-  · have hi : ⟪p₂ -ᵥ p₁, p -ᵥ midpoint ℝ p₁ p₂⟫ = 0 := by
-      rw [@dist_eq_norm_vsub' V, @dist_eq_norm_vsub' V, ←
-        mul_self_inj (norm_nonneg _) (norm_nonneg _), ← real_inner_self_eq_norm_mul_norm, ←
-        real_inner_self_eq_norm_mul_norm] at hd
-      simp_rw [vsub_midpoint, ← vsub_sub_vsub_cancel_left p₂ p₁ p, inner_sub_left, inner_add_right,
-        inner_smul_right, hd, real_inner_comm (p -ᵥ p₁)]
-      abel
-    rw [@Orientation.inner_eq_zero_iff_eq_zero_or_eq_smul_rotation_pi_div_two V _ _ _ o,
-      or_iff_right (vsub_ne_zero.2 h.symm)] at hi
-    rcases hi with ⟨r, hr⟩
-    rw [eq_comm, ← eq_vadd_iff_vsub_eq] at hr
-    exact ⟨r, hr.symm⟩
-  · rcases hr with ⟨r, rfl⟩
-    simp_rw [@dist_eq_norm_vsub V, vsub_vadd_eq_vsub_sub, left_vsub_midpoint, right_vsub_midpoint,
-      invOf_eq_inv, ← neg_vsub_eq_vsub_rev p₂ p₁, ← mul_self_inj (norm_nonneg _) (norm_nonneg _), ←
-      real_inner_self_eq_norm_mul_norm, inner_sub_sub_self]
-    simp [-neg_vsub_eq_vsub_rev]
+  have hi : ⟪p₂ -ᵥ p₁, p -ᵥ midpoint ℝ p₁ p₂⟫ = 0 := by
+    rw [@dist_eq_norm_vsub' V, @dist_eq_norm_vsub' V, ←
+      mul_self_inj (norm_nonneg _) (norm_nonneg _), ← real_inner_self_eq_norm_mul_norm, ←
+      real_inner_self_eq_norm_mul_norm] at hd
+    simp_rw [vsub_midpoint, ← vsub_sub_vsub_cancel_left p₂ p₁ p, inner_sub_left, inner_add_right,
+      inner_smul_right, hd, real_inner_comm (p -ᵥ p₁)]
+    abel
+  rw [@Orientation.inner_eq_zero_iff_eq_zero_or_eq_smul_rotation_pi_div_two V _ _ _ o,
+    or_iff_right (vsub_ne_zero.2 h.symm)] at hi
+  rcases hi with ⟨r, hr⟩
+  rw [eq_comm, ← eq_vadd_iff_vsub_eq] at hr
+  exact ⟨r, hr.symm⟩
+  rcases hr with ⟨r, rfl⟩
+  simp_rw [@dist_eq_norm_vsub V, vsub_vadd_eq_vsub_sub, left_vsub_midpoint, right_vsub_midpoint,
+    invOf_eq_inv, ← neg_vsub_eq_vsub_rev p₂ p₁, ← mul_self_inj (norm_nonneg _) (norm_nonneg _), ←
+    real_inner_self_eq_norm_mul_norm, inner_sub_sub_self]
+  simp [-neg_vsub_eq_vsub_rev]
 
 open AffineSubspace
 
@@ -600,79 +600,79 @@ theorem _root_.Collinear.oangle_sign_of_sameRay_vsub {p₁ p₂ p₃ p₄ : P} (
     (hp₃p₄ : p₃ ≠ p₄) (hc : Collinear ℝ ({p₁, p₂, p₃, p₄} : Set P))
     (hr : SameRay ℝ (p₂ -ᵥ p₁) (p₄ -ᵥ p₃)) : (∡ p₁ p₅ p₂).sign = (∡ p₃ p₅ p₄).sign := by
   by_cases hc₅₁₂ : Collinear ℝ ({p₅, p₁, p₂} : Set P)
-  · have hc₅₁₂₃₄ : Collinear ℝ ({p₅, p₁, p₂, p₃, p₄} : Set P) :=
-      (hc.collinear_insert_iff_of_ne (Set.mem_insert _ _)
-        (Set.mem_insert_of_mem _ (Set.mem_insert _ _)) hp₁p₂).2 hc₅₁₂
-    have hc₅₃₄ : Collinear ℝ ({p₅, p₃, p₄} : Set P) :=
-      (hc.collinear_insert_iff_of_ne
-        (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_insert _ _)))
-        (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _
-          (Set.mem_singleton _)))) hp₃p₄).1 hc₅₁₂₃₄
-    rw [Set.insert_comm] at hc₅₁₂ hc₅₃₄
-    have hs₁₅₂ := oangle_eq_zero_or_eq_pi_iff_collinear.2 hc₅₁₂
-    have hs₃₅₄ := oangle_eq_zero_or_eq_pi_iff_collinear.2 hc₅₃₄
-    rw [← Real.Angle.sign_eq_zero_iff] at hs₁₅₂ hs₃₅₄
-    rw [hs₁₅₂, hs₃₅₄]
-  · let s : Set (P × P × P) :=
-      (fun x : line[ℝ, p₁, p₂] × V => (x.1, p₅, x.2 +ᵥ (x.1 : P))) ''
-        Set.univ ×ˢ {v | SameRay ℝ (p₂ -ᵥ p₁) v ∧ v ≠ 0}
-    have hco : IsConnected s :=
-      haveI : ConnectedSpace line[ℝ, p₁, p₂] := AddTorsor.connectedSpace _ _
-      (isConnected_univ.prod (isConnected_setOf_sameRay_and_ne_zero
-        (vsub_ne_zero.2 hp₁p₂.symm))).image _
-        (continuous_fst.subtype_val.prod_mk (continuous_const.prod_mk
-          (continuous_snd.vadd continuous_fst.subtype_val))).continuousOn
-    have hf : ContinuousOn (fun p : P × P × P => ∡ p.1 p.2.1 p.2.2) s := by
-      refine ContinuousAt.continuousOn fun p hp => continuousAt_oangle ?_ ?_
-      all_goals
-        simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_univ, true_and_iff, Prod.ext_iff] at hp
-        obtain ⟨q₁, q₅, q₂⟩ := p
-        dsimp only at hp ⊢
-        obtain ⟨⟨⟨q, hq⟩, v⟩, hv, rfl, rfl, rfl⟩ := hp
-        dsimp only [Subtype.coe_mk, Set.mem_setOf] at hv ⊢
-        obtain ⟨hvr, -⟩ := hv
-        rintro rfl
-        refine hc₅₁₂ ((collinear_insert_iff_of_mem_affineSpan ?_).2 (collinear_pair _ _ _))
-      · exact hq
-      · refine vadd_mem_of_mem_direction ?_ hq
-        rw [← exists_nonneg_left_iff_sameRay (vsub_ne_zero.2 hp₁p₂.symm)] at hvr
-        obtain ⟨r, -, rfl⟩ := hvr
-        rw [direction_affineSpan]
-        exact smul_vsub_rev_mem_vectorSpan_pair _ _ _
-    have hsp : ∀ p : P × P × P, p ∈ s → ∡ p.1 p.2.1 p.2.2 ≠ 0 ∧ ∡ p.1 p.2.1 p.2.2 ≠ π := by
-      intro p hp
-      simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_setOf, Set.mem_univ, true_and_iff,
-        Prod.ext_iff] at hp
+  have hc₅₁₂₃₄ : Collinear ℝ ({p₅, p₁, p₂, p₃, p₄} : Set P) :=
+    (hc.collinear_insert_iff_of_ne (Set.mem_insert _ _)
+      (Set.mem_insert_of_mem _ (Set.mem_insert _ _)) hp₁p₂).2 hc₅₁₂
+  have hc₅₃₄ : Collinear ℝ ({p₅, p₃, p₄} : Set P) :=
+    (hc.collinear_insert_iff_of_ne
+      (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_insert _ _)))
+      (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _
+        (Set.mem_singleton _)))) hp₃p₄).1 hc₅₁₂₃₄
+  rw [Set.insert_comm] at hc₅₁₂ hc₅₃₄
+  have hs₁₅₂ := oangle_eq_zero_or_eq_pi_iff_collinear.2 hc₅₁₂
+  have hs₃₅₄ := oangle_eq_zero_or_eq_pi_iff_collinear.2 hc₅₃₄
+  rw [← Real.Angle.sign_eq_zero_iff] at hs₁₅₂ hs₃₅₄
+  rw [hs₁₅₂, hs₃₅₄]
+  let s : Set (P × P × P) :=
+    (fun x : line[ℝ, p₁, p₂] × V => (x.1, p₅, x.2 +ᵥ (x.1 : P))) ''
+      Set.univ ×ˢ {v | SameRay ℝ (p₂ -ᵥ p₁) v ∧ v ≠ 0}
+  have hco : IsConnected s :=
+    haveI : ConnectedSpace line[ℝ, p₁, p₂] := AddTorsor.connectedSpace _ _
+    (isConnected_univ.prod (isConnected_setOf_sameRay_and_ne_zero
+      (vsub_ne_zero.2 hp₁p₂.symm))).image _
+      (continuous_fst.subtype_val.prod_mk (continuous_const.prod_mk
+        (continuous_snd.vadd continuous_fst.subtype_val))).continuousOn
+  have hf : ContinuousOn (fun p : P × P × P => ∡ p.1 p.2.1 p.2.2) s := by
+    refine ContinuousAt.continuousOn fun p hp => continuousAt_oangle ?_ ?_
+    all_goals
+      simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_univ, true_and_iff, Prod.ext_iff] at hp
       obtain ⟨q₁, q₅, q₂⟩ := p
       dsimp only at hp ⊢
       obtain ⟨⟨⟨q, hq⟩, v⟩, hv, rfl, rfl, rfl⟩ := hp
       dsimp only [Subtype.coe_mk, Set.mem_setOf] at hv ⊢
-      obtain ⟨hvr, hv0⟩ := hv
-      rw [← exists_nonneg_left_iff_sameRay (vsub_ne_zero.2 hp₁p₂.symm)] at hvr
-      obtain ⟨r, -, rfl⟩ := hvr
-      change q ∈ line[ℝ, p₁, p₂] at hq
-      rw [oangle_ne_zero_and_ne_pi_iff_affineIndependent]
-      refine affineIndependent_of_ne_of_mem_of_not_mem_of_mem ?_ hq
-          (fun h => hc₅₁₂ ((collinear_insert_iff_of_mem_affineSpan h).2 (collinear_pair _ _ _))) ?_
-      · rwa [← @vsub_ne_zero V, vsub_vadd_eq_vsub_sub, vsub_self, zero_sub, neg_ne_zero]
-      · refine vadd_mem_of_mem_direction ?_ hq
-        rw [direction_affineSpan]
-        exact smul_vsub_rev_mem_vectorSpan_pair _ _ _
-    have hp₁p₂s : (p₁, p₅, p₂) ∈ s := by
-      simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_setOf, Set.mem_univ, true_and_iff,
-        Prod.ext_iff]
-      refine ⟨⟨⟨p₁, left_mem_affineSpan_pair ℝ _ _⟩, p₂ -ᵥ p₁⟩,
-        ⟨SameRay.rfl, vsub_ne_zero.2 hp₁p₂.symm⟩, ?_⟩
-      simp
-    have hp₃p₄s : (p₃, p₅, p₄) ∈ s := by
-      simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_setOf, Set.mem_univ, true_and_iff,
-        Prod.ext_iff]
-      refine ⟨⟨⟨p₃, hc.mem_affineSpan_of_mem_of_ne (Set.mem_insert _ _)
-        (Set.mem_insert_of_mem _ (Set.mem_insert _ _))
-        (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_insert _ _))) hp₁p₂⟩, p₄ -ᵥ p₃⟩,
-        ⟨hr, vsub_ne_zero.2 hp₃p₄.symm⟩, ?_⟩
-      simp
-    convert Real.Angle.sign_eq_of_continuousOn hco hf hsp hp₃p₄s hp₁p₂s
+      obtain ⟨hvr, -⟩ := hv
+      rintro rfl
+      refine hc₅₁₂ ((collinear_insert_iff_of_mem_affineSpan ?_).2 (collinear_pair _ _ _))
+    exact hq
+    refine vadd_mem_of_mem_direction ?_ hq
+    rw [← exists_nonneg_left_iff_sameRay (vsub_ne_zero.2 hp₁p₂.symm)] at hvr
+    obtain ⟨r, -, rfl⟩ := hvr
+    rw [direction_affineSpan]
+    exact smul_vsub_rev_mem_vectorSpan_pair _ _ _
+  have hsp : ∀ p : P × P × P, p ∈ s → ∡ p.1 p.2.1 p.2.2 ≠ 0 ∧ ∡ p.1 p.2.1 p.2.2 ≠ π := by
+    intro p hp
+    simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_setOf, Set.mem_univ, true_and_iff,
+      Prod.ext_iff] at hp
+    obtain ⟨q₁, q₅, q₂⟩ := p
+    dsimp only at hp ⊢
+    obtain ⟨⟨⟨q, hq⟩, v⟩, hv, rfl, rfl, rfl⟩ := hp
+    dsimp only [Subtype.coe_mk, Set.mem_setOf] at hv ⊢
+    obtain ⟨hvr, hv0⟩ := hv
+    rw [← exists_nonneg_left_iff_sameRay (vsub_ne_zero.2 hp₁p₂.symm)] at hvr
+    obtain ⟨r, -, rfl⟩ := hvr
+    change q ∈ line[ℝ, p₁, p₂] at hq
+    rw [oangle_ne_zero_and_ne_pi_iff_affineIndependent]
+    refine affineIndependent_of_ne_of_mem_of_not_mem_of_mem ?_ hq
+        (fun h => hc₅₁₂ ((collinear_insert_iff_of_mem_affineSpan h).2 (collinear_pair _ _ _))) ?_
+    rwa [← @vsub_ne_zero V, vsub_vadd_eq_vsub_sub, vsub_self, zero_sub, neg_ne_zero]
+    refine vadd_mem_of_mem_direction ?_ hq
+    rw [direction_affineSpan]
+    exact smul_vsub_rev_mem_vectorSpan_pair _ _ _
+  have hp₁p₂s : (p₁, p₅, p₂) ∈ s := by
+    simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_setOf, Set.mem_univ, true_and_iff,
+      Prod.ext_iff]
+    refine ⟨⟨⟨p₁, left_mem_affineSpan_pair ℝ _ _⟩, p₂ -ᵥ p₁⟩,
+      ⟨SameRay.rfl, vsub_ne_zero.2 hp₁p₂.symm⟩, ?_⟩
+    simp
+  have hp₃p₄s : (p₃, p₅, p₄) ∈ s := by
+    simp_rw [s, Set.mem_image, Set.mem_prod, Set.mem_setOf, Set.mem_univ, true_and_iff,
+      Prod.ext_iff]
+    refine ⟨⟨⟨p₃, hc.mem_affineSpan_of_mem_of_ne (Set.mem_insert _ _)
+      (Set.mem_insert_of_mem _ (Set.mem_insert _ _))
+      (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_insert _ _))) hp₁p₂⟩, p₄ -ᵥ p₃⟩,
+      ⟨hr, vsub_ne_zero.2 hp₃p₄.symm⟩, ?_⟩
+    simp
+  convert Real.Angle.sign_eq_of_continuousOn hco hf hsp hp₃p₄s hp₁p₂s
 
 /-- Given three points in strict order on the same line, and a fourth point, the angles at the
 fourth point between the first and second or second and third points have the same sign. -/
@@ -726,8 +726,8 @@ theorem _root_.AffineSubspace.SSameSide.oangle_sign_eq {s : AffineSubspace ℝ P
       obtain ⟨p', hp', rfl⟩ := hp
       dsimp only
       rintro rfl
-    · exact hp'.2.2 hp₁
-    · exact hp'.2.2 hp₂
+    exact hp'.2.2 hp₁
+    exact hp'.2.2 hp₂
   have hsp : ∀ p : P × P × P, p ∈ sp → ∡ p.1 p.2.1 p.2.2 ≠ 0 ∧ ∡ p.1 p.2.1 p.2.2 ≠ π
   intro p hp
   simp_rw [sp, Set.mem_image, Set.mem_setOf] at hp

@@ -68,9 +68,9 @@ theorem normalize_of_nonneg {z : ℤ} (h : 0 ≤ z) : normalize z = z := by
 
 theorem normalize_of_nonpos {z : ℤ} (h : z ≤ 0) : normalize z = -z := by
   obtain rfl | h := h.eq_or_lt
-  · simp
-  · rw [normalize_apply, normUnit_eq, if_neg (not_le_of_gt h), Units.val_neg, Units.val_one,
-      mul_neg_one]
+  simp
+  rw [normalize_apply, normUnit_eq, if_neg (not_le_of_gt h), Units.val_neg, Units.val_one,
+    mul_neg_one]
 
 theorem normalize_coe_nat (n : ℕ) : normalize (n : ℤ) = n :=
   normalize_of_nonneg (ofNat_le_ofNat_of_le <| Nat.zero_le n)
@@ -126,11 +126,11 @@ end GCDMonoid
 
 theorem exists_unit_of_abs (a : ℤ) : ∃ (u : ℤ) (_ : IsUnit u), (Int.natAbs a : ℤ) = u * a := by
   cases' natAbs_eq a with h h
-  · use 1, isUnit_one
-    rw [← h, one_mul]
-  · use -1, isUnit_one.neg
-    rw [← neg_eq_iff_eq_neg.mpr h]
-    simp only [neg_mul, one_mul]
+  use 1, isUnit_one
+  rw [← h, one_mul]
+  use -1, isUnit_one.neg
+  rw [← neg_eq_iff_eq_neg.mpr h]
+  simp only [neg_mul, one_mul]
 
 theorem gcd_eq_natAbs {a b : ℤ} : Int.gcd a b = Nat.gcd a.natAbs b.natAbs :=
   rfl

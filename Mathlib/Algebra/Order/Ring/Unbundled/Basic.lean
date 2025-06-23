@@ -369,10 +369,10 @@ lemma le_iff_exists_nonneg_add
     [ExistsAddOfLE α] [ContravariantClass α α (· + ·) (· ≤ ·)] [CovariantClass α α (· + ·) (· ≤ ·)]
     (a b : α) : a ≤ b ↔ ∃ c ≥ 0, b = a + c := by
   refine ⟨fun h ↦ ?_, ?_⟩
-  · obtain ⟨c, rfl⟩ := exists_add_of_le h
-    exact ⟨c, nonneg_of_le_add_right h, rfl⟩
-  · rintro ⟨c, hc, rfl⟩
-    exact le_add_of_nonneg_right hc
+  obtain ⟨c, rfl⟩ := exists_add_of_le h
+  exact ⟨c, nonneg_of_le_add_right h, rfl⟩
+  rintro ⟨c, hc, rfl⟩
+  exact le_add_of_nonneg_right hc
 
 end OrderedSemiring
 
@@ -605,9 +605,9 @@ theorem nonneg_and_nonneg_or_nonpos_and_nonpos_of_mul_nonneg
   refine Decidable.or_iff_not_and_not.2 ?_
   simp only [not_and, not_le]; intro ab nab; apply not_lt_of_le hab _
   rcases lt_trichotomy 0 a with (ha | rfl | ha)
-  · exact mul_neg_of_pos_of_neg ha (ab ha.le)
-  · exact ((ab le_rfl).asymm (nab le_rfl)).elim
-  · exact mul_neg_of_neg_of_pos ha (nab ha.le)
+  exact mul_neg_of_pos_of_neg ha (ab ha.le)
+  exact ((ab le_rfl).asymm (nab le_rfl)).elim
+  exact mul_neg_of_neg_of_pos ha (nab ha.le)
 
 theorem nonneg_of_mul_nonneg_left [MulPosStrictMono α]
     (h : 0 ≤ a * b) (hb : 0 < b) : 0 ≤ a :=
@@ -855,12 +855,12 @@ theorem mul_self_pos [ExistsAddOfLE α] [PosMulStrictMono α] [MulPosStrictMono 
     [CovariantClass α α (· + ·) (· < ·)] [ContravariantClass α α (· + ·) (· < ·)]
     {a : α} : 0 < a * a ↔ a ≠ 0 := by
   constructor
-  · rintro h rfl
-    rw [mul_zero] at h
-    exact h.false
-  · intro h
-    cases' h.lt_or_lt with h h
-    exacts [mul_pos_of_neg_of_neg h h, mul_pos h h]
+  rintro h rfl
+  rw [mul_zero] at h
+  exact h.false
+  intro h
+  cases' h.lt_or_lt with h h
+  exacts [mul_pos_of_neg_of_neg h h, mul_pos h h]
 
 theorem nonneg_of_mul_nonpos_left [ExistsAddOfLE α] [MulPosStrictMono α]
     [CovariantClass α α (swap (· + ·)) (· ≤ ·)] [ContravariantClass α α (swap (· + ·)) (· ≤ ·)]
@@ -896,7 +896,7 @@ lemma sq_nonneg [IsRightCancelAdd α]
     [ZeroLEOneClass α] [ExistsAddOfLE α] [PosMulMono α] [CovariantClass α α (· + ·) (· < ·)]
     (a : α) : 0 ≤ a ^ 2 := by
   obtain ha | ha := le_total 0 a
-  · exact pow_nonneg ha _
+  exact pow_nonneg ha _
   obtain ⟨b, hab⟩ := exists_add_of_le ha
   calc
     0 ≤ b ^ 2 := pow_nonneg (not_lt.1 fun hb ↦ hab.not_gt <| add_neg_of_nonpos_of_neg ha hb) _

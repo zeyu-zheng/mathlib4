@@ -410,8 +410,8 @@ theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Fi
           sum_subset (filter_subset _ _) fun p hps hp => by
             simp only [mem_filter, mem_support_iff, not_and, Classical.not_not] at hp ⊢
             by_cases h1 : f p.1 = 0
-            · rw [h1, zero_mul]
-            · rw [hp hps h1, mul_zero]
+            rw [h1, zero_mul]
+            rw [hp hps h1, mul_zero]
 
 @[simp]
 theorem single_mul_single [Mul G] {a₁ a₂ : G} {b₁ b₂ : k} :
@@ -453,13 +453,13 @@ theorem mapDomain_mul {α : Type*} {β : Type*} {α₂ : Type*} [Semiring β] [M
     mapDomain f (x * y) = mapDomain f x * mapDomain f y := by
   simp_rw [mul_def, mapDomain_sum, mapDomain_single, map_mul]
   rw [Finsupp.sum_mapDomain_index]
-  · congr
-    ext a b
-    rw [Finsupp.sum_mapDomain_index]
-    · simp
-    · simp [mul_add]
-  · simp
-  · simp [add_mul]
+  congr
+  ext a b
+  rw [Finsupp.sum_mapDomain_index]
+  simp
+  simp [mul_add]
+  simp
+  simp [add_mul]
 
 variable (k G)
 
@@ -524,12 +524,12 @@ theorem mul_single_apply_of_not_exists_mul [Mul G] (r : k) {g g' : G} (x : Monoi
     (h : ¬∃ d, g' = d * g) : (x * single g r) g' = 0 := by
     rw [mul_apply, Finsupp.sum_comm, Finsupp.sum_single_index]
     swap
-    · simp_rw [Finsupp.sum, mul_zero, ite_self, Finset.sum_const_zero]
-    · apply Finset.sum_eq_zero
-      simp_rw [ite_eq_right_iff]
-      rintro g'' _hg'' rfl
-      exfalso
-      exact h ⟨_, rfl⟩
+    simp_rw [Finsupp.sum, mul_zero, ite_self, Finset.sum_const_zero]
+    apply Finset.sum_eq_zero
+    simp_rw [ite_eq_right_iff]
+    rintro g'' _hg'' rfl
+    exfalso
+    exact h ⟨_, rfl⟩
 
 open Classical in
 theorem single_mul_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G}
@@ -553,12 +553,12 @@ theorem single_mul_apply_of_not_exists_mul [Mul G] (r : k) {g g' : G} (x : Monoi
     (h : ¬∃ d, g' = g * d) : (single g r * x) g' = 0 := by
     rw [mul_apply, Finsupp.sum_single_index]
     swap
-    · simp_rw [Finsupp.sum, zero_mul, ite_self, Finset.sum_const_zero]
-    · apply Finset.sum_eq_zero
-      simp_rw [ite_eq_right_iff]
-      rintro g'' _hg'' rfl
-      exfalso
-      exact h ⟨_, rfl⟩
+    simp_rw [Finsupp.sum, zero_mul, ite_self, Finset.sum_const_zero]
+    apply Finset.sum_eq_zero
+    simp_rw [ite_eq_right_iff]
+    rintro g'' _hg'' rfl
+    exfalso
+    exact h ⟨_, rfl⟩
 
 theorem liftNC_smul [MulOneClass G] {R : Type*} [Semiring R] (f : k →+* R) (g : G →* R) (c : k)
     (φ : MonoidAlgebra k G) : liftNC (f : k →+ R) g (c • φ) = f c * liftNC (f : k →+ R) g φ := by
@@ -775,10 +775,10 @@ theorem induction_on [Semiring k] [Monoid G] {p : MonoidAlgebra k G → Prop} (f
     (hM : ∀ g, p (of k G g)) (hadd : ∀ f g : MonoidAlgebra k G, p f → p g → p (f + g))
     (hsmul : ∀ (r : k) (f), p f → p (r • f)) : p f := by
   refine Finsupp.induction_linear f ?_ (fun f g hf hg => hadd f g hf hg) fun g r => ?_
-  · simpa using hsmul 0 (of k G 1) (hM 1)
-  · convert hsmul r (of k G g) (hM g)
-    -- Porting note: Was `simp only`.
-    rw [of_apply, smul_single', mul_one]
+  simpa using hsmul 0 (of k G 1) (hM 1)
+  convert hsmul r (of k G g) (hM g)
+  -- Porting note: Was `simp only`.
+  rw [of_apply, smul_single', mul_one]
 
 end Algebra
 
@@ -1467,13 +1467,13 @@ theorem mapDomain_mul {α : Type*} {β : Type*} {α₂ : Type*} [Semiring β] [A
     mapDomain f (x * y) = mapDomain f x * mapDomain f y := by
   simp_rw [mul_def, mapDomain_sum, mapDomain_single, map_add]
   rw [Finsupp.sum_mapDomain_index]
-  · congr
-    ext a b
-    rw [Finsupp.sum_mapDomain_index]
-    · simp
-    · simp [mul_add]
-  · simp
-  · simp [add_mul]
+  congr
+  ext a b
+  rw [Finsupp.sum_mapDomain_index]
+  simp
+  simp [mul_add]
+  simp
+  simp [add_mul]
 
 section
 
@@ -1568,10 +1568,10 @@ theorem induction_on [AddMonoid G] {p : k[G] → Prop} (f : k[G])
     (hadd : ∀ f g : k[G], p f → p g → p (f + g))
     (hsmul : ∀ (r : k) (f), p f → p (r • f)) : p f := by
   refine Finsupp.induction_linear f ?_ (fun f g hf hg => hadd f g hf hg) fun g r => ?_
-  · simpa using hsmul 0 (of k G (Multiplicative.ofAdd 0)) (hM 0)
-  · convert hsmul r (of k G (Multiplicative.ofAdd g)) (hM g)
-    -- Porting note: Was `simp only`.
-    rw [of_apply, toAdd_ofAdd, smul_single', mul_one]
+  simpa using hsmul 0 (of k G (Multiplicative.ofAdd 0)) (hM 0)
+  convert hsmul r (of k G (Multiplicative.ofAdd g)) (hM g)
+  -- Porting note: Was `simp only`.
+  rw [of_apply, toAdd_ofAdd, smul_single', mul_one]
 
 /-- If `f : G → H` is an additive homomorphism between two additive monoids, then
 `Finsupp.mapDomain f` is a ring homomorphism between their add monoid algebras. -/

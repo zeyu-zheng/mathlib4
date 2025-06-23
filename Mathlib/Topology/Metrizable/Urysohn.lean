@@ -45,9 +45,9 @@ theorem exists_inducing_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Inducing f := by
   letI : TopologicalSpace s := ⊥
   haveI : DiscreteTopology s := ⟨rfl⟩
   rsuffices ⟨f, hf⟩ : ∃ f : X → s →ᵇ ℝ, Inducing f
-  · exact ⟨fun x => (f x).extend (Encodable.encode' s) 0,
-      (BoundedContinuousFunction.isometry_extend (Encodable.encode' s)
-        (0 : ℕ →ᵇ ℝ)).embedding.toInducing.comp hf⟩
+  exact ⟨fun x => (f x).extend (Encodable.encode' s) 0,
+    (BoundedContinuousFunction.isometry_extend (Encodable.encode' s)
+      (0 : ℕ →ᵇ ℝ)).embedding.toInducing.comp hf⟩
   have hd : ∀ UV : s, Disjoint (closure UV.1.1) UV.1.2ᶜ :=
     fun UV => disjoint_compl_right.mono_right (compl_subset_compl.2 UV.2.2)
   -- Choose a sequence of `εₙ > 0`, `n : s`, that is bounded above by `1` and tends to zero
@@ -75,34 +75,29 @@ theorem exists_inducing_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Inducing f := by
       fun UV₁ UV₂ => Real.dist_le_of_mem_Icc_01 (hf01 _ _) (hf01 _ _)⟩
   have hF : ∀ x UV, F x UV = f UV x := fun _ _ => rfl
   refine ⟨F, inducing_iff_nhds.2 fun x => le_antisymm ?_ ?_⟩
-  · /- First we prove that `F` is continuous. Given `δ > 0`, consider the set `T` of `(U, V) ∈ s`
-    such that `ε (U, V) ≥ δ`. Since `ε` tends to zero, `T` is finite. Since each `f` is continuous,
-    we can choose a neighborhood such that `dist (F y (U, V)) (F x (U, V)) ≤ δ` for any
-    `(U, V) ∈ T`. For `(U, V) ∉ T`, the same inequality is true because both `F y (U, V)` and
-    `F x (U, V)` belong to the interval `[0, ε (U, V)]`. -/
-    refine (nhds_basis_closedBall.comap _).ge_iff.2 fun δ δ0 => ?_
+  · refine (nhds_basis_closedBall.comap _).ge_iff.2 fun δ δ0 => ?_
     have h_fin : { UV : s | δ ≤ ε UV }.Finite := by simpa only [← not_lt] using hε (gt_mem_nhds δ0)
-    have : ∀ᶠ y in 𝓝 x, ∀ UV, δ ≤ ε UV → dist (F y UV) (F x UV) ≤ δ := by
-      refine (eventually_all_finite h_fin).2 fun UV _ => ?_
-      exact (f UV).continuous.tendsto x (closedBall_mem_nhds _ δ0)
+    have : ∀ᶠ y in 𝓝 x, ∀ UV, δ ≤ ε UV → dist (F y UV) (F x UV) ≤ δ
+    refine (eventually_all_finite h_fin).2 fun UV _ => ?_
+    exact (f UV).continuous.tendsto x (closedBall_mem_nhds _ δ0)
     refine this.mono fun y hy => (BoundedContinuousFunction.dist_le δ0.le).2 fun UV => ?_
     rcases le_total δ (ε UV) with hle | hle
     exacts [hy _ hle, (Real.dist_le_of_mem_Icc (hf0ε _ _) (hf0ε _ _)).trans (by rwa [sub_zero])]
-  · /- Finally, we prove that each neighborhood `V` of `x : X`
-    includes a preimage of a neighborhood of `F x` under `F`.
-    Without loss of generality, `V` belongs to `B`.
-    Choose `U ∈ B` such that `x ∈ V` and `closure V ⊆ U`.
-    Then the preimage of the `(ε (U, V))`-neighborhood of `F x` is included by `V`. -/
-    refine ((nhds_basis_ball.comap _).le_basis_iff hB.nhds_hasBasis).2 ?_
-    rintro V ⟨hVB, hxV⟩
-    rcases hB.exists_closure_subset (hB.mem_nhds hVB hxV) with ⟨U, hUB, hxU, hUV⟩
-    set UV : ↥s := ⟨(U, V), ⟨hUB, hVB⟩, hUV⟩
-    refine ⟨ε UV, (ε01 UV).1, fun y (hy : dist (F y) (F x) < ε UV) => ?_⟩
-    replace hy : dist (F y UV) (F x UV) < ε UV :=
-      (BoundedContinuousFunction.dist_coe_le_dist _).trans_lt hy
-    contrapose! hy
-    rw [hF, hF, hfε UV hy, hf0 UV hxU, Pi.zero_apply, dist_zero_right]
-    exact le_abs_self _
+  /- Finally, we prove that each neighborhood `V` of `x : X`
+  includes a preimage of a neighborhood of `F x` under `F`.
+  Without loss of generality, `V` belongs to `B`.
+  Choose `U ∈ B` such that `x ∈ V` and `closure V ⊆ U`.
+  Then the preimage of the `(ε (U, V))`-neighborhood of `F x` is included by `V`. -/
+  refine ((nhds_basis_ball.comap _).le_basis_iff hB.nhds_hasBasis).2 ?_
+  rintro V ⟨hVB, hxV⟩
+  rcases hB.exists_closure_subset (hB.mem_nhds hVB hxV) with ⟨U, hUB, hxU, hUV⟩
+  set UV : ↥s := ⟨(U, V), ⟨hUB, hVB⟩, hUV⟩
+  refine ⟨ε UV, (ε01 UV).1, fun y (hy : dist (F y) (F x) < ε UV) => ?_⟩
+  replace hy : dist (F y UV) (F x UV) < ε UV :=
+    (BoundedContinuousFunction.dist_coe_le_dist _).trans_lt hy
+  contrapose! hy
+  rw [hF, hF, hfε UV hy, hf0 UV hxU, Pi.zero_apply, dist_zero_right]
+  exact le_abs_self _
 
 /-- *Urysohn's metrization theorem* (Tychonoff's version):
 a regular topological space with second countable topology `X` is metrizable,

@@ -97,68 +97,68 @@ theorem exists_norm_eq_iInf_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
   use fun n => √(b n)
   constructor
   -- first goal :  `∀ (n : ℕ), 0 ≤ √(b n)`
-  · intro n
-    exact sqrt_nonneg _
+  intro n
+  exact sqrt_nonneg _
   constructor
   -- second goal : `∀ (n m N : ℕ), N ≤ n → N ≤ m → dist ↑(w n) ↑(w m) ≤ √(b N)`
-  · intro p q N hp hq
-    let wp := (w p : F)
-    let wq := (w q : F)
-    let a := u - wq
-    let b := u - wp
-    let half := 1 / (2 : ℝ)
-    let div := 1 / ((N : ℝ) + 1)
-    have :
+  intro p q N hp hq
+  let wp := (w p : F)
+  let wq := (w q : F)
+  let a := u - wq
+  let b := u - wp
+  let half := 1 / (2 : ℝ)
+  let div := 1 / ((N : ℝ) + 1)
+  have :
+    4 * ‖u - half • (wq + wp)‖ * ‖u - half • (wq + wp)‖ + ‖wp - wq‖ * ‖wp - wq‖ =
+      2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) :=
+    calc
       4 * ‖u - half • (wq + wp)‖ * ‖u - half • (wq + wp)‖ + ‖wp - wq‖ * ‖wp - wq‖ =
-        2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) :=
-      calc
-        4 * ‖u - half • (wq + wp)‖ * ‖u - half • (wq + wp)‖ + ‖wp - wq‖ * ‖wp - wq‖ =
-            2 * ‖u - half • (wq + wp)‖ * (2 * ‖u - half • (wq + wp)‖) + ‖wp - wq‖ * ‖wp - wq‖ :=
-          by ring
-        _ =
-            absR (2 : ℝ) * ‖u - half • (wq + wp)‖ * (absR (2 : ℝ) * ‖u - half • (wq + wp)‖) +
-              ‖wp - wq‖ * ‖wp - wq‖ := by
-          rw [_root_.abs_of_nonneg]
-          exact zero_le_two
-        _ =
-            ‖(2 : ℝ) • (u - half • (wq + wp))‖ * ‖(2 : ℝ) • (u - half • (wq + wp))‖ +
-              ‖wp - wq‖ * ‖wp - wq‖ := by simp [norm_smul]
-        _ = ‖a + b‖ * ‖a + b‖ + ‖a - b‖ * ‖a - b‖ := by
-          rw [smul_sub, smul_smul, mul_one_div_cancel (_root_.two_ne_zero : (2 : ℝ) ≠ 0), ←
-            one_add_one_eq_two, add_smul]
-          simp only [one_smul]
-          have eq₁ : wp - wq = a - b := (sub_sub_sub_cancel_left _ _ _).symm
-          have eq₂ : u + u - (wq + wp) = a + b := by
-            show u + u - (wq + wp) = u - wq + (u - wp)
-            abel
-          rw [eq₁, eq₂]
-        _ = 2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) := parallelogram_law_with_norm ℝ _ _
-    have eq : δ ≤ ‖u - half • (wq + wp)‖ := by
-      rw [smul_add]
-      apply δ_le'
-      apply h₂
-      repeat' exact Subtype.mem _
-      repeat' exact le_of_lt one_half_pos
-      exact add_halves 1
-    have eq₁ : 4 * δ * δ ≤ 4 * ‖u - half • (wq + wp)‖ * ‖u - half • (wq + wp)‖ := by
-      simp_rw [mul_assoc]
-      gcongr
-    have eq₂ : ‖a‖ ≤ δ + div :=
-        le_trans (le_of_lt <| hw q) (add_le_add_left (Nat.one_div_le_one_div hq) _)
-    have eq₂' : ‖b‖ ≤ δ + div :=
-        le_trans (le_of_lt <| hw p) (add_le_add_left (Nat.one_div_le_one_div hp) _)
-    rw [dist_eq_norm]
-    apply nonneg_le_nonneg_of_sq_le_sq
-    · exact sqrt_nonneg _
-    rw [mul_self_sqrt]
-    · calc
-      ‖wp - wq‖ * ‖wp - wq‖ =
-          2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) - 4 * ‖u - half • (wq + wp)‖ * ‖u - half • (wq + wp)‖ := by
-        simp [← this]
-      _ ≤ 2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) - 4 * δ * δ := by gcongr
-      _ ≤ 2 * ((δ + div) * (δ + div) + (δ + div) * (δ + div)) - 4 * δ * δ := by gcongr
-      _ = 8 * δ * div + 4 * div * div := by ring
-    positivity
+          2 * ‖u - half • (wq + wp)‖ * (2 * ‖u - half • (wq + wp)‖) + ‖wp - wq‖ * ‖wp - wq‖ :=
+        by ring
+      _ =
+          absR (2 : ℝ) * ‖u - half • (wq + wp)‖ * (absR (2 : ℝ) * ‖u - half • (wq + wp)‖) +
+            ‖wp - wq‖ * ‖wp - wq‖ := by
+        rw [_root_.abs_of_nonneg]
+        exact zero_le_two
+      _ =
+          ‖(2 : ℝ) • (u - half • (wq + wp))‖ * ‖(2 : ℝ) • (u - half • (wq + wp))‖ +
+            ‖wp - wq‖ * ‖wp - wq‖ := by simp [norm_smul]
+      _ = ‖a + b‖ * ‖a + b‖ + ‖a - b‖ * ‖a - b‖ := by
+        rw [smul_sub, smul_smul, mul_one_div_cancel (_root_.two_ne_zero : (2 : ℝ) ≠ 0), ←
+          one_add_one_eq_two, add_smul]
+        simp only [one_smul]
+        have eq₁ : wp - wq = a - b := (sub_sub_sub_cancel_left _ _ _).symm
+        have eq₂ : u + u - (wq + wp) = a + b := by
+          show u + u - (wq + wp) = u - wq + (u - wp)
+          abel
+        rw [eq₁, eq₂]
+      _ = 2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) := parallelogram_law_with_norm ℝ _ _
+  have eq : δ ≤ ‖u - half • (wq + wp)‖ := by
+    rw [smul_add]
+    apply δ_le'
+    apply h₂
+    repeat' exact Subtype.mem _
+    repeat' exact le_of_lt one_half_pos
+    exact add_halves 1
+  have eq₁ : 4 * δ * δ ≤ 4 * ‖u - half • (wq + wp)‖ * ‖u - half • (wq + wp)‖ := by
+    simp_rw [mul_assoc]
+    gcongr
+  have eq₂ : ‖a‖ ≤ δ + div :=
+      le_trans (le_of_lt <| hw q) (add_le_add_left (Nat.one_div_le_one_div hq) _)
+  have eq₂' : ‖b‖ ≤ δ + div :=
+      le_trans (le_of_lt <| hw p) (add_le_add_left (Nat.one_div_le_one_div hp) _)
+  rw [dist_eq_norm]
+  apply nonneg_le_nonneg_of_sq_le_sq
+  exact sqrt_nonneg _
+  rw [mul_self_sqrt]
+  calc
+    ‖wp - wq‖ * ‖wp - wq‖ =
+        2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) - 4 * ‖u - half • (wq + wp)‖ * ‖u - half • (wq + wp)‖ := by
+      simp [← this]
+    _ ≤ 2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) - 4 * δ * δ := by gcongr
+    _ ≤ 2 * ((δ + div) * (δ + div) + (δ + div) * (δ + div)) - 4 * δ * δ := by gcongr
+    _ = 8 * δ * div + 4 * div * div := by ring
+  positivity
   -- third goal : `Tendsto (fun (n : ℕ) => √(b n)) atTop (𝓝 0)`
   suffices Tendsto (fun x ↦ √(8 * δ * x + 4 * x * x) : ℝ → ℝ) (𝓝 0) (𝓝 0)
     from this.comp tendsto_one_div_add_atTop_nhds_zero_nat
@@ -181,85 +181,85 @@ theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
     (hv : v ∈ K) : (‖u - v‖ = ⨅ w : K, ‖u - w‖) ↔ ∀ w ∈ K, ⟪u - v, w - v⟫_ℝ ≤ 0 := by
   letI : Nonempty K := ⟨⟨v, hv⟩⟩
   constructor
-  · intro eq w hw
-    let δ := ⨅ w : K, ‖u - w‖
-    let p := ⟪u - v, w - v⟫_ℝ
-    let q := ‖w - v‖ ^ 2
-    have δ_le (w : K) : δ ≤ ‖u - w‖ := ciInf_le ⟨0, fun _ ⟨_, h⟩ => h ▸ norm_nonneg _⟩ _
-    have δ_le' (w) (hw : w ∈ K) : δ ≤ ‖u - w‖ := δ_le ⟨w, hw⟩
-    have (θ : ℝ) (hθ₁ : 0 < θ) (hθ₂ : θ ≤ 1) : 2 * p ≤ θ * q
-    have : ‖u - v‖ ^ 2 ≤ ‖u - v‖ ^ 2 - 2 * θ * ⟪u - v, w - v⟫_ℝ + θ * θ * ‖w - v‖ ^ 2 :=
-      calc ‖u - v‖ ^ 2
-        _ ≤ ‖u - (θ • w + (1 - θ) • v)‖ ^ 2 := by
-          simp only [sq]; apply mul_self_le_mul_self (norm_nonneg _)
-          rw [eq]; apply δ_le'
-          apply h hw hv
-          exacts [le_of_lt hθ₁, sub_nonneg.2 hθ₂, add_sub_cancel _ _]
-        _ = ‖u - v - θ • (w - v)‖ ^ 2 := by
-          have : u - (θ • w + (1 - θ) • v) = u - v - θ • (w - v) := by
-            rw [smul_sub, sub_smul, one_smul]
-            simp only [sub_eq_add_neg, add_comm, add_left_comm, add_assoc, neg_add_rev]
-          rw [this]
-        _ = ‖u - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v) + θ * θ * ‖w - v‖ ^ 2 := by
-          rw [@norm_sub_sq ℝ, inner_smul_right, norm_smul]
-          simp only [sq]
-          show
-            ‖u - v‖ * ‖u - v‖ - 2 * (θ * inner (u - v) (w - v)) +
-              absR θ * ‖w - v‖ * (absR θ * ‖w - v‖) =
-            ‖u - v‖ * ‖u - v‖ - 2 * θ * inner (u - v) (w - v) + θ * θ * (‖w - v‖ * ‖w - v‖)
-          rw [abs_of_pos hθ₁]; ring
-    have eq₁ :
-      ‖u - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v) + θ * θ * ‖w - v‖ ^ 2 =
-        ‖u - v‖ ^ 2 + (θ * θ * ‖w - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v)) := by
-      abel
-    rw [eq₁, le_add_iff_nonneg_right] at this
-    have eq₂ :
-      θ * θ * ‖w - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v) =
-        θ * (θ * ‖w - v‖ ^ 2 - 2 * inner (u - v) (w - v)) := by ring
-    rw [eq₂] at this
-    have := le_of_sub_nonneg (nonneg_of_mul_nonneg_right this hθ₁)
-    exact this
-    by_cases hq : q = 0
-    · rw [hq] at this
-      have : p ≤ 0
-      have := this (1 : ℝ) (by norm_num) (by norm_num)
-      linarith
-      exact this
-    · have q_pos : 0 < q := lt_of_le_of_ne (sq_nonneg _) fun h ↦ hq h.symm
-      by_contra hp
-      rw [not_le] at hp
-      let θ := min (1 : ℝ) (p / q)
-      have eq₁ : θ * q ≤ p :=
-        calc
-          θ * q ≤ p / q * q := mul_le_mul_of_nonneg_right (min_le_right _ _) (sq_nonneg _)
-          _ = p := div_mul_cancel₀ _ hq
-      have : 2 * p ≤ p :=
-        calc
-          2 * p ≤ θ * q := by
-            exact this θ (lt_min (by norm_num) (div_pos hp q_pos)) (by norm_num [θ])
-          _ ≤ p := eq₁
-      linarith
-  · intro h
-    apply le_antisymm
-    · apply le_ciInf
-      intro w
-      apply nonneg_le_nonneg_of_sq_le_sq (norm_nonneg _)
-      have := h w w.2
-      calc
-        ‖u - v‖ * ‖u - v‖ ≤ ‖u - v‖ * ‖u - v‖ - 2 * inner (u - v) ((w : F) - v) := by linarith
-        _ ≤ ‖u - v‖ ^ 2 - 2 * inner (u - v) ((w : F) - v) + ‖(w : F) - v‖ ^ 2 := by
-          rw [sq]
-          refine le_add_of_nonneg_right ?_
-          exact sq_nonneg _
-        _ = ‖u - v - (w - v)‖ ^ 2 := (@norm_sub_sq ℝ _ _ _ _ _ _).symm
-        _ = ‖u - w‖ * ‖u - w‖ := by
-          have : u - v - (w - v) = u - w := by abel
-          rw [this, sq]
-    · show ⨅ w : K, ‖u - w‖ ≤ (fun w : K => ‖u - w‖) ⟨v, hv⟩
-      apply ciInf_le
-      use 0
-      rintro y ⟨z, rfl⟩
-      exact norm_nonneg _
+  intro eq w hw
+  let δ := ⨅ w : K, ‖u - w‖
+  let p := ⟪u - v, w - v⟫_ℝ
+  let q := ‖w - v‖ ^ 2
+  have δ_le (w : K) : δ ≤ ‖u - w‖ := ciInf_le ⟨0, fun _ ⟨_, h⟩ => h ▸ norm_nonneg _⟩ _
+  have δ_le' (w) (hw : w ∈ K) : δ ≤ ‖u - w‖ := δ_le ⟨w, hw⟩
+  have (θ : ℝ) (hθ₁ : 0 < θ) (hθ₂ : θ ≤ 1) : 2 * p ≤ θ * q
+  have : ‖u - v‖ ^ 2 ≤ ‖u - v‖ ^ 2 - 2 * θ * ⟪u - v, w - v⟫_ℝ + θ * θ * ‖w - v‖ ^ 2 :=
+    calc ‖u - v‖ ^ 2
+      _ ≤ ‖u - (θ • w + (1 - θ) • v)‖ ^ 2 := by
+        simp only [sq]; apply mul_self_le_mul_self (norm_nonneg _)
+        rw [eq]; apply δ_le'
+        apply h hw hv
+        exacts [le_of_lt hθ₁, sub_nonneg.2 hθ₂, add_sub_cancel _ _]
+      _ = ‖u - v - θ • (w - v)‖ ^ 2 := by
+        have : u - (θ • w + (1 - θ) • v) = u - v - θ • (w - v) := by
+          rw [smul_sub, sub_smul, one_smul]
+          simp only [sub_eq_add_neg, add_comm, add_left_comm, add_assoc, neg_add_rev]
+        rw [this]
+      _ = ‖u - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v) + θ * θ * ‖w - v‖ ^ 2 := by
+        rw [@norm_sub_sq ℝ, inner_smul_right, norm_smul]
+        simp only [sq]
+        show
+          ‖u - v‖ * ‖u - v‖ - 2 * (θ * inner (u - v) (w - v)) +
+            absR θ * ‖w - v‖ * (absR θ * ‖w - v‖) =
+          ‖u - v‖ * ‖u - v‖ - 2 * θ * inner (u - v) (w - v) + θ * θ * (‖w - v‖ * ‖w - v‖)
+        rw [abs_of_pos hθ₁]; ring
+  have eq₁ :
+    ‖u - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v) + θ * θ * ‖w - v‖ ^ 2 =
+      ‖u - v‖ ^ 2 + (θ * θ * ‖w - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v)) := by
+    abel
+  rw [eq₁, le_add_iff_nonneg_right] at this
+  have eq₂ :
+    θ * θ * ‖w - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v) =
+      θ * (θ * ‖w - v‖ ^ 2 - 2 * inner (u - v) (w - v)) := by ring
+  rw [eq₂] at this
+  have := le_of_sub_nonneg (nonneg_of_mul_nonneg_right this hθ₁)
+  exact this
+  by_cases hq : q = 0
+  rw [hq] at this
+  have : p ≤ 0
+  have := this (1 : ℝ) (by norm_num) (by norm_num)
+  linarith
+  exact this
+  have q_pos : 0 < q := lt_of_le_of_ne (sq_nonneg _) fun h ↦ hq h.symm
+  by_contra hp
+  rw [not_le] at hp
+  let θ := min (1 : ℝ) (p / q)
+  have eq₁ : θ * q ≤ p :=
+    calc
+      θ * q ≤ p / q * q := mul_le_mul_of_nonneg_right (min_le_right _ _) (sq_nonneg _)
+      _ = p := div_mul_cancel₀ _ hq
+  have : 2 * p ≤ p :=
+    calc
+      2 * p ≤ θ * q := by
+        exact this θ (lt_min (by norm_num) (div_pos hp q_pos)) (by norm_num [θ])
+      _ ≤ p := eq₁
+  linarith
+  intro h
+  apply le_antisymm
+  apply le_ciInf
+  intro w
+  apply nonneg_le_nonneg_of_sq_le_sq (norm_nonneg _)
+  have := h w w.2
+  calc
+    ‖u - v‖ * ‖u - v‖ ≤ ‖u - v‖ * ‖u - v‖ - 2 * inner (u - v) ((w : F) - v) := by linarith
+    _ ≤ ‖u - v‖ ^ 2 - 2 * inner (u - v) ((w : F) - v) + ‖(w : F) - v‖ ^ 2 := by
+      rw [sq]
+      refine le_add_of_nonneg_right ?_
+      exact sq_nonneg _
+    _ = ‖u - v - (w - v)‖ ^ 2 := (@norm_sub_sq ℝ _ _ _ _ _ _).symm
+    _ = ‖u - w‖ * ‖u - w‖ := by
+      have : u - v - (w - v) = u - w := by abel
+      rw [this, sq]
+  show ⨅ w : K, ‖u - w‖ ≤ (fun w : K => ‖u - w‖) ⟨v, hv⟩
+  apply ciInf_le
+  use 0
+  rintro y ⟨z, rfl⟩
+  exact norm_nonneg _
 
 variable (K : Submodule 𝕜 E)
 
@@ -330,23 +330,23 @@ theorem norm_eq_iInf_iff_inner_eq_zero {u : E} {v : E} (hv : v ∈ K) :
   letI : Module ℝ E := RestrictScalars.module ℝ 𝕜 E
   let K' : Submodule ℝ E := K.restrictScalars ℝ
   constructor
-  · intro H
-    have A : ∀ w ∈ K, re ⟪u - v, w⟫ = 0 := (norm_eq_iInf_iff_real_inner_eq_zero K' hv).1 H
-    intro w hw
-    apply ext
-    · simp [A w hw]
-    · symm
-      calc
-        im (0 : 𝕜) = 0 := im.map_zero
-        _ = re ⟪u - v, (-I : 𝕜) • w⟫ := (A _ (K.smul_mem (-I) hw)).symm
-        _ = re (-I * ⟪u - v, w⟫) := by rw [inner_smul_right]
-        _ = im ⟪u - v, w⟫ := by simp
-  · intro H
-    have : ∀ w ∈ K', ⟪u - v, w⟫_ℝ = 0
-    intro w hw
-    rw [real_inner_eq_re_inner, H w hw]
-    exact zero_re'
-    exact (norm_eq_iInf_iff_real_inner_eq_zero K' hv).2 this
+  intro H
+  have A : ∀ w ∈ K, re ⟪u - v, w⟫ = 0 := (norm_eq_iInf_iff_real_inner_eq_zero K' hv).1 H
+  intro w hw
+  apply ext
+  simp [A w hw]
+  symm
+  calc
+    im (0 : 𝕜) = 0 := im.map_zero
+    _ = re ⟪u - v, (-I : 𝕜) • w⟫ := (A _ (K.smul_mem (-I) hw)).symm
+    _ = re (-I * ⟪u - v, w⟫) := by rw [inner_smul_right]
+    _ = im ⟪u - v, w⟫ := by simp
+  intro H
+  have : ∀ w ∈ K', ⟪u - v, w⟫_ℝ = 0
+  intro w hw
+  rw [real_inner_eq_re_inner, H w hw]
+  exact zero_re'
+  exact (norm_eq_iInf_iff_real_inner_eq_zero K' hv).2 this
 
 /-- A subspace `K : Submodule 𝕜 E` has an orthogonal projection if evey vector `v : E` admits an
 orthogonal projection to `K`. -/
@@ -534,16 +534,16 @@ theorem orthogonalProjection_mem_subspace_eq_self (v : K) : orthogonalProjection
 /-- A point equals its orthogonal projection if and only if it lies in the subspace. -/
 theorem orthogonalProjection_eq_self_iff {v : E} : (orthogonalProjection K v : E) = v ↔ v ∈ K := by
   refine ⟨fun h => ?_, fun h => eq_orthogonalProjection_of_mem_of_inner_eq_zero h ?_⟩
-  · rw [← h]
-    simp
-  · simp
+  rw [← h]
+  simp
+  simp
 
 @[simp]
 theorem orthogonalProjection_eq_zero_iff {v : E} : orthogonalProjection K v = 0 ↔ v ∈ Kᗮ := by
   refine ⟨fun h ↦ ?_, fun h ↦ Subtype.eq <| eq_orthogonalProjection_of_mem_orthogonal
     (zero_mem _) ?_⟩
-  · simpa [h] using sub_orthogonalProjection_mem_orthogonal (K := K) v
-  · simpa
+  simpa [h] using sub_orthogonalProjection_mem_orthogonal (K := K) v
+  simpa
 
 @[simp]
 theorem ker_orthogonalProjection : LinearMap.ker (orthogonalProjection K) = Kᗮ := by
@@ -554,7 +554,7 @@ theorem LinearIsometry.map_orthogonalProjection {E E' : Type*} [NormedAddCommGro
     (p : Submodule 𝕜 E) [HasOrthogonalProjection p] [HasOrthogonalProjection (p.map f.toLinearMap)]
     (x : E) : f (orthogonalProjection p x) = orthogonalProjection (p.map f.toLinearMap) (f x) := by
   refine (eq_orthogonalProjection_of_mem_of_inner_eq_zero ?_ fun y hy => ?_).symm
-  · refine Submodule.apply_coe_mem_map _ _
+  refine Submodule.apply_coe_mem_map _ _
   rcases hy with ⟨x', hx', rfl : f x' = y⟩
   rw [← f.map_sub, f.inner_map_map, orthogonalProjection_inner_eq_zero x x' hx']
 
@@ -591,17 +591,17 @@ theorem smul_orthogonalProjection_singleton {v : E} (w : E) :
   suffices ((orthogonalProjection (𝕜 ∙ v) (((‖v‖ : 𝕜) ^ 2) • w)) : E) = ⟪v, w⟫ • v by
     simpa using this
   apply eq_orthogonalProjection_of_mem_of_inner_eq_zero
-  · rw [Submodule.mem_span_singleton]
-    use ⟪v, w⟫
-  · rw [← Submodule.mem_orthogonal', Submodule.mem_orthogonal_singleton_iff_inner_left]
-    simp [inner_sub_left, inner_smul_left, inner_self_eq_norm_sq_to_K, mul_comm]
+  rw [Submodule.mem_span_singleton]
+  use ⟪v, w⟫
+  rw [← Submodule.mem_orthogonal', Submodule.mem_orthogonal_singleton_iff_inner_left]
+  simp [inner_sub_left, inner_smul_left, inner_self_eq_norm_sq_to_K, mul_comm]
 
 /-- Formula for orthogonal projection onto a single vector. -/
 theorem orthogonalProjection_singleton {v : E} (w : E) :
     (orthogonalProjection (𝕜 ∙ v) w : E) = (⟪v, w⟫ / ((‖v‖ ^ 2 : ℝ) : 𝕜)) • v := by
   by_cases hv : v = 0
-  · rw [hv, eq_orthogonalProjection_of_eq_submodule (Submodule.span_zero_singleton 𝕜)]
-    simp
+  rw [hv, eq_orthogonalProjection_of_eq_submodule (Submodule.span_zero_singleton 𝕜)]
+  simp
   have hv' : ‖v‖ ≠ 0 := ne_of_gt (norm_pos_iff.mpr hv)
   have key :
     (((‖v‖ ^ 2 : ℝ) : 𝕜)⁻¹ * ((‖v‖ ^ 2 : ℝ) : 𝕜)) • ((orthogonalProjection (𝕜 ∙ v) w) : E) =
@@ -741,9 +741,9 @@ theorem Submodule.sup_orthogonal_inf_of_completeSpace {K₁ K₂ : Submodule �
   let v : K₁ := orthogonalProjection K₁ x
   have hvm : x - v ∈ K₁ᗮ := sub_orthogonalProjection_mem_orthogonal x
   constructor
-  · rintro ⟨y, hy, z, hz, rfl⟩
-    exact K₂.add_mem (h hy) hz.2
-  · exact fun hx => ⟨v, v.prop, x - v, ⟨hvm, K₂.sub_mem hx (h v.prop)⟩, add_sub_cancel _ _⟩
+  rintro ⟨y, hy, z, hz, rfl⟩
+  exact K₂.add_mem (h hy) hz.2
+  exact fun hx => ⟨v, v.prop, x - v, ⟨hvm, K₂.sub_mem hx (h v.prop)⟩, add_sub_cancel _ _⟩
 
 variable {K}
 
@@ -766,16 +766,16 @@ complement is itself. -/
 theorem Submodule.orthogonal_orthogonal [HasOrthogonalProjection K] : Kᗮᗮ = K := by
   ext v
   constructor
-  · obtain ⟨y, hy, z, hz, rfl⟩ := K.exists_add_mem_mem_orthogonal v
-    intro hv
-    have hz' : z = 0
-    have hyz : ⟪z, y⟫ = 0
-    simp [hz y hy, inner_eq_zero_symm]
-    simpa [inner_add_right, hyz] using hv z hz
-    simp [hy, hz']
-  · intro hv w hw
-    rw [inner_eq_zero_symm]
-    exact hw v hv
+  obtain ⟨y, hy, z, hz, rfl⟩ := K.exists_add_mem_mem_orthogonal v
+  intro hv
+  have hz' : z = 0
+  have hyz : ⟪z, y⟫ = 0
+  simp [hz y hy, inner_eq_zero_symm]
+  simpa [inner_add_right, hyz] using hv z hz
+  simp [hy, hz']
+  intro hv w hw
+  rw [inner_eq_zero_symm]
+  exact hw v hv
 
 /-- In a Hilbert space, the orthogonal complement of the orthogonal complement of a subspace `K`
 is the topological closure of `K`.
@@ -786,9 +786,9 @@ of all elements equal to zero. Then `Kᗮ = ⊥`, `Kᗮᗮ = ⊤`.  -/
 theorem Submodule.orthogonal_orthogonal_eq_closure [CompleteSpace E] :
     Kᗮᗮ = K.topologicalClosure := by
   refine le_antisymm ?_ ?_
-  · convert Submodule.orthogonal_orthogonal_monotone K.le_topologicalClosure using 1
-    rw [K.topologicalClosure.orthogonal_orthogonal]
-  · exact K.topologicalClosure_minimal K.le_orthogonal_orthogonal Kᗮ.isClosed_orthogonal
+  convert Submodule.orthogonal_orthogonal_monotone K.le_topologicalClosure using 1
+  rw [K.topologicalClosure.orthogonal_orthogonal]
+  exact K.topologicalClosure_minimal K.le_orthogonal_orthogonal Kᗮ.isClosed_orthogonal
 
 variable {K}
 
@@ -869,7 +869,7 @@ theorem orthogonalProjection_tendsto_closure_iSup [CompleteSpace E] {ι : Type*}
     Filter.Tendsto (fun i => (orthogonalProjection (U i) x : E)) atTop
       (𝓝 (orthogonalProjection (⨆ i, U i).topologicalClosure x : E)) := by
   cases isEmpty_or_nonempty ι
-  · exact tendsto_of_isEmpty
+  exact tendsto_of_isEmpty
   let y := (orthogonalProjection (⨆ i, U i).topologicalClosure x : E)
   have proj_x : ∀ i, orthogonalProjection (U i) x = orthogonalProjection (U i) y := fun i =>
     (orthogonalProjection_orthogonalProjection_of_le
@@ -911,8 +911,8 @@ theorem Submodule.topologicalClosure_eq_top_iff [CompleteSpace E] :
     K.topologicalClosure = ⊤ ↔ Kᗮ = ⊥ := by
   rw [← Submodule.orthogonal_orthogonal_eq_closure]
   constructor <;> intro h
-  · rw [← Submodule.triorthogonal_eq_orthogonal, h, Submodule.top_orthogonal_eq_bot]
-  · rw [h, Submodule.bot_orthogonal_eq_top]
+  rw [← Submodule.triorthogonal_eq_orthogonal, h, Submodule.top_orthogonal_eq_bot]
+  rw [h, Submodule.bot_orthogonal_eq_top]
 
 namespace Dense
 
@@ -973,8 +973,8 @@ theorem reflection_sub {v w : F} (h : ‖v‖ = ‖w‖) : reflection (ℝ ∙ (
   rw [real_inner_add_sub_eq_zero_iff]
   exact h
   convert congr_arg₂ (· + ·) h₂ h₁ using 1
-  · simp
-  · abel
+  simp
+  abel
 
 variable (K)
 
@@ -1060,8 +1060,8 @@ that of `E`. -/
 theorem Submodule.finrank_add_finrank_orthogonal [FiniteDimensional 𝕜 E] (K : Submodule 𝕜 E) :
     finrank 𝕜 K + finrank 𝕜 Kᗮ = finrank 𝕜 E := by
   convert Submodule.finrank_add_inf_finrank_orthogonal (le_top : K ≤ ⊤) using 1
-  · rw [inf_top_eq]
-  · simp
+  rw [inf_top_eq]
+  simp
 
 /-- Given a finite-dimensional space `E` and subspace `K`, the dimensions of `K` and `Kᗮ` add to
 that of `E`. -/
@@ -1087,73 +1087,73 @@ theorem LinearIsometryEquiv.reflections_generate_dim_aux [FiniteDimensional ℝ 
   -- We prove this by strong induction on `n`, the dimension of the orthogonal complement of the
   -- fixed subspace of the endomorphism `φ`
   induction' n with n IH generalizing φ
-  · -- Base case: `n = 0`, the fixed subspace is the whole space, so `φ = id`
-    refine ⟨[], rfl.le, show φ = 1 from ?_⟩
-    have : ker (ContinuousLinearMap.id ℝ F - φ) = ⊤
-    rwa [le_zero_iff, Submodule.finrank_eq_zero, Submodule.orthogonal_eq_bot_iff] at hn
-    symm
-    ext x
-    have := LinearMap.congr_fun (LinearMap.ker_eq_top.mp this) x
-    simpa only [sub_eq_zero, ContinuousLinearMap.coe_sub, LinearMap.sub_apply,
-      LinearMap.zero_apply] using this
-  · -- Inductive step.  Let `W` be the fixed subspace of `φ`.  We suppose its complement to have
-    -- dimension at most n + 1.
-    let W := ker (ContinuousLinearMap.id ℝ F - φ)
-    have hW : ∀ w ∈ W, φ w = w := fun w hw => (sub_eq_zero.mp hw).symm
-    by_cases hn' : finrank ℝ Wᗮ ≤ n
-    · obtain ⟨V, hV₁, hV₂⟩ := IH φ hn'
-      exact ⟨V, hV₁.trans n.le_succ, hV₂⟩
-    -- Take a nonzero element `v` of the orthogonal complement of `W`.
-    haveI : Nontrivial Wᗮ := nontrivial_of_finrank_pos (by omega : 0 < finrank ℝ Wᗮ)
-    obtain ⟨v, hv⟩ := exists_ne (0 : Wᗮ)
-    have hφv : φ v ∈ Wᗮ
-    intro w hw
-    rw [← hW w hw, LinearIsometryEquiv.inner_map_map]
-    exact v.prop w hw
-    have hv' : (v : F) ∉ W
-    intro h
-    exact hv ((Submodule.mem_left_iff_eq_zero_of_disjoint W.orthogonal_disjoint).mp h)
-    -- Let `ρ` be the reflection in `v - φ v`; this is designed to swap `v` and `φ v`
-    let x : F := v - φ v
-    let ρ := reflection (ℝ ∙ x)ᗮ
-    -- Notation: Let `V` be the fixed subspace of `φ.trans ρ`
-    let V := ker (ContinuousLinearMap.id ℝ F - φ.trans ρ)
-    have hV : ∀ w, ρ (φ w) = w → w ∈ V
-    intro w hw
-    change w - ρ (φ w) = 0
-    rw [sub_eq_zero, hw]
-    -- Everything fixed by `φ` is fixed by `φ.trans ρ`
-    have H₂V : W ≤ V
-    intro w hw
-    apply hV
-    rw [hW w hw]
-    refine reflection_mem_subspace_eq_self ?_
-    rw [Submodule.mem_orthogonal_singleton_iff_inner_left]
-    exact Submodule.sub_mem _ v.prop hφv _ hw
-    -- `v` is also fixed by `φ.trans ρ`
-    have H₁V : (v : F) ∈ V
-    apply hV
-    have : ρ v = φ v := reflection_sub (φ.norm_map v).symm
-    rw [← this]
-    exact reflection_reflection _ _
-    -- By dimension-counting, the complement of the fixed subspace of `φ.trans ρ` has dimension at
-    -- most `n`
-    have : finrank ℝ Vᗮ ≤ n
-    change finrank ℝ Wᗮ ≤ n + 1 at hn
-    have : finrank ℝ W + 1 ≤ finrank ℝ V :=
-      Submodule.finrank_lt_finrank_of_lt (SetLike.lt_iff_le_and_exists.2 ⟨H₂V, v, H₁V, hv'⟩)
-    have : finrank ℝ V + finrank ℝ Vᗮ = finrank ℝ F := V.finrank_add_finrank_orthogonal
-    have : finrank ℝ W + finrank ℝ Wᗮ = finrank ℝ F := W.finrank_add_finrank_orthogonal
-    omega
-    -- So apply the inductive hypothesis to `φ.trans ρ`
-    obtain ⟨l, hl, hφl⟩ := IH (ρ * φ) this
-    -- Prepend `ρ` to the factorization into reflections obtained for `φ.trans ρ`; this gives a
-    -- factorization into reflections for `φ`.
-    refine ⟨x::l, Nat.succ_le_succ hl, ?_⟩
-    rw [List.map_cons, List.prod_cons]
-    have := congr_arg (ρ * ·) hφl
-    dsimp only at this
-    rwa [← mul_assoc, reflection_mul_reflection, one_mul] at this
+  -- Base case: `n = 0`, the fixed subspace is the whole space, so `φ = id`
+  refine ⟨[], rfl.le, show φ = 1 from ?_⟩
+  have : ker (ContinuousLinearMap.id ℝ F - φ) = ⊤
+  rwa [le_zero_iff, Submodule.finrank_eq_zero, Submodule.orthogonal_eq_bot_iff] at hn
+  symm
+  ext x
+  have := LinearMap.congr_fun (LinearMap.ker_eq_top.mp this) x
+  simpa only [sub_eq_zero, ContinuousLinearMap.coe_sub, LinearMap.sub_apply,
+    LinearMap.zero_apply] using this
+  -- Inductive step.  Let `W` be the fixed subspace of `φ`.  We suppose its complement to have
+  -- dimension at most n + 1.
+  let W := ker (ContinuousLinearMap.id ℝ F - φ)
+  have hW : ∀ w ∈ W, φ w = w := fun w hw => (sub_eq_zero.mp hw).symm
+  by_cases hn' : finrank ℝ Wᗮ ≤ n
+  obtain ⟨V, hV₁, hV₂⟩ := IH φ hn'
+  exact ⟨V, hV₁.trans n.le_succ, hV₂⟩
+  -- Take a nonzero element `v` of the orthogonal complement of `W`.
+  haveI : Nontrivial Wᗮ := nontrivial_of_finrank_pos (by omega : 0 < finrank ℝ Wᗮ)
+  obtain ⟨v, hv⟩ := exists_ne (0 : Wᗮ)
+  have hφv : φ v ∈ Wᗮ
+  intro w hw
+  rw [← hW w hw, LinearIsometryEquiv.inner_map_map]
+  exact v.prop w hw
+  have hv' : (v : F) ∉ W
+  intro h
+  exact hv ((Submodule.mem_left_iff_eq_zero_of_disjoint W.orthogonal_disjoint).mp h)
+  -- Let `ρ` be the reflection in `v - φ v`; this is designed to swap `v` and `φ v`
+  let x : F := v - φ v
+  let ρ := reflection (ℝ ∙ x)ᗮ
+  -- Notation: Let `V` be the fixed subspace of `φ.trans ρ`
+  let V := ker (ContinuousLinearMap.id ℝ F - φ.trans ρ)
+  have hV : ∀ w, ρ (φ w) = w → w ∈ V
+  intro w hw
+  change w - ρ (φ w) = 0
+  rw [sub_eq_zero, hw]
+  -- Everything fixed by `φ` is fixed by `φ.trans ρ`
+  have H₂V : W ≤ V
+  intro w hw
+  apply hV
+  rw [hW w hw]
+  refine reflection_mem_subspace_eq_self ?_
+  rw [Submodule.mem_orthogonal_singleton_iff_inner_left]
+  exact Submodule.sub_mem _ v.prop hφv _ hw
+  -- `v` is also fixed by `φ.trans ρ`
+  have H₁V : (v : F) ∈ V
+  apply hV
+  have : ρ v = φ v := reflection_sub (φ.norm_map v).symm
+  rw [← this]
+  exact reflection_reflection _ _
+  -- By dimension-counting, the complement of the fixed subspace of `φ.trans ρ` has dimension at
+  -- most `n`
+  have : finrank ℝ Vᗮ ≤ n
+  change finrank ℝ Wᗮ ≤ n + 1 at hn
+  have : finrank ℝ W + 1 ≤ finrank ℝ V :=
+    Submodule.finrank_lt_finrank_of_lt (SetLike.lt_iff_le_and_exists.2 ⟨H₂V, v, H₁V, hv'⟩)
+  have : finrank ℝ V + finrank ℝ Vᗮ = finrank ℝ F := V.finrank_add_finrank_orthogonal
+  have : finrank ℝ W + finrank ℝ Wᗮ = finrank ℝ F := W.finrank_add_finrank_orthogonal
+  omega
+  -- So apply the inductive hypothesis to `φ.trans ρ`
+  obtain ⟨l, hl, hφl⟩ := IH (ρ * φ) this
+  -- Prepend `ρ` to the factorization into reflections obtained for `φ.trans ρ`; this gives a
+  -- factorization into reflections for `φ`.
+  refine ⟨x::l, Nat.succ_le_succ hl, ?_⟩
+  rw [List.map_cons, List.prod_cons]
+  have := congr_arg (ρ * ·) hφl
+  dsimp only at this
+  rwa [← mul_assoc, reflection_mul_reflection, one_mul] at this
 
 /-- The orthogonal group of `F` is generated by reflections; specifically each element `φ` of the
 orthogonal group is a product of at most as many reflections as the dimension of `F`.
@@ -1228,18 +1228,18 @@ theorem OrthogonalFamily.projection_directSum_coeAddHom [DecidableEq ι] {V : ι
     [CompleteSpace (V i)] :
     orthogonalProjection (V i) (DirectSum.coeAddMonoidHom V x) = x i := by
   induction' x using DirectSum.induction_on with j x x y hx hy
-  · simp
-  · simp_rw [DirectSum.coeAddMonoidHom_of, DirectSum.of]
-    -- Porting note: was in the previous `simp_rw`, no longer works
-    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [DFinsupp.singleAddHom_apply]
-    obtain rfl | hij := Decidable.eq_or_ne i j
-    · rw [orthogonalProjection_mem_subspace_eq_self, DFinsupp.single_eq_same]
-    · rw [orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero,
-        DFinsupp.single_eq_of_ne hij.symm]
-      exact hV.isOrtho hij.symm x.prop
-  · simp_rw [map_add]
-    exact congr_arg₂ (· + ·) hx hy
+  simp
+  simp_rw [DirectSum.coeAddMonoidHom_of, DirectSum.of]
+  -- Porting note: was in the previous `simp_rw`, no longer works
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [DFinsupp.singleAddHom_apply]
+  obtain rfl | hij := Decidable.eq_or_ne i j
+  rw [orthogonalProjection_mem_subspace_eq_self, DFinsupp.single_eq_same]
+  rw [orthogonalProjection_mem_subspace_orthogonalComplement_eq_zero,
+    DFinsupp.single_eq_of_ne hij.symm]
+  exact hV.isOrtho hij.symm x.prop
+  simp_rw [map_add]
+  exact congr_arg₂ (· + ·) hx hy
 
 /-- If a family of submodules is orthogonal and they span the whole space, then the orthogonal
 projection provides a means to decompose the space into its submodules.
@@ -1257,10 +1257,10 @@ abbrev OrthogonalFamily.decomposition [DecidableEq ι] [Fintype ι] {V : ι → 
     rw [DirectSum.coeAddMonoidHom, DirectSum.toAddMonoid, DFinsupp.liftAddHom_apply]
     -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
     erw [DFinsupp.sumAddHom_apply]; rw [DFinsupp.sum_eq_sum_fintype]
-    · simp_rw [Equiv.apply_symm_apply, AddSubmonoidClass.coe_subtype]
-      exact hV.sum_projection_of_mem_iSup _ ((h.ge : _) Submodule.mem_top)
-    · intro i
-      exact map_zero _
+    simp_rw [Equiv.apply_symm_apply, AddSubmonoidClass.coe_subtype]
+    exact hV.sum_projection_of_mem_iSup _ ((h.ge : _) Submodule.mem_top)
+    intro i
+    exact map_zero _
   right_inv x := by
     dsimp only
     simp_rw [hV.projection_directSum_coeAddHom, DFinsupp.equivFunOnFintype_symm_coe]
@@ -1279,64 +1279,64 @@ theorem maximal_orthonormal_iff_orthogonalComplement_eq_bot (hv : Orthonormal �
     (∀ u ⊇ v, Orthonormal 𝕜 ((↑) : u → E) → u = v) ↔ (span 𝕜 v)ᗮ = ⊥ := by
   rw [Submodule.eq_bot_iff]
   constructor
-  · contrapose!
-    -- ** direction 1: nonempty orthogonal complement implies nonmaximal
-    rintro ⟨x, hx', hx⟩
-    -- take a nonzero vector and normalize it
-    let e := (‖x‖⁻¹ : 𝕜) • x
-    have he : ‖e‖ = 1
-    simp [norm_smul_inv_norm hx]
-    have he' : e ∈ (span 𝕜 v)ᗮ := smul_mem' _ _ hx'
-    have he'' : e ∉ v
-    intro hev
-    have : e = 0
-    have : e ∈ span 𝕜 v ⊓ (span 𝕜 v)ᗮ := ⟨subset_span hev, he'⟩
-    simpa [(span 𝕜 v).inf_orthogonal_eq_bot] using this
-    have : e ≠ 0 := hv.ne_zero ⟨e, hev⟩
-    contradiction
-    -- put this together with `v` to provide a candidate orthonormal basis for the whole space
-    refine ⟨insert e v, v.subset_insert e, ⟨?_, ?_⟩, (ne_insert_of_not_mem v he'').symm⟩
-    · -- show that the elements of `insert e v` have unit length
-      rintro ⟨a, ha'⟩
-      cases' eq_or_mem_of_mem_insert ha' with ha ha
-      · simp [ha, he]
-      · exact hv.1 ⟨a, ha⟩
-    · -- show that the elements of `insert e v` are orthogonal
-      have h_end : ∀ a ∈ v, ⟪a, e⟫ = 0
-      intro a ha
-      exact he' a (Submodule.subset_span ha)
-      rintro ⟨a, ha'⟩
-      cases' eq_or_mem_of_mem_insert ha' with ha ha
-      · rintro ⟨b, hb'⟩ hab'
-        have hb : b ∈ v
-        refine mem_of_mem_insert_of_ne hb' ?_
-        intro hbe'
-        apply hab'
-        simp [ha, hbe']
-        rw [inner_eq_zero_symm]
-        simpa [ha] using h_end b hb
-      rintro ⟨b, hb'⟩ hab'
-      cases' eq_or_mem_of_mem_insert hb' with hb hb
-      · simpa [hb] using h_end a ha
-      have : (⟨a, ha⟩ : v) ≠ ⟨b, hb⟩
-      intro hab''
-      apply hab'
-      simpa using hab''
-      exact hv.2 this
-  · -- ** direction 2: empty orthogonal complement implies maximal
-    simp only [Subset.antisymm_iff]
-    rintro h u (huv : v ⊆ u) hu
-    refine ⟨?_, huv⟩
-    intro x hxu
-    refine ((mt (h x)) (hu.ne_zero ⟨x, hxu⟩)).imp_symm ?_
-    intro hxv y hy
-    have hxv' : (⟨x, hxu⟩ : u) ∉ ((↑) ⁻¹' v : Set u)
-    simp [huv, hxv]
-    obtain ⟨l, hl, rfl⟩ :
-      ∃ l ∈ Finsupp.supported 𝕜 𝕜 ((↑) ⁻¹' v : Set u), (Finsupp.total (↥u) E 𝕜 (↑)) l = y := by
-      rw [← Finsupp.mem_span_image_iff_total]
-      simp [huv, inter_eq_self_of_subset_right, hy]
-    exact hu.inner_finsupp_eq_zero hxv' hl
+  contrapose!
+  -- ** direction 1: nonempty orthogonal complement implies nonmaximal
+  rintro ⟨x, hx', hx⟩
+  -- take a nonzero vector and normalize it
+  let e := (‖x‖⁻¹ : 𝕜) • x
+  have he : ‖e‖ = 1
+  simp [norm_smul_inv_norm hx]
+  have he' : e ∈ (span 𝕜 v)ᗮ := smul_mem' _ _ hx'
+  have he'' : e ∉ v
+  intro hev
+  have : e = 0
+  have : e ∈ span 𝕜 v ⊓ (span 𝕜 v)ᗮ := ⟨subset_span hev, he'⟩
+  simpa [(span 𝕜 v).inf_orthogonal_eq_bot] using this
+  have : e ≠ 0 := hv.ne_zero ⟨e, hev⟩
+  contradiction
+  -- put this together with `v` to provide a candidate orthonormal basis for the whole space
+  refine ⟨insert e v, v.subset_insert e, ⟨?_, ?_⟩, (ne_insert_of_not_mem v he'').symm⟩
+  -- show that the elements of `insert e v` have unit length
+  rintro ⟨a, ha'⟩
+  cases' eq_or_mem_of_mem_insert ha' with ha ha
+  simp [ha, he]
+  exact hv.1 ⟨a, ha⟩
+  -- show that the elements of `insert e v` are orthogonal
+  have h_end : ∀ a ∈ v, ⟪a, e⟫ = 0
+  intro a ha
+  exact he' a (Submodule.subset_span ha)
+  rintro ⟨a, ha'⟩
+  cases' eq_or_mem_of_mem_insert ha' with ha ha
+  rintro ⟨b, hb'⟩ hab'
+  have hb : b ∈ v
+  refine mem_of_mem_insert_of_ne hb' ?_
+  intro hbe'
+  apply hab'
+  simp [ha, hbe']
+  rw [inner_eq_zero_symm]
+  simpa [ha] using h_end b hb
+  rintro ⟨b, hb'⟩ hab'
+  cases' eq_or_mem_of_mem_insert hb' with hb hb
+  simpa [hb] using h_end a ha
+  have : (⟨a, ha⟩ : v) ≠ ⟨b, hb⟩
+  intro hab''
+  apply hab'
+  simpa using hab''
+  exact hv.2 this
+  -- ** direction 2: empty orthogonal complement implies maximal
+  simp only [Subset.antisymm_iff]
+  rintro h u (huv : v ⊆ u) hu
+  refine ⟨?_, huv⟩
+  intro x hxu
+  refine ((mt (h x)) (hu.ne_zero ⟨x, hxu⟩)).imp_symm ?_
+  intro hxv y hy
+  have hxv' : (⟨x, hxu⟩ : u) ∉ ((↑) ⁻¹' v : Set u)
+  simp [huv, hxv]
+  obtain ⟨l, hl, rfl⟩ :
+    ∃ l ∈ Finsupp.supported 𝕜 𝕜 ((↑) ⁻¹' v : Set u), (Finsupp.total (↥u) E 𝕜 (↑)) l = y := by
+    rw [← Finsupp.mem_span_image_iff_total]
+    simp [huv, inter_eq_self_of_subset_right, hy]
+  exact hu.inner_finsupp_eq_zero hxv' hl
 
 variable [FiniteDimensional 𝕜 E]
 
@@ -1350,9 +1350,9 @@ theorem maximal_orthonormal_iff_basis_of_finiteDimensional (hv : Orthonormal �
   have hv_coe : range ((↑) : v → E) = v
   simp
   constructor
-  · refine fun h => ⟨Basis.mk hv.linearIndependent _, Basis.coe_mk _ ?_⟩
-    convert h.ge
-  · rintro ⟨h, coe_h⟩
-    rw [← h.span_eq, coe_h, hv_coe]
+  refine fun h => ⟨Basis.mk hv.linearIndependent _, Basis.coe_mk _ ?_⟩
+  convert h.ge
+  rintro ⟨h, coe_h⟩
+  rw [← h.span_eq, coe_h, hv_coe]
 
 end OrthonormalBasis

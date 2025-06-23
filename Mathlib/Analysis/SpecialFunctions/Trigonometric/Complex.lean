@@ -44,14 +44,14 @@ theorem cos_ne_zero_iff {θ : ℂ} : cos θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ (2 * k
 theorem sin_eq_zero_iff {θ : ℂ} : sin θ = 0 ↔ ∃ k : ℤ, θ = k * π := by
   rw [← Complex.cos_sub_pi_div_two, cos_eq_zero_iff]
   constructor
-  · rintro ⟨k, hk⟩
-    use k + 1
-    field_simp [eq_add_of_sub_eq hk]
-    ring
-  · rintro ⟨k, rfl⟩
-    use k - 1
-    field_simp
-    ring
+  rintro ⟨k, hk⟩
+  use k + 1
+  field_simp [eq_add_of_sub_eq hk]
+  ring
+  rintro ⟨k, rfl⟩
+  use k - 1
+  field_simp
+  ring
 
 theorem sin_ne_zero_iff {θ : ℂ} : sin θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π := by
   rw [← not_exists, not_iff_not, sin_eq_zero_iff]
@@ -118,17 +118,17 @@ theorem tan_add {x y : ℂ}
       (∃ k : ℤ, x = (2 * k + 1) * π / 2) ∧ ∃ l : ℤ, y = (2 * l + 1) * π / 2) :
     tan (x + y) = (tan x + tan y) / (1 - tan x * tan y) := by
   rcases h with (⟨h1, h2⟩ | ⟨⟨k, rfl⟩, ⟨l, rfl⟩⟩)
-  · rw [tan, sin_add, cos_add, ←
-      div_div_div_cancel_right (sin x * cos y + cos x * sin y)
-        (mul_ne_zero (cos_ne_zero_iff.mpr h1) (cos_ne_zero_iff.mpr h2)),
-      add_div, sub_div]
-    simp only [← div_mul_div_comm, tan, mul_one, one_mul, div_self (cos_ne_zero_iff.mpr h1),
-      div_self (cos_ne_zero_iff.mpr h2)]
-  · haveI t := tan_int_mul_pi_div_two
-    obtain ⟨hx, hy, hxy⟩ := t (2 * k + 1), t (2 * l + 1), t (2 * k + 1 + (2 * l + 1))
-    simp only [Int.cast_add, Int.cast_two, Int.cast_mul, Int.cast_one, hx, hy] at hx hy hxy
-    rw [hx, hy, add_zero, zero_div, mul_div_assoc, mul_div_assoc, ←
-      add_mul (2 * (k : ℂ) + 1) (2 * l + 1) (π / 2), ← mul_div_assoc, hxy]
+  rw [tan, sin_add, cos_add, ←
+    div_div_div_cancel_right (sin x * cos y + cos x * sin y)
+      (mul_ne_zero (cos_ne_zero_iff.mpr h1) (cos_ne_zero_iff.mpr h2)),
+    add_div, sub_div]
+  simp only [← div_mul_div_comm, tan, mul_one, one_mul, div_self (cos_ne_zero_iff.mpr h1),
+    div_self (cos_ne_zero_iff.mpr h2)]
+  haveI t := tan_int_mul_pi_div_two
+  obtain ⟨hx, hy, hxy⟩ := t (2 * k + 1), t (2 * l + 1), t (2 * k + 1 + (2 * l + 1))
+  simp only [Int.cast_add, Int.cast_two, Int.cast_mul, Int.cast_one, hx, hy] at hx hy hxy
+  rw [hx, hy, add_zero, zero_div, mul_div_assoc, mul_div_assoc, ←
+    add_mul (2 * (k : ℂ) + 1) (2 * l + 1) (π / 2), ← mul_div_assoc, hxy]
 
 theorem tan_add' {x y : ℂ}
     (h : (∀ k : ℤ, x ≠ (2 * k + 1) * π / 2) ∧ ∀ l : ℤ, y ≠ (2 * l + 1) * π / 2) :
@@ -137,9 +137,9 @@ theorem tan_add' {x y : ℂ}
 
 theorem tan_two_mul {z : ℂ} : tan (2 * z) = (2 : ℂ) * tan z / ((1 : ℂ) - tan z ^ 2) := by
   by_cases h : ∀ k : ℤ, z ≠ (2 * k + 1) * π / 2
-  · rw [two_mul, two_mul, sq, tan_add (Or.inl ⟨h, h⟩)]
-  · rw [not_forall_not] at h
-    rw [two_mul, two_mul, sq, tan_add (Or.inr ⟨h, h⟩)]
+  rw [two_mul, two_mul, sq, tan_add (Or.inl ⟨h, h⟩)]
+  rw [not_forall_not] at h
+  rw [two_mul, two_mul, sq, tan_add (Or.inr ⟨h, h⟩)]
 
 theorem tan_add_mul_I {x y : ℂ}
     (h :

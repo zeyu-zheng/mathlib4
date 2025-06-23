@@ -26,7 +26,7 @@ theorem imo2019_q1 (f : ℤ → ℤ) :
     (∀ a b : ℤ, f (2 * a) + 2 * f b = f (f (a + b))) ↔ f = 0 ∨ ∃ c, f = fun x => 2 * x + c := by
   constructor; swap
   -- easy way: f(x)=0 and f(x)=2x+c work.
-  · rintro (rfl | ⟨c, rfl⟩) <;> intros <;> norm_num; ring
+  rintro (rfl | ⟨c, rfl⟩) <;> intros <;> norm_num; ring
   -- hard way.
   intro hf
   -- functional equation
@@ -43,13 +43,13 @@ theorem imo2019_q1 (f : ℤ → ℤ) :
   obtain ⟨c, H⟩ : ∃ c, ∀ b, f b = c + m * b := by
     refine ⟨f 0, fun b => ?_⟩
     induction' b using Int.induction_on with b ihb b ihb
-    · simp
-    · simp [H, ihb, mul_add, add_assoc]
-    · rw [← sub_eq_of_eq_add (H _)]
-      simp [ihb]; ring
+    simp
+    simp [H, ihb, mul_add, add_assoc]
+    rw [← sub_eq_of_eq_add (H _)]
+    simp [ihb]; ring
   -- Now use `hf 0 0` and `hf 0 1` to show that `m ∈ {0, 2}`
   have H3 : 2 * c = m * c
   simpa [H, mul_add] using hf 0 0
   obtain rfl | rfl : 2 = m ∨ m = 0 := by simpa [H, mul_add, H3] using hf 0 1
-  · right; use c; ext b; simp [H, add_comm]
-  · left; ext b; simpa [H, two_ne_zero] using H3
+  right; use c; ext b; simp [H, add_comm]
+  left; ext b; simpa [H, two_ne_zero] using H3

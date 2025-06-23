@@ -92,8 +92,8 @@ example {p q r s : Prop} (pr : p ↔ r) (qs : q ↔ s) : p ∧ q ↔ r ∧ s := 
 example {f : ℕ → Prop} :
     (∃ k, f (3 + 2 + k) ∨ f (8 + 1 + k)) ↔ ∃ k, f (1 + 4 + k) ∨ f (2 + 7 + k) := by
   congrm (∃ k, f (?_ + k) ∨ f (?_ + k))
-  · guard_target =ₛ 3 + 2 = 1 + 4; simp
-  · guard_target =ₛ 8 + 1 = 2 + 7; simp
+  guard_target =ₛ 3 + 2 = 1 + 4; simp
+  guard_target =ₛ 8 + 1 = 2 + 7; simp
 
 example {a b : ℕ} (h : a = b) : (fun _ : ℕ => ∀ z, a + a = z) = (fun _ => ∀ z, b + a = z) := by
   congrm fun x => ∀ w, ?_ + a = w

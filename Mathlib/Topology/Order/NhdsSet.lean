@@ -47,8 +47,8 @@ theorem nhdsSet_Ioc (h : a < b) : 𝓝ˢ (Ioc a b) = 𝓝 b ⊔ 𝓟 (Ioo a b) :
 
 theorem nhdsSet_Icc (h : a ≤ b) : 𝓝ˢ (Icc a b) = 𝓝 a ⊔ 𝓝 b ⊔ 𝓟 (Ioo a b) := by
   rcases h.eq_or_lt with rfl | hlt
-  · simp
-  · rw [← Ioc_insert_left h, nhdsSet_insert, nhdsSet_Ioc hlt, sup_assoc]
+  simp
+  rw [← Ioc_insert_left h, nhdsSet_insert, nhdsSet_Ioc hlt, sup_assoc]
 
 /-!
 ### Lemmas about `Ixi _ ∈ 𝓝ˢ (Set.Ici _)`

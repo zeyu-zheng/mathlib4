@@ -537,9 +537,9 @@ theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
 open Classical in
 theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (Ico a b).card = (Icc a b).card - 1 := by
     by_cases h : a ≤ b
-    · rw [Icc_eq_cons_Ico h, card_cons]
-      exact (Nat.add_sub_cancel _ _).symm
-    · rw [Ico_eq_empty fun h' => h h'.le, Icc_eq_empty h, card_empty, Nat.zero_sub]
+    rw [Icc_eq_cons_Ico h, card_cons]
+    exact (Nat.add_sub_cancel _ _).symm
+    rw [Ico_eq_empty fun h' => h h'.le, Icc_eq_empty h, card_empty, Nat.zero_sub]
 
 theorem card_Ioc_eq_card_Icc_sub_one (a b : α) : (Ioc a b).card = (Icc a b).card - 1 :=
   @card_Ico_eq_card_Icc_sub_one αᵒᵈ _ _ _ _
@@ -547,9 +547,9 @@ theorem card_Ioc_eq_card_Icc_sub_one (a b : α) : (Ioc a b).card = (Icc a b).car
 open Classical in
 theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (Ioo a b).card = (Ico a b).card - 1 := by
     by_cases h : a < b
-    · rw [Ico_eq_cons_Ioo h, card_cons]
-      exact (Nat.add_sub_cancel _ _).symm
-    · rw [Ioo_eq_empty h, Ico_eq_empty h, card_empty, Nat.zero_sub]
+    rw [Ico_eq_cons_Ioo h, card_cons]
+    exact (Nat.add_sub_cancel _ _).symm
+    rw [Ioo_eq_empty h, Ico_eq_empty h, card_empty, Nat.zero_sub]
 
 theorem card_Ioo_eq_card_Ioc_sub_one (a b : α) : (Ioo a b).card = (Ioc a b).card - 1 :=
   @card_Ioo_eq_card_Ico_sub_one αᵒᵈ _ _ _ _
@@ -905,21 +905,21 @@ lemma transGen_wcovBy_of_le [Preorder α] [LocallyFiniteOrder α] {x y : α} (hx
     ⟨Ico_subset_Icc_self, not_subset.mpr ⟨y, ⟨right_mem_Icc.mpr hxy, right_not_mem_Ico⟩⟩⟩
   by_cases hxy' : y ≤ x
   -- If `y ≤ x`, then `x ⩿ y`
-  · exact .single <| wcovBy_of_le_of_le hxy hxy'
+  exact .single <| wcovBy_of_le_of_le hxy hxy'
   /- and if `¬ y ≤ x`, then `x < y`, not because it is a linear order, but because `x ≤ y`
   already. In that case, since `z` is maximal in `Ico x y`, then `z ⩿ y` and we can use the
   induction hypothesis to show that `Relation.TransGen (· ⩿ ·) x z`. -/
-  · have h_non : (Ico x y).Nonempty := ⟨x, mem_Ico.mpr ⟨le_rfl, lt_of_le_not_le hxy hxy'⟩⟩
-    obtain ⟨z, z_mem, hz⟩ := (Ico x y).exists_maximal h_non
-    have z_card : (Icc x z).card <(Icc x y).card := calc
-      (Icc x z).card ≤ (Ico x y).card :=
-        card_le_card <| Icc_subset_Ico_right (mem_Ico.mp z_mem).2
-      _              < (Icc x y).card := this
-    have h₁ := transGen_wcovBy_of_le (mem_Ico.mp z_mem).1
-    have h₂ : z ⩿ y := by
-      refine ⟨(mem_Ico.mp z_mem).2.le, fun c hzc hcy ↦ hz c ?_ hzc⟩
-      exact mem_Ico.mpr <| ⟨(mem_Ico.mp z_mem).1.trans hzc.le, hcy⟩
-    exact .tail h₁ h₂
+  have h_non : (Ico x y).Nonempty := ⟨x, mem_Ico.mpr ⟨le_rfl, lt_of_le_not_le hxy hxy'⟩⟩
+  obtain ⟨z, z_mem, hz⟩ := (Ico x y).exists_maximal h_non
+  have z_card : (Icc x z).card <(Icc x y).card := calc
+    (Icc x z).card ≤ (Ico x y).card :=
+      card_le_card <| Icc_subset_Ico_right (mem_Ico.mp z_mem).2
+    _              < (Icc x y).card := this
+  have h₁ := transGen_wcovBy_of_le (mem_Ico.mp z_mem).1
+  have h₂ : z ⩿ y := by
+    refine ⟨(mem_Ico.mp z_mem).2.le, fun c hzc hcy ↦ hz c ?_ hzc⟩
+    exact mem_Ico.mpr <| ⟨(mem_Ico.mp z_mem).1.trans hzc.le, hcy⟩
+  exact .tail h₁ h₂
 termination_by (Icc x y).card
 
 /-- In a locally finite preorder, `≤` is the transitive closure of `⩿`. -/
@@ -953,11 +953,11 @@ lemma transGen_covBy_of_lt [Preorder α] [LocallyFiniteOrder α] {x y : α} (hxy
   by_cases hxz : x < z
   /- when `x < z`, then we may use the induction hypothesis to get a chain
   `Relation.TransGen (· ⋖ ·) x z`, which we can extend with `Relation.TransGen.tail`. -/
-  · exact .tail (transGen_covBy_of_lt hxz) hzy
+  exact .tail (transGen_covBy_of_lt hxz) hzy
   /- when `¬ x < z`, then actually `z ≤ x` (not because it's a linear order, but because
   `x ≤ z`), and since `z ⋖ y` we conclude that `x ⋖ y` , then `Relation.TransGen.single`. -/
-  · simp only [lt_iff_le_not_le, not_and, not_not] at hxz
-    exact .single (hzy.of_le_of_lt (hxz (mem_Ico.mp z_mem).1) hxy)
+  simp only [lt_iff_le_not_le, not_and, not_not] at hxz
+  exact .single (hzy.of_le_of_lt (hxz (mem_Ico.mp z_mem).1) hxy)
 termination_by (Ico x y).card
 
 /-- In a locally finite preorder, `<` is the transitive closure of `⋖`. -/

@@ -138,10 +138,10 @@ theorem comp_hasFDerivAt_iff' {f : G → E} {x : G} {f' : G →L[𝕜] F} :
 theorem comp_fderivWithin {f : G → E} {s : Set G} {x : G} (hxs : UniqueDiffWithinAt 𝕜 s x) :
     fderivWithin 𝕜 (iso ∘ f) s x = (iso : E →L[𝕜] F).comp (fderivWithin 𝕜 f s x) := by
   by_cases h : DifferentiableWithinAt 𝕜 f s x
-  · rw [fderiv.comp_fderivWithin x iso.differentiableAt h hxs, iso.fderiv]
-  · have : ¬DifferentiableWithinAt 𝕜 (iso ∘ f) s x := mt iso.comp_differentiableWithinAt_iff.1 h
-    rw [fderivWithin_zero_of_not_differentiableWithinAt h,
-      fderivWithin_zero_of_not_differentiableWithinAt this, ContinuousLinearMap.comp_zero]
+  rw [fderiv.comp_fderivWithin x iso.differentiableAt h hxs, iso.fderiv]
+  have : ¬DifferentiableWithinAt 𝕜 (iso ∘ f) s x := mt iso.comp_differentiableWithinAt_iff.1 h
+  rw [fderivWithin_zero_of_not_differentiableWithinAt h,
+    fderivWithin_zero_of_not_differentiableWithinAt this, ContinuousLinearMap.comp_zero]
 
 theorem comp_fderiv {f : G → E} {x : G} :
     fderiv 𝕜 (iso ∘ f) x = (iso : E →L[𝕜] F).comp (fderiv 𝕜 f x) := by
@@ -227,12 +227,12 @@ theorem comp_right_fderivWithin {f : F → G} {s : Set F} {x : E}
     fderivWithin 𝕜 (f ∘ iso) (iso ⁻¹' s) x =
       (fderivWithin 𝕜 f s (iso x)).comp (iso : E →L[𝕜] F) := by
   by_cases h : DifferentiableWithinAt 𝕜 f s (iso x)
-  · exact (iso.comp_right_hasFDerivWithinAt_iff.2 h.hasFDerivWithinAt).fderivWithin hxs
-  · have : ¬DifferentiableWithinAt 𝕜 (f ∘ iso) (iso ⁻¹' s) x := by
-      intro h'
-      exact h (iso.comp_right_differentiableWithinAt_iff.1 h')
-    rw [fderivWithin_zero_of_not_differentiableWithinAt h,
-      fderivWithin_zero_of_not_differentiableWithinAt this, ContinuousLinearMap.zero_comp]
+  exact (iso.comp_right_hasFDerivWithinAt_iff.2 h.hasFDerivWithinAt).fderivWithin hxs
+  have : ¬DifferentiableWithinAt 𝕜 (f ∘ iso) (iso ⁻¹' s) x := by
+    intro h'
+    exact h (iso.comp_right_differentiableWithinAt_iff.1 h')
+  rw [fderivWithin_zero_of_not_differentiableWithinAt h,
+    fderivWithin_zero_of_not_differentiableWithinAt this, ContinuousLinearMap.zero_comp]
 
 theorem comp_right_fderiv {f : F → G} {x : E} :
     fderiv 𝕜 (f ∘ iso) x = (fderiv 𝕜 f (iso x)).comp (iso : E →L[𝕜] F) := by
@@ -351,12 +351,12 @@ theorem HasStrictFDerivAt.of_local_left_inverse {f : E → F} {f' : E ≃L[𝕜]
   clear this
   refine ((hf.comp_tendsto hg).symm.congr'
     (hfg.mono ?_) (eventually_of_forall fun _ => rfl)).trans_isBigO ?_
-  · rintro p ⟨hp1, hp2⟩
-    simp [hp1, hp2]
-  · refine (hf.isBigO_sub_rev.comp_tendsto hg).congr' (eventually_of_forall fun _ => rfl)
-      (hfg.mono ?_)
-    rintro p ⟨hp1, hp2⟩
-    simp only [(· ∘ ·), hp1, hp2]
+  rintro p ⟨hp1, hp2⟩
+  simp [hp1, hp2]
+  refine (hf.isBigO_sub_rev.comp_tendsto hg).congr' (eventually_of_forall fun _ => rfl)
+    (hfg.mono ?_)
+  rintro p ⟨hp1, hp2⟩
+  simp only [(· ∘ ·), hp1, hp2]
 
 /-- If `f (g y) = y` for `y` in some neighborhood of `a`, `g` is continuous at `a`, and `f` has an
 invertible derivative `f'` at `g a`, then `g` has the derivative `f'⁻¹` at `a`.
@@ -373,12 +373,12 @@ theorem HasFDerivAt.of_local_left_inverse {f : E → F} {f' : E ≃L[𝕜] F} {g
   refine HasFDerivAtFilter.of_isLittleO <| this.trans_isLittleO ?_
   clear this
   refine ((hf.isLittleO.comp_tendsto hg).symm.congr' (hfg.mono ?_) .rfl).trans_isBigO ?_
-  · intro p hp
-    simp [hp, hfg.self_of_nhds]
-  · refine ((hf.isBigO_sub_rev f'.antilipschitz).comp_tendsto hg).congr'
-      (eventually_of_forall fun _ => rfl) (hfg.mono ?_)
-    rintro p hp
-    simp only [(· ∘ ·), hp, hfg.self_of_nhds]
+  intro p hp
+  simp [hp, hfg.self_of_nhds]
+  refine ((hf.isBigO_sub_rev f'.antilipschitz).comp_tendsto hg).congr'
+    (eventually_of_forall fun _ => rfl) (hfg.mono ?_)
+  rintro p hp
+  simp only [(· ∘ ·), hp, hfg.self_of_nhds]
 
 /-- If `f` is a partial homeomorphism defined on a neighbourhood of `f.symm a`, and `f` has an
 invertible derivative `f'` in the sense of strict differentiability at `f.symm a`, then `f.symm` has

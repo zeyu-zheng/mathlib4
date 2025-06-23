@@ -202,51 +202,51 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
   apply eq_of_infinite_eval_eq
   -- The two polynomials agree on all `x` of the form `x = y + y⁻¹`.
   apply @Set.Infinite.mono _ { x : K | ∃ y, x = y + y⁻¹ ∧ y ≠ 0 }
-  · rintro _ ⟨x, rfl, hx⟩
-    simp only [eval_X, eval_pow, Set.mem_setOf_eq, @add_pow_char K _ p,
-      dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), inv_pow, ZMod.castHom_apply,
-      ZMod.cast_one']
+  rintro _ ⟨x, rfl, hx⟩
+  simp only [eval_X, eval_pow, Set.mem_setOf_eq, @add_pow_char K _ p,
+    dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), inv_pow, ZMod.castHom_apply,
+    ZMod.cast_one']
   -- Now we need to show that the set of such `x` is infinite.
   -- If the set is finite, then we will show that `K` is also finite.
-  · intro h
-    rw [← Set.infinite_univ_iff] at H
-    apply H
-    -- To each `x` of the form `x = y + y⁻¹`
-    -- we `bind` the set of `y` that solve the equation `x = y + y⁻¹`.
-    -- For every `x`, that set is finite (since it is governed by a quadratic equation).
-    -- For the moment, we claim that all these sets together cover `K`.
-    suffices (Set.univ : Set K) =
-        ⋃ x ∈ { x : K | ∃ y : K, x = y + y⁻¹ ∧ y ≠ 0 }, { y | x = y + y⁻¹ ∨ y = 0 }  by
-      rw [this]
-      clear this
-      refine h.biUnion fun x _ => ?_
-      -- The following quadratic polynomial has as solutions the `y` for which `x = y + y⁻¹`.
-      let φ : K[X] := X ^ 2 - C x * X + 1
-      have hφ : φ ≠ 0 := by
-        intro H
-        have : φ.eval 0 = 0 := by rw [H, eval_zero]
-        simpa [φ, eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul,
-          mul_zero, sq, zero_add, one_ne_zero]
-      convert (φ.roots ∪ {0}).toFinset.finite_toSet using 1
-      ext1 y
-      simp only [φ, Multiset.mem_toFinset, Set.mem_setOf_eq, Finset.mem_coe, Multiset.mem_union,
-        mem_roots hφ, IsRoot, eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one,
-        Multiset.mem_singleton]
-      by_cases hy : y = 0
-      · simp only [hy, eq_self_iff_true, or_true_iff]
-      apply or_congr _ Iff.rfl
-      rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mul, inv_mul_cancel hy]
-      apply eq_iff_eq_cancel_right.mpr
-      ring
-    -- Finally, we prove the claim that our finite union of finite sets covers all of `K`.
-    apply (Set.eq_univ_of_forall _).symm
-    intro x
-    simp only [exists_prop, Set.mem_iUnion, Set.bind_def, Ne, Set.mem_setOf_eq]
-    by_cases hx : x = 0
-    · simp only [hx, and_true_iff, eq_self_iff_true, inv_zero, or_true_iff]
-      exact ⟨_, 1, rfl, one_ne_zero⟩
-    · simp only [hx, or_false_iff, exists_eq_right]
-      exact ⟨_, rfl, hx⟩
+  intro h
+  rw [← Set.infinite_univ_iff] at H
+  apply H
+  -- To each `x` of the form `x = y + y⁻¹`
+  -- we `bind` the set of `y` that solve the equation `x = y + y⁻¹`.
+  -- For every `x`, that set is finite (since it is governed by a quadratic equation).
+  -- For the moment, we claim that all these sets together cover `K`.
+  suffices (Set.univ : Set K) =
+      ⋃ x ∈ { x : K | ∃ y : K, x = y + y⁻¹ ∧ y ≠ 0 }, { y | x = y + y⁻¹ ∨ y = 0 }  by
+    rw [this]
+    clear this
+    refine h.biUnion fun x _ => ?_
+    -- The following quadratic polynomial has as solutions the `y` for which `x = y + y⁻¹`.
+    let φ : K[X] := X ^ 2 - C x * X + 1
+    have hφ : φ ≠ 0 := by
+      intro H
+      have : φ.eval 0 = 0 := by rw [H, eval_zero]
+      simpa [φ, eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul,
+        mul_zero, sq, zero_add, one_ne_zero]
+    convert (φ.roots ∪ {0}).toFinset.finite_toSet using 1
+    ext1 y
+    simp only [φ, Multiset.mem_toFinset, Set.mem_setOf_eq, Finset.mem_coe, Multiset.mem_union,
+      mem_roots hφ, IsRoot, eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one,
+      Multiset.mem_singleton]
+    by_cases hy : y = 0
+    simp only [hy, eq_self_iff_true, or_true_iff]
+    apply or_congr _ Iff.rfl
+    rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mul, inv_mul_cancel hy]
+    apply eq_iff_eq_cancel_right.mpr
+    ring
+  -- Finally, we prove the claim that our finite union of finite sets covers all of `K`.
+  apply (Set.eq_univ_of_forall _).symm
+  intro x
+  simp only [exists_prop, Set.mem_iUnion, Set.bind_def, Ne, Set.mem_setOf_eq]
+  by_cases hx : x = 0
+  simp only [hx, and_true_iff, eq_self_iff_true, inv_zero, or_true_iff]
+  exact ⟨_, 1, rfl, one_ne_zero⟩
+  simp only [hx, or_false_iff, exists_eq_right]
+  exact ⟨_, rfl, hx⟩
 
 theorem dickson_one_one_charP (p : ℕ) [Fact p.Prime] [CharP R p] : dickson 1 (1 : R) p = X ^ p := by
   have h : (1 : R) = ZMod.castHom (dvd_refl p) R 1

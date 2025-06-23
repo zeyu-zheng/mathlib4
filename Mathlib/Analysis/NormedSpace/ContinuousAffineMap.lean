@@ -93,13 +93,13 @@ theorem contLinear_eq_zero_iff_exists_const (f : P →ᴬ[R] Q) :
     f.contLinear = 0 ↔ ∃ q, f = const R P q := by
   have h₁ : f.contLinear = 0 ↔ (f : P →ᵃ[R] Q).linear = 0
   refine ⟨fun h => ?_, fun h => ?_⟩ <;> ext
-  · rw [← coe_contLinear_eq_linear, h]; rfl
-  · rw [← coe_linear_eq_coe_contLinear, h]; rfl
+  rw [← coe_contLinear_eq_linear, h]; rfl
+  rw [← coe_linear_eq_coe_contLinear, h]; rfl
   have h₂ : ∀ q : Q, f = const R P q ↔ (f : P →ᵃ[R] Q) = AffineMap.const R P q
   intro q
   refine ⟨fun h => ?_, fun h => ?_⟩ <;> ext
-  · rw [h]; rfl
-  · rw [← coe_to_affineMap, h]; rfl
+  rw [h]; rfl
+  rw [← coe_to_affineMap, h]; rfl
   simp_rw [h₁, h₂]
   exact (f : P →ᵃ[R] Q).linear_eq_zero_iff_exists_const
 
@@ -171,16 +171,16 @@ noncomputable instance : NormedAddCommGroup (V →ᴬ[𝕜] W) :=
             (norm_add_le _ _).trans (add_le_add (le_max_right _ _) (le_max_right _ _))⟩
       eq_zero_of_map_eq_zero' := fun f h₀ => by
         rcases max_eq_iff.mp h₀ with (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩) <;> rw [h₁] at h₂
-        · rw [norm_le_zero_iff, contLinear_eq_zero_iff_exists_const] at h₂
-          obtain ⟨q, rfl⟩ := h₂
-          simp only [norm_eq_zero, coe_const, Function.const_apply] at h₁
-          rw [h₁]
-          rfl
-        · rw [norm_eq_zero', contLinear_eq_zero_iff_exists_const] at h₁
-          obtain ⟨q, rfl⟩ := h₁
-          simp only [norm_le_zero_iff, coe_const, Function.const_apply] at h₂
-          rw [h₂]
-          rfl }
+        rw [norm_le_zero_iff, contLinear_eq_zero_iff_exists_const] at h₂
+        obtain ⟨q, rfl⟩ := h₂
+        simp only [norm_eq_zero, coe_const, Function.const_apply] at h₁
+        rw [h₁]
+        rfl
+        rw [norm_eq_zero', contLinear_eq_zero_iff_exists_const] at h₁
+        obtain ⟨q, rfl⟩ := h₁
+        simp only [norm_le_zero_iff, coe_const, Function.const_apply] at h₂
+        rw [h₂]
+        rfl }
 
 set_option maxSynthPendingDepth 2 in
 instance : NormedSpace 𝕜 (V →ᴬ[𝕜] W) where
@@ -191,20 +191,20 @@ instance : NormedSpace 𝕜 (V →ᴬ[𝕜] W) where
 theorem norm_comp_le (g : W₂ →ᴬ[𝕜] V) : ‖f.comp g‖ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ := by
   rw [norm_def, max_le_iff]
   constructor
-  · calc
-      ‖f.comp g 0‖ = ‖f (g 0)‖ := by simp
-      _ = ‖f.contLinear (g 0) + f 0‖ := by rw [f.decomp]; simp
-      _ ≤ ‖f.contLinear‖ * ‖g 0‖ + ‖f 0‖ :=
-        ((norm_add_le _ _).trans (add_le_add_right (f.contLinear.le_opNorm _) _))
-      _ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ :=
-        add_le_add_right
-          (mul_le_mul f.norm_contLinear_le g.norm_image_zero_le (norm_nonneg _) (norm_nonneg _)) _
-  · calc
-      ‖(f.comp g).contLinear‖ ≤ ‖f.contLinear‖ * ‖g.contLinear‖ :=
-        (g.comp_contLinear f).symm ▸ f.contLinear.opNorm_comp_le _
-      _ ≤ ‖f‖ * ‖g‖ :=
-        (mul_le_mul f.norm_contLinear_le g.norm_contLinear_le (norm_nonneg _) (norm_nonneg _))
-      _ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ := by rw [le_add_iff_nonneg_right]; apply norm_nonneg
+  calc
+    ‖f.comp g 0‖ = ‖f (g 0)‖ := by simp
+    _ = ‖f.contLinear (g 0) + f 0‖ := by rw [f.decomp]; simp
+    _ ≤ ‖f.contLinear‖ * ‖g 0‖ + ‖f 0‖ :=
+      ((norm_add_le _ _).trans (add_le_add_right (f.contLinear.le_opNorm _) _))
+    _ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ :=
+      add_le_add_right
+        (mul_le_mul f.norm_contLinear_le g.norm_image_zero_le (norm_nonneg _) (norm_nonneg _)) _
+  calc
+    ‖(f.comp g).contLinear‖ ≤ ‖f.contLinear‖ * ‖g.contLinear‖ :=
+      (g.comp_contLinear f).symm ▸ f.contLinear.opNorm_comp_le _
+    _ ≤ ‖f‖ * ‖g‖ :=
+      (mul_le_mul f.norm_contLinear_le g.norm_contLinear_le (norm_nonneg _) (norm_nonneg _))
+    _ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ := by rw [le_add_iff_nonneg_right]; apply norm_nonneg
 
 variable (𝕜 V W)
 

@@ -144,17 +144,17 @@ theorem range_pullback_to_prod {X Y Z : TopCat} (f : X ⟶ Z) (g : Y ⟶ Z) :
       { x | (Limits.prod.fst ≫ f) x = (Limits.prod.snd ≫ g) x } := by
   ext x
   constructor
-  · rintro ⟨y, rfl⟩
-    change (_ ≫ _ ≫ f) _ = (_ ≫ _ ≫ g) _ -- new `change` after #13170
-    simp [pullback.condition]
-  · rintro (h : f (_, _).1 = g (_, _).2)
-    use (pullbackIsoProdSubtype f g).inv ⟨⟨_, _⟩, h⟩
-    change (forget TopCat).map _ _ = _ -- new `change` after #13170
-    apply Concrete.limit_ext
-    rintro ⟨⟨⟩⟩ <;>
-    erw [← comp_apply, ← comp_apply, limit.lift_π] <;> -- now `erw` after #13170
-    -- This used to be `simp` before leanprover/lean4#2644
-    aesop_cat
+  rintro ⟨y, rfl⟩
+  change (_ ≫ _ ≫ f) _ = (_ ≫ _ ≫ g) _ -- new `change` after #13170
+  simp [pullback.condition]
+  rintro (h : f (_, _).1 = g (_, _).2)
+  use (pullbackIsoProdSubtype f g).inv ⟨⟨_, _⟩, h⟩
+  change (forget TopCat).map _ _ = _ -- new `change` after #13170
+  apply Concrete.limit_ext
+  rintro ⟨⟨⟩⟩ <;>
+  erw [← comp_apply, ← comp_apply, limit.lift_π] <;> -- now `erw` after #13170
+  -- This used to be `simp` before leanprover/lean4#2644
+  aesop_cat
 
 /-- The pullback along an embedding is (isomorphic to) the preimage. -/
 noncomputable
@@ -197,11 +197,11 @@ theorem range_pullback_map {W X Y Z S T : TopCat} (f₁ : W ⟶ S) (f₂ : X ⟶
       (pullback.fst g₁ g₂) ⁻¹' Set.range i₁ ∩ (pullback.snd g₁ g₂) ⁻¹' Set.range i₂ := by
   ext
   constructor
-  · rintro ⟨y, rfl⟩
-    simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_range]
-    erw [← comp_apply, ← comp_apply] -- now `erw` after #13170
-    simp only [limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app, comp_apply]
-    exact ⟨exists_apply_eq_apply _ _, exists_apply_eq_apply _ _⟩
+  rintro ⟨y, rfl⟩
+  simp only [Set.mem_inter_iff, Set.mem_preimage, Set.mem_range]
+  erw [← comp_apply, ← comp_apply] -- now `erw` after #13170
+  simp only [limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app, comp_apply]
+  exact ⟨exists_apply_eq_apply _ _, exists_apply_eq_apply _ _⟩
   rintro ⟨⟨x₁, hx₁⟩, ⟨x₂, hx₂⟩⟩
   have : f₁ x₁ = f₂ x₂
   apply (TopCat.mono_iff_injective _).mp H₃
@@ -213,41 +213,41 @@ theorem range_pullback_map {W X Y Z S T : TopCat} (f₁ : W ⟶ S) (f₂ : X ⟶
   apply Concrete.limit_ext
   rintro (_ | _ | _) <;>
   erw [← comp_apply, ← comp_apply] -- now `erw` after #13170
-  · simp only [Category.assoc, limit.lift_π, PullbackCone.mk_π_app_one]
-    simp only [cospan_one, pullbackIsoProdSubtype_inv_fst_assoc, comp_apply]
-    erw [pullbackFst_apply, hx₁]
-    rw [← limit.w _ WalkingCospan.Hom.inl, cospan_map_inl, comp_apply (g := g₁)]
-    rfl -- `rfl` was not needed before #13170
-  · simp only [cospan_left, limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app,
-      pullbackIsoProdSubtype_inv_fst_assoc, comp_apply]
-    erw [hx₁] -- now `erw` after #13170
-    rfl -- `rfl` was not needed before #13170
-  · simp only [cospan_right, limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app,
-      pullbackIsoProdSubtype_inv_snd_assoc, comp_apply]
-    erw [hx₂] -- now `erw` after #13170
-    rfl -- `rfl` was not needed before #13170
+  simp only [Category.assoc, limit.lift_π, PullbackCone.mk_π_app_one]
+  simp only [cospan_one, pullbackIsoProdSubtype_inv_fst_assoc, comp_apply]
+  erw [pullbackFst_apply, hx₁]
+  rw [← limit.w _ WalkingCospan.Hom.inl, cospan_map_inl, comp_apply (g := g₁)]
+  rfl -- `rfl` was not needed before #13170
+  simp only [cospan_left, limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app,
+    pullbackIsoProdSubtype_inv_fst_assoc, comp_apply]
+  erw [hx₁] -- now `erw` after #13170
+  rfl -- `rfl` was not needed before #13170
+  simp only [cospan_right, limit.lift_π, PullbackCone.mk_pt, PullbackCone.mk_π_app,
+    pullbackIsoProdSubtype_inv_snd_assoc, comp_apply]
+  erw [hx₂] -- now `erw` after #13170
+  rfl -- `rfl` was not needed before #13170
 
 theorem pullback_fst_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
     Set.range (pullback.fst f g) = { x : X | ∃ y : Y, f x = g y } := by
   ext x
   constructor
-  · rintro ⟨(y : (forget TopCat).obj _), rfl⟩
-    use (pullback.snd f g) y
-    exact ConcreteCategory.congr_hom pullback.condition y
-  · rintro ⟨y, eq⟩
-    use (TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨x, y⟩, eq⟩
-    rw [pullbackIsoProdSubtype_inv_fst_apply]
+  rintro ⟨(y : (forget TopCat).obj _), rfl⟩
+  use (pullback.snd f g) y
+  exact ConcreteCategory.congr_hom pullback.condition y
+  rintro ⟨y, eq⟩
+  use (TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨x, y⟩, eq⟩
+  rw [pullbackIsoProdSubtype_inv_fst_apply]
 
 theorem pullback_snd_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
     Set.range (pullback.snd f g) = { y : Y | ∃ x : X, f x = g y } := by
   ext y
   constructor
-  · rintro ⟨(x : (forget TopCat).obj _), rfl⟩
-    use (pullback.fst f g) x
-    exact ConcreteCategory.congr_hom pullback.condition x
-  · rintro ⟨x, eq⟩
-    use (TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨x, y⟩, eq⟩
-    rw [pullbackIsoProdSubtype_inv_snd_apply]
+  rintro ⟨(x : (forget TopCat).obj _), rfl⟩
+  use (pullback.fst f g) x
+  exact ConcreteCategory.congr_hom pullback.condition x
+  rintro ⟨x, eq⟩
+  use (TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨x, y⟩, eq⟩
+  rw [pullbackIsoProdSubtype_inv_snd_apply]
 
 /-- If there is a diagram where the morphisms `W ⟶ Y` and `X ⟶ Z` are embeddings,
 then the induced morphism `W ×ₛ X ⟶ Y ×ₜ Z` is also an embedding.
@@ -291,14 +291,14 @@ theorem pullback_map_openEmbedding_of_open_embeddings {W X Y Z S T : TopCat.{u}}
     (H₂ : OpenEmbedding i₂) (i₃ : S ⟶ T) [H₃ : Mono i₃] (eq₁ : f₁ ≫ i₃ = i₁ ≫ g₁)
     (eq₂ : f₂ ≫ i₃ = i₂ ≫ g₂) : OpenEmbedding (pullback.map f₁ f₂ g₁ g₂ i₁ i₂ i₃ eq₁ eq₂) := by
   constructor
-  · apply
-      pullback_map_embedding_of_embeddings f₁ f₂ g₁ g₂ H₁.toEmbedding H₂.toEmbedding i₃ eq₁ eq₂
-  · rw [range_pullback_map]
-    apply IsOpen.inter <;> apply Continuous.isOpen_preimage
-    · apply ContinuousMap.continuous_toFun
-    · exact H₁.isOpen_range
-    · apply ContinuousMap.continuous_toFun
-    · exact H₂.isOpen_range
+  apply
+    pullback_map_embedding_of_embeddings f₁ f₂ g₁ g₂ H₁.toEmbedding H₂.toEmbedding i₃ eq₁ eq₂
+  rw [range_pullback_map]
+  apply IsOpen.inter <;> apply Continuous.isOpen_preimage
+  apply ContinuousMap.continuous_toFun
+  exact H₁.isOpen_range
+  apply ContinuousMap.continuous_toFun
+  exact H₂.isOpen_range
 
 theorem snd_embedding_of_left_embedding {X Y S : TopCat} {f : X ⟶ S} (H : Embedding f) (g : Y ⟶ S) :
     Embedding <| ⇑(pullback.snd f g) := by
@@ -380,36 +380,36 @@ theorem pullback_snd_image_fst_preimage (f : X ⟶ Z) (g : Y ⟶ Z) (U : Set X) 
       g ⁻¹' (f '' U) := by
   ext x
   constructor
-  · rintro ⟨(y : (forget TopCat).obj _), hy, rfl⟩
-    exact
-      ⟨(pullback.fst f g) y, hy, ConcreteCategory.congr_hom pullback.condition y⟩
-  · rintro ⟨y, hy, eq⟩
+  rintro ⟨(y : (forget TopCat).obj _), hy, rfl⟩
+  exact
+    ⟨(pullback.fst f g) y, hy, ConcreteCategory.congr_hom pullback.condition y⟩
+  rintro ⟨y, hy, eq⟩
   -- next 5 lines were
   -- `exact ⟨(TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨_, _⟩, eq⟩, by simpa, by simp⟩` before #13170
-    refine ⟨(TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨_, _⟩, eq⟩, ?_, ?_⟩
-    · simp only [coe_of, Set.mem_preimage]
-      convert hy
-      erw [pullbackIsoProdSubtype_inv_fst_apply]
-    · rw [pullbackIsoProdSubtype_inv_snd_apply]
+  refine ⟨(TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨_, _⟩, eq⟩, ?_, ?_⟩
+  simp only [coe_of, Set.mem_preimage]
+  convert hy
+  erw [pullbackIsoProdSubtype_inv_fst_apply]
+  rw [pullbackIsoProdSubtype_inv_snd_apply]
 
 theorem pullback_fst_image_snd_preimage (f : X ⟶ Z) (g : Y ⟶ Z) (U : Set Y) :
     (pullback.fst f g) '' ((pullback.snd f g) ⁻¹' U) =
       f ⁻¹' (g '' U) := by
   ext x
   constructor
-  · rintro ⟨(y : (forget TopCat).obj _), hy, rfl⟩
-    exact
-      ⟨(pullback.snd f g) y, hy,
-        (ConcreteCategory.congr_hom pullback.condition y).symm⟩
-  · rintro ⟨y, hy, eq⟩
-    -- next 5 lines were
-    -- `exact ⟨(TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨_, _⟩, eq.symm⟩, by simpa, by simp⟩`
-    -- before #13170
-    refine ⟨(TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨_, _⟩, eq.symm⟩, ?_, ?_⟩
-    · simp only [coe_of, Set.mem_preimage]
-      convert hy
-      erw [pullbackIsoProdSubtype_inv_snd_apply]
-    · rw [pullbackIsoProdSubtype_inv_fst_apply]
+  rintro ⟨(y : (forget TopCat).obj _), hy, rfl⟩
+  exact
+    ⟨(pullback.snd f g) y, hy,
+      (ConcreteCategory.congr_hom pullback.condition y).symm⟩
+  rintro ⟨y, hy, eq⟩
+  -- next 5 lines were
+  -- `exact ⟨(TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨_, _⟩, eq.symm⟩, by simpa, by simp⟩`
+  -- before #13170
+  refine ⟨(TopCat.pullbackIsoProdSubtype f g).inv ⟨⟨_, _⟩, eq.symm⟩, ?_, ?_⟩
+  simp only [coe_of, Set.mem_preimage]
+  convert hy
+  erw [pullbackIsoProdSubtype_inv_snd_apply]
+  rw [pullbackIsoProdSubtype_inv_fst_apply]
 
 end Pullback
 
@@ -436,12 +436,12 @@ theorem coequalizer_isOpen_iff (F : WalkingParallelPair ⥤ TopCat.{u})
     IsOpen U ↔ IsOpen (colimit.ι F WalkingParallelPair.one ⁻¹' U) := by
   rw [colimit_isOpen_iff]
   constructor
-  · intro H
-    exact H _
-  · intro H j
-    cases j
-    · rw [← colimit.w F WalkingParallelPairHom.left]
-      exact (F.map WalkingParallelPairHom.left).continuous_toFun.isOpen_preimage _ H
-    · exact H
+  intro H
+  exact H _
+  intro H j
+  cases j
+  rw [← colimit.w F WalkingParallelPairHom.left]
+  exact (F.map WalkingParallelPairHom.left).continuous_toFun.isOpen_preimage _ H
+  exact H
 
 end TopCat

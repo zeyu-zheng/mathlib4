@@ -28,7 +28,7 @@ theorem eq_one_iff_odd {n : ℕ} : (n : ZMod 2) = 1 ↔ Odd n := by
 
 theorem ne_zero_iff_odd {n : ℕ} : (n : ZMod 2) ≠ 0 ↔ Odd n := by
   constructor <;>
-    · contrapose
-      simp [eq_zero_iff_even]
+  · contrapose
+    simp [eq_zero_iff_even]
 
 end ZMod

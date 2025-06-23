@@ -74,9 +74,9 @@ theorem Subalgebra.isSimpleOrder_of_finrank_prime (F A) [Field F] [Ring A] [IsDo
       haveI : FiniteDimensional _ _ := .of_finrank_pos hp.pos
       letI := divisionRingOfFiniteDimensional F K
       refine (hp.eq_one_or_self_of_dvd _ ⟨_, (finrank_mul_finrank F K A).symm⟩).imp ?_ fun h => ?_
-      · exact fun h' => Subalgebra.eq_bot_of_finrank_one h'
-      · exact
-          Algebra.toSubmodule_eq_top.1 (eq_top_of_finrank_eq <| K.finrank_toSubmodule.trans h) }
+      exact fun h' => Subalgebra.eq_bot_of_finrank_one h'
+      exact
+        Algebra.toSubmodule_eq_top.1 (eq_top_of_finrank_eq <| K.finrank_toSubmodule.trans h) }
 -- TODO: `IntermediateField` version
 
 @[deprecated (since := "2024-01-12")]

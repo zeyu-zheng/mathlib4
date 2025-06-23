@@ -178,24 +178,24 @@ variable [NormedField 𝕜] [NormedRing 𝕝] [NormedSpace 𝕜 𝕝] [AddCommGr
 /-- Scalar multiplication (by possibly different types) of a balanced set is monotone. -/
 theorem Balanced.smul_mono (hs : Balanced 𝕝 s) {a : 𝕝} {b : 𝕜} (h : ‖a‖ ≤ ‖b‖) : a • s ⊆ b • s := by
   obtain rfl | hb := eq_or_ne b 0
-  · rw [norm_zero, norm_le_zero_iff] at h
-    simp only [h, ← image_smul, zero_smul, Subset.rfl]
-  · calc
-      a • s = b • (b⁻¹ • a) • s := by rw [smul_assoc, smul_inv_smul₀ hb]
-      _ ⊆ b • s := smul_set_mono <| hs _ <| by
-        rw [norm_smul, norm_inv, ← div_eq_inv_mul]
-        exact div_le_one_of_le h (norm_nonneg _)
+  rw [norm_zero, norm_le_zero_iff] at h
+  simp only [h, ← image_smul, zero_smul, Subset.rfl]
+  calc
+    a • s = b • (b⁻¹ • a) • s := by rw [smul_assoc, smul_inv_smul₀ hb]
+    _ ⊆ b • s := smul_set_mono <| hs _ <| by
+      rw [norm_smul, norm_inv, ← div_eq_inv_mul]
+      exact div_le_one_of_le h (norm_nonneg _)
 
 theorem Balanced.smul_mem_mono [SMulCommClass 𝕝 𝕜 E] (hs : Balanced 𝕝 s) {a : 𝕜} {b : 𝕝}
     (ha : a • x ∈ s) (hba : ‖b‖ ≤ ‖a‖) : b • x ∈ s := by
   rcases eq_or_ne a 0 with rfl | ha₀
-  · simp_all
-  · calc
-      b • x = (a⁻¹ • b) • a • x := by rw [smul_comm, smul_assoc, smul_inv_smul₀ ha₀]
-      _ ∈ s := by
-        refine hs.smul_mem ?_ ha
-        rw [norm_smul, norm_inv, ← div_eq_inv_mul]
-        exact div_le_one_of_le hba (norm_nonneg _)
+  simp_all
+  calc
+    b • x = (a⁻¹ • b) • a • x := by rw [smul_comm, smul_assoc, smul_inv_smul₀ ha₀]
+    _ ∈ s := by
+      refine hs.smul_mem ?_ ha
+      rw [norm_smul, norm_inv, ← div_eq_inv_mul]
+      exact div_le_one_of_le hba (norm_nonneg _)
 
 theorem Balanced.subset_smul (hA : Balanced 𝕜 A) (ha : 1 ≤ ‖a‖) : A ⊆ a • A := by
   rw [← @norm_one 𝕜] at ha; simpa using hA.smul_mono ha
@@ -229,9 +229,9 @@ theorem Balanced.zero_insert_interior (hA : Balanced 𝕜 A) :
   obtain rfl | h := eq_or_ne a 0
   · rw [zero_smul_set]
     exacts [subset_union_left, ⟨0, Or.inl rfl⟩]
-  · rw [← image_smul, image_insert_eq, smul_zero]
-    apply insert_subset_insert
-    exact ((isOpenMap_smul₀ h).mapsTo_interior <| hA.smul_mem ha).image_subset
+  rw [← image_smul, image_insert_eq, smul_zero]
+  apply insert_subset_insert
+  exact ((isOpenMap_smul₀ h).mapsTo_interior <| hA.smul_mem ha).image_subset
 
 @[deprecated Balanced.zero_insert_interior (since := "2024-02-03")]
 theorem balanced_zero_union_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 : Set E) ∪ interior A) :=

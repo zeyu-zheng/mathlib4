@@ -126,26 +126,26 @@ theorem IsInvertedBy.iff_of_iso (W : MorphismProperty C) {F₁ F₂ : C ⥤ D} (
 lemma IsInvertedBy.isoClosure_iff (W : MorphismProperty C) (F : C ⥤ D) :
     W.isoClosure.IsInvertedBy F ↔ W.IsInvertedBy F := by
   constructor
-  · intro h X Y f hf
-    exact h _ (W.le_isoClosure _ hf)
-  · intro h X Y f ⟨X', Y', f', hf', ⟨e⟩⟩
-    have : f = e.inv.left ≫ f' ≫ e.hom.right
-    erw [← e.hom.w, ← Arrow.comp_left_assoc, e.inv_hom_id, Category.id_comp]
-    rfl
-    simp only [this, F.map_comp]
-    have := h _ hf'
-    infer_instance
+  intro h X Y f hf
+  exact h _ (W.le_isoClosure _ hf)
+  intro h X Y f ⟨X', Y', f', hf', ⟨e⟩⟩
+  have : f = e.inv.left ≫ f' ≫ e.hom.right
+  erw [← e.hom.w, ← Arrow.comp_left_assoc, e.inv_hom_id, Category.id_comp]
+  rfl
+  simp only [this, F.map_comp]
+  have := h _ hf'
+  infer_instance
 
 @[simp]
 lemma IsInvertedBy.iff_comp {C₁ C₂ C₃ : Type*} [Category C₁] [Category C₂] [Category C₃]
     (W : MorphismProperty C₁) (F : C₁ ⥤ C₂) (G : C₂ ⥤ C₃) [G.ReflectsIsomorphisms] :
     W.IsInvertedBy (F ⋙ G) ↔ W.IsInvertedBy F := by
   constructor
-  · intro h X Y f hf
-    have : IsIso (G.map (F.map f)) := h _ hf
-    exact isIso_of_reflects_iso (F.map f) G
-  · intro hF
-    exact IsInvertedBy.of_comp W F hF G
+  intro h X Y f hf
+  have : IsIso (G.map (F.map f)) := h _ hf
+  exact isIso_of_reflects_iso (F.map f) G
+  intro hF
+  exact IsInvertedBy.of_comp W F hF G
 
 lemma IsInvertedBy.iff_le_inverseImage_isomorphisms (W : MorphismProperty C) (F : C ⥤ D) :
     W.IsInvertedBy F ↔ W ≤ (isomorphisms D).inverseImage F := Iff.rfl

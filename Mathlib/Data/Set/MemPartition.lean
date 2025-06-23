@@ -64,12 +64,12 @@ lemma disjoint_memPartition (f : ℕ → Set α) (n : ℕ) {u v : Set α}
     obtain ⟨u', hu', hu'_eq⟩ := hu
     obtain ⟨v', hv', hv'_eq⟩ := hv
     rcases hu'_eq with rfl | rfl <;> rcases hv'_eq with rfl | rfl
-    · refine Disjoint.mono inter_subset_left inter_subset_left (ih hu' hv' ?_)
-      exact fun huv' ↦ huv (huv' ▸ rfl)
-    · exact Disjoint.mono_left inter_subset_right Set.disjoint_sdiff_right
-    · exact Disjoint.mono_right inter_subset_right Set.disjoint_sdiff_left
-    · refine Disjoint.mono diff_subset diff_subset (ih hu' hv' ?_)
-      exact fun huv' ↦ huv (huv' ▸ rfl)
+    refine Disjoint.mono inter_subset_left inter_subset_left (ih hu' hv' ?_)
+    exact fun huv' ↦ huv (huv' ▸ rfl)
+    exact Disjoint.mono_left inter_subset_right Set.disjoint_sdiff_right
+    exact Disjoint.mono_right inter_subset_right Set.disjoint_sdiff_left
+    refine Disjoint.mono diff_subset diff_subset (ih hu' hv' ?_)
+    exact fun huv' ↦ huv (huv' ▸ rfl)
 
 @[simp]
 lemma sUnion_memPartition (f : ℕ → Set α) (n : ℕ) : ⋃₀ memPartition f n = univ := by
@@ -83,8 +83,8 @@ lemma sUnion_memPartition (f : ℕ → Set α) (n : ℕ) : ⋃₀ memPartition f
       iff_true] at this ⊢
     obtain ⟨t, ht, hxt⟩ := this
     by_cases hxf : x ∈ f n
-    · exact ⟨t ∩ f n, ⟨t, ht, Or.inl rfl⟩, hxt, hxf⟩
-    · exact ⟨t \ f n, ⟨t, ht, Or.inr rfl⟩, hxt, hxf⟩
+    exact ⟨t ∩ f n, ⟨t, ht, Or.inl rfl⟩, hxt, hxf⟩
+    exact ⟨t \ f n, ⟨t, ht, Or.inr rfl⟩, hxt, hxf⟩
 
 lemma finite_memPartition (f : ℕ → Set α) (n : ℕ) : Set.Finite (memPartition f n) := by
   induction n with

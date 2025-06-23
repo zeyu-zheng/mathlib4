@@ -313,10 +313,10 @@ lemma pi_nnnorm_le_iff' {r : ℝ≥0} : ‖x‖₊ ≤ r ↔ ∀ i, ‖x i‖₊
 @[to_additive pi_norm_le_iff_of_nonempty]
 lemma pi_norm_le_iff_of_nonempty' [Nonempty ι] : ‖f‖ ≤ r ↔ ∀ b, ‖f b‖ ≤ r := by
   by_cases hr : 0 ≤ r
-  · exact pi_norm_le_iff_of_nonneg' hr
-  · exact
-      iff_of_false (fun h => hr <| (norm_nonneg' _).trans h) fun h =>
-        hr <| (norm_nonneg' _).trans <| h <| Classical.arbitrary _
+  exact pi_norm_le_iff_of_nonneg' hr
+  exact
+    iff_of_false (fun h => hr <| (norm_nonneg' _).trans h) fun h =>
+      hr <| (norm_nonneg' _).trans <| h <| Classical.arbitrary _
 
 /-- The seminorm of an element in a product space is `< r` if and only if the norm of each
 component is. -/

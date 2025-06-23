@@ -119,10 +119,10 @@ instance {V : Type u} [Fintype V] [DecidableEq V] : Fintype (SimpleGraph V) wher
     rintro ⟨Adj, hs, hi⟩
     simp only [mem_map, mem_univ, true_and, Subtype.exists, Bool.not_eq_true]
     refine ⟨fun v w ↦ Adj v w, ⟨?_, ?_⟩, ?_⟩
-    · simp [hs.iff]
-    · intro v; simp [hi v]
-    · ext
-      simp
+    simp [hs.iff]
+    intro v; simp [hi v]
+    ext
+    simp
 
 /-- Construct the simple graph induced by the given relation. It
 symmetrizes the relation and makes it irreflexive. -/
@@ -316,8 +316,8 @@ instance completeAtomicBooleanAlgebra : CompleteAtomicBooleanAlgebra (SimpleGrap
     inf_compl_le_bot := fun G v w h => False.elim <| h.2.2 h.1
     top_le_sup_compl := fun G v w hvw => by
       by_cases h : G.Adj v w
-      · exact Or.inl h
-      · exact Or.inr ⟨hvw, h⟩
+      exact Or.inl h
+      exact Or.inr ⟨hvw, h⟩
     sSup := sSup
     le_sSup := fun s G hG a b hab => ⟨G, hG, hab⟩
     sSup_le := fun s G hG a b => by
@@ -686,10 +686,10 @@ theorem adj_incidenceSet_inter {v : V} {e : Sym2 V} (he : e ∈ G.edgeSet) (h : 
   ext e'
   simp only [incidenceSet, Set.mem_sep_iff, Set.mem_inter_iff, Set.mem_singleton_iff]
   refine ⟨fun h' => ?_, ?_⟩
-  · rw [← Sym2.other_spec h]
-    exact (Sym2.mem_and_mem_iff (edge_other_ne G he h).symm).mp ⟨h'.1.2, h'.2.2⟩
-  · rintro rfl
-    exact ⟨⟨he, h⟩, he, Sym2.other_mem _⟩
+  rw [← Sym2.other_spec h]
+  exact (Sym2.mem_and_mem_iff (edge_other_ne G he h).symm).mp ⟨h'.1.2, h'.2.2⟩
+  rintro rfl
+  exact ⟨⟨he, h⟩, he, Sym2.other_mem _⟩
 
 theorem compl_neighborSet_disjoint (G : SimpleGraph V) (v : V) :
     Disjoint (G.neighborSet v) (Gᶜ.neighborSet v) := by

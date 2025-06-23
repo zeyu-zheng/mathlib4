@@ -80,8 +80,8 @@ theorem isOrthoᵢ_flip (B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₁'] M) {v : 
     B.IsOrthoᵢ v ↔ B.flip.IsOrthoᵢ v := by
   simp_rw [isOrthoᵢ_def]
   constructor <;> intro h i j hij
-  · rw [flip_apply]
-    exact h j i (Ne.symm hij)
+  rw [flip_apply]
+  exact h j i (Ne.symm hij)
   simp_rw [flip_apply] at h
   exact h j i (Ne.symm hij)
 
@@ -98,25 +98,25 @@ theorem ortho_smul_left {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] V} {x y} 
     IsOrtho B x y ↔ IsOrtho B (a • x) y := by
   dsimp only [IsOrtho]
   constructor <;> intro H
-  · rw [map_smulₛₗ₂, H, smul_zero]
-  · rw [map_smulₛₗ₂, smul_eq_zero] at H
-    cases' H with H H
-    · rw [map_eq_zero I₁] at H
-      trivial
-    · exact H
+  rw [map_smulₛₗ₂, H, smul_zero]
+  rw [map_smulₛₗ₂, smul_eq_zero] at H
+  cases' H with H H
+  rw [map_eq_zero I₁] at H
+  trivial
+  exact H
 
 -- todo: this also holds for [CommRing R] [IsDomain R] when J₂ is invertible
 theorem ortho_smul_right {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] V} {x y} {a : K₂} {ha : a ≠ 0} :
     IsOrtho B x y ↔ IsOrtho B x (a • y) := by
   dsimp only [IsOrtho]
   constructor <;> intro H
-  · rw [map_smulₛₗ, H, smul_zero]
-  · rw [map_smulₛₗ, smul_eq_zero] at H
-    cases' H with H H
-    · simp at H
-      exfalso
-      exact ha H
-    · exact H
+  rw [map_smulₛₗ, H, smul_zero]
+  rw [map_smulₛₗ, smul_eq_zero] at H
+  cases' H with H H
+  simp at H
+  exfalso
+  exact ha H
+  exact H
 
 open Classical in
 /-- A set of orthogonal vectors `v` with respect to some sesquilinear map `B` is linearly
@@ -216,8 +216,8 @@ theorem isSymm_zero : (0 : M →ₛₗ[I] M →ₗ[R] R).IsSymm := fun _ _ => ma
 
 theorem isSymm_iff_eq_flip {B : LinearMap.BilinForm R M} : B.IsSymm ↔ B = B.flip := by
   constructor <;> intro h
-  · ext
-    rw [← h, flip_apply, RingHom.id_apply]
+  ext
+  rw [← h, flip_apply, RingHom.id_apply]
   intro x y
   conv_lhs => rw [h]
   rfl
@@ -291,9 +291,9 @@ variable [CommRing R] [AddCommGroup M] [Module R M] [CommSemiring R₁] [AddComm
 theorem isAlt_iff_eq_neg_flip [NoZeroDivisors R] [CharZero R] {B : M₁ →ₛₗ[I] M₁ →ₛₗ[I] R} :
     B.IsAlt ↔ B = -B.flip := by
   constructor <;> intro h
-  · ext
-    simp_rw [neg_apply, flip_apply]
-    exact (h.neg _ _).symm
+  ext
+  simp_rw [neg_apply, flip_apply]
+  exact (h.neg _ _).symm
   intro x
   let h' := congr_fun₂ h x x
   simp only [neg_apply, flip_apply, ← add_eq_zero_iff_eq_neg] at h'
@@ -369,10 +369,10 @@ theorem orthogonal_span_singleton_eq_to_lin_ker {B : V →ₗ[K] V →ₛₗ[J] 
   ext y
   simp_rw [Submodule.mem_orthogonalBilin_iff, LinearMap.mem_ker, Submodule.mem_span_singleton]
   constructor
-  · exact fun h ↦ h x ⟨1, one_smul _ _⟩
-  · rintro h _ ⟨z, rfl⟩
-    rw [isOrtho_def, map_smulₛₗ₂, smul_eq_zero]
-    exact Or.intro_right _ h
+  exact fun h ↦ h x ⟨1, one_smul _ _⟩
+  rintro h _ ⟨z, rfl⟩
+  rw [isOrtho_def, map_smulₛₗ₂, smul_eq_zero]
+  exact Or.intro_right _ h
 
 -- todo: Generalize this to sesquilinear maps
 theorem span_singleton_sup_orthogonal_eq_top {B : V →ₗ[K] V →ₗ[K] K} {x : V} (hx : ¬B.IsOrtho x x) :
@@ -416,11 +416,11 @@ variable {B B' f g}
 
 theorem isAdjointPair_iff_comp_eq_compl₂ : IsAdjointPair B B' f g ↔ B'.comp f = B.compl₂ g := by
   constructor <;> intro h
-  · ext x y
-    rw [comp_apply, compl₂_apply]
-    exact h x y
-  · intro _ _
-    rw [← compl₂_apply, ← comp_apply, h]
+  ext x y
+  rw [comp_apply, compl₂_apply]
+  exact h x y
+  intro _ _
+  rw [← compl₂_apply, ← comp_apply, h]
 
 theorem isAdjointPair_zero : IsAdjointPair B B' 0 0 := fun _ _ ↦ by simp only [zero_apply, map_zero]
 
@@ -643,7 +643,7 @@ theorem flip_nondegenerate {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] M} : B
 theorem separatingLeft_iff_linear_nontrivial {B : M₁ →ₛₗ[I₁] M₂ →ₛₗ[I₂] M} :
     B.SeparatingLeft ↔ ∀ x : M₁, B x = 0 → x = 0 := by
   constructor <;> intro h x hB
-  · simpa only [hB, zero_apply, eq_self_iff_true, forall_const] using h x
+  simpa only [hB, zero_apply, eq_self_iff_true, forall_const] using h x
   have h' : B x = 0
   ext
   rw [zero_apply]
@@ -711,8 +711,8 @@ theorem IsOrthoᵢ.not_isOrtho_basis_self_of_separatingLeft [Nontrivial R]
   rw [map_smulₛₗ]
   suffices B (v i) (v j) = 0 by rw [this, smul_zero]
   obtain rfl | hij := eq_or_ne i j
-  · exact ho
-  · exact h hij
+  exact ho
+  exact h hij
 
 /-- An orthogonal basis with respect to a right-separating bilinear map has no self-orthogonal
 elements. -/
@@ -736,13 +736,13 @@ theorem IsOrthoᵢ.separatingLeft_of_not_isOrtho_basis_self [NoZeroSMulDivisors 
   specialize hB (v i)
   simp_rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, map_sum₂, map_smulₛₗ₂] at hB
   rw [Finset.sum_eq_single i] at hB
-  · exact (smul_eq_zero.mp hB).elim _root_.id (h i).elim
-  · intro j _hj hij
-    replace hij : B (v j) (v i) = 0 := hO hij
-    rw [hij, RingHom.id_apply, smul_zero]
-  · intro hi
-    replace hi : vi i = 0 := Finsupp.not_mem_support_iff.mp hi
-    rw [hi, RingHom.id_apply, zero_smul]
+  exact (smul_eq_zero.mp hB).elim _root_.id (h i).elim
+  intro j _hj hij
+  replace hij : B (v j) (v i) = 0 := hO hij
+  rw [hij, RingHom.id_apply, smul_zero]
+  intro hi
+  replace hi : vi i = 0 := Finsupp.not_mem_support_iff.mp hi
+  rw [hi, RingHom.id_apply, zero_smul]
 
 /-- Given an orthogonal basis with respect to a bilinear map, the bilinear map is right-separating
 if the basis has no elements which are self-orthogonal. -/

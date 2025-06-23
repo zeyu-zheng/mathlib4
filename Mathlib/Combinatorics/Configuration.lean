@@ -126,13 +126,13 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
     intro s
     by_cases hs₀ : s.card = 0
     -- If `s = ∅`, then `s.card = 0 ≤ (s.bUnion t).card`
-    · simp_rw [hs₀, zero_le]
+    simp_rw [hs₀, zero_le]
     by_cases hs₁ : s.card = 1
     -- If `s = {l}`, then pick a point `p ∉ l`
-    · obtain ⟨l, rfl⟩ := Finset.card_eq_one.mp hs₁
-      obtain ⟨p, hl⟩ := exists_point l
-      rw [Finset.card_singleton, Finset.singleton_biUnion, Nat.one_le_iff_ne_zero]
-      exact Finset.card_ne_zero_of_mem (Set.mem_toFinset.mpr hl)
+    obtain ⟨l, rfl⟩ := Finset.card_eq_one.mp hs₁
+    obtain ⟨p, hl⟩ := exists_point l
+    rw [Finset.card_singleton, Finset.singleton_biUnion, Nat.one_le_iff_ne_zero]
+    exact Finset.card_ne_zero_of_mem (Set.mem_toFinset.mpr hl)
     suffices (s.biUnion t)ᶜ.card ≤ sᶜ.card by
       -- Rephrase in terms of complements (uses `h`)
       rw [Finset.card_compl, Finset.card_compl, tsub_le_iff_left] at this
@@ -148,15 +148,15 @@ theorem Nondegenerate.exists_injective_of_card_le [Nondegenerate P L] [Fintype P
       Finset.one_lt_card_iff.mp (Nat.one_lt_iff_ne_zero_and_ne_one.mpr ⟨hs₀, hs₁⟩)
     exact (eq_or_eq (hp₁ l₁ hl₁) (hp₂ l₁ hl₁) (hp₁ l₂ hl₂) (hp₂ l₂ hl₂)).resolve_right hl₃
     by_cases hs₃ : sᶜ.card = 0
-    · rw [hs₃, Nat.le_zero]
-      rw [Finset.card_compl, tsub_eq_zero_iff_le, LE.le.le_iff_eq (Finset.card_le_univ _), eq_comm,
-        Finset.card_eq_iff_eq_univ] at hs₃ ⊢
-      rw [hs₃]
-      rw [Finset.eq_univ_iff_forall] at hs₃ ⊢
-      exact fun p =>
-        Exists.elim (exists_line p)-- If `s = univ`, then show `s.bUnion t = univ`
-        fun l hl => Finset.mem_biUnion.mpr ⟨l, Finset.mem_univ l, Set.mem_toFinset.mpr hl⟩
-    · exact hs₂.trans (Nat.one_le_iff_ne_zero.mpr hs₃)
+    rw [hs₃, Nat.le_zero]
+    rw [Finset.card_compl, tsub_eq_zero_iff_le, LE.le.le_iff_eq (Finset.card_le_univ _), eq_comm,
+      Finset.card_eq_iff_eq_univ] at hs₃ ⊢
+    rw [hs₃]
+    rw [Finset.eq_univ_iff_forall] at hs₃ ⊢
+    exact fun p =>
+      Exists.elim (exists_line p)-- If `s = univ`, then show `s.bUnion t = univ`
+      fun l hl => Finset.mem_biUnion.mpr ⟨l, Finset.mem_univ l, Set.mem_toFinset.mpr hl⟩
+    exact hs₂.trans (Nat.one_le_iff_ne_zero.mpr hs₃)
 
 -- If `s < univ`, then consequence of `hs₂`
 variable (L)
@@ -189,7 +189,7 @@ variable {P L}
 theorem HasLines.pointCount_le_lineCount [HasLines P L] {p : P} {l : L} (h : p ∉ l)
     [Finite { l : L // p ∈ l }] : pointCount P l ≤ lineCount L p := by
   by_cases hf : Infinite { p : P // p ∈ l }
-  · exact (le_of_eq Nat.card_eq_zero_of_infinite).trans (zero_le (lineCount L p))
+  exact (le_of_eq Nat.card_eq_zero_of_infinite).trans (zero_le (lineCount L p))
   haveI := fintypeOfNotInfinite hf
   cases nonempty_fintype { l : L // p ∈ l }
   rw [lineCount, pointCount, Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
@@ -223,12 +223,12 @@ theorem HasLines.card_le [HasLines P L] [Fintype P] [Fintype L] :
       _ < ∑ p, lineCount L p := by
         obtain ⟨p, hp⟩ := not_forall.mp (mt (Fintype.card_le_of_surjective f) hc₂)
         refine sum_lt_sum_of_subset (subset_univ _) (mem_univ p) ?_ ?_ fun p _ _ ↦ zero_le _
-        · simpa only [Finset.mem_map, exists_prop, Finset.mem_univ, true_and_iff]
-        · rw [lineCount, Nat.card_eq_fintype_card, Fintype.card_pos_iff]
-          obtain ⟨l, _⟩ := @exists_line P L _ _ p
-          exact
-            let this := not_exists.mp hp l
-            ⟨⟨mkLine this, (mkLine_ax this).2⟩⟩
+        simpa only [Finset.mem_map, exists_prop, Finset.mem_univ, true_and_iff]
+        rw [lineCount, Nat.card_eq_fintype_card, Fintype.card_pos_iff]
+        obtain ⟨l, _⟩ := @exists_line P L _ _ p
+        exact
+          let this := not_exists.mp hp l
+          ⟨⟨mkLine this, (mkLine_ax this).2⟩⟩
   exact lt_irrefl _ this
 
 /-- If a nondegenerate configuration has a unique point on any two lines, then `|L| ≤ |P|`. -/
@@ -260,10 +260,10 @@ theorem HasLines.lineCount_eq_pointCount [HasLines P L] [Fintype P] [Fintype L]
     rw [s.sum_finset_product Finset.univ fun p => Set.toFinset { l | p ∈ l }]
     on_goal 1 =>
       rw [s.sum_finset_product_right Finset.univ fun l => Set.toFinset { p | p ∈ l }, eq_comm]
-      · refine sum_bijective _ hf1 (by simp) fun l _ ↦ ?_
-        simp_rw [hf2, sum_const, Set.toFinset_card, ← Nat.card_eq_fintype_card]
-        change pointCount P l • _ = lineCount L (f l) • _
-        rw [hf2]
+      refine sum_bijective _ hf1 (by simp) fun l _ ↦ ?_
+      simp_rw [hf2, sum_const, Set.toFinset_card, ← Nat.card_eq_fintype_card]
+      change pointCount P l • _ = lineCount L (f l) • _
+      rw [hf2]
     simp_rw [s, Finset.mem_univ, true_and_iff, Set.mem_toFinset]; exact fun p => Iff.rfl
     simp_rw [s, Finset.mem_univ, true_and_iff, Set.mem_toFinset]; exact fun p => Iff.rfl
     have step3 : ∑ i ∈ sᶜ, lineCount L i.1 = ∑ i ∈ sᶜ, pointCount P i.2

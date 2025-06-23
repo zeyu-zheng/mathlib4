@@ -1174,8 +1174,8 @@ theorem subset_singleton_iff {α : Type*} {s : Set α} {x : α} : s ⊆ {x} ↔ 
 
 theorem subset_singleton_iff_eq {s : Set α} {x : α} : s ⊆ {x} ↔ s = ∅ ∨ s = {x} := by
   obtain rfl | hs := s.eq_empty_or_nonempty
-  · exact ⟨fun _ => Or.inl rfl, fun _ => empty_subset _⟩
-  · simp [eq_singleton_iff_nonempty_unique_mem, hs, hs.ne_empty]
+  exact ⟨fun _ => Or.inl rfl, fun _ => empty_subset _⟩
+  simp [eq_singleton_iff_nonempty_unique_mem, hs, hs.ne_empty]
 
 theorem Nonempty.subset_singleton_iff (h : s.Nonempty) : s ⊆ {a} ↔ s = {a} :=
   subset_singleton_iff_eq.trans <| or_iff_right h.ne_empty
@@ -1559,12 +1559,12 @@ open Classical in
 theorem insert_diff_of_not_mem (s) (h : a ∉ t) : insert a s \ t = insert a (s \ t) := by
     ext x
     by_cases h' : x ∈ t
-    · have : x ≠ a := by
-        intro H
-        rw [H] at h'
-        exact h h'
-      simp [h, h', this]
-    · simp [h, h']
+    have : x ≠ a := by
+      intro H
+      rw [H] at h'
+      exact h h'
+    simp [h, h', this]
+    simp [h, h']
 
 theorem insert_diff_self_of_not_mem {a : α} {s : Set α} (h : a ∉ s) : insert a s \ {a} = s := by
   ext x
@@ -1647,7 +1647,7 @@ theorem subset_insert_iff {s t : Set α} {x : α} :
     s ⊆ insert x t ↔ s ⊆ t ∨ (x ∈ s ∧ s \ {x} ⊆ t) := by
   rw [← diff_singleton_subset_iff]
   by_cases hx : x ∈ s
-  · rw [and_iff_right hx, or_iff_right_of_imp diff_subset.trans]
+  rw [and_iff_right hx, or_iff_right_of_imp diff_subset.trans]
   rw [diff_singleton_eq_self hx, or_iff_left_of_imp And.right]
 
 theorem union_eq_diff_union_diff_union_inter (s t : Set α) : s ∪ t = s \ t ∪ t \ s ∪ s ∩ t :=
@@ -1770,8 +1770,8 @@ theorem powerset_singleton (x : α) : 𝒫({x} : Set α) = {∅, {x}} := by
 theorem mem_dite (p : Prop) [Decidable p] (s : p → Set α) (t : ¬ p → Set α) (x : α) :
     (x ∈ if h : p then s h else t h) ↔ (∀ h : p, x ∈ s h) ∧ ∀ h : ¬p, x ∈ t h := by
   split_ifs with hp
-  · exact ⟨fun hx => ⟨fun _ => hx, fun hnp => (hnp hp).elim⟩, fun hx => hx.1 hp⟩
-  · exact ⟨fun hx => ⟨fun h => (hp h).elim, fun _ => hx⟩, fun hx => hx.2 hp⟩
+  exact ⟨fun hx => ⟨fun _ => hx, fun hnp => (hnp hp).elim⟩, fun hx => hx.1 hp⟩
+  exact ⟨fun hx => ⟨fun h => (hp h).elim, fun _ => hx⟩, fun hx => hx.2 hp⟩
 
 theorem mem_dite_univ_right (p : Prop) [Decidable p] (t : p → Set α) (x : α) :
     (x ∈ if h : p then t h else univ) ↔ ∀ h : p, x ∈ t h := by

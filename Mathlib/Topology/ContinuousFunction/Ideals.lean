@@ -147,12 +147,12 @@ variable (X R)
 
 theorem ideal_gc : GaloisConnection (setOfIdeal : Ideal C(X, R) → Set X) (idealOfSet R) := by
   refine fun I s => ⟨fun h f hf => ?_, fun h x hx => ?_⟩
-  · by_contra h'
-    rcases not_mem_idealOfSet.mp h' with ⟨x, hx, hfx⟩
-    exact hfx (not_mem_setOfIdeal.mp (mt (@h x) hx) hf)
-  · obtain ⟨f, hf, hfx⟩ := mem_setOfIdeal.mp hx
-    by_contra hx'
-    exact not_mem_idealOfSet.mpr ⟨x, hx', hfx⟩ (h hf)
+  by_contra h'
+  rcases not_mem_idealOfSet.mp h' with ⟨x, hx, hfx⟩
+  exact hfx (not_mem_setOfIdeal.mp (mt (@h x) hx) hf)
+  obtain ⟨f, hf, hfx⟩ := mem_setOfIdeal.mp hx
+  by_contra hx'
+  exact not_mem_idealOfSet.mpr ⟨x, hx', hfx⟩ (h hf)
 
 end TopologicalRing
 
@@ -211,27 +211,27 @@ theorem idealOfSet_ofIdeal_eq_closure (I : Ideal C(X, 𝕜)) :
     refine (nnnorm_lt_iff _ hε).2 fun x => ?_
     simp only [coe_sub, coe_mul, Pi.sub_apply, Pi.mul_apply]
     by_cases hx : x ∈ t
-    · simpa only [hgt hx, comp_apply, Pi.one_apply, ContinuousMap.coe_coe, algebraMapCLM_apply,
-        map_one, mul_one, sub_self, nnnorm_zero] using hε
-    · refine lt_of_le_of_lt ?_ (half_lt_self hε)
-      have :=
-        calc
-          ‖((1 - (algebraMapCLM ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) x : 𝕜)‖₊ =
-              ‖1 - algebraMap ℝ≥0 𝕜 (g x)‖₊ := by
-            simp only [coe_sub, coe_one, coe_comp, ContinuousMap.coe_coe, Pi.sub_apply,
-              Pi.one_apply, Function.comp_apply, algebraMapCLM_apply]
-          _ = ‖algebraMap ℝ≥0 𝕜 (1 - g x)‖₊ := by
-            simp only [Algebra.algebraMap_eq_smul_one, NNReal.smul_def, NNReal.coe_sub (hg x),
-              NNReal.coe_one, sub_smul, one_smul]
-          _ ≤ 1 := (nnnorm_algebraMap_nnreal 𝕜 (1 - g x)).trans_le tsub_le_self
+    simpa only [hgt hx, comp_apply, Pi.one_apply, ContinuousMap.coe_coe, algebraMapCLM_apply,
+      map_one, mul_one, sub_self, nnnorm_zero] using hε
+    refine lt_of_le_of_lt ?_ (half_lt_self hε)
+    have :=
       calc
-        ‖f x - f x * (algebraMapCLM ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g x‖₊ =
-            ‖f x * (1 - (algebraMapCLM ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) x‖₊ := by
-          simp only [mul_sub, coe_sub, coe_one, Pi.sub_apply, Pi.one_apply, mul_one]
-        _ ≤ ε / 2 * ‖(1 - (algebraMapCLM ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) x‖₊ :=
-          ((nnnorm_mul_le _ _).trans
-            (mul_le_mul_right' (not_le.mp <| show ¬ε / 2 ≤ ‖f x‖₊ from hx).le _))
-        _ ≤ ε / 2 := by simpa only [mul_one] using mul_le_mul_left' this _
+        ‖((1 - (algebraMapCLM ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) x : 𝕜)‖₊ =
+            ‖1 - algebraMap ℝ≥0 𝕜 (g x)‖₊ := by
+          simp only [coe_sub, coe_one, coe_comp, ContinuousMap.coe_coe, Pi.sub_apply,
+            Pi.one_apply, Function.comp_apply, algebraMapCLM_apply]
+        _ = ‖algebraMap ℝ≥0 𝕜 (1 - g x)‖₊ := by
+          simp only [Algebra.algebraMap_eq_smul_one, NNReal.smul_def, NNReal.coe_sub (hg x),
+            NNReal.coe_one, sub_smul, one_smul]
+        _ ≤ 1 := (nnnorm_algebraMap_nnreal 𝕜 (1 - g x)).trans_le tsub_le_self
+    calc
+      ‖f x - f x * (algebraMapCLM ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g x‖₊ =
+          ‖f x * (1 - (algebraMapCLM ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) x‖₊ := by
+        simp only [mul_sub, coe_sub, coe_one, Pi.sub_apply, Pi.one_apply, mul_one]
+      _ ≤ ε / 2 * ‖(1 - (algebraMapCLM ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) x‖₊ :=
+        ((nnnorm_mul_le _ _).trans
+          (mul_le_mul_right' (not_le.mp <| show ¬ε / 2 ≤ ‖f x‖₊ from hx).le _))
+      _ ≤ ε / 2 := by simpa only [mul_one] using mul_le_mul_left' this _
   /- There is some `g' : C(X, ℝ≥0)` which is strictly positive on `t` such that the composition
     `↑g` with the natural embedding of `ℝ≥0` into `𝕜` lies in `I`. This follows from compactness of
     `t` and that we can do it in any neighborhood of a point `x ∈ t`. Indeed, since `x ∈ t`, then
@@ -240,36 +240,36 @@ theorem idealOfSet_ofIdeal_eq_closure (I : Ideal C(X, 𝕜)) :
     this map with the natural embedding is just `star fₓ * fₓ ∈ I`. -/
   have : ∃ g' : C(X, ℝ≥0), (algebraMapCLM ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g' ∈ I ∧ ∀ x ∈ t, 0 < g' x := by
     refine ht.isCompact.induction_on ?_ ?_ ?_ ?_
-    · refine ⟨0, ?_, fun x hx => False.elim hx⟩
-      convert I.zero_mem
-      ext
-      simp only [comp_apply, zero_apply, ContinuousMap.coe_coe, map_zero]
-    · rintro s₁ s₂ hs ⟨g, hI, hgt⟩; exact ⟨g, hI, fun x hx => hgt x (hs hx)⟩
-    · rintro s₁ s₂ ⟨g₁, hI₁, hgt₁⟩ ⟨g₂, hI₂, hgt₂⟩
-      refine ⟨g₁ + g₂, ?_, fun x hx => ?_⟩
-      · convert I.add_mem hI₁ hI₂
-        ext y
-        simp only [coe_add, Pi.add_apply, map_add, coe_comp, Function.comp_apply,
-          ContinuousMap.coe_coe]
-      · rcases hx with (hx | hx)
-        · simpa only [zero_add] using add_lt_add_of_lt_of_le (hgt₁ x hx) zero_le'
-        · simpa only [zero_add] using add_lt_add_of_le_of_lt zero_le' (hgt₂ x hx)
-    · intro x hx
-      replace hx := htI.subset_compl_right hx
-      rw [compl_compl, mem_setOfIdeal] at hx
-      obtain ⟨g, hI, hgx⟩ := hx
-      have := (map_continuous g).continuousAt.eventually_ne hgx
-      refine
-        ⟨{y : X | g y ≠ 0} ∩ t,
-          mem_nhdsWithin_iff_exists_mem_nhds_inter.mpr ⟨_, this, Set.Subset.rfl⟩,
-          ⟨⟨fun x => ‖g x‖₊ ^ 2, (map_continuous g).nnnorm.pow 2⟩, ?_, fun x hx =>
-            pow_pos (norm_pos_iff.mpr hx.1) 2⟩⟩
-      convert I.mul_mem_left (star g) hI
-      ext
-      simp only [comp_apply, ContinuousMap.coe_coe, coe_mk, algebraMapCLM_toFun, map_pow,
-        mul_apply, star_apply, star_def]
-      simp only [normSq_eq_def', RCLike.conj_mul, ofReal_pow]
-      rfl
+    refine ⟨0, ?_, fun x hx => False.elim hx⟩
+    convert I.zero_mem
+    ext
+    simp only [comp_apply, zero_apply, ContinuousMap.coe_coe, map_zero]
+    rintro s₁ s₂ hs ⟨g, hI, hgt⟩; exact ⟨g, hI, fun x hx => hgt x (hs hx)⟩
+    rintro s₁ s₂ ⟨g₁, hI₁, hgt₁⟩ ⟨g₂, hI₂, hgt₂⟩
+    refine ⟨g₁ + g₂, ?_, fun x hx => ?_⟩
+    convert I.add_mem hI₁ hI₂
+    ext y
+    simp only [coe_add, Pi.add_apply, map_add, coe_comp, Function.comp_apply,
+      ContinuousMap.coe_coe]
+    rcases hx with (hx | hx)
+    simpa only [zero_add] using add_lt_add_of_lt_of_le (hgt₁ x hx) zero_le'
+    simpa only [zero_add] using add_lt_add_of_le_of_lt zero_le' (hgt₂ x hx)
+    intro x hx
+    replace hx := htI.subset_compl_right hx
+    rw [compl_compl, mem_setOfIdeal] at hx
+    obtain ⟨g, hI, hgx⟩ := hx
+    have := (map_continuous g).continuousAt.eventually_ne hgx
+    refine
+      ⟨{y : X | g y ≠ 0} ∩ t,
+        mem_nhdsWithin_iff_exists_mem_nhds_inter.mpr ⟨_, this, Set.Subset.rfl⟩,
+        ⟨⟨fun x => ‖g x‖₊ ^ 2, (map_continuous g).nnnorm.pow 2⟩, ?_, fun x hx =>
+          pow_pos (norm_pos_iff.mpr hx.1) 2⟩⟩
+    convert I.mul_mem_left (star g) hI
+    ext
+    simp only [comp_apply, ContinuousMap.coe_coe, coe_mk, algebraMapCLM_toFun, map_pow,
+      mul_apply, star_apply, star_def]
+    simp only [normSq_eq_def', RCLike.conj_mul, ofReal_pow]
+    rfl
   /- Get the function `g'` which is guaranteed to exist above. By the extreme value theorem and
     compactness of `t`, there is some `0 < c` such that `c ≤ g' x` for all `x ∈ t`. Then by
     `exists_mul_le_one_eqOn_ge` there is some `g` for which `g * g'` is the desired function. -/
@@ -406,19 +406,19 @@ variable [CompactSpace X] [T2Space X] [RCLike 𝕜]
 
 theorem continuousMapEval_bijective : Bijective (continuousMapEval X 𝕜) := by
   refine ⟨fun x y hxy => ?_, fun φ => ?_⟩
-  · contrapose! hxy
-    rcases exists_continuous_zero_one_of_isClosed (isClosed_singleton : _root_.IsClosed {x})
-        (isClosed_singleton : _root_.IsClosed {y}) (Set.disjoint_singleton.mpr hxy) with
-      ⟨f, fx, fy, -⟩
-    rw [DFunLike.ne_iff]
-    use (⟨fun (x : ℝ) => (x : 𝕜), RCLike.continuous_ofReal⟩ : C(ℝ, 𝕜)).comp f
-    simpa only [continuousMapEval_apply_apply, ContinuousMap.comp_apply, coe_mk, Ne,
-      RCLike.ofReal_inj] using
-      ((fx (Set.mem_singleton x)).symm ▸ (fy (Set.mem_singleton y)).symm ▸ zero_ne_one : f x ≠ f y)
-  · obtain ⟨x, hx⟩ := (ideal_isMaximal_iff (RingHom.ker φ)).mp inferInstance
-    refine ⟨x, CharacterSpace.ext_ker <| Ideal.ext fun f => ?_⟩
-    simpa only [RingHom.mem_ker, continuousMapEval_apply_apply, mem_idealOfSet_compl_singleton,
-      RingHom.mem_ker] using SetLike.ext_iff.mp hx f
+  contrapose! hxy
+  rcases exists_continuous_zero_one_of_isClosed (isClosed_singleton : _root_.IsClosed {x})
+      (isClosed_singleton : _root_.IsClosed {y}) (Set.disjoint_singleton.mpr hxy) with
+    ⟨f, fx, fy, -⟩
+  rw [DFunLike.ne_iff]
+  use (⟨fun (x : ℝ) => (x : 𝕜), RCLike.continuous_ofReal⟩ : C(ℝ, 𝕜)).comp f
+  simpa only [continuousMapEval_apply_apply, ContinuousMap.comp_apply, coe_mk, Ne,
+    RCLike.ofReal_inj] using
+    ((fx (Set.mem_singleton x)).symm ▸ (fy (Set.mem_singleton y)).symm ▸ zero_ne_one : f x ≠ f y)
+  obtain ⟨x, hx⟩ := (ideal_isMaximal_iff (RingHom.ker φ)).mp inferInstance
+  refine ⟨x, CharacterSpace.ext_ker <| Ideal.ext fun f => ?_⟩
+  simpa only [RingHom.mem_ker, continuousMapEval_apply_apply, mem_idealOfSet_compl_singleton,
+    RingHom.mem_ker] using SetLike.ext_iff.mp hx f
 
 /-- This is the natural homeomorphism between a compact Hausdorff space `X` and the
 `WeakDual.characterSpace 𝕜 C(X, 𝕜)`. -/

@@ -281,8 +281,8 @@ theorem lookup_insert_ne {a a'} {b' : β a'} {s : AList β} (h : a ≠ a') :
 @[simp] theorem lookup_insert_eq_none {l : AList β} {k k' : α} {v : β k} :
     (l.insert k v).lookup k' = none ↔ (k' ≠ k) ∧ l.lookup k' = none := by
   by_cases h : k' = k
-  · subst h; simp
-  · simp_all [lookup_insert_ne h]
+  subst h; simp
+  simp_all [lookup_insert_ne h]
 
 @[simp]
 theorem lookup_to_alist {a} (s : List (Sigma β)) : lookup a s.toAList = s.dlookup a := by
@@ -451,22 +451,22 @@ theorem union_comm_of_disjoint {s₁ s₂ : AList β} (h : Disjoint s₁ s₂) :
     (by
       intros; simp only [union_entries, Option.mem_def, dlookup_kunion_eq_some]
       constructor <;> intro h'
-      · cases' h' with h' h'
-        · right
-          refine ⟨?_, h'⟩
-          apply h
-          rw [keys, ← List.dlookup_isSome, h']
-          exact rfl
-        · left
-          rw [h'.2]
-      · cases' h' with h' h'
-        · right
-          refine ⟨?_, h'⟩
-          intro h''
-          apply h _ h''
-          rw [keys, ← List.dlookup_isSome, h']
-          exact rfl
-        · left
-          rw [h'.2])
+      cases' h' with h' h'
+      right
+      refine ⟨?_, h'⟩
+      apply h
+      rw [keys, ← List.dlookup_isSome, h']
+      exact rfl
+      left
+      rw [h'.2]
+      cases' h' with h' h'
+      right
+      refine ⟨?_, h'⟩
+      intro h''
+      apply h _ h''
+      rw [keys, ← List.dlookup_isSome, h']
+      exact rfl
+      left
+      rw [h'.2])
 
 end AList

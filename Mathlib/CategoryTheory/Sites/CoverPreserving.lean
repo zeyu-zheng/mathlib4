@@ -165,17 +165,17 @@ lemma Functor.isContinuous_of_coverPreserving (hF₁ : CompatiblePreserving.{w} 
     (hF₂ : CoverPreserving J K F) : Functor.IsContinuous.{w} F J K where
   op_comp_isSheafOfTypes G X S hS x hx := by
     apply exists_unique_of_exists_of_unique
-    · have H := G.2 _ (hF₂.cover_preserve hS)
-      exact ⟨H.amalgamate (x.functorPushforward F) (hx.functorPushforward hF₁),
-        fun V f hf => (H.isAmalgamation (hx.functorPushforward hF₁) (F.map f) _).trans
-          (hF₁.apply_map _ hx hf)⟩
-    · intro y₁ y₂ hy₁ hy₂
-      apply (Presieve.isSeparated_of_isSheaf _ _ G.cond _ (hF₂.cover_preserve hS)).ext
-      rintro Y _ ⟨Z, g, h, hg, rfl⟩
-      dsimp
-      simp only [Functor.map_comp, types_comp_apply]
-      have H := (hy₁ g hg).trans (hy₂ g hg).symm
-      dsimp at H
-      rw [H]
+    have H := G.2 _ (hF₂.cover_preserve hS)
+    exact ⟨H.amalgamate (x.functorPushforward F) (hx.functorPushforward hF₁),
+      fun V f hf => (H.isAmalgamation (hx.functorPushforward hF₁) (F.map f) _).trans
+        (hF₁.apply_map _ hx hf)⟩
+    intro y₁ y₂ hy₁ hy₂
+    apply (Presieve.isSeparated_of_isSheaf _ _ G.cond _ (hF₂.cover_preserve hS)).ext
+    rintro Y _ ⟨Z, g, h, hg, rfl⟩
+    dsimp
+    simp only [Functor.map_comp, types_comp_apply]
+    have H := (hy₁ g hg).trans (hy₂ g hg).symm
+    dsimp at H
+    rw [H]
 
 end CategoryTheory

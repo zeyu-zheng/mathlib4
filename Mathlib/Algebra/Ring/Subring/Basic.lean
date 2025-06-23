@@ -769,10 +769,10 @@ theorem closure_induction' {s : Set R} {p : ∀ x, x ∈ closure s → Prop}
   refine
     closure_induction ha (fun m hm => ⟨subset_closure hm, mem m hm⟩) ⟨zero_mem _, zero⟩
       ⟨one_mem _, one⟩ ?_ (fun x hx => hx.elim fun hx' hx => ⟨neg_mem hx', neg _ _ hx⟩) ?_
-  · exact (fun x y hx hy => hx.elim fun hx' hx => hy.elim fun hy' hy =>
-      ⟨add_mem hx' hy', add _ _ _ _ hx hy⟩)
-  · exact (fun x y hx hy => hx.elim fun hx' hx => hy.elim fun hy' hy =>
-      ⟨mul_mem hx' hy', mul _ _ _ _ hx hy⟩)
+  exact (fun x y hx hy => hx.elim fun hx' hx => hy.elim fun hy' hy =>
+    ⟨add_mem hx' hy', add _ _ _ _ hx hy⟩)
+  exact (fun x y hx hy => hx.elim fun hx' hx => hy.elim fun hy' hy =>
+    ⟨mul_mem hx' hy', mul _ _ _ _ hx hy⟩)
 
 /-- An induction principle for closure membership, for predicates with two arguments. -/
 @[elab_as_elim]
@@ -787,9 +787,9 @@ theorem closure_induction₂ {s : Set R} {p : R → R → Prop} {a b : R} (ha : 
   refine
     closure_induction hb ?_ (H0_right _) (H1_right _) (Hadd_right a) (Hneg_right a) (Hmul_right a)
   refine closure_induction ha Hs (fun x _ => H0_left x) (fun x _ => H1_left x) ?_ ?_ ?_
-  · exact fun x y H₁ H₂ z zs => Hadd_left x y z (H₁ z zs) (H₂ z zs)
-  · exact fun x hx z zs => Hneg_left x z (hx z zs)
-  · exact fun x y H₁ H₂ z zs => Hmul_left x y z (H₁ z zs) (H₂ z zs)
+  exact fun x y H₁ H₂ z zs => Hadd_left x y z (H₁ z zs) (H₂ z zs)
+  exact fun x hx z zs => Hneg_left x z (hx z zs)
+  exact fun x y H₁ H₂ z zs => Hmul_left x y z (H₁ z zs) (H₂ z zs)
 
 theorem mem_closure_iff {s : Set R} {x} :
     x ∈ closure s ↔ x ∈ AddSubgroup.closure (Submonoid.closure s : Set R) :=
@@ -1150,7 +1150,7 @@ protected theorem InClosure.recOn {C : R → Prop} {x : R} (hx : x ∈ closure s
   rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
   clear hx
   induction' L with hd tl ih
-  · exact h0
+  exact h0
   rw [List.forall_mem_cons] at HL
   suffices C (List.prod hd) by
     rw [List.map_cons, List.sum_cons]
@@ -1159,32 +1159,32 @@ protected theorem InClosure.recOn {C : R → Prop} {x : R} (hx : x ∈ closure s
   clear ih tl
   rsuffices ⟨L, HL', HP | HP⟩ :
     ∃ L : List R, (∀ x ∈ L, x ∈ s) ∧ (List.prod hd = List.prod L ∨ List.prod hd = -List.prod L)
-  · rw [HP]
-    clear HP HL hd
-    induction' L with hd tl ih
-    · exact h1
-    rw [List.forall_mem_cons] at HL'
-    rw [List.prod_cons]
-    exact hs _ HL'.1 _ (ih HL'.2)
-  · rw [HP]
-    clear HP HL hd
-    induction' L with hd tl ih
-    · exact hneg1
-    rw [List.prod_cons, neg_mul_eq_mul_neg]
-    rw [List.forall_mem_cons] at HL'
-    exact hs _ HL'.1 _ (ih HL'.2)
+  rw [HP]
+  clear HP HL hd
+  induction' L with hd tl ih
+  exact h1
+  rw [List.forall_mem_cons] at HL'
+  rw [List.prod_cons]
+  exact hs _ HL'.1 _ (ih HL'.2)
+  rw [HP]
+  clear HP HL hd
+  induction' L with hd tl ih
+  exact hneg1
+  rw [List.prod_cons, neg_mul_eq_mul_neg]
+  rw [List.forall_mem_cons] at HL'
+  exact hs _ HL'.1 _ (ih HL'.2)
   induction' hd with hd tl ih
-  · exact ⟨[], List.forall_mem_nil _, Or.inl rfl⟩
+  exact ⟨[], List.forall_mem_nil _, Or.inl rfl⟩
   rw [List.forall_mem_cons] at HL
   rcases ih HL.2 with ⟨L, HL', HP | HP⟩ <;> cases' HL.1 with hhd hhd
-  · exact
-      ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩,
-        Or.inl <| by rw [List.prod_cons, List.prod_cons, HP]⟩
-  · exact ⟨L, HL', Or.inr <| by rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
-  · exact
-      ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩,
-        Or.inr <| by rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
-  · exact ⟨L, HL', Or.inl <| by rw [List.prod_cons, hhd, HP, neg_one_mul, neg_neg]⟩
+  exact
+    ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩,
+      Or.inl <| by rw [List.prod_cons, List.prod_cons, HP]⟩
+  exact ⟨L, HL', Or.inr <| by rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
+  exact
+    ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩,
+      Or.inr <| by rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
+  exact ⟨L, HL', Or.inl <| by rw [List.prod_cons, hhd, HP, neg_one_mul, neg_neg]⟩
 
 theorem closure_preimage_le (f : R →+* S) (s : Set S) : closure (f ⁻¹' s) ≤ (closure s).comap f :=
   closure_le.2 fun _ hx => SetLike.mem_coe.2 <| mem_comap.2 <| subset_closure hx
@@ -1304,16 +1304,16 @@ theorem map_comap_eq_self_of_surjective
 theorem comap_map_eq (f : R →+* S) (s : Subring R) :
     (s.map f).comap f = s ⊔ closure (f ⁻¹' {0}) := by
   apply le_antisymm
-  · intro x hx
-    rw [mem_comap, mem_map] at hx
-    obtain ⟨y, hy, hxy⟩ := hx
-    replace hxy : x - y ∈ f ⁻¹' {0} := by simp [hxy]
-    rw [← closure_eq s, ← closure_union, ← add_sub_cancel y x]
-    exact Subring.add_mem _ (subset_closure <| Or.inl hy) (subset_closure <| Or.inr hxy)
-  · rw [← map_le_iff_le_comap, map_sup, f.map_closure]
-    apply le_of_eq
-    rw [sup_eq_left, closure_le]
-    exact (Set.image_preimage_subset f {0}).trans (Set.singleton_subset_iff.2 (s.map f).zero_mem)
+  intro x hx
+  rw [mem_comap, mem_map] at hx
+  obtain ⟨y, hy, hxy⟩ := hx
+  replace hxy : x - y ∈ f ⁻¹' {0} := by simp [hxy]
+  rw [← closure_eq s, ← closure_union, ← add_sub_cancel y x]
+  exact Subring.add_mem _ (subset_closure <| Or.inl hy) (subset_closure <| Or.inr hxy)
+  rw [← map_le_iff_le_comap, map_sup, f.map_closure]
+  apply le_of_eq
+  rw [sup_eq_left, closure_le]
+  exact (Set.image_preimage_subset f {0}).trans (Set.singleton_subset_iff.2 (s.map f).zero_mem)
 
 theorem comap_map_eq_self {f : R →+* S} {s : Subring R}
     (h : f ⁻¹' {0} ⊆ s) : (s.map f).comap f = s := by

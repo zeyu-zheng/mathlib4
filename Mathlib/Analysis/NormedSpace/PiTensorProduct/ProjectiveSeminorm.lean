@@ -128,9 +128,9 @@ theorem projectiveSeminorm_tprod_le (m : Π i, E i) :
     projectiveSeminorm (⨂ₜ[𝕜] i, m i) ≤ ∏ i, ‖m i‖ := by
   rw [projectiveSeminorm_apply]
   convert ciInf_le (bddBelow_projectiveSemiNormAux _) ⟨[((1 : 𝕜), m)] ,?_⟩
-  · simp only [projectiveSeminormAux, Function.comp_apply, List.map_cons, norm_one, one_mul,
-    List.map_nil, List.sum_cons, List.sum_nil, add_zero]
-  · rw [mem_lifts_iff, List.map_singleton, List.sum_singleton, one_smul]
+  simp only [projectiveSeminormAux, Function.comp_apply, List.map_cons, norm_one, one_mul,
+  List.map_nil, List.sum_cons, List.sum_nil, add_zero]
+  rw [mem_lifts_iff, List.map_singleton, List.sum_singleton, one_smul]
 
 theorem norm_eval_le_projectiveSeminorm (x : ⨂[𝕜] i, E i) (G : Type*) [SeminormedAddCommGroup G]
     [NormedSpace 𝕜 G] (f : ContinuousMultilinearMap 𝕜 E G) :

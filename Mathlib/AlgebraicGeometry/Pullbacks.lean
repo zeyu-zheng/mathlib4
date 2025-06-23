@@ -78,10 +78,10 @@ theorem t_snd (i j : 𝒰.J) : t 𝒰 f g i j ≫ pullback.snd _ _ =
 
 theorem t_id (i : 𝒰.J) : t 𝒰 f g i i = 𝟙 _ := by
   apply pullback.hom_ext <;> rw [Category.id_comp]
-  · apply pullback.hom_ext
-    · rw [← cancel_mono (𝒰.map i)]; simp only [pullback.condition, Category.assoc, t_fst_fst]
-    · simp only [Category.assoc, t_fst_snd]
-  · rw [← cancel_mono (𝒰.map i)]; simp only [pullback.condition, t_snd, Category.assoc]
+  apply pullback.hom_ext
+  rw [← cancel_mono (𝒰.map i)]; simp only [pullback.condition, Category.assoc, t_fst_fst]
+  simp only [Category.assoc, t_fst_snd]
+  rw [← cancel_mono (𝒰.map i)]; simp only [pullback.condition, t_snd, Category.assoc]
 
 /-- The inclusion map of `V i j = (Uᵢ ×[Z] Y) ×[X] Uⱼ ⟶ Uᵢ ×[Z] Y`-/
 abbrev fV (i j : 𝒰.J) : v 𝒰 f g i j ⟶ pullback (𝒰.map i ≫ f) g :=
@@ -180,16 +180,16 @@ theorem cocycle_snd_snd (i j k : 𝒰.J) :
 -- `by tidy` should solve it, but it times out.
 theorem cocycle (i j k : 𝒰.J) : t' 𝒰 f g i j k ≫ t' 𝒰 f g j k i ≫ t' 𝒰 f g k i j = 𝟙 _ := by
   apply pullback.hom_ext <;> rw [Category.id_comp]
-  · apply pullback.hom_ext
-    · apply pullback.hom_ext
-      · simp_rw [Category.assoc, cocycle_fst_fst_fst 𝒰 f g i j k]
-      · simp_rw [Category.assoc, cocycle_fst_fst_snd 𝒰 f g i j k]
-    · simp_rw [Category.assoc, cocycle_fst_snd 𝒰 f g i j k]
-  · apply pullback.hom_ext
-    · apply pullback.hom_ext
-      · simp_rw [Category.assoc, cocycle_snd_fst_fst 𝒰 f g i j k]
-      · simp_rw [Category.assoc, cocycle_snd_fst_snd 𝒰 f g i j k]
-    · simp_rw [Category.assoc, cocycle_snd_snd 𝒰 f g i j k]
+  apply pullback.hom_ext
+  apply pullback.hom_ext
+  simp_rw [Category.assoc, cocycle_fst_fst_fst 𝒰 f g i j k]
+  simp_rw [Category.assoc, cocycle_fst_fst_snd 𝒰 f g i j k]
+  simp_rw [Category.assoc, cocycle_fst_snd 𝒰 f g i j k]
+  apply pullback.hom_ext
+  apply pullback.hom_ext
+  simp_rw [Category.assoc, cocycle_snd_fst_fst 𝒰 f g i j k]
+  simp_rw [Category.assoc, cocycle_snd_fst_snd 𝒰 f g i j k]
+  simp_rw [Category.assoc, cocycle_snd_snd 𝒰 f g i j k]
 
 /-- Given `Uᵢ ×[Z] Y`, this is the glued fibered product `X ×[Z] Y`. -/
 @[simps U V f t t', simps (config := .lemmasOnly) J]
@@ -337,17 +337,17 @@ theorem lift_comp_ι (i : 𝒰.J) :
   intro j
   dsimp only [OpenCover.pullbackCover]
   trans pullbackFstιToV 𝒰 f g i j ≫ fV 𝒰 f g j i ≫ (gluing 𝒰 f g).ι _
-  · rw [← show _ = fV 𝒰 f g j i ≫ _ from (gluing 𝒰 f g).glue_condition j i]
-    simp_rw [← Category.assoc]
-    congr 1
-    rw [gluing_f, gluing_t]
-    apply pullback.hom_ext <;> simp_rw [Category.assoc]
-    · simp_rw [t_fst_fst, pullback.lift_fst, pullbackFstιToV_snd, GlueData.openCover_map]
-    · simp_rw [t_fst_snd, pullback.lift_snd, pullbackFstιToV_fst_assoc, pullback.condition_assoc,
-        GlueData.openCover_map, p2]
-      simp
-  · rw [pullback.condition, ← Category.assoc]
-    simp_rw [pullbackFstιToV_fst, GlueData.openCover_map]
+  rw [← show _ = fV 𝒰 f g j i ≫ _ from (gluing 𝒰 f g).glue_condition j i]
+  simp_rw [← Category.assoc]
+  congr 1
+  rw [gluing_f, gluing_t]
+  apply pullback.hom_ext <;> simp_rw [Category.assoc]
+  simp_rw [t_fst_fst, pullback.lift_fst, pullbackFstιToV_snd, GlueData.openCover_map]
+  simp_rw [t_fst_snd, pullback.lift_snd, pullbackFstιToV_fst_assoc, pullback.condition_assoc,
+    GlueData.openCover_map, p2]
+  simp
+  rw [pullback.condition, ← Category.assoc]
+  simp_rw [pullbackFstιToV_fst, GlueData.openCover_map]
 
 /-- The canonical isomorphism between `W ×[X] Uᵢ` and `Uᵢ ×[X] Y`. That is, the preimage of `Uᵢ` in
 `W` along `p1` is indeed `Uᵢ ×[X] Y`. -/

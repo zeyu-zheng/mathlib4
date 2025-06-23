@@ -64,14 +64,14 @@ theorem gauge_gaugeRescale' (s : Set E) {t : Set E} {x : E} (hx : gauge t x ≠ 
 theorem gauge_gaugeRescale (s : Set E) {t : Set E} (hta : Absorbent ℝ t) (htb : IsVonNBounded ℝ t)
     (x : E) : gauge t (gaugeRescale s t x) = gauge s x := by
   rcases eq_or_ne x 0 with rfl | hx
-  · simp
-  · exact gauge_gaugeRescale' s ((gauge_pos hta htb).2 hx).ne'
+  simp
+  exact gauge_gaugeRescale' s ((gauge_pos hta htb).2 hx).ne'
 
 theorem gauge_gaugeRescale_le (s t : Set E) (x : E) :
     gauge t (gaugeRescale s t x) ≤ gauge s x := by
   by_cases hx : gauge t x = 0
-  · simp [gaugeRescale, hx, gauge_nonneg]
-  · exact (gauge_gaugeRescale' s hx).le
+  simp [gaugeRescale, hx, gauge_nonneg]
+  exact (gauge_gaugeRescale' s hx).le
 
 theorem gaugeRescale_gaugeRescale {s t u : Set E} (hta : Absorbent ℝ t) (htb : IsVonNBounded ℝ t)
     (x : E) : gaugeRescale t u (gaugeRescale s t x) = gaugeRescale s u x := by
@@ -107,12 +107,12 @@ theorem continuous_gaugeRescale {s t : Set E} (hs : Convex ℝ s) (hs₀ : s ∈
   have hta : Absorbent ℝ t := absorbent_nhds_zero ht₀
   refine continuous_iff_continuousAt.2 fun x ↦ ?_
   rcases eq_or_ne x 0 with rfl | hx
-  · rw [ContinuousAt, gaugeRescale_zero]
-    nth_rewrite 2 [← comap_gauge_nhds_zero htb ht₀]
-    simp only [tendsto_comap_iff, (· ∘ ·), gauge_gaugeRescale _ hta htb]
-    exact tendsto_gauge_nhds_zero hs₀
-  · exact ((continuousAt_gauge hs hs₀).div (continuousAt_gauge ht ht₀)
-      ((gauge_pos hta htb).2 hx).ne').smul continuousAt_id
+  rw [ContinuousAt, gaugeRescale_zero]
+  nth_rewrite 2 [← comap_gauge_nhds_zero htb ht₀]
+  simp only [tendsto_comap_iff, (· ∘ ·), gauge_gaugeRescale _ hta htb]
+  exact tendsto_gauge_nhds_zero hs₀
+  exact ((continuousAt_gauge hs hs₀).div (continuousAt_gauge ht ht₀)
+    ((gauge_pos hta htb).2 hx).ne').smul continuousAt_id
 
 /-- `gaugeRescale` bundled as a `Homeomorph`. -/
 def gaugeRescaleHomeomorph (s t : Set E)
@@ -153,22 +153,22 @@ theorem exists_homeomorph_image_eq {s t : Set E}
     ∃ e : E ≃ₜ E, e '' interior s = interior t ∧ e '' closure s = closure t ∧
       e '' frontier s = frontier t := by
   rsuffices ⟨e, h₁, h₂⟩ : ∃ e : E ≃ₜ E, e '' interior s = interior t ∧ e '' closure s = closure t
-  · refine ⟨e, h₁, h₂, ?_⟩
-    simp_rw [← closure_diff_interior, image_diff e.injective, h₁, h₂]
+  refine ⟨e, h₁, h₂, ?_⟩
+  simp_rw [← closure_diff_interior, image_diff e.injective, h₁, h₂]
   rcases hsne with ⟨x, hx⟩
   rcases htne with ⟨y, hy⟩
   set h : E ≃ₜ E := by
     apply gaugeRescaleHomeomorph (-x +ᵥ s) (-y +ᵥ t) <;>
       simp [← mem_interior_iff_mem_nhds, interior_vadd, mem_vadd_set_iff_neg_vadd_mem, *]
   refine ⟨.trans (.addLeft (-x)) <| h.trans <| .addLeft y, ?_, ?_⟩
-  · calc
-      (fun a ↦ y + h (-x + a)) '' interior s = y +ᵥ h '' interior (-x +ᵥ s) := by
-        simp_rw [interior_vadd, ← image_vadd, image_image, vadd_eq_add]
-      _ = _ := by rw [image_gaugeRescaleHomeomorph_interior, interior_vadd, vadd_neg_vadd]
-  · calc
-      (fun a ↦ y + h (-x + a)) '' closure s = y +ᵥ h '' closure (-x +ᵥ s) := by
-        simp_rw [closure_vadd, ← image_vadd, image_image, vadd_eq_add]
-      _ = _ := by rw [image_gaugeRescaleHomeomorph_closure, closure_vadd, vadd_neg_vadd]
+  calc
+    (fun a ↦ y + h (-x + a)) '' interior s = y +ᵥ h '' interior (-x +ᵥ s) := by
+      simp_rw [interior_vadd, ← image_vadd, image_image, vadd_eq_add]
+    _ = _ := by rw [image_gaugeRescaleHomeomorph_interior, interior_vadd, vadd_neg_vadd]
+  calc
+    (fun a ↦ y + h (-x + a)) '' closure s = y +ᵥ h '' closure (-x +ᵥ s) := by
+      simp_rw [closure_vadd, ← image_vadd, image_image, vadd_eq_add]
+    _ = _ := by rw [image_gaugeRescaleHomeomorph_closure, closure_vadd, vadd_neg_vadd]
 
 end Module
 

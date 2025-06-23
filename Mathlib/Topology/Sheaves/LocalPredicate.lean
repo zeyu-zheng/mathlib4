@@ -176,25 +176,25 @@ theorem isSheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredica
     -- So, we can obtain a unique gluing
     obtain ⟨gl, gl_spec, gl_uniq⟩ := (sheafToTypes X T).existsUnique_gluing U sf' sf'_comp
     refine ⟨⟨gl, ?_⟩, ?_, ?_⟩
-    · -- Our first goal is to show that this chosen gluing satisfies the
-      -- predicate. Of course, we use locality of the predicate.
-      apply P.locality
-      rintro ⟨x, mem⟩
-      -- Once we're at a particular point `x`, we can select some open set `x ∈ U i`.
-      choose i hi using Opens.mem_iSup.mp mem
-      -- We claim that the predicate holds in `U i`
-      use U i, hi, Opens.leSupr U i
-      -- This follows, since our original family `sf` satisfies the predicate
-      convert (sf i).property using 1
-      exact gl_spec i
+    -- Our first goal is to show that this chosen gluing satisfies the
+    -- predicate. Of course, we use locality of the predicate.
+    apply P.locality
+    rintro ⟨x, mem⟩
+    -- Once we're at a particular point `x`, we can select some open set `x ∈ U i`.
+    choose i hi using Opens.mem_iSup.mp mem
+    -- We claim that the predicate holds in `U i`
+    use U i, hi, Opens.leSupr U i
+    -- This follows, since our original family `sf` satisfies the predicate
+    convert (sf i).property using 1
+    exact gl_spec i
 
     -- It remains to show that the chosen lift is really a gluing for the subsheaf and
     -- that it is unique. Both of which follow immediately from the corresponding facts
     -- in the sheaf of functions without the local predicate.
-    · exact fun i => Subtype.ext (gl_spec i)
-    · intro gl' hgl'
-      refine Subtype.ext ?_
-      exact gl_uniq gl'.1 fun i => congr_arg Subtype.val (hgl' i)
+    exact fun i => Subtype.ext (gl_spec i)
+    intro gl' hgl'
+    refine Subtype.ext ?_
+    exact gl_uniq gl'.1 fun i => congr_arg Subtype.val (hgl' i)
 
 end subpresheafToTypes
 
@@ -232,8 +232,8 @@ theorem stalkToFiber_surjective (P : LocalPredicate T) (x : X)
     Function.Surjective (stalkToFiber P x) := fun t => by
   rcases w t with ⟨U, f, h, rfl⟩
   fconstructor
-  · exact (subsheafToTypes P).presheaf.germ ⟨x, U.2⟩ ⟨f, h⟩
-  · exact stalkToFiber_germ _ U.1 ⟨x, U.2⟩ ⟨f, h⟩
+  exact (subsheafToTypes P).presheaf.germ ⟨x, U.2⟩ ⟨f, h⟩
+  exact stalkToFiber_germ _ U.1 ⟨x, U.2⟩ ⟨f, h⟩
 
 /-- The `stalkToFiber` map is injective at `x` if any two allowed sections which agree at `x`
 agree on some neighborhood of `x`.
@@ -251,8 +251,8 @@ theorem stalkToFiber_injective (P : LocalPredicate T) (x : X)
       tU = (subsheafToTypes P).presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ ∧
         tV = (subsheafToTypes P).presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ :=
     ?_
-  · choose W s hW e using Q
-    exact e.1.trans e.2.symm
+  choose W s hW e using Q
+  exact e.1.trans e.2.symm
   -- Then use induction to pick particular representatives of `tU tV : stalk x`
   obtain ⟨U, ⟨fU, hU⟩, rfl⟩ := jointly_surjective'.{v, v} tU
   obtain ⟨V, ⟨fV, hV⟩, rfl⟩ := jointly_surjective'.{v, v} tV
@@ -263,9 +263,9 @@ theorem stalkToFiber_injective (P : LocalPredicate T) (x : X)
   rcases w with ⟨W, iU, iV, w⟩
   -- and put it back together again in the correct order.
   refine ⟨op W, fun w => fU (iU w : (unop U).1), P.res ?_ _ hU, ?_⟩
-  · rcases W with ⟨W, m⟩
-    exact iU
-  · exact ⟨colimit_sound iU.op (Subtype.eq rfl), colimit_sound iV.op (Subtype.eq (funext w).symm)⟩
+  rcases W with ⟨W, m⟩
+  exact iU
+  exact ⟨colimit_sound iU.op (Subtype.eq rfl), colimit_sound iV.op (Subtype.eq (funext w).symm)⟩
 
 /-- Some repackaging:
 the presheaf of functions satisfying `continuousPrelocal` is just the same thing as

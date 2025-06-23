@@ -41,8 +41,8 @@ instance instLinearOrderedCancelAddCommMonoid : LinearOrderedCancelAddCommMonoid
 instance instOrderedSub : OrderedSub ℕ := by
   refine ⟨fun m n k ↦ ?_⟩
   induction' n with n ih generalizing k
-  · simp
-  · simp only [sub_succ, pred_le_iff, ih, succ_add, add_succ]
+  simp
+  simp only [sub_succ, pred_le_iff, ih, succ_add, add_succ]
 
 /-! ### Miscellaneous lemmas -/
 

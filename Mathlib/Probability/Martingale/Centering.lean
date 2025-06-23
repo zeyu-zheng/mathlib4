@@ -88,13 +88,13 @@ theorem martingale_martingalePart (hf : Adapted ℱ f) (hf_int : ∀ n, Integrab
       f 0 + ∑ k ∈ Finset.range j, (μ[f (k + 1) - f k|ℱ i] - μ[μ[f (k + 1) - f k|ℱ k]|ℱ i]) := by
     rw [martingalePart_eq_sum]
     refine (condexp_add (hf_int 0) ?_).trans ?_
-    · exact integrable_finset_sum' _ fun i _ => ((hf_int _).sub (hf_int _)).sub integrable_condexp
+    exact integrable_finset_sum' _ fun i _ => ((hf_int _).sub (hf_int _)).sub integrable_condexp
     refine (EventuallyEq.add EventuallyEq.rfl (condexp_finset_sum fun i _ => ?_)).trans ?_
-    · exact ((hf_int _).sub (hf_int _)).sub integrable_condexp
+    exact ((hf_int _).sub (hf_int _)).sub integrable_condexp
     refine EventuallyEq.add ?_ ?_
-    · rw [condexp_of_stronglyMeasurable (ℱ.le _) _ (hf_int 0)]
-      · exact (hf 0).mono (ℱ.mono (zero_le i))
-    · exact eventuallyEq_sum fun k _ => condexp_sub ((hf_int _).sub (hf_int _)) integrable_condexp
+    rw [condexp_of_stronglyMeasurable (ℱ.le _) _ (hf_int 0)]
+    exact (hf 0).mono (ℱ.mono (zero_le i))
+    exact eventuallyEq_sum fun k _ => condexp_sub ((hf_int _).sub (hf_int _)) integrable_condexp
   refine h_eq_sum.trans ?_
   have h_ge : ∀ k, i ≤ k → μ[f (k + 1) - f k|ℱ i] - μ[μ[f (k + 1) - f k|ℱ k]|ℱ i] =ᵐ[μ] 0
   intro k hk
@@ -105,12 +105,12 @@ theorem martingale_martingalePart (hf : Adapted ℱ f) (hf_int : ∀ n, Integrab
   have h_lt : ∀ k, k < i → μ[f (k + 1) - f k|ℱ i] - μ[μ[f (k + 1) - f k|ℱ k]|ℱ i] =ᵐ[μ]
       f (k + 1) - f k - μ[f (k + 1) - f k|ℱ k] := by
     refine fun k hk => EventuallyEq.sub ?_ ?_
-    · rw [condexp_of_stronglyMeasurable]
-      · exact ((hf (k + 1)).mono (ℱ.mono (Nat.succ_le_of_lt hk))).sub ((hf k).mono (ℱ.mono hk.le))
-      · exact (hf_int _).sub (hf_int _)
-    · rw [condexp_of_stronglyMeasurable]
-      · exact stronglyMeasurable_condexp.mono (ℱ.mono hk.le)
-      · exact integrable_condexp
+    rw [condexp_of_stronglyMeasurable]
+    exact ((hf (k + 1)).mono (ℱ.mono (Nat.succ_le_of_lt hk))).sub ((hf k).mono (ℱ.mono hk.le))
+    exact (hf_int _).sub (hf_int _)
+    rw [condexp_of_stronglyMeasurable]
+    exact stronglyMeasurable_condexp.mono (ℱ.mono hk.le)
+    exact integrable_condexp
   rw [martingalePart_eq_sum]
   refine EventuallyEq.add EventuallyEq.rfl ?_
   rw [← Finset.sum_range_add_sum_Ico _ hij, ←

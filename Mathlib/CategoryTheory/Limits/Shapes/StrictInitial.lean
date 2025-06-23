@@ -199,34 +199,34 @@ said object via `limit.π`. -/
 theorem limit_π_isIso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
     (H : ∀ (j) (_ : j ≠ i), IsTerminal (F.obj j)) [Subsingleton (i ⟶ i)] : IsIso (limit.π F i) := by
     refine ⟨⟨limit.lift _ ⟨_, ⟨?_, ?_⟩⟩, ?_, ?_⟩⟩
-    · exact fun j =>
-        dite (j = i)
-          (fun h => eqToHom (by cases h; rfl))
-          fun h => (H _ h).from _
-    · intro j k f
-      split_ifs with h h_1 h_1
-      · cases h
-        cases h_1
-        obtain rfl : f = 𝟙 _ := Subsingleton.elim _ _
-        simp
-      · cases h
-        erw [Category.comp_id]
-        haveI : IsIso (F.map f) := (H _ h_1).isIso_from _
-        rw [← IsIso.comp_inv_eq]
-        apply (H _ h_1).hom_ext
-      · cases h_1
-        apply (H _ h).hom_ext
-      · apply (H _ h).hom_ext
-    · ext
-      rw [assoc, limit.lift_π]
-      dsimp only
-      split_ifs with h
-      · cases h
-        rw [id_comp, eqToHom_refl]
-        exact comp_id _
-      · apply (H _ h).hom_ext
-    · rw [limit.lift_π]
-      simp
+    exact fun j =>
+      dite (j = i)
+        (fun h => eqToHom (by cases h; rfl))
+        fun h => (H _ h).from _
+    intro j k f
+    split_ifs with h h_1 h_1
+    cases h
+    cases h_1
+    obtain rfl : f = 𝟙 _ := Subsingleton.elim _ _
+    simp
+    cases h
+    erw [Category.comp_id]
+    haveI : IsIso (F.map f) := (H _ h_1).isIso_from _
+    rw [← IsIso.comp_inv_eq]
+    apply (H _ h_1).hom_ext
+    cases h_1
+    apply (H _ h).hom_ext
+    apply (H _ h).hom_ext
+    ext
+    rw [assoc, limit.lift_π]
+    dsimp only
+    split_ifs with h
+    cases h
+    rw [id_comp, eqToHom_refl]
+    exact comp_id _
+    apply (H _ h).hom_ext
+    rw [limit.lift_π]
+    simp
 
 variable [HasTerminal C]
 

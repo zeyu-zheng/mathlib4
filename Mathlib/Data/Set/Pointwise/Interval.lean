@@ -695,8 +695,8 @@ theorem image_mul_right_Icc' (a b : α) {c : α} (h : 0 < c) :
 theorem image_mul_right_Icc {a b c : α} (hab : a ≤ b) (hc : 0 ≤ c) :
     (fun x => x * c) '' Icc a b = Icc (a * c) (b * c) := by
   cases eq_or_lt_of_le hc
-  · subst c
-    simp [(nonempty_Icc.2 hab).image_const]
+  subst c
+  simp [(nonempty_Icc.2 hab).image_const]
   exact image_mul_right_Icc' a b ‹0 < c›
 
 theorem image_mul_left_Icc' {a : α} (h : 0 < a) (b c : α) :

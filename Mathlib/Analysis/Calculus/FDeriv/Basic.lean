@@ -238,8 +238,8 @@ theorem HasFDerivWithinAt.lim (h : HasFDerivWithinAt f f' s x) {α : Type*} (l :
   conv in 𝓝[s] x => rw [← add_zero x]
   rw [nhdsWithin, tendsto_inf]
   constructor
-  · apply tendsto_const_nhds.add (tangentConeAt.lim_zero l clim cdlim)
-  · rwa [tendsto_principal]
+  apply tendsto_const_nhds.add (tangentConeAt.lim_zero l clim cdlim)
+  rwa [tendsto_principal]
   have : (fun y => f y - f x - f' (y - x)) =o[𝓝[s] x] fun y => y - x := h.isLittleO
   have : (fun n => f (x + d n) - f x - f' (x + d n - x)) =o[l] fun n => x + d n - x :=
     this.comp_tendsto tendsto_arg
@@ -315,7 +315,7 @@ only assumes that `‖f x - f x₀‖ ≤ C * ‖x - x₀‖` in a neighborhood 
 theorem HasFDerivAt.le_of_lip' {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (hf : HasFDerivAt f f' x₀)
     {C : ℝ} (hC₀ : 0 ≤ C) (hlip : ∀ᶠ x in 𝓝 x₀, ‖f x - f x₀‖ ≤ C * ‖x - x₀‖) : ‖f'‖ ≤ C := by
   refine le_of_forall_pos_le_add fun ε ε0 => opNorm_le_of_nhds_zero ?_ ?_
-  · exact add_nonneg hC₀ ε0.le
+  exact add_nonneg hC₀ ε0.le
   rw [← map_add_left_nhds_zero x₀, eventually_map] at hlip
   filter_upwards [isLittleO_iff.1 (hasFDerivAt_iff_isLittleO_nhds_zero.1 hf) ε0, hlip] with y hy hyC
   rw [add_sub_cancel_left] at hyC
@@ -385,9 +385,9 @@ lemma hasFDerivWithinAt_of_isOpen (h : IsOpen s) (hx : x ∈ s) :
 theorem hasFDerivWithinAt_insert {y : E} :
     HasFDerivWithinAt f f' (insert y s) x ↔ HasFDerivWithinAt f f' s x := by
   rcases eq_or_ne x y with (rfl | h)
-  · simp_rw [HasFDerivWithinAt, hasFDerivAtFilter_iff_isLittleO]
-    apply Asymptotics.isLittleO_insert
-    simp only [sub_self, map_zero]
+  simp_rw [HasFDerivWithinAt, hasFDerivAtFilter_iff_isLittleO]
+  apply Asymptotics.isLittleO_insert
+  simp only [sub_self, map_zero]
   refine ⟨fun h => h.mono <| subset_insert y s, fun hf => hf.mono_of_mem ?_⟩
   simp_rw [nhdsWithin_insert_of_ne h, self_mem_nhdsWithin]
 
@@ -488,10 +488,10 @@ theorem hasFDerivWithinAt_of_nmem_closure (h : x ∉ closure s) : HasFDerivWithi
 theorem DifferentiableWithinAt.hasFDerivWithinAt (h : DifferentiableWithinAt 𝕜 f s x) :
     HasFDerivWithinAt f (fderivWithin 𝕜 f s x) s x := by
   by_cases H : 𝓝[s \ {x}] x = ⊥
-  · exact .of_nhdsWithin_eq_bot H
-  · unfold DifferentiableWithinAt at h
-    rw [fderivWithin, if_neg H, dif_pos h]
-    exact Classical.choose_spec h
+  exact .of_nhdsWithin_eq_bot H
+  unfold DifferentiableWithinAt at h
+  rw [fderivWithin, if_neg H, dif_pos h]
+  exact Classical.choose_spec h
 
 theorem DifferentiableAt.hasFDerivAt (h : DifferentiableAt 𝕜 f x) :
     HasFDerivAt f (fderiv 𝕜 f x) x := by
@@ -527,9 +527,9 @@ theorem norm_fderiv_le_of_lip' {f : E → F} {x₀ : E}
     {C : ℝ} (hC₀ : 0 ≤ C) (hlip : ∀ᶠ x in 𝓝 x₀, ‖f x - f x₀‖ ≤ C * ‖x - x₀‖) :
     ‖fderiv 𝕜 f x₀‖ ≤ C := by
   by_cases hf : DifferentiableAt 𝕜 f x₀
-  · exact hf.hasFDerivAt.le_of_lip' hC₀ hlip
-  · rw [fderiv_zero_of_not_differentiableAt hf]
-    simp [hC₀]
+  exact hf.hasFDerivAt.le_of_lip' hC₀ hlip
+  rw [fderiv_zero_of_not_differentiableAt hf]
+  simp [hC₀]
 
 /-- Converse to the mean value inequality: if `f` is `C`-lipschitz
 on a neighborhood of `x₀` then its derivative at `x₀` has norm bounded by `C`.

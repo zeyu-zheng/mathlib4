@@ -325,7 +325,7 @@ lemma disjoint_genEigenspace [NoZeroSMulDivisors R M]
     (mapsTo_genEigenspace_of_comm (Algebra.mul_sub_algebraMap_commutes f μ₂) μ₂ l)
   have : IsNilpotent (f₂ - f₁)
   apply Commute.isNilpotent_sub (x := f₂) (y := f₁) _ ⟨l, ?_⟩ ⟨k, ?_⟩
-  · ext; simp [f₁, f₂, smul_sub, sub_sub, smul_comm μ₁, add_sub_left_comm]
+  ext; simp [f₁, f₂, smul_sub, sub_sub, smul_comm μ₁, add_sub_left_comm]
   ext ⟨x, _, _⟩; simpa [LinearMap.restrict_apply, LinearMap.pow_restrict _] using ‹_›
   ext ⟨x, _, _⟩; simpa [LinearMap.restrict_apply, LinearMap.pow_restrict _] using ‹_›
   have hf₁₂ : f₂ - f₁ = algebraMap R (End R p) (μ₁ - μ₂)
@@ -358,7 +358,7 @@ theorem independent_genEigenspace [NoZeroSMulDivisors R M] (f : End R M) :
     exact fun s μ _ ↦ this _ _ (s.not_mem_erase μ)
   intro μ₁ s
   induction' s using Finset.induction_on with μ₂ s _ ih
-  · simp
+  simp
   intro hμ₁₂
   obtain ⟨hμ₁₂ : μ₁ ≠ μ₂, hμ₁ : μ₁ ∉ s⟩ := by rwa [Finset.mem_insert, not_or] at hμ₁₂
   specialize ih hμ₁
@@ -374,15 +374,15 @@ theorem independent_genEigenspace [NoZeroSMulDivisors R M] (f : End R M) :
   have hyz : (g ^ k) (y + z) ∈
       (⨆ k, genEigenspace f μ₁ k) ⊓ s.sup fun μ ↦ ⨆ k, f.genEigenspace μ k := by
     refine ⟨f.mapsTo_iSup_genEigenspace_of_comm ?_ μ₁ hx, ?_⟩
-    · exact Algebra.mul_sub_algebraMap_pow_commutes f μ₂ k
-    · rw [SetLike.mem_coe, map_add, hk, zero_add]
-      suffices (s.sup fun μ ↦ ⨆ k, f.genEigenspace μ k).map (g ^ k) ≤
-          s.sup fun μ ↦ ⨆ k, f.genEigenspace μ k by exact this (Submodule.mem_map_of_mem hz)
-      simp_rw [Finset.sup_eq_iSup, Submodule.map_iSup (ι := R), Submodule.map_iSup (ι := _ ∈ s)]
-      refine iSup₂_mono fun μ _ ↦ ?_
-      rintro - ⟨u, hu, rfl⟩
-      refine f.mapsTo_iSup_genEigenspace_of_comm ?_ μ hu
-      exact Algebra.mul_sub_algebraMap_pow_commutes f μ₂ k
+    exact Algebra.mul_sub_algebraMap_pow_commutes f μ₂ k
+    rw [SetLike.mem_coe, map_add, hk, zero_add]
+    suffices (s.sup fun μ ↦ ⨆ k, f.genEigenspace μ k).map (g ^ k) ≤
+        s.sup fun μ ↦ ⨆ k, f.genEigenspace μ k by exact this (Submodule.mem_map_of_mem hz)
+    simp_rw [Finset.sup_eq_iSup, Submodule.map_iSup (ι := R), Submodule.map_iSup (ι := _ ∈ s)]
+    refine iSup₂_mono fun μ _ ↦ ?_
+    rintro - ⟨u, hu, rfl⟩
+    refine f.mapsTo_iSup_genEigenspace_of_comm ?_ μ hu
+    exact Algebra.mul_sub_algebraMap_pow_commutes f μ₂ k
   rw [ih.eq_bot, Submodule.mem_bot] at hyz
   simp_rw [Submodule.mem_iSup_of_chain, mem_genEigenspace]
   exact ⟨k, hyz⟩
@@ -413,10 +413,10 @@ theorem genEigenspace_restrict (f : End R M) (p : Submodule R M) (k : ℕ) (μ :
       Submodule.comap p.subtype (f.genEigenspace μ k) := by
   simp only [genEigenspace, OrderHom.coe_mk, ← LinearMap.ker_comp]
   induction' k with k ih
-  · rw [pow_zero, pow_zero, LinearMap.one_eq_id]
-    apply (Submodule.ker_subtype _).symm
-  · erw [pow_succ, pow_succ, LinearMap.ker_comp, LinearMap.ker_comp, ih, ← LinearMap.ker_comp,
-      LinearMap.comp_assoc]
+  rw [pow_zero, pow_zero, LinearMap.one_eq_id]
+  apply (Submodule.ker_subtype _).symm
+  erw [pow_succ, pow_succ, LinearMap.ker_comp, LinearMap.ker_comp, ih, ← LinearMap.ker_comp,
+    LinearMap.comp_assoc]
 
 lemma _root_.Submodule.inf_genEigenspace (f : End R M) (p : Submodule R M) {k : ℕ} {μ : R}
     (hfp : ∀ x : M, x ∈ p → f x ∈ p) :
@@ -506,9 +506,9 @@ lemma iSup_genEigenspace_inf_le_add
   suffices (((f₁ - μ₁ • 1) ^ i) * ((f₂ - μ₂ • 1) ^ j)) m = 0 by
     rw [LinearMap.smul_apply, this, smul_zero]
   cases' Nat.le_or_le_of_add_eq_add_pred (Finset.mem_antidiagonal.mp hij) with hi hj
-  · rw [(h.pow_pow i j).eq, LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hi hk₁,
-      LinearMap.map_zero]
-  · rw [LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hj hk₂, LinearMap.map_zero]
+  rw [(h.pow_pow i j).eq, LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hi hk₁,
+    LinearMap.map_zero]
+  rw [LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hj hk₂, LinearMap.map_zero]
 
 lemma map_smul_of_iInf_genEigenspace_ne_bot [NoZeroSMulDivisors R M]
     {L F : Type*} [SMul R L] [FunLike F L (End R M)] [MulActionHomClass F R L (End R M)] (f : F)

@@ -42,11 +42,11 @@ lemma coversTop_iff_of_isTerminal (X : C) (hX : IsTerminal X)
     {I : Type*} (Y : I → C) :
     J.CoversTop Y ↔ Sieve.ofObjects Y X ∈ J X := by
   constructor
-  · tauto
-  · intro h W
-    apply J.superset_covering _ (J.pullback_stable (hX.from W) h)
-    rintro T a ⟨i, ⟨b⟩⟩
-    exact ⟨i, ⟨b⟩⟩
+  tauto
+  intro h W
+  apply J.superset_covering _ (J.pullback_stable (hX.from W) h)
+  rintro T a ⟨i, ⟨b⟩⟩
+  exact ⟨i, ⟨b⟩⟩
 
 namespace CoversTop
 
@@ -125,27 +125,27 @@ lemma exists_unique_section (hx : x.IsCompatible) (hY : J.CoversTop Y) (hF : IsS
     ∃! (s : F.sections), ∀ (i : I), s.1 (Opposite.op (Y i)) = x i := by
   have H := (isSheaf_iff_isSheaf_of_type _ _).1 hF
   apply exists_unique_of_exists_of_unique
-  · let s := fun (X : C) => (H _ (hY X)).amalgamate _
-      (hx.familyOfElements_isCompatible X)
-    have hs : ∀ {X : C} (i : I) (f : X ⟶ Y i), s X = F.map f.op (x i) := fun {X} i f => by
-      have h := Presieve.IsSheafFor.valid_glue (H _ (hY X))
-          (hx.familyOfElements_isCompatible _) (𝟙 _) ⟨i, ⟨f⟩⟩
-      simp only [op_id, F.map_id, types_id_apply] at h
-      exact h.trans (hx.familyOfElements_apply _ _ _)
-    have hs' : ∀ {W X : C} (a : W ⟶ X) (i : I) (_ : W ⟶ Y i), F.map a.op (s X) = s W
-    intro W X a i b
-    rw [hs i b]
-    exact (Presieve.IsSheafFor.valid_glue (H _ (hY X))
-      (hx.familyOfElements_isCompatible _) a ⟨i, ⟨b⟩⟩).trans (familyOfElements_apply hx _ _ _)
-    refine ⟨⟨fun X => s X.unop, ?_⟩, fun i => (hs i (𝟙 (Y i))).trans (by simp)⟩
-    rintro ⟨Y₁⟩ ⟨Y₂⟩ ⟨f : Y₂ ⟶ Y₁⟩
-    change F.map f.op (s Y₁) = s Y₂
-    apply (Presieve.isSeparated_of_isSheaf J F H _ (hY Y₂)).ext
-    rintro Z φ ⟨i, ⟨g⟩⟩
-    rw [hs' φ i g, ← hs' (φ ≫ f) i g, op_comp, F.map_comp]
-    rfl
-  · intro y₁ y₂ hy₁ hy₂
-    exact hY.sections_ext ⟨F, hF⟩ (fun i => by rw [hy₁, hy₂])
+  let s := fun (X : C) => (H _ (hY X)).amalgamate _
+    (hx.familyOfElements_isCompatible X)
+  have hs : ∀ {X : C} (i : I) (f : X ⟶ Y i), s X = F.map f.op (x i) := fun {X} i f => by
+    have h := Presieve.IsSheafFor.valid_glue (H _ (hY X))
+        (hx.familyOfElements_isCompatible _) (𝟙 _) ⟨i, ⟨f⟩⟩
+    simp only [op_id, F.map_id, types_id_apply] at h
+    exact h.trans (hx.familyOfElements_apply _ _ _)
+  have hs' : ∀ {W X : C} (a : W ⟶ X) (i : I) (_ : W ⟶ Y i), F.map a.op (s X) = s W
+  intro W X a i b
+  rw [hs i b]
+  exact (Presieve.IsSheafFor.valid_glue (H _ (hY X))
+    (hx.familyOfElements_isCompatible _) a ⟨i, ⟨b⟩⟩).trans (familyOfElements_apply hx _ _ _)
+  refine ⟨⟨fun X => s X.unop, ?_⟩, fun i => (hs i (𝟙 (Y i))).trans (by simp)⟩
+  rintro ⟨Y₁⟩ ⟨Y₂⟩ ⟨f : Y₂ ⟶ Y₁⟩
+  change F.map f.op (s Y₁) = s Y₂
+  apply (Presieve.isSeparated_of_isSheaf J F H _ (hY Y₂)).ext
+  rintro Z φ ⟨i, ⟨g⟩⟩
+  rw [hs' φ i g, ← hs' (φ ≫ f) i g, op_comp, F.map_comp]
+  rfl
+  intro y₁ y₂ hy₁ hy₂
+  exact hY.sections_ext ⟨F, hF⟩ (fun i => by rw [hy₁, hy₂])
 
 variable (hx : x.IsCompatible) (hY : J.CoversTop Y) (hF : IsSheaf J F)
 

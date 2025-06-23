@@ -297,8 +297,8 @@ theorem sigmaFinsuppEquivDFinsupp_single [DecidableEq ι] [Zero N] (a : Σi, η 
   obtain ⟨i, a⟩ := a
   ext j b
   by_cases h : i = j
-  · subst h
-    classical simp [split_apply, Finsupp.single_apply]
+  subst h
+  classical simp [split_apply, Finsupp.single_apply]
   suffices Finsupp.single (⟨i, a⟩ : Σi, η i) n ⟨j, b⟩ = 0 by simp [split_apply, dif_neg h, this]
   have H : (⟨i, a⟩ : Σi, η i) ≠ ⟨j, b⟩
   simp [h]

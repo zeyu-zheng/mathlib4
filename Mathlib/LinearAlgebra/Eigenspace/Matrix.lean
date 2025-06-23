@@ -46,22 +46,22 @@ lemma hasEigenvalue_toLin_diagonal_iff (d : n → R) {μ : R} [NoZeroSMulDivisor
   have (i : n) : HasEigenvalue (toLin b b (diagonal d)) (d i) :=
     hasEigenvalue_of_hasEigenvector <| hasEigenvector_toLin_diagonal d i b
   constructor
-  · contrapose!
-    intro hμ h_eig
-    have h_iSup : ⨆ μ ∈ Set.range d, eigenspace (toLin b b (diagonal d)) μ = ⊤ := by
-      rw [eq_top_iff, ← b.span_eq, Submodule.span_le]
-      rintro - ⟨i, rfl⟩
-      simp only [SetLike.mem_coe]
-      apply Submodule.mem_iSup_of_mem (d i)
-      apply Submodule.mem_iSup_of_mem ⟨i, rfl⟩
-      rw [mem_eigenspace_iff]
-      exact (hasEigenvector_toLin_diagonal d i b).apply_eq_smul
-    have hμ_not_mem : μ ∉ Set.range d := by simpa using fun i ↦ (hμ i)
-    have := eigenspaces_independent (toLin b b (diagonal d)) |>.disjoint_biSup hμ_not_mem
-    rw [h_iSup, disjoint_top] at this
-    exact h_eig this
-  · rintro ⟨i, rfl⟩
-    exact this i
+  contrapose!
+  intro hμ h_eig
+  have h_iSup : ⨆ μ ∈ Set.range d, eigenspace (toLin b b (diagonal d)) μ = ⊤ := by
+    rw [eq_top_iff, ← b.span_eq, Submodule.span_le]
+    rintro - ⟨i, rfl⟩
+    simp only [SetLike.mem_coe]
+    apply Submodule.mem_iSup_of_mem (d i)
+    apply Submodule.mem_iSup_of_mem ⟨i, rfl⟩
+    rw [mem_eigenspace_iff]
+    exact (hasEigenvector_toLin_diagonal d i b).apply_eq_smul
+  have hμ_not_mem : μ ∉ Set.range d := by simpa using fun i ↦ (hμ i)
+  have := eigenspaces_independent (toLin b b (diagonal d)) |>.disjoint_biSup hμ_not_mem
+  rw [h_iSup, disjoint_top] at this
+  exact h_eig this
+  rintro ⟨i, rfl⟩
+  exact this i
 
 /-- Eigenvalues of a diagonal linear operator with respect to standard basis
     are the diagonal entries. -/

@@ -38,8 +38,8 @@ theorem MulAction.smul_bijective_of_is_unit
   rw [Function.bijective_iff_has_inverse]
   use fun a ↦ m⁻¹ • a
   constructor
-  · intro x; simp [← Units.smul_def]
-  · intro x; simp [← Units.smul_def]
+  intro x; simp [← Units.smul_def]
+  intro x; simp [← Units.smul_def]
 
 variable {R S : Type*} (M M₁ M₂ N : Type*)
 
@@ -74,21 +74,21 @@ theorem preimage_smul_setₛₗ'
     (hc' : Function.Injective (fun (n : N) ↦ σ c • n)) :
     h ⁻¹' (σ c • t) = c • h ⁻¹' t := by
   apply le_antisymm
-  · intro m
-    obtain ⟨m', rfl⟩ := hc m
-    rintro ⟨n, hn, hn'⟩
-    refine ⟨m', ?_, rfl⟩
-    rw [map_smulₛₗ] at hn'
-    rw [mem_preimage, ← hc' hn']
-    exact hn
-  · exact smul_preimage_set_leₛₗ M N σ h c t
+  intro m
+  obtain ⟨m', rfl⟩ := hc m
+  rintro ⟨n, hn, hn'⟩
+  refine ⟨m', ?_, rfl⟩
+  rw [map_smulₛₗ] at hn'
+  rw [mem_preimage, ← hc' hn']
+  exact hn
+  exact smul_preimage_set_leₛₗ M N σ h c t
 
 /-- `preimage_smul_setₛₗ` when both scalars act by unit -/
 theorem preimage_smul_setₛₗ_of_units (hc : IsUnit c) (hc' : IsUnit (σ c)) :
     h ⁻¹' (σ c • t) = c • h ⁻¹' t := by
   apply preimage_smul_setₛₗ'
-  · exact (MulAction.smul_bijective_of_is_unit hc).surjective
-  · exact (MulAction.smul_bijective_of_is_unit hc').injective
+  exact (MulAction.smul_bijective_of_is_unit hc).surjective
+  exact (MulAction.smul_bijective_of_is_unit hc').injective
 
 
 /-- `preimage_smul_setₛₗ` in the context of a `MonoidHom` -/

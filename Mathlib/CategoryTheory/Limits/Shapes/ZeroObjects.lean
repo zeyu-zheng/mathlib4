@@ -102,10 +102,10 @@ def isoIsTerminal (hX : IsZero X) (hY : IsTerminal Y) : X ≅ Y :=
 theorem of_iso (hY : IsZero Y) (e : X ≅ Y) : IsZero X := by
   refine ⟨fun Z => ⟨⟨⟨e.hom ≫ hY.to_ Z⟩, fun f => ?_⟩⟩,
     fun Z => ⟨⟨⟨hY.from_ Z ≫ e.inv⟩, fun f => ?_⟩⟩⟩
-  · rw [← cancel_epi e.inv]
-    apply hY.eq_of_src
-  · rw [← cancel_mono e.hom]
-    apply hY.eq_of_tgt
+  rw [← cancel_epi e.inv]
+  apply hY.eq_of_src
+  rw [← cancel_mono e.hom]
+  apply hY.eq_of_tgt
 
 theorem op (h : IsZero X) : IsZero (Opposite.op X) :=
   ⟨fun Y => ⟨⟨⟨(h.from_ (Opposite.unop Y)).op⟩, fun _ => Quiver.Hom.unop_inj (h.eq_of_tgt _ _)⟩⟩,
@@ -126,22 +126,22 @@ theorem Iso.isZero_iff {X Y : C} (e : X ≅ Y) : IsZero X ↔ IsZero Y :=
 
 theorem Functor.isZero (F : C ⥤ D) (hF : ∀ X, IsZero (F.obj X)) : IsZero F := by
   constructor <;> intro G <;> refine ⟨⟨⟨?_⟩, ?_⟩⟩
-  · refine
-      { app := fun X => (hF _).to_ _
-        naturality := ?_ }
-    intros
-    exact (hF _).eq_of_src _ _
-  · intro f
-    ext
-    apply (hF _).eq_of_src _ _
-  · refine
-      { app := fun X => (hF _).from_ _
-        naturality := ?_ }
-    intros
-    exact (hF _).eq_of_tgt _ _
-  · intro f
-    ext
-    apply (hF _).eq_of_tgt _ _
+  refine
+    { app := fun X => (hF _).to_ _
+      naturality := ?_ }
+  intros
+  exact (hF _).eq_of_src _ _
+  intro f
+  ext
+  apply (hF _).eq_of_src _ _
+  refine
+    { app := fun X => (hF _).from_ _
+      naturality := ?_ }
+  intros
+  exact (hF _).eq_of_tgt _ _
+  intro f
+  ext
+  apply (hF _).eq_of_tgt _ _
 
 namespace Limits
 

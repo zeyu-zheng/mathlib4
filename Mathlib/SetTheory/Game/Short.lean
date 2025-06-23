@@ -62,14 +62,14 @@ theorem subsingleton_short_example : ∀ x : PGame, Subsingleton (Short x)
     ⟨fun a b => by
       cases a; cases b
       congr!
-      · funext x
-        apply @Subsingleton.elim _ (subsingleton_short_example (xL x))
-        -- Decreasing goal in Lean 4 is `Subsequent (xL x) (mk α β L R)`
-        -- where `α`, `β`, `L`, and `R` are fresh hypotheses only propositionally
-        -- equal to `xl`, `xr`, `xL`, and `xR`.
-        -- (In Lean 3 it was `(mk xl xr xL xR)` instead.)
-      · funext x
-        apply @Subsingleton.elim _ (subsingleton_short_example (xR x))⟩
+      funext x
+      apply @Subsingleton.elim _ (subsingleton_short_example (xL x))
+      -- Decreasing goal in Lean 4 is `Subsequent (xL x) (mk α β L R)`
+      -- where `α`, `β`, `L`, and `R` are fresh hypotheses only propositionally
+      -- equal to `xl`, `xr`, `xL`, and `xR`.
+      -- (In Lean 3 it was `(mk xl xr xL xR)` instead.)
+      funext x
+      apply @Subsingleton.elim _ (subsingleton_short_example (xR x))⟩
 termination_by x => x
 -- We need to unify a bunch of hypotheses before `pgame_wf_tac` can work.
 decreasing_by all_goals {
@@ -151,8 +151,8 @@ theorem short_birthday (x : PGame.{u}) : [Short x] → x.birthday < Ordinal.omeg
         Cardinal.lsub_lt_ord_of_isRegular.{u, u} Cardinal.isRegular_aleph0
           (Cardinal.lt_aleph0_of_finite _) fun i => ?_
       rw [Cardinal.ord_aleph0]
-    · apply ihl
-    · apply ihr
+    apply ihl
+    apply ihr
 
 /-- This leads to infinite loops if made into an instance. -/
 def Short.ofIsEmpty {l r xL xR} [IsEmpty l] [IsEmpty r] : Short (PGame.mk l r xL xR) := by
@@ -190,8 +190,8 @@ instance listShortGet :
 instance shortOfLists : ∀ (L R : List PGame) [ListShort L] [ListShort R], Short (PGame.ofLists L R)
   | L, R, _, _ => by
     apply Short.mk
-    · intros; infer_instance
-    · intros; apply PGame.listShortGet
+    intros; infer_instance
+    intros; apply PGame.listShortGet
 
 /-- If `x` is a short game, and `y` is a relabelling of `x`, then `y` is also short. -/
 def shortOfRelabelling : ∀ {x y : PGame.{u}}, Relabelling x y → Short x → Short y
@@ -212,8 +212,8 @@ instance shortAdd : ∀ (x y : PGame.{u}) [Short x] [Short y], Short (x + y)
     apply Short.mk
     all_goals
       rintro ⟨i⟩
-      · apply shortAdd
-      · change Short (mk xl xr xL xR + _); apply shortAdd
+      apply shortAdd
+      change Short (mk xl xr xL xR + _); apply shortAdd
 termination_by x y => (x, y)
 
 instance shortNat : ∀ n : ℕ, Short n

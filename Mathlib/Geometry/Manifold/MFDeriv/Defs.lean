@@ -151,7 +151,7 @@ theorem differentiable_within_at_localInvariantProp :
       have : I (e x) ∈ I.symm ⁻¹' e.target ∩ Set.range I := by simp only [hx, mfld_simps]
       have := (mem_groupoid_of_pregroupoid.2 he).2.contDiffWithinAt this
       convert (h.comp' _ (this.differentiableWithinAt le_top)).mono_of_mem _ using 1
-      · ext y; simp only [mfld_simps]
+      ext y; simp only [mfld_simps]
       refine
         mem_nhdsWithin.mpr
           ⟨I.symm ⁻¹' e.target, e.open_target.preimage I.continuous_symm, by
@@ -160,10 +160,10 @@ theorem differentiable_within_at_localInvariantProp :
     congr_of_forall := by
       intro s x f g h hx hf
       apply hf.congr
-      · intro y hy
-        simp only [mfld_simps] at hy
-        simp only [h, hy, mfld_simps]
-      · simp only [hx, mfld_simps]
+      intro y hy
+      simp only [mfld_simps] at hy
+      simp only [h, hy, mfld_simps]
+      simp only [hx, mfld_simps]
     left_invariance' := by
       intro s x f e' he' hs hx h
       rw [DifferentiableWithinAtProp] at h ⊢
@@ -171,8 +171,8 @@ theorem differentiable_within_at_localInvariantProp :
         simp only [hx, mfld_simps]
       have := (mem_groupoid_of_pregroupoid.2 he').1.contDiffWithinAt A
       convert (this.differentiableWithinAt le_top).comp _ h _
-      · ext y; simp only [mfld_simps]
-      · intro y hy; simp only [mfld_simps] at hy; simpa only [hy, mfld_simps] using hs hy.1 }
+      ext y; simp only [mfld_simps]
+      intro y hy; simp only [mfld_simps] at hy; simpa only [hy, mfld_simps] using hs hy.1 }
 
 /-- Predicate ensuring that, at a point and within a set, a function can have at most one
 derivative. This is expressed using the preferred chart at the considered point. -/

@@ -95,8 +95,8 @@ lemma pullback.hom_ext {Z : CompHaus.{u}} (a b : Z ⟶ pullback f g)
   apply_fun (fun q => q z) at hfst hsnd
   apply Subtype.ext
   apply Prod.ext
-  · exact hfst
-  · exact hsnd
+  exact hfst
+  exact hsnd
 
 /--
 The pullback cone whose cone point is the explicit pullback.

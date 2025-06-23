@@ -120,13 +120,13 @@ instance (priority := 100) lawfulMvFunctor : LawfulMvFunctor F where
 theorem liftP_iff {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (x : F α) :
     LiftP p x ↔ ∃ a f, x = abs ⟨a, f⟩ ∧ ∀ i j, p (f i j) := by
   constructor
-  · rintro ⟨y, hy⟩
-    cases' h : repr y with a f
-    use a, fun i j => (f i j).val
-    constructor
-    · rw [← hy, ← abs_repr y, h, ← abs_map]; rfl
-    intro i j
-    apply (f i j).property
+  rintro ⟨y, hy⟩
+  cases' h : repr y with a f
+  use a, fun i j => (f i j).val
+  constructor
+  rw [← hy, ← abs_repr y, h, ← abs_map]; rfl
+  intro i j
+  apply (f i j).property
   rintro ⟨a, f, h₀, h₁⟩
   use abs ⟨a, fun i j => ⟨f i j, h₁ i j⟩⟩
   rw [← abs_map, h₀]; rfl
@@ -134,19 +134,19 @@ theorem liftP_iff {α : TypeVec n} (p : ∀ ⦃i⦄, α i → Prop) (x : F α) :
 theorem liftR_iff {α : TypeVec n} (r : ∀ /- ⦃i⦄ -/ {i}, α i → α i → Prop) (x y : F α) :
     LiftR r x y ↔ ∃ a f₀ f₁, x = abs ⟨a, f₀⟩ ∧ y = abs ⟨a, f₁⟩ ∧ ∀ i j, r (f₀ i j) (f₁ i j) := by
   constructor
-  · rintro ⟨u, xeq, yeq⟩
-    cases' h : repr u with a f
-    use a, fun i j => (f i j).val.fst, fun i j => (f i j).val.snd
-    constructor
-    · rw [← xeq, ← abs_repr u, h, ← abs_map]; rfl
-    constructor
-    · rw [← yeq, ← abs_repr u, h, ← abs_map]; rfl
-    intro i j
-    exact (f i j).property
+  rintro ⟨u, xeq, yeq⟩
+  cases' h : repr u with a f
+  use a, fun i j => (f i j).val.fst, fun i j => (f i j).val.snd
+  constructor
+  rw [← xeq, ← abs_repr u, h, ← abs_map]; rfl
+  constructor
+  rw [← yeq, ← abs_repr u, h, ← abs_map]; rfl
+  intro i j
+  exact (f i j).property
   rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
   use abs ⟨a, fun i j => ⟨(f₀ i j, f₁ i j), h i j⟩⟩
   dsimp; constructor
-  · rw [xeq, ← abs_map]; rfl
+  rw [xeq, ← abs_map]; rfl
   rw [yeq, ← abs_map]; rfl
 
 open Set
@@ -156,13 +156,13 @@ open MvFunctor (LiftP LiftR)
 theorem mem_supp {α : TypeVec n} (x : F α) (i) (u : α i) :
     u ∈ supp x i ↔ ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ := by
   rw [supp]; dsimp; constructor
-  · intro h a f haf
-    have : LiftP (fun i u => u ∈ f i '' univ) x
-    rw [liftP_iff]
-    refine ⟨a, f, haf.symm, ?_⟩
-    intro i u
-    exact mem_image_of_mem _ (mem_univ _)
-    exact h this
+  intro h a f haf
+  have : LiftP (fun i u => u ∈ f i '' univ) x
+  rw [liftP_iff]
+  refine ⟨a, f, haf.symm, ?_⟩
+  intro i u
+  exact mem_image_of_mem _ (mem_univ _)
+  exact h this
   intro h p; rw [liftP_iff]
   rintro ⟨a, f, xeq, h'⟩
   rcases h a f xeq.symm with ⟨i, _, hi⟩
@@ -175,22 +175,22 @@ theorem has_good_supp_iff {α : TypeVec n} (x : F α) :
     (∀ p, LiftP p x ↔ ∀ (i), ∀ u ∈ supp x i, p i u) ↔
       ∃ a f, abs ⟨a, f⟩ = x ∧ ∀ i a' f', abs ⟨a', f'⟩ = x → f i '' univ ⊆ f' i '' univ := by
   constructor
-  · intro h
-    have : LiftP (supp x) x
-    rw [h]; introv; exact id
-    rw [liftP_iff] at this
-    rcases this with ⟨a, f, xeq, h'⟩
-    refine ⟨a, f, xeq.symm, ?_⟩
-    intro a' f' h''
-    rintro hu u ⟨j, _h₂, hfi⟩
-    have hh : u ∈ supp x a'
-    rw [← hfi]; apply h'
-    exact (mem_supp x _ u).mp hh _ _ hu
+  intro h
+  have : LiftP (supp x) x
+  rw [h]; introv; exact id
+  rw [liftP_iff] at this
+  rcases this with ⟨a, f, xeq, h'⟩
+  refine ⟨a, f, xeq.symm, ?_⟩
+  intro a' f' h''
+  rintro hu u ⟨j, _h₂, hfi⟩
+  have hh : u ∈ supp x a'
+  rw [← hfi]; apply h'
+  exact (mem_supp x _ u).mp hh _ _ hu
   rintro ⟨a, f, xeq, h⟩ p; rw [liftP_iff]; constructor
-  · rintro ⟨a', f', xeq', h'⟩ i u usuppx
-    rcases (mem_supp x _ u).mp (@usuppx) a' f' xeq'.symm with ⟨i, _, f'ieq⟩
-    rw [← f'ieq]
-    apply h'
+  rintro ⟨a', f', xeq', h'⟩ i u usuppx
+  rcases (mem_supp x _ u).mp (@usuppx) a' f' xeq'.symm with ⟨i, _, f'ieq⟩
+  rw [← f'ieq]
+  apply h'
   intro h'
   refine ⟨a, f, xeq.symm, ?_⟩; intro j y
   apply h'; rw [mem_supp]
@@ -215,8 +215,8 @@ def SuppPreservation : Prop :=
 theorem supp_eq_of_isUniform (h : q.IsUniform) {α : TypeVec n} (a : q.P.A) (f : q.P.B a ⟹ α) :
     ∀ i, supp (abs ⟨a, f⟩) i = f i '' univ := by
   intro; ext u; rw [mem_supp]; constructor
-  · intro h'
-    apply h' _ _ rfl
+  intro h'
+  apply h' _ _ rfl
   intro h' a' f' e
   rw [← h _ _ _ _ e.symm]; apply h'
 
@@ -224,11 +224,11 @@ theorem liftP_iff_of_isUniform (h : q.IsUniform) {α : TypeVec n} (x : F α) (p 
     LiftP p x ↔ ∀ (i), ∀ u ∈ supp x i, p i u := by
   rw [liftP_iff, ← abs_repr x]
   cases' repr x with a f; constructor
-  · rintro ⟨a', f', abseq, hf⟩ u
-    rw [supp_eq_of_isUniform h, h _ _ _ _ abseq]
-    rintro b ⟨i, _, hi⟩
-    rw [← hi]
-    apply hf
+  rintro ⟨a', f', abseq, hf⟩ u
+  rw [supp_eq_of_isUniform h, h _ _ _ _ abseq]
+  rintro b ⟨i, _, hi⟩
+  rw [← hi]
+  apply hf
   intro h'
   refine ⟨a, f, rfl, fun _ i => h' _ _ ?_⟩
   rw [supp_eq_of_isUniform h]
@@ -242,25 +242,25 @@ theorem supp_map (h : q.IsUniform) {α β : TypeVec n} (g : α ⟹ β) (x : F α
 
 theorem suppPreservation_iff_isUniform : q.SuppPreservation ↔ q.IsUniform := by
   constructor
-  · intro h α a a' f f' h' i
-    rw [← MvPFunctor.supp_eq, ← MvPFunctor.supp_eq, ← h, h', h]
-  · rintro h α ⟨a, f⟩
-    ext
-    rwa [supp_eq_of_isUniform, MvPFunctor.supp_eq]
+  intro h α a a' f f' h' i
+  rw [← MvPFunctor.supp_eq, ← MvPFunctor.supp_eq, ← h, h', h]
+  rintro h α ⟨a, f⟩
+  ext
+  rwa [supp_eq_of_isUniform, MvPFunctor.supp_eq]
 
 theorem suppPreservation_iff_liftpPreservation : q.SuppPreservation ↔ q.LiftPPreservation := by
   constructor <;> intro h
-  · rintro α p ⟨a, f⟩
-    have h' := h
-    rw [suppPreservation_iff_isUniform] at h'
-    dsimp only [SuppPreservation, supp] at h
-    simp only [liftP_iff_of_isUniform, supp_eq_of_isUniform, MvPFunctor.liftP_iff', h',
-      image_univ, mem_range, exists_imp]
-    constructor <;> intros <;> subst_vars <;> solve_by_elim
-  · rintro α ⟨a, f⟩
-    simp only [LiftPPreservation] at h
-    ext
-    simp only [supp, h, mem_setOf_eq]
+  rintro α p ⟨a, f⟩
+  have h' := h
+  rw [suppPreservation_iff_isUniform] at h'
+  dsimp only [SuppPreservation, supp] at h
+  simp only [liftP_iff_of_isUniform, supp_eq_of_isUniform, MvPFunctor.liftP_iff', h',
+    image_univ, mem_range, exists_imp]
+  constructor <;> intros <;> subst_vars <;> solve_by_elim
+  rintro α ⟨a, f⟩
+  simp only [LiftPPreservation] at h
+  ext
+  simp only [supp, h, mem_setOf_eq]
 
 theorem liftpPreservation_iff_uniform : q.LiftPPreservation ↔ q.IsUniform := by
   rw [← suppPreservation_iff_liftpPreservation, suppPreservation_iff_isUniform]

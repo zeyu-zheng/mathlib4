@@ -178,8 +178,8 @@ theorem HasDerivAt.hasGradientAt (h : HasDerivAt g g' u) :
 
 theorem gradient_eq_deriv : ∇ g u = starRingEnd 𝕜 (deriv g u) := by
   by_cases h : DifferentiableAt 𝕜 g u
-  · rw [h.hasGradientAt.hasDerivAt.deriv, RCLike.conj_conj]
-  · rw [gradient_eq_zero_of_not_differentiableAt h, deriv_zero_of_not_differentiableAt h, map_zero]
+  rw [h.hasGradientAt.hasDerivAt.deriv, RCLike.conj_conj]
+  rw [gradient_eq_zero_of_not_differentiableAt h, deriv_zero_of_not_differentiableAt h, map_zero]
 
 end OneDimension
 

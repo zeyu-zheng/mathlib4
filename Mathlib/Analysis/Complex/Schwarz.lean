@@ -77,14 +77,14 @@ theorem schwarz_aux {f : ℂ → ℂ} (hd : DifferentiableOn ℂ f (ball c R₁)
     exact ((differentiableOn_dslope <| ball_mem_nhds _ hR₁).mpr hd).mono
       (closedBall_subset_ball hr.2)
   refine norm_le_of_forall_mem_frontier_norm_le isBounded_ball hd ?_ ?_
-  · rw [frontier_ball c hr₀.ne']
-    intro z hz
-    have hz' : z ≠ c := ne_of_mem_sphere hz hr₀.ne'
-    rw [dslope_of_ne _ hz', slope_def_module, norm_smul, norm_inv, mem_sphere_iff_norm.1 hz, ←
-      div_eq_inv_mul, div_le_div_right hr₀, ← dist_eq_norm]
-    exact le_of_lt (h_maps (mem_ball.2 (by rw [mem_sphere.1 hz]; exact hr.2)))
-  · rw [closure_ball c hr₀.ne', mem_closedBall]
-    exact hr.1.le
+  rw [frontier_ball c hr₀.ne']
+  intro z hz
+  have hz' : z ≠ c := ne_of_mem_sphere hz hr₀.ne'
+  rw [dslope_of_ne _ hz', slope_def_module, norm_smul, norm_inv, mem_sphere_iff_norm.1 hz, ←
+    div_eq_inv_mul, div_le_div_right hr₀, ← dist_eq_norm]
+  exact le_of_lt (h_maps (mem_ball.2 (by rw [mem_sphere.1 hz]; exact hr.2)))
+  rw [closure_ball c hr₀.ne', mem_closedBall]
+  exact hr.1.le
 
 /-- Two cases of the **Schwarz Lemma** (derivative and distance), merged together. -/
 theorem norm_dslope_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R₁))
@@ -93,7 +93,7 @@ theorem norm_dslope_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R
   have hR₁ : 0 < R₁ := nonempty_ball.1 ⟨z, hz⟩
   have hR₂ : 0 < R₂ := nonempty_ball.1 ⟨f z, h_maps hz⟩
   rcases eq_or_ne (dslope f c z) 0 with hc | hc
-  · rw [hc, norm_zero]; exact div_nonneg hR₂.le hR₁.le
+  rw [hc, norm_zero]; exact div_nonneg hR₂.le hR₁.le
   rcases exists_dual_vector ℂ _ hc with ⟨g, hg, hgf⟩
   have hg' : ‖g‖₊ = 1 := NNReal.eq hg
   have hg₀ : ‖g‖₊ ≠ 0
@@ -149,7 +149,7 @@ theorem dist_le_div_mul_dist_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c
     (h_maps : MapsTo f (ball c R₁) (ball (f c) R₂)) (hz : z ∈ ball c R₁) :
     dist (f z) (f c) ≤ R₂ / R₁ * dist z c := by
   rcases eq_or_ne z c with (rfl | hne)
-  · simp only [dist_self, mul_zero, le_rfl]
+  simp only [dist_self, mul_zero, le_rfl]
   simpa only [dslope_of_ne _ hne, slope_def_module, norm_smul, norm_inv, ← div_eq_inv_mul, ←
     dist_eq_norm, div_le_iff (dist_pos.2 hne)] using norm_dslope_le_div_of_mapsTo_ball hd h_maps hz
 

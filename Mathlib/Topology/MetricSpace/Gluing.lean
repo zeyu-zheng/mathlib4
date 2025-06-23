@@ -112,8 +112,8 @@ private theorem glueDist_triangle_inl_inr_inr (Φ : Z → X) (Ψ : Z → Y) (ε 
   simp only [glueDist]
   rw [add_right_comm, add_le_add_iff_right]
   refine le_ciInf_add fun p => ciInf_le_of_le ⟨0, ?_⟩ p ?_
-  · exact forall_mem_range.2 fun _ => add_nonneg dist_nonneg dist_nonneg
-  · linarith [dist_triangle_left z (Ψ p) y]
+  exact forall_mem_range.2 fun _ => add_nonneg dist_nonneg dist_nonneg
+  linarith [dist_triangle_left z (Ψ p) y]
 
 private theorem glueDist_triangle_inl_inr_inl (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
     (H : ∀ p q, |dist (Φ p) (Φ q) - dist (Ψ p) (Ψ q)| ≤ 2 * ε) (x : X) (y : Y) (z : X) :
@@ -157,15 +157,15 @@ theorem Sum.mem_uniformity_iff_glueDist (hε : 0 < ε) (s : Set ((X ⊕ Y) × (X
     s ∈ 𝓤 (X ⊕ Y) ↔ ∃ δ > 0, ∀ a b, glueDist Φ Ψ ε a b < δ → (a, b) ∈ s := by
   simp only [Sum.uniformity, Filter.mem_sup, Filter.mem_map, mem_uniformity_dist, mem_preimage]
   constructor
-  · rintro ⟨⟨δX, δX0, hX⟩, δY, δY0, hY⟩
-    refine ⟨min (min δX δY) ε, lt_min (lt_min δX0 δY0) hε, ?_⟩
-    rintro (a | a) (b | b) h <;> simp only [lt_min_iff] at h
-    · exact hX h.1.1
-    · exact absurd h.2 (le_glueDist_inl_inr _ _ _ _ _).not_lt
-    · exact absurd h.2 (le_glueDist_inr_inl _ _ _ _ _).not_lt
-    · exact hY h.1.2
-  · rintro ⟨ε, ε0, H⟩
-    constructor <;> exact ⟨ε, ε0, fun h => H _ _ h⟩
+  rintro ⟨⟨δX, δX0, hX⟩, δY, δY0, hY⟩
+  refine ⟨min (min δX δY) ε, lt_min (lt_min δX0 δY0) hε, ?_⟩
+  rintro (a | a) (b | b) h <;> simp only [lt_min_iff] at h
+  exact hX h.1.1
+  exact absurd h.2 (le_glueDist_inl_inr _ _ _ _ _).not_lt
+  exact absurd h.2 (le_glueDist_inr_inl _ _ _ _ _).not_lt
+  exact hY h.1.2
+  rintro ⟨ε, ε0, H⟩
+  constructor <;> exact ⟨ε, ε0, fun h => H _ _ h⟩
 
 /-- Given two maps `Φ` and `Ψ` intro metric spaces `X` and `Y` such that the distances between
 `Φ p` and `Φ q`, and between `Ψ p` and `Ψ q`, coincide up to `2 ε` where `ε > 0`, one can almost
@@ -231,18 +231,18 @@ theorem Sum.one_le_dist_inr_inl {x : X} {y : Y} : 1 ≤ Sum.dist (.inr y) (.inl 
 private theorem Sum.mem_uniformity (s : Set ((X ⊕ Y) × (X ⊕ Y))) :
     s ∈ 𝓤 (X ⊕ Y) ↔ ∃ ε > 0, ∀ a b, Sum.dist a b < ε → (a, b) ∈ s := by
   constructor
-  · rintro ⟨hsX, hsY⟩
-    rcases mem_uniformity_dist.1 hsX with ⟨εX, εX0, hX⟩
-    rcases mem_uniformity_dist.1 hsY with ⟨εY, εY0, hY⟩
-    refine ⟨min (min εX εY) 1, lt_min (lt_min εX0 εY0) zero_lt_one, ?_⟩
-    rintro (a | a) (b | b) h
-    · exact hX (lt_of_lt_of_le h (le_trans (min_le_left _ _) (min_le_left _ _)))
-    · cases not_le_of_lt (lt_of_lt_of_le h (min_le_right _ _)) Sum.one_le_dist_inl_inr
-    · cases not_le_of_lt (lt_of_lt_of_le h (min_le_right _ _)) Sum.one_le_dist_inr_inl
-    · exact hY (lt_of_lt_of_le h (le_trans (min_le_left _ _) (min_le_right _ _)))
-  · rintro ⟨ε, ε0, H⟩
-    constructor <;> rw [Filter.mem_sets, Filter.mem_map, mem_uniformity_dist] <;>
-      exact ⟨ε, ε0, fun h => H _ _ h⟩
+  rintro ⟨hsX, hsY⟩
+  rcases mem_uniformity_dist.1 hsX with ⟨εX, εX0, hX⟩
+  rcases mem_uniformity_dist.1 hsY with ⟨εY, εY0, hY⟩
+  refine ⟨min (min εX εY) 1, lt_min (lt_min εX0 εY0) zero_lt_one, ?_⟩
+  rintro (a | a) (b | b) h
+  exact hX (lt_of_lt_of_le h (le_trans (min_le_left _ _) (min_le_left _ _)))
+  cases not_le_of_lt (lt_of_lt_of_le h (min_le_right _ _)) Sum.one_le_dist_inl_inr
+  cases not_le_of_lt (lt_of_lt_of_le h (min_le_right _ _)) Sum.one_le_dist_inr_inl
+  exact hY (lt_of_lt_of_le h (le_trans (min_le_left _ _) (min_le_right _ _)))
+  rintro ⟨ε, ε0, H⟩
+  constructor <;> rw [Filter.mem_sets, Filter.mem_map, mem_uniformity_dist] <;>
+    exact ⟨ε, ε0, fun h => H _ _ h⟩
 
 /-- The distance on the disjoint union indeed defines a metric space. All the distance properties
 follow from our choice of the distance. The harder work is to show that the uniform structure
@@ -341,56 +341,56 @@ theorem fst_eq_of_dist_lt_one (x y : Σi, E i) (h : dist x y < 1) : x.1 = y.1 :=
 protected theorem dist_triangle (x y z : Σi, E i) : dist x z ≤ dist x y + dist y z := by
   rcases x with ⟨i, x⟩; rcases y with ⟨j, y⟩; rcases z with ⟨k, z⟩
   rcases eq_or_ne i k with (rfl | hik)
-  · rcases eq_or_ne i j with (rfl | hij)
-    · simpa using dist_triangle x y z
-    · simp only [Sigma.dist_same, Sigma.dist_ne hij, Sigma.dist_ne hij.symm]
-      calc
-        dist x z ≤ dist x (Nonempty.some ⟨x⟩) + 0 + 0 + (0 + 0 + dist (Nonempty.some ⟨z⟩) z) := by
-          simpa only [zero_add, add_zero] using dist_triangle _ _ _
-        _ ≤ _ := by apply_rules [add_le_add, le_rfl, dist_nonneg, zero_le_one]
-  · rcases eq_or_ne i j with (rfl | hij)
-    · simp only [Sigma.dist_ne hik, Sigma.dist_same]
-      calc
-        dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z ≤
-            dist x y + dist y (Nonempty.some ⟨y⟩) + 1 + dist (Nonempty.some ⟨z⟩) z := by
-          apply_rules [add_le_add, le_rfl, dist_triangle]
-        _ = _ := by abel
-    · rcases eq_or_ne j k with (rfl | hjk)
-      · simp only [Sigma.dist_ne hij, Sigma.dist_same]
-        calc
-          dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z ≤
-              dist x (Nonempty.some ⟨x⟩) + 1 + (dist (Nonempty.some ⟨z⟩) y + dist y z) := by
-            apply_rules [add_le_add, le_rfl, dist_triangle]
-          _ = _ := by abel
-      · simp only [hik, hij, hjk, Sigma.dist_ne, Ne, not_false_iff]
-        calc
-          dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z =
-              dist x (Nonempty.some ⟨x⟩) + 1 + 0 + (0 + 0 + dist (Nonempty.some ⟨z⟩) z) := by
-            simp only [add_zero, zero_add]
-          _ ≤ _ := by apply_rules [add_le_add, zero_le_one, dist_nonneg, le_rfl]
+  rcases eq_or_ne i j with (rfl | hij)
+  simpa using dist_triangle x y z
+  simp only [Sigma.dist_same, Sigma.dist_ne hij, Sigma.dist_ne hij.symm]
+  calc
+    dist x z ≤ dist x (Nonempty.some ⟨x⟩) + 0 + 0 + (0 + 0 + dist (Nonempty.some ⟨z⟩) z) := by
+      simpa only [zero_add, add_zero] using dist_triangle _ _ _
+    _ ≤ _ := by apply_rules [add_le_add, le_rfl, dist_nonneg, zero_le_one]
+  rcases eq_or_ne i j with (rfl | hij)
+  simp only [Sigma.dist_ne hik, Sigma.dist_same]
+  calc
+    dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z ≤
+        dist x y + dist y (Nonempty.some ⟨y⟩) + 1 + dist (Nonempty.some ⟨z⟩) z := by
+      apply_rules [add_le_add, le_rfl, dist_triangle]
+    _ = _ := by abel
+  rcases eq_or_ne j k with (rfl | hjk)
+  simp only [Sigma.dist_ne hij, Sigma.dist_same]
+  calc
+    dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z ≤
+        dist x (Nonempty.some ⟨x⟩) + 1 + (dist (Nonempty.some ⟨z⟩) y + dist y z) := by
+      apply_rules [add_le_add, le_rfl, dist_triangle]
+    _ = _ := by abel
+  simp only [hik, hij, hjk, Sigma.dist_ne, Ne, not_false_iff]
+  calc
+    dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z =
+        dist x (Nonempty.some ⟨x⟩) + 1 + 0 + (0 + 0 + dist (Nonempty.some ⟨z⟩) z) := by
+      simp only [add_zero, zero_add]
+    _ ≤ _ := by apply_rules [add_le_add, zero_le_one, dist_nonneg, le_rfl]
 
 protected theorem isOpen_iff (s : Set (Σi, E i)) :
     IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, ∀ y, dist x y < ε → y ∈ s := by
   constructor
-  · rintro hs ⟨i, x⟩ hx
-    obtain ⟨ε, εpos, hε⟩ : ∃ ε > 0, ball x ε ⊆ Sigma.mk i ⁻¹' s :=
-      Metric.isOpen_iff.1 (isOpen_sigma_iff.1 hs i) x hx
-    refine ⟨min ε 1, lt_min εpos zero_lt_one, ?_⟩
-    rintro ⟨j, y⟩ hy
-    rcases eq_or_ne i j with (rfl | hij)
-    · simp only [Sigma.dist_same, lt_min_iff] at hy
-      exact hε (mem_ball'.2 hy.1)
-    · apply (lt_irrefl (1 : ℝ) _).elim
-      calc
-        1 ≤ Sigma.dist ⟨i, x⟩ ⟨j, y⟩ := Sigma.one_le_dist_of_ne hij _ _
-        _ < 1 := hy.trans_le (min_le_right _ _)
-  · refine fun H => isOpen_sigma_iff.2 fun i => Metric.isOpen_iff.2 fun x hx => ?_
-    obtain ⟨ε, εpos, hε⟩ : ∃ ε > 0, ∀ y, dist (⟨i, x⟩ : Σj, E j) y < ε → y ∈ s :=
-      H ⟨i, x⟩ hx
-    refine ⟨ε, εpos, fun y hy => ?_⟩
-    apply hε ⟨i, y⟩
-    rw [Sigma.dist_same]
-    exact mem_ball'.1 hy
+  rintro hs ⟨i, x⟩ hx
+  obtain ⟨ε, εpos, hε⟩ : ∃ ε > 0, ball x ε ⊆ Sigma.mk i ⁻¹' s :=
+    Metric.isOpen_iff.1 (isOpen_sigma_iff.1 hs i) x hx
+  refine ⟨min ε 1, lt_min εpos zero_lt_one, ?_⟩
+  rintro ⟨j, y⟩ hy
+  rcases eq_or_ne i j with (rfl | hij)
+  simp only [Sigma.dist_same, lt_min_iff] at hy
+  exact hε (mem_ball'.2 hy.1)
+  apply (lt_irrefl (1 : ℝ) _).elim
+  calc
+    1 ≤ Sigma.dist ⟨i, x⟩ ⟨j, y⟩ := Sigma.one_le_dist_of_ne hij _ _
+    _ < 1 := hy.trans_le (min_le_right _ _)
+  refine fun H => isOpen_sigma_iff.2 fun i => Metric.isOpen_iff.2 fun x hx => ?_
+  obtain ⟨ε, εpos, hε⟩ : ∃ ε > 0, ∀ y, dist (⟨i, x⟩ : Σj, E j) y < ε → y ∈ s :=
+    H ⟨i, x⟩ hx
+  refine ⟨ε, εpos, fun y hy => ?_⟩
+  apply hε ⟨i, y⟩
+  rw [Sigma.dist_same]
+  exact mem_ball'.1 hy
 
 /-- A metric space structure on the disjoint union `Σ i, E i`.
 We embed isometrically each factor, set the basepoints at distance 1, arbitrarily,
@@ -538,16 +538,16 @@ theorem inductiveLimitDist_eq_dist (I : ∀ n, Isometry (f n)) (x y : Σn, X n) 
     rfl
   | (m + 1), hx, hy => by
     by_cases h : max x.1 y.1 = (m + 1)
-    · generalize m + 1 = m' at *
-      subst m'
-      rfl
-    · have : max x.1 y.1 ≤ succ m := by simp [hx, hy]
-      have : max x.1 y.1 ≤ m
-      simpa [h] using of_le_succ this
-      have xm : x.1 ≤ m := le_trans (le_max_left _ _) this
-      have ym : y.1 ≤ m := le_trans (le_max_right _ _) this
-      rw [leRecOn_succ xm, leRecOn_succ ym, (I m).dist_eq]
-      exact inductiveLimitDist_eq_dist I x y m xm ym
+    generalize m + 1 = m' at *
+    subst m'
+    rfl
+    have : max x.1 y.1 ≤ succ m := by simp [hx, hy]
+    have : max x.1 y.1 ≤ m
+    simpa [h] using of_le_succ this
+    have xm : x.1 ≤ m := le_trans (le_max_left _ _) this
+    have ym : y.1 ≤ m := le_trans (le_max_right _ _) this
+    rw [leRecOn_succ xm, leRecOn_succ ym, (I m).dist_eq]
+    exact inductiveLimitDist_eq_dist I x y m xm ym
 
 /-- Premetric space structure on `Σ n, X n`. -/
 def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σn, X n) where

@@ -76,7 +76,7 @@ def pNilradical (R : Type*) [CommSemiring R] (p : ℕ) : Ideal R := if 1 < p the
 theorem pNilradical_le_nilradical {R : Type*} [CommSemiring R] {p : ℕ} :
     pNilradical R p ≤ nilradical R := by
   by_cases hp : 1 < p
-  · rw [pNilradical, if_pos hp]
+  rw [pNilradical, if_pos hp]
   simp_rw [pNilradical, if_neg hp, bot_le]
 
 theorem pNilradical_eq_nilradical {R : Type*} [CommSemiring R] {p : ℕ} (hp : 1 < p) :
@@ -97,16 +97,16 @@ theorem pNilradical_one {R : Type*} [CommSemiring R] :
 theorem mem_pNilradical {R : Type*} [CommSemiring R] {p : ℕ} {x : R} :
     x ∈ pNilradical R p ↔ ∃ n : ℕ, x ^ p ^ n = 0 := by
   by_cases hp : 1 < p
-  · rw [pNilradical_eq_nilradical hp]
-    refine ⟨fun ⟨n, h⟩ ↦ ⟨n, ?_⟩, fun ⟨n, h⟩ ↦ ⟨p ^ n, h⟩⟩
-    rw [← Nat.sub_add_cancel ((Nat.lt_pow_self hp n).le), pow_add, h, mul_zero]
+  rw [pNilradical_eq_nilradical hp]
+  refine ⟨fun ⟨n, h⟩ ↦ ⟨n, ?_⟩, fun ⟨n, h⟩ ↦ ⟨p ^ n, h⟩⟩
+  rw [← Nat.sub_add_cancel ((Nat.lt_pow_self hp n).le), pow_add, h, mul_zero]
   rw [pNilradical_eq_bot hp, Ideal.mem_bot]
   refine ⟨fun h ↦ ⟨0, by rw [pow_zero, pow_one, h]⟩, fun ⟨n, h⟩ ↦ ?_⟩
   rcases Nat.le_one_iff_eq_zero_or_eq_one.1 (not_lt.1 hp) with hp | hp
-  · by_cases hn : n = 0
-    · rwa [hn, pow_zero, pow_one] at h
-    rw [hp, zero_pow hn, pow_zero] at h
-    subsingleton [subsingleton_of_zero_eq_one h.symm]
+  by_cases hn : n = 0
+  rwa [hn, pow_zero, pow_one] at h
+  rw [hp, zero_pow hn, pow_zero] at h
+  subsingleton [subsingleton_of_zero_eq_one h.symm]
   rwa [hp, one_pow, pow_one] at h
 
 theorem sub_mem_pNilradical_iff_pow_expChar_pow_eq {R : Type*} [CommRing R] {p : ℕ} [ExpChar R p]
@@ -157,9 +157,9 @@ theorem IsPRadical.ker_le [IsPRadical i p] :
 theorem IsPRadical.comap_pNilradical [IsPRadical i p] :
     (pNilradical L p).comap i = pNilradical K p := by
   refine le_antisymm (fun x h ↦ mem_pNilradical.2 ?_) (fun x h ↦ ?_)
-  · obtain ⟨n, h⟩ := mem_pNilradical.1 <| Ideal.mem_comap.1 h
-    obtain ⟨m, h⟩ := mem_pNilradical.1 <| ker_le i p ((map_pow i x _).symm ▸ h)
-    exact ⟨n + m, by rwa [pow_add, pow_mul]⟩
+  obtain ⟨n, h⟩ := mem_pNilradical.1 <| Ideal.mem_comap.1 h
+  obtain ⟨m, h⟩ := mem_pNilradical.1 <| ker_le i p ((map_pow i x _).symm ▸ h)
+  exact ⟨n + m, by rwa [pow_add, pow_mul]⟩
   simp only [Ideal.mem_comap, mem_pNilradical] at h ⊢
   obtain ⟨n, h⟩ := h
   exact ⟨n, by simpa only [map_pow, map_zero] using congr(i $h)⟩

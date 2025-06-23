@@ -364,8 +364,8 @@ theorem map_map (g : β →o γ) (f : α →o β) (s : Interval α) : (s.map f).
 @[simp]
 theorem dual_map (f : α →o β) (s : Interval α) : dual (s.map f) = s.dual.map (OrderHom.dual f) := by
   cases s
-  · rfl
-  · exact WithBot.map_comm rfl _
+  rfl
+  exact WithBot.map_comm rfl _
 
 variable [BoundedOrder α]
 
@@ -476,8 +476,8 @@ instance lattice : Lattice (Interval α) :=
       | some s, some t => by
         change dite _ _ _ ≤ _
         split_ifs
-        · exact WithBot.coe_le_coe.2 ⟨le_sup_left, inf_le_left⟩
-        · exact bot_le
+        exact WithBot.coe_le_coe.2 ⟨le_sup_left, inf_le_left⟩
+        exact bot_le
     inf_le_right := fun s t =>
       match s, t with
       | ⊥, ⊥ => bot_le
@@ -486,8 +486,8 @@ instance lattice : Lattice (Interval α) :=
       | some s, some t => by
         change dite _ _ _ ≤ _
         split_ifs
-        · exact WithBot.coe_le_coe.2 ⟨le_sup_right, inf_le_right⟩
-        · exact bot_le
+        exact WithBot.coe_le_coe.2 ⟨le_sup_right, inf_le_right⟩
+        exact bot_le
     le_inf := fun s t c =>
       match s, t, c with
       | ⊥, t, c => fun _ _ => bot_le
@@ -497,7 +497,7 @@ instance lattice : Lattice (Interval α) :=
         change _ ≤ dite _ _ _
         simp only [WithBot.coe_le_coe] at hb hc ⊢
         rw [dif_pos, WithBot.coe_le_coe]
-        · exact ⟨sup_le hb.1 hc.1, le_inf hb.2 hc.2⟩
+        exact ⟨sup_le hb.1 hc.1, le_inf hb.2 hc.2⟩
         -- Porting note: had to add the next 6 lines including the changes because
         -- it seems that lean cannot automatically turn `NonemptyInterval.toDualProd s`
         -- into `s.toProd` anymore.
@@ -521,10 +521,10 @@ theorem coe_inf : ∀ s t : Interval α, (↑(s ⊓ t) : Set α) = ↑s ∩ ↑t
   | (s : NonemptyInterval α), (t : NonemptyInterval α) => by
     simp only [Inf.inf, coe_coe, NonemptyInterval.coe_def, Icc_inter_Icc]
     split_ifs with h
-    · simp only [coe_coe, NonemptyInterval.coe_def]
-    · refine (Icc_eq_empty <| mt ?_ h).symm
-      exact fun h ↦ ⟨le_sup_left.trans <| h.trans inf_le_right,
-        le_sup_right.trans <| h.trans inf_le_left⟩
+    simp only [coe_coe, NonemptyInterval.coe_def]
+    refine (Icc_eq_empty <| mt ?_ h).symm
+    exact fun h ↦ ⟨le_sup_left.trans <| h.trans inf_le_right,
+      le_sup_right.trans <| h.trans inf_le_left⟩
 
 end Decidable
 
@@ -593,21 +593,21 @@ noncomputable instance completeLattice [@DecidableRel α (· ≤ ·)] :
         le_sSup := fun s s ha => by
           dsimp only -- Porting note (#10752): added `dsimp only`
           split_ifs with h
-          · exact (h ha).le
+          exact (h ha).le
           cases s
-          · exact bot_le
-          · -- Porting note: This case was
-            -- `exact WithBot.some_le_some.2 ⟨iInf₂_le _ ha, le_iSup₂_of_le _ ha le_rfl⟩`
-            -- but there seems to be a defEq-problem at `iInf₂_le` that lean cannot resolve yet.
-            apply WithBot.coe_le_coe.2
-            constructor
-            · apply iInf₂_le
-              exact ha
-            · exact le_iSup₂_of_le _ ha le_rfl
+          exact bot_le
+          -- Porting note: This case was
+          -- `exact WithBot.some_le_some.2 ⟨iInf₂_le _ ha, le_iSup₂_of_le _ ha le_rfl⟩`
+          -- but there seems to be a defEq-problem at `iInf₂_le` that lean cannot resolve yet.
+          apply WithBot.coe_le_coe.2
+          constructor
+          apply iInf₂_le
+          exact ha
+          exact le_iSup₂_of_le _ ha le_rfl
         sSup_le := fun s s ha => by
           dsimp only -- Porting note (#10752): added `dsimp only`
           split_ifs with h
-          · exact bot_le
+          exact bot_le
           obtain ⟨b, hs, hb⟩ := not_subset.1 h
           lift s to NonemptyInterval α using ne_bot_of_le_ne_bot hb (ha _ hs)
           exact
@@ -627,12 +627,12 @@ noncomputable instance completeLattice [@DecidableRel α (· ≤ ·)] :
         sInf_le := fun s₁ s ha => by
           dsimp only -- Porting note (#10752): added `dsimp only`
           split_ifs with h
-          · lift s to NonemptyInterval α using ne_of_mem_of_not_mem ha h.1
-            -- Porting note: Lean failed to figure out the function `f` by itself,
-            -- so I added it through manually
-            let f := fun (s : NonemptyInterval α) (_ : ↑s ∈ s₁) => s.toProd.fst
-            exact WithBot.coe_le_coe.2 ⟨le_iSup₂ (f := f) s ha, iInf₂_le s ha⟩
-          · exact bot_le
+          lift s to NonemptyInterval α using ne_of_mem_of_not_mem ha h.1
+          -- Porting note: Lean failed to figure out the function `f` by itself,
+          -- so I added it through manually
+          let f := fun (s : NonemptyInterval α) (_ : ↑s ∈ s₁) => s.toProd.fst
+          exact WithBot.coe_le_coe.2 ⟨le_iSup₂ (f := f) s ha, iInf₂_le s ha⟩
+          exact bot_le
         le_sInf := by
           intro S s ha
           cases s with
@@ -640,24 +640,24 @@ noncomputable instance completeLattice [@DecidableRel α (· ≤ ·)] :
           | coe s =>
             dsimp -- Porting note (#11227): added a `dsimp`
             split_ifs with h
-            · exact WithBot.coe_le_coe.2
-                ⟨iSup₂_le fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).1,
-                  le_iInf₂ fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).2⟩
-            · rw [not_and_or, not_not] at h
-              rcases h with h | h
-              · exact ha _ h
-              · -- Porting note: ungolfed, due to identification problems
-                -- between `toProd` and `toDualProd`. Original mathport output:
-                -- cases h fun t hb c hc =>
-                --   (WithBot.coe_le_coe.1 <| ha _ hb).1.trans <|
-                --     s.fst_le_snd.trans (WithBot.coe_le_coe.1 <| ha _ hc).2 }
-                exfalso
-                apply h
-                intro b hb c hc
-                have h₁ := (WithBot.coe_le_coe.1 <| ha _ hb).1
-                repeat rw [NonemptyInterval.toDualProd_apply] at h₁
-                rw [OrderDual.toDual_le_toDual] at h₁
-                exact h₁.trans (s.fst_le_snd.trans (WithBot.coe_le_coe.1 <| ha _ hc).2)
+            exact WithBot.coe_le_coe.2
+              ⟨iSup₂_le fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).1,
+                le_iInf₂ fun t hb => (WithBot.coe_le_coe.1 <| ha _ hb).2⟩
+            rw [not_and_or, not_not] at h
+            rcases h with h | h
+            exact ha _ h
+            -- Porting note: ungolfed, due to identification problems
+            -- between `toProd` and `toDualProd`. Original mathport output:
+            -- cases h fun t hb c hc =>
+            --   (WithBot.coe_le_coe.1 <| ha _ hb).1.trans <|
+            --     s.fst_le_snd.trans (WithBot.coe_le_coe.1 <| ha _ hc).2 }
+            exfalso
+            apply h
+            intro b hb c hc
+            have h₁ := (WithBot.coe_le_coe.1 <| ha _ hb).1
+            repeat rw [NonemptyInterval.toDualProd_apply] at h₁
+            rw [OrderDual.toDual_le_toDual] at h₁
+            exact h₁.trans (s.fst_le_snd.trans (WithBot.coe_le_coe.1 <| ha _ hc).2)
   }
 
 @[simp, norm_cast]
@@ -668,16 +668,16 @@ theorem coe_sInf [@DecidableRel α (· ≤ ·)] (S : Set (Interval α)) :
   -- change ↑ (dite _ _ _) = _
   change ((dite _ _ _ : Interval α) : Set α) = ⋂ (s : Interval α) (_ : s ∈ S), (s : Set α)
   split_ifs with h
-  · ext
-    simp [Interval.forall, h.1, ← forall_and, ← NonemptyInterval.mem_def]
+  ext
+  simp [Interval.forall, h.1, ← forall_and, ← NonemptyInterval.mem_def]
   simp_rw [not_and_or, Classical.not_not] at h
   rcases h with h | h
-  · refine (eq_empty_of_subset_empty ?_).symm
-    exact iInter₂_subset_of_subset _ h Subset.rfl
-  · refine (not_nonempty_iff_eq_empty.1 ?_).symm
-    rintro ⟨x, hx⟩
-    rw [mem_iInter₂] at hx
-    exact h fun s ha t hb => (hx _ ha).1.trans (hx _ hb).2
+  refine (eq_empty_of_subset_empty ?_).symm
+  exact iInter₂_subset_of_subset _ h Subset.rfl
+  refine (not_nonempty_iff_eq_empty.1 ?_).symm
+  rintro ⟨x, hx⟩
+  rw [mem_iInter₂] at hx
+  exact h fun s ha t hb => (hx _ ha).1.trans (hx _ hb).2
 
 @[simp, norm_cast]
 theorem coe_iInf [@DecidableRel α (· ≤ ·)] (f : ι → Interval α) :

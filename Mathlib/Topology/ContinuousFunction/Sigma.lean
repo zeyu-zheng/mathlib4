@@ -49,10 +49,10 @@ theorem embedding_sigmaMk_comp [Nonempty X] :
       let ⟨x⟩ := ‹Nonempty X›
       ⟨_, (isOpen_sigma_fst_preimage {i}).preimage (continuous_eval_const x), fun _ ↦ Iff.rfl⟩⟩
   inj := by
-    · rintro ⟨i, g⟩ ⟨i', g'⟩ h
-      obtain ⟨rfl, hg⟩ : i = i' ∧ HEq (⇑g) (⇑g') :=
-        Function.eq_of_sigmaMk_comp <| congr_arg DFunLike.coe h
-      simpa using hg
+    rintro ⟨i, g⟩ ⟨i', g'⟩ h
+    obtain ⟨rfl, hg⟩ : i = i' ∧ HEq (⇑g) (⇑g') :=
+      Function.eq_of_sigmaMk_comp <| congr_arg DFunLike.coe h
+    simpa using hg
 
 section ConnectedSpace
 

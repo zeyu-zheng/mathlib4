@@ -23,21 +23,21 @@ theorem tendsto_sum_pi_div_four :
   obtain ⟨l, h⟩ :
       ∃ l, Tendsto (fun n ↦ ∑ i ∈ range n, (-1 : ℝ) ^ i / (2 * i + 1)) atTop (𝓝 l) := by
     apply Antitone.tendsto_alternating_series_of_tendsto_zero
-    · exact antitone_iff_forall_lt.mpr fun _ _ _ ↦ by gcongr
-    · apply Tendsto.inv_tendsto_atTop; apply tendsto_atTop_add_const_right
-      exact tendsto_natCast_atTop_atTop.const_mul_atTop zero_lt_two
+    exact antitone_iff_forall_lt.mpr fun _ _ _ ↦ by gcongr
+    apply Tendsto.inv_tendsto_atTop; apply tendsto_atTop_add_const_right
+    exact tendsto_natCast_atTop_atTop.const_mul_atTop zero_lt_two
   -- Abel's limit theorem states that the corresponding power series has the same limit as `x → 1⁻`
   have abel := tendsto_tsum_powerSeries_nhdsWithin_lt h
   -- Massage the expression to get `x ^ (2 * n + 1)` in the tsum rather than `x ^ n`...
   have m : 𝓝[<] (1 : ℝ) ≤ 𝓝 1 := tendsto_nhdsWithin_of_tendsto_nhds fun _ a ↦ a
   have q : Tendsto (fun x : ℝ ↦ x ^ 2) (𝓝[<] 1) (𝓝[<] 1)
   apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
-  · nth_rw 3 [← one_pow 2]
-    exact Tendsto.pow ‹_› _
-  · rw [eventually_iff_exists_mem]
-    use Set.Ioo (-1) 1
-    exact ⟨(by rw [mem_nhdsWithin_Iio_iff_exists_Ioo_subset]; use -1, by simp),
-      fun _ _ ↦ by rwa [Set.mem_Iio, sq_lt_one_iff_abs_lt_one, abs_lt, ← Set.mem_Ioo]⟩
+  nth_rw 3 [← one_pow 2]
+  exact Tendsto.pow ‹_› _
+  rw [eventually_iff_exists_mem]
+  use Set.Ioo (-1) 1
+  exact ⟨(by rw [mem_nhdsWithin_Iio_iff_exists_Ioo_subset]; use -1, by simp),
+    fun _ _ ↦ by rwa [Set.mem_Iio, sq_lt_one_iff_abs_lt_one, abs_lt, ← Set.mem_Ioo]⟩
   replace abel := (abel.comp q).mul m
   rw [mul_one] at abel
   -- ...so that we can replace the tsum with the real arctangent function

@@ -166,11 +166,11 @@ instance isDomain (I : Ideal R) [hI : I.IsPrime] : IsDomain (R ⧸ I) :=
 
 theorem isDomain_iff_prime (I : Ideal R) : IsDomain (R ⧸ I) ↔ I.IsPrime := by
   refine ⟨fun H => ⟨zero_ne_one_iff.1 ?_, fun {x y} h => ?_⟩, fun h => inferInstance⟩
-  · haveI : Nontrivial (R ⧸ I) := ⟨H.2.1⟩
-    exact zero_ne_one
-  · simp only [← eq_zero_iff_mem, (mk I).map_mul] at h ⊢
-    haveI := @IsDomain.to_noZeroDivisors (R ⧸ I) _ H
-    exact eq_zero_or_eq_zero_of_mul_eq_zero h
+  haveI : Nontrivial (R ⧸ I) := ⟨H.2.1⟩
+  exact zero_ne_one
+  simp only [← eq_zero_iff_mem, (mk I).map_mul] at h ⊢
+  haveI := @IsDomain.to_noZeroDivisors (R ⧸ I) _ H
+  exact eq_zero_or_eq_zero_of_mul_eq_zero h
 
 theorem exists_inv {I : Ideal R} [hI : I.IsMaximal] :
     ∀ {a : R ⧸ I}, a ≠ 0 → ∃ b : R ⧸ I, a * b = 1 := by
@@ -211,13 +211,13 @@ protected noncomputable abbrev field (I : Ideal R) [hI : I.IsMaximal] : Field (R
 theorem maximal_of_isField (I : Ideal R) (hqf : IsField (R ⧸ I)) : I.IsMaximal := by
   apply Ideal.isMaximal_iff.2
   constructor
-  · intro h
-    rcases hqf.exists_pair_ne with ⟨⟨x⟩, ⟨y⟩, hxy⟩
-    exact hxy (Ideal.Quotient.eq.2 (mul_one (x - y) ▸ I.mul_mem_left _ h))
-  · intro J x hIJ hxnI hxJ
-    rcases hqf.mul_inv_cancel (mt Ideal.Quotient.eq_zero_iff_mem.1 hxnI) with ⟨⟨y⟩, hy⟩
-    rw [← zero_add (1 : R), ← sub_self (x * y), sub_add]
-    exact J.sub_mem (J.mul_mem_right _ hxJ) (hIJ (Ideal.Quotient.eq.1 hy))
+  intro h
+  rcases hqf.exists_pair_ne with ⟨⟨x⟩, ⟨y⟩, hxy⟩
+  exact hxy (Ideal.Quotient.eq.2 (mul_one (x - y) ▸ I.mul_mem_left _ h))
+  intro J x hIJ hxnI hxJ
+  rcases hqf.mul_inv_cancel (mt Ideal.Quotient.eq_zero_iff_mem.1 hxnI) with ⟨⟨y⟩, hy⟩
+  rw [← zero_add (1 : R), ← sub_self (x * y), sub_add]
+  exact J.sub_mem (J.mul_mem_right _ hxJ) (hIJ (Ideal.Quotient.eq.1 hy))
 
 /-- The quotient of a ring by an ideal is a field iff the ideal is maximal. -/
 theorem maximal_ideal_iff_isField_quotient (I : Ideal R) : I.IsMaximal ↔ IsField (R ⧸ I) :=

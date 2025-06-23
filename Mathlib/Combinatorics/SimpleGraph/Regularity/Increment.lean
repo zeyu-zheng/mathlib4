@@ -126,9 +126,9 @@ lemma le_sum_distinctPairs_edgeDensity_sq (x : {i // i ∈ P.parts.offDiag}) (h�
     (∑ i ∈ distinctPairs hP G ε x, G.edgeDensity i.1 i.2 ^ 2 : ℝ) / 16 ^ P.parts.card := by
   rw [distinctPairs, ← add_sub_assoc, add_sub_right_comm]
   split_ifs with h
-  · rw [add_zero]
-    exact edgeDensity_chunk_uniform hPα hPε _ _
-  · exact edgeDensity_chunk_not_uniform hPα hPε hε₁ (mem_offDiag.1 x.2).2.2 h
+  rw [add_zero]
+  exact edgeDensity_chunk_uniform hPα hPε _ _
+  exact edgeDensity_chunk_not_uniform hPα hPε hε₁ (mem_offDiag.1 x.2).2.2 h
 
 /-- The increment partition has energy greater than the original one by a known fixed amount. -/
 theorem energy_increment (hP : P.IsEquipartition) (hP₇ : 7 ≤ P.parts.card)
@@ -167,12 +167,12 @@ theorem energy_increment (hP : P.IsEquipartition) (hP₇ : 7 ≤ P.parts.card)
     _ = (6/7 * P.parts.card ^ 2) * ε ^ 5 * (7 / 24) := by ring
     _ ≤ P.parts.offDiag.card * ε ^ 5 * (22 / 75) := by
         gcongr ?_ * _ * ?_
-        · rw [← mul_div_right_comm, div_le_iff (by norm_num), offDiag_card]
-          norm_cast
-          rw [tsub_mul]
-          refine le_tsub_of_add_le_left ?_
-          nlinarith
-        · norm_num
+        rw [← mul_div_right_comm, div_le_iff (by norm_num), offDiag_card]
+        norm_cast
+        rw [tsub_mul]
+        refine le_tsub_of_add_le_left ?_
+        nlinarith
+        norm_num
     _ = (P.parts.offDiag.card * ε * (ε ^ 4 / 3) - P.parts.offDiag.card * (ε ^ 5 / 25)) := by ring
     _ ≤ ((nonUniforms P G ε).card * (ε ^ 4 / 3) - P.parts.offDiag.card * (ε ^ 5 / 25)) := by gcongr
 

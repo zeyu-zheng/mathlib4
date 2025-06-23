@@ -55,8 +55,8 @@ lemma measure_univ_eq_of_subset (hP : IsProjectiveMeasureFamily P) (hJI : J ⊆ 
       (fun x : ∀ i : I, α i ↦ fun i : J ↦ x ⟨i, hJI i.2⟩) ⁻¹' (univ : Set (∀ i : J, α i))
   rw [preimage_univ]
   rw [this, ← Measure.map_apply _ MeasurableSet.univ]
-  · rw [hP I J hJI]
-  · exact measurable_pi_lambda _ (fun _ ↦ measurable_pi_apply _)
+  rw [hP I J hJI]
+  exact measurable_pi_lambda _ (fun _ ↦ measurable_pi_apply _)
 
 open Classical in
 lemma measure_univ_eq (hP : IsProjectiveMeasureFamily P) (I J : Finset ι) :
@@ -95,12 +95,12 @@ lemma congr_cylinder (hP : IsProjectiveMeasureFamily P)
       (fun f ↦ fun j : J ↦ f ⟨j, Finset.mem_union_right I j.prop⟩) ⁻¹' T
   suffices P (I ∪ J) U = P I S ∧ P (I ∪ J) U = P J T from this.1.symm.trans this.2
   constructor
-  · have h_eq_union : cylinder I S = cylinder (I ∪ J) U
-    rw [← inter_cylinder, h_eq, inter_self]
-    exact hP.congr_cylinder_of_subset hS h_eq_union.symm Finset.subset_union_left
-  · have h_eq_union : cylinder J T = cylinder (I ∪ J) U
-    rw [← inter_cylinder, h_eq, inter_self]
-    exact hP.congr_cylinder_of_subset hT h_eq_union.symm Finset.subset_union_right
+  have h_eq_union : cylinder I S = cylinder (I ∪ J) U
+  rw [← inter_cylinder, h_eq, inter_self]
+  exact hP.congr_cylinder_of_subset hS h_eq_union.symm Finset.subset_union_left
+  have h_eq_union : cylinder J T = cylinder (I ∪ J) U
+  rw [← inter_cylinder, h_eq, inter_self]
+  exact hP.congr_cylinder_of_subset hT h_eq_union.symm Finset.subset_union_right
 
 end IsProjectiveMeasureFamily
 

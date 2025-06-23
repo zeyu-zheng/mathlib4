@@ -48,15 +48,15 @@ theorem range_eq_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : range f
 
 theorem isCompl_of_proj {f : E →ₗ[R] p} (hf : ∀ x : p, f x = x) : IsCompl p (ker f) := by
   constructor
-  · rw [disjoint_iff_inf_le]
-    rintro x ⟨hpx, hfx⟩
-    erw [SetLike.mem_coe, mem_ker, hf ⟨x, hpx⟩, mk_eq_zero] at hfx
-    simp only [hfx, SetLike.mem_coe, zero_mem]
-  · rw [codisjoint_iff_le_sup]
-    intro x _
-    rw [mem_sup']
-    refine ⟨f x, ⟨x - f x, ?_⟩, add_sub_cancel _ _⟩
-    rw [mem_ker, LinearMap.map_sub, hf, sub_self]
+  rw [disjoint_iff_inf_le]
+  rintro x ⟨hpx, hfx⟩
+  erw [SetLike.mem_coe, mem_ker, hf ⟨x, hpx⟩, mk_eq_zero] at hfx
+  simp only [hfx, SetLike.mem_coe, zero_mem]
+  rw [codisjoint_iff_le_sup]
+  intro x _
+  rw [mem_sup']
+  refine ⟨f x, ⟨x - f x, ?_⟩, add_sub_cancel _ _⟩
+  rw [mem_ker, LinearMap.map_sub, hf, sub_self]
 
 end LinearMap
 
@@ -349,19 +349,19 @@ structure IsProj {F : Type*} [FunLike F M M] (f : F) : Prop where
 
 theorem isProj_iff_idempotent (f : M →ₗ[S] M) : (∃ p : Submodule S M, IsProj p f) ↔ f ∘ₗ f = f := by
   constructor
-  · intro h
-    obtain ⟨p, hp⟩ := h
-    ext x
-    rw [comp_apply]
-    exact hp.map_id (f x) (hp.map_mem x)
-  · intro h
-    use range f
-    constructor
-    · intro x
-      exact mem_range_self f x
-    · intro x hx
-      obtain ⟨y, hy⟩ := mem_range.1 hx
-      rw [← hy, ← comp_apply, h]
+  intro h
+  obtain ⟨p, hp⟩ := h
+  ext x
+  rw [comp_apply]
+  exact hp.map_id (f x) (hp.map_mem x)
+  intro h
+  use range f
+  constructor
+  intro x
+  exact mem_range_self f x
+  intro x hx
+  obtain ⟨y, hy⟩ := mem_range.1 hx
+  rw [← hy, ← comp_apply, h]
 
 namespace IsProj
 
@@ -395,10 +395,10 @@ theorem eq_conj_prod_map' {f : E →ₗ[R] E} (h : IsProj p f) :
         prodMap id 0 ∘ₗ (p.prodEquivOfIsCompl (ker f) h.isCompl).symm.toLinearMap := by
   rw [← LinearMap.comp_assoc, LinearEquiv.eq_comp_toLinearMap_symm]
   ext x
-  · simp only [coe_prodEquivOfIsCompl, comp_apply, coe_inl, coprod_apply, coeSubtype,
-      _root_.map_zero, add_zero, h.map_id x x.2, prodMap_apply, id_apply]
-  · simp only [coe_prodEquivOfIsCompl, comp_apply, coe_inr, coprod_apply, _root_.map_zero,
-      coeSubtype, zero_add, map_coe_ker, prodMap_apply, zero_apply, add_zero]
+  simp only [coe_prodEquivOfIsCompl, comp_apply, coe_inl, coprod_apply, coeSubtype,
+    _root_.map_zero, add_zero, h.map_id x x.2, prodMap_apply, id_apply]
+  simp only [coe_prodEquivOfIsCompl, comp_apply, coe_inr, coprod_apply, _root_.map_zero,
+    coeSubtype, zero_add, map_coe_ker, prodMap_apply, zero_apply, add_zero]
 
 end IsProj
 

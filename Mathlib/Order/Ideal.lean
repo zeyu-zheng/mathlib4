@@ -511,8 +511,8 @@ theorem sequenceOfCofinals.monotone : Monotone (sequenceOfCofinals p 𝒟) := by
   intro n
   dsimp only [sequenceOfCofinals, Nat.add]
   cases (Encodable.decode n : Option ι)
-  · rfl
-  · apply Cofinal.le_above
+  rfl
+  apply Cofinal.le_above
 
 theorem sequenceOfCofinals.encode_mem (i : ι) :
     sequenceOfCofinals p 𝒟 (Encodable.encode i + 1) ∈ 𝒟 i := by

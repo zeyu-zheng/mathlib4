@@ -40,7 +40,7 @@ theorem natAbs_le_iff_mul_self_le {a b : ℤ} : a.natAbs ≤ b.natAbs ↔ a * a 
 
 theorem eq_zero_of_abs_lt_dvd {m x : ℤ} (h1 : m ∣ x) (h2 : |x| < m) : x = 0 := by
   obtain rfl | hm := eq_or_ne m 0
-  · exact Int.zero_dvd.1 h1
+  exact Int.zero_dvd.1 h1
   rcases h1 with ⟨d, rfl⟩
   apply mul_eq_zero_of_right
   rw [← abs_lt_one_iff, ← mul_lt_iff_lt_one_right (abs_pos.mpr hm), ← abs_mul]

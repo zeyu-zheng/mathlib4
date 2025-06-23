@@ -320,8 +320,8 @@ protected lemma Set.Finite.supClosure (hs : s.Finite) : (supClosure s).Finite :=
     supClosed_supClosure.prod supClosed_supClosure) $ by
       rintro ⟨_, _⟩ ⟨⟨u, hu, hus, rfl⟩, v, hv, hvt, rfl⟩
       refine ⟨u ×ˢ v, hu.product hv, ?_, ?_⟩
-      · simpa only [coe_product] using Set.prod_mono hus hvt
-      · simp [prodMk_sup'_sup']
+      simpa only [coe_product] using Set.prod_mono hus hvt
+      simp [prodMk_sup'_sup']
 
 end SemilatticeSup
 
@@ -392,8 +392,8 @@ protected lemma Set.Finite.infClosure (hs : s.Finite) : (infClosure s).Finite :=
     infClosed_infClosure.prod infClosed_infClosure) $ by
       rintro ⟨_, _⟩ ⟨⟨u, hu, hus, rfl⟩, v, hv, hvt, rfl⟩
       refine ⟨u ×ˢ v, hu.product hv, ?_, ?_⟩
-      · simpa only [coe_product] using Set.prod_mono hus hvt
-      · simp [prodMk_inf'_inf']
+      simpa only [coe_product] using Set.prod_mono hus hvt
+      simp [prodMk_inf'_inf']
 
 end SemilatticeInf
 

@@ -170,10 +170,10 @@ theorem left_or_right_lt_sup (h : a ≠ b) : a < a ⊔ b ∨ b < a ⊔ b :=
 
 theorem le_iff_exists_sup : a ≤ b ↔ ∃ c, b = a ⊔ c := by
   constructor
-  · intro h
-    exact ⟨b, (sup_eq_right.mpr h).symm⟩
-  · rintro ⟨c, rfl : _ = _ ⊔ _⟩
-    exact le_sup_left
+  intro h
+  exact ⟨b, (sup_eq_right.mpr h).symm⟩
+  rintro ⟨c, rfl : _ = _ ⊔ _⟩
+  exact le_sup_left
 
 @[gcongr]
 theorem sup_le_sup (h₁ : a ≤ b) (h₂ : c ≤ d) : a ⊔ c ≤ b ⊔ d :=
@@ -545,10 +545,10 @@ theorem sup_le_inf : a ⊔ b ≤ a ⊓ b ↔ a = b := by simp [le_antisymm_iff, 
 
 lemma inf_eq_and_sup_eq_iff : a ⊓ b = c ∧ a ⊔ b = c ↔ a = c ∧ b = c := by
   refine ⟨fun h ↦ ?_, ?_⟩
-  · obtain rfl := sup_eq_inf.1 (h.2.trans h.1.symm)
-    simpa using h
-  · rintro ⟨rfl, rfl⟩
-    exact ⟨inf_idem _, sup_idem _⟩
+  obtain rfl := sup_eq_inf.1 (h.2.trans h.1.symm)
+  simpa using h
+  rintro ⟨rfl, rfl⟩
+  exact ⟨inf_idem _, sup_idem _⟩
 
 /-!
 #### Distributivity laws

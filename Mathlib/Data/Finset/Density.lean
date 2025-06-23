@@ -88,20 +88,20 @@ lemma dens_le_dens (h : s ⊆ t) : dens s ≤ dens t :=
 lemma dens_lt_dens (h : s ⊂ t) : dens s < dens t :=
   div_lt_div_of_pos_right (mod_cast card_strictMono h) $ by
     cases isEmpty_or_nonempty α
-    · simp [Subsingleton.elim s t, ssubset_irrfl] at h
-    · exact mod_cast Fintype.card_pos
+    simp [Subsingleton.elim s t, ssubset_irrfl] at h
+    exact mod_cast Fintype.card_pos
 
 @[mono] lemma dens_mono : Monotone (dens : Finset α → ℚ≥0) := fun _ _ ↦ dens_le_dens
 @[mono] lemma dens_strictMono : StrictMono (dens : Finset α → ℚ≥0) := fun _ _ ↦ dens_lt_dens
 
 lemma dens_map_le [Fintype β] (f : α ↪ β) : dens (s.map f) ≤ dens s := by
   cases isEmpty_or_nonempty α
-  · simp [Subsingleton.elim s ∅]
+  simp [Subsingleton.elim s ∅]
   simp_rw [dens, card_map]
   gcongr
-  · positivity
-  · exact mod_cast Fintype.card_pos
-  · exact Fintype.card_le_of_injective _ f.2
+  positivity
+  exact mod_cast Fintype.card_pos
+  exact Fintype.card_le_of_injective _ f.2
 
 section Nonempty
 variable [Nonempty α]

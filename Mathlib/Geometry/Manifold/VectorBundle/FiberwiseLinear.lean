@@ -131,15 +131,15 @@ theorem SmoothFiberwiseLinear.locality_aux₁ (e : PartialHomeomorph (B × F) (B
   exact this.1
   have he : e.source = (Prod.fst '' e.source) ×ˢ (univ : Set F)
   apply HasSubset.Subset.antisymm
-  · intro p hp
-    exact ⟨⟨p, hp, rfl⟩, trivial⟩
-  · rintro ⟨x, v⟩ ⟨⟨p, hp, rfl : p.fst = x⟩, -⟩
-    exact heu ⟨p, hp⟩ (p.fst, v) (hu' ⟨p, hp⟩)
+  intro p hp
+  exact ⟨⟨p, hp, rfl⟩, trivial⟩
+  rintro ⟨x, v⟩ ⟨⟨p, hp, rfl : p.fst = x⟩, -⟩
+  exact heu ⟨p, hp⟩ (p.fst, v) (hu' ⟨p, hp⟩)
   refine ⟨Prod.fst '' e.source, he, ?_⟩
   rintro x ⟨p, hp, rfl⟩
   refine ⟨φ ⟨p, hp⟩, u ⟨p, hp⟩, hu ⟨p, hp⟩, ?_, hu' _, hφ ⟨p, hp⟩, h2φ ⟨p, hp⟩, ?_⟩
-  · intro y hy; exact ⟨(y, 0), heu ⟨p, hp⟩ ⟨_, _⟩ hy, rfl⟩
-  · rw [← hesu, e.restr_source_inter]; exact heφ ⟨p, hp⟩
+  intro y hy; exact ⟨(y, 0), heu ⟨p, hp⟩ ⟨_, _⟩ hy, rfl⟩
+  rw [← hesu, e.restr_source_inter]; exact heφ ⟨p, hp⟩
 
 open Classical in
 /-- Let `e` be a partial homeomorphism of `B × F` whose source is `U ×ˢ univ`, for some set `U` in

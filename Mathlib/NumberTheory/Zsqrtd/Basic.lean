@@ -294,22 +294,22 @@ theorem mul_star {x y : ℤ} : (⟨x, y⟩ * star ⟨x, y⟩ : ℤ√d) = x * x 
 
 theorem intCast_dvd (z : ℤ) (a : ℤ√d) : ↑z ∣ a ↔ z ∣ a.re ∧ z ∣ a.im := by
   constructor
-  · rintro ⟨x, rfl⟩
-    simp only [add_zero, intCast_re, zero_mul, mul_im, dvd_mul_right, and_self_iff,
-      mul_re, mul_zero, intCast_im]
-  · rintro ⟨⟨r, hr⟩, ⟨i, hi⟩⟩
-    use ⟨r, i⟩
-    rw [smul_val, Zsqrtd.ext_iff]
-    exact ⟨hr, hi⟩
+  rintro ⟨x, rfl⟩
+  simp only [add_zero, intCast_re, zero_mul, mul_im, dvd_mul_right, and_self_iff,
+    mul_re, mul_zero, intCast_im]
+  rintro ⟨⟨r, hr⟩, ⟨i, hi⟩⟩
+  use ⟨r, i⟩
+  rw [smul_val, Zsqrtd.ext_iff]
+  exact ⟨hr, hi⟩
 
 @[simp, norm_cast]
 theorem intCast_dvd_intCast (a b : ℤ) : (a : ℤ√d) ∣ b ↔ a ∣ b := by
   rw [intCast_dvd]
   constructor
-  · rintro ⟨hre, -⟩
-    rwa [intCast_re] at hre
-  · rw [intCast_re, intCast_im]
-    exact fun hc => ⟨hc, dvd_zero a⟩
+  rintro ⟨hre, -⟩
+  rwa [intCast_re] at hre
+  rw [intCast_re, intCast_im]
+  exact fun hc => ⟨hc, dvd_zero a⟩
 
 @[deprecated (since := "2024-05-25")] alias coe_int_dvd_iff := intCast_dvd
 @[deprecated (since := "2024-05-25")] alias coe_int_dvd_coe_int := intCast_dvd_intCast
@@ -330,26 +330,26 @@ theorem gcd_pos_iff (a : ℤ√d) : 0 < Int.gcd a.re a.im ↔ a ≠ 0 :=
 theorem coprime_of_dvd_coprime {a b : ℤ√d} (hcoprime : IsCoprime a.re a.im) (hdvd : b ∣ a) :
     IsCoprime b.re b.im := by
   apply isCoprime_of_dvd
-  · rintro ⟨hre, him⟩
-    obtain rfl : b = 0 := Zsqrtd.ext b 0 hre him
-    rw [zero_dvd_iff] at hdvd
-    simp [hdvd, zero_im, zero_re, not_isCoprime_zero_zero] at hcoprime
-  · rintro z hz - hzdvdu hzdvdv
-    apply hz
-    obtain ⟨ha, hb⟩ : z ∣ a.re ∧ z ∣ a.im := by
-      rw [← intCast_dvd]
-      apply dvd_trans _ hdvd
-      rw [intCast_dvd]
-      exact ⟨hzdvdu, hzdvdv⟩
-    exact hcoprime.isUnit_of_dvd' ha hb
+  rintro ⟨hre, him⟩
+  obtain rfl : b = 0 := Zsqrtd.ext b 0 hre him
+  rw [zero_dvd_iff] at hdvd
+  simp [hdvd, zero_im, zero_re, not_isCoprime_zero_zero] at hcoprime
+  rintro z hz - hzdvdu hzdvdv
+  apply hz
+  obtain ⟨ha, hb⟩ : z ∣ a.re ∧ z ∣ a.im := by
+    rw [← intCast_dvd]
+    apply dvd_trans _ hdvd
+    rw [intCast_dvd]
+    exact ⟨hzdvdu, hzdvdv⟩
+  exact hcoprime.isUnit_of_dvd' ha hb
 
 theorem exists_coprime_of_gcd_pos {a : ℤ√d} (hgcd : 0 < Int.gcd a.re a.im) :
     ∃ b : ℤ√d, a = ((Int.gcd a.re a.im : ℤ) : ℤ√d) * b ∧ IsCoprime b.re b.im := by
   obtain ⟨re, im, H1, Hre, Him⟩ := Int.exists_gcd_one hgcd
   rw [mul_comm] at Hre Him
   refine ⟨⟨re, im⟩, ?_, ?_⟩
-  · rw [smul_val, ← Hre, ← Him]
-  · rw [← Int.gcd_eq_one_iff_coprime, H1]
+  rw [smul_val, ← Hre, ← Him]
+  rw [← Int.gcd_eq_one_iff_coprime, H1]
 
 end Gcd
 
@@ -518,17 +518,17 @@ theorem norm_eq_one_iff' {d : ℤ} (hd : d ≤ 0) (z : ℤ√d) : z.norm = 1 ↔
 
 theorem norm_eq_zero_iff {d : ℤ} (hd : d < 0) (z : ℤ√d) : z.norm = 0 ↔ z = 0 := by
   constructor
-  · intro h
-    rw [norm_def, sub_eq_add_neg, mul_assoc] at h
-    have left := mul_self_nonneg z.re
-    have right := neg_nonneg.mpr (mul_nonpos_of_nonpos_of_nonneg hd.le (mul_self_nonneg z.im))
-    obtain ⟨ha, hb⟩ := (add_eq_zero_iff' left right).mp h
-    ext <;> apply eq_zero_of_mul_self_eq_zero
-    · exact ha
-    · rw [neg_eq_zero, mul_eq_zero] at hb
-      exact hb.resolve_left hd.ne
-  · rintro rfl
-    exact norm_zero
+  intro h
+  rw [norm_def, sub_eq_add_neg, mul_assoc] at h
+  have left := mul_self_nonneg z.re
+  have right := neg_nonneg.mpr (mul_nonpos_of_nonpos_of_nonneg hd.le (mul_self_nonneg z.im))
+  obtain ⟨ha, hb⟩ := (add_eq_zero_iff' left right).mp h
+  ext <;> apply eq_zero_of_mul_self_eq_zero
+  exact ha
+  rw [neg_eq_zero, mul_eq_zero] at hb
+  exact hb.resolve_left hd.ne
+  rintro rfl
+  exact norm_zero
 
 theorem norm_eq_of_associated {d : ℤ} (hd : d ≤ 0) {x y : ℤ√d} (h : Associated x y) :
     x.norm = y.norm := by
@@ -593,41 +593,41 @@ theorem nonneg_add_lem {x y z w : ℕ} (xy : Nonneg (⟨x, -y⟩ : ℤ√d)) (zw
 theorem Nonneg.add {a b : ℤ√d} (ha : Nonneg a) (hb : Nonneg b) : Nonneg (a + b) := by
   rcases nonneg_cases ha with ⟨x, y, rfl | rfl | rfl⟩ <;>
     rcases nonneg_cases hb with ⟨z, w, rfl | rfl | rfl⟩
-  · trivial
-  · refine nonnegg_cases_right fun i h => sqLe_of_le ?_ ?_ (nonnegg_pos_neg.1 hb)
-    · dsimp only at h
-      exact Int.ofNat_le.1 (le_of_neg_le_neg (Int.le.intro y (by simp [add_comm, *])))
-    · apply Nat.le_add_left
-  · refine nonnegg_cases_left fun i h => sqLe_of_le ?_ ?_ (nonnegg_neg_pos.1 hb)
-    · dsimp only at h
-      exact Int.ofNat_le.1 (le_of_neg_le_neg (Int.le.intro x (by simp [add_comm, *])))
-    · apply Nat.le_add_left
-  · refine nonnegg_cases_right fun i h => sqLe_of_le ?_ ?_ (nonnegg_pos_neg.1 ha)
-    · dsimp only at h
-      exact Int.ofNat_le.1 (le_of_neg_le_neg (Int.le.intro w (by simp [*])))
-    · apply Nat.le_add_right
-  · have : Nonneg ⟨_, _⟩ :=
-      nonnegg_pos_neg.2 (sqLe_add (nonnegg_pos_neg.1 ha) (nonnegg_pos_neg.1 hb))
-    rw [Nat.cast_add, Nat.cast_add, neg_add] at this
-    rwa [add_def]
-    -- Porting note: was
-    -- simpa [add_comm] using
-    --   nonnegg_pos_neg.2 (sqLe_add (nonnegg_pos_neg.1 ha) (nonnegg_pos_neg.1 hb))
-  · exact nonneg_add_lem ha hb
-  · refine nonnegg_cases_left fun i h => sqLe_of_le ?_ ?_ (nonnegg_neg_pos.1 ha)
-    · dsimp only at h
-      exact Int.ofNat_le.1 (le_of_neg_le_neg (Int.le.intro _ h))
-    · apply Nat.le_add_right
-  · dsimp
-    rw [add_comm, add_comm (y : ℤ)]
-    exact nonneg_add_lem hb ha
-  · have : Nonneg ⟨_, _⟩ :=
-      nonnegg_neg_pos.2 (sqLe_add (nonnegg_neg_pos.1 ha) (nonnegg_neg_pos.1 hb))
-    rw [Nat.cast_add, Nat.cast_add, neg_add] at this
-    rwa [add_def]
-    -- Porting note: was
-    -- simpa [add_comm] using
-    --   nonnegg_neg_pos.2 (sqLe_add (nonnegg_neg_pos.1 ha) (nonnegg_neg_pos.1 hb))
+  trivial
+  refine nonnegg_cases_right fun i h => sqLe_of_le ?_ ?_ (nonnegg_pos_neg.1 hb)
+  dsimp only at h
+  exact Int.ofNat_le.1 (le_of_neg_le_neg (Int.le.intro y (by simp [add_comm, *])))
+  apply Nat.le_add_left
+  refine nonnegg_cases_left fun i h => sqLe_of_le ?_ ?_ (nonnegg_neg_pos.1 hb)
+  dsimp only at h
+  exact Int.ofNat_le.1 (le_of_neg_le_neg (Int.le.intro x (by simp [add_comm, *])))
+  apply Nat.le_add_left
+  refine nonnegg_cases_right fun i h => sqLe_of_le ?_ ?_ (nonnegg_pos_neg.1 ha)
+  dsimp only at h
+  exact Int.ofNat_le.1 (le_of_neg_le_neg (Int.le.intro w (by simp [*])))
+  apply Nat.le_add_right
+  have : Nonneg ⟨_, _⟩ :=
+    nonnegg_pos_neg.2 (sqLe_add (nonnegg_pos_neg.1 ha) (nonnegg_pos_neg.1 hb))
+  rw [Nat.cast_add, Nat.cast_add, neg_add] at this
+  rwa [add_def]
+  -- Porting note: was
+  -- simpa [add_comm] using
+  --   nonnegg_pos_neg.2 (sqLe_add (nonnegg_pos_neg.1 ha) (nonnegg_pos_neg.1 hb))
+  exact nonneg_add_lem ha hb
+  refine nonnegg_cases_left fun i h => sqLe_of_le ?_ ?_ (nonnegg_neg_pos.1 ha)
+  dsimp only at h
+  exact Int.ofNat_le.1 (le_of_neg_le_neg (Int.le.intro _ h))
+  apply Nat.le_add_right
+  dsimp
+  rw [add_comm, add_comm (y : ℤ)]
+  exact nonneg_add_lem hb ha
+  have : Nonneg ⟨_, _⟩ :=
+    nonnegg_neg_pos.2 (sqLe_add (nonnegg_neg_pos.1 ha) (nonnegg_neg_pos.1 hb))
+  rw [Nat.cast_add, Nat.cast_add, neg_add] at this
+  rwa [add_def]
+  -- Porting note: was
+  -- simpa [add_comm] using
+  --   nonnegg_neg_pos.2 (sqLe_add (nonnegg_neg_pos.1 ha) (nonnegg_neg_pos.1 hb))
 
 theorem nonneg_iff_zero_le {a : ℤ√d} : Nonneg a ↔ 0 ≤ a :=
   show _ ↔ Nonneg _ by simp
@@ -668,8 +668,8 @@ theorem le_arch (a : ℤ√d) : ∃ n : ℕ, a ≤ n := by
   refine ⟨x + d * y, h.trans ?_⟩
   change Nonneg ⟨↑x + d * y - ↑x, 0 - ↑y⟩
   cases' y with y
-  · simp
-    trivial
+  simp
+  trivial
   have h : ∀ y, SqLe y d (d * y) 1 := fun y => by
     simpa [SqLe, mul_comm, mul_left_comm] using Nat.mul_le_mul_right (y * y) (Nat.le_mul_self d)
   rw [show (x : ℤ) + d * Nat.succ y - x = d * Nat.succ y by simp]
@@ -888,17 +888,17 @@ theorem norm_eq_zero {d : ℤ} (h_nonsquare : ∀ n : ℤ, d ≠ n * n) (a : ℤ
   dsimp only [norm] at ha
   rw [sub_eq_zero] at ha
   by_cases h : 0 ≤ d
-  · obtain ⟨d', rfl⟩ := Int.eq_ofNat_of_zero_le h
-    haveI : Nonsquare d' := ⟨fun n h => h_nonsquare n <| mod_cast h⟩
-    exact divides_sq_eq_zero_z ha
-  · push_neg at h
-    suffices a.re * a.re = 0 by
-      rw [eq_zero_of_mul_self_eq_zero this] at ha ⊢
-      simpa only [true_and_iff, or_self_right, zero_re, zero_im, eq_self_iff_true, zero_eq_mul,
-        mul_zero, mul_eq_zero, h.ne, false_or_iff, or_self_iff] using ha
-    apply _root_.le_antisymm _ (mul_self_nonneg _)
-    rw [ha, mul_assoc]
-    exact mul_nonpos_of_nonpos_of_nonneg h.le (mul_self_nonneg _)
+  obtain ⟨d', rfl⟩ := Int.eq_ofNat_of_zero_le h
+  haveI : Nonsquare d' := ⟨fun n h => h_nonsquare n <| mod_cast h⟩
+  exact divides_sq_eq_zero_z ha
+  push_neg at h
+  suffices a.re * a.re = 0 by
+    rw [eq_zero_of_mul_self_eq_zero this] at ha ⊢
+    simpa only [true_and_iff, or_self_right, zero_re, zero_im, eq_self_iff_true, zero_eq_mul,
+      mul_zero, mul_eq_zero, h.ne, false_or_iff, or_self_iff] using ha
+  apply _root_.le_antisymm _ (mul_self_nonneg _)
+  rw [ha, mul_assoc]
+  exact mul_nonpos_of_nonpos_of_nonneg h.le (mul_self_nonneg _)
 
 variable {R : Type}
 

@@ -189,9 +189,9 @@ theorem span_eq_sInf {S : Set (ℙ K V)} : span S = sInf { W : Subspace K V| S �
   ext x
   simp_rw [mem_carrier_iff, mem_span x]
   refine ⟨fun hx => ?_, fun hx W hW => ?_⟩
-  · rintro W ⟨T, hT, rfl⟩
-    exact hx T hT
-  · exact (@sInf_le _ _ { W : Subspace K V | S ⊆ ↑W } W hW) hx
+  rintro W ⟨T, hT, rfl⟩
+  exact hx T hT
+  exact (@sInf_le _ _ { W : Subspace K V | S ⊆ ↑W } W hW) hx
 
 /-- If a set of points in projective space is contained in a subspace, and that subspace is
 contained in the span of the set of points, then the span of the set of points is equal to

@@ -303,12 +303,12 @@ lemma mem_distinguishedTriangles_iff' (T : Triangle Cᵒᵖ) :
         Nonempty (T ≅ (triangleOpEquivalence C).functor.obj (Opposite.op T')) := by
   rw [mem_distinguishedTriangles_iff]
   constructor
-  · intro hT
-    exact ⟨_ ,hT, ⟨(triangleOpEquivalence C).counitIso.symm.app T⟩⟩
-  · rintro ⟨T', hT', ⟨e⟩⟩
-    refine isomorphic_distinguished _ hT' _ ?_
-    exact Iso.unop ((triangleOpEquivalence C).unitIso.app (Opposite.op T') ≪≫
-      (triangleOpEquivalence C).inverse.mapIso e.symm)
+  intro hT
+  exact ⟨_ ,hT, ⟨(triangleOpEquivalence C).counitIso.symm.app T⟩⟩
+  rintro ⟨T', hT', ⟨e⟩⟩
+  refine isomorphic_distinguished _ hT' _ ?_
+  exact Iso.unop ((triangleOpEquivalence C).unitIso.app (Opposite.op T') ≪≫
+    (triangleOpEquivalence C).inverse.mapIso e.symm)
 
 lemma isomorphic_distinguished (T₁ : Triangle Cᵒᵖ)
     (hT₁ : T₁ ∈ distinguishedTriangles C) (T₂ : Triangle Cᵒᵖ) (e : T₂ ≅ T₁) :

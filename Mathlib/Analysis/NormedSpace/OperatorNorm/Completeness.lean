@@ -234,20 +234,20 @@ theorem opNorm_extend_le :
     ‖f.extend e h_dense (uniformEmbedding_of_bound _ h_e).toUniformInducing‖ ≤ N * ‖f‖ := by
   -- Add `opNorm_le_of_dense`?
   refine opNorm_le_bound _ ?_ (isClosed_property h_dense (isClosed_le ?_ ?_) fun x ↦ ?_)
-  · cases le_total 0 N with
-    | inl hN => exact mul_nonneg hN (norm_nonneg _)
-    | inr hN =>
-      have : Unique E := ⟨⟨0⟩, fun x ↦ norm_le_zero_iff.mp <|
-        (h_e x).trans (mul_nonpos_of_nonpos_of_nonneg hN (norm_nonneg _))⟩
-      obtain rfl : f = 0 := Subsingleton.elim ..
-      simp
-  · exact (cont _).norm
-  · exact continuous_const.mul continuous_norm
-  · rw [extend_eq]
-    calc
-      ‖f x‖ ≤ ‖f‖ * ‖x‖ := le_opNorm _ _
-      _ ≤ ‖f‖ * (N * ‖e x‖) := mul_le_mul_of_nonneg_left (h_e x) (norm_nonneg _)
-      _ ≤ N * ‖f‖ * ‖e x‖ := by rw [mul_comm ↑N ‖f‖, mul_assoc]
+  cases le_total 0 N with
+  | inl hN => exact mul_nonneg hN (norm_nonneg _)
+  | inr hN =>
+    have : Unique E := ⟨⟨0⟩, fun x ↦ norm_le_zero_iff.mp <|
+      (h_e x).trans (mul_nonpos_of_nonpos_of_nonneg hN (norm_nonneg _))⟩
+    obtain rfl : f = 0 := Subsingleton.elim ..
+    simp
+  exact (cont _).norm
+  exact continuous_const.mul continuous_norm
+  rw [extend_eq]
+  calc
+    ‖f x‖ ≤ ‖f‖ * ‖x‖ := le_opNorm _ _
+    _ ≤ ‖f‖ * (N * ‖e x‖) := mul_le_mul_of_nonneg_left (h_e x) (norm_nonneg _)
+    _ ≤ N * ‖f‖ * ‖e x‖ := by rw [mul_comm ↑N ‖f‖, mul_assoc]
 
 @[deprecated (since := "2024-02-02")] alias op_norm_extend_le := opNorm_extend_le
 

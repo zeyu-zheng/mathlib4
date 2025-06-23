@@ -50,7 +50,7 @@ lemma congr {q : ℕ} (h : p = q) : CharP R q := h ▸ ‹CharP R p›
 
 lemma natCast_eq_natCast' (h : a ≡ b [MOD p]) : (a : R) = b := by
   wlog hle : a ≤ b
-  · exact (this R p h.symm (le_of_not_le hle)).symm
+  exact (this R p h.symm (le_of_not_le hle)).symm
   rw [Nat.modEq_iff_dvd' hle] at h
   rw [← Nat.sub_add_cancel hle, Nat.cast_add, (cast_eq_zero_iff R p _).mpr h, zero_add]
 
@@ -79,7 +79,7 @@ variable [IsRightCancelAdd R]
 
 lemma natCast_eq_natCast : (a : R) = b ↔ a ≡ b [MOD p] := by
   wlog hle : a ≤ b
-  · rw [eq_comm, this R p (le_of_not_le hle), Nat.ModEq.comm]
+  rw [eq_comm, this R p (le_of_not_le hle), Nat.ModEq.comm]
   rw [Nat.modEq_iff_dvd' hle, ← cast_eq_zero_iff R p (b - a),
     ← add_right_cancel_iff (G := R) (a := a) (b := b - a), zero_add, ← Nat.cast_add,
     Nat.sub_add_cancel hle, eq_comm]
@@ -94,12 +94,12 @@ variable [AddGroupWithOne R] (p : ℕ) [CharP R p] {a b : ℤ}
 
 lemma intCast_eq_zero_iff (a : ℤ) : (a : R) = 0 ↔ (p : ℤ) ∣ a := by
   rcases lt_trichotomy a 0 with (h | rfl | h)
-  · rw [← neg_eq_zero, ← Int.cast_neg, ← dvd_neg]
-    lift -a to ℕ using neg_nonneg.mpr (le_of_lt h) with b
-    rw [Int.cast_natCast, CharP.cast_eq_zero_iff R p, Int.natCast_dvd_natCast]
-  · simp only [Int.cast_zero, eq_self_iff_true, dvd_zero]
-  · lift a to ℕ using le_of_lt h with b
-    rw [Int.cast_natCast, CharP.cast_eq_zero_iff R p, Int.natCast_dvd_natCast]
+  rw [← neg_eq_zero, ← Int.cast_neg, ← dvd_neg]
+  lift -a to ℕ using neg_nonneg.mpr (le_of_lt h) with b
+  rw [Int.cast_natCast, CharP.cast_eq_zero_iff R p, Int.natCast_dvd_natCast]
+  simp only [Int.cast_zero, eq_self_iff_true, dvd_zero]
+  lift a to ℕ using le_of_lt h with b
+  rw [Int.cast_natCast, CharP.cast_eq_zero_iff R p, Int.natCast_dvd_natCast]
 
 lemma intCast_eq_intCast : (a : R) = b ↔ a ≡ b [ZMOD p] := by
   rw [eq_comm, ← sub_eq_zero, ← Int.cast_sub, CharP.intCast_eq_zero_iff R p, Int.modEq_iff_dvd]
@@ -381,8 +381,8 @@ lemma Int.cast_injOn_of_ringChar_ne_two {R : Type*} [NonAssocRing R] [Nontrivial
   rintro _ (rfl | rfl | rfl) _ (rfl | rfl | rfl) h <;>
   simp only
     [cast_neg, cast_one, cast_zero, neg_eq_zero, one_ne_zero, zero_ne_one, zero_eq_neg] at h ⊢
-  · exact ((Ring.neg_one_ne_one_of_char_ne_two hR).symm h).elim
-  · exact ((Ring.neg_one_ne_one_of_char_ne_two hR) h).elim
+  exact ((Ring.neg_one_ne_one_of_char_ne_two hR).symm h).elim
+  exact ((Ring.neg_one_ne_one_of_char_ne_two hR) h).elim
 
 end
 

@@ -122,21 +122,21 @@ theorem uniform_oscillationWithin (hK : ∀ x ∈ K, oscillationWithin f D x < �
   refine le_trans (diam_mono (subset_trans ?_ (image_subset_iff.2 hr))) (le_of_lt hn₂)
   exact image_mono (inter_subset_inter_left D (ball_subset_ball hr'))
   by_cases r_top : r = ⊤
-  · use 1, one_pos, 2, one_lt_two, this 2 (by simp only [r_top, le_top])
-  · obtain ⟨r', hr'⟩ := exists_between (toReal_pos (ne_of_gt r0) r_top)
-    use r', hr'.1, r.toReal, hr'.2, this r.toReal ofReal_toReal_le
+  use 1, one_pos, 2, one_lt_two, this 2 (by simp only [r_top, le_top])
+  obtain ⟨r', hr'⟩ := exists_between (toReal_pos (ne_of_gt r0) r_top)
+  use r', hr'.1, r.toReal, hr'.2, this r.toReal ofReal_toReal_le
   have S_antitone : ∀ (r₁ r₂ : ℝ), r₁ ≤ r₂ → S r₂ ⊆ S r₁ :=
     fun r₁ r₂ hr x ⟨a, ar₂, ha⟩ ↦ ⟨a, lt_of_le_of_lt hr ar₂, ha⟩
   obtain ⟨δ, δ0, hδ⟩ : ∃ r > 0, K ⊆ S r := by
     obtain ⟨T, Tb, Tfin, hT⟩ := comp.elim_finite_subcover_image S_open S_cover
     by_cases T_nonempty : T.Nonempty
-    · use Tfin.isWF.min T_nonempty, Tb (Tfin.isWF.min_mem T_nonempty)
-      intro x hx
-      obtain ⟨r, hr⟩ := mem_iUnion.1 (hT hx)
-      simp only [mem_iUnion, exists_prop] at hr
-      exact (S_antitone _ r (IsWF.min_le Tfin.isWF T_nonempty hr.1)) hr.2
-    · rw [not_nonempty_iff_eq_empty] at T_nonempty
-      use 1, one_pos, subset_trans hT (by simp [T_nonempty])
+    use Tfin.isWF.min T_nonempty, Tb (Tfin.isWF.min_mem T_nonempty)
+    intro x hx
+    obtain ⟨r, hr⟩ := mem_iUnion.1 (hT hx)
+    simp only [mem_iUnion, exists_prop] at hr
+    exact (S_antitone _ r (IsWF.min_le Tfin.isWF T_nonempty hr.1)) hr.2
+    rw [not_nonempty_iff_eq_empty] at T_nonempty
+    use 1, one_pos, subset_trans hT (by simp [T_nonempty])
   use δ, δ0
   intro x xK
   obtain ⟨a, δa, ha⟩ := hδ xK

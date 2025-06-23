@@ -70,11 +70,11 @@ instance : OrderedSub (WithTop α) := by
   constructor
   rintro x y z
   cases y
-  · cases z <;> simp
+  cases z <;> simp
   cases x
-  · simp
+  simp
   cases z
-  · simp
+  simp
   norm_cast; exact tsub_le_iff_right
 
 end WithTop

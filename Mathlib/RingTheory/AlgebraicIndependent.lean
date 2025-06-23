@@ -308,11 +308,11 @@ theorem exists_maximal_algebraicIndependent (s t : Set A) (hst : s ⊆ t)
         ⟨⋃₀ c, by
           refine ⟨⟨algebraicIndependent_sUnion_of_directed hcn chainc.directedOn
               fun a ha => (hc ha).1, ?_, ?_⟩, ?_⟩
-          · cases' hcn with x hx
-            exact subset_sUnion_of_subset _ x (hc hx).2.1 hx
-          · exact sUnion_subset fun x hx => (hc hx).2.2
-          · intro s
-            exact subset_sUnion_of_mem⟩)
+          cases' hcn with x hx
+          exact subset_sUnion_of_subset _ x (hc hx).2.1 hx
+          exact sUnion_subset fun x hx => (hc hx).2.2
+          intro s
+          exact subset_sUnion_of_mem⟩)
       s ⟨hs, Set.Subset.refl s, hst⟩ with
     ⟨u, ⟨huai, _, hut⟩, hsu, hx⟩
   use u, huai, hsu, hut
@@ -417,14 +417,14 @@ theorem AlgebraicIndependent.aeval_comp_mvPolynomialOptionEquivPolynomialAdjoin
   refine MvPolynomial.ringHom_ext ?_ ?_ <;>
     simp only [RingHom.comp_apply, RingEquiv.toRingHom_eq_coe, RingEquiv.coe_toRingHom,
       AlgHom.coe_toRingHom, AlgHom.coe_toRingHom]
-  · intro r
-    rw [hx.mvPolynomialOptionEquivPolynomialAdjoin_C, aeval_C, Polynomial.aeval_C,
-      IsScalarTower.algebraMap_apply R (adjoin R (range x)) A]
-  · rintro (⟨⟩ | ⟨i⟩)
-    · rw [hx.mvPolynomialOptionEquivPolynomialAdjoin_X_none, aeval_X, Polynomial.aeval_X,
-        Option.elim]
-    · rw [hx.mvPolynomialOptionEquivPolynomialAdjoin_X_some, Polynomial.aeval_C,
-        hx.algebraMap_aevalEquiv, aeval_X, aeval_X, Option.elim]
+  intro r
+  rw [hx.mvPolynomialOptionEquivPolynomialAdjoin_C, aeval_C, Polynomial.aeval_C,
+    IsScalarTower.algebraMap_apply R (adjoin R (range x)) A]
+  rintro (⟨⟩ | ⟨i⟩)
+  rw [hx.mvPolynomialOptionEquivPolynomialAdjoin_X_none, aeval_X, Polynomial.aeval_X,
+    Option.elim]
+  rw [hx.mvPolynomialOptionEquivPolynomialAdjoin_X_some, Polynomial.aeval_C,
+    hx.algebraMap_aevalEquiv, aeval_X, aeval_X, Option.elim]
 
 theorem AlgebraicIndependent.option_iff (hx : AlgebraicIndependent R x) (a : A) :
     (AlgebraicIndependent R fun o : Option ι => o.elim a x) ↔
@@ -461,18 +461,18 @@ theorem AlgebraicIndependent.isTranscendenceBasis_iff {ι : Type w} {R : Type u}
       ∀ (κ : Type v) (w : κ → A) (_ : AlgebraicIndependent R w) (j : ι → κ) (_ : w ∘ j = x),
         Surjective j := by
   fconstructor
-  · rintro p κ w i' j rfl
-    have p := p.2 (range w) i'.coe_range (range_comp_subset_range _ _)
-    rw [range_comp, ← @image_univ _ _ w] at p
-    exact range_iff_surjective.mp (image_injective.mpr i'.injective p)
-  · intro p
-    use i
-    intro w i' h
-    specialize p w ((↑) : w → A) i' (fun i => ⟨x i, range_subset_iff.mp h i⟩) (by ext; simp)
-    have q := congr_arg (fun s => ((↑) : w → A) '' s) p.range_eq
-    dsimp at q
-    rw [← image_univ, image_image] at q
-    simpa using q
+  rintro p κ w i' j rfl
+  have p := p.2 (range w) i'.coe_range (range_comp_subset_range _ _)
+  rw [range_comp, ← @image_univ _ _ w] at p
+  exact range_iff_surjective.mp (image_injective.mpr i'.injective p)
+  intro p
+  use i
+  intro w i' h
+  specialize p w ((↑) : w → A) i' (fun i => ⟨x i, range_subset_iff.mp h i⟩) (by ext; simp)
+  have q := congr_arg (fun s => ((↑) : w → A) '' s) p.range_eq
+  dsimp at q
+  rw [← image_univ, image_image] at q
+  simpa using q
 
 theorem IsTranscendenceBasis.isAlgebraic [Nontrivial R] (hx : IsTranscendenceBasis R x) :
     Algebra.IsAlgebraic (adjoin R (range x)) A := by

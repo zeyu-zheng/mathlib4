@@ -217,16 +217,16 @@ theorem δ_comp_δ' {n} {i : Fin (n + 2)} {j : Fin (n + 3)} (H : Fin.castSucc i 
       δ (j.pred fun (hj : j = 0) => by simp [hj, Fin.not_lt_zero] at H) ≫
         δ (Fin.castSucc i) := by
   rw [← δ_comp_δ]
-  · rw [Fin.succ_pred]
-  · simpa only [Fin.le_iff_val_le_val, ← Nat.lt_succ_iff, Nat.succ_eq_add_one, ← Fin.val_succ,
-      j.succ_pred, Fin.lt_iff_val_lt_val] using H
+  rw [Fin.succ_pred]
+  simpa only [Fin.le_iff_val_le_val, ← Nat.lt_succ_iff, Nat.succ_eq_add_one, ← Fin.val_succ,
+    j.succ_pred, Fin.lt_iff_val_lt_val] using H
 
 theorem δ_comp_δ'' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : i ≤ Fin.castSucc j) :
     δ (i.castLT (Nat.lt_of_le_of_lt (Fin.le_iff_val_le_val.mp H) j.is_lt)) ≫ δ j.succ =
       δ j ≫ δ i := by
   rw [δ_comp_δ]
-  · rfl
-  · exact H
+  rfl
+  exact H
 
 /-- The special case of the first simplicial identity -/
 @[reassoc]
@@ -246,19 +246,19 @@ theorem δ_comp_σ_of_le {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : i ≤ Fin.
   ext k : 3
   dsimp [σ, δ]
   rcases le_or_lt i k with (hik | hik)
-  · rw [Fin.succAbove_of_le_castSucc _ _ (Fin.castSucc_le_castSucc_iff.mpr hik),
-    Fin.succ_predAbove_succ, Fin.succAbove_of_le_castSucc]
-    rcases le_or_lt k (j.castSucc) with (hjk | hjk)
-    · rwa [Fin.predAbove_of_le_castSucc _ _ hjk, Fin.castSucc_castPred]
-    · rw [Fin.le_castSucc_iff, Fin.predAbove_of_castSucc_lt _ _ hjk, Fin.succ_pred]
-      exact H.trans_lt hjk
-  · rw [Fin.succAbove_of_castSucc_lt _ _ (Fin.castSucc_lt_castSucc_iff.mpr hik)]
-    have hjk := H.trans_lt' hik
-    rw [Fin.predAbove_of_le_castSucc _ _ (Fin.castSucc_le_castSucc_iff.mpr
-      (hjk.trans (Fin.castSucc_lt_succ _)).le),
-      Fin.predAbove_of_le_castSucc _ _ hjk.le, Fin.castPred_castSucc, Fin.succAbove_of_castSucc_lt,
-      Fin.castSucc_castPred]
-    rwa [Fin.castSucc_castPred]
+  rw [Fin.succAbove_of_le_castSucc _ _ (Fin.castSucc_le_castSucc_iff.mpr hik),
+  Fin.succ_predAbove_succ, Fin.succAbove_of_le_castSucc]
+  rcases le_or_lt k (j.castSucc) with (hjk | hjk)
+  rwa [Fin.predAbove_of_le_castSucc _ _ hjk, Fin.castSucc_castPred]
+  rw [Fin.le_castSucc_iff, Fin.predAbove_of_castSucc_lt _ _ hjk, Fin.succ_pred]
+  exact H.trans_lt hjk
+  rw [Fin.succAbove_of_castSucc_lt _ _ (Fin.castSucc_lt_castSucc_iff.mpr hik)]
+  have hjk := H.trans_lt' hik
+  rw [Fin.predAbove_of_le_castSucc _ _ (Fin.castSucc_le_castSucc_iff.mpr
+    (hjk.trans (Fin.castSucc_lt_succ _)).le),
+    Fin.predAbove_of_le_castSucc _ _ hjk.le, Fin.castPred_castSucc, Fin.succAbove_of_castSucc_lt,
+    Fin.castSucc_castPred]
+  rwa [Fin.castSucc_castPred]
 
 /-- The first part of the third simplicial identity -/
 @[reassoc]
@@ -301,32 +301,32 @@ theorem δ_comp_σ_of_gt {n} {i : Fin (n + 2)} {j : Fin (n + 1)} (H : Fin.castSu
   ext k : 3
   dsimp [δ, σ]
   rcases le_or_lt k i with (hik | hik)
-  · rw [Fin.succAbove_of_castSucc_lt _ _ (Fin.castSucc_lt_succ_iff.mpr hik)]
-    rcases le_or_lt k (j.castSucc) with (hjk | hjk)
-    · rw [Fin.predAbove_of_le_castSucc _ _
-      (Fin.castSucc_le_castSucc_iff.mpr hjk), Fin.castPred_castSucc,
-      Fin.predAbove_of_le_castSucc _ _ hjk, Fin.succAbove_of_castSucc_lt, Fin.castSucc_castPred]
-      rw [Fin.castSucc_castPred]
-      exact hjk.trans_lt H
-    · rw [Fin.predAbove_of_castSucc_lt _ _ (Fin.castSucc_lt_castSucc_iff.mpr hjk),
-      Fin.predAbove_of_castSucc_lt _ _ hjk, Fin.succAbove_of_castSucc_lt,
-      Fin.castSucc_pred_eq_pred_castSucc]
-      rwa [Fin.castSucc_lt_iff_succ_le, Fin.succ_pred]
-  · rw [Fin.succAbove_of_le_castSucc _ _ (Fin.succ_le_castSucc_iff.mpr hik)]
-    have hjk := H.trans hik
-    rw [Fin.predAbove_of_castSucc_lt _ _ hjk, Fin.predAbove_of_castSucc_lt _ _
-      (Fin.castSucc_lt_succ_iff.mpr hjk.le),
-    Fin.pred_succ, Fin.succAbove_of_le_castSucc, Fin.succ_pred]
-    rwa [Fin.le_castSucc_pred_iff]
+  rw [Fin.succAbove_of_castSucc_lt _ _ (Fin.castSucc_lt_succ_iff.mpr hik)]
+  rcases le_or_lt k (j.castSucc) with (hjk | hjk)
+  rw [Fin.predAbove_of_le_castSucc _ _
+  (Fin.castSucc_le_castSucc_iff.mpr hjk), Fin.castPred_castSucc,
+  Fin.predAbove_of_le_castSucc _ _ hjk, Fin.succAbove_of_castSucc_lt, Fin.castSucc_castPred]
+  rw [Fin.castSucc_castPred]
+  exact hjk.trans_lt H
+  rw [Fin.predAbove_of_castSucc_lt _ _ (Fin.castSucc_lt_castSucc_iff.mpr hjk),
+  Fin.predAbove_of_castSucc_lt _ _ hjk, Fin.succAbove_of_castSucc_lt,
+  Fin.castSucc_pred_eq_pred_castSucc]
+  rwa [Fin.castSucc_lt_iff_succ_le, Fin.succ_pred]
+  rw [Fin.succAbove_of_le_castSucc _ _ (Fin.succ_le_castSucc_iff.mpr hik)]
+  have hjk := H.trans hik
+  rw [Fin.predAbove_of_castSucc_lt _ _ hjk, Fin.predAbove_of_castSucc_lt _ _
+    (Fin.castSucc_lt_succ_iff.mpr hjk.le),
+  Fin.pred_succ, Fin.succAbove_of_le_castSucc, Fin.succ_pred]
+  rwa [Fin.le_castSucc_pred_iff]
 
 @[reassoc]
 theorem δ_comp_σ_of_gt' {n} {i : Fin (n + 3)} {j : Fin (n + 2)} (H : j.succ < i) :
     δ i ≫ σ j = σ (j.castLT ((add_lt_add_iff_right 1).mp (lt_of_lt_of_le H i.is_le))) ≫
       δ (i.pred fun (hi : i = 0) => by simp only [Fin.not_lt_zero, hi] at H) := by
   rw [← δ_comp_σ_of_gt]
-  · simp
-  · rw [Fin.castSucc_castLT, ← Fin.succ_lt_succ_iff, Fin.succ_pred]
-    exact H
+  simp
+  rw [Fin.castSucc_castLT, ← Fin.succ_lt_succ_iff, Fin.succ_pred]
+  exact H
 
 /-- The fifth simplicial identity -/
 @[reassoc]
@@ -335,32 +335,32 @@ theorem σ_comp_σ {n} {i j : Fin (n + 1)} (H : i ≤ j) :
   ext k : 3
   dsimp [σ]
   cases' k using Fin.lastCases with k
-  · simp only [len_mk, Fin.predAbove_right_last]
-  · cases' k using Fin.cases with k
-    · rw [Fin.castSucc_zero, Fin.predAbove_of_le_castSucc _ 0 (Fin.zero_le _),
-      Fin.predAbove_of_le_castSucc _ _ (Fin.zero_le _), Fin.castPred_zero,
-      Fin.predAbove_of_le_castSucc _ 0 (Fin.zero_le _),
-      Fin.predAbove_of_le_castSucc _ _ (Fin.zero_le _)]
-    · rcases le_or_lt i k with (h | h)
-      · simp_rw [Fin.predAbove_of_castSucc_lt i.castSucc _ (Fin.castSucc_lt_castSucc_iff.mpr
-        (Fin.castSucc_lt_succ_iff.mpr h)), ← Fin.succ_castSucc, Fin.pred_succ,
-        Fin.succ_predAbove_succ]
-        rw [Fin.predAbove_of_castSucc_lt i _ (Fin.castSucc_lt_succ_iff.mpr _), Fin.pred_succ]
-        rcases le_or_lt k j with (hkj | hkj)
-        · rwa [Fin.predAbove_of_le_castSucc _ _ (Fin.castSucc_le_castSucc_iff.mpr hkj),
-          Fin.castPred_castSucc]
-        · rw [Fin.predAbove_of_castSucc_lt _ _ (Fin.castSucc_lt_castSucc_iff.mpr hkj),
-          Fin.le_pred_iff,
-          Fin.succ_le_castSucc_iff]
-          exact H.trans_lt hkj
-      · simp_rw [Fin.predAbove_of_le_castSucc i.castSucc _ (Fin.castSucc_le_castSucc_iff.mpr
-        (Fin.succ_le_castSucc_iff.mpr h)), Fin.castPred_castSucc, ← Fin.succ_castSucc,
-        Fin.succ_predAbove_succ]
-        rw [Fin.predAbove_of_le_castSucc _ k.castSucc
-        (Fin.castSucc_le_castSucc_iff.mpr (h.le.trans H)),
-        Fin.castPred_castSucc, Fin.predAbove_of_le_castSucc _ k.succ
-        (Fin.succ_le_castSucc_iff.mpr (H.trans_lt' h)), Fin.predAbove_of_le_castSucc _ k.succ
-        (Fin.succ_le_castSucc_iff.mpr h)]
+  simp only [len_mk, Fin.predAbove_right_last]
+  cases' k using Fin.cases with k
+  rw [Fin.castSucc_zero, Fin.predAbove_of_le_castSucc _ 0 (Fin.zero_le _),
+  Fin.predAbove_of_le_castSucc _ _ (Fin.zero_le _), Fin.castPred_zero,
+  Fin.predAbove_of_le_castSucc _ 0 (Fin.zero_le _),
+  Fin.predAbove_of_le_castSucc _ _ (Fin.zero_le _)]
+  rcases le_or_lt i k with (h | h)
+  simp_rw [Fin.predAbove_of_castSucc_lt i.castSucc _ (Fin.castSucc_lt_castSucc_iff.mpr
+  (Fin.castSucc_lt_succ_iff.mpr h)), ← Fin.succ_castSucc, Fin.pred_succ,
+  Fin.succ_predAbove_succ]
+  rw [Fin.predAbove_of_castSucc_lt i _ (Fin.castSucc_lt_succ_iff.mpr _), Fin.pred_succ]
+  rcases le_or_lt k j with (hkj | hkj)
+  rwa [Fin.predAbove_of_le_castSucc _ _ (Fin.castSucc_le_castSucc_iff.mpr hkj),
+  Fin.castPred_castSucc]
+  rw [Fin.predAbove_of_castSucc_lt _ _ (Fin.castSucc_lt_castSucc_iff.mpr hkj),
+  Fin.le_pred_iff,
+  Fin.succ_le_castSucc_iff]
+  exact H.trans_lt hkj
+  simp_rw [Fin.predAbove_of_le_castSucc i.castSucc _ (Fin.castSucc_le_castSucc_iff.mpr
+  (Fin.succ_le_castSucc_iff.mpr h)), Fin.castPred_castSucc, ← Fin.succ_castSucc,
+  Fin.succ_predAbove_succ]
+  rw [Fin.predAbove_of_le_castSucc _ k.castSucc
+  (Fin.castSucc_le_castSucc_iff.mpr (h.le.trans H)),
+  Fin.castPred_castSucc, Fin.predAbove_of_le_castSucc _ k.succ
+  (Fin.succ_le_castSucc_iff.mpr (H.trans_lt' h)), Fin.predAbove_of_le_castSucc _ k.succ
+  (Fin.succ_le_castSucc_iff.mpr h)]
 
 /--
 If `f : [m] ⟶ [n+1]` is a morphism and `j` is not in the range of `f`,
@@ -379,25 +379,25 @@ lemma factor_δ_spec {m n : ℕ} (f : ([m] : SimplexCategory) ⟶ [n+1]) (j : Fi
   specialize hj k
   dsimp [factor_δ, δ, σ]
   cases' j using cases with j
-  · rw [predAbove_of_le_castSucc _ _ (zero_le _), castPred_zero, predAbove_of_castSucc_lt 0 _
-    (castSucc_zero ▸ pos_of_ne_zero hj),
-    zero_succAbove, succ_pred]
-  · rw [predAbove_of_castSucc_lt 0 _ (castSucc_zero ▸ succ_pos _), pred_succ]
-    rcases hj.lt_or_lt with (hj | hj)
-    · rw [predAbove_of_le_castSucc j _]
-      swap
-      · exact (le_castSucc_iff.mpr hj)
-      · rw [succAbove_of_castSucc_lt]
-        swap
-        · rwa [castSucc_lt_succ_iff, castPred_le_iff, le_castSucc_iff]
-        rw [castSucc_castPred]
-    · rw [predAbove_of_castSucc_lt]
-      swap
-      · exact (castSucc_lt_succ _).trans hj
-      rw [succAbove_of_le_castSucc]
-      swap
-      · rwa [succ_le_castSucc_iff, lt_pred_iff]
-      rw [succ_pred]
+  rw [predAbove_of_le_castSucc _ _ (zero_le _), castPred_zero, predAbove_of_castSucc_lt 0 _
+  (castSucc_zero ▸ pos_of_ne_zero hj),
+  zero_succAbove, succ_pred]
+  rw [predAbove_of_castSucc_lt 0 _ (castSucc_zero ▸ succ_pos _), pred_succ]
+  rcases hj.lt_or_lt with (hj | hj)
+  rw [predAbove_of_le_castSucc j _]
+  swap
+  exact (le_castSucc_iff.mpr hj)
+  rw [succAbove_of_castSucc_lt]
+  swap
+  rwa [castSucc_lt_succ_iff, castPred_le_iff, le_castSucc_iff]
+  rw [castSucc_castPred]
+  rw [predAbove_of_castSucc_lt]
+  swap
+  exact (castSucc_lt_succ _).trans hj
+  rw [succAbove_of_le_castSucc]
+  swap
+  rwa [succ_le_castSucc_iff, lt_pred_iff]
+  rw [succ_pred]
 
 end Generators
 
@@ -548,18 +548,18 @@ instance {n : ℕ} {i : Fin (n + 1)} : Epi (σ i) := by
   intro b
   simp only [σ, mkHom, Hom.toOrderHom_mk, OrderHom.coe_mk]
   by_cases h : b ≤ i
-  · use b
-    -- This was not needed before leanprover/lean4#2644
-    dsimp
-    rw [Fin.predAbove_of_le_castSucc i b (by simpa only [Fin.coe_eq_castSucc] using h)]
-    simp only [len_mk, Fin.coe_eq_castSucc, Fin.castPred_castSucc]
-  · use b.succ
-    -- This was not needed before leanprover/lean4#2644
-    dsimp
-    rw [Fin.predAbove_of_castSucc_lt i b.succ _, Fin.pred_succ]
-    rw [not_le] at h
-    rw [Fin.lt_iff_val_lt_val] at h ⊢
-    simpa only [Fin.val_succ, Fin.coe_castSucc] using Nat.lt.step h
+  use b
+  -- This was not needed before leanprover/lean4#2644
+  dsimp
+  rw [Fin.predAbove_of_le_castSucc i b (by simpa only [Fin.coe_eq_castSucc] using h)]
+  simp only [len_mk, Fin.coe_eq_castSucc, Fin.castPred_castSucc]
+  use b.succ
+  -- This was not needed before leanprover/lean4#2644
+  dsimp
+  rw [Fin.predAbove_of_castSucc_lt i b.succ _, Fin.pred_succ]
+  rw [not_le] at h
+  rw [Fin.lt_iff_val_lt_val] at h ⊢
+  simpa only [Fin.val_succ, Fin.coe_castSucc] using Nat.lt.step h
 
 instance : (forget SimplexCategory).ReflectsIsomorphisms :=
   ⟨fun f hf =>
@@ -569,13 +569,13 @@ instance : (forget SimplexCategory).ReflectsIsomorphisms :=
             { toFun := inv ((forget SimplexCategory).map f)
               monotone' := fun y₁ y₂ h => by
                 by_cases h' : y₁ < y₂
-                · by_contra h''
-                  apply not_le.mpr h'
-                  convert f.toOrderHom.monotone (le_of_not_ge h'')
-                  all_goals
-                    exact (congr_hom (Iso.inv_hom_id
-                      (asIso ((forget SimplexCategory).map f))) _).symm
-                · rw [eq_of_le_of_not_lt h h'] }
+                by_contra h''
+                apply not_le.mpr h'
+                convert f.toOrderHom.monotone (le_of_not_ge h'')
+                all_goals
+                  try exact (congr_hom (Iso.inv_hom_id
+                    (asIso ((forget SimplexCategory).map f))) _).symm
+                rw [eq_of_le_of_not_lt h h'] }
         hom_inv_id := by
           ext1
           ext1
@@ -625,39 +625,39 @@ theorem eq_σ_comp_of_not_injective' {n : ℕ} {Δ' : SimplexCategory} (θ : mk 
   simp only [len_mk, σ, mkHom, comp_toOrderHom, Hom.toOrderHom_mk, OrderHom.comp_coe,
     OrderHom.coe_mk, Function.comp_apply]
   by_cases h' : x ≤ Fin.castSucc i
-  · -- This was not needed before leanprover/lean4#2644
-    dsimp
-    rw [Fin.predAbove_of_le_castSucc i x h']
-    dsimp [δ]
-    erw [Fin.succAbove_of_castSucc_lt _ _ _]
-    · rw [Fin.castSucc_castPred]
-    · exact (Fin.castSucc_lt_succ_iff.mpr h')
-  · simp only [not_le] at h'
-    let y := x.pred <| by rintro (rfl : x = 0); simp at h'
-    have hy : x = y.succ := (Fin.succ_pred x _).symm
-    rw [hy] at h' ⊢
-    -- This was not needed before leanprover/lean4#2644
-    conv_rhs => dsimp
-    rw [Fin.predAbove_of_castSucc_lt i y.succ h', Fin.pred_succ]
-    by_cases h'' : y = i
-    · rw [h'']
-      refine hi.symm.trans ?_
-      congr 1
-      dsimp [δ]
-      erw [Fin.succAbove_of_castSucc_lt i.succ]
-      exact Fin.lt_succ
-    · dsimp [δ]
-      erw [Fin.succAbove_of_le_castSucc i.succ _]
-      simp only [Fin.lt_iff_val_lt_val, Fin.le_iff_val_le_val, Fin.val_succ, Fin.coe_castSucc,
-        Nat.lt_succ_iff, Fin.ext_iff] at h' h'' ⊢
-      cases' Nat.le.dest h' with c hc
-      cases c
-      · exfalso
-        simp only [Nat.zero_eq, add_zero, len_mk, Fin.coe_pred] at hc
-        rw [hc] at h''
-        exact h'' rfl
-      · rw [← hc]
-        simp only [add_le_add_iff_left, Nat.succ_eq_add_one, le_add_iff_nonneg_left, zero_le]
+  -- This was not needed before leanprover/lean4#2644
+  dsimp
+  rw [Fin.predAbove_of_le_castSucc i x h']
+  dsimp [δ]
+  erw [Fin.succAbove_of_castSucc_lt _ _ _]
+  rw [Fin.castSucc_castPred]
+  exact (Fin.castSucc_lt_succ_iff.mpr h')
+  simp only [not_le] at h'
+  let y := x.pred <| by rintro (rfl : x = 0); simp at h'
+  have hy : x = y.succ := (Fin.succ_pred x _).symm
+  rw [hy] at h' ⊢
+  -- This was not needed before leanprover/lean4#2644
+  conv_rhs => dsimp
+  rw [Fin.predAbove_of_castSucc_lt i y.succ h', Fin.pred_succ]
+  by_cases h'' : y = i
+  rw [h'']
+  refine hi.symm.trans ?_
+  congr 1
+  dsimp [δ]
+  erw [Fin.succAbove_of_castSucc_lt i.succ]
+  exact Fin.lt_succ
+  dsimp [δ]
+  erw [Fin.succAbove_of_le_castSucc i.succ _]
+  simp only [Fin.lt_iff_val_lt_val, Fin.le_iff_val_le_val, Fin.val_succ, Fin.coe_castSucc,
+    Nat.lt_succ_iff, Fin.ext_iff] at h' h'' ⊢
+  cases' Nat.le.dest h' with c hc
+  cases c
+  exfalso
+  simp only [Nat.zero_eq, add_zero, len_mk, Fin.coe_pred] at hc
+  rw [hc] at h''
+  exact h'' rfl
+  rw [← hc]
+  simp only [add_le_add_iff_left, Nat.succ_eq_add_one, le_add_iff_nonneg_left, zero_le]
 
 theorem eq_σ_comp_of_not_injective {n : ℕ} {Δ' : SimplexCategory} (θ : mk (n + 1) ⟶ Δ')
     (hθ : ¬Function.Injective θ.toOrderHom) :
@@ -668,50 +668,50 @@ theorem eq_σ_comp_of_not_injective {n : ℕ} {Δ' : SimplexCategory} (θ : mk (
   have hθ₂ : ∃ x y : Fin (n + 2), (Hom.toOrderHom θ) x = (Hom.toOrderHom θ) y ∧ x < y
   rcases hθ with ⟨x, y, ⟨h₁, h₂⟩⟩
   by_cases h : x < y
-  · exact ⟨x, y, ⟨h₁, h⟩⟩
-  · refine ⟨y, x, ⟨h₁.symm, ?_⟩⟩
-    rcases lt_or_eq_of_le (not_lt.mp h) with h' | h'
-    · exact h'
-    · exfalso
-      exact h₂ h'.symm
+  exact ⟨x, y, ⟨h₁, h⟩⟩
+  refine ⟨y, x, ⟨h₁.symm, ?_⟩⟩
+  rcases lt_or_eq_of_le (not_lt.mp h) with h' | h'
+  exact h'
+  exfalso
+  exact h₂ h'.symm
   rcases hθ₂ with ⟨x, y, ⟨h₁, h₂⟩⟩
   use x.castPred ((Fin.le_last _).trans_lt' h₂).ne
   apply eq_σ_comp_of_not_injective'
   apply le_antisymm
-  · exact θ.toOrderHom.monotone (le_of_lt (Fin.castSucc_lt_succ _))
-  · rw [Fin.castSucc_castPred, h₁]
-    exact θ.toOrderHom.monotone ((Fin.succ_castPred_le_iff _).mpr h₂)
+  exact θ.toOrderHom.monotone (le_of_lt (Fin.castSucc_lt_succ _))
+  rw [Fin.castSucc_castPred, h₁]
+  exact θ.toOrderHom.monotone ((Fin.succ_castPred_le_iff _).mpr h₂)
 
 theorem eq_comp_δ_of_not_surjective' {n : ℕ} {Δ : SimplexCategory} (θ : Δ ⟶ mk (n + 1))
     (i : Fin (n + 2)) (hi : ∀ x, θ.toOrderHom x ≠ i) : ∃ θ' : Δ ⟶ mk n, θ = θ' ≫ δ i := by
   by_cases h : i < Fin.last (n + 1)
-  · use θ ≫ σ (Fin.castPred i h.ne)
-    ext1
-    ext1
-    ext1 x
-    simp only [len_mk, Category.assoc, comp_toOrderHom, OrderHom.comp_coe, Function.comp_apply]
-    by_cases h' : θ.toOrderHom x ≤ i
-    · simp only [σ, mkHom, Hom.toOrderHom_mk, OrderHom.coe_mk]
-      -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-      erw [Fin.predAbove_of_le_castSucc _ _ (by rwa [Fin.castSucc_castPred])]
-      dsimp [δ]
-      erw [Fin.succAbove_of_castSucc_lt i]
-      · rw [Fin.castSucc_castPred]
-      · rw [(hi x).le_iff_lt] at h'
-        exact h'
-    · simp only [not_le] at h'
-      dsimp [σ, δ]
-      erw [Fin.predAbove_of_castSucc_lt _ _ (by rwa [Fin.castSucc_castPred])]
-      rw [Fin.succAbove_of_le_castSucc i _]
-      · erw [Fin.succ_pred]
-      · exact Nat.le_sub_one_of_lt (Fin.lt_iff_val_lt_val.mp h')
-  · obtain rfl := le_antisymm (Fin.le_last i) (not_lt.mp h)
-    use θ ≫ σ (Fin.last _)
-    ext x : 3
-    dsimp [δ, σ]
-    simp_rw [Fin.succAbove_last, Fin.predAbove_last_apply]
-    erw [dif_neg (hi x)]
-    rw [Fin.castSucc_castPred]
+  use θ ≫ σ (Fin.castPred i h.ne)
+  ext1
+  ext1
+  ext1 x
+  simp only [len_mk, Category.assoc, comp_toOrderHom, OrderHom.comp_coe, Function.comp_apply]
+  by_cases h' : θ.toOrderHom x ≤ i
+  simp only [σ, mkHom, Hom.toOrderHom_mk, OrderHom.coe_mk]
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [Fin.predAbove_of_le_castSucc _ _ (by rwa [Fin.castSucc_castPred])]
+  dsimp [δ]
+  erw [Fin.succAbove_of_castSucc_lt i]
+  rw [Fin.castSucc_castPred]
+  rw [(hi x).le_iff_lt] at h'
+  exact h'
+  simp only [not_le] at h'
+  dsimp [σ, δ]
+  erw [Fin.predAbove_of_castSucc_lt _ _ (by rwa [Fin.castSucc_castPred])]
+  rw [Fin.succAbove_of_le_castSucc i _]
+  erw [Fin.succ_pred]
+  exact Nat.le_sub_one_of_lt (Fin.lt_iff_val_lt_val.mp h')
+  obtain rfl := le_antisymm (Fin.le_last i) (not_lt.mp h)
+  use θ ≫ σ (Fin.last _)
+  ext x : 3
+  dsimp [δ, σ]
+  simp_rw [Fin.succAbove_last, Fin.predAbove_last_apply]
+  erw [dif_neg (hi x)]
+  rw [Fin.castSucc_castPred]
 
 theorem eq_comp_δ_of_not_surjective {n : ℕ} {Δ : SimplexCategory} (θ : Δ ⟶ mk (n + 1))
     (hθ : ¬Function.Surjective θ.toOrderHom) :
@@ -764,9 +764,9 @@ theorem eq_δ_of_mono {n : ℕ} (θ : mk n ⟶ mk (n + 1)) [Mono θ] : ∃ i : F
 theorem len_lt_of_mono {Δ' Δ : SimplexCategory} (i : Δ' ⟶ Δ) [hi : Mono i] (hi' : Δ ≠ Δ') :
     Δ'.len < Δ.len := by
   rcases lt_or_eq_of_le (len_le_of_mono hi) with (h | h)
-  · exact h
-  · exfalso
-    exact hi' (by ext; exact h.symm)
+  exact h
+  exfalso
+  exact hi' (by ext; exact h.symm)
 
 noncomputable instance : SplitEpiCategory SimplexCategory :=
   skeletalEquivalence.inverse.splitEpiCategoryImpOfIsEquivalence

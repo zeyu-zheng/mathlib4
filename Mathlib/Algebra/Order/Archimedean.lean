@@ -222,9 +222,9 @@ theorem exists_mem_Ioc_zpow (hx : 0 < x) (hy : 1 < y) : ∃ n : ℤ, x ∈ Ioc (
 /-- For any `y < 1` and any positive `x`, there exists `n : ℕ` with `y ^ n < x`. -/
 theorem exists_pow_lt_of_lt_one (hx : 0 < x) (hy : y < 1) : ∃ n : ℕ, y ^ n < x := by
   by_cases y_pos : y ≤ 0
-  · use 1
-    simp only [pow_one]
-    exact y_pos.trans_lt hx
+  use 1
+  simp only [pow_one]
+  exact y_pos.trans_lt hx
   rw [not_le] at y_pos
   rcases pow_unbounded_of_one_lt x⁻¹ (one_lt_inv y_pos hy) with ⟨q, hq⟩
   exact ⟨q, by rwa [inv_pow, inv_lt_inv hx (pow_pos y_pos _)] at hq⟩
@@ -236,16 +236,16 @@ theorem exists_nat_pow_near_of_lt_one (xpos : 0 < x) (hx : x ≤ 1) (ypos : 0 < 
   rcases exists_nat_pow_near (one_le_inv_iff.2 ⟨xpos, hx⟩) (one_lt_inv_iff.2 ⟨ypos, hy⟩) with
     ⟨n, hn, h'n⟩
   refine ⟨n, ?_, ?_⟩
-  · rwa [inv_pow, inv_lt_inv xpos (pow_pos ypos _)] at h'n
-  · rwa [inv_pow, inv_le_inv (pow_pos ypos _) xpos] at hn
+  rwa [inv_pow, inv_lt_inv xpos (pow_pos ypos _)] at h'n
+  rwa [inv_pow, inv_le_inv (pow_pos ypos _) xpos] at hn
 
 lemma exists_nat_one_div_lt (hε : 0 < ε) : ∃ n : ℕ, 1 / (n + 1 : α) < ε := by
   cases' exists_nat_gt (1 / ε) with n hn
   use n
   rw [div_lt_iff, ← div_lt_iff' hε]
-  · apply hn.trans
-    simp [zero_lt_one]
-  · exact n.cast_add_one_pos
+  apply hn.trans
+  simp [zero_lt_one]
+  exact n.cast_add_one_pos
 
 end LinearOrderedSemifield
 
@@ -267,16 +267,16 @@ theorem exists_rat_btwn {x y : α} (h : x < y) : ∃ q : ℚ, x < q ∧ (q : α)
   have n0' := (inv_pos.2 (sub_pos.2 h)).trans nh
   have n0 := Nat.cast_pos.1 n0'
   rw [Rat.cast_div_of_ne_zero, Rat.cast_natCast, Rat.cast_intCast, div_lt_iff n0']
-  · refine ⟨(lt_div_iff n0').2 <| (lt_iff_lt_of_le_iff_le (zh _)).1 (lt_add_one _), ?_⟩
-    rw [Int.cast_add, Int.cast_one]
-    refine lt_of_le_of_lt (add_le_add_right ((zh _).1 le_rfl) _) ?_
-    rwa [← lt_sub_iff_add_lt', ← sub_mul, ← div_lt_iff' (sub_pos.2 h), one_div]
-  · rw [Rat.den_intCast, Nat.cast_one]
-    exact one_ne_zero
-  · intro H
-    rw [Rat.num_natCast, Int.cast_natCast, Nat.cast_eq_zero] at H
-    subst H
-    cases n0
+  refine ⟨(lt_div_iff n0').2 <| (lt_iff_lt_of_le_iff_le (zh _)).1 (lt_add_one _), ?_⟩
+  rw [Int.cast_add, Int.cast_one]
+  refine lt_of_le_of_lt (add_le_add_right ((zh _).1 le_rfl) _) ?_
+  rwa [← lt_sub_iff_add_lt', ← sub_mul, ← div_lt_iff' (sub_pos.2 h), one_div]
+  rw [Rat.den_intCast, Nat.cast_one]
+  exact one_ne_zero
+  intro H
+  rw [Rat.num_natCast, Int.cast_natCast, Nat.cast_eq_zero] at H
+  subst H
+  cases n0
 
 theorem le_of_forall_rat_lt_imp_le (h : ∀ q : ℚ, (q : α) < x → (q : α) ≤ y) : x ≤ y :=
   le_of_not_lt fun hyx =>

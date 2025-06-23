@@ -114,12 +114,12 @@ halfspace doesn't intersect `A`. -/
 theorem eq_inter_halfspace [Nontrivial 𝕜] {A B : Set E} (hAB : IsExposed 𝕜 A B) :
     ∃ l : E →L[𝕜] 𝕜, ∃ a, B = { x ∈ A | a ≤ l x } := by
   obtain rfl | hB := B.eq_empty_or_nonempty
-  · refine ⟨0, 1, ?_⟩
-    rw [eq_comm, eq_empty_iff_forall_not_mem]
-    rintro x ⟨-, h⟩
-    rw [ContinuousLinearMap.zero_apply] at h
-    have : ¬(1 : 𝕜) ≤ 0 := not_le_of_lt zero_lt_one
-    contradiction
+  refine ⟨0, 1, ?_⟩
+  rw [eq_comm, eq_empty_iff_forall_not_mem]
+  rintro x ⟨-, h⟩
+  rw [ContinuousLinearMap.zero_apply] at h
+  have : ¬(1 : 𝕜) ≤ 0 := not_le_of_lt zero_lt_one
+  contradiction
   exact hAB.eq_inter_halfspace' hB
 
 protected theorem inter [ContinuousAdd 𝕜] {A B C : Set E} (hB : IsExposed 𝕜 A B)
@@ -128,14 +128,14 @@ protected theorem inter [ContinuousAdd 𝕜] {A B C : Set E} (hB : IsExposed �
   obtain ⟨l₁, rfl⟩ := hB ⟨w, hwB⟩
   obtain ⟨l₂, rfl⟩ := hC ⟨w, hwC⟩
   refine ⟨l₁ + l₂, Subset.antisymm ?_ ?_⟩
-  · rintro x ⟨⟨hxA, hxB⟩, ⟨-, hxC⟩⟩
-    exact ⟨hxA, fun z hz => add_le_add (hxB z hz) (hxC z hz)⟩
+  rintro x ⟨⟨hxA, hxB⟩, ⟨-, hxC⟩⟩
+  exact ⟨hxA, fun z hz => add_le_add (hxB z hz) (hxC z hz)⟩
   rintro x ⟨hxA, hx⟩
   refine ⟨⟨hxA, fun y hy => ?_⟩, hxA, fun y hy => ?_⟩
-  · exact
-      (add_le_add_iff_right (l₂ x)).1 ((add_le_add (hwB.2 y hy) (hwC.2 x hxA)).trans (hx w hwB.1))
-  · exact
-      (add_le_add_iff_left (l₁ x)).1 (le_trans (add_le_add (hwB.2 x hxA) (hwC.2 y hy)) (hx w hwB.1))
+  exact
+    (add_le_add_iff_right (l₂ x)).1 ((add_le_add (hwB.2 y hy) (hwC.2 x hxA)).trans (hx w hwB.1))
+  exact
+    (add_le_add_iff_left (l₁ x)).1 (le_trans (add_le_add (hwB.2 x hxA) (hwC.2 y hy)) (hx w hwB.1))
 
 theorem sInter [ContinuousAdd 𝕜] {F : Finset (Set E)} (hF : F.Nonempty)
     (hAF : ∀ B ∈ F, IsExposed 𝕜 A B) : IsExposed 𝕜 A (⋂₀ F) := by
@@ -144,10 +144,10 @@ theorem sInter [ContinuousAdd 𝕜] {F : Finset (Set E)} (hF : F.Nonempty)
   | @insert C F _ hF' =>
     rw [Finset.coe_insert, sInter_insert]
     obtain rfl | hFnemp := F.eq_empty_or_nonempty
-    · rw [Finset.coe_empty, sInter_empty, inter_univ]
-      exact hAF C (Finset.mem_singleton_self C)
-    · exact (hAF C (Finset.mem_insert_self C F)).inter
-        (hF' hFnemp fun B hB => hAF B (Finset.mem_insert_of_mem hB))
+    rw [Finset.coe_empty, sInter_empty, inter_univ]
+    exact hAF C (Finset.mem_singleton_self C)
+    exact (hAF C (Finset.mem_insert_self C F)).inter
+      (hF' hFnemp fun B hB => hAF B (Finset.mem_insert_of_mem hB))
 
 theorem inter_left (hC : IsExposed 𝕜 A C) (hCB : C ⊆ B) : IsExposed 𝕜 (A ∩ B) C := by
   rintro ⟨w, hw⟩
@@ -162,7 +162,7 @@ theorem inter_right (hC : IsExposed 𝕜 B C) (hCA : C ⊆ A) : IsExposed 𝕜 (
 protected theorem isClosed [OrderClosedTopology 𝕜] {A B : Set E} (hAB : IsExposed 𝕜 A B)
     (hA : IsClosed A) : IsClosed B := by
   obtain rfl | hB := B.eq_empty_or_nonempty
-  · simp
+  simp
   obtain ⟨l, a, rfl⟩ := hAB.eq_inter_halfspace' hB
   exact hA.isClosed_le continuousOn_const l.continuous.continuousOn
 
@@ -216,7 +216,7 @@ namespace IsExposed
 
 protected theorem convex (hAB : IsExposed 𝕜 A B) (hA : Convex 𝕜 A) : Convex 𝕜 B := by
   obtain rfl | hB := B.eq_empty_or_nonempty
-  · exact convex_empty
+  exact convex_empty
   obtain ⟨l, rfl⟩ := hAB hB
   exact fun x₁ hx₁ x₂ hx₂ a b ha hb hab =>
     ⟨hA hx₁.1 hx₂.1 ha hb hab, fun y hy =>
@@ -230,10 +230,10 @@ protected theorem isExtreme (hAB : IsExposed 𝕜 A B) : IsExtreme 𝕜 A B := b
   have hlx₁ := hxB.2 x₁ hx₁A
   have hlx₂ := hxB.2 x₂ hx₂A
   refine ⟨⟨hx₁A, fun y hy => ?_⟩, ⟨hx₂A, fun y hy => ?_⟩⟩
-  · rw [hlx₁.antisymm (hl.le_left_of_right_le (mem_univ _) (mem_univ _) hx hlx₂)]
-    exact hxB.2 y hy
-  · rw [hlx₂.antisymm (hl.le_right_of_left_le (mem_univ _) (mem_univ _) hx hlx₁)]
-    exact hxB.2 y hy
+  rw [hlx₁.antisymm (hl.le_left_of_right_le (mem_univ _) (mem_univ _) hx hlx₂)]
+  exact hxB.2 y hy
+  rw [hlx₂.antisymm (hl.le_right_of_left_le (mem_univ _) (mem_univ _) hx hlx₁)]
+  exact hxB.2 y hy
 
 end IsExposed
 

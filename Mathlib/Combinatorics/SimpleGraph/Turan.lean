@@ -75,12 +75,12 @@ lemma turanGraph_zero : turanGraph n 0 = ⊤ := by
 theorem turanGraph_eq_top : turanGraph n r = ⊤ ↔ r = 0 ∨ n ≤ r := by
   simp_rw [SimpleGraph.ext_iff, Function.funext_iff, turanGraph, top_adj, eq_iff_iff, not_iff_not]
   refine ⟨fun h ↦ ?_, ?_⟩
-  · contrapose! h
-    use ⟨0, (Nat.pos_of_ne_zero h.1).trans h.2⟩, ⟨r, h.2⟩
-    simp [h.1.symm]
-  · rintro (rfl | h) a b
-    · simp [Fin.val_inj]
-    · rw [Nat.mod_eq_of_lt (a.2.trans_le h), Nat.mod_eq_of_lt (b.2.trans_le h), Fin.val_inj]
+  contrapose! h
+  use ⟨0, (Nat.pos_of_ne_zero h.1).trans h.2⟩, ⟨r, h.2⟩
+  simp [h.1.symm]
+  rintro (rfl | h) a b
+  simp [Fin.val_inj]
+  rw [Nat.mod_eq_of_lt (a.2.trans_le h), Nat.mod_eq_of_lt (b.2.trans_le h), Fin.val_inj]
 
 variable (hr : 0 < r)
 
@@ -119,9 +119,9 @@ lemma exists_isTuranMaximal :
   rw [Set.mem_toFinset] at Sm
   refine ⟨Sm, fun I _ cf ↦ ?_⟩
   by_cases Im : I ∈ c.toFinset
-  · convert Sl I Im
-  · rw [Set.mem_toFinset] at Im
-    contradiction
+  convert Sl I Im
+  rw [Set.mem_toFinset] at Im
+  contradiction
 
 end Defs
 
@@ -134,8 +134,8 @@ lemma degree_eq_of_not_adj (h : G.IsTuranMaximal r) (hn : ¬G.Adj s t) :
     G.degree s = G.degree t := by
   rw [IsTuranMaximal] at h; contrapose! h; intro cf
   wlog hd : G.degree t < G.degree s generalizing G t s
-  · replace hd : G.degree s < G.degree t := lt_of_le_of_ne (le_of_not_lt hd) h
-    exact this (by rwa [adj_comm] at hn) hd.ne' cf hd
+  replace hd : G.degree s < G.degree t := lt_of_le_of_ne (le_of_not_lt hd) h
+  exact this (by rwa [adj_comm] at hn) hd.ne' cf hd
   use G.replaceVertex s t, inferInstance, cf.replaceVertex s t
   have := G.card_edgeFinset_replaceVertex_of_not_adj hn
   omega
@@ -158,8 +158,8 @@ lemma not_adj_trans (h : G.IsTuranMaximal r) (hts : ¬G.Adj t s) (hsu : ¬G.Adj 
   unfold degree; congr 1; ext v
   simp only [mem_neighborFinset, SimpleGraph.irrefl, ite_self]
   by_cases eq : v = t
-  · simpa only [eq, not_adj_replaceVertex_same, false_iff]
-  · rw [G.adj_replaceVertex_iff_of_ne s nst eq]
+  simpa only [eq, not_adj_replaceVertex_same, false_iff]
+  rw [G.adj_replaceVertex_iff_of_ne s nst eq]
   have l2 : (G.replaceVertex s t).degree u = G.degree u - 1
   rw [degree, degree, ← card_singleton t, ← card_sdiff (by simp [h.symm])]
   congr 1; ext v
@@ -272,10 +272,10 @@ theorem nonempty_iso_turanGraph (h : G.IsTuranMaximal r) :
   rw [← h.not_adj_iff_part_eq] at this
   rw [← not_iff_not, not_ne_iff, this, card_parts]
   rcases le_or_lt r (Fintype.card V) with c | c
-  · rw [min_eq_right c]; rfl
-  · have lc : ∀ x, zm ⟨x, _⟩ < Fintype.card V := fun x ↦ (zm ⟨x, mem_univ x⟩).2
-    rw [min_eq_left c.le, Nat.mod_eq_of_lt (lc a), Nat.mod_eq_of_lt (lc b),
-      ← Nat.mod_eq_of_lt ((lc a).trans c), ← Nat.mod_eq_of_lt ((lc b).trans c)]; rfl
+  rw [min_eq_right c]; rfl
+  have lc : ∀ x, zm ⟨x, _⟩ < Fintype.card V := fun x ↦ (zm ⟨x, mem_univ x⟩).2
+  rw [min_eq_left c.le, Nat.mod_eq_of_lt (lc a), Nat.mod_eq_of_lt (lc b),
+    ← Nat.mod_eq_of_lt ((lc a).trans c), ← Nat.mod_eq_of_lt ((lc b).trans c)]; rfl
 
 end IsTuranMaximal
 

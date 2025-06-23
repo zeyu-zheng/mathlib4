@@ -60,8 +60,8 @@ theorem mul_matrix_apply [Fintype m] [DecidableEq m] [Semiring α] (f : l ≃. m
     (i j) : (f.toMatrix * M :) i j = Option.casesOn (f i) 0 fun fi => M fi j := by
   dsimp [toMatrix, Matrix.mul_apply]
   cases' h : f i with fi
-  · simp [h]
-  · rw [Finset.sum_eq_single fi] <;> simp (config := { contextual := true }) [h, eq_comm]
+  simp [h]
+  rw [Finset.sum_eq_single fi] <;> simp (config := { contextual := true }) [h, eq_comm]
 
 theorem toMatrix_symm [DecidableEq m] [DecidableEq n] [Zero α] [One α] (f : m ≃. n) :
     (f.symm.toMatrix : Matrix n m α) = f.toMatrixᵀ := by
@@ -79,12 +79,12 @@ theorem matrix_mul_apply [Fintype m] [Semiring α] [DecidableEq n] (M : Matrix l
     (i j) : (M * f.toMatrix :) i j = Option.casesOn (f.symm j) 0 fun fj => M i fj := by
   dsimp [toMatrix, Matrix.mul_apply]
   cases' h : f.symm j with fj
-  · simp [h, ← f.eq_some_iff]
-  · rw [Finset.sum_eq_single fj]
-    · simp [h, ← f.eq_some_iff]
-    · rintro b - n
-      simp [h, ← f.eq_some_iff, n.symm]
-    · simp
+  simp [h, ← f.eq_some_iff]
+  rw [Finset.sum_eq_single fj]
+  simp [h, ← f.eq_some_iff]
+  rintro b - n
+  simp [h, ← f.eq_some_iff, n.symm]
+  simp
 
 theorem toPEquiv_mul_matrix [Fintype m] [DecidableEq m] [Semiring α] (f : m ≃ m)
     (M : Matrix m n α) : f.toPEquiv.toMatrix * M = M.submatrix f id := by
@@ -118,12 +118,12 @@ theorem toMatrix_injective [DecidableEq n] [MonoidWithZero α] [Nontrivial α] :
     intro i hi
     use i
     cases' hf : f i with fi
-    · cases' hg : g i with gi
-      · rw [hf, hg] at hi; exact (hi rfl).elim
-      · use gi
-        simp
-    · use fi
-      simp [hf.symm, Ne.symm hi]
+    cases' hg : g i with gi
+    rw [hf, hg] at hi; exact (hi rfl).elim
+    use gi
+    simp
+    use fi
+    simp [hf.symm, Ne.symm hi]
 
 theorem toMatrix_swap [DecidableEq n] [Ring α] (i j : n) :
     (Equiv.swap i j).toPEquiv.toMatrix =

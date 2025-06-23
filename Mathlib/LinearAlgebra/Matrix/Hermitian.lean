@@ -262,12 +262,12 @@ theorem isHermitian_iff_isSymmetric [Fintype n] [DecidableEq n] {A : Matrix n n 
   simp only [toEuclideanLin_piLp_equiv_symm, EuclideanSpace.inner_piLp_equiv_symm, toLin'_apply,
     star_mulVec, dotProduct_mulVec]
   constructor
-  · rintro (h : Aᴴ = A) x y
-    rw [h]
-  · intro h
-    ext i j
-    simpa only [(Pi.single_star i 1).symm, ← star_mulVec, mul_one, dotProduct_single,
-      single_vecMul, star_one, one_mul] using h (Pi.single i 1) (Pi.single j 1)
+  rintro (h : Aᴴ = A) x y
+  rw [h]
+  intro h
+  ext i j
+  simpa only [(Pi.single_star i 1).symm, ← star_mulVec, mul_one, dotProduct_single,
+    single_vecMul, star_one, one_mul] using h (Pi.single i 1) (Pi.single j 1)
 
 end RCLike
 

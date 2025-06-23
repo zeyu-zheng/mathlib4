@@ -85,8 +85,8 @@ private theorem ext_aux (I J : HasZeroMorphisms C)
   apply congrArg Zero.mk w
   cases I; cases J
   congr
-  · apply proof_irrel_heq
-  · apply proof_irrel_heq
+  apply proof_irrel_heq
+  apply proof_irrel_heq
 
 /-- If you're tempted to use this lemma "in the wild", you should probably
 carefully consider whether you've made a mistake in allowing two
@@ -190,20 +190,20 @@ theorem of_epi_eq_zero {X Y : C} (f : X ⟶ Y) [Epi f] (h : f = 0) : IsZero Y :=
 theorem iff_isSplitMono_eq_zero {X Y : C} (f : X ⟶ Y) [IsSplitMono f] : IsZero X ↔ f = 0 := by
   rw [iff_id_eq_zero]
   constructor
-  · intro h
-    rw [← Category.id_comp f, h, zero_comp]
-  · intro h
-    rw [← IsSplitMono.id f]
-    simp only [h, zero_comp]
+  intro h
+  rw [← Category.id_comp f, h, zero_comp]
+  intro h
+  rw [← IsSplitMono.id f]
+  simp only [h, zero_comp]
 
 theorem iff_isSplitEpi_eq_zero {X Y : C} (f : X ⟶ Y) [IsSplitEpi f] : IsZero Y ↔ f = 0 := by
   rw [iff_id_eq_zero]
   constructor
-  · intro h
-    rw [← Category.comp_id f, h, comp_zero]
-  · intro h
-    rw [← IsSplitEpi.id f]
-    simp [h]
+  intro h
+  rw [← Category.comp_id f, h, comp_zero]
+  intro h
+  rw [← IsSplitEpi.id f]
+  simp [h]
 
 theorem of_mono {X Y : C} (f : X ⟶ Y) [Mono f] (i : IsZero Y) : IsZero X := by
   have hf := i.eq_zero_of_tgt f

@@ -469,21 +469,21 @@ theorem toIocMod_neg' (a b : α) : toIocMod hp (-a) b = p - toIcoMod hp a (-b) :
 
 theorem toIcoMod_eq_toIcoMod : toIcoMod hp a b = toIcoMod hp a c ↔ ∃ n : ℤ, c - b = n • p := by
   refine ⟨fun h => ⟨toIcoDiv hp a c - toIcoDiv hp a b, ?_⟩, fun h => ?_⟩
-  · conv_lhs => rw [← toIcoMod_add_toIcoDiv_zsmul hp a b, ← toIcoMod_add_toIcoDiv_zsmul hp a c]
-    rw [h, sub_smul]
-    abel
-  · rcases h with ⟨z, hz⟩
-    rw [sub_eq_iff_eq_add] at hz
-    rw [hz, toIcoMod_zsmul_add]
+  conv_lhs => rw [← toIcoMod_add_toIcoDiv_zsmul hp a b, ← toIcoMod_add_toIcoDiv_zsmul hp a c]
+  rw [h, sub_smul]
+  abel
+  rcases h with ⟨z, hz⟩
+  rw [sub_eq_iff_eq_add] at hz
+  rw [hz, toIcoMod_zsmul_add]
 
 theorem toIocMod_eq_toIocMod : toIocMod hp a b = toIocMod hp a c ↔ ∃ n : ℤ, c - b = n • p := by
   refine ⟨fun h => ⟨toIocDiv hp a c - toIocDiv hp a b, ?_⟩, fun h => ?_⟩
-  · conv_lhs => rw [← toIocMod_add_toIocDiv_zsmul hp a b, ← toIocMod_add_toIocDiv_zsmul hp a c]
-    rw [h, sub_smul]
-    abel
-  · rcases h with ⟨z, hz⟩
-    rw [sub_eq_iff_eq_add] at hz
-    rw [hz, toIocMod_zsmul_add]
+  conv_lhs => rw [← toIocMod_add_toIocDiv_zsmul hp a b, ← toIocMod_add_toIocDiv_zsmul hp a c]
+  rw [h, sub_smul]
+  abel
+  rcases h with ⟨z, hz⟩
+  rw [sub_eq_iff_eq_add] at hz
+  rw [hz, toIocMod_zsmul_add]
 
 /-! ### Links between the `Ico` and `Ioc` variants applied to the same element -/
 
@@ -500,9 +500,9 @@ theorem modEq_iff_toIcoMod_eq_left : a ≡ b [PMOD p] ↔ toIcoMod hp a b = a :=
 
 theorem modEq_iff_toIocMod_eq_right : a ≡ b [PMOD p] ↔ toIocMod hp a b = a + p := by
   refine modEq_iff_eq_add_zsmul.trans ⟨?_, fun h => ⟨toIocDiv hp a b + 1, ?_⟩⟩
-  · rintro ⟨z, rfl⟩
-    rw [toIocMod_add_zsmul, toIocMod_apply_left]
-  · rwa [add_one_zsmul, add_left_comm, ← sub_eq_iff_eq_add']
+  rintro ⟨z, rfl⟩
+  rw [toIocMod_add_zsmul, toIocMod_apply_left]
+  rwa [add_one_zsmul, add_left_comm, ← sub_eq_iff_eq_add']
 
 alias ⟨ModEq.toIcoMod_eq_left, _⟩ := modEq_iff_toIcoMod_eq_left
 
@@ -517,24 +517,24 @@ theorem tfae_modEq :
         toIcoMod hp a b + p = toIocMod hp a b] := by
   rw [modEq_iff_toIcoMod_eq_left hp]
   tfae_have 3 → 2
-  · rw [← not_exists, not_imp_not]
-    exact fun ⟨i, hi⟩ =>
-      ((toIcoMod_eq_iff hp).2 ⟨Set.Ioo_subset_Ico_self hi, i, (sub_add_cancel b _).symm⟩).trans
-        ((toIocMod_eq_iff hp).2 ⟨Set.Ioo_subset_Ioc_self hi, i, (sub_add_cancel b _).symm⟩).symm
+  rw [← not_exists, not_imp_not]
+  exact fun ⟨i, hi⟩ =>
+    ((toIcoMod_eq_iff hp).2 ⟨Set.Ioo_subset_Ico_self hi, i, (sub_add_cancel b _).symm⟩).trans
+      ((toIocMod_eq_iff hp).2 ⟨Set.Ioo_subset_Ioc_self hi, i, (sub_add_cancel b _).symm⟩).symm
   tfae_have 4 → 3
-  · intro h
-    rw [← h, Ne, eq_comm, add_right_eq_self]
-    exact hp.ne'
+  intro h
+  rw [← h, Ne, eq_comm, add_right_eq_self]
+  exact hp.ne'
   tfae_have 1 → 4
-  · intro h
-    rw [h, eq_comm, toIocMod_eq_iff, Set.right_mem_Ioc]
-    refine ⟨lt_add_of_pos_right a hp, toIcoDiv hp a b - 1, ?_⟩
-    rw [sub_one_zsmul, add_add_add_comm, add_right_neg, add_zero]
-    conv_lhs => rw [← toIcoMod_add_toIcoDiv_zsmul hp a b, h]
+  intro h
+  rw [h, eq_comm, toIocMod_eq_iff, Set.right_mem_Ioc]
+  refine ⟨lt_add_of_pos_right a hp, toIcoDiv hp a b - 1, ?_⟩
+  rw [sub_one_zsmul, add_add_add_comm, add_right_neg, add_zero]
+  conv_lhs => rw [← toIcoMod_add_toIcoDiv_zsmul hp a b, h]
   tfae_have 2 → 1
-  · rw [← not_exists, not_imp_comm]
-    have h' := toIcoMod_mem_Ico hp a b
-    exact fun h => ⟨_, h'.1.lt_of_ne' h, h'.2⟩
+  rw [← not_exists, not_imp_comm]
+  have h' := toIcoMod_mem_Ico hp a b
+  exact fun h => ⟨_, h'.1.lt_of_ne' h, h'.2⟩
   tfae_finish
 
 variable {a b}
@@ -733,9 +733,9 @@ private theorem toIxxMod_cyclic_left {x₁ x₂ x₃ : α} (h : toIcoMod hp x₁
     rw [hd, toIocMod_add_zsmul', toIcoMod_add_zsmul', add_le_add_iff_right]
     assumption -- Porting note: was `simpa`
   rcases le_or_lt x₃' (x₁ + p) with h₃₁ | h₁₃
-  · suffices hIoc₂₁ : toIocMod hp x₂' x₁ = x₁ + p from hIoc₂₁.symm.trans_ge h₃₁
-    apply (toIocMod_eq_iff hp).2
-    exact ⟨⟨h₂₁, by simp [x₂', left_le_toIcoMod]⟩, -1, by simp⟩
+  suffices hIoc₂₁ : toIocMod hp x₂' x₁ = x₁ + p from hIoc₂₁.symm.trans_ge h₃₁
+  apply (toIocMod_eq_iff hp).2
+  exact ⟨⟨h₂₁, by simp [x₂', left_le_toIcoMod]⟩, -1, by simp⟩
   have hIoc₁₃ : toIocMod hp x₁ x₃' = x₃' - p
   apply (toIocMod_eq_iff hp).2
   exact ⟨⟨lt_sub_iff_add_lt.2 h₁₃, le_of_lt (h₃₂.trans h₂₁)⟩, 1, by simp⟩
@@ -763,8 +763,8 @@ private theorem toIxxMod_total' (a b c : α) :
   rw [min_le_iff] at this
   rw [toIxxMod_iff, toIxxMod_iff]
   refine this.imp (le_trans <| add_le_add_left ?_ _) (le_trans <| add_le_add_left ?_ _)
-  · apply toIcoMod_le_toIocMod
-  · apply toIcoMod_le_toIocMod
+  apply toIcoMod_le_toIocMod
+  apply toIcoMod_le_toIocMod
 
 private theorem toIxxMod_total (a b c : α) :
     toIcoMod hp a b ≤ toIocMod hp a c ∨ toIcoMod hp c b ≤ toIocMod hp c a :=
@@ -775,16 +775,16 @@ private theorem toIxxMod_trans {x₁ x₂ x₃ x₄ : α}
     (h₂₃₄ : toIcoMod hp x₂ x₄ ≤ toIocMod hp x₂ x₃ ∧ ¬toIcoMod hp x₃ x₄ ≤ toIocMod hp x₃ x₂) :
     toIcoMod hp x₁ x₄ ≤ toIocMod hp x₁ x₃ ∧ ¬toIcoMod hp x₃ x₄ ≤ toIocMod hp x₃ x₁ := by
   constructor
-  · suffices h : ¬x₃ ≡ x₂ [PMOD p] by
-      have h₁₂₃' := toIxxMod_cyclic_left _ (toIxxMod_cyclic_left _ h₁₂₃.1)
-      have h₂₃₄' := toIxxMod_cyclic_left _ (toIxxMod_cyclic_left _ h₂₃₄.1)
-      rw [(not_modEq_iff_toIcoMod_eq_toIocMod hp).1 h] at h₂₃₄'
-      exact toIxxMod_cyclic_left _ (h₁₂₃'.trans h₂₃₄')
-    by_contra h
-    rw [(modEq_iff_toIcoMod_eq_left hp).1 h] at h₁₂₃
-    exact h₁₂₃.2 (left_lt_toIocMod _ _ _).le
-  · rw [not_le] at h₁₂₃ h₂₃₄ ⊢
-    exact (h₁₂₃.2.trans_le (toIcoMod_le_toIocMod _ x₃ x₂)).trans h₂₃₄.2
+  suffices h : ¬x₃ ≡ x₂ [PMOD p] by
+    have h₁₂₃' := toIxxMod_cyclic_left _ (toIxxMod_cyclic_left _ h₁₂₃.1)
+    have h₂₃₄' := toIxxMod_cyclic_left _ (toIxxMod_cyclic_left _ h₂₃₄.1)
+    rw [(not_modEq_iff_toIcoMod_eq_toIocMod hp).1 h] at h₂₃₄'
+    exact toIxxMod_cyclic_left _ (h₁₂₃'.trans h₂₃₄')
+  by_contra h
+  rw [(modEq_iff_toIcoMod_eq_left hp).1 h] at h₁₂₃
+  exact h₁₂₃.2 (left_lt_toIocMod _ _ _).le
+  rw [not_le] at h₁₂₃ h₂₃₄ ⊢
+  exact (h₁₂₃.2.trans_le (toIcoMod_le_toIocMod _ x₃ x₂)).trans h₂₃₄.2
 
 namespace QuotientAddGroup
 

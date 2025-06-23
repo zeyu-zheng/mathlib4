@@ -109,10 +109,10 @@ lemma IsMatching.iSup {ι : Sort _} {f : ι → Subgraph G} (hM : (i : ι) → (
   intro y hy
   obtain ⟨i' , hi'⟩ := iSup_adj.mp hy
   by_cases heq : i = i'
-  · exact hw.2 y (heq.symm ▸ hi')
-  · have := hd heq
-    simp only [Set.disjoint_left] at this
-    simpa [(mem_support _).mpr ⟨w, hw.1⟩, (mem_support _).mpr ⟨y, hi'⟩] using @this v
+  exact hw.2 y (heq.symm ▸ hi')
+  have := hd heq
+  simp only [Set.disjoint_left] at this
+  simpa [(mem_support _).mpr ⟨w, hw.1⟩, (mem_support _).mpr ⟨y, hi'⟩] using @this v
 
 lemma IsMatching.subgraphOfAdj (h : G.Adj v w) : (G.subgraphOfAdj h).IsMatching := by
   intro _ hv
@@ -127,11 +127,11 @@ lemma IsMatching.coeSubgraph {G' : Subgraph G} {M : Subgraph G'.coe} (hM : M.IsM
   obtain ⟨w, hw⟩ := hM <| Set.mem_of_mem_image_val <| M.verts_coeSubgraph.symm ▸ hv
   use w
   refine ⟨?_, fun y hy => ?_⟩
-  · obtain ⟨v, hv⟩ := (Set.mem_image _ _ _).mp <| M.verts_coeSubgraph.symm ▸ hv
-    simp only [coeSubgraph_adj, Subtype.coe_eta, Subtype.coe_prop, exists_const]
-    exact ⟨hv.2 ▸ v.2, hw.1⟩
-  · obtain ⟨_, hw', hvw⟩ := (coeSubgraph_adj _ _ _).mp hy
-    rw [← hw.2 ⟨y, hw'⟩ hvw]
+  obtain ⟨v, hv⟩ := (Set.mem_image _ _ _).mp <| M.verts_coeSubgraph.symm ▸ hv
+  simp only [coeSubgraph_adj, Subtype.coe_eta, Subtype.coe_prop, exists_const]
+  exact ⟨hv.2 ▸ v.2, hw.1⟩
+  obtain ⟨_, hw', hvw⟩ := (coeSubgraph_adj _ _ _).mp hy
+  rw [← hw.2 ⟨y, hw'⟩ hvw]
 
 /--
 The subgraph `M` of `G` is a perfect matching on `G` if it's a matching and every vertex `G` is
@@ -161,10 +161,10 @@ theorem IsMatching.even_card [Fintype M.verts] (h : M.IsMatching) : Even M.verts
 
 theorem isPerfectMatching_iff : M.IsPerfectMatching ↔ ∀ v, ∃! w, M.Adj v w := by
   refine ⟨?_, fun hm => ⟨fun v _ => hm v, fun v => ?_⟩⟩
-  · rintro ⟨hm, hs⟩ v
-    exact hm (hs v)
-  · obtain ⟨w, hw, -⟩ := hm v
-    exact M.edge_vert hw
+  rintro ⟨hm, hs⟩ v
+  exact hm (hs v)
+  obtain ⟨w, hw, -⟩ := hm v
+  exact M.edge_vert hw
 
 theorem isPerfectMatching_iff_forall_degree [∀ v, Fintype (M.neighborSet v)] :
     M.IsPerfectMatching ↔ ∀ v, M.degree v = 1 := by

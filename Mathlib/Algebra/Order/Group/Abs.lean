@@ -29,33 +29,33 @@ variable [LinearOrderedCommGroup α] {a b : α}
 
 @[to_additive] lemma mabs_pow (n : ℕ) (a : α) : |a ^ n|ₘ = |a|ₘ ^ n := by
   obtain ha | ha := le_total a 1
-  · rw [mabs_of_le_one ha, ← mabs_inv, ← inv_pow, mabs_of_one_le]
-    exact one_le_pow_of_one_le' (one_le_inv'.2 ha) n
-  · rw [mabs_of_one_le ha, mabs_of_one_le (one_le_pow_of_one_le' ha n)]
+  rw [mabs_of_le_one ha, ← mabs_inv, ← inv_pow, mabs_of_one_le]
+  exact one_le_pow_of_one_le' (one_le_inv'.2 ha) n
+  rw [mabs_of_one_le ha, mabs_of_one_le (one_le_pow_of_one_le' ha n)]
 
 @[to_additive] private lemma mabs_mul_eq_mul_mabs_le (hab : a ≤ b) :
     |a * b|ₘ = |a|ₘ * |b|ₘ ↔ 1 ≤ a ∧ 1 ≤ b ∨ a ≤ 1 ∧ b ≤ 1 := by
   obtain ha | ha := le_or_lt 1 a <;> obtain hb | hb := le_or_lt 1 b
-  · simp [ha, hb, mabs_of_one_le, one_le_mul ha hb]
-  · exact (lt_irrefl (1 : α) <| ha.trans_lt <| hab.trans_lt hb).elim
+  simp [ha, hb, mabs_of_one_le, one_le_mul ha hb]
+  exact (lt_irrefl (1 : α) <| ha.trans_lt <| hab.trans_lt hb).elim
   swap
-  · simp [ha.le, hb.le, mabs_of_le_one, mul_le_one', mul_comm]
+  simp [ha.le, hb.le, mabs_of_le_one, mul_le_one', mul_comm]
   have : (|a * b|ₘ = a⁻¹ * b ↔ b ≤ 1) ↔
     (|a * b|ₘ = |a|ₘ * |b|ₘ ↔ 1 ≤ a ∧ 1 ≤ b ∨ a ≤ 1 ∧ b ≤ 1) := by
     simp [ha.le, ha.not_le, hb, mabs_of_le_one, mabs_of_one_le]
   refine this.mp ⟨fun h ↦ ?_, fun h ↦ by simp only [h.antisymm hb, mabs_of_lt_one ha, mul_one]⟩
   obtain ab | ab := le_or_lt (a * b) 1
-  · refine (eq_one_of_inv_eq' ?_).le
-    rwa [mabs_of_le_one ab, mul_inv_rev, mul_comm, mul_right_inj] at h
-  · rw [mabs_of_one_lt ab, mul_left_inj] at h
-    rw [eq_one_of_inv_eq' h.symm] at ha
-    cases ha.false
+  refine (eq_one_of_inv_eq' ?_).le
+  rwa [mabs_of_le_one ab, mul_inv_rev, mul_comm, mul_right_inj] at h
+  rw [mabs_of_one_lt ab, mul_left_inj] at h
+  rw [eq_one_of_inv_eq' h.symm] at ha
+  cases ha.false
 
 @[to_additive] lemma mabs_mul_eq_mul_mabs_iff (a b : α) :
     |a * b|ₘ = |a|ₘ * |b|ₘ ↔ 1 ≤ a ∧ 1 ≤ b ∨ a ≤ 1 ∧ b ≤ 1 := by
   obtain ab | ab := le_total a b
-  · exact mabs_mul_eq_mul_mabs_le ab
-  · simpa only [mul_comm, and_comm] using mabs_mul_eq_mul_mabs_le ab
+  exact mabs_mul_eq_mul_mabs_le ab
+  simpa only [mul_comm, and_comm] using mabs_mul_eq_mul_mabs_le ab
 
 end LinearOrderedCommGroup
 
@@ -206,11 +206,11 @@ theorem abs_eq_neg_self : |a| = -a ↔ a ≤ 0 := by
     Use cases on this lemma to automate linarith in inequalities -/
 theorem abs_cases (a : α) : |a| = a ∧ 0 ≤ a ∨ |a| = -a ∧ a < 0 := by
   by_cases h : 0 ≤ a
-  · left
-    exact ⟨abs_eq_self.mpr h, h⟩
-  · right
-    push_neg at h
-    exact ⟨abs_eq_neg_self.mpr (le_of_lt h), h⟩
+  left
+  exact ⟨abs_eq_self.mpr h, h⟩
+  right
+  push_neg at h
+  exact ⟨abs_eq_neg_self.mpr (le_of_lt h), h⟩
 
 @[simp]
 theorem max_zero_add_max_neg_zero_eq_abs_self (a : α) : max a 0 + max (-a) 0 = |a| := by

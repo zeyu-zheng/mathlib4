@@ -115,8 +115,8 @@ variable {K} [LinearOrderedSemifield K] {p q : ℚ≥0}
 theorem cast_strictMono : StrictMono ((↑) : ℚ≥0 → K) := fun p q h => by
   rwa [NNRat.cast_def, NNRat.cast_def, div_lt_div_iff, ← Nat.cast_mul, ← Nat.cast_mul,
     Nat.cast_lt (α := K), ← NNRat.lt_def]
-  · simp
-  · simp
+  simp
+  simp
 
 @[mono]
 theorem cast_mono : Monotone ((↑) : ℚ≥0 → K) :=

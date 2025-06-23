@@ -133,9 +133,9 @@ end
 lemma hasLimit_iff_small_sections :
     HasLimit F ↔ Small.{u} (F ⋙ forget Grp).sections := by
   constructor
-  · apply Concrete.small_sections_of_hasLimit
-  · intro
-    infer_instance
+  apply Concrete.small_sections_of_hasLimit
+  intro
+  infer_instance
 
 /-- If `J` is `u`-small, `Grp.{u}` has limits of shape `J`. -/
 @[to_additive "If `J` is `u`-small, `AddGrp.{u}` has limits of shape `J`."]
@@ -288,9 +288,9 @@ end
 lemma hasLimit_iff_small_sections :
     HasLimit F ↔ Small.{u} (F ⋙ forget CommGrp).sections := by
   constructor
-  · apply Concrete.small_sections_of_hasLimit
-  · intro
-    infer_instance
+  apply Concrete.small_sections_of_hasLimit
+  intro
+  infer_instance
 
 /-- If `J` is `u`-small, `CommGrp.{u}` has limits of shape `J`. -/
 @[to_additive "If `J` is `u`-small, `AddCommGrp.{u}` has limits of shape `J`."]

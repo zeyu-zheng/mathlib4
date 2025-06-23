@@ -126,8 +126,8 @@ variable {S : L.Substructure M}
 theorem Term.realize_mem {α : Type*} (t : L.Term α) (xs : α → M) (h : ∀ a, xs a ∈ S) :
     t.realize xs ∈ S := by
   induction' t with a n f ts ih
-  · exact h a
-  · exact Substructure.fun_mem _ _ _ ih
+  exact h a
+  exact Substructure.fun_mem _ _ _ ih
 
 namespace Substructure
 
@@ -180,8 +180,8 @@ instance instInfSet : InfSet (L.Substructure M) :=
           (by
             rintro _ ⟨t, rfl⟩
             by_cases h : t ∈ s
-            · simpa [h] using t.fun_mem f
-            · simp [h]) }⟩
+            simpa [h] using t.fun_mem f
+            simp [h]) }⟩
 
 @[simp, norm_cast]
 theorem coe_sInf (S : Set (L.Substructure M)) :

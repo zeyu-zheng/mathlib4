@@ -89,10 +89,10 @@ lemma num_zero : IsFractionRing.num A (0 : K) = 0 := by
   have := mk'_num_den' A (0 : K)
   simp only [div_eq_zero_iff] at this
   rcases this with h | h
-  · exact NoZeroSMulDivisors.algebraMap_injective A K (by convert h; simp)
-  · replace h : algebraMap A K (den A (0 : K)) = algebraMap A K 0 := by convert h; simp
-    absurd NoZeroSMulDivisors.algebraMap_injective A K h
-    apply nonZeroDivisors.coe_ne_zero
+  exact NoZeroSMulDivisors.algebraMap_injective A K (by convert h; simp)
+  replace h : algebraMap A K (den A (0 : K)) = algebraMap A K 0 := by convert h; simp
+  absurd NoZeroSMulDivisors.algebraMap_injective A K h
+  apply nonZeroDivisors.coe_ne_zero
 
 @[simp]
 lemma num_eq_zero (x : K) : IsFractionRing.num A x = 0 ↔ x = 0 :=
@@ -124,12 +124,12 @@ theorem isUnit_den_iff (x : K) : IsUnit (den A x : A) ↔ IsLocalization.IsInteg
     apply IsRelPrime.isUnit_of_dvd (num_den_reduced A x).symm
     use v
     apply_fun algebraMap A K
-    · simp only [map_mul, h]
-      rw [mul_comm, ← div_eq_iff]
-      · simp only [mk'_num_den']
-      intro h
-      replace h : algebraMap A K (den A x : A) = algebraMap A K 0 := by convert h; simp
-      exact nonZeroDivisors.coe_ne_zero _ <| NoZeroSMulDivisors.algebraMap_injective A K h
+    simp only [map_mul, h]
+    rw [mul_comm, ← div_eq_iff]
+    simp only [mk'_num_den']
+    intro h
+    replace h : algebraMap A K (den A x : A) = algebraMap A K 0 := by convert h; simp
+    exact nonZeroDivisors.coe_ne_zero _ <| NoZeroSMulDivisors.algebraMap_injective A K h
     exact NoZeroSMulDivisors.algebraMap_injective A K
 
 theorem isUnit_den_zero : IsUnit (den A (0 : K) : A) := by

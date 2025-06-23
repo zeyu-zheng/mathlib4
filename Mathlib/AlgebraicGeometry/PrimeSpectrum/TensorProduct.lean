@@ -68,12 +68,12 @@ lemma PrimeSpectrum.embedding_tensorProductTo_of_surjectiveOnStalks :
   obtain ⟨t, r, a, ht, e⟩ := hRT.exists_mul_eq_tmul f
     (J.asIdeal.comap g) inferInstance
   refine ⟨_, ?_, ⟨_, (basicOpen a).2.prod (basicOpen t).2, rfl⟩, ?_⟩
-  · rintro x ⟨hx₁ : a ⊗ₜ[R] (1 : T) ∉ x.asIdeal, hx₂ : (1 : S) ⊗ₜ[R] t ∉ x.asIdeal⟩
-      (hx₃ : f ∈ x.asIdeal)
-    apply x.asIdeal.primeCompl.mul_mem hx₁ hx₂
+  rintro x ⟨hx₁ : a ⊗ₜ[R] (1 : T) ∉ x.asIdeal, hx₂ : (1 : S) ⊗ₜ[R] t ∉ x.asIdeal⟩
+    (hx₃ : f ∈ x.asIdeal)
+  apply x.asIdeal.primeCompl.mul_mem hx₁ hx₂
+  rw [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul, ← e]
+  exact x.asIdeal.mul_mem_left _ hx₃
+  have : a ⊗ₜ[R] (1 : T) * (1 : S) ⊗ₜ[R] t ∉ J.asIdeal := by
     rw [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul, ← e]
-    exact x.asIdeal.mul_mem_left _ hx₃
-  · have : a ⊗ₜ[R] (1 : T) * (1 : S) ⊗ₜ[R] t ∉ J.asIdeal := by
-      rw [Algebra.TensorProduct.tmul_mul_tmul, mul_one, one_mul, ← e]
-      exact J.asIdeal.primeCompl.mul_mem ht hJ
-    rwa [J.isPrime.mul_mem_iff_mem_or_mem.not, not_or] at this
+    exact J.asIdeal.primeCompl.mul_mem ht hJ
+  rwa [J.isPrime.mul_mem_iff_mem_or_mem.not, not_or] at this

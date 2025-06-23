@@ -206,10 +206,10 @@ theorem fst_ssubset_fst_iff : c.fst ⊂ d.fst ↔ c < d :=
 @[simp]
 theorem snd_subset_snd_iff : c.snd ⊆ d.snd ↔ d ≤ c := by
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · rw [← fst_subset_fst_iff, ← c.closure_snd, ← d.closure_snd]
-    exact extentClosure_anti _ h
-  · rw [← c.closure_fst, ← d.closure_fst]
-    exact intentClosure_anti _ h
+  rw [← fst_subset_fst_iff, ← c.closure_snd, ← d.closure_snd]
+  exact extentClosure_anti _ h
+  rw [← c.closure_fst, ← d.closure_fst]
+  exact intentClosure_anti _ h
 
 @[simp]
 theorem snd_ssubset_snd_iff : c.snd ⊂ d.snd ↔ d < c := by

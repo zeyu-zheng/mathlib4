@@ -128,16 +128,16 @@ instance : Inhabited (Partition G) := ⟨G.selfColoring.toPartition⟩
 
 theorem partitionable_iff_colorable {n : ℕ} : G.Partitionable n ↔ G.Colorable n := by
   constructor
-  · rintro ⟨P, hf, hc⟩
-    have : Fintype P.parts := hf.fintype
-    rw [Set.Finite.card_toFinset hf] at hc
-    apply P.colorable.mono hc
-  · rintro ⟨C⟩
-    refine ⟨C.toPartition, C.colorClasses_finite, le_trans ?_ (Fintype.card_fin n).le⟩
-    generalize_proofs h
-    change Set.Finite (Coloring.colorClasses C) at h
-    have : Fintype C.colorClasses := C.colorClasses_finite.fintype
-    rw [h.card_toFinset]
-    exact C.card_colorClasses_le
+  rintro ⟨P, hf, hc⟩
+  have : Fintype P.parts := hf.fintype
+  rw [Set.Finite.card_toFinset hf] at hc
+  apply P.colorable.mono hc
+  rintro ⟨C⟩
+  refine ⟨C.toPartition, C.colorClasses_finite, le_trans ?_ (Fintype.card_fin n).le⟩
+  generalize_proofs h
+  change Set.Finite (Coloring.colorClasses C) at h
+  have : Fintype C.colorClasses := C.colorClasses_finite.fintype
+  rw [h.card_toFinset]
+  exact C.card_colorClasses_le
 
 end SimpleGraph

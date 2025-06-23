@@ -139,14 +139,14 @@ example (A B C : ℝ) : |A + B| + C ≤ |A| + |B| + C := by gcongr ?_ + (A : ℝ
 
 example {n i : ℕ} (hi : i ∈ range n) : 2 ^ i ≤ 2 ^ n := by
   gcongr
-  · norm_num
-  · apply le_of_lt
-    simpa using hi
+  norm_num
+  apply le_of_lt
+  simpa using hi
 
 example {n' : ℕ} (hn': 6 ≤ n') : 2 ^ ((n' + 1) * (n' + 1)) ≤ 2 ^ (n' * n' + 4 * n') := by
   gcongr
-  · norm_num
-  · linarith
+  norm_num
+  linarith
 
 example {F : ℕ → ℕ} (le_sum: ∀ {N : ℕ}, 6 ≤ N → 15 ≤ F N) {n' : ℕ} (hn' : 6 ≤ n') :
     let A := F n';
@@ -158,11 +158,11 @@ example {F : ℕ → ℕ} (le_sum: ∀ {N : ℕ}, 6 ≤ N → 15 ≤ F N) {n' : 
 example {a : ℤ} {n : ℕ} (ha : ∀ i < n, 2 ^ i ≤ a) :
     ∏ i ∈ range n, (a - 2 ^ i) ≤ ∏ _i ∈ range n, a := by
   gcongr with i
-  · intro i hi
-    simp only [mem_range] at hi
-    linarith [ha i hi]
-  · have : 0 ≤ 2 ^ i := by positivity
-    linarith
+  intro i hi
+  simp only [mem_range] at hi
+  linarith [ha i hi]
+  have : 0 ≤ 2 ^ i := by positivity
+  linarith
 
 -- this tests that the match goes only as deep as is indicated by the template
 example {a b c d e : ℝ} (_h1 : 0 ≤ b) (_h2 : 0 ≤ c) (hac : a * b + 1 ≤ c * d + 1) (_hbd : b ≤ d) :

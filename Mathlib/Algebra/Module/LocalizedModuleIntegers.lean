@@ -62,13 +62,13 @@ theorem exist_integer_multiples {ι : Type*} (s : Finset ι) (g : ι → M') :
     ∃ b : S, ∀ i ∈ s, IsInteger f (b.val • g i) := by
   choose sec hsec using (fun i ↦ IsLocalizedModule.surj S f (g i))
   refine ⟨∏ i ∈ s, (sec i).2, fun i hi => ⟨?_, ?_⟩⟩
-  · exact (∏ j ∈ s.erase i, (sec j).2) • (sec i).1
-  · simp only [LinearMap.map_smul_of_tower, Submonoid.coe_finset_prod]
-    rw [← hsec, ← mul_smul, Submonoid.smul_def]
-    congr
-    simp only [Submonoid.coe_mul, Submonoid.coe_finset_prod, mul_comm]
-    rw [← Finset.prod_insert (f := fun i ↦ ((sec i).snd).val) (s.not_mem_erase i),
-      Finset.insert_erase hi]
+  exact (∏ j ∈ s.erase i, (sec j).2) • (sec i).1
+  simp only [LinearMap.map_smul_of_tower, Submonoid.coe_finset_prod]
+  rw [← hsec, ← mul_smul, Submonoid.smul_def]
+  congr
+  simp only [Submonoid.coe_mul, Submonoid.coe_finset_prod, mul_comm]
+  rw [← Finset.prod_insert (f := fun i ↦ ((sec i).snd).val) (s.not_mem_erase i),
+    Finset.insert_erase hi]
 
 /-- We can clear the denominators of a finite indexed family of fractions. -/
 theorem exist_integer_multiples_of_finite {ι : Type*} [Finite ι] (g : ι → M') :
@@ -112,11 +112,11 @@ theorem finsetIntegerMultiple_image [DecidableEq M] (s : Finset M') :
   rw [Finset.coe_image]
   ext
   constructor
-  · rintro ⟨_, ⟨x, -, rfl⟩, rfl⟩
-    rw [map_integerMultiple]
-    exact Set.mem_image_of_mem _ x.prop
-  · rintro ⟨x, hx, rfl⟩
-    exact ⟨_, ⟨⟨x, hx⟩, s.mem_attach _, rfl⟩, map_integerMultiple S f s id _⟩
+  rintro ⟨_, ⟨x, -, rfl⟩, rfl⟩
+  rw [map_integerMultiple]
+  exact Set.mem_image_of_mem _ x.prop
+  rintro ⟨x, hx, rfl⟩
+  exact ⟨_, ⟨⟨x, hx⟩, s.mem_attach _, rfl⟩, map_integerMultiple S f s id _⟩
 
 theorem smul_mem_finsetIntegerMultiple_span [DecidableEq M] (x : M) (s : Finset M')
     (hx : f x ∈ Submodule.span R s) :

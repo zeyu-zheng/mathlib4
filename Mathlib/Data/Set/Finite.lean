@@ -700,9 +700,9 @@ theorem Finite.iUnion {ι : Type*} {s : ι → Set α} {t : Set ι} (ht : t.Fini
   suffices ⋃ i, s i ⊆ ⋃ i ∈ t, s i by exact (ht.biUnion hs).subset this
   refine iUnion_subset fun i x hx => ?_
   by_cases hi : i ∈ t
-  · exact mem_biUnion hi hx
-  · rw [he i hi, mem_empty_iff_false] at hx
-    contradiction
+  exact mem_biUnion hi hx
+  rw [he i hi, mem_empty_iff_false] at hx
+  contradiction
 
 section monad
 attribute [local instance] Set.monad
@@ -833,12 +833,12 @@ protected theorem Infinite.prod_right (ht : t.Infinite) (hs : s.Nonempty) : (s �
 protected theorem infinite_prod :
     (s ×ˢ t).Infinite ↔ s.Infinite ∧ t.Nonempty ∨ t.Infinite ∧ s.Nonempty := by
   refine ⟨fun h => ?_, ?_⟩
-  · simp_rw [Set.Infinite, @and_comm ¬_, ← Classical.not_imp]
-    by_contra!
-    exact h ((this.1 h.nonempty.snd).prod <| this.2 h.nonempty.fst)
-  · rintro (h | h)
-    · exact h.1.prod_left h.2
-    · exact h.1.prod_right h.2
+  simp_rw [Set.Infinite, @and_comm ¬_, ← Classical.not_imp]
+  by_contra!
+  exact h ((this.1 h.nonempty.snd).prod <| this.2 h.nonempty.fst)
+  rintro (h | h)
+  exact h.1.prod_left h.2
+  exact h.1.prod_right h.2
 
 theorem finite_prod : (s ×ˢ t).Finite ↔ (s.Finite ∨ t = ∅) ∧ (t.Finite ∨ s = ∅) := by
   simp only [← not_infinite, Set.infinite_prod, not_or, not_and_or, not_nonempty_iff_eq_empty]
@@ -1012,20 +1012,20 @@ theorem eq_finite_iUnion_of_finite_subset_iUnion {ι} {s : ι → Set α} {t : S
     ext x
     rw [mem_iUnion]
     constructor
-    · intro x_in
-      rcases mem_iUnion.mp (hI x_in) with ⟨i, _, ⟨hi, rfl⟩, H⟩
-      exact ⟨⟨i, hi⟩, ⟨H, x_in⟩⟩
-    · rintro ⟨i, -, H⟩
-      exact H⟩
+    intro x_in
+    rcases mem_iUnion.mp (hI x_in) with ⟨i, _, ⟨hi, rfl⟩, H⟩
+    exact ⟨⟨i, hi⟩, ⟨H, x_in⟩⟩
+    rintro ⟨i, -, H⟩
+    exact H⟩
 
 @[elab_as_elim]
 theorem Finite.induction_on {C : Set α → Prop} {s : Set α} (h : s.Finite) (H0 : C ∅)
     (H1 : ∀ {a s}, a ∉ s → Set.Finite s → C s → C (insert a s)) : C s := by
   lift s to Finset α using h
   induction' s using Finset.cons_induction_on with a s ha hs
-  · rwa [Finset.coe_empty]
-  · rw [Finset.coe_cons]
-    exact @H1 a s ha (Set.toFinite _) hs
+  rwa [Finset.coe_empty]
+  rw [Finset.coe_cons]
+  exact @H1 a s ha (Set.toFinite _) hs
 
 /-- Analogous to `Finset.induction_on'`. -/
 @[elab_as_elim]
@@ -1230,11 +1230,11 @@ protected theorem Infinite.image2_right (ht : t.Infinite) (ha : a ∈ s) (hf : I
 theorem infinite_image2 (hfs : ∀ b ∈ t, InjOn (fun a => f a b) s) (hft : ∀ a ∈ s, InjOn (f a) t) :
     (image2 f s t).Infinite ↔ s.Infinite ∧ t.Nonempty ∨ t.Infinite ∧ s.Nonempty := by
   refine ⟨fun h => Set.infinite_prod.1 ?_, ?_⟩
-  · rw [← image_uncurry_prod] at h
-    exact h.of_image _
-  · rintro (⟨hs, b, hb⟩ | ⟨ht, a, ha⟩)
-    · exact hs.image2_left hb (hfs _ hb)
-    · exact ht.image2_right ha (hft _ ha)
+  rw [← image_uncurry_prod] at h
+  exact h.of_image _
+  rintro (⟨hs, b, hb⟩ | ⟨ht, a, ha⟩)
+  exact hs.image2_left hb (hfs _ hb)
+  exact ht.image2_right ha (hft _ ha)
 
 lemma finite_image2 (hfs : ∀ b ∈ t, InjOn (f · b) s) (hft : ∀ a ∈ s, InjOn (f a) t) :
     (image2 f s t).Finite ↔ s.Finite ∧ t.Finite ∨ s = ∅ ∨ t = ∅ := by
@@ -1323,9 +1323,9 @@ theorem exists_max_image [LinearOrder β] (s : Set α) (f : α → β) (h1 : s.F
 theorem exists_lower_bound_image [Nonempty α] [LinearOrder β] (s : Set α) (f : α → β)
     (h : s.Finite) : ∃ a : α, ∀ b ∈ s, f a ≤ f b := by
   rcases s.eq_empty_or_nonempty with rfl | hs
-  · exact ‹Nonempty α›.elim fun a => ⟨a, fun _ => False.elim⟩
-  · rcases Set.exists_min_image s f h hs with ⟨x₀, _, hx₀⟩
-    exact ⟨x₀, fun x hx => hx₀ x hx⟩
+  exact ‹Nonempty α›.elim fun a => ⟨a, fun _ => False.elim⟩
+  rcases Set.exists_min_image s f h hs with ⟨x₀, _, hx₀⟩
+  exact ⟨x₀, fun x hx => hx₀ x hx⟩
 
 theorem exists_upper_bound_image [Nonempty α] [LinearOrder β] (s : Set α) (f : α → β)
     (h : s.Finite) : ∃ a : α, ∀ b ∈ s, f b ≤ f a :=
@@ -1335,10 +1335,10 @@ theorem Finite.iSup_biInf_of_monotone {ι ι' α : Type*} [Preorder ι'] [Nonemp
     [IsDirected ι' (· ≤ ·)] [Order.Frame α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α}
     (hf : ∀ i ∈ s, Monotone (f i)) : ⨆ j, ⨅ i ∈ s, f i j = ⨅ i ∈ s, ⨆ j, f i j := by
   induction' s, hs using Set.Finite.dinduction_on with a s _ _ ihs hf
-  · simp [iSup_const]
-  · rw [forall_mem_insert] at hf
-    simp only [iInf_insert, ← ihs hf.2]
-    exact iSup_inf_of_monotone hf.1 fun j₁ j₂ hj => iInf₂_mono fun i hi => hf.2 i hi hj
+  simp [iSup_const]
+  rw [forall_mem_insert] at hf
+  simp only [iInf_insert, ← ihs hf.2]
+  exact iSup_inf_of_monotone hf.1 fun j₁ j₂ hj => iInf₂_mono fun i hi => hf.2 i hi hj
 
 theorem Finite.iSup_biInf_of_antitone {ι ι' α : Type*} [Preorder ι'] [Nonempty ι']
     [IsDirected ι' (swap (· ≤ ·))] [Order.Frame α] {s : Set ι} (hs : s.Finite) {f : ι → ι' → α}
@@ -1422,18 +1422,18 @@ theorem Finite.exists_maximal_wrt [PartialOrder β] (f : α → β) (s : Set α)
   | H0 => exact absurd hs not_nonempty_empty
   | @H1 a s his _ ih =>
     rcases s.eq_empty_or_nonempty with h | h
-    · use a
-      simp [h]
+    use a
+    simp [h]
     rcases ih h with ⟨b, hb, ih⟩
     by_cases h : f b ≤ f a
-    · refine ⟨a, Set.mem_insert _ _, fun c hc hac => le_antisymm hac ?_⟩
-      rcases Set.mem_insert_iff.1 hc with (rfl | hcs)
-      · rfl
-      · rwa [← ih c hcs (le_trans h hac)]
-    · refine ⟨b, Set.mem_insert_of_mem _ hb, fun c hc hbc => ?_⟩
-      rcases Set.mem_insert_iff.1 hc with (rfl | hcs)
-      · exact (h hbc).elim
-      · exact ih c hcs hbc
+    refine ⟨a, Set.mem_insert _ _, fun c hc hac => le_antisymm hac ?_⟩
+    rcases Set.mem_insert_iff.1 hc with (rfl | hcs)
+    rfl
+    rwa [← ih c hcs (le_trans h hac)]
+    refine ⟨b, Set.mem_insert_of_mem _ hb, fun c hc hbc => ?_⟩
+    rcases Set.mem_insert_iff.1 hc with (rfl | hcs)
+    exact (h hbc).elim
+    exact ih c hcs hbc
 
 /-- A version of `Finite.exists_maximal_wrt` with the (weaker) hypothesis that the image of `s`
   is finite rather than `s` itself. -/

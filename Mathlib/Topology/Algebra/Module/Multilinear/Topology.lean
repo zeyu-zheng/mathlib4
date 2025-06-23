@@ -42,10 +42,10 @@ lemma range_toUniformOnFun [DecidableEq ι] [TopologicalSpace F] :
           toFun _ f (update m i (c • x)) = c • toFun _ f (update m i x))} := by
   ext f
   constructor
-  · rintro ⟨f, rfl⟩
-    exact ⟨f.cont, f.map_add, f.map_smul⟩
-  · rintro ⟨hcont, hadd, hsmul⟩
-    exact ⟨⟨⟨f, by intro; convert hadd, by intro; convert hsmul⟩, hcont⟩, rfl⟩
+  rintro ⟨f, rfl⟩
+  exact ⟨f.cont, f.map_add, f.map_smul⟩
+  rintro ⟨hcont, hadd, hsmul⟩
+  exact ⟨⟨⟨f, by intro; convert hadd, by intro; convert hsmul⟩, hcont⟩, rfl⟩
 
 @[simp]
 lemma toUniformOnFun_toFun [TopologicalSpace F] (f : ContinuousMultilinearMap 𝕜 E F) :
@@ -107,11 +107,11 @@ theorem completeSpace (h : RestrictGenTopology {s : Set (Π i, E i) | IsVonNBoun
     range_toUniformOnFun]
   simp only [setOf_and, setOf_forall]
   apply_rules [IsClosed.isComplete, IsClosed.inter]
-  · exact UniformOnFun.isClosed_setOf_continuous h
-  · exact isClosed_iInter fun m ↦ isClosed_iInter fun i ↦
-      isClosed_iInter fun x ↦ isClosed_iInter fun y ↦ isClosed_eq H (H.add H)
-  · exact isClosed_iInter fun m ↦ isClosed_iInter fun i ↦
-      isClosed_iInter fun c ↦ isClosed_iInter fun x ↦ isClosed_eq H (H.const_smul _)
+  exact UniformOnFun.isClosed_setOf_continuous h
+  exact isClosed_iInter fun m ↦ isClosed_iInter fun i ↦
+    isClosed_iInter fun x ↦ isClosed_iInter fun y ↦ isClosed_eq H (H.add H)
+  exact isClosed_iInter fun m ↦ isClosed_iInter fun i ↦
+    isClosed_iInter fun c ↦ isClosed_iInter fun x ↦ isClosed_eq H (H.const_smul _)
 
 instance instCompleteSpace [∀ i, TopologicalAddGroup (E i)] [SequentialSpace (Π i, E i)] :
     CompleteSpace (ContinuousMultilinearMap 𝕜 E F) :=
@@ -146,8 +146,8 @@ theorem hasBasis_nhds_zero_of_basis {ι : Type*} {p : ι → Prop} {b : ι → S
   haveI : UniformAddGroup F := comm_topologicalAddGroup_is_uniform
   rw [nhds_induced]
   refine (UniformOnFun.hasBasis_nhds_zero_of_basis _ ?_ ?_ h).comap DFunLike.coe
-  · exact ⟨∅, isVonNBounded_empty _ _⟩
-  · exact directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union
+  exact ⟨∅, isVonNBounded_empty _ _⟩
+  exact directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union
 
 theorem hasBasis_nhds_zero :
     (𝓝 (0 : ContinuousMultilinearMap 𝕜 E F)).HasBasis

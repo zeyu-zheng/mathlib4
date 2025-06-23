@@ -86,8 +86,8 @@ theorem gcd_mul_lcm (n m : ℕ+) : gcd n m * lcm n m = n * m :=
 
 theorem eq_one_of_lt_two {n : ℕ+} : n < 2 → n = 1 := by
   intro h; apply le_antisymm; swap
-  · apply PNat.one_le
-  · exact PNat.lt_add_one_iff.1 h
+  apply PNat.one_le
+  exact PNat.lt_add_one_iff.1 h
 
 section Prime
 

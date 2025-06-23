@@ -114,7 +114,7 @@ theorem fx_gt_xm1 {f : ℚ → ℝ} {x : ℚ} (hx : 1 ≤ x)
       (x - 1 : ℝ) < ⌊x⌋₊ := mod_cast Nat.sub_one_lt_floor x
       _ ≤ f ⌊x⌋₊ := H4 _ (Nat.floor_pos.2 hx)
   obtain h_eq | h_lt := (Nat.floor_le <| zero_le_one.trans hx).eq_or_lt
-  · rwa [h_eq] at hx0
+  rwa [h_eq] at hx0
   calc
     (x - 1 : ℝ) < f ⌊x⌋₊ := hx0
     _ < f (x - ⌊x⌋₊) + f ⌊x⌋₊ := (lt_add_of_pos_left _ (f_pos_of_pos (sub_pos.mpr h_lt) H1 H4))
@@ -125,9 +125,9 @@ theorem pow_f_le_f_pow {f : ℚ → ℝ} {n : ℕ} (hn : 0 < n) {x : ℚ} (hx : 
     (H1 : ∀ x y, 0 < x → 0 < y → f (x * y) ≤ f x * f y) (H4 : ∀ n : ℕ, 0 < n → (n : ℝ) ≤ f n) :
     f (x ^ n) ≤ f x ^ n := by
   induction' n with pn hpn
-  · exfalso; exact Nat.lt_asymm hn hn
+  exfalso; exact Nat.lt_asymm hn hn
   cases' pn with pn
-  · norm_num
+  norm_num
   have hpn' := hpn pn.succ_pos
   rw [pow_succ x (pn + 1), pow_succ (f x) (pn + 1)]
   have hxp : 0 < x
@@ -184,9 +184,9 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
   have H3 : ∀ x : ℚ, 0 < x → ∀ n : ℕ, 0 < n → ↑n * f x ≤ f (n * x)
   intro x hx n hn
   cases' n with n
-  · exact (lt_irrefl 0 hn).elim
+  exact (lt_irrefl 0 hn).elim
   induction' n with pn hpn
-  · norm_num
+  norm_num
   calc
     ↑(pn + 2) * f x = (↑pn + 1 + 1) * f x := by norm_cast
     _ = (↑pn + 1) * f x + f x := by ring
@@ -228,9 +228,9 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
   intro n hn x hx
   have h2 : f (n * x) ≤ n * f x
   cases' n with n
-  · exfalso; exact Nat.lt_asymm hn hn
+  exfalso; exact Nat.lt_asymm hn hn
   cases' n with n
-  · norm_num
+  norm_num
   have hfneq : f n.succ.succ = n.succ.succ
   have :=
     fixed_point_of_gt_1 (Nat.one_lt_cast.mpr (Nat.succ_lt_succ n.succ_pos)) H1 H2 H4 H5 ha1

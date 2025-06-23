@@ -72,22 +72,22 @@ theorem antidiagonal_cons (a : α) (s) :
     simp only [revzip, reverse_append, quot_mk_to_coe, coe_eq_coe, powersetAux'_cons, cons_coe,
       map_coe, antidiagonal_coe', coe_add]
     rw [← zip_map, ← zip_map, zip_append, (_ : _ ++ _ = _)]
-    · congr
-      · simp only [List.map_id]
-      · rw [map_reverse]
-      · simp
-    · simp
+    congr
+    simp only [List.map_id]
+    rw [map_reverse]
+    simp
+    simp
 
 theorem antidiagonal_eq_map_powerset [DecidableEq α] (s : Multiset α) :
     s.antidiagonal = s.powerset.map fun t ↦ (s - t, t) := by
   induction' s using Multiset.induction_on with a s hs
-  · simp only [antidiagonal_zero, powerset_zero, zero_tsub, map_singleton]
-  · simp_rw [antidiagonal_cons, powerset_cons, map_add, hs, map_map, Function.comp, Prod.map_mk,
-      id, sub_cons, erase_cons_head]
-    rw [add_comm]
-    congr 1
-    refine Multiset.map_congr rfl fun x hx ↦ ?_
-    rw [cons_sub_of_le _ (mem_powerset.mp hx)]
+  simp only [antidiagonal_zero, powerset_zero, zero_tsub, map_singleton]
+  simp_rw [antidiagonal_cons, powerset_cons, map_add, hs, map_map, Function.comp, Prod.map_mk,
+    id, sub_cons, erase_cons_head]
+  rw [add_comm]
+  congr 1
+  refine Multiset.map_congr rfl fun x hx ↦ ?_
+  rw [cons_sub_of_le _ (mem_powerset.mp hx)]
 
 @[simp]
 theorem card_antidiagonal (s : Multiset α) : card (antidiagonal s) = 2 ^ card s := by

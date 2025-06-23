@@ -135,12 +135,12 @@ on the kernel of `ZMod.unitsMap`. -/
 lemma factorsThrough_iff_ker_unitsMap {d : ℕ} [NeZero n] (hd : d ∣ n) :
     FactorsThrough χ d ↔ (ZMod.unitsMap hd).ker ≤ χ.toUnitHom.ker := by
   refine ⟨fun ⟨_, ⟨χ₀, hχ₀⟩⟩ x hx ↦ ?_, fun h ↦ ?_⟩
-  · rw [MonoidHom.mem_ker, hχ₀, changeLevel_toUnitHom, MonoidHom.comp_apply, hx, map_one]
-  · let E := MonoidHom.liftOfSurjective _ (ZMod.unitsMap_surjective hd) ⟨_, h⟩
-    have hE : E.comp (ZMod.unitsMap hd) = χ.toUnitHom := MonoidHom.liftOfRightInverse_comp ..
-    refine ⟨hd, MulChar.ofUnitHom E, equivToUnitHom.injective (?_ : toUnitHom _ = toUnitHom _)⟩
-    simp_rw [changeLevel_toUnitHom, toUnitHom_eq, ofUnitHom_eq, Equiv.apply_symm_apply, hE,
-      toUnitHom_eq]
+  rw [MonoidHom.mem_ker, hχ₀, changeLevel_toUnitHom, MonoidHom.comp_apply, hx, map_one]
+  let E := MonoidHom.liftOfSurjective _ (ZMod.unitsMap_surjective hd) ⟨_, h⟩
+  have hE : E.comp (ZMod.unitsMap hd) = χ.toUnitHom := MonoidHom.liftOfRightInverse_comp ..
+  refine ⟨hd, MulChar.ofUnitHom E, equivToUnitHom.injective (?_ : toUnitHom _ = toUnitHom _)⟩
+  simp_rw [changeLevel_toUnitHom, toUnitHom_eq, ofUnitHom_eq, Equiv.apply_symm_apply, hE,
+    toUnitHom_eq]
 
 /-!
 ### Edge cases
@@ -249,10 +249,10 @@ noncomputable def primitiveCharacter : DirichletCharacter R χ.conductor :=
 
 lemma primitiveCharacter_isPrimitive : IsPrimitive (χ.primitiveCharacter) := by
   by_cases h : χ.conductor = 0
-  · rw [isPrimitive_def]
-    convert conductor_eq_zero_iff_level_eq_zero.mpr h
-  · exact le_antisymm (Nat.le_of_dvd (Nat.pos_of_ne_zero h) (conductor_dvd_level _)) <|
-      conductor_le_conductor_mem_conductorSet <| conductor_mem_conductorSet χ
+  rw [isPrimitive_def]
+  convert conductor_eq_zero_iff_level_eq_zero.mpr h
+  exact le_antisymm (Nat.le_of_dvd (Nat.pos_of_ne_zero h) (conductor_dvd_level _)) <|
+    conductor_le_conductor_mem_conductorSet <| conductor_mem_conductorSet χ
 
 lemma primitiveCharacter_one (hn : n ≠ 0) :
     (1 : DirichletCharacter R n).primitiveCharacter = 1 := by

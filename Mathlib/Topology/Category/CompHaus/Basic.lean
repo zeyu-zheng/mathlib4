@@ -177,46 +177,46 @@ def limitConeIsLimit {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u
 
 theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f := by
   constructor
-  · dsimp [Function.Surjective]
-    contrapose!
-    rintro ⟨y, hy⟩ hf
-    let C := Set.range f
-    have hC : IsClosed C := (isCompact_range f.continuous).isClosed
-    let D := ({y} : Set Y)
-    have hD : IsClosed D := isClosed_singleton
-    have hCD : Disjoint C D
-    rw [Set.disjoint_singleton_right]
-    rintro ⟨y', hy'⟩
-    exact hy y' hy'
-    obtain ⟨φ, hφ0, hφ1, hφ01⟩ := exists_continuous_zero_one_of_isClosed hC hD hCD
-    haveI : CompactSpace (ULift.{u} <| Set.Icc (0 : ℝ) 1) := Homeomorph.ulift.symm.compactSpace
-    haveI : T2Space (ULift.{u} <| Set.Icc (0 : ℝ) 1) := Homeomorph.ulift.symm.t2Space
-    let Z := of (ULift.{u} <| Set.Icc (0 : ℝ) 1)
-    let g : Y ⟶ Z :=
-      ⟨fun y' => ⟨⟨φ y', hφ01 y'⟩⟩,
-        continuous_uLift_up.comp (φ.continuous.subtype_mk fun y' => hφ01 y')⟩
-    let h : Y ⟶ Z := ⟨fun _ => ⟨⟨0, Set.left_mem_Icc.mpr zero_le_one⟩⟩, continuous_const⟩
-    have H : h = g := by
-      rw [← cancel_epi f]
-      ext x
-      -- Porting note: `ext` doesn't apply these two lemmas.
-      apply ULift.ext
-      apply Subtype.ext
-      dsimp
-      -- Porting note: This `change` is not ideal.
-      -- I think lean is having issues understanding when a `ContinuousMap` should be considered
-      -- as a morphism.
-      -- TODO(?): Make morphisms in `CompHaus` (and other topological categories)
-      -- into a one-field-structure.
-      change 0 = φ (f x)
-      simp only [hφ0 (Set.mem_range_self x), Pi.zero_apply]
-    apply_fun fun e => (e y).down.1 at H
-    dsimp [Z] at H
-    change 0 = φ y at H
-    simp only [hφ1 (Set.mem_singleton y), Pi.one_apply] at H
-    exact zero_ne_one H
-  · rw [← CategoryTheory.epi_iff_surjective]
-    apply (forget CompHaus).epi_of_epi_map
+  dsimp [Function.Surjective]
+  contrapose!
+  rintro ⟨y, hy⟩ hf
+  let C := Set.range f
+  have hC : IsClosed C := (isCompact_range f.continuous).isClosed
+  let D := ({y} : Set Y)
+  have hD : IsClosed D := isClosed_singleton
+  have hCD : Disjoint C D
+  rw [Set.disjoint_singleton_right]
+  rintro ⟨y', hy'⟩
+  exact hy y' hy'
+  obtain ⟨φ, hφ0, hφ1, hφ01⟩ := exists_continuous_zero_one_of_isClosed hC hD hCD
+  haveI : CompactSpace (ULift.{u} <| Set.Icc (0 : ℝ) 1) := Homeomorph.ulift.symm.compactSpace
+  haveI : T2Space (ULift.{u} <| Set.Icc (0 : ℝ) 1) := Homeomorph.ulift.symm.t2Space
+  let Z := of (ULift.{u} <| Set.Icc (0 : ℝ) 1)
+  let g : Y ⟶ Z :=
+    ⟨fun y' => ⟨⟨φ y', hφ01 y'⟩⟩,
+      continuous_uLift_up.comp (φ.continuous.subtype_mk fun y' => hφ01 y')⟩
+  let h : Y ⟶ Z := ⟨fun _ => ⟨⟨0, Set.left_mem_Icc.mpr zero_le_one⟩⟩, continuous_const⟩
+  have H : h = g := by
+    rw [← cancel_epi f]
+    ext x
+    -- Porting note: `ext` doesn't apply these two lemmas.
+    apply ULift.ext
+    apply Subtype.ext
+    dsimp
+    -- Porting note: This `change` is not ideal.
+    -- I think lean is having issues understanding when a `ContinuousMap` should be considered
+    -- as a morphism.
+    -- TODO(?): Make morphisms in `CompHaus` (and other topological categories)
+    -- into a one-field-structure.
+    change 0 = φ (f x)
+    simp only [hφ0 (Set.mem_range_self x), Pi.zero_apply]
+  apply_fun fun e => (e y).down.1 at H
+  dsimp [Z] at H
+  change 0 = φ y at H
+  simp only [hφ1 (Set.mem_singleton y), Pi.one_apply] at H
+  exact zero_ne_one H
+  rw [← CategoryTheory.epi_iff_surjective]
+  apply (forget CompHaus).epi_of_epi_map
 
 end CompHaus
 

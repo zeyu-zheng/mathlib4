@@ -85,9 +85,9 @@ theorem rename_monomial (f : σ → τ) (d : σ →₀ ℕ) (r : R) :
     rename f (monomial d r) = monomial (d.mapDomain f) r := by
   rw [rename, aeval_monomial, monomial_eq (s := Finsupp.mapDomain f d),
     Finsupp.prod_mapDomain_index]
-  · rfl
-  · exact fun n => pow_zero _
-  · exact fun n i₁ i₂ => pow_add _ _ _
+  rfl
+  exact fun n => pow_zero _
+  exact fun n i₁ i₂ => pow_add _ _ _
 
 theorem rename_eq (f : σ → τ) (p : MvPolynomial σ R) :
     rename f p = Finsupp.mapDomain (Finsupp.mapDomain f) p := by
@@ -162,8 +162,8 @@ variable (f : R →+* S) (k : σ → τ) (g : τ → S) (p : MvPolynomial σ R)
 
 theorem eval₂_rename : (rename k p).eval₂ f g = p.eval₂ f (g ∘ k) := by
   apply MvPolynomial.induction_on p <;>
-    · intros
-      simp [*]
+  · intros
+    simp [*]
 
 theorem eval_rename (g : τ → R) (p : MvPolynomial σ R) : eval g (rename k p) = eval (g ∘ k) p :=
   eval₂_rename _ _ _ _
@@ -177,20 +177,20 @@ theorem aeval_rename [Algebra R S] : aeval g (rename k p) = aeval (g ∘ k) p :=
 theorem rename_eval₂ (g : τ → MvPolynomial σ R) :
     rename k (p.eval₂ C (g ∘ k)) = (rename k p).eval₂ C (rename k ∘ g) := by
   apply MvPolynomial.induction_on p <;>
-    · intros
-      simp [*]
+  · intros
+    simp [*]
 
 theorem rename_prod_mk_eval₂ (j : τ) (g : σ → MvPolynomial σ R) :
     rename (Prod.mk j) (p.eval₂ C g) = p.eval₂ C fun x => rename (Prod.mk j) (g x) := by
   apply MvPolynomial.induction_on p <;>
-    · intros
-      simp [*]
+  · intros
+    simp [*]
 
 theorem eval₂_rename_prod_mk (g : σ × τ → S) (i : σ) (p : MvPolynomial τ R) :
     (rename (Prod.mk i) p).eval₂ f g = eval₂ f (fun j => g (i, j)) p := by
   apply MvPolynomial.induction_on p <;>
-    · intros
-      simp [*]
+  · intros
+    simp [*]
 
 theorem eval_rename_prod_mk (g : σ × τ → R) (i : σ) (p : MvPolynomial τ R) :
     eval g (rename (Prod.mk i) p) = eval (fun j => g (i, j)) p :=
@@ -203,22 +203,22 @@ open Classical in
 theorem exists_finset_rename (p : MvPolynomial σ R) :
     ∃ (s : Finset σ) (q : MvPolynomial { x // x ∈ s } R), p = rename (↑) q := by
   apply induction_on p
-  · intro r
-    exact ⟨∅, C r, by rw [rename_C]⟩
-  · rintro p q ⟨s, p, rfl⟩ ⟨t, q, rfl⟩
-    refine ⟨s ∪ t, ⟨?_, ?_⟩⟩
-    · refine rename (Subtype.map id ?_) p + rename (Subtype.map id ?_) q <;>
-        simp (config := { contextual := true }) only [id, true_or_iff, or_true_iff,
-          Finset.mem_union, forall_true_iff]
-    · simp only [rename_rename, map_add]
-      rfl
-  · rintro p n ⟨s, p, rfl⟩
-    refine ⟨insert n s, ⟨?_, ?_⟩⟩
-    · refine rename (Subtype.map id ?_) p * X ⟨n, s.mem_insert_self n⟩
-      simp (config := { contextual := true }) only [id, or_true_iff, Finset.mem_insert,
-        forall_true_iff]
-    · simp only [rename_rename, rename_X, Subtype.coe_mk, map_mul]
-      rfl
+  intro r
+  exact ⟨∅, C r, by rw [rename_C]⟩
+  rintro p q ⟨s, p, rfl⟩ ⟨t, q, rfl⟩
+  refine ⟨s ∪ t, ⟨?_, ?_⟩⟩
+  refine rename (Subtype.map id ?_) p + rename (Subtype.map id ?_) q <;>
+    simp (config := { contextual := true }) only [id, true_or_iff, or_true_iff,
+      Finset.mem_union, forall_true_iff]
+  simp only [rename_rename, map_add]
+  rfl
+  rintro p n ⟨s, p, rfl⟩
+  refine ⟨insert n s, ⟨?_, ?_⟩⟩
+  refine rename (Subtype.map id ?_) p * X ⟨n, s.mem_insert_self n⟩
+  simp (config := { contextual := true }) only [id, or_true_iff, Finset.mem_insert,
+    forall_true_iff]
+  simp only [rename_rename, rename_X, Subtype.coe_mk, map_mul]
+  rfl
 
 open Classical in
 /-- `exists_finset_rename` for two polynomials at once: for any two polynomials `p₁`, `p₂` in a
@@ -233,12 +233,12 @@ theorem exists_finset_rename₂ (p₁ p₂ : MvPolynomial σ R) :
   use rename (Set.inclusion s₁.subset_union_left) q₁
   use rename (Set.inclusion s₁.subset_union_right) q₂
   constructor -- Porting note: was `<;> simp <;> rfl` but Lean couldn't infer the arguments
-  · -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [rename_rename (Set.inclusion s₁.subset_union_left)]
-    rfl
-  · -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [rename_rename (Set.inclusion s₁.subset_union_right)]
-    rfl
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [rename_rename (Set.inclusion s₁.subset_union_left)]
+  rfl
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [rename_rename (Set.inclusion s₁.subset_union_right)]
+  rfl
 
 /-- Every polynomial is a polynomial in finitely many variables. -/
 theorem exists_fin_rename (p : MvPolynomial σ R) :
@@ -266,11 +266,11 @@ theorem coeff_rename_mapDomain (f : σ → τ) (hf : Injective f) (φ : MvPolyno
     (rename f φ).coeff (d.mapDomain f) = φ.coeff d := by
   apply φ.induction_on' (P := fun ψ => coeff (Finsupp.mapDomain f d) ((rename f) ψ) = coeff d ψ)
   -- Lean could no longer infer the motive
-  · intro u r
-    rw [rename_monomial, coeff_monomial, coeff_monomial]
-    simp only [(Finsupp.mapDomain_injective hf).eq_iff]
-  · intros
-    simp only [*, map_add, coeff_add]
+  intro u r
+  rw [rename_monomial, coeff_monomial, coeff_monomial]
+  simp only [(Finsupp.mapDomain_injective hf).eq_iff]
+  intros
+  simp only [*, map_add, coeff_add]
 
 @[simp]
 theorem coeff_rename_embDomain (f : σ ↪ τ) (φ : MvPolynomial σ R) (d : σ →₀ ℕ) :
@@ -298,12 +298,12 @@ theorem coeff_rename_ne_zero (f : σ → τ) (φ : MvPolynomial σ R) (d : τ �
 theorem constantCoeff_rename {τ : Type*} (f : σ → τ) (φ : MvPolynomial σ R) :
     constantCoeff (rename f φ) = constantCoeff φ := by
   apply φ.induction_on
-  · intro a
-    simp only [constantCoeff_C, rename_C]
-  · intro p q hp hq
-    simp only [hp, hq, map_add]
-  · intro p n hp
-    simp only [hp, rename_X, constantCoeff_X, map_mul]
+  intro a
+  simp only [constantCoeff_C, rename_C]
+  intro p q hp hq
+  simp only [hp, hq, map_add]
+  intro p n hp
+  simp only [hp, rename_X, constantCoeff_X, map_mul]
 
 end Coeff
 

@@ -209,10 +209,10 @@ variable [CovariantClass β β (· + ·) (· < ·)]
 theorem strictMono_iff_map_pos [iamhc : AddMonoidHomClass F α β]  :
     StrictMono (f : α → β) ↔ ∀ a, 0 < a → 0 < f a := by
   refine ⟨fun h a => ?_, fun h a b hl => ?_⟩
-  · rw [← map_zero f]
-    apply h
-  · rw [← sub_add_cancel b a, map_add f]
-    exact lt_add_of_pos_left _ (h _ <| sub_pos.2 hl)
+  rw [← map_zero f]
+  apply h
+  rw [← sub_add_cancel b a, map_add f]
+  exact lt_add_of_pos_left _ (h _ <| sub_pos.2 hl)
 
 theorem strictAnti_iff_map_neg : StrictAnti (f : α → β) ↔ ∀ a, 0 < a → f a < 0 :=
   strictMono_toDual_comp_iff.symm.trans <| strictMono_iff_map_pos (β := βᵒᵈ) (iamhc := iamhc) _

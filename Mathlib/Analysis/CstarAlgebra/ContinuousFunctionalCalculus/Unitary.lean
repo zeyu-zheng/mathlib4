@@ -24,24 +24,24 @@ variable {A : Type*} [TopologicalSpace A] [Ring A] [StarRing A] [Algebra ℂ A]
 lemma unitary_iff_isStarNormal_and_spectrum_subset_circle {u : A} :
     u ∈ unitary A ↔ IsStarNormal u ∧ spectrum ℂ u ⊆ circle := by
   refine ⟨fun hu ↦ ?_, ?_⟩
-  · have h_normal := isStarNormal_of_mem_unitary hu
-    refine ⟨h_normal, ?_⟩
-    have h := unitary.star_mul_self_of_mem hu
-    rw [← cfc_id ℂ u, ← cfc_star id u, ← cfc_mul .., ← cfc_one ℂ u] at h
-    have := eqOn_of_cfc_eq_cfc h
-    peel this with x hx _
-    rw [SetLike.mem_coe, mem_circle_iff_normSq]
-    simpa using congr($(this).re)
-  · rintro ⟨_, hu⟩
-    rw [unitary.mem_iff, ← cfc_id ℂ u, ← cfc_star, ← cfc_mul .., ← cfc_mul .., ← cfc_one ℂ u]
-    simp only [id_eq]
-    constructor
-    all_goals
-      apply cfc_congr (fun x hx ↦ ?_)
-      simp only [RCLike.star_def, mul_comm x]
-      apply hu at hx
-      rwa [SetLike.mem_coe, mem_circle_iff_normSq, ← Complex.ofReal_injective.eq_iff,
-        Complex.normSq_eq_conj_mul_self] at hx
+  have h_normal := isStarNormal_of_mem_unitary hu
+  refine ⟨h_normal, ?_⟩
+  have h := unitary.star_mul_self_of_mem hu
+  rw [← cfc_id ℂ u, ← cfc_star id u, ← cfc_mul .., ← cfc_one ℂ u] at h
+  have := eqOn_of_cfc_eq_cfc h
+  peel this with x hx _
+  rw [SetLike.mem_coe, mem_circle_iff_normSq]
+  simpa using congr($(this).re)
+  rintro ⟨_, hu⟩
+  rw [unitary.mem_iff, ← cfc_id ℂ u, ← cfc_star, ← cfc_mul .., ← cfc_mul .., ← cfc_one ℂ u]
+  simp only [id_eq]
+  constructor
+  all_goals
+    apply cfc_congr (fun x hx ↦ ?_)
+    simp only [RCLike.star_def, mul_comm x]
+    apply hu at hx
+    rwa [SetLike.mem_coe, mem_circle_iff_normSq, ← Complex.ofReal_injective.eq_iff,
+      Complex.normSq_eq_conj_mul_self] at hx
 
 lemma mem_unitary_of_spectrum_subset_circle {u : A}
     [IsStarNormal u] (hu : spectrum ℂ u ⊆ circle) : u ∈ unitary A :=

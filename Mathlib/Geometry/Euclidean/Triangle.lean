@@ -78,105 +78,105 @@ theorem norm_eq_of_angle_sub_eq_angle_sub_rev_of_angle_ne_pi {x y : V}
   replace h := Real.arccos_injOn (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one x (x - y)))
     (abs_le.mp (abs_real_inner_div_norm_mul_norm_le_one y (y - x))) h
   by_cases hxy : x = y
-  · rw [hxy]
-  · rw [← norm_neg (y - x), neg_sub, mul_comm, mul_comm ‖y‖, div_eq_mul_inv, div_eq_mul_inv,
-      mul_inv_rev, mul_inv_rev, ← mul_assoc, ← mul_assoc] at h
-    replace h :=
-      mul_right_cancel₀ (inv_ne_zero fun hz => hxy (eq_of_sub_eq_zero (norm_eq_zero.1 hz))) h
-    rw [inner_sub_right, inner_sub_right, real_inner_comm x y, real_inner_self_eq_norm_mul_norm,
-      real_inner_self_eq_norm_mul_norm, mul_sub_right_distrib, mul_sub_right_distrib,
-      mul_self_mul_inv, mul_self_mul_inv, sub_eq_sub_iff_sub_eq_sub, ← mul_sub_left_distrib] at h
-    by_cases hx0 : x = 0
-    · rw [hx0, norm_zero, inner_zero_left, zero_mul, zero_sub, neg_eq_zero] at h
-      rw [hx0, norm_zero, h]
-    · by_cases hy0 : y = 0
-      · rw [hy0, norm_zero, inner_zero_right, zero_mul, sub_zero] at h
-        rw [hy0, norm_zero, h]
-      · rw [inv_sub_inv (fun hz => hx0 (norm_eq_zero.1 hz)) fun hz => hy0 (norm_eq_zero.1 hz), ←
-          neg_sub, ← mul_div_assoc, mul_comm, mul_div_assoc, ← mul_neg_one] at h
-        symm
-        by_contra hyx
-        replace h := (mul_left_cancel₀ (sub_ne_zero_of_ne hyx) h).symm
-        rw [real_inner_div_norm_mul_norm_eq_neg_one_iff, ← angle_eq_pi_iff] at h
-        exact hpi h
+  rw [hxy]
+  rw [← norm_neg (y - x), neg_sub, mul_comm, mul_comm ‖y‖, div_eq_mul_inv, div_eq_mul_inv,
+    mul_inv_rev, mul_inv_rev, ← mul_assoc, ← mul_assoc] at h
+  replace h :=
+    mul_right_cancel₀ (inv_ne_zero fun hz => hxy (eq_of_sub_eq_zero (norm_eq_zero.1 hz))) h
+  rw [inner_sub_right, inner_sub_right, real_inner_comm x y, real_inner_self_eq_norm_mul_norm,
+    real_inner_self_eq_norm_mul_norm, mul_sub_right_distrib, mul_sub_right_distrib,
+    mul_self_mul_inv, mul_self_mul_inv, sub_eq_sub_iff_sub_eq_sub, ← mul_sub_left_distrib] at h
+  by_cases hx0 : x = 0
+  rw [hx0, norm_zero, inner_zero_left, zero_mul, zero_sub, neg_eq_zero] at h
+  rw [hx0, norm_zero, h]
+  by_cases hy0 : y = 0
+  rw [hy0, norm_zero, inner_zero_right, zero_mul, sub_zero] at h
+  rw [hy0, norm_zero, h]
+  rw [inv_sub_inv (fun hz => hx0 (norm_eq_zero.1 hz)) fun hz => hy0 (norm_eq_zero.1 hz), ←
+    neg_sub, ← mul_div_assoc, mul_comm, mul_div_assoc, ← mul_neg_one] at h
+  symm
+  by_contra hyx
+  replace h := (mul_left_cancel₀ (sub_ne_zero_of_ne hyx) h).symm
+  rw [real_inner_div_norm_mul_norm_eq_neg_one_iff, ← angle_eq_pi_iff] at h
+  exact hpi h
 
 /-- The cosine of the sum of two angles in a possibly degenerate
 triangle (where two given sides are nonzero), vector angle form. -/
 theorem cos_angle_sub_add_angle_sub_rev_eq_neg_cos_angle {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
     Real.cos (angle x (x - y) + angle y (y - x)) = -Real.cos (angle x y) := by
   by_cases hxy : x = y
-  · rw [hxy, angle_self hy]
-    simp
-  · rw [Real.cos_add, cos_angle, cos_angle, cos_angle]
-    have hxn : ‖x‖ ≠ 0 := fun h => hx (norm_eq_zero.1 h)
-    have hyn : ‖y‖ ≠ 0 := fun h => hy (norm_eq_zero.1 h)
-    have hxyn : ‖x - y‖ ≠ 0 := fun h => hxy (eq_of_sub_eq_zero (norm_eq_zero.1 h))
-    apply mul_right_cancel₀ hxn
-    apply mul_right_cancel₀ hyn
-    apply mul_right_cancel₀ hxyn
-    apply mul_right_cancel₀ hxyn
-    have H1 :
-      Real.sin (angle x (x - y)) * Real.sin (angle y (y - x)) * ‖x‖ * ‖y‖ * ‖x - y‖ * ‖x - y‖ =
-        Real.sin (angle x (x - y)) * (‖x‖ * ‖x - y‖) *
-          (Real.sin (angle y (y - x)) * (‖y‖ * ‖x - y‖)) := by
-      ring
-    have H2 :
-      ⟪x, x⟫ * (⟪x, x⟫ - ⟪x, y⟫ - (⟪x, y⟫ - ⟪y, y⟫)) - (⟪x, x⟫ - ⟪x, y⟫) * (⟪x, x⟫ - ⟪x, y⟫) =
-        ⟪x, x⟫ * ⟪y, y⟫ - ⟪x, y⟫ * ⟪x, y⟫ := by
-      ring
-    have H3 :
-      ⟪y, y⟫ * (⟪y, y⟫ - ⟪x, y⟫ - (⟪x, y⟫ - ⟪x, x⟫)) - (⟪y, y⟫ - ⟪x, y⟫) * (⟪y, y⟫ - ⟪x, y⟫) =
-        ⟪x, x⟫ * ⟪y, y⟫ - ⟪x, y⟫ * ⟪x, y⟫ := by
-      ring
-    rw [mul_sub_right_distrib, mul_sub_right_distrib, mul_sub_right_distrib, mul_sub_right_distrib,
-      H1, sin_angle_mul_norm_mul_norm, norm_sub_rev x y, sin_angle_mul_norm_mul_norm,
-      norm_sub_rev y x, inner_sub_left, inner_sub_left, inner_sub_right, inner_sub_right,
-      inner_sub_right, inner_sub_right, real_inner_comm x y, H2, H3,
-      Real.mul_self_sqrt (sub_nonneg_of_le (real_inner_mul_inner_self_le x y)),
-      real_inner_self_eq_norm_mul_norm, real_inner_self_eq_norm_mul_norm,
-      real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two]
-    field_simp [hxn, hyn, hxyn]
+  rw [hxy, angle_self hy]
+  simp
+  rw [Real.cos_add, cos_angle, cos_angle, cos_angle]
+  have hxn : ‖x‖ ≠ 0 := fun h => hx (norm_eq_zero.1 h)
+  have hyn : ‖y‖ ≠ 0 := fun h => hy (norm_eq_zero.1 h)
+  have hxyn : ‖x - y‖ ≠ 0 := fun h => hxy (eq_of_sub_eq_zero (norm_eq_zero.1 h))
+  apply mul_right_cancel₀ hxn
+  apply mul_right_cancel₀ hyn
+  apply mul_right_cancel₀ hxyn
+  apply mul_right_cancel₀ hxyn
+  have H1 :
+    Real.sin (angle x (x - y)) * Real.sin (angle y (y - x)) * ‖x‖ * ‖y‖ * ‖x - y‖ * ‖x - y‖ =
+      Real.sin (angle x (x - y)) * (‖x‖ * ‖x - y‖) *
+        (Real.sin (angle y (y - x)) * (‖y‖ * ‖x - y‖)) := by
     ring
+  have H2 :
+    ⟪x, x⟫ * (⟪x, x⟫ - ⟪x, y⟫ - (⟪x, y⟫ - ⟪y, y⟫)) - (⟪x, x⟫ - ⟪x, y⟫) * (⟪x, x⟫ - ⟪x, y⟫) =
+      ⟪x, x⟫ * ⟪y, y⟫ - ⟪x, y⟫ * ⟪x, y⟫ := by
+    ring
+  have H3 :
+    ⟪y, y⟫ * (⟪y, y⟫ - ⟪x, y⟫ - (⟪x, y⟫ - ⟪x, x⟫)) - (⟪y, y⟫ - ⟪x, y⟫) * (⟪y, y⟫ - ⟪x, y⟫) =
+      ⟪x, x⟫ * ⟪y, y⟫ - ⟪x, y⟫ * ⟪x, y⟫ := by
+    ring
+  rw [mul_sub_right_distrib, mul_sub_right_distrib, mul_sub_right_distrib, mul_sub_right_distrib,
+    H1, sin_angle_mul_norm_mul_norm, norm_sub_rev x y, sin_angle_mul_norm_mul_norm,
+    norm_sub_rev y x, inner_sub_left, inner_sub_left, inner_sub_right, inner_sub_right,
+    inner_sub_right, inner_sub_right, real_inner_comm x y, H2, H3,
+    Real.mul_self_sqrt (sub_nonneg_of_le (real_inner_mul_inner_self_le x y)),
+    real_inner_self_eq_norm_mul_norm, real_inner_self_eq_norm_mul_norm,
+    real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two]
+  field_simp [hxn, hyn, hxyn]
+  ring
 
 /-- The sine of the sum of two angles in a possibly degenerate
 triangle (where two given sides are nonzero), vector angle form. -/
 theorem sin_angle_sub_add_angle_sub_rev_eq_sin_angle {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
     Real.sin (angle x (x - y) + angle y (y - x)) = Real.sin (angle x y) := by
   by_cases hxy : x = y
-  · rw [hxy, angle_self hy]
-    simp
-  · rw [Real.sin_add, cos_angle, cos_angle]
-    have hxn : ‖x‖ ≠ 0 := fun h => hx (norm_eq_zero.1 h)
-    have hyn : ‖y‖ ≠ 0 := fun h => hy (norm_eq_zero.1 h)
-    have hxyn : ‖x - y‖ ≠ 0 := fun h => hxy (eq_of_sub_eq_zero (norm_eq_zero.1 h))
-    apply mul_right_cancel₀ hxn
-    apply mul_right_cancel₀ hyn
-    apply mul_right_cancel₀ hxyn
-    apply mul_right_cancel₀ hxyn
-    have H1 :
-      Real.sin (angle x (x - y)) * (⟪y, y - x⟫ / (‖y‖ * ‖y - x‖)) * ‖x‖ * ‖y‖ * ‖x - y‖ =
-        Real.sin (angle x (x - y)) * (‖x‖ * ‖x - y‖) * (⟪y, y - x⟫ / (‖y‖ * ‖y - x‖)) * ‖y‖ := by
-      ring
-    have H2 :
-      ⟪x, x - y⟫ / (‖x‖ * ‖y - x‖) * Real.sin (angle y (y - x)) * ‖x‖ * ‖y‖ * ‖y - x‖ =
-        ⟪x, x - y⟫ / (‖x‖ * ‖y - x‖) * (Real.sin (angle y (y - x)) * (‖y‖ * ‖y - x‖)) * ‖x‖ := by
-      ring
-    have H3 :
-      ⟪x, x⟫ * (⟪x, x⟫ - ⟪x, y⟫ - (⟪x, y⟫ - ⟪y, y⟫)) - (⟪x, x⟫ - ⟪x, y⟫) * (⟪x, x⟫ - ⟪x, y⟫) =
-        ⟪x, x⟫ * ⟪y, y⟫ - ⟪x, y⟫ * ⟪x, y⟫ := by
-      ring
-    have H4 :
-      ⟪y, y⟫ * (⟪y, y⟫ - ⟪x, y⟫ - (⟪x, y⟫ - ⟪x, x⟫)) - (⟪y, y⟫ - ⟪x, y⟫) * (⟪y, y⟫ - ⟪x, y⟫) =
-        ⟪x, x⟫ * ⟪y, y⟫ - ⟪x, y⟫ * ⟪x, y⟫ := by
-      ring
-    rw [right_distrib, right_distrib, right_distrib, right_distrib, H1, sin_angle_mul_norm_mul_norm,
-      norm_sub_rev x y, H2, sin_angle_mul_norm_mul_norm, norm_sub_rev y x,
-      mul_assoc (Real.sin (angle x y)), sin_angle_mul_norm_mul_norm, inner_sub_left, inner_sub_left,
-      inner_sub_right, inner_sub_right, inner_sub_right, inner_sub_right, real_inner_comm x y, H3,
-      H4, real_inner_self_eq_norm_mul_norm, real_inner_self_eq_norm_mul_norm,
-      real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two]
-    field_simp [hxn, hyn, hxyn]
+  rw [hxy, angle_self hy]
+  simp
+  rw [Real.sin_add, cos_angle, cos_angle]
+  have hxn : ‖x‖ ≠ 0 := fun h => hx (norm_eq_zero.1 h)
+  have hyn : ‖y‖ ≠ 0 := fun h => hy (norm_eq_zero.1 h)
+  have hxyn : ‖x - y‖ ≠ 0 := fun h => hxy (eq_of_sub_eq_zero (norm_eq_zero.1 h))
+  apply mul_right_cancel₀ hxn
+  apply mul_right_cancel₀ hyn
+  apply mul_right_cancel₀ hxyn
+  apply mul_right_cancel₀ hxyn
+  have H1 :
+    Real.sin (angle x (x - y)) * (⟪y, y - x⟫ / (‖y‖ * ‖y - x‖)) * ‖x‖ * ‖y‖ * ‖x - y‖ =
+      Real.sin (angle x (x - y)) * (‖x‖ * ‖x - y‖) * (⟪y, y - x⟫ / (‖y‖ * ‖y - x‖)) * ‖y‖ := by
     ring
+  have H2 :
+    ⟪x, x - y⟫ / (‖x‖ * ‖y - x‖) * Real.sin (angle y (y - x)) * ‖x‖ * ‖y‖ * ‖y - x‖ =
+      ⟪x, x - y⟫ / (‖x‖ * ‖y - x‖) * (Real.sin (angle y (y - x)) * (‖y‖ * ‖y - x‖)) * ‖x‖ := by
+    ring
+  have H3 :
+    ⟪x, x⟫ * (⟪x, x⟫ - ⟪x, y⟫ - (⟪x, y⟫ - ⟪y, y⟫)) - (⟪x, x⟫ - ⟪x, y⟫) * (⟪x, x⟫ - ⟪x, y⟫) =
+      ⟪x, x⟫ * ⟪y, y⟫ - ⟪x, y⟫ * ⟪x, y⟫ := by
+    ring
+  have H4 :
+    ⟪y, y⟫ * (⟪y, y⟫ - ⟪x, y⟫ - (⟪x, y⟫ - ⟪x, x⟫)) - (⟪y, y⟫ - ⟪x, y⟫) * (⟪y, y⟫ - ⟪x, y⟫) =
+      ⟪x, x⟫ * ⟪y, y⟫ - ⟪x, y⟫ * ⟪x, y⟫ := by
+    ring
+  rw [right_distrib, right_distrib, right_distrib, right_distrib, H1, sin_angle_mul_norm_mul_norm,
+    norm_sub_rev x y, H2, sin_angle_mul_norm_mul_norm, norm_sub_rev y x,
+    mul_assoc (Real.sin (angle x y)), sin_angle_mul_norm_mul_norm, inner_sub_left, inner_sub_left,
+    inner_sub_right, inner_sub_right, inner_sub_right, inner_sub_right, real_inner_comm x y, H3,
+    H4, real_inner_self_eq_norm_mul_norm, real_inner_self_eq_norm_mul_norm,
+    real_inner_eq_norm_mul_self_add_norm_mul_self_sub_norm_sub_mul_self_div_two]
+  field_simp [hxn, hyn, hxyn]
+  ring
 
 /-- The cosine of the sum of the angles of a possibly degenerate
 triangle (where two given sides are nonzero), vector angle form. -/
@@ -228,9 +228,9 @@ theorem angle_add_angle_sub_add_angle_sub_eq_pi {x y : V} (hx : x ≠ 0) (hy : y
     replace h3lt := lt_of_mul_lt_mul_right h3lt (le_of_lt Real.pi_pos)
     norm_cast at h3lt
   interval_cases n
-  · simp [hn] at hcos
-  · norm_num [hn]
-  · simp [hn] at hcos
+  simp [hn] at hcos
+  norm_num [hn]
+  simp [hn] at hcos
 
 end InnerProductGeometry
 
@@ -259,8 +259,8 @@ theorem dist_sq_eq_dist_sq_add_dist_sq_sub_two_mul_dist_mul_dist_mul_cos_angle (
   unfold angle
   convert norm_sub_sq_eq_norm_sq_add_norm_sq_sub_two_mul_norm_mul_norm_mul_cos_angle
     (p1 -ᵥ p2 : V) (p3 -ᵥ p2 : V)
-  · exact (vsub_sub_vsub_cancel_right p1 p3 p2).symm
-  · exact (vsub_sub_vsub_cancel_right p1 p3 p2).symm
+  exact (vsub_sub_vsub_cancel_right p1 p3 p2).symm
+  exact (vsub_sub_vsub_cancel_right p1 p3 p2).symm
 
 alias law_cos := dist_sq_eq_dist_sq_add_dist_sq_sub_two_mul_dist_mul_dist_mul_cos_angle
 
@@ -270,8 +270,8 @@ theorem angle_eq_angle_of_dist_eq {p1 p2 p3 : P} (h : dist p1 p2 = dist p1 p3) :
   rw [dist_eq_norm_vsub V p1 p2, dist_eq_norm_vsub V p1 p3] at h
   unfold angle
   convert angle_sub_eq_angle_sub_rev_of_norm_eq h
-  · exact (vsub_sub_vsub_cancel_left p3 p2 p1).symm
-  · exact (vsub_sub_vsub_cancel_left p2 p3 p1).symm
+  exact (vsub_sub_vsub_cancel_left p3 p2 p1).symm
+  exact (vsub_sub_vsub_cancel_left p2 p3 p1).symm
 
 /-- Converse of pons asinorum, angle-at-point form. -/
 theorem dist_eq_of_angle_eq_angle_of_angle_ne_pi {p1 p2 p3 : P} (h : ∠ p1 p2 p3 = ∠ p1 p3 p2)
@@ -316,15 +316,15 @@ theorem dist_sq_mul_dist_add_dist_sq_mul_dist (a b c p : P) (h : ∠ b p c = π)
 theorem dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq (a b c : P) :
     dist a b ^ 2 + dist a c ^ 2 = 2 * (dist a (midpoint ℝ b c) ^ 2 + (dist b c / 2) ^ 2) := by
   by_cases hbc : b = c
-  · simp [hbc, midpoint_self, dist_self, two_mul]
-  · let m := midpoint ℝ b c
-    have : dist b c ≠ 0 := (dist_pos.mpr hbc).ne'
-    have hm := dist_sq_mul_dist_add_dist_sq_mul_dist a b c m (angle_midpoint_eq_pi b c hbc)
-    simp only [m, dist_left_midpoint, dist_right_midpoint, Real.norm_two] at hm
-    calc
-      dist a b ^ 2 + dist a c ^ 2 = 2 / dist b c * (dist a b ^ 2 *
-        ((2 : ℝ)⁻¹ * dist b c) + dist a c ^ 2 * (2⁻¹ * dist b c)) := by field_simp; ring
-      _ = 2 * (dist a (midpoint ℝ b c) ^ 2 + (dist b c / 2) ^ 2) := by rw [hm]; field_simp; ring
+  simp [hbc, midpoint_self, dist_self, two_mul]
+  let m := midpoint ℝ b c
+  have : dist b c ≠ 0 := (dist_pos.mpr hbc).ne'
+  have hm := dist_sq_mul_dist_add_dist_sq_mul_dist a b c m (angle_midpoint_eq_pi b c hbc)
+  simp only [m, dist_left_midpoint, dist_right_midpoint, Real.norm_two] at hm
+  calc
+    dist a b ^ 2 + dist a c ^ 2 = 2 / dist b c * (dist a b ^ 2 *
+      ((2 : ℝ)⁻¹ * dist b c) + dist a c ^ 2 * (2⁻¹ * dist b c)) := by field_simp; ring
+    _ = 2 * (dist a (midpoint ℝ b c) ^ 2 + (dist b c / 2) ^ 2) := by rw [hm]; field_simp; ring
 
 theorem dist_mul_of_eq_angle_of_dist_mul (a b c a' b' c' : P) (r : ℝ) (h : ∠ a' b' c' = ∠ a b c)
     (hab : dist a' b' = r * dist a b) (hcb : dist c' b' = r * dist c b) :
@@ -337,11 +337,11 @@ theorem dist_mul_of_eq_angle_of_dist_mul (a b c a' b' c' : P) (r : ℝ) (h : ∠
       rw [h, hab, hcb]; ring
     _ = (r * dist a c) ^ 2 := by simp [pow_two, ← law_cos a b c, mul_pow]; ring
   by_cases hab₁ : a = b
-  · have hab'₁ : a' = b' := by
-      rw [← dist_eq_zero, hab, dist_eq_zero.mpr hab₁, mul_zero r]
-    rw [hab₁, hab'₁, dist_comm b' c', dist_comm b c, hcb]
-  · have h1 : 0 ≤ r * dist a b := by rw [← hab]; exact dist_nonneg
-    have h2 : 0 ≤ r := nonneg_of_mul_nonneg_left h1 (dist_pos.mpr hab₁)
-    exact (sq_eq_sq dist_nonneg (mul_nonneg h2 dist_nonneg)).mp h'
+  have hab'₁ : a' = b' := by
+    rw [← dist_eq_zero, hab, dist_eq_zero.mpr hab₁, mul_zero r]
+  rw [hab₁, hab'₁, dist_comm b' c', dist_comm b c, hcb]
+  have h1 : 0 ≤ r * dist a b := by rw [← hab]; exact dist_nonneg
+  have h2 : 0 ≤ r := nonneg_of_mul_nonneg_left h1 (dist_pos.mpr hab₁)
+  exact (sq_eq_sq dist_nonneg (mul_nonneg h2 dist_nonneg)).mp h'
 
 end EuclideanGeometry

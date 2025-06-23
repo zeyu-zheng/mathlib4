@@ -84,8 +84,8 @@ theorem moveRight {x : PGame} (o : Numeric x) (j : x.RightMoves) : Numeric (x.mo
 
 lemma isOption {x' x} (h : IsOption x' x) (hx : Numeric x) : Numeric x' := by
   cases h
-  · apply hx.moveLeft
-  · apply hx.moveRight
+  apply hx.moveLeft
+  apply hx.moveRight
 
 end Numeric
 
@@ -101,10 +101,10 @@ theorem numeric_rec {C : PGame → Prop}
 theorem Relabelling.numeric_imp {x y : PGame} (r : x ≡r y) (ox : Numeric x) : Numeric y := by
   induction' x using PGame.moveRecOn with x IHl IHr generalizing y
   apply Numeric.mk (fun i j => ?_) (fun i => ?_) fun j => ?_
-  · rw [← lt_congr (r.moveLeftSymm i).equiv (r.moveRightSymm j).equiv]
-    apply ox.left_lt_right
-  · exact IHl _ (r.moveLeftSymm i) (ox.moveLeft _)
-  · exact IHr _ (r.moveRightSymm j) (ox.moveRight _)
+  rw [← lt_congr (r.moveLeftSymm i).equiv (r.moveRightSymm j).equiv]
+  apply ox.left_lt_right
+  exact IHl _ (r.moveLeftSymm i) (ox.moveLeft _)
+  exact IHr _ (r.moveRightSymm j) (ox.moveRight _)
 
 /-- Relabellings preserve being numeric. -/
 theorem Relabelling.numeric_congr {x y : PGame} (r : x ≡r y) : Numeric x ↔ Numeric y :=
@@ -115,10 +115,10 @@ theorem lf_asymm {x y : PGame} (ox : Numeric x) (oy : Numeric y) : x ⧏ y → �
     (fun xl xr xL xR hx _oxl _oxr IHxl IHxr => ?_) x ox y oy
   refine numeric_rec fun yl yr yL yR hy oyl oyr _IHyl _IHyr => ?_
   rw [mk_lf_mk, mk_lf_mk]; rintro (⟨i, h₁⟩ | ⟨j, h₁⟩) (⟨i, h₂⟩ | ⟨j, h₂⟩)
-  · exact IHxl _ _ (oyl _) (h₁.moveLeft_lf _) (h₂.moveLeft_lf _)
-  · exact (le_trans h₂ h₁).not_gf (lf_of_lt (hy _ _))
-  · exact (le_trans h₁ h₂).not_gf (lf_of_lt (hx _ _))
-  · exact IHxr _ _ (oyr _) (h₁.lf_moveRight _) (h₂.lf_moveRight _)
+  exact IHxl _ _ (oyl _) (h₁.moveLeft_lf _) (h₂.moveLeft_lf _)
+  exact (le_trans h₂ h₁).not_gf (lf_of_lt (hy _ _))
+  exact (le_trans h₁ h₂).not_gf (lf_of_lt (hx _ _))
+  exact IHxr _ _ (oyr _) (h₁.lf_moveRight _) (h₂.lf_moveRight _)
 
 theorem le_of_lf {x y : PGame} (h : x ⧏ y) (ox : Numeric x) (oy : Numeric y) : x ≤ y :=
   not_lf.1 (lf_asymm ox oy h)
@@ -195,10 +195,10 @@ theorem insertLeft_numeric {x x' : PGame} (x_num : x.Numeric) (x'_num : x'.Numer
   rcases x with ⟨xl, xr, xL, xR⟩
   simp only [insertLeft, Sum.forall, forall_const, Sum.elim_inl, Sum.elim_inr] at x_num ⊢
   constructor
-  · simp only [x_num.1, implies_true, true_and]
-    simp only [rightMoves_mk, moveRight_mk] at h
-    exact h.2
-  · simp only [x_num, implies_true, x'_num, and_self]
+  simp only [x_num.1, implies_true, true_and]
+  simp only [rightMoves_mk, moveRight_mk] at h
+  exact h.2
+  simp only [x_num, implies_true, x'_num, and_self]
 
 /-- Inserting a larger numeric right option into a numeric game results in a numeric game. -/
 theorem insertRight_numeric {x x' : PGame} (x_num : x.Numeric) (x'_num : x'.Numeric)
@@ -225,19 +225,19 @@ theorem add : ∀ {x y : PGame} (_ : Numeric x) (_ : Numeric y), Numeric (x + y)
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, ox, oy =>
     ⟨by
       rintro (ix | iy) (jx | jy)
-      · exact add_lt_add_right (ox.1 ix jx) _
-      · exact (add_lf_add_of_lf_of_le (lf_mk _ _ ix) (oy.le_moveRight jy)).lt
-          ((ox.moveLeft ix).add oy) (ox.add (oy.moveRight jy))
-      · exact (add_lf_add_of_lf_of_le (mk_lf _ _ jx) (oy.moveLeft_le iy)).lt
-          (ox.add (oy.moveLeft iy)) ((ox.moveRight jx).add oy)
-      · exact add_lt_add_left (oy.1 iy jy) ⟨xl, xr, xL, xR⟩, by
+      exact add_lt_add_right (ox.1 ix jx) _
+      exact (add_lf_add_of_lf_of_le (lf_mk _ _ ix) (oy.le_moveRight jy)).lt
+        ((ox.moveLeft ix).add oy) (ox.add (oy.moveRight jy))
+      exact (add_lf_add_of_lf_of_le (mk_lf _ _ jx) (oy.moveLeft_le iy)).lt
+        (ox.add (oy.moveLeft iy)) ((ox.moveRight jx).add oy)
+      exact add_lt_add_left (oy.1 iy jy) ⟨xl, xr, xL, xR⟩, by
       constructor
-      · rintro (ix | iy)
-        · exact (ox.moveLeft ix).add oy
-        · exact ox.add (oy.moveLeft iy)
-      · rintro (jx | jy)
-        · apply (ox.moveRight jx).add oy
-        · apply ox.add (oy.moveRight jy)⟩
+      rintro (ix | iy)
+      exact (ox.moveLeft ix).add oy
+      exact ox.add (oy.moveLeft iy)
+      rintro (jx | jy)
+      apply (ox.moveRight jx).add oy
+      apply ox.add (oy.moveRight jy)⟩
 termination_by x y => (x, y) -- Porting note: Added `termination_by`
 
 theorem sub {x y : PGame} (ox : Numeric x) (oy : Numeric y) : Numeric (x - y) :=

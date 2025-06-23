@@ -97,11 +97,11 @@ lemma toFiniteAux_univ_le_one (μ : Measure α) [SFinite μ] : μ.toFiniteAux Se
       ≤ (2 ^ (n + 1))⁻¹ := by
     intro n
     by_cases h_zero : sFiniteSeq μ n = 0
-    · simp [h_zero]
-    · rw [ENNReal.le_inv_iff_mul_le, mul_assoc, mul_comm (sFiniteSeq μ n Set.univ),
-        ENNReal.inv_mul_cancel]
-      · simp [h_zero]
-      · exact ENNReal.mul_ne_top (by simp) (measure_ne_top _ _)
+    simp [h_zero]
+    rw [ENNReal.le_inv_iff_mul_le, mul_assoc, mul_comm (sFiniteSeq μ n Set.univ),
+      ENNReal.inv_mul_cancel]
+    simp [h_zero]
+    exact ENNReal.mul_ne_top (by simp) (measure_ne_top _ _)
   refine (tsum_le_tsum h_le_pow ENNReal.summable ENNReal.summable).trans ?_
   simp [ENNReal.inv_pow, ENNReal.tsum_geometric_add_one, ENNReal.inv_mul_cancel]
 
@@ -218,8 +218,8 @@ lemma restrict_compl_sigmaFiniteSet_eq_zero_or_top (μ : Measure α) [SFinite μ
     false_or]
   rw [Measure.restrict_apply' (measurableSet_sigmaFiniteSet μ).compl]
   by_cases h_zero : μ.toFinite (s ∩ μ.sigmaFiniteSetᶜ) = 0
-  · exact Or.inl h_zero
-  · exact Or.inr (ENNReal.top_mul h_zero)
+  exact Or.inl h_zero
+  exact Or.inr (ENNReal.top_mul h_zero)
 
 lemma measure_eq_zero_or_top_of_subset_compl_sigmaFiniteSet [SFinite μ]
     (ht_subset : t ⊆ μ.sigmaFiniteSetᶜ) :
@@ -255,8 +255,8 @@ instance (μ : Measure α) [SFinite μ] : SigmaFinite (μ.restrict μ.sigmaFinit
   have : SigmaFinite (μ.toFinite.withDensity
       (fun x ↦ if μ.densityToFinite x ≠ ∞ then μ.densityToFinite x else 1)) := by
     refine SigmaFinite.withDensity_of_ne_top ?_
-    · refine ae_of_all _ (fun x ↦ ?_)
-      split_ifs with h <;> simp [h]
+    refine ae_of_all _ (fun x ↦ ?_)
+    split_ifs with h <;> simp [h]
   exact Restrict.sigmaFinite _ _
 
 lemma sigmaFinite_of_measure_compl_sigmaFiniteSet_eq_zero [SFinite μ]

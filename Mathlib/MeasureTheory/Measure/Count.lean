@@ -73,16 +73,16 @@ theorem count_apply_infinite (hs : s.Infinite) : count s = ∞ := by
 @[simp]
 theorem count_apply_eq_top' (s_mble : MeasurableSet s) : count s = ∞ ↔ s.Infinite := by
   by_cases hs : s.Finite
-  · simp [Set.Infinite, hs, count_apply_finite' hs s_mble]
-  · change s.Infinite at hs
-    simp [hs, count_apply_infinite]
+  simp [Set.Infinite, hs, count_apply_finite' hs s_mble]
+  change s.Infinite at hs
+  simp [hs, count_apply_infinite]
 
 @[simp]
 theorem count_apply_eq_top [MeasurableSingletonClass α] : count s = ∞ ↔ s.Infinite := by
   by_cases hs : s.Finite
-  · exact count_apply_eq_top' hs.measurableSet
-  · change s.Infinite at hs
-    simp [hs, count_apply_infinite]
+  exact count_apply_eq_top' hs.measurableSet
+  change s.Infinite at hs
+  simp [hs, count_apply_infinite]
 
 @[simp]
 theorem count_apply_lt_top' (s_mble : MeasurableSet s) : count s < ∞ ↔ s.Finite :=
@@ -139,18 +139,18 @@ theorem count_singleton [MeasurableSingletonClass α] (a : α) : count ({a} : Se
 theorem count_injective_image' {f : β → α} (hf : Function.Injective f) {s : Set β}
     (s_mble : MeasurableSet s) (fs_mble : MeasurableSet (f '' s)) : count (f '' s) = count s := by
   by_cases hs : s.Finite
-  · lift s to Finset β using hs
-    rw [← Finset.coe_image, count_apply_finset' _, count_apply_finset' s_mble,
-      s.card_image_of_injective hf]
-    simpa only [Finset.coe_image] using fs_mble
-  · rw [count_apply_infinite hs]
-    rw [← finite_image_iff hf.injOn] at hs
-    rw [count_apply_infinite hs]
+  lift s to Finset β using hs
+  rw [← Finset.coe_image, count_apply_finset' _, count_apply_finset' s_mble,
+    s.card_image_of_injective hf]
+  simpa only [Finset.coe_image] using fs_mble
+  rw [count_apply_infinite hs]
+  rw [← finite_image_iff hf.injOn] at hs
+  rw [count_apply_infinite hs]
 
 theorem count_injective_image [MeasurableSingletonClass α] [MeasurableSingletonClass β] {f : β → α}
     (hf : Function.Injective f) (s : Set β) : count (f '' s) = count s := by
   by_cases hs : s.Finite
-  · exact count_injective_image' hf hs.measurableSet (Finite.image f hs).measurableSet
+  exact count_injective_image' hf hs.measurableSet (Finite.image f hs).measurableSet
   rw [count_apply_infinite hs]
   rw [← finite_image_iff hf.injOn] at hs
   rw [count_apply_infinite hs]

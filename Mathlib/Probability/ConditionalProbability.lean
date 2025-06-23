@@ -108,8 +108,8 @@ theorem cond_toMeasurable_eq :
     μ[|(toMeasurable μ s)] = μ[|s] := by
   unfold cond
   by_cases hnt : μ s = ∞
-  · simp [hnt]
-  · simp [Measure.restrict_toMeasurable hnt]
+  simp [hnt]
+  simp [Measure.restrict_toMeasurable hnt]
 
 variable {μ} in
 lemma cond_absolutelyContinuous : μ[|s] ≪ μ :=
@@ -160,12 +160,12 @@ lemma cond_cond_eq_cond_inter' (hms : MeasurableSet s) (hmt : MeasurableSet t) (
   ext u
   rw [cond_apply _ hmt, cond_apply _ hms, cond_apply _ hms, cond_apply _ (hms.inter hmt)]
   obtain hst | hst := eq_or_ne (μ (s ∩ t)) 0
-  · have : μ (s ∩ t ∩ u) = 0 := measure_mono_null Set.inter_subset_left hst
-    simp [this, ← Set.inter_assoc]
-  · have hcs' : μ s ≠ 0 :=
-      (measure_pos_of_superset Set.inter_subset_left hst).ne'
-    simp [*, ← mul_assoc, ← Set.inter_assoc, ENNReal.mul_inv, ENNReal.mul_inv_cancel,
-      mul_right_comm _ _ (μ s)⁻¹]
+  have : μ (s ∩ t ∩ u) = 0 := measure_mono_null Set.inter_subset_left hst
+  simp [this, ← Set.inter_assoc]
+  have hcs' : μ s ≠ 0 :=
+    (measure_pos_of_superset Set.inter_subset_left hst).ne'
+  simp [*, ← mul_assoc, ← Set.inter_assoc, ENNReal.mul_inv, ENNReal.mul_inv_cancel,
+    mul_right_comm _ _ (μ s)⁻¹]
 
 /-- Conditioning first on `s` and then on `t` results in the same measure as conditioning
 on `s ∩ t`. -/
@@ -176,8 +176,8 @@ theorem cond_cond_eq_cond_inter [IsFiniteMeasure μ] (hms : MeasurableSet s)
 theorem cond_mul_eq_inter' (hms : MeasurableSet s) (hcs' : μ s ≠ ∞) (t : Set Ω) :
     μ[t|s] * μ s = μ (s ∩ t) := by
   obtain hcs | hcs := eq_or_ne (μ s) 0
-  · simp [hcs, measure_inter_null_of_null_left]
-  · rw [cond_apply μ hms t, mul_comm, ← mul_assoc, ENNReal.mul_inv_cancel hcs hcs', one_mul]
+  simp [hcs, measure_inter_null_of_null_left]
+  rw [cond_apply μ hms t, mul_comm, ← mul_assoc, ENNReal.mul_inv_cancel hcs hcs', one_mul]
 
 theorem cond_mul_eq_inter [IsFiniteMeasure μ] (hms : MeasurableSet s) (t : Set Ω) :
     μ[t|s] * μ s = μ (s ∩ t) := cond_mul_eq_inter' μ hms (measure_ne_top _ s) t

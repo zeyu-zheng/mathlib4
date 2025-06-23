@@ -86,8 +86,8 @@ theorem stalkToFiber_surjective (x : X) : Function.Surjective (F.stalkToFiber x)
   obtain ⟨U, m, s, rfl⟩ := F.germ_exist _ t
   use ⟨U, m⟩
   fconstructor
-  · exact fun y => F.germ y s
-  · exact ⟨PrelocalPredicate.sheafifyOf ⟨s, fun _ => rfl⟩, rfl⟩
+  exact fun y => F.germ y s
+  exact ⟨PrelocalPredicate.sheafifyOf ⟨s, fun _ => rfl⟩, rfl⟩
 
 theorem stalkToFiber_injective (x : X) : Function.Injective (F.stalkToFiber x) := by
   apply TopCat.stalkToFiber_injective
@@ -101,16 +101,16 @@ theorem stalkToFiber_injective (x : X) : Function.Injective (F.stalkToFiber x) :
   rcases F.germ_eq x mU mV gU gV e with ⟨W, mW, iU', iV', (e' : F.map iU'.op gU = F.map iV'.op gV)⟩
   use ⟨W ⊓ (U' ⊓ V'), ⟨mW, mU, mV⟩⟩
   refine ⟨?_, ?_, ?_⟩
-  · change W ⊓ (U' ⊓ V') ⟶ U.obj
-    exact Opens.infLERight _ _ ≫ Opens.infLELeft _ _ ≫ iU
-  · change W ⊓ (U' ⊓ V') ⟶ V.obj
-    exact Opens.infLERight _ _ ≫ Opens.infLERight _ _ ≫ iV
-  · intro w
-    specialize wU ⟨w.1, w.2.2.1⟩
-    specialize wV ⟨w.1, w.2.2.2⟩
-    dsimp at wU wV ⊢
-    erw [wU, ← F.germ_res iU' ⟨w, w.2.1⟩, wV, ← F.germ_res iV' ⟨w, w.2.1⟩,
-      CategoryTheory.types_comp_apply, CategoryTheory.types_comp_apply, e']
+  change W ⊓ (U' ⊓ V') ⟶ U.obj
+  exact Opens.infLERight _ _ ≫ Opens.infLELeft _ _ ≫ iU
+  change W ⊓ (U' ⊓ V') ⟶ V.obj
+  exact Opens.infLERight _ _ ≫ Opens.infLERight _ _ ≫ iV
+  intro w
+  specialize wU ⟨w.1, w.2.2.1⟩
+  specialize wV ⟨w.1, w.2.2.2⟩
+  dsimp at wU wV ⊢
+  erw [wU, ← F.germ_res iU' ⟨w, w.2.1⟩, wV, ← F.germ_res iV' ⟨w, w.2.1⟩,
+    CategoryTheory.types_comp_apply, CategoryTheory.types_comp_apply, e']
 
 /-- The isomorphism between a stalk of the sheafification and the original stalk.
 -/

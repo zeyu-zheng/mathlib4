@@ -213,16 +213,16 @@ lemma mem_distTriang_iff (T : Triangle (DerivedCategory C)) :
     (T ∈ distTriang (DerivedCategory C)) ↔ ∃ (X Y : CochainComplex C ℤ) (f : X ⟶ Y),
       Nonempty (T ≅ Q.mapTriangle.obj (CochainComplex.mappingCone.triangle f)) := by
   constructor
-  · rintro ⟨T', e, ⟨X, Y, f, ⟨e'⟩⟩⟩
-    refine ⟨_, _, f, ⟨?_⟩⟩
-    exact e ≪≫ Qh.mapTriangle.mapIso e' ≪≫
-      (Functor.mapTriangleCompIso (HomotopyCategory.quotient C _) Qh).symm.app _ ≪≫
-      (Functor.mapTriangleIso (quotientCompQhIso C)).app _
-  · rintro ⟨X, Y, f, ⟨e⟩⟩
-    refine isomorphic_distinguished _ (Qh.map_distinguished _ ?_) _
-      (e ≪≫ (Functor.mapTriangleIso (quotientCompQhIso C)).symm.app _ ≪≫
-      (Functor.mapTriangleCompIso (HomotopyCategory.quotient C _) Qh).app _)
-    exact ⟨_, _, f, ⟨Iso.refl _⟩⟩
+  rintro ⟨T', e, ⟨X, Y, f, ⟨e'⟩⟩⟩
+  refine ⟨_, _, f, ⟨?_⟩⟩
+  exact e ≪≫ Qh.mapTriangle.mapIso e' ≪≫
+    (Functor.mapTriangleCompIso (HomotopyCategory.quotient C _) Qh).symm.app _ ≪≫
+    (Functor.mapTriangleIso (quotientCompQhIso C)).app _
+  rintro ⟨X, Y, f, ⟨e⟩⟩
+  refine isomorphic_distinguished _ (Qh.map_distinguished _ ?_) _
+    (e ≪≫ (Functor.mapTriangleIso (quotientCompQhIso C)).symm.app _ ≪≫
+    (Functor.mapTriangleCompIso (HomotopyCategory.quotient C _) Qh).app _)
+  exact ⟨_, _, f, ⟨Iso.refl _⟩⟩
 
 /-- The single functors `C ⥤ DerivedCategory C` for all `n : ℤ` along with
 their compatibilities with shifts. -/

@@ -76,9 +76,9 @@ open scoped List in
 theorem mem_countedSequence_iff_perm {p q l} :
     l ∈ countedSequence p q ↔ l ~ List.replicate p (1 : ℤ) ++ List.replicate q (-1) := by
   rw [List.perm_replicate_append_replicate]
-  · simp only [countedSequence, List.subset_def, mem_setOf_eq, List.mem_cons (b := (1 : ℤ)),
-      List.mem_singleton]
-  · norm_num1
+  simp only [countedSequence, List.subset_def, mem_setOf_eq, List.mem_cons (b := (1 : ℤ)),
+    List.mem_singleton]
+  norm_num1
 
 @[simp]
 theorem counted_right_zero (p : ℕ) : countedSequence p 0 = {List.replicate p 1} := by
@@ -111,33 +111,33 @@ theorem counted_succ_succ (p q : ℕ) :
   ext l
   rw [countedSequence, countedSequence, countedSequence]
   constructor
-  · intro hl
-    have hlnil := counted_ne_nil_left (Nat.succ_ne_zero p) hl
-    obtain ⟨hl₀, hl₁, hl₂⟩ := hl
-    obtain hlast | hlast := hl₂ (l.head hlnil) (List.head_mem hlnil)
-    · refine Or.inl ⟨l.tail, ⟨?_, ?_, ?_⟩, ?_⟩
-      · rw [List.count_tail l 1 hlnil, hl₀, hlast, if_pos rfl, Nat.add_sub_cancel]
-      · rw [List.count_tail l (-1) hlnil, hl₁, hlast, if_neg (by decide), Nat.sub_zero]
-      · exact fun x hx => hl₂ x (List.mem_of_mem_tail hx)
-      · rw [← hlast, List.head_cons_tail]
-    · refine Or.inr ⟨l.tail, ⟨?_, ?_, ?_⟩, ?_⟩
-      · rw [List.count_tail l 1 hlnil, hl₀, hlast, if_neg (by decide), Nat.sub_zero]
-      · rw [List.count_tail l (-1) hlnil, hl₁, hlast, if_pos rfl, Nat.add_sub_cancel]
-      · exact fun x hx => hl₂ x (List.mem_of_mem_tail hx)
-      · rw [← hlast, List.head_cons_tail]
-  · rintro (⟨t, ⟨ht₀, ht₁, ht₂⟩, rfl⟩ | ⟨t, ⟨ht₀, ht₁, ht₂⟩, rfl⟩)
-    · refine ⟨?_, ?_, ?_⟩
-      · rw [List.count_cons, if_pos rfl, ht₀]
-      · rw [List.count_cons, if_neg, ht₁]
-        norm_num
-      · rintro x (_ | _)
-        exacts [Or.inl rfl, ht₂ x (by tauto)]
-    · refine ⟨?_, ?_, ?_⟩
-      · rw [List.count_cons, if_neg, ht₀]
-        norm_num
-      · rw [List.count_cons, if_pos rfl, ht₁]
-      · rintro x (_ | _)
-        exacts [Or.inr rfl, ht₂ x (by tauto)]
+  intro hl
+  have hlnil := counted_ne_nil_left (Nat.succ_ne_zero p) hl
+  obtain ⟨hl₀, hl₁, hl₂⟩ := hl
+  obtain hlast | hlast := hl₂ (l.head hlnil) (List.head_mem hlnil)
+  refine Or.inl ⟨l.tail, ⟨?_, ?_, ?_⟩, ?_⟩
+  rw [List.count_tail l 1 hlnil, hl₀, hlast, if_pos rfl, Nat.add_sub_cancel]
+  rw [List.count_tail l (-1) hlnil, hl₁, hlast, if_neg (by decide), Nat.sub_zero]
+  exact fun x hx => hl₂ x (List.mem_of_mem_tail hx)
+  rw [← hlast, List.head_cons_tail]
+  refine Or.inr ⟨l.tail, ⟨?_, ?_, ?_⟩, ?_⟩
+  rw [List.count_tail l 1 hlnil, hl₀, hlast, if_neg (by decide), Nat.sub_zero]
+  rw [List.count_tail l (-1) hlnil, hl₁, hlast, if_pos rfl, Nat.add_sub_cancel]
+  exact fun x hx => hl₂ x (List.mem_of_mem_tail hx)
+  rw [← hlast, List.head_cons_tail]
+  rintro (⟨t, ⟨ht₀, ht₁, ht₂⟩, rfl⟩ | ⟨t, ⟨ht₀, ht₁, ht₂⟩, rfl⟩)
+  refine ⟨?_, ?_, ?_⟩
+  rw [List.count_cons, if_pos rfl, ht₀]
+  rw [List.count_cons, if_neg, ht₁]
+  norm_num
+  rintro x (_ | _)
+  exacts [Or.inl rfl, ht₂ x (by tauto)]
+  refine ⟨?_, ?_, ?_⟩
+  rw [List.count_cons, if_neg, ht₀]
+  norm_num
+  rw [List.count_cons, if_pos rfl, ht₁]
+  rintro x (_ | _)
+  exacts [Or.inr rfl, ht₂ x (by tauto)]
 
 theorem countedSequence_finite : ∀ p q : ℕ, (countedSequence p q).Finite
   | 0, q => by simp
@@ -204,26 +204,26 @@ theorem first_vote_pos :
       ← counted_succ_succ,
       condCount_eq_one_of ((countedSequence_finite p (q + 1)).image _)
         ((countedSequence_nonempty _ _).image _)]
-    · have : List.cons (-1) '' countedSequence (p + 1) q ∩ {l : List ℤ | l.headI = 1} = ∅
-      ext
-      simp only [mem_inter_iff, mem_image, mem_setOf_eq, mem_empty_iff_false, iff_false_iff,
-        not_and, forall_exists_index, and_imp]
-      rintro l _ rfl
-      norm_num
-      have hint :
-        countedSequence (p + 1) (q + 1) ∩ List.cons 1 '' countedSequence p (q + 1) =
-          List.cons 1 '' countedSequence p (q + 1)
-      rw [inter_eq_right, counted_succ_succ]
-      exact subset_union_left
-      rw [(condCount_eq_zero_iff <| (countedSequence_finite _ _).image _).2 this, condCount,
-        cond_apply _ list_int_measurableSet, hint, count_injective_image List.cons_injective,
-        count_countedSequence, count_countedSequence, one_mul, zero_mul, add_zero,
-        Nat.cast_add, Nat.cast_one, mul_comm, ← div_eq_mul_inv, ENNReal.div_eq_div_iff]
-      · norm_cast
-        rw [mul_comm _ (p + 1), ← Nat.succ_eq_add_one p, Nat.succ_add, Nat.succ_mul_choose_eq,
-          mul_comm]
-      all_goals simp [(Nat.choose_pos <| le_add_of_nonneg_right zero_le').ne']
-    · simp
+    have : List.cons (-1) '' countedSequence (p + 1) q ∩ {l : List ℤ | l.headI = 1} = ∅
+    ext
+    simp only [mem_inter_iff, mem_image, mem_setOf_eq, mem_empty_iff_false, iff_false_iff,
+      not_and, forall_exists_index, and_imp]
+    rintro l _ rfl
+    norm_num
+    have hint :
+      countedSequence (p + 1) (q + 1) ∩ List.cons 1 '' countedSequence p (q + 1) =
+        List.cons 1 '' countedSequence p (q + 1)
+    rw [inter_eq_right, counted_succ_succ]
+    exact subset_union_left
+    rw [(condCount_eq_zero_iff <| (countedSequence_finite _ _).image _).2 this, condCount,
+      cond_apply _ list_int_measurableSet, hint, count_injective_image List.cons_injective,
+      count_countedSequence, count_countedSequence, one_mul, zero_mul, add_zero,
+      Nat.cast_add, Nat.cast_one, mul_comm, ← div_eq_mul_inv, ENNReal.div_eq_div_iff]
+    norm_cast
+    rw [mul_comm _ (p + 1), ← Nat.succ_eq_add_one p, Nat.succ_add, Nat.succ_mul_choose_eq,
+      mul_comm]
+    all_goals simp [(Nat.choose_pos <| le_add_of_nonneg_right zero_le').ne']
+    simp
 
 theorem headI_mem_of_nonempty {α : Type*} [Inhabited α] : ∀ {l : List α} (_ : l ≠ []), l.headI ∈ l
   | [], h => (h rfl).elim
@@ -244,10 +244,10 @@ theorem ballot_same (p : ℕ) : condCount (countedSequence (p + 1) (p + 1)) stay
   rw [condCount_eq_zero_iff (countedSequence_finite _ _), eq_empty_iff_forall_not_mem]
   rintro x ⟨hx, t⟩
   apply ne_of_gt (t x _ x.suffix_refl)
-  · simpa using sum_of_mem_countedSequence hx
-  · refine List.ne_nil_of_length_pos ?_
-    rw [length_of_mem_countedSequence hx]
-    exact Nat.add_pos_left (Nat.succ_pos _) _
+  simpa using sum_of_mem_countedSequence hx
+  refine List.ne_nil_of_length_pos ?_
+  rw [length_of_mem_countedSequence hx]
+  exact Nat.add_pos_left (Nat.succ_pos _) _
 
 theorem ballot_edge (p : ℕ) : condCount (countedSequence (p + 1) 0) staysPositive = 1 := by
   rw [counted_right_zero]
@@ -261,11 +261,11 @@ theorem countedSequence_int_pos_counted_succ_succ (p q : ℕ) :
       (countedSequence p (q + 1)).image (List.cons 1) := by
   rw [counted_succ_succ, union_inter_distrib_right,
       (_ : List.cons (-1) '' countedSequence (p + 1) q ∩ {l | l.headI = 1} = ∅), union_empty] <;>
-    · ext
-      simp only [mem_inter_iff, mem_image, mem_setOf_eq, and_iff_left_iff_imp, mem_empty_iff_false,
-        iff_false_iff, not_and, forall_exists_index, and_imp]
-      rintro y _ rfl
-      norm_num
+    ext
+    simp only [mem_inter_iff, mem_image, mem_setOf_eq, and_iff_left_iff_imp, mem_empty_iff_false,
+      iff_false_iff, not_and, forall_exists_index, and_imp]
+    rintro y _ rfl
+    norm_num
 
 theorem ballot_pos (p q : ℕ) :
     condCount (countedSequence (p + 1) (q + 1) ∩ {l | l.headI = 1}) staysPositive =
@@ -288,11 +288,11 @@ theorem countedSequence_int_neg_counted_succ_succ (p q : ℕ) :
   rw [counted_succ_succ, union_inter_distrib_right,
       (_ : List.cons 1 '' countedSequence p (q + 1) ∩ {l : List ℤ | l.headI = 1}ᶜ = ∅),
       empty_union] <;>
-    · ext
-      simp only [mem_inter_iff, mem_image, mem_setOf_eq, and_iff_left_iff_imp, mem_empty_iff_false,
-        iff_false_iff, not_and, forall_exists_index, and_imp]
-      rintro y _ rfl
-      norm_num
+    ext
+    simp only [mem_inter_iff, mem_image, mem_setOf_eq, and_iff_left_iff_imp, mem_empty_iff_false,
+      iff_false_iff, not_and, forall_exists_index, and_imp]
+    rintro y _ rfl
+    norm_num
 
 theorem ballot_neg (p q : ℕ) (qp : q < p) :
     condCount (countedSequence (p + 1) (q + 1) ∩ {l | l.headI = 1}ᶜ) staysPositive =
@@ -314,43 +314,43 @@ open Classical in
 theorem ballot_problem' :
     ∀ q p, q < p → (condCount (countedSequence p q) staysPositive).toReal = (p - q) / (p + q) := by
   apply Nat.diag_induction
-  · intro p
-    rw [ballot_same]
-    simp
-  · intro p
-    rw [ballot_edge]
-    simp only [ENNReal.one_toReal, Nat.cast_add, Nat.cast_one, Nat.cast_zero, sub_zero, add_zero]
-    rw [div_self]
-    exact Nat.cast_add_one_ne_zero p
-  · intro q p qp h₁ h₂
-    haveI := condCount_isProbabilityMeasure
-      (countedSequence_finite p (q + 1)) (countedSequence_nonempty _ _)
-    haveI := condCount_isProbabilityMeasure
-      (countedSequence_finite (p + 1) q) (countedSequence_nonempty _ _)
-    have h₃ : p + 1 + (q + 1) > 0
-    apply Nat.add_pos_left (Nat.succ_pos _) _
-    rw [← condCount_add_compl_eq {l : List ℤ | l.headI = 1} _ (countedSequence_finite _ _),
-      first_vote_pos _ _ h₃, first_vote_neg _ _ h₃, ballot_pos, ballot_neg _ _ qp]
-    rw [ENNReal.toReal_add, ENNReal.toReal_mul, ENNReal.toReal_mul, ← Nat.cast_add,
-      ENNReal.toReal_div, ENNReal.toReal_div, ENNReal.toReal_nat, ENNReal.toReal_nat,
-      ENNReal.toReal_nat, h₁, h₂]
-    · have h₄ : (p + 1 : ℝ) + (q + 1 : ℝ) ≠ (0 : ℝ)
-      apply ne_of_gt
-      assumption_mod_cast
-      have h₅ : (p + 1 : ℝ) + ↑q ≠ (0 : ℝ)
-      apply ne_of_gt
-      norm_cast
-      linarith
-      have h₆ : ↑p + (q + 1 : ℝ) ≠ (0 : ℝ)
-      apply ne_of_gt
-      norm_cast
-      linarith
-      field_simp [h₄, h₅, h₆] at *
-      ring
-    all_goals
-      refine (ENNReal.mul_lt_top ?_ ?_).ne
-      · exact (measure_lt_top _ _).ne
-      · simp [Ne, ENNReal.div_eq_top]
+  intro p
+  rw [ballot_same]
+  simp
+  intro p
+  rw [ballot_edge]
+  simp only [ENNReal.one_toReal, Nat.cast_add, Nat.cast_one, Nat.cast_zero, sub_zero, add_zero]
+  rw [div_self]
+  exact Nat.cast_add_one_ne_zero p
+  intro q p qp h₁ h₂
+  haveI := condCount_isProbabilityMeasure
+    (countedSequence_finite p (q + 1)) (countedSequence_nonempty _ _)
+  haveI := condCount_isProbabilityMeasure
+    (countedSequence_finite (p + 1) q) (countedSequence_nonempty _ _)
+  have h₃ : p + 1 + (q + 1) > 0
+  apply Nat.add_pos_left (Nat.succ_pos _) _
+  rw [← condCount_add_compl_eq {l : List ℤ | l.headI = 1} _ (countedSequence_finite _ _),
+    first_vote_pos _ _ h₃, first_vote_neg _ _ h₃, ballot_pos, ballot_neg _ _ qp]
+  rw [ENNReal.toReal_add, ENNReal.toReal_mul, ENNReal.toReal_mul, ← Nat.cast_add,
+    ENNReal.toReal_div, ENNReal.toReal_div, ENNReal.toReal_nat, ENNReal.toReal_nat,
+    ENNReal.toReal_nat, h₁, h₂]
+  have h₄ : (p + 1 : ℝ) + (q + 1 : ℝ) ≠ (0 : ℝ)
+  apply ne_of_gt
+  assumption_mod_cast
+  have h₅ : (p + 1 : ℝ) + ↑q ≠ (0 : ℝ)
+  apply ne_of_gt
+  norm_cast
+  linarith
+  have h₆ : ↑p + (q + 1 : ℝ) ≠ (0 : ℝ)
+  apply ne_of_gt
+  norm_cast
+  linarith
+  field_simp [h₄, h₅, h₆] at *
+  ring
+  all_goals
+    refine (ENNReal.mul_lt_top ?_ ?_).ne
+    exact (measure_lt_top _ _).ne
+    simp [Ne, ENNReal.div_eq_top]
 
 /-- The ballot problem. -/
 theorem ballot_problem :

@@ -27,10 +27,10 @@ variable [NormedRing B] [NormedAlgebra 𝕜 B] [Algebra A B] {f : E → B}
 theorem AnalyticAt.aeval_polynomial (hf : AnalyticAt 𝕜 f z) (p : A[X]) :
     AnalyticAt 𝕜 (fun x ↦ aeval (f x) p) z := by
   refine p.induction_on (fun k ↦ ?_) (fun p q hp hq ↦ ?_) fun p i hp ↦ ?_
-  · simp_rw [aeval_C]; apply analyticAt_const
-  · simp_rw [aeval_add]; exact hp.add hq
-  · convert hp.mul hf
-    simp_rw [pow_succ, aeval_mul, ← mul_assoc, aeval_X]
+  simp_rw [aeval_C]; apply analyticAt_const
+  simp_rw [aeval_add]; exact hp.add hq
+  convert hp.mul hf
+  simp_rw [pow_succ, aeval_mul, ← mul_assoc, aeval_X]
 
 theorem AnalyticOn.aeval_polynomial (hf : AnalyticOn 𝕜 f s) (p : A[X]) :
     AnalyticOn 𝕜 (fun x ↦ aeval (f x) p) s := fun x hx ↦ (hf x hx).aeval_polynomial p
@@ -48,9 +48,9 @@ variable [NormedCommRing B] [NormedAlgebra 𝕜 B] [Algebra A B] {σ : Type*} {f
 theorem AnalyticAt.aeval_mvPolynomial (hf : ∀ i, AnalyticAt 𝕜 (f · i) z) (p : MvPolynomial σ A) :
     AnalyticAt 𝕜 (fun x ↦ aeval (f x) p) z := by
   apply p.induction_on (fun k ↦ ?_) (fun p q hp hq ↦ ?_) fun p i hp ↦ ?_ -- `refine` doesn't work
-  · simp_rw [aeval_C]; apply analyticAt_const
-  · simp_rw [map_add]; exact hp.add hq
-  · simp_rw [map_mul, aeval_X]; exact hp.mul (hf i)
+  simp_rw [aeval_C]; apply analyticAt_const
+  simp_rw [map_add]; exact hp.add hq
+  simp_rw [map_mul, aeval_X]; exact hp.mul (hf i)
 
 theorem AnalyticOn.aeval_mvPolynomial (hf : ∀ i, AnalyticOn 𝕜 (f · i) s) (p : MvPolynomial σ A) :
     AnalyticOn 𝕜 (fun x ↦ aeval (f x) p) s := fun x hx ↦ .aeval_mvPolynomial (hf · x hx) p

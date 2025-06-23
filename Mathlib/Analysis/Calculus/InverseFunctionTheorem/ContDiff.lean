@@ -66,7 +66,7 @@ theorem to_localInverse {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a)
   have := hf.localInverse_apply_image hf' hn
   apply (hf.toPartialHomeomorph f hf' hn).contDiffAt_symm
     (image_mem_toPartialHomeomorph_target hf hf' hn)
-  · convert hf'
-  · convert hf
+  convert hf'
+  convert hf
 
 end ContDiffAt

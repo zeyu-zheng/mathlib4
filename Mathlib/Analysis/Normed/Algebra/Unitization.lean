@@ -153,32 +153,32 @@ theorem lipschitzWith_addEquiv :
   refine AddMonoidHomClass.lipschitz_of_bound (Unitization.addEquiv 𝕜 A) 2 fun x => ?_
   rw [norm_eq_sup, Prod.norm_def]
   refine max_le ?_ ?_
-  · rw [sup_eq_max, mul_max_of_nonneg _ _ (zero_le_two : (0 : ℝ) ≤ 2)]
-    exact le_max_of_le_left ((le_add_of_nonneg_left (norm_nonneg _)).trans_eq (two_mul _).symm)
-  · nontriviality A
-    rw [two_mul]
-    calc
-      ‖x.snd‖ = ‖mul 𝕜 A x.snd‖ :=
-        .symm <| (isometry_mul 𝕜 A).norm_map_of_map_zero (map_zero _) _
-      _ ≤ ‖algebraMap 𝕜 _ x.fst + mul 𝕜 A x.snd‖ + ‖x.fst‖ := by
-        simpa only [add_comm _ (mul 𝕜 A x.snd), norm_algebraMap'] using
-          norm_le_add_norm_add (mul 𝕜 A x.snd) (algebraMap 𝕜 _ x.fst)
-      _ ≤ _ := add_le_add le_sup_right le_sup_left
+  rw [sup_eq_max, mul_max_of_nonneg _ _ (zero_le_two : (0 : ℝ) ≤ 2)]
+  exact le_max_of_le_left ((le_add_of_nonneg_left (norm_nonneg _)).trans_eq (two_mul _).symm)
+  nontriviality A
+  rw [two_mul]
+  calc
+    ‖x.snd‖ = ‖mul 𝕜 A x.snd‖ :=
+      .symm <| (isometry_mul 𝕜 A).norm_map_of_map_zero (map_zero _) _
+    _ ≤ ‖algebraMap 𝕜 _ x.fst + mul 𝕜 A x.snd‖ + ‖x.fst‖ := by
+      simpa only [add_comm _ (mul 𝕜 A x.snd), norm_algebraMap'] using
+        norm_le_add_norm_add (mul 𝕜 A x.snd) (algebraMap 𝕜 _ x.fst)
+    _ ≤ _ := add_le_add le_sup_right le_sup_left
 
 theorem antilipschitzWith_addEquiv :
     AntilipschitzWith 2 (addEquiv 𝕜 A) := by
   refine AddMonoidHomClass.antilipschitz_of_bound (addEquiv 𝕜 A) fun x => ?_
   rw [norm_eq_sup, Prod.norm_def, NNReal.coe_two]
   refine max_le ?_ ?_
-  · rw [mul_max_of_nonneg _ _ (zero_le_two : (0 : ℝ) ≤ 2)]
-    exact le_max_of_le_left ((le_add_of_nonneg_left (norm_nonneg _)).trans_eq (two_mul _).symm)
-  · nontriviality A
-    calc
-      ‖algebraMap 𝕜 _ x.fst + mul 𝕜 A x.snd‖ ≤ ‖algebraMap 𝕜 _ x.fst‖ + ‖mul 𝕜 A x.snd‖ :=
-        norm_add_le _ _
-      _ = ‖x.fst‖ + ‖x.snd‖ := by
-        rw [norm_algebraMap', (AddMonoidHomClass.isometry_iff_norm (mul 𝕜 A)).mp (isometry_mul 𝕜 A)]
-      _ ≤ _ := (add_le_add (le_max_left _ _) (le_max_right _ _)).trans_eq (two_mul _).symm
+  rw [mul_max_of_nonneg _ _ (zero_le_two : (0 : ℝ) ≤ 2)]
+  exact le_max_of_le_left ((le_add_of_nonneg_left (norm_nonneg _)).trans_eq (two_mul _).symm)
+  nontriviality A
+  calc
+    ‖algebraMap 𝕜 _ x.fst + mul 𝕜 A x.snd‖ ≤ ‖algebraMap 𝕜 _ x.fst‖ + ‖mul 𝕜 A x.snd‖ :=
+      norm_add_le _ _
+    _ = ‖x.fst‖ + ‖x.snd‖ := by
+      rw [norm_algebraMap', (AddMonoidHomClass.isometry_iff_norm (mul 𝕜 A)).mp (isometry_mul 𝕜 A)]
+    _ ≤ _ := (add_le_add (le_max_left _ _) (le_max_right _ _)).trans_eq (two_mul _).symm
 
 open Bornology Filter
 open scoped Uniformity Topology

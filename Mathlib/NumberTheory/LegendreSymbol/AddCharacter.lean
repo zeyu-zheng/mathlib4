@@ -120,10 +120,10 @@ lemma exists_divisor_of_not_isPrimitive (he : ¬e.IsPrimitive) :
   -- We have `AddChar.mulShift e b = 1`, but `b ≠ 0`.
   obtain ⟨d, hd, u, hu, rfl⟩ := b.eq_unit_mul_divisor
   refine ⟨d, hd, lt_of_le_of_ne (Nat.le_of_dvd (NeZero.pos _) hd) ?_, ?_⟩
-  · exact fun h ↦ by simp only [h, ZMod.natCast_self, mul_zero, ne_eq, not_true_eq_false] at hb_ne
-  · rw [← mulShift_unit_eq_one_iff _ hu, ← hb, mul_comm]
-    ext1 y
-    rw [mulShift_apply, mulShift_apply, mulShift_apply, mul_assoc]
+  exact fun h ↦ by simp only [h, ZMod.natCast_self, mul_zero, ne_eq, not_true_eq_false] at hb_ne
+  rw [← mulShift_unit_eq_one_iff _ hu, ← hb, mul_comm]
+  ext1 y
+  rw [mulShift_apply, mulShift_apply, mulShift_apply, mul_assoc]
 
 end ZMod
 
@@ -260,12 +260,12 @@ theorem sum_mulShift {R : Type*} [CommRing R] [Fintype R] [DecidableEq R]
     {R' : Type*} [CommRing R'] [IsDomain R'] {ψ : AddChar R R'} (b : R)
     (hψ : IsPrimitive ψ) : ∑ x : R, ψ (x * b) = if b = 0 then Fintype.card R else 0 := by
   split_ifs with h
-  · -- case `b = 0`
-    simp only [h, mul_zero, map_zero_eq_one, Finset.sum_const, Nat.smul_one_eq_cast]
-    rfl
-  · -- case `b ≠ 0`
-    simp_rw [mul_comm]
-    exact mod_cast sum_eq_zero_of_ne_one (hψ h)
+  -- case `b = 0`
+  simp only [h, mul_zero, map_zero_eq_one, Finset.sum_const, Nat.smul_one_eq_cast]
+  rfl
+  -- case `b ≠ 0`
+  simp_rw [mul_comm]
+  exact mod_cast sum_eq_zero_of_ne_one (hψ h)
 
 /-!
 ### Complex-valued additive characters

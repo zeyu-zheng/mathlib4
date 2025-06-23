@@ -36,29 +36,29 @@ theorem compl_section_ordSeparatingSet_mem_nhdsWithin_Ici (hd : Disjoint s (clos
   exact disjoint_left.1 hd ha
   rcases exists_Icc_mem_subset_of_mem_nhdsWithin_Ici hmem with ⟨b, hab, hmem', hsub⟩
   by_cases H : Disjoint (Icc a b) (ordConnectedSection <| ordSeparatingSet s t)
-  · exact mem_of_superset hmem' (disjoint_left.1 H)
-  · simp only [Set.disjoint_left, not_forall, Classical.not_not] at H
-    rcases H with ⟨c, ⟨hac, hcb⟩, hc⟩
-    have hsub' : Icc a b ⊆ ordConnectedComponent tᶜ a :=
-      subset_ordConnectedComponent (left_mem_Icc.2 hab) hsub
-    have hd : Disjoint s (ordConnectedSection (ordSeparatingSet s t)) :=
-      disjoint_left_ordSeparatingSet.mono_right ordConnectedSection_subset
-    replace hac : a < c := hac.lt_of_ne <| Ne.symm <| ne_of_mem_of_not_mem hc <|
-      disjoint_left.1 hd ha
-    refine mem_of_superset (Ico_mem_nhdsWithin_Ici (left_mem_Ico.2 hac)) fun x hx hx' => ?_
-    refine hx.2.ne (eq_of_mem_ordConnectedSection_of_uIcc_subset hx' hc ?_)
-    refine subset_inter (subset_iUnion₂_of_subset a ha ?_) ?_
-    · exact OrdConnected.uIcc_subset inferInstance (hsub' ⟨hx.1, hx.2.le.trans hcb⟩)
-        (hsub' ⟨hac.le, hcb⟩)
-    · rcases mem_iUnion₂.1 (ordConnectedSection_subset hx').2 with ⟨y, hyt, hxy⟩
-      refine subset_iUnion₂_of_subset y hyt (OrdConnected.uIcc_subset inferInstance hxy ?_)
-      refine subset_ordConnectedComponent left_mem_uIcc hxy ?_
-      suffices c < y by
-        rw [uIcc_of_ge (hx.2.trans this).le]
-        exact ⟨hx.2.le, this.le⟩
-      refine lt_of_not_le fun hyc => ?_
-      have hya : y < a := not_le.1 fun hay => hsub ⟨hay, hyc.trans hcb⟩ hyt
-      exact hxy (Icc_subset_uIcc ⟨hya.le, hx.1⟩) ha
+  exact mem_of_superset hmem' (disjoint_left.1 H)
+  simp only [Set.disjoint_left, not_forall, Classical.not_not] at H
+  rcases H with ⟨c, ⟨hac, hcb⟩, hc⟩
+  have hsub' : Icc a b ⊆ ordConnectedComponent tᶜ a :=
+    subset_ordConnectedComponent (left_mem_Icc.2 hab) hsub
+  have hd : Disjoint s (ordConnectedSection (ordSeparatingSet s t)) :=
+    disjoint_left_ordSeparatingSet.mono_right ordConnectedSection_subset
+  replace hac : a < c := hac.lt_of_ne <| Ne.symm <| ne_of_mem_of_not_mem hc <|
+    disjoint_left.1 hd ha
+  refine mem_of_superset (Ico_mem_nhdsWithin_Ici (left_mem_Ico.2 hac)) fun x hx hx' => ?_
+  refine hx.2.ne (eq_of_mem_ordConnectedSection_of_uIcc_subset hx' hc ?_)
+  refine subset_inter (subset_iUnion₂_of_subset a ha ?_) ?_
+  exact OrdConnected.uIcc_subset inferInstance (hsub' ⟨hx.1, hx.2.le.trans hcb⟩)
+    (hsub' ⟨hac.le, hcb⟩)
+  rcases mem_iUnion₂.1 (ordConnectedSection_subset hx').2 with ⟨y, hyt, hxy⟩
+  refine subset_iUnion₂_of_subset y hyt (OrdConnected.uIcc_subset inferInstance hxy ?_)
+  refine subset_ordConnectedComponent left_mem_uIcc hxy ?_
+  suffices c < y by
+    rw [uIcc_of_ge (hx.2.trans this).le]
+    exact ⟨hx.2.le, this.le⟩
+  refine lt_of_not_le fun hyc => ?_
+  have hya : y < a := not_le.1 fun hay => hsub ⟨hay, hyc.trans hcb⟩ hyt
+  exact hxy (Icc_subset_uIcc ⟨hya.le, hx.1⟩) ha
 
 theorem compl_section_ordSeparatingSet_mem_nhdsWithin_Iic (hd : Disjoint s (closure t))
     (ha : a ∈ s) : (ordConnectedSection <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≤] a := by

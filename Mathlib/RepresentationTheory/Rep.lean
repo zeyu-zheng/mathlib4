@@ -501,12 +501,12 @@ theorem to_Module_monoidAlgebra_map_aux {k G : Type*} [CommRing k] [Monoid G] (V
     f ((((MonoidAlgebra.lift k G (V →ₗ[k] V)) ρ) r) x) =
       (((MonoidAlgebra.lift k G (W →ₗ[k] W)) σ) r) (f x) := by
   apply MonoidAlgebra.induction_on r
-  · intro g
-    simp only [one_smul, MonoidAlgebra.lift_single, MonoidAlgebra.of_apply]
-    exact LinearMap.congr_fun (w g) x
-  · intro g h gw hw; simp only [map_add, add_left_inj, LinearMap.add_apply, hw, gw]
-  · intro r g w
-    simp only [map_smul, w, RingHom.id_apply, LinearMap.smul_apply, LinearMap.map_smulₛₗ]
+  intro g
+  simp only [one_smul, MonoidAlgebra.lift_single, MonoidAlgebra.of_apply]
+  exact LinearMap.congr_fun (w g) x
+  intro g h gw hw; simp only [map_add, add_left_inj, LinearMap.add_apply, hw, gw]
+  intro r g w
+  simp only [map_smul, w, RingHom.id_apply, LinearMap.smul_apply, LinearMap.map_smulₛₗ]
 
 /-- Auxiliary definition for `toModuleMonoidAlgebra`. -/
 def toModuleMonoidAlgebraMap {V W : Rep k G} (f : V ⟶ W) :

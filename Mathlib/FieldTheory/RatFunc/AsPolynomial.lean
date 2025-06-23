@@ -146,9 +146,9 @@ theorem eval_add {x y : RatFunc K} (hx : Polynomial.eval₂ f a (denom x) ≠ 0)
     (hy : Polynomial.eval₂ f a (denom y) ≠ 0) : eval f a (x + y) = eval f a x + eval f a y := by
   unfold eval
   by_cases hxy : Polynomial.eval₂ f a (denom (x + y)) = 0
-  · have := Polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero f a (denom_add_dvd x y) hxy
-    rw [Polynomial.eval₂_mul] at this
-    cases mul_eq_zero.mp this <;> contradiction
+  have := Polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero f a (denom_add_dvd x y) hxy
+  rw [Polynomial.eval₂_mul] at this
+  cases mul_eq_zero.mp this <;> contradiction
   rw [div_add_div _ _ hx hy, eq_div_iff (mul_ne_zero hx hy), div_eq_mul_inv, mul_right_comm, ←
     div_eq_mul_inv, div_eq_iff hxy]
   simp only [← Polynomial.eval₂_mul, ← Polynomial.eval₂_add]
@@ -165,9 +165,9 @@ theorem eval_mul {x y : RatFunc K} (hx : Polynomial.eval₂ f a (denom x) ≠ 0)
     (hy : Polynomial.eval₂ f a (denom y) ≠ 0) : eval f a (x * y) = eval f a x * eval f a y := by
   unfold eval
   by_cases hxy : Polynomial.eval₂ f a (denom (x * y)) = 0
-  · have := Polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero f a (denom_mul_dvd x y) hxy
-    rw [Polynomial.eval₂_mul] at this
-    cases mul_eq_zero.mp this <;> contradiction
+  have := Polynomial.eval₂_eq_zero_of_dvd_of_eval₂_eq_zero f a (denom_mul_dvd x y) hxy
+  rw [Polynomial.eval₂_mul] at this
+  cases mul_eq_zero.mp this <;> contradiction
   rw [div_mul_div_comm, eq_div_iff (mul_ne_zero hx hy), div_eq_mul_inv, mul_right_comm, ←
     div_eq_mul_inv, div_eq_iff hxy]
   repeat' rw [← Polynomial.eval₂_mul]
@@ -202,8 +202,8 @@ theorem idealX_span : (idealX K).asIdeal = Ideal.span {X} := rfl
 theorem valuation_X_eq_neg_one :
     (idealX K).valuation (RatFunc.X : RatFunc K) = Multiplicative.ofAdd (-1 : ℤ) := by
   rw [← RatFunc.algebraMap_X, valuation_of_algebraMap, intValuation_singleton]
-  · exact Polynomial.X_ne_zero
-  · exact idealX_span K
+  exact Polynomial.X_ne_zero
+  exact idealX_span K
 
 theorem valuation_of_mk (f : Polynomial K) {g : Polynomial K} (hg : g ≠ 0) :
     (Polynomial.idealX K).valuation (RatFunc.mk f g) =

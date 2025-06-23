@@ -78,8 +78,8 @@ theorem cramerMap_is_linear (i : n) : IsLinearMap α fun b => cramerMap A b i :=
 
 theorem cramer_is_linear : IsLinearMap α (cramerMap A) := by
   constructor <;> intros <;> ext i
-  · apply (cramerMap_is_linear A i).1
-  · apply (cramerMap_is_linear A i).2
+  apply (cramerMap_is_linear A i).1
+  apply (cramerMap_is_linear A i).2
 
 /-- `cramer A b i` is the determinant of the matrix `A` with column `i` replaced with `b`,
   and thus `cramer A b` is the vector output by Cramer's rule on `A` and `b`.
@@ -100,13 +100,13 @@ theorem cramer_transpose_row_self (i : n) : Aᵀ.cramer (A i) = Pi.single i A.de
   ext j
   rw [cramer_apply, Pi.single_apply]
   split_ifs with h
-  · -- i = j: this entry should be `A.det`
-    subst h
-    simp only [updateColumn_transpose, det_transpose, updateRow_eq_self]
-  · -- i ≠ j: this entry should be 0
-    rw [updateColumn_transpose, det_transpose]
-    apply det_zero_of_row_eq h
-    rw [updateRow_self, updateRow_ne (Ne.symm h)]
+  -- i = j: this entry should be `A.det`
+  subst h
+  simp only [updateColumn_transpose, det_transpose, updateRow_eq_self]
+  -- i ≠ j: this entry should be 0
+  rw [updateColumn_transpose, det_transpose]
+  apply det_zero_of_row_eq h
+  rw [updateRow_self, updateRow_ne (Ne.symm h)]
 
 theorem cramer_row_self (i : n) (h : ∀ j, b j = A j i) : A.cramer b = Pi.single i A.det := by
   rw [← transpose_transpose A, det_transpose]
@@ -118,9 +118,9 @@ theorem cramer_one : cramer (1 : Matrix n n α) = 1 := by
   -- Porting note: was `ext i j`
   refine LinearMap.pi_ext' (fun (i : n) => LinearMap.ext_ring (funext (fun (j : n) => ?_)))
   convert congr_fun (cramer_row_self (1 : Matrix n n α) (Pi.single i 1) i _) j
-  · simp
-  · intro j
-    rw [Matrix.one_eq_pi_single, Pi.single_comm]
+  simp
+  intro j
+  rw [Matrix.one_eq_pi_single, Pi.single_comm]
 
 theorem cramer_smul (r : α) (A : Matrix n n α) :
     cramer (r • A) = r ^ (Fintype.card n - 1) • cramer A :=
@@ -203,26 +203,26 @@ theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate Aᵀ
   intro σ _
   congr 1
   by_cases h : i = σ j
-  · -- Everything except `(i , j)` (= `(σ j , j)`) is given by A, and the rest is a single `1`.
-    congr
-    ext j'
-    subst h
-    have : σ j' = σ j ↔ j' = j := σ.injective.eq_iff
-    rw [updateRow_apply, updateColumn_apply]
-    simp_rw [this]
-    rw [← dite_eq_ite, ← dite_eq_ite]
-    congr 1 with rfl
-    rw [Pi.single_eq_same, Pi.single_eq_same]
-  · -- Otherwise, we need to show that there is a `0` somewhere in the product.
-    have : (∏ j' : n, updateColumn A j (Pi.single i 1) (σ j') j') = 0
-    apply prod_eq_zero (mem_univ j)
-    rw [updateColumn_self, Pi.single_eq_of_ne' h]
-    rw [this]
-    apply prod_eq_zero (mem_univ (σ⁻¹ i))
-    erw [apply_symm_apply σ i, updateRow_self]
-    apply Pi.single_eq_of_ne
-    intro h'
-    exact h ((symm_apply_eq σ).mp h')
+  -- Everything except `(i , j)` (= `(σ j , j)`) is given by A, and the rest is a single `1`.
+  congr
+  ext j'
+  subst h
+  have : σ j' = σ j ↔ j' = j := σ.injective.eq_iff
+  rw [updateRow_apply, updateColumn_apply]
+  simp_rw [this]
+  rw [← dite_eq_ite, ← dite_eq_ite]
+  congr 1 with rfl
+  rw [Pi.single_eq_same, Pi.single_eq_same]
+  -- Otherwise, we need to show that there is a `0` somewhere in the product.
+  have : (∏ j' : n, updateColumn A j (Pi.single i 1) (σ j') j') = 0
+  apply prod_eq_zero (mem_univ j)
+  rw [updateColumn_self, Pi.single_eq_of_ne' h]
+  rw [this]
+  apply prod_eq_zero (mem_univ (σ⁻¹ i))
+  erw [apply_symm_apply σ i, updateRow_self]
+  apply Pi.single_eq_of_ne
+  intro h'
+  exact h ((symm_apply_eq σ).mp h')
 
 @[simp]
 theorem adjugate_submatrix_equiv_self (e : n ≃ m) (A : Matrix m m α) :
@@ -311,13 +311,13 @@ theorem adjugate_diagonal (v : n → α) :
   ext i j
   simp only [adjugate_def, cramer_apply, diagonal_transpose, of_apply]
   obtain rfl | hij := eq_or_ne i j
-  · rw [diagonal_apply_eq, diagonal_updateColumn_single, det_diagonal,
-      prod_update_of_mem (Finset.mem_univ _), sdiff_singleton_eq_erase, one_mul]
-  · rw [diagonal_apply_ne _ hij]
-    refine det_eq_zero_of_row_eq_zero j fun k => ?_
-    obtain rfl | hjk := eq_or_ne k j
-    · rw [updateColumn_self, Pi.single_eq_of_ne' hij]
-    · rw [updateColumn_ne hjk, diagonal_apply_ne' _ hjk]
+  rw [diagonal_apply_eq, diagonal_updateColumn_single, det_diagonal,
+    prod_update_of_mem (Finset.mem_univ _), sdiff_singleton_eq_erase, one_mul]
+  rw [diagonal_apply_ne _ hij]
+  refine det_eq_zero_of_row_eq_zero j fun k => ?_
+  obtain rfl | hjk := eq_or_ne k j
+  rw [updateColumn_self, Pi.single_eq_of_ne' hij]
+  rw [updateColumn_ne hjk, diagonal_apply_ne' _ hjk]
 
 theorem _root_.RingHom.map_adjugate {R S : Type*} [CommRing R] [CommRing S] (f : R →+* S)
     (M : Matrix n n R) : f.mapMatrix M.adjugate = Matrix.adjugate (f.mapMatrix M) := by
@@ -336,8 +336,8 @@ theorem _root_.AlgHom.map_adjugate {R A B : Type*} [CommSemiring R] [CommRing A]
 theorem det_adjugate (A : Matrix n n α) : (adjugate A).det = A.det ^ (Fintype.card n - 1) := by
   -- get rid of the `- 1`
   rcases (Fintype.card n).eq_zero_or_pos with h_card | h_card
-  · haveI : IsEmpty n := Fintype.card_eq_zero_iff.mp h_card
-    rw [h_card, Nat.zero_sub, pow_zero, adjugate_subsingleton, det_one]
+  haveI : IsEmpty n := Fintype.card_eq_zero_iff.mp h_card
+  rw [h_card, Nat.zero_sub, pow_zero, adjugate_subsingleton, det_one]
   replace h_card := tsub_add_cancel_of_le h_card.nat_succ_le
   -- express `A` as an evaluation of a polynomial in n^2 variables, and solve in the polynomial ring
   -- where `A'.det` is non-zero.
@@ -423,16 +423,16 @@ theorem adjugate_conjTranspose [StarRing α] (A : Matrix n n α) : A.adjugateᴴ
 theorem isRegular_of_isLeftRegular_det {A : Matrix n n α} (hA : IsLeftRegular A.det) :
     IsRegular A := by
   constructor
-  · intro B C h
-    refine hA.matrix ?_
-    simp only at h ⊢
-    rw [← Matrix.one_mul B, ← Matrix.one_mul C, ← Matrix.smul_mul, ← Matrix.smul_mul, ←
-      adjugate_mul, Matrix.mul_assoc, Matrix.mul_assoc, h]
-  · intro B C (h : B * A = C * A)
-    refine hA.matrix ?_
-    simp only
-    rw [← Matrix.mul_one B, ← Matrix.mul_one C, ← Matrix.mul_smul, ← Matrix.mul_smul, ←
-      mul_adjugate, ← Matrix.mul_assoc, ← Matrix.mul_assoc, h]
+  intro B C h
+  refine hA.matrix ?_
+  simp only at h ⊢
+  rw [← Matrix.one_mul B, ← Matrix.one_mul C, ← Matrix.smul_mul, ← Matrix.smul_mul, ←
+    adjugate_mul, Matrix.mul_assoc, Matrix.mul_assoc, h]
+  intro B C (h : B * A = C * A)
+  refine hA.matrix ?_
+  simp only
+  rw [← Matrix.mul_one B, ← Matrix.mul_one C, ← Matrix.mul_smul, ← Matrix.mul_smul, ←
+    mul_adjugate, ← Matrix.mul_assoc, ← Matrix.mul_assoc, h]
 
 theorem adjugate_mul_distrib_aux (A B : Matrix n n α) (hA : IsLeftRegular A.det)
     (hB : IsLeftRegular B.det) : adjugate (A * B) = adjugate B * adjugate A := by
@@ -471,8 +471,8 @@ theorem adjugate_mul_distrib (A B : Matrix n n α) : adjugate (A * B) = adjugate
 @[simp]
 theorem adjugate_pow (A : Matrix n n α) (k : ℕ) : adjugate (A ^ k) = adjugate A ^ k := by
   induction' k with k IH
-  · simp
-  · rw [pow_succ', adjugate_mul_distrib, IH, pow_succ]
+  simp
+  rw [pow_succ', adjugate_mul_distrib, IH, pow_succ]
 
 theorem det_smul_adjugate_adjugate (A : Matrix n n α) :
     det A • adjugate (adjugate A) = det A ^ (Fintype.card n - 1) • A := by
@@ -487,9 +487,9 @@ theorem adjugate_adjugate (A : Matrix n n α) (h : Fintype.card n ≠ 1) :
     adjugate (adjugate A) = det A ^ (Fintype.card n - 2) • A := by
   -- get rid of the `- 2`
   cases' h_card : Fintype.card n with n'
-  · subsingleton [Fintype.card_eq_zero_iff.mp h_card]
+  subsingleton [Fintype.card_eq_zero_iff.mp h_card]
   cases n'
-  · exact (h h_card).elim
+  exact (h h_card).elim
   rw [← h_card]
   -- express `A` as an evaluation of a polynomial in n^2 variables, and solve in the polynomial ring
   -- where `A'.det` is non-zero.

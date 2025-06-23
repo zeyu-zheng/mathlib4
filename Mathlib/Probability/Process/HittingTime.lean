@@ -75,10 +75,10 @@ theorem hitting_of_lt {m : ι} (h : m < n) : hitting u s n m ω = m := by
 theorem hitting_le {m : ι} (ω : Ω) : hitting u s n m ω ≤ m := by
   simp only [hitting]
   split_ifs with h
-  · obtain ⟨j, hj₁, hj₂⟩ := h
-    change j ∈ {i | u i ω ∈ s} at hj₂
-    exact (csInf_le (BddBelow.inter_of_left bddBelow_Icc) (Set.mem_inter hj₁ hj₂)).trans hj₁.2
-  · exact le_rfl
+  obtain ⟨j, hj₁, hj₂⟩ := h
+  change j ∈ {i | u i ω ∈ s} at hj₂
+  exact (csInf_le (BddBelow.inter_of_left bddBelow_Icc) (Set.mem_inter hj₁ hj₂)).trans hj₁.2
+  exact le_rfl
 
 open Classical in
 theorem not_mem_of_lt_hitting {m k : ι} (hk₁ : k < hitting u s n m ω) (hk₂ : n ≤ k) :
@@ -95,22 +95,22 @@ theorem hitting_eq_end_iff {m : ι} : hitting u s n m ω = m ↔
 
 theorem hitting_of_le {m : ι} (hmn : m ≤ n) : hitting u s n m ω = m := by
   obtain rfl | h := le_iff_eq_or_lt.1 hmn
-  · rw [hitting, ite_eq_right_iff, forall_exists_index]
-    conv => intro; rw [Set.mem_Icc, Set.Icc_self, and_imp, and_imp]
-    intro i hi₁ hi₂ hi
-    rw [Set.inter_eq_left.2, csInf_singleton]
-    exact Set.singleton_subset_iff.2 (le_antisymm hi₂ hi₁ ▸ hi)
-  · exact hitting_of_lt h
+  rw [hitting, ite_eq_right_iff, forall_exists_index]
+  conv => intro; rw [Set.mem_Icc, Set.Icc_self, and_imp, and_imp]
+  intro i hi₁ hi₂ hi
+  rw [Set.inter_eq_left.2, csInf_singleton]
+  exact Set.singleton_subset_iff.2 (le_antisymm hi₂ hi₁ ▸ hi)
+  exact hitting_of_lt h
 
 theorem le_hitting {m : ι} (hnm : n ≤ m) (ω : Ω) : n ≤ hitting u s n m ω := by
   simp only [hitting]
   split_ifs with h
-  · refine le_csInf ?_ fun b hb => ?_
-    · obtain ⟨k, hk_Icc, hk_s⟩ := h
-      exact ⟨k, hk_Icc, hk_s⟩
-    · rw [Set.mem_inter_iff] at hb
-      exact hb.1.1
-  · exact hnm
+  refine le_csInf ?_ fun b hb => ?_
+  obtain ⟨k, hk_Icc, hk_s⟩ := h
+  exact ⟨k, hk_Icc, hk_s⟩
+  rw [Set.mem_inter_iff] at hb
+  exact hb.1.1
+  exact hnm
 
 theorem le_hitting_of_exists {m : ι} (h_exists : ∃ j ∈ Set.Icc n m, u j ω ∈ s) :
     n ≤ hitting u s n m ω := by
@@ -135,9 +135,9 @@ theorem hitting_mem_set [IsWellOrder ι (· < ·)] {m : ι} (h_exists : ∃ j �
 theorem hitting_mem_set_of_hitting_lt [IsWellOrder ι (· < ·)] {m : ι} (hl : hitting u s n m ω < m) :
     u (hitting u s n m ω) ω ∈ s := by
   by_cases h : ∃ j ∈ Set.Icc n m, u j ω ∈ s
-  · exact hitting_mem_set h
-  · simp_rw [hitting, if_neg h] at hl
-    exact False.elim (hl.ne rfl)
+  exact hitting_mem_set h
+  simp_rw [hitting, if_neg h] at hl
+  exact False.elim (hl.ne rfl)
 
 theorem hitting_le_of_mem {m : ι} (hin : n ≤ i) (him : i ≤ m) (his : u i ω ∈ s) :
     hitting u s n m ω ≤ i := by
@@ -149,63 +149,63 @@ theorem hitting_le_iff_of_exists [IsWellOrder ι (· < ·)] {m : ι}
     (h_exists : ∃ j ∈ Set.Icc n m, u j ω ∈ s) :
     hitting u s n m ω ≤ i ↔ ∃ j ∈ Set.Icc n i, u j ω ∈ s := by
   constructor <;> intro h'
-  · exact ⟨hitting u s n m ω, ⟨le_hitting_of_exists h_exists, h'⟩, hitting_mem_set h_exists⟩
-  · have h'' : ∃ k ∈ Set.Icc n (min m i), u k ω ∈ s := by
-      obtain ⟨k₁, hk₁_mem, hk₁_s⟩ := h_exists
-      obtain ⟨k₂, hk₂_mem, hk₂_s⟩ := h'
-      refine ⟨min k₁ k₂, ⟨le_min hk₁_mem.1 hk₂_mem.1, min_le_min hk₁_mem.2 hk₂_mem.2⟩, ?_⟩
-      exact min_rec' (fun j => u j ω ∈ s) hk₁_s hk₂_s
-    obtain ⟨k, hk₁, hk₂⟩ := h''
-    refine le_trans ?_ (hk₁.2.trans (min_le_right _ _))
-    exact hitting_le_of_mem hk₁.1 (hk₁.2.trans (min_le_left _ _)) hk₂
+  exact ⟨hitting u s n m ω, ⟨le_hitting_of_exists h_exists, h'⟩, hitting_mem_set h_exists⟩
+  have h'' : ∃ k ∈ Set.Icc n (min m i), u k ω ∈ s := by
+    obtain ⟨k₁, hk₁_mem, hk₁_s⟩ := h_exists
+    obtain ⟨k₂, hk₂_mem, hk₂_s⟩ := h'
+    refine ⟨min k₁ k₂, ⟨le_min hk₁_mem.1 hk₂_mem.1, min_le_min hk₁_mem.2 hk₂_mem.2⟩, ?_⟩
+    exact min_rec' (fun j => u j ω ∈ s) hk₁_s hk₂_s
+  obtain ⟨k, hk₁, hk₂⟩ := h''
+  refine le_trans ?_ (hk₁.2.trans (min_le_right _ _))
+  exact hitting_le_of_mem hk₁.1 (hk₁.2.trans (min_le_left _ _)) hk₂
 
 theorem hitting_le_iff_of_lt [IsWellOrder ι (· < ·)] {m : ι} (i : ι) (hi : i < m) :
     hitting u s n m ω ≤ i ↔ ∃ j ∈ Set.Icc n i, u j ω ∈ s := by
   by_cases h_exists : ∃ j ∈ Set.Icc n m, u j ω ∈ s
-  · rw [hitting_le_iff_of_exists h_exists]
-  · simp_rw [hitting, if_neg h_exists]
-    push_neg at h_exists
-    simp only [not_le.mpr hi, Set.mem_Icc, false_iff_iff, not_exists, not_and, and_imp]
-    exact fun k hkn hki => h_exists k ⟨hkn, hki.trans hi.le⟩
+  rw [hitting_le_iff_of_exists h_exists]
+  simp_rw [hitting, if_neg h_exists]
+  push_neg at h_exists
+  simp only [not_le.mpr hi, Set.mem_Icc, false_iff_iff, not_exists, not_and, and_imp]
+  exact fun k hkn hki => h_exists k ⟨hkn, hki.trans hi.le⟩
 
 theorem hitting_lt_iff [IsWellOrder ι (· < ·)] {m : ι} (i : ι) (hi : i ≤ m) :
     hitting u s n m ω < i ↔ ∃ j ∈ Set.Ico n i, u j ω ∈ s := by
   constructor <;> intro h'
-  · have h : ∃ j ∈ Set.Icc n m, u j ω ∈ s := by
-      by_contra h
-      simp_rw [hitting, if_neg h, ← not_le] at h'
-      exact h' hi
-    exact ⟨hitting u s n m ω, ⟨le_hitting_of_exists h, h'⟩, hitting_mem_set h⟩
-  · obtain ⟨k, hk₁, hk₂⟩ := h'
-    refine lt_of_le_of_lt ?_ hk₁.2
-    exact hitting_le_of_mem hk₁.1 (hk₁.2.le.trans hi) hk₂
+  have h : ∃ j ∈ Set.Icc n m, u j ω ∈ s := by
+    by_contra h
+    simp_rw [hitting, if_neg h, ← not_le] at h'
+    exact h' hi
+  exact ⟨hitting u s n m ω, ⟨le_hitting_of_exists h, h'⟩, hitting_mem_set h⟩
+  obtain ⟨k, hk₁, hk₂⟩ := h'
+  refine lt_of_le_of_lt ?_ hk₁.2
+  exact hitting_le_of_mem hk₁.1 (hk₁.2.le.trans hi) hk₂
 
 theorem hitting_eq_hitting_of_exists {m₁ m₂ : ι} (h : m₁ ≤ m₂)
     (h' : ∃ j ∈ Set.Icc n m₁, u j ω ∈ s) : hitting u s n m₁ ω = hitting u s n m₂ ω := by
   simp only [hitting, if_pos h']
   obtain ⟨j, hj₁, hj₂⟩ := h'
   rw [if_pos]
-  · refine le_antisymm ?_ (csInf_le_csInf bddBelow_Icc.inter_of_left ⟨j, hj₁, hj₂⟩
-      (Set.inter_subset_inter_left _ (Set.Icc_subset_Icc_right h)))
-    refine le_csInf ⟨j, Set.Icc_subset_Icc_right h hj₁, hj₂⟩ fun i hi => ?_
-    by_cases hi' : i ≤ m₁
-    · exact csInf_le bddBelow_Icc.inter_of_left ⟨⟨hi.1.1, hi'⟩, hi.2⟩
-    · change j ∈ {i | u i ω ∈ s} at hj₂
-      exact ((csInf_le bddBelow_Icc.inter_of_left ⟨hj₁, hj₂⟩).trans (hj₁.2.trans le_rfl)).trans
-        (le_of_lt (not_le.1 hi'))
+  refine le_antisymm ?_ (csInf_le_csInf bddBelow_Icc.inter_of_left ⟨j, hj₁, hj₂⟩
+    (Set.inter_subset_inter_left _ (Set.Icc_subset_Icc_right h)))
+  refine le_csInf ⟨j, Set.Icc_subset_Icc_right h hj₁, hj₂⟩ fun i hi => ?_
+  by_cases hi' : i ≤ m₁
+  exact csInf_le bddBelow_Icc.inter_of_left ⟨⟨hi.1.1, hi'⟩, hi.2⟩
+  change j ∈ {i | u i ω ∈ s} at hj₂
+  exact ((csInf_le bddBelow_Icc.inter_of_left ⟨hj₁, hj₂⟩).trans (hj₁.2.trans le_rfl)).trans
+    (le_of_lt (not_le.1 hi'))
   exact ⟨j, ⟨hj₁.1, hj₁.2.trans h⟩, hj₂⟩
 
 theorem hitting_mono {m₁ m₂ : ι} (hm : m₁ ≤ m₂) : hitting u s n m₁ ω ≤ hitting u s n m₂ ω := by
   by_cases h : ∃ j ∈ Set.Icc n m₁, u j ω ∈ s
-  · exact (hitting_eq_hitting_of_exists hm h).le
-  · simp_rw [hitting, if_neg h]
-    split_ifs with h'
-    · obtain ⟨j, hj₁, hj₂⟩ := h'
-      refine le_csInf ⟨j, hj₁, hj₂⟩ ?_
-      by_contra hneg; push_neg at hneg
-      obtain ⟨i, hi₁, hi₂⟩ := hneg
-      exact h ⟨i, ⟨hi₁.1.1, hi₂.le⟩, hi₁.2⟩
-    · exact hm
+  exact (hitting_eq_hitting_of_exists hm h).le
+  simp_rw [hitting, if_neg h]
+  split_ifs with h'
+  obtain ⟨j, hj₁, hj₂⟩ := h'
+  refine le_csInf ⟨j, hj₁, hj₂⟩ ?_
+  by_contra hneg; push_neg at hneg
+  obtain ⟨i, hi₁, hi₂⟩ := hneg
+  exact h ⟨i, ⟨hi₁.1.1, hi₂.le⟩, hi₁.2⟩
+  exact hm
 
 end Inequalities
 
@@ -216,15 +216,15 @@ theorem hitting_isStoppingTime [ConditionallyCompleteLinearOrder ι] [IsWellOrde
     (hs : MeasurableSet s) : IsStoppingTime f (hitting u s n n') := by
   intro i
   rcases le_or_lt n' i with hi | hi
-  · have h_le : ∀ ω, hitting u s n n' ω ≤ i := fun x => (hitting_le x).trans hi
-    simp [h_le]
-  · have h_set_eq_Union : {ω | hitting u s n n' ω ≤ i} = ⋃ j ∈ Set.Icc n i, u j ⁻¹' s := by
-      ext x
-      rw [Set.mem_setOf_eq, hitting_le_iff_of_lt _ hi]
-      simp only [Set.mem_Icc, exists_prop, Set.mem_iUnion, Set.mem_preimage]
-    rw [h_set_eq_Union]
-    exact MeasurableSet.iUnion fun j =>
-      MeasurableSet.iUnion fun hj => f.mono hj.2 _ ((hu j).measurable hs)
+  have h_le : ∀ ω, hitting u s n n' ω ≤ i := fun x => (hitting_le x).trans hi
+  simp [h_le]
+  have h_set_eq_Union : {ω | hitting u s n n' ω ≤ i} = ⋃ j ∈ Set.Icc n i, u j ⁻¹' s := by
+    ext x
+    rw [Set.mem_setOf_eq, hitting_le_iff_of_lt _ hi]
+    simp only [Set.mem_Icc, exists_prop, Set.mem_iUnion, Set.mem_preimage]
+  rw [h_set_eq_Union]
+  exact MeasurableSet.iUnion fun j =>
+    MeasurableSet.iUnion fun hj => f.mono hj.2 _ ((hu j).measurable hs)
 
 theorem stoppedValue_hitting_mem [ConditionallyCompleteLinearOrder ι] [IsWellOrder ι (· < ·)]
     {u : ι → Ω → β} {s : Set β} {n m : ι} {ω : Ω} (h : ∃ j ∈ Set.Icc n m, u j ω ∈ s) :
@@ -282,11 +282,11 @@ variable {u : ι → Ω → β} {s : Set β} {f : Filtration ℕ m}
 theorem hitting_bot_le_iff {i n : ι} {ω : Ω} (hx : ∃ j, j ≤ n ∧ u j ω ∈ s) :
     hitting u s ⊥ n ω ≤ i ↔ ∃ j ≤ i, u j ω ∈ s := by
   cases' lt_or_le i n with hi hi
-  · rw [hitting_le_iff_of_lt _ hi]
-    simp
-  · simp only [(hitting_le ω).trans hi, true_iff_iff]
-    obtain ⟨j, hj₁, hj₂⟩ := hx
-    exact ⟨j, hj₁.trans hi, hj₂⟩
+  rw [hitting_le_iff_of_lt _ hi]
+  simp
+  simp only [(hitting_le ω).trans hi, true_iff_iff]
+  obtain ⟨j, hj₁, hj₂⟩ := hx
+  exact ⟨j, hj₁.trans hi, hj₂⟩
 
 end ConditionallyCompleteLinearOrderBot
 

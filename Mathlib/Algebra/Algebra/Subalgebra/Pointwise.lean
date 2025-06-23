@@ -35,11 +35,11 @@ theorem mul_toSubmodule_le (S T : Subalgebra R A) :
 theorem mul_self (S : Subalgebra R A) : (Subalgebra.toSubmodule S) * (Subalgebra.toSubmodule S)
     = (Subalgebra.toSubmodule S) := by
   apply le_antisymm
-  · refine (mul_toSubmodule_le _ _).trans_eq ?_
-    rw [sup_idem]
-  · intro x hx1
-    rw [← mul_one x]
-    exact Submodule.mul_mem_mul hx1 (show (1 : A) ∈ S from one_mem S)
+  refine (mul_toSubmodule_le _ _).trans_eq ?_
+  rw [sup_idem]
+  intro x hx1
+  rw [← mul_one x]
+  exact Submodule.mul_mem_mul hx1 (show (1 : A) ∈ S from one_mem S)
 
 /-- When `A` is commutative, `Subalgebra.mul_toSubmodule_le` is strict. -/
 theorem mul_toSubmodule {R : Type*} {A : Type*} [CommSemiring R] [CommSemiring A] [Algebra R A]
@@ -50,13 +50,13 @@ theorem mul_toSubmodule {R : Type*} {A : Type*} [CommSemiring R] [CommSemiring A
   refine
     Algebra.adjoin_induction hx (fun x hx => ?_) (fun r => ?_) (fun _ _ => Submodule.add_mem _)
       fun x y hx hy => ?_
-  · cases' hx with hxS hxT
-    · rw [← mul_one x]
-      exact Submodule.mul_mem_mul hxS (show (1 : A) ∈ T from one_mem T)
-    · rw [← one_mul x]
-      exact Submodule.mul_mem_mul (show (1 : A) ∈ S from one_mem S) hxT
-  · rw [← one_mul (algebraMap _ _ _)]
-    exact Submodule.mul_mem_mul (show (1 : A) ∈ S from one_mem S) (algebraMap_mem T _)
+  cases' hx with hxS hxT
+  rw [← mul_one x]
+  exact Submodule.mul_mem_mul hxS (show (1 : A) ∈ T from one_mem T)
+  rw [← one_mul x]
+  exact Submodule.mul_mem_mul (show (1 : A) ∈ S from one_mem S) hxT
+  rw [← one_mul (algebraMap _ _ _)]
+  exact Submodule.mul_mem_mul (show (1 : A) ∈ S from one_mem S) (algebraMap_mem T _)
   have := Submodule.mul_mem_mul hx hy
   rwa [mul_assoc, mul_comm _ (Subalgebra.toSubmodule T), ← mul_assoc _ _ (Subalgebra.toSubmodule S),
     mul_self, mul_comm (Subalgebra.toSubmodule T), ← mul_assoc, mul_self] at this

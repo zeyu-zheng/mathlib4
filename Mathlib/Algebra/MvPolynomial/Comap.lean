@@ -59,14 +59,14 @@ theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R)
     comap (g.comp f) x = comap f (comap g x) := by
   funext i
   trans aeval x (aeval (fun i => g (X i)) (f (X i)))
-  · apply eval₂Hom_congr rfl rfl
-    rw [AlgHom.comp_apply]
-    suffices g = aeval fun i => g (X i) by rw [← this]
-    exact aeval_unique g
-  · simp only [comap, aeval_eq_eval₂Hom, map_eval₂Hom, AlgHom.comp_apply]
-    refine eval₂Hom_congr ?_ rfl rfl
-    ext r
-    apply aeval_C
+  apply eval₂Hom_congr rfl rfl
+  rw [AlgHom.comp_apply]
+  suffices g = aeval fun i => g (X i) by rw [← this]
+  exact aeval_unique g
+  simp only [comap, aeval_eq_eval₂Hom, map_eval₂Hom, AlgHom.comp_apply]
+  refine eval₂Hom_congr ?_ rfl rfl
+  ext r
+  apply aeval_C
 
 theorem comap_comp (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R)
     (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R) : comap (g.comp f) = comap f ∘ comap g := by

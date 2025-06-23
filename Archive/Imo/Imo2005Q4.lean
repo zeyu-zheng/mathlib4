@@ -51,9 +51,9 @@ open IMO2005Q4
 /-- Main statement:  The only positive integer coprime to all terms of the sequence `a` is `1`. -/
 theorem imo2005_q4 {k : ℕ} (hk : 0 < k) : (∀ n : ℕ, 1 ≤ n → IsCoprime (a n) k) ↔ k = 1 := by
   constructor; rotate_left
-  · -- The property is clearly true for `k = 1`
-    rintro rfl n -
-    exact isCoprime_one_right
+  -- The property is clearly true for `k = 1`
+  rintro rfl n -
+  exact isCoprime_one_right
   intro h
   -- Conversely, suppose `k` is a number with the property, and let `p` be `k.minFac` (by
   -- definition this is the minimal prime factor of `k` if `k ≠ 1`, and otherwise `1`.
@@ -69,11 +69,11 @@ theorem imo2005_q4 {k : ℕ} (hk : 0 < k) : (∀ n : ℕ, 1 ≤ n → IsCoprime 
     rwa [isCoprime_comm,(Nat.prime_iff_prime_int.mp hp).coprime_iff_not_dvd] at this
   -- For `p = 2` and `p = 3`, take `n = 1` and `n = 2`, respectively
   by_cases hp2 : p = 2
-  · rw [hp2] at h
-    apply h 1 <;> decide
+  rw [hp2] at h
+  apply h 1 <;> decide
   by_cases hp3 : p = 3
-  · rw [hp3] at h
-    apply h 2 <;> decide
+  rw [hp3] at h
+  apply h 2 <;> decide
   -- Otherwise, take `n = p - 2`
   refine h (p - 2) ?_ (find_specified_factor hp hp2 hp3)
   calc

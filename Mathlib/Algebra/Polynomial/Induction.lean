@@ -41,15 +41,15 @@ protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (C
   have A : ∀ {n : ℕ} {a}, M (C a * X ^ n)
   intro n a
   induction' n with n ih
-  · rw [pow_zero, mul_one]; exact h_C a
-  · exact h_monomial _ _ ih
+  rw [pow_zero, mul_one]; exact h_C a
+  exact h_monomial _ _ ih
   have B : ∀ s : Finset ℕ, M (s.sum fun n : ℕ => C (p.coeff n) * X ^ n)
   apply Finset.induction
-  · convert h_C 0
-    exact C_0.symm
-  · intro n s ns ih
-    rw [sum_insert ns]
-    exact h_add _ _ A ih
+  convert h_C 0
+  exact C_0.symm
+  intro n s ns ih
+  rw [sum_insert ns]
+  exact h_add _ _ A ih
   rw [← sum_C_mul_X_pow_eq p, Polynomial.sum]
   exact B (support p)
 

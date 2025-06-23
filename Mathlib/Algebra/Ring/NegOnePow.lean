@@ -55,21 +55,21 @@ lemma negOnePow_two_mul_add_one (n : ℤ) : (2 * n + 1).negOnePow = -1 :=
 
 lemma negOnePow_eq_one_iff (n : ℤ) : n.negOnePow = 1 ↔ Even n := by
   constructor
-  · intro h
-    rw [Int.even_iff_not_odd]
-    intro h'
-    simp only [negOnePow_odd _ h'] at h
-    contradiction
-  · exact negOnePow_even n
+  intro h
+  rw [Int.even_iff_not_odd]
+  intro h'
+  simp only [negOnePow_odd _ h'] at h
+  contradiction
+  exact negOnePow_even n
 
 lemma negOnePow_eq_neg_one_iff (n : ℤ) : n.negOnePow = -1 ↔ Odd n := by
   constructor
-  · intro h
-    rw [Int.odd_iff_not_even]
-    intro h'
-    rw [negOnePow_even _ h'] at h
-    contradiction
-  · exact negOnePow_odd n
+  intro h
+  rw [Int.odd_iff_not_even]
+  intro h'
+  rw [negOnePow_even _ h'] at h
+  contradiction
+  exact negOnePow_odd n
 
 @[simp]
 theorem abs_negOnePow (n : ℤ) : |(n.negOnePow : ℤ)| = 1 := by
@@ -91,12 +91,12 @@ lemma negOnePow_sub (n₁ n₂ : ℤ) :
 lemma negOnePow_eq_iff (n₁ n₂ : ℤ) :
     n₁.negOnePow = n₂.negOnePow ↔ Even (n₁ - n₂) := by
   by_cases h₂ : Even n₂
-  · rw [negOnePow_even _ h₂, Int.even_sub, negOnePow_eq_one_iff]
-    tauto
-  · rw [← Int.odd_iff_not_even] at h₂
-    rw [negOnePow_odd _ h₂, Int.even_sub, negOnePow_eq_neg_one_iff,
-      Int.even_iff_not_odd, Int.even_iff_not_odd]
-    tauto
+  rw [negOnePow_even _ h₂, Int.even_sub, negOnePow_eq_one_iff]
+  tauto
+  rw [← Int.odd_iff_not_even] at h₂
+  rw [negOnePow_odd _ h₂, Int.even_sub, negOnePow_eq_neg_one_iff,
+    Int.even_iff_not_odd, Int.even_iff_not_odd]
+  tauto
 
 @[simp]
 lemma negOnePow_mul_self (n : ℤ) : (n * n).negOnePow = n.negOnePow := by
@@ -104,9 +104,9 @@ lemma negOnePow_mul_self (n : ℤ) : (n * n).negOnePow = n.negOnePow := by
 
 lemma coe_negOnePow (K : Type*) (n : ℤ) [Field K] : n.negOnePow = (-1 : K) ^ n := by
   rcases even_or_odd' n with ⟨k, rfl | rfl⟩
-  · rw [zpow_mul, zpow_ofNat]
-    simp
-  · rw [zpow_add_one₀ (by norm_num), zpow_mul, zpow_ofNat]
-    simp
+  rw [zpow_mul, zpow_ofNat]
+  simp
+  rw [zpow_add_one₀ (by norm_num), zpow_mul, zpow_ofNat]
+  simp
 
 end Int

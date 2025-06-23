@@ -190,10 +190,10 @@ lemma pow_mul_mem_factoredNumbers {s : Finset ℕ} {p n : ℕ} (hp : p.Prime) (e
   have hp' := pow_ne_zero e hp.ne_zero
   refine ⟨mul_ne_zero hp' hn.1, fun q hq ↦ ?_⟩
   rcases (mem_primeFactorsList_mul hp' hn.1).mp hq with H | H
-  · rw [mem_primeFactorsList hp'] at H
-    rw [(prime_dvd_prime_iff_eq H.1 hp).mp <| H.1.dvd_of_dvd_pow H.2]
-    exact Finset.mem_insert_self p s
-  · exact Finset.mem_insert_of_mem <| hn.2 _ H
+  rw [mem_primeFactorsList hp'] at H
+  rw [(prime_dvd_prime_iff_eq H.1 hp).mp <| H.1.dvd_of_dvd_pow H.2]
+  exact Finset.mem_insert_self p s
+  exact Finset.mem_insert_of_mem <| hn.2 _ H
 
 /-- If `p ∉ s` is a prime and `n` is `s`-factored, then `p` and `n` are coprime. -/
 lemma Prime.factoredNumbers_coprime {s : Finset ℕ} {p n : ℕ} (hp : p.Prime) (hs : p ∉ s)
@@ -375,9 +375,9 @@ lemma pow_mul_mem_smoothNumbers {p n : ℕ} (hp : p ≠ 0) (e : ℕ) (hn : n ∈
   have hp' := pow_ne_zero e hp
   refine ⟨mul_ne_zero hp' hn.1, fun q hq ↦ ?_⟩
   rcases (mem_primeFactorsList_mul hp' hn.1).mp hq with H | H
-  · rw [mem_primeFactorsList hp'] at H
-    exact lt_succ.mpr <| le_of_dvd hp.bot_lt <| H.1.dvd_of_dvd_pow H.2
-  · exact (hn.2 q H).trans <| lt_succ_self p
+  rw [mem_primeFactorsList hp'] at H
+  exact lt_succ.mpr <| le_of_dvd hp.bot_lt <| H.1.dvd_of_dvd_pow H.2
+  exact (hn.2 q H).trans <| lt_succ_self p
 
 /-- If `p` is a prime and `n` is `p`-smooth, then `p` and `n` are coprime. -/
 lemma Prime.smoothNumbers_coprime {p n : ℕ} (hp : p.Prime) (hn : n ∈ smoothNumbers p) :
@@ -451,10 +451,10 @@ lemma eq_prod_primes_mul_sq_of_mem_smoothNumbers {n k : ℕ} (h : n ∈ smoothNu
   obtain ⟨l, m, H₁, H₂⟩ := sq_mul_squarefree n
   have hl : l ∈ smoothNumbers k := mem_smoothNumbers_of_dvd h (Dvd.intro_left (m ^ 2) H₁)
   refine ⟨l.primeFactorsList.toFinset, ?_,  m, ?_⟩
-  · simp only [toFinset_factors, Finset.mem_powerset]
-    refine fun p hp ↦ mem_primesBelow.mpr ⟨?_, (mem_primeFactors.mp hp).1⟩
-    rw [mem_primeFactors] at hp
-    exact mem_smoothNumbers'.mp hl p hp.1 hp.2.1
+  simp only [toFinset_factors, Finset.mem_powerset]
+  refine fun p hp ↦ mem_primesBelow.mpr ⟨?_, (mem_primeFactors.mp hp).1⟩
+  rw [mem_primeFactors] at hp
+  exact mem_smoothNumbers'.mp hl p hp.1 hp.2.1
   rw [← H₁]
   congr
   simp only [toFinset_factors]
@@ -471,14 +471,14 @@ lemma smoothNumbersUpTo_subset_image (N k : ℕ) :
   simp only [id_eq, Finset.mem_range, zero_lt_succ, not_true_eq_false, Finset.mem_image,
     Finset.mem_product, Finset.mem_powerset, Finset.mem_erase, Prod.exists]
   refine ⟨s, m, ⟨Finset.mem_powerset.mp hs, ?_, ?_⟩, hm.symm⟩
-  · have := hm ▸ ne_zero_of_mem_smoothNumbers hn₂
-    simp only [ne_eq, _root_.mul_eq_zero, sq_eq_zero_iff, not_or] at this
-    exact this.1
-  · rw [lt_succ, le_sqrt']
-    refine LE.le.trans ?_ (hm ▸ hn₁)
-    nth_rw 1 [← mul_one (m ^ 2)]
-    exact mul_le_mul_left' (Finset.one_le_prod' fun p hp ↦
-      (prime_of_mem_primesBelow <| Finset.mem_powerset.mp hs hp).one_lt.le) _
+  have := hm ▸ ne_zero_of_mem_smoothNumbers hn₂
+  simp only [ne_eq, _root_.mul_eq_zero, sq_eq_zero_iff, not_or] at this
+  exact this.1
+  rw [lt_succ, le_sqrt']
+  refine LE.le.trans ?_ (hm ▸ hn₁)
+  nth_rw 1 [← mul_one (m ^ 2)]
+  exact mul_le_mul_left' (Finset.one_le_prod' fun p hp ↦
+    (prime_of_mem_primesBelow <| Finset.mem_powerset.mp hs hp).one_lt.le) _
 
 /-- The cardinality of the set of `k`-smooth numbers `≤ N` is bounded by `2^π(k-1) * √N`. -/
 lemma smoothNumbersUpTo_card_le (N k : ℕ) :
@@ -506,10 +506,10 @@ lemma roughNumbersUpTo_eq_biUnion (N k) :
   have H₂ : m ≠ 0 → p ∣ m → ¬ m < p :=
     fun h₁ h₂ ↦ not_lt.mpr <| le_of_dvd (Nat.pos_of_ne_zero h₁) h₂
   constructor
-  · rintro ⟨h₁, h₂, _, h₄, h₅, h₆⟩
-    exact ⟨⟨⟨H₁ h₂ h₅ h₁, h₄⟩, fun h _ ↦ h₆ h⟩, h₁, h₂, h₅⟩
-  · rintro ⟨⟨⟨_, h₂⟩, h₃⟩, h₄, h₅, h₆⟩
-    exact ⟨h₄, h₅, H₂ h₅ h₆, h₂, h₆, fun h ↦ h₃ h h₂⟩
+  rintro ⟨h₁, h₂, _, h₄, h₅, h₆⟩
+  exact ⟨⟨⟨H₁ h₂ h₅ h₁, h₄⟩, fun h _ ↦ h₆ h⟩, h₁, h₂, h₅⟩
+  rintro ⟨⟨⟨_, h₂⟩, h₃⟩, h₄, h₅, h₆⟩
+  exact ⟨h₄, h₅, H₂ h₅ h₆, h₂, h₆, fun h ↦ h₃ h h₂⟩
 
 /-- The cardinality of the set of `k`-rough numbers `≤ N` is bounded by the sum of `⌊N/p⌋`
 over the primes `k ≤ p ≤ N`. -/

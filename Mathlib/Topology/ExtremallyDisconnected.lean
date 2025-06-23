@@ -107,8 +107,8 @@ protected theorem CompactT2.Projective.extremallyDisconnected [CompactSpace X] [
   have f_sur : Surjective f
   intro x
   by_cases hx : x ∈ U
-  · exact ⟨⟨(x, false), Or.inr ⟨subset_closure hx, mem_singleton _⟩⟩, rfl⟩
-  · exact ⟨⟨(x, true), Or.inl ⟨hx, mem_singleton _⟩⟩, rfl⟩
+  exact ⟨⟨(x, false), Or.inr ⟨subset_closure hx, mem_singleton _⟩⟩, rfl⟩
+  exact ⟨⟨(x, true), Or.inl ⟨hx, mem_singleton _⟩⟩, rfl⟩
   haveI : CompactSpace Z := isCompact_iff_compactSpace.mp hZ.isCompact
   obtain ⟨g, hg, g_sec⟩ := h continuous_id f_cont f_sur
   let φ := Subtype.val ∘ g
@@ -117,17 +117,17 @@ protected theorem CompactT2.Projective.extremallyDisconnected [CompactSpace X] [
   suffices closure U = φ ⁻¹' Z₂ by
     rw [this, preimage_comp, ← isClosed_compl_iff, ← preimage_compl,
       ← preimage_subtype_coe_eq_compl Subset.rfl]
-    · exact hZ₁.preimage hφ
-    · rw [hZ₁₂.inter_eq, inter_empty]
+    exact hZ₁.preimage hφ
+    rw [hZ₁₂.inter_eq, inter_empty]
   refine (closure_minimal ?_ <| hZ₂.preimage hφ).antisymm fun x hx => ?_
-  · intro x hx
-    have : φ x ∈ Z₁ ∪ Z₂ := (g x).2
-    -- Porting note: Originally `simpa [hx, hφ₁] using this`
-    cases' this with hφ hφ
-    · exact ((hφ₁ x ▸ hφ.1) hx).elim
-    · exact hφ
-  · rw [← hφ₁ x]
-    exact hx.1
+  intro x hx
+  have : φ x ∈ Z₁ ∪ Z₂ := (g x).2
+  -- Porting note: Originally `simpa [hx, hφ₁] using this`
+  cases' this with hφ hφ
+  exact ((hφ₁ x ▸ hφ.1) hx).elim
+  exact hφ
+  rw [← hφ₁ x]
+  exact hx.1
 
 end
 
@@ -159,18 +159,18 @@ lemma exists_compact_surjective_zorn_subset [T1Space A] [CompactSpace D] {π : D
     fun c hc _ h => mem_iInter.mp h ⟨c, hc⟩⟩
   -- prove intersection of chain is mapped onto $A$
   by_cases hC : Nonempty C
-  · refine eq_univ_of_forall fun a => inter_nonempty_iff_exists_left.mp ?_
-    -- apply Cantor's intersection theorem
-    refine iInter_inter (ι := C) (π ⁻¹' {a}) _ ▸
-      IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed _
-      ?_ (fun c => ?_) (fun c => IsClosed.isCompact ?_) (fun c => ?_)
-    · replace C_chain : IsChain (· ⊇ ·) C := C_chain.symm
-      have : ∀ s t : Set D, s ⊇ t → _ ⊇ _ := fun _ _ => inter_subset_inter_left <| π ⁻¹' {a}
-      exact (directedOn_iff_directed.mp C_chain.directedOn).mono_comp (· ⊇ ·) this
-    · rw [← image_inter_nonempty_iff, (C_sub c.mem).right, univ_inter]
-      exact singleton_nonempty a
-    all_goals exact (C_sub c.mem).left.inter <| (T1Space.t1 a).preimage π_cont
-  · rw [@iInter_of_empty _ _ <| not_nonempty_iff.mp hC, image_univ_of_surjective π_surj]
+  refine eq_univ_of_forall fun a => inter_nonempty_iff_exists_left.mp ?_
+  -- apply Cantor's intersection theorem
+  refine iInter_inter (ι := C) (π ⁻¹' {a}) _ ▸
+    IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed _
+    ?_ (fun c => ?_) (fun c => IsClosed.isCompact ?_) (fun c => ?_)
+  replace C_chain : IsChain (· ⊇ ·) C := C_chain.symm
+  have : ∀ s t : Set D, s ⊇ t → _ ⊇ _ := fun _ _ => inter_subset_inter_left <| π ⁻¹' {a}
+  exact (directedOn_iff_directed.mp C_chain.directedOn).mono_comp (· ⊇ ·) this
+  rw [← image_inter_nonempty_iff, (C_sub c.mem).right, univ_inter]
+  exact singleton_nonempty a
+  all_goals exact (C_sub c.mem).left.inter <| (T1Space.t1 a).preimage π_cont
+  rw [@iInter_of_empty _ _ <| not_nonempty_iff.mp hC, image_univ_of_surjective π_surj]
 
 /-- Lemma 2.1 in [Gleason, *Projective topological spaces*][gleason1958]:
 if $\rho$ is a continuous surjection from a topological space $E$ to a topological space $A$
@@ -181,24 +181,24 @@ lemma image_subset_closure_compl_image_compl_of_isOpen {ρ : E → A} (ρ_cont :
     {G : Set E} (hG : IsOpen G) : ρ '' G ⊆ closure ((ρ '' Gᶜ)ᶜ) := by
   -- suffices to prove for nonempty $G$
   by_cases G_empty : G = ∅
-  · simpa only [G_empty, image_empty] using empty_subset _
-  · -- let $a \in \rho(G)$
-    intro a ha
-    rw [mem_closure_iff]
-    -- let $N$ be a neighbourhood of $a$
-    intro N N_open hN
-    -- get $x \in A$ from nonempty open $G \cap \rho^{-1}(N)$
-    rcases (G.mem_image ρ a).mp ha with ⟨e, he, rfl⟩
-    have nonempty : (G ∩ ρ⁻¹' N).Nonempty := ⟨e, mem_inter he <| mem_preimage.mpr hN⟩
-    have is_open : IsOpen <| G ∩ ρ⁻¹' N := hG.inter <| N_open.preimage ρ_cont
-    have ne_univ : ρ '' (G ∩ ρ⁻¹' N)ᶜ ≠ univ :=
-      zorn_subset _ (compl_ne_univ.mpr nonempty) is_open.isClosed_compl
-    rcases nonempty_compl.mpr ne_univ with ⟨x, hx⟩
-    -- prove $x \in N \cap (A \setminus \rho(E \setminus G))$
-    have hx' : x ∈ (ρ '' Gᶜ)ᶜ := fun h => hx <| image_subset ρ (by simp) h
-    rcases ρ_surj x with ⟨y, rfl⟩
-    have hy : y ∈ G ∩ ρ⁻¹' N := by simpa using mt (mem_image_of_mem ρ) <| mem_compl hx
-    exact ⟨ρ y, mem_inter (mem_preimage.mp <| mem_of_mem_inter_right hy) hx'⟩
+  simpa only [G_empty, image_empty] using empty_subset _
+  -- let $a \in \rho(G)$
+  intro a ha
+  rw [mem_closure_iff]
+  -- let $N$ be a neighbourhood of $a$
+  intro N N_open hN
+  -- get $x \in A$ from nonempty open $G \cap \rho^{-1}(N)$
+  rcases (G.mem_image ρ a).mp ha with ⟨e, he, rfl⟩
+  have nonempty : (G ∩ ρ⁻¹' N).Nonempty := ⟨e, mem_inter he <| mem_preimage.mpr hN⟩
+  have is_open : IsOpen <| G ∩ ρ⁻¹' N := hG.inter <| N_open.preimage ρ_cont
+  have ne_univ : ρ '' (G ∩ ρ⁻¹' N)ᶜ ≠ univ :=
+    zorn_subset _ (compl_ne_univ.mpr nonempty) is_open.isClosed_compl
+  rcases nonempty_compl.mpr ne_univ with ⟨x, hx⟩
+  -- prove $x \in N \cap (A \setminus \rho(E \setminus G))$
+  have hx' : x ∈ (ρ '' Gᶜ)ᶜ := fun h => hx <| image_subset ρ (by simp) h
+  rcases ρ_surj x with ⟨y, rfl⟩
+  have hy : y ∈ G ∩ ρ⁻¹' N := by simpa using mt (mem_image_of_mem ρ) <| mem_compl hx
+  exact ⟨ρ y, mem_inter (mem_preimage.mp <| mem_of_mem_inter_right hy) hx'⟩
 
 /-- Lemma 2.2 in [Gleason, *Projective topological spaces*][gleason1958]:
 in an extremally disconnected space, if $U_1$ and $U_2$ are disjoint open sets,
@@ -299,13 +299,13 @@ instance instExtremallyDisconnected {ι : Type*} {π : ι → Type*} [∀ i, Top
     rw [h]
     exact h₀ _ (hs i)
   apply IsOpenMap.preimage_closure_eq_closure_preimage
-  · intro U _
-    rw [isOpen_sigma_iff]
-    intro j
-    by_cases ij : i = j
-    · rwa [← ij, sigma_mk_preimage_image_eq_self]
-    · rw [sigma_mk_preimage_image' ij]
-      exact isOpen_empty
-  · continuity
+  intro U _
+  rw [isOpen_sigma_iff]
+  intro j
+  by_cases ij : i = j
+  rwa [← ij, sigma_mk_preimage_image_eq_self]
+  rw [sigma_mk_preimage_image' ij]
+  exact isOpen_empty
+  continuity
 
 end

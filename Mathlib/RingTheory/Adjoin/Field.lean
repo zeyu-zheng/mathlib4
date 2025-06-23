@@ -56,8 +56,8 @@ theorem Polynomial.lift_of_splits {F K L : Type*} [Field F] [Field K] [Field L] 
     [Algebra F L] (s : Finset K) : (∀ x ∈ s, IsIntegral F x ∧
       Splits (algebraMap F L) (minpoly F x)) → Nonempty (Algebra.adjoin F (s : Set K) →ₐ[F] L) := by
     refine Finset.induction_on s (fun _ ↦ ?_) fun a s _ ih H ↦ ?_
-    · rw [coe_empty, Algebra.adjoin_empty]
-      exact ⟨(Algebra.ofId F L).comp (Algebra.botEquiv F K)⟩
+    rw [coe_empty, Algebra.adjoin_empty]
+    exact ⟨(Algebra.ofId F L).comp (Algebra.botEquiv F K)⟩
     rw [forall_mem_insert] at H
     rcases H with ⟨⟨H1, H2⟩, H3⟩
     cases' ih H3 with f
@@ -72,9 +72,9 @@ theorem Polynomial.lift_of_splits {F K L : Type*} [Field F] [Field K] [Field L] 
     have H6 : (minpoly Ks a).Splits (algebraMap Ks L)
     refine splits_of_splits_of_dvd _ ((minpoly.monic H1).map (algebraMap F Ks)).ne_zero
       ((splits_map_iff _ _).2 ?_) (minpoly.dvd _ _ ?_)
-    · rw [← IsScalarTower.algebraMap_eq]
-      exact H2
-    · rw [Polynomial.aeval_map_algebraMap, minpoly.aeval]
+    rw [← IsScalarTower.algebraMap_eq]
+    exact H2
+    rw [Polynomial.aeval_map_algebraMap, minpoly.aeval]
     obtain ⟨y, hy⟩ := Polynomial.exists_root_of_splits _ H6 (minpoly.degree_pos H5).ne'
     exact ⟨Subalgebra.ofRestrictScalars F _ <| Algebra.adjoin.liftSingleton Ks a y hy⟩
 

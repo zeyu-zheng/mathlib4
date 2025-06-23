@@ -106,10 +106,10 @@ protected theorem of_dvd (d : m ∣ n) (h : a ≡ b [ZMOD n]) : a ≡ b [ZMOD m]
 
 protected theorem mul_left' (h : a ≡ b [ZMOD n]) : c * a ≡ c * b [ZMOD c * n] := by
   obtain hc | rfl | hc := lt_trichotomy c 0
-  · rw [← neg_modEq_neg, ← modEq_neg, ← neg_mul, ← neg_mul, ← neg_mul]
-    simp only [ModEq, mul_emod_mul_of_pos _ _ (neg_pos.2 hc), h.eq]
-  · simp only [zero_mul, ModEq.rfl]
-  · simp only [ModEq, mul_emod_mul_of_pos _ _ hc, h.eq]
+  rw [← neg_modEq_neg, ← modEq_neg, ← neg_mul, ← neg_mul, ← neg_mul]
+  simp only [ModEq, mul_emod_mul_of_pos _ _ (neg_pos.2 hc), h.eq]
+  simp only [zero_mul, ModEq.rfl]
+  simp only [ModEq, mul_emod_mul_of_pos _ _ hc, h.eq]
 
 protected theorem mul_right' (h : a ≡ b [ZMOD n]) : a * c ≡ b * c [ZMOD n * c] := by
   rw [mul_comm a, mul_comm b, mul_comm n]; exact h.mul_left'
@@ -184,10 +184,10 @@ theorem cancel_right_div_gcd (hm : 0 < m) (h : a * c ≡ b * c [ZMOD m]) :
   rw [modEq_iff_dvd] at h ⊢
   -- Porting note: removed `show` due to leanprover-community/mathlib4#3305
   refine Int.dvd_of_dvd_mul_right_of_gcd_one (?_ : m / d ∣ c / d * (b - a)) ?_
-  · rw [mul_comm, ← Int.mul_ediv_assoc (b - a) gcd_dvd_right, sub_mul]
-    exact Int.ediv_dvd_ediv gcd_dvd_left h
-  · rw [gcd_div gcd_dvd_left gcd_dvd_right, natAbs_ofNat,
-      Nat.div_self (gcd_pos_of_ne_zero_left c hm.ne')]
+  rw [mul_comm, ← Int.mul_ediv_assoc (b - a) gcd_dvd_right, sub_mul]
+  exact Int.ediv_dvd_ediv gcd_dvd_left h
+  rw [gcd_div gcd_dvd_left gcd_dvd_right, natAbs_ofNat,
+    Nat.div_self (gcd_pos_of_ne_zero_left c hm.ne')]
 
 /-- To cancel a common factor `c` from a `ModEq` we must divide the modulus `m` by `gcd m c`. -/
 theorem cancel_left_div_gcd (hm : 0 < m) (h : c * a ≡ c * b [ZMOD m]) : a ≡ b [ZMOD m / gcd m c] :=

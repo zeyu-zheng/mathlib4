@@ -175,8 +175,8 @@ theorem integrableOn_singleton_iff {x : α} [MeasurableSingletonClass α] :
 theorem integrableOn_finite_biUnion {s : Set β} (hs : s.Finite) {t : β → Set α} :
     IntegrableOn f (⋃ i ∈ s, t i) μ ↔ ∀ i ∈ s, IntegrableOn f (t i) μ := by
   refine hs.induction_on ?_ ?_
-  · simp
-  · intro a s _ _ hf; simp [hf, or_imp, forall_and]
+  simp
+  intro a s _ _ hf; simp [hf, or_imp, forall_and]
 
 @[simp]
 theorem integrableOn_finset_iUnion {s : Finset β} {t : β → Set α} :
@@ -278,16 +278,16 @@ theorem IntegrableOn.of_ae_diff_eq_zero (hf : IntegrableOn f s μ) (ht : NullMea
   let v := toMeasurable μ u
   have A : IntegrableOn f v μ
   rw [IntegrableOn, hu.restrict_toMeasurable]
-  · exact hu
-  · intro x hx; exact hx.2
+  exact hu
+  intro x hx; exact hx.2
   have B : IntegrableOn f (t \ v) μ
   apply integrableOn_zero.congr
   filter_upwards [ae_restrict_of_ae h't,
     ae_restrict_mem₀ (ht.diff (measurableSet_toMeasurable μ u).nullMeasurableSet)] with x hxt hx
   by_cases h'x : x ∈ s
-  · by_contra H
-    exact hx.2 (subset_toMeasurable μ u ⟨h'x, Ne.symm H⟩)
-  · exact (hxt ⟨hx.1, h'x⟩).symm
+  by_contra H
+  exact hx.2 (subset_toMeasurable μ u ⟨h'x, Ne.symm H⟩)
+  exact (hxt ⟨hx.1, h'x⟩).symm
   apply (A.union B).mono_set _
   rw [union_diff_self]
   exact subset_union_right
@@ -352,16 +352,16 @@ theorem _root_.MeasurableEmbedding.integrableAtFilter_map_iff [MeasurableSpace �
     IntegrableAtFilter f (l.map e) (μ.map e) ↔ IntegrableAtFilter (f ∘ e) l μ := by
   simp_rw [IntegrableAtFilter, he.integrableOn_map_iff]
   constructor <;> rintro ⟨s, hs⟩
-  · exact ⟨_, hs⟩
-  · exact ⟨e '' s, by rwa [mem_map, he.injective.preimage_image]⟩
+  exact ⟨_, hs⟩
+  exact ⟨e '' s, by rwa [mem_map, he.injective.preimage_image]⟩
 
 theorem _root_.MeasurableEmbedding.integrableAtFilter_iff_comap [MeasurableSpace β] {e : α → β}
     (he : MeasurableEmbedding e) {f : β → E} {μ : Measure β} :
     IntegrableAtFilter f (l.map e) μ ↔ IntegrableAtFilter (f ∘ e) l (μ.comap e) := by
   simp_rw [← he.integrableAtFilter_map_iff, IntegrableAtFilter, he.map_comap]
   constructor <;> rintro ⟨s, hs, int⟩
-  · exact ⟨s, hs, int.mono_measure <| μ.restrict_le_self⟩
-  · exact ⟨_, inter_mem hs range_mem_map, int.inter_of_restrict⟩
+  exact ⟨s, hs, int.mono_measure <| μ.restrict_le_self⟩
+  exact ⟨_, inter_mem hs range_mem_map, int.inter_of_restrict⟩
 
 theorem Integrable.integrableAtFilter (h : Integrable f μ) (l : Filter α) :
     IntegrableAtFilter f l μ :=
@@ -432,8 +432,8 @@ theorem integrableAtFilter_top : IntegrableAtFilter f ⊤ μ ↔ Integrable f μ
 theorem IntegrableAtFilter.sup_iff {l l' : Filter α} :
     IntegrableAtFilter f (l ⊔ l') μ ↔ IntegrableAtFilter f l μ ∧ IntegrableAtFilter f l' μ := by
   constructor
-  · exact fun h => ⟨h.filter_mono le_sup_left, h.filter_mono le_sup_right⟩
-  · exact fun ⟨⟨s, hsl, hs⟩, ⟨t, htl, ht⟩⟩ ↦ ⟨s ∪ t, union_mem_sup hsl htl, hs.union ht⟩
+  exact fun h => ⟨h.filter_mono le_sup_left, h.filter_mono le_sup_right⟩
+  exact fun ⟨⟨s, hsl, hs⟩, ⟨t, htl, ht⟩⟩ ↦ ⟨s ∪ t, union_mem_sup hsl htl, hs.union ht⟩
 
 /-- If `μ` is a measure finite at filter `l` and `f` is a function such that its norm is bounded
 above at `l`, then `f` is integrable at `l`. -/
@@ -474,8 +474,8 @@ theorem integrable_add_of_disjoint {f g : α → E} (h : Disjoint (support f) (s
     (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
     Integrable (f + g) μ ↔ Integrable f μ ∧ Integrable g μ := by
   refine ⟨fun hfg => ⟨?_, ?_⟩, fun h => h.1.add h.2⟩
-  · rw [← indicator_add_eq_left h]; exact hfg.indicator hf.measurableSet_support
-  · rw [← indicator_add_eq_right h]; exact hfg.indicator hg.measurableSet_support
+  rw [← indicator_add_eq_left h]; exact hfg.indicator hf.measurableSet_support
+  rw [← indicator_add_eq_right h]; exact hfg.indicator hg.measurableSet_support
 
 /-- If a function converges along a filter to a limit `a`, is integrable along this filter, and
 all elements of the filter have infinite measure, then the limit has to vanish. -/
@@ -541,9 +541,9 @@ theorem ContinuousOn.aestronglyMeasurable [TopologicalSpace α] [TopologicalSpac
       ⟨hf.aemeasurable hs, f '' s, ?_,
         mem_of_superset (self_mem_ae_restrict hs) (subset_preimage_image _ _)⟩
   cases h.out
-  · rw [image_eq_range]
-    exact isSeparable_range <| continuousOn_iff_continuous_restrict.1 hf
-  · exact .of_separableSpace _
+  rw [image_eq_range]
+  exact isSeparable_range <| continuousOn_iff_continuous_restrict.1 hf
+  exact .of_separableSpace _
 
 /-- A function which is continuous on a compact set `s` is almost everywhere strongly measurable
 with respect to `μ.restrict s`. -/
@@ -555,8 +555,8 @@ theorem ContinuousOn.aestronglyMeasurable_of_isCompact [TopologicalSpace α] [Op
   borelize β
   rw [aestronglyMeasurable_iff_aemeasurable_separable]
   refine ⟨hf.aemeasurable h's, f '' s, ?_, ?_⟩
-  · exact (hs.image_of_continuousOn hf).isSeparable
-  · exact mem_of_superset (self_mem_ae_restrict h's) (subset_preimage_image _ _)
+  exact (hs.image_of_continuousOn hf).isSeparable
+  exact mem_of_superset (self_mem_ae_restrict h's) (subset_preimage_image _ _)
 
 theorem ContinuousOn.integrableAt_nhdsWithin_of_isSeparable [TopologicalSpace α]
     [PseudoMetrizableSpace α] [OpensMeasurableSpace α] {μ : Measure α} [IsLocallyFiniteMeasure μ]
@@ -622,34 +622,34 @@ variable [PartialOrder α] [MeasurableSingletonClass α] {f : α → E} {μ : Me
 theorem integrableOn_Icc_iff_integrableOn_Ioc' (ha : μ {a} ≠ ∞) :
     IntegrableOn f (Icc a b) μ ↔ IntegrableOn f (Ioc a b) μ := by
   by_cases hab : a ≤ b
-  · rw [← Ioc_union_left hab, integrableOn_union,
-      eq_true (integrableOn_singleton_iff.mpr <| Or.inr ha.lt_top), and_true_iff]
-  · rw [Icc_eq_empty hab, Ioc_eq_empty]
-    contrapose! hab
-    exact hab.le
+  rw [← Ioc_union_left hab, integrableOn_union,
+    eq_true (integrableOn_singleton_iff.mpr <| Or.inr ha.lt_top), and_true_iff]
+  rw [Icc_eq_empty hab, Ioc_eq_empty]
+  contrapose! hab
+  exact hab.le
 
 theorem integrableOn_Icc_iff_integrableOn_Ico' (hb : μ {b} ≠ ∞) :
     IntegrableOn f (Icc a b) μ ↔ IntegrableOn f (Ico a b) μ := by
   by_cases hab : a ≤ b
-  · rw [← Ico_union_right hab, integrableOn_union,
-      eq_true (integrableOn_singleton_iff.mpr <| Or.inr hb.lt_top), and_true_iff]
-  · rw [Icc_eq_empty hab, Ico_eq_empty]
-    contrapose! hab
-    exact hab.le
+  rw [← Ico_union_right hab, integrableOn_union,
+    eq_true (integrableOn_singleton_iff.mpr <| Or.inr hb.lt_top), and_true_iff]
+  rw [Icc_eq_empty hab, Ico_eq_empty]
+  contrapose! hab
+  exact hab.le
 
 theorem integrableOn_Ico_iff_integrableOn_Ioo' (ha : μ {a} ≠ ∞) :
     IntegrableOn f (Ico a b) μ ↔ IntegrableOn f (Ioo a b) μ := by
   by_cases hab : a < b
-  · rw [← Ioo_union_left hab, integrableOn_union,
-      eq_true (integrableOn_singleton_iff.mpr <| Or.inr ha.lt_top), and_true_iff]
-  · rw [Ioo_eq_empty hab, Ico_eq_empty hab]
+  rw [← Ioo_union_left hab, integrableOn_union,
+    eq_true (integrableOn_singleton_iff.mpr <| Or.inr ha.lt_top), and_true_iff]
+  rw [Ioo_eq_empty hab, Ico_eq_empty hab]
 
 theorem integrableOn_Ioc_iff_integrableOn_Ioo' (hb : μ {b} ≠ ∞) :
     IntegrableOn f (Ioc a b) μ ↔ IntegrableOn f (Ioo a b) μ := by
   by_cases hab : a < b
-  · rw [← Ioo_union_right hab, integrableOn_union,
-      eq_true (integrableOn_singleton_iff.mpr <| Or.inr hb.lt_top), and_true_iff]
-  · rw [Ioo_eq_empty hab, Ioc_eq_empty hab]
+  rw [← Ioo_union_right hab, integrableOn_union,
+    eq_true (integrableOn_singleton_iff.mpr <| Or.inr hb.lt_top), and_true_iff]
+  rw [Ioo_eq_empty hab, Ioc_eq_empty hab]
 
 theorem integrableOn_Icc_iff_integrableOn_Ioo' (ha : μ {a} ≠ ∞) (hb : μ {b} ≠ ∞) :
     IntegrableOn f (Icc a b) μ ↔ IntegrableOn f (Ioo a b) μ := by

@@ -79,10 +79,10 @@ lemma LocallyLinear.map (f : α ↪ β) (hG : G.LocallyLinear) : (G.map f).Local
 @[simp] lemma locallyLinear_comap {G : SimpleGraph β} {e : α ≃ β} :
     (G.comap e).LocallyLinear ↔ G.LocallyLinear := by
   refine ⟨fun h ↦ ?_, ?_⟩
-  · rw [← comap_map_eq e.symm.toEmbedding G, comap_symm, map_symm]
-    exact h.map _
-  · rw [← Equiv.coe_toEmbedding, ← map_symm]
-    exact LocallyLinear.map _
+  rw [← comap_map_eq e.symm.toEmbedding G, comap_symm, map_symm]
+  exact h.map _
+  rw [← Equiv.coe_toEmbedding, ← map_symm]
+  exact LocallyLinear.map _
 
 open Classical in
 lemma edgeDisjointTriangles_iff_mem_sym2_subsingleton :
@@ -95,38 +95,38 @@ lemma edgeDisjointTriangles_iff_mem_sym2_subsingleton :
       Set.mem_inter_iff, Set.mem_sep_iff, mem_cliqueSet_iff, Set.mem_setOf_eq,
       and_and_and_comm (b := _ ∈ _), and_self, is3Clique_iff]
     constructor
-    · rintro ⟨⟨c, d, e, hcd, hce, hde, rfl⟩, hab⟩
-      simp only [mem_insert, mem_singleton] at hab
-      obtain ⟨rfl | rfl | rfl, rfl | rfl | rfl⟩ := hab
-      any_goals
-        simp only [*, adj_comm, true_and, Ne, eq_self_iff_true, not_true] at *
-      any_goals
-        first
-        | exact ⟨c, by aesop⟩
-        | exact ⟨d, by aesop⟩
-        | exact ⟨e, by aesop⟩
-        | simp only [*, adj_comm, true_and, Ne, eq_self_iff_true, not_true] at *
-          exact ⟨c, by aesop⟩
-        | simp only [*, adj_comm, true_and, Ne, eq_self_iff_true, not_true] at *
-          exact ⟨d, by aesop⟩
-        | simp only [*, adj_comm, true_and, Ne, eq_self_iff_true, not_true] at *
-          exact ⟨e, by aesop⟩
-    · rintro ⟨hab, c, hac, hbc, rfl⟩
-      refine ⟨⟨a, b, c, ?_⟩, ?_⟩ <;> simp [*]
+    rintro ⟨⟨c, d, e, hcd, hce, hde, rfl⟩, hab⟩
+    simp only [mem_insert, mem_singleton] at hab
+    obtain ⟨rfl | rfl | rfl, rfl | rfl | rfl⟩ := hab
+    any_goals
+      simp only [*, adj_comm, true_and, Ne, eq_self_iff_true, not_true] at *
+    any_goals
+      first
+      | exact ⟨c, by aesop⟩
+      | exact ⟨d, by aesop⟩
+      | exact ⟨e, by aesop⟩
+      | simp only [*, adj_comm, true_and, Ne, eq_self_iff_true, not_true] at *
+        exact ⟨c, by aesop⟩
+      | simp only [*, adj_comm, true_and, Ne, eq_self_iff_true, not_true] at *
+        exact ⟨d, by aesop⟩
+      | simp only [*, adj_comm, true_and, Ne, eq_self_iff_true, not_true] at *
+        exact ⟨e, by aesop⟩
+    rintro ⟨hab, c, hac, hbc, rfl⟩
+    refine ⟨⟨a, b, c, ?_⟩, ?_⟩ <;> simp [*]
   constructor
-  · rw [Sym2.forall]
-    rintro hG a b hab
-    simp only [Sym2.isDiag_iff_proj_eq] at hab
-    rw [this _ _ (Sym2.mk_isDiag_iff.not.2 hab)]
-    rintro _ ⟨hab, c, hac, hbc, rfl⟩ _ ⟨-, d, had, hbd, rfl⟩
-    refine hG.eq ?_ ?_ (Set.Nontrivial.not_subsingleton ⟨a, ?_, b, ?_, hab.ne⟩) <;>
-      simp [is3Clique_triple_iff, *]
-  · simp only [EdgeDisjointTriangles, is3Clique_iff, Set.Pairwise, mem_cliqueSet_iff, Ne,
-      forall_exists_index, and_imp, ← Set.not_nontrivial_iff (s := _ ∩ _), not_imp_not,
-      Set.Nontrivial, Set.mem_inter_iff, mem_coe]
-    rintro hG _ a b c hab hac hbc rfl _ d e f hde hdf hef rfl g hg₁ hg₂ h hh₁ hh₂ hgh
-    refine hG (Sym2.mk_isDiag_iff.not.2 hgh) ⟨⟨a, b, c, ?_⟩, by simpa using And.intro hg₁ hh₁⟩
-      ⟨⟨d, e, f, ?_⟩, by simpa using And.intro hg₂ hh₂⟩ <;> simp [is3Clique_triple_iff, *]
+  rw [Sym2.forall]
+  rintro hG a b hab
+  simp only [Sym2.isDiag_iff_proj_eq] at hab
+  rw [this _ _ (Sym2.mk_isDiag_iff.not.2 hab)]
+  rintro _ ⟨hab, c, hac, hbc, rfl⟩ _ ⟨-, d, had, hbd, rfl⟩
+  refine hG.eq ?_ ?_ (Set.Nontrivial.not_subsingleton ⟨a, ?_, b, ?_, hab.ne⟩) <;>
+    simp [is3Clique_triple_iff, *]
+  simp only [EdgeDisjointTriangles, is3Clique_iff, Set.Pairwise, mem_cliqueSet_iff, Ne,
+    forall_exists_index, and_imp, ← Set.not_nontrivial_iff (s := _ ∩ _), not_imp_not,
+    Set.Nontrivial, Set.mem_inter_iff, mem_coe]
+  rintro hG _ a b c hab hac hbc rfl _ d e f hde hdf hef rfl g hg₁ hg₂ h hh₁ hh₂ hgh
+  refine hG (Sym2.mk_isDiag_iff.not.2 hgh) ⟨⟨a, b, c, ?_⟩, by simpa using And.intro hg₁ hh₁⟩
+    ⟨⟨d, e, f, ?_⟩, by simpa using And.intro hg₂ hh₂⟩ <;> simp [is3Clique_triple_iff, *]
 
 alias ⟨EdgeDisjointTriangles.mem_sym2_subsingleton, _⟩ :=
   edgeDisjointTriangles_iff_mem_sym2_subsingleton
@@ -143,25 +143,25 @@ lemma EdgeDisjointTriangles.card_edgeFinset_le (hG : G.EdgeDisjointTriangles) :
     3 * (G.cliqueFinset 3).card ≤ G.edgeFinset.card := by
   rw [mul_comm, ← mul_one G.edgeFinset.card]
   refine card_mul_le_card_mul (fun s e ↦ e ∈ s.sym2) ?_ (fun e he ↦ ?_)
-  · simp only [is3Clique_iff, mem_cliqueFinset_iff, mem_sym2_iff, forall_exists_index, and_imp]
-    rintro _ a b c hab hac hbc rfl
-    have : Finset.card ({s(a, b), s(a, c), s(b, c)} : Finset (Sym2 α)) = 3
-    refine card_eq_three.2 ⟨_, _, _, ?_, ?_, ?_, rfl⟩ <;> simp [hab.ne, hac.ne, hbc.ne]
-    rw [← this]
-    refine card_mono ?_
-    simp [insert_subset, *]
-  · simpa only [card_le_one, mem_bipartiteBelow, and_imp, Set.Subsingleton, Set.mem_setOf_eq,
-      mem_cliqueFinset_iff, mem_cliqueSet_iff]
-      using hG.mem_sym2_subsingleton (G.not_isDiag_of_mem_edgeSet $ mem_edgeFinset.1 he)
+  simp only [is3Clique_iff, mem_cliqueFinset_iff, mem_sym2_iff, forall_exists_index, and_imp]
+  rintro _ a b c hab hac hbc rfl
+  have : Finset.card ({s(a, b), s(a, c), s(b, c)} : Finset (Sym2 α)) = 3
+  refine card_eq_three.2 ⟨_, _, _, ?_, ?_, ?_, rfl⟩ <;> simp [hab.ne, hac.ne, hbc.ne]
+  rw [← this]
+  refine card_mono ?_
+  simp [insert_subset, *]
+  simpa only [card_le_one, mem_bipartiteBelow, and_imp, Set.Subsingleton, Set.mem_setOf_eq,
+    mem_cliqueFinset_iff, mem_cliqueSet_iff]
+    using hG.mem_sym2_subsingleton (G.not_isDiag_of_mem_edgeSet $ mem_edgeFinset.1 he)
 
 lemma LocallyLinear.card_edgeFinset (hG : G.LocallyLinear) :
     G.edgeFinset.card = 3 * (G.cliqueFinset 3).card := by
   refine hG.edgeDisjointTriangles.card_edgeFinset_le.antisymm' ?_
   rw [← mul_comm, ← mul_one (Finset.card _)]
   refine card_mul_le_card_mul (fun e s ↦ e ∈ s.sym2) ?_ ?_
-  · simpa [Sym2.forall, Nat.one_le_iff_ne_zero, -Finset.card_eq_zero, Finset.card_ne_zero,
-        Finset.Nonempty]
-      using hG.2
+  simpa [Sym2.forall, Nat.one_le_iff_ne_zero, -Finset.card_eq_zero, Finset.card_ne_zero,
+      Finset.Nonempty]
+    using hG.2
   simp only [mem_cliqueFinset_iff, is3Clique_iff, forall_exists_index, and_imp]
   rintro _ a b c hab hac hbc rfl
   calc
@@ -226,8 +226,8 @@ private lemma farFromTriangleFree_of_disjoint_triangles_aux {tris : Finset (Fins
   have i := pd ht₁ ht₂ (Subtype.val_injective.ne tne)
   rw [Sym2.eq_iff] at t
   obtain t | t := t
-  · exact hfne _ (i ⟨hfx ht₁, t.1.symm ▸ hfx ht₂⟩ ⟨hfy ht₁, t.2.symm ▸ hfy ht₂⟩)
-  · exact hfne _ (i ⟨hfx ht₁, t.1.symm ▸ hfy ht₂⟩ ⟨hfy ht₁, t.2.symm ▸ hfx ht₂⟩)
+  exact hfne _ (i ⟨hfx ht₁, t.1.symm ▸ hfx ht₂⟩ ⟨hfy ht₁, t.2.symm ▸ hfy ht₂⟩)
+  exact hfne _ (i ⟨hfx ht₁, t.1.symm ▸ hfy ht₂⟩ ⟨hfy ht₁, t.2.symm ▸ hfx ht₂⟩)
 
 /-- If there are `ε * (card α)^2` disjoint triangles, then the graph is `ε`-far from being
 triangle-free. -/

@@ -76,15 +76,15 @@ variable {R : Type*} [CommRing R]
 theorem det_vandermonde_id_eq_superFactorial (n : ℕ) :
     (Matrix.vandermonde (fun (i : Fin (n + 1)) ↦ (i : R))).det = Nat.superFactorial n := by
   induction' n with n hn
-  · simp [Matrix.det_vandermonde]
-  · rw [Nat.superFactorial, Matrix.det_vandermonde, Fin.prod_univ_succAbove _ 0]
-    push_cast
-    congr
-    · simp only [Fin.val_zero, Nat.cast_zero, sub_zero]
-      norm_cast
-      simp [Fin.prod_univ_eq_prod_range (fun i ↦ (↑i + 1)) (n + 1)]
-    · rw [Matrix.det_vandermonde] at hn
-      simp [hn]
+  simp [Matrix.det_vandermonde]
+  rw [Nat.superFactorial, Matrix.det_vandermonde, Fin.prod_univ_succAbove _ 0]
+  push_cast
+  congr
+  simp only [Fin.val_zero, Nat.cast_zero, sub_zero]
+  norm_cast
+  simp [Fin.prod_univ_eq_prod_range (fun i ↦ (↑i + 1)) (n + 1)]
+  rw [Matrix.det_vandermonde] at hn
+  simp [hn]
 
 theorem superFactorial_two_mul : ∀ n : ℕ,
     sf (2 * n) = (∏ i ∈ range n, (2 * i + 1) !) ^ 2 * 2 ^ n * n !
@@ -107,10 +107,10 @@ private theorem matrixOf_eval_descPochhammer_eq_mul_matrixOf_choose {n : ℕ} (v
     (∏ i : Fin n, Nat.factorial i) *
       (Matrix.of (fun (i j : Fin n) => (Nat.choose (v i) (j : ℕ) : ℤ))).det := by
   convert Matrix.det_mul_row (fun (i : Fin n) => ((Nat.factorial (i : ℕ)) : ℤ)) _
-  · rw [Matrix.of_apply, descPochhammer_eval_eq_descFactorial ℤ _ _]
-    congr
-    exact Nat.descFactorial_eq_factorial_mul_choose _ _
-  · rw [Nat.cast_prod]
+  rw [Matrix.of_apply, descPochhammer_eval_eq_descFactorial ℤ _ _]
+  congr
+  exact Nat.descFactorial_eq_factorial_mul_choose _ _
+  rw [Nat.cast_prod]
 
 theorem superFactorial_dvd_vandermonde_det {n : ℕ} (v : Fin (n + 1) → ℤ) :
     ↑(Nat.superFactorial n) ∣ (Matrix.vandermonde v).det := by

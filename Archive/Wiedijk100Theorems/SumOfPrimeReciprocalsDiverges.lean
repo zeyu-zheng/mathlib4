@@ -80,8 +80,8 @@ theorem sum_lt_half_of_not_tendsto
     simp only [sum_filter]
   have hf : ∀ n : ℕ, 0 ≤ ite (Nat.Prime n) (1 / (n : ℝ)) 0 := by
     intro n; split_ifs
-    · simp only [one_div, inv_nonneg, Nat.cast_nonneg]
-    · exact le_rfl
+    simp only [one_div, inv_nonneg, Nat.cast_nonneg]
+    exact le_rfl
   rw [h0, ← summable_iff_not_tendsto_nat_atTop_of_nonneg hf, summable_iff_vanishing] at h
   obtain ⟨s, h⟩ := h (Set.Ioo (-1) (1 / 2)) (isOpen_Ioo.mem_nhds (by norm_num))
   obtain ⟨k, hk⟩ := exists_nat_subset_range s
@@ -105,13 +105,13 @@ theorem range_sdiff_eq_biUnion {x k : ℕ} : range x \ M x k = U x k := by
   simp only [mem_biUnion, not_and, mem_sdiff, mem_filter, mem_range, U, M, P]
   push_neg
   constructor
-  · rintro ⟨hex, hexh⟩
-    obtain ⟨p, ⟨hpp, hpe1⟩, hpk⟩ := hexh hex
-    refine ⟨p, ?_, ⟨hex, hpe1⟩⟩
-    exact ⟨(Nat.le_of_dvd e.succ_pos hpe1).trans_lt (Nat.succ_lt_succ hex), hpk, hpp⟩
-  · rintro ⟨p, hpfilter, ⟨hex, hpe1⟩⟩
-    rw [imp_iff_right hex]
-    exact ⟨hex, ⟨p, ⟨hpfilter.2.2, hpe1⟩, hpfilter.2.1⟩⟩
+  rintro ⟨hex, hexh⟩
+  obtain ⟨p, ⟨hpp, hpe1⟩, hpk⟩ := hexh hex
+  refine ⟨p, ?_, ⟨hex, hpe1⟩⟩
+  exact ⟨(Nat.le_of_dvd e.succ_pos hpe1).trans_lt (Nat.succ_lt_succ hex), hpk, hpp⟩
+  rintro ⟨p, hpfilter, ⟨hex, hpe1⟩⟩
+  rw [imp_iff_right hex]
+  exact ⟨hex, ⟨p, ⟨hpfilter.2.2, hpe1⟩, hpfilter.2.1⟩⟩
 
 /--
 The number of `e < x` for which `e + 1` has a prime factor `p > k` is bounded by `x` times the sum
@@ -143,15 +143,15 @@ theorem card_le_two_pow {x k : ℕ} :
   simp only [f, K, M₁, M, mem_filter, mem_range, mem_powerset, mem_image, exists_prop] at hm ⊢
   obtain ⟨⟨-, hmp⟩, hms⟩ := hm
   use! (m + 1).primeFactorsList
-  · rwa [Multiset.coe_nodup, ← Nat.squarefree_iff_nodup_primeFactorsList m.succ_ne_zero]
+  rwa [Multiset.coe_nodup, ← Nat.squarefree_iff_nodup_primeFactorsList m.succ_ne_zero]
   refine ⟨fun p => ?_, ?_⟩
-  · suffices p ∈ (m + 1).primeFactorsList → ∃ a : ℕ, a < k ∧ a.succ = p by simpa
-    simp only [Nat.mem_primeFactorsList m.succ_ne_zero]
-    intro hp
-    exact
-      ⟨p.pred, (Nat.pred_lt (Nat.Prime.ne_zero hp.1)).trans_le ((hmp p) hp),
-        Nat.succ_pred_eq_of_pos (Nat.Prime.pos hp.1)⟩
-  · simp [Nat.prod_primeFactorsList m.succ_ne_zero, m.add_one_sub_one]
+  suffices p ∈ (m + 1).primeFactorsList → ∃ a : ℕ, a < k ∧ a.succ = p by simpa
+  simp only [Nat.mem_primeFactorsList m.succ_ne_zero]
+  intro hp
+  exact
+    ⟨p.pred, (Nat.pred_lt (Nat.Prime.ne_zero hp.1)).trans_le ((hmp p) hp),
+      Nat.succ_pred_eq_of_pos (Nat.Prime.pos hp.1)⟩
+  simp [Nat.prod_primeFactorsList m.succ_ne_zero, m.add_one_sub_one]
   -- The number of elements of `M x k` with `e + 1` squarefree is bounded by the number of subsets
   -- of `[1, k]`.
   calc
@@ -182,13 +182,13 @@ theorem card_le_two_pow_mul_sqrt {x k : ℕ} : card (M x k) ≤ 2 ^ k * Nat.sqrt
   obtain ⟨ham, hbm⟩ := Dvd.intro_left _ hab₁, Dvd.intro _ hab₁
   refine ⟨a, b, ⟨⟨⟨?_, fun p hp => ?_⟩, hab₂⟩, ⟨?_, fun p hp => ?_⟩⟩, by
       simp_rw [hab₁, m.add_one_sub_one]⟩
-  · exact (Nat.succ_le_succ_iff.mp (Nat.le_of_dvd hm' ham)).trans_lt hm.1
-  · exact hm.2 p ⟨hp.1, hp.2.trans ham⟩
-  · calc
-      b < b + 1 := lt_add_one b
-      _ ≤ (m + 1).sqrt := by simpa only [Nat.le_sqrt, pow_two] using Nat.le_of_dvd hm' hbm
-      _ ≤ x.sqrt := Nat.sqrt_le_sqrt (Nat.succ_le_iff.mpr hm.1)
-  · exact hm.2 p ⟨hp.1, hp.2.trans (Nat.dvd_of_pow_dvd one_le_two hbm)⟩
+  exact (Nat.succ_le_succ_iff.mp (Nat.le_of_dvd hm' ham)).trans_lt hm.1
+  exact hm.2 p ⟨hp.1, hp.2.trans ham⟩
+  calc
+    b < b + 1 := lt_add_one b
+    _ ≤ (m + 1).sqrt := by simpa only [Nat.le_sqrt, pow_two] using Nat.le_of_dvd hm' hbm
+    _ ≤ x.sqrt := Nat.sqrt_le_sqrt (Nat.succ_le_iff.mpr hm.1)
+  exact hm.2 p ⟨hp.1, hp.2.trans (Nat.dvd_of_pow_dvd one_le_two hbm)⟩
   have h2 : card M₂ ≤ Nat.sqrt x
   rw [← card_range (Nat.sqrt x)]; apply card_le_card; simp [M, M₂]
   calc

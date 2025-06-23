@@ -81,9 +81,9 @@ open NormedField
 theorem mem_tangentConeAt_of_pow_smul {r : 𝕜} (hr₀ : r ≠ 0) (hr : ‖r‖ < 1)
     (hs : ∀ᶠ n : ℕ in atTop, x + r ^ n • y ∈ s) : y ∈ tangentConeAt 𝕜 s x := by
   refine ⟨fun n ↦ (r ^ n)⁻¹, fun n ↦ r ^ n • y, hs, ?_, ?_⟩
-  · simp only [norm_inv, norm_pow, ← inv_pow]
-    exact tendsto_pow_atTop_atTop_of_one_lt <| one_lt_inv (norm_pos_iff.2 hr₀) hr
-  · simp only [inv_smul_smul₀ (pow_ne_zero _ hr₀), tendsto_const_nhds]
+  simp only [norm_inv, norm_pow, ← inv_pow]
+  exact tendsto_pow_atTop_atTop_of_one_lt <| one_lt_inv (norm_pos_iff.2 hr₀) hr
+  simp only [inv_smul_smul₀ (pow_ne_zero _ hr₀), tendsto_const_nhds]
 
 theorem tangentCone_univ : tangentConeAt 𝕜 univ x = univ :=
   let ⟨_r, hr₀, hr⟩ := exists_norm_lt_one 𝕜
@@ -140,12 +140,12 @@ theorem subset_tangentCone_prod_left {t : Set F} {y : F} (ht : y ∈ closure t) 
   exact ⟨z - y, by simpa using hzt, by simpa using hz⟩
   choose d' hd' using this
   refine ⟨c, fun n => (d n, d' n), ?_, hc, ?_⟩
-  · show ∀ᶠ n in atTop, (x, y) + (d n, d' n) ∈ s ×ˢ t
-    filter_upwards [hd] with n hn
-    simp [hn, (hd' n).1]
-  · apply Tendsto.prod_mk_nhds hy _
-    refine squeeze_zero_norm (fun n => (hd' n).2.le) ?_
-    exact tendsto_pow_atTop_nhds_zero_of_lt_one one_half_pos.le one_half_lt_one
+  show ∀ᶠ n in atTop, (x, y) + (d n, d' n) ∈ s ×ˢ t
+  filter_upwards [hd] with n hn
+  simp [hn, (hd' n).1]
+  apply Tendsto.prod_mk_nhds hy _
+  refine squeeze_zero_norm (fun n => (hd' n).2.le) ?_
+  exact tendsto_pow_atTop_nhds_zero_of_lt_one one_half_pos.le one_half_lt_one
 
 /-- The tangent cone of a product contains the tangent cone of its right factor. -/
 theorem subset_tangentCone_prod_right {t : Set F} {y : F} (hs : x ∈ closure s) :
@@ -159,12 +159,12 @@ theorem subset_tangentCone_prod_right {t : Set F} {y : F} (hs : x ∈ closure s)
   exact ⟨z - x, by simpa using hzs, by simpa using hz⟩
   choose d' hd' using this
   refine ⟨c, fun n => (d' n, d n), ?_, hc, ?_⟩
-  · show ∀ᶠ n in atTop, (x, y) + (d' n, d n) ∈ s ×ˢ t
-    filter_upwards [hd] with n hn
-    simp [hn, (hd' n).1]
-  · apply Tendsto.prod_mk_nhds _ hy
-    refine squeeze_zero_norm (fun n => (hd' n).2.le) ?_
-    exact tendsto_pow_atTop_nhds_zero_of_lt_one one_half_pos.le one_half_lt_one
+  show ∀ᶠ n in atTop, (x, y) + (d' n, d n) ∈ s ×ˢ t
+  filter_upwards [hd] with n hn
+  simp [hn, (hd' n).1]
+  apply Tendsto.prod_mk_nhds _ hy
+  refine squeeze_zero_norm (fun n => (hd' n).2.le) ?_
+  exact tendsto_pow_atTop_nhds_zero_of_lt_one one_half_pos.le one_half_lt_one
 
 /-- The tangent cone of a product contains the tangent cone of each factor. -/
 theorem mapsTo_tangentCone_pi {ι : Type*} [DecidableEq ι] {E : ι → Type*}
@@ -181,12 +181,12 @@ theorem mapsTo_tangentCone_pi {ι : Type*} [DecidableEq ι] {E : ι → Type*}
   choose! d' hd's hcd' using this
   refine ⟨c, fun n => Function.update (d' n) i (d n), hd.mono fun n hn j _ => ?_, hc,
       tendsto_pi_nhds.2 fun j => ?_⟩
-  · rcases em (j = i) with (rfl | hj) <;> simp [*]
-  · rcases em (j = i) with (rfl | hj)
-    · simp [hy]
-    · suffices Tendsto (fun n => c n • d' n j) atTop (𝓝 0) by simpa [hj]
-      refine squeeze_zero_norm (fun n => (hcd' n j hj).le) ?_
-      exact tendsto_pow_atTop_nhds_zero_of_lt_one one_half_pos.le one_half_lt_one
+  rcases em (j = i) with (rfl | hj) <;> simp [*]
+  rcases em (j = i) with (rfl | hj)
+  simp [hy]
+  suffices Tendsto (fun n => c n • d' n j) atTop (𝓝 0) by simpa [hj]
+  refine squeeze_zero_norm (fun n => (hcd' n j hj).le) ?_
+  exact tendsto_pow_atTop_nhds_zero_of_lt_one one_half_pos.le one_half_lt_one
 
 /-- If a subset of a real vector space contains an open segment, then the direction of this
 segment belongs to the tangent cone at its endpoints. -/
@@ -196,9 +196,9 @@ theorem mem_tangentCone_of_openSegment_subset {s : Set G} {x y : G} (h : openSeg
   refine (eventually_ne_atTop 0).mono fun n hn ↦ (h ?_)
   rw [openSegment_eq_image]
   refine ⟨(1 / 2) ^ n, ⟨?_, ?_⟩, ?_⟩
-  · exact pow_pos one_half_pos _
-  · exact pow_lt_one one_half_pos.le one_half_lt_one hn
-  · simp only [sub_smul, one_smul, smul_sub]; abel
+  exact pow_pos one_half_pos _
+  exact pow_lt_one one_half_pos.le one_half_lt_one hn
+  simp only [sub_smul, one_smul, smul_sub]; abel
 
 /-- If a subset of a real vector space contains a segment, then the direction of this
 segment belongs to the tangent cone at its endpoints. -/

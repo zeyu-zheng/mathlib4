@@ -169,21 +169,21 @@ theorem extremePoints_prod (s : Set E) (t : Set F) :
   ext
   refine (and_congr_right fun hx ↦ ⟨fun h ↦ ?_, fun h ↦ ?_⟩).trans and_and_and_comm
   constructor
-  · rintro x₁ hx₁ x₂ hx₂ hx_fst
-    refine (h (mk_mem_prod hx₁ hx.2) (mk_mem_prod hx₂ hx.2) ?_).imp (congr_arg Prod.fst)
-        (congr_arg Prod.fst)
-    rw [← Prod.image_mk_openSegment_left]
-    exact ⟨_, hx_fst, rfl⟩
-  · rintro x₁ hx₁ x₂ hx₂ hx_snd
-    refine (h (mk_mem_prod hx.1 hx₁) (mk_mem_prod hx.1 hx₂) ?_).imp (congr_arg Prod.snd)
-        (congr_arg Prod.snd)
-    rw [← Prod.image_mk_openSegment_right]
-    exact ⟨_, hx_snd, rfl⟩
-  · rintro x₁ hx₁ x₂ hx₂ ⟨a, b, ha, hb, hab, hx'⟩
-    simp_rw [Prod.ext_iff]
-    exact and_and_and_comm.1
-        ⟨h.1 hx₁.1 hx₂.1 ⟨a, b, ha, hb, hab, congr_arg Prod.fst hx'⟩,
-          h.2 hx₁.2 hx₂.2 ⟨a, b, ha, hb, hab, congr_arg Prod.snd hx'⟩⟩
+  rintro x₁ hx₁ x₂ hx₂ hx_fst
+  refine (h (mk_mem_prod hx₁ hx.2) (mk_mem_prod hx₂ hx.2) ?_).imp (congr_arg Prod.fst)
+      (congr_arg Prod.fst)
+  rw [← Prod.image_mk_openSegment_left]
+  exact ⟨_, hx_fst, rfl⟩
+  rintro x₁ hx₁ x₂ hx₂ hx_snd
+  refine (h (mk_mem_prod hx.1 hx₁) (mk_mem_prod hx.1 hx₂) ?_).imp (congr_arg Prod.snd)
+      (congr_arg Prod.snd)
+  rw [← Prod.image_mk_openSegment_right]
+  exact ⟨_, hx_snd, rfl⟩
+  rintro x₁ hx₁ x₂ hx₂ ⟨a, b, ha, hb, hab, hx'⟩
+  simp_rw [Prod.ext_iff]
+  exact and_and_and_comm.1
+      ⟨h.1 hx₁.1 hx₂.1 ⟨a, b, ha, hb, hab, congr_arg Prod.fst hx'⟩,
+        h.2 hx₁.2 hx₂.2 ⟨a, b, ha, hb, hab, congr_arg Prod.snd hx'⟩⟩
 
 @[simp]
 theorem extremePoints_pi (s : ∀ i, Set (π i)) :
@@ -191,20 +191,20 @@ theorem extremePoints_pi (s : ∀ i, Set (π i)) :
   ext x
   simp only [mem_extremePoints, mem_pi, mem_univ, true_imp_iff, @forall_and ι]
   refine and_congr_right fun hx ↦ ⟨fun h i ↦ ?_, fun h ↦ ?_⟩
-  · rintro x₁ hx₁ x₂ hx₂ hi
-    refine (h (update x i x₁) ?_ (update x i x₂) ?_ ?_).imp (fun h₁ ↦ by rw [← h₁, update_same])
-        fun h₂ ↦ by rw [← h₂, update_same]
-    iterate 2
-      rintro j
-      obtain rfl | hji := eq_or_ne j i
-      · rwa [update_same]
-      · rw [update_noteq hji]
-        exact hx _
-    rw [← Pi.image_update_openSegment]
-    exact ⟨_, hi, update_eq_self _ _⟩
-  · rintro x₁ hx₁ x₂ hx₂ ⟨a, b, ha, hb, hab, hx'⟩
-    simp_rw [funext_iff, ← forall_and]
-    exact fun i ↦ h _ _ (hx₁ _) _ (hx₂ _) ⟨a, b, ha, hb, hab, congr_fun hx' _⟩
+  rintro x₁ hx₁ x₂ hx₂ hi
+  refine (h (update x i x₁) ?_ (update x i x₂) ?_ ?_).imp (fun h₁ ↦ by rw [← h₁, update_same])
+      fun h₂ ↦ by rw [← h₂, update_same]
+  iterate 2
+    rintro j
+    obtain rfl | hji := eq_or_ne j i
+    rwa [update_same]
+    rw [update_noteq hji]
+    exact hx _
+  rw [← Pi.image_update_openSegment]
+  exact ⟨_, hi, update_eq_self _ _⟩
+  rintro x₁ hx₁ x₂ hx₂ ⟨a, b, ha, hb, hab, hx'⟩
+  simp_rw [funext_iff, ← forall_and]
+  exact fun i ↦ h _ _ (hx₁ _) _ (hx₂ _) ⟨a, b, ha, hb, hab, congr_fun hx' _⟩
 
 end OrderedSemiring
 
@@ -237,9 +237,9 @@ theorem mem_extremePoints_iff_forall_segment : x ∈ A.extremePoints 𝕜 ↔
   · rw [← insert_endpoints_openSegment]
     rintro H (rfl | rfl | hx)
     exacts [Or.inl rfl, Or.inr rfl, Or.inl <| (H hx).1]
-  · intro H hx
-    rcases H (openSegment_subset_segment _ _ _ hx) with (rfl | rfl)
-    exacts [⟨rfl, (left_mem_openSegment_iff.1 hx).symm⟩, ⟨right_mem_openSegment_iff.1 hx, rfl⟩]
+  intro H hx
+  rcases H (openSegment_subset_segment _ _ _ hx) with (rfl | rfl)
+  exacts [⟨rfl, (left_mem_openSegment_iff.1 hx).symm⟩, ⟨right_mem_openSegment_iff.1 hx, rfl⟩]
 
 theorem Convex.mem_extremePoints_iff_convex_diff (hA : Convex 𝕜 A) :
     x ∈ A.extremePoints 𝕜 ↔ x ∈ A ∧ Convex 𝕜 (A \ {x}) := by

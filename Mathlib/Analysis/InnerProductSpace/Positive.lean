@@ -127,13 +127,13 @@ instance instLoewnerPartialOrder : PartialOrder (E →L[𝕜] E) where
     have h_isSymm := isSelfAdjoint_iff_isSymmetric.mp h₂.isSelfAdjoint
     exact_mod_cast h_isSymm.inner_map_self_eq_zero.mp fun x ↦ by
       apply RCLike.ext
-      · rw [map_zero]
-        apply le_antisymm
-        · rw [← neg_nonneg, ← map_neg, ← inner_neg_left]
-          simpa using h₁.inner_nonneg_left _
-        · exact h₂.inner_nonneg_left _
-      · rw [coe_sub, LinearMap.sub_apply, coe_coe, coe_coe, map_zero, ← sub_apply,
-          ← h_isSymm.coe_reApplyInnerSelf_apply (T := f₁ - f₂) x, RCLike.ofReal_im]
+      rw [map_zero]
+      apply le_antisymm
+      rw [← neg_nonneg, ← map_neg, ← inner_neg_left]
+      simpa using h₁.inner_nonneg_left _
+      exact h₂.inner_nonneg_left _
+      rw [coe_sub, LinearMap.sub_apply, coe_coe, coe_coe, map_zero, ← sub_apply,
+        ← h_isSymm.coe_reApplyInnerSelf_apply (T := f₁ - f₂) x, RCLike.ofReal_im]
 
 lemma le_def (f g : E →L[𝕜] E) : f ≤ g ↔ (g - f).IsPositive := Iff.rfl
 

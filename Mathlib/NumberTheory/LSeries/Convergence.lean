@@ -67,22 +67,22 @@ lemma LSeries.abscissaOfAbsConv_le_of_forall_lt_LSeriesSummable {f : ℕ → ℂ
     forall_apply_eq_imp_iff₂] at hy
   have H (a : EReal) : x < a → y ≤ a
   induction' a with a₀
-  · simp only [not_lt_bot, le_bot_iff, IsEmpty.forall_iff]
-  · exact_mod_cast fun ha ↦ hy a₀ (h a₀ ha)
-  · simp only [EReal.coe_lt_top, le_top, forall_true_left]
+  simp only [not_lt_bot, le_bot_iff, IsEmpty.forall_iff]
+  exact_mod_cast fun ha ↦ hy a₀ (h a₀ ha)
+  simp only [EReal.coe_lt_top, le_top, forall_true_left]
   exact Set.Ioi_subset_Ici_iff.mp H
 
 lemma LSeries.abscissaOfAbsConv_le_of_forall_lt_LSeriesSummable' {f : ℕ → ℂ} {x : EReal}
     (h : ∀ y : ℝ, x < y → LSeriesSummable f y) :
     abscissaOfAbsConv f ≤ x := by
   induction' x with y
-  · refine le_of_eq <| sInf_eq_bot.mpr fun y hy ↦ ?_
-    induction' y with z
-    · simp only [gt_iff_lt, lt_self_iff_false] at hy
-    · exact ⟨z - 1,  ⟨z-1, h (z - 1) <| EReal.bot_lt_coe _, rfl⟩, by norm_cast; exact sub_one_lt z⟩
-    · exact ⟨0, ⟨0, h 0 <| EReal.bot_lt_coe 0, rfl⟩, EReal.zero_lt_top⟩
-  · exact abscissaOfAbsConv_le_of_forall_lt_LSeriesSummable <| by exact_mod_cast h
-  · exact le_top
+  refine le_of_eq <| sInf_eq_bot.mpr fun y hy ↦ ?_
+  induction' y with z
+  simp only [gt_iff_lt, lt_self_iff_false] at hy
+  exact ⟨z - 1,  ⟨z-1, h (z - 1) <| EReal.bot_lt_coe _, rfl⟩, by norm_cast; exact sub_one_lt z⟩
+  exact ⟨0, ⟨0, h 0 <| EReal.bot_lt_coe 0, rfl⟩, EReal.zero_lt_top⟩
+  exact abscissaOfAbsConv_le_of_forall_lt_LSeriesSummable <| by exact_mod_cast h
+  exact le_top
 
 /-- If `‖f n‖` is bounded by a constant times `n^x`, then the abscissa of absolute convergence
 of `f` is bounded by `x + 1`. -/
@@ -110,13 +110,13 @@ lemma LSeries.abscissaOfAbsConv_le_of_isBigO_rpow {f : ℕ → ℂ} {x : ℝ}
 lemma LSeries.abscissaOfAbsConv_le_of_le_const {f : ℕ → ℂ} (h : ∃ C, ∀ n ≠ 0, ‖f n‖ ≤ C) :
     abscissaOfAbsConv f ≤ 1 := by
   convert abscissaOfAbsConv_le_of_le_const_mul_rpow (x := 0) ?_
-  · simp only [EReal.coe_zero, zero_add]
-  · simpa only [norm_eq_abs, Real.rpow_zero, mul_one] using h
+  simp only [EReal.coe_zero, zero_add]
+  simpa only [norm_eq_abs, Real.rpow_zero, mul_one] using h
 
 open Filter in
 /-- If `f` is `O(1)`, then the abscissa of absolute convergence of `f` is bounded above by `1`. -/
 lemma LSeries.abscissaOfAbsConv_le_one_of_isBigO_one {f : ℕ → ℂ} (h : f =O[atTop] (1 : ℕ → ℝ)) :
     abscissaOfAbsConv f ≤ 1 := by
   convert abscissaOfAbsConv_le_of_isBigO_rpow (x := 0) ?_
-  · simp only [EReal.coe_zero, zero_add]
-  · simpa only [Real.rpow_zero] using h
+  simp only [EReal.coe_zero, zero_add]
+  simpa only [Real.rpow_zero] using h

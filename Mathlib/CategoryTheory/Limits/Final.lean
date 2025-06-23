@@ -245,15 +245,15 @@ theorem colimit_cocone_comp_aux (s : Cocone (F ⋙ G)) (j : C) :
   -- This point is that this would be true if we took `lift (F.obj j)` to just be `j`
   -- and `homToLift (F.obj j)` to be `𝟙 (F.obj j)`.
   apply induction F fun X k => G.map k ≫ s.ι.app X = (s.ι.app j : _)
-  · intro j₁ j₂ k₁ k₂ f w h
-    rw [← w]
-    rw [← s.w f] at h
-    simpa using h
-  · intro j₁ j₂ k₁ k₂ f w h
-    rw [← w] at h
-    rw [← s.w f]
-    simpa using h
-  · exact s.w (𝟙 _)
+  intro j₁ j₂ k₁ k₂ f w h
+  rw [← w]
+  rw [← s.w f] at h
+  simpa using h
+  intro j₁ j₂ k₁ k₂ f w h
+  rw [← w] at h
+  rw [← s.w f]
+  simpa using h
+  exact s.w (𝟙 _)
 
 variable (F G)
 
@@ -365,7 +365,7 @@ theorem zigzag_of_eqvGen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ 
     obtain ⟨f, w⟩ := r
     fconstructor
     swap
-    · fconstructor
+    fconstructor
     left; fconstructor
     exact StructuredArrow.homMk f
   | refl => fconstructor
@@ -374,8 +374,8 @@ theorem zigzag_of_eqvGen_quot_rel {F : C ⥤ D} {d : D} {f₁ f₂ : ΣX, d ⟶ 
     exact ih
   | trans x y z _ _ ih₁ ih₂ =>
     apply Relation.ReflTransGen.trans
-    · exact ih₁
-    · exact ih₂
+    exact ih₁
+    exact ih₂
 
 end Final
 
@@ -517,15 +517,15 @@ theorem limit_cone_comp_aux (s : Cone (F ⋙ G)) (j : C) :
   -- This point is that this would be true if we took `lift (F.obj j)` to just be `j`
   -- and `homToLift (F.obj j)` to be `𝟙 (F.obj j)`.
   apply induction F fun X k => s.π.app X ≫ G.map k = (s.π.app j : _)
-  · intro j₁ j₂ k₁ k₂ f w h
-    rw [← s.w f]
-    rw [← w] at h
-    simpa using h
-  · intro j₁ j₂ k₁ k₂ f w h
-    rw [← s.w f] at h
-    rw [← w]
-    simpa using h
-  · exact s.w (𝟙 _)
+  intro j₁ j₂ k₁ k₂ f w h
+  rw [← s.w f]
+  rw [← w] at h
+  simpa using h
+  intro j₁ j₂ k₁ k₂ f w h
+  rw [← s.w f] at h
+  rw [← w]
+  simpa using h
+  exact s.w (𝟙 _)
 
 variable (F G)
 
@@ -769,18 +769,18 @@ theorem IsFilteredOrEmpty.of_final (F : C ⥤ D) [Final F] [IsFilteredOrEmpty C]
     let P : StructuredArrow X F → Prop := fun h => ∃ (Z : C) (q₁ : h.right ⟶ Z)
       (q₂ : Final.lift F Y ⟶ Z), h.hom ≫ F.map q₁ = f ≫ Final.homToLift F Y ≫ F.map q₂
     rsuffices ⟨Z, q₁, q₂, h⟩ : Nonempty (P (StructuredArrow.mk (g ≫ Final.homToLift F Y)))
-    · refine ⟨F.obj (IsFiltered.coeq q₁ q₂),
-        Final.homToLift F Y ≫ F.map (q₁ ≫ IsFiltered.coeqHom q₁ q₂), ?_⟩
-      conv_lhs => rw [IsFiltered.coeq_condition]
-      simp only [F.map_comp, ← reassoc_of% h, StructuredArrow.mk_hom_eq_self, Category.assoc]
+    refine ⟨F.obj (IsFiltered.coeq q₁ q₂),
+      Final.homToLift F Y ≫ F.map (q₁ ≫ IsFiltered.coeqHom q₁ q₂), ?_⟩
+    conv_lhs => rw [IsFiltered.coeq_condition]
+    simp only [F.map_comp, ← reassoc_of% h, StructuredArrow.mk_hom_eq_self, Category.assoc]
     have h₀ : P (StructuredArrow.mk (f ≫ Final.homToLift F Y)) := ⟨_, 𝟙 _, 𝟙 _, by simp⟩
     refine isPreconnected_induction P ?_ ?_ h₀ _
-    · rintro U V h ⟨Z, q₁, q₂, hq⟩
-      obtain ⟨W, q₃, q₄, hq'⟩ := IsFiltered.span q₁ h.right
-      refine ⟨W, q₄, q₂ ≫ q₃, ?_⟩
-      rw [F.map_comp, ← reassoc_of% hq, ← F.map_comp, hq', F.map_comp, StructuredArrow.w_assoc]
-    · rintro U V h ⟨Z, q₁, q₂, hq⟩
-      exact ⟨Z, h.right ≫ q₁, q₂, by simp only [F.map_comp, StructuredArrow.w_assoc, hq]⟩
+    rintro U V h ⟨Z, q₁, q₂, hq⟩
+    obtain ⟨W, q₃, q₄, hq'⟩ := IsFiltered.span q₁ h.right
+    refine ⟨W, q₄, q₂ ≫ q₃, ?_⟩
+    rw [F.map_comp, ← reassoc_of% hq, ← F.map_comp, hq', F.map_comp, StructuredArrow.w_assoc]
+    rintro U V h ⟨Z, q₁, q₂, hq⟩
+    exact ⟨Z, h.right ≫ q₁, q₂, by simp only [F.map_comp, StructuredArrow.w_assoc, hq]⟩
 
 /-- Final functors preserve filteredness.
 

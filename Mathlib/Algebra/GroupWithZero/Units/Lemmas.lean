@@ -45,8 +45,8 @@ theorem map_eq_zero : f a = 0 ↔ a = 0 :=
 theorem eq_on_inv₀ [MonoidWithZeroHomClass F' G₀ M₀'] (f g : F') (h : f a = g a) :
     f a⁻¹ = g a⁻¹ := by
   rcases eq_or_ne a 0 with (rfl | ha)
-  · rw [inv_zero, map_zero, map_zero]
-  · exact (IsUnit.mk0 a ha).eq_on_inv f g h
+  rw [inv_zero, map_zero, map_zero]
+  exact (IsUnit.mk0 a ha).eq_on_inv f g h
 
 end MonoidWithZero
 
@@ -59,9 +59,9 @@ variable [GroupWithZero G₀] [GroupWithZero G₀'] [FunLike F G₀ G₀']
 @[simp]
 theorem map_inv₀ : f a⁻¹ = (f a)⁻¹ := by
   by_cases h : a = 0
-  · simp [h, map_zero f]
-  · apply eq_inv_of_mul_eq_one_left
-    rw [← map_mul, inv_mul_cancel h, map_one]
+  simp [h, map_zero f]
+  apply eq_inv_of_mul_eq_one_left
+  rw [← map_mul, inv_mul_cancel h, map_one]
 
 @[simp]
 theorem map_div₀ : f (a / b) = f a / f b :=

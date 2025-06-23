@@ -107,9 +107,9 @@ lemma isSheafFor_of_factorsThru
   simp only [← Presieve.isSeparatedFor_and_exists_isAmalgamation_iff_isSheafFor] at *
   choose W i e h1 h2 using H
   refine ⟨?_, fun x hx => ?_⟩
-  · intro x y₁ y₂ h₁ h₂
-    refine hS.1.ext (fun Y g hg => ?_)
-    simp only [← h2 hg, op_comp, P.map_comp, types_comp_apply, h₁ _ (h1 _ ), h₂ _ (h1 _)]
+  intro x y₁ y₂ h₁ h₂
+  refine hS.1.ext (fun Y g hg => ?_)
+  simp only [← h2 hg, op_comp, P.map_comp, types_comp_apply, h₁ _ (h1 _ ), h₂ _ (h1 _)]
   let y : S.FamilyOfElements P := fun Y g hg => P.map (i _).op (x (e hg) (h1 _))
   have hy : y.Compatible
   intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ h
@@ -200,8 +200,8 @@ lemma saturate_of_superset (K : Coverage C) {X : C} {S T : Sieve X} (h : S ≤ T
   apply Saturate.transitive _ _ _ hS
   intro Y g hg
   rw [eq_top_pullback (h := h)]
-  · apply Saturate.top
-  · assumption
+  apply Saturate.top
+  assumption
 
 variable (C) in
 /--
@@ -276,25 +276,25 @@ it is the infimum of all Grothendieck topologies whose associated coverage conta
 theorem toGrothendieck_eq_sInf (K : Coverage C) : toGrothendieck _ K =
     sInf {J | K ≤ ofGrothendieck _ J } := by
   apply le_antisymm
-  · apply le_sInf; intro J hJ
-    intro X S hS
-    induction hS with
-    | of X S hS => apply hJ; assumption
-    | top => apply J.top_mem
-    | transitive X R S _ _ H1 H2 => exact J.transitive H1 _ H2
-  · apply sInf_le
-    intro X S hS
-    apply Saturate.of _ _ hS
+  apply le_sInf; intro J hJ
+  intro X S hS
+  induction hS with
+  | of X S hS => apply hJ; assumption
+  | top => apply J.top_mem
+  | transitive X R S _ _ H1 H2 => exact J.transitive H1 _ H2
+  apply sInf_le
+  intro X S hS
+  apply Saturate.of _ _ hS
 
 instance : SemilatticeSup (Coverage C) where
   sup x y :=
   { covering := fun B ↦ x.covering B ∪ y.covering B
     pullback := by
       rintro X Y f S (hx | hy)
-      · obtain ⟨T, hT⟩ := x.pullback f S hx
-        exact ⟨T, Or.inl hT.1, hT.2⟩
-      · obtain ⟨T, hT⟩ := y.pullback f S hy
-        exact ⟨T, Or.inr hT.1, hT.2⟩ }
+      obtain ⟨T, hT⟩ := x.pullback f S hx
+      exact ⟨T, Or.inl hT.1, hT.2⟩
+      obtain ⟨T, hT⟩ := y.pullback f S hy
+      exact ⟨T, Or.inr hT.1, hT.2⟩ }
   toPartialOrder := inferInstance
   le_sup_left _ _ _ := Set.subset_union_left
   le_sup_right _ _ _ := Set.subset_union_right
@@ -328,71 +328,71 @@ theorem isSheaf_coverage (K : Coverage C) (P : Cᵒᵖ ⥤ Type*) :
     Presieve.IsSheaf (toGrothendieck _ K) P ↔
     (∀ {X : C} (R : Presieve X), R ∈ K X → Presieve.IsSheafFor P R) := by
   constructor
-  · intro H X R hR
-    rw [Presieve.isSheafFor_iff_generate]
-    apply H _ <| Saturate.of _ _ hR
-  · intro H X S hS
-    -- This is the key point of the proof:
-    -- We must generalize the induction in the correct way.
-    suffices ∀ ⦃Y : C⦄ (f : Y ⟶ X), Presieve.IsSheafFor P (S.pullback f).arrows by
-      simpa using this (f := 𝟙 _)
-    induction hS with
-    | of X S hS =>
-      intro Y f
-      obtain ⟨T, hT1, hT2⟩ := K.pullback f S hS
-      apply Presieve.isSheafFor_of_factorsThru (S := T)
-      · intro Z g hg
-        obtain ⟨W, i, e, h1, h2⟩ := hT2 hg
-        exact ⟨Z, 𝟙 _, g, ⟨W, i, e, h1, h2⟩, by simp⟩
-      · apply H; assumption
-      · intro Z g _
-        obtain ⟨R, hR1, hR2⟩ := K.pullback g _ hT1
-        exact ⟨R, (H _ hR1).isSeparatedFor, hR2⟩
-    | top => intros; simpa using Presieve.isSheafFor_top_sieve _
-    | transitive X R S _ _ H1 H2 =>
-      intro Y f
-      simp only [← Presieve.isSeparatedFor_and_exists_isAmalgamation_iff_isSheafFor] at *
-      choose H1 H1' using H1
-      choose H2 H2' using H2
-      refine ⟨?_, fun x hx => ?_⟩
-      · intro x t₁ t₂ h₁ h₂
-        refine (H1 f).ext (fun Z g hg => ?_)
-        refine (H2 hg (𝟙 _)).ext (fun ZZ gg hgg => ?_)
-        simp only [Sieve.pullback_id, Sieve.pullback_apply] at hgg
-        simp only [← types_comp_apply]
-        rw [← P.map_comp, ← op_comp, h₁, h₂]
-        simpa only [Sieve.pullback_apply, Category.assoc] using hgg
-      let y : ∀ ⦃Z : C⦄ (g : Z ⟶ Y),
-        ((S.pullback (g ≫ f)).pullback (𝟙 _)).arrows.FamilyOfElements P :=
-        fun Z g ZZ gg hgg => x (gg ≫ g) (by simpa using hgg)
-      have hy : ∀ ⦃Z : C⦄ (g : Z ⟶ Y), (y g).Compatible := by
-        intro Z g Y₁ Y₂ ZZ g₁ g₂ f₁ f₂ h₁ h₂ h
-        rw [hx]
-        rw [reassoc_of% h]
-      choose z hz using fun ⦃Z : C⦄ ⦃g : Z ⟶ Y⦄ (hg : R.pullback f g) =>
-        H2' hg (𝟙 _) (y g) (hy g)
-      let q : (R.pullback f).arrows.FamilyOfElements P := fun Z g hg => z hg
-      have hq : q.Compatible := by
-        intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ h
-        apply (H2 h₁ g₁).ext
-        intro ZZ gg hgg
-        simp only [← types_comp_apply]
-        rw [← P.map_comp, ← P.map_comp, ← op_comp, ← op_comp, hz, hz]
-        · dsimp [y]; congr 1; simp only [Category.assoc, h]
-        · simpa [reassoc_of% h] using hgg
-        · simpa using hgg
-      obtain ⟨t, ht⟩ := H1' f q hq
-      refine ⟨t, fun Z g hg => ?_⟩
-      refine (H1 (g ≫ f)).ext (fun ZZ gg hgg => ?_)
-      rw [← types_comp_apply _ (P.map gg.op), ← P.map_comp, ← op_comp, ht]
-      on_goal 2 => simpa using hgg
-      refine (H2 hgg (𝟙 _)).ext (fun ZZZ ggg hggg => ?_)
-      rw [← types_comp_apply _ (P.map ggg.op), ← P.map_comp, ← op_comp, hz]
-      on_goal 2 => simpa using hggg
-      refine (H2 hgg ggg).ext (fun ZZZZ gggg _ => ?_)
-      rw [← types_comp_apply _ (P.map gggg.op), ← P.map_comp, ← op_comp]
-      apply hx
-      simp
+  intro H X R hR
+  rw [Presieve.isSheafFor_iff_generate]
+  apply H _ <| Saturate.of _ _ hR
+  intro H X S hS
+  -- This is the key point of the proof:
+  -- We must generalize the induction in the correct way.
+  suffices ∀ ⦃Y : C⦄ (f : Y ⟶ X), Presieve.IsSheafFor P (S.pullback f).arrows by
+    simpa using this (f := 𝟙 _)
+  induction hS with
+  | of X S hS =>
+    intro Y f
+    obtain ⟨T, hT1, hT2⟩ := K.pullback f S hS
+    apply Presieve.isSheafFor_of_factorsThru (S := T)
+    intro Z g hg
+    obtain ⟨W, i, e, h1, h2⟩ := hT2 hg
+    exact ⟨Z, 𝟙 _, g, ⟨W, i, e, h1, h2⟩, by simp⟩
+    apply H; assumption
+    intro Z g _
+    obtain ⟨R, hR1, hR2⟩ := K.pullback g _ hT1
+    exact ⟨R, (H _ hR1).isSeparatedFor, hR2⟩
+  | top => intros; simpa using Presieve.isSheafFor_top_sieve _
+  | transitive X R S _ _ H1 H2 =>
+    intro Y f
+    simp only [← Presieve.isSeparatedFor_and_exists_isAmalgamation_iff_isSheafFor] at *
+    choose H1 H1' using H1
+    choose H2 H2' using H2
+    refine ⟨?_, fun x hx => ?_⟩
+    intro x t₁ t₂ h₁ h₂
+    refine (H1 f).ext (fun Z g hg => ?_)
+    refine (H2 hg (𝟙 _)).ext (fun ZZ gg hgg => ?_)
+    simp only [Sieve.pullback_id, Sieve.pullback_apply] at hgg
+    simp only [← types_comp_apply]
+    rw [← P.map_comp, ← op_comp, h₁, h₂]
+    simpa only [Sieve.pullback_apply, Category.assoc] using hgg
+    let y : ∀ ⦃Z : C⦄ (g : Z ⟶ Y),
+      ((S.pullback (g ≫ f)).pullback (𝟙 _)).arrows.FamilyOfElements P :=
+      fun Z g ZZ gg hgg => x (gg ≫ g) (by simpa using hgg)
+    have hy : ∀ ⦃Z : C⦄ (g : Z ⟶ Y), (y g).Compatible := by
+      intro Z g Y₁ Y₂ ZZ g₁ g₂ f₁ f₂ h₁ h₂ h
+      rw [hx]
+      rw [reassoc_of% h]
+    choose z hz using fun ⦃Z : C⦄ ⦃g : Z ⟶ Y⦄ (hg : R.pullback f g) =>
+      H2' hg (𝟙 _) (y g) (hy g)
+    let q : (R.pullback f).arrows.FamilyOfElements P := fun Z g hg => z hg
+    have hq : q.Compatible := by
+      intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ h
+      apply (H2 h₁ g₁).ext
+      intro ZZ gg hgg
+      simp only [← types_comp_apply]
+      rw [← P.map_comp, ← P.map_comp, ← op_comp, ← op_comp, hz, hz]
+      dsimp [y]; congr 1; simp only [Category.assoc, h]
+      simpa [reassoc_of% h] using hgg
+      simpa using hgg
+    obtain ⟨t, ht⟩ := H1' f q hq
+    refine ⟨t, fun Z g hg => ?_⟩
+    refine (H1 (g ≫ f)).ext (fun ZZ gg hgg => ?_)
+    rw [← types_comp_apply _ (P.map gg.op), ← P.map_comp, ← op_comp, ht]
+    on_goal 2 => simpa using hgg
+    refine (H2 hgg (𝟙 _)).ext (fun ZZZ ggg hggg => ?_)
+    rw [← types_comp_apply _ (P.map ggg.op), ← P.map_comp, ← op_comp, hz]
+    on_goal 2 => simpa using hggg
+    refine (H2 hgg ggg).ext (fun ZZZZ gggg _ => ?_)
+    rw [← types_comp_apply _ (P.map gggg.op), ← P.map_comp, ← op_comp]
+    apply hx
+    simp
 
 /--
 A presheaf is a sheaf for the Grothendieck topology generated by a union of coverages iff it is a
@@ -407,8 +407,8 @@ theorem isSheaf_sup (K L : Coverage C) (P : Cᵒᵖ ⥤ Type*) :
   rw [isSheaf_coverage]
   intro X R hR
   cases' hR with hR hR
-  · exact h.1 R hR
-  · exact h.2 R hR
+  exact h.1 R hR
+  exact h.2 R hR
 
 end Presieve
 

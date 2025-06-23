@@ -468,9 +468,9 @@ theorem le_glb_Ioi (a : α) (hb : IsGLB (Ioi a) b) : a ≤ b :=
 theorem lub_Iio_eq_self_or_Iio_eq_Iic [PartialOrder γ] {j : γ} (i : γ) (hj : IsLUB (Iio i) j) :
     j = i ∨ Iio i = Iic j := by
   cases' eq_or_lt_of_le (lub_Iio_le i hj) with hj_eq_i hj_lt_i
-  · exact Or.inl hj_eq_i
-  · right
-    exact Set.ext fun k => ⟨fun hk_lt => hj.1 hk_lt, fun hk_le_j => lt_of_le_of_lt hk_le_j hj_lt_i⟩
+  exact Or.inl hj_eq_i
+  right
+  exact Set.ext fun k => ⟨fun hk_lt => hj.1 hk_lt, fun hk_le_j => lt_of_le_of_lt hk_le_j hj_lt_i⟩
 
 theorem glb_Ioi_eq_self_or_Ioi_eq_Ici [PartialOrder γ] {j : γ} (i : γ) (hj : IsGLB (Ioi i) j) :
     j = i ∨ Ioi i = Ici j :=
@@ -482,14 +482,14 @@ variable [LinearOrder γ]
 
 theorem exists_lub_Iio (i : γ) : ∃ j, IsLUB (Iio i) j := by
   by_cases h_exists_lt : ∃ j, j ∈ upperBounds (Iio i) ∧ j < i
-  · obtain ⟨j, hj_ub, hj_lt_i⟩ := h_exists_lt
-    exact ⟨j, hj_ub, fun k hk_ub => hk_ub hj_lt_i⟩
-  · refine ⟨i, fun j hj => le_of_lt hj, ?_⟩
-    rw [mem_lowerBounds]
-    by_contra h
-    refine h_exists_lt ?_
-    push_neg at h
-    exact h
+  obtain ⟨j, hj_ub, hj_lt_i⟩ := h_exists_lt
+  exact ⟨j, hj_ub, fun k hk_ub => hk_ub hj_lt_i⟩
+  refine ⟨i, fun j hj => le_of_lt hj, ?_⟩
+  rw [mem_lowerBounds]
+  by_contra h
+  refine h_exists_lt ?_
+  push_neg at h
+  exact h
 
 theorem exists_glb_Ioi (i : γ) : ∃ j, IsGLB (Ioi i) j :=
   @exists_lub_Iio γᵒᵈ _ i
@@ -611,7 +611,7 @@ variable [SemilatticeSup γ] [DenselyOrdered γ]
 theorem isGLB_Ioo {a b : γ} (h : a < b) : IsGLB (Ioo a b) a :=
   ⟨fun x hx => hx.1.le, fun x hx => by
     cases' eq_or_lt_of_le (le_sup_right : a ≤ x ⊔ a) with h₁ h₂
-    · exact h₁.symm ▸ le_sup_left
+    exact h₁.symm ▸ le_sup_left
     obtain ⟨y, lty, ylt⟩ := exists_between h₂
     apply (not_lt_of_le (sup_le (hx ⟨lty, ylt.trans_le (sup_le _ h.le)⟩) lty.le) ylt).elim
     obtain ⟨u, au, ub⟩ := exists_between h
@@ -1334,14 +1334,14 @@ theorem isLUB_prod {s : Set (α × β)} (p : α × β) :
       ⟨⟨monotone_fst.mem_upperBounds_image H.1, fun a ha => ?_⟩,
         ⟨monotone_snd.mem_upperBounds_image H.1, fun a ha => ?_⟩⟩,
       fun H => ⟨?_, ?_⟩⟩
-  · suffices h : (a, p.2) ∈ upperBounds s from (H.2 h).1
-    exact fun q hq => ⟨ha <| mem_image_of_mem _ hq, (H.1 hq).2⟩
-  · suffices h : (p.1, a) ∈ upperBounds s from (H.2 h).2
-    exact fun q hq => ⟨(H.1 hq).1, ha <| mem_image_of_mem _ hq⟩
-  · exact fun q hq => ⟨H.1.1 <| mem_image_of_mem _ hq, H.2.1 <| mem_image_of_mem _ hq⟩
-  · exact fun q hq =>
-      ⟨H.1.2 <| monotone_fst.mem_upperBounds_image hq,
-        H.2.2 <| monotone_snd.mem_upperBounds_image hq⟩
+  suffices h : (a, p.2) ∈ upperBounds s from (H.2 h).1
+  exact fun q hq => ⟨ha <| mem_image_of_mem _ hq, (H.1 hq).2⟩
+  suffices h : (p.1, a) ∈ upperBounds s from (H.2 h).2
+  exact fun q hq => ⟨(H.1 hq).1, ha <| mem_image_of_mem _ hq⟩
+  exact fun q hq => ⟨H.1.1 <| mem_image_of_mem _ hq, H.2.1 <| mem_image_of_mem _ hq⟩
+  exact fun q hq =>
+    ⟨H.1.2 <| monotone_fst.mem_upperBounds_image hq,
+      H.2.2 <| monotone_snd.mem_upperBounds_image hq⟩
 
 theorem isGLB_prod {s : Set (α × β)} (p : α × β) :
     IsGLB s p ↔ IsGLB (Prod.fst '' s) p.1 ∧ IsGLB (Prod.snd '' s) p.2 :=
@@ -1378,10 +1378,10 @@ theorem isLUB_pi {s : Set (∀ a, π a)} {f : ∀ a, π a} :
     refine
       ⟨fun H a => ⟨(Function.monotone_eval a).mem_upperBounds_image H.1, fun b hb => ?_⟩, fun H =>
         ⟨?_, ?_⟩⟩
-    · suffices h : Function.update f a b ∈ upperBounds s from Function.update_same a b f ▸ H.2 h a
-      exact fun g hg => le_update_iff.2 ⟨hb <| mem_image_of_mem _ hg, fun i _ => H.1 hg i⟩
-    · exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
-    · exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upperBounds_image hg)
+    suffices h : Function.update f a b ∈ upperBounds s from Function.update_same a b f ▸ H.2 h a
+    exact fun g hg => le_update_iff.2 ⟨hb <| mem_image_of_mem _ hg, fun i _ => H.1 hg i⟩
+    exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
+    exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upperBounds_image hg)
 
 theorem isGLB_pi {s : Set (∀ a, π a)} {f : ∀ a, π a} :
     IsGLB s f ↔ ∀ a, IsGLB (Function.eval a '' s) (f a) :=

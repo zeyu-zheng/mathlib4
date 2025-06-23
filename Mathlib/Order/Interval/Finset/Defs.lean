@@ -82,12 +82,12 @@ lemma exists_min_greater [LinearOrder α] [LocallyFiniteOrder α] {x ub : α} (h
   have h : (Finset.Ioc x ub).Nonempty := ⟨ub, Finset.mem_Ioc.2 ⟨hx, le_rfl⟩⟩
   use Finset.min' (Finset.Ioc x ub) h
   constructor
-  · exact (Finset.mem_Ioc.mp <| Finset.min'_mem _ h).1
+  exact (Finset.mem_Ioc.mp <| Finset.min'_mem _ h).1
   rintro y hxy
   obtain hy | hy := le_total y ub
-  · refine Finset.min'_le (Ioc x ub) y ?_
-    simp [*] at *
-  · exact (Finset.min'_le _ _ (Finset.mem_Ioc.2 ⟨hx, le_rfl⟩)).trans hy
+  refine Finset.min'_le (Ioc x ub) y ?_
+  simp [*] at *
+  exact (Finset.min'_le _ _ (Finset.mem_Ioc.2 ⟨hx, le_rfl⟩)).trans hy
 ```
 Note that the converse is not true. Consider `{-2^z | z : ℤ} ∪ {2^z | z : ℤ}`. Any element has a
 successor (and actually a predecessor as well), so it is a `SuccOrder`, but it's not locally finite
@@ -1131,7 +1131,7 @@ theorem Set.finite_iff_bddBelow [SemilatticeInf α] [LocallyFiniteOrder α] [Ord
 theorem Set.finite_iff_bddBelow_bddAbove [Nonempty α] [Lattice α] [LocallyFiniteOrder α] :
     s.Finite ↔ BddBelow s ∧ BddAbove s := by
   obtain (rfl | hs) := s.eq_empty_or_nonempty
-  · simp only [Set.finite_empty, bddBelow_empty, bddAbove_empty, and_self]
+  simp only [Set.finite_empty, bddBelow_empty, bddAbove_empty, and_self]
   exact ⟨fun h ↦ ⟨⟨h.toFinset.inf' ((Finite.toFinset_nonempty h).mpr hs) id,
     fun x hx ↦ Finset.inf'_le id ((Finite.mem_toFinset h).mpr hx)⟩,
     ⟨h.toFinset.sup' ((Finite.toFinset_nonempty h).mpr hs) id, fun x hx ↦ Finset.le_sup' id

@@ -96,10 +96,10 @@ theorem range_derivWithin_subset_closure_span_image
     range (derivWithin f s) ⊆ closure (Submodule.span 𝕜 (f '' t)) := by
   rintro - ⟨x, rfl⟩
   rcases eq_or_neBot (𝓝[s \ {x}] x) with H|H
-  · simpa [derivWithin, fderivWithin, H] using subset_closure (zero_mem _)
+  simpa [derivWithin, fderivWithin, H] using subset_closure (zero_mem _)
   by_cases H' : DifferentiableWithinAt 𝕜 f s x; swap
-  · rw [derivWithin_zero_of_not_differentiableWithinAt H']
-    exact subset_closure (zero_mem _)
+  rw [derivWithin_zero_of_not_differentiableWithinAt H']
+  exact subset_closure (zero_mem _)
   have I : (𝓝[(s ∩ t) \ {x}] x).NeBot
   rw [← mem_closure_iff_nhdsWithin_neBot] at H ⊢
   have A : closure (s \ {x}) ⊆ closure (closure (s ∩ t) \ {x}) :=
@@ -116,16 +116,16 @@ theorem range_derivWithin_subset_closure_span_image
   filter_upwards [self_mem_nhdsWithin] with y hy
   simp only [slope, vsub_eq_sub, SetLike.mem_coe]
   refine Submodule.smul_mem _ _ (Submodule.sub_mem _ ?_ ?_)
-  · apply Submodule.le_topologicalClosure
-    apply Submodule.subset_span
-    exact mem_image_of_mem _ hy.1.2
-  · apply Submodule.closure_subset_topologicalClosure_span
-    suffices A : f x ∈ closure (f '' (s ∩ t)) from
-      closure_mono (image_subset _ inter_subset_right) A
-    apply ContinuousWithinAt.mem_closure_image
-    · apply H'.continuousWithinAt.mono inter_subset_left
-    rw [mem_closure_iff_nhdsWithin_neBot]
-    exact I.mono (nhdsWithin_mono _ diff_subset)
+  apply Submodule.le_topologicalClosure
+  apply Submodule.subset_span
+  exact mem_image_of_mem _ hy.1.2
+  apply Submodule.closure_subset_topologicalClosure_span
+  suffices A : f x ∈ closure (f '' (s ∩ t)) from
+    closure_mono (image_subset _ inter_subset_right) A
+  apply ContinuousWithinAt.mem_closure_image
+  apply H'.continuousWithinAt.mono inter_subset_left
+  rw [mem_closure_iff_nhdsWithin_neBot]
+  exact I.mono (nhdsWithin_mono _ diff_subset)
 
 /-- Given a dense set `t`, then the range of `deriv f` is contained in the closure of the submodule
 spanned by the image of `t`. -/

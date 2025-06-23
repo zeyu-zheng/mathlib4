@@ -354,17 +354,17 @@ def BinaryFan.isLimitFlip {X Y : C} {c : BinaryFan X Y} (hc : IsLimit c) :
 theorem BinaryFan.isLimit_iff_isIso_fst {X Y : C} (h : IsTerminal Y) (c : BinaryFan X Y) :
     Nonempty (IsLimit c) ↔ IsIso c.fst := by
   constructor
-  · rintro ⟨H⟩
-    obtain ⟨l, hl, -⟩ := BinaryFan.IsLimit.lift' H (𝟙 X) (h.from X)
-    exact
-      ⟨⟨l,
-          BinaryFan.IsLimit.hom_ext H (by simpa [hl, -Category.comp_id] using Category.comp_id _)
-            (h.hom_ext _ _),
-          hl⟩⟩
-  · intro
-    exact
-      ⟨BinaryFan.IsLimit.mk _ (fun f _ => f ≫ inv c.fst) (fun _ _ => by simp)
-          (fun _ _ => h.hom_ext _ _) fun _ _ _ e _ => by simp [← e]⟩
+  rintro ⟨H⟩
+  obtain ⟨l, hl, -⟩ := BinaryFan.IsLimit.lift' H (𝟙 X) (h.from X)
+  exact
+    ⟨⟨l,
+        BinaryFan.IsLimit.hom_ext H (by simpa [hl, -Category.comp_id] using Category.comp_id _)
+          (h.hom_ext _ _),
+        hl⟩⟩
+  intro
+  exact
+    ⟨BinaryFan.IsLimit.mk _ (fun f _ => f ≫ inv c.fst) (fun _ _ => by simp)
+        (fun _ _ => h.hom_ext _ _) fun _ _ _ e _ => by simp [← e]⟩
 
 theorem BinaryFan.isLimit_iff_isIso_snd {X Y : C} (h : IsTerminal X) (c : BinaryFan X Y) :
     Nonempty (IsLimit c) ↔ IsIso c.snd := by
@@ -407,17 +407,17 @@ def BinaryCofan.isColimitFlip {X Y : C} {c : BinaryCofan X Y} (hc : IsColimit c)
 theorem BinaryCofan.isColimit_iff_isIso_inl {X Y : C} (h : IsInitial Y) (c : BinaryCofan X Y) :
     Nonempty (IsColimit c) ↔ IsIso c.inl := by
   constructor
-  · rintro ⟨H⟩
-    obtain ⟨l, hl, -⟩ := BinaryCofan.IsColimit.desc' H (𝟙 X) (h.to X)
-    refine ⟨⟨l, hl, BinaryCofan.IsColimit.hom_ext H (?_) (h.hom_ext _ _)⟩⟩
-    rw [Category.comp_id]
-    have e : (inl c ≫ l) ≫ inl c = 𝟙 X ≫ inl c := congrArg (·≫inl c) hl
-    rwa [Category.assoc,Category.id_comp] at e
-  · intro
-    exact
-      ⟨BinaryCofan.IsColimit.mk _ (fun f _ => inv c.inl ≫ f)
-          (fun _ _ => IsIso.hom_inv_id_assoc _ _) (fun _ _ => h.hom_ext _ _) fun _ _ _ e _ =>
-          (IsIso.eq_inv_comp _).mpr e⟩
+  rintro ⟨H⟩
+  obtain ⟨l, hl, -⟩ := BinaryCofan.IsColimit.desc' H (𝟙 X) (h.to X)
+  refine ⟨⟨l, hl, BinaryCofan.IsColimit.hom_ext H (?_) (h.hom_ext _ _)⟩⟩
+  rw [Category.comp_id]
+  have e : (inl c ≫ l) ≫ inl c = 𝟙 X ≫ inl c := congrArg (·≫inl c) hl
+  rwa [Category.assoc,Category.id_comp] at e
+  intro
+  exact
+    ⟨BinaryCofan.IsColimit.mk _ (fun f _ => inv c.inl ≫ f)
+        (fun _ _ => IsIso.hom_inv_id_assoc _ _) (fun _ _ => h.hom_ext _ _) fun _ _ _ e _ =>
+        (IsIso.eq_inv_comp _).mpr e⟩
 
 theorem BinaryCofan.isColimit_iff_isIso_inr {X Y : C} (h : IsInitial X) (c : BinaryCofan X Y) :
     Nonempty (IsColimit c) ↔ IsIso c.inr := by
@@ -684,10 +684,10 @@ instance prod.map_mono {C : Type*} [Category C] {W X Y Z : C} (f : W ⟶ Y) (g :
     [Mono g] [HasBinaryProduct W X] [HasBinaryProduct Y Z] : Mono (prod.map f g) :=
   ⟨fun i₁ i₂ h => by
     ext
-    · rw [← cancel_mono f]
-      simpa using congr_arg (fun f => f ≫ prod.fst) h
-    · rw [← cancel_mono g]
-      simpa using congr_arg (fun f => f ≫ prod.snd) h⟩
+    rw [← cancel_mono f]
+    simpa using congr_arg (fun f => f ≫ prod.fst) h
+    rw [← cancel_mono g]
+    simpa using congr_arg (fun f => f ≫ prod.snd) h⟩
 
 @[reassoc] -- Porting note (#10618): simp can prove these
 theorem prod.diag_map {X Y : C} (f : X ⟶ Y) [HasBinaryProduct X X] [HasBinaryProduct Y Y] :
@@ -795,10 +795,10 @@ instance coprod.map_epi {C : Type*} [Category C] {W X Y Z : C} (f : W ⟶ Y) (g 
     [Epi g] [HasBinaryCoproduct W X] [HasBinaryCoproduct Y Z] : Epi (coprod.map f g) :=
   ⟨fun i₁ i₂ h => by
     ext
-    · rw [← cancel_epi f]
-      simpa using congr_arg (fun f => coprod.inl ≫ f) h
-    · rw [← cancel_epi g]
-      simpa using congr_arg (fun f => coprod.inr ≫ f) h⟩
+    rw [← cancel_epi f]
+    simpa using congr_arg (fun f => coprod.inl ≫ f) h
+    rw [← cancel_epi g]
+    simpa using congr_arg (fun f => coprod.inr ≫ f) h⟩
 
 -- The simp linter says simp can prove the reassoc version of this lemma.
 -- Porting note: and the og version too

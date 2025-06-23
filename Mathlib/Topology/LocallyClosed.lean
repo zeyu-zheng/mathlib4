@@ -113,10 +113,10 @@ lemma Inducing.isLocallyClosed_iff {s : Set X}
     IsLocallyClosed s ↔ ∃ s' : Set Y, IsLocallyClosed s' ∧ f ⁻¹' s' = s := by
   simp_rw [IsLocallyClosed, hf.isOpen_iff, hf.isClosed_iff]
   constructor
-  · rintro ⟨_, _, ⟨U, hU, rfl⟩, ⟨Z, hZ, rfl⟩, rfl⟩
-    exact ⟨_, ⟨U, Z, hU, hZ, rfl⟩, rfl⟩
-  · rintro ⟨_, ⟨U, Z, hU, hZ, rfl⟩, rfl⟩
-    exact ⟨_, _, ⟨U, hU, rfl⟩, ⟨Z, hZ, rfl⟩, rfl⟩
+  rintro ⟨_, _, ⟨U, hU, rfl⟩, ⟨Z, hZ, rfl⟩, rfl⟩
+  exact ⟨_, ⟨U, Z, hU, hZ, rfl⟩, rfl⟩
+  rintro ⟨_, ⟨U, Z, hU, hZ, rfl⟩, rfl⟩
+  exact ⟨_, _, ⟨U, hU, rfl⟩, ⟨Z, hZ, rfl⟩, rfl⟩
 
 lemma Embedding.isLocallyClosed_iff {s : Set X}
     {f : X → Y} (hf : Embedding f) :
@@ -147,35 +147,35 @@ lemma isLocallyClosed_tfae (s : Set X) :
       ∀ x ∈ s, ∃ U, x ∈ U ∧ IsOpen U ∧ U ∩ closure s ⊆ s,
       IsOpen (closure s ↓∩ s)] := by
   tfae_have 1 → 2
-  · rintro ⟨U, Z, hU, hZ, rfl⟩
-    have : Z ∪ (frontier (U ∩ Z))ᶜ = univ
-    nth_rw 1 [← hZ.closure_eq]
-    rw [← compl_subset_iff_union, compl_subset_compl]
-    refine frontier_subset_closure.trans (closure_mono inter_subset_right)
-    rw [coborder_eq_union_frontier_compl, inter_union_distrib_right, this,
-      inter_univ]
-    exact hU.union isClosed_frontier.isOpen_compl
+  rintro ⟨U, Z, hU, hZ, rfl⟩
+  have : Z ∪ (frontier (U ∩ Z))ᶜ = univ
+  nth_rw 1 [← hZ.closure_eq]
+  rw [← compl_subset_iff_union, compl_subset_compl]
+  refine frontier_subset_closure.trans (closure_mono inter_subset_right)
+  rw [coborder_eq_union_frontier_compl, inter_union_distrib_right, this,
+    inter_univ]
+  exact hU.union isClosed_frontier.isOpen_compl
   tfae_have 2 → 3
-  · exact fun h x ↦ (⟨coborder s, h.mem_nhds <| subset_coborder ·, isClosed_preimage_val_coborder⟩)
+  exact fun h x ↦ (⟨coborder s, h.mem_nhds <| subset_coborder ·, isClosed_preimage_val_coborder⟩)
   tfae_have 3 → 4
-  · intro h x hx
-    obtain ⟨t, ht, ht'⟩ := h x hx
-    obtain ⟨U, hUt, hU, hxU⟩ := mem_nhds_iff.mp ht
-    rw [isClosed_preimage_val] at ht'
-    exact ⟨U, hxU, hU, (subset_inter (inter_subset_left.trans hUt) (hU.inter_closure.trans
-      (closure_mono <| inter_subset_inter hUt subset_rfl))).trans ht'⟩
+  intro h x hx
+  obtain ⟨t, ht, ht'⟩ := h x hx
+  obtain ⟨U, hUt, hU, hxU⟩ := mem_nhds_iff.mp ht
+  rw [isClosed_preimage_val] at ht'
+  exact ⟨U, hxU, hU, (subset_inter (inter_subset_left.trans hUt) (hU.inter_closure.trans
+    (closure_mono <| inter_subset_inter hUt subset_rfl))).trans ht'⟩
   tfae_have 4 → 5
-  · intro H
-    choose U hxU hU e using H
-    refine ⟨⋃ x ∈ s, U x ‹_›, isOpen_iUnion (isOpen_iUnion <| hU ·), ext fun x ↦ ⟨?_, ?_⟩⟩
-    · rintro ⟨_, ⟨⟨y, rfl⟩, ⟨_, ⟨hy, rfl⟩, hxU⟩⟩⟩
-      exact e y hy ⟨hxU, x.2⟩
-    · exact (subset_iUnion₂ _ _ <| hxU x ·)
+  intro H
+  choose U hxU hU e using H
+  refine ⟨⋃ x ∈ s, U x ‹_›, isOpen_iUnion (isOpen_iUnion <| hU ·), ext fun x ↦ ⟨?_, ?_⟩⟩
+  rintro ⟨_, ⟨⟨y, rfl⟩, ⟨_, ⟨hy, rfl⟩, hxU⟩⟩⟩
+  exact e y hy ⟨hxU, x.2⟩
+  exact (subset_iUnion₂ _ _ <| hxU x ·)
   tfae_have 5 → 1
-  · intro H
-    convert H.isLocallyClosed.image inducing_subtype_val
-      (by simpa using isClosed_closure.isLocallyClosed)
-    simpa using subset_closure
+  intro H
+  convert H.isLocallyClosed.image inducing_subtype_val
+    (by simpa using isClosed_closure.isLocallyClosed)
+  simpa using subset_closure
   tfae_finish
 
 lemma isLocallyClosed_iff_isOpen_coborder : IsLocallyClosed s ↔ IsOpen (coborder s) :=

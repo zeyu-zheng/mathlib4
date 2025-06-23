@@ -224,14 +224,14 @@ def desc (F : J ⥤ PresheafedSpace.{_, _, v} C) (s : Cocone F) : colimit F ⟶ 
 theorem desc_fac (F : J ⥤ PresheafedSpace.{_, _, v} C) (s : Cocone F) (j : J) :
     (colimitCocone F).ι.app j ≫ desc F s = s.ι.app j := by
   ext U
-  · simp [desc]
-  · -- Porting note: the original proof is just `ext; dsimp [desc, descCApp]; simpa`,
-    -- but this has to be expanded a bit
-    rw [NatTrans.comp_app, PresheafedSpace.comp_c_app, whiskerRight_app]
-    dsimp [desc, descCApp]
-    simp only [eqToHom_app, op_obj, Opens.map_comp_obj, eqToHom_map, Functor.leftOp, assoc]
-    rw [limitObjIsoLimitCompEvaluation_inv_π_app_assoc]
-    simp
+  simp [desc]
+  -- Porting note: the original proof is just `ext; dsimp [desc, descCApp]; simpa`,
+  -- but this has to be expanded a bit
+  rw [NatTrans.comp_app, PresheafedSpace.comp_c_app, whiskerRight_app]
+  dsimp [desc, descCApp]
+  simp only [eqToHom_app, op_obj, Opens.map_comp_obj, eqToHom_map, Functor.leftOp, assoc]
+  rw [limitObjIsoLimitCompEvaluation_inv_π_app_assoc]
+  simp
 
 end ColimitCoconeIsColimit
 
@@ -267,9 +267,9 @@ instance : PreservesColimitsOfShape J (PresheafedSpace.forget.{u, v, v} C) :=
   ⟨fun {F} => preservesColimitOfPreservesColimitCocone (colimitCoconeIsColimit F) <| by
     apply IsColimit.ofIsoColimit (colimit.isColimit _)
     fapply Cocones.ext
-    · rfl
-    · intro j
-      simp⟩
+    rfl
+    intro j
+    simp⟩
 
 /-- When `C` has limits, the category of presheaved spaces with values in `C` itself has colimits.
 -/
@@ -285,9 +285,9 @@ instance forgetPreservesColimits [HasLimits C] : PreservesColimits (PresheafedSp
         preservesColimitOfPreservesColimitCocone (colimitCoconeIsColimit F)
           (by apply IsColimit.ofIsoColimit (colimit.isColimit _)
               fapply Cocones.ext
-              · rfl
-              · intro j
-                simp) }
+              rfl
+              intro j
+              simp) }
 
 /-- The components of the colimit of a diagram of `PresheafedSpace C` is obtained
 via taking componentwise limits.

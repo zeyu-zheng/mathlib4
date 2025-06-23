@@ -29,17 +29,17 @@ namespace Nat
 
 theorem choose_le_pow (r n : ℕ) : (n.choose r : α) ≤ (n ^ r : α) / r ! := by
   rw [le_div_iff']
-  · norm_cast
-    rw [← Nat.descFactorial_eq_factorial_mul_choose]
-    exact n.descFactorial_le_pow r
+  norm_cast
+  rw [← Nat.descFactorial_eq_factorial_mul_choose]
+  exact n.descFactorial_le_pow r
   exact mod_cast r.factorial_pos
 
 -- horrific casting is due to ℕ-subtraction
 theorem pow_le_choose (r n : ℕ) : ((n + 1 - r : ℕ) ^ r : α) / r ! ≤ n.choose r := by
   rw [div_le_iff']
-  · norm_cast
-    rw [← Nat.descFactorial_eq_factorial_mul_choose]
-    exact n.pow_sub_le_descFactorial r
+  norm_cast
+  rw [← Nat.descFactorial_eq_factorial_mul_choose]
+  exact n.pow_sub_le_descFactorial r
   exact mod_cast r.factorial_pos
 
 end Nat

@@ -278,9 +278,9 @@ theorem span_smul_of_span_eq_top {s : Set S} (hs : span R s = ⊤) (t : Set A) :
     fun p hp ↦ closure_induction hp (zero_mem _) (fun _ _ ↦ add_mem) fun s0 y hy ↦ by
       refine span_induction (hs ▸ mem_top : s0 ∈ span R s)
         (fun x hx ↦ subset_span ⟨x, hx, y, hy, rfl⟩) ?_ ?_ ?_
-      · rw [zero_smul]; apply zero_mem
-      · intro _ _; rw [add_smul]; apply add_mem
-      · intro r s0 hy; rw [IsScalarTower.smul_assoc]; exact smul_mem _ r hy
+      rw [zero_smul]; apply zero_mem
+      intro _ _; rw [add_smul]; apply add_mem
+      intro r s0 hy; rw [IsScalarTower.smul_assoc]; exact smul_mem _ r hy
 
 -- The following two lemmas were originally used to prove `span_smul_of_span_eq_top`
 -- but are now not needed.

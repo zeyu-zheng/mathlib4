@@ -85,15 +85,15 @@ lemma term_congr {f g : ℕ → ℂ} (h : ∀ {n}, n ≠ 0 → f n = g n) (s : �
 lemma norm_term_eq (f : ℕ → ℂ) (s : ℂ) (n : ℕ) :
     ‖term f s n‖ = if n = 0 then 0 else ‖f n‖ / n ^ s.re := by
   rcases eq_or_ne n 0 with rfl | hn
-  · simp only [term_zero, norm_zero, ↓reduceIte]
-  · rw [if_neg hn, term_of_ne_zero hn, norm_div, norm_natCast_cpow_of_pos <| Nat.pos_of_ne_zero hn]
+  simp only [term_zero, norm_zero, ↓reduceIte]
+  rw [if_neg hn, term_of_ne_zero hn, norm_div, norm_natCast_cpow_of_pos <| Nat.pos_of_ne_zero hn]
 
 lemma norm_term_le {f g : ℕ → ℂ} (s : ℂ) {n : ℕ} (h : ‖f n‖ ≤ ‖g n‖) :
     ‖term f s n‖ ≤ ‖term g s n‖ := by
   simp only [norm_term_eq]
   split
-  · rfl
-  · gcongr
+  rfl
+  gcongr
 
 lemma norm_term_le_of_re_le_re (f : ℕ → ℂ) {s s' : ℂ} (h : s.re ≤ s'.re) (n : ℕ) :
     ‖term f s' n‖ ≤ ‖term f s n‖ := by
@@ -238,11 +238,11 @@ open Nat Complex
 
 lemma term_delta (s : ℂ) (n : ℕ) : term δ s n = if n = 1 then 1 else 0 := by
   rcases eq_or_ne n 0 with rfl | hn
-  · simp only [term_zero, zero_ne_one, ↓reduceIte]
-  · simp only [ne_eq, hn, not_false_eq_true, term_of_ne_zero, delta]
-    rcases eq_or_ne n 1 with rfl | hn'
-    · simp only [↓reduceIte, cast_one, one_cpow, ne_eq, one_ne_zero, not_false_eq_true, div_self]
-    · simp only [hn', ↓reduceIte, zero_div]
+  simp only [term_zero, zero_ne_one, ↓reduceIte]
+  simp only [ne_eq, hn, not_false_eq_true, term_of_ne_zero, delta]
+  rcases eq_or_ne n 1 with rfl | hn'
+  simp only [↓reduceIte, cast_one, one_cpow, ne_eq, one_ne_zero, not_false_eq_true, div_self]
+  simp only [hn', ↓reduceIte, zero_div]
 
 lemma mul_delta_eq_smul_delta {f : ℕ → ℂ} : f * δ = f 1 • δ := by
   ext n
@@ -311,16 +311,16 @@ lemma LSeriesSummable_of_le_const_mul_rpow {f : ℕ → ℂ} {x : ℝ} {s : ℂ}
   linarith only [hs]
   refine Summable.mul_left _ <|
     Summable.of_norm_bounded_eventually_nat (fun n ↦ (n : ℝ) ^ (-s.re + x - 1)) ?_ ?_
-  · simp only [Real.summable_nat_rpow, hsx]
-  · simp only [neg_add_rev, neg_sub, norm_norm, Filter.eventually_atTop]
-    refine ⟨1, fun n hn ↦ ?_⟩
-    simp only [norm_natCast_cpow_of_pos hn, add_re, sub_re, neg_re, ofReal_re, one_re]
-    convert le_refl ?_ using 2
-    ring
+  simp only [Real.summable_nat_rpow, hsx]
+  simp only [neg_add_rev, neg_sub, norm_norm, Filter.eventually_atTop]
+  refine ⟨1, fun n hn ↦ ?_⟩
+  simp only [norm_natCast_cpow_of_pos hn, add_re, sub_re, neg_re, ofReal_re, one_re]
+  convert le_refl ?_ using 2
+  ring
   refine Summable.of_norm <| hsum.of_nonneg_of_le (fun _ ↦ norm_nonneg _) (fun n ↦ ?_)
   rcases n.eq_zero_or_pos with rfl | hn
-  · simp only [term_zero, norm_zero]
-    exact norm_nonneg _
+  simp only [term_zero, norm_zero]
+  exact norm_nonneg _
   have hn' : 0 < (n : ℝ) ^ s.re := Real.rpow_pos_of_pos (Nat.cast_pos.mpr hn) _
   simp_rw [term_of_ne_zero hn.ne', norm_div, norm_natCast_cpow_of_pos hn, div_le_iff hn',
     norm_eq_abs (C : ℂ), abs_ofReal, _root_.abs_of_nonneg hC₀, div_eq_mul_inv, mul_assoc,
@@ -341,14 +341,14 @@ lemma LSeriesSummable_of_isBigO_rpow {f : ℕ → ℂ} {x : ℝ} {s : ℂ} (hs :
   have hCC' : C ≤ C' := le_max_left ..
   refine LSeriesSummable_of_le_const_mul_rpow hs ⟨C', fun n hn₀ ↦ ?_⟩
   rcases le_or_lt m n with hn | hn
-  · refine (hm n hn).trans ?_
-    have hn₀ : (0 : ℝ) ≤ n := cast_nonneg _
-    gcongr
-    rw [Real.norm_eq_abs, abs_rpow_of_nonneg hn₀, _root_.abs_of_nonneg hn₀]
-  · have hn' : 0 < n := Nat.pos_of_ne_zero hn₀
-    refine (div_le_iff <| rpow_pos_of_pos (cast_pos.mpr hn') _).mp ?_
-    refine (le_max' _ _ <| mem_insert_of_mem ?_).trans <| le_max_right ..
-    exact mem_image.mpr ⟨n, mem_range.mpr hn, rfl⟩
+  refine (hm n hn).trans ?_
+  have hn₀ : (0 : ℝ) ≤ n := cast_nonneg _
+  gcongr
+  rw [Real.norm_eq_abs, abs_rpow_of_nonneg hn₀, _root_.abs_of_nonneg hn₀]
+  have hn' : 0 < n := Nat.pos_of_ne_zero hn₀
+  refine (div_le_iff <| rpow_pos_of_pos (cast_pos.mpr hn') _).mp ?_
+  refine (le_max' _ _ <| mem_insert_of_mem ?_).trans <| le_max_right ..
+  exact mem_image.mpr ⟨n, mem_range.mpr hn, rfl⟩
 
 /-- If `f` is bounded, then its `LSeries` is summable at `s` when `re s > 1`. -/
 theorem LSeriesSummable_of_bounded_of_one_lt_re {f : ℕ → ℂ} {m : ℝ}

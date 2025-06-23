@@ -97,17 +97,17 @@ theorem tendsto_abv_eval₂_atTop {R S k α : Type*} [Semiring R] [Ring S] [Line
     (hf : f p.leadingCoeff ≠ 0) {l : Filter α} {z : α → S} (hz : Tendsto (abv ∘ z) l atTop) :
     Tendsto (fun x => abv (p.eval₂ f (z x))) l atTop := by
   revert hf; refine degree_pos_induction_on p hd ?_ ?_ ?_ <;> clear hd p
-  · rintro _ - hc
-    rw [leadingCoeff_mul_X, leadingCoeff_C] at hc
-    simpa [abv_mul abv] using hz.const_mul_atTop ((abv_pos abv).2 hc)
-  · intro _ _ ihp hf
-    rw [leadingCoeff_mul_X] at hf
-    simpa [abv_mul abv] using (ihp hf).atTop_mul_atTop hz
-  · intro _ a hd ihp hf
-    rw [add_comm, leadingCoeff_add_of_degree_lt (degree_C_le.trans_lt hd)] at hf
-    refine tendsto_atTop_of_add_const_right (abv (-f a)) ?_
-    refine tendsto_atTop_mono (fun _ => abv_add abv _ _) ?_
-    simpa using ihp hf
+  rintro _ - hc
+  rw [leadingCoeff_mul_X, leadingCoeff_C] at hc
+  simpa [abv_mul abv] using hz.const_mul_atTop ((abv_pos abv).2 hc)
+  intro _ _ ihp hf
+  rw [leadingCoeff_mul_X] at hf
+  simpa [abv_mul abv] using (ihp hf).atTop_mul_atTop hz
+  intro _ a hd ihp hf
+  rw [add_comm, leadingCoeff_add_of_degree_lt (degree_C_le.trans_lt hd)] at hf
+  refine tendsto_atTop_of_add_const_right (abv (-f a)) ?_
+  refine tendsto_atTop_mono (fun _ => abv_add abv _ _) ?_
+  simpa using ihp hf
 
 theorem tendsto_abv_atTop {R k α : Type*} [Ring R] [LinearOrderedField k] (abv : R → k)
     [IsAbsoluteValue abv] (p : R[X]) (h : 0 < degree p) {l : Filter α} {z : α → R}
@@ -153,18 +153,18 @@ theorem coeff_le_of_roots_le {p : F[X]} {f : F →+* K} {B : ℝ} (i : ℕ) (h1 
     (h2 : Splits f p) (h3 : ∀ z ∈ (map f p).roots, ‖z‖ ≤ B) :
     ‖(map f p).coeff i‖ ≤ B ^ (p.natDegree - i) * p.natDegree.choose i := by
   obtain hB | hB := lt_or_le B 0
-  · rw [eq_one_of_roots_le hB h1 h2 h3, Polynomial.map_one, natDegree_one, zero_tsub, pow_zero,
-      one_mul, coeff_one]
-    split_ifs with h <;> simp [h]
+  rw [eq_one_of_roots_le hB h1 h2 h3, Polynomial.map_one, natDegree_one, zero_tsub, pow_zero,
+    one_mul, coeff_one]
+  split_ifs with h <;> simp [h]
   rw [← h1.natDegree_map f]
   obtain hi | hi := lt_or_le (map f p).natDegree i
-  · rw [coeff_eq_zero_of_natDegree_lt hi, norm_zero]
-    positivity
+  rw [coeff_eq_zero_of_natDegree_lt hi, norm_zero]
+  positivity
   rw [coeff_eq_esymm_roots_of_splits ((splits_id_iff_splits f).2 h2) hi, (h1.map _).leadingCoeff,
     one_mul, norm_mul, norm_pow, norm_neg, norm_one, one_pow, one_mul]
   apply ((norm_multiset_sum_le _).trans <| sum_le_card_nsmul _ _ fun r hr => _).trans
-  · rw [Multiset.map_map, card_map, card_powersetCard, ← natDegree_eq_card_roots' h2,
-      Nat.choose_symm hi, mul_comm, nsmul_eq_mul]
+  rw [Multiset.map_map, card_map, card_powersetCard, ← natDegree_eq_card_roots' h2,
+    Nat.choose_symm hi, mul_comm, nsmul_eq_mul]
   intro r hr
   simp_rw [Multiset.mem_map] at hr
   obtain ⟨_, ⟨s, hs, rfl⟩, rfl⟩ := hr
@@ -182,20 +182,20 @@ theorem coeff_bdd_of_roots_le {B : ℝ} {d : ℕ} (f : F →+* K) {p : F[X]} (h1
     (h2 : Splits f p) (h3 : p.natDegree ≤ d) (h4 : ∀ z ∈ (map f p).roots, ‖z‖ ≤ B) (i : ℕ) :
     ‖(map f p).coeff i‖ ≤ max B 1 ^ d * d.choose (d / 2) := by
   obtain hB | hB := le_or_lt 0 B
-  · apply (coeff_le_of_roots_le i h1 h2 h4).trans
-    calc
-      _ ≤ max B 1 ^ (p.natDegree - i) * p.natDegree.choose i := by gcongr; apply le_max_left
-      _ ≤ max B 1 ^ d * p.natDegree.choose i := by
-        gcongr
-        · apply le_max_right
-        · exact le_trans (Nat.sub_le _ _) h3
-      _ ≤ max B 1 ^ d * d.choose (d / 2) := by
-        gcongr; exact (i.choose_mono h3).trans (i.choose_le_middle d)
-  · rw [eq_one_of_roots_le hB h1 h2 h4, Polynomial.map_one, coeff_one]
-    refine _root_.trans ?_
-      (one_le_mul_of_one_le_of_one_le (one_le_pow_of_one_le (le_max_right B 1) d) ?_)
-    · split_ifs <;> norm_num
-    · exact mod_cast Nat.succ_le_iff.mpr (Nat.choose_pos (d.div_le_self 2))
+  apply (coeff_le_of_roots_le i h1 h2 h4).trans
+  calc
+    _ ≤ max B 1 ^ (p.natDegree - i) * p.natDegree.choose i := by gcongr; apply le_max_left
+    _ ≤ max B 1 ^ d * p.natDegree.choose i := by
+      gcongr
+      apply le_max_right
+      exact le_trans (Nat.sub_le _ _) h3
+    _ ≤ max B 1 ^ d * d.choose (d / 2) := by
+      gcongr; exact (i.choose_mono h3).trans (i.choose_le_middle d)
+  rw [eq_one_of_roots_le hB h1 h2 h4, Polynomial.map_one, coeff_one]
+  refine _root_.trans ?_
+    (one_le_mul_of_one_le_of_one_le (one_le_pow_of_one_le (le_max_right B 1) d) ?_)
+  split_ifs <;> norm_num
+  exact mod_cast Nat.succ_le_iff.mpr (Nat.choose_pos (d.div_le_self 2))
 
 end Roots
 

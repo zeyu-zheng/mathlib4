@@ -34,10 +34,10 @@ noncomputable instance ChooseBasisIndex.fintype [Module.Finite R M] :
     Fintype (Module.Free.ChooseBasisIndex R M) := by
   refine @Fintype.ofFinite _ ?_
   cases subsingleton_or_nontrivial R
-  · have := Module.subsingleton R M
-    rw [ChooseBasisIndex]
-    infer_instance
-  · exact Module.Finite.finite_basis (chooseBasis _ _)
+  have := Module.subsingleton R M
+  rw [ChooseBasisIndex]
+  infer_instance
+  exact Module.Finite.finite_basis (chooseBasis _ _)
 
 end Ring
 

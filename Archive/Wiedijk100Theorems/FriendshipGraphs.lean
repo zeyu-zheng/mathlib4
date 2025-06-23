@@ -119,8 +119,8 @@ theorem degree_eq_of_not_adj {v w : V} (hvw : ¬G.Adj v w) : degree G v = degree
 theorem adjMatrix_sq_of_regular (hd : G.IsRegularOfDegree d) :
     G.adjMatrix R ^ 2 = of fun v w => if v = w then (d : R) else (1 : R) := by
   ext (v w); by_cases h : v = w
-  · rw [h, sq, adjMatrix_mul_self_apply_self, hd]; simp
-  · rw [adjMatrix_sq_of_ne R hG h, of_apply, if_neg h]
+  rw [h, sq, adjMatrix_mul_self_apply_self, hd]; simp
+  rw [adjMatrix_sq_of_ne R hG h, of_apply, if_neg h]
 
 theorem adjMatrix_sq_mod_p_of_regular {p : ℕ} (dmod : (d : ZMod p) = 1)
     (hd : G.IsRegularOfDegree d) : G.adjMatrix (ZMod p) ^ 2 = of fun _ _ => 1 := by
@@ -170,15 +170,15 @@ theorem isRegularOf_not_existsPolitician (hG' : ¬ExistsPolitician G) :
 theorem card_of_regular (hd : G.IsRegularOfDegree d) : d + (Fintype.card V - 1) = d * d := by
   have v := Classical.arbitrary V
   trans ((G.adjMatrix ℕ ^ 2) *ᵥ (fun _ => 1)) v
-  · rw [adjMatrix_sq_of_regular hG hd, mulVec, dotProduct, ← insert_erase (mem_univ v)]
-    simp only [sum_insert, mul_one, if_true, Nat.cast_id, eq_self_iff_true, mem_erase, not_true,
-      Ne, not_false_iff, add_right_inj, false_and_iff, of_apply]
-    rw [Finset.sum_const_nat, card_erase_of_mem (mem_univ v), mul_one]; · rfl
-    intro x hx; simp [(ne_of_mem_erase hx).symm]
-  · rw [sq, ← mulVec_mulVec]
-    simp only [adjMatrix_mulVec_const_apply_of_regular hd, neighborFinset,
-      card_neighborSet_eq_degree, hd v, Function.const_def, adjMatrix_mulVec_apply _ _ (mulVec _ _),
-      mul_one, sum_const, Set.toFinset_card, Algebra.id.smul_eq_mul, Nat.cast_id]
+  rw [adjMatrix_sq_of_regular hG hd, mulVec, dotProduct, ← insert_erase (mem_univ v)]
+  simp only [sum_insert, mul_one, if_true, Nat.cast_id, eq_self_iff_true, mem_erase, not_true,
+    Ne, not_false_iff, add_right_inj, false_and_iff, of_apply]
+  rw [Finset.sum_const_nat, card_erase_of_mem (mem_univ v), mul_one]; · rfl
+  intro x hx; simp [(ne_of_mem_erase hx).symm]
+  rw [sq, ← mulVec_mulVec]
+  simp only [adjMatrix_mulVec_const_apply_of_regular hd, neighborFinset,
+    card_neighborSet_eq_degree, hd v, Function.const_def, adjMatrix_mulVec_apply _ _ (mulVec _ _),
+    mul_one, sum_const, Set.toFinset_card, Algebra.id.smul_eq_mul, Nat.cast_id]
 
 /-- The size of a `d`-regular friendship graph is `1 mod (d-1)`, and thus `1 mod p` for a
   factor `p ∣ d-1`. -/
@@ -212,7 +212,7 @@ theorem adjMatrix_pow_mod_p_of_regular {p : ℕ} (dmod : (d : ZMod p) = 1)
   | 0 | 1 => exfalso; linarith
   | k + 2 =>
     induction' k with k hind
-    · exact adjMatrix_sq_mod_p_of_regular hG dmod hd
+    exact adjMatrix_sq_mod_p_of_regular hG dmod hd
     rw [pow_succ', hind (Nat.le_add_left 2 k)]
     exact adjMatrix_mul_const_one_mod_p_of_regular dmod hd
 
@@ -279,17 +279,17 @@ theorem existsPolitician_of_degree_le_one (hd : G.IsRegularOfDegree d) (hd1 : d 
 theorem neighborFinset_eq_of_degree_eq_two (hd : G.IsRegularOfDegree 2) (v : V) :
     G.neighborFinset v = Finset.univ.erase v := by
   apply Finset.eq_of_subset_of_card_le
-  · rw [Finset.subset_iff]
-    intro x
-    rw [mem_neighborFinset, Finset.mem_erase]
-    exact fun h => ⟨(G.ne_of_adj h).symm, Finset.mem_univ _⟩
+  rw [Finset.subset_iff]
+  intro x
+  rw [mem_neighborFinset, Finset.mem_erase]
+  exact fun h => ⟨(G.ne_of_adj h).symm, Finset.mem_univ _⟩
   convert_to 2 ≤ _
-  · convert_to _ = Fintype.card V - 1
-    · have hfr := card_of_regular hG hd
-      linarith
-    · exact Finset.card_erase_of_mem (Finset.mem_univ _)
-  · dsimp only [IsRegularOfDegree, degree] at hd
-    rw [hd]
+  convert_to _ = Fintype.card V - 1
+  have hfr := card_of_regular hG hd
+  linarith
+  exact Finset.card_erase_of_mem (Finset.mem_univ _)
+  dsimp only [IsRegularOfDegree, degree] at hd
+  rw [hd]
 
 theorem existsPolitician_of_degree_eq_two (hd : G.IsRegularOfDegree 2) : ExistsPolitician G := by
   have v := Classical.arbitrary V
@@ -316,8 +316,8 @@ theorem friendship_theorem [Nonempty V] : ExistsPolitician G := by
   by_contra npG
   rcases hG.isRegularOf_not_existsPolitician npG with ⟨d, dreg⟩
   cases' lt_or_le d 3 with dle2 dge3
-  · exact npG (hG.existsPolitician_of_degree_le_two dreg (Nat.lt_succ_iff.mp dle2))
-  · exact hG.false_of_three_le_degree dreg dge3
+  exact npG (hG.existsPolitician_of_degree_le_two dreg (Nat.lt_succ_iff.mp dle2))
+  exact hG.false_of_three_le_degree dreg dge3
 
 end
 

@@ -47,9 +47,9 @@ theorem mem_product {l₁ : List α} {l₂ : List β} {a : α} {b : β} :
 theorem length_product (l₁ : List α) (l₂ : List β) :
     length (l₁ ×ˢ l₂) = length l₁ * length l₂ := by
   induction' l₁ with x l₁ IH
-  · exact (Nat.zero_mul _).symm
-  · simp only [length, product_cons, length_append, IH, Nat.add_mul, Nat.one_mul, length_map,
-      Nat.add_comm]
+  exact (Nat.zero_mul _).symm
+  simp only [length, product_cons, length_append, IH, Nat.add_mul, Nat.one_mul, length_map,
+    Nat.add_comm]
 
 /-! ### sigma -/
 
@@ -80,7 +80,7 @@ theorem mem_sigma {l₁ : List α} {l₂ : ∀ a, List (σ a)} {a : α} {b : σ 
 theorem length_sigma' (l₁ : List α) (l₂ : ∀ a, List (σ a)) :
     length (l₁.sigma l₂) = Nat.sum (l₁.map fun a ↦ length (l₂ a)) := by
   induction' l₁ with x l₁ IH
-  · rfl
-  · simp only [map, sigma_cons, length_append, length_map, IH, Nat.sum_cons]
+  rfl
+  simp only [map, sigma_cons, length_append, length_map, IH, Nat.sum_cons]
 
 end List

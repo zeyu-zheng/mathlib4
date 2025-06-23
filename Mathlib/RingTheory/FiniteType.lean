@@ -118,15 +118,15 @@ theorem iff_quotient_freeAlgebra :
     FiniteType R A ↔
       ∃ (s : Finset A) (f : FreeAlgebra R s →ₐ[R] A), Surjective f := by
   constructor
-  · rintro ⟨s, hs⟩
-    refine ⟨s, FreeAlgebra.lift _ (↑), ?_⟩
-    intro x
-    have hrw : (↑s : Set A) = fun x : A => x ∈ s.val := rfl
-    rw [← Set.mem_range, ← AlgHom.coe_range]
-    erw [← adjoin_eq_range_freeAlgebra_lift, ← hrw, hs]
-    exact Set.mem_univ x
-  · rintro ⟨s, ⟨f, hsur⟩⟩
-    exact FiniteType.of_surjective (FiniteType.freeAlgebra R s) f hsur
+  rintro ⟨s, hs⟩
+  refine ⟨s, FreeAlgebra.lift _ (↑), ?_⟩
+  intro x
+  have hrw : (↑s : Set A) = fun x : A => x ∈ s.val := rfl
+  rw [← Set.mem_range, ← AlgHom.coe_range]
+  erw [← adjoin_eq_range_freeAlgebra_lift, ← hrw, hs]
+  exact Set.mem_univ x
+  rintro ⟨s, ⟨f, hsur⟩⟩
+  exact FiniteType.of_surjective (FiniteType.freeAlgebra R s) f hsur
 
 /-- A commutative algebra is finitely generated if and only if it is a quotient
 of a polynomial ring whose variables are indexed by a finset. -/
@@ -134,50 +134,50 @@ theorem iff_quotient_mvPolynomial :
     FiniteType R S ↔
       ∃ (s : Finset S) (f : MvPolynomial { x // x ∈ s } R →ₐ[R] S), Surjective f := by
   constructor
-  · rintro ⟨s, hs⟩
-    use s, MvPolynomial.aeval (↑)
-    intro x
-    have hrw : (↑s : Set S) = fun x : S => x ∈ s.val := rfl
-    rw [← Set.mem_range, ← AlgHom.coe_range, ← adjoin_eq_range, ← hrw, hs]
-    exact Set.mem_univ x
-  · rintro ⟨s, ⟨f, hsur⟩⟩
-    exact FiniteType.of_surjective (FiniteType.mvPolynomial R { x // x ∈ s }) f hsur
+  rintro ⟨s, hs⟩
+  use s, MvPolynomial.aeval (↑)
+  intro x
+  have hrw : (↑s : Set S) = fun x : S => x ∈ s.val := rfl
+  rw [← Set.mem_range, ← AlgHom.coe_range, ← adjoin_eq_range, ← hrw, hs]
+  exact Set.mem_univ x
+  rintro ⟨s, ⟨f, hsur⟩⟩
+  exact FiniteType.of_surjective (FiniteType.mvPolynomial R { x // x ∈ s }) f hsur
 
 /-- An algebra is finitely generated if and only if it is a quotient
 of a polynomial ring whose variables are indexed by a fintype. -/
 theorem iff_quotient_freeAlgebra' : FiniteType R A ↔
     ∃ (ι : Type uA) (_ : Fintype ι) (f : FreeAlgebra R ι →ₐ[R] A), Surjective f := by
   constructor
-  · rw [iff_quotient_freeAlgebra]
-    rintro ⟨s, ⟨f, hsur⟩⟩
-    use { x : A // x ∈ s }, inferInstance, f
-  · rintro ⟨ι, ⟨hfintype, ⟨f, hsur⟩⟩⟩
-    letI : Fintype ι := hfintype
-    exact FiniteType.of_surjective (FiniteType.freeAlgebra R ι) f hsur
+  rw [iff_quotient_freeAlgebra]
+  rintro ⟨s, ⟨f, hsur⟩⟩
+  use { x : A // x ∈ s }, inferInstance, f
+  rintro ⟨ι, ⟨hfintype, ⟨f, hsur⟩⟩⟩
+  letI : Fintype ι := hfintype
+  exact FiniteType.of_surjective (FiniteType.freeAlgebra R ι) f hsur
 
 /-- A commutative algebra is finitely generated if and only if it is a quotient
 of a polynomial ring whose variables are indexed by a fintype. -/
 theorem iff_quotient_mvPolynomial' : FiniteType R S ↔
     ∃ (ι : Type uS) (_ : Fintype ι) (f : MvPolynomial ι R →ₐ[R] S), Surjective f := by
   constructor
-  · rw [iff_quotient_mvPolynomial]
-    rintro ⟨s, ⟨f, hsur⟩⟩
-    use { x : S // x ∈ s }, inferInstance, f
-  · rintro ⟨ι, ⟨hfintype, ⟨f, hsur⟩⟩⟩
-    letI : Fintype ι := hfintype
-    exact FiniteType.of_surjective (FiniteType.mvPolynomial R ι) f hsur
+  rw [iff_quotient_mvPolynomial]
+  rintro ⟨s, ⟨f, hsur⟩⟩
+  use { x : S // x ∈ s }, inferInstance, f
+  rintro ⟨ι, ⟨hfintype, ⟨f, hsur⟩⟩⟩
+  letI : Fintype ι := hfintype
+  exact FiniteType.of_surjective (FiniteType.mvPolynomial R ι) f hsur
 
 /-- A commutative algebra is finitely generated if and only if it is a quotient of a polynomial ring
 in `n` variables. -/
 theorem iff_quotient_mvPolynomial'' :
     FiniteType R S ↔ ∃ (n : ℕ) (f : MvPolynomial (Fin n) R →ₐ[R] S), Surjective f := by
   constructor
-  · rw [iff_quotient_mvPolynomial']
-    rintro ⟨ι, hfintype, ⟨f, hsur⟩⟩
-    have equiv := MvPolynomial.renameEquiv R (Fintype.equivFin ι)
-    exact ⟨Fintype.card ι, AlgHom.comp f equiv.symm.toAlgHom, by simpa using hsur⟩
-  · rintro ⟨n, ⟨f, hsur⟩⟩
-    exact FiniteType.of_surjective (FiniteType.mvPolynomial R (Fin n)) f hsur
+  rw [iff_quotient_mvPolynomial']
+  rintro ⟨ι, hfintype, ⟨f, hsur⟩⟩
+  have equiv := MvPolynomial.renameEquiv R (Fintype.equivFin ι)
+  exact ⟨Fintype.card ι, AlgHom.comp f equiv.symm.toAlgHom, by simpa using hsur⟩
+  rintro ⟨n, ⟨f, hsur⟩⟩
+  exact FiniteType.of_surjective (FiniteType.mvPolynomial R (Fin n)) f hsur
 
 instance prod [hA : FiniteType R A] [hB : FiniteType R B] : FiniteType R (A × B) :=
   ⟨by rw [← Subalgebra.prod_top]; exact hA.1.prod hB.1⟩
@@ -412,20 +412,20 @@ theorem mvPolynomial_aeval_of_surjective_of_closure [AddCommMonoid M] [CommSemir
       (MvPolynomial.aeval fun s : S => of' R M ↑s : MvPolynomial S R → R[M]) := by
   intro f
   induction' f using induction_on with m f g ihf ihg r f ih
-  · have : m ∈ closure S := hS.symm ▸ mem_top _
-    refine AddSubmonoid.closure_induction this (fun m hm => ?_) ?_ ?_
-    · exact ⟨MvPolynomial.X ⟨m, hm⟩, MvPolynomial.aeval_X _ _⟩
-    · exact ⟨1, map_one _⟩
-    · rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
-      exact
-        ⟨P₁ * P₂, by
-          rw [map_mul, hP₁, hP₂, of_apply, of_apply, of_apply, single_mul_single,
-            one_mul]; rfl⟩
-  · rcases ihf with ⟨P, rfl⟩
-    rcases ihg with ⟨Q, rfl⟩
-    exact ⟨P + Q, map_add _ _ _⟩
-  · rcases ih with ⟨P, rfl⟩
-    exact ⟨r • P, map_smul _ _ _⟩
+  have : m ∈ closure S := hS.symm ▸ mem_top _
+  refine AddSubmonoid.closure_induction this (fun m hm => ?_) ?_ ?_
+  exact ⟨MvPolynomial.X ⟨m, hm⟩, MvPolynomial.aeval_X _ _⟩
+  exact ⟨1, map_one _⟩
+  rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
+  exact
+    ⟨P₁ * P₂, by
+      rw [map_mul, hP₁, hP₂, of_apply, of_apply, of_apply, single_mul_single,
+        one_mul]; rfl⟩
+  rcases ihf with ⟨P, rfl⟩
+  rcases ihg with ⟨Q, rfl⟩
+  exact ⟨P + Q, map_add _ _ _⟩
+  rcases ih with ⟨P, rfl⟩
+  exact ⟨r • P, map_smul _ _ _⟩
 
 variable [AddMonoid M]
 
@@ -437,20 +437,20 @@ theorem freeAlgebra_lift_of_surjective_of_closure [CommSemiring R] {S : Set M}
       (FreeAlgebra.lift R fun s : S => of' R M ↑s : FreeAlgebra R S → R[M]) := by
   intro f
   induction' f using induction_on with m f g ihf ihg r f ih
-  · have : m ∈ closure S := hS.symm ▸ mem_top _
-    refine AddSubmonoid.closure_induction this (fun m hm => ?_) ?_ ?_
-    · exact ⟨FreeAlgebra.ι R ⟨m, hm⟩, FreeAlgebra.lift_ι_apply _ _⟩
-    · exact ⟨1, map_one _⟩
-    · rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
-      exact
-        ⟨P₁ * P₂, by
-          rw [map_mul, hP₁, hP₂, of_apply, of_apply, of_apply, single_mul_single,
-            one_mul]; rfl⟩
-  · rcases ihf with ⟨P, rfl⟩
-    rcases ihg with ⟨Q, rfl⟩
-    exact ⟨P + Q, map_add _ _ _⟩
-  · rcases ih with ⟨P, rfl⟩
-    exact ⟨r • P, map_smul _ _ _⟩
+  have : m ∈ closure S := hS.symm ▸ mem_top _
+  refine AddSubmonoid.closure_induction this (fun m hm => ?_) ?_ ?_
+  exact ⟨FreeAlgebra.ι R ⟨m, hm⟩, FreeAlgebra.lift_ι_apply _ _⟩
+  exact ⟨1, map_one _⟩
+  rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
+  exact
+    ⟨P₁ * P₂, by
+      rw [map_mul, hP₁, hP₂, of_apply, of_apply, of_apply, single_mul_single,
+        one_mul]; rfl⟩
+  rcases ihf with ⟨P, rfl⟩
+  rcases ihg with ⟨Q, rfl⟩
+  exact ⟨P + Q, map_add _ _ _⟩
+  rcases ih with ⟨P, rfl⟩
+  exact ⟨r • P, map_smul _ _ _⟩
 
 variable (R M)
 
@@ -580,18 +580,18 @@ theorem mvPolynomial_aeval_of_surjective_of_closure [CommMonoid M] [CommSemiring
       (MvPolynomial.aeval fun s : S => of R M ↑s : MvPolynomial S R → MonoidAlgebra R M) := by
   intro f
   induction' f using induction_on with m f g ihf ihg r f ih
-  · have : m ∈ closure S := hS.symm ▸ mem_top _
-    refine Submonoid.closure_induction this (fun m hm => ?_) ?_ ?_
-    · exact ⟨MvPolynomial.X ⟨m, hm⟩, MvPolynomial.aeval_X _ _⟩
-    · exact ⟨1, map_one _⟩
-    · rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
-      exact
-        ⟨P₁ * P₂, by
-          rw [map_mul, hP₁, hP₂, of_apply, of_apply, of_apply, single_mul_single, one_mul]⟩
-  · rcases ihf with ⟨P, rfl⟩; rcases ihg with ⟨Q, rfl⟩
-    exact ⟨P + Q, map_add _ _ _⟩
-  · rcases ih with ⟨P, rfl⟩
-    exact ⟨r • P, map_smul _ _ _⟩
+  have : m ∈ closure S := hS.symm ▸ mem_top _
+  refine Submonoid.closure_induction this (fun m hm => ?_) ?_ ?_
+  exact ⟨MvPolynomial.X ⟨m, hm⟩, MvPolynomial.aeval_X _ _⟩
+  exact ⟨1, map_one _⟩
+  rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
+  exact
+    ⟨P₁ * P₂, by
+      rw [map_mul, hP₁, hP₂, of_apply, of_apply, of_apply, single_mul_single, one_mul]⟩
+  rcases ihf with ⟨P, rfl⟩; rcases ihg with ⟨Q, rfl⟩
+  exact ⟨P + Q, map_add _ _ _⟩
+  rcases ih with ⟨P, rfl⟩
+  exact ⟨r • P, map_smul _ _ _⟩
 
 
 variable [Monoid M]
@@ -604,19 +604,19 @@ theorem freeAlgebra_lift_of_surjective_of_closure [CommSemiring R] {S : Set M}
       (FreeAlgebra.lift R fun s : S => of R M ↑s : FreeAlgebra R S → MonoidAlgebra R M) := by
   intro f
   induction' f using induction_on with m f g ihf ihg r f ih
-  · have : m ∈ closure S := hS.symm ▸ mem_top _
-    refine Submonoid.closure_induction this (fun m hm => ?_) ?_ ?_
-    · exact ⟨FreeAlgebra.ι R ⟨m, hm⟩, FreeAlgebra.lift_ι_apply _ _⟩
-    · exact ⟨1, map_one _⟩
-    · rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
-      exact
-        ⟨P₁ * P₂, by
-          rw [map_mul, hP₁, hP₂, of_apply, of_apply, of_apply, single_mul_single, one_mul]⟩
-  · rcases ihf with ⟨P, rfl⟩
-    rcases ihg with ⟨Q, rfl⟩
-    exact ⟨P + Q, map_add _ _ _⟩
-  · rcases ih with ⟨P, rfl⟩
-    exact ⟨r • P, map_smul _ _ _⟩
+  have : m ∈ closure S := hS.symm ▸ mem_top _
+  refine Submonoid.closure_induction this (fun m hm => ?_) ?_ ?_
+  exact ⟨FreeAlgebra.ι R ⟨m, hm⟩, FreeAlgebra.lift_ι_apply _ _⟩
+  exact ⟨1, map_one _⟩
+  rintro m₁ m₂ ⟨P₁, hP₁⟩ ⟨P₂, hP₂⟩
+  exact
+    ⟨P₁ * P₂, by
+      rw [map_mul, hP₁, hP₂, of_apply, of_apply, of_apply, single_mul_single, one_mul]⟩
+  rcases ihf with ⟨P, rfl⟩
+  rcases ihg with ⟨Q, rfl⟩
+  exact ⟨P + Q, map_add _ _ _⟩
+  rcases ih with ⟨P, rfl⟩
+  exact ⟨r • P, map_smul _ _ _⟩
 
 /-- If a monoid `M` is finitely generated then `MonoidAlgebra R M` is of finite type. -/
 instance finiteType_of_fg [CommRing R] [Monoid.FG M] : FiniteType R (MonoidAlgebra R M) :=
@@ -692,35 +692,35 @@ instance (priority := 100) CommRing.orzechProperty
       ((f.restrictScalars A).restrict fun x hx ↦ ?_ : N' →ₗ[A] M')
       (fun _ _ h ↦ injective_subtype _ (hi congr(($h).1)))
       fun ⟨x, hx⟩ ↦ ?_) ⟨n, (subset_span (by simp))⟩ (Subtype.val_injective hn)).1)
-  · induction hx using span_induction' with
-    | mem x hx =>
-      change i x ∈ M'
-      simp only [Set.singleton_union, Set.mem_insert_iff, Set.mem_range] at hx
-      rcases hx with hx | ⟨j, rfl⟩
-      · rw [hx, ← hb, piEquiv_apply_apply]
-        refine Submodule.sum_mem _ fun j _ ↦ ?_
-        let b' : A := ⟨b j, Subring.subset_closure (by simp)⟩
-        rw [show b j • mj j = b' • mj j from rfl]
-        exact smul_mem _ _ (subset_span (by simp))
-      · rw [← hc, piEquiv_apply_apply]
-        refine Submodule.sum_mem _ fun j' _ ↦ ?_
-        let c' : A := ⟨c j j', Subring.subset_closure
-          (by simp [show ∃ a b, c a b = c j j' from ⟨j, j', rfl⟩])⟩
-        rw [show c j j' • mj j' = c' • mj j' from rfl]
-        exact smul_mem _ _ (subset_span (by simp))
-    | zero => simp
-    | add x _ y _ hx hy => rw [map_add]; exact add_mem hx hy
-    | smul a x _ hx => rw [map_smul]; exact smul_mem _ _ hx
-  · induction hx using span_induction' with
-    | mem x hx =>
-      change f x ∈ M'
-      simp only [Set.singleton_union, Set.mem_insert_iff, Set.mem_range] at hx
-      rcases hx with hx | ⟨j, rfl⟩
-      · rw [hx, hn]; exact zero_mem _
-      · exact subset_span (by simp [hnj])
-    | zero => simp
-    | add x _ y _ hx hy => rw [map_add]; exact add_mem hx hy
-    | smul a x _ hx => rw [map_smul]; exact smul_mem _ _ hx
+  induction hx using span_induction' with
+  | mem x hx =>
+    change i x ∈ M'
+    simp only [Set.singleton_union, Set.mem_insert_iff, Set.mem_range] at hx
+    rcases hx with hx | ⟨j, rfl⟩
+    rw [hx, ← hb, piEquiv_apply_apply]
+    refine Submodule.sum_mem _ fun j _ ↦ ?_
+    let b' : A := ⟨b j, Subring.subset_closure (by simp)⟩
+    rw [show b j • mj j = b' • mj j from rfl]
+    exact smul_mem _ _ (subset_span (by simp))
+    rw [← hc, piEquiv_apply_apply]
+    refine Submodule.sum_mem _ fun j' _ ↦ ?_
+    let c' : A := ⟨c j j', Subring.subset_closure
+      (by simp [show ∃ a b, c a b = c j j' from ⟨j, j', rfl⟩])⟩
+    rw [show c j j' • mj j' = c' • mj j' from rfl]
+    exact smul_mem _ _ (subset_span (by simp))
+  | zero => simp
+  | add x _ y _ hx hy => rw [map_add]; exact add_mem hx hy
+  | smul a x _ hx => rw [map_smul]; exact smul_mem _ _ hx
+  induction hx using span_induction' with
+  | mem x hx =>
+    change f x ∈ M'
+    simp only [Set.singleton_union, Set.mem_insert_iff, Set.mem_range] at hx
+    rcases hx with hx | ⟨j, rfl⟩
+    rw [hx, hn]; exact zero_mem _
+    exact subset_span (by simp [hnj])
+  | zero => simp
+  | add x _ y _ hx hy => rw [map_add]; exact add_mem hx hy
+  | smul a x _ hx => rw [map_smul]; exact smul_mem _ _ hx
   suffices x ∈ LinearMap.range ((f.restrictScalars A).domRestrict N') by
     obtain ⟨a, ha⟩ := this
     exact ⟨a, Subtype.val_injective ha⟩

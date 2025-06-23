@@ -553,8 +553,8 @@ theorem sequence_mono_nat {r : β → β → Prop} {f : α → β} (hf : Directe
   dsimp [Directed.sequence]
   generalize hf.sequence f n = p
   cases' (decode n : Option α) with a
-  · exact (Classical.choose_spec (hf p p)).1
-  · exact (Classical.choose_spec (hf p a)).1
+  exact (Classical.choose_spec (hf p p)).1
+  exact (Classical.choose_spec (hf p a)).1
 
 theorem rel_sequence {r : β → β → Prop} {f : α → β} (hf : Directed r f) (a : α) :
     r (f a) (f (hf.sequence f (encode a + 1))) := by

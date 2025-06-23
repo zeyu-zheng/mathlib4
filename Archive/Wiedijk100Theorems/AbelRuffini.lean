@@ -77,20 +77,20 @@ theorem irreducible_Phi (p : ℕ) (hp : p.Prime) (hpa : p ∣ a) (hpb : p ∣ b)
   rw [← map_Phi a b (Int.castRingHom ℚ), ← IsPrimitive.Int.irreducible_iff_irreducible_map_cast]
   on_goal 1 =>
     apply irreducible_of_eisenstein_criterion
-    · rwa [span_singleton_prime (Int.natCast_ne_zero.mpr hp.ne_zero), Int.prime_iff_natAbs_prime]
-    · rw [leadingCoeff_Phi, mem_span_singleton]
-      exact mod_cast mt Nat.dvd_one.mp hp.ne_one
-    · intro n hn
-      rw [mem_span_singleton]
-      rw [degree_Phi] at hn; norm_cast at hn
-      interval_cases n <;>
-      simp (config := {decide := true}) only [Φ, coeff_X_pow, coeff_C, Int.natCast_dvd_natCast.mpr,
-        hpb, if_true, coeff_C_mul, if_false, coeff_X_zero, hpa, coeff_add, zero_add, mul_zero,
-        coeff_sub, add_zero, zero_sub, dvd_neg, neg_zero, dvd_mul_of_dvd_left]
-    · simp only [degree_Phi, ← WithBot.coe_zero, WithBot.coe_lt_coe, Nat.succ_pos']
-      decide
-    · rw [coeff_zero_Phi, span_singleton_pow, mem_span_singleton]
-      exact mt Int.natCast_dvd_natCast.mp hp2b
+    rwa [span_singleton_prime (Int.natCast_ne_zero.mpr hp.ne_zero), Int.prime_iff_natAbs_prime]
+    rw [leadingCoeff_Phi, mem_span_singleton]
+    exact mod_cast mt Nat.dvd_one.mp hp.ne_one
+    intro n hn
+    rw [mem_span_singleton]
+    rw [degree_Phi] at hn; norm_cast at hn
+    interval_cases n <;>
+    simp (config := {decide := true}) only [Φ, coeff_X_pow, coeff_C, Int.natCast_dvd_natCast.mpr,
+      hpb, if_true, coeff_C_mul, if_false, coeff_X_zero, hpa, coeff_add, zero_add, mul_zero,
+      coeff_sub, add_zero, zero_sub, dvd_neg, neg_zero, dvd_mul_of_dvd_left]
+    simp only [degree_Phi, ← WithBot.coe_zero, WithBot.coe_lt_coe, Nat.succ_pos']
+    decide
+    rw [coeff_zero_Phi, span_singleton_pow, mem_span_singleton]
+    exact mt Int.natCast_dvd_natCast.mp hp2b
   all_goals exact Monic.isPrimitive (monic_Phi a b)
 
 theorem real_roots_Phi_le : Fintype.card ((Φ ℚ a b).rootSet ℝ) ≤ 3 := by
@@ -114,27 +114,27 @@ theorem real_roots_Phi_ge_aux (hab : b < a) :
   have hf0 : 0 ≤ f 0
   simp [hf]
   by_cases hb : (1 : ℝ) - a + b < 0
-  · have hf1 : f 1 < 0 := by simp [hf, hb]
-    have hfa : 0 ≤ f a
-    simp_rw [hf, ← sq]
-    refine add_nonneg (sub_nonneg.mpr (pow_le_pow_right ha ?_)) ?_ <;> norm_num
-    obtain ⟨x, ⟨-, hx1⟩, hx2⟩ := intermediate_value_Ico' hle (hc _) (Set.mem_Ioc.mpr ⟨hf1, hf0⟩)
-    obtain ⟨y, ⟨hy1, -⟩, hy2⟩ := intermediate_value_Ioc ha (hc _) (Set.mem_Ioc.mpr ⟨hf1, hfa⟩)
-    exact ⟨x, y, (hx1.trans hy1).ne, hx2, hy2⟩
-  · replace hb : (b : ℝ) = a - 1 := by linarith [show (b : ℝ) + 1 ≤ a from mod_cast hab]
-    have hf1 : f 1 = 0
-    simp [hf, hb]
-    have hfa :=
-      calc
-        f (-a) = (a : ℝ) ^ 2 - (a : ℝ) ^ 5 + b := by
-          norm_num [hf, ← sq, sub_eq_add_neg, add_comm, Odd.neg_pow (by decide : Odd 5)]
-        _ ≤ (a : ℝ) ^ 2 - (a : ℝ) ^ 3 + (a - 1) := by
-          refine add_le_add (sub_le_sub_left (pow_le_pow_right ha ?_) _) ?_ <;> linarith
-        _ = -((a : ℝ) - 1) ^ 2 * (a + 1) := by ring
-        _ ≤ 0 := by nlinarith
-    have ha' := neg_nonpos.mpr (hle.trans ha)
-    obtain ⟨x, ⟨-, hx1⟩, hx2⟩ := intermediate_value_Icc ha' (hc _) (Set.mem_Icc.mpr ⟨hfa, hf0⟩)
-    exact ⟨x, 1, (hx1.trans_lt zero_lt_one).ne, hx2, hf1⟩
+  have hf1 : f 1 < 0 := by simp [hf, hb]
+  have hfa : 0 ≤ f a
+  simp_rw [hf, ← sq]
+  refine add_nonneg (sub_nonneg.mpr (pow_le_pow_right ha ?_)) ?_ <;> norm_num
+  obtain ⟨x, ⟨-, hx1⟩, hx2⟩ := intermediate_value_Ico' hle (hc _) (Set.mem_Ioc.mpr ⟨hf1, hf0⟩)
+  obtain ⟨y, ⟨hy1, -⟩, hy2⟩ := intermediate_value_Ioc ha (hc _) (Set.mem_Ioc.mpr ⟨hf1, hfa⟩)
+  exact ⟨x, y, (hx1.trans hy1).ne, hx2, hy2⟩
+  replace hb : (b : ℝ) = a - 1 := by linarith [show (b : ℝ) + 1 ≤ a from mod_cast hab]
+  have hf1 : f 1 = 0
+  simp [hf, hb]
+  have hfa :=
+    calc
+      f (-a) = (a : ℝ) ^ 2 - (a : ℝ) ^ 5 + b := by
+        norm_num [hf, ← sq, sub_eq_add_neg, add_comm, Odd.neg_pow (by decide : Odd 5)]
+      _ ≤ (a : ℝ) ^ 2 - (a : ℝ) ^ 3 + (a - 1) := by
+        refine add_le_add (sub_le_sub_left (pow_le_pow_right ha ?_) _) ?_ <;> linarith
+      _ = -((a : ℝ) - 1) ^ 2 * (a + 1) := by ring
+      _ ≤ 0 := by nlinarith
+  have ha' := neg_nonpos.mpr (hle.trans ha)
+  obtain ⟨x, ⟨-, hx1⟩, hx2⟩ := intermediate_value_Icc ha' (hc _) (Set.mem_Icc.mpr ⟨hfa, hf0⟩)
+  exact ⟨x, 1, (hx1.trans_lt zero_lt_one).ne, hx2, hf1⟩
 
 theorem real_roots_Phi_ge (hab : b < a) : 2 ≤ Fintype.card ((Φ ℚ a b).rootSet ℝ) := by
   have q_ne_zero : Φ ℚ a b ≠ 0 := (monic_Phi a b).ne_zero
@@ -151,11 +151,11 @@ theorem complex_roots_Phi (h : (Φ ℚ a b).Separable) : Fintype.card ((Φ ℚ a
 theorem gal_Phi (hab : b < a) (h_irred : Irreducible (Φ ℚ a b)) :
     Bijective (galActionHom (Φ ℚ a b) ℂ) := by
   apply galActionHom_bijective_of_prime_degree' h_irred
-  · simp only [natDegree_Phi]; decide
-  · rw [complex_roots_Phi a b h_irred.separable, Nat.succ_le_succ_iff]
-    exact (real_roots_Phi_le a b).trans (Nat.le_succ 3)
-  · simp_rw [complex_roots_Phi a b h_irred.separable, Nat.succ_le_succ_iff]
-    exact real_roots_Phi_ge a b hab
+  simp only [natDegree_Phi]; decide
+  rw [complex_roots_Phi a b h_irred.separable, Nat.succ_le_succ_iff]
+  exact (real_roots_Phi_le a b).trans (Nat.le_succ 3)
+  simp_rw [complex_roots_Phi a b h_irred.separable, Nat.succ_le_succ_iff]
+  exact real_roots_Phi_ge a b hab
 
 theorem not_solvable_by_rad (p : ℕ) (x : ℂ) (hx : aeval x (Φ ℚ a b) = 0) (hab : b < a)
     (hp : p.Prime) (hpa : p ∣ a) (hpb : p ∣ b) (hp2b : ¬p ^ 2 ∣ b) : ¬IsSolvableByRad ℚ x := by

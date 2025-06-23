@@ -71,9 +71,9 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
     suffices (upperBounds Sn ∩ lowerBounds Sp).Nonempty by
       simpa only [Set.Nonempty, upperBounds, lowerBounds, forall_mem_image] using this
     refine exists_between_of_forall_le (Nonempty.image f ?_) (Nonempty.image f (dense y)) ?_
-    · rcases dense (-y) with ⟨x, hx⟩
-      rw [← neg_neg x, NegMemClass.coe_neg, ← sub_eq_add_neg] at hx
-      exact ⟨_, hx⟩
+    rcases dense (-y) with ⟨x, hx⟩
+    rw [← neg_neg x, NegMemClass.coe_neg, ← sub_eq_add_neg] at hx
+    exact ⟨_, hx⟩
     rintro a ⟨xn, hxn, rfl⟩ b ⟨xp, hxp, rfl⟩
     have := s.add_mem hxp hxn
     rw [add_assoc, add_sub_cancel, ← sub_eq_add_neg, ← AddSubgroupClass.coe_sub] at this
@@ -81,33 +81,33 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
     rwa [f.map_sub, sub_nonneg] at this
   -- Porting note: removed an unused `have`
   refine ⟨f.supSpanSingleton y (-c) hy, ?_, ?_⟩
-  · refine lt_iff_le_not_le.2 ⟨f.left_le_sup _ _, fun H => ?_⟩
-    replace H := LinearPMap.domain_mono.monotone H
-    rw [LinearPMap.domain_supSpanSingleton, sup_le_iff, span_le, singleton_subset_iff] at H
-    exact hy H.2
-  · rintro ⟨z, hz⟩ hzs
-    rcases mem_sup.1 hz with ⟨x, hx, y', hy', rfl⟩
-    rcases mem_span_singleton.1 hy' with ⟨r, rfl⟩
-    simp only [Subtype.coe_mk] at hzs
-    erw [LinearPMap.supSpanSingleton_apply_mk _ _ _ _ _ hx, smul_neg, ← sub_eq_add_neg, sub_nonneg]
-    rcases lt_trichotomy r 0 with (hr | hr | hr)
-    · have : -(r⁻¹ • x) - y ∈ s := by
-        rwa [← s.smul_mem_iff (neg_pos.2 hr), smul_sub, smul_neg, neg_smul, neg_neg, smul_smul,
-          mul_inv_cancel hr.ne, one_smul, sub_eq_add_neg, neg_smul, neg_neg]
-      -- Porting note: added type annotation and `by exact`
-      replace : f (r⁻¹ • ⟨x, hx⟩) ≤ c := le_c (r⁻¹ • ⟨x, hx⟩) (by exact this)
-      rwa [← mul_le_mul_left (neg_pos.2 hr), neg_mul, neg_mul, neg_le_neg_iff, f.map_smul,
-        smul_eq_mul, ← mul_assoc, mul_inv_cancel hr.ne, one_mul] at this
-    · subst r
-      simp only [zero_smul, add_zero] at hzs ⊢
-      apply nonneg
-      exact hzs
-    · have : r⁻¹ • x + y ∈ s := by
-        rwa [← s.smul_mem_iff hr, smul_add, smul_smul, mul_inv_cancel hr.ne', one_smul]
-      -- Porting note: added type annotation and `by exact`
-      replace : c ≤ f (r⁻¹ • ⟨x, hx⟩) := c_le (r⁻¹ • ⟨x, hx⟩) (by exact this)
-      rwa [← mul_le_mul_left hr, f.map_smul, smul_eq_mul, ← mul_assoc, mul_inv_cancel hr.ne',
-        one_mul] at this
+  refine lt_iff_le_not_le.2 ⟨f.left_le_sup _ _, fun H => ?_⟩
+  replace H := LinearPMap.domain_mono.monotone H
+  rw [LinearPMap.domain_supSpanSingleton, sup_le_iff, span_le, singleton_subset_iff] at H
+  exact hy H.2
+  rintro ⟨z, hz⟩ hzs
+  rcases mem_sup.1 hz with ⟨x, hx, y', hy', rfl⟩
+  rcases mem_span_singleton.1 hy' with ⟨r, rfl⟩
+  simp only [Subtype.coe_mk] at hzs
+  erw [LinearPMap.supSpanSingleton_apply_mk _ _ _ _ _ hx, smul_neg, ← sub_eq_add_neg, sub_nonneg]
+  rcases lt_trichotomy r 0 with (hr | hr | hr)
+  have : -(r⁻¹ • x) - y ∈ s := by
+    rwa [← s.smul_mem_iff (neg_pos.2 hr), smul_sub, smul_neg, neg_smul, neg_neg, smul_smul,
+      mul_inv_cancel hr.ne, one_smul, sub_eq_add_neg, neg_smul, neg_neg]
+  -- Porting note: added type annotation and `by exact`
+  replace : f (r⁻¹ • ⟨x, hx⟩) ≤ c := le_c (r⁻¹ • ⟨x, hx⟩) (by exact this)
+  rwa [← mul_le_mul_left (neg_pos.2 hr), neg_mul, neg_mul, neg_le_neg_iff, f.map_smul,
+    smul_eq_mul, ← mul_assoc, mul_inv_cancel hr.ne, one_mul] at this
+  subst r
+  simp only [zero_smul, add_zero] at hzs ⊢
+  apply nonneg
+  exact hzs
+  have : r⁻¹ • x + y ∈ s := by
+    rwa [← s.smul_mem_iff hr, smul_add, smul_smul, mul_inv_cancel hr.ne', one_smul]
+  -- Porting note: added type annotation and `by exact`
+  replace : c ≤ f (r⁻¹ • ⟨x, hx⟩) := c_le (r⁻¹ • ⟨x, hx⟩) (by exact this)
+  rwa [← mul_le_mul_left hr, f.map_smul, smul_eq_mul, ← mul_assoc, mul_inv_cancel hr.ne',
+    one_mul] at this
 
 theorem exists_top (p : E →ₗ.[ℝ] ℝ) (hp_nonneg : ∀ x : p.domain, (x : E) ∈ s → 0 ≤ p x)
     (hp_dense : ∀ y, ∃ x : p.domain, (x : E) + y ∈ s) :
@@ -148,8 +148,8 @@ theorem riesz_extension (s : ConvexCone ℝ E) (f : E →ₗ.[ℝ] ℝ)
   rcases RieszExtension.exists_top s f nonneg dense
     with ⟨⟨g_dom, g⟩, ⟨-, hfg⟩, rfl : g_dom = ⊤, hgs⟩
   refine ⟨g.comp (LinearMap.id.codRestrict ⊤ fun _ ↦ trivial), ?_, ?_⟩
-  · exact fun x => (hfg rfl).symm
-  · exact fun x hx => hgs ⟨x, _⟩ hx
+  exact fun x => (hfg rfl).symm
+  exact fun x hx => hgs ⟨x, _⟩ hx
 
 /-- **Hahn-Banach theorem**: if `N : E → ℝ` is a sublinear map, `f` is a linear map
 defined on a subspace of `E`, and `f x ≤ N x` for all `x` in the domain of `f`,
@@ -178,7 +178,7 @@ theorem exists_extension_of_le_sublinear (f : E →ₗ.[ℝ] ℝ) (N : E → ℝ
   replace g_eq : ∀ (x : f.domain) (y : ℝ), g (x, y) = y - f x := fun x y ↦
     (g_eq ⟨(x, y), ⟨x.2, trivial⟩⟩).trans (sub_eq_neg_add _ _).symm
   refine ⟨-g.comp (inl ℝ E ℝ), fun x ↦ ?_, fun x ↦ ?_⟩
-  · simp [g_eq x 0]
-  · calc -g (x, 0) = g (0, N x) - g (x, N x) := by simp [← map_sub, ← map_neg]
-      _ = N x - g (x, N x) := by simpa using g_eq 0 (N x)
-      _ ≤ N x := by simpa using g_nonneg ⟨x, N x⟩ (le_refl (N x))
+  simp [g_eq x 0]
+  calc -g (x, 0) = g (0, N x) - g (x, N x) := by simp [← map_sub, ← map_neg]
+    _ = N x - g (x, N x) := by simpa using g_eq 0 (N x)
+    _ ≤ N x := by simpa using g_nonneg ⟨x, N x⟩ (le_refl (N x))

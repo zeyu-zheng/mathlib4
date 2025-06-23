@@ -169,14 +169,14 @@ theorem nonZeroDivisors.coe_ne_zero [Nontrivial M] (x : M⁰) : (x : M) ≠ 0 :=
 
 theorem mul_mem_nonZeroDivisors {a b : M₁} : a * b ∈ M₁⁰ ↔ a ∈ M₁⁰ ∧ b ∈ M₁⁰ := by
   constructor
-  · intro h
-    constructor <;> intro x h' <;> apply h
-    · rw [← mul_assoc, h', zero_mul]
-    · rw [mul_comm a b, ← mul_assoc, h', zero_mul]
-  · rintro ⟨ha, hb⟩ x hx
-    apply ha
-    apply hb
-    rw [mul_assoc, hx]
+  intro h
+  constructor <;> intro x h' <;> apply h
+  rw [← mul_assoc, h', zero_mul]
+  rw [mul_comm a b, ← mul_assoc, h', zero_mul]
+  rintro ⟨ha, hb⟩ x hx
+  apply ha
+  apply hb
+  rw [mul_assoc, hx]
 
 theorem isUnit_of_mem_nonZeroDivisors {G₀ : Type*} [GroupWithZero G₀] {x : G₀}
     (hx : x ∈ nonZeroDivisors G₀) : IsUnit x :=
@@ -222,10 +222,10 @@ theorem powers_le_nonZeroDivisors_of_noZeroDivisors [NoZeroDivisors M] {a : M} (
 theorem map_le_nonZeroDivisors_of_injective [NoZeroDivisors M'] [MonoidWithZeroHomClass F M M']
     (f : F) (hf : Function.Injective f) {S : Submonoid M} (hS : S ≤ M⁰) : S.map f ≤ M'⁰ := by
   cases subsingleton_or_nontrivial M
-  · simp [Subsingleton.elim S ⊥]
-  · exact le_nonZeroDivisors_of_noZeroDivisors fun h ↦
-      let ⟨x, hx, hx0⟩ := h
-      zero_ne_one (hS (hf (hx0.trans (map_zero f).symm) ▸ hx : 0 ∈ S) 1 (mul_zero 1)).symm
+  simp [Subsingleton.elim S ⊥]
+  exact le_nonZeroDivisors_of_noZeroDivisors fun h ↦
+    let ⟨x, hx, hx0⟩ := h
+    zero_ne_one (hS (hf (hx0.trans (map_zero f).symm) ▸ hx : 0 ∈ S) 1 (mul_zero 1)).symm
 
 theorem nonZeroDivisors_le_comap_nonZeroDivisors_of_injective [NoZeroDivisors M']
     [MonoidWithZeroHomClass F M M'] (f : F) (hf : Function.Injective f) : M⁰ ≤ M'⁰.comap f :=
@@ -292,12 +292,12 @@ theorem mk_mem_nonZeroDivisors_associates : Associates.mk a ∈ (Associates M₀
   rw [mem_nonZeroDivisors_iff, mem_nonZeroDivisors_iff, ← not_iff_not]
   push_neg
   constructor
-  · rintro ⟨⟨x⟩, hx₁, hx₂⟩
-    refine ⟨x, ?_, ?_⟩
-    · rwa [← Associates.mk_eq_zero, ← Associates.mk_mul_mk, ← Associates.quot_mk_eq_mk]
-    · rwa [← Associates.mk_ne_zero, ← Associates.quot_mk_eq_mk]
-  · refine fun ⟨b, hb₁, hb₂⟩ ↦ ⟨Associates.mk b, ?_, by rwa [Associates.mk_ne_zero]⟩
-    rw [Associates.mk_mul_mk, hb₁, Associates.mk_zero]
+  rintro ⟨⟨x⟩, hx₁, hx₂⟩
+  refine ⟨x, ?_, ?_⟩
+  rwa [← Associates.mk_eq_zero, ← Associates.mk_mul_mk, ← Associates.quot_mk_eq_mk]
+  rwa [← Associates.mk_ne_zero, ← Associates.quot_mk_eq_mk]
+  refine fun ⟨b, hb₁, hb₂⟩ ↦ ⟨Associates.mk b, ?_, by rwa [Associates.mk_ne_zero]⟩
+  rw [Associates.mk_mul_mk, hb₁, Associates.mk_zero]
 
 /-- The non-zero divisors of associates of a monoid with zero `M₀` are isomorphic to the associates
 of the non-zero divisors of `M₀` under the map `⟨⟦a⟧, _⟩ ↦ ⟦⟨a, _⟩⟧`. -/

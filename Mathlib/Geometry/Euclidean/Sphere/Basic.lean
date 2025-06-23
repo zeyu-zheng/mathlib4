@@ -140,10 +140,10 @@ theorem cospherical_def (ps : Set P) :
 theorem cospherical_iff_exists_sphere {ps : Set P} :
     Cospherical ps ↔ ∃ s : Sphere P, ps ⊆ (s : Set P) := by
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · rcases h with ⟨c, r, h⟩
-    exact ⟨⟨c, r⟩, h⟩
-  · rcases h with ⟨s, h⟩
-    exact ⟨s.center, s.radius, h⟩
+  rcases h with ⟨c, r, h⟩
+  exact ⟨⟨c, r⟩, h⟩
+  rcases h with ⟨s, h⟩
+  exact ⟨s.center, s.radius, h⟩
 
 /-- The set of points in a sphere is cospherical. -/
 theorem Sphere.cospherical (s : Sphere P) : Cospherical (s : Set P) :=
@@ -175,8 +175,8 @@ variable [NormedAddCommGroup V] [NormedSpace ℝ V] [MetricSpace P] [NormedAddTo
 theorem cospherical_pair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) :=
   ⟨midpoint ℝ p₁ p₂, ‖(2 : ℝ)‖⁻¹ * dist p₁ p₂, by
     rintro p (rfl | rfl | _)
-    · rw [dist_comm, dist_midpoint_left (𝕜 := ℝ)]
-    · rw [dist_comm, dist_midpoint_right (𝕜 := ℝ)]⟩
+    rw [dist_comm, dist_midpoint_left (𝕜 := ℝ)]
+    rw [dist_comm, dist_midpoint_right (𝕜 := ℝ)]⟩
 
 /-- A set of points is concyclic if it is cospherical and coplanar. (Most results are stated
 directly in terms of `Cospherical` instead of using `Concyclic`.) -/
@@ -250,9 +250,9 @@ theorem Cospherical.affineIndependent_of_mem_of_ne {s : Set P} (hs : Cospherical
     (h₁ : p₁ ∈ s) (h₂ : p₂ ∈ s) (h₃ : p₃ ∈ s) (h₁₂ : p₁ ≠ p₂) (h₁₃ : p₁ ≠ p₃) (h₂₃ : p₂ ≠ p₃) :
     AffineIndependent ℝ ![p₁, p₂, p₃] := by
   refine hs.affineIndependent ?_ ?_
-  · simp [h₁, h₂, h₃, Set.insert_subset_iff]
-  · erw [Fin.cons_injective_iff, Fin.cons_injective_iff]
-    simp [h₁₂, h₁₃, h₂₃, Function.Injective, eq_iff_true_of_subsingleton]
+  simp [h₁, h₂, h₃, Set.insert_subset_iff]
+  erw [Fin.cons_injective_iff, Fin.cons_injective_iff]
+  simp [h₁₂, h₁₃, h₂₃, Function.Injective, eq_iff_true_of_subsingleton]
 
 /-- The three points of a cospherical set are affinely independent. -/
 theorem Cospherical.affineIndependent_of_ne {p₁ p₂ p₃ : P} (hs : Cospherical ({p₁, p₂, p₃} : Set P))
@@ -302,39 +302,39 @@ theorem inner_pos_or_eq_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ 
     real_inner_self_eq_norm_mul_norm, sub_pos]
   refine lt_of_le_of_ne
     ((real_inner_le_norm _ _).trans (mul_le_mul_of_nonneg_right ?_ (norm_nonneg _))) ?_
-  · rwa [← dist_eq_norm_vsub, ← dist_eq_norm_vsub, hp₁]
-  · rcases hp₂.lt_or_eq with (hp₂' | hp₂')
-    · refine ((real_inner_le_norm _ _).trans_lt (mul_lt_mul_of_pos_right ?_ ?_)).ne
-      · rwa [← hp₁, @dist_eq_norm_vsub V, @dist_eq_norm_vsub V] at hp₂'
-      · rw [norm_pos_iff, vsub_ne_zero]
-        rintro rfl
-        rw [← hp₁] at hp₂'
-        refine (dist_nonneg.not_lt : ¬dist p₂ s.center < 0) ?_
-        simpa using hp₂'
-    · rw [← hp₁, @dist_eq_norm_vsub V, @dist_eq_norm_vsub V] at hp₂'
-      nth_rw 1 [← hp₂']
-      rw [Ne, inner_eq_norm_mul_iff_real, hp₂', ← sub_eq_zero, ← smul_sub,
-        vsub_sub_vsub_cancel_right, ← Ne, smul_ne_zero_iff, vsub_ne_zero,
-        and_iff_left (Ne.symm h), norm_ne_zero_iff, vsub_ne_zero]
-      rintro rfl
-      refine h (Eq.symm ?_)
-      simpa using hp₂'
+  rwa [← dist_eq_norm_vsub, ← dist_eq_norm_vsub, hp₁]
+  rcases hp₂.lt_or_eq with (hp₂' | hp₂')
+  refine ((real_inner_le_norm _ _).trans_lt (mul_lt_mul_of_pos_right ?_ ?_)).ne
+  rwa [← hp₁, @dist_eq_norm_vsub V, @dist_eq_norm_vsub V] at hp₂'
+  rw [norm_pos_iff, vsub_ne_zero]
+  rintro rfl
+  rw [← hp₁] at hp₂'
+  refine (dist_nonneg.not_lt : ¬dist p₂ s.center < 0) ?_
+  simpa using hp₂'
+  rw [← hp₁, @dist_eq_norm_vsub V, @dist_eq_norm_vsub V] at hp₂'
+  nth_rw 1 [← hp₂']
+  rw [Ne, inner_eq_norm_mul_iff_real, hp₂', ← sub_eq_zero, ← smul_sub,
+    vsub_sub_vsub_cancel_right, ← Ne, smul_ne_zero_iff, vsub_ne_zero,
+    and_iff_left (Ne.symm h), norm_ne_zero_iff, vsub_ne_zero]
+  rintro rfl
+  refine h (Eq.symm ?_)
+  simpa using hp₂'
 
 /-- Given a point on a sphere and a point not outside it, the inner product between the
 difference of those points and the radius vector is nonnegative. -/
 theorem inner_nonneg_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
     (hp₂ : dist p₂ s.center ≤ s.radius) : 0 ≤ ⟪p₁ -ᵥ p₂, p₁ -ᵥ s.center⟫ := by
   rcases inner_pos_or_eq_of_dist_le_radius hp₁ hp₂ with (h | rfl)
-  · exact h.le
-  · simp
+  exact h.le
+  simp
 
 /-- Given a point on a sphere and a point inside it, the inner product between the difference of
 those points and the radius vector is positive. -/
 theorem inner_pos_of_dist_lt_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
     (hp₂ : dist p₂ s.center < s.radius) : 0 < ⟪p₁ -ᵥ p₂, p₁ -ᵥ s.center⟫ := by
   by_cases h : p₁ = p₂
-  · rw [h, mem_sphere] at hp₁
-    exact False.elim (hp₂.ne hp₁)
+  rw [h, mem_sphere] at hp₁
+  exact False.elim (hp₂.ne hp₁)
   exact (inner_pos_or_eq_of_dist_le_radius hp₁ hp₂.le).resolve_right h
 
 /-- Given three collinear points, two on a sphere and one not outside it, the one not outside it

@@ -81,8 +81,8 @@ theorem parallelepiped_comp_equiv (v : ι → E) (e : ι' ≃ ι) :
   refine
     ⟨fun h => ⟨fun i => ?_, fun i => ?_⟩, fun h =>
       ⟨fun i => h.1 (e.symm i), fun i => h.2 (e.symm i)⟩⟩
-  · simpa only [Equiv.symm_apply_apply] using h.1 (e i)
-  · simpa only [Equiv.symm_apply_apply] using h.2 (e i)
+  simpa only [Equiv.symm_apply_apply] using h.1 (e i)
+  simpa only [Equiv.symm_apply_apply] using h.2 (e i)
   rw [this, ← image_comp]
   congr 1 with x
   have := fun z : ι' → ℝ => e.symm.sum_comp fun i => z i • v (e i)
@@ -103,29 +103,29 @@ theorem parallelepiped_orthonormalBasis_one_dim (b : OrthonormalBasis ι ℝ ℝ
   let F : ℝ → Fin 1 → ℝ := fun t => fun _i => t
   have A : Icc (0 : Fin 1 → ℝ) 1 = F '' Icc (0 : ℝ) 1
   apply Subset.antisymm
-  · intro x hx
-    refine ⟨x 0, ⟨hx.1 0, hx.2 0⟩, ?_⟩
-    ext j
-    simp only [Subsingleton.elim j 0]
-  · rintro x ⟨y, hy, rfl⟩
-    exact ⟨fun _j => hy.1, fun _j => hy.2⟩
+  intro x hx
+  refine ⟨x 0, ⟨hx.1 0, hx.2 0⟩, ?_⟩
+  ext j
+  simp only [Subsingleton.elim j 0]
+  rintro x ⟨y, hy, rfl⟩
+  exact ⟨fun _j => hy.1, fun _j => hy.2⟩
   rcases orthonormalBasis_one_dim (b.reindex e) with (H | H)
-  · left
-    simp_rw [parallelepiped, H, A, Algebra.id.smul_eq_mul, mul_one]
-    simp only [Finset.univ_unique, Fin.default_eq_zero, Finset.sum_singleton, ← image_comp,
-      Function.comp_apply, image_id']
-  · right
-    simp_rw [H, parallelepiped, Algebra.id.smul_eq_mul, A]
-    simp only [F, Finset.univ_unique, Fin.default_eq_zero, mul_neg, mul_one, Finset.sum_neg_distrib,
-      Finset.sum_singleton, ← image_comp, Function.comp, image_neg, preimage_neg_Icc, neg_zero]
+  left
+  simp_rw [parallelepiped, H, A, Algebra.id.smul_eq_mul, mul_one]
+  simp only [Finset.univ_unique, Fin.default_eq_zero, Finset.sum_singleton, ← image_comp,
+    Function.comp_apply, image_id']
+  right
+  simp_rw [H, parallelepiped, Algebra.id.smul_eq_mul, A]
+  simp only [F, Finset.univ_unique, Fin.default_eq_zero, mul_neg, mul_one, Finset.sum_neg_distrib,
+    Finset.sum_singleton, ← image_comp, Function.comp, image_neg, preimage_neg_Icc, neg_zero]
 
 theorem parallelepiped_eq_sum_segment (v : ι → E) : parallelepiped v = ∑ i, segment ℝ 0 (v i) := by
   ext
   simp only [mem_parallelepiped_iff, Set.mem_finset_sum, Finset.mem_univ, forall_true_left,
     segment_eq_image, smul_zero, zero_add, ← Set.pi_univ_Icc, Set.mem_univ_pi]
   constructor
-  · rintro ⟨t, ht, rfl⟩
-    exact ⟨t • v, fun {i} => ⟨t i, ht _, by simp⟩, rfl⟩
+  rintro ⟨t, ht, rfl⟩
+  exact ⟨t • v, fun {i} => ⟨t i, ht _, by simp⟩, rfl⟩
   rintro ⟨g, hg, rfl⟩
   choose t ht hg using @hg
   refine ⟨@t, @ht, ?_⟩
@@ -148,28 +148,28 @@ theorem parallelepiped_single [DecidableEq ι] (a : ι → ℝ) :
     Pi.sup_apply, ← Pi.single_smul', Pi.one_apply, Pi.zero_apply, ← Pi.smul_apply',
     Finset.univ_sum_single (_ : ι → ℝ)]
   constructor
-  · rintro ⟨t, ht, rfl⟩ i
-    specialize ht i
-    simp_rw [smul_eq_mul, Pi.mul_apply]
-    rcases le_total (a i) 0 with hai | hai
-    · rw [sup_eq_left.mpr hai, inf_eq_right.mpr hai]
-      exact ⟨le_mul_of_le_one_left hai ht.2, mul_nonpos_of_nonneg_of_nonpos ht.1 hai⟩
-    · rw [sup_eq_right.mpr hai, inf_eq_left.mpr hai]
-      exact ⟨mul_nonneg ht.1 hai, mul_le_of_le_one_left hai ht.2⟩
-  · intro h
-    refine ⟨fun i => x i / a i, fun i => ?_, funext fun i => ?_⟩
-    · specialize h i
-      rcases le_total (a i) 0 with hai | hai
-      · rw [sup_eq_left.mpr hai, inf_eq_right.mpr hai] at h
-        exact ⟨div_nonneg_of_nonpos h.2 hai, div_le_one_of_ge h.1 hai⟩
-      · rw [sup_eq_right.mpr hai, inf_eq_left.mpr hai] at h
-        exact ⟨div_nonneg h.1 hai, div_le_one_of_le h.2 hai⟩
-    · specialize h i
-      simp only [smul_eq_mul, Pi.mul_apply]
-      rcases eq_or_ne (a i) 0 with hai | hai
-      · rw [hai, inf_idem, sup_idem, ← le_antisymm_iff] at h
-        rw [hai, ← h, zero_div, zero_mul]
-      · rw [div_mul_cancel₀ _ hai]
+  rintro ⟨t, ht, rfl⟩ i
+  specialize ht i
+  simp_rw [smul_eq_mul, Pi.mul_apply]
+  rcases le_total (a i) 0 with hai | hai
+  rw [sup_eq_left.mpr hai, inf_eq_right.mpr hai]
+  exact ⟨le_mul_of_le_one_left hai ht.2, mul_nonpos_of_nonneg_of_nonpos ht.1 hai⟩
+  rw [sup_eq_right.mpr hai, inf_eq_left.mpr hai]
+  exact ⟨mul_nonneg ht.1 hai, mul_le_of_le_one_left hai ht.2⟩
+  intro h
+  refine ⟨fun i => x i / a i, fun i => ?_, funext fun i => ?_⟩
+  specialize h i
+  rcases le_total (a i) 0 with hai | hai
+  rw [sup_eq_left.mpr hai, inf_eq_right.mpr hai] at h
+  exact ⟨div_nonneg_of_nonpos h.2 hai, div_le_one_of_ge h.1 hai⟩
+  rw [sup_eq_right.mpr hai, inf_eq_left.mpr hai] at h
+  exact ⟨div_nonneg h.1 hai, div_le_one_of_le h.2 hai⟩
+  specialize h i
+  simp only [smul_eq_mul, Pi.mul_apply]
+  rcases eq_or_ne (a i) 0 with hai | hai
+  rw [hai, inf_idem, sup_idem, ← le_antisymm_iff] at h
+  rw [hai, ← h, zero_div, zero_mul]
+  rw [div_mul_cancel₀ _ hai]
 
 end AddCommGroup
 
@@ -221,29 +221,29 @@ theorem Basis.prod_parallelepiped (v : Basis ι ℝ E) (w : Basis ι' ℝ F) :
   simp only [Basis.coe_parallelepiped, TopologicalSpace.PositiveCompacts.coe_prod, Set.mem_prod,
     mem_parallelepiped_iff]
   constructor
-  · intro h
-    rcases h with ⟨t, ht1, ht2⟩
-    constructor
-    · use t ∘ Sum.inl
-      constructor
-      · exact ⟨(ht1.1 <| Sum.inl ·), (ht1.2 <| Sum.inl ·)⟩
-      simp [ht2, Prod.fst_sum, Prod.snd_sum]
-    · use t ∘ Sum.inr
-      constructor
-      · exact ⟨(ht1.1 <| Sum.inr ·), (ht1.2 <| Sum.inr ·)⟩
-      simp [ht2, Prod.fst_sum, Prod.snd_sum]
+  intro h
+  rcases h with ⟨t, ht1, ht2⟩
+  constructor
+  use t ∘ Sum.inl
+  constructor
+  exact ⟨(ht1.1 <| Sum.inl ·), (ht1.2 <| Sum.inl ·)⟩
+  simp [ht2, Prod.fst_sum, Prod.snd_sum]
+  use t ∘ Sum.inr
+  constructor
+  exact ⟨(ht1.1 <| Sum.inr ·), (ht1.2 <| Sum.inr ·)⟩
+  simp [ht2, Prod.fst_sum, Prod.snd_sum]
   intro h
   rcases h with ⟨⟨t, ht1, ht2⟩, ⟨s, hs1, hs2⟩⟩
   use Sum.elim t s
   constructor
-  · constructor
-    · change ∀ x : ι ⊕ ι', 0 ≤ Sum.elim t s x
-      aesop
-    · change ∀ x : ι ⊕ ι', Sum.elim t s x ≤ 1
-      aesop
+  constructor
+  change ∀ x : ι ⊕ ι', 0 ≤ Sum.elim t s x
+  aesop
+  change ∀ x : ι ⊕ ι', Sum.elim t s x ≤ 1
+  aesop
   ext
-  · simp [ht2, Prod.fst_sum]
-  · simp [hs2, Prod.snd_sum]
+  simp [ht2, Prod.fst_sum]
+  simp [hs2, Prod.snd_sum]
 
 variable [MeasurableSpace E] [BorelSpace E]
 

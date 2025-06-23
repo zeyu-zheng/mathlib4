@@ -37,18 +37,18 @@ theorem updateFinset_singleton {i y} :
     updateFinset x {i} y = Function.update x i (y ⟨i, mem_singleton_self i⟩) := by
   congr with j
   by_cases hj : j = i
-  · cases hj
-    simp only [dif_pos, Finset.mem_singleton, update_same, updateFinset]
-  · simp [hj, updateFinset]
+  cases hj
+  simp only [dif_pos, Finset.mem_singleton, update_same, updateFinset]
+  simp [hj, updateFinset]
 
 theorem update_eq_updateFinset {i y} :
     Function.update x i y = updateFinset x {i} (uniqueElim y) := by
   congr with j
   by_cases hj : j = i
-  · cases hj
-    simp only [dif_pos, Finset.mem_singleton, update_same, updateFinset]
-    exact uniqueElim_default (α := fun j : ({i} : Finset ι) => π j) y
-  · simp [hj, updateFinset]
+  cases hj
+  simp only [dif_pos, Finset.mem_singleton, update_same, updateFinset]
+  exact uniqueElim_default (α := fun j : ({i} : Finset ι) => π j) y
+  simp [hj, updateFinset]
 
 theorem updateFinset_updateFinset {s t : Finset ι} (hst : Disjoint s t)
     {y : ∀ i : ↥s, π i} {z : ∀ i : ↥t, π i} :
@@ -59,8 +59,8 @@ theorem updateFinset_updateFinset {s t : Finset ι} (hst : Disjoint s t)
   by_cases his : i ∈ s <;> by_cases hit : i ∈ t <;>
     simp only [updateFinset, his, hit, dif_pos, dif_neg, Finset.mem_union, true_or_iff,
       false_or_iff, not_false_iff]
-  · exfalso; exact Finset.disjoint_left.mp hst his hit
-  · exact piCongrLeft_sum_inl (fun b : ↥(s ∪ t) => π b) e y z ⟨i, his⟩ |>.symm
-  · exact piCongrLeft_sum_inr (fun b : ↥(s ∪ t) => π b) e y z ⟨i, hit⟩ |>.symm
+  exfalso; exact Finset.disjoint_left.mp hst his hit
+  exact piCongrLeft_sum_inl (fun b : ↥(s ∪ t) => π b) e y z ⟨i, his⟩ |>.symm
+  exact piCongrLeft_sum_inr (fun b : ↥(s ∪ t) => π b) e y z ⟨i, hit⟩ |>.symm
 
 end Function

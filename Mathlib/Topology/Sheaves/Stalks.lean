@@ -187,22 +187,22 @@ theorem stalkPushforward_iso_of_openEmbedding {f : X ⟶ Y} (hf : OpenEmbedding 
             _).symm ≪≫
         colim.mapIso _).isIso_hom
   swap
-  · fapply NatIso.ofComponents
-    · intro U
-      refine F.mapIso (eqToIso ?_)
-      dsimp only [Functor.op]
-      exact congr_arg op (Opens.ext <| Set.preimage_image_eq (unop U).1.1 hf.inj)
-    · intro U V i; erw [← F.map_comp, ← F.map_comp]; congr 1
-  · change (_ : colimit _ ⟶ _) = (_ : colimit _ ⟶ _)
-    ext U
-    rw [← Iso.comp_inv_eq]
-    erw [colimit.ι_map_assoc]
-    rw [colimit.ι_pre, Category.assoc]
-    erw [colimit.ι_map_assoc, colimit.ι_pre, ← F.map_comp_assoc]
-    apply colimit.w ((OpenNhds.inclusion (f x)).op ⋙ f _* F) _
-    dsimp only [Functor.op]
-    refine ((homOfLE ?_).op : op (unop U) ⟶ _)
-    exact Set.image_preimage_subset _ _
+  fapply NatIso.ofComponents
+  intro U
+  refine F.mapIso (eqToIso ?_)
+  dsimp only [Functor.op]
+  exact congr_arg op (Opens.ext <| Set.preimage_image_eq (unop U).1.1 hf.inj)
+  intro U V i; erw [← F.map_comp, ← F.map_comp]; congr 1
+  change (_ : colimit _ ⟶ _) = (_ : colimit _ ⟶ _)
+  ext U
+  rw [← Iso.comp_inv_eq]
+  erw [colimit.ι_map_assoc]
+  rw [colimit.ι_pre, Category.assoc]
+  erw [colimit.ι_map_assoc, colimit.ι_pre, ← F.map_comp_assoc]
+  apply colimit.w ((OpenNhds.inclusion (f x)).op ⋙ f _* F) _
+  dsimp only [Functor.op]
+  refine ((homOfLE ?_).op : op (unop U) ⟶ _)
+  exact Set.image_preimage_subset _ _
 
 end stalkPushforward
 
@@ -444,11 +444,11 @@ theorem section_ext (F : Sheaf C X) (U : Opens X) (s t : F.1.obj (op U))
   -- Since `F` is a sheaf, we can prove the equality locally, if we can show that these
   -- neighborhoods form a cover of `U`.
   apply F.eq_of_locally_eq' V U i₁
-  · intro x hxU
-    simp only [Opens.coe_iSup, Set.mem_iUnion, SetLike.mem_coe]
-    exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
-  · intro x
-    rw [heq, Subsingleton.elim (i₁ x) (i₂ x)]
+  intro x hxU
+  simp only [Opens.coe_iSup, Set.mem_iUnion, SetLike.mem_coe]
+  exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
+  intro x
+  rw [heq, Subsingleton.elim (i₁ x) (i₂ x)]
 
 /-
 Note that the analogous statement for surjectivity is false: Surjectivity on stalks does not
@@ -517,10 +517,10 @@ theorem app_surjective_of_injective_of_locally_surjective {F G : Sheaf C X} (f :
   suffices IsCompatible F.val V sf by
     -- Since `F` is a sheaf, we can glue all the local preimages together to get a global preimage.
     obtain ⟨s, s_spec, -⟩ := F.existsUnique_gluing' V U iVU V_cover sf this
-    · use s
-      apply G.eq_of_locally_eq' V U iVU V_cover
-      intro x
-      rw [← comp_apply, ← f.1.naturality, comp_apply, s_spec, heq]
+    use s
+    apply G.eq_of_locally_eq' V U iVU V_cover
+    intro x
+    rw [← comp_apply, ← f.1.naturality, comp_apply, s_spec, heq]
   intro x y
   -- What's left to show here is that the sections `sf` are compatible, i.e. they agree on
   -- the intersections `V x ⊓ V y`. We prove this by showing that all germs are equal.

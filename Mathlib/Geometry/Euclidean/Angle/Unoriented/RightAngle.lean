@@ -74,10 +74,10 @@ theorem angle_add_eq_arcsin_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (h0 
   rw [pow_two, norm_add_sq_eq_norm_sq_add_norm_sq_real h, ne_comm]
   refine ne_of_lt ?_
   rcases h0 with (h0 | h0)
-  · exact
-      Left.add_pos_of_pos_of_nonneg (mul_self_pos.2 (norm_ne_zero_iff.2 h0)) (mul_self_nonneg _)
-  · exact
-      Left.add_pos_of_nonneg_of_pos (mul_self_nonneg _) (mul_self_pos.2 (norm_ne_zero_iff.2 h0))
+  exact
+    Left.add_pos_of_pos_of_nonneg (mul_self_pos.2 (norm_ne_zero_iff.2 h0)) (mul_self_nonneg _)
+  exact
+    Left.add_pos_of_nonneg_of_pos (mul_self_nonneg _) (mul_self_pos.2 (norm_ne_zero_iff.2 h0))
   rw [angle_add_eq_arccos_of_inner_eq_zero h,
     Real.arccos_eq_arcsin (div_nonneg (norm_nonneg _) (norm_nonneg _)), div_pow, one_sub_div hxy]
   nth_rw 1 [pow_two]
@@ -149,11 +149,11 @@ theorem cos_angle_add_mul_norm_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) :
     Real.cos (angle x (x + y)) * ‖x + y‖ = ‖x‖ := by
   rw [cos_angle_add_of_inner_eq_zero h]
   by_cases hxy : ‖x + y‖ = 0
-  · have h' := norm_add_sq_eq_norm_sq_add_norm_sq_real h
-    rw [hxy, zero_mul, eq_comm,
-      add_eq_zero_iff' (mul_self_nonneg ‖x‖) (mul_self_nonneg ‖y‖), mul_self_eq_zero] at h'
-    simp [h'.1]
-  · exact div_mul_cancel₀ _ hxy
+  have h' := norm_add_sq_eq_norm_sq_add_norm_sq_real h
+  rw [hxy, zero_mul, eq_comm,
+    add_eq_zero_iff' (mul_self_nonneg ‖x‖) (mul_self_nonneg ‖y‖), mul_self_eq_zero] at h'
+  simp [h'.1]
+  exact div_mul_cancel₀ _ hxy
 
 /-- The sine of an angle in a right-angled triangle multiplied by the hypotenuse equals the
 opposite side. -/
@@ -165,8 +165,8 @@ theorem sin_angle_add_mul_norm_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) :
   rw [← mul_self_ne_zero, norm_add_sq_eq_norm_sq_add_norm_sq_real h]
   refine (ne_of_lt ?_).symm
   rcases h0 with (h0 | h0)
-  · exact Left.add_pos_of_pos_of_nonneg (mul_self_pos.2 (norm_ne_zero_iff.2 h0)) (mul_self_nonneg _)
-  · exact Left.add_pos_of_nonneg_of_pos (mul_self_nonneg _) (mul_self_pos.2 (norm_ne_zero_iff.2 h0))
+  exact Left.add_pos_of_pos_of_nonneg (mul_self_pos.2 (norm_ne_zero_iff.2 h0)) (mul_self_nonneg _)
+  exact Left.add_pos_of_nonneg_of_pos (mul_self_nonneg _) (mul_self_pos.2 (norm_ne_zero_iff.2 h0))
 
 /-- The tangent of an angle in a right-angled triangle multiplied by the adjacent side equals
 the opposite side. -/
@@ -181,8 +181,8 @@ theorem norm_div_cos_angle_add_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (
     ‖x‖ / Real.cos (angle x (x + y)) = ‖x + y‖ := by
   rw [cos_angle_add_of_inner_eq_zero h]
   rcases h0 with (h0 | h0)
-  · rw [div_div_eq_mul_div, mul_comm, div_eq_mul_inv, mul_inv_cancel_right₀ (norm_ne_zero_iff.2 h0)]
-  · simp [h0]
+  rw [div_div_eq_mul_div, mul_comm, div_eq_mul_inv, mul_inv_cancel_right₀ (norm_ne_zero_iff.2 h0)]
+  simp [h0]
 
 /-- A side of a right-angled triangle divided by the sine of the opposite angle equals the
 hypotenuse. -/
@@ -198,8 +198,8 @@ theorem norm_div_tan_angle_add_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) (
     ‖y‖ / Real.tan (angle x (x + y)) = ‖x‖ := by
   rw [tan_angle_add_of_inner_eq_zero h]
   rcases h0 with (h0 | h0)
-  · simp [h0]
-  · rw [div_div_eq_mul_div, mul_comm, div_eq_mul_inv, mul_inv_cancel_right₀ (norm_ne_zero_iff.2 h0)]
+  simp [h0]
+  rw [div_div_eq_mul_div, mul_comm, div_eq_mul_inv, mul_inv_cancel_right₀ (norm_ne_zero_iff.2 h0)]
 
 /-- An angle in a right-angled triangle expressed using `arccos`, version subtracting vectors. -/
 theorem angle_sub_eq_arccos_of_inner_eq_zero {x y : V} (h : ⟪x, y⟫ = 0) :

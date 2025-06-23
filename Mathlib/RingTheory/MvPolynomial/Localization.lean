@@ -49,29 +49,29 @@ instance isLocalization : IsLocalization (M.map <| C (σ := σ))
     simp only [algebraMap_def, Prod.exists, Subtype.exists,
       Submonoid.mem_map, exists_prop, exists_exists_and_eq_and, map_C]
     refine induction_on' p ?_ ?_
-    · intro u s
-      obtain ⟨⟨r, m⟩, hr⟩ := IsLocalization.surj M s
-      use monomial u r, m, m.property
-      simp only [map_monomial]
-      rw [← hr, mul_comm, C_mul_monomial, mul_comm]
-    · intro p p' ⟨x, m, hm, hxm⟩ ⟨x', m', hm', hxm'⟩
-      use x * (C m') + x' * (C m), m * m', Submonoid.mul_mem _ hm hm'
-      simp only [map_mul, map_add, map_C]
-      rw [add_mul, ← mul_assoc, hxm, ← mul_assoc, ← hxm, ← hxm']
-      ring
+    intro u s
+    obtain ⟨⟨r, m⟩, hr⟩ := IsLocalization.surj M s
+    use monomial u r, m, m.property
+    simp only [map_monomial]
+    rw [← hr, mul_comm, C_mul_monomial, mul_comm]
+    intro p p' ⟨x, m, hm, hxm⟩ ⟨x', m', hm', hxm'⟩
+    use x * (C m') + x' * (C m), m * m', Submonoid.mul_mem _ hm hm'
+    simp only [map_mul, map_add, map_C]
+    rw [add_mul, ← mul_assoc, hxm, ← mul_assoc, ← hxm, ← hxm']
+    ring
   exists_of_eq {p q} := by
     intro h
     simp_rw [algebraMap_def, MvPolynomial.ext_iff, coeff_map] at h
     choose c hc using (fun m ↦ IsLocalization.exists_of_eq (M := M) (h m))
     simp only [Subtype.exists, Submonoid.mem_map, exists_prop, exists_exists_and_eq_and]
     refine ⟨Finset.prod (p.support ∪ q.support) (fun m ↦ c m), ?_, ?_⟩
-    · exact M.prod_mem (fun m _ ↦ (c m).property)
-    · ext m
-      simp only [coeff_C_mul]
-      by_cases h : m ∈ p.support ∪ q.support
-      · exact Finset.prod_mul_eq_prod_mul_of_exists m h (hc m)
-      · simp only [Finset.mem_union, mem_support_iff, ne_eq, not_or, Decidable.not_not] at h
-        rw [h.left, h.right]
+    exact M.prod_mem (fun m _ ↦ (c m).property)
+    ext m
+    simp only [coeff_C_mul]
+    by_cases h : m ∈ p.support ∪ q.support
+    exact Finset.prod_mul_eq_prod_mul_of_exists m h (hc m)
+    simp only [Finset.mem_union, mem_support_iff, ne_eq, not_or, Decidable.not_not] at h
+    rw [h.left, h.right]
 
 lemma isLocalization_C_mk' (a : R) (m : M) :
     C (IsLocalization.mk' S a m) = IsLocalization.mk' (MvPolynomial σ S) (C (σ := σ) a)
@@ -126,14 +126,14 @@ private lemma auxHom_auxInv : (auxHom S r).toRingHom.comp (auxInv S r) = RingHom
 private lemma auxInv_auxHom : (auxInv S r).comp (auxHom (S := S) r).toRingHom = RingHom.id _ := by
   rw [← RingHom.cancel_right (Ideal.Quotient.mk_surjective)]
   ext x
-  · simp [auxInv]
-  · simp only [auxInv, AlgHom.toRingHom_eq_coe, RingHom.coe_comp, RingHom.coe_coe,
-      Function.comp_apply, auxHom_mk, aeval_X, RingHomCompTriple.comp_eq]
-    erw [IsLocalization.lift_mk'_spec]
-    simp only [map_one, RingHom.coe_comp, Function.comp_apply]
-    rw [← _root_.map_one (Ideal.Quotient.mk _)]
-    rw [← _root_.map_mul, Ideal.Quotient.mk_eq_mk_iff_sub_mem, ← Ideal.neg_mem_iff, neg_sub]
-    exact Ideal.mem_span_singleton_self (C r * X x - 1)
+  simp [auxInv]
+  simp only [auxInv, AlgHom.toRingHom_eq_coe, RingHom.coe_comp, RingHom.coe_coe,
+    Function.comp_apply, auxHom_mk, aeval_X, RingHomCompTriple.comp_eq]
+  erw [IsLocalization.lift_mk'_spec]
+  simp only [map_one, RingHom.coe_comp, Function.comp_apply]
+  rw [← _root_.map_one (Ideal.Quotient.mk _)]
+  rw [← _root_.map_mul, Ideal.Quotient.mk_eq_mk_iff_sub_mem, ← Ideal.neg_mem_iff, neg_sub]
+  exact Ideal.mem_span_singleton_self (C r * X x - 1)
 
 /-- The canonical algebra isomorphism from `MvPolynomial Unit R` quotiented by
 `C r * X () - 1` to the localization of `R` away from `r`. -/

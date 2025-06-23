@@ -131,10 +131,10 @@ lemma W_iff' {Y Z : C} (g : Y ⟶ Z) :
       (_ : Triangle.mk f g h ∈ distTriang C), S.P X := by
   rw [S.W_iff]
   constructor
-  · rintro ⟨Z, g, h, H, mem⟩
-    exact ⟨_, _, _, inv_rot_of_distTriang _ H, S.shift _ (-1) mem⟩
-  · rintro ⟨Z, g, h, H, mem⟩
-    exact ⟨_, _, _, rot_of_distTriang _ H, S.shift _ 1 mem⟩
+  rintro ⟨Z, g, h, H, mem⟩
+  exact ⟨_, _, _, inv_rot_of_distTriang _ H, S.shift _ (-1) mem⟩
+  rintro ⟨Z, g, h, H, mem⟩
+  exact ⟨_, _, _, rot_of_distTriang _ H, S.shift _ 1 mem⟩
 
 lemma W.mk {T : Triangle C} (hT : T ∈ distTriang C) (h : S.P T.obj₃) : S.W T.mor₁ :=
   ⟨_, _, _, hT, h⟩
@@ -146,11 +146,11 @@ lemma W.mk' {T : Triangle C} (hT : T ∈ distTriang C) (h : S.P T.obj₁) : S.W 
 lemma isoClosure_W : S.isoClosure.W = S.W := by
   ext X Y f
   constructor
-  · rintro ⟨Z, g, h, mem, ⟨Z', hZ', ⟨e⟩⟩⟩
-    refine ⟨Z', g ≫ e.hom, e.inv ≫ h, isomorphic_distinguished _ mem _ ?_, hZ'⟩
-    exact Triangle.isoMk _ _ (Iso.refl _) (Iso.refl _) e.symm
-  · rintro ⟨Z, g, h, mem, hZ⟩
-    exact ⟨Z, g, h, mem, le_isoClosure _ _ hZ⟩
+  rintro ⟨Z, g, h, mem, ⟨Z', hZ', ⟨e⟩⟩⟩
+  refine ⟨Z', g ≫ e.hom, e.inv ≫ h, isomorphic_distinguished _ mem _ ?_, hZ'⟩
+  exact Triangle.isoMk _ _ (Iso.refl _) (Iso.refl _) e.symm
+  rintro ⟨Z, g, h, mem, hZ⟩
+  exact ⟨Z, g, h, mem, le_isoClosure _ _ hZ⟩
 
 instance respectsIso_W : S.W.RespectsIso where
   precomp := by
@@ -205,11 +205,11 @@ lemma mem_W_iff_of_distinguished
     [ClosedUnderIsomorphisms S.P] (T : Triangle C) (hT : T ∈ distTriang C) :
     S.W T.mor₁ ↔ S.P T.obj₃ := by
   constructor
-  · rintro ⟨Z, g, h, hT', mem⟩
-    obtain ⟨e, _⟩ := exists_iso_of_arrow_iso _ _ hT' hT (Iso.refl _)
-    exact mem_of_iso S.P (Triangle.π₃.mapIso e) mem
-  · intro h
-    exact ⟨_, _, _, hT, h⟩
+  rintro ⟨Z, g, h, hT', mem⟩
+  obtain ⟨e, _⟩ := exists_iso_of_arrow_iso _ _ hT' hT (Iso.refl _)
+  exact mem_of_iso S.P (Triangle.π₃.mapIso e) mem
+  intro h
+  exact ⟨_, _, _, hT, h⟩
 
 instance [IsTriangulated C] : S.W.HasLeftCalculusOfFractions where
   exists_leftFraction X Y φ := by
@@ -224,10 +224,10 @@ instance [IsTriangulated C] : S.W.HasLeftCalculusOfFractions where
     obtain ⟨q, hq⟩ := Triangle.yoneda_exact₂ _ H _ hf₂
     obtain ⟨Y', r, t, mem'⟩ := distinguished_cocone_triangle q
     refine ⟨Y', r, ?_, ?_⟩
-    · exact ⟨_, _, _, rot_of_distTriang _ mem', S.shift _ _ mem⟩
-    · have eq := comp_distTriang_mor_zero₁₂ _ mem'
-      dsimp at eq
-      rw [← sub_eq_zero, ← sub_comp, hq, assoc, eq, comp_zero]
+    exact ⟨_, _, _, rot_of_distTriang _ mem', S.shift _ _ mem⟩
+    have eq := comp_distTriang_mor_zero₁₂ _ mem'
+    dsimp at eq
+    rw [← sub_eq_zero, ← sub_comp, hq, assoc, eq, comp_zero]
 
 instance [IsTriangulated C] : S.W.HasRightCalculusOfFractions where
   exists_rightFraction X Y φ := by
@@ -244,10 +244,10 @@ instance [IsTriangulated C] : S.W.HasRightCalculusOfFractions where
     obtain ⟨q, hq⟩ := Triangle.coyoneda_exact₂ _ H _ hf₂
     obtain ⟨Y', r, t, mem'⟩ := distinguished_cocone_triangle₁ q
     refine ⟨Y', r, ?_, ?_⟩
-    · exact ⟨_, _, _, mem', mem⟩
-    · have eq := comp_distTriang_mor_zero₁₂ _ mem'
-      dsimp at eq
-      rw [← sub_eq_zero, ← comp_sub, hq, reassoc_of% eq, zero_comp]
+    exact ⟨_, _, _, mem', mem⟩
+    have eq := comp_distTriang_mor_zero₁₂ _ mem'
+    dsimp at eq
+    rw [← sub_eq_zero, ← comp_sub, hq, reassoc_of% eq, zero_comp]
 
 instance [IsTriangulated C] : S.W.IsCompatibleWithTriangulation := ⟨by
   rintro T₁ T₃ mem₁ mem₃ a b ⟨Z₅, g₅, h₅, mem₅, mem₅'⟩ ⟨Z₄, g₄, h₄, mem₄, mem₄'⟩ comm

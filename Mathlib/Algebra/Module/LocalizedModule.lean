@@ -161,8 +161,8 @@ private theorem add_assoc' (x y z : LocalizedModule S M) : x + y + z = x + (y + 
   refine mk_eq.mpr ⟨1, ?_⟩
   rw [one_smul, one_smul]
   congr 1
-  · rw [mul_assoc]
-  · rw [eq_comm, mul_comm, add_assoc, mul_smul, mul_smul, ← mul_smul sx sz, mul_comm, mul_smul]
+  rw [mul_assoc]
+  rw [eq_comm, mul_comm, add_assoc, mul_smul, mul_smul, ← mul_smul sx sz, mul_comm, mul_smul]
 
 private theorem add_comm' (x y : LocalizedModule S M) : x + y = y + x :=
   LocalizedModule.induction_on₂ (fun m m' s s' => by rw [mk_add_mk, mk_add_mk, add_comm, mul_comm])
@@ -351,8 +351,8 @@ private theorem smul_add_aux (x : T) (p q : LocalizedModule S M) :
   rw [show x • _ =  IsLocalization.mk' T _ _ • _ by rw [IsLocalization.mk'_sec (M := S) T]]
   rw [← IsLocalization.mk'_cancel _ _ (IsLocalization.sec S x).2, mk'_smul_mk]
   congr 1
-  · simp only [Submonoid.smul_def, smul_add, ← mul_smul, Submonoid.coe_mul]; ring_nf
-  · rw [mul_mul_mul_comm] -- ring does not work here
+  simp only [Submonoid.smul_def, smul_add, ← mul_smul, Submonoid.coe_mul]; ring_nf
+  rw [mul_mul_mul_comm] -- ring does not work here
 
 private theorem smul_zero_aux (x : T) : x • (0 : LocalizedModule S M) = 0 := by
   erw [smul_def, smul_zero, zero_mk]
@@ -570,12 +570,12 @@ theorem isLocalizedModule_iff_isLocalization {A Aₛ} [CommSemiring A] [Algebra 
       IsLocalization (Algebra.algebraMapSubmonoid A S) Aₛ := by
   rw [isLocalizedModule_iff, isLocalization_iff]
   refine and_congr ?_ (and_congr (forall_congr' fun _ ↦ ?_) (forall₂_congr fun _ _ ↦ ?_))
-  · simp_rw [← (Algebra.lmul R Aₛ).commutes, Algebra.lmul_isUnit_iff, Subtype.forall,
-      Algebra.algebraMapSubmonoid, ← SetLike.mem_coe, Submonoid.coe_map,
-      Set.forall_mem_image, ← IsScalarTower.algebraMap_apply]
-  · simp_rw [Prod.exists, Subtype.exists, Algebra.algebraMapSubmonoid]
-    simp [← IsScalarTower.algebraMap_apply, Submonoid.mk_smul, Algebra.smul_def, mul_comm]
-  · congr!; simp_rw [Subtype.exists, Algebra.algebraMapSubmonoid]; simp [Algebra.smul_def]
+  simp_rw [← (Algebra.lmul R Aₛ).commutes, Algebra.lmul_isUnit_iff, Subtype.forall,
+    Algebra.algebraMapSubmonoid, ← SetLike.mem_coe, Submonoid.coe_map,
+    Set.forall_mem_image, ← IsScalarTower.algebraMap_apply]
+  simp_rw [Prod.exists, Subtype.exists, Algebra.algebraMapSubmonoid]
+  simp [← IsScalarTower.algebraMap_apply, Submonoid.mk_smul, Algebra.smul_def, mul_comm]
+  congr!; simp_rw [Subtype.exists, Algebra.algebraMapSubmonoid]; simp [Algebra.smul_def]
 
 instance {A Aₛ} [CommSemiring A] [Algebra R A][CommSemiring Aₛ] [Algebra A Aₛ] [Algebra R Aₛ]
     [IsScalarTower R A Aₛ] [h : IsLocalization (Algebra.algebraMapSubmonoid A S) Aₛ] :
@@ -629,11 +629,11 @@ theorem lift'_add (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (M
       erw [map_add, Module.End_algebraMap_isUnit_inv_apply_eq_iff, smul_add, ← map_smul,
         ← map_smul, ← map_smul]
       congr 1 <;> symm
-      · erw [Module.End_algebraMap_isUnit_inv_apply_eq_iff, mul_smul, ← map_smul]
-        rfl
-      · dsimp
-        erw [Module.End_algebraMap_isUnit_inv_apply_eq_iff, mul_comm, mul_smul, ← map_smul]
-        rfl)
+      erw [Module.End_algebraMap_isUnit_inv_apply_eq_iff, mul_smul, ← map_smul]
+      rfl
+      dsimp
+      erw [Module.End_algebraMap_isUnit_inv_apply_eq_iff, mul_comm, mul_smul, ← map_smul]
+      rfl)
     x y
 
 theorem lift'_smul (g : M →ₗ[R] M'') (h : ∀ x : S, IsUnit ((algebraMap R (Module.End R M'')) x))
@@ -740,8 +740,8 @@ theorem fromLocalizedModule'_add (x y : LocalizedModule S M) :
         ← map_smul, map_add]
       congr 1
       all_goals rw [Module.End_algebraMap_isUnit_inv_apply_eq_iff']
-      · simp [mul_smul, Submonoid.smul_def]
-      · rw [Submonoid.coe_mul, LinearMap.map_smul_of_tower, mul_comm, mul_smul, Submonoid.smul_def])
+      simp [mul_smul, Submonoid.smul_def]
+      rw [Submonoid.coe_mul, LinearMap.map_smul_of_tower, mul_comm, mul_smul, Submonoid.smul_def])
     x y
 
 theorem fromLocalizedModule'_smul (r : R) (x : LocalizedModule S M) :
@@ -1135,21 +1135,21 @@ theorem mkOfAlgebra {R S S' : Type*} [CommRing R] [CommRing S] [CommRing S'] [Al
         rw [← Algebra.smul_def]
         simpa [Submonoid.smul_def] using f.congr_arg e
   constructor
-  · intro x
-    rw [Module.End_isUnit_iff]
-    constructor
-    · rintro a b (e : x • a = x • b)
-      simp_rw [Submonoid.smul_def, Algebra.smul_def] at e
-      exact (h₁ x x.2).mul_left_cancel e
-    · intro a
-      refine ⟨((h₁ x x.2).unit⁻¹ : _) * a, ?_⟩
-      rw [Module.algebraMap_end_apply, Algebra.smul_def, ← mul_assoc, IsUnit.mul_val_inv, one_mul]
-  · exact h₂
-  · intros x y
-    dsimp only [AlgHom.toLinearMap_apply]
-    rw [← sub_eq_zero, ← map_sub, h₃]
-    simp_rw [smul_sub, sub_eq_zero]
-    exact id
+  intro x
+  rw [Module.End_isUnit_iff]
+  constructor
+  rintro a b (e : x • a = x • b)
+  simp_rw [Submonoid.smul_def, Algebra.smul_def] at e
+  exact (h₁ x x.2).mul_left_cancel e
+  intro a
+  refine ⟨((h₁ x x.2).unit⁻¹ : _) * a, ?_⟩
+  rw [Module.algebraMap_end_apply, Algebra.smul_def, ← mul_assoc, IsUnit.mul_val_inv, one_mul]
+  exact h₂
+  intros x y
+  dsimp only [AlgHom.toLinearMap_apply]
+  rw [← sub_eq_zero, ← map_sub, h₃]
+  simp_rw [smul_sub, sub_eq_zero]
+  exact id
 
 end Algebra
 
@@ -1164,13 +1164,13 @@ variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
 lemma LocalizedModule.mem_ker_mkLinearMap_iff {S : Submonoid R} {m} :
     m ∈ LinearMap.ker (LocalizedModule.mkLinearMap S M) ↔ ∃ r ∈ S, r • m = 0 := by
   constructor
-  · intro H
-    obtain ⟨r, hr⟩ := (@LocalizedModule.mk_eq _ _ S M _ _ m 0 1 1).mp (by simpa using H)
-    exact ⟨r, r.2, by simpa using hr⟩
-  · rintro ⟨r, hr, e⟩
-    apply ((Module.End_isUnit_iff _).mp
-      (IsLocalizedModule.map_units (LocalizedModule.mkLinearMap S M) ⟨r, hr⟩)).injective
-    simp [← IsLocalizedModule.mk_eq_mk', LocalizedModule.smul'_mk, e]
+  intro H
+  obtain ⟨r, hr⟩ := (@LocalizedModule.mk_eq _ _ S M _ _ m 0 1 1).mp (by simpa using H)
+  exact ⟨r, r.2, by simpa using hr⟩
+  rintro ⟨r, hr, e⟩
+  apply ((Module.End_isUnit_iff _).mp
+    (IsLocalizedModule.map_units (LocalizedModule.mkLinearMap S M) ⟨r, hr⟩)).injective
+  simp [← IsLocalizedModule.mk_eq_mk', LocalizedModule.smul'_mk, e]
 
 lemma LocalizedModule.subsingleton_iff_ker_eq_top {S : Submonoid R} :
     Subsingleton (LocalizedModule S M) ↔

@@ -94,16 +94,16 @@ theorem IsGood.sqrt_two_le (h : IsGood x A) : sqrt 2 ≤ A :=
 theorem isGood_iff_of_sqrt_two_lt (hA : sqrt 2 < A) : IsGood x A ↔ x = (A / 2) ^ 2 + 1 / 2 := by
   have : 0 < A := lt_trans (by simp) hA
   constructor
-  · intro h
-    have hx : 1 < x
-    rwa [h.sqrt_two_lt_iff_one_lt] at hA
-    rw [isGood_iff_eq_sqrt hx, eq_comm, sqrt_eq_iff_sq_eq] at h <;> linarith
-  · rintro rfl
-    rw [isGood_iff_eq_sqrt]
-    · conv_lhs => rw [← sqrt_sq this.le]
-      ring_nf
-    · rw [sqrt_lt' this] at hA
-      linarith
+  intro h
+  have hx : 1 < x
+  rwa [h.sqrt_two_lt_iff_one_lt] at hA
+  rw [isGood_iff_eq_sqrt hx, eq_comm, sqrt_eq_iff_sq_eq] at h <;> linarith
+  rintro rfl
+  rw [isGood_iff_eq_sqrt]
+  conv_lhs => rw [← sqrt_sq this.le]
+  ring_nf
+  rw [sqrt_lt' this] at hA
+  linarith
 
 theorem isGood_sqrt2_iff : IsGood x (sqrt 2) ↔ x ∈ Icc (1 / 2) 1 := by
   refine ⟨fun h ↦ ?_, fun h ↦ (isGood_iff_eq_sqrt_two h).2 rfl⟩

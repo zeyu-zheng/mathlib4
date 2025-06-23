@@ -33,18 +33,18 @@ embedding.
 lemma closedEmbedding_natUnionInftyEmbedding : ClosedEmbedding natUnionInftyEmbedding := by
   refine closedEmbedding_of_continuous_injective_closed
     natUnionInftyEmbedding.continuous ?_ ?_
-  · rintro (_|n) (_|m) h
-    · rfl
-    · simp only [natUnionInftyEmbedding, one_div, ContinuousMap.coe_mk, zero_eq_inv] at h
-      rw [← Nat.cast_one, ← Nat.cast_add, eq_comm, Nat.cast_eq_zero] at h
-      simp at h
-    · simp only [natUnionInftyEmbedding, one_div, ContinuousMap.coe_mk, inv_eq_zero] at h
-      rw [← Nat.cast_one, ← Nat.cast_add, Nat.cast_eq_zero] at h
-      simp at h
-    · simp only [natUnionInftyEmbedding, one_div, ContinuousMap.coe_mk, inv_inj, add_left_inj,
-        Nat.cast_inj] at h
-      rw [h]
-  · exact fun _ hC => (hC.isCompact.image natUnionInftyEmbedding.continuous).isClosed
+  rintro (_|n) (_|m) h
+  rfl
+  simp only [natUnionInftyEmbedding, one_div, ContinuousMap.coe_mk, zero_eq_inv] at h
+  rw [← Nat.cast_one, ← Nat.cast_add, eq_comm, Nat.cast_eq_zero] at h
+  simp at h
+  simp only [natUnionInftyEmbedding, one_div, ContinuousMap.coe_mk, inv_eq_zero] at h
+  rw [← Nat.cast_one, ← Nat.cast_add, Nat.cast_eq_zero] at h
+  simp at h
+  simp only [natUnionInftyEmbedding, one_div, ContinuousMap.coe_mk, inv_inj, add_left_inj,
+    Nat.cast_inj] at h
+  rw [h]
+  exact fun _ hC => (hC.isCompact.image natUnionInftyEmbedding.continuous).isClosed
 
 instance : MetrizableSpace (OnePoint ℕ) := closedEmbedding_natUnionInftyEmbedding.metrizableSpace
 

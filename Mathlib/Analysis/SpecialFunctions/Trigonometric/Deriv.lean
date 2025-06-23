@@ -614,10 +614,10 @@ theorem sinh_sub_id_strictMono : StrictMono fun x => sinh x - x := by
   -- Porting note: `by simp; abel` was just `by simp` in mathlib3.
   refine strictMono_of_odd_strictMonoOn_nonneg (fun x => by simp; abel) ?_
   refine strictMonoOn_of_deriv_pos (convex_Ici _) ?_ fun x hx => ?_
-  · exact (continuous_sinh.sub continuous_id).continuousOn
-  · rw [interior_Ici, mem_Ioi] at hx
-    rw [deriv_sub, deriv_sinh, deriv_id'', sub_pos, one_lt_cosh]
-    exacts [hx.ne', differentiableAt_sinh, differentiableAt_id]
+  exact (continuous_sinh.sub continuous_id).continuousOn
+  rw [interior_Ici, mem_Ioi] at hx
+  rw [deriv_sub, deriv_sinh, deriv_id'', sub_pos, one_lt_cosh]
+  exacts [hx.ne', differentiableAt_sinh, differentiableAt_id]
 
 @[simp]
 theorem self_le_sinh_iff : x ≤ sinh x ↔ 0 ≤ x :=

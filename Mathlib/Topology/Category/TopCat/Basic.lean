@@ -177,10 +177,10 @@ theorem openEmbedding_iff_comp_isIso' {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ 
 theorem openEmbedding_iff_isIso_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] :
     OpenEmbedding (f ≫ g) ↔ OpenEmbedding g := by
   constructor
-  · intro h
-    convert h.comp (TopCat.homeoOfIso (asIso f).symm).openEmbedding
-    exact congrArg _ (IsIso.inv_hom_id_assoc f g).symm
-  · exact fun h => h.comp (TopCat.homeoOfIso (asIso f)).openEmbedding
+  intro h
+  convert h.comp (TopCat.homeoOfIso (asIso f).symm).openEmbedding
+  exact congrArg _ (IsIso.inv_hom_id_assoc f g).symm
+  exact fun h => h.comp (TopCat.homeoOfIso (asIso f)).openEmbedding
 
 @[simp]
 theorem openEmbedding_iff_isIso_comp' {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] :

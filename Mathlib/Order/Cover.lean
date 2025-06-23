@@ -391,9 +391,9 @@ of `Set.Ioi b'`. -/
 lemma LT.lt.exists_disjoint_Iio_Ioi (h : a < b) :
     ∃ a' > a, ∃ b' < b, ∀ x < a', ∀ y > b', x < y := by
   by_cases h' : a ⋖ b
-  · exact ⟨b, h, a, h, fun x hx y hy => hx.trans_le <| h'.ge_of_gt hy⟩
-  · rcases h.exists_lt_lt h' with ⟨c, ha, hb⟩
-    exact ⟨c, ha, c, hb, fun _ h₁ _ => lt_trans h₁⟩
+  exact ⟨b, h, a, h, fun x hx y hy => hx.trans_le <| h'.ge_of_gt hy⟩
+  rcases h.exists_lt_lt h' with ⟨c, ha, hb⟩
+  exact ⟨c, ha, c, hb, fun _ h₁ _ => lt_trans h₁⟩
 
 end LinearOrder
 
@@ -403,16 +403,16 @@ variable {s t : Set α} {a : α}
 @[simp] lemma wcovBy_insert (x : α) (s : Set α) : s ⩿ insert x s := by
   refine wcovBy_of_eq_or_eq (subset_insert x s) fun t hst h2t => ?_
   by_cases h : x ∈ t
-  · exact Or.inr (subset_antisymm h2t <| insert_subset_iff.mpr ⟨h, hst⟩)
-  · refine Or.inl (subset_antisymm ?_ hst)
-    rwa [← diff_singleton_eq_self h, diff_singleton_subset_iff]
+  exact Or.inr (subset_antisymm h2t <| insert_subset_iff.mpr ⟨h, hst⟩)
+  refine Or.inl (subset_antisymm ?_ hst)
+  rwa [← diff_singleton_eq_self h, diff_singleton_subset_iff]
 
 @[simp] lemma sdiff_singleton_wcovBy (s : Set α) (a : α) : s \ {a} ⩿ s := by
   by_cases ha : a ∈ s
-  · convert wcovBy_insert a _
-    ext
-    simp [ha]
-  · simp [ha]
+  convert wcovBy_insert a _
+  ext
+  simp [ha]
+  simp [ha]
 
 @[simp] lemma covBy_insert (ha : a ∉ s) : s ⋖ insert a s :=
   (wcovBy_insert _ _).covBy_of_lt <| ssubset_insert ha
@@ -496,21 +496,21 @@ theorem mk_covBy_mk_iff_right : (a, b₁) ⋖ (a, b₂) ↔ b₁ ⋖ b₂ := by
 
 theorem mk_wcovBy_mk_iff : (a₁, b₁) ⩿ (a₂, b₂) ↔ a₁ ⩿ a₂ ∧ b₁ = b₂ ∨ b₁ ⩿ b₂ ∧ a₁ = a₂ := by
   refine ⟨fun h => ?_, ?_⟩
-  · obtain rfl | rfl : a₁ = a₂ ∨ b₁ = b₂ := fst_eq_or_snd_eq_of_wcovBy h
-    · exact Or.inr ⟨mk_wcovBy_mk_iff_right.1 h, rfl⟩
-    · exact Or.inl ⟨mk_wcovBy_mk_iff_left.1 h, rfl⟩
-  · rintro (⟨h, rfl⟩ | ⟨h, rfl⟩)
-    · exact mk_wcovBy_mk_iff_left.2 h
-    · exact mk_wcovBy_mk_iff_right.2 h
+  obtain rfl | rfl : a₁ = a₂ ∨ b₁ = b₂ := fst_eq_or_snd_eq_of_wcovBy h
+  exact Or.inr ⟨mk_wcovBy_mk_iff_right.1 h, rfl⟩
+  exact Or.inl ⟨mk_wcovBy_mk_iff_left.1 h, rfl⟩
+  rintro (⟨h, rfl⟩ | ⟨h, rfl⟩)
+  exact mk_wcovBy_mk_iff_left.2 h
+  exact mk_wcovBy_mk_iff_right.2 h
 
 theorem mk_covBy_mk_iff : (a₁, b₁) ⋖ (a₂, b₂) ↔ a₁ ⋖ a₂ ∧ b₁ = b₂ ∨ b₁ ⋖ b₂ ∧ a₁ = a₂ := by
   refine ⟨fun h => ?_, ?_⟩
-  · obtain rfl | rfl : a₁ = a₂ ∨ b₁ = b₂ := fst_eq_or_snd_eq_of_wcovBy h.wcovBy
-    · exact Or.inr ⟨mk_covBy_mk_iff_right.1 h, rfl⟩
-    · exact Or.inl ⟨mk_covBy_mk_iff_left.1 h, rfl⟩
-  · rintro (⟨h, rfl⟩ | ⟨h, rfl⟩)
-    · exact mk_covBy_mk_iff_left.2 h
-    · exact mk_covBy_mk_iff_right.2 h
+  obtain rfl | rfl : a₁ = a₂ ∨ b₁ = b₂ := fst_eq_or_snd_eq_of_wcovBy h.wcovBy
+  exact Or.inr ⟨mk_covBy_mk_iff_right.1 h, rfl⟩
+  exact Or.inl ⟨mk_covBy_mk_iff_left.1 h, rfl⟩
+  rintro (⟨h, rfl⟩ | ⟨h, rfl⟩)
+  exact mk_covBy_mk_iff_left.2 h
+  exact mk_covBy_mk_iff_right.2 h
 
 theorem wcovBy_iff : x ⩿ y ↔ x.1 ⩿ y.1 ∧ x.2 = y.2 ∨ x.2 ⩿ y.2 ∧ x.1 = y.1 := by
   cases x

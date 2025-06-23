@@ -68,12 +68,12 @@ theorem disc_eq_regionBetween :
   ext p
   simp only [disc, regionBetween, mem_setOf_eq, mem_Ioo, mem_Ioc, Pi.neg_apply]
   constructor <;> intro h
-  · cases abs_lt_of_sq_lt_sq' (lt_of_add_lt_of_nonneg_left h (sq_nonneg p.2)) r.2 with
-    | intro left right =>
-      rw [add_comm, ← lt_sub_iff_add_lt] at h
-      exact ⟨⟨left, right.le⟩, sq_lt.mp h⟩
-  · rw [add_comm, ← lt_sub_iff_add_lt]
-    exact sq_lt.mpr h.2
+  cases abs_lt_of_sq_lt_sq' (lt_of_add_lt_of_nonneg_left h (sq_nonneg p.2)) r.2 with
+  | intro left right =>
+    rw [add_comm, ← lt_sub_iff_add_lt] at h
+    exact ⟨⟨left, right.le⟩, sq_lt.mp h⟩
+  rw [add_comm, ← lt_sub_iff_add_lt]
+  exact sq_lt.mpr h.2
 
 /-- The disc is a `MeasurableSet`. -/
 theorem measurableSet_disc : MeasurableSet (disc r) := by
@@ -106,22 +106,22 @@ theorem area_disc : volume (disc r) = NNReal.pi * r ^ 2 := by
               ((hasDerivAt_const x (r : ℝ)⁻¹).mul (hasDerivAt_id' x)))).add
         ((hasDerivAt_id' x).mul ((((hasDerivAt_id' x).pow 2).const_sub ((r : ℝ) ^ 2)).sqrt _))
       using 1
-    · have h₁ : (r:ℝ) ^ 2 - x ^ 2 > 0 := sub_pos_of_lt (sq_lt_sq' hx1 hx2)
-      have h : sqrt ((r:ℝ) ^ 2 - x ^ 2) ^ 3 = ((r:ℝ) ^ 2 - x ^ 2) * sqrt ((r: ℝ) ^ 2 - x ^ 2) := by
-        rw [pow_three, ← mul_assoc, mul_self_sqrt (by positivity)]
-      field_simp
-      ring_nf
-      rw [h]
-      ring
-    · suffices -(1 : ℝ) < (r : ℝ)⁻¹ * x by exact this.ne'
-      calc
-        -(1 : ℝ) = (r : ℝ)⁻¹ * -r := by simp [inv_mul_cancel hlt.ne']
-        _ < (r : ℝ)⁻¹ * x := by nlinarith [inv_pos.mpr hlt]
-    · suffices (r : ℝ)⁻¹ * x < 1 by exact this.ne
-      calc
-        (r : ℝ)⁻¹ * x < (r : ℝ)⁻¹ * r := by nlinarith [inv_pos.mpr hlt]
-        _ = 1 := inv_mul_cancel hlt.ne'
-    · nlinarith
+    have h₁ : (r:ℝ) ^ 2 - x ^ 2 > 0 := sub_pos_of_lt (sq_lt_sq' hx1 hx2)
+    have h : sqrt ((r:ℝ) ^ 2 - x ^ 2) ^ 3 = ((r:ℝ) ^ 2 - x ^ 2) * sqrt ((r: ℝ) ^ 2 - x ^ 2) := by
+      rw [pow_three, ← mul_assoc, mul_self_sqrt (by positivity)]
+    field_simp
+    ring_nf
+    rw [h]
+    ring
+    suffices -(1 : ℝ) < (r : ℝ)⁻¹ * x by exact this.ne'
+    calc
+      -(1 : ℝ) = (r : ℝ)⁻¹ * -r := by simp [inv_mul_cancel hlt.ne']
+      _ < (r : ℝ)⁻¹ * x := by nlinarith [inv_pos.mpr hlt]
+    suffices (r : ℝ)⁻¹ * x < 1 by exact this.ne
+    calc
+      (r : ℝ)⁻¹ * x < (r : ℝ)⁻¹ * r := by nlinarith [inv_pos.mpr hlt]
+      _ = 1 := inv_mul_cancel hlt.ne'
+    nlinarith
   have hcont : ContinuousOn F (Icc (-r) r) := (by continuity : Continuous F).continuousOn
   calc
     ∫ x in -r..r, 2 * f x = F r - F (-r) :=

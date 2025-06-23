@@ -233,8 +233,8 @@ theorem widePullback_ext {B : C} {ι : Type w} {X : ι → C} (f : ∀ j : ι, X
     x = y := by
   apply Concrete.limit_ext
   rintro (_ | j)
-  · exact h₀
-  · apply h
+  exact h₀
+  apply h
 
 theorem widePullback_ext' {B : C} {ι : Type w} [Nonempty ι] {X : ι → C}
     (f : ∀ j : ι, X j ⟶ B) [HasWidePullback.{w} B X f]
@@ -255,9 +255,9 @@ theorem multiequalizer_ext {I : MulticospanIndex.{w} C} [HasMultiequalizer I]
     (h : ∀ t : I.L, Multiequalizer.ι I t x = Multiequalizer.ι I t y) : x = y := by
   apply Concrete.limit_ext
   rintro (a | b)
-  · apply h
-  · rw [← limit.w I.multicospan (WalkingMulticospan.Hom.fst b), comp_apply, comp_apply]
-    simp [h]
+  apply h
+  rw [← limit.w I.multicospan (WalkingMulticospan.Hom.fst b), comp_apply, comp_apply]
+  simp [h]
 
 /-- An auxiliary equivalence to be used in `multiequalizerEquiv` below. -/
 def multiequalizerEquivAux (I : MulticospanIndex C) :
@@ -322,21 +322,21 @@ theorem widePushout_exists_rep {B : C} {α : Type _} {X : α → C} (f : ∀ j :
     [HasWidePushout.{v} B X f] [PreservesColimit (wideSpan B X f) (forget C)]
     (x : ↑(widePushout B X f)) : (∃ y : B, head f y = x) ∨ ∃ (i : α) (y : X i), ι f i y = x := by
   obtain ⟨_ | j, y, rfl⟩ := Concrete.colimit_exists_rep _ x
-  · left
-    use y
-    rfl
-  · right
-    use j, y
-    rfl
+  left
+  use y
+  rfl
+  right
+  use j, y
+  rfl
 
 theorem widePushout_exists_rep' {B : C} {α : Type _} [Nonempty α] {X : α → C}
     (f : ∀ j : α, B ⟶ X j) [HasWidePushout.{v} B X f] [PreservesColimit (wideSpan B X f) (forget C)]
     (x : ↑(widePushout B X f)) : ∃ (i : α) (y : X i), ι f i y = x := by
   rcases Concrete.widePushout_exists_rep f x with (⟨y, rfl⟩ | ⟨i, y, rfl⟩)
-  · inhabit α
-    use default, f _ y
-    simp only [← arrow_ι _ default, comp_apply]
-  · use i, y
+  inhabit α
+  use default, f _ y
+  simp only [← arrow_ι _ default, comp_apply]
+  use i, y
 
 end WidePushout
 

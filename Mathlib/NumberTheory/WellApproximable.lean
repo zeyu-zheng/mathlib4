@@ -143,10 +143,10 @@ theorem smul_eq_of_mul_dvd (hn : 0 < n) (han : orderOf a ^ 2 ∣ n) :
   have hf : Surjective f
   rintro ⟨b, hb⟩
   refine ⟨⟨a⁻¹ * b, ?_⟩, ?_⟩
-  · rw [mem_setOf_eq, ← orderOf_inv, mul_inv_rev, inv_inv, mul_comm]
-    apply han
-    simpa
-  · simp only [f, Subtype.mk_eq_mk, Subtype.coe_mk, mul_inv_cancel_left]
+  rw [mem_setOf_eq, ← orderOf_inv, mul_inv_rev, inv_inv, mul_comm]
+  apply han
+  simpa
+  simp only [f, Subtype.mk_eq_mk, Subtype.coe_mk, mul_inv_cancel_left]
   simpa only [mem_setOf_eq, Subtype.coe_mk, iUnion_coe_set] using
     hf.iUnion_comp fun b => ball (b : A) δ
 
@@ -159,8 +159,8 @@ theorem mem_approxAddOrderOf_iff {δ : ℝ} {x : UnitAddCircle} {n : ℕ} (hn : 
   simp only [mem_approx_add_orderOf_iff, mem_setOf_eq, ball, exists_prop, dist_eq_norm,
     AddCircle.addOrderOf_eq_pos_iff hn, mul_one]
   constructor
-  · rintro ⟨y, ⟨m, hm₁, hm₂, rfl⟩, hx⟩; exact ⟨m, hm₁, hm₂, hx⟩
-  · rintro ⟨m, hm₁, hm₂, hx⟩; exact ⟨↑((m : ℝ) / n), ⟨m, hm₁, hm₂, rfl⟩, hx⟩
+  rintro ⟨y, ⟨m, hm₁, hm₂, rfl⟩, hx⟩; exact ⟨m, hm₁, hm₂, hx⟩
+  rintro ⟨m, hm₁, hm₂, hx⟩; exact ⟨↑((m : ℝ) / n), ⟨m, hm₁, hm₂, rfl⟩, hx⟩
 
 theorem mem_addWellApproximable_iff (δ : ℕ → ℝ) (x : UnitAddCircle) :
     x ∈ addWellApproximable UnitAddCircle δ ↔
@@ -168,9 +168,9 @@ theorem mem_addWellApproximable_iff (δ : ℕ → ℝ) (x : UnitAddCircle) :
   simp only [mem_add_wellApproximable_iff, ← Nat.cofinite_eq_atTop, cofinite.blimsup_set_eq,
     mem_setOf_eq]
   refine iff_of_eq (congr_arg Set.Infinite <| ext fun n => ⟨fun hn => ?_, fun hn => ?_⟩)
-  · exact (mem_approxAddOrderOf_iff hn.1).mp hn.2
-  · have h : 0 < n := by obtain ⟨m, hm₁, _, _⟩ := hn; exact pos_of_gt hm₁
-    exact ⟨h, (mem_approxAddOrderOf_iff h).mpr hn⟩
+  exact (mem_approxAddOrderOf_iff hn.1).mp hn.2
+  have h : 0 < n := by obtain ⟨m, hm₁, _, _⟩ := hn; exact pos_of_gt hm₁
+  exact ⟨h, (mem_approxAddOrderOf_iff h).mpr hn⟩
 
 end UnitAddCircle
 
@@ -294,23 +294,23 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
     exact blimsup_congr (eventually_of_forall fun n hn =>
       approxAddOrderOf.vadd_eq_of_mul_dvd (δ n) hn.1 hn.2)
   by_cases h : ∀ p : Nat.Primes, A p =ᵐ[μ] (∅ : Set 𝕊) ∧ B p =ᵐ[μ] (∅ : Set 𝕊)
-  · replace h : ∀ p : Nat.Primes, (u p +ᵥ E : Set _) =ᵐ[μ] E := by
-      intro p
-      replace hE₂ : E =ᵐ[μ] C p := hE₂ p (h p)
-      have h_qmp : Measure.QuasiMeasurePreserving (-u p +ᵥ ·) μ μ :=
-        (measurePreserving_vadd _ μ).quasiMeasurePreserving
-      refine (h_qmp.vadd_ae_eq_of_ae_eq (u p) hE₂).trans (ae_eq_trans ?_ hE₂.symm)
-      rw [hC]
-    exact ae_empty_or_univ_of_forall_vadd_ae_eq_self hE₀ h hu
-  · right
-    simp only [not_forall, not_and_or] at h
-    obtain ⟨p, hp⟩ := h
-    rw [hE₁ p]
-    cases hp
-    · cases' hA p with _ h; · contradiction
-      simp only [h, union_ae_eq_univ_of_ae_eq_univ_left]
-    · cases' hB p with _ h; · contradiction
-      simp only [h, union_ae_eq_univ_of_ae_eq_univ_left, union_ae_eq_univ_of_ae_eq_univ_right]
+  replace h : ∀ p : Nat.Primes, (u p +ᵥ E : Set _) =ᵐ[μ] E := by
+    intro p
+    replace hE₂ : E =ᵐ[μ] C p := hE₂ p (h p)
+    have h_qmp : Measure.QuasiMeasurePreserving (-u p +ᵥ ·) μ μ :=
+      (measurePreserving_vadd _ μ).quasiMeasurePreserving
+    refine (h_qmp.vadd_ae_eq_of_ae_eq (u p) hE₂).trans (ae_eq_trans ?_ hE₂.symm)
+    rw [hC]
+  exact ae_empty_or_univ_of_forall_vadd_ae_eq_self hE₀ h hu
+  right
+  simp only [not_forall, not_and_or] at h
+  obtain ⟨p, hp⟩ := h
+  rw [hE₁ p]
+  cases hp
+  cases' hA p with _ h; · contradiction
+  simp only [h, union_ae_eq_univ_of_ae_eq_univ_left]
+  cases' hB p with _ h; · contradiction
+  simp only [h, union_ae_eq_univ_of_ae_eq_univ_left, union_ae_eq_univ_of_ae_eq_univ_right]
 
 /-- A general version of **Dirichlet's approximation theorem**.
 
@@ -326,10 +326,10 @@ lemma _root_.NormedAddCommGroup.exists_norm_nsmul_le {A : Type*}
   suffices ¬ Pairwise (Disjoint on B) by
     obtain ⟨i, j, hij, x, hx⟩ := exists_lt_mem_inter_of_not_pairwise_disjoint this
     refine ⟨j - i, ⟨le_tsub_of_add_le_left hij, ?_⟩, ?_⟩
-    · simpa only [tsub_le_iff_right] using j.property.2.trans le_self_add
-    · rw [sub_nsmul _ (Subtype.coe_le_coe.mpr hij.le), ← sub_eq_add_neg, ← dist_eq_norm]
-      exact (dist_triangle ((j : ℕ) • ξ) x ((i : ℕ) • ξ)).trans (by
-        linarith [mem_closedBall.mp hx.1, mem_closedBall'.mp hx.2])
+    simpa only [tsub_le_iff_right] using j.property.2.trans le_self_add
+    rw [sub_nsmul _ (Subtype.coe_le_coe.mpr hij.le), ← sub_eq_add_neg, ← dist_eq_norm]
+    exact (dist_triangle ((j : ℕ) • ξ) x ((i : ℕ) • ξ)).trans (by
+      linarith [mem_closedBall.mp hx.1, mem_closedBall'.mp hx.2])
   by_contra h
   apply hn.ne'
   have h' : ⋃ j, B j = univ

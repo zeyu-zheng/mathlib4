@@ -30,16 +30,16 @@ variable {m n : ℕ}
   pred_le := pred_le
   min_of_le_pred {a} ha := by
     cases a
-    · exact isMin_bot
-    · exact (not_succ_le_self _ ha).elim
+    exact isMin_bot
+    exact (not_succ_le_self _ ha).elim
   le_pred_of_lt {a} {b} h := by
     cases b
-    · exact (a.not_lt_zero h).elim
-    · exact le_of_succ_le_succ h
+    exact (a.not_lt_zero h).elim
+    exact le_of_succ_le_succ h
   le_of_pred_lt {a} {b} h := by
     cases a
-    · exact b.zero_le
-    · exact h
+    exact b.zero_le
+    exact h
 
 @[simp]
 theorem succ_eq_succ : Order.succ = succ :=

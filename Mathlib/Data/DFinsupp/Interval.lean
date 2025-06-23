@@ -44,15 +44,15 @@ variable [∀ i, DecidableEq (α i)]
 
 theorem mem_dfinsupp_iff : f ∈ s.dfinsupp t ↔ f.support ⊆ s ∧ ∀ i ∈ s, f i ∈ t i := by
   refine mem_map.trans ⟨?_, ?_⟩
-  · rintro ⟨f, hf, rfl⟩
-    rw [Function.Embedding.coeFn_mk] -- Porting note: added to avoid heartbeat timeout
-    refine ⟨support_mk_subset, fun i hi => ?_⟩
-    convert mem_pi.1 hf i hi
-    exact mk_of_mem hi
-  · refine fun h => ⟨fun i _ => f i, mem_pi.2 h.2, ?_⟩
-    ext i
-    dsimp
-    exact ite_eq_left_iff.2 fun hi => (not_mem_support_iff.1 fun H => hi <| h.1 H).symm
+  rintro ⟨f, hf, rfl⟩
+  rw [Function.Embedding.coeFn_mk] -- Porting note: added to avoid heartbeat timeout
+  refine ⟨support_mk_subset, fun i hi => ?_⟩
+  convert mem_pi.1 hf i hi
+  exact mk_of_mem hi
+  refine fun h => ⟨fun i _ => f i, mem_pi.2 h.2, ?_⟩
+  ext i
+  dsimp
+  exact ite_eq_left_iff.2 fun hi => (not_mem_support_iff.1 fun H => hi <| h.1 H).symm
 
 /-- When `t` is supported on `s`, `f ∈ s.dfinsupp t` precisely means that `f` is pointwise in `t`.
 -/
@@ -62,11 +62,11 @@ theorem mem_dfinsupp_iff_of_support_subset {t : Π₀ i, Finset (α i)} (ht : t.
   refine mem_dfinsupp_iff.trans (forall_and.symm.trans <| forall_congr' fun i =>
       ⟨ fun h => ?_,
         fun h => ⟨fun hi => ht <| mem_support_iff.2 fun H => mem_support_iff.1 hi ?_, fun _ => h⟩⟩)
-  · by_cases hi : i ∈ s
-    · exact h.2 hi
-    · rw [not_mem_support_iff.1 (mt h.1 hi), not_mem_support_iff.1 (not_mem_mono ht hi)]
-      exact zero_mem_zero
-  · rwa [H, mem_zero] at h
+  by_cases hi : i ∈ s
+  exact h.2 hi
+  rw [not_mem_support_iff.1 (mt h.1 hi), not_mem_support_iff.1 (not_mem_mono ht hi)]
+  exact zero_mem_zero
+  rwa [H, mem_zero] at h
 
 end Finset
 

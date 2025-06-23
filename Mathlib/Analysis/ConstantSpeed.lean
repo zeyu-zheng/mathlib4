@@ -69,100 +69,100 @@ theorem hasConstantSpeedOnWith_iff_ordered :
       x ≤ y → eVariationOn f (s ∩ Icc x y) = ENNReal.ofReal (l * (y - x)) := by
   refine ⟨fun h x xs y ys _ => h xs ys, fun h x xs y ys => ?_⟩
   rcases le_total x y with (xy | yx)
-  · exact h xs ys xy
-  · rw [eVariationOn.subsingleton, ENNReal.ofReal_of_nonpos]
-    · exact mul_nonpos_of_nonneg_of_nonpos l.prop (sub_nonpos_of_le yx)
-    · rintro z ⟨zs, xz, zy⟩ w ⟨ws, xw, wy⟩
-      cases le_antisymm (zy.trans yx) xz
-      cases le_antisymm (wy.trans yx) xw
-      rfl
+  exact h xs ys xy
+  rw [eVariationOn.subsingleton, ENNReal.ofReal_of_nonpos]
+  exact mul_nonpos_of_nonneg_of_nonpos l.prop (sub_nonpos_of_le yx)
+  rintro z ⟨zs, xz, zy⟩ w ⟨ws, xw, wy⟩
+  cases le_antisymm (zy.trans yx) xz
+  cases le_antisymm (wy.trans yx) xw
+  rfl
 
 theorem hasConstantSpeedOnWith_iff_variationOnFromTo_eq :
     HasConstantSpeedOnWith f s l ↔ LocallyBoundedVariationOn f s ∧
       ∀ ⦃x⦄ (_ : x ∈ s) ⦃y⦄ (_ : y ∈ s), variationOnFromTo f s x y = l * (y - x) := by
   constructor
-  · rintro h; refine ⟨h.hasLocallyBoundedVariationOn, fun x xs y ys => ?_⟩
-    rw [hasConstantSpeedOnWith_iff_ordered] at h
-    rcases le_total x y with (xy | yx)
-    · rw [variationOnFromTo.eq_of_le f s xy, h xs ys xy]
-      exact ENNReal.toReal_ofReal (mul_nonneg l.prop (sub_nonneg.mpr xy))
-    · rw [variationOnFromTo.eq_of_ge f s yx, h ys xs yx]
-      have := ENNReal.toReal_ofReal (mul_nonneg l.prop (sub_nonneg.mpr yx))
-      simp_all only [NNReal.val_eq_coe]; ring
-  · rw [hasConstantSpeedOnWith_iff_ordered]
-    rintro h x xs y ys xy
-    rw [← h.2 xs ys, variationOnFromTo.eq_of_le f s xy, ENNReal.ofReal_toReal (h.1 x y xs ys)]
+  rintro h; refine ⟨h.hasLocallyBoundedVariationOn, fun x xs y ys => ?_⟩
+  rw [hasConstantSpeedOnWith_iff_ordered] at h
+  rcases le_total x y with (xy | yx)
+  rw [variationOnFromTo.eq_of_le f s xy, h xs ys xy]
+  exact ENNReal.toReal_ofReal (mul_nonneg l.prop (sub_nonneg.mpr xy))
+  rw [variationOnFromTo.eq_of_ge f s yx, h ys xs yx]
+  have := ENNReal.toReal_ofReal (mul_nonneg l.prop (sub_nonneg.mpr yx))
+  simp_all only [NNReal.val_eq_coe]; ring
+  rw [hasConstantSpeedOnWith_iff_ordered]
+  rintro h x xs y ys xy
+  rw [← h.2 xs ys, variationOnFromTo.eq_of_le f s xy, ENNReal.ofReal_toReal (h.1 x y xs ys)]
 
 theorem HasConstantSpeedOnWith.union {t : Set ℝ} (hfs : HasConstantSpeedOnWith f s l)
     (hft : HasConstantSpeedOnWith f t l) {x : ℝ} (hs : IsGreatest s x) (ht : IsLeast t x) :
     HasConstantSpeedOnWith f (s ∪ t) l := by
   rw [hasConstantSpeedOnWith_iff_ordered] at hfs hft ⊢
   rintro z (zs | zt) y (ys | yt) zy
-  · have : (s ∪ t) ∩ Icc z y = s ∩ Icc z y := by
-      ext w; constructor
-      · rintro ⟨ws | wt, zw, wy⟩
-        · exact ⟨ws, zw, wy⟩
-        · exact ⟨(le_antisymm (wy.trans (hs.2 ys)) (ht.2 wt)).symm ▸ hs.1, zw, wy⟩
-      · rintro ⟨ws, zwy⟩; exact ⟨Or.inl ws, zwy⟩
-    rw [this, hfs zs ys zy]
+  have : (s ∪ t) ∩ Icc z y = s ∩ Icc z y
+  ext w; constructor
+  rintro ⟨ws | wt, zw, wy⟩
+  exact ⟨ws, zw, wy⟩
+  exact ⟨(le_antisymm (wy.trans (hs.2 ys)) (ht.2 wt)).symm ▸ hs.1, zw, wy⟩
+  rintro ⟨ws, zwy⟩; exact ⟨Or.inl ws, zwy⟩
+  rw [this, hfs zs ys zy]
   · have : (s ∪ t) ∩ Icc z y = s ∩ Icc z x ∪ t ∩ Icc x y := by
       ext w; constructor
       · rintro ⟨ws | wt, zw, wy⟩
         exacts [Or.inl ⟨ws, zw, hs.2 ws⟩, Or.inr ⟨wt, ht.2 wt, wy⟩]
-      · rintro (⟨ws, zw, wx⟩ | ⟨wt, xw, wy⟩)
-        exacts [⟨Or.inl ws, zw, wx.trans (ht.2 yt)⟩, ⟨Or.inr wt, (hs.2 zs).trans xw, wy⟩]
+      rintro (⟨ws, zw, wx⟩ | ⟨wt, xw, wy⟩)
+      exacts [⟨Or.inl ws, zw, wx.trans (ht.2 yt)⟩, ⟨Or.inr wt, (hs.2 zs).trans xw, wy⟩]
     rw [this, @eVariationOn.union _ _ _ _ f _ _ x, hfs zs hs.1 (hs.2 zs), hft ht.1 yt (ht.2 yt)]
-    · have q := ENNReal.ofReal_add (mul_nonneg l.prop (sub_nonneg.mpr (hs.2 zs)))
-        (mul_nonneg l.prop (sub_nonneg.mpr (ht.2 yt)))
-      simp only [NNReal.val_eq_coe] at q
-      rw [← q]
-      ring_nf
+    have q := ENNReal.ofReal_add (mul_nonneg l.prop (sub_nonneg.mpr (hs.2 zs)))
+      (mul_nonneg l.prop (sub_nonneg.mpr (ht.2 yt)))
+    simp only [NNReal.val_eq_coe] at q
+    rw [← q]
+    ring_nf
     exacts [⟨⟨hs.1, hs.2 zs, le_rfl⟩, fun w ⟨_, _, wx⟩ => wx⟩,
       ⟨⟨ht.1, le_rfl, ht.2 yt⟩, fun w ⟨_, xw, _⟩ => xw⟩]
-  · cases le_antisymm zy ((hs.2 ys).trans (ht.2 zt))
-    simp only [Icc_self, sub_self, mul_zero, ENNReal.ofReal_zero]
-    exact eVariationOn.subsingleton _ fun _ ⟨_, uz⟩ _ ⟨_, vz⟩ => uz.trans vz.symm
-  · have : (s ∪ t) ∩ Icc z y = t ∩ Icc z y := by
-      ext w; constructor
-      · rintro ⟨ws | wt, zw, wy⟩
-        · exact ⟨le_antisymm ((ht.2 zt).trans zw) (hs.2 ws) ▸ ht.1, zw, wy⟩
-        · exact ⟨wt, zw, wy⟩
-      · rintro ⟨wt, zwy⟩; exact ⟨Or.inr wt, zwy⟩
-    rw [this, hft zt yt zy]
+  cases le_antisymm zy ((hs.2 ys).trans (ht.2 zt))
+  simp only [Icc_self, sub_self, mul_zero, ENNReal.ofReal_zero]
+  exact eVariationOn.subsingleton _ fun _ ⟨_, uz⟩ _ ⟨_, vz⟩ => uz.trans vz.symm
+  have : (s ∪ t) ∩ Icc z y = t ∩ Icc z y := by
+    ext w; constructor
+    rintro ⟨ws | wt, zw, wy⟩
+    exact ⟨le_antisymm ((ht.2 zt).trans zw) (hs.2 ws) ▸ ht.1, zw, wy⟩
+    exact ⟨wt, zw, wy⟩
+    rintro ⟨wt, zwy⟩; exact ⟨Or.inr wt, zwy⟩
+  rw [this, hft zt yt zy]
 
 theorem HasConstantSpeedOnWith.Icc_Icc {x y z : ℝ} (hfs : HasConstantSpeedOnWith f (Icc x y) l)
     (hft : HasConstantSpeedOnWith f (Icc y z) l) : HasConstantSpeedOnWith f (Icc x z) l := by
   rcases le_total x y with (xy | yx)
-  · rcases le_total y z with (yz | zy)
-    · rw [← Set.Icc_union_Icc_eq_Icc xy yz]
-      exact hfs.union hft (isGreatest_Icc xy) (isLeast_Icc yz)
-    · rintro u ⟨xu, uz⟩ v ⟨xv, vz⟩
-      rw [Icc_inter_Icc, sup_of_le_right xu, inf_of_le_right vz, ←
-        hfs ⟨xu, uz.trans zy⟩ ⟨xv, vz.trans zy⟩, Icc_inter_Icc, sup_of_le_right xu,
-        inf_of_le_right (vz.trans zy)]
-  · rintro u ⟨xu, uz⟩ v ⟨xv, vz⟩
-    rw [Icc_inter_Icc, sup_of_le_right xu, inf_of_le_right vz, ←
-      hft ⟨yx.trans xu, uz⟩ ⟨yx.trans xv, vz⟩, Icc_inter_Icc, sup_of_le_right (yx.trans xu),
-      inf_of_le_right vz]
+  rcases le_total y z with (yz | zy)
+  rw [← Set.Icc_union_Icc_eq_Icc xy yz]
+  exact hfs.union hft (isGreatest_Icc xy) (isLeast_Icc yz)
+  rintro u ⟨xu, uz⟩ v ⟨xv, vz⟩
+  rw [Icc_inter_Icc, sup_of_le_right xu, inf_of_le_right vz, ←
+    hfs ⟨xu, uz.trans zy⟩ ⟨xv, vz.trans zy⟩, Icc_inter_Icc, sup_of_le_right xu,
+    inf_of_le_right (vz.trans zy)]
+  rintro u ⟨xu, uz⟩ v ⟨xv, vz⟩
+  rw [Icc_inter_Icc, sup_of_le_right xu, inf_of_le_right vz, ←
+    hft ⟨yx.trans xu, uz⟩ ⟨yx.trans xv, vz⟩, Icc_inter_Icc, sup_of_le_right (yx.trans xu),
+    inf_of_le_right vz]
 
 theorem hasConstantSpeedOnWith_zero_iff :
     HasConstantSpeedOnWith f s 0 ↔ ∀ᵉ (x ∈ s) (y ∈ s), edist (f x) (f y) = 0 := by
   dsimp [HasConstantSpeedOnWith]
   simp only [zero_mul, ENNReal.ofReal_zero, ← eVariationOn.eq_zero_iff]
   constructor
-  · by_contra!
-    obtain ⟨h, hfs⟩ := this
-    simp_rw [ne_eq, eVariationOn.eq_zero_iff] at hfs h
-    push_neg at hfs
-    obtain ⟨x, xs, y, ys, hxy⟩ := hfs
-    rcases le_total x y with (xy | yx)
-    · exact hxy (h xs ys x ⟨xs, le_rfl, xy⟩ y ⟨ys, xy, le_rfl⟩)
-    · rw [edist_comm] at hxy
-      exact hxy (h ys xs y ⟨ys, le_rfl, yx⟩ x ⟨xs, yx, le_rfl⟩)
-  · rintro h x _ y _
-    refine le_antisymm ?_ zero_le'
-    rw [← h]
-    exact eVariationOn.mono f inter_subset_left
+  by_contra!
+  obtain ⟨h, hfs⟩ := this
+  simp_rw [ne_eq, eVariationOn.eq_zero_iff] at hfs h
+  push_neg at hfs
+  obtain ⟨x, xs, y, ys, hxy⟩ := hfs
+  rcases le_total x y with (xy | yx)
+  exact hxy (h xs ys x ⟨xs, le_rfl, xy⟩ y ⟨ys, xy, le_rfl⟩)
+  rw [edist_comm] at hxy
+  exact hxy (h ys xs y ⟨ys, le_rfl, yx⟩ x ⟨xs, yx, le_rfl⟩)
+  rintro h x _ y _
+  refine le_antisymm ?_ zero_le'
+  rw [← h]
+  exact eVariationOn.mono f inter_subset_left
 
 theorem HasConstantSpeedOnWith.ratio {l' : ℝ≥0} (hl' : l' ≠ 0) {φ : ℝ → ℝ} (φm : MonotoneOn φ s)
     (hfφ : HasConstantSpeedOnWith (f ∘ φ) s l) (hf : HasConstantSpeedOnWith f (φ '' s) l') ⦃x : ℝ⦄
@@ -247,15 +247,15 @@ theorem has_unit_speed_naturalParameterization (f : α → E) {s : Set α}
   rw [hasConstantSpeedOnWith_iff_ordered]
   rintro _ ⟨b, bs, rfl⟩ _ ⟨c, cs, rfl⟩ h
   rcases le_total c b with (cb | bc)
-  · rw [NNReal.coe_one, one_mul, le_antisymm h (variationOnFromTo.monotoneOn hf as cs bs cb),
-      sub_self, ENNReal.ofReal_zero, Icc_self, eVariationOn.subsingleton]
-    exact fun x hx y hy => hx.2.trans hy.2.symm
-  · rw [NNReal.coe_one, one_mul, sub_eq_add_neg, variationOnFromTo.eq_neg_swap, neg_neg, add_comm,
-      variationOnFromTo.add hf bs as cs, ← variationOnFromTo.eq_neg_swap f]
-    rw [←
-      eVariationOn.comp_inter_Icc_eq_of_monotoneOn (naturalParameterization f s a) _
-        (variationOnFromTo.monotoneOn hf as) bs cs]
-    rw [@eVariationOn.eq_of_edist_zero_on _ _ _ _ _ f]
-    · rw [variationOnFromTo.eq_of_le _ _ bc, ENNReal.ofReal_toReal (hf b c bs cs)]
-    · rintro x ⟨xs, _, _⟩
-      exact edist_naturalParameterization_eq_zero hf as xs
+  rw [NNReal.coe_one, one_mul, le_antisymm h (variationOnFromTo.monotoneOn hf as cs bs cb),
+    sub_self, ENNReal.ofReal_zero, Icc_self, eVariationOn.subsingleton]
+  exact fun x hx y hy => hx.2.trans hy.2.symm
+  rw [NNReal.coe_one, one_mul, sub_eq_add_neg, variationOnFromTo.eq_neg_swap, neg_neg, add_comm,
+    variationOnFromTo.add hf bs as cs, ← variationOnFromTo.eq_neg_swap f]
+  rw [←
+    eVariationOn.comp_inter_Icc_eq_of_monotoneOn (naturalParameterization f s a) _
+      (variationOnFromTo.monotoneOn hf as) bs cs]
+  rw [@eVariationOn.eq_of_edist_zero_on _ _ _ _ _ f]
+  rw [variationOnFromTo.eq_of_le _ _ bc, ENNReal.ofReal_toReal (hf b c bs cs)]
+  rintro x ⟨xs, _, _⟩
+  exact edist_naturalParameterization_eq_zero hf as xs

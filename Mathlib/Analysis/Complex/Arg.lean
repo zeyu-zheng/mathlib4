@@ -29,9 +29,9 @@ namespace Complex
 
 theorem sameRay_iff : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ x.arg = y.arg := by
   rcases eq_or_ne x 0 with (rfl | hx)
-  · simp
+  simp
   rcases eq_or_ne y 0 with (rfl | hy)
-  · simp
+  simp
   simp only [hx, hy, false_or_iff, sameRay_iff_norm_smul_eq, arg_eq_arg_iff hx hy]
   field_simp [hx, hy]
   rw [mul_comm, eq_comm]

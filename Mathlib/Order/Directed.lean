@@ -104,11 +104,11 @@ theorem Directed.extend_bot [Preorder α] [OrderBot α] {e : ι → β} {f : ι 
     Directed (· ≤ ·) (Function.extend e f ⊥) := by
   intro a b
   rcases (em (∃ i, e i = a)).symm with (ha | ⟨i, rfl⟩)
-  · use b
-    simp [Function.extend_apply' _ _ _ ha]
+  use b
+  simp [Function.extend_apply' _ _ _ ha]
   rcases (em (∃ i, e i = b)).symm with (hb | ⟨j, rfl⟩)
-  · use e i
-    simp [Function.extend_apply' _ _ _ hb]
+  use e i
+  simp [Function.extend_apply' _ _ _ hb]
   rcases hf i j with ⟨k, hi, hj⟩
   use e k
   simp only [he.extend_apply, *, true_and_iff]
@@ -198,13 +198,13 @@ section Reflexive
 protected theorem DirectedOn.insert (h : Reflexive r) (a : α) {s : Set α} (hd : DirectedOn r s)
     (ha : ∀ b ∈ s, ∃ c ∈ s, a ≼ c ∧ b ≼ c) : DirectedOn r (insert a s) := by
   rintro x (rfl | hx) y (rfl | hy)
-  · exact ⟨y, Set.mem_insert _ _, h _, h _⟩
-  · obtain ⟨w, hws, hwr⟩ := ha y hy
-    exact ⟨w, Set.mem_insert_of_mem _ hws, hwr⟩
-  · obtain ⟨w, hws, hwr⟩ := ha x hx
-    exact ⟨w, Set.mem_insert_of_mem _ hws, hwr.symm⟩
-  · obtain ⟨w, hws, hwr⟩ := hd x hx y hy
-    exact ⟨w, Set.mem_insert_of_mem _ hws, hwr⟩
+  exact ⟨y, Set.mem_insert _ _, h _, h _⟩
+  obtain ⟨w, hws, hwr⟩ := ha y hy
+  exact ⟨w, Set.mem_insert_of_mem _ hws, hwr⟩
+  obtain ⟨w, hws, hwr⟩ := ha x hx
+  exact ⟨w, Set.mem_insert_of_mem _ hws, hwr.symm⟩
+  obtain ⟨w, hws, hwr⟩ := hd x hx y hy
+  exact ⟨w, Set.mem_insert_of_mem _ hws, hwr⟩
 
 theorem directedOn_singleton (h : Reflexive r) (a : α) : DirectedOn r ({a} : Set α) :=
   fun x hx _ hy => ⟨x, hx, h _, hx.symm ▸ hy.symm ▸ h _⟩

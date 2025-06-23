@@ -155,11 +155,11 @@ theorem multiplicity_factorial_mul_succ {n p : ℕ} (hp : p.Prime) :
 theorem multiplicity_factorial_mul {n p : ℕ} (hp : p.Prime) :
     multiplicity p (p * n)! = multiplicity p n ! + n := by
   induction' n with n ih
-  · simp
-  · simp only [succ_eq_add_one, multiplicity.mul, hp, hp.prime, ih, multiplicity_factorial_mul_succ,
-      ← add_assoc, Nat.cast_one, Nat.cast_add, factorial_succ]
-    congr 1
-    rw [add_comm, add_assoc]
+  simp
+  simp only [succ_eq_add_one, multiplicity.mul, hp, hp.prime, ih, multiplicity_factorial_mul_succ,
+    ← add_assoc, Nat.cast_one, Nat.cast_add, factorial_succ]
+  congr 1
+  rw [add_comm, add_assoc]
 
 /-- A prime power divides `n!` iff it is at most the sum of the quotients `n / p ^ i`.
   This sum is expressed over the set `Ico 1 b` where `b` is any bound greater than `log p n` -/
@@ -213,7 +213,7 @@ theorem multiplicity_choose {p n k b : ℕ} (hp : p.Prime) (hkn : k ≤ n) (hnb 
       ((Ico 1 b).filter fun i => p ^ i ≤ k % p ^ i + (n - k) % p ^ i).card := by
   have := Nat.sub_add_cancel hkn
   convert @multiplicity_choose' p (n - k) k b hp _
-  · rw [this]
+  rw [this]
   exact this.symm ▸ hnb
 
 /-- A lower bound on the multiplicity of `p` in `choose n k`. -/
@@ -256,7 +256,7 @@ theorem multiplicity_choose_prime_pow {p n k : ℕ} (hp : p.Prime) (hkn : k ≤ 
 
 theorem dvd_choose_pow (hp : Prime p) (hk : k ≠ 0) (hkp : k ≠ p ^ n) : p ∣ (p ^ n).choose k := by
   obtain hkp | hkp := hkp.symm.lt_or_lt
-  · simp [choose_eq_zero_of_lt hkp]
+  simp [choose_eq_zero_of_lt hkp]
   refine multiplicity_ne_zero.1 fun h => hkp.not_le <| Nat.le_of_dvd hk.bot_lt ?_
   have H := hp.multiplicity_choose_prime_pow_add_multiplicity hkp.le hk
   rw [h, zero_add, eq_coe_iff] at H
@@ -271,26 +271,26 @@ end Prime
 theorem multiplicity_two_factorial_lt : ∀ {n : ℕ} (_ : n ≠ 0), multiplicity 2 n ! < n := by
   have h2 := prime_two.prime
   refine binaryRec ?_ ?_
-  · exact fun h => False.elim <| h rfl
-  · intro b n ih h
-    by_cases hn : n = 0
-    · subst hn
-      simp only [ne_eq, bit_eq_zero, true_and, Bool.not_eq_false] at h
-      simp only [h, bit_true, factorial, mul_one, Nat.isUnit_iff, cast_one]
-      rw [Prime.multiplicity_one]
-      · simp [zero_lt_one]
-      · decide
-    have : multiplicity 2 (2 * n)! < (2 * n : ℕ)
-    rw [prime_two.multiplicity_factorial_mul]
-    refine (PartENat.add_lt_add_right (ih hn) (PartENat.natCast_ne_top _)).trans_le ?_
-    rw [two_mul]
-    norm_cast
-    cases b
-    · simpa
-    · suffices multiplicity 2 (2 * n + 1) + multiplicity 2 (2 * n)! < ↑(2 * n) + 1 by
-        simpa [multiplicity.mul, h2, prime_two, bit, factorial]
-      rw [multiplicity_eq_zero.2 (two_not_dvd_two_mul_add_one n), zero_add]
-      refine this.trans ?_
-      exact mod_cast lt_succ_self _
+  exact fun h => False.elim <| h rfl
+  intro b n ih h
+  by_cases hn : n = 0
+  subst hn
+  simp only [ne_eq, bit_eq_zero, true_and, Bool.not_eq_false] at h
+  simp only [h, bit_true, factorial, mul_one, Nat.isUnit_iff, cast_one]
+  rw [Prime.multiplicity_one]
+  simp [zero_lt_one]
+  decide
+  have : multiplicity 2 (2 * n)! < (2 * n : ℕ)
+  rw [prime_two.multiplicity_factorial_mul]
+  refine (PartENat.add_lt_add_right (ih hn) (PartENat.natCast_ne_top _)).trans_le ?_
+  rw [two_mul]
+  norm_cast
+  cases b
+  simpa
+  suffices multiplicity 2 (2 * n + 1) + multiplicity 2 (2 * n)! < ↑(2 * n) + 1 by
+    simpa [multiplicity.mul, h2, prime_two, bit, factorial]
+  rw [multiplicity_eq_zero.2 (two_not_dvd_two_mul_add_one n), zero_add]
+  refine this.trans ?_
+  exact mod_cast lt_succ_self _
 
 end Nat

@@ -55,25 +55,25 @@ theorem eq_one_of_noncommProd_eq_one_of_independent {ι : Type*} (s : Finset ι)
     (heq1 : s.noncommProd f comm = 1) : ∀ i ∈ s, f i = 1 := by
     revert heq1
     induction' s using Finset.induction_on with i s hnmem ih
-    · simp
-    · have hcomm := comm.mono (Finset.coe_subset.2 <| Finset.subset_insert _ _)
-      simp only [Finset.forall_mem_insert] at hmem
-      have hmem_bsupr : s.noncommProd f hcomm ∈ ⨆ i ∈ (s : Set ι), K i
-      refine Subgroup.noncommProd_mem _ _ ?_
-      intro x hx
-      have : K x ≤ ⨆ i ∈ (s : Set ι), K i := le_iSup₂ (f := fun i _ => K i) x hx
-      exact this (hmem.2 x hx)
-      intro heq1
-      rw [Finset.noncommProd_insert_of_not_mem _ _ _ _ hnmem] at heq1
-      have hnmem' : i ∉ (s : Set ι)
-      simpa
-      obtain ⟨heq1i : f i = 1, heq1S : s.noncommProd f _ = 1⟩ :=
-        Subgroup.disjoint_iff_mul_eq_one.mp (hind.disjoint_biSup hnmem') hmem.1 hmem_bsupr heq1
-      intro i h
-      simp only [Finset.mem_insert] at h
-      rcases h with (rfl | h)
-      · exact heq1i
-      · refine ih hcomm hmem.2 heq1S _ h
+    simp
+    have hcomm := comm.mono (Finset.coe_subset.2 <| Finset.subset_insert _ _)
+    simp only [Finset.forall_mem_insert] at hmem
+    have hmem_bsupr : s.noncommProd f hcomm ∈ ⨆ i ∈ (s : Set ι), K i
+    refine Subgroup.noncommProd_mem _ _ ?_
+    intro x hx
+    have : K x ≤ ⨆ i ∈ (s : Set ι), K i := le_iSup₂ (f := fun i _ => K i) x hx
+    exact this (hmem.2 x hx)
+    intro heq1
+    rw [Finset.noncommProd_insert_of_not_mem _ _ _ _ hnmem] at heq1
+    have hnmem' : i ∉ (s : Set ι)
+    simpa
+    obtain ⟨heq1i : f i = 1, heq1S : s.noncommProd f _ = 1⟩ :=
+      Subgroup.disjoint_iff_mul_eq_one.mp (hind.disjoint_biSup hnmem') hmem.1 hmem_bsupr heq1
+    intro i h
+    simp only [Finset.mem_insert] at h
+    rcases h with (rfl | h)
+    exact heq1i
+    refine ih hcomm hmem.2 heq1S _ h
 
 end Subgroup
 
@@ -124,11 +124,11 @@ theorem noncommPiCoprod_mulSingle (i : ι) (y : N i) :
   rw [Finset.noncommProd_insert_of_not_mem _ _ _ _ (Finset.not_mem_erase i _)]
   rw [Pi.mulSingle_eq_same]
   rw [Finset.noncommProd_eq_pow_card]
-  · rw [one_pow]
-    exact mul_one _
-  · intro j hj
-    simp only [Finset.mem_erase] at hj
-    simp [hj]
+  rw [one_pow]
+  exact mul_one _
+  intro j hj
+  simp only [Finset.mem_erase] at hj
+  simp [hj]
 
 /-- The universal property of `MonoidHom.noncommPiCoprod` -/
 @[to_additive "The universal property of `AddMonoidHom.noncommPiCoprod`"]
@@ -150,14 +150,14 @@ theorem noncommPiCoprod_mrange :
     MonoidHom.mrange (noncommPiCoprod ϕ hcomm) = ⨆ i : ι, MonoidHom.mrange (ϕ i) := by
   letI := Classical.decEq ι
   apply le_antisymm
-  · rintro x ⟨f, rfl⟩
-    refine Submonoid.noncommProd_mem _ _ _ (fun _ _ _ _ h => hcomm h _ _) (fun i _ => ?_)
-    apply Submonoid.mem_sSup_of_mem
-    · use i
-    simp
-  · refine iSup_le ?_
-    rintro i x ⟨y, rfl⟩
-    exact ⟨Pi.mulSingle i y, noncommPiCoprod_mulSingle _ _ _⟩
+  rintro x ⟨f, rfl⟩
+  refine Submonoid.noncommProd_mem _ _ _ (fun _ _ _ _ h => hcomm h _ _) (fun i _ => ?_)
+  apply Submonoid.mem_sSup_of_mem
+  use i
+  simp
+  refine iSup_le ?_
+  rintro i x ⟨y, rfl⟩
+  exact ⟨Pi.mulSingle i y, noncommPiCoprod_mulSingle _ _ _⟩
 
 end MonoidHom
 
@@ -181,15 +181,15 @@ theorem noncommPiCoprod_range
     (noncommPiCoprod ϕ hcomm).range = ⨆ i : ι, (ϕ i).range := by
   letI := Classical.decEq ι
   apply le_antisymm
-  · rintro x ⟨f, rfl⟩
-    refine Subgroup.noncommProd_mem _ (fun _ _ _ _ h => hcomm h _ _) ?_
-    intro i _hi
-    apply Subgroup.mem_sSup_of_mem
-    · use i
-    simp
-  · refine iSup_le ?_
-    rintro i x ⟨y, rfl⟩
-    exact ⟨Pi.mulSingle i y, noncommPiCoprod_mulSingle _ _ _⟩
+  rintro x ⟨f, rfl⟩
+  refine Subgroup.noncommProd_mem _ (fun _ _ _ _ h => hcomm h _ _) ?_
+  intro i _hi
+  apply Subgroup.mem_sSup_of_mem
+  use i
+  simp
+  refine iSup_le ?_
+  rintro i x ⟨y, rfl⟩
+  exact ⟨Pi.mulSingle i y, noncommPiCoprod_mulSingle _ _ _⟩
 
 open Classical in
 @[to_additive]
@@ -221,9 +221,9 @@ theorem independent_range_of_coprime_order
   dsimp at hxi hxp
   rw [iSup_subtype', ← noncommPiCoprod_range] at hxp
   rotate_left
-  · intro _ _ hj
-    apply hcomm
-    exact hj ∘ Subtype.ext
+  intro _ _ hj
+  apply hcomm
+  exact hj ∘ Subtype.ext
   cases' hxp with g hgf
   cases' hxi with g' hg'f
   have hxi : orderOf f ∣ Fintype.card (H i)
@@ -294,9 +294,9 @@ theorem injective_noncommPiCoprod_of_independent
     (hind : CompleteLattice.Independent H) :
     Function.Injective (noncommPiCoprod hcomm) := by
   apply MonoidHom.injective_noncommPiCoprod_of_independent
-  · simpa using hind
-  · intro i
-    exact Subtype.coe_injective
+  simpa using hind
+  intro i
+  exact Subtype.coe_injective
 
 @[to_additive]
 theorem independent_of_coprime_order

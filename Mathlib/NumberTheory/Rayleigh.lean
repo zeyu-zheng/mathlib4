@@ -90,24 +90,24 @@ private theorem hit_or_miss (h : r > 0) :
     j ∈ {beattySeq r k | k} ∨ ∃ k : ℤ, k < j / r ∧ (j + 1) / r ≤ k + 1 := by
   -- for both cases, the candidate is `k = ⌈(j + 1) / r⌉ - 1`
   cases lt_or_ge ((⌈(j + 1) / r⌉ - 1) * r) j
-  · refine Or.inr ⟨⌈(j + 1) / r⌉ - 1, ?_⟩
-    rw [Int.cast_sub, Int.cast_one, lt_div_iff h, sub_add_cancel]
-    exact ⟨‹_›, Int.le_ceil _⟩
-  · refine Or.inl ⟨⌈(j + 1) / r⌉ - 1, ?_⟩
-    rw [beattySeq, Int.floor_eq_iff, Int.cast_sub, Int.cast_one, ← lt_div_iff h, sub_lt_iff_lt_add]
-    exact ⟨‹_›, Int.ceil_lt_add_one _⟩
+  refine Or.inr ⟨⌈(j + 1) / r⌉ - 1, ?_⟩
+  rw [Int.cast_sub, Int.cast_one, lt_div_iff h, sub_add_cancel]
+  exact ⟨‹_›, Int.le_ceil _⟩
+  refine Or.inl ⟨⌈(j + 1) / r⌉ - 1, ?_⟩
+  rw [beattySeq, Int.floor_eq_iff, Int.cast_sub, Int.cast_one, ← lt_div_iff h, sub_lt_iff_lt_add]
+  exact ⟨‹_›, Int.ceil_lt_add_one _⟩
 
 /-- Let `0 < r ∈ ℝ` and `j ∈ ℤ`. Then either `j ∈ B'_r` or `B'_r` jumps over `j`. -/
 private theorem hit_or_miss' (h : r > 0) :
     j ∈ {beattySeq' r k | k} ∨ ∃ k : ℤ, k ≤ j / r ∧ (j + 1) / r < k + 1 := by
   -- for both cases, the candidate is `k = ⌊(j + 1) / r⌋`
   cases le_or_gt (⌊(j + 1) / r⌋ * r) j
-  · exact Or.inr ⟨⌊(j + 1) / r⌋, (le_div_iff h).2 ‹_›, Int.lt_floor_add_one _⟩
-  · refine Or.inl ⟨⌊(j + 1) / r⌋, ?_⟩
-    rw [beattySeq', sub_eq_iff_eq_add, Int.ceil_eq_iff, Int.cast_add, Int.cast_one]
-    constructor
-    · rwa [add_sub_cancel_right]
-    exact sub_nonneg.1 (Int.sub_floor_div_mul_nonneg (j + 1 : ℝ) h)
+  exact Or.inr ⟨⌊(j + 1) / r⌋, (le_div_iff h).2 ‹_›, Int.lt_floor_add_one _⟩
+  refine Or.inl ⟨⌊(j + 1) / r⌋, ?_⟩
+  rw [beattySeq', sub_eq_iff_eq_add, Int.ceil_eq_iff, Int.cast_add, Int.cast_one]
+  constructor
+  rwa [add_sub_cancel_right]
+  exact sub_nonneg.1 (Int.sub_floor_div_mul_nonneg (j + 1 : ℝ) h)
 
 end Beatty
 
@@ -117,12 +117,12 @@ theorem compl_beattySeq {r s : ℝ} (hrs : r.IsConjExponent s) :
     {beattySeq r k | k}ᶜ = {beattySeq' s k | k} := by
   ext j
   by_cases h₁ : j ∈ {beattySeq r k | k} <;> by_cases h₂ : j ∈ {beattySeq' s k | k}
-  · exact (Set.not_disjoint_iff.2 ⟨j, h₁, h₂⟩ (Beatty.no_collision hrs)).elim
-  · simp only [Set.mem_compl_iff, h₁, h₂, not_true_eq_false]
-  · simp only [Set.mem_compl_iff, h₁, h₂, not_false_eq_true]
-  · have ⟨k, h₁₁, h₁₂⟩ := (Beatty.hit_or_miss hrs.pos).resolve_left h₁
-    have ⟨m, h₂₁, h₂₂⟩ := (Beatty.hit_or_miss' hrs.symm.pos).resolve_left h₂
-    exact (Beatty.no_anticollision hrs ⟨j, k, m, h₁₁, h₁₂, h₂₁, h₂₂⟩).elim
+  exact (Set.not_disjoint_iff.2 ⟨j, h₁, h₂⟩ (Beatty.no_collision hrs)).elim
+  simp only [Set.mem_compl_iff, h₁, h₂, not_true_eq_false]
+  simp only [Set.mem_compl_iff, h₁, h₂, not_false_eq_true]
+  have ⟨k, h₁₁, h₁₂⟩ := (Beatty.hit_or_miss hrs.pos).resolve_left h₁
+  have ⟨m, h₂₁, h₂₂⟩ := (Beatty.hit_or_miss' hrs.symm.pos).resolve_left h₂
+  exact (Beatty.no_anticollision hrs ⟨j, k, m, h₁₁, h₁₂, h₂₁, h₂₂⟩).elim
 
 theorem compl_beattySeq' {r s : ℝ} (hrs : r.IsConjExponent s) :
     {beattySeq' r k | k}ᶜ = {beattySeq s k | k} := by
@@ -135,11 +135,11 @@ than 1, and `1/r + 1/s = 1`. Then `B⁺_r` and `B⁺'_s` partition the positive 
 theorem beattySeq_symmDiff_beattySeq'_pos {r s : ℝ} (hrs : r.IsConjExponent s) :
     {beattySeq r k | k > 0} ∆ {beattySeq' s k | k > 0} = {n | 0 < n} := by
   apply Set.eq_of_subset_of_subset
-  · rintro j (⟨⟨k, hk, hjk⟩, -⟩ | ⟨⟨k, hk, hjk⟩, -⟩)
-    · rw [Set.mem_setOf_eq, ← hjk, beattySeq, Int.floor_pos]
-      exact one_le_mul_of_one_le_of_one_le (by norm_cast) hrs.one_lt.le
-    · rw [Set.mem_setOf_eq, ← hjk, beattySeq', sub_pos, Int.lt_ceil, Int.cast_one]
-      exact one_lt_mul_of_le_of_lt (by norm_cast) hrs.symm.one_lt
+  rintro j (⟨⟨k, hk, hjk⟩, -⟩ | ⟨⟨k, hk, hjk⟩, -⟩)
+  rw [Set.mem_setOf_eq, ← hjk, beattySeq, Int.floor_pos]
+  exact one_le_mul_of_one_le_of_one_le (by norm_cast) hrs.one_lt.le
+  rw [Set.mem_setOf_eq, ← hjk, beattySeq', sub_pos, Int.lt_ceil, Int.cast_one]
+  exact one_lt_mul_of_le_of_lt (by norm_cast) hrs.symm.one_lt
   intro j (hj : 0 < j)
   have hb₁ : ∀ s ≥ 0, j ∈ {beattySeq s k | k > 0} ↔ j ∈ {beattySeq s k | k}
   intro _ hs

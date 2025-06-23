@@ -63,8 +63,8 @@ theorem factorial_ne_zero (n : ℕ) : n ! ≠ 0 :=
 
 theorem factorial_dvd_factorial {m n} (h : m ≤ n) : m ! ∣ n ! := by
   induction' h with n _ ih
-  · exact Nat.dvd_refl _
-  · exact Nat.dvd_trans ih (Nat.dvd_mul_left _ _)
+  exact Nat.dvd_refl _
+  exact Nat.dvd_trans ih (Nat.dvd_mul_left _ _)
 
 theorem dvd_factorial : ∀ {m n}, 0 < m → m ≤ n → m ∣ n !
   | succ _, _, _, h => Nat.dvd_trans (Nat.dvd_mul_right _ _) (factorial_dvd_factorial h)
@@ -86,8 +86,8 @@ theorem factorial_lt (hn : 0 < n) : n ! < m ! ↔ n < m := by
   rw [factorial_succ, succ_mul, Nat.lt_add_left_iff_pos]
   exact Nat.mul_pos hk k.factorial_pos
   induction' h with k hnk ih generalizing hn
-  · exact this hn
-  · exact lt_trans (ih hn) $ this <| lt_trans hn <| lt_of_succ_le hnk
+  exact this hn
+  exact lt_trans (ih hn) $ this <| lt_trans hn <| lt_of_succ_le hnk
 
 @[gcongr]
 lemma factorial_lt_of_lt {m n : ℕ} (hn : 0 < n) (h : n < m) : n ! < m ! := (factorial_lt hn).mpr h
@@ -97,25 +97,25 @@ lemma factorial_lt_of_lt {m n : ℕ} (hn : 0 < n) (h : n < m) : n ! < m ! := (fa
 @[simp]
 theorem factorial_eq_one : n ! = 1 ↔ n ≤ 1 := by
   constructor
-  · intro h
-    rw [← not_lt, ← one_lt_factorial, h]
-    apply lt_irrefl
-  · rintro (_|_|_) <;> rfl
+  intro h
+  rw [← not_lt, ← one_lt_factorial, h]
+  apply lt_irrefl
+  rintro (_|_|_) <;> rfl
 
 theorem factorial_inj (hn : 1 < n) : n ! = m ! ↔ n = m := by
   refine ⟨fun h => ?_, congr_arg _⟩
   obtain hnm | rfl | hnm := lt_trichotomy n m
-  · rw [← factorial_lt <| lt_of_succ_lt hn, h] at hnm
-    cases lt_irrefl _ hnm
-  · rfl
+  rw [← factorial_lt <| lt_of_succ_lt hn, h] at hnm
+  cases lt_irrefl _ hnm
+  rfl
   rw [← one_lt_factorial, h, one_lt_factorial] at hn
   rw [← factorial_lt <| lt_of_succ_lt hn, h] at hnm
   cases lt_irrefl _ hnm
 
 theorem factorial_inj' (h : 1 < n ∨ 1 < m) : n ! = m ! ↔ n = m := by
   obtain hn|hm := h
-  · exact factorial_inj hn
-  · rw [eq_comm, factorial_inj hm, eq_comm]
+  exact factorial_inj hn
+  rw [eq_comm, factorial_inj hm, eq_comm]
 
 theorem self_le_factorial : ∀ n : ℕ, n ≤ n !
   | 0 => Nat.zero_le _
@@ -139,28 +139,28 @@ theorem add_factorial_succ_lt_factorial_add_succ {i : ℕ} (n : ℕ) (hi : 2 ≤
 theorem add_factorial_lt_factorial_add {i n : ℕ} (hi : 2 ≤ i) (hn : 1 ≤ n) :
     i + n ! < (i + n)! := by
   cases hn
-  · rw [factorial_one]
-    exact lt_factorial_self (succ_le_succ hi)
+  rw [factorial_one]
+  exact lt_factorial_self (succ_le_succ hi)
   exact add_factorial_succ_lt_factorial_add_succ _ hi
 
 theorem add_factorial_succ_le_factorial_add_succ (i : ℕ) (n : ℕ) :
     i + (n + 1)! ≤ (i + (n + 1))! := by
   cases (le_or_lt (2 : ℕ) i)
-  · rw [← Nat.add_assoc]
-    apply Nat.le_of_lt
-    apply add_factorial_succ_lt_factorial_add_succ
-    assumption
-  · match i with
-    | 0 => simp
-    | 1 =>
-      rw [← Nat.add_assoc, factorial_succ (1 + n), Nat.add_mul, Nat.one_mul, Nat.add_comm 1 n,
-        Nat.add_le_add_iff_right]
-      exact Nat.mul_pos n.succ_pos n.succ.factorial_pos
-    | succ (succ n) => contradiction
+  rw [← Nat.add_assoc]
+  apply Nat.le_of_lt
+  apply add_factorial_succ_lt_factorial_add_succ
+  assumption
+  match i with
+  | 0 => simp
+  | 1 =>
+    rw [← Nat.add_assoc, factorial_succ (1 + n), Nat.add_mul, Nat.one_mul, Nat.add_comm 1 n,
+      Nat.add_le_add_iff_right]
+    exact Nat.mul_pos n.succ_pos n.succ.factorial_pos
+  | succ (succ n) => contradiction
 
 theorem add_factorial_le_factorial_add (i : ℕ) {n : ℕ} (n1 : 1 ≤ n) : i + n ! ≤ (i + n)! := by
   cases' n1 with h
-  · exact self_le_factorial _
+  exact self_le_factorial _
   exact add_factorial_succ_le_factorial_add_succ i h
 
 theorem factorial_mul_pow_sub_le_factorial {n m : ℕ} (hnm : n ≤ m) : n ! * n ^ (m - n) ≤ m ! := by
@@ -412,7 +412,7 @@ lemma factorial_two_mul_le (n : ℕ) : (2 * n)! ≤ (2 * n) ^ n * n ! := by
 
 lemma two_pow_mul_factorial_le_factorial_two_mul (n : ℕ) : 2 ^ n * n ! ≤ (2 * n) ! := by
   obtain _ | n := n
-  · simp
+  simp
   rw [Nat.mul_comm, Nat.two_mul]
   calc
     _ ≤ (n + 1)! * (n + 2) ^ (n + 1) :=

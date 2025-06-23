@@ -43,11 +43,11 @@ theorem IsSubfield.div_mem {S : Set F} (hS : IsSubfield S) {x y : F} (hx : x ∈
 theorem IsSubfield.pow_mem {a : F} {n : ℤ} {s : Set F} (hs : IsSubfield s) (h : a ∈ s) :
     a ^ n ∈ s := by
   cases' n with n n
-  · suffices a ^ (n : ℤ) ∈ s by exact this
-    rw [zpow_natCast]
-    exact hs.toIsSubring.toIsSubmonoid.pow_mem h
-  · rw [zpow_negSucc]
-    exact hs.inv_mem (hs.toIsSubring.toIsSubmonoid.pow_mem h)
+  suffices a ^ (n : ℤ) ∈ s by exact this
+  rw [zpow_natCast]
+  exact hs.toIsSubring.toIsSubmonoid.pow_mem h
+  rw [zpow_negSucc]
+  exact hs.inv_mem (hs.toIsSubring.toIsSubmonoid.pow_mem h)
 
 theorem Univ.isSubfield : IsSubfield (@Set.univ F) :=
   { Univ.isSubmonoid, IsAddSubgroup.univ_addSubgroup with
@@ -95,9 +95,9 @@ theorem closure.isSubfield : IsSubfield (closure S) :=
       rcases id ha with ⟨p, hp, q, hq, rfl⟩
       rcases id hb with ⟨r, hr, s, hs, rfl⟩
       by_cases hq0 : q = 0
-      · rwa [hq0, div_zero, zero_add]
+      rwa [hq0, div_zero, zero_add]
       by_cases hs0 : s = 0
-      · rwa [hs0, div_zero, add_zero]
+      rwa [hs0, div_zero, add_zero]
       exact ⟨p * s + q * r,
         IsAddSubmonoid.add_mem Ring.closure.isSubring.toIsAddSubgroup.toIsAddSubmonoid
           (Ring.closure.isSubring.toIsSubmonoid.mul_mem hp hs)

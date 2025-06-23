@@ -373,18 +373,18 @@ theorem ne_iff_lt_iff_le [PartialOrder α] {a b : α} : (a ≠ b ↔ a < b) ↔ 
 theorem min_def' [LinearOrder α] (a b : α) : min a b = if b ≤ a then b else a := by
   rw [min_def]
   rcases lt_trichotomy a b with (lt | eq | gt)
-  · rw [if_pos lt.le, if_neg (not_le.mpr lt)]
-  · rw [if_pos eq.le, if_pos eq.ge, eq]
-  · rw [if_neg (not_le.mpr gt.gt), if_pos gt.le]
+  rw [if_pos lt.le, if_neg (not_le.mpr lt)]
+  rw [if_pos eq.le, if_pos eq.ge, eq]
+  rw [if_neg (not_le.mpr gt.gt), if_pos gt.le]
 
 -- Variant of `min_def` with the branches reversed.
 -- This is sometimes useful as it used to be the default.
 theorem max_def' [LinearOrder α] (a b : α) : max a b = if b ≤ a then a else b := by
   rw [max_def]
   rcases lt_trichotomy a b with (lt | eq | gt)
-  · rw [if_pos lt.le, if_neg (not_le.mpr lt)]
-  · rw [if_pos eq.le, if_pos eq.ge, eq]
-  · rw [if_neg (not_le.mpr gt.gt), if_pos gt.le]
+  rw [if_pos lt.le, if_neg (not_le.mpr lt)]
+  rw [if_pos eq.le, if_pos eq.ge, eq]
+  rw [if_neg (not_le.mpr gt.gt), if_pos gt.le]
 
 theorem lt_of_not_le [LinearOrder α] {a b : α} (h : ¬b ≤ a) : a < b :=
   ((le_total _ _).resolve_right h).lt_of_not_le h
@@ -606,9 +606,9 @@ lemma ltByCases_comm {h₁ : x < y → P} {h₂ : x = y → P} {h₃ : y < x →
     (p : y = x → x = y := fun h' => h'.symm) :
     ltByCases x y h₁ h₂ h₃ = ltByCases y x h₃ (h₂ ∘ p) h₁ := by
   refine ltByCases x y (fun h => ?_) (fun h => ?_) (fun h => ?_)
-  · rw [ltByCases_lt h, ltByCases_gt h]
-  · rw [ltByCases_eq h, ltByCases_eq h.symm, comp_apply]
-  · rw [ltByCases_lt h, ltByCases_gt h]
+  rw [ltByCases_lt h, ltByCases_gt h]
+  rw [ltByCases_eq h, ltByCases_eq h.symm, comp_apply]
+  rw [ltByCases_lt h, ltByCases_gt h]
 
 lemma eq_iff_eq_of_lt_iff_lt_of_gt_iff_gt {x' y' : α}
     (ltc : (x < y) ↔ (x' < y')) (gtc : (y < x) ↔ (y' < x')) :
@@ -626,12 +626,12 @@ lemma ltByCases_rec {h₁ : x < y → P} {h₂ : x = y → P} {h₃ : y < x → 
 lemma ltByCases_eq_iff {h₁ : x < y → P} {h₂ : x = y → P} {h₃ : y < x → P} {p : P} :
     ltByCases x y h₁ h₂ h₃ = p ↔ (∃ h, h₁ h = p) ∨ (∃ h, h₂ h = p) ∨ (∃ h, h₃ h = p) := by
   refine ltByCases x y (fun h => ?_) (fun h => ?_) (fun h => ?_)
-  · simp only [ltByCases_lt, exists_prop_of_true, h, h.not_lt, not_false_eq_true,
-    exists_prop_of_false, or_false, h.ne]
-  · simp only [h, lt_self_iff_false, ltByCases_eq, not_false_eq_true,
-    exists_prop_of_false, exists_prop_of_true, or_false, false_or]
-  · simp only [ltByCases_gt, exists_prop_of_true, h, h.not_lt, not_false_eq_true,
-    exists_prop_of_false, false_or, h.ne']
+  simp only [ltByCases_lt, exists_prop_of_true, h, h.not_lt, not_false_eq_true,
+  exists_prop_of_false, or_false, h.ne]
+  simp only [h, lt_self_iff_false, ltByCases_eq, not_false_eq_true,
+  exists_prop_of_false, exists_prop_of_true, or_false, false_or]
+  simp only [ltByCases_gt, exists_prop_of_true, h, h.not_lt, not_false_eq_true,
+  exists_prop_of_false, false_or, h.ne']
 
 lemma ltByCases_congr {x' y' : α} {h₁ : x < y → P} {h₂ : x = y → P} {h₃ : y < x → P}
     {h₁' : x' < y' → P} {h₂' : x' = y' → P} {h₃' : y' < x' → P} (ltc : (x < y) ↔ (x' < y'))
@@ -640,10 +640,10 @@ lemma ltByCases_congr {x' y' : α} {h₁ : x < y → P} {h₂ : x = y → P} {h�
     (hh'₃ : ∀ (h : y' < x'), h₃ (gtc.mpr h) = h₃' h) :
     ltByCases x y h₁ h₂ h₃ = ltByCases x' y' h₁' h₂' h₃' := by
   refine ltByCases_rec _ (fun h => ?_) (fun h => ?_) (fun h => ?_)
-  · rw [ltByCases_lt (ltc.mp h), hh'₁]
-  · rw [eq_iff_eq_of_lt_iff_lt_of_gt_iff_gt ltc gtc] at h
-    rw [ltByCases_eq h, hh'₂]
-  · rw [ltByCases_gt (gtc.mp h), hh'₃]
+  rw [ltByCases_lt (ltc.mp h), hh'₁]
+  rw [eq_iff_eq_of_lt_iff_lt_of_gt_iff_gt ltc gtc] at h
+  rw [ltByCases_eq h, hh'₂]
+  rw [ltByCases_gt (gtc.mp h), hh'₃]
 
 /-- Perform a case-split on the ordering of `x` and `y` in a decidable linear order,
 non-dependently. -/
@@ -677,9 +677,9 @@ lemma ltTrichotomy_self {p : P} : ltTrichotomy x y p p p = p :=
 lemma ltTrichotomy_eq_iff : ltTrichotomy x y p q r = s ↔
     (x < y ∧ p = s) ∨ (x = y ∧ q = s) ∨ (y < x ∧ r = s) := by
   refine ltByCases x y (fun h => ?_) (fun h => ?_) (fun h => ?_)
-  · simp only [ltTrichotomy_lt, false_and, true_and, or_false, h, h.not_lt, h.ne]
-  · simp only [ltTrichotomy_eq, false_and, true_and, or_false, false_or, h, lt_irrefl]
-  · simp only [ltTrichotomy_gt, false_and, true_and, false_or, h, h.not_lt, h.ne']
+  simp only [ltTrichotomy_lt, false_and, true_and, or_false, h, h.not_lt, h.ne]
+  simp only [ltTrichotomy_eq, false_and, true_and, or_false, false_or, h, lt_irrefl]
+  simp only [ltTrichotomy_gt, false_and, true_and, false_or, h, h.not_lt, h.ne']
 
 lemma ltTrichotomy_congr {x' y' : α} {p' q' r' : P} (ltc : (x < y) ↔ (x' < y'))
     (gtc : (y < x) ↔ (y' < x')) (hh'₁ : x' < y' → p = p')
@@ -960,10 +960,10 @@ theorem compare_of_injective_eq_compareOfLessAndEq (a b : α) [LinearOrder β]
   have h := LinearOrder.compare_eq_compareOfLessAndEq (f a) (f b)
   simp only [h, compareOfLessAndEq]
   split_ifs <;> try (first | rfl | contradiction)
-  · have : ¬ f a = f b := by rename_i h; exact inj.ne h
-    contradiction
-  · have : f a = f b := by rename_i h; exact congrArg f h
-    contradiction
+  have : ¬ f a = f b := by rename_i h; exact inj.ne h
+  contradiction
+  have : f a = f b := by rename_i h; exact congrArg f h
+  contradiction
 
 /-- Transfer a `LinearOrder` on `β` to a `LinearOrder` on `α` using an injective
 function `f : α → β`. This version takes `[Sup α]` and `[Inf α]` as arguments, then uses
@@ -1162,12 +1162,12 @@ theorem mk_lt_mk_iff_right : (a, b₁) < (a, b₂) ↔ b₁ < b₂ :=
 
 theorem lt_iff : x < y ↔ x.1 < y.1 ∧ x.2 ≤ y.2 ∨ x.1 ≤ y.1 ∧ x.2 < y.2 := by
   refine ⟨fun h ↦ ?_, ?_⟩
-  · by_cases h₁ : y.1 ≤ x.1
-    · exact Or.inr ⟨h.1.1, LE.le.lt_of_not_le h.1.2 fun h₂ ↦ h.2 ⟨h₁, h₂⟩⟩
-    · exact Or.inl ⟨LE.le.lt_of_not_le h.1.1 h₁, h.1.2⟩
-  · rintro (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩)
-    · exact ⟨⟨h₁.le, h₂⟩, fun h ↦ h₁.not_le h.1⟩
-    · exact ⟨⟨h₁, h₂.le⟩, fun h ↦ h₂.not_le h.2⟩
+  by_cases h₁ : y.1 ≤ x.1
+  exact Or.inr ⟨h.1.1, LE.le.lt_of_not_le h.1.2 fun h₂ ↦ h.2 ⟨h₁, h₂⟩⟩
+  exact Or.inl ⟨LE.le.lt_of_not_le h.1.1 h₁, h.1.2⟩
+  rintro (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩)
+  exact ⟨⟨h₁.le, h₂⟩, fun h ↦ h₁.not_le h.1⟩
+  exact ⟨⟨h₁, h₂.le⟩, fun h ↦ h₂.not_le h.2⟩
 
 @[simp]
 theorem mk_lt_mk : (a₁, b₁) < (a₂, b₂) ↔ a₁ < a₂ ∧ b₁ ≤ b₂ ∨ a₁ ≤ a₂ ∧ b₁ < b₂ :=
@@ -1216,10 +1216,10 @@ instance [Preorder α] [Preorder β] [DenselyOrdered α] [DenselyOrdered β] : D
   ⟨fun a b ↦ by
     simp_rw [Prod.lt_iff]
     rintro (⟨h₁, h₂⟩ | ⟨h₁, h₂⟩)
-    · obtain ⟨c, ha, hb⟩ := exists_between h₁
-      exact ⟨(c, _), Or.inl ⟨ha, h₂⟩, Or.inl ⟨hb, le_rfl⟩⟩
-    · obtain ⟨c, ha, hb⟩ := exists_between h₂
-      exact ⟨(_, c), Or.inr ⟨h₁, ha⟩, Or.inr ⟨le_rfl, hb⟩⟩⟩
+    obtain ⟨c, ha, hb⟩ := exists_between h₁
+    exact ⟨(c, _), Or.inl ⟨ha, h₂⟩, Or.inl ⟨hb, le_rfl⟩⟩
+    obtain ⟨c, ha, hb⟩ := exists_between h₂
+    exact ⟨(_, c), Or.inr ⟨h₁, ha⟩, Or.inr ⟨le_rfl, hb⟩⟩⟩
 
 open Classical in
 instance [∀ i, Preorder (π i)] [∀ i, DenselyOrdered (π i)] :

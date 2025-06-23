@@ -72,17 +72,17 @@ theorem leastGE_eq_min (π : Ω → ℕ) (r : ℝ) (ω : Ω) {n : ℕ} (hπn : �
     leastGE f r (π ω) ω = min (π ω) (leastGE f r n ω) := by
   refine le_antisymm (le_min (leastGE_le _) (leastGE_mono (hπn ω) r ω)) ?_
   by_cases hle : π ω ≤ leastGE f r n ω
-  · rw [min_eq_left hle, leastGE]
-    by_cases h : ∃ j ∈ Set.Icc 0 (π ω), f j ω ∈ Set.Ici r
-    · refine hle.trans (Eq.le ?_)
-      rw [leastGE, ← hitting_eq_hitting_of_exists (hπn ω) h]
-    · simp only [hitting, if_neg h, le_rfl]
-  · rw [min_eq_right (not_le.1 hle).le, leastGE, leastGE, ←
-      hitting_eq_hitting_of_exists (hπn ω) _]
-    rw [not_le, leastGE, hitting_lt_iff _ (hπn ω)] at hle
-    exact
-      let ⟨j, hj₁, hj₂⟩ := hle
-      ⟨j, ⟨hj₁.1, hj₁.2.le⟩, hj₂⟩
+  rw [min_eq_left hle, leastGE]
+  by_cases h : ∃ j ∈ Set.Icc 0 (π ω), f j ω ∈ Set.Ici r
+  refine hle.trans (Eq.le ?_)
+  rw [leastGE, ← hitting_eq_hitting_of_exists (hπn ω) h]
+  simp only [hitting, if_neg h, le_rfl]
+  rw [min_eq_right (not_le.1 hle).le, leastGE, leastGE, ←
+    hitting_eq_hitting_of_exists (hπn ω) _]
+  rw [not_le, leastGE, hitting_lt_iff _ (hπn ω)] at hle
+  exact
+    let ⟨j, hj₁, hj₂⟩ := hle
+    ⟨j, ⟨hj₁.1, hj₁.2.le⟩, hj₂⟩
 
 theorem stoppedValue_stoppedValue_leastGE (f : ℕ → Ω → ℝ) (π : Ω → ℕ) (r : ℝ) {n : ℕ}
     (hπn : ∀ ω, π ω ≤ n) : stoppedValue (fun i => stoppedValue f (leastGE f r i)) π =
@@ -94,18 +94,18 @@ theorem stoppedValue_stoppedValue_leastGE (f : ℕ → Ω → ℝ) (π : Ω → 
 theorem Submartingale.stoppedValue_leastGE [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ) (r : ℝ) :
     Submartingale (fun i => stoppedValue f (leastGE f r i)) ℱ μ := by
   rw [submartingale_iff_expected_stoppedValue_mono]
-  · intro σ π hσ hπ hσ_le_π hπ_bdd
-    obtain ⟨n, hπ_le_n⟩ := hπ_bdd
-    simp_rw [stoppedValue_stoppedValue_leastGE f σ r fun i => (hσ_le_π i).trans (hπ_le_n i)]
-    simp_rw [stoppedValue_stoppedValue_leastGE f π r hπ_le_n]
-    refine hf.expected_stoppedValue_mono ?_ ?_ ?_ fun ω => (min_le_left _ _).trans (hπ_le_n ω)
-    · exact hσ.min (hf.adapted.isStoppingTime_leastGE _ _)
-    · exact hπ.min (hf.adapted.isStoppingTime_leastGE _ _)
-    · exact fun ω => min_le_min (hσ_le_π ω) le_rfl
-  · exact fun i => stronglyMeasurable_stoppedValue_of_le hf.adapted.progMeasurable_of_discrete
-      (hf.adapted.isStoppingTime_leastGE _ _) leastGE_le
-  · exact fun i => integrable_stoppedValue _ (hf.adapted.isStoppingTime_leastGE _ _) hf.integrable
-      leastGE_le
+  intro σ π hσ hπ hσ_le_π hπ_bdd
+  obtain ⟨n, hπ_le_n⟩ := hπ_bdd
+  simp_rw [stoppedValue_stoppedValue_leastGE f σ r fun i => (hσ_le_π i).trans (hπ_le_n i)]
+  simp_rw [stoppedValue_stoppedValue_leastGE f π r hπ_le_n]
+  refine hf.expected_stoppedValue_mono ?_ ?_ ?_ fun ω => (min_le_left _ _).trans (hπ_le_n ω)
+  exact hσ.min (hf.adapted.isStoppingTime_leastGE _ _)
+  exact hπ.min (hf.adapted.isStoppingTime_leastGE _ _)
+  exact fun ω => min_le_min (hσ_le_π ω) le_rfl
+  exact fun i => stronglyMeasurable_stoppedValue_of_le hf.adapted.progMeasurable_of_discrete
+    (hf.adapted.isStoppingTime_leastGE _ _) leastGE_le
+  exact fun i => integrable_stoppedValue _ (hf.adapted.isStoppingTime_leastGE _ _) hf.integrable
+    leastGE_le
 
 variable {r : ℝ} {R : ℝ≥0}
 
@@ -115,13 +115,13 @@ theorem norm_stoppedValue_leastGE_le (hr : 0 ≤ r) (hf0 : f 0 = 0)
   filter_upwards [hbdd] with ω hbddω
   change f (leastGE f r i ω) ω ≤ r + R
   by_cases heq : leastGE f r i ω = 0
-  · rw [heq, hf0, Pi.zero_apply]
-    exact add_nonneg hr R.coe_nonneg
-  · obtain ⟨k, hk⟩ := Nat.exists_eq_succ_of_ne_zero heq
-    rw [hk, add_comm, ← sub_le_iff_le_add]
-    have := not_mem_of_lt_hitting (hk.symm ▸ k.lt_succ_self : k < leastGE f r i ω) (zero_le _)
-    simp only [Set.mem_union, Set.mem_Iic, Set.mem_Ici, not_or, not_le] at this
-    exact (sub_lt_sub_left this _).le.trans ((le_abs_self _).trans (hbddω _))
+  rw [heq, hf0, Pi.zero_apply]
+  exact add_nonneg hr R.coe_nonneg
+  obtain ⟨k, hk⟩ := Nat.exists_eq_succ_of_ne_zero heq
+  rw [hk, add_comm, ← sub_le_iff_le_add]
+  have := not_mem_of_lt_hitting (hk.symm ▸ k.lt_succ_self : k < leastGE f r i ω) (zero_le _)
+  simp only [Set.mem_union, Set.mem_Iic, Set.mem_Ici, not_or, not_le] at this
+  exact (sub_lt_sub_left this _).le.trans ((le_abs_self _).trans (hbddω _))
 
 theorem Submartingale.stoppedValue_leastGE_eLpNorm_le [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
     (hr : 0 ≤ r) (hf0 : f 0 = 0) (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) (i : ℕ) :
@@ -191,16 +191,16 @@ theorem Submartingale.bddAbove_iff_exists_tendsto [IsFiniteMeasure μ] (hf : Sub
     simpa only [g, sub_sub_sub_cancel_right]
   filter_upwards [hg.bddAbove_iff_exists_tendsto_aux hg0 hgbdd] with ω hω
   convert hω using 1
-  · refine ⟨fun h => ?_, fun h => ?_⟩ <;> obtain ⟨b, hb⟩ := h <;>
-    refine ⟨b + |f 0 ω|, fun y hy => ?_⟩ <;> obtain ⟨n, rfl⟩ := hy
-    · simp_rw [g, sub_eq_add_neg]
-      exact add_le_add (hb ⟨n, rfl⟩) (neg_le_abs _)
-    · exact sub_le_iff_le_add.1 (le_trans (sub_le_sub_left (le_abs_self _) _) (hb ⟨n, rfl⟩))
-  · refine ⟨fun h => ?_, fun h => ?_⟩ <;> obtain ⟨c, hc⟩ := h
-    · exact ⟨c - f 0 ω, hc.sub_const _⟩
-    · refine ⟨c + f 0 ω, ?_⟩
-      have := hc.add_const (f 0 ω)
-      simpa only [g, sub_add_cancel]
+  refine ⟨fun h => ?_, fun h => ?_⟩ <;> obtain ⟨b, hb⟩ := h <;>
+  refine ⟨b + |f 0 ω|, fun y hy => ?_⟩ <;> obtain ⟨n, rfl⟩ := hy
+  simp_rw [g, sub_eq_add_neg]
+  exact add_le_add (hb ⟨n, rfl⟩) (neg_le_abs _)
+  exact sub_le_iff_le_add.1 (le_trans (sub_le_sub_left (le_abs_self _) _) (hb ⟨n, rfl⟩))
+  refine ⟨fun h => ?_, fun h => ?_⟩ <;> obtain ⟨c, hc⟩ := h
+  exact ⟨c - f 0 ω, hc.sub_const _⟩
+  refine ⟨c + f 0 ω, ?_⟩
+  have := hc.add_const (f 0 ω)
+  simpa only [g, sub_add_cancel]
 
 /-!
 ### Lévy's generalization of the Borel-Cantelli lemma
@@ -238,19 +238,19 @@ theorem Martingale.bddAbove_range_iff_bddBelow_range [IsFiniteMeasure μ] (hf : 
   have : (∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c)) ↔
       ∃ c, Tendsto (fun n => (-f) n ω) atTop (𝓝 c) := by
     constructor <;> rintro ⟨c, hc⟩
-    · exact ⟨-c, hc.neg⟩
-    · refine ⟨-c, ?_⟩
-      convert hc.neg
-      simp only [neg_neg, Pi.neg_apply]
+    exact ⟨-c, hc.neg⟩
+    refine ⟨-c, ?_⟩
+    convert hc.neg
+    simp only [neg_neg, Pi.neg_apply]
   rw [hω₁, this, ← hω₂]
   constructor <;> rintro ⟨c, hc⟩ <;> refine ⟨-c, fun ω hω => ?_⟩
-  · rw [mem_upperBounds] at hc
-    refine neg_le.2 (hc _ ?_)
-    simpa only [Pi.neg_apply, Set.mem_range, neg_inj]
-  · rw [mem_lowerBounds] at hc
-    simp_rw [Set.mem_range, Pi.neg_apply, neg_eq_iff_eq_neg] at hω
-    refine le_neg.1 (hc _ ?_)
-    simpa only [Set.mem_range]
+  rw [mem_upperBounds] at hc
+  refine neg_le.2 (hc _ ?_)
+  simpa only [Pi.neg_apply, Set.mem_range, neg_inj]
+  rw [mem_lowerBounds] at hc
+  simp_rw [Set.mem_range, Pi.neg_apply, neg_eq_iff_eq_neg] at hω
+  refine le_neg.1 (hc _ ?_)
+  simpa only [Set.mem_range]
 
 theorem Martingale.ae_not_tendsto_atTop_atTop [IsFiniteMeasure μ] (hf : Martingale f ℱ μ)
     (hbdd : ∀ᵐ ω ∂μ, ∀ i, |f (i + 1) ω - f i ω| ≤ R) :
@@ -326,19 +326,19 @@ theorem tendsto_sum_indicator_atTop_iff [IsFiniteMeasure μ]
   filter_upwards [ae_all_iff.1 hfmono n] with ω hω using sub_nonneg.2 hω
   filter_upwards [h₁, h₂, h₃, hfmono] with ω hω₁ hω₂ hω₃ hω₄
   constructor <;> intro ht
-  · refine tendsto_atTop_atTop_of_monotone' ?_ ?_
-    · intro n m hnm
-      simp only [predictablePart, Finset.sum_apply]
-      exact Finset.sum_mono_set_of_nonneg hω₃ (Finset.range_mono hnm)
-    rintro ⟨b, hbdd⟩
-    rw [← tendsto_neg_atBot_iff] at ht
-    simp only [martingalePart, sub_eq_add_neg] at hω₁
-    exact hω₁ (tendsto_atTop_add_right_of_le _ (-b) (tendsto_neg_atBot_iff.1 ht) fun n =>
-      neg_le_neg (hbdd ⟨n, rfl⟩))
-  · refine tendsto_atTop_atTop_of_monotone' (monotone_nat_of_le_succ hω₄) ?_
-    rintro ⟨b, hbdd⟩
-    exact hω₂ ((tendsto_atBot_add_left_of_ge _ b fun n =>
-      hbdd ⟨n, rfl⟩) <| tendsto_neg_atBot_iff.2 ht)
+  refine tendsto_atTop_atTop_of_monotone' ?_ ?_
+  intro n m hnm
+  simp only [predictablePart, Finset.sum_apply]
+  exact Finset.sum_mono_set_of_nonneg hω₃ (Finset.range_mono hnm)
+  rintro ⟨b, hbdd⟩
+  rw [← tendsto_neg_atBot_iff] at ht
+  simp only [martingalePart, sub_eq_add_neg] at hω₁
+  exact hω₁ (tendsto_atTop_add_right_of_le _ (-b) (tendsto_neg_atBot_iff.1 ht) fun n =>
+    neg_le_neg (hbdd ⟨n, rfl⟩))
+  refine tendsto_atTop_atTop_of_monotone' (monotone_nat_of_le_succ hω₄) ?_
+  rintro ⟨b, hbdd⟩
+  exact hω₂ ((tendsto_atBot_add_left_of_ge _ b fun n =>
+    hbdd ⟨n, rfl⟩) <| tendsto_neg_atBot_iff.2 ht)
 
 open BorelCantelli
 
@@ -351,9 +351,9 @@ theorem tendsto_sum_indicator_atTop_iff' [IsFiniteMeasure μ] {s : ℕ → Set �
   have := tendsto_sum_indicator_atTop_iff (eventually_of_forall fun ω n => ?_) (adapted_process hs)
     (integrable_process μ hs) (eventually_of_forall <| process_difference_le s)
   swap
-  · rw [process, process, ← sub_nonneg, Finset.sum_apply, Finset.sum_apply,
-      Finset.sum_range_succ_sub_sum]
-    exact Set.indicator_nonneg (fun _ _ => zero_le_one) _
+  rw [process, process, ← sub_nonneg, Finset.sum_apply, Finset.sum_apply,
+    Finset.sum_range_succ_sub_sum]
+  exact Set.indicator_nonneg (fun _ _ => zero_le_one) _
   simp_rw [process, predictablePart_process_ae_eq] at this
   simpa using this
 

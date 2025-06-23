@@ -95,12 +95,12 @@ lemma IsUniform.pos (hG : G.IsUniform ε s t) : 0 < ε :=
   refine ⟨IsUniform.pos, fun hε s' hs' t' ht' hs ht ↦ ?_⟩
   rw [card_singleton, Nat.cast_one, one_mul] at hs ht
   obtain rfl | rfl := Finset.subset_singleton_iff.1 hs'
-  · replace hs : ε ≤ 0 := by simpa using hs
-    exact (hε.not_le hs).elim
+  replace hs : ε ≤ 0 := by simpa using hs
+  exact (hε.not_le hs).elim
   obtain rfl | rfl := Finset.subset_singleton_iff.1 ht'
-  · replace ht : ε ≤ 0 := by simpa using ht
-    exact (hε.not_le ht).elim
-  · rwa [sub_self, abs_zero]
+  replace ht : ε ≤ 0 := by simpa using ht
+  exact (hε.not_le ht).elim
+  rwa [sub_self, abs_zero]
 
 theorem not_isUniform_zero : ¬G.IsUniform (0 : 𝕜) s t := fun h =>
   (abs_nonneg _).not_lt <| h (empty_subset _) (empty_subset _) (by simp) (by simp)
@@ -159,25 +159,25 @@ noncomputable def nonuniformWitness (ε : 𝕜) (s t : Finset α) : Finset α :=
 theorem nonuniformWitness_subset (h : ¬G.IsUniform ε s t) : G.nonuniformWitness ε s t ⊆ s := by
   unfold nonuniformWitness
   split_ifs
-  · exact G.left_nonuniformWitnesses_subset h
-  · exact G.right_nonuniformWitnesses_subset fun i => h i.symm
+  exact G.left_nonuniformWitnesses_subset h
+  exact G.right_nonuniformWitnesses_subset fun i => h i.symm
 
 theorem le_card_nonuniformWitness (h : ¬G.IsUniform ε s t) :
     (s.card : 𝕜) * ε ≤ (G.nonuniformWitness ε s t).card := by
   unfold nonuniformWitness
   split_ifs
-  · exact G.left_nonuniformWitnesses_card h
-  · exact G.right_nonuniformWitnesses_card fun i => h i.symm
+  exact G.left_nonuniformWitnesses_card h
+  exact G.right_nonuniformWitnesses_card fun i => h i.symm
 
 theorem nonuniformWitness_spec (h₁ : s ≠ t) (h₂ : ¬G.IsUniform ε s t) : ε ≤ |G.edgeDensity
     (G.nonuniformWitness ε s t) (G.nonuniformWitness ε t s) - G.edgeDensity s t| := by
   unfold nonuniformWitness
   rcases trichotomous_of WellOrderingRel s t with (lt | rfl | gt)
-  · rw [if_pos lt, if_neg (asymm lt)]
-    exact G.nonuniformWitnesses_spec h₂
-  · cases h₁ rfl
-  · rw [if_neg (asymm gt), if_pos gt, edgeDensity_comm, edgeDensity_comm _ s]
-    apply G.nonuniformWitnesses_spec fun i => h₂ i.symm
+  rw [if_pos lt, if_neg (asymm lt)]
+  exact G.nonuniformWitnesses_spec h₂
+  cases h₁ rfl
+  rw [if_neg (asymm gt), if_pos gt, edgeDensity_comm, edgeDensity_comm _ s]
+  apply G.nonuniformWitnesses_spec fun i => h₂ i.symm
 
 end SimpleGraph
 
@@ -274,24 +274,24 @@ lemma IsEquipartition.card_interedges_sparsePairs_le' (hP : P.IsEquipartition)
     _ ≤ _ := sum_le_sum_of_subset_of_nonneg (filter_subset _ _) fun i _ _ ↦ by positivity
     _ = _ := (mul_sum _ _ _).symm
     _ ≤ _ := mul_le_mul_of_nonneg_left ?_ hε
-  · gcongr with UV hUV
-    obtain ⟨U, V⟩ := UV
-    simp [mk_mem_sparsePairs, ← card_interedges_div_card] at hUV
-    refine ((div_lt_iff ?_).1 hUV.2.2.2).le
-    exact mul_pos (Nat.cast_pos.2 (P.nonempty_of_mem_parts hUV.1).card_pos)
-      (Nat.cast_pos.2 (P.nonempty_of_mem_parts hUV.2.1).card_pos)
+  gcongr with UV hUV
+  obtain ⟨U, V⟩ := UV
+  simp [mk_mem_sparsePairs, ← card_interedges_div_card] at hUV
+  refine ((div_lt_iff ?_).1 hUV.2.2.2).le
+  exact mul_pos (Nat.cast_pos.2 (P.nonempty_of_mem_parts hUV.1).card_pos)
+    (Nat.cast_pos.2 (P.nonempty_of_mem_parts hUV.2.1).card_pos)
   norm_cast
   calc
     (_ : ℕ) ≤ _ := sum_le_card_nsmul P.parts.offDiag (fun i ↦ i.1.card * i.2.card)
             ((A.card / P.parts.card + 1)^2 : ℕ) ?_
     _ ≤ (P.parts.card * (A.card / P.parts.card) + P.parts.card) ^ 2 := ?_
     _ ≤ _ := Nat.pow_le_pow_of_le_left (add_le_add_right (Nat.mul_div_le _ _) _) _
-  · simp only [Prod.forall, Finpartition.mk_mem_nonUniforms, and_imp, mem_offDiag, sq]
-    rintro U V hU hV -
-    exact_mod_cast Nat.mul_le_mul (hP.card_part_le_average_add_one hU)
-      (hP.card_part_le_average_add_one hV)
-  · rw [smul_eq_mul, offDiag_card, Nat.mul_sub_right_distrib, ← sq, ← mul_pow, mul_add_one (α := ℕ)]
-    exact Nat.sub_le _ _
+  simp only [Prod.forall, Finpartition.mk_mem_nonUniforms, and_imp, mem_offDiag, sq]
+  rintro U V hU hV -
+  exact_mod_cast Nat.mul_le_mul (hP.card_part_le_average_add_one hU)
+    (hP.card_part_le_average_add_one hV)
+  rw [smul_eq_mul, offDiag_card, Nat.mul_sub_right_distrib, ← sq, ← mul_pow, mul_add_one (α := ℕ)]
+  exact Nat.sub_le _ _
 
 lemma IsEquipartition.card_interedges_sparsePairs_le (hP : P.IsEquipartition) (hε : 0 ≤ ε) :
     ((P.sparsePairs G ε).biUnion fun (U, V) ↦ G.interedges U V).card ≤ 4 * ε * A.card ^ 2 := by
@@ -310,7 +310,7 @@ private lemma aux {i j : ℕ} (hj : 0 < j) : j * (j - 1) * (i / j + 1) ^ 2 < (i 
 lemma IsEquipartition.card_biUnion_offDiag_le' (hP : P.IsEquipartition) :
     ((P.parts.biUnion offDiag).card : 𝕜) ≤ A.card * (A.card + P.parts.card) / P.parts.card := by
   obtain h | h := P.parts.eq_empty_or_nonempty
-  · simp [h]
+  simp [h]
   calc
     _ ≤ (P.parts.card : 𝕜) * (↑(A.card / P.parts.card) * ↑(A.card / P.parts.card + 1)) :=
         mod_cast card_biUnion_le_card_mul _ _ _ fun U hU ↦ ?_
@@ -318,7 +318,7 @@ lemma IsEquipartition.card_biUnion_offDiag_le' (hP : P.IsEquipartition) :
     _ ≤ A.card * (A.card / P.parts.card + 1) :=
         mul_le_mul (mod_cast Nat.mul_div_le _ _) ?_ (by positivity) (by positivity)
     _ = _ := by rw [← div_add_same (mod_cast h.card_pos.ne'), mul_div_assoc]
-  · simpa using Nat.cast_div_le
+  simpa using Nat.cast_div_le
   suffices (U.card - 1) * U.card ≤ A.card / P.parts.card * (A.card / P.parts.card + 1) by
     rwa [Nat.mul_sub_right_distrib, one_mul, ← offDiag_card] at this
   have := hP.card_part_le_average_add_one hU
@@ -328,7 +328,7 @@ lemma IsEquipartition.card_biUnion_offDiag_le' (hP : P.IsEquipartition) :
 lemma IsEquipartition.card_biUnion_offDiag_le (hε : 0 < ε) (hP : P.IsEquipartition)
     (hP' : 4 / ε ≤ P.parts.card) : (P.parts.biUnion offDiag).card ≤ ε / 2 * A.card ^ 2 := by
   obtain rfl | hA : A = ⊥ ∨ _ := A.eq_empty_or_nonempty
-  · simp [Subsingleton.elim P ⊥]
+  simp [Subsingleton.elim P ⊥]
   apply hP.card_biUnion_offDiag_le'.trans
   rw [div_le_iff (Nat.cast_pos.2 (P.parts_nonempty hA.ne_empty).card_pos)]
   have : (A.card : 𝕜) + P.parts.card ≤ 2 * A.card
@@ -350,15 +350,15 @@ lemma IsEquipartition.sum_nonUniforms_lt' (hA : A.Nonempty) (hε : 0 < ε) (hP :
     _ = _ := nsmul_eq_mul _ _
     _ ≤ _ := mul_le_mul_of_nonneg_right hG $ by positivity
     _ < _ := ?_
-  · simp only [Prod.forall, Finpartition.mk_mem_nonUniforms, and_imp]
-    rintro U V hU hV - -
-    rw [sq, ← Nat.cast_mul, ← Nat.cast_mul, Nat.cast_le]
-    exact Nat.mul_le_mul (hP.card_part_le_average_add_one hU)
-      (hP.card_part_le_average_add_one hV)
-  · rw [mul_right_comm _ ε, mul_comm ε]
-    apply mul_lt_mul_of_pos_right _ hε
-    norm_cast
-    exact aux (P.parts_nonempty hA.ne_empty).card_pos
+  simp only [Prod.forall, Finpartition.mk_mem_nonUniforms, and_imp]
+  rintro U V hU hV - -
+  rw [sq, ← Nat.cast_mul, ← Nat.cast_mul, Nat.cast_le]
+  exact Nat.mul_le_mul (hP.card_part_le_average_add_one hU)
+    (hP.card_part_le_average_add_one hV)
+  rw [mul_right_comm _ ε, mul_comm ε]
+  apply mul_lt_mul_of_pos_right _ hε
+  norm_cast
+  exact aux (P.parts_nonempty hA.ne_empty).card_pos
 
 lemma IsEquipartition.sum_nonUniforms_lt (hA : A.Nonempty) (hε : 0 < ε) (hP : P.IsEquipartition)
     (hG : P.IsUniform G ε) :
@@ -417,9 +417,9 @@ lemma unreduced_edges_subset :
   obtain ⟨U, hU, hx⟩ := P.exists_mem hx
   obtain ⟨V, hV, hy⟩ := P.exists_mem hy
   obtain rfl | hUV := eq_or_ne U V
-  · exact Or.inr (Or.inl ⟨U, hU, hx, hy, G.ne_of_adj h⟩)
+  exact Or.inr (Or.inl ⟨U, hU, hx, hy, G.ne_of_adj h⟩)
   by_cases h₂ : G.IsUniform (ε/8) U V
-  · exact Or.inr $ Or.inr ⟨U, V, hU, hV, hUV, h' _ hU _ hV hx hy hUV h₂, hx, hy, h⟩
-  · exact Or.inl ⟨U, V, hU, hV, hUV, h₂, hx, hy⟩
+  exact Or.inr $ Or.inr ⟨U, V, hU, hV, hUV, h' _ hU _ hV hx hy hUV h₂, hx, hy, h⟩
+  exact Or.inl ⟨U, V, hU, hV, hUV, h₂, hx, hy⟩
 
 end SimpleGraph

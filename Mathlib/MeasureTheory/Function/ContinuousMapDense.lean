@@ -108,12 +108,12 @@ theorem exists_continuous_eLpNorm_sub_le_of_closed [μ.OuterRegular] (hp : p ≠
       ∀ x, ‖g x • c - s.indicator (fun _x => c) x‖ ≤ ‖(v \ s).indicator (fun _x => c) x‖
   intro x
   by_cases hv : x ∈ v
-  · rw [← Set.diff_union_of_subset hsv] at hv
-    cases' hv with hsv hs
-    · simpa only [hsv.2, Set.indicator_of_not_mem, not_false_iff, sub_zero, hsv,
-        Set.indicator_of_mem] using gc_bd0 x
-    · simp [hgs hs, hs]
-  · simp [hgv hv, show x ∉ s from fun h => hv (hsv h)]
+  rw [← Set.diff_union_of_subset hsv] at hv
+  cases' hv with hsv hs
+  simpa only [hsv.2, Set.indicator_of_not_mem, not_false_iff, sub_zero, hsv,
+    Set.indicator_of_mem] using gc_bd0 x
+  simp [hgs hs, hs]
+  simp [hgv hv, show x ∉ s from fun h => hv (hsv h)]
   have gc_support : (Function.support fun x : α => g x • c) ⊆ v
   refine Function.support_subset_iff'.2 fun x hx => ?_
   simp only [hgv hx, Pi.zero_apply, zero_smul]
@@ -127,9 +127,9 @@ theorem exists_continuous_eLpNorm_sub_le_of_closed [μ.OuterRegular] (hp : p ≠
     ENNReal.toReal_nonneg, imp_true_iff]
   refine (eLpNorm_mono fun x => ?_).trans_lt this
   by_cases hx : x ∈ v
-  · simp only [hx, abs_of_nonneg (hg_range x).1, (hg_range x).2, Real.norm_eq_abs,
-      indicator_of_mem, CstarRing.norm_one]
-  · simp only [hgv hx, Pi.zero_apply, Real.norm_eq_abs, abs_zero, abs_nonneg]
+  simp only [hx, abs_of_nonneg (hg_range x).1, (hg_range x).2, Real.norm_eq_abs,
+    indicator_of_mem, CstarRing.norm_one]
+  simp only [hgv hx, Pi.zero_apply, Real.norm_eq_abs, abs_zero, abs_nonneg]
   refine
     ⟨fun x => g x • c, g.continuous.smul continuous_const, (eLpNorm_mono gc_bd).trans ?_, gc_bd0,
       gc_support.trans inter_subset_left, gc_mem⟩
@@ -153,11 +153,11 @@ theorem Memℒp.exists_hasCompactSupport_eLpNorm_sub_le [WeaklyLocallyCompactSpa
   apply hf.induction_dense hp _ _ _ _ hε
   rotate_left
   -- stability under addition
-  · rintro f g ⟨f_cont, f_mem, hf⟩ ⟨g_cont, g_mem, hg⟩
-    exact ⟨f_cont.add g_cont, f_mem.add g_mem, hf.add hg⟩
+  rintro f g ⟨f_cont, f_mem, hf⟩ ⟨g_cont, g_mem, hg⟩
+  exact ⟨f_cont.add g_cont, f_mem.add g_mem, hf.add hg⟩
   -- ae strong measurability
-  · rintro f ⟨_f_cont, f_mem, _hf⟩
-    exact f_mem.aestronglyMeasurable
+  rintro f ⟨_f_cont, f_mem, _hf⟩
+  exact f_mem.aestronglyMeasurable
   -- We are left with approximating characteristic functions.
   -- This follows from `exists_continuous_eLpNorm_sub_le_of_closed`.
   intro c t ht htμ ε hε
@@ -252,13 +252,13 @@ theorem Memℒp.exists_boundedContinuous_eLpNorm_sub_le [μ.WeaklyRegular] (hp :
   apply hf.induction_dense hp _ _ _ _ hε
   rotate_left
   -- stability under addition
-  · rintro f g ⟨f_cont, f_mem, f_bd⟩ ⟨g_cont, g_mem, g_bd⟩
-    refine ⟨f_cont.add g_cont, f_mem.add g_mem, ?_⟩
-    let f' : α →ᵇ E := ⟨⟨f, f_cont⟩, Metric.isBounded_range_iff.1 f_bd⟩
-    let g' : α →ᵇ E := ⟨⟨g, g_cont⟩, Metric.isBounded_range_iff.1 g_bd⟩
-    exact (f' + g').isBounded_range
+  rintro f g ⟨f_cont, f_mem, f_bd⟩ ⟨g_cont, g_mem, g_bd⟩
+  refine ⟨f_cont.add g_cont, f_mem.add g_mem, ?_⟩
+  let f' : α →ᵇ E := ⟨⟨f, f_cont⟩, Metric.isBounded_range_iff.1 f_bd⟩
+  let g' : α →ᵇ E := ⟨⟨g, g_cont⟩, Metric.isBounded_range_iff.1 g_bd⟩
+  exact (f' + g').isBounded_range
   -- ae strong measurability
-  · exact fun f ⟨_, h, _⟩ => h.aestronglyMeasurable
+  exact fun f ⟨_, h, _⟩ => h.aestronglyMeasurable
   -- We are left with approximating characteristic functions.
   -- This follows from `exists_continuous_eLpNorm_sub_le_of_closed`.
   intro c t ht htμ ε hε

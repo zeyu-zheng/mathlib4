@@ -125,9 +125,9 @@ theorem map_frobeniusPoly.key₂ {n i j : ℕ} (hi : i ≤ n) (hj : j < p ^ (n -
     j - v p ⟨j + 1, j.succ_pos⟩ + n = i + j + (n - i - v p ⟨j + 1, j.succ_pos⟩) := by
   generalize h : v p ⟨j + 1, j.succ_pos⟩ = m
   rsuffices ⟨h₁, h₂⟩ : m ≤ n - i ∧ m ≤ j
-  · rw [tsub_add_eq_add_tsub h₂, add_comm i j, add_tsub_assoc_of_le (h₁.trans (Nat.sub_le n i)),
-      add_assoc, tsub_right_comm, add_comm i,
-      tsub_add_cancel_of_le (le_tsub_of_add_le_right ((le_tsub_iff_left hi).mp h₁))]
+  rw [tsub_add_eq_add_tsub h₂, add_comm i j, add_tsub_assoc_of_le (h₁.trans (Nat.sub_le n i)),
+    add_assoc, tsub_right_comm, add_comm i,
+    tsub_add_cancel_of_le (le_tsub_of_add_le_right ((le_tsub_iff_left hi).mp h₁))]
   have hle : p ^ m ≤ j + 1 := h ▸ Nat.le_of_dvd j.succ_pos (multiplicity.pow_multiplicity_dvd _)
   exact ⟨(pow_le_pow_iff_right hp.1.one_lt).1 (hle.trans hj),
      Nat.le_of_lt_succ ((Nat.lt_pow_self hp.1.one_lt m).trans_le hle)⟩
@@ -282,10 +282,10 @@ theorem coeff_frobenius_charP (x : 𝕎 R) (n : ℕ) : coeff (frobenius x) n = x
           (MvPolynomial.map (Int.castRingHom (ZMod p)) (frobeniusPoly p n)) := ?_
     _ = aeval (fun k => x.coeff k) (X n ^ p : MvPolynomial ℕ (ZMod p)) := ?_
     _ = x.coeff n ^ p := ?_
-  · conv_rhs => rw [aeval_eq_eval₂Hom, eval₂Hom_map_hom]
-    apply eval₂Hom_congr (RingHom.ext_int _ _) rfl rfl
-  · rw [frobeniusPoly_zmod]
-  · rw [map_pow, aeval_X]
+  conv_rhs => rw [aeval_eq_eval₂Hom, eval₂Hom_map_hom]
+  apply eval₂Hom_congr (RingHom.ext_int _ _) rfl rfl
+  rw [frobeniusPoly_zmod]
+  rw [map_pow, aeval_X]
 
 theorem frobenius_eq_map_frobenius : @frobenius p R _ _ = map (_root_.frobenius R p) := by
   ext (x n)

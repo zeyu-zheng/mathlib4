@@ -446,17 +446,17 @@ noncomputable instance : ConditionallyCompleteLinearOrderBot ℝ≥0 :=
 @[norm_cast]
 theorem coe_sSup (s : Set ℝ≥0) : (↑(sSup s) : ℝ) = sSup (((↑) : ℝ≥0 → ℝ) '' s) := by
   rcases Set.eq_empty_or_nonempty s with rfl|hs
-  · simp
+  simp
   by_cases H : BddAbove s
-  · have A : sSup (Subtype.val '' s) ∈ Set.Ici 0 := by
-      apply Real.sSup_nonneg
-      rintro - ⟨y, -, rfl⟩
-      exact y.2
-    exact (@subset_sSup_of_within ℝ (Set.Ici (0 : ℝ)) _ _ (_) s hs H A).symm
-  · simp only [csSup_of_not_bddAbove H, csSup_empty, bot_eq_zero', NNReal.coe_zero]
-    apply (Real.sSup_of_not_bddAbove ?_).symm
-    contrapose! H
-    exact bddAbove_coe.1 H
+  have A : sSup (Subtype.val '' s) ∈ Set.Ici 0 := by
+    apply Real.sSup_nonneg
+    rintro - ⟨y, -, rfl⟩
+    exact y.2
+  exact (@subset_sSup_of_within ℝ (Set.Ici (0 : ℝ)) _ _ (_) s hs H A).symm
+  simp only [csSup_of_not_bddAbove H, csSup_empty, bot_eq_zero', NNReal.coe_zero]
+  apply (Real.sSup_of_not_bddAbove ?_).symm
+  contrapose! H
+  exact bddAbove_coe.1 H
 
 @[simp, norm_cast] -- Porting note: add `simp`
 theorem coe_iSup {ι : Sort*} (s : ι → ℝ≥0) : (↑(⨆ i, s i) : ℝ) = ⨆ i, ↑(s i) := by
@@ -465,8 +465,8 @@ theorem coe_iSup {ι : Sort*} (s : ι → ℝ≥0) : (↑(⨆ i, s i) : ℝ) = �
 @[norm_cast]
 theorem coe_sInf (s : Set ℝ≥0) : (↑(sInf s) : ℝ) = sInf (((↑) : ℝ≥0 → ℝ) '' s) := by
   rcases Set.eq_empty_or_nonempty s with rfl|hs
-  · simp only [Set.image_empty, Real.sInf_empty, coe_eq_zero]
-    exact @subset_sInf_emptyset ℝ (Set.Ici (0 : ℝ)) _ _ (_)
+  simp only [Set.image_empty, Real.sInf_empty, coe_eq_zero]
+  exact @subset_sInf_emptyset ℝ (Set.Ici (0 : ℝ)) _ _ (_)
   have A : sInf (Subtype.val '' s) ∈ Set.Ici 0
   apply Real.sInf_nonneg
   rintro - ⟨y, -, rfl⟩
@@ -878,9 +878,9 @@ theorem div_lt_one_of_lt {a b : ℝ≥0} (h : a < b) : a / b < 1 := by
 
 theorem _root_.Real.toNNReal_inv {x : ℝ} : Real.toNNReal x⁻¹ = (Real.toNNReal x)⁻¹ := by
   rcases le_total 0 x with hx | hx
-  · nth_rw 1 [← Real.coe_toNNReal x hx]
-    rw [← NNReal.coe_inv, Real.toNNReal_coe]
-  · rw [toNNReal_eq_zero.mpr hx, inv_zero, toNNReal_eq_zero.mpr (inv_nonpos.mpr hx)]
+  nth_rw 1 [← Real.coe_toNNReal x hx]
+  rw [← NNReal.coe_inv, Real.toNNReal_coe]
+  rw [toNNReal_eq_zero.mpr hx, inv_zero, toNNReal_eq_zero.mpr (inv_nonpos.mpr hx)]
 
 theorem _root_.Real.toNNReal_div {x y : ℝ} (hx : 0 ≤ x) :
     Real.toNNReal (x / y) = Real.toNNReal x / Real.toNNReal y := by
@@ -1000,11 +1000,11 @@ theorem image_coe_nnreal_real (h : t.OrdConnected) : ((↑) '' t : Set ℝ).OrdC
 theorem image_real_toNNReal (h : s.OrdConnected) : (Real.toNNReal '' s).OrdConnected := by
   refine ⟨forall_mem_image.2 fun x hx => forall_mem_image.2 fun y hy z hz => ?_⟩
   rcases le_total y 0 with hy₀ | hy₀
-  · rw [mem_Icc, Real.toNNReal_of_nonpos hy₀, nonpos_iff_eq_zero] at hz
-    exact ⟨y, hy, (toNNReal_of_nonpos hy₀).trans hz.2.symm⟩
-  · lift y to ℝ≥0 using hy₀
-    rw [toNNReal_coe] at hz
-    exact ⟨z, h.out hx hy ⟨toNNReal_le_iff_le_coe.1 hz.1, hz.2⟩, toNNReal_coe⟩
+  rw [mem_Icc, Real.toNNReal_of_nonpos hy₀, nonpos_iff_eq_zero] at hz
+  exact ⟨y, hy, (toNNReal_of_nonpos hy₀).trans hz.2.symm⟩
+  lift y to ℝ≥0 using hy₀
+  rw [toNNReal_coe] at hz
+  exact ⟨z, h.out hx hy ⟨toNNReal_le_iff_le_coe.1 hz.1, hz.2⟩, toNNReal_coe⟩
 
 theorem preimage_real_toNNReal (h : t.OrdConnected) : (Real.toNNReal ⁻¹' t).OrdConnected :=
   h.preimage_mono Real.toNNReal_mono
@@ -1062,12 +1062,12 @@ theorem NNReal.exists_lt_of_strictMono [h : Nontrivial Γ₀ˣ] {f : Γ₀ →*�
   have hfu : f u < 1
   rw [hu]
   split_ifs with hu1
-  · rw [← _root_.map_one f]; exact hf hu1
-  · have hfg0 : f g ≠ 0 :=
-      fun h0 ↦ (Units.ne_zero g) ((map_eq_zero f).mp h0)
-    have hg1' : 1 < g := lt_of_le_of_ne (not_lt.mp hu1) hg1.symm
-    rw [Units.val_inv_eq_inv_val, map_inv₀, inv_lt_one_iff hfg0, ← _root_.map_one f]
-    exact hf hg1'
+  rw [← _root_.map_one f]; exact hf hu1
+  have hfg0 : f g ≠ 0 :=
+    fun h0 ↦ (Units.ne_zero g) ((map_eq_zero f).mp h0)
+  have hg1' : 1 < g := lt_of_le_of_ne (not_lt.mp hu1) hg1.symm
+  rw [Units.val_inv_eq_inv_val, map_inv₀, inv_lt_one_iff hfg0, ← _root_.map_one f]
+  exact hf hg1'
   obtain ⟨n, hn⟩ := exists_pow_lt_of_lt_one hr hfu
   use u ^ n
   rwa [Units.val_pow_eq_pow_val, _root_.map_pow]

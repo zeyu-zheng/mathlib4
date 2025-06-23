@@ -62,8 +62,8 @@ lemma meas_le_of_le_of_forall_le_meas_thickening_add {ε₁ ε₂ : ℝ≥0∞} 
     (h_le : ε₁ ≤ ε₂) {B : Set Ω} (hε₁ : μ B ≤ ν (thickening ε₁.toReal B) + ε₁) :
     μ B ≤ ν (thickening ε₂.toReal B) + ε₂ := by
   by_cases ε_top : ε₂ = ∞
-  · simp only [ne_eq, FiniteMeasure.ennreal_coeFn_eq_coeFn_toMeasure, ε_top, top_toReal,
-                add_top, le_top]
+  simp only [ne_eq, FiniteMeasure.ennreal_coeFn_eq_coeFn_toMeasure, ε_top, top_toReal,
+              add_top, le_top]
   apply hε₁.trans (add_le_add ?_ h_le)
   exact measure_mono (μ := ν) (thickening_mono (toReal_mono ε_top h_le) B)
 
@@ -88,7 +88,7 @@ lemma levyProkhorovEDist_le_of_forall_add_pos_le (μ ν : Measure Ω) (δ : ℝ�
   apply ENNReal.le_of_forall_pos_le_add
   intro ε hε _
   by_cases ε_top : ε = ∞
-  · simp only [ε_top, add_top, le_top]
+  simp only [ε_top, add_top, le_top]
   apply sInf_le
   intro B B_mble
   simpa only [add_assoc] using h ε B (coe_pos.mpr hε) coe_lt_top B_mble
@@ -99,7 +99,7 @@ lemma levyProkhorovEDist_le_of_forall (μ ν : Measure Ω) (δ : ℝ≥0∞)
         μ B ≤ ν (thickening ε.toReal B) + ε ∧ ν B ≤ μ (thickening ε.toReal B) + ε) :
     levyProkhorovEDist μ ν ≤ δ := by
   by_cases δ_top : δ = ∞
-  · simp only [δ_top, add_top, le_top]
+  simp only [δ_top, add_top, le_top]
   apply levyProkhorovEDist_le_of_forall_add_pos_le
   intro x B x_pos x_lt_top B_mble
   simpa only [← add_assoc] using h (δ + x) B (ENNReal.lt_add_right δ_top x_pos.ne.symm)
@@ -130,9 +130,9 @@ lemma levyProkhorovEDist_comm (μ ν : Measure Ω) :
 lemma levyProkhorovEDist_triangle [OpensMeasurableSpace Ω] (μ ν κ : Measure Ω) :
     levyProkhorovEDist μ κ ≤ levyProkhorovEDist μ ν + levyProkhorovEDist ν κ := by
   by_cases LPμν_finite : levyProkhorovEDist μ ν = ∞
-  · simp [LPμν_finite]
+  simp [LPμν_finite]
   by_cases LPνκ_finite : levyProkhorovEDist ν κ = ∞
-  · simp [LPνκ_finite]
+  simp [LPνκ_finite]
   apply levyProkhorovEDist_le_of_forall_add_pos_le
   intro ε B ε_pos ε_lt_top B_mble
   have half_ε_pos : 0 < ε / 2 := ENNReal.div_pos ε_pos.ne' two_ne_top
@@ -147,20 +147,20 @@ lemma levyProkhorovEDist_triangle [OpensMeasurableSpace Ω] (μ ν κ : Measure 
   have hs_add_r' : s.toReal + r.toReal
       = (levyProkhorovEDist μ ν + levyProkhorovEDist ν κ + ε).toReal := by
     rw [← hs_add_r, ← ENNReal.toReal_add]
-    · exact ENNReal.add_ne_top.mpr ⟨LPνκ_finite, half_ε_lt_top.ne⟩
-    · exact ENNReal.add_ne_top.mpr ⟨LPμν_finite, half_ε_lt_top.ne⟩
+    exact ENNReal.add_ne_top.mpr ⟨LPνκ_finite, half_ε_lt_top.ne⟩
+    exact ENNReal.add_ne_top.mpr ⟨LPμν_finite, half_ε_lt_top.ne⟩
   rw [← hs_add_r', add_assoc, ← hs_add_r, add_assoc _ _ ε, ← hs_add_r]
   refine ⟨?_, ?_⟩
-  · calc μ B ≤ ν (thickening r.toReal B) + r :=
-      left_measure_le_of_levyProkhorovEDist_lt lt_r B_mble
+  calc μ B ≤ ν (thickening r.toReal B) + r :=
+    left_measure_le_of_levyProkhorovEDist_lt lt_r B_mble
     _ ≤ κ (thickening s.toReal (thickening r.toReal B)) + s + r :=
       add_le_add_right
         (left_measure_le_of_levyProkhorovEDist_lt lt_s isOpen_thickening.measurableSet) _
     _ = κ (thickening s.toReal (thickening r.toReal B)) + (s + r) := add_assoc _ _ _
     _ ≤ κ (thickening (s.toReal + r.toReal) B) + (s + r) :=
       add_le_add_right (measure_mono (thickening_thickening_subset _ _ _)) _
-  · calc κ B ≤ ν (thickening s.toReal B) + s :=
-      right_measure_le_of_levyProkhorovEDist_lt lt_s B_mble
+  calc κ B ≤ ν (thickening s.toReal B) + s :=
+    right_measure_le_of_levyProkhorovEDist_lt lt_s B_mble
     _ ≤ μ (thickening r.toReal (thickening s.toReal B)) + r + s :=
       add_le_add_right
         (right_measure_le_of_levyProkhorovEDist_lt lt_r isOpen_thickening.measurableSet) s
@@ -191,9 +191,9 @@ lemma levyProkhorovDist_triangle [OpensMeasurableSpace Ω] (μ ν κ : Measure �
   convert (ENNReal.toReal_le_toReal (a := levyProkhorovEDist μ κ)
     (b := levyProkhorovEDist μ ν + levyProkhorovEDist ν κ)
     _ _).mpr <| levyProkhorovEDist_triangle μ ν κ
-  · simp only [levyProkhorovDist, ENNReal.toReal_add dμν_finite dνκ_finite]
-  · exact dμκ_finite
-  · exact ENNReal.add_ne_top.mpr ⟨dμν_finite, dνκ_finite⟩
+  simp only [levyProkhorovDist, ENNReal.toReal_add dμν_finite dνκ_finite]
+  exact dμκ_finite
+  exact ENNReal.add_ne_top.mpr ⟨dμν_finite, dνκ_finite⟩
 
 /-- A type synonym, to be used for `Measure α`, `FiniteMeasure α`, or `ProbabilityMeasure α`,
 when they are to be equipped with the Lévy-Prokhorov distance. -/
@@ -265,8 +265,8 @@ lemma levyProkhorovDist_le_of_forall_le
   intro ε B ε_gt ε_lt_top B_mble
   have ε_gt' : δ < ε.toReal
   refine (ofReal_lt_ofReal_iff ?_).mp ?_
-  · exact ENNReal.toReal_pos (ne_zero_of_lt ε_gt) ε_lt_top.ne
-  · simpa [ofReal_toReal_eq_iff.mpr ε_lt_top.ne] using ε_gt
+  exact ENNReal.toReal_pos (ne_zero_of_lt ε_gt) ε_lt_top.ne
+  simpa [ofReal_toReal_eq_iff.mpr ε_lt_top.ne] using ε_gt
   convert h ε.toReal B ε_gt' B_mble
   exact (ENNReal.ofReal_toReal ε_lt_top.ne).symm
 
@@ -303,8 +303,8 @@ lemma BoundedContinuousFunction.integral_eq_integral_meas_le_of_hasFiniteIntegra
     (f : α →ᵇ ℝ) (μ : Measure α) (f_nn : 0 ≤ᵐ[μ] f) (hf : HasFiniteIntegral f μ) :
     ∫ ω, f ω ∂μ = ∫ t in Ioc 0 ‖f‖, ENNReal.toReal (μ {a : α | t ≤ f a}) := by
   rw [Integrable.integral_eq_integral_Ioc_meas_le (M := ‖f‖) ?_ f_nn ?_]
-  · refine ⟨f.continuous.measurable.aestronglyMeasurable, hf⟩
-  · exact eventually_of_forall (fun x ↦ BoundedContinuousFunction.apply_le_norm f x)
+  refine ⟨f.continuous.measurable.aestronglyMeasurable, hf⟩
+  exact eventually_of_forall (fun x ↦ BoundedContinuousFunction.apply_le_norm f x)
 
 /-- A version of the layer cake formula for bounded continuous functions and finite measures:
 ∫ f dμ = ∫ t in (0, ‖f‖], μ {x | f(x) ≥ t} dt. -/
@@ -328,35 +328,35 @@ lemma BoundedContinuousFunction.integral_le_of_levyProkhorovEDist_lt (μ ν : Me
     convert (ENNReal.toReal_le_toReal (measure_ne_top _ _) ?_).mpr
             <| left_measure_le_of_levyProkhorovEDist_lt hμν (B := {a | t ≤ f a})
                 (f.continuous.measurable measurableSet_Ici)
-    · rw [ENNReal.toReal_add (measure_ne_top ν _) ofReal_ne_top, ENNReal.toReal_ofReal ε_pos.le]
-    · exact ENNReal.add_ne_top.mpr ⟨measure_ne_top ν _, ofReal_ne_top⟩
+    rw [ENNReal.toReal_add (measure_ne_top ν _) ofReal_ne_top, ENNReal.toReal_ofReal ε_pos.le]
+    exact ENNReal.add_ne_top.mpr ⟨measure_ne_top ν _, ofReal_ne_top⟩
   have intble₁ : IntegrableOn (fun t ↦ ENNReal.toReal (μ {a | t ≤ f a})) (Ioc 0 ‖f‖)
   apply Measure.integrableOn_of_bounded (M := ENNReal.toReal (μ univ)) measure_Ioc_lt_top.ne
-  · apply (Measurable.ennreal_toReal (Antitone.measurable ?_)).aestronglyMeasurable
-    exact fun _ _ hst ↦ measure_mono (fun _ h ↦ hst.trans h)
-  · apply eventually_of_forall <| fun t ↦ ?_
-    simp only [Real.norm_eq_abs, abs_toReal]
-    exact (ENNReal.toReal_le_toReal (measure_ne_top _ _) (measure_ne_top _ _)).mpr
-          <| measure_mono (subset_univ _)
+  apply (Measurable.ennreal_toReal (Antitone.measurable ?_)).aestronglyMeasurable
+  exact fun _ _ hst ↦ measure_mono (fun _ h ↦ hst.trans h)
+  apply eventually_of_forall <| fun t ↦ ?_
+  simp only [Real.norm_eq_abs, abs_toReal]
+  exact (ENNReal.toReal_le_toReal (measure_ne_top _ _) (measure_ne_top _ _)).mpr
+        <| measure_mono (subset_univ _)
   have intble₂ : IntegrableOn
                   (fun t ↦ ENNReal.toReal (ν (thickening ε {a | t ≤ f a}))) (Ioc 0 ‖f‖) := by
     apply Measure.integrableOn_of_bounded (M := ENNReal.toReal (ν univ)) measure_Ioc_lt_top.ne
-    · apply (Measurable.ennreal_toReal (Antitone.measurable ?_)).aestronglyMeasurable
-      exact fun _ _ hst ↦ measure_mono <| thickening_subset_of_subset ε (fun _ h ↦ hst.trans h)
-    · apply eventually_of_forall <| fun t ↦ ?_
-      simp only [Real.norm_eq_abs, abs_toReal]
-      exact (ENNReal.toReal_le_toReal (measure_ne_top _ _) (measure_ne_top _ _)).mpr
-            <| measure_mono (subset_univ _)
+    apply (Measurable.ennreal_toReal (Antitone.measurable ?_)).aestronglyMeasurable
+    exact fun _ _ hst ↦ measure_mono <| thickening_subset_of_subset ε (fun _ h ↦ hst.trans h)
+    apply eventually_of_forall <| fun t ↦ ?_
+    simp only [Real.norm_eq_abs, abs_toReal]
+    exact (ENNReal.toReal_le_toReal (measure_ne_top _ _) (measure_ne_top _ _)).mpr
+          <| measure_mono (subset_univ _)
   apply le_trans (setIntegral_mono (s := Ioc 0 ‖f‖) ?_ ?_ key)
-  · rw [integral_add]
-    · apply add_le_add_left
-      simp only [integral_const, MeasurableSet.univ, Measure.restrict_apply, univ_inter,
-                  Real.volume_Ioc, sub_zero, norm_nonneg, toReal_ofReal, smul_eq_mul,
-                  (mul_comm _ ε).le]
-    · exact intble₂
-    · exact integrable_const ε
-  · exact intble₁
-  · exact intble₂.add <| integrable_const ε
+  rw [integral_add]
+  apply add_le_add_left
+  simp only [integral_const, MeasurableSet.univ, Measure.restrict_apply, univ_inter,
+              Real.volume_Ioc, sub_zero, norm_nonneg, toReal_ofReal, smul_eq_mul,
+              (mul_comm _ ε).le]
+  exact intble₂
+  exact integrable_const ε
+  exact intble₁
+  exact intble₂.add <| integrable_const ε
 
 /-- A monotone decreasing convergence lemma for integrals of measures of thickenings:
 `∫ t in (0, ‖f‖], μ (thickening ε {x | f(x) ≥ t}) dt` tends to
@@ -367,23 +367,23 @@ lemma tendsto_integral_meas_thickening_le (f : Ω →ᵇ ℝ)
       (𝓝 (∫ t in A, ENNReal.toReal (μ {a | t ≤ f a}))) := by
   apply tendsto_integral_filter_of_dominated_convergence (G := ℝ) (μ := volume.restrict A)
         (F := fun ε t ↦ (μ (thickening ε {a | t ≤ f a}))) (f := fun t ↦ (μ {a | t ≤ f a})) 1
-  · apply eventually_of_forall fun n ↦ Measurable.aestronglyMeasurable ?_
-    simp only [measurable_coe_nnreal_real_iff]
-    apply measurable_toNNReal.comp <| Antitone.measurable (fun s t hst ↦ ?_)
-    exact measure_mono <| thickening_subset_of_subset _ <| fun ω h ↦ hst.trans h
-  · apply eventually_of_forall (fun i ↦ ?_)
-    apply eventually_of_forall (fun t ↦ ?_)
-    simp only [Real.norm_eq_abs, NNReal.abs_eq, Pi.one_apply]
-    exact (ENNReal.toReal_le_toReal (measure_ne_top _ _) one_ne_top).mpr prob_le_one
-  · have aux : IsFiniteMeasure (volume.restrict A) := ⟨by simp [lt_top_iff_ne_top, A_finmeas]⟩
-    apply integrable_const
-  · apply eventually_of_forall (fun t ↦ ?_)
-    simp only [NNReal.tendsto_coe]
-    apply (ENNReal.tendsto_toNNReal _).comp
-    · apply tendsto_measure_thickening_of_isClosed ?_ ?_
-      · exact ⟨1, ⟨Real.zero_lt_one, measure_ne_top _ _⟩⟩
-      · exact isClosed_le continuous_const f.continuous
-    · exact measure_ne_top _ _
+  apply eventually_of_forall fun n ↦ Measurable.aestronglyMeasurable ?_
+  simp only [measurable_coe_nnreal_real_iff]
+  apply measurable_toNNReal.comp <| Antitone.measurable (fun s t hst ↦ ?_)
+  exact measure_mono <| thickening_subset_of_subset _ <| fun ω h ↦ hst.trans h
+  apply eventually_of_forall (fun i ↦ ?_)
+  apply eventually_of_forall (fun t ↦ ?_)
+  simp only [Real.norm_eq_abs, NNReal.abs_eq, Pi.one_apply]
+  exact (ENNReal.toReal_le_toReal (measure_ne_top _ _) one_ne_top).mpr prob_le_one
+  have aux : IsFiniteMeasure (volume.restrict A) := ⟨by simp [lt_top_iff_ne_top, A_finmeas]⟩
+  apply integrable_const
+  apply eventually_of_forall (fun t ↦ ?_)
+  simp only [NNReal.tendsto_coe]
+  apply (ENNReal.tendsto_toNNReal _).comp
+  apply tendsto_measure_thickening_of_isClosed ?_ ?_
+  exact ⟨1, ⟨Real.zero_lt_one, measure_ne_top _ _⟩⟩
+  exact isClosed_le continuous_const f.continuous
+  exact measure_ne_top _ _
 
 /-- The coercion `LevyProkhorov (ProbabilityMeasure Ω) → ProbabilityMeasure Ω` is continuous. -/
 lemma LevyProkhorov.continuous_toProbabilityMeasure :
@@ -396,51 +396,51 @@ lemma LevyProkhorov.continuous_toProbabilityMeasure :
   refine fun f ↦ tendsto_integral_of_forall_limsup_integral_le_integral ?_ f
   intro f f_nn
   by_cases f_zero : ‖f‖ = 0
-  · simp only [norm_eq_zero] at f_zero
-    simp [f_zero, limsup_const]
+  simp only [norm_eq_zero] at f_zero
+  simp [f_zero, limsup_const]
   have norm_f_pos : 0 < ‖f‖ := lt_of_le_of_ne (norm_nonneg _) (fun a => f_zero a.symm)
   apply _root_.le_of_forall_pos_le_add
   intro δ δ_pos
   apply limsup_le_of_le ?_
-  · obtain ⟨εs, ⟨_, ⟨εs_pos, εs_lim⟩⟩⟩ := exists_seq_strictAnti_tendsto (0 : ℝ)
-    have ε_of_room := Tendsto.add (tendsto_iff_dist_tendsto_zero.mp hμs) εs_lim
-    have ε_of_room' : Tendsto (fun n ↦ dist (μs n) ν + εs n) atTop (𝓝[>] 0)
-    rw [tendsto_nhdsWithin_iff]
-    refine ⟨by simpa using ε_of_room, eventually_of_forall fun n ↦ ?_⟩
-    · rw [mem_Ioi]
-      linarith [εs_pos n, dist_nonneg (x := μs n) (y := ν)]
-    rw [add_zero] at ε_of_room
-    have key := (tendsto_integral_meas_thickening_le f (A := Ioc 0 ‖f‖) (by simp) P).comp ε_of_room'
-    have aux : ∀ (z : ℝ), Iio (z + δ/2) ∈ 𝓝 z := fun z ↦ Iio_mem_nhds (by linarith)
-    filter_upwards [key (aux _), ε_of_room <| Iio_mem_nhds <| half_pos <|
-                      Real.mul_pos (inv_pos.mpr norm_f_pos) δ_pos]
-      with n hn hn'
-    simp only [mem_preimage, mem_Iio] at *
-    specialize εs_pos n
-    have bound := BoundedContinuousFunction.integral_le_of_levyProkhorovEDist_lt
-                    (Ps n) P (ε := dist (μs n) ν + εs n) ?_ ?_ f ?_
-    · refine bound.trans ?_
-      apply (add_le_add_right hn.le _).trans
-      rw [BoundedContinuousFunction.integral_eq_integral_meas_le]
-      · simp only [ProbabilityMeasure.ennreal_coeFn_eq_coeFn_toMeasure]
-        rw [add_assoc, mul_comm]
-        gcongr
-        calc
-          δ / 2 + ‖f‖ * (dist (μs n) ν + εs n)
-          _ ≤ δ / 2 + ‖f‖ * (‖f‖⁻¹ * δ / 2) := by gcongr
-          _ = δ := by field_simp; ring
-      · exact eventually_of_forall f_nn
-    · positivity
-    · rw [ENNReal.ofReal_add (by positivity) (by positivity), ← add_zero (levyProkhorovEDist _ _)]
-      apply ENNReal.add_lt_add_of_le_of_lt (levyProkhorovEDist_ne_top _ _)
-            (le_of_eq ?_) (ofReal_pos.mpr εs_pos)
-      rw [LevyProkhorov.dist_def, levyProkhorovDist,
-          ofReal_toReal (levyProkhorovEDist_ne_top _ _)]
-      simp only [Ps, P, LevyProkhorov.toProbabilityMeasure]
-    · exact eventually_of_forall f_nn
-  · simp only [IsCoboundedUnder, IsCobounded, eventually_map, eventually_atTop,
-               forall_exists_index]
-    refine ⟨0, fun a i hia ↦ le_trans (integral_nonneg f_nn) (hia i le_rfl)⟩
+  obtain ⟨εs, ⟨_, ⟨εs_pos, εs_lim⟩⟩⟩ := exists_seq_strictAnti_tendsto (0 : ℝ)
+  have ε_of_room := Tendsto.add (tendsto_iff_dist_tendsto_zero.mp hμs) εs_lim
+  have ε_of_room' : Tendsto (fun n ↦ dist (μs n) ν + εs n) atTop (𝓝[>] 0)
+  rw [tendsto_nhdsWithin_iff]
+  refine ⟨by simpa using ε_of_room, eventually_of_forall fun n ↦ ?_⟩
+  rw [mem_Ioi]
+  linarith [εs_pos n, dist_nonneg (x := μs n) (y := ν)]
+  rw [add_zero] at ε_of_room
+  have key := (tendsto_integral_meas_thickening_le f (A := Ioc 0 ‖f‖) (by simp) P).comp ε_of_room'
+  have aux : ∀ (z : ℝ), Iio (z + δ/2) ∈ 𝓝 z := fun z ↦ Iio_mem_nhds (by linarith)
+  filter_upwards [key (aux _), ε_of_room <| Iio_mem_nhds <| half_pos <|
+                    Real.mul_pos (inv_pos.mpr norm_f_pos) δ_pos]
+    with n hn hn'
+  simp only [mem_preimage, mem_Iio] at *
+  specialize εs_pos n
+  have bound := BoundedContinuousFunction.integral_le_of_levyProkhorovEDist_lt
+                  (Ps n) P (ε := dist (μs n) ν + εs n) ?_ ?_ f ?_
+  refine bound.trans ?_
+  apply (add_le_add_right hn.le _).trans
+  rw [BoundedContinuousFunction.integral_eq_integral_meas_le]
+  simp only [ProbabilityMeasure.ennreal_coeFn_eq_coeFn_toMeasure]
+  rw [add_assoc, mul_comm]
+  gcongr
+  calc
+    δ / 2 + ‖f‖ * (dist (μs n) ν + εs n)
+    _ ≤ δ / 2 + ‖f‖ * (‖f‖⁻¹ * δ / 2) := by gcongr
+    _ = δ := by field_simp; ring
+  exact eventually_of_forall f_nn
+  positivity
+  rw [ENNReal.ofReal_add (by positivity) (by positivity), ← add_zero (levyProkhorovEDist _ _)]
+  apply ENNReal.add_lt_add_of_le_of_lt (levyProkhorovEDist_ne_top _ _)
+        (le_of_eq ?_) (ofReal_pos.mpr εs_pos)
+  rw [LevyProkhorov.dist_def, levyProkhorovDist,
+      ofReal_toReal (levyProkhorovEDist_ne_top _ _)]
+  simp only [Ps, P, LevyProkhorov.toProbabilityMeasure]
+  exact eventually_of_forall f_nn
+  simp only [IsCoboundedUnder, IsCobounded, eventually_map, eventually_atTop,
+             forall_exists_index]
+  refine ⟨0, fun a i hia ↦ le_trans (integral_nonneg f_nn) (hia i le_rfl)⟩
 
 /-- The topology of the Lévy-Prokhorov metric is at least as fine as the topology of convergence in
 distribution. -/
@@ -467,30 +467,30 @@ lemma SeparableSpace.exists_measurable_partition_diam_le {ε : ℝ} (ε_pos : 0 
         (∀ n, diam (As n) ≤ ε) ∧ (⋃ n, As n = univ) ∧
         (Pairwise (fun (n m : ℕ) ↦ Disjoint (As n) (As m))) := by
   by_cases X_emp : IsEmpty Ω
-  · refine ⟨fun _ ↦ ∅, fun _ ↦ MeasurableSet.empty, fun _ ↦ Bornology.isBounded_empty, ?_, ?_,
-            fun _ _ _ ↦ disjoint_of_subsingleton⟩
-    · intro n
-      simpa only [diam_empty] using LT.lt.le ε_pos
-    · simp only [iUnion_empty]
-      apply Eq.symm
-      simp only [univ_eq_empty_iff, X_emp]
+  refine ⟨fun _ ↦ ∅, fun _ ↦ MeasurableSet.empty, fun _ ↦ Bornology.isBounded_empty, ?_, ?_,
+          fun _ _ _ ↦ disjoint_of_subsingleton⟩
+  intro n
+  simpa only [diam_empty] using LT.lt.le ε_pos
+  simp only [iUnion_empty]
+  apply Eq.symm
+  simp only [univ_eq_empty_iff, X_emp]
   rw [not_isEmpty_iff] at X_emp
   obtain ⟨xs, xs_dense⟩ := exists_dense_seq Ω
   have half_ε_pos : 0 < ε / 2 := half_pos ε_pos
   set Bs := fun n ↦ Metric.ball (xs n) (ε/2)
   set As := disjointed Bs
   refine ⟨As, ?_, ?_, ?_, ?_, ?_⟩
-  · exact MeasurableSet.disjointed (fun n ↦ measurableSet_ball)
-  · exact fun n ↦ Bornology.IsBounded.subset isBounded_ball <| disjointed_subset Bs n
-  · intro n
-    apply (diam_mono (disjointed_subset Bs n) isBounded_ball).trans
-    convert diam_ball half_ε_pos.le
-    ring
-  · have aux : ⋃ n, Bs n = univ := by
-      convert DenseRange.iUnion_uniformity_ball xs_dense <| Metric.dist_mem_uniformity half_ε_pos
-      exact (ball_eq_ball' _ _).symm
-    simpa only [← aux] using iUnion_disjointed
-  · exact disjoint_disjointed Bs
+  exact MeasurableSet.disjointed (fun n ↦ measurableSet_ball)
+  exact fun n ↦ Bornology.IsBounded.subset isBounded_ball <| disjointed_subset Bs n
+  intro n
+  apply (diam_mono (disjointed_subset Bs n) isBounded_ball).trans
+  convert diam_ball half_ε_pos.le
+  ring
+  have aux : ⋃ n, Bs n = univ := by
+    convert DenseRange.iUnion_uniformity_ball xs_dense <| Metric.dist_mem_uniformity half_ε_pos
+    exact (ball_eq_ball' _ _).symm
+  simpa only [← aux] using iUnion_disjointed
+  exact disjoint_disjointed Bs
 
 variable {Ω}
 
@@ -498,15 +498,15 @@ lemma ProbabilityMeasure.toMeasure_add_pos_gt_mem_nhds (P : ProbabilityMeasure �
     {G : Set Ω} (G_open : IsOpen G) {ε : ℝ≥0∞} (ε_pos : 0 < ε) :
     {Q | P.toMeasure G < Q.toMeasure G + ε} ∈ 𝓝 P := by
   by_cases easy : P.toMeasure G < ε
-  · exact eventually_of_forall (fun _ ↦ lt_of_lt_of_le easy le_add_self)
+  exact eventually_of_forall (fun _ ↦ lt_of_lt_of_le easy le_add_self)
   by_cases ε_top : ε = ∞
-  · simp [ε_top, measure_lt_top]
+  simp [ε_top, measure_lt_top]
   simp only [not_lt] at easy
   have aux : P.toMeasure G - ε < liminf (fun Q ↦ Q.toMeasure G) (𝓝 P)
   apply lt_of_lt_of_le (ENNReal.sub_lt_self (measure_lt_top _ _).ne _ _)
       <| ProbabilityMeasure.le_liminf_measure_open_of_tendsto tendsto_id G_open
-  · exact (lt_of_lt_of_le ε_pos easy).ne.symm
-  · exact ε_pos.ne.symm
+  exact (lt_of_lt_of_le ε_pos easy).ne.symm
+  exact ε_pos.ne.symm
   filter_upwards [gt_mem_sets_of_limsInf_gt (α := ℝ≥0∞) isBounded_ge_of_bot
       (show P.toMeasure G - ε < limsInf ((𝓝 P).map (fun Q ↦ Q.toMeasure G)) from aux)] with Q hQ
   simp only [preimage_setOf_eq, mem_setOf_eq] at hQ
@@ -586,10 +586,10 @@ lemma ProbabilityMeasure.continuous_toLevyProkhorov :
     obtain ⟨i, hi⟩ := show ∃ n, ω ∈ Es n by simp only [← mem_iUnion, Es_cover, mem_univ]
     simp only [mem_Ici, mem_union, mem_iUnion, exists_prop]
     by_cases i_small : i ∈ Iio N
-    · refine Or.inl ⟨i, ?_, self_subset_thickening third_ε_pos _ hi⟩
-      simp only [mem_Iio, mem_setOf_eq, JB]
-      refine ⟨nonempty_iff_ne_empty.mp <| Set.nonempty_of_mem <| mem_inter ω_in_B hi, i_small⟩
-    · exact Or.inr ⟨i, by simpa only [mem_Iio, not_lt] using i_small, hi⟩
+    refine Or.inl ⟨i, ?_, self_subset_thickening third_ε_pos _ hi⟩
+    simp only [mem_Iio, mem_setOf_eq, JB]
+    refine ⟨nonempty_iff_ne_empty.mp <| Set.nonempty_of_mem <| mem_inter ω_in_B hi, i_small⟩
+    exact Or.inr ⟨i, by simpa only [mem_Iio, not_lt] using i_small, hi⟩
   have subset_thickB : ⋃ i ∈ JB, thickening (ε / 3) (Es i) ⊆ thickening δ B := by
     intro ω ω_in_U
     simp only [mem_setOf_eq, mem_iUnion, exists_prop] at ω_in_U

@@ -35,15 +35,15 @@ theorem summable_iff_cauchySeq_finset_and_tsum_mem (f : β → α) :
     Summable f ↔ CauchySeq (fun s : Finset β ↦ ∑ b in s, f b) ∧
       ∑' i, toCompl (f i) ∈ Set.range toCompl := by
   constructor
-  · rintro ⟨a, ha⟩
-    exact ⟨ha.cauchySeq, ((summable_iff_summable_compl_and_tsum_mem f).mp ⟨a, ha⟩).2⟩
-  · rintro ⟨h_cauchy, h_tsum⟩
-    apply (summable_iff_summable_compl_and_tsum_mem f).mpr
-    constructor
-    · apply summable_iff_cauchySeq_finset.mpr
-      simp_rw [Function.comp_apply, ← map_sum]
-      exact h_cauchy.map (uniformContinuous_coe α)
-    · exact h_tsum
+  rintro ⟨a, ha⟩
+  exact ⟨ha.cauchySeq, ((summable_iff_summable_compl_and_tsum_mem f).mp ⟨a, ha⟩).2⟩
+  rintro ⟨h_cauchy, h_tsum⟩
+  apply (summable_iff_summable_compl_and_tsum_mem f).mpr
+  constructor
+  apply summable_iff_cauchySeq_finset.mpr
+  simp_rw [Function.comp_apply, ← map_sum]
+  exact h_cauchy.map (uniformContinuous_coe α)
+  exact h_tsum
 
 /-- If a function `f` is summable in a uniform additive group `α`, then its sum in `α` is the same
 as its sum in `Completion α`. -/

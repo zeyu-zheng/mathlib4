@@ -134,11 +134,11 @@ theorem quadratic_reciprocity (hp : p ≠ 2) (hq : q ≠ 2) (hpq : p ≠ q) :
 theorem quadratic_reciprocity' (hp : p ≠ 2) (hq : q ≠ 2) :
     legendreSym q p = (-1) ^ (p / 2 * (q / 2)) * legendreSym p q := by
   rcases eq_or_ne p q with h | h
-  · subst p
-    rw [(eq_zero_iff q q).mpr (mod_cast natCast_self q), mul_zero]
-  · have qr := congr_arg (· * legendreSym p q) (quadratic_reciprocity hp hq h)
-    have : ((q : ℤ) : ZMod p) ≠ 0 := mod_cast prime_ne_zero p q h
-    simpa only [mul_assoc, ← pow_two, sq_one p this, mul_one] using qr
+  subst p
+  rw [(eq_zero_iff q q).mpr (mod_cast natCast_self q), mul_zero]
+  have qr := congr_arg (· * legendreSym p q) (quadratic_reciprocity hp hq h)
+  have : ((q : ℤ) : ZMod p) ≠ 0 := mod_cast prime_ne_zero p q h
+  simpa only [mul_assoc, ← pow_two, sq_one p this, mul_one] using qr
 
 /-- The Law of Quadratic Reciprocity: if `p` and `q` are odd primes and `p % 4 = 1`,
 then `(q / p) = (p / q)`. -/
@@ -166,9 +166,9 @@ open legendreSym
 theorem exists_sq_eq_prime_iff_of_mod_four_eq_one (hp1 : p % 4 = 1) (hq1 : q ≠ 2) :
     IsSquare (q : ZMod p) ↔ IsSquare (p : ZMod q) := by
   rcases eq_or_ne p q with h | h
-  · subst p; rfl
-  · rw [← eq_one_iff' p (prime_ne_zero p q h), ← eq_one_iff' q (prime_ne_zero q p h.symm),
-      quadratic_reciprocity_one_mod_four hp1 hq1]
+  subst p; rfl
+  rw [← eq_one_iff' p (prime_ne_zero p q h), ← eq_one_iff' q (prime_ne_zero q p h.symm),
+    quadratic_reciprocity_one_mod_four hp1 hq1]
 
 /-- If `p` and `q` are distinct primes that are both congruent to `3` mod `4`, then `q` is
 a square mod `p` iff `p` is a nonsquare mod `q`. -/

@@ -209,8 +209,8 @@ theorem rank_conjTranspose_mul_self (A : Matrix m n R) : (Aᴴ * A).rank = A.ran
   dsimp only
   trans finrank R { x // x ∈ LinearMap.range (mulVecLin (Aᴴ * A)) } +
     finrank R { x // x ∈ LinearMap.ker (mulVecLin (Aᴴ * A)) }
-  · rw [ker_mulVecLin_conjTranspose_mul_self]
-  · simp only [LinearMap.finrank_range_add_finrank_ker]
+  rw [ker_mulVecLin_conjTranspose_mul_self]
+  simp only [LinearMap.finrank_range_add_finrank_ker]
 
 -- this follows the proof here https://math.stackexchange.com/a/81903/1896
 /-- TODO: prove this in greater generality. -/
@@ -237,11 +237,11 @@ theorem ker_mulVecLin_transpose_mul_self (A : Matrix m n R) :
   ext x
   simp only [LinearMap.mem_ker, mulVecLin_apply, ← mulVec_mulVec]
   constructor
-  · intro h
-    replace h := congr_arg (dotProduct x) h
-    rwa [dotProduct_mulVec, dotProduct_zero, vecMul_transpose, dotProduct_self_eq_zero] at h
-  · intro h
-    rw [h, mulVec_zero]
+  intro h
+  replace h := congr_arg (dotProduct x) h
+  rwa [dotProduct_mulVec, dotProduct_zero, vecMul_transpose, dotProduct_self_eq_zero] at h
+  intro h
+  rw [h, mulVec_zero]
 
 theorem rank_transpose_mul_self (A : Matrix m n R) : (Aᵀ * A).rank = A.rank := by
   dsimp only [rank]
@@ -249,8 +249,8 @@ theorem rank_transpose_mul_self (A : Matrix m n R) : (Aᵀ * A).rank = A.rank :=
   dsimp only
   trans finrank R { x // x ∈ LinearMap.range (mulVecLin (Aᵀ * A)) } +
     finrank R { x // x ∈ LinearMap.ker (mulVecLin (Aᵀ * A)) }
-  · rw [ker_mulVecLin_transpose_mul_self]
-  · simp only [LinearMap.finrank_range_add_finrank_ker]
+  rw [ker_mulVecLin_transpose_mul_self]
+  simp only [LinearMap.finrank_range_add_finrank_ker]
 
 /-- TODO: prove this in greater generality. -/
 @[simp]

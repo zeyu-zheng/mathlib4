@@ -264,10 +264,10 @@ theorem AddMonoidHom.completion_zero :
     AddMonoidHom.completion (0 : α →+ β) continuous_const = 0 := by
   ext x
   refine Completion.induction_on x ?_ ?_
-  · apply isClosed_eq (AddMonoidHom.continuous_completion (0 : α →+ β) continuous_const)
-    exact continuous_const
-  · intro a
-    simp [(0 : α →+ β).completion_coe continuous_const, coe_zero]
+  apply isClosed_eq (AddMonoidHom.continuous_completion (0 : α →+ β) continuous_const)
+  exact continuous_const
+  intro a
+  simp [(0 : α →+ β).completion_coe continuous_const, coe_zero]
 
 theorem AddMonoidHom.completion_add {γ : Type*} [AddCommGroup γ] [UniformSpace γ]
     [UniformAddGroup γ] (f g : α →+ γ) (hf : Continuous f) (hg : Continuous g) :
@@ -276,9 +276,9 @@ theorem AddMonoidHom.completion_add {γ : Type*} [AddCommGroup γ] [UniformSpace
   have hfg := hf.add hg
   ext x
   refine Completion.induction_on x ?_ ?_
-  · exact isClosed_eq ((f + g).continuous_completion hfg)
-      ((f.continuous_completion hf).add (g.continuous_completion hg))
-  · intro a
-    simp [(f + g).completion_coe hfg, coe_add, f.completion_coe hf, g.completion_coe hg]
+  exact isClosed_eq ((f + g).continuous_completion hfg)
+    ((f.continuous_completion hf).add (g.continuous_completion hg))
+  intro a
+  simp [(f + g).completion_coe hfg, coe_add, f.completion_coe hf, g.completion_coe hg]
 
 end AddMonoidHom

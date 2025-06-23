@@ -298,10 +298,10 @@ theorem eq_replicate_of_subsingleton [Subsingleton α] (a : α) {n : ℕ} (s : S
 instance [Subsingleton α] (n : ℕ) : Subsingleton (Sym α n) :=
   ⟨by
     cases n
-    · simp [eq_iff_true_of_subsingleton]
-    · intro s s'
-      obtain ⟨b, -⟩ := exists_mem s
-      rw [eq_replicate_of_subsingleton b s', eq_replicate_of_subsingleton b s]⟩
+    simp [eq_iff_true_of_subsingleton]
+    intro s s'
+    obtain ⟨b, -⟩ := exists_mem s
+    rw [eq_replicate_of_subsingleton b s', eq_replicate_of_subsingleton b s]⟩
 
 instance inhabitedSym [Inhabited α] (n : ℕ) : Inhabited (Sym α n) :=
   ⟨replicate n default⟩
@@ -522,8 +522,8 @@ theorem fill_filterNe [DecidableEq α] (a : α) (m : Sym α n) :
       ext b; dsimp
       rw [count_add, count_filter, Sym.coe_replicate, count_replicate]
       obtain rfl | h := eq_or_ne a b
-      · rw [if_pos rfl, if_neg (not_not.2 rfl), zero_add]
-      · rw [if_pos h, if_neg h.symm, add_zero])
+      rw [if_pos rfl, if_neg (not_not.2 rfl), zero_add]
+      rw [if_pos h, if_neg h.symm, add_zero])
 
 theorem filter_ne_fill [DecidableEq α] (a : α) (m : Σi : Fin (n + 1), Sym α (n - i)) (h : a ∉ m.2) :
     (m.2.fill a m.1).filterNe a = m :=
@@ -531,10 +531,10 @@ theorem filter_ne_fill [DecidableEq α] (a : α) (m : Σi : Fin (n + 1), Sym α 
     (by
       rw [filterNe, ← val_eq_coe, Subtype.coe_mk, val_eq_coe, coe_fill]
       rw [filter_add, filter_eq_self.2, add_right_eq_self, eq_zero_iff_forall_not_mem]
-      · intro b hb
-        rw [mem_filter, Sym.mem_coe, mem_replicate] at hb
-        exact hb.2 hb.1.2.symm
-      · exact fun a ha ha' => h <| ha'.symm ▸ ha)
+      intro b hb
+      rw [mem_filter, Sym.mem_coe, mem_replicate] at hb
+      exact hb.2 hb.1.2.symm
+      exact fun a ha ha' => h <| ha'.symm ▸ ha)
 
 theorem count_coe_fill_self_of_not_mem [DecidableEq α] {a : α} {i : Fin (n + 1)} {s : Sym α (n - i)}
     (hx : a ∉ s) :
@@ -599,23 +599,23 @@ theorem decode_inr (s : Sym α n.succ) : decode (Sum.inr s) = s.map Embedding.so
 @[simp]
 theorem decode_encode [DecidableEq α] (s : Sym (Option α) n.succ) : decode (encode s) = s := by
   by_cases h : none ∈ s
-  · simp [h]
-  · simp only [decode, h, not_false_iff, encode_of_not_none_mem, Embedding.some_apply, map_map,
-      comp_apply, Option.some_get]
-    convert s.attach_map_coe
+  simp [h]
+  simp only [decode, h, not_false_iff, encode_of_not_none_mem, Embedding.some_apply, map_map,
+    comp_apply, Option.some_get]
+  convert s.attach_map_coe
 
 @[simp]
 theorem encode_decode [DecidableEq α] (s : Sym (Option α) n ⊕ Sym α n.succ) :
     encode (decode s) = s := by
   obtain s | s := s
-  · simp
-  · unfold SymOptionSuccEquiv.encode
-    split_ifs with h
-    · obtain ⟨a, _, ha⟩ := Multiset.mem_map.mp h
-      exact Option.some_ne_none _ ha
-    · refine congr_arg Sum.inr ?_
-      refine map_injective (Option.some_injective _) _ ?_
-      refine Eq.trans ?_ (.trans (SymOptionSuccEquiv.decode (Sum.inr s)).attach_map_coe ?_) <;> simp
+  simp
+  unfold SymOptionSuccEquiv.encode
+  split_ifs with h
+  obtain ⟨a, _, ha⟩ := Multiset.mem_map.mp h
+  exact Option.some_ne_none _ ha
+  refine congr_arg Sum.inr ?_
+  refine map_injective (Option.some_injective _) _ ?_
+  refine Eq.trans ?_ (.trans (SymOptionSuccEquiv.decode (Sum.inr s)).attach_map_coe ?_) <;> simp
 
 end SymOptionSuccEquiv
 

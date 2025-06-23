@@ -54,9 +54,9 @@ to `R` really is _covering_, i.e. the union of all open sets equals `U`.
 theorem iSup_eq_of_mem_grothendieck (hR : Sieve.generate R ∈ Opens.grothendieckTopology X U) :
     iSup (coveringOfPresieve U R) = U := by
   apply le_antisymm
-  · refine iSup_le ?_
-    intro f
-    exact f.2.1.le
+  refine iSup_le ?_
+  intro f
+  exact f.2.1.le
   intro x hxU
   rw [Opens.coe_iSup, Set.mem_iUnion]
   obtain ⟨V, iVU, ⟨W, iVW, iWU, hiWU, -⟩, hxV⟩ := hR x hxU
@@ -126,8 +126,8 @@ theorem coverDense_iff_isBasis [Category ι] (B : ι ⥤ Opens X) :
     B.IsCoverDense (Opens.grothendieckTopology X) ↔ Opens.IsBasis (Set.range B.obj) := by
   rw [Opens.isBasis_iff_nbhd]
   constructor
-  · intro hd U x hx; rcases hd.1 U x hx with ⟨V, f, ⟨i, f₁, f₂, _⟩, hV⟩
-    exact ⟨B.obj i, ⟨i, rfl⟩, f₁.le hV, f₂.le⟩
+  intro hd U x hx; rcases hd.1 U x hx with ⟨V, f, ⟨i, f₁, f₂, _⟩, hV⟩
+  exact ⟨B.obj i, ⟨i, rfl⟩, f₁.le hV, f₂.le⟩
   intro hb; constructor; intro U x hx; rcases hb hx with ⟨_, ⟨i, rfl⟩, hx, hi⟩
   exact ⟨B.obj i, ⟨⟨hi⟩⟩, ⟨⟨i, 𝟙 _, ⟨⟨hi⟩⟩, rfl⟩⟩, hx⟩
 
@@ -165,8 +165,8 @@ lemma OpenEmbedding.functor_isContinuous (h : OpenEmbedding f) :
     h.isOpenMap.functor.IsContinuous (Opens.grothendieckTopology X)
       (Opens.grothendieckTopology Y) := by
   apply Functor.isContinuous_of_coverPreserving
-  · exact h.compatiblePreserving
-  · exact h.isOpenMap.coverPreserving
+  exact h.compatiblePreserving
+  exact h.isOpenMap.coverPreserving
 
 theorem TopCat.Presheaf.isSheaf_of_openEmbedding (h : OpenEmbedding f) (hF : F.IsSheaf) :
     IsSheaf (h.isOpenMap.functor.op ⋙ F) := by
@@ -179,13 +179,13 @@ instance : RepresentablyFlat (Opens.map f) := by
   constructor
   intro U
   refine @IsCofiltered.mk _ _ ?_ ?_
-  · constructor
-    · intro V W
-      exact ⟨⟨⟨PUnit.unit⟩, V.right ⊓ W.right, homOfLE <| le_inf V.hom.le W.hom.le⟩,
-        StructuredArrow.homMk (homOfLE inf_le_left),
-        StructuredArrow.homMk (homOfLE inf_le_right), trivial⟩
-    · exact fun _ _ _ _ ↦ ⟨_, 𝟙 _, by simp [eq_iff_true_of_subsingleton]⟩
-  · exact ⟨StructuredArrow.mk <| show U ⟶ (Opens.map f).obj ⊤ from homOfLE le_top⟩
+  constructor
+  intro V W
+  exact ⟨⟨⟨PUnit.unit⟩, V.right ⊓ W.right, homOfLE <| le_inf V.hom.le W.hom.le⟩,
+    StructuredArrow.homMk (homOfLE inf_le_left),
+    StructuredArrow.homMk (homOfLE inf_le_right), trivial⟩
+  exact fun _ _ _ _ ↦ ⟨_, 𝟙 _, by simp [eq_iff_true_of_subsingleton]⟩
+  exact ⟨StructuredArrow.mk <| show U ⟶ (Opens.map f).obj ⊤ from homOfLE le_top⟩
 
 theorem compatiblePreserving_opens_map :
     CompatiblePreserving (Opens.grothendieckTopology X) (Opens.map f) :=
@@ -201,8 +201,8 @@ theorem coverPreserving_opens_map : CoverPreserving (Opens.grothendieckTopology 
 instance : (Opens.map f).IsContinuous (Opens.grothendieckTopology Y)
     (Opens.grothendieckTopology X) := by
   apply Functor.isContinuous_of_coverPreserving
-  · exact compatiblePreserving_opens_map f
-  · exact coverPreserving_opens_map f
+  exact compatiblePreserving_opens_map f
+  exact coverPreserving_opens_map f
 
 end OpenEmbedding
 

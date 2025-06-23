@@ -47,9 +47,9 @@ theorem toReal_sub_of_le {a b : ℝ≥0∞} (h : b ≤ a) (ha : a ≠ ∞) :
 theorem le_toReal_sub {a b : ℝ≥0∞} (hb : b ≠ ∞) : a.toReal - b.toReal ≤ (a - b).toReal := by
   lift b to ℝ≥0 using hb
   induction a
-  · simp
-  · simp only [← coe_sub, NNReal.sub_def, Real.coe_toNNReal', coe_toReal]
-    exact le_max_left _ _
+  simp
+  simp only [← coe_sub, NNReal.sub_def, Real.coe_toNNReal', coe_toReal]
+  exact le_max_left _ _
 
 theorem toReal_add_le : (a + b).toReal ≤ a.toReal + b.toReal :=
   if ha : a = ∞ then by simp only [ha, top_add, top_toReal, zero_add, toReal_nonneg]
@@ -77,8 +77,8 @@ theorem toReal_mono (hb : b ≠ ∞) (h : a ≤ b) : a.toReal ≤ b.toReal :=
 
 theorem toReal_mono' (h : a ≤ b) (ht : b = ∞ → a = ∞) : a.toReal ≤ b.toReal := by
   rcases eq_or_ne a ∞ with rfl | ha
-  · exact toReal_nonneg
-  · exact toReal_mono (mt ht ha) h
+  exact toReal_nonneg
+  exact toReal_mono (mt ht ha) h
 
 @[simp]
 theorem toReal_lt_toReal (ha : a ≠ ∞) (hb : b ≠ ∞) : a.toReal < b.toReal ↔ a < b := by
@@ -283,7 +283,7 @@ lemma ofReal_eq_ofNat {r : ℝ} {n : ℕ} [n.AtLeastTwo] :
 theorem ofReal_sub (p : ℝ) {q : ℝ} (hq : 0 ≤ q) :
     ENNReal.ofReal (p - q) = ENNReal.ofReal p - ENNReal.ofReal q := by
   obtain h | h := le_total p q
-  · rw [ofReal_of_nonpos (sub_nonpos_of_le h), tsub_eq_zero_of_le (ofReal_le_ofReal h)]
+  rw [ofReal_of_nonpos (sub_nonpos_of_le h), tsub_eq_zero_of_le (ofReal_le_ofReal h)]
   refine ENNReal.eq_sub_of_add_eq ofReal_ne_top ?_
   rw [← ofReal_add (sub_nonneg_of_le h) hq, sub_add_cancel]
 
@@ -420,9 +420,9 @@ protected theorem trichotomy₂ {p q : ℝ≥0∞} (hpq : p ≤ q) :
           p = ∞ ∧ q = ∞ ∨
             0 < p.toReal ∧ q = ∞ ∨ 0 < p.toReal ∧ 0 < q.toReal ∧ p.toReal ≤ q.toReal := by
   rcases eq_or_lt_of_le (bot_le : 0 ≤ p) with ((rfl : 0 = p) | (hp : 0 < p))
-  · simpa using q.trichotomy
+  simpa using q.trichotomy
   rcases eq_or_lt_of_le (le_top : q ≤ ∞) with (rfl | hq)
-  · simpa using p.trichotomy
+  simpa using p.trichotomy
   repeat' right
   have hq' : 0 < q := lt_of_lt_of_le hp hpq
   have hp' : p < ∞ := lt_of_le_of_lt hpq hq
@@ -467,9 +467,9 @@ variable {a b c d : ℝ≥0∞} {r p q : ℝ≥0}
 
 theorem toNNReal_iInf (hf : ∀ i, f i ≠ ∞) : (iInf f).toNNReal = ⨅ i, (f i).toNNReal := by
   cases isEmpty_or_nonempty ι
-  · rw [iInf_of_empty, top_toNNReal, NNReal.iInf_empty]
-  · lift f to ι → ℝ≥0 using hf
-    simp_rw [← coe_iInf, toNNReal_coe]
+  rw [iInf_of_empty, top_toNNReal, NNReal.iInf_empty]
+  lift f to ι → ℝ≥0 using hf
+  simp_rw [← coe_iInf, toNNReal_coe]
 
 theorem toNNReal_sInf (s : Set ℝ≥0∞) (hs : ∀ r ∈ s, r ≠ ∞) :
     (sInf s).toNNReal = sInf (ENNReal.toNNReal '' s) := by
@@ -482,8 +482,8 @@ theorem toNNReal_iSup (hf : ∀ i, f i ≠ ∞) : (iSup f).toNNReal = ⨆ i, (f 
   lift f to ι → ℝ≥0 using hf
   simp_rw [toNNReal_coe]
   by_cases h : BddAbove (range f)
-  · rw [← coe_iSup h, toNNReal_coe]
-  · rw [NNReal.iSup_of_not_bddAbove h, iSup_coe_eq_top.2 h, top_toNNReal]
+  rw [← coe_iSup h, toNNReal_coe]
+  rw [NNReal.iSup_of_not_bddAbove h, iSup_coe_eq_top.2 h, top_toNNReal]
 
 theorem toNNReal_sSup (s : Set ℝ≥0∞) (hs : ∀ r ∈ s, r ≠ ∞) :
     (sSup s).toNNReal = sSup (ENNReal.toNNReal '' s) := by
@@ -536,12 +536,12 @@ theorem iInf_sum {α : Type*} {f : ι → α → ℝ≥0∞} {s : Finset α} [No
     (h : ∀ (t : Finset α) (i j : ι), ∃ k, ∀ a ∈ t, f k a ≤ f i a ∧ f k a ≤ f j a) :
     ⨅ i, ∑ a ∈ s, f i a = ∑ a ∈ s, ⨅ i, f i a := by
   induction' s using Finset.cons_induction_on with a s ha ih
-  · simp only [Finset.sum_empty, ciInf_const]
-  · simp only [Finset.sum_cons, ← ih]
-    refine (iInf_add_iInf fun i j => ?_).symm
-    refine (h (Finset.cons a s ha) i j).imp fun k hk => ?_
-    rw [Finset.forall_mem_cons] at hk
-    exact add_le_add hk.1.1 (Finset.sum_le_sum fun a ha => (hk.2 a ha).2)
+  simp only [Finset.sum_empty, ciInf_const]
+  simp only [Finset.sum_cons, ← ih]
+  refine (iInf_add_iInf fun i j => ?_).symm
+  refine (h (Finset.cons a s ha) i j).imp fun k hk => ?_
+  rw [Finset.forall_mem_cons] at hk
+  exact add_le_add hk.1.1 (Finset.sum_le_sum fun a ha => (hk.2 a ha).2)
 
 /-- If `x ≠ 0` and `x ≠ ∞`, then right multiplication by `x` maps infimum to infimum.
 See also `ENNReal.iInf_mul` that assumes `[Nonempty ι]` but does not require `x ≠ 0`. -/
@@ -556,8 +556,8 @@ also `ENNReal.iInf_mul_of_ne` that assumes `x ≠ 0` but does not require `[None
 theorem iInf_mul {ι} [Nonempty ι] {f : ι → ℝ≥0∞} {x : ℝ≥0∞} (h : x ≠ ∞) :
     iInf f * x = ⨅ i, f i * x := by
   by_cases h0 : x = 0
-  · simp only [h0, mul_zero, iInf_const]
-  · exact iInf_mul_of_ne h0 h
+  simp only [h0, mul_zero, iInf_const]
+  exact iInf_mul_of_ne h0 h
 
 /-- If `x ≠ ∞`, then left multiplication by `x` maps infimum over a nonempty type to infimum. See
 also `ENNReal.mul_iInf_of_ne` that assumes `x ≠ 0` but does not require `[Nonempty ι]`. -/

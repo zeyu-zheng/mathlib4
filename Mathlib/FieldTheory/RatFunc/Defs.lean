@@ -187,10 +187,10 @@ theorem liftOn_mk {P : Sort v} (p q : K[X]) (f : K[X] → K[X] → P) (f0 : ∀ 
       fun {p q p' q'} hq hq' h => H' (nonZeroDivisors.ne_zero hq) (nonZeroDivisors.ne_zero hq') h) :
     (RatFunc.mk p q).liftOn f @H = f p q := by
   by_cases hq : q = 0
-  · subst hq
-    simp only [mk_zero, f0, ← Localization.mk_zero 1, Localization.liftOn_mk,
-      liftOn_ofFractionRing_mk, Submonoid.coe_one]
-  · simp only [mk_eq_localization_mk _ hq, Localization.liftOn_mk, liftOn_ofFractionRing_mk]
+  subst hq
+  simp only [mk_zero, f0, ← Localization.mk_zero 1, Localization.liftOn_mk,
+    liftOn_ofFractionRing_mk, Submonoid.coe_one]
+  simp only [mk_eq_localization_mk _ hq, Localization.liftOn_mk, liftOn_ofFractionRing_mk]
 
 /-- Non-dependent recursion principle for `RatFunc K`: if `f p q : P` for all `p q`,
 such that `f (a * p) (a * q) = f p q`, then we can find a value of `P`

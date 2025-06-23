@@ -109,17 +109,17 @@ instance : Category (Grothendieck F) where
   comp := @fun X Y Z f g => Grothendieck.comp f g
   comp_id := @fun X Y f => by
     dsimp; ext
-    · simp
-    · dsimp
-      rw [← NatIso.naturality_2 (eqToIso (F.map_id Y.base)) f.fiber]
-      simp
+    simp
+    dsimp
+    rw [← NatIso.naturality_2 (eqToIso (F.map_id Y.base)) f.fiber]
+    simp
   id_comp := @fun X Y f => by dsimp; ext <;> simp
   assoc := @fun W X Y Z f g h => by
     dsimp; ext
-    · simp
-    · dsimp
-      rw [← NatIso.naturality_2 (eqToIso (F.map_comp _ _)) f.fiber]
-      simp
+    simp
+    dsimp
+    rw [← NatIso.naturality_2 (eqToIso (F.map_comp _ _)) f.fiber]
+    simp
 
 @[simp]
 theorem id_fiber' (X : Grothendieck F) :
@@ -195,13 +195,13 @@ theorem functor_comp_forget {α : F ⟶ G} :
 
 theorem map_id_eq : map (𝟙 F) = 𝟙 (Cat.of <| Grothendieck <| F) := by
   fapply Functor.ext
-  · intro X
-    rfl
-  · intro X Y f
-    simp [map_map]
-    congr
-    rw [NatTrans.id_app]
-    simp
+  intro X
+  rfl
+  intro X Y f
+  simp [map_map]
+  congr
+  rw [NatTrans.id_app]
+  simp
 
 /-- Making the equality of functors into an isomorphism. Note: we should avoid equality of functors
 if possible, and we should prefer `map_id_iso` to `map_id_eq` whenever we can. -/
@@ -212,16 +212,16 @@ variable {H : C ⥤ Cat}
 theorem map_comp_eq (α : F ⟶ G) (β : G ⟶ H) :
     map (α ≫ β) = map α ⋙ map β := by
   fapply Functor.ext
-  · intro X
-    rfl
-  · intro X Y f
-    simp only [map_map, map_obj_base, NatTrans.comp_app, Cat.comp_obj, Cat.comp_map,
-      eqToHom_refl, Functor.comp_map, Functor.map_comp, Category.comp_id, Category.id_comp]
-    fapply Grothendieck.ext
-    · rfl
-    · simp only [eqToHom_refl, Category.id_comp]
-      erw [eqToHom_app, eqToHom_app, eqToHom_app, eqToHom_map]
-      simp only [Cat.comp_obj, eqToHom_trans_assoc]
+  intro X
+  rfl
+  intro X Y f
+  simp only [map_map, map_obj_base, NatTrans.comp_app, Cat.comp_obj, Cat.comp_map,
+    eqToHom_refl, Functor.comp_map, Functor.map_comp, Category.comp_id, Category.id_comp]
+  fapply Grothendieck.ext
+  rfl
+  simp only [eqToHom_refl, Category.id_comp]
+  erw [eqToHom_app, eqToHom_app, eqToHom_app, eqToHom_map]
+  simp only [Cat.comp_obj, eqToHom_trans_assoc]
 
 /-- Making the equality of functors into an isomorphism. Note: we should avoid equality of functors
 if possible, and we should prefer `map_comp_iso` to `map_comp_eq` whenever we can. -/

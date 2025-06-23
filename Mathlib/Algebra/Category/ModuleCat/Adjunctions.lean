@@ -183,22 +183,22 @@ instance : LaxMonoidal.{u} (free R).obj := .ofTensorHom
 
 instance : IsIso (@LaxMonoidal.ε _ _ _ _ _ _ (free R).obj _ _) := by
   refine ⟨⟨Finsupp.lapply PUnit.unit, ⟨?_, ?_⟩⟩⟩
-  · -- Porting note (#11041): broken ext
-    apply LinearMap.ext_ring
-    -- Porting note (#10959): simp used to be able to close this goal
-    dsimp
-    erw [ModuleCat.comp_def, LinearMap.comp_apply, ε_apply, Finsupp.lapply_apply,
-      Finsupp.single_eq_same, id_apply]
-  · -- Porting note (#11041): broken ext
-    apply Finsupp.lhom_ext'
-    intro ⟨⟩
-    apply LinearMap.ext_ring
-    apply Finsupp.ext
-    intro ⟨⟩
-    -- Porting note (#10959): simp used to be able to close this goal
-    dsimp
-    erw [ModuleCat.comp_def, LinearMap.comp_apply, ε_apply, Finsupp.lapply_apply,
-      Finsupp.single_eq_same]
+  -- Porting note (#11041): broken ext
+  apply LinearMap.ext_ring
+  -- Porting note (#10959): simp used to be able to close this goal
+  dsimp
+  erw [ModuleCat.comp_def, LinearMap.comp_apply, ε_apply, Finsupp.lapply_apply,
+    Finsupp.single_eq_same, id_apply]
+  -- Porting note (#11041): broken ext
+  apply Finsupp.lhom_ext'
+  intro ⟨⟩
+  apply LinearMap.ext_ring
+  apply Finsupp.ext
+  intro ⟨⟩
+  -- Porting note (#10959): simp used to be able to close this goal
+  dsimp
+  erw [ModuleCat.comp_def, LinearMap.comp_apply, ε_apply, Finsupp.lapply_apply,
+    Finsupp.single_eq_same]
 
 end Free
 

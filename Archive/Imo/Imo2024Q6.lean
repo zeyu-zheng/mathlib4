@@ -52,8 +52,8 @@ lemma Aquaesulian.eq_of_apply_eq_inl {x₁ x₂ : G} (he : f x₁ = f x₂)
 lemma Aquaesulian.injective : Function.Injective f := by
   intro x₁ x₂ he
   rcases h x₁ x₂ with hc | hc
-  · exact (h.eq_of_apply_eq_inl he.symm hc).symm
-  · exact h.eq_of_apply_eq_inl he hc
+  exact (h.eq_of_apply_eq_inl he.symm hc).symm
+  exact h.eq_of_apply_eq_inl he hc
 
 @[simp]
 lemma Aquaesulian.apply_zero : f 0 = 0 := by
@@ -63,10 +63,10 @@ lemma Aquaesulian.apply_zero : f 0 = 0 := by
 @[simp]
 lemma Aquaesulian.apply_neg_apply_add (x : G) : f (-(f x)) + x = 0 := by
   rcases h x (-(f x)) with hc | hc
-  · rw [add_right_neg, ← h.apply_zero] at hc
-    exact h.injective hc
-  · rw [add_right_neg, h.apply_zero] at hc
-    exact hc.symm
+  rw [add_right_neg, ← h.apply_zero] at hc
+  exact h.injective hc
+  rw [add_right_neg, h.apply_zero] at hc
+  exact hc.symm
 
 @[simp]
 lemma Aquaesulian.apply_neg_apply (x : G) : f (-(f x)) = -x := by
@@ -87,30 +87,30 @@ lemma Aquaesulian.apply_neg_eq_neg_iff {x₁ x₂ : G} : f (-x₂) = -x₁ ↔ f
 lemma Aquaesulian.pair_lemma {x u v : G} (huv : u ≠ v) (hx : f x = u ∨ f u = x)
     (hy : f x = v ∨ f v = x) : f x = v ∨ f x = u := by
   rcases hx with hx | hx <;> rcases hy with hy | hy
-  · exact (huv (hx.symm.trans hy)).elim
-  · exact .inr hx
-  · exact .inl hy
-  · exact ((h.injective.ne huv) (hx.trans hy.symm)).elim
+  exact (huv (hx.symm.trans hy)).elim
+  exact .inr hx
+  exact .inl hy
+  exact ((h.injective.ne huv) (hx.trans hy.symm)).elim
 
 lemma Aquaesulian.g_two {x y u v : G} (huv : u ≠ v) (hx : f x + f (-x) = u)
     (hy : f y + f (-y) = v) :
     f (x + y) = -(f (-x)) + -(f (-y)) + v ∨ f (x + y) = -(f (-x)) + -(f (-y)) + u := by
   refine h.pair_lemma ?_ ?_ ?_
-  · simp [huv]
-  · convert h x (-(f (-y))) using 2
-    · rw [h.apply_neg_apply_neg, add_comm]
-    · rw [← hx]
-      abel
-    · rw [← hx]
-      abel_nf
-    · rw [h.apply_neg_apply_neg, add_comm]
-  · convert h y (-(f (-x))) using 2
-    · rw [h.apply_neg_apply_neg]
-    · rw [← hy]
-      abel
-    · rw [← hy]
-      abel_nf
-    · rw [h.apply_neg_apply_neg]
+  simp [huv]
+  convert h x (-(f (-y))) using 2
+  rw [h.apply_neg_apply_neg, add_comm]
+  rw [← hx]
+  abel
+  rw [← hx]
+  abel_nf
+  rw [h.apply_neg_apply_neg, add_comm]
+  convert h y (-(f (-x))) using 2
+  rw [h.apply_neg_apply_neg]
+  rw [← hy]
+  abel
+  rw [← hy]
+  abel_nf
+  rw [h.apply_neg_apply_neg]
 
 lemma Aquaesulian.u_eq_zero {x y u v : G} (huv : u ≠ v) (hx : f x + f (-x) = u)
     (hy : f y + f (-y) = v) (hxyv : f (x + y) = -(f (-x)) + -(f (-y)) + v) : u = 0 := by
@@ -119,43 +119,43 @@ lemma Aquaesulian.u_eq_zero {x y u v : G} (huv : u ≠ v) (hx : f x + f (-x) = u
   have hc := h (x + y) (f (-x) - u)
   rw [hx, hxyv, neg_add_cancel_left, hy] at hc
   rcases hc with hc | hc
-  · abel_nf at hc
-    simpa using hc
-  · nth_rw 2 [← h.apply_neg_apply_neg y] at hc
-    rw [h.injective.eq_iff, hy] at hc
-    abel_nf at hc
-    simp [add_comm, huv] at hc
+  abel_nf at hc
+  simpa using hc
+  nth_rw 2 [← h.apply_neg_apply_neg y] at hc
+  rw [h.injective.eq_iff, hy] at hc
+  abel_nf at hc
+  simp [add_comm, huv] at hc
 
 lemma Aquaesulian.u_eq_zero_or_v_eq_zero {x y u v : G} (huv : u ≠ v) (hx : f x + f (-x) = u)
     (hy : f y + f (-y) = v) : u = 0 ∨ v = 0 := by
   rcases h.g_two huv hx hy with hxy' | hxy'
-  · exact .inl (h.u_eq_zero huv hx hy hxy')
-  · rw [add_comm x y, add_comm (-(f (-x))) (-(f (-y)))] at hxy'
-    exact .inr (h.u_eq_zero huv.symm hy hx hxy')
+  exact .inl (h.u_eq_zero huv hx hy hxy')
+  rw [add_comm x y, add_comm (-(f (-x))) (-(f (-y)))] at hxy'
+  exact .inr (h.u_eq_zero huv.symm hy hx hxy')
 
 open Classical in
 lemma Aquaesulian.card_le_two : #(Set.range (fun x ↦ f x + f (-x))) ≤ 2 := by
   by_cases hf : ∀ x, f x + f (-x) = 0
-  · simp [hf]
-  · rw [not_forall] at hf
-    rcases hf with ⟨x, hx⟩
-    suffices #(Set.range (fun x ↦ f x + f (-x))) ≤ (2 : ℕ) from mod_cast this
-    rw [Cardinal.mk_le_iff_forall_finset_subset_card_le]
-    intro s hs
-    simp_rw [Set.subset_def, Set.mem_range] at hs
-    refine (Finset.card_le_card_of_surjOn (fun x ↦ f x + f (-x)) ?_).trans
-      (Finset.card_le_two (a := 0) (b := x))
-    intro y hy
-    rcases hs y hy with ⟨t, ht⟩
-    simp only [Finset.coe_insert, Finset.coe_singleton, Set.mem_image, Set.mem_insert_iff,
-               Set.mem_singleton_iff, exists_eq_or_imp, neg_zero, exists_eq_left, h.apply_zero,
-               add_zero]
-    by_cases h0 : y = 0
-    · simp [h0]
-    · refine .inr ?_
-      by_contra hxy
-      have huv := h.u_eq_zero_or_v_eq_zero hxy rfl ht
-      simp [hx, h0] at huv
+  simp [hf]
+  rw [not_forall] at hf
+  rcases hf with ⟨x, hx⟩
+  suffices #(Set.range (fun x ↦ f x + f (-x))) ≤ (2 : ℕ) from mod_cast this
+  rw [Cardinal.mk_le_iff_forall_finset_subset_card_le]
+  intro s hs
+  simp_rw [Set.subset_def, Set.mem_range] at hs
+  refine (Finset.card_le_card_of_surjOn (fun x ↦ f x + f (-x)) ?_).trans
+    (Finset.card_le_two (a := 0) (b := x))
+  intro y hy
+  rcases hs y hy with ⟨t, ht⟩
+  simp only [Finset.coe_insert, Finset.coe_singleton, Set.mem_image, Set.mem_insert_iff,
+             Set.mem_singleton_iff, exists_eq_or_imp, neg_zero, exists_eq_left, h.apply_zero,
+             add_zero]
+  by_cases h0 : y = 0
+  simp [h0]
+  refine .inr ?_
+  by_contra hxy
+  have huv := h.u_eq_zero_or_v_eq_zero hxy rfl ht
+  simp [hx, h0] at huv
 
 end General
 
@@ -204,50 +204,50 @@ lemma apply_fExample_add_apply_of_fract_le {x y : ℚ} (h : Int.fract y ≤ Int.
 lemma aquaesulian_fExample : Aquaesulian fExample := by
   intro x y
   rcases lt_or_le (Int.fract x) (Int.fract y) with h | h
-  · rw [add_comm (fExample x), add_comm x]
-    exact .inr (apply_fExample_add_apply_of_fract_le h.le)
-  · exact .inl (apply_fExample_add_apply_of_fract_le h)
+  rw [add_comm (fExample x), add_comm x]
+  exact .inr (apply_fExample_add_apply_of_fract_le h.le)
+  exact .inl (apply_fExample_add_apply_of_fract_le h)
 
 lemma fract_fExample (x : ℚ) :
     Int.fract (fExample x) = if Int.fract x = 0 then 0 else 1 - Int.fract x := by
   by_cases h : Int.fract x = 0
-  · simp [fExample, h]
-  · simp [fExample, h, sub_eq_add_neg, Int.fract_neg]
+  simp [fExample, h]
+  simp [fExample, h, sub_eq_add_neg, Int.fract_neg]
 
 lemma floor_fExample (x : ℚ) :
     ⌊fExample x⌋ = if Int.fract x = 0 then x else ⌊x⌋ - 1 := by
   by_cases h : Int.fract x = 0
-  · simp only [h, if_true, fExample, sub_zero, Int.floor_intCast]
-    rw [Int.fract, sub_eq_zero] at h
-    exact h.symm
-  · simp only [h, if_false, fExample, sub_eq_add_neg, Int.floor_int_add, Int.cast_add,
-               add_right_inj]
-    suffices ⌊-Int.fract x⌋ = -1 from mod_cast this
-    rw [Int.floor_eq_iff]
-    simp [(Int.fract_nonneg x).lt_of_ne' h, (Int.fract_lt_one x).le]
+  simp only [h, if_true, fExample, sub_zero, Int.floor_intCast]
+  rw [Int.fract, sub_eq_zero] at h
+  exact h.symm
+  simp only [h, if_false, fExample, sub_eq_add_neg, Int.floor_int_add, Int.cast_add,
+             add_right_inj]
+  suffices ⌊-Int.fract x⌋ = -1 from mod_cast this
+  rw [Int.floor_eq_iff]
+  simp [(Int.fract_nonneg x).lt_of_ne' h, (Int.fract_lt_one x).le]
 
 lemma card_range_fExample : #(Set.range (fun x ↦ fExample x + fExample (-x))) = 2 := by
   have h : Set.range (fun x ↦ fExample x + fExample (-x)) = {0, -2}
   ext x
   simp only [Set.mem_range, Set.mem_insert_iff, Set.mem_singleton_iff]
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · rcases h with ⟨y, rfl⟩
-    rw [← Int.floor_add_fract (fExample y), ← Int.floor_add_fract (fExample (-y))]
-    by_cases h : Int.fract y = 0
-    · simp [fract_fExample, floor_fExample, h]
-    · refine .inr ?_
-      simp only [fract_fExample, floor_fExample, h, if_false, sub_add_sub_cancel,
-                 Int.fract_neg_eq_zero]
-      rw [Int.fract_neg h, Int.floor_neg, Int.cast_neg, Int.ceil_eq_add_one_sub_fract h,
-          ← Int.self_sub_fract]
-      abel_nf
-      simp
-  · rcases h with rfl | rfl
-    · refine ⟨0, by simp [fExample]⟩
-    · refine ⟨1 / 2, ?_⟩
-      rw [(by norm_num : (-(1 / 2) : ℚ) = (-1 : ℤ) + (1 / 2 : ℚ)), fExample_int_add,
-          fExample_of_mem_Ico ⟨by norm_num, by norm_num⟩]
-      norm_num
+  rcases h with ⟨y, rfl⟩
+  rw [← Int.floor_add_fract (fExample y), ← Int.floor_add_fract (fExample (-y))]
+  by_cases h : Int.fract y = 0
+  simp [fract_fExample, floor_fExample, h]
+  refine .inr ?_
+  simp only [fract_fExample, floor_fExample, h, if_false, sub_add_sub_cancel,
+             Int.fract_neg_eq_zero]
+  rw [Int.fract_neg h, Int.floor_neg, Int.cast_neg, Int.ceil_eq_add_one_sub_fract h,
+      ← Int.self_sub_fract]
+  abel_nf
+  simp
+  rcases h with rfl | rfl
+  refine ⟨0, by simp [fExample]⟩
+  refine ⟨1 / 2, ?_⟩
+  rw [(by norm_num : (-(1 / 2) : ℚ) = (-1 : ℤ) + (1 / 2 : ℚ)), fExample_int_add,
+      fExample_of_mem_Ico ⟨by norm_num, by norm_num⟩]
+  norm_num
   rw [h]
   simp
 

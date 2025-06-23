@@ -59,8 +59,8 @@ theorem disjointed_succ (f : ℕ → α) (n : ℕ) : disjointed f (n + 1) = f (n
 theorem disjointed_le_id : disjointed ≤ (id : (ℕ → α) → ℕ → α) := by
   rintro f n
   cases n
-  · rfl
-  · exact sdiff_le
+  rfl
+  exact sdiff_le
 
 theorem disjointed_le (f : ℕ → α) : disjointed f ≤ f :=
   disjointed_le_id f
@@ -68,7 +68,7 @@ theorem disjointed_le (f : ℕ → α) : disjointed f ≤ f :=
 theorem disjoint_disjointed (f : ℕ → α) : Pairwise (Disjoint on disjointed f) := by
   refine (Symmetric.pairwise_on Disjoint.symm _).2 fun m n h => ?_
   cases n
-  · exact (Nat.not_lt_zero _ h).elim
+  exact (Nat.not_lt_zero _ h).elim
   exact
     disjoint_sdiff_self_right.mono_left
       ((disjointed_le f m).trans (le_partialSups_of_le f (Nat.lt_add_one_iff.1 h)))
@@ -104,8 +104,8 @@ protected lemma Monotone.disjointed_succ_sup {f : ℕ → α} (hf : Monotone f) 
 theorem partialSups_disjointed (f : ℕ → α) : partialSups (disjointed f) = partialSups f := by
   ext n
   induction' n with k ih
-  · rw [partialSups_zero, partialSups_zero, disjointed_zero]
-  · rw [partialSups_succ, partialSups_succ, disjointed_succ, ih, sup_sdiff_self_right]
+  rw [partialSups_zero, partialSups_zero, disjointed_zero]
+  rw [partialSups_succ, partialSups_succ, disjointed_succ, ih, sup_sdiff_self_right]
 
 /-- `disjointed f` is the unique sequence that is pairwise disjoint and has the same partial sups
 as `f`. -/
@@ -113,14 +113,14 @@ theorem disjointed_unique {f d : ℕ → α} (hdisj : Pairwise (Disjoint on d))
     (hsups : partialSups d = partialSups f) : d = disjointed f := by
   ext n
   cases' n with n
-  · rw [← partialSups_zero d, hsups, partialSups_zero, disjointed_zero]
+  rw [← partialSups_zero d, hsups, partialSups_zero, disjointed_zero]
   suffices h : d n.succ = partialSups d n.succ \ partialSups d n by
     rw [h, hsups, partialSups_succ, disjointed_succ, sup_sdiff, sdiff_self, bot_sup_eq]
   rw [partialSups_succ, sup_sdiff, sdiff_self, bot_sup_eq, eq_comm, sdiff_eq_self_iff_disjoint]
   suffices h : ∀ m ≤ n, Disjoint (partialSups d m) (d n.succ) from h n le_rfl
   rintro m hm
   induction' m with m ih
-  · exact hdisj (Nat.succ_ne_zero _).symm
+  exact hdisj (Nat.succ_ne_zero _).symm
   rw [partialSups_succ, disjoint_iff, inf_sup_right, sup_eq_bot_iff, ← disjoint_iff, ← disjoint_iff]
   exact ⟨ih (Nat.le_of_succ_le hm), hdisj (Nat.lt_succ_of_le hm).ne⟩
 
@@ -135,9 +135,9 @@ theorem iSup_disjointed (f : ℕ → α) : ⨆ n, disjointed f n = ⨆ n, f n :=
 
 theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f n ⊓ ⨅ i < n, (f i)ᶜ := by
   cases n
-  · rw [disjointed_zero, eq_comm, inf_eq_left]
-    simp_rw [le_iInf_iff]
-    exact fun i hi => (i.not_lt_zero hi).elim
+  rw [disjointed_zero, eq_comm, inf_eq_left]
+  simp_rw [le_iInf_iff]
+  exact fun i hi => (i.not_lt_zero hi).elim
   simp_rw [disjointed_succ, partialSups_eq_biSup, sdiff_eq, compl_iSup]
   congr
   ext i

@@ -99,8 +99,8 @@ theorem incMatrix_apply_eq_one_iff : G.incMatrix R a e = 1 ↔ e ∈ G.incidence
   unfold incMatrix Set.indicator
   simp only [Pi.one_apply]
   apply Iff.intro <;> intro h
-  · split at h <;> simp_all only [zero_ne_one]
-  · simp_all only [ite_true]
+  split at h <;> simp_all only [zero_ne_one]
+  simp_all only [ite_true]
 
 end MulZeroOneClass
 
@@ -141,19 +141,19 @@ theorem incMatrix_transpose_mul_diag [Fintype α] [Decidable (e ∈ G.edgeSet)] 
     simp only [Matrix.mul_apply, incMatrix_apply', transpose_apply, ite_zero_mul_ite_zero, one_mul,
       sum_boole, and_self_iff]
     split_ifs with h
-    · revert h
-      refine e.ind ?_
-      intro v w h
-      rw [← Nat.cast_two, ← card_pair (G.ne_of_adj h)]
-      simp only [mk'_mem_incidenceSet_iff, G.mem_edgeSet.mp h, true_and, mem_univ, forall_true_left,
-        forall_eq_or_imp, forall_eq, and_self, mem_singleton, ne_eq]
-      congr 2
-      ext u
-      simp
-    · revert h
-      refine e.ind ?_
-      intro v w h
-      simp [mk'_mem_incidenceSet_iff, G.mem_edgeSet.not.mp h]
+    revert h
+    refine e.ind ?_
+    intro v w h
+    rw [← Nat.cast_two, ← card_pair (G.ne_of_adj h)]
+    simp only [mk'_mem_incidenceSet_iff, G.mem_edgeSet.mp h, true_and, mem_univ, forall_true_left,
+      forall_eq_or_imp, forall_eq, and_self, mem_singleton, ne_eq]
+    congr 2
+    ext u
+    simp
+    revert h
+    refine e.ind ?_
+    intro v w h
+    simp [mk'_mem_incidenceSet_iff, G.mem_edgeSet.not.mp h]
 
 end NonAssocSemiring
 
@@ -177,11 +177,11 @@ theorem incMatrix_mul_transpose
       if a = b then (G.degree a : R) else if G.Adj a b then 1 else 0 := by
   ext a b
   split_ifs with h h'
-  · subst b
-    exact incMatrix_mul_transpose_diag (R := R) G
-  · exact G.incMatrix_mul_transpose_apply_of_adj h'
-  · simp only [Matrix.mul_apply, Matrix.transpose_apply,
-      G.incMatrix_apply_mul_incMatrix_apply_of_not_adj h h', sum_const_zero]
+  subst b
+  exact incMatrix_mul_transpose_diag (R := R) G
+  exact G.incMatrix_mul_transpose_apply_of_adj h'
+  simp only [Matrix.mul_apply, Matrix.transpose_apply,
+    G.incMatrix_apply_mul_incMatrix_apply_of_not_adj h h', sum_const_zero]
 
 end Semiring
 

@@ -215,14 +215,14 @@ theorem ι_eq_zero_iff (x : M) : ι R x = 0 ↔ x = 0 := by rw [← ι_inj R x 0
 @[simp]
 theorem ι_eq_algebraMap_iff (x : M) (r : R) : ι R x = algebraMap R _ r ↔ x = 0 ∧ r = 0 := by
   refine ⟨fun h => ?_, ?_⟩
-  · letI : Module Rᵐᵒᵖ M := Module.compHom _ ((RingHom.id R).fromOpposite mul_comm)
-    haveI : IsCentralScalar R M := ⟨fun r m => rfl⟩
-    have hf0 : toTrivSqZeroExt (ι R x) = (0, x) := toTrivSqZeroExt_ι _
-    rw [h, AlgHom.commutes] at hf0
-    have : r = 0 ∧ 0 = x := Prod.ext_iff.1 hf0
-    exact this.symm.imp_left Eq.symm
-  · rintro ⟨rfl, rfl⟩
-    rw [LinearMap.map_zero, RingHom.map_zero]
+  letI : Module Rᵐᵒᵖ M := Module.compHom _ ((RingHom.id R).fromOpposite mul_comm)
+  haveI : IsCentralScalar R M := ⟨fun r m => rfl⟩
+  have hf0 : toTrivSqZeroExt (ι R x) = (0, x) := toTrivSqZeroExt_ι _
+  rw [h, AlgHom.commutes] at hf0
+  have : r = 0 ∧ 0 = x := Prod.ext_iff.1 hf0
+  exact this.symm.imp_left Eq.symm
+  rintro ⟨rfl, rfl⟩
+  rw [LinearMap.map_zero, RingHom.map_zero]
 
 @[simp]
 theorem ι_ne_one [Nontrivial R] (x : M) : ι R x ≠ 1 := by
@@ -245,16 +245,16 @@ theorem ι_add_mul_swap (x y : M) : ι R x * ι R y + ι R y * ι R x = 0 :=
 theorem ι_mul_prod_list {n : ℕ} (f : Fin n → M) (i : Fin n) :
     (ι R <| f i) * (List.ofFn fun i => ι R <| f i).prod = 0 := by
   induction' n with n hn
-  · exact i.elim0
-  · rw [List.ofFn_succ, List.prod_cons, ← mul_assoc]
-    by_cases h : i = 0
-    · rw [h, ι_sq_zero, zero_mul]
-    · replace hn :=
-        congr_arg (ι R (f 0) * ·) <| hn (fun i => f <| Fin.succ i) (i.pred h)
-      simp only at hn
-      rw [Fin.succ_pred, ← mul_assoc, mul_zero] at hn
-      refine (eq_zero_iff_eq_zero_of_add_eq_zero ?_).mp hn
-      rw [← add_mul, ι_add_mul_swap, zero_mul]
+  exact i.elim0
+  rw [List.ofFn_succ, List.prod_cons, ← mul_assoc]
+  by_cases h : i = 0
+  rw [h, ι_sq_zero, zero_mul]
+  replace hn :=
+    congr_arg (ι R (f 0) * ·) <| hn (fun i => f <| Fin.succ i) (i.pred h)
+  simp only at hn
+  rw [Fin.succ_pred, ← mul_assoc, mul_zero] at hn
+  refine (eq_zero_iff_eq_zero_of_add_eq_zero ?_).mp hn
+  rw [← add_mul, ι_add_mul_swap, zero_mul]
 
 variable (R)
 

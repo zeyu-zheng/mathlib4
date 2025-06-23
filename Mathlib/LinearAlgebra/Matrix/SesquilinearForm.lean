@@ -273,17 +273,17 @@ theorem LinearMap.toMatrix₂'_compl₁₂ (B : (n → R) →ₗ[R] (m → R) �
   rw [sum_comm]
   conv_lhs => rw [← LinearMap.sum_repr_mul_repr_mul (Pi.basisFun R n) (Pi.basisFun R m) (l _) (r _)]
   rw [Finsupp.sum_fintype]
-  · apply sum_congr rfl
-    rintro i' -
-    rw [Finsupp.sum_fintype]
-    · apply sum_congr rfl
-      rintro j' -
-      simp only [smul_eq_mul, Pi.basisFun_repr, mul_assoc, mul_comm, mul_left_comm,
-        Pi.basisFun_apply, of_apply]
-    · intros
-      simp only [zero_smul, smul_zero]
-  · intros
-    simp only [zero_smul, Finsupp.sum_zero]
+  apply sum_congr rfl
+  rintro i' -
+  rw [Finsupp.sum_fintype]
+  apply sum_congr rfl
+  rintro j' -
+  simp only [smul_eq_mul, Pi.basisFun_repr, mul_assoc, mul_comm, mul_left_comm,
+    Pi.basisFun_apply, of_apply]
+  intros
+  simp only [zero_smul, smul_zero]
+  intros
+  simp only [zero_smul, Finsupp.sum_zero]
 
 theorem LinearMap.toMatrix₂'_comp (B : (n → R) →ₗ[R] (m → R) →ₗ[R] R) (f : (n' → R) →ₗ[R] n → R) :
     toMatrix₂' R (B.comp f) = (toMatrix' f)ᵀ * toMatrix₂' R B := by
@@ -419,17 +419,17 @@ theorem LinearMap.toMatrix₂_compl₁₂ (B : M₁ →ₗ[R] M₂ →ₗ[R] R) 
   rw [sum_comm]
   conv_lhs => rw [← LinearMap.sum_repr_mul_repr_mul b₁ b₂]
   rw [Finsupp.sum_fintype]
-  · apply sum_congr rfl
-    rintro i' -
-    rw [Finsupp.sum_fintype]
-    · apply sum_congr rfl
-      rintro j' -
-      simp only [smul_eq_mul, LinearMap.toMatrix_apply, Basis.equivFun_apply, mul_assoc, mul_comm,
-        mul_left_comm]
-    · intros
-      simp only [zero_smul, smul_zero]
-  · intros
-    simp only [zero_smul, Finsupp.sum_zero]
+  apply sum_congr rfl
+  rintro i' -
+  rw [Finsupp.sum_fintype]
+  apply sum_congr rfl
+  rintro j' -
+  simp only [smul_eq_mul, LinearMap.toMatrix_apply, Basis.equivFun_apply, mul_assoc, mul_comm,
+    mul_left_comm]
+  intros
+  simp only [zero_smul, smul_zero]
+  intros
+  simp only [zero_smul, Finsupp.sum_zero]
 
 theorem LinearMap.toMatrix₂_comp (B : M₁ →ₗ[R] M₂ →ₗ[R] R) (f : M₁' →ₗ[R] M₁) :
     LinearMap.toMatrix₂ b₁' b₂ (B.comp f) =
@@ -522,8 +522,8 @@ theorem isAdjointPair_toLinearMap₂' :
       B = B' ↔ LinearMap.toMatrix₂' R B = LinearMap.toMatrix₂' R B' := by
     intro B B'
     constructor <;> intro h
-    · rw [h]
-    · exact (LinearMap.toMatrix₂' R).injective h
+    rw [h]
+    exact (LinearMap.toMatrix₂' R).injective h
   simp_rw [h, LinearMap.toMatrix₂'_comp, LinearMap.toMatrix₂'_compl₂,
     LinearMap.toMatrix'_toLin', LinearMap.toMatrix'_toLinearMap₂']
   rfl
@@ -539,8 +539,8 @@ theorem isAdjointPair_toLinearMap₂ :
       B = B' ↔ LinearMap.toMatrix₂ b₁ b₂ B = LinearMap.toMatrix₂ b₁ b₂ B' := by
     intro B B'
     constructor <;> intro h
-    · rw [h]
-    · exact (LinearMap.toMatrix₂ b₁ b₂).injective h
+    rw [h]
+    exact (LinearMap.toMatrix₂ b₁ b₂).injective h
   simp_rw [h, LinearMap.toMatrix₂_comp b₂ b₂, LinearMap.toMatrix₂_compl₂ b₁ b₁,
     LinearMap.toMatrix_toLin, LinearMap.toMatrix₂_toLinearMap₂]
   rfl
@@ -560,10 +560,10 @@ theorem Matrix.isAdjointPair_equiv (P : Matrix n n R) (h : IsUnit P) :
     simp only [← mul_assoc, P.transpose_nonsing_inv]
     -- Porting note: the previous proof used `conv` and was causing timeouts, so we use `convert`
     convert this using 2
-    · rw [mul_assoc, mul_assoc, ← mul_assoc J]
-      rfl
-    · rw [mul_assoc, mul_assoc, ← mul_assoc _ _ J]
-      rfl
+    rw [mul_assoc, mul_assoc, ← mul_assoc J]
+    rfl
+    rw [mul_assoc, mul_assoc, ← mul_assoc _ _ J]
+    rfl
   rw [Units.eq_mul_inv_iff_mul_eq]
   conv_rhs => rw [mul_assoc]
   rw [v.inv_mul_eq_iff_eq_mul]
@@ -582,15 +582,15 @@ theorem mem_pairSelfAdjointMatricesSubmodule :
   simp only [pairSelfAdjointMatricesSubmodule, LinearEquiv.coe_coe, LinearMap.toMatrix'_apply,
     Submodule.mem_map, mem_isPairSelfAdjointSubmodule]
   constructor
-  · rintro ⟨f, hf, hA⟩
-    have hf' : f = toLin' A₁
-    rw [← hA, Matrix.toLin'_toMatrix']
-    rw [hf'] at hf
-    rw [← isAdjointPair_toLinearMap₂']
-    exact hf
-  · intro h
-    refine ⟨toLin' A₁, ?_, LinearMap.toMatrix'_toLin' _⟩
-    exact (isAdjointPair_toLinearMap₂' _ _ _ _).mpr h
+  rintro ⟨f, hf, hA⟩
+  have hf' : f = toLin' A₁
+  rw [← hA, Matrix.toLin'_toMatrix']
+  rw [hf'] at hf
+  rw [← isAdjointPair_toLinearMap₂']
+  exact hf
+  intro h
+  refine ⟨toLin' A₁, ?_, LinearMap.toMatrix'_toLin' _⟩
+  exact (isAdjointPair_toLinearMap₂' _ _ _ _).mpr h
 
 /-- The submodule of self-adjoint matrices with respect to the bilinear form corresponding to
 the matrix `J`. -/

@@ -62,10 +62,10 @@ theorem mem_prod_iff {s : Set (α × β)} {f : Filter α} {g : Filter β} :
     s ∈ f ×ˢ g ↔ ∃ t₁ ∈ f, ∃ t₂ ∈ g, t₁ ×ˢ t₂ ⊆ s := by
   simp only [SProd.sprod, Filter.prod]
   constructor
-  · rintro ⟨t₁, ⟨s₁, hs₁, hts₁⟩, t₂, ⟨s₂, hs₂, hts₂⟩, rfl⟩
-    exact ⟨s₁, hs₁, s₂, hs₂, fun p ⟨h, h'⟩ => ⟨hts₁ h, hts₂ h'⟩⟩
-  · rintro ⟨t₁, ht₁, t₂, ht₂, h⟩
-    exact mem_inf_of_inter (preimage_mem_comap ht₁) (preimage_mem_comap ht₂) h
+  rintro ⟨t₁, ⟨s₁, hs₁, hts₁⟩, t₂, ⟨s₂, hs₂, hts₂⟩, rfl⟩
+  exact ⟨s₁, hs₁, s₂, hs₂, fun p ⟨h, h'⟩ => ⟨hts₁ h, hts₂ h'⟩⟩
+  rintro ⟨t₁, ht₁, t₂, ht₂, h⟩
+  exact mem_inf_of_inter (preimage_mem_comap ht₁) (preimage_mem_comap ht₂) h
 
 @[simp]
 theorem prod_mem_prod_iff [f.NeBot] [g.NeBot] : s ×ˢ t ∈ f ×ˢ g ↔ s ∈ f ∧ t ∈ g :=
@@ -81,10 +81,10 @@ theorem mem_prod_principal {s : Set (α × β)} :
     s ∈ f ×ˢ 𝓟 t ↔ { a | ∀ b ∈ t, (a, b) ∈ s } ∈ f := by
   rw [← @exists_mem_subset_iff _ f, mem_prod_iff]
   refine exists_congr fun u => Iff.rfl.and ⟨?_, fun h => ⟨t, mem_principal_self t, ?_⟩⟩
-  · rintro ⟨v, v_in, hv⟩ a a_in b b_in
-    exact hv (mk_mem_prod a_in <| v_in b_in)
-  · rintro ⟨x, y⟩ ⟨hx, hy⟩
-    exact h hx y hy
+  rintro ⟨v, v_in, hv⟩ a a_in b b_in
+  exact hv (mk_mem_prod a_in <| v_in b_in)
+  rintro ⟨x, y⟩ ⟨hx, hy⟩
+  exact h hx y hy
 
 theorem mem_prod_top {s : Set (α × β)} :
     s ∈ f ×ˢ (⊤ : Filter β) ↔ { a | ∀ b, (a, b) ∈ s } ∈ f := by
@@ -344,8 +344,8 @@ protected theorem map_prod (m : α × β → γ) (f : Filter α) (g : Filter β)
   simp only [Filter.ext_iff, mem_map, mem_prod_iff, mem_map_seq_iff, exists_and_left]
   intro s
   constructor
-  · exact fun ⟨t, ht, s, hs, h⟩ => ⟨s, hs, t, ht, fun x hx y hy => @h ⟨x, y⟩ ⟨hx, hy⟩⟩
-  · exact fun ⟨s, hs, t, ht, h⟩ => ⟨t, ht, s, hs, fun ⟨x, y⟩ ⟨hx, hy⟩ => h x hx y hy⟩
+  exact fun ⟨t, ht, s, hs, h⟩ => ⟨s, hs, t, ht, fun x hx y hy => @h ⟨x, y⟩ ⟨hx, hy⟩⟩
+  exact fun ⟨s, hs, t, ht, h⟩ => ⟨t, ht, s, hs, fun ⟨x, y⟩ ⟨hx, hy⟩ => h x hx y hy⟩
 
 theorem prod_eq : f ×ˢ g = (f.map Prod.mk).seq g := f.map_prod id g
 
@@ -510,11 +510,11 @@ theorem map_prod_map_const_id_principal_coprod_principal {α β ι : Type*} (a :
   congr
   ext ⟨b', i'⟩
   constructor
-  · rintro ⟨⟨a'', i''⟩, _, h₂, h₃⟩
-    simp
-  · rintro ⟨h₁, _⟩
-    use (a, i')
-    simpa using h₁.symm
+  rintro ⟨⟨a'', i''⟩, _, h₂, h₃⟩
+  simp
+  rintro ⟨h₁, _⟩
+  use (a, i')
+  simpa using h₁.symm
 
 theorem Tendsto.prod_map_coprod {δ : Type*} {f : α → γ} {g : β → δ} {a : Filter α} {b : Filter β}
     {c : Filter γ} {d : Filter δ} (hf : Tendsto f a c) (hg : Tendsto g b d) :

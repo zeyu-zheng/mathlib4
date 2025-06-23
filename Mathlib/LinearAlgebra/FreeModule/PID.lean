@@ -118,24 +118,24 @@ theorem generator_maximal_submoduleImage_dvd {N O : Submodule R M} (hNO : N ≤ 
   refine dvd_trans ?_ d_dvd_right
   rw [dvd_generator_iff, Ideal.span, ←
     span_singleton_generator (Submodule.span R {a, ψ ⟨y, hNO yN⟩})]
-  · obtain ⟨r₁, r₂, d_eq⟩ : ∃ r₁ r₂ : R, d = r₁ * a + r₂ * ψ ⟨y, hNO yN⟩ := by
-      obtain ⟨r₁, r₂', hr₂', hr₁⟩ :=
-        mem_span_insert.mp (IsPrincipal.generator_mem (Submodule.span R {a, ψ ⟨y, hNO yN⟩}))
-      obtain ⟨r₂, rfl⟩ := mem_span_singleton.mp hr₂'
-      exact ⟨r₁, r₂, hr₁⟩
-    let ψ' : O →ₗ[R] R := r₁ • ϕ + r₂ • ψ
-    have : span R {d} ≤ ψ'.submoduleImage N := by
-      rw [span_le, singleton_subset_iff, SetLike.mem_coe, LinearMap.mem_submoduleImage_of_le hNO]
-      refine ⟨y, yN, ?_⟩
-      change r₁ * ϕ ⟨y, hNO yN⟩ + r₂ * ψ ⟨y, hNO yN⟩ = d
-      rw [d_eq, ϕy_eq]
-    refine
-      le_antisymm (this.trans (le_of_eq ?_)) (Ideal.span_singleton_le_span_singleton.mpr d_dvd_left)
-    rw [span_singleton_generator]
-    apply (le_trans _ this).eq_of_not_gt (hϕ ψ')
-    rw [← span_singleton_generator (ϕ.submoduleImage N)]
-    exact Ideal.span_singleton_le_span_singleton.mpr d_dvd_left
-  · exact subset_span (mem_insert _ _)
+  obtain ⟨r₁, r₂, d_eq⟩ : ∃ r₁ r₂ : R, d = r₁ * a + r₂ * ψ ⟨y, hNO yN⟩ := by
+    obtain ⟨r₁, r₂', hr₂', hr₁⟩ :=
+      mem_span_insert.mp (IsPrincipal.generator_mem (Submodule.span R {a, ψ ⟨y, hNO yN⟩}))
+    obtain ⟨r₂, rfl⟩ := mem_span_singleton.mp hr₂'
+    exact ⟨r₁, r₂, hr₁⟩
+  let ψ' : O →ₗ[R] R := r₁ • ϕ + r₂ • ψ
+  have : span R {d} ≤ ψ'.submoduleImage N := by
+    rw [span_le, singleton_subset_iff, SetLike.mem_coe, LinearMap.mem_submoduleImage_of_le hNO]
+    refine ⟨y, yN, ?_⟩
+    change r₁ * ϕ ⟨y, hNO yN⟩ + r₂ * ψ ⟨y, hNO yN⟩ = d
+    rw [d_eq, ϕy_eq]
+  refine
+    le_antisymm (this.trans (le_of_eq ?_)) (Ideal.span_singleton_le_span_singleton.mpr d_dvd_left)
+  rw [span_singleton_generator]
+  apply (le_trans _ this).eq_of_not_gt (hϕ ψ')
+  rw [← span_singleton_generator (ϕ.submoduleImage N)]
+  exact Ideal.span_singleton_le_span_singleton.mpr d_dvd_left
+  exact subset_span (mem_insert _ _)
 
 /-- The induction hypothesis of `Submodule.basisOfPid` and `Submodule.smithNormalForm`.
 
@@ -178,8 +178,8 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type*} [AddCommGroup O] [Mod
   have a_mem : a ∈ ϕ.submoduleImage N := generator_mem _
   -- If `a` is zero, then the submodule is trivial. So let's assume `a ≠ 0`, `N ≠ ⊥`.
   by_cases a_zero : a = 0
-  · have := eq_bot_of_generator_maximal_submoduleImage_eq_zero b'M N_le_M ϕ_max a_zero
-    contradiction
+  have := eq_bot_of_generator_maximal_submoduleImage_eq_zero b'M N_le_M ϕ_max a_zero
+  contradiction
   -- We claim that `ϕ⁻¹ a = y` can be taken as basis element of `N`.
   obtain ⟨y, yN, ϕy_eq⟩ := (LinearMap.mem_submoduleImage_of_le N_le_M).mp a_mem
   have _ϕy_ne_zero : ϕ ⟨y, N_le_M yN⟩ ≠ 0 := fun h ↦ a_zero (ϕy_eq.symm.trans h)
@@ -239,35 +239,35 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type*} [AddCommGroup O] [Mod
     rw [mul_comm, mul_smul, hc]
   -- So we can extend a basis for `N'` with `y`
   refine ⟨y'_ortho_M', ay'_ortho_N', fun n' bN' ↦ ⟨?_, ?_⟩⟩
-  · refine Basis.mkFinConsOfLE y yN bN' N'_le_N ?_ ?_
-    · intro c z zN' hc
-      refine ay'_ortho_N' c z zN' ?_
-      rwa [← a_smul_y'] at hc
-    · intro z zN
-      obtain ⟨b, hb⟩ : _ ∣ ϕ ⟨z, N_le_M zN⟩ := generator_submoduleImage_dvd_of_mem N_le_M ϕ zN
-      refine ⟨-b, Submodule.mem_map.mpr ⟨⟨_, N.sub_mem zN (N.smul_mem b yN)⟩, ?_, ?_⟩⟩
-      · refine LinearMap.mem_ker.mpr (show ϕ (⟨z, N_le_M zN⟩ - b • ⟨y, N_le_M yN⟩) = 0 from ?_)
-        rw [LinearMap.map_sub, LinearMap.map_smul, hb, ϕy_eq, smul_eq_mul, mul_comm, sub_self]
-      · simp only [sub_eq_add_neg, neg_smul, coeSubtype]
+  refine Basis.mkFinConsOfLE y yN bN' N'_le_N ?_ ?_
+  intro c z zN' hc
+  refine ay'_ortho_N' c z zN' ?_
+  rwa [← a_smul_y'] at hc
+  intro z zN
+  obtain ⟨b, hb⟩ : _ ∣ ϕ ⟨z, N_le_M zN⟩ := generator_submoduleImage_dvd_of_mem N_le_M ϕ zN
+  refine ⟨-b, Submodule.mem_map.mpr ⟨⟨_, N.sub_mem zN (N.smul_mem b yN)⟩, ?_, ?_⟩⟩
+  refine LinearMap.mem_ker.mpr (show ϕ (⟨z, N_le_M zN⟩ - b • ⟨y, N_le_M yN⟩) = 0 from ?_)
+  rw [LinearMap.map_sub, LinearMap.map_smul, hb, ϕy_eq, smul_eq_mul, mul_comm, sub_self]
+  simp only [sub_eq_add_neg, neg_smul, coeSubtype]
   -- And extend a basis for `M'` with `y'`
   intro m' hn'm' bM'
   refine ⟨Nat.succ_le_succ hn'm', ?_, ?_⟩
-  · refine Basis.mkFinConsOfLE y' y'M bM' M'_le_M y'_ortho_M' ?_
-    intro z zM
-    refine ⟨-ϕ ⟨z, zM⟩, ⟨⟨z, zM⟩ - ϕ ⟨z, zM⟩ • ⟨y', y'M⟩, LinearMap.mem_ker.mpr ?_, ?_⟩⟩
-    · rw [LinearMap.map_sub, LinearMap.map_smul, ϕy'_eq, smul_eq_mul, mul_one, sub_self]
-    · rw [LinearMap.map_sub, LinearMap.map_smul, sub_eq_add_neg, neg_smul]
-      rfl
+  refine Basis.mkFinConsOfLE y' y'M bM' M'_le_M y'_ortho_M' ?_
+  intro z zM
+  refine ⟨-ϕ ⟨z, zM⟩, ⟨⟨z, zM⟩ - ϕ ⟨z, zM⟩ • ⟨y', y'M⟩, LinearMap.mem_ker.mpr ?_, ?_⟩⟩
+  rw [LinearMap.map_sub, LinearMap.map_smul, ϕy'_eq, smul_eq_mul, mul_one, sub_self]
+  rw [LinearMap.map_sub, LinearMap.map_smul, sub_eq_add_neg, neg_smul]
+  rfl
   -- It remains to show the extended bases are compatible with each other.
   intro as h
   refine ⟨Fin.cons a as, ?_⟩
   intro i
   rw [Basis.coe_mkFinConsOfLE, Basis.coe_mkFinConsOfLE]
   refine Fin.cases ?_ (fun i ↦ ?_) i
-  · simp only [Fin.cons_zero, Fin.castLE_zero]
-    exact a_smul_y'.symm
-  · rw [Fin.castLE_succ]
-    simp only [Fin.cons_succ, Function.comp_apply, coe_inclusion, map_coe, coeSubtype, h i]
+  simp only [Fin.cons_zero, Fin.castLE_zero]
+  exact a_smul_y'.symm
+  rw [Fin.castLE_succ]
+  simp only [Fin.cons_succ, Function.comp_apply, coe_inclusion, map_coe, coeSubtype, h i]
 
 /-- A submodule of a free `R`-module of finite rank is also a free `R`-module of finite rank,
 if `R` is a principal ideal domain.
@@ -284,8 +284,8 @@ theorem Submodule.nonempty_basis_of_pid {ι : Type*} [Finite ι] (b : Basis ι R
   induction N using inductionOnRank b with | ih N ih =>
   let b' := (b.reindex (Fintype.equivFin ι)).map (LinearEquiv.ofTop _ rfl).symm
   by_cases N_bot : N = ⊥
-  · subst N_bot
-    exact ⟨0, ⟨Basis.empty _⟩⟩
+  subst N_bot
+  exact ⟨0, ⟨Basis.empty _⟩⟩
   obtain ⟨y, -, a, hay, M', -, N', N'_le_N, -, -, ay_ortho, h'⟩ :=
     Submodule.basis_of_pid_aux ⊤ N b' N_bot le_top
   obtain ⟨n', ⟨bN'⟩⟩ := ih N' N'_le_N _ hay ay_ortho
@@ -493,8 +493,8 @@ theorem Submodule.exists_smith_normal_form_of_le [Finite ι] (b : Basis ι R M) 
   induction O using inductionOnRank b generalizing N with | ih M0 ih =>
   obtain ⟨m, b'M⟩ := M0.basisOfPid b
   by_cases N_bot : N = ⊥
-  · subst N_bot
-    exact ⟨0, m, Nat.zero_le _, b'M, Basis.empty _, finZeroElim, finZeroElim⟩
+  subst N_bot
+  exact ⟨0, m, Nat.zero_le _, b'M, Basis.empty _, finZeroElim, finZeroElim⟩
   obtain ⟨y, hy, a, _, M', M'_le_M, N', _, N'_le_M', y_ortho, _, h⟩ :=
     Submodule.basis_of_pid_aux M0 N b'M N_bot N_le_O
 

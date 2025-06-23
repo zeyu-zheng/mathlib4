@@ -194,50 +194,50 @@ theorem Ico_succ_left_eq_erase_Ico : Ico a.succ b = erase (Ico a b) a := by
 
 theorem mod_injOn_Ico (n a : ℕ) : Set.InjOn (· % a) (Finset.Ico n (n + a)) := by
   induction' n with n ih
-  · simp only [zero_add, Nat.zero_eq, Ico_zero_eq_range]
-    rintro k hk l hl (hkl : k % a = l % a)
-    simp only [Finset.mem_range, Finset.mem_coe] at hk hl
-    rwa [mod_eq_of_lt hk, mod_eq_of_lt hl] at hkl
+  simp only [zero_add, Nat.zero_eq, Ico_zero_eq_range]
+  rintro k hk l hl (hkl : k % a = l % a)
+  simp only [Finset.mem_range, Finset.mem_coe] at hk hl
+  rwa [mod_eq_of_lt hk, mod_eq_of_lt hl] at hkl
   rw [Ico_succ_left_eq_erase_Ico, succ_add, succ_eq_add_one,
     Ico_succ_right_eq_insert_Ico (by omega)]
   rintro k hk l hl (hkl : k % a = l % a)
   have ha : 0 < a := Nat.pos_iff_ne_zero.2 $ by rintro rfl; simp at hk
   simp only [Finset.mem_coe, Finset.mem_insert, Finset.mem_erase] at hk hl
   rcases hk with ⟨hkn, rfl | hk⟩ <;> rcases hl with ⟨hln, rfl | hl⟩
-  · rfl
-  · rw [add_mod_right] at hkl
-    refine (hln <| ih hl ?_ hkl.symm).elim
-    simpa using Nat.lt_add_of_pos_right (n := n) ha
-  · rw [add_mod_right] at hkl
-    suffices k = n by contradiction
-    refine ih hk ?_ hkl
-    simpa using Nat.lt_add_of_pos_right (n := n) ha
-  · refine ih ?_ ?_ hkl <;> simp only [Finset.mem_coe, hk, hl]
+  rfl
+  rw [add_mod_right] at hkl
+  refine (hln <| ih hl ?_ hkl.symm).elim
+  simpa using Nat.lt_add_of_pos_right (n := n) ha
+  rw [add_mod_right] at hkl
+  suffices k = n by contradiction
+  refine ih hk ?_ hkl
+  simpa using Nat.lt_add_of_pos_right (n := n) ha
+  refine ih ?_ ?_ hkl <;> simp only [Finset.mem_coe, hk, hl]
 
 /-- Note that while this lemma cannot be easily generalized to a type class, it holds for ℤ as
 well. See `Int.image_Ico_emod` for the ℤ version. -/
 theorem image_Ico_mod (n a : ℕ) : (Ico n (n + a)).image (· % a) = range a := by
   obtain rfl | ha := eq_or_ne a 0
-  · rw [range_zero, add_zero, Ico_self, image_empty]
+  rw [range_zero, add_zero, Ico_self, image_empty]
   ext i
   simp only [mem_image, exists_prop, mem_range, mem_Ico]
   constructor
-  · rintro ⟨i, _, rfl⟩
-    exact mod_lt i ha.bot_lt
+  rintro ⟨i, _, rfl⟩
+  exact mod_lt i ha.bot_lt
   intro hia
   have hn := Nat.mod_add_div n a
   obtain hi | hi := lt_or_le i (n % a)
-  · refine ⟨i + a * (n / a + 1), ⟨?_, ?_⟩, ?_⟩
-    · rw [add_comm (n / a), Nat.mul_add, mul_one, ← add_assoc]
-      refine hn.symm.le.trans (Nat.add_le_add_right ?_ _)
-      simpa only [zero_add] using add_le_add (zero_le i) (Nat.mod_lt n ha.bot_lt).le
-    · refine lt_of_lt_of_le (Nat.add_lt_add_right hi (a * (n / a + 1))) ?_
-      rw [Nat.mul_add, mul_one, ← add_assoc, hn]
-    · rw [Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt hia]
-  · refine ⟨i + a * (n / a), ⟨?_, ?_⟩, ?_⟩
-    · omega
-    · omega
-    · rw [Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt hia]
+  refine ⟨i + a * (n / a + 1), ⟨?_, ?_⟩, ?_⟩
+  rw [add_comm (n / a), Nat.mul_add, mul_one, ← add_assoc]
+  refine hn.symm.le.trans (Nat.add_le_add_right ?_ _)
+  simpa only [zero_add] using add_le_add (zero_le i) (Nat.mod_lt n ha.bot_lt).le
+  refine lt_of_lt_of_le (Nat.add_lt_add_right hi (a * (n / a + 1))) ?_
+  rw [Nat.mul_add, mul_one, ← add_assoc, hn]
+  rw [Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt hia]
+  refine ⟨i + a * (n / a), ⟨?_, ?_⟩, ?_⟩
+  omega
+  omega
+  rw [Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt hia]
 
 section Multiset
 
@@ -258,9 +258,9 @@ namespace Finset
 theorem range_image_pred_top_sub (n : ℕ) :
     ((Finset.range n).image fun j => n - 1 - j) = Finset.range n := by
   cases n
-  · rw [range_zero, image_empty]
-  · rw [Finset.range_eq_Ico, Nat.Ico_image_const_sub_eq_Ico (Nat.zero_le _)]
-    simp_rw [succ_sub_succ, Nat.sub_zero, Nat.sub_self]
+  rw [range_zero, image_empty]
+  rw [Finset.range_eq_Ico, Nat.Ico_image_const_sub_eq_Ico (Nat.zero_le _)]
+  simp_rw [succ_sub_succ, Nat.sub_zero, Nat.sub_self]
 
 theorem range_add_eq_union : range (a + b) = range a ∪ (range b).map (addLeftEmbedding a) := by
   rw [Finset.range_eq_Ico, map_eq_image]
@@ -268,9 +268,9 @@ theorem range_add_eq_union : range (a + b) = range a ∪ (range b).map (addLeftE
   ext x
   simp only [Ico_zero_eq_range, mem_image, mem_range, addLeftEmbedding_apply, mem_Ico]
   constructor
-  · aesop
-  · rintro h
-    exact ⟨x - a, by omega⟩
+  aesop
+  rintro h
+  exact ⟨x - a, by omega⟩
 
 end Finset
 
@@ -286,14 +286,14 @@ theorem Nat.decreasing_induction_of_not_bddAbove (hP : ¬BddAbove { x | P x }) (
 lemma Nat.strong_decreasing_induction (base : ∃ n, ∀ m > n, P m) (step : ∀ n, (∀ m > n, P m) → P n)
     (n : ℕ) : P n := by
   apply Nat.decreasing_induction_of_not_bddAbove (P := fun n ↦ ∀ m ≥ n, P m) _ _ n n le_rfl
-  · intro n ih m hm
-    rcases hm.eq_or_lt with rfl | hm
-    · exact step n ih
-    · exact ih m hm
-  · rintro ⟨b, hb⟩
-    rcases base with ⟨n, hn⟩
-    specialize @hb (n + b + 1) (fun m hm ↦ hn _ _)
-    all_goals omega
+  intro n ih m hm
+  rcases hm.eq_or_lt with rfl | hm
+  exact step n ih
+  exact ih m hm
+  rintro ⟨b, hb⟩
+  rcases base with ⟨n, hn⟩
+  specialize @hb (n + b + 1) (fun m hm ↦ hn _ _)
+  all_goals omega
 
 theorem Nat.decreasing_induction_of_infinite (hP : { x | P x }.Infinite) (n : ℕ) : P n :=
   Nat.decreasing_induction_of_not_bddAbove h (mt BddAbove.finite hP) n

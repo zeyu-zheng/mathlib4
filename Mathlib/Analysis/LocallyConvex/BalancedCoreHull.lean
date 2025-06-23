@@ -154,7 +154,7 @@ theorem balancedCoreAux_balanced (h0 : (0 : E) ∈ balancedCoreAux 𝕜 s) :
     Balanced 𝕜 (balancedCoreAux 𝕜 s) := by
   rintro a ha x ⟨y, hy, rfl⟩
   obtain rfl | h := eq_or_ne a 0
-  · simp_rw [zero_smul, h0]
+  simp_rw [zero_smul, h0]
   rw [mem_balancedCoreAux_iff] at hy ⊢
   intro r hr
   have h'' : 1 ≤ ‖a⁻¹ • r‖
@@ -202,17 +202,17 @@ variable [NontriviallyNormedField 𝕜] [AddCommGroup E] [Module 𝕜 E] [Topolo
 
 protected theorem IsClosed.balancedCore (hU : IsClosed U) : IsClosed (balancedCore 𝕜 U) := by
   by_cases h : (0 : E) ∈ U
-  · rw [balancedCore_eq_iInter h]
-    refine isClosed_iInter fun a => ?_
-    refine isClosed_iInter fun ha => ?_
-    have ha' := lt_of_lt_of_le zero_lt_one ha
-    rw [norm_pos_iff] at ha'
-    exact isClosedMap_smul_of_ne_zero ha' U hU
-  · have : balancedCore 𝕜 U = ∅ := by
-      contrapose! h
-      exact balancedCore_nonempty_iff.mp h
-    rw [this]
-    exact isClosed_empty
+  rw [balancedCore_eq_iInter h]
+  refine isClosed_iInter fun a => ?_
+  refine isClosed_iInter fun ha => ?_
+  have ha' := lt_of_lt_of_le zero_lt_one ha
+  rw [norm_pos_iff] at ha'
+  exact isClosedMap_smul_of_ne_zero ha' U hU
+  have : balancedCore 𝕜 U = ∅ := by
+    contrapose! h
+    exact balancedCore_nonempty_iff.mp h
+  rw [this]
+  exact isClosed_empty
 
 theorem balancedCore_mem_nhds_zero (hU : U ∈ 𝓝 (0 : E)) : balancedCore 𝕜 U ∈ 𝓝 (0 : E) := by
   -- Getting neighborhoods of the origin for `0 : 𝕜` and `0 : E`

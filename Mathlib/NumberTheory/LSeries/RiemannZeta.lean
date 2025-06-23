@@ -171,8 +171,8 @@ theorem completedZeta_eq_tsum_of_one_lt_re {s : ℂ} (hs : 1 < re s) :
     ← tsum_mul_left]
   congr 1 with n
   split_ifs with h
-  · simp only [h, Nat.cast_zero, zero_cpow (Complex.ne_zero_of_one_lt_re hs), div_zero]
-  · rfl
+  simp only [h, Nat.cast_zero, zero_cpow (Complex.ne_zero_of_one_lt_re hs), div_zero]
+  rfl
 
 /-- The Riemann zeta function agrees with the naive Dirichlet-series definition when the latter
 converges. (Note that this is false without the assumption: when `re s ≤ 1` the sum is divergent,
@@ -188,8 +188,8 @@ theorem zeta_eq_tsum_one_div_nat_add_one_cpow {s : ℂ} (hs : 1 < re s) :
     riemannZeta s = ∑' n : ℕ, 1 / (n + 1 : ℂ) ^ s := by
   have := zeta_eq_tsum_one_div_nat_cpow hs
   rw [tsum_eq_zero_add] at this
-  · simpa [zero_cpow (Complex.ne_zero_of_one_lt_re hs)]
-  · rwa [Complex.summable_one_div_nat_cpow]
+  simpa [zero_cpow (Complex.ne_zero_of_one_lt_re hs)]
+  rwa [Complex.summable_one_div_nat_cpow]
 
 /-- Special case of `zeta_eq_tsum_one_div_nat_cpow` when the argument is in `ℕ`, so the power
 function can be expressed using naïve `pow` rather than `cpow`. -/

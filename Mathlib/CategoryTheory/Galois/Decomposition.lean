@@ -79,34 +79,34 @@ private lemma has_decomp_connected_components_aux (F : C ⥤ FintypeCat.{w}) [Fi
   induction' n using Nat.strongRecOn with n hi
   intro X hn
   by_cases h : IsConnected X
-  · exact has_decomp_connected_components_aux_conn X
+  exact has_decomp_connected_components_aux_conn X
   by_cases nhi : IsInitial X → False
-  · obtain ⟨Y, v, hni, hvmono, hvnoiso⟩ :=
-      has_non_trivial_subobject_of_not_isConnected_of_not_initial X h nhi
-    obtain ⟨Z, u, ⟨c⟩⟩ := PreGaloisCategory.monoInducesIsoOnDirectSummand v
-    let t : ColimitCocone (pair Y Z) := { cocone := BinaryCofan.mk v u, isColimit := c }
-    have hn1 : Nat.card (F.obj Y) < n := by
-      rw [hn]
-      exact lt_card_fiber_of_mono_of_notIso F v hvnoiso
-    have i : X ≅ Y ⨿ Z := (colimit.isoColimitCocone t).symm
-    have hnn : Nat.card (F.obj X) = Nat.card (F.obj Y) + Nat.card (F.obj Z) := by
-      rw [card_fiber_eq_of_iso F i]
-      exact card_fiber_coprod_eq_sum F Y Z
-    have hn2 : Nat.card (F.obj Z) < n := by
-      rw [hn, hnn, lt_add_iff_pos_left]
-      exact Nat.pos_of_ne_zero (non_zero_card_fiber_of_not_initial F Y hni)
-    let ⟨ι₁, f₁, g₁, hc₁, hf₁, he₁⟩ := hi (Nat.card (F.obj Y)) hn1 Y rfl
-    let ⟨ι₂, f₂, g₂, hc₂, hf₂, he₂⟩ := hi (Nat.card (F.obj Z)) hn2 Z rfl
-    refine ⟨ι₁ ⊕ ι₂, Sum.elim f₁ f₂,
-      Cofan.combPairHoms (Cofan.mk Y g₁) (Cofan.mk Z g₂) (BinaryCofan.mk v u), ?_⟩
-    use Cofan.combPairIsColimit hc₁ hc₂ c
-    refine ⟨fun i ↦ ?_, inferInstance⟩
-    cases i
-    · exact hf₁ _
-    · exact hf₂ _
-  · simp only [not_forall, not_false_eq_true] at nhi
-    obtain ⟨hi⟩ := nhi
-    exact has_decomp_connected_components_aux_initial X hi
+  obtain ⟨Y, v, hni, hvmono, hvnoiso⟩ :=
+    has_non_trivial_subobject_of_not_isConnected_of_not_initial X h nhi
+  obtain ⟨Z, u, ⟨c⟩⟩ := PreGaloisCategory.monoInducesIsoOnDirectSummand v
+  let t : ColimitCocone (pair Y Z) := { cocone := BinaryCofan.mk v u, isColimit := c }
+  have hn1 : Nat.card (F.obj Y) < n := by
+    rw [hn]
+    exact lt_card_fiber_of_mono_of_notIso F v hvnoiso
+  have i : X ≅ Y ⨿ Z := (colimit.isoColimitCocone t).symm
+  have hnn : Nat.card (F.obj X) = Nat.card (F.obj Y) + Nat.card (F.obj Z) := by
+    rw [card_fiber_eq_of_iso F i]
+    exact card_fiber_coprod_eq_sum F Y Z
+  have hn2 : Nat.card (F.obj Z) < n := by
+    rw [hn, hnn, lt_add_iff_pos_left]
+    exact Nat.pos_of_ne_zero (non_zero_card_fiber_of_not_initial F Y hni)
+  let ⟨ι₁, f₁, g₁, hc₁, hf₁, he₁⟩ := hi (Nat.card (F.obj Y)) hn1 Y rfl
+  let ⟨ι₂, f₂, g₂, hc₂, hf₂, he₂⟩ := hi (Nat.card (F.obj Z)) hn2 Z rfl
+  refine ⟨ι₁ ⊕ ι₂, Sum.elim f₁ f₂,
+    Cofan.combPairHoms (Cofan.mk Y g₁) (Cofan.mk Z g₂) (BinaryCofan.mk v u), ?_⟩
+  use Cofan.combPairIsColimit hc₁ hc₂ c
+  refine ⟨fun i ↦ ?_, inferInstance⟩
+  cases i
+  exact hf₁ _
+  exact hf₂ _
+  simp only [not_forall, not_false_eq_true] at nhi
+  obtain ⟨hi⟩ := nhi
+  exact has_decomp_connected_components_aux_initial X hi
 
 /-- In a Galois category, every object is the sum of connected objects. -/
 theorem has_decomp_connected_components (X : C) :
@@ -244,14 +244,14 @@ private lemma selfProdTermIncl_fib_eq (b : F.obj A) :
   apply Concrete.Pi.map_ext _ F
   intro (t : F.obj X)
   convert_to F.map (selfProdProj u t) b = _
-  · simp only [selfProdProj, map_comp, FintypeCat.comp_apply]; rfl
-  · dsimp only [selfProdPermIncl, Pi.whiskerEquiv]
-    rw [map_comp, FintypeCat.comp_apply, h]
-    convert_to F.map (selfProdProj u t) b =
-      (F.map (Pi.map' (fiberPerm h b) fun _ ↦ 𝟙 X) ≫
-      F.map (Pi.π (fun _ ↦ X) t)) (mkSelfProdFib F X)
-    rw [← map_comp, Pi.map'_comp_π, Category.comp_id, mkSelfProdFib_map_π F X (fiberPerm h b t)]
-    rfl
+  simp only [selfProdProj, map_comp, FintypeCat.comp_apply]; rfl
+  dsimp only [selfProdPermIncl, Pi.whiskerEquiv]
+  rw [map_comp, FintypeCat.comp_apply, h]
+  convert_to F.map (selfProdProj u t) b =
+    (F.map (Pi.map' (fiberPerm h b) fun _ ↦ 𝟙 X) ≫
+    F.map (Pi.π (fun _ ↦ X) t)) (mkSelfProdFib F X)
+  rw [← map_comp, Pi.map'_comp_π, Category.comp_id, mkSelfProdFib_map_π F X (fiberPerm h b t)]
+  rfl
 
 /-- There exists an automorphism `f` of `A` that maps `b` to `a`.
 `f` is obtained by considering `u` and `selfProdPermIncl h b`.
@@ -271,18 +271,18 @@ lemma exists_galois_representative (X : C) : ∃ (A : C) (a : F.obj A),
   use A
   use a
   constructor
-  · refine (isGalois_iff_pretransitive F A).mpr ⟨fun x y ↦ ?_⟩
-    obtain ⟨fi1, hfi1⟩ := subobj_selfProd_trans h1 x
-    obtain ⟨fi2, hfi2⟩ := subobj_selfProd_trans h1 y
-    use fi1 ≪≫ fi2.symm
-    show F.map (fi1.hom ≫ fi2.inv) x = y
-    simp only [map_comp, FintypeCat.comp_apply]
-    rw [hfi1, ← hfi2]
-    exact congr_fun (F.mapIso fi2).hom_inv_id y
-  · refine ⟨evaluation_injective_of_isConnected F A X a, ?_⟩
-    intro x
-    use u ≫ Pi.π _ x
-    exact (selfProdProj_fiber h1) x
+  refine (isGalois_iff_pretransitive F A).mpr ⟨fun x y ↦ ?_⟩
+  obtain ⟨fi1, hfi1⟩ := subobj_selfProd_trans h1 x
+  obtain ⟨fi2, hfi2⟩ := subobj_selfProd_trans h1 y
+  use fi1 ≪≫ fi2.symm
+  show F.map (fi1.hom ≫ fi2.inv) x = y
+  simp only [map_comp, FintypeCat.comp_apply]
+  rw [hfi1, ← hfi2]
+  exact congr_fun (F.mapIso fi2).hom_inv_id y
+  refine ⟨evaluation_injective_of_isConnected F A X a, ?_⟩
+  intro x
+  use u ≫ Pi.π _ x
+  exact (selfProdProj_fiber h1) x
 
 /-- Any element in the fiber of an object `X` is the evaluation of a morphism from a
 Galois object. -/

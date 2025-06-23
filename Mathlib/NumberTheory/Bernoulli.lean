@@ -126,7 +126,7 @@ end Examples
 @[simp]
 theorem sum_bernoulli' (n : ℕ) : (∑ k ∈ range n, (n.choose k : ℚ) * bernoulli' k) = n := by
   cases' n with n
-  · simp
+  simp
   suffices
     ((n + 1 : ℚ) * ∑ k ∈ range n, ↑(n.choose k) / (n - k + 1) * bernoulli' k) =
       ∑ x ∈ range n, ↑(n.succ.choose x) * bernoulli' x by
@@ -149,7 +149,7 @@ theorem bernoulli'PowerSeries_mul_exp_sub_one :
   ext n
   -- constant coefficient is a special case
   cases' n with n
-  · simp
+  simp
   rw [bernoulli'PowerSeries, coeff_mul, mul_comm X, sum_antidiagonal_succ']
   suffices (∑ p ∈ antidiagonal n,
       bernoulli' p.1 / p.1! * ((p.2 + 1) * p.2! : ℚ)⁻¹) = (n ! : ℚ)⁻¹ by
@@ -171,10 +171,10 @@ theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoul
   suffices (B - evalNegHom B) * (exp ℚ - 1) = X * (exp ℚ - 1) by
     cases' mul_eq_mul_right_iff.mp this with h h <;>
       simp only [PowerSeries.ext_iff, evalNegHom, coeff_X] at h
-    · apply eq_zero_of_neg_eq
-      specialize h n
-      split_ifs at h <;> simp_all [B, h_odd.neg_one_pow, factorial_ne_zero]
-    · simpa (config := {decide := true}) [Nat.factorial] using h 1
+    apply eq_zero_of_neg_eq
+    specialize h n
+    split_ifs at h <;> simp_all [B, h_odd.neg_one_pow, factorial_ne_zero]
+    simpa (config := {decide := true}) [Nat.factorial] using h 1
   have h : B * (exp ℚ - 1) = X * exp ℚ
   simpa [bernoulli'PowerSeries] using bernoulli'PowerSeries_mul_exp_sub_one ℚ
   rw [sub_mul, h, mul_sub X, sub_right_inj, ← neg_sub, mul_neg, neg_eq_iff_eq_neg]
@@ -200,17 +200,17 @@ theorem bernoulli_eq_bernoulli'_of_ne_one {n : ℕ} (hn : n ≠ 1) : bernoulli n
   by_cases h0 : n = 0; · simp [h0]
   rw [bernoulli, neg_one_pow_eq_pow_mod_two]
   cases' mod_two_eq_zero_or_one n with h h
-  · simp [h]
-  · simp [bernoulli'_odd_eq_zero (odd_iff.mpr h) (one_lt_iff_ne_zero_and_ne_one.mpr ⟨h0, hn⟩)]
+  simp [h]
+  simp [bernoulli'_odd_eq_zero (odd_iff.mpr h) (one_lt_iff_ne_zero_and_ne_one.mpr ⟨h0, hn⟩)]
 
 @[simp]
 theorem sum_bernoulli (n : ℕ) :
     (∑ k ∈ range n, (n.choose k : ℚ) * bernoulli k) = if n = 1 then 1 else 0 := by
   cases' n with n
-  · simp
+  simp
   cases' n with n
-  · rw [sum_range_one]
-    simp
+  rw [sum_range_one]
+  simp
   suffices (∑ i ∈ range n, ↑((n + 2).choose (i + 2)) * bernoulli (i + 2)) = n / 2 by
     simp only [this, sum_range_succ', cast_succ, bernoulli_one, bernoulli_zero, choose_one_right,
       mul_one, choose_zero_right, cast_zero, if_false, zero_add, succ_succ_ne_one]
@@ -219,18 +219,18 @@ theorem sum_bernoulli (n : ℕ) :
   simp_rw [sum_range_succ', cast_succ, ← eq_sub_iff_add_eq] at f
   -- Porting note: was `convert f`
   refine Eq.trans ?_ (Eq.trans f ?_)
-  · congr
-    funext x
-    rw [bernoulli_eq_bernoulli'_of_ne_one (succ_ne_zero x ∘ succ.inj)]
-  · simp only [one_div, mul_one, bernoulli'_zero, cast_one, choose_zero_right, add_sub_cancel_right,
-      zero_add, choose_one_right, cast_succ, cast_add, cast_one, bernoulli'_one, one_div]
-    ring
+  congr
+  funext x
+  rw [bernoulli_eq_bernoulli'_of_ne_one (succ_ne_zero x ∘ succ.inj)]
+  simp only [one_div, mul_one, bernoulli'_zero, cast_one, choose_zero_right, add_sub_cancel_right,
+    zero_add, choose_one_right, cast_succ, cast_add, cast_one, bernoulli'_one, one_div]
+  ring
 
 theorem bernoulli_spec' (n : ℕ) :
     (∑ k ∈ antidiagonal n, ((k.1 + k.2).choose k.2 : ℚ) / (k.2 + 1) * bernoulli k.1) =
       if n = 0 then 1 else 0 := by
   cases' n with n
-  · simp
+  simp
   rw [if_neg (succ_ne_zero _)]
   -- algebra facts
   have h₁ : (1, n) ∈ antidiagonal n.succ
@@ -245,11 +245,11 @@ theorem bernoulli_spec' (n : ℕ) :
   rw [sum_eq_add_sum_diff_singleton h₁] at H ⊢
   apply add_eq_of_eq_sub'
   convert eq_sub_of_add_eq' H using 1
-  · refine sum_congr rfl fun p h => ?_
-    obtain ⟨h', h''⟩ : p ∈ _ ∧ p ≠ _ := by rwa [mem_sdiff, mem_singleton] at h
-    simp [bernoulli_eq_bernoulli'_of_ne_one ((not_congr (antidiagonal_congr h' h₁)).mp h'')]
-  · field_simp [h₃]
-    norm_num
+  refine sum_congr rfl fun p h => ?_
+  obtain ⟨h', h''⟩ : p ∈ _ ∧ p ≠ _ := by rwa [mem_sdiff, mem_singleton] at h
+  simp [bernoulli_eq_bernoulli'_of_ne_one ((not_congr (antidiagonal_congr h' h₁)).mp h'')]
+  field_simp [h₃]
+  norm_num
 
 /-- The exponential generating function for the Bernoulli numbers `bernoulli n`. -/
 def bernoulliPowerSeries :=
@@ -259,13 +259,13 @@ theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A -
   ext n
   -- constant coefficient is a special case
   cases' n with n
-  · simp
+  simp
   simp only [bernoulliPowerSeries, coeff_mul, coeff_X, sum_antidiagonal_succ', one_div, coeff_mk,
     coeff_one, coeff_exp, LinearMap.map_sub, factorial, if_pos, cast_succ, cast_one, cast_mul,
     sub_zero, RingHom.map_one, add_eq_zero_iff, if_false, _root_.inv_one, zero_add, one_ne_zero,
     mul_zero, and_false_iff, sub_self, ← RingHom.map_mul, ← map_sum]
   cases' n with n
-  · simp
+  simp
   rw [if_neg n.succ_succ_ne_one]
   have hfact : ∀ m, (m ! : ℚ) ≠ 0 := fun m => mod_cast factorial_ne_zero m
   have hite2 : ite (n.succ = 0) 1 0 = (0 : ℚ) := if_neg n.succ_ne_zero
@@ -309,9 +309,9 @@ theorem sum_range_pow (n p : ℕ) :
       map_inv₀, map_natCast, coeff_mk, mul_inv_rev]
     rw [mul_comm ((n : ℚ) ^ (q - m + 1)), ← mul_assoc _ _ ((n : ℚ) ^ (q - m + 1)), ← one_div,
       mul_one_div, div_div, tsub_add_eq_add_tsub (le_of_lt_succ h), cast_div, cast_mul]
-    · ring
-    · exact factorial_mul_factorial_dvd_factorial h.le
-    · simp [hne, factorial_ne_zero]
+    ring
+    exact factorial_mul_factorial_dvd_factorial h.le
+    simp [hne, factorial_ne_zero]
   -- same as our goal except we pull out `p!` for convenience
   have hps :
     (∑ k ∈ range n, (k : ℚ) ^ p) =
@@ -339,9 +339,9 @@ theorem sum_range_pow (n p : ℕ) :
       bernoulliPowerSeries, mul_right_comm]
     simp only [mul_comm, mul_eq_mul_left_iff, hexp, or_false]
     refine Eq.trans (mul_eq_mul_right_iff.mpr ?_) (Eq.trans h_cauchy ?_)
-    · left
-      congr
-    · simp only [mul_comm, factorial, cast_succ, cast_pow]
+    left
+    congr
+    simp only [mul_comm, factorial, cast_succ, cast_pow]
 
   -- massage `hps` into our goal
   rw [hps, sum_mul]
@@ -358,7 +358,7 @@ theorem sum_Ico_pow (n p : ℕ) :
   rw [← Nat.cast_succ]
   -- dispose of the trivial case
   cases' p with p
-  · simp
+  simp
   let f i := bernoulli i * p.succ.succ.choose i * (n : ℚ) ^ (p.succ.succ - i) / p.succ.succ
   let f' i := bernoulli' i * p.succ.succ.choose i * (n : ℚ) ^ (p.succ.succ - i) / p.succ.succ
   suffices (∑ k ∈ Ico 1 n.succ, (k : ℚ) ^ p.succ) = ∑ i ∈ range p.succ.succ, f' i by convert this

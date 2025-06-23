@@ -226,18 +226,18 @@ variable {f : ℝ → ℝ} {f' : ℝ} {s : Set ℝ} {a b : ℝ}
 lemma one_mem_posTangentConeAt_iff_mem_closure :
     1 ∈ posTangentConeAt s a ↔ a ∈ closure (Ioi a ∩ s) := by
   constructor
-  · rintro ⟨c, d, hs, hc, hcd⟩
-    have : Tendsto (a + d ·) atTop (𝓝 a)
-    simpa only [add_zero] using tendsto_const_nhds.add
-      (tangentConeAt.lim_zero _ (tendsto_abs_atTop_atTop.comp hc) hcd)
-    apply mem_closure_of_tendsto this
-    filter_upwards [hc.eventually_gt_atTop 0, hcd.eventually (lt_mem_nhds one_pos), hs]
-      with n hcn hcdn hdn
-    simp_all
-  · intro h
-    apply mem_posTangentConeAt_of_frequently_mem
-    rw [mem_closure_iff_frequently, ← map_add_left_nhds_zero, frequently_map] at h
-    simpa [nhdsWithin, frequently_inf_principal] using h
+  rintro ⟨c, d, hs, hc, hcd⟩
+  have : Tendsto (a + d ·) atTop (𝓝 a)
+  simpa only [add_zero] using tendsto_const_nhds.add
+    (tangentConeAt.lim_zero _ (tendsto_abs_atTop_atTop.comp hc) hcd)
+  apply mem_closure_of_tendsto this
+  filter_upwards [hc.eventually_gt_atTop 0, hcd.eventually (lt_mem_nhds one_pos), hs]
+    with n hcn hcdn hdn
+  simp_all
+  intro h
+  apply mem_posTangentConeAt_of_frequently_mem
+  rw [mem_closure_iff_frequently, ← map_add_left_nhds_zero, frequently_map] at h
+  simpa [nhdsWithin, frequently_inf_principal] using h
 
 lemma one_mem_posTangentConeAt_iff_frequently :
     1 ∈ posTangentConeAt s a ↔ ∃ᶠ x in 𝓝[>] a, x ∈ s := by

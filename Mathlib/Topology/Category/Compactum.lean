@@ -161,15 +161,15 @@ theorem isClosed_iff {X : Compactum} (S : Set X) :
     IsClosed S ↔ ∀ F : Ultrafilter X, S ∈ F → X.str F ∈ S := by
   rw [← isOpen_compl_iff]
   constructor
-  · intro cond F h
-    by_contra c
-    specialize cond F c
-    rw [compl_mem_iff_not_mem] at cond
-    contradiction
-  · intro h1 F h2
-    specialize h1 F
-    cases' F.mem_or_compl_mem S with h h
-    exacts [absurd (h1 h) h2, h]
+  intro cond F h
+  by_contra c
+  specialize cond F c
+  rw [compl_mem_iff_not_mem] at cond
+  contradiction
+  intro h1 F h2
+  specialize h1 F
+  cases' F.mem_or_compl_mem S with h h
+  exacts [absurd (h1 h) h2, h]
 
 instance {X : Compactum} : CompactSpace X := by
   constructor
@@ -194,8 +194,8 @@ private theorem basic_inter {X : Compactum} (A B : Set X) : basic (A ∩ B) = ba
   · intro hG
     constructor <;> filter_upwards [hG] with _
     exacts [And.left, And.right]
-  · rintro ⟨h1, h2⟩
-    exact inter_mem h1 h2
+  rintro ⟨h1, h2⟩
+  exact inter_mem h1 h2
 
 private theorem subset_cl {X : Compactum} (A : Set X) : A ⊆ cl A := fun a ha =>
   ⟨X.incl a, ha, by simp⟩
@@ -246,9 +246,9 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A := by
   suffices ∀ P ∈ C2, P ∈ C0 ∨ ∃ Q ∈ C0, P = AA ∩ Q by
     intro P hP
     cases' this P hP with h h
-    · exact claim2 _ h
-    · rcases h with ⟨Q, hQ, rfl⟩
-      exact claim3 _ hQ
+    exact claim2 _ h
+    rcases h with ⟨Q, hQ, rfl⟩
+    exact claim3 _ hQ
   intro P hP
   exact claim5.finiteInterClosure_insert _ hP
   intro T hT
@@ -304,20 +304,20 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
   suffices ∀ S ∈ T2, S ∈ T0 ∨ ∃ Q ∈ T0, S = AA ∩ Q by
     intro S hS
     cases' this _ hS with h h
-    · exact claim5 S h
-    · rcases h with ⟨Q, hQ, rfl⟩
-      exact claim4 Q hQ
+    exact claim5 S h
+    rcases h with ⟨Q, hQ, rfl⟩
+    exact claim4 Q hQ
   intro S hS
   apply finiteInterClosure_insert
-  · constructor
-    · use Set.univ
-      refine ⟨Filter.univ_sets _, ?_⟩
-      ext
-      refine ⟨?_, by tauto⟩
-      · intro
-        apply Filter.univ_sets
-    · exact claim3
-  · exact hS
+  constructor
+  use Set.univ
+  refine ⟨Filter.univ_sets _, ?_⟩
+  ext
+  refine ⟨?_, by tauto⟩
+  intro
+  apply Filter.univ_sets
+  exact claim3
+  exact hS
   -- It suffices to show that the intersection of any finite subset of T1 is nonempty.
   suffices ∀ F : fsu, ↑F ⊆ T1 → (⋂₀ ι F).Nonempty by
     obtain ⟨G, h1⟩ := Ultrafilter.exists_ultrafilter_of_finite_inter_nonempty _ this
@@ -352,10 +352,10 @@ theorem cl_eq_closure {X : Compactum} (A : Set X) : cl A = closure A := by
   ext
   rw [mem_closure_iff_ultrafilter]
   constructor
-  · rintro ⟨F, h1, h2⟩
-    exact ⟨F, h1, le_nhds_of_str_eq _ _ h2⟩
-  · rintro ⟨F, h1, h2⟩
-    exact ⟨F, h1, str_eq_of_le_nhds _ _ h2⟩
+  rintro ⟨F, h1, h2⟩
+  exact ⟨F, h1, le_nhds_of_str_eq _ _ h2⟩
+  rintro ⟨F, h1, h2⟩
+  exact ⟨F, h1, str_eq_of_le_nhds _ _ h2⟩
 
 /-- Any morphism of compacta is continuous. -/
 theorem continuous_of_hom {X Y : Compactum} (f : X ⟶ Y) : Continuous f := by

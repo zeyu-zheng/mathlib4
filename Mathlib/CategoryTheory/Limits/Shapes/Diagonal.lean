@@ -271,10 +271,10 @@ theorem pullback_map_diagonal_isPullback :
       (diagonal i)
       (pullback.map (f ≫ i) (g ≫ i) i i f g (𝟙 _) (Category.comp_id _) (Category.comp_id _)) := by
   apply IsPullback.of_iso_pullback _ (pullbackDiagonalMapIdIso f g i).symm
-  · simp
-  · ext <;> simp
-  · constructor
-    ext <;> simp [condition]
+  simp
+  ext <;> simp
+  constructor
+  ext <;> simp [condition]
 
 /-- The diagonal object of `X ×[Z] Y ⟶ X` is isomorphic to `Δ_{Y/Z} ×[Z] X`. -/
 def diagonalObjPullbackFstIso {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :

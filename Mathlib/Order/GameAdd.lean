@@ -57,9 +57,9 @@ theorem gameAdd_iff {rα rβ} {x y : α × β} :
   constructor
   · rintro (@⟨a₁, a₂, b, h⟩ | @⟨a, b₁, b₂, h⟩)
     exacts [Or.inl ⟨h, rfl⟩, Or.inr ⟨h, rfl⟩]
-  · revert x y
-    rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨h, rfl : b₁ = b₂⟩ | ⟨h, rfl : a₁ = a₂⟩)
-    exacts [GameAdd.fst h, GameAdd.snd h]
+  revert x y
+  rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨h, rfl : b₁ = b₂⟩ | ⟨h, rfl : a₁ = a₂⟩)
+  exacts [GameAdd.fst h, GameAdd.snd h]
 
 theorem gameAdd_mk_iff {rα rβ} {a₁ a₂ : α} {b₁ b₂ : β} :
     GameAdd rα rβ (a₁, b₁) (a₂, b₂) ↔ rα a₁ a₂ ∧ b₁ = b₂ ∨ rβ b₁ b₂ ∧ a₁ = a₂ :=
@@ -183,12 +183,12 @@ theorem Acc.sym2_gameAdd {a b} (ha : Acc rα a) (hb : Acc rα b) :
   rw [Sym2.GameAdd]
   dsimp
   rintro ((rc | rd) | (rd | rc))
-  · exact iha c rc ⟨b, hb⟩
-  · exact ihb d rd
-  · rw [Sym2.eq_swap]
-    exact iha d rd ⟨b, hb⟩
-  · rw [Sym2.eq_swap]
-    exact ihb c rc
+  exact iha c rc ⟨b, hb⟩
+  exact ihb d rd
+  rw [Sym2.eq_swap]
+  exact iha d rd ⟨b, hb⟩
+  rw [Sym2.eq_swap]
+  exact ihb c rc
 
 /-- The `Sym2.GameAdd` relation on well-founded inputs is well-founded. -/
 theorem WellFounded.sym2_gameAdd (h : WellFounded rα) : WellFounded (Sym2.GameAdd rα) :=

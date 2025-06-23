@@ -558,8 +558,8 @@ theorem biproduct.map_eq_map' {f g : J → C} [HasBiproduct f] [HasBiproduct g] 
   dsimp
   rw [biproduct.ι_π_assoc, biproduct.ι_π]
   split_ifs with h
-  · subst h; rw [eqToHom_refl, Category.id_comp]; erw [Category.comp_id]
-  · simp
+  subst h; rw [eqToHom_refl, Category.id_comp]; erw [Category.comp_id]
+  simp
 
 @[reassoc (attr := simp)]
 theorem biproduct.map_π {f g : J → C} [HasBiproduct f] [HasBiproduct g] (p : ∀ j, f j ⟶ g j)
@@ -614,14 +614,14 @@ lemma biproduct.whiskerEquiv_hom_eq_lift {f : J → C} {g : K → C} (e : J ≃ 
   simp only [whiskerEquiv_hom]
   ext k j
   by_cases h : k = e j
-  · subst h
-    simp
-  · simp only [ι_desc_assoc, Category.assoc, ne_eq, lift_π]
-    rw [biproduct.ι_π_ne, biproduct.ι_π_ne_assoc]
-    · simp
-    · rintro rfl
-      simp at h
-    · exact Ne.symm h
+  subst h
+  simp
+  simp only [ι_desc_assoc, Category.assoc, ne_eq, lift_π]
+  rw [biproduct.ι_π_ne, biproduct.ι_π_ne_assoc]
+  simp
+  rintro rfl
+  simp at h
+  exact Ne.symm h
 
 lemma biproduct.whiskerEquiv_inv_eq_lift {f : J → C} {g : K → C} (e : J ≃ K)
     (w : ∀ j, g (e j) ≅ f j) [HasBiproduct f] [HasBiproduct g] :
@@ -630,16 +630,16 @@ lemma biproduct.whiskerEquiv_inv_eq_lift {f : J → C} {g : K → C} (e : J ≃ 
   simp only [whiskerEquiv_inv]
   ext j k
   by_cases h : k = e j
-  · subst h
-    simp only [ι_desc_assoc, ← eqToHom_iso_hom_naturality_assoc w (e.symm_apply_apply j).symm,
-      Equiv.symm_apply_apply, eqToHom_comp_ι, Category.assoc, bicone_ι_π_self, Category.comp_id,
-      lift_π, bicone_ι_π_self_assoc]
-  · simp only [ι_desc_assoc, Category.assoc, ne_eq, lift_π]
-    rw [biproduct.ι_π_ne, biproduct.ι_π_ne_assoc]
-    · simp
-    · exact h
-    · rintro rfl
-      simp at h
+  subst h
+  simp only [ι_desc_assoc, ← eqToHom_iso_hom_naturality_assoc w (e.symm_apply_apply j).symm,
+    Equiv.symm_apply_apply, eqToHom_comp_ι, Category.assoc, bicone_ι_π_self, Category.comp_id,
+    lift_π, bicone_ι_π_self_assoc]
+  simp only [ι_desc_assoc, Category.assoc, ne_eq, lift_π]
+  rw [biproduct.ι_π_ne, biproduct.ι_π_ne_assoc]
+  simp
+  exact h
+  rintro rfl
+  simp at h
 
 instance {ι} (f : ι → Type*) (g : (i : ι) → (f i) → C)
     [∀ i, HasBiproduct (g i)] [HasBiproduct fun i => ⨁ g i] :
@@ -651,14 +651,14 @@ instance {ι} (f : ι → Type*) (g : (i : ι) → (f i) → C)
         π := fun X => biproduct.π (fun i => ⨁ g i) X.1 ≫ biproduct.π (g X.1) X.2
         ι_π := fun ⟨j, x⟩ ⟨j', y⟩ => by
           split_ifs with h
-          · obtain ⟨rfl, rfl⟩ := h
-            simp
-          · simp only [Sigma.mk.inj_iff, not_and] at h
-            by_cases w : j = j'
-            · cases w
-              simp only [heq_eq_eq, forall_true_left] at h
-              simp [biproduct.ι_π_ne _ h]
-            · simp [biproduct.ι_π_ne_assoc _ w] }
+          obtain ⟨rfl, rfl⟩ := h
+          simp
+          simp only [Sigma.mk.inj_iff, not_and] at h
+          by_cases w : j = j'
+          cases w
+          simp only [heq_eq_eq, forall_true_left] at h
+          simp [biproduct.ι_π_ne _ h]
+          simp [biproduct.ι_π_ne_assoc _ w] }
       isBilimit :=
       { isLimit := mkFanLimit _
           (fun s => biproduct.lift fun b => biproduct.lift fun c => s.proj ⟨b, c⟩)
@@ -700,7 +700,7 @@ theorem biproduct.fromSubtype_π [DecidablePred p] (j : J) :
   · rw [dif_pos h, biproduct.ι_π]
     split_ifs with h₁ h₂ h₂
     exacts [rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_arg Subtype.val h₂)), rfl]
-  · rw [dif_neg h, dif_neg (show (i : J) ≠ j from fun h₂ => h (h₂ ▸ i.2)), comp_zero]
+  rw [dif_neg h, dif_neg (show (i : J) ≠ j from fun h₂ => h (h₂ ▸ i.2)), comp_zero]
 
 theorem biproduct.fromSubtype_eq_lift [DecidablePred p] :
     biproduct.fromSubtype f p =
@@ -730,7 +730,7 @@ theorem biproduct.ι_toSubtype [DecidablePred p] (j : J) :
   · rw [dif_pos h, biproduct.ι_π]
     split_ifs with h₁ h₂ h₂
     exacts [rfl, False.elim (h₂ (Subtype.ext h₁)), False.elim (h₁ (congr_arg Subtype.val h₂)), rfl]
-  · rw [dif_neg h, dif_neg (show j ≠ i from fun h₂ => h (h₂.symm ▸ i.2)), zero_comp]
+  rw [dif_neg h, dif_neg (show j ≠ i from fun h₂ => h (h₂.symm ▸ i.2)), zero_comp]
 
 theorem biproduct.toSubtype_eq_desc [DecidablePred p] :
     biproduct.toSubtype f p =
@@ -762,8 +762,8 @@ theorem biproduct.toSubtype_fromSubtype [DecidablePred p] :
       biproduct.map fun j => if p j then 𝟙 (f j) else 0 := by
   ext1 i
   by_cases h : p i
-  · simp [h]
-  · simp [h]
+  simp [h]
+  simp [h]
 
 end
 
@@ -1004,8 +1004,8 @@ variable (C)
 instance (priority := 100) hasZeroObject_of_hasFiniteBiproducts [HasFiniteBiproducts C] :
     HasZeroObject C := by
   refine ⟨⟨biproduct Empty.elim, fun X => ⟨⟨⟨0⟩, ?_⟩⟩, fun X => ⟨⟨⟨0⟩, ?_⟩⟩⟩⟩
-  · intro a; apply biproduct.hom_ext'; simp
-  · intro a; apply biproduct.hom_ext; simp
+  intro a; apply biproduct.hom_ext'; simp
+  intro a; apply biproduct.hom_ext; simp
 
 section
 
@@ -1575,22 +1575,22 @@ theorem biprod_isoCoprod_hom {X Y : C} [HasBinaryBiproduct X Y] :
 theorem biprod.map_eq_map' {W X Y Z : C} [HasBinaryBiproduct W X] [HasBinaryBiproduct Y Z]
     (f : W ⟶ Y) (g : X ⟶ Z) : biprod.map f g = biprod.map' f g := by
   ext
-  · simp only [mapPair_left, IsColimit.ι_map, IsLimit.map_π, biprod.inl_fst_assoc,
-      Category.assoc, ← BinaryBicone.toCone_π_app_left, ← BinaryBiproduct.bicone_fst, ←
-      BinaryBicone.toCocone_ι_app_left, ← BinaryBiproduct.bicone_inl]
-    dsimp; simp
-  · simp only [mapPair_left, IsColimit.ι_map, IsLimit.map_π, zero_comp, biprod.inl_snd_assoc,
-      Category.assoc, ← BinaryBicone.toCone_π_app_right, ← BinaryBiproduct.bicone_snd, ←
-      BinaryBicone.toCocone_ι_app_left, ← BinaryBiproduct.bicone_inl]
-    simp
-  · simp only [mapPair_right, biprod.inr_fst_assoc, IsColimit.ι_map, IsLimit.map_π, zero_comp,
-      Category.assoc, ← BinaryBicone.toCone_π_app_left, ← BinaryBiproduct.bicone_fst, ←
-      BinaryBicone.toCocone_ι_app_right, ← BinaryBiproduct.bicone_inr]
-    simp
-  · simp only [mapPair_right, IsColimit.ι_map, IsLimit.map_π, biprod.inr_snd_assoc,
-      Category.assoc, ← BinaryBicone.toCone_π_app_right, ← BinaryBiproduct.bicone_snd, ←
-      BinaryBicone.toCocone_ι_app_right, ← BinaryBiproduct.bicone_inr]
-    simp
+  simp only [mapPair_left, IsColimit.ι_map, IsLimit.map_π, biprod.inl_fst_assoc,
+    Category.assoc, ← BinaryBicone.toCone_π_app_left, ← BinaryBiproduct.bicone_fst, ←
+    BinaryBicone.toCocone_ι_app_left, ← BinaryBiproduct.bicone_inl]
+  dsimp; simp
+  simp only [mapPair_left, IsColimit.ι_map, IsLimit.map_π, zero_comp, biprod.inl_snd_assoc,
+    Category.assoc, ← BinaryBicone.toCone_π_app_right, ← BinaryBiproduct.bicone_snd, ←
+    BinaryBicone.toCocone_ι_app_left, ← BinaryBiproduct.bicone_inl]
+  simp
+  simp only [mapPair_right, biprod.inr_fst_assoc, IsColimit.ι_map, IsLimit.map_π, zero_comp,
+    Category.assoc, ← BinaryBicone.toCone_π_app_left, ← BinaryBiproduct.bicone_fst, ←
+    BinaryBicone.toCocone_ι_app_right, ← BinaryBiproduct.bicone_inr]
+  simp
+  simp only [mapPair_right, IsColimit.ι_map, IsLimit.map_π, biprod.inr_snd_assoc,
+    Category.assoc, ← BinaryBicone.toCone_π_app_right, ← BinaryBiproduct.bicone_snd, ←
+    BinaryBicone.toCocone_ι_app_right, ← BinaryBiproduct.bicone_inr]
+  simp
 
 instance biprod.inl_mono {X Y : C} [HasBinaryBiproduct X Y] :
     IsSplitMono (biprod.inl : X ⟶ X ⊞ Y) :=
@@ -1678,12 +1678,12 @@ def biprod.uniqueUpToIso (X Y : C) [HasBinaryBiproduct X Y] {b : BinaryBicone X 
 theorem biprod.isIso_inl_iff_id_eq_fst_comp_inl (X Y : C) [HasBinaryBiproduct X Y] :
     IsIso (biprod.inl : X ⟶ X ⊞ Y) ↔ 𝟙 (X ⊞ Y) = biprod.fst ≫ biprod.inl := by
   constructor
-  · intro h
-    have := (cancel_epi (inv biprod.inl : X ⊞ Y ⟶ X)).2 <| @biprod.inl_fst _ _ _ X Y _
-    rw [IsIso.inv_hom_id_assoc, Category.comp_id] at this
-    rw [this, IsIso.inv_hom_id]
-  · intro h
-    exact ⟨⟨biprod.fst, biprod.inl_fst, h.symm⟩⟩
+  intro h
+  have := (cancel_epi (inv biprod.inl : X ⊞ Y ⟶ X)).2 <| @biprod.inl_fst _ _ _ X Y _
+  rw [IsIso.inv_hom_id_assoc, Category.comp_id] at this
+  rw [this, IsIso.inv_hom_id]
+  intro h
+  exact ⟨⟨biprod.fst, biprod.inl_fst, h.symm⟩⟩
 
 section BiprodKernel
 
@@ -1871,16 +1871,16 @@ def isoZeroBiprod {X Y : C} [HasBinaryBiproduct X Y] (hY : IsZero X) : Y ≅ X �
 lemma biprod_isZero_iff (A B : C) [HasBinaryBiproduct A B] :
     IsZero (biprod A B) ↔ IsZero A ∧ IsZero B := by
   constructor
-  · intro h
-    simp only [IsZero.iff_id_eq_zero] at h ⊢
-    simp only [show 𝟙 A = biprod.inl ≫ 𝟙 (A ⊞ B) ≫ biprod.fst by simp,
-      show 𝟙 B = biprod.inr ≫ 𝟙 (A ⊞ B) ≫ biprod.snd by simp, h, zero_comp, comp_zero,
-      and_self]
-  · rintro ⟨hA, hB⟩
-    rw [IsZero.iff_id_eq_zero]
-    apply biprod.hom_ext
-    · apply hA.eq_of_tgt
-    · apply hB.eq_of_tgt
+  intro h
+  simp only [IsZero.iff_id_eq_zero] at h ⊢
+  simp only [show 𝟙 A = biprod.inl ≫ 𝟙 (A ⊞ B) ≫ biprod.fst by simp,
+    show 𝟙 B = biprod.inr ≫ 𝟙 (A ⊞ B) ≫ biprod.snd by simp, h, zero_comp, comp_zero,
+    and_self]
+  rintro ⟨hA, hB⟩
+  rw [IsZero.iff_id_eq_zero]
+  apply biprod.hom_ext
+  apply hA.eq_of_tgt
+  apply hB.eq_of_tgt
 
 end IsZero
 

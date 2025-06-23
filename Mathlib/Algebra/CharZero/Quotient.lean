@@ -26,16 +26,16 @@ theorem zsmul_mem_zmultiples_iff_exists_sub_div {r : R} {z : ℤ} (hz : z ≠ 0)
   simp_rw [← zsmul_eq_mul, smul_add, ← mul_smul_comm, zsmul_eq_mul (z : R)⁻¹, mul_inv_cancel hz',
     mul_one, ← natCast_zsmul, smul_smul, ← add_smul]
   constructor
-  · rintro ⟨k, h⟩
-    simp_rw [← h]
-    refine ⟨⟨(k % z).toNat, ?_⟩, k / z, ?_⟩
-    · rw [← Int.ofNat_lt, Int.toNat_of_nonneg (Int.emod_nonneg _ hz)]
-      exact (Int.emod_lt _ hz).trans_eq (Int.abs_eq_natAbs _)
-    rw [Fin.val_mk, Int.toNat_of_nonneg (Int.emod_nonneg _ hz)]
-    nth_rewrite 3 [← Int.ediv_add_emod k z]
-    rfl
-  · rintro ⟨k, n, h⟩
-    exact ⟨_, h⟩
+  rintro ⟨k, h⟩
+  simp_rw [← h]
+  refine ⟨⟨(k % z).toNat, ?_⟩, k / z, ?_⟩
+  rw [← Int.ofNat_lt, Int.toNat_of_nonneg (Int.emod_nonneg _ hz)]
+  exact (Int.emod_lt _ hz).trans_eq (Int.abs_eq_natAbs _)
+  rw [Fin.val_mk, Int.toNat_of_nonneg (Int.emod_nonneg _ hz)]
+  nth_rewrite 3 [← Int.ediv_add_emod k z]
+  rfl
+  rintro ⟨k, n, h⟩
+  exact ⟨_, h⟩
 
 theorem nsmul_mem_zmultiples_iff_exists_sub_div {r : R} {n : ℕ} (hn : n ≠ 0) :
     n • r ∈ AddSubgroup.zmultiples p ↔

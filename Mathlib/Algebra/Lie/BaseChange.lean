@@ -61,48 +61,48 @@ theorem bracket_tmul (s t : A) (x : L) (y : M) : ⁅s ⊗ₜ[R] x, t ⊗ₜ[R] y
 private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x, x⁆ = 0 := by
   simp only [bracket_def]
   refine x.induction_on ?_ ?_ ?_
-  · simp only [LinearMap.map_zero, eq_self_iff_true, LinearMap.zero_apply]
-  · intro a l
-    simp only [bracket'_tmul, TensorProduct.tmul_zero, eq_self_iff_true, lie_self]
-  · intro z₁ z₂ h₁ h₂
-    suffices bracket' R A L L z₁ z₂ + bracket' R A L L z₂ z₁ = 0 by
-      rw [LinearMap.map_add, LinearMap.map_add, LinearMap.add_apply, LinearMap.add_apply, h₁, h₂,
-        zero_add, add_zero, add_comm, this]
-    refine z₁.induction_on ?_ ?_ ?_
-    · simp only [LinearMap.map_zero, add_zero, LinearMap.zero_apply]
-    · intro a₁ l₁; refine z₂.induction_on ?_ ?_ ?_
-      · simp only [LinearMap.map_zero, add_zero, LinearMap.zero_apply]
-      · intro a₂ l₂
-        simp only [← lie_skew l₂ l₁, mul_comm a₁ a₂, TensorProduct.tmul_neg, bracket'_tmul,
-          add_right_neg]
-      · intro y₁ y₂ hy₁ hy₂
-        simp only [hy₁, hy₂, add_add_add_comm, add_zero, LinearMap.add_apply, LinearMap.map_add]
-    · intro y₁ y₂ hy₁ hy₂
-      simp only [add_add_add_comm, hy₁, hy₂, add_zero, LinearMap.add_apply, LinearMap.map_add]
+  simp only [LinearMap.map_zero, eq_self_iff_true, LinearMap.zero_apply]
+  intro a l
+  simp only [bracket'_tmul, TensorProduct.tmul_zero, eq_self_iff_true, lie_self]
+  intro z₁ z₂ h₁ h₂
+  suffices bracket' R A L L z₁ z₂ + bracket' R A L L z₂ z₁ = 0 by
+    rw [LinearMap.map_add, LinearMap.map_add, LinearMap.add_apply, LinearMap.add_apply, h₁, h₂,
+      zero_add, add_zero, add_comm, this]
+  refine z₁.induction_on ?_ ?_ ?_
+  simp only [LinearMap.map_zero, add_zero, LinearMap.zero_apply]
+  intro a₁ l₁; refine z₂.induction_on ?_ ?_ ?_
+  simp only [LinearMap.map_zero, add_zero, LinearMap.zero_apply]
+  intro a₂ l₂
+  simp only [← lie_skew l₂ l₁, mul_comm a₁ a₂, TensorProduct.tmul_neg, bracket'_tmul,
+    add_right_neg]
+  intro y₁ y₂ hy₁ hy₂
+  simp only [hy₁, hy₂, add_add_add_comm, add_zero, LinearMap.add_apply, LinearMap.map_add]
+  intro y₁ y₂ hy₁ hy₂
+  simp only [add_add_add_comm, hy₁, hy₂, add_zero, LinearMap.add_apply, LinearMap.map_add]
 
 private theorem bracket_leibniz_lie (x y : A ⊗[R] L) (z : A ⊗[R] M) :
     ⁅x, ⁅y, z⁆⁆ = ⁅⁅x, y⁆, z⁆ + ⁅y, ⁅x, z⁆⁆ := by
   -- Porting note: replaced some `simp`s by `rw`s to avoid raising heartbeats
   simp only [bracket_def]
   refine x.induction_on ?_ ?_ ?_
-  · simp only [LinearMap.map_zero, add_zero, LinearMap.zero_apply]
-  · intro a₁ l₁
-    refine y.induction_on ?_ ?_ ?_
-    · simp only [LinearMap.map_zero, add_zero, LinearMap.zero_apply]
-    · intro a₂ l₂
-      refine z.induction_on ?_ ?_ ?_
-      · rw [LinearMap.map_zero, LinearMap.map_zero, LinearMap.map_zero, LinearMap.map_zero,
-          add_zero]
-      · intro a₃ l₃; simp only [bracket'_tmul]
-        rw [mul_left_comm a₂ a₁ a₃, mul_assoc, leibniz_lie, TensorProduct.tmul_add]
-      · intro u₁ u₂ h₁ h₂
-        rw [map_add, map_add, map_add, map_add, map_add, h₁, h₂, add_add_add_comm]
-    · intro u₁ u₂ h₁ h₂
-      rw [map_add, LinearMap.add_apply, LinearMap.add_apply, map_add, map_add, map_add,
-        LinearMap.add_apply, h₁, h₂, add_add_add_comm]
-  · intro u₁ u₂ h₁ h₂
-    rw [map_add, LinearMap.add_apply, LinearMap.add_apply, map_add, map_add, LinearMap.add_apply,
-      map_add, LinearMap.add_apply, h₁, h₂, add_add_add_comm]
+  simp only [LinearMap.map_zero, add_zero, LinearMap.zero_apply]
+  intro a₁ l₁
+  refine y.induction_on ?_ ?_ ?_
+  simp only [LinearMap.map_zero, add_zero, LinearMap.zero_apply]
+  intro a₂ l₂
+  refine z.induction_on ?_ ?_ ?_
+  rw [LinearMap.map_zero, LinearMap.map_zero, LinearMap.map_zero, LinearMap.map_zero,
+    add_zero]
+  intro a₃ l₃; simp only [bracket'_tmul]
+  rw [mul_left_comm a₂ a₁ a₃, mul_assoc, leibniz_lie, TensorProduct.tmul_add]
+  intro u₁ u₂ h₁ h₂
+  rw [map_add, map_add, map_add, map_add, map_add, h₁, h₂, add_add_add_comm]
+  intro u₁ u₂ h₁ h₂
+  rw [map_add, LinearMap.add_apply, LinearMap.add_apply, map_add, map_add, map_add,
+    LinearMap.add_apply, h₁, h₂, add_add_add_comm]
+  intro u₁ u₂ h₁ h₂
+  rw [map_add, LinearMap.add_apply, LinearMap.add_apply, map_add, map_add, LinearMap.add_apply,
+    map_add, LinearMap.add_apply, h₁, h₂, add_add_add_comm]
 
 instance instLieRing : LieRing (A ⊗[R] L) where
   add_lie x y z := by simp only [bracket_def, LinearMap.add_apply, LinearMap.map_add]
@@ -219,33 +219,33 @@ lemma lie_baseChange {I : LieIdeal R L} {N : LieSubmodule R L M} :
   rw [← coe_toSubmodule_eq_iff, coe_baseChange, lieIdeal_oper_eq_linear_span',
     Submodule.baseChange_span, this, lieIdeal_oper_eq_linear_span']
   refine le_antisymm (Submodule.span_mono ?_) (Submodule.span_le.mpr ?_)
-  · rintro - ⟨x, hx, m, hm, rfl⟩
-    exact ⟨1 ⊗ₜ x, tmul_mem_baseChange_of_mem 1 hx,
-           1 ⊗ₜ m, tmul_mem_baseChange_of_mem 1 hm, by simp⟩
-  · rintro - ⟨x, hx, m, hm, rfl⟩
-    revert m
-    apply Submodule.span_induction
-      (p := fun x' ↦ ∀ m' ∈ N.baseChange A, ⁅x', m'⁆ ∈ Submodule.span A s) hx
-    · rintro _ ⟨y : L, hy : y ∈ I, rfl⟩ m hm
-      apply Submodule.span_induction (p := fun m' ↦ ⁅(1 : A) ⊗ₜ[R] y, m'⁆ ∈ Submodule.span A s) hm
-      · rintro - ⟨m', hm' : m' ∈ N, rfl⟩
-        rw [TensorProduct.mk_apply, LieAlgebra.ExtendScalars.bracket_tmul, mul_one]
-        apply Submodule.subset_span
-        exact ⟨y, hy, m', hm', rfl⟩
-      · simp
-      · intro u v hu hv
-        rw [lie_add]
-        exact Submodule.add_mem _ hu hv
-      · intro a u hu
-        rw [lie_smul]
-        exact Submodule.smul_mem _ a hu
-    · simp
-    · intro x y hx hy m' hm'
-      rw [add_lie]
-      exact Submodule.add_mem _ (hx _ hm') (hy _ hm')
-    · intro a x hx m' hm'
-      rw [smul_lie]
-      exact Submodule.smul_mem _ a (hx _ hm')
+  rintro - ⟨x, hx, m, hm, rfl⟩
+  exact ⟨1 ⊗ₜ x, tmul_mem_baseChange_of_mem 1 hx,
+         1 ⊗ₜ m, tmul_mem_baseChange_of_mem 1 hm, by simp⟩
+  rintro - ⟨x, hx, m, hm, rfl⟩
+  revert m
+  apply Submodule.span_induction
+    (p := fun x' ↦ ∀ m' ∈ N.baseChange A, ⁅x', m'⁆ ∈ Submodule.span A s) hx
+  rintro _ ⟨y : L, hy : y ∈ I, rfl⟩ m hm
+  apply Submodule.span_induction (p := fun m' ↦ ⁅(1 : A) ⊗ₜ[R] y, m'⁆ ∈ Submodule.span A s) hm
+  rintro - ⟨m', hm' : m' ∈ N, rfl⟩
+  rw [TensorProduct.mk_apply, LieAlgebra.ExtendScalars.bracket_tmul, mul_one]
+  apply Submodule.subset_span
+  exact ⟨y, hy, m', hm', rfl⟩
+  simp
+  intro u v hu hv
+  rw [lie_add]
+  exact Submodule.add_mem _ hu hv
+  intro a u hu
+  rw [lie_smul]
+  exact Submodule.smul_mem _ a hu
+  simp
+  intro x y hx hy m' hm'
+  rw [add_lie]
+  exact Submodule.add_mem _ (hx _ hm') (hy _ hm')
+  intro a x hx m' hm'
+  rw [smul_lie]
+  exact Submodule.smul_mem _ a (hx _ hm')
 
 end LieSubmodule
 

@@ -182,12 +182,12 @@ theorem norm_sub_le_of_mem_A {c : 𝕜} (hc : 1 < ‖c‖) {r ε : ℝ} (hε : 0
     _ ≤ ‖f (x + y) - f x - L₂ (x + y - x)‖ + ‖f (x + y) - f x - L₁ (x + y - x)‖ := norm_sub_le _ _
     _ ≤ ε * r + ε * r := by
       apply add_le_add
-      · apply le_of_mem_A h₂
-        · simp only [le_of_lt (half_pos hr), mem_closedBall, dist_self]
-        · simp only [dist_eq_norm, add_sub_cancel_left, mem_closedBall, ylt.le]
-      · apply le_of_mem_A h₁
-        · simp only [le_of_lt (half_pos hr), mem_closedBall, dist_self]
-        · simp only [dist_eq_norm, add_sub_cancel_left, mem_closedBall, ylt.le]
+      apply le_of_mem_A h₂
+      simp only [le_of_lt (half_pos hr), mem_closedBall, dist_self]
+      simp only [dist_eq_norm, add_sub_cancel_left, mem_closedBall, ylt.le]
+      apply le_of_mem_A h₁
+      simp only [le_of_lt (half_pos hr), mem_closedBall, dist_self]
+      simp only [dist_eq_norm, add_sub_cancel_left, mem_closedBall, ylt.le]
     _ = 2 * ε * r := by ring
     _ ≤ 2 * ε * (2 * ‖c‖ * ‖y‖) := by gcongr
     _ = 4 * ‖c‖ * ε * ‖y‖ := by ring
@@ -205,8 +205,8 @@ theorem differentiable_set_subset_D :
     exists_pow_lt_of_lt_one R_pos (by norm_num : (1 : ℝ) / 2 < 1)
   simp only [mem_iUnion, mem_iInter, B, mem_inter_iff]
   refine ⟨n, fun p hp q hq => ⟨fderiv 𝕜 f x, hx.2, ⟨?_, ?_⟩⟩⟩ <;>
-    · refine hR _ ⟨pow_pos (by norm_num) _, lt_of_le_of_lt ?_ hn⟩
-      exact pow_le_pow_of_le_one (by norm_num) (by norm_num) (by assumption)
+  · refine hR _ ⟨pow_pos (by norm_num) _, lt_of_le_of_lt ?_ hn⟩
+    exact pow_le_pow_of_le_one (by norm_num) (by norm_num) (by assumption)
 
 /-- Harder inclusion: at a point in `D f K`, the function `f` has a derivative, in `K`. -/
 theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete K) :
@@ -302,7 +302,7 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
     -- We need to show that `f (x + y) - f x - f' y` is small. For this, we will work at scale
     -- `k` where `k` is chosen with `‖y‖ ∼ 2 ^ (-k)`.
     by_cases y_pos : y = 0
-    · simp [y_pos]
+    simp [y_pos]
     have yzero : 0 < ‖y‖ := norm_pos_iff.mpr y_pos
     have y_lt : ‖y‖ < (1 / 2) ^ (n e + 1) := by simpa using mem_ball_iff_norm.1 hy
     have yone : ‖y‖ ≤ 1 := le_trans y_lt.le (pow_le_one _ (by norm_num) (by norm_num))
@@ -323,10 +323,10 @@ theorem D_subset_differentiable_set {K : Set (E →L[𝕜] F)} (hK : IsComplete 
     -- (in fact, we use `m = k - 1` instead of `k` because of the precise definition of `A`).
     have J1 : ‖f (x + y) - f x - L e (n e) m (x + y - x)‖ ≤ (1 / 2) ^ e * (1 / 2) ^ m := by
       apply le_of_mem_A (hn e (n e) m le_rfl m_ge).2.2
-      · simp only [mem_closedBall, dist_self]
-        positivity
-      · simpa only [dist_eq_norm, add_sub_cancel_left, mem_closedBall, pow_succ, mul_one_div] using
-          h'k
+      simp only [mem_closedBall, dist_self]
+      positivity
+      simpa only [dist_eq_norm, add_sub_cancel_left, mem_closedBall, pow_succ, mul_one_div] using
+        h'k
     have J2 : ‖f (x + y) - f x - L e (n e) m y‖ ≤ 4 * (1 / 2) ^ e * ‖y‖ :=
       calc
         ‖f (x + y) - f x - L e (n e) m y‖ ≤ (1 / 2) ^ e * (1 / 2) ^ m := by
@@ -405,9 +405,9 @@ theorem stronglyMeasurable_deriv [MeasurableSpace 𝕜] [OpensMeasurableSpace �
     [h : SecondCountableTopologyEither 𝕜 F] (f : 𝕜 → F) : StronglyMeasurable (deriv f) := by
   borelize F
   rcases h.out with h𝕜|hF
-  · exact stronglyMeasurable_iff_measurable_separable.2
-      ⟨measurable_deriv f, isSeparable_range_deriv _⟩
-  · exact (measurable_deriv f).stronglyMeasurable
+  exact stronglyMeasurable_iff_measurable_separable.2
+    ⟨measurable_deriv f, isSeparable_range_deriv _⟩
+  exact (measurable_deriv f).stronglyMeasurable
 
 theorem aemeasurable_deriv [MeasurableSpace 𝕜] [OpensMeasurableSpace 𝕜] [MeasurableSpace F]
     [BorelSpace F] (f : 𝕜 → F) (μ : Measure 𝕜) : AEMeasurable (deriv f) μ :=
@@ -505,8 +505,8 @@ theorem mem_A_of_differentiable {ε : ℝ} (hε : 0 < ε) {x : ℝ}
         (hm ⟨hy.1, hy.2.trans_lt (by linarith [hr.2])⟩))
     _ ≤ ε / 2 * r + ε / 2 * r := by
       gcongr
-      · rw [Real.norm_of_nonneg] <;> linarith [hz.1, hz.2]
-      · rw [Real.norm_of_nonneg] <;> linarith [hy.1, hy.2]
+      rw [Real.norm_of_nonneg] <;> linarith [hz.1, hz.2]
+      rw [Real.norm_of_nonneg] <;> linarith [hy.1, hy.2]
     _ = ε * r := by ring
 
 theorem norm_sub_le_of_mem_A {r x : ℝ} (hr : 0 < r) (ε : ℝ) {L₁ L₂ : F} (h₁ : x ∈ A f L₁ r ε)
@@ -523,8 +523,8 @@ theorem norm_sub_le_of_mem_A {r x : ℝ} (hr : 0 < r) (ε : ℝ) {L₁ L₂ : F}
       norm_sub_le _ _
     _ ≤ ε * r + ε * r := by
       apply add_le_add
-      · apply le_of_mem_A h₂ <;> simp [(half_pos hr).le]
-      · apply le_of_mem_A h₁ <;> simp [(half_pos hr).le]
+      apply le_of_mem_A h₂ <;> simp [(half_pos hr).le]
+      apply le_of_mem_A h₁ <;> simp [(half_pos hr).le]
     _ = r / 2 * (4 * ε) := by ring
 
 /-- Easy inclusion: a differentiability point with derivative in `K` belongs to `D f K`. -/
@@ -539,8 +539,8 @@ theorem differentiable_set_subset_D :
     exists_pow_lt_of_lt_one R_pos (by norm_num : (1 : ℝ) / 2 < 1)
   simp only [mem_iUnion, mem_iInter, B, mem_inter_iff]
   refine ⟨n, fun p hp q hq => ⟨derivWithin f (Ici x) x, hx.2, ⟨?_, ?_⟩⟩⟩ <;>
-    · refine hR _ ⟨pow_pos (by norm_num) _, lt_of_le_of_lt ?_ hn⟩
-      exact pow_le_pow_of_le_one (by norm_num) (by norm_num) (by assumption)
+  · refine hR _ ⟨pow_pos (by norm_num) _, lt_of_le_of_lt ?_ hn⟩
+    exact pow_le_pow_of_le_one (by norm_num) (by norm_num) (by assumption)
 
 /-- Harder inclusion: at a point in `D f K`, the function `f` has a derivative, in `K`. -/
 theorem D_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
@@ -638,7 +638,7 @@ theorem D_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
     -- We need to show that `f y - f x - f' (y - x)` is small. For this, we will work at scale
     -- `k` where `k` is chosen with `‖y - x‖ ∼ 2 ^ (-k)`.
     rcases eq_or_lt_of_le hy.1 with (rfl | xy)
-    · simp only [sub_self, zero_smul, norm_zero, mul_zero, le_rfl]
+    simp only [sub_self, zero_smul, norm_zero, mul_zero, le_rfl]
     have yzero : 0 < y - x := sub_pos.2 xy
     have y_le : y - x ≤ (1 / 2) ^ (n e + 1) := by linarith [hy.2]
     have yone : y - x ≤ 1 := le_trans y_le (pow_le_one _ (by norm_num) (by norm_num))
@@ -661,10 +661,10 @@ theorem D_subset_differentiable_set {K : Set F} (hK : IsComplete K) :
       calc
         ‖f y - f x - (y - x) • L e (n e) m‖ ≤ (1 / 2) ^ e * (1 / 2) ^ m := by
           apply le_of_mem_A (hn e (n e) m le_rfl m_ge).2.2
-          · simp only [one_div, inv_pow, left_mem_Icc, le_add_iff_nonneg_right]
-            positivity
-          · simp only [pow_add, tsub_le_iff_left] at h'k
-            simpa only [hy.1, mem_Icc, true_and_iff, one_div, pow_one] using h'k
+          simp only [one_div, inv_pow, left_mem_Icc, le_add_iff_nonneg_right]
+          positivity
+          simp only [pow_add, tsub_le_iff_left] at h'k
+          simpa only [hy.1, mem_Icc, true_and_iff, one_div, pow_one] using h'k
         _ = 4 * (1 / 2) ^ e * (1 / 2) ^ (m + 2) := by field_simp; ring
         _ ≤ 4 * (1 / 2) ^ e * (y - x) := by gcongr
         _ = 4 * (1 / 2) ^ e * ‖y - x‖ := by rw [Real.norm_of_nonneg yzero.le]
@@ -853,17 +853,17 @@ lemma isOpen_A_with_param {r s : ℝ} (hf : Continuous f.uncurry) (L : E →L[�
   _ ≤ ‖f a' z - f a z‖ + ‖f a y - f a' y‖ + ‖f a z - f a y - (L z - L y)‖ := norm_add₃_le _ _ _
   _ ≤ ε + ε + b := by
       gcongr
-      · rw [← dist_eq_norm]
-        change dist (f.uncurry (a', z)) (f.uncurry (a, z)) ≤ ε
-        apply (hu _ _ _).le
-        · exact ha'x'.1
-        · simp [dzx]
-      · rw [← dist_eq_norm']
-        change dist (f.uncurry (a', y)) (f.uncurry (a, y)) ≤ ε
-        apply (hu _ _ _).le
-        · exact ha'x'.1
-        · simp [dyx]
-      · simp [hb, dyx, dzx]
+      rw [← dist_eq_norm]
+      change dist (f.uncurry (a', z)) (f.uncurry (a, z)) ≤ ε
+      apply (hu _ _ _).le
+      exact ha'x'.1
+      simp [dzx]
+      rw [← dist_eq_norm']
+      change dist (f.uncurry (a', y)) (f.uncurry (a, y)) ≤ ε
+      apply (hu _ _ _).le
+      exact ha'x'.1
+      simp [dyx]
+      simp [hb, dyx, dzx]
   _ < s * r := by linarith
 
 lemma isOpen_B_with_param {r s t : ℝ} (hf : Continuous f.uncurry) (K : Set (E →L[𝕜] F)) :
@@ -938,20 +938,20 @@ theorem stronglyMeasurable_deriv_with_param [LocallyCompactSpace 𝕜] [Measurab
     StronglyMeasurable (fun (p : α × 𝕜) ↦ deriv (f p.1) p.2) := by
   borelize F
   rcases h.out with hα|hF
-  · have : ProperSpace 𝕜 := .of_locallyCompactSpace 𝕜
-    apply stronglyMeasurable_iff_measurable_separable.2 ⟨measurable_deriv_with_param hf, ?_⟩
-    have : range (fun (p : α × 𝕜) ↦ deriv (f p.1) p.2)
-        ⊆ closure (Submodule.span 𝕜 (range f.uncurry)) := by
-      rintro - ⟨p, rfl⟩
-      have A : deriv (f p.1) p.2 ∈ closure (Submodule.span 𝕜 (range (f p.1)))
-      rw [← image_univ]
-      apply range_deriv_subset_closure_span_image _ dense_univ (mem_range_self _)
-      have B : range (f p.1) ⊆ range (f.uncurry)
-      rintro - ⟨x, rfl⟩
-      exact mem_range_self (p.1, x)
-      exact closure_mono (Submodule.span_mono B) A
-    exact (isSeparable_range hf).span.closure.mono this
-  · exact (measurable_deriv_with_param hf).stronglyMeasurable
+  have : ProperSpace 𝕜 := .of_locallyCompactSpace 𝕜
+  apply stronglyMeasurable_iff_measurable_separable.2 ⟨measurable_deriv_with_param hf, ?_⟩
+  have : range (fun (p : α × 𝕜) ↦ deriv (f p.1) p.2)
+      ⊆ closure (Submodule.span 𝕜 (range f.uncurry)) := by
+    rintro - ⟨p, rfl⟩
+    have A : deriv (f p.1) p.2 ∈ closure (Submodule.span 𝕜 (range (f p.1)))
+    rw [← image_univ]
+    apply range_deriv_subset_closure_span_image _ dense_univ (mem_range_self _)
+    have B : range (f p.1) ⊆ range (f.uncurry)
+    rintro - ⟨x, rfl⟩
+    exact mem_range_self (p.1, x)
+    exact closure_mono (Submodule.span_mono B) A
+  exact (isSeparable_range hf).span.closure.mono this
+  exact (measurable_deriv_with_param hf).stronglyMeasurable
 
 theorem aemeasurable_deriv_with_param [LocallyCompactSpace 𝕜] [MeasurableSpace 𝕜]
     [OpensMeasurableSpace 𝕜] [MeasurableSpace F]

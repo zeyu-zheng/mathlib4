@@ -131,8 +131,8 @@ protected lemma mk' {P : MorphismProperty Scheme} [P.RespectsIso]
         (∀ i, P (f ∣_ U i)) → P f) :
     IsLocalAtTarget P := by
   refine ⟨inferInstance, fun {X Y} f 𝒰 ↦ ⟨?_, fun H ↦ of_sSup_eq_top f _ 𝒰.iSup_opensRange ?_⟩⟩
-  · exact fun H i ↦ (P.arrow_mk_iso_iff (morphismRestrictOpensRange f _)).mp (restrict _ _ H)
-  · exact fun i ↦ (P.arrow_mk_iso_iff (morphismRestrictOpensRange f _)).mpr (H i)
+  exact fun H i ↦ (P.arrow_mk_iso_iff (morphismRestrictOpensRange f _)).mp (restrict _ _ H)
+  exact fun i ↦ (P.arrow_mk_iso_iff (morphismRestrictOpensRange f _)).mpr (H i)
 
 /-- The intersection of two morphism properties that are local at the target is again local at
 the target. -/
@@ -210,14 +210,14 @@ protected lemma mk' {P : MorphismProperty Scheme} [P.RespectsIso]
     IsLocalAtSource P := by
   refine ⟨inferInstance, fun {X Y} f 𝒰 ↦
     ⟨fun H i ↦ ?_, fun H ↦ of_sSup_eq_top f _ 𝒰.iSup_opensRange fun i ↦ ?_⟩⟩
-  · rw [← IsOpenImmersion.isoOfRangeEq_hom_fac (𝒰.map i) (Scheme.Opens.ι _)
-      (congr_arg Opens.carrier (𝒰.map i).opensRange.opensRange_ι.symm), Category.assoc,
-      P.cancel_left_of_respectsIso]
-    exact restrict _ _ H
-  · rw [← IsOpenImmersion.isoOfRangeEq_inv_fac (𝒰.map i) (Scheme.Opens.ι _)
-      (congr_arg Opens.carrier (𝒰.map i).opensRange.opensRange_ι.symm), Category.assoc,
-      P.cancel_left_of_respectsIso]
-    exact H _
+  rw [← IsOpenImmersion.isoOfRangeEq_hom_fac (𝒰.map i) (Scheme.Opens.ι _)
+    (congr_arg Opens.carrier (𝒰.map i).opensRange.opensRange_ι.symm), Category.assoc,
+    P.cancel_left_of_respectsIso]
+  exact restrict _ _ H
+  rw [← IsOpenImmersion.isoOfRangeEq_inv_fac (𝒰.map i) (Scheme.Opens.ι _)
+    (congr_arg Opens.carrier (𝒰.map i).opensRange.opensRange_ι.symm), Category.assoc,
+    P.cancel_left_of_respectsIso]
+  exact H _
 
 /-- The intersection of two morphism properties that are local at the target is again local at
 the target. -/
@@ -268,8 +268,8 @@ lemma isLocalAtTarget [P.IsMultiplicative]
     refine (iff_of_openCover (𝒰.pullbackCover f)).trans (forall_congr' fun i ↦ ?_)
     rw [← Scheme.OpenCover.pullbackHom_map]
     constructor
-    · exact hP _ _
-    · exact fun H ↦ P.comp_mem _ _ H (of_isOpenImmersion _)
+    exact hP _ _
+    exact fun H ↦ P.comp_mem _ _ H (of_isOpenImmersion _)
 
 end IsLocalAtSource
 
@@ -328,15 +328,15 @@ theorem respectsIso_mk {P : AffineTargetMorphismProperty}
       P f → @P _ _ (f ≫ e.hom) (isAffine_of_isIso e.inv)) :
     P.toProperty.RespectsIso := by
   constructor
-  · rintro X Y Z e f ⟨a, h⟩; exact ⟨a, h₁ e f h⟩
-  · rintro X Y Z e f ⟨a, h⟩; exact ⟨isAffine_of_isIso e.inv, h₂ e f h⟩
+  rintro X Y Z e f ⟨a, h⟩; exact ⟨a, h₁ e f h⟩
+  rintro X Y Z e f ⟨a, h⟩; exact ⟨isAffine_of_isIso e.inv, h₂ e f h⟩
 
 instance respectsIso_of
     (P : MorphismProperty Scheme) [P.RespectsIso] :
     (of P).toProperty.RespectsIso := by
   apply respectsIso_mk
-  · intro _ _ _ _ _ _; apply MorphismProperty.RespectsIso.precomp
-  · intro _ _ _ _ _ _; apply MorphismProperty.RespectsIso.postcomp
+  intro _ _ _ _ _ _; apply MorphismProperty.RespectsIso.precomp
+  intro _ _ _ _ _ _; apply MorphismProperty.RespectsIso.postcomp
 
 /-- We say that `P : AffineTargetMorphismProperty` is a local property if
 1. `P` respects isomorphisms.
@@ -400,14 +400,14 @@ theorem of_targetAffineLocally_of_isPullback
 instance (P : AffineTargetMorphismProperty) [P.toProperty.RespectsIso] :
     (targetAffineLocally P).RespectsIso := by
   constructor
-  · introv H U
-    rw [morphismRestrict_comp, P.cancel_left_of_respectsIso]
-    exact H U
-  · introv H
-    rintro ⟨U, hU : IsAffineOpen U⟩; dsimp
-    haveI : IsAffine _ := hU.preimage_of_isIso e.hom
-    rw [morphismRestrict_comp, P.cancel_right_of_respectsIso]
-    exact H ⟨(Opens.map e.hom.val.base).obj U, hU.preimage_of_isIso e.hom⟩
+  introv H U
+  rw [morphismRestrict_comp, P.cancel_left_of_respectsIso]
+  exact H U
+  introv H
+  rintro ⟨U, hU : IsAffineOpen U⟩; dsimp
+  haveI : IsAffine _ := hU.preimage_of_isIso e.hom
+  rw [morphismRestrict_comp, P.cancel_right_of_respectsIso]
+  exact H ⟨(Opens.map e.hom.val.base).obj U, hU.preimage_of_isIso e.hom⟩
 
 /--
 `HasAffineProperty P Q` is a type class asserting that `P` is local at the target, and over affine
@@ -441,11 +441,11 @@ lemma of_isLocalAtTarget (P) [IsLocalAtTarget P] :
   eq_targetAffineLocally' := by
     ext X Y f
     constructor
-    · intro hf ⟨U, hU⟩
-      exact IsLocalAtTarget.restrict hf _
-    · intro hf
-      exact IsLocalAtTarget.of_openCover (P := P) Y.affineCover
-        fun i ↦ of_targetAffineLocally_of_isPullback (.of_hasPullback _ _) hf
+    intro hf ⟨U, hU⟩
+    exact IsLocalAtTarget.restrict hf _
+    intro hf
+    exact IsLocalAtTarget.of_openCover (P := P) Y.affineCover
+      fun i ↦ of_targetAffineLocally_of_isPullback (.of_hasPullback _ _) hf
 
 lemma copy {P P'} {Q Q'} [HasAffineProperty P Q]
     (e : P = P') (e' : Q = Q') : HasAffineProperty P' Q' where
@@ -519,28 +519,28 @@ theorem iff_of_isAffine [IsAffine Y] : P f ↔ Q f := by
     dsimp; infer_instance
   rw [iff_of_openCover (P := P) (Scheme.openCoverOfIsIso.{0} (𝟙 Y))]
   trans Q (pullback.snd f (𝟙 _))
-  · exact ⟨fun H => H PUnit.unit, fun H _ => H⟩
+  exact ⟨fun H => H PUnit.unit, fun H _ => H⟩
   rw [← Category.comp_id (pullback.snd _ _), ← pullback.condition,
     Q.cancel_left_of_respectsIso]
 
 instance (priority := 900) : IsLocalAtTarget P := by
   letI := isLocal_affineProperty P
   apply IsLocalAtTarget.mk'
-  · rw [eq_targetAffineLocally P]
-    intro X Y f U H V
-    rw [Q.arrow_mk_iso_iff (morphismRestrictRestrict f _ _)]
-    exact H ⟨_, V.2.image_of_isOpenImmersion (Y.ofRestrict _)⟩
-  · rintro X Y f ι U hU H
-    let 𝒰 := Y.openCoverOfISupEqTop U hU
-    apply of_openCover 𝒰.affineRefinement.openCover
-    rintro ⟨i, j⟩
-    have : P (𝒰.pullbackHom f i)
-    refine (P.arrow_mk_iso_iff
-      (morphismRestrictEq _ ?_ ≪≫ morphismRestrictOpensRange f (𝒰.map i))).mp (H i)
-    exact (Scheme.Opens.opensRange_ι _).symm
-    rw [← Q.cancel_left_of_respectsIso (𝒰.pullbackCoverAffineRefinementObjIso f _).inv,
-      𝒰.pullbackCoverAffineRefinementObjIso_inv_pullbackHom]
-    exact of_isPullback (.of_hasPullback _ _) this
+  rw [eq_targetAffineLocally P]
+  intro X Y f U H V
+  rw [Q.arrow_mk_iso_iff (morphismRestrictRestrict f _ _)]
+  exact H ⟨_, V.2.image_of_isOpenImmersion (Y.ofRestrict _)⟩
+  rintro X Y f ι U hU H
+  let 𝒰 := Y.openCoverOfISupEqTop U hU
+  apply of_openCover 𝒰.affineRefinement.openCover
+  rintro ⟨i, j⟩
+  have : P (𝒰.pullbackHom f i)
+  refine (P.arrow_mk_iso_iff
+    (morphismRestrictEq _ ?_ ≪≫ morphismRestrictOpensRange f (𝒰.map i))).mp (H i)
+  exact (Scheme.Opens.opensRange_ι _).symm
+  rw [← Q.cancel_left_of_respectsIso (𝒰.pullbackCoverAffineRefinementObjIso f _).inv,
+    𝒰.pullbackCoverAffineRefinementObjIso_inv_pullbackHom]
+  exact of_isPullback (.of_hasPullback _ _) this
 
 open AffineTargetMorphismProperty in
 protected theorem iff :

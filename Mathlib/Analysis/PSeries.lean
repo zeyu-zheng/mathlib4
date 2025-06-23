@@ -50,10 +50,10 @@ theorem le_sum_schlomilch' (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f 
     (hu : Monotone u) (n : ℕ) :
     (∑ k ∈ Ico (u 0) (u n), f k) ≤ ∑ k ∈ range n, (u (k + 1) - u k) • f (u k) := by
   induction' n with n ihn
-  · simp
+  simp
   suffices (∑ k ∈ Ico (u n) (u (n + 1)), f k) ≤ (u (n + 1) - u n) • f (u n) by
     rw [sum_range_succ, ← sum_Ico_consecutive]
-    · exact add_le_add ihn this
+    exact add_le_add ihn this
     exacts [hu n.zero_le, hu n.le_succ]
   have : ∀ k ∈ Ico (u n) (u (n + 1)), f k ≤ f (u n) := fun k hk =>
     hf (Nat.succ_le_of_lt (h_pos n)) (mem_Ico.mp hk).1
@@ -82,7 +82,7 @@ theorem sum_schlomilch_le' (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f n ≤ f 
     (hu : Monotone u) (n : ℕ) :
     (∑ k ∈ range n, (u (k + 1) - u k) • f (u (k + 1))) ≤ ∑ k ∈ Ico (u 0 + 1) (u n + 1), f k := by
   induction' n with n ihn
-  · simp
+  simp
   suffices (u (n + 1) - u n) • f (u (n + 1)) ≤ ∑ k ∈ Ico (u n + 1) (u (n + 1) + 1), f k by
     rw [sum_range_succ, ← sum_Ico_consecutive]
     exacts [add_le_add ihn this,
@@ -115,7 +115,7 @@ theorem sum_schlomilch_le {C : ℕ} (hf : ∀ ⦃m n⦄, 1 < m → m ≤ n → f
     intro k _
     rw [smul_smul]
     gcongr
-    · exact h_nonneg (u (k + 1))
+    exact h_nonneg (u (k + 1))
     exact mod_cast h_succ_diff k
   convert sum_le_sum this
   simp [smul_sum]
@@ -189,16 +189,16 @@ theorem summable_schlomilch_iff {C : ℕ} {u : ℕ → ℕ} {f : ℕ → ℝ≥0
     (Summable fun k : ℕ => (u (k + 1) - (u k : ℝ≥0)) * f (u k)) ↔ Summable f := by
   simp only [← tsum_coe_ne_top_iff_summable, Ne, not_iff_not, ENNReal.coe_mul]
   constructor <;> intro h
-  · replace hf : ∀ m n, 1 < m → m ≤ n → (f n : ℝ≥0∞) ≤ f m := fun m n hm hmn =>
-      ENNReal.coe_le_coe.2 (hf (zero_lt_one.trans hm) hmn)
-    have h_nonneg : ∀ n, 0 ≤ (f n : ℝ≥0∞) := fun n =>
-      ENNReal.coe_le_coe.2 (f n).2
-    obtain hC := tsum_schlomilch_le hf h_pos h_nonneg hu_strict.monotone h_succ_diff
-    simpa [add_eq_top, mul_ne_top, mul_eq_top, hC_nonzero] using eq_top_mono hC h
-  · replace hf : ∀ m n, 0 < m → m ≤ n → (f n : ℝ≥0∞) ≤ f m := fun m n hm hmn =>
-      ENNReal.coe_le_coe.2 (hf hm hmn)
-    have : ∑ k ∈ range (u 0), (f k : ℝ≥0∞) ≠ ∞ := (sum_lt_top fun a _ => coe_ne_top).ne
-    simpa [h, add_eq_top, this] using le_tsum_schlomilch hf h_pos hu_strict
+  replace hf : ∀ m n, 1 < m → m ≤ n → (f n : ℝ≥0∞) ≤ f m := fun m n hm hmn =>
+    ENNReal.coe_le_coe.2 (hf (zero_lt_one.trans hm) hmn)
+  have h_nonneg : ∀ n, 0 ≤ (f n : ℝ≥0∞) := fun n =>
+    ENNReal.coe_le_coe.2 (f n).2
+  obtain hC := tsum_schlomilch_le hf h_pos h_nonneg hu_strict.monotone h_succ_diff
+  simpa [add_eq_top, mul_ne_top, mul_eq_top, hC_nonzero] using eq_top_mono hC h
+  replace hf : ∀ m n, 0 < m → m ≤ n → (f n : ℝ≥0∞) ≤ f m := fun m n hm hmn =>
+    ENNReal.coe_le_coe.2 (hf hm hmn)
+  have : ∑ k ∈ range (u 0), (f k : ℝ≥0∞) ≠ ∞ := (sum_lt_top fun a _ => coe_ne_top).ne
+  simpa [h, add_eq_top, this] using le_tsum_schlomilch hf h_pos hu_strict
 
 open ENNReal in
 theorem summable_condensed_iff {f : ℕ → ℝ≥0} (hf : ∀ ⦃m n⦄, 0 < m → m ≤ n → f n ≤ f m) :
@@ -260,30 +260,30 @@ theorem summable_nat_rpow_inv {p : ℝ} :
   rcases le_or_lt 0 p with hp | hp
   /- Cauchy condensation test applies only to antitone sequences, so we consider the
     cases `0 ≤ p` and `p < 0` separately. -/
-  · rw [← summable_condensed_iff_of_nonneg]
-    · simp_rw [Nat.cast_pow, Nat.cast_two, ← rpow_natCast, ← rpow_mul zero_lt_two.le, mul_comm _ p,
-        rpow_mul zero_lt_two.le, rpow_natCast, ← inv_pow, ← mul_pow,
-        summable_geometric_iff_norm_lt_one]
-      nth_rw 1 [← rpow_one 2]
-      rw [← division_def, ← rpow_sub zero_lt_two, norm_eq_abs,
-        abs_of_pos (rpow_pos_of_pos zero_lt_two _), rpow_lt_one_iff zero_lt_two.le]
-      norm_num
-    · intro n
-      positivity
-    · intro m n hm hmn
-      gcongr
+  rw [← summable_condensed_iff_of_nonneg]
+  simp_rw [Nat.cast_pow, Nat.cast_two, ← rpow_natCast, ← rpow_mul zero_lt_two.le, mul_comm _ p,
+    rpow_mul zero_lt_two.le, rpow_natCast, ← inv_pow, ← mul_pow,
+    summable_geometric_iff_norm_lt_one]
+  nth_rw 1 [← rpow_one 2]
+  rw [← division_def, ← rpow_sub zero_lt_two, norm_eq_abs,
+    abs_of_pos (rpow_pos_of_pos zero_lt_two _), rpow_lt_one_iff zero_lt_two.le]
+  norm_num
+  intro n
+  positivity
+  intro m n hm hmn
+  gcongr
   -- If `p < 0`, then `1 / n ^ p` tends to infinity, thus the series diverges.
-  · suffices ¬Summable (fun n => ((n : ℝ) ^ p)⁻¹ : ℕ → ℝ) by
-      have : ¬1 < p := fun hp₁ => hp.not_le (zero_le_one.trans hp₁.le)
-      simpa only [this, iff_false]
-    intro h
-    obtain ⟨k : ℕ, hk₁ : ((k : ℝ) ^ p)⁻¹ < 1, hk₀ : k ≠ 0⟩ :=
-      ((h.tendsto_cofinite_zero.eventually (gt_mem_nhds zero_lt_one)).and
-          (eventually_cofinite_ne 0)).exists
-    apply hk₀
-    rw [← pos_iff_ne_zero, ← @Nat.cast_pos ℝ] at hk₀
-    simpa [inv_lt_one_iff_of_pos (rpow_pos_of_pos hk₀ _), one_lt_rpow_iff_of_pos hk₀, hp,
-      hp.not_lt, hk₀] using hk₁
+  suffices ¬Summable (fun n => ((n : ℝ) ^ p)⁻¹ : ℕ → ℝ) by
+    have : ¬1 < p := fun hp₁ => hp.not_le (zero_le_one.trans hp₁.le)
+    simpa only [this, iff_false]
+  intro h
+  obtain ⟨k : ℕ, hk₁ : ((k : ℝ) ^ p)⁻¹ < 1, hk₀ : k ≠ 0⟩ :=
+    ((h.tendsto_cofinite_zero.eventually (gt_mem_nhds zero_lt_one)).and
+        (eventually_cofinite_ne 0)).exists
+  apply hk₀
+  rw [← pos_iff_ne_zero, ← @Nat.cast_pos ℝ] at hk₀
+  simpa [inv_lt_one_iff_of_pos (rpow_pos_of_pos hk₀ _), one_lt_rpow_iff_of_pos hk₀, hp,
+    hp.not_lt, hk₀] using hk₁
 
 @[simp]
 theorem summable_nat_rpow {p : ℝ} : Summable (fun n => (n : ℝ) ^ p : ℕ → ℝ) ↔ p < -1 := by
@@ -345,8 +345,8 @@ alias not_summable_one_div_nat_cast := not_summable_one_div_natCast
 theorem tendsto_sum_range_one_div_nat_succ_atTop :
     Tendsto (fun n => ∑ i ∈ Finset.range n, (1 / (i + 1) : ℝ)) atTop atTop := by
   rw [← not_summable_iff_tendsto_nat_atTop_of_nonneg]
-  · exact_mod_cast mt (_root_.summable_nat_add_iff 1).1 not_summable_one_div_natCast
-  · exact fun i => by positivity
+  exact_mod_cast mt (_root_.summable_nat_add_iff 1).1 not_summable_one_div_natCast
+  exact fun i => by positivity
 
 end Real
 
@@ -379,7 +379,7 @@ set_option tactic.skipAssignedInstances false in
 theorem sum_Ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) :
     (∑ i ∈ Ioc k n, ((i : α) ^ 2)⁻¹) ≤ (k : α)⁻¹ - (n : α)⁻¹ := by
   refine Nat.le_induction ?_ ?_ n h
-  · simp only [Ioc_self, sum_empty, sub_self, le_refl]
+  simp only [Ioc_self, sum_empty, sub_self, le_refl]
   intro n hn IH
   rw [sum_Ioc_succ_top hn]
   apply (add_le_add IH le_rfl).trans
@@ -391,29 +391,29 @@ theorem sum_Ioc_inv_sq_le_sub {k n : ℕ} (hk : k ≠ 0) (h : k ≤ n) :
   linarith
   field_simp
   rw [div_le_div_iff _ A, ← sub_nonneg]
-  · ring_nf
-    rw [add_comm]
-    exact B.le
-  · -- Porting note: was `nlinarith`
-    positivity
+  ring_nf
+  rw [add_comm]
+  exact B.le
+  -- Porting note: was `nlinarith`
+  positivity
 
 theorem sum_Ioo_inv_sq_le (k n : ℕ) : (∑ i ∈ Ioo k n, (i ^ 2 : α)⁻¹) ≤ 2 / (k + 1) :=
   calc
     (∑ i ∈ Ioo k n, ((i : α) ^ 2)⁻¹) ≤ ∑ i ∈ Ioc k (max (k + 1) n), ((i : α) ^ 2)⁻¹ := by
       apply sum_le_sum_of_subset_of_nonneg
-      · intro x hx
-        simp only [mem_Ioo] at hx
-        simp only [hx, hx.2.le, mem_Ioc, le_max_iff, or_true_iff, and_self_iff]
-      · intro i _hi _hident
-        positivity
+      intro x hx
+      simp only [mem_Ioo] at hx
+      simp only [hx, hx.2.le, mem_Ioc, le_max_iff, or_true_iff, and_self_iff]
+      intro i _hi _hident
+      positivity
     _ ≤ ((k + 1 : α) ^ 2)⁻¹ + ∑ i ∈ Ioc k.succ (max (k + 1) n), ((i : α) ^ 2)⁻¹ := by
       rw [← Nat.Icc_succ_left, ← Nat.Ico_succ_right, sum_eq_sum_Ico_succ_bot]
       swap; · exact Nat.succ_lt_succ ((Nat.lt_succ_self k).trans_le (le_max_left _ _))
       rw [Nat.Ico_succ_right, Nat.Icc_succ_left, Nat.cast_succ]
     _ ≤ ((k + 1 : α) ^ 2)⁻¹ + (k + 1 : α)⁻¹ := by
       refine add_le_add le_rfl ((sum_Ioc_inv_sq_le_sub ?_ (le_max_left _ _)).trans ?_)
-      · simp only [Ne, Nat.succ_ne_zero, not_false_iff]
-      · simp only [Nat.cast_succ, one_div, sub_le_self_iff, inv_nonneg, Nat.cast_nonneg]
+      simp only [Ne, Nat.succ_ne_zero, not_false_iff]
+      simp only [Nat.cast_succ, one_div, sub_le_self_iff, inv_nonneg, Nat.cast_nonneg]
     _ ≤ 1 / (k + 1) + 1 / (k + 1) := by
       have A : (1 : α) ≤ k + 1 := by simp only [le_add_iff_nonneg_left, Nat.cast_nonneg]
       simp_rw [← one_div]
@@ -449,24 +449,24 @@ lemma Real.summable_one_div_nat_add_rpow (a : ℝ) (s : ℝ) :
       Summable (fun n : ℕ ↦ 1 / |n + c| ^ s) by
     simp_rw [← summable_one_div_nat_rpow, Iff.intro (this a 0) (this 0 a), add_zero, Nat.abs_cast]
   refine fun b c h ↦ summable_of_isBigO_nat h (isBigO_of_div_tendsto_nhds ?_ 1 ?_)
-  · filter_upwards [eventually_gt_atTop (Nat.ceil |b|)] with n hn hx
-    have hna : 0 < n + b := by linarith [lt_of_abs_lt ((abs_neg b).symm ▸ Nat.lt_of_ceil_lt hn)]
-    exfalso
-    revert hx
-    positivity
-  · simp_rw [Pi.div_def, div_div, mul_one_div, one_div_div]
-    refine (?_ : Tendsto (fun x : ℝ ↦ |x + b| ^ s / |x + c| ^ s) atTop (𝓝 1)).comp
-      tendsto_natCast_atTop_atTop
-    have : Tendsto (fun x : ℝ ↦ 1 + (b - c) / x) atTop (𝓝 1) := by
-      simpa using tendsto_const_nhds.add ((tendsto_const_nhds (X := ℝ)).div_atTop tendsto_id)
-    have : Tendsto (fun x ↦ (x + b) / (x + c)) atTop (𝓝 1) := by
-      refine (this.comp (tendsto_id.atTop_add (tendsto_const_nhds (x := c)))).congr' ?_
-      filter_upwards [eventually_gt_atTop (-c)] with x hx
-      field_simp [(by linarith : 0 < x + c).ne']
-    apply (one_rpow s ▸ (continuousAt_rpow_const _ s (by simp)).tendsto.comp this).congr'
-    filter_upwards [eventually_gt_atTop (-b), eventually_gt_atTop (-c)] with x hb hc
-    rw [neg_lt_iff_pos_add] at hb hc
-    rw [Function.comp_apply, div_rpow hb.le hc.le, abs_of_pos hb, abs_of_pos hc]
+  filter_upwards [eventually_gt_atTop (Nat.ceil |b|)] with n hn hx
+  have hna : 0 < n + b := by linarith [lt_of_abs_lt ((abs_neg b).symm ▸ Nat.lt_of_ceil_lt hn)]
+  exfalso
+  revert hx
+  positivity
+  simp_rw [Pi.div_def, div_div, mul_one_div, one_div_div]
+  refine (?_ : Tendsto (fun x : ℝ ↦ |x + b| ^ s / |x + c| ^ s) atTop (𝓝 1)).comp
+    tendsto_natCast_atTop_atTop
+  have : Tendsto (fun x : ℝ ↦ 1 + (b - c) / x) atTop (𝓝 1) := by
+    simpa using tendsto_const_nhds.add ((tendsto_const_nhds (X := ℝ)).div_atTop tendsto_id)
+  have : Tendsto (fun x ↦ (x + b) / (x + c)) atTop (𝓝 1) := by
+    refine (this.comp (tendsto_id.atTop_add (tendsto_const_nhds (x := c)))).congr' ?_
+    filter_upwards [eventually_gt_atTop (-c)] with x hx
+    field_simp [(by linarith : 0 < x + c).ne']
+  apply (one_rpow s ▸ (continuousAt_rpow_const _ s (by simp)).tendsto.comp this).congr'
+  filter_upwards [eventually_gt_atTop (-b), eventually_gt_atTop (-c)] with x hb hc
+  rw [neg_lt_iff_pos_add] at hb hc
+  rw [Function.comp_apply, div_rpow hb.le hc.le, abs_of_pos hb, abs_of_pos hc]
 
 lemma Real.summable_one_div_int_add_rpow (a : ℝ) (s : ℝ) :
     Summable (fun n : ℤ ↦ 1 / |n + a| ^ s) ↔ 1 < s := by

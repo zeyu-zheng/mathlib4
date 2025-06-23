@@ -82,51 +82,51 @@ theorem closedBall_mem_vitaliFamily_of_dist_le_mul {K : ℝ} {x y : α} {r : ℝ
     small, if the annulus `{y | ε ≤ dist y x ≤ R/4}` is empty. We split between the cases `r ≤ R`
     and `r > R`, and use the doubling for the former and rough estimates for the latter. -/
   rcases le_or_lt r R with (hr | hr)
-  · refine ⟨(K + 1) * r, ?_⟩
-    constructor
-    · apply closedBall_subset_closedBall'
-      rw [dist_comm]
-      linarith
-    · have I1 : closedBall x (3 * ((K + 1) * r)) ⊆ closedBall y ((4 * K + 3) * r) := by
-        apply closedBall_subset_closedBall'
-        linarith
-      have I2 : closedBall y ((4 * K + 3) * r) ⊆ closedBall y (max (4 * K + 3) 3 * r)
-      apply closedBall_subset_closedBall
-      exact mul_le_mul_of_nonneg_right (le_max_left _ _) rpos.le
-      apply (measure_mono (I1.trans I2)).trans
-      exact measure_mul_le_scalingConstantOf_mul _
-        ⟨zero_lt_three.trans_le (le_max_right _ _), le_rfl⟩ hr
-  · refine ⟨R / 4, H, ?_⟩
-    have : closedBall x (3 * (R / 4)) ⊆ closedBall y r
+  refine ⟨(K + 1) * r, ?_⟩
+  constructor
+  apply closedBall_subset_closedBall'
+  rw [dist_comm]
+  linarith
+  have I1 : closedBall x (3 * ((K + 1) * r)) ⊆ closedBall y ((4 * K + 3) * r) := by
     apply closedBall_subset_closedBall'
-    have A : y ∈ closedBall y r := mem_closedBall_self rpos.le
-    have B := mem_closedBall'.1 (H A)
     linarith
-    apply (measure_mono this).trans _
-    refine le_mul_of_one_le_left (zero_le _) ?_
-    exact ENNReal.one_le_coe_iff.2 (le_max_right _ _)
+  have I2 : closedBall y ((4 * K + 3) * r) ⊆ closedBall y (max (4 * K + 3) 3 * r)
+  apply closedBall_subset_closedBall
+  exact mul_le_mul_of_nonneg_right (le_max_left _ _) rpos.le
+  apply (measure_mono (I1.trans I2)).trans
+  exact measure_mul_le_scalingConstantOf_mul _
+    ⟨zero_lt_three.trans_le (le_max_right _ _), le_rfl⟩ hr
+  refine ⟨R / 4, H, ?_⟩
+  have : closedBall x (3 * (R / 4)) ⊆ closedBall y r
+  apply closedBall_subset_closedBall'
+  have A : y ∈ closedBall y r := mem_closedBall_self rpos.le
+  have B := mem_closedBall'.1 (H A)
+  linarith
+  apply (measure_mono this).trans _
+  refine le_mul_of_one_le_left (zero_le _) ?_
+  exact ENNReal.one_le_coe_iff.2 (le_max_right _ _)
 
 theorem tendsto_closedBall_filterAt {K : ℝ} {x : α} {ι : Type*} {l : Filter ι} (w : ι → α)
     (δ : ι → ℝ) (δlim : Tendsto δ l (𝓝[>] 0)) (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)) :
     Tendsto (fun j => closedBall (w j) (δ j)) l ((vitaliFamily μ K).filterAt x) := by
   refine (vitaliFamily μ K).tendsto_filterAt_iff.mpr ⟨?_, fun ε hε => ?_⟩
-  · filter_upwards [xmem, δlim self_mem_nhdsWithin] with j hj h'j
-    exact closedBall_mem_vitaliFamily_of_dist_le_mul μ hj h'j
-  · rcases l.eq_or_neBot with rfl | h
-    · simp
-    have hK : 0 ≤ K
-    rcases (xmem.and (δlim self_mem_nhdsWithin)).exists with ⟨j, hj, h'j⟩
-    have : 0 ≤ K * δ j := nonempty_closedBall.1 ⟨x, hj⟩
-    exact (mul_nonneg_iff_left_nonneg_of_pos (mem_Ioi.1 h'j)).1 this
-    have δpos := eventually_mem_of_tendsto_nhdsWithin δlim
-    replace δlim := tendsto_nhds_of_tendsto_nhdsWithin δlim
-    replace hK : 0 < K + 1 := by linarith
-    apply (((Metric.tendsto_nhds.mp δlim _ (div_pos hε hK)).and δpos).and xmem).mono
-    rintro j ⟨⟨hjε, hj₀ : 0 < δ j⟩, hx⟩ y hy
-    replace hjε : (K + 1) * δ j < ε := by
-      simpa [abs_eq_self.mpr hj₀.le] using (lt_div_iff' hK).mp hjε
-    simp only [mem_closedBall] at hx hy ⊢
-    linarith [dist_triangle_right y x (w j)]
+  filter_upwards [xmem, δlim self_mem_nhdsWithin] with j hj h'j
+  exact closedBall_mem_vitaliFamily_of_dist_le_mul μ hj h'j
+  rcases l.eq_or_neBot with rfl | h
+  simp
+  have hK : 0 ≤ K
+  rcases (xmem.and (δlim self_mem_nhdsWithin)).exists with ⟨j, hj, h'j⟩
+  have : 0 ≤ K * δ j := nonempty_closedBall.1 ⟨x, hj⟩
+  exact (mul_nonneg_iff_left_nonneg_of_pos (mem_Ioi.1 h'j)).1 this
+  have δpos := eventually_mem_of_tendsto_nhdsWithin δlim
+  replace δlim := tendsto_nhds_of_tendsto_nhdsWithin δlim
+  replace hK : 0 < K + 1 := by linarith
+  apply (((Metric.tendsto_nhds.mp δlim _ (div_pos hε hK)).and δpos).and xmem).mono
+  rintro j ⟨⟨hjε, hj₀ : 0 < δ j⟩, hx⟩ y hy
+  replace hjε : (K + 1) * δ j < ε := by
+    simpa [abs_eq_self.mpr hj₀.le] using (lt_div_iff' hK).mp hjε
+  simp only [mem_closedBall] at hx hy ⊢
+  linarith [dist_triangle_right y x (w j)]
 
 end
 

@@ -479,32 +479,32 @@ theorem posMulMono_iff_covariant_pos :
   ⟨@PosMulMono.to_covariantClass_pos_mul_le _ _ _ _, fun h =>
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_lt
-      · simp [← ha]
-      · exact @CovariantClass.elim α>0 α (fun x y => x * y) (· ≤ ·) _ ⟨_, ha⟩ _ _ h ⟩⟩
+      simp [← ha]
+      exact @CovariantClass.elim α>0 α (fun x y => x * y) (· ≤ ·) _ ⟨_, ha⟩ _ _ h ⟩⟩
 
 theorem mulPosMono_iff_covariant_pos :
     MulPosMono α ↔ CovariantClass α>0 α (fun x y => y * x) (· ≤ ·) :=
   ⟨@MulPosMono.to_covariantClass_pos_mul_le _ _ _ _, fun h =>
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_lt
-      · simp [← ha]
-      · exact @CovariantClass.elim α>0 α (fun x y => y * x) (· ≤ ·) _ ⟨_, ha⟩ _ _ h ⟩⟩
+      simp [← ha]
+      exact @CovariantClass.elim α>0 α (fun x y => y * x) (· ≤ ·) _ ⟨_, ha⟩ _ _ h ⟩⟩
 
 theorem posMulReflectLT_iff_contravariant_pos :
     PosMulReflectLT α ↔ ContravariantClass α>0 α (fun x y => x * y) (· < ·) :=
   ⟨@PosMulReflectLT.to_contravariantClass_pos_mul_lt _ _ _ _, fun h =>
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_lt
-      · simp [← ha] at h
-      · exact @ContravariantClass.elim α>0 α (fun x y => x * y) (· < ·) _ ⟨_, ha⟩ _ _ h ⟩⟩
+      simp [← ha] at h
+      exact @ContravariantClass.elim α>0 α (fun x y => x * y) (· < ·) _ ⟨_, ha⟩ _ _ h ⟩⟩
 
 theorem mulPosReflectLT_iff_contravariant_pos :
     MulPosReflectLT α ↔ ContravariantClass α>0 α (fun x y => y * x) (· < ·) :=
   ⟨@MulPosReflectLT.to_contravariantClass_pos_mul_lt _ _ _ _, fun h =>
     ⟨fun a b c h => by
       obtain ha | ha := a.prop.eq_or_lt
-      · simp [← ha] at h
-      · exact @ContravariantClass.elim α>0 α (fun x y => y * x) (· < ·) _ ⟨_, ha⟩ _ _ h ⟩⟩
+      simp [← ha] at h
+      exact @ContravariantClass.elim α>0 α (fun x y => y * x) (· < ·) _ ⟨_, ha⟩ _ _ h ⟩⟩
 
 -- Porting note: mathlib3 proofs would look like `StrictMono.monotone <| @CovariantClass.elim ..`
 -- but implicit argument handling causes that to break
@@ -550,8 +550,8 @@ theorem mul_eq_mul_iff_eq_and_eq_of_pos [PosMulStrictMono α] [MulPosStrictMono 
   refine ⟨fun h ↦ ?_, by rintro ⟨rfl, rfl⟩; rfl⟩
   simp only [eq_iff_le_not_lt, hab, hcd, true_and]
   refine ⟨fun hab ↦ h.not_lt ?_, fun hcd ↦ h.not_lt ?_⟩
-  · exact (mul_le_mul_of_nonneg_left hcd a0.le).trans_lt (mul_lt_mul_of_pos_right hab d0)
-  · exact (mul_lt_mul_of_pos_left hcd a0).trans_le (mul_le_mul_of_nonneg_right hab d0.le)
+  exact (mul_le_mul_of_nonneg_left hcd a0.le).trans_lt (mul_lt_mul_of_pos_right hab d0)
+  exact (mul_lt_mul_of_pos_left hcd a0).trans_le (mul_le_mul_of_nonneg_right hab d0.le)
 
 theorem mul_eq_mul_iff_eq_and_eq_of_pos' [PosMulStrictMono α] [MulPosStrictMono α]
     (hab : a ≤ b) (hcd : c ≤ d) (b0 : 0 < b) (c0 : 0 < c) :
@@ -559,8 +559,8 @@ theorem mul_eq_mul_iff_eq_and_eq_of_pos' [PosMulStrictMono α] [MulPosStrictMono
   refine ⟨fun h ↦ ?_, by rintro ⟨rfl, rfl⟩; rfl⟩
   simp only [eq_iff_le_not_lt, hab, hcd, true_and]
   refine ⟨fun hab ↦ h.not_lt ?_, fun hcd ↦ h.not_lt ?_⟩
-  · exact (mul_lt_mul_of_pos_right hab c0).trans_le (mul_le_mul_of_nonneg_left hcd b0.le)
-  · exact (mul_le_mul_of_nonneg_right hab c0.le).trans_lt (mul_lt_mul_of_pos_left hcd b0)
+  exact (mul_lt_mul_of_pos_right hab c0).trans_le (mul_le_mul_of_nonneg_left hcd b0.le)
+  exact (mul_le_mul_of_nonneg_right hab c0.le).trans_lt (mul_lt_mul_of_pos_left hcd b0)
 
 end PartialOrder
 
@@ -571,12 +571,12 @@ variable [LinearOrder α]
 theorem pos_and_pos_or_neg_and_neg_of_mul_pos [PosMulMono α] [MulPosMono α] (hab : 0 < a * b) :
     0 < a ∧ 0 < b ∨ a < 0 ∧ b < 0 := by
   rcases lt_trichotomy a 0 with (ha | rfl | ha)
-  · refine Or.inr ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => ?_) hab⟩
-    exact mul_nonpos_of_nonpos_of_nonneg ha.le hb
-  · rw [zero_mul] at hab
-    exact hab.false.elim
-  · refine Or.inl ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => ?_) hab⟩
-    exact mul_nonpos_of_nonneg_of_nonpos ha.le hb
+  refine Or.inr ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => ?_) hab⟩
+  exact mul_nonpos_of_nonpos_of_nonneg ha.le hb
+  rw [zero_mul] at hab
+  exact hab.false.elim
+  refine Or.inl ⟨ha, lt_imp_lt_of_le_imp_le (fun hb => ?_) hab⟩
+  exact mul_nonpos_of_nonneg_of_nonpos ha.le hb
 
 theorem neg_of_mul_pos_right [PosMulMono α] [MulPosMono α] (h : 0 < a * b) (ha : a ≤ 0) : b < 0 :=
   ((pos_and_pos_or_neg_and_neg_of_mul_pos h).resolve_left fun h => h.1.not_le ha).2
@@ -911,8 +911,8 @@ variable [LinearOrder α]
 -- proven with `a0 : 0 ≤ a` as `exists_square_le`
 theorem exists_square_le' [PosMulStrictMono α] (a0 : 0 < a) : ∃ b : α, b * b ≤ a := by
   obtain ha | ha := lt_or_le a 1
-  · exact ⟨a, (mul_lt_of_lt_one_right a0 ha).le⟩
-  · exact ⟨1, by rwa [mul_one]⟩
+  exact ⟨a, (mul_lt_of_lt_one_right a0 ha).le⟩
+  exact ⟨1, by rwa [mul_one]⟩
 
 end LinearOrder
 

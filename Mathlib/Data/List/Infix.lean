@@ -138,17 +138,17 @@ theorem prefix_iff_eq_take : l₁ <+: l₂ ↔ l₁ = take (length l₁) l₂ :=
 
 theorem prefix_take_iff {x y : List α} {n : ℕ} : x <+: y.take n ↔ x <+: y ∧ x.length ≤ n := by
   constructor
-  · intro h
-    constructor
-    · exact List.IsPrefix.trans h <| List.take_prefix n y
-    · replace h := h.length_le
-      rw [length_take, Nat.le_min] at h
-      exact h.left
-  · intro ⟨hp, hl⟩
-    have hl' := hp.length_le
-    rw [List.prefix_iff_eq_take] at *
-    rw [hp, List.take_take]
-    simp [min_eq_left, hl, hl']
+  intro h
+  constructor
+  exact List.IsPrefix.trans h <| List.take_prefix n y
+  replace h := h.length_le
+  rw [length_take, Nat.le_min] at h
+  exact h.left
+  intro ⟨hp, hl⟩
+  have hl' := hp.length_le
+  rw [List.prefix_iff_eq_take] at *
+  rw [hp, List.take_take]
+  simp [min_eq_left, hl, hl']
 
 theorem concat_get_prefix {x y : List α} (h : x <+: y) (hl : x.length < y.length) :
     x ++ [y.get ⟨x.length, hl⟩] <+: y := by
@@ -205,31 +205,31 @@ theorem prefix_take_le_iff {L : List (List (Option α))} (hm : m < L.length) :
 
 theorem cons_prefix_iff : a :: l₁ <+: b :: l₂ ↔ a = b ∧ l₁ <+: l₂ := by
   constructor
-  · rintro ⟨L, hL⟩
-    simp only [cons_append] at hL
-    injection hL with hLLeft hLRight
-    exact ⟨hLLeft, ⟨L, hLRight⟩⟩
-  · rintro ⟨rfl, h⟩
-    rwa [prefix_cons_inj]
+  rintro ⟨L, hL⟩
+  simp only [cons_append] at hL
+  injection hL with hLLeft hLRight
+  exact ⟨hLLeft, ⟨L, hLRight⟩⟩
+  rintro ⟨rfl, h⟩
+  rwa [prefix_cons_inj]
 
 protected theorem IsPrefix.map (h : l₁ <+: l₂) (f : α → β) : l₁.map f <+: l₂.map f := by
   induction' l₁ with hd tl hl generalizing l₂
-  · simp only [nil_prefix, map_nil]
-  · cases' l₂ with hd₂ tl₂
-    · simpa only using eq_nil_of_prefix_nil h
-    · rw [cons_prefix_iff] at h
-      simp only [List.map_cons, h, prefix_cons_inj, hl, map]
+  simp only [nil_prefix, map_nil]
+  cases' l₂ with hd₂ tl₂
+  simpa only using eq_nil_of_prefix_nil h
+  rw [cons_prefix_iff] at h
+  simp only [List.map_cons, h, prefix_cons_inj, hl, map]
 
 protected theorem IsPrefix.filterMap (h : l₁ <+: l₂) (f : α → Option β) :
     l₁.filterMap f <+: l₂.filterMap f := by
   induction' l₁ with hd₁ tl₁ hl generalizing l₂
-  · simp only [nil_prefix, filterMap_nil]
-  · cases' l₂ with hd₂ tl₂
-    · simpa only using eq_nil_of_prefix_nil h
-    · rw [cons_prefix_iff] at h
-      rw [← @singleton_append _ hd₁ _, ← @singleton_append _ hd₂ _, filterMap_append,
-        filterMap_append, h.left, prefix_append_right_inj]
-      exact hl h.right
+  simp only [nil_prefix, filterMap_nil]
+  cases' l₂ with hd₂ tl₂
+  simpa only using eq_nil_of_prefix_nil h
+  rw [cons_prefix_iff] at h
+  rw [← @singleton_append _ hd₁ _, ← @singleton_append _ hd₂ _, filterMap_append,
+    filterMap_append, h.left, prefix_append_right_inj]
+  exact hl h.right
 
 @[deprecated (since := "2024-03-26")] alias IsPrefix.filter_map := IsPrefix.filterMap
 
@@ -339,8 +339,8 @@ theorem map_reverse_tails (l : List α) : map reverse l.tails = (reverse <| init
 @[simp]
 theorem length_tails (l : List α) : length (tails l) = length l + 1 := by
   induction' l with x l IH
-  · simp
-  · simpa using IH
+  simp
+  simpa using IH
 
 @[simp]
 theorem length_inits (l : List α) : length (inits l) = length l + 1 := by simp [inits_eq_tails]
@@ -401,8 +401,8 @@ theorem insert_eq_ite (a : α) (l : List α) : insert a l = if a ∈ l then l el
 @[simp]
 theorem suffix_insert (a : α) (l : List α) : l <:+ l.insert a := by
   by_cases h : a ∈ l
-  · simp only [insert_of_mem h, insert, suffix_refl]
-  · simp only [insert_of_not_mem h, suffix_cons, insert]
+  simp only [insert_of_mem h, insert, suffix_refl]
+  simp only [insert_of_not_mem h, suffix_cons, insert]
 
 theorem infix_insert (a : α) (l : List α) : l <:+: l.insert a :=
   (suffix_insert a l).isInfix

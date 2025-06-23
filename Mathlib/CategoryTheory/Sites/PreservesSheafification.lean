@@ -131,20 +131,20 @@ lemma GrothendieckTopology.preservesSheafification_iff_of_adjunctions :
       IsIso (G₂.map (whiskerRight (adj₁.unit.app P) F)) := by
   simp only [← J.W_iff_isIso_map_of_adjunction adj₂]
   constructor
-  · intro _ P
-    apply W_of_preservesSheafification
-    rw [J.W_iff_isIso_map_of_adjunction adj₁]
-    infer_instance
-  · intro h
-    constructor
-    intro P₁ P₂ f hf
-    rw [J.W_iff_isIso_map_of_adjunction adj₁] at hf
-    dsimp [MorphismProperty.inverseImage]
-    rw [← MorphismProperty.postcomp_iff _ _ _ (h P₂), ← whiskerRight_comp]
-    erw [adj₁.unit.naturality f]
-    dsimp only [Functor.comp_map]
-    rw [whiskerRight_comp, MorphismProperty.precomp_iff _ _ _ (h P₁)]
-    apply Localization.LeftBousfield.W_of_isIso
+  intro _ P
+  apply W_of_preservesSheafification
+  rw [J.W_iff_isIso_map_of_adjunction adj₁]
+  infer_instance
+  intro h
+  constructor
+  intro P₁ P₂ f hf
+  rw [J.W_iff_isIso_map_of_adjunction adj₁] at hf
+  dsimp [MorphismProperty.inverseImage]
+  rw [← MorphismProperty.postcomp_iff _ _ _ (h P₂), ← whiskerRight_comp]
+  erw [adj₁.unit.naturality f]
+  dsimp only [Functor.comp_map]
+  rw [whiskerRight_comp, MorphismProperty.precomp_iff _ _ _ (h P₁)]
+  apply Localization.LeftBousfield.W_of_isIso
 
 section HasSheafCompose
 

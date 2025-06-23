@@ -108,10 +108,10 @@ theorem ordConnectedComponent_ordConnectedProj (s : Set α) (x : s) :
 theorem ordConnectedProj_eq {x y : s} :
     ordConnectedProj s x = ordConnectedProj s y ↔ [[(x : α), y]] ⊆ s := by
   constructor <;> intro h
-  · rw [← mem_ordConnectedComponent, ← ordConnectedComponent_ordConnectedProj, h,
-      ordConnectedComponent_ordConnectedProj, self_mem_ordConnectedComponent]
-    exact y.2
-  · simp only [ordConnectedProj, ordConnectedComponent_eq h]
+  rw [← mem_ordConnectedComponent, ← ordConnectedComponent_ordConnectedProj, h,
+    ordConnectedComponent_ordConnectedProj, self_mem_ordConnectedComponent]
+  exact y.2
+  simp only [ordConnectedProj, ordConnectedComponent_eq h]
 
 /-- A set that intersects each order connected component of a set by a single point. Defined as the
 range of `Set.ordConnectedProj s`. -/
@@ -177,7 +177,7 @@ theorem disjoint_ordT5Nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) := by
   clear hx₂
   rw [mem_ordConnectedComponent, subset_inter_iff] at ha hb
   wlog hab : a ≤ b with H
-  · exact H b hbt hb a has ha (le_of_not_le hab)
+  exact H b hbt hb a has ha (le_of_not_le hab)
   cases' ha with ha ha'
   cases' hb with hb hb'
   have hsub : [[a, b]] ⊆ (ordSeparatingSet s t).ordConnectedSectionᶜ
@@ -187,9 +187,9 @@ theorem disjoint_ordT5Nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) := by
     _ ⊆ (ordSeparatingSet s t).ordConnectedSectionᶜ := union_subset ha' hb'
   clear ha' hb'
   rcases le_total x a with hxa | hax
-  · exact hb (Icc_subset_uIcc' ⟨hxa, hab⟩) has
+  exact hb (Icc_subset_uIcc' ⟨hxa, hab⟩) has
   rcases le_total b x with hbx | hxb
-  · exact ha (Icc_subset_uIcc ⟨hab, hbx⟩) hbt
+  exact ha (Icc_subset_uIcc ⟨hab, hbx⟩) hbt
   have h' : x ∈ ordSeparatingSet s t := ⟨mem_iUnion₂.2 ⟨a, has, ha⟩, mem_iUnion₂.2 ⟨b, hbt, hb⟩⟩
   lift x to ordSeparatingSet s t using h'
   suffices ordConnectedComponent (ordSeparatingSet s t) x ⊆ [[a, b]] from

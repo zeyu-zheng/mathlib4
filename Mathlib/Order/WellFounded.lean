@@ -107,18 +107,18 @@ end
 protected theorem lt_succ_iff {r : α → α → Prop} [wo : IsWellOrder α r] {x : α} (h : ∃ y, r x y)
     (y : α) : r y (wo.wf.succ x) ↔ r y x ∨ y = x := by
   constructor
-  · intro h'
-    have : ¬r x y
-    intro hy
-    rw [WellFounded.succ, dif_pos] at h'
-    exact wo.wf.not_lt_min _ h hy h'
-    rcases trichotomous_of r x y with (hy | hy | hy)
-    · exfalso
-      exact this hy
-    · right
-      exact hy.symm
-    left
-    exact hy
+  intro h'
+  have : ¬r x y
+  intro hy
+  rw [WellFounded.succ, dif_pos] at h'
+  exact wo.wf.not_lt_min _ h hy h'
+  rcases trichotomous_of r x y with (hy | hy | hy)
+  exfalso
+  exact this hy
+  right
+  exact hy.symm
+  left
+  exact hy
   rintro (hy | rfl); (· exact _root_.trans hy (wo.wf.lt_succ h)); exact wo.wf.lt_succ h
 
 section LinearOrder
@@ -136,11 +136,11 @@ private theorem eq_strictMono_iff_eq_range_aux {f g : β → γ} (hf : StrictMon
     rw [hfg]
     exact Set.mem_range_self b
   cases' lt_or_le c b with hcb hbc
-  · rw [H c hcb] at hc
-    rw [hg.injective hc] at hcb
-    exact hcb.false.elim
-  · rw [← hc]
-    exact hf.monotone hbc
+  rw [H c hcb] at hc
+  rw [hg.injective hc] at hcb
+  exact hcb.false.elim
+  rw [← hc]
+  exact hf.monotone hbc
 
 theorem eq_strictMono_iff_eq_range (h : WellFounded ((· < ·) : β → β → Prop)) {f g : β → γ}
     (hf : StrictMono f) (hg : StrictMono g) :

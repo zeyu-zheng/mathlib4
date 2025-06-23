@@ -55,8 +55,8 @@ lemma IsNilpotent.smul [MonoidWithZero R] [MonoidWithZero S] [MulActionWithZero 
 theorem IsNilpotent.isUnit_sub_one [Ring R] {r : R} (hnil : IsNilpotent r) : IsUnit (r - 1) := by
   obtain ⟨n, hn⟩ := hnil
   refine ⟨⟨r - 1, -∑ i ∈ Finset.range n, r ^ i, ?_, ?_⟩, rfl⟩
-  · simp [mul_geom_sum, hn]
-  · simp [geom_sum_mul, hn]
+  simp [mul_geom_sum, hn]
+  simp [geom_sum_mul, hn]
 
 theorem IsNilpotent.isUnit_one_sub [Ring R] {r : R} (hnil : IsNilpotent r) : IsUnit (1 - r) := by
   rw [← IsUnit.neg_iff, neg_sub]
@@ -117,7 +117,7 @@ theorem add_pow_eq_zero_of_add_le_succ_of_pow_eq_zero (h_comm : Commute x y) {m 
   rintro ⟨i, j⟩ hij
   suffices x ^ i * y ^ j = 0 by simp only [this, nsmul_eq_mul, mul_zero]
   by_cases hi : m ≤ i
-  · rw [pow_eq_zero_of_le hi hx, zero_mul]
+  rw [pow_eq_zero_of_le hi hx, zero_mul]
   rw [pow_eq_zero_of_le ?_ hy, mul_zero]
   linarith [Finset.mem_antidiagonal.mp hij]
 
@@ -141,10 +141,10 @@ protected lemma isNilpotent_sum {ι : Type*} {s : Finset ι} {f : ι → R}
   | @insert j s hj ih => ?_
   rw [Finset.sum_insert hj]
   apply Commute.isNilpotent_add
-  · exact Commute.sum_right _ _ _ (fun i hi ↦ h_comm _ _ (by simp) (by simp [hi]))
-  · apply hnp; simp
-  · exact ih (fun i hi ↦ hnp i (by simp [hi]))
-      (fun i j hi hj ↦ h_comm i j (by simp [hi]) (by simp [hj]))
+  exact Commute.sum_right _ _ _ (fun i hi ↦ h_comm _ _ (by simp) (by simp [hi]))
+  apply hnp; simp
+  exact ih (fun i hi ↦ hnp i (by simp [hi]))
+    (fun i j hi hj ↦ h_comm i j (by simp [hi]) (by simp [hj]))
 
 protected lemma isNilpotent_mul_left_iff (h_comm : Commute x y) (hy : y ∈ nonZeroDivisorsLeft R) :
     IsNilpotent (x * y) ↔ IsNilpotent x := by
@@ -193,12 +193,12 @@ lemma NoZeroSMulDivisors.isReduced (R M : Type*)
     IsReduced R := by
   refine ⟨fun x ⟨k, hk⟩ ↦ ?_⟩
   induction' k with k ih
-  · rw [pow_zero] at hk
-    exact eq_zero_of_zero_eq_one hk.symm x
-  · obtain ⟨m : M, hm : m ≠ 0⟩ := exists_ne (0 : M)
-    have : x ^ (k + 1) • m = 0
-    simp only [hk, zero_smul]
-    rw [pow_succ', mul_smul] at this
-    rcases eq_zero_or_eq_zero_of_smul_eq_zero this with rfl | hx
-    · rfl
-    · exact ih <| (eq_zero_or_eq_zero_of_smul_eq_zero hx).resolve_right hm
+  rw [pow_zero] at hk
+  exact eq_zero_of_zero_eq_one hk.symm x
+  obtain ⟨m : M, hm : m ≠ 0⟩ := exists_ne (0 : M)
+  have : x ^ (k + 1) • m = 0
+  simp only [hk, zero_smul]
+  rw [pow_succ', mul_smul] at this
+  rcases eq_zero_or_eq_zero_of_smul_eq_zero this with rfl | hx
+  rfl
+  exact ih <| (eq_zero_or_eq_zero_of_smul_eq_zero hx).resolve_right hm

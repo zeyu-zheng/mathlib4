@@ -74,8 +74,8 @@ open scoped Classical in
 example (hp : p) (hq : q) : (if p ∧ q then 1 else 0) = 1 := by
   -- split_ifs creates a hypothesis with a type that's a metavariable
   split_ifs
-  · rfl
-  · tauto
+  rfl
+  tauto
 
 example (hp : p) (hq : q) (h : ¬ (p ∧ q)) : False := by
   -- causes `h'` to have a type that's a metavariable:

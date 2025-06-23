@@ -44,8 +44,8 @@ theorem memℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AEStronglyMeasur
     Memℒp f 2 μ ↔ Integrable (fun x => ‖f x‖ ^ 2) μ := by
   rw [← memℒp_one_iff_integrable]
   convert (memℒp_norm_rpow_iff hf two_ne_zero ENNReal.two_ne_top).symm
-  · simp
-  · rw [div_eq_mul_inv, ENNReal.mul_inv_cancel two_ne_zero ENNReal.two_ne_top]
+  simp
+  rw [div_eq_mul_inv, ENNReal.mul_inv_cancel two_ne_zero ENNReal.two_ne_top]
 
 theorem memℒp_two_iff_integrable_sq {f : α → ℝ} (hf : AEStronglyMeasurable f μ) :
     Memℒp f 2 μ ↔ Integrable (fun x => f x ^ 2) μ := by
@@ -126,8 +126,8 @@ theorem eLpNorm_inner_lt_top (f g : α →₂[μ] E) : eLpNorm (fun x : α => �
     -- TODO(kmill): the type ascription is getting around an elaboration error
     _ ≤ ‖(‖f x‖ ^ 2 + ‖g x‖ ^ 2 : ℝ)‖ := (two_mul_le_add_sq _ _).trans (le_abs_self _)
   refine (eLpNorm_mono_ae (ae_of_all _ h)).trans_lt ((eLpNorm_add_le ?_ ?_ le_rfl).trans_lt ?_)
-  · exact ((Lp.aestronglyMeasurable f).norm.aemeasurable.pow_const _).aestronglyMeasurable
-  · exact ((Lp.aestronglyMeasurable g).norm.aemeasurable.pow_const _).aestronglyMeasurable
+  exact ((Lp.aestronglyMeasurable f).norm.aemeasurable.pow_const _).aestronglyMeasurable
+  exact ((Lp.aestronglyMeasurable g).norm.aemeasurable.pow_const _).aestronglyMeasurable
   rw [ENNReal.add_lt_top]
   exact ⟨eLpNorm_rpow_two_norm_lt_top f, eLpNorm_rpow_two_norm_lt_top g⟩
 
@@ -150,8 +150,8 @@ theorem integral_inner_eq_sq_eLpNorm (f : α →₂[μ] E) :
   norm_cast
   rw [integral_eq_lintegral_of_nonneg_ae]
   rotate_left
-  · exact Filter.eventually_of_forall fun x => sq_nonneg _
-  · exact ((Lp.aestronglyMeasurable f).norm.aemeasurable.pow_const _).aestronglyMeasurable
+  exact Filter.eventually_of_forall fun x => sq_nonneg _
+  exact ((Lp.aestronglyMeasurable f).norm.aemeasurable.pow_const _).aestronglyMeasurable
   congr
   ext1 x
   have h_two : (2 : ℝ) = ((2 : ℕ) : ℝ)
@@ -168,12 +168,12 @@ private theorem norm_sq_eq_inner' (f : α →₂[μ] E) : ‖f‖ ^ 2 = RCLike.r
   simp
   rw [inner_def, integral_inner_eq_sq_eLpNorm, norm_def, ← ENNReal.toReal_pow, RCLike.ofReal_re,
     ENNReal.toReal_eq_toReal (ENNReal.pow_ne_top (Lp.eLpNorm_ne_top f)) _]
-  · rw [← ENNReal.rpow_natCast, eLpNorm_eq_eLpNorm' two_ne_zero ENNReal.two_ne_top, eLpNorm', ←
-      ENNReal.rpow_mul, one_div, h_two]
-    simp
-  · refine (lintegral_rpow_nnnorm_lt_top_of_eLpNorm'_lt_top zero_lt_two ?_).ne
-    rw [← h_two, ← eLpNorm_eq_eLpNorm' two_ne_zero ENNReal.two_ne_top]
-    exact Lp.eLpNorm_lt_top f
+  rw [← ENNReal.rpow_natCast, eLpNorm_eq_eLpNorm' two_ne_zero ENNReal.two_ne_top, eLpNorm', ←
+    ENNReal.rpow_mul, one_div, h_two]
+  simp
+  refine (lintegral_rpow_nnnorm_lt_top_of_eLpNorm'_lt_top zero_lt_two ?_).ne
+  rw [← h_two, ← eLpNorm_eq_eLpNorm' two_ne_zero ENNReal.two_ne_top]
+  exact Lp.eLpNorm_lt_top f
 
 theorem mem_L1_inner (f g : α →₂[μ] E) :
     AEEqFun.mk (fun x => ⟪f x, g x⟫)

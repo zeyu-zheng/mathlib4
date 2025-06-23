@@ -195,15 +195,15 @@ theorem spectralRadius_le_pow_nnnorm_pow_one_div (a : A) (n : ℕ) :
   have hn : 0 < ((n + 1 : ℕ) : ℝ) := mod_cast Nat.succ_pos'
   convert monotone_rpow_of_nonneg (one_div_pos.mpr hn).le nnnorm_pow_le using 1
   all_goals dsimp
-  · rw [one_div, pow_rpow_inv_natCast]
-    positivity
+  rw [one_div, pow_rpow_inv_natCast]
+  positivity
   rw [Nat.cast_succ, ENNReal.coe_mul_rpow]
 
 theorem spectralRadius_le_liminf_pow_nnnorm_pow_one_div (a : A) :
     spectralRadius 𝕜 a ≤ atTop.liminf fun n : ℕ => (‖a ^ n‖₊ : ℝ≥0∞) ^ (1 / n : ℝ) := by
   refine ENNReal.le_of_forall_lt_one_mul_le fun ε hε => ?_
   by_cases h : ε = 0
-  · simp only [h, zero_mul, zero_le']
+  simp only [h, zero_mul, zero_le']
   have hε' : ε⁻¹ ≠ ∞ := fun h' =>
     h (by simpa only [inv_inv, inv_top] using congr_arg (fun x : ℝ≥0∞ => x⁻¹) h')
   simp only [ENNReal.mul_le_iff_le_inv h (hε.trans_le le_top).ne, mul_comm ε⁻¹,
@@ -281,23 +281,23 @@ theorem hasFPowerSeriesOnBall_inverse_one_sub_smul [CompleteSpace A] (a : A) :
         le_radius_of_bound_nnreal _ (max 1 ‖(1 : A)‖₊) fun n => ?_
       rw [← norm_toNNReal, norm_mkPiRing, norm_toNNReal]
       cases' n with n
-      · simp only [Nat.zero_eq, le_refl, mul_one, or_true_iff, le_max_iff, pow_zero]
-      · refine
-          le_trans (le_trans (mul_le_mul_right' (nnnorm_pow_le' a n.succ_pos) (r ^ n.succ)) ?_)
-            (le_max_left _ _)
-        by_cases h : ‖a‖₊ = 0
-        · simp only [h, zero_mul, zero_le', pow_succ']
-        · rw [← coe_inv h, coe_lt_coe, NNReal.lt_inv_iff_mul_lt h] at hr
-          simpa only [← mul_pow, mul_comm] using pow_le_one' hr.le n.succ
+      simp only [Nat.zero_eq, le_refl, mul_one, or_true_iff, le_max_iff, pow_zero]
+      refine
+        le_trans (le_trans (mul_le_mul_right' (nnnorm_pow_le' a n.succ_pos) (r ^ n.succ)) ?_)
+          (le_max_left _ _)
+      by_cases h : ‖a‖₊ = 0
+      simp only [h, zero_mul, zero_le', pow_succ']
+      rw [← coe_inv h, coe_lt_coe, NNReal.lt_inv_iff_mul_lt h] at hr
+      simpa only [← mul_pow, mul_comm] using pow_le_one' hr.le n.succ
     r_pos := ENNReal.inv_pos.mpr coe_ne_top
     hasSum := fun {y} hy => by
       have norm_lt : ‖y • a‖ < 1 := by
         by_cases h : ‖a‖₊ = 0
-        · simp only [nnnorm_eq_zero.mp h, norm_zero, zero_lt_one, smul_zero]
-        · have nnnorm_lt : ‖y‖₊ < ‖a‖₊⁻¹ := by
-            simpa only [← coe_inv h, mem_ball_zero_iff, Metric.emetric_ball_nnreal] using hy
-          rwa [← coe_nnnorm, ← Real.lt_toNNReal_iff_coe_lt, Real.toNNReal_one, nnnorm_smul,
-            ← NNReal.lt_inv_iff_mul_lt h]
+        simp only [nnnorm_eq_zero.mp h, norm_zero, zero_lt_one, smul_zero]
+        have nnnorm_lt : ‖y‖₊ < ‖a‖₊⁻¹ := by
+          simpa only [← coe_inv h, mem_ball_zero_iff, Metric.emetric_ball_nnreal] using hy
+        rwa [← coe_nnnorm, ← Real.lt_toNNReal_iff_coe_lt, Real.toNNReal_one, nnnorm_smul,
+          ← NNReal.lt_inv_iff_mul_lt h]
       simpa [← smul_pow, (NormedRing.summable_geometric_of_norm_lt_one _ norm_lt).hasSum_iff] using
         (NormedRing.inverse_one_sub _ norm_lt).symm }
 
@@ -306,14 +306,14 @@ variable {𝕜}
 theorem isUnit_one_sub_smul_of_lt_inv_radius {a : A} {z : 𝕜} (h : ↑‖z‖₊ < (spectralRadius 𝕜 a)⁻¹) :
     IsUnit (1 - z • a) := by
   by_cases hz : z = 0
-  · simp only [hz, isUnit_one, sub_zero, zero_smul]
-  · let u := Units.mk0 z hz
-    suffices hu : IsUnit (u⁻¹ • (1 : A) - a) by
-      rwa [IsUnit.smul_sub_iff_sub_inv_smul, inv_inv u] at hu
-    rw [Units.smul_def, ← Algebra.algebraMap_eq_smul_one, ← mem_resolventSet_iff]
-    refine mem_resolventSet_of_spectralRadius_lt ?_
-    rwa [Units.val_inv_eq_inv_val, nnnorm_inv,
-      coe_inv (nnnorm_ne_zero_iff.mpr (Units.val_mk0 hz ▸ hz : (u : 𝕜) ≠ 0)), lt_inv_iff_lt_inv]
+  simp only [hz, isUnit_one, sub_zero, zero_smul]
+  let u := Units.mk0 z hz
+  suffices hu : IsUnit (u⁻¹ • (1 : A) - a) by
+    rwa [IsUnit.smul_sub_iff_sub_inv_smul, inv_inv u] at hu
+  rw [Units.smul_def, ← Algebra.algebraMap_eq_smul_one, ← mem_resolventSet_iff]
+  refine mem_resolventSet_of_spectralRadius_lt ?_
+  rwa [Units.val_inv_eq_inv_val, nnnorm_inv,
+    coe_inv (nnnorm_ne_zero_iff.mpr (Units.val_mk0 hz ▸ hz : (u : 𝕜) ≠ 0)), lt_inv_iff_lt_inv]
 
 /-- In a Banach algebra `A` over `𝕜`, for `a : A` the function `fun z ↦ (1 - z • a)⁻¹` is
 differentiable on any closed ball centered at zero of radius `r < (spectralRadius 𝕜 a)⁻¹`. -/
@@ -480,8 +480,8 @@ theorem exp_mem_exp [RCLike 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [Complet
   have h₃ : exp 𝕜 (a - ↑ₐ z) = 1 + (a - ↑ₐ z) * b
   rw [exp_eq_tsum]
   convert tsum_eq_zero_add (expSeries_summable' (𝕂 := 𝕜) (a - ↑ₐ z))
-  · simp only [Nat.factorial_zero, Nat.cast_one, inv_one, pow_zero, one_smul]
-  · exact h₀.symm
+  simp only [Nat.factorial_zero, Nat.cast_one, inv_one, pow_zero, one_smul]
+  exact h₀.symm
   rw [spectrum.mem_iff, IsUnit.sub_iff, ← one_mul (↑ₐ (exp 𝕜 z)), hexpmul, ← _root_.sub_mul,
     Commute.isUnit_mul_iff (Algebra.commutes (exp 𝕜 z) (exp 𝕜 (a - ↑ₐ z) - 1)).symm,
     sub_eq_iff_eq_add'.mpr h₃, Commute.isUnit_mul_iff (h₀ ▸ h₁ : (a - ↑ₐ z) * b = b * (a - ↑ₐ z))]
@@ -585,20 +585,20 @@ lemma spectralRadius_eq {𝕜₁ 𝕜₂ A : Type*} [NormedField 𝕜₁] [Norme
   have := algebraMap_isometry 𝕜₁ 𝕜₂ |>.nnnorm_map_of_map_zero (map_zero _)
   apply le_antisymm
   all_goals apply iSup₂_le fun x hx ↦ ?_
-  · refine congr_arg ((↑) : ℝ≥0 → ℝ≥0∞) (this x) |>.symm.trans_le <| le_iSup₂ (α := ℝ≥0∞) _ ?_
-    exact (spectrum.algebraMap_mem_iff _).mpr hx
-  · have ⟨y, hy, hy'⟩ := h.algebraMap_image.symm ▸ hx
-    subst hy'
-    exact this y ▸ le_iSup₂ (α := ℝ≥0∞) y hy
+  refine congr_arg ((↑) : ℝ≥0 → ℝ≥0∞) (this x) |>.symm.trans_le <| le_iSup₂ (α := ℝ≥0∞) _ ?_
+  exact (spectrum.algebraMap_mem_iff _).mpr hx
+  have ⟨y, hy, hy'⟩ := h.algebraMap_image.symm ▸ hx
+  subst hy'
+  exact this y ▸ le_iSup₂ (α := ℝ≥0∞) y hy
 
 variable {A : Type*} [Ring A]
 
 lemma nnreal_iff [Algebra ℝ A] {a : A} :
     SpectrumRestricts a ContinuousMap.realToNNReal ↔ ∀ x ∈ spectrum ℝ a, 0 ≤ x := by
   refine ⟨fun h x hx ↦ ?_, fun h ↦ ?_⟩
-  · obtain ⟨x, -, rfl⟩ := h.algebraMap_image.symm ▸ hx
-    exact coe_nonneg x
-  · exact .of_subset_range_algebraMap (fun _ ↦ Real.toNNReal_coe) fun x hx ↦ ⟨⟨x, h x hx⟩, rfl⟩
+  obtain ⟨x, -, rfl⟩ := h.algebraMap_image.symm ▸ hx
+  exact coe_nonneg x
+  exact .of_subset_range_algebraMap (fun _ ↦ Real.toNNReal_coe) fun x hx ↦ ⟨⟨x, h x hx⟩, rfl⟩
 
 lemma nnreal_of_nonneg {A : Type*} [Ring A] [PartialOrder A] [Algebra ℝ A]
     [NonnegSpectrumClass ℝ A] {a : A} (ha : 0 ≤ a) :
@@ -608,9 +608,9 @@ lemma nnreal_of_nonneg {A : Type*} [Ring A] [PartialOrder A] [Algebra ℝ A]
 lemma real_iff [Algebra ℂ A] {a : A} :
     SpectrumRestricts a Complex.reCLM ↔ ∀ x ∈ spectrum ℂ a, x = x.re := by
   refine ⟨fun h x hx ↦ ?_, fun h ↦ ?_⟩
-  · obtain ⟨x, -, rfl⟩ := h.algebraMap_image.symm ▸ hx
-    simp
-  · exact .of_subset_range_algebraMap Complex.ofReal_re fun x hx ↦ ⟨x.re, (h x hx).symm⟩
+  obtain ⟨x, -, rfl⟩ := h.algebraMap_image.symm ▸ hx
+  simp
+  exact .of_subset_range_algebraMap Complex.ofReal_re fun x hx ↦ ⟨x.re, (h x hx).symm⟩
 
 lemma nnreal_iff_spectralRadius_le [Algebra ℝ A] {a : A} {t : ℝ≥0} (ht : spectralRadius ℝ a ≤ t) :
     SpectrumRestricts a ContinuousMap.realToNNReal ↔
@@ -622,17 +622,17 @@ lemma nnreal_iff_spectralRadius_le [Algebra ℝ A] {a : A} {t : ℝ≥0} (ht : s
   exact le_iSup₂ (α := ℝ≥0∞) x hx |>.trans ht
   rw [nnreal_iff]
   refine ⟨fun h ↦ iSup₂_le fun x hx ↦ ?_, fun h ↦ ?_⟩
-  · rw [← spectrum.singleton_sub_eq] at hx
-    obtain ⟨y, hy, rfl⟩ : ∃ y ∈ spectrum ℝ a, ↑t - y = x := by simpa using hx
-    obtain ⟨hty, hyt⟩ := Set.mem_Icc.mp <| this hy
-    lift y to ℝ≥0 using h y hy
-    rw [← NNReal.coe_sub (by exact_mod_cast hyt)]
-    simp
-  · replace h : ∀ x ∈ spectrum ℝ a, ‖t - x‖₊ ≤ t := by
-      simpa [spectralRadius, iSup₂_le_iff, ← spectrum.singleton_sub_eq] using h
-    peel h with x hx h_le
-    rw [← NNReal.coe_le_coe, coe_nnnorm, Real.norm_eq_abs, abs_le] at h_le
-    linarith [h_le.2]
+  rw [← spectrum.singleton_sub_eq] at hx
+  obtain ⟨y, hy, rfl⟩ : ∃ y ∈ spectrum ℝ a, ↑t - y = x := by simpa using hx
+  obtain ⟨hty, hyt⟩ := Set.mem_Icc.mp <| this hy
+  lift y to ℝ≥0 using h y hy
+  rw [← NNReal.coe_sub (by exact_mod_cast hyt)]
+  simp
+  replace h : ∀ x ∈ spectrum ℝ a, ‖t - x‖₊ ≤ t := by
+    simpa [spectralRadius, iSup₂_le_iff, ← spectrum.singleton_sub_eq] using h
+  peel h with x hx h_le
+  rw [← NNReal.coe_le_coe, coe_nnnorm, Real.norm_eq_abs, abs_le] at h_le
+  linarith [h_le.2]
 
 lemma _root_.NNReal.spectralRadius_mem_spectrum {A : Type*} [NormedRing A] [NormedAlgebra ℝ A]
     [CompleteSpace A] {a : A} (ha : (spectrum ℝ a).Nonempty)

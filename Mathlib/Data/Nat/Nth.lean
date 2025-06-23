@@ -160,11 +160,11 @@ theorem nth_mem_of_infinite (hf : (setOf p).Infinite) (n : ℕ) : p (nth p n) :=
 theorem exists_lt_card_nth_eq {x} (h : p x) :
     ∃ n, (∀ hf : (setOf p).Finite, n < hf.toFinset.card) ∧ nth p n = x := by
   refine (setOf p).finite_or_infinite.elim (fun hf => ?_) fun hf => ?_
-  · rcases exists_lt_card_finite_nth_eq hf h with ⟨n, hn, hx⟩
-    exact ⟨n, fun _ => hn, hx⟩
-  · rw [← @Set.mem_setOf_eq _ _ p, ← range_nth_of_infinite hf] at h
-    rcases h with ⟨n, hx⟩
-    exact ⟨n, fun hf' => absurd hf' hf, hx⟩
+  rcases exists_lt_card_finite_nth_eq hf h with ⟨n, hn, hx⟩
+  exact ⟨n, fun _ => hn, hx⟩
+  rw [← @Set.mem_setOf_eq _ _ p, ← range_nth_of_infinite hf] at h
+  rcases h with ⟨n, hx⟩
+  exact ⟨n, fun hf' => absurd hf' hf, hx⟩
 
 theorem subset_range_nth : setOf p ⊆ Set.range (nth p) := fun x (hx : p x) =>
   let ⟨n, _, hn⟩ := exists_lt_card_nth_eq hx
@@ -213,13 +213,13 @@ nonempty because we use the same "garbage value" `0` both for `sInf` on `ℕ` an
 for `n ≥ card s`. -/
 theorem nth_eq_sInf (p : ℕ → Prop) (n : ℕ) : nth p n = sInf {x | p x ∧ ∀ k < n, nth p k < x} := by
   by_cases hn : ∀ hf : (setOf p).Finite, n < hf.toFinset.card
-  · exact (isLeast_nth hn).csInf_eq.symm
-  · push_neg at hn
-    rcases hn with ⟨hf, hn⟩
-    rw [nth_of_card_le _ hn]
-    refine ((congr_arg sInf <| Set.eq_empty_of_forall_not_mem fun k hk => ?_).trans sInf_empty).symm
-    rcases exists_lt_card_nth_eq hk.1 with ⟨k, hlt, rfl⟩
-    exact (hk.2 _ ((hlt hf).trans_le hn)).false
+  exact (isLeast_nth hn).csInf_eq.symm
+  push_neg at hn
+  rcases hn with ⟨hf, hn⟩
+  rw [nth_of_card_le _ hn]
+  refine ((congr_arg sInf <| Set.eq_empty_of_forall_not_mem fun k hk => ?_).trans sInf_empty).symm
+  rcases exists_lt_card_nth_eq hk.1 with ⟨k, hlt, rfl⟩
+  exact (hk.2 _ ((hlt hf).trans_le hn)).false
 
 theorem nth_zero : nth p 0 = sInf (setOf p) := by rw [nth_eq_sInf]; simp
 
@@ -232,10 +232,10 @@ theorem nth_zero_of_exists [DecidablePred p] (h : ∃ n, p n) : nth p 0 = Nat.fi
 theorem nth_eq_zero {n} :
     nth p n = 0 ↔ p 0 ∧ n = 0 ∨ ∃ hf : (setOf p).Finite, hf.toFinset.card ≤ n := by
   refine ⟨fun h => ?_, ?_⟩
-  · simp only [or_iff_not_imp_right, not_exists, not_le]
-    exact fun hn => ⟨h ▸ nth_mem _ hn, nonpos_iff_eq_zero.1 <| h ▸ le_nth hn⟩
-  · rintro (⟨h₀, rfl⟩ | ⟨hf, hle⟩)
-    exacts [nth_zero_of_zero h₀, nth_of_card_le hf hle]
+  simp only [or_iff_not_imp_right, not_exists, not_le]
+  exact fun hn => ⟨h ▸ nth_mem _ hn, nonpos_iff_eq_zero.1 <| h ▸ le_nth hn⟩
+  rintro (⟨h₀, rfl⟩ | ⟨hf, hle⟩)
+  exacts [nth_zero_of_zero h₀, nth_of_card_le hf hle]
 
 theorem nth_eq_zero_mono (h₀ : ¬p 0) {a b : ℕ} (hab : a ≤ b) (ha : nth p a = 0) : nth p b = 0 := by
   simp only [nth_eq_zero, h₀, false_and_iff, false_or_iff] at ha ⊢
@@ -243,14 +243,14 @@ theorem nth_eq_zero_mono (h₀ : ¬p 0) {a b : ℕ} (hab : a ≤ b) (ha : nth p 
 
 theorem le_nth_of_lt_nth_succ {k a : ℕ} (h : a < nth p (k + 1)) (ha : p a) : a ≤ nth p k := by
   cases' (setOf p).finite_or_infinite with hf hf
-  · rcases exists_lt_card_finite_nth_eq hf ha with ⟨n, hn, rfl⟩
-    cases' lt_or_le (k + 1) hf.toFinset.card with hk hk
-    · rwa [(nth_strictMonoOn hf).lt_iff_lt hn hk, Nat.lt_succ_iff,
-        ← (nth_strictMonoOn hf).le_iff_le hn (k.lt_succ_self.trans hk)] at h
-    · rw [nth_of_card_le _ hk] at h
-      exact absurd h (zero_le _).not_lt
-  · rcases subset_range_nth ha with ⟨n, rfl⟩
-    rwa [nth_lt_nth hf, Nat.lt_succ_iff, ← nth_le_nth hf] at h
+  rcases exists_lt_card_finite_nth_eq hf ha with ⟨n, hn, rfl⟩
+  cases' lt_or_le (k + 1) hf.toFinset.card with hk hk
+  rwa [(nth_strictMonoOn hf).lt_iff_lt hn hk, Nat.lt_succ_iff,
+    ← (nth_strictMonoOn hf).le_iff_le hn (k.lt_succ_self.trans hk)] at h
+  rw [nth_of_card_le _ hk] at h
+  exact absurd h (zero_le _).not_lt
+  rcases subset_range_nth ha with ⟨n, rfl⟩
+  rwa [nth_lt_nth hf, Nat.lt_succ_iff, ← nth_le_nth hf] at h
 
 section Count
 
@@ -276,8 +276,8 @@ theorem filter_range_nth_eq_insert {k : ℕ}
   simp only [mem_insert, mem_filter, mem_range] at ha ⊢
   have : nth p k < nth p (k + 1) := nth_lt_nth' k.lt_succ_self hlt
   rcases ha with (rfl | ⟨hlt, hpa⟩)
-  · exact ⟨this, nth_mem _ fun hf => k.lt_succ_self.trans (hlt hf)⟩
-  · exact ⟨hlt.trans this, hpa⟩
+  exact ⟨this, nth_mem _ fun hf => k.lt_succ_self.trans (hlt hf)⟩
+  exact ⟨hlt.trans this, hpa⟩
 
 theorem filter_range_nth_eq_insert_of_finite (hf : (setOf p).Finite) {k : ℕ}
     (hlt : k + 1 < hf.toFinset.card) :
@@ -291,10 +291,10 @@ theorem filter_range_nth_eq_insert_of_infinite (hp : (setOf p).Infinite) (k : �
 theorem count_nth {n : ℕ} (hn : ∀ hf : (setOf p).Finite, n < hf.toFinset.card) :
     count p (nth p n) = n := by
   induction' n with k ihk
-  · exact count_nth_zero _
-  · rw [count_eq_card_filter_range, filter_range_nth_eq_insert hn, card_insert_of_not_mem, ←
-      count_eq_card_filter_range, ihk fun hf => lt_of_succ_lt (hn hf)]
-    simp
+  exact count_nth_zero _
+  rw [count_eq_card_filter_range, filter_range_nth_eq_insert hn, card_insert_of_not_mem, ←
+    count_eq_card_filter_range, ihk fun hf => lt_of_succ_lt (hn hf)]
+  simp
 
 theorem count_nth_of_lt_card_finite {n : ℕ} (hp : (setOf p).Finite) (hlt : n < hp.toFinset.card) :
     count p (nth p n) = n :=
@@ -365,8 +365,8 @@ theorem nth_of_forall_not {n : ℕ} (hp : ∀ n' ≥ n, ¬p n') : nth p n = 0 :=
   contrapose! hp
   exact ⟨n', by simpa using hp, Set.mem_setOf.mp hn'⟩
   rw [nth_of_card_le ((finite_toSet _).subset this)]
-  · refine (Finset.card_le_card ?_).trans_eq (Finset.card_range n)
-    exact Set.Finite.toFinset_subset.mpr this
+  refine (Finset.card_le_card ?_).trans_eq (Finset.card_range n)
+  exact Set.Finite.toFinset_subset.mpr this
 
 @[simp] theorem nth_false (n : ℕ) : nth (fun _ ↦ False) n = 0 := nth_of_forall_not fun _ _ ↦ id
 

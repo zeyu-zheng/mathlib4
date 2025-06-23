@@ -309,7 +309,7 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
     ⟨trivializationAt F E a, mem_baseSet_trivializationAt F E a⟩
   -- If `a < b`, then `[a, b] = ∅`, and the statement is trivial
   cases' lt_or_le b a with hab hab
-  · exact ⟨ea, by simp [*]⟩
+  exact ⟨ea, by simp [*]⟩
   /- Let `s` be the set of points `x ∈ [a, b]` such that `E` is trivializable over `[a, x]`.
     We need to show that `b ∈ s`. Let `c = Sup s`. We will show that `c ∈ s` and `c = b`. -/
   set s : Set B := { x ∈ Icc a b | ∃ e : Trivialization F (π F E), Icc a x ⊆ e.baseSet }
@@ -322,7 +322,7 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
   have hc : c ∈ Icc a b := ⟨hsc.1 ha, hsc.2 hsb⟩
   obtain ⟨-, ec : Trivialization F (π F E), hec : Icc a c ⊆ ec.baseSet⟩ : c ∈ s := by
     rcases hc.1.eq_or_lt with heq | hlt
-    · rwa [← heq]
+    rwa [← heq]
     refine ⟨hc, ?_⟩
     /- In order to show that `c ∈ s`, consider a trivialization `ec` of `proj` over a neighborhood
       of `c`. Its base set includes `(c', c]` for some `c' ∈ [a, c)`. -/
@@ -340,9 +340,9 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
     done. Otherwise we show that `proj` can be trivialized over a larger interval `[a, d]`,
     `d ∈ (c, b]`, hence `c` is not an upper bound of `s`. -/
   rcases hc.2.eq_or_lt with heq | hlt
-  · exact ⟨ec, heq ▸ hec⟩
+  exact ⟨ec, heq ▸ hec⟩
   rsuffices ⟨d, hdcb, hd⟩ : ∃ d ∈ Ioc c b, ∃ e : Trivialization F (π F E), Icc a d ⊆ e.baseSet
-  · exact ((hsc.1 ⟨⟨hc.1.trans hdcb.1.le, hdcb.2⟩, hd⟩).not_lt hdcb.1).elim
+  exact ((hsc.1 ⟨⟨hc.1.trans hdcb.1.le, hdcb.2⟩, hd⟩).not_lt hdcb.1).elim
   /- Since the base set of `ec` is open, it includes `[c, d)` (hence, `[a, d)`) for some
     `d ∈ (c, b]`. -/
   obtain ⟨d, hdcb, hd⟩ : ∃ d ∈ Ioc c b, Ico c d ⊆ ec.baseSet :=
@@ -350,22 +350,19 @@ theorem FiberBundle.exists_trivialization_Icc_subset [ConditionallyCompleteLinea
       (mem_nhdsWithin_of_mem_nhds <| IsOpen.mem_nhds ec.open_baseSet (hec ⟨hc.1, le_rfl⟩))
   have had : Ico a d ⊆ ec.baseSet := Ico_subset_Icc_union_Ico.trans (union_subset hec hd)
   by_cases he : Disjoint (Iio d) (Ioi c)
-  · /- If `(c, d) = ∅`, then let `ed` be a trivialization of `proj` over a neighborhood of `d`.
-      Then the disjoint union of `ec` restricted to `(-∞, d)` and `ed` restricted to `(c, ∞)` is
-      a trivialization over `[a, d]`. -/
-    obtain ⟨ed, hed⟩ : ∃ ed : Trivialization F (π F E), d ∈ ed.baseSet :=
-      ⟨trivializationAt F E d, mem_baseSet_trivializationAt F E d⟩
+  · obtain ⟨ed, hed⟩ : ∃ ed : Trivialization F (π F E), d ∈ ed.baseSet
+    exact ⟨trivializationAt F E d, mem_baseSet_trivializationAt F E d⟩
     refine ⟨d, hdcb,
       (ec.restrOpen (Iio d) isOpen_Iio).disjointUnion (ed.restrOpen (Ioi c) isOpen_Ioi)
         (he.mono inter_subset_right inter_subset_right), fun x hx => ?_⟩
     rcases hx.2.eq_or_lt with (rfl | hxd)
     exacts [Or.inr ⟨hed, hdcb.1⟩, Or.inl ⟨had ⟨hx.1, hxd⟩, hxd⟩]
-  · /- If `(c, d)` is nonempty, then take `d' ∈ (c, d)`. Since the base set of `ec` includes
-          `[a, d)`, it includes `[a, d'] ⊆ [a, d)` as well. -/
-    rw [disjoint_left] at he
-    push_neg at he
-    rcases he with ⟨d', hdd' : d' < d, hd'c⟩
-    exact ⟨d', ⟨hd'c, hdd'.le.trans hdcb.2⟩, ec, (Icc_subset_Ico_right hdd').trans had⟩
+  /- If `(c, d)` is nonempty, then take `d' ∈ (c, d)`. Since the base set of `ec` includes
+        `[a, d)`, it includes `[a, d'] ⊆ [a, d)` as well. -/
+  rw [disjoint_left] at he
+  push_neg at he
+  rcases he with ⟨d', hdd' : d' < d, hd'c⟩
+  exact ⟨d', ⟨hd'c, hdd'.le.trans hdcb.2⟩, ec, (Icc_subset_Ico_right hdd').trans had⟩
 
 end FiberBundle
 
@@ -502,15 +499,15 @@ theorem localTrivAsPartialEquiv_trans (i j : ι) :
     (Z.localTrivAsPartialEquiv i).symm.trans (Z.localTrivAsPartialEquiv j) ≈
       (Z.trivChange i j).toPartialEquiv := by
   constructor
-  · ext x
-    simp only [mem_localTrivAsPartialEquiv_target, mfld_simps]
-    rfl
-  · rintro ⟨x, v⟩ hx
-    simp only [trivChange, localTrivAsPartialEquiv, PartialEquiv.symm, true_and_iff,
-      Prod.mk.inj_iff, prod_mk_mem_set_prod_eq, PartialEquiv.trans_source, mem_inter_iff,
-      and_true_iff, mem_preimage, proj, mem_univ, eq_self_iff_true, (· ∘ ·),
-      PartialEquiv.coe_trans, TotalSpace.proj] at hx ⊢
-    simp only [Z.coordChange_comp, hx, mem_inter_iff, and_self_iff, mem_baseSet_at]
+  ext x
+  simp only [mem_localTrivAsPartialEquiv_target, mfld_simps]
+  rfl
+  rintro ⟨x, v⟩ hx
+  simp only [trivChange, localTrivAsPartialEquiv, PartialEquiv.symm, true_and_iff,
+    Prod.mk.inj_iff, prod_mk_mem_set_prod_eq, PartialEquiv.trans_source, mem_inter_iff,
+    and_true_iff, mem_preimage, proj, mem_univ, eq_self_iff_true, (· ∘ ·),
+    PartialEquiv.coe_trans, TotalSpace.proj] at hx ⊢
+  simp only [Z.coordChange_comp, hx, mem_inter_iff, and_self_iff, mem_baseSet_at]
 
 /-- Topological structure on the total space of a fiber bundle created from core, designed so
 that all the local trivialization are continuous. -/
@@ -589,12 +586,12 @@ theorem continuous_const_section (v : F)
   have A : Z.baseSet (Z.indexAt x) ∈ 𝓝 x :=
     IsOpen.mem_nhds (Z.isOpen_baseSet (Z.indexAt x)) (Z.mem_baseSet_at x)
   refine ((Z.localTrivAt x).toPartialHomeomorph.continuousAt_iff_continuousAt_comp_left ?_).2 ?_
-  · exact A
-  · apply continuousAt_id.prod
-    simp only [(· ∘ ·), mfld_simps, localTrivAt_snd]
-    have : ContinuousOn (fun _ : B => v) (Z.baseSet (Z.indexAt x)) := continuousOn_const
-    refine (this.congr fun y hy ↦ ?_).continuousAt A
-    exact h _ _ _ ⟨mem_baseSet_at _ _, hy⟩
+  exact A
+  apply continuousAt_id.prod
+  simp only [(· ∘ ·), mfld_simps, localTrivAt_snd]
+  have : ContinuousOn (fun _ : B => v) (Z.baseSet (Z.indexAt x)) := continuousOn_const
+  refine (this.congr fun y hy ↦ ?_).continuousAt A
+  exact h _ _ _ ⟨mem_baseSet_at _ _, hy⟩
 
 @[simp, mfld_simps]
 theorem localTrivAsPartialEquiv_coe : ⇑(Z.localTrivAsPartialEquiv i) = Z.localTriv i :=
@@ -675,9 +672,9 @@ instance fiberBundle : FiberBundle F Z.Fiber where
     simp only [(· ∘ ·), localTrivAt_apply_mk, Trivialization.coe_coe,
       ← (embedding_prod_mk b).nhds_eq_comap]
     convert_to 𝓝 x = 𝓝 x ⊓ 𝓟 univ
-    · congr
-      exact eq_univ_of_forall (mk_mem_localTrivAt_source Z _)
-    · rw [principal_univ, inf_top_eq]
+    congr
+    exact eq_univ_of_forall (mk_mem_localTrivAt_source Z _)
+    rw [principal_univ, inf_top_eq]
   trivializationAtlas' := Set.range Z.localTriv
   trivializationAt' := Z.localTrivAt
   mem_baseSet_trivializationAt' := Z.mem_baseSet_at
@@ -842,12 +839,12 @@ theorem continuousOn_of_comp_right {X : Type*} [TopologicalSpace X] {f : TotalSp
     a.trivializationOfMemPretrivializationAtlas (a.pretrivialization_mem_atlas z.proj)
   refine (e.continuousAt_of_comp_right ?_
     ((hf z.proj hz).continuousAt (IsOpen.mem_nhds ?_ ?_))).continuousWithinAt
-  · exact a.mem_base_pretrivializationAt z.proj
-  · exact (hs.inter (a.pretrivializationAt z.proj).open_baseSet).prod isOpen_univ
+  exact a.mem_base_pretrivializationAt z.proj
+  exact (hs.inter (a.pretrivializationAt z.proj).open_baseSet).prod isOpen_univ
   refine ⟨?_, mem_univ _⟩
   rw [e.coe_fst]
-  · exact ⟨hz, a.mem_base_pretrivializationAt z.proj⟩
-  · rw [e.mem_source]
-    exact a.mem_base_pretrivializationAt z.proj
+  exact ⟨hz, a.mem_base_pretrivializationAt z.proj⟩
+  rw [e.mem_source]
+  exact a.mem_base_pretrivializationAt z.proj
 
 end FiberPrebundle

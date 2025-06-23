@@ -64,12 +64,12 @@ theorem withDensityᵥ_zero : μ.withDensityᵥ (0 : α → E) = 0 := by
 @[simp]
 theorem withDensityᵥ_neg : μ.withDensityᵥ (-f) = -μ.withDensityᵥ f := by
   by_cases hf : Integrable f μ
-  · ext1 i hi
-    rw [VectorMeasure.neg_apply, withDensityᵥ_apply hf hi, ← integral_neg,
-      withDensityᵥ_apply hf.neg hi]
-    rfl
-  · rw [withDensityᵥ, withDensityᵥ, dif_neg hf, dif_neg, neg_zero]
-    rwa [integrable_neg_iff]
+  ext1 i hi
+  rw [VectorMeasure.neg_apply, withDensityᵥ_apply hf hi, ← integral_neg,
+    withDensityᵥ_apply hf.neg hi]
+  rfl
+  rw [withDensityᵥ, withDensityᵥ, dif_neg hf, dif_neg, neg_zero]
+  rwa [integrable_neg_iff]
 
 theorem withDensityᵥ_neg' : (μ.withDensityᵥ fun x => -f x) = -μ.withDensityᵥ f :=
   withDensityᵥ_neg
@@ -82,8 +82,8 @@ theorem withDensityᵥ_add (hf : Integrable f μ) (hg : Integrable g μ) :
     withDensityᵥ_apply hg hi]
   simp_rw [Pi.add_apply]
   rw [integral_add] <;> rw [← integrableOn_univ]
-  · exact hf.integrableOn.restrict MeasurableSet.univ
-  · exact hg.integrableOn.restrict MeasurableSet.univ
+  exact hf.integrableOn.restrict MeasurableSet.univ
+  exact hg.integrableOn.restrict MeasurableSet.univ
 
 theorem withDensityᵥ_add' (hf : Integrable f μ) (hg : Integrable g μ) :
     (μ.withDensityᵥ fun x => f x + g x) = μ.withDensityᵥ f + μ.withDensityᵥ g :=
@@ -102,14 +102,14 @@ theorem withDensityᵥ_sub' (hf : Integrable f μ) (hg : Integrable g μ) :
 theorem withDensityᵥ_smul {𝕜 : Type*} [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E]
     [SMulCommClass ℝ 𝕜 E] (f : α → E) (r : 𝕜) : μ.withDensityᵥ (r • f) = r • μ.withDensityᵥ f := by
   by_cases hf : Integrable f μ
-  · ext1 i hi
-    rw [withDensityᵥ_apply (hf.smul r) hi, VectorMeasure.smul_apply, withDensityᵥ_apply hf hi, ←
-      integral_smul r f]
-    rfl
-  · by_cases hr : r = 0
-    · rw [hr, zero_smul, zero_smul, withDensityᵥ_zero]
-    · rw [withDensityᵥ, withDensityᵥ, dif_neg hf, dif_neg, smul_zero]
-      rwa [integrable_smul_iff hr f]
+  ext1 i hi
+  rw [withDensityᵥ_apply (hf.smul r) hi, VectorMeasure.smul_apply, withDensityᵥ_apply hf hi, ←
+    integral_smul r f]
+  rfl
+  by_cases hr : r = 0
+  rw [hr, zero_smul, zero_smul, withDensityᵥ_zero]
+  rw [withDensityᵥ, withDensityᵥ, dif_neg hf, dif_neg, smul_zero]
+  rwa [integrable_smul_iff hr f]
 
 theorem withDensityᵥ_smul' {𝕜 : Type*} [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E]
     [SMulCommClass ℝ 𝕜 E] (f : α → E) (r : 𝕜) :
@@ -136,11 +136,11 @@ theorem withDensityᵥ_smul_eq_withDensityᵥ_withDensity' {f : α → ℝ≥0�
 theorem Measure.withDensityᵥ_absolutelyContinuous (μ : Measure α) (f : α → ℝ) :
     μ.withDensityᵥ f ≪ᵥ μ.toENNRealVectorMeasure := by
   by_cases hf : Integrable f μ
-  · refine VectorMeasure.AbsolutelyContinuous.mk fun i hi₁ hi₂ => ?_
-    rw [toENNRealVectorMeasure_apply_measurable hi₁] at hi₂
-    rw [withDensityᵥ_apply hf hi₁, Measure.restrict_zero_set hi₂, integral_zero_measure]
-  · rw [withDensityᵥ, dif_neg hf]
-    exact VectorMeasure.AbsolutelyContinuous.zero _
+  refine VectorMeasure.AbsolutelyContinuous.mk fun i hi₁ hi₂ => ?_
+  rw [toENNRealVectorMeasure_apply_measurable hi₁] at hi₂
+  rw [withDensityᵥ_apply hf hi₁, Measure.restrict_zero_set hi₂, integral_zero_measure]
+  rw [withDensityᵥ, dif_neg hf]
+  exact VectorMeasure.AbsolutelyContinuous.zero _
 
 /-- Having the same density implies the underlying functions are equal almost everywhere. -/
 theorem Integrable.ae_eq_of_withDensityᵥ_eq {f g : α → E} (hf : Integrable f μ)
@@ -151,11 +151,11 @@ theorem Integrable.ae_eq_of_withDensityᵥ_eq {f g : α → E} (hf : Integrable 
 theorem WithDensityᵥEq.congr_ae {f g : α → E} (h : f =ᵐ[μ] g) :
     μ.withDensityᵥ f = μ.withDensityᵥ g := by
   by_cases hf : Integrable f μ
-  · ext i hi
-    rw [withDensityᵥ_apply hf hi, withDensityᵥ_apply (hf.congr h) hi]
-    exact integral_congr_ae (ae_restrict_of_ae h)
-  · have hg : ¬Integrable g μ := by intro hg; exact hf (hg.congr h.symm)
-    rw [withDensityᵥ, withDensityᵥ, dif_neg hf, dif_neg hg]
+  ext i hi
+  rw [withDensityᵥ_apply hf hi, withDensityᵥ_apply (hf.congr h) hi]
+  exact integral_congr_ae (ae_restrict_of_ae h)
+  have hg : ¬Integrable g μ := by intro hg; exact hf (hg.congr h.symm)
+  rw [withDensityᵥ, withDensityᵥ, dif_neg hf, dif_neg hg]
 
 theorem Integrable.withDensityᵥ_eq_iff {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ) :
     μ.withDensityᵥ f = μ.withDensityᵥ g ↔ f =ᵐ[μ] g :=

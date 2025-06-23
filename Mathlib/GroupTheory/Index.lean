@@ -61,13 +61,13 @@ theorem index_comap_of_surjective {f : G' →* G} (hf : Function.Surjective f) :
   simp only [QuotientGroup.leftRel_apply]
   exact fun x y => iff_of_eq (congr_arg (· ∈ H) (by rw [f.map_mul, f.map_inv]))
   refine Cardinal.toNat_congr (Equiv.ofBijective (Quotient.map' f fun x y => (key x y).mp) ⟨?_, ?_⟩)
-  · simp_rw [← Quotient.eq''] at key
-    refine Quotient.ind' fun x => ?_
-    refine Quotient.ind' fun y => ?_
-    exact (key x y).mpr
-  · refine Quotient.ind' fun x => ?_
-    obtain ⟨y, hy⟩ := hf x
-    exact ⟨y, (Quotient.map'_mk'' f _ y).trans (congr_arg Quotient.mk'' hy)⟩
+  simp_rw [← Quotient.eq''] at key
+  refine Quotient.ind' fun x => ?_
+  refine Quotient.ind' fun y => ?_
+  exact (key x y).mpr
+  refine Quotient.ind' fun x => ?_
+  obtain ⟨y, hy⟩ := hf x
+  exact ⟨y, (Quotient.map'_mk'' f _ y).trans (congr_arg Quotient.mk'' hy)⟩
 
 @[to_additive]
 theorem index_comap (f : G' →* G) :
@@ -149,11 +149,11 @@ theorem index_eq_two_iff : H.index = 2 ↔ ∃ a, ∀ b, Xor' (b * a ∈ H) (b �
     xor_iff_iff_not]
   refine exists_congr fun a =>
     ⟨fun ha b => ⟨fun hba hb => ?_, fun hb => ?_⟩, fun ha => ⟨?_, fun b hb => ?_⟩⟩
-  · exact ha.1 ((mul_mem_cancel_left hb).1 hba)
-  · exact inv_inv b ▸ ha.2 _ (mt (inv_mem_iff (x := b)).1 hb)
-  · rw [← inv_mem_iff (x := a), ← ha, inv_mul_self]
-    exact one_mem _
-  · rwa [ha, inv_mem_iff (x := b)]
+  exact ha.1 ((mul_mem_cancel_left hb).1 hba)
+  exact inv_inv b ▸ ha.2 _ (mt (inv_mem_iff (x := b)).1 hb)
+  rw [← inv_mem_iff (x := a), ← ha, inv_mul_self]
+  exact one_mem _
+  rwa [ha, inv_mem_iff (x := b)]
 
 @[to_additive]
 theorem mul_mem_iff_of_index_two (h : H.index = 2) {a b : G} : a * b ∈ H ↔ (a ∈ H ↔ b ∈ H) := by
@@ -313,7 +313,7 @@ theorem index_inf_ne_zero (hH : H.index ≠ 0) (hK : K.index ≠ 0) : (H ⊓ K).
 @[to_additive]
 theorem relindex_inf_le : (H ⊓ K).relindex L ≤ H.relindex L * K.relindex L := by
   by_cases h : H.relindex L = 0
-  · exact (le_of_eq (relindex_eq_zero_of_le_left inf_le_left h)).trans (zero_le _)
+  exact (le_of_eq (relindex_eq_zero_of_le_left inf_le_left h)).trans (zero_le _)
   rw [← inf_relindex_right, inf_assoc, ← relindex_mul_relindex _ _ L inf_le_right inf_le_right,
     inf_relindex_right, inf_relindex_right]
   exact mul_le_mul_right' (relindex_le_of_le_right inf_le_right h) (K.relindex L)

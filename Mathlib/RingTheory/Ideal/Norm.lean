@@ -156,7 +156,7 @@ theorem Ideal.mul_add_mem_pow_succ_unique [IsDedekindDomain S] {i : ℕ} (a d d'
 theorem cardQuot_pow_of_prime [IsDedekindDomain S] {i : ℕ} :
     cardQuot (P ^ i) = cardQuot P ^ i := by
   induction' i with i ih
-  · simp
+  simp
   have : P ^ (i + 1) < P ^ i := Ideal.pow_succ_lt_pow hP i
   suffices hquot : map (P ^ i.succ).mkQ (P ^ i) ≃ S ⧸ P by
     rw [pow_succ' (cardQuot P), ← ih, cardQuot_apply (P ^ i.succ), ←
@@ -168,22 +168,22 @@ theorem cardQuot_pow_of_prime [IsDedekindDomain S] {i : ℕ} :
   choose k hk_mem hk_eq using fun c' (hc' : c' ∈ map (mkQ (P ^ i.succ)) (P ^ i)) =>
     Submodule.mem_map.mp hc'
   refine Equiv.ofBijective (fun c' => Quotient.mk'' (f (k c' c'.prop) (hk_mem c' c'.prop))) ⟨?_, ?_⟩
-  · rintro ⟨c₁', hc₁'⟩ ⟨c₂', hc₂'⟩ h
-    rw [Subtype.mk_eq_mk, ← hk_eq _ hc₁', ← hk_eq _ hc₂', mkQ_apply, mkQ_apply,
-      Submodule.Quotient.eq, ← hf _ (hk_mem _ hc₁'), ← hf _ (hk_mem _ hc₂')]
-    refine Ideal.mul_add_mem_pow_succ_inj _ _ _ _ _ _ a_mem (hg _ _) (hg _ _) ?_
-    simpa only [Submodule.Quotient.mk''_eq_mk, Submodule.Quotient.mk''_eq_mk,
-      Submodule.Quotient.eq] using h
-  · intro d'
-    refine Quotient.inductionOn' d' fun d => ?_
-    have hd' := (mem_map (f := mkQ (P ^ i.succ))).mpr ⟨a * d, Ideal.mul_mem_right d _ a_mem, rfl⟩
-    refine ⟨⟨_, hd'⟩, ?_⟩
-    simp only [Submodule.Quotient.mk''_eq_mk, Ideal.Quotient.mk_eq_mk, Ideal.Quotient.eq,
-      Subtype.coe_mk]
-    refine
-      Ideal.mul_add_mem_pow_succ_unique hP a _ _ _ _ a_not_mem (hg _ (hk_mem _ hd')) (zero_mem _) ?_
-    rw [hf, add_zero]
-    exact (Submodule.Quotient.eq _).mp (hk_eq _ hd')
+  rintro ⟨c₁', hc₁'⟩ ⟨c₂', hc₂'⟩ h
+  rw [Subtype.mk_eq_mk, ← hk_eq _ hc₁', ← hk_eq _ hc₂', mkQ_apply, mkQ_apply,
+    Submodule.Quotient.eq, ← hf _ (hk_mem _ hc₁'), ← hf _ (hk_mem _ hc₂')]
+  refine Ideal.mul_add_mem_pow_succ_inj _ _ _ _ _ _ a_mem (hg _ _) (hg _ _) ?_
+  simpa only [Submodule.Quotient.mk''_eq_mk, Submodule.Quotient.mk''_eq_mk,
+    Submodule.Quotient.eq] using h
+  intro d'
+  refine Quotient.inductionOn' d' fun d => ?_
+  have hd' := (mem_map (f := mkQ (P ^ i.succ))).mpr ⟨a * d, Ideal.mul_mem_right d _ a_mem, rfl⟩
+  refine ⟨⟨_, hd'⟩, ?_⟩
+  simp only [Submodule.Quotient.mk''_eq_mk, Ideal.Quotient.mk_eq_mk, Ideal.Quotient.eq,
+    Subtype.coe_mk]
+  refine
+    Ideal.mul_add_mem_pow_succ_unique hP a _ _ _ _ a_not_mem (hg _ (hk_mem _ hd')) (zero_mem _) ?_
+  rw [hf, add_zero]
+  exact (Submodule.Quotient.eq _).mp (hk_eq _ hd')
 
 end PPrime
 
@@ -241,16 +241,16 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type*} [EquivLike E S I] [AddEquivCl
       Ideal.absNorm I := by
   -- `S ⧸ I` might be infinite if `I = ⊥`, but then `e` can't be an equiv.
   by_cases hI : I = ⊥
-  · subst hI
-    have : (1 : S) ≠ 0 := one_ne_zero
-    have : (1 : S) = 0 := EquivLike.injective e (Subsingleton.elim _ _)
-    contradiction
+  subst hI
+  have : (1 : S) ≠ 0 := one_ne_zero
+  have : (1 : S) = 0 := EquivLike.injective e (Subsingleton.elim _ _)
+  contradiction
   let ι := Module.Free.ChooseBasisIndex ℤ S
   let b := Module.Free.chooseBasis ℤ S
   cases isEmpty_or_nonempty ι
-  · nontriviality S
-    exact (not_nontrivial_iff_subsingleton.mpr
-      (Function.Surjective.subsingleton b.repr.toEquiv.symm.surjective) (by infer_instance)).elim
+  nontriviality S
+  exact (not_nontrivial_iff_subsingleton.mpr
+    (Function.Surjective.subsingleton b.repr.toEquiv.symm.surjective) (by infer_instance)).elim
   -- Thus `(S ⧸ I)` is isomorphic to a product of `ZMod`s, so it is a fintype.
   letI := Ideal.fintypeQuotientOfFreeOfNeBot I hI
   -- Use the Smith normal form to choose a nice basis for `I`.
@@ -312,8 +312,8 @@ theorem absNorm_span_singleton (r : S) :
     absNorm (span ({r} : Set S)) = (Algebra.norm ℤ r).natAbs := by
   rw [Algebra.norm_apply]
   by_cases hr : r = 0
-  · simp only [hr, Ideal.span_zero, Algebra.coe_lmul_eq_mul, eq_self_iff_true, Ideal.absNorm_bot,
-      LinearMap.det_zero'', Set.singleton_zero, _root_.map_zero, Int.natAbs_zero]
+  simp only [hr, Ideal.span_zero, Algebra.coe_lmul_eq_mul, eq_self_iff_true, Ideal.absNorm_bot,
+    LinearMap.det_zero'', Set.singleton_zero, _root_.map_zero, Int.natAbs_zero]
   letI := Ideal.fintypeQuotientOfFreeOfNeBot (span {r}) (mt span_singleton_eq_bot.mp hr)
   let b := Module.Free.chooseBasis ℤ S
   rw [← natAbs_det_equiv _ (b.equiv (basisSpanSingleton b hr) (Equiv.refl _))]
@@ -340,15 +340,15 @@ theorem absNorm_span_insert (r : S) (s : Set S) :
 
 theorem absNorm_eq_zero_iff {I : Ideal S} : Ideal.absNorm I = 0 ↔ I = ⊥ := by
   constructor
-  · intro hI
-    rw [← le_bot_iff]
-    intros x hx
-    rw [mem_bot, ← Algebra.norm_eq_zero_iff (R := ℤ), ← Int.natAbs_eq_zero,
-      ← Ideal.absNorm_span_singleton, ← zero_dvd_iff, ← hI]
-    apply Ideal.absNorm_dvd_absNorm_of_le
-    rwa [Ideal.span_singleton_le_iff_mem]
-  · rintro rfl
-    exact absNorm_bot
+  intro hI
+  rw [← le_bot_iff]
+  intros x hx
+  rw [mem_bot, ← Algebra.norm_eq_zero_iff (R := ℤ), ← Int.natAbs_eq_zero,
+    ← Ideal.absNorm_span_singleton, ← zero_dvd_iff, ← hI]
+  apply Ideal.absNorm_dvd_absNorm_of_le
+  rwa [Ideal.span_singleton_le_iff_mem]
+  rintro rfl
+  exact absNorm_bot
 
 theorem absNorm_ne_zero_of_nonZeroDivisors (I : (Ideal S)⁰) : Ideal.absNorm (I : Ideal S) ≠ 0 :=
   Ideal.absNorm_eq_zero_iff.not.mpr <| nonZeroDivisors.coe_ne_zero _
@@ -384,28 +384,28 @@ theorem span_singleton_absNorm {I : Ideal S} (hI : (Ideal.absNorm I).Prime) :
   have : Ideal.IsPrime (Ideal.span (singleton (Ideal.absNorm I : ℤ)))
   rwa [Ideal.span_singleton_prime (Int.ofNat_ne_zero.mpr hI.ne_zero), ← Nat.prime_iff_prime_int]
   apply (this.isMaximal _).eq_of_le
-  · exact ((isPrime_of_irreducible_absNorm
-      ((Nat.irreducible_iff_nat_prime _).mpr hI)).comap (algebraMap ℤ S)).ne_top
-  · rw [span_singleton_le_iff_mem, mem_comap, algebraMap_int_eq, map_natCast]
-    exact absNorm_mem I
-  · rw [Ne, span_singleton_eq_bot]
-    exact Int.ofNat_ne_zero.mpr hI.ne_zero
+  exact ((isPrime_of_irreducible_absNorm
+    ((Nat.irreducible_iff_nat_prime _).mpr hI)).comap (algebraMap ℤ S)).ne_top
+  rw [span_singleton_le_iff_mem, mem_comap, algebraMap_int_eq, map_natCast]
+  exact absNorm_mem I
+  rw [Ne, span_singleton_eq_bot]
+  exact Int.ofNat_ne_zero.mpr hI.ne_zero
 
 theorem finite_setOf_absNorm_eq [CharZero S] {n : ℕ} (hn : 0 < n) :
     {I : Ideal S | Ideal.absNorm I = n}.Finite := by
   let f := fun I : Ideal S => Ideal.map (Ideal.Quotient.mk (@Ideal.span S _ {↑n})) I
   refine @Set.Finite.of_finite_image _ _ _ f ?_ ?_
-  · suffices Finite (S ⧸ @Ideal.span S _ {↑n}) by
-      let g := ((↑) : Ideal (S ⧸ @Ideal.span S _ {↑n}) → Set (S ⧸ @Ideal.span S _ {↑n}))
-      refine @Set.Finite.of_finite_image _ _ _ g ?_ SetLike.coe_injective.injOn
-      exact Set.Finite.subset (@Set.finite_univ _ (@Set.finite' _ this)) (Set.subset_univ _)
-    rw [← absNorm_ne_zero_iff, absNorm_span_singleton]
-    simpa only [Ne, Int.natAbs_eq_zero, Algebra.norm_eq_zero_iff, Nat.cast_eq_zero] using
-      ne_of_gt hn
-  · intro I hI J hJ h
-    rw [← comap_map_mk (span_singleton_absNorm_le I), ← hI.symm, ←
-      comap_map_mk (span_singleton_absNorm_le J), ← hJ.symm]
-    congr
+  suffices Finite (S ⧸ @Ideal.span S _ {↑n}) by
+    let g := ((↑) : Ideal (S ⧸ @Ideal.span S _ {↑n}) → Set (S ⧸ @Ideal.span S _ {↑n}))
+    refine @Set.Finite.of_finite_image _ _ _ g ?_ SetLike.coe_injective.injOn
+    exact Set.Finite.subset (@Set.finite_univ _ (@Set.finite' _ this)) (Set.subset_univ _)
+  rw [← absNorm_ne_zero_iff, absNorm_span_singleton]
+  simpa only [Ne, Int.natAbs_eq_zero, Algebra.norm_eq_zero_iff, Nat.cast_eq_zero] using
+    ne_of_gt hn
+  intro I hI J hJ h
+  rw [← comap_map_mk (span_singleton_absNorm_le I), ← hI.symm, ←
+    comap_map_mk (span_singleton_absNorm_le J), ← hJ.symm]
+  congr
 
 theorem norm_dvd_iff {x : S} (hx : Prime (Algebra.norm ℤ x)) {y : ℤ} :
     Algebra.norm ℤ x ∣ y ↔ x ∣ y := by
@@ -488,26 +488,26 @@ theorem spanNorm_localization (I : Ideal S) [Module.Finite R S] [Module.Free R S
     [IsLocalization M Rₘ] [IsLocalization (Algebra.algebraMapSubmonoid S M) Sₘ] :
     spanNorm Rₘ (I.map (algebraMap S Sₘ)) = (spanNorm R I).map (algebraMap R Rₘ) := by
   cases subsingleton_or_nontrivial R
-  · haveI := IsLocalization.unique R Rₘ M
-    simp [eq_iff_true_of_subsingleton]
+  haveI := IsLocalization.unique R Rₘ M
+  simp [eq_iff_true_of_subsingleton]
   let b := Module.Free.chooseBasis R S
   rw [map_spanNorm]
   refine span_eq_span (Set.image_subset_iff.mpr ?_) (Set.image_subset_iff.mpr ?_)
-  · rintro a' ha'
-    simp only [Set.mem_preimage, submodule_span_eq, ← map_spanNorm, SetLike.mem_coe,
-      IsLocalization.mem_map_algebraMap_iff (Algebra.algebraMapSubmonoid S M) Sₘ,
-      IsLocalization.mem_map_algebraMap_iff M Rₘ, Prod.exists] at ha' ⊢
-    obtain ⟨⟨a, ha⟩, ⟨_, ⟨s, hs, rfl⟩⟩, has⟩ := ha'
-    refine ⟨⟨Algebra.norm R a, norm_mem_spanNorm _ _ ha⟩,
-      ⟨s ^ Fintype.card (Module.Free.ChooseBasisIndex R S), pow_mem hs _⟩, ?_⟩
-    simp only [Submodule.coe_mk, Subtype.coe_mk, map_pow] at has ⊢
-    apply_fun Algebra.norm Rₘ at has
-    rwa [_root_.map_mul, ← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply R Rₘ,
-      Algebra.norm_algebraMap_of_basis (b.localizationLocalization Rₘ M Sₘ),
-      Algebra.norm_localization R M a] at has
-  · intro a ha
-    rw [Set.mem_preimage, Function.comp_apply, ← Algebra.norm_localization (Sₘ := Sₘ) R M a]
-    exact subset_span (Set.mem_image_of_mem _ (mem_map_of_mem _ ha))
+  rintro a' ha'
+  simp only [Set.mem_preimage, submodule_span_eq, ← map_spanNorm, SetLike.mem_coe,
+    IsLocalization.mem_map_algebraMap_iff (Algebra.algebraMapSubmonoid S M) Sₘ,
+    IsLocalization.mem_map_algebraMap_iff M Rₘ, Prod.exists] at ha' ⊢
+  obtain ⟨⟨a, ha⟩, ⟨_, ⟨s, hs, rfl⟩⟩, has⟩ := ha'
+  refine ⟨⟨Algebra.norm R a, norm_mem_spanNorm _ _ ha⟩,
+    ⟨s ^ Fintype.card (Module.Free.ChooseBasisIndex R S), pow_mem hs _⟩, ?_⟩
+  simp only [Submodule.coe_mk, Subtype.coe_mk, map_pow] at has ⊢
+  apply_fun Algebra.norm Rₘ at has
+  rwa [_root_.map_mul, ← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply R Rₘ,
+    Algebra.norm_algebraMap_of_basis (b.localizationLocalization Rₘ M Sₘ),
+    Algebra.norm_localization R M a] at has
+  intro a ha
+  rw [Set.mem_preimage, Function.comp_apply, ← Algebra.norm_localization (Sₘ := Sₘ) R M a]
+  exact subset_span (Set.mem_image_of_mem _ (mem_map_of_mem _ ha))
 
 theorem spanNorm_mul_spanNorm_le (I J : Ideal S) :
     spanNorm R I * spanNorm R J ≤ spanNorm R (I * J) := by
@@ -524,11 +524,11 @@ theorem spanNorm_mul_of_bot_or_top [IsDomain R] [IsDomain S] [Module.Free R S] [
     spanNorm R (I * J) = spanNorm R I * spanNorm R J := by
   refine le_antisymm ?_ (spanNorm_mul_spanNorm_le R _ _)
   cases' eq_bot_or_top (spanNorm R I) with hI hI
-  · rw [hI, spanNorm_eq_bot_iff.mp hI, bot_mul, spanNorm_bot]
-    exact bot_le
+  rw [hI, spanNorm_eq_bot_iff.mp hI, bot_mul, spanNorm_bot]
+  exact bot_le
   rw [hI, Ideal.top_mul]
   cases' eq_bot_or_top (spanNorm R J) with hJ hJ
-  · rw [hJ, spanNorm_eq_bot_iff.mp hJ, mul_bot, spanNorm_bot]
+  rw [hJ, spanNorm_eq_bot_iff.mp hJ, mul_bot, spanNorm_bot]
   rw [hJ]
   exact le_top
 
@@ -544,16 +544,16 @@ variable [Module.Finite R S] [Module.Free R S]
 theorem spanNorm_mul (I J : Ideal S) : spanNorm R (I * J) = spanNorm R I * spanNorm R J := by
   nontriviality R
   cases subsingleton_or_nontrivial S
-  · have : ∀ I : Ideal S, I = ⊤ := fun I => Subsingleton.elim I ⊤
-    simp [this I, this J, this (I * J)]
+  have : ∀ I : Ideal S, I = ⊤ := fun I => Subsingleton.elim I ⊤
+  simp [this I, this J, this (I * J)]
   refine eq_of_localization_maximal ?_
   intro P hP
   by_cases hP0 : P = ⊥
-  · subst hP0
-    rw [spanNorm_mul_of_bot_or_top]
-    intro I
-    refine or_iff_not_imp_right.mpr fun hI => ?_
-    exact (hP.eq_of_le hI bot_le).symm
+  subst hP0
+  rw [spanNorm_mul_of_bot_or_top]
+  intro I
+  refine or_iff_not_imp_right.mpr fun hI => ?_
+  exact (hP.eq_of_le hI bot_le).symm
   let P' := Algebra.algebraMapSubmonoid S P.primeCompl
   letI : Algebra (Localization.AtPrime P) (Localization P') := localizationAlgebra P.primeCompl S
   haveI : IsScalarTower R (Localization.AtPrime P) (Localization P') :=

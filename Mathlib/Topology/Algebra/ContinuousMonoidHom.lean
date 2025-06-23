@@ -339,10 +339,10 @@ theorem locallyCompactSpace_of_equicontinuousAt (U : Set X) (V : Set Y)
   have hS4 : S4 = (↑) '' S1 := by
     ext
     constructor
-    · rintro ⟨-, ⟨f, hf, rfl⟩, rfl⟩
-      exact ⟨f, hf, rfl⟩
-    · rintro ⟨f, hf, rfl⟩
-      exact ⟨⟨f, h.continuous ⟨f, hf⟩⟩, ⟨⟨f, h.continuous ⟨f, hf⟩⟩, hf, rfl⟩, rfl⟩
+    rintro ⟨-, ⟨f, hf, rfl⟩, rfl⟩
+    exact ⟨f, hf, rfl⟩
+    rintro ⟨f, hf, rfl⟩
+    exact ⟨⟨f, h.continuous ⟨f, hf⟩⟩, ⟨⟨f, h.continuous ⟨f, hf⟩⟩, hf, rfl⟩, rfl⟩
   replace h : Equicontinuous ((↑) : S3 → X → Y) := by
     rw [equicontinuous_iff_range, ← Set.image_eq_range] at h ⊢
     rwa [← hS4] at h
@@ -381,8 +381,8 @@ theorem locallyCompactSpace_of_hasBasis (V : ℕ → Set Y)
   have hU4 : ∀ f : X →* Y, Set.MapsTo f (U 0) (V 0) → ∀ n, Set.MapsTo f (U n) (V n) := by
     intro f hf n
     induction' n with n ih
-    · exact hf
-    · exact fun x hx ↦ hV (ih (hU3 n hx)) (map_mul f x x ▸ ih (hU2 n (Set.mul_mem_mul hx hx)))
+    exact hf
+    exact fun x hx ↦ hV (ih (hU3 n hx)) (map_mul f x x ▸ ih (hU2 n (Set.mul_mem_mul hx hx)))
   apply locallyCompactSpace_of_equicontinuousAt (U 0) (V 0) hU0c (hVo.mem_of_mem trivial)
   rw [hVo.uniformity_of_nhds_one.equicontinuousAt_iff_right]
   refine fun n _ ↦ Filter.eventually_iff_exists_mem.mpr ⟨U n, hU1 n, fun x hx ⟨f, hf⟩ ↦ ?_⟩

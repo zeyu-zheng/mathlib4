@@ -140,14 +140,14 @@ theorem linearIndependent_smul_of_linearIndependent {s : Finset F} :
     rw [sum_apply]
     congr
     · skip
-    · ext
-      rw [Pi.smul_apply, sub_smul, smul_eq_mul]
+    ext
+    rw [Pi.smul_apply, sub_smul, smul_eq_mul]
   rw [sum_sub_distrib, Pi.zero_apply, sub_eq_zero]
   conv_lhs =>
     congr
     · skip
-    · ext x
-      rw [toFun_apply, ← mul_inv_cancel_left g g', mul_smul, ← smul_mul', ← toFun_apply _ x]
+    ext x
+    rw [toFun_apply, ← mul_inv_cancel_left g g', mul_smul, ← smul_mul', ← toFun_apply _ x]
   show
     (∑ x ∈ s, g • (fun y => l y • MulAction.toFun G F y) x (g⁻¹ * g')) =
       ∑ x ∈ s, (fun y => l y • MulAction.toFun G F y) x g'
@@ -216,16 +216,16 @@ theorem irreducible_aux (f g : Polynomial (FixedPoints.subfield G F)) (hf : f.Mo
   have := eval₂ G F x
   rw [← hfg, Polynomial.eval₂_mul, mul_eq_zero] at this
   cases' this with this this
-  · right
-    have hf3 : f = minpoly G F x :=
-      Polynomial.eq_of_monic_of_associated hf (monic G F x)
-        (associated_of_dvd_dvd hf2 <| @of_eval₂ G _ F _ _ _ x f this)
-    rwa [← mul_one (minpoly G F x), hf3, mul_right_inj' (monic G F x).ne_zero] at hfg
-  · left
-    have hg3 : g = minpoly G F x :=
-      Polynomial.eq_of_monic_of_associated hg (monic G F x)
-        (associated_of_dvd_dvd hg2 <| @of_eval₂ G _ F _ _ _ x g this)
-    rwa [← one_mul (minpoly G F x), hg3, mul_left_inj' (monic G F x).ne_zero] at hfg
+  right
+  have hf3 : f = minpoly G F x :=
+    Polynomial.eq_of_monic_of_associated hf (monic G F x)
+      (associated_of_dvd_dvd hf2 <| @of_eval₂ G _ F _ _ _ x f this)
+  rwa [← mul_one (minpoly G F x), hf3, mul_right_inj' (monic G F x).ne_zero] at hfg
+  left
+  have hg3 : g = minpoly G F x :=
+    Polynomial.eq_of_monic_of_associated hg (monic G F x)
+      (associated_of_dvd_dvd hg2 <| @of_eval₂ G _ F _ _ _ x g this)
+  rwa [← one_mul (minpoly G F x), hg3, mul_left_inj' (monic G F x).ne_zero] at hfg
 
 theorem irreducible : Irreducible (minpoly G F x) :=
   (Polynomial.irreducible_of_monic (monic G F x) (ne_one G F x)).2 (irreducible_aux G F x)
@@ -329,11 +329,11 @@ theorem toAlgHom_bijective (G : Type u) (F : Type v) [Group G] [Field F] [Finite
   cases nonempty_fintype G
   rw [Fintype.bijective_iff_injective_and_card]
   constructor
-  · exact MulSemiringAction.toAlgHom_injective _ F
-  · apply le_antisymm
-    · exact Fintype.card_le_of_injective _ (MulSemiringAction.toAlgHom_injective _ F)
-    · rw [← finrank_eq_card G F]
-      exact LE.le.trans_eq (finrank_algHom _ F) (finrank_linearMap_self _ _ _)
+  exact MulSemiringAction.toAlgHom_injective _ F
+  apply le_antisymm
+  exact Fintype.card_le_of_injective _ (MulSemiringAction.toAlgHom_injective _ F)
+  rw [← finrank_eq_card G F]
+  exact LE.le.trans_eq (finrank_algHom _ F) (finrank_linearMap_self _ _ _)
 
 /-- Bijection between G and algebra homomorphisms that fix the fixed points -/
 def toAlgHomEquiv (G : Type u) (F : Type v) [Group G] [Field F] [Finite G] [MulSemiringAction G F]

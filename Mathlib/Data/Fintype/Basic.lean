@@ -1112,10 +1112,10 @@ theorem exists_seq_of_forall_finset_exists' {α : Type*} (P : α → Prop) (r : 
   rcases exists_seq_of_forall_finset_exists P r h with ⟨f, hf, hf'⟩
   refine ⟨f, hf, fun m n hmn => ?_⟩
   rcases lt_trichotomy m n with (h | rfl | h)
-  · exact hf' m n h
-  · exact (hmn rfl).elim
-  · apply symm
-    exact hf' n m h
+  exact hf' m n h
+  exact (hmn rfl).elim
+  apply symm
+  exact hf' n m h
 
 open Batteries.ExtendedBinder Lean Meta
 

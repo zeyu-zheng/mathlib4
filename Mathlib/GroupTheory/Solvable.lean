@@ -49,8 +49,8 @@ theorem derivedSeries_succ (n : ℕ) :
 -- Porting note: had to provide inductive hypothesis explicitly
 theorem derivedSeries_normal (n : ℕ) : (derivedSeries G n).Normal := by
   induction' n with n ih
-  · exact (⊤ : Subgroup G).normal_of_characteristic
-  · exact @Subgroup.commutator_normal G _ (derivedSeries G n) (derivedSeries G n) ih ih
+  exact (⊤ : Subgroup G).normal_of_characteristic
+  exact @Subgroup.commutator_normal G _ (derivedSeries G n) (derivedSeries G n) ih ih
 
 -- Porting note: higher simp priority to restore Lean 3 behavior
 @[simp 1100]
@@ -68,16 +68,16 @@ variable (f)
 theorem map_derivedSeries_le_derivedSeries (n : ℕ) :
     (derivedSeries G n).map f ≤ derivedSeries G' n := by
   induction' n with n ih
-  · exact le_top
-  · simp only [derivedSeries_succ, map_commutator, commutator_mono, ih]
+  exact le_top
+  simp only [derivedSeries_succ, map_commutator, commutator_mono, ih]
 
 variable {f}
 
 theorem derivedSeries_le_map_derivedSeries (hf : Function.Surjective f) (n : ℕ) :
     derivedSeries G' n ≤ (derivedSeries G n).map f := by
   induction' n with n ih
-  · exact (map_top_of_surjective f hf).ge
-  · exact commutator_le_map_commutator ih ih
+  exact (map_top_of_surjective f hf).ge
+  exact commutator_le_map_commutator ih ih
 
 theorem map_derivedSeries_eq (hf : Function.Surjective f) (n : ℕ) :
     (derivedSeries G n).map f = derivedSeries G' n :=
@@ -123,9 +123,9 @@ theorem solvable_of_ker_le_range {G' G'' : Type*} [Group G'] [Group G''] (f : G'
   refine ⟨⟨n + m, le_bot_iff.mp (Subgroup.map_bot f ▸ hm ▸ ?_)⟩⟩
   clear hm
   induction' m with m hm
-  · exact f.range_eq_map ▸ ((derivedSeries G n).map_eq_bot_iff.mp
-      (le_bot_iff.mp ((map_derivedSeries_le_derivedSeries g n).trans hn.le))).trans hfg
-  · exact commutator_le_map_commutator hm hm
+  exact f.range_eq_map ▸ ((derivedSeries G n).map_eq_bot_iff.mp
+    (le_bot_iff.mp ((map_derivedSeries_le_derivedSeries g n).trans hn.le))).trans hfg
+  exact commutator_le_map_commutator hm hm
 
 theorem solvable_of_solvable_injective (hf : Function.Injective f) [IsSolvable G'] :
     IsSolvable G :=
@@ -154,23 +154,23 @@ variable [IsSimpleGroup G]
 
 theorem IsSimpleGroup.derivedSeries_succ {n : ℕ} : derivedSeries G n.succ = commutator G := by
   induction' n with n ih
-  · exact derivedSeries_one G
+  exact derivedSeries_one G
   rw [_root_.derivedSeries_succ, ih, _root_.commutator]
   cases' (commutator_normal (⊤ : Subgroup G) (⊤ : Subgroup G)).eq_bot_or_eq_top with h h
-  · rw [h, commutator_bot_left]
-  · rwa [h]
+  rw [h, commutator_bot_left]
+  rwa [h]
 
 theorem IsSimpleGroup.comm_iff_isSolvable : (∀ a b : G, a * b = b * a) ↔ IsSolvable G :=
   ⟨isSolvable_of_comm, fun ⟨⟨n, hn⟩⟩ => by
     cases n
-    · intro a b
-      refine (mem_bot.1 ?_).trans (mem_bot.1 ?_).symm <;>
-        · rw [← hn]
-          exact mem_top _
-    · rw [IsSimpleGroup.derivedSeries_succ] at hn
-      intro a b
-      rw [← mul_inv_eq_one, mul_inv_rev, ← mul_assoc, ← mem_bot, ← hn, commutator_eq_closure]
-      exact subset_closure ⟨a, b, rfl⟩⟩
+    intro a b
+    refine (mem_bot.1 ?_).trans (mem_bot.1 ?_).symm <;>
+    · rw [← hn]
+      exact mem_top _
+    rw [IsSimpleGroup.derivedSeries_succ] at hn
+    intro a b
+    rw [← mul_inv_eq_one, mul_inv_rev, ← mul_assoc, ← mem_bot, ← hn, commutator_eq_closure]
+    exact subset_closure ⟨a, b, rfl⟩⟩
 
 end IsSimpleGroup
 
@@ -190,9 +190,9 @@ theorem Equiv.Perm.fin_5_not_solvable : ¬IsSolvable (Equiv.Perm (Fin 5)) := by
   unfold_let; decide
   refine not_solvable_of_mem_derivedSeries (show x ≠ 1 by decide) fun n => ?_
   induction' n with n ih
-  · exact mem_top x
-  · rw [key, (derivedSeries_normal _ _).mem_comm_iff, inv_mul_cancel_left]
-    exact commutator_mem_commutator ih ((derivedSeries_normal _ _).conj_mem _ ih _)
+  exact mem_top x
+  rw [key, (derivedSeries_normal _ _).mem_comm_iff, inv_mul_cancel_left]
+  exact commutator_mem_commutator ih ((derivedSeries_normal _ _).conj_mem _ ih _)
 
 theorem Equiv.Perm.not_solvable (X : Type*) (hX : 5 ≤ Cardinal.mk X) :
     ¬IsSolvable (Equiv.Perm X) := by

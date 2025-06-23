@@ -45,9 +45,9 @@ lemma Preadditive.mono_iff_injective {X Y : C} (f : X ⟶ Y) :
     Mono f ↔ Function.Injective ((forget₂ C Ab).map f) := by
   rw [← AddCommGrp.mono_iff_injective]
   constructor
-  · intro
-    infer_instance
-  · apply Functor.mono_of_mono_map
+  intro
+  infer_instance
+  apply Functor.mono_of_mono_map
 
 lemma Preadditive.mono_iff_injective' {X Y : C} (f : X ⟶ Y) :
     Mono f ↔ Function.Injective ((forget C).map f) := by
@@ -60,9 +60,9 @@ lemma Preadditive.epi_iff_surjective {X Y : C} (f : X ⟶ Y) :
     Epi f ↔ Function.Surjective ((forget₂ C Ab).map f) := by
   rw [← AddCommGrp.epi_iff_surjective]
   constructor
-  · intro
-    infer_instance
-  · apply Functor.epi_of_epi_map
+  intro
+  infer_instance
+  apply Functor.epi_of_epi_map
 
 lemma Preadditive.epi_iff_surjective' {X Y : C} (f : X ⟶ Y) :
     Epi f ↔ Function.Surjective ((forget C).map f) := by
@@ -165,18 +165,18 @@ lemma δ_apply' (x₃ : (forget₂ C Ab).obj D.L₀.X₃)
   refine (congr_hom (e.hom.naturality D.δ) x₃).trans
     ((D.δ_apply (e.hom.app _ x₃) (e.hom.app _ x₂) (e.hom.app _ x₁) ?_ ?_ ).trans
     (congr_hom (e.hom.naturality D.v₂₃.τ₁).symm x₁))
-  · refine ((congr_hom (e.hom.naturality D.L₁.g) x₂).symm.trans ?_).trans
-      (congr_hom (e.hom.naturality D.v₀₁.τ₃) x₃)
-    dsimp
-    rw [comp_apply, comp_apply]
-    erw [h₂]
-    rfl
-  · refine ((congr_hom (e.hom.naturality D.L₂.f) x₁).symm.trans ?_).trans
-      (congr_hom (e.hom.naturality D.v₁₂.τ₂) x₂)
-    dsimp
-    rw [comp_apply, comp_apply]
-    erw [h₁]
-    rfl
+  refine ((congr_hom (e.hom.naturality D.L₁.g) x₂).symm.trans ?_).trans
+    (congr_hom (e.hom.naturality D.v₀₁.τ₃) x₃)
+  dsimp
+  rw [comp_apply, comp_apply]
+  erw [h₂]
+  rfl
+  refine ((congr_hom (e.hom.naturality D.L₂.f) x₁).symm.trans ?_).trans
+    (congr_hom (e.hom.naturality D.v₁₂.τ₂) x₂)
+  dsimp
+  rw [comp_apply, comp_apply]
+  erw [h₁]
+  rfl
 
 end SnakeInput
 

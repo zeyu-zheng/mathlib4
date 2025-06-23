@@ -94,8 +94,8 @@ lemma measurableSet_isRatStieltjesPoint (hf : Measurable f) :
   ext a
   simp only [mem_setOf_eq, mem_inter_iff]
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · exact ⟨⟨⟨h.mono, h.tendsto_atTop_one⟩, h.tendsto_atBot_zero⟩, h.iInf_rat_gt_eq⟩
-  · exact ⟨h.1.1.1, h.1.1.2, h.1.2, h.2⟩
+  exact ⟨⟨⟨h.mono, h.tendsto_atTop_one⟩, h.tendsto_atBot_zero⟩, h.iInf_rat_gt_eq⟩
+  exact ⟨h.1.1.1, h.1.1.2, h.1.2, h.2⟩
 
 lemma IsRatStieltjesPoint.ite {f g : α → ℚ → ℝ} {a : α} (p : α → Prop) [DecidablePred p]
     (hf : p a → IsRatStieltjesPoint f a) (hg : ¬ p a → IsRatStieltjesPoint g a) :
@@ -186,21 +186,21 @@ lemma iInf_rat_gt_defaultRatCDF (t : ℚ) :
   apply le_rfl
   apply zero_le_one
   split_ifs with h
-  · refine le_antisymm ?_ (le_ciInf fun x ↦ ?_)
-    · obtain ⟨q, htq, hq_neg⟩ : ∃ q, t < q ∧ q < 0 := ⟨t / 2, by linarith, by linarith⟩
-      refine (ciInf_le h_bdd ⟨q, htq⟩).trans ?_
-      rw [if_pos]
-      rwa [Subtype.coe_mk]
-    · split_ifs
-      exacts [le_rfl, zero_le_one]
-  · refine le_antisymm ?_ ?_
-    · refine (ciInf_le h_bdd ⟨t + 1, lt_add_one t⟩).trans ?_
-      split_ifs
-      exacts [zero_le_one, le_rfl]
-    · refine le_ciInf fun x ↦ ?_
-      rw [if_neg]
-      rw [not_lt] at h ⊢
-      exact h.trans (mem_Ioi.mp x.prop).le
+  refine le_antisymm ?_ (le_ciInf fun x ↦ ?_)
+  obtain ⟨q, htq, hq_neg⟩ : ∃ q, t < q ∧ q < 0 := ⟨t / 2, by linarith, by linarith⟩
+  refine (ciInf_le h_bdd ⟨q, htq⟩).trans ?_
+  rw [if_pos]
+  rwa [Subtype.coe_mk]
+  · split_ifs
+    exacts [le_rfl, zero_le_one]
+  refine le_antisymm ?_ ?_
+  · refine (ciInf_le h_bdd ⟨t + 1, lt_add_one t⟩).trans ?_
+    split_ifs
+    exacts [zero_le_one, le_rfl]
+  refine le_ciInf fun x ↦ ?_
+  rw [if_neg]
+  rw [not_lt] at h ⊢
+  exact h.trans (mem_Ioi.mp x.prop).le
 
 lemma isRatStieltjesPoint_defaultRatCDF (a : α) :
     IsRatStieltjesPoint (fun (_ : α) ↦ defaultRatCDF) a where
@@ -276,13 +276,13 @@ lemma IsMeasurableRatCDF.stieltjesFunctionAux_eq (a : α) (r : ℚ) :
     IsMeasurableRatCDF.stieltjesFunctionAux f a r = f a r := by
   rw [← hf.iInf_rat_gt_eq a r, IsMeasurableRatCDF.stieltjesFunctionAux]
   refine Equiv.iInf_congr ?_ ?_
-  · exact
-      { toFun := fun t ↦ ⟨t.1, mod_cast t.2⟩
-        invFun := fun t ↦ ⟨t.1, mod_cast t.2⟩
-        left_inv := fun t ↦ by simp only [Subtype.coe_eta]
-        right_inv := fun t ↦ by simp only [Subtype.coe_eta] }
-  · intro t
-    simp only [Equiv.coe_fn_mk, Subtype.coe_mk]
+  exact
+    { toFun := fun t ↦ ⟨t.1, mod_cast t.2⟩
+      invFun := fun t ↦ ⟨t.1, mod_cast t.2⟩
+      left_inv := fun t ↦ by simp only [Subtype.coe_eta]
+      right_inv := fun t ↦ by simp only [Subtype.coe_eta] }
+  intro t
+  simp only [Equiv.coe_fn_mk, Subtype.coe_mk]
 
 lemma IsMeasurableRatCDF.stieltjesFunctionAux_nonneg (a : α) (r : ℝ) :
     0 ≤ IsMeasurableRatCDF.stieltjesFunctionAux f a r := by
@@ -300,9 +300,9 @@ lemma IsMeasurableRatCDF.monotone_stieltjesFunctionAux (a : α) :
   exact ⟨⟨r, hrx⟩⟩
   simp_rw [IsMeasurableRatCDF.stieltjesFunctionAux_def]
   refine le_ciInf fun r ↦ (ciInf_le ?_ ?_).trans_eq ?_
-  · refine ⟨0, fun z ↦ ?_⟩; rintro ⟨u, rfl⟩; exact hf.nonneg a _
-  · exact ⟨r.1, hxy.trans_lt r.prop⟩
-  · rfl
+  refine ⟨0, fun z ↦ ?_⟩; rintro ⟨u, rfl⟩; exact hf.nonneg a _
+  exact ⟨r.1, hxy.trans_lt r.prop⟩
+  rfl
 
 lemma IsMeasurableRatCDF.continuousWithinAt_stieltjesFunctionAux_Ici (a : α) (x : ℝ) :
     ContinuousWithinAt (IsMeasurableRatCDF.stieltjesFunctionAux f a) (Ici x) x := by
@@ -343,8 +343,8 @@ lemma IsMeasurableRatCDF.stieltjesFunction_le_one (a : α) (x : ℝ) :
   rw [← StieltjesFunction.iInf_rat_gt_eq]
   simp_rw [IsMeasurableRatCDF.stieltjesFunction_eq]
   refine ciInf_le_of_le ?_ ?_ (hf.le_one _ _)
-  · refine ⟨0, fun z ↦ ?_⟩; rintro ⟨u, rfl⟩; exact hf.nonneg a _
-  · exact ⟨r, hrx⟩
+  refine ⟨0, fun z ↦ ?_⟩; rintro ⟨u, rfl⟩; exact hf.nonneg a _
+  exact ⟨r, hrx⟩
 
 lemma IsMeasurableRatCDF.tendsto_stieltjesFunction_atBot (a : α) :
     Tendsto (hf.stieltjesFunction a) atBot (𝓝 0) := by
@@ -415,21 +415,21 @@ lemma IsMeasurableRatCDF.measurable_measure_stieltjesFunction :
   refine fun s hs ↦ MeasurableSpace.induction_on_inter
     (C := fun s ↦ Measurable fun b ↦ StieltjesFunction.measure (hf.stieltjesFunction b) s)
     (borel_eq_generateFrom_Iic ℝ) isPiSystem_Iic ?_ ?_ ?_ ?_ hs
-  · simp only [measure_empty, measurable_const]
-  · rintro S ⟨u, rfl⟩
-    simp_rw [measure_stieltjesFunction_Iic hf _ u]
-    exact (measurable_stieltjesFunction hf u).ennreal_ofReal
-  · intro t ht ht_cd_meas
-    have : (fun a ↦ (hf.stieltjesFunction a).measure tᶜ) =
-        (fun a ↦ (hf.stieltjesFunction a).measure univ)
-          - fun a ↦ (hf.stieltjesFunction a).measure t := by
-      ext1 a
-      rw [measure_compl ht (measure_ne_top (hf.stieltjesFunction a).measure _), Pi.sub_apply]
-    simp_rw [this, measure_stieltjesFunction_univ hf]
-    exact Measurable.sub measurable_const ht_cd_meas
-  · intro f hf_disj hf_meas hf_cd_meas
-    simp_rw [measure_iUnion hf_disj hf_meas]
-    exact Measurable.ennreal_tsum hf_cd_meas
+  simp only [measure_empty, measurable_const]
+  rintro S ⟨u, rfl⟩
+  simp_rw [measure_stieltjesFunction_Iic hf _ u]
+  exact (measurable_stieltjesFunction hf u).ennreal_ofReal
+  intro t ht ht_cd_meas
+  have : (fun a ↦ (hf.stieltjesFunction a).measure tᶜ) =
+      (fun a ↦ (hf.stieltjesFunction a).measure univ)
+        - fun a ↦ (hf.stieltjesFunction a).measure t := by
+    ext1 a
+    rw [measure_compl ht (measure_ne_top (hf.stieltjesFunction a).measure _), Pi.sub_apply]
+  simp_rw [this, measure_stieltjesFunction_univ hf]
+  exact Measurable.sub measurable_const ht_cd_meas
+  intro f hf_disj hf_meas hf_cd_meas
+  simp_rw [measure_iUnion hf_disj hf_meas]
+  exact Measurable.ennreal_tsum hf_cd_meas
 
 end Measure
 

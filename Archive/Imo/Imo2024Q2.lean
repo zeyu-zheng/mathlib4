@@ -89,8 +89,8 @@ noncomputable def large_n : ℕ := (max h.N h.symm.N + 1) * φ (a * b + 1) - 1
 lemma symm_large_n : h.symm.large_n = h.large_n := by
   simp_rw [large_n]
   congr 2
-  · rw [max_comm]
-  · rw [mul_comm]
+  rw [max_comm]
+  rw [mul_comm]
 
 lemma N_le_large_n : h.N ≤ h.large_n := by
   have hp : 0 < φ (a * b + 1) := Nat.totient_pos.2 (Nat.add_pos_right _ zero_lt_one)
@@ -110,8 +110,8 @@ noncomputable def large_n_0 : ℕ := (max h.N h.symm.N) * φ (a * b + 1)
 lemma symm_large_n_0 : h.symm.large_n_0 = h.large_n_0 := by
   simp_rw [large_n_0]
   congr 1
-  · rw [max_comm]
-  · rw [mul_comm]
+  rw [max_comm]
+  rw [mul_comm]
 
 lemma N_le_large_n_0 : h.N ≤ h.large_n_0 := by
   have hp : 0 < φ (a * b + 1) := Nat.totient_pos.2 (Nat.add_pos_right _ zero_lt_one)
@@ -140,8 +140,8 @@ lemma ab_add_one_dvd_a_pow_large_n_add_b : a * b + 1 ∣ a ^ h.large_n + b := by
 
 lemma ab_add_one_dvd_b_pow_large_n_add_a : a * b + 1 ∣ b ^ h.large_n + a := by
   convert h.symm.ab_add_one_dvd_a_pow_large_n_add_b using 1
-  · rw [mul_comm]
-  · rw [h.symm_large_n]
+  rw [mul_comm]
+  rw [h.symm_large_n]
 
 lemma ab_add_one_dvd_g : a * b + 1 ∣ h.g :=
   h.dvd_g_of_le_N_of_dvd h.N_le_large_n h.ab_add_one_dvd_a_pow_large_n_add_b
@@ -180,12 +180,12 @@ def solutionSet : Set (ℕ × ℕ) := {(1, 1)}
 
 theorem result (a b : ℕ) : Condition a b ↔ (a, b) ∈ solutionSet := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · simp only [solutionSet, Set.mem_singleton_iff, Prod.mk.injEq]
-    exact ⟨h.a_eq_one, h.b_eq_one⟩
-  · simp only [solutionSet, Set.mem_singleton_iff, Prod.mk.injEq] at h
-    rcases h with ⟨rfl, rfl⟩
-    rw [Condition]
-    refine ⟨by decide, by decide, 2, 1, ?_⟩
-    simp
+  simp only [solutionSet, Set.mem_singleton_iff, Prod.mk.injEq]
+  exact ⟨h.a_eq_one, h.b_eq_one⟩
+  simp only [solutionSet, Set.mem_singleton_iff, Prod.mk.injEq] at h
+  rcases h with ⟨rfl, rfl⟩
+  rw [Condition]
+  refine ⟨by decide, by decide, 2, 1, ?_⟩
+  simp
 
 end Imo2024Q2

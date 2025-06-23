@@ -200,8 +200,8 @@ instance : Inf (StructureGroupoid H) :=
         rcases hx x hex with ⟨s, hs⟩
         use s
         refine And.intro hs.left (And.intro hs.right.left ?_)
-      · exact hs.right.right.left
-      · exact hs.right.right.right)
+      exact hs.right.right.left
+      exact hs.right.right.right)
     (mem_of_eqOnSource' := fun e e' he hee' =>
       ⟨G.mem_of_eqOnSource' e e' he.left hee', G'.mem_of_eqOnSource' e e' he.right hee'⟩)⟩
 
@@ -328,12 +328,12 @@ instance instStructureGroupoidOrderBot : OrderBot (StructureGroupoid H) where
     have hf : f ∈ {PartialHomeomorph.refl H} ∪ { e : PartialHomeomorph H H | e.source = ∅ } := hf
     simp only [singleton_union, mem_setOf_eq, mem_insert_iff] at hf
     cases' hf with hf hf
-    · rw [hf]
-      apply u.id_mem
-    · apply u.locality
-      intro x hx
-      rw [hf, mem_empty_iff_false] at hx
-      exact hx.elim
+    rw [hf]
+    apply u.id_mem
+    apply u.locality
+    intro x hx
+    rw [hf, mem_empty_iff_false] at hx
+    exact hx.elim
 
 instance : Inhabited (StructureGroupoid H) := ⟨idGroupoid H⟩
 
@@ -506,26 +506,26 @@ groupoid. -/
 theorem closedUnderRestriction_iff_id_le (G : StructureGroupoid H) :
     ClosedUnderRestriction G ↔ idRestrGroupoid ≤ G := by
   constructor
-  · intro _i
-    rw [StructureGroupoid.le_iff]
-    rintro e ⟨s, hs, hes⟩
-    refine G.mem_of_eqOnSource ?_ hes
-    convert closedUnderRestriction' G.id_mem hs
-    -- Porting note: was
-    -- change s = _ ∩ _
-    -- rw [hs.interior_eq]
-    -- simp only [mfld_simps]
-    ext
-    · rw [PartialHomeomorph.restr_apply, PartialHomeomorph.refl_apply, id, ofSet_apply, id_eq]
-    · simp [hs]
-    · simp [hs.interior_eq]
-  · intro h
-    constructor
-    intro e he s hs
-    rw [← ofSet_trans (e : PartialHomeomorph H H) hs]
-    refine G.trans ?_ he
-    apply StructureGroupoid.le_iff.mp h
-    exact idRestrGroupoid_mem hs
+  intro _i
+  rw [StructureGroupoid.le_iff]
+  rintro e ⟨s, hs, hes⟩
+  refine G.mem_of_eqOnSource ?_ hes
+  convert closedUnderRestriction' G.id_mem hs
+  -- Porting note: was
+  -- change s = _ ∩ _
+  -- rw [hs.interior_eq]
+  -- simp only [mfld_simps]
+  ext
+  rw [PartialHomeomorph.restr_apply, PartialHomeomorph.refl_apply, id, ofSet_apply, id_eq]
+  simp [hs]
+  simp [hs.interior_eq]
+  intro h
+  constructor
+  intro e he s hs
+  rw [← ofSet_trans (e : PartialHomeomorph H H) hs]
+  refine G.trans ?_ he
+  apply StructureGroupoid.le_iff.mp h
+  exact idRestrGroupoid_mem hs
 
 /-- The groupoid of all partial homeomorphisms on a topological space `H`
 is closed under restriction. -/
@@ -684,12 +684,12 @@ theorem ChartedSpace.locallyConnectedSpace [LocallyConnectedSpace H] : LocallyCo
   let e : M → PartialHomeomorph M H := chartAt H
   refine locallyConnectedSpace_of_connected_bases (fun x s ↦ (e x).symm '' s)
       (fun x s ↦ (IsOpen s ∧ e x x ∈ s ∧ IsConnected s) ∧ s ⊆ (e x).target) ?_ ?_
-  · intro x
-    simpa only [e, PartialHomeomorph.symm_map_nhds_eq, mem_chart_source] using
-      ((LocallyConnectedSpace.open_connected_basis (e x x)).restrict_subset
-        ((e x).open_target.mem_nhds (mem_chart_target H x))).map (e x).symm
-  · rintro x s ⟨⟨-, -, hsconn⟩, hssubset⟩
-    exact hsconn.isPreconnected.image _ ((e x).continuousOn_symm.mono hssubset)
+  intro x
+  simpa only [e, PartialHomeomorph.symm_map_nhds_eq, mem_chart_source] using
+    ((LocallyConnectedSpace.open_connected_basis (e x x)).restrict_subset
+      ((e x).open_target.mem_nhds (mem_chart_target H x))).map (e x).symm
+  rintro x s ⟨⟨-, -, hsconn⟩, hssubset⟩
+  exact hsconn.isPreconnected.image _ ((e x).continuousOn_symm.mono hssubset)
 
 /-- If `M` is modelled on `H'` and `H'` is itself modelled on `H`, then we can consider `M` as being
 modelled on `H`. -/
@@ -794,10 +794,10 @@ theorem prodChartedSpace_chartAt :
 
 theorem chartedSpaceSelf_prod : prodChartedSpace H H H' H' = chartedSpaceSelf (H × H') := by
   ext1
-  · simp [prodChartedSpace, atlas, ChartedSpace.atlas]
-  · ext1
-    simp only [prodChartedSpace_chartAt, chartAt_self_eq, refl_prod_refl]
-    rfl
+  simp [prodChartedSpace, atlas, ChartedSpace.atlas]
+  ext1
+  simp only [prodChartedSpace_chartAt, chartAt_self_eq, refl_prod_refl]
+  rfl
 
 end prodChartedSpace
 
@@ -1151,8 +1151,8 @@ protected instance instHasGroupoid [ClosedUnderRestriction G] : HasGroupoid s G 
     refine G.mem_of_eqOnSource ?_
       (subtypeRestr_symm_trans_subtypeRestr (s := s) _ (chartAt H x) (chartAt H x'))
     apply closedUnderRestriction'
-    · exact G.compatible (chart_mem_atlas _ _) (chart_mem_atlas _ _)
-    · exact isOpen_inter_preimage_symm (chartAt _ _) s.2
+    exact G.compatible (chart_mem_atlas _ _) (chart_mem_atlas _ _)
+    exact isOpen_inter_preimage_symm (chartAt _ _) s.2
 
 theorem chartAt_subtype_val_symm_eventuallyEq (U : Opens M) {x : U} :
     (chartAt H x.val).symm =ᶠ[𝓝 (chartAt H x.val x.val)] Subtype.val ∘ (chartAt H x).symm := by

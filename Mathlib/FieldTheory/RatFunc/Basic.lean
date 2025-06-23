@@ -212,9 +212,9 @@ variable [IsScalarTower R K[X] K[X]]
 theorem mk_smul (c : R) (p q : K[X]) : RatFunc.mk (c • p) q = c • RatFunc.mk p q := by
   letI : SMulZeroClass R (FractionRing K[X]) := inferInstance
   by_cases hq : q = 0
-  · rw [hq, mk_zero, mk_zero, ← ofFractionRing_smul, smul_zero]
-  · rw [mk_eq_localization_mk _ hq, mk_eq_localization_mk _ hq, ← Localization.smul_mk, ←
-      ofFractionRing_smul]
+  rw [hq, mk_zero, mk_zero, ← ofFractionRing_smul, smul_zero]
+  rw [mk_eq_localization_mk _ hq, mk_eq_localization_mk _ hq, ← Localization.smul_mk, ←
+    ofFractionRing_smul]
 
 instance : IsScalarTower R K[X] (RatFunc K) :=
   ⟨fun c p q => q.induction_on' fun q r _ => by rw [← mk_smul, smul_assoc, mk_smul, mk_smul]⟩
@@ -473,7 +473,7 @@ theorem liftMonoidWithZeroHom_injective [Nontrivial R] (φ : R[X] →*₀ G₀) 
   congr 1
   refine Localization.mk_eq_mk_iff.mpr (Localization.r_of_eq (M := R[X]) ?_)
   have := mul_eq_mul_of_div_eq_div _ _ ?_ ?_ h
-  · rwa [← map_mul, ← map_mul, hφ.eq_iff, mul_comm, mul_comm a'.fst] at this
+  rwa [← map_mul, ← map_mul, hφ.eq_iff, mul_comm, mul_comm a'.fst] at this
   all_goals exact map_ne_zero_of_mem_nonZeroDivisors _ hφ (SetLike.coe_mem _)
 
 /-- Lift an injective ring homomorphism `R[X] →+* L` to a `RatFunc R →+* L`
@@ -596,17 +596,17 @@ theorem map_apply_div {R F : Type*} [CommRing R] [IsDomain R]
     map φ hφ (algebraMap _ _ p / algebraMap _ _ q) =
       algebraMap _ _ (φ p) / algebraMap _ _ (φ q) := by
   rcases eq_or_ne q 0 with (rfl | hq)
-  · have : (0 : RatFunc K) = algebraMap K[X] _ 0 / algebraMap K[X] _ 1 := by simp
-    rw [map_zero, map_zero, map_zero, div_zero, div_zero, this, map_apply_div_ne_zero, map_one,
-      map_one, div_one, map_zero, map_zero]
-    exact one_ne_zero
+  have : (0 : RatFunc K) = algebraMap K[X] _ 0 / algebraMap K[X] _ 1 := by simp
+  rw [map_zero, map_zero, map_zero, div_zero, div_zero, this, map_apply_div_ne_zero, map_one,
+    map_one, div_one, map_zero, map_zero]
+  exact one_ne_zero
   exact map_apply_div_ne_zero _ _ _ _ hq
 
 theorem liftMonoidWithZeroHom_apply_div {L : Type*} [CommGroupWithZero L]
     (φ : MonoidWithZeroHom K[X] L) (hφ : K[X]⁰ ≤ L⁰.comap φ) (p q : K[X]) :
     liftMonoidWithZeroHom φ hφ (algebraMap _ _ p / algebraMap _ _ q) = φ p / φ q := by
   rcases eq_or_ne q 0 with (rfl | hq)
-  · simp only [div_zero, map_zero]
+  simp only [div_zero, map_zero]
   simp only [← mk_eq_div, mk_eq_localization_mk _ hq,
     liftMonoidWithZeroHom_apply_ofFractionRing_mk]
 
@@ -858,8 +858,8 @@ theorem num_div (p q : K[X]) :
     num (algebraMap _ _ p / algebraMap _ _ q) =
       Polynomial.C (q / gcd p q).leadingCoeff⁻¹ * (p / gcd p q) := by
   by_cases hq : q = 0
-  · simp [hq]
-  · exact num_div' p hq
+  simp [hq]
+  exact num_div' p hq
 
 @[simp]
 theorem num_one : num (1 : RatFunc K) = 1 := by convert num_div (1 : K[X]) 1 <;> simp
@@ -870,8 +870,8 @@ theorem num_algebraMap (p : K[X]) : num (algebraMap _ _ p) = p := by convert num
 theorem num_div_dvd (p : K[X]) {q : K[X]} (hq : q ≠ 0) :
     num (algebraMap _ _ p / algebraMap _ _ q) ∣ p := by
   rw [num_div _ q, C_mul_dvd]
-  · exact EuclideanDomain.div_dvd_of_dvd (gcd_dvd_left p q)
-  · simpa only [Ne, inv_eq_zero, Polynomial.leadingCoeff_eq_zero] using right_div_gcd_ne_zero hq
+  exact EuclideanDomain.div_dvd_of_dvd (gcd_dvd_left p q)
+  simpa only [Ne, inv_eq_zero, Polynomial.leadingCoeff_eq_zero] using right_div_gcd_ne_zero hq
 
 /-- A version of `num_div_dvd` with the LHS in simp normal form -/
 @[simp]
@@ -913,10 +913,10 @@ theorem denom_algebraMap (p : K[X]) : denom (algebraMap _ (RatFunc K) p) = 1 := 
 @[simp]
 theorem denom_div_dvd (p q : K[X]) : denom (algebraMap _ _ p / algebraMap _ _ q) ∣ q := by
   by_cases hq : q = 0
-  · simp [hq]
+  simp [hq]
   rw [denom_div _ hq, C_mul_dvd]
-  · exact EuclideanDomain.div_dvd_of_dvd (gcd_dvd_right p q)
-  · simpa only [Ne, inv_eq_zero, Polynomial.leadingCoeff_eq_zero] using right_div_gcd_ne_zero hq
+  exact EuclideanDomain.div_dvd_of_dvd (gcd_dvd_right p q)
+  simpa only [Ne, inv_eq_zero, Polynomial.leadingCoeff_eq_zero] using right_div_gcd_ne_zero hq
 
 @[simp]
 theorem num_div_denom (x : RatFunc K) : algebraMap _ _ (num x) / algebraMap _ _ (denom x) = x := by
@@ -926,12 +926,12 @@ theorem num_div_denom (x : RatFunc K) : algebraMap _ _ (num x) / algebraMap _ _ 
   rw [num_div p q, denom_div p hq, RingHom.map_mul, RingHom.map_mul, mul_div_mul_left,
     div_eq_div_iff, ← RingHom.map_mul, ← RingHom.map_mul, mul_comm _ q, ←
     EuclideanDomain.mul_div_assoc, ← EuclideanDomain.mul_div_assoc, mul_comm]
-  · apply gcd_dvd_right
-  · apply gcd_dvd_left
-  · exact algebraMap_ne_zero q_div_ne_zero
-  · exact algebraMap_ne_zero hq
-  · refine algebraMap_ne_zero (mt Polynomial.C_eq_zero.mp ?_)
-    exact inv_ne_zero (Polynomial.leadingCoeff_ne_zero.mpr q_div_ne_zero)
+  apply gcd_dvd_right
+  apply gcd_dvd_left
+  exact algebraMap_ne_zero q_div_ne_zero
+  exact algebraMap_ne_zero hq
+  refine algebraMap_ne_zero (mt Polynomial.C_eq_zero.mp ?_)
+  exact inv_ne_zero (Polynomial.leadingCoeff_ne_zero.mpr q_div_ne_zero)
 
 theorem isCoprime_num_denom (x : RatFunc K) : IsCoprime x.num x.denom := by
   induction' x using RatFunc.induction_on with p q hq
@@ -960,8 +960,8 @@ theorem num_denom_add (x y : RatFunc K) :
   (num_mul_eq_mul_denom_iff (mul_ne_zero (denom_ne_zero x) (denom_ne_zero y))).mpr <| by
     conv_lhs => rw [← num_div_denom x, ← num_div_denom y]
     rw [div_add_div, RingHom.map_mul, RingHom.map_add, RingHom.map_mul, RingHom.map_mul]
-    · exact algebraMap_ne_zero (denom_ne_zero x)
-    · exact algebraMap_ne_zero (denom_ne_zero y)
+    exact algebraMap_ne_zero (denom_ne_zero x)
+    exact algebraMap_ne_zero (denom_ne_zero y)
 
 theorem num_denom_neg (x : RatFunc K) : (-x).num * x.denom = -x.num * (-x).denom := by
   rw [num_mul_eq_mul_denom_iff (denom_ne_zero x), _root_.map_neg, neg_div, num_div_denom]
@@ -976,31 +976,31 @@ theorem num_denom_mul (x y : RatFunc K) :
 theorem num_dvd {x : RatFunc K} {p : K[X]} (hp : p ≠ 0) :
     num x ∣ p ↔ ∃ q : K[X], q ≠ 0 ∧ x = algebraMap _ _ p / algebraMap _ _ q := by
   constructor
-  · rintro ⟨q, rfl⟩
-    obtain ⟨_hx, hq⟩ := mul_ne_zero_iff.mp hp
-    use denom x * q
-    rw [RingHom.map_mul, RingHom.map_mul, ← div_mul_div_comm, div_self, mul_one, num_div_denom]
-    · exact ⟨mul_ne_zero (denom_ne_zero x) hq, rfl⟩
-    · exact algebraMap_ne_zero hq
-  · rintro ⟨q, hq, rfl⟩
-    exact num_div_dvd p hq
+  rintro ⟨q, rfl⟩
+  obtain ⟨_hx, hq⟩ := mul_ne_zero_iff.mp hp
+  use denom x * q
+  rw [RingHom.map_mul, RingHom.map_mul, ← div_mul_div_comm, div_self, mul_one, num_div_denom]
+  exact ⟨mul_ne_zero (denom_ne_zero x) hq, rfl⟩
+  exact algebraMap_ne_zero hq
+  rintro ⟨q, hq, rfl⟩
+  exact num_div_dvd p hq
 
 theorem denom_dvd {x : RatFunc K} {q : K[X]} (hq : q ≠ 0) :
     denom x ∣ q ↔ ∃ p : K[X], x = algebraMap _ _ p / algebraMap _ _ q := by
   constructor
-  · rintro ⟨p, rfl⟩
-    obtain ⟨_hx, hp⟩ := mul_ne_zero_iff.mp hq
-    use num x * p
-    rw [RingHom.map_mul, RingHom.map_mul, ← div_mul_div_comm, div_self, mul_one, num_div_denom]
-    exact algebraMap_ne_zero hp
-  · rintro ⟨p, rfl⟩
-    exact denom_div_dvd p q
+  rintro ⟨p, rfl⟩
+  obtain ⟨_hx, hp⟩ := mul_ne_zero_iff.mp hq
+  use num x * p
+  rw [RingHom.map_mul, RingHom.map_mul, ← div_mul_div_comm, div_self, mul_one, num_div_denom]
+  exact algebraMap_ne_zero hp
+  rintro ⟨p, rfl⟩
+  exact denom_div_dvd p q
 
 theorem num_mul_dvd (x y : RatFunc K) : num (x * y) ∣ num x * num y := by
   by_cases hx : x = 0
-  · simp [hx]
+  simp [hx]
   by_cases hy : y = 0
-  · simp [hy]
+  simp [hy]
   rw [num_dvd (mul_ne_zero (num_ne_zero hx) (num_ne_zero hy))]
   refine ⟨x.denom * y.denom, mul_ne_zero (denom_ne_zero x) (denom_ne_zero y), ?_⟩
   rw [RingHom.map_mul, RingHom.map_mul, ← div_mul_div_comm, num_div_denom, num_div_denom]
@@ -1015,8 +1015,8 @@ theorem denom_add_dvd (x y : RatFunc K) : denom (x + y) ∣ denom x * denom y :=
   refine ⟨x.num * y.denom + x.denom * y.num, ?_⟩
   rw [RingHom.map_mul, RingHom.map_add, RingHom.map_mul, RingHom.map_mul, ← div_add_div,
     num_div_denom, num_div_denom]
-  · exact algebraMap_ne_zero (denom_ne_zero x)
-  · exact algebraMap_ne_zero (denom_ne_zero y)
+  exact algebraMap_ne_zero (denom_ne_zero x)
+  exact algebraMap_ne_zero (denom_ne_zero y)
 
 theorem map_denom_ne_zero {L F : Type*} [Zero L] [FunLike F K[X] L] [ZeroHomClass F K[X] L]
     (φ : F) (hφ : Function.Injective φ) (f : RatFunc K) : φ f.denom ≠ 0 := fun H =>

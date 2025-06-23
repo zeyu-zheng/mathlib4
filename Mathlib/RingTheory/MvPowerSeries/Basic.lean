@@ -257,10 +257,10 @@ theorem coeff_add_mul_monomial (a : R) :
 theorem commute_monomial {a : R} {n} :
     Commute φ (monomial R n a) ↔ ∀ m, Commute (coeff R m φ) a := by
   refine ext_iff.trans ⟨fun h m => ?_, fun h m => ?_⟩
-  · have := h (m + n)
-    rwa [coeff_add_mul_monomial, add_comm, coeff_add_monomial_mul] at this
-  · rw [coeff_mul_monomial, coeff_monomial_mul]
-    split_ifs <;> [apply h; rfl]
+  have := h (m + n)
+  rwa [coeff_add_mul_monomial, add_comm, coeff_add_monomial_mul] at this
+  rw [coeff_mul_monomial, coeff_monomial_mul]
+  split_ifs <;> [apply h; rfl]
 
 protected theorem one_mul : (1 : MvPowerSeries σ R) * φ = φ :=
   ext fun n => by simpa using coeff_add_monomial_mul 0 n φ 1
@@ -323,13 +323,13 @@ theorem monomial_mul_monomial (m n : σ →₀ ℕ) (a b : R) :
   ext k
   simp only [coeff_mul_monomial, coeff_monomial]
   split_ifs with h₁ h₂ h₃ h₃ h₂ <;> try rfl
-  · rw [← h₂, tsub_add_cancel_of_le h₁] at h₃
-    exact (h₃ rfl).elim
-  · rw [h₃, add_tsub_cancel_right] at h₂
-    exact (h₂ rfl).elim
-  · exact zero_mul b
-  · rw [h₂] at h₁
-    exact (h₁ <| le_add_left le_rfl).elim
+  rw [← h₂, tsub_add_cancel_of_le h₁] at h₃
+  exact (h₃ rfl).elim
+  rw [h₃, add_tsub_cancel_right] at h₂
+  exact (h₂ rfl).elim
+  exact zero_mul b
+  rw [h₂] at h₁
+  exact (h₁ <| le_add_left le_rfl).elim
 
 variable (σ) (R)
 
@@ -386,8 +386,8 @@ theorem X_def (s : σ) : X s = monomial R (single s 1) 1 :=
 
 theorem X_pow_eq (s : σ) (n : ℕ) : (X s : MvPowerSeries σ R) ^ n = monomial R (single s n) 1 := by
   induction' n with n ih
-  · simp
-  · rw [pow_succ, ih, Finsupp.single_add, X, monomial_mul_monomial, one_mul]
+  simp
+  rw [pow_succ, ih, Finsupp.single_add, X, monomial_mul_monomial, one_mul]
 
 theorem coeff_X_pow [DecidableEq σ] (m : σ →₀ ℕ) (s : σ) (n : ℕ) :
     coeff R m ((X s : MvPowerSeries σ R) ^ n) = if m = single s n then 1 else 0 := by
@@ -472,13 +472,13 @@ theorem X_inj [Nontrivial R] {s t : σ} : (X s : MvPowerSeries σ R) = X t ↔ s
     replace h := congr_arg (coeff R (single s 1)) h
     rw [coeff_X, if_pos rfl, coeff_X] at h
     split_ifs at h with H
-    · rw [Finsupp.single_eq_single_iff] at H
-      cases' H with H H
-      · exact H.1
-      · exfalso
-        exact one_ne_zero H.1
-    · exfalso
-      exact one_ne_zero h, congr_arg X⟩
+    rw [Finsupp.single_eq_single_iff] at H
+    cases' H with H H
+    exact H.1
+    exfalso
+    exact one_ne_zero H.1
+    exfalso
+    exact one_ne_zero h, congr_arg X⟩
 
 end Semiring
 
@@ -551,62 +551,62 @@ open Classical in
 theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
     (X s : MvPowerSeries σ R) ^ n ∣ φ ↔ ∀ m : σ →₀ ℕ, m s < n → coeff R m φ = 0 := by
   constructor
-  · rintro ⟨φ, rfl⟩ m h
-    rw [coeff_mul, Finset.sum_eq_zero]
-    rintro ⟨i, j⟩ hij
-    rw [coeff_X_pow, if_neg, zero_mul]
-    contrapose! h
-    dsimp at h
-    subst i
-    rw [mem_antidiagonal] at hij
-    rw [← hij, Finsupp.add_apply, Finsupp.single_eq_same]
-    exact Nat.le_add_right n _
-  · intro h
-    refine ⟨fun m => coeff R (m + single s n) φ, ?_⟩
-    ext m
-    by_cases H : m - single s n + single s n = m
-    · rw [coeff_mul, Finset.sum_eq_single (single s n, m - single s n)]
-      · rw [coeff_X_pow, if_pos rfl, one_mul]
-        simpa using congr_arg (fun m : σ →₀ ℕ => coeff R m φ) H.symm
-      · rintro ⟨i, j⟩ hij hne
-        rw [mem_antidiagonal] at hij
-        rw [coeff_X_pow]
-        split_ifs with hi
-        · exfalso
-          apply hne
-          rw [← hij, ← hi, Prod.mk.inj_iff]
-          refine ⟨rfl, ?_⟩
-          ext t
-          simp only [add_tsub_cancel_left, Finsupp.add_apply, Finsupp.tsub_apply]
-        · exact zero_mul _
-      · intro hni
-        exfalso
-        apply hni
-        rwa [mem_antidiagonal, add_comm]
-    · rw [h, coeff_mul, Finset.sum_eq_zero]
-      · rintro ⟨i, j⟩ hij
-        rw [mem_antidiagonal] at hij
-        rw [coeff_X_pow]
-        split_ifs with hi
-        · exfalso
-          apply H
-          rw [← hij, hi]
-          ext
-          rw [coe_add, coe_add, Pi.add_apply, Pi.add_apply, add_tsub_cancel_left, add_comm]
-        · exact zero_mul _
-      · contrapose! H
-        ext t
-        by_cases hst : s = t
-        · subst t
-          simpa using tsub_add_cancel_of_le H
-        · simp [Finsupp.single_apply, hst]
+  rintro ⟨φ, rfl⟩ m h
+  rw [coeff_mul, Finset.sum_eq_zero]
+  rintro ⟨i, j⟩ hij
+  rw [coeff_X_pow, if_neg, zero_mul]
+  contrapose! h
+  dsimp at h
+  subst i
+  rw [mem_antidiagonal] at hij
+  rw [← hij, Finsupp.add_apply, Finsupp.single_eq_same]
+  exact Nat.le_add_right n _
+  intro h
+  refine ⟨fun m => coeff R (m + single s n) φ, ?_⟩
+  ext m
+  by_cases H : m - single s n + single s n = m
+  rw [coeff_mul, Finset.sum_eq_single (single s n, m - single s n)]
+  rw [coeff_X_pow, if_pos rfl, one_mul]
+  simpa using congr_arg (fun m : σ →₀ ℕ => coeff R m φ) H.symm
+  rintro ⟨i, j⟩ hij hne
+  rw [mem_antidiagonal] at hij
+  rw [coeff_X_pow]
+  split_ifs with hi
+  exfalso
+  apply hne
+  rw [← hij, ← hi, Prod.mk.inj_iff]
+  refine ⟨rfl, ?_⟩
+  ext t
+  simp only [add_tsub_cancel_left, Finsupp.add_apply, Finsupp.tsub_apply]
+  exact zero_mul _
+  intro hni
+  exfalso
+  apply hni
+  rwa [mem_antidiagonal, add_comm]
+  rw [h, coeff_mul, Finset.sum_eq_zero]
+  rintro ⟨i, j⟩ hij
+  rw [mem_antidiagonal] at hij
+  rw [coeff_X_pow]
+  split_ifs with hi
+  exfalso
+  apply H
+  rw [← hij, hi]
+  ext
+  rw [coe_add, coe_add, Pi.add_apply, Pi.add_apply, add_tsub_cancel_left, add_comm]
+  exact zero_mul _
+  contrapose! H
+  ext t
+  by_cases hst : s = t
+  subst t
+  simpa using tsub_add_cancel_of_le H
+  simp [Finsupp.single_apply, hst]
 
 theorem X_dvd_iff {s : σ} {φ : MvPowerSeries σ R} :
     (X s : MvPowerSeries σ R) ∣ φ ↔ ∀ m : σ →₀ ℕ, m s = 0 → coeff R m φ = 0 := by
   rw [← pow_one (X s : MvPowerSeries σ R), X_pow_dvd_iff]
   constructor <;> intro h m hm
-  · exact h m (hm.symm ▸ zero_lt_one)
-  · exact h m (Nat.eq_zero_of_le_zero <| Nat.le_of_succ_le_succ hm)
+  exact h m (hm.symm ▸ zero_lt_one)
+  exact h m (Nat.eq_zero_of_le_zero <| Nat.le_of_succ_le_succ hm)
 
 end Semiring
 
@@ -626,31 +626,31 @@ theorem coeff_prod [DecidableEq σ]
   | empty =>
     simp only [prod_empty, sum_const, nsmul_eq_mul, mul_one, coeff_one, finsuppAntidiag_empty]
     split_ifs
-    · simp only [card_singleton, Nat.cast_one]
-    · simp only [card_empty, Nat.cast_zero]
+    simp only [card_singleton, Nat.cast_one]
+    simp only [card_empty, Nat.cast_zero]
   | @insert a s ha ih =>
     rw [finsuppAntidiag_insert ha, prod_insert ha, coeff_mul, sum_biUnion]
-    · apply Finset.sum_congr rfl
-      simp only [mem_antidiagonal, sum_map, Function.Embedding.coeFn_mk, coe_update, Prod.forall]
-      rintro u v rfl
-      rw [ih, Finset.mul_sum, ← Finset.sum_attach]
-      apply Finset.sum_congr rfl
-      simp only [mem_attach, Finset.prod_insert ha, Function.update_same, forall_true_left,
-        Subtype.forall]
-      rintro x -
-      rw [Finset.prod_congr rfl]
-      intro i hi
-      rw [Function.update_noteq]
-      exact ne_of_mem_of_not_mem hi ha
-    · simp only [Set.PairwiseDisjoint, Set.Pairwise, mem_coe, mem_antidiagonal, ne_eq,
-        disjoint_left, mem_map, mem_attach, Function.Embedding.coeFn_mk, true_and, Subtype.exists,
-        exists_prop, not_exists, not_and, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂,
-        Prod.forall, Prod.mk.injEq]
-      rintro u v rfl u' v' huv h k - l - hkl
-      obtain rfl : u' = u := by
-        simpa only [Finsupp.coe_update, Function.update_same] using DFunLike.congr_fun hkl a
-      simp only [add_right_inj] at huv
-      exact h rfl huv.symm
+    apply Finset.sum_congr rfl
+    simp only [mem_antidiagonal, sum_map, Function.Embedding.coeFn_mk, coe_update, Prod.forall]
+    rintro u v rfl
+    rw [ih, Finset.mul_sum, ← Finset.sum_attach]
+    apply Finset.sum_congr rfl
+    simp only [mem_attach, Finset.prod_insert ha, Function.update_same, forall_true_left,
+      Subtype.forall]
+    rintro x -
+    rw [Finset.prod_congr rfl]
+    intro i hi
+    rw [Function.update_noteq]
+    exact ne_of_mem_of_not_mem hi ha
+    simp only [Set.PairwiseDisjoint, Set.Pairwise, mem_coe, mem_antidiagonal, ne_eq,
+      disjoint_left, mem_map, mem_attach, Function.Embedding.coeFn_mk, true_and, Subtype.exists,
+      exists_prop, not_exists, not_and, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂,
+      Prod.forall, Prod.mk.injEq]
+    rintro u v rfl u' v' huv h k - l - hkl
+    obtain rfl : u' = u := by
+      simpa only [Finsupp.coe_update, Function.update_same] using DFunLike.congr_fun hkl a
+    simp only [add_right_inj] at huv
+    exact h rfl huv.symm
 
 /-- The `d`th coefficient of a power of a multivariate power series
 is the sum, indexed by `finsuppAntidiag (Finset.range n) d`, of products of coefficients  -/
@@ -693,12 +693,12 @@ theorem coeff_eq_zero_of_constantCoeff_nilpotent [DecidableEq σ]
     ← sum_sdiff (hs), sum_eq_zero (s := s) hs'', add_zero]
   rw [← hs_def]
   convert Finset.card_nsmul_le_sum (range n \ s) (fun x ↦ degree (k x)) 1 _
-  · simp only [Algebra.id.smul_eq_mul, mul_one]
-  · simp only [degree_eq_weight_one, map_sum]
-  · simp only [hs_def, mem_filter, mem_sdiff, mem_range, not_and, and_imp]
-    intro i hi hi'
-    rw [← not_lt, Nat.lt_one_iff, degree_eq_zero_iff]
-    exact hi' hi
+  simp only [Algebra.id.smul_eq_mul, mul_one]
+  simp only [degree_eq_weight_one, map_sum]
+  simp only [hs_def, mem_filter, mem_sdiff, mem_range, not_and, and_imp]
+  intro i hi hi'
+  rw [← not_lt, Nat.lt_one_iff, degree_eq_zero_iff]
+  exact hi' hi
 
 end CommSemiring
 

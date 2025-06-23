@@ -84,10 +84,10 @@ theorem continuousOn_iUnion' {g : X → Y} (hf : LocallyFinite f)
   rw [ContinuousWithinAt, hf.nhdsWithin_iUnion, tendsto_iSup]
   intro i
   by_cases hx : x ∈ closure (f i)
-  · exact hc i _ hx
-  · rw [mem_closure_iff_nhdsWithin_neBot, not_neBot] at hx
-    rw [hx]
-    exact tendsto_bot
+  exact hc i _ hx
+  rw [mem_closure_iff_nhdsWithin_neBot, not_neBot] at hx
+  rw [hx]
+  exact tendsto_bot
 
 theorem continuousOn_iUnion {g : X → Y} (hf : LocallyFinite f) (h_cl : ∀ i, IsClosed (f i))
     (h_cont : ∀ i, ContinuousOn g (f i)) : ContinuousOn g (⋃ i, f i) :=

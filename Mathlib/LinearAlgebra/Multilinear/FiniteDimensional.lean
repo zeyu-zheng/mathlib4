@@ -32,19 +32,19 @@ private theorem free_and_finite_fin (n : ℕ) (N : Fin n → Type*) [∀ i, AddC
     [∀ i, Module R (N i)] [∀ i, Module.Finite R (N i)] [∀ i, Module.Free R (N i)] :
     Module.Free R (MultilinearMap R N M₂) ∧ Module.Finite R (MultilinearMap R N M₂) := by
   induction' n with n ih
-  · haveI : IsEmpty (Fin Nat.zero) := inferInstanceAs (IsEmpty (Fin 0))
+  haveI : IsEmpty (Fin Nat.zero) := inferInstanceAs (IsEmpty (Fin 0))
+  exact
+    ⟨Module.Free.of_equiv (constLinearEquivOfIsEmpty R R N M₂),
+      Module.Finite.equiv (constLinearEquivOfIsEmpty R R N M₂)⟩
+  suffices
+    Module.Free R (N 0 →ₗ[R] MultilinearMap R (fun i : Fin n => N i.succ) M₂) ∧
+      Module.Finite R (N 0 →ₗ[R] MultilinearMap R (fun i : Fin n => N i.succ) M₂) by
+    cases this
     exact
-      ⟨Module.Free.of_equiv (constLinearEquivOfIsEmpty R R N M₂),
-        Module.Finite.equiv (constLinearEquivOfIsEmpty R R N M₂)⟩
-  · suffices
-      Module.Free R (N 0 →ₗ[R] MultilinearMap R (fun i : Fin n => N i.succ) M₂) ∧
-        Module.Finite R (N 0 →ₗ[R] MultilinearMap R (fun i : Fin n => N i.succ) M₂) by
-      cases this
-      exact
-        ⟨Module.Free.of_equiv (multilinearCurryLeftEquiv R N M₂),
-          Module.Finite.equiv (multilinearCurryLeftEquiv R N M₂)⟩
-    cases ih fun i => N i.succ
-    exact ⟨Module.Free.linearMap _ _ _ _, Module.Finite.linearMap _ _ _ _⟩
+      ⟨Module.Free.of_equiv (multilinearCurryLeftEquiv R N M₂),
+        Module.Finite.equiv (multilinearCurryLeftEquiv R N M₂)⟩
+  cases ih fun i => N i.succ
+  exact ⟨Module.Free.linearMap _ _ _ _, Module.Finite.linearMap _ _ _ _⟩
 
 variable [∀ i, AddCommGroup (M₁ i)] [∀ i, Module R (M₁ i)]
 variable [∀ i, Module.Finite R (M₁ i)] [∀ i, Module.Free R (M₁ i)]

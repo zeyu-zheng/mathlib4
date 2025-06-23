@@ -132,11 +132,11 @@ lemma id : χ₀ n (RingEquiv.refl L) = 1 := by
   refine (toFun_unique n (RingEquiv.refl L) 1 <| fun t ↦ ?_).symm
   have : 1 ≤ Fintype.card { x // x ∈ rootsOfUnity n L } := Fin.size_positive'
   obtain (h | h) := this.lt_or_eq
-  · have := Fact.mk h
-    simp [ZMod.val_one]
-  · have := Fintype.card_le_one_iff_subsingleton.mp h.ge
-    obtain rfl : t = 1 := Subsingleton.elim t 1
-    simp
+  have := Fact.mk h
+  simp [ZMod.val_one]
+  have := Fintype.card_le_one_iff_subsingleton.mp h.ge
+  obtain rfl : t = 1 := Subsingleton.elim t 1
+  simp
 
 lemma comp (g h : L ≃+* L) : χ₀ n (g * h) =
     χ₀ n g * χ₀ n h := by

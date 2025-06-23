@@ -324,16 +324,16 @@ theorem Filter.HasBasis.hasBasis_of_denseInducing [TopologicalSpace α] [Topolog
   rw [Filter.hasBasis_iff] at h ⊢
   intro T
   refine ⟨fun hT => ?_, fun hT => ?_⟩
-  · obtain ⟨T', hT₁, hT₂, hT₃⟩ := exists_mem_nhds_isClosed_subset hT
-    have hT₄ : f ⁻¹' T' ∈ 𝓝 x
-    rw [hf.toInducing.nhds_eq_comap x]
-    exact ⟨T', hT₁, Subset.rfl⟩
-    obtain ⟨i, hi, hi'⟩ := (h _).mp hT₄
-    exact
-      ⟨i, hi,
-        (closure_mono (image_subset f hi')).trans
-          (Subset.trans (closure_minimal (image_preimage_subset _ _) hT₂) hT₃)⟩
-  · obtain ⟨i, hi, hi'⟩ := hT
-    suffices closure (f '' s i) ∈ 𝓝 (f x) by filter_upwards [this] using hi'
-    replace h := (h (s i)).mpr ⟨i, hi, Subset.rfl⟩
-    exact hf.closure_image_mem_nhds h
+  obtain ⟨T', hT₁, hT₂, hT₃⟩ := exists_mem_nhds_isClosed_subset hT
+  have hT₄ : f ⁻¹' T' ∈ 𝓝 x
+  rw [hf.toInducing.nhds_eq_comap x]
+  exact ⟨T', hT₁, Subset.rfl⟩
+  obtain ⟨i, hi, hi'⟩ := (h _).mp hT₄
+  exact
+    ⟨i, hi,
+      (closure_mono (image_subset f hi')).trans
+        (Subset.trans (closure_minimal (image_preimage_subset _ _) hT₂) hT₃)⟩
+  obtain ⟨i, hi, hi'⟩ := hT
+  suffices closure (f '' s i) ∈ 𝓝 (f x) by filter_upwards [this] using hi'
+  replace h := (h (s i)).mpr ⟨i, hi, Subset.rfl⟩
+  exact hf.closure_image_mem_nhds h

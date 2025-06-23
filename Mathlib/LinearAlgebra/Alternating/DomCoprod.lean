@@ -81,8 +81,8 @@ theorem domCoprod.summand_add_swap_smul_eq_zero (a : Mᵢ [⋀^ιa]→ₗ[R'] N�
     MultilinearMap.smul_apply, MultilinearMap.neg_apply, MultilinearMap.domDomCongr_apply,
     MultilinearMap.domCoprod_apply]
   convert add_right_neg (G := N₁ ⊗[R'] N₂) _ using 6 <;>
-    · ext k
-      rw [Equiv.apply_swap_eq_self hv]
+  · ext k
+    rw [Equiv.apply_swap_eq_self hv]
 
 /-- Swapping elements in `σ` with equal values in `v` result in zero if the swap has no effect
 on the quotient. -/

@@ -82,8 +82,8 @@ theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s * s)
   rw [quadratic_eq_zero_iff_discrim_eq_sq ha, h, sq, mul_self_eq_mul_self_iff]
   field_simp
   apply or_congr
-  · constructor <;> intro h' <;> linear_combination -h'
-  · constructor <;> intro h' <;> linear_combination h'
+  constructor <;> intro h' <;> linear_combination -h'
+  constructor <;> intro h' <;> linear_combination h'
 
 /-- A quadratic has roots if its discriminant has square roots -/
 theorem exists_quadratic_eq_zero (ha : a ≠ 0) (h : ∃ s, discrim a b c = s * s) :
@@ -111,23 +111,23 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
   rw [discrim, sq]
   obtain ha | rfl | ha : a < 0 ∨ a = 0 ∨ 0 < a := lt_trichotomy a 0
   -- if a < 0
-  · have : Tendsto (fun x => (a * x + b) * x + c) atTop atBot :=
-      tendsto_atBot_add_const_right _ c
-        ((tendsto_atBot_add_const_right _ b (tendsto_id.const_mul_atTop_of_neg ha)).atBot_mul_atTop
-          tendsto_id)
-    rcases (this.eventually (eventually_lt_atBot 0)).exists with ⟨x, hx⟩
-    exact False.elim ((h x).not_lt <| by rwa [← add_mul])
+  have : Tendsto (fun x => (a * x + b) * x + c) atTop atBot :=
+    tendsto_atBot_add_const_right _ c
+      ((tendsto_atBot_add_const_right _ b (tendsto_id.const_mul_atTop_of_neg ha)).atBot_mul_atTop
+        tendsto_id)
+  rcases (this.eventually (eventually_lt_atBot 0)).exists with ⟨x, hx⟩
+  exact False.elim ((h x).not_lt <| by rwa [← add_mul])
   -- if a = 0
-  · rcases eq_or_ne b 0 with (rfl | hb)
-    · simp
-    · have := h ((-c - 1) / b)
-      rw [mul_div_cancel₀ _ hb] at this
-      linarith
+  rcases eq_or_ne b 0 with (rfl | hb)
+  simp
+  have := h ((-c - 1) / b)
+  rw [mul_div_cancel₀ _ hb] at this
+  linarith
   -- if a > 0
-  · have ha' : 0 ≤ 4 * a := mul_nonneg zero_le_four ha.le
-    convert neg_nonpos.2 (mul_nonneg ha' (h (-b / (2 * a)))) using 1
-    field_simp
-    ring
+  have ha' : 0 ≤ 4 * a := mul_nonneg zero_le_four ha.le
+  convert neg_nonpos.2 (mul_nonneg ha' (h (-b / (2 * a)))) using 1
+  field_simp
+  ring
 
 lemma discrim_le_zero_of_nonpos (h : ∀ x : K, a * x * x + b * x + c ≤ 0) : discrim a b c ≤ 0 :=
   discrim_neg a b c ▸ discrim_le_zero <| by simpa only [neg_mul, ← neg_add, neg_nonneg]

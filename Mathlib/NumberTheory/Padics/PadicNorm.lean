@@ -149,11 +149,11 @@ protected theorem of_int (z : ℤ) : padicNorm p z ≤ 1 :=
   else by
     unfold padicNorm
     rw [if_neg _]
-    · refine zpow_le_one_of_nonpos ?_ ?_
-      · exact mod_cast le_of_lt hp.1.one_lt
-      · rw [padicValRat.of_int, neg_nonpos]
-        norm_cast
-        simp
+    refine zpow_le_one_of_nonpos ?_ ?_
+    exact mod_cast le_of_lt hp.1.one_lt
+    rw [padicValRat.of_int, neg_nonpos]
+    norm_cast
+    simp
     exact mod_cast hz
 
 private theorem nonarchimedean_aux {q r : ℚ} (h : padicValRat p q ≤ padicValRat p r) :
@@ -170,19 +170,19 @@ private theorem nonarchimedean_aux {q r : ℚ} (h : padicValRat p q ≤ padicVal
         apply le_max_iff.2
         left
         apply zpow_le_of_le
-        · exact mod_cast le_of_lt hp.1.one_lt
-        · apply neg_le_neg
-          have : padicValRat p q = min (padicValRat p q) (padicValRat p r) := (min_eq_left h).symm
-          rw [this]
-          exact min_le_padicValRat_add hqr
+        exact mod_cast le_of_lt hp.1.one_lt
+        apply neg_le_neg
+        have : padicValRat p q = min (padicValRat p q) (padicValRat p r) := (min_eq_left h).symm
+        rw [this]
+        exact min_le_padicValRat_add hqr
 
 /-- The `p`-adic norm is nonarchimedean: the norm of `p + q` is at most the max of the norm of `p`
 and the norm of `q`. -/
 protected theorem nonarchimedean {q r : ℚ} :
     padicNorm p (q + r) ≤ max (padicNorm p q) (padicNorm p r) := by
   wlog hle : padicValRat p q ≤ padicValRat p r generalizing q r
-  · rw [add_comm, max_comm]
-    exact this (le_of_not_le hle)
+  rw [add_comm, max_comm]
+  exact this (le_of_not_le hle)
   exact nonarchimedean_aux hle
 
 /-- The `p`-adic norm respects the triangle inequality: the norm of `p + q` is at most the norm of
@@ -204,8 +204,8 @@ of the norms of `q` and `r`. -/
 theorem add_eq_max_of_ne {q r : ℚ} (hne : padicNorm p q ≠ padicNorm p r) :
     padicNorm p (q + r) = max (padicNorm p q) (padicNorm p r) := by
   wlog hlt : padicNorm p r < padicNorm p q
-  · rw [add_comm, max_comm]
-    exact this hne.symm (hne.lt_or_lt.resolve_right hlt)
+  rw [add_comm, max_comm]
+  exact this hne.symm (hne.lt_or_lt.resolve_right hlt)
   have : padicNorm p q ≤ max (padicNorm p (q + r)) (padicNorm p r) :=
     calc
       padicNorm p q = padicNorm p (q + r + (-r)) := by ring_nf
@@ -218,8 +218,8 @@ theorem add_eq_max_of_ne {q r : ℚ} (hne : padicNorm p q ≠ padicNorm p r) :
     exact not_lt_of_ge this hlt
   have : padicNorm p q ≤ padicNorm p (q + r) := by rwa [max_eq_left hnge] at this
   apply _root_.le_antisymm
-  · apply padicNorm.nonarchimedean
-  · rwa [max_eq_left_of_lt hlt]
+  apply padicNorm.nonarchimedean
+  rwa [max_eq_left_of_lt hlt]
 
 /-- The `p`-adic norm is an absolute value: positive-definite and multiplicative, satisfying the
 triangle inequality. -/
@@ -231,36 +231,36 @@ instance : IsAbsoluteValue (padicNorm p) where
 
 theorem dvd_iff_norm_le {n : ℕ} {z : ℤ} : ↑(p ^ n) ∣ z ↔ padicNorm p z ≤ (p : ℚ) ^ (-n : ℤ) := by
   unfold padicNorm; split_ifs with hz
-  · norm_cast at hz
-    simp [hz]
-  · rw [zpow_le_iff_le, neg_le_neg_iff, padicValRat.of_int,
-      padicValInt.of_ne_one_ne_zero hp.1.ne_one _]
-    · norm_cast
-      rw [← PartENat.coe_le_coe, PartENat.natCast_get, ← multiplicity.pow_dvd_iff_le_multiplicity,
-        Nat.cast_pow]
-      exact mod_cast hz
-    · exact mod_cast hp.1.one_lt
+  norm_cast at hz
+  simp [hz]
+  rw [zpow_le_iff_le, neg_le_neg_iff, padicValRat.of_int,
+    padicValInt.of_ne_one_ne_zero hp.1.ne_one _]
+  norm_cast
+  rw [← PartENat.coe_le_coe, PartENat.natCast_get, ← multiplicity.pow_dvd_iff_le_multiplicity,
+    Nat.cast_pow]
+  exact mod_cast hz
+  exact mod_cast hp.1.one_lt
 
 /-- The `p`-adic norm of an integer `m` is one iff `p` doesn't divide `m`. -/
 theorem int_eq_one_iff (m : ℤ) : padicNorm p m = 1 ↔ ¬(p : ℤ) ∣ m := by
   nth_rw 2 [← pow_one p]
   simp only [dvd_iff_norm_le, Int.cast_natCast, Nat.cast_one, zpow_neg, zpow_one, not_le]
   constructor
-  · intro h
-    rw [h, inv_lt_one_iff_of_pos] <;> norm_cast
-    · exact Nat.Prime.one_lt Fact.out
-    · exact Nat.Prime.pos Fact.out
-  · simp only [padicNorm]
-    split_ifs
-    · rw [inv_lt_zero, ← Nat.cast_zero, Nat.cast_lt]
-      intro h
-      exact (Nat.not_lt_zero p h).elim
-    · have : 1 < (p : ℚ) := by norm_cast; exact Nat.Prime.one_lt (Fact.out : Nat.Prime p)
-      rw [← zpow_neg_one, zpow_lt_iff_lt this]
-      have : 0 ≤ padicValRat p m
-      simp only [of_int, Nat.cast_nonneg]
-      intro h
-      rw [← zpow_zero (p : ℚ), zpow_inj] <;> linarith
+  intro h
+  rw [h, inv_lt_one_iff_of_pos] <;> norm_cast
+  exact Nat.Prime.one_lt Fact.out
+  exact Nat.Prime.pos Fact.out
+  simp only [padicNorm]
+  split_ifs
+  rw [inv_lt_zero, ← Nat.cast_zero, Nat.cast_lt]
+  intro h
+  exact (Nat.not_lt_zero p h).elim
+  have : 1 < (p : ℚ) := by norm_cast; exact Nat.Prime.one_lt (Fact.out : Nat.Prime p)
+  rw [← zpow_neg_one, zpow_lt_iff_lt this]
+  have : 0 ≤ padicValRat p m
+  simp only [of_int, Nat.cast_nonneg]
+  intro h
+  rw [← zpow_zero (p : ℚ), zpow_inj] <;> linarith
 
 theorem int_lt_one_iff (m : ℤ) : padicNorm p m < 1 ↔ (p : ℤ) ∣ m := by
   rw [← not_iff_not, ← int_eq_one_iff, eq_iff_le_not_lt]
@@ -289,12 +289,12 @@ theorem sum_lt {α : Type*} {F : α → ℚ} {t : ℚ} {s : Finset α} :
     refine s.induction_on (by rintro ⟨-, ⟨⟩⟩) ?_
     rintro a S haS IH - ht
     by_cases hs : S.Nonempty
-    · rw [Finset.sum_insert haS]
-      exact
-        lt_of_le_of_lt padicNorm.nonarchimedean
-          (max_lt (ht a (Finset.mem_insert_self a S))
-            (IH hs fun b hb ↦ ht b (Finset.mem_insert_of_mem hb)))
-    · simp_all
+    rw [Finset.sum_insert haS]
+    exact
+      lt_of_le_of_lt padicNorm.nonarchimedean
+        (max_lt (ht a (Finset.mem_insert_self a S))
+          (IH hs fun b hb ↦ ht b (Finset.mem_insert_of_mem hb)))
+    simp_all
 
 open Classical in
 theorem sum_le {α : Type*} {F : α → ℚ} {t : ℚ} {s : Finset α} :
@@ -302,23 +302,23 @@ theorem sum_le {α : Type*} {F : α → ℚ} {t : ℚ} {s : Finset α} :
     refine s.induction_on (by rintro ⟨-, ⟨⟩⟩) ?_
     rintro a S haS IH - ht
     by_cases hs : S.Nonempty
-    · rw [Finset.sum_insert haS]
-      exact
-        padicNorm.nonarchimedean.trans
-          (max_le (ht a (Finset.mem_insert_self a S))
-            (IH hs fun b hb ↦ ht b (Finset.mem_insert_of_mem hb)))
-    · simp_all
+    rw [Finset.sum_insert haS]
+    exact
+      padicNorm.nonarchimedean.trans
+        (max_le (ht a (Finset.mem_insert_self a S))
+          (IH hs fun b hb ↦ ht b (Finset.mem_insert_of_mem hb)))
+    simp_all
 
 theorem sum_lt' {α : Type*} {F : α → ℚ} {t : ℚ} {s : Finset α}
     (hF : ∀ i ∈ s, padicNorm p (F i) < t) (ht : 0 < t) : padicNorm p (∑ i ∈ s, F i) < t := by
   obtain rfl | hs := Finset.eq_empty_or_nonempty s
-  · simp [ht]
-  · exact sum_lt hs hF
+  simp [ht]
+  exact sum_lt hs hF
 
 theorem sum_le' {α : Type*} {F : α → ℚ} {t : ℚ} {s : Finset α}
     (hF : ∀ i ∈ s, padicNorm p (F i) ≤ t) (ht : 0 ≤ t) : padicNorm p (∑ i ∈ s, F i) ≤ t := by
   obtain rfl | hs := Finset.eq_empty_or_nonempty s
-  · simp [ht]
-  · exact sum_le hs hF
+  simp [ht]
+  exact sum_le hs hF
 
 end padicNorm

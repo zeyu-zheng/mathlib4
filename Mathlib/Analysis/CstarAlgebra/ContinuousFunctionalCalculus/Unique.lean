@@ -253,10 +253,10 @@ lemma toContinuousMapHom_toNNReal (f : C(X, ℝ)₀) :
 lemma toNNReal_smul (r : ℝ≥0) (f : C(X, ℝ)₀) : (r • f).toNNReal = r • f.toNNReal := by
   ext x
   by_cases h : 0 ≤ f x
-  · simpa [max_eq_left h, NNReal.smul_def] using mul_nonneg r.coe_nonneg h
-  · push_neg at h
-    simpa [max_eq_right h.le, NNReal.smul_def]
-      using mul_nonpos_of_nonneg_of_nonpos r.coe_nonneg h.le
+  simpa [max_eq_left h, NNReal.smul_def] using mul_nonneg r.coe_nonneg h
+  push_neg at h
+  simpa [max_eq_right h.le, NNReal.smul_def]
+    using mul_nonpos_of_nonneg_of_nonpos r.coe_nonneg h.le
 
 @[simp]
 lemma toNNReal_neg_smul (r : ℝ≥0) (f : C(X, ℝ)₀) : (-(r • f)).toNNReal = r • (-f).toNNReal := by
@@ -387,9 +387,9 @@ instance NNReal.instUniqueNonUnitalContinuousFunctionalCalculus
           Continuous ξ' ∧ ξ' (ContinuousMapZero.id h0') = ξ (ContinuousMapZero.id h0)) := by
       intro ξ'
       refine ⟨ξ.continuous_realContinuousMapZeroOfNNReal hξ |>.comp <| ?_, ?_⟩
-      · rw [continuous_induced_rng]
-        exact ContinuousMap.continuous_comp_left _ |>.comp continuous_induced_dom
-      · exact ξ.realContinuousMapZeroOfNNReal_apply_comp_toReal (.id h0)
+      rw [continuous_induced_rng]
+      exact ContinuousMap.continuous_comp_left _ |>.comp continuous_induced_dom
+      exact ξ.realContinuousMapZeroOfNNReal_apply_comp_toReal (.id h0)
     obtain ⟨hφ', hφ_id⟩ := this φ hφ
     obtain ⟨hψ', hψ_id⟩ := this ψ hψ
     have hs' : CompactSpace s' := e.compactSpace

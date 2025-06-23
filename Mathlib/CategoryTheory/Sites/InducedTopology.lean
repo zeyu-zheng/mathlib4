@@ -55,10 +55,10 @@ variable [G.LocallyCoverDense K] [G.IsLocallyFull K] [G.IsLocallyFaithful K]
 theorem pushforward_cover_iff_cover_pullback [G.Full] [G.Faithful] {X : C} (S : Sieve X) :
     K _ (S.functorPushforward G) ↔ ∃ T : K (G.obj X), T.val.functorPullback G = S := by
   constructor
-  · intro hS
-    exact ⟨⟨_, hS⟩, (Sieve.fullyFaithfulFunctorGaloisCoinsertion G X).u_l_eq S⟩
-  · rintro ⟨T, rfl⟩
-    exact LocallyCoverDense.functorPushforward_functorPullback_mem T
+  intro hS
+  exact ⟨⟨_, hS⟩, (Sieve.fullyFaithfulFunctorGaloisCoinsertion G X).u_l_eq S⟩
+  rintro ⟨T, rfl⟩
+  exact LocallyCoverDense.functorPushforward_functorPullback_mem T
 
 /-- If a functor `G : C ⥤ (D, K)` is fully faithful and locally dense,
 then the set `{ T ∩ mor(C) | T ∈ K }` is a grothendieck topology of `C`.
@@ -123,10 +123,10 @@ instance over_forget_locallyCoverDense (X : C) : (Over.forget X).LocallyCoverDen
     convert T.property
     ext Z f
     constructor
-    · rintro ⟨_, _, g', hg, rfl⟩
-      exact T.val.downward_closed hg g'
-    · intro hf
-      exact ⟨Over.mk (f ≫ Y.hom), Over.homMk f, 𝟙 _, hf, (Category.id_comp _).symm⟩
+    rintro ⟨_, _, g', hg, rfl⟩
+    exact T.val.downward_closed hg g'
+    intro hf
+    exact ⟨Over.mk (f ≫ Y.hom), Over.homMk f, 𝟙 _, hf, (Category.id_comp _).symm⟩
 
 /-- Cover-dense functors induces an equivalence of categories of sheaves.
 

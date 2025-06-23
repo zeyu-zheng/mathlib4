@@ -28,7 +28,7 @@ open Ideal Ideal.Quotient
 theorem dvd_sub_pow_of_dvd_sub {R : Type*} [CommRing R] {p : ℕ} {a b : R} (h : (p : R) ∣ a - b)
     (k : ℕ) : (p ^ (k + 1) : R) ∣ a ^ p ^ k - b ^ p ^ k := by
   induction' k with k ih
-  · rwa [pow_one, pow_zero, pow_one, pow_one]
+  rwa [pow_one, pow_zero, pow_one, pow_one]
   rw [pow_succ p k, pow_mul, pow_mul, ← geom_sum₂_mul, pow_succ']
   refine mul_dvd_mul ?_ ih
   let f : R →+* R ⧸ span {(p : R)} := mk (span {(p : R)})

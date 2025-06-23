@@ -140,12 +140,12 @@ theorem admissible_E8 : Admissible E8 :=
 theorem Admissible.one_lt_sumInv {pqr : Multiset ℕ+} : Admissible pqr → 1 < sumInv pqr := by
   rw [Admissible]
   rintro (⟨p', q', H⟩ | ⟨n, H⟩ | H | H | H)
-  · rw [← H, A', sumInv_pqr, add_assoc]
-    simp only [lt_add_iff_pos_right, PNat.one_coe, inv_one, Nat.cast_one]
-    apply add_pos <;> simp only [PNat.pos, Nat.cast_pos, inv_pos]
-  · rw [← H, D', sumInv_pqr]
-    conv_rhs => simp only [OfNat.ofNat, PNat.mk_coe]
-    norm_num
+  rw [← H, A', sumInv_pqr, add_assoc]
+  simp only [lt_add_iff_pos_right, PNat.one_coe, inv_one, Nat.cast_one]
+  apply add_pos <;> simp only [PNat.pos, Nat.cast_pos, inv_pos]
+  rw [← H, D', sumInv_pqr]
+  conv_rhs => simp only [OfNat.ofNat, PNat.mk_coe]
+  norm_num
   all_goals
     rw [← H, E', sumInv_pqr]
     conv_rhs => simp only [OfNat.ofNat, PNat.mk_coe]
@@ -160,16 +160,16 @@ theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv 
   have h3r := h3q.trans hqr
   have hp : (p : ℚ)⁻¹ ≤ 3⁻¹
   rw [inv_le_inv _ h3]
-  · assumption_mod_cast
-  · norm_num
+  assumption_mod_cast
+  norm_num
   have hq : (q : ℚ)⁻¹ ≤ 3⁻¹
   rw [inv_le_inv _ h3]
-  · assumption_mod_cast
-  · norm_num
+  assumption_mod_cast
+  norm_num
   have hr : (r : ℚ)⁻¹ ≤ 3⁻¹
   rw [inv_le_inv _ h3]
-  · assumption_mod_cast
-  · norm_num
+  assumption_mod_cast
+  norm_num
   calc
     (p : ℚ)⁻¹ + (q : ℚ)⁻¹ + (r : ℚ)⁻¹ ≤ 3⁻¹ + 3⁻¹ + 3⁻¹ := add_le_add (add_le_add hp hq) hr
     _ = 1 := by norm_num
@@ -182,12 +182,12 @@ theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 
   have h4r := H.trans hqr
   have hq : (q : ℚ)⁻¹ ≤ 4⁻¹
   rw [inv_le_inv _ h4]
-  · assumption_mod_cast
-  · norm_num
+  assumption_mod_cast
+  norm_num
   have hr : (r : ℚ)⁻¹ ≤ 4⁻¹
   rw [inv_le_inv _ h4]
-  · assumption_mod_cast
-  · norm_num
+  assumption_mod_cast
+  norm_num
   calc
     (2⁻¹ + (q : ℚ)⁻¹ + (r : ℚ)⁻¹) ≤ 2⁻¹ + 4⁻¹ + 4⁻¹ := add_le_add (add_le_add le_rfl hq) hr
     _ = 1 := by norm_num
@@ -199,8 +199,8 @@ theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 := by
   rw [sumInv_pqr]
   have hr : (r : ℚ)⁻¹ ≤ 6⁻¹
   rw [inv_le_inv _ h6]
-  · assumption_mod_cast
-  · norm_num
+  assumption_mod_cast
+  norm_num
   calc
     (2⁻¹ + 3⁻¹ + (r : ℚ)⁻¹ : ℚ) ≤ 2⁻¹ + 3⁻¹ + 6⁻¹ := add_le_add (add_le_add le_rfl le_rfl) hr
     _ = 1 := by norm_num
@@ -212,19 +212,19 @@ theorem admissible_of_one_lt_sumInv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : q
   replace hp3 := Finset.mem_Iio.mpr hp3
   conv at hp3 => change p ∈ ({1, 2} : Multiset ℕ+)
   fin_cases hp3
-  · exact admissible_A' q r
+  exact admissible_A' q r
   have hq4 : q < 4 := lt_four hqr H
   replace hq4 := Finset.mem_Ico.mpr ⟨hpq, hq4⟩; clear hpq
   conv at hq4 => change q ∈ ({2, 3} : Multiset ℕ+)
   fin_cases hq4
-  · exact admissible_D' r
+  exact admissible_D' r
   have hr6 : r < 6 := lt_six H
   replace hr6 := Finset.mem_Ico.mpr ⟨hqr, hr6⟩; clear hqr
   conv at hr6 => change r ∈ ({3, 4, 5} : Multiset ℕ+)
   fin_cases hr6
-  · exact admissible_E6
-  · exact admissible_E7
-  · exact admissible_E8
+  exact admissible_E6
+  exact admissible_E7
+  exact admissible_E8
 
 theorem admissible_of_one_lt_sumInv_aux :
     ∀ {pqr : List ℕ+} (_ : pqr.Sorted (· ≤ ·)) (_ : pqr.length = 3) (_ : 1 < sumInv pqr),

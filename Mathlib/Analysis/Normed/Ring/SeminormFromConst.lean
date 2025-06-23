@@ -89,15 +89,15 @@ theorem seminormFromConst_seq_antitone (x : R) : Antitone (seminormFromConst_seq
   have hc_pos : 0 < f c := lt_of_le_of_ne (apply_nonneg f _) hc.symm
   apply le_trans ((div_le_div_right (pow_pos hc_pos _)).mpr (map_mul_le_mul f _ _))
   by_cases heq : m = n
-  · have hnm : n - m = 0 := by rw [heq, Nat.sub_self n]
-    rw [hnm, heq, div_le_div_right (pow_pos hc_pos _), pow_zero]
-    conv_rhs => rw [← mul_one (f (x * c ^ n))]
-    exact mul_le_mul_of_nonneg_left hf1 (apply_nonneg f _)
-  · have h1 : 1 ≤ n - m := by
-      rw [Nat.one_le_iff_ne_zero, ne_eq, Nat.sub_eq_zero_iff_le, not_le]
-      exact lt_of_le_of_ne hmn heq
-    rw [hpm c h1, mul_div_assoc, div_eq_mul_inv, pow_sub₀ _ hc hmn, mul_assoc, mul_comm (f c ^ m)⁻¹,
-      ← mul_assoc (f c ^ n), mul_inv_cancel (pow_ne_zero n hc), one_mul, div_eq_mul_inv]
+  have hnm : n - m = 0 := by rw [heq, Nat.sub_self n]
+  rw [hnm, heq, div_le_div_right (pow_pos hc_pos _), pow_zero]
+  conv_rhs => rw [← mul_one (f (x * c ^ n))]
+  exact mul_le_mul_of_nonneg_left hf1 (apply_nonneg f _)
+  have h1 : 1 ≤ n - m := by
+    rw [Nat.one_le_iff_ne_zero, ne_eq, Nat.sub_eq_zero_iff_le, not_le]
+    exact lt_of_le_of_ne hmn heq
+  rw [hpm c h1, mul_div_assoc, div_eq_mul_inv, pow_sub₀ _ hc hmn, mul_assoc, mul_comm (f c ^ m)⁻¹,
+    ← mul_assoc (f c ^ n), mul_inv_cancel (pow_ne_zero n hc), one_mul, div_eq_mul_inv]
 
 /-- The real-valued function sending `x ∈ R` to the limit of `(f (x * c^n))/((f c)^n)`. -/
 def seminormFromConst' (x : R) : ℝ :=
@@ -202,9 +202,9 @@ theorem seminormFromConst_apply_of_isMul {x : R} (hx : ∀ y : R, f (x * y) = f 
     have hseq : seminormFromConst_seq c f x = fun _n ↦ f x := by
       ext n
       by_cases hn : n = 0
-      · simp only [seminormFromConst_seq, hn, pow_zero, mul_one, div_one]
-      · simp only [seminormFromConst_seq, hx (c ^ n), hpm _ (Nat.one_le_iff_ne_zero.mpr hn),
-          mul_div_assoc, div_self (pow_ne_zero n hc), mul_one]
+      simp only [seminormFromConst_seq, hn, pow_zero, mul_one, div_one]
+      simp only [seminormFromConst_seq, hx (c ^ n), hpm _ (Nat.one_le_iff_ne_zero.mpr hn),
+        mul_div_assoc, div_self (pow_ne_zero n hc), mul_one]
     rw [hseq]
     exact tendsto_const_nhds
   tendsto_nhds_unique (seminormFromConst_isLimit hf1 hc hpm x) hlim

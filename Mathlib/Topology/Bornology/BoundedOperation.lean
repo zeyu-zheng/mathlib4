@@ -64,10 +64,10 @@ instance [PseudoMetricSpace R] [AddMonoid R] [LipschitzAdd R] : BoundedAdd R whe
     ext p
     simp only [Set.mem_image, Set.mem_prod, Prod.exists]
     constructor
-    · intro ⟨a, a_in_s, b, b_in_t, eq_p⟩
-      exact ⟨a, b, ⟨a_in_s, b_in_t⟩, eq_p⟩
-    · intro ⟨a, b, ⟨a_in_s, b_in_t⟩, eq_p⟩
-      simpa [← eq_p] using Set.add_mem_add a_in_s b_in_t
+    intro ⟨a, a_in_s, b, b_in_t, eq_p⟩
+    exact ⟨a, b, ⟨a_in_s, b_in_t⟩, eq_p⟩
+    intro ⟨a, b, ⟨a_in_s, b_in_t⟩, eq_p⟩
+    simpa [← eq_p] using Set.add_mem_add a_in_s b_in_t
 
 end bounded_add
 
@@ -112,10 +112,10 @@ lemma boundedSub_of_lipschitzWith_sub [PseudoMetricSpace R] [Sub R] {K : NNReal}
     ext p
     simp only [Set.mem_image, Set.mem_prod, Prod.exists]
     constructor
-    · intro ⟨a, a_in_s, b, b_in_t, eq_p⟩
-      exact ⟨a, b, ⟨a_in_s, b_in_t⟩, eq_p⟩
-    · intro ⟨a, b, ⟨a_in_s, b_in_t⟩, eq_p⟩
-      simpa [← eq_p] using Set.sub_mem_sub a_in_s b_in_t
+    intro ⟨a, a_in_s, b, b_in_t, eq_p⟩
+    exact ⟨a, b, ⟨a_in_s, b_in_t⟩, eq_p⟩
+    intro ⟨a, b, ⟨a_in_s, b_in_t⟩, eq_p⟩
+    simpa [← eq_p] using Set.sub_mem_sub a_in_s b_in_t
 
 end bounded_sub
 
@@ -144,18 +144,18 @@ lemma isBounded_pow {R : Type*} [Bornology R] [Monoid R] [BoundedMul R] {s : Set
     (s_bdd : Bornology.IsBounded s) (n : ℕ) :
     Bornology.IsBounded ((fun x ↦ x ^ n) '' s) := by
   induction' n with n hn
-  · by_cases s_empty : s = ∅
-    · simp [s_empty]
-    simp_rw [← nonempty_iff_ne_empty] at s_empty
-    simp [s_empty]
-  · have obs : ((fun x ↦ x ^ (n + 1)) '' s) ⊆ ((fun x ↦ x ^ n) '' s) * s := by
-      intro x hx
-      simp only [mem_image] at hx
-      obtain ⟨y, y_in_s, ypow_eq_x⟩ := hx
-      rw [← ypow_eq_x, pow_succ y n]
-      apply Set.mul_mem_mul _ y_in_s
-      use y
-    exact (isBounded_mul hn s_bdd).subset obs
+  by_cases s_empty : s = ∅
+  simp [s_empty]
+  simp_rw [← nonempty_iff_ne_empty] at s_empty
+  simp [s_empty]
+  have obs : ((fun x ↦ x ^ (n + 1)) '' s) ⊆ ((fun x ↦ x ^ n) '' s) * s := by
+    intro x hx
+    simp only [mem_image] at hx
+    obtain ⟨y, y_in_s, ypow_eq_x⟩ := hx
+    rw [← ypow_eq_x, pow_succ y n]
+    apply Set.mul_mem_mul _ y_in_s
+    use y
+  exact (isBounded_mul hn s_bdd).subset obs
 
 lemma mul_bounded_of_bounded_of_bounded {X : Type*} [PseudoMetricSpace R] [Mul R] [BoundedMul R]
     {f g : X → R} (f_bdd : ∃ C, ∀ x y, dist (f x) (f y) ≤ C)
@@ -207,8 +207,8 @@ instance : BoundedMul R where
     have aux : ∀ {x y}, x ∈ s → y ∈ t → ‖x * y‖ ≤ Af * Ag
     intro x y x_in_s y_in_t
     apply (norm_mul_le _ _).trans (mul_le_mul _ _ (norm_nonneg _) hAf')
-    · exact mem_closedBall_zero_iff.mp (hAf x_in_s)
-    · exact mem_closedBall_zero_iff.mp (hAg y_in_t)
+    exact mem_closedBall_zero_iff.mp (hAf x_in_s)
+    exact mem_closedBall_zero_iff.mp (hAg y_in_t)
     calc ‖x₁ * y₁ - x₂ * y₂‖
      _ ≤ ‖x₁ * y₁‖ + ‖x₂ * y₂‖        := norm_sub_le _ _
      _ ≤ Af * Ag + Af * Ag            := add_le_add (aux hx₁ hy₁) (aux hx₂ hy₂)

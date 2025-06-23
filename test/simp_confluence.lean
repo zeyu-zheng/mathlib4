@@ -13,8 +13,8 @@ example {f : α → β} (s t : Set β) (h : Surjective f) :
     f '' (f ⁻¹' s) ⊆ t ↔ f '' (f ⁻¹' s) ⊆ t := by
   conv =>
     congr
-    · simp [h, -image_preimage_eq, -subset_range_of_surjective]
-    · simp [h, -image_subset_iff, -subset_range_of_surjective]
+    simp [h, -image_preimage_eq, -subset_range_of_surjective]
+    simp [h, -image_subset_iff, -subset_range_of_surjective]
   fail_if_success simp [h, -subset_range_of_surjective]
   simp [h]
 
@@ -24,8 +24,8 @@ example {s : Set α} (hs : Set.Nonempty s) (t : Set β) (a : β) :
     (fun _ => a) '' s ⊆ t ↔ (fun _ => a) '' s ⊆ t := by
   conv =>
     congr
-    · simp [hs, -Nonempty.image_const, -Nonempty.subset_preimage_const]
-    · simp [hs, -image_subset_iff, -Nonempty.subset_preimage_const]
+    simp [hs, -Nonempty.image_const, -Nonempty.subset_preimage_const]
+    simp [hs, -image_subset_iff, -Nonempty.subset_preimage_const]
   fail_if_success simp [hs, -Nonempty.subset_preimage_const]
   simp [hs]
 
@@ -34,8 +34,8 @@ example {s : Set α} (hs : Set.Nonempty s) (t : Set β) (a : β) :
 example {f : α → β} (s) : f '' univ ⊆ s ↔ f '' univ ⊆ s := by
   conv =>
     congr
-    · simp [-image_univ, -preimage_eq_univ_iff]
-    · simp [-image_subset_iff, -preimage_eq_univ_iff]
+    simp [-image_univ, -preimage_eq_univ_iff]
+    simp [-image_subset_iff, -preimage_eq_univ_iff]
   fail_if_success simp [-preimage_eq_univ_iff]
   simp
 

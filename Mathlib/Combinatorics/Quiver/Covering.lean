@@ -195,47 +195,47 @@ theorem Prefunctor.pathStar_injective (hφ : ∀ u, Injective (φ.star u)) (u : 
     -- Porting note: added `Sigma.mk.inj_iff`
     simp only [Prefunctor.pathStar_apply, Prefunctor.mapPath_nil, Prefunctor.mapPath_cons,
       Sigma.mk.inj_iff] at h
-  · -- Porting note: goal not present in lean3.
-    rfl
-  · exfalso
-    cases' h with h h'
-    rw [← Path.eq_cast_iff_heq rfl h.symm, Path.cast_cons] at h'
-    exact (Path.nil_ne_cons _ _) h'
-  · exfalso
-    cases' h with h h'
-    rw [← Path.cast_eq_iff_heq rfl h, Path.cast_cons] at h'
-    exact (Path.cons_ne_nil _ _) h'
-  · cases' h with hφy h'
-    rw [← Path.cast_eq_iff_heq rfl hφy, Path.cast_cons, Path.cast_rfl_rfl] at h'
-    have hφx := Path.obj_eq_of_cons_eq_cons h'
-    have hφp := Path.heq_of_cons_eq_cons h'
-    have hφe := HEq.trans (Hom.cast_heq rfl hφy _).symm (Path.hom_heq_of_cons_eq_cons h')
-    have h_path_star : φ.pathStar u ⟨x₁, p₁⟩ = φ.pathStar u ⟨x₂, p₂⟩
-    simp only [Prefunctor.pathStar_apply, Sigma.mk.inj_iff]; exact ⟨hφx, hφp⟩
-    cases ih h_path_star
-    have h_star : φ.star x₁ ⟨y₁, e₁⟩ = φ.star x₁ ⟨y₂, e₂⟩
-    simp only [Prefunctor.star_apply, Sigma.mk.inj_iff]; exact ⟨hφy, hφe⟩
-    cases hφ x₁ h_star
-    rfl
+  -- Porting note: goal not present in lean3.
+  rfl
+  exfalso
+  cases' h with h h'
+  rw [← Path.eq_cast_iff_heq rfl h.symm, Path.cast_cons] at h'
+  exact (Path.nil_ne_cons _ _) h'
+  exfalso
+  cases' h with h h'
+  rw [← Path.cast_eq_iff_heq rfl h, Path.cast_cons] at h'
+  exact (Path.cons_ne_nil _ _) h'
+  cases' h with hφy h'
+  rw [← Path.cast_eq_iff_heq rfl hφy, Path.cast_cons, Path.cast_rfl_rfl] at h'
+  have hφx := Path.obj_eq_of_cons_eq_cons h'
+  have hφp := Path.heq_of_cons_eq_cons h'
+  have hφe := HEq.trans (Hom.cast_heq rfl hφy _).symm (Path.hom_heq_of_cons_eq_cons h')
+  have h_path_star : φ.pathStar u ⟨x₁, p₁⟩ = φ.pathStar u ⟨x₂, p₂⟩
+  simp only [Prefunctor.pathStar_apply, Sigma.mk.inj_iff]; exact ⟨hφx, hφp⟩
+  cases ih h_path_star
+  have h_star : φ.star x₁ ⟨y₁, e₁⟩ = φ.star x₁ ⟨y₂, e₂⟩
+  simp only [Prefunctor.star_apply, Sigma.mk.inj_iff]; exact ⟨hφy, hφe⟩
+  cases hφ x₁ h_star
+  rfl
 
 theorem Prefunctor.pathStar_surjective (hφ : ∀ u, Surjective (φ.star u)) (u : U) :
     Surjective (φ.pathStar u) := by
   dsimp (config := { unfoldPartialApp := true }) [Prefunctor.pathStar, Quiver.PathStar.mk]
   rintro ⟨v, p⟩
   induction' p with v' v'' p' ev ih
-  · use ⟨u, Path.nil⟩
-    simp only [Prefunctor.mapPath_nil, eq_self_iff_true, heq_iff_eq, and_self_iff]
-  · obtain ⟨⟨u', q'⟩, h⟩ := ih
-    simp only at h
-    obtain ⟨rfl, rfl⟩ := h
-    obtain ⟨⟨u'', eu⟩, k⟩ := hφ u' ⟨_, ev⟩
-    simp only [star_apply, Sigma.mk.inj_iff] at k
-    -- Porting note: was `obtain ⟨rfl, rfl⟩ := k`
-    obtain ⟨rfl, k⟩ := k
-    simp only [heq_eq_eq] at k
-    subst k
-    use ⟨_, q'.cons eu⟩
-    simp only [Prefunctor.mapPath_cons, eq_self_iff_true, heq_iff_eq, and_self_iff]
+  use ⟨u, Path.nil⟩
+  simp only [Prefunctor.mapPath_nil, eq_self_iff_true, heq_iff_eq, and_self_iff]
+  obtain ⟨⟨u', q'⟩, h⟩ := ih
+  simp only at h
+  obtain ⟨rfl, rfl⟩ := h
+  obtain ⟨⟨u'', eu⟩, k⟩ := hφ u' ⟨_, ev⟩
+  simp only [star_apply, Sigma.mk.inj_iff] at k
+  -- Porting note: was `obtain ⟨rfl, rfl⟩ := k`
+  obtain ⟨rfl, k⟩ := k
+  simp only [heq_eq_eq] at k
+  subst k
+  use ⟨_, q'.cons eu⟩
+  simp only [Prefunctor.mapPath_cons, eq_self_iff_true, heq_iff_eq, and_self_iff]
 
 theorem Prefunctor.pathStar_bijective (hφ : ∀ u, Bijective (φ.star u)) (u : U) :
     Bijective (φ.pathStar u) :=

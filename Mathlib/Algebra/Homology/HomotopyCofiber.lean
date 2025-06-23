@@ -147,9 +147,9 @@ lemma ext_to_X (i j : ι) (hij : c.Rel i j) {A : C} {f g : A ⟶ X φ i}
   haveI := HasHomotopyCofiber.hasBinaryBiproduct φ _ _ hij
   rw [← cancel_mono (XIsoBiprod φ i j hij).hom]
   apply biprod.hom_ext
-  · simpa using h₁
-  · obtain rfl := c.next_eq' hij
-    simpa [sndX, dif_pos hij] using h₂
+  simpa using h₁
+  obtain rfl := c.next_eq' hij
+  simpa [sndX, dif_pos hij] using h₂
 
 lemma ext_to_X' (i : ι) (hi : ¬ c.Rel i (c.next i)) {A : C} {f g : A ⟶ X φ i}
     (h : f ≫ sndX φ i = g ≫ sndX φ i) : f = g := by
@@ -162,9 +162,9 @@ lemma ext_from_X (i j : ι) (hij : c.Rel j i) {A : C} {f g : X φ j ⟶ A}
   haveI := HasHomotopyCofiber.hasBinaryBiproduct φ _ _ hij
   rw [← cancel_epi (XIsoBiprod φ j i hij).inv]
   apply biprod.hom_ext'
-  · simpa [inlX] using h₁
-  · obtain rfl := c.next_eq' hij
-    simpa [inrX, dif_pos hij] using h₂
+  simpa [inlX] using h₁
+  obtain rfl := c.next_eq' hij
+  simpa [inrX, dif_pos hij] using h₂
 
 lemma ext_from_X' (i : ι) (hi : ¬ c.Rel i (c.next i)) {A : C} {f g : X φ i ⟶ A}
     (h : inrX φ i ≫ f = inrX φ i ≫ g) : f = g := by
@@ -187,9 +187,9 @@ lemma d_sndX (i j : ι) (hij : c.Rel i j) :
 lemma inlX_d (i j k : ι) (hij : c.Rel i j) (hjk : c.Rel j k) :
     inlX φ j i hij ≫ d φ i j = -F.d j k ≫ inlX φ k j hjk + φ.f j ≫ inrX φ j := by
   apply ext_to_X φ j k hjk
-  · dsimp
-    simp [d_fstX φ  _ _ _ hij hjk]
-  · simp [d_sndX φ _ _ hij]
+  dsimp
+  simp [d_fstX φ  _ _ _ hij hjk]
+  simp [d_sndX φ _ _ hij]
 
 @[reassoc]
 lemma inlX_d' (i j : ι) (hij : c.Rel i j) (hj : ¬ c.Rel j (c.next j)) :
@@ -205,13 +205,13 @@ lemma shape (i j : ι) (hij : ¬ c.Rel i j) :
 lemma inrX_d (i j : ι) :
     inrX φ i ≫ d φ i j = G.d i j ≫ inrX φ j := by
   by_cases hij : c.Rel i j
-  · by_cases hj : c.Rel j (c.next j)
-    · apply ext_to_X _ _ _ hj
-      · simp [d_fstX φ _ _ _ hij]
-      · simp [d_sndX φ _ _ hij]
-    · apply ext_to_X' _ _ hj
-      simp [d_sndX φ _ _ hij]
-  · rw [shape φ _ _ hij, G.shape _ _ hij, zero_comp, comp_zero]
+  by_cases hj : c.Rel j (c.next j)
+  apply ext_to_X _ _ _ hj
+  simp [d_fstX φ _ _ _ hij]
+  simp [d_sndX φ _ _ hij]
+  apply ext_to_X' _ _ hj
+  simp [d_sndX φ _ _ hij]
+  rw [shape φ _ _ hij, G.shape _ _ hij, zero_comp, comp_zero]
 
 end homotopyCofiber
 
@@ -322,21 +322,21 @@ lemma inr_desc :
 lemma inrCompHomotopy_hom_desc_hom (hc : ∀ j, ∃ i, c.Rel i j) (i j : ι) :
     (inrCompHomotopy φ hc).hom i j ≫ (desc φ α hα).f j = hα.hom i j := by
   by_cases hij : c.Rel j i
-  · dsimp
-    simp only [inrCompHomotopy_hom φ hc i j hij, desc_f φ α hα _ _ hij,
-      comp_add, inlX_fstX_assoc, inlX_sndX_assoc, zero_comp, add_zero]
-  · simp only [Homotopy.zero _ _ _ hij, zero_comp]
+  dsimp
+  simp only [inrCompHomotopy_hom φ hc i j hij, desc_f φ α hα _ _ hij,
+    comp_add, inlX_fstX_assoc, inlX_sndX_assoc, zero_comp, add_zero]
+  simp only [Homotopy.zero _ _ _ hij, zero_comp]
 
 lemma eq_desc (f : homotopyCofiber φ ⟶ K) (hc : ∀ j, ∃ i, c.Rel i j) :
     f = desc φ (inr φ ≫ f) (Homotopy.trans (Homotopy.ofEq (by simp))
       (((inrCompHomotopy φ hc).compRight f).trans (Homotopy.ofEq (by simp)))) := by
   ext j
   by_cases hj : c.Rel j (c.next j)
-  · apply ext_from_X φ _ _ hj
-    · simp [inrCompHomotopy_hom _ _ _ _ hj]
-    · simp
-  · apply ext_from_X' φ _ hj
-    simp
+  apply ext_from_X φ _ _ hj
+  simp [inrCompHomotopy_hom _ _ _ _ hj]
+  simp
+  apply ext_from_X' φ _ hj
+  simp
 
 end
 
@@ -344,16 +344,16 @@ lemma descSigma_ext_iff {K : HomologicalComplex C c}
     (x y : Σ (α : G ⟶ K), Homotopy (φ ≫ α) 0) :
     x = y ↔ x.1 = y.1 ∧ (∀ (i j : ι) (_ : c.Rel j i), x.2.hom i j = y.2.hom i j) := by
   constructor
-  · rintro rfl
-    tauto
-  · obtain ⟨x₁, x₂⟩ := x
-    obtain ⟨y₁, y₂⟩ := y
-    rintro ⟨rfl, h⟩
-    simp only [Sigma.mk.inj_iff, heq_eq_eq, true_and]
-    ext i j
-    by_cases hij : c.Rel j i
-    · exact h _ _ hij
-    · simp only [Homotopy.zero _ _ _ hij]
+  rintro rfl
+  tauto
+  obtain ⟨x₁, x₂⟩ := x
+  obtain ⟨y₁, y₂⟩ := y
+  rintro ⟨rfl, h⟩
+  simp only [Sigma.mk.inj_iff, heq_eq_eq, true_and]
+  ext i j
+  by_cases hij : c.Rel j i
+  exact h _ _ hij
+  simp only [Homotopy.zero _ _ _ hij]
 
 /-- Morphisms `homotopyCofiber φ ⟶ K` are uniquely determined by
 a morphism `α : G ⟶ K` and a homotopy from `φ ≫ α` to `0`. -/
@@ -461,19 +461,19 @@ lemma inlX_nullHomotopy_f (i j : ι) (hij : c.Rel j i) :
       inlX K i j hij ≫ (π K ≫ ι₀ K - 𝟙 _).f j := by
   dsimp [nullHomotopicMap]
   by_cases hj : ∃ (k : ι), c.Rel k j
-  · obtain ⟨k, hjk⟩ := hj
-    simp only [assoc, Homotopy.nullHomotopicMap'_f hjk hij, homotopyCofiber_X, homotopyCofiber_d,
-      homotopyCofiber.d_sndX_assoc _ _ _ hij, add_comp, comp_add, homotopyCofiber.inlX_fstX_assoc,
-      homotopyCofiber.inlX_sndX_assoc, zero_comp, add_zero, comp_sub, inlX_π_assoc, comp_id,
-      zero_sub, ← HomologicalComplex.comp_f_assoc, biprod.lift_snd, neg_f_apply, id_f,
-      neg_comp, id_comp]
-  · simp only [not_exists] at hj
-    simp only [Homotopy.nullHomotopicMap'_f_of_not_rel_right hij hj,
-      homotopyCofiber_X, homotopyCofiber_d, assoc, comp_sub, comp_id,
-      homotopyCofiber.d_sndX_assoc _ _ _ hij, add_comp, comp_add, zero_comp, add_zero,
-      homotopyCofiber.inlX_fstX_assoc, homotopyCofiber.inlX_sndX_assoc,
-      ← HomologicalComplex.comp_f_assoc, biprod.lift_snd, neg_f_apply, id_f, neg_comp,
-      id_comp, inlX_π_assoc, zero_sub]
+  obtain ⟨k, hjk⟩ := hj
+  simp only [assoc, Homotopy.nullHomotopicMap'_f hjk hij, homotopyCofiber_X, homotopyCofiber_d,
+    homotopyCofiber.d_sndX_assoc _ _ _ hij, add_comp, comp_add, homotopyCofiber.inlX_fstX_assoc,
+    homotopyCofiber.inlX_sndX_assoc, zero_comp, add_zero, comp_sub, inlX_π_assoc, comp_id,
+    zero_sub, ← HomologicalComplex.comp_f_assoc, biprod.lift_snd, neg_f_apply, id_f,
+    neg_comp, id_comp]
+  simp only [not_exists] at hj
+  simp only [Homotopy.nullHomotopicMap'_f_of_not_rel_right hij hj,
+    homotopyCofiber_X, homotopyCofiber_d, assoc, comp_sub, comp_id,
+    homotopyCofiber.d_sndX_assoc _ _ _ hij, add_comp, comp_add, zero_comp, add_zero,
+    homotopyCofiber.inlX_fstX_assoc, homotopyCofiber.inlX_sndX_assoc,
+    ← HomologicalComplex.comp_f_assoc, biprod.lift_snd, neg_f_apply, id_f, neg_comp,
+    id_comp, inlX_π_assoc, zero_sub]
 
 lemma biprod_lift_id_sub_id : biprod.lift (𝟙 K) (-𝟙 K) = biprod.inl - biprod.inr :=
   biprod.hom_ext _ _ (by simp) (by simp)
@@ -483,34 +483,34 @@ lemma inrX_nullHomotopy_f (j : ι) :
   obtain ⟨i, hij⟩ := hc j
   dsimp [nullHomotopicMap]
   by_cases hj : ∃ (k : ι), c.Rel j k
-  · obtain ⟨k, hjk⟩ := hj
-    simp only [Homotopy.nullHomotopicMap'_f hij hjk,
-      homotopyCofiber_X, homotopyCofiber_d, assoc, comp_add,
-      homotopyCofiber.inrX_d_assoc, homotopyCofiber.inrX_sndX_assoc, comp_sub,
-      inrX_π_assoc, comp_id, ← Hom.comm_assoc, homotopyCofiber.inlX_d _ _ _ _ _ hjk,
-      comp_neg, add_neg_cancel_left]
-    rw [← cancel_epi (biprodXIso K K j).inv]
-    ext
-    · simp [ι₀]
-    · dsimp
-      simp only [inr_biprodXIso_inv_assoc, biprod_inr_snd_f_assoc, comp_sub,
-        biprod_inr_desc_f_assoc, id_f, id_comp, ι₀, comp_f, biprod_lift_id_sub_id,
-        sub_f_apply, sub_comp, homotopyCofiber_X, homotopyCofiber.inr_f]
-  · simp only [not_exists] at hj
-    simp only [assoc, Homotopy.nullHomotopicMap'_f_of_not_rel_left hij hj, homotopyCofiber_X,
-      homotopyCofiber_d, homotopyCofiber.inlX_d' _ _ _ _ (hj _), homotopyCofiber.inrX_sndX_assoc,
-      comp_sub, inrX_π_assoc, comp_id, ι₀, comp_f, homotopyCofiber.inr_f]
-    rw [← cancel_epi (biprodXIso K K j).inv]
-    ext
-    · simp
-    · simp [biprod_lift_id_sub_id]
+  obtain ⟨k, hjk⟩ := hj
+  simp only [Homotopy.nullHomotopicMap'_f hij hjk,
+    homotopyCofiber_X, homotopyCofiber_d, assoc, comp_add,
+    homotopyCofiber.inrX_d_assoc, homotopyCofiber.inrX_sndX_assoc, comp_sub,
+    inrX_π_assoc, comp_id, ← Hom.comm_assoc, homotopyCofiber.inlX_d _ _ _ _ _ hjk,
+    comp_neg, add_neg_cancel_left]
+  rw [← cancel_epi (biprodXIso K K j).inv]
+  ext
+  simp [ι₀]
+  dsimp
+  simp only [inr_biprodXIso_inv_assoc, biprod_inr_snd_f_assoc, comp_sub,
+    biprod_inr_desc_f_assoc, id_f, id_comp, ι₀, comp_f, biprod_lift_id_sub_id,
+    sub_f_apply, sub_comp, homotopyCofiber_X, homotopyCofiber.inr_f]
+  simp only [not_exists] at hj
+  simp only [assoc, Homotopy.nullHomotopicMap'_f_of_not_rel_left hij hj, homotopyCofiber_X,
+    homotopyCofiber_d, homotopyCofiber.inlX_d' _ _ _ _ (hj _), homotopyCofiber.inrX_sndX_assoc,
+    comp_sub, inrX_π_assoc, comp_id, ι₀, comp_f, homotopyCofiber.inr_f]
+  rw [← cancel_epi (biprodXIso K K j).inv]
+  ext
+  simp
+  simp [biprod_lift_id_sub_id]
 
 lemma nullHomotopicMap_eq : nullHomotopicMap K = π K ≫ ι₀ K - 𝟙 _ := by
   ext i
   by_cases hi : c.Rel i (c.next i)
-  · exact homotopyCofiber.ext_from_X (biprod.lift (𝟙 K) (-𝟙 K)) (c.next i) i hi
-      (inlX_nullHomotopy_f _ _ _ _) (inrX_nullHomotopy_f _ hc _)
-  · exact homotopyCofiber.ext_from_X' (biprod.lift (𝟙 K) (-𝟙 K)) _ hi (inrX_nullHomotopy_f _ hc _)
+  exact homotopyCofiber.ext_from_X (biprod.lift (𝟙 K) (-𝟙 K)) (c.next i) i hi
+    (inlX_nullHomotopy_f _ _ _ _) (inrX_nullHomotopy_f _ hc _)
+  exact homotopyCofiber.ext_from_X' (biprod.lift (𝟙 K) (-𝟙 K)) _ hi (inrX_nullHomotopy_f _ hc _)
 
 end πCompι₀Homotopy
 

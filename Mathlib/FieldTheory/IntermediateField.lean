@@ -295,15 +295,15 @@ open Classical in
 @[simp, norm_cast]
 theorem coe_sum {ι : Type*} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by
     induction' (Finset.univ : Finset ι) using Finset.induction_on with i s hi H
-    · simp
-    · rw [Finset.sum_insert hi, AddMemClass.coe_add, H, Finset.sum_insert hi]
+    simp
+    rw [Finset.sum_insert hi, AddMemClass.coe_add, H, Finset.sum_insert hi]
 
 open Classical in
 @[norm_cast] --Porting note (#10618): `simp` can prove it
 theorem coe_prod {ι : Type*} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by
     induction' (Finset.univ : Finset ι) using Finset.induction_on with i s hi H
-    · simp
-    · rw [Finset.prod_insert hi, MulMemClass.coe_mul, H, Finset.prod_insert hi]
+    simp
+    rw [Finset.prod_insert hi, MulMemClass.coe_mul, H, Finset.prod_insert hi]
 
 /-! `IntermediateField`s inherit structure from their `Subalgebra` coercions. -/
 
@@ -466,23 +466,23 @@ instance AlgHom.inhabited : Inhabited (S →ₐ[K] L) :=
 theorem aeval_coe {R : Type*} [CommRing R] [Algebra R K] [Algebra R L] [IsScalarTower R K L]
     (x : S) (P : R[X]) : aeval (x : L) P = aeval x P := by
   refine Polynomial.induction_on' P (fun f g hf hg => ?_) fun n r => ?_
-  · rw [aeval_add, aeval_add, AddMemClass.coe_add, hf, hg]
-  · simp only [MulMemClass.coe_mul, aeval_monomial, SubmonoidClass.coe_pow, mul_eq_mul_right_iff]
-    left
-    rfl
+  rw [aeval_add, aeval_add, AddMemClass.coe_add, hf, hg]
+  simp only [MulMemClass.coe_mul, aeval_monomial, SubmonoidClass.coe_pow, mul_eq_mul_right_iff]
+  left
+  rfl
 
 theorem coe_isIntegral_iff {R : Type*} [CommRing R] [Algebra R K] [Algebra R L]
     [IsScalarTower R K L] {x : S} : IsIntegral R (x : L) ↔ IsIntegral R x := by
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · obtain ⟨P, hPmo, hProot⟩ := h
-    refine ⟨P, hPmo, (injective_iff_map_eq_zero _).1 (algebraMap (↥S) L).injective _ ?_⟩
-    letI : IsScalarTower R S L := IsScalarTower.of_algebraMap_eq (congr_fun rfl)
-    rw [eval₂_eq_eval_map, ← eval₂_at_apply, eval₂_eq_eval_map, Polynomial.map_map, ←
-      IsScalarTower.algebraMap_eq, ← eval₂_eq_eval_map]
-    exact hProot
-  · obtain ⟨P, hPmo, hProot⟩ := h
-    refine ⟨P, hPmo, ?_⟩
-    rw [← aeval_def, aeval_coe, aeval_def, hProot, ZeroMemClass.coe_zero]
+  obtain ⟨P, hPmo, hProot⟩ := h
+  refine ⟨P, hPmo, (injective_iff_map_eq_zero _).1 (algebraMap (↥S) L).injective _ ?_⟩
+  letI : IsScalarTower R S L := IsScalarTower.of_algebraMap_eq (congr_fun rfl)
+  rw [eval₂_eq_eval_map, ← eval₂_at_apply, eval₂_eq_eval_map, Polynomial.map_map, ←
+    IsScalarTower.algebraMap_eq, ← eval₂_eq_eval_map]
+  exact hProot
+  obtain ⟨P, hPmo, hProot⟩ := h
+  refine ⟨P, hPmo, ?_⟩
+  rw [← aeval_def, aeval_coe, aeval_def, hProot, ZeroMemClass.coe_zero]
 
 /-- The map `E → F` when `E` is an intermediate field contained in the intermediate field `F`.
 
@@ -737,10 +737,10 @@ theorem mem_restrict (x : E) : x ∈ restrict h ↔ x.1 ∈ F :=
 theorem lift_restrict : lift (restrict h) = F := by
   ext x
   refine ⟨fun hx ↦ ?_, fun hx ↦ ?_⟩
-  · let y : E := ⟨x, lift_le (restrict h) hx⟩
-    exact (mem_restrict h y).1 ((mem_lift y).1 hx)
-  · let y : E := ⟨x, h hx⟩
-    exact (mem_lift y).2 ((mem_restrict h y).2 hx)
+  let y : E := ⟨x, lift_le (restrict h) hx⟩
+  exact (mem_restrict h y).1 ((mem_lift y).1 hx)
+  let y : E := ⟨x, h hx⟩
+  exact (mem_lift y).2 ((mem_restrict h y).2 hx)
 
 /--
 `F` is equivalent to `F` as an intermediate field of `E / K`.

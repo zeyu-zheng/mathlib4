@@ -50,26 +50,26 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : M
   have h_mul_indicator : ∀ g, Measurable g → Measurable fun a => g a * T.indicator (fun _ => c) a :=
     fun g h_mg => h_mg.mul (measurable_const.indicator h_meas_T)
   apply @Measurable.ennreal_induction _ Mf
-  · intro c' s' h_meas_s'
-    simp_rw [← inter_indicator_mul]
-    rw [lintegral_indicator _ (MeasurableSet.inter (hMf _ h_meas_s') h_meas_T),
-      lintegral_indicator _ (hMf _ h_meas_s'), lintegral_indicator _ h_meas_T]
-    simp only [measurable_const, lintegral_const, univ_inter, lintegral_const_mul,
-      MeasurableSet.univ, Measure.restrict_apply]
-    rw [IndepSets_iff] at h_ind
-    rw [mul_mul_mul_comm, h_ind s' T h_meas_s' (Set.mem_singleton _)]
-  · intro f' g _ h_meas_f' _ h_ind_f' h_ind_g
-    have h_measM_f' : Measurable f' := h_meas_f'.mono hMf le_rfl
-    simp_rw [Pi.add_apply, right_distrib]
-    rw [lintegral_add_left (h_mul_indicator _ h_measM_f'), lintegral_add_left h_measM_f',
-      right_distrib, h_ind_f', h_ind_g]
-  · intro f h_meas_f h_mono_f h_ind_f
-    have h_measM_f : ∀ n, Measurable (f n) := fun n => (h_meas_f n).mono hMf le_rfl
-    simp_rw [ENNReal.iSup_mul]
-    rw [lintegral_iSup h_measM_f h_mono_f, lintegral_iSup, ENNReal.iSup_mul]
-    · simp_rw [← h_ind_f]
-    · exact fun n => h_mul_indicator _ (h_measM_f n)
-    · exact fun m n h_le a => mul_le_mul_right' (h_mono_f h_le a) _
+  intro c' s' h_meas_s'
+  simp_rw [← inter_indicator_mul]
+  rw [lintegral_indicator _ (MeasurableSet.inter (hMf _ h_meas_s') h_meas_T),
+    lintegral_indicator _ (hMf _ h_meas_s'), lintegral_indicator _ h_meas_T]
+  simp only [measurable_const, lintegral_const, univ_inter, lintegral_const_mul,
+    MeasurableSet.univ, Measure.restrict_apply]
+  rw [IndepSets_iff] at h_ind
+  rw [mul_mul_mul_comm, h_ind s' T h_meas_s' (Set.mem_singleton _)]
+  intro f' g _ h_meas_f' _ h_ind_f' h_ind_g
+  have h_measM_f' : Measurable f' := h_meas_f'.mono hMf le_rfl
+  simp_rw [Pi.add_apply, right_distrib]
+  rw [lintegral_add_left (h_mul_indicator _ h_measM_f'), lintegral_add_left h_measM_f',
+    right_distrib, h_ind_f', h_ind_g]
+  intro f h_meas_f h_mono_f h_ind_f
+  have h_measM_f : ∀ n, Measurable (f n) := fun n => (h_meas_f n).mono hMf le_rfl
+  simp_rw [ENNReal.iSup_mul]
+  rw [lintegral_iSup h_measM_f h_mono_f, lintegral_iSup, ENNReal.iSup_mul]
+  simp_rw [← h_ind_f]
+  exact fun n => h_mul_indicator _ (h_measM_f n)
+  exact fun m n h_le a => mul_le_mul_right' (h_mono_f h_le a) _
 
 /-- If `f` and `g` are independent random variables with values in `ℝ≥0∞`,
    then `E[f * g] = E[f] * E[g]`. However, instead of directly using the independence
@@ -84,22 +84,22 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurableSpace
   revert g
   have h_measM_f : Measurable f := h_meas_f.mono hMf le_rfl
   apply @Measurable.ennreal_induction _ Mg
-  · intro c s h_s
-    apply lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator hMf _ (hMg _ h_s) _ h_meas_f
-    apply indepSets_of_indepSets_of_le_right h_ind
-    rwa [singleton_subset_iff]
-  · intro f' g _ h_measMg_f' _ h_ind_f' h_ind_g'
-    have h_measM_f' : Measurable f' := h_measMg_f'.mono hMg le_rfl
-    simp_rw [Pi.add_apply, left_distrib]
-    rw [lintegral_add_left h_measM_f', lintegral_add_left (h_measM_f.mul h_measM_f'), left_distrib,
-      h_ind_f', h_ind_g']
-  · intro f' h_meas_f' h_mono_f' h_ind_f'
-    have h_measM_f' : ∀ n, Measurable (f' n) := fun n => (h_meas_f' n).mono hMg le_rfl
-    simp_rw [ENNReal.mul_iSup]
-    rw [lintegral_iSup, lintegral_iSup h_measM_f' h_mono_f', ENNReal.mul_iSup]
-    · simp_rw [← h_ind_f']
-    · exact fun n => h_measM_f.mul (h_measM_f' n)
-    · exact fun n m (h_le : n ≤ m) a => mul_le_mul_left' (h_mono_f' h_le a) _
+  intro c s h_s
+  apply lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator hMf _ (hMg _ h_s) _ h_meas_f
+  apply indepSets_of_indepSets_of_le_right h_ind
+  rwa [singleton_subset_iff]
+  intro f' g _ h_measMg_f' _ h_ind_f' h_ind_g'
+  have h_measM_f' : Measurable f' := h_measMg_f'.mono hMg le_rfl
+  simp_rw [Pi.add_apply, left_distrib]
+  rw [lintegral_add_left h_measM_f', lintegral_add_left (h_measM_f.mul h_measM_f'), left_distrib,
+    h_ind_f', h_ind_g']
+  intro f' h_meas_f' h_mono_f' h_ind_f'
+  have h_measM_f' : ∀ n, Measurable (f' n) := fun n => (h_meas_f' n).mono hMg le_rfl
+  simp_rw [ENNReal.mul_iSup]
+  rw [lintegral_iSup, lintegral_iSup h_measM_f' h_mono_f', ENNReal.mul_iSup]
+  simp_rw [← h_ind_f']
+  exact fun n => h_measM_f.mul (h_measM_f' n)
+  exact fun n m (h_le : n ≤ m) a => mul_le_mul_left' (h_mono_f' h_le a) _
 
 /-- If `f` and `g` are independent random variables with values in `ℝ≥0∞`,
    then `E[f * g] = E[f] * E[g]`. -/
@@ -259,21 +259,21 @@ theorem IndepFun.integral_mul_of_integrable (hXY : IndepFun X Y μ) (hX : Integr
 theorem IndepFun.integral_mul (hXY : IndepFun X Y μ) (hX : AEStronglyMeasurable X μ)
     (hY : AEStronglyMeasurable Y μ) : integral μ (X * Y) = integral μ X * integral μ Y := by
   by_cases h'X : X =ᵐ[μ] 0
-  · have h' : X * Y =ᵐ[μ] 0 := by
-      filter_upwards [h'X] with ω hω
-      simp [hω]
-    simp only [integral_congr_ae h'X, integral_congr_ae h', Pi.zero_apply, integral_const,
-      Algebra.id.smul_eq_mul, mul_zero, zero_mul]
+  have h' : X * Y =ᵐ[μ] 0 := by
+    filter_upwards [h'X] with ω hω
+    simp [hω]
+  simp only [integral_congr_ae h'X, integral_congr_ae h', Pi.zero_apply, integral_const,
+    Algebra.id.smul_eq_mul, mul_zero, zero_mul]
   by_cases h'Y : Y =ᵐ[μ] 0
-  · have h' : X * Y =ᵐ[μ] 0 := by
-      filter_upwards [h'Y] with ω hω
-      simp [hω]
-    simp only [integral_congr_ae h'Y, integral_congr_ae h', Pi.zero_apply, integral_const,
-      Algebra.id.smul_eq_mul, mul_zero, zero_mul]
+  have h' : X * Y =ᵐ[μ] 0 := by
+    filter_upwards [h'Y] with ω hω
+    simp [hω]
+  simp only [integral_congr_ae h'Y, integral_congr_ae h', Pi.zero_apply, integral_const,
+    Algebra.id.smul_eq_mul, mul_zero, zero_mul]
   by_cases h : Integrable (X * Y) μ
-  · have HX : Integrable X μ := hXY.integrable_left_of_integrable_mul h hX hY h'Y
-    have HY : Integrable Y μ := hXY.integrable_right_of_integrable_mul h hX hY h'X
-    exact hXY.integral_mul_of_integrable HX HY
+  have HX : Integrable X μ := hXY.integrable_left_of_integrable_mul h hX hY h'Y
+  have HY : Integrable Y μ := hXY.integrable_right_of_integrable_mul h hX hY h'X
+  exact hXY.integral_mul_of_integrable HX HY
   · rw [integral_undef h]
     have I : ¬(Integrable X μ ∧ Integrable Y μ) := by
       rintro ⟨HX, HY⟩

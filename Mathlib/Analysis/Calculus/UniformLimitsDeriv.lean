@@ -121,46 +121,46 @@ theorem uniformCauchySeqOnFilter_of_fderiv (hf' : UniformCauchySeqOnFilter f' l 
     rw [add_zero] at this
     exact this.congr (by simp)
   constructor
-  · -- This inequality follows from the mean value theorem. To apply it, we will need to shrink our
-    -- neighborhood to small enough ball
-    rw [Metric.tendstoUniformlyOnFilter_iff] at hf' ⊢
-    intro ε hε
-    have := (tendsto_swap4_prod.eventually (hf.prod_mk hf)).diag_of_prod_right
-    obtain ⟨a, b, c, d, e⟩ := eventually_prod_iff.1 ((hf' ε hε).and this)
-    obtain ⟨R, hR, hR'⟩ := Metric.nhds_basis_ball.eventually_iff.mp d
-    let r := min 1 R
-    have hr : 0 < r
-    simp [r, hR]
-    have hr' : ∀ ⦃y : E⦄, y ∈ Metric.ball x r → c y := fun y hy =>
-      hR' (lt_of_lt_of_le (Metric.mem_ball.mp hy) (min_le_right _ _))
-    have hxy : ∀ y : E, y ∈ Metric.ball x r → ‖y - x‖ < 1 := by
-      intro y hy
-      rw [Metric.mem_ball, dist_eq_norm] at hy
-      exact lt_of_lt_of_le hy (min_le_left _ _)
-    have hxyε : ∀ y : E, y ∈ Metric.ball x r → ε * ‖y - x‖ < ε := by
-      intro y hy
-      exact (mul_lt_iff_lt_one_right hε.lt).mpr (hxy y hy)
-    -- With a small ball in hand, apply the mean value theorem
-    refine
-      eventually_prod_iff.mpr
-        ⟨_, b, fun e : E => Metric.ball x r e,
-          eventually_mem_set.mpr (Metric.nhds_basis_ball.mem_of_mem hr), fun {n} hn {y} hy => ?_⟩
-    simp only [Pi.zero_apply, dist_zero_left] at e ⊢
-    refine lt_of_le_of_lt ?_ (hxyε y hy)
-    exact
-      Convex.norm_image_sub_le_of_norm_hasFDerivWithin_le
-        (fun y hy => ((e hn (hr' hy)).2.1.sub (e hn (hr' hy)).2.2).hasFDerivWithinAt)
-        (fun y hy => (e hn (hr' hy)).1.le) (convex_ball x r) (Metric.mem_ball_self hr) hy
-  · -- This is just `hfg` run through `eventually_prod_iff`
-    refine Metric.tendstoUniformlyOnFilter_iff.mpr fun ε hε => ?_
-    obtain ⟨t, ht, ht'⟩ := (Metric.cauchy_iff.mp hfg).2 ε hε
-    exact
-      eventually_prod_iff.mpr
-        ⟨fun n : ι × ι => f n.1 x ∈ t ∧ f n.2 x ∈ t,
-          eventually_prod_iff.mpr ⟨_, ht, _, ht, fun {n} hn {n'} hn' => ⟨hn, hn'⟩⟩,
-          fun _ => True,
-          by simp,
-          fun {n} hn {y} _ => by simpa [norm_sub_rev, dist_eq_norm] using ht' _ hn.1 _ hn.2⟩
+  -- This inequality follows from the mean value theorem. To apply it, we will need to shrink our
+  -- neighborhood to small enough ball
+  rw [Metric.tendstoUniformlyOnFilter_iff] at hf' ⊢
+  intro ε hε
+  have := (tendsto_swap4_prod.eventually (hf.prod_mk hf)).diag_of_prod_right
+  obtain ⟨a, b, c, d, e⟩ := eventually_prod_iff.1 ((hf' ε hε).and this)
+  obtain ⟨R, hR, hR'⟩ := Metric.nhds_basis_ball.eventually_iff.mp d
+  let r := min 1 R
+  have hr : 0 < r
+  simp [r, hR]
+  have hr' : ∀ ⦃y : E⦄, y ∈ Metric.ball x r → c y := fun y hy =>
+    hR' (lt_of_lt_of_le (Metric.mem_ball.mp hy) (min_le_right _ _))
+  have hxy : ∀ y : E, y ∈ Metric.ball x r → ‖y - x‖ < 1 := by
+    intro y hy
+    rw [Metric.mem_ball, dist_eq_norm] at hy
+    exact lt_of_lt_of_le hy (min_le_left _ _)
+  have hxyε : ∀ y : E, y ∈ Metric.ball x r → ε * ‖y - x‖ < ε := by
+    intro y hy
+    exact (mul_lt_iff_lt_one_right hε.lt).mpr (hxy y hy)
+  -- With a small ball in hand, apply the mean value theorem
+  refine
+    eventually_prod_iff.mpr
+      ⟨_, b, fun e : E => Metric.ball x r e,
+        eventually_mem_set.mpr (Metric.nhds_basis_ball.mem_of_mem hr), fun {n} hn {y} hy => ?_⟩
+  simp only [Pi.zero_apply, dist_zero_left] at e ⊢
+  refine lt_of_le_of_lt ?_ (hxyε y hy)
+  exact
+    Convex.norm_image_sub_le_of_norm_hasFDerivWithin_le
+      (fun y hy => ((e hn (hr' hy)).2.1.sub (e hn (hr' hy)).2.2).hasFDerivWithinAt)
+      (fun y hy => (e hn (hr' hy)).1.le) (convex_ball x r) (Metric.mem_ball_self hr) hy
+  -- This is just `hfg` run through `eventually_prod_iff`
+  refine Metric.tendstoUniformlyOnFilter_iff.mpr fun ε hε => ?_
+  obtain ⟨t, ht, ht'⟩ := (Metric.cauchy_iff.mp hfg).2 ε hε
+  exact
+    eventually_prod_iff.mpr
+      ⟨fun n : ι × ι => f n.1 x ∈ t ∧ f n.2 x ∈ t,
+        eventually_prod_iff.mpr ⟨_, ht, _, ht, fun {n} hn {n'} hn' => ⟨hn, hn'⟩⟩,
+        fun _ => True,
+        by simp,
+        fun {n} hn {y} _ => by simpa [norm_sub_rev, dist_eq_norm] using ht' _ hn.1 _ hn.2⟩
 
 /-- A variant of the second fundamental theorem of calculus (FTC-2): If a sequence of functions
 between real or complex normed spaces are differentiable on a ball centered at `x`, they
@@ -178,8 +178,8 @@ theorem uniformCauchySeqOn_ball_of_fderiv {r : ℝ} (hf' : UniformCauchySeqOn f'
   letI : NormedSpace ℝ E := NormedSpace.restrictScalars ℝ 𝕜 _
   have : NeBot l := (cauchy_map_iff.1 hfg).1
   rcases le_or_lt r 0 with (hr | hr)
-  · simp only [Metric.ball_eq_empty.2 hr, UniformCauchySeqOn, Set.mem_empty_iff_false,
-      IsEmpty.forall_iff, eventually_const, imp_true_iff]
+  simp only [Metric.ball_eq_empty.2 hr, UniformCauchySeqOn, Set.mem_empty_iff_false,
+    IsEmpty.forall_iff, eventually_const, imp_true_iff]
   rw [SeminormedAddGroup.uniformCauchySeqOn_iff_tendstoUniformlyOn_zero] at hf' ⊢
   suffices
     TendstoUniformlyOn (fun (n : ι × ι) (z : E) => f n.1 z - f n.2 z - (f n.1 x - f n.2 x)) 0
@@ -191,32 +191,32 @@ theorem uniformCauchySeqOn_ball_of_fderiv {r : ℝ} (hf' : UniformCauchySeqOn f'
     refine this.congr ?_
     filter_upwards with n z _ using (by simp)
   constructor
-  · -- This inequality follows from the mean value theorem
-    rw [Metric.tendstoUniformlyOn_iff] at hf' ⊢
-    intro ε hε
-    obtain ⟨q, hqpos, hq⟩ : ∃ q : ℝ, 0 < q ∧ q * r < ε := by
-      simp_rw [mul_comm]
-      exact exists_pos_mul_lt hε.lt r
-    apply (hf' q hqpos.gt).mono
-    intro n hn y hy
-    simp_rw [dist_eq_norm, Pi.zero_apply, zero_sub, norm_neg] at hn ⊢
-    have mvt :=
-      Convex.norm_image_sub_le_of_norm_hasFDerivWithin_le
-        (fun z hz => ((hf n.1 z hz).sub (hf n.2 z hz)).hasFDerivWithinAt) (fun z hz => (hn z hz).le)
-        (convex_ball x r) (Metric.mem_ball_self hr) hy
-    refine lt_of_le_of_lt mvt ?_
-    have : q * ‖y - x‖ < q * r :=
-      mul_lt_mul' rfl.le (by simpa only [dist_eq_norm] using Metric.mem_ball.mp hy) (norm_nonneg _)
-        hqpos
-    exact this.trans hq
-  · -- This is just `hfg` run through `eventually_prod_iff`
-    refine Metric.tendstoUniformlyOn_iff.mpr fun ε hε => ?_
-    obtain ⟨t, ht, ht'⟩ := (Metric.cauchy_iff.mp hfg).2 ε hε
-    rw [eventually_prod_iff]
-    refine ⟨fun n => f n x ∈ t, ht, fun n => f n x ∈ t, ht, ?_⟩
-    intro n hn n' hn' z _
-    rw [dist_eq_norm, Pi.zero_apply, zero_sub, norm_neg, ← dist_eq_norm]
-    exact ht' _ hn _ hn'
+  -- This inequality follows from the mean value theorem
+  rw [Metric.tendstoUniformlyOn_iff] at hf' ⊢
+  intro ε hε
+  obtain ⟨q, hqpos, hq⟩ : ∃ q : ℝ, 0 < q ∧ q * r < ε := by
+    simp_rw [mul_comm]
+    exact exists_pos_mul_lt hε.lt r
+  apply (hf' q hqpos.gt).mono
+  intro n hn y hy
+  simp_rw [dist_eq_norm, Pi.zero_apply, zero_sub, norm_neg] at hn ⊢
+  have mvt :=
+    Convex.norm_image_sub_le_of_norm_hasFDerivWithin_le
+      (fun z hz => ((hf n.1 z hz).sub (hf n.2 z hz)).hasFDerivWithinAt) (fun z hz => (hn z hz).le)
+      (convex_ball x r) (Metric.mem_ball_self hr) hy
+  refine lt_of_le_of_lt mvt ?_
+  have : q * ‖y - x‖ < q * r :=
+    mul_lt_mul' rfl.le (by simpa only [dist_eq_norm] using Metric.mem_ball.mp hy) (norm_nonneg _)
+      hqpos
+  exact this.trans hq
+  -- This is just `hfg` run through `eventually_prod_iff`
+  refine Metric.tendstoUniformlyOn_iff.mpr fun ε hε => ?_
+  obtain ⟨t, ht, ht'⟩ := (Metric.cauchy_iff.mp hfg).2 ε hε
+  rw [eventually_prod_iff]
+  refine ⟨fun n => f n x ∈ t, ht, fun n => f n x ∈ t, ht, ?_⟩
+  intro n hn n' hn' z _
+  rw [dist_eq_norm, Pi.zero_apply, zero_sub, norm_neg, ← dist_eq_norm]
+  exact ht' _ hn _ hn'
 
 /-- If a sequence of functions between real or complex normed spaces are differentiable on a
 preconnected open set, they form a Cauchy sequence _at_ `x`, and their derivatives are Cauchy
@@ -258,7 +258,7 @@ theorem difference_quotients_converge_uniformly (hf' : TendstoUniformlyOnFilter 
       (fun y : E => (‖y - x‖⁻¹ : 𝕜) • (g y - g x)) l (𝓝 x) := by
   let A : NormedSpace ℝ E := NormedSpace.restrictScalars ℝ 𝕜 _
   rcases eq_or_ne l ⊥ with (hl | hl)
-  · simp only [hl, TendstoUniformlyOnFilter, bot_prod, eventually_bot, imp_true_iff]
+  simp only [hl, TendstoUniformlyOnFilter, bot_prod, eventually_bot, imp_true_iff]
   haveI : NeBot l := ⟨hl⟩
   refine
     UniformCauchySeqOnFilter.tendstoUniformlyOnFilter_of_tendsto ?_
@@ -346,46 +346,46 @@ theorem hasFDerivAt_of_tendstoUniformlyOnFilter [NeBot l]
   have : 𝓝 (0 : G) = 𝓝 (0 + 0 + 0) := by simp only [add_zero]
   rw [this]
   refine Tendsto.add (Tendsto.add ?_ ?_) ?_
-  · have := difference_quotients_converge_uniformly hf' hf hfg
-    rw [Metric.tendstoUniformlyOnFilter_iff] at this
-    rw [Metric.tendsto_nhds]
-    intro ε hε
-    apply ((this ε hε).filter_mono curry_le_prod).mono
-    intro n hn
-    rw [dist_eq_norm] at hn ⊢
-    rw [← smul_sub] at hn
-    rwa [sub_zero]
-  · -- (Almost) the definition of the derivatives
-    rw [Metric.tendsto_nhds]
-    intro ε hε
-    rw [eventually_curry_iff]
-    refine hf.curry.mono fun n hn => ?_
-    have := hn.self_of_nhds
-    rw [hasFDerivAt_iff_tendsto, Metric.tendsto_nhds] at this
-    refine (this ε hε).mono fun y hy => ?_
-    rw [dist_eq_norm] at hy ⊢
-    simp only [sub_zero, map_sub, norm_mul, norm_inv, norm_norm] at hy ⊢
-    rw [norm_smul, norm_inv, RCLike.norm_coe_norm]
-    exact hy
-  · -- hfg' after specializing to `x` and applying the definition of the operator norm
-    refine Tendsto.mono_left ?_ curry_le_prod
-    have h1 : Tendsto (fun n : ι × E => g' n.2 - f' n.1 n.2) (l ×ˢ 𝓝 x) (𝓝 0) := by
-      rw [Metric.tendstoUniformlyOnFilter_iff] at hf'
-      exact Metric.tendsto_nhds.mpr fun ε hε => by simpa using hf' ε hε
-    have h2 : Tendsto (fun n : ι => g' x - f' n x) l (𝓝 0) := by
-      rw [Metric.tendsto_nhds] at h1 ⊢
-      exact fun ε hε => (h1 ε hε).curry.mono fun n hn => hn.self_of_nhds
-    refine squeeze_zero_norm ?_
-      (tendsto_zero_iff_norm_tendsto_zero.mp (tendsto_fst.comp (h2.prod_map tendsto_id)))
-    intro n
-    simp_rw [norm_smul, norm_inv, RCLike.norm_coe_norm]
-    by_cases hx : x = n.2; · simp [hx]
-    have hnx : 0 < ‖n.2 - x‖ := by
-      rw [norm_pos_iff]; intro hx'; exact hx (eq_of_sub_eq_zero hx').symm
-    rw [inv_mul_le_iff hnx, mul_comm]
-    simp only [Function.comp_apply, Prod.map_apply']
-    rw [norm_sub_rev]
-    exact (f' n.1 x - g' x).le_opNorm (n.2 - x)
+  have := difference_quotients_converge_uniformly hf' hf hfg
+  rw [Metric.tendstoUniformlyOnFilter_iff] at this
+  rw [Metric.tendsto_nhds]
+  intro ε hε
+  apply ((this ε hε).filter_mono curry_le_prod).mono
+  intro n hn
+  rw [dist_eq_norm] at hn ⊢
+  rw [← smul_sub] at hn
+  rwa [sub_zero]
+  -- (Almost) the definition of the derivatives
+  rw [Metric.tendsto_nhds]
+  intro ε hε
+  rw [eventually_curry_iff]
+  refine hf.curry.mono fun n hn => ?_
+  have := hn.self_of_nhds
+  rw [hasFDerivAt_iff_tendsto, Metric.tendsto_nhds] at this
+  refine (this ε hε).mono fun y hy => ?_
+  rw [dist_eq_norm] at hy ⊢
+  simp only [sub_zero, map_sub, norm_mul, norm_inv, norm_norm] at hy ⊢
+  rw [norm_smul, norm_inv, RCLike.norm_coe_norm]
+  exact hy
+  -- hfg' after specializing to `x` and applying the definition of the operator norm
+  refine Tendsto.mono_left ?_ curry_le_prod
+  have h1 : Tendsto (fun n : ι × E => g' n.2 - f' n.1 n.2) (l ×ˢ 𝓝 x) (𝓝 0) := by
+    rw [Metric.tendstoUniformlyOnFilter_iff] at hf'
+    exact Metric.tendsto_nhds.mpr fun ε hε => by simpa using hf' ε hε
+  have h2 : Tendsto (fun n : ι => g' x - f' n x) l (𝓝 0) := by
+    rw [Metric.tendsto_nhds] at h1 ⊢
+    exact fun ε hε => (h1 ε hε).curry.mono fun n hn => hn.self_of_nhds
+  refine squeeze_zero_norm ?_
+    (tendsto_zero_iff_norm_tendsto_zero.mp (tendsto_fst.comp (h2.prod_map tendsto_id)))
+  intro n
+  simp_rw [norm_smul, norm_inv, RCLike.norm_coe_norm]
+  by_cases hx : x = n.2; · simp [hx]
+  have hnx : 0 < ‖n.2 - x‖ := by
+    rw [norm_pos_iff]; intro hx'; exact hx (eq_of_sub_eq_zero hx').symm
+  rw [inv_mul_le_iff hnx, mul_comm]
+  simp only [Function.comp_apply, Prod.map_apply']
+  rw [norm_sub_rev]
+  exact (f' n.1 x - g' x).le_opNorm (n.2 - x)
 
 theorem hasFDerivAt_of_tendstoLocallyUniformlyOn [NeBot l] {s : Set E} (hs : IsOpen s)
     (hf' : TendstoLocallyUniformlyOn f' g' l s) (hf : ∀ n, ∀ x ∈ s, HasFDerivAt (f n) (f' n x) x)

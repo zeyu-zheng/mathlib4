@@ -281,12 +281,12 @@ theorem contMDiffWithinAt_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) 
     (hm : m ≤ n) :
     ContMDiffWithinAt I I' m (f ∘ h) s x ↔ ContMDiffWithinAt J I' m f (h.symm ⁻¹' s) (h x) := by
   constructor
-  · intro Hfh
-    rw [← h.symm_apply_apply x] at Hfh
-    simpa only [(· ∘ ·), h.apply_symm_apply] using
-      Hfh.comp (h x) (h.symm.contMDiffWithinAt.of_le hm) (mapsTo_preimage _ _)
-  · rw [← h.image_eq_preimage]
-    exact fun hf => hf.comp x (h.contMDiffWithinAt.of_le hm) (mapsTo_image _ _)
+  intro Hfh
+  rw [← h.symm_apply_apply x] at Hfh
+  simpa only [(· ∘ ·), h.apply_symm_apply] using
+    Hfh.comp (h x) (h.symm.contMDiffWithinAt.of_le hm) (mapsTo_preimage _ _)
+  rw [← h.image_eq_preimage]
+  exact fun hf => hf.comp x (h.contMDiffWithinAt.of_le hm) (mapsTo_image _ _)
 
 @[simp]
 theorem contMDiffOn_comp_diffeomorph_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) {f : N → M'} {s} (hm : m ≤ n) :

@@ -93,28 +93,28 @@ instance lawfulApplicative : LawfulApplicative Finset :=
     seqLeft_eq := fun s t => by
       rw [seq_def, fmap_def, seqLeft_def]
       obtain rfl | ht := t.eq_empty_or_nonempty
-      · simp_rw [image_empty, if_true]
-        exact (sup_bot _).symm
-      · ext a
-        rw [if_neg ht.ne_empty, mem_sup]
-        refine ⟨fun ha => ⟨const _ a, mem_image_of_mem _ ha, mem_image_const_self.2 ht⟩, ?_⟩
-        rintro ⟨f, hf, ha⟩
-        rw [mem_image] at hf ha
-        obtain ⟨b, hb, rfl⟩ := hf
-        obtain ⟨_, _, rfl⟩ := ha
-        exact hb
+      simp_rw [image_empty, if_true]
+      exact (sup_bot _).symm
+      ext a
+      rw [if_neg ht.ne_empty, mem_sup]
+      refine ⟨fun ha => ⟨const _ a, mem_image_of_mem _ ha, mem_image_const_self.2 ht⟩, ?_⟩
+      rintro ⟨f, hf, ha⟩
+      rw [mem_image] at hf ha
+      obtain ⟨b, hb, rfl⟩ := hf
+      obtain ⟨_, _, rfl⟩ := ha
+      exact hb
     seqRight_eq := fun s t => by
       rw [seq_def, fmap_def, seqRight_def]
       obtain rfl | hs := s.eq_empty_or_nonempty
-      · rw [if_pos rfl, image_empty, sup_empty, bot_eq_empty]
-      · ext a
-        rw [if_neg hs.ne_empty, mem_sup]
-        refine ⟨fun ha => ⟨id, mem_image_const_self.2 hs, by rwa [image_id]⟩, ?_⟩
-        rintro ⟨f, hf, ha⟩
-        rw [mem_image] at hf ha
-        obtain ⟨b, hb, rfl⟩ := ha
-        obtain ⟨_, _, rfl⟩ := hf
-        exact hb
+      rw [if_pos rfl, image_empty, sup_empty, bot_eq_empty]
+      ext a
+      rw [if_neg hs.ne_empty, mem_sup]
+      refine ⟨fun ha => ⟨id, mem_image_const_self.2 hs, by rwa [image_id]⟩, ?_⟩
+      rintro ⟨f, hf, ha⟩
+      rw [mem_image] at hf ha
+      obtain ⟨b, hb, rfl⟩ := ha
+      obtain ⟨_, _, rfl⟩ := hf
+      exact hb
     pure_seq := fun f s => by simp only [pure_def, seq_def, sup_singleton, fmap_def]
     map_pure := fun f a => image_singleton _ _
     seq_pure := fun s a => sup_singleton'' _ _
@@ -123,10 +123,10 @@ instance lawfulApplicative : LawfulApplicative Finset :=
       simp_rw [seq_def, fmap_def]
       simp only [exists_prop, mem_sup, mem_image]
       constructor
-      · rintro ⟨g, hg, b, ⟨f, hf, a, ha, rfl⟩, rfl⟩
-        exact ⟨g ∘ f, ⟨comp g, ⟨g, hg, rfl⟩, f, hf, rfl⟩, a, ha, rfl⟩
-      · rintro ⟨c, ⟨_, ⟨g, hg, rfl⟩, f, hf, rfl⟩, a, ha, rfl⟩
-        exact ⟨g, hg, f a, ⟨f, hf, a, ha, rfl⟩, rfl⟩ }
+      rintro ⟨g, hg, b, ⟨f, hf, a, ha, rfl⟩, rfl⟩
+      exact ⟨g ∘ f, ⟨comp g, ⟨g, hg, rfl⟩, f, hf, rfl⟩, a, ha, rfl⟩
+      rintro ⟨c, ⟨_, ⟨g, hg, rfl⟩, f, hf, rfl⟩, a, ha, rfl⟩
+      exact ⟨g, hg, f a, ⟨f, hf, a, ha, rfl⟩, rfl⟩ }
 
 instance commApplicative : CommApplicative Finset :=
   { Finset.lawfulApplicative with

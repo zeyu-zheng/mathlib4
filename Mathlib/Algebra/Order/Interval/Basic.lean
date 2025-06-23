@@ -440,13 +440,13 @@ variable [OrderedCommGroup α] {s t : NonemptyInterval α}
 @[to_additive]
 protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pure b ∧ a * b = 1 := by
   refine ⟨fun h => ?_, ?_⟩
-  · rw [NonemptyInterval.ext_iff, Prod.ext_iff] at h
-    have := (mul_le_mul_iff_of_ge s.fst_le_snd t.fst_le_snd).1 (h.2.trans h.1.symm).le
-    refine ⟨s.fst, t.fst, ?_, ?_, h.1⟩ <;> apply NonemptyInterval.ext <;> dsimp [pure]
-    · nth_rw 2 [this.1]
-    · nth_rw 2 [this.2]
-  · rintro ⟨b, c, rfl, rfl, h⟩
-    rw [pure_mul_pure, h, pure_one]
+  rw [NonemptyInterval.ext_iff, Prod.ext_iff] at h
+  have := (mul_le_mul_iff_of_ge s.fst_le_snd t.fst_le_snd).1 (h.2.trans h.1.symm).le
+  refine ⟨s.fst, t.fst, ?_, ?_, h.1⟩ <;> apply NonemptyInterval.ext <;> dsimp [pure]
+  nth_rw 2 [this.1]
+  nth_rw 2 [this.2]
+  rintro ⟨b, c, rfl, rfl, h⟩
+  rw [pure_mul_pure, h, pure_one]
 
 instance subtractionCommMonoid {α : Type u} [OrderedAddCommGroup α] :
     SubtractionCommMonoid (NonemptyInterval α) :=
@@ -491,12 +491,12 @@ variable [OrderedCommGroup α] {s t : Interval α}
 @[to_additive]
 protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = pure a ∧ t = pure b ∧ a * b = 1 := by
   cases s
-  · simp
+  simp
   cases t
-  · simp
-  · simp_rw [← NonemptyInterval.coe_mul_interval, ← NonemptyInterval.coe_one_interval,
-      WithBot.coe_inj, NonemptyInterval.coe_eq_pure]
-    exact NonemptyInterval.mul_eq_one_iff
+  simp
+  simp_rw [← NonemptyInterval.coe_mul_interval, ← NonemptyInterval.coe_one_interval,
+    WithBot.coe_inj, NonemptyInterval.coe_eq_pure]
+  exact NonemptyInterval.mul_eq_one_iff
 
 instance subtractionCommMonoid {α : Type u} [OrderedAddCommGroup α] :
     SubtractionCommMonoid (Interval α) :=
@@ -615,8 +615,8 @@ theorem length_sum_le (f : ι → Interval α) (s : Finset ι) :
     (∑ i ∈ s, f i).length ≤ ∑ i ∈ s, (f i).length := by
   -- Porting note: Old proof was `:= Finset.le_sum_of_subadditive _ length_zero length_add_le _ _`
   apply Finset.le_sum_of_subadditive
-  · exact length_zero
-  · exact length_add_le
+  exact length_zero
+  exact length_add_le
 
 end Interval
 

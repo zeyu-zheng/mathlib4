@@ -38,10 +38,10 @@ lemma isSigmaCompact_empty : IsSigmaCompact (∅ : Set X) :=
 lemma isSigmaCompact_iUnion_of_isCompact [hι : Countable ι] (s : ι → Set X)
     (hcomp : ∀ i, IsCompact (s i)) : IsSigmaCompact (⋃ i, s i) := by
   rcases isEmpty_or_nonempty ι
-  · simp only [iUnion_of_empty, isSigmaCompact_empty]
-  · -- If ι is non-empty, choose a surjection f : ℕ → ι, this yields a map ℕ → Set X.
-    obtain ⟨f, hf⟩ := countable_iff_exists_surjective.mp hι
-    exact ⟨s ∘ f, fun n ↦ hcomp (f n), Function.Surjective.iUnion_comp hf _⟩
+  simp only [iUnion_of_empty, isSigmaCompact_empty]
+  -- If ι is non-empty, choose a surjection f : ℕ → ι, this yields a map ℕ → Set X.
+  obtain ⟨f, hf⟩ := countable_iff_exists_surjective.mp hι
+  exact ⟨s ∘ f, fun n ↦ hcomp (f n), Function.Surjective.iUnion_comp hf _⟩
 
 /-- Countable unions of compact sets are σ-compact. -/
 lemma isSigmaCompact_sUnion_of_isCompact {S : Set (Set X)} (hc : Set.Countable S)
@@ -102,21 +102,21 @@ lemma IsSigmaCompact.image {f : X → Y} (hf : Continuous f) {s : Set X} (hs : I
 lemma Inducing.isSigmaCompact_iff {f : X → Y} {s : Set X}
     (hf : Inducing f) : IsSigmaCompact s ↔ IsSigmaCompact (f '' s) := by
   constructor
-  · exact fun h ↦ h.image hf.continuous
-  · rintro ⟨L, hcomp, hcov⟩
-    -- Suppose f(s) is σ-compact; we want to show s is σ-compact.
-    -- Write f(s) as a union of compact sets L n, so s = ⋃ K n with K n := f⁻¹(L n) ∩ s.
-    -- Since f is inducing, each K n is compact iff L n is.
-    refine ⟨fun n ↦ f ⁻¹' (L n) ∩ s, ?_, ?_⟩
-    · intro n
-      have : f '' (f ⁻¹' (L n) ∩ s) = L n
-      rw [image_preimage_inter, inter_eq_left.mpr]
-      exact (subset_iUnion _ n).trans hcov.le
-      apply hf.isCompact_iff.mpr (this.symm ▸ (hcomp n))
-    · calc ⋃ n, f ⁻¹' L n ∩ s
-        _ = f ⁻¹' (⋃ n, L n) ∩ s  := by rw [preimage_iUnion, iUnion_inter]
-        _ = f ⁻¹' (f '' s) ∩ s := by rw [hcov]
-        _ = s := inter_eq_right.mpr (subset_preimage_image _ _)
+  exact fun h ↦ h.image hf.continuous
+  rintro ⟨L, hcomp, hcov⟩
+  -- Suppose f(s) is σ-compact; we want to show s is σ-compact.
+  -- Write f(s) as a union of compact sets L n, so s = ⋃ K n with K n := f⁻¹(L n) ∩ s.
+  -- Since f is inducing, each K n is compact iff L n is.
+  refine ⟨fun n ↦ f ⁻¹' (L n) ∩ s, ?_, ?_⟩
+  intro n
+  have : f '' (f ⁻¹' (L n) ∩ s) = L n
+  rw [image_preimage_inter, inter_eq_left.mpr]
+  exact (subset_iUnion _ n).trans hcov.le
+  apply hf.isCompact_iff.mpr (this.symm ▸ (hcomp n))
+  calc ⋃ n, f ⁻¹' L n ∩ s
+    _ = f ⁻¹' (⋃ n, L n) ∩ s  := by rw [preimage_iUnion, iUnion_inter]
+    _ = f ⁻¹' (f '' s) ∩ s := by rw [hcov]
+    _ = s := inter_eq_right.mpr (subset_preimage_image _ _)
 
 /-- If `f : X → Y` is an `Embedding`, the image `f '' s` of a set `s` is σ-compact
   if and only `s` is σ-compact. -/
@@ -224,8 +224,8 @@ instance [Finite ι] {X : ι → Type*} [∀ i, TopologicalSpace (X i)] [∀ i, 
   refine ⟨⟨fun n => Set.pi univ fun i => compactCovering (X i) n,
     fun n => isCompact_univ_pi fun i => isCompact_compactCovering (X i) _, ?_⟩⟩
   rw [iUnion_univ_pi_of_monotone]
-  · simp only [iUnion_compactCovering, pi_univ]
-  · exact fun i => compactCovering_subset (X i)
+  simp only [iUnion_compactCovering, pi_univ]
+  exact fun i => compactCovering_subset (X i)
 
 instance [SigmaCompactSpace Y] : SigmaCompactSpace (X ⊕ Y) :=
   ⟨⟨fun n => Sum.inl '' compactCovering X n ∪ Sum.inr '' compactCovering Y n, fun n =>
@@ -237,16 +237,16 @@ instance [SigmaCompactSpace Y] : SigmaCompactSpace (X ⊕ Y) :=
 instance [Countable ι] {X : ι → Type*} [∀ i, TopologicalSpace (X i)]
     [∀ i, SigmaCompactSpace (X i)] : SigmaCompactSpace (Σi, X i) := by
   cases isEmpty_or_nonempty ι
-  · infer_instance
-  · rcases exists_surjective_nat ι with ⟨f, hf⟩
-    refine ⟨⟨fun n => ⋃ k ≤ n, Sigma.mk (f k) '' compactCovering (X (f k)) n, fun n => ?_, ?_⟩⟩
-    · refine (finite_le_nat _).isCompact_biUnion fun k _ => ?_
-      exact (isCompact_compactCovering _ _).image continuous_sigmaMk
-    · simp only [iUnion_eq_univ_iff, Sigma.forall, mem_iUnion, hf.forall]
-      intro k y
-      rcases exists_mem_compactCovering y with ⟨n, hn⟩
-      refine ⟨max k n, k, le_max_left _ _, mem_image_of_mem _ ?_⟩
-      exact compactCovering_subset _ (le_max_right _ _) hn
+  infer_instance
+  rcases exists_surjective_nat ι with ⟨f, hf⟩
+  refine ⟨⟨fun n => ⋃ k ≤ n, Sigma.mk (f k) '' compactCovering (X (f k)) n, fun n => ?_, ?_⟩⟩
+  refine (finite_le_nat _).isCompact_biUnion fun k _ => ?_
+  exact (isCompact_compactCovering _ _).image continuous_sigmaMk
+  simp only [iUnion_eq_univ_iff, Sigma.forall, mem_iUnion, hf.forall]
+  intro k y
+  rcases exists_mem_compactCovering y with ⟨n, hn⟩
+  refine ⟨max k n, k, le_max_left _ _, mem_image_of_mem _ ?_⟩
+  exact compactCovering_subset _ (le_max_right _ _) hn
 
 protected theorem ClosedEmbedding.sigmaCompactSpace {e : Y → X} (he : ClosedEmbedding e) :
     SigmaCompactSpace Y :=
@@ -362,10 +362,10 @@ theorem exists_mem (x : X) : ∃ n, x ∈ K n :=
 theorem exists_superset_of_isCompact {s : Set X} (hs : IsCompact s) : ∃ n, s ⊆ K n := by
   suffices ∃ n, s ⊆ interior (K n) from this.imp fun _ ↦ (Subset.trans · interior_subset)
   refine hs.elim_directed_cover (interior ∘ K) (fun _ ↦ isOpen_interior) ?_ ?_
-  · intro x _
-    rcases K.exists_mem x with ⟨k, hk⟩
-    exact mem_iUnion.2 ⟨k + 1, K.subset_interior_succ _ hk⟩
-  · exact Monotone.directed_le fun _ _ h ↦ interior_mono <| K.subset h
+  intro x _
+  rcases K.exists_mem x with ⟨k, hk⟩
+  exact mem_iUnion.2 ⟨k + 1, K.subset_interior_succ _ hk⟩
+  exact Monotone.directed_le fun _ _ h ↦ interior_mono <| K.subset h
 
 /-- The minimal `n` such that `x ∈ K n`. -/
 protected noncomputable def find (x : X) : ℕ :=

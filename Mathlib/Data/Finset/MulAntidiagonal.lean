@@ -96,12 +96,12 @@ theorem mulAntidiagonal_min_mul_min {α} [LinearOrderedCancelCommMonoid α] {s t
   ext ⟨a, b⟩
   simp only [mem_mulAntidiagonal, mem_singleton, Prod.ext_iff]
   constructor
-  · rintro ⟨has, hat, hst⟩
-    obtain rfl :=
-      (hs.min_le hns has).eq_of_not_lt fun hlt =>
-        (mul_lt_mul_of_lt_of_le hlt <| ht.min_le hnt hat).ne' hst
-    exact ⟨rfl, mul_left_cancel hst⟩
-  · rintro ⟨rfl, rfl⟩
-    exact ⟨hs.min_mem _, ht.min_mem _, rfl⟩
+  rintro ⟨has, hat, hst⟩
+  obtain rfl :=
+    (hs.min_le hns has).eq_of_not_lt fun hlt =>
+      (mul_lt_mul_of_lt_of_le hlt <| ht.min_le hnt hat).ne' hst
+  exact ⟨rfl, mul_left_cancel hst⟩
+  rintro ⟨rfl, rfl⟩
+  exact ⟨hs.min_mem _, ht.min_mem _, rfl⟩
 
 end Finset

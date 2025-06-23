@@ -177,10 +177,10 @@ theorem mem_iSup_of_directed {ι} [hι : Nonempty ι] {S : ι → Submonoid M} (
   suffices x ∈ closure (⋃ i, (S i : Set M)) → ∃ i, x ∈ S i by
     simpa only [closure_iUnion, closure_eq (S _)] using this
   refine fun hx ↦ closure_induction hx (fun _ ↦ mem_iUnion.1) ?_ ?_
-  · exact hι.elim fun i ↦ ⟨i, (S i).one_mem⟩
-  · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
-    rcases hS i j with ⟨k, hki, hkj⟩
-    exact ⟨k, (S k).mul_mem (hki hi) (hkj hj)⟩
+  exact hι.elim fun i ↦ ⟨i, (S i).one_mem⟩
+  rintro x y ⟨i, hi⟩ ⟨j, hj⟩
+  rcases hS i j with ⟨k, hki, hkj⟩
+  exact ⟨k, (S k).mul_mem (hki hi) (hkj hj)⟩
 
 @[to_additive]
 theorem coe_iSup_of_directed {ι} [Nonempty ι] {S : ι → Submonoid M} (hS : Directed (· ≤ ·) S) :
@@ -246,10 +246,10 @@ theorem iSup_induction' {ι : Sort*} (S : ι → Submonoid M) {C : ∀ x, (x ∈
     (hx : x ∈ ⨆ i, S i) : C x hx := by
   refine Exists.elim (?_ : ∃ Hx, C x Hx) fun (hx : x ∈ ⨆ i, S i) (hc : C x hx) => hc
   refine @iSup_induction _ _ ι S (fun m => ∃ hm, C m hm) _ hx (fun i x hx => ?_) ?_ fun x y => ?_
-  · exact ⟨_, mem _ _ hx⟩
-  · exact ⟨_, one⟩
-  · rintro ⟨_, Cx⟩ ⟨_, Cy⟩
-    exact ⟨_, mul _ _ _ _ Cx Cy⟩
+  exact ⟨_, mem _ _ hx⟩
+  exact ⟨_, one⟩
+  rintro ⟨_, Cx⟩ ⟨_, Cy⟩
+  exact ⟨_, mul _ _ _ _ Cx Cy⟩
 
 end Submonoid
 
@@ -358,10 +358,10 @@ theorem closure_induction_left {s : Set M} {p : (m : M) → m ∈ closure s → 
   simp_rw [closure_eq_mrange] at h
   obtain ⟨l, rfl⟩ := h
   induction' l with x y ih
-  · exact one
-  · simp only [map_mul, FreeMonoid.lift_eval_of]
-    refine mul_left _ x.prop (FreeMonoid.lift Subtype.val y) _ (ih ?_)
-    simp only [closure_eq_mrange, mem_mrange, exists_apply_eq_apply]
+  exact one
+  simp only [map_mul, FreeMonoid.lift_eval_of]
+  refine mul_left _ x.prop (FreeMonoid.lift Subtype.val y) _ (ih ?_)
+  simp only [closure_eq_mrange, mem_mrange, exists_apply_eq_apply]
 
 @[to_additive (attr := elab_as_elim)]
 theorem induction_of_closure_eq_top_left {s : Set M} {p : M → Prop} (hs : closure s = ⊤) (x : M)
@@ -517,22 +517,22 @@ theorem IsScalarTower.of_mclosure_eq_top {N α} [Monoid M] [MulAction M N] [SMul
     {s : Set M} (htop : Submonoid.closure s = ⊤)
     (hs : ∀ x ∈ s, ∀ (y : N) (z : α), (x • y) • z = x • y • z) : IsScalarTower M N α := by
   refine ⟨fun x => Submonoid.induction_of_closure_eq_top_left htop x ?_ ?_⟩
-  · intro y z
-    rw [one_smul, one_smul]
-  · clear x
-    intro x hx x' hx' y z
-    rw [mul_smul, mul_smul, hs x hx, hx']
+  intro y z
+  rw [one_smul, one_smul]
+  clear x
+  intro x hx x' hx' y z
+  rw [mul_smul, mul_smul, hs x hx, hx']
 
 @[to_additive]
 theorem SMulCommClass.of_mclosure_eq_top {N α} [Monoid M] [SMul N α] [MulAction M α] {s : Set M}
     (htop : Submonoid.closure s = ⊤) (hs : ∀ x ∈ s, ∀ (y : N) (z : α), x • y • z = y • x • z) :
     SMulCommClass M N α := by
   refine ⟨fun x => Submonoid.induction_of_closure_eq_top_left htop x ?_ ?_⟩
-  · intro y z
-    rw [one_smul, one_smul]
-  · clear x
-    intro x hx x' hx' y z
-    rw [mul_smul, mul_smul, hx', hs x hx]
+  intro y z
+  rw [one_smul, one_smul]
+  clear x
+  intro x hx x' hx' y z
+  rw [mul_smul, mul_smul, hx', hs x hx]
 
 namespace Submonoid
 
@@ -614,10 +614,10 @@ theorem mul_right_mem_add_closure (ha : a ∈ AddSubmonoid.closure (S : Set R)) 
   revert b
   apply @AddSubmonoid.closure_induction _ _ _
     (fun z => ∀ (b : R), b ∈ S → z * b ∈ AddSubmonoid.closure S) _ ha <;> clear ha a
-  · exact fun r hr b hb => AddSubmonoid.mem_closure.mpr fun y hy => hy (mul_mem hr hb)
-  · exact fun b _ => by simp only [zero_mul, (AddSubmonoid.closure (S : Set R)).zero_mem]
-  · simp_rw [add_mul]
-    exact fun r s hr hs b hb => (AddSubmonoid.closure (S : Set R)).add_mem (hr _ hb) (hs _ hb)
+  exact fun r hr b hb => AddSubmonoid.mem_closure.mpr fun y hy => hy (mul_mem hr hb)
+  exact fun b _ => by simp only [zero_mul, (AddSubmonoid.closure (S : Set R)).zero_mem]
+  simp_rw [add_mul]
+  exact fun r s hr hs b hb => (AddSubmonoid.closure (S : Set R)).add_mem (hr _ hb) (hs _ hb)
 
 /-- The product of two elements of the additive closure of a submonoid `M` is an element of the
 additive closure of `M`. -/
@@ -627,10 +627,10 @@ theorem mul_mem_add_closure (ha : a ∈ AddSubmonoid.closure (S : Set R))
   apply @AddSubmonoid.closure_induction _ _ _
     (fun z => ∀ {a : R}, a ∈ AddSubmonoid.closure ↑S → a * z ∈ AddSubmonoid.closure ↑S)
       _ hb <;> clear hb b
-  · exact fun r hr b hb => MulMemClass.mul_right_mem_add_closure hb hr
-  · exact fun _ => by simp only [mul_zero, (AddSubmonoid.closure (S : Set R)).zero_mem]
-  · simp_rw [mul_add]
-    exact fun r s hr hs b hb => (AddSubmonoid.closure (S : Set R)).add_mem (hr hb) (hs hb)
+  exact fun r hr b hb => MulMemClass.mul_right_mem_add_closure hb hr
+  exact fun _ => by simp only [mul_zero, (AddSubmonoid.closure (S : Set R)).zero_mem]
+  simp_rw [mul_add]
+  exact fun r s hr hs b hb => (AddSubmonoid.closure (S : Set R)).add_mem (hr hb) (hs hb)
 
 /-- The product of an element of `S` and an element of the additive closure of a multiplicative
 submonoid `S` is contained in the additive closure of `S`. -/
@@ -660,12 +660,12 @@ theorem ofMul_image_powers_eq_multiples_ofMul [Monoid M] {x : M} :
     Additive.ofMul '' (Submonoid.powers x : Set M) = AddSubmonoid.multiples (Additive.ofMul x) := by
   ext
   constructor
-  · rintro ⟨y, ⟨n, hy1⟩, hy2⟩
-    use n
-    simpa [← ofMul_pow, hy1]
-  · rintro ⟨n, hn⟩
-    refine ⟨x ^ n, ⟨n, rfl⟩, ?_⟩
-    rwa [ofMul_pow]
+  rintro ⟨y, ⟨n, hy1⟩, hy2⟩
+  use n
+  simpa [← ofMul_pow, hy1]
+  rintro ⟨n, hn⟩
+  refine ⟨x ^ n, ⟨n, rfl⟩, ?_⟩
+  rwa [ofMul_pow]
 
 theorem ofAdd_image_multiples_eq_powers_ofAdd [AddMonoid A] {x : A} :
     Multiplicative.ofAdd '' (AddSubmonoid.multiples x : Set A) =

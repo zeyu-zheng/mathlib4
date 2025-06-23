@@ -25,21 +25,21 @@ variable {n : Type*} [DecidableEq n] [Fintype n]
 theorem FiniteField.Matrix.charpoly_pow_card {K : Type*} [Field K] [Fintype K] (M : Matrix n n K) :
     (M ^ Fintype.card K).charpoly = M.charpoly := by
   cases (isEmpty_or_nonempty n).symm
-  · cases' CharP.exists K with p hp; letI := hp
-    rcases FiniteField.card K p with ⟨⟨k, kpos⟩, ⟨hp, hk⟩⟩
-    haveI : Fact p.Prime := ⟨hp⟩
-    dsimp at hk; rw [hk]
-    apply (frobenius_inj K[X] p).iterate k
-    repeat' rw [iterate_frobenius (R := K[X])]; rw [← hk]
-    rw [← FiniteField.expand_card]
-    unfold charpoly
-    rw [AlgHom.map_det, ← coe_detMonoidHom, ← (detMonoidHom : Matrix n n K[X] →* K[X]).map_pow]
-    apply congr_arg det
-    refine matPolyEquiv.injective ?_
-    rw [map_pow, matPolyEquiv_charmatrix, hk, sub_pow_char_pow_of_commute, ← C_pow]
-    · exact (id (matPolyEquiv_eq_X_pow_sub_C (p ^ k) M) : _)
-    · exact (C M).commute_X
-  · exact congr_arg _ (Subsingleton.elim _ _)
+  cases' CharP.exists K with p hp; letI := hp
+  rcases FiniteField.card K p with ⟨⟨k, kpos⟩, ⟨hp, hk⟩⟩
+  haveI : Fact p.Prime := ⟨hp⟩
+  dsimp at hk; rw [hk]
+  apply (frobenius_inj K[X] p).iterate k
+  repeat' rw [iterate_frobenius (R := K[X])]; rw [← hk]
+  rw [← FiniteField.expand_card]
+  unfold charpoly
+  rw [AlgHom.map_det, ← coe_detMonoidHom, ← (detMonoidHom : Matrix n n K[X] →* K[X]).map_pow]
+  apply congr_arg det
+  refine matPolyEquiv.injective ?_
+  rw [map_pow, matPolyEquiv_charmatrix, hk, sub_pow_char_pow_of_commute, ← C_pow]
+  exact (id (matPolyEquiv_eq_X_pow_sub_C (p ^ k) M) : _)
+  exact (C M).commute_X
+  exact congr_arg _ (Subsingleton.elim _ _)
 
 @[simp]
 theorem ZMod.charpoly_pow_card {p : ℕ} [Fact p.Prime] (M : Matrix n n (ZMod p)) :
@@ -50,7 +50,7 @@ theorem ZMod.charpoly_pow_card {p : ℕ} [Fact p.Prime] (M : Matrix n n (ZMod p)
 theorem FiniteField.trace_pow_card {K : Type*} [Field K] [Fintype K] (M : Matrix n n K) :
     trace (M ^ Fintype.card K) = trace M ^ Fintype.card K := by
   cases isEmpty_or_nonempty n
-  · simp [Matrix.trace]
+  simp [Matrix.trace]
   rw [Matrix.trace_eq_neg_charpoly_coeff, Matrix.trace_eq_neg_charpoly_coeff,
     FiniteField.Matrix.charpoly_pow_card, FiniteField.pow_card]
 

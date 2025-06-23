@@ -126,13 +126,13 @@ variable {s : Finset ι} {n : μ} {f : ι → μ}
   induction' Fintype.truncEquivFinOfCardEq (Fintype.card_coe s) using Trunc.ind with e
   simp only [Trunc.lift_mk, mem_map, mem_finAntidiagonal, Embedding.coeFn_mk]
   constructor
-  · rintro ⟨f, ⟨hf, rfl⟩, rfl⟩
-    rw [sum_dite_of_true fun _ ↦ id]
-    exact ⟨Fintype.sum_equiv e _ _ (by simp), by simp (config := { contextual := true })⟩
-  · rintro ⟨rfl, hf⟩
-    refine ⟨f ∘ (↑) ∘ e.symm, ?_, by ext i; have := not_imp_comm.1 (hf i); aesop⟩
-    rw [← sum_attach s]
-    exact Fintype.sum_equiv e.symm _ _ (by simp)
+  rintro ⟨f, ⟨hf, rfl⟩, rfl⟩
+  rw [sum_dite_of_true fun _ ↦ id]
+  exact ⟨Fintype.sum_equiv e _ _ (by simp), by simp (config := { contextual := true })⟩
+  rintro ⟨rfl, hf⟩
+  refine ⟨f ∘ (↑) ∘ e.symm, ?_, by ext i; have := not_imp_comm.1 (hf i); aesop⟩
+  rw [← sum_attach s]
+  exact Fintype.sum_equiv e.symm _ _ (by simp)
 
 @[simp] lemma piAntidiag_empty_zero : piAntidiag (∅ : Finset ι) (0 : μ) = {0} := by
   ext; simp [Fintype.sum_eq_zero_iff_of_nonneg, funext_iff, not_imp_comm, ← forall_and]
@@ -173,13 +173,13 @@ lemma piAntidiag_cons (hi : i ∉ s)  (n : μ) :
   simp only [mem_piAntidiag, sum_cons, ne_eq, mem_cons, mem_disjiUnion, mem_antidiagonal, mem_map,
     addLeftEmbedding_apply, Prod.exists]
   constructor
-  · rintro ⟨hn, hf⟩
-    refine ⟨_, _, hn, update f i 0, ⟨sum_update_of_not_mem hi _ _, fun j ↦ ?_⟩, by aesop⟩
-    have := fun h₁ h₂ ↦ (hf j h₁).resolve_left h₂
-    aesop (add simp [update])
-  · rintro ⟨a, _, hn, g, ⟨rfl, hg⟩, rfl⟩
-    have := hg i
-    aesop (add simp [sum_add_distrib])
+  rintro ⟨hn, hf⟩
+  refine ⟨_, _, hn, update f i 0, ⟨sum_update_of_not_mem hi _ _, fun j ↦ ?_⟩, by aesop⟩
+  have := fun h₁ h₂ ↦ (hf j h₁).resolve_left h₂
+  aesop (add simp [update])
+  rintro ⟨a, _, hn, g, ⟨rfl, hg⟩, rfl⟩
+  have := hg i
+  aesop (add simp [sum_add_distrib])
 
 lemma piAntidiag_insert [DecidableEq (ι → μ)] (hi : i ∉ s) (n : μ) :
     piAntidiag (insert i s) n = (antidiagonal n).biUnion fun p : μ × μ ↦ (piAntidiag s p.snd).image
@@ -214,14 +214,14 @@ lemma nsmul_piAntidiag [DecidableEq (ι → ℕ)] (s : Finset ι) (m : ℕ) {n :
   simp only [mem_smul_finset, mem_filter, mem_piAntidiag, Function.Embedding.coeFn_mk, exists_prop,
     and_assoc]
   constructor
-  · rintro ⟨f, rfl, hf, rfl⟩
-    simpa [← mul_sum, hn] using hf
+  rintro ⟨f, rfl, hf, rfl⟩
+  simpa [← mul_sum, hn] using hf
   rintro ⟨hfsum, hfsup, hfdvd⟩
   have (i) : n ∣ f i
   by_cases hi : i ∈ s
-  · exact hfdvd _ hi
-  · rw [not_imp_comm.1 (hfsup _) hi]
-    exact dvd_zero _
+  exact hfdvd _ hi
+  rw [not_imp_comm.1 (hfsup _) hi]
+  exact dvd_zero _
   refine ⟨fun i ↦ f i / n, ?_⟩
   simpa [Nat.sum_div, Nat.div_ne_zero_iff_of_dvd, funext_iff, Nat.mul_div_cancel', ← Nat.sum_div, *]
 
@@ -253,11 +253,11 @@ lemma map_sym_eq_piAntidiag [DecidableEq ι] (s : Finset ι) (n : ℕ) :
   simp only [Sym.val_eq_coe, mem_map, mem_sym_iff, Embedding.coeFn_mk, funext_iff, Sym.exists,
     Sym.mem_mk, Sym.coe_mk, exists_and_left, exists_prop, mem_piAntidiag, ne_eq]
   constructor
-  · rintro ⟨m, hm, rfl, hf⟩
-    simpa [← hf, Multiset.sum_count_eq_card hm]
-  · rintro ⟨rfl, hf⟩
-    refine ⟨∑ a ∈ s, f a • {a}, ?_, ?_⟩
-    · simp (config := { contextual := true })
-    · simpa [Multiset.count_sum', Multiset.count_singleton, not_imp_comm, eq_comm (a := 0)] using hf
+  rintro ⟨m, hm, rfl, hf⟩
+  simpa [← hf, Multiset.sum_count_eq_card hm]
+  rintro ⟨rfl, hf⟩
+  refine ⟨∑ a ∈ s, f a • {a}, ?_, ?_⟩
+  simp (config := { contextual := true })
+  simpa [Multiset.count_sum', Multiset.count_singleton, not_imp_comm, eq_comm (a := 0)] using hf
 
 end Finset

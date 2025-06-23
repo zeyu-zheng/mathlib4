@@ -112,12 +112,12 @@ open LinearMap in
 theorem lift_rank_add_lift_rank_le_rank_prod [Nontrivial R] :
     lift.{v'} (Module.rank R M) + lift.{v} (Module.rank R M') ≤ Module.rank R (M × M') := by
   convert rank_quotient_add_rank_le (ker <| LinearMap.fst R M M')
-  · refine Eq.trans ?_ (lift_id'.{v, v'} _)
-    rw [(quotKerEquivRange _).lift_rank_eq,
-        rank_range_of_surjective _ fst_surjective, lift_umax.{v, v'}]
-  · refine Eq.trans ?_ (lift_id'.{v', v} _)
-    rw [ker_fst, ← (LinearEquiv.ofInjective _ <| inr_injective (M := M) (M₂ := M')).lift_rank_eq,
-        lift_umax.{v', v}]
+  refine Eq.trans ?_ (lift_id'.{v, v'} _)
+  rw [(quotKerEquivRange _).lift_rank_eq,
+      rank_range_of_surjective _ fst_surjective, lift_umax.{v, v'}]
+  refine Eq.trans ?_ (lift_id'.{v', v} _)
+  rw [ker_fst, ← (LinearEquiv.ofInjective _ <| inr_injective (M := M) (M₂ := M')).lift_rank_eq,
+      lift_umax.{v', v}]
 
 theorem rank_add_rank_le_rank_prod [Nontrivial R] :
     Module.rank R M + Module.rank R M₁ ≤ Module.rank R (M × M₁) := by

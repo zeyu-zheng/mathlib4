@@ -193,8 +193,8 @@ theorem comap_mono {f : F} {q q' : Submodule R₂ M₂} : q ≤ q' → comap f q
 theorem le_comap_pow_of_le_comap (p : Submodule R M) {f : M →ₗ[R] M} (h : p ≤ p.comap f) (k : ℕ) :
     p ≤ p.comap (f ^ k) := by
   induction' k with k ih
-  · simp [LinearMap.one_eq_id]
-  · simp [LinearMap.iterate_succ, comap_comp, h.trans (comap_mono ih)]
+  simp [LinearMap.one_eq_id]
+  simp [LinearMap.iterate_succ, comap_comp, h.trans (comap_mono ih)]
 
 section
 
@@ -480,10 +480,10 @@ variable (p : Submodule R M) (q : Submodule R₂ M₂)
 theorem mem_map_equiv {e : M ≃ₛₗ[τ₁₂] M₂} {x : M₂} :
     x ∈ p.map (e : M →ₛₗ[τ₁₂] M₂) ↔ e.symm x ∈ p := by
   rw [Submodule.mem_map]; constructor
-  · rintro ⟨y, hy, hx⟩
-    simp [← hx, hy]
-  · intro hx
-    exact ⟨e.symm x, hx, by simp⟩
+  rintro ⟨y, hy, hx⟩
+  simp [← hx, hy]
+  intro hx
+  exact ⟨e.symm x, hx, by simp⟩
 
 theorem map_equiv_eq_comap_symm (e : M ≃ₛₗ[τ₁₂] M₂) (K : Submodule R M) :
     K.map (e : M →ₛₗ[τ₁₂] M₂) = K.comap (e.symm : M₂ →ₛₗ[τ₂₁] M) :=
@@ -498,12 +498,12 @@ variable {p}
 theorem map_symm_eq_iff (e : M ≃ₛₗ[τ₁₂] M₂) {K : Submodule R₂ M₂} :
     K.map e.symm = p ↔ p.map e = K := by
   constructor <;> rintro rfl
-  · calc
-      map e (map e.symm K) = comap e.symm (map e.symm K) := map_equiv_eq_comap_symm _ _
-      _ = K := comap_map_eq_of_injective e.symm.injective _
-  · calc
-      map e.symm (map e p) = comap e (map e p) := (comap_equiv_eq_map_symm _ _).symm
-      _ = p := comap_map_eq_of_injective e.injective _
+  calc
+    map e (map e.symm K) = comap e.symm (map e.symm K) := map_equiv_eq_comap_symm _ _
+    _ = K := comap_map_eq_of_injective e.symm.injective _
+  calc
+    map e.symm (map e p) = comap e (map e p) := (comap_equiv_eq_map_symm _ _).symm
+    _ = p := comap_map_eq_of_injective e.injective _
 
 theorem orderIsoMapComap_apply' (e : M ≃ₛₗ[τ₁₂] M₂) (p : Submodule R M) :
     orderIsoMapComap e p = comap e.symm p :=

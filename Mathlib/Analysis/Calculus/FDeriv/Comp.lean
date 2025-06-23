@@ -193,10 +193,10 @@ protected theorem HasFDerivAtFilter.iterate {f : E → E} {f' : E →L[𝕜] E}
     (hf : HasFDerivAtFilter f f' x L) (hL : Tendsto f L L) (hx : f x = x) (n : ℕ) :
     HasFDerivAtFilter f^[n] (f' ^ n) x L := by
   induction' n with n ihn
-  · exact hasFDerivAtFilter_id x L
-  · rw [Function.iterate_succ, pow_succ]
-    rw [← hx] at ihn
-    exact ihn.comp x hf hL
+  exact hasFDerivAtFilter_id x L
+  rw [Function.iterate_succ, pow_succ]
+  rw [← hx] at ihn
+  exact ihn.comp x hf hL
 
 @[fun_prop]
 protected theorem HasFDerivAt.iterate {f : E → E} {f' : E →L[𝕜] E} (hf : HasFDerivAt f f' x)
@@ -220,10 +220,10 @@ protected theorem HasStrictFDerivAt.iterate {f : E → E} {f' : E →L[𝕜] E}
     (hf : HasStrictFDerivAt f f' x) (hx : f x = x) (n : ℕ) :
     HasStrictFDerivAt f^[n] (f' ^ n) x := by
   induction' n with n ihn
-  · exact hasStrictFDerivAt_id x
-  · rw [Function.iterate_succ, pow_succ]
-    rw [← hx] at ihn
-    exact ihn.comp x hf
+  exact hasStrictFDerivAt_id x
+  rw [Function.iterate_succ, pow_succ]
+  rw [← hx] at ihn
+  exact ihn.comp x hf
 
 @[fun_prop]
 protected theorem DifferentiableAt.iterate {f : E → E} (hf : DifferentiableAt 𝕜 f x) (hx : f x = x)

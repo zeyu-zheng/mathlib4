@@ -115,15 +115,15 @@ theorem encodePosNum_nonempty (n : PosNum) : encodePosNum n ≠ [] :=
 theorem decode_encodePosNum : ∀ n, decodePosNum (encodePosNum n) = n := by
   intro n
   induction' n with m hm m hm <;> unfold encodePosNum decodePosNum
-  · rfl
-  · rw [hm]
-    exact if_neg (encodePosNum_nonempty m)
-  · exact congr_arg PosNum.bit0 hm
+  rfl
+  rw [hm]
+  exact if_neg (encodePosNum_nonempty m)
+  exact congr_arg PosNum.bit0 hm
 
 theorem decode_encodeNum : ∀ n, decodeNum (encodeNum n) = n := by
   intro n
   cases' n with n <;> unfold encodeNum decodeNum
-  · rfl
+  rfl
   rw [decode_encodePosNum n]
   rw [PosNum.cast_to_num]
   exact if_neg (encodePosNum_nonempty n)

@@ -605,10 +605,10 @@ theorem map_perm [DecidableEq ι] [Fintype ι] (v : ι → M) (σ : Equiv.Perm �
     g (v ∘ σ) = Equiv.Perm.sign σ • g v := by
   -- Porting note: `apply` → `induction'`
   induction' σ using Equiv.Perm.swap_induction_on' with s x y hxy hI
-  · simp
-  · -- Porting note: `← Function.comp.assoc` & `-Equiv.Perm.sign_swap'` are required.
-    simpa [← Function.comp.assoc, g.map_swap (v ∘ s) hxy,
-      Equiv.Perm.sign_swap hxy, -Equiv.Perm.sign_swap'] using hI
+  simp
+  -- Porting note: `← Function.comp.assoc` & `-Equiv.Perm.sign_swap'` are required.
+  simpa [← Function.comp.assoc, g.map_swap (v ∘ s) hxy,
+    Equiv.Perm.sign_swap hxy, -Equiv.Perm.sign_swap'] using hI
 
 theorem map_congr_perm [DecidableEq ι] [Fintype ι] (σ : Equiv.Perm ι) :
     g v = Equiv.Perm.sign σ • g (v ∘ σ) := by
@@ -843,10 +843,10 @@ theorem Basis.ext_alternating {f g : N₁ [⋀^ι]→ₗ[R'] N₂} (e : Basis ι
     f = g := by
     refine AlternatingMap.coe_multilinearMap_injective (Basis.ext_multilinear e fun v => ?_)
     by_cases hi : Function.Injective v
-    · exact h v hi
-    · have : ¬Function.Injective fun i => e (v i) := hi.imp Function.Injective.of_comp
-      rw [coe_multilinearMap, coe_multilinearMap, f.map_eq_zero_of_not_injective _ this,
-        g.map_eq_zero_of_not_injective _ this]
+    exact h v hi
+    have : ¬Function.Injective fun i => e (v i) := hi.imp Function.Injective.of_comp
+    rw [coe_multilinearMap, coe_multilinearMap, f.map_eq_zero_of_not_injective _ this,
+      g.map_eq_zero_of_not_injective _ this]
 
 end Basis
 
@@ -920,8 +920,8 @@ theorem curryLeft_compLinearMap {n : ℕ} (g : M₂'' →ₗ[R'] M'')
     (f.compLinearMap g).curryLeft m = (f.curryLeft (g m)).compLinearMap g :=
   ext fun v => congr_arg f <| funext <| by
     refine Fin.cases ?_ ?_
-    · rfl
-    · simp
+    rfl
+    simp
 
 /-- The space of constant maps is equivalent to the space of maps that are alternating with respect
 to an empty family. -/

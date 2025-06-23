@@ -58,7 +58,7 @@ theorem bitIndices_bit_false (n : ℕ) :
 
 @[simp] theorem bitIndices_sorted {n : ℕ} : n.bitIndices.Sorted (· < ·) := by
   induction' n using binaryRec with b n hs
-  · simp
+  simp
   suffices List.Pairwise (fun a b ↦ a < b) n.bitIndices by
     cases b <;> simpa [List.Sorted, bit_false, bit_true, List.pairwise_map]
   exact List.Pairwise.imp (by simp) hs
@@ -66,7 +66,7 @@ theorem bitIndices_bit_false (n : ℕ) :
 @[simp] theorem bitIndices_two_pow_mul (k n : ℕ) :
     bitIndices (2^k * n) = (bitIndices n).map (· + k) := by
   induction' k with k ih
-  · simp
+  simp
   rw [add_comm, pow_add, pow_one, mul_assoc, bitIndices_two_mul, ih, List.map_map, comp_add_right]
   simp [add_comm (a := 1)]
 
@@ -75,11 +75,11 @@ theorem bitIndices_bit_false (n : ℕ) :
 
 @[simp] theorem twoPowSum_bitIndices (n : ℕ) : (n.bitIndices.map (fun i ↦ 2 ^ i)).sum = n := by
   induction' n using binaryRec with b n hs
-  · simp
+  simp
   have hrw : (fun i ↦ 2^i) ∘ (fun x ↦ x+1) = fun i ↦ 2 * 2 ^ i
   ext i; simp [pow_add, mul_comm]
   cases b
-  · simpa [hrw, List.sum_map_mul_left]
+  simpa [hrw, List.sum_map_mul_left]
   simp [hrw, List.sum_map_mul_left, hs, add_comm (a := 1)]
 
 /-- Together with `Nat.twoPowSum_bitIndices`, this implies a bijection between `ℕ` and `Finset ℕ`.
@@ -87,15 +87,15 @@ See `Finset.equivBitIndices` for this bijection. -/
 theorem bitIndices_twoPowsum {L : List ℕ} (hL : List.Sorted (· < ·) L) :
     (L.map (fun i ↦ 2^i)).sum.bitIndices = L := by
   cases' L with a L
-  · simp
+  simp
   obtain ⟨haL, hL⟩ := sorted_cons.1 hL
   simp_rw [Nat.lt_iff_add_one_le] at haL
   have h' : ∃ (L₀ : List ℕ), L₀.Sorted (· < ·) ∧ L = L₀.map (· + a + 1)
   refine ⟨L.map (· - (a+1)), ?_, ?_⟩
-  · rwa [Sorted, pairwise_map, Pairwise.and_mem,
-      Pairwise.iff (S := fun x y ↦ x ∈ L ∧ y ∈ L ∧ x < y), ← Pairwise.and_mem]
-    simp only [and_congr_right_iff]
-    exact fun x y hx _ ↦ by rw [tsub_lt_tsub_iff_right (haL _ hx)]
+  rwa [Sorted, pairwise_map, Pairwise.and_mem,
+    Pairwise.iff (S := fun x y ↦ x ∈ L ∧ y ∈ L ∧ x < y), ← Pairwise.and_mem]
+  simp only [and_congr_right_iff]
+  exact fun x y hx _ ↦ by rw [tsub_lt_tsub_iff_right (haL _ hx)]
   have h' : ∀ x ∈ L, ((fun x ↦ x + a + 1) ∘ (fun x ↦ x - (a + 1))) x = x := fun x hx ↦ by
     simp only [add_assoc, Function.comp_apply]; rw [tsub_add_cancel_of_le (haL _ hx)]
   simp [List.map_congr_left h']

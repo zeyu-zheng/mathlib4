@@ -126,9 +126,9 @@ lemma truncatedSup_of_not_mem (h : a ∉ lowerClosure s) : truncatedSup s a = �
 lemma le_truncatedSup : a ≤ truncatedSup s a := by
   rw [truncatedSup]
   split_ifs with h
-  · obtain ⟨ℬ, hb, h⟩ := h
-    exact h.trans $ le_sup' id $ mem_filter.2 ⟨hb, h⟩
-  · exact le_top
+  obtain ⟨ℬ, hb, h⟩ := h
+  exact h.trans $ le_sup' id $ mem_filter.2 ⟨hb, h⟩
+  exact le_top
 
 lemma map_truncatedSup (e : α ≃o β) (s : Finset α) (a : α) :
     e (truncatedSup s a) = truncatedSup (s.map e.toEquiv.toEmbedding) (e a) := by
@@ -192,9 +192,9 @@ lemma truncatedInf_of_not_mem (h : a ∉ upperClosure s) : truncatedInf s a = �
 lemma truncatedInf_le : truncatedInf s a ≤ a := by
   unfold truncatedInf
   split_ifs with h
-  · obtain ⟨b, hb, hba⟩ := h
-    exact hba.trans' $ inf'_le id $ mem_filter.2 ⟨hb, ‹_›⟩
-  · exact bot_le
+  obtain ⟨b, hb, hba⟩ := h
+  exact hba.trans' $ inf'_le id $ mem_filter.2 ⟨hb, ‹_›⟩
+  exact bot_le
 
 @[simp] lemma truncatedInf_empty (a : α) : truncatedInf ∅ a = ⊥ := truncatedInf_of_not_mem $ by simp
 
@@ -297,28 +297,28 @@ lemma card_truncatedSup_union_add_card_truncatedSup_infs (𝒜 ℬ : Finset (Fin
       (truncatedSup 𝒜 s).card + (truncatedSup ℬ s).card := by
   by_cases h𝒜 : s ∈ lowerClosure (𝒜 : Set $ Finset α) <;>
     by_cases hℬ : s ∈ lowerClosure (ℬ : Set $ Finset α)
-  · rw [truncatedSup_union h𝒜 hℬ, truncatedSup_infs h𝒜 hℬ]
-    exact card_union_add_card_inter _ _
-  · rw [truncatedSup_union_left h𝒜 hℬ, truncatedSup_of_not_mem hℬ,
-      truncatedSup_infs_of_not_mem fun h ↦ hℬ h.2]
-  · rw [truncatedSup_union_right h𝒜 hℬ, truncatedSup_of_not_mem h𝒜,
-      truncatedSup_infs_of_not_mem fun h ↦ h𝒜 h.1, add_comm]
-  · rw [truncatedSup_of_not_mem h𝒜, truncatedSup_of_not_mem hℬ,
-      truncatedSup_union_of_not_mem h𝒜 hℬ, truncatedSup_infs_of_not_mem fun h ↦ h𝒜 h.1]
+  rw [truncatedSup_union h𝒜 hℬ, truncatedSup_infs h𝒜 hℬ]
+  exact card_union_add_card_inter _ _
+  rw [truncatedSup_union_left h𝒜 hℬ, truncatedSup_of_not_mem hℬ,
+    truncatedSup_infs_of_not_mem fun h ↦ hℬ h.2]
+  rw [truncatedSup_union_right h𝒜 hℬ, truncatedSup_of_not_mem h𝒜,
+    truncatedSup_infs_of_not_mem fun h ↦ h𝒜 h.1, add_comm]
+  rw [truncatedSup_of_not_mem h𝒜, truncatedSup_of_not_mem hℬ,
+    truncatedSup_union_of_not_mem h𝒜 hℬ, truncatedSup_infs_of_not_mem fun h ↦ h𝒜 h.1]
 
 lemma card_truncatedInf_union_add_card_truncatedInf_sups (𝒜 ℬ : Finset (Finset α)) (s : Finset α) :
     (truncatedInf (𝒜 ∪ ℬ) s).card + (truncatedInf (𝒜 ⊻ ℬ) s).card =
       (truncatedInf 𝒜 s).card + (truncatedInf ℬ s).card := by
   by_cases h𝒜 : s ∈ upperClosure (𝒜 : Set $ Finset α) <;>
     by_cases hℬ : s ∈ upperClosure (ℬ : Set $ Finset α)
-  · rw [truncatedInf_union h𝒜 hℬ, truncatedInf_sups h𝒜 hℬ]
-    exact card_inter_add_card_union _ _
-  · rw [truncatedInf_union_left h𝒜 hℬ, truncatedInf_of_not_mem hℬ,
-      truncatedInf_sups_of_not_mem fun h ↦ hℬ h.2]
-  · rw [truncatedInf_union_right h𝒜 hℬ, truncatedInf_of_not_mem h𝒜,
-      truncatedInf_sups_of_not_mem fun h ↦ h𝒜 h.1, add_comm]
-  · rw [truncatedInf_of_not_mem h𝒜, truncatedInf_of_not_mem hℬ,
-      truncatedInf_union_of_not_mem h𝒜 hℬ, truncatedInf_sups_of_not_mem fun h ↦ h𝒜 h.1]
+  rw [truncatedInf_union h𝒜 hℬ, truncatedInf_sups h𝒜 hℬ]
+  exact card_inter_add_card_union _ _
+  rw [truncatedInf_union_left h𝒜 hℬ, truncatedInf_of_not_mem hℬ,
+    truncatedInf_sups_of_not_mem fun h ↦ hℬ h.2]
+  rw [truncatedInf_union_right h𝒜 hℬ, truncatedInf_of_not_mem h𝒜,
+    truncatedInf_sups_of_not_mem fun h ↦ h𝒜 h.1, add_comm]
+  rw [truncatedInf_of_not_mem h𝒜, truncatedInf_of_not_mem hℬ,
+    truncatedInf_union_of_not_mem h𝒜 hℬ, truncatedInf_sups_of_not_mem fun h ↦ h𝒜 h.1]
 
 end Finset
 
@@ -396,20 +396,20 @@ lemma supSum_of_not_univ_mem (h𝒜₁ : 𝒜.Nonempty) (h𝒜₂ : univ ∉ �
   induction' m using Nat.strong_induction_on with m ih generalizing 𝒜
   replace ih := fun 𝒜 h𝒜 h𝒜₁ h𝒜₂ ↦ @ih _ h𝒜 𝒜 h𝒜₁ h𝒜₂ rfl
   obtain ⟨a, rfl⟩ | h𝒜₃ := h𝒜₁.exists_eq_singleton_or_nontrivial
-  · refine supSum_singleton ?_
-    simpa [eq_comm] using h𝒜₂
+  refine supSum_singleton ?_
+  simpa [eq_comm] using h𝒜₂
   cases m
-  · cases h𝒜₁.card_pos.ne hm
+  cases h𝒜₁.card_pos.ne hm
   obtain ⟨s, 𝒜, hs, rfl, rfl⟩ := card_eq_succ.1 hm.symm
   have h𝒜 : 𝒜.Nonempty := nonempty_iff_ne_empty.2 (by rintro rfl; simp at h𝒜₃)
   rw [insert_eq, eq_sub_of_add_eq (supSum_union_add_supSum_infs _ _), singleton_infs,
     supSum_singleton (ne_of_mem_of_not_mem (mem_insert_self _ _) h𝒜₂), ih, ih, add_sub_cancel_right]
-  · exact card_image_le.trans_lt (lt_add_one _)
-  · exact h𝒜.image _
-  · simpa using fun _ ↦ ne_of_mem_of_not_mem (mem_insert_self _ _) h𝒜₂
-  · exact lt_add_one _
-  · exact h𝒜
-  · exact fun h ↦ h𝒜₂ (mem_insert_of_mem h)
+  exact card_image_le.trans_lt (lt_add_one _)
+  exact h𝒜.image _
+  simpa using fun _ ↦ ne_of_mem_of_not_mem (mem_insert_self _ _) h𝒜₂
+  exact lt_add_one _
+  exact h𝒜
+  exact fun h ↦ h𝒜₂ (mem_insert_of_mem h)
 
 /-- The **Ahlswede-Zhang Identity**. -/
 lemma infSum_eq_one (h𝒜₁ : 𝒜.Nonempty) (h𝒜₀ : ∅ ∉ 𝒜) : infSum 𝒜 = 1 := by

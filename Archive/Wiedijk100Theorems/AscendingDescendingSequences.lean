@@ -72,20 +72,20 @@ theorem erdos_szekeres {r s n : ℕ} {f : Fin n → α} (hn : r * s < n) (hf : I
   -- first in the pair is more than `r` somewhere, then we have an increasing subsequence in our
   -- set, and if the second is more than `s` somewhere, then we have a decreasing subsequence.
   rsuffices ⟨i, hi⟩ : ∃ i, r < (ab i).1 ∨ s < (ab i).2
-  · refine Or.imp ?_ ?_ hi
-    on_goal 1 =>
-      have : (ab i).1 ∈ image card (inc_sequences_ending_in i) := by
-        simp only [← hab]; exact max'_mem _ _
-    on_goal 2 =>
-      have : (ab i).2 ∈ image card (dec_sequences_ending_in i) := by
-        simp only [← hab]; exact max'_mem _ _
-    all_goals
-      intro hi
-      rw [mem_image] at this
-      obtain ⟨t, ht₁, ht₂⟩ := this
-      refine ⟨t, by rwa [ht₂], ?_⟩
-      rw [mem_filter] at ht₁
-      apply ht₁.2.2
+  refine Or.imp ?_ ?_ hi
+  on_goal 1 =>
+    have : (ab i).1 ∈ image card (inc_sequences_ending_in i) := by
+      simp only [← hab]; exact max'_mem _ _
+  on_goal 2 =>
+    have : (ab i).2 ∈ image card (dec_sequences_ending_in i) := by
+      simp only [← hab]; exact max'_mem _ _
+  all_goals
+    intro hi
+    rw [mem_image] at this
+    obtain ⟨t, ht₁, ht₂⟩ := this
+    refine ⟨t, by rwa [ht₂], ?_⟩
+    rw [mem_filter] at ht₁
+    apply ht₁.2.2
   -- Show first that the pair of labels is unique.
   have : Injective ab := by
     simp only [← hab]
@@ -115,32 +115,32 @@ theorem erdos_szekeres {r s n : ℕ} {f : Fin n → α} (hn : r * s < n) (hf : I
       -- Now our new subsequence is given by adding `j` at the end of `t`.
       refine ⟨insert j t, ?_, ?_⟩
       -- First make sure it's valid, i.e., that this subsequence ends at `j` and is increasing
-      · rw [mem_filter]
-        refine ⟨?_, ?_, ?_⟩
-        · rw [mem_powerset]; apply subset_univ
-        -- It ends at `j` since `i < j`.
-        · convert max_insert (a := j) (s := t)
-          rw [ht₁.2.1, max_eq_left]
-          apply WithBot.coe_le_coe.mpr (le_of_lt ‹i < j›)
-        -- To show it's increasing (i.e., `f` is monotone increasing on `t.insert j`), we do cases
-        -- on what the possibilities could be - either in `t` or equals `j`.
-        simp only [StrictMonoOn, StrictAntiOn, coe_insert, Set.mem_insert_iff, mem_coe]
-        -- Most of the cases are just bashes.
-        rintro x ⟨rfl | _⟩ y ⟨rfl | _⟩ _
-        · apply (irrefl _ ‹j < j›).elim
-        · exfalso
-          apply not_le_of_lt (_root_.trans ‹i < j› ‹j < y›) (le_max_of_eq ‹y ∈ t› ‹t.max = i›)
-        · first
-          | apply lt_of_le_of_lt _ ‹f i < f j›
-          | apply lt_of_lt_of_le ‹f j < f i› _
-          rcases lt_or_eq_of_le (le_max_of_eq ‹x ∈ t› ‹t.max = i›) with (_ | rfl)
-          · apply le_of_lt (ht₁.2.2 ‹x ∈ t› (mem_of_max ‹t.max = i›) ‹x < i›)
-          · rfl
-        · apply ht₁.2.2 ‹x ∈ t› ‹y ∈ t› ‹x < y›
+      rw [mem_filter]
+      refine ⟨?_, ?_, ?_⟩
+      rw [mem_powerset]; apply subset_univ
+      -- It ends at `j` since `i < j`.
+      convert max_insert (a := j) (s := t)
+      rw [ht₁.2.1, max_eq_left]
+      apply WithBot.coe_le_coe.mpr (le_of_lt ‹i < j›)
+      -- To show it's increasing (i.e., `f` is monotone increasing on `t.insert j`), we do cases
+      -- on what the possibilities could be - either in `t` or equals `j`.
+      simp only [StrictMonoOn, StrictAntiOn, coe_insert, Set.mem_insert_iff, mem_coe]
+      -- Most of the cases are just bashes.
+      rintro x ⟨rfl | _⟩ y ⟨rfl | _⟩ _
+      apply (irrefl _ ‹j < j›).elim
+      exfalso
+      apply not_le_of_lt (_root_.trans ‹i < j› ‹j < y›) (le_max_of_eq ‹y ∈ t› ‹t.max = i›)
+      first
+      | apply lt_of_le_of_lt _ ‹f i < f j›
+      | apply lt_of_lt_of_le ‹f j < f i› _
+      rcases lt_or_eq_of_le (le_max_of_eq ‹x ∈ t› ‹t.max = i›) with (_ | rfl)
+      apply le_of_lt (ht₁.2.2 ‹x ∈ t› (mem_of_max ‹t.max = i›) ‹x < i›)
+      rfl
+      apply ht₁.2.2 ‹x ∈ t› ‹y ∈ t› ‹x < y›
       -- Finally show that this new subsequence is one longer than the old one.
-      · rw [card_insert_of_not_mem, ht₂]
-        intro
-        apply not_le_of_lt ‹i < j› (le_max_of_eq ‹j ∈ t› ‹t.max = i›)
+      rw [card_insert_of_not_mem, ht₂]
+      intro
+      apply not_le_of_lt ‹i < j› (le_max_of_eq ‹j ∈ t› ‹t.max = i›)
   -- Finished both goals!
   -- Now that we have uniqueness of each label, it remains to do some counting to finish off.
   -- Suppose all the labels are small.
@@ -160,9 +160,9 @@ theorem erdos_szekeres {r s n : ℕ} {f : Fin n → α} (hn : r * s < n) (hf : I
     have z : 1 ≤ (ab i).1 ∧ 1 ≤ (ab i).2 := by
       simp only [← hab]
       constructor <;>
-        · apply le_max'
-          rw [mem_image]
-          exact ⟨{i}, by solve_by_elim, card_singleton i⟩
+        apply le_max'
+        rw [mem_image]
+        exact ⟨{i}, by solve_by_elim, card_singleton i⟩
     -- Need to get `a_i ≤ r`, here phrased as: there is some `a < r` with `a+1 = a_i`.
     exact ⟨⟨(ab i).1 - 1, by omega⟩, (ab i).2 - 1, by omega⟩
   -- To get our contradiction, it suffices to prove `n ≤ r * s`

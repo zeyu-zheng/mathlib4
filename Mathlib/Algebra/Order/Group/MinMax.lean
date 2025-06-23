@@ -69,18 +69,18 @@ variable {α : Type*} [LinearOrderedAddCommGroup α] {a b c : α}
 
 theorem max_sub_max_le_max (a b c d : α) : max a b - max c d ≤ max (a - c) (b - d) := by
   simp only [sub_le_iff_le_add, max_le_iff]; constructor
-  · calc
+  calc
     a = a - c + c := (sub_add_cancel a c).symm
     _ ≤ max (a - c) (b - d) + max c d := add_le_add (le_max_left _ _) (le_max_left _ _)
-  · calc
+  calc
     b = b - d + d := (sub_add_cancel b d).symm
     _ ≤ max (a - c) (b - d) + max c d := add_le_add (le_max_right _ _) (le_max_right _ _)
 
 theorem abs_max_sub_max_le_max (a b c d : α) : |max a b - max c d| ≤ max |a - c| |b - d| := by
   refine abs_sub_le_iff.2 ⟨?_, ?_⟩
-  · exact (max_sub_max_le_max _ _ _ _).trans (max_le_max (le_abs_self _) (le_abs_self _))
-  · rw [abs_sub_comm a c, abs_sub_comm b d]
-    exact (max_sub_max_le_max _ _ _ _).trans (max_le_max (le_abs_self _) (le_abs_self _))
+  exact (max_sub_max_le_max _ _ _ _).trans (max_le_max (le_abs_self _) (le_abs_self _))
+  rw [abs_sub_comm a c, abs_sub_comm b d]
+  exact (max_sub_max_le_max _ _ _ _).trans (max_le_max (le_abs_self _) (le_abs_self _))
 
 theorem abs_min_sub_min_le_max (a b c d : α) : |min a b - min c d| ≤ max |a - c| |b - d| := by
   simpa only [max_neg_neg, neg_sub_neg, abs_sub_comm] using

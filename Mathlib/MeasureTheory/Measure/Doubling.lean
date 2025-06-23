@@ -70,7 +70,7 @@ theorem exists_eventually_forall_measure_closedBall_le_mul (K : ℝ) :
       μ (closedBall x ((2 : ℝ) ^ n * ε)) ≤ ↑(C ^ n) * μ (closedBall x ε) := by
     intro n
     induction' n with n ih
-    · simp
+    simp
     replace ih := eventually_nhdsWithin_pos_mul_left (two_pos : 0 < (2 : ℝ)) ih
     refine (ih.and (exists_measure_closedBall_le_mul' μ)).mono fun ε hε x => ?_
     calc
@@ -80,19 +80,19 @@ theorem exists_eventually_forall_measure_closedBall_le_mul (K : ℝ) :
       _ ≤ ↑(C ^ n) * (C * μ (closedBall x ε)) := by gcongr; exact hε.2 x
       _ = ↑(C ^ (n + 1)) * μ (closedBall x ε) := by rw [← mul_assoc, pow_succ, ENNReal.coe_mul]
   rcases lt_or_le K 1 with (hK | hK)
-  · refine ⟨1, ?_⟩
-    simp only [ENNReal.coe_one, one_mul]
-    refine eventually_mem_nhdsWithin.mono fun ε hε x t ht ↦ ?_
-    gcongr
-    nlinarith [mem_Ioi.mp hε]
-  · use C ^ ⌈Real.logb 2 K⌉₊
-    filter_upwards [hμ ⌈Real.logb 2 K⌉₊, eventually_mem_nhdsWithin] with ε hε hε₀ x t ht
-    refine le_trans ?_ (hε x)
-    gcongr
-    · exact (mem_Ioi.mp hε₀).le
-    · refine ht.trans ?_
-      rw [← Real.rpow_natCast, ← Real.logb_le_iff_le_rpow]
-      exacts [Nat.le_ceil _, by norm_num, by linarith]
+  refine ⟨1, ?_⟩
+  simp only [ENNReal.coe_one, one_mul]
+  refine eventually_mem_nhdsWithin.mono fun ε hε x t ht ↦ ?_
+  gcongr
+  nlinarith [mem_Ioi.mp hε]
+  use C ^ ⌈Real.logb 2 K⌉₊
+  filter_upwards [hμ ⌈Real.logb 2 K⌉₊, eventually_mem_nhdsWithin] with ε hε hε₀ x t ht
+  refine le_trans ?_ (hε x)
+  gcongr
+  exact (mem_Ioi.mp hε₀).le
+  refine ht.trans ?_
+  rw [← Real.rpow_natCast, ← Real.logb_le_iff_le_rpow]
+  exacts [Nat.le_ceil _, by norm_num, by linarith]
 
 /-- A variant of `IsUnifLocDoublingMeasure.doublingConstant` which allows for scaling the
 radius by values other than `2`. -/
@@ -112,14 +112,14 @@ theorem eventually_measure_mul_le_scalingConstantOf_mul (K : ℝ) :
   rcases mem_nhdsWithin_Ioi_iff_exists_Ioc_subset.1 h with ⟨R, Rpos, hR⟩
   refine ⟨R, Rpos, fun x t r ht hr => ?_⟩
   rcases lt_trichotomy r 0 with (rneg | rfl | rpos)
-  · have : t * r < 0 := mul_neg_of_pos_of_neg ht.1 rneg
-    simp only [closedBall_eq_empty.2 this, measure_empty, zero_le']
-  · simp only [mul_zero, closedBall_zero]
-    refine le_mul_of_one_le_of_le ?_ le_rfl
-    apply ENNReal.one_le_coe_iff.2 (le_max_right _ _)
-  · apply (hR ⟨rpos, hr⟩ x t ht.2).trans
-    gcongr
-    apply le_max_left
+  have : t * r < 0 := mul_neg_of_pos_of_neg ht.1 rneg
+  simp only [closedBall_eq_empty.2 this, measure_empty, zero_le']
+  simp only [mul_zero, closedBall_zero]
+  refine le_mul_of_one_le_of_le ?_ le_rfl
+  apply ENNReal.one_le_coe_iff.2 (le_max_right _ _)
+  apply (hR ⟨rpos, hr⟩ x t ht.2).trans
+  gcongr
+  apply le_max_left
 
 theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
     ∀ᶠ r in 𝓝[>] 0, ∀ x, μ (closedBall x (K * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) := by

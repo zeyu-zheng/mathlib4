@@ -68,10 +68,10 @@ theorem SetLike.algebraMap_mem_graded [Zero ι] [CommSemiring S] [Semiring R] [A
 theorem SetLike.natCast_mem_graded [Zero ι] [AddMonoidWithOne R] [SetLike σ R]
     [AddSubmonoidClass σ R] (A : ι → σ) [SetLike.GradedOne A] (n : ℕ) : (n : R) ∈ A 0 := by
   induction' n with _ n_ih
-  · rw [Nat.cast_zero]
-    exact zero_mem (A 0)
-  · rw [Nat.cast_succ]
-    exact add_mem n_ih (SetLike.one_mem_graded _)
+  rw [Nat.cast_zero]
+  exact zero_mem (A 0)
+  rw [Nat.cast_succ]
+  exact add_mem n_ih (SetLike.one_mem_graded _)
 
 @[deprecated (since := "2024-04-17")]
 alias SetLike.nat_cast_mem_graded := SetLike.natCast_mem_graded
@@ -79,10 +79,10 @@ alias SetLike.nat_cast_mem_graded := SetLike.natCast_mem_graded
 theorem SetLike.intCast_mem_graded [Zero ι] [AddGroupWithOne R] [SetLike σ R]
     [AddSubgroupClass σ R] (A : ι → σ) [SetLike.GradedOne A] (z : ℤ) : (z : R) ∈ A 0 := by
   induction z
-  · rw [Int.ofNat_eq_coe, Int.cast_natCast]
-    exact SetLike.natCast_mem_graded _ _
-  · rw [Int.cast_negSucc]
-    exact neg_mem (SetLike.natCast_mem_graded _ _)
+  rw [Int.ofNat_eq_coe, Int.cast_natCast]
+  exact SetLike.natCast_mem_graded _ _
+  rw [Int.cast_negSucc]
+  exact neg_mem (SetLike.natCast_mem_graded _ _)
 
 @[deprecated (since := "2024-04-17")]
 alias SetLike.int_cast_mem_graded := SetLike.intCast_mem_graded
@@ -171,11 +171,11 @@ theorem coe_mul_apply_eq_dfinsupp_sum [AddMonoid ι] [SetLike.GradedMonoid A]
   iterate 2 rw [DFinsupp.sum_apply, DFinsupp.sum, AddSubmonoidClass.coe_finset_sum]; congr; ext
   dsimp only
   split_ifs with h
-  · subst h
-    rw [of_eq_same]
-    rfl
-  · rw [of_eq_of_ne _ _ _ h]
-    rfl
+  subst h
+  rw [of_eq_same]
+  rfl
+  rw [of_eq_of_ne _ _ _ h]
+  rfl
 
 open Classical in
 theorem coe_of_mul_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r : A i)
@@ -184,11 +184,11 @@ theorem coe_of_mul_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r
     rw [coe_mul_apply_eq_dfinsupp_sum]
     apply (DFinsupp.sum_single_index _).trans
     swap
-    · simp_rw [ZeroMemClass.coe_zero, zero_mul, ite_self]
-      exact DFinsupp.sum_zero
+    simp_rw [ZeroMemClass.coe_zero, zero_mul, ite_self]
+    exact DFinsupp.sum_zero
     simp_rw [DFinsupp.sum, H, Finset.sum_ite_eq']
     split_ifs with h
-    · rfl
+    rfl
     rw [DFinsupp.not_mem_support_iff.mp h, ZeroMemClass.coe_zero, mul_zero]
 
 open Classical in
@@ -198,11 +198,11 @@ theorem coe_mul_of_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] (r : ⨁ i,
     rw [coe_mul_apply_eq_dfinsupp_sum, DFinsupp.sum_comm]
     apply (DFinsupp.sum_single_index _).trans
     swap
-    · simp_rw [ZeroMemClass.coe_zero, mul_zero, ite_self]
-      exact DFinsupp.sum_zero
+    simp_rw [ZeroMemClass.coe_zero, mul_zero, ite_self]
+    exact DFinsupp.sum_zero
     simp_rw [DFinsupp.sum, H, Finset.sum_ite_eq']
     split_ifs with h
-    · rfl
+    rfl
     rw [DFinsupp.not_mem_support_iff.mp h, ZeroMemClass.coe_zero, zero_mul]
 
 theorem coe_of_mul_apply_add [AddLeftCancelMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r : A i)
@@ -226,10 +226,10 @@ theorem coe_of_mul_apply_of_not_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι)
     rw [coe_mul_apply_eq_dfinsupp_sum]
     apply (DFinsupp.sum_single_index _).trans
     swap
-    · simp_rw [ZeroMemClass.coe_zero, zero_mul, ite_self]
-      exact DFinsupp.sum_zero
-    · rw [DFinsupp.sum, Finset.sum_ite_of_false, Finset.sum_const_zero]
-      exact fun x _ H => h ((self_le_add_right i x).trans_eq H)
+    simp_rw [ZeroMemClass.coe_zero, zero_mul, ite_self]
+    exact DFinsupp.sum_zero
+    rw [DFinsupp.sum, Finset.sum_ite_of_false, Finset.sum_const_zero]
+    exact fun x _ H => h ((self_le_add_right i x).trans_eq H)
 
 open Classical in
 theorem coe_mul_of_apply_of_not_le (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι) (h : ¬i ≤ n) :
@@ -237,10 +237,10 @@ theorem coe_mul_of_apply_of_not_le (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι)
     rw [coe_mul_apply_eq_dfinsupp_sum, DFinsupp.sum_comm]
     apply (DFinsupp.sum_single_index _).trans
     swap
-    · simp_rw [ZeroMemClass.coe_zero, mul_zero, ite_self]
-      exact DFinsupp.sum_zero
-    · rw [DFinsupp.sum, Finset.sum_ite_of_false, Finset.sum_const_zero]
-      exact fun x _ H => h ((self_le_add_left i x).trans_eq H)
+    simp_rw [ZeroMemClass.coe_zero, mul_zero, ite_self]
+    exact DFinsupp.sum_zero
+    rw [DFinsupp.sum, Finset.sum_ite_of_false, Finset.sum_const_zero]
+    exact fun x _ H => h ((self_le_add_left i x).trans_eq H)
 
 variable [Sub ι] [OrderedSub ι] [ContravariantClass ι ι (· + ·) (· ≤ ·)]
 

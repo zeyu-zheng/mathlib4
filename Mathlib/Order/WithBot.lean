@@ -247,8 +247,8 @@ theorem unbot_le_iff {a : WithBot α} (h : a ≠ ⊥) {b : α} :
 theorem unbot'_le_iff {a : WithBot α} {b c : α} (h : a = ⊥ → b ≤ c) :
     a.unbot' b ≤ c ↔ a ≤ c := by
   induction a
-  · simpa using h rfl
-  · simp
+  simpa using h rfl
+  simp
 
 end LE
 
@@ -298,8 +298,8 @@ protected theorem bot_lt_iff_ne_bot : ∀ {x : WithBot α}, ⊥ < x ↔ x ≠ �
 theorem unbot'_lt_iff {a : WithBot α} {b c : α} (h : a = ⊥ → b < c) :
     a.unbot' b < c ↔ a < c := by
   induction a
-  · simpa [bot_lt_coe] using h rfl
-  · simp
+  simpa [bot_lt_coe] using h rfl
+  simp
 
 end LT
 
@@ -319,12 +319,12 @@ instance partialOrder [PartialOrder α] : PartialOrder (WithBot α) :=
   { WithBot.preorder with
     le_antisymm := fun o₁ o₂ h₁ h₂ => by
       cases' o₁ with a
-      · cases' o₂ with b
-        · rfl
-        rcases h₂ b rfl with ⟨_, ⟨⟩, _⟩
-      · rcases h₁ a rfl with ⟨b, ⟨⟩, h₁'⟩
-        rcases h₂ b rfl with ⟨_, ⟨⟩, h₂'⟩
-        rw [le_antisymm h₁' h₂'] }
+      cases' o₂ with b
+      rfl
+      rcases h₂ b rfl with ⟨_, ⟨⟩, _⟩
+      rcases h₁ a rfl with ⟨b, ⟨⟩, h₁'⟩
+      rcases h₂ b rfl with ⟨_, ⟨⟩, h₂'⟩
+      rw [le_antisymm h₁' h₂'] }
 
 section Preorder
 
@@ -394,11 +394,11 @@ instance semilatticeSup [SemilatticeSup α] : SemilatticeSup (WithBot α) where
   le_sup_right := fun o₁ o₂ a ha => by cases ha; cases o₁ <;> simp
   sup_le := fun o₁ o₂ o₃ h₁ h₂ a ha => by
     cases' o₁ with b <;> cases' o₂ with c <;> cases ha
-    · exact h₂ a rfl
-    · exact h₁ a rfl
-    · rcases h₁ b rfl with ⟨d, ⟨⟩, h₁'⟩
-      simp only [coe_le_coe] at h₂
-      exact ⟨d, rfl, sup_le h₁' h₂⟩
+    exact h₂ a rfl
+    exact h₁ a rfl
+    rcases h₁ b rfl with ⟨d, ⟨⟩, h₁'⟩
+    simp only [coe_le_coe] at h₂
+    exact ⟨d, rfl, sup_le h₁' h₂⟩
 
 theorem coe_sup [SemilatticeSup α] (a b : α) : ((a ⊔ b : α) : WithBot α) = (a : WithBot α) ⊔ b :=
   rfl
@@ -516,23 +516,23 @@ theorem lt_iff_exists_coe_btwn [Preorder α] [DenselyOrdered α] [NoMinOrder α]
 instance noTopOrder [LE α] [NoTopOrder α] [Nonempty α] : NoTopOrder (WithBot α) :=
   ⟨by
     apply recBotCoe
-    · exact ‹Nonempty α›.elim fun a => ⟨a, not_coe_le_bot a⟩
+    exact ‹Nonempty α›.elim fun a => ⟨a, not_coe_le_bot a⟩
 
-    · intro a
-      obtain ⟨b, h⟩ := exists_not_le a
-      exact ⟨b, by rwa [coe_le_coe]⟩
-      ⟩
+    intro a
+    obtain ⟨b, h⟩ := exists_not_le a
+    exact ⟨b, by rwa [coe_le_coe]⟩
+    ⟩
 
 instance noMaxOrder [LT α] [NoMaxOrder α] [Nonempty α] : NoMaxOrder (WithBot α) :=
   ⟨by
     apply WithBot.recBotCoe
-    · apply ‹Nonempty α›.elim
-      exact fun a => ⟨a, WithBot.bot_lt_coe a⟩
+    apply ‹Nonempty α›.elim
+    exact fun a => ⟨a, WithBot.bot_lt_coe a⟩
 
-    · intro a
-      obtain ⟨b, ha⟩ := exists_gt a
-      exact ⟨b, coe_lt_coe.mpr ha⟩
-      ⟩
+    intro a
+    obtain ⟨b, ha⟩ := exists_gt a
+    exact ⟨b, coe_lt_coe.mpr ha⟩
+    ⟩
 
 end WithBot
 

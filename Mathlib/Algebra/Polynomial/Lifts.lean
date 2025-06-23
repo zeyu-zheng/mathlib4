@@ -113,8 +113,8 @@ theorem erase_mem_lifts {p : S[X]} (n : ℕ) (h : p ∈ lifts f) : p.erase n ∈
   rw [lifts_iff_ringHom_rangeS, mem_map_rangeS] at h ⊢
   intro k
   by_cases hk : k = n
-  · use 0
-    simp only [hk, RingHom.map_zero, erase_same]
+  use 0
+  simp only [hk, RingHom.map_zero, erase_same]
   obtain ⟨i, hi⟩ := h k
   use i
   simp only [hi, hk, erase_ne, Ne, not_false_iff]
@@ -124,9 +124,9 @@ section LiftDeg
 theorem monomial_mem_lifts_and_degree_eq {s : S} {n : ℕ} (hl : monomial n s ∈ lifts f) :
     ∃ q : R[X], map f q = monomial n s ∧ q.degree = (monomial n s).degree := by
   by_cases hzero : s = 0
-  · use 0
-    simp only [hzero, degree_zero, eq_self_iff_true, and_self_iff, monomial_zero_right,
-      Polynomial.map_zero]
+  use 0
+  simp only [hzero, degree_zero, eq_self_iff_true, and_self_iff, monomial_zero_right,
+    Polynomial.map_zero]
   rw [lifts_iff_set_range] at hl
   obtain ⟨q, hq⟩ := hl
   replace hq := (ext_iff.1 hq) n
@@ -135,7 +135,7 @@ theorem monomial_mem_lifts_and_degree_eq {s : S} {n : ℕ} (hl : monomial n s �
   exact hq
   use monomial n (q.coeff n)
   constructor
-  · simp only [hcoeff, map_monomial]
+  simp only [hcoeff, map_monomial]
   have hqzero : q.coeff n ≠ 0
   intro habs
   simp only [habs, RingHom.map_zero] at hcoeff
@@ -152,10 +152,10 @@ theorem mem_lifts_and_degree_eq {p : S[X]} (hlifts : p ∈ lifts f) :
   induction' d using Nat.strong_induction_on with n hn
   intros p hlifts hdeg
   by_cases erase_zero : p.eraseLead = 0
-  · rw [← eraseLead_add_monomial_natDegree_leadingCoeff p, erase_zero, zero_add, leadingCoeff]
-    exact
-      monomial_mem_lifts_and_degree_eq
-        (monomial_mem_lifts p.natDegree ((lifts_iff_coeff_lifts p).1 hlifts p.natDegree))
+  rw [← eraseLead_add_monomial_natDegree_leadingCoeff p, erase_zero, zero_add, leadingCoeff]
+  exact
+    monomial_mem_lifts_and_degree_eq
+      (monomial_mem_lifts p.natDegree ((lifts_iff_coeff_lifts p).1 hlifts p.natDegree))
   have deg_erase := Or.resolve_right (eraseLead_natDegree_lt_or_eraseLead_eq_zero p) erase_zero
   have pzero : p ≠ 0
   intro habs
@@ -175,9 +175,9 @@ theorem mem_lifts_and_degree_eq {p : S[X]} (hlifts : p ∈ lifts f) :
       (refl p.eraseLead.natDegree)
   use erase + lead
   constructor
-  · simp only [hlead, herase, Polynomial.map_add]
-    rw [← eraseLead, ← leadingCoeff]
-    rw [eraseLead_add_monomial_natDegree_leadingCoeff p]
+  simp only [hlead, herase, Polynomial.map_add]
+  rw [← eraseLead, ← leadingCoeff]
+  rw [eraseLead_add_monomial_natDegree_leadingCoeff p]
   rw [degree_eq_natDegree pzero, ← deg_lead]
   apply degree_add_eq_right_of_degree_lt
   rw [herase.2, deg_lead, ← degree_eq_natDegree pzero]
@@ -192,15 +192,15 @@ of the same degree. -/
 theorem lifts_and_degree_eq_and_monic [Nontrivial S] {p : S[X]} (hlifts : p ∈ lifts f)
     (hp : p.Monic) : ∃ q : R[X], map f q = p ∧ q.degree = p.degree ∧ q.Monic := by
   cases' subsingleton_or_nontrivial R with hR hR
-  · obtain ⟨q, hq⟩ := mem_lifts_and_degree_eq hlifts
-    exact ⟨q, hq.1, hq.2, monic_of_subsingleton _⟩
+  obtain ⟨q, hq⟩ := mem_lifts_and_degree_eq hlifts
+  exact ⟨q, hq.1, hq.2, monic_of_subsingleton _⟩
   have H : erase p.natDegree p + X ^ p.natDegree = p
   simpa only [hp.leadingCoeff, C_1, one_mul, eraseLead] using eraseLead_add_C_mul_X_pow p
   by_cases h0 : erase p.natDegree p = 0
-  · rw [← H, h0, zero_add]
-    refine ⟨X ^ p.natDegree, ?_, ?_, monic_X_pow p.natDegree⟩
-    · rw [Polynomial.map_pow, map_X]
-    · rw [degree_X_pow, degree_X_pow]
+  rw [← H, h0, zero_add]
+  refine ⟨X ^ p.natDegree, ?_, ?_, monic_X_pow p.natDegree⟩
+  rw [Polynomial.map_pow, map_X]
+  rw [degree_X_pow, degree_X_pow]
   obtain ⟨q, hq⟩ := mem_lifts_and_degree_eq (erase_mem_lifts p.natDegree hlifts)
   have p_neq_0 : p ≠ 0
   intro hp; apply h0; rw [hp]; simp only [natDegree_zero, erase_zero]
@@ -208,14 +208,14 @@ theorem lifts_and_degree_eq_and_monic [Nontrivial S] {p : S[X]} (hlifts : p ∈ 
   rw [@degree_X_pow R, hq.2, ← degree_eq_natDegree p_neq_0]
   exact degree_erase_lt p_neq_0
   refine ⟨q + X ^ p.natDegree, ?_, ?_, (monic_X_pow _).add_of_right hdeg⟩
-  · rw [Polynomial.map_add, hq.1, Polynomial.map_pow, map_X, H]
-  · rw [degree_add_eq_right_of_degree_lt hdeg, degree_X_pow, degree_eq_natDegree hp.ne_zero]
+  rw [Polynomial.map_add, hq.1, Polynomial.map_pow, map_X, H]
+  rw [degree_add_eq_right_of_degree_lt hdeg, degree_X_pow, degree_eq_natDegree hp.ne_zero]
 
 theorem lifts_and_natDegree_eq_and_monic {p : S[X]} (hlifts : p ∈ lifts f) (hp : p.Monic) :
     ∃ q : R[X], map f q = p ∧ q.natDegree = p.natDegree ∧ q.Monic := by
   cases' subsingleton_or_nontrivial S with hR hR
-  · obtain rfl : p = 1 := Subsingleton.elim _ _
-    exact ⟨1, Subsingleton.elim _ _, by simp, by simp⟩
+  obtain rfl : p = 1 := Subsingleton.elim _ _
+  exact ⟨1, Subsingleton.elim _ _, by simp, by simp⟩
   obtain ⟨p', h₁, h₂, h₃⟩ := lifts_and_degree_eq_and_monic hlifts hp
   exact ⟨p', h₁, natDegree_eq_of_degree_eq h₂, h₃⟩
 

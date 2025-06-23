@@ -49,12 +49,12 @@ theorem hasStrictFDerivAt_cpow' {x y : ℂ} (hp : x ∈ slitPlane) :
 theorem hasStrictDerivAt_const_cpow {x y : ℂ} (h : x ≠ 0 ∨ y ≠ 0) :
     HasStrictDerivAt (fun y => x ^ y) (x ^ y * log x) y := by
   rcases em (x = 0) with (rfl | hx)
-  · replace h := h.neg_resolve_left rfl
-    rw [log_zero, mul_zero]
-    refine (hasStrictDerivAt_const _ 0).congr_of_eventuallyEq ?_
-    exact (isOpen_ne.eventually_mem h).mono fun y hy => (zero_cpow hy).symm
-  · simpa only [cpow_def_of_ne_zero hx, mul_one] using
-      ((hasStrictDerivAt_id y).const_mul (log x)).cexp
+  replace h := h.neg_resolve_left rfl
+  rw [log_zero, mul_zero]
+  refine (hasStrictDerivAt_const _ 0).congr_of_eventuallyEq ?_
+  exact (isOpen_ne.eventually_mem h).mono fun y hy => (zero_cpow hy).symm
+  simpa only [cpow_def_of_ne_zero hx, mul_one] using
+    ((hasStrictDerivAt_id y).const_mul (log x)).cexp
 
 theorem hasFDerivAt_cpow {p : ℂ × ℂ} (hp : p.1 ∈ slitPlane) :
     HasFDerivAt (fun x : ℂ × ℂ => x.1 ^ x.2)
@@ -201,44 +201,44 @@ theorem hasDerivAt_ofReal_cpow {x : ℝ} (hx : x ≠ 0) {r : ℂ} (hr : r ≠ -1
     HasDerivAt (fun y : ℝ => (y : ℂ) ^ (r + 1) / (r + 1)) (x ^ r) x := by
   rw [Ne, ← add_eq_zero_iff_eq_neg, ← Ne] at hr
   rcases lt_or_gt_of_ne hx.symm with (hx | hx)
-  · -- easy case : `0 < x`
-    -- Porting note: proof used to be
-    -- convert (((hasDerivAt_id (x : ℂ)).cpow_const _).div_const (r + 1)).comp_ofReal using 1
-    -- · rw [add_sub_cancel, id.def, mul_one, mul_comm, mul_div_cancel _ hr]
-    -- · rw [id.def, ofReal_re]; exact Or.inl hx
-    apply HasDerivAt.comp_ofReal (e := fun y => (y : ℂ) ^ (r + 1) / (r + 1))
-    convert HasDerivAt.div_const (𝕜 := ℂ) ?_ (r + 1) using 1
-    · exact (mul_div_cancel_right₀ _ hr).symm
-    · convert HasDerivAt.cpow_const ?_ ?_ using 1
-      · rw [add_sub_cancel_right, mul_comm]; exact (mul_one _).symm
-      · exact hasDerivAt_id (x : ℂ)
-      · simp [hx]
-  · -- harder case : `x < 0`
-    have : ∀ᶠ y : ℝ in 𝓝 x,
-        (y : ℂ) ^ (r + 1) / (r + 1) = (-y : ℂ) ^ (r + 1) * exp (π * I * (r + 1)) / (r + 1) := by
-      refine Filter.eventually_of_mem (Iio_mem_nhds hx) fun y hy => ?_
-      rw [ofReal_cpow_of_nonpos (le_of_lt hy)]
-    refine HasDerivAt.congr_of_eventuallyEq ?_ this
-    rw [ofReal_cpow_of_nonpos (le_of_lt hx)]
-    suffices HasDerivAt (fun y : ℝ => (-↑y) ^ (r + 1) * exp (↑π * I * (r + 1)))
-        ((r + 1) * (-↑x) ^ r * exp (↑π * I * r)) x by
-      convert this.div_const (r + 1) using 1
-      conv_rhs => rw [mul_assoc, mul_comm, mul_div_cancel_right₀ _ hr]
-    rw [mul_add ((π : ℂ) * _), mul_one, exp_add, exp_pi_mul_I, mul_comm (_ : ℂ) (-1 : ℂ),
-      neg_one_mul]
-    simp_rw [mul_neg, ← neg_mul, ← ofReal_neg]
-    suffices HasDerivAt (fun y : ℝ => (↑(-y) : ℂ) ^ (r + 1)) (-(r + 1) * ↑(-x) ^ r) x by
-      convert this.neg.mul_const _ using 1; ring
-    suffices HasDerivAt (fun y : ℝ => (y : ℂ) ^ (r + 1)) ((r + 1) * ↑(-x) ^ r) (-x) by
-      convert @HasDerivAt.scomp ℝ _ ℂ _ _ x ℝ _ _ _ _ _ _ _ _ this (hasDerivAt_neg x) using 1
-      rw [real_smul, ofReal_neg 1, ofReal_one]; ring
-    suffices HasDerivAt (fun y : ℂ => y ^ (r + 1)) ((r + 1) * ↑(-x) ^ r) ↑(-x) by
-      exact this.comp_ofReal
-    conv in ↑_ ^ _ => rw [(by ring : r = r + 1 - 1)]
-    convert HasDerivAt.cpow_const ?_ ?_ using 1
-    · rw [add_sub_cancel_right, add_sub_cancel_right]; exact (mul_one _).symm
-    · exact hasDerivAt_id ((-x : ℝ) : ℂ)
-    · simp [hx]
+  -- easy case : `0 < x`
+  -- Porting note: proof used to be
+  -- convert (((hasDerivAt_id (x : ℂ)).cpow_const _).div_const (r + 1)).comp_ofReal using 1
+  -- · rw [add_sub_cancel, id.def, mul_one, mul_comm, mul_div_cancel _ hr]
+  -- · rw [id.def, ofReal_re]; exact Or.inl hx
+  apply HasDerivAt.comp_ofReal (e := fun y => (y : ℂ) ^ (r + 1) / (r + 1))
+  convert HasDerivAt.div_const (𝕜 := ℂ) ?_ (r + 1) using 1
+  exact (mul_div_cancel_right₀ _ hr).symm
+  convert HasDerivAt.cpow_const ?_ ?_ using 1
+  rw [add_sub_cancel_right, mul_comm]; exact (mul_one _).symm
+  exact hasDerivAt_id (x : ℂ)
+  simp [hx]
+  -- harder case : `x < 0`
+  have : ∀ᶠ y : ℝ in 𝓝 x,
+      (y : ℂ) ^ (r + 1) / (r + 1) = (-y : ℂ) ^ (r + 1) * exp (π * I * (r + 1)) / (r + 1) := by
+    refine Filter.eventually_of_mem (Iio_mem_nhds hx) fun y hy => ?_
+    rw [ofReal_cpow_of_nonpos (le_of_lt hy)]
+  refine HasDerivAt.congr_of_eventuallyEq ?_ this
+  rw [ofReal_cpow_of_nonpos (le_of_lt hx)]
+  suffices HasDerivAt (fun y : ℝ => (-↑y) ^ (r + 1) * exp (↑π * I * (r + 1)))
+      ((r + 1) * (-↑x) ^ r * exp (↑π * I * r)) x by
+    convert this.div_const (r + 1) using 1
+    conv_rhs => rw [mul_assoc, mul_comm, mul_div_cancel_right₀ _ hr]
+  rw [mul_add ((π : ℂ) * _), mul_one, exp_add, exp_pi_mul_I, mul_comm (_ : ℂ) (-1 : ℂ),
+    neg_one_mul]
+  simp_rw [mul_neg, ← neg_mul, ← ofReal_neg]
+  suffices HasDerivAt (fun y : ℝ => (↑(-y) : ℂ) ^ (r + 1)) (-(r + 1) * ↑(-x) ^ r) x by
+    convert this.neg.mul_const _ using 1; ring
+  suffices HasDerivAt (fun y : ℝ => (y : ℂ) ^ (r + 1)) ((r + 1) * ↑(-x) ^ r) (-x) by
+    convert @HasDerivAt.scomp ℝ _ ℂ _ _ x ℝ _ _ _ _ _ _ _ _ this (hasDerivAt_neg x) using 1
+    rw [real_smul, ofReal_neg 1, ofReal_one]; ring
+  suffices HasDerivAt (fun y : ℂ => y ^ (r + 1)) ((r + 1) * ↑(-x) ^ r) ↑(-x) by
+    exact this.comp_ofReal
+  conv in ↑_ ^ _ => rw [(by ring : r = r + 1 - 1)]
+  convert HasDerivAt.cpow_const ?_ ?_ using 1
+  rw [add_sub_cancel_right, add_sub_cancel_right]; exact (mul_one _).symm
+  exact hasDerivAt_id ((-x : ℝ) : ℂ)
+  simp [hx]
 
 end deriv
 
@@ -298,10 +298,10 @@ theorem _root_.HasStrictDerivAt.rpow {f g : ℝ → ℝ} {f' g' : ℝ} (hf : Has
 theorem hasStrictDerivAt_rpow_const_of_ne {x : ℝ} (hx : x ≠ 0) (p : ℝ) :
     HasStrictDerivAt (fun x => x ^ p) (p * x ^ (p - 1)) x := by
   cases' hx.lt_or_lt with hx hx
-  · have := (hasStrictFDerivAt_rpow_of_neg (x, p) hx).comp_hasStrictDerivAt x
-      ((hasStrictDerivAt_id x).prod (hasStrictDerivAt_const _ _))
-    convert this using 1; simp
-  · simpa using (hasStrictDerivAt_id x).rpow (hasStrictDerivAt_const x p) hx
+  have := (hasStrictFDerivAt_rpow_of_neg (x, p) hx).comp_hasStrictDerivAt x
+    ((hasStrictDerivAt_id x).prod (hasStrictDerivAt_const _ _))
+  convert this using 1; simp
+  simpa using (hasStrictDerivAt_id x).rpow (hasStrictDerivAt_const x p) hx
 
 theorem hasStrictDerivAt_const_rpow {a : ℝ} (ha : 0 < a) (x : ℝ) :
     HasStrictDerivAt (fun x => a ^ x) (a ^ x * log a) x := by
@@ -332,7 +332,7 @@ variable {z x y : ℝ}
 theorem hasDerivAt_rpow_const {x p : ℝ} (h : x ≠ 0 ∨ 1 ≤ p) :
     HasDerivAt (fun x => x ^ p) (p * x ^ (p - 1)) x := by
   rcases ne_or_eq x 0 with (hx | rfl)
-  · exact (hasStrictDerivAt_rpow_const_of_ne hx _).hasDerivAt
+  exact (hasStrictDerivAt_rpow_const_of_ne hx _).hasDerivAt
   replace h : 1 ≤ p := h.neg_resolve_left rfl
   apply hasDerivAt_of_hasDerivAt_of_ne fun x hx =>
     (hasStrictDerivAt_rpow_const_of_ne hx p).hasDerivAt
@@ -357,11 +357,11 @@ theorem contDiffAt_rpow_const_of_ne {x p : ℝ} {n : ℕ∞} (h : x ≠ 0) :
 theorem contDiff_rpow_const_of_le {p : ℝ} {n : ℕ} (h : ↑n ≤ p) :
     ContDiff ℝ n fun x : ℝ => x ^ p := by
   induction' n with n ihn generalizing p
-  · exact contDiff_zero.2 (continuous_id.rpow_const fun x => Or.inr <| by simpa using h)
-  · have h1 : 1 ≤ p := le_trans (by simp) h
-    rw [Nat.cast_succ, ← le_sub_iff_add_le] at h
-    rw [contDiff_succ_iff_deriv, deriv_rpow_const' h1]
-    exact ⟨differentiable_rpow_const h1, contDiff_const.mul (ihn h)⟩
+  exact contDiff_zero.2 (continuous_id.rpow_const fun x => Or.inr <| by simpa using h)
+  have h1 : 1 ≤ p := le_trans (by simp) h
+  rw [Nat.cast_succ, ← le_sub_iff_add_le] at h
+  rw [contDiff_succ_iff_deriv, deriv_rpow_const' h1]
+  exact ⟨differentiable_rpow_const h1, contDiff_const.mul (ihn h)⟩
 
 theorem contDiffAt_rpow_const_of_le {x p : ℝ} {n : ℕ} (h : ↑n ≤ p) :
     ContDiffAt ℝ n (fun x : ℝ => x ^ p) x :=

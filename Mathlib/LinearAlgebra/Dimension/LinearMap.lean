@@ -100,30 +100,30 @@ theorem le_rank_iff_exists_linearIndependent {c : Cardinal} {f : V →ₗ[K] V'}
   rcases f.rangeRestrict.exists_rightInverse_of_surjective f.range_rangeRestrict with ⟨g, hg⟩
   have fg : LeftInverse f.rangeRestrict g := LinearMap.congr_fun hg
   refine ⟨fun h => ?_, ?_⟩
-  · rcases _root_.le_rank_iff_exists_linearIndependent.1 h with ⟨s, rfl, si⟩
-    refine ⟨g '' s, Cardinal.mk_image_eq_lift _ _ fg.injective, ?_⟩
-    replace fg : ∀ x, f (g x) = x := by
-      intro x
-      convert congr_arg Subtype.val (fg x)
-    replace si : LinearIndependent K fun x : s => f (g x) := by
-      simpa only [fg] using si.map' _ (ker_subtype _)
-    exact si.image_of_comp s g f
-  · rintro ⟨s, hsc, si⟩
-    have : LinearIndependent K fun x : s => f.rangeRestrict x :=
-      LinearIndependent.of_comp f.range.subtype (by convert si)
-    convert this.image.cardinal_le_rank
-    rw [← Cardinal.lift_inj, ← hsc, Cardinal.mk_image_eq_of_injOn_lift]
-    exact injOn_iff_injective.2 this.injective
+  rcases _root_.le_rank_iff_exists_linearIndependent.1 h with ⟨s, rfl, si⟩
+  refine ⟨g '' s, Cardinal.mk_image_eq_lift _ _ fg.injective, ?_⟩
+  replace fg : ∀ x, f (g x) = x := by
+    intro x
+    convert congr_arg Subtype.val (fg x)
+  replace si : LinearIndependent K fun x : s => f (g x) := by
+    simpa only [fg] using si.map' _ (ker_subtype _)
+  exact si.image_of_comp s g f
+  rintro ⟨s, hsc, si⟩
+  have : LinearIndependent K fun x : s => f.rangeRestrict x :=
+    LinearIndependent.of_comp f.range.subtype (by convert si)
+  convert this.image.cardinal_le_rank
+  rw [← Cardinal.lift_inj, ← hsc, Cardinal.mk_image_eq_of_injOn_lift]
+  exact injOn_iff_injective.2 this.injective
 
 theorem le_rank_iff_exists_linearIndependent_finset {n : ℕ} {f : V →ₗ[K] V'} :
     ↑n ≤ rank f ↔ ∃ s : Finset V, s.card = n ∧ LinearIndependent K fun x : (s : Set V) => f x := by
   simp only [le_rank_iff_exists_linearIndependent, Cardinal.lift_natCast, Cardinal.lift_eq_nat_iff,
     Cardinal.mk_set_eq_nat_iff_finset]
   constructor
-  · rintro ⟨s, ⟨t, rfl, rfl⟩, si⟩
-    exact ⟨t, rfl, si⟩
-  · rintro ⟨s, rfl, si⟩
-    exact ⟨s, ⟨s, rfl, rfl⟩, si⟩
+  rintro ⟨s, ⟨t, rfl, rfl⟩, si⟩
+  exact ⟨t, rfl, si⟩
+  rintro ⟨s, rfl, si⟩
+  exact ⟨s, ⟨s, rfl, rfl⟩, si⟩
 
 end DivisionRing
 

@@ -45,19 +45,19 @@ theorem TFAE_mem_nhdsWithin_Ioi {a b : α} (hab : a < b) (s : Set α) :
       ∃ u ∈ Ioc a b, Ioo a u ⊆ s,
       ∃ u ∈ Ioi a, Ioo a u ⊆ s] := by
   tfae_have 1 ↔ 2
-  · rw [nhdsWithin_Ioc_eq_nhdsWithin_Ioi hab]
+  rw [nhdsWithin_Ioc_eq_nhdsWithin_Ioi hab]
   tfae_have 1 ↔ 3
-  · rw [nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
+  rw [nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
   tfae_have 4 → 5
-  · exact fun ⟨u, umem, hu⟩ => ⟨u, umem.1, hu⟩
+  exact fun ⟨u, umem, hu⟩ => ⟨u, umem.1, hu⟩
   tfae_have 5 → 1
-  · rintro ⟨u, hau, hu⟩
-    exact mem_of_superset (Ioo_mem_nhdsWithin_Ioi ⟨le_refl a, hau⟩) hu
+  rintro ⟨u, hau, hu⟩
+  exact mem_of_superset (Ioo_mem_nhdsWithin_Ioi ⟨le_refl a, hau⟩) hu
   tfae_have 1 → 4
-  · intro h
-    rcases mem_nhdsWithin_iff_exists_mem_nhds_inter.1 h with ⟨v, va, hv⟩
-    rcases exists_Ico_subset_of_mem_nhds' va hab with ⟨u, au, hu⟩
-    exact ⟨u, au, fun x hx => hv ⟨hu ⟨le_of_lt hx.1, hx.2⟩, hx.1⟩⟩
+  intro h
+  rcases mem_nhdsWithin_iff_exists_mem_nhds_inter.1 h with ⟨v, va, hv⟩
+  rcases exists_Ico_subset_of_mem_nhds' va hab with ⟨u, au, hu⟩
+  exact ⟨u, au, fun x hx => hv ⟨hu ⟨le_of_lt hx.1, hx.2⟩, hx.1⟩⟩
   tfae_finish
 
 theorem mem_nhdsWithin_Ioi_iff_exists_mem_Ioc_Ioo_subset {a u' : α} {s : Set α} (hu' : a < u') :
@@ -79,10 +79,10 @@ lemma nhdsWithin_Ioi_basis [NoMaxOrder α] (a : α) : (𝓝[>] a).HasBasis (a < 
 
 theorem nhdsWithin_Ioi_eq_bot_iff {a : α} : 𝓝[>] a = ⊥ ↔ IsTop a ∨ ∃ b, a ⋖ b := by
   by_cases ha : IsTop a
-  · simp [ha, ha.isMax.Ioi_eq]
-  · simp only [ha, false_or]
-    rw [isTop_iff_isMax, not_isMax_iff] at ha
-    simp only [(nhdsWithin_Ioi_basis' ha).eq_bot_iff, covBy_iff_Ioo_eq]
+  simp [ha, ha.isMax.Ioi_eq]
+  simp only [ha, false_or]
+  rw [isTop_iff_isMax, not_isMax_iff] at ha
+  simp only [(nhdsWithin_Ioi_basis' ha).eq_bot_iff, covBy_iff_Ioo_eq]
 
 /-- A set is a neighborhood of `a` within `(a, +∞)` if and only if it contains an interval `(a, u)`
 with `a < u`. -/
@@ -110,11 +110,11 @@ theorem mem_nhdsWithin_Ioi_iff_exists_Ioc_subset [NoMaxOrder α] [DenselyOrdered
     {s : Set α} : s ∈ 𝓝[>] a ↔ ∃ u ∈ Ioi a, Ioc a u ⊆ s := by
   rw [mem_nhdsWithin_Ioi_iff_exists_Ioo_subset]
   constructor
-  · rintro ⟨u, au, as⟩
-    rcases exists_between au with ⟨v, hv⟩
-    exact ⟨v, hv.1, fun x hx => as ⟨hx.1, lt_of_le_of_lt hx.2 hv.2⟩⟩
-  · rintro ⟨u, au, as⟩
-    exact ⟨u, au, Subset.trans Ioo_subset_Ioc_self as⟩
+  rintro ⟨u, au, as⟩
+  rcases exists_between au with ⟨v, hv⟩
+  exact ⟨v, hv.1, fun x hx => as ⟨hx.1, lt_of_le_of_lt hx.2 hv.2⟩⟩
+  rintro ⟨u, au, as⟩
+  exact ⟨u, au, Subset.trans Ioo_subset_Ioc_self as⟩
 
 open List in
 /-- The following statements are equivalent:
@@ -182,18 +182,18 @@ theorem TFAE_mem_nhdsWithin_Ici {a b : α} (hab : a < b) (s : Set α) :
       ∃ u ∈ Ioc a b, Ico a u ⊆ s,
       ∃ u ∈ Ioi a , Ico a u ⊆ s] := by
   tfae_have 1 ↔ 2
-  · rw [nhdsWithin_Icc_eq_nhdsWithin_Ici hab]
+  rw [nhdsWithin_Icc_eq_nhdsWithin_Ici hab]
   tfae_have 1 ↔ 3
-  · rw [nhdsWithin_Ico_eq_nhdsWithin_Ici hab]
+  rw [nhdsWithin_Ico_eq_nhdsWithin_Ici hab]
   tfae_have 1 ↔ 5
-  · exact (nhdsWithin_Ici_basis' ⟨b, hab⟩).mem_iff
+  exact (nhdsWithin_Ici_basis' ⟨b, hab⟩).mem_iff
   tfae_have 4 → 5
-  · exact fun ⟨u, umem, hu⟩ => ⟨u, umem.1, hu⟩
+  exact fun ⟨u, umem, hu⟩ => ⟨u, umem.1, hu⟩
   tfae_have 5 → 4
-  · rintro ⟨u, hua, hus⟩
-    exact
-      ⟨min u b, ⟨lt_min hua hab, min_le_right _ _⟩,
-        (Ico_subset_Ico_right <| min_le_left _ _).trans hus⟩
+  rintro ⟨u, hua, hus⟩
+  exact
+    ⟨min u b, ⟨lt_min hua hab, min_le_right _ _⟩,
+      (Ico_subset_Ico_right <| min_le_left _ _).trans hus⟩
   tfae_finish
 
 theorem mem_nhdsWithin_Ici_iff_exists_mem_Ioc_Ico_subset {a u' : α} {s : Set α} (hu' : a < u') :
@@ -290,8 +290,8 @@ variable {l : Filter β} {f g : β → α}
 theorem nhds_eq_iInf_abs_sub (a : α) : 𝓝 a = ⨅ r > 0, 𝓟 { b | |a - b| < r } := by
   simp only [nhds_eq_order, abs_lt, setOf_and, ← inf_principal, iInf_inf_eq]
   refine (congr_arg₂ _ ?_ ?_).trans (inf_comm ..)
-  · refine (Equiv.subLeft a).iInf_congr fun x => ?_; simp [Ioi]
-  · refine (Equiv.subRight a).iInf_congr fun x => ?_; simp [Iio]
+  refine (Equiv.subLeft a).iInf_congr fun x => ?_; simp [Ioi]
+  refine (Equiv.subRight a).iInf_congr fun x => ?_; simp [Iio]
 
 theorem orderTopology_of_nhds_abs {α : Type*} [TopologicalSpace α] [LinearOrderedAddCommGroup α]
     (h_nhds : ∀ a : α, 𝓝 a = ⨅ r > 0, 𝓟 { b | |a - b| < r }) : OrderTopology α := by

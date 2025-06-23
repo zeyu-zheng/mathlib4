@@ -50,24 +50,24 @@ theorem W_succ (k : ℕ) :
 
 theorem W_pos (k : ℕ) : 0 < W k := by
   induction' k with k hk
-  · unfold W; simp
-  · rw [W_succ]
-    refine mul_pos hk (mul_pos (div_pos ?_ ?_) (div_pos ?_ ?_)) <;> positivity
+  unfold W; simp
+  rw [W_succ]
+  refine mul_pos hk (mul_pos (div_pos ?_ ?_) (div_pos ?_ ?_)) <;> positivity
 
 theorem W_eq_factorial_ratio (n : ℕ) :
     W n = 2 ^ (4 * n) * n ! ^ 4 / ((2 * n)! ^ 2 * (2 * n + 1)) := by
   induction' n with n IH
-  · simp only [W, prod_range_zero, Nat.factorial_zero, mul_zero, pow_zero,
-      algebraMap.coe_one, one_pow, mul_one, algebraMap.coe_zero, zero_add, div_self, Ne,
-      one_ne_zero, not_false_iff]
-    norm_num
-  · unfold W at IH ⊢
-    rw [prod_range_succ, IH, _root_.div_mul_div_comm, _root_.div_mul_div_comm]
-    refine (div_eq_div_iff ?_ ?_).mpr ?_
-    any_goals exact ne_of_gt (by positivity)
-    simp_rw [Nat.mul_succ, Nat.factorial_succ, pow_succ]
-    push_cast
-    ring_nf
+  simp only [W, prod_range_zero, Nat.factorial_zero, mul_zero, pow_zero,
+    algebraMap.coe_one, one_pow, mul_one, algebraMap.coe_zero, zero_add, div_self, Ne,
+    one_ne_zero, not_false_iff]
+  norm_num
+  unfold W at IH ⊢
+  rw [prod_range_succ, IH, _root_.div_mul_div_comm, _root_.div_mul_div_comm]
+  refine (div_eq_div_iff ?_ ?_).mpr ?_
+  any_goals exact ne_of_gt (by positivity)
+  simp_rw [Nat.mul_succ, Nat.factorial_succ, pow_succ]
+  push_cast
+  ring_nf
 
 theorem W_eq_integral_sin_pow_div_integral_sin_pow (k : ℕ) : (π / 2)⁻¹ * W k =
     (∫ x : ℝ in (0)..π, sin x ^ (2 * k + 1)) / ∫ x : ℝ in (0)..π, sin x ^ (2 * k) := by

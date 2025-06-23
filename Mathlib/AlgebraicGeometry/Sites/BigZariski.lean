@@ -81,14 +81,14 @@ lemma subcanonical_zariskiTopology : Sheaf.Subcanonical zariskiTopology := by
     apply hx
     exact Limits.pullback.condition
   refine ⟨e, ?_, ?_⟩
-  · rintro Z e ⟨j⟩
-    dsimp [e]
-    rw [𝓤.ι_glueMorphisms]
-  · intro e' h
-    apply 𝓤.hom_ext
-    intro j
-    rw [𝓤.ι_glueMorphisms]
-    exact h (𝓤.map j) (.mk j)
+  rintro Z e ⟨j⟩
+  dsimp [e]
+  rw [𝓤.ι_glueMorphisms]
+  intro e' h
+  apply 𝓤.hom_ext
+  intro j
+  rw [𝓤.ι_glueMorphisms]
+  exact h (𝓤.map j) (.mk j)
 
 end Scheme
 

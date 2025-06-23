@@ -300,9 +300,9 @@ example : @Squarefree ℕ Multiplicative.monoid 1 := by
   intros x dx h
   simp_rw [← ofAdd_add, Multiplicative.ofAdd.injective.eq_iff] at h
   cases x
-  · simp [isUnit_one]
-  · simp only [Nat.succ_add, Nat.add_succ] at h
-    cases h
+  simp [isUnit_one]
+  simp only [Nat.succ_add, Nat.add_succ] at h
+  cases h
 -/
 
 example : Nat.fib 0 = 0 := by norm_num1

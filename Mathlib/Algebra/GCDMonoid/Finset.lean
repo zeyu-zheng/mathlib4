@@ -69,8 +69,8 @@ theorem dvd_lcm {b : β} (hb : b ∈ s) : f b ∣ s.lcm f :=
 theorem lcm_insert [DecidableEq β] {b : β} :
     (insert b s : Finset β).lcm f = GCDMonoid.lcm (f b) (s.lcm f) := by
   by_cases h : b ∈ s
-  · rw [insert_eq_of_mem h,
-      (lcm_eq_right_iff (f b) (s.lcm f) (Multiset.normalize_lcm (s.1.map f))).2 (dvd_lcm h)]
+  rw [insert_eq_of_mem h,
+    (lcm_eq_right_iff (f b) (s.lcm f) (Multiset.normalize_lcm (s.1.map f))).2 (dvd_lcm h)]
   apply fold_insert h
 
 @[simp]
@@ -142,8 +142,8 @@ theorem dvd_gcd {a : α} : (∀ b ∈ s, a ∣ f b) → a ∣ s.gcd f :=
 theorem gcd_insert [DecidableEq β] {b : β} :
     (insert b s : Finset β).gcd f = GCDMonoid.gcd (f b) (s.gcd f) := by
   by_cases h : b ∈ s
-  · rw [insert_eq_of_mem h,
-      (gcd_eq_right_iff (f b) (s.gcd f) (Multiset.normalize_gcd (s.1.map f))).2 (gcd_dvd h)]
+  rw [insert_eq_of_mem h,
+    (gcd_eq_right_iff (f b) (s.gcd f) (Multiset.normalize_gcd (s.1.map f))).2 (gcd_dvd h)]
   apply fold_insert h
 
 @[simp]
@@ -179,15 +179,15 @@ theorem gcd_eq_gcd_image [DecidableEq α] : s.gcd f = (s.image f).gcd id :=
 theorem gcd_eq_zero_iff : s.gcd f = 0 ↔ ∀ x : β, x ∈ s → f x = 0 := by
   rw [gcd_def, Multiset.gcd_eq_zero_iff]
   constructor <;> intro h
-  · intro b bs
-    apply h (f b)
-    simp only [Multiset.mem_map, mem_def.1 bs]
-    use b
-    simp only [mem_def.1 bs, eq_self_iff_true, and_self]
-  · intro a as
-    rw [Multiset.mem_map] at as
-    rcases as with ⟨b, ⟨bs, rfl⟩⟩
-    apply h b (mem_def.1 bs)
+  intro b bs
+  apply h (f b)
+  simp only [Multiset.mem_map, mem_def.1 bs]
+  use b
+  simp only [mem_def.1 bs, eq_self_iff_true, and_self]
+  intro a as
+  rw [Multiset.mem_map] at as
+  rcases as with ⟨b, ⟨bs, rfl⟩⟩
+  apply h b (mem_def.1 bs)
 
 open Classical in
 /- Porting note: The change from `p : α → Prop` to `p : α → Bool` made this slightly less nice with
@@ -195,32 +195,32 @@ all the `decide`s around. -/
 theorem gcd_eq_gcd_filter_ne_zero [DecidablePred fun x : β ↦ f x = 0] :
     s.gcd f = (s.filter fun x ↦ f x ≠ 0).gcd f := by
     trans ((s.filter fun x ↦ f x = 0) ∪ s.filter fun x ↦ (f x ≠ 0)).gcd f
-    · rw [filter_union_filter_neg_eq]
+    rw [filter_union_filter_neg_eq]
     rw [gcd_union]
     refine Eq.trans (?_ : _ = GCDMonoid.gcd (0 : α) ?_) (?_ : GCDMonoid.gcd (0 : α) _ = _)
-    · exact (gcd (filter (fun x => (f x ≠ 0)) s) f)
-    · refine congr (congr rfl <| s.induction_on ?_ ?_) (by simp)
-      · simp
-      · intro a s _ h
-        rw [filter_insert]
-        split_ifs with h1 <;> simp [h, h1]
+    exact (gcd (filter (fun x => (f x ≠ 0)) s) f)
+    refine congr (congr rfl <| s.induction_on ?_ ?_) (by simp)
+    simp
+    intro a s _ h
+    rw [filter_insert]
+    split_ifs with h1 <;> simp [h, h1]
     simp only [gcd_zero_left, normalize_gcd]
 
 open Classical in
 nonrec theorem gcd_mul_left {a : α} : (s.gcd fun x ↦ a * f x) = normalize a * s.gcd f := by
     refine s.induction_on ?_ ?_
-    · simp
-    · intro b t _ h
-      rw [gcd_insert, gcd_insert, h, ← gcd_mul_left]
-      apply ((normalize_associated a).mul_right _).gcd_eq_right
+    simp
+    intro b t _ h
+    rw [gcd_insert, gcd_insert, h, ← gcd_mul_left]
+    apply ((normalize_associated a).mul_right _).gcd_eq_right
 
 open Classical in
 nonrec theorem gcd_mul_right {a : α} : (s.gcd fun x ↦ f x * a) = s.gcd f * normalize a := by
     refine s.induction_on ?_ ?_
-    · simp
-    · intro b t _ h
-      rw [gcd_insert, gcd_insert, h, ← gcd_mul_right]
-      apply ((normalize_associated a).mul_left _).gcd_eq_right
+    simp
+    intro b t _ h
+    rw [gcd_insert, gcd_insert, h, ← gcd_mul_right]
+    apply ((normalize_associated a).mul_left _).gcd_eq_right
 
 theorem extract_gcd' (f g : β → α) (hs : ∃ x, x ∈ s ∧ f x ≠ 0)
     (hg : ∀ b ∈ s, f b = s.gcd f * g b) : s.gcd g = 1 :=
@@ -233,14 +233,14 @@ open Classical in
 theorem extract_gcd (f : β → α) (hs : s.Nonempty) :
     ∃ g : β → α, (∀ b ∈ s, f b = s.gcd f * g b) ∧ s.gcd g = 1 := by
     by_cases h : ∀ x ∈ s, f x = (0 : α)
-    · refine ⟨fun _ ↦ 1, fun b hb ↦ by rw [h b hb, gcd_eq_zero_iff.2 h, mul_one], ?_⟩
-      rw [gcd_eq_gcd_image, image_const hs, gcd_singleton, id, normalize_one]
-    · choose g' hg using @gcd_dvd _ _ _ _ s f
-      push_neg at h
-      refine ⟨fun b ↦ if hb : b ∈ s then g' hb else 0, fun b hb ↦ ?_,
-          extract_gcd' f _ h fun b hb ↦ ?_⟩
-      · simp only [hb, hg, dite_true]
-      rw [dif_pos hb, hg hb]
+    refine ⟨fun _ ↦ 1, fun b hb ↦ by rw [h b hb, gcd_eq_zero_iff.2 h, mul_one], ?_⟩
+    rw [gcd_eq_gcd_image, image_const hs, gcd_singleton, id, normalize_one]
+    choose g' hg using @gcd_dvd _ _ _ _ s f
+    push_neg at h
+    refine ⟨fun b ↦ if hb : b ∈ s then g' hb else 0, fun b hb ↦ ?_,
+        extract_gcd' f _ h fun b hb ↦ ?_⟩
+    simp only [hb, hg, dite_true]
+    rw [dif_pos hb, hg hb]
 
 variable [Div α] [MulDivCancelClass α] {f : ι → α} {s : Finset ι} {i : ι}
 
@@ -271,7 +271,7 @@ theorem gcd_eq_of_dvd_sub {s : Finset β} {f g : β → α} {a : α}
     GCDMonoid.gcd a (s.gcd f) = GCDMonoid.gcd a (s.gcd g) := by
     revert h
     refine s.induction_on ?_ ?_
-    · simp
+    simp
     intro b s _ hi h
     rw [gcd_insert, gcd_insert, gcd_comm (f b), ← gcd_assoc,
       hi fun x hx ↦ h _ (mem_insert_of_mem hx), gcd_comm a, gcd_assoc,

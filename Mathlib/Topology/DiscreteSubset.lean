@@ -89,8 +89,8 @@ theorem isClosed_and_discrete_iff {S : Set X} :
   constructor <;> intro H
   · by_cases hx : x ∈ S
     exacts [H.2 hx, (H.1 hx).mono_left nhdsWithin_le_nhds]
-  · refine ⟨fun hx ↦ ?_, fun _ ↦ H⟩
-    simpa [disjoint_iff, nhdsWithin, inf_assoc, hx] using H
+  refine ⟨fun hx ↦ ?_, fun _ ↦ H⟩
+  simpa [disjoint_iff, nhdsWithin, inf_assoc, hx] using H
 
 /-- In any topological space, the open sets with with discrete complement form a filter. -/
 def Filter.codiscrete (X : Type*) [TopologicalSpace X] : Filter X where

@@ -157,14 +157,14 @@ theorem binCast_eq [AddMonoidWithOne R] (n : ℕ) :
   | succ k =>
       rw [Nat.binCast]
       by_cases h : (k + 1) % 2 = 0
-      · conv => rhs; rw [← Nat.mod_add_div (k+1) 2]
-        rw [if_pos h, hk _ <| Nat.div_lt_self (Nat.succ_pos k) (Nat.le_refl 2), ← Nat.cast_add]
-        rw [h, Nat.zero_add, Nat.succ_mul, Nat.one_mul]
-      · conv => rhs; rw [← Nat.mod_add_div (k+1) 2]
-        rw [if_neg h, hk _ <| Nat.div_lt_self (Nat.succ_pos k) (Nat.le_refl 2), ← Nat.cast_add]
-        have h1 := Or.resolve_left (Nat.mod_two_eq_zero_or_one (succ k)) h
-        rw [h1, Nat.add_comm 1, Nat.succ_mul, Nat.one_mul]
-        simp only [Nat.cast_add, Nat.cast_one]
+      conv => rhs; rw [← Nat.mod_add_div (k+1) 2]
+      rw [if_pos h, hk _ <| Nat.div_lt_self (Nat.succ_pos k) (Nat.le_refl 2), ← Nat.cast_add]
+      rw [h, Nat.zero_add, Nat.succ_mul, Nat.one_mul]
+      conv => rhs; rw [← Nat.mod_add_div (k+1) 2]
+      rw [if_neg h, hk _ <| Nat.div_lt_self (Nat.succ_pos k) (Nat.le_refl 2), ← Nat.cast_add]
+      have h1 := Or.resolve_left (Nat.mod_two_eq_zero_or_one (succ k)) h
+      rw [h1, Nat.add_comm 1, Nat.succ_mul, Nat.one_mul]
+      simp only [Nat.cast_add, Nat.cast_one]
 
 theorem cast_two [AddMonoidWithOne R] : ((2 : ℕ) : R) = (2 : R) := rfl
 

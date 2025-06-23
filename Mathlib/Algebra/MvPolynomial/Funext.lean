@@ -29,16 +29,16 @@ variable {R : Type*} [CommRing R] [IsDomain R] [Infinite R]
 private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
     (h : ∀ x : Fin n → R, eval x p = 0) : p = 0 := by
   induction' n with n ih
-  · apply (MvPolynomial.isEmptyRingEquiv R (Fin 0)).injective
-    rw [RingEquiv.map_zero]
-    convert h finZeroElim
-  · apply (finSuccEquiv R n).injective
-    simp only [map_zero]
-    refine Polynomial.funext fun q => ?_
-    rw [Polynomial.eval_zero]
-    apply ih fun x => ?_
-    calc _ = _ := eval_polynomial_eval_finSuccEquiv p _
-         _ = 0 := h _
+  apply (MvPolynomial.isEmptyRingEquiv R (Fin 0)).injective
+  rw [RingEquiv.map_zero]
+  convert h finZeroElim
+  apply (finSuccEquiv R n).injective
+  simp only [map_zero]
+  refine Polynomial.funext fun q => ?_
+  rw [Polynomial.eval_zero]
+  apply ih fun x => ?_
+  calc _ = _ := eval_polynomial_eval_finSuccEquiv p _
+       _ = 0 := h _
 
 open Classical in
 /-- Two multivariate polynomials over an infinite integral domain are equal

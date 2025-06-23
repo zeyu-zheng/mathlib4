@@ -110,11 +110,11 @@ theorem edist_triangle_right (x y z : α) : edist x y ≤ edist x z + edist y z 
 
 theorem edist_congr_right {x y z : α} (h : edist x y = 0) : edist x z = edist y z := by
   apply le_antisymm
-  · rw [← zero_add (edist y z), ← h]
-    apply edist_triangle
-  · rw [edist_comm] at h
-    rw [← zero_add (edist x z), ← h]
-    apply edist_triangle
+  rw [← zero_add (edist y z), ← h]
+  apply edist_triangle
+  rw [edist_comm] at h
+  rw [← zero_add (edist x z), ← h]
+  apply edist_triangle
 
 theorem edist_congr_left {x y z : α} (h : edist x y = 0) : edist z x = edist z y := by
   rw [edist_comm z x, edist_comm z y]
@@ -190,10 +190,10 @@ protected theorem EMetric.mk_uniformity_basis {β : Type*} {p : β → Prop} {f 
     (𝓤 α).HasBasis p fun x => { p : α × α | edist p.1 p.2 < f x } := by
   refine ⟨fun s => uniformity_basis_edist.mem_iff.trans ?_⟩
   constructor
-  · rintro ⟨ε, ε₀, hε⟩
-    rcases hf ε ε₀ with ⟨i, hi, H⟩
-    exact ⟨i, hi, fun x hx => hε <| lt_of_lt_of_le hx.out H⟩
-  · exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, H⟩
+  rintro ⟨ε, ε₀, hε⟩
+  rcases hf ε ε₀ with ⟨i, hi, H⟩
+  exact ⟨i, hi, fun x hx => hε <| lt_of_lt_of_le hx.out H⟩
+  exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, H⟩
 
 /-- Given `f : β → ℝ≥0∞`, if `f` sends `{i | p i}` to a set of positive numbers
 accumulating to zero, then closed `f i`-neighborhoods of the diagonal form a basis of `𝓤 α`.
@@ -204,11 +204,11 @@ protected theorem EMetric.mk_uniformity_basis_le {β : Type*} {p : β → Prop} 
     (𝓤 α).HasBasis p fun x => { p : α × α | edist p.1 p.2 ≤ f x } := by
   refine ⟨fun s => uniformity_basis_edist.mem_iff.trans ?_⟩
   constructor
-  · rintro ⟨ε, ε₀, hε⟩
-    rcases exists_between ε₀ with ⟨ε', hε'⟩
-    rcases hf ε' hε'.1 with ⟨i, hi, H⟩
-    exact ⟨i, hi, fun x hx => hε <| lt_of_le_of_lt (le_trans hx.out H) hε'.2⟩
-  · exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, fun x hx => H (le_of_lt hx.out)⟩
+  rintro ⟨ε, ε₀, hε⟩
+  rcases exists_between ε₀ with ⟨ε', hε'⟩
+  rcases hf ε' hε'.1 with ⟨i, hi, H⟩
+  exact ⟨i, hi, fun x hx => hε <| lt_of_le_of_lt (le_trans hx.out H) hε'.2⟩
+  exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, fun x hx => H (le_of_lt hx.out)⟩
 
 theorem uniformity_basis_edist_le :
     (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => { p : α × α | edist p.1 p.2 ≤ ε } :=
@@ -693,18 +693,18 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
     (hs : ∀ ε > 0, ∃ t : Set α, t.Countable ∧ s ⊆ ⋃ x ∈ t, closedBall x ε) :
     ∃ t, t ⊆ s ∧ t.Countable ∧ s ⊆ closure t := by
   rcases s.eq_empty_or_nonempty with (rfl | ⟨x₀, hx₀⟩)
-  · exact ⟨∅, empty_subset _, countable_empty, empty_subset _⟩
+  exact ⟨∅, empty_subset _, countable_empty, empty_subset _⟩
   choose! T hTc hsT using fun n : ℕ => hs n⁻¹ (by simp)
   have : ∀ r x, ∃ y ∈ s, closedBall x r ∩ s ⊆ closedBall y (r * 2) := fun r x => by
     rcases (closedBall x r ∩ s).eq_empty_or_nonempty with (he | ⟨y, hxy, hys⟩)
-    · refine ⟨x₀, hx₀, ?_⟩
-      rw [he]
-      exact empty_subset _
-    · refine ⟨y, hys, fun z hz => ?_⟩
-      calc
-        edist z y ≤ edist z x + edist y x := edist_triangle_right _ _ _
-        _ ≤ r + r := add_le_add hz.1 hxy
-        _ = r * 2 := (mul_two r).symm
+    refine ⟨x₀, hx₀, ?_⟩
+    rw [he]
+    exact empty_subset _
+    refine ⟨y, hys, fun z hz => ?_⟩
+    calc
+      edist z y ≤ edist z x + edist y x := edist_triangle_right _ _ _
+      _ ≤ r + r := add_le_add hz.1 hxy
+      _ = r * 2 := (mul_two r).symm
   choose f hfs hf using this
   refine
     ⟨⋃ n : ℕ, f n⁻¹ '' T n, iUnion_subset fun n => image_subset_iff.2 fun z _ => hfs _ _,
@@ -857,16 +857,16 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) :
         add_le_add (add_le_add (edist_le_diam_of_mem ha xs) le_rfl) (edist_le_diam_of_mem yt hb)
   refine diam_le fun a ha b hb => ?_
   cases' (mem_union _ _ _).1 ha with h'a h'a <;> cases' (mem_union _ _ _).1 hb with h'b h'b
-  · calc
-      edist a b ≤ diam s := edist_le_diam_of_mem h'a h'b
-      _ ≤ diam s + (edist x y + diam t) := le_self_add
-      _ = diam s + edist x y + diam t := (add_assoc _ _ _).symm
-  · exact A a h'a b h'b
-  · have Z := A b h'b a h'a
-    rwa [edist_comm] at Z
-  · calc
-      edist a b ≤ diam t := edist_le_diam_of_mem h'a h'b
-      _ ≤ diam s + edist x y + diam t := le_add_self
+  calc
+    edist a b ≤ diam s := edist_le_diam_of_mem h'a h'b
+    _ ≤ diam s + (edist x y + diam t) := le_self_add
+    _ = diam s + edist x y + diam t := (add_assoc _ _ _).symm
+  exact A a h'a b h'b
+  have Z := A b h'b a h'a
+  rwa [edist_comm] at Z
+  calc
+    edist a b ≤ diam t := edist_le_diam_of_mem h'a h'b
+    _ ≤ diam s + edist x y + diam t := le_add_self
 
 theorem diam_union' {t : Set α} (h : (s ∩ t).Nonempty) : diam (s ∪ t) ≤ diam s + diam t := by
   let ⟨x, ⟨xs, xt⟩⟩ := h

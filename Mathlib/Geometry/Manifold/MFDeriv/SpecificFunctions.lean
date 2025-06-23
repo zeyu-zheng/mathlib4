@@ -144,8 +144,8 @@ theorem tangentMapWithin_id {p : TangentBundle I M} (hs : UniqueMDiffWithinAt I 
     tangentMapWithin I I (id : M → M) s p = p := by
   simp only [tangentMapWithin, id]
   rw [mfderivWithin_id]
-  · rcases p with ⟨⟩; rfl
-  · exact hs
+  rcases p with ⟨⟩; rfl
+  exact hs
 
 end id
 
@@ -251,8 +251,8 @@ theorem tangentMapWithin_prod_fst {s : Set (M × M')} {p : TangentBundle (I.prod
     tangentMapWithin (I.prod I') I Prod.fst s p = ⟨p.proj.1, p.2.1⟩ := by
   simp only [tangentMapWithin]
   rw [mfderivWithin_fst]
-  · rcases p with ⟨⟩; rfl
-  · exact hs
+  rcases p with ⟨⟩; rfl
+  exact hs
 
 theorem hasMFDerivAt_snd (x : M × M') :
     HasMFDerivAt (I.prod I') I' Prod.snd x
@@ -313,8 +313,8 @@ theorem tangentMapWithin_prod_snd {s : Set (M × M')} {p : TangentBundle (I.prod
     tangentMapWithin (I.prod I') I' Prod.snd s p = ⟨p.proj.2, p.2.2⟩ := by
   simp only [tangentMapWithin]
   rw [mfderivWithin_snd]
-  · rcases p with ⟨⟩; rfl
-  · exact hs
+  rcases p with ⟨⟩; rfl
+  exact hs
 
 variable {I I' I''}
 
@@ -436,8 +436,8 @@ theorem mfderiv_neg (f : M → E') (x : M) :
       (-mfderiv I 𝓘(𝕜, E') f x : TangentSpace I x →L[𝕜] E') := by
   simp_rw [mfderiv]
   by_cases hf : MDifferentiableAt I 𝓘(𝕜, E') f x
-  · exact hf.hasMFDerivAt.neg.mfderiv
-  · rw [if_neg hf]; rw [← mdifferentiableAt_neg] at hf; rw [if_neg hf, neg_zero]
+  exact hf.hasMFDerivAt.neg.mfderiv
+  rw [if_neg hf]; rw [← mdifferentiableAt_neg] at hf; rw [if_neg hf, neg_zero]
 
 theorem HasMFDerivAt.sub (hf : HasMFDerivAt I 𝓘(𝕜, E') f z f')
     (hg : HasMFDerivAt I 𝓘(𝕜, E') g z g') : HasMFDerivAt I 𝓘(𝕜, E') (f - g) z (f' - g') :=

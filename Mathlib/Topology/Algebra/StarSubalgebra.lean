@@ -51,9 +51,9 @@ theorem closedEmbedding_inclusion {S₁ S₂ : StarSubalgebra R A} (h : S₁ ≤
     isClosed_range := isClosed_induced_iff.2
       ⟨S₁, hS₁, by
           convert (Set.range_subtype_map id _).symm
-          · rw [Set.image_id]; rfl
-          · intro _ h'
-            apply h h' ⟩ }
+          rw [Set.image_id]; rfl
+          intro _ h'
+          apply h h' ⟩ }
 
 variable [TopologicalSemiring A] [ContinuousStar A]
 variable [TopologicalSpace B] [Semiring B] [Algebra R B] [StarRing B]
@@ -239,9 +239,9 @@ theorem induction_on {x y : A}
   induction hy using Algebra.adjoin_induction'' with
   | mem u hu =>
     obtain ((rfl : u = x) | (hu : star u = x)) := by simpa using hu
-    · exact self
-    · simp_rw [← hu, star_star] at star_self
-      exact star_self
+    exact self
+    simp_rw [← hu, star_star] at star_self
+    exact star_self
   | algebraMap r => exact algebraMap r
   | add u hu_mem v hv_mem hu hv =>
     exact add u (subset_closure hu_mem) v (subset_closure hv_mem) (hu hu_mem) (hv hv_mem)

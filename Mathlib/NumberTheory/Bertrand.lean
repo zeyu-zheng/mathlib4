@@ -66,39 +66,39 @@ theorem real_main_inequality {x : ℝ} (x_large : (512 : ℝ) ≤ x) :
   -- porting note (#11083): the proof was rewritten, because it was too slow
   have h : ConcaveOn ℝ (Set.Ioi 0.5) f := by
     apply ConcaveOn.sub
-    · apply ConcaveOn.add
-      · exact strictConcaveOn_log_Ioi.concaveOn.subset
-          (Set.Ioi_subset_Ioi (by norm_num)) (convex_Ioi 0.5)
-      convert ((strictConcaveOn_sqrt_mul_log_Ioi.concaveOn.comp_linearMap
-        ((2 : ℝ) • LinearMap.id))) using 1
-      ext x
-      simp only [Set.mem_Ioi, Set.mem_preimage, LinearMap.smul_apply,
-        LinearMap.id_coe, id_eq, smul_eq_mul]
-      rw [← mul_lt_mul_left (two_pos)]
-      norm_num1
-      rfl
+    apply ConcaveOn.add
+    exact strictConcaveOn_log_Ioi.concaveOn.subset
+      (Set.Ioi_subset_Ioi (by norm_num)) (convex_Ioi 0.5)
+    convert ((strictConcaveOn_sqrt_mul_log_Ioi.concaveOn.comp_linearMap
+      ((2 : ℝ) • LinearMap.id))) using 1
+    ext x
+    simp only [Set.mem_Ioi, Set.mem_preimage, LinearMap.smul_apply,
+      LinearMap.id_coe, id_eq, smul_eq_mul]
+    rw [← mul_lt_mul_left (two_pos)]
+    norm_num1
+    rfl
     apply ConvexOn.smul
-    · refine div_nonneg (log_nonneg (by norm_num1)) (by norm_num1)
-    · exact convexOn_id (convex_Ioi (0.5 : ℝ))
+    refine div_nonneg (log_nonneg (by norm_num1)) (by norm_num1)
+    exact convexOn_id (convex_Ioi (0.5 : ℝ))
   suffices ∃ x1 x2, 0.5 < x1 ∧ x1 < x2 ∧ x2 ≤ x ∧ 0 ≤ f x1 ∧ f x2 ≤ 0 by
     obtain ⟨x1, x2, h1, h2, h0, h3, h4⟩ := this
     exact (h.right_le_of_le_left'' h1 ((h1.trans h2).trans_le h0) h2 h0 (h4.trans h3)).trans h4
   refine ⟨18, 512, by norm_num1, by norm_num1, x_large, ?_, ?_⟩
-  · have : √(2 * 18 : ℝ) = 6 := (sqrt_eq_iff_mul_self_eq_of_pos (by norm_num1)).mpr (by norm_num1)
-    rw [hf _ (by norm_num1), log_nonneg_iff (by positivity), this, one_le_div (by norm_num1)]
-    norm_num1
-  · have : √(2 * 512) = 32 :=
-      (sqrt_eq_iff_mul_self_eq_of_pos (by norm_num1)).mpr (by norm_num1)
-    rw [hf _ (by norm_num1), log_nonpos_iff (hf' _ (by norm_num1)), this,
-        div_le_one (by positivity)]
-    conv in 512 => equals 2 ^ 9 => norm_num1
-    conv in 2 * 512 => equals 2 ^ 10 => norm_num1
-    conv in 32 => rw [← Nat.cast_ofNat]
-    rw [rpow_natCast, ← pow_mul, ← pow_add]
-    conv in 4 => equals 2 ^ (2 : ℝ) => rw [rpow_two]; norm_num1
-    rw [← rpow_mul, ← rpow_natCast]
-    on_goal 1 => apply rpow_le_rpow_of_exponent_le
-    all_goals norm_num1
+  have : √(2 * 18 : ℝ) = 6 := (sqrt_eq_iff_mul_self_eq_of_pos (by norm_num1)).mpr (by norm_num1)
+  rw [hf _ (by norm_num1), log_nonneg_iff (by positivity), this, one_le_div (by norm_num1)]
+  norm_num1
+  have : √(2 * 512) = 32 :=
+    (sqrt_eq_iff_mul_self_eq_of_pos (by norm_num1)).mpr (by norm_num1)
+  rw [hf _ (by norm_num1), log_nonpos_iff (hf' _ (by norm_num1)), this,
+      div_le_one (by positivity)]
+  conv in 512 => equals 2 ^ 9 => norm_num1
+  conv in 2 * 512 => equals 2 ^ 10 => norm_num1
+  conv in 32 => rw [← Nat.cast_ofNat]
+  rw [rpow_natCast, ← pow_mul, ← pow_add]
+  conv in 4 => equals 2 ^ (2 : ℝ) => rw [rpow_two]; norm_num1
+  rw [← rpow_mul, ← rpow_natCast]
+  on_goal 1 => apply rpow_le_rpow_of_exponent_le
+  all_goals norm_num1
 
 end Bertrand
 
@@ -116,11 +116,11 @@ theorem bertrand_main_inequality {n : ℕ} (n_large : 512 ≤ n) :
   simp only [cast_add, cast_one, cast_mul, cast_pow, ← Real.rpow_natCast]
   refine _root_.trans ?_ (Bertrand.real_main_inequality (by exact_mod_cast n_large))
   gcongr
-  · have n2_pos : 0 < 2 * n := by positivity
-    exact mod_cast n2_pos
-  · exact_mod_cast Real.nat_sqrt_le_real_sqrt
-  · norm_num1
-  · exact cast_div_le.trans (by norm_cast)
+  have n2_pos : 0 < 2 * n := by positivity
+  exact mod_cast n2_pos
+  exact_mod_cast Real.nat_sqrt_le_real_sqrt
+  norm_num1
+  exact cast_div_le.trans (by norm_cast)
 
 /-- A lemma that tells us that, in the case where Bertrand's postulate does not hold, the prime
 factorization of the central binomial coefficent only has factors at most `2 * n / 3 + 1`.
@@ -130,15 +130,15 @@ theorem centralBinom_factorization_small (n : ℕ) (n_large : 2 < n)
     centralBinom n = ∏ p ∈ Finset.range (2 * n / 3 + 1), p ^ (centralBinom n).factorization p := by
   refine (Eq.trans ?_ n.prod_pow_factorization_centralBinom).symm
   apply Finset.prod_subset
-  · exact Finset.range_subset.2 (add_le_add_right (Nat.div_le_self _ _) _)
+  exact Finset.range_subset.2 (add_le_add_right (Nat.div_le_self _ _) _)
   intro x hx h2x
   rw [Finset.mem_range, Nat.lt_succ_iff] at hx h2x
   rw [not_le, div_lt_iff_lt_mul' three_pos, mul_comm x] at h2x
   replace no_prime := not_exists.mp no_prime x
   rw [← and_assoc, not_and', not_and_or, not_lt] at no_prime
   cases' no_prime hx with h h
-  · rw [factorization_eq_zero_of_non_prime n.centralBinom h, Nat.pow_zero]
-  · rw [factorization_centralBinom_of_two_mul_self_lt_three_mul n_large h h2x, Nat.pow_zero]
+  rw [factorization_eq_zero_of_non_prime n.centralBinom h, Nat.pow_zero]
+  rw [factorization_centralBinom_of_two_mul_self_lt_three_mul n_large h h2x, Nat.pow_zero]
 
 /-- An upper bound on the central binomial coefficient used in the proof of Bertrand's postulate.
 The bound splits the prime factors of `centralBinom n` into those
@@ -162,21 +162,21 @@ theorem centralBinom_le_of_no_bertrand_prime (n : ℕ) (n_large : 2 < n)
   rw [centralBinom_factorization_small n n_large no_prime, ← this, ←
     Finset.prod_filter_mul_prod_filter_not S (· ≤ sqrt (2 * n))]
   apply mul_le_mul'
-  · refine (Finset.prod_le_prod' fun p _ => (?_ : f p ≤ 2 * n)).trans ?_
-    · exact pow_factorization_choose_le (mul_pos two_pos n_pos)
-    have : (Finset.Icc 1 (sqrt (2 * n))).card = sqrt (2 * n)
-    rw [card_Icc, Nat.add_sub_cancel]
-    rw [Finset.prod_const]
-    refine pow_le_pow_right n2_pos ((Finset.card_le_card fun x hx => ?_).trans this.le)
-    obtain ⟨h1, h2⟩ := Finset.mem_filter.1 hx
-    exact Finset.mem_Icc.mpr ⟨(Finset.mem_filter.1 h1).2.one_lt.le, h2⟩
-  · refine le_trans ?_ (primorial_le_4_pow (2 * n / 3))
-    refine (Finset.prod_le_prod' fun p hp => (?_ : f p ≤ p)).trans ?_
-    · obtain ⟨h1, h2⟩ := Finset.mem_filter.1 hp
-      refine (pow_le_pow_right (Finset.mem_filter.1 h1).2.one_lt.le ?_).trans (pow_one p).le
-      exact Nat.factorization_choose_le_one (sqrt_lt'.mp <| not_le.1 h2)
-    refine Finset.prod_le_prod_of_subset_of_one_le' (Finset.filter_subset _ _) ?_
-    exact fun p hp _ => (Finset.mem_filter.1 hp).2.one_lt.le
+  refine (Finset.prod_le_prod' fun p _ => (?_ : f p ≤ 2 * n)).trans ?_
+  exact pow_factorization_choose_le (mul_pos two_pos n_pos)
+  have : (Finset.Icc 1 (sqrt (2 * n))).card = sqrt (2 * n)
+  rw [card_Icc, Nat.add_sub_cancel]
+  rw [Finset.prod_const]
+  refine pow_le_pow_right n2_pos ((Finset.card_le_card fun x hx => ?_).trans this.le)
+  obtain ⟨h1, h2⟩ := Finset.mem_filter.1 hx
+  exact Finset.mem_Icc.mpr ⟨(Finset.mem_filter.1 h1).2.one_lt.le, h2⟩
+  refine le_trans ?_ (primorial_le_4_pow (2 * n / 3))
+  refine (Finset.prod_le_prod' fun p hp => (?_ : f p ≤ p)).trans ?_
+  obtain ⟨h1, h2⟩ := Finset.mem_filter.1 hp
+  refine (pow_le_pow_right (Finset.mem_filter.1 h1).2.one_lt.le ?_).trans (pow_one p).le
+  exact Nat.factorization_choose_le_one (sqrt_lt'.mp <| not_le.1 h2)
+  refine Finset.prod_le_prod_of_subset_of_one_le' (Finset.filter_subset _ _) ?_
+  exact fun p hp _ => (Finset.mem_filter.1 hp).2.one_lt.le
 
 namespace Nat
 
@@ -216,7 +216,7 @@ theorem exists_prime_lt_and_le_two_mul (n : ℕ) (hn0 : n ≠ 0) :
   cases' lt_or_le 511 n with h h
   -- If `n` is large, apply the lemma derived from the inequalities on the central binomial
   -- coefficient.
-  · exact exists_prime_lt_and_le_two_mul_eventually n h
+  exact exists_prime_lt_and_le_two_mul_eventually n h
   replace h : n < 521 := h.trans_lt (by norm_num1)
   revert h
   -- For small `n`, supply a list of primes to cover the initial cases.

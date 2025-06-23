@@ -91,8 +91,8 @@ theorem _root_.Measurable.lmarginal (hf : Measurable f) : Measurable (∫⋯∫�
   refine hf.comp ?_
   rw [measurable_pi_iff]; intro i
   by_cases hi : i ∈ s
-  · simpa [hi, updateFinset] using measurable_pi_iff.1 measurable_snd _
-  · simpa [hi, updateFinset] using measurable_pi_iff.1 measurable_fst _
+  simpa [hi, updateFinset] using measurable_pi_iff.1 measurable_snd _
+  simpa [hi, updateFinset] using measurable_pi_iff.1 measurable_fst _
 
 @[simp] theorem lmarginal_empty (f : (∀ i, π i) → ℝ≥0∞) : ∫⋯∫⁻_∅, f ∂μ = f := by
   ext1 x
@@ -237,14 +237,14 @@ theorem lintegral_eq_of_lmarginal_eq [Fintype δ] (s : Finset δ) {f g : (∀ i,
     (hf : Measurable f) (hg : Measurable g) (hfg : ∫⋯∫⁻_s, f ∂μ = ∫⋯∫⁻_s, g ∂μ) :
     ∫⁻ x, f x ∂Measure.pi μ = ∫⁻ x, g x ∂Measure.pi μ := by
   rcases isEmpty_or_nonempty (∀ i, π i) with h|⟨⟨x⟩⟩
-  · simp_rw [lintegral_of_isEmpty]
+  simp_rw [lintegral_of_isEmpty]
   simp_rw [lintegral_eq_lmarginal_univ x, lmarginal_eq_of_subset (Finset.subset_univ s) hf hg hfg]
 
 theorem lintegral_le_of_lmarginal_le [Fintype δ] (s : Finset δ) {f g : (∀ i, π i) → ℝ≥0∞}
     (hf : Measurable f) (hg : Measurable g) (hfg : ∫⋯∫⁻_s, f ∂μ ≤ ∫⋯∫⁻_s, g ∂μ) :
     ∫⁻ x, f x ∂Measure.pi μ ≤ ∫⁻ x, g x ∂Measure.pi μ := by
   rcases isEmpty_or_nonempty (∀ i, π i) with h|⟨⟨x⟩⟩
-  · simp_rw [lintegral_of_isEmpty, le_rfl]
+  simp_rw [lintegral_of_isEmpty, le_rfl]
   simp_rw [lintegral_eq_lmarginal_univ x, lmarginal_le_of_subset (Finset.subset_univ s) hf hg hfg x]
 
 end LMarginal

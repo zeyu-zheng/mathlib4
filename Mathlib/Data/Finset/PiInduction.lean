@@ -43,23 +43,23 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
   cases nonempty_fintype ι
   induction' hs : univ.sigma f using Finset.strongInductionOn with s ihs generalizing f; subst s
   rcases eq_empty_or_nonempty (univ.sigma f) with he | hne
-  · convert h0 using 1
-    simpa [funext_iff] using he
-  · rcases sigma_nonempty.1 hne with ⟨i, -, hi⟩
-    rcases H_ex i (f i) hi with ⟨x, x_mem, hr⟩
-    set g := update f i ((f i).erase x) with hg
-    clear_value g
-    have hx' : x ∉ g i
-    rw [hg, update_same]
-    apply not_mem_erase
-    rw [show f = update g i (insert x (g i)) by
-      rw [hg, update_idem, update_same, insert_erase x_mem, update_eq_self]] at hr ihs ⊢
-    clear hg
-    rw [update_same, erase_insert hx'] at hr
-    refine step _ _ _ hr (ihs (univ.sigma g) ?_ _ rfl)
-    rw [ssubset_iff_of_subset (sigma_mono (Subset.refl _) _)]
-    exacts [⟨⟨i, x⟩, mem_sigma.2 ⟨mem_univ _, by simp⟩, by simp [hx']⟩,
-      (@le_update_iff _ _ _ _ g g i _).2 ⟨subset_insert _ _, fun _ _ ↦ le_rfl⟩]
+  convert h0 using 1
+  simpa [funext_iff] using he
+  rcases sigma_nonempty.1 hne with ⟨i, -, hi⟩
+  rcases H_ex i (f i) hi with ⟨x, x_mem, hr⟩
+  set g := update f i ((f i).erase x) with hg
+  clear_value g
+  have hx' : x ∉ g i
+  rw [hg, update_same]
+  apply not_mem_erase
+  rw [show f = update g i (insert x (g i)) by
+    rw [hg, update_idem, update_same, insert_erase x_mem, update_eq_self]] at hr ihs ⊢
+  clear hg
+  rw [update_same, erase_insert hx'] at hr
+  refine step _ _ _ hr (ihs (univ.sigma g) ?_ _ rfl)
+  rw [ssubset_iff_of_subset (sigma_mono (Subset.refl _) _)]
+  exacts [⟨⟨i, x⟩, mem_sigma.2 ⟨mem_univ _, by simp⟩, by simp [hx']⟩,
+    (@le_update_iff _ _ _ _ g g i _).2 ⟨subset_insert _ _, fun _ _ ↦ le_rfl⟩]
 
 /-- Given a predicate on functions `∀ i, Finset (α i)` defined on a finite type, it is true on all
 maps provided that it is true on `fun _ ↦ ∅` and for any function `g : ∀ i, Finset (α i)`, an index

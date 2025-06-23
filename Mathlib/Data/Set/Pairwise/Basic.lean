@@ -85,13 +85,13 @@ alias ⟨Pairwise.of_refl, _⟩ := pairwise_iff_of_refl
 theorem Nonempty.pairwise_iff_exists_forall [IsEquiv α r] {s : Set ι} (hs : s.Nonempty) :
     s.Pairwise (r on f) ↔ ∃ z, ∀ x ∈ s, r (f x) z := by
   constructor
-  · rcases hs with ⟨y, hy⟩
-    refine fun H => ⟨f y, fun x hx => ?_⟩
-    rcases eq_or_ne x y with (rfl | hne)
-    · apply IsRefl.refl
-    · exact H hx hy hne
-  · rintro ⟨z, hz⟩ x hx y hy _
-    exact @IsTrans.trans α r _ (f x) z (f y) (hz _ hx) (IsSymm.symm _ _ <| hz _ hy)
+  rcases hs with ⟨y, hy⟩
+  refine fun H => ⟨f y, fun x hx => ?_⟩
+  rcases eq_or_ne x y with (rfl | hne)
+  apply IsRefl.refl
+  exact H hx hy hne
+  rintro ⟨z, hz⟩ x hx y hy _
+  exact @IsTrans.trans α r _ (f x) z (f y) (hz _ hx) (IsSymm.symm _ _ <| hz _ hy)
 
 /-- For a nonempty set `s`, a function `f` takes pairwise equal values on `s` if and only if
 for some `z` in the codomain, `f` takes value `z` on all `x ∈ s`. See also
@@ -104,8 +104,8 @@ theorem Nonempty.pairwise_eq_iff_exists_eq {s : Set α} (hs : s.Nonempty) {f : �
 theorem pairwise_iff_exists_forall [Nonempty ι] (s : Set α) (f : α → ι) {r : ι → ι → Prop}
     [IsEquiv ι r] : s.Pairwise (r on f) ↔ ∃ z, ∀ x ∈ s, r (f x) z := by
   rcases s.eq_empty_or_nonempty with (rfl | hne)
-  · simp
-  · exact hne.pairwise_iff_exists_forall
+  simp
+  exact hne.pairwise_iff_exists_forall
 
 /-- A function `f : α → ι` with nonempty codomain takes pairwise equal values on a set `s` if and
 only if for some `z` in the codomain, `f` takes value `z` on all `x ∈ s`. See also
@@ -289,10 +289,10 @@ lemma PairwiseDisjoint.eq_or_disjoint
 lemma pairwiseDisjoint_range_iff {α β : Type*} {f : α → (Set β)} :
     (Set.range f).PairwiseDisjoint id ↔ ∀ x y, f x = f y ∨ Disjoint (f x) (f y) := by
   constructor
-  · intro h x y
-    apply h.eq_or_disjoint (Set.mem_range_self x) (Set.mem_range_self y)
-  · rintro h _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hxy
-    exact (h x y).resolve_left hxy
+  intro h x y
+  apply h.eq_or_disjoint (Set.mem_range_self x) (Set.mem_range_self y)
+  rintro h _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ hxy
+  exact (h x y).resolve_left hxy
 
 /-- If the range of `f` is pairwise disjoint, then the image of any set `s` under `f` is as well. -/
 lemma _root_.Pairwise.pairwiseDisjoint (h : Pairwise (Disjoint on f)) (s : Set ι) :
@@ -353,13 +353,13 @@ theorem pairwiseDisjoint_image_right_iff {f : α → β → γ} {s : Set α} {t 
     (hf : ∀ a ∈ s, Injective (f a)) :
     (s.PairwiseDisjoint fun a => f a '' t) ↔ (s ×ˢ t).InjOn fun p => f p.1 p.2 := by
   refine ⟨fun hs x hx y hy (h : f _ _ = _) => ?_, fun hs x hx y hy h => ?_⟩
-  · suffices x.1 = y.1 by exact Prod.ext this (hf _ hx.1 <| h.trans <| by rw [this])
-    refine hs.elim hx.1 hy.1 (not_disjoint_iff.2 ⟨_, mem_image_of_mem _ hx.2, ?_⟩)
-    rw [h]
-    exact mem_image_of_mem _ hy.2
-  · refine disjoint_iff_inf_le.mpr ?_
-    rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
-    exact h (congr_arg Prod.fst <| hs (mk_mem_prod hx ha) (mk_mem_prod hy hb) hab)
+  suffices x.1 = y.1 by exact Prod.ext this (hf _ hx.1 <| h.trans <| by rw [this])
+  refine hs.elim hx.1 hy.1 (not_disjoint_iff.2 ⟨_, mem_image_of_mem _ hx.2, ?_⟩)
+  rw [h]
+  exact mem_image_of_mem _ hy.2
+  refine disjoint_iff_inf_le.mpr ?_
+  rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
+  exact h (congr_arg Prod.fst <| hs (mk_mem_prod hx ha) (mk_mem_prod hy hb) hab)
 
 /-- The partial images of a binary function `f` whose partial evaluations are injective are pairwise
 disjoint iff `f` is injective . -/
@@ -367,13 +367,13 @@ theorem pairwiseDisjoint_image_left_iff {f : α → β → γ} {s : Set α} {t :
     (hf : ∀ b ∈ t, Injective fun a => f a b) :
     (t.PairwiseDisjoint fun b => (fun a => f a b) '' s) ↔ (s ×ˢ t).InjOn fun p => f p.1 p.2 := by
   refine ⟨fun ht x hx y hy (h : f _ _ = _) => ?_, fun ht x hx y hy h => ?_⟩
-  · suffices x.2 = y.2 by exact Prod.ext (hf _ hx.2 <| h.trans <| by rw [this]) this
-    refine ht.elim hx.2 hy.2 (not_disjoint_iff.2 ⟨_, mem_image_of_mem _ hx.1, ?_⟩)
-    rw [h]
-    exact mem_image_of_mem _ hy.1
-  · refine disjoint_iff_inf_le.mpr ?_
-    rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
-    exact h (congr_arg Prod.snd <| ht (mk_mem_prod ha hx) (mk_mem_prod hb hy) hab)
+  suffices x.2 = y.2 by exact Prod.ext (hf _ hx.2 <| h.trans <| by rw [this]) this
+  refine ht.elim hx.2 hy.2 (not_disjoint_iff.2 ⟨_, mem_image_of_mem _ hx.1, ?_⟩)
+  rw [h]
+  exact mem_image_of_mem _ hy.1
+  refine disjoint_iff_inf_le.mpr ?_
+  rintro _ ⟨⟨a, ha, hab⟩, b, hb, rfl⟩
+  exact h (congr_arg Prod.snd <| ht (mk_mem_prod ha hx) (mk_mem_prod hb hy) hab)
 
 lemma exists_ne_mem_inter_of_not_pairwiseDisjoint
     {f : ι → Set α} (h : ¬ s.PairwiseDisjoint f) :
@@ -391,8 +391,8 @@ lemma exists_lt_mem_inter_of_not_pairwiseDisjoint [LinearOrder ι]
     ∃ i ∈ s, ∃ j ∈ s, i < j ∧ ∃ x, x ∈ f i ∩ f j := by
   obtain ⟨i, hi, j, hj, hne, x, hx₁, hx₂⟩ := exists_ne_mem_inter_of_not_pairwiseDisjoint h
   cases' lt_or_lt_iff_ne.mpr hne with h_lt h_lt
-  · exact ⟨i, hi, j, hj, h_lt, x, hx₁, hx₂⟩
-  · exact ⟨j, hj, i, hi, h_lt, x, hx₂, hx₁⟩
+  exact ⟨i, hi, j, hj, h_lt, x, hx₁, hx₂⟩
+  exact ⟨j, hj, i, hi, h_lt, x, hx₂, hx₁⟩
 
 end Set
 

@@ -55,11 +55,11 @@ theorem mellin_eq_fourierIntegral (f : ℝ → E) {s : ℂ} :
       congr
       ext u
       trans Complex.exp (-s.im * u * I) • (Real.exp (-s.re * u) • f (Real.exp (-u)))
-      · conv => lhs; rw [← re_add_im s]
-        rw [neg_add, add_mul, Complex.exp_add, mul_comm, ← smul_eq_mul, smul_assoc]
-        norm_cast
-        push_cast
-        ring_nf
+      conv => lhs; rw [← re_add_im s]
+      rw [neg_add, add_mul, Complex.exp_add, mul_comm, ← smul_eq_mul, smul_assoc]
+      norm_cast
+      push_cast
+      ring_nf
       congr
       rw [mul_comm (-s.im : ℂ) (u : ℂ), mul_comm (-2 * π)]
       have : 2 * (π : ℂ) ≠ 0 := by norm_num; exact pi_ne_zero

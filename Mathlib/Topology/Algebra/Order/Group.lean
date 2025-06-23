@@ -31,22 +31,22 @@ instance (priority := 100) LinearOrderedAddCommGroup.topologicalAddGroup :
     rintro ⟨a, b⟩
     refine LinearOrderedAddCommGroup.tendsto_nhds.2 fun ε ε0 => ?_
     rcases dense_or_discrete 0 ε with (⟨δ, δ0, δε⟩ | ⟨_h₁, h₂⟩)
-    · -- If there exists `δ ∈ (0, ε)`, then we choose `δ`-nhd of `a` and `(ε-δ)`-nhd of `b`
-      filter_upwards [(eventually_abs_sub_lt a δ0).prod_nhds
-          (eventually_abs_sub_lt b (sub_pos.2 δε))]
-      rintro ⟨x, y⟩ ⟨hx : |x - a| < δ, hy : |y - b| < ε - δ⟩
-      rw [add_sub_add_comm]
-      calc
-        |x - a + (y - b)| ≤ |x - a| + |y - b| := abs_add _ _
-        _ < δ + (ε - δ) := add_lt_add hx hy
-        _ = ε := add_sub_cancel _ _
-    · -- Otherwise `ε`-nhd of each point `a` is `{a}`
-      have hε : ∀ {x y}, |x - y| < ε → x = y
-      intro x y h
-      simpa [sub_eq_zero] using h₂ _ h
-      filter_upwards [(eventually_abs_sub_lt a ε0).prod_nhds (eventually_abs_sub_lt b ε0)]
-      rintro ⟨x, y⟩ ⟨hx : |x - a| < ε, hy : |y - b| < ε⟩
-      simpa [hε hx, hε hy]
+    -- If there exists `δ ∈ (0, ε)`, then we choose `δ`-nhd of `a` and `(ε-δ)`-nhd of `b`
+    filter_upwards [(eventually_abs_sub_lt a δ0).prod_nhds
+        (eventually_abs_sub_lt b (sub_pos.2 δε))]
+    rintro ⟨x, y⟩ ⟨hx : |x - a| < δ, hy : |y - b| < ε - δ⟩
+    rw [add_sub_add_comm]
+    calc
+      |x - a + (y - b)| ≤ |x - a| + |y - b| := abs_add _ _
+      _ < δ + (ε - δ) := add_lt_add hx hy
+      _ = ε := add_sub_cancel _ _
+    -- Otherwise `ε`-nhd of each point `a` is `{a}`
+    have hε : ∀ {x y}, |x - y| < ε → x = y
+    intro x y h
+    simpa [sub_eq_zero] using h₂ _ h
+    filter_upwards [(eventually_abs_sub_lt a ε0).prod_nhds (eventually_abs_sub_lt b ε0)]
+    rintro ⟨x, y⟩ ⟨hx : |x - a| < ε, hy : |y - b| < ε⟩
+    simpa [hε hx, hε hy]
   continuous_neg :=
     continuous_iff_continuousAt.2 fun a =>
       LinearOrderedAddCommGroup.tendsto_nhds.2 fun ε ε0 =>

@@ -112,11 +112,11 @@ open Classical in
 theorem _root_.Finsupp.toAList_lookupFinsupp (f : α →₀ M) : f.toAList.lookupFinsupp = f := by
   ext a
   by_cases h : f a = 0
-  · suffices f.toAList.lookup a = none by simp [h, this]
-    simp [lookup_eq_none, h]
-  · suffices f.toAList.lookup a = some (f a) by simp [h, this]
-    apply mem_lookup_iff.2
-    simpa using h
+  suffices f.toAList.lookup a = none by simp [h, this]
+  simp [lookup_eq_none, h]
+  suffices f.toAList.lookup a = some (f a) by simp [h, this]
+  apply mem_lookup_iff.2
+  simpa using h
 
 theorem lookupFinsupp_surjective : Function.Surjective (@lookupFinsupp α M _) := fun f =>
   ⟨_, Finsupp.toAList_lookupFinsupp f⟩

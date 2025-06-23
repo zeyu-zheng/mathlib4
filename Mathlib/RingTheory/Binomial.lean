@@ -168,10 +168,10 @@ theorem ascPochhammer_smeval_cast (R : Type*) [Semiring R] {S : Type*} [NonAssoc
     [Pow S ℕ] [Module R S] [IsScalarTower R S S] [NatPowAssoc S]
     (x : S) (n : ℕ) : (ascPochhammer R n).smeval x = (ascPochhammer ℕ n).smeval x := by
   induction' n with n hn
-  · simp only [Nat.zero_eq, ascPochhammer_zero, smeval_one, one_smul]
-  · simp only [ascPochhammer_succ_right, mul_add, smeval_add, smeval_mul_X, ← Nat.cast_comm]
-    simp only [← C_eq_natCast, smeval_C_mul, hn, Nat.cast_smul_eq_nsmul R n]
-    simp only [nsmul_eq_mul, Nat.cast_id]
+  simp only [Nat.zero_eq, ascPochhammer_zero, smeval_one, one_smul]
+  simp only [ascPochhammer_succ_right, mul_add, smeval_add, smeval_mul_X, ← Nat.cast_comm]
+  simp only [← C_eq_natCast, smeval_C_mul, hn, Nat.cast_smul_eq_nsmul R n]
+  simp only [nsmul_eq_mul, Nat.cast_id]
 
 variable {R S : Type*}
 
@@ -200,8 +200,8 @@ theorem descPochhammer_smeval_eq_descFactorial (n k : ℕ) :
     rw [descPochhammer_succ_right, Nat.descFactorial_succ, smeval_mul, ih, mul_comm, Nat.cast_mul,
       smeval_sub, smeval_X, smeval_natCast, npow_one, npow_zero, nsmul_one]
     by_cases h : n < k
-    · simp only [Nat.descFactorial_eq_zero_iff_lt.mpr h, Nat.cast_zero, zero_mul]
-    · rw [Nat.cast_sub <| not_lt.mp h]
+    simp only [Nat.descFactorial_eq_zero_iff_lt.mpr h, Nat.cast_zero, zero_mul]
+    rw [Nat.cast_sub <| not_lt.mp h]
 
 theorem ascPochhammer_smeval_neg_eq_descPochhammer (r : R) (k : ℕ) :
     (ascPochhammer ℕ k).smeval (-r) = (-1)^k * (descPochhammer ℤ k).smeval r := by
@@ -408,8 +408,8 @@ theorem choose_zero_pos (R) [NonAssocRing R] [Pow R ℕ] [NatPowAssoc R] [Binomi
 theorem choose_zero_ite (R) [NonAssocRing R] [Pow R ℕ] [NatPowAssoc R] [BinomialRing R]
     (k : ℕ) : choose (0 : R) k = if k = 0 then 1 else 0 := by
   split_ifs with hk
-  · rw [hk, choose_zero_right]
-  · rw [choose_zero_pos R <| Nat.pos_of_ne_zero hk]
+  rw [hk, choose_zero_right]
+  rw [choose_zero_pos R <| Nat.pos_of_ne_zero hk]
 
 @[simp]
 theorem choose_one_right' (r : R) : choose r 1 = r ^ 1 := by

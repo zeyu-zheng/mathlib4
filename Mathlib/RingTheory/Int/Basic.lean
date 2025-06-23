@@ -33,18 +33,18 @@ namespace Int
 
 theorem gcd_eq_one_iff_coprime {a b : ℤ} : Int.gcd a b = 1 ↔ IsCoprime a b := by
   constructor
-  · intro hg
-    obtain ⟨ua, -, ha⟩ := exists_unit_of_abs a
-    obtain ⟨ub, -, hb⟩ := exists_unit_of_abs b
-    use Nat.gcdA (Int.natAbs a) (Int.natAbs b) * ua, Nat.gcdB (Int.natAbs a) (Int.natAbs b) * ub
-    rw [mul_assoc, ← ha, mul_assoc, ← hb, mul_comm, mul_comm _ (Int.natAbs b : ℤ), ←
-      Nat.gcd_eq_gcd_ab, ← gcd_eq_natAbs, hg, Int.ofNat_one]
-  · rintro ⟨r, s, h⟩
-    by_contra hg
-    obtain ⟨p, ⟨hp, ha, hb⟩⟩ := Nat.Prime.not_coprime_iff_dvd.mp hg
-    apply Nat.Prime.not_dvd_one hp
-    rw [← natCast_dvd_natCast, Int.ofNat_one, ← h]
-    exact dvd_add ((natCast_dvd.mpr ha).mul_left _) ((natCast_dvd.mpr hb).mul_left _)
+  intro hg
+  obtain ⟨ua, -, ha⟩ := exists_unit_of_abs a
+  obtain ⟨ub, -, hb⟩ := exists_unit_of_abs b
+  use Nat.gcdA (Int.natAbs a) (Int.natAbs b) * ua, Nat.gcdB (Int.natAbs a) (Int.natAbs b) * ub
+  rw [mul_assoc, ← ha, mul_assoc, ← hb, mul_comm, mul_comm _ (Int.natAbs b : ℤ), ←
+    Nat.gcd_eq_gcd_ab, ← gcd_eq_natAbs, hg, Int.ofNat_one]
+  rintro ⟨r, s, h⟩
+  by_contra hg
+  obtain ⟨p, ⟨hp, ha, hb⟩⟩ := Nat.Prime.not_coprime_iff_dvd.mp hg
+  apply Nat.Prime.not_dvd_one hp
+  rw [← natCast_dvd_natCast, Int.ofNat_one, ← h]
+  exact dvd_add ((natCast_dvd.mpr ha).mul_left _) ((natCast_dvd.mpr hb).mul_left _)
 
 theorem coprime_iff_nat_coprime {a b : ℤ} : IsCoprime a b ↔ Nat.Coprime a.natAbs b.natAbs := by
   rw [← gcd_eq_one_iff_coprime, Nat.coprime_iff_gcd_eq_one, gcd_eq_natAbs]
@@ -63,8 +63,8 @@ theorem sq_of_gcd_eq_one {a b c : ℤ} (h : Int.gcd a b = 1) (heq : a * b = c ^ 
   use d
   rw [← hu]
   cases' Int.units_eq_one_or u with hu' hu' <;>
-    · rw [hu']
-      simp
+  · rw [hu']
+    simp
 
 theorem sq_of_coprime {a b c : ℤ} (h : IsCoprime a b) (heq : a * b = c ^ 2) :
     ∃ a0 : ℤ, a = a0 ^ 2 ∨ a = -a0 ^ 2 :=
@@ -73,10 +73,10 @@ theorem sq_of_coprime {a b c : ℤ} (h : IsCoprime a b) (heq : a * b = c ^ 2) :
 theorem natAbs_euclideanDomain_gcd (a b : ℤ) :
     Int.natAbs (EuclideanDomain.gcd a b) = Int.gcd a b := by
   apply Nat.dvd_antisymm <;> rw [← Int.natCast_dvd_natCast]
-  · rw [Int.natAbs_dvd]
-    exact Int.dvd_gcd (EuclideanDomain.gcd_dvd_left _ _) (EuclideanDomain.gcd_dvd_right _ _)
-  · rw [Int.dvd_natAbs]
-    exact EuclideanDomain.dvd_gcd Int.gcd_dvd_left Int.gcd_dvd_right
+  rw [Int.natAbs_dvd]
+  exact Int.dvd_gcd (EuclideanDomain.gcd_dvd_left _ _) (EuclideanDomain.gcd_dvd_right _ _)
+  rw [Int.dvd_natAbs]
+  exact EuclideanDomain.dvd_gcd Int.gcd_dvd_left Int.gcd_dvd_right
 
 end Int
 
@@ -102,11 +102,11 @@ theorem Int.Prime.dvd_pow' {n : ℤ} {k p : ℕ} (hp : Nat.Prime p) (h : (p : �
 theorem prime_two_or_dvd_of_dvd_two_mul_pow_self_two {m : ℤ} {p : ℕ} (hp : Nat.Prime p)
     (h : (p : ℤ) ∣ 2 * m ^ 2) : p = 2 ∨ p ∣ Int.natAbs m := by
   cases' Int.Prime.dvd_mul hp h with hp2 hpp
-  · apply Or.intro_left
-    exact le_antisymm (Nat.le_of_dvd zero_lt_two hp2) (Nat.Prime.two_le hp)
-  · apply Or.intro_right
-    rw [sq, Int.natAbs_mul] at hpp
-    exact or_self_iff.mp ((Nat.Prime.dvd_mul hp).mp hpp)
+  apply Or.intro_left
+  exact le_antisymm (Nat.le_of_dvd zero_lt_two hp2) (Nat.Prime.two_le hp)
+  apply Or.intro_right
+  rw [sq, Int.natAbs_mul] at hpp
+  exact or_self_iff.mp ((Nat.Prime.dvd_mul hp).mp hpp)
 
 theorem Int.exists_prime_and_dvd {n : ℤ} (hn : n.natAbs ≠ 1) : ∃ p, Prime p ∧ p ∣ n := by
   obtain ⟨p, pp, pd⟩ := Nat.exists_prime_and_dvd hn

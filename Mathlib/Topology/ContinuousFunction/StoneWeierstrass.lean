@@ -172,7 +172,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   -- so we get that out of the way here.
   by_cases nX : Nonempty X
   swap
-  · exact ⟨nA.some, (dist_lt_iff pos).mpr fun x => False.elim (nX ⟨x⟩), nA.choose_spec⟩
+  exact ⟨nA.some, (dist_lt_iff pos).mpr fun x => False.elim (nX ⟨x⟩), nA.choose_spec⟩
   /-
     The strategy now is to pick a family of continuous functions `g x y` in `A`
     with the property that `g x y x = f x` and `g x y y = f y`
@@ -189,9 +189,9 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   have U_nhd_y : ∀ x y, U x y ∈ 𝓝 y
   intro x y
   refine IsOpen.mem_nhds ?_ ?_
-  · apply isOpen_lt <;> continuity
-  · rw [Set.mem_setOf_eq, w₂]
-    exact sub_lt_self _ pos
+  apply isOpen_lt <;> continuity
+  rw [Set.mem_setOf_eq, w₂]
+  exact sub_lt_self _ pos
   -- Fixing `x` for a moment, we have a family of functions `fun y ↦ g x y`
   -- which on different patches (the `U x y`) are greater than `f z - ε`.
   -- Taking the supremum of these functions
@@ -223,12 +223,12 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   have W_nhd : ∀ x, W x ∈ 𝓝 x := by
     intro x
     refine IsOpen.mem_nhds ?_ ?_
-    · -- Porting note: mathlib3 `continuity` found `continuous_set_coe`
-      apply isOpen_lt (continuous_set_coe _ _)
-      continuity
-    · dsimp only [W, Set.mem_setOf_eq]
-      rw [h_eq]
-      exact lt_add_of_pos_right _ pos
+    -- Porting note: mathlib3 `continuity` found `continuous_set_coe`
+    apply isOpen_lt (continuous_set_coe _ _)
+    continuity
+    dsimp only [W, Set.mem_setOf_eq]
+    rw [h_eq]
+    exact lt_add_of_pos_right _ pos
   -- Since `X` is compact, there is some finset `ys t`
   -- so the union of the `W x` for `x ∈ xs` still covers everything.
   let xs : Finset X := (CompactSpace.elim_nhds_subcover W W_nhd).choose
@@ -248,13 +248,13 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   rw [show ∀ a b ε : ℝ, dist a b < ε ↔ a < b + ε ∧ b - ε < a by
         intros; simp only [← Metric.mem_ball, Real.ball_eq_Ioo, Set.mem_Ioo, and_comm]]
   fconstructor
-  · dsimp
-    simp only [Finset.inf'_lt_iff, ContinuousMap.inf'_apply]
-    exact Set.exists_set_mem_of_union_eq_top _ _ xs_w z
-  · dsimp
-    simp only [Finset.lt_inf'_iff, ContinuousMap.inf'_apply]
-    rintro x -
-    apply lt_h
+  dsimp
+  simp only [Finset.inf'_lt_iff, ContinuousMap.inf'_apply]
+  exact Set.exists_set_mem_of_union_eq_top _ _ xs_w z
+  dsimp
+  simp only [Finset.lt_inf'_iff, ContinuousMap.inf'_apply]
+  rintro x -
+  apply lt_h
 
 /-- The **Stone-Weierstrass Approximation Theorem**,
 that a subalgebra `A` of `C(X, ℝ)`, where `X` is a compact topological space,
@@ -349,13 +349,13 @@ theorem Subalgebra.SeparatesPoints.rclike_to_real {A : StarSubalgebra 𝕜 C(X, 
     const_apply]
   -- Consider now the function `fun x ↦ |f x - f x₂| ^ 2`
   refine ⟨_, ⟨⟨(‖F ·‖ ^ 2), by continuity⟩, ?_, rfl⟩, ?_⟩
-  · -- This is also an element of the subalgebra, and takes only real values
-    rw [SetLike.mem_coe, Subalgebra.mem_comap]
-    convert (A.restrictScalars ℝ).mul_mem hFA (star_mem hFA : star F ∈ A)
-    ext1
-    simp [← RCLike.mul_conj]
-  · -- And it also separates the points `x₁`, `x₂`
-    simpa [F] using sub_ne_zero.mpr hf
+  -- This is also an element of the subalgebra, and takes only real values
+  rw [SetLike.mem_coe, Subalgebra.mem_comap]
+  convert (A.restrictScalars ℝ).mul_mem hFA (star_mem hFA : star F ∈ A)
+  ext1
+  simp [← RCLike.mul_conj]
+  -- And it also separates the points `x₁`, `x₂`
+  simpa [F] using sub_ne_zero.mpr hf
 
 variable [CompactSpace X]
 
@@ -508,17 +508,17 @@ lemma ker_evalStarAlgHom_inter_adjoin_id (s : Set 𝕜) (h0 : 0 ∈ s) :
       RingHom.ker (evalStarAlgHom 𝕜 𝕜 (⟨0, h0⟩ : s)) = adjoin 𝕜 {restrict s (.id 𝕜)} := by
   ext f
   constructor
-  · rintro ⟨hf₁, hf₂⟩
-    rw [SetLike.mem_coe] at hf₂ ⊢
-    simp_rw [adjoin_id_eq_span_one_add, Set.mem_add, SetLike.mem_coe, mem_span_singleton] at hf₁
-    obtain ⟨-, ⟨r, rfl⟩, f, hf, rfl⟩ := hf₁
-    have := nonUnitalStarAlgebraAdjoin_id_subset_ker_evalStarAlgHom h0 hf
-    simp only [SetLike.mem_coe, RingHom.mem_ker, evalStarAlgHom_apply] at hf₂ this
-    rw [add_apply, this, add_zero, smul_apply, one_apply, smul_eq_mul, mul_one] at hf₂
-    rwa [hf₂, zero_smul, zero_add]
-  · simp only [Set.mem_inter_iff, SetLike.mem_coe]
-    refine fun hf ↦ ⟨?_, nonUnitalStarAlgebraAdjoin_id_subset_ker_evalStarAlgHom h0 hf⟩
-    exact adjoin_le_starAlgebra_adjoin _ _ hf
+  rintro ⟨hf₁, hf₂⟩
+  rw [SetLike.mem_coe] at hf₂ ⊢
+  simp_rw [adjoin_id_eq_span_one_add, Set.mem_add, SetLike.mem_coe, mem_span_singleton] at hf₁
+  obtain ⟨-, ⟨r, rfl⟩, f, hf, rfl⟩ := hf₁
+  have := nonUnitalStarAlgebraAdjoin_id_subset_ker_evalStarAlgHom h0 hf
+  simp only [SetLike.mem_coe, RingHom.mem_ker, evalStarAlgHom_apply] at hf₂ this
+  rw [add_apply, this, add_zero, smul_apply, one_apply, smul_eq_mul, mul_one] at hf₂
+  rwa [hf₂, zero_smul, zero_add]
+  simp only [Set.mem_inter_iff, SetLike.mem_coe]
+  refine fun hf ↦ ⟨?_, nonUnitalStarAlgebraAdjoin_id_subset_ker_evalStarAlgHom h0 hf⟩
+  exact adjoin_le_starAlgebra_adjoin _ _ hf
 
 -- the statement should be in terms of non unital subalgebras, but we lack API
 open RingHom Filter Topology in
@@ -528,16 +528,16 @@ theorem AlgHom.closure_ker_inter {F S K A : Type*} [CommRing K] [Ring A] [Algebr
     [SMulMemClass S K A] (φ : F) (hφ : Continuous φ) (s : S) :
     closure (s ∩ RingHom.ker φ) = closure s ∩ (ker φ : Set A) := by
   refine subset_antisymm ?_ ?_
-  · simpa only [ker_eq, (isClosed_singleton.preimage hφ).closure_eq]
-      using closure_inter_subset_inter_closure s (ker φ : Set A)
-  · intro x ⟨hxs, (hxφ : φ x = 0)⟩
-    rw [mem_closure_iff_clusterPt, ClusterPt] at hxs
-    have : Tendsto (fun y ↦ y - φ y • 1) (𝓝 x ⊓ 𝓟 s) (𝓝 x)
-    conv => congr; rfl; rfl; rw [← sub_zero x, ← zero_smul K 1, ← hxφ]
-    exact Filter.tendsto_inf_left (Continuous.tendsto (by fun_prop) x)
-    refine mem_closure_of_tendsto this <| eventually_inf_principal.mpr ?_
-    filter_upwards [] with g hg using
-      ⟨sub_mem hg (SMulMemClass.smul_mem _ <| one_mem _), by simp [RingHom.mem_ker]⟩
+  simpa only [ker_eq, (isClosed_singleton.preimage hφ).closure_eq]
+    using closure_inter_subset_inter_closure s (ker φ : Set A)
+  intro x ⟨hxs, (hxφ : φ x = 0)⟩
+  rw [mem_closure_iff_clusterPt, ClusterPt] at hxs
+  have : Tendsto (fun y ↦ y - φ y • 1) (𝓝 x ⊓ 𝓟 s) (𝓝 x)
+  conv => congr; rfl; rfl; rw [← sub_zero x, ← zero_smul K 1, ← hxφ]
+  exact Filter.tendsto_inf_left (Continuous.tendsto (by fun_prop) x)
+  refine mem_closure_of_tendsto this <| eventually_inf_principal.mpr ?_
+  filter_upwards [] with g hg using
+    ⟨sub_mem hg (SMulMemClass.smul_mem _ <| one_mem _), by simp [RingHom.mem_ker]⟩
 
 lemma ker_evalStarAlgHom_eq_closure_adjoin_id (s : Set 𝕜) (h0 : 0 ∈ s) [CompactSpace s] :
     (RingHom.ker (evalStarAlgHom 𝕜 𝕜 (⟨0, h0⟩ : s)) : Set C(s, 𝕜)) =

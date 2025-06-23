@@ -43,13 +43,13 @@ theorem X_pow_dvd_iff {f : R[X]} {n : ℕ} : X ^ n ∣ f ↔ ∀ d < n, f.coeff 
     simp only [hgf, coeff_X_pow_mul', ite_eq_right_iff, not_le_of_lt hd, IsEmpty.forall_iff],
     fun hd => by
     induction' n with n hn
-    · simp [pow_zero, one_dvd]
-    · obtain ⟨g, hgf⟩ := hn fun d : ℕ => fun H : d < n => hd _ (Nat.lt_succ_of_lt H)
-      have := coeff_X_pow_mul g n 0
-      rw [zero_add, ← hgf, hd n (Nat.lt_succ_self n)] at this
-      obtain ⟨k, hgk⟩ := Polynomial.X_dvd_iff.mpr this.symm
-      use k
-      rwa [pow_succ, mul_assoc, ← hgk]⟩
+    simp [pow_zero, one_dvd]
+    obtain ⟨g, hgf⟩ := hn fun d : ℕ => fun H : d < n => hd _ (Nat.lt_succ_of_lt H)
+    have := coeff_X_pow_mul g n 0
+    rw [zero_add, ← hgf, hd n (Nat.lt_succ_self n)] at this
+    obtain ⟨k, hgk⟩ := Polynomial.X_dvd_iff.mpr this.symm
+    use k
+    rwa [pow_succ, mul_assoc, ← hgk]⟩
 
 variable {p q : R[X]}
 
@@ -155,11 +155,11 @@ theorem degree_modByMonic_lt [Nontrivial R] :
 theorem natDegree_modByMonic_lt (p : R[X]) {q : R[X]} (hmq : Monic q) (hq : q ≠ 1) :
     natDegree (p %ₘ q) < q.natDegree := by
   by_cases hpq : p %ₘ q = 0
-  · rw [hpq, natDegree_zero, Nat.pos_iff_ne_zero]
-    contrapose! hq
-    exact eq_one_of_monic_natDegree_zero hmq hq
-  · haveI := Nontrivial.of_polynomial_ne hpq
-    exact natDegree_lt_natDegree hpq (degree_modByMonic_lt p hmq)
+  rw [hpq, natDegree_zero, Nat.pos_iff_ne_zero]
+  contrapose! hq
+  exact eq_one_of_monic_natDegree_zero hmq hq
+  haveI := Nontrivial.of_polynomial_ne hpq
+  exact natDegree_lt_natDegree hpq (degree_modByMonic_lt p hmq)
 
 open Classical in
 @[simp]
@@ -167,8 +167,8 @@ theorem zero_modByMonic (p : R[X]) : 0 %ₘ p = 0 := by
   unfold modByMonic divModByMonicAux
   dsimp
   by_cases hp : Monic p
-  · rw [dif_pos hp, if_neg (mt And.right (not_not_intro rfl))]
-  · rw [dif_neg hp]
+  rw [dif_pos hp, if_neg (mt And.right (not_not_intro rfl))]
+  rw [dif_neg hp]
 
 open Classical in
 @[simp]
@@ -176,8 +176,8 @@ theorem zero_divByMonic (p : R[X]) : 0 /ₘ p = 0 := by
   unfold divByMonic divModByMonicAux
   dsimp
   by_cases hp : Monic p
-  · rw [dif_pos hp, if_neg (mt And.right (not_not_intro rfl))]
-  · rw [dif_neg hp]
+  rw [dif_pos hp, if_neg (mt And.right (not_not_intro rfl))]
+  rw [dif_neg hp]
 
 @[simp]
 theorem modByMonic_zero (p : R[X]) : p %ₘ 0 = p :=
@@ -304,9 +304,9 @@ theorem natDegree_divByMonic (f : R[X]) {g : R[X]} (hg : g.Monic) :
     natDegree (f /ₘ g) = natDegree f - natDegree g := by
   nontriviality R
   by_cases hfg : f /ₘ g = 0
-  · rw [hfg, natDegree_zero]
-    rw [divByMonic_eq_zero_iff hg] at hfg
-    rw [tsub_eq_zero_iff_le.mpr (natDegree_le_natDegree <| le_of_lt hfg)]
+  rw [hfg, natDegree_zero]
+  rw [divByMonic_eq_zero_iff hg] at hfg
+  rw [tsub_eq_zero_iff_le.mpr (natDegree_le_natDegree <| le_of_lt hfg)]
   have hgf := hfg
   rw [divByMonic_eq_zero_iff hg] at hgf
   push_neg at hgf
@@ -437,23 +437,23 @@ lemma coeff_divByMonic_X_sub_C_rec (p : R[X]) (a : R) (n : ℕ) :
 theorem coeff_divByMonic_X_sub_C (p : R[X]) (a : R) (n : ℕ) :
     (p /ₘ (X - C a)).coeff n = ∑ i ∈ Icc (n + 1) p.natDegree, a ^ (i - (n + 1)) * p.coeff i := by
   wlog h : p.natDegree ≤ n generalizing n
-  · refine Nat.decreasingInduction' (fun n hn _ ih ↦ ?_) (le_of_not_le h) ?_
-    · rw [coeff_divByMonic_X_sub_C_rec, ih, eq_comm, Icc_eq_cons_Ioc (Nat.succ_le.mpr hn),
-          sum_cons, Nat.sub_self, pow_zero, one_mul, mul_sum]
-      congr 1; refine sum_congr ?_ fun i hi ↦ ?_
-      · ext; simp [Nat.succ_le]
-      rw [← mul_assoc, ← pow_succ', eq_comm, i.sub_succ', Nat.sub_add_cancel]
-      apply Nat.le_sub_of_add_le
-      rw [add_comm]; exact (mem_Icc.mp hi).1
-    · exact this _ le_rfl
+  refine Nat.decreasingInduction' (fun n hn _ ih ↦ ?_) (le_of_not_le h) ?_
+  rw [coeff_divByMonic_X_sub_C_rec, ih, eq_comm, Icc_eq_cons_Ioc (Nat.succ_le.mpr hn),
+      sum_cons, Nat.sub_self, pow_zero, one_mul, mul_sum]
+  congr 1; refine sum_congr ?_ fun i hi ↦ ?_
+  ext; simp [Nat.succ_le]
+  rw [← mul_assoc, ← pow_succ', eq_comm, i.sub_succ', Nat.sub_add_cancel]
+  apply Nat.le_sub_of_add_le
+  rw [add_comm]; exact (mem_Icc.mp hi).1
+  exact this _ le_rfl
   rw [Icc_eq_empty (Nat.lt_succ.mpr h).not_le, sum_empty]
   nontriviality R
   by_cases hp : p.natDegree = 0
-  · rw [(divByMonic_eq_zero_iff <| monic_X_sub_C a).mpr, coeff_zero]
-    apply degree_lt_degree; rw [hp, natDegree_X_sub_C]; norm_num
-  · apply coeff_eq_zero_of_natDegree_lt
-    rw [natDegree_divByMonic p (monic_X_sub_C a), natDegree_X_sub_C]
-    exact (Nat.pred_lt hp).trans_le h
+  rw [(divByMonic_eq_zero_iff <| monic_X_sub_C a).mpr, coeff_zero]
+  apply degree_lt_degree; rw [hp, natDegree_X_sub_C]; norm_num
+  apply coeff_eq_zero_of_natDegree_lt
+  rw [natDegree_divByMonic p (monic_X_sub_C a), natDegree_X_sub_C]
+  exact (Nat.pred_lt hp).trans_le h
 
 variable (R) in
 theorem not_isField : ¬IsField R[X] := by
@@ -515,10 +515,10 @@ open Classical in
 @[simp]
 theorem rootMultiplicity_C (r a : R) : rootMultiplicity a (C r) = 0 := by
   cases subsingleton_or_nontrivial R
-  · rw [Subsingleton.elim (C r) 0, rootMultiplicity_zero]
+  rw [Subsingleton.elim (C r) 0, rootMultiplicity_zero]
   rw [rootMultiplicity_eq_multiplicity]
   split_ifs with hr
-  · rfl
+  rfl
   have h : natDegree (C r) < natDegree (X - C a)
   simp
   simp_rw [multiplicity.multiplicity_eq_zero.mpr ((monic_X_sub_C a).not_dvd_of_natDegree_lt hr h),
@@ -564,8 +564,8 @@ theorem modByMonic_X_sub_C_eq_C_eval (p : R[X]) (a : R) : p %ₘ (X - C a) = C (
   have : degree (p %ₘ (X - C a)) ≤ 0 := by
     revert this
     cases degree (p %ₘ (X - C a))
-    · exact fun _ => bot_le
-    · exact fun h => WithBot.coe_le_coe.2 (Nat.le_of_lt_succ (WithBot.coe_lt_coe.1 h))
+    exact fun _ => bot_le
+    exact fun h => WithBot.coe_le_coe.2 (Nat.le_of_lt_succ (WithBot.coe_lt_coe.1 h))
   rw [eq_C_of_degree_le_zero this, eval_C] at h
   rw [eq_C_of_degree_le_zero this, h]
 
@@ -591,11 +591,11 @@ theorem mem_span_C_X_sub_C_X_sub_C_iff_eval_eval_eq_zero {b : R[X]} {P : R[X][X]
     P ∈ Ideal.span {C (X - C a), X - C b} ↔ (P.eval b).eval a = 0 := by
   rw [Ideal.mem_span_pair]
   constructor <;> intro h
-  · rcases h with ⟨_, _, rfl⟩
-    simp only [eval_C, eval_X, eval_add, eval_sub, eval_mul, add_zero, mul_zero, sub_self]
-  · rcases dvd_iff_isRoot.mpr h with ⟨p, hp⟩
-    rcases @X_sub_C_dvd_sub_C_eval _ b _ P with ⟨q, hq⟩
-    exact ⟨C p, q, by rw [mul_comm, mul_comm q, eq_add_of_sub_eq' hq, hp, C_mul]⟩
+  rcases h with ⟨_, _, rfl⟩
+  simp only [eval_C, eval_X, eval_add, eval_sub, eval_mul, add_zero, mul_zero, sub_self]
+  rcases dvd_iff_isRoot.mpr h with ⟨p, hp⟩
+  rcases @X_sub_C_dvd_sub_C_eval _ b _ P with ⟨q, hq⟩
+  exact ⟨C p, q, by rw [mul_comm, mul_comm q, eq_add_of_sub_eq' hq, hp, C_mul]⟩
 
 -- TODO: generalize this to Ring. In general, 0 can be replaced by any element in the center of R.
 theorem modByMonic_X (p : R[X]) : p %ₘ X = C (p.eval 0) := by

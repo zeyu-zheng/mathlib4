@@ -81,8 +81,8 @@ theorem norm_algebraMap_of_basis [Fintype ι] (b : Basis ι R S) (x : R) :
   haveI := Classical.decEq ι
   rw [norm_apply, ← det_toMatrix b, lmul_algebraMap]
   convert @det_diagonal _ _ _ _ _ fun _ : ι => x
-  · ext (i j); rw [toMatrix_lsmul]
-  · rw [Finset.prod_const, Finset.card_univ]
+  ext (i j); rw [toMatrix_lsmul]
+  rw [Finset.prod_const, Finset.card_univ]
 
 /-- If `x` is in the base field `K`, then the norm is `x ^ [L : K]`.
 
@@ -92,9 +92,9 @@ theorem norm_algebraMap_of_basis [Fintype ι] (b : Basis ι R S) (x : R) :
 protected theorem norm_algebraMap {L : Type*} [Ring L] [Algebra K L] (x : K) :
     norm K (algebraMap K L x) = x ^ finrank K L := by
   by_cases H : ∃ s : Finset L, Nonempty (Basis s K L)
-  · rw [norm_algebraMap_of_basis H.choose_spec.some, finrank_eq_card_basis H.choose_spec.some]
-  · rw [norm_eq_one_of_not_exists_basis K H, finrank_eq_zero_of_not_exists_basis, pow_zero]
-    rintro ⟨s, ⟨b⟩⟩
-    exact H ⟨s, ⟨b⟩⟩
+  rw [norm_algebraMap_of_basis H.choose_spec.some, finrank_eq_card_basis H.choose_spec.some]
+  rw [norm_eq_one_of_not_exists_basis K H, finrank_eq_zero_of_not_exists_basis, pow_zero]
+  rintro ⟨s, ⟨b⟩⟩
+  exact H ⟨s, ⟨b⟩⟩
 
 end Algebra

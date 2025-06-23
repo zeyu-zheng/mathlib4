@@ -458,10 +458,10 @@ lemma invRotate_distinguished_triangle' (T : Triangle (HomotopyCategory C (Compl
 lemma rotate_distinguished_triangle (T : Triangle (HomotopyCategory C (ComplexShape.up ℤ))) :
     T ∈ distinguishedTriangles C ↔ T.rotate ∈ distinguishedTriangles C := by
   constructor
-  · exact rotate_distinguished_triangle' T
-  · intro hT
-    exact isomorphic_distinguished _ (invRotate_distinguished_triangle' T.rotate hT) _
-      ((triangleRotation _).unitIso.app T)
+  exact rotate_distinguished_triangle' T
+  intro hT
+  exact isomorphic_distinguished _ (invRotate_distinguished_triangle' T.rotate hT) _
+    ((triangleRotation _).unitIso.app T)
 
 lemma complete_distinguished_triangle_morphism
     (T₁ T₂ : Triangle (HomotopyCategory C (ComplexShape.up ℤ)))

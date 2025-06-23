@@ -252,9 +252,9 @@ theorem reverse_get_zero {v : Vector α (n + 1)} : v.reverse.head = v.last := by
   simp_rw [toList_reverse]
   rw [List.get_eq_getElem, List.get_eq_getElem, ← Option.some_inj, Fin.cast, Fin.cast,
     ← List.getElem?_eq_getElem, ← List.getElem?_eq_getElem, List.getElem?_reverse]
-  · congr
-    simp
-  · simp
+  congr
+  simp
+  simp
 
 section Scan
 
@@ -313,11 +313,11 @@ retrieved via `head`, is the starting value `b : β`.
 @[simp]
 theorem scanl_head : (scanl f b v).head = b := by
   cases n
-  · have : v = nil := by simp only [Nat.zero_eq, eq_iff_true_of_subsingleton]
-    simp only [this, scanl_nil, head_cons]
-  · rw [← cons_head_tail v]
-    simp only [← get_zero, get_eq_get, toList_scanl, toList_cons, List.scanl, Fin.val_zero,
-      List.get]
+  have : v = nil := by simp only [Nat.zero_eq, eq_iff_true_of_subsingleton]
+  simp only [this, scanl_nil, head_cons]
+  rw [← cons_head_tail v]
+  simp only [← get_zero, get_eq_get, toList_scanl, toList_cons, List.scanl, Fin.val_zero,
+    List.get]
 
 /-- For an index `i : Fin n`, the nth element of `scanl` of a
 vector `v : Vector α n` at `i.succ`, is equal to the application
@@ -330,15 +330,15 @@ This lemma is the `get` version of `scanl_cons`.
 theorem scanl_get (i : Fin n) :
     (scanl f b v).get i.succ = f ((scanl f b v).get (Fin.castSucc i)) (v.get i) := by
   cases' n with n
-  · exact i.elim0
+  exact i.elim0
   induction' n with n hn generalizing b
-  · have i0 : i = 0 := Fin.eq_zero _
-    simp [scanl_singleton, i0, get_zero]; simp [get_eq_get, List.get]
-  · rw [← cons_head_tail v, scanl_cons, get_cons_succ]
-    refine Fin.cases ?_ ?_ i
-    · simp only [get_zero, scanl_head, Fin.castSucc_zero, head_cons]
-    · intro i'
-      simp only [hn, Fin.castSucc_fin_succ, get_cons_succ]
+  have i0 : i = 0 := Fin.eq_zero _
+  simp [scanl_singleton, i0, get_zero]; simp [get_eq_get, List.get]
+  rw [← cons_head_tail v, scanl_cons, get_cons_succ]
+  refine Fin.cases ?_ ?_ i
+  simp only [get_zero, scanl_head, Fin.castSucc_zero, head_cons]
+  intro i'
+  simp only [hn, Fin.castSucc_fin_succ, get_cons_succ]
 
 end Scan
 
@@ -519,17 +519,17 @@ theorem eraseIdx_insertNth' {v : Vector α (n + 1)} :
     rw [Subtype.mk_eq_mk]
     simp only [Fin.lt_iff_val_lt_val]
     split_ifs with hij
-    · rcases Nat.exists_eq_succ_of_ne_zero
-        (Nat.pos_iff_ne_zero.1 (lt_of_le_of_lt (Nat.zero_le _) hij)) with ⟨j, rfl⟩
-      rw [← List.insertNth_eraseIdx_of_ge]
-      · simp; rfl
-      · simpa
-      · simpa [Nat.lt_succ_iff] using hij
-    · dsimp
-      rw [← List.insertNth_eraseIdx_of_le i j _ _ _]
-      · rfl
-      · simpa
-      · simpa [not_lt] using hij
+    rcases Nat.exists_eq_succ_of_ne_zero
+      (Nat.pos_iff_ne_zero.1 (lt_of_le_of_lt (Nat.zero_le _) hij)) with ⟨j, rfl⟩
+    rw [← List.insertNth_eraseIdx_of_ge]
+    simp; rfl
+    simpa
+    simpa [Nat.lt_succ_iff] using hij
+    dsimp
+    rw [← List.insertNth_eraseIdx_of_le i j _ _ _]
+    rfl
+    simpa
+    simpa [not_lt] using hij
 
 @[deprecated (since := "2024-05-04")] alias removeNth_insertNth' := eraseIdx_insertNth'
 
@@ -540,9 +540,9 @@ theorem insertNth_comm (a b : α) (i j : Fin (n + 1)) (h : i ≤ j) :
     refine Subtype.eq ?_
     simp only [insertNth_val, Fin.val_succ, Fin.castSucc, Fin.coe_castAdd]
     apply List.insertNth_comm
-    · assumption
-    · rw [hl]
-      exact Nat.le_of_succ_le_succ j.2
+    assumption
+    rw [hl]
+    exact Nat.le_of_succ_le_succ j.2
 
 end InsertNth
 
@@ -567,7 +567,7 @@ theorem get_set_of_ne {v : Vector α n} {i j : Fin n} (h : i ≠ j) (a : α) :
   cases v; cases i; cases j
   simp only [get_eq_get, toList_set, toList_mk, Fin.cast_mk, List.get_eq_getElem]
   rw [List.getElem_set_of_ne]
-  · simpa using h
+  simpa using h
 
 theorem get_set_eq_if {v : Vector α n} {i j : Fin n} (a : α) :
     (v.set i a).get j = if i = j then a else v.get j := by
@@ -638,10 +638,10 @@ protected theorem comp_traverse (f : β → F γ) (g : α → G β) (x : Vector 
     Vector.traverse (Comp.mk ∘ Functor.map f ∘ g) x =
       Comp.mk (Vector.traverse f <$> Vector.traverse g x) := by
   induction' x with n x xs ih
-  · simp! [cast, *, functor_norm]
-    rfl
-  · rw [Vector.traverse_def, ih]
-    simp [functor_norm, (· ∘ ·)]
+  simp! [cast, *, functor_norm]
+  rfl
+  rw [Vector.traverse_def, ih]
+  simp [functor_norm, (· ∘ ·)]
 
 protected theorem traverse_eq_map_id {α β} (f : α → β) :
     ∀ x : Vector α n, x.traverse ((pure : _ → Id _) ∘ f) = (pure : _ → Id _) (map f x) := by
@@ -652,9 +652,9 @@ variable [LawfulApplicative F] (η : ApplicativeTransformation F G)
 protected theorem naturality {α β : Type u} (f : α → F β) (x : Vector α n) :
     η (x.traverse f) = x.traverse (@η _ ∘ f) := by
   induction' x with n x xs ih
-  · simp! [functor_norm, cast, η.preserves_pure]
-  · rw [Vector.traverse_def, Vector.traverse_def, ← ih, η.preserves_seq, η.preserves_map]
-    rfl
+  simp! [functor_norm, cast, η.preserves_pure]
+  rw [Vector.traverse_def, Vector.traverse_def, ← ih, η.preserves_seq, η.preserves_map]
+  rfl
 
 end Traverse
 
@@ -726,8 +726,8 @@ theorem get_map₂ (v₁ : Vector α n) (v₂ : Vector β n) (f : α → β → 
   | cons ih =>
     rw [map₂_cons]
     cases i using Fin.cases
-    · simp only [get_zero, head_cons]
-    · simp only [get_cons_succ, ih]
+    simp only [get_zero, head_cons]
+    simp only [get_cons_succ, ih]
 
 @[simp]
 theorem mapAccumr_cons :

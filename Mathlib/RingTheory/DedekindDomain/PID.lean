@@ -42,35 +42,35 @@ theorem Ideal.eq_span_singleton_of_mem_of_not_mem_sq_of_not_mem_prime_ne {P : Id
   rintro rfl
   exact hxP2 (zero_mem _)
   by_cases hP0 : P = ⊥
-  · subst hP0
-    -- Porting note: was `simpa using hxP2` but that hypothesis didn't even seem relevant in Lean 3
-    rwa [eq_comm, span_singleton_eq_bot, ← mem_bot]
+  subst hP0
+  -- Porting note: was `simpa using hxP2` but that hypothesis didn't even seem relevant in Lean 3
+  rwa [eq_comm, span_singleton_eq_bot, ← mem_bot]
   have hspan0 : span ({x} : Set R) ≠ ⊥ := mt Ideal.span_singleton_eq_bot.mp hx0
   have span_le := (Ideal.span_singleton_le_iff_mem _).mpr x_mem
   refine
     associated_iff_eq.mp
       ((associated_iff_normalizedFactors_eq_normalizedFactors hP0 hspan0).mpr
         (le_antisymm ((dvd_iff_normalizedFactors_le_normalizedFactors hP0 hspan0).mp ?_) ?_))
-  · rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
+  rwa [Ideal.dvd_iff_le, Ideal.span_singleton_le_iff_mem]
   simp only [normalizedFactors_irreducible (Ideal.prime_of_isPrime hP0 hP).irreducible,
     normalize_eq, Multiset.le_iff_count, Multiset.count_singleton]
   intro Q
   split_ifs with hQ
-  · subst hQ
-    refine (Ideal.count_normalizedFactors_eq ?_ ?_).le <;>
-        simp only [Ideal.span_singleton_le_iff_mem, pow_one] <;>
-      assumption
+  subst hQ
+  refine (Ideal.count_normalizedFactors_eq ?_ ?_).le <;>
+      simp only [Ideal.span_singleton_le_iff_mem, pow_one] <;>
+    assumption
   by_cases hQp : IsPrime Q
-  · refine (Ideal.count_normalizedFactors_eq ?_ ?_).le <;>
-      -- Porting note: included `zero_add` in the simp arguments
-      simp only [Ideal.span_singleton_le_iff_mem, zero_add, pow_one, pow_zero, one_eq_top,
-                 Submodule.mem_top]
-    exact hxQ _ hQp hQ
-  · exact
-      (Multiset.count_eq_zero.mpr fun hQi =>
-          hQp
-            (isPrime_of_prime
-              (irreducible_iff_prime.mp (irreducible_of_normalized_factor _ hQi)))).le
+  refine (Ideal.count_normalizedFactors_eq ?_ ?_).le <;>
+    -- Porting note: included `zero_add` in the simp arguments
+    simp only [Ideal.span_singleton_le_iff_mem, zero_add, pow_one, pow_zero, one_eq_top,
+               Submodule.mem_top]
+  exact hxQ _ hQp hQ
+  exact
+    (Multiset.count_eq_zero.mpr fun hQi =>
+        hQp
+          (isPrime_of_prime
+            (irreducible_iff_prime.mp (irreducible_of_normalized_factor _ hQi)))).le
 
 -- Porting note: replaced three implicit coercions of `I` with explicit `(I : Submodule R A)`
 theorem FractionalIdeal.isPrincipal_of_unit_of_comap_mul_span_singleton_eq_top {R A : Type*}
@@ -94,10 +94,10 @@ theorem FractionalIdeal.isPrincipal_of_unit_of_comap_mul_span_singleton_eq_top {
   refine ⟨⟨w, ?_⟩⟩
   rw [← FractionalIdeal.coe_spanSingleton S, ← inv_inv I, eq_comm]
   refine congr_arg coeToSubmodule (Units.eq_inv_of_mul_eq_one_left (le_antisymm ?_ ?_))
-  · conv_rhs => rw [← hinv, mul_comm]
-    apply FractionalIdeal.mul_le_mul_left (FractionalIdeal.spanSingleton_le_iff_mem.mpr hw)
-  · rw [FractionalIdeal.one_le, ← hvw, mul_comm]
-    exact FractionalIdeal.mul_mem_mul hv (FractionalIdeal.mem_spanSingleton_self _ _)
+  conv_rhs => rw [← hinv, mul_comm]
+  apply FractionalIdeal.mul_le_mul_left (FractionalIdeal.spanSingleton_le_iff_mem.mpr hw)
+  rw [FractionalIdeal.one_le, ← hvw, mul_comm]
+  exact FractionalIdeal.mul_mem_mul hv (FractionalIdeal.mem_spanSingleton_self _ _)
 
 /--
 An invertible fractional ideal of a commutative ring with finitely many maximal ideals is principal.
@@ -145,24 +145,24 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A : Type*} [CommR
     rwa [← hc] at this
   simp_rw [v, Finset.mul_sum, mul_smul_comm] at hmem
   rw [← s.add_sum_erase _ hM, Submodule.add_mem_iff_left] at hmem
-  · refine hm M hM ?_
-    obtain ⟨c, hc : algebraMap R A c = a M * b M⟩ := this _ (ha M hM) _ (hb M hM)
-    rw [← hc] at hmem ⊢
-    rw [Algebra.smul_def, ← _root_.map_mul] at hmem
-    obtain ⟨d, hdM, he⟩ := hmem
-    rw [IsLocalization.injective _ hS he] at hdM
-    -- Note: #8386 had to specify the value of `f`
-    exact Submodule.mem_map_of_mem (f := Algebra.linearMap _ _)
-        (((hf.mem_toFinset.1 hM).isPrime.mem_or_mem hdM).resolve_left <| hum M hM)
-  · refine Submodule.sum_mem _ fun M' hM' => ?_
-    rw [Finset.mem_erase] at hM'
-    obtain ⟨c, hc⟩ := this _ (ha M hM) _ (hb M' hM'.2)
-    rw [← hc, Algebra.smul_def, ← _root_.map_mul]
-    specialize hu M' hM'.2
-    simp_rw [Ideal.mem_iInf, Finset.mem_erase] at hu
-    -- Note: #8386 had to specify the value of `f`
-    exact Submodule.mem_map_of_mem (f := Algebra.linearMap _ _)
-      (M.mul_mem_right _ <| hu M ⟨hM'.1.symm, hM⟩)
+  refine hm M hM ?_
+  obtain ⟨c, hc : algebraMap R A c = a M * b M⟩ := this _ (ha M hM) _ (hb M hM)
+  rw [← hc] at hmem ⊢
+  rw [Algebra.smul_def, ← _root_.map_mul] at hmem
+  obtain ⟨d, hdM, he⟩ := hmem
+  rw [IsLocalization.injective _ hS he] at hdM
+  -- Note: #8386 had to specify the value of `f`
+  exact Submodule.mem_map_of_mem (f := Algebra.linearMap _ _)
+      (((hf.mem_toFinset.1 hM).isPrime.mem_or_mem hdM).resolve_left <| hum M hM)
+  refine Submodule.sum_mem _ fun M' hM' => ?_
+  rw [Finset.mem_erase] at hM'
+  obtain ⟨c, hc⟩ := this _ (ha M hM) _ (hb M' hM'.2)
+  rw [← hc, Algebra.smul_def, ← _root_.map_mul]
+  specialize hu M' hM'.2
+  simp_rw [Ideal.mem_iInf, Finset.mem_erase] at hu
+  -- Note: #8386 had to specify the value of `f`
+  exact Submodule.mem_map_of_mem (f := Algebra.linearMap _ _)
+    (M.mul_mem_right _ <| hu M ⟨hM'.1.symm, hM⟩)
 
 /-- An invertible ideal in a commutative ring with finitely many maximal ideals is principal.
 
@@ -178,10 +178,10 @@ theorem IsPrincipalIdealRing.of_finite_primes [IsDedekindDomain R]
     (h : {I : Ideal R | I.IsPrime}.Finite) : IsPrincipalIdealRing R :=
   ⟨fun I => by
     obtain rfl | hI := eq_or_ne I ⊥
-    · exact bot_isPrincipal
+    exact bot_isPrincipal
     apply Ideal.IsPrincipal.of_finite_maximals_of_isUnit
-    · apply h.subset; exact @Ideal.IsMaximal.isPrime _ _
-    · exact isUnit_of_mul_eq_one _ _ (FractionalIdeal.coe_ideal_mul_inv I hI)⟩
+    apply h.subset; exact @Ideal.IsMaximal.isPrime _ _
+    exact isUnit_of_mul_eq_one _ _ (FractionalIdeal.coe_ideal_mul_inv I hI)⟩
 
 variable [IsDedekindDomain R]
 variable (S : Type*) [CommRing S]
@@ -226,15 +226,15 @@ theorem IsLocalization.OverPrime.mem_normalizedFactors_of_isPrime [IsDomain S]
     IsScalarTower.algebraMap_eq R (Localization.AtPrime p) Sₚ, ← Ideal.map_map,
     Localization.AtPrime.map_eq_maximalIdeal, Ideal.map_le_iff_le_comap,
     hpu (LocalRing.maximalIdeal _) ⟨this, _⟩, hpu (comap _ _) ⟨_, _⟩]
-  · have : Algebra.IsIntegral (Localization.AtPrime p) Sₚ := ⟨isIntegral_localization⟩
-    exact mt (Ideal.eq_bot_of_comap_eq_bot ) hP0
-  · exact Ideal.comap_isPrime (algebraMap (Localization.AtPrime p) Sₚ) P
-  · exact (LocalRing.maximalIdeal.isMaximal _).isPrime
-  · rw [Ne, zero_eq_bot, Ideal.map_eq_bot_iff_of_injective]
-    · assumption
-    rw [IsScalarTower.algebraMap_eq R S Sₚ]
-    exact
-      (IsLocalization.injective Sₚ non_zero_div).comp (NoZeroSMulDivisors.algebraMap_injective _ _)
+  have : Algebra.IsIntegral (Localization.AtPrime p) Sₚ := ⟨isIntegral_localization⟩
+  exact mt (Ideal.eq_bot_of_comap_eq_bot ) hP0
+  exact Ideal.comap_isPrime (algebraMap (Localization.AtPrime p) Sₚ) P
+  exact (LocalRing.maximalIdeal.isMaximal _).isPrime
+  rw [Ne, zero_eq_bot, Ideal.map_eq_bot_iff_of_injective]
+  assumption
+  rw [IsScalarTower.algebraMap_eq R S Sₚ]
+  exact
+    (IsLocalization.injective Sₚ non_zero_div).comp (NoZeroSMulDivisors.algebraMap_injective _ _)
 
 /-- Let `p` be a prime in the Dedekind domain `R` and `S` be an integral extension of `R`,
 then the localization `Sₚ` of `S` at `p` is a PID. -/

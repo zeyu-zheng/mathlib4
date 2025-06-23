@@ -47,11 +47,11 @@ variable {E F G H : Type*} [NormedAddCommGroup E] [NormedSpace 𝕜 E] [NormedAd
     {x : E} {r : ℝ≥0∞} :
     HasFPowerSeriesWithinOnBall f p univ x r ↔ HasFPowerSeriesOnBall f p x r := by
   constructor
-  · intro h
-    exact ⟨h.r_le, h.r_pos, fun {y} m ↦ h.hasSum (mem_univ _) m⟩
-  · intro h
-    refine ⟨h.r_le, h.r_pos, fun {y} _ m => h.hasSum m, ?_⟩
-    exact (h.continuousOn.continuousAt (EMetric.ball_mem_nhds x h.r_pos)).continuousWithinAt
+  intro h
+  exact ⟨h.r_le, h.r_pos, fun {y} m ↦ h.hasSum (mem_univ _) m⟩
+  intro h
+  refine ⟨h.r_le, h.r_pos, fun {y} _ m => h.hasSum m, ?_⟩
+  exact (h.continuousOn.continuousAt (EMetric.ball_mem_nhds x h.r_pos)).continuousWithinAt
 
 @[simp] lemma hasFPowerSeriesWithinAt_univ {f : E → F} {p : FormalMultilinearSeries 𝕜 E F} {x : E} :
     HasFPowerSeriesWithinAt f p univ x ↔ HasFPowerSeriesAt f p x := by
@@ -131,8 +131,8 @@ lemma analyticWithinOn_of_locally_analyticWithinOn {f : E → F} {s : Set E}
       intro y ys yr
       simp only [EMetric.mem_ball, lt_min_iff, edist_lt_ofReal, dist_zero_right] at yr
       apply fp.hasSum ⟨ys, ru ?_⟩
-      · simp only [EMetric.mem_ball, yr]
-      · simp only [Metric.mem_ball, dist_self_add_left, yr]
+      simp only [EMetric.mem_ball, yr]
+      simp only [Metric.mem_ball, dist_self_add_left, yr]
     continuousWithinAt := by
       refine (fu.continuousOn x ⟨m, xu⟩).mono_left (le_of_eq ?_)
       exact nhdsWithin_eq_nhdsWithin xu ou (by simp only [inter_assoc, inter_self])
@@ -171,31 +171,31 @@ lemma hasFPowerSeriesWithinOnBall_iff_exists_hasFPowerSeriesOnBall [CompleteSpac
       ContinuousWithinAt f s x ∧ ∃ g, EqOn f g (s ∩ EMetric.ball x r) ∧
         HasFPowerSeriesOnBall g p x r := by
   constructor
-  · intro h
-    refine ⟨h.continuousWithinAt, fun y ↦ p.sum (y - x), ?_, ?_⟩
-    · intro y ⟨ys,yb⟩
-      simp only [EMetric.mem_ball, edist_eq_coe_nnnorm_sub] at yb
-      have e0 := p.hasSum (x := y - x) ?_
-      have e1 := (h.hasSum (y := y - x) ?_ ?_)
-      · simp only [add_sub_cancel] at e1
-        exact e1.unique e0
-      · simpa only [add_sub_cancel]
-      · simpa only [EMetric.mem_ball, edist_eq_coe_nnnorm]
-      · simp only [EMetric.mem_ball, edist_eq_coe_nnnorm]
-        exact lt_of_lt_of_le yb h.r_le
-    · refine ⟨h.r_le, h.r_pos, ?_⟩
-      intro y lt
-      simp only [add_sub_cancel_left]
-      apply p.hasSum
-      simp only [EMetric.mem_ball] at lt ⊢
-      exact lt_of_lt_of_le lt h.r_le
-  · intro ⟨mem, g, hfg, hg⟩
-    refine ⟨hg.r_le, hg.r_pos, ?_, mem⟩
-    intro y ys lt
-    rw [hfg]
-    · exact hg.hasSum lt
-    · refine ⟨ys, ?_⟩
-      simpa only [EMetric.mem_ball, edist_eq_coe_nnnorm_sub, add_sub_cancel_left, sub_zero] using lt
+  intro h
+  refine ⟨h.continuousWithinAt, fun y ↦ p.sum (y - x), ?_, ?_⟩
+  intro y ⟨ys,yb⟩
+  simp only [EMetric.mem_ball, edist_eq_coe_nnnorm_sub] at yb
+  have e0 := p.hasSum (x := y - x) ?_
+  have e1 := (h.hasSum (y := y - x) ?_ ?_)
+  simp only [add_sub_cancel] at e1
+  exact e1.unique e0
+  simpa only [add_sub_cancel]
+  simpa only [EMetric.mem_ball, edist_eq_coe_nnnorm]
+  simp only [EMetric.mem_ball, edist_eq_coe_nnnorm]
+  exact lt_of_lt_of_le yb h.r_le
+  refine ⟨h.r_le, h.r_pos, ?_⟩
+  intro y lt
+  simp only [add_sub_cancel_left]
+  apply p.hasSum
+  simp only [EMetric.mem_ball] at lt ⊢
+  exact lt_of_lt_of_le lt h.r_le
+  intro ⟨mem, g, hfg, hg⟩
+  refine ⟨hg.r_le, hg.r_pos, ?_, mem⟩
+  intro y ys lt
+  rw [hfg]
+  exact hg.hasSum lt
+  refine ⟨ys, ?_⟩
+  simpa only [EMetric.mem_ball, edist_eq_coe_nnnorm_sub, add_sub_cancel_left, sub_zero] using lt
 
 /-- `f` has power series `p` at `x` iff some local extension of `f` has that series -/
 lemma hasFPowerSeriesWithinAt_iff_exists_hasFPowerSeriesAt [CompleteSpace F] {f : E → F}
@@ -203,21 +203,21 @@ lemma hasFPowerSeriesWithinAt_iff_exists_hasFPowerSeriesAt [CompleteSpace F] {f 
     HasFPowerSeriesWithinAt f p s x ↔
       ContinuousWithinAt f s x ∧ ∃ g, f =ᶠ[𝓝[s] x] g ∧ HasFPowerSeriesAt g p x := by
   constructor
-  · intro ⟨r, h⟩
-    rcases hasFPowerSeriesWithinOnBall_iff_exists_hasFPowerSeriesOnBall.mp h with ⟨fc, g, e, h⟩
-    refine ⟨fc, g, ?_, ⟨r, h⟩⟩
-    refine Filter.eventuallyEq_iff_exists_mem.mpr ⟨_, ?_, e⟩
-    exact inter_mem_nhdsWithin _ (EMetric.ball_mem_nhds _ h.r_pos)
-  · intro ⟨mem, g, hfg, ⟨r, hg⟩⟩
-    simp only [eventuallyEq_nhdsWithin_iff, Metric.eventually_nhds_iff] at hfg
-    rcases hfg with ⟨e, e0, hfg⟩
-    refine ⟨min r (.ofReal e), ?_⟩
-    refine hasFPowerSeriesWithinOnBall_iff_exists_hasFPowerSeriesOnBall.mpr ⟨mem, g, ?_, ?_⟩
-    · intro y ⟨ys, xy⟩
-      refine hfg ?_ ys
-      simp only [EMetric.mem_ball, lt_min_iff, edist_lt_ofReal] at xy
-      exact xy.2
-    · exact hg.mono (lt_min hg.r_pos (by positivity)) (min_le_left _ _)
+  intro ⟨r, h⟩
+  rcases hasFPowerSeriesWithinOnBall_iff_exists_hasFPowerSeriesOnBall.mp h with ⟨fc, g, e, h⟩
+  refine ⟨fc, g, ?_, ⟨r, h⟩⟩
+  refine Filter.eventuallyEq_iff_exists_mem.mpr ⟨_, ?_, e⟩
+  exact inter_mem_nhdsWithin _ (EMetric.ball_mem_nhds _ h.r_pos)
+  intro ⟨mem, g, hfg, ⟨r, hg⟩⟩
+  simp only [eventuallyEq_nhdsWithin_iff, Metric.eventually_nhds_iff] at hfg
+  rcases hfg with ⟨e, e0, hfg⟩
+  refine ⟨min r (.ofReal e), ?_⟩
+  refine hasFPowerSeriesWithinOnBall_iff_exists_hasFPowerSeriesOnBall.mpr ⟨mem, g, ?_, ?_⟩
+  intro y ⟨ys, xy⟩
+  refine hfg ?_ ys
+  simp only [EMetric.mem_ball, lt_min_iff, edist_lt_ofReal] at xy
+  exact xy.2
+  exact hg.mono (lt_min hg.r_pos (by positivity)) (min_le_left _ _)
 
 /-- `f` is analytic within `s` at `x` iff some local extension of `f` is analytic at `x` -/
 lemma analyticWithinAt_iff_exists_analyticAt [CompleteSpace F] {f : E → F} {s : Set E} {x : E} :
@@ -230,12 +230,12 @@ lemma analyticWithinAt_iff_exists_analyticAt [CompleteSpace F] {f : E → F} {s 
 lemma AnalyticWithinAt.exists_analyticAt [CompleteSpace F] {f : E → F} {s : Set E} {x : E}
     (h : AnalyticWithinAt 𝕜 f s x) : ∃ g, f x = g x ∧ f =ᶠ[𝓝[s] x] g ∧ AnalyticAt 𝕜 g x := by
   by_cases s0 : 𝓝[s] x = ⊥
-  · refine ⟨fun _ ↦ f x, rfl, ?_, analyticAt_const⟩
-    simp only [EventuallyEq, s0, eventually_bot]
-  · rcases analyticWithinAt_iff_exists_analyticAt.mp h with ⟨_, g, fg, hg⟩
-    refine ⟨g, ?_, fg, hg⟩
-    exact tendsto_nhds_unique' ⟨s0⟩ h.continuousWithinAt
-      (hg.continuousAt.continuousWithinAt.congr' fg.symm)
+  refine ⟨fun _ ↦ f x, rfl, ?_, analyticAt_const⟩
+  simp only [EventuallyEq, s0, eventually_bot]
+  rcases analyticWithinAt_iff_exists_analyticAt.mp h with ⟨_, g, fg, hg⟩
+  refine ⟨g, ?_, fg, hg⟩
+  exact tendsto_nhds_unique' ⟨s0⟩ h.continuousWithinAt
+    (hg.continuousAt.continuousWithinAt.congr' fg.symm)
 
 /-!
 ### Congruence
@@ -302,12 +302,12 @@ lemma AnalyticWithinAt.comp [CompleteSpace F] [CompleteSpace G] {f : F → G} {g
   rcases hf.exists_analyticAt with ⟨f', _, ef, hf'⟩
   rcases hg.exists_analyticAt with ⟨g', gx, eg, hg'⟩
   refine analyticWithinAt_iff_exists_analyticAt.mpr ⟨?_, f' ∘ g', ?_, ?_⟩
-  · exact hf.continuousWithinAt.comp hg.continuousWithinAt h
-  · have gt := hg.continuousWithinAt.tendsto_nhdsWithin h
-    filter_upwards [eg, gt.eventually ef]
-    intro y gy fgy
-    simp only [Function.comp_apply, fgy, ← gy]
-  · exact hf'.comp_of_eq hg' gx.symm
+  exact hf.continuousWithinAt.comp hg.continuousWithinAt h
+  have gt := hg.continuousWithinAt.tendsto_nhdsWithin h
+  filter_upwards [eg, gt.eventually ef]
+  intro y gy fgy
+  simp only [Function.comp_apply, fgy, ← gy]
+  exact hf'.comp_of_eq hg' gx.symm
 
 lemma AnalyticWithinOn.comp [CompleteSpace F] [CompleteSpace G] {f : F → G} {g : E → F} {s : Set F}
     {t : Set E} (hf : AnalyticWithinOn 𝕜 f s) (hg : AnalyticWithinOn 𝕜 g t) (h : MapsTo g t s) :
@@ -343,8 +343,8 @@ lemma HasFPowerSeriesWithinOnBall.prod {e : E} {f : E → F} {g : E → G} {s : 
     intro y m hy
     simp_rw [FormalMultilinearSeries.prod, ContinuousMultilinearMap.prod_apply]
     refine (hf.hasSum m ?_).prod_mk (hg.hasSum m ?_)
-    · exact EMetric.mem_ball.mpr (lt_of_lt_of_le hy (min_le_left _ _))
-    · exact EMetric.mem_ball.mpr (lt_of_lt_of_le hy (min_le_right _ _))
+    exact EMetric.mem_ball.mpr (lt_of_lt_of_le hy (min_le_left _ _))
+    exact EMetric.mem_ball.mpr (lt_of_lt_of_le hy (min_le_right _ _))
   continuousWithinAt := hf.continuousWithinAt.prod hg.continuousWithinAt
 
 lemma HasFPowerSeriesWithinAt.prod {e : E} {f : E → F} {g : E → G} {s : Set E}

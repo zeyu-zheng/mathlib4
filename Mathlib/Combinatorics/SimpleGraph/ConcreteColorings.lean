@@ -44,9 +44,9 @@ theorem chromaticNumber_pathGraph (n : ℕ) (h : 2 ≤ n) :
     (pathGraph n).chromaticNumber = 2 := by
   have hc := (pathGraph.bicoloring n).colorable
   apply le_antisymm
-  · exact hc.chromaticNumber_le
-  · simpa only [pathGraph_two_eq_top, chromaticNumber_top] using
-      chromaticNumber_mono_of_embedding (pathGraph_two_embedding n h)
+  exact hc.chromaticNumber_le
+  simpa only [pathGraph_two_eq_top, chromaticNumber_top] using
+    chromaticNumber_mono_of_embedding (pathGraph_two_embedding n h)
 
 theorem Coloring.even_length_iff_congr {α} {G : SimpleGraph α}
     (c : G.Coloring Bool) {u v : α} (p : G.Walk u v) :

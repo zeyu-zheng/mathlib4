@@ -61,16 +61,16 @@ theorem betaIntegral_convergent_left {u : ℂ} (hu : 0 < re u) (v : ℂ) :
     IntervalIntegrable (fun x =>
       (x : ℂ) ^ (u - 1) * (1 - (x : ℂ)) ^ (v - 1) : ℝ → ℂ) volume 0 (1 / 2) := by
   apply IntervalIntegrable.mul_continuousOn
-  · refine intervalIntegral.intervalIntegrable_cpow' ?_
-    rwa [sub_re, one_re, ← zero_sub, sub_lt_sub_iff_right]
-  · apply ContinuousAt.continuousOn
-    intro x hx
-    rw [uIcc_of_le (by positivity : (0 : ℝ) ≤ 1 / 2)] at hx
-    apply ContinuousAt.cpow
-    · exact (continuous_const.sub continuous_ofReal).continuousAt
-    · exact continuousAt_const
-    · norm_cast
-      exact ofReal_mem_slitPlane.2 <| by linarith only [hx.2]
+  refine intervalIntegral.intervalIntegrable_cpow' ?_
+  rwa [sub_re, one_re, ← zero_sub, sub_lt_sub_iff_right]
+  apply ContinuousAt.continuousOn
+  intro x hx
+  rw [uIcc_of_le (by positivity : (0 : ℝ) ≤ 1 / 2)] at hx
+  apply ContinuousAt.cpow
+  exact (continuous_const.sub continuous_ofReal).continuousAt
+  exact continuousAt_const
+  norm_cast
+  exact ofReal_mem_slitPlane.2 <| by linarith only [hx.2]
 
 /-- The Beta integral is convergent for all `u, v` of positive real part. -/
 theorem betaIntegral_convergent {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
@@ -79,11 +79,11 @@ theorem betaIntegral_convergent {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
   refine (betaIntegral_convergent_left hu v).trans ?_
   rw [IntervalIntegrable.iff_comp_neg]
   convert ((betaIntegral_convergent_left hv u).comp_add_right 1).symm using 1
-  · ext1 x
-    conv_lhs => rw [mul_comm]
-    congr 2 <;> · push_cast; ring
-  · norm_num
-  · norm_num
+  ext1 x
+  conv_lhs => rw [mul_comm]
+  congr 2 <;> · push_cast; ring
+  norm_num
+  norm_num
 
 theorem betaIntegral_symm (u v : ℂ) : betaIntegral v u = betaIntegral u v := by
   rw [betaIntegral, betaIntegral]
@@ -99,10 +99,10 @@ theorem betaIntegral_symm (u v : ℂ) : betaIntegral v u = betaIntegral u v := b
 theorem betaIntegral_eval_one_right {u : ℂ} (hu : 0 < re u) : betaIntegral u 1 = 1 / u := by
   simp_rw [betaIntegral, sub_self, cpow_zero, mul_one]
   rw [integral_cpow (Or.inl _)]
-  · rw [ofReal_zero, ofReal_one, one_cpow, zero_cpow, sub_zero, sub_add_cancel]
-    rw [sub_add_cancel]
-    contrapose! hu; rw [hu, zero_re]
-  · rwa [sub_re, one_re, ← sub_pos, sub_neg_eq_add, sub_add_cancel]
+  rw [ofReal_zero, ofReal_one, one_cpow, zero_cpow, sub_zero, sub_add_cancel]
+  rw [sub_add_cancel]
+  contrapose! hu; rw [hu, zero_re]
+  rwa [sub_re, one_re, ← sub_pos, sub_neg_eq_add, sub_add_cancel]
 
 theorem betaIntegral_scaled (s t : ℂ) {a : ℝ} (ha : 0 < a) :
     ∫ x in (0)..a, (x : ℂ) ^ (s - 1) * ((a : ℂ) - x) ^ (t - 1) =
@@ -118,11 +118,11 @@ theorem betaIntegral_scaled (s t : ℂ) {a : ℝ} (ha : 0 < a) :
   refine setIntegral_congr measurableSet_Ioc fun x hx => ?_
   rw [mul_mul_mul_comm]
   congr 1
-  · rw [← mul_cpow_ofReal_nonneg ha.le (div_pos hx.1 ha).le, ofReal_div, mul_div_cancel₀ _ ha']
-  · rw [(by norm_cast : (1 : ℂ) - ↑(x / a) = ↑(1 - x / a)), ←
-      mul_cpow_ofReal_nonneg ha.le (sub_nonneg.mpr <| (div_le_one ha).mpr hx.2)]
-    push_cast
-    rw [mul_sub, mul_one, mul_div_cancel₀ _ ha']
+  rw [← mul_cpow_ofReal_nonneg ha.le (div_pos hx.1 ha).le, ofReal_div, mul_div_cancel₀ _ ha']
+  rw [(by norm_cast : (1 : ℂ) - ↑(x / a) = ↑(1 - x / a)), ←
+    mul_cpow_ofReal_nonneg ha.le (sub_nonneg.mpr <| (div_le_one ha).mpr hx.2)]
+  push_cast
+  rw [mul_sub, mul_one, mul_div_cancel₀ _ ha']
 
 /-- Relation between Beta integral and Gamma function.  -/
 theorem Gamma_mul_Gamma_eq_betaIntegral {s t : ℂ} (hs : 0 < re s) (ht : 0 < re t) :
@@ -156,21 +156,21 @@ theorem betaIntegral_recurrence {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
   rw [add_re, one_re]; positivity
   have hc : ContinuousOn F (Icc 0 1)
   refine (ContinuousAt.continuousOn fun x hx => ?_).mul (ContinuousAt.continuousOn fun x hx => ?_)
-  · refine (continuousAt_cpow_const_of_re_pos (Or.inl ?_) hu).comp continuous_ofReal.continuousAt
-    rw [ofReal_re]; exact hx.1
-  · refine (continuousAt_cpow_const_of_re_pos (Or.inl ?_) hv).comp
-      (continuous_const.sub continuous_ofReal).continuousAt
-    rw [sub_re, one_re, ofReal_re, sub_nonneg]
-    exact hx.2
+  refine (continuousAt_cpow_const_of_re_pos (Or.inl ?_) hu).comp continuous_ofReal.continuousAt
+  rw [ofReal_re]; exact hx.1
+  refine (continuousAt_cpow_const_of_re_pos (Or.inl ?_) hv).comp
+    (continuous_const.sub continuous_ofReal).continuousAt
+  rw [sub_re, one_re, ofReal_re, sub_nonneg]
+  exact hx.2
   have hder : ∀ x : ℝ, x ∈ Ioo (0 : ℝ) 1 →
       HasDerivAt F (u * ((x : ℂ) ^ (u - 1) * (1 - (x : ℂ)) ^ v) -
         v * ((x : ℂ) ^ u * (1 - (x : ℂ)) ^ (v - 1))) x := by
     intro x hx
     have U : HasDerivAt (fun y : ℂ => y ^ u) (u * (x : ℂ) ^ (u - 1)) ↑x := by
       have := @HasDerivAt.cpow_const _ _ _ u (hasDerivAt_id (x : ℂ)) (Or.inl ?_)
-      · simp only [id_eq, mul_one] at this
-        exact this
-      · rw [id_eq, ofReal_re]; exact hx.1
+      simp only [id_eq, mul_one] at this
+      exact this
+      rw [id_eq, ofReal_re]; exact hx.1
     have V : HasDerivAt (fun y : ℂ => (1 - y) ^ v) (-v * (1 - (x : ℂ)) ^ (v - 1)) ↑x := by
       have A := @HasDerivAt.cpow_const _ _ _ v (hasDerivAt_id (1 - (x : ℂ))) (Or.inl ?_)
       swap; · rw [id, sub_re, one_re, ofReal_re, sub_pos]; exact hx.2
@@ -195,29 +195,29 @@ theorem betaIntegral_recurrence {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
     contrapose! hv; rw [hv, zero_re]
   rw [hF0, hF1, sub_zero, intervalIntegral.integral_sub, intervalIntegral.integral_const_mul,
     intervalIntegral.integral_const_mul] at int_ev
-  · rw [betaIntegral, betaIntegral, ← sub_eq_zero]
-    convert int_ev <;> ring
-  · apply IntervalIntegrable.const_mul
-    convert betaIntegral_convergent hu hv'; ring
-  · apply IntervalIntegrable.const_mul
-    convert betaIntegral_convergent hu' hv; ring
+  rw [betaIntegral, betaIntegral, ← sub_eq_zero]
+  convert int_ev <;> ring
+  apply IntervalIntegrable.const_mul
+  convert betaIntegral_convergent hu hv'; ring
+  apply IntervalIntegrable.const_mul
+  convert betaIntegral_convergent hu' hv; ring
 
 /-- Explicit formula for the Beta function when second argument is a positive integer. -/
 theorem betaIntegral_eval_nat_add_one_right {u : ℂ} (hu : 0 < re u) (n : ℕ) :
     betaIntegral u (n + 1) = n ! / ∏ j ∈ Finset.range (n + 1), (u + j) := by
   induction' n with n IH generalizing u
-  · rw [Nat.cast_zero, zero_add, betaIntegral_eval_one_right hu, Nat.factorial_zero, Nat.cast_one]
-    simp
-  · have := betaIntegral_recurrence hu (?_ : 0 < re n.succ)
-    swap; · rw [← ofReal_natCast, ofReal_re]; positivity
-    rw [mul_comm u _, ← eq_div_iff] at this
-    swap; · contrapose! hu; rw [hu, zero_re]
-    rw [this, Finset.prod_range_succ', Nat.cast_succ, IH]
-    swap; · rw [add_re, one_re]; positivity
-    rw [Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one, Nat.cast_zero, add_zero, ←
-      mul_div_assoc, ← div_div]
-    congr 3 with j : 1
-    push_cast; abel
+  rw [Nat.cast_zero, zero_add, betaIntegral_eval_one_right hu, Nat.factorial_zero, Nat.cast_one]
+  simp
+  have := betaIntegral_recurrence hu (?_ : 0 < re n.succ)
+  swap; · rw [← ofReal_natCast, ofReal_re]; positivity
+  rw [mul_comm u _, ← eq_div_iff] at this
+  swap; · contrapose! hu; rw [hu, zero_re]
+  rw [this, Finset.prod_range_succ', Nat.cast_succ, IH]
+  swap; · rw [add_re, one_re]; positivity
+  rw [Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one, Nat.cast_zero, add_zero, ←
+    mul_div_assoc, ← div_div]
+  congr 3 with j : 1
+  push_cast; abel
 
 end Complex
 
@@ -246,10 +246,10 @@ theorem GammaSeq_add_one_left (s : ℂ) {n : ℕ} (hn : n ≠ 0) :
     rw [GammaSeq, Finset.prod_range_succ', Nat.cast_zero, add_zero, div_mul_div_comm, ← mul_assoc,
       ← mul_assoc, mul_comm _ (Finset.prod _ _)]
   congr 3
-  · rw [cpow_add _ _ (Nat.cast_ne_zero.mpr hn), cpow_one, mul_comm]
-  · refine Finset.prod_congr (by rfl) fun x _ => ?_
-    push_cast; ring
-  · abel
+  rw [cpow_add _ _ (Nat.cast_ne_zero.mpr hn), cpow_one, mul_comm]
+  refine Finset.prod_congr (by rfl) fun x _ => ?_
+  push_cast; ring
+  abel
 
 theorem GammaSeq_eq_approx_Gamma_integral {s : ℂ} (hs : 0 < re s) {n : ℕ} (hn : n ≠ 0) :
     GammaSeq s n = ∫ x : ℝ in (0)..n, ↑((1 - x / n) ^ n) * (x : ℂ) ^ (s - 1) := by
@@ -292,51 +292,51 @@ theorem approx_Gamma_integral_tendsto_Gamma_integral {s : ℂ} (hs : 0 < re s) :
       Measure.restrict_restrict_of_subset Ioc_subset_Ioi_self, ← IntegrableOn, ←
       intervalIntegrable_iff_integrableOn_Ioc_of_le (by positivity : (0 : ℝ) ≤ n)]
     apply IntervalIntegrable.continuousOn_mul
-    · refine intervalIntegral.intervalIntegrable_cpow' ?_
-      rwa [sub_re, one_re, ← zero_sub, sub_lt_sub_iff_right]
-    · apply Continuous.continuousOn
-      exact RCLike.continuous_ofReal.comp -- Porting note: was `continuity`
-        ((continuous_const.sub (continuous_id'.div_const ↑n)).pow n)
+    refine intervalIntegral.intervalIntegrable_cpow' ?_
+    rwa [sub_re, one_re, ← zero_sub, sub_lt_sub_iff_right]
+    apply Continuous.continuousOn
+    exact RCLike.continuous_ofReal.comp -- Porting note: was `continuity`
+      ((continuous_const.sub (continuous_id'.div_const ↑n)).pow n)
   -- pointwise limit of f
   have f_tends : ∀ x : ℝ, x ∈ Ioi (0 : ℝ) →
       Tendsto (fun n : ℕ => f n x) atTop (𝓝 <| ↑(Real.exp (-x)) * (x : ℂ) ^ (s - 1)) := by
     intro x hx
     apply Tendsto.congr'
-    · show ∀ᶠ n : ℕ in atTop, ↑((1 - x / n) ^ n) * (x : ℂ) ^ (s - 1) = f n x
-      filter_upwards [eventually_ge_atTop ⌈x⌉₊] with n hn
-      rw [Nat.ceil_le] at hn
-      dsimp only [f]
-      rw [indicator_of_mem]
-      exact ⟨hx, hn⟩
-    · simp_rw [mul_comm]
-      refine (Tendsto.comp (continuous_ofReal.tendsto _) ?_).const_mul _
-      convert tendsto_one_plus_div_pow_exp (-x) using 1
-      ext1 n
-      rw [neg_div, ← sub_eq_add_neg]
+    show ∀ᶠ n : ℕ in atTop, ↑((1 - x / n) ^ n) * (x : ℂ) ^ (s - 1) = f n x
+    filter_upwards [eventually_ge_atTop ⌈x⌉₊] with n hn
+    rw [Nat.ceil_le] at hn
+    dsimp only [f]
+    rw [indicator_of_mem]
+    exact ⟨hx, hn⟩
+    simp_rw [mul_comm]
+    refine (Tendsto.comp (continuous_ofReal.tendsto _) ?_).const_mul _
+    convert tendsto_one_plus_div_pow_exp (-x) using 1
+    ext1 n
+    rw [neg_div, ← sub_eq_add_neg]
   -- let `convert` identify the remaining goals
   convert tendsto_integral_of_dominated_convergence _ (fun n => (f_ible n).1)
     (Real.GammaIntegral_convergent hs) _
     ((ae_restrict_iff' measurableSet_Ioi).mpr (ae_of_all _ f_tends)) using 1
   -- limit of f is the integrand we want
-  · ext1 n
-    rw [MeasureTheory.integral_indicator (measurableSet_Ioc : MeasurableSet (Ioc (_ : ℝ) _)),
-      intervalIntegral.integral_of_le (by positivity : 0 ≤ (n : ℝ)),
-      Measure.restrict_restrict_of_subset Ioc_subset_Ioi_self]
+  ext1 n
+  rw [MeasureTheory.integral_indicator (measurableSet_Ioc : MeasurableSet (Ioc (_ : ℝ) _)),
+    intervalIntegral.integral_of_le (by positivity : 0 ≤ (n : ℝ)),
+    Measure.restrict_restrict_of_subset Ioc_subset_Ioi_self]
   -- f is uniformly bounded by the Gamma integrand
-  · intro n
-    rw [ae_restrict_iff' measurableSet_Ioi]
-    filter_upwards with x hx
-    dsimp only [f]
-    rcases lt_or_le (n : ℝ) x with (hxn | hxn)
-    · rw [indicator_of_not_mem (not_mem_Ioc_of_gt hxn), norm_zero,
-        mul_nonneg_iff_right_nonneg_of_pos (exp_pos _)]
-      exact rpow_nonneg (le_of_lt hx) _
-    · rw [indicator_of_mem (mem_Ioc.mpr ⟨mem_Ioi.mp hx, hxn⟩), norm_mul, Complex.norm_eq_abs,
-        Complex.abs_of_nonneg
-          (pow_nonneg (sub_nonneg.mpr <| div_le_one_of_le hxn <| by positivity) _),
-        Complex.norm_eq_abs, abs_cpow_eq_rpow_re_of_pos hx, sub_re, one_re,
-        mul_le_mul_right (rpow_pos_of_pos hx _)]
-      exact one_sub_div_pow_le_exp_neg hxn
+  intro n
+  rw [ae_restrict_iff' measurableSet_Ioi]
+  filter_upwards with x hx
+  dsimp only [f]
+  rcases lt_or_le (n : ℝ) x with (hxn | hxn)
+  rw [indicator_of_not_mem (not_mem_Ioc_of_gt hxn), norm_zero,
+    mul_nonneg_iff_right_nonneg_of_pos (exp_pos _)]
+  exact rpow_nonneg (le_of_lt hx) _
+  rw [indicator_of_mem (mem_Ioc.mpr ⟨mem_Ioi.mp hx, hxn⟩), norm_mul, Complex.norm_eq_abs,
+    Complex.abs_of_nonneg
+      (pow_nonneg (sub_nonneg.mpr <| div_le_one_of_le hxn <| by positivity) _),
+    Complex.norm_eq_abs, abs_cpow_eq_rpow_re_of_pos hx, sub_re, one_re,
+    mul_le_mul_right (rpow_pos_of_pos hx _)]
+  exact one_sub_div_pow_le_exp_neg hxn
 
 /-- Euler's limit formula for the complex Gamma function. -/
 theorem GammaSeq_tendsto_Gamma (s : ℂ) : Tendsto (GammaSeq s) atTop (𝓝 <| Gamma s) := by
@@ -345,30 +345,30 @@ theorem GammaSeq_tendsto_Gamma (s : ℂ) : Tendsto (GammaSeq s) atTop (𝓝 <| G
     apply this
     rw [neg_lt]
     rcases lt_or_le 0 (re s) with (hs | hs)
-    · exact (neg_neg_of_pos hs).trans_le (Nat.cast_nonneg _)
-    · refine (Nat.lt_floor_add_one _).trans_le ?_
-      rw [sub_eq_neg_add, Nat.floor_add_one (neg_nonneg.mpr hs), Nat.cast_add_one]
+    exact (neg_neg_of_pos hs).trans_le (Nat.cast_nonneg _)
+    refine (Nat.lt_floor_add_one _).trans_le ?_
+    rw [sub_eq_neg_add, Nat.floor_add_one (neg_nonneg.mpr hs), Nat.cast_add_one]
   intro m
   induction' m with m IH generalizing s
-  · -- Base case: `0 < re s`, so Gamma is given by the integral formula
-    intro hs
-    rw [Nat.cast_zero, neg_zero] at hs
-    rw [← Gamma_eq_GammaAux]
-    · refine Tendsto.congr' ?_ (approx_Gamma_integral_tendsto_Gamma_integral hs)
-      refine (eventually_ne_atTop 0).mp (eventually_of_forall fun n hn => ?_)
-      exact (GammaSeq_eq_approx_Gamma_integral hs hn).symm
-    · rwa [Nat.cast_zero, neg_lt_zero]
-  · -- Induction step: use recurrence formulae in `s` for Gamma and GammaSeq
-    intro hs
-    rw [Nat.cast_succ, neg_add, ← sub_eq_add_neg, sub_lt_iff_lt_add, ← one_re, ← add_re] at hs
-    rw [GammaAux]
-    have := @Tendsto.congr' _ _ _ ?_ _ _
-      ((eventually_ne_atTop 0).mp (eventually_of_forall fun n hn => ?_)) ((IH _ hs).div_const s)
-    pick_goal 3; · exact GammaSeq_add_one_left s hn -- doesn't work if inlined?
-    conv at this => arg 1; intro n; rw [mul_comm]
-    rwa [← mul_one (GammaAux m (s + 1) / s), tendsto_mul_iff_of_ne_zero _ (one_ne_zero' ℂ)] at this
-    simp_rw [add_assoc]
-    exact tendsto_natCast_div_add_atTop (1 + s)
+  -- Base case: `0 < re s`, so Gamma is given by the integral formula
+  intro hs
+  rw [Nat.cast_zero, neg_zero] at hs
+  rw [← Gamma_eq_GammaAux]
+  refine Tendsto.congr' ?_ (approx_Gamma_integral_tendsto_Gamma_integral hs)
+  refine (eventually_ne_atTop 0).mp (eventually_of_forall fun n hn => ?_)
+  exact (GammaSeq_eq_approx_Gamma_integral hs hn).symm
+  rwa [Nat.cast_zero, neg_lt_zero]
+  -- Induction step: use recurrence formulae in `s` for Gamma and GammaSeq
+  intro hs
+  rw [Nat.cast_succ, neg_add, ← sub_eq_add_neg, sub_lt_iff_lt_add, ← one_re, ← add_re] at hs
+  rw [GammaAux]
+  have := @Tendsto.congr' _ _ _ ?_ _ _
+    ((eventually_ne_atTop 0).mp (eventually_of_forall fun n hn => ?_)) ((IH _ hs).div_const s)
+  pick_goal 3; · exact GammaSeq_add_one_left s hn -- doesn't work if inlined?
+  conv at this => arg 1; intro n; rw [mul_comm]
+  rwa [← mul_one (GammaAux m (s + 1) / s), tendsto_mul_iff_of_ne_zero _ (one_ne_zero' ℂ)] at this
+  simp_rw [add_assoc]
+  exact tendsto_natCast_div_add_atTop (1 + s)
 
 end Complex
 
@@ -410,55 +410,55 @@ theorem GammaSeq_mul (z : ℂ) {n : ℕ} (hn : n ≠ 0) :
 theorem Gamma_mul_Gamma_one_sub (z : ℂ) : Gamma z * Gamma (1 - z) = π / sin (π * z) := by
   have pi_ne : (π : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr pi_ne_zero
   by_cases hs : sin (↑π * z) = 0
-  · -- first deal with silly case z = integer
-    rw [hs, div_zero]
-    rw [← neg_eq_zero, ← Complex.sin_neg, ← mul_neg, Complex.sin_eq_zero_iff, mul_comm] at hs
-    obtain ⟨k, hk⟩ := hs
-    rw [mul_eq_mul_right_iff, eq_false (ofReal_ne_zero.mpr pi_pos.ne'), or_false_iff,
-      neg_eq_iff_eq_neg] at hk
-    rw [hk]
-    cases k
-    · rw [Int.ofNat_eq_coe, Int.cast_natCast, Complex.Gamma_neg_nat_eq_zero, zero_mul]
-    · rw [Int.cast_negSucc, neg_neg, Nat.cast_add, Nat.cast_one, add_comm, sub_add_cancel_left,
-        Complex.Gamma_neg_nat_eq_zero, mul_zero]
+  -- first deal with silly case z = integer
+  rw [hs, div_zero]
+  rw [← neg_eq_zero, ← Complex.sin_neg, ← mul_neg, Complex.sin_eq_zero_iff, mul_comm] at hs
+  obtain ⟨k, hk⟩ := hs
+  rw [mul_eq_mul_right_iff, eq_false (ofReal_ne_zero.mpr pi_pos.ne'), or_false_iff,
+    neg_eq_iff_eq_neg] at hk
+  rw [hk]
+  cases k
+  rw [Int.ofNat_eq_coe, Int.cast_natCast, Complex.Gamma_neg_nat_eq_zero, zero_mul]
+  rw [Int.cast_negSucc, neg_neg, Nat.cast_add, Nat.cast_one, add_comm, sub_add_cancel_left,
+    Complex.Gamma_neg_nat_eq_zero, mul_zero]
   refine tendsto_nhds_unique ((GammaSeq_tendsto_Gamma z).mul (GammaSeq_tendsto_Gamma <| 1 - z)) ?_
   have : ↑π / sin (↑π * z) = 1 * (π / sin (π * z))
   rw [one_mul]
   convert Tendsto.congr' ((eventually_ne_atTop 0).mp (eventually_of_forall fun n hn =>
     (GammaSeq_mul z hn).symm)) (Tendsto.mul _ _)
-  · convert tendsto_natCast_div_add_atTop (1 - z) using 1; ext1 n; rw [add_sub_assoc]
-  · have : ↑π / sin (↑π * z) = 1 / (sin (π * z) / π) := by field_simp
-    convert tendsto_const_nhds.div _ (div_ne_zero hs pi_ne)
-    rw [← tendsto_mul_iff_of_ne_zero tendsto_const_nhds pi_ne, div_mul_cancel₀ _ pi_ne]
-    convert tendsto_euler_sin_prod z using 1
-    ext1 n; rw [mul_comm, ← mul_assoc]
+  convert tendsto_natCast_div_add_atTop (1 - z) using 1; ext1 n; rw [add_sub_assoc]
+  have : ↑π / sin (↑π * z) = 1 / (sin (π * z) / π) := by field_simp
+  convert tendsto_const_nhds.div _ (div_ne_zero hs pi_ne)
+  rw [← tendsto_mul_iff_of_ne_zero tendsto_const_nhds pi_ne, div_mul_cancel₀ _ pi_ne]
+  convert tendsto_euler_sin_prod z using 1
+  ext1 n; rw [mul_comm, ← mul_assoc]
 
 /-- The Gamma function does not vanish on `ℂ` (except at non-positive integers, where the function
 is mathematically undefined and we set it to `0` by convention). -/
 theorem Gamma_ne_zero {s : ℂ} (hs : ∀ m : ℕ, s ≠ -m) : Gamma s ≠ 0 := by
   by_cases h_im : s.im = 0
-  · have : s = ↑s.re := by
-      conv_lhs => rw [← Complex.re_add_im s]
-      rw [h_im, ofReal_zero, zero_mul, add_zero]
-    rw [this, Gamma_ofReal, ofReal_ne_zero]
-    refine Real.Gamma_ne_zero fun n => ?_
-    specialize hs n
-    contrapose! hs
-    rwa [this, ← ofReal_natCast, ← ofReal_neg, ofReal_inj]
-  · have : sin (↑π * s) ≠ 0 := by
-      rw [Complex.sin_ne_zero_iff]
-      intro k
-      apply_fun im
-      rw [im_ofReal_mul, ← ofReal_intCast, ← ofReal_mul, ofReal_im]
-      exact mul_ne_zero Real.pi_pos.ne' h_im
-    have A := div_ne_zero (ofReal_ne_zero.mpr Real.pi_pos.ne') this
-    rw [← Complex.Gamma_mul_Gamma_one_sub s, mul_ne_zero_iff] at A
-    exact A.1
+  have : s = ↑s.re := by
+    conv_lhs => rw [← Complex.re_add_im s]
+    rw [h_im, ofReal_zero, zero_mul, add_zero]
+  rw [this, Gamma_ofReal, ofReal_ne_zero]
+  refine Real.Gamma_ne_zero fun n => ?_
+  specialize hs n
+  contrapose! hs
+  rwa [this, ← ofReal_natCast, ← ofReal_neg, ofReal_inj]
+  have : sin (↑π * s) ≠ 0 := by
+    rw [Complex.sin_ne_zero_iff]
+    intro k
+    apply_fun im
+    rw [im_ofReal_mul, ← ofReal_intCast, ← ofReal_mul, ofReal_im]
+    exact mul_ne_zero Real.pi_pos.ne' h_im
+  have A := div_ne_zero (ofReal_ne_zero.mpr Real.pi_pos.ne') this
+  rw [← Complex.Gamma_mul_Gamma_one_sub s, mul_ne_zero_iff] at A
+  exact A.1
 
 theorem Gamma_eq_zero_iff (s : ℂ) : Gamma s = 0 ↔ ∃ m : ℕ, s = -m := by
   constructor
-  · contrapose!; exact Gamma_ne_zero
-  · rintro ⟨m, rfl⟩; exact Gamma_neg_nat_eq_zero m
+  contrapose!; exact Gamma_ne_zero
+  rintro ⟨m, rfl⟩; exact Gamma_neg_nat_eq_zero m
 
 /-- A weaker, but easier-to-apply, version of `Complex.Gamma_ne_zero`. -/
 theorem Gamma_ne_zero_of_re_pos {s : ℂ} (hs : 0 < re s) : Gamma s ≠ 0 := by
@@ -512,8 +512,8 @@ answer! (These results are useful in the theory of zeta and L-functions.) -/
 theorem one_div_Gamma_eq_self_mul_one_div_Gamma_add_one (s : ℂ) :
     (Gamma s)⁻¹ = s * (Gamma (s + 1))⁻¹ := by
   rcases ne_or_eq s 0 with (h | rfl)
-  · rw [Gamma_add_one s h, mul_inv, mul_inv_cancel_left₀ h]
-  · rw [zero_add, Gamma_zero, inv_zero, zero_mul]
+  rw [Gamma_add_one s h, mul_inv, mul_inv_cancel_left₀ h]
+  rw [zero_add, Gamma_zero, inv_zero, zero_mul]
 
 /-- The reciprocal of the Gamma function is differentiable everywhere
 (including the points where Gamma itself is not). -/
@@ -553,8 +553,8 @@ theorem Gamma_mul_Gamma_add_half (s : ℂ) :
   suffices (fun z => (Gamma z)⁻¹ * (Gamma (z + 1 / 2))⁻¹) = fun z =>
       (Gamma (2 * z))⁻¹ * (2 : ℂ) ^ (2 * z - 1) / ↑(√π) by
     convert congr_arg Inv.inv (congr_fun this s) using 1
-    · rw [mul_inv, inv_inv, inv_inv]
-    · rw [div_eq_mul_inv, mul_inv, mul_inv, inv_inv, inv_inv, ← cpow_neg, neg_sub]
+    rw [mul_inv, inv_inv, inv_inv]
+    rw [div_eq_mul_inv, mul_inv, mul_inv, inv_inv, inv_inv, ← cpow_neg, neg_sub]
   have h1 : AnalyticOn ℂ (fun z : ℂ => (Gamma z)⁻¹ * (Gamma (z + 1 / 2))⁻¹) univ := by
     refine DifferentiableOn.analyticOn ?_ isOpen_univ
     refine (differentiable_one_div_Gamma.mul ?_).differentiableOn
@@ -564,13 +564,13 @@ theorem Gamma_mul_Gamma_add_half (s : ℂ) :
     refine DifferentiableOn.analyticOn ?_ isOpen_univ
     refine (Differentiable.mul ?_ (differentiable_const _)).differentiableOn
     apply Differentiable.mul
-    · exact differentiable_one_div_Gamma.comp (differentiable_id'.const_mul _)
-    · refine fun t => DifferentiableAt.const_cpow ?_ (Or.inl two_ne_zero)
-      exact DifferentiableAt.sub_const (differentiableAt_id.const_mul _) _
+    exact differentiable_one_div_Gamma.comp (differentiable_id'.const_mul _)
+    refine fun t => DifferentiableAt.const_cpow ?_ (Or.inl two_ne_zero)
+    exact DifferentiableAt.sub_const (differentiableAt_id.const_mul _) _
   have h3 : Tendsto ((↑) : ℝ → ℂ) (𝓝[≠] 1) (𝓝[≠] 1) := by
     rw [tendsto_nhdsWithin_iff]; constructor
-    · exact tendsto_nhdsWithin_of_tendsto_nhds continuous_ofReal.continuousAt
-    · exact eventually_nhdsWithin_iff.mpr (eventually_of_forall fun t ht => ofReal_ne_one.mpr ht)
+    exact tendsto_nhdsWithin_of_tendsto_nhds continuous_ofReal.continuousAt
+    exact eventually_nhdsWithin_iff.mpr (eventually_of_forall fun t ht => ofReal_ne_one.mpr ht)
   refine AnalyticOn.eq_of_frequently_eq h1 h2 (h3.frequently ?_)
   refine ((Eventually.filter_mono nhdsWithin_le_nhds) ?_).frequently
   refine (eventually_gt_nhds zero_lt_one).mp (eventually_of_forall fun t ht => ?_)

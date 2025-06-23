@@ -228,8 +228,8 @@ theorem tsub_apply (f g : ι →₀ α) (a : ι) : (f - g) a = f a - g a :=
 theorem single_tsub : single i (a - b) = single i a - single i b := by
   ext j
   obtain rfl | h := eq_or_ne i j
-  · rw [tsub_apply, single_eq_same, single_eq_same, single_eq_same]
-  · rw [tsub_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, tsub_self]
+  rw [tsub_apply, single_eq_same, single_eq_same, single_eq_same]
+  rw [tsub_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, tsub_self]
 
 theorem support_tsub {f1 f2 : ι →₀ α} : (f1 - f2).support ⊆ f1.support := by
   simp (config := { contextual := true }) only [subset_iff, tsub_eq_zero_iff_le, mem_support_iff,

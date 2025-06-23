@@ -59,7 +59,7 @@ end
 theorem size_shiftLeft' {b m n} (h : shiftLeft' b m n ≠ 0) :
     size (shiftLeft' b m n) = size m + n := by
   induction' n with n IH
-  · simp [shiftLeft']
+  simp [shiftLeft']
   simp only [shiftLeft', ne_eq] at h ⊢
   rw [size_bit h, Nat.add_succ]
   by_cases s0 : shiftLeft' b m n = 0
@@ -84,10 +84,10 @@ theorem lt_size_self (n : ℕ) : n < 2 ^ size n := by
   have : ∀ {n}, n = 0 → n < 1 <<< (size n)
   simp
   apply binaryRec _ _ n
-  · apply this rfl
+  apply this rfl
   intro b n IH
   by_cases h : bit b n = 0
-  · apply this h
+  apply this h
   rw [size_bit h, shiftLeft_succ, shiftLeft_eq, one_mul]
   cases b <;> dsimp [bit] <;> omega
 
@@ -95,19 +95,19 @@ theorem size_le {m n : ℕ} : size m ≤ n ↔ m < 2 ^ n :=
   ⟨fun h => lt_of_lt_of_le (lt_size_self _) (pow_le_pow_of_le_right (by decide) h), by
     rw [← one_shiftLeft]; revert n
     apply binaryRec _ _ m
-    · intro n
-      simp
-    · intro b m IH n h
-      by_cases e : bit b m = 0
-      · simp [e]
-      rw [size_bit e]
-      cases' n with n
-      · exact e.elim (Nat.eq_zero_of_le_zero (le_of_lt_succ h))
-      · apply succ_le_succ (IH _)
-        apply Nat.lt_of_mul_lt_mul_left (a := 2)
-        simp only [shiftLeft_succ] at *
-        refine lt_of_le_of_lt ?_ h
-        cases b <;> dsimp [bit] <;> omega⟩
+    intro n
+    simp
+    intro b m IH n h
+    by_cases e : bit b m = 0
+    simp [e]
+    rw [size_bit e]
+    cases' n with n
+    exact e.elim (Nat.eq_zero_of_le_zero (le_of_lt_succ h))
+    apply succ_le_succ (IH _)
+    apply Nat.lt_of_mul_lt_mul_left (a := 2)
+    simp only [shiftLeft_succ] at *
+    refine lt_of_le_of_lt ?_ h
+    cases b <;> dsimp [bit] <;> omega⟩
 
 theorem lt_size {m n : ℕ} : m < size n ↔ 2 ^ m ≤ n := by
   rw [← not_lt, Decidable.iff_not_comm, not_lt, size_le]
@@ -127,7 +127,7 @@ theorem size_le_size {m n : ℕ} (h : m ≤ n) : size m ≤ size n :=
 theorem size_eq_bits_len (n : ℕ) : n.bits.length = n.size := by
   induction' n using Nat.binaryRec' with b n h ih; · simp
   rw [size_bit, bits_append_bit _ _ h]
-  · simp [ih]
-  · simpa [bit_eq_zero_iff]
+  simp [ih]
+  simpa [bit_eq_zero_iff]
 
 end Nat

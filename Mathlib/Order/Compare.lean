@@ -61,9 +61,9 @@ lemma compares_gt [LT α] (a b : α) : Compares gt a b = (a > b) := rfl
 
 theorem compares_swap [LT α] {a b : α} {o : Ordering} : o.swap.Compares a b ↔ o.Compares b a := by
   cases o
-  · exact Iff.rfl
-  · exact eq_comm
-  · exact Iff.rfl
+  exact Iff.rfl
+  exact eq_comm
+  exact Iff.rfl
 
 alias ⟨Compares.of_swap, Compares.swap⟩ := compares_swap
 
@@ -112,13 +112,13 @@ theorem compares_iff_of_compares_impl [LinearOrder α] [Preorder β] {a b : α} 
     (h : ∀ {o}, Compares o a b → Compares o a' b') (o) : Compares o a b ↔ Compares o a' b' := by
   refine ⟨h, fun ho => ?_⟩
   cases' lt_trichotomy a b with hab hab
-  · have hab : Compares Ordering.lt a b := hab
-    rwa [ho.inj (h hab)]
-  · cases' hab with hab hab
-    · have hab : Compares Ordering.eq a b := hab
-      rwa [ho.inj (h hab)]
-    · have hab : Compares Ordering.gt a b := hab
-      rwa [ho.inj (h hab)]
+  have hab : Compares Ordering.lt a b := hab
+  rwa [ho.inj (h hab)]
+  cases' hab with hab hab
+  have hab : Compares Ordering.eq a b := hab
+  rwa [ho.inj (h hab)]
+  have hab : Compares Ordering.gt a b := hab
+  rwa [ho.inj (h hab)]
 
 theorem swap_orElse (o₁ o₂) : (orElse o₁ o₂).swap = orElse o₁.swap o₂.swap := by
   cases o₁ <;> rfl

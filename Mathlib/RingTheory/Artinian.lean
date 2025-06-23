@@ -125,14 +125,14 @@ instance isArtinian_pi {R ι : Type*} [Finite ι] :
     ∀ {M : ι → Type*} [Ring R] [∀ i, AddCommGroup (M i)],
       ∀ [∀ i, Module R (M i)], ∀ [∀ i, IsArtinian R (M i)], IsArtinian R (∀ i, M i) := by
   apply Finite.induction_empty_option _ _ _ ι
-  · intro α β e hα M _ _ _ _
-    have := @hα
-    exact isArtinian_of_linearEquiv (LinearEquiv.piCongrLeft R M e)
-  · intro M _ _ _ _
-    infer_instance
-  · intro α _ ih M _ _ _ _
-    have := @ih
-    exact isArtinian_of_linearEquiv (LinearEquiv.piOptionEquivProd R).symm
+  intro α β e hα M _ _ _ _
+  have := @hα
+  exact isArtinian_of_linearEquiv (LinearEquiv.piCongrLeft R M e)
+  intro M _ _ _ _
+  infer_instance
+  intro α _ ih M _ _ _ _
+  have := @ih
+  exact isArtinian_of_linearEquiv (LinearEquiv.piOptionEquivProd R).symm
 
 /-- A version of `isArtinian_pi` for non-dependent functions. We need this instance because
 sometimes Lean fails to apply the dependent version in non-dependent settings (e.g., it fails to
@@ -228,7 +228,7 @@ theorem eventually_codisjoint_ker_pow_range_pow (f : M →ₗ[R] M) :
   simp_rw [← hn _ hm, Submodule.eq_top_iff', Submodule.mem_sup]
   intro x
   rsuffices ⟨y, hy⟩ : ∃ y, (f ^ m) ((f ^ n) y) = (f ^ m) x
-  · exact ⟨x - (f ^ n) y, by simp [hy], (f ^ n) y, by simp⟩
+  exact ⟨x - (f ^ n) y, by simp [hy], (f ^ n) y, by simp⟩
   -- Note: #8386 had to change `mem_range` into `mem_range (f := _)`
   simp_rw [f.pow_apply n, f.pow_apply m, ← iterate_add_apply, ← f.pow_apply (m + n),
     ← f.pow_apply m, ← mem_range (f := _), ← hn _ (n.le_add_left m), hn _ hm]
@@ -240,8 +240,8 @@ lemma eventually_iInf_range_pow_eq (f : Module.End R M) :
     monotone_stabilizes f.iterateRange
   refine eventually_atTop.mpr ⟨n, fun l hl ↦ le_antisymm (iInf_le _ _) (le_iInf fun m ↦ ?_)⟩
   rcases le_or_lt l m with h | h
-  · rw [← hn _ (hl.trans h), hn _ hl]
-  · exact f.iterateRange.monotone h.le
+  rw [← hn _ (hl.trans h), hn _ hl]
+  exact f.iterateRange.monotone h.le
 
 /-- This is the Fitting decomposition of the module `M` with respect to the endomorphism `f`.
 
@@ -288,11 +288,11 @@ theorem disjoint_partial_infs_eventually_top (f : ℕ → Submodule R M)
     ∃ n : ℕ, ∀ m, n ≤ m → f m = ⊤ := by
   -- A little off-by-one cleanup first:
   rsuffices ⟨n, w⟩ : ∃ n : ℕ, ∀ m, n ≤ m → OrderDual.toDual f (m + 1) = ⊤
-  · use n + 1
-    rintro (_ | m) p
-    · cases p
-    · apply w
-      exact Nat.succ_le_succ_iff.mp p
+  use n + 1
+  rintro (_ | m) p
+  cases p
+  apply w
+  exact Nat.succ_le_succ_iff.mp p
   obtain ⟨n, w⟩ := monotone_stabilizes (partialSups (OrderDual.toDual ∘ f))
   refine ⟨n, fun m p => ?_⟩
   exact (h m).eq_bot_of_ge (sup_eq_left.1 <| (w (m + 1) <| le_add_right p).symm.trans <| w m p)
@@ -368,15 +368,15 @@ theorem isArtinian_of_fg_of_artinian {R M} [Ring R] [AddCommGroup M] [Module R M
   haveI := Classical.decEq R
   have : ∀ x ∈ s, x ∈ N := fun x hx => hs ▸ Submodule.subset_span hx
   refine @isArtinian_of_surjective _ ((↑s : Set M) →₀ R) N _ _ _ _ _ ?_ ?_ isArtinian_finsupp
-  · exact Finsupp.total (↑s : Set M) N R (fun i => ⟨i, hs ▸ subset_span i.2⟩)
-  · rw [← LinearMap.range_eq_top, eq_top_iff,
-       ← map_le_map_iff_of_injective (show Injective (Submodule.subtype N)
-         from Subtype.val_injective), Submodule.map_top, range_subtype,
-         ← Submodule.map_top, ← Submodule.map_comp, Submodule.map_top]
-    subst N
-    refine span_le.2 (fun i hi => ?_)
-    use Finsupp.single ⟨i, hi⟩ 1
-    simp
+  exact Finsupp.total (↑s : Set M) N R (fun i => ⟨i, hs ▸ subset_span i.2⟩)
+  rw [← LinearMap.range_eq_top, eq_top_iff,
+     ← map_le_map_iff_of_injective (show Injective (Submodule.subtype N)
+       from Subtype.val_injective), Submodule.map_top, range_subtype,
+       ← Submodule.map_top, ← Submodule.map_comp, Submodule.map_top]
+  subst N
+  refine span_le.2 (fun i hi => ?_)
+  use Finsupp.single ⟨i, hi⟩ 1
+  simp
 
 instance isArtinian_of_fg_of_artinian' {R M} [Ring R] [AddCommGroup M] [Module R M]
     [IsArtinianRing R] [Module.Finite R M] : IsArtinian R M :=
@@ -425,9 +425,9 @@ theorem isNilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R)) 
   rcases SetLike.exists_of_lt hJJ' with ⟨x, hxJ', hxJ⟩
   obtain rfl : J ⊔ Ideal.span {x} = J' := by
     apply eq_of_le_of_not_lt _ (hJ' (J ⊔ Ideal.span {x}) _)
-    · exact sup_le hJJ'.le (span_le.2 (singleton_subset_iff.2 hxJ'))
-    · rw [SetLike.lt_iff_le_and_exists]
-      exact ⟨le_sup_left, ⟨x, mem_sup_right (mem_span_singleton_self x), hxJ⟩⟩
+    exact sup_le hJJ'.le (span_le.2 (singleton_subset_iff.2 hxJ'))
+    rw [SetLike.lt_iff_le_and_exists]
+    exact ⟨le_sup_left, ⟨x, mem_sup_right (mem_span_singleton_self x), hxJ⟩⟩
   have : J ⊔ Jac • Ideal.span {x} ≤ J ⊔ Ideal.span {x} :=
     sup_le_sup_left (smul_le.2 fun _ _ _ => Submodule.smul_mem _ _) _
   have : Jac * Ideal.span {x} ≤ J := by -- Need version 4 of Nakayama's lemma on Stacks

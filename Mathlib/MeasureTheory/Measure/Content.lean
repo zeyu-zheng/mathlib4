@@ -148,7 +148,7 @@ theorem innerContent_exists_compact {U : Opens G} (hU : μ.innerContent U ≠ �
     (hε : ε ≠ 0) : ∃ K : Compacts G, (K : Set G) ⊆ U ∧ μ.innerContent U ≤ μ K + ε := by
   have h'ε := ENNReal.coe_ne_zero.2 hε
   rcases le_or_lt (μ.innerContent U) ε with h | h
-  · exact ⟨⊥, empty_subset _, le_add_left h⟩
+  exact ⟨⊥, empty_subset _, le_add_left h⟩
   have h₂ := ENNReal.sub_lt_self hU h.ne_bot h'ε
   conv at h₂ => rhs; rw [innerContent]
   simp only [lt_iSup_iff] at h₂
@@ -161,10 +161,10 @@ theorem innerContent_iSup_nat [R1Space G] (U : ℕ → Opens G) :
   have h3 : ∀ (t : Finset ℕ) (K : ℕ → Compacts G), μ (t.sup K) ≤ t.sum fun i => μ (K i)
   intro t K
   refine Finset.induction_on t ?_ ?_
-  · simp only [μ.empty, nonpos_iff_eq_zero, Finset.sum_empty, Finset.sup_empty]
-  · intro n s hn ih
-    rw [Finset.sup_insert, Finset.sum_insert hn]
-    exact le_trans (μ.sup_le _ _) (add_le_add_left ih _)
+  simp only [μ.empty, nonpos_iff_eq_zero, Finset.sum_empty, Finset.sup_empty]
+  intro n s hn ih
+  rw [Finset.sup_insert, Finset.sum_insert hn]
+  exact le_trans (μ.sup_le _ _) (add_le_add_left ih _)
   refine iSup₂_le fun K hK => ?_
   obtain ⟨t, ht⟩ :=
     K.isCompact.elim_finite_subcover _ (fun i => (U i).isOpen) (by rwa [← Opens.coe_iSup])
@@ -172,9 +172,9 @@ theorem innerContent_iSup_nat [R1Space G] (U : ℕ → Opens G) :
     ⟨K', h1K', h2K', h3K'⟩
   let L : ℕ → Compacts G := fun n => ⟨K' n, h1K' n⟩
   convert le_trans (h3 t L) _
-  · ext1
-    rw [Compacts.coe_finset_sup, Finset.sup_eq_iSup]
-    exact h3K'
+  ext1
+  rw [Compacts.coe_finset_sup, Finset.sup_eq_iSup]
+  exact h3K'
   refine le_trans (Finset.sum_le_sum ?_) (ENNReal.sum_le_tsum t)
   intro i _
   refine le_trans ?_ (le_iSup _ (L i))
@@ -245,10 +245,10 @@ theorem outerMeasure_le (U : Opens G) (K : Compacts G) (hUK : (U : Set G) ⊆ K)
 
 theorem le_outerMeasure_compacts (K : Compacts G) : μ K ≤ μ.outerMeasure K := by
   rw [Content.outerMeasure, inducedOuterMeasure_eq_iInf]
-  · exact le_iInf fun U => le_iInf fun hU => le_iInf <| μ.le_innerContent K ⟨U, hU⟩
-  · exact fun U hU => isOpen_iUnion hU
-  · exact μ.innerContent_iUnion_nat
-  · exact μ.innerContent_mono
+  exact le_iInf fun U => le_iInf fun hU => le_iInf <| μ.le_innerContent K ⟨U, hU⟩
+  exact fun U hU => isOpen_iUnion hU
+  exact μ.innerContent_iUnion_nat
+  exact μ.innerContent_mono
 
 theorem outerMeasure_eq_iInf (A : Set G) :
     μ.outerMeasure A = ⨅ (U : Set G) (hU : IsOpen U) (_ : A ⊆ U), μ.innerContent ⟨U, hU⟩ :=
@@ -298,8 +298,8 @@ theorem outerMeasure_caratheodory (A : Set G) :
       ∀ U : Opens G, μ.outerMeasure (U ∩ A) + μ.outerMeasure (U \ A) ≤ μ.outerMeasure U := by
   rw [Opens.forall]
   apply inducedOuterMeasure_caratheodory
-  · apply innerContent_iUnion_nat
-  · apply innerContent_mono'
+  apply innerContent_iUnion_nat
+  apply innerContent_mono'
 
 @[to_additive]
 theorem outerMeasure_pos_of_is_mul_left_invariant [Group G] [TopologicalGroup G]
@@ -411,21 +411,21 @@ variable [MeasurableSpace G] [R1Space G] [BorelSpace G]
 theorem measure_eq_content_of_regular (H : MeasureTheory.Content.ContentRegular μ)
     (K : TopologicalSpace.Compacts G) : μ.measure ↑K = μ K := by
   refine le_antisymm ?_ ?_
-  · apply ENNReal.le_of_forall_pos_le_add
-    intro ε εpos _
-    obtain ⟨K', K'_hyp⟩ := contentRegular_exists_compact μ H K (ne_bot_of_gt εpos)
-    calc
-      μ.measure ↑K ≤ μ.measure (interior ↑K') := measure_mono K'_hyp.1
-      _ ≤ μ K' := by
-        rw [μ.measure_apply (IsOpen.measurableSet isOpen_interior)]
-        exact μ.outerMeasure_interior_compacts K'
-      _ ≤ μ K + ε := K'_hyp.right
-  · calc
-    μ K ≤ μ ⟨closure K, K.2.closure⟩ := μ.mono _ _ subset_closure
-    _ ≤ μ.measure (closure K) := by
-      rw [μ.measure_apply (isClosed_closure.measurableSet)]
-      exact μ.le_outerMeasure_compacts _
-    _ = μ.measure K := K.2.measure_closure _
+  apply ENNReal.le_of_forall_pos_le_add
+  intro ε εpos _
+  obtain ⟨K', K'_hyp⟩ := contentRegular_exists_compact μ H K (ne_bot_of_gt εpos)
+  calc
+    μ.measure ↑K ≤ μ.measure (interior ↑K') := measure_mono K'_hyp.1
+    _ ≤ μ K' := by
+      rw [μ.measure_apply (IsOpen.measurableSet isOpen_interior)]
+      exact μ.outerMeasure_interior_compacts K'
+    _ ≤ μ K + ε := K'_hyp.right
+  calc
+  μ K ≤ μ ⟨closure K, K.2.closure⟩ := μ.mono _ _ subset_closure
+  _ ≤ μ.measure (closure K) := by
+    rw [μ.measure_apply (isClosed_closure.measurableSet)]
+    exact μ.le_outerMeasure_compacts _
+  _ = μ.measure K := K.2.measure_closure _
 
 end RegularContents
 

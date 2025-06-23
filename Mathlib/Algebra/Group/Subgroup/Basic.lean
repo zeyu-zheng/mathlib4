@@ -151,8 +151,8 @@ theorem div_mem_comm_iff {a b : G} : a / b ∈ H ↔ b / a ∈ H :=
 theorem exists_inv_mem_iff_exists_mem {P : G → Prop} :
     (∃ x : G, x ∈ H ∧ P x⁻¹) ↔ ∃ x ∈ H, P x := by
   constructor <;>
-    · rintro ⟨x, x_in, hx⟩
-      exact ⟨x⁻¹, inv_mem x_in, by simp [hx]⟩
+  · rintro ⟨x, x_in, hx⟩
+    exact ⟨x⁻¹, inv_mem x_in, by simp [hx]⟩
 
 @[to_additive]
 theorem mul_mem_cancel_right {x y : G} (h : x ∈ H) : y * x ∈ H ↔ y ∈ H :=
@@ -909,10 +909,10 @@ theorem closure_closure_coe_preimage {k : Set G} : closure (((↑) : closure k �
   eq_top_iff.2 fun x =>
     Subtype.recOn x fun x hx _ => by
       refine closure_induction' (fun g hg => ?_) ?_ (fun g₁ g₂ hg₁ hg₂ => ?_) (fun g hg => ?_) hx
-      · exact subset_closure hg
-      · exact one_mem _
-      · exact mul_mem
-      · exact inv_mem
+      exact subset_closure hg
+      exact one_mem _
+      exact mul_mem
+      exact inv_mem
 
 /-- If all the elements of a set `s` commute, then `closure s` is a commutative group. -/
 @[to_additive
@@ -995,12 +995,12 @@ theorem mem_closure_singleton {x y : G} : y ∈ closure ({x} : Set G) ↔ ∃ n 
   refine
     ⟨fun hy => closure_induction hy ?_ ?_ ?_ ?_, fun ⟨n, hn⟩ =>
       hn ▸ zpow_mem (subset_closure <| mem_singleton x) n⟩
-  · intro y hy
-    rw [eq_of_mem_singleton hy]
-    exact ⟨1, zpow_one x⟩
-  · exact ⟨0, zpow_zero x⟩
-  · rintro _ _ ⟨n, rfl⟩ ⟨m, rfl⟩
-    exact ⟨n + m, zpow_add x n m⟩
+  intro y hy
+  rw [eq_of_mem_singleton hy]
+  exact ⟨1, zpow_one x⟩
+  exact ⟨0, zpow_zero x⟩
+  rintro _ _ ⟨n, rfl⟩ ⟨m, rfl⟩
+  exact ⟨n + m, zpow_add x n m⟩
   rintro _ ⟨n, rfl⟩
   exact ⟨-n, zpow_neg x n⟩
 
@@ -1024,12 +1024,12 @@ theorem mem_iSup_of_directed {ι} [hι : Nonempty ι] {K : ι → Subgroup G} (h
   suffices x ∈ closure (⋃ i, (K i : Set G)) → ∃ i, x ∈ K i by
     simpa only [closure_iUnion, closure_eq (K _)] using this
   refine fun hx ↦ closure_induction hx (fun _ ↦ mem_iUnion.1) ?_ ?_ ?_
-  · exact hι.elim fun i ↦ ⟨i, (K i).one_mem⟩
-  · rintro x y ⟨i, hi⟩ ⟨j, hj⟩
-    rcases hK i j with ⟨k, hki, hkj⟩
-    exact ⟨k, mul_mem (hki hi) (hkj hj)⟩
-  · rintro _ ⟨i, hi⟩
-    exact ⟨i, inv_mem hi⟩
+  exact hι.elim fun i ↦ ⟨i, (K i).one_mem⟩
+  rintro x y ⟨i, hi⟩ ⟨j, hj⟩
+  rcases hK i j with ⟨k, hki, hkj⟩
+  exact ⟨k, mul_mem (hki hi) (hkj hj)⟩
+  rintro _ ⟨i, hi⟩
+  exact ⟨i, inv_mem hi⟩
 
 @[to_additive]
 theorem coe_iSup_of_directed {ι} [Nonempty ι] {S : ι → Subgroup G} (hS : Directed (· ≤ ·) S) :
@@ -1166,10 +1166,10 @@ theorem comap_equiv_eq_map_symm' (f : N ≃* G) (K : Subgroup G) :
 theorem map_symm_eq_iff_map_eq {H : Subgroup N} {e : G ≃* N} :
     H.map ↑e.symm = K ↔ K.map ↑e = H := by
   constructor <;> rintro rfl
-  · rw [map_map, ← MulEquiv.coe_monoidHom_trans, MulEquiv.symm_trans_self,
-      MulEquiv.coe_monoidHom_refl, map_id]
-  · rw [map_map, ← MulEquiv.coe_monoidHom_trans, MulEquiv.self_trans_symm,
-      MulEquiv.coe_monoidHom_refl, map_id]
+  rw [map_map, ← MulEquiv.coe_monoidHom_trans, MulEquiv.symm_trans_self,
+    MulEquiv.coe_monoidHom_refl, map_id]
+  rw [map_map, ← MulEquiv.coe_monoidHom_trans, MulEquiv.self_trans_symm,
+    MulEquiv.coe_monoidHom_refl, map_id]
 
 @[to_additive]
 theorem map_le_iff_le_comap {f : G →* N} {K : Subgroup G} {H : Subgroup N} :
@@ -1436,34 +1436,34 @@ theorem pi_bot : (pi Set.univ fun i => (⊥ : Subgroup (f i))) = ⊥ :=
 theorem le_pi_iff {I : Set η} {H : ∀ i, Subgroup (f i)} {J : Subgroup (∀ i, f i)} :
     J ≤ pi I H ↔ ∀ i : η, i ∈ I → map (Pi.evalMonoidHom f i) J ≤ H i := by
   constructor
-  · intro h i hi
-    rintro _ ⟨x, hx, rfl⟩
-    exact (h hx) _ hi
-  · intro h x hx i hi
-    exact h i hi ⟨_, hx, rfl⟩
+  intro h i hi
+  rintro _ ⟨x, hx, rfl⟩
+  exact (h hx) _ hi
+  intro h x hx i hi
+  exact h i hi ⟨_, hx, rfl⟩
 
 @[to_additive (attr := simp)]
 theorem mulSingle_mem_pi [DecidableEq η] {I : Set η} {H : ∀ i, Subgroup (f i)} (i : η) (x : f i) :
     Pi.mulSingle i x ∈ pi I H ↔ i ∈ I → x ∈ H i := by
   constructor
-  · intro h hi
-    simpa using h i hi
-  · intro h j hj
-    by_cases heq : j = i
-    · subst heq
-      simpa using h hj
-    · simp [heq, one_mem]
+  intro h hi
+  simpa using h i hi
+  intro h j hj
+  by_cases heq : j = i
+  subst heq
+  simpa using h hj
+  simp [heq, one_mem]
 
 open Classical in
 @[to_additive]
 theorem pi_eq_bot_iff (H : ∀ i, Subgroup (f i)) : pi Set.univ H = ⊥ ↔ ∀ i, H i = ⊥ := by
     simp only [eq_bot_iff_forall]
     constructor
-    · intro h i x hx
-      have : MonoidHom.mulSingle f i x = 1 :=
-        h (MonoidHom.mulSingle f i x) ((mulSingle_mem_pi i x).mpr fun _ => hx)
-      simpa using congr_fun this i
-    · exact fun h x hx => funext fun i => h _ _ (hx i trivial)
+    intro h i x hx
+    have : MonoidHom.mulSingle f i x = 1 :=
+      h (MonoidHom.mulSingle f i x) ((mulSingle_mem_pi i x).mpr fun _ => hx)
+    simpa using congr_fun this i
+    exact fun h x hx => funext fun i => h _ _ (hx i trivial)
 
 end Pi
 
@@ -1682,13 +1682,13 @@ theorem le_normalizer_map (f : G →* N) : H.normalizer.map f ≤ (H.map f).norm
   simp only [and_imp, exists_prop, mem_map, exists_imp, mem_normalizer_iff]
   rintro x hx rfl n
   constructor
-  · rintro ⟨y, hy, rfl⟩
-    use x * y * x⁻¹, (hx y).1 hy
-    simp
-  · rintro ⟨y, hyH, hy⟩
-    use x⁻¹ * y * x
-    rw [hx]
-    simp [hy, hyH, mul_assoc]
+  rintro ⟨y, hy, rfl⟩
+  use x * y * x⁻¹, (hx y).1 hy
+  simp
+  rintro ⟨y, hyH, hy⟩
+  use x⁻¹ * y * x
+  rw [hx]
+  simp [hy, hyH, mul_assoc]
 
 variable (G)
 
@@ -1851,21 +1851,21 @@ theorem le_normalClosure {H : Subgroup G} : H ≤ normalClosure ↑H := fun _ h 
 instance normalClosure_normal : (normalClosure s).Normal :=
   ⟨fun n h g => by
     refine Subgroup.closure_induction h (fun x hx => ?_) ?_ (fun x y ihx ihy => ?_) fun x ihx => ?_
-    · exact conjugatesOfSet_subset_normalClosure (conj_mem_conjugatesOfSet hx)
-    · simpa using (normalClosure s).one_mem
-    · rw [← conj_mul]
-      exact mul_mem ihx ihy
-    · rw [← conj_inv]
-      exact inv_mem ihx⟩
+    exact conjugatesOfSet_subset_normalClosure (conj_mem_conjugatesOfSet hx)
+    simpa using (normalClosure s).one_mem
+    rw [← conj_mul]
+    exact mul_mem ihx ihy
+    rw [← conj_inv]
+    exact inv_mem ihx⟩
 
 /-- The normal closure of `s` is the smallest normal subgroup containing `s`. -/
 theorem normalClosure_le_normal {N : Subgroup G} [N.Normal] (h : s ⊆ N) : normalClosure s ≤ N := by
   intro a w
   refine closure_induction w (fun x hx => ?_) ?_ (fun x y ihx ihy => ?_) fun x ihx => ?_
-  · exact conjugatesOfSet_subset h hx
-  · exact one_mem _
-  · exact mul_mem ihx ihy
-  · exact inv_mem ihx
+  exact conjugatesOfSet_subset h hx
+  exact one_mem _
+  exact mul_mem ihx ihy
+  exact inv_mem ihx
 
 theorem normalClosure_subset_iff {N : Subgroup G} [N.Normal] : s ⊆ N ↔ normalClosure s ≤ N :=
   ⟨normalClosure_le_normal, Set.Subset.trans subset_normalClosure⟩
@@ -2111,8 +2111,8 @@ theorem ker_toHomUnits {M} [Monoid M] (f : G →* M) : f.toHomUnits.ker = f.ker 
 @[to_additive]
 theorem eq_iff (f : G →* M) {x y : G} : f x = f y ↔ y⁻¹ * x ∈ f.ker := by
   constructor <;> intro h
-  · rw [mem_ker, map_mul, h, ← map_mul, inv_mul_self, map_one]
-  · rw [← one_mul x, ← mul_inv_self y, mul_assoc, map_mul, f.mem_ker.1 h, mul_one]
+  rw [mem_ker, map_mul, h, ← map_mul, inv_mul_self, map_one]
+  rw [← one_mul x, ← mul_inv_self y, mul_assoc, map_mul, f.mem_ker.1 h, mul_one]
 
 @[to_additive]
 instance decidableMemKer [DecidableEq M] (f : G →* M) : DecidablePred (· ∈ f.ker) := fun x =>
@@ -2456,16 +2456,16 @@ theorem comap_normalizer_eq_of_injective_of_le_range {N : Type*} [Group N] (H : 
   apply Subgroup.map_injective hf
   rw [map_comap_eq_self h]
   apply le_antisymm
-  · refine le_trans (le_of_eq ?_) (map_mono (le_normalizer_comap _))
-    rw [map_comap_eq_self h]
-  · refine le_trans (le_normalizer_map f) (le_of_eq ?_)
-    rw [map_comap_eq_self (le_trans le_normalizer h)]
+  refine le_trans (le_of_eq ?_) (map_mono (le_normalizer_comap _))
+  rw [map_comap_eq_self h]
+  refine le_trans (le_normalizer_map f) (le_of_eq ?_)
+  rw [map_comap_eq_self (le_trans le_normalizer h)]
 
 @[to_additive]
 theorem subgroupOf_normalizer_eq {H N : Subgroup G} (h : H.normalizer ≤ N) :
     H.normalizer.subgroupOf N = (H.subgroupOf N).normalizer := by
   apply comap_normalizer_eq_of_injective_of_le_range
-  · exact Subtype.coe_injective
+  exact Subtype.coe_injective
   simpa
 
 /-- The image of the normalizer is equal to the normalizer of the image of an isomorphism. -/
@@ -2622,9 +2622,9 @@ theorem map_normalClosure (s : Set G) (f : G →* N) (hf : Surjective f) :
     (normalClosure s).map f = normalClosure (f '' s) := by
   have : Normal (map f (normalClosure s)) := Normal.map inferInstance f hf
   apply le_antisymm
-  · simp [map_le_iff_le_comap, normalClosure_le_normal, coe_comap,
-      ← Set.image_subset_iff, subset_normalClosure]
-  · exact normalClosure_le_normal (Set.image_subset f subset_normalClosure)
+  simp [map_le_iff_le_comap, normalClosure_le_normal, coe_comap,
+    ← Set.image_subset_iff, subset_normalClosure]
+  exact normalClosure_le_normal (Set.image_subset f subset_normalClosure)
 
 theorem comap_normalClosure (s : Set N) (f : G ≃* N) :
     normalClosure (f ⁻¹' s) = (normalClosure s).comap f := by
@@ -2716,14 +2716,14 @@ theorem mem_sup : x ∈ s ⊔ t ↔ ∃ y ∈ s, ∃ z ∈ t, y * z = x :=
   ⟨fun h => by
     rw [sup_eq_closure] at h
     refine Subgroup.closure_induction h ?_ ?_ ?_ ?_
-    · rintro y (h | h)
-      · exact ⟨y, h, 1, t.one_mem, by simp⟩
-      · exact ⟨1, s.one_mem, y, h, by simp⟩
-    · exact ⟨1, s.one_mem, 1, ⟨t.one_mem, mul_one 1⟩⟩
-    · rintro _ _ ⟨y₁, hy₁, z₁, hz₁, rfl⟩ ⟨y₂, hy₂, z₂, hz₂, rfl⟩
-      exact ⟨_, mul_mem hy₁ hy₂, _, mul_mem hz₁ hz₂, by simp [mul_assoc, mul_left_comm]⟩
-    · rintro _ ⟨y, hy, z, hz, rfl⟩
-      exact ⟨_, inv_mem hy, _, inv_mem hz, mul_comm z y ▸ (mul_inv_rev z y).symm⟩, by
+    rintro y (h | h)
+    exact ⟨y, h, 1, t.one_mem, by simp⟩
+    exact ⟨1, s.one_mem, y, h, by simp⟩
+    exact ⟨1, s.one_mem, 1, ⟨t.one_mem, mul_one 1⟩⟩
+    rintro _ _ ⟨y₁, hy₁, z₁, hz₁, rfl⟩ ⟨y₂, hy₂, z₂, hz₂, rfl⟩
+    exact ⟨_, mul_mem hy₁ hy₂, _, mul_mem hz₁ hz₂, by simp [mul_assoc, mul_left_comm]⟩
+    rintro _ ⟨y, hy, z, hz, rfl⟩
+    exact ⟨_, inv_mem hy, _, inv_mem hz, mul_comm z y ▸ (mul_inv_rev z y).symm⟩, by
     rintro ⟨y, hy, z, hz, rfl⟩; exact mul_mem_sup hy hz⟩
 
 @[to_additive]
@@ -2806,17 +2806,17 @@ theorem commute_of_normal_of_disjoint (H₁ H₂ : Subgroup G) (hH₁ : H₁.Nor
     (hdis : Disjoint H₁ H₂) (x y : G) (hx : x ∈ H₁) (hy : y ∈ H₂) : Commute x y := by
   suffices x * y * x⁻¹ * y⁻¹ = 1 by
     show x * y = y * x
-    · rw [mul_assoc, mul_eq_one_iff_eq_inv] at this
-      -- Porting note: Previous code was:
-      -- simpa
-      simp only [this, mul_inv_rev, inv_inv]
+    rw [mul_assoc, mul_eq_one_iff_eq_inv] at this
+    -- Porting note: Previous code was:
+    -- simpa
+    simp only [this, mul_inv_rev, inv_inv]
   apply hdis.le_bot
   constructor
-  · suffices x * (y * x⁻¹ * y⁻¹) ∈ H₁ by simpa [mul_assoc]
-    exact H₁.mul_mem hx (hH₁.conj_mem _ (H₁.inv_mem hx) _)
-  · show x * y * x⁻¹ * y⁻¹ ∈ H₂
-    apply H₂.mul_mem _ (H₂.inv_mem hy)
-    apply hH₂.conj_mem _ hy
+  suffices x * (y * x⁻¹ * y⁻¹) ∈ H₁ by simpa [mul_assoc]
+  exact H₁.mul_mem hx (hH₁.conj_mem _ (H₁.inv_mem hx) _)
+  show x * y * x⁻¹ * y⁻¹ ∈ H₂
+  apply H₂.mul_mem _ (H₂.inv_mem hy)
+  apply hH₂.conj_mem _ hy
 
 end SubgroupNormal
 
@@ -2863,8 +2863,8 @@ theorem normalClosure_eq_top_of {N : Subgroup G} [hn : N.Normal] {g g' : G} {hg 
   have hs : Function.Surjective (((MulAut.conj c).toMonoidHom.restrict N).codRestrict _ h)
   rintro ⟨x, hx⟩
   refine ⟨⟨c⁻¹ * x * c, ?_⟩, ?_⟩
-  · have h := hn.conj_mem _ hx c⁻¹
-    rwa [inv_inv] at h
+  have h := hn.conj_mem _ hx c⁻¹
+  rwa [inv_inv] at h
   simp only [MonoidHom.codRestrict_apply, MulEquiv.coe_toMonoidHom, MulAut.conj_apply, coe_mk,
     MonoidHom.restrict_apply, Subtype.mk_eq_mk, ← mul_assoc, mul_inv_self, one_mul]
   rw [mul_assoc, mul_inv_self, mul_one]

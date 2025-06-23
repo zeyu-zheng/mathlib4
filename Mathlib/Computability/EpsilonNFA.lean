@@ -101,8 +101,8 @@ theorem evalFrom_append_singleton (S : Set σ) (x : List α) (a : α) :
 @[simp]
 theorem evalFrom_empty (x : List α) : M.evalFrom ∅ x = ∅ := by
   induction' x using List.reverseRecOn with x a ih
-  · rw [evalFrom_nil, εClosure_empty]
-  · rw [evalFrom_append_singleton, ih, stepSet_empty]
+  rw [evalFrom_nil, εClosure_empty]
+  rw [evalFrom_append_singleton, ih, stepSet_empty]
 
 /-- `M.eval x` computes all possible paths through `M` with input `x` starting at an element of
 `M.start`. -/
@@ -165,8 +165,8 @@ theorem toεNFA_εClosure (M : NFA α σ) (S : Set σ) : M.toεNFA.εClosure S =
   ext a
   refine ⟨?_, εNFA.εClosure.base _⟩
   rintro (⟨_, h⟩ | ⟨_, _, h, _⟩)
-  · exact h
-  · cases h
+  exact h
+  cases h
 
 @[simp]
 theorem toεNFA_evalFrom_match (M : NFA α σ) (start : Set σ) :

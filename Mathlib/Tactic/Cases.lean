@@ -23,13 +23,13 @@ example (h : p ∨ q) : q ∨ p := by
 
 example (h : p ∨ q) : q ∨ p := by
   cases' h with hp hq
-  · exact Or.inr hp
-  · exact Or.inl hq
+  exact Or.inr hp
+  exact Or.inl hq
 
 example (h : p ∨ q) : q ∨ p := by
   rcases h with hp | hq
-  · exact Or.inr hp
-  · exact Or.inl hq
+  exact Or.inr hp
+  exact Or.inl hq
 ```
 
 Prefer `cases` or `rcases` when possible, because these tactics promote structured proofs.

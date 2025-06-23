@@ -96,10 +96,10 @@ theorem lhopital_zero_right_on_Ico (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x
     (hdiv : Tendsto (fun x => f' x / g' x) (𝓝[>] a) l) :
     Tendsto (fun x => f x / g x) (𝓝[>] a) l := by
   refine lhopital_zero_right_on_Ioo hab hff' hgg' hg' ?_ ?_ hdiv
-  · rw [← hfa, ← nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
-    exact ((hcf a <| left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).tendsto
-  · rw [← hga, ← nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
-    exact ((hcg a <| left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).tendsto
+  rw [← hfa, ← nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
+  exact ((hcf a <| left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).tendsto
+  rw [← hga, ← nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
+  exact ((hcg a <| left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).tendsto
 
 theorem lhopital_zero_left_on_Ioo (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x)
     (hgg' : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ Ioo a b, g' x ≠ 0)
@@ -131,10 +131,10 @@ theorem lhopital_zero_left_on_Ioc (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x)
     (hdiv : Tendsto (fun x => f' x / g' x) (𝓝[<] b) l) :
     Tendsto (fun x => f x / g x) (𝓝[<] b) l := by
   refine lhopital_zero_left_on_Ioo hab hff' hgg' hg' ?_ ?_ hdiv
-  · rw [← hfb, ← nhdsWithin_Ioo_eq_nhdsWithin_Iio hab]
-    exact ((hcf b <| right_mem_Ioc.mpr hab).mono Ioo_subset_Ioc_self).tendsto
-  · rw [← hgb, ← nhdsWithin_Ioo_eq_nhdsWithin_Iio hab]
-    exact ((hcg b <| right_mem_Ioc.mpr hab).mono Ioo_subset_Ioc_self).tendsto
+  rw [← hfb, ← nhdsWithin_Ioo_eq_nhdsWithin_Iio hab]
+  exact ((hcf b <| right_mem_Ioc.mpr hab).mono Ioo_subset_Ioc_self).tendsto
+  rw [← hgb, ← nhdsWithin_Ioo_eq_nhdsWithin_Iio hab]
+  exact ((hcg b <| right_mem_Ioc.mpr hab).mono Ioo_subset_Ioc_self).tendsto
 
 theorem lhopital_zero_atTop_on_Ioi (hff' : ∀ x ∈ Ioi a, HasDerivAt f (f' x) x)
     (hgg' : ∀ x ∈ Ioi a, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ Ioi a, g' x ≠ 0)
@@ -214,10 +214,10 @@ theorem lhopital_zero_right_on_Ico (hdf : DifferentiableOn ℝ f (Ioo a b))
     (hdiv : Tendsto (fun x => (deriv f) x / (deriv g) x) (𝓝[>] a) l) :
     Tendsto (fun x => f x / g x) (𝓝[>] a) l := by
   refine lhopital_zero_right_on_Ioo hab hdf hg' ?_ ?_ hdiv
-  · rw [← hfa, ← nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
-    exact ((hcf a <| left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).tendsto
-  · rw [← hga, ← nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
-    exact ((hcg a <| left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).tendsto
+  rw [← hfa, ← nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
+  exact ((hcf a <| left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).tendsto
+  rw [← hga, ← nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
+  exact ((hcg a <| left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).tendsto
 
 theorem lhopital_zero_left_on_Ioo (hdf : DifferentiableOn ℝ f (Ioo a b))
     (hg' : ∀ x ∈ Ioo a b, (deriv g) x ≠ 0) (hfb : Tendsto f (𝓝[<] b) (𝓝 0))

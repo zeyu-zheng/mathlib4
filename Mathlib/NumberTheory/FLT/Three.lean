@@ -89,13 +89,13 @@ private lemma three_dvd_b_of_dvd_a_of_gcd_eq_one_of_case2 {a b c : ℤ} (ha : a 
   rw [Finset.pair_comm, Finset.Insert.comm]
   by_contra! h3b
   by_cases h3c : 3 ∣ c
-  · apply h3b
-    rw [add_assoc, add_comm (b ^ 3), ← add_assoc] at HF
-    exact dvd_c_of_prime_of_dvd_a_of_dvd_b_of_FLT Int.prime_three h3a h3c HF
-  · refine H (-b) (-c) a ha (by simp [h3b]) (by simp [h3c]) h3a hbc ?_
-    rw [add_eq_zero_iff_eq_neg, ← (show Odd 3 by decide).neg_pow] at HF
-    rw [← HF]
-    ring
+  apply h3b
+  rw [add_assoc, add_comm (b ^ 3), ← add_assoc] at HF
+  exact dvd_c_of_prime_of_dvd_a_of_dvd_b_of_FLT Int.prime_three h3a h3c HF
+  refine H (-b) (-c) a ha (by simp [h3b]) (by simp [h3c]) h3a hbc ?_
+  rw [add_eq_zero_iff_eq_neg, ← (show Odd 3 by decide).neg_pow] at HF
+  rw [← HF]
+  ring
 
 open Finset in
 private lemma fermatLastTheoremThree_of_dvd_a_of_gcd_eq_one_of_case2 {a b c : ℤ} (ha : a ≠ 0)
@@ -111,9 +111,9 @@ private lemma fermatLastTheoremThree_of_dvd_a_of_gcd_eq_one_of_case2 {a b c : �
   refine three_dvd_b_of_dvd_a_of_gcd_eq_one_of_case2 ha ?_ h3a HF H
   simp only [← Hgcd, gcd_insert, gcd_singleton, id_eq, ← Int.abs_eq_normalize, abs_neg]
   rcases hx with hx | hx | hx
-  · exact hx ▸ h3a
-  · exact hx ▸ h3b
-  · simpa [hx] using dvd_c_of_prime_of_dvd_a_of_dvd_b_of_FLT Int.prime_three h3a h3b HF
+  exact hx ▸ h3a
+  exact hx ▸ h3b
+  simpa [hx] using dvd_c_of_prime_of_dvd_a_of_dvd_b_of_FLT Int.prime_three h3a h3b HF
 
 open Finset Int in
 /--
@@ -128,20 +128,20 @@ theorem fermatLastTheoremThree_of_three_dvd_only_c
   refine fermatLastTheoremWith_of_fermatLastTheoremWith_coprime (fun a b c ha hb hc Hgcd hF ↦?_)
   by_cases h1 : 3 ∣ a * b * c
   swap
-  · exact fermatLastTheoremThree_case_1 h1 hF
+  exact fermatLastTheoremThree_case_1 h1 hF
   rw [(prime_three).dvd_mul, (prime_three).dvd_mul] at h1
   rw [← sub_eq_zero, sub_eq_add_neg, ← (show Odd 3 by decide).neg_pow] at hF
   rcases h1 with (h3a | h3b) | h3c
-  · refine fermatLastTheoremThree_of_dvd_a_of_gcd_eq_one_of_case2 ha h3a ?_ H hF
-    simp only [← Hgcd, Insert.comm, gcd_insert, gcd_singleton, id_eq, ← abs_eq_normalize, abs_neg]
-  · rw [add_comm (a ^ 3)] at hF
-    refine fermatLastTheoremThree_of_dvd_a_of_gcd_eq_one_of_case2 hb h3b ?_ H hF
-    simp only [← Hgcd, Insert.comm, gcd_insert, gcd_singleton, id_eq, ← abs_eq_normalize, abs_neg]
-  · rw [add_comm _ ((-c) ^ 3), ← add_assoc] at hF
-    refine fermatLastTheoremThree_of_dvd_a_of_gcd_eq_one_of_case2 (neg_ne_zero.2 hc) (by simp [h3c])
-      ?_ H hF
-    rw [Finset.Insert.comm (-c), Finset.pair_comm (-c) b]
-    simp only [← Hgcd, Insert.comm, gcd_insert, gcd_singleton, id_eq, ← abs_eq_normalize, abs_neg]
+  refine fermatLastTheoremThree_of_dvd_a_of_gcd_eq_one_of_case2 ha h3a ?_ H hF
+  simp only [← Hgcd, Insert.comm, gcd_insert, gcd_singleton, id_eq, ← abs_eq_normalize, abs_neg]
+  rw [add_comm (a ^ 3)] at hF
+  refine fermatLastTheoremThree_of_dvd_a_of_gcd_eq_one_of_case2 hb h3b ?_ H hF
+  simp only [← Hgcd, Insert.comm, gcd_insert, gcd_singleton, id_eq, ← abs_eq_normalize, abs_neg]
+  rw [add_comm _ ((-c) ^ 3), ← add_assoc] at hF
+  refine fermatLastTheoremThree_of_dvd_a_of_gcd_eq_one_of_case2 (neg_ne_zero.2 hc) (by simp [h3c])
+    ?_ H hF
+  rw [Finset.Insert.comm (-c), Finset.pair_comm (-c) b]
+  simp only [← Hgcd, Insert.comm, gcd_insert, gcd_singleton, id_eq, ← abs_eq_normalize, abs_neg]
 
 section eisenstein
 
@@ -166,15 +166,15 @@ lemma FermatLastTheoremForThree_of_FermatLastTheoremThreeGen :
   intro H
   refine fermatLastTheoremThree_of_three_dvd_only_c (fun a b c hc ha hb ⟨x, hx⟩ hcoprime h ↦ ?_)
   refine H a b c 1 (by simp [hc]) (fun hdvd ↦ ha ?_) (fun hdvd ↦ hb ?_) ?_ ?_ ?_
-  · rwa [← Ideal.norm_dvd_iff (hζ.prime_norm_toInteger_sub_one_of_prime_ne_two' (by decide)),
-      hζ.norm_toInteger_sub_one_of_prime_ne_two' (by decide)] at hdvd
-  · rwa [← Ideal.norm_dvd_iff (hζ.prime_norm_toInteger_sub_one_of_prime_ne_two' (by decide)),
-      hζ.norm_toInteger_sub_one_of_prime_ne_two' (by decide)] at hdvd
-  · exact dvd_trans hζ.toInteger_sub_one_dvd_prime' ⟨x, by simp [hx]⟩
-  · rw [show a = algebraMap _ (𝓞 K) a by simp, show b = algebraMap _ (𝓞 K) b by simp]
-    exact hcoprime.map _
-  · simp only [Units.val_one, one_mul]
-    exact_mod_cast h
+  rwa [← Ideal.norm_dvd_iff (hζ.prime_norm_toInteger_sub_one_of_prime_ne_two' (by decide)),
+    hζ.norm_toInteger_sub_one_of_prime_ne_two' (by decide)] at hdvd
+  rwa [← Ideal.norm_dvd_iff (hζ.prime_norm_toInteger_sub_one_of_prime_ne_two' (by decide)),
+    hζ.norm_toInteger_sub_one_of_prime_ne_two' (by decide)] at hdvd
+  exact dvd_trans hζ.toInteger_sub_one_dvd_prime' ⟨x, by simp [hx]⟩
+  rw [show a = algebraMap _ (𝓞 K) a by simp, show b = algebraMap _ (𝓞 K) b by simp]
+  exact hcoprime.map _
+  simp only [Units.val_one, one_mul]
+  exact_mod_cast h
 
 namespace FermatLastTheoremForThreeGen
 
@@ -238,22 +238,22 @@ lemma a_cube_b_cube_congr_one_or_neg_one :
     ⟨x, hx⟩ | ⟨x, hx⟩ <;>
   rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd hζ S'.hb with
     ⟨y, hy⟩ | ⟨y, hy⟩
-  · exfalso
-    replace hζ : IsPrimitiveRoot ζ ((3 : ℕ+) ^ 1) := by rwa [pow_one]
-    refine hζ.toInteger_sub_one_not_dvd_two (by decide) ⟨S'.u * λ ^ 2 * z ^ 3 - λ ^ 3 * (x + y), ?_⟩
-    symm
-    calc _ = S'.u * (λ * z) ^ 3 - λ ^ 4 * x - λ ^ 4 * y := by ring
+  exfalso
+  replace hζ : IsPrimitiveRoot ζ ((3 : ℕ+) ^ 1) := by rwa [pow_one]
+  refine hζ.toInteger_sub_one_not_dvd_two (by decide) ⟨S'.u * λ ^ 2 * z ^ 3 - λ ^ 3 * (x + y), ?_⟩
+  symm
+  calc _ = S'.u * (λ * z) ^ 3 - λ ^ 4 * x - λ ^ 4 * y := by ring
     _ = (S'.a ^ 3 + S'.b ^ 3) - (S'.a ^ 3 - 1) - (S'.b ^ 3 - 1) := by rw [← hx, ← hy, ← hz, ← S'.H]
     _ = 2 := by ring
-  · left
-    exact ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
-  · right
-    exact ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
-  · exfalso
-    replace hζ : IsPrimitiveRoot ζ ((3 : ℕ+) ^ 1) := by rwa [pow_one]
-    refine hζ.toInteger_sub_one_not_dvd_two (by decide) ⟨λ ^ 3 * (x + y) - S'.u * λ ^ 2 * z ^ 3, ?_⟩
-    symm
-    calc _ =  λ ^ 4 * x + λ ^ 4 * y - S'.u * (λ * z) ^ 3 := by ring
+  left
+  exact ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
+  right
+  exact ⟨⟨x, hx⟩, ⟨y, hy⟩⟩
+  exfalso
+  replace hζ : IsPrimitiveRoot ζ ((3 : ℕ+) ^ 1) := by rwa [pow_one]
+  refine hζ.toInteger_sub_one_not_dvd_two (by decide) ⟨λ ^ 3 * (x + y) - S'.u * λ ^ 2 * z ^ 3, ?_⟩
+  symm
+  calc _ =  λ ^ 4 * x + λ ^ 4 * y - S'.u * (λ * z) ^ 3 := by ring
     _ = (S'.a ^ 3 + 1) + (S'.b ^ 3 + 1) - (S'.a ^ 3 + S'.b ^ 3) := by rw [← hx, ← hy, ← hz, ← S'.H]
     _ = 2 := by ring
 
@@ -341,18 +341,18 @@ lemma ex_cube_add_cube_eq_and_isCoprime_and_not_dvd_and_dvd :
     ∃ (a' b' : 𝓞 K), a' ^ 3 + b' ^ 3 = S'.u * S'.c ^ 3 ∧ IsCoprime a' b' ∧ ¬ λ ∣ a' ∧
       ¬ λ ∣ b' ∧ λ ^ 2 ∣ a' + b' := by
   rcases lambda_sq_dvd_or_dvd_or_dvd S' with h | h | h
-  · exact ⟨S'.a, S'.b, S'.H, S'.coprime, S'.ha, S'.hb, h⟩
-  · refine ⟨S'.a, η * S'.b, ?_, ?_, S'.ha, fun ⟨x, hx⟩ ↦ S'.hb ⟨η ^ 2 * x, ?_⟩, h⟩
-    · simp [mul_pow, ← val_pow_eq_pow_val, hζ.toInteger_cube_eq_one, val_one, one_mul, S'.H]
-    · refine (isCoprime_mul_unit_left_right (Units.isUnit η) _ _).2 S'.coprime
-    · rw [mul_comm _ x, ← mul_assoc, ← hx, mul_comm _ S'.b, mul_assoc, ← pow_succ', coe_eta,
-        hζ.toInteger_cube_eq_one, mul_one]
-  · refine ⟨S'.a, η ^ 2 * S'.b, ?_, ?_, S'.ha, fun ⟨x, hx⟩ ↦ S'.hb ⟨η * x, ?_⟩, h⟩
-    · rw [mul_pow, ← pow_mul, mul_comm 2, pow_mul, coe_eta, hζ.toInteger_cube_eq_one, one_pow,
-        one_mul, S'.H]
-    · exact (isCoprime_mul_unit_left_right ((Units.isUnit η).pow _) _ _).2 S'.coprime
-    · rw [mul_comm _ x, ← mul_assoc, ← hx, mul_comm _ S'.b, mul_assoc, ← pow_succ, coe_eta,
-        hζ.toInteger_cube_eq_one, mul_one]
+  exact ⟨S'.a, S'.b, S'.H, S'.coprime, S'.ha, S'.hb, h⟩
+  refine ⟨S'.a, η * S'.b, ?_, ?_, S'.ha, fun ⟨x, hx⟩ ↦ S'.hb ⟨η ^ 2 * x, ?_⟩, h⟩
+  simp [mul_pow, ← val_pow_eq_pow_val, hζ.toInteger_cube_eq_one, val_one, one_mul, S'.H]
+  refine (isCoprime_mul_unit_left_right (Units.isUnit η) _ _).2 S'.coprime
+  rw [mul_comm _ x, ← mul_assoc, ← hx, mul_comm _ S'.b, mul_assoc, ← pow_succ', coe_eta,
+    hζ.toInteger_cube_eq_one, mul_one]
+  refine ⟨S'.a, η ^ 2 * S'.b, ?_, ?_, S'.ha, fun ⟨x, hx⟩ ↦ S'.hb ⟨η * x, ?_⟩, h⟩
+  rw [mul_pow, ← pow_mul, mul_comm 2, pow_mul, coe_eta, hζ.toInteger_cube_eq_one, one_pow,
+    one_mul, S'.H]
+  exact (isCoprime_mul_unit_left_right ((Units.isUnit η).pow _) _ _).2 S'.coprime
+  rw [mul_comm _ x, ← mul_assoc, ← hx, mul_comm _ S'.b, mul_assoc, ← pow_succ, coe_eta,
+    hζ.toInteger_cube_eq_one, mul_one]
 
 /-- Given `S' : Solution'`, then there is `S₁ : Solution` such that
 `S₁.multiplicity = S'.multiplicity`. -/
@@ -508,8 +508,8 @@ private lemma lambda_not_dvd_x : ¬ λ ∣ S.x := fun h ↦ by
   have := S.two_le_multiplicity
   rw [show 3 * multiplicity S - 2 + 1 + 1 = 3 * multiplicity S by omega, mul_pow, ← pow_mul,
     mul_comm _ 3, mul_dvd_mul_iff_left _] at h
-  · exact lambda_not_dvd_w _ <| hζ.zeta_sub_one_prime'.dvd_of_dvd_pow h
-  · simp [hζ.zeta_sub_one_prime'.ne_zero]
+  exact lambda_not_dvd_w _ <| hζ.zeta_sub_one_prime'.dvd_of_dvd_pow h
+  simp [hζ.zeta_sub_one_prime'.ne_zero]
 
 private lemma isCoprime_helper {r s t w : 𝓞 K} (hr : ¬ λ ∣ r) (hs : ¬ λ ∣ s)
     (Hp : ∀ {p}, Prime p → p ∣ t → p ∣ w → Associated p λ) (H₁ : ∀ {q}, q ∣ r → q ∣ t)
@@ -625,12 +625,12 @@ private lemma formula2 :
   simp only [zero_mul, add_mul]
   rw [← formula1 S]
   congrm ?_ + ?_ + ?_
-  · have : (S.multiplicity-1)*3+1 = 3*S.multiplicity-2 := by have := S.two_le_multiplicity; omega
-    calc _ = S.X^3 *(S.u₂*S.u₂⁻¹)*(η^3*S.u₁)*(λ^((S.multiplicity-1)*3)*λ):= by push_cast; ring
+  have : (S.multiplicity-1)*3+1 = 3*S.multiplicity-2 := by have := S.two_le_multiplicity; omega
+  calc _ = S.X^3 *(S.u₂*S.u₂⁻¹)*(η^3*S.u₁)*(λ^((S.multiplicity-1)*3)*λ):= by push_cast; ring
     _ = S.X^3*S.u₁*λ^(3*S.multiplicity-2) := by simp [hζ.toInteger_cube_eq_one, ← pow_succ, this]
-  · ring
-  · field_simp [u₄_def]
-    ring
+  ring
+  field_simp [u₄_def]
+  ring
 
 private lemma lambda_sq_div_u₅_mul : λ ^ 2 ∣ S.u₅ * (λ ^ (S.multiplicity - 1) * S.X) ^ 3 := by
   use λ^(3*S.multiplicity-5)*S.u₅*(S.X^3)
@@ -651,18 +651,18 @@ private lemma u₄_eq_one_or_neg_one : S.u₄ = 1 ∨ S.u₄ = -1 := by
     HY | HY <;> rcases lambda_pow_four_dvd_cube_sub_one_or_add_one_of_lambda_not_dvd
       hζ S.lambda_not_dvd_Z with HZ | HZ <;> replace HY := this.trans HY <;> replace HZ :=
       this.trans HZ <;> rcases HY with ⟨Y, hY⟩ <;> rcases HZ with ⟨Z, hZ⟩
-  · refine ⟨-1, X-Y-S.u₄*Z, ?_⟩
-    rw [show λ^2*(X-Y-S.u₄*Z)=λ^2*X-λ^2*Y-S.u₄*(λ^2*Z) by ring, ← hX, ← hY, ← hZ, ← formula2]
-    ring
-  · refine ⟨1, -X+Y+S.u₄*Z, ?_⟩
-    rw [show λ^2*(-X+Y+S.u₄*Z)=-(λ^2*X-λ^2*Y-S.u₄*(λ^2*Z)) by ring, ← hX, ← hY, ← hZ, ← formula2]
-    ring
-  · refine ⟨1, X-Y-S.u₄*Z, ?_⟩
-    rw [show λ^2*(X-Y-S.u₄*Z)=λ^2*X-λ^2*Y-S.u₄*(λ^2*Z) by ring, ← hX, ← hY, ← hZ, ← formula2]
-    ring
-  · refine ⟨-1, -X+Y+S.u₄*Z, ?_⟩
-    rw [show λ^2*(-X+Y+S.u₄*Z)=-(λ^2*X-λ^2*Y-S.u₄*(λ^2*Z)) by ring, ← hX, ← hY, ← hZ, ← formula2]
-    ring
+  refine ⟨-1, X-Y-S.u₄*Z, ?_⟩
+  rw [show λ^2*(X-Y-S.u₄*Z)=λ^2*X-λ^2*Y-S.u₄*(λ^2*Z) by ring, ← hX, ← hY, ← hZ, ← formula2]
+  ring
+  refine ⟨1, -X+Y+S.u₄*Z, ?_⟩
+  rw [show λ^2*(-X+Y+S.u₄*Z)=-(λ^2*X-λ^2*Y-S.u₄*(λ^2*Z)) by ring, ← hX, ← hY, ← hZ, ← formula2]
+  ring
+  refine ⟨1, X-Y-S.u₄*Z, ?_⟩
+  rw [show λ^2*(X-Y-S.u₄*Z)=λ^2*X-λ^2*Y-S.u₄*(λ^2*Z) by ring, ← hX, ← hY, ← hZ, ← formula2]
+  ring
+  refine ⟨-1, -X+Y+S.u₄*Z, ?_⟩
+  rw [show λ^2*(-X+Y+S.u₄*Z)=-(λ^2*X-λ^2*Y-S.u₄*(λ^2*Z)) by ring, ← hX, ← hY, ← hZ, ← formula2]
+  ring
 
 private lemma u₄_sq : S.u₄ ^ 2 = 1 := by
   rcases S.u₄_eq_one_or_neg_one with h | h <;> simp [h]

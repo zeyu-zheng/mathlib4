@@ -281,12 +281,12 @@ of `p i`, coercing them to `N`, and summing them. -/
 theorem iSup_eq_range_dfinsupp_lsum (p : ι → Submodule R N) :
     iSup p = LinearMap.range (DFinsupp.lsum ℕ (M := fun i ↦ ↥(p i)) fun i => (p i).subtype) := by
   apply le_antisymm
-  · apply iSup_le _
-    intro i y hy
-    simp only [LinearMap.mem_range, lsum_apply_apply]
-    exact ⟨DFinsupp.single i ⟨y, hy⟩, DFinsupp.sumAddHom_single _ _ _⟩
-  · rintro x ⟨v, rfl⟩
-    exact dfinsupp_sumAddHom_mem _ v _ fun i _ => (le_iSup p i : p i ≤ _) (v i).2
+  apply iSup_le _
+  intro i y hy
+  simp only [LinearMap.mem_range, lsum_apply_apply]
+  exact ⟨DFinsupp.single i ⟨y, hy⟩, DFinsupp.sumAddHom_single _ _ _⟩
+  rintro x ⟨v, rfl⟩
+  exact dfinsupp_sumAddHom_mem _ v _ fun i _ => (le_iSup p i : p i ≤ _) (v i).2
 
 /-- The bounded supremum of a family of commutative additive submonoids is equal to the range of
 `DFinsupp.sumAddHom` composed with `DFinsupp.filter_add_monoid_hom`; that is, every element in the
@@ -299,15 +299,15 @@ theorem biSup_eq_range_dfinsupp_lsum (p : ι → Prop) [DecidablePred p] (S : ι
           (DFinsupp.lsum ℕ (M := fun i ↦ ↥(S i)) (fun i => (S i).subtype))
             (DFinsupp.filterLinearMap R _ p)) := by
   apply le_antisymm
-  · refine iSup₂_le fun i hi y hy => ⟨DFinsupp.single i ⟨y, hy⟩, ?_⟩
-    rw [LinearMap.comp_apply, filterLinearMap_apply, filter_single_pos _ _ hi]
-    simp only [lsum_apply_apply, sumAddHom_single, LinearMap.toAddMonoidHom_coe, coeSubtype]
-  · rintro x ⟨v, rfl⟩
-    refine dfinsupp_sumAddHom_mem _ _ _ fun i _ => ?_
-    refine mem_iSup_of_mem i ?_
-    by_cases hp : p i
-    · simp [hp]
-    · simp [hp]
+  refine iSup₂_le fun i hi y hy => ⟨DFinsupp.single i ⟨y, hy⟩, ?_⟩
+  rw [LinearMap.comp_apply, filterLinearMap_apply, filter_single_pos _ _ hi]
+  simp only [lsum_apply_apply, sumAddHom_single, LinearMap.toAddMonoidHom_coe, coeSubtype]
+  rintro x ⟨v, rfl⟩
+  refine dfinsupp_sumAddHom_mem _ _ _ fun i _ => ?_
+  refine mem_iSup_of_mem i ?_
+  by_cases hp : p i
+  simp [hp]
+  simp [hp]
 
 /-- A characterisation of the span of a family of submodules.
 
@@ -342,43 +342,43 @@ lemma mem_iSup_iff_exists_finsupp (p : ι → Submodule R N) (x : N) :
   refine ⟨fun ⟨f, hf⟩ ↦ ⟨⟨f.support, fun i ↦ (f i : N), by simp⟩, by simp, hf⟩, ?_⟩
   rintro ⟨f, hf, rfl⟩
   refine ⟨DFinsupp.mk f.support fun i ↦ ⟨f i, hf i⟩, Finset.sum_congr ?_ fun i hi ↦ ?_⟩
-  · ext; simp
-  · simp [Finsupp.mem_support_iff.mp hi]
+  ext; simp
+  simp [Finsupp.mem_support_iff.mp hi]
 
 open Classical in
 theorem mem_iSup_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N) (a : N) :
     (a ∈ ⨆ i ∈ s, p i) ↔ ∃ μ : ∀ i, p i, (∑ i ∈ s, (μ i : N)) = a := by
     rw [Submodule.mem_iSup_iff_exists_dfinsupp']
     constructor <;> rintro ⟨μ, hμ⟩
-    · use fun i => ⟨μ i, (iSup_const_le : _ ≤ p i) (coe_mem <| μ i)⟩
-      rw [← hμ]
-      symm
-      apply Finset.sum_subset
-      · intro x
-        contrapose
-        intro hx
-        rw [mem_support_iff, not_ne_iff]
-        ext
-        rw [coe_zero, ← mem_bot R]
-        suffices ⊥ = ⨆ (_ : x ∈ s), p x from this.symm ▸ coe_mem (μ x)
-        exact (iSup_neg hx).symm
-      · intro x _ hx
-        rw [mem_support_iff, not_ne_iff] at hx
-        rw [hx]
-        rfl
-    · refine ⟨DFinsupp.mk s ?_, ?_⟩
-      · rintro ⟨i, hi⟩
-        refine ⟨μ i, ?_⟩
-        rw [iSup_pos]
-        · exact coe_mem _
-        · exact hi
-      simp only [DFinsupp.sum]
-      rw [Finset.sum_subset support_mk_subset, ← hμ]
-      · exact Finset.sum_congr rfl fun x hx => congr_arg Subtype.val <| mk_of_mem hx
-      · intro x _ hx
-        rw [mem_support_iff, not_ne_iff] at hx
-        rw [hx]
-        rfl
+    use fun i => ⟨μ i, (iSup_const_le : _ ≤ p i) (coe_mem <| μ i)⟩
+    rw [← hμ]
+    symm
+    apply Finset.sum_subset
+    intro x
+    contrapose
+    intro hx
+    rw [mem_support_iff, not_ne_iff]
+    ext
+    rw [coe_zero, ← mem_bot R]
+    suffices ⊥ = ⨆ (_ : x ∈ s), p x from this.symm ▸ coe_mem (μ x)
+    exact (iSup_neg hx).symm
+    intro x _ hx
+    rw [mem_support_iff, not_ne_iff] at hx
+    rw [hx]
+    rfl
+    refine ⟨DFinsupp.mk s ?_, ?_⟩
+    rintro ⟨i, hi⟩
+    refine ⟨μ i, ?_⟩
+    rw [iSup_pos]
+    exact coe_mem _
+    exact hi
+    simp only [DFinsupp.sum]
+    rw [Finset.sum_subset support_mk_subset, ← hμ]
+    exact Finset.sum_congr rfl fun x hx => congr_arg Subtype.val <| mk_of_mem hx
+    intro x _ hx
+    rw [mem_support_iff, not_ne_iff] at hx
+    rw [hx]
+    rfl
 
 end Submodule
 

@@ -194,22 +194,22 @@ variable {f x}
 theorem pbind_eq_none {f : ∀ a : α, a ∈ x → Option β}
     (h' : ∀ a (H : a ∈ x), f a H = none → x = none) : x.pbind f = none ↔ x = none := by
   cases x
-  · simp
-  · simp only [pbind, iff_false]
-    intro h
-    cases h' _ rfl h
+  simp
+  simp only [pbind, iff_false]
+  intro h
+  cases h' _ rfl h
 
 theorem pbind_eq_some {f : ∀ a : α, a ∈ x → Option β} {y : β} :
     x.pbind f = some y ↔ ∃ (z : α) (H : z ∈ x), f z H = some y := by
   rcases x with (_|x)
-  · simp only [pbind, false_iff, not_exists]
-    intro z h
-    simp at h
-  · simp only [pbind]
-    refine ⟨fun h ↦ ⟨x, rfl, h⟩, ?_⟩
-    rintro ⟨z, H, hz⟩
-    simp only [mem_def, Option.some_inj] at H
-    simpa [H] using hz
+  simp only [pbind, false_iff, not_exists]
+  intro z h
+  simp at h
+  simp only [pbind]
+  refine ⟨fun h ↦ ⟨x, rfl, h⟩, ?_⟩
+  rintro ⟨z, H, hz⟩
+  simp only [mem_def, Option.some_inj] at H
+  simpa [H] using hz
 
 -- Porting note: Can't simp tag this anymore because `pmap` simplifies
 -- @[simp]
@@ -220,14 +220,14 @@ theorem pmap_eq_none_iff {h} : pmap f x h = none ↔ x = none := by cases x <;> 
 theorem pmap_eq_some_iff {hf} {y : β} :
     pmap f x hf = some y ↔ ∃ (a : α) (H : x = some a), f a (hf a H) = y := by
   rcases x with (_|x)
-  · simp only [not_mem_none, exists_false, pmap, not_false_iff, exists_prop_of_false]
-  · constructor
-    · intro h
-      simp only [pmap, Option.some_inj] at h
-      exact ⟨x, rfl, h⟩
-    · rintro ⟨a, H, rfl⟩
-      simp only [mem_def, Option.some_inj] at H
-      simp only [H, pmap]
+  simp only [not_mem_none, exists_false, pmap, not_false_iff, exists_prop_of_false]
+  constructor
+  intro h
+  simp only [pmap, Option.some_inj] at h
+  exact ⟨x, rfl, h⟩
+  rintro ⟨a, H, rfl⟩
+  simp only [mem_def, Option.some_inj] at H
+  simp only [H, pmap]
 
 -- Porting note: Can't simp tag this anymore because `join` and `pmap` simplify
 -- @[simp]
@@ -316,8 +316,8 @@ compile_inductive% Option
 theorem orElse_eq_some (o o' : Option α) (x : α) :
     (o <|> o') = some x ↔ o = some x ∨ o = none ∧ o' = some x := by
   cases o
-  · simp only [true_and, false_or, eq_self_iff_true, none_orElse]
-  · simp only [some_orElse, or_false, false_and]
+  simp only [true_and, false_or, eq_self_iff_true, none_orElse]
+  simp only [some_orElse, or_false, false_and]
 
 
 theorem orElse_eq_some' (o o' : Option α) (x : α) :
@@ -327,8 +327,8 @@ theorem orElse_eq_some' (o o' : Option α) (x : α) :
 @[simp]
 theorem orElse_eq_none (o o' : Option α) : (o <|> o') = none ↔ o = none ∧ o' = none := by
   cases o
-  · simp only [true_and, none_orElse, eq_self_iff_true]
-  · simp only [some_orElse, false_and]
+  simp only [true_and, none_orElse, eq_self_iff_true]
+  simp only [some_orElse, false_and]
 
 @[simp]
 theorem orElse_eq_none' (o o' : Option α) : o.orElse (fun _ ↦ o') = none ↔ o = none ∧ o' = none :=

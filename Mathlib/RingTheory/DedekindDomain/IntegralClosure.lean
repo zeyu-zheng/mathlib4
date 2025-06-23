@@ -68,18 +68,18 @@ theorem IsIntegralClosure.isLocalization [Algebra.IsAlgebraic K L] :
   haveI : NoZeroSMulDivisors A L := NoZeroSMulDivisors.trans A K L
   haveI : NoZeroSMulDivisors A C := IsIntegralClosure.noZeroSMulDivisors A L
   refine ⟨?_, fun z => ?_, fun {x y} h => ⟨1, ?_⟩⟩
-  · rintro ⟨_, x, hx, rfl⟩
-    rw [isUnit_iff_ne_zero, map_ne_zero_iff _ (IsIntegralClosure.algebraMap_injective C A L),
-      Subtype.coe_mk, map_ne_zero_iff _ (NoZeroSMulDivisors.algebraMap_injective A C)]
-    exact mem_nonZeroDivisors_iff_ne_zero.mp hx
-  · obtain ⟨m, hm⟩ :=
-      IsIntegral.exists_multiple_integral_of_isLocalization A⁰ z
-        (Algebra.IsIntegral.isIntegral (R := K) z)
-    obtain ⟨x, hx⟩ : ∃ x, algebraMap C L x = m • z := IsIntegralClosure.isIntegral_iff.mp hm
-    refine ⟨⟨x, algebraMap A C m, m, SetLike.coe_mem m, rfl⟩, ?_⟩
-    rw [Subtype.coe_mk, ← IsScalarTower.algebraMap_apply, hx, mul_comm, Submonoid.smul_def,
-      smul_def]
-  · simp only [IsIntegralClosure.algebraMap_injective C A L h]
+  rintro ⟨_, x, hx, rfl⟩
+  rw [isUnit_iff_ne_zero, map_ne_zero_iff _ (IsIntegralClosure.algebraMap_injective C A L),
+    Subtype.coe_mk, map_ne_zero_iff _ (NoZeroSMulDivisors.algebraMap_injective A C)]
+  exact mem_nonZeroDivisors_iff_ne_zero.mp hx
+  obtain ⟨m, hm⟩ :=
+    IsIntegral.exists_multiple_integral_of_isLocalization A⁰ z
+      (Algebra.IsIntegral.isIntegral (R := K) z)
+  obtain ⟨x, hx⟩ : ∃ x, algebraMap C L x = m • z := IsIntegralClosure.isIntegral_iff.mp hm
+  refine ⟨⟨x, algebraMap A C m, m, SetLike.coe_mem m, rfl⟩, ?_⟩
+  rw [Subtype.coe_mk, ← IsScalarTower.algebraMap_apply, hx, mul_comm, Submonoid.smul_def,
+    smul_def]
+  simp only [IsIntegralClosure.algebraMap_injective C A L h]
 
 theorem IsIntegralClosure.isLocalization_of_isSeparable [Algebra.IsSeparable K L] :
     IsLocalization (Algebra.algebraMapSubmonoid C A⁰) L :=
@@ -116,22 +116,22 @@ theorem exists_integral_multiples (s : Finset L) :
     ∃ y ≠ (0 : A), ∀ x ∈ s, IsIntegral A (y • x) := by
   haveI := Classical.decEq L
   refine s.induction ?_ ?_
-  · use 1, one_ne_zero
-    rintro x ⟨⟩
-  · rintro x s hx ⟨y, hy, hs⟩
-    have := exists_integral_multiple
-      ((IsFractionRing.isAlgebraic_iff A K L).mpr (.of_finite _ x))
-      ((injective_iff_map_eq_zero (algebraMap A L)).mp ?_)
-    · rcases this with ⟨x', y', hy', hx'⟩
-      refine ⟨y * y', mul_ne_zero hy hy', fun x'' hx'' => ?_⟩
-      rcases Finset.mem_insert.mp hx'' with (rfl | hx'')
-      · rw [mul_smul, Algebra.smul_def, Algebra.smul_def, mul_comm _ x'', hx']
-        exact isIntegral_algebraMap.mul x'.2
-      · rw [mul_comm, mul_smul, Algebra.smul_def]
-        exact isIntegral_algebraMap.mul (hs _ hx'')
-    · rw [IsScalarTower.algebraMap_eq A K L]
-      apply (algebraMap K L).injective.comp
-      exact IsFractionRing.injective _ _
+  use 1, one_ne_zero
+  rintro x ⟨⟩
+  rintro x s hx ⟨y, hy, hs⟩
+  have := exists_integral_multiple
+    ((IsFractionRing.isAlgebraic_iff A K L).mpr (.of_finite _ x))
+    ((injective_iff_map_eq_zero (algebraMap A L)).mp ?_)
+  rcases this with ⟨x', y', hy', hx'⟩
+  refine ⟨y * y', mul_ne_zero hy hy', fun x'' hx'' => ?_⟩
+  rcases Finset.mem_insert.mp hx'' with (rfl | hx'')
+  rw [mul_smul, Algebra.smul_def, Algebra.smul_def, mul_comm _ x'', hx']
+  exact isIntegral_algebraMap.mul x'.2
+  rw [mul_comm, mul_smul, Algebra.smul_def]
+  exact isIntegral_algebraMap.mul (hs _ hx'')
+  rw [IsScalarTower.algebraMap_eq A K L]
+  apply (algebraMap K L).injective.comp
+  exact IsFractionRing.injective _ _
 
 variable (L)
 
@@ -153,13 +153,13 @@ theorem FiniteDimensional.exists_is_basis_integral :
     invFun := fun x => (algebraMap A L y)⁻¹ * x
     left_inv := ?_
     right_inv := ?_}, ?_⟩
-  · intro x; simp only [inv_mul_cancel_left₀ hy']
-  · intro x; simp only [mul_inv_cancel_left₀ hy']
-  · rintro ⟨x', hx'⟩
-    simp only [Algebra.smul_def, Finset.mem_image, exists_prop, Finset.mem_univ,
-      true_and_iff] at his'
-    simp only [Basis.map_apply, LinearEquiv.coe_mk]
-    exact his' _ ⟨_, rfl⟩
+  intro x; simp only [inv_mul_cancel_left₀ hy']
+  intro x; simp only [mul_inv_cancel_left₀ hy']
+  rintro ⟨x', hx'⟩
+  simp only [Algebra.smul_def, Finset.mem_image, exists_prop, Finset.mem_univ,
+    true_and_iff] at his'
+  simp only [Basis.map_apply, LinearEquiv.coe_mk]
+  exact his' _ ⟨_, rfl⟩
 
 variable [Algebra.IsSeparable K L]
 

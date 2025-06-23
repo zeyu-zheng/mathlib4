@@ -31,7 +31,7 @@ variable {R S : Type*} [CommRing R] [CommRing S] [Algebra R S]
 theorem rank_sup_eq_rank_left_mul_rank_of_free :
     Module.rank R ↥(A ⊔ B) = Module.rank R A * Module.rank A (Algebra.adjoin A (B : Set S)) := by
   rcases subsingleton_or_nontrivial R with _ | _
-  · haveI := Module.subsingleton R S; simp
+  haveI := Module.subsingleton R S; simp
   nontriviality S using rank_subsingleton'
   letI : Algebra A (Algebra.adjoin A (B : Set S)) := Subalgebra.algebra _
   letI : SMul A (Algebra.adjoin A (B : Set S)) := Algebra.toSMul

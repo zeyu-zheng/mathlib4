@@ -65,33 +65,33 @@ theorem lift_obj : (lift σ φ τ h).obj = τ :=
 
 theorem lift_comp : (of σ ⋙q lift σ φ τ h) = φ := by
   fapply Prefunctor.ext
-  · rintro X
-    simp only [Prefunctor.comp_obj]
-    apply Eq.symm
-    exact h X
-  · rintro X Y f
-    simp only [Prefunctor.comp_map]
-    apply eq_of_heq
-    iterate 2 apply (cast_heq _ _).trans
-    apply HEq.symm
-    apply (eqRec_heq _ _).trans
-    have : ∀ {α γ} {β : α → γ → Sort _} {a a'} (p : a = a') g (b : β a g), HEq (p ▸ b) b
-    intros
-    subst_vars
-    rfl
-    apply this
+  rintro X
+  simp only [Prefunctor.comp_obj]
+  apply Eq.symm
+  exact h X
+  rintro X Y f
+  simp only [Prefunctor.comp_map]
+  apply eq_of_heq
+  iterate 2 apply (cast_heq _ _).trans
+  apply HEq.symm
+  apply (eqRec_heq _ _).trans
+  have : ∀ {α γ} {β : α → γ → Sort _} {a a'} (p : a = a') g (b : β a g), HEq (p ▸ b) b
+  intros
+  subst_vars
+  rfl
+  apply this
 
 theorem lift_unique (Φ : Push σ ⥤q W') (Φ₀ : Φ.obj = τ) (Φcomp : (of σ ⋙q Φ) = φ) :
     Φ = lift σ φ τ h := by
   dsimp only [of, lift]
   fapply Prefunctor.ext
-  · intro X
-    simp only
-    rw [Φ₀]
-  · rintro _ _ ⟨⟩
-    subst_vars
-    simp only [Prefunctor.comp_map, cast_eq]
-    rfl
+  intro X
+  simp only
+  rw [Φ₀]
+  rintro _ _ ⟨⟩
+  subst_vars
+  simp only [Prefunctor.comp_map, cast_eq]
+  rfl
 
 end Push
 

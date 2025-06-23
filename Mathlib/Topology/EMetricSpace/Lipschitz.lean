@@ -104,11 +104,11 @@ lemma locallyLipschitzOn_iff_restrict :
     mem_comap]
   congr! with x K
   constructor
-  · rintro ⟨t, ht, hft⟩
-    exact ⟨_, ⟨t, ht, Subset.rfl⟩, hft.mono <| inter_subset_right.trans <| image_preimage_subset ..⟩
-  · rintro ⟨t, ⟨u, hu, hut⟩, hft⟩
-    exact ⟨s ∩ u, Filter.inter_mem self_mem_nhdsWithin hu,
-      hft.mono fun x hx ↦ ⟨hx.1, ⟨x, hx.1⟩, hut hx.2, rfl⟩⟩
+  rintro ⟨t, ht, hft⟩
+  exact ⟨_, ⟨t, ht, Subset.rfl⟩, hft.mono <| inter_subset_right.trans <| image_preimage_subset ..⟩
+  rintro ⟨t, ⟨u, hu, hut⟩, hft⟩
+  exact ⟨s ∩ u, Filter.inter_mem self_mem_nhdsWithin hu,
+    hft.mono fun x hx ↦ ⟨hx.1, ⟨x, hx.1⟩, hut hx.2, rfl⟩⟩
 
 alias ⟨LipschitzOnWith.to_restrict, _⟩ := lipschitzOnWith_iff_restrict
 alias ⟨LocallyLipschitzOn.restrict, _⟩ := locallyLipschitzOn_iff_restrict
@@ -430,10 +430,10 @@ theorem continuousOn_prod_of_subset_closure_continuousOn_lipschitzOnWith [Pseudo
         edist (f (x', y)) (f (x, y)) := edist_triangle4 _ _ _ _
     _ ≤ K * (δ + δ) + ε / 2 + K * δ := by
       gcongr
-      · refine (hb b hbt).edist_le_mul_of_le has (hs' hx') ?_
-        exact (edist_triangle _ _ _).trans (add_le_add (le_of_lt hax) hxx'.le)
-      · exact hby
-      · exact (hb y hy).edist_le_mul_of_le (hs' hx') hx ((edist_comm _ _).trans_le hxx'.le)
+      refine (hb b hbt).edist_le_mul_of_le has (hs' hx') ?_
+      exact (edist_triangle _ _ _).trans (add_le_add (le_of_lt hax) hxx'.le)
+      exact hby
+      exact (hb y hy).edist_le_mul_of_le (hs' hx') hx ((edist_comm _ _).trans_le hxx'.le)
     _ = δ * ↑(3 * K) + ε / 2 := by push_cast; ring
     _ ≤ ε / 2 + ε / 2 := by gcongr
     _ = ε := ENNReal.add_halves _

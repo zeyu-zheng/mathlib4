@@ -158,12 +158,12 @@ theorem Spec.basicOpen_hom_ext {X : RingedSpace.{u}} {R : CommRingCat.{u}}
         toOpen R U ≫ β.c.app (op U)) :
     α = β := by
   ext : 1
-  · exact w
-  · apply
-      ((TopCat.Sheaf.pushforward _ β.base).obj X.sheaf).hom_ext _ PrimeSpectrum.isBasis_basic_opens
-    intro r
-    apply (StructureSheaf.to_basicOpen_epi R r).1
-    simpa using h r
+  exact w
+  apply
+    ((TopCat.Sheaf.pushforward _ β.base).obj X.sheaf).hom_ext _ PrimeSpectrum.isBasis_basic_opens
+  intro r
+  apply (StructureSheaf.to_basicOpen_epi R r).1
+  simpa using h r
 
 -- Porting note: `simps!` generate some garbage lemmas, so choose manually,
 -- if more is needed, add them here
@@ -392,39 +392,39 @@ theorem isLocalizedModule_toPushforwardStalkAlgHom_aux (y) :
 instance isLocalizedModule_toPushforwardStalkAlgHom :
     IsLocalizedModule p.asIdeal.primeCompl (toPushforwardStalkAlgHom R S p).toLinearMap := by
   apply IsLocalizedModule.mkOfAlgebra
-  · intro x hx; rw [algebraMap_pushforward_stalk, toPushforwardStalk_comp]
-    change IsUnit ((TopCat.Presheaf.stalkFunctor CommRingCat p).map
-      (Spec.sheafedSpaceMap (algebraMap ↑R ↑S)).c _)
-    exact (IsLocalization.map_units ((structureSheaf R).presheaf.stalk p) ⟨x, hx⟩).map _
-  · apply isLocalizedModule_toPushforwardStalkAlgHom_aux
-  · intro x hx
-    rw [toPushforwardStalkAlgHom_apply, ← (toPushforwardStalk (algebraMap R S) p).map_zero,
-      toPushforwardStalk] at hx
-    -- Porting note: this `change` is manually rewriting `comp_apply`
-    change _ = (TopCat.Presheaf.germ (Spec.topMap (algebraMap ↑R ↑S) _* (structureSheaf ↑S).val)
-      (⟨p, trivial⟩ : (⊤ : TopologicalSpace.Opens (PrimeSpectrum R))) (toOpen S ⊤ 0)) at hx
-    rw [map_zero] at hx
-    change (forget CommRingCat).map _ _ = (forget _).map _ _ at hx
-    obtain ⟨U, hpU, i₁, i₂, e⟩ := TopCat.Presheaf.germ_eq _ _ _ _ _ _ hx
-    obtain ⟨_, ⟨r, rfl⟩, hpr, hrU⟩ :=
-      PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open (show p ∈ U.1 from hpU)
-        U.2
-    change PrimeSpectrum.basicOpen r ≤ U at hrU
-    apply_fun (Spec.topMap (algebraMap R S) _* (structureSheaf S).1).map (homOfLE hrU).op at e
-    simp only [Functor.op_map, map_zero, ← comp_apply, toOpen_res] at e
-    have : toOpen S (PrimeSpectrum.basicOpen <| algebraMap R S r) x = 0 := by
-      refine Eq.trans ?_ e; rfl
-    have :=
-      (@IsLocalization.mk'_one _ _ _ _ _ _
-            (StructureSheaf.IsLocalization.to_basicOpen S <| algebraMap R S r) x).trans
-        this
-    obtain ⟨⟨_, n, rfl⟩, e⟩ := (IsLocalization.mk'_eq_zero_iff _ _).mp this
-    refine ⟨⟨r, hpr⟩ ^ n, ?_⟩
-    rw [Submonoid.smul_def, Algebra.smul_def]
-    -- Porting note: manually rewrite `Submonoid.coe_pow`
-    change (algebraMap R S) (r ^ n) * x = 0
-    rw [map_pow]
-    exact e
+  intro x hx; rw [algebraMap_pushforward_stalk, toPushforwardStalk_comp]
+  change IsUnit ((TopCat.Presheaf.stalkFunctor CommRingCat p).map
+    (Spec.sheafedSpaceMap (algebraMap ↑R ↑S)).c _)
+  exact (IsLocalization.map_units ((structureSheaf R).presheaf.stalk p) ⟨x, hx⟩).map _
+  apply isLocalizedModule_toPushforwardStalkAlgHom_aux
+  intro x hx
+  rw [toPushforwardStalkAlgHom_apply, ← (toPushforwardStalk (algebraMap R S) p).map_zero,
+    toPushforwardStalk] at hx
+  -- Porting note: this `change` is manually rewriting `comp_apply`
+  change _ = (TopCat.Presheaf.germ (Spec.topMap (algebraMap ↑R ↑S) _* (structureSheaf ↑S).val)
+    (⟨p, trivial⟩ : (⊤ : TopologicalSpace.Opens (PrimeSpectrum R))) (toOpen S ⊤ 0)) at hx
+  rw [map_zero] at hx
+  change (forget CommRingCat).map _ _ = (forget _).map _ _ at hx
+  obtain ⟨U, hpU, i₁, i₂, e⟩ := TopCat.Presheaf.germ_eq _ _ _ _ _ _ hx
+  obtain ⟨_, ⟨r, rfl⟩, hpr, hrU⟩ :=
+    PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open (show p ∈ U.1 from hpU)
+      U.2
+  change PrimeSpectrum.basicOpen r ≤ U at hrU
+  apply_fun (Spec.topMap (algebraMap R S) _* (structureSheaf S).1).map (homOfLE hrU).op at e
+  simp only [Functor.op_map, map_zero, ← comp_apply, toOpen_res] at e
+  have : toOpen S (PrimeSpectrum.basicOpen <| algebraMap R S r) x = 0 := by
+    refine Eq.trans ?_ e; rfl
+  have :=
+    (@IsLocalization.mk'_one _ _ _ _ _ _
+          (StructureSheaf.IsLocalization.to_basicOpen S <| algebraMap R S r) x).trans
+      this
+  obtain ⟨⟨_, n, rfl⟩, e⟩ := (IsLocalization.mk'_eq_zero_iff _ _).mp this
+  refine ⟨⟨r, hpr⟩ ^ n, ?_⟩
+  rw [Submonoid.smul_def, Algebra.smul_def]
+  -- Porting note: manually rewrite `Submonoid.coe_pow`
+  change (algebraMap R S) (r ^ n) * x = 0
+  rw [map_pow]
+  exact e
 
 end StructureSheaf
 

@@ -74,19 +74,19 @@ theorem Icc_eq_image_powerset (h : s ⊆ t) : Icc s t = (t \ s).powerset.image (
   ext u
   simp_rw [mem_Icc, mem_image, mem_powerset]
   constructor
-  · rintro ⟨hs, ht⟩
-    exact ⟨u \ s, sdiff_le_sdiff_right ht, sup_sdiff_cancel_right hs⟩
-  · rintro ⟨v, hv, rfl⟩
-    exact ⟨le_sup_left, union_subset h <| hv.trans sdiff_subset⟩
+  rintro ⟨hs, ht⟩
+  exact ⟨u \ s, sdiff_le_sdiff_right ht, sup_sdiff_cancel_right hs⟩
+  rintro ⟨v, hv, rfl⟩
+  exact ⟨le_sup_left, union_subset h <| hv.trans sdiff_subset⟩
 
 theorem Ico_eq_image_ssubsets (h : s ⊆ t) : Ico s t = (t \ s).ssubsets.image (s ∪ ·) := by
   ext u
   simp_rw [mem_Ico, mem_image, mem_ssubsets]
   constructor
-  · rintro ⟨hs, ht⟩
-    exact ⟨u \ s, sdiff_lt_sdiff_right ht hs, sup_sdiff_cancel_right hs⟩
-  · rintro ⟨v, hv, rfl⟩
-    exact ⟨le_sup_left, sup_lt_of_lt_sdiff_left hv h⟩
+  rintro ⟨hs, ht⟩
+  exact ⟨u \ s, sdiff_lt_sdiff_right ht hs, sup_sdiff_cancel_right hs⟩
+  rintro ⟨v, hv, rfl⟩
+  exact ⟨le_sup_left, sup_lt_of_lt_sdiff_left hv h⟩
 
 /-- Cardinality of a non-empty `Icc` of finsets. -/
 theorem card_Icc_finset (h : s ⊆ t) : (Icc s t).card = 2 ^ (t.card - s.card) := by

@@ -190,13 +190,13 @@ lemma isQuasiregular_zero : IsQuasiregular 0 := ⟨1, rfl⟩
 lemma isQuasiregular_iff {x : R} :
     IsQuasiregular x ↔ ∃ y, y + x + x * y = 0 ∧ x + y + y * x = 0 := by
   constructor
-  · rintro ⟨u, rfl⟩
-    exact ⟨equiv.symm u⁻¹.val, by simp⟩
-  · rintro ⟨y, hy₁, hy₂⟩
-    refine ⟨⟨equiv x, equiv y, ?_, ?_⟩, rfl⟩
-    all_goals
-      apply equiv.symm.injective
-      assumption
+  rintro ⟨u, rfl⟩
+  exact ⟨equiv.symm u⁻¹.val, by simp⟩
+  rintro ⟨y, hy₁, hy₂⟩
+  refine ⟨⟨equiv x, equiv y, ?_, ?_⟩, rfl⟩
+  all_goals
+    apply equiv.symm.injective
+    assumption
 
 end PreQuasiregular
 
@@ -211,8 +211,8 @@ lemma IsQuasiregular.isUnit_one_add {R : Type*} [Semiring R] {x : R} (hx : IsQua
     IsUnit (1 + x) := by
   obtain ⟨y, hy₁, hy₂⟩ := isQuasiregular_iff.mp hx
   refine ⟨⟨1 + x, 1 + y, ?_, ?_⟩, rfl⟩
-  · convert congr(1 + $(hy₁)) using 1 <;> [noncomm_ring; simp]
-  · convert congr(1 + $(hy₂)) using 1 <;> [noncomm_ring; simp]
+  convert congr(1 + $(hy₁)) using 1 <;> [noncomm_ring; simp]
+  convert congr(1 + $(hy₂)) using 1 <;> [noncomm_ring; simp]
 
 lemma isQuasiregular_iff_isUnit {R : Type*} [Ring R] {x : R} :
     IsQuasiregular x ↔ IsUnit (1 + x) := by
@@ -232,9 +232,9 @@ lemma isQuasiregular_iff_isUnit' (R : Type*) {A : Type*} [CommSemiring R] [NonUn
     [Module R A] [IsScalarTower R A A] [SMulCommClass R A A] {x : A} :
     IsQuasiregular x ↔ IsUnit (1 + x : Unitization R A) := by
   refine ⟨?_, fun hx ↦ ?_⟩
-  · rintro ⟨u, rfl⟩
-    exact (Unitization.unitsFstOne_mulEquiv_quasiregular R).symm u |>.val.isUnit
-  · exact ⟨(Unitization.unitsFstOne_mulEquiv_quasiregular R) ⟨hx.unit, by simp⟩, by simp⟩
+  rintro ⟨u, rfl⟩
+  exact (Unitization.unitsFstOne_mulEquiv_quasiregular R).symm u |>.val.isUnit
+  exact ⟨(Unitization.unitsFstOne_mulEquiv_quasiregular R) ⟨hx.unit, by simp⟩, by simp⟩
 
 variable (R : Type*) {A : Type*} [CommSemiring R] [NonUnitalRing A]
   [Module R A] [IsScalarTower R A A] [SMulCommClass R A A]
@@ -421,8 +421,8 @@ variable [IsScalarTower R S A] (h : QuasispectrumRestricts a f)
 
 theorem algebraMap_image : algebraMap R S '' quasispectrum R a = quasispectrum S a := by
   refine Set.eq_of_subset_of_subset ?_ fun s hs => ⟨f s, ?_⟩
-  · simpa only [quasispectrum.preimage_algebraMap] using
-      (quasispectrum S a).image_preimage_subset (algebraMap R S)
+  simpa only [quasispectrum.preimage_algebraMap] using
+    (quasispectrum S a).image_preimage_subset (algebraMap R S)
   exact ⟨quasispectrum.of_algebraMap_mem S ((h.rightInvOn hs).symm ▸ hs), h.rightInvOn hs⟩
 
 theorem image : f '' quasispectrum S a = quasispectrum R a := by
@@ -479,8 +479,8 @@ theorem of_rightInvOn (h₁ : Function.LeftInverse f (algebraMap R S))
     (h₂ : (spectrum S a).RightInvOn f (algebraMap R S)) : SpectrumRestricts a f where
   rightInvOn x hx := by
     obtain (rfl | hx) := mem_quasispectrum_iff.mp hx
-    · simpa using h₁ 0
-    · exact h₂ hx
+    simpa using h₁ 0
+    exact h₂ hx
   left_inv := h₁
 
 lemma _root_.spectrumRestricts_iff :
@@ -493,17 +493,17 @@ theorem of_subset_range_algebraMap (hf : f.LeftInverse (algebraMap R S))
   rightInvOn := fun s hs => by
     rw [mem_quasispectrum_iff] at hs
     obtain (rfl | hs) := hs
-    · simpa using hf 0
-    · obtain ⟨r, rfl⟩ := h hs
-      rw [hf r]
+    simpa using hf 0
+    obtain ⟨r, rfl⟩ := h hs
+    rw [hf r]
   left_inv := hf
 
 variable [IsScalarTower R S A] (h : SpectrumRestricts a f)
 
 theorem algebraMap_image : algebraMap R S '' spectrum R a = spectrum S a := by
   refine Set.eq_of_subset_of_subset ?_ fun s hs => ⟨f s, ?_⟩
-  · simpa only [spectrum.preimage_algebraMap] using
-      (spectrum S a).image_preimage_subset (algebraMap R S)
+  simpa only [spectrum.preimage_algebraMap] using
+    (spectrum S a).image_preimage_subset (algebraMap R S)
   exact ⟨spectrum.of_algebraMap_mem S ((h.rightInvOn hs).symm ▸ hs), h.rightInvOn hs⟩
 
 theorem image : f '' spectrum S a = spectrum R a := by
@@ -541,5 +541,5 @@ theorem quasispectrumRestricts_iff_spectrumRestricts {R S A : Type*} [Semifield 
   refine ⟨(Set.RightInvOn.mono · Set.subset_union_left), fun h' x hx ↦ ?_⟩
   simp only [Set.union_singleton, Set.mem_insert_iff] at hx
   obtain (rfl | hx) := hx
-  · simpa using h 0
-  · exact h' hx
+  simpa using h 0
+  exact h' hx

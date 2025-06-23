@@ -33,27 +33,27 @@ section Examples
 
 instance widePullbackShape_connected (J : Type v₁) : IsConnected (WidePullbackShape J) := by
   apply IsConnected.of_induct
-  · introv hp t
-    cases j
-    · exact hp
-    · rwa [t (WidePullbackShape.Hom.term _)]
+  introv hp t
+  cases j
+  exact hp
+  rwa [t (WidePullbackShape.Hom.term _)]
 
 instance widePushoutShape_connected (J : Type v₁) : IsConnected (WidePushoutShape J) := by
   apply IsConnected.of_induct
-  · introv hp t
-    cases j
-    · exact hp
-    · rwa [← t (WidePushoutShape.Hom.init _)]
+  introv hp t
+  cases j
+  exact hp
+  rwa [← t (WidePushoutShape.Hom.init _)]
 
 instance parallelPairInhabited : Inhabited WalkingParallelPair :=
   ⟨WalkingParallelPair.one⟩
 
 instance parallel_pair_connected : IsConnected WalkingParallelPair := by
   apply IsConnected.of_induct
-  · introv _ t
-    cases j
-    · rwa [t WalkingParallelPairHom.left]
-    · assumption
+  introv _ t
+  cases j
+  rwa [t WalkingParallelPairHom.left]
+  assumption
 
 end Examples
 

@@ -104,10 +104,10 @@ variable {x : γ} {s : Set γ}
 
 theorem subsingleton_closedBall (x : γ) {r : ℝ} (hr : r ≤ 0) : (closedBall x r).Subsingleton := by
   rcases hr.lt_or_eq with (hr | rfl)
-  · rw [closedBall_eq_empty.2 hr]
-    exact subsingleton_empty
-  · rw [closedBall_zero]
-    exact subsingleton_singleton
+  rw [closedBall_eq_empty.2 hr]
+  exact subsingleton_empty
+  rw [closedBall_zero]
+  exact subsingleton_singleton
 
 theorem subsingleton_sphere (x : γ) {r : ℝ} (hr : r ≤ 0) : (sphere x r).Subsingleton :=
   (subsingleton_closedBall x hr).anti sphere_subset_closedBall

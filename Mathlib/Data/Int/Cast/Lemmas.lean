@@ -58,10 +58,10 @@ variable [CharZero α] {m n : ℤ}
 @[simp] lemma cast_eq_zero : (n : α) = 0 ↔ n = 0 where
   mp h := by
     cases n
-    · erw [Int.cast_natCast] at h
-      exact congr_arg _ (Nat.cast_eq_zero.1 h)
-    · rw [cast_negSucc, neg_eq_zero, Nat.cast_eq_zero] at h
-      contradiction
+    erw [Int.cast_natCast] at h
+    exact congr_arg _ (Nat.cast_eq_zero.1 h)
+    rw [cast_negSucc, neg_eq_zero, Nat.cast_eq_zero] at h
+    contradiction
   mpr h := by rw [h, cast_zero]
 
 @[simp, norm_cast]
@@ -251,10 +251,10 @@ theorem ext_mint {f g : Multiplicative ℤ →* M} (h1 : f (ofAdd 1) = g (ofAdd 
 theorem ext_int {f g : ℤ →* M} (h_neg_one : f (-1) = g (-1))
     (h_nat : f.comp Int.ofNatHom.toMonoidHom = g.comp Int.ofNatHom.toMonoidHom) : f = g := by
   ext (x | x)
-  · exact (DFunLike.congr_fun h_nat x : _)
-  · rw [Int.negSucc_eq, ← neg_one_mul, f.map_mul, g.map_mul]
-    congr 1
-    exact mod_cast (DFunLike.congr_fun h_nat (x + 1) : _)
+  exact (DFunLike.congr_fun h_nat x : _)
+  rw [Int.negSucc_eq, ← neg_one_mul, f.map_mul, g.map_mul]
+  congr 1
+  exact mod_cast (DFunLike.congr_fun h_nat (x + 1) : _)
 
 end MonoidHom
 

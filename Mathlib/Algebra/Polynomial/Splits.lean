@@ -171,7 +171,7 @@ theorem map_rootOfSplits' {f : K[X]} (hf : f.Splits i) (hfd) :
 theorem natDegree_eq_card_roots' {p : K[X]} {i : K →+* L} (hsplit : Splits i p) :
     (p.map i).natDegree = Multiset.card (p.map i).roots := by
   by_cases hp : p.map i = 0
-  · rw [hp, natDegree_zero, roots_zero, Multiset.card_zero]
+  rw [hp, natDegree_zero, roots_zero, Multiset.card_zero]
   obtain ⟨q, he, hd, hr⟩ := exists_prod_multiset_X_sub_C_mul (p.map i)
   rw [← splits_id_iff_splits, ← he] at hsplit
   rw [← he] at hp
@@ -181,10 +181,10 @@ theorem natDegree_eq_card_roots' {p : K[X]} {i : K →+* L} (hsplit : Splits i p
   have h' : (map (RingHom.id L) q).natDegree ≠ 0
   simp [h]
   have := roots_ne_zero_of_splits' (RingHom.id L) (splits_of_splits_mul' _ ?_ hsplit).2 h'
-  · rw [map_id] at this
-    exact this hr
-  · rw [map_id]
-    exact mul_ne_zero monic_prod_multiset_X_sub_C.ne_zero hq
+  rw [map_id] at this
+  exact this hr
+  rw [map_id]
+  exact mul_ne_zero monic_prod_multiset_X_sub_C.ne_zero hq
 
 theorem degree_eq_card_roots' {p : K[X]} {i : K →+* L} (p_ne_zero : p.map i ≠ 0)
     (hsplit : Splits i p) : (p.map i).degree = Multiset.card (p.map i).roots := by
@@ -239,10 +239,10 @@ theorem splits_prod_iff {ι : Type u} {s : ι → K[X]} {t : Finset ι} :
 theorem degree_eq_one_of_irreducible_of_splits {p : K[X]} (hp : Irreducible p)
     (hp_splits : Splits (RingHom.id K) p) : p.degree = 1 := by
   rcases hp_splits with ⟨⟩ | hp_splits
-  · exfalso
-    simp_all
-  · apply hp_splits hp
-    simp
+  exfalso
+  simp_all
+  apply hp_splits hp
+  simp
 
 theorem exists_root_of_splits {f : K[X]} (hs : Splits i f) (hf0 : degree f ≠ 0) :
     ∃ x, eval₂ i x f = 0 :=
@@ -339,12 +339,12 @@ theorem splits_of_exists_multiset {f : K[X]} {s : Multiset L}
       rw [irreducible_iff_prime] at hp
       rw [hs, ← Multiset.prod_toList] at hdp
       obtain hd | hd := hp.2.2 _ _ hdp
-      · refine (hp.2.1 <| isUnit_of_dvd_unit hd ?_).elim
-        exact isUnit_C.2 ((leadingCoeff_ne_zero.2 hf0).isUnit.map i)
-      · obtain ⟨q, hq, hd⟩ := hp.dvd_prod_iff.1 hd
-        obtain ⟨a, _, rfl⟩ := Multiset.mem_map.1 (Multiset.mem_toList.1 hq)
-        rw [degree_eq_degree_of_associated ((hp.dvd_prime_iff_associated <| prime_X_sub_C a).1 hd)]
-        exact degree_X_sub_C a
+      refine (hp.2.1 <| isUnit_of_dvd_unit hd ?_).elim
+      exact isUnit_C.2 ((leadingCoeff_ne_zero.2 hf0).isUnit.map i)
+      obtain ⟨q, hq, hd⟩ := hp.dvd_prod_iff.1 hd
+      obtain ⟨a, _, rfl⟩ := Multiset.mem_map.1 (Multiset.mem_toList.1 hq)
+      rw [degree_eq_degree_of_associated ((hp.dvd_prime_iff_associated <| prime_X_sub_C a).1 hd)]
+      exact degree_X_sub_C a
 
 theorem splits_of_splits_id {f : K[X]} : Splits (RingHom.id K) f → Splits i f :=
   UniqueFactorizationMonoid.induction_on_prime f (fun _ => splits_zero _)
@@ -397,13 +397,13 @@ theorem splits_of_isScalarTower {f : R[X]} [Algebra K L] [IsScalarTower R K L]
 theorem splits_iff_card_roots {p : K[X]} :
     Splits (RingHom.id K) p ↔ Multiset.card p.roots = p.natDegree := by
   constructor
-  · intro H
-    rw [natDegree_eq_card_roots H, map_id]
-  · intro hroots
-    rw [splits_iff_exists_multiset (RingHom.id K)]
-    use p.roots
-    simp only [RingHom.id_apply, map_id]
-    exact (C_leadingCoeff_mul_prod_multiset_X_sub_C hroots).symm
+  intro H
+  rw [natDegree_eq_card_roots H, map_id]
+  intro hroots
+  rw [splits_iff_exists_multiset (RingHom.id K)]
+  use p.roots
+  simp only [RingHom.id_apply, map_id]
+  exact (C_leadingCoeff_mul_prod_multiset_X_sub_C hroots).symm
 
 theorem aeval_root_derivative_of_splits [Algebra K L] [DecidableEq L] {P : K[X]} (hmo : P.Monic)
     (hP : P.Splits (algebraMap K L)) {r : L} (hr : r ∈ P.aroots L) :
@@ -433,8 +433,8 @@ theorem sum_roots_eq_nextCoeff_of_monic_of_split {P : K[X]} (hmo : P.Monic)
     (hP : P.Splits (RingHom.id K)) : P.nextCoeff = -P.roots.sum := by
   nth_rw 1 [eq_prod_roots_of_monic_of_splits_id hmo hP]
   rw [Monic.nextCoeff_multiset_prod _ _ fun a ha => _]
-  · simp_rw [nextCoeff_X_sub_C, Multiset.sum_map_neg']
-  · simp only [monic_X_sub_C, implies_true]
+  simp_rw [nextCoeff_X_sub_C, Multiset.sum_map_neg']
+  simp only [monic_X_sub_C, implies_true]
 
 end Splits
 

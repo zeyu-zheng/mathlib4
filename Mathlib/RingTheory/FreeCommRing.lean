@@ -216,23 +216,23 @@ theorem isSupported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
         ∃ n : ℤ, lift (fun a => if a ∈ s then (0 : ℤ[X]) else Polynomial.X) x = n := by
     intro x hx
     refine Subring.InClosure.recOn hx ?_ ?_ ?_ ?_
-    · use 1
-      rw [RingHom.map_one]
-      norm_cast
-    · use -1
-      rw [RingHom.map_neg, RingHom.map_one, Int.cast_neg, Int.cast_one]
-    · rintro _ ⟨z, hzs, rfl⟩ _ _
-      use 0
-      rw [RingHom.map_mul, lift_of, if_pos hzs, zero_mul]
-      norm_cast
-    · rintro x y ⟨q, hq⟩ ⟨r, hr⟩
-      refine ⟨q + r, ?_⟩
-      rw [RingHom.map_add, hq, hr]
-      norm_cast
+    use 1
+    rw [RingHom.map_one]
+    norm_cast
+    use -1
+    rw [RingHom.map_neg, RingHom.map_one, Int.cast_neg, Int.cast_one]
+    rintro _ ⟨z, hzs, rfl⟩ _ _
+    use 0
+    rw [RingHom.map_mul, lift_of, if_pos hzs, zero_mul]
+    norm_cast
+    rintro x y ⟨q, hq⟩ ⟨r, hr⟩
+    refine ⟨q + r, ?_⟩
+    rw [RingHom.map_add, hq, hr]
+    norm_cast
   specialize this (of p) hps
   rw [lift_of] at this
   split_ifs at this with h
-  · exact h
+  exact h
   exfalso
   apply Ne.symm Int.zero_ne_one
   rcases this with ⟨w, H⟩
@@ -244,14 +244,14 @@ theorem isSupported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
 theorem map_subtype_val_restriction {x} (s : Set α) [DecidablePred (· ∈ s)]
     (hxs : IsSupported x s) : map (↑) (restriction s x) = x := by
   refine Subring.InClosure.recOn hxs ?_ ?_ ?_ ?_
-  · rw [RingHom.map_one]
-    rfl
-  · rw [map_neg, map_one]
-    rfl
-  · rintro _ ⟨p, hps, rfl⟩ n ih
-    rw [RingHom.map_mul, restriction_of, dif_pos hps, RingHom.map_mul, map_of, ih]
-  · intro x y ihx ihy
-    rw [RingHom.map_add, RingHom.map_add, ihx, ihy]
+  rw [RingHom.map_one]
+  rfl
+  rw [map_neg, map_one]
+  rfl
+  rintro _ ⟨p, hps, rfl⟩ n ih
+  rw [RingHom.map_mul, restriction_of, dif_pos hps, RingHom.map_mul, map_of, ih]
+  intro x y ihx ihy
+  rw [RingHom.map_add, RingHom.map_add, ihx, ihy]
 
 theorem exists_finite_support (x : FreeCommRing α) : ∃ s : Set α, Set.Finite s ∧ IsSupported x s :=
   FreeCommRing.induction_on x ⟨∅, Set.finite_empty, isSupported_neg isSupported_one⟩

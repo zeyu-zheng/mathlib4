@@ -20,8 +20,8 @@ inputs to the pattern.  For example,
 example {a b x c d : ℝ} (h1 : a + 1 ≤ b + 1) (h2 : c + 2 ≤ d + 2) :
     x ^ 2 * a + c ≤ x ^ 2 * b + d := by
   gcongr
-  · linarith
-  · linarith
+  linarith
+  linarith
 ```
 This example has the goal of proving the relation `≤` between a LHS and RHS both of the pattern
 ```
@@ -421,8 +421,8 @@ inputs to the pattern.  For example,
 example {a b x c d : ℝ} (h1 : a + 1 ≤ b + 1) (h2 : c + 2 ≤ d + 2) :
     x ^ 2 * a + c ≤ x ^ 2 * b + d := by
   gcongr
-  · linarith
-  · linarith
+  linarith
+  linarith
 ```
 This example has the goal of proving the relation `≤` between a LHS and RHS both of the pattern
 ```

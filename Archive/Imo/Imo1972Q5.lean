@@ -52,8 +52,8 @@ theorem imo1972_q5 (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y
     0 < ‖f x‖ := norm_pos_iff.mpr hx
     _ ≤ k := hk₁ x
   rw [div_lt_iff]
-  · apply lt_mul_of_one_lt_right h₁ hneg
-  · exact zero_lt_one.trans hneg
+  apply lt_mul_of_one_lt_right h₁ hneg
+  exact zero_lt_one.trans hneg
   -- Demonstrate that `k ≤ k'` using `hk₂`.
   have H₂ : k ≤ k'
   have h₁ : ∃ x : ℝ, x ∈ S
@@ -61,8 +61,8 @@ theorem imo1972_q5 (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y
   have h₂ : ∀ x, ‖f x‖ ≤ k'
   intro x
   rw [le_div_iff]
-  · apply (mul_le_mul_left zero_lt_two).mp (hk₂ x)
-  · exact zero_lt_one.trans hneg
+  apply (mul_le_mul_left zero_lt_two).mp (hk₂ x)
+  exact zero_lt_one.trans hneg
   apply csSup_le h₁
   rintro y' ⟨yy, rfl⟩
   exact h₂ yy

@@ -139,8 +139,8 @@ theorem efixedPoint_eq_of_edist_lt_top (hf : ContractingWith K f) {x : α} (hx :
     <;> try apply efixedPoint_isFixedPt
   change edistLtTopSetoid.Rel _ _
   trans x
-  · apply Setoid.symm' -- Porting note: Originally `symm`
-    exact hf.edist_efixedPoint_lt_top hx
+  apply Setoid.symm' -- Porting note: Originally `symm`
+  exact hf.edist_efixedPoint_lt_top hx
   trans y
   exacts [lt_top_iff_ne_top.2 h, hf.edist_efixedPoint_lt_top hy]
 
@@ -152,11 +152,11 @@ theorem exists_fixedPoint' {s : Set α} (hsc : IsComplete s) (hsf : MapsTo f s s
   haveI := hsc.completeSpace_coe
   rcases hf.exists_fixedPoint ⟨x, hxs⟩ hx with ⟨y, hfy, h_tendsto, hle⟩
   refine ⟨y, y.2, Subtype.ext_iff_val.1 hfy, ?_, fun n ↦ ?_⟩
-  · convert (continuous_subtype_val.tendsto _).comp h_tendsto
-    simp only [(· ∘ ·), MapsTo.iterate_restrict, MapsTo.val_restrict_apply]
-  · convert hle n
-    rw [MapsTo.iterate_restrict]
-    rfl
+  convert (continuous_subtype_val.tendsto _).comp h_tendsto
+  simp only [(· ∘ ·), MapsTo.iterate_restrict, MapsTo.val_restrict_apply]
+  convert hle n
+  rw [MapsTo.iterate_restrict]
+  rfl
 
 variable (f)
 
@@ -221,11 +221,11 @@ theorem efixedPoint_eq_of_edist_lt_top' (hf : ContractingWith K f) {s : Set α} 
     <;> try apply efixedPoint_isFixedPt'
   change edistLtTopSetoid.Rel _ _
   trans x
-  · apply Setoid.symm' -- Porting note: Originally `symm`
-    apply edist_efixedPoint_lt_top'
+  apply Setoid.symm' -- Porting note: Originally `symm`
+  apply edist_efixedPoint_lt_top'
   trans y
-  · exact lt_top_iff_ne_top.2 hxy
-  · apply edist_efixedPoint_lt_top'
+  exact lt_top_iff_ne_top.2 hxy
+  apply edist_efixedPoint_lt_top'
 
 end ContractingWith
 

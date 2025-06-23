@@ -202,10 +202,10 @@ theorem induction {C : Poly α → Prop} (H1 : ∀ i, C (proj i)) (H2 : ∀ n, C
     (H3 : ∀ f g, C f → C g → C (f - g)) (H4 : ∀ f g, C f → C g → C (f * g)) (f : Poly α) : C f := by
   cases' f with f pf
   induction' pf with i n f g pf pg ihf ihg f g pf pg ihf ihg
-  · apply H1
-  · apply H2
-  · apply H3 _ _ ihf ihg
-  · apply H4 _ _ ihf ihg
+  apply H1
+  apply H2
+  apply H3 _ _ ihf ihg
+  apply H4 _ _ ihf ihg
 
 /-- The sum of squares of a list of polynomials. This is relevant for
   Diophantine equations, because it means that a list of equations
@@ -277,11 +277,11 @@ theorem inject_dummies_lem (f : β → γ) (g : γ → Option β) (inv : ∀ x, 
     (p : Poly (α ⊕ β)) (v : α → ℕ) :
     (∃ t, p (v ⊗ t) = 0) ↔ ∃ t, p.map (inl ⊗ inr ∘ f) (v ⊗ t) = 0 := by
   dsimp; refine ⟨fun t => ?_, fun t => ?_⟩ <;> cases' t with t ht
-  · have : (v ⊗ (0 ::ₒ t) ∘ g) ∘ (inl ⊗ inr ∘ f) = v ⊗ t :=
-      funext fun s => by cases' s with a b <;> dsimp [(· ∘ ·)]; try rw [inv]; rfl
-    exact ⟨(0 ::ₒ t) ∘ g, by rwa [this]⟩
-  · have : v ⊗ t ∘ f = (v ⊗ t) ∘ (inl ⊗ inr ∘ f) := funext fun s => by cases' s with a b <;> rfl
-    exact ⟨t ∘ f, by rwa [this]⟩
+  have : (v ⊗ (0 ::ₒ t) ∘ g) ∘ (inl ⊗ inr ∘ f) = v ⊗ t :=
+    funext fun s => by cases' s with a b <;> dsimp [(· ∘ ·)]; try rw [inv]; rfl
+  exact ⟨(0 ::ₒ t) ∘ g, by rwa [this]⟩
+  have : v ⊗ t ∘ f = (v ⊗ t) ∘ (inl ⊗ inr ∘ f) := funext fun s => by cases' s with a b <;> rfl
+  exact ⟨t ∘ f, by rwa [this]⟩
 
 theorem inject_dummies (f : β → γ) (g : γ → Option β) (inv : ∀ x, g (f x) = some x)
     (p : Poly (α ⊕ β)) (h : ∀ v, S v ↔ ∃ t, p (v ⊗ t) = 0) :
@@ -307,7 +307,7 @@ theorem DiophList.forall (l : List (Set <| α → ℕ)) (d : l.Forall Dioph) :
     let ⟨β, pl, h⟩ := this
     ⟨β, Poly.sumsq pl, fun v => (h v).trans <| exists_congr fun t => (Poly.sumsq_eq_zero _ _).symm⟩
   induction' l with S l IH
-  · exact ⟨ULift Empty, [], fun _ => by simp⟩
+  exact ⟨ULift Empty, [], fun _ => by simp⟩
   simp? at d says simp only [List.forall_cons] at d
   exact
     let ⟨⟨β, p, pe⟩, dl⟩ := d
@@ -347,13 +347,13 @@ theorem union : ∀ (_ : Dioph S) (_ : Dioph S'), Dioph (S ∪ S')
               (@mul_eq_zero _ _ _ (p ((v ⊗ t) ∘ (inl ⊗ inr ∘ inl)))
                   (q ((v ⊗ t) ∘ (inl ⊗ inr ∘ inr)))).symm))
       -- Porting note: putting everything on the same line fails
-      · refine inject_dummies_lem _ ?_ ?_ _ _
-        · exact some ⊗ fun _ => none
-        · exact fun _ => by simp only [elim_inl]
+      refine inject_dummies_lem _ ?_ ?_ _ _
+      exact some ⊗ fun _ => none
+      exact fun _ => by simp only [elim_inl]
       -- Porting note: putting everything on the same line fails
-      · refine inject_dummies_lem _ ?_ ?_ _ _
-        · exact (fun _ => none) ⊗ some
-        · exact fun _ => by simp only [elim_inr]⟩
+      refine inject_dummies_lem _ ?_ ?_ _ _
+      exact (fun _ => none) ⊗ some
+      exact fun _ => by simp only [elim_inr]⟩
 
 /-- A partial function is Diophantine if its graph is Diophantine. -/
 def DiophPFun (f : (α → ℕ) →. ℕ) : Prop :=
@@ -570,12 +570,12 @@ theorem sub_dioph : DiophFn fun v => f v - g v :=
           show y = x + z ∨ y ≤ z ∧ x = 0 ↔ y - z = x from
             ⟨fun o => by
               rcases o with (ae | ⟨yz, x0⟩)
-              · rw [ae, add_tsub_cancel_right]
-              · rw [x0, tsub_eq_zero_iff_le.mpr yz], by
+              rw [ae, add_tsub_cancel_right]
+              rw [x0, tsub_eq_zero_iff_le.mpr yz], by
               rintro rfl
               rcases le_total y z with yz | zy
-              · exact Or.inr ⟨yz, tsub_eq_zero_iff_le.mpr yz⟩
-              · exact Or.inl (tsub_add_cancel_of_le zy).symm⟩
+              exact Or.inr ⟨yz, tsub_eq_zero_iff_le.mpr yz⟩
+              exact Or.inl (tsub_add_cancel_of_le zy).symm⟩
 
 scoped infixl:80 " D- " => Dioph.sub_dioph
 
@@ -594,7 +594,7 @@ theorem mod_dioph : DiophFn fun v => f v % g v :=
           show ((y = 0 ∨ z < y) ∧ ∃ c, z + y * c = x) ↔ x % y = z from
             ⟨fun ⟨h, c, hc⟩ => by
               rw [← hc]; simp; cases' h with x0 hl
-              · rw [x0, mod_zero]
+              rw [x0, mod_zero]
               exact mod_eq_of_lt hl, fun e => by
                 rw [← e]
                 exact ⟨or_iff_not_imp_left.2 fun h => mod_lt _ (Nat.pos_of_ne_zero h), x / y,

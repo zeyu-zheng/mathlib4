@@ -29,10 +29,10 @@ theorem exists_prime_mul_pow_lt_factorial [LinearOrderedRing K] [FloorRing K] (n
     _ ≤ ⌈|a|⌉ * (⌈|c|⌉ : K) ^ p := ?_
     _ = ↑(Int.natAbs ⌈|a|⌉ * Int.natAbs ⌈|c|⌉ ^ p) := ?_
     _ < ↑(p - 1)! := Nat.cast_lt.mpr h
-  · rw [abs_mul, abs_pow]
-    gcongr <;> try first | positivity | apply Int.le_ceil
-  · simp_rw [Nat.cast_mul, Nat.cast_pow, Int.cast_natAbs,
-      abs_eq_self.mpr (Int.ceil_nonneg (abs_nonneg (_ : K)))]
+  rw [abs_mul, abs_pow]
+  gcongr <;> try first | positivity | apply Int.le_ceil
+  simp_rw [Nat.cast_mul, Nat.cast_pow, Int.cast_natAbs,
+    abs_eq_self.mpr (Int.ceil_nonneg (abs_nonneg (_ : K)))]
 
 theorem exists_prime_mul_pow_div_factorial_lt_one [LinearOrderedField K] [FloorRing K]
     (n : ℕ) (a c : K) :

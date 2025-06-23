@@ -135,8 +135,8 @@ instance mono_pullback_to_prod {C : Type*} [Category C] {X Y Z : C} (f : X ⟶ Z
     Mono (prod.lift (pullback.fst f g) (pullback.snd f g)) :=
   ⟨fun {W} i₁ i₂ h => by
     ext
-    · simpa using congrArg (fun f => f ≫ prod.fst) h
-    · simpa using congrArg (fun f => f ≫ prod.snd) h⟩
+    simpa using congrArg (fun f => f ≫ prod.fst) h
+    simpa using congrArg (fun f => f ≫ prod.snd) h⟩
 
 /-- The pullback of `f, g` is also the pullback of `f ≫ i, g ≫ i` for any mono `i`. -/
 noncomputable def pullbackIsPullbackOfCompMono (f : X ⟶ W) (g : Y ⟶ W) (i : W ⟶ Z) [Mono i]
@@ -167,8 +167,8 @@ instance pullback_snd_iso_of_right_factors_mono :
   dsimp only [cospan_right, id_eq, eq_mpr_eq_cast, PullbackCone.mk_pt, PullbackCone.mk_π_app,
     Functor.const_obj_obj, cospan_one] at this
   convert (congrArg IsIso (show _ ≫ pullback.snd (𝟙 Z) f = _ from this)).mp inferInstance
-  · exact (Category.id_comp _).symm
-  · exact (Category.id_comp _).symm
+  exact (Category.id_comp _).symm
+  exact (Category.id_comp _).symm
 
 attribute [local instance] hasPullback_of_right_iso
 
@@ -183,8 +183,8 @@ instance pullback_snd_iso_of_left_factors_mono :
   dsimp only [cospan_left, id_eq, eq_mpr_eq_cast, PullbackCone.mk_pt, PullbackCone.mk_π_app,
     Functor.const_obj_obj, cospan_one] at this
   convert (congrArg IsIso (show _ ≫ pullback.fst f (𝟙 Z) = _ from this)).mp inferInstance
-  · exact (Category.id_comp _).symm
-  · exact (Category.id_comp _).symm
+  exact (Category.id_comp _).symm
+  exact (Category.id_comp _).symm
 
 end
 
@@ -204,14 +204,14 @@ theorem fst_eq_snd_of_mono_eq [Mono f] : pullback.fst f f = pullback.snd f f :=
 @[simp]
 theorem pullbackSymmetry_hom_of_mono_eq [Mono f] : (pullbackSymmetry f f).hom = 𝟙 _ := by
   ext
-  · simp [fst_eq_snd_of_mono_eq]
-  · simp [fst_eq_snd_of_mono_eq]
+  simp [fst_eq_snd_of_mono_eq]
+  simp [fst_eq_snd_of_mono_eq]
 
 instance fst_iso_of_mono_eq [Mono f] : IsIso (pullback.fst f f) := by
   refine ⟨⟨pullback.lift (𝟙 _) (𝟙 _) (by simp), ?_, by simp⟩⟩
   ext
-  · simp
-  · simp [fst_eq_snd_of_mono_eq]
+  simp
+  simp [fst_eq_snd_of_mono_eq]
 
 instance snd_iso_of_mono_eq [Mono f] : IsIso (pullback.snd f f) := by
   rw [← fst_eq_snd_of_mono_eq]
@@ -309,8 +309,8 @@ instance epi_coprod_to_pushout {C : Type*} [Category C] {X Y Z : C} (f : X ⟶ Y
     Epi (coprod.desc (pushout.inl f g) (pushout.inr f g)) :=
   ⟨fun {W} i₁ i₂ h => by
     ext
-    · simpa using congrArg (fun f => coprod.inl ≫ f) h
-    · simpa using congrArg (fun f => coprod.inr ≫ f) h⟩
+    simpa using congrArg (fun f => coprod.inl ≫ f) h
+    simpa using congrArg (fun f => coprod.inr ≫ f) h⟩
 
 /-- The pushout of `f, g` is also the pullback of `h ≫ f, h ≫ g` for any epi `h`. -/
 noncomputable def pushoutIsPushoutOfEpiComp (f : X ⟶ Y) (g : X ⟶ Z) (h : W ⟶ X) [Epi h]
@@ -337,8 +337,8 @@ instance pushout_inr_iso_of_right_factors_epi :
   convert (congrArg IsIso (show pushout.inr _ _ ≫ _ = _ from colimit.isoColimitCocone_ι_inv
     ⟨_, pushoutIsPushoutOfEpiComp (𝟙 _) f h⟩ WalkingSpan.right)).mp
     inferInstance
-  · apply (Category.comp_id _).symm
-  · apply (Category.comp_id _).symm
+  apply (Category.comp_id _).symm
+  apply (Category.comp_id _).symm
 
 attribute [local instance] hasPushout_of_right_iso
 
@@ -350,8 +350,8 @@ instance pushout_inl_iso_of_left_factors_epi (f : X ⟶ Y) :
   convert (congrArg IsIso (show pushout.inl _ _ ≫ _ = _ from colimit.isoColimitCocone_ι_inv
     ⟨_, pushoutIsPushoutOfEpiComp f (𝟙 _) h⟩ WalkingSpan.left)).mp
         inferInstance
-  · exact (Category.comp_id _).symm
-  · exact (Category.comp_id _).symm
+  exact (Category.comp_id _).symm
+  exact (Category.comp_id _).symm
 
 end
 
@@ -375,8 +375,8 @@ theorem pullback_symmetry_hom_of_epi_eq [Epi f] : (pushoutSymmetry f f).hom = �
 instance inl_iso_of_epi_eq [Epi f] : IsIso (pushout.inl _ _ : _ ⟶ pushout f f) := by
   refine ⟨⟨pushout.desc (𝟙 _) (𝟙 _) (by simp), by simp, ?_⟩⟩
   apply pushout.hom_ext
-  · simp
-  · simp [inl_eq_inr_of_epi_eq]
+  simp
+  simp [inl_eq_inr_of_epi_eq]
 
 instance inr_iso_of_epi_eq [Epi f] : IsIso (pushout.inr f f) := by
   rw [← inl_eq_inr_of_epi_eq]

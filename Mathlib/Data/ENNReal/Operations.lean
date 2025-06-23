@@ -199,11 +199,11 @@ theorem lt_top_of_mul_ne_top_right (h : a * b ≠ ∞) (ha : a ≠ 0) : b < ∞ 
 
 theorem mul_lt_top_iff {a b : ℝ≥0∞} : a * b < ∞ ↔ a < ∞ ∧ b < ∞ ∨ a = 0 ∨ b = 0 := by
   constructor
-  · intro h
-    rw [← or_assoc, or_iff_not_imp_right, or_iff_not_imp_right]
-    intro hb ha
-    exact ⟨lt_top_of_mul_ne_top_left h.ne hb, lt_top_of_mul_ne_top_right h.ne ha⟩
-  · rintro (⟨ha, hb⟩ | rfl | rfl) <;> [exact mul_lt_top ha.ne hb.ne; simp; simp]
+  intro h
+  rw [← or_assoc, or_iff_not_imp_right, or_iff_not_imp_right]
+  intro hb ha
+  exact ⟨lt_top_of_mul_ne_top_left h.ne hb, lt_top_of_mul_ne_top_right h.ne ha⟩
+  rintro (⟨ha, hb⟩ | rfl | rfl) <;> [exact mul_lt_top ha.ne hb.ne; simp; simp]
 
 theorem mul_self_lt_top_iff {a : ℝ≥0∞} : a * a < ⊤ ↔ a < ⊤ := by
   rw [ENNReal.mul_lt_top_iff, and_self, or_self, or_iff_left_iff_imp]
@@ -219,10 +219,10 @@ theorem mul_pos (ha : a ≠ 0) (hb : b ≠ 0) : 0 < a * b :=
 -- Porting note (#11215): TODO: generalize to `WithTop`
 @[simp] theorem pow_eq_top_iff {n : ℕ} : a ^ n = ∞ ↔ a = ∞ ∧ n ≠ 0 := by
   rcases n.eq_zero_or_pos with rfl | (hn : 0 < n)
-  · simp
-  · induction a
-    · simp only [Ne, hn.ne', top_pow hn, not_false_eq_true, and_self]
-    · simp only [← coe_pow, coe_ne_top, false_and]
+  simp
+  induction a
+  simp only [Ne, hn.ne', top_pow hn, not_false_eq_true, and_self]
+  simp only [← coe_pow, coe_ne_top, false_and]
 
 theorem pow_eq_top (n : ℕ) (h : a ^ n = ∞) : a = ∞ :=
   (pow_eq_top_iff.1 h).1
@@ -259,11 +259,11 @@ section Cancel
   This is true in `ℝ≥0∞` for all elements except `∞`. -/
 theorem addLECancellable_iff_ne {a : ℝ≥0∞} : AddLECancellable a ↔ a ≠ ∞ := by
   constructor
-  · rintro h rfl
-    refine zero_lt_one.not_le (h ?_)
-    simp
-  · rintro h b c hbc
-    apply ENNReal.le_of_add_le_add_left h hbc
+  rintro h rfl
+  refine zero_lt_one.not_le (h ?_)
+  simp
+  rintro h b c hbc
+  apply ENNReal.le_of_add_le_add_left h hbc
 
 /-- This lemma has an abbreviated name because it is used frequently. -/
 theorem cancel_of_ne {a : ℝ≥0∞} (h : a ≠ ∞) : AddLECancellable a :=
@@ -337,9 +337,9 @@ protected theorem add_sub_cancel_right (hb : b ≠ ∞) : a + b - b = a :=
 
 protected theorem lt_add_of_sub_lt_left (h : a ≠ ∞ ∨ b ≠ ∞) : a - b < c → a < b + c := by
   obtain rfl | hb := eq_or_ne b ∞
-  · rw [top_add, lt_top_iff_ne_top]
-    exact fun _ => h.resolve_right (Classical.not_not.2 rfl)
-  · exact (cancel_of_ne hb).lt_add_of_tsub_lt_left
+  rw [top_add, lt_top_iff_ne_top]
+  exact fun _ => h.resolve_right (Classical.not_not.2 rfl)
+  exact (cancel_of_ne hb).lt_add_of_tsub_lt_left
 
 protected theorem lt_add_of_sub_lt_right (h : a ≠ ∞ ∨ c ≠ ∞) : a - c < b → a < b + c :=
   add_comm c b ▸ ENNReal.lt_add_of_sub_lt_left h
@@ -419,9 +419,9 @@ infinity -/
 theorem toNNReal_sum {s : Finset α} {f : α → ℝ≥0∞} (hf : ∀ a ∈ s, f a ≠ ∞) :
     ENNReal.toNNReal (∑ a ∈ s, f a) = ∑ a ∈ s, ENNReal.toNNReal (f a) := by
   rw [← coe_inj, coe_toNNReal, coe_finset_sum, sum_congr rfl]
-  · intro x hx
-    exact (coe_toNNReal (hf x hx)).symm
-  · exact (sum_lt_top hf).ne
+  intro x hx
+  exact (coe_toNNReal (hf x hx)).symm
+  exact (sum_lt_top hf).ne
 
 /-- seeing `ℝ≥0∞` as `Real` does not change their sum, unless one of the `ℝ≥0∞` is infinity -/
 theorem toReal_sum {s : Finset α} {f : α → ℝ≥0∞} (hf : ∀ a ∈ s, f a ≠ ∞) :

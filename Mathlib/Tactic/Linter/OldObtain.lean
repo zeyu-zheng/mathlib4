@@ -26,9 +26,9 @@ theorem foo : True := by
   obtain h : True := trivial
   -- These are linted against.
   obtain : True
-  · trivial
+  trivial
   obtain h : True
-  · trivial
+  trivial
 ```
 We allow the first four (since an explicit proof is provided), but lint against the last two.
 

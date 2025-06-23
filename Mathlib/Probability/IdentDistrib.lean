@@ -173,30 +173,30 @@ theorem lintegral_eq {f : α → ℝ≥0∞} {g : β → ℝ≥0∞} (h : IdentD
 theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [BorelSpace γ]
     (h : IdentDistrib f g μ ν) : ∫ x, f x ∂μ = ∫ x, g x ∂ν := by
   by_cases hf : AEStronglyMeasurable f μ
-  · have A : AEStronglyMeasurable id (Measure.map f μ) := by
-      rw [aestronglyMeasurable_iff_aemeasurable_separable]
-      rcases (aestronglyMeasurable_iff_aemeasurable_separable.1 hf).2 with ⟨t, t_sep, ht⟩
-      refine ⟨aemeasurable_id, ⟨closure t, t_sep.closure, ?_⟩⟩
-      rw [ae_map_iff h.aemeasurable_fst]
-      · filter_upwards [ht] with x hx using subset_closure hx
-      · exact isClosed_closure.measurableSet
-    change ∫ x, id (f x) ∂μ = ∫ x, id (g x) ∂ν
-    rw [← integral_map h.aemeasurable_fst A]
-    rw [h.map_eq] at A
-    rw [← integral_map h.aemeasurable_snd A, h.map_eq]
-  · rw [integral_non_aestronglyMeasurable hf]
-    rw [h.aestronglyMeasurable_iff] at hf
-    rw [integral_non_aestronglyMeasurable hf]
+  have A : AEStronglyMeasurable id (Measure.map f μ) := by
+    rw [aestronglyMeasurable_iff_aemeasurable_separable]
+    rcases (aestronglyMeasurable_iff_aemeasurable_separable.1 hf).2 with ⟨t, t_sep, ht⟩
+    refine ⟨aemeasurable_id, ⟨closure t, t_sep.closure, ?_⟩⟩
+    rw [ae_map_iff h.aemeasurable_fst]
+    filter_upwards [ht] with x hx using subset_closure hx
+    exact isClosed_closure.measurableSet
+  change ∫ x, id (f x) ∂μ = ∫ x, id (g x) ∂ν
+  rw [← integral_map h.aemeasurable_fst A]
+  rw [h.map_eq] at A
+  rw [← integral_map h.aemeasurable_snd A, h.map_eq]
+  rw [integral_non_aestronglyMeasurable hf]
+  rw [h.aestronglyMeasurable_iff] at hf
+  rw [integral_non_aestronglyMeasurable hf]
 
 theorem eLpNorm_eq [NormedAddCommGroup γ] [OpensMeasurableSpace γ] (h : IdentDistrib f g μ ν)
     (p : ℝ≥0∞) : eLpNorm f p μ = eLpNorm g p ν := by
   by_cases h0 : p = 0
-  · simp [h0]
+  simp [h0]
   by_cases h_top : p = ∞
-  · simp only [h_top, eLpNorm, eLpNormEssSup, ENNReal.top_ne_zero, eq_self_iff_true, if_true,
-      if_false]
-    apply essSup_eq
-    exact h.comp (measurable_coe_nnreal_ennreal.comp measurable_nnnorm)
+  simp only [h_top, eLpNorm, eLpNormEssSup, ENNReal.top_ne_zero, eq_self_iff_true, if_true,
+    if_false]
+  apply essSup_eq
+  exact h.comp (measurable_coe_nnreal_ennreal.comp measurable_nnnorm)
   simp only [eLpNorm_eq_eLpNorm' h0 h_top, eLpNorm', one_div]
   congr 1
   apply lintegral_eq
@@ -339,11 +339,11 @@ lemma indepFun_of_identDistrib_pair
     IndepFun X' Y' μ' := by
   rw [indepFun_iff_map_prod_eq_prod_map_map _ _, ← h_ident.map_eq,
     (indepFun_iff_map_prod_eq_prod_map_map _ _).1 h_indep]
-  · exact congr (congrArg Measure.prod <| (h_ident.comp measurable_fst).map_eq)
-      (h_ident.comp measurable_snd).map_eq
-  · exact measurable_fst.aemeasurable.comp_aemeasurable h_ident.aemeasurable_fst
-  · exact measurable_snd.aemeasurable.comp_aemeasurable h_ident.aemeasurable_fst
-  · exact measurable_fst.aemeasurable.comp_aemeasurable h_ident.aemeasurable_snd
-  · exact measurable_snd.aemeasurable.comp_aemeasurable h_ident.aemeasurable_snd
+  exact congr (congrArg Measure.prod <| (h_ident.comp measurable_fst).map_eq)
+    (h_ident.comp measurable_snd).map_eq
+  exact measurable_fst.aemeasurable.comp_aemeasurable h_ident.aemeasurable_fst
+  exact measurable_snd.aemeasurable.comp_aemeasurable h_ident.aemeasurable_fst
+  exact measurable_fst.aemeasurable.comp_aemeasurable h_ident.aemeasurable_snd
+  exact measurable_snd.aemeasurable.comp_aemeasurable h_ident.aemeasurable_snd
 
 end ProbabilityTheory

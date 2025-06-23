@@ -208,8 +208,8 @@ theorem quasiSober_of_open_cover (S : Set (Set α)) (hS : ∀ s : S, IsOpen (s :
   have := continuous_subtype_val.closure_preimage_subset _ H.genericPoint_spec.mem
   rw [h'.closure_eq] at this
   apply le_antisymm
-  · apply h'.closure_subset_iff.mpr
-    simpa using this
+  apply h'.closure_subset_iff.mpr
+  simpa using this
   rw [← image_singleton, ← closure_image_closure continuous_subtype_val, H.genericPoint_spec.def]
   refine (subset_closure_inter_of_isPreirreducible_of_isOpen h.2 (hS ⟨U, hU⟩) ⟨x, hx, hU'⟩).trans
     (closure_mono ?_)

@@ -92,8 +92,8 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
     (f : PartialIso α β) (a : α) :
     ∃ b : β, ∀ p ∈ f.val, cmp (Prod.fst p) a = cmp (Prod.snd p) b := by
   by_cases h : ∃ b, (a, b) ∈ f.val
-  · cases' h with b hb
-    exact ⟨b, fun p hp ↦ f.prop _ hp _ hb⟩
+  cases' h with b hb
+  exact ⟨b, fun p hp ↦ f.prop _ hp _ hb⟩
   have :
     ∀ x ∈ (f.val.filter fun p : α × β ↦ p.fst < a).image Prod.snd,
       ∀ y ∈ (f.val.filter fun p : α × β ↦ a < p.fst).image Prod.snd, x < y := by
@@ -109,14 +109,14 @@ theorem exists_across [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonem
   rintro ⟨p1, p2⟩ hp
   have : p1 ≠ a := fun he ↦ h ⟨p2, he ▸ hp⟩
   cases' lt_or_gt_of_ne this with hl hr
-  · have : p1 < a ∧ p2 < b :=
-      ⟨hl, hb.1 _ (Finset.mem_image.mpr ⟨(p1, p2), Finset.mem_filter.mpr ⟨hp, hl⟩, rfl⟩)⟩
-    rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff] at this
-    exact this.1.trans this.2.symm
-  · have : a < p1 ∧ b < p2 :=
-      ⟨hr, hb.2 _ (Finset.mem_image.mpr ⟨(p1, p2), Finset.mem_filter.mpr ⟨hp, hr⟩, rfl⟩)⟩
-    rw [← cmp_eq_gt_iff, ← cmp_eq_gt_iff] at this
-    exact this.1.trans this.2.symm
+  have : p1 < a ∧ p2 < b :=
+    ⟨hl, hb.1 _ (Finset.mem_image.mpr ⟨(p1, p2), Finset.mem_filter.mpr ⟨hp, hl⟩, rfl⟩)⟩
+  rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff] at this
+  exact this.1.trans this.2.symm
+  have : a < p1 ∧ b < p2 :=
+    ⟨hr, hb.2 _ (Finset.mem_image.mpr ⟨(p1, p2), Finset.mem_filter.mpr ⟨hp, hr⟩, rfl⟩)⟩
+  rw [← cmp_eq_gt_iff, ← cmp_eq_gt_iff] at this
+  exact this.1.trans this.2.symm
 
 /-- A partial isomorphism between `α` and `β` is also a partial isomorphism between `β` and `α`. -/
 protected def comm : PartialIso α β → PartialIso β α :=

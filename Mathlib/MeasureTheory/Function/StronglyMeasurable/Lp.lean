@@ -44,13 +44,13 @@ theorem Memℒp.finStronglyMeasurable_of_stronglyMeasurable (hf : Memℒp f p μ
     hf_meas.separableSpace_range_union_singleton
   let fs := SimpleFunc.approxOn f hf_meas.measurable (Set.range f ∪ {0}) 0 (by simp)
   refine ⟨fs, ?_, ?_⟩
-  · have h_fs_Lp : ∀ n, Memℒp (fs n) p μ :=
-      SimpleFunc.memℒp_approxOn_range hf_meas.measurable hf
-    exact fun n => (fs n).measure_support_lt_top_of_memℒp (h_fs_Lp n) hp_ne_zero hp_ne_top
-  · intro x
-    apply SimpleFunc.tendsto_approxOn
-    apply subset_closure
-    simp
+  have h_fs_Lp : ∀ n, Memℒp (fs n) p μ :=
+    SimpleFunc.memℒp_approxOn_range hf_meas.measurable hf
+  exact fun n => (fs n).measure_support_lt_top_of_memℒp (h_fs_Lp n) hp_ne_zero hp_ne_top
+  intro x
+  apply SimpleFunc.tendsto_approxOn
+  apply subset_closure
+  simp
 
 theorem Memℒp.aefinStronglyMeasurable (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     AEFinStronglyMeasurable f μ :=

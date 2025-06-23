@@ -202,10 +202,10 @@ noncomputable def splitEpiEquiv [Full F] [Faithful F] : SplitEpi f ≃ SplitEpi 
 @[simp]
 theorem isSplitEpi_iff [Full F] [Faithful F] : IsSplitEpi (F.map f) ↔ IsSplitEpi f := by
   constructor
-  · intro h
-    exact IsSplitEpi.mk' ((splitEpiEquiv F f).invFun h.exists_splitEpi.some)
-  · intro h
-    exact IsSplitEpi.mk' ((splitEpiEquiv F f).toFun h.exists_splitEpi.some)
+  intro h
+  exact IsSplitEpi.mk' ((splitEpiEquiv F f).invFun h.exists_splitEpi.some)
+  intro h
+  exact IsSplitEpi.mk' ((splitEpiEquiv F f).toFun h.exists_splitEpi.some)
 
 /-- If `F` is a fully faithful functor, split monomorphisms are preserved and reflected by `F`. -/
 noncomputable def splitMonoEquiv [Full F] [Faithful F] : SplitMono f ≃ SplitMono (F.map f) where
@@ -220,26 +220,26 @@ noncomputable def splitMonoEquiv [Full F] [Faithful F] : SplitMono f ≃ SplitMo
 @[simp]
 theorem isSplitMono_iff [Full F] [Faithful F] : IsSplitMono (F.map f) ↔ IsSplitMono f := by
   constructor
-  · intro h
-    exact IsSplitMono.mk' ((splitMonoEquiv F f).invFun h.exists_splitMono.some)
-  · intro h
-    exact IsSplitMono.mk' ((splitMonoEquiv F f).toFun h.exists_splitMono.some)
+  intro h
+  exact IsSplitMono.mk' ((splitMonoEquiv F f).invFun h.exists_splitMono.some)
+  intro h
+  exact IsSplitMono.mk' ((splitMonoEquiv F f).toFun h.exists_splitMono.some)
 
 @[simp]
 theorem epi_map_iff_epi [hF₁ : PreservesEpimorphisms F] [hF₂ : ReflectsEpimorphisms F] :
     Epi (F.map f) ↔ Epi f := by
   constructor
-  · exact F.epi_of_epi_map
-  · intro h
-    exact F.map_epi f
+  exact F.epi_of_epi_map
+  intro h
+  exact F.map_epi f
 
 @[simp]
 theorem mono_map_iff_mono [hF₁ : PreservesMonomorphisms F] [hF₂ : ReflectsMonomorphisms F] :
     Mono (F.map f) ↔ Mono f := by
   constructor
-  · exact F.mono_of_mono_map
-  · intro h
-    exact F.map_mono f
+  exact F.mono_of_mono_map
+  intro h
+  exact F.map_mono f
 
 /-- If `F : C ⥤ D` is an equivalence of categories and `C` is a `split_epi_category`,
 then `D` also is. -/
@@ -285,12 +285,12 @@ variable {C D : Type*} [Category C] [Category D] {F : C ⥤ D} {A B : C} (f : A 
 theorem strongEpi_map_iff_strongEpi_of_isEquivalence [IsEquivalence F] :
     StrongEpi (F.map f) ↔ StrongEpi f := by
   constructor
-  · intro
-    have e : Arrow.mk f ≅ Arrow.mk (F.inv.map (F.map f)) :=
-      Arrow.isoOfNatIso F.asEquivalence.unitIso (Arrow.mk f)
-    rw [StrongEpi.iff_of_arrow_iso e]
-    infer_instance
-  · intro
-    infer_instance
+  intro
+  have e : Arrow.mk f ≅ Arrow.mk (F.inv.map (F.map f)) :=
+    Arrow.isoOfNatIso F.asEquivalence.unitIso (Arrow.mk f)
+  rw [StrongEpi.iff_of_arrow_iso e]
+  infer_instance
+  intro
+  infer_instance
 
 end CategoryTheory.Functor

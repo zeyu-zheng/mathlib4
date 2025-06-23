@@ -107,9 +107,9 @@ theorem disjoint_or_exists_inter_eq_convexHull (hs : s ∈ K.faces) (ht : t ∈ 
   by_contra! h
   refine h.2 (s ∩ t) (K.down_closed hs inter_subset_left fun hst => h.1 <|
     disjoint_iff_inf_le.mpr <| (K.inter_subset_convexHull hs ht).trans ?_) ?_
-  · rw [← coe_inter, hst, coe_empty, convexHull_empty]
-    rfl
-  · rw [coe_inter, convexHull_inter_convexHull hs ht]
+  rw [← coe_inter, hst, coe_empty, convexHull_empty]
+  rfl
+  rw [coe_inter, convexHull_inter_convexHull hs ht]
 
 /-- Construct a simplicial complex by removing the empty face for you. -/
 @[simps]
@@ -184,13 +184,13 @@ theorem facets_subset : K.facets ⊆ K.faces := fun _ hs => hs.1
 
 theorem not_facet_iff_subface (hs : s ∈ K.faces) : s ∉ K.facets ↔ ∃ t, t ∈ K.faces ∧ s ⊂ t := by
   refine ⟨fun hs' : ¬(_ ∧ _) => ?_, ?_⟩
-  · push_neg at hs'
-    obtain ⟨t, ht⟩ := hs' hs
-    exact ⟨t, ht.1, ⟨ht.2.1, fun hts => ht.2.2 (Subset.antisymm ht.2.1 hts)⟩⟩
-  · rintro ⟨t, ht⟩ ⟨hs, hs'⟩
-    have := hs' ht.1 ht.2.1
-    rw [this] at ht
-    exact ht.2.2 (Subset.refl t)
+  push_neg at hs'
+  obtain ⟨t, ht⟩ := hs' hs
+  exact ⟨t, ht.1, ⟨ht.2.1, fun hts => ht.2.2 (Subset.antisymm ht.2.1 hts)⟩⟩
+  rintro ⟨t, ht⟩ ⟨hs, hs'⟩
+  have := hs' ht.1 ht.2.1
+  rw [this] at ht
+  exact ht.2.2 (Subset.refl t)
 
 /-!
 ### The semilattice of simplicial complexes

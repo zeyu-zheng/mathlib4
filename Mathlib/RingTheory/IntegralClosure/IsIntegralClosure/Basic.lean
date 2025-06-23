@@ -77,9 +77,9 @@ theorem isIntegral_algebraMap_iff [Algebra A B] [IsScalarTower R A B] {x : A}
 theorem isIntegral_iff_isIntegral_closure_finite {r : B} :
     IsIntegral R r ↔ ∃ s : Set R, s.Finite ∧ IsIntegral (Subring.closure s) r := by
   constructor <;> intro hr
-  · rcases hr with ⟨p, hmp, hpr⟩
-    refine ⟨_, Finset.finite_toSet _, p.restriction, monic_restriction.2 hmp, ?_⟩
-    rw [← aeval_def, ← aeval_map_algebraMap R r p.restriction, map_restriction, aeval_def, hpr]
+  rcases hr with ⟨p, hmp, hpr⟩
+  refine ⟨_, Finset.finite_toSet _, p.restriction, monic_restriction.2 hmp, ?_⟩
+  rw [← aeval_def, ← aeval_map_algebraMap R r p.restriction, map_restriction, aeval_def, hpr]
   rcases hr with ⟨s, _, hsr⟩
   exact hsr.of_subring _
 
@@ -221,11 +221,11 @@ theorem integralClosure_map_algEquiv [Algebra R S] (f : A ≃ₐ[R] S) :
   ext y
   rw [Subalgebra.mem_map]
   constructor
-  · rintro ⟨x, hx, rfl⟩
-    exact hx.map f
-  · intro hy
-    use f.symm y, hy.map (f.symm : S →ₐ[R] A)
-    simp
+  rintro ⟨x, hx, rfl⟩
+  exact hx.map f
+  intro hy
+  use f.symm y, hy.map (f.symm : S →ₐ[R] A)
+  simp
 
 /-- An `AlgHom` between two rings restrict to an `AlgHom` between the integral closures inside
 them. -/
@@ -339,12 +339,12 @@ theorem normalizeScaleRoots_coeff_mul_leadingCoeff_pow (i : ℕ) (hp : 1 ≤ nat
   simp only [normalizeScaleRoots, finset_sum_coeff, coeff_monomial, Finset.sum_ite_eq', one_mul,
     zero_mul, mem_support_iff, ite_mul, Ne, ite_not]
   split_ifs with h₁ h₂
-  · simp [h₁]
-  · rw [h₂, leadingCoeff, ← pow_succ', tsub_add_cancel_of_le hp]
-  · rw [mul_assoc, ← pow_add, tsub_add_cancel_of_le]
-    apply Nat.le_sub_one_of_lt
-    rw [lt_iff_le_and_ne]
-    exact ⟨le_natDegree_of_ne_zero h₁, h₂⟩
+  simp [h₁]
+  rw [h₂, leadingCoeff, ← pow_succ', tsub_add_cancel_of_le hp]
+  rw [mul_assoc, ← pow_add, tsub_add_cancel_of_le]
+  apply Nat.le_sub_one_of_lt
+  rw [lt_iff_le_and_ne]
+  exact ⟨le_natDegree_of_ne_zero h₁, h₂⟩
 
 theorem leadingCoeff_smul_normalizeScaleRoots (p : R[X]) :
     p.leadingCoeff • normalizeScaleRoots p = scaleRoots p p.leadingCoeff := by
@@ -355,12 +355,12 @@ theorem leadingCoeff_smul_normalizeScaleRoots (p : R[X]) :
   simp only [tsub_le_iff_right, smul_eq_mul, mul_ite, mul_one, mul_zero,
     Finset.sum_ite_eq', mem_support_iff, ne_eq, ite_not]
   split_ifs with h₁ h₂
-  · simp [*]
-  · simp [*]
-  · rw [mul_comm, mul_assoc, ← pow_succ, tsub_right_comm,
-      tsub_add_cancel_of_le]
-    rw [Nat.succ_le_iff]
-    exact tsub_pos_of_lt (lt_of_le_of_ne (le_natDegree_of_ne_zero h₁) h₂)
+  simp [*]
+  simp [*]
+  rw [mul_comm, mul_assoc, ← pow_succ, tsub_right_comm,
+    tsub_add_cancel_of_le]
+  rw [Nat.succ_le_iff]
+  exact tsub_pos_of_lt (lt_of_le_of_ne (le_natDegree_of_ne_zero h₁) h₂)
 
 theorem normalizeScaleRoots_support : (normalizeScaleRoots p).support ≤ p.support := by
   intro x
@@ -372,16 +372,16 @@ theorem normalizeScaleRoots_support : (normalizeScaleRoots p).support ≤ p.supp
 
 theorem normalizeScaleRoots_degree : (normalizeScaleRoots p).degree = p.degree := by
   apply le_antisymm
-  · exact Finset.sup_mono (normalizeScaleRoots_support p)
-  · rw [← degree_scaleRoots, ← leadingCoeff_smul_normalizeScaleRoots]
-    exact degree_smul_le _ _
+  exact Finset.sup_mono (normalizeScaleRoots_support p)
+  rw [← degree_scaleRoots, ← leadingCoeff_smul_normalizeScaleRoots]
+  exact degree_smul_le _ _
 
 theorem normalizeScaleRoots_eval₂_leadingCoeff_mul (h : 1 ≤ p.natDegree) (f : R →+* S) (x : S) :
     (normalizeScaleRoots p).eval₂ f (f p.leadingCoeff * x) =
       f p.leadingCoeff ^ (p.natDegree - 1) * p.eval₂ f x := by
   rw [eval₂_eq_sum_range, eval₂_eq_sum_range, Finset.mul_sum]
   apply Finset.sum_congr
-  · rw [natDegree_eq_of_degree_eq (normalizeScaleRoots_degree p)]
+  rw [natDegree_eq_of_degree_eq (normalizeScaleRoots_degree p)]
   intro n _hn
   rw [mul_pow, ← mul_assoc, ← f.map_pow, ← f.map_mul,
     normalizeScaleRoots_coeff_mul_leadingCoeff_pow _ _ h, f.map_mul, f.map_pow]
@@ -398,21 +398,21 @@ theorem normalizeScaleRoots_monic (h : p ≠ 0) : (normalizeScaleRoots p).Monic 
 theorem RingHom.isIntegralElem_leadingCoeff_mul (h : p.eval₂ f x = 0) :
     f.IsIntegralElem (f p.leadingCoeff * x) := by
   by_cases h' : 1 ≤ p.natDegree
-  · use normalizeScaleRoots p
-    have : p ≠ 0 := fun h'' => by
-      rw [h'', natDegree_zero] at h'
-      exact Nat.not_succ_le_zero 0 h'
-    use normalizeScaleRoots_monic p this
-    rw [normalizeScaleRoots_eval₂_leadingCoeff_mul p h' f x, h, mul_zero]
-  · by_cases hp : p.map f = 0
-    · apply_fun fun q => coeff q p.natDegree at hp
-      rw [coeff_map, coeff_zero, coeff_natDegree] at hp
-      rw [hp, zero_mul]
-      exact f.isIntegralElem_zero
-    · rw [Nat.one_le_iff_ne_zero, Classical.not_not] at h'
-      rw [eq_C_of_natDegree_eq_zero h', eval₂_C] at h
-      suffices p.map f = 0 by exact (hp this).elim
-      rw [eq_C_of_natDegree_eq_zero h', map_C, h, C_eq_zero]
+  use normalizeScaleRoots p
+  have : p ≠ 0 := fun h'' => by
+    rw [h'', natDegree_zero] at h'
+    exact Nat.not_succ_le_zero 0 h'
+  use normalizeScaleRoots_monic p this
+  rw [normalizeScaleRoots_eval₂_leadingCoeff_mul p h' f x, h, mul_zero]
+  by_cases hp : p.map f = 0
+  apply_fun fun q => coeff q p.natDegree at hp
+  rw [coeff_map, coeff_zero, coeff_natDegree] at hp
+  rw [hp, zero_mul]
+  exact f.isIntegralElem_zero
+  rw [Nat.one_le_iff_ne_zero, Classical.not_not] at h'
+  rw [eq_C_of_natDegree_eq_zero h', eval₂_C] at h
+  suffices p.map f = 0 by exact (hp this).elim
+  rw [eq_C_of_natDegree_eq_zero h', map_C, h, C_eq_zero]
 
 /-- Given a `p : R[X]` and a root `x : S`,
 then `p.leadingCoeff • x : S` is integral over `R`. -/

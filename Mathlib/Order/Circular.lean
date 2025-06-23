@@ -353,15 +353,15 @@ abbrev Preorder.toCircularPreorder (α : Type*) [Preorder α] : CircularPreorder
     rwa [← or_assoc, or_comm]
   sbtw_trans_left {a b c d} := by
     rintro (⟨hab, hbc⟩ | ⟨hbc, hca⟩ | ⟨hca, hab⟩) (⟨hbd, hdc⟩ | ⟨hdc, hcb⟩ | ⟨hcb, hbd⟩)
-    · exact Or.inl ⟨hab.trans hbd, hdc⟩
-    · exact (hbc.not_lt hcb).elim
-    · exact (hbc.not_lt hcb).elim
-    · exact Or.inr (Or.inl ⟨hdc, hca⟩)
-    · exact Or.inr (Or.inl ⟨hdc, hca⟩)
-    · exact (hbc.not_lt hcb).elim
-    · exact Or.inr (Or.inl ⟨hdc, hca⟩)
-    · exact Or.inr (Or.inl ⟨hdc, hca⟩)
-    · exact Or.inr (Or.inr ⟨hca, hab.trans hbd⟩)
+    exact Or.inl ⟨hab.trans hbd, hdc⟩
+    exact (hbc.not_lt hcb).elim
+    exact (hbc.not_lt hcb).elim
+    exact Or.inr (Or.inl ⟨hdc, hca⟩)
+    exact Or.inr (Or.inl ⟨hdc, hca⟩)
+    exact (hbc.not_lt hcb).elim
+    exact Or.inr (Or.inl ⟨hdc, hca⟩)
+    exact Or.inr (Or.inl ⟨hdc, hca⟩)
+    exact Or.inr (Or.inr ⟨hca, hab.trans hbd⟩)
   sbtw_iff_btw_not_btw {a b c} := by
     simp_rw [lt_iff_le_not_le]
     have h1 := le_trans a b c
@@ -382,15 +382,15 @@ abbrev PartialOrder.toCircularPartialOrder (α : Type*) [PartialOrder α] : Circ
   { Preorder.toCircularPreorder α with
     btw_antisymm := fun {a b c} => by
       rintro (⟨hab, hbc⟩ | ⟨hbc, hca⟩ | ⟨hca, hab⟩) (⟨hcb, hba⟩ | ⟨hba, hac⟩ | ⟨hac, hcb⟩)
-      · exact Or.inl (hab.antisymm hba)
-      · exact Or.inl (hab.antisymm hba)
-      · exact Or.inr (Or.inl <| hbc.antisymm hcb)
-      · exact Or.inr (Or.inl <| hbc.antisymm hcb)
-      · exact Or.inr (Or.inr <| hca.antisymm hac)
-      · exact Or.inr (Or.inl <| hbc.antisymm hcb)
-      · exact Or.inl (hab.antisymm hba)
-      · exact Or.inl (hab.antisymm hba)
-      · exact Or.inr (Or.inr <| hca.antisymm hac) }
+      exact Or.inl (hab.antisymm hba)
+      exact Or.inl (hab.antisymm hba)
+      exact Or.inr (Or.inl <| hbc.antisymm hcb)
+      exact Or.inr (Or.inl <| hbc.antisymm hcb)
+      exact Or.inr (Or.inr <| hca.antisymm hac)
+      exact Or.inr (Or.inl <| hbc.antisymm hcb)
+      exact Or.inl (hab.antisymm hba)
+      exact Or.inl (hab.antisymm hba)
+      exact Or.inr (Or.inr <| hca.antisymm hac) }
 
 /-- The circular order obtained from "looping around" a linear order.
 See note [reducible non-instances]. -/
@@ -399,14 +399,14 @@ abbrev LinearOrder.toCircularOrder (α : Type*) [LinearOrder α] : CircularOrder
     btw_total := fun a b c => by
       rcases le_total a b with hab | hba <;> rcases le_total b c with hbc | hcb <;>
         rcases le_total c a with hca | hac
-      · exact Or.inl (Or.inl ⟨hab, hbc⟩)
-      · exact Or.inl (Or.inl ⟨hab, hbc⟩)
-      · exact Or.inl (Or.inr <| Or.inr ⟨hca, hab⟩)
-      · exact Or.inr (Or.inr <| Or.inr ⟨hac, hcb⟩)
-      · exact Or.inl (Or.inr <| Or.inl ⟨hbc, hca⟩)
-      · exact Or.inr (Or.inr <| Or.inl ⟨hba, hac⟩)
-      · exact Or.inr (Or.inl ⟨hcb, hba⟩)
-      · exact Or.inr (Or.inr <| Or.inl ⟨hba, hac⟩) }
+      exact Or.inl (Or.inl ⟨hab, hbc⟩)
+      exact Or.inl (Or.inl ⟨hab, hbc⟩)
+      exact Or.inl (Or.inr <| Or.inr ⟨hca, hab⟩)
+      exact Or.inr (Or.inr <| Or.inr ⟨hac, hcb⟩)
+      exact Or.inl (Or.inr <| Or.inl ⟨hbc, hca⟩)
+      exact Or.inr (Or.inr <| Or.inl ⟨hba, hac⟩)
+      exact Or.inr (Or.inl ⟨hcb, hba⟩)
+      exact Or.inr (Or.inr <| Or.inl ⟨hba, hac⟩) }
 
 /-! ### Dual constructions -/
 

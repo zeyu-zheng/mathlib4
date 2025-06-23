@@ -178,10 +178,10 @@ theorem hundred_lt_pow_initialBound_mul {ε : ℝ} (hε : 0 < ε) (l : ℕ) :
     100 < ↑4 ^ initialBound ε l * ε ^ 5 := by
   rw [← rpow_natCast 4, ← div_lt_iff (pow_pos hε 5), lt_rpow_iff_log_lt _ zero_lt_four, ←
     div_lt_iff, initialBound, Nat.cast_max, Nat.cast_max]
-  · push_cast
-    exact lt_max_of_lt_right (lt_max_of_lt_right <| Nat.lt_floor_add_one _)
-  · exact log_pos (by norm_num)
-  · exact div_pos (by norm_num) (pow_pos hε 5)
+  push_cast
+  exact lt_max_of_lt_right (lt_max_of_lt_right <| Nat.lt_floor_add_one _)
+  exact log_pos (by norm_num)
+  exact div_pos (by norm_num) (pow_pos hε 5)
 
 /-- An explicit bound on the size of the equipartition whose existence is given by Szemerédi's
 regularity lemma. -/
@@ -212,7 +212,7 @@ theorem add_div_le_sum_sq_div_card (hst : s ⊆ t) (f : ι → 𝕜) (d : 𝕜) 
     (ht : d ≤ ((∑ i ∈ t, f i) / t.card) ^ 2) :
     d + s.card / t.card * x ^ 2 ≤ (∑ i ∈ t, f i ^ 2) / t.card := by
   obtain hscard | hscard := (s.card.cast_nonneg : (0 : 𝕜) ≤ s.card).eq_or_lt
-  · simpa [← hscard] using ht.trans sum_div_card_sq_le_sum_sq_div_card
+  simpa [← hscard] using ht.trans sum_div_card_sq_le_sum_sq_div_card
   have htcard : (0 : 𝕜) < t.card := hscard.trans_le (Nat.cast_le.2 (card_le_card hst))
   have h₁ : x ^ 2 ≤ ((∑ i ∈ s, f i) / s.card - (∑ i ∈ t, f i) / t.card) ^ 2 :=
     sq_le_sq.2 (by rwa [abs_of_nonneg hx])

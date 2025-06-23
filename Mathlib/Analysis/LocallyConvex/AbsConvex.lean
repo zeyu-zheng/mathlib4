@@ -63,11 +63,11 @@ variable [ContinuousSMul ℝ E] [TopologicalAddGroup E]
 theorem nhds_basis_abs_convex_open :
     (𝓝 (0 : E)).HasBasis (fun s => (0 : E) ∈ s ∧ IsOpen s ∧ Balanced 𝕜 s ∧ Convex ℝ s) id := by
   refine (nhds_basis_abs_convex 𝕜 E).to_hasBasis ?_ ?_
-  · rintro s ⟨hs_nhds, hs_balanced, hs_convex⟩
-    refine ⟨interior s, ?_, interior_subset⟩
-    exact
-      ⟨mem_interior_iff_mem_nhds.mpr hs_nhds, isOpen_interior,
-        hs_balanced.interior (mem_interior_iff_mem_nhds.mpr hs_nhds), hs_convex.interior⟩
+  rintro s ⟨hs_nhds, hs_balanced, hs_convex⟩
+  refine ⟨interior s, ?_, interior_subset⟩
+  exact
+    ⟨mem_interior_iff_mem_nhds.mpr hs_nhds, isOpen_interior,
+      hs_balanced.interior (mem_interior_iff_mem_nhds.mpr hs_nhds), hs_convex.interior⟩
   rintro s ⟨hs_zero, hs_open, hs_balanced, hs_convex⟩
   exact ⟨s, ⟨hs_open.mem_nhds hs_zero, hs_balanced, hs_convex⟩, rfl.subset⟩
 
@@ -141,9 +141,9 @@ variable [SMulCommClass ℝ 𝕜 E] [LocallyConvexSpace ℝ E]
 theorem with_gaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) := by
   refine SeminormFamily.withSeminorms_of_hasBasis _ ?_
   refine (nhds_basis_abs_convex_open 𝕜 E).to_hasBasis (fun s hs => ?_) fun s hs => ?_
-  · refine ⟨s, ⟨?_, rfl.subset⟩⟩
-    convert (gaugeSeminormFamily _ _).basisSets_singleton_mem ⟨s, hs⟩ one_pos
-    rw [gaugeSeminormFamily_ball, Subtype.coe_mk]
+  refine ⟨s, ⟨?_, rfl.subset⟩⟩
+  convert (gaugeSeminormFamily _ _).basisSets_singleton_mem ⟨s, hs⟩ one_pos
+  rw [gaugeSeminormFamily_ball, Subtype.coe_mk]
   refine ⟨s, ⟨?_, rfl.subset⟩⟩
   rw [SeminormFamily.basisSets_iff] at hs
   rcases hs with ⟨t, r, hr, rfl⟩

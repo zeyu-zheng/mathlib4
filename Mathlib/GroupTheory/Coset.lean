@@ -195,28 +195,28 @@ theorem leftCoset_eq_iff {x y : α} : x • (s : Set α) = y • s ↔ x⁻¹ * 
   rw [Set.ext_iff]
   simp_rw [mem_leftCoset_iff, SetLike.mem_coe]
   constructor
-  · intro h
-    apply (h y).mpr
-    rw [mul_left_inv]
-    exact s.one_mem
-  · intro h z
-    rw [← mul_inv_cancel_right x⁻¹ y]
-    rw [mul_assoc]
-    exact s.mul_mem_cancel_left h
+  intro h
+  apply (h y).mpr
+  rw [mul_left_inv]
+  exact s.one_mem
+  intro h z
+  rw [← mul_inv_cancel_right x⁻¹ y]
+  rw [mul_assoc]
+  exact s.mul_mem_cancel_left h
 
 @[to_additive rightAddCoset_eq_iff]
 theorem rightCoset_eq_iff {x y : α} : op x • (s : Set α) = op y • s ↔ y * x⁻¹ ∈ s := by
   rw [Set.ext_iff]
   simp_rw [mem_rightCoset_iff, SetLike.mem_coe]
   constructor
-  · intro h
-    apply (h y).mpr
-    rw [mul_right_inv]
-    exact s.one_mem
-  · intro h z
-    rw [← inv_mul_cancel_left y x⁻¹]
-    rw [← mul_assoc]
-    exact s.mul_mem_cancel_right h
+  intro h
+  apply (h y).mpr
+  rw [mul_right_inv]
+  exact s.one_mem
+  intro h z
+  rw [← inv_mul_cancel_left y x⁻¹]
+  rw [← mul_assoc]
+  exact s.mul_mem_cancel_right h
 
 end CosetSubgroup
 

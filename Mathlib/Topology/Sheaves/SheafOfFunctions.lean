@@ -58,21 +58,21 @@ theorem toTypes_isSheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
     -- Using this data, we can glue our functions together to a single section
     let s : ∀ x : ↑(iSup U), T x := fun x => sf (index x) ⟨x.1, index_spec x⟩
     refine ⟨s, ?_, ?_⟩
-    · intro i
-      funext x
-      -- Now we need to verify that this lifted function restricts correctly to each set `U i`.
-      -- Of course, the difficulty is that at any given point `x ∈ U i`,
-      -- we may have used the axiom of choice to pick a different `j` with `x ∈ U j`
-      -- when defining the function.
-      -- Thus we'll need to use the fact that the restrictions are compatible.
-      exact congr_fun (hsf (index ⟨x, _⟩) i) ⟨x, ⟨index_spec ⟨x.1, _⟩, x.2⟩⟩
-    · -- Now we just need to check that the lift we picked was the only possible one.
-      -- So we suppose we had some other gluing `t` of our sections
-      intro t ht
-      -- and observe that we need to check that it agrees with our choice
-      -- for each `x ∈ ↑(iSup U)`.
-      funext x
-      exact congr_fun (ht (index x)) ⟨x.1, index_spec x⟩
+    intro i
+    funext x
+    -- Now we need to verify that this lifted function restricts correctly to each set `U i`.
+    -- Of course, the difficulty is that at any given point `x ∈ U i`,
+    -- we may have used the axiom of choice to pick a different `j` with `x ∈ U j`
+    -- when defining the function.
+    -- Thus we'll need to use the fact that the restrictions are compatible.
+    exact congr_fun (hsf (index ⟨x, _⟩) i) ⟨x, ⟨index_spec ⟨x.1, _⟩, x.2⟩⟩
+    -- Now we just need to check that the lift we picked was the only possible one.
+    -- So we suppose we had some other gluing `t` of our sections
+    intro t ht
+    -- and observe that we need to check that it agrees with our choice
+    -- for each `x ∈ ↑(iSup U)`.
+    funext x
+    exact congr_fun (ht (index x)) ⟨x.1, index_spec x⟩
 
 -- We verify that the non-dependent version is an immediate consequence:
 /-- The presheaf of not-necessarily-continuous functions to

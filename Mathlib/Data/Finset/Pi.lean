@@ -110,7 +110,7 @@ theorem pi_singletons {β : Type*} (s : Finset α) (f : α → β) :
     (s.pi fun a => ({f a} : Finset β)) = {fun a _ => f a} := by
   rw [eq_singleton_iff_unique_mem]
   constructor
-  · simp
+  simp
   intro a ha
   ext i hi
   rw [mem_pi] at ha

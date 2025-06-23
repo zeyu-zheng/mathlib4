@@ -602,13 +602,13 @@ theorem tendsto_translationNumber_of_dist_bounded_aux (x : ℕ → ℝ) (C : ℝ
     (H : ∀ n : ℕ, dist ((f ^ n) 0) (x n) ≤ C) :
     Tendsto (fun n : ℕ => x (2 ^ n) / 2 ^ n) atTop (𝓝 <| τ f) := by
   apply f.tendsto_translationNumber_aux.congr_dist (squeeze_zero (fun _ => dist_nonneg) _ _)
-  · exact fun n => C / 2 ^ n
-  · intro n
-    have : 0 < (2 ^ n : ℝ) := pow_pos zero_lt_two _
-    convert (div_le_div_right this).2 (H (2 ^ n)) using 1
-    rw [transnumAuxSeq, Real.dist_eq, ← sub_div, abs_div, abs_of_pos this, Real.dist_eq]
-  · exact mul_zero C ▸ tendsto_const_nhds.mul <| tendsto_inv_atTop_zero.comp <|
-      tendsto_pow_atTop_atTop_of_one_lt one_lt_two
+  exact fun n => C / 2 ^ n
+  intro n
+  have : 0 < (2 ^ n : ℝ) := pow_pos zero_lt_two _
+  convert (div_le_div_right this).2 (H (2 ^ n)) using 1
+  rw [transnumAuxSeq, Real.dist_eq, ← sub_div, abs_div, abs_of_pos this, Real.dist_eq]
+  exact mul_zero C ▸ tendsto_const_nhds.mul <| tendsto_inv_atTop_zero.comp <|
+    tendsto_pow_atTop_atTop_of_one_lt one_lt_two
 
 theorem translationNumber_eq_of_dist_bounded {f g : CircleDeg1Lift} (C : ℝ)
     (H : ∀ n : ℕ, dist ((f ^ n) 0) ((g ^ n) 0) ≤ C) : τ f = τ g :=
@@ -811,11 +811,11 @@ theorem exists_eq_add_translationNumber (hf : Continuous f) : ∃ x, f x = x + �
 theorem translationNumber_eq_int_iff (hf : Continuous f) {m : ℤ} :
     τ f = m ↔ ∃ x : ℝ, f x = x + m := by
   constructor
-  · intro h
-    simp only [← h]
-    exact f.exists_eq_add_translationNumber hf
-  · rintro ⟨x, hx⟩
-    exact f.translationNumber_of_eq_add_int hx
+  intro h
+  simp only [← h]
+  exact f.exists_eq_add_translationNumber hf
+  rintro ⟨x, hx⟩
+  exact f.translationNumber_of_eq_add_int hx
 
 theorem continuous_pow (hf : Continuous f) (n : ℕ) : Continuous (f ^ n : CircleDeg1Lift) := by
   rw [coe_pow]
@@ -860,11 +860,11 @@ theorem semiconj_of_group_action_of_forall_translationNumber_eq {G : Type*} [Gro
   -- Now we apply `csSup_div_semiconj` and go back to `f₁` and `f₂`.
   refine ⟨⟨⟨_, fun x y hxy => ?_⟩, fun x => ?_⟩, csSup_div_semiconj F₂ F₁ fun x => ?_⟩ <;>
     simp only [hF₁, hF₂, ← map_inv, coe_mk]
-  · exact ciSup_mono (this y) fun g => mono _ (mono _ hxy)
-  · simp only [map_add_one]
-    exact (Monotone.map_ciSup_of_continuousAt (continuousAt_id.add continuousAt_const)
-      (monotone_id.add_const (1 : ℝ)) (this x)).symm
-  · exact this x
+  exact ciSup_mono (this y) fun g => mono _ (mono _ hxy)
+  simp only [map_add_one]
+  exact (Monotone.map_ciSup_of_continuousAt (continuousAt_id.add continuousAt_const)
+    (monotone_id.add_const (1 : ℝ)) (this x)).symm
+  exact this x
 
 /-- If two lifts of circle homeomorphisms have the same translation number, then they are
 semiconjugate by a `CircleDeg1Lift`. This version uses arguments `f₁ f₂ : CircleDeg1Liftˣ`

@@ -128,12 +128,12 @@ theorem strongRankCondition_iff_succ :
     StrongRankCondition R ↔
       ∀ (n : ℕ) (f : (Fin (n + 1) → R) →ₗ[R] Fin n → R), ¬Function.Injective f := by
   refine ⟨fun h n => fun f hf => ?_, fun h => ⟨@fun n m f hf => ?_⟩⟩
-  · letI : StrongRankCondition R := h
-    exact Nat.not_succ_le_self n (le_of_fin_injective R f hf)
-  · by_contra H
-    exact
-      h m (f.comp (Function.ExtendByZero.linearMap R (Fin.castLE (not_le.1 H))))
-        (hf.comp (Function.extend_injective (Fin.strictMono_castLE _).injective _))
+  letI : StrongRankCondition R := h
+  exact Nat.not_succ_le_self n (le_of_fin_injective R f hf)
+  by_contra H
+  exact
+    h m (f.comp (Function.ExtendByZero.linearMap R (Fin.castLE (not_le.1 H))))
+      (hf.comp (Function.extend_injective (Fin.strictMono_castLE _).injective _))
 
 /-- Any nontrivial ring satisfying Orzech property also satisfies strong rank condition. -/
 instance (priority := 100) strongRankCondition_of_orzechProperty

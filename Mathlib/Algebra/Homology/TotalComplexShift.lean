@@ -84,15 +84,15 @@ instance : ((shiftFunctor₁ C x).obj K).HasTotal (up ℤ) := fun n =>
       left_inv := by
         rintro ⟨⟨a, b⟩, h⟩
         ext
-        · dsimp
-          omega
-        · rfl
+        dsimp
+        omega
+        rfl
       right_inv := by
         intro ⟨⟨a, b⟩, h⟩
         ext
-        · dsimp
-          omega
-        · rfl }
+        dsimp
+        omega
+        rfl }
     (fun _ => Iso.refl _)
 
 instance : ((shiftFunctor₂ C y).obj K).HasTotal (up ℤ) := fun n =>
@@ -106,15 +106,15 @@ instance : ((shiftFunctor₂ C y).obj K).HasTotal (up ℤ) := fun n =>
       left_inv := by
         rintro ⟨⟨a, b⟩, h⟩
         ext
-        · rfl
-        · dsimp
-          omega
+        rfl
+        dsimp
+        omega
       right_inv := by
         intro ⟨⟨a, b⟩, h⟩
         ext
-        · rfl
-        · dsimp
-          omega }
+        rfl
+        dsimp
+        omega }
     (fun _ => Iso.refl _)
 
 instance : ((shiftFunctor₂ C y ⋙ shiftFunctor₁ C x).obj K).HasTotal (up ℤ) := by
@@ -144,42 +144,42 @@ lemma D₁_totalShift₁XIso_hom (n₀ n₁ n₀' n₁' : ℤ) (h₀ : n₀ + x 
     ((shiftFunctor₁ C x).obj K).D₁ (up ℤ) n₀ n₁ ≫ (K.totalShift₁XIso x n₁ n₁' h₁).hom =
       x.negOnePow • ((K.totalShift₁XIso x n₀ n₀' h₀).hom ≫ K.D₁ (up ℤ) n₀' n₁') := by
   by_cases h : (up ℤ).Rel n₀ n₁
-  · apply total.hom_ext
-    intro p q hpq
-    dsimp at h hpq
-    dsimp [totalShift₁XIso]
-    rw [ι_D₁_assoc, Linear.comp_units_smul, ι_totalDesc_assoc, ι_D₁,
-      ((shiftFunctor₁ C x).obj K).d₁_eq _ rfl _ _ (by dsimp; omega),
-      K.d₁_eq _ (show p + x + 1 = p + 1 + x by omega) _ _ (by dsimp; omega)]
-    dsimp
-    rw [one_smul, assoc, ι_totalDesc, one_smul, Linear.units_smul_comp]
-  · rw [D₁_shape _ _ _ _ h, zero_comp, D₁_shape, comp_zero, smul_zero]
-    intro h'
-    apply h
-    dsimp at h' ⊢
-    omega
+  apply total.hom_ext
+  intro p q hpq
+  dsimp at h hpq
+  dsimp [totalShift₁XIso]
+  rw [ι_D₁_assoc, Linear.comp_units_smul, ι_totalDesc_assoc, ι_D₁,
+    ((shiftFunctor₁ C x).obj K).d₁_eq _ rfl _ _ (by dsimp; omega),
+    K.d₁_eq _ (show p + x + 1 = p + 1 + x by omega) _ _ (by dsimp; omega)]
+  dsimp
+  rw [one_smul, assoc, ι_totalDesc, one_smul, Linear.units_smul_comp]
+  rw [D₁_shape _ _ _ _ h, zero_comp, D₁_shape, comp_zero, smul_zero]
+  intro h'
+  apply h
+  dsimp at h' ⊢
+  omega
 
 @[reassoc]
 lemma D₂_totalShift₁XIso_hom (n₀ n₁ n₀' n₁' : ℤ) (h₀ : n₀ + x = n₀') (h₁ : n₁ + x = n₁') :
     ((shiftFunctor₁ C x).obj K).D₂ (up ℤ) n₀ n₁ ≫ (K.totalShift₁XIso x n₁ n₁' h₁).hom =
       x.negOnePow • ((K.totalShift₁XIso x n₀ n₀' h₀).hom ≫ K.D₂ (up ℤ) n₀' n₁') := by
   by_cases h : (up ℤ).Rel n₀ n₁
-  · apply total.hom_ext
-    intro p q hpq
-    dsimp at h hpq
-    dsimp [totalShift₁XIso]
-    rw [ι_D₂_assoc, Linear.comp_units_smul, ι_totalDesc_assoc, ι_D₂,
-      ((shiftFunctor₁ C x).obj K).d₂_eq _ _ rfl _ (by dsimp; omega),
-      K.d₂_eq _ _ rfl _ (by dsimp; omega), smul_smul,
-      Linear.units_smul_comp, assoc, ι_totalDesc]
-    dsimp
-    congr 1
-    rw [add_comm p, Int.negOnePow_add, ← mul_assoc, Int.units_mul_self, one_mul]
-  · rw [D₂_shape _ _ _ _ h, zero_comp, D₂_shape, comp_zero, smul_zero]
-    intro h'
-    apply h
-    dsimp at h' ⊢
-    omega
+  apply total.hom_ext
+  intro p q hpq
+  dsimp at h hpq
+  dsimp [totalShift₁XIso]
+  rw [ι_D₂_assoc, Linear.comp_units_smul, ι_totalDesc_assoc, ι_D₂,
+    ((shiftFunctor₁ C x).obj K).d₂_eq _ _ rfl _ (by dsimp; omega),
+    K.d₂_eq _ _ rfl _ (by dsimp; omega), smul_smul,
+    Linear.units_smul_comp, assoc, ι_totalDesc]
+  dsimp
+  congr 1
+  rw [add_comm p, Int.negOnePow_add, ← mul_assoc, Int.units_mul_self, one_mul]
+  rw [D₂_shape _ _ _ _ h, zero_comp, D₂_shape, comp_zero, smul_zero]
+  intro h'
+  apply h
+  dsimp at h' ⊢
+  omega
 
 /-- The isomorphism `((shiftFunctor₁ C x).obj K).total (up ℤ) ≅ (K.total (up ℤ))⟦x⟧`
 expressing the compatibility of the total complex with the shift on the first indices.
@@ -250,47 +250,47 @@ lemma D₁_totalShift₂XIso_hom (n₀ n₁ n₀' n₁' : ℤ) (h₀ : n₀ + y 
     ((shiftFunctor₂ C y).obj K).D₁ (up ℤ) n₀ n₁ ≫ (K.totalShift₂XIso y n₁ n₁' h₁).hom =
       y.negOnePow • ((K.totalShift₂XIso y n₀ n₀' h₀).hom ≫ K.D₁ (up ℤ) n₀' n₁') := by
   by_cases h : (up ℤ).Rel n₀ n₁
-  · apply total.hom_ext
-    intro p q hpq
-    dsimp at h hpq
-    dsimp [totalShift₂XIso]
-    rw [ι_D₁_assoc, Linear.comp_units_smul, ι_totalDesc_assoc, Linear.units_smul_comp,
-      ι_D₁, smul_smul, ((shiftFunctor₂ C y).obj K).d₁_eq _ rfl _ _ (by dsimp; omega),
-      K.d₁_eq _ rfl _ _ (by dsimp; omega)]
-    dsimp
-    rw [one_smul, one_smul, assoc, ι_totalDesc, Linear.comp_units_smul, ← Int.negOnePow_add]
-    congr 2
-    linarith
-  · rw [D₁_shape _ _ _ _ h, zero_comp, D₁_shape, comp_zero, smul_zero]
-    intro h'
-    apply h
-    dsimp at h' ⊢
-    omega
+  apply total.hom_ext
+  intro p q hpq
+  dsimp at h hpq
+  dsimp [totalShift₂XIso]
+  rw [ι_D₁_assoc, Linear.comp_units_smul, ι_totalDesc_assoc, Linear.units_smul_comp,
+    ι_D₁, smul_smul, ((shiftFunctor₂ C y).obj K).d₁_eq _ rfl _ _ (by dsimp; omega),
+    K.d₁_eq _ rfl _ _ (by dsimp; omega)]
+  dsimp
+  rw [one_smul, one_smul, assoc, ι_totalDesc, Linear.comp_units_smul, ← Int.negOnePow_add]
+  congr 2
+  linarith
+  rw [D₁_shape _ _ _ _ h, zero_comp, D₁_shape, comp_zero, smul_zero]
+  intro h'
+  apply h
+  dsimp at h' ⊢
+  omega
 
 @[reassoc]
 lemma D₂_totalShift₂XIso_hom (n₀ n₁ n₀' n₁' : ℤ) (h₀ : n₀ + y = n₀') (h₁ : n₁ + y = n₁') :
     ((shiftFunctor₂ C y).obj K).D₂ (up ℤ) n₀ n₁ ≫ (K.totalShift₂XIso y n₁ n₁' h₁).hom =
       y.negOnePow • ((K.totalShift₂XIso y n₀ n₀' h₀).hom ≫ K.D₂ (up ℤ) n₀' n₁') := by
   by_cases h : (up ℤ).Rel n₀ n₁
-  · apply total.hom_ext
-    intro p q hpq
-    dsimp at h hpq
-    dsimp [totalShift₂XIso]
-    rw [ι_D₂_assoc, Linear.comp_units_smul, ι_totalDesc_assoc, Linear.units_smul_comp,
-      smul_smul, ι_D₂, ((shiftFunctor₂ C y).obj K).d₂_eq _ _ rfl _ (by dsimp; omega),
-      K.d₂_eq _ _ (show q + y + 1 = q + 1 + y by omega) _ (by dsimp; omega),
-      Linear.units_smul_comp, assoc, smul_smul, ι_totalDesc]
-    dsimp
-    rw [Linear.units_smul_comp, Linear.comp_units_smul, smul_smul, smul_smul,
-      ← Int.negOnePow_add, ← Int.negOnePow_add, ← Int.negOnePow_add,
-      ← Int.negOnePow_add]
-    congr 2
-    omega
-  · rw [D₂_shape _ _ _ _ h, zero_comp, D₂_shape, comp_zero, smul_zero]
-    intro h'
-    apply h
-    dsimp at h' ⊢
-    omega
+  apply total.hom_ext
+  intro p q hpq
+  dsimp at h hpq
+  dsimp [totalShift₂XIso]
+  rw [ι_D₂_assoc, Linear.comp_units_smul, ι_totalDesc_assoc, Linear.units_smul_comp,
+    smul_smul, ι_D₂, ((shiftFunctor₂ C y).obj K).d₂_eq _ _ rfl _ (by dsimp; omega),
+    K.d₂_eq _ _ (show q + y + 1 = q + 1 + y by omega) _ (by dsimp; omega),
+    Linear.units_smul_comp, assoc, smul_smul, ι_totalDesc]
+  dsimp
+  rw [Linear.units_smul_comp, Linear.comp_units_smul, smul_smul, smul_smul,
+    ← Int.negOnePow_add, ← Int.negOnePow_add, ← Int.negOnePow_add,
+    ← Int.negOnePow_add]
+  congr 2
+  omega
+  rw [D₂_shape _ _ _ _ h, zero_comp, D₂_shape, comp_zero, smul_zero]
+  intro h'
+  apply h
+  dsimp at h' ⊢
+  omega
 
 /-- The isomorphism `((shiftFunctor₂ C y).obj K).total (up ℤ) ≅ (K.total (up ℤ))⟦y⟧`
 expressing the compatibility of the total complex with the shift on the second indices.

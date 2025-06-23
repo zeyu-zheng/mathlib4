@@ -248,26 +248,26 @@ theorem isElementary_of_exists (f : M ↪[L] N)
     intro n φ x
     exact φ.realize_relabel_sum_inr.symm.trans (_root_.trans (h n _ _) φ.realize_relabel_sum_inr)
   refine fun n φ => φ.recOn ?_ ?_ ?_ ?_ ?_
-  · exact fun {_} _ => Iff.rfl
-  · intros
-    simp [BoundedFormula.Realize, ← Sum.comp_elim, Embedding.realize_term]
-  · intros
-    simp only [BoundedFormula.Realize, ← Sum.comp_elim, realize_term]
-    erw [map_rel f]
-  · intro _ _ _ ih1 ih2 _
-    simp [ih1, ih2]
-  · intro n φ ih xs
-    simp only [BoundedFormula.realize_all]
-    refine ⟨fun h a => ?_, ?_⟩
-    · rw [← ih, Fin.comp_snoc]
-      exact h (f a)
-    · contrapose!
-      rintro ⟨a, ha⟩
-      obtain ⟨b, hb⟩ := htv n φ.not xs a (by
-          rw [BoundedFormula.realize_not, ← Unique.eq_default (f ∘ default)]
-          exact ha)
-      refine ⟨b, fun h => hb (Eq.mp ?_ ((ih _).2 h))⟩
-      rw [Unique.eq_default (f ∘ default), Fin.comp_snoc]
+  exact fun {_} _ => Iff.rfl
+  intros
+  simp [BoundedFormula.Realize, ← Sum.comp_elim, Embedding.realize_term]
+  intros
+  simp only [BoundedFormula.Realize, ← Sum.comp_elim, realize_term]
+  erw [map_rel f]
+  intro _ _ _ ih1 ih2 _
+  simp [ih1, ih2]
+  intro n φ ih xs
+  simp only [BoundedFormula.realize_all]
+  refine ⟨fun h a => ?_, ?_⟩
+  rw [← ih, Fin.comp_snoc]
+  exact h (f a)
+  contrapose!
+  rintro ⟨a, ha⟩
+  obtain ⟨b, hb⟩ := htv n φ.not xs a (by
+      rw [BoundedFormula.realize_not, ← Unique.eq_default (f ∘ default)]
+      exact ha)
+  refine ⟨b, fun h => hb (Eq.mp ?_ ((ih _).2 h))⟩
+  rw [Unique.eq_default (f ∘ default), Fin.comp_snoc]
 
 /-- Bundles an embedding satisfying the Tarski-Vaught test as an elementary embedding. -/
 @[simps]

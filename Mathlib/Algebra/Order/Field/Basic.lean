@@ -123,14 +123,14 @@ theorem inv_pos_lt_iff_one_lt_mul' (ha : 0 < a) : a⁻¹ < b ↔ 1 < a * b := by
 /-- One direction of `div_le_iff` where `b` is allowed to be `0` (but `c` must be nonnegative) -/
 theorem div_le_of_nonneg_of_le_mul (hb : 0 ≤ b) (hc : 0 ≤ c) (h : a ≤ c * b) : a / b ≤ c := by
   rcases eq_or_lt_of_le hb with (rfl | hb')
-  · simp only [div_zero, hc]
-  · rwa [div_le_iff hb']
+  simp only [div_zero, hc]
+  rwa [div_le_iff hb']
 
 /-- One direction of `div_le_iff` where `c` is allowed to be `0` (but `b` must be nonnegative) -/
 lemma mul_le_of_nonneg_of_le_div (hb : 0 ≤ b) (hc : 0 ≤ c) (h : a ≤ b / c) : a * c ≤ b := by
   obtain rfl | hc := hc.eq_or_lt
-  · simpa using hb
-  · rwa [le_div_iff hc] at h
+  simpa using hb
+  rwa [le_div_iff hc] at h
 
 theorem div_le_one_of_le (h : a ≤ b) (hb : 0 ≤ b) : a / b ≤ 1 :=
   div_le_of_nonneg_of_le_mul hb zero_le_one <| by rwa [one_mul]
@@ -200,8 +200,8 @@ theorem inv_lt_one_iff_of_pos (h₀ : 0 < a) : a⁻¹ < 1 ↔ 1 < a :=
 
 theorem inv_lt_one_iff : a⁻¹ < 1 ↔ a ≤ 0 ∨ 1 < a := by
   rcases le_or_lt a 0 with ha | ha
-  · simp [ha, (inv_nonpos (α := α) |>.2 ha).trans_lt zero_lt_one]
-  · simp only [ha.not_le, false_or_iff, inv_lt_one_iff_of_pos ha]
+  simp [ha, (inv_nonpos (α := α) |>.2 ha).trans_lt zero_lt_one]
+  simp only [ha.not_le, false_or_iff, inv_lt_one_iff_of_pos ha]
 
 theorem one_lt_inv_iff : 1 < a⁻¹ ↔ 0 < a ∧ a < 1 :=
   ⟨fun h => ⟨inv_pos (α := α) |>.1 (zero_lt_one.trans h),
@@ -209,8 +209,8 @@ theorem one_lt_inv_iff : 1 < a⁻¹ ↔ 0 < a ∧ a < 1 :=
 
 theorem inv_le_one_iff : a⁻¹ ≤ 1 ↔ a ≤ 0 ∨ 1 ≤ a := by
   rcases em (a = 1) with (rfl | ha)
-  · simp [le_rfl]
-  · simp only [Ne.le_iff_lt (Ne.symm ha), Ne.le_iff_lt (mt inv_eq_one.1 ha), inv_lt_one_iff]
+  simp [le_rfl]
+  simp only [Ne.le_iff_lt (Ne.symm ha), Ne.le_iff_lt (mt inv_eq_one.1 ha), inv_lt_one_iff]
 
 theorem one_le_inv_iff : 1 ≤ a⁻¹ ↔ 0 < a ∧ a ≤ 1 :=
   ⟨fun h => ⟨inv_pos (α := α) |>.1 (zero_lt_one.trans_le h),
@@ -484,10 +484,10 @@ theorem inv_pow_strictAnti (a1 : 1 < a) : StrictAnti fun n : ℕ => (a ^ n)⁻¹
 theorem IsGLB.mul_left {s : Set α} (ha : 0 ≤ a) (hs : IsGLB s b) :
     IsGLB ((fun b => a * b) '' s) (a * b) := by
   rcases lt_or_eq_of_le ha with (ha | rfl)
-  · exact (OrderIso.mulLeft₀ _ ha).isGLB_image'.2 hs
-  · simp_rw [zero_mul]
-    rw [hs.nonempty.image_const]
-    exact isGLB_singleton
+  exact (OrderIso.mulLeft₀ _ ha).isGLB_image'.2 hs
+  simp_rw [zero_mul]
+  rw [hs.nonempty.image_const]
+  exact isGLB_singleton
 
 theorem IsGLB.mul_right {s : Set α} (ha : 0 ≤ a) (hs : IsGLB s b) :
     IsGLB ((fun b => b * a) '' s) (b * a) := by simpa [mul_comm] using hs.mul_left ha
@@ -599,14 +599,14 @@ theorem sub_inv_antitoneOn_Iio :
 theorem sub_inv_antitoneOn_Icc_right (ha : c < a) :
     AntitoneOn (fun x ↦ (x-c)⁻¹) (Set.Icc a b) := by
   by_cases hab : a ≤ b
-  · exact sub_inv_antitoneOn_Ioi.mono <| (Set.Icc_subset_Ioi_iff hab).mpr ha
-  · simp [hab, Set.Subsingleton.antitoneOn]
+  exact sub_inv_antitoneOn_Ioi.mono <| (Set.Icc_subset_Ioi_iff hab).mpr ha
+  simp [hab, Set.Subsingleton.antitoneOn]
 
 theorem sub_inv_antitoneOn_Icc_left (ha : b < c) :
     AntitoneOn (fun x ↦ (x-c)⁻¹) (Set.Icc a b) := by
   by_cases hab : a ≤ b
-  · exact sub_inv_antitoneOn_Iio.mono <| (Set.Icc_subset_Iio_iff hab).mpr ha
-  · simp [hab, Set.Subsingleton.antitoneOn]
+  exact sub_inv_antitoneOn_Iio.mono <| (Set.Icc_subset_Iio_iff hab).mpr ha
+  simp [hab, Set.Subsingleton.antitoneOn]
 
 theorem inv_antitoneOn_Ioi :
     AntitoneOn (fun x : α ↦ x⁻¹) (Set.Ioi 0) := by
@@ -670,27 +670,27 @@ theorem lt_one_div_of_neg (ha : a < 0) (hb : b < 0) : a < 1 / b ↔ b < 1 / a :=
 
 theorem one_lt_div_iff : 1 < a / b ↔ 0 < b ∧ b < a ∨ b < 0 ∧ a < b := by
   rcases lt_trichotomy b 0 with (hb | rfl | hb)
-  · simp [hb, hb.not_lt, one_lt_div_of_neg]
-  · simp [lt_irrefl, zero_le_one]
-  · simp [hb, hb.not_lt, one_lt_div]
+  simp [hb, hb.not_lt, one_lt_div_of_neg]
+  simp [lt_irrefl, zero_le_one]
+  simp [hb, hb.not_lt, one_lt_div]
 
 theorem one_le_div_iff : 1 ≤ a / b ↔ 0 < b ∧ b ≤ a ∨ b < 0 ∧ a ≤ b := by
   rcases lt_trichotomy b 0 with (hb | rfl | hb)
-  · simp [hb, hb.not_lt, one_le_div_of_neg]
-  · simp [lt_irrefl, zero_lt_one.not_le, zero_lt_one]
-  · simp [hb, hb.not_lt, one_le_div]
+  simp [hb, hb.not_lt, one_le_div_of_neg]
+  simp [lt_irrefl, zero_lt_one.not_le, zero_lt_one]
+  simp [hb, hb.not_lt, one_le_div]
 
 theorem div_lt_one_iff : a / b < 1 ↔ 0 < b ∧ a < b ∨ b = 0 ∨ b < 0 ∧ b < a := by
   rcases lt_trichotomy b 0 with (hb | rfl | hb)
-  · simp [hb, hb.not_lt, hb.ne, div_lt_one_of_neg]
-  · simp [zero_lt_one]
-  · simp [hb, hb.not_lt, div_lt_one, hb.ne.symm]
+  simp [hb, hb.not_lt, hb.ne, div_lt_one_of_neg]
+  simp [zero_lt_one]
+  simp [hb, hb.not_lt, div_lt_one, hb.ne.symm]
 
 theorem div_le_one_iff : a / b ≤ 1 ↔ 0 < b ∧ a ≤ b ∨ b = 0 ∨ b < 0 ∧ b ≤ a := by
   rcases lt_trichotomy b 0 with (hb | rfl | hb)
-  · simp [hb, hb.not_lt, hb.ne, div_le_one_of_neg]
-  · simp [zero_le_one]
-  · simp [hb, hb.not_lt, div_le_one, hb.ne.symm]
+  simp [hb, hb.not_lt, hb.ne, div_le_one_of_neg]
+  simp [zero_le_one]
+  simp [hb, hb.not_lt, div_le_one, hb.ne.symm]
 
 /-! ### Relating two divisions, involving `1` -/
 
@@ -758,10 +758,10 @@ theorem sub_one_div_inv_le_two (a2 : 2 ≤ a) : (1 - 1 / a)⁻¹ ≤ 2 := by
 theorem IsLUB.mul_left {s : Set α} (ha : 0 ≤ a) (hs : IsLUB s b) :
     IsLUB ((fun b => a * b) '' s) (a * b) := by
   rcases lt_or_eq_of_le ha with (ha | rfl)
-  · exact (OrderIso.mulLeft₀ _ ha).isLUB_image'.2 hs
-  · simp_rw [zero_mul]
-    rw [hs.nonempty.image_const]
-    exact isLUB_singleton
+  exact (OrderIso.mulLeft₀ _ ha).isLUB_image'.2 hs
+  simp_rw [zero_mul]
+  rw [hs.nonempty.image_const]
+  exact isLUB_singleton
 
 -- TODO: Generalize to `LinearOrderedSemifield`
 theorem IsLUB.mul_right {s : Set α} (ha : 0 ≤ a) (hs : IsLUB s b) :

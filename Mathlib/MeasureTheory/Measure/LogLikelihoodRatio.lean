@@ -40,9 +40,9 @@ lemma exp_llr (μ ν : Measure α) [SigmaFinite μ] :
       =ᵐ[ν] fun x ↦ if μ.rnDeriv ν x = 0 then 1 else (μ.rnDeriv ν x).toReal := by
   filter_upwards [Measure.rnDeriv_lt_top μ ν] with x hx
   by_cases h_zero : μ.rnDeriv ν x = 0
-  · simp only [llr, h_zero, ENNReal.zero_toReal, log_zero, exp_zero, ite_true]
-  · rw [llr, exp_log, if_neg h_zero]
-    exact ENNReal.toReal_pos h_zero hx.ne
+  simp only [llr, h_zero, ENNReal.zero_toReal, log_zero, exp_zero, ite_true]
+  rw [llr, exp_log, if_neg h_zero]
+  exact ENNReal.toReal_pos h_zero hx.ne
 
 lemma exp_llr_of_ac (μ ν : Measure α) [SigmaFinite μ] [Measure.HaveLebesgueDecomposition μ ν]
     (hμν : μ ≪ ν) :
@@ -92,10 +92,10 @@ lemma llr_smul_left [IsFiniteMeasure μ] [Measure.HaveLebesgueDecomposition μ �
   simp only [Pi.smul_apply, smul_eq_mul, ENNReal.toReal_mul]
   rw [log_mul]
   rotate_left
-  · rw [ENNReal.toReal_ne_zero]
-    simp [hc, hc_ne_top]
-  · rw [ENNReal.toReal_ne_zero]
-    simp [hx_pos.ne', hx_ne_top.ne]
+  rw [ENNReal.toReal_ne_zero]
+  simp [hc, hc_ne_top]
+  rw [ENNReal.toReal_ne_zero]
+  simp [hx_pos.ne', hx_ne_top.ne]
   ring
 
 lemma llr_smul_right [IsFiniteMeasure μ] [Measure.HaveLebesgueDecomposition μ ν]
@@ -109,10 +109,10 @@ lemma llr_smul_right [IsFiniteMeasure μ] [Measure.HaveLebesgueDecomposition μ 
   simp only [Pi.smul_apply, smul_eq_mul, ENNReal.toReal_mul]
   rw [log_mul]
   rotate_left
-  · rw [ENNReal.toReal_ne_zero]
-    simp [hc, hc_ne_top]
-  · rw [ENNReal.toReal_ne_zero]
-    simp [hx_pos.ne', hx_ne_top.ne]
+  rw [ENNReal.toReal_ne_zero]
+  simp [hc, hc_ne_top]
+  rw [ENNReal.toReal_ne_zero]
+  simp [hx_pos.ne', hx_ne_top.ne]
   rw [ENNReal.toReal_inv, log_inv]
   ring
 
@@ -129,12 +129,12 @@ lemma llr_tilted_left [SigmaFinite μ] [SigmaFinite ν] (hμν : μ ≪ ν)
       hμν.ae_le (Measure.rnDeriv_lt_top μ ν)] with x hx hx_pos hx_lt_top
     rw [llr, hx, log_mul, div_eq_mul_inv, log_mul (exp_pos _).ne', log_exp, log_inv, llr,
       ← sub_eq_add_neg]
-    · simp only [ne_eq, inv_eq_zero]
-      exact (integral_exp_pos hf).ne'
-    · simp only [ne_eq, div_eq_zero_iff]
-      push_neg
-      exact ⟨(exp_pos _).ne', (integral_exp_pos hf).ne'⟩
-    · simp [ENNReal.toReal_eq_zero_iff, hx_lt_top.ne, hx_pos.ne']
+    simp only [ne_eq, inv_eq_zero]
+    exact (integral_exp_pos hf).ne'
+    simp only [ne_eq, div_eq_zero_iff]
+    push_neg
+    exact ⟨(exp_pos _).ne', (integral_exp_pos hf).ne'⟩
+    simp [ENNReal.toReal_eq_zero_iff, hx_lt_top.ne, hx_pos.ne']
 
 lemma integrable_llr_tilted_left [IsFiniteMeasure μ] [SigmaFinite ν]
     (hμν : μ ≪ ν) (hf : Integrable f μ) (h_int : Integrable (llr μ ν) μ)
@@ -168,9 +168,9 @@ lemma llr_tilted_right [SigmaFinite μ] [SigmaFinite ν]
     filter_upwards [hμν.ae_le (toReal_rnDeriv_tilted_right μ ν hf), Measure.rnDeriv_pos hμν,
       hμν.ae_le (Measure.rnDeriv_lt_top μ ν)] with x hx hx_pos hx_lt_top
     rw [llr, hx, log_mul, log_mul (exp_pos _).ne', log_exp, llr]
-    · exact (integral_exp_pos hf).ne'
-    · refine (mul_pos (exp_pos _) (integral_exp_pos hf)).ne'
-    · simp [ENNReal.toReal_eq_zero_iff, hx_lt_top.ne, hx_pos.ne']
+    exact (integral_exp_pos hf).ne'
+    refine (mul_pos (exp_pos _) (integral_exp_pos hf)).ne'
+    simp [ENNReal.toReal_eq_zero_iff, hx_lt_top.ne, hx_pos.ne']
 
 lemma integrable_llr_tilted_right [IsFiniteMeasure μ] [SigmaFinite ν]
     (hμν : μ ≪ ν) (hfμ : Integrable f μ)

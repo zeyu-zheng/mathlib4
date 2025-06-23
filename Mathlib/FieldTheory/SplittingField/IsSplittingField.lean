@@ -127,10 +127,10 @@ theorem finiteDimensional (f : K[X]) [IsSplittingField K L f] : FiniteDimensiona
 theorem of_algEquiv [Algebra K F] (p : K[X]) (f : F ≃ₐ[K] L) [IsSplittingField K F p] :
     IsSplittingField K L p := by
   constructor
-  · rw [← f.toAlgHom.comp_algebraMap]
-    exact splits_comp_of_splits _ _ (splits F p)
-  · rw [← (Algebra.range_top_iff_surjective f.toAlgHom).mpr f.surjective,
-      adjoin_rootSet_eq_range (splits F p), adjoin_rootSet F p]
+  rw [← f.toAlgHom.comp_algebraMap]
+  exact splits_comp_of_splits _ _ (splits F p)
+  rw [← (Algebra.range_top_iff_surjective f.toAlgHom).mpr f.surjective,
+    adjoin_rootSet_eq_range (splits F p), adjoin_rootSet F p]
 
 theorem adjoin_rootSet_eq_range [Algebra K F] (f : K[X]) [IsSplittingField K L f] (i : L →ₐ[K] F) :
     Algebra.adjoin K (rootSet f F) = i.range :=

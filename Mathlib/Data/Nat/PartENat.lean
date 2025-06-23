@@ -367,12 +367,12 @@ theorem ne_top_of_lt {x y : PartENat} (h : x < y) : x ≠ ⊤ :=
 
 theorem eq_top_iff_forall_lt (x : PartENat) : x = ⊤ ↔ ∀ n : ℕ, (n : PartENat) < x := by
   constructor
-  · rintro rfl n
-    exact natCast_lt_top _
-  · contrapose!
-    rw [ne_top_iff]
-    rintro ⟨n, rfl⟩
-    exact ⟨n, irrefl _⟩
+  rintro rfl n
+  exact natCast_lt_top _
+  contrapose!
+  rw [ne_top_iff]
+  rintro ⟨n, rfl⟩
+  exact ⟨n, irrefl _⟩
 
 theorem eq_top_iff_forall_le (x : PartENat) : x = ⊤ ↔ ∀ n : ℕ, (n : PartENat) ≤ x :=
   (eq_top_iff_forall_lt x).trans
@@ -436,9 +436,9 @@ protected theorem add_lt_add_right {x y z : PartENat} (h : x < y) (hz : z ≠ �
   rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩
   rcases ne_top_iff.mp hz with ⟨k, rfl⟩
   induction' y using PartENat.casesOn with n
-  · rw [top_add]
-    -- Porting note: was apply_mod_cast natCast_lt_top
-    norm_cast; apply natCast_lt_top
+  rw [top_add]
+  -- Porting note: was apply_mod_cast natCast_lt_top
+  norm_cast; apply natCast_lt_top
   norm_cast at h
   -- Porting note: was `apply_mod_cast add_lt_add_right h`
   norm_cast; apply add_lt_add_right h
@@ -459,14 +459,14 @@ theorem lt_add_one {x : PartENat} (hx : x ≠ ⊤) : x < x + 1 := by
 
 theorem le_of_lt_add_one {x y : PartENat} (h : x < y + 1) : x ≤ y := by
   induction' y using PartENat.casesOn with n
-  · apply le_top
+  apply le_top
   rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩
   -- Porting note: was `apply_mod_cast Nat.le_of_lt_succ; apply_mod_cast h`
   norm_cast; apply Nat.le_of_lt_succ; norm_cast at h
 
 theorem add_one_le_of_lt {x y : PartENat} (h : x < y) : x + 1 ≤ y := by
   induction' y using PartENat.casesOn with n
-  · apply le_top
+  apply le_top
   rcases ne_top_iff.mp (ne_top_of_lt h) with ⟨m, rfl⟩
   -- Porting note: was `apply_mod_cast Nat.succ_le_of_lt; apply_mod_cast h`
   norm_cast; apply Nat.succ_le_of_lt; norm_cast at h
@@ -475,7 +475,7 @@ theorem add_one_le_iff_lt {x y : PartENat} (hx : x ≠ ⊤) : x + 1 ≤ y ↔ x 
   refine ⟨fun h => ?_, add_one_le_of_lt⟩
   rcases ne_top_iff.mp hx with ⟨m, rfl⟩
   induction' y using PartENat.casesOn with n
-  · apply natCast_lt_top
+  apply natCast_lt_top
   -- Porting note: was `apply_mod_cast Nat.lt_of_succ_le; apply_mod_cast h`
   norm_cast; apply Nat.lt_of_succ_le; norm_cast at h
 
@@ -486,8 +486,8 @@ theorem lt_add_one_iff_lt {x y : PartENat} (hx : x ≠ ⊤) : x < y + 1 ↔ x �
   refine ⟨le_of_lt_add_one, fun h => ?_⟩
   rcases ne_top_iff.mp hx with ⟨m, rfl⟩
   induction' y using PartENat.casesOn with n
-  · rw [top_add]
-    apply natCast_lt_top
+  rw [top_add]
+  apply natCast_lt_top
   -- Porting note: was `apply_mod_cast Nat.lt_succ_of_le; apply_mod_cast h`
   norm_cast; apply Nat.lt_succ_of_le; norm_cast at h
 
@@ -573,10 +573,10 @@ theorem toWithTop_ofNat (n : ℕ) [n.AtLeastTwo] {_ : Decidable (OfNat.ofNat n :
 theorem toWithTop_le {x y : PartENat} [hx : Decidable x.Dom] [hy : Decidable y.Dom] :
     toWithTop x ≤ toWithTop y ↔ x ≤ y := by
   induction y using PartENat.casesOn generalizing hy
-  · simp
+  simp
   induction x using PartENat.casesOn generalizing hx
-  · simp
-  · simp -- Porting note: this takes too long.
+  simp
+  simp -- Porting note: this takes too long.
 
 /-
 Porting note: As part of the investigation above, I noticed that Lean4 does not
@@ -653,10 +653,10 @@ open scoped Classical
 theorem toWithTop_add {x y : PartENat} : toWithTop (x + y) = toWithTop x + toWithTop y := by
   refine PartENat.casesOn y ?_ ?_ <;> refine PartENat.casesOn x ?_ ?_
   -- Porting note: was `simp [← Nat.cast_add, ← ENat.coe_add]`
-  · simp only [add_top, toWithTop_top', _root_.add_top]
-  · simp only [add_top, toWithTop_top', toWithTop_natCast', _root_.add_top, forall_const]
-  · simp only [top_add, toWithTop_top', toWithTop_natCast', _root_.top_add, forall_const]
-  · simp_rw [toWithTop_natCast', ← Nat.cast_add, toWithTop_natCast', forall_const]
+  simp only [add_top, toWithTop_top', _root_.add_top]
+  simp only [add_top, toWithTop_top', toWithTop_natCast', _root_.add_top, forall_const]
+  simp only [top_add, toWithTop_top', toWithTop_natCast', _root_.top_add, forall_const]
+  simp_rw [toWithTop_natCast', ← Nat.cast_add, toWithTop_natCast', forall_const]
 
 /-- `Equiv` between `PartENat` and `ℕ∞` (for the order isomorphism see
 `withTopOrderIso`). -/
@@ -766,11 +766,11 @@ theorem lt_find_iff (n : ℕ) : (n : PartENat) < find P ↔ ∀ m ≤ n, ¬P m :
   refine ⟨?_, lt_find P n⟩
   intro h m hm
   by_cases H : (find P).Dom
-  · apply Nat.find_min H
-    rw [coe_lt_iff] at h
-    specialize h H
-    exact lt_of_le_of_lt hm h
-  · exact not_exists.mp H m
+  apply Nat.find_min H
+  rw [coe_lt_iff] at h
+  specialize h H
+  exact lt_of_le_of_lt hm h
+  exact not_exists.mp H m
 
 theorem find_le (n : ℕ) (h : P n) : find P ≤ n := by
   rw [le_coe_iff]

@@ -134,10 +134,10 @@ theorem le_inf_support_list_prod (degt0 : 0 ≤ degt 0)
     (l.map fun f : R[A] => f.support.inf degt).sum ≤ l.prod.support.inf degt := by
   refine OrderDual.ofDual_le_ofDual.mpr ?_
   refine sup_support_list_prod_le ?_ ?_ l
-  · refine (OrderDual.ofDual_le_ofDual.mp ?_)
-    exact degt0
-  · refine (fun a b => OrderDual.ofDual_le_ofDual.mp ?_)
-    exact degtm a b
+  refine (OrderDual.ofDual_le_ofDual.mp ?_)
+  exact degt0
+  refine (fun a b => OrderDual.ofDual_le_ofDual.mp ?_)
+  exact degtm a b
 
 theorem sup_support_pow_le (degb0 : degb 0 ≤ 0) (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b)
     (n : ℕ) (f : R[A]) : (f ^ n).support.sup degb ≤ n • f.support.sup degb := by
@@ -149,8 +149,8 @@ theorem le_inf_support_pow (degt0 : 0 ≤ degt 0) (degtm : ∀ a b, degt a + deg
     (n : ℕ) (f : R[A]) : n • f.support.inf degt ≤ (f ^ n).support.inf degt := by
   refine OrderDual.ofDual_le_ofDual.mpr <| sup_support_pow_le (OrderDual.ofDual_le_ofDual.mp ?_)
       (fun a b => OrderDual.ofDual_le_ofDual.mp ?_) n f
-  · exact degt0
-  · exact degtm _ _
+  exact degt0
+  exact degtm _ _
 
 end AddMonoids
 
@@ -176,8 +176,8 @@ theorem le_inf_support_multiset_prod (degt0 : 0 ≤ degt 0)
   refine OrderDual.ofDual_le_ofDual.mpr <|
     sup_support_multiset_prod_le (OrderDual.ofDual_le_ofDual.mp ?_)
       (fun a b => OrderDual.ofDual_le_ofDual.mp ?_) m
-  · exact degt0
-  · exact degtm _ _
+  exact degt0
+  exact degtm _ _
 
 theorem sup_support_finset_prod_le (degb0 : degb 0 ≤ 0)
     (degbm : ∀ a b, degb (a + b) ≤ degb a + degb b) (s : Finset ι) (f : ι → R[A]) :
@@ -274,9 +274,9 @@ theorem supDegree_prod_le {R A B : Type*} [CommSemiring R] [AddCommMonoid A] [Ad
   refine s.induction ?_ ?_
   · rw [Finset.prod_empty, Finset.sum_empty, one_def, supDegree_single]
     split_ifs; exacts [bot_le, hzero.le]
-  · intro i s his ih
-    rw [Finset.prod_insert his, Finset.sum_insert his]
-    exact (supDegree_mul_le hadd).trans (add_le_add_left ih _)
+  intro i s his ih
+  rw [Finset.prod_insert his, Finset.sum_insert his]
+  exact (supDegree_mul_le hadd).trans (add_le_add_left ih _)
 
 variable [CovariantClass B B (· + ·) (· < ·)] [CovariantClass B B (Function.swap (· + ·)) (· < ·)]
 
@@ -285,18 +285,18 @@ theorem apply_add_of_supDegree_le (hD : D.Injective) {ap aq : A}
     (p * q) (ap + aq) = p ap * q aq := by
   simp_rw [mul_apply, Finsupp.sum]
   rw [Finset.sum_eq_single ap, Finset.sum_eq_single aq, if_pos rfl]
-  · refine fun a ha hne => if_neg (fun he => ?_)
-    apply_fun D at he; simp_rw [hadd] at he
-    exact (add_lt_add_left (((Finset.le_sup ha).trans hq).lt_of_ne <| hD.ne_iff.2 hne) _).ne he
-  · intro h; rw [if_pos rfl, Finsupp.not_mem_support_iff.1 h, mul_zero]
-  · refine fun a ha hne => Finset.sum_eq_zero (fun a' ha' => if_neg <| fun he => ?_)
-    apply_fun D at he
-    simp_rw [hadd] at he
-    have := covariantClass_le_of_lt B B (· + ·)
-    exact (add_lt_add_of_lt_of_le (((Finset.le_sup ha).trans hp).lt_of_ne <| hD.ne_iff.2 hne)
-      <| (Finset.le_sup ha').trans hq).ne he
-  · refine fun h => Finset.sum_eq_zero (fun a _ => ite_eq_right_iff.mpr <| fun _ => ?_)
-    rw [Finsupp.not_mem_support_iff.mp h, zero_mul]
+  refine fun a ha hne => if_neg (fun he => ?_)
+  apply_fun D at he; simp_rw [hadd] at he
+  exact (add_lt_add_left (((Finset.le_sup ha).trans hq).lt_of_ne <| hD.ne_iff.2 hne) _).ne he
+  intro h; rw [if_pos rfl, Finsupp.not_mem_support_iff.1 h, mul_zero]
+  refine fun a ha hne => Finset.sum_eq_zero (fun a' ha' => if_neg <| fun he => ?_)
+  apply_fun D at he
+  simp_rw [hadd] at he
+  have := covariantClass_le_of_lt B B (· + ·)
+  exact (add_lt_add_of_lt_of_le (((Finset.le_sup ha).trans hp).lt_of_ne <| hD.ne_iff.2 hne)
+    <| (Finset.le_sup ha').trans hq).ne he
+  refine fun h => Finset.sum_eq_zero (fun a _ => ite_eq_right_iff.mpr <| fun _ => ?_)
+  rw [Finsupp.not_mem_support_iff.mp h, zero_mul]
 
 theorem supDegree_withBot_some_comp {s : AddMonoidAlgebra R A} (hs : s.support.Nonempty) :
     supDegree (WithBot.some ∘ D) s = supDegree D s := by

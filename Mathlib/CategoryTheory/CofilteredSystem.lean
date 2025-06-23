@@ -88,7 +88,7 @@ theorem nonempty_sections_of_finite_cofiltered_system {J : Type u} [Category.{w}
   haveI : ∀ i, Finite (F'.obj i) := fun i => Finite.of_equiv (F.obj (down.obj i)) Equiv.ulift.symm
   -- Step 2: apply the bootstrap theorem
   cases isEmpty_or_nonempty J
-  · fconstructor <;> apply isEmptyElim
+  fconstructor <;> apply isEmptyElim
   haveI : IsCofiltered J := ⟨⟩
   obtain ⟨u, hu⟩ := nonempty_sections_of_finite_cofiltered_system.init F'
   -- Step 3: interpret the results
@@ -112,9 +112,9 @@ theorem nonempty_sections_of_finite_inverse_system {J : Type u} [Preorder J] [Is
     (F : Jᵒᵖ ⥤ Type v) [∀ j : Jᵒᵖ, Finite (F.obj j)] [∀ j : Jᵒᵖ, Nonempty (F.obj j)] :
     F.sections.Nonempty := by
   cases isEmpty_or_nonempty J
-  · haveI : IsEmpty Jᵒᵖ := ⟨fun j => isEmptyElim j.unop⟩ -- TODO: this should be a global instance
-    exact ⟨isEmptyElim, by apply isEmptyElim⟩
-  · exact nonempty_sections_of_finite_cofiltered_system _
+  haveI : IsEmpty Jᵒᵖ := ⟨fun j => isEmptyElim j.unop⟩ -- TODO: this should be a global instance
+  exact ⟨isEmptyElim, by apply isEmptyElim⟩
+  exact nonempty_sections_of_finite_cofiltered_system _
 
 end FiniteKonig
 
@@ -157,9 +157,9 @@ theorem IsMittagLeffler.subset_image_eventualRange (h : F.IsMittagLeffler) (f : 
 theorem eventualRange_eq_range_precomp (f : i ⟶ j) (g : j ⟶ k)
     (h : F.eventualRange k = range (F.map g)) : F.eventualRange k = range (F.map <| f ≫ g) := by
   apply subset_antisymm
-  · apply iInter₂_subset
-  · rw [h, F.map_comp]
-    apply range_comp_subset_range
+  apply iInter₂_subset
+  rw [h, F.map_comp]
+  apply range_comp_subset_range
 
 theorem isMittagLeffler_of_surjective (h : ∀ ⦃i j : J⦄ (f : i ⟶ j), (F.map f).Surjective) :
     F.IsMittagLeffler :=
@@ -229,14 +229,14 @@ theorem IsMittagLeffler.toPreimages (h : F.IsMittagLeffler) : (F.toPreimages s).
       exact ⟨_, rfl⟩
     obtain ⟨y, hy, h₃⟩ := h.subset_image_eventualRange F (f₃ ≫ f₂) this
     refine ⟨⟨y, mem_iInter.2 fun g₂ => ?_⟩, Subtype.ext ?_⟩
-    · obtain ⟨j₄, f₄, h₄⟩ := IsCofilteredOrEmpty.cone_maps g₂ ((f₃ ≫ f₂) ≫ g₁)
-      obtain ⟨y, rfl⟩ := F.mem_eventualRange_iff.1 hy f₄
-      rw [← map_comp_apply] at h₃
-      rw [mem_preimage, ← map_comp_apply, h₄, ← Category.assoc, map_comp_apply, h₃,
-        ← map_comp_apply]
-      apply mem_iInter.1 hx
-    · simp_rw [toPreimages_map, MapsTo.val_restrict_apply]
-      rw [← Category.assoc, map_comp_apply, h₃, map_comp_apply]
+    obtain ⟨j₄, f₄, h₄⟩ := IsCofilteredOrEmpty.cone_maps g₂ ((f₃ ≫ f₂) ≫ g₁)
+    obtain ⟨y, rfl⟩ := F.mem_eventualRange_iff.1 hy f₄
+    rw [← map_comp_apply] at h₃
+    rw [mem_preimage, ← map_comp_apply, h₄, ← Category.assoc, map_comp_apply, h₃,
+      ← map_comp_apply]
+    apply mem_iInter.1 hx
+    simp_rw [toPreimages_map, MapsTo.val_restrict_apply]
+    rw [← Category.assoc, map_comp_apply, h₃, map_comp_apply]
 
 theorem isMittagLeffler_of_exists_finite_range
     (h : ∀ j : J, ∃ (i : _) (f : i ⟶ j), (range <| F.map f).Finite) : F.IsMittagLeffler := by
@@ -310,10 +310,10 @@ theorem toPreimages_nonempty_of_surjective [hFn : ∀ j : J, Nonempty (F.obj j)]
     Nonempty ((F.toPreimages s).obj j) := by
   simp only [toPreimages_obj, nonempty_coe_sort, nonempty_iInter, mem_preimage]
   obtain h | ⟨⟨ji⟩⟩ := isEmpty_or_nonempty (j ⟶ i)
-  · exact ⟨(hFn j).some, fun ji => h.elim ji⟩
-  · obtain ⟨y, ys⟩ := hs
-    obtain ⟨x, rfl⟩ := Fsur ji y
-    exact ⟨x, fun ji' => (F.thin_diagram_of_surjective Fsur ji' ji).symm ▸ ys⟩
+  exact ⟨(hFn j).some, fun ji => h.elim ji⟩
+  obtain ⟨y, ys⟩ := hs
+  obtain ⟨x, rfl⟩ := Fsur ji y
+  exact ⟨x, fun ji' => (F.thin_diagram_of_surjective Fsur ji' ji).symm ▸ ys⟩
 
 theorem eval_section_injective_of_eventually_injective {j}
     (Finj : ∀ (i) (f : i ⟶ j), (F.map f).Injective) (i) (f : i ⟶ j) :
@@ -336,10 +336,10 @@ theorem eval_section_surjective_of_surjective (i : J) :
   haveI := F.toPreimages_nonempty_of_surjective s Fsur (singleton_nonempty x)
   obtain ⟨sec, h⟩ := nonempty_sections_of_finite_cofiltered_system (F.toPreimages s)
   refine ⟨⟨fun j => (sec j).val, fun jk => by simpa [Subtype.ext_iff] using h jk⟩, ?_⟩
-  · have := (sec i).prop
-    simp only [mem_iInter, mem_preimage, mem_singleton_iff] at this
-    have := this (𝟙 i)
-    rwa [map_id_apply] at this
+  have := (sec i).prop
+  simp only [mem_iInter, mem_preimage, mem_singleton_iff] at this
+  have := this (𝟙 i)
+  rwa [map_id_apply] at this
 
 theorem eventually_injective [Nonempty J] [Finite F.sections] :
     ∃ j, ∀ (i) (f : i ⟶ j), (F.map f).Injective := by

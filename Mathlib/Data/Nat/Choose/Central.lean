@@ -79,8 +79,8 @@ This bound is of interest because it appears in
 theorem four_pow_lt_mul_centralBinom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * centralBinom n := by
   induction' n using Nat.strong_induction_on with n IH
   rcases lt_trichotomy n 4 with (hn | rfl | hn)
-  · clear IH; exact False.elim ((not_lt.2 n_big) hn)
-  · norm_num [centralBinom, choose]
+  clear IH; exact False.elim ((not_lt.2 n_big) hn)
+  norm_num [centralBinom, choose]
   obtain ⟨n, rfl⟩ : ∃ m, n = m + 1 := Nat.exists_eq_succ_of_ne_zero (Nat.not_eq_zero_of_lt hn)
   calc
     4 ^ (n + 1) < 4 * (n * centralBinom n) := lt_of_eq_of_lt pow_succ' <|

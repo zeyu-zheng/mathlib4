@@ -247,14 +247,14 @@ protected theorem isTopologicalBasis : IsTopologicalBasis (lowerBasis α) := by
   simp_rw [lowerBasis, coe_upperClosure, compl_iUnion]
   ext s
   constructor
-  · rintro ⟨F, hF, rfl⟩
-    refine ⟨(fun a => (Ici a)ᶜ) '' F, ⟨hF.image _, image_subset_iff.2 fun _ _ => ⟨_, rfl⟩⟩, ?_⟩
-    simp only [sInter_image]
-  · rintro ⟨F, ⟨hF, hs⟩, rfl⟩
-    haveI := hF.to_subtype
-    rw [subset_def, Subtype.forall'] at hs
-    choose f hf using hs
-    exact ⟨_, finite_range f, by simp_rw [biInter_range, hf, sInter_eq_iInter]⟩
+  rintro ⟨F, hF, rfl⟩
+  refine ⟨(fun a => (Ici a)ᶜ) '' F, ⟨hF.image _, image_subset_iff.2 fun _ _ => ⟨_, rfl⟩⟩, ?_⟩
+  simp only [sInter_image]
+  rintro ⟨F, ⟨hF, hs⟩, rfl⟩
+  haveI := hF.to_subtype
+  rw [subset_def, Subtype.forall'] at hs
+  choose f hf using hs
+  exact ⟨_, finite_range f, by simp_rw [biInter_range, hf, sInter_eq_iInter]⟩
 
 /-- A function `f : β → α` with lower topology in the codomain is continuous
 if and only if the preimage of every interval `Set.Ici a` is a closed set.
@@ -373,8 +373,8 @@ instance instIsLowerProd [Preorder α] [TopologicalSpace α] [IsLower α]
     IsLower (α × β) where
   topology_eq_lowerTopology := by
     refine le_antisymm (le_generateFrom ?_) ?_
-    · rintro _ ⟨x, rfl⟩
-      exact (isClosed_Ici.prod isClosed_Ici).isOpen_compl
+    rintro _ ⟨x, rfl⟩
+    exact (isClosed_Ici.prod isClosed_Ici).isOpen_compl
     rw [(IsLower.isTopologicalBasis.prod
       IsLower.isTopologicalBasis).eq_generateFrom, le_generateFrom_iff_subset_isOpen,
       image2_subset_iff]
@@ -384,8 +384,8 @@ instance instIsLowerProd [Preorder α] [TopologicalSpace α] [IsLower α]
     -- without `let`, `refine` tries to use the product topology and fails
     let _ : TopologicalSpace (α × β) := lower (α × β)
     refine (hs.isOpen_biInter fun a _ => ?_).inter (ht.isOpen_biInter fun b _ => ?_)
-    · exact GenerateOpen.basic _ ⟨(a, ⊥), by simp [Ici_prod_eq, prod_univ]⟩
-    · exact GenerateOpen.basic _ ⟨(⊥, b), by simp [Ici_prod_eq, univ_prod]⟩
+    exact GenerateOpen.basic _ ⟨(a, ⊥), by simp [Ici_prod_eq, prod_univ]⟩
+    exact GenerateOpen.basic _ ⟨(⊥, b), by simp [Ici_prod_eq, univ_prod]⟩
 
 instance instIsUpperProd [Preorder α] [TopologicalSpace α] [IsUpper α]
     [OrderTop α] [Preorder β] [TopologicalSpace β] [IsUpper β] [OrderTop β] :
@@ -429,8 +429,8 @@ end CompleteLattice_IsUpper
 
 lemma isUpper_orderDual [Preorder α] [TopologicalSpace α] : IsUpper αᵒᵈ ↔ IsLower α := by
   constructor
-  · apply OrderDual.instIsLower
-  · apply OrderDual.instIsUpper
+  apply OrderDual.instIsLower
+  apply OrderDual.instIsUpper
 
 lemma isLower_orderDual [Preorder α] [TopologicalSpace α] : IsLower αᵒᵈ ↔ IsUpper α :=
   isUpper_orderDual.symm

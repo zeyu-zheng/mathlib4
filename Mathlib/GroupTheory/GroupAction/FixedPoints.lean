@@ -169,8 +169,8 @@ theorem set_mem_fixedBy_of_movedBy_subset {s : Set α} {g : G} (s_subset : (fixe
     rw [a_fixed]
   case neg a_moved =>
     constructor <;> (intro; apply s_subset)
-    · exact a_moved
-    · rwa [Set.mem_compl_iff, smul_mem_fixedBy_iff_mem_fixedBy]
+    exact a_moved
+    rwa [Set.mem_compl_iff, smul_mem_fixedBy_iff_mem_fixedBy]
 
 end Pointwise
 

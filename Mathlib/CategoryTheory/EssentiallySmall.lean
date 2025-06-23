@@ -65,10 +65,10 @@ noncomputable def equivSmallModel (C : Type u) [Category.{v} C] [EssentiallySmal
 theorem essentiallySmall_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D]
     (e : C ≌ D) : EssentiallySmall.{w} C ↔ EssentiallySmall.{w} D := by
   fconstructor
-  · rintro ⟨S, 𝒮, ⟨f⟩⟩
-    exact EssentiallySmall.mk' (e.symm.trans f)
-  · rintro ⟨S, 𝒮, ⟨f⟩⟩
-    exact EssentiallySmall.mk' (e.trans f)
+  rintro ⟨S, 𝒮, ⟨f⟩⟩
+  exact EssentiallySmall.mk' (e.symm.trans f)
+  rintro ⟨S, 𝒮, ⟨f⟩⟩
+  exact EssentiallySmall.mk' (e.trans f)
 
 theorem Discrete.essentiallySmallOfSmall {α : Type u} [Small.{w} α] :
     EssentiallySmall.{w} (Discrete α) :=
@@ -192,19 +192,19 @@ theorem essentiallySmall_iff (C : Type u) [Category.{v} C] :
     EssentiallySmall.{w} C ↔ Small.{w} (Skeleton C) ∧ LocallySmall.{w} C := by
   -- This theorem is the only bit of real work in this file.
   fconstructor
-  · intro h
-    fconstructor
-    · rcases h with ⟨S, 𝒮, ⟨e⟩⟩
-      refine ⟨⟨Skeleton S, ⟨?_⟩⟩⟩
-      exact e.skeletonEquiv
-    · infer_instance
-  · rintro ⟨⟨S, ⟨e⟩⟩, L⟩
-    let e' := (ShrinkHoms.equivalence C).skeletonEquiv.symm
-    letI : Category S := InducedCategory.category (e'.trans e).symm
-    refine ⟨⟨S, this, ⟨?_⟩⟩⟩
-    refine (ShrinkHoms.equivalence C).trans <|
-      (skeletonEquivalence (ShrinkHoms C)).symm.trans
-        ((inducedFunctor (e'.trans e).symm).asEquivalence.symm)
+  intro h
+  fconstructor
+  rcases h with ⟨S, 𝒮, ⟨e⟩⟩
+  refine ⟨⟨Skeleton S, ⟨?_⟩⟩⟩
+  exact e.skeletonEquiv
+  infer_instance
+  rintro ⟨⟨S, ⟨e⟩⟩, L⟩
+  let e' := (ShrinkHoms.equivalence C).skeletonEquiv.symm
+  letI : Category S := InducedCategory.category (e'.trans e).symm
+  refine ⟨⟨S, this, ⟨?_⟩⟩⟩
+  refine (ShrinkHoms.equivalence C).trans <|
+    (skeletonEquivalence (ShrinkHoms C)).symm.trans
+      ((inducedFunctor (e'.trans e).symm).asEquivalence.symm)
 
 theorem essentiallySmall_of_small_of_locallySmall [Small.{w} C] [LocallySmall.{w} C] :
     EssentiallySmall.{w} C :=

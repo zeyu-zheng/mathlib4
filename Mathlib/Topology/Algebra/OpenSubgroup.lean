@@ -137,12 +137,12 @@ instance : Inhabited (OpenSubgroup G) :=
 theorem isClosed [ContinuousMul G] (U : OpenSubgroup G) : IsClosed (U : Set G) := by
   apply isOpen_compl_iff.1
   refine isOpen_iff_forall_mem_open.2 fun x hx => ⟨(fun y => y * x⁻¹) ⁻¹' U, ?_, ?_, ?_⟩
-  · refine fun u hux hu => hx ?_
-    simp only [Set.mem_preimage, SetLike.mem_coe] at hux hu ⊢
-    convert U.mul_mem (U.inv_mem hux) hu
-    simp
-  · exact U.isOpen.preimage (continuous_mul_right _)
-  · simp [one_mem]
+  refine fun u hux hu => hx ?_
+  simp only [Set.mem_preimage, SetLike.mem_coe] at hux hu ⊢
+  convert U.mul_mem (U.inv_mem hux) hu
+  simp
+  exact U.isOpen.preimage (continuous_mul_right _)
+  simp [one_mem]
 
 @[to_additive]
 theorem isClopen [ContinuousMul G] (U : OpenSubgroup G) : IsClopen (U : Set G) :=

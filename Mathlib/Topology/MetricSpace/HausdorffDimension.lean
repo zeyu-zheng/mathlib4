@@ -231,22 +231,22 @@ of a set `s` is the supremum over `x ∈ s` of the limit superiors of `dimH t` a
 `(𝓝[s] x).smallSets`. -/
 theorem bsupr_limsup_dimH (s : Set X) : ⨆ x ∈ s, limsup dimH (𝓝[s] x).smallSets = dimH s := by
   refine le_antisymm (iSup₂_le fun x _ => ?_) ?_
-  · refine limsup_le_of_le isCobounded_le_of_bot ?_
-    exact eventually_smallSets.2 ⟨s, self_mem_nhdsWithin, fun t => dimH_mono⟩
-  · refine le_of_forall_ge_of_dense fun r hr => ?_
-    rcases exists_mem_nhdsWithin_lt_dimH_of_lt_dimH hr with ⟨x, hxs, hxr⟩
-    refine le_iSup₂_of_le x hxs ?_; rw [limsup_eq]; refine le_sInf fun b hb => ?_
-    rcases eventually_smallSets.1 hb with ⟨t, htx, ht⟩
-    exact (hxr t htx).le.trans (ht t Subset.rfl)
+  refine limsup_le_of_le isCobounded_le_of_bot ?_
+  exact eventually_smallSets.2 ⟨s, self_mem_nhdsWithin, fun t => dimH_mono⟩
+  refine le_of_forall_ge_of_dense fun r hr => ?_
+  rcases exists_mem_nhdsWithin_lt_dimH_of_lt_dimH hr with ⟨x, hxs, hxr⟩
+  refine le_iSup₂_of_le x hxs ?_; rw [limsup_eq]; refine le_sInf fun b hb => ?_
+  rcases eventually_smallSets.1 hb with ⟨t, htx, ht⟩
+  exact (hxr t htx).le.trans (ht t Subset.rfl)
 
 /-- In an (extended) metric space with second countable topology, the Hausdorff dimension
 of a set `s` is the supremum over all `x` of the limit superiors of `dimH t` along
 `(𝓝[s] x).smallSets`. -/
 theorem iSup_limsup_dimH (s : Set X) : ⨆ x, limsup dimH (𝓝[s] x).smallSets = dimH s := by
   refine le_antisymm (iSup_le fun x => ?_) ?_
-  · refine limsup_le_of_le isCobounded_le_of_bot ?_
-    exact eventually_smallSets.2 ⟨s, self_mem_nhdsWithin, fun t => dimH_mono⟩
-  · rw [← bsupr_limsup_dimH]; exact iSup₂_le_iSup _ _
+  refine limsup_le_of_le isCobounded_le_of_bot ?_
+  exact eventually_smallSets.2 ⟨s, self_mem_nhdsWithin, fun t => dimH_mono⟩
+  rw [← bsupr_limsup_dimH]; exact iSup₂_le_iSup _ _
 
 end
 
@@ -421,14 +421,14 @@ variable {E : Type*} [Fintype ι] [NormedAddCommGroup E] [NormedSpace ℝ E] [Fi
 theorem dimH_ball_pi (x : ι → ℝ) {r : ℝ} (hr : 0 < r) :
     dimH (Metric.ball x r) = Fintype.card ι := by
   cases isEmpty_or_nonempty ι
-  · rwa [dimH_subsingleton, eq_comm, Nat.cast_eq_zero, Fintype.card_eq_zero_iff]
-    exact fun x _ y _ => Subsingleton.elim x y
-  · rw [← ENNReal.coe_natCast]
-    have : μH[Fintype.card ι] (Metric.ball x r) = ENNReal.ofReal ((2 * r) ^ Fintype.card ι)
-    rw [hausdorffMeasure_pi_real, Real.volume_pi_ball _ hr]
-    refine dimH_of_hausdorffMeasure_ne_zero_ne_top ?_ ?_ <;> rw [NNReal.coe_natCast, this]
-    · simp [pow_pos (mul_pos (zero_lt_two' ℝ) hr)]
-    · exact ENNReal.ofReal_ne_top
+  rwa [dimH_subsingleton, eq_comm, Nat.cast_eq_zero, Fintype.card_eq_zero_iff]
+  exact fun x _ y _ => Subsingleton.elim x y
+  rw [← ENNReal.coe_natCast]
+  have : μH[Fintype.card ι] (Metric.ball x r) = ENNReal.ofReal ((2 * r) ^ Fintype.card ι)
+  rw [hausdorffMeasure_pi_real, Real.volume_pi_ball _ hr]
+  refine dimH_of_hausdorffMeasure_ne_zero_ne_top ?_ ?_ <;> rw [NNReal.coe_natCast, this]
+  simp [pow_pos (mul_pos (zero_lt_two' ℝ) hr)]
+  exact ENNReal.ofReal_ne_top
 
 theorem dimH_ball_pi_fin {n : ℕ} (x : Fin n → ℝ) {r : ℝ} (hr : 0 < r) :
     dimH (Metric.ball x r) = n := by rw [dimH_ball_pi x hr, Fintype.card_fin]
@@ -445,10 +445,10 @@ theorem dimH_of_mem_nhds {x : E} {s : Set E} (h : s ∈ 𝓝 x) : dimH s = finra
     ContinuousLinearEquiv.ofFinrankEq (FiniteDimensional.finrank_fin_fun ℝ).symm
   rw [← e.dimH_image]
   refine le_antisymm ?_ ?_
-  · exact (dimH_mono (subset_univ _)).trans_eq (dimH_univ_pi_fin _)
-  · have : e '' s ∈ 𝓝 (e x) := by rw [← e.map_nhds_eq]; exact image_mem_map h
-    rcases Metric.nhds_basis_ball.mem_iff.1 this with ⟨r, hr0, hr⟩
-    simpa only [dimH_ball_pi_fin (e x) hr0] using dimH_mono hr
+  exact (dimH_mono (subset_univ _)).trans_eq (dimH_univ_pi_fin _)
+  have : e '' s ∈ 𝓝 (e x) := by rw [← e.map_nhds_eq]; exact image_mem_map h
+  rcases Metric.nhds_basis_ball.mem_iff.1 this with ⟨r, hr0, hr⟩
+  simpa only [dimH_ball_pi_fin (e x) hr0] using dimH_mono hr
 
 theorem dimH_of_nonempty_interior {s : Set E} (h : (interior s).Nonempty) : dimH s = finrank ℝ E :=
   let ⟨_, hx⟩ := h

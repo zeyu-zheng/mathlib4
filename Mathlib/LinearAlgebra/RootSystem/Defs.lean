@@ -263,8 +263,8 @@ lemma isCrystallographic_iff :
     P.IsCrystallographic ↔ ∀ i j, ∃ z : ℤ, z = P.pairing i j := by
   rw [IsCrystallographic]
   refine ⟨fun h i j ↦ ?_, fun h i _ ⟨j, hj⟩ ↦ ?_⟩
-  · simpa [AddSubgroup.mem_zmultiples_iff] using h i (mem_range_self j)
-  · simpa [← hj, AddSubgroup.mem_zmultiples_iff] using h i j
+  simpa [AddSubgroup.mem_zmultiples_iff] using h i (mem_range_self j)
+  simpa [← hj, AddSubgroup.mem_zmultiples_iff] using h i j
 
 /-- A root pairing is said to be reduced if any linearly dependent pair of roots is related by a
 sign. -/
@@ -275,11 +275,11 @@ lemma isReduced_iff : P.IsReduced ↔ ∀ i j : ι, i ≠ j →
     ¬ LinearIndependent R ![P.root i, P.root j] → P.root i = - P.root j := by
   rw [IsReduced]
   refine ⟨fun h i j hij hLin ↦ ?_, fun h i j hLin  ↦ ?_⟩
-  · specialize h i j hLin
-    simp_all only [ne_eq, EmbeddingLike.apply_eq_iff_eq, false_or]
-  · by_cases h' : i = j
-    · exact Or.inl (congrArg P.root h')
-    · exact Or.inr (h i j h' hLin)
+  specialize h i j hLin
+  simp_all only [ne_eq, EmbeddingLike.apply_eq_iff_eq, false_or]
+  by_cases h' : i = j
+  exact Or.inl (congrArg P.root h')
+  exact Or.inr (h i j h' hLin)
 
 /-- The Coxeter Weight of a pair gives the weight of an edge in a Coxeter diagram, when it is
 finite.  It is `4 cos² θ`, where `θ` describes the dihedral angle between hyperplanes. -/

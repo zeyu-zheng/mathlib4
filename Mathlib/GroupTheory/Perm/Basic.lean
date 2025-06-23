@@ -186,8 +186,8 @@ theorem sumCongrHom_injective {α β : Type*} : Function.Injective (sumCongrHom 
   rintro ⟨⟩ ⟨⟩ h
   rw [Prod.mk.inj_iff]
   constructor <;> ext i
-  · simpa using Equiv.congr_fun h (Sum.inl i)
-  · simpa using Equiv.congr_fun h (Sum.inr i)
+  simpa using Equiv.congr_fun h (Sum.inl i)
+  simpa using Equiv.congr_fun h (Sum.inr i)
 
 @[simp]
 theorem sumCongr_swap_one {α β : Type*} [DecidableEq α] [DecidableEq β] (i j : α) :
@@ -348,8 +348,8 @@ private theorem pow_aux (hf : ∀ x, p x ↔ p (f x)) : ∀ {n : ℕ} (x), p x �
 theorem subtypePerm_pow (f : Perm α) (n : ℕ) (hf) :
     (f.subtypePerm hf : Perm { x // p x }) ^ n = (f ^ n).subtypePerm (pow_aux hf) := by
   induction' n with n ih
-  · simp
-  · simp_rw [pow_succ', ih, subtypePerm_mul]
+  simp
+  simp_rw [pow_succ', ih, subtypePerm_mul]
 
 private theorem zpow_aux (hf : ∀ x, p x ↔ p (f x)) : ∀ {n : ℤ} (x), p x ↔ p ((f ^ n) x)
   | Int.ofNat n => pow_aux hf
@@ -361,8 +361,8 @@ private theorem zpow_aux (hf : ∀ x, p x ↔ p (f x)) : ∀ {n : ℤ} (x), p x 
 theorem subtypePerm_zpow (f : Perm α) (n : ℤ) (hf) :
     (f.subtypePerm hf ^ n : Perm { x // p x }) = (f ^ n).subtypePerm (zpow_aux hf) := by
   induction' n with n ih
-  · exact subtypePerm_pow _ _ _
-  · simp only [zpow_negSucc, subtypePerm_pow, subtypePerm_inv]
+  exact subtypePerm_pow _ _ _
+  simp only [zpow_negSucc, subtypePerm_pow, subtypePerm_inv]
 
 variable [DecidablePred p] {a : α}
 
@@ -377,12 +377,12 @@ theorem ofSubtype_subtypePerm {f : Perm α} (h₁ : ∀ x, p x ↔ p (f x)) (h�
     ofSubtype (subtypePerm f h₁) = f :=
   Equiv.ext fun x => by
     by_cases hx : p x
-    · exact (subtypePerm f h₁).extendDomain_apply_subtype _ hx
-    · rw [ofSubtype, MonoidHom.coe_mk]
-      -- Porting note: added `dsimp`
-      dsimp only [OneHom.coe_mk]
-      rw [Equiv.Perm.extendDomain_apply_not_subtype _ _ hx]
-      exact not_not.mp fun h => hx (h₂ x (Ne.symm h))
+    exact (subtypePerm f h₁).extendDomain_apply_subtype _ hx
+    rw [ofSubtype, MonoidHom.coe_mk]
+    -- Porting note: added `dsimp`
+    dsimp only [OneHom.coe_mk]
+    rw [Equiv.Perm.extendDomain_apply_not_subtype _ _ hx]
+    exact not_not.mp fun h => hx (h₂ x (Ne.symm h))
 
 theorem ofSubtype_apply_of_mem (f : Perm (Subtype p)) (ha : p a) : ofSubtype f a = f ⟨a, ha⟩ :=
   extendDomain_apply_subtype _ _ ha

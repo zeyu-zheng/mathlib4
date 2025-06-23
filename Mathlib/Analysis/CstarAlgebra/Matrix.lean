@@ -50,14 +50,14 @@ theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.uni
   -- The norm squared of an entry is at most the L2 norm of its row.
   have norm_sum : ‖U i j‖ ^ 2 ≤ ∑ x, ‖U i x‖ ^ 2
   apply Multiset.single_le_sum
-  · intro x h_x
-    rw [Multiset.mem_map] at h_x
-    cases' h_x with a h_a
-    rw [← h_a.2]
-    apply sq_nonneg
-  · rw [Multiset.mem_map]
-    use j
-    simp only [eq_self_iff_true, Finset.mem_univ_val, and_self_iff, sq_eq_sq]
+  intro x h_x
+  rw [Multiset.mem_map] at h_x
+  cases' h_x with a h_a
+  rw [← h_a.2]
+  apply sq_nonneg
+  rw [Multiset.mem_map]
+  use j
+  simp only [eq_self_iff_true, Finset.mem_univ_val, and_self_iff, sq_eq_sq]
   -- The L2 norm of a row is a diagonal entry of U * Uᴴ
   have diag_eq_norm_sum : (U * Uᴴ) i i = (∑ x : n, ‖U i x‖ ^ 2 : ℝ)
   simp only [Matrix.mul_apply, Matrix.conjTranspose_apply, ← starRingEnd_apply, RCLike.mul_conj,

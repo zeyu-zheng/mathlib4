@@ -79,13 +79,13 @@ theorem AlgHom.isIntegrallyClosedIn (f : A →ₐ[R] B) (hf : Function.Injective
     IsIntegrallyClosedIn R B → IsIntegrallyClosedIn R A := by
   rintro ⟨inj, cl⟩
   refine ⟨Function.Injective.of_comp (f := f) ?_, fun hx => ?_, ?_⟩
-  · convert inj
-    aesop
-  · obtain ⟨y, fx_eq⟩ := cl.mp ((isIntegral_algHom_iff f hf).mpr hx)
-    aesop
-  · rintro ⟨y, rfl⟩
-    apply (isIntegral_algHom_iff f hf).mp
-    aesop
+  convert inj
+  aesop
+  obtain ⟨y, fx_eq⟩ := cl.mp ((isIntegral_algHom_iff f hf).mpr hx)
+  aesop
+  rintro ⟨y, rfl⟩
+  apply (isIntegral_algHom_iff f hf).mp
+  aesop
 
 /-- Being integrally closed is preserved under algebra isomorphisms. -/
 theorem AlgEquiv.isIntegrallyClosedIn (e : A ≃ₐ[R] B) :
@@ -109,12 +109,12 @@ theorem isIntegrallyClosedIn_iff {R A : Type*} [CommRing R] [CommRing A] [Algebr
       Function.Injective (algebraMap R A) ∧
         ∀ {x : A}, IsIntegral R x → ∃ y, algebraMap R A y = x := by
   constructor
-  · rintro ⟨_, cl⟩
-    aesop
-  · rintro ⟨inj, cl⟩
-    refine ⟨inj, by aesop, ?_⟩
-    rintro ⟨y, rfl⟩
-    apply isIntegral_algebraMap
+  rintro ⟨_, cl⟩
+  aesop
+  rintro ⟨inj, cl⟩
+  refine ⟨inj, by aesop, ?_⟩
+  rintro ⟨y, rfl⟩
+  apply isIntegral_algebraMap
 
 /-- `R` is integrally closed iff all integral elements of its fraction field `K`
 are also elements of `R`. -/
@@ -150,13 +150,13 @@ theorem integralClosure_eq_bot_iff (hRA : Function.Injective (algebraMap R A)) :
     integralClosure R A = ⊥ ↔ IsIntegrallyClosedIn R A := by
   refine eq_bot_iff.trans ?_
   constructor
-  · intro h
-    refine ⟨ hRA, fun hx => Set.mem_range.mp (Algebra.mem_bot.mp (h hx)), ?_⟩
-    rintro ⟨y, rfl⟩
-    apply isIntegral_algebraMap
-  · intro h x hx
-    rw [Algebra.mem_bot, Set.mem_range]
-    exact isIntegral_iff.mp hx
+  intro h
+  refine ⟨ hRA, fun hx => Set.mem_range.mp (Algebra.mem_bot.mp (h hx)), ?_⟩
+  rintro ⟨y, rfl⟩
+  apply isIntegral_algebraMap
+  intro h x hx
+  rw [Algebra.mem_bot, Set.mem_range]
+  exact isIntegral_iff.mp hx
 
 variable (R)
 
@@ -228,7 +228,7 @@ theorem integralClosure_eq_bot_iff : integralClosure R K = ⊥ ↔ IsIntegrallyC
 theorem pow_dvd_pow_iff {n : ℕ} (hn : n ≠ 0) {a b : R} : a ^ n ∣ b ^ n ↔ a ∣ b  := by
   refine ⟨fun ⟨x, hx⟩ ↦ ?_, fun h ↦ pow_dvd_pow_of_dvd h n⟩
   by_cases ha : a = 0
-  · simpa [ha, hn] using hx
+  simpa [ha, hn] using hx
   let K := FractionRing R
   replace ha : algebraMap R K a ≠ 0 := fun h ↦
     ha <| (injective_iff_map_eq_zero _).1 (IsFractionRing.injective R K) _ h

@@ -143,8 +143,8 @@ theorem ext_nat'' [MonoidWithZeroHomClass F ℕ A] (f g : F) (h_pos : ∀ {n : �
     f = g := by
   apply DFunLike.ext
   rintro (_ | n)
-  · simp [map_zero f, map_zero g]
-  · exact h_pos n.succ_pos
+  simp [map_zero f, map_zero g]
+  exact h_pos n.succ_pos
 
 @[ext]
 theorem MonoidWithZeroHom.ext_nat {f g : ℕ →*₀ A} : (∀ {n : ℕ}, 0 < n → f n = g n) → f = g :=

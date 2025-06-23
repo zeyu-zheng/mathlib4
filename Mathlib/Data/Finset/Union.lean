@@ -198,10 +198,10 @@ lemma filter_biUnion (s : Finset α) (f : α → Finset β) (p : β → Prop) [D
   ext b
   simp only [mem_biUnion, exists_prop, mem_filter]
   constructor
-  · rintro ⟨⟨a, ha, hba⟩, hb⟩
-    exact ⟨a, ha, hba, hb⟩
-  · rintro ⟨a, ha, hba, hb⟩
-    exact ⟨⟨a, ha, hba⟩, hb⟩
+  rintro ⟨⟨a, ha, hba⟩, hb⟩
+  exact ⟨a, ha, hba, hb⟩
+  rintro ⟨a, ha, hba, hb⟩
+  exact ⟨⟨a, ha, hba⟩, hb⟩
 
 lemma biUnion_filter_eq_of_maps_to [DecidableEq α] {s : Finset α} {t : Finset β} {f : α → β}
     (h : ∀ x ∈ s, f x ∈ t) : (t.biUnion fun a ↦ s.filter fun c ↦ f c = a) = s := by
@@ -226,9 +226,9 @@ open Classical in
 lemma disjoint_biUnion_left (s : Finset α) (f : α → Finset β) (t : Finset β) :
     Disjoint (s.biUnion f) t ↔ ∀ i ∈ s, Disjoint (f i) t := by
   refine s.induction ?_ ?_
-  · simp only [forall_mem_empty_iff, biUnion_empty, disjoint_empty_left]
-  · intro i s his ih
-    simp only [disjoint_union_left, biUnion_insert, his, forall_mem_insert, ih]
+  simp only [forall_mem_empty_iff, biUnion_empty, disjoint_empty_left]
+  intro i s his ih
+  simp only [disjoint_union_left, biUnion_insert, his, forall_mem_insert, ih]
 
 lemma disjoint_biUnion_right (s : Finset β) (t : Finset α) (f : α → Finset β) :
     Disjoint s (t.biUnion f) ↔ ∀ i ∈ t, Disjoint s (f i) := by

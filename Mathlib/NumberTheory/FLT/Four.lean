@@ -36,20 +36,20 @@ theorem mul {a b c k : ℤ} (hk0 : k ≠ 0) :
     Fermat42 a b c ↔ Fermat42 (k * a) (k * b) (k ^ 2 * c) := by
   delta Fermat42
   constructor
-  · intro f42
-    constructor
-    · exact mul_ne_zero hk0 f42.1
-    constructor
-    · exact mul_ne_zero hk0 f42.2.1
-    · have H : a ^ 4 + b ^ 4 = c ^ 2 := f42.2.2
-      linear_combination k ^ 4 * H
-  · intro f42
-    constructor
-    · exact right_ne_zero_of_mul f42.1
-    constructor
-    · exact right_ne_zero_of_mul f42.2.1
-    apply (mul_right_inj' (pow_ne_zero 4 hk0)).mp
-    linear_combination f42.2.2
+  intro f42
+  constructor
+  exact mul_ne_zero hk0 f42.1
+  constructor
+  exact mul_ne_zero hk0 f42.2.1
+  have H : a ^ 4 + b ^ 4 = c ^ 2 := f42.2.2
+  linear_combination k ^ 4 * H
+  intro f42
+  constructor
+  exact right_ne_zero_of_mul f42.1
+  constructor
+  exact right_ne_zero_of_mul f42.2.1
+  apply (mul_right_inj' (pow_ne_zero 4 hk0)).mp
+  linear_combination f42.2.2
 
 theorem ne_zero {a b c : ℤ} (h : Fermat42 a b c) : c ≠ 0 := by
   apply ne_zero_pow two_ne_zero _; apply ne_of_gt
@@ -94,8 +94,8 @@ theorem coprime_of_minimal {a b c : ℤ} (h : Minimal a b c) : IsCoprime a b := 
     (Fermat42.mul (Int.natCast_ne_zero.mpr (Nat.Prime.ne_zero hp))).mpr h.1
   apply Nat.le_lt_asymm (h.2 _ _ _ hf)
   rw [Int.natAbs_mul, lt_mul_iff_one_lt_left, Int.natAbs_pow, Int.natAbs_ofNat]
-  · exact Nat.one_lt_pow two_ne_zero (Nat.Prime.one_lt hp)
-  · exact Nat.pos_of_ne_zero (Int.natAbs_ne_zero.2 (ne_zero hf))
+  exact Nat.one_lt_pow two_ne_zero (Nat.Prime.one_lt hp)
+  exact Nat.pos_of_ne_zero (Int.natAbs_ne_zero.2 (ne_zero hf))
 
 /-- We can swap `a` and `b` in a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2`. -/
 theorem minimal_comm {a b c : ℤ} : Minimal a b c → Minimal b a c := fun ⟨h1, h2⟩ =>
@@ -105,9 +105,9 @@ theorem minimal_comm {a b c : ℤ} : Minimal a b c → Minimal b a c := fun ⟨h
 theorem neg_of_minimal {a b c : ℤ} : Minimal a b c → Minimal a b (-c) := by
   rintro ⟨⟨ha, hb, heq⟩, h2⟩
   constructor
-  · apply And.intro ha (And.intro hb _)
-    rw [heq]
-    exact (neg_sq c).symm
+  apply And.intro ha (And.intro hb _)
+  rw [heq]
+  exact (neg_sq c).symm
   rwa [Int.natAbs_neg c]
 
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has `a` odd. -/
@@ -115,14 +115,14 @@ theorem exists_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
     ∃ a0 b0 c0, Minimal a0 b0 c0 ∧ a0 % 2 = 1 := by
   obtain ⟨a0, b0, c0, hf⟩ := exists_minimal h
   cases' Int.emod_two_eq_zero_or_one a0 with hap hap
-  · cases' Int.emod_two_eq_zero_or_one b0 with hbp hbp
-    · exfalso
-      have h1 : 2 ∣ (Int.gcd a0 b0 : ℤ) :=
-        Int.dvd_gcd (Int.dvd_of_emod_eq_zero hap) (Int.dvd_of_emod_eq_zero hbp)
-      rw [Int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal hf)] at h1
-      revert h1
-      decide
-    · exact ⟨b0, ⟨a0, ⟨c0, minimal_comm hf, hbp⟩⟩⟩
+  cases' Int.emod_two_eq_zero_or_one b0 with hbp hbp
+  exfalso
+  have h1 : 2 ∣ (Int.gcd a0 b0 : ℤ) :=
+    Int.dvd_gcd (Int.dvd_of_emod_eq_zero hap) (Int.dvd_of_emod_eq_zero hbp)
+  rw [Int.gcd_eq_one_iff_coprime.mpr (coprime_of_minimal hf)] at h1
+  revert h1
+  decide
+  exact ⟨b0, ⟨a0, ⟨c0, minimal_comm hf, hbp⟩⟩⟩
   exact ⟨a0, ⟨b0, ⟨c0, hf, hap⟩⟩⟩
 
 /-- We can assume that a minimal solution to `a ^ 4 + b ^ 4 = c ^ 2` has
@@ -131,11 +131,11 @@ theorem exists_pos_odd_minimal {a b c : ℤ} (h : Fermat42 a b c) :
     ∃ a0 b0 c0, Minimal a0 b0 c0 ∧ a0 % 2 = 1 ∧ 0 < c0 := by
   obtain ⟨a0, b0, c0, hf, hc⟩ := exists_odd_minimal h
   rcases lt_trichotomy 0 c0 with (h1 | h1 | h1)
-  · use a0, b0, c0
-  · exfalso
-    exact ne_zero hf.1 h1.symm
-  · use a0, b0, -c0, neg_of_minimal hf, hc
-    exact neg_pos.mpr h1
+  use a0, b0, c0
+  exfalso
+  exact ne_zero hf.1 h1.symm
+  use a0, b0, -c0, neg_of_minimal hf, hc
+  exact neg_pos.mpr h1
 
 end Fermat42
 
@@ -214,8 +214,8 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   apply ne_zero_pow two_ne_zero
   rw [hs]
   apply mul_ne_zero
-  · exact ne_of_gt h4
-  · exact hrsz
+  exact ne_of_gt h4
+  exact hrsz
   obtain ⟨i, hi⟩ := Int.sq_of_gcd_eq_one hcp hs.symm
   -- use m is positive to exclude m = - i ^ 2
   have hi' : ¬m = -i ^ 2
@@ -255,12 +255,12 @@ theorem not_minimal {a b c : ℤ} (h : Minimal a b c) (ha2 : a % 2 = 1) (hc : 0 
   apply right_ne_zero_of_mul hrsz hk
   have hj2 : r ^ 2 = j ^ 4
   cases' hj with hjp hjp <;>
-    · rw [hjp]
-      ring
+  · rw [hjp]
+    ring
   have hk2 : s ^ 2 = k ^ 4
   cases' hk with hkp hkp <;>
-    · rw [hkp]
-      ring
+  · rw [hkp]
+    ring
   -- from m = r ^ 2 + s ^ 2 we now get a new solution to a ^ 4 + b ^ 4 = c ^ 2:
   have hh : i ^ 2 = j ^ 4 + k ^ 4
   rw [← hi, htt3, hj2, hk2]
@@ -306,5 +306,5 @@ theorem FermatLastTheorem.of_odd_primes
   intro n h
   obtain hdvd|⟨p, hpprime, hdvd, hpodd⟩ := Nat.four_dvd_or_exists_odd_prime_and_dvd_of_two_lt h <;>
     apply FermatLastTheoremWith.mono hdvd
-  · exact fermatLastTheoremFour
-  · exact hprimes p hpprime hpodd
+  exact fermatLastTheoremFour
+  exact hprimes p hpprime hpodd

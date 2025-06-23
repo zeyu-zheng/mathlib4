@@ -551,10 +551,10 @@ theorem Perm.subtypeCongr.refl :
 theorem Perm.subtypeCongr.symm : (ep.subtypeCongr en).symm = Perm.subtypeCongr ep.symm en.symm := by
   ext x
   by_cases h : p x
-  · have : p (ep.symm ⟨x, h⟩) := Subtype.property _
-    simp [Perm.subtypeCongr.apply, h, symm_apply_eq, this]
-  · have : ¬p (en.symm ⟨x, h⟩) := Subtype.property (en.symm _)
-    simp [Perm.subtypeCongr.apply, h, symm_apply_eq, this]
+  have : p (ep.symm ⟨x, h⟩) := Subtype.property _
+  simp [Perm.subtypeCongr.apply, h, symm_apply_eq, this]
+  have : ¬p (en.symm ⟨x, h⟩) := Subtype.property (en.symm _)
+  simp [Perm.subtypeCongr.apply, h, symm_apply_eq, this]
 
 @[simp]
 theorem Perm.subtypeCongr.trans :
@@ -562,10 +562,10 @@ theorem Perm.subtypeCongr.trans :
     = Perm.subtypeCongr (ep.trans ep') (en.trans en') := by
   ext x
   by_cases h : p x
-  · have : p (ep ⟨x, h⟩) := Subtype.property _
-    simp [Perm.subtypeCongr.apply, h, this]
-  · have : ¬p (en ⟨x, h⟩) := Subtype.property (en _)
-    simp [Perm.subtypeCongr.apply, h, symm_apply_eq, this]
+  have : p (ep ⟨x, h⟩) := Subtype.property _
+  simp [Perm.subtypeCongr.apply, h, this]
+  have : ¬p (en ⟨x, h⟩) := Subtype.property (en _)
+  simp [Perm.subtypeCongr.apply, h, symm_apply_eq, this]
 
 end sumCompl
 
@@ -783,8 +783,8 @@ theorem fst_prodExtendRight (ab : α₁ × β₁) : (prodExtendRight a e ab).fst
   rw [prodExtendRight]
   dsimp
   split_ifs with h
-  · rw [h]
-  · rfl
+  rw [h]
+  rfl
 
 end Perm
 
@@ -1377,7 +1377,7 @@ theorem swapCore_comm (r a b : α) : swapCore a b r = swapCore b a r := by
   unfold swapCore
   -- Porting note: whatever solution works for `swapCore_swapCore` will work here too.
   split_ifs with h₁ h₂ h₃ <;> try simp
-  · cases h₁; cases h₂; rfl
+  cases h₁; cases h₂; rfl
 
 /-- `swap a b` is the permutation that swaps `a` and `b` and
   leaves other values as is. -/
@@ -1458,10 +1458,10 @@ theorem swap_apply_self (i j a : α) : swap i j (swap i j a) = a := by
 theorem apply_swap_eq_self {v : α → β} {i j : α} (hv : v i = v j) (k : α) :
     v (swap i j k) = v k := by
   by_cases hi : k = i
-  · rw [hi, swap_apply_left, hv]
+  rw [hi, swap_apply_left, hv]
 
   by_cases hj : k = j
-  · rw [hj, swap_apply_right, hv]
+  rw [hj, swap_apply_right, hv]
 
   rw [swap_apply_of_ne_of_ne hi hj]
 
@@ -1470,13 +1470,13 @@ theorem swap_apply_eq_iff {x y z w : α} : swap x y z = w ↔ z = swap x y w := 
 
 theorem swap_apply_ne_self_iff {a b x : α} : swap a b x ≠ x ↔ a ≠ b ∧ (x = a ∨ x = b) := by
   by_cases hab : a = b
-  · simp [hab]
+  simp [hab]
 
   by_cases hax : x = a
-  · simp [hax, eq_comm]
+  simp [hax, eq_comm]
 
   by_cases hbx : x = b
-  · simp [hbx]
+  simp [hbx]
 
   simp [hab, hax, hbx, swap_apply_of_ne_of_ne]
 
@@ -1487,21 +1487,21 @@ theorem sumCongr_swap_refl {α β : Sort _} [DecidableEq α] [DecidableEq β] (i
     Equiv.Perm.sumCongr (Equiv.swap i j) (Equiv.refl β) = Equiv.swap (Sum.inl i) (Sum.inl j) := by
   ext x
   cases x
-  · simp only [Equiv.sumCongr_apply, Sum.map, coe_refl, comp_id, Sum.elim_inl, comp_apply,
-      swap_apply_def, Sum.inl.injEq]
-    split_ifs <;> rfl
-  · simp [Sum.map, swap_apply_of_ne_of_ne]
+  simp only [Equiv.sumCongr_apply, Sum.map, coe_refl, comp_id, Sum.elim_inl, comp_apply,
+    swap_apply_def, Sum.inl.injEq]
+  split_ifs <;> rfl
+  simp [Sum.map, swap_apply_of_ne_of_ne]
 
 @[simp]
 theorem sumCongr_refl_swap {α β : Sort _} [DecidableEq α] [DecidableEq β] (i j : β) :
     Equiv.Perm.sumCongr (Equiv.refl α) (Equiv.swap i j) = Equiv.swap (Sum.inr i) (Sum.inr j) := by
   ext x
   cases x
-  · simp [Sum.map, swap_apply_of_ne_of_ne]
+  simp [Sum.map, swap_apply_of_ne_of_ne]
 
-  · simp only [Equiv.sumCongr_apply, Sum.map, coe_refl, comp_id, Sum.elim_inr, comp_apply,
-      swap_apply_def, Sum.inr.injEq]
-    split_ifs <;> rfl
+  simp only [Equiv.sumCongr_apply, Sum.map, coe_refl, comp_id, Sum.elim_inr, comp_apply,
+    swap_apply_def, Sum.inr.injEq]
+  split_ifs <;> rfl
 
 end Perm
 
@@ -1544,9 +1544,9 @@ theorem Function.Injective.map_swap [DecidableEq α] [DecidableEq β] {f : α �
     f (Equiv.swap x y z) = Equiv.swap (f x) (f y) (f z) := by
   conv_rhs => rw [Equiv.swap_apply_def]
   split_ifs with h₁ h₂
-  · rw [hf h₁, Equiv.swap_apply_left]
-  · rw [hf h₂, Equiv.swap_apply_right]
-  · rw [Equiv.swap_apply_of_ne_of_ne (mt (congr_arg f) h₁) (mt (congr_arg f) h₂)]
+  rw [hf h₁, Equiv.swap_apply_left]
+  rw [hf h₂, Equiv.swap_apply_right]
+  rw [Equiv.swap_apply_of_ne_of_ne (mt (congr_arg f) h₁) (mt (congr_arg f) h₂)]
 
 namespace Equiv
 
@@ -1730,10 +1730,10 @@ theorem Function.Injective.swap_apply
     [DecidableEq α] [DecidableEq β] {f : α → β} (hf : Function.Injective f) (x y z : α) :
     Equiv.swap (f x) (f y) (f z) = f (Equiv.swap x y z) := by
   by_cases hx : z = x
-  · simp [hx]
+  simp [hx]
 
   by_cases hy : z = y
-  · simp [hy]
+  simp [hy]
 
   rw [Equiv.swap_apply_of_ne_of_ne hx hy, Equiv.swap_apply_of_ne_of_ne (hf.ne hx) (hf.ne hy)]
 
@@ -1789,15 +1789,15 @@ theorem piCongrLeft'_update [DecidableEq α] [DecidableEq β] (P : α → Sort*)
     e.piCongrLeft' P (update f (e.symm b) x) = update (e.piCongrLeft' P f) b x := by
   ext b'
   rcases eq_or_ne b' b with (rfl | h)
-  · simp
-  · simp only [Equiv.piCongrLeft'_apply, ne_eq, h, not_false_iff, update_noteq]
-    rw [update_noteq _]
-    rw [ne_eq]
-    intro h'
-    /- an example of something that should work, or also putting `EmbeddingLike.apply_eq_iff_eq`
-      in the `simp` should too:
-    have := (EmbeddingLike.apply_eq_iff_eq e).mp h' -/
-    cases e.symm.injective h' |> h
+  simp
+  simp only [Equiv.piCongrLeft'_apply, ne_eq, h, not_false_iff, update_noteq]
+  rw [update_noteq _]
+  rw [ne_eq]
+  intro h'
+  /- an example of something that should work, or also putting `EmbeddingLike.apply_eq_iff_eq`
+    in the `simp` should too:
+  have := (EmbeddingLike.apply_eq_iff_eq e).mp h' -/
+  cases e.symm.injective h' |> h
 
 theorem piCongrLeft'_symm_update [DecidableEq α] [DecidableEq β] (P : α → Sort*) (e : α ≃ β)
     (f : ∀ b, P (e.symm b)) (b : β) (x : P (e.symm b)) :

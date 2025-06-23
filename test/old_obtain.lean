@@ -27,7 +27,7 @@ note: this linter can be disabled with `set_option linter.oldObtain false`
 set_option linter.oldObtain true in
 theorem foo' : True := by
   obtain : True
-  · trivial
+  trivial
   trivial
 
 set_option linter.oldObtain false in
@@ -39,5 +39,5 @@ note: this linter can be disabled with `set_option linter.oldObtain false`
 set_option linter.oldObtain true in
 theorem foo'' : True := by
   obtain h : True
-  · trivial
+  trivial
   trivial

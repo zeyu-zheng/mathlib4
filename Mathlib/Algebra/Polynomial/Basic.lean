@@ -404,8 +404,8 @@ theorem monomial_mul_monomial (n m : ℕ) (r s : R) :
 @[simp]
 theorem monomial_pow (n : ℕ) (r : R) (k : ℕ) : monomial n r ^ k = monomial (n * k) (r ^ k) := by
   induction' k with k ih
-  · simp [pow_zero, monomial_zero_one]
-  · simp [pow_succ, ih, monomial_mul_monomial, mul_add, add_comm]
+  simp [pow_zero, monomial_zero_one]
+  simp [pow_succ, ih, monomial_mul_monomial, mul_add, add_comm]
 
 theorem smul_monomial {S} [SMulZeroClass S R] (a : S) (n : ℕ) (b : R) :
     a • monomial n b = monomial n (a • b) :=
@@ -480,8 +480,8 @@ theorem monomial_one_one_eq_X : monomial 1 (1 : R) = X :=
 
 theorem monomial_one_right_eq_X_pow (n : ℕ) : monomial n (1 : R) = X ^ n := by
   induction' n with n ih
-  · simp [monomial_zero_one]
-  · rw [pow_succ, ← ih, ← monomial_one_one_eq_X, monomial_mul_monomial, mul_one]
+  simp [monomial_zero_one]
+  rw [pow_succ, ← ih, ← monomial_one_one_eq_X, monomial_mul_monomial, mul_one]
 
 @[simp]
 theorem toFinsupp_X : X.toFinsupp = Finsupp.single 1 (1 : R) :=
@@ -498,9 +498,9 @@ theorem X_mul : X * p = p * X := by
 
 theorem X_pow_mul {n : ℕ} : X ^ n * p = p * X ^ n := by
   induction' n with n ih
-  · simp
-  · conv_lhs => rw [pow_succ]
-    rw [mul_assoc, X_mul, ← mul_assoc, ih, mul_assoc, ← pow_succ]
+  simp
+  conv_lhs => rw [pow_succ]
+  rw [mul_assoc, X_mul, ← mul_assoc, ih, mul_assoc, ← pow_succ]
 
 /-- Prefer putting constants to the left of `X`.
 
@@ -540,8 +540,8 @@ theorem monomial_mul_X (n : ℕ) (r : R) : monomial n r * X = monomial (n + 1) r
 theorem monomial_mul_X_pow (n : ℕ) (r : R) (k : ℕ) :
     monomial n r * X ^ k = monomial (n + k) r := by
   induction' k with k ih
-  · simp
-  · simp [ih, pow_succ, ← mul_assoc, add_assoc]
+  simp
+  simp [ih, pow_succ, ← mul_assoc, add_assoc]
 
 @[simp]
 theorem X_mul_monomial (n : ℕ) (r : R) : X * monomial n r = monomial (n + 1) r := by
@@ -773,8 +773,8 @@ end Fewnomials
 
 theorem X_pow_eq_monomial (n) : X ^ n = monomial n (1 : R) := by
   induction' n with n hn
-  · rw [pow_zero, monomial_zero_one]
-  · rw [pow_succ, hn, X, monomial_mul_monomial, one_mul]
+  rw [pow_zero, monomial_zero_one]
+  rw [pow_succ, hn, X, monomial_mul_monomial, one_mul]
 
 @[simp high]
 theorem toFinsupp_X_pow (n : ℕ) : (X ^ n).toFinsupp = Finsupp.single n (1 : R) := by

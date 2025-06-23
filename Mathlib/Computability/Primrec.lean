@@ -577,8 +577,8 @@ theorem nat_le : PrimrecRel ((· ≤ ·) : ℕ → ℕ → Prop) :=
   (nat_casesOn nat_sub (const true) (const false).to₂).of_eq fun p => by
     dsimp [swap]
     cases' e : p.1 - p.2 with n
-    · simp [tsub_eq_zero_iff_le.1 e]
-    · simp [not_le.2 (Nat.lt_of_sub_eq_succ e)]
+    simp [tsub_eq_zero_iff_le.1 e]
+    simp [not_le.2 (Nat.lt_of_sub_eq_succ e)]
 
 theorem nat_min : Primrec₂ (@min ℕ _) :=
   ite nat_le fst snd
@@ -770,7 +770,7 @@ private theorem list_foldl' {f : α → List β} {g : α → σ} {h : α → σ 
   generalize f a = l
   generalize g a = x
   induction' n with n IH generalizing l x
-  · rfl
+  rfl
   simp only [iterate_succ, comp_apply]
   cases' l with b l <;> simp [IH]
 
@@ -808,8 +808,8 @@ instance sum : Primcodable (α ⊕ β) :=
         show _ = encode (decodeSum n) by
           simp only [decodeSum, Nat.boddDiv2_eq]
           cases Nat.bodd n <;> simp [decodeSum]
-          · cases @decode α _ n.div2 <;> rfl
-          · cases @decode β _ n.div2 <;> rfl⟩
+          cases @decode α _ n.div2 <;> rfl
+          cases @decode β _ n.div2 <;> rfl⟩
 
 instance list : Primcodable (List α) :=
   ⟨letI H := @Primcodable.prim (List ℕ) _
@@ -833,10 +833,10 @@ instance list : Primcodable (List α) :=
           this _ _ (IH _ (Nat.unpair_right_le n))
         intro o p IH
         cases o <;> cases p
-        · rfl
-        · injection IH
-        · injection IH
-        · exact congr_arg (fun k => (Nat.pair (encode a) k).succ.succ) (Nat.succ.inj IH)⟩
+        rfl
+        injection IH
+        injection IH
+        exact congr_arg (fun k => (Nat.pair (encode a) k).succ.succ) (Nat.succ.inj IH)⟩
 end Primcodable
 
 namespace Primrec
@@ -921,10 +921,10 @@ theorem list_get? : Primrec₂ (@List.get? α) :=
     dsimp; symm
     induction' l with a l IH generalizing n; · rfl
     cases' n with n
-    · dsimp [F]
-      clear IH
-      induction' l with _ l IH <;> simp [*]
-    · apply IH
+    dsimp [F]
+    clear IH
+    induction' l with _ l IH <;> simp [*]
+    apply IH
 
 theorem list_getD (d : α) : Primrec₂ fun l n => List.getD l n d := by
   simp only [List.getD_eq_getD_get?]
@@ -1051,21 +1051,21 @@ theorem nat_omega_rec' (f : β → σ) {m : β → ℕ} {l : β → List β} {g 
       have mapGraph_graph {bs bs' : List β} (has : bs' ⊆ bs) :
           mapGraph (bs.map $ fun x => (x, f x)) bs' = bs'.map f := by
         induction' bs' with b bs' ih <;> simp [mapGraph]
-        · have : b ∈ bs ∧ bs' ⊆ bs := by simpa using has
-          rcases this with ⟨ha, has'⟩
-          simpa [List.lookup_graph f ha] using ih has'
+        have : b ∈ bs ∧ bs' ⊆ bs := by simpa using has
+        rcases this with ⟨ha, has'⟩
+        simpa [List.lookup_graph f ha] using ih has'
       have graph_succ : ∀ i, graph b (i + 1) =
         (bindList b (m b - i)).filterMap fun b' =>
           (g b' <| mapGraph (graph b i) (l b')).map (b', ·) := fun _ => rfl
       have bindList_succ : ∀ i, bindList b (i + 1) = (bindList b i).bind l := fun _ => rfl
       induction' i with i ih
-      · symm; simpa [graph] using bindList_eq_nil
-      · simp only [graph_succ, ih (Nat.le_of_lt hi), Nat.succ_sub (Nat.lt_succ.mp hi),
-          Nat.succ_eq_add_one, bindList_succ, Nat.reduceSubDiff]
-        apply List.filterMap_eq_map_iff_forall_eq_some.mpr
-        intro b' ha'; simp; rw [mapGraph_graph]
-        · exact H b'
-        · exact (List.infix_bind_of_mem ha' l).subset
+      symm; simpa [graph] using bindList_eq_nil
+      simp only [graph_succ, ih (Nat.le_of_lt hi), Nat.succ_sub (Nat.lt_succ.mp hi),
+        Nat.succ_eq_add_one, bindList_succ, Nat.reduceSubDiff]
+      apply List.filterMap_eq_map_iff_forall_eq_some.mpr
+      intro b' ha'; simp; rw [mapGraph_graph]
+      exact H b'
+      exact (List.infix_bind_of_mem ha' l).subset
     simp [graph_eq_map_bindList (m b + 1) (Nat.le_refl _), bindList]
 
 theorem nat_omega_rec (f : α → β → σ) {m : α → β → ℕ}
@@ -1343,8 +1343,8 @@ theorem if_lt {n a b f g} (ha : @Primrec' n a) (hb : @Primrec' n b) (hf : @Primr
     (hg : @Primrec' n g) : @Primrec' n fun v => if a v < b v then f v else g v :=
   (prec' (sub.comp₂ _ hb ha) hg (tail <| tail hf)).of_eq fun v => by
     cases e : b v - a v
-    · simp [not_lt.2 (tsub_eq_zero_iff_le.mp e)]
-    · simp [Nat.lt_of_sub_eq_succ e]
+    simp [not_lt.2 (tsub_eq_zero_iff_le.mp e)]
+    simp [Nat.lt_of_sub_eq_succ e]
 
 theorem natPair : @Primrec' 2 fun v => v.head.pair v.tail.head :=
   if_lt head (tail head) (add.comp₂ _ (tail <| mul.comp₂ _ head head) head)
@@ -1365,16 +1365,16 @@ theorem sqrt : @Primrec' 1 fun v => v.head.sqrt := by
           have x := v.head; have y := v.tail.head
           exact if x.succ < y.succ * y.succ then y else y.succ)
         head (const 0) ?_
-    · exact this
+    exact this
     have x1 : @Primrec' 3 fun v => v.head.succ := succ.comp₁ _ head
     have y1 : @Primrec' 3 fun v => v.tail.head.succ := succ.comp₁ _ (tail head)
     exact if_lt x1 (mul.comp₂ _ y1 y1) (tail head) y1
   introv; symm
   induction' n with n IH; · simp
   dsimp; rw [IH]; split_ifs with h
-  · exact le_antisymm (Nat.sqrt_le_sqrt (Nat.le_succ _)) (Nat.lt_succ_iff.1 <| Nat.sqrt_lt.2 h)
-  · exact
-      Nat.eq_sqrt.2 ⟨not_lt.1 h, Nat.sqrt_lt.1 <| Nat.lt_succ_iff.2 <| Nat.sqrt_succ_le_succ_sqrt _⟩
+  exact le_antisymm (Nat.sqrt_le_sqrt (Nat.le_succ _)) (Nat.lt_succ_iff.1 <| Nat.sqrt_lt.2 h)
+  exact
+    Nat.eq_sqrt.2 ⟨not_lt.1 h, Nat.sqrt_lt.1 <| Nat.lt_succ_iff.2 <| Nat.sqrt_succ_le_succ_sqrt _⟩
 
 theorem unpair₁ {n f} (hf : @Primrec' n f) : @Primrec' n fun v => (f v).unpair.1 := by
   have s := sqrt.comp₁ _ hf

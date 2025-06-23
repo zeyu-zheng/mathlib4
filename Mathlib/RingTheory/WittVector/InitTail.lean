@@ -70,8 +70,8 @@ theorem coeff_select (x : 𝕎 R) (n : ℕ) :
     (select P x).coeff n = aeval x.coeff (selectPoly P n) := by
   dsimp [select, selectPoly]
   split_ifs with hi
-  · rw [aeval_X, mk]; simp only [hi, if_true]
-  · rw [map_zero, mk]; simp only [hi, if_false]
+  rw [aeval_X, mk]; simp only [hi, if_true]
+  rw [map_zero, mk]; simp only [hi, if_false]
 
 -- Porting note: replaced `@[is_poly]` with `instance`. Made the argument `P` implicit in doing so.
 instance select_isPoly {P : ℕ → Prop} : IsPoly p fun _ _ x => select P x := by
@@ -100,8 +100,8 @@ theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬
   refine fun m _ => mul_eq_mul_left_iff.mpr (Or.inl ?_)
   rw [ite_pow, zero_pow (pow_ne_zero _ hp.out.ne_zero)]
   by_cases Pm : P m
-  · rw [if_pos Pm, if_neg $ not_not_intro Pm, zero_pow Fin.size_pos'.ne', add_zero]
-  · rwa [if_neg Pm, if_pos, zero_add]
+  rw [if_pos Pm, if_neg $ not_not_intro Pm, zero_pow Fin.size_pos'.ne', add_zero]
+  rwa [if_neg Pm, if_pos, zero_add]
 
 theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coeff n = 0) :
     (x + y).coeff n = x.coeff n + y.coeff n := by
@@ -111,20 +111,20 @@ theorem coeff_add_of_disjoint (x y : 𝕎 R) (h : ∀ n, x.coeff n = 0 ∨ y.coe
   have hx : select P z = x
   ext1 n; rw [select, coeff_mk, coeff_mk]
   split_ifs with hn
-  · rfl
-  · rw [(h n).resolve_right hn]
+  rfl
+  rw [(h n).resolve_right hn]
   have hy : select (fun i => ¬P i) z = y
   ext1 n; rw [select, coeff_mk, coeff_mk]
   split_ifs with hn
-  · exact hn.symm
-  · rfl
+  exact hn.symm
+  rfl
   calc
     (x + y).coeff n = z.coeff n := by rw [← hx, ← hy, select_add_select_not P z]
     _ = x.coeff n + y.coeff n := by
       simp only [z, mk.eq_1]
       split_ifs with y0
-      · rw [y0, add_zero]
-      · rw [h n |>.resolve_right y0, zero_add]
+      rw [y0, add_zero]
+      rw [h n |>.resolve_right y0, zero_add]
 
 end Select
 

@@ -153,19 +153,19 @@ theorem fourierIntegral_add (he : Continuous e) (hL : Continuous fun p : V × W 
   dsimp only [Pi.add_apply, fourierIntegral]
   simp_rw [smul_add]
   rw [integral_add]
-  · exact (fourierIntegral_convergent_iff he hL w).2 hf
-  · exact (fourierIntegral_convergent_iff he hL w).2 hg
+  exact (fourierIntegral_convergent_iff he hL w).2 hf
+  exact (fourierIntegral_convergent_iff he hL w).2 hg
 
 /-- The Fourier integral of an `L^1` function is a continuous function. -/
 theorem fourierIntegral_continuous [FirstCountableTopology W] (he : Continuous e)
     (hL : Continuous fun p : V × W ↦ L p.1 p.2) {f : V → E} (hf : Integrable f μ) :
     Continuous (fourierIntegral e μ L f) := by
   apply continuous_of_dominated
-  · exact fun w ↦ ((fourierIntegral_convergent_iff he hL w).2 hf).1
-  · exact fun w ↦ ae_of_all _ fun v ↦ le_of_eq (norm_circle_smul _ _)
-  · exact hf.norm
-  · refine ae_of_all _ fun v ↦ (he.comp ?_).smul continuous_const
-    exact (hL.comp (continuous_prod_mk.mpr ⟨continuous_const, continuous_id⟩)).neg
+  exact fun w ↦ ((fourierIntegral_convergent_iff he hL w).2 hf).1
+  exact fun w ↦ ae_of_all _ fun v ↦ le_of_eq (norm_circle_smul _ _)
+  exact hf.norm
+  refine ae_of_all _ fun v ↦ (he.comp ?_).smul continuous_const
+  exact (hL.comp (continuous_prod_mk.mpr ⟨continuous_const, continuous_id⟩)).neg
 
 end Continuous
 
@@ -197,21 +197,21 @@ theorem integral_bilin_fourierIntegral_eq_flip
     have : Integrable (fun (p : W × V) ↦ ‖M‖ * (‖g p.1‖ * ‖f p.2‖)) (ν.prod μ) :=
       (hg.norm.prod_mul hf.norm).const_mul _
     apply this.mono
-    · -- This proof can be golfed but becomes very slow; breaking it up into steps
-      -- speeds up compilation.
-      change AEStronglyMeasurable (fun p : W × V ↦ (M (e (-(L p.2) p.1) • f p.2) (g p.1))) _
-      have A : AEStronglyMeasurable (fun (p : W × V) ↦ e (-L p.2 p.1) • f p.2) (ν.prod μ) := by
-        refine (Continuous.aestronglyMeasurable ?_).smul hf.1.snd
-        exact he.comp (hL.comp continuous_swap).neg
-      have A' : AEStronglyMeasurable (fun p ↦ (g p.1, e (-(L p.2) p.1) • f p.2) : W × V → F × E)
-        (Measure.prod ν μ) := hg.1.fst.prod_mk A
-      have B : Continuous (fun q ↦ M q.2 q.1 : F × E → G) := M.flip.continuous₂
-      apply B.comp_aestronglyMeasurable A' -- `exact` works, but `apply` is 10x faster!
-    · filter_upwards with ⟨ξ, x⟩
-      rw [Function.uncurry_apply_pair, Submonoid.smul_def, (M.flip (g ξ)).map_smul,
-        ← Submonoid.smul_def, norm_circle_smul, ContinuousLinearMap.flip_apply,
-        norm_mul, norm_norm M, norm_mul, norm_norm, norm_norm, mul_comm (‖g _‖), ← mul_assoc]
-      exact M.le_opNorm₂ (f x) (g ξ)
+    -- This proof can be golfed but becomes very slow; breaking it up into steps
+    -- speeds up compilation.
+    change AEStronglyMeasurable (fun p : W × V ↦ (M (e (-(L p.2) p.1) • f p.2) (g p.1))) _
+    have A : AEStronglyMeasurable (fun (p : W × V) ↦ e (-L p.2 p.1) • f p.2) (ν.prod μ) := by
+      refine (Continuous.aestronglyMeasurable ?_).smul hf.1.snd
+      exact he.comp (hL.comp continuous_swap).neg
+    have A' : AEStronglyMeasurable (fun p ↦ (g p.1, e (-(L p.2) p.1) • f p.2) : W × V → F × E)
+      (Measure.prod ν μ) := hg.1.fst.prod_mk A
+    have B : Continuous (fun q ↦ M q.2 q.1 : F × E → G) := M.flip.continuous₂
+    apply B.comp_aestronglyMeasurable A' -- `exact` works, but `apply` is 10x faster!
+    filter_upwards with ⟨ξ, x⟩
+    rw [Function.uncurry_apply_pair, Submonoid.smul_def, (M.flip (g ξ)).map_smul,
+      ← Submonoid.smul_def, norm_circle_smul, ContinuousLinearMap.flip_apply,
+      norm_mul, norm_norm M, norm_mul, norm_norm, norm_norm, mul_comm (‖g _‖), ← mul_assoc]
+    exact M.le_opNorm₂ (f x) (g ξ)
   _ = ∫ x, (∫ ξ, M (f x) (e (-L.flip ξ x) • g ξ) ∂ν) ∂μ := by
       simp only [ContinuousLinearMap.flip_apply, ContinuousLinearMap.map_smul_of_tower,
       ContinuousLinearMap.coe_smul', Pi.smul_apply, LinearMap.flip_apply]
@@ -248,9 +248,9 @@ theorem fourierIntegral_continuousLinearMap_apply
     fourierIntegral e μ L.toLinearMap₂ f w a =
       fourierIntegral e μ L.toLinearMap₂ (fun x ↦ f x a) w := by
   rw [fourierIntegral, ContinuousLinearMap.integral_apply]
-  · rfl
-  · apply (fourierIntegral_convergent_iff he _ _).2 hf
-    exact L.continuous₂
+  rfl
+  apply (fourierIntegral_convergent_iff he _ _).2 hf
+  exact L.continuous₂
 
 theorem fourierIntegral_continuousMultilinearMap_apply
     {f : V → (ContinuousMultilinearMap ℝ M E)} {m : (i : ι) → M i} {w : W} (he : Continuous e)
@@ -258,9 +258,9 @@ theorem fourierIntegral_continuousMultilinearMap_apply
     fourierIntegral e μ L.toLinearMap₂ f w m =
       fourierIntegral e μ L.toLinearMap₂ (fun x ↦ f x m) w := by
   rw [fourierIntegral, ContinuousMultilinearMap.integral_apply]
-  · rfl
-  · apply (fourierIntegral_convergent_iff he _ _).2 hf
-    exact L.continuous₂
+  rfl
+  apply (fourierIntegral_convergent_iff he _ _).2 hf
+  exact L.continuous₂
 
 end VectorFourier
 

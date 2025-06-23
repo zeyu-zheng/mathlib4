@@ -508,9 +508,9 @@ theorem injective_of_lt_imp_ne [LinearOrder α] {f : α → β} (h : ∀ x y, x 
     Injective f := by
   intro x y hf
   rcases lt_trichotomy x y with (hxy | rfl | hxy)
-  · exact absurd hf <| h _ _ hxy
-  · rfl
-  · exact absurd hf.symm <| h _ _ hxy
+  exact absurd hf <| h _ _ hxy
+  rfl
+  exact absurd hf.symm <| h _ _ hxy
 
 theorem injective_of_le_imp_le [PartialOrder α] [Preorder β] (f : α → β)
     (h : ∀ {x y}, f x ≤ f y → x ≤ y) : Injective f :=
@@ -543,9 +543,9 @@ theorem StrictAnti.isMin_of_apply (hf : StrictAnti f) (ha : IsMax (f a)) : IsMin
 lemma StrictMono.add_le_nat {f : ℕ → ℕ} (hf : StrictMono f) (m n : ℕ) : m + f n ≤ f (m + n)  := by
   rw [Nat.add_comm m, Nat.add_comm m]
   induction' m with m ih
-  · rw [Nat.add_zero, Nat.add_zero]
-  · rw [← Nat.add_assoc, ← Nat.add_assoc, Nat.succ_le]
-    exact ih.trans_lt (hf (n + m).lt_succ_self)
+  rw [Nat.add_zero, Nat.add_zero]
+  rw [← Nat.add_assoc, ← Nat.add_assoc, Nat.succ_le]
+  exact ih.trans_lt (hf (n + m).lt_succ_self)
 
 protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop}
     [DecidablePred p]
@@ -553,11 +553,11 @@ protected theorem StrictMono.ite' (hf : StrictMono f) (hg : StrictMono g) {p : �
     StrictMono fun x ↦ if p x then f x else g x := by
   intro x y h
   by_cases hy : p y
-  · have hx : p x := hp h hy
-    simpa [hx, hy] using hf h
+  have hx : p x := hp h hy
+  simpa [hx, hy] using hf h
   by_cases hx : p x
-  · simpa [hx, hy] using hfg hx hy h
-  · simpa [hx, hy] using hg h
+  simpa [hx, hy] using hfg hx hy h
+  simpa [hx, hy] using hg h
 
 protected theorem StrictMono.ite (hf : StrictMono f) (hg : StrictMono g) {p : α → Prop}
     [DecidablePred p] (hp : ∀ ⦃x y⦄, x < y → p y → p x) (hfg : ∀ x, f x ≤ g x) :
@@ -792,15 +792,15 @@ theorem Antitone.strictAnti_iff_injective (hf : Antitone f) : StrictAnti f ↔ I
 theorem Monotone.eq_of_le_of_le {a₁ a₂ : α} (h_mon : Monotone f) (h_fa : f a₁ = f a₂) {i : α}
     (h₁ : a₁ ≤ i) (h₂ : i ≤ a₂) : f i = f a₁ := by
   apply le_antisymm
-  · rw [h_fa]; exact h_mon h₂
-  · exact h_mon h₁
+  rw [h_fa]; exact h_mon h₂
+  exact h_mon h₁
 
 /-- If an antitone function is equal at two points, it is equal between all of them -/
 theorem Antitone.eq_of_le_of_le {a₁ a₂ : α} (h_anti : Antitone f) (h_fa : f a₁ = f a₂) {i : α}
     (h₁ : a₁ ≤ i) (h₂ : i ≤ a₂) : f i = f a₁ := by
   apply le_antisymm
-  · exact h_anti h₁
-  · rw [h_fa]; exact h_anti h₂
+  exact h_anti h₁
+  rw [h_fa]; exact h_anti h₂
 
 end PartialOrder
 
@@ -817,24 +817,24 @@ lemma not_monotone_not_antitone_iff_exists_le_le :
     exacts [⟨⟨_, _, hbc, hfcb⟩, _, _, hab, hfab⟩, ⟨⟨_, _, hab, hfba⟩, _, _, hbc, hfbc⟩]
   rintro ⟨⟨a, b, hab, hfba⟩, c, d, hcd, hfcd⟩
   obtain hda | had := le_total d a
-  · obtain hfad | hfda := le_total (f a) (f d)
-    · exact ⟨c, d, b, hcd, hda.trans hab, Or.inl ⟨hfcd, hfba.trans_le hfad⟩⟩
-    · exact ⟨c, a, b, hcd.trans hda, hab, Or.inl ⟨hfcd.trans_le hfda, hfba⟩⟩
+  obtain hfad | hfda := le_total (f a) (f d)
+  exact ⟨c, d, b, hcd, hda.trans hab, Or.inl ⟨hfcd, hfba.trans_le hfad⟩⟩
+  exact ⟨c, a, b, hcd.trans hda, hab, Or.inl ⟨hfcd.trans_le hfda, hfba⟩⟩
   obtain hac | hca := le_total a c
-  · obtain hfdb | hfbd := le_or_lt (f d) (f b)
-    · exact ⟨a, c, d, hac, hcd, Or.inr ⟨hfcd.trans <| hfdb.trans_lt hfba, hfcd⟩⟩
-    obtain hfca | hfac := lt_or_le (f c) (f a)
-    · exact ⟨a, c, d, hac, hcd, Or.inr ⟨hfca, hfcd⟩⟩
-    obtain hbd | hdb := le_total b d
-    · exact ⟨a, b, d, hab, hbd, Or.inr ⟨hfba, hfbd⟩⟩
-    · exact ⟨a, d, b, had, hdb, Or.inl ⟨hfac.trans_lt hfcd, hfbd⟩⟩
-  · obtain hfdb | hfbd := le_or_lt (f d) (f b)
-    · exact ⟨c, a, b, hca, hab, Or.inl ⟨hfcd.trans <| hfdb.trans_lt hfba, hfba⟩⟩
-    obtain hfca | hfac := lt_or_le (f c) (f a)
-    · exact ⟨c, a, b, hca, hab, Or.inl ⟨hfca, hfba⟩⟩
-    obtain hbd | hdb := le_total b d
-    · exact ⟨a, b, d, hab, hbd, Or.inr ⟨hfba, hfbd⟩⟩
-    · exact ⟨a, d, b, had, hdb, Or.inl ⟨hfac.trans_lt hfcd, hfbd⟩⟩
+  obtain hfdb | hfbd := le_or_lt (f d) (f b)
+  exact ⟨a, c, d, hac, hcd, Or.inr ⟨hfcd.trans <| hfdb.trans_lt hfba, hfcd⟩⟩
+  obtain hfca | hfac := lt_or_le (f c) (f a)
+  exact ⟨a, c, d, hac, hcd, Or.inr ⟨hfca, hfcd⟩⟩
+  obtain hbd | hdb := le_total b d
+  exact ⟨a, b, d, hab, hbd, Or.inr ⟨hfba, hfbd⟩⟩
+  exact ⟨a, d, b, had, hdb, Or.inl ⟨hfac.trans_lt hfcd, hfbd⟩⟩
+  obtain hfdb | hfbd := le_or_lt (f d) (f b)
+  exact ⟨c, a, b, hca, hab, Or.inl ⟨hfcd.trans <| hfdb.trans_lt hfba, hfba⟩⟩
+  obtain hfca | hfac := lt_or_le (f c) (f a)
+  exact ⟨c, a, b, hca, hab, Or.inl ⟨hfca, hfba⟩⟩
+  obtain hbd | hdb := le_total b d
+  exact ⟨a, b, d, hab, hbd, Or.inr ⟨hfba, hfbd⟩⟩
+  exact ⟨a, d, b, had, hdb, Or.inl ⟨hfac.trans_lt hfcd, hfbd⟩⟩
 
 /-- A function between linear orders which is neither monotone nor antitone makes a dent upright or
 downright. -/
@@ -939,10 +939,10 @@ theorem Int.rel_of_forall_rel_succ_of_lt (r : β → β → Prop) [IsTrans β r]
   rcases lt.dest hab with ⟨n, rfl⟩
   clear hab
   induction' n with n ihn
-  · rw [Int.ofNat_one]
-    apply h
-  · rw [Int.ofNat_succ, ← Int.add_assoc]
-    exact _root_.trans ihn (h _)
+  rw [Int.ofNat_one]
+  apply h
+  rw [Int.ofNat_succ, ← Int.add_assoc]
+  exact _root_.trans ihn (h _)
 
 theorem Int.rel_of_forall_rel_succ_of_le (r : β → β → Prop) [IsRefl β r] [IsTrans β r] {f : ℤ → β}
     (h : ∀ n, r (f n) (f (n + 1))) ⦃a b : ℤ⦄ (hab : a ≤ b) : r (f a) (f b) :=
@@ -973,11 +973,11 @@ theorem exists_strictMono : ∃ f : ℤ → α, StrictMono f := by
   rcases Nat.exists_strictAnti' (default : α) with ⟨g, hg, hg₀⟩
   refine ⟨fun n ↦ Int.casesOn n f fun n ↦ g (n + 1), strictMono_int_of_lt_succ ?_⟩
   rintro (n | _ | n)
-  · exact hf n.lt_succ_self
-  · show g 1 < f 0
-    rw [hf₀, ← hg₀]
-    exact hg Nat.zero_lt_one
-  · exact hg (Nat.lt_succ_self _)
+  exact hf n.lt_succ_self
+  show g 1 < f 0
+  rw [hf₀, ← hg₀]
+  exact hg Nat.zero_lt_one
+  exact hg (Nat.lt_succ_self _)
 
 /-- If `α` is a nonempty preorder with no minimal or maximal elements, then there exists a strictly
 antitone function `f : ℤ → α`. -/

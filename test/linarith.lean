@@ -413,10 +413,10 @@ example (x y : ℚ) : x = 0 → y = 0 → x*x + y*y = 0 := by
 
 lemma norm_eq_zero_iff {x y : ℚ} : x * x + y * y = 0 ↔ x = 0 ∧ y = 0 := by
   constructor
-  · intro
-    constructor <;>
-      nlinarith
-  · intro; nlinarith
+  intro
+  constructor <;>
+    nlinarith
+  intro; nlinarith
 
 lemma norm_zero_left {x y : ℚ} (h1 : x * x + y * y = 0) : x = 0 := by
   nlinarith

@@ -92,9 +92,9 @@ lemma isNormalClosure_iff : IsNormalClosure F K L ↔
   and all minimal polynomials of `K/F` splits in `L/F`. -/
 lemma isNormalClosure_normalClosure : IsNormalClosure F K (normalClosure F K L) := by
   rw [isNormalClosure_iff]; constructor
-  · rw [normalClosure_eq_iSup_adjoin_of_splits splits]
-    exact fun x ↦ splits_of_splits (splits x) ((IntermediateField.subset_adjoin F _).trans <|
-      SetLike.coe_subset_coe.mpr <| by apply le_iSup _ x)
+  rw [normalClosure_eq_iSup_adjoin_of_splits splits]
+  exact fun x ↦ splits_of_splits (splits x) ((IntermediateField.subset_adjoin F _).trans <|
+    SetLike.coe_subset_coe.mpr <| by apply le_iSup _ x)
   simp_rw [normalClosure, ← top_le_iff]
   refine fun x _ ↦ (IntermediateField.val _).injective.mem_set_image.mp ?_
   change x.val ∈ IntermediateField.map (IntermediateField.val _) _
@@ -159,8 +159,8 @@ noncomputable def algHomEquiv : (K →ₐ[F] normalClosure F K L) ≃ (K →ₐ[
 
 instance normal [h : Normal F L] : Normal F (normalClosure F K L) := by
   obtain _ | φ := isEmpty_or_nonempty (K →ₐ[F] L)
-  · rw [normalClosure, iSup_of_empty]; exact Normal.of_algEquiv (botEquiv F L).symm
-  · exact (isNormalClosure_normalClosure F K L).normal
+  rw [normalClosure, iSup_of_empty]; exact Normal.of_algEquiv (botEquiv F L).symm
+  exact (isNormalClosure_normalClosure F K L).normal
 
 instance is_finiteDimensional [FiniteDimensional F K] :
     FiniteDimensional F (normalClosure F K L) := by
@@ -235,9 +235,9 @@ lemma normalClosure_def' : normalClosure F K L = ⨆ f : L →ₐ[F] L, K.map f 
 
 lemma normalClosure_def'' : normalClosure F K L = ⨆ f : L ≃ₐ[F] L, K.map f := by
   refine (normalClosure_def' K).trans (le_antisymm (iSup_le (fun f ↦ ?_)) (iSup_le (fun f ↦ ?_)))
-  · exact le_iSup_of_le (f.restrictNormal' L)
-      (fun b ⟨a, h⟩ ↦ ⟨a, h.1, h.2 ▸ f.restrictNormal_commutes L a⟩)
-  · exact le_iSup_of_le f le_rfl
+  exact le_iSup_of_le (f.restrictNormal' L)
+    (fun b ⟨a, h⟩ ↦ ⟨a, h.1, h.2 ▸ f.restrictNormal_commutes L a⟩)
+  exact le_iSup_of_le f le_rfl
 
 lemma normalClosure_mono (h : K ≤ K') : normalClosure F K L ≤ normalClosure F K' L := by
   rw [normalClosure_def', normalClosure_def']

@@ -77,60 +77,60 @@ theorem iSup_genEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K V] (f : E
   induction' h_dim : finrank K V using Nat.strong_induction_on with n ih generalizing V
   cases' n with n
   -- If the vector space is 0-dimensional, the result is trivial.
-  · rw [← top_le_iff]
-    simp only [Submodule.finrank_eq_zero.1 (Eq.trans (finrank_top _ _) h_dim), bot_le]
+  rw [← top_le_iff]
+  simp only [Submodule.finrank_eq_zero.1 (Eq.trans (finrank_top _ _) h_dim), bot_le]
   -- Otherwise the vector space is nontrivial.
-  · haveI : Nontrivial V := finrank_pos_iff.1 (by rw [h_dim]; apply Nat.zero_lt_succ)
-    -- Hence, `f` has an eigenvalue `μ₀`.
-    obtain ⟨μ₀, hμ₀⟩ : ∃ μ₀, f.HasEigenvalue μ₀ := exists_eigenvalue f
-    -- We define `ES` to be the generalized eigenspace
-    let ES := f.genEigenspace μ₀ (finrank K V)
-    -- and `ER` to be the generalized eigenrange.
-    let ER := f.genEigenrange μ₀ (finrank K V)
-    -- `f` maps `ER` into itself.
-    have h_f_ER : ∀ x : V, x ∈ ER → f x ∈ ER := fun x hx =>
-      map_genEigenrange_le (Submodule.mem_map_of_mem hx)
-    -- Therefore, we can define the restriction `f'` of `f` to `ER`.
-    let f' : End K ER := f.restrict h_f_ER
-    -- The dimension of `ES` is positive
-    have h_dim_ES_pos : 0 < finrank K ES := by
-      dsimp only [ES]
-      rw [h_dim]
-      apply pos_finrank_genEigenspace_of_hasEigenvalue hμ₀ (Nat.zero_lt_succ n)
-    -- and the dimensions of `ES` and `ER` add up to `finrank K V`.
-    have h_dim_add : finrank K ER + finrank K ES = finrank K V := by
-      apply LinearMap.finrank_range_add_finrank_ker
-    -- Therefore the dimension `ER` mus be smaller than `finrank K V`.
-    have h_dim_ER : finrank K ER < n.succ := by linarith
-    -- This allows us to apply the induction hypothesis on `ER`:
-    have ih_ER : ⨆ (μ : K) (k : ℕ), f'.genEigenspace μ k = ⊤ :=
-      ih (finrank K ER) h_dim_ER f' rfl
-    -- The induction hypothesis gives us a statement about subspaces of `ER`. We can transfer this
-    -- to a statement about subspaces of `V` via `submodule.subtype`:
-    have ih_ER' : ⨆ (μ : K) (k : ℕ), (f'.genEigenspace μ k).map ER.subtype = ER := by
-      simp only [(Submodule.map_iSup _ _).symm, ih_ER, Submodule.map_subtype_top ER]
-    -- Moreover, every generalized eigenspace of `f'` is contained in the corresponding generalized
-    -- eigenspace of `f`.
-    have hff' :
-      ∀ μ k, (f'.genEigenspace μ k).map ER.subtype ≤ f.genEigenspace μ k := by
-      intros
-      rw [genEigenspace_restrict]
-      apply Submodule.map_comap_le
-    -- It follows that `ER` is contained in the span of all generalized eigenvectors.
-    have hER : ER ≤ ⨆ (μ : K) (k : ℕ), f.genEigenspace μ k := by
-      rw [← ih_ER']
-      exact iSup₂_mono hff'
-    -- `ES` is contained in this span by definition.
-    have hES : ES ≤ ⨆ (μ : K) (k : ℕ), f.genEigenspace μ k :=
-      le_trans (le_iSup (fun k => f.genEigenspace μ₀ k) (finrank K V))
-        (le_iSup (fun μ : K => ⨆ k : ℕ, f.genEigenspace μ k) μ₀)
-    -- Moreover, we know that `ER` and `ES` are disjoint.
-    have h_disjoint : Disjoint ER ES := generalized_eigenvec_disjoint_range_ker f μ₀
-    -- Since the dimensions of `ER` and `ES` add up to the dimension of `V`, it follows that the
-    -- span of all generalized eigenvectors is all of `V`.
-    show ⨆ (μ : K) (k : ℕ), f.genEigenspace μ k = ⊤
-    rw [← top_le_iff, ← Submodule.eq_top_of_disjoint ER ES h_dim_add h_disjoint]
-    apply sup_le hER hES
+  haveI : Nontrivial V := finrank_pos_iff.1 (by rw [h_dim]; apply Nat.zero_lt_succ)
+  -- Hence, `f` has an eigenvalue `μ₀`.
+  obtain ⟨μ₀, hμ₀⟩ : ∃ μ₀, f.HasEigenvalue μ₀ := exists_eigenvalue f
+  -- We define `ES` to be the generalized eigenspace
+  let ES := f.genEigenspace μ₀ (finrank K V)
+  -- and `ER` to be the generalized eigenrange.
+  let ER := f.genEigenrange μ₀ (finrank K V)
+  -- `f` maps `ER` into itself.
+  have h_f_ER : ∀ x : V, x ∈ ER → f x ∈ ER := fun x hx =>
+    map_genEigenrange_le (Submodule.mem_map_of_mem hx)
+  -- Therefore, we can define the restriction `f'` of `f` to `ER`.
+  let f' : End K ER := f.restrict h_f_ER
+  -- The dimension of `ES` is positive
+  have h_dim_ES_pos : 0 < finrank K ES := by
+    dsimp only [ES]
+    rw [h_dim]
+    apply pos_finrank_genEigenspace_of_hasEigenvalue hμ₀ (Nat.zero_lt_succ n)
+  -- and the dimensions of `ES` and `ER` add up to `finrank K V`.
+  have h_dim_add : finrank K ER + finrank K ES = finrank K V := by
+    apply LinearMap.finrank_range_add_finrank_ker
+  -- Therefore the dimension `ER` mus be smaller than `finrank K V`.
+  have h_dim_ER : finrank K ER < n.succ := by linarith
+  -- This allows us to apply the induction hypothesis on `ER`:
+  have ih_ER : ⨆ (μ : K) (k : ℕ), f'.genEigenspace μ k = ⊤ :=
+    ih (finrank K ER) h_dim_ER f' rfl
+  -- The induction hypothesis gives us a statement about subspaces of `ER`. We can transfer this
+  -- to a statement about subspaces of `V` via `submodule.subtype`:
+  have ih_ER' : ⨆ (μ : K) (k : ℕ), (f'.genEigenspace μ k).map ER.subtype = ER := by
+    simp only [(Submodule.map_iSup _ _).symm, ih_ER, Submodule.map_subtype_top ER]
+  -- Moreover, every generalized eigenspace of `f'` is contained in the corresponding generalized
+  -- eigenspace of `f`.
+  have hff' :
+    ∀ μ k, (f'.genEigenspace μ k).map ER.subtype ≤ f.genEigenspace μ k := by
+    intros
+    rw [genEigenspace_restrict]
+    apply Submodule.map_comap_le
+  -- It follows that `ER` is contained in the span of all generalized eigenvectors.
+  have hER : ER ≤ ⨆ (μ : K) (k : ℕ), f.genEigenspace μ k := by
+    rw [← ih_ER']
+    exact iSup₂_mono hff'
+  -- `ES` is contained in this span by definition.
+  have hES : ES ≤ ⨆ (μ : K) (k : ℕ), f.genEigenspace μ k :=
+    le_trans (le_iSup (fun k => f.genEigenspace μ₀ k) (finrank K V))
+      (le_iSup (fun μ : K => ⨆ k : ℕ, f.genEigenspace μ k) μ₀)
+  -- Moreover, we know that `ER` and `ES` are disjoint.
+  have h_disjoint : Disjoint ER ES := generalized_eigenvec_disjoint_range_ker f μ₀
+  -- Since the dimensions of `ER` and `ES` add up to the dimension of `V`, it follows that the
+  -- span of all generalized eigenvectors is all of `V`.
+  show ⨆ (μ : K) (k : ℕ), f.genEigenspace μ k = ⊤
+  rw [← top_le_iff, ← Submodule.eq_top_of_disjoint ER ES h_dim_add h_disjoint]
+  apply sup_le hER hES
 
 end Module.End
 
@@ -150,7 +150,7 @@ theorem inf_iSup_genEigenspace [FiniteDimensional K V] (h : ∀ x ∈ p, f x ∈
     exact (mem_iSup_iff_exists_finsupp _ _).mpr ⟨m, fun μ ↦ mem_inf.mp ⟨this μ, hm₂ μ⟩, rfl⟩
   intro μ
   by_cases hμ : μ ∈ m.support; swap
-  · simp only [Finsupp.not_mem_support_iff.mp hμ, p.zero_mem]
+  simp only [Finsupp.not_mem_support_iff.mp hμ, p.zero_mem]
   have h_comm : ∀ (μ₁ μ₂ : K),
     Commute ((f - algebraMap K (End K V) μ₁) ^ finrank K V)
             ((f - algebraMap K (End K V) μ₂) ^ finrank K V) := fun μ₁ μ₂ ↦
@@ -165,7 +165,7 @@ theorem inf_iSup_genEigenspace [FiniteDimensional K V] (h : ∀ x ∈ p, f x ∈
       Finsupp.sum_ite_eq', if_pos hμ]
   rintro μ' hμ'
   split_ifs with hμμ'
-  · rw [hμμ']
+  rw [hμμ']
   replace hm₂ : ((f - algebraMap K (End K V) μ') ^ finrank K V) (m μ') = 0 := by
     obtain ⟨k, hk⟩ := (mem_iSup_of_chain _ _).mp (hm₂ μ')
     exact Module.End.genEigenspace_le_genEigenspace_finrank _ _ k hk

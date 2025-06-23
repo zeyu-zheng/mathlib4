@@ -217,10 +217,10 @@ theorem ContinuousAt.comp_div_cases {f g : α → G₀} (h : α → G₀ → β)
     ContinuousAt (fun x => h x (f x / g x)) a := by
   show ContinuousAt (↿h ∘ fun x => (x, f x / g x)) a
   by_cases hga : g a = 0
-  · rw [ContinuousAt]
-    simp_rw [comp_apply, hga, div_zero]
-    exact (h2h hga).comp (continuousAt_id.prod_mk tendsto_top)
-  · exact ContinuousAt.comp (hh hga) (continuousAt_id.prod (hf.div hg hga))
+  rw [ContinuousAt]
+  simp_rw [comp_apply, hga, div_zero]
+  exact (h2h hga).comp (continuousAt_id.prod_mk tendsto_top)
+  exact ContinuousAt.comp (hh hga) (continuousAt_id.prod (hf.div hg hga))
 
 /-- `h x (f x / g x)` is continuous under certain conditions, even if the denominator is sometimes
   `0`. See docstring of `ContinuousAt.comp_div_cases`. -/
@@ -312,10 +312,10 @@ variable [GroupWithZero G₀] [TopologicalSpace G₀] [HasContinuousInv₀ G₀]
 theorem continuousAt_zpow₀ (x : G₀) (m : ℤ) (h : x ≠ 0 ∨ 0 ≤ m) :
     ContinuousAt (fun x => x ^ m) x := by
   cases' m with m m
-  · simpa only [Int.ofNat_eq_coe, zpow_natCast] using continuousAt_pow x m
-  · simp only [zpow_negSucc]
-    have hx : x ≠ 0 := h.resolve_right (Int.negSucc_lt_zero m).not_le
-    exact (continuousAt_pow x (m + 1)).inv₀ (pow_ne_zero _ hx)
+  simpa only [Int.ofNat_eq_coe, zpow_natCast] using continuousAt_pow x m
+  simp only [zpow_negSucc]
+  have hx : x ≠ 0 := h.resolve_right (Int.negSucc_lt_zero m).not_le
+  exact (continuousAt_pow x (m + 1)).inv₀ (pow_ne_zero _ hx)
 
 theorem continuousOn_zpow₀ (m : ℤ) : ContinuousOn (fun x : G₀ => x ^ m) {0}ᶜ := fun _x hx =>
   (continuousAt_zpow₀ _ _ (Or.inl hx)).continuousWithinAt

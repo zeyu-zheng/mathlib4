@@ -179,9 +179,9 @@ instance : Subsingleton (iter₁ ⟶ iter₂) where
       apply this
     refine fun _ => WellFoundedLT.induction _ (fun i hi hi' => ?_)
     obtain rfl|⟨i, rfl, hi''⟩|_ := eq_bot_or_eq_succ_or_isWellOrderLimitElement i
-    · simp only [natTrans_app_zero]
-    · simp only [Hom.natTrans_app_succ _ i (lt_of_lt_of_le hi'' hi'), hi i hi'']
-    · exact (iter₁.isColimit i hi').hom_ext (fun ⟨k, hk⟩ => by simp [hi k hk]))
+    simp only [natTrans_app_zero]
+    simp only [Hom.natTrans_app_succ _ i (lt_of_lt_of_le hi'' hi'), hi i hi'']
+    exact (iter₁.isColimit i hi').hom_ext (fun ⟨k, hk⟩ => by simp [hi k hk]))
 
 end Hom
 

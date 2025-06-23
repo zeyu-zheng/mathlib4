@@ -76,10 +76,10 @@ variable [DecidablePred p] [DecidablePred q]
 
 lemma find_eq_iff (h : ∃ n : ℕ, p n) : Nat.find h = m ↔ p m ∧ ∀ n < m, ¬ p n := by
   constructor
-  · rintro rfl
-    exact ⟨Nat.find_spec h, fun _ ↦ Nat.find_min h⟩
-  · rintro ⟨hm, hlt⟩
-    exact le_antisymm (Nat.find_min' h hm) (not_lt.1 <| imp_not_comm.1 (hlt _) <| Nat.find_spec h)
+  rintro rfl
+  exact ⟨Nat.find_spec h, fun _ ↦ Nat.find_min h⟩
+  rintro ⟨hm, hlt⟩
+  exact le_antisymm (Nat.find_min' h hm) (not_lt.1 <| imp_not_comm.1 (hlt _) <| Nat.find_spec h)
 
 @[simp] lemma find_lt_iff (h : ∃ n : ℕ, p n) (n : ℕ) : Nat.find h < n ↔ ∃ m < n, p m :=
   ⟨fun h2 ↦ ⟨Nat.find h, h2, Nat.find_spec h⟩,
@@ -115,13 +115,13 @@ lemma find_pos (h : ∃ n : ℕ, p n) : 0 < Nat.find h ↔ ¬p 0 :=
 lemma find_add {hₘ : ∃ m, p (m + n)} {hₙ : ∃ n, p n} (hn : n ≤ Nat.find hₙ) :
     Nat.find hₘ + n = Nat.find hₙ := by
   refine le_antisymm ((le_find_iff _ _).2 fun m hm hpm => Nat.not_le.2 hm ?_) ?_
-  · have hnm : n ≤ m := le_trans hn (find_le hpm)
-    refine Nat.add_le_of_le_sub hnm (find_le ?_)
-    rwa [Nat.sub_add_cancel hnm]
-  · rw [← Nat.sub_le_iff_le_add]
-    refine (le_find_iff _ _).2 fun m hm hpm => Nat.not_le.2 hm ?_
-    rw [Nat.sub_le_iff_le_add]
-    exact find_le hpm
+  have hnm : n ≤ m := le_trans hn (find_le hpm)
+  refine Nat.add_le_of_le_sub hnm (find_le ?_)
+  rwa [Nat.sub_add_cancel hnm]
+  rw [← Nat.sub_le_iff_le_add]
+  refine (le_find_iff _ _).2 fun m hm hpm => Nat.not_le.2 hm ?_
+  rw [Nat.sub_le_iff_le_add]
+  exact find_le hpm
 
 end Find
 
@@ -153,29 +153,29 @@ lemma findGreatest_of_not (h : ¬ P (n + 1)) : findGreatest P (n + 1) = findGrea
 lemma findGreatest_eq_iff :
     Nat.findGreatest P k = m ↔ m ≤ k ∧ (m ≠ 0 → P m) ∧ ∀ ⦃n⦄, m < n → n ≤ k → ¬P n := by
   induction' k with k ihk generalizing m
-  · rw [eq_comm, Iff.comm]
-    simp only [zero_eq, Nat.le_zero, ne_eq, findGreatest_zero, and_iff_left_iff_imp]
-    rintro rfl
-    exact ⟨fun h ↦ (h rfl).elim, fun n hlt heq ↦ by omega⟩
-  · by_cases hk : P (k + 1)
-    · rw [findGreatest_eq hk]
-      constructor
-      · rintro rfl
-        exact ⟨le_refl _, fun _ ↦ hk, fun n hlt hle ↦ by omega⟩
-      · rintro ⟨hle, h0, hm⟩
-        rcases Decidable.eq_or_lt_of_le hle with (rfl | hlt)
-        exacts [rfl, (hm hlt (le_refl _) hk).elim]
-    · rw [findGreatest_of_not hk, ihk]
-      constructor
-      · rintro ⟨hle, hP, hm⟩
-        refine ⟨le_trans hle k.le_succ, hP, fun n hlt hle ↦ ?_⟩
-        rcases Decidable.eq_or_lt_of_le hle with (rfl | hlt')
-        exacts [hk, hm hlt <| Nat.lt_succ_iff.1 hlt']
-      · rintro ⟨hle, hP, hm⟩
-        refine ⟨Nat.lt_succ_iff.1 (lt_of_le_of_ne hle ?_), hP,
-          fun n hlt hle ↦ hm hlt (le_trans hle k.le_succ)⟩
-        rintro rfl
-        exact hk (hP k.succ_ne_zero)
+  rw [eq_comm, Iff.comm]
+  simp only [zero_eq, Nat.le_zero, ne_eq, findGreatest_zero, and_iff_left_iff_imp]
+  rintro rfl
+  exact ⟨fun h ↦ (h rfl).elim, fun n hlt heq ↦ by omega⟩
+  by_cases hk : P (k + 1)
+  rw [findGreatest_eq hk]
+  constructor
+  rintro rfl
+  exact ⟨le_refl _, fun _ ↦ hk, fun n hlt hle ↦ by omega⟩
+  · rintro ⟨hle, h0, hm⟩
+    rcases Decidable.eq_or_lt_of_le hle with (rfl | hlt)
+    exacts [rfl, (hm hlt (le_refl _) hk).elim]
+  rw [findGreatest_of_not hk, ihk]
+  constructor
+  · rintro ⟨hle, hP, hm⟩
+    refine ⟨le_trans hle k.le_succ, hP, fun n hlt hle ↦ ?_⟩
+    rcases Decidable.eq_or_lt_of_le hle with (rfl | hlt')
+    exacts [hk, hm hlt <| Nat.lt_succ_iff.1 hlt']
+  rintro ⟨hle, hP, hm⟩
+  refine ⟨Nat.lt_succ_iff.1 (lt_of_le_of_ne hle ?_), hP,
+  fun n hlt hle ↦ hm hlt (le_trans hle k.le_succ)⟩
+  rintro rfl
+  exact hk (hP k.succ_ne_zero)
 
 lemma findGreatest_eq_zero_iff : Nat.findGreatest P k = 0 ↔ ∀ ⦃n⦄, 0 < n → n ≤ k → ¬P n := by
   simp [findGreatest_eq_iff]
@@ -185,10 +185,10 @@ lemma findGreatest_eq_zero_iff : Nat.findGreatest P k = 0 ↔ ∀ ⦃n⦄, 0 < n
 
 lemma findGreatest_spec (hmb : m ≤ n) (hm : P m) : P (Nat.findGreatest P n) := by
   by_cases h : Nat.findGreatest P n = 0
-  · cases m
-    · rwa [h]
-    exact ((findGreatest_eq_zero_iff.1 h) (zero_lt_succ _) hmb hm).elim
-  · exact (findGreatest_eq_iff.1 rfl).2.1 h
+  cases m
+  rwa [h]
+  exact ((findGreatest_eq_zero_iff.1 h) (zero_lt_succ _) hmb hm).elim
+  exact (findGreatest_eq_iff.1 rfl).2.1 h
 
 lemma findGreatest_le (n : ℕ) : Nat.findGreatest P n ≤ n :=
   (findGreatest_eq_iff.1 rfl).1
@@ -199,20 +199,20 @@ lemma le_findGreatest (hmb : m ≤ n) (hm : P m) : m ≤ Nat.findGreatest P n :=
 lemma findGreatest_mono_right (P : ℕ → Prop) [DecidablePred P] {m n} (hmn : m ≤ n) :
     Nat.findGreatest P m ≤ Nat.findGreatest P n := by
   induction' hmn with k hmk ih
-  · simp
+  simp
   rw [findGreatest_succ]
   split_ifs
-  · exact le_trans ih $ le_trans (findGreatest_le _) (le_succ _)
-  · exact ih
+  exact le_trans ih $ le_trans (findGreatest_le _) (le_succ _)
+  exact ih
 
 lemma findGreatest_mono_left [DecidablePred Q] (hPQ : ∀ n, P n → Q n) (n : ℕ) :
     Nat.findGreatest P n ≤ Nat.findGreatest Q n := by
   induction' n with n hn
-  · rfl
+  rfl
   by_cases h : P (n + 1)
-  · rw [findGreatest_eq h, findGreatest_eq (hPQ _ h)]
-  · rw [findGreatest_of_not h]
-    exact le_trans hn (Nat.findGreatest_mono_right _ <| le_succ _)
+  rw [findGreatest_eq h, findGreatest_eq (hPQ _ h)]
+  rw [findGreatest_of_not h]
+  exact le_trans hn (Nat.findGreatest_mono_right _ <| le_succ _)
 
 lemma findGreatest_mono [DecidablePred Q] (hPQ : ∀ n, P n → Q n) (hmn : m ≤ n) :
     Nat.findGreatest P m ≤ Nat.findGreatest Q n :=

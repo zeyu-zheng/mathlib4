@@ -63,10 +63,10 @@ def graph (f : α →₀ M) : Finset (α × M) :=
 theorem mk_mem_graph_iff {a : α} {m : M} {f : α →₀ M} : (a, m) ∈ f.graph ↔ f a = m ∧ m ≠ 0 := by
   simp_rw [graph, mem_map, mem_support_iff]
   constructor
-  · rintro ⟨b, ha, rfl, -⟩
-    exact ⟨rfl, ha⟩
-  · rintro ⟨rfl, ha⟩
-    exact ⟨a, ha, rfl⟩
+  rintro ⟨b, ha, rfl, -⟩
+  exact ⟨rfl, ha⟩
+  rintro ⟨rfl, ha⟩
+  exact ⟨a, ha, rfl⟩
 
 @[simp]
 theorem mem_graph_iff {c : α × M} {f : α →₀ M} : c ∈ f.graph ↔ f c.1 = c.2 ∧ c.2 ≠ 0 := by
@@ -399,10 +399,10 @@ def mapDomain (f : α → β) (v : α →₀ M) : β →₀ M :=
 theorem mapDomain_apply {f : α → β} (hf : Function.Injective f) (x : α →₀ M) (a : α) :
     mapDomain f x (f a) = x a := by
   rw [mapDomain, sum_apply, sum_eq_single a, single_eq_same]
-  · intro b _ hba
-    exact single_eq_of_ne (hf.ne hba)
-  · intro _
-    rw [single_zero, coe_zero, Pi.zero_apply]
+  intro b _ hba
+  exact single_eq_of_ne (hf.ne hba)
+  intro _
+  rw [single_zero, coe_zero, Pi.zero_apply]
 
 theorem mapDomain_notin_range {f : α → β} (x : α →₀ M) (a : β) (h : a ∉ Set.range f) :
     mapDomain f x a = 0 := by
@@ -416,10 +416,10 @@ theorem mapDomain_id : mapDomain id v = v :=
 theorem mapDomain_comp {f : α → β} {g : β → γ} :
     mapDomain (g ∘ f) v = mapDomain g (mapDomain f v) := by
   refine ((sum_sum_index ?_ ?_).trans ?_).symm
-  · intro
-    exact single_zero _
-  · intro
-    exact single_add _
+  intro
+  exact single_zero _
+  intro
+  exact single_add _
   refine sum_congr fun _ _ => sum_single_index ?_
   exact single_zero _
 
@@ -480,13 +480,13 @@ theorem mapDomain_apply' (S : Set α) {f : α → β} (x : α →₀ M) (hS : (x
     rw [mapDomain, sum_apply, sum]
     simp_rw [single_apply]
     by_cases hax : a ∈ x.support
-    · rw [← Finset.add_sum_erase _ _ hax, if_pos rfl]
-      convert add_zero (x a)
-      refine Finset.sum_eq_zero fun i hi => if_neg ?_
-      exact (hf.mono hS).ne (Finset.mem_of_mem_erase hi) hax (Finset.ne_of_mem_erase hi)
-    · rw [not_mem_support_iff.1 hax]
-      refine Finset.sum_eq_zero fun i hi => if_neg ?_
-      exact hf.ne (hS hi) ha (ne_of_mem_of_not_mem hi hax)
+    rw [← Finset.add_sum_erase _ _ hax, if_pos rfl]
+    convert add_zero (x a)
+    refine Finset.sum_eq_zero fun i hi => if_neg ?_
+    exact (hf.mono hS).ne (Finset.mem_of_mem_erase hi) hax (Finset.ne_of_mem_erase hi)
+    rw [not_mem_support_iff.1 hax]
+    refine Finset.sum_eq_zero fun i hi => if_neg ?_
+    exact hf.ne (hS hi) ha (ne_of_mem_of_not_mem hi hax)
 
 theorem mapDomain_support_of_injOn [DecidableEq β] {f : α → β} (s : α →₀ M)
     (hf : Set.InjOn f s.support) : (mapDomain f s).support = Finset.image f s.support :=
@@ -496,10 +496,10 @@ theorem mapDomain_support_of_injOn [DecidableEq β] {f : α → β} (s : α →�
     rcases hx with ⟨hx_w, hx_h_left, rfl⟩
     simp only [mem_support_iff, Ne]
     rw [mapDomain_apply' (↑s.support : Set _) _ _ hf]
-    · exact hx_h_left
-    · simp only [mem_coe, mem_support_iff, Ne]
-      exact hx_h_left
-    · exact Subset.refl _
+    exact hx_h_left
+    simp only [mem_coe, mem_support_iff, Ne]
+    exact hx_h_left
+    exact Subset.refl _
 
 theorem mapDomain_support_of_injective [DecidableEq β] {f : α → β} (hf : Function.Injective f)
     (s : α →₀ M) : (mapDomain f s).support = Finset.image f s.support :=
@@ -524,9 +524,9 @@ theorem sum_mapDomain_index_addMonoidHom [AddCommMonoid N] {f : α → β} {s : 
 theorem embDomain_eq_mapDomain (f : α ↪ β) (v : α →₀ M) : embDomain f v = mapDomain f v := by
   ext a
   by_cases h : a ∈ Set.range f
-  · rcases h with ⟨a, rfl⟩
-    rw [mapDomain_apply f.injective, embDomain_apply]
-  · rw [mapDomain_notin_range, embDomain_notin_range] <;> assumption
+  rcases h with ⟨a, rfl⟩
+  rw [mapDomain_apply f.injective, embDomain_apply]
+  rw [mapDomain_notin_range, embDomain_notin_range] <;> assumption
 
 @[to_additive]
 theorem prod_mapDomain_index_inj [CommMonoid N] {f : α → β} {s : α →₀ M} {h : β → M → N}
@@ -580,11 +580,11 @@ theorem mapDomain_injOn (S : Set α) {f : α → β} (hf : Set.InjOn f S) :
   intro v₁ hv₁ v₂ hv₂ eq
   ext a
   by_cases h : a ∈ v₁.support ∪ v₂.support
-  · rw [← mapDomain_apply' S _ hv₁ hf _, ← mapDomain_apply' S _ hv₂ hf _, eq] <;>
-      · apply Set.union_subset hv₁ hv₂
-        exact mod_cast h
-  · simp only [not_or, mem_union, not_not, mem_support_iff] at h
-    simp [h]
+  rw [← mapDomain_apply' S _ hv₁ hf _, ← mapDomain_apply' S _ hv₂ hf _, eq] <;>
+  · apply Set.union_subset hv₁ hv₂
+    exact mod_cast h
+  simp only [not_or, mem_union, not_not, mem_support_iff] at h
+  simp [h]
 
 theorem equivMapDomain_eq_mapDomain {M} [AddCommMonoid M] (f : α ≃ β) (l : α →₀ M) :
     equivMapDomain f l = mapDomain f l := by ext x; simp [mapDomain_equiv_apply]
@@ -638,10 +638,10 @@ lemma embDomain_comapDomain {f : α ↪ β} {g : β →₀ M} (hg : ↑g.support
     embDomain f (comapDomain f g f.injective.injOn) = g := by
   ext b
   by_cases hb : b ∈ Set.range f
-  · obtain ⟨a, rfl⟩ := hb
-    rw [embDomain_apply, comapDomain_apply]
-  · replace hg : g b = 0 := not_mem_support_iff.mp <| mt (hg ·) hb
-    rw [embDomain_notin_range _ _ _ hb, hg]
+  obtain ⟨a, rfl⟩ := hb
+  rw [embDomain_apply, comapDomain_apply]
+  replace hg : g b = 0 := not_mem_support_iff.mp <| mt (hg ·) hb
+  rw [embDomain_notin_range _ _ _ hb, hg]
 
 /-- Note the `hif` argument is needed for this to work in `rw`. -/
 @[simp]
@@ -656,11 +656,11 @@ theorem comapDomain_single (f : α → β) (a : α) (m : M)
     (hif : Set.InjOn f (f ⁻¹' (single (f a) m).support)) :
     comapDomain f (Finsupp.single (f a) m) hif = Finsupp.single a m := by
   rcases eq_or_ne m 0 with (rfl | hm)
-  · simp only [single_zero, comapDomain_zero]
-  · rw [eq_single_iff, comapDomain_apply, comapDomain_support, ← Finset.coe_subset, coe_preimage,
-      support_single_ne_zero _ hm, coe_singleton, coe_singleton, single_eq_same]
-    rw [support_single_ne_zero _ hm, coe_singleton] at hif
-    exact ⟨fun x hx => hif hx rfl hx, rfl⟩
+  simp only [single_zero, comapDomain_zero]
+  rw [eq_single_iff, comapDomain_apply, comapDomain_support, ← Finset.coe_subset, coe_preimage,
+    support_single_ne_zero _ hm, coe_singleton, coe_singleton, single_eq_same]
+  rw [support_single_ne_zero _ hm, coe_singleton] at hif
+  exact ⟨fun x hx => hif hx rfl hx, rfl⟩
 
 end Zero
 
@@ -743,13 +743,13 @@ theorem prod_option_index [AddCommMonoid M] [CommMonoid N] (f : Option α →₀
     (h_add : ∀ o m₁ m₂, b o (m₁ + m₂) = b o m₁ * b o m₂) :
     f.prod b = b none (f none) * f.some.prod fun a => b (Option.some a) := by
     apply induction_linear f
-    · simp [some_zero, h_zero]
-    · intro f₁ f₂ h₁ h₂
-      rw [Finsupp.prod_add_index, h₁, h₂, some_add, Finsupp.prod_add_index]
-      · simp only [h_add, Pi.add_apply, Finsupp.coe_add]
-        rw [mul_mul_mul_comm]
-      all_goals simp [h_zero, h_add]
-    · rintro (_ | a) m <;> simp [h_zero, h_add]
+    simp [some_zero, h_zero]
+    intro f₁ f₂ h₁ h₂
+    rw [Finsupp.prod_add_index, h₁, h₂, some_add, Finsupp.prod_add_index]
+    simp only [h_add, Pi.add_apply, Finsupp.coe_add]
+    rw [mul_mul_mul_comm]
+    all_goals simp [h_zero, h_add]
+    rintro (_ | a) m <;> simp [h_zero, h_add]
 
 theorem sum_option_index_smul [Semiring R] [AddCommMonoid M] [Module R M] (f : Option α →₀ R)
     (b : Option α → M) :
@@ -870,8 +870,8 @@ theorem frange_single {x : α} {y : M} : frange (single x y) ⊆ {y} := fun r hr
   ht2 ▸ by
       rw [single_apply] at ht2 ⊢
       split_ifs at ht2 ⊢
-      · exact Finset.mem_singleton_self _
-      · exact (t ht2.symm).elim
+      exact Finset.mem_singleton_self _
+      exact (t ht2.symm).elim
 
 end Frange
 
@@ -1025,11 +1025,11 @@ theorem mem_support_multiset_sum [AddCommMonoid M] {s : Multiset (α →₀ M)} 
     (by
       intro f s ih ha
       by_cases h : a ∈ f.support
-      · exact ⟨f, Multiset.mem_cons_self _ _, h⟩
-      · simp only [Multiset.sum_cons, mem_support_iff, add_apply, not_mem_support_iff.1 h,
-          zero_add] at ha
-        rcases ih (mem_support_iff.2 ha) with ⟨f', h₀, h₁⟩
-        exact ⟨f', Multiset.mem_cons_of_mem h₀, h₁⟩)
+      exact ⟨f, Multiset.mem_cons_self _ _, h⟩
+      simp only [Multiset.sum_cons, mem_support_iff, add_apply, not_mem_support_iff.1 h,
+        zero_add] at ha
+      rcases ih (mem_support_iff.2 ha) with ⟨f', h₀, h₁⟩
+      exact ⟨f', Multiset.mem_cons_of_mem h₀, h₁⟩)
 
 theorem mem_support_finset_sum [AddCommMonoid M] {s : Finset ι} {h : ι → α →₀ M} (a : α)
     (ha : a ∈ (∑ c ∈ s, h c).support) : ∃ c ∈ s, a ∈ (h c).support :=
@@ -1058,22 +1058,22 @@ theorem curry_apply (f : α × β →₀ M) (x : α) (y : β) : f.curry x y = f 
     simp only [ne_eq, single_apply, Prod.ext_iff, ite_and]
     split_ifs <;> simp [single_apply, *]
     rw [Finsupp.curry, sum_apply, sum_apply, sum_eq_single, this, if_pos rfl]
-    · intro b _ b_ne
-      rw [this b, if_neg b_ne]
-    · intro _
-      rw [single_zero, single_zero, coe_zero, Pi.zero_apply, coe_zero, Pi.zero_apply]
+    intro b _ b_ne
+    rw [this b, if_neg b_ne]
+    intro _
+    rw [single_zero, single_zero, coe_zero, Pi.zero_apply, coe_zero, Pi.zero_apply]
 
 theorem sum_curry_index (f : α × β →₀ M) (g : α → β → M → N) (hg₀ : ∀ a b, g a b 0 = 0)
     (hg₁ : ∀ a b c₀ c₁, g a b (c₀ + c₁) = g a b c₀ + g a b c₁) :
     (f.curry.sum fun a f => f.sum (g a)) = f.sum fun p c => g p.1 p.2 c := by
   rw [Finsupp.curry]
   trans
-  · exact
-      sum_sum_index (fun a => sum_zero_index) fun a b₀ b₁ =>
-        sum_add_index' (fun a => hg₀ _ _) fun c d₀ d₁ => hg₁ _ _ _ _
+  exact
+    sum_sum_index (fun a => sum_zero_index) fun a b₀ b₁ =>
+      sum_add_index' (fun a => hg₀ _ _) fun c d₀ d₁ => hg₁ _ _ _ _
   congr; funext p c
   trans
-  · exact sum_single_index sum_zero_index
+  exact sum_single_index sum_zero_index
   exact sum_single_index (hg₀ _ _)
 
 /-- Given a finitely supported function `f` from `α` to the type of
@@ -1107,8 +1107,8 @@ theorem filter_curry (f : α × β →₀ M) (p : α → Prop) [DecidablePred p]
     refine Finset.sum_congr rfl ?_
     rintro ⟨a₁, a₂⟩ _
     split_ifs with h
-    · rw [filter_apply_pos, filter_single_of_pos] <;> exact h
-    · rwa [filter_single_of_neg]
+    rw [filter_apply_pos, filter_single_of_pos] <;> exact h
+    rwa [filter_single_of_neg]
 
 theorem support_curry [DecidableEq α] (f : α × β →₀ M) :
     f.curry.support ⊆ f.support.image Prod.fst := by
@@ -1391,9 +1391,9 @@ theorem mapRange_smul {_ : Monoid R} [AddMonoid M] [DistribMulAction R M] [AddMo
     [DistribMulAction R N] {f : M → N} {hf : f 0 = 0} (c : R) (v : α →₀ M)
     (hsmul : ∀ x, f (c • x) = c • f x) : mapRange f hf (c • v) = c • mapRange f hf v := by
   erw [← mapRange_comp]
-  · have : f ∘ (c • ·) = (c • ·) ∘ f := funext hsmul
-    simp_rw [this]
-    apply mapRange_comp
+  have : f ∘ (c • ·) = (c • ·) ∘ f := funext hsmul
+  simp_rw [this]
+  apply mapRange_comp
   simp only [Function.comp_apply, smul_zero, hf]
 
 theorem smul_single_one [Semiring R] (a : α) (b : R) : b • single a (1 : R) = single a b := by
@@ -1512,10 +1512,10 @@ theorem extendDomain_eq_embDomain_subtype (f : Subtype P →₀ M) :
     extendDomain f = embDomain (.subtype _) f := by
   ext a
   by_cases h : P a
-  · refine Eq.trans ?_ (embDomain_apply (.subtype P) f (Subtype.mk a h)).symm
-    simp [h]
-  · rw [embDomain_notin_range, extendDomain_toFun, dif_neg h]
-    simp [h]
+  refine Eq.trans ?_ (embDomain_apply (.subtype P) f (Subtype.mk a h)).symm
+  simp [h]
+  rw [embDomain_notin_range, extendDomain_toFun, dif_neg h]
+  simp [h]
 
 theorem support_extendDomain_subset (f : Subtype P →₀ M) :
     ↑(f.extendDomain).support ⊆ {x | P x} := by
@@ -1533,14 +1533,14 @@ theorem extendDomain_subtypeDomain (f : α →₀ M) (hf : ∀ a ∈ f.support, 
     (subtypeDomain P f).extendDomain = f := by
   ext a
   by_cases h : P a
-  · exact dif_pos h
-  · #adaptation_note
-    /-- Prior to nightly-2024-06-18, this `rw` was done by `dsimp`. -/
-    rw [extendDomain_toFun]
-    dsimp
-    rw [if_neg h, eq_comm, ← not_mem_support_iff]
-    refine mt ?_ h
-    exact @hf _
+  exact dif_pos h
+  #adaptation_note
+  /-- Prior to nightly-2024-06-18, this `rw` was done by `dsimp`. -/
+  rw [extendDomain_toFun]
+  dsimp
+  rw [if_neg h, eq_comm, ← not_mem_support_iff]
+  refine mt ?_ h
+  exact @hf _
 
 @[simp]
 theorem extendDomain_single (a : Subtype P) (m : M) :
@@ -1550,11 +1550,11 @@ theorem extendDomain_single (a : Subtype P) (m : M) :
   /-- Prior to nightly-2024-06-18, this `rw` was instead `dsimp only`. -/
   rw [extendDomain_toFun]
   obtain rfl | ha := eq_or_ne a.val a'
-  · simp_rw [single_eq_same, dif_pos a.prop]
-  · simp_rw [single_eq_of_ne ha, dite_eq_right_iff]
-    intro h
-    rw [single_eq_of_ne]
-    simp [Subtype.ext_iff, ha]
+  simp_rw [single_eq_same, dif_pos a.prop]
+  simp_rw [single_eq_of_ne ha, dite_eq_right_iff]
+  intro h
+  rw [single_eq_of_ne]
+  simp [Subtype.ext_iff, ha]
 
 end
 

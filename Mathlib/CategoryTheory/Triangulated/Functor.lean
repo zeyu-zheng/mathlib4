@@ -50,9 +50,9 @@ def mapTriangle : Triangle C ⥤ Triangle D where
 instance [Faithful F] : Faithful F.mapTriangle where
   map_injective {X Y} f g h := by
     ext <;> apply F.map_injective
-    · exact congr_arg TriangleMorphism.hom₁ h
-    · exact congr_arg TriangleMorphism.hom₂ h
-    · exact congr_arg TriangleMorphism.hom₃ h
+    exact congr_arg TriangleMorphism.hom₁ h
+    exact congr_arg TriangleMorphism.hom₂ h
+    exact congr_arg TriangleMorphism.hom₃ h
 
 instance [Full F] [Faithful F] : Full F.mapTriangle where
   map_surjective {X Y} f :=
@@ -185,12 +185,12 @@ noncomputable instance [F.IsTriangulated] :
       comm₁ := by
         dsimp
         ext
-        · simp only [assoc, prodComparison_fst, prod.comp_lift, comp_id, comp_zero,
-            limit.lift_π, BinaryFan.mk_pt, BinaryFan.π_app_left, BinaryFan.mk_fst,
-            ← F.map_comp, F.map_id]
-        · simp only [assoc, prodComparison_snd, prod.comp_lift, comp_id, comp_zero,
-            limit.lift_π, BinaryFan.mk_pt, BinaryFan.π_app_right, BinaryFan.mk_snd,
-            ← F.map_comp, F.map_zero]
+        simp only [assoc, prodComparison_fst, prod.comp_lift, comp_id, comp_zero,
+          limit.lift_π, BinaryFan.mk_pt, BinaryFan.π_app_left, BinaryFan.mk_fst,
+          ← F.map_comp, F.map_id]
+        simp only [assoc, prodComparison_snd, prod.comp_lift, comp_id, comp_zero,
+          limit.lift_π, BinaryFan.mk_pt, BinaryFan.π_app_right, BinaryFan.mk_snd,
+          ← F.map_comp, F.map_zero]
       comm₂ := by simp
       comm₃ := by simp }
   exact isIso₂_of_isIso₁₃ φ (F.map_distinguished _ (binaryProductTriangle_distinguished X₁ X₃))
@@ -219,11 +219,11 @@ lemma isTriangulated_of_iso {F₁ F₂ : C ⥤ D} (e : F₁ ≅ F₂) [F₁.Comm
 lemma isTriangulated_iff_of_iso {F₁ F₂ : C ⥤ D} (e : F₁ ≅ F₂) [F₁.CommShift ℤ] [F₂.CommShift ℤ]
     [NatTrans.CommShift e.hom ℤ] : F₁.IsTriangulated ↔ F₂.IsTriangulated := by
   constructor
-  · intro
-    exact isTriangulated_of_iso e
-  · intro
-    have : NatTrans.CommShift e.symm.hom ℤ := inferInstanceAs (NatTrans.CommShift e.inv ℤ)
-    exact isTriangulated_of_iso e.symm
+  intro
+  exact isTriangulated_of_iso e
+  intro
+  have : NatTrans.CommShift e.symm.hom ℤ := inferInstanceAs (NatTrans.CommShift e.inv ℤ)
+  exact isTriangulated_of_iso e.symm
 
 lemma mem_mapTriangle_essImage_of_distinguished
     [F.IsTriangulated] [F.mapArrow.EssSurj] (T : Triangle D) (hT : T ∈ distTriang D) :

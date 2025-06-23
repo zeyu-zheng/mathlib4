@@ -65,12 +65,12 @@ lemma integral_bilinear_hasLineDerivAt_right_eq_neg_left_of_integrable_aux1 [Sig
     filter_upwards [hf'g.prod_right_ae, hfg'.prod_right_ae, hfg.prod_right_ae]
       with x hf'gx hfg'x hfgx
     apply integral_bilinear_hasDerivAt_right_eq_neg_left_of_integrable ?_ ?_ hfg'x hf'gx hfgx
-    · intro t
-      convert (hf (x, t)).scomp_of_eq t ((hasDerivAt_id t).add (hasDerivAt_const t (-t))) (by simp)
-        <;> simp
-    · intro t
-      convert (hg (x, t)).scomp_of_eq t ((hasDerivAt_id t).add (hasDerivAt_const t (-t))) (by simp)
-        <;> simp
+    intro t
+    convert (hf (x, t)).scomp_of_eq t ((hasDerivAt_id t).add (hasDerivAt_const t (-t))) (by simp)
+      <;> simp
+    intro t
+    convert (hg (x, t)).scomp_of_eq t ((hasDerivAt_id t).add (hasDerivAt_const t (-t))) (by simp)
+      <;> simp
   _ = - ∫ x, B (f' x) (g x) ∂(μ.prod volume) := by rw [integral_neg, integral_prod _ hf'g]
 
 lemma integral_bilinear_hasLineDerivAt_right_eq_neg_left_of_integrable_aux2
@@ -106,13 +106,13 @@ theorem integral_bilinear_hasLineDerivAt_right_eq_neg_left_of_integrable
     (hf : ∀ x, HasLineDerivAt ℝ f (f' x) x v) (hg : ∀ x, HasLineDerivAt ℝ g (g' x) x v) :
     ∫ x, B (f x) (g' x) ∂μ = - ∫ x, B (f' x) (g x) ∂μ := by
   by_cases hW : CompleteSpace W; swap
-  · simp [integral, hW]
+  simp [integral, hW]
   rcases eq_or_ne v 0 with rfl|hv
-  · have Hf' x : f' x = 0 := by
-      simpa [(hasLineDerivAt_zero (f := f) (x := x)).lineDeriv] using (hf x).lineDeriv.symm
-    have Hg' x : g' x = 0
-    simpa [(hasLineDerivAt_zero (f := g) (x := x)).lineDeriv] using (hg x).lineDeriv.symm
-    simp [Hf', Hg']
+  have Hf' x : f' x = 0 := by
+    simpa [(hasLineDerivAt_zero (f := f) (x := x)).lineDeriv] using (hf x).lineDeriv.symm
+  have Hg' x : g' x = 0
+  simpa [(hasLineDerivAt_zero (f := g) (x := x)).lineDeriv] using (hg x).lineDeriv.symm
+  simp [Hf', Hg']
   have : Nontrivial E := nontrivial_iff.2 ⟨v, 0, hv⟩
   let n := finrank ℝ E
   let E' := Fin (n - 1) → ℝ
@@ -122,8 +122,8 @@ theorem integral_bilinear_hasLineDerivAt_right_eq_neg_left_of_integrable
     have L₀ : E ≃L[ℝ] (E' × ℝ) := (ContinuousLinearEquiv.ofFinrankEq this).symm
     obtain ⟨M, hM⟩ : ∃ M : (E' × ℝ) ≃L[ℝ] (E' × ℝ), M (L₀ v) = (0, 1) := by
       apply SeparatingDual.exists_continuousLinearEquiv_apply_eq
-      · simpa using hv
-      · simp
+      simpa using hv
+      simp
     exact ⟨L₀.trans M, by simp [hM]⟩
   let ν := Measure.map L μ
   suffices H : ∫ (x : E' × ℝ), (B (f (L.symm x))) (g' (L.symm x)) ∂ν =
@@ -134,25 +134,25 @@ theorem integral_bilinear_hasLineDerivAt_right_eq_neg_left_of_integrable
     simpa [this, hL.integral_map] using H
   have L_emb : MeasurableEmbedding L := L.toHomeomorph.measurableEmbedding
   apply integral_bilinear_hasLineDerivAt_right_eq_neg_left_of_integrable_aux2
-  · simpa [L_emb.integrable_map_iff, Function.comp] using hf'g
-  · simpa [L_emb.integrable_map_iff, Function.comp] using hfg'
-  · simpa [L_emb.integrable_map_iff, Function.comp] using hfg
-  · intro x
-    have : f = (f ∘ L.symm) ∘ (L : E →ₗ[ℝ] (E' × ℝ))
-    ext y; simp
-    specialize hf (L.symm x)
-    rw [this] at hf
-    convert hf.of_comp using 1
-    · simp
-    · simp [← hL]
-  · intro x
-    have : g = (g ∘ L.symm) ∘ (L : E →ₗ[ℝ] (E' × ℝ))
-    ext y; simp
-    specialize hg (L.symm x)
-    rw [this] at hg
-    convert hg.of_comp using 1
-    · simp
-    · simp [← hL]
+  simpa [L_emb.integrable_map_iff, Function.comp] using hf'g
+  simpa [L_emb.integrable_map_iff, Function.comp] using hfg'
+  simpa [L_emb.integrable_map_iff, Function.comp] using hfg
+  intro x
+  have : f = (f ∘ L.symm) ∘ (L : E →ₗ[ℝ] (E' × ℝ))
+  ext y; simp
+  specialize hf (L.symm x)
+  rw [this] at hf
+  convert hf.of_comp using 1
+  simp
+  simp [← hL]
+  intro x
+  have : g = (g ∘ L.symm) ∘ (L : E →ₗ[ℝ] (E' × ℝ))
+  ext y; simp
+  specialize hg (L.symm x)
+  rw [this] at hg
+  convert hg.of_comp using 1
+  simp
+  simp [← hL]
 
 /-- **Integration by parts for Fréchet derivatives**
 Version with a general bilinear form `B`.

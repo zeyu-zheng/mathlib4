@@ -192,39 +192,39 @@ open Classical in
 theorem epi_iff_surjective {X Y : LightProfinite.{u}} (f : X ⟶ Y) :
     Epi f ↔ Function.Surjective f := by
   constructor
-  · -- Note: in mathlib3 `contrapose` saw through `Function.Surjective`.
-    dsimp [Function.Surjective]
-    contrapose!
-    rintro ⟨y, hy⟩ hf
-    let C := Set.range f
-    have hC : IsClosed C := (isCompact_range f.continuous).isClosed
-    let U := Cᶜ
-    have hyU : y ∈ U
-    refine Set.mem_compl ?_
-    rintro ⟨y', hy'⟩
-    exact hy y' hy'
-    have hUy : U ∈ 𝓝 y := hC.compl_mem_nhds hyU
-    obtain ⟨V, hV, hyV, hVU⟩ := isTopologicalBasis_isClopen.mem_nhds_iff.mp hUy
-    let Z := of (ULift.{u} <| Fin 2)
-    let g : Y ⟶ Z := ⟨(LocallyConstant.ofIsClopen hV).map ULift.up, LocallyConstant.continuous _⟩
-    let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
-    have H : h = g
-    rw [← cancel_epi f]
-    ext x
-    apply ULift.ext
-    dsimp [g, LocallyConstant.ofIsClopen]
-    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [CategoryTheory.comp_apply, ContinuousMap.coe_mk,
-      CategoryTheory.comp_apply, ContinuousMap.coe_mk, Function.comp_apply, if_neg]
-    refine mt (fun α => hVU α) ?_
-    simp only [U, C, Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_iff]
-    apply_fun fun e => (e y).down at H
-    dsimp [g, LocallyConstant.ofIsClopen] at H
-    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [ContinuousMap.coe_mk, ContinuousMap.coe_mk, Function.comp_apply, if_pos hyV] at H
-    exact top_ne_bot H
-  · rw [← CategoryTheory.epi_iff_surjective]
-    apply (forget LightProfinite).epi_of_epi_map
+  -- Note: in mathlib3 `contrapose` saw through `Function.Surjective`.
+  dsimp [Function.Surjective]
+  contrapose!
+  rintro ⟨y, hy⟩ hf
+  let C := Set.range f
+  have hC : IsClosed C := (isCompact_range f.continuous).isClosed
+  let U := Cᶜ
+  have hyU : y ∈ U
+  refine Set.mem_compl ?_
+  rintro ⟨y', hy'⟩
+  exact hy y' hy'
+  have hUy : U ∈ 𝓝 y := hC.compl_mem_nhds hyU
+  obtain ⟨V, hV, hyV, hVU⟩ := isTopologicalBasis_isClopen.mem_nhds_iff.mp hUy
+  let Z := of (ULift.{u} <| Fin 2)
+  let g : Y ⟶ Z := ⟨(LocallyConstant.ofIsClopen hV).map ULift.up, LocallyConstant.continuous _⟩
+  let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
+  have H : h = g
+  rw [← cancel_epi f]
+  ext x
+  apply ULift.ext
+  dsimp [g, LocallyConstant.ofIsClopen]
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [CategoryTheory.comp_apply, ContinuousMap.coe_mk,
+    CategoryTheory.comp_apply, ContinuousMap.coe_mk, Function.comp_apply, if_neg]
+  refine mt (fun α => hVU α) ?_
+  simp only [U, C, Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_iff]
+  apply_fun fun e => (e y).down at H
+  dsimp [g, LocallyConstant.ofIsClopen] at H
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [ContinuousMap.coe_mk, ContinuousMap.coe_mk, Function.comp_apply, if_pos hyV] at H
+  exact top_ne_bot H
+  rw [← CategoryTheory.epi_iff_surjective]
+  apply (forget LightProfinite).epi_of_epi_map
 
 end LightProfinite
 
@@ -300,18 +300,18 @@ instance (S : LightDiagram.{u}) : SecondCountableTopology S.cone.pt := by
   refine @Countable.of_equiv _ _ ?_ (LocallyConstant.equivClopens (X := S.cone.pt))
   refine @Function.Surjective.countable
     (Σ (n : ℕ), LocallyConstant ((S.diagram ⋙ FintypeCat.toProfinite).obj ⟨n⟩) (Fin 2)) _ ?_ ?_ ?_
-  · apply @instCountableSigma _ _ _ ?_
-    intro n
-    refine @Finite.to_countable _ ?_
-    refine @Finite.of_injective _ ((S.diagram ⋙ FintypeCat.toProfinite).obj ⟨n⟩ → (Fin 2)) ?_ _
-      LocallyConstant.coe_injective
-    refine @Pi.finite _ _ ?_ _
-    simp only [Functor.comp_obj]
-    exact show (Finite (S.diagram.obj _)) from inferInstance
-  · exact fun a ↦ a.snd.comap (S.cone.π.app ⟨a.fst⟩)
-  · intro a
-    obtain ⟨n, g, h⟩ := Profinite.exists_locallyConstant S.cone S.isLimit a
-    exact ⟨⟨unop n, g⟩, h.symm⟩
+  apply @instCountableSigma _ _ _ ?_
+  intro n
+  refine @Finite.to_countable _ ?_
+  refine @Finite.of_injective _ ((S.diagram ⋙ FintypeCat.toProfinite).obj ⟨n⟩ → (Fin 2)) ?_ _
+    LocallyConstant.coe_injective
+  refine @Pi.finite _ _ ?_ _
+  simp only [Functor.comp_obj]
+  exact show (Finite (S.diagram.obj _)) from inferInstance
+  exact fun a ↦ a.snd.comap (S.cone.π.app ⟨a.fst⟩)
+  intro a
+  obtain ⟨n, g, h⟩ := Profinite.exists_locallyConstant S.cone S.isLimit a
+  exact ⟨⟨unop n, g⟩, h.symm⟩
 
 /-- The inverse part of the equivalence `LightProfinite ≌ LightDiagram` -/
 @[simps]

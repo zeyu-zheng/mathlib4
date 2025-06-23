@@ -127,11 +127,11 @@ lemma quasiIso_shift_iff {K L : CochainComplex C ℤ} (φ : K ⟶ L) (n : ℤ) :
     QuasiIso (φ⟦n⟧') ↔ QuasiIso φ := by
   simp only [quasiIso_iff, fun i ↦ quasiIsoAt_shift_iff φ n i _ rfl]
   constructor
-  · intro h j
-    obtain ⟨i, rfl⟩ : ∃ i, j = n + i := ⟨j - n, by omega⟩
-    exact h i
-  · intro h i
-    exact h (n + i)
+  intro h j
+  obtain ⟨i, rfl⟩ : ∃ i, j = n + i := ⟨j - n, by omega⟩
+  exact h i
+  intro h i
+  exact h (n + i)
 
 instance {K L : CochainComplex C ℤ} (φ : K ⟶ L) (n : ℤ) [QuasiIso φ] :
     QuasiIso (φ⟦n⟧') := by

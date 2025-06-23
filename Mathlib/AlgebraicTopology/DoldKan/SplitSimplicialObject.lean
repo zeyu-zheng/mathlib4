@@ -60,9 +60,9 @@ theorem decomposition_id (Δ : SimplexCategoryᵒᵖ) :
   intro A
   dsimp
   erw [comp_id, comp_sum, Finset.sum_eq_single A, cofan_inj_πSummand_eq_id_assoc]
-  · intro B _ h₂
-    rw [s.cofan_inj_πSummand_eq_zero_assoc _ _ h₂, zero_comp]
-  · simp
+  intro B _ h₂
+  rw [s.cofan_inj_πSummand_eq_zero_assoc _ _ h₂, zero_comp]
+  simp
 
 @[reassoc (attr := simp)]
 theorem σ_comp_πSummand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) :
@@ -91,27 +91,27 @@ theorem cofan_inj_comp_PInfty_eq_zero {X : SimplicialObject C} (s : SimplicialOb
 theorem comp_PInfty_eq_zero_iff {Z : C} {n : ℕ} (f : Z ⟶ X _[n]) :
     f ≫ PInfty.f n = 0 ↔ f ≫ s.πSummand (IndexSet.id (op [n])) = 0 := by
   constructor
-  · intro h
-    rcases n with _|n
-    · dsimp at h
-      rw [comp_id] at h
-      rw [h, zero_comp]
-    · have h' := f ≫= PInfty_f_add_QInfty_f (n + 1)
-      dsimp at h'
-      rw [comp_id, comp_add, h, zero_add] at h'
-      rw [← h', assoc, QInfty_f, decomposition_Q, Preadditive.sum_comp, Preadditive.comp_sum,
-        Finset.sum_eq_zero]
-      intro i _
-      simp only [assoc, σ_comp_πSummand_id_eq_zero, comp_zero]
-  · intro h
-    rw [← comp_id f, assoc, s.decomposition_id, Preadditive.sum_comp, Preadditive.comp_sum,
-      Fintype.sum_eq_zero]
-    intro A
-    by_cases hA : A.EqId
-    · dsimp at hA
-      subst hA
-      rw [assoc, reassoc_of% h, zero_comp]
-    · simp only [assoc, s.cofan_inj_comp_PInfty_eq_zero A hA, comp_zero]
+  intro h
+  rcases n with _|n
+  dsimp at h
+  rw [comp_id] at h
+  rw [h, zero_comp]
+  have h' := f ≫= PInfty_f_add_QInfty_f (n + 1)
+  dsimp at h'
+  rw [comp_id, comp_add, h, zero_add] at h'
+  rw [← h', assoc, QInfty_f, decomposition_Q, Preadditive.sum_comp, Preadditive.comp_sum,
+    Finset.sum_eq_zero]
+  intro i _
+  simp only [assoc, σ_comp_πSummand_id_eq_zero, comp_zero]
+  intro h
+  rw [← comp_id f, assoc, s.decomposition_id, Preadditive.sum_comp, Preadditive.comp_sum,
+    Fintype.sum_eq_zero]
+  intro A
+  by_cases hA : A.EqId
+  dsimp at hA
+  subst hA
+  rw [assoc, reassoc_of% h, zero_comp]
+  simp only [assoc, s.cofan_inj_comp_PInfty_eq_zero A hA, comp_zero]
 
 @[reassoc (attr := simp)]
 theorem PInfty_comp_πSummand_id (n : ℕ) :

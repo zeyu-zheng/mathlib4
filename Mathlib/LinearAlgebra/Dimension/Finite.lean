@@ -44,22 +44,22 @@ lemma rank_eq_zero_iff :
     Module.rank R M = 0 ↔ ∀ x : M, ∃ a : R, a ≠ 0 ∧ a • x = 0 := by
   nontriviality R
   constructor
-  · contrapose!
-    rintro ⟨x, hx⟩
-    rw [← Cardinal.one_le_iff_ne_zero]
-    have : LinearIndependent R (fun _ : Unit ↦ x) :=
-      linearIndependent_iff.mpr (fun l hl ↦ Finsupp.unique_ext <| not_not.mp fun H ↦
-        hx _ H ((Finsupp.total_unique _ _ _).symm.trans hl))
-    simpa using this.cardinal_lift_le_rank
-  · intro h
-    rw [← le_zero_iff, Module.rank_def]
-    apply ciSup_le'
-    intro ⟨s, hs⟩
-    rw [nonpos_iff_eq_zero, Cardinal.mk_eq_zero_iff, ← not_nonempty_iff]
-    rintro ⟨i : s⟩
-    obtain ⟨a, ha, ha'⟩ := h i
-    apply ha
-    simpa using DFunLike.congr_fun (linearIndependent_iff.mp hs (Finsupp.single i a) (by simpa)) i
+  contrapose!
+  rintro ⟨x, hx⟩
+  rw [← Cardinal.one_le_iff_ne_zero]
+  have : LinearIndependent R (fun _ : Unit ↦ x) :=
+    linearIndependent_iff.mpr (fun l hl ↦ Finsupp.unique_ext <| not_not.mp fun H ↦
+      hx _ H ((Finsupp.total_unique _ _ _).symm.trans hl))
+  simpa using this.cardinal_lift_le_rank
+  intro h
+  rw [← le_zero_iff, Module.rank_def]
+  apply ciSup_le'
+  intro ⟨s, hs⟩
+  rw [nonpos_iff_eq_zero, Cardinal.mk_eq_zero_iff, ← not_nonempty_iff]
+  rintro ⟨i : s⟩
+  obtain ⟨a, ha, ha'⟩ := h i
+  apply ha
+  simpa using DFunLike.congr_fun (linearIndependent_iff.mp hs (Finsupp.single i a) (by simpa)) i
 
 variable [Nontrivial R]
 variable [NoZeroSMulDivisors R M]
@@ -170,9 +170,9 @@ theorem lt_aleph0_of_finite {ι : Type w}
     [Module.Finite R M] {v : ι → M} (h : LinearIndependent R v) : #ι < ℵ₀ := by
   apply Cardinal.lift_lt.1
   apply lt_of_le_of_lt
-  · apply h.cardinal_lift_le_rank
-  · rw [← finrank_eq_rank, Cardinal.lift_aleph0, Cardinal.lift_natCast]
-    apply Cardinal.nat_lt_aleph0
+  apply h.cardinal_lift_le_rank
+  rw [← finrank_eq_rank, Cardinal.lift_aleph0, Cardinal.lift_natCast]
+  apply Cardinal.nat_lt_aleph0
 
 theorem finite [Module.Finite R M] {ι : Type*} {f : ι → M}
     (h : LinearIndependent R f) : Finite ι :=
@@ -203,15 +203,15 @@ lemma exists_finset_linearIndependent_of_le_rank {n : ℕ} (hn : n ≤ Module.ra
     ∃ s : Finset M, s.card = n ∧ LinearIndependent R ((↑) : s → M) := by
   have := nonempty_linearIndependent_set
   cases' hn.eq_or_lt with h h
-  · obtain ⟨⟨s, hs⟩, hs'⟩ := Cardinal.exists_eq_natCast_of_iSup_eq _
-      (Cardinal.bddAbove_range.{v, v} _) _ (h.trans (Module.rank_def R M)).symm
-    have : Finite s := lt_aleph0_iff_finite.mp (hs' ▸ nat_lt_aleph0 n)
-    cases nonempty_fintype s
-    exact ⟨s.toFinset, by simpa using hs', by convert hs <;> exact Set.mem_toFinset⟩
-  · obtain ⟨s, hs, hs'⟩ := exists_set_linearIndependent_of_lt_rank h
-    have : Finite s := lt_aleph0_iff_finite.mp (hs ▸ nat_lt_aleph0 n)
-    cases nonempty_fintype s
-    exact ⟨s.toFinset, by simpa using hs, by convert hs' <;> exact Set.mem_toFinset⟩
+  obtain ⟨⟨s, hs⟩, hs'⟩ := Cardinal.exists_eq_natCast_of_iSup_eq _
+    (Cardinal.bddAbove_range.{v, v} _) _ (h.trans (Module.rank_def R M)).symm
+  have : Finite s := lt_aleph0_iff_finite.mp (hs' ▸ nat_lt_aleph0 n)
+  cases nonempty_fintype s
+  exact ⟨s.toFinset, by simpa using hs', by convert hs <;> exact Set.mem_toFinset⟩
+  obtain ⟨s, hs, hs'⟩ := exists_set_linearIndependent_of_lt_rank h
+  have : Finite s := lt_aleph0_iff_finite.mp (hs ▸ nat_lt_aleph0 n)
+  cases nonempty_fintype s
+  exact ⟨s.toFinset, by simpa using hs, by convert hs' <;> exact Set.mem_toFinset⟩
 
 lemma exists_linearIndependent_of_le_rank {n : ℕ} (hn : n ≤ Module.rank R M) :
     ∃ f : Fin n → M, LinearIndependent R f :=
@@ -231,8 +231,8 @@ lemma natCast_le_rank_iff_finset {n : ℕ} :
 lemma exists_finset_linearIndependent_of_le_finrank {n : ℕ} (hn : n ≤ finrank R M) :
     ∃ s : Finset M, s.card = n ∧ LinearIndependent R ((↑) : s → M) := by
   by_cases h : finrank R M = 0
-  · rw [le_zero_iff.mp (hn.trans_eq h)]
-    exact ⟨∅, rfl, by convert linearIndependent_empty R M using 2 <;> aesop⟩
+  rw [le_zero_iff.mp (hn.trans_eq h)]
+  exact ⟨∅, rfl, by convert linearIndependent_empty R M using 2 <;> aesop⟩
   exact exists_finset_linearIndependent_of_le_rank
     ((natCast_le.mpr hn).trans_eq (cast_toNat_of_lt_aleph0 (toNat_ne_zero.mp h).2))
 
@@ -327,17 +327,17 @@ theorem Module.exists_nontrivial_relation_sum_zero_of_finrank_succ_lt_card
   refine ⟨f, ?_, ?_, ?_⟩
   -- After this, it's a matter of verifying the properties,
   -- based on the corresponding properties for `g`.
-  · rw [sum_map, Embedding.coeFn_mk] at gsum
-    simp_rw [f, ← t.sum_erase_add _ x₀_mem, if_pos, neg_smul, sum_smul,
-             ← sub_eq_add_neg, ← sum_sub_distrib, ← gsum, smul_sub]
-    refine sum_congr rfl fun x x_mem ↦ ?_
-    rw [if_neg (mem_erase.mp x_mem).1]
-  · simp_rw [f, ← t.sum_erase_add _ x₀_mem, if_pos, add_neg_eq_zero]
-    exact sum_congr rfl fun x x_mem ↦ if_neg (mem_erase.mp x_mem).1
-  · obtain ⟨x₁, x₁_mem', rfl⟩ := Finset.mem_map.mp x₁_mem
-    have := mem_erase.mp x₁_mem'
-    exact ⟨x₁, by
-      simpa only [f, Embedding.coeFn_mk, sub_add_cancel, this.2, true_and, if_neg this.1]⟩
+  rw [sum_map, Embedding.coeFn_mk] at gsum
+  simp_rw [f, ← t.sum_erase_add _ x₀_mem, if_pos, neg_smul, sum_smul,
+           ← sub_eq_add_neg, ← sum_sub_distrib, ← gsum, smul_sub]
+  refine sum_congr rfl fun x x_mem ↦ ?_
+  rw [if_neg (mem_erase.mp x_mem).1]
+  simp_rw [f, ← t.sum_erase_add _ x₀_mem, if_pos, add_neg_eq_zero]
+  exact sum_congr rfl fun x x_mem ↦ if_neg (mem_erase.mp x_mem).1
+  obtain ⟨x₁, x₁_mem', rfl⟩ := Finset.mem_map.mp x₁_mem
+  have := mem_erase.mp x₁_mem'
+  exact ⟨x₁, by
+    simpa only [f, Embedding.coeFn_mk, sub_add_cancel, this.2, true_and, if_neg this.1]⟩
 
 end
 
@@ -456,8 +456,8 @@ variable [Module.Free R M]
 theorem finrank_eq_zero_of_basis_imp_not_finite
     (h : ∀ s : Set M, Basis.{v} (s : Set M) R M → ¬s.Finite) : finrank R M = 0 := by
   cases subsingleton_or_nontrivial R
-  · have := Module.subsingleton R M
-    exact (h ∅ ⟨LinearEquiv.ofSubsingleton _ _⟩ Set.finite_empty).elim
+  have := Module.subsingleton R M
+  exact (h ∅ ⟨LinearEquiv.ofSubsingleton _ _⟩ Set.finite_empty).elim
   obtain ⟨_, ⟨b⟩⟩ := (Module.free_iff_set R M).mp ‹_›
   have := Set.Infinite.to_subtype (h _ b)
   exact b.linearIndependent.finrank_eq_zero_of_infinite
@@ -506,12 +506,12 @@ theorem finrank_eq_one (v : M) (n : v ≠ 0) (h : ∀ w : M, ∃ c : R, c • v 
 theorem finrank_le_one (v : M) (h : ∀ w : M, ∃ c : R, c • v = w) : finrank R M ≤ 1 := by
   haveI := nontrivial_of_invariantBasisNumber R
   rcases eq_or_ne v 0 with (rfl | hn)
-  · haveI :=
-      _root_.subsingleton_of_forall_eq (0 : M) fun w => by
-        obtain ⟨c, rfl⟩ := h w
-        simp
-    rw [finrank_zero_of_subsingleton]
-    exact zero_le_one
-  · exact (finrank_eq_one v hn h).le
+  haveI :=
+    _root_.subsingleton_of_forall_eq (0 : M) fun w => by
+      obtain ⟨c, rfl⟩ := h w
+      simp
+  rw [finrank_zero_of_subsingleton]
+  exact zero_le_one
+  exact (finrank_eq_one v hn h).le
 
 end RankOne

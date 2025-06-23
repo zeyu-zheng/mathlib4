@@ -188,11 +188,11 @@ theorem slash_action_eq'_iff (k : ℤ) (Γ : Subgroup SL(2, ℤ)) (f : ℍ → �
     (f ∣[k] γ) z = f z ↔ f (γ • z) = ((↑ₘ[ℤ] γ 1 0 : ℂ) * z + (↑ₘ[ℤ] γ 1 1 : ℂ)) ^ k * f z := by
   simp only [subgroup_slash, slash_def, ModularForm.slash]
   convert inv_mul_eq_iff_eq_mul₀ (G₀ := ℂ) _ using 2
-  · rw [mul_comm]
-    simp only [denom, zpow_neg, det_coe', ofReal_one, one_zpow, mul_one, subgroup_to_sl_moeb,
-      sl_moeb]
-    rfl
-  · convert zpow_ne_zero k (denom_ne_zero γ z)
+  rw [mul_comm]
+  simp only [denom, zpow_neg, det_coe', ofReal_one, one_zpow, mul_one, subgroup_to_sl_moeb,
+    sl_moeb]
+  rfl
+  convert zpow_ne_zero k (denom_ne_zero γ z)
 
 theorem mul_slash (k1 k2 : ℤ) (A : GL(2, ℝ)⁺) (f g : ℍ → ℂ) :
     (f * g) ∣[k1 + k2] A = ((↑ₘA).det : ℝ) • f ∣[k1] A * g ∣[k2] A := by

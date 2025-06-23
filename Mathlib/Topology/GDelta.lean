@@ -87,13 +87,13 @@ theorem IsGδ.iInter_of_isOpen [Countable ι'] {f : ι' → Set X} (hf : ∀ i, 
 lemma isGδ_iff_eq_iInter_nat {s : Set X} :
     IsGδ s ↔ ∃ (f : ℕ → Set X), (∀ n, IsOpen (f n)) ∧ s = ⋂ n, f n := by
   refine ⟨?_, ?_⟩
-  · rintro ⟨T, hT, T_count, rfl⟩
-    rcases Set.eq_empty_or_nonempty T with rfl|hT
-    · exact ⟨fun _n ↦ univ, fun _n ↦ isOpen_univ, by simp⟩
-    · obtain ⟨f, hf⟩ : ∃ (f : ℕ → Set X), T = range f := Countable.exists_eq_range T_count hT
-      exact ⟨f, by aesop, by simp [hf]⟩
-  · rintro ⟨f, hf, rfl⟩
-    exact .iInter_of_isOpen hf
+  rintro ⟨T, hT, T_count, rfl⟩
+  rcases Set.eq_empty_or_nonempty T with rfl|hT
+  exact ⟨fun _n ↦ univ, fun _n ↦ isOpen_univ, by simp⟩
+  obtain ⟨f, hf⟩ : ∃ (f : ℕ → Set X), T = range f := Countable.exists_eq_range T_count hT
+  exact ⟨f, by aesop, by simp [hf]⟩
+  rintro ⟨f, hf, rfl⟩
+  exact .iInter_of_isOpen hf
 
 alias ⟨IsGδ.eq_iInter_nat, _⟩ := isGδ_iff_eq_iInter_nat
 
@@ -274,11 +274,11 @@ lemma isMeagre_iff_countable_union_isNowhereDense {s : Set X} :
   simp_rw [← and_assoc, ← forall_and, forall_mem_image, ← isClosed_isNowhereDense_iff_compl,
     sInter_image, ← compl_iUnion₂, compl_subset_compl, ← sUnion_eq_biUnion, and_assoc]
   refine ⟨fun ⟨S, hS, hc, hsub⟩ ↦ ⟨S, fun s hs ↦ (hS hs).2, ?_, hsub⟩, ?_⟩
-  · rw [← compl_compl_image S]; exact hc.image _
-  · intro ⟨S, hS, hc, hsub⟩
-    use closure '' S
-    rw [forall_mem_image]
-    exact ⟨fun s hs ↦ ⟨isClosed_closure, (hS s hs).closure⟩,
-      (hc.image _).image _, hsub.trans (sUnion_mono_subsets fun s ↦ subset_closure)⟩
+  rw [← compl_compl_image S]; exact hc.image _
+  intro ⟨S, hS, hc, hsub⟩
+  use closure '' S
+  rw [forall_mem_image]
+  exact ⟨fun s hs ↦ ⟨isClosed_closure, (hS s hs).closure⟩,
+    (hc.image _).image _, hsub.trans (sUnion_mono_subsets fun s ↦ subset_closure)⟩
 
 end meagre

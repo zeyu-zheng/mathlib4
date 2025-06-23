@@ -111,18 +111,18 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
   have g_deriv : ∀ t ∈ Icc (0 : ℝ) 1, HasDerivWithinAt g (g' t) (Icc 0 1) t := by
     intro t ht
     apply_rules [HasDerivWithinAt.sub, HasDerivWithinAt.add]
-    · refine (hf _ ?_).comp_hasDerivWithinAt _ ?_
-      · exact xt_mem t ht
-      apply_rules [HasDerivAt.hasDerivWithinAt, HasDerivAt.const_add, HasDerivAt.smul_const,
-        hasDerivAt_mul_const]
-    · apply_rules [HasDerivAt.hasDerivWithinAt, HasDerivAt.smul_const, hasDerivAt_mul_const]
-    · apply_rules [HasDerivAt.hasDerivWithinAt, HasDerivAt.smul_const, hasDerivAt_mul_const]
-    · suffices H : HasDerivWithinAt (fun u => ((u * h) ^ 2 / 2) • f'' w w)
-          ((((2 : ℕ) : ℝ) * (t * h) ^ (2 - 1) * (1 * h) / 2) • f'' w w) (Icc 0 1) t by
-        convert H using 2
-        ring
-      apply_rules [HasDerivAt.hasDerivWithinAt, HasDerivAt.smul_const, hasDerivAt_id',
-        HasDerivAt.pow, HasDerivAt.mul_const]
+    refine (hf _ ?_).comp_hasDerivWithinAt _ ?_
+    exact xt_mem t ht
+    apply_rules [HasDerivAt.hasDerivWithinAt, HasDerivAt.const_add, HasDerivAt.smul_const,
+      hasDerivAt_mul_const]
+    apply_rules [HasDerivAt.hasDerivWithinAt, HasDerivAt.smul_const, hasDerivAt_mul_const]
+    apply_rules [HasDerivAt.hasDerivWithinAt, HasDerivAt.smul_const, hasDerivAt_mul_const]
+    suffices H : HasDerivWithinAt (fun u => ((u * h) ^ 2 / 2) • f'' w w)
+        ((((2 : ℕ) : ℝ) * (t * h) ^ (2 - 1) * (1 * h) / 2) • f'' w w) (Icc 0 1) t by
+      convert H using 2
+      ring
+    apply_rules [HasDerivAt.hasDerivWithinAt, HasDerivAt.smul_const, hasDerivAt_id',
+      HasDerivAt.pow, HasDerivAt.mul_const]
   -- check that `g'` is uniformly bounded, with a suitable bound `ε * ((‖v‖ + ‖w‖) * ‖w‖) * h^2`.
   have g'_bound : ∀ t ∈ Ico (0 : ℝ) 1, ‖g' t‖ ≤ ε * ((‖v‖ + ‖w‖) * ‖w‖) * h ^ 2 := by
     intro t ht
@@ -163,12 +163,12 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
     simpa only [mul_one, sub_zero] using
       norm_image_sub_le_of_norm_deriv_le_segment' g_deriv g'_bound 1 (right_mem_Icc.2 zero_le_one)
   convert I using 1
-  · congr 1
-    simp only [g, Nat.one_ne_zero, add_zero, one_mul, zero_div, zero_mul, sub_zero,
-      zero_smul, Ne, not_false_iff, zero_pow]
-    abel
-  · simp only [Real.norm_eq_abs, abs_mul, add_nonneg (norm_nonneg v) (norm_nonneg w), abs_of_nonneg,
-      hpos.le, mul_assoc, norm_nonneg, abs_pow]
+  congr 1
+  simp only [g, Nat.one_ne_zero, add_zero, one_mul, zero_div, zero_mul, sub_zero,
+    zero_smul, Ne, not_false_iff, zero_pow]
+  abel
+  simp only [Real.norm_eq_abs, abs_mul, add_nonneg (norm_nonneg v) (norm_nonneg w), abs_of_nonneg,
+    hpos.le, mul_assoc, norm_nonneg, abs_pow]
 
 /-- One can get `f'' v w` as the limit of `h ^ (-2)` times the alternate sum of the values of `f`
 along the vertices of a quadrilateral with sides `h v` and `h w` based at `x`.
@@ -241,13 +241,13 @@ theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E}
   have : (fun h : ℝ => 1 / h ^ 2) =O[𝓝[>] 0] fun h => 1 / h ^ 2 := isBigO_refl _ _
   have C := this.smul_isLittleO A
   apply C.congr' _ _
-  · filter_upwards [self_mem_nhdsWithin]
-    intro h (hpos : 0 < h)
-    rw [← one_smul ℝ (f'' w v - f'' v w), smul_smul, smul_smul]
-    congr 1
-    field_simp [LT.lt.ne' hpos]
-  · filter_upwards [self_mem_nhdsWithin] with h (hpos : 0 < h)
-    field_simp [LT.lt.ne' hpos, SMul.smul]
+  filter_upwards [self_mem_nhdsWithin]
+  intro h (hpos : 0 < h)
+  rw [← one_smul ℝ (f'' w v - f'' v w), smul_smul, smul_smul]
+  congr 1
+  field_simp [LT.lt.ne' hpos]
+  filter_upwards [self_mem_nhdsWithin] with h (hpos : 0 < h)
+  field_simp [LT.lt.ne' hpos, SMul.smul]
   simpa only [sub_eq_zero] using isLittleO_const_const_iff.1 B
 
 /-- If a function is differentiable inside a convex set with nonempty interior, and has a second

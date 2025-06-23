@@ -163,10 +163,10 @@ theorem symmDiff_sup_inf : a ∆ b ⊔ a ⊓ b = a ⊔ b := by
   refine le_antisymm (sup_le symmDiff_le_sup inf_le_sup) ?_
   rw [sup_inf_left, symmDiff]
   refine sup_le (le_inf le_sup_right ?_) (le_inf ?_ le_sup_right)
-  · rw [sup_right_comm]
-    exact le_sup_of_le_left le_sdiff_sup
-  · rw [sup_assoc]
-    exact le_sup_of_le_right le_sdiff_sup
+  rw [sup_right_comm]
+  exact le_sup_of_le_left le_sdiff_sup
+  rw [sup_assoc]
+  exact le_sup_of_le_right le_sdiff_sup
 
 @[simp]
 theorem inf_sup_symmDiff : a ⊓ b ⊔ a ∆ b = a ⊔ b := by rw [sup_comm, symmDiff_sup_inf]
@@ -641,17 +641,17 @@ theorem symmDiff_symmDiff_right' :
         { rw [inf_sup_left, inf_sup_right, ← sup_assoc, ← inf_assoc, ← inf_assoc] }
     _ = a ⊓ b ⊓ c ⊔ a ⊓ bᶜ ⊓ cᶜ ⊔ aᶜ ⊓ b ⊓ cᶜ ⊔ aᶜ ⊓ bᶜ ⊓ c := (by
       congr 1
-      · congr 1
-        rw [inf_comm, inf_assoc]
-      · apply inf_left_right_swap)
+      congr 1
+      rw [inf_comm, inf_assoc]
+      apply inf_left_right_swap)
 
 variable {a b c}
 
 theorem Disjoint.le_symmDiff_sup_symmDiff_left (h : Disjoint a b) : c ≤ a ∆ c ⊔ b ∆ c := by
   trans c \ (a ⊓ b)
-  · rw [h.eq_bot, sdiff_bot]
-  · rw [sdiff_inf]
-    exact sup_le_sup le_sup_right le_sup_right
+  rw [h.eq_bot, sdiff_bot]
+  rw [sdiff_inf]
+  exact sup_le_sup le_sup_right le_sup_right
 
 theorem Disjoint.le_symmDiff_sup_symmDiff_right (h : Disjoint b c) : a ≤ a ∆ b ⊔ a ∆ c := by
   simp_rw [symmDiff_comm a]

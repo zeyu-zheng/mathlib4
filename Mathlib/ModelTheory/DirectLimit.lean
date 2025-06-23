@@ -64,11 +64,11 @@ theorem coe_natLERec (m n : ℕ) (h : m ≤ n) :
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le h
   ext x
   induction' k with k ih
-  · -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [natLERec, Nat.leRecOn_self, Embedding.refl_apply, Nat.leRecOn_self]
-  · -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [Nat.leRecOn_succ le_self_add, natLERec, Nat.leRecOn_succ le_self_add, ← natLERec,
-      Embedding.comp_apply, ih]
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [natLERec, Nat.leRecOn_self, Embedding.refl_apply, Nat.leRecOn_self]
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [Nat.leRecOn_succ le_self_add, natLERec, Nat.leRecOn_succ le_self_add, ← natLERec,
+    Embedding.comp_apply, ih]
 
 instance natLERec.directedSystem : DirectedSystem G' fun i j h => natLERec f' i j h :=
   ⟨fun i x _ => congr (congr rfl (Nat.leRecOn_self _)) rfl,
@@ -265,7 +265,7 @@ theorem exists_quotient_mk'_sigma_mk'_eq {α : Type*} [Finite α] (x : α → Di
   have : (.mk f i (f (Quotient.out (x a)).fst i r (Quotient.out (x a)).snd) : Σˣ f).fst ≤ i :=
     le_rfl
   rw [equiv_iff G f (i := i) (hi _) this]
-  · simp only [DirectedSystem.map_self]
+  simp only [DirectedSystem.map_self]
   exact ⟨a, rfl⟩
 
 variable (L ι)
@@ -415,16 +415,16 @@ theorem cg {ι : Type*} [Countable ι] [Preorder ι] [IsDirected ι (· ≤ ·)]
     (h : ∀ i, Structure.CG L (G i)) [DirectedSystem G fun i j h => f i j h] :
     Structure.CG L (DirectLimit G f) := by
   refine ⟨⟨⋃ i, DirectLimit.of L ι G f i '' Classical.choose (h i).out, ?_, ?_⟩⟩
-  · exact Set.countable_iUnion fun i => Set.Countable.image (Classical.choose_spec (h i).out).1 _
-  · rw [eq_top_iff, Substructure.closure_unionᵢ]
-    simp_rw [← Embedding.coe_toHom, Substructure.closure_image]
-    rw [le_iSup_iff]
-    intro S hS x _
-    let out := Quotient.out (s := DirectLimit.setoid G f)
-    refine hS (out x).1 ⟨(out x).2, ?_, ?_⟩
-    · rw [(Classical.choose_spec (h (out x).1).out).2]
-      trivial
-    · simp only [out, Embedding.coe_toHom, DirectLimit.of_apply, Sigma.eta, Quotient.out_eq]
+  exact Set.countable_iUnion fun i => Set.Countable.image (Classical.choose_spec (h i).out).1 _
+  rw [eq_top_iff, Substructure.closure_unionᵢ]
+  simp_rw [← Embedding.coe_toHom, Substructure.closure_image]
+  rw [le_iSup_iff]
+  intro S hS x _
+  let out := Quotient.out (s := DirectLimit.setoid G f)
+  refine hS (out x).1 ⟨(out x).2, ?_, ?_⟩
+  rw [(Classical.choose_spec (h (out x).1).out).2]
+  trivial
+  simp only [out, Embedding.coe_toHom, DirectLimit.of_apply, Sigma.eta, Quotient.out_eq]
 
 instance cg' {ι : Type*} [Countable ι] [Preorder ι] [IsDirected ι (· ≤ ·)] [Nonempty ι]
     {G : ι → Type w} [∀ i, L.Structure (G i)] (f : ∀ i j, i ≤ j → G i ↪[L] G j)

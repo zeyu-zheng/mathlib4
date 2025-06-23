@@ -80,8 +80,8 @@ variable (A x)
 theorem aeval : aeval x (minpoly A x) = 0 := by
   delta minpoly
   split_ifs with hx
-  · exact (degree_lt_wf.min_mem _ hx).2
-  · exact aeval_zero _
+  exact (degree_lt_wf.min_mem _ hx).2
+  exact aeval_zero _
 
 /-- Given any `f : B →ₐ[A] B'` and any `x : L`, the minimal polynomial of `x` vanishes at `f x`. -/
 @[simp]
@@ -97,17 +97,17 @@ theorem ne_one [Nontrivial B] : minpoly A x ≠ 1 := by
 theorem map_ne_one [Nontrivial B] {R : Type*} [Semiring R] [Nontrivial R] (f : A →+* R) :
     (minpoly A x).map f ≠ 1 := by
   by_cases hx : IsIntegral A x
-  · exact mt ((monic hx).eq_one_of_map_eq_one f) (ne_one A x)
-  · rw [eq_zero hx, Polynomial.map_zero]
-    exact zero_ne_one
+  exact mt ((monic hx).eq_one_of_map_eq_one f) (ne_one A x)
+  rw [eq_zero hx, Polynomial.map_zero]
+  exact zero_ne_one
 
 /-- A minimal polynomial is not a unit. -/
 theorem not_isUnit [Nontrivial B] : ¬IsUnit (minpoly A x) := by
   haveI : Nontrivial A := (algebraMap A B).domain_nontrivial
   by_cases hx : IsIntegral A x
-  · exact mt (monic hx).eq_one_of_isUnit (ne_one A x)
-  · rw [eq_zero hx]
-    exact not_isUnit_zero
+  exact mt (monic hx).eq_one_of_isUnit (ne_one A x)
+  rw [eq_zero hx]
+  exact not_isUnit_zero
 
 theorem mem_range_of_degree_eq_one (hx : (minpoly A x).degree = 1) :
     x ∈ (algebraMap A B).range := by
@@ -125,8 +125,8 @@ it is the monic polynomial with smallest degree that has `x` as its root. -/
 theorem min {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0) :
     degree (minpoly A x) ≤ degree p := by
   delta minpoly; split_ifs with hx
-  · exact le_of_not_lt (degree_lt_wf.not_lt_min _ hx ⟨pmonic, hp⟩)
-  · simp only [degree_zero, bot_le]
+  exact le_of_not_lt (degree_lt_wf.not_lt_min _ hx ⟨pmonic, hp⟩)
+  simp only [degree_zero, bot_le]
 
 theorem unique' {p : A[X]} (hm : p.Monic) (hp : Polynomial.aeval x p = 0)
     (hl : ∀ q : A[X], degree q < degree p → q = 0 ∨ Polynomial.aeval x q ≠ 0) :
@@ -135,7 +135,7 @@ theorem unique' {p : A[X]} (hm : p.Monic) (hp : Polynomial.aeval x p = 0)
   have hx : IsIntegral A x := ⟨p, hm, hp⟩
   obtain h | h := hl _ ((minpoly A x).degree_modByMonic_lt hm)
   swap
-  · exact (h <| (aeval_modByMonic_eq_self_of_root hm hp).trans <| aeval A x).elim
+  exact (h <| (aeval_modByMonic_eq_self_of_root hm hp).trans <| aeval A x).elim
   obtain ⟨r, hr⟩ := (modByMonic_eq_zero_iff_dvd hm).1 h
   rw [hr]
   have hlead := congr_arg leadingCoeff hr
@@ -158,9 +158,9 @@ theorem subsingleton [Subsingleton B] : minpoly A x = 1 := by
   have := minpoly.min A x monic_one (Subsingleton.elim _ _)
   rw [degree_one] at this
   rcases le_or_lt (minpoly A x).degree 0 with h | h
-  · rwa [(monic ⟨1, monic_one, by simp [eq_iff_true_of_subsingleton]⟩ :
-           (minpoly A x).Monic).degree_le_zero_iff_eq_one] at h
-  · exact (this.not_lt h).elim
+  rwa [(monic ⟨1, monic_one, by simp [eq_iff_true_of_subsingleton]⟩ :
+         (minpoly A x).Monic).degree_le_zero_iff_eq_one] at h
+  exact (this.not_lt h).elim
 
 end Ring
 
@@ -221,7 +221,7 @@ theorem eq_X_sub_C_of_algebraMap_inj (a : A) (hf : Function.Injective (algebraMa
     minpoly A (algebraMap A B a) = X - C a := by
   nontriviality A
   refine (unique' A _ (monic_X_sub_C a) ?_ ?_).symm
-  · rw [map_sub, aeval_C, aeval_X, sub_self]
+  rw [map_sub, aeval_C, aeval_X, sub_self]
   simp_rw [or_iff_not_imp_left]
   intro q hl h0
   rw [← natDegree_lt_natDegree_iff h0, natDegree_X_sub_C, Nat.lt_one_iff] at hl
@@ -259,9 +259,9 @@ theorem irreducible (hx : IsIntegral A x) : Irreducible (minpoly A x) := by
   have heval := congr_arg (Polynomial.aeval x) he
   rw [aeval A x, aeval_mul, mul_eq_zero] at heval
   cases' heval with heval heval
-  · exact aeval_ne_zero_of_dvdNotUnit_minpoly hx hf ⟨hf.ne_zero, g, h.2, he.symm⟩ heval
-  · refine aeval_ne_zero_of_dvdNotUnit_minpoly hx hg ⟨hg.ne_zero, f, h.1, ?_⟩ heval
-    rw [mul_comm, he]
+  exact aeval_ne_zero_of_dvdNotUnit_minpoly hx hf ⟨hf.ne_zero, g, h.2, he.symm⟩ heval
+  refine aeval_ne_zero_of_dvdNotUnit_minpoly hx hg ⟨hg.ne_zero, f, h.1, ?_⟩ heval
+  rw [mul_comm, he]
 
 end IsDomain
 

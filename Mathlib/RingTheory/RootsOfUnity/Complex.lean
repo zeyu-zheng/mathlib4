@@ -35,20 +35,20 @@ theorem isPrimitiveRoot_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.Coprim
   simp only [← exp_nat_mul, exp_eq_one_iff]
   have hn0 : (n : ℂ) ≠ 0 := mod_cast h0
   constructor
-  · use i
-    field_simp [hn0, mul_comm (i : ℂ), mul_comm (n : ℂ)]
-  · simp only [hn0, mul_right_comm _ _ ↑n, mul_left_inj' two_pi_I_ne_zero, Ne, not_false_iff,
-      mul_comm _ (i : ℂ), ← mul_assoc _ (i : ℂ), exists_imp, field_simps]
-    norm_cast
-    rintro l k hk
-    conv_rhs at hk => rw [mul_comm, ← mul_assoc]
-    have hz : 2 * ↑π * I ≠ 0
-    simp [pi_pos.ne.symm, I_ne_zero]
-    field_simp [hz] at hk
-    norm_cast at hk
-    have : n ∣ i * l
-    rw [← Int.natCast_dvd_natCast, hk, mul_comm]; apply dvd_mul_left
-    exact hi.symm.dvd_of_dvd_mul_left this
+  use i
+  field_simp [hn0, mul_comm (i : ℂ), mul_comm (n : ℂ)]
+  simp only [hn0, mul_right_comm _ _ ↑n, mul_left_inj' two_pi_I_ne_zero, Ne, not_false_iff,
+    mul_comm _ (i : ℂ), ← mul_assoc _ (i : ℂ), exists_imp, field_simps]
+  norm_cast
+  rintro l k hk
+  conv_rhs at hk => rw [mul_comm, ← mul_assoc]
+  have hz : 2 * ↑π * I ≠ 0
+  simp [pi_pos.ne.symm, I_ne_zero]
+  field_simp [hz] at hk
+  norm_cast at hk
+  have : n ∣ i * l
+  rw [← Int.natCast_dvd_natCast, hk, mul_comm]; apply dvd_mul_left
+  exact hi.symm.dvd_of_dvd_mul_left this
 
 theorem isPrimitiveRoot_exp (n : ℕ) (h0 : n ≠ 0) : IsPrimitiveRoot (exp (2 * π * I / n)) n := by
   simpa only [Nat.cast_one, one_div] using
@@ -58,7 +58,7 @@ theorem isPrimitiveRoot_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
     IsPrimitiveRoot ζ n ↔ ∃ i < (n : ℕ), ∃ _ : i.Coprime n, exp (2 * π * I * (i / n)) = ζ := by
   have hn0 : (n : ℂ) ≠ 0 := mod_cast hn
   constructor; swap
-  · rintro ⟨i, -, hi, rfl⟩; exact isPrimitiveRoot_exp_of_coprime i n hn hi
+  rintro ⟨i, -, hi, rfl⟩; exact isPrimitiveRoot_exp_of_coprime i n hn hi
   intro h
   obtain ⟨i, hi, rfl⟩ :=
     (isPrimitiveRoot_exp n hn).eq_pow_of_pow_eq_one h.pow_eq_one (Nat.pos_of_ne_zero hn)
@@ -74,24 +74,24 @@ nonrec theorem mem_rootsOfUnity (n : ℕ+) (x : Units ℂ) :
   rw [mem_rootsOfUnity, Units.ext_iff, Units.val_pow_eq_pow_val, Units.val_one]
   have hn0 : (n : ℂ) ≠ 0 := mod_cast n.ne_zero
   constructor
-  · intro h
-    obtain ⟨i, hi, H⟩ : ∃ i < (n : ℕ), exp (2 * π * I / n) ^ i = x := by
-      simpa only using (isPrimitiveRoot_exp n n.ne_zero).eq_pow_of_pow_eq_one h n.pos
-    refine ⟨i, hi, ?_⟩
-    rw [← H, ← exp_nat_mul]
-    congr 1
-    field_simp [hn0, mul_comm (i : ℂ)]
-  · rintro ⟨i, _, H⟩
-    rw [← H, ← exp_nat_mul, exp_eq_one_iff]
-    use i
-    field_simp [hn0, mul_comm ((n : ℕ) : ℂ), mul_comm (i : ℂ)]
+  intro h
+  obtain ⟨i, hi, H⟩ : ∃ i < (n : ℕ), exp (2 * π * I / n) ^ i = x := by
+    simpa only using (isPrimitiveRoot_exp n n.ne_zero).eq_pow_of_pow_eq_one h n.pos
+  refine ⟨i, hi, ?_⟩
+  rw [← H, ← exp_nat_mul]
+  congr 1
+  field_simp [hn0, mul_comm (i : ℂ)]
+  rintro ⟨i, _, H⟩
+  rw [← H, ← exp_nat_mul, exp_eq_one_iff]
+  use i
+  field_simp [hn0, mul_comm ((n : ℕ) : ℂ), mul_comm (i : ℂ)]
 
 theorem card_rootsOfUnity (n : ℕ+) : Fintype.card (rootsOfUnity n ℂ) = n :=
   (isPrimitiveRoot_exp n n.ne_zero).card_rootsOfUnity
 
 theorem card_primitiveRoots (k : ℕ) : (primitiveRoots k ℂ).card = φ k := by
   by_cases h : k = 0
-  · simp [h]
+  simp [h]
   exact (isPrimitiveRoot_exp k h).card_primitiveRoots
 
 end Complex
@@ -130,12 +130,12 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
   on_goal 2 =>
     replace hin := Nat.isCoprime_iff_coprime.mpr hin
     split_ifs
-    · exact hin
-    · convert hin.add_mul_left_left (-1) using 1
-      rw [mul_neg_one, sub_eq_add_neg]
+    exact hin
+    convert hin.add_mul_left_left (-1) using 1
+    rw [mul_neg_one, sub_eq_add_neg]
   on_goal 2 =>
     split_ifs with h₂
-    · exact mod_cast h
+    exact mod_cast h
     suffices (i - n : ℤ).natAbs = n - i by
       rw [this]
       apply tsub_lt_self hn.bot_lt
@@ -145,26 +145,26 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
     rw [← Int.natAbs_neg, neg_sub, Int.natAbs_eq_iff]
     exact Or.inl (Int.ofNat_sub h.le).symm
   split_ifs with h₂
-  · convert Complex.arg_cos_add_sin_mul_I _
-    · push_cast; rfl
-    · push_cast; rfl
-    field_simp [hn]
-    refine ⟨(neg_lt_neg Real.pi_pos).trans_le ?_, ?_⟩
-    · rw [neg_zero]
-      exact mul_nonneg (mul_nonneg i.cast_nonneg <| by simp [Real.pi_pos.le])
-        (by rw [inv_nonneg]; simp only [Nat.cast_nonneg])
-    rw [← mul_rotate', mul_div_assoc]
-    rw [← mul_one n] at h₂
-    exact mul_le_of_le_one_right Real.pi_pos.le
-      ((div_le_iff' <| mod_cast pos_of_gt h).mpr <| mod_cast h₂)
+  convert Complex.arg_cos_add_sin_mul_I _
+  push_cast; rfl
+  push_cast; rfl
+  field_simp [hn]
+  refine ⟨(neg_lt_neg Real.pi_pos).trans_le ?_, ?_⟩
+  rw [neg_zero]
+  exact mul_nonneg (mul_nonneg i.cast_nonneg <| by simp [Real.pi_pos.le])
+    (by rw [inv_nonneg]; simp only [Nat.cast_nonneg])
+  rw [← mul_rotate', mul_div_assoc]
+  rw [← mul_one n] at h₂
+  exact mul_le_of_le_one_right Real.pi_pos.le
+    ((div_le_iff' <| mod_cast pos_of_gt h).mpr <| mod_cast h₂)
   rw [← Complex.cos_sub_two_pi, ← Complex.sin_sub_two_pi]
   convert Complex.arg_cos_add_sin_mul_I _
-  · push_cast
-    rw [← sub_one_mul, sub_div, div_self]
-    exact mod_cast hn
-  · push_cast
-    rw [← sub_one_mul, sub_div, div_self]
-    exact mod_cast hn
+  push_cast
+  rw [← sub_one_mul, sub_div, div_self]
+  exact mod_cast hn
+  push_cast
+  rw [← sub_one_mul, sub_div, div_self]
+  exact mod_cast hn
   field_simp [hn]
   refine ⟨?_, le_trans ?_ Real.pi_pos.le⟩
   on_goal 2 =>
@@ -173,9 +173,9 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
       (div_nonneg (by simp [Real.pi_pos.le]) <| by simp)
   rw [← mul_rotate', mul_div_assoc, neg_lt, ← mul_neg, mul_lt_iff_lt_one_right Real.pi_pos, ←
     neg_div, ← neg_mul, neg_sub, div_lt_iff, one_mul, sub_mul, sub_lt_comm, ← mul_sub_one]
-  · norm_num
-    exact mod_cast not_le.mp h₂
-  · exact Nat.cast_pos.mpr hn.bot_lt
+  norm_num
+  exact mod_cast not_le.mp h₂
+  exact Nat.cast_pos.mpr hn.bot_lt
 
 lemma Complex.norm_eq_one_of_mem_rootsOfUnity {ζ : ℂˣ} {n : ℕ+} (hζ : ζ ∈ rootsOfUnity n ℂ) :
     ‖(ζ : ℂ)‖ = 1 := by

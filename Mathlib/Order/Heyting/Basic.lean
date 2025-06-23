@@ -729,12 +729,12 @@ theorem compl_compl_inf_distrib (a b : α) : (a ⊓ b)ᶜᶜ = aᶜᶜ ⊓ bᶜ�
 
 theorem compl_compl_himp_distrib (a b : α) : (a ⇨ b)ᶜᶜ = aᶜᶜ ⇨ bᶜᶜ := by
   apply le_antisymm
-  · rw [le_himp_iff, ← compl_compl_inf_distrib]
-    exact compl_anti (compl_anti himp_inf_le)
-  · refine le_compl_comm.1 ((compl_anti compl_sup_le_himp).trans ?_)
-    rw [compl_sup_distrib, le_compl_iff_disjoint_right, disjoint_right_comm, ←
-      le_compl_iff_disjoint_right]
-    exact inf_himp_le
+  rw [le_himp_iff, ← compl_compl_inf_distrib]
+  exact compl_anti (compl_anti himp_inf_le)
+  refine le_compl_comm.1 ((compl_anti compl_sup_le_himp).trans ?_)
+  rw [compl_sup_distrib, le_compl_iff_disjoint_right, disjoint_right_comm, ←
+    le_compl_iff_disjoint_right]
+  exact inf_himp_le
 
 instance OrderDual.instCoheytingAlgebra : CoheytingAlgebra αᵒᵈ where
   hnot := toDual ∘ compl ∘ ofDual
@@ -868,12 +868,12 @@ theorem hnot_hnot_sup_distrib (a b : α) : ￢￢(a ⊔ b) = ￢￢a ⊔ ￢￢b
 
 theorem hnot_hnot_sdiff_distrib (a b : α) : ￢￢(a \ b) = ￢￢a \ ￢￢b := by
   apply le_antisymm
-  · refine hnot_le_comm.1 ((hnot_anti sdiff_le_inf_hnot).trans' ?_)
-    rw [hnot_inf_distrib, hnot_le_iff_codisjoint_right, codisjoint_left_comm, ←
-      hnot_le_iff_codisjoint_right]
-    exact le_sdiff_sup
-  · rw [sdiff_le_iff, ← hnot_hnot_sup_distrib]
-    exact hnot_anti (hnot_anti le_sup_sdiff)
+  refine hnot_le_comm.1 ((hnot_anti sdiff_le_inf_hnot).trans' ?_)
+  rw [hnot_inf_distrib, hnot_le_iff_codisjoint_right, codisjoint_left_comm, ←
+    hnot_le_iff_codisjoint_right]
+  exact le_sdiff_sup
+  rw [sdiff_le_iff, ← hnot_hnot_sup_distrib]
+  exact hnot_anti (hnot_anti le_sup_sdiff)
 
 instance OrderDual.instHeytingAlgebra : HeytingAlgebra αᵒᵈ where
   compl := toDual ∘ hnot ∘ ofDual
@@ -942,15 +942,15 @@ abbrev LinearOrder.toBiheytingAlgebra [LinearOrder α] [BoundedOrder α] : Bihey
     le_himp_iff := fun a b c => by
       change _ ≤ ite _ _ _ ↔ _
       split_ifs with h
-      · exact iff_of_true le_top (inf_le_of_right_le h)
-      · rw [inf_le_iff, or_iff_left h],
+      exact iff_of_true le_top (inf_le_of_right_le h)
+      rw [inf_le_iff, or_iff_left h],
     himp_bot := fun a => if_congr le_bot_iff rfl rfl, sdiff := fun a b => if a ≤ b then ⊥ else a,
     hnot := fun a => if a = ⊤ then ⊥ else ⊤,
     sdiff_le_iff := fun a b c => by
       change ite _ _ _ ≤ _ ↔ _
       split_ifs with h
-      · exact iff_of_true bot_le (le_sup_of_le_left h)
-      · rw [le_sup_iff, or_iff_right h],
+      exact iff_of_true bot_le (le_sup_of_le_left h)
+      rw [le_sup_iff, or_iff_right h],
     top_sdiff := fun a => if_congr top_le_iff rfl rfl }
 
 instance OrderDual.instBiheytingAlgebra [BiheytingAlgebra α] : BiheytingAlgebra αᵒᵈ where

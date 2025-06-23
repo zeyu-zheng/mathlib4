@@ -430,13 +430,13 @@ lemma mem_snoc {p : RelSeries r} {newLast : α} {rel : r p.last newLast} {x : α
   simp only [snoc, append, singleton_length, Nat.add_zero, Nat.reduceAdd, Fin.cast_refl,
     Function.comp_id, mem_def, id_eq, Set.mem_range]
   constructor
-  · rintro ⟨i, rfl⟩
-    exact Fin.lastCases (Or.inr <| Fin.append_right _ _ 0) (fun i => Or.inl ⟨⟨i.1, i.2⟩,
-      (Fin.append_left _ _ _).symm⟩) i
-  · intro h
-    rcases h with (⟨i, rfl⟩ | rfl)
-    · exact ⟨i.castSucc, Fin.append_left _ _ _⟩
-    · exact ⟨Fin.last _, Fin.append_right _ _ 0⟩
+  rintro ⟨i, rfl⟩
+  exact Fin.lastCases (Or.inr <| Fin.append_right _ _ 0) (fun i => Or.inl ⟨⟨i.1, i.2⟩,
+    (Fin.append_left _ _ _).symm⟩) i
+  intro h
+  rcases h with (⟨i, rfl⟩ | rfl)
+  exact ⟨i.castSucc, Fin.append_left _ _ _⟩
+  exact ⟨Fin.last _, Fin.append_right _ _ 0⟩
 
 /--
 If a series `a₀ -r→ a₁ -r→ ...` has positive length, then `a₁ -r→ ...` is another series
@@ -524,16 +524,16 @@ lemma smash_succ_castAdd {p q : RelSeries r} (h : p.last = q.head)
     (i : Fin p.length) : p.smash q h (i.castAdd q.length).succ = p i.succ := by
   rw [smash_toFun]
   split_ifs with H
-  · congr
-  · simp only [Fin.val_succ, Fin.coe_castAdd] at H
-    convert h.symm
-    · congr
-      simp only [Fin.val_succ, Fin.coe_castAdd, Nat.zero_mod, tsub_eq_zero_iff_le]
-      omega
-    · congr
-      ext
-      change i.1 + 1 = p.length
-      omega
+  congr
+  simp only [Fin.val_succ, Fin.coe_castAdd] at H
+  convert h.symm
+  congr
+  simp only [Fin.val_succ, Fin.coe_castAdd, Nat.zero_mod, tsub_eq_zero_iff_le]
+  omega
+  congr
+  ext
+  change i.1 + 1 = p.length
+  omega
 
 lemma smash_natAdd {p q : RelSeries r} (h : p.last = q.head) (i : Fin q.length) :
     smash p q h (Fin.castSucc <| i.natAdd p.length) = q (Fin.castSucc i) := by
@@ -545,11 +545,11 @@ lemma smash_succ_natAdd {p q : RelSeries r} (h : p.last = q.head) (i : Fin q.len
     smash p q h (i.natAdd p.length).succ = q i.succ := by
   rw [smash_toFun]
   split_ifs with H
-  · have H' : p.length < p.length + (i.1 + 1) := by omega
-    exact (lt_irrefl _ (H.trans H')).elim
-  · congr
-    simp only [Fin.val_succ, Fin.coe_natAdd]
-    rw [add_assoc, Nat.add_sub_cancel_left]
+  have H' : p.length < p.length + (i.1 + 1) := by omega
+  exact (lt_irrefl _ (H.trans H')).elim
+  congr
+  simp only [Fin.val_succ, Fin.coe_natAdd]
+  rw [add_assoc, Nat.add_sub_cancel_left]
 
 @[simp] lemma head_smash {p q : RelSeries r} (h : p.last = q.head) :
     (smash p q h).head = p.head := by

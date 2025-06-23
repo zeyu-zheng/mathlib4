@@ -269,8 +269,8 @@ variable {α} [DecidableEq ι]
 theorem single_tsub : single i (a - b) = single i a - single i b := by
   ext j
   obtain rfl | h := eq_or_ne i j
-  · rw [tsub_apply, single_eq_same, single_eq_same, single_eq_same]
-  · rw [tsub_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, tsub_self]
+  rw [tsub_apply, single_eq_same, single_eq_same, single_eq_same]
+  rw [tsub_apply, single_eq_of_ne h, single_eq_of_ne h, single_eq_of_ne h, tsub_self]
 
 variable [∀ (i) (x : α i), Decidable (x ≠ 0)]
 

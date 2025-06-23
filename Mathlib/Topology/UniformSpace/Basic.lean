@@ -262,12 +262,12 @@ theorem UniformSpace.Core.ext :
 theorem UniformSpace.Core.nhds_toTopologicalSpace {α : Type u} (u : Core α) (x : α) :
     @nhds α u.toTopologicalSpace x = comap (Prod.mk x) u.uniformity := by
   apply TopologicalSpace.nhds_mkOfNhds_of_hasBasis (fun _ ↦ (basis_sets _).comap _)
-  · exact fun a U hU ↦ u.refl hU rfl
-  · intro a U hU
-    rcases u.comp_mem_uniformity_sets hU with ⟨V, hV, hVU⟩
-    filter_upwards [preimage_mem_comap hV] with b hb
-    filter_upwards [preimage_mem_comap hV] with c hc
-    exact hVU ⟨b, hb, hc⟩
+  exact fun a U hU ↦ u.refl hU rfl
+  intro a U hU
+  rcases u.comp_mem_uniformity_sets hU with ⟨V, hV, hVU⟩
+  filter_upwards [preimage_mem_comap hV] with b hb
+  filter_upwards [preimage_mem_comap hV] with c hc
+  exact hVU ⟨b, hb, hc⟩
 
 -- the topological structure is embedded in the uniform structure
 -- to avoid instance diamond issues. See Note [forgetful inheritance].
@@ -440,7 +440,7 @@ theorem eventually_uniformity_iterate_comp_subset {s : Set (α × α)} (hs : s �
     ∀ᶠ t in (𝓤 α).smallSets, (t ○ ·)^[n] t ⊆ s := by
   suffices ∀ᶠ t in (𝓤 α).smallSets, t ⊆ s ∧ (t ○ ·)^[n] t ⊆ s from (eventually_and.1 this).2
   induction' n with n ihn generalizing s
-  · simpa
+  simpa
   rcases comp_mem_uniformity_sets hs with ⟨t, htU, hts⟩
   refine (ihn htU).mono fun U hU => ?_
   rw [Function.iterate_succ_apply']
@@ -519,8 +519,8 @@ theorem uniformity_lift_le_comp {f : Set (α × α) → Filter β} (h : Monotone
   calc
     ((𝓤 α).lift fun s => f (s ○ s)) = ((𝓤 α).lift' fun s : Set (α × α) => s ○ s).lift f := by
       rw [lift_lift'_assoc]
-      · exact monotone_id.compRel monotone_id
-      · exact h
+      exact monotone_id.compRel monotone_id
+      exact h
     _ ≤ (𝓤 α).lift f := lift_mono comp_le_uniformity le_rfl
 
 theorem comp3_mem_uniformity {s : Set (α × α)} (hs : s ∈ 𝓤 α) : ∃ t ∈ 𝓤 α, t ○ (t ○ t) ⊆ s :=
@@ -624,11 +624,11 @@ theorem mem_comp_comp {V W M : Set (β × β)} (hW' : SymmetricRel W) {p : β ×
     p ∈ V ○ M ○ W ↔ (ball p.1 V ×ˢ ball p.2 W ∩ M).Nonempty := by
   cases' p with x y
   constructor
-  · rintro ⟨z, ⟨w, hpw, hwz⟩, hzy⟩
-    exact ⟨(w, z), ⟨hpw, by rwa [mem_ball_symmetry hW']⟩, hwz⟩
-  · rintro ⟨⟨w, z⟩, ⟨w_in, z_in⟩, hwz⟩
-    rw [mem_ball_symmetry hW'] at z_in
-    exact ⟨z, ⟨w, w_in, hwz⟩, z_in⟩
+  rintro ⟨z, ⟨w, hpw, hwz⟩, hzy⟩
+  exact ⟨(w, z), ⟨hpw, by rwa [mem_ball_symmetry hW']⟩, hwz⟩
+  rintro ⟨⟨w, z⟩, ⟨w_in, z_in⟩, hwz⟩
+  rw [mem_ball_symmetry hW'] at z_in
+  exact ⟨z, ⟨w, w_in, hwz⟩, z_in⟩
 
 /-!
 ### Neighborhoods in uniform spaces
@@ -686,11 +686,11 @@ theorem UniformSpace.mem_nhds_iff_symm {x : α} {s : Set α} :
     s ∈ 𝓝 x ↔ ∃ V ∈ 𝓤 α, SymmetricRel V ∧ ball x V ⊆ s := by
   rw [UniformSpace.mem_nhds_iff]
   constructor
-  · rintro ⟨V, V_in, V_sub⟩
-    use symmetrizeRel V, symmetrize_mem_uniformity V_in, symmetric_symmetrizeRel V
-    exact Subset.trans (ball_mono (symmetrizeRel_subset_self V) x) V_sub
-  · rintro ⟨V, V_in, _, V_sub⟩
-    exact ⟨V, V_in, V_sub⟩
+  rintro ⟨V, V_in, V_sub⟩
+  use symmetrizeRel V, symmetrize_mem_uniformity V_in, symmetric_symmetrizeRel V
+  exact Subset.trans (ball_mono (symmetrizeRel_subset_self V) x) V_sub
+  rintro ⟨V, V_in, _, V_sub⟩
+  exact ⟨V, V_in, V_sub⟩
 
 theorem UniformSpace.hasBasis_nhds (x : α) :
     HasBasis (𝓝 x) (fun s : Set (α × α) => s ∈ 𝓤 α ∧ SymmetricRel s) fun s => ball x s :=
@@ -758,9 +758,9 @@ theorem nhds_eq_uniformity_prod {a b : α} :
     𝓝 (a, b) =
       (𝓤 α).lift' fun s : Set (α × α) => { y : α | (y, a) ∈ s } ×ˢ { y : α | (b, y) ∈ s } := by
   rw [nhds_prod_eq, nhds_nhds_eq_uniformity_uniformity_prod, lift_lift'_same_eq_lift']
-  · exact fun s => monotone_const.set_prod monotone_preimage
-  · refine fun t => Monotone.set_prod ?_ monotone_const
-    exact monotone_preimage (f := fun y => (y, a))
+  exact fun s => monotone_const.set_prod monotone_preimage
+  refine fun t => Monotone.set_prod ?_ monotone_const
+  exact monotone_preimage (f := fun y => (y, a))
 
 theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd : d ∈ 𝓤 α) :
     ∃ t : Set (α × α), IsOpen t ∧ s ⊆ t ∧
@@ -770,8 +770,8 @@ theorem nhdset_of_mem_uniformity {d : Set (α × α)} (s : Set (α × α)) (hd :
     mem_nhds_iff.mp <|
       show cl_d ∈ 𝓝 (x, y) by
         rw [nhds_eq_uniformity_prod, mem_lift'_sets]
-        · exact ⟨d, hd, fun ⟨a, b⟩ ⟨ha, hb⟩ => ⟨x, y, ha, hp, hb⟩⟩
-        · exact fun _ _ h _ h' => ⟨h h'.1, h h'.2⟩
+        exact ⟨d, hd, fun ⟨a, b⟩ ⟨ha, hb⟩ => ⟨x, y, ha, hp, hb⟩⟩
+        exact fun _ _ h _ h' => ⟨h h'.1, h h'.2⟩
   choose t ht using this
   exact ⟨(⋃ p : α × α, ⋃ h : p ∈ s, t p h : Set (α × α)),
     isOpen_iUnion fun p : α × α => isOpen_iUnion fun hp => (ht p hp).right.left,
@@ -867,12 +867,12 @@ theorem isOpen_iff_open_ball_subset {s : Set α} :
     IsOpen s ↔ ∀ x ∈ s, ∃ V ∈ 𝓤 α, IsOpen V ∧ ball x V ⊆ s := by
   rw [isOpen_iff_ball_subset]
   constructor <;> intro h x hx
-  · obtain ⟨V, hV, hV'⟩ := h x hx
-    exact
-      ⟨interior V, interior_mem_uniformity hV, isOpen_interior,
-        (ball_mono interior_subset x).trans hV'⟩
-  · obtain ⟨V, hV, -, hV'⟩ := h x hx
-    exact ⟨V, hV, hV'⟩
+  obtain ⟨V, hV, hV'⟩ := h x hx
+  exact
+    ⟨interior V, interior_mem_uniformity hV, isOpen_interior,
+      (ball_mono interior_subset x).trans hV'⟩
+  obtain ⟨V, hV, -, hV'⟩ := h x hx
+  exact ⟨V, hV, hV'⟩
 
 /-- The uniform neighborhoods of all points of a dense set cover the whole space. -/
 theorem Dense.biUnion_uniformity_ball {s : Set α} {U : Set (α × α)} (hs : Dense s) (hU : U ∈ 𝓤 α) :
@@ -1106,8 +1106,8 @@ abbrev UniformSpace.comap (f : α → β) (u : UniformSpace β) : UniformSpace �
   comp := le_trans
     (by
       rw [comap_lift'_eq, comap_lift'_eq2]
-      · exact lift'_mono' fun s _ ⟨a₁, a₂⟩ ⟨x, h₁, h₂⟩ => ⟨f x, h₁, h₂⟩
-      · exact monotone_id.compRel monotone_id)
+      exact lift'_mono' fun s _ ⟨a₁, a₂⟩ ⟨x, h₁, h₂⟩ => ⟨f x, h₁, h₂⟩
+      exact monotone_id.compRel monotone_id)
     (comap_mono u.comp)
   toTopologicalSpace := u.toTopologicalSpace.induced f
   nhds_eq_comap_uniformity x := by
@@ -1626,15 +1626,15 @@ theorem IsCompact.nhdsSet_basis_uniformity {p : ι → Prop} {V : ι → Set (α
     (𝓝ˢ K).HasBasis p fun i => ⋃ x ∈ K, ball x (V i) where
   mem_iff' U := by
     constructor
-    · intro H
-      have HKU : K ⊆ ⋃ _ : Unit, interior U
-      simpa only [iUnion_const, subset_interior_iff_mem_nhdsSet] using H
-      obtain ⟨i, hpi, hi⟩ : ∃ i, p i ∧ ⋃ x ∈ K, ball x (V i) ⊆ interior U := by
-        simpa using hbasis.lebesgue_number_lemma hK (fun _ ↦ isOpen_interior) HKU
-      exact ⟨i, hpi, hi.trans interior_subset⟩
-    · rintro ⟨i, hpi, hi⟩
-      refine mem_of_superset (bUnion_mem_nhdsSet fun x _ ↦ ?_) hi
-      exact ball_mem_nhds _ <| hbasis.mem_of_mem hpi
+    intro H
+    have HKU : K ⊆ ⋃ _ : Unit, interior U
+    simpa only [iUnion_const, subset_interior_iff_mem_nhdsSet] using H
+    obtain ⟨i, hpi, hi⟩ : ∃ i, p i ∧ ⋃ x ∈ K, ball x (V i) ⊆ interior U := by
+      simpa using hbasis.lebesgue_number_lemma hK (fun _ ↦ isOpen_interior) HKU
+    exact ⟨i, hpi, hi.trans interior_subset⟩
+    rintro ⟨i, hpi, hi⟩
+    refine mem_of_superset (bUnion_mem_nhdsSet fun x _ ↦ ?_) hi
+    exact ball_mem_nhds _ <| hbasis.mem_of_mem hpi
 
 -- TODO: move to a separate file, golf using the regularity of a uniform space.
 theorem Disjoint.exists_uniform_thickening {A B : Set α} (hA : IsCompact A) (hB : IsClosed B)

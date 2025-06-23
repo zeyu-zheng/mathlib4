@@ -78,11 +78,11 @@ theorem intDegree_mul {x y : RatFunc K} (hx : x ≠ 0) (hy : y ≠ 0) :
 @[simp]
 theorem intDegree_neg (x : RatFunc K) : intDegree (-x) = intDegree x := by
   by_cases hx : x = 0
-  · rw [hx, neg_zero]
-  · rw [intDegree, intDegree, ← natDegree_neg x.num]
-    exact
-      natDegree_sub_eq_of_prod_eq (num_ne_zero (neg_ne_zero.mpr hx)) (denom_ne_zero (-x))
-        (neg_ne_zero.mpr (num_ne_zero hx)) (denom_ne_zero x) (num_denom_neg x)
+  rw [hx, neg_zero]
+  rw [intDegree, intDegree, ← natDegree_neg x.num]
+  exact
+    natDegree_sub_eq_of_prod_eq (num_ne_zero (neg_ne_zero.mpr hx)) (denom_ne_zero (-x))
+      (neg_ne_zero.mpr (num_ne_zero hx)) (denom_ne_zero x) (num_denom_neg x)
 
 theorem intDegree_add {x y : RatFunc K} (hxy : x + y ≠ 0) :
     (x + y).intDegree =
@@ -101,8 +101,8 @@ theorem natDegree_num_mul_right_sub_natDegree_denom_mul_left_eq_intDegree {x : R
 theorem intDegree_add_le {x y : RatFunc K} (hy : y ≠ 0) (hxy : x + y ≠ 0) :
     intDegree (x + y) ≤ max (intDegree x) (intDegree y) := by
   by_cases hx : x = 0
-  · simp only [hx, zero_add, ne_eq] at hxy
-    simp [hx, hxy]
+  simp only [hx, zero_add, ne_eq] at hxy
+  simp [hx, hxy]
   rw [intDegree_add hxy, ←
     natDegree_num_mul_right_sub_natDegree_denom_mul_left_eq_intDegree hx y.denom_ne_zero,
     mul_comm y.denom, ←

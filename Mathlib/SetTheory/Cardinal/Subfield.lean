@@ -70,14 +70,14 @@ open Cardinal
 lemma cardinal_mk_closure_le_max : #(closure s) ≤ max #s ℵ₀ :=
   (Cardinal.mk_le_of_surjective <| surjective_ofWType s).trans <| by
     convert WType.cardinal_mk_le_max_aleph0_of_finite' using 1
-    · rw [lift_uzero, mk_sum, lift_uzero]
-      have : lift.{u,0} #(Fin 6) < ℵ₀ := lift_lt_aleph0.mpr (lt_aleph0_of_finite _)
-      obtain h|h := lt_or_le #s ℵ₀
-      · rw [max_eq_right h.le, max_eq_right]
-        exact (add_lt_aleph0 this h).le
-      · rw [max_eq_left h, add_eq_right h (this.le.trans h), max_eq_left h]
+    rw [lift_uzero, mk_sum, lift_uzero]
+    have : lift.{u,0} #(Fin 6) < ℵ₀ := lift_lt_aleph0.mpr (lt_aleph0_of_finite _)
+    obtain h|h := lt_or_le #s ℵ₀
+    rw [max_eq_right h.le, max_eq_right]
+    exact (add_lt_aleph0 this h).le
+    rw [max_eq_left h, add_eq_right h (this.le.trans h), max_eq_left h]
     rintro (n|_)
-    · fin_cases n <;> infer_instance
+    fin_cases n <;> infer_instance
     infer_instance
 
 lemma cardinal_mk_closure [Infinite s] : #(closure s) = #s :=

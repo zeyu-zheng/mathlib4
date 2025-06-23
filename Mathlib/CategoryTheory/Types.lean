@@ -230,10 +230,10 @@ See <https://stacks.math.columbia.edu/tag/003C>.
 -/
 theorem mono_iff_injective {X Y : Type u} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
   constructor
-  · intro H x x' h
-    rw [← homOfElement_eq_iff] at h ⊢
-    exact (cancel_mono f).mp h
-  · exact fun H => ⟨fun g g' h => H.comp_left h⟩
+  intro H x x' h
+  rw [← homOfElement_eq_iff] at h ⊢
+  exact (cancel_mono f).mp h
+  exact fun H => ⟨fun g g' h => H.comp_left h⟩
 
 theorem injective_of_mono {X Y : Type u} (f : X ⟶ Y) [hf : Mono f] : Function.Injective f :=
   (mono_iff_injective f).1 hf
@@ -244,13 +244,13 @@ See <https://stacks.math.columbia.edu/tag/003C>.
 -/
 theorem epi_iff_surjective {X Y : Type u} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f := by
   constructor
-  · rintro ⟨H⟩
-    refine Function.surjective_of_right_cancellable_Prop fun g₁ g₂ hg => ?_
-    rw [← Equiv.ulift.symm.injective.comp_left.eq_iff]
-    apply H
-    change ULift.up ∘ g₁ ∘ f = ULift.up ∘ g₂ ∘ f
-    rw [hg]
-  · exact fun H => ⟨fun g g' h => H.injective_comp_right h⟩
+  rintro ⟨H⟩
+  refine Function.surjective_of_right_cancellable_Prop fun g₁ g₂ hg => ?_
+  rw [← Equiv.ulift.symm.injective.comp_left.eq_iff]
+  apply H
+  change ULift.up ∘ g₁ ∘ f = ULift.up ∘ g₂ ∘ f
+  rw [hg]
+  exact fun H => ⟨fun g g' h => H.injective_comp_right h⟩
 
 theorem surjective_of_epi {X Y : Type u} (f : X ⟶ Y) [hf : Epi f] : Function.Surjective f :=
   (epi_iff_surjective f).1 hf

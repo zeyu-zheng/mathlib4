@@ -198,15 +198,15 @@ lemma hasSum_int_evenKernel₀ (a : ℝ) {t : ℝ} (ht : 0 < t) :
   haveI := Classical.propDecidable -- speed up instance search for `if / then / else`
   simp_rw [AddCircle.coe_eq_zero_iff, zsmul_one]
   split_ifs with h
-  · obtain ⟨k, rfl⟩ := h
-    simp_rw [← Int.cast_add, Int.cast_eq_zero, add_eq_zero_iff_eq_neg]
-    simpa only [Int.cast_add, neg_mul, Int.cast_neg, add_left_neg, ne_eq, OfNat.ofNat_ne_zero,
-      not_false_eq_true, zero_pow, mul_zero, zero_mul, Real.exp_zero]
-      using hasSum_ite_sub_hasSum (hasSum_int_evenKernel (k : ℝ) ht) (-k)
-  · suffices ∀ (n : ℤ), n + a ≠ 0 by simpa [this] using hasSum_int_evenKernel a ht
-    contrapose! h
-    let ⟨n, hn⟩ := h
-    exact ⟨-n, by rwa [Int.cast_neg, neg_eq_iff_add_eq_zero]⟩
+  obtain ⟨k, rfl⟩ := h
+  simp_rw [← Int.cast_add, Int.cast_eq_zero, add_eq_zero_iff_eq_neg]
+  simpa only [Int.cast_add, neg_mul, Int.cast_neg, add_left_neg, ne_eq, OfNat.ofNat_ne_zero,
+    not_false_eq_true, zero_pow, mul_zero, zero_mul, Real.exp_zero]
+    using hasSum_ite_sub_hasSum (hasSum_int_evenKernel (k : ℝ) ht) (-k)
+  suffices ∀ (n : ℤ), n + a ≠ 0 by simpa [this] using hasSum_int_evenKernel a ht
+  contrapose! h
+  let ⟨n, hn⟩ := h
+  exact ⟨-n, by rwa [Int.cast_neg, neg_eq_iff_add_eq_zero]⟩
 
 lemma hasSum_int_cosKernel₀ (a : ℝ) {t : ℝ} (ht : 0 < t) :
     HasSum (fun n : ℤ ↦ if n = 0 then 0 else cexp (2 * π * I * a * n) * rexp (-π * n ^ 2 * t))
@@ -329,12 +329,12 @@ lemma completedHurwitzZetaEven_eq (a : UnitAddCircle) (s : ℂ) :
     completedHurwitzZetaEven₀ a s - (if a = 0 then 1 else 0) / s - 1 / (1 - s) := by
   rw [completedHurwitzZetaEven, WeakFEPair.Λ, sub_div, sub_div]
   congr 1
-  · change completedHurwitzZetaEven₀ a s - (1 / (s / 2)) • (if a = 0 then 1 else 0) / 2 =
-      completedHurwitzZetaEven₀ a s - (if a = 0 then 1 else 0) / s
-    rw [smul_eq_mul, mul_comm, mul_div_assoc, div_div, div_mul_cancel₀ _ two_ne_zero, mul_one_div]
-  · change (1 / (↑(1 / 2 : ℝ) - s / 2)) • 1 / 2 = 1 / (1 - s)
-    push_cast
-    rw [smul_eq_mul, mul_one, ← sub_div, div_div, div_mul_cancel₀ _ two_ne_zero]
+  change completedHurwitzZetaEven₀ a s - (1 / (s / 2)) • (if a = 0 then 1 else 0) / 2 =
+    completedHurwitzZetaEven₀ a s - (if a = 0 then 1 else 0) / s
+  rw [smul_eq_mul, mul_comm, mul_div_assoc, div_div, div_mul_cancel₀ _ two_ne_zero, mul_one_div]
+  change (1 / (↑(1 / 2 : ℝ) - s / 2)) • 1 / 2 = 1 / (1 - s)
+  push_cast
+  rw [smul_eq_mul, mul_one, ← sub_div, div_div, div_mul_cancel₀ _ two_ne_zero]
 
 /--
 The meromorphic function of `s` which agrees with
@@ -353,11 +353,11 @@ lemma completedCosZeta_eq (a : UnitAddCircle) (s : ℂ) :
     completedCosZeta₀ a s - 1 / s - (if a = 0 then 1 else 0) / (1 - s) := by
   rw [completedCosZeta, WeakFEPair.Λ, sub_div, sub_div]
   congr 1
-  · rw [completedCosZeta₀, WeakFEPair.symm, hurwitzEvenFEPair, smul_eq_mul, mul_one, div_div,
-      div_mul_cancel₀ _ (two_ne_zero' ℂ)]
-  · simp_rw [WeakFEPair.symm, hurwitzEvenFEPair, push_cast, inv_one, smul_eq_mul,
-      mul_comm _ (if _ then _ else _), mul_div_assoc, div_div, ← sub_div,
-      div_mul_cancel₀ _ (two_ne_zero' ℂ), mul_one_div]
+  rw [completedCosZeta₀, WeakFEPair.symm, hurwitzEvenFEPair, smul_eq_mul, mul_one, div_div,
+    div_mul_cancel₀ _ (two_ne_zero' ℂ)]
+  simp_rw [WeakFEPair.symm, hurwitzEvenFEPair, push_cast, inv_one, smul_eq_mul,
+    mul_comm _ (if _ then _ else _), mul_div_assoc, div_div, ← sub_div,
+    div_mul_cancel₀ _ (two_ne_zero' ℂ), mul_one_div]
 
 /-!
 ## Parity and functional equations
@@ -426,13 +426,13 @@ lemma differentiableAt_completedHurwitzZetaEven
     DifferentiableAt ℂ (completedHurwitzZetaEven a) s := by
   refine (((hurwitzEvenFEPair a).differentiableAt_Λ ?_ (Or.inl ?_)).comp s
       (differentiableAt_id.div_const _)).div_const _
-  · simp only [ne_eq, div_eq_zero_iff, OfNat.ofNat_ne_zero, or_false]
-    rcases hs with h | h
-    · exact Or.inl h
-    · simp only [hurwitzEvenFEPair, one_div, h, ↓reduceIte, or_true]
-  · change s / 2 ≠ ↑(1 / 2 : ℝ)
-    rw [ofReal_div, ofReal_one, ofReal_ofNat]
-    exact hs' ∘ (div_left_inj' two_ne_zero).mp
+  simp only [ne_eq, div_eq_zero_iff, OfNat.ofNat_ne_zero, or_false]
+  rcases hs with h | h
+  exact Or.inl h
+  simp only [hurwitzEvenFEPair, one_div, h, ↓reduceIte, or_true]
+  change s / 2 ≠ ↑(1 / 2 : ℝ)
+  rw [ofReal_div, ofReal_one, ofReal_ofNat]
+  exact hs' ∘ (div_left_inj' two_ne_zero).mp
 
 lemma differentiable_completedHurwitzZetaEven₀ (a : UnitAddCircle) :
     Differentiable ℂ (completedHurwitzZetaEven₀ a) :=
@@ -456,11 +456,11 @@ lemma differentiableAt_completedCosZeta
     DifferentiableAt ℂ (completedCosZeta a) s := by
   refine (((hurwitzEvenFEPair a).symm.differentiableAt_Λ (Or.inl ?_) ?_).comp s
       (differentiableAt_id.div_const _)).div_const _
-  · exact div_ne_zero_iff.mpr ⟨hs, two_ne_zero⟩
-  · change s / 2 ≠ ↑(1 / 2 : ℝ) ∨ (if a = 0 then 1 else 0) = 0
-    refine Or.imp (fun h ↦ ?_) (fun ha ↦ ?_) hs'
-    · simpa only [push_cast] using h ∘ (div_left_inj' two_ne_zero).mp
-    · simp_rw [eq_false_intro ha, if_false]
+  exact div_ne_zero_iff.mpr ⟨hs, two_ne_zero⟩
+  change s / 2 ≠ ↑(1 / 2 : ℝ) ∨ (if a = 0 then 1 else 0) = 0
+  refine Or.imp (fun h ↦ ?_) (fun ha ↦ ?_) hs'
+  simpa only [push_cast] using h ∘ (div_left_inj' two_ne_zero).mp
+  simp_rw [eq_false_intro ha, if_false]
 
 lemma differentiable_completedCosZeta₀ (a : UnitAddCircle) :
     Differentiable ℂ (completedCosZeta₀ a) :=
@@ -521,12 +521,12 @@ lemma hasSum_int_completedCosZeta (a : ℝ) {s : ℂ} (hs : 1 < re s) :
     refine ((hurwitzEvenFEPair a).symm.hasMellin (?_ : 1 / 2 < (s / 2).re)).2.symm
     rwa [div_ofNat_re, div_lt_div_right two_pos]]
   refine (hasSum_mellin_pi_mul_sq (zero_lt_one.trans hs) hF ?_).congr_fun fun n ↦ ?_
-  · apply (((summable_one_div_int_add_rpow 0 s.re).mpr hs).div_const 2).of_norm_bounded
-    intro i
-    simp only [c, (by { push_cast; ring } : 2 * π * I * a * i = ↑(2 * π * a * i) * I), norm_div,
-      RCLike.norm_ofNat, norm_norm, Complex.norm_exp_ofReal_mul_I, add_zero, norm_one,
-      norm_of_nonneg (by positivity : 0 ≤ |(i : ℝ)| ^ s.re), div_right_comm, le_rfl]
-  · simp only [c, Int.cast_eq_zero, ← Int.cast_abs, ofReal_intCast, div_right_comm, mul_div_assoc]
+  apply (((summable_one_div_int_add_rpow 0 s.re).mpr hs).div_const 2).of_norm_bounded
+  intro i
+  simp only [c, (by { push_cast; ring } : 2 * π * I * a * i = ↑(2 * π * a * i) * I), norm_div,
+    RCLike.norm_ofNat, norm_norm, Complex.norm_exp_ofReal_mul_I, add_zero, norm_one,
+    norm_of_nonneg (by positivity : 0 ≤ |(i : ℝ)| ^ s.re), div_right_comm, le_rfl]
+  simp only [c, Int.cast_eq_zero, ← Int.cast_abs, ofReal_intCast, div_right_comm, mul_div_assoc]
 
 /-- Formula for `completedCosZeta` as a Dirichlet series in the convergence range
 (second version, with sum over `ℕ`). -/
@@ -539,11 +539,11 @@ lemma hasSum_nat_completedCosZeta (a : ℝ) {s : ℂ} (hs : 1 < re s) :
   rw [aux, div_zero, zero_div, add_zero] at hint
   refine hint.congr_fun fun n ↦ ?_
   split_ifs with h
-  · simp only [h, Nat.cast_zero, aux, div_zero, zero_div, neg_zero, zero_add]
-  · simp only [ofReal_cos, ofReal_mul, ofReal_ofNat, ofReal_natCast, Complex.cos,
-      show 2 * π * a * n * I = 2 * π * I * a * n by ring, neg_mul, mul_div_assoc,
-      div_right_comm _ (2 : ℂ), Int.cast_natCast, Nat.abs_cast, Int.cast_neg, mul_neg, abs_neg, ←
-      mul_add, ← add_div]
+  simp only [h, Nat.cast_zero, aux, div_zero, zero_div, neg_zero, zero_add]
+  simp only [ofReal_cos, ofReal_mul, ofReal_ofNat, ofReal_natCast, Complex.cos,
+    show 2 * π * a * n * I = 2 * π * I * a * n by ring, neg_mul, mul_div_assoc,
+    div_right_comm _ (2 : ℂ), Int.cast_natCast, Nat.abs_cast, Int.cast_neg, mul_neg, abs_neg, ←
+    mul_add, ← add_div]
 
 /-- Formula for `completedHurwitzZetaEven` as a Dirichlet series in the convergence range. -/
 lemma hasSum_int_completedHurwitzZetaEven (a : ℝ) {s : ℂ} (hs : 1 < re s) :
@@ -554,18 +554,18 @@ lemma hasSum_int_completedHurwitzZetaEven (a : ℝ) {s : ℂ} (hs : 1 < re s) :
     refine (ofReal_sub .. ▸ (hasSum_ofReal.mpr (hasSum_int_evenKernel₀ a ht)).div_const
       2).congr_fun fun n ↦ ?_
     split_ifs
-    · rw [ofReal_zero, zero_div]
-    · rw [mul_comm, mul_one_div]
+    rw [ofReal_zero, zero_div]
+    rw [mul_comm, mul_one_div]
   rw [show completedHurwitzZetaEven a s = mellin (fun t ↦ ((evenKernel (↑a) t : ℂ) -
         ↑(if (a : UnitAddCircle) = 0 then 1 else 0 : ℝ)) / 2) (s / 2) by
     simp_rw [mellin_div_const, apply_ite ofReal', ofReal_one, ofReal_zero]
     refine congr_arg (· / 2) ((hurwitzEvenFEPair a).hasMellin (?_ : 1 / 2 < (s / 2).re)).2.symm
     rwa [div_ofNat_re, div_lt_div_right two_pos]]
   refine (hasSum_mellin_pi_mul_sq (zero_lt_one.trans hs) hF ?_).congr_fun fun n ↦ ?_
-  · simp_rw [← mul_one_div ‖_‖]
-    apply Summable.mul_left
-    rwa [summable_one_div_int_add_rpow]
-  · rw [mul_one_div, div_right_comm]
+  simp_rw [← mul_one_div ‖_‖]
+  apply Summable.mul_left
+  rwa [summable_one_div_int_add_rpow]
+  rw [mul_one_div, div_right_comm]
 
 /-!
 ## The un-completed even Hurwitz zeta
@@ -583,21 +583,21 @@ lemma differentiableAt_update_of_residue
     filter_upwards [self_mem_nhdsWithin] with s (hs : s ≠ 0)
     rw [Pi.div_apply, ← div_div, mul_div_cancel_left₀ _ hs]
   rcases ne_or_eq s 0 with hs | rfl
-  · -- Easy case : `s ≠ 0`
-    refine (claim s hs hs').congr_of_eventuallyEq ?_
-    filter_upwards [isOpen_compl_singleton.mem_nhds hs] with x hx
-    simp only [Function.update_noteq hx]
-  · -- Hard case : `s = 0`
-    simp_rw [← claim2.limUnder_eq]
-    have S_nhds : {(1 : ℂ)}ᶜ ∈ 𝓝 (0 : ℂ) := isOpen_compl_singleton.mem_nhds hs'
-    refine ((Complex.differentiableOn_update_limUnder_of_isLittleO S_nhds
-      (fun t ht ↦ (claim t ht.2 ht.1).differentiableWithinAt) ?_) 0 hs').differentiableAt S_nhds
-    simp only [Gammaℝ, zero_div, div_zero, Complex.Gamma_zero, mul_zero, cpow_zero, sub_zero]
-    -- Remains to show completed zeta is `o (s ^ (-1))` near 0.
-    refine (isBigO_const_of_tendsto claim2 <| one_ne_zero' ℂ).trans_isLittleO ?_
-    rw [isLittleO_iff_tendsto']
-    · exact Tendsto.congr (fun x ↦ by rw [← one_div, one_div_one_div]) nhdsWithin_le_nhds
-    · exact eventually_of_mem self_mem_nhdsWithin fun x hx hx' ↦ (hx <| inv_eq_zero.mp hx').elim
+  -- Easy case : `s ≠ 0`
+  refine (claim s hs hs').congr_of_eventuallyEq ?_
+  filter_upwards [isOpen_compl_singleton.mem_nhds hs] with x hx
+  simp only [Function.update_noteq hx]
+  -- Hard case : `s = 0`
+  simp_rw [← claim2.limUnder_eq]
+  have S_nhds : {(1 : ℂ)}ᶜ ∈ 𝓝 (0 : ℂ) := isOpen_compl_singleton.mem_nhds hs'
+  refine ((Complex.differentiableOn_update_limUnder_of_isLittleO S_nhds
+    (fun t ht ↦ (claim t ht.2 ht.1).differentiableWithinAt) ?_) 0 hs').differentiableAt S_nhds
+  simp only [Gammaℝ, zero_div, div_zero, Complex.Gamma_zero, mul_zero, cpow_zero, sub_zero]
+  -- Remains to show completed zeta is `o (s ^ (-1))` near 0.
+  refine (isBigO_const_of_tendsto claim2 <| one_ne_zero' ℂ).trans_isLittleO ?_
+  rw [isLittleO_iff_tendsto']
+  exact Tendsto.congr (fun x ↦ by rw [← one_div, one_div_one_div]) nhdsWithin_le_nhds
+  exact eventually_of_mem self_mem_nhdsWithin fun x hx hx' ↦ (hx <| inv_eq_zero.mp hx').elim
 
 /-- The even part of the Hurwitz zeta function, i.e. the meromorphic function of `s` which agrees
 with `1 / 2 * ∑' (n : ℤ), 1 / |n + a| ^ s` for `1 < re s`-/
@@ -609,10 +609,10 @@ lemma hurwitzZetaEven_def_of_ne_or_ne {a : UnitAddCircle} {s : ℂ} (h : a ≠ 0
     hurwitzZetaEven a s = completedHurwitzZetaEven a s / Gammaℝ s := by
   rw [hurwitzZetaEven]
   rcases ne_or_eq s 0 with h | rfl
-  · rw [Function.update_noteq h]
-  · simpa only [Gammaℝ, Function.update_same, neg_zero, zero_div, cpow_zero, Complex.Gamma_zero,
-    mul_zero, div_zero, ite_eq_right_iff, div_eq_zero_iff, neg_eq_zero, one_ne_zero,
-    OfNat.ofNat_ne_zero, or_self, imp_false, ne_eq, not_true_eq_false, or_false] using h
+  rw [Function.update_noteq h]
+  simpa only [Gammaℝ, Function.update_same, neg_zero, zero_div, cpow_zero, Complex.Gamma_zero,
+  mul_zero, div_zero, ite_eq_right_iff, div_eq_zero_iff, neg_eq_zero, one_ne_zero,
+  OfNat.ofNat_ne_zero, or_self, imp_false, ne_eq, not_true_eq_false, or_false] using h
 
 lemma hurwitzZetaEven_apply_zero (a : UnitAddCircle) :
     hurwitzZetaEven a 0 = if a = 0 then -1 / 2 else 0 :=
@@ -677,10 +677,10 @@ lemma differentiable_hurwitzZetaEven_sub_hurwitzZetaEven (a b : UnitAddCircle) :
     Differentiable ℂ (fun s ↦ hurwitzZetaEven a s - hurwitzZetaEven b s) := by
   intro z
   rcases ne_or_eq z 1 with hz | rfl
-  · exact (differentiableAt_hurwitzZetaEven a hz).sub (differentiableAt_hurwitzZetaEven b hz)
-  · convert (differentiableAt_hurwitzZetaEven_sub_one_div a).sub
-      (differentiableAt_hurwitzZetaEven_sub_one_div b) using 2 with s
-    abel
+  exact (differentiableAt_hurwitzZetaEven a hz).sub (differentiableAt_hurwitzZetaEven b hz)
+  convert (differentiableAt_hurwitzZetaEven_sub_one_div a).sub
+    (differentiableAt_hurwitzZetaEven_sub_one_div b) using 2 with s
+  abel
 
 /--
 Formula for `hurwitzZetaEven` as a Dirichlet series in the convergence range, with sum over `ℤ`.
@@ -739,12 +739,12 @@ theorem cosZeta_neg_two_mul_nat_add_one (a : UnitAddCircle) (n : ℕ) :
 lemma differentiableAt_cosZeta (a : UnitAddCircle) {s : ℂ} (hs' : s ≠ 1 ∨ a ≠ 0) :
     DifferentiableAt ℂ (cosZeta a) s := by
   rcases ne_or_eq s 1 with hs' | rfl
-  · exact differentiableAt_update_of_residue (fun _ ht ht' ↦
-      differentiableAt_completedCosZeta a ht (Or.inl ht')) (completedCosZeta_residue_zero a) s hs'
-  · apply ((differentiableAt_completedCosZeta a one_ne_zero hs').mul
-      (differentiable_Gammaℝ_inv.differentiableAt)).congr_of_eventuallyEq
-    filter_upwards [isOpen_compl_singleton.mem_nhds one_ne_zero] with x hx
-    simp_rw [cosZeta, Function.update_noteq hx, div_eq_mul_inv]
+  exact differentiableAt_update_of_residue (fun _ ht ht' ↦
+    differentiableAt_completedCosZeta a ht (Or.inl ht')) (completedCosZeta_residue_zero a) s hs'
+  apply ((differentiableAt_completedCosZeta a one_ne_zero hs').mul
+    (differentiable_Gammaℝ_inv.differentiableAt)).congr_of_eventuallyEq
+  filter_upwards [isOpen_compl_singleton.mem_nhds one_ne_zero] with x hx
+  simp_rw [cosZeta, Function.update_noteq hx, div_eq_mul_inv]
 
 /-- If `a ≠ 0` then the cosine zeta function is entire. -/
 lemma differentiable_cosZeta_of_ne_zero {a : UnitAddCircle} (ha : a ≠ 0) :
@@ -774,9 +774,9 @@ lemma LSeriesHasSum_cos (a : ℝ) {s : ℂ} (hs : 1 < re s) :
     LSeriesHasSum (Real.cos <| 2 * π * a * ·) s (cosZeta a s) := by
   refine (hasSum_nat_cosZeta a hs).congr_fun (fun n ↦ ?_)
   rcases eq_or_ne n 0 with rfl | hn
-  · rw [LSeries.term_zero, Nat.cast_zero, Nat.cast_zero, zero_cpow (ne_zero_of_one_lt_re hs),
-      div_zero]
-  · apply LSeries.term_of_ne_zero hn
+  rw [LSeries.term_zero, Nat.cast_zero, Nat.cast_zero, zero_cpow (ne_zero_of_one_lt_re hs),
+    div_zero]
+  apply LSeries.term_of_ne_zero hn
 
 /-!
 ## Functional equations for the un-completed zetas

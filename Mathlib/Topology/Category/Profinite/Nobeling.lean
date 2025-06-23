@@ -96,8 +96,8 @@ theorem continuous_proj :
   apply continuous_pi
   intro i
   split
-  · apply continuous_apply
-  · apply continuous_const
+  apply continuous_apply
+  apply continuous_const
 
 /-- The image of `Proj π J` -/
 def π : Set (I → Bool) := (Proj J) '' C
@@ -120,8 +120,8 @@ theorem proj_eq_self {x : I → Bool} (h : ∀ i, x i ≠ false → J i) : Proj 
 theorem proj_prop_eq_self (hh : ∀ i x, x ∈ C → x i ≠ false → J i) : π C J = C := by
   ext x
   refine ⟨fun ⟨y, hy, h⟩ ↦ ?_, fun h ↦ ⟨x, h, ?_⟩⟩
-  · rwa [← h, proj_eq_self]; exact (hh · y hy)
-  · rw [proj_eq_self]; exact (hh · x h)
+  rwa [← h, proj_eq_self]; exact (hh · y hy)
+  rw [proj_eq_self]; exact (hh · x h)
 
 theorem proj_comp_of_subset (h : ∀ i, J i → K i) : (Proj J ∘ Proj K) =
     (Proj J : (I → Bool) → (I → Bool)) := by
@@ -130,14 +130,14 @@ theorem proj_comp_of_subset (h : ∀ i, J i → K i) : (Proj J ∘ Proj K) =
 theorem proj_eq_of_subset (h : ∀ i, J i → K i) : π (π C K) J = π C J := by
   ext x
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · obtain ⟨y, ⟨z, hz, rfl⟩, rfl⟩ := h
-    refine ⟨z, hz, (?_ : _ = (Proj J ∘ Proj K) z)⟩
-    rw [proj_comp_of_subset J K h]
-  · obtain ⟨y, hy, rfl⟩ := h
-    dsimp [π]
-    rw [← Set.image_comp]
-    refine ⟨y, hy, ?_⟩
-    rw [proj_comp_of_subset J K h]
+  obtain ⟨y, ⟨z, hz, rfl⟩, rfl⟩ := h
+  refine ⟨z, hz, (?_ : _ = (Proj J ∘ Proj K) z)⟩
+  rw [proj_comp_of_subset J K h]
+  obtain ⟨y, hy, rfl⟩ := h
+  dsimp [π]
+  rw [← Set.image_comp]
+  refine ⟨y, hy, ?_⟩
+  rw [proj_comp_of_subset J K h]
 
 variable {J K L}
 
@@ -184,18 +184,18 @@ def iso_map : C(π C J, (IndexFunctor.obj C J)) :=
 
 lemma iso_map_bijective : Function.Bijective (iso_map C J) := by
   refine ⟨fun a b h ↦ ?_, fun a ↦ ?_⟩
-  · ext i
-    rw [Subtype.ext_iff] at h
-    by_cases hi : J i
-    · exact congr_fun h ⟨i, hi⟩
-    · rcases a with ⟨_, c, hc, rfl⟩
-      rcases b with ⟨_, d, hd, rfl⟩
-      simp only [Proj, if_neg hi]
-  · refine ⟨⟨fun i ↦ if hi : J i then a.val ⟨i, hi⟩ else false, ?_⟩, ?_⟩
-    · rcases a with ⟨_, y, hy, rfl⟩
-      exact ⟨y, hy, rfl⟩
-    · ext i
-      exact dif_pos i.prop
+  ext i
+  rw [Subtype.ext_iff] at h
+  by_cases hi : J i
+  exact congr_fun h ⟨i, hi⟩
+  rcases a with ⟨_, c, hc, rfl⟩
+  rcases b with ⟨_, d, hd, rfl⟩
+  simp only [Proj, if_neg hi]
+  refine ⟨⟨fun i ↦ if hi : J i then a.val ⟨i, hi⟩ else false, ?_⟩, ?_⟩
+  rcases a with ⟨_, y, hy, rfl⟩
+  exact ⟨y, hy, rfl⟩
+  ext i
+  exact dif_pos i.prop
 
 variable {C}
 variable (hC : IsCompact C)
@@ -352,11 +352,11 @@ theorem injective : Function.Injective (eval C) := by
   intro ⟨a, ha⟩ ⟨b, hb⟩ h
   dsimp [eval] at h
   rcases lt_trichotomy a b with (h'|rfl|h')
-  · exfalso; apply hb; rw [← h]
-    exact Submodule.subset_span ⟨a, h', rfl⟩
-  · rfl
-  · exfalso; apply ha; rw [h]
-    exact Submodule.subset_span ⟨b, ⟨h',rfl⟩⟩
+  exfalso; apply hb; rw [← h]
+  exact Submodule.subset_span ⟨a, h', rfl⟩
+  rfl
+  exfalso; apply ha; rw [h]
+  exact Submodule.subset_span ⟨b, ⟨h',rfl⟩⟩
 
 /-- The image of the good products in the module `LocallyConstant C ℤ`. -/
 def range := Set.range (GoodProducts.eval C)
@@ -382,16 +382,16 @@ theorem eval_eq (l : Products I) (x : C) :
   change LocallyConstant.evalMonoidHom x (l.eval C) = _
   rw [eval, map_list_prod]
   split_ifs with h
-  · simp only [List.map_map]
-    apply List.prod_eq_one
-    simp only [List.mem_map, Function.comp_apply]
-    rintro _ ⟨i, hi, rfl⟩
-    exact if_pos (h i hi)
-  · simp only [List.map_map, List.prod_eq_zero_iff, List.mem_map, Function.comp_apply]
-    push_neg at h
-    convert h with i
-    dsimp [LocallyConstant.evalMonoidHom, e]
-    simp only [ite_eq_right_iff, one_ne_zero]
+  simp only [List.map_map]
+  apply List.prod_eq_one
+  simp only [List.mem_map, Function.comp_apply]
+  rintro _ ⟨i, hi, rfl⟩
+  exact if_pos (h i hi)
+  simp only [List.map_map, List.prod_eq_zero_iff, List.mem_map, Function.comp_apply]
+  push_neg at h
+  convert h with i
+  dsimp [LocallyConstant.evalMonoidHom, e]
+  simp only [ite_eq_right_iff, one_ne_zero]
 
 theorem evalFacProp {l : Products I} (J : I → Prop)
     (h : ∀ a, a ∈ l.val → J a) [∀ j, Decidable (J j)] :
@@ -439,14 +439,14 @@ theorem GoodProducts.span_iff_products : ⊤ ≤ span ℤ (Set.range (eval C)) �
   intro l h
   dsimp
   by_cases hl : l.isGood C
-  · apply subset_span
-    exact ⟨⟨l, hl⟩, rfl⟩
-  · simp only [Products.isGood, not_not] at hl
-    suffices Products.eval C '' {m | m < l} ⊆ span ℤ (Set.range (GoodProducts.eval C)) by
-      rw [← span_le] at this
-      exact this hl
-    rintro a ⟨m, hm, rfl⟩
-    exact h m hm
+  apply subset_span
+  exact ⟨⟨l, hl⟩, rfl⟩
+  simp only [Products.isGood, not_not] at hl
+  suffices Products.eval C '' {m | m < l} ⊆ span ℤ (Set.range (GoodProducts.eval C)) by
+    rw [← span_le] at this
+    exact this hl
+  rintro a ⟨m, hm, rfl⟩
+  exact h m hm
 
 end Products
 
@@ -490,8 +490,8 @@ instance : Fintype (π C (· ∈ s)) := by
   intro ⟨_, x, hx, rfl⟩ ⟨_, y, hy, rfl⟩ h
   ext i
   by_cases hi : i ∈ s
-  · exact congrFun h ⟨i, hi⟩
-  · simp only [Proj, if_neg hi]
+  exact congrFun h ⟨i, hi⟩
+  simp only [Proj, if_neg hi]
 
 
 open scoped Classical in
@@ -536,9 +536,9 @@ theorem factors_prod_eq_basis_of_eq {x y : (π C fun x ↦ x ∈ s)} (h : y = x)
   rintro _ ⟨a, ⟨b, _, rfl⟩, rfl⟩
   dsimp
   split_ifs with hh
-  · rw [e, LocallyConstant.coe_mk, if_pos hh]
-  · rw [LocallyConstant.sub_apply, e, LocallyConstant.coe_mk, LocallyConstant.coe_mk, if_neg hh]
-    simp only [LocallyConstant.toFun_eq_coe, LocallyConstant.coe_one, Pi.one_apply, sub_zero]
+  rw [e, LocallyConstant.coe_mk, if_pos hh]
+  rw [LocallyConstant.sub_apply, e, LocallyConstant.coe_mk, LocallyConstant.coe_mk, if_neg hh]
+  simp only [LocallyConstant.toFun_eq_coe, LocallyConstant.coe_one, Pi.one_apply, sub_zero]
 
 theorem e_mem_of_eq_true {x : (π C (· ∈ s))} {a : I} (hx : x.val a = true) :
     e (π C (· ∈ s)) a ∈ factors C s x := by
@@ -562,13 +562,13 @@ theorem factors_prod_eq_basis_of_ne {x y : (π C (· ∈ s))} (h : y ≠ x) :
   simp only [List.mem_map]
   obtain ⟨a, ha⟩ : ∃ a, y.val a ≠ x.val a := by contrapose! h; ext; apply h
   cases hx : x.val a
-  · rw [hx, ne_eq, Bool.not_eq_false] at ha
-    refine ⟨1 - (e (π C (· ∈ s)) a), ⟨one_sub_e_mem_of_false _ _ ha hx, ?_⟩⟩
-    rw [e, LocallyConstant.evalMonoidHom_apply, LocallyConstant.sub_apply,
-      LocallyConstant.coe_one, Pi.one_apply, LocallyConstant.coe_mk, if_pos ha, sub_self]
-  · refine ⟨e (π C (· ∈ s)) a, ⟨e_mem_of_eq_true _ _ hx, ?_⟩⟩
-    rw [hx] at ha
-    rw [LocallyConstant.evalMonoidHom_apply, e, LocallyConstant.coe_mk, if_neg ha]
+  rw [hx, ne_eq, Bool.not_eq_false] at ha
+  refine ⟨1 - (e (π C (· ∈ s)) a), ⟨one_sub_e_mem_of_false _ _ ha hx, ?_⟩⟩
+  rw [e, LocallyConstant.evalMonoidHom_apply, LocallyConstant.sub_apply,
+    LocallyConstant.coe_one, Pi.one_apply, LocallyConstant.coe_mk, if_pos ha, sub_self]
+  refine ⟨e (π C (· ∈ s)) a, ⟨e_mem_of_eq_true _ _ hx, ?_⟩⟩
+  rw [hx] at ha
+  rw [LocallyConstant.evalMonoidHom_apply, e, LocallyConstant.coe_mk, if_neg ha]
 
 /-- If `s` is finite, the product of the elements of the list `factors C s x`
 is the delta function at `x`. -/
@@ -626,29 +626,29 @@ theorem GoodProducts.spanFin : ⊤ ≤ Submodule.span ℤ (Set.range (eval (π C
     have hmap := fun g ↦ map_finsupp_sum (LinearMap.mulLeft ℤ (e (π C (· ∈ s)) a)) c g
     dsimp at hmap ⊢
     split_ifs
-    · rw [hmap]
-      exact finsupp_sum_mem_span_eval _ _ ha hc
-    · ring_nf
-      rw [hmap]
-      apply Submodule.add_mem
-      · apply Submodule.neg_mem
-        exact finsupp_sum_mem_span_eval _ _ ha hc
-      · apply Submodule.finsupp_sum_mem
-        intro m hm
-        apply Submodule.smul_mem
-        apply Submodule.subset_span
-        refine ⟨m, ⟨?_, rfl⟩⟩
-        simp only [Set.mem_setOf_eq]
-        have hmas : m.val ≤ as :=
-          hc (by simpa only [Finset.mem_coe, Finsupp.mem_support_iff] using hm)
-        refine le_trans hmas ?_
-        cases as with
-        | nil => exact (List.nil_lt_cons a []).le
-        | cons b bs =>
-          apply le_of_lt
-          rw [List.chain'_cons] at ha
-          have hlex := List.lt.head bs (b :: bs) ha.1
-          exact (List.lt_iff_lex_lt _ _).mp hlex
+    rw [hmap]
+    exact finsupp_sum_mem_span_eval _ _ ha hc
+    ring_nf
+    rw [hmap]
+    apply Submodule.add_mem
+    apply Submodule.neg_mem
+    exact finsupp_sum_mem_span_eval _ _ ha hc
+    apply Submodule.finsupp_sum_mem
+    intro m hm
+    apply Submodule.smul_mem
+    apply Submodule.subset_span
+    refine ⟨m, ⟨?_, rfl⟩⟩
+    simp only [Set.mem_setOf_eq]
+    have hmas : m.val ≤ as :=
+      hc (by simpa only [Finset.mem_coe, Finsupp.mem_support_iff] using hm)
+    refine le_trans hmas ?_
+    cases as with
+    | nil => exact (List.nil_lt_cons a []).le
+    | cons b bs =>
+      apply le_of_lt
+      rw [List.chain'_cons] at ha
+      have hlex := List.lt.head bs (b :: bs) ha.1
+      exact (List.lt_iff_lex_lt _ _).mp hlex
 
 end Fin
 
@@ -720,10 +720,10 @@ theorem ord_term_aux {o : Ordinal} (ho : o < Ordinal.type ((·<·) : I → I →
 theorem ord_term {o : Ordinal} (ho : o < Ordinal.type ((·<·) : I → I → Prop)) (i : I) :
     ord I i = o ↔ term I ho = i := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · subst h
-    exact term_ord_aux ho
-  · subst h
-    exact ord_term_aux ho
+  subst h
+  exact term_ord_aux ho
+  subst h
+  exact ord_term_aux ho
 
 /-- A predicate saying that `C` is "small" enough to satisfy the inductive hypothesis. -/
 def contained (o : Ordinal) : Prop := ∀ f, f ∈ C → ∀ (i : I), f i = true → ord I i < o
@@ -999,11 +999,11 @@ theorem range_equiv_smaller_toFun_bijective (o : Ordinal) :
     Function.Bijective (range_equiv_smaller_toFun C o) := by
   dsimp (config := { unfoldPartialApp := true }) [range_equiv_smaller_toFun]
   refine ⟨fun a b hab ↦ ?_, fun ⟨a, b, hb⟩ ↦ ?_⟩
-  · ext1
-    simp only [Subtype.mk.injEq] at hab
-    exact injective_πs C o hab
-  · use ⟨b, hb.1⟩
-    simpa only [Subtype.mk.injEq] using hb.2
+  ext1
+  simp only [Subtype.mk.injEq] at hab
+  exact injective_πs C o hab
+  use ⟨b, hb.1⟩
+  simpa only [Subtype.mk.injEq] using hb.2
 
 /--
 The equivalence from the image of the `GoodProducts` in `LocallyConstant (π C (ord I · < o)) ℤ` to
@@ -1031,12 +1031,12 @@ theorem smaller_mono {o₁ o₂ : Ordinal} (h : o₁ ≤ o₂) : smaller C o₁ 
   use πs' C h g
   obtain ⟨⟨l, gl⟩, rfl⟩ := hg
   refine ⟨?_, ?_⟩
-  · use ⟨l, Products.isGood_mono C h gl⟩
-    ext x
-    rw [eval, ← Products.eval_πs' _ h (Products.prop_of_isGood  C _ gl), eval]
-  · rw [← LocallyConstant.coe_inj, coe_πs C o₂, ← LocallyConstant.toFun_eq_coe, coe_πs',
-      Function.comp.assoc, projRestricts_comp_projRestrict C _, coe_πs]
-    rfl
+  use ⟨l, Products.isGood_mono C h gl⟩
+  ext x
+  rw [eval, ← Products.eval_πs' _ h (Products.prop_of_isGood  C _ gl), eval]
+  rw [← LocallyConstant.coe_inj, coe_πs C o₂, ← LocallyConstant.toFun_eq_coe, coe_πs',
+    Function.comp.assoc, projRestricts_comp_projRestrict C _, coe_πs]
+  rfl
 
 end GoodProducts
 
@@ -1063,15 +1063,15 @@ theorem GoodProducts.union : range C = ⋃ (e : {o' // o' < o}), (smaller C e.va
   ext p
   simp only [smaller, range, Set.mem_iUnion, Set.mem_image, Set.mem_range, Subtype.exists]
   refine ⟨fun hp ↦ ?_, fun hp ↦ ?_⟩
-  · obtain ⟨l, hl, rfl⟩ := hp
-    rw [contained_eq_proj C o hsC, Products.limitOrdinal C ho] at hl
-    obtain ⟨o', ho'⟩ := hl
-    refine ⟨o', ho'.1, eval (π C (ord I · < o')) ⟨l, ho'.2⟩, ⟨l, ho'.2, rfl⟩, ?_⟩
-    exact Products.eval_πs C (Products.prop_of_isGood  C _ ho'.2)
-  · obtain ⟨o', h, _, ⟨l, hl, rfl⟩, rfl⟩ := hp
-    refine ⟨l, ?_, (Products.eval_πs C (Products.prop_of_isGood  C _ hl)).symm⟩
-    rw [contained_eq_proj C o hsC]
-    exact Products.isGood_mono C (le_of_lt h) hl
+  obtain ⟨l, hl, rfl⟩ := hp
+  rw [contained_eq_proj C o hsC, Products.limitOrdinal C ho] at hl
+  obtain ⟨o', ho'⟩ := hl
+  refine ⟨o', ho'.1, eval (π C (ord I · < o')) ⟨l, ho'.2⟩, ⟨l, ho'.2, rfl⟩, ?_⟩
+  exact Products.eval_πs C (Products.prop_of_isGood  C _ ho'.2)
+  obtain ⟨o', h, _, ⟨l, hl, rfl⟩, rfl⟩ := hp
+  refine ⟨l, ?_, (Products.eval_πs C (Products.prop_of_isGood  C _ hl)).symm⟩
+  rw [contained_eq_proj C o hsC]
+  exact Products.isGood_mono C (le_of_lt h) hl
 
 /--
 The image of the `GoodProducts` in `C` is equivalent to the union of `smaller C o'` over all
@@ -1210,8 +1210,8 @@ theorem continuous_swapTrue  :
   apply continuous_pi
   intro i
   apply Continuous.comp'
-  · apply continuous_bot
-  · apply continuous_apply
+  apply continuous_bot
+  apply continuous_apply
 
 variable {o}
 
@@ -1222,13 +1222,13 @@ theorem swapTrue_mem_C1 (f : π (C1 C ho) (ord I · < o)) :
   dsimp (config := { unfoldPartialApp := true }) [SwapTrue]
   ext i
   split_ifs with h
-  · rw [ord_term ho] at h
-    simpa only [← h] using hg.2.symm
-  · simp only [Proj, ite_eq_left_iff, not_lt, @eq_comm _ false, ← Bool.not_eq_true]
-    specialize hsC g hg.1 i
-    intro h'
-    contrapose! hsC
-    exact ⟨hsC, Order.succ_le_of_lt (h'.lt_of_ne' h)⟩
+  rw [ord_term ho] at h
+  simpa only [← h] using hg.2.symm
+  simp only [Proj, ite_eq_left_iff, not_lt, @eq_comm _ false, ← Bool.not_eq_true]
+  specialize hsC g hg.1 i
+  intro h'
+  contrapose! hsC
+  exact ⟨hsC, Order.succ_le_of_lt (h'.lt_of_ne' h)⟩
 
 /-- The first way to map `C'` into `C`. -/
 def CC'₀ : C' C ho → C := fun g ↦ ⟨g.val,g.prop.1.1⟩
@@ -1277,27 +1277,27 @@ theorem C0_projOrd {x : I → Bool} (hx : x ∈ C0 C ho) : Proj (ord I · < o) x
   intro hi
   rw [le_iff_lt_or_eq] at hi
   cases' hi with hi hi
-  · specialize hsC x hx.1 i
-    rw [← not_imp_not] at hsC
-    simp only [not_lt, Bool.not_eq_true, Order.succ_le_iff] at hsC
-    exact (hsC hi).symm
-  · simp only [C0, Set.mem_inter_iff, Set.mem_setOf_eq] at hx
-    rw [eq_comm, ord_term ho] at hi
-    rw [← hx.2, hi]
+  specialize hsC x hx.1 i
+  rw [← not_imp_not] at hsC
+  simp only [not_lt, Bool.not_eq_true, Order.succ_le_iff] at hsC
+  exact (hsC hi).symm
+  simp only [C0, Set.mem_inter_iff, Set.mem_setOf_eq] at hx
+  rw [eq_comm, ord_term ho] at hi
+  rw [← hx.2, hi]
 
 theorem C1_projOrd {x : I → Bool} (hx : x ∈ C1 C ho) : SwapTrue o (Proj (ord I · < o) x) = x := by
   ext i
   dsimp [SwapTrue, Proj]
   split_ifs with hi h
-  · rw [ord_term ho] at hi
-    rw [← hx.2, hi]
-  · rfl
-  · simp only [not_lt] at h
-    have h' : o < ord I i := lt_of_le_of_ne h (Ne.symm hi)
-    specialize hsC x hx.1 i
-    rw [← not_imp_not] at hsC
-    simp only [not_lt, Bool.not_eq_true, Order.succ_le_iff] at hsC
-    exact (hsC h').symm
+  rw [ord_term ho] at hi
+  rw [← hx.2, hi]
+  rfl
+  simp only [not_lt] at h
+  have h' : o < ord I i := lt_of_le_of_ne h (Ne.symm hi)
+  specialize hsC x hx.1 i
+  rw [← not_imp_not] at hsC
+  simp only [not_lt, Bool.not_eq_true, Order.succ_le_iff] at hsC
+  exact (hsC h').symm
 
 open scoped Classical in
 theorem CC_exact {f : LocallyConstant C ℤ} (hf : Linear_CC' C hsC ho f = 0) :
@@ -1313,27 +1313,27 @@ theorem CC_exact {f : LocallyConstant C ℤ} (hf : Linear_CC' C hsC ho f = 0) :
     ((continuous_swapTrue o).comp continuous_subtype_val) _
   refine ⟨LocallyConstant.piecewise' ?_ (isClosed_C0 C hC ho)
       (isClosed_proj _ o (isClosed_C1 C hC ho)) (f.comap ⟨C₀C, h₀⟩) (f.comap ⟨C₁C, h₁⟩) ?_, ?_⟩
-  · rintro _ ⟨y, hyC, rfl⟩
-    simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_univ, iff_true]
-    rw [← union_C0C1_eq C ho] at hyC
-    refine hyC.imp (fun hyC ↦ ?_) (fun hyC ↦ ⟨y, hyC, rfl⟩)
-    rwa [C0_projOrd C hsC ho hyC]
-  · intro x hx
-    simpa only [h₀, h₁, LocallyConstant.coe_comap] using (congrFun hf ⟨x, hx⟩).symm
-  · ext ⟨x, hx⟩
-    rw [← union_C0C1_eq C ho] at hx
-    cases' hx with hx₀ hx₁
-    · have hx₀' : ProjRestrict C (ord I · < o) ⟨x, hx⟩ = x := by
-        simpa only [ProjRestrict, Set.MapsTo.val_restrict_apply] using C0_projOrd C hsC ho hx₀
-      simp only [πs_apply_apply, hx₀', hx₀, LocallyConstant.piecewise'_apply_left,
-        LocallyConstant.coe_comap, ContinuousMap.coe_mk, Function.comp_apply]
-    · have hx₁' : (ProjRestrict C (ord I · < o) ⟨x, hx⟩).val ∈ π (C1 C ho) (ord I · < o) := by
-        simpa only [ProjRestrict, Set.MapsTo.val_restrict_apply] using ⟨x, hx₁, rfl⟩
-      simp only [C₁C, πs_apply_apply, continuous_projRestrict, LocallyConstant.coe_comap,
-        Function.comp_apply, hx₁', LocallyConstant.piecewise'_apply_right, h₁]
-      congr
-      simp only [ContinuousMap.coe_mk, Subtype.mk.injEq]
-      exact C1_projOrd C hsC ho hx₁
+  rintro _ ⟨y, hyC, rfl⟩
+  simp only [Set.mem_union, Set.mem_setOf_eq, Set.mem_univ, iff_true]
+  rw [← union_C0C1_eq C ho] at hyC
+  refine hyC.imp (fun hyC ↦ ?_) (fun hyC ↦ ⟨y, hyC, rfl⟩)
+  rwa [C0_projOrd C hsC ho hyC]
+  intro x hx
+  simpa only [h₀, h₁, LocallyConstant.coe_comap] using (congrFun hf ⟨x, hx⟩).symm
+  ext ⟨x, hx⟩
+  rw [← union_C0C1_eq C ho] at hx
+  cases' hx with hx₀ hx₁
+  have hx₀' : ProjRestrict C (ord I · < o) ⟨x, hx⟩ = x := by
+    simpa only [ProjRestrict, Set.MapsTo.val_restrict_apply] using C0_projOrd C hsC ho hx₀
+  simp only [πs_apply_apply, hx₀', hx₀, LocallyConstant.piecewise'_apply_left,
+    LocallyConstant.coe_comap, ContinuousMap.coe_mk, Function.comp_apply]
+  have hx₁' : (ProjRestrict C (ord I · < o) ⟨x, hx⟩).val ∈ π (C1 C ho) (ord I · < o) := by
+    simpa only [ProjRestrict, Set.MapsTo.val_restrict_apply] using ⟨x, hx₁, rfl⟩
+  simp only [C₁C, πs_apply_apply, continuous_projRestrict, LocallyConstant.coe_comap,
+    Function.comp_apply, hx₁', LocallyConstant.piecewise'_apply_right, h₁]
+  congr
+  simp only [ContinuousMap.coe_mk, Subtype.mk.injEq]
+  exact C1_projOrd C hsC ho hx₁
 
 variable (o) in
 theorem succ_mono : CategoryTheory.Mono (ModuleCat.ofHom (πs C o)) := by
@@ -1363,25 +1363,25 @@ theorem union_succ : GoodProducts C = GoodProducts (π C (ord I · < o)) ∪ Max
   ext l
   simp only [GoodProducts, MaxProducts, Set.mem_union, Set.mem_setOf_eq]
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · by_cases hh : term I ho ∈ l.val
-    · exact Or.inr ⟨h, hh⟩
-    · left
-      intro he
-      apply h
-      have h' := Products.prop_of_isGood_of_contained C _ h hsC
-      simp only [Order.lt_succ_iff] at h'
-      simp only [not_imp_not] at hh
-      have hh' : ∀ a ∈ l.val, ord I a < o
-      intro a ha
-      refine (h' a ha).lt_of_ne ?_
-      rw [ne_eq, ord_term ho a]
-      rintro rfl
-      contradiction
-      rwa [Products.eval_πs_image C hh', ← Products.eval_πs C hh',
-        Submodule.apply_mem_span_image_iff_mem_span (injective_πs _ _)]
-  · refine h.elim (fun hh ↦ ?_) And.left
-    have := Products.isGood_mono C (Order.lt_succ o).le hh
-    rwa [contained_eq_proj C (Order.succ o) hsC]
+  by_cases hh : term I ho ∈ l.val
+  exact Or.inr ⟨h, hh⟩
+  left
+  intro he
+  apply h
+  have h' := Products.prop_of_isGood_of_contained C _ h hsC
+  simp only [Order.lt_succ_iff] at h'
+  simp only [not_imp_not] at hh
+  have hh' : ∀ a ∈ l.val, ord I a < o
+  intro a ha
+  refine (h' a ha).lt_of_ne ?_
+  rw [ne_eq, ord_term ho a]
+  rintro rfl
+  contradiction
+  rwa [Products.eval_πs_image C hh', ← Products.eval_πs C hh',
+    Submodule.apply_mem_span_image_iff_mem_span (injective_πs _ _)]
+  refine h.elim (fun hh ↦ ?_) And.left
+  have := Products.isGood_mono C (Order.lt_succ o).le hh
+  rwa [contained_eq_proj C (Order.succ o) hsC]
 
 /-- The inclusion map from the sum of `GoodProducts (π C (ord I · < o))` and
     `(MaxProducts C ho)` to `Products I`. -/
@@ -1398,8 +1398,8 @@ theorem injective_sum_to : Function.Injective (sum_to C ho) := by
 theorem sum_to_range :
     Set.range (sum_to C ho) = GoodProducts (π C (ord I · < o)) ∪ MaxProducts C ho := by
   have h : Set.range (sum_to C ho) = _ ∪ _ := Set.Sum.elim_range _ _; rw [h]; congr<;> ext l
-  · exact ⟨fun ⟨m,hm⟩ ↦ by rw [← hm]; exact m.prop, fun hl ↦ ⟨⟨l,hl⟩, rfl⟩⟩
-  · exact ⟨fun ⟨m,hm⟩ ↦ by rw [← hm]; exact m.prop, fun hl ↦ ⟨⟨l,hl⟩, rfl⟩⟩
+  exact ⟨fun ⟨m,hm⟩ ↦ by rw [← hm]; exact m.prop, fun hl ↦ ⟨⟨l,hl⟩, rfl⟩⟩
+  exact ⟨fun ⟨m,hm⟩ ↦ by rw [← hm]; exact m.prop, fun hl ↦ ⟨⟨l,hl⟩, rfl⟩⟩
 
 /-- The equivalence from the sum of `GoodProducts (π C (ord I · < o))` and
     `(MaxProducts C ho)` to `GoodProducts C`. -/
@@ -1532,11 +1532,11 @@ theorem Products.max_eq_eval [Inhabited I] (l : Products I) (hl : l.val ≠ [])
     apply forall_congr; intro i; apply forall_congr; intro hi; rw [hi' i hi]
   simp only [H]
   split_ifs with h₁ h₂ h₃ <;> try (dsimp [e])
-  · rw [if_pos (swapTrue_eq_true _ _), if_neg]
-    · rfl
-    · simp [mem_C'_eq_false C ho x x.prop, Bool.coe_false]
-  · push_neg at h₂; obtain ⟨i, hi⟩ := h₂; exfalso; rw [hi' i hi.1] at hi; exact hi.2 (h₁ i hi.1)
-  · push_neg at h₁; obtain ⟨i, hi⟩ := h₁; exfalso; rw [← hi' i hi.1] at hi; exact hi.2 (h₃ i hi.1)
+  rw [if_pos (swapTrue_eq_true _ _), if_neg]
+  rfl
+  simp [mem_C'_eq_false C ho x x.prop, Bool.coe_false]
+  push_neg at h₂; obtain ⟨i, hi⟩ := h₂; exfalso; rw [hi' i hi.1] at hi; exact hi.2 (h₁ i hi.1)
+  push_neg at h₁; obtain ⟨i, hi⟩ := h₁; exfalso; rw [← hi' i hi.1] at hi; exact hi.2 (h₃ i hi.1)
 
 namespace GoodProducts
 
@@ -1562,23 +1562,23 @@ theorem chain'_cons_of_lt (l : MaxProducts C ho)
     List.chain'_iff_pairwise.mp q.prop⟩
   refine lt_of_le_of_lt (Products.head!_le_of_lt hq (q.val.ne_nil_of_mem ha)) ?_
   by_cases hM : l.val.Tail.val = []
-  · rw [Products.lt_iff_lex_lt, hM] at hq
-    simp only [List.Lex.not_nil_right] at hq
-  · have := l.val.prop
-    rw [max_eq_o_cons_tail C hsC ho l, List.chain'_iff_pairwise] at this
-    exact List.rel_of_pairwise_cons this (List.head!_mem_self hM)
+  rw [Products.lt_iff_lex_lt, hM] at hq
+  simp only [List.Lex.not_nil_right] at hq
+  have := l.val.prop
+  rw [max_eq_o_cons_tail C hsC ho l, List.chain'_iff_pairwise] at this
+  exact List.rel_of_pairwise_cons this (List.head!_mem_self hM)
 
 theorem good_lt_maxProducts (q : GoodProducts (π C (ord I · < o)))
     (l : MaxProducts C ho) : List.Lex (·<·) q.val.val l.val.val := by
   have : Inhabited I := ⟨term I ho⟩
   by_cases h : q.val.val = []
-  · rw [h, max_eq_o_cons_tail C hsC ho l]
-    exact List.Lex.nil
-  · rw [← List.cons_head!_tail h, max_eq_o_cons_tail C hsC ho l]
-    apply List.Lex.rel
-    rw [← Ordinal.typein_lt_typein (·<·)]
-    simp only [term, Ordinal.typein_enum]
-    exact Products.prop_of_isGood C _ q.prop q.val.val.head! (List.head!_mem_self h)
+  rw [h, max_eq_o_cons_tail C hsC ho l]
+  exact List.Lex.nil
+  rw [← List.cons_head!_tail h, max_eq_o_cons_tail C hsC ho l]
+  apply List.Lex.rel
+  rw [← Ordinal.typein_lt_typein (·<·)]
+  simp only [term, Ordinal.typein_enum]
+  exact Products.prop_of_isGood C _ q.prop q.val.val.head! (List.head!_mem_self h)
 
 /--
 Removing the leading `o` from a term of `MaxProducts C` yields a list which `isGood` with respect to
@@ -1632,26 +1632,26 @@ theorem maxTail_isGood (l : MaxProducts C ho)
 
   -- Now we just need to prove that a sum of two terms belongs to a span:
   apply Submodule.add_mem
-  · apply Submodule.finsupp_sum_mem
-    intro q _
-    erw [LinearMap.map_smul (fₗ := πs C o) (c := w q) (x := eval (π C (ord I · < o)) q)]
-    apply Submodule.smul_mem
-    apply Submodule.subset_span
-    dsimp only [eval]
-    rw [Products.eval_πs C (Products.prop_of_isGood _ _ q.prop)]
-    refine ⟨q.val, ⟨?_, rfl⟩⟩
-    simp only [Products.lt_iff_lex_lt, Set.mem_setOf_eq]
-    exact good_lt_maxProducts C hsC ho q l
-  · apply Submodule.finsupp_sum_mem
-    intro q hq
-    apply Submodule.smul_mem
-    apply Submodule.subset_span
-    rw [Finsupp.mem_supported] at hmmem
-    rw [← Finsupp.mem_support_iff] at hq
-    refine ⟨⟨term I ho :: q.val, chain'_cons_of_lt C hsC ho l q (hmmem hq)⟩, ⟨?_, rfl⟩⟩
-    simp only [Products.lt_iff_lex_lt, Set.mem_setOf_eq]
-    rw [max_eq_o_cons_tail C hsC ho l]
-    exact List.Lex.cons ((Products.lt_iff_lex_lt q l.val.Tail).mp (hmmem hq))
+  apply Submodule.finsupp_sum_mem
+  intro q _
+  erw [LinearMap.map_smul (fₗ := πs C o) (c := w q) (x := eval (π C (ord I · < o)) q)]
+  apply Submodule.smul_mem
+  apply Submodule.subset_span
+  dsimp only [eval]
+  rw [Products.eval_πs C (Products.prop_of_isGood _ _ q.prop)]
+  refine ⟨q.val, ⟨?_, rfl⟩⟩
+  simp only [Products.lt_iff_lex_lt, Set.mem_setOf_eq]
+  exact good_lt_maxProducts C hsC ho q l
+  apply Submodule.finsupp_sum_mem
+  intro q hq
+  apply Submodule.smul_mem
+  apply Submodule.subset_span
+  rw [Finsupp.mem_supported] at hmmem
+  rw [← Finsupp.mem_support_iff] at hq
+  refine ⟨⟨term I ho :: q.val, chain'_cons_of_lt C hsC ho l q (hmmem hq)⟩, ⟨?_, rfl⟩⟩
+  simp only [Products.lt_iff_lex_lt, Set.mem_setOf_eq]
+  rw [max_eq_o_cons_tail C hsC ho l]
+  exact List.Lex.cons ((Products.lt_iff_lex_lt q l.val.Tail).mp (hmmem hq))
 
 /-- Given `l : MaxProducts C ho`, its `Tail` is a `GoodProducts (C' C ho)`. -/
 noncomputable
@@ -1710,10 +1710,10 @@ theorem GoodProducts.P0 : P I 0 := fun _ C _ hsC ↦ by
     ext x; exact Bool.eq_false_iff.mpr (fun ht ↦ (Ordinal.not_lt_zero (ord I x)) (hsC c hc x ht))
   rw [Set.subset_singleton_iff_eq] at this
   cases this
-  · subst C
-    exact linearIndependentEmpty
-  · subst C
-    exact linearIndependentSingleton
+  subst C
+  exact linearIndependentEmpty
+  subst C
+  exact linearIndependentSingleton
 
 theorem GoodProducts.Plimit (o : Ordinal) (ho : Ordinal.IsLimit o) :
     (∀ (o' : Ordinal), o' < o → P I o') → P I o := by
@@ -1732,10 +1732,10 @@ theorem GoodProducts.linearIndependentAux (μ : Ordinal) : P I μ := by
   rw [linearIndependent_iff_sum C hsC ho']
   refine ModuleCat.linearIndependent_leftExact (succ_exact C hC hsC ho') ?_ ?_ (succ_mono C o)
     (square_commutes C ho')
-  · exact h (le_of_lt ho') (π C (ord I · < o)) (isClosed_proj C o hC) (contained_proj C o)
-  · exact linearIndependent_comp_of_eval C hC hsC ho' (span (π C (ord I · < o))
-      (isClosed_proj C o hC)) (h (le_of_lt ho') (C' C ho') (isClosed_C' C hC ho')
-      (contained_C' C ho'))
+  exact h (le_of_lt ho') (π C (ord I · < o)) (isClosed_proj C o hC) (contained_proj C o)
+  exact linearIndependent_comp_of_eval C hC hsC ho' (span (π C (ord I · < o))
+    (isClosed_proj C o hC)) (h (le_of_lt ho') (C' C ho') (isClosed_C' C hC ho')
+    (contained_C' C ho'))
 
 theorem GoodProducts.linearIndependent (hC : IsClosed C) :
     LinearIndependent ℤ (GoodProducts.eval C) :=
@@ -1773,28 +1773,28 @@ open scoped Classical in
 /-- The map `Nobeling.ι` is a closed embedding. -/
 theorem Nobeling.embedding : ClosedEmbedding (Nobeling.ι S) := by
   apply Continuous.closedEmbedding
-  · dsimp (config := { unfoldPartialApp := true }) [ι]
-    refine continuous_pi ?_
-    intro C
-    rw [← IsLocallyConstant.iff_continuous]
-    refine ((IsLocallyConstant.tfae _).out 0 3).mpr ?_
-    rintro ⟨⟩
-    · refine IsClopen.isOpen (isClopen_compl_iff.mp ?_)
-      convert C.2
-      ext x
-      simp only [Set.mem_compl_iff, Set.mem_preimage, Set.mem_singleton_iff,
-        decide_eq_false_iff_not, not_not]
-    · refine IsClopen.isOpen ?_
-      convert C.2
-      ext x
-      simp only [Set.mem_preimage, Set.mem_singleton_iff, decide_eq_true_eq]
-  · intro a b h
-    by_contra hn
-    obtain ⟨C, hC, hh⟩ := exists_isClopen_of_totally_separated hn
-    apply hh.2 ∘ of_decide_eq_true
-    dsimp (config := { unfoldPartialApp := true }) [ι] at h
-    rw [← congr_fun h ⟨C, hC⟩]
-    exact decide_eq_true hh.1
+  dsimp (config := { unfoldPartialApp := true }) [ι]
+  refine continuous_pi ?_
+  intro C
+  rw [← IsLocallyConstant.iff_continuous]
+  refine ((IsLocallyConstant.tfae _).out 0 3).mpr ?_
+  rintro ⟨⟩
+  refine IsClopen.isOpen (isClopen_compl_iff.mp ?_)
+  convert C.2
+  ext x
+  simp only [Set.mem_compl_iff, Set.mem_preimage, Set.mem_singleton_iff,
+    decide_eq_false_iff_not, not_not]
+  refine IsClopen.isOpen ?_
+  convert C.2
+  ext x
+  simp only [Set.mem_preimage, Set.mem_singleton_iff, decide_eq_true_eq]
+  intro a b h
+  by_contra hn
+  obtain ⟨C, hC, hh⟩ := exists_isClopen_of_totally_separated hn
+  apply hh.2 ∘ of_decide_eq_true
+  dsimp (config := { unfoldPartialApp := true }) [ι] at h
+  rw [← congr_fun h ⟨C, hC⟩]
+  exact decide_eq_true hh.1
 
 end Profinite
 

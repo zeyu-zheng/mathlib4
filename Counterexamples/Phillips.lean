@@ -287,26 +287,26 @@ theorem exists_discrete_support_nonpos (f : BoundedAdditiveMeasure α) :
   intro n
   rw [div_le_iff' (show (0 : ℝ) < 2 by norm_num), hε]
   convert hF (s n) u using 2
-  · dsimp
-    ext x
-    simp only [not_exists, mem_iUnion, mem_diff]
-    tauto
-  · congr 1
-    simp only [s, Function.iterate_succ', Subtype.coe_mk, union_diff_left, Function.comp]
+  dsimp
+  ext x
+  simp only [not_exists, mem_iUnion, mem_diff]
+  tauto
+  congr 1
+  simp only [s, Function.iterate_succ', Subtype.coe_mk, union_diff_left, Function.comp]
   have I2 : ∀ n : ℕ, (n : ℝ) * (ε / 2) ≤ f ↑(s n)
   intro n
   induction' n with n IH
-  · simp only [s, BoundedAdditiveMeasure.empty, id, Nat.cast_zero, zero_mul,
-      Function.iterate_zero, Subtype.coe_mk, Nat.zero_eq]
-    rfl
-  · have : (s (n + 1)).1 = (s (n + 1)).1 \ (s n).1 ∪ (s n).1 := by
-      simpa only [s, Function.iterate_succ', union_diff_self]
-        using (diff_union_of_subset subset_union_left).symm
-    rw [this, f.additive]
-    swap; · exact disjoint_sdiff_self_left
-    calc
-      ((n + 1 : ℕ) : ℝ) * (ε / 2) = ε / 2 + n * (ε / 2) := by simp only [Nat.cast_succ]; ring
-      _ ≤ f (↑(s (n + 1 : ℕ)) \ ↑(s n)) + f ↑(s n) := add_le_add (I1 n) IH
+  simp only [s, BoundedAdditiveMeasure.empty, id, Nat.cast_zero, zero_mul,
+    Function.iterate_zero, Subtype.coe_mk, Nat.zero_eq]
+  rfl
+  have : (s (n + 1)).1 = (s (n + 1)).1 \ (s n).1 ∪ (s n).1 := by
+    simpa only [s, Function.iterate_succ', union_diff_self]
+      using (diff_union_of_subset subset_union_left).symm
+  rw [this, f.additive]
+  swap; · exact disjoint_sdiff_self_left
+  calc
+    ((n + 1 : ℕ) : ℝ) * (ε / 2) = ε / 2 + n * (ε / 2) := by simp only [Nat.cast_succ]; ring
+    _ ≤ f (↑(s (n + 1 : ℕ)) \ ↑(s n)) + f ↑(s n) := add_le_add (I1 n) IH
   rcases exists_nat_gt (f.C / (ε / 2)) with ⟨n, hn⟩
   have : (n : ℝ) ≤ f.C / (ε / 2)
   rw [le_div_iff (half_pos ε_pos)]; exact (I2 n).trans (f.le_bound _)
@@ -317,14 +317,14 @@ theorem exists_discrete_support (f : BoundedAdditiveMeasure α) :
   rcases f.exists_discrete_support_nonpos with ⟨s₁, s₁_count, h₁⟩
   rcases (-f).exists_discrete_support_nonpos with ⟨s₂, s₂_count, h₂⟩
   refine ⟨s₁ ∪ s₂, s₁_count.union s₂_count, fun t ht => le_antisymm ?_ ?_⟩
-  · have : t \ (s₁ ∪ s₂) = (t \ (s₁ ∪ s₂)) \ s₁ := by
-      rw [diff_diff, union_comm, union_assoc, union_self]
-    rw [this]
-    exact h₁ _ (ht.mono diff_subset)
-  · have : t \ (s₁ ∪ s₂) = (t \ (s₁ ∪ s₂)) \ s₂ := by rw [diff_diff, union_assoc, union_self]
-    rw [this]
-    simp only [neg_nonpos, neg_apply] at h₂
-    exact h₂ _ (ht.mono diff_subset)
+  have : t \ (s₁ ∪ s₂) = (t \ (s₁ ∪ s₂)) \ s₁ := by
+    rw [diff_diff, union_comm, union_assoc, union_self]
+  rw [this]
+  exact h₁ _ (ht.mono diff_subset)
+  have : t \ (s₁ ∪ s₂) = (t \ (s₁ ∪ s₂)) \ s₂ := by rw [diff_diff, union_assoc, union_self]
+  rw [this]
+  simp only [neg_nonpos, neg_apply] at h₂
+  exact h₂ _ (ht.mono diff_subset)
 
 /-- A countable set outside of which the measure gives zero mass to countable sets. We are not
 claiming this set is unique, but we make an arbitrary choice of such a set. -/
@@ -352,9 +352,9 @@ theorem eq_add_parts (f : BoundedAdditiveMeasure α) (s : Set α) :
     f s = f.discretePart s + f.continuousPart s := by
   simp only [discretePart, continuousPart, restrict_apply]
   rw [← f.additive, ← union_inter_distrib_right]
-  · simp only [union_univ, union_diff_self, univ_inter]
-  · have : Disjoint f.discreteSupport (univ \ f.discreteSupport) := disjoint_sdiff_self_right
-    exact this.mono inter_subset_left inter_subset_left
+  simp only [union_univ, union_diff_self, univ_inter]
+  have : Disjoint f.discreteSupport (univ \ f.discreteSupport) := disjoint_sdiff_self_right
+  exact this.mono inter_subset_left inter_subset_left
 
 theorem discretePart_apply (f : BoundedAdditiveMeasure α) (s : Set α) :
     f.discretePart s = f (f.discreteSupport ∩ s) :=
@@ -371,8 +371,8 @@ theorem continuousPart_apply_diff (f : BoundedAdditiveMeasure α) (s t : Set α)
     f.continuousPart (t \ s) = f.continuousPart t := by
   conv_rhs => rw [← diff_union_inter t s]
   rw [additive, self_eq_add_right]
-  · exact continuousPart_apply_eq_zero_of_countable _ _ (hs.mono inter_subset_right)
-  · exact Disjoint.mono_right inter_subset_right disjoint_sdiff_self_left
+  exact continuousPart_apply_eq_zero_of_countable _ _ (hs.mono inter_subset_right)
+  exact Disjoint.mono_right inter_subset_right disjoint_sdiff_self_left
 
 end BoundedAdditiveMeasure
 
@@ -428,14 +428,14 @@ theorem toFunctions_toMeasure [MeasurableSpace α] (μ : Measure α) [IsFiniteMe
         (ofNormedAddCommGroupDiscrete (indicator s 1) 1 (norm_indicator_le_one s)) =
       (μ s).toReal
   rw [extensionToBoundedFunctions_apply]
-  · change ∫ x, s.indicator (fun _ => (1 : ℝ)) x ∂μ = _
-    simp [integral_indicator hs]
-  · change Integrable (indicator s 1) μ
-    have : Integrable (fun _ => (1 : ℝ)) μ := integrable_const (1 : ℝ)
-    apply
-      this.mono' (Measurable.indicator (@measurable_const _ _ _ _ (1 : ℝ)) hs).aestronglyMeasurable
-    apply Filter.eventually_of_forall
-    exact norm_indicator_le_one _
+  change ∫ x, s.indicator (fun _ => (1 : ℝ)) x ∂μ = _
+  simp [integral_indicator hs]
+  change Integrable (indicator s 1) μ
+  have : Integrable (fun _ => (1 : ℝ)) μ := integrable_const (1 : ℝ)
+  apply
+    this.mono' (Measurable.indicator (@measurable_const _ _ _ _ (1 : ℝ)) hs).aestronglyMeasurable
+  apply Filter.eventually_of_forall
+  exact norm_indicator_le_one _
 
 theorem toFunctions_toMeasure_continuousPart [MeasurableSpace α] [MeasurableSingletonClass α]
     (μ : Measure α) [IsFiniteMeasure μ] [NoAtoms μ] (s : Set α) (hs : MeasurableSet s) :
@@ -443,9 +443,9 @@ theorem toFunctions_toMeasure_continuousPart [MeasurableSpace α] [MeasurableSin
   let f := μ.extensionToBoundedFunctions.toBoundedAdditiveMeasure
   change f (univ \ f.discreteSupport ∩ s) = (μ s).toReal
   rw [toFunctions_toMeasure]; swap
-  · exact
-      MeasurableSet.inter
-        (MeasurableSet.univ.diff (Countable.measurableSet f.countable_discreteSupport)) hs
+  exact
+    MeasurableSet.inter
+      (MeasurableSet.univ.diff (Countable.measurableSet f.countable_discreteSupport)) hs
   congr 1
   rw [inter_comm, ← inter_diff_assoc, inter_univ]
   exact measure_diff_null (f.countable_discreteSupport.measure_zero _)
@@ -466,22 +466,22 @@ theorem sierpinski_pathological_family (Hcont : #ℝ = aleph 1) :
     ∃ f : ℝ → Set ℝ, (∀ x, (univ \ f x).Countable) ∧ ∀ y, {x : ℝ | y ∈ f x}.Countable := by
   rcases Cardinal.ord_eq ℝ with ⟨r, hr, H⟩
   refine ⟨fun x => {y | r x y}, fun x => ?_, fun y => ?_⟩
-  · have : univ \ {y | r x y} = {y | r y x} ∪ {x} := by
-      ext y
-      simp only [true_and_iff, mem_univ, mem_setOf_eq, mem_insert_iff, union_singleton, mem_diff]
-      rcases trichotomous_of r x y with (h | rfl | h)
-      · simp only [h, not_or, false_iff_iff, not_true]
-        constructor
-        · rintro rfl; exact irrefl_of r y h
-        · exact asymm h
-      · simp only [true_or_iff, eq_self_iff_true, iff_true_iff]; exact irrefl x
-      · simp only [h, iff_true_iff, or_true_iff]; exact asymm h
-    rw [this]
-    apply Countable.union _ (countable_singleton _)
-    rw [Cardinal.countable_iff_lt_aleph_one, ← Hcont]
-    exact Cardinal.card_typein_lt r x H
-  · rw [Cardinal.countable_iff_lt_aleph_one, ← Hcont]
-    exact Cardinal.card_typein_lt r y H
+  have : univ \ {y | r x y} = {y | r y x} ∪ {x} := by
+    ext y
+    simp only [true_and_iff, mem_univ, mem_setOf_eq, mem_insert_iff, union_singleton, mem_diff]
+    rcases trichotomous_of r x y with (h | rfl | h)
+    simp only [h, not_or, false_iff_iff, not_true]
+    constructor
+    rintro rfl; exact irrefl_of r y h
+    exact asymm h
+    simp only [true_or_iff, eq_self_iff_true, iff_true_iff]; exact irrefl x
+    simp only [h, iff_true_iff, or_true_iff]; exact asymm h
+  rw [this]
+  apply Countable.union _ (countable_singleton _)
+  rw [Cardinal.countable_iff_lt_aleph_one, ← Hcont]
+  exact Cardinal.card_typein_lt r x H
+  rw [Cardinal.countable_iff_lt_aleph_one, ← Hcont]
+  exact Cardinal.card_typein_lt r y H
 
 /-- A family of sets in `ℝ` which only miss countably many points, but such that any point is
 contained in only countably many of them. -/

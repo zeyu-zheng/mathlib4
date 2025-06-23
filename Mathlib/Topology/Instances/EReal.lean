@@ -164,7 +164,7 @@ lemma limsup_le_limsup (h : u ≤ᶠ[f] v) :
 private lemma limsup_add_le_of_lt (ha : limsup u f < a) (hb : limsup v f < b) :
     limsup (u + v) f ≤ a + b := by
   rcases eq_or_neBot f with (rfl | _)
-  · simp only [limsup_bot, bot_le]
+  simp only [limsup_bot, bot_le]
   rw [← @limsup_const EReal α _ f _ (a + b)]
   apply limsup_le_limsup (Eventually.mp (Eventually.and (eventually_lt_of_limsup_lt ha)
     (eventually_lt_of_limsup_lt hb)) (eventually_of_forall _))
@@ -194,13 +194,13 @@ lemma limsup_add_le_add_limsup
     (h : limsup u f ≠ ⊥ ∨ limsup v f ≠ ⊤) (h' : limsup u f ≠ ⊤ ∨ limsup v f ≠ ⊥) :
     limsup (u + v) f ≤ (limsup u f) + (limsup v f) := by
   rcases eq_bot_or_bot_lt (limsup u f) with (u_bot | u_nbot)
-  · have v_ntop := h.neg_resolve_left u_bot
-    rw [limsup_add_bot_of_ne_top u_bot v_ntop]; exact bot_le
+  have v_ntop := h.neg_resolve_left u_bot
+  rw [limsup_add_bot_of_ne_top u_bot v_ntop]; exact bot_le
   rcases eq_bot_or_bot_lt (limsup v f) with (v_bot | v_nbot)
-  · have u_ntop := h'.neg_resolve_right v_bot
-    rw [add_comm, limsup_add_bot_of_ne_top v_bot u_ntop]; exact bot_le
+  have u_ntop := h'.neg_resolve_right v_bot
+  rw [add_comm, limsup_add_bot_of_ne_top v_bot u_ntop]; exact bot_le
   rcases eq_top_or_lt_top (limsup v f) with (v_top | v_ntop)
-  · rw [v_top, add_top_of_ne_bot (ne_of_gt u_nbot)]; exact le_top
+  rw [v_top, add_top_of_ne_bot (ne_of_gt u_nbot)]; exact le_top
   have limsup_v_real := coe_toReal (ne_of_lt v_ntop) (ne_of_gt v_nbot)
   apply (le_iff_le_forall_real_gt _ _).1
   intros x hx
@@ -217,12 +217,12 @@ lemma limsup_add_le_add_limsup
 lemma limsup_add_le_of_le (ha : limsup u f < a) (hb : limsup v f ≤ b) :
     limsup (u + v) f ≤ a + b := by
   rcases lt_or_eq_of_le hb with (hb | hb)
-  · exact limsup_add_le_of_lt ha hb
+  exact limsup_add_le_of_lt ha hb
   by_cases hb' : b = ⊤
-  · convert le_top
-    on_goal 1 => rw [hb']
-    -- This closes both remaining goals at once.
-    exact add_top_of_ne_bot ha.ne_bot
+  convert le_top
+  on_goal 1 => rw [hb']
+  -- This closes both remaining goals at once.
+  exact add_top_of_ne_bot ha.ne_bot
   exact (limsup_add_le_add_limsup (hb ▸ Or.inr hb') (Or.inl ha.ne_top)).trans
     (add_le_add ha.le hb.le)
 
@@ -257,9 +257,9 @@ lemma liminf_add_top_of_ne_bot (h : liminf u f = ⊤) (h' : liminf v f ≠ ⊥) 
 
 lemma add_liminf_le_liminf_add : (liminf u f) + (liminf v f) ≤ liminf (u + v) f := by
   by_cases hu : liminf u f = ⊥
-  · simp_all
+  simp_all
   by_cases hv : liminf v f = ⊥
-  · simp_all
+  simp_all
   have h' : limsup (-(u + v)) f = limsup (-u + -v) f
   apply limsup_congr
   filter_upwards [eventually_lt_of_lt_liminf (bot_lt_iff_ne_bot.mpr hu),
@@ -274,16 +274,16 @@ lemma add_liminf_le_liminf_add : (liminf u f) + (liminf v f) ≤ liminf (u + v) 
 lemma limsup_le_iff {b : EReal} : limsup u f ≤ b ↔ ∀ c : ℝ, b < c → ∀ᶠ a : α in f, u a ≤ c := by
   rw [← le_iff_le_forall_real_gt]
   refine ⟨?_, ?_⟩ <;> intro h c b_lt_c
-  · rcases exists_between_coe_real b_lt_c with ⟨d, b_lt_d, d_lt_c⟩
-    specialize h d b_lt_d
-    have key := Filter.eventually_lt_of_limsup_lt (lt_of_le_of_lt h d_lt_c)
-    apply Filter.mem_of_superset key
-    rw [Set.setOf_subset_setOf]
-    exact fun a h' ↦ le_of_lt h'
-  · rcases eq_or_neBot f with (rfl | _)
-    · simp only [limsup_bot, bot_le]
-    · specialize h c b_lt_c
-      exact @Filter.limsup_const EReal α _ f _ (c : EReal) ▸ limsup_le_limsup h
+  rcases exists_between_coe_real b_lt_c with ⟨d, b_lt_d, d_lt_c⟩
+  specialize h d b_lt_d
+  have key := Filter.eventually_lt_of_limsup_lt (lt_of_le_of_lt h d_lt_c)
+  apply Filter.mem_of_superset key
+  rw [Set.setOf_subset_setOf]
+  exact fun a h' ↦ le_of_lt h'
+  rcases eq_or_neBot f with (rfl | _)
+  simp only [limsup_bot, bot_le]
+  specialize h c b_lt_c
+  exact @Filter.limsup_const EReal α _ f _ (c : EReal) ▸ limsup_le_limsup h
 
 end LimInfSup
 
@@ -336,15 +336,15 @@ theorem continuousAt_add {p : EReal × EReal} (h : p.1 ≠ ⊤ ∨ p.2 ≠ ⊥) 
     ContinuousAt (fun p : EReal × EReal => p.1 + p.2) p := by
   rcases p with ⟨x, y⟩
   induction x <;> induction y
-  · exact continuousAt_add_bot_bot
-  · exact continuousAt_add_bot_coe _
-  · simp at h'
-  · exact continuousAt_add_coe_bot _
-  · exact continuousAt_add_coe_coe _ _
-  · exact continuousAt_add_coe_top _
-  · simp at h
-  · exact continuousAt_add_top_coe _
-  · exact continuousAt_add_top_top
+  exact continuousAt_add_bot_bot
+  exact continuousAt_add_bot_coe _
+  simp at h'
+  exact continuousAt_add_coe_bot _
+  exact continuousAt_add_coe_coe _ _
+  exact continuousAt_add_coe_top _
+  simp at h
+  exact continuousAt_add_top_coe _
+  exact continuousAt_add_top_top
 
 /-! ### Negation -/
 
@@ -397,15 +397,15 @@ private lemma continuousAt_mul_top_top :
   rw [_root_.eventually_nhds_iff]
   use (Set.Ioi ((max x 0) : EReal)) ×ˢ (Set.Ioi 1)
   split_ands
-  · intros p p_in_prod
-    simp only [Set.mem_prod, Set.mem_Ioi, max_lt_iff] at p_in_prod
-    rcases p_in_prod with ⟨⟨p1_gt_x, p1_pos⟩, p2_gt_1⟩
-    have := mul_le_mul_of_nonneg_left (le_of_lt p2_gt_1) (le_of_lt p1_pos)
-    rw [mul_one p.1] at this
-    exact lt_of_lt_of_le p1_gt_x this
-  · exact IsOpen.prod isOpen_Ioi isOpen_Ioi
-  · simp
-  · rw [Set.mem_Ioi, ← EReal.coe_one]; exact EReal.coe_lt_top 1
+  intros p p_in_prod
+  simp only [Set.mem_prod, Set.mem_Ioi, max_lt_iff] at p_in_prod
+  rcases p_in_prod with ⟨⟨p1_gt_x, p1_pos⟩, p2_gt_1⟩
+  have := mul_le_mul_of_nonneg_left (le_of_lt p2_gt_1) (le_of_lt p1_pos)
+  rw [mul_one p.1] at this
+  exact lt_of_lt_of_le p1_gt_x this
+  exact IsOpen.prod isOpen_Ioi isOpen_Ioi
+  simp
+  rw [Set.mem_Ioi, ← EReal.coe_one]; exact EReal.coe_lt_top 1
 
 private lemma continuousAt_mul_top_pos {a : ℝ} (h : 0 < a) :
     ContinuousAt (fun p : EReal × EReal ↦ p.1 * p.2) (⊤, a) := by
@@ -414,33 +414,33 @@ private lemma continuousAt_mul_top_pos {a : ℝ} (h : 0 < a) :
   rw [_root_.eventually_nhds_iff]
   use (Set.Ioi ((2*(max (x+1) 0)/a : ℝ) : EReal)) ×ˢ (Set.Ioi ((a/2 : ℝ) : EReal))
   split_ands
-  · intros p p_in_prod
-    simp only [Set.mem_prod, Set.mem_Ioi] at p_in_prod
-    rcases p_in_prod with ⟨p1_gt, p2_gt⟩
-    have p1_pos : 0 < p.1
-    apply lt_of_le_of_lt _ p1_gt
-    rw [EReal.coe_nonneg]
-    apply mul_nonneg _ (le_of_lt (inv_pos_of_pos h))
-    simp only [gt_iff_lt, Nat.ofNat_pos, mul_nonneg_iff_of_pos_left, le_max_iff, le_refl, or_true]
-    have a2_pos : 0 < ((a/2 : ℝ) : EReal)
-    rw [EReal.coe_pos]; linarith
-    have lock := mul_le_mul_of_nonneg_right (le_of_lt p1_gt) (le_of_lt a2_pos)
-    have key := mul_le_mul_of_nonneg_left (le_of_lt p2_gt) (le_of_lt p1_pos)
-    replace lock := le_trans lock key
-    apply lt_of_lt_of_le _ lock
-    rw [← EReal.coe_mul, EReal.coe_lt_coe_iff, div_mul_div_comm, mul_comm,
-      ← div_mul_div_comm, mul_div_right_comm]
-    simp only [ne_eq, Ne.symm (ne_of_lt h), not_false_eq_true, _root_.div_self, OfNat.ofNat_ne_zero,
-      one_mul, lt_max_iff, lt_add_iff_pos_right, zero_lt_one, true_or]
-  · exact IsOpen.prod isOpen_Ioi isOpen_Ioi
-  · simp
-  · simp [h]
+  intros p p_in_prod
+  simp only [Set.mem_prod, Set.mem_Ioi] at p_in_prod
+  rcases p_in_prod with ⟨p1_gt, p2_gt⟩
+  have p1_pos : 0 < p.1
+  apply lt_of_le_of_lt _ p1_gt
+  rw [EReal.coe_nonneg]
+  apply mul_nonneg _ (le_of_lt (inv_pos_of_pos h))
+  simp only [gt_iff_lt, Nat.ofNat_pos, mul_nonneg_iff_of_pos_left, le_max_iff, le_refl, or_true]
+  have a2_pos : 0 < ((a/2 : ℝ) : EReal)
+  rw [EReal.coe_pos]; linarith
+  have lock := mul_le_mul_of_nonneg_right (le_of_lt p1_gt) (le_of_lt a2_pos)
+  have key := mul_le_mul_of_nonneg_left (le_of_lt p2_gt) (le_of_lt p1_pos)
+  replace lock := le_trans lock key
+  apply lt_of_lt_of_le _ lock
+  rw [← EReal.coe_mul, EReal.coe_lt_coe_iff, div_mul_div_comm, mul_comm,
+    ← div_mul_div_comm, mul_div_right_comm]
+  simp only [ne_eq, Ne.symm (ne_of_lt h), not_false_eq_true, _root_.div_self, OfNat.ofNat_ne_zero,
+    one_mul, lt_max_iff, lt_add_iff_pos_right, zero_lt_one, true_or]
+  exact IsOpen.prod isOpen_Ioi isOpen_Ioi
+  simp
+  simp [h]
 
 private lemma continuousAt_mul_top_ne_zero {a : ℝ} (h : a ≠ 0) :
     ContinuousAt (fun p : EReal × EReal ↦ p.1 * p.2) (⊤, a) := by
   rcases lt_or_gt_of_ne h with a_neg | a_pos
-  · exact neg_neg a ▸ continuousAt_mul_symm2 (continuousAt_mul_top_pos (neg_pos.2 a_neg))
-  · exact continuousAt_mul_top_pos a_pos
+  exact neg_neg a ▸ continuousAt_mul_symm2 (continuousAt_mul_top_pos (neg_pos.2 a_neg))
+  exact continuousAt_mul_top_pos a_pos
 
 /-- The multiplication on `EReal` is continuous except at indeterminacies
 (i.e. whenever one value is zero and the other infinite). -/
@@ -449,18 +449,18 @@ theorem continuousAt_mul {p : EReal × EReal} (h₁ : p.1 ≠ 0 ∨ p.2 ≠ ⊥)
     ContinuousAt (fun p : EReal × EReal ↦ p.1 * p.2) p := by
   rcases p with ⟨x, y⟩
   induction x <;> induction y
-  · exact continuousAt_mul_symm3 continuousAt_mul_top_top
-  · simp only [ne_eq, not_true_eq_false, EReal.coe_eq_zero, false_or] at h₃
-    exact continuousAt_mul_symm1 (continuousAt_mul_top_ne_zero h₃)
-  · exact EReal.neg_top ▸ continuousAt_mul_symm1 continuousAt_mul_top_top
-  · simp only [ne_eq, EReal.coe_eq_zero, not_true_eq_false, or_false] at h₁
-    exact continuousAt_mul_symm2 (continuousAt_mul_swap (continuousAt_mul_top_ne_zero h₁))
-  · exact continuousAt_mul_coe_coe _ _
-  · simp only [ne_eq, EReal.coe_eq_zero, not_true_eq_false, or_false] at h₂
-    exact continuousAt_mul_swap (continuousAt_mul_top_ne_zero h₂)
-  · exact continuousAt_mul_symm2 continuousAt_mul_top_top
-  · simp only [ne_eq, not_true_eq_false, EReal.coe_eq_zero, false_or] at h₄
-    exact continuousAt_mul_top_ne_zero h₄
-  · exact continuousAt_mul_top_top
+  exact continuousAt_mul_symm3 continuousAt_mul_top_top
+  simp only [ne_eq, not_true_eq_false, EReal.coe_eq_zero, false_or] at h₃
+  exact continuousAt_mul_symm1 (continuousAt_mul_top_ne_zero h₃)
+  exact EReal.neg_top ▸ continuousAt_mul_symm1 continuousAt_mul_top_top
+  simp only [ne_eq, EReal.coe_eq_zero, not_true_eq_false, or_false] at h₁
+  exact continuousAt_mul_symm2 (continuousAt_mul_swap (continuousAt_mul_top_ne_zero h₁))
+  exact continuousAt_mul_coe_coe _ _
+  simp only [ne_eq, EReal.coe_eq_zero, not_true_eq_false, or_false] at h₂
+  exact continuousAt_mul_swap (continuousAt_mul_top_ne_zero h₂)
+  exact continuousAt_mul_symm2 continuousAt_mul_top_top
+  simp only [ne_eq, not_true_eq_false, EReal.coe_eq_zero, false_or] at h₄
+  exact continuousAt_mul_top_ne_zero h₄
+  exact continuousAt_mul_top_top
 
 end EReal

@@ -82,11 +82,11 @@ theorem IsSRGWith.card_neighborFinset_union_eq {v w : V} (h : G.IsSRGWith n k �
   rw [Nat.sub_add_cancel, ← Set.toFinset_card]
   -- Porting note: Set.toFinset_inter needs workaround to use unification to solve for one of the
   -- instance arguments:
-  · simp [commonNeighbors, @Set.toFinset_inter _ _ _ _ _ _ (_),
-      ← neighborFinset_def, Finset.card_union_add_card_inter, card_neighborFinset_eq_degree,
-      h.regular.degree_eq, two_mul]
-  · apply le_trans (card_commonNeighbors_le_degree_left _ _ _)
-    simp [h.regular.degree_eq, two_mul]
+  simp [commonNeighbors, @Set.toFinset_inter _ _ _ _ _ _ (_),
+    ← neighborFinset_def, Finset.card_union_add_card_inter, card_neighborFinset_eq_degree,
+    h.regular.degree_eq, two_mul]
+  apply le_trans (card_commonNeighbors_le_degree_left _ _ _)
+  simp [h.regular.degree_eq, two_mul]
 
 /-- Assuming `G` is strongly regular, `2*(k + 1) - m` in `G` is the number of vertices that are
 adjacent to either `v` or `w` when `¬G.Adj v w`. So it's the cardinality of
@@ -116,9 +116,9 @@ theorem sdiff_compl_neighborFinset_inter_eq {v w : V} (h : G.Adj v w) :
   simp only [and_imp, mem_union, mem_sdiff, mem_compl, and_iff_left_iff_imp, mem_neighborFinset,
     mem_inter, mem_singleton]
   rintro hnv hnw (rfl | rfl)
-  · exact hnv h
-  · apply hnw
-    rwa [adj_comm]
+  exact hnv h
+  apply hnw
+  rwa [adj_comm]
 
 theorem IsSRGWith.compl_is_regular (h : G.IsSRGWith n k ℓ μ) :
     Gᶜ.IsRegularOfDegree (n - k - 1) := by
@@ -133,11 +133,11 @@ theorem IsSRGWith.card_commonNeighbors_eq_of_adj_compl (h : G.IsSRGWith n k ℓ 
   have hne : v ≠ w := ne_of_adj _ ha
   rw [compl_adj] at ha
   rw [card_sdiff, ← insert_eq, card_insert_of_not_mem, card_singleton, ← Finset.compl_union]
-  · rw [card_compl, h.card_neighborFinset_union_of_not_adj hne ha.2, ← h.card]
-  · simp only [hne.symm, not_false_iff, mem_singleton]
-  · intro u
-    simp only [mem_union, mem_compl, mem_neighborFinset, mem_inter, mem_singleton]
-    rintro (rfl | rfl) <;> simpa [adj_comm] using ha.2
+  rw [card_compl, h.card_neighborFinset_union_of_not_adj hne ha.2, ← h.card]
+  simp only [hne.symm, not_false_iff, mem_singleton]
+  intro u
+  simp only [mem_union, mem_compl, mem_neighborFinset, mem_inter, mem_singleton]
+  rintro (rfl | rfl) <;> simpa [adj_comm] using ha.2
 
 theorem IsSRGWith.card_commonNeighbors_eq_of_not_adj_compl (h : G.IsSRGWith n k ℓ μ) {v w : V}
     (hn : v ≠ w) (hna : ¬Gᶜ.Adj v w) :
@@ -165,32 +165,32 @@ theorem IsSRGWith.param_eq (h : G.IsSRGWith n k ℓ μ) (hn : 0 < n) :
   rw [← h.card, Fintype.card_pos_iff] at hn
   obtain ⟨v⟩ := hn
   convert card_mul_eq_card_mul G.Adj (s := G.neighborFinset v) (t := Gᶜ.neighborFinset v) _ _
-  · simp [h.regular v]
-  · simp [h.compl.regular v]
-  · intro w hw
-    rw [mem_neighborFinset] at hw
-    simp_rw [bipartiteAbove]
-    -- This used to be part of the enclosing `simp_rw` chain,
-    -- but after leanprover/lean4#3124 it caused a maximum recursion depth error.
-    change Finset.card (filter (fun a => Adj G w a) _) = _
-    simp_rw [← mem_neighborFinset, filter_mem_eq_inter]
-    have s : {v} ⊆ G.neighborFinset w \ G.neighborFinset v
-    rw [singleton_subset_iff, mem_sdiff, mem_neighborFinset]
-    exact ⟨hw.symm, G.not_mem_neighborFinset_self v⟩
-    rw [inter_comm, neighborFinset_compl, ← inter_sdiff_assoc, ← sdiff_eq_inter_compl, card_sdiff s,
-      card_singleton, ← sdiff_inter_self_left, card_sdiff (by apply inter_subset_left)]
-    congr
-    · simp [h.regular w]
-    · simp_rw [inter_comm, neighborFinset_def, ← Set.toFinset_inter, ← h.of_adj v w hw,
-        ← Set.toFinset_card]
-      congr!
-  · intro w hw
-    simp_rw [neighborFinset_compl, mem_sdiff, mem_compl, mem_singleton, mem_neighborFinset,
-      ← Ne.eq_def] at hw
-    simp_rw [bipartiteBelow, adj_comm, ← mem_neighborFinset, filter_mem_eq_inter,
-      neighborFinset_def, ← Set.toFinset_inter, ← h.of_not_adj hw.2.symm hw.1,
-      ← Set.toFinset_card]
-    congr!
+  simp [h.regular v]
+  simp [h.compl.regular v]
+  intro w hw
+  rw [mem_neighborFinset] at hw
+  simp_rw [bipartiteAbove]
+  -- This used to be part of the enclosing `simp_rw` chain,
+  -- but after leanprover/lean4#3124 it caused a maximum recursion depth error.
+  change Finset.card (filter (fun a => Adj G w a) _) = _
+  simp_rw [← mem_neighborFinset, filter_mem_eq_inter]
+  have s : {v} ⊆ G.neighborFinset w \ G.neighborFinset v
+  rw [singleton_subset_iff, mem_sdiff, mem_neighborFinset]
+  exact ⟨hw.symm, G.not_mem_neighborFinset_self v⟩
+  rw [inter_comm, neighborFinset_compl, ← inter_sdiff_assoc, ← sdiff_eq_inter_compl, card_sdiff s,
+    card_singleton, ← sdiff_inter_self_left, card_sdiff (by apply inter_subset_left)]
+  congr
+  simp [h.regular w]
+  simp_rw [inter_comm, neighborFinset_def, ← Set.toFinset_inter, ← h.of_adj v w hw,
+    ← Set.toFinset_card]
+  congr!
+  intro w hw
+  simp_rw [neighborFinset_compl, mem_sdiff, mem_compl, mem_singleton, mem_neighborFinset,
+    ← Ne.eq_def] at hw
+  simp_rw [bipartiteBelow, adj_comm, ← mem_neighborFinset, filter_mem_eq_inter,
+    neighborFinset_def, ← Set.toFinset_inter, ← h.of_not_adj hw.2.symm hw.1,
+    ← Set.toFinset_card]
+  congr!
 
 /-- Let `A` and `C` be the adjacency matrices of a strongly regular graph with parameters `n k ℓ μ`
 and its complement respectively and `I` be the identity matrix,
@@ -203,13 +203,13 @@ theorem IsSRGWith.matrix_eq {α : Type*} [Semiring α] (h : G.IsSRGWith n k ℓ 
     adjMatrix_apply, compl_adj]
   rw [Fintype.card_congr (G.walkLengthTwoEquivCommonNeighbors v w)]
   obtain rfl | hn := eq_or_ne v w
-  · rw [← Set.toFinset_card]
-    simp [commonNeighbors, ← neighborFinset_def, h.regular v]
-  · simp only [Matrix.one_apply_ne' hn.symm, ne_eq, hn]
-    by_cases ha : G.Adj v w <;>
-      simp only [ha, ite_true, ite_false, add_zero, zero_add, nsmul_eq_mul, smul_zero, mul_one,
-        not_true_eq_false, not_false_eq_true, and_false, and_self]
-    · rw [h.of_adj v w ha]
-    · rw [h.of_not_adj hn ha]
+  rw [← Set.toFinset_card]
+  simp [commonNeighbors, ← neighborFinset_def, h.regular v]
+  simp only [Matrix.one_apply_ne' hn.symm, ne_eq, hn]
+  by_cases ha : G.Adj v w <;>
+    simp only [ha, ite_true, ite_false, add_zero, zero_add, nsmul_eq_mul, smul_zero, mul_one,
+      not_true_eq_false, not_false_eq_true, and_false, and_self]
+  rw [h.of_adj v w ha]
+  rw [h.of_not_adj hn ha]
 
 end SimpleGraph

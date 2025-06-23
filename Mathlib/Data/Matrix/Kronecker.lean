@@ -223,8 +223,8 @@ theorem det_kroneckerMapBilinear [CommSemiring R] [Fintype m] [Fintype n] [Decid
       rw [det_mul, ← diagonal_one, ← diagonal_one, kroneckerMapBilinear_apply_apply,
         kroneckerMap_diagonal_right _ fun _ => _, kroneckerMapBilinear_apply_apply,
         kroneckerMap_diagonal_left _ fun _ => _, det_reindex_self]
-      · intro; exact LinearMap.map_zero₂ _ _
-      · intro; exact map_zero _
+      intro; exact LinearMap.map_zero₂ _ _
+      intro; exact map_zero _
     _ = _ := by simp_rw [det_blockDiagonal, Finset.prod_const, Finset.card_univ]
 
 end KroneckerMap
@@ -368,34 +368,34 @@ theorem det_kronecker [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] [C
     det (A ⊗ₖ B) = det A ^ Fintype.card n * det B ^ Fintype.card m := by
   refine (det_kroneckerMapBilinear (Algebra.lmul ℕ R).toLinearMap mul_mul_mul_comm _ _).trans ?_
   congr 3
-  · ext i j
-    exact mul_one _
-  · ext i j
-    exact one_mul _
+  ext i j
+  exact mul_one _
+  ext i j
+  exact one_mul _
 
 theorem inv_kronecker [Fintype m] [Fintype n] [DecidableEq m] [DecidableEq n] [CommRing R]
     (A : Matrix m m R) (B : Matrix n n R) : (A ⊗ₖ B)⁻¹ = A⁻¹ ⊗ₖ B⁻¹ := by
   -- handle the special cases where either matrix is not invertible
   by_cases hA : IsUnit A.det
   swap
-  · cases isEmpty_or_nonempty n
-    · subsingleton
-    have hAB : ¬IsUnit (A ⊗ₖ B).det
-    refine mt (fun hAB => ?_) hA
-    rw [det_kronecker] at hAB
-    exact (isUnit_pow_iff Fintype.card_ne_zero).mp (isUnit_of_mul_isUnit_left hAB)
-    rw [nonsing_inv_apply_not_isUnit _ hA, zero_kronecker, nonsing_inv_apply_not_isUnit _ hAB]
+  cases isEmpty_or_nonempty n
+  subsingleton
+  have hAB : ¬IsUnit (A ⊗ₖ B).det
+  refine mt (fun hAB => ?_) hA
+  rw [det_kronecker] at hAB
+  exact (isUnit_pow_iff Fintype.card_ne_zero).mp (isUnit_of_mul_isUnit_left hAB)
+  rw [nonsing_inv_apply_not_isUnit _ hA, zero_kronecker, nonsing_inv_apply_not_isUnit _ hAB]
   by_cases hB : IsUnit B.det; swap
-  · cases isEmpty_or_nonempty m
-    · subsingleton
-    have hAB : ¬IsUnit (A ⊗ₖ B).det
-    refine mt (fun hAB => ?_) hB
-    rw [det_kronecker] at hAB
-    exact (isUnit_pow_iff Fintype.card_ne_zero).mp (isUnit_of_mul_isUnit_right hAB)
-    rw [nonsing_inv_apply_not_isUnit _ hB, kronecker_zero, nonsing_inv_apply_not_isUnit _ hAB]
+  cases isEmpty_or_nonempty m
+  subsingleton
+  have hAB : ¬IsUnit (A ⊗ₖ B).det
+  refine mt (fun hAB => ?_) hB
+  rw [det_kronecker] at hAB
+  exact (isUnit_pow_iff Fintype.card_ne_zero).mp (isUnit_of_mul_isUnit_right hAB)
+  rw [nonsing_inv_apply_not_isUnit _ hB, kronecker_zero, nonsing_inv_apply_not_isUnit _ hAB]
   -- otherwise follows trivially from `mul_kronecker_mul`
-  · apply inv_eq_right_inv
-    rw [← mul_kronecker_mul, ← one_kronecker_one, mul_nonsing_inv _ hA, mul_nonsing_inv _ hB]
+  apply inv_eq_right_inv
+  rw [← mul_kronecker_mul, ← one_kronecker_one, mul_nonsing_inv _ hA, mul_nonsing_inv _ hB]
 
 end Kronecker
 

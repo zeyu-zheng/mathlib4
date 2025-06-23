@@ -111,10 +111,10 @@ theorem not_integrableOn_of_tendsto_norm_atTop_of_deriv_isBigO_filter
   filter_upwards [hd] with x hx
   have : deriv f' x = a (deriv f x)
   rw [fderiv.comp_deriv x _ hx]
-  · have : fderiv ℝ a (f x) = a.toContinuousLinearMap := a.toContinuousLinearMap.fderiv
-    simp only [this]
-    rfl
-  · exact a.toContinuousLinearMap.differentiableAt
+  have : fderiv ℝ a (f x) = a.toContinuousLinearMap := a.toContinuousLinearMap.fderiv
+  simp only [this]
+  rfl
+  exact a.toContinuousLinearMap.differentiableAt
   simp only [this]
   simp
   exact not_integrableOn_of_tendsto_norm_atTop_of_deriv_isBigO_filter_aux l hl h'd h'f h'fg
@@ -142,12 +142,12 @@ theorem not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isBigO_within_diff
   obtain ⟨l, hl, hl', hle, hmem⟩ :
     ∃ l : Filter ℝ, TendstoIxxClass Icc l l ∧ l.NeBot ∧ l ≤ 𝓝 c ∧ [[a, b]] \ {c} ∈ l := by
     cases' (min_lt_max.2 hne).lt_or_lt c with hlt hlt
-    · refine ⟨𝓝[<] c, inferInstance, inferInstance, inf_le_left, ?_⟩
-      rw [← Iic_diff_right]
-      exact diff_mem_nhdsWithin_diff (Icc_mem_nhdsWithin_Iic ⟨hlt, hc.2⟩) _
-    · refine ⟨𝓝[>] c, inferInstance, inferInstance, inf_le_left, ?_⟩
-      rw [← Ici_diff_left]
-      exact diff_mem_nhdsWithin_diff (Icc_mem_nhdsWithin_Ici ⟨hc.1, hlt⟩) _
+    refine ⟨𝓝[<] c, inferInstance, inferInstance, inf_le_left, ?_⟩
+    rw [← Iic_diff_right]
+    exact diff_mem_nhdsWithin_diff (Icc_mem_nhdsWithin_Iic ⟨hlt, hc.2⟩) _
+    refine ⟨𝓝[>] c, inferInstance, inferInstance, inf_le_left, ?_⟩
+    rw [← Ici_diff_left]
+    exact diff_mem_nhdsWithin_diff (Icc_mem_nhdsWithin_Ici ⟨hc.1, hlt⟩) _
   have : l ≤ 𝓝[[[a, b]] \ {c}] c := le_inf hle (le_principal_iff.2 hmem)
   exact not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isBigO_filter l
     (mem_of_superset hmem diff_subset) (h_deriv.filter_mono this) (h_infty.mono_left this)
@@ -187,12 +187,12 @@ theorem not_intervalIntegrable_of_sub_inv_isBigO_punctured {f : ℝ → F} {a b 
 theorem intervalIntegrable_sub_inv_iff {a b c : ℝ} :
     IntervalIntegrable (fun x => (x - c)⁻¹) volume a b ↔ a = b ∨ c ∉ [[a, b]] := by
   constructor
-  · refine fun h => or_iff_not_imp_left.2 fun hne hc => ?_
-    exact not_intervalIntegrable_of_sub_inv_isBigO_punctured (isBigO_refl _ _) hne hc h
-  · rintro (rfl | h₀)
-    · exact IntervalIntegrable.refl
-    refine ((continuous_sub_right c).continuousOn.inv₀ ?_).intervalIntegrable
-    exact fun x hx => sub_ne_zero.2 <| ne_of_mem_of_not_mem hx h₀
+  refine fun h => or_iff_not_imp_left.2 fun hne hc => ?_
+  exact not_intervalIntegrable_of_sub_inv_isBigO_punctured (isBigO_refl _ _) hne hc h
+  rintro (rfl | h₀)
+  exact IntervalIntegrable.refl
+  refine ((continuous_sub_right c).continuousOn.inv₀ ?_).intervalIntegrable
+  exact fun x hx => sub_ne_zero.2 <| ne_of_mem_of_not_mem hx h₀
 
 /-- The function `fun x => x⁻¹` is integrable on `a..b` if and only if
 `a = b` or `0 ∉ [a, b]`. -/

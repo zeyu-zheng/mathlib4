@@ -30,10 +30,10 @@ variable {p : ℕ} [Fact p.Prime]
 
 theorem frobenius_zmod (f : MvPolynomial σ (ZMod p)) : frobenius _ p f = expand p f := by
   apply induction_on f
-  · intro a; rw [expand_C, frobenius_def, ← C_pow, ZMod.pow_card]
-  · simp only [map_add]; intro _ _ hf hg; rw [hf, hg]
-  · simp only [expand_X, map_mul]
-    intro _ _ hf; rw [hf, frobenius_def]
+  intro a; rw [expand_C, frobenius_def, ← C_pow, ZMod.pow_card]
+  simp only [map_add]; intro _ _ hf hg; rw [hf, hg]
+  simp only [expand_X, map_mul]
+  intro _ _ hf; rw [hf, frobenius_def]
 
 theorem expand_zmod (f : MvPolynomial σ (ZMod p)) : expand p f = f ^ p :=
   (frobenius_zmod _).symm
@@ -89,11 +89,11 @@ theorem indicator_mem_restrictDegree (c : σ → K) :
   simp_rw [← Multiset.coe_countAddMonoidHom, map_sum,
     AddMonoidHom.map_nsmul, Multiset.coe_countAddMonoidHom, nsmul_eq_mul, Nat.cast_id]
   trans
-  · refine Finset.sum_eq_single n ?_ ?_
-    · intro b _ ne
-      simp [Multiset.count_singleton, ne, if_neg (Ne.symm _)]
-    · intro h; exact (h <| Finset.mem_univ _).elim
-  · rw [Multiset.count_singleton_self, mul_one]
+  refine Finset.sum_eq_single n ?_ ?_
+  intro b _ ne
+  simp [Multiset.count_singleton, ne, if_neg (Ne.symm _)]
+  intro h; exact (h <| Finset.mem_univ _).elim
+  rw [Multiset.count_singleton_self, mul_one]
 
 end CommRing
 
@@ -128,16 +128,16 @@ theorem map_restrict_dom_evalₗ : (restrictDegree σ K (Fintype.card K - 1)).ma
   cases nonempty_fintype σ
   refine top_unique (SetLike.le_def.2 fun e _ => mem_map.2 ?_)
   refine ⟨∑ n : σ → K, e n • indicator n, ?_, ?_⟩
-  · exact sum_mem fun c _ => smul_mem _ _ (indicator_mem_restrictDegree _)
-  · ext n
-    simp only [_root_.map_sum, @Finset.sum_apply (σ → K) (fun _ => K) _ _ _ _ _, Pi.smul_apply,
-      map_smul]
-    simp only [evalₗ_apply]
-    trans
-    · refine Finset.sum_eq_single n (fun b _ h => ?_) ?_
-      · rw [eval_indicator_apply_eq_zero _ _ h.symm, smul_zero]
-      · exact fun h => (h <| Finset.mem_univ n).elim
-    · rw [eval_indicator_apply_eq_one, smul_eq_mul, mul_one]
+  exact sum_mem fun c _ => smul_mem _ _ (indicator_mem_restrictDegree _)
+  ext n
+  simp only [_root_.map_sum, @Finset.sum_apply (σ → K) (fun _ => K) _ _ _ _ _, Pi.smul_apply,
+    map_smul]
+  simp only [evalₗ_apply]
+  trans
+  refine Finset.sum_eq_single n (fun b _ h => ?_) ?_
+  rw [eval_indicator_apply_eq_zero _ _ h.symm, smul_zero]
+  exact fun h => (h <| Finset.mem_univ n).elim
+  rw [eval_indicator_apply_eq_one, smul_eq_mul, mul_one]
 
 end
 

@@ -55,19 +55,19 @@ theorem AffineBasis.interior_convexHull {ι E : Type*} [Finite ι] [NormedAddCom
     [NormedSpace ℝ E] (b : AffineBasis ι ℝ E) :
     interior (convexHull ℝ (range b)) = {x | ∀ i, 0 < b.coord i x} := by
   cases subsingleton_or_nontrivial ι
-  · -- The zero-dimensional case.
-    have : range b = univ :=
-      AffineSubspace.eq_univ_of_subsingleton_span_eq_top (subsingleton_range _) b.tot
-    simp [this]
-  · -- The positive-dimensional case.
-    haveI : FiniteDimensional ℝ E := b.finiteDimensional
-    have : convexHull ℝ (range b) = ⋂ i, b.coord i ⁻¹' Ici 0 := by
-      rw [b.convexHull_eq_nonneg_coord, setOf_forall]; rfl
-    ext
-    simp only [this, interior_iInter_of_finite, ←
-      IsOpenMap.preimage_interior_eq_interior_preimage (isOpenMap_barycentric_coord b _)
-        (continuous_barycentric_coord b _),
-      interior_Ici, mem_iInter, mem_setOf_eq, mem_Ioi, mem_preimage]
+  -- The zero-dimensional case.
+  have : range b = univ :=
+    AffineSubspace.eq_univ_of_subsingleton_span_eq_top (subsingleton_range _) b.tot
+  simp [this]
+  -- The positive-dimensional case.
+  haveI : FiniteDimensional ℝ E := b.finiteDimensional
+  have : convexHull ℝ (range b) = ⋂ i, b.coord i ⁻¹' Ici 0 := by
+    rw [b.convexHull_eq_nonneg_coord, setOf_forall]; rfl
+  ext
+  simp only [this, interior_iInter_of_finite, ←
+    IsOpenMap.preimage_interior_eq_interior_preimage (isOpenMap_barycentric_coord b _)
+      (continuous_barycentric_coord b _),
+    interior_Ici, mem_iInter, mem_setOf_eq, mem_Ioi, mem_preimage]
 
 variable {V P : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P]
@@ -94,14 +94,14 @@ theorem IsOpen.exists_between_affineIndependent_span_eq_top {s u : Set P} (hu : 
     div_ne_zero ε0.ne' (dist_ne_zero.2 (ne_of_mem_of_not_mem hq hy).symm)
   let w : t → ℝˣ := fun p => if hp : (p : P) ∈ s then 1 else Units.mk0 _ (hεyq (↑p) hp)
   refine ⟨Set.range fun p : t => lineMap q p (w p : ℝ), ?_, ?_, ?_, ?_⟩
-  · intro p hp; use ⟨p, ht₁ hp⟩; simp [w, hp]
-  · rintro y ⟨⟨p, hp⟩, rfl⟩
-    by_cases hps : p ∈ s <;>
-    simp only [w, hps, lineMap_apply_one, Units.val_mk0, dif_neg, dif_pos, not_false_iff,
-      Units.val_one, Subtype.coe_mk] <;>
-    [exact hsu hps; exact hf p]
-  · exact (ht₂.units_lineMap ⟨q, ht₁ hq⟩ w).range
-  · rw [affineSpan_eq_affineSpan_lineMap_units (ht₁ hq) w, ht₃]
+  intro p hp; use ⟨p, ht₁ hp⟩; simp [w, hp]
+  rintro y ⟨⟨p, hp⟩, rfl⟩
+  by_cases hps : p ∈ s <;>
+  simp only [w, hps, lineMap_apply_one, Units.val_mk0, dif_neg, dif_pos, not_false_iff,
+    Units.val_one, Subtype.coe_mk] <;>
+  [exact hsu hps; exact hf p]
+  exact (ht₂.units_lineMap ⟨q, ht₁ hq⟩ w).range
+  rw [affineSpan_eq_affineSpan_lineMap_units (ht₁ hq) w, ht₃]
 
 theorem IsOpen.exists_subset_affineIndependent_span_eq_top {u : Set P} (hu : IsOpen u)
     (hne : u.Nonempty) : ∃ s ⊆ u, AffineIndependent ℝ ((↑) : s → P) ∧ affineSpan ℝ s = ⊤ := by

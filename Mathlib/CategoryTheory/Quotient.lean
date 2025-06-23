@@ -124,10 +124,10 @@ protected theorem sound {a b : C} {f₁ f₂ : a ⟶ b} (h : r f₁ f₂) :
 lemma compClosure_iff_self [h : Congruence r] {X Y : C} (f g : X ⟶ Y) :
     CompClosure r f g ↔ r f g := by
   constructor
-  · intro hfg
-    induction' hfg with m m' hm
-    exact Congruence.compLeft _ (Congruence.compRight _ (by assumption))
-  · exact CompClosure.of _ _ _
+  intro hfg
+  induction' hfg with m m' hm
+  exact Congruence.compLeft _ (Congruence.compRight _ (by assumption))
+  exact CompClosure.of _ _ _
 
 @[simp]
 theorem compClosure_eq_self [h : Congruence r] :
@@ -160,30 +160,30 @@ variable (H : ∀ (x y : C) (f₁ f₂ : x ⟶ y), r f₁ f₂ → F.map f₁ = 
 
 theorem lift_spec : functor r ⋙ lift r F H = F := by
   apply Functor.ext; rotate_left
-  · rintro X
-    rfl
-  · rintro X Y f
-    dsimp [lift, functor]
-    simp
+  rintro X
+  rfl
+  rintro X Y f
+  dsimp [lift, functor]
+  simp
 
 theorem lift_unique (Φ : Quotient r ⥤ D) (hΦ : functor r ⋙ Φ = F) : Φ = lift r F H := by
   subst_vars
   fapply Functor.hext
-  · rintro X
-    dsimp [lift, Functor]
-    congr
-  · rintro _ _ f
-    dsimp [lift, Functor]
-    refine Quot.inductionOn f (fun _ ↦ ?_) -- Porting note: this line was originally an `apply`
-    simp only [Quot.liftOn_mk, Functor.comp_map]
-    congr
+  rintro X
+  dsimp [lift, Functor]
+  congr
+  rintro _ _ f
+  dsimp [lift, Functor]
+  refine Quot.inductionOn f (fun _ ↦ ?_) -- Porting note: this line was originally an `apply`
+  simp only [Quot.liftOn_mk, Functor.comp_map]
+  congr
 
 lemma lift_unique' (F₁ F₂ : Quotient r ⥤ D) (h : functor r ⋙ F₁ = functor r ⋙ F₂) :
     F₁ = F₂ := by
   rw [lift_unique r (functor r ⋙ F₂) _ F₂ rfl]; swap
-  · rintro X Y f g h
-    dsimp
-    rw [Quotient.sound r h]
+  rintro X Y f g h
+  dsimp
+  rw [Quotient.sound r h]
   apply lift_unique
   rw [h]
 

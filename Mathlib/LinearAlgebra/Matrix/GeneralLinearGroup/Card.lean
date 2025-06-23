@@ -85,10 +85,10 @@ noncomputable def equiv_GL_linearindependent (hn : 0 < n) :
 theorem card_GL_field :
     Nat.card (GL (Fin n) 𝔽) = ∏ i : (Fin n), (q ^ n - q ^ ( i : ℕ )) := by
   rcases Nat.eq_zero_or_pos n with rfl | hn
-  · simp [Nat.card_eq_fintype_card]
-  · rw [Nat.card_congr (equiv_GL_linearindependent n hn), card_linearIndependent,
-    FiniteDimensional.finrank_fintype_fun_eq_card, Fintype.card_fin]
-    simp only [FiniteDimensional.finrank_fintype_fun_eq_card, Fintype.card_fin, le_refl]
+  simp [Nat.card_eq_fintype_card]
+  rw [Nat.card_congr (equiv_GL_linearindependent n hn), card_linearIndependent,
+  FiniteDimensional.finrank_fintype_fun_eq_card, Fintype.card_fin]
+  simp only [FiniteDimensional.finrank_fintype_fun_eq_card, Fintype.card_fin, le_refl]
 
 end field
 

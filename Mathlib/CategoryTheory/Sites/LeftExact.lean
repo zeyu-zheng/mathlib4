@@ -173,26 +173,26 @@ instance preservesLimitsOfShape_plusFunctor
   constructor; intro F; apply preservesLimitOfEvaluation; intro X
   apply preservesLimitOfPreservesLimitCone (limit.isLimit F)
   refine ⟨fun S => liftToPlusObjLimitObj.{w, v, u} F X.unop S, ?_, ?_⟩
-  · intro S k
-    apply liftToPlusObjLimitObj_fac
-  · intro S m hm
-    dsimp [liftToPlusObjLimitObj]
-    simp_rw [← Category.assoc, Iso.eq_comp_inv, ← Iso.comp_inv_eq]
-    refine limit.hom_ext (fun k => ?_)
-    simp only [limit.lift_π, Category.assoc, ← hm]
-    congr 1
-    refine colimit.hom_ext (fun k => ?_)
-    dsimp [plusMap, plusObj]
-    erw [colimit.ι_map, colimit.ι_desc_assoc, limit.lift_π]
-    conv_lhs => dsimp
-    simp only [Category.assoc]
-    rw [ι_colimitLimitIso_limit_π_assoc]
-    simp only [NatIso.ofComponents_inv_app, colimitObjIsoColimitCompEvaluation_ι_app_hom,
-      Iso.symm_inv]
-    conv_lhs =>
-      dsimp [IsLimit.conePointUniqueUpToIso]
-    rw [← Category.assoc, ← NatTrans.comp_app, limit.lift_π]
-    rfl
+  intro S k
+  apply liftToPlusObjLimitObj_fac
+  intro S m hm
+  dsimp [liftToPlusObjLimitObj]
+  simp_rw [← Category.assoc, Iso.eq_comp_inv, ← Iso.comp_inv_eq]
+  refine limit.hom_ext (fun k => ?_)
+  simp only [limit.lift_π, Category.assoc, ← hm]
+  congr 1
+  refine colimit.hom_ext (fun k => ?_)
+  dsimp [plusMap, plusObj]
+  erw [colimit.ι_map, colimit.ι_desc_assoc, limit.lift_π]
+  conv_lhs => dsimp
+  simp only [Category.assoc]
+  rw [ι_colimitLimitIso_limit_π_assoc]
+  simp only [NatIso.ofComponents_inv_app, colimitObjIsoColimitCompEvaluation_ι_app_hom,
+    Iso.symm_inv]
+  conv_lhs =>
+    dsimp [IsLimit.conePointUniqueUpToIso]
+  rw [← Category.assoc, ← NatTrans.comp_app, limit.lift_π]
+  rfl
 
 instance preserveFiniteLimits_plusFunctor
     [HasFiniteLimits D] [PreservesFiniteLimits (forget D)] [(forget D).ReflectsIsomorphisms] :
@@ -236,11 +236,11 @@ instance preservesLimitsOfShape_presheafToSheaf :
     Limits.hasLimitsOfShape_of_equivalence e
   haveI : FinCategory (AsSmall.{max v u} (FinCategory.AsType K)) := by
     constructor
-    · show Fintype (ULift _)
-      infer_instance
-    · intro j j'
-      show Fintype (ULift _)
-      infer_instance
+    show Fintype (ULift _)
+    infer_instance
+    intro j j'
+    show Fintype (ULift _)
+    infer_instance
   refine @preservesLimitsOfShapeOfEquiv _ _ _ _ _ _ _ _ e.symm _ (show _ from ?_)
   constructor; intro F; constructor; intro S hS
   apply isLimitOfReflects (sheafToPresheaf J D)

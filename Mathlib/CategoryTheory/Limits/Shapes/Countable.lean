@@ -116,9 +116,9 @@ instance sequentialFunctor_initial : (sequentialFunctor J).Initial  where
     simp only [List.chain_cons, Zag, List.Chain.nil, and_true, ne_eq, not_false_eq_true,
       List.getLast_cons, not_true_eq_false, List.getLast_singleton']
     wlog h : (unop i.left) ≤ (unop j.left)
-    · exact or_comm.1 (this (C := C) J d n g inferInstance j i (le_of_lt (not_le.mp h)))
-    · right
-      exact ⟨CostructuredArrow.homMk (homOfLE h).op rfl⟩
+    exact or_comm.1 (this (C := C) J d n g inferInstance j i (le_of_lt (not_le.mp h)))
+    right
+    exact ⟨CostructuredArrow.homMk (homOfLE h).op rfl⟩
 
 /--
 This is proved in https://stacks.math.columbia.edu/tag/0032

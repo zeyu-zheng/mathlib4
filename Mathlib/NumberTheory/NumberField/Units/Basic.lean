@@ -115,10 +115,10 @@ instance [NumberField K] : Fintype (torsion K) := by
   refine Set.Finite.of_finite_image ?_ (coe_injective K).injOn
   refine (Embeddings.finite_of_norm_le K ℂ 1).subset
     (fun a ⟨u, ⟨h_tors, h_ua⟩⟩ => ⟨?_, fun φ => ?_⟩)
-  · rw [← h_ua]
-    exact u.val.prop
-  · rw [← h_ua]
-    exact le_of_eq ((eq_iff_eq _ 1).mp ((mem_torsion K).mp h_tors) φ)
+  rw [← h_ua]
+  exact u.val.prop
+  rw [← h_ua]
+  exact le_of_eq ((eq_iff_eq _ 1).mp ((mem_torsion K).mp h_tors) φ)
 
 instance : Nonempty (torsion K) := One.instNonempty
 
@@ -135,12 +135,12 @@ theorem rootsOfUnity_eq_one [NumberField K] {k : ℕ+} (hc : Nat.Coprime k (tors
   rw [mem_rootsOfUnity]
   refine ⟨fun h => ?_, fun h => by rw [h, one_pow]⟩
   refine orderOf_eq_one_iff.mp (Nat.eq_one_of_dvd_coprimes hc ?_ ?_)
-  · exact orderOf_dvd_of_pow_eq_one h
-  · have hζ : ζ ∈ torsion K := by
-      rw [torsion, CommGroup.mem_torsion, isOfFinOrder_iff_pow_eq_one]
-      exact ⟨k, k.prop, h⟩
-    rw [orderOf_submonoid (⟨ζ, hζ⟩ : torsion K)]
-    exact orderOf_dvd_card
+  exact orderOf_dvd_of_pow_eq_one h
+  have hζ : ζ ∈ torsion K := by
+    rw [torsion, CommGroup.mem_torsion, isOfFinOrder_iff_pow_eq_one]
+    exact ⟨k, k.prop, h⟩
+  rw [orderOf_submonoid (⟨ζ, hζ⟩ : torsion K)]
+  exact orderOf_dvd_card
 
 /-- The group of roots of unity of order dividing `torsionOrder` is equal to the torsion
 group. -/
@@ -149,9 +149,9 @@ theorem rootsOfUnity_eq_torsion [NumberField K] :
   ext ζ
   rw [torsion, mem_rootsOfUnity]
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · rw [CommGroup.mem_torsion, isOfFinOrder_iff_pow_eq_one]
-    exact ⟨↑(torsionOrder K), (torsionOrder K).prop, h⟩
-  · exact Subtype.ext_iff.mp (@pow_card_eq_one (torsion K) _ _ ⟨ζ, h⟩)
+  rw [CommGroup.mem_torsion, isOfFinOrder_iff_pow_eq_one]
+  exact ⟨↑(torsionOrder K), (torsionOrder K).prop, h⟩
+  exact Subtype.ext_iff.mp (@pow_card_eq_one (torsion K) _ _ ⟨ζ, h⟩)
 
 end torsion
 

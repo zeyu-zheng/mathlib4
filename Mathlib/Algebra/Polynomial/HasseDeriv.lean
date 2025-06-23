@@ -64,17 +64,17 @@ theorem hasseDeriv_apply :
 theorem hasseDeriv_coeff (n : ℕ) :
     (hasseDeriv k f).coeff n = (n + k).choose k * f.coeff (n + k) := by
   rw [hasseDeriv_apply, coeff_sum, sum_def, Finset.sum_eq_single (n + k), coeff_monomial]
-  · simp only [if_true, add_tsub_cancel_right, eq_self_iff_true]
-  · intro i _hi hink
-    rw [coeff_monomial]
-    by_cases hik : i < k
-    · simp only [Nat.choose_eq_zero_of_lt hik, ite_self, Nat.cast_zero, zero_mul]
-    · push_neg at hik
-      rw [if_neg]
-      contrapose! hink
-      exact (tsub_eq_iff_eq_add_of_le hik).mp hink
-  · intro h
-    simp only [not_mem_support_iff.mp h, monomial_zero_right, mul_zero, coeff_zero]
+  simp only [if_true, add_tsub_cancel_right, eq_self_iff_true]
+  intro i _hi hink
+  rw [coeff_monomial]
+  by_cases hik : i < k
+  simp only [Nat.choose_eq_zero_of_lt hik, ite_self, Nat.cast_zero, zero_mul]
+  push_neg at hik
+  rw [if_neg]
+  contrapose! hink
+  exact (tsub_eq_iff_eq_add_of_le hik).mp hink
+  intro h
+  simp only [not_mem_support_iff.mp h, monomial_zero_right, mul_zero, coeff_zero]
 
 theorem hasseDeriv_zero' : hasseDeriv 0 f = f := by
   simp only [hasseDeriv_apply, tsub_zero, Nat.choose_zero_right, Nat.cast_one, one_mul,
@@ -104,15 +104,15 @@ theorem hasseDeriv_monomial (n : ℕ) (r : R) :
   ext i
   simp only [hasseDeriv_coeff, coeff_monomial]
   by_cases hnik : n = i + k
-  · rw [if_pos hnik, if_pos, ← hnik]
-    apply tsub_eq_of_eq_add_rev
-    rwa [add_comm]
-  · rw [if_neg hnik, mul_zero]
-    by_cases hkn : k ≤ n
-    · rw [← tsub_eq_iff_eq_add_of_le hkn] at hnik
-      rw [if_neg hnik]
-    · push_neg at hkn
-      rw [Nat.choose_eq_zero_of_lt hkn, Nat.cast_zero, zero_mul, ite_self]
+  rw [if_pos hnik, if_pos, ← hnik]
+  apply tsub_eq_of_eq_add_rev
+  rwa [add_comm]
+  rw [if_neg hnik, mul_zero]
+  by_cases hkn : k ≤ n
+  rw [← tsub_eq_iff_eq_add_of_le hkn] at hnik
+  rw [if_neg hnik]
+  push_neg at hkn
+  rw [Nat.choose_eq_zero_of_lt hkn, Nat.cast_zero, zero_mul, ite_self]
 
 theorem hasseDeriv_C (r : R) (hk : 0 < k) : hasseDeriv k (C r) = 0 := by
   rw [← monomial_zero_left, hasseDeriv_monomial, Nat.choose_eq_zero_of_lt hk, Nat.cast_zero,
@@ -127,7 +127,7 @@ theorem hasseDeriv_X (hk : 1 < k) : hasseDeriv k (X : R[X]) = 0 := by
 
 theorem factorial_smul_hasseDeriv : ⇑(k ! • @hasseDeriv R _ k) = (@derivative R _)^[k] := by
   induction' k with k ih
-  · rw [hasseDeriv_zero, factorial_zero, iterate_zero, one_smul, LinearMap.id_coe]
+  rw [hasseDeriv_zero, factorial_zero, iterate_zero, one_smul, LinearMap.id_coe]
   ext f n : 2
   rw [iterate_succ_apply', ← ih]
   simp only [LinearMap.smul_apply, coeff_smul, LinearMap.map_smul_of_tower, coeff_derivative,
@@ -156,12 +156,12 @@ theorem hasseDeriv_comp (k l : ℕ) :
   rw [← Nat.cast_mul]
   congr 2
   by_cases hikl : i < k + l
-  · rw [choose_eq_zero_of_lt hikl, mul_zero]
-    by_cases hil : i < l
-    · rw [choose_eq_zero_of_lt hil, mul_zero]
-    · push_neg at hil
-      rw [← tsub_lt_iff_right hil] at hikl
-      rw [choose_eq_zero_of_lt hikl, zero_mul]
+  rw [choose_eq_zero_of_lt hikl, mul_zero]
+  by_cases hil : i < l
+  rw [choose_eq_zero_of_lt hil, mul_zero]
+  push_neg at hil
+  rw [← tsub_lt_iff_right hil] at hikl
+  rw [choose_eq_zero_of_lt hikl, zero_mul]
   push_neg at hikl
   apply @cast_injective ℚ
   have h1 : l ≤ i := le_of_add_le_right hikl
@@ -180,28 +180,28 @@ theorem natDegree_hasseDeriv_le (p : R[X]) (n : ℕ) :
     refine (natDegree_sum_le _ _).trans ?_
     simp_rw [Function.comp, natDegree_monomial]
     rw [Finset.fold_ite, Finset.fold_const]
-    · simp only [ite_self, max_eq_right, zero_le', Finset.fold_max_le, true_and_iff, and_imp,
-        tsub_le_iff_right, mem_support_iff, Ne, Finset.mem_filter]
-      intro x hx hx'
-      have hxp : x ≤ p.natDegree := le_natDegree_of_ne_zero hx
-      have hxn : n ≤ x
-      contrapose! hx'
-      simp [Nat.choose_eq_zero_of_lt hx']
-      rwa [tsub_add_cancel_of_le (hxn.trans hxp)]
-    · simp
+    simp only [ite_self, max_eq_right, zero_le', Finset.fold_max_le, true_and_iff, and_imp,
+      tsub_le_iff_right, mem_support_iff, Ne, Finset.mem_filter]
+    intro x hx hx'
+    have hxp : x ≤ p.natDegree := le_natDegree_of_ne_zero hx
+    have hxn : n ≤ x
+    contrapose! hx'
+    simp [Nat.choose_eq_zero_of_lt hx']
+    rwa [tsub_add_cancel_of_le (hxn.trans hxp)]
+    simp
 
 open Classical in
 theorem natDegree_hasseDeriv [NoZeroSMulDivisors ℕ R] (p : R[X]) (n : ℕ) :
     natDegree (hasseDeriv n p) = natDegree p - n := by
   cases' lt_or_le p.natDegree n with hn hn
-  · simpa [hasseDeriv_eq_zero_of_lt_natDegree, hn] using (tsub_eq_zero_of_le hn.le).symm
-  · refine map_natDegree_eq_sub ?_ ?_
-    · exact fun h => hasseDeriv_eq_zero_of_lt_natDegree _ _
-    · simp only [ite_eq_right_iff, Ne, natDegree_monomial, hasseDeriv_monomial]
-      intro k c c0 hh
-      -- this is where we use the `smul_eq_zero` from `NoZeroSMulDivisors`
-      rw [← nsmul_eq_mul, smul_eq_zero, Nat.choose_eq_zero_iff] at hh
-      exact (tsub_eq_zero_of_le (Or.resolve_right hh c0).le).symm
+  simpa [hasseDeriv_eq_zero_of_lt_natDegree, hn] using (tsub_eq_zero_of_le hn.le).symm
+  refine map_natDegree_eq_sub ?_ ?_
+  exact fun h => hasseDeriv_eq_zero_of_lt_natDegree _ _
+  simp only [ite_eq_right_iff, Ne, natDegree_monomial, hasseDeriv_monomial]
+  intro k c c0 hh
+  -- this is where we use the `smul_eq_zero` from `NoZeroSMulDivisors`
+  rw [← nsmul_eq_mul, smul_eq_zero, Nat.choose_eq_zero_iff] at hh
+  exact (tsub_eq_zero_of_le (Or.resolve_right hh c0).le).symm
 
 section
 
@@ -232,11 +232,11 @@ theorem hasseDeriv_mul (f g : R[X]) :
     rw [mem_antidiagonal] at hx
     subst hx
     by_cases hm : m < x.1
-    · simp only [Nat.choose_eq_zero_of_lt hm, Nat.cast_zero, zero_mul,
-                 monomial_zero_right]
+    simp only [Nat.choose_eq_zero_of_lt hm, Nat.cast_zero, zero_mul,
+               monomial_zero_right]
     by_cases hn : n < x.2
-    · simp only [Nat.choose_eq_zero_of_lt hn, Nat.cast_zero, zero_mul,
-                 mul_zero, monomial_zero_right]
+    simp only [Nat.choose_eq_zero_of_lt hn, Nat.cast_zero, zero_mul,
+               mul_zero, monomial_zero_right]
     push_neg at hm hn
     rw [tsub_add_eq_add_tsub hm, ← add_tsub_assoc_of_le hn, ← tsub_add_eq_tsub_tsub,
       add_comm x.2 x.1, mul_assoc, ← mul_assoc r, ← (Nat.cast_commute _ r).eq, mul_assoc, mul_assoc]

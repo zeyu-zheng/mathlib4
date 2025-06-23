@@ -118,8 +118,8 @@ theorem integral_diff (ht : MeasurableSet t) (hfs : IntegrableOn f s μ) (hts : 
 theorem integral_inter_add_diff₀ (ht : NullMeasurableSet t μ) (hfs : IntegrableOn f s μ) :
     ∫ x in s ∩ t, f x ∂μ + ∫ x in s \ t, f x ∂μ = ∫ x in s, f x ∂μ := by
   rw [← Measure.restrict_inter_add_diff₀ s ht, integral_add_measure]
-  · exact Integrable.mono_measure hfs (Measure.restrict_mono inter_subset_left le_rfl)
-  · exact Integrable.mono_measure hfs (Measure.restrict_mono diff_subset le_rfl)
+  exact Integrable.mono_measure hfs (Measure.restrict_mono inter_subset_left le_rfl)
+  exact Integrable.mono_measure hfs (Measure.restrict_mono diff_subset le_rfl)
 
 theorem integral_inter_add_diff (ht : MeasurableSet t) (hfs : IntegrableOn f s μ) :
     ∫ x in s ∩ t, f x ∂μ + ∫ x in s \ t, f x ∂μ = ∫ x in s, f x ∂μ :=
@@ -130,21 +130,21 @@ theorem integral_finset_biUnion {ι : Type*} (t : Finset ι) {s : ι → Set X}
     (hf : ∀ i ∈ t, IntegrableOn f (s i) μ) :
     ∫ x in ⋃ i ∈ t, s i, f x ∂μ = ∑ i ∈ t, ∫ x in s i, f x ∂μ := by
   induction' t using Finset.induction_on with a t hat IH hs h's
-  · simp
-  · simp only [Finset.coe_insert, Finset.forall_mem_insert, Set.pairwise_insert,
-      Finset.set_biUnion_insert] at hs hf h's ⊢
-    rw [integral_union _ _ hf.1 (integrableOn_finset_iUnion.2 hf.2)]
-    · rw [Finset.sum_insert hat, IH hs.2 h's.1 hf.2]
-    · simp only [disjoint_iUnion_right]
-      exact fun i hi => (h's.2 i hi (ne_of_mem_of_not_mem hi hat).symm).1
-    · exact Finset.measurableSet_biUnion _ hs.2
+  simp
+  simp only [Finset.coe_insert, Finset.forall_mem_insert, Set.pairwise_insert,
+    Finset.set_biUnion_insert] at hs hf h's ⊢
+  rw [integral_union _ _ hf.1 (integrableOn_finset_iUnion.2 hf.2)]
+  rw [Finset.sum_insert hat, IH hs.2 h's.1 hf.2]
+  simp only [disjoint_iUnion_right]
+  exact fun i hi => (h's.2 i hi (ne_of_mem_of_not_mem hi hat).symm).1
+  exact Finset.measurableSet_biUnion _ hs.2
 
 theorem integral_fintype_iUnion {ι : Type*} [Fintype ι] {s : ι → Set X}
     (hs : ∀ i, MeasurableSet (s i)) (h's : Pairwise (Disjoint on s))
     (hf : ∀ i, IntegrableOn f (s i) μ) : ∫ x in ⋃ i, s i, f x ∂μ = ∑ i, ∫ x in s i, f x ∂μ := by
   convert integral_finset_biUnion Finset.univ (fun i _ => hs i) _ fun i _ => hf i
-  · simp
-  · simp [pairwise_univ, h's]
+  simp
+  simp [pairwise_univ, h's]
 
 theorem integral_empty : ∫ x in ∅, f x ∂μ = 0 := by
   rw [Measure.restrict_empty, integral_zero_measure]
@@ -293,9 +293,9 @@ theorem integral_iUnion_ae {ι : Type*} [Countable ι] {s : ι → Set X}
 theorem setIntegral_eq_zero_of_ae_eq_zero (ht_eq : ∀ᵐ x ∂μ, x ∈ t → f x = 0) :
     ∫ x in t, f x ∂μ = 0 := by
   by_cases hf : AEStronglyMeasurable f (μ.restrict t); swap
-  · rw [integral_undef]
-    contrapose! hf
-    exact hf.1
+  rw [integral_undef]
+  contrapose! hf
+  exact hf.1
   have : ∫ x in t, hf.mk f x ∂μ = 0
   refine integral_eq_zero_of_ae ?_
   rw [EventuallyEq,
@@ -378,10 +378,10 @@ theorem setIntegral_eq_of_subset_of_ae_diff_eq_zero_aux (hts : s ⊆ t)
       simp only [mem_preimage, mem_singleton_iff, eq_iff_iff, and_congr_left_iff, mem_diff]
       intro h'x
       by_cases xs : x ∈ s
-      · simp only [xs, hts xs]
-      · simp only [xs, iff_false_iff]
-        intro xt
-        exact h'x (hx ⟨xt, xs⟩)
+      simp only [xs, hts xs]
+      simp only [xs, iff_false_iff]
+      intro xt
+      exact h'x (hx ⟨xt, xs⟩)
     _ = ∫ x in s ∩ k, f x ∂μ + ∫ x in s \ k, f x ∂μ := by
       have : ∀ x ∈ s ∩ k, f x = 0 := fun x hx => hx.2
       rw [setIntegral_eq_zero_of_forall_eq_zero this, zero_add]
@@ -396,8 +396,8 @@ and `t` coincide if `t` is null-measurable. -/
 theorem setIntegral_eq_of_subset_of_ae_diff_eq_zero (ht : NullMeasurableSet t μ) (hts : s ⊆ t)
     (h't : ∀ᵐ x ∂μ, x ∈ t \ s → f x = 0) : ∫ x in t, f x ∂μ = ∫ x in s, f x ∂μ := by
   by_cases h : IntegrableOn f t μ; swap
-  · have : ¬IntegrableOn f s μ := fun H => h (H.of_ae_diff_eq_zero ht h't)
-    rw [integral_undef h, integral_undef this]
+  have : ¬IntegrableOn f s μ := fun H => h (H.of_ae_diff_eq_zero ht h't)
+  rw [integral_undef h, integral_undef this]
   let f' := h.1.mk f
   calc
     ∫ x in t, f x ∂μ = ∫ x in t, f' x ∂μ := integral_congr_ae h.1.ae_eq_mk
@@ -646,13 +646,13 @@ theorem setIntegral_gt_gt {R : ℝ} {f : X → ℝ} (hR : 0 ≤ R)
   exact le_of_lt hx
   rw [← sub_pos, ← smul_eq_mul, ← setIntegral_const, ← integral_sub hfint this,
     setIntegral_pos_iff_support_of_nonneg_ae]
-  · rw [← zero_lt_iff] at hμ
-    rwa [Set.inter_eq_self_of_subset_right]
-    exact fun x hx => Ne.symm (ne_of_lt <| sub_pos.2 hx)
-  · rw [Pi.zero_def, EventuallyLE, ae_restrict_iff₀]
-    · exact eventually_of_forall fun x hx => sub_nonneg.2 <| le_of_lt hx
-    · exact nullMeasurableSet_le aemeasurable_zero (hfint.1.aemeasurable.sub aemeasurable_const)
-  · exact Integrable.sub hfint this
+  rw [← zero_lt_iff] at hμ
+  rwa [Set.inter_eq_self_of_subset_right]
+  exact fun x hx => Ne.symm (ne_of_lt <| sub_pos.2 hx)
+  rw [Pi.zero_def, EventuallyLE, ae_restrict_iff₀]
+  exact eventually_of_forall fun x hx => sub_nonneg.2 <| le_of_lt hx
+  exact nullMeasurableSet_le aemeasurable_zero (hfint.1.aemeasurable.sub aemeasurable_const)
+  exact Integrable.sub hfint this
 
 @[deprecated (since := "2024-04-17")]
 alias set_integral_gt_gt := setIntegral_gt_gt
@@ -878,9 +878,9 @@ lemma Integrable.measure_le_integral {f : X → ℝ} (f_int : Integrable f μ) (
     μ s ≤ ENNReal.ofReal (∫ x, f x ∂μ) := by
   rw [ofReal_integral_eq_lintegral_ofReal f_int f_nonneg]
   apply meas_le_lintegral₀
-  · exact ENNReal.continuous_ofReal.measurable.comp_aemeasurable f_int.1.aemeasurable
-  · intro x hx
-    simpa using ENNReal.ofReal_le_ofReal (hs x hx)
+  exact ENNReal.continuous_ofReal.measurable.comp_aemeasurable f_int.1.aemeasurable
+  intro x hx
+  simpa using ENNReal.ofReal_le_ofReal (hs x hx)
 
 lemma integral_le_measure {f : X → ℝ} {s : Set X}
     (hs : ∀ x ∈ s, f x ≤ 1) (h's : ∀ x ∈ sᶜ, f x ≤ 0) :
@@ -1182,51 +1182,51 @@ variable [CompleteSpace F] [NormedSpace ℝ E]
 theorem integral_comp_comm [CompleteSpace E] (L : E →L[𝕜] F) {φ : X → E} (φ_int : Integrable φ μ) :
     ∫ x, L (φ x) ∂μ = L (∫ x, φ x ∂μ) := by
   apply φ_int.induction (P := fun φ => ∫ x, L (φ x) ∂μ = L (∫ x, φ x ∂μ))
-  · intro e s s_meas _
-    rw [integral_indicator_const e s_meas, ← @smul_one_smul E ℝ 𝕜 _ _ _ _ _ (μ s).toReal e,
-      ContinuousLinearMap.map_smul, @smul_one_smul F ℝ 𝕜 _ _ _ _ _ (μ s).toReal (L e), ←
-      integral_indicator_const (L e) s_meas]
-    congr 1 with a
-    rw [← Function.comp_def L, Set.indicator_comp_of_zero L.map_zero, Function.comp_apply]
-  · intro f g _ f_int g_int hf hg
-    simp [L.map_add, integral_add (μ := μ) f_int g_int,
-      integral_add (μ := μ) (L.integrable_comp f_int) (L.integrable_comp g_int), hf, hg]
-  · exact isClosed_eq L.continuous_integral_comp_L1 (L.continuous.comp continuous_integral)
-  · intro f g hfg _ hf
-    convert hf using 1 <;> clear hf
-    · exact integral_congr_ae (hfg.fun_comp L).symm
-    · rw [integral_congr_ae hfg.symm]
+  intro e s s_meas _
+  rw [integral_indicator_const e s_meas, ← @smul_one_smul E ℝ 𝕜 _ _ _ _ _ (μ s).toReal e,
+    ContinuousLinearMap.map_smul, @smul_one_smul F ℝ 𝕜 _ _ _ _ _ (μ s).toReal (L e), ←
+    integral_indicator_const (L e) s_meas]
+  congr 1 with a
+  rw [← Function.comp_def L, Set.indicator_comp_of_zero L.map_zero, Function.comp_apply]
+  intro f g _ f_int g_int hf hg
+  simp [L.map_add, integral_add (μ := μ) f_int g_int,
+    integral_add (μ := μ) (L.integrable_comp f_int) (L.integrable_comp g_int), hf, hg]
+  exact isClosed_eq L.continuous_integral_comp_L1 (L.continuous.comp continuous_integral)
+  intro f g hfg _ hf
+  convert hf using 1 <;> clear hf
+  · exact integral_congr_ae (hfg.fun_comp L).symm
+  · rw [integral_congr_ae hfg.symm]
 
 theorem integral_apply {H : Type*} [NormedAddCommGroup H] [NormedSpace 𝕜 H] {φ : X → H →L[𝕜] E}
     (φ_int : Integrable φ μ) (v : H) : (∫ x, φ x ∂μ) v = ∫ x, φ x v ∂μ := by
   by_cases hE : CompleteSpace E
-  · exact ((ContinuousLinearMap.apply 𝕜 E v).integral_comp_comm φ_int).symm
-  · rcases subsingleton_or_nontrivial H with hH|hH
-    · simp [Subsingleton.eq_zero v]
-    · have : ¬(CompleteSpace (H →L[𝕜] E)) := by
-        rwa [SeparatingDual.completeSpace_continuousLinearMap_iff]
-      simp [integral, hE, this]
+  exact ((ContinuousLinearMap.apply 𝕜 E v).integral_comp_comm φ_int).symm
+  rcases subsingleton_or_nontrivial H with hH|hH
+  simp [Subsingleton.eq_zero v]
+  have : ¬(CompleteSpace (H →L[𝕜] E)) := by
+    rwa [SeparatingDual.completeSpace_continuousLinearMap_iff]
+  simp [integral, hE, this]
 
 theorem _root_.ContinuousMultilinearMap.integral_apply {ι : Type*} [Fintype ι] {M : ι → Type*}
     [∀ i, NormedAddCommGroup (M i)] [∀ i, NormedSpace 𝕜 (M i)]
     {φ : X → ContinuousMultilinearMap 𝕜 M E} (φ_int : Integrable φ μ) (m : ∀ i, M i) :
     (∫ x, φ x ∂μ) m = ∫ x, φ x m ∂μ := by
   by_cases hE : CompleteSpace E
-  · exact ((ContinuousMultilinearMap.apply 𝕜 M E m).integral_comp_comm φ_int).symm
-  · by_cases hm : ∀ i, m i ≠ 0
-    · have : ¬ CompleteSpace (ContinuousMultilinearMap 𝕜 M E) := by
-        rwa [SeparatingDual.completeSpace_continuousMultilinearMap_iff _ _ hm]
-      simp [integral, hE, this]
-    · push_neg at hm
-      rcases hm with ⟨i, hi⟩
-      simp [ContinuousMultilinearMap.map_coord_zero _ i hi]
+  exact ((ContinuousMultilinearMap.apply 𝕜 M E m).integral_comp_comm φ_int).symm
+  by_cases hm : ∀ i, m i ≠ 0
+  have : ¬ CompleteSpace (ContinuousMultilinearMap 𝕜 M E) := by
+    rwa [SeparatingDual.completeSpace_continuousMultilinearMap_iff _ _ hm]
+  simp [integral, hE, this]
+  push_neg at hm
+  rcases hm with ⟨i, hi⟩
+  simp [ContinuousMultilinearMap.map_coord_zero _ i hi]
 
 variable [CompleteSpace E]
 
 theorem integral_comp_comm' (L : E →L[𝕜] F) {K} (hL : AntilipschitzWith K L) (φ : X → E) :
     ∫ x, L (φ x) ∂μ = L (∫ x, φ x ∂μ) := by
   by_cases h : Integrable φ μ
-  · exact integral_comp_comm L h
+  exact integral_comp_comm L h
   have : ¬Integrable (fun x => L (φ x)) μ
   rwa [← Function.comp_def,
     LipschitzWith.integrable_comp_iff_of_antilipschitz L.lipschitz hL L.map_zero]
@@ -1255,8 +1255,8 @@ theorem integral_comp_comm (L : E ≃L[𝕜] F) (φ : X → E) : ∫ x, L (φ x)
   have : CompleteSpace E ↔ CompleteSpace F :=
     completeSpace_congr (e := L.toEquiv) L.uniformEmbedding
   obtain ⟨_, _⟩|⟨_, _⟩ := iff_iff_and_or_not_and_not.mp this
-  · exact L.toContinuousLinearMap.integral_comp_comm' L.antilipschitz _
-  · simp [integral, *]
+  exact L.toContinuousLinearMap.integral_comp_comm' L.antilipschitz _
+  simp [integral, *]
 
 end ContinuousLinearEquiv
 
@@ -1278,11 +1278,11 @@ theorem integral_conj {f : X → 𝕜} : ∫ x, conj (f x) ∂μ = conj (∫ x, 
 theorem integral_coe_re_add_coe_im {f : X → 𝕜} (hf : Integrable f μ) :
     ∫ x, (re (f x) : 𝕜) ∂μ + (∫ x, (im (f x) : 𝕜) ∂μ) * RCLike.I = ∫ x, f x ∂μ := by
   rw [mul_comm, ← smul_eq_mul, ← integral_smul, ← integral_add]
-  · congr
-    ext1 x
-    rw [smul_eq_mul, mul_comm, RCLike.re_add_im]
-  · exact hf.re.ofReal
-  · exact hf.im.ofReal.smul (𝕜 := 𝕜) (β := 𝕜) RCLike.I
+  congr
+  ext1 x
+  rw [smul_eq_mul, mul_comm, RCLike.re_add_im]
+  exact hf.re.ofReal
+  exact hf.im.ofReal.smul (𝕜 := 𝕜) (β := 𝕜) RCLike.I
 
 theorem integral_re_add_im {f : X → 𝕜} (hf : Integrable f μ) :
     ((∫ x, RCLike.re (f x) ∂μ : ℝ) : 𝕜) + (∫ x, RCLike.im (f x) ∂μ : ℝ) * RCLike.I =
@@ -1305,9 +1305,9 @@ lemma swap_integral (f : X → E × F) : (∫ x, f x ∂μ).swap = ∫ x, (f x).
 theorem fst_integral [CompleteSpace F] {f : X → E × F} (hf : Integrable f μ) :
     (∫ x, f x ∂μ).1 = ∫ x, (f x).1 ∂μ := by
   by_cases hE : CompleteSpace E
-  · exact ((ContinuousLinearMap.fst ℝ E F).integral_comp_comm hf).symm
-  · have : ¬(CompleteSpace (E × F)) := fun h ↦ hE <| .fst_of_prod (β := F)
-    simp [integral, *]
+  exact ((ContinuousLinearMap.fst ℝ E F).integral_comp_comm hf).symm
+  have : ¬(CompleteSpace (E × F)) := fun h ↦ hE <| .fst_of_prod (β := F)
+  simp [integral, *]
 
 theorem snd_integral [CompleteSpace E] {f : X → E × F} (hf : Integrable f μ) :
     (∫ x, f x ∂μ).2 = ∫ x, (f x).2 ∂μ := by
@@ -1324,12 +1324,12 @@ theorem integral_smul_const {𝕜 : Type*} [RCLike 𝕜] [NormedSpace 𝕜 E] [C
     (f : X → 𝕜) (c : E) :
     ∫ x, f x • c ∂μ = (∫ x, f x ∂μ) • c := by
   by_cases hf : Integrable f μ
-  · exact ((1 : 𝕜 →L[𝕜] 𝕜).smulRight c).integral_comp_comm hf
-  · by_cases hc : c = 0
-    · simp [hc, integral_zero, smul_zero]
-    rw [integral_undef hf, integral_undef, zero_smul]
-    rw [integrable_smul_const hc]
-    simp_rw [hf, not_false_eq_true]
+  exact ((1 : 𝕜 →L[𝕜] 𝕜).smulRight c).integral_comp_comm hf
+  by_cases hc : c = 0
+  simp [hc, integral_zero, smul_zero]
+  rw [integral_undef hf, integral_undef, zero_smul]
+  rw [integrable_smul_const hc]
+  simp_rw [hf, not_false_eq_true]
 
 theorem integral_withDensity_eq_integral_smul {f : X → ℝ≥0} (f_meas : Measurable f) (g : X → E) :
     ∫ x, g x ∂μ.withDensity (fun x => f x) = ∫ x, f x • g x ∂μ := by
@@ -1427,10 +1427,10 @@ variable [PseudoEMetricSpace X]
 theorem measure_le_lintegral_thickenedIndicatorAux (μ : Measure X) {E : Set X}
     (E_mble : MeasurableSet E) (δ : ℝ) : μ E ≤ ∫⁻ x, (thickenedIndicatorAux δ E x : ℝ≥0∞) ∂μ := by
   convert_to lintegral μ (E.indicator fun _ => (1 : ℝ≥0∞)) ≤ lintegral μ (thickenedIndicatorAux δ E)
-  · rw [lintegral_indicator _ E_mble]
-    simp only [lintegral_one, Measure.restrict_apply, MeasurableSet.univ, univ_inter]
-  · apply lintegral_mono
-    apply indicator_le_thickenedIndicatorAux
+  rw [lintegral_indicator _ E_mble]
+  simp only [lintegral_one, Measure.restrict_apply, MeasurableSet.univ, univ_inter]
+  apply lintegral_mono
+  apply indicator_le_thickenedIndicatorAux
 
 theorem measure_le_lintegral_thickenedIndicator (μ : Measure X) {E : Set X}
     (E_mble : MeasurableSet E) {δ : ℝ} (δ_pos : 0 < δ) :
@@ -1459,9 +1459,9 @@ theorem Integrable.simpleFunc_mul (g : SimpleFunc X ℝ) (hf : Integrable f μ) 
   have : Set.indicator s (Function.const X c) * f = s.indicator (c • f) := by
     ext1 x
     by_cases hx : x ∈ s
-    · simp only [hx, Pi.mul_apply, Set.indicator_of_mem, Pi.smul_apply, Algebra.id.smul_eq_mul,
-        ← Function.const_def]
-    · simp only [hx, Pi.mul_apply, Set.indicator_of_not_mem, not_false_iff, zero_mul]
+    simp only [hx, Pi.mul_apply, Set.indicator_of_mem, Pi.smul_apply, Algebra.id.smul_eq_mul,
+      ← Function.const_def]
+    simp only [hx, Pi.mul_apply, Set.indicator_of_not_mem, not_false_iff, zero_mul]
   rw [this, integrable_indicator_iff hs]
   exact (hf.smul c).integrableOn
 
@@ -1494,13 +1494,13 @@ theorem continuous_parametric_integral_of_continuous
   rcases exists_compact_mem_nhds x₀ with ⟨U, U_cpct, U_nhds⟩
   rcases (U_cpct.prod hs).bddAbove_image hf.norm.continuousOn with ⟨M, hM⟩
   apply continuousAt_of_dominated
-  · filter_upwards with x using Continuous.aestronglyMeasurable (by fun_prop)
-  · filter_upwards [U_nhds] with x x_in
-    rw [ae_restrict_iff]
-    · filter_upwards with t t_in using hM (mem_image_of_mem _ <| mk_mem_prod x_in t_in)
-    · exact (isClosed_le (by fun_prop) (by fun_prop)).measurableSet
-  · exact integrableOn_const.mpr (Or.inr hs.measure_lt_top)
-  · filter_upwards using (by fun_prop)
+  filter_upwards with x using Continuous.aestronglyMeasurable (by fun_prop)
+  filter_upwards [U_nhds] with x x_in
+  rw [ae_restrict_iff]
+  filter_upwards with t t_in using hM (mem_image_of_mem _ <| mk_mem_prod x_in t_in)
+  exact (isClosed_le (by fun_prop) (by fun_prop)).measurableSet
+  exact integrableOn_const.mpr (Or.inr hs.measure_lt_top)
+  filter_upwards using (by fun_prop)
 
 /-- Consider a parameterized integral `x ↦ ∫ y, L (g y) (f x y)` where `L` is bilinear,
 `g` is locally integrable and `f` is continuous and uniformly compactly supported. Then the
@@ -1531,44 +1531,44 @@ lemma continuousOn_integral_bilinear_of_locally_integrable_of_compact_support
       rcases IsCompact.exists_bound_of_continuousOn hk this with ⟨C, hC⟩
       refine ⟨max C 0, fun y ↦ ?_⟩
       by_cases hx : y ∈ k
-      · exact (hC y hx).trans (le_max_left _ _)
-      · simp [hfs p y hp hx]
+      exact (hC y hx).trans (le_max_left _ _)
+      simp [hfs p y hp hx]
     have : IntegrableOn (fun y ↦ ‖L‖ * ‖g y‖ * C) k μ :=
       (hg.norm.const_mul _).mul_const _
     apply Integrable.mono' this ?_ ?_
-    · borelize G
-      apply L.aestronglyMeasurable_comp₂ hg.aestronglyMeasurable
-      apply StronglyMeasurable.aestronglyMeasurable
-      apply Continuous.stronglyMeasurable_of_support_subset_isCompact (A p hp) hk
-      apply support_subset_iff'.2 (fun y hy ↦ hfs p y hp hy)
-    · apply eventually_of_forall (fun y ↦ (le_opNorm₂ L (g y) (f p y)).trans ?_)
-      gcongr
-      apply hC
+    borelize G
+    apply L.aestronglyMeasurable_comp₂ hg.aestronglyMeasurable
+    apply StronglyMeasurable.aestronglyMeasurable
+    apply Continuous.stronglyMeasurable_of_support_subset_isCompact (A p hp) hk
+    apply support_subset_iff'.2 (fun y hy ↦ hfs p y hp hy)
+    apply eventually_of_forall (fun y ↦ (le_opNorm₂ L (g y) (f p y)).trans ?_)
+    gcongr
+    apply hC
   filter_upwards [v_mem, self_mem_nhdsWithin] with p hp h'p
   calc
   ‖∫ x, L (g x) (f p x) ∂μ - ∫ x, L (g x) (f q x) ∂μ‖
     = ‖∫ x in k, L (g x) (f p x) ∂μ - ∫ x in k, L (g x) (f q x) ∂μ‖ := by
       congr 2
-      · refine (setIntegral_eq_integral_of_forall_compl_eq_zero (fun y hy ↦ ?_)).symm
-        simp [hfs p y h'p hy]
-      · refine (setIntegral_eq_integral_of_forall_compl_eq_zero (fun y hy ↦ ?_)).symm
-        simp [hfs q y hq hy]
+      refine (setIntegral_eq_integral_of_forall_compl_eq_zero (fun y hy ↦ ?_)).symm
+      simp [hfs p y h'p hy]
+      refine (setIntegral_eq_integral_of_forall_compl_eq_zero (fun y hy ↦ ?_)).symm
+      simp [hfs q y hq hy]
   _ = ‖∫ x in k, L (g x) (f p x) - L (g x) (f q x) ∂μ‖ := by rw [integral_sub (I p h'p) (I q hq)]
   _ ≤ ∫ x in k, ‖L (g x) (f p x) - L (g x) (f q x)‖ ∂μ := norm_integral_le_integral_norm _
   _ ≤ ∫ x in k, ‖L‖ * ‖g x‖ * δ ∂μ := by
       apply integral_mono_of_nonneg (eventually_of_forall (fun y ↦ by positivity))
-      · exact (hg.norm.const_mul _).mul_const _
-      · filter_upwards with y
-        by_cases hy : y ∈ k
-        · dsimp only
-          specialize hv p hp y hy
-          calc
-          ‖L (g y) (f p y) - L (g y) (f q y)‖
-            = ‖L (g y) (f p y - f q y)‖ := by simp only [map_sub]
-          _ ≤ ‖L‖ * ‖g y‖ * ‖f p y - f q y‖ := le_opNorm₂ _ _ _
-          _ ≤ ‖L‖ * ‖g y‖ * δ := by gcongr
-        · simp only [hfs p y h'p hy, hfs q y hq hy, sub_self, norm_zero, mul_zero]
-          positivity
+      exact (hg.norm.const_mul _).mul_const _
+      filter_upwards with y
+      by_cases hy : y ∈ k
+      dsimp only
+      specialize hv p hp y hy
+      calc
+        ‖L (g y) (f p y) - L (g y) (f q y)‖
+          = ‖L (g y) (f p y - f q y)‖ := by simp only [map_sub]
+        _ ≤ ‖L‖ * ‖g y‖ * ‖f p y - f q y‖ := le_opNorm₂ _ _ _
+        _ ≤ ‖L‖ * ‖g y‖ * δ := by gcongr
+      simp only [hfs p y h'p hy, hfs q y hq hy, sub_self, norm_zero, mul_zero]
+      positivity
   _ < ε := hδ
 
 /-- Consider a parameterized integral `x ↦ ∫ y, f x y` where `f` is continuous and uniformly

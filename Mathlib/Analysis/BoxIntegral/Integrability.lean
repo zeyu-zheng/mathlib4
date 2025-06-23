@@ -81,21 +81,21 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = fal
     refine fun J hJ hJs x hx => ⟨hrsU _ ⟨hJs, π.tag_mem_Icc J⟩ ?_, π.le_of_mem' J hJ hx⟩
     simpa only [r, s.piecewise_eq_of_mem _ _ hJs] using hπ.1 J hJ (Box.coe_subset_Icc hx)
   refine abs_sub_le_iff.2 ⟨?_, ?_⟩
-  · refine (ENNReal.le_toReal_sub B).trans (ENNReal.toReal_le_coe_of_le_coe ?_)
-    refine (tsub_le_tsub (measure_mono htU) le_rfl).trans (le_measure_diff.trans ?_)
-    refine (measure_mono fun x hx => ?_).trans hμU.le
-    exact ⟨hx.1.1, fun hx' => hx.2 ⟨hx'.1, hx.1.2⟩⟩
-  · have hμt : μ t ≠ ∞ := ((measure_mono (htU.trans inter_subset_left)).trans_lt hUt).ne
-    refine (ENNReal.le_toReal_sub hμt).trans (ENNReal.toReal_le_coe_of_le_coe ?_)
-    refine le_measure_diff.trans ((measure_mono ?_).trans hμF.le)
-    rintro x ⟨⟨hxs, hxI⟩, hxt⟩
-    refine ⟨⟨hxs, Box.coe_subset_Icc hxI⟩, fun hxF => hxt ?_⟩
-    simp only [t, TaggedPrepartition.iUnion_def, TaggedPrepartition.mem_filter, Set.mem_iUnion]
-    rcases hπp x hxI with ⟨J, hJπ, hxJ⟩
-    refine ⟨J, ⟨hJπ, ?_⟩, hxJ⟩
-    contrapose hxF
-    refine hrs'F _ ⟨π.tag_mem_Icc J, hxF⟩ ?_
-    simpa only [r, s.piecewise_eq_of_not_mem _ _ hxF] using hπ.1 J hJπ (Box.coe_subset_Icc hxJ)
+  refine (ENNReal.le_toReal_sub B).trans (ENNReal.toReal_le_coe_of_le_coe ?_)
+  refine (tsub_le_tsub (measure_mono htU) le_rfl).trans (le_measure_diff.trans ?_)
+  refine (measure_mono fun x hx => ?_).trans hμU.le
+  exact ⟨hx.1.1, fun hx' => hx.2 ⟨hx'.1, hx.1.2⟩⟩
+  have hμt : μ t ≠ ∞ := ((measure_mono (htU.trans inter_subset_left)).trans_lt hUt).ne
+  refine (ENNReal.le_toReal_sub hμt).trans (ENNReal.toReal_le_coe_of_le_coe ?_)
+  refine le_measure_diff.trans ((measure_mono ?_).trans hμF.le)
+  rintro x ⟨⟨hxs, hxI⟩, hxt⟩
+  refine ⟨⟨hxs, Box.coe_subset_Icc hxI⟩, fun hxF => hxt ?_⟩
+  simp only [t, TaggedPrepartition.iUnion_def, TaggedPrepartition.mem_filter, Set.mem_iUnion]
+  rcases hπp x hxI with ⟨J, hJπ, hxJ⟩
+  refine ⟨J, ⟨hJπ, ?_⟩, hxJ⟩
+  contrapose hxF
+  refine hrs'F _ ⟨π.tag_mem_Icc J, hxF⟩ ?_
+  simpa only [r, s.piecewise_eq_of_not_mem _ _ hxF] using hπ.1 J hJπ (Box.coe_subset_Icc hxJ)
 
 /-- If `f` is a.e. equal to zero on a rectangular box, then it has McShane integral zero on this
 box. -/
@@ -115,10 +115,10 @@ theorem HasIntegral.of_aeEq_zero {l : IntegrationParams} {I : Box ι} {f : (ι �
   have : ∀ n, ∃ U, N ⁻¹' {n} ⊆ U ∧ IsOpen U ∧ μ.restrict I U < δ n / n := fun n ↦ by
     refine (N ⁻¹' {n}).exists_isOpen_lt_of_lt _ ?_
     cases' n with n
-    · simpa [ENNReal.div_zero (ENNReal.coe_pos.2 (δ0 _)).ne'] using measure_lt_top (μ.restrict I) _
-    · refine (measure_mono_null ?_ hf).le.trans_lt ?_
-      · exact fun x hxN hxf => n.succ_ne_zero ((Eq.symm hxN).trans <| N0.2 hxf)
-      · simp [(δ0 _).ne']
+    simpa [ENNReal.div_zero (ENNReal.coe_pos.2 (δ0 _)).ne'] using measure_lt_top (μ.restrict I) _
+    refine (measure_mono_null ?_ hf).le.trans_lt ?_
+    exact fun x hxN hxf => n.succ_ne_zero ((Eq.symm hxN).trans <| N0.2 hxf)
+    simp [(δ0 _).ne']
   choose U hNU hUo hμU using this
   have : ∀ x, ∃ r : Ioi (0 : ℝ), closedBall x r ⊆ U (N x) := fun x => by
     obtain ⟨r, hr₀, hr⟩ := nhds_basis_closedBall.mem_iff.1 ((hUo _).mem_nhds (hNU _ rfl))
@@ -173,13 +173,13 @@ theorem hasBoxIntegral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ
     (I : Box ι) (l : IntegrationParams) (hl : l.bRiemann = false) :
     HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSMul (f.integral (μ.restrict I)) := by
   induction' f using MeasureTheory.SimpleFunc.induction with y s hs f g _ hfi hgi
-  · simpa only [Measure.restrict_apply hs, const_zero, integral_piecewise_zero, integral_const,
-      Measure.restrict_apply, MeasurableSet.univ, Set.univ_inter] using
-      BoxIntegral.hasIntegralIndicatorConst l hl hs I y μ
-  · borelize E; haveI := Fact.mk (I.measure_coe_lt_top μ)
-    rw [integral_add]
-    exacts [hfi.add hgi, integrable_iff.2 fun _ _ => measure_lt_top _ _,
-      integrable_iff.2 fun _ _ => measure_lt_top _ _]
+  simpa only [Measure.restrict_apply hs, const_zero, integral_piecewise_zero, integral_const,
+    Measure.restrict_apply, MeasurableSet.univ, Set.univ_inter] using
+    BoxIntegral.hasIntegralIndicatorConst l hl hs I y μ
+  borelize E; haveI := Fact.mk (I.measure_coe_lt_top μ)
+  rw [integral_add]
+  exacts [hfi.add hgi, integrable_iff.2 fun _ _ => measure_lt_top _ _,
+    integrable_iff.2 fun _ _ => measure_lt_top _ _]
 
 /-- For a simple function, its McShane (or Henstock, or `⊥`) box integral is equal to its
 integral in the sense of `MeasureTheory.SimpleFunc.integral`. -/
@@ -250,54 +250,54 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
     (∑ J ∈ π.boxes, ∫ x in J, f (Nx <| π.tag J) x ∂μ) _).trans ?_
   rw [add_mul, add_mul, one_mul]
   refine add_le_add_three ?_ ?_ ?_
-  · /- Since each `f (Nx <| π.tag J)` is `ε`-close to `g (π.tag J)`, replacing the latter with
-        the former in the formula for the integral sum changes the sum at most by `μ I * ε`. -/
-    rw [← hπp.iUnion_eq, π.measure_iUnion_toReal, sum_mul, integralSum]
-    refine dist_sum_sum_le_of_le _ fun J _ => ?_; dsimp
-    rw [dist_eq_norm, ← smul_sub, norm_smul, Real.norm_eq_abs, abs_of_nonneg ENNReal.toReal_nonneg]
-    gcongr
-    rw [← dist_eq_norm']; exact hNxε _
-  · /- We group the terms of both sums by the values of `Nx (π.tag J)`.
-        For each `N`, the sum of Bochner integrals over the boxes is equal
-        to the sum of box integrals, and the sum of box integrals is `δᵢ`-close
-        to the corresponding integral sum due to the Henstock-Sacks inequality. -/
-    rw [← π.sum_fiberwise fun J => Nx (π.tag J), ← π.sum_fiberwise fun J => Nx (π.tag J)]
-    refine le_trans ?_ (NNReal.coe_lt_coe.2 hcε).le
-    refine
-      (dist_sum_sum_le_of_le _ fun n hn => ?_).trans
-        (sum_le_hasSum _ (fun n _ => (δ n).2) (NNReal.hasSum_coe.2 hδc))
-    have hNxn : ∀ J ∈ π.filter fun J => Nx (π.tag J) = n, Nx (π.tag J) = n := fun J hJ =>
-      (π.mem_filter.1 hJ).2
-    have hrn : ∀ J ∈ π.filter fun J => Nx (π.tag J) = n,
-        r c (π.tag J) = (hfi' n).convergenceR (δ n) c (π.tag J) := fun J hJ ↦ by
-      obtain rfl := hNxn J hJ
-      rfl
-    have :
-        l.MemBaseSet I c ((hfi' n).convergenceR (δ n) c) (π.filter fun J => Nx (π.tag J) = n) :=
-      (hπ.filter _).mono' _ le_rfl le_rfl fun J hJ => (hrn J hJ).le
-    convert (hfi' n).dist_integralSum_sum_integral_le_of_memBaseSet (δ0 _) this using 2
-    · refine sum_congr rfl fun J hJ => ?_
-      simp [hNxn J hJ]
-    · refine sum_congr rfl fun J hJ => ?_
-      rw [← SimpleFunc.integral_eq_integral, SimpleFunc.box_integral_eq_integral _ _ _ _ hl,
-        hNxn J hJ]
-      exact (hfi _).mono_set (Prepartition.le_of_mem _ hJ)
-  · /-  For the last jump, we use the fact that the distance between `f (Nx x) x` and `g x` is less
-        than or equal to the distance between `f N₀ x` and `g x` and the integral of
-        `‖f N₀ x - g x‖` is less than or equal to `ε`. -/
-    refine le_trans ?_ hN₀
-    have hfi : ∀ (n), ∀ J ∈ π, IntegrableOn (f n) (↑J) μ := fun n J hJ =>
-      (hfi n).mono_set (π.le_of_mem' J hJ)
-    have hgi : ∀ J ∈ π, IntegrableOn g (↑J) μ := fun J hJ => hgi.mono_set (π.le_of_mem' J hJ)
-    have hfgi : ∀ (n), ∀ J ∈ π, IntegrableOn (fun x => ‖f n x - g x‖) J μ := fun n J hJ =>
-      ((hfi n J hJ).sub (hgi J hJ)).norm
-    rw [← hπp.iUnion_eq, Prepartition.iUnion_def',
-      integral_finset_biUnion π.boxes (fun J _ => J.measurableSet_coe) π.pairwiseDisjoint hgi,
-      integral_finset_biUnion π.boxes (fun J _ => J.measurableSet_coe) π.pairwiseDisjoint (hfgi _)]
-    refine dist_sum_sum_le_of_le _ fun J hJ => ?_
-    rw [dist_eq_norm, ← integral_sub (hfi _ J hJ) (hgi J hJ)]
-    refine norm_integral_le_of_norm_le (hfgi _ J hJ) (eventually_of_forall fun x => ?_)
-    exact hfg_mono x (hNx (π.tag J))
+  /- Since each `f (Nx <| π.tag J)` is `ε`-close to `g (π.tag J)`, replacing the latter with
+      the former in the formula for the integral sum changes the sum at most by `μ I * ε`. -/
+  rw [← hπp.iUnion_eq, π.measure_iUnion_toReal, sum_mul, integralSum]
+  refine dist_sum_sum_le_of_le _ fun J _ => ?_; dsimp
+  rw [dist_eq_norm, ← smul_sub, norm_smul, Real.norm_eq_abs, abs_of_nonneg ENNReal.toReal_nonneg]
+  gcongr
+  rw [← dist_eq_norm']; exact hNxε _
+  /- We group the terms of both sums by the values of `Nx (π.tag J)`.
+      For each `N`, the sum of Bochner integrals over the boxes is equal
+      to the sum of box integrals, and the sum of box integrals is `δᵢ`-close
+      to the corresponding integral sum due to the Henstock-Sacks inequality. -/
+  rw [← π.sum_fiberwise fun J => Nx (π.tag J), ← π.sum_fiberwise fun J => Nx (π.tag J)]
+  refine le_trans ?_ (NNReal.coe_lt_coe.2 hcε).le
+  refine
+    (dist_sum_sum_le_of_le _ fun n hn => ?_).trans
+      (sum_le_hasSum _ (fun n _ => (δ n).2) (NNReal.hasSum_coe.2 hδc))
+  have hNxn : ∀ J ∈ π.filter fun J => Nx (π.tag J) = n, Nx (π.tag J) = n := fun J hJ =>
+    (π.mem_filter.1 hJ).2
+  have hrn : ∀ J ∈ π.filter fun J => Nx (π.tag J) = n,
+      r c (π.tag J) = (hfi' n).convergenceR (δ n) c (π.tag J) := fun J hJ ↦ by
+    obtain rfl := hNxn J hJ
+    rfl
+  have :
+      l.MemBaseSet I c ((hfi' n).convergenceR (δ n) c) (π.filter fun J => Nx (π.tag J) = n) :=
+    (hπ.filter _).mono' _ le_rfl le_rfl fun J hJ => (hrn J hJ).le
+  convert (hfi' n).dist_integralSum_sum_integral_le_of_memBaseSet (δ0 _) this using 2
+  refine sum_congr rfl fun J hJ => ?_
+  simp [hNxn J hJ]
+  refine sum_congr rfl fun J hJ => ?_
+  rw [← SimpleFunc.integral_eq_integral, SimpleFunc.box_integral_eq_integral _ _ _ _ hl,
+    hNxn J hJ]
+  exact (hfi _).mono_set (Prepartition.le_of_mem _ hJ)
+  /-  For the last jump, we use the fact that the distance between `f (Nx x) x` and `g x` is less
+      than or equal to the distance between `f N₀ x` and `g x` and the integral of
+      `‖f N₀ x - g x‖` is less than or equal to `ε`. -/
+  refine le_trans ?_ hN₀
+  have hfi : ∀ (n), ∀ J ∈ π, IntegrableOn (f n) (↑J) μ := fun n J hJ =>
+    (hfi n).mono_set (π.le_of_mem' J hJ)
+  have hgi : ∀ J ∈ π, IntegrableOn g (↑J) μ := fun J hJ => hgi.mono_set (π.le_of_mem' J hJ)
+  have hfgi : ∀ (n), ∀ J ∈ π, IntegrableOn (fun x => ‖f n x - g x‖) J μ := fun n J hJ =>
+    ((hfi n J hJ).sub (hgi J hJ)).norm
+  rw [← hπp.iUnion_eq, Prepartition.iUnion_def',
+    integral_finset_biUnion π.boxes (fun J _ => J.measurableSet_coe) π.pairwiseDisjoint hgi,
+    integral_finset_biUnion π.boxes (fun J _ => J.measurableSet_coe) π.pairwiseDisjoint (hfgi _)]
+  refine dist_sum_sum_le_of_le _ fun J hJ => ?_
+  rw [dist_eq_norm, ← integral_sub (hfi _ J hJ) (hgi J hJ)]
+  refine norm_integral_le_of_norm_le (hfgi _ J hJ) (eventually_of_forall fun x => ?_)
+  exact hfg_mono x (hNx (π.tag J))
 
 /-- If `f : ℝⁿ → E` is continuous on a rectangular box `I`, then it is Box integrable on `I`
 w.r.t. a locally finite measure `μ` with the same integral. -/
@@ -321,23 +321,23 @@ theorem AEContinuous.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} (
   convert hy
   refine HasIntegral.unique (IntegrableOn.hasBoxIntegral ?_ ⊥ rfl) (HasIntegral.mono hy bot_le)
   constructor
-  · let v := {x : (ι → ℝ) | ContinuousAt f x}
-    have : AEStronglyMeasurable f (μ.restrict v) :=
-      (ContinuousAt.continuousOn fun _ h ↦ h).aestronglyMeasurable (measurableSet_of_continuousAt f)
-    refine this.mono_measure (Measure.le_iff.2 fun s hs ↦ ?_)
-    repeat rw [μ.restrict_apply hs]
-    apply le_of_le_of_eq <| μ.mono s.inter_subset_left
-    refine measure_eq_measure_of_null_diff s.inter_subset_left ?_ |>.symm
-    rw [diff_self_inter, Set.diff_eq]
-    refine (le_antisymm (zero_le (μ (s ∩ vᶜ))) ?_).symm
-    exact le_trans (μ.mono s.inter_subset_right) (nonpos_iff_eq_zero.2 hc)
-  · have : IsFiniteMeasure (μ.restrict (Box.Icc I)) :=
-      { measure_univ_lt_top := by simp [I.isCompact_Icc.measure_lt_top (μ := μ)] }
-    have : IsFiniteMeasure (μ.restrict I) :=
-      isFiniteMeasure_of_le (μ.restrict (Box.Icc I))
-                            (μ.restrict_mono Box.coe_subset_Icc (le_refl μ))
-    obtain ⟨C, hC⟩ := hb
-    refine hasFiniteIntegral_of_bounded (C := C) (Filter.eventually_iff_exists_mem.2 ?_)
-    use I, self_mem_ae_restrict I.measurableSet_coe, fun y hy ↦ hC y (I.coe_subset_Icc hy)
+  let v := {x : (ι → ℝ) | ContinuousAt f x}
+  have : AEStronglyMeasurable f (μ.restrict v) :=
+    (ContinuousAt.continuousOn fun _ h ↦ h).aestronglyMeasurable (measurableSet_of_continuousAt f)
+  refine this.mono_measure (Measure.le_iff.2 fun s hs ↦ ?_)
+  repeat rw [μ.restrict_apply hs]
+  apply le_of_le_of_eq <| μ.mono s.inter_subset_left
+  refine measure_eq_measure_of_null_diff s.inter_subset_left ?_ |>.symm
+  rw [diff_self_inter, Set.diff_eq]
+  refine (le_antisymm (zero_le (μ (s ∩ vᶜ))) ?_).symm
+  exact le_trans (μ.mono s.inter_subset_right) (nonpos_iff_eq_zero.2 hc)
+  have : IsFiniteMeasure (μ.restrict (Box.Icc I)) :=
+    { measure_univ_lt_top := by simp [I.isCompact_Icc.measure_lt_top (μ := μ)] }
+  have : IsFiniteMeasure (μ.restrict I) :=
+    isFiniteMeasure_of_le (μ.restrict (Box.Icc I))
+                          (μ.restrict_mono Box.coe_subset_Icc (le_refl μ))
+  obtain ⟨C, hC⟩ := hb
+  refine hasFiniteIntegral_of_bounded (C := C) (Filter.eventually_iff_exists_mem.2 ?_)
+  use I, self_mem_ae_restrict I.measurableSet_coe, fun y hy ↦ hC y (I.coe_subset_Icc hy)
 
 end MeasureTheory

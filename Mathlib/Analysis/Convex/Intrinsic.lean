@@ -219,7 +219,7 @@ attribute [local instance] AffineSubspace.toNormedAddTorsor AffineSubspace.nonem
 theorem image_intrinsicInterior (φ : P →ᵃⁱ[𝕜] Q) (s : Set P) :
     intrinsicInterior 𝕜 (φ '' s) = φ '' intrinsicInterior 𝕜 s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
-  · simp only [intrinsicInterior_empty, image_empty]
+  simp only [intrinsicInterior_empty, image_empty]
   haveI : Nonempty s := hs.to_subtype
   let f := ((affineSpan 𝕜 s).isometryEquivMap φ).toHomeomorph
   have : φ.toAffineMap ∘ (↑) ∘ f.symm = (↑) := funext isometryEquivMap.apply_symm_apply
@@ -232,7 +232,7 @@ theorem image_intrinsicInterior (φ : P →ᵃⁱ[𝕜] Q) (s : Set P) :
 theorem image_intrinsicFrontier (φ : P →ᵃⁱ[𝕜] Q) (s : Set P) :
     intrinsicFrontier 𝕜 (φ '' s) = φ '' intrinsicFrontier 𝕜 s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
-  · simp
+  simp
   haveI : Nonempty s := hs.to_subtype
   let f := ((affineSpan 𝕜 s).isometryEquivMap φ).toHomeomorph
   have : φ.toAffineMap ∘ (↑) ∘ f.symm = (↑) := funext isometryEquivMap.apply_symm_apply
@@ -245,7 +245,7 @@ theorem image_intrinsicFrontier (φ : P →ᵃⁱ[𝕜] Q) (s : Set P) :
 theorem image_intrinsicClosure (φ : P →ᵃⁱ[𝕜] Q) (s : Set P) :
     intrinsicClosure 𝕜 (φ '' s) = φ '' intrinsicClosure 𝕜 s := by
   obtain rfl | hs := s.eq_empty_or_nonempty
-  · simp
+  simp
   haveI : Nonempty s := hs.to_subtype
   let f := ((affineSpan 𝕜 s).isometryEquivMap φ).toHomeomorph
   have : φ.toAffineMap ∘ (↑) ∘ f.symm = (↑) := funext isometryEquivMap.apply_symm_apply
@@ -266,15 +266,15 @@ theorem intrinsicClosure_eq_closure : intrinsicClosure 𝕜 s = closure s := by
   ext x
   simp only [mem_closure_iff, mem_intrinsicClosure]
   refine ⟨?_, fun h => ⟨⟨x, _⟩, ?_, Subtype.coe_mk _ ?_⟩⟩
-  · rintro ⟨x, h, rfl⟩ t ht hx
-    obtain ⟨z, hz₁, hz₂⟩ := h _ (continuous_induced_dom.isOpen_preimage t ht) hx
-    exact ⟨z, hz₁, hz₂⟩
-  · rintro _ ⟨t, ht, rfl⟩ hx
-    obtain ⟨y, hyt, hys⟩ := h _ ht hx
-    exact ⟨⟨_, subset_affineSpan 𝕜 s hys⟩, hyt, hys⟩
-  · by_contra hc
-    obtain ⟨z, hz₁, hz₂⟩ := h _ (affineSpan 𝕜 s).closed_of_finiteDimensional.isOpen_compl hc
-    exact hz₁ (subset_affineSpan 𝕜 s hz₂)
+  rintro ⟨x, h, rfl⟩ t ht hx
+  obtain ⟨z, hz₁, hz₂⟩ := h _ (continuous_induced_dom.isOpen_preimage t ht) hx
+  exact ⟨z, hz₁, hz₂⟩
+  rintro _ ⟨t, ht, rfl⟩ hx
+  obtain ⟨y, hyt, hys⟩ := h _ ht hx
+  exact ⟨⟨_, subset_affineSpan 𝕜 s hys⟩, hyt, hys⟩
+  by_contra hc
+  obtain ⟨z, hz₁, hz₂⟩ := h _ (affineSpan 𝕜 s).closed_of_finiteDimensional.isOpen_compl hc
+  exact hz₁ (subset_affineSpan 𝕜 s hz₂)
 
 variable {𝕜}
 

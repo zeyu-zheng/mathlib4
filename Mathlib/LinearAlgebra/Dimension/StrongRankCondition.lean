@@ -59,27 +59,27 @@ theorem mk_eq_mk_of_basis (v : Basis ι R M) (v' : Basis ι' R M) :
     Cardinal.lift.{w'} #ι = Cardinal.lift.{w} #ι' := by
   haveI := nontrivial_of_invariantBasisNumber R
   cases fintypeOrInfinite ι
-  · -- `v` is a finite basis, so by `basis_finite_of_finite_spans` so is `v'`.
-    -- haveI : Finite (range v) := Set.finite_range v
-    haveI := basis_finite_of_finite_spans _ (Set.finite_range v) v.span_eq v'
-    cases nonempty_fintype ι'
-    -- We clean up a little:
-    rw [Cardinal.mk_fintype, Cardinal.mk_fintype]
-    simp only [Cardinal.lift_natCast, Cardinal.natCast_inj]
-    -- Now we can use invariant basis number to show they have the same cardinality.
-    apply card_eq_of_linearEquiv R
-    exact
-      (Finsupp.linearEquivFunOnFinite R R ι).symm.trans v.repr.symm ≪≫ₗ v'.repr ≪≫ₗ
-        Finsupp.linearEquivFunOnFinite R R ι'
-  · -- `v` is an infinite basis,
-    -- so by `infinite_basis_le_maximal_linearIndependent`, `v'` is at least as big,
-    -- and then applying `infinite_basis_le_maximal_linearIndependent` again
-    -- we see they have the same cardinality.
-    have w₁ := infinite_basis_le_maximal_linearIndependent' v _ v'.linearIndependent v'.maximal
-    rcases Cardinal.lift_mk_le'.mp w₁ with ⟨f⟩
-    haveI : Infinite ι' := Infinite.of_injective f f.2
-    have w₂ := infinite_basis_le_maximal_linearIndependent' v' _ v.linearIndependent v.maximal
-    exact le_antisymm w₁ w₂
+  -- `v` is a finite basis, so by `basis_finite_of_finite_spans` so is `v'`.
+  -- haveI : Finite (range v) := Set.finite_range v
+  haveI := basis_finite_of_finite_spans _ (Set.finite_range v) v.span_eq v'
+  cases nonempty_fintype ι'
+  -- We clean up a little:
+  rw [Cardinal.mk_fintype, Cardinal.mk_fintype]
+  simp only [Cardinal.lift_natCast, Cardinal.natCast_inj]
+  -- Now we can use invariant basis number to show they have the same cardinality.
+  apply card_eq_of_linearEquiv R
+  exact
+    (Finsupp.linearEquivFunOnFinite R R ι).symm.trans v.repr.symm ≪≫ₗ v'.repr ≪≫ₗ
+      Finsupp.linearEquivFunOnFinite R R ι'
+  -- `v` is an infinite basis,
+  -- so by `infinite_basis_le_maximal_linearIndependent`, `v'` is at least as big,
+  -- and then applying `infinite_basis_le_maximal_linearIndependent` again
+  -- we see they have the same cardinality.
+  have w₁ := infinite_basis_le_maximal_linearIndependent' v _ v'.linearIndependent v'.maximal
+  rcases Cardinal.lift_mk_le'.mp w₁ with ⟨f⟩
+  haveI : Infinite ι' := Infinite.of_injective f f.2
+  have w₂ := infinite_basis_le_maximal_linearIndependent' v' _ v.linearIndependent v.maximal
+  exact le_antisymm w₁ w₂
 
 /-- Given two bases indexed by `ι` and `ι'` of an `R`-module, where `R` satisfies the invariant
 basis number property, an equiv `ι ≃ ι'`. -/
@@ -107,11 +107,11 @@ theorem Basis.le_span'' {ι : Type*} [Fintype ι] (b : Basis ι R M) {w : Set M}
   -- We construct a surjective linear map `(w → R) →ₗ[R] (ι → R)`,
   -- by expressing a linear combination in `w` as a linear combination in `ι`.
   fapply card_le_of_surjective' R
-  · exact b.repr.toLinearMap.comp (Finsupp.total w M R (↑))
-  · apply Surjective.comp (g := b.repr.toLinearMap)
-    · apply LinearEquiv.surjective
-    rw [← LinearMap.range_eq_top, Finsupp.range_total]
-    simpa using s
+  exact b.repr.toLinearMap.comp (Finsupp.total w M R (↑))
+  apply Surjective.comp (g := b.repr.toLinearMap)
+  apply LinearEquiv.surjective
+  rw [← LinearMap.range_eq_top, Finsupp.range_total]
+  simpa using s
 
 /--
 Another auxiliary lemma for `Basis.le_span`, which does not require assuming the basis is finite,
@@ -134,28 +134,28 @@ then the cardinality of any basis is bounded by the cardinality of any spanning 
 theorem Basis.le_span {J : Set M} (v : Basis ι R M) (hJ : span R J = ⊤) : #(range v) ≤ #J := by
   haveI := nontrivial_of_invariantBasisNumber R
   cases fintypeOrInfinite J
-  · rw [← Cardinal.lift_le, Cardinal.mk_range_eq_of_injective v.injective, Cardinal.mk_fintype J]
-    convert Cardinal.lift_le.{v}.2 (basis_le_span' v hJ)
-    simp
-  · let S : J → Set ι := fun j => ↑(v.repr j).support
-    let S' : J → Set M := fun j => v '' S j
-    have hs : range v ⊆ ⋃ j, S' j
-    intro b hb
-    rcases mem_range.1 hb with ⟨i, hi⟩
-    have : span R J ≤ comap v.repr.toLinearMap (Finsupp.supported R R (⋃ j, S j)) :=
-      span_le.2 fun j hj x hx => ⟨_, ⟨⟨j, hj⟩, rfl⟩, hx⟩
-    rw [hJ] at this
-    replace : v.repr (v i) ∈ Finsupp.supported R R (⋃ j, S j) := this trivial
-    rw [v.repr_self, Finsupp.mem_supported, Finsupp.support_single_ne_zero _ one_ne_zero] at this
-    · subst b
-      rcases mem_iUnion.1 (this (Finset.mem_singleton_self _)) with ⟨j, hj⟩
-      exact mem_iUnion.2 ⟨j, (mem_image _ _ _).2 ⟨i, hj, rfl⟩⟩
-    refine le_of_not_lt fun IJ => ?_
-    suffices #(⋃ j, S' j) < #(range v) by exact not_le_of_lt this ⟨Set.embeddingOfSubset _ _ hs⟩
-    refine lt_of_le_of_lt (le_trans Cardinal.mk_iUnion_le_sum_mk
-      (Cardinal.sum_le_sum _ (fun _ => ℵ₀) ?_)) ?_
-    · exact fun j => (Cardinal.lt_aleph0_of_finite _).le
-    · simpa
+  rw [← Cardinal.lift_le, Cardinal.mk_range_eq_of_injective v.injective, Cardinal.mk_fintype J]
+  convert Cardinal.lift_le.{v}.2 (basis_le_span' v hJ)
+  simp
+  let S : J → Set ι := fun j => ↑(v.repr j).support
+  let S' : J → Set M := fun j => v '' S j
+  have hs : range v ⊆ ⋃ j, S' j
+  intro b hb
+  rcases mem_range.1 hb with ⟨i, hi⟩
+  have : span R J ≤ comap v.repr.toLinearMap (Finsupp.supported R R (⋃ j, S j)) :=
+    span_le.2 fun j hj x hx => ⟨_, ⟨⟨j, hj⟩, rfl⟩, hx⟩
+  rw [hJ] at this
+  replace : v.repr (v i) ∈ Finsupp.supported R R (⋃ j, S j) := this trivial
+  rw [v.repr_self, Finsupp.mem_supported, Finsupp.support_single_ne_zero _ one_ne_zero] at this
+  subst b
+  rcases mem_iUnion.1 (this (Finset.mem_singleton_self _)) with ⟨j, hj⟩
+  exact mem_iUnion.2 ⟨j, (mem_image _ _ _).2 ⟨i, hj, rfl⟩⟩
+  refine le_of_not_lt fun IJ => ?_
+  suffices #(⋃ j, S' j) < #(range v) by exact not_le_of_lt this ⟨Set.embeddingOfSubset _ _ hs⟩
+  refine lt_of_le_of_lt (le_trans Cardinal.mk_iUnion_le_sum_mk
+    (Cardinal.sum_le_sum _ (fun _ => ℵ₀) ?_)) ?_
+  exact fun j => (Cardinal.lt_aleph0_of_finite _).le
+  simpa
 
 end RankCondition
 
@@ -175,13 +175,13 @@ theorem linearIndependent_le_span_aux' {ι : Type*} [Fintype ι] (v : ι → M)
   -- and expressing that (using the axiom of choice) as a linear combination over `w`.
   -- We can do this linearly by constructing the map on a basis.
   fapply card_le_of_injective' R
-  · apply Finsupp.total
-    exact fun i => Span.repr R w ⟨v i, s (mem_range_self i)⟩
-  · intro f g h
-    apply_fun Finsupp.total w M R (↑) at h
-    simp only [Finsupp.total_total, Submodule.coe_mk, Span.finsupp_total_repr] at h
-    rw [← sub_eq_zero, ← LinearMap.map_sub] at h
-    exact sub_eq_zero.mp (linearIndependent_iff.mp i _ h)
+  apply Finsupp.total
+  exact fun i => Span.repr R w ⟨v i, s (mem_range_self i)⟩
+  intro f g h
+  apply_fun Finsupp.total w M R (↑) at h
+  simp only [Finsupp.total_total, Submodule.coe_mk, Span.finsupp_total_repr] at h
+  rw [← sub_eq_zero, ← LinearMap.map_sub] at h
+  exact sub_eq_zero.mp (linearIndependent_iff.mp i _ h)
 
 /-- If `R` satisfies the strong rank condition,
 then any linearly independent family `v : ι → M`
@@ -255,12 +255,12 @@ theorem linearIndependent_le_basis {ι : Type w} (b : Basis ι R M) {κ : Type w
     (i : LinearIndependent R v) : #κ ≤ #ι := by
   -- We split into cases depending on whether `ι` is infinite.
   cases fintypeOrInfinite ι
-  · rw [Cardinal.mk_fintype ι] -- When `ι` is finite, we have `linearIndependent_le_span`,
-    haveI : Nontrivial R := nontrivial_of_invariantBasisNumber R
-    rw [Fintype.card_congr (Equiv.ofInjective b b.injective)]
-    exact linearIndependent_le_span v i (range b) b.span_eq
-  · -- and otherwise we have `linearIndependent_le_infinite_basis`.
-    exact linearIndependent_le_infinite_basis b v i
+  rw [Cardinal.mk_fintype ι] -- When `ι` is finite, we have `linearIndependent_le_span`,
+  haveI : Nontrivial R := nontrivial_of_invariantBasisNumber R
+  rw [Fintype.card_congr (Equiv.ofInjective b b.injective)]
+  exact linearIndependent_le_span v i (range b) b.span_eq
+  -- and otherwise we have `linearIndependent_le_infinite_basis`.
+  exact linearIndependent_le_infinite_basis b v i
 
 /-- Let `R` satisfy the strong rank condition. If `m` elements of a free rank `n` `R`-module are
 linearly independent, then `m ≤ n`. -/
@@ -279,26 +279,26 @@ This proof (along with some of the lemmas above) comes from
 theorem maximal_linearIndependent_eq_infinite_basis {ι : Type w} (b : Basis ι R M) [Infinite ι]
     {κ : Type w} (v : κ → M) (i : LinearIndependent R v) (m : i.Maximal) : #κ = #ι := by
   apply le_antisymm
-  · exact linearIndependent_le_basis b v i
-  · haveI : Nontrivial R := nontrivial_of_invariantBasisNumber R
-    exact infinite_basis_le_maximal_linearIndependent b v i m
+  exact linearIndependent_le_basis b v i
+  haveI : Nontrivial R := nontrivial_of_invariantBasisNumber R
+  exact infinite_basis_le_maximal_linearIndependent b v i m
 
 theorem Basis.mk_eq_rank'' {ι : Type v} (v : Basis ι R M) : #ι = Module.rank R M := by
   haveI := nontrivial_of_invariantBasisNumber R
   rw [Module.rank_def]
   apply le_antisymm
-  · trans
-    swap
-    · apply le_ciSup (Cardinal.bddAbove_range.{v, v} _)
-      exact
-        ⟨Set.range v, by
-          convert v.reindexRange.linearIndependent
-          ext
-          simp⟩
-    · exact (Cardinal.mk_range_eq v v.injective).ge
-  · apply ciSup_le'
-    rintro ⟨s, li⟩
-    apply linearIndependent_le_basis v _ li
+  trans
+  swap
+  apply le_ciSup (Cardinal.bddAbove_range.{v, v} _)
+  exact
+    ⟨Set.range v, by
+      convert v.reindexRange.linearIndependent
+      ext
+      simp⟩
+  exact (Cardinal.mk_range_eq v v.injective).ge
+  apply ciSup_le'
+  rintro ⟨s, li⟩
+  apply linearIndependent_le_basis v _ li
 
 theorem Basis.mk_range_eq_rank (v : Basis ι R M) : #(range v) = Module.rank R M :=
   v.reindexRange.mk_eq_rank''

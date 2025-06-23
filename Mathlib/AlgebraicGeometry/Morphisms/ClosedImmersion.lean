@@ -123,11 +123,11 @@ theorem of_comp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) [IsClosedImmersion 
     have h := closedEmbedding (f ≫ g)
     rw [Scheme.comp_val_base] at h
     apply closedEmbedding_of_continuous_injective_closed (Scheme.Hom.continuous f)
-    · exact Function.Injective.of_comp h.inj
-    · intro Z hZ
-      rw [ClosedEmbedding.closed_iff_image_closed (closedEmbedding g),
-        ← Set.image_comp]
-      exact ClosedEmbedding.isClosedMap h _ hZ
+    exact Function.Injective.of_comp h.inj
+    intro Z hZ
+    rw [ClosedEmbedding.closed_iff_image_closed (closedEmbedding g),
+      ← Set.image_comp]
+    exact ClosedEmbedding.isClosedMap h _ hZ
   surj_on_stalks x := by
     have h := (f ≫ g).stalkMap_surjective x
     simp_rw [Scheme.comp_val, Scheme.stalkMap_comp] at h

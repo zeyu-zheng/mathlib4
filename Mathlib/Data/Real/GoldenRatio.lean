@@ -184,23 +184,23 @@ end Fibrec
 theorem Real.coe_fib_eq' :
     (fun n => Nat.fib n : ℕ → ℝ) = fun n => (φ ^ n - ψ ^ n) / √5 := by
   rw [fibRec.sol_eq_of_eq_init]
-  · intro i hi
-    norm_cast at hi
-    fin_cases hi
-    · simp
-    · simp only [goldenRatio, goldenConj]
-      ring_nf
-      rw [mul_inv_cancel]; norm_num
-  · exact fib_isSol_fibRec
-  · -- Porting note: Rewrote this proof
-    suffices LinearRecurrence.IsSolution fibRec
-        ((fun n ↦ (√5)⁻¹ * φ ^ n) - (fun n ↦ (√5)⁻¹ * ψ ^ n)) by
-      convert this
-      rw [Pi.sub_apply]
-      ring
-    apply (@fibRec ℝ _).solSpace.sub_mem
-    · exact Submodule.smul_mem fibRec.solSpace (√5)⁻¹ geom_gold_isSol_fibRec
-    · exact Submodule.smul_mem fibRec.solSpace (√5)⁻¹ geom_goldConj_isSol_fibRec
+  intro i hi
+  norm_cast at hi
+  fin_cases hi
+  simp
+  simp only [goldenRatio, goldenConj]
+  ring_nf
+  rw [mul_inv_cancel]; norm_num
+  exact fib_isSol_fibRec
+  -- Porting note: Rewrote this proof
+  suffices LinearRecurrence.IsSolution fibRec
+      ((fun n ↦ (√5)⁻¹ * φ ^ n) - (fun n ↦ (√5)⁻¹ * ψ ^ n)) by
+    convert this
+    rw [Pi.sub_apply]
+    ring
+  apply (@fibRec ℝ _).solSpace.sub_mem
+  exact Submodule.smul_mem fibRec.solSpace (√5)⁻¹ geom_gold_isSol_fibRec
+  exact Submodule.smul_mem fibRec.solSpace (√5)⁻¹ geom_goldConj_isSol_fibRec
 
 /-- Binet's formula as a dependent equality. -/
 theorem Real.coe_fib_eq : ∀ n, (Nat.fib n : ℝ) = (φ ^ n - ψ ^ n) / √5 := by

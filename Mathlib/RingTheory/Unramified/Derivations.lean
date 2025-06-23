@@ -35,15 +35,15 @@ instance FormallyUnramified.subsingleton_kaehlerDifferential [FormallyUnramified
 theorem FormallyUnramified.iff_subsingleton_kaehlerDifferential :
     FormallyUnramified R S ↔ Subsingleton (Ω[S⁄R]) := by
   constructor
-  · intros; infer_instance
-  · intro H
-    constructor
-    intro B _ _ I hI f₁ f₂ e
-    letI := f₁.toRingHom.toAlgebra
-    haveI := IsScalarTower.of_algebraMap_eq' f₁.comp_algebraMap.symm
-    have :=
-      ((KaehlerDifferential.linearMapEquivDerivation R S).toEquiv.trans
-            (derivationToSquareZeroEquivLift I hI)).surjective.subsingleton
-    exact Subtype.ext_iff.mp (@Subsingleton.elim _ this ⟨f₁, rfl⟩ ⟨f₂, e.symm⟩)
+  intros; infer_instance
+  intro H
+  constructor
+  intro B _ _ I hI f₁ f₂ e
+  letI := f₁.toRingHom.toAlgebra
+  haveI := IsScalarTower.of_algebraMap_eq' f₁.comp_algebraMap.symm
+  have :=
+    ((KaehlerDifferential.linearMapEquivDerivation R S).toEquiv.trans
+          (derivationToSquareZeroEquivLift I hI)).surjective.subsingleton
+  exact Subtype.ext_iff.mp (@Subsingleton.elim _ this ⟨f₁, rfl⟩ ⟨f₂, e.symm⟩)
 
 end Algebra

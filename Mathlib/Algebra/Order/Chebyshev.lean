@@ -143,7 +143,7 @@ variable [LinearOrderedField α] {s : Finset ι} {f : ι → α}
 theorem sum_div_card_sq_le_sum_sq_div_card :
     ((∑ i ∈ s, f i) / s.card) ^ 2 ≤ (∑ i ∈ s, f i ^ 2) / s.card := by
   obtain rfl | hs := s.eq_empty_or_nonempty
-  · simp
+  simp
   rw [← card_pos, ← @Nat.cast_pos α] at hs
   rw [div_pow, div_le_div_iff (sq_pos_of_ne_zero hs.ne') hs, sq (s.card : α), mul_left_comm, ←
     mul_assoc]

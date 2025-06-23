@@ -62,8 +62,8 @@ theorem ne_iff {β : α → Sort*} {f₁ f₂ : ∀ a, β a} : f₁ ≠ f₂ ↔
 lemma funext_iff_of_subsingleton [Subsingleton α] {g : α → β} (x y : α) :
     f x = g y ↔ f = g := by
   refine ⟨fun h ↦ funext fun z ↦ ?_, fun h ↦ ?_⟩
-  · rwa [Subsingleton.elim x z, Subsingleton.elim y z] at h
-  · rw [h, Subsingleton.elim x y]
+  rwa [Subsingleton.elim x z, Subsingleton.elim y z] at h
+  rw [h, Subsingleton.elim x y]
 
 protected theorem Bijective.injective {f : α → β} (hf : Bijective f) : Injective f := hf.1
 protected theorem Bijective.surjective {f : α → β} (hf : Bijective f) : Surjective f := hf.2
@@ -133,10 +133,10 @@ lemma Injective.dite (p : α → Prop) [DecidablePred p]
     Function.Injective (fun x ↦ if h : p x then f ⟨x, h⟩ else f' ⟨x, h⟩) := fun x₁ x₂ h => by
  dsimp only at h
  by_cases h₁ : p x₁ <;> by_cases h₂ : p x₂
- · rw [dif_pos h₁, dif_pos h₂] at h; injection (hf h)
- · rw [dif_pos h₁, dif_neg h₂] at h; exact (im_disj h).elim
- · rw [dif_neg h₁, dif_pos h₂] at h; exact (im_disj h.symm).elim
- · rw [dif_neg h₁, dif_neg h₂] at h; injection (hf' h)
+ rw [dif_pos h₁, dif_pos h₂] at h; injection (hf h)
+ rw [dif_pos h₁, dif_neg h₂] at h; exact (im_disj h).elim
+ rw [dif_neg h₁, dif_pos h₂] at h; exact (im_disj h.symm).elim
+ rw [dif_neg h₁, dif_neg h₂] at h; injection (hf' h)
 
 theorem Surjective.of_comp {g : γ → α} (S : Surjective (f ∘ g)) : Surjective f := fun y ↦
   let ⟨x, h⟩ := S y
@@ -257,7 +257,7 @@ theorem not_surjective_Type {α : Type u} (f : α → Type max u v) : ¬Surjecti
   suffices cast hU (g s).2 = cast hU (g t).2 by
     simp only [cast_cast, cast_eq] at this
     assumption
-  · congr
+  congr
   exact cantor_injective g hg
 
 /-- `g` is a partial inverse to `f` (an injective but not necessarily
@@ -544,17 +544,17 @@ theorem apply_update {ι : Sort*} [DecidableEq ι] {α β : ι → Sort*} (f : �
     (g : ∀ i, α i) (i : ι) (v : α i) (j : ι) :
     f j (update g i v j) = update (fun k ↦ f k (g k)) i (f i v) j := by
   by_cases h : j = i
-  · subst j
-    simp
-  · simp [h]
+  subst j
+  simp
+  simp [h]
 
 theorem apply_update₂ {ι : Sort*} [DecidableEq ι] {α β γ : ι → Sort*} (f : ∀ i, α i → β i → γ i)
     (g : ∀ i, α i) (h : ∀ i, β i) (i : ι) (v : α i) (w : β i) (j : ι) :
     f j (update g i v j) (update h i w j) = update (fun k ↦ f k (g k) (h k)) i (f i v w) j := by
   by_cases h : j = i
-  · subst j
-    simp
-  · simp [h]
+  subst j
+  simp
+  simp [h]
 
 theorem pred_update (P : ∀ ⦃a⦄, β a → Prop) (f : ∀ a, β a) (a' : α) (v : β a') (a : α) :
     P (update f a' v a) ↔ a = a' ∧ P v ∨ a ≠ a' ∧ P (f a) := by
@@ -569,11 +569,11 @@ theorem update_comm {α} [DecidableEq α] {β : α → Sort*} {a b : α} (h : a 
   funext c
   simp only [update]
   by_cases h₁ : c = b <;> by_cases h₂ : c = a
-  · rw [dif_pos h₁, dif_pos h₂]
-    cases h (h₂.symm.trans h₁)
-  · rw [dif_pos h₁, dif_pos h₁, dif_neg h₂]
-  · rw [dif_neg h₁, dif_neg h₁]
-  · rw [dif_neg h₁, dif_neg h₁]
+  rw [dif_pos h₁, dif_pos h₂]
+  cases h (h₂.symm.trans h₁)
+  rw [dif_pos h₁, dif_pos h₁, dif_neg h₂]
+  rw [dif_neg h₁, dif_neg h₁]
+  rw [dif_neg h₁, dif_neg h₁]
 
 @[simp]
 theorem update_idem {α} [DecidableEq α] {β : α → Sort*} {a : α} (v w : β a) (f : ∀ a, β a) :
@@ -856,8 +856,8 @@ lemma forall_existsUnique_iff {r : α → β → Prop} :
   refine ⟨fun h ↦ ?_, ?_⟩
   · refine ⟨fun a ↦ (h a).choose, fun hr ↦ ?_, fun h' ↦ h' ▸ ?_⟩
     exacts [((h _).choose_spec.2 _ hr).symm, (h _).choose_spec.1]
-  · rintro ⟨f, hf⟩
-    simp [hf]
+  rintro ⟨f, hf⟩
+  simp [hf]
 
 /-- A relation `r : α → β → Prop` is "function-like"
 (for each `a` there exists a unique `b` such that `r a b`)

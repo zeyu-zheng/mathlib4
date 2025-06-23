@@ -104,13 +104,13 @@ theorem hasFDerivAt_integral_of_dominated_loc_of_lip' {F' : α → H →L[𝕜] 
   refine ⟨hF'_int, ?_⟩
   /- Discard the trivial case where `E` is not complete, as all integrals vanish. -/
   by_cases hE : CompleteSpace E; swap
-  · rcases subsingleton_or_nontrivial H with hH|hH
-    · have : Subsingleton (H →L[𝕜] E) := inferInstance
-      convert hasFDerivAt_of_subsingleton _ x₀
-    · have : ¬(CompleteSpace (H →L[𝕜] E)) := by
-        simpa [SeparatingDual.completeSpace_continuousLinearMap_iff] using hE
-      simp only [integral, hE, ↓reduceDIte, this]
-      exact hasFDerivAt_const 0 x₀
+  rcases subsingleton_or_nontrivial H with hH|hH
+  have : Subsingleton (H →L[𝕜] E) := inferInstance
+  convert hasFDerivAt_of_subsingleton _ x₀
+  have : ¬(CompleteSpace (H →L[𝕜] E)) := by
+    simpa [SeparatingDual.completeSpace_continuousLinearMap_iff] using hE
+  simp only [integral, hE, ↓reduceDIte, this]
+  exact hasFDerivAt_const 0 x₀
   have h_ball : ball x₀ ε ∈ 𝓝 x₀ := ball_mem_nhds x₀ ε_pos
   have : ∀ᶠ x in 𝓝 x₀, ‖x - x₀‖⁻¹ * ‖((∫ a, F x a ∂μ) - ∫ a, F x₀ a ∂μ) - (∫ a, F' a ∂μ) (x - x₀)‖ =
       ‖∫ a, ‖x - x₀‖⁻¹ • (F x a - F x₀ a - F' a (x - x₀)) ∂μ‖ := by
@@ -123,35 +123,35 @@ theorem hasFDerivAt_integral_of_dominated_loc_of_lip' {F' : α → H →L[𝕜] 
   rw [hasFDerivAt_iff_tendsto, tendsto_congr' this, ← tendsto_zero_iff_norm_tendsto_zero, ←
     show (∫ a : α, ‖x₀ - x₀‖⁻¹ • (F x₀ a - F x₀ a - (F' a) (x₀ - x₀)) ∂μ) = 0 by simp]
   apply tendsto_integral_filter_of_dominated_convergence
-  · filter_upwards [h_ball] with _ x_in
-    apply AEStronglyMeasurable.const_smul
-    exact ((hF_meas _ x_in).sub (hF_meas _ x₀_in)).sub (hF'_meas.apply_continuousLinearMap _)
-  · refine mem_of_superset h_ball fun x hx ↦ ?_
-    apply (h_diff.and h_lipsch).mono
-    on_goal 1 => rintro a ⟨-, ha_bound⟩
-    show ‖‖x - x₀‖⁻¹ • (F x a - F x₀ a - F' a (x - x₀))‖ ≤ b a + ‖F' a‖
-    replace ha_bound : ‖F x a - F x₀ a‖ ≤ b a * ‖x - x₀‖ := ha_bound x hx
-    calc
-      ‖‖x - x₀‖⁻¹ • (F x a - F x₀ a - F' a (x - x₀))‖ =
-          ‖‖x - x₀‖⁻¹ • (F x a - F x₀ a) - ‖x - x₀‖⁻¹ • F' a (x - x₀)‖ := by rw [smul_sub]
-      _ ≤ ‖‖x - x₀‖⁻¹ • (F x a - F x₀ a)‖ + ‖‖x - x₀‖⁻¹ • F' a (x - x₀)‖ := norm_sub_le _ _
-      _ = ‖x - x₀‖⁻¹ * ‖F x a - F x₀ a‖ + ‖x - x₀‖⁻¹ * ‖F' a (x - x₀)‖ := by
-        rw [norm_smul_of_nonneg, norm_smul_of_nonneg] <;> exact nneg _
-      _ ≤ ‖x - x₀‖⁻¹ * (b a * ‖x - x₀‖) + ‖x - x₀‖⁻¹ * (‖F' a‖ * ‖x - x₀‖) := by
-        gcongr; exact (F' a).le_opNorm _
-      _ ≤ b a + ‖F' a‖ := ?_
-    simp only [← div_eq_inv_mul]
-    apply_rules [add_le_add, div_le_of_nonneg_of_le_mul] <;> first | rfl | positivity
-  · exact b_int.add hF'_int.norm
-  · apply h_diff.mono
-    intro a ha
-    suffices Tendsto (fun x ↦ ‖x - x₀‖⁻¹ • (F x a - F x₀ a - F' a (x - x₀))) (𝓝 x₀) (𝓝 0) by simpa
-    rw [tendsto_zero_iff_norm_tendsto_zero]
-    have : (fun x ↦ ‖x - x₀‖⁻¹ * ‖F x a - F x₀ a - F' a (x - x₀)‖) = fun x ↦
-        ‖‖x - x₀‖⁻¹ • (F x a - F x₀ a - F' a (x - x₀))‖ := by
-      ext x
-      rw [norm_smul_of_nonneg (nneg _)]
-    rwa [hasFDerivAt_iff_tendsto, this] at ha
+  filter_upwards [h_ball] with _ x_in
+  apply AEStronglyMeasurable.const_smul
+  exact ((hF_meas _ x_in).sub (hF_meas _ x₀_in)).sub (hF'_meas.apply_continuousLinearMap _)
+  refine mem_of_superset h_ball fun x hx ↦ ?_
+  apply (h_diff.and h_lipsch).mono
+  on_goal 1 => rintro a ⟨-, ha_bound⟩
+  show ‖‖x - x₀‖⁻¹ • (F x a - F x₀ a - F' a (x - x₀))‖ ≤ b a + ‖F' a‖
+  replace ha_bound : ‖F x a - F x₀ a‖ ≤ b a * ‖x - x₀‖ := ha_bound x hx
+  calc
+    ‖‖x - x₀‖⁻¹ • (F x a - F x₀ a - F' a (x - x₀))‖ =
+        ‖‖x - x₀‖⁻¹ • (F x a - F x₀ a) - ‖x - x₀‖⁻¹ • F' a (x - x₀)‖ := by rw [smul_sub]
+    _ ≤ ‖‖x - x₀‖⁻¹ • (F x a - F x₀ a)‖ + ‖‖x - x₀‖⁻¹ • F' a (x - x₀)‖ := norm_sub_le _ _
+    _ = ‖x - x₀‖⁻¹ * ‖F x a - F x₀ a‖ + ‖x - x₀‖⁻¹ * ‖F' a (x - x₀)‖ := by
+      rw [norm_smul_of_nonneg, norm_smul_of_nonneg] <;> exact nneg _
+    _ ≤ ‖x - x₀‖⁻¹ * (b a * ‖x - x₀‖) + ‖x - x₀‖⁻¹ * (‖F' a‖ * ‖x - x₀‖) := by
+      gcongr; exact (F' a).le_opNorm _
+    _ ≤ b a + ‖F' a‖ := ?_
+  simp only [← div_eq_inv_mul]
+  apply_rules [add_le_add, div_le_of_nonneg_of_le_mul] <;> first | rfl | positivity
+  exact b_int.add hF'_int.norm
+  apply h_diff.mono
+  intro a ha
+  suffices Tendsto (fun x ↦ ‖x - x₀‖⁻¹ • (F x a - F x₀ a - F' a (x - x₀))) (𝓝 x₀) (𝓝 0) by simpa
+  rw [tendsto_zero_iff_norm_tendsto_zero]
+  have : (fun x ↦ ‖x - x₀‖⁻¹ * ‖F x a - F x₀ a - F' a (x - x₀)‖) = fun x ↦
+      ‖‖x - x₀‖⁻¹ • (F x a - F x₀ a - F' a (x - x₀))‖ := by
+    ext x
+    rw [norm_smul_of_nonneg (nneg _)]
+  rwa [hasFDerivAt_iff_tendsto, this] at ha
 
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming
 `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball around `x₀` for ae `a`
@@ -274,7 +274,7 @@ theorem hasDerivAt_integral_of_dominated_loc_of_lip {F' : α → E} (ε_pos : 0 
       hF'_int
   refine ⟨hF'_int, ?_⟩
   by_cases hE : CompleteSpace E; swap
-  · simpa [integral, hE] using hasDerivAt_const x₀ 0
+  simpa [integral, hE] using hasDerivAt_const x₀ 0
   simp_rw [hasDerivAt_iff_hasFDerivAt] at h_diff ⊢
   simpa only [(· ∘ ·), ContinuousLinearMap.integral_comp_comm _ hF'_int] using key
 

@@ -281,8 +281,8 @@ theorem single_of_single_apply (a a' : α) (b : M) :
   rw [single_apply, single_apply]
   ext
   split_ifs with h
-  · rw [h]
-  · rw [zero_apply, single_apply, ite_self]
+  rw [h]
+  rw [zero_apply, single_apply, ite_self]
 
 theorem support_single_ne_zero (a : α) (hb : b ≠ 0) : (single a b).support = {a} :=
   if_neg hb
@@ -322,18 +322,18 @@ theorem eq_single_iff {f : α →₀ M} {a b} : f = single a b ↔ f.support ⊆
 theorem single_eq_single_iff (a₁ a₂ : α) (b₁ b₂ : M) :
     single a₁ b₁ = single a₂ b₂ ↔ a₁ = a₂ ∧ b₁ = b₂ ∨ b₁ = 0 ∧ b₂ = 0 := by
   constructor
-  · intro eq
-    by_cases h : a₁ = a₂
-    · refine Or.inl ⟨h, ?_⟩
-      rwa [h, (single_injective a₂).eq_iff] at eq
-    · rw [DFunLike.ext_iff] at eq
-      have h₁ := eq a₁
-      have h₂ := eq a₂
-      simp only [single_eq_same, single_eq_of_ne h, single_eq_of_ne (Ne.symm h)] at h₁ h₂
-      exact Or.inr ⟨h₁, h₂.symm⟩
-  · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
-    · rfl
-    · rw [single_zero, single_zero]
+  intro eq
+  by_cases h : a₁ = a₂
+  refine Or.inl ⟨h, ?_⟩
+  rwa [h, (single_injective a₂).eq_iff] at eq
+  rw [DFunLike.ext_iff] at eq
+  have h₁ := eq a₁
+  have h₂ := eq a₂
+  simp only [single_eq_same, single_eq_of_ne h, single_eq_of_ne (Ne.symm h)] at h₁ h₂
+  exact Or.inr ⟨h₁, h₂.symm⟩
+  rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
+  rfl
+  rw [single_zero, single_zero]
 
 /-- `Finsupp.single a b` is injective in `a`. For the statement that it is injective in `b`, see
 `Finsupp.single_injective` -/
@@ -377,8 +377,8 @@ lemma apply_single [AddCommMonoid N] [AddCommMonoid P]
     e ((single a n) b) = single a (e n) b := by
   simp only [single_apply]
   split_ifs
-  · rfl
-  · exact map_zero e
+  rfl
+  exact map_zero e
 
 theorem support_eq_singleton {f : α →₀ M} {a : α} :
     f.support = {a} ↔ f a ≠ 0 ∧ f = single a (f a) :=
@@ -508,8 +508,8 @@ theorem support_update_subset [DecidableEq α] [DecidableEq M] :
     support (f.update a b) ⊆ insert a f.support := by
   rw [support_update]
   split_ifs
-  · exact (erase_subset _ _).trans (subset_insert _ _)
-  · rfl
+  exact (erase_subset _ _).trans (subset_insert _ _)
+  rfl
 
 theorem update_comm (f : α →₀ M) {a₁ a₂ : α} (h : a₁ ≠ a₂) (m₁ m₂ : M) :
     update (update f a₁ m₁) a₂ m₂ = update (update f a₂ m₂) a₁ m₁ :=
@@ -571,21 +571,21 @@ theorem erase_apply [DecidableEq α] {a a' : α} {f : α →₀ M} :
 @[simp]
 theorem erase_single {a : α} {b : M} : erase a (single a b) = 0 := by
   ext s; by_cases hs : s = a
-  · rw [hs, erase_same]
-    rfl
-  · rw [erase_ne hs]
-    exact single_eq_of_ne (Ne.symm hs)
+  rw [hs, erase_same]
+  rfl
+  rw [erase_ne hs]
+  exact single_eq_of_ne (Ne.symm hs)
 
 theorem erase_single_ne {a a' : α} {b : M} (h : a ≠ a') : erase a (single a' b) = single a' b := by
   ext s; by_cases hs : s = a
-  · rw [hs, erase_same, single_eq_of_ne h.symm]
-  · rw [erase_ne hs]
+  rw [hs, erase_same, single_eq_of_ne h.symm]
+  rw [erase_ne hs]
 
 @[simp]
 theorem erase_of_not_mem_support {f : α →₀ M} {a} (haf : a ∉ f.support) : erase a f = f := by
   ext b; by_cases hab : b = a
-  · rwa [hab, erase_same, eq_comm, ← not_mem_support_iff]
-  · rw [erase_ne hab]
+  rwa [hab, erase_same, eq_comm, ← not_mem_support_iff]
+  rw [erase_ne hab]
 
 @[simp, nolint simpNF] -- Porting note: simpNF linter claims simp can prove this, it can not
 theorem erase_zero (a : α) : erase a (0 : α →₀ M) = 0 := by
@@ -775,9 +775,9 @@ open Classical in
 theorem embDomain_apply (f : α ↪ β) (v : α →₀ M) (a : α) : embDomain f v (f a) = v a := by
     change dite _ _ _ = _
     split_ifs with h <;> rw [Finset.mem_map' f] at h
-    · refine congr_arg (v : α → M) (f.inj' ?_)
-      exact Finset.choose_property (fun a₁ => f a₁ = f a) _ _
-    · exact (not_mem_support_iff.1 h).symm
+    refine congr_arg (v : α → M) (f.inj' ?_)
+    exact Finset.choose_property (fun a₁ => f a₁ = f a) _ _
+    exact (not_mem_support_iff.1 h).symm
 
 open Classical in
 theorem embDomain_notin_range (f : α ↪ β) (v : α →₀ M) (a : β) (h : a ∉ Set.range f) :
@@ -801,9 +801,9 @@ theorem embDomain_mapRange (f : α ↪ β) (g : M → N) (p : α →₀ M) (hg :
     embDomain f (mapRange g hg p) = mapRange g hg (embDomain f p) := by
   ext a
   by_cases h : a ∈ Set.range f
-  · rcases h with ⟨a', rfl⟩
-    rw [mapRange_apply, embDomain_apply, embDomain_apply, mapRange_apply]
-  · rw [mapRange_apply, embDomain_notin_range, embDomain_notin_range, ← hg] <;> assumption
+  rcases h with ⟨a', rfl⟩
+  rw [mapRange_apply, embDomain_apply, embDomain_apply, mapRange_apply]
+  rw [mapRange_apply, embDomain_notin_range, embDomain_notin_range, ← hg] <;> assumption
 
 open Classical in
 theorem single_of_embDomain_single (l : α →₀ M) (f : α ↪ β) (a : β) (b : M) (hb : b ≠ 0)
@@ -815,14 +815,14 @@ theorem single_of_embDomain_single (l : α →₀ M) (f : α ↪ β) (a : β) (b
     rcases Finset.mem_map.1 ha with ⟨c, _hc₁, hc₂⟩
     use c
     constructor
-    · ext d
-      rw [← embDomain_apply f l, h]
-      by_cases h_cases : c = d
-      · simp only [Eq.symm h_cases, hc₂, single_eq_same]
-      · rw [single_apply, single_apply, if_neg, if_neg h_cases]
-        by_contra hfd
-        exact h_cases (f.injective (hc₂.trans hfd))
-    · exact hc₂
+    ext d
+    rw [← embDomain_apply f l, h]
+    by_cases h_cases : c = d
+    simp only [Eq.symm h_cases, hc₂, single_eq_same]
+    rw [single_apply, single_apply, if_neg, if_neg h_cases]
+    by_contra hfd
+    exact h_cases (f.injective (hc₂.trans hfd))
+    exact hc₂
 
 open Classical in
 @[simp]
@@ -830,12 +830,12 @@ theorem embDomain_single (f : α ↪ β) (a : α) (m : M) :
     embDomain f (single a m) = single (f a) m := by
     ext b
     by_cases h : b ∈ Set.range f
-    · rcases h with ⟨a', rfl⟩
-      simp [single_apply]
-    · simp only [embDomain_notin_range, h, single_apply, not_false_iff]
-      rw [if_neg]
-      rintro rfl
-      simp at h
+    rcases h with ⟨a', rfl⟩
+    simp [single_apply]
+    simp only [embDomain_notin_range, h, single_apply, not_false_iff]
+    rw [if_neg]
+    rintro rfl
+    simp at h
 
 end EmbDomain
 
@@ -873,8 +873,8 @@ theorem zipWith_single_single (f : M → N → P) (hf : f 0 0 = 0) (a : α) (m :
   ext a'
   rw [zipWith_apply]
   obtain rfl | ha' := eq_or_ne a a'
-  · rw [single_eq_same, single_eq_same, single_eq_same]
-  · rw [single_eq_of_ne ha', single_eq_of_ne ha', single_eq_of_ne ha', hf]
+  rw [single_eq_same, single_eq_same, single_eq_same]
+  rw [single_eq_of_ne ha', single_eq_of_ne ha', single_eq_of_ne ha', hf]
 
 end ZipWith
 
@@ -971,16 +971,16 @@ theorem update_eq_single_add_erase (f : α →₀ M) (a : α) (b : M) :
     f.update a b = single a b + f.erase a := by
     ext j
     rcases eq_or_ne a j with (rfl | h)
-    · simp
-    · simp [Function.update_noteq h.symm, single_apply, h, erase_ne, h.symm]
+    simp
+    simp [Function.update_noteq h.symm, single_apply, h, erase_ne, h.symm]
 
 open Classical in
 theorem update_eq_erase_add_single (f : α →₀ M) (a : α) (b : M) :
     f.update a b = f.erase a + single a b := by
     ext j
     rcases eq_or_ne a j with (rfl | h)
-    · simp
-    · simp [Function.update_noteq h.symm, single_apply, h, erase_ne, h.symm]
+    simp
+    simp [Function.update_noteq h.symm, single_apply, h, erase_ne, h.symm]
 
 theorem single_add_erase (a : α) (f : α →₀ M) : single a (f a) + f.erase a = f := by
   rw [← update_eq_single_add_erase, update_self]
@@ -991,7 +991,7 @@ theorem erase_add_single (a : α) (f : α →₀ M) : f.erase a + single a (f a)
 @[simp]
 theorem erase_add (a : α) (f f' : α →₀ M) : erase a (f + f') = erase a f + erase a f' := by
   ext s; by_cases hs : s = a
-  · rw [hs, add_apply, erase_same, erase_same, erase_same, add_zero]
+  rw [hs, add_apply, erase_same, erase_same, erase_same, add_zero]
   rw [add_apply, erase_ne hs, erase_ne hs, erase_ne hs, add_apply]
 
 /-- `Finsupp.erase` as an `AddMonoidHom`. -/
@@ -1010,12 +1010,12 @@ protected theorem induction {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 :
   Finset.cons_induction_on s (fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf => by
     suffices p (single a (f a) + f.erase a) by rwa [single_add_erase] at this
     apply ha
-    · rw [support_erase, mem_erase]
-      exact fun H => H.1 rfl
-    · rw [← mem_support_iff, hf]
-      exact mem_cons_self _ _
-    · apply ih _ _
-      rw [support_erase, hf, Finset.erase_cons]
+    rw [support_erase, mem_erase]
+    exact fun H => H.1 rfl
+    rw [← mem_support_iff, hf]
+    exact mem_cons_self _ _
+    apply ih _ _
+    rw [support_erase, hf, Finset.erase_cons]
 
 open Classical in
 theorem induction₂ {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
@@ -1025,12 +1025,12 @@ theorem induction₂ {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
   Finset.cons_induction_on s (fun f hf => by rwa [support_eq_empty.1 hf]) fun a s has ih f hf => by
     suffices p (f.erase a + single a (f a)) by rwa [erase_add_single] at this
     apply ha
-    · rw [support_erase, mem_erase]
-      exact fun H => H.1 rfl
-    · rw [← mem_support_iff, hf]
-      exact mem_cons_self _ _
-    · apply ih _ _
-      rw [support_erase, hf, Finset.erase_cons]
+    rw [support_erase, mem_erase]
+    exact fun H => H.1 rfl
+    rw [← mem_support_iff, hf]
+    exact mem_cons_self _ _
+    apply ih _ _
+    rw [support_erase, hf, Finset.erase_cons]
 
 theorem induction_linear {p : (α →₀ M) → Prop} (f : α →₀ M) (h0 : p 0)
     (hadd : ∀ f g : α →₀ M, p f → p g → p (f + g)) (hsingle : ∀ a b, p (single a b)) : p f :=
@@ -1205,8 +1205,8 @@ theorem support_sub [DecidableEq α] [AddGroup G] {f g : α →₀ G} :
 theorem erase_eq_sub_single [AddGroup G] (f : α →₀ G) (a : α) : f.erase a = f - single a (f a) := by
   ext a'
   rcases eq_or_ne a a' with (rfl | h)
-  · simp
-  · simp [erase_ne h.symm, single_eq_of_ne h]
+  simp
+  simp [erase_ne h.symm, single_eq_of_ne h]
 
 theorem update_eq_sub_add_single [AddGroup G] (f : α →₀ G) (a : α) (b : G) :
     f.update a b = f - single a (f a) + single a b := by

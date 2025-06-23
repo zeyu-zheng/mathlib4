@@ -94,8 +94,8 @@ theorem commutator_commutator_eq_bot_of_rotate (h1 : ⁅⁅H₂, H₃⁆, H₁�
   intro x hx y hy z hz
   trans x * z * ⁅y, ⁅z⁻¹, x⁻¹⁆⁆⁻¹ * z⁻¹ * y * ⁅x⁻¹, ⁅y⁻¹, z⁆⁆⁻¹ * y⁻¹ * x⁻¹
   · group
-  · rw [h1 _ (H₂.inv_mem hy) _ hz _ (H₁.inv_mem hx), h2 _ (H₃.inv_mem hz) _ (H₁.inv_mem hx) _ hy]
-    group
+  rw [h1 _ (H₂.inv_mem hy) _ hz _ (H₁.inv_mem hx), h2 _ (H₃.inv_mem hz) _ (H₁.inv_mem hx) _ hy]
+  group
 
 variable (H₁ H₂)
 
@@ -145,11 +145,11 @@ end Normal
 theorem map_commutator (f : G →* G') : map f ⁅H₁, H₂⁆ = ⁅map f H₁, map f H₂⁆ := by
   simp_rw [le_antisymm_iff, map_le_iff_le_comap, commutator_le, mem_comap, map_commutatorElement]
   constructor
-  · intro p hp q hq
-    exact commutator_mem_commutator (mem_map_of_mem _ hp) (mem_map_of_mem _ hq)
-  · rintro _ ⟨p, hp, rfl⟩ _ ⟨q, hq, rfl⟩
-    rw [← map_commutatorElement]
-    exact mem_map_of_mem _ (commutator_mem_commutator hp hq)
+  intro p hp q hq
+  exact commutator_mem_commutator (mem_map_of_mem _ hp) (mem_map_of_mem _ hq)
+  rintro _ ⟨p, hp, rfl⟩ _ ⟨q, hq, rfl⟩
+  rw [← map_commutatorElement]
+  exact mem_map_of_mem _ (commutator_mem_commutator hp hq)
 
 variable {H₁ H₂}
 
@@ -168,15 +168,15 @@ instance commutator_characteristic [h₁ : Characteristic H₁] [h₂ : Characte
 theorem commutator_prod_prod (K₁ K₂ : Subgroup G') :
     ⁅H₁.prod K₁, H₂.prod K₂⁆ = ⁅H₁, H₂⁆.prod ⁅K₁, K₂⁆ := by
   apply le_antisymm
-  · rw [commutator_le]
-    rintro ⟨p₁, p₂⟩ ⟨hp₁, hp₂⟩ ⟨q₁, q₂⟩ ⟨hq₁, hq₂⟩
-    exact ⟨commutator_mem_commutator hp₁ hq₁, commutator_mem_commutator hp₂ hq₂⟩
-  · rw [prod_le_iff]
-    constructor <;>
-      · rw [map_commutator]
-        apply commutator_mono <;>
-          simp [le_prod_iff, map_map, MonoidHom.fst_comp_inl, MonoidHom.snd_comp_inl,
-            MonoidHom.fst_comp_inr, MonoidHom.snd_comp_inr]
+  rw [commutator_le]
+  rintro ⟨p₁, p₂⟩ ⟨hp₁, hp₂⟩ ⟨q₁, q₂⟩ ⟨hq₁, hq₂⟩
+  exact ⟨commutator_mem_commutator hp₁ hq₁, commutator_mem_commutator hp₂ hq₂⟩
+  rw [prod_le_iff]
+  constructor <;>
+  · rw [map_commutator]
+    apply commutator_mono <;>
+      simp [le_prod_iff, map_map, MonoidHom.fst_comp_inl, MonoidHom.snd_comp_inl,
+        MonoidHom.fst_comp_inr, MonoidHom.snd_comp_inr]
 
 /-- The commutator of direct product is contained in the direct product of the commutators.
 
@@ -198,13 +198,13 @@ theorem commutator_pi_pi_of_finite {η : Type*} [Finite η] {Gs : η → Type*} 
     intro i hi
     rw [map_commutator]
     apply commutator_mono <;>
-      · rw [le_pi_iff]
-        intro j _hj
-        rintro _ ⟨_, ⟨x, hx, rfl⟩, rfl⟩
-        by_cases h : j = i
-        · subst h
-          simpa using hx
-        · simp [h, one_mem]
+    · rw [le_pi_iff]
+      intro j _hj
+      rintro _ ⟨_, ⟨x, hx, rfl⟩, rfl⟩
+      by_cases h : j = i
+      subst h
+      simpa using hx
+      simp [h, one_mem]
 
 end Subgroup
 

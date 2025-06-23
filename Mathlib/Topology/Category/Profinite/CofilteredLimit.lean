@@ -49,13 +49,13 @@ theorem exists_isClopen_of_cofiltered {U : Set C.pt} (hC : IsLimit C) (hU : IsCl
       (Profinite.toTopCat.mapCone C) (isLimitOfPreserves _ hC) (fun j => {W | IsClopen W}) ?_
       (fun i => isClopen_univ) (fun i U1 U2 hU1 hU2 => hU1.inter hU2) ?_
   rotate_left
-  · intro i
-    change TopologicalSpace.IsTopologicalBasis {W : Set (F.obj i) | IsClopen W}
-    apply isTopologicalBasis_isClopen
-  · rintro i j f V (hV : IsClopen _)
-    exact ⟨hV.1.preimage ((F ⋙ toTopCat).map f).continuous,
-      hV.2.preimage ((F ⋙ toTopCat).map f).continuous⟩
-    -- Porting note: `<;> continuity` fails
+  intro i
+  change TopologicalSpace.IsTopologicalBasis {W : Set (F.obj i) | IsClopen W}
+  apply isTopologicalBasis_isClopen
+  rintro i j f V (hV : IsClopen _)
+  exact ⟨hV.1.preimage ((F ⋙ toTopCat).map f).continuous,
+    hV.2.preimage ((F ⋙ toTopCat).map f).continuous⟩
+  -- Porting note: `<;> continuity` fails
   -- Using this, since `U` is open, we can write `U` as a union of clopen sets all of which
   -- are preimages of clopens from the factors in the limit.
   obtain ⟨S, hS, h⟩ := hB.open_eq_sUnion hU.2
@@ -90,25 +90,25 @@ theorem exists_isClopen_of_cofiltered {U : Set C.pt} (hC : IsLimit C) (hU : IsCl
   let W : S → Set (F.obj j0) := fun s => if hs : s ∈ G then F.map (f s hs) ⁻¹' V s else Set.univ
   -- Conclude, using the `j0` and the clopen set of `F.obj j0` obtained above.
   refine ⟨j0, ⋃ (s : S) (_ : s ∈ G), W s, ?_, ?_⟩
-  · apply isClopen_biUnion_finset
-    intro s hs
-    dsimp [W]
-    rw [dif_pos hs]
-    exact ⟨(hV s).1.1.preimage (F.map _).continuous, (hV s).1.2.preimage (F.map _).continuous⟩
-  · ext x
-    constructor
-    · intro hx
-      simp_rw [W, Set.preimage_iUnion, Set.mem_iUnion]
-      obtain ⟨_, ⟨s, rfl⟩, _, ⟨hs, rfl⟩, hh⟩ := hG hx
-      refine ⟨s, hs, ?_⟩
-      rwa [dif_pos hs, ← Set.preimage_comp, ← CompHausLike.coe_comp, ← Functor.map_comp, C.w]
-    · intro hx
-      simp_rw [W, Set.preimage_iUnion, Set.mem_iUnion] at hx
-      obtain ⟨s, hs, hx⟩ := hx
-      rw [h]
-      refine ⟨s.1, s.2, ?_⟩
-      rw [(hV s).2]
-      rwa [dif_pos hs, ← Set.preimage_comp, ← CompHausLike.coe_comp, ← Functor.map_comp, C.w] at hx
+  apply isClopen_biUnion_finset
+  intro s hs
+  dsimp [W]
+  rw [dif_pos hs]
+  exact ⟨(hV s).1.1.preimage (F.map _).continuous, (hV s).1.2.preimage (F.map _).continuous⟩
+  ext x
+  constructor
+  intro hx
+  simp_rw [W, Set.preimage_iUnion, Set.mem_iUnion]
+  obtain ⟨_, ⟨s, rfl⟩, _, ⟨hs, rfl⟩, hh⟩ := hG hx
+  refine ⟨s, hs, ?_⟩
+  rwa [dif_pos hs, ← Set.preimage_comp, ← CompHausLike.coe_comp, ← Functor.map_comp, C.w]
+  intro hx
+  simp_rw [W, Set.preimage_iUnion, Set.mem_iUnion] at hx
+  obtain ⟨s, hs, hx⟩ := hx
+  rw [h]
+  refine ⟨s.1, s.2, ?_⟩
+  rw [(hV s).2]
+  rwa [dif_pos hs, ← Set.preimage_comp, ← CompHausLike.coe_comp, ← Functor.map_comp, C.w] at hx
 
 theorem exists_locallyConstant_fin_two (hC : IsLimit C) (f : LocallyConstant C.pt (Fin 2)) :
     ∃ (j : J) (g : LocallyConstant (F.obj j) (Fin 2)), f = g.comap (C.π.app _) := by
@@ -177,15 +177,15 @@ theorem exists_locallyConstant_finite_nonempty {α : Type*} [Finite α] [Nonempt
   -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
   erw [dif_pos h2]
   apply_fun ι
-  · rw [h2.choose_spec]
-    exact h1
-  · intro a b hh
-    have hhh := congr_fun hh a
-    dsimp [ι] at hhh
-    rw [if_pos rfl] at hhh
-    split_ifs at hhh with hh1
-    · exact hh1.symm
-    · exact False.elim (bot_ne_top hhh)
+  rw [h2.choose_spec]
+  exact h1
+  intro a b hh
+  have hhh := congr_fun hh a
+  dsimp [ι] at hhh
+  rw [if_pos rfl] at hhh
+  split_ifs at hhh with hh1
+  exact hh1.symm
+  exact False.elim (bot_ne_top hhh)
 
 /-- Any locally constant function from a cofiltered limit of profinite sets factors through
 one of the components. -/
@@ -194,36 +194,36 @@ theorem exists_locallyConstant {α : Type*} (hC : IsLimit C) (f : LocallyConstan
   let S := f.discreteQuotient
   let ff : S → α := f.lift
   cases isEmpty_or_nonempty S
-  · suffices ∃ j, IsEmpty (F.obj j) by
-      refine this.imp fun j hj => ?_
-      refine ⟨⟨hj.elim, fun A => ?_⟩, ?_⟩
-      · suffices (fun a ↦ IsEmpty.elim hj a) ⁻¹' A = ∅ by
-          rw [this]
-          exact isOpen_empty
-        exact @Set.eq_empty_of_isEmpty _ hj _
-      · ext x
-        exact hj.elim' (C.π.app j x)
-    simp only [← not_nonempty_iff, ← not_forall]
-    intro h
-    haveI : ∀ j : J, Nonempty ((F ⋙ Profinite.toTopCat).obj j) := h
-    haveI : ∀ j : J, T2Space ((F ⋙ Profinite.toTopCat).obj j) := fun j =>
-      (inferInstance : T2Space (F.obj j))
-    haveI : ∀ j : J, CompactSpace ((F ⋙ Profinite.toTopCat).obj j) := fun j =>
-      (inferInstance : CompactSpace (F.obj j))
-    have cond := TopCat.nonempty_limitCone_of_compact_t2_cofiltered_system.{u}
-      (F ⋙ Profinite.toTopCat)
-    suffices Nonempty C.pt from IsEmpty.false (S.proj this.some)
-    let D := Profinite.toTopCat.mapCone C
-    have hD : IsLimit D := isLimitOfPreserves Profinite.toTopCat hC
-    have CD := (hD.conePointUniqueUpToIso (TopCat.limitConeIsLimit.{v, max u v} _)).inv
-    exact cond.map CD
-  · let f' : LocallyConstant C.pt S := ⟨S.proj, S.proj_isLocallyConstant⟩
-    obtain ⟨j, g', hj⟩ := exists_locallyConstant_finite_nonempty _ hC f'
-    refine ⟨j, ⟨ff ∘ g', g'.isLocallyConstant.comp _⟩, ?_⟩
-    ext1 t
-    apply_fun fun e => e t at hj
-    dsimp at hj ⊢
-    rw [← hj]
-    rfl
+  suffices ∃ j, IsEmpty (F.obj j) by
+    refine this.imp fun j hj => ?_
+    refine ⟨⟨hj.elim, fun A => ?_⟩, ?_⟩
+    suffices (fun a ↦ IsEmpty.elim hj a) ⁻¹' A = ∅ by
+      rw [this]
+      exact isOpen_empty
+    exact @Set.eq_empty_of_isEmpty _ hj _
+    ext x
+    exact hj.elim' (C.π.app j x)
+  simp only [← not_nonempty_iff, ← not_forall]
+  intro h
+  haveI : ∀ j : J, Nonempty ((F ⋙ Profinite.toTopCat).obj j) := h
+  haveI : ∀ j : J, T2Space ((F ⋙ Profinite.toTopCat).obj j) := fun j =>
+    (inferInstance : T2Space (F.obj j))
+  haveI : ∀ j : J, CompactSpace ((F ⋙ Profinite.toTopCat).obj j) := fun j =>
+    (inferInstance : CompactSpace (F.obj j))
+  have cond := TopCat.nonempty_limitCone_of_compact_t2_cofiltered_system.{u}
+    (F ⋙ Profinite.toTopCat)
+  suffices Nonempty C.pt from IsEmpty.false (S.proj this.some)
+  let D := Profinite.toTopCat.mapCone C
+  have hD : IsLimit D := isLimitOfPreserves Profinite.toTopCat hC
+  have CD := (hD.conePointUniqueUpToIso (TopCat.limitConeIsLimit.{v, max u v} _)).inv
+  exact cond.map CD
+  let f' : LocallyConstant C.pt S := ⟨S.proj, S.proj_isLocallyConstant⟩
+  obtain ⟨j, g', hj⟩ := exists_locallyConstant_finite_nonempty _ hC f'
+  refine ⟨j, ⟨ff ∘ g', g'.isLocallyConstant.comp _⟩, ?_⟩
+  ext1 t
+  apply_fun fun e => e t at hj
+  dsimp at hj ⊢
+  rw [← hj]
+  rfl
 
 end Profinite

@@ -43,12 +43,12 @@ theorem locallyConnectedSpace_iff_open_connected_subsets :
   simp_rw [locallyConnectedSpace_iff_open_connected_basis]
   refine forall_congr' fun _ => ?_
   constructor
-  · intro h U hU
-    rcases h.mem_iff.mp hU with ⟨V, hV, hVU⟩
-    exact ⟨V, hVU, hV⟩
-  · exact fun h => ⟨fun U => ⟨fun hU =>
-      let ⟨V, hVU, hV⟩ := h U hU
-      ⟨V, hV, hVU⟩, fun ⟨V, ⟨hV, hxV, _⟩, hVU⟩ => mem_nhds_iff.mpr ⟨V, hVU, hV, hxV⟩⟩⟩
+  intro h U hU
+  rcases h.mem_iff.mp hU with ⟨V, hV, hVU⟩
+  exact ⟨V, hVU, hV⟩
+  exact fun h => ⟨fun U => ⟨fun hU =>
+    let ⟨V, hVU, hV⟩ := h U hU
+    ⟨V, hV, hVU⟩, fun ⟨V, ⟨hV, hxV, _⟩, hVU⟩ => mem_nhds_iff.mpr ⟨V, hVU, hV, hxV⟩⟩⟩
 
 /-- A space with discrete topology is a locally connected space. -/
 instance (priority := 100) DiscreteTopology.toLocallyConnectedSpace (α) [TopologicalSpace α]
@@ -83,28 +83,28 @@ theorem locallyConnectedSpace_iff_connectedComponentIn_open :
     LocallyConnectedSpace α ↔
       ∀ F : Set α, IsOpen F → ∀ x ∈ F, IsOpen (connectedComponentIn F x) := by
   constructor
-  · intro h
-    exact fun F hF x _ => hF.connectedComponentIn
-  · intro h
-    rw [locallyConnectedSpace_iff_open_connected_subsets]
-    refine fun x U hU =>
-        ⟨connectedComponentIn (interior U) x,
-          (connectedComponentIn_subset _ _).trans interior_subset, h _ isOpen_interior x ?_,
-          mem_connectedComponentIn ?_, isConnected_connectedComponentIn_iff.mpr ?_⟩ <;>
-      exact mem_interior_iff_mem_nhds.mpr hU
+  intro h
+  exact fun F hF x _ => hF.connectedComponentIn
+  intro h
+  rw [locallyConnectedSpace_iff_open_connected_subsets]
+  refine fun x U hU =>
+      ⟨connectedComponentIn (interior U) x,
+        (connectedComponentIn_subset _ _).trans interior_subset, h _ isOpen_interior x ?_,
+        mem_connectedComponentIn ?_, isConnected_connectedComponentIn_iff.mpr ?_⟩ <;>
+    exact mem_interior_iff_mem_nhds.mpr hU
 
 theorem locallyConnectedSpace_iff_connected_subsets :
     LocallyConnectedSpace α ↔ ∀ (x : α), ∀ U ∈ 𝓝 x, ∃ V ∈ 𝓝 x, IsPreconnected V ∧ V ⊆ U := by
   constructor
-  · rw [locallyConnectedSpace_iff_open_connected_subsets]
-    intro h x U hxU
-    rcases h x U hxU with ⟨V, hVU, hV₁, hxV, hV₂⟩
-    exact ⟨V, hV₁.mem_nhds hxV, hV₂.isPreconnected, hVU⟩
-  · rw [locallyConnectedSpace_iff_connectedComponentIn_open]
-    refine fun h U hU x _ => isOpen_iff_mem_nhds.mpr fun y hy => ?_
-    rw [connectedComponentIn_eq hy]
-    rcases h y U (hU.mem_nhds <| (connectedComponentIn_subset _ _) hy) with ⟨V, hVy, hV, hVU⟩
-    exact Filter.mem_of_superset hVy (hV.subset_connectedComponentIn (mem_of_mem_nhds hVy) hVU)
+  rw [locallyConnectedSpace_iff_open_connected_subsets]
+  intro h x U hxU
+  rcases h x U hxU with ⟨V, hVU, hV₁, hxV, hV₂⟩
+  exact ⟨V, hV₁.mem_nhds hxV, hV₂.isPreconnected, hVU⟩
+  rw [locallyConnectedSpace_iff_connectedComponentIn_open]
+  refine fun h U hU x _ => isOpen_iff_mem_nhds.mpr fun y hy => ?_
+  rw [connectedComponentIn_eq hy]
+  rcases h y U (hU.mem_nhds <| (connectedComponentIn_subset _ _) hy) with ⟨V, hVy, hV, hVU⟩
+  exact Filter.mem_of_superset hVy (hV.subset_connectedComponentIn (mem_of_mem_nhds hVy) hVU)
 
 theorem locallyConnectedSpace_iff_connected_basis :
     LocallyConnectedSpace α ↔

@@ -50,9 +50,9 @@ instance (priority := 900) quasiCompact_of_isIso {X Y : Scheme} (f : X ⟶ Y) [I
   intro U _ hU'
   convert hU'.image (inv f.1.base).continuous_toFun using 1
   rw [Set.image_eq_preimage_of_inverse]
-  · delta Function.LeftInverse
-    exact IsIso.inv_hom_id_apply f.1.base
-  · exact IsIso.hom_inv_id_apply f.1.base
+  delta Function.LeftInverse
+  exact IsIso.inv_hom_id_apply f.1.base
+  exact IsIso.hom_inv_id_apply f.1.base
 
 instance quasiCompact_comp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) [QuasiCompact f]
     [QuasiCompact g] : QuasiCompact (f ≫ g) := by
@@ -60,15 +60,15 @@ instance quasiCompact_comp {X Y Z : Scheme} (f : X ⟶ Y) (g : Y ⟶ Z) [QuasiCo
   intro U hU hU'
   rw [Scheme.comp_val_base, TopCat.coe_comp, Set.preimage_comp]
   apply QuasiCompact.isCompact_preimage
-  · exact Continuous.isOpen_preimage (by fun_prop) _ hU
+  exact Continuous.isOpen_preimage (by fun_prop) _ hU
   apply QuasiCompact.isCompact_preimage <;> assumption
 
 theorem isCompactOpen_iff_eq_finset_affine_union {X : Scheme} (U : Set X) :
     IsCompact U ∧ IsOpen U ↔ ∃ s : Set X.affineOpens, s.Finite ∧ U = ⋃ i ∈ s, i := by
   apply Opens.IsBasis.isCompact_open_iff_eq_finite_iUnion
     (fun (U : X.affineOpens) => (U : X.Opens))
-  · rw [Subtype.range_coe]; exact isBasis_affine_open X
-  · exact fun i => i.2.isCompact
+  rw [Subtype.range_coe]; exact isBasis_affine_open X
+  exact fun i => i.2.isCompact
 
 theorem isCompactOpen_iff_eq_basicOpen_union {X : Scheme} [IsAffine X] (U : Set X) :
     IsCompact U ∧ IsOpen U ↔
@@ -106,16 +106,16 @@ theorem isCompact_basicOpen (X : Scheme) {U : X.Opens} (hU : IsCompact (U : Set 
             (SetLike.coe_subset_coe.2 <| RingedSpace.basicOpen_le _ _)).symm.trans ?_
   rw [e, Set.iUnion₂_inter]
   apply le_antisymm <;> apply Set.iUnion₂_subset
-  · intro i hi
-    -- Porting note: had to make explicit the first given parameter to `Set.subset_iUnion₂`
-    exact Set.Subset.trans (Set.Subset.rfl : _ ≤ g ⟨i, hi⟩)
-      (@Set.subset_iUnion₂ _ _ _
-        (fun (i : X.affineOpens) (_ : i ∈ Set.range g) => (i : Set X.toPresheafedSpace)) _
-        (Set.mem_range_self ⟨i, hi⟩))
-  · rintro ⟨i, hi⟩ ⟨⟨j, hj⟩, hj'⟩
-    rw [← hj']
-    refine Set.Subset.trans ?_ (Set.subset_iUnion₂ j hj)
-    exact Set.Subset.rfl
+  intro i hi
+  -- Porting note: had to make explicit the first given parameter to `Set.subset_iUnion₂`
+  exact Set.Subset.trans (Set.Subset.rfl : _ ≤ g ⟨i, hi⟩)
+    (@Set.subset_iUnion₂ _ _ _
+      (fun (i : X.affineOpens) (_ : i ∈ Set.range g) => (i : Set X.toPresheafedSpace)) _
+      (Set.mem_range_self ⟨i, hi⟩))
+  rintro ⟨i, hi⟩ ⟨⟨j, hj⟩, hj'⟩
+  rw [← hj']
+  refine Set.Subset.trans ?_ (Set.subset_iUnion₂ j hj)
+  exact Set.Subset.rfl
 
 @[reducible]
 instance : HasAffineProperty @QuasiCompact (fun X _ _ _ ↦ CompactSpace X) where
@@ -128,22 +128,22 @@ instance : HasAffineProperty @QuasiCompact (fun X _ _ _ ↦ CompactSpace X) wher
     constructor
     · apply AffineTargetMorphismProperty.respectsIso_mk <;> rintro X Y Z e _ _ H
       exacts [@Homeomorph.compactSpace _ _ _ _ H (TopCat.homeoOfIso (asIso e.inv.1.base)), H]
-    · introv _ H
-      change CompactSpace ((Opens.map f.val.base).obj (Y.basicOpen r))
-      rw [Scheme.preimage_basicOpen f r]
-      erw [← isCompact_iff_compactSpace]
-      rw [← isCompact_univ_iff] at H
-      apply isCompact_basicOpen
-      exact H
-    · rintro X Y H f S hS hS'
-      rw [← IsAffineOpen.basicOpen_union_eq_self_iff] at hS
-      · rw [← isCompact_univ_iff]
-        change IsCompact ((Opens.map f.val.base).obj ⊤).1
-        rw [← hS]
-        dsimp [Opens.map]
-        simp only [Opens.iSup_mk, Opens.coe_mk, Set.preimage_iUnion]
-        exact isCompact_iUnion fun i => isCompact_iff_compactSpace.mpr (hS' i)
-      · exact isAffineOpen_top _
+    introv _ H
+    change CompactSpace ((Opens.map f.val.base).obj (Y.basicOpen r))
+    rw [Scheme.preimage_basicOpen f r]
+    erw [← isCompact_iff_compactSpace]
+    rw [← isCompact_univ_iff] at H
+    apply isCompact_basicOpen
+    exact H
+    rintro X Y H f S hS hS'
+    rw [← IsAffineOpen.basicOpen_union_eq_self_iff] at hS
+    rw [← isCompact_univ_iff]
+    change IsCompact ((Opens.map f.val.base).obj ⊤).1
+    rw [← hS]
+    dsimp [Opens.map]
+    simp only [Opens.iSup_mk, Opens.coe_mk, Set.preimage_iUnion]
+    exact isCompact_iUnion fun i => isCompact_iff_compactSpace.mpr (hS' i)
+    exact isAffineOpen_top _
 
 theorem quasiCompact_over_affine_iff {X Y : Scheme} (f : X ⟶ Y) [IsAffine Y] :
     QuasiCompact f ↔ CompactSpace X := by
@@ -188,14 +188,14 @@ theorem compact_open_induction_on {P : X.Opens → Prop} (S : X.Opens)
   replace hs' : S = iSup fun i : s => (i : X.Opens) := by ext1; simpa using hs'
   subst hs'
   apply @Set.Finite.induction_on _ _ _ hs
-  · convert h₁; rw [iSup_eq_bot]; rintro ⟨_, h⟩; exact h.elim
-  · intro x s _ hs h₄
-    have : IsCompact (⨆ i : s, (i : X.Opens)).1
-    refine ((isCompactOpen_iff_eq_finset_affine_union _).mpr ?_).1; exact ⟨s, hs, by simp⟩
-    convert h₂ _ this x h₄
-    rw [iSup_subtype, sup_comm]
-    conv_rhs => rw [iSup_subtype]
-    exact iSup_insert
+  convert h₁; rw [iSup_eq_bot]; rintro ⟨_, h⟩; exact h.elim
+  intro x s _ hs h₄
+  have : IsCompact (⨆ i : s, (i : X.Opens)).1
+  refine ((isCompactOpen_iff_eq_finset_affine_union _).mpr ?_).1; exact ⟨s, hs, by simp⟩
+  convert h₂ _ this x h₄
+  rw [iSup_subtype, sup_comm]
+  conv_rhs => rw [iSup_subtype]
+  exact iSup_insert
 
 theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isAffineOpen (X : Scheme)
     {U : X.Opens} (hU : IsAffineOpen U) (x f : Γ(X, U))
@@ -222,14 +222,14 @@ theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact (X : Scheme
     exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isAffineOpen X i.1.2
       (X.presheaf.map (homOfLE (h₁ i)).op x) (X.presheaf.map (homOfLE (h₁ i)).op f) ?_
   swap
-  · delta TopCat.Presheaf.restrictOpen TopCat.Presheaf.restrict at H ⊢
-    convert congr_arg (X.presheaf.map (homOfLE _).op) H
-    -- Note: the below was `simp only [← comp_apply]`
-    · rw [← comp_apply, ← comp_apply]
-      · simp only [← Functor.map_comp]
-        rfl
-    · rw [map_zero]
-    · simp only [Scheme.basicOpen_res, inf_le_right]
+  delta TopCat.Presheaf.restrictOpen TopCat.Presheaf.restrict at H ⊢
+  convert congr_arg (X.presheaf.map (homOfLE _).op) H
+  -- Note: the below was `simp only [← comp_apply]`
+  rw [← comp_apply, ← comp_apply]
+  simp only [← Functor.map_comp]
+  rfl
+  rw [map_zero]
+  simp only [Scheme.basicOpen_res, inf_le_right]
   choose n hn using H'
   haveI := hs.to_subtype
   cases nonempty_fintype s

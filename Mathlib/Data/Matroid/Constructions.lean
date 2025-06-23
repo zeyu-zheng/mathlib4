@@ -165,7 +165,7 @@ theorem freeOn_indep (hIE : I ⊆ E) : (freeOn E).Indep I :=
 
 theorem eq_freeOn_iff : M = freeOn E ↔ M.E = E ∧ M.Indep E := by
   refine ⟨?_, fun h ↦ ?_⟩
-  · rintro rfl; simp [Subset.rfl]
+  rintro rfl; simp [Subset.rfl]
   simp only [eq_iff_indep_iff_indep_forall, freeOn_ground, freeOn_indep_iff, h.1, true_and]
   exact fun I hIX ↦ iff_of_true (h.2.subset hIX) hIX
 

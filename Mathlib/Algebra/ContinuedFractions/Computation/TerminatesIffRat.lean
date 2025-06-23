@@ -66,34 +66,34 @@ nonrec theorem exists_gcf_pair_rat_eq_of_nth_contsAux :
       intro n IH
       rcases n with (_ | _ | n)
       -- n = 0
-      · suffices ∃ gp : Pair ℚ, Pair.mk (1 : K) 0 = gp.map (↑) by simpa [contsAux]
-        use Pair.mk 1 0
-        simp
+      suffices ∃ gp : Pair ℚ, Pair.mk (1 : K) 0 = gp.map (↑) by simpa [contsAux]
+      use Pair.mk 1 0
+      simp
       -- n = 1
-      · suffices ∃ conts : Pair ℚ, Pair.mk g.h 1 = conts.map (↑) by simpa [contsAux]
-        use Pair.mk ⌊v⌋ 1
-        simp [g]
+      suffices ∃ conts : Pair ℚ, Pair.mk g.h 1 = conts.map (↑) by simpa [contsAux]
+      use Pair.mk ⌊v⌋ 1
+      simp [g]
       -- 2 ≤ n
-      · cases' IH (n + 1) <| lt_add_one (n + 1) with pred_conts pred_conts_eq
-        -- invoke the IH
-        cases' s_ppred_nth_eq : g.s.get? n with gp_n
-        -- option.none
-        · use pred_conts
-          have : g.contsAux (n + 2) = g.contsAux (n + 1) :=
-            contsAux_stable_of_terminated (n + 1).le_succ s_ppred_nth_eq
-          simp only [this, pred_conts_eq]
-        -- option.some
-        · -- invoke the IH a second time
-          cases' IH n <| lt_of_le_of_lt n.le_succ <| lt_add_one <| n + 1 with ppred_conts
-            ppred_conts_eq
-          obtain ⟨a_eq_one, z, b_eq_z⟩ : gp_n.a = 1 ∧ ∃ z : ℤ, gp_n.b = (z : K) :=
-            of_partNum_eq_one_and_exists_int_partDen_eq s_ppred_nth_eq
-          -- finally, unfold the recurrence to obtain the required rational value.
-          simp only [a_eq_one, b_eq_z,
-            contsAux_recurrence s_ppred_nth_eq ppred_conts_eq pred_conts_eq]
-          use nextConts 1 (z : ℚ) ppred_conts pred_conts
-          cases ppred_conts; cases pred_conts
-          simp [nextConts, nextNum, nextDen])
+      cases' IH (n + 1) <| lt_add_one (n + 1) with pred_conts pred_conts_eq
+      -- invoke the IH
+      cases' s_ppred_nth_eq : g.s.get? n with gp_n
+      -- option.none
+      use pred_conts
+      have : g.contsAux (n + 2) = g.contsAux (n + 1) :=
+        contsAux_stable_of_terminated (n + 1).le_succ s_ppred_nth_eq
+      simp only [this, pred_conts_eq]
+      -- option.some
+      -- invoke the IH a second time
+      cases' IH n <| lt_of_le_of_lt n.le_succ <| lt_add_one <| n + 1 with ppred_conts
+        ppred_conts_eq
+      obtain ⟨a_eq_one, z, b_eq_z⟩ : gp_n.a = 1 ∧ ∃ z : ℤ, gp_n.b = (z : K) :=
+        of_partNum_eq_one_and_exists_int_partDen_eq s_ppred_nth_eq
+      -- finally, unfold the recurrence to obtain the required rational value.
+      simp only [a_eq_one, b_eq_z,
+        contsAux_recurrence s_ppred_nth_eq ppred_conts_eq pred_conts_eq]
+      use nextConts 1 (z : ℚ) ppred_conts pred_conts
+      cases ppred_conts; cases pred_conts
+      simp [nextConts, nextNum, nextDen])
 
 theorem exists_gcf_pair_rat_eq_nth_conts :
     ∃ conts : Pair ℚ, (of v).conts n = (conts.map (↑) : Pair K) := by
@@ -173,12 +173,12 @@ theorem coe_stream_nth_rat_eq :
     | some ifp_n =>
       cases' ifp_n with b fr
       cases' Decidable.em (fr = 0) with fr_zero fr_ne_zero
-      · simp [IntFractPair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_zero]
-      · replace IH : some (IntFractPair.mk b (fr : K)) = IntFractPair.stream (↑q) n := by
-          rwa [stream_q_nth_eq] at IH
-        have : (fr : K)⁻¹ = ((fr⁻¹ : ℚ) : K) := by norm_cast
-        have coe_of_fr := coe_of_rat_eq this
-        simpa [IntFractPair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_ne_zero]
+      simp [IntFractPair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_zero]
+      replace IH : some (IntFractPair.mk b (fr : K)) = IntFractPair.stream (↑q) n := by
+        rwa [stream_q_nth_eq] at IH
+      have : (fr : K)⁻¹ = ((fr⁻¹ : ℚ) : K) := by norm_cast
+      have coe_of_fr := coe_of_rat_eq this
+      simpa [IntFractPair.stream, IH.symm, v_eq_q, stream_q_nth_eq, fr_ne_zero]
 
 theorem coe_stream'_rat_eq :
     ((IntFractPair.stream q).map (Option.map (mapFr (↑))) : Stream' <| Option <| IntFractPair K) =
@@ -292,20 +292,20 @@ theorem stream_nth_fr_num_le_fr_num_sub_n_rat :
 theorem exists_nth_stream_eq_none_of_rat (q : ℚ) : ∃ n : ℕ, IntFractPair.stream q n = none := by
   let fract_q_num := (Int.fract q).num; let n := fract_q_num.natAbs + 1
   cases' stream_nth_eq : IntFractPair.stream q n with ifp
-  · use n, stream_nth_eq
-  · -- arrive at a contradiction since the numerator decreased num + 1 times but every fractional
-    -- value is nonnegative.
-    have ifp_fr_num_le_q_fr_num_sub_n : ifp.fr.num ≤ fract_q_num - n :=
-      stream_nth_fr_num_le_fr_num_sub_n_rat stream_nth_eq
-    have : fract_q_num - n = -1 := by
-      have : 0 ≤ fract_q_num := Rat.num_nonneg.mpr (Int.fract_nonneg q)
-      -- Porting note: was
-      -- simp [Int.natAbs_of_nonneg this, sub_add_eq_sub_sub_swap, sub_right_comm]
-      simp only [n, Nat.cast_add, Int.natAbs_of_nonneg this, Nat.cast_one,
-        sub_add_eq_sub_sub_swap, sub_right_comm, sub_self, zero_sub]
-    have : 0 ≤ ifp.fr := (nth_stream_fr_nonneg_lt_one stream_nth_eq).left
-    have : 0 ≤ ifp.fr.num := Rat.num_nonneg.mpr this
-    omega
+  use n, stream_nth_eq
+  -- arrive at a contradiction since the numerator decreased num + 1 times but every fractional
+  -- value is nonnegative.
+  have ifp_fr_num_le_q_fr_num_sub_n : ifp.fr.num ≤ fract_q_num - n :=
+    stream_nth_fr_num_le_fr_num_sub_n_rat stream_nth_eq
+  have : fract_q_num - n = -1 := by
+    have : 0 ≤ fract_q_num := Rat.num_nonneg.mpr (Int.fract_nonneg q)
+    -- Porting note: was
+    -- simp [Int.natAbs_of_nonneg this, sub_add_eq_sub_sub_swap, sub_right_comm]
+    simp only [n, Nat.cast_add, Int.natAbs_of_nonneg this, Nat.cast_one,
+      sub_add_eq_sub_sub_swap, sub_right_comm, sub_self, zero_sub]
+  have : 0 ≤ ifp.fr := (nth_stream_fr_nonneg_lt_one stream_nth_eq).left
+  have : 0 ≤ ifp.fr.num := Rat.num_nonneg.mpr this
+  omega
 
 end IntFractPair
 

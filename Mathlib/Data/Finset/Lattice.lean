@@ -120,8 +120,8 @@ theorem sup_const {s : Finset β} (h : s.Nonempty) (c : α) : (s.sup fun _ => c)
 @[simp]
 theorem sup_bot (s : Finset β) : (s.sup fun _ => ⊥) = (⊥ : α) := by
   obtain rfl | hs := s.eq_empty_or_nonempty
-  · exact sup_empty
-  · exact sup_const hs _
+  exact sup_empty
+  exact sup_const hs _
 
 theorem sup_ite (p : β → Prop) [DecidablePred p] :
     (s.sup fun i => ite (p i) (f i) (g i)) = (s.filter p).sup f ⊔ (s.filter fun i => ¬p i).sup g :=
@@ -169,8 +169,8 @@ end Prod
 theorem sup_erase_bot [DecidableEq α] (s : Finset α) : (s.erase ⊥).sup id = s.sup id := by
   refine (sup_mono (s.erase_subset _)).antisymm (Finset.sup_le_iff.2 fun a ha => ?_)
   obtain rfl | ha' := eq_or_ne a ⊥
-  · exact bot_le
-  · exact le_sup (mem_erase.2 ⟨ha', ha⟩)
+  exact bot_le
+  exact le_sup (mem_erase.2 ⟨ha', ha⟩)
 
 theorem sup_sdiff_right {α β : Type*} [GeneralizedBooleanAlgebra α] (s : Finset β) (f : β → α)
     (a : α) : (s.sup fun b => f b \ a) = s.sup f \ a := by
@@ -222,21 +222,21 @@ theorem sup_le_of_le_directed {α : Type*} [SemilatticeSup α] [OrderBot α] (s 
     (hs : s.Nonempty) (hdir : DirectedOn (· ≤ ·) s) (t : Finset α) :
     (∀ x ∈ t, ∃ y ∈ s, x ≤ y) → ∃ x ∈ s, t.sup id ≤ x := by
     induction' t using Finset.induction_on with a r _ ih h
-    · simpa only [forall_prop_of_true, and_true_iff, forall_prop_of_false, bot_le, not_false_iff,
-        sup_empty, forall_true_iff, not_mem_empty]
-    · intro h
-      have incs : (r : Set α) ⊆ ↑(insert a r)
-      rw [Finset.coe_subset]
-      apply Finset.subset_insert
-      -- x ∈ s is above the sup of r
-      obtain ⟨x, ⟨hxs, hsx_sup⟩⟩ := ih fun x hx => h x <| incs hx
-      -- y ∈ s is above a
-      obtain ⟨y, hys, hay⟩ := h a (Finset.mem_insert_self a r)
-      -- z ∈ s is above x and y
-      obtain ⟨z, hzs, ⟨hxz, hyz⟩⟩ := hdir x hxs y hys
-      use z, hzs
-      rw [sup_insert, id, sup_le_iff]
-      exact ⟨le_trans hay hyz, le_trans hsx_sup hxz⟩
+    simpa only [forall_prop_of_true, and_true_iff, forall_prop_of_false, bot_le, not_false_iff,
+      sup_empty, forall_true_iff, not_mem_empty]
+    intro h
+    have incs : (r : Set α) ⊆ ↑(insert a r)
+    rw [Finset.coe_subset]
+    apply Finset.subset_insert
+    -- x ∈ s is above the sup of r
+    obtain ⟨x, ⟨hxs, hsx_sup⟩⟩ := ih fun x hx => h x <| incs hx
+    -- y ∈ s is above a
+    obtain ⟨y, hys, hay⟩ := h a (Finset.mem_insert_self a r)
+    -- z ∈ s is above x and y
+    obtain ⟨z, hzs, ⟨hxz, hyz⟩⟩ := hdir x hxs y hys
+    use z, hzs
+    rw [sup_insert, id, sup_le_iff]
+    exact ⟨le_trans hay hyz, le_trans hsx_sup hxz⟩
 
 -- If we acquire sublattices
 -- the hypotheses should be reformulated as `s : SubsemilatticeSupBot`
@@ -507,7 +507,7 @@ theorem inf_sup {κ : ι → Type*} (s : Finset ι) (t : ∀ i, Finset (κ i)) (
     (s.inf fun i => (t i).sup (f i)) =
       (s.pi t).sup fun g => s.attach.inf fun i => f _ <| g _ i.2 := by
   induction' s using Finset.induction with i s hi ih
-  · simp
+  simp
   rw [inf_insert, ih, attach_insert, sup_inf_sup]
   refine eq_of_forall_ge_iff fun c => ?_
   simp only [Finset.sup_le_iff, mem_product, mem_pi, and_imp, Prod.forall,
@@ -522,11 +522,11 @@ theorem inf_sup {κ : ι → Type*} (s : Finset ι) (t : ∀ i, Finset (κ i)) (
   -- Porting note: `simpa` doesn't support placeholders in proof terms
   have := h (fun j hj => if hji : j = i then cast (congr_arg κ hji.symm) a
       else g _ <| mem_of_mem_insert_of_ne hj hji) (fun j hj => ?_)
-  · simpa only [cast_eq, dif_pos, Function.comp, Subtype.coe_mk, dif_neg, aux] using this
+  simpa only [cast_eq, dif_pos, Function.comp, Subtype.coe_mk, dif_neg, aux] using this
   rw [mem_insert] at hj
   obtain (rfl | hj) := hj
-  · simpa
-  · simpa [ne_of_mem_of_not_mem hj hi] using hg _ _
+  simpa
+  simpa [ne_of_mem_of_not_mem hj hi] using hg _ _
 
 theorem sup_inf {κ : ι → Type*} (s : Finset ι) (t : ∀ i, Finset (κ i)) (f : ∀ i, κ i → α) :
     (s.sup fun i => (t i).inf (f i)) = (s.pi t).inf fun g => s.attach.sup fun i => f _ <| g _ i.2 :=
@@ -595,14 +595,14 @@ theorem comp_sup_eq_sup_comp_of_is_total [SemilatticeSup β] [OrderBot β] (g : 
 @[simp]
 protected theorem le_sup_iff (ha : ⊥ < a) : a ≤ s.sup f ↔ ∃ b ∈ s, a ≤ f b := by
   apply Iff.intro
-  · induction s using cons_induction with
-    | empty => exact (absurd · (not_le_of_lt ha))
-    | cons c t hc ih =>
-      rw [sup_cons, le_sup_iff]
-      exact fun
-      | Or.inl h => ⟨c, mem_cons.2 (Or.inl rfl), h⟩
-      | Or.inr h => let ⟨b, hb, hle⟩ := ih h; ⟨b, mem_cons.2 (Or.inr hb), hle⟩
-  · exact fun ⟨b, hb, hle⟩ => le_trans hle (le_sup hb)
+  induction s using cons_induction with
+  | empty => exact (absurd · (not_le_of_lt ha))
+  | cons c t hc ih =>
+    rw [sup_cons, le_sup_iff]
+    exact fun
+    | Or.inl h => ⟨c, mem_cons.2 (Or.inl rfl), h⟩
+    | Or.inr h => let ⟨b, hb, hle⟩ := ih h; ⟨b, mem_cons.2 (Or.inr hb), hle⟩
+  exact fun ⟨b, hb, hle⟩ => le_trans hle (le_sup hb)
 
 protected theorem sup_eq_top_iff {α : Type*} [LinearOrder α] [BoundedOrder α] [Nontrivial α]
     {s : Finset ι} {f : ι → α} : s.sup f = ⊤ ↔ ∃ b ∈ s, f b = ⊤ := by
@@ -612,20 +612,20 @@ protected theorem sup_eq_top_iff {α : Type*} [LinearOrder α] [BoundedOrder α]
 protected theorem Nonempty.sup_eq_top_iff {α : Type*} [LinearOrder α] [BoundedOrder α]
     {s : Finset ι} {f : ι → α} (hs : s.Nonempty) : s.sup f = ⊤ ↔ ∃ b ∈ s, f b = ⊤ := by
   cases subsingleton_or_nontrivial α
-  · simpa [Subsingleton.elim _ (⊤ : α)]
-  · exact Finset.sup_eq_top_iff
+  simpa [Subsingleton.elim _ (⊤ : α)]
+  exact Finset.sup_eq_top_iff
 
 @[simp]
 protected theorem lt_sup_iff : a < s.sup f ↔ ∃ b ∈ s, a < f b := by
   apply Iff.intro
-  · induction s using cons_induction with
-    | empty => exact (absurd · not_lt_bot)
-    | cons c t hc ih =>
-      rw [sup_cons, lt_sup_iff]
-      exact fun
-      | Or.inl h => ⟨c, mem_cons.2 (Or.inl rfl), h⟩
-      | Or.inr h => let ⟨b, hb, hlt⟩ := ih h; ⟨b, mem_cons.2 (Or.inr hb), hlt⟩
-  · exact fun ⟨b, hb, hlt⟩ => lt_of_lt_of_le hlt (le_sup hb)
+  induction s using cons_induction with
+  | empty => exact (absurd · not_lt_bot)
+  | cons c t hc ih =>
+    rw [sup_cons, lt_sup_iff]
+    exact fun
+    | Or.inl h => ⟨c, mem_cons.2 (Or.inl rfl), h⟩
+    | Or.inr h => let ⟨b, hb, hlt⟩ := ih h; ⟨b, mem_cons.2 (Or.inr hb), hlt⟩
+  exact fun ⟨b, hb, hlt⟩ => lt_of_lt_of_le hlt (le_sup hb)
 
 @[simp]
 protected theorem sup_lt_iff (ha : ⊥ < a) : s.sup f < a ↔ ∀ b ∈ s, f b < a :=
@@ -735,10 +735,10 @@ theorem le_sup'_of_le {a : α} {b : β} (hb : b ∈ s) (h : a ≤ f b) : a ≤ s
 @[simp]
 theorem sup'_const (a : α) : s.sup' H (fun _ => a) = a := by
   apply le_antisymm
-  · apply sup'_le
-    intros
-    exact le_rfl
-  · apply le_sup' (fun _ => a) H.choose_spec
+  apply sup'_le
+  intros
+  exact le_rfl
+  apply le_sup' (fun _ => a) H.choose_spec
 
 theorem sup'_union [DecidableEq β] {s₁ s₂ : Finset β} (h₁ : s₁.Nonempty) (h₂ : s₂.Nonempty)
     (f : β → α) :
@@ -1217,15 +1217,15 @@ theorem max_eq_bot {s : Finset α} : s.max = ⊥ ↔ s = ∅ :=
 
 theorem mem_of_max {s : Finset α} : ∀ {a : α}, s.max = a → a ∈ s := by
   induction' s using Finset.induction_on with b s _ ih
-  · intro _ H; cases H
-  · intro a h
-    by_cases p : b = a
-    · induction p
-      exact mem_insert_self b s
-    · cases' max_choice (↑b) s.max with q q <;> rw [max_insert, q] at h
-      · cases h
-        cases p rfl
-      · exact mem_insert_of_mem (ih h)
+  intro _ H; cases H
+  intro a h
+  by_cases p : b = a
+  induction p
+  exact mem_insert_self b s
+  cases' max_choice (↑b) s.max with q q <;> rw [max_insert, q] at h
+  cases h
+  cases p rfl
+  exact mem_insert_of_mem (ih h)
 
 theorem le_max {a : α} {s : Finset α} (as : a ∈ s) : ↑a ≤ s.max :=
   le_sup as
@@ -1527,10 +1527,10 @@ theorem min'_erase_ne_self {s : Finset α} (s0 : (s.erase x).Nonempty) : (s.eras
 
 theorem max_erase_ne_self {s : Finset α} : (s.erase x).max ≠ x := by
   by_cases s0 : (s.erase x).Nonempty
-  · refine ne_of_eq_of_ne (coe_max' s0).symm ?_
-    exact WithBot.coe_eq_coe.not.mpr (max'_erase_ne_self _)
-  · rw [not_nonempty_iff_eq_empty.mp s0, max_empty]
-    exact WithBot.bot_ne_coe
+  refine ne_of_eq_of_ne (coe_max' s0).symm ?_
+  exact WithBot.coe_eq_coe.not.mpr (max'_erase_ne_self _)
+  rw [not_nonempty_iff_eq_empty.mp s0, max_empty]
+  exact WithBot.bot_ne_coe
 
 theorem min_erase_ne_self {s : Finset α} : (s.erase x).min ≠ x := by
   -- Porting note: old proof `convert @max_erase_ne_self αᵒᵈ _ _ _`
@@ -1598,10 +1598,10 @@ theorem induction_on_max [DecidableEq α] {p : Finset α → Prop} (s : Finset �
     (step : ∀ a s, (∀ x ∈ s, x < a) → p s → p (insert a s)) : p s := by
   induction' s using Finset.strongInductionOn with s ihs
   rcases s.eq_empty_or_nonempty with (rfl | hne)
-  · exact h0
-  · have H : s.max' hne ∈ s := max'_mem s hne
-    rw [← insert_erase H]
-    exact step _ _ (fun x => s.lt_max'_of_mem_erase_max' hne) (ihs _ <| erase_ssubset H)
+  exact h0
+  have H : s.max' hne ∈ s := max'_mem s hne
+  rw [← insert_erase H]
+  exact step _ _ (fun x => s.lt_max'_of_mem_erase_max' hne) (ihs _ <| erase_ssubset H)
 
 /-- Induction principle for `Finset`s in a linearly ordered type: a predicate is true on all
 `s : Finset α` provided that:
@@ -1631,15 +1631,15 @@ theorem induction_on_max_value [DecidableEq ι] (f : ι → α) {p : Finset ι �
     (h0 : p ∅) (step : ∀ a s, a ∉ s → (∀ x ∈ s, f x ≤ f a) → p s → p (insert a s)) : p s := by
   induction' s using Finset.strongInductionOn with s ihs
   rcases (s.image f).eq_empty_or_nonempty with (hne | hne)
-  · simp only [image_eq_empty] at hne
-    simp only [hne, h0]
-  · have H : (s.image f).max' hne ∈ s.image f := max'_mem (s.image f) hne
-    simp only [mem_image, exists_prop] at H
-    rcases H with ⟨a, has, hfa⟩
-    rw [← insert_erase has]
-    refine step _ _ (not_mem_erase a s) (fun x hx => ?_) (ihs _ <| erase_ssubset has)
-    rw [hfa]
-    exact le_max' _ _ (mem_image_of_mem _ <| mem_of_mem_erase hx)
+  simp only [image_eq_empty] at hne
+  simp only [hne, h0]
+  have H : (s.image f).max' hne ∈ s.image f := max'_mem (s.image f) hne
+  simp only [mem_image, exists_prop] at H
+  rcases H with ⟨a, has, hfa⟩
+  rw [← insert_erase has]
+  refine step _ _ (not_mem_erase a s) (fun x hx => ?_) (ihs _ <| erase_ssubset has)
+  rw [hfa]
+  exact le_max' _ _ (mem_image_of_mem _ <| mem_of_mem_erase hx)
 
 /-- Induction principle for `Finset`s in any type from which a given function `f` maps to a linearly
 ordered type : a predicate is true on all `s : Finset α` provided that:
@@ -1704,10 +1704,10 @@ theorem count_finset_sup [DecidableEq β] (s : Finset α) (f : α → Multiset �
     count b (s.sup f) = s.sup fun a => count b (f a) := by
   letI := Classical.decEq α
   refine s.induction ?_ ?_
-  · exact count_zero _
-  · intro i s _ ih
-    rw [Finset.sup_insert, sup_eq_union, count_union, Finset.sup_insert, ih]
-    rfl
+  exact count_zero _
+  intro i s _ ih
+  rw [Finset.sup_insert, sup_eq_union, count_union, Finset.sup_insert, ih]
+  rfl
 
 theorem mem_sup {α β} [DecidableEq β] {s : Finset α} {f : α → Multiset β} {x : β} :
     x ∈ s.sup f ↔ ∃ v ∈ s, x ∈ f v := by
@@ -1751,8 +1751,8 @@ open Classical in
 that works for `ι : Sort*`. -/
 theorem iSup_eq_iSup_finset (s : ι → α) : ⨆ i, s i = ⨆ t : Finset ι, ⨆ i ∈ t, s i := by
   refine le_antisymm ?_ ?_
-  · exact iSup_le fun b => le_iSup_of_le {b} <| le_iSup_of_le b <| le_iSup_of_le (by simp) <| le_rfl
-  · exact iSup_le fun t => iSup_le fun b => iSup_le fun _ => le_iSup _ _
+  exact iSup_le fun b => le_iSup_of_le {b} <| le_iSup_of_le b <| le_iSup_of_le (by simp) <| le_rfl
+  exact iSup_le fun t => iSup_le fun b => iSup_le fun _ => le_iSup _ _
 
 /-- Supremum of `s i`, `i : ι`, is equal to the supremum over `t : Finset ι` of suprema
 `⨆ i ∈ t, s i`. This version works for `ι : Sort*`. See `iSup_eq_iSup_finset` for a version
@@ -1819,14 +1819,14 @@ theorem mem_maximals_iff_forall_insert (hP : ∀ ⦃s t⦄, P t → s ⊆ t → 
     s ∈ maximals (· ⊆ ·) {t | P t} ↔ P s ∧ ∀ x ∉ s, ¬ P (insert x s) := by
   simp only [mem_maximals_iff, and_congr_right_iff, Set.mem_setOf_eq]
   refine fun _ ↦ ⟨fun h x hx hxs ↦ hx ?_, fun h t ht hst ↦ hst.antisymm fun x hxt ↦ ?_⟩
-  · rw [h hxs (subset_insert _ _)]; exact mem_insert_self x s
+  rw [h hxs (subset_insert _ _)]; exact mem_insert_self x s
   exact by_contra fun hxs ↦ h x hxs (hP ht (insert_subset hxt hst))
 
 theorem mem_minimals_iff_forall_erase (hP : ∀ ⦃s t⦄, P s → s ⊆ t → P t) :
     s ∈ minimals (· ⊆ ·) {t | P t} ↔ P s ∧ ∀ x ∈ s, ¬ P (s.erase x) := by
   simp only [mem_minimals_iff, Set.mem_setOf_eq, and_congr_right_iff]
   refine fun _ ↦ ⟨fun h x hx hxs ↦ ?_, fun h t ht hst ↦ Eq.symm <| hst.antisymm (fun x hxs ↦ ?_)⟩
-  · rw [(h hxs (erase_subset x s))] at hx; simp at hx
+  rw [(h hxs (erase_subset x s))] at hx; simp at hx
   exact by_contra fun hxt ↦ h x hxs (hP ht <| subset_erase.2 ⟨hst, hxt⟩)
 
 end minimal

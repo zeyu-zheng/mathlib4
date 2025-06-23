@@ -68,15 +68,15 @@ variable {C c}
 lemma isIso_Q_map_iff_mem_quasiIso {K L : HomologicalComplex C c} (f : K ⟶ L) :
     IsIso (Q.map f) ↔ HomologicalComplex.quasiIso C c f := by
   constructor
-  · intro h
-    rw [HomologicalComplex.mem_quasiIso_iff, quasiIso_iff]
-    intro i
-    rw [quasiIsoAt_iff_isIso_homologyMap]
-    refine (NatIso.isIso_map_iff (homologyFunctorFactors C c i) f).1 ?_
-    dsimp
-    infer_instance
-  · intro h
-    exact Localization.inverts Q (HomologicalComplex.quasiIso C c) _ h
+  intro h
+  rw [HomologicalComplex.mem_quasiIso_iff, quasiIso_iff]
+  intro i
+  rw [quasiIsoAt_iff_isIso_homologyMap]
+  refine (NatIso.isIso_map_iff (homologyFunctorFactors C c i) f).1 ?_
+  dsimp
+  infer_instance
+  intro h
+  exact Localization.inverts Q (HomologicalComplex.quasiIso C c) _ h
 
 end HomologicalComplexUpToQuasiIso
 
@@ -129,12 +129,12 @@ lemma quasiIso_eq_quasiIso_map_quotient :
   ext ⟨K⟩ ⟨L⟩ f
   obtain ⟨f, rfl⟩ := (HomotopyCategory.quotient C c).map_surjective f
   constructor
-  · intro hf
-    rw [quotient_map_mem_quasiIso_iff] at hf
-    exact MorphismProperty.map_mem_map _ _ _ hf
-  · rintro ⟨K', L', g, h, ⟨e⟩⟩
-    rw [← quotient_map_mem_quasiIso_iff] at h
-    exact ((quasiIso C c).arrow_mk_iso_iff e).1 h
+  intro hf
+  rw [quotient_map_mem_quasiIso_iff] at hf
+  exact MorphismProperty.map_mem_map _ _ _ hf
+  rintro ⟨K', L', g, h, ⟨e⟩⟩
+  rw [← quotient_map_mem_quasiIso_iff] at h
+  exact ((quasiIso C c).arrow_mk_iso_iff e).1 h
 
 end HomotopyCategory
 

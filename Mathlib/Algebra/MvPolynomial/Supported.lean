@@ -68,11 +68,11 @@ open Classical in
 theorem mem_supported : p ∈ supported R s ↔ ↑p.vars ⊆ s := by
   rw [supported_eq_range_rename, AlgHom.mem_range]
   constructor
-  · rintro ⟨p, rfl⟩
-    refine _root_.trans (Finset.coe_subset.2 (vars_rename _ _)) ?_
-    simp
-  · intro hs
-    exact exists_rename_eq_of_vars_subset_range p ((↑) : s → σ) Subtype.val_injective (by simpa)
+  rintro ⟨p, rfl⟩
+  refine _root_.trans (Finset.coe_subset.2 (vars_rename _ _)) ?_
+  simp
+  intro hs
+  exact exists_rename_eq_of_vars_subset_range p ((↑) : s → σ) Subtype.val_injective (by simpa)
 
 theorem supported_eq_vars_subset : (supported R s : Set (MvPolynomial σ R)) = { p | ↑p.vars ⊆ s } :=
   Set.ext fun _ ↦ mem_supported
@@ -104,9 +104,9 @@ theorem X_mem_supported [Nontrivial R] {i : σ} : X i ∈ supported R s ↔ i �
 @[simp]
 theorem supported_le_supported_iff [Nontrivial R] : supported R s ≤ supported R t ↔ s ⊆ t := by
   constructor
-  · intro h i
-    simpa using @h (X i)
-  · exact supported_mono
+  intro h i
+  simpa using @h (X i)
+  exact supported_mono
 
 theorem supported_strictMono [Nontrivial R] :
     StrictMono (supported R : Set σ → Subalgebra R (MvPolynomial σ R)) :=

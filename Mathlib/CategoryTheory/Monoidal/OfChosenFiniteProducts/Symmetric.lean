@@ -47,9 +47,9 @@ theorem hexagon_forward (X Y Z : C) :
           tensorHom ℬ (𝟙 Y) (Limits.BinaryFan.braiding (ℬ X Z).isLimit (ℬ Z X).isLimit).hom := by
   dsimp [tensorHom, Limits.BinaryFan.braiding]
   apply (ℬ _ _).isLimit.hom_ext; rintro ⟨⟨⟩⟩
-  · dsimp [Limits.IsLimit.conePointUniqueUpToIso]; simp
-  · apply (ℬ _ _).isLimit.hom_ext
-    rintro ⟨⟨⟩⟩ <;> · dsimp [Limits.IsLimit.conePointUniqueUpToIso]; simp
+  dsimp [Limits.IsLimit.conePointUniqueUpToIso]; simp
+  apply (ℬ _ _).isLimit.hom_ext
+  rintro ⟨⟨⟩⟩ <;> · dsimp [Limits.IsLimit.conePointUniqueUpToIso]; simp
 
 theorem hexagon_reverse (X Y Z : C) :
     (BinaryFan.associatorOfLimitCone ℬ X Y Z).inv ≫
@@ -61,14 +61,14 @@ theorem hexagon_reverse (X Y Z : C) :
           tensorHom ℬ (Limits.BinaryFan.braiding (ℬ X Z).isLimit (ℬ Z X).isLimit).hom (𝟙 Y) := by
   dsimp [tensorHom, Limits.BinaryFan.braiding]
   apply (ℬ _ _).isLimit.hom_ext; rintro ⟨⟨⟩⟩
-  · apply (ℬ _ _).isLimit.hom_ext
-    rintro ⟨⟨⟩⟩ <;>
-      · dsimp [BinaryFan.associatorOfLimitCone, BinaryFan.associator,
-          Limits.IsLimit.conePointUniqueUpToIso]
-        simp
+  apply (ℬ _ _).isLimit.hom_ext
+  rintro ⟨⟨⟩⟩ <;>
   · dsimp [BinaryFan.associatorOfLimitCone, BinaryFan.associator,
       Limits.IsLimit.conePointUniqueUpToIso]
     simp
+  dsimp [BinaryFan.associatorOfLimitCone, BinaryFan.associator,
+    Limits.IsLimit.conePointUniqueUpToIso]
+  simp
 
 theorem symmetry (X Y : C) :
     (Limits.BinaryFan.braiding (ℬ X Y).isLimit (ℬ Y X).isLimit).hom ≫

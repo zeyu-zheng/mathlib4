@@ -382,11 +382,11 @@ theorem preVal_mul {x y : ModP K v O hv p} (hxy0 : x * y ≠ 0) :
 theorem preVal_add (x y : ModP K v O hv p) :
     preVal K v O hv p (x + y) ≤ max (preVal K v O hv p x) (preVal K v O hv p y) := by
   by_cases hx0 : x = 0
-  · rw [hx0, zero_add]; exact le_max_right _ _
+  rw [hx0, zero_add]; exact le_max_right _ _
   by_cases hy0 : y = 0
-  · rw [hy0, add_zero]; exact le_max_left _ _
+  rw [hy0, add_zero]; exact le_max_left _ _
   by_cases hxy0 : x + y = 0
-  · rw [hxy0, preVal_zero]; exact zero_le _
+  rw [hxy0, preVal_zero]; exact zero_le _
   obtain ⟨r, rfl⟩ := Ideal.Quotient.mk_surjective x
   obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective y
   rw [← map_add (Ideal.Quotient.mk (Ideal.span {↑p})) r s] at hxy0 ⊢
@@ -429,7 +429,7 @@ theorem mul_ne_zero_of_pow_p_ne_zero {x y : ModP K v O hv p} (hx : x ^ p ≠ 0) 
     mul_one_div_cancel (Nat.cast_ne_zero.2 hp.1.ne_zero : (p : ℝ) ≠ 0), rpow_one] at hx hy
   rw [RingHom.map_mul, v.map_mul]; refine lt_of_le_of_lt ?_ (mul_lt_mul₀ hx hy)
   by_cases hvp : v p = 0
-  · rw [hvp]; exact zero_le _
+  rw [hvp]; exact zero_le _
   replace hvp := zero_lt_iff.2 hvp
   conv_lhs => rw [← rpow_one (v p)]
   rw [← rpow_add (ne_of_gt hvp)]
@@ -479,7 +479,7 @@ theorem valAux_eq {f : PreTilt K v O hv p} {n : ℕ} (hfn : coeff _ _ n f ≠ 0)
   rw [valAux, dif_pos h]
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le (Nat.find_min' h hfn)
   induction' k with k ih
-  · rfl
+  rfl
   obtain ⟨x, hx⟩ := Ideal.Quotient.mk_surjective (coeff (ModP K v O hv p) p (Nat.find h + k + 1) f)
   have h1 : (Ideal.Quotient.mk _ x : ModP K v O hv p) ≠ 0 := hx.symm ▸ hfn
   have h2 : (Ideal.Quotient.mk _ (x ^ p) : ModP K v O hv p) ≠ 0
@@ -503,9 +503,9 @@ theorem valAux_one : valAux K v O hv p 1 = 1 :=
 theorem valAux_mul (f g : PreTilt K v O hv p) :
     valAux K v O hv p (f * g) = valAux K v O hv p f * valAux K v O hv p g := by
   by_cases hf : f = 0
-  · rw [hf, zero_mul, valAux_zero, zero_mul]
+  rw [hf, zero_mul, valAux_zero, zero_mul]
   by_cases hg : g = 0
-  · rw [hg, mul_zero, valAux_zero, mul_zero]
+  rw [hg, mul_zero, valAux_zero, mul_zero]
   obtain ⟨m, hm⟩ : ∃ n, coeff _ _ n f ≠ 0 := not_forall.1 fun h => hf <| Perfection.ext h
   obtain ⟨n, hn⟩ : ∃ n, coeff _ _ n g ≠ 0 := not_forall.1 fun h => hg <| Perfection.ext h
   replace hm := coeff_ne_zero_of_le hm (le_max_left m n)
@@ -513,19 +513,19 @@ theorem valAux_mul (f g : PreTilt K v O hv p) :
   have hfg : coeff _ _ (max m n + 1) (f * g) ≠ 0
   rw [RingHom.map_mul]
   refine ModP.mul_ne_zero_of_pow_p_ne_zero ?_ ?_
-  · rw [← RingHom.map_pow, coeff_pow_p f]; assumption
-  · rw [← RingHom.map_pow, coeff_pow_p g]; assumption
+  rw [← RingHom.map_pow, coeff_pow_p f]; assumption
+  rw [← RingHom.map_pow, coeff_pow_p g]; assumption
   rw [valAux_eq (coeff_add_ne_zero hm 1), valAux_eq (coeff_add_ne_zero hn 1), valAux_eq hfg]
   rw [RingHom.map_mul] at hfg ⊢; rw [ModP.preVal_mul hfg, mul_pow]
 
 theorem valAux_add (f g : PreTilt K v O hv p) :
     valAux K v O hv p (f + g) ≤ max (valAux K v O hv p f) (valAux K v O hv p g) := by
   by_cases hf : f = 0
-  · rw [hf, zero_add, valAux_zero, max_eq_right]; exact zero_le _
+  rw [hf, zero_add, valAux_zero, max_eq_right]; exact zero_le _
   by_cases hg : g = 0
-  · rw [hg, add_zero, valAux_zero, max_eq_left]; exact zero_le _
+  rw [hg, add_zero, valAux_zero, max_eq_left]; exact zero_le _
   by_cases hfg : f + g = 0
-  · rw [hfg, valAux_zero]; exact zero_le _
+  rw [hfg, valAux_zero]; exact zero_le _
   replace hf : ∃ n, coeff _ _ n f ≠ 0 := not_forall.1 fun h => hf <| Perfection.ext h
   replace hg : ∃ n, coeff _ _ n g ≠ 0 := not_forall.1 fun h => hg <| Perfection.ext h
   replace hfg : ∃ n, coeff _ _ n (f + g) ≠ 0 := not_forall.1 fun h => hfg <| Perfection.ext h
@@ -536,8 +536,8 @@ theorem valAux_add (f g : PreTilt K v O hv p) :
   rw [valAux_eq hm, valAux_eq hn, valAux_eq hk, RingHom.map_add]
   cases' le_max_iff.1
       (ModP.preVal_add (coeff _ _ (max (max m n) k) f) (coeff _ _ (max (max m n) k) g)) with h h
-  · exact le_max_of_le_left (pow_le_pow_left' h _)
-  · exact le_max_of_le_right (pow_le_pow_left' h _)
+  exact le_max_of_le_left (pow_le_pow_left' h _)
+  exact le_max_of_le_right (pow_le_pow_left' h _)
 
 variable (K v O hv p)
 
@@ -555,7 +555,7 @@ variable {K v O hv p}
 
 theorem map_eq_zero {f : PreTilt K v O hv p} : val K v O hv p f = 0 ↔ f = 0 := by
   by_cases hf0 : f = 0
-  · rw [hf0]; exact iff_of_true (Valuation.map_zero _) rfl
+  rw [hf0]; exact iff_of_true (Valuation.map_zero _) rfl
   obtain ⟨n, hn⟩ : ∃ n, coeff _ _ n f ≠ 0 := not_forall.1 fun h => hf0 <| Perfection.ext h
   show valAux K v O hv p f = 0 ↔ f = 0; refine iff_of_false (fun hvf => hn ?_) hf0
   rw [valAux_eq hn] at hvf; replace hvf := pow_eq_zero hvf; rwa [ModP.preVal_eq_zero] at hvf

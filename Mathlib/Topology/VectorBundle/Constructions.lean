@@ -127,15 +127,15 @@ instance VectorBundle.prod [VectorBundle 𝕜 F₁ E₁] [VectorBundle 𝕜 F₂
     refine (((continuousOn_coordChange 𝕜 e₁ e₁').mono ?_).prod_mapL 𝕜
       ((continuousOn_coordChange 𝕜 e₂ e₂').mono ?_)).congr ?_ <;>
       dsimp only [baseSet_prod, mfld_simps]
-    · mfld_set_tac
-    · mfld_set_tac
-    · rintro b hb
-      rw [ContinuousLinearMap.ext_iff]
-      rintro ⟨v₁, v₂⟩
-      show (e₁.prod e₂).coordChangeL 𝕜 (e₁'.prod e₂') b (v₁, v₂) =
-        (e₁.coordChangeL 𝕜 e₁' b v₁, e₂.coordChangeL 𝕜 e₂' b v₂)
-      rw [e₁.coordChangeL_apply e₁', e₂.coordChangeL_apply e₂', (e₁.prod e₂).coordChangeL_apply']
-      exacts [rfl, hb, ⟨hb.1.2, hb.2.2⟩, ⟨hb.1.1, hb.2.1⟩]
+    mfld_set_tac
+    mfld_set_tac
+    rintro b hb
+    rw [ContinuousLinearMap.ext_iff]
+    rintro ⟨v₁, v₂⟩
+    show (e₁.prod e₂).coordChangeL 𝕜 (e₁'.prod e₂') b (v₁, v₂) =
+      (e₁.coordChangeL 𝕜 e₁' b v₁, e₂.coordChangeL 𝕜 e₂' b v₂)
+    rw [e₁.coordChangeL_apply e₁', e₂.coordChangeL_apply e₂', (e₁.prod e₂).coordChangeL_apply']
+    exacts [rfl, hb, ⟨hb.1.2, hb.2.2⟩, ⟨hb.1.1, hb.2.1⟩]
 
 variable {𝕜 F₁ E₁ F₂ E₂}
 

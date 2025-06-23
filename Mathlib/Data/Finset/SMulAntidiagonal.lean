@@ -111,12 +111,12 @@ theorem smulAntidiagonal_min_smul_min [LinearOrder G] [LinearOrder P] [SMul G P]
   ext ⟨a, b⟩
   simp only [mem_smulAntidiagonal, mem_singleton, Prod.ext_iff]
   constructor
-  · rintro ⟨has, hat, hst⟩
-    obtain rfl :=
-      (hs.min_le hns has).eq_of_not_lt fun hlt =>
-        (SMul.smul_lt_smul_of_lt_of_le hlt <| ht.min_le hnt hat).ne' hst
-    exact ⟨rfl, IsCancelSMul.left_cancel _ _ _ hst⟩
-  · rintro ⟨rfl, rfl⟩
-    exact ⟨hs.min_mem _, ht.min_mem _, rfl⟩
+  rintro ⟨has, hat, hst⟩
+  obtain rfl :=
+    (hs.min_le hns has).eq_of_not_lt fun hlt =>
+      (SMul.smul_lt_smul_of_lt_of_le hlt <| ht.min_le hnt hat).ne' hst
+  exact ⟨rfl, IsCancelSMul.left_cancel _ _ _ hst⟩
+  rintro ⟨rfl, rfl⟩
+  exact ⟨hs.min_mem _, ht.min_mem _, rfl⟩
 
 end Finset

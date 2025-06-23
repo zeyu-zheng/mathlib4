@@ -86,19 +86,19 @@ theorem exists_isLUB {S : Set ℝ} (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ 
     simpa using sub_lt_iff_lt_add'.2 (lt_of_le_of_lt hy <| sub_lt_iff_lt_add.1 <| hf₂ _ k0 _ yS)
   let g : CauSeq ℚ abs := ⟨fun n => f n / n, hg⟩
   refine ⟨mk g, ⟨fun x xS => ?_, fun y h => ?_⟩⟩
-  · refine le_of_forall_ge_of_dense fun z xz => ?_
-    cases' exists_nat_gt (x - z)⁻¹ with K hK
-    refine le_mk_of_forall_le ⟨K, fun n nK => ?_⟩
-    replace xz := sub_pos.2 xz
-    replace hK := hK.le.trans (Nat.cast_le.2 nK)
-    have n0 : 0 < n := Nat.cast_pos.1 ((inv_pos.2 xz).trans_le hK)
-    refine le_trans ?_ (hf₂ _ n0 _ xS).le
-    rwa [le_sub_comm, inv_le (Nat.cast_pos.2 n0 : (_ : ℝ) < _) xz]
-  · exact
-      mk_le_of_forall_le
-        ⟨1, fun n n1 =>
-          let ⟨x, xS, hx⟩ := hf₁ _ n1
-          le_trans hx (h xS)⟩
+  refine le_of_forall_ge_of_dense fun z xz => ?_
+  cases' exists_nat_gt (x - z)⁻¹ with K hK
+  refine le_mk_of_forall_le ⟨K, fun n nK => ?_⟩
+  replace xz := sub_pos.2 xz
+  replace hK := hK.le.trans (Nat.cast_le.2 nK)
+  have n0 : 0 < n := Nat.cast_pos.1 ((inv_pos.2 xz).trans_le hK)
+  refine le_trans ?_ (hf₂ _ n0 _ xS).le
+  rwa [le_sub_comm, inv_le (Nat.cast_pos.2 n0 : (_ : ℝ) < _) xz]
+  exact
+    mk_le_of_forall_le
+      ⟨1, fun n n1 =>
+        let ⟨x, xS, hx⟩ := hf₁ _ n1
+        le_trans hx (h xS)⟩
 
 /-- A nonempty, bounded below set of real numbers has a greatest lower bound. -/
 theorem exists_isGLB {S : Set ℝ} (hne : S.Nonempty) (hbdd : BddBelow S) : ∃ x, IsGLB S x := by
@@ -154,17 +154,17 @@ theorem sInf_le_iff {s : Set ℝ} (h : BddBelow s) (h' : s.Nonempty) {a : ℝ} :
     sInf s ≤ a ↔ ∀ ε, 0 < ε → ∃ x ∈ s, x < a + ε := by
   rw [le_iff_forall_pos_lt_add]
   constructor <;> intro H ε ε_pos
-  · exact exists_lt_of_csInf_lt h' (H ε ε_pos)
-  · rcases H ε ε_pos with ⟨x, x_in, hx⟩
-    exact csInf_lt_of_lt h x_in hx
+  exact exists_lt_of_csInf_lt h' (H ε ε_pos)
+  rcases H ε ε_pos with ⟨x, x_in, hx⟩
+  exact csInf_lt_of_lt h x_in hx
 
 theorem le_sSup_iff {s : Set ℝ} (h : BddAbove s) (h' : s.Nonempty) {a : ℝ} :
     a ≤ sSup s ↔ ∀ ε, ε < 0 → ∃ x ∈ s, a + ε < x := by
   rw [le_iff_forall_pos_lt_add]
   refine ⟨fun H ε ε_neg => ?_, fun H ε ε_pos => ?_⟩
-  · exact exists_lt_of_lt_csSup h' (lt_sub_iff_add_lt.mp (H _ (neg_pos.mpr ε_neg)))
-  · rcases H _ (neg_lt_zero.mpr ε_pos) with ⟨x, x_in, hx⟩
-    exact sub_lt_iff_lt_add.mp (lt_csSup_of_lt h x_in hx)
+  exact exists_lt_of_lt_csSup h' (lt_sub_iff_add_lt.mp (H _ (neg_pos.mpr ε_neg)))
+  rcases H _ (neg_lt_zero.mpr ε_pos) with ⟨x, x_in, hx⟩
+  exact sub_lt_iff_lt_add.mp (lt_csSup_of_lt h x_in hx)
 
 @[simp]
 theorem sSup_empty : sSup (∅ : Set ℝ) = 0 :=
@@ -179,8 +179,8 @@ theorem sSup_empty : sSup (∅ : Set ℝ) = 0 :=
 @[simp]
 theorem ciSup_const_zero {α : Sort*} : ⨆ _ : α, (0 : ℝ) = 0 := by
   cases isEmpty_or_nonempty α
-  · exact Real.iSup_of_isEmpty _
-  · exact ciSup_const
+  exact Real.iSup_of_isEmpty _
+  exact ciSup_const
 
 theorem sSup_of_not_bddAbove {s : Set ℝ} (hs : ¬BddAbove s) : sSup s = 0 :=
   dif_neg fun h => hs h.2
@@ -200,8 +200,8 @@ theorem sInf_empty : sInf (∅ : Set ℝ) = 0 := by simp [sInf_def, sSup_empty]
 @[simp]
 theorem ciInf_const_zero {α : Sort*} : ⨅ _ : α, (0 : ℝ) = 0 := by
   cases isEmpty_or_nonempty α
-  · exact Real.iInf_of_isEmpty _
-  · exact ciInf_const
+  exact Real.iInf_of_isEmpty _
+  exact ciInf_const
 
 theorem sInf_of_not_bddBelow {s : Set ℝ} (hs : ¬BddBelow s) : sInf s = 0 :=
   neg_eq_zero.2 <| sSup_of_not_bddAbove <| mt bddAbove_neg.1 hs
@@ -216,8 +216,8 @@ suffices to show that `S` is bounded below by `0` to show that `0 ≤ sSup S`.
 -/
 theorem sSup_nonneg (S : Set ℝ) (hS : ∀ x ∈ S, (0 : ℝ) ≤ x) : 0 ≤ sSup S := by
   rcases S.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
-  · exact sSup_empty.ge
-  · apply dite _ (fun h => le_csSup_of_le h hy <| hS y hy) fun h => (sSup_of_not_bddAbove h).ge
+  exact sSup_empty.ge
+  apply dite _ (fun h => le_csSup_of_le h hy <| hS y hy) fun h => (sSup_of_not_bddAbove h).ge
 
 /--
 As `0` is the default value for `Real.sSup` of the empty set or sets which are not bounded above, it
@@ -264,13 +264,13 @@ suffices to show that `S` is bounded above by `0` to show that `sInf S ≤ 0`.
 -/
 theorem sInf_nonpos (S : Set ℝ) (hS : ∀ x ∈ S, x ≤ (0 : ℝ)) : sInf S ≤ 0 := by
   rcases S.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
-  · exact sInf_empty.le
-  · apply dite _ (fun h => csInf_le_of_le h hy <| hS y hy) fun h => (sInf_of_not_bddBelow h).le
+  exact sInf_empty.le
+  apply dite _ (fun h => csInf_le_of_le h hy <| hS y hy) fun h => (sInf_of_not_bddBelow h).le
 
 theorem sInf_le_sSup (s : Set ℝ) (h₁ : BddBelow s) (h₂ : BddAbove s) : sInf s ≤ sSup s := by
   rcases s.eq_empty_or_nonempty with (rfl | hne)
-  · rw [sInf_empty, sSup_empty]
-  · exact csInf_le_csSup h₁ h₂ hne
+  rw [sInf_empty, sSup_empty]
+  exact csInf_le_csSup h₁ h₂ hne
 
 theorem cauSeq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x := by
   let S := { x : ℝ | const abs x < f }
@@ -279,16 +279,16 @@ theorem cauSeq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x := by
     le_of_lt <| const_lt.1 <| CauSeq.lt_trans yS h
   have ub : ∃ x, ∀ y ∈ S, y ≤ x := (exists_gt f).imp ub'
   refine ⟨sSup S, ((lt_total _ _).resolve_left fun h => ?_).resolve_right fun h => ?_⟩
-  · rcases h with ⟨ε, ε0, i, ih⟩
-    refine (csSup_le lb (ub' _ ?_)).not_lt (sub_lt_self _ (half_pos ε0))
-    refine ⟨_, half_pos ε0, i, fun j ij => ?_⟩
-    rw [sub_apply, const_apply, sub_right_comm, le_sub_iff_add_le, add_halves]
-    exact ih _ ij
-  · rcases h with ⟨ε, ε0, i, ih⟩
-    refine (le_csSup ub ?_).not_lt ((lt_add_iff_pos_left _).2 (half_pos ε0))
-    refine ⟨_, half_pos ε0, i, fun j ij => ?_⟩
-    rw [sub_apply, const_apply, add_comm, ← sub_sub, le_sub_iff_add_le, add_halves]
-    exact ih _ ij
+  rcases h with ⟨ε, ε0, i, ih⟩
+  refine (csSup_le lb (ub' _ ?_)).not_lt (sub_lt_self _ (half_pos ε0))
+  refine ⟨_, half_pos ε0, i, fun j ij => ?_⟩
+  rw [sub_apply, const_apply, sub_right_comm, le_sub_iff_add_le, add_halves]
+  exact ih _ ij
+  rcases h with ⟨ε, ε0, i, ih⟩
+  refine (le_csSup ub ?_).not_lt ((lt_add_iff_pos_left _).2 (half_pos ε0))
+  refine ⟨_, half_pos ε0, i, fun j ij => ?_⟩
+  rw [sub_apply, const_apply, add_comm, ← sub_sub, le_sub_iff_add_le, add_halves]
+  exact ih _ ij
 
 instance : CauSeq.IsComplete ℝ abs :=
   ⟨cauSeq_converges⟩
@@ -298,25 +298,25 @@ open Set
 theorem iInf_Ioi_eq_iInf_rat_gt {f : ℝ → ℝ} (x : ℝ) (hf : BddBelow (f '' Ioi x))
     (hf_mono : Monotone f) : ⨅ r : Ioi x, f r = ⨅ q : { q' : ℚ // x < q' }, f q := by
   refine le_antisymm ?_ ?_
-  · have : Nonempty { r' : ℚ // x < ↑r' } := by
-      obtain ⟨r, hrx⟩ := exists_rat_gt x
-      exact ⟨⟨r, hrx⟩⟩
-    refine le_ciInf fun r => ?_
-    obtain ⟨y, hxy, hyr⟩ := exists_rat_btwn r.prop
-    refine ciInf_set_le hf (hxy.trans ?_)
-    exact_mod_cast hyr
-  · refine le_ciInf fun q => ?_
-    have hq := q.prop
-    rw [mem_Ioi] at hq
-    obtain ⟨y, hxy, hyq⟩ := exists_rat_btwn hq
-    refine (ciInf_le ?_ ?_).trans ?_
-    · refine ⟨hf.some, fun z => ?_⟩
-      rintro ⟨u, rfl⟩
-      suffices hfu : f u ∈ f '' Ioi x from hf.choose_spec hfu
-      exact ⟨u, u.prop, rfl⟩
-    · exact ⟨y, hxy⟩
-    · refine hf_mono (le_trans ?_ hyq.le)
-      norm_cast
+  have : Nonempty { r' : ℚ // x < ↑r' } := by
+    obtain ⟨r, hrx⟩ := exists_rat_gt x
+    exact ⟨⟨r, hrx⟩⟩
+  refine le_ciInf fun r => ?_
+  obtain ⟨y, hxy, hyr⟩ := exists_rat_btwn r.prop
+  refine ciInf_set_le hf (hxy.trans ?_)
+  exact_mod_cast hyr
+  refine le_ciInf fun q => ?_
+  have hq := q.prop
+  rw [mem_Ioi] at hq
+  obtain ⟨y, hxy, hyq⟩ := exists_rat_btwn hq
+  refine (ciInf_le ?_ ?_).trans ?_
+  refine ⟨hf.some, fun z => ?_⟩
+  rintro ⟨u, rfl⟩
+  suffices hfu : f u ∈ f '' Ioi x from hf.choose_spec hfu
+  exact ⟨u, u.prop, rfl⟩
+  exact ⟨y, hxy⟩
+  refine hf_mono (le_trans ?_ hyq.le)
+  norm_cast
 
 theorem not_bddAbove_coe : ¬ (BddAbove <| range (fun (x : ℚ) ↦ (x : ℝ))) := by
   dsimp only [BddAbove, upperBounds]

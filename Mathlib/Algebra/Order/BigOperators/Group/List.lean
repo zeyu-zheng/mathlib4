@@ -26,8 +26,8 @@ lemma Forall₂.prod_le_prod' [Preorder M] [CovariantClass M M (Function.swap (�
     [CovariantClass M M (· * ·) (· ≤ ·)] {l₁ l₂ : List M} (h : Forall₂ (· ≤ ·) l₁ l₂) :
     l₁.prod ≤ l₂.prod := by
   induction' h with a b la lb hab ih ih'
-  · rfl
-  · simpa only [prod_cons] using mul_le_mul' hab ih'
+  rfl
+  simpa only [prod_cons] using mul_le_mul' hab ih'
 
 /-- If `l₁` is a sublist of `l₂` and all elements of `l₂` are greater than or equal to one, then
 `l₁.prod ≤ l₂.prod`. One can prove a stronger version assuming `∀ a ∈ l₂.diff l₁, 1 ≤ a` instead
@@ -68,12 +68,12 @@ lemma prod_lt_prod' [Preorder M] [CovariantClass M M (· * ·) (· < ·)]
     [CovariantClass M M (Function.swap (· * ·)) (· ≤ ·)] {l : List ι} (f g : ι → M)
     (h₁ : ∀ i ∈ l, f i ≤ g i) (h₂ : ∃ i ∈ l, f i < g i) : (l.map f).prod < (l.map g).prod := by
   induction' l with i l ihl
-  · rcases h₂ with ⟨_, ⟨⟩, _⟩
+  rcases h₂ with ⟨_, ⟨⟩, _⟩
   simp only [forall_mem_cons, map_cons, prod_cons] at h₁ ⊢
   simp only [mem_cons, exists_eq_or_imp] at h₂
   cases h₂
-  · exact mul_lt_mul_of_lt_of_le ‹_› (prod_le_prod' h₁.2)
-  · exact mul_lt_mul_of_le_of_lt h₁.1 <| ihl h₁.2 ‹_›
+  exact mul_lt_mul_of_lt_of_le ‹_› (prod_le_prod' h₁.2)
+  exact mul_lt_mul_of_le_of_lt h₁.1 <| ihl h₁.2 ‹_›
 
 @[to_additive]
 lemma prod_lt_prod_of_ne_nil [Preorder M] [CovariantClass M M (· * ·) (· < ·)]
@@ -116,7 +116,7 @@ lemma one_le_prod_of_one_le [Preorder M] [CovariantClass M M (· * ·) (· ≤ �
   -- We don't use `pow_card_le_prod` to avoid assumption
   -- [covariant_class M M (function.swap (*)) (≤)]
   induction' l with hd tl ih
-  · rfl
+  rfl
   rw [prod_cons]
   exact one_le_mul (hl₁ hd (mem_cons_self hd tl)) (ih fun x h => hl₁ x (mem_cons_of_mem hd h))
 
@@ -126,7 +126,7 @@ end Monoid
 lemma sum_le_foldr_max [AddMonoid M] [AddMonoid N] [LinearOrder N] (f : M → N) (h0 : f 0 ≤ 0)
     (hadd : ∀ x y, f (x + y) ≤ max (f x) (f y)) (l : List M) : f l.sum ≤ (l.map f).foldr max 0 := by
   induction' l with hd tl IH
-  · simpa using h0
+  simpa using h0
   simp only [List.sum_cons, List.foldr_map, List.foldr] at IH ⊢
   exact (hadd _ _).trans (max_le_max le_rfl IH)
 
@@ -141,14 +141,14 @@ lemma one_lt_prod_of_one_lt [OrderedCommMonoid M] :
     apply one_lt_mul_of_lt_of_le' hl₁.1
     apply le_of_lt ((b :: l).one_lt_prod_of_one_lt _ (l.cons_ne_nil b))
     intro x hx; cases hx
-    · exact hl₁.2.1
-    · exact hl₁.2.2 _ ‹_›
+    exact hl₁.2.1
+    exact hl₁.2.2 _ ‹_›
 
 @[to_additive]
 lemma single_le_prod [OrderedCommMonoid M] {l : List M} (hl₁ : ∀ x ∈ l, (1 : M) ≤ x) :
     ∀ x ∈ l, x ≤ l.prod := by
   induction l
-  · simp
+  simp
   simp_rw [prod_cons, forall_mem_cons] at hl₁ ⊢
   constructor
   case cons.left => exact le_mul_of_one_le_right' (one_le_prod_of_one_le hl₁.2)
@@ -165,15 +165,15 @@ variable [CanonicallyOrderedCommMonoid M] {l : List M}
 @[to_additive] lemma prod_eq_one_iff : l.prod = 1 ↔ ∀ x ∈ l, x = (1 : M) :=
   ⟨all_one_of_le_one_le_of_prod_eq_one fun _ _ => one_le _, fun h => by
     rw [List.eq_replicate.2 ⟨_, h⟩, prod_replicate, one_pow]
-    · exact (length l)
-    · rfl⟩
+    exact (length l)
+    rfl⟩
 
 @[to_additive] lemma monotone_prod_take (L : List M) : Monotone fun i => (L.take i).prod := by
   refine monotone_nat_of_le_succ fun n => ?_
   cases' lt_or_le n L.length with h h
-  · rw [prod_take_succ _ _ h]
-    exact le_self_mul
-  · simp [take_all_of_le h, take_all_of_le (le_trans h (Nat.le_succ _))]
+  rw [prod_take_succ _ _ h]
+  exact le_self_mul
+  simp [take_all_of_le h, take_all_of_le (le_trans h (Nat.le_succ _))]
 
 end CanonicallyOrderedCommMonoid
 end List

@@ -104,8 +104,8 @@ instance (priority := 75) toSemiring {R} [Semiring R] [SetLike S R] [Subsemiring
 theorem coe_pow {R} [Semiring R] [SetLike S R] [SubsemiringClass S R] (x : s) (n : ℕ) :
     ((x ^ n : s) : R) = (x : R) ^ n := by
   induction' n with n ih
-  · simp
-  · simp [pow_succ, ih]
+  simp
+  simp [pow_succ, ih]
 
 /-- A subsemiring of a `CommSemiring` is a `CommSemiring`. -/
 instance toCommSemiring {R} [CommSemiring R] [SetLike S R] [SubsemiringClass S R] :
@@ -316,8 +316,8 @@ instance toSemiring {R} [Semiring R] (s : Subsemiring R) : Semiring s :=
 theorem coe_pow {R} [Semiring R] (s : Subsemiring R) (x : s) (n : ℕ) :
     ((x ^ n : s) : R) = (x : R) ^ n := by
   induction' n with n ih
-  · simp
-  · simp [pow_succ, ih]
+  simp
+  simp [pow_succ, ih]
 
 /-- A subsemiring of a `CommSemiring` is a `CommSemiring`. -/
 instance toCommSemiring {R} [CommSemiring R] (s : Subsemiring R) : CommSemiring s :=
@@ -696,8 +696,8 @@ theorem subsemiringClosure_eq_closure : M.subsemiringClosure = Subsemiring.closu
       (Subsemiring.mem_closure.mp hx) M.subsemiringClosure fun s sM => ?_⟩
   <;> rintro - ⟨H1, rfl⟩
   <;> rintro - ⟨H2, rfl⟩
-  · exact AddSubmonoid.mem_closure.mp hx H1.toAddSubmonoid H2
-  · exact H2 sM
+  exact AddSubmonoid.mem_closure.mp hx H1.toAddSubmonoid H2
+  exact H2 sM
 
 end Submonoid
 
@@ -751,10 +751,10 @@ theorem closure_induction' {s : Set R} {p : ∀ x, x ∈ closure s → Prop}
   refine
     closure_induction ha (fun m hm => ⟨subset_closure hm, mem m hm⟩) ⟨zero_mem _, zero⟩
       ⟨one_mem _, one⟩ ?_ ?_
-  · exact (fun x y hx hy => hx.elim fun hx' hx => hy.elim fun hy' hy =>
-      ⟨add_mem hx' hy', add _ _ _ _ hx hy⟩)
-  · exact (fun x y hx hy => hx.elim fun hx' hx => hy.elim fun hy' hy =>
-      ⟨mul_mem hx' hy', mul _ _ _ _ hx hy⟩)
+  exact (fun x y hx hy => hx.elim fun hx' hx => hy.elim fun hy' hy =>
+    ⟨add_mem hx' hy', add _ _ _ _ hx hy⟩)
+  exact (fun x y hx hy => hx.elim fun hx' hx => hy.elim fun hy' hy =>
+    ⟨mul_mem hx' hy', mul _ _ _ _ hx hy⟩)
 
 /-- An induction principle for closure membership for predicates with two arguments. -/
 @[elab_as_elim]
@@ -773,29 +773,29 @@ theorem closure_induction₂ {s : Set R} {p : R → R → Prop} {x} {y : R} (hx 
 theorem mem_closure_iff_exists_list {R} [Semiring R] {s : Set R} {x} :
     x ∈ closure s ↔ ∃ L : List (List R), (∀ t ∈ L, ∀ y ∈ t, y ∈ s) ∧ (L.map List.prod).sum = x := by
   constructor
-  · intro hx
-    -- Porting note: needed explicit `p`
-    let p : R → Prop := fun x =>
-      ∃ (L : List (List R)),
-        (∀ (t : List R), t ∈ L → ∀ (y : R), y ∈ t → y ∈ s) ∧ (List.map List.prod L).sum = x
-    exact AddSubmonoid.closure_induction (p := p) (mem_closure_iff.1 hx)
-      (fun x hx =>
-        suffices ∃ t : List R, (∀ y ∈ t, y ∈ s) ∧ t.prod = x from
-          let ⟨t, ht1, ht2⟩ := this
-          ⟨[t], List.forall_mem_singleton.2 ht1, by
-            rw [List.map_singleton, List.sum_singleton, ht2]⟩
-        Submonoid.closure_induction hx
-          (fun x hx => ⟨[x], List.forall_mem_singleton.2 hx, one_mul x⟩)
-          ⟨[], List.forall_mem_nil _, rfl⟩ fun x y ⟨t, ht1, ht2⟩ ⟨u, hu1, hu2⟩ =>
-          ⟨t ++ u, List.forall_mem_append.2 ⟨ht1, hu1⟩, by rw [List.prod_append, ht2, hu2]⟩)
-      ⟨[], List.forall_mem_nil _, rfl⟩ fun x y ⟨L, HL1, HL2⟩ ⟨M, HM1, HM2⟩ =>
-      ⟨L ++ M, List.forall_mem_append.2 ⟨HL1, HM1⟩, by
-        rw [List.map_append, List.sum_append, HL2, HM2]⟩
-  · rintro ⟨L, HL1, HL2⟩
-    exact HL2 ▸
-      list_sum_mem fun r hr =>
-        let ⟨t, ht1, ht2⟩ := List.mem_map.1 hr
-        ht2 ▸ list_prod_mem _ fun y hy => subset_closure <| HL1 t ht1 y hy
+  intro hx
+  -- Porting note: needed explicit `p`
+  let p : R → Prop := fun x =>
+    ∃ (L : List (List R)),
+      (∀ (t : List R), t ∈ L → ∀ (y : R), y ∈ t → y ∈ s) ∧ (List.map List.prod L).sum = x
+  exact AddSubmonoid.closure_induction (p := p) (mem_closure_iff.1 hx)
+    (fun x hx =>
+      suffices ∃ t : List R, (∀ y ∈ t, y ∈ s) ∧ t.prod = x from
+        let ⟨t, ht1, ht2⟩ := this
+        ⟨[t], List.forall_mem_singleton.2 ht1, by
+          rw [List.map_singleton, List.sum_singleton, ht2]⟩
+      Submonoid.closure_induction hx
+        (fun x hx => ⟨[x], List.forall_mem_singleton.2 hx, one_mul x⟩)
+        ⟨[], List.forall_mem_nil _, rfl⟩ fun x y ⟨t, ht1, ht2⟩ ⟨u, hu1, hu2⟩ =>
+        ⟨t ++ u, List.forall_mem_append.2 ⟨ht1, hu1⟩, by rw [List.prod_append, ht2, hu2]⟩)
+    ⟨[], List.forall_mem_nil _, rfl⟩ fun x y ⟨L, HL1, HL2⟩ ⟨M, HM1, HM2⟩ =>
+    ⟨L ++ M, List.forall_mem_append.2 ⟨HL1, HM1⟩, by
+      rw [List.map_append, List.sum_append, HL2, HM2]⟩
+  rintro ⟨L, HL1, HL2⟩
+  exact HL2 ▸
+    list_sum_mem fun r hr =>
+      let ⟨t, ht1, ht2⟩ := List.mem_map.1 hr
+      ht2 ▸ list_prod_mem _ fun y hy => subset_closure <| HL1 t ht1 y hy
 
 variable (R)
 

@@ -102,10 +102,10 @@ are `M`-regular. -/
 theorem mul_and_mul_iff [Mul R] [IsScalarTower R R M] :
     IsSMulRegular M (a * b) ∧ IsSMulRegular M (b * a) ↔ IsSMulRegular M a ∧ IsSMulRegular M b := by
   refine ⟨?_, ?_⟩
-  · rintro ⟨ab, ba⟩
-    exact ⟨ba.of_mul, ab.of_mul⟩
-  · rintro ⟨ha, hb⟩
-    exact ⟨ha.mul hb, hb.mul ha⟩
+  rintro ⟨ab, ba⟩
+  exact ⟨ba.of_mul, ab.of_mul⟩
+  rintro ⟨ha, hb⟩
+  exact ⟨ha.mul hb, hb.mul ha⟩
 
 lemma of_injective {N F} [SMul R N] [FunLike F M N] [MulActionHomClass F R M N]
     (f : F) {r : R} (h1 : Function.Injective f) (h2 : IsSMulRegular N r) :
@@ -135,9 +135,9 @@ theorem of_mul_eq_one (h : a * b = 1) : IsSMulRegular M b :=
 /-- Any power of an `M`-regular element is `M`-regular. -/
 theorem pow (n : ℕ) (ra : IsSMulRegular M a) : IsSMulRegular M (a ^ n) := by
   induction' n with n hn
-  · rw [pow_zero]; simp only [one]
-  · rw [pow_succ']
-    exact (ra.smul_iff (a ^ n)).mpr hn
+  rw [pow_zero]; simp only [one]
+  rw [pow_succ']
+  exact (ra.smul_iff (a ^ n)).mpr hn
 
 /-- An element `a` is `M`-regular if and only if a positive power of `a` is `M`-regular. -/
 theorem pow_iff {n : ℕ} (n0 : 0 < n) : IsSMulRegular M (a ^ n) ↔ IsSMulRegular M a := by

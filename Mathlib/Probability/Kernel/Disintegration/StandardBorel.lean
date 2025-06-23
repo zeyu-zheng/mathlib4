@@ -87,28 +87,28 @@ lemma isRatCondKernelCDFAux_density_Iic (κ : Kernel α (γ × ℝ)) [IsFiniteKe
   tendsto_integral_of_antitone a s hs_anti hs_tendsto := by
     let s' : ℕ → Set ℝ := fun n ↦ Iic (s n)
     refine tendsto_integral_density_of_antitone le_rfl a s' ?_ ?_ (fun _ ↦ measurableSet_Iic)
-    · refine fun i j hij ↦ Iic_subset_Iic.mpr ?_
-      exact mod_cast hs_anti hij
-    · ext x
-      simp only [mem_iInter, mem_Iic, mem_empty_iff_false, iff_false, not_forall, not_le, s']
-      rw [tendsto_atTop_atBot] at hs_tendsto
-      have ⟨q, hq⟩ := exists_rat_lt x
-      obtain ⟨i, hi⟩ := hs_tendsto q
-      refine ⟨i, lt_of_le_of_lt ?_ hq⟩
-      exact mod_cast hi i le_rfl
+    refine fun i j hij ↦ Iic_subset_Iic.mpr ?_
+    exact mod_cast hs_anti hij
+    ext x
+    simp only [mem_iInter, mem_Iic, mem_empty_iff_false, iff_false, not_forall, not_le, s']
+    rw [tendsto_atTop_atBot] at hs_tendsto
+    have ⟨q, hq⟩ := exists_rat_lt x
+    obtain ⟨i, hi⟩ := hs_tendsto q
+    refine ⟨i, lt_of_le_of_lt ?_ hq⟩
+    exact mod_cast hi i le_rfl
   tendsto_integral_of_monotone a s hs_mono hs_tendsto := by
     rw [fst_apply' _ _ MeasurableSet.univ]
     let s' : ℕ → Set ℝ := fun n ↦ Iic (s n)
     refine tendsto_integral_density_of_monotone (le_rfl : fst κ ≤ fst κ)
       a s' ?_ ?_ (fun _ ↦ measurableSet_Iic)
-    · exact fun i j hij ↦ Iic_subset_Iic.mpr (by exact mod_cast hs_mono hij)
-    · ext x
-      simp only [mem_iUnion, mem_Iic, mem_univ, iff_true]
-      rw [tendsto_atTop_atTop] at hs_tendsto
-      have ⟨q, hq⟩ := exists_rat_gt x
-      obtain ⟨i, hi⟩ := hs_tendsto q
-      refine ⟨i, hq.le.trans ?_⟩
-      exact mod_cast hi i le_rfl
+    exact fun i j hij ↦ Iic_subset_Iic.mpr (by exact mod_cast hs_mono hij)
+    ext x
+    simp only [mem_iUnion, mem_Iic, mem_univ, iff_true]
+    rw [tendsto_atTop_atTop] at hs_tendsto
+    have ⟨q, hq⟩ := exists_rat_gt x
+    obtain ⟨i, hi⟩ := hs_tendsto q
+    refine ⟨i, hq.le.trans ?_⟩
+    exact mod_cast hi i le_rfl
   integrable a q := integrable_density le_rfl a measurableSet_Iic
   setIntegral a A hA q := setIntegral_density le_rfl a measurableSet_Iic hA
 
@@ -211,8 +211,8 @@ lemma borelMarkovFromReal_apply' (Ω : Type*) [Nonempty Ω] [MeasurableSpace Ω]
   have he := measurableEmbedding_embeddingReal Ω
   rw [borelMarkovFromReal_apply]
   split_ifs with h
-  · rw [Measure.comap_apply _ he.injective he.measurableSet_image' _ hs]
-  · rw [Measure.comap_apply _ he.injective he.measurableSet_image' _ hs, Measure.dirac_apply]
+  rw [Measure.comap_apply _ he.injective he.measurableSet_image' _ hs]
+  rw [Measure.comap_apply _ he.injective he.measurableSet_image' _ hs, Measure.dirac_apply]
 
 /-- When `η` is an s-finite kernel, `borelMarkovFromReal Ω η` is an s-finite kernel. -/
 instance instIsSFiniteKernelBorelMarkovFromReal (η : Kernel α ℝ) [IsSFiniteKernel η] :
@@ -231,9 +231,9 @@ instance instIsMarkovKernelBorelMarkovFromReal (η : Kernel α ℝ) [IsMarkovKer
   refine IsMarkovKernel.comapRight _ (measurableEmbedding_embeddingReal Ω) (fun a ↦ ?_)
   rw [piecewise_apply]
   split_ifs with h
-  · rwa [← prob_compl_eq_zero_iff (measurableEmbedding_embeddingReal Ω).measurableSet_range]
-  · rw [deterministic_apply]
-    simp [(range_nonempty (embeddingReal Ω)).choose_spec]
+  rwa [← prob_compl_eq_zero_iff (measurableEmbedding_embeddingReal Ω).measurableSet_range]
+  rw [deterministic_apply]
+  simp [(range_nonempty (embeddingReal Ω)).choose_spec]
 
 open Classical in
 /-- For `κ' := map κ (Prod.map (id : β → β) e) (measurable_id.prod_map he.measurable)`, the
@@ -282,8 +282,8 @@ lemma compProd_fst_borelMarkovFromReal_eq_comapRight_compProd
   filter_upwards [h_ae] with a ha
   rw [borelMarkovFromReal, comapRight_apply', comapRight_apply']
   rotate_left
-  · exact measurable_prod_mk_left ht
-  · exact measurable_prod_mk_left ht
+  exact measurable_prod_mk_left ht
+  exact measurable_prod_mk_left ht
   rw [piecewise_apply, if_pos]
   exact ha
 

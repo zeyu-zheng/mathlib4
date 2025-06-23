@@ -1327,13 +1327,13 @@ dropped, without changing the result. -/
 @[simp]
 theorem iSup_ne_bot_subtype (f : ι → α) : ⨆ i : { i // f i ≠ ⊥ }, f i = ⨆ i, f i := by
   by_cases htriv : ∀ i, f i = ⊥
-  · simp only [iSup_bot, (funext htriv : f = _)]
+  simp only [iSup_bot, (funext htriv : f = _)]
   refine (iSup_comp_le f _).antisymm (iSup_mono' fun i => ?_)
   by_cases hi : f i = ⊥
-  · rw [hi]
-    obtain ⟨i₀, hi₀⟩ := not_forall.mp htriv
-    exact ⟨⟨i₀, hi₀⟩, bot_le⟩
-  · exact ⟨⟨i, hi⟩, rfl.le⟩
+  rw [hi]
+  obtain ⟨i₀, hi₀⟩ := not_forall.mp htriv
+  exact ⟨⟨i₀, hi₀⟩, bot_le⟩
+  exact ⟨⟨i, hi⟩, rfl.le⟩
 
 /-- When taking the infimum of `f : ι → α`, the elements of `ι` on which `f` gives `⊤` can be
 dropped, without changing the result. -/
@@ -1353,10 +1353,10 @@ theorem sInf_image2 {f : β → γ → α} {s : Set β} {t : Set γ} :
 
 theorem iSup_ge_eq_iSup_nat_add (u : ℕ → α) (n : ℕ) : ⨆ i ≥ n, u i = ⨆ i, u (i + n) := by
   apply le_antisymm <;> simp only [iSup_le_iff]
-  · refine fun i hi => le_sSup ⟨i - n, ?_⟩
-    dsimp only
-    rw [Nat.sub_add_cancel hi]
-  · exact fun i => le_sSup ⟨i + n, iSup_pos (Nat.le_add_left _ _)⟩
+  refine fun i hi => le_sSup ⟨i - n, ?_⟩
+  dsimp only
+  rw [Nat.sub_add_cancel hi]
+  exact fun i => le_sSup ⟨i + n, iSup_pos (Nat.le_add_left _ _)⟩
 
 theorem iInf_ge_eq_iInf_nat_add (u : ℕ → α) (n : ℕ) : ⨅ i ≥ n, u i = ⨅ i, u (i + n) :=
   @iSup_ge_eq_iSup_nat_add αᵒᵈ _ _ _
@@ -1377,7 +1377,7 @@ theorem iSup_iInf_ge_nat_add (f : ℕ → α) (k : ℕ) :
     ⨆ n, ⨅ i ≥ n, f (i + k) = ⨆ n, ⨅ i ≥ n, f i := by
   have hf : Monotone fun n => ⨅ i ≥ n, f i := fun n m h => biInf_mono fun i => h.trans
   rw [← Monotone.iSup_nat_add hf k]
-  · simp_rw [iInf_ge_eq_iInf_nat_add, ← Nat.add_assoc]
+  simp_rw [iInf_ge_eq_iInf_nat_add, ← Nat.add_assoc]
 
 -- Porting note: removing `@[simp]`, see discussion on `iSup_iInf_ge_nat_add`.
 -- @[simp]

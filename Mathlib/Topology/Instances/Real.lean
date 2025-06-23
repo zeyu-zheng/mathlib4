@@ -189,8 +189,8 @@ open Metric
 dependencies. -/
 instance {a : ℝ} : DiscreteTopology (AddSubgroup.zmultiples a) := by
   rcases eq_or_ne a 0 with (rfl | ha)
-  · rw [AddSubgroup.zmultiples_zero_eq_bot]
-    exact Subsingleton.discreteTopology (α := (⊥ : Submodule ℤ ℝ))
+  rw [AddSubgroup.zmultiples_zero_eq_bot]
+  exact Subsingleton.discreteTopology (α := (⊥ : Submodule ℤ ℝ))
   rw [discreteTopology_iff_isOpen_singleton_zero, isOpen_induced_iff]
   refine ⟨ball 0 |a|, isOpen_ball, ?_⟩
   ext ⟨x, hx⟩

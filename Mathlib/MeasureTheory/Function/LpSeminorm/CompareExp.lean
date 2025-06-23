@@ -28,7 +28,7 @@ theorem eLpNorm'_le_eLpNorm'_mul_rpow_measure_univ {p q : ℝ} (hp0_lt : 0 < p) 
     eLpNorm' f p μ ≤ eLpNorm' f q μ * μ Set.univ ^ (1 / p - 1 / q) := by
   have hq0_lt : 0 < q := lt_of_lt_of_le hp0_lt hpq
   by_cases hpq_eq : p = q
-  · rw [hpq_eq, sub_self, ENNReal.rpow_zero, mul_one]
+  rw [hpq_eq, sub_self, ENNReal.rpow_zero, mul_one]
   have hpq : p < q := lt_of_le_of_ne hpq hpq_eq
   let g := fun _ : α => (1 : ℝ≥0∞)
   have h_rw : (∫⁻ a, (‖f a‖₊ : ℝ≥0∞) ^ p ∂μ) = ∫⁻ a, ((‖f a‖₊ : ℝ≥0∞) * g a) ^ p ∂μ :=
@@ -66,22 +66,22 @@ theorem eLpNorm_le_eLpNorm_mul_rpow_measure_univ {p q : ℝ≥0∞} (hpq : p ≤
     (hf : AEStronglyMeasurable f μ) :
     eLpNorm f p μ ≤ eLpNorm f q μ * μ Set.univ ^ (1 / p.toReal - 1 / q.toReal) := by
   by_cases hp0 : p = 0
-  · simp [hp0, zero_le]
+  simp [hp0, zero_le]
   rw [← Ne] at hp0
   have hp0_lt : 0 < p := lt_of_le_of_ne (zero_le _) hp0.symm
   have hq0_lt : 0 < q := lt_of_lt_of_le hp0_lt hpq
   by_cases hq_top : q = ∞
-  · simp only [hq_top, _root_.div_zero, one_div, ENNReal.top_toReal, sub_zero, eLpNorm_exponent_top,
-      GroupWithZero.inv_zero]
-    by_cases hp_top : p = ∞
-    · simp only [hp_top, ENNReal.rpow_zero, mul_one, ENNReal.top_toReal, sub_zero,
-        GroupWithZero.inv_zero, eLpNorm_exponent_top]
-      exact le_rfl
-    rw [eLpNorm_eq_eLpNorm' hp0 hp_top]
-    have hp_pos : 0 < p.toReal := ENNReal.toReal_pos hp0_lt.ne' hp_top
-    refine (eLpNorm'_le_eLpNormEssSup_mul_rpow_measure_univ hp_pos).trans (le_of_eq ?_)
-    congr
-    exact one_div _
+  simp only [hq_top, _root_.div_zero, one_div, ENNReal.top_toReal, sub_zero, eLpNorm_exponent_top,
+    GroupWithZero.inv_zero]
+  by_cases hp_top : p = ∞
+  simp only [hp_top, ENNReal.rpow_zero, mul_one, ENNReal.top_toReal, sub_zero,
+    GroupWithZero.inv_zero, eLpNorm_exponent_top]
+  exact le_rfl
+  rw [eLpNorm_eq_eLpNorm' hp0 hp_top]
+  have hp_pos : 0 < p.toReal := ENNReal.toReal_pos hp0_lt.ne' hp_top
+  refine (eLpNorm'_le_eLpNormEssSup_mul_rpow_measure_univ hp_pos).trans (le_of_eq ?_)
+  congr
+  exact one_div _
   have hp_lt_top : p < ∞ := hpq.trans_lt (lt_top_iff_ne_top.mpr hq_top)
   have hp_pos : 0 < p.toReal := ENNReal.toReal_pos hp0_lt.ne' hp_lt_top.ne
   rw [eLpNorm_eq_eLpNorm' hp0_lt.ne.symm hp_lt_top.ne, eLpNorm_eq_eLpNorm' hq0_lt.ne.symm hq_top]
@@ -119,8 +119,8 @@ theorem eLpNorm'_lt_top_of_eLpNorm'_lt_top_of_exponent_le {p q : ℝ} [IsFiniteM
     (hf : AEStronglyMeasurable f μ) (hfq_lt_top : eLpNorm' f q μ < ∞) (hp_nonneg : 0 ≤ p)
     (hpq : p ≤ q) : eLpNorm' f p μ < ∞ := by
   rcases le_or_lt p 0 with hp_nonpos | hp_pos
-  · rw [le_antisymm hp_nonpos hp_nonneg]
-    simp
+  rw [le_antisymm hp_nonpos hp_nonneg]
+  simp
   have hq_pos : 0 < q := lt_of_lt_of_le hp_pos hpq
   calc
     eLpNorm' f p μ ≤ eLpNorm' f q μ * μ Set.univ ^ (1 / p - 1 / q) :=
@@ -138,20 +138,20 @@ theorem Memℒp.memℒp_of_exponent_le {p q : ℝ≥0∞} [IsFiniteMeasure μ] {
     (hpq : p ≤ q) : Memℒp f p μ := by
   cases' hfq with hfq_m hfq_lt_top
   by_cases hp0 : p = 0
-  · rwa [hp0, memℒp_zero_iff_aestronglyMeasurable]
+  rwa [hp0, memℒp_zero_iff_aestronglyMeasurable]
   rw [← Ne] at hp0
   refine ⟨hfq_m, ?_⟩
   by_cases hp_top : p = ∞
-  · have hq_top : q = ∞ := by rwa [hp_top, top_le_iff] at hpq
-    rw [hp_top]
-    rwa [hq_top] at hfq_lt_top
+  have hq_top : q = ∞ := by rwa [hp_top, top_le_iff] at hpq
+  rw [hp_top]
+  rwa [hq_top] at hfq_lt_top
   have hp_pos : 0 < p.toReal := ENNReal.toReal_pos hp0 hp_top
   by_cases hq_top : q = ∞
-  · rw [eLpNorm_eq_eLpNorm' hp0 hp_top]
-    rw [hq_top, eLpNorm_exponent_top] at hfq_lt_top
-    refine lt_of_le_of_lt (eLpNorm'_le_eLpNormEssSup_mul_rpow_measure_univ hp_pos) ?_
-    refine ENNReal.mul_lt_top hfq_lt_top.ne ?_
-    exact (ENNReal.rpow_lt_top_of_nonneg (by simp [hp_pos.le]) (measure_ne_top μ Set.univ)).ne
+  rw [eLpNorm_eq_eLpNorm' hp0 hp_top]
+  rw [hq_top, eLpNorm_exponent_top] at hfq_lt_top
+  refine lt_of_le_of_lt (eLpNorm'_le_eLpNormEssSup_mul_rpow_measure_univ hp_pos) ?_
+  refine ENNReal.mul_lt_top hfq_lt_top.ne ?_
+  exact (ENNReal.rpow_lt_top_of_nonneg (by simp [hp_pos.le]) (measure_ne_top μ Set.univ)).ne
   have hq0 : q ≠ 0
   by_contra hq_eq_zero
   have hp_eq_zero : p = 0 := le_antisymm (by rwa [hq_eq_zero] at hpq) (zero_le _)
@@ -176,12 +176,12 @@ theorem eLpNorm_le_eLpNorm_top_mul_eLpNorm (p : ℝ≥0∞) (f : α → E) {g : 
     (h : ∀ᵐ x ∂μ, ‖b (f x) (g x)‖₊ ≤ ‖f x‖₊ * ‖g x‖₊) :
     eLpNorm (fun x => b (f x) (g x)) p μ ≤ eLpNorm f ∞ μ * eLpNorm g p μ := by
   by_cases hp_top : p = ∞
-  · simp_rw [hp_top, eLpNorm_exponent_top]
-    refine le_trans (essSup_mono_ae <| h.mono fun a ha => ?_) (ENNReal.essSup_mul_le _ _)
-    simp_rw [Pi.mul_apply, ← ENNReal.coe_mul, ENNReal.coe_le_coe]
-    exact ha
+  simp_rw [hp_top, eLpNorm_exponent_top]
+  refine le_trans (essSup_mono_ae <| h.mono fun a ha => ?_) (ENNReal.essSup_mul_le _ _)
+  simp_rw [Pi.mul_apply, ← ENNReal.coe_mul, ENNReal.coe_le_coe]
+  exact ha
   by_cases hp_zero : p = 0
-  · simp only [hp_zero, eLpNorm_exponent_zero, mul_zero, le_zero_iff]
+  simp only [hp_zero, eLpNorm_exponent_zero, mul_zero, le_zero_iff]
   simp_rw [eLpNorm_eq_lintegral_rpow_nnnorm hp_zero hp_top, eLpNorm_exponent_top, eLpNormEssSup]
   calc
     (∫⁻ x, (‖b (f x) (g x)‖₊ : ℝ≥0∞) ^ p.toReal ∂μ) ^ (1 / p.toReal) ≤
@@ -205,8 +205,8 @@ theorem eLpNorm_le_eLpNorm_top_mul_eLpNorm (p : ℝ≥0∞) (f : α → E) {g : 
       swap; · exact hg.nnnorm.aemeasurable.coe_nnreal_ennreal.pow aemeasurable_const
       rw [ENNReal.mul_rpow_of_nonneg]
       swap
-      · rw [one_div_nonneg]
-        exact ENNReal.toReal_nonneg
+      rw [one_div_nonneg]
+      exact ENNReal.toReal_nonneg
       rw [← ENNReal.rpow_mul, one_div, mul_inv_cancel, ENNReal.rpow_one]
       rw [Ne, ENNReal.toReal_eq_zero_iff, not_or]
       exact ⟨hp_zero, hp_top⟩
@@ -251,7 +251,7 @@ theorem eLpNorm_le_eLpNorm_mul_eLpNorm_of_nnnorm {p q r : ℝ≥0∞}
     (h : ∀ᵐ x ∂μ, ‖b (f x) (g x)‖₊ ≤ ‖f x‖₊ * ‖g x‖₊) (hpqr : 1 / p = 1 / q + 1 / r) :
     eLpNorm (fun x => b (f x) (g x)) p μ ≤ eLpNorm f q μ * eLpNorm g r μ := by
   by_cases hp_zero : p = 0
-  · simp [hp_zero]
+  simp [hp_zero]
   have hq_ne_zero : q ≠ 0
   intro hq_zero
   simp only [hq_zero, hp_zero, one_div, ENNReal.inv_zero, top_add, ENNReal.inv_eq_top] at hpqr
@@ -259,30 +259,30 @@ theorem eLpNorm_le_eLpNorm_mul_eLpNorm_of_nnnorm {p q r : ℝ≥0∞}
   intro hr_zero
   simp only [hr_zero, hp_zero, one_div, ENNReal.inv_zero, add_top, ENNReal.inv_eq_top] at hpqr
   by_cases hq_top : q = ∞
-  · have hpr : p = r := by
-      simpa only [hq_top, one_div, ENNReal.inv_top, zero_add, inv_inj] using hpqr
-    rw [← hpr, hq_top]
-    exact eLpNorm_le_eLpNorm_top_mul_eLpNorm p f hg b h
+  have hpr : p = r := by
+    simpa only [hq_top, one_div, ENNReal.inv_top, zero_add, inv_inj] using hpqr
+  rw [← hpr, hq_top]
+  exact eLpNorm_le_eLpNorm_top_mul_eLpNorm p f hg b h
   by_cases hr_top : r = ∞
-  · have hpq : p = q := by
-      simpa only [hr_top, one_div, ENNReal.inv_top, add_zero, inv_inj] using hpqr
-    rw [← hpq, hr_top]
-    exact eLpNorm_le_eLpNorm_mul_eLpNorm_top p hf g b h
+  have hpq : p = q := by
+    simpa only [hr_top, one_div, ENNReal.inv_top, add_zero, inv_inj] using hpqr
+  rw [← hpq, hr_top]
+  exact eLpNorm_le_eLpNorm_mul_eLpNorm_top p hf g b h
   have hpq : p < q
   suffices 1 / q < 1 / p by rwa [one_div, one_div, ENNReal.inv_lt_inv] at this
   rw [hpqr]
   refine ENNReal.lt_add_right ?_ ?_
-  · simp only [hq_ne_zero, one_div, Ne, ENNReal.inv_eq_top, not_false_iff]
-  · simp only [hr_top, one_div, Ne, ENNReal.inv_eq_zero, not_false_iff]
+  simp only [hq_ne_zero, one_div, Ne, ENNReal.inv_eq_top, not_false_iff]
+  simp only [hr_top, one_div, Ne, ENNReal.inv_eq_zero, not_false_iff]
   rw [eLpNorm_eq_eLpNorm' hp_zero (hpq.trans_le le_top).ne, eLpNorm_eq_eLpNorm' hq_ne_zero hq_top,
     eLpNorm_eq_eLpNorm' hr_ne_zero hr_top]
   refine eLpNorm'_le_eLpNorm'_mul_eLpNorm' hf hg _ h ?_ ?_ ?_
-  · exact ENNReal.toReal_pos hp_zero (hpq.trans_le le_top).ne
-  · exact ENNReal.toReal_strict_mono hq_top hpq
+  exact ENNReal.toReal_pos hp_zero (hpq.trans_le le_top).ne
+  exact ENNReal.toReal_strict_mono hq_top hpq
   rw [← ENNReal.one_toReal, ← ENNReal.toReal_div, ← ENNReal.toReal_div, ← ENNReal.toReal_div, hpqr,
     ENNReal.toReal_add]
-  · simp only [hq_ne_zero, one_div, Ne, ENNReal.inv_eq_top, not_false_iff]
-  · simp only [hr_ne_zero, one_div, Ne, ENNReal.inv_eq_top, not_false_iff]
+  simp only [hq_ne_zero, one_div, Ne, ENNReal.inv_eq_top, not_false_iff]
+  simp only [hr_ne_zero, one_div, Ne, ENNReal.inv_eq_top, not_false_iff]
 
 @[deprecated (since := "2024-07-27")]
 alias snorm_le_snorm_mul_snorm_of_nnnorm := eLpNorm_le_eLpNorm_mul_eLpNorm_of_nnnorm

@@ -268,13 +268,13 @@ theorem image_commutatorSet_closureCommutatorRepresentatives :
         commutatorSet (closureCommutatorRepresentatives G) =
       commutatorSet G := by
   apply Set.Subset.antisymm
-  · rintro - ⟨-, ⟨g₁, g₂, rfl⟩, rfl⟩
-    exact ⟨g₁, g₂, rfl⟩
-  · exact fun g hg =>
-      ⟨_,
-        ⟨⟨_, subset_closure (Or.inl ⟨_, ⟨⟨g, hg⟩, rfl⟩, rfl⟩)⟩,
-          ⟨_, subset_closure (Or.inr ⟨_, ⟨⟨g, hg⟩, rfl⟩, rfl⟩)⟩, rfl⟩,
-        hg.choose_spec.choose_spec⟩
+  rintro - ⟨-, ⟨g₁, g₂, rfl⟩, rfl⟩
+  exact ⟨g₁, g₂, rfl⟩
+  exact fun g hg =>
+    ⟨_,
+      ⟨⟨_, subset_closure (Or.inl ⟨_, ⟨⟨g, hg⟩, rfl⟩, rfl⟩)⟩,
+        ⟨_, subset_closure (Or.inr ⟨_, ⟨⟨g, hg⟩, rfl⟩, rfl⟩)⟩, rfl⟩,
+      hg.choose_spec.choose_spec⟩
 
 theorem card_commutatorSet_closureCommutatorRepresentatives :
     Nat.card (commutatorSet (closureCommutatorRepresentatives G)) = Nat.card (commutatorSet G) := by

@@ -824,14 +824,14 @@ theorem bliminf_eq_iSup_biInf_of_nat {p : ℕ → Prop} {u : ℕ → α} :
 theorem limsup_eq_sInf_sSup {ι R : Type*} (F : Filter ι) [CompleteLattice R] (a : ι → R) :
     limsup a F = sInf ((fun I => sSup (a '' I)) '' F.sets) := by
   apply le_antisymm
-  · rw [limsup_eq]
-    refine sInf_le_sInf fun x hx => ?_
-    rcases (mem_image _ F.sets x).mp hx with ⟨I, ⟨I_mem_F, hI⟩⟩
-    filter_upwards [I_mem_F] with i hi
-    exact hI ▸ le_sSup (mem_image_of_mem _ hi)
-  · refine le_sInf fun b hb => sInf_le_of_le (mem_image_of_mem _ hb) <| sSup_le ?_
-    rintro _ ⟨_, h, rfl⟩
-    exact h
+  rw [limsup_eq]
+  refine sInf_le_sInf fun x hx => ?_
+  rcases (mem_image _ F.sets x).mp hx with ⟨I, ⟨I_mem_F, hI⟩⟩
+  filter_upwards [I_mem_F] with i hi
+  exact hI ▸ le_sSup (mem_image_of_mem _ hi)
+  refine le_sInf fun b hb => sInf_le_of_le (mem_image_of_mem _ hb) <| sSup_le ?_
+  rintro _ ⟨_, h, rfl⟩
+  exact h
 
 theorem liminf_eq_sSup_sInf {ι R : Type*} (F : Filter ι) [CompleteLattice R] (a : ι → R) :
     liminf a F = sSup ((fun I => sInf (a '' I)) '' F.sets) :=
@@ -1099,9 +1099,9 @@ theorem cofinite.blimsup_set_eq :
   simp only [blimsup_eq, le_eq_subset, eventually_cofinite, not_forall, sInf_eq_sInter, exists_prop]
   ext x
   refine ⟨fun h => ?_, fun hx t h => ?_⟩ <;> contrapose! h
-  · simp only [mem_sInter, mem_setOf_eq, not_forall, exists_prop]
-    exact ⟨{x}ᶜ, by simpa using h, by simp⟩
-  · exact hx.mono fun i hi => ⟨hi.1, fun hit => h (hit hi.2)⟩
+  simp only [mem_sInter, mem_setOf_eq, not_forall, exists_prop]
+  exact ⟨{x}ᶜ, by simpa using h, by simp⟩
+  exact hx.mono fun i hi => ⟨hi.1, fun hit => h (hit hi.2)⟩
 
 theorem cofinite.bliminf_set_eq : bliminf s cofinite p = { x | { n | p n ∧ x ∉ s n }.Finite } := by
   rw [← compl_inj_iff]
@@ -1126,8 +1126,8 @@ theorem exists_forall_mem_of_hasBasis_mem_blimsup {l : Filter β} {b : ι → Se
   simp only [iSup_eq_iUnion, iInf_eq_iInter, mem_iInter, mem_iUnion, exists_prop] at hx
   choose g hg hg' using hx
   refine ⟨fun i : { i | q i } => g (b i) (hl.mem_of_mem i.2), fun i => ⟨?_, ?_⟩⟩
-  · exact hg' (b i) (hl.mem_of_mem i.2)
-  · exact hg (b i) (hl.mem_of_mem i.2)
+  exact hg' (b i) (hl.mem_of_mem i.2)
+  exact hg (b i) (hl.mem_of_mem i.2)
 
 theorem exists_forall_mem_of_hasBasis_mem_blimsup' {l : Filter β} {b : ι → Set β}
     (hl : l.HasBasis (fun _ => True) b) {u : β → Set α} {p : β → Prop} {x : α}
@@ -1204,14 +1204,14 @@ theorem limsup_le_iff {α β} [ConditionallyCompleteLinearOrder β] {f : Filter 
   --In the first case, we use `forall_lt_iff_le'` and split an interval.
   --In the second case, the function `u` must eventually be smaller or equal to `x`.
   by_cases h' : ∀ y > x, ∃ z, x < z ∧ z < y
-  · rw [← forall_lt_iff_le']
-    intro y x_y
-    rcases h' y x_y with ⟨z, x_z, z_y⟩
-    exact lt_of_le_of_lt (limsup_le_of_le h₁ ((h z x_z).mono (fun _ ↦ le_of_lt))) z_y
-  · apply limsup_le_of_le h₁
-    set_option push_neg.use_distrib true in push_neg at h'
-    rcases h' with ⟨z, x_z, hz⟩
-    exact (h z x_z).mono  <| fun w hw ↦ (or_iff_left (not_le_of_lt hw)).1 (hz (u w))
+  rw [← forall_lt_iff_le']
+  intro y x_y
+  rcases h' y x_y with ⟨z, x_z, z_y⟩
+  exact lt_of_le_of_lt (limsup_le_of_le h₁ ((h z x_z).mono (fun _ ↦ le_of_lt))) z_y
+  apply limsup_le_of_le h₁
+  set_option push_neg.use_distrib true in push_neg at h'
+  rcases h' with ⟨z, x_z, hz⟩
+  exact (h z x_z).mono  <| fun w hw ↦ (or_iff_left (not_le_of_lt hw)).1 (hz (u w))
 
 theorem le_limsup_iff {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α} {u : α → β} {x : β}
     (h₁ : f.IsCoboundedUnder (· ≤ ·) u := by isBoundedDefault)
@@ -1222,14 +1222,14 @@ theorem le_limsup_iff {α β} [ConditionallyCompleteLinearOrder β] {f : Filter 
   --In the first case, we use `forall_lt_iff_le` and split an interval.
   --In the second case, the function `u` must frequently be larger or equal to `x`.
   by_cases h' : ∀ y < x, ∃ z, y < z ∧ z < x
-  · rw [← forall_lt_iff_le]
-    intro y y_x
-    rcases h' y y_x with ⟨z, y_z, z_x⟩
-    exact lt_of_lt_of_le y_z (le_limsup_of_frequently_le ((h z z_x).mono (fun _ ↦ le_of_lt)) h₂)
-  · apply le_limsup_of_frequently_le _ h₂
-    set_option push_neg.use_distrib true in push_neg at h'
-    rcases h' with ⟨z, z_x, hz⟩
-    exact (h z z_x).mono <| fun w hw ↦ (or_iff_right (not_le_of_lt hw)).1 (hz (u w))
+  rw [← forall_lt_iff_le]
+  intro y y_x
+  rcases h' y y_x with ⟨z, y_z, z_x⟩
+  exact lt_of_lt_of_le y_z (le_limsup_of_frequently_le ((h z z_x).mono (fun _ ↦ le_of_lt)) h₂)
+  apply le_limsup_of_frequently_le _ h₂
+  set_option push_neg.use_distrib true in push_neg at h'
+  rcases h' with ⟨z, z_x, hz⟩
+  exact (h z z_x).mono <| fun w hw ↦ (or_iff_right (not_le_of_lt hw)).1 (hz (u w))
 
 theorem le_liminf_iff {α β} [ConditionallyCompleteLinearOrder β] {f : Filter α} {u : α → β} {x : β}
     (h₁ : f.IsCoboundedUnder (· ≥ ·) u := by isBoundedDefault)
@@ -1291,29 +1291,29 @@ theorem HasBasis.liminf_eq_ciSup_ciInf {v : Filter ι}
   have A : ⋃ (j : Subtype p), ⋂ (i : s j), Iic (f i) =
          ⋃ (j : Subtype p), ⋂ (i : s (liminf_reparam f s p j)), Iic (f i) := by
     apply Subset.antisymm
-    · apply iUnion_subset (fun j ↦ ?_)
-      by_cases hj : j ∈ m
-      · have : j = liminf_reparam f s p j := by simp only [liminf_reparam, hj, ite_true]
-        conv_lhs => rw [this]
-        apply subset_iUnion _ j
-      · simp only [m, mem_setOf_eq, ← nonempty_iInter_Iic_iff, not_nonempty_iff_eq_empty] at hj
-        simp only [hj, empty_subset]
-    · apply iUnion_subset (fun j ↦ ?_)
-      exact subset_iUnion (fun (k : Subtype p) ↦ (⋂ (i : s k), Iic (f i))) (liminf_reparam f s p j)
+    apply iUnion_subset (fun j ↦ ?_)
+    by_cases hj : j ∈ m
+    have : j = liminf_reparam f s p j := by simp only [liminf_reparam, hj, ite_true]
+    conv_lhs => rw [this]
+    apply subset_iUnion _ j
+    simp only [m, mem_setOf_eq, ← nonempty_iInter_Iic_iff, not_nonempty_iff_eq_empty] at hj
+    simp only [hj, empty_subset]
+    apply iUnion_subset (fun j ↦ ?_)
+    exact subset_iUnion (fun (k : Subtype p) ↦ (⋂ (i : s k), Iic (f i))) (liminf_reparam f s p j)
   have B : ∀ (j : Subtype p), ⋂ (i : s (liminf_reparam f s p j)), Iic (f i) =
                                 Iic (⨅ (i : s (liminf_reparam f s p j)), f i) := by
     intro j
     apply (Iic_ciInf _).symm
     change liminf_reparam f s p j ∈ m
     by_cases Hj : j ∈ m
-    · simpa only [liminf_reparam, if_pos Hj] using Hj
-    · simp only [liminf_reparam, if_neg Hj]
-      have Z : ∃ n, (exists_surjective_nat (Subtype p)).choose n ∈ m ∨ ∀ j, j ∉ m
-      rcases (exists_surjective_nat (Subtype p)).choose_spec j0 with ⟨n, rfl⟩
-      exact ⟨n, Or.inl hj0⟩
-      rcases Nat.find_spec Z with hZ|hZ
-      · exact hZ
-      · exact (hZ j0 hj0).elim
+    simpa only [liminf_reparam, if_pos Hj] using Hj
+    simp only [liminf_reparam, if_neg Hj]
+    have Z : ∃ n, (exists_surjective_nat (Subtype p)).choose n ∈ m ∨ ∀ j, j ∉ m
+    rcases (exists_surjective_nat (Subtype p)).choose_spec j0 with ⟨n, rfl⟩
+    exact ⟨n, Or.inl hj0⟩
+    rcases Nat.find_spec Z with hZ|hZ
+    exact hZ
+    exact (hZ j0 hj0).elim
   simp_rw [hv.liminf_eq_sSup_iUnion_iInter, A, B, sSup_iUnion_Iic]
 
 /-- Writing a liminf as a supremum of infimum, in a (possibly non-complete) conditionally complete
@@ -1325,21 +1325,21 @@ theorem HasBasis.liminf_eq_ite {v : Filter ι} {p : ι' → Prop} {s : ι' → S
       if ∀ (j : Subtype p), ¬BddBelow (range (fun (i : s j) ↦ f i)) then sSup ∅
       else ⨆ (j : Subtype p), ⨅ (i : s (liminf_reparam f s p j)), f i := by
   by_cases H : ∃ (j : Subtype p), s j = ∅
-  · rw [if_pos H]
-    rcases H with ⟨j, hj⟩
-    simp [hv.liminf_eq_sSup_univ_of_empty j j.2 hj]
+  rw [if_pos H]
+  rcases H with ⟨j, hj⟩
+  simp [hv.liminf_eq_sSup_univ_of_empty j j.2 hj]
   rw [if_neg H]
   by_cases H' : ∀ (j : Subtype p), ¬BddBelow (range (fun (i : s j) ↦ f i))
-  · have A : ∀ (j : Subtype p), ⋂ (i : s j), Iic (f i) = ∅ := by
-      simp_rw [← not_nonempty_iff_eq_empty, nonempty_iInter_Iic_iff]
-      exact H'
-    simp_rw [if_pos H', hv.liminf_eq_sSup_iUnion_iInter, A, iUnion_empty]
+  have A : ∀ (j : Subtype p), ⋂ (i : s j), Iic (f i) = ∅ := by
+    simp_rw [← not_nonempty_iff_eq_empty, nonempty_iInter_Iic_iff]
+    exact H'
+  simp_rw [if_pos H', hv.liminf_eq_sSup_iUnion_iInter, A, iUnion_empty]
   rw [if_neg H']
   apply hv.liminf_eq_ciSup_ciInf
-  · push_neg at H
-    simpa only [nonempty_iff_ne_empty] using H
-  · push_neg at H'
-    exact H'
+  push_neg at H
+  simpa only [nonempty_iff_ne_empty] using H
+  push_neg at H'
+  exact H'
 
 /-- Given an indexed family of sets `s j` and a function `f`, then `limsup_reparam j` is equal
 to `j` if `f` is bounded above on `s j`, and otherwise to some index `k` such that `f` is bounded
@@ -1468,13 +1468,13 @@ theorem limsup_max [ConditionallyCompleteLinearOrder β] {f : Filter α} {u v : 
   have bddmax := IsBoundedUnder.sup h₃ h₄
   have cobddmax := isCoboundedUnder_le_max (v := v) (Or.inl h₁)
   apply le_antisymm
-  · refine (limsup_le_iff cobddmax bddmax).2 (fun b hb ↦ ?_)
-    have hu := eventually_lt_of_limsup_lt (lt_of_le_of_lt (le_max_left _ _) hb) h₃
-    have hv := eventually_lt_of_limsup_lt (lt_of_le_of_lt (le_max_right _ _) hb) h₄
-    refine mem_of_superset (inter_mem hu hv) (fun _ ↦ by simp)
-  · exact max_le (c := limsup (fun a ↦ max (u a) (v a)) f)
-      (limsup_le_limsup (eventually_of_forall (fun a : α ↦ le_max_left (u a) (v a))) h₁ bddmax)
-      (limsup_le_limsup (eventually_of_forall (fun a : α ↦ le_max_right (u a) (v a))) h₂ bddmax)
+  refine (limsup_le_iff cobddmax bddmax).2 (fun b hb ↦ ?_)
+  have hu := eventually_lt_of_limsup_lt (lt_of_le_of_lt (le_max_left _ _) hb) h₃
+  have hv := eventually_lt_of_limsup_lt (lt_of_le_of_lt (le_max_right _ _) hb) h₄
+  refine mem_of_superset (inter_mem hu hv) (fun _ ↦ by simp)
+  exact max_le (c := limsup (fun a ↦ max (u a) (v a)) f)
+    (limsup_le_limsup (eventually_of_forall (fun a : α ↦ le_max_left (u a) (v a))) h₁ bddmax)
+    (limsup_le_limsup (eventually_of_forall (fun a : α ↦ le_max_right (u a) (v a))) h₂ bddmax)
 
 theorem liminf_min [ConditionallyCompleteLinearOrder β] {f : Filter α} {u v : α → β}
     (h₁ : f.IsCoboundedUnder (· ≥ ·) u := by isBoundedDefault)
@@ -1539,25 +1539,25 @@ theorem limsup_finset_sup' [ConditionallyCompleteLinearOrder β] {f : Filter α}
     limsup (fun a ↦ sup' s hs (fun i ↦ F i a)) f = sup' s hs (fun i ↦ limsup (F i) f) := by
   have bddsup := isBoundedUnder_le_finset_sup' hs h₂
   apply le_antisymm
-  · have h₃ : ∃ i ∈ s, f.IsCoboundedUnder (· ≤ ·) (F i) := by
-      rcases hs with ⟨i, i_s⟩
-      use i, i_s
-      exact h₁ i i_s
-    have cobddsup := isCoboundedUnder_le_finset_sup' hs h₃
-    refine (limsup_le_iff cobddsup bddsup).2 (fun b hb ↦ ?_)
-    rw [eventually_iff_exists_mem]
-    use ⋂ i ∈ s, {a | F i a < b}
-    split_ands
-    · rw [biInter_finset_mem]
-      suffices key : ∀ i ∈ s, ∀ᶠ a in f, F i a < b from fun i i_s ↦ eventually_iff.1 (key i i_s)
-      intro i i_s
-      apply eventually_lt_of_limsup_lt _ (h₂ i i_s)
-      exact lt_of_le_of_lt (Finset.le_sup' (f := fun i ↦ limsup (F i) f) i_s) hb
-    · simp only [mem_iInter, mem_setOf_eq, Finset.sup'_apply, sup'_lt_iff, imp_self, implies_true]
-  · apply Finset.sup'_le hs (fun i ↦ limsup (F i) f)
-    refine fun i i_s ↦ limsup_le_limsup (eventually_of_forall (fun a ↦ ?_)) (h₁ i i_s) bddsup
-    simp only [Finset.sup'_apply, le_sup'_iff]
+  have h₃ : ∃ i ∈ s, f.IsCoboundedUnder (· ≤ ·) (F i) := by
+    rcases hs with ⟨i, i_s⟩
     use i, i_s
+    exact h₁ i i_s
+  have cobddsup := isCoboundedUnder_le_finset_sup' hs h₃
+  refine (limsup_le_iff cobddsup bddsup).2 (fun b hb ↦ ?_)
+  rw [eventually_iff_exists_mem]
+  use ⋂ i ∈ s, {a | F i a < b}
+  split_ands
+  rw [biInter_finset_mem]
+  suffices key : ∀ i ∈ s, ∀ᶠ a in f, F i a < b from fun i i_s ↦ eventually_iff.1 (key i i_s)
+  intro i i_s
+  apply eventually_lt_of_limsup_lt _ (h₂ i i_s)
+  exact lt_of_le_of_lt (Finset.le_sup' (f := fun i ↦ limsup (F i) f) i_s) hb
+  simp only [mem_iInter, mem_setOf_eq, Finset.sup'_apply, sup'_lt_iff, imp_self, implies_true]
+  apply Finset.sup'_le hs (fun i ↦ limsup (F i) f)
+  refine fun i i_s ↦ limsup_le_limsup (eventually_of_forall (fun a ↦ ?_)) (h₁ i i_s) bddsup
+  simp only [Finset.sup'_apply, le_sup'_iff]
+  use i, i_s
 
 theorem limsup_finset_sup [ConditionallyCompleteLinearOrder β] [OrderBot β] {f : Filter α}
     {F : ι → α → β} {s : Finset ι}
@@ -1565,9 +1565,9 @@ theorem limsup_finset_sup [ConditionallyCompleteLinearOrder β] [OrderBot β] {f
     (h₂ : ∀ i ∈ s, f.IsBoundedUnder (· ≤ ·) (F i) := by exact fun _ _ ↦ by isBoundedDefault) :
     limsup (fun a ↦ sup s (fun i ↦ F i a)) f = sup s (fun i ↦ limsup (F i) f) := by
   rcases eq_or_neBot f with (rfl | _)
-  · simp [limsup_eq, csInf_univ]
+  simp [limsup_eq, csInf_univ]
   rcases Finset.eq_empty_or_nonempty s with (rfl | s_nemp)
-  · simp only [Finset.sup_apply, sup_empty, limsup_const]
+  simp only [Finset.sup_apply, sup_empty, limsup_const]
   rw [← Finset.sup'_eq_sup s_nemp fun i ↦ limsup (F i) f, ← limsup_finset_sup' s_nemp h₁ h₂]
   congr
   ext a
@@ -1601,7 +1601,7 @@ lemma IsCobounded.frequently_ge [NeBot F] (cobdd : IsCobounded (· ≤ ·) F) :
     ∃ l, ∃ᶠ x in F, l ≤ x := by
   obtain ⟨t, ht⟩ := cobdd
   by_cases tbot : IsBot t
-  · refine ⟨t, frequently_of_forall fun r ↦ tbot r⟩
+  refine ⟨t, frequently_of_forall fun r ↦ tbot r⟩
   obtain ⟨t', ht'⟩ : ∃ t', t' < t := by
     by_contra!
     exact tbot this
@@ -1620,7 +1620,7 @@ lemma IsCobounded.frequently_le [NeBot F] (cobdd : IsCobounded (· ≥ ·) F) :
 lemma IsCobounded.of_frequently_ge {l : R} (freq_ge : ∃ᶠ x in F, l ≤ x) :
     IsCobounded (· ≤ ·) F := by
   by_cases lbot : IsBot l
-  · refine ⟨l, fun x _ ↦ lbot x⟩
+  refine ⟨l, fun x _ ↦ lbot x⟩
   obtain ⟨l', hl'⟩ : ∃ l', l' < l := by
     by_contra!
     exact lbot this

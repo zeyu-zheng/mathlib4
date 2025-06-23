@@ -51,74 +51,74 @@ theorem ContinuousLinearMap.norm_iteratedFDerivWithin_le_of_bilinear_aux {Du Eu 
     original spaces, which explains why we assume in the lemma that all spaces live in the same
     universe. -/
   induction' n with n IH generalizing Eu Fu Gu
-  · simp only [Nat.zero_eq, norm_iteratedFDerivWithin_zero, zero_add, Finset.range_one,
-      Finset.sum_singleton, Nat.choose_self, Nat.cast_one, one_mul, Nat.sub_zero, ← mul_assoc]
-    apply B.le_opNorm₂
-  · have In : (n : ℕ∞) + 1 ≤ n.succ := by simp only [Nat.cast_succ, le_refl]
-    -- Porting note: the next line is a hack allowing Lean to find the operator norm instance.
-    let norm := @ContinuousLinearMap.hasOpNorm _ _ Eu ((Du →L[𝕜] Fu) →L[𝕜] Du →L[𝕜] Gu) _ _ _ _ _ _
-      (RingHom.id 𝕜)
-    have I1 :
-        ‖iteratedFDerivWithin 𝕜 n (fun y : Du => B.precompR Du (f y) (fderivWithin 𝕜 g s y)) s x‖ ≤
-          ‖B‖ * ∑ i ∈ Finset.range (n + 1), n.choose i * ‖iteratedFDerivWithin 𝕜 i f s x‖ *
-            ‖iteratedFDerivWithin 𝕜 (n + 1 - i) g s x‖ := by
-      calc
-        ‖iteratedFDerivWithin 𝕜 n (fun y : Du => B.precompR Du (f y) (fderivWithin 𝕜 g s y)) s x‖ ≤
-            ‖B.precompR Du‖ * ∑ i ∈ Finset.range (n + 1),
-              n.choose i * ‖iteratedFDerivWithin 𝕜 i f s x‖ *
-                ‖iteratedFDerivWithin 𝕜 (n - i) (fderivWithin 𝕜 g s) s x‖ :=
-          IH _ (hf.of_le (Nat.cast_le.2 (Nat.le_succ n))) (hg.fderivWithin hs In)
-        _ ≤ ‖B‖ * ∑ i ∈ Finset.range (n + 1), n.choose i * ‖iteratedFDerivWithin 𝕜 i f s x‖ *
+  simp only [Nat.zero_eq, norm_iteratedFDerivWithin_zero, zero_add, Finset.range_one,
+    Finset.sum_singleton, Nat.choose_self, Nat.cast_one, one_mul, Nat.sub_zero, ← mul_assoc]
+  apply B.le_opNorm₂
+  have In : (n : ℕ∞) + 1 ≤ n.succ := by simp only [Nat.cast_succ, le_refl]
+  -- Porting note: the next line is a hack allowing Lean to find the operator norm instance.
+  let norm := @ContinuousLinearMap.hasOpNorm _ _ Eu ((Du →L[𝕜] Fu) →L[𝕜] Du →L[𝕜] Gu) _ _ _ _ _ _
+    (RingHom.id 𝕜)
+  have I1 :
+      ‖iteratedFDerivWithin 𝕜 n (fun y : Du => B.precompR Du (f y) (fderivWithin 𝕜 g s y)) s x‖ ≤
+        ‖B‖ * ∑ i ∈ Finset.range (n + 1), n.choose i * ‖iteratedFDerivWithin 𝕜 i f s x‖ *
+          ‖iteratedFDerivWithin 𝕜 (n + 1 - i) g s x‖ := by
+    calc
+      ‖iteratedFDerivWithin 𝕜 n (fun y : Du => B.precompR Du (f y) (fderivWithin 𝕜 g s y)) s x‖ ≤
+          ‖B.precompR Du‖ * ∑ i ∈ Finset.range (n + 1),
+            n.choose i * ‖iteratedFDerivWithin 𝕜 i f s x‖ *
               ‖iteratedFDerivWithin 𝕜 (n - i) (fderivWithin 𝕜 g s) s x‖ :=
-            mul_le_mul_of_nonneg_right (B.norm_precompR_le Du) (by positivity)
-        _ = _ := by
-          congr 1
-          apply Finset.sum_congr rfl fun i hi => ?_
-          rw [Nat.succ_sub (Nat.lt_succ_iff.1 (Finset.mem_range.1 hi)),
-            ← norm_iteratedFDerivWithin_fderivWithin hs hx]
-    -- Porting note: the next line is a hack allowing Lean to find the operator norm instance.
-    let norm := @ContinuousLinearMap.hasOpNorm _ _ (Du →L[𝕜] Eu) (Fu →L[𝕜] Du →L[𝕜] Gu) _ _ _ _ _ _
-      (RingHom.id 𝕜)
-    have I2 :
-        ‖iteratedFDerivWithin 𝕜 n (fun y : Du => B.precompL Du (fderivWithin 𝕜 f s y) (g y)) s x‖ ≤
-        ‖B‖ * ∑ i ∈ Finset.range (n + 1), n.choose i * ‖iteratedFDerivWithin 𝕜 (i + 1) f s x‖ *
-          ‖iteratedFDerivWithin 𝕜 (n - i) g s x‖ :=
-      calc
-        ‖iteratedFDerivWithin 𝕜 n (fun y : Du => B.precompL Du (fderivWithin 𝕜 f s y) (g y)) s x‖ ≤
-            ‖B.precompL Du‖ * ∑ i ∈ Finset.range (n + 1),
-              n.choose i * ‖iteratedFDerivWithin 𝕜 i (fderivWithin 𝕜 f s) s x‖ *
-                ‖iteratedFDerivWithin 𝕜 (n - i) g s x‖ :=
-          IH _ (hf.fderivWithin hs In) (hg.of_le (Nat.cast_le.2 (Nat.le_succ n)))
-        _ ≤ ‖B‖ * ∑ i ∈ Finset.range (n + 1),
+        IH _ (hf.of_le (Nat.cast_le.2 (Nat.le_succ n))) (hg.fderivWithin hs In)
+      _ ≤ ‖B‖ * ∑ i ∈ Finset.range (n + 1), n.choose i * ‖iteratedFDerivWithin 𝕜 i f s x‖ *
+            ‖iteratedFDerivWithin 𝕜 (n - i) (fderivWithin 𝕜 g s) s x‖ :=
+          mul_le_mul_of_nonneg_right (B.norm_precompR_le Du) (by positivity)
+      _ = _ := by
+        congr 1
+        apply Finset.sum_congr rfl fun i hi => ?_
+        rw [Nat.succ_sub (Nat.lt_succ_iff.1 (Finset.mem_range.1 hi)),
+          ← norm_iteratedFDerivWithin_fderivWithin hs hx]
+  -- Porting note: the next line is a hack allowing Lean to find the operator norm instance.
+  let norm := @ContinuousLinearMap.hasOpNorm _ _ (Du →L[𝕜] Eu) (Fu →L[𝕜] Du →L[𝕜] Gu) _ _ _ _ _ _
+    (RingHom.id 𝕜)
+  have I2 :
+      ‖iteratedFDerivWithin 𝕜 n (fun y : Du => B.precompL Du (fderivWithin 𝕜 f s y) (g y)) s x‖ ≤
+      ‖B‖ * ∑ i ∈ Finset.range (n + 1), n.choose i * ‖iteratedFDerivWithin 𝕜 (i + 1) f s x‖ *
+        ‖iteratedFDerivWithin 𝕜 (n - i) g s x‖ :=
+    calc
+      ‖iteratedFDerivWithin 𝕜 n (fun y : Du => B.precompL Du (fderivWithin 𝕜 f s y) (g y)) s x‖ ≤
+          ‖B.precompL Du‖ * ∑ i ∈ Finset.range (n + 1),
             n.choose i * ‖iteratedFDerivWithin 𝕜 i (fderivWithin 𝕜 f s) s x‖ *
               ‖iteratedFDerivWithin 𝕜 (n - i) g s x‖ :=
-            mul_le_mul_of_nonneg_right (B.norm_precompL_le Du) (by positivity)
-        _ = _ := by
-          congr 1
-          apply Finset.sum_congr rfl fun i _ => ?_
-          rw [← norm_iteratedFDerivWithin_fderivWithin hs hx]
-    have J : iteratedFDerivWithin 𝕜 n
-        (fun y : Du => fderivWithin 𝕜 (fun y : Du => B (f y) (g y)) s y) s x =
-          iteratedFDerivWithin 𝕜 n (fun y => B.precompR Du (f y)
-            (fderivWithin 𝕜 g s y) + B.precompL Du (fderivWithin 𝕜 f s y) (g y)) s x := by
-      apply iteratedFDerivWithin_congr (fun y hy => ?_) hx
-      have L : (1 : ℕ∞) ≤ n.succ := by
-        simpa only [ENat.coe_one, Nat.one_le_cast] using Nat.succ_pos n
-      exact B.fderivWithin_of_bilinear (hf.differentiableOn L y hy) (hg.differentiableOn L y hy)
-        (hs y hy)
-    rw [← norm_iteratedFDerivWithin_fderivWithin hs hx, J]
-    have A : ContDiffOn 𝕜 n (fun y => B.precompR Du (f y) (fderivWithin 𝕜 g s y)) s :=
-      (B.precompR Du).isBoundedBilinearMap.contDiff.comp_contDiff_on₂
-        (hf.of_le (Nat.cast_le.2 (Nat.le_succ n))) (hg.fderivWithin hs In)
-    have A' : ContDiffOn 𝕜 n (fun y => B.precompL Du (fderivWithin 𝕜 f s y) (g y)) s :=
-      (B.precompL Du).isBoundedBilinearMap.contDiff.comp_contDiff_on₂ (hf.fderivWithin hs In)
-        (hg.of_le (Nat.cast_le.2 (Nat.le_succ n)))
-    rw [iteratedFDerivWithin_add_apply' A A' hs hx]
-    apply (norm_add_le _ _).trans ((add_le_add I1 I2).trans (le_of_eq ?_))
-    simp_rw [← mul_add, mul_assoc]
-    congr 1
-    exact (Finset.sum_choose_succ_mul
-      (fun i j => ‖iteratedFDerivWithin 𝕜 i f s x‖ * ‖iteratedFDerivWithin 𝕜 j g s x‖) n).symm
+        IH _ (hf.fderivWithin hs In) (hg.of_le (Nat.cast_le.2 (Nat.le_succ n)))
+      _ ≤ ‖B‖ * ∑ i ∈ Finset.range (n + 1),
+          n.choose i * ‖iteratedFDerivWithin 𝕜 i (fderivWithin 𝕜 f s) s x‖ *
+            ‖iteratedFDerivWithin 𝕜 (n - i) g s x‖ :=
+          mul_le_mul_of_nonneg_right (B.norm_precompL_le Du) (by positivity)
+      _ = _ := by
+        congr 1
+        apply Finset.sum_congr rfl fun i _ => ?_
+        rw [← norm_iteratedFDerivWithin_fderivWithin hs hx]
+  have J : iteratedFDerivWithin 𝕜 n
+      (fun y : Du => fderivWithin 𝕜 (fun y : Du => B (f y) (g y)) s y) s x =
+        iteratedFDerivWithin 𝕜 n (fun y => B.precompR Du (f y)
+          (fderivWithin 𝕜 g s y) + B.precompL Du (fderivWithin 𝕜 f s y) (g y)) s x := by
+    apply iteratedFDerivWithin_congr (fun y hy => ?_) hx
+    have L : (1 : ℕ∞) ≤ n.succ := by
+      simpa only [ENat.coe_one, Nat.one_le_cast] using Nat.succ_pos n
+    exact B.fderivWithin_of_bilinear (hf.differentiableOn L y hy) (hg.differentiableOn L y hy)
+      (hs y hy)
+  rw [← norm_iteratedFDerivWithin_fderivWithin hs hx, J]
+  have A : ContDiffOn 𝕜 n (fun y => B.precompR Du (f y) (fderivWithin 𝕜 g s y)) s :=
+    (B.precompR Du).isBoundedBilinearMap.contDiff.comp_contDiff_on₂
+      (hf.of_le (Nat.cast_le.2 (Nat.le_succ n))) (hg.fderivWithin hs In)
+  have A' : ContDiffOn 𝕜 n (fun y => B.precompL Du (fderivWithin 𝕜 f s y) (g y)) s :=
+    (B.precompL Du).isBoundedBilinearMap.contDiff.comp_contDiff_on₂ (hf.fderivWithin hs In)
+      (hg.of_le (Nat.cast_le.2 (Nat.le_succ n)))
+  rw [iteratedFDerivWithin_add_apply' A A' hs hx]
+  apply (norm_add_le _ _).trans ((add_le_add I1 I2).trans (le_of_eq ?_))
+  simp_rw [← mul_add, mul_assoc]
+  congr 1
+  exact (Finset.sum_choose_succ_mul
+    (fun i j => ‖iteratedFDerivWithin 𝕜 i f s x‖ * ‖iteratedFDerivWithin 𝕜 j g s x‖) n).symm
 
 /-- Bounding the norm of the iterated derivative of `B (f x) (g x)` within a set in terms of the
 iterated derivatives of `f` and `g` when `B` is bilinear:
@@ -361,8 +361,8 @@ theorem norm_iteratedFDerivWithin_comp_le_aux {Fu Gu : Type u} [NormedAddCommGro
     `ContinuousLinearMap.norm_iteratedFDeriv_le_of_bilinear_of_le_one` to get from these a bound
     on `D^n (g ' ∘ f ⬝ f')`. -/
   induction' n using Nat.case_strong_induction_on with n IH generalizing Gu
-  · simpa [norm_iteratedFDerivWithin_zero, Nat.factorial_zero, algebraMap.coe_one, one_mul,
-      pow_zero, mul_one, comp_apply] using hC 0 le_rfl
+  simpa [norm_iteratedFDerivWithin_zero, Nat.factorial_zero, algebraMap.coe_one, one_mul,
+    pow_zero, mul_one, comp_apply] using hC 0 le_rfl
   have M : (n : ℕ∞) < n.succ := Nat.cast_lt.2 n.lt_succ_self
   have Cnonneg : 0 ≤ C := (norm_nonneg _).trans (hC 0 bot_le)
   have Dnonneg : 0 ≤ D
@@ -375,19 +375,19 @@ theorem norm_iteratedFDerivWithin_comp_le_aux {Fu Gu : Type u} [NormedAddCommGro
     intro i hi
     simp only [Finset.mem_range_succ_iff] at hi
     apply IH i hi
-    · apply hg.fderivWithin ht
-      simp only [Nat.cast_succ]
-      exact add_le_add_right (Nat.cast_le.2 hi) _
-    · apply hf.of_le (Nat.cast_le.2 (hi.trans n.le_succ))
-    · intro j hj
-      have : ‖iteratedFDerivWithin 𝕜 j (fderivWithin 𝕜 g t) t (f x)‖ =
-          ‖iteratedFDerivWithin 𝕜 (j + 1) g t (f x)‖ := by
-        rw [iteratedFDerivWithin_succ_eq_comp_right ht (hst hx), comp_apply,
-          LinearIsometryEquiv.norm_map]
-      rw [this]
-      exact hC (j + 1) (add_le_add (hj.trans hi) le_rfl)
-    · intro j hj h'j
-      exact hD j hj (h'j.trans (hi.trans n.le_succ))
+    apply hg.fderivWithin ht
+    simp only [Nat.cast_succ]
+    exact add_le_add_right (Nat.cast_le.2 hi) _
+    apply hf.of_le (Nat.cast_le.2 (hi.trans n.le_succ))
+    intro j hj
+    have : ‖iteratedFDerivWithin 𝕜 j (fderivWithin 𝕜 g t) t (f x)‖ =
+        ‖iteratedFDerivWithin 𝕜 (j + 1) g t (f x)‖ := by
+      rw [iteratedFDerivWithin_succ_eq_comp_right ht (hst hx), comp_apply,
+        LinearIsometryEquiv.norm_map]
+    rw [this]
+    exact hC (j + 1) (add_le_add (hj.trans hi) le_rfl)
+    intro j hj h'j
+    exact hD j hj (h'j.trans (hi.trans n.le_succ))
   -- reformulate `hD` as a bound for the derivatives of `f'`.
   have J : ∀ i, ‖iteratedFDerivWithin 𝕜 (n - i) (fderivWithin 𝕜 f s) s x‖ ≤ D ^ (n - i + 1)
   intro i
@@ -396,8 +396,8 @@ theorem norm_iteratedFDerivWithin_comp_le_aux {Fu Gu : Type u} [NormedAddCommGro
     rw [iteratedFDerivWithin_succ_eq_comp_right hs hx, comp_apply, LinearIsometryEquiv.norm_map]
   rw [this]
   apply hD
-  · simp only [le_add_iff_nonneg_left, zero_le']
-  · apply Nat.succ_le_succ tsub_le_self
+  simp only [le_add_iff_nonneg_left, zero_le']
+  apply Nat.succ_le_succ tsub_le_self
   -- Now put these together: first, notice that we have to bound `D^n (g' ∘ f ⬝ f')`.
   calc
     ‖iteratedFDerivWithin 𝕜 (n + 1) (g ∘ f) s x‖ =
@@ -411,8 +411,8 @@ theorem norm_iteratedFDerivWithin_comp_le_aux {Fu Gu : Type u} [NormedAddCommGro
       congr 1
       refine iteratedFDerivWithin_congr (fun y hy => ?_) hx _
       apply fderivWithin.comp _ _ _ hst (hs y hy)
-      · exact hg.differentiableOn L _ (hst hy)
-      · exact hf.differentiableOn L _ hy
+      exact hg.differentiableOn L _ (hst hy)
+      exact hf.differentiableOn L _ hy
     -- bound it using the fact that the composition of linear maps is a bilinear operation,
     -- for which we have bounds for the`n`-th derivative.
     _ ≤ ∑ i ∈ Finset.range (n + 1),
@@ -431,8 +431,8 @@ theorem norm_iteratedFDerivWithin_comp_le_aux {Fu Gu : Type u} [NormedAddCommGro
     -- assumption for `g' ∘ f`).
     _ ≤ ∑ i ∈ Finset.range (n + 1), (n.choose i : ℝ) * (i ! * C * D ^ i) * D ^ (n - i + 1) := by
       gcongr with i hi
-      · exact I i hi
-      · exact J i
+      exact I i hi
+      exact J i
     -- We are left with trivial algebraic manipulations to see that this is smaller than
     -- the claimed bound.
     _ = ∑ i ∈ Finset.range (n + 1),
@@ -444,12 +444,12 @@ theorem norm_iteratedFDerivWithin_comp_le_aux {Fu Gu : Type u} [NormedAddCommGro
       ring
     _ = ∑ i ∈ Finset.range (n + 1), (n ! : ℝ) * 1 * C * D ^ (n + 1) * ((n - i)! : ℝ)⁻¹ := by
       congr! with i hi
-      · apply inv_mul_cancel
-        simpa only [Ne, Nat.cast_eq_zero] using i.factorial_ne_zero
-      · rw [← pow_add]
-        congr 1
-        rw [Nat.add_succ, Nat.succ_inj']
-        exact Nat.add_sub_of_le (Finset.mem_range_succ_iff.1 hi)
+      apply inv_mul_cancel
+      simpa only [Ne, Nat.cast_eq_zero] using i.factorial_ne_zero
+      rw [← pow_add]
+      congr 1
+      rw [Nat.add_succ, Nat.succ_inj']
+      exact Nat.add_sub_of_le (Finset.mem_range_succ_iff.1 hi)
     _ ≤ ∑ i ∈ Finset.range (n + 1), (n ! : ℝ) * 1 * C * D ^ (n + 1) * 1 := by
       gcongr with i
       apply inv_le_one

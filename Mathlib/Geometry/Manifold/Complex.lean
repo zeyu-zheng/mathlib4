@@ -70,8 +70,8 @@ theorem Complex.norm_eventually_eq_of_mdifferentiableAt_of_isLocalMax {f : M →
       e.right_inv hyt] at hy₂
     exact hy₂.2
   convert norm_eventually_eq_of_isLocalMax hd _
-  · exact congr_arg f (extChartAt_to_inv _ _).symm
-  · simpa only [e, IsLocalMax, IsMaxFilter, ← H₂, (· ∘ ·), extChartAt_to_inv] using hc
+  exact congr_arg f (extChartAt_to_inv _ _).symm
+  simpa only [e, IsLocalMax, IsMaxFilter, ← H₂, (· ∘ ·), extChartAt_to_inv] using hc
 
 /-!
 ### Functions holomorphic on a set
@@ -126,9 +126,9 @@ theorem apply_eq_of_isPreconnected_isCompact_isOpen {f : M → F} {U : Set M} {a
   refine ?_
   -- Subtract `f b` to avoid the assumption `[StrictConvexSpace ℝ F]`
   wlog hb₀ : f b = 0 generalizing f
-  · have hd' : MDifferentiableOn I 𝓘(ℂ, F) (f · - f b) U := fun x hx ↦
-      ⟨(hd x hx).1.sub continuousWithinAt_const, (hd x hx).2.sub_const _⟩
-    simpa [sub_eq_zero] using this hd' (sub_self _)
+  have hd' : MDifferentiableOn I 𝓘(ℂ, F) (f · - f b) U := fun x hx ↦
+    ⟨(hd x hx).1.sub continuousWithinAt_const, (hd x hx).2.sub_const _⟩
+  simpa [sub_eq_zero] using this hd' (sub_self _)
   rcases hc.exists_isMaxOn ⟨a, ha⟩ hd.continuousOn.norm with ⟨c, hcU, hc⟩
   have : ∀ x ∈ U, ‖f x‖ = ‖f c‖ :=
     norm_eqOn_of_isPreconnected_of_isMaxOn hd hpc ho hcU hc

@@ -385,20 +385,20 @@ theorem image_morphismRestrict_preimage {X Y : Scheme.{u}} (f : X ⟶ Y) (U : Y.
   ext1
   ext x
   constructor
-  · rintro ⟨⟨x, hx⟩, hx' : (f ∣_ U).val.base _ ∈ V, rfl⟩
-    refine ⟨⟨_, hx⟩, ?_, rfl⟩
-    -- Porting note: this rewrite was not necessary
-    rw [SetLike.mem_coe]
-    convert hx'
-    -- Porting note: `ext1` is not compiling
-    refine Subtype.ext ?_
-    exact (morphismRestrict_base_coe f U ⟨x, hx⟩).symm
-  · rintro ⟨⟨x, hx⟩, hx' : _ ∈ V.1, rfl : x = _⟩
-    refine ⟨⟨_, hx⟩, (?_ : (f ∣_ U).val.base ⟨x, hx⟩ ∈ V.1), rfl⟩
-    convert hx'
-    -- Porting note: `ext1` is compiling
-    refine Subtype.ext ?_
-    exact morphismRestrict_base_coe f U ⟨x, hx⟩
+  rintro ⟨⟨x, hx⟩, hx' : (f ∣_ U).val.base _ ∈ V, rfl⟩
+  refine ⟨⟨_, hx⟩, ?_, rfl⟩
+  -- Porting note: this rewrite was not necessary
+  rw [SetLike.mem_coe]
+  convert hx'
+  -- Porting note: `ext1` is not compiling
+  refine Subtype.ext ?_
+  exact (morphismRestrict_base_coe f U ⟨x, hx⟩).symm
+  rintro ⟨⟨x, hx⟩, hx' : _ ∈ V.1, rfl : x = _⟩
+  refine ⟨⟨_, hx⟩, (?_ : (f ∣_ U).val.base ⟨x, hx⟩ ∈ V.1), rfl⟩
+  convert hx'
+  -- Porting note: `ext1` is compiling
+  refine Subtype.ext ?_
+  exact morphismRestrict_base_coe f U ⟨x, hx⟩
 
 lemma eqToHom_eq_homOfLE {C} [Preorder C] {X Y : C} (e : X = Y) : eqToHom e = homOfLE e.le := rfl
 

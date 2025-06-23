@@ -56,7 +56,7 @@ def oangle (x y : V) : Real.Angle :=
 theorem continuousAt_oangle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
     ContinuousAt (fun y : V × V => o.oangle y.1 y.2) x := by
   refine (Complex.continuousAt_arg_coe_angle ?_).comp ?_
-  · exact o.kahler_ne_zero hx1 hx2
+  exact o.kahler_ne_zero hx1 hx2
   exact ((continuous_ofReal.comp continuous_inner).add
     ((continuous_ofReal.comp o.areaForm'.continuous₂).mul continuous_const)).continuousAt
 
@@ -190,20 +190,20 @@ theorem oangle_neg_right {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
 theorem two_zsmul_oangle_neg_left (x y : V) :
     (2 : ℤ) • o.oangle (-x) y = (2 : ℤ) • o.oangle x y := by
   by_cases hx : x = 0
-  · simp [hx]
-  · by_cases hy : y = 0
-    · simp [hy]
-    · simp [o.oangle_neg_left hx hy]
+  simp [hx]
+  by_cases hy : y = 0
+  simp [hy]
+  simp [o.oangle_neg_left hx hy]
 
 /-- Negating the second vector passed to `oangle` does not change twice the angle. -/
 @[simp]
 theorem two_zsmul_oangle_neg_right (x y : V) :
     (2 : ℤ) • o.oangle x (-y) = (2 : ℤ) • o.oangle x y := by
   by_cases hx : x = 0
-  · simp [hx]
-  · by_cases hy : y = 0
-    · simp [hy]
-    · simp [o.oangle_neg_right hx hy]
+  simp [hx]
+  by_cases hy : y = 0
+  simp [hy]
+  simp [o.oangle_neg_right hx hy]
 
 /-- Negating both vectors passed to `oangle` does not change the angle. -/
 @[simp]
@@ -275,23 +275,23 @@ theorem oangle_smul_right_of_neg (x y : V) {r : ℝ} (hr : r < 0) :
 @[simp]
 theorem oangle_smul_left_self_of_nonneg (x : V) {r : ℝ} (hr : 0 ≤ r) : o.oangle (r • x) x = 0 := by
   rcases hr.lt_or_eq with (h | h)
-  · simp [h]
-  · simp [h.symm]
+  simp [h]
+  simp [h.symm]
 
 /-- The angle between a vector and a nonnegative multiple of that vector is 0. -/
 @[simp]
 theorem oangle_smul_right_self_of_nonneg (x : V) {r : ℝ} (hr : 0 ≤ r) : o.oangle x (r • x) = 0 := by
   rcases hr.lt_or_eq with (h | h)
-  · simp [h]
-  · simp [h.symm]
+  simp [h]
+  simp [h.symm]
 
 /-- The angle between two nonnegative multiples of the same vector is 0. -/
 @[simp]
 theorem oangle_smul_smul_self_of_nonneg (x : V) {r₁ r₂ : ℝ} (hr₁ : 0 ≤ r₁) (hr₂ : 0 ≤ r₂) :
     o.oangle (r₁ • x) (r₂ • x) = 0 := by
   rcases hr₁.lt_or_eq with (h | h)
-  · simp [h, hr₂]
-  · simp [h.symm]
+  simp [h, hr₂]
+  simp [h.symm]
 
 /-- Multiplying the first vector passed to `oangle` by a nonzero real does not change twice the
 angle. -/
@@ -366,13 +366,13 @@ theorem oangle_eq_pi_iff_sameRay_neg {x y : V} :
     o.oangle x y = π ↔ x ≠ 0 ∧ y ≠ 0 ∧ SameRay ℝ x (-y) := by
   rw [← o.oangle_eq_zero_iff_sameRay]
   constructor
-  · intro h
-    by_cases hx : x = 0; · simp [hx, Real.Angle.pi_ne_zero.symm] at h
-    by_cases hy : y = 0; · simp [hy, Real.Angle.pi_ne_zero.symm] at h
-    refine ⟨hx, hy, ?_⟩
-    rw [o.oangle_neg_right hx hy, h, Real.Angle.coe_pi_add_coe_pi]
-  · rintro ⟨hx, hy, h⟩
-    rwa [o.oangle_neg_right hx hy, ← Real.Angle.sub_coe_pi_eq_add_coe_pi, sub_eq_zero] at h
+  intro h
+  by_cases hx : x = 0; · simp [hx, Real.Angle.pi_ne_zero.symm] at h
+  by_cases hy : y = 0; · simp [hy, Real.Angle.pi_ne_zero.symm] at h
+  refine ⟨hx, hy, ?_⟩
+  rw [o.oangle_neg_right hx hy, h, Real.Angle.coe_pi_add_coe_pi]
+  rintro ⟨hx, hy, h⟩
+  rwa [o.oangle_neg_right hx hy, ← Real.Angle.sub_coe_pi_eq_add_coe_pi, sub_eq_zero] at h
 
 /-- The oriented angle between two vectors is zero or `π` if and only if those two vectors are
 not linearly independent. -/
@@ -387,22 +387,22 @@ theorem oangle_eq_zero_or_eq_pi_iff_right_eq_smul {x y : V} :
     o.oangle x y = 0 ∨ o.oangle x y = π ↔ x = 0 ∨ ∃ r : ℝ, y = r • x := by
   rw [oangle_eq_zero_iff_sameRay, oangle_eq_pi_iff_sameRay_neg]
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · rcases h with (h | ⟨-, -, h⟩)
-    · by_cases hx : x = 0; · simp [hx]
-      obtain ⟨r, -, rfl⟩ := h.exists_nonneg_left hx
-      exact Or.inr ⟨r, rfl⟩
-    · by_cases hx : x = 0; · simp [hx]
-      obtain ⟨r, -, hy⟩ := h.exists_nonneg_left hx
-      refine Or.inr ⟨-r, ?_⟩
-      simp [hy]
-  · rcases h with (rfl | ⟨r, rfl⟩); · simp
-    by_cases hx : x = 0; · simp [hx]
-    rcases lt_trichotomy r 0 with (hr | hr | hr)
-    · rw [← neg_smul]
-      exact Or.inr ⟨hx, smul_ne_zero hr.ne hx,
-        SameRay.sameRay_pos_smul_right x (Left.neg_pos_iff.2 hr)⟩
-    · simp [hr]
-    · exact Or.inl (SameRay.sameRay_pos_smul_right x hr)
+  rcases h with (h | ⟨-, -, h⟩)
+  by_cases hx : x = 0; · simp [hx]
+  obtain ⟨r, -, rfl⟩ := h.exists_nonneg_left hx
+  exact Or.inr ⟨r, rfl⟩
+  by_cases hx : x = 0; · simp [hx]
+  obtain ⟨r, -, hy⟩ := h.exists_nonneg_left hx
+  refine Or.inr ⟨-r, ?_⟩
+  simp [hy]
+  rcases h with (rfl | ⟨r, rfl⟩); · simp
+  by_cases hx : x = 0; · simp [hx]
+  rcases lt_trichotomy r 0 with (hr | hr | hr)
+  rw [← neg_smul]
+  exact Or.inr ⟨hx, smul_ne_zero hr.ne hx,
+    SameRay.sameRay_pos_smul_right x (Left.neg_pos_iff.2 hr)⟩
+  simp [hr]
+  exact Or.inl (SameRay.sameRay_pos_smul_right x hr)
 
 /-- The oriented angle between two vectors is not zero or `π` if and only if those two vectors
 are linearly independent. -/
@@ -415,18 +415,18 @@ theorem oangle_ne_zero_and_ne_pi_iff_linearIndependent {x y : V} :
 theorem eq_iff_norm_eq_and_oangle_eq_zero (x y : V) : x = y ↔ ‖x‖ = ‖y‖ ∧ o.oangle x y = 0 := by
   rw [oangle_eq_zero_iff_sameRay]
   constructor
-  · rintro rfl
-    simp; rfl
-  · rcases eq_or_ne y 0 with (rfl | hy)
-    · simp
-    rintro ⟨h₁, h₂⟩
-    obtain ⟨r, hr, rfl⟩ := h₂.exists_nonneg_right hy
-    have : ‖y‖ ≠ 0
-    simpa using hy
-    obtain rfl : r = 1 := by
-      apply mul_right_cancel₀ this
-      simpa [norm_smul, _root_.abs_of_nonneg hr] using h₁
-    simp
+  rintro rfl
+  simp; rfl
+  rcases eq_or_ne y 0 with (rfl | hy)
+  simp
+  rintro ⟨h₁, h₂⟩
+  obtain ⟨r, hr, rfl⟩ := h₂.exists_nonneg_right hy
+  have : ‖y‖ ≠ 0
+  simpa using hy
+  obtain rfl : r = 1 := by
+    apply mul_right_cancel₀ this
+    simpa [norm_smul, _root_.abs_of_nonneg hr] using h₁
+  simp
 
 /-- Two vectors with equal norms are equal if and only if they have zero angle between them. -/
 theorem eq_iff_oangle_eq_zero_of_norm_eq {x y : V} (h : ‖x‖ = ‖y‖) : x = y ↔ o.oangle x y = 0 :=
@@ -445,14 +445,14 @@ theorem oangle_add {x y z : V} (hx : x ≠ 0) (hy : y ≠ 0) (hz : z ≠ 0) :
     o.oangle x y + o.oangle y z = o.oangle x z := by
   simp_rw [oangle]
   rw [← Complex.arg_mul_coe_angle, o.kahler_mul y x z]
-  · congr 1
-    convert Complex.arg_real_mul _ (_ : 0 < ‖y‖ ^ 2) using 2
-    · norm_cast
-    · have : 0 < ‖y‖
-      simpa using hy
-      positivity
-  · exact o.kahler_ne_zero hx hy
-  · exact o.kahler_ne_zero hy hz
+  congr 1
+  convert Complex.arg_real_mul _ (_ : 0 < ‖y‖ ^ 2) using 2
+  norm_cast
+  have : 0 < ‖y‖
+  simpa using hy
+  positivity
+  exact o.kahler_ne_zero hx hy
+  exact o.kahler_ne_zero hy hz
 
 /-- Given three nonzero vectors, the angle between the second and the third plus the angle
 between the first and the second equals the angle between the first and the third. -/
@@ -551,9 +551,9 @@ theorem inner_eq_norm_mul_norm_mul_cos_oangle (x y : V) :
   have : ‖y‖ ≠ 0
   simpa using hy
   rw [oangle, Real.Angle.cos_coe, Complex.cos_arg, o.abs_kahler]
-  · simp only [kahler_apply_apply, real_smul, add_re, ofReal_re, mul_re, I_re, ofReal_im]
-    field_simp
-  · exact o.kahler_ne_zero hx hy
+  simp only [kahler_apply_apply, real_smul, add_re, ofReal_re, mul_re, I_re, ofReal_im]
+  field_simp
+  exact o.kahler_ne_zero hx hy
 
 /-- The cosine of the oriented angle between two nonzero vectors is the inner product divided by
 the product of the norms. -/
@@ -581,10 +581,10 @@ theorem angle_eq_abs_oangle_toReal {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
   have h0 := InnerProductGeometry.angle_nonneg x y
   have hpi := InnerProductGeometry.angle_le_pi x y
   rcases o.oangle_eq_angle_or_eq_neg_angle hx hy with (h | h)
-  · rw [h, eq_comm, Real.Angle.abs_toReal_coe_eq_self_iff]
-    exact ⟨h0, hpi⟩
-  · rw [h, eq_comm, Real.Angle.abs_toReal_neg_coe_eq_self_iff]
-    exact ⟨h0, hpi⟩
+  rw [h, eq_comm, Real.Angle.abs_toReal_coe_eq_self_iff]
+  exact ⟨h0, hpi⟩
+  rw [h, eq_comm, Real.Angle.abs_toReal_neg_coe_eq_self_iff]
+  exact ⟨h0, hpi⟩
 
 /-- If the sign of the oriented angle between two vectors is zero, either one of the vectors is
 zero or the unoriented angle is 0 or π. -/
@@ -603,36 +603,36 @@ theorem oangle_eq_of_angle_eq_of_sign_eq {w x y z : V}
     (h : InnerProductGeometry.angle w x = InnerProductGeometry.angle y z)
     (hs : (o.oangle w x).sign = (o.oangle y z).sign) : o.oangle w x = o.oangle y z := by
   by_cases h0 : (w = 0 ∨ x = 0) ∨ y = 0 ∨ z = 0
-  · have hs' : (o.oangle w x).sign = 0 ∧ (o.oangle y z).sign = 0 := by
-      rcases h0 with ((rfl | rfl) | rfl | rfl)
-      · simpa using hs.symm
-      · simpa using hs.symm
-      · simpa using hs
-      · simpa using hs
-    rcases hs' with ⟨hswx, hsyz⟩
-    have h' : InnerProductGeometry.angle w x = π / 2 ∧ InnerProductGeometry.angle y z = π / 2
+  have hs' : (o.oangle w x).sign = 0 ∧ (o.oangle y z).sign = 0 := by
     rcases h0 with ((rfl | rfl) | rfl | rfl)
-    · simpa using h.symm
-    · simpa using h.symm
-    · simpa using h
-    · simpa using h
-    rcases h' with ⟨hwx, hyz⟩
-    have hpi : π / 2 ≠ π
-    intro hpi
-    rw [div_eq_iff, eq_comm, ← sub_eq_zero, mul_two, add_sub_cancel_right] at hpi
-    · exact Real.pi_pos.ne.symm hpi
-    · exact two_ne_zero
-    have h0wx : w = 0 ∨ x = 0
-    have h0' := o.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero hswx
-    simpa [hwx, Real.pi_pos.ne.symm, hpi] using h0'
-    have h0yz : y = 0 ∨ z = 0
-    have h0' := o.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero hsyz
-    simpa [hyz, Real.pi_pos.ne.symm, hpi] using h0'
-    rcases h0wx with (h0wx | h0wx) <;> rcases h0yz with (h0yz | h0yz) <;> simp [h0wx, h0yz]
-  · push_neg at h0
-    rw [Real.Angle.eq_iff_abs_toReal_eq_of_sign_eq hs]
-    rwa [o.angle_eq_abs_oangle_toReal h0.1.1 h0.1.2,
-      o.angle_eq_abs_oangle_toReal h0.2.1 h0.2.2] at h
+    simpa using hs.symm
+    simpa using hs.symm
+    simpa using hs
+    simpa using hs
+  rcases hs' with ⟨hswx, hsyz⟩
+  have h' : InnerProductGeometry.angle w x = π / 2 ∧ InnerProductGeometry.angle y z = π / 2
+  rcases h0 with ((rfl | rfl) | rfl | rfl)
+  simpa using h.symm
+  simpa using h.symm
+  simpa using h
+  simpa using h
+  rcases h' with ⟨hwx, hyz⟩
+  have hpi : π / 2 ≠ π
+  intro hpi
+  rw [div_eq_iff, eq_comm, ← sub_eq_zero, mul_two, add_sub_cancel_right] at hpi
+  exact Real.pi_pos.ne.symm hpi
+  exact two_ne_zero
+  have h0wx : w = 0 ∨ x = 0
+  have h0' := o.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero hswx
+  simpa [hwx, Real.pi_pos.ne.symm, hpi] using h0'
+  have h0yz : y = 0 ∨ z = 0
+  have h0' := o.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero hsyz
+  simpa [hyz, Real.pi_pos.ne.symm, hpi] using h0'
+  rcases h0wx with (h0wx | h0wx) <;> rcases h0yz with (h0yz | h0yz) <;> simp [h0wx, h0yz]
+  push_neg at h0
+  rw [Real.Angle.eq_iff_abs_toReal_eq_of_sign_eq hs]
+  rwa [o.angle_eq_abs_oangle_toReal h0.1.1 h0.1.2,
+    o.angle_eq_abs_oangle_toReal h0.2.1 h0.2.2] at h
 
 /-- If the signs of two oriented angles between nonzero vectors are equal, the oriented angles are
 equal if and only if the unoriented angles are equal. -/
@@ -671,26 +671,26 @@ is zero. -/
 theorem oangle_eq_zero_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) :
     o.oangle x y = 0 ↔ InnerProductGeometry.angle x y = 0 := by
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · simpa [o.angle_eq_abs_oangle_toReal hx hy]
-  · have ha := o.oangle_eq_angle_or_eq_neg_angle hx hy
-    rw [h] at ha
-    simpa using ha
+  simpa [o.angle_eq_abs_oangle_toReal hx hy]
+  have ha := o.oangle_eq_angle_or_eq_neg_angle hx hy
+  rw [h] at ha
+  simpa using ha
 
 /-- The oriented angle between two vectors is `π` if and only if the unoriented angle is `π`. -/
 theorem oangle_eq_pi_iff_angle_eq_pi {x y : V} :
     o.oangle x y = π ↔ InnerProductGeometry.angle x y = π := by
   by_cases hx : x = 0
-  · simp [hx, Real.Angle.pi_ne_zero.symm, div_eq_mul_inv, mul_right_eq_self₀, not_or,
-      Real.pi_ne_zero]
+  simp [hx, Real.Angle.pi_ne_zero.symm, div_eq_mul_inv, mul_right_eq_self₀, not_or,
+    Real.pi_ne_zero]
   by_cases hy : y = 0
-  · simp [hy, Real.Angle.pi_ne_zero.symm, div_eq_mul_inv, mul_right_eq_self₀, not_or,
-      Real.pi_ne_zero]
+  simp [hy, Real.Angle.pi_ne_zero.symm, div_eq_mul_inv, mul_right_eq_self₀, not_or,
+    Real.pi_ne_zero]
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · rw [o.angle_eq_abs_oangle_toReal hx hy, h]
-    simp [Real.pi_pos.le]
-  · have ha := o.oangle_eq_angle_or_eq_neg_angle hx hy
-    rw [h] at ha
-    simpa using ha
+  rw [o.angle_eq_abs_oangle_toReal hx hy, h]
+  simp [Real.pi_pos.le]
+  have ha := o.oangle_eq_angle_or_eq_neg_angle hx hy
+  rw [h] at ha
+  simpa using ha
 
 /-- One of two vectors is zero or the oriented angle between them is plus or minus `π / 2` if
 and only if the inner product of those vectors is zero. -/
@@ -700,9 +700,9 @@ theorem eq_zero_or_oangle_eq_iff_inner_eq_zero {x y : V} :
   by_cases hy : y = 0; · simp [hy]
   rw [InnerProductGeometry.inner_eq_zero_iff_angle_eq_pi_div_two, or_iff_right hx, or_iff_right hy]
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · rwa [o.angle_eq_abs_oangle_toReal hx hy, Real.Angle.abs_toReal_eq_pi_div_two_iff]
-  · convert o.oangle_eq_angle_or_eq_neg_angle hx hy using 2 <;> rw [h]
-    simp only [neg_div, Real.Angle.coe_neg]
+  rwa [o.angle_eq_abs_oangle_toReal hx hy, Real.Angle.abs_toReal_eq_pi_div_two_iff]
+  convert o.oangle_eq_angle_or_eq_neg_angle hx hy using 2 <;> rw [h]
+  simp only [neg_div, Real.Angle.coe_neg]
 
 /-- If the oriented angle between two vectors is `π / 2`, the inner product of those vectors
 is zero. -/
@@ -773,26 +773,26 @@ theorem oangle_smul_add_right_eq_zero_or_eq_pi_iff {x y : V} (r : ℝ) :
   conv_rhs => enter [1, g, 2, 1, i]; tactic => change Fin 2 at i
   conv_rhs => enter [1, g]; rw [Fin.exists_fin_two]
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · rcases h with ⟨m, h, hm⟩
-    change m 0 • x + m 1 • (r • x + y) = 0 at h
-    refine ⟨![m 0 + m 1 * r, m 1], ?_⟩
-    change (m 0 + m 1 * r) • x + m 1 • y = 0 ∧ (m 0 + m 1 * r ≠ 0 ∨ m 1 ≠ 0)
-    rw [smul_add, smul_smul, ← add_assoc, ← add_smul] at h
-    refine ⟨h, not_and_or.1 fun h0 => ?_⟩
-    obtain ⟨h0, h1⟩ := h0
-    rw [h1] at h0 hm
-    rw [zero_mul, add_zero] at h0
-    simp [h0] at hm
-  · rcases h with ⟨m, h, hm⟩
-    change m 0 • x + m 1 • y = 0 at h
-    refine ⟨![m 0 - m 1 * r, m 1], ?_⟩
-    change (m 0 - m 1 * r) • x + m 1 • (r • x + y) = 0 ∧ (m 0 - m 1 * r ≠ 0 ∨ m 1 ≠ 0)
-    rw [sub_smul, smul_add, smul_smul, ← add_assoc, sub_add_cancel]
-    refine ⟨h, not_and_or.1 fun h0 => ?_⟩
-    obtain ⟨h0, h1⟩ := h0
-    rw [h1] at h0 hm
-    rw [zero_mul, sub_zero] at h0
-    simp [h0] at hm
+  rcases h with ⟨m, h, hm⟩
+  change m 0 • x + m 1 • (r • x + y) = 0 at h
+  refine ⟨![m 0 + m 1 * r, m 1], ?_⟩
+  change (m 0 + m 1 * r) • x + m 1 • y = 0 ∧ (m 0 + m 1 * r ≠ 0 ∨ m 1 ≠ 0)
+  rw [smul_add, smul_smul, ← add_assoc, ← add_smul] at h
+  refine ⟨h, not_and_or.1 fun h0 => ?_⟩
+  obtain ⟨h0, h1⟩ := h0
+  rw [h1] at h0 hm
+  rw [zero_mul, add_zero] at h0
+  simp [h0] at hm
+  rcases h with ⟨m, h, hm⟩
+  change m 0 • x + m 1 • y = 0 at h
+  refine ⟨![m 0 - m 1 * r, m 1], ?_⟩
+  change (m 0 - m 1 * r) • x + m 1 • (r • x + y) = 0 ∧ (m 0 - m 1 * r ≠ 0 ∨ m 1 ≠ 0)
+  rw [sub_smul, smul_add, smul_smul, ← add_assoc, sub_add_cancel]
+  refine ⟨h, not_and_or.1 fun h0 => ?_⟩
+  obtain ⟨h0, h1⟩ := h0
+  rw [h1] at h0 hm
+  rw [zero_mul, sub_zero] at h0
+  simp [h0] at hm
 
 /-- Adding a multiple of the first vector passed to `oangle` to the second vector does not change
 the sign of the angle. -/
@@ -800,8 +800,8 @@ the sign of the angle. -/
 theorem oangle_sign_smul_add_right (x y : V) (r : ℝ) :
     (o.oangle x (r • x + y)).sign = (o.oangle x y).sign := by
   by_cases h : o.oangle x y = 0 ∨ o.oangle x y = π
-  · rwa [Real.Angle.sign_eq_zero_iff.2 h, Real.Angle.sign_eq_zero_iff,
-      oangle_smul_add_right_eq_zero_or_eq_pi_iff]
+  rwa [Real.Angle.sign_eq_zero_iff.2 h, Real.Angle.sign_eq_zero_iff,
+    oangle_smul_add_right_eq_zero_or_eq_pi_iff]
   have h' : ∀ r' : ℝ, o.oangle x (r' • x + y) ≠ 0 ∧ o.oangle x (r' • x + y) ≠ π
   intro r'
   rwa [← o.oangle_smul_add_right_eq_zero_or_eq_pi_iff r', not_or] at h
@@ -816,8 +816,8 @@ theorem oangle_sign_smul_add_right (x y : V) (r : ℝ) :
       obtain ⟨r', -, rfl⟩ := hz
       simp only [Prod.fst, Prod.snd]
       intro hz
-    · simpa [hz] using (h' 0).1
-    · simpa [hz] using (h' r').1
+    simpa [hz] using (h' 0).1
+    simpa [hz] using (h' r').1
   have hs : ∀ z : V × V, z ∈ s → o.oangle z.1 z.2 ≠ 0 ∧ o.oangle z.1 z.2 ≠ π
   intro z hz
   simp_rw [s, Set.mem_image] at hz
@@ -938,15 +938,15 @@ theorem oangle_sign_smul_add_smul_smul_add_smul (x y : V) (r₁ r₂ r₃ r₄ :
     (o.oangle (r₁ • x + r₂ • y) (r₃ • x + r₄ • y)).sign =
       SignType.sign (r₁ * r₄ - r₂ * r₃) * (o.oangle x y).sign := by
   by_cases hr₁ : r₁ = 0
-  · rw [hr₁, zero_smul, zero_mul, zero_add, zero_sub, Left.sign_neg,
-      oangle_sign_smul_left, add_comm, oangle_sign_smul_add_smul_right, oangle_rev,
-      Real.Angle.sign_neg, sign_mul, mul_neg, mul_neg, neg_mul, mul_assoc]
-  · rw [← o.oangle_sign_smul_add_right (r₁ • x + r₂ • y) (r₃ • x + r₄ • y) (-r₃ / r₁), smul_add,
-      smul_smul, smul_smul, div_mul_cancel₀ _ hr₁, neg_smul, ← add_assoc, add_comm (-(r₃ • x)), ←
-      sub_eq_add_neg, sub_add_cancel, ← add_smul, oangle_sign_smul_right,
-      oangle_sign_smul_add_smul_left, ← mul_assoc, ← sign_mul, add_mul, mul_assoc, mul_comm r₂ r₁, ←
-      mul_assoc, div_mul_cancel₀ _ hr₁, add_comm, neg_mul, ← sub_eq_add_neg, mul_comm r₄,
-      mul_comm r₃]
+  rw [hr₁, zero_smul, zero_mul, zero_add, zero_sub, Left.sign_neg,
+    oangle_sign_smul_left, add_comm, oangle_sign_smul_add_smul_right, oangle_rev,
+    Real.Angle.sign_neg, sign_mul, mul_neg, mul_neg, neg_mul, mul_assoc]
+  rw [← o.oangle_sign_smul_add_right (r₁ • x + r₂ • y) (r₃ • x + r₄ • y) (-r₃ / r₁), smul_add,
+    smul_smul, smul_smul, div_mul_cancel₀ _ hr₁, neg_smul, ← add_assoc, add_comm (-(r₃ • x)), ←
+    sub_eq_add_neg, sub_add_cancel, ← add_smul, oangle_sign_smul_right,
+    oangle_sign_smul_add_smul_left, ← mul_assoc, ← sign_mul, add_mul, mul_assoc, mul_comm r₂ r₁, ←
+    mul_assoc, div_mul_cancel₀ _ hr₁, add_comm, neg_mul, ← sub_eq_add_neg, mul_comm r₄,
+    mul_comm r₃]
 
 /-- A base angle of an isosceles triangle is acute, oriented vector angle form. -/
 theorem abs_oangle_sub_left_toReal_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y‖) :
@@ -957,18 +957,18 @@ theorem abs_oangle_sub_left_toReal_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y�
   rw [o.oangle_eq_pi_sub_two_zsmul_oangle_sub_of_norm_eq hn h, Real.Angle.sign_pi_sub]
   rw [Real.Angle.sign_two_zsmul_eq_sign_iff] at hs
   rcases hs with (hs | hs)
-  · rw [oangle_eq_pi_iff_oangle_rev_eq_pi, oangle_eq_pi_iff_sameRay_neg, neg_sub] at hs
-    rcases hs with ⟨hy, -, hr⟩
-    rw [← exists_nonneg_left_iff_sameRay hy] at hr
-    rcases hr with ⟨r, hr0, hr⟩
-    rw [eq_sub_iff_add_eq] at hr
-    nth_rw 2 [← one_smul ℝ y] at hr
-    rw [← add_smul] at hr
-    rw [← hr, norm_smul, Real.norm_eq_abs, abs_of_pos (Left.add_pos_of_nonneg_of_pos hr0 one_pos),
-      mul_left_eq_self₀, or_iff_left (norm_ne_zero_iff.2 hy), add_left_eq_self] at h
-    rw [h, zero_add, one_smul] at hr
-    exact False.elim (hn hr.symm)
-  · exact hs
+  rw [oangle_eq_pi_iff_oangle_rev_eq_pi, oangle_eq_pi_iff_sameRay_neg, neg_sub] at hs
+  rcases hs with ⟨hy, -, hr⟩
+  rw [← exists_nonneg_left_iff_sameRay hy] at hr
+  rcases hr with ⟨r, hr0, hr⟩
+  rw [eq_sub_iff_add_eq] at hr
+  nth_rw 2 [← one_smul ℝ y] at hr
+  rw [← add_smul] at hr
+  rw [← hr, norm_smul, Real.norm_eq_abs, abs_of_pos (Left.add_pos_of_nonneg_of_pos hr0 one_pos),
+    mul_left_eq_self₀, or_iff_left (norm_ne_zero_iff.2 hy), add_left_eq_self] at h
+  rw [h, zero_add, one_smul] at hr
+  exact False.elim (hn hr.symm)
+  exact hs
 
 /-- A base angle of an isosceles triangle is acute, oriented vector angle form. -/
 theorem abs_oangle_sub_right_toReal_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y‖) :

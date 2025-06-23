@@ -201,9 +201,9 @@ theorem lieIdeal_oper_eq_tensor_map_range :
     LieModuleHom.coe_linearMap_comp, LinearMap.range_comp, mapIncl_def, coe_linearMap_map,
     TensorProduct.map_range_eq_span_tmul, Submodule.map_span]
   congr; ext m; constructor
-  · rintro ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩; use x ⊗ₜ n; constructor
-    · use ⟨x, hx⟩, ⟨n, hn⟩; simp
-    · simp
-  · rintro ⟨t, ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩, h⟩; rw [← h]; use ⟨x, hx⟩, ⟨n, hn⟩; simp
+  rintro ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩; use x ⊗ₜ n; constructor
+  use ⟨x, hx⟩, ⟨n, hn⟩; simp
+  simp
+  rintro ⟨t, ⟨⟨x, hx⟩, ⟨n, hn⟩, rfl⟩, h⟩; rw [← h]; use ⟨x, hx⟩, ⟨n, hn⟩; simp
 
 end LieSubmodule

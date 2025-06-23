@@ -113,8 +113,8 @@ theorem lapMatrix_toLinearMap₂'_apply'_eq_zero_iff_forall_reachable (x : V →
   refine ⟨?_, fun h i j hA ↦ h i j hA.reachable⟩
   intro h i j ⟨w⟩
   induction' w with w i j _ hA _ h'
-  · rfl
-  · exact (h i j hA).trans h'
+  rfl
+  exact (h i j hA).trans h'
 
 theorem lapMatrix_toLin'_apply_eq_zero_iff_forall_reachable (x : V → ℝ) :
     Matrix.toLin' (G.lapMatrix ℝ) x = 0 ↔ ∀ i j : V, G.Reachable i j → x i = x j := by
@@ -132,12 +132,12 @@ lemma mem_ker_toLin'_lapMatrix_of_connectedComponent {G : SimpleGraph V} [Decida
   rw [LinearMap.mem_ker, lapMatrix_toLin'_apply_eq_zero_iff_forall_reachable]
   intro i j h
   split_ifs with h₁ h₂ h₃
-  · rfl
-  · rw [← ConnectedComponent.eq] at h
-    exact (h₂ (h₁ ▸ h.symm)).elim
-  · rw [← ConnectedComponent.eq] at h
-    exact (h₁ (h₃ ▸ h)).elim
-  · rfl
+  rfl
+  rw [← ConnectedComponent.eq] at h
+  exact (h₂ (h₁ ▸ h.symm)).elim
+  rw [← ConnectedComponent.eq] at h
+  exact (h₁ (h₃ ▸ h)).elim
+  rfl
 
 /-- Given a connected component `c` of a graph `G`, `lapMatrix_ker_basis_aux c` is the map
 `V → ℝ` which is `1` on the vertices in `c` and `0` elsewhere.

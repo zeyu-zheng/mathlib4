@@ -296,10 +296,10 @@ lemma XYIdeal_eq₂ {x₁ x₂ y₁ y₂ : F} (h₁ : W.Equation x₁ y₁)
     XYIdeal W x₂ (C y₂) = XYIdeal W x₂ (linePolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂) := by
   have hy₂ : y₂ = (linePolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂).eval x₂
   by_cases hx : x₁ = x₂
-  · rcases hx, Y_eq_of_Y_ne h₁ h₂ hx <| hxy hx with ⟨rfl, rfl⟩
-    field_simp [linePolynomial, sub_ne_zero_of_ne <| hxy rfl]
-  · field_simp [linePolynomial, slope_of_X_ne hx, sub_ne_zero_of_ne hx]
-    ring1
+  rcases hx, Y_eq_of_Y_ne h₁ h₂ hx <| hxy hx with ⟨rfl, rfl⟩
+  field_simp [linePolynomial, sub_ne_zero_of_ne <| hxy rfl]
+  field_simp [linePolynomial, slope_of_X_ne hx, sub_ne_zero_of_ne hx]
+  ring1
   nth_rw 1 [hy₂]
   simp only [XYIdeal, XClass, YClass, linePolynomial]
   rw [← span_pair_add_mul_right <| mk W <| C <| C <| -W.slope x₁ x₂ y₁ y₂, ← _root_.map_mul,
@@ -325,19 +325,19 @@ lemma XYIdeal_neg_mul {x y : F} (h : W.Nonsingular x y) :
   apply congr_arg
   simp_rw [eq_top_iff_one, mem_span_insert', mem_span_singleton']
   rcases ((nonsingular_iff' ..).mp h).right with hx | hy
-  · let W_X := W.a₁ * y - (3 * x ^ 2 + 2 * W.a₂ * x + W.a₄)
-    refine
-      ⟨C <| C W_X⁻¹ * -(X + C (2 * x + W.a₂)), C <| C <| W_X⁻¹ * W.a₁, 0, C <| C <| W_X⁻¹ * -1, ?_⟩
-    rw [← mul_right_inj' <| C_ne_zero.mpr <| C_ne_zero.mpr hx]
-    simp only [mul_add, ← mul_assoc, ← C_mul, mul_inv_cancel hx]
-    C_simp
-    ring1
-  · let W_Y := 2 * y + W.a₁ * x + W.a₃
-    refine ⟨0, C <| C W_Y⁻¹, C <| C <| W_Y⁻¹ * -1, 0, ?_⟩
-    rw [negY, ← mul_right_inj' <| C_ne_zero.mpr <| C_ne_zero.mpr hy]
-    simp only [mul_add, ← mul_assoc, ← C_mul, mul_inv_cancel hy]
-    C_simp
-    ring1
+  let W_X := W.a₁ * y - (3 * x ^ 2 + 2 * W.a₂ * x + W.a₄)
+  refine
+    ⟨C <| C W_X⁻¹ * -(X + C (2 * x + W.a₂)), C <| C <| W_X⁻¹ * W.a₁, 0, C <| C <| W_X⁻¹ * -1, ?_⟩
+  rw [← mul_right_inj' <| C_ne_zero.mpr <| C_ne_zero.mpr hx]
+  simp only [mul_add, ← mul_assoc, ← C_mul, mul_inv_cancel hx]
+  C_simp
+  ring1
+  let W_Y := 2 * y + W.a₁ * x + W.a₃
+  refine ⟨0, C <| C W_Y⁻¹, C <| C <| W_Y⁻¹ * -1, 0, ?_⟩
+  rw [negY, ← mul_right_inj' <| C_ne_zero.mpr <| C_ne_zero.mpr hy]
+  simp only [mul_add, ← mul_assoc, ← C_mul, mul_inv_cancel hy]
+  C_simp
+  ring1
 
 private lemma XYIdeal'_mul_inv {x y : F} (h : W.Nonsingular x y) :
     XYIdeal W x (C y) * (XYIdeal W x (C <| W.negY x y) *
@@ -369,23 +369,23 @@ lemma XYIdeal_mul_XYIdeal {x₁ x₂ y₁ y₂ : F} (h₁ : W.Equation x₁ y₁
     mem_map_iff_of_surjective _ AdjoinRoot.mk_surjective, ← span_insert, mem_span_insert',
     mem_span_singleton']
   by_cases hx : x₁ = x₂
-  · rcases hx, Y_eq_of_Y_ne h₁ h₂ hx (hxy hx) with ⟨rfl, rfl⟩
-    let y := (y₁ - W.negY x₁ y₁) ^ 2
-    replace hxy := pow_ne_zero 2 <| sub_ne_zero_of_ne <| hxy rfl
-    refine ⟨1 + C (C <| y⁻¹ * 4) * W.polynomial,
-      ⟨C <| C y⁻¹ * (C 4 * X ^ 2 + C (4 * x₁ + W.b₂) * X + C (4 * x₁ ^ 2 + W.b₂ * x₁ + 2 * W.b₄)),
-        0, C (C y⁻¹) * (Y - W.negPolynomial), ?_⟩, by
-      rw [map_add, map_one, _root_.map_mul <| mk W, AdjoinRoot.mk_self, mul_zero, add_zero]⟩
-    rw [polynomial, negPolynomial, ← mul_right_inj' <| C_ne_zero.mpr <| C_ne_zero.mpr hxy]
-    simp only [mul_add, ← mul_assoc, ← C_mul, mul_inv_cancel hxy]
-    linear_combination (norm := (rw [b₂, b₄, negY]; C_simp; ring1))
-      -4 * congr_arg C (congr_arg C <| (equation_iff ..).mp h₁)
-  · replace hx := sub_ne_zero_of_ne hx
-    refine ⟨_, ⟨⟨C <| C (x₁ - x₂)⁻¹, C <| C <| (x₁ - x₂)⁻¹ * -1, 0, ?_⟩, map_one _⟩⟩
-    rw [← mul_right_inj' <| C_ne_zero.mpr <| C_ne_zero.mpr hx]
-    simp only [← mul_assoc, mul_add, ← C_mul, mul_inv_cancel hx]
-    C_simp
-    ring1
+  rcases hx, Y_eq_of_Y_ne h₁ h₂ hx (hxy hx) with ⟨rfl, rfl⟩
+  let y := (y₁ - W.negY x₁ y₁) ^ 2
+  replace hxy := pow_ne_zero 2 <| sub_ne_zero_of_ne <| hxy rfl
+  refine ⟨1 + C (C <| y⁻¹ * 4) * W.polynomial,
+    ⟨C <| C y⁻¹ * (C 4 * X ^ 2 + C (4 * x₁ + W.b₂) * X + C (4 * x₁ ^ 2 + W.b₂ * x₁ + 2 * W.b₄)),
+      0, C (C y⁻¹) * (Y - W.negPolynomial), ?_⟩, by
+    rw [map_add, map_one, _root_.map_mul <| mk W, AdjoinRoot.mk_self, mul_zero, add_zero]⟩
+  rw [polynomial, negPolynomial, ← mul_right_inj' <| C_ne_zero.mpr <| C_ne_zero.mpr hxy]
+  simp only [mul_add, ← mul_assoc, ← C_mul, mul_inv_cancel hxy]
+  linear_combination (norm := (rw [b₂, b₄, negY]; C_simp; ring1))
+    -4 * congr_arg C (congr_arg C <| (equation_iff ..).mp h₁)
+  replace hx := sub_ne_zero_of_ne hx
+  refine ⟨_, ⟨⟨C <| C (x₁ - x₂)⁻¹, C <| C <| (x₁ - x₂)⁻¹ * -1, 0, ?_⟩, map_one _⟩⟩
+  rw [← mul_right_inj' <| C_ne_zero.mpr <| C_ne_zero.mpr hx]
+  simp only [← mul_assoc, mul_add, ← C_mul, mul_inv_cancel hx]
+  C_simp
+  ring1
 
 -- Porting note (#10619): removed `@[simp]` to avoid a `simpNF` linter error
 /-- The non-zero fractional ideal $\langle X - x, Y - y \rangle$ of $F(W)$ for some $x, y \in F$. -/
@@ -446,29 +446,29 @@ lemma degree_norm_smul_basis [IsDomain R] (p q : R[X]) :
     rw [degree_mul, degree_pow, ← one_mul <| X ^ 3, ← C_1, degree_cubic <| one_ne_zero' R]
   rw [norm_smul_basis]
   by_cases hp : p = 0
-  · simpa only [hp, hdq, neg_zero, zero_sub, zero_mul, zero_pow two_ne_zero, degree_neg] using
-      (max_bot_left _).symm
-  · by_cases hq : q = 0
-    · simpa only [hq, hdp, sub_zero, zero_mul, mul_zero, zero_pow two_ne_zero] using
-        (max_bot_right _).symm
-    · rw [← not_congr degree_eq_bot] at hp hq
-      -- Porting note: BUG `cases` tactic does not modify assumptions in `hp'` and `hq'`
-      rcases hp' : p.degree with _ | dp -- `hp' : ` should be redundant
-      · exact (hp hp').elim -- `hp'` should be `rfl`
-      · rw [hp'] at hdp hdpq -- line should be redundant
-        rcases hq' : q.degree with _ | dq -- `hq' : ` should be redundant
-        · exact (hq hq').elim -- `hq'` should be `rfl`
-        · rw [hq'] at hdpq hdq -- line should be redundant
-          rcases le_or_lt dp (dq + 1) with hpq | hpq
-          · convert (degree_sub_eq_right_of_degree_lt <| (degree_sub_le _ _).trans_lt <|
-                      max_lt_iff.mpr ⟨hdp.trans_lt _, hdpq.trans_lt _⟩).trans
-              (max_eq_right_of_lt _).symm <;> rw [hdq] <;>
-                exact WithBot.coe_lt_coe.mpr <| by dsimp; linarith only [hpq]
-          · rw [sub_sub]
-            convert (degree_sub_eq_left_of_degree_lt <| (degree_add_le _ _).trans_lt <|
-                      max_lt_iff.mpr ⟨hdpq.trans_lt _, hdq.trans_lt _⟩).trans
-              (max_eq_left_of_lt _).symm <;> rw [hdp] <;>
-                exact WithBot.coe_lt_coe.mpr <| by dsimp; linarith only [hpq]
+  simpa only [hp, hdq, neg_zero, zero_sub, zero_mul, zero_pow two_ne_zero, degree_neg] using
+    (max_bot_left _).symm
+  by_cases hq : q = 0
+  simpa only [hq, hdp, sub_zero, zero_mul, mul_zero, zero_pow two_ne_zero] using
+    (max_bot_right _).symm
+  rw [← not_congr degree_eq_bot] at hp hq
+  -- Porting note: BUG `cases` tactic does not modify assumptions in `hp'` and `hq'`
+  rcases hp' : p.degree with _ | dp -- `hp' : ` should be redundant
+  exact (hp hp').elim -- `hp'` should be `rfl`
+  rw [hp'] at hdp hdpq -- line should be redundant
+  rcases hq' : q.degree with _ | dq -- `hq' : ` should be redundant
+  exact (hq hq').elim -- `hq'` should be `rfl`
+  rw [hq'] at hdpq hdq -- line should be redundant
+  rcases le_or_lt dp (dq + 1) with hpq | hpq
+  convert (degree_sub_eq_right_of_degree_lt <| (degree_sub_le _ _).trans_lt <|
+            max_lt_iff.mpr ⟨hdp.trans_lt _, hdpq.trans_lt _⟩).trans
+    (max_eq_right_of_lt _).symm <;> rw [hdq] <;>
+      exact WithBot.coe_lt_coe.mpr <| by dsimp; linarith only [hpq]
+  rw [sub_sub]
+  convert (degree_sub_eq_left_of_degree_lt <| (degree_add_le _ _).trans_lt <|
+            max_lt_iff.mpr ⟨hdpq.trans_lt _, hdq.trans_lt _⟩).trans
+    (max_eq_left_of_lt _).symm <;> rw [hdp] <;>
+      exact WithBot.coe_lt_coe.mpr <| by dsimp; linarith only [hpq]
 
 variable {W} in
 lemma degree_norm_ne_one [IsDomain R] (x : W.CoordinateRing) :
@@ -529,30 +529,30 @@ lemma toClass_some {x y : F} (h : W.Nonsingular x y) :
 private lemma add_eq_zero (P Q : W.Point) : P + Q = 0 ↔ P = -Q := by
   rcases P, Q with ⟨_ | @⟨x₁, y₁, _⟩, _ | @⟨x₂, y₂, _⟩⟩
   any_goals rfl
-  · rw [zero_def, zero_add, ← neg_eq_iff_eq_neg, neg_zero, eq_comm]
-  · rw [neg_some, some.injEq]
-    constructor
-    · contrapose!; intro h; rw [add_of_imp h]; exact some_ne_zero _
-    · exact fun ⟨hx, hy⟩ ↦ add_of_Y_eq hx hy
+  rw [zero_def, zero_add, ← neg_eq_iff_eq_neg, neg_zero, eq_comm]
+  rw [neg_some, some.injEq]
+  constructor
+  contrapose!; intro h; rw [add_of_imp h]; exact some_ne_zero _
+  exact fun ⟨hx, hy⟩ ↦ add_of_Y_eq hx hy
 
 lemma toClass_eq_zero (P : W.Point) : toClass P = 0 ↔ P = 0 := by
   constructor
-  · intro hP
-    rcases P with (_ | ⟨h, _⟩)
-    · rfl
-    · rcases (ClassGroup.mk_eq_one_of_coe_ideal <| by rfl).mp hP with ⟨p, h0, hp⟩
-      apply (p.natDegree_norm_ne_one _).elim
-      rw [← finrank_quotient_span_eq_natDegree_norm (CoordinateRing.basis W) h0,
-        ← (quotientEquivAlgOfEq F hp).toLinearEquiv.finrank_eq,
-        (CoordinateRing.quotientXYIdealEquiv W h).toLinearEquiv.finrank_eq,
-        FiniteDimensional.finrank_self]
-  · exact congr_arg toClass
+  intro hP
+  rcases P with (_ | ⟨h, _⟩)
+  rfl
+  rcases (ClassGroup.mk_eq_one_of_coe_ideal <| by rfl).mp hP with ⟨p, h0, hp⟩
+  apply (p.natDegree_norm_ne_one _).elim
+  rw [← finrank_quotient_span_eq_natDegree_norm (CoordinateRing.basis W) h0,
+    ← (quotientEquivAlgOfEq F hp).toLinearEquiv.finrank_eq,
+    (CoordinateRing.quotientXYIdealEquiv W h).toLinearEquiv.finrank_eq,
+    FiniteDimensional.finrank_self]
+  exact congr_arg toClass
 
 lemma toClass_injective : Function.Injective <| @toClass _ _ W := by
   rintro (_ | h) _ hP
   all_goals rw [← neg_inj, ← add_eq_zero, ← toClass_eq_zero, map_add, ← hP]
-  · exact zero_add 0
-  · exact CoordinateRing.mk_XYIdeal'_mul_mk_XYIdeal'_of_Yeq h
+  exact zero_add 0
+  exact CoordinateRing.mk_XYIdeal'_mul_mk_XYIdeal'_of_Yeq h
 
 noncomputable instance : AddCommGroup W.Point where
   nsmul := nsmulRec

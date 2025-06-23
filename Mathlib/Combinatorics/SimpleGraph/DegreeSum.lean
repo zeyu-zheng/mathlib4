@@ -57,10 +57,10 @@ theorem dart_fst_fiber [DecidableEq V] (v : V) :
   ext d
   simp only [mem_image, true_and_iff, mem_filter, SetCoe.exists, mem_univ, exists_prop_of_true]
   constructor
-  · rintro rfl
-    exact ⟨_, d.adj, by ext <;> rfl⟩
-  · rintro ⟨e, he, rfl⟩
-    rfl
+  rintro rfl
+  exact ⟨_, d.adj, by ext <;> rfl⟩
+  rintro ⟨e, he, rfl⟩
+  rfl
 
 theorem dart_fst_fiber_card_eq_degree [DecidableEq V] (v : V) :
     (univ.filter fun d : G.Dart => d.fst = v).card = G.degree v := by
@@ -120,14 +120,14 @@ theorem even_card_odd_degree_vertices [Fintype V] [DecidableRel G.Adj] :
     simp only [ZMod.natCast_self, zero_mul, Nat.cast_mul] at h
     rw [Nat.cast_sum, ← sum_filter_ne_zero] at h
     rw [@sum_congr _ _ _ _ (fun v => (G.degree v : ZMod 2)) (fun _v => (1 : ZMod 2)) _ rfl] at h
-    · simp only [filter_congr, mul_one, nsmul_eq_mul, sum_const, Ne] at h
-      rw [← ZMod.eq_zero_iff_even]
-      convert h
-      exact ZMod.ne_zero_iff_odd.symm
-    · intro v
-      simp only [true_and_iff, mem_filter, mem_univ, Ne]
-      rw [ZMod.eq_zero_iff_even, ZMod.eq_one_iff_odd, Nat.odd_iff_not_even, imp_self]
-      trivial
+    simp only [filter_congr, mul_one, nsmul_eq_mul, sum_const, Ne] at h
+    rw [← ZMod.eq_zero_iff_even]
+    convert h
+    exact ZMod.ne_zero_iff_odd.symm
+    intro v
+    simp only [true_and_iff, mem_filter, mem_univ, Ne]
+    rw [ZMod.eq_zero_iff_even, ZMod.eq_one_iff_odd, Nat.odd_iff_not_even, imp_self]
+    trivial
 
 theorem odd_card_odd_degree_vertices_ne [Fintype V] [DecidableEq V] [DecidableRel G.Adj] (v : V)
     (h : Odd (G.degree v)) : Odd (univ.filter fun w => w ≠ v ∧ Odd (G.degree w)).card := by
@@ -144,11 +144,11 @@ theorem odd_card_odd_degree_vertices_ne [Fintype V] [DecidableEq V] [DecidableRe
   rw [and_comm]
   simp only [hc, filter_congr]
   rw [← filter_filter, filter_ne', card_erase_of_mem]
-  · refine ⟨k - 1, tsub_eq_of_eq_add <| hg.trans ?_⟩
-    rw [add_assoc, one_add_one_eq_two, ← Nat.mul_succ, ← two_mul]
-    congr
-    omega
-  · simpa only [true_and_iff, mem_filter, mem_univ]
+  refine ⟨k - 1, tsub_eq_of_eq_add <| hg.trans ?_⟩
+  rw [add_assoc, one_add_one_eq_two, ← Nat.mul_succ, ← two_mul]
+  congr
+  omega
+  simpa only [true_and_iff, mem_filter, mem_univ]
 
 theorem exists_ne_odd_degree_of_exists_odd_degree [Fintype V] [DecidableRel G.Adj] (v : V)
     (h : Odd (G.degree v)) : ∃ w : V, w ≠ v ∧ Odd (G.degree w) := by

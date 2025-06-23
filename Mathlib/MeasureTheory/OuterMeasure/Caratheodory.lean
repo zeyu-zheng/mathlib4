@@ -107,8 +107,8 @@ theorem isCaratheodory_iUnion_nat {s : ℕ → Set α} (h : ∀ i, IsCaratheodor
       intro t
       have hp : m (t ∩ ⋃ i, s i) ≤ ⨆ n, m (t ∩ ⋃ i < n, s i)
       convert m.iUnion fun i => t ∩ s i using 1
-      · simp [inter_iUnion]
-      · simp [ENNReal.tsum_eq_iSup_nat, isCaratheodory_sum m h hd]
+      simp [inter_iUnion]
+      simp [ENNReal.tsum_eq_iSup_nat, isCaratheodory_sum m h hd]
       refine le_trans (add_le_add_right hp _) ?_
       rw [ENNReal.iSup_add]
       refine iSup_le fun n => le_trans (add_le_add_left ?_ _)
@@ -166,21 +166,21 @@ theorem ofFunction_caratheodory {m : Set α → ℝ≥0∞} {s : Set α} {h₀ :
       (add_le_add ((iInf_le_of_le fun i => f i ∩ s) <| iInf_le _ ?_)
         ((iInf_le_of_le fun i => f i \ s) <| iInf_le _ ?_))
       ?_
-  · rw [← iUnion_inter]
-    exact inter_subset_inter_left _ hf
-  · rw [← iUnion_diff]
-    exact diff_subset_diff_left hf
-  · rw [← ENNReal.tsum_add]
-    exact ENNReal.tsum_le_tsum fun i => hs _
+  rw [← iUnion_inter]
+  exact inter_subset_inter_left _ hf
+  rw [← iUnion_diff]
+  exact diff_subset_diff_left hf
+  rw [← ENNReal.tsum_add]
+  exact ENNReal.tsum_le_tsum fun i => hs _
 
 theorem boundedBy_caratheodory {m : Set α → ℝ≥0∞} {s : Set α}
     (hs : ∀ t, m (t ∩ s) + m (t \ s) ≤ m t) : MeasurableSet[(boundedBy m).caratheodory] s := by
   apply ofFunction_caratheodory; intro t
   rcases t.eq_empty_or_nonempty with h | h
-  · simp [h, Set.not_nonempty_empty]
-  · convert le_trans _ (hs t)
-    · simp [h]
-    exact add_le_add iSup_const_le iSup_const_le
+  simp [h, Set.not_nonempty_empty]
+  convert le_trans _ (hs t)
+  simp [h]
+  exact add_le_add iSup_const_le iSup_const_le
 
 @[simp]
 theorem zero_caratheodory : (0 : OuterMeasure α).caratheodory = ⊤ :=

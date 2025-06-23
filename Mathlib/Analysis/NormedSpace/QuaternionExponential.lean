@@ -44,13 +44,13 @@ theorem expSeries_even_of_imaginary {q : Quaternion ℝ} (hq : q.re = 0) (n : �
     k⁻¹ • q ^ (2 * n) = k⁻¹ • (-normSq q) ^ n := by rw [pow_mul, hq2]
     _ = k⁻¹ • ↑((-1 : ℝ) ^ n * ‖q‖ ^ (2 * n)) := ?_
     _ = ↑((-1 : ℝ) ^ n * ‖q‖ ^ (2 * n) / k) := ?_
-  · congr 1
-    rw [neg_pow, normSq_eq_norm_mul_self, pow_mul, sq]
-    push_cast
-    rfl
-  · rw [← coe_mul_eq_smul, div_eq_mul_inv]
-    norm_cast
-    ring_nf
+  congr 1
+  rw [neg_pow, normSq_eq_norm_mul_self, pow_mul, sq]
+  push_cast
+  rfl
+  rw [← coe_mul_eq_smul, div_eq_mul_inv]
+  norm_cast
+  ring_nf
 
 /-- The odd terms of `expSeries` are real, and correspond to the series for
 $\frac{q}{‖q‖} \sin ‖q‖$. -/
@@ -59,7 +59,7 @@ theorem expSeries_odd_of_imaginary {q : Quaternion ℝ} (hq : q.re = 0) (n : ℕ
       (((-1 : ℝ) ^ n * ‖q‖ ^ (2 * n + 1) / (2 * n + 1)!) / ‖q‖) • q := by
   rw [expSeries_apply_eq]
   obtain rfl | hq0 := eq_or_ne q 0
-  · simp
+  simp
   have hq2 : q ^ 2 = -normSq q := sq_eq_neg_normSq.mpr hq
   have hqn := norm_ne_zero_iff.mpr hq0
   let k : ℝ := ↑(2 * n + 1)!
@@ -67,13 +67,13 @@ theorem expSeries_odd_of_imaginary {q : Quaternion ℝ} (hq : q.re = 0) (n : ℕ
     k⁻¹ • q ^ (2 * n + 1) = k⁻¹ • ((-normSq q) ^ n * q) := by rw [pow_succ, pow_mul, hq2]
     _ = k⁻¹ • ((-1 : ℝ) ^ n * ‖q‖ ^ (2 * n)) • q := ?_
     _ = ((-1 : ℝ) ^ n * ‖q‖ ^ (2 * n + 1) / k / ‖q‖) • q := ?_
-  · congr 1
-    rw [neg_pow, normSq_eq_norm_mul_self, pow_mul, sq, ← coe_mul_eq_smul]
-    norm_cast
-  · rw [smul_smul]
-    congr 1
-    simp_rw [pow_succ, mul_div_assoc, div_div_cancel_left' hqn]
-    ring
+  congr 1
+  rw [neg_pow, normSq_eq_norm_mul_self, pow_mul, sq, ← coe_mul_eq_smul]
+  norm_cast
+  rw [smul_smul]
+  congr 1
+  simp_rw [pow_succ, mul_div_assoc, div_div_cancel_left' hqn]
+  ring
 
 /-- Auxiliary result; if the power series corresponding to `Real.cos` and `Real.sin` evaluated
 at `‖q‖` tend to `c` and `s`, then the exponential series tends to `c + (s / ‖q‖)`. -/
@@ -84,12 +84,12 @@ theorem hasSum_expSeries_of_imaginary {q : Quaternion ℝ} (hq : q.re = 0) {c s 
   replace hc := hasSum_coe.mpr hc
   replace hs := (hs.div_const ‖q‖).smul_const q
   refine HasSum.even_add_odd ?_ ?_
-  · convert hc using 1
-    ext n : 1
-    rw [expSeries_even_of_imaginary hq]
-  · convert hs using 1
-    ext n : 1
-    rw [expSeries_odd_of_imaginary hq]
+  convert hc using 1
+  ext n : 1
+  rw [expSeries_even_of_imaginary hq]
+  convert hs using 1
+  ext n : 1
+  rw [expSeries_odd_of_imaginary hq]
 
 /-- The closed form for the quaternion exponential on imaginary quaternions. -/
 theorem exp_of_re_eq_zero (q : Quaternion ℝ) (hq : q.re = 0) :
@@ -121,7 +121,7 @@ theorem normSq_exp (q : ℍ[ℝ]) : normSq (exp ℝ q) = exp ℝ q.re ^ 2 :=
     _ = exp ℝ q.re ^ 2 * (Real.cos ‖q.im‖ ^ 2 + Real.sin ‖q.im‖ ^ 2) := by
       congr 1
       obtain hv | hv := eq_or_ne ‖q.im‖ 0
-      · simp [hv]
+      simp [hv]
       rw [normSq_add, normSq_smul, star_smul, coe_mul_eq_smul, smul_re, smul_re, star_re, im_re,
         smul_zero, smul_zero, mul_zero, add_zero, div_pow, normSq_coe,
         normSq_eq_norm_mul_self, ← sq, div_mul_cancel₀ _ (pow_ne_zero _ hv)]

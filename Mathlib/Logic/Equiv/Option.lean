@@ -89,18 +89,18 @@ theorem removeNone_aux_inv (x : α) : removeNone_aux e.symm (removeNone_aux e x)
   Option.some_injective _
     (by
       cases h1 : e.symm (some (removeNone_aux e x)) <;> cases h2 : e (some x)
-      · rw [removeNone_aux_none _ h1]
-        exact (e.eq_symm_apply.mpr h2).symm
+      rw [removeNone_aux_none _ h1]
+      exact (e.eq_symm_apply.mpr h2).symm
 
-      · rw [removeNone_aux_some _ ⟨_, h2⟩] at h1
-        simp at h1
+      rw [removeNone_aux_some _ ⟨_, h2⟩] at h1
+      simp at h1
 
-      · rw [removeNone_aux_none _ h2] at h1
-        simp at h1
+      rw [removeNone_aux_none _ h2] at h1
+      simp at h1
 
-      · rw [removeNone_aux_some _ ⟨_, h1⟩]
-        rw [removeNone_aux_some _ ⟨_, h2⟩]
-        simp)
+      rw [removeNone_aux_some _ ⟨_, h1⟩]
+      rw [removeNone_aux_some _ ⟨_, h2⟩]
+      simp)
 
 /-- Given an equivalence between two `Option` types, eliminate `none` from that equivalence by
 mapping `e.symm none` to `e none`. -/
@@ -127,13 +127,13 @@ theorem option_symm_apply_none_iff : e.symm none = none ↔ e none = none :=
 
 theorem some_removeNone_iff {x : α} : some (removeNone e x) = e none ↔ e.symm none = some x := by
   cases' h : e (some x) with a
-  · rw [removeNone_none _ h]
-    simpa using (congr_arg e.symm h).symm
-  · rw [removeNone_some _ ⟨a, h⟩]
-    have h1 := congr_arg e.symm h
-    rw [symm_apply_apply] at h1
-    simp only [false_iff_iff, apply_eq_iff_eq]
-    simp [h1, apply_eq_iff_eq]
+  rw [removeNone_none _ h]
+  simpa using (congr_arg e.symm h).symm
+  rw [removeNone_some _ ⟨a, h⟩]
+  have h1 := congr_arg e.symm h
+  rw [symm_apply_apply] at h1
+  simp only [false_iff_iff, apply_eq_iff_eq]
+  simp [h1, apply_eq_iff_eq]
 
 @[simp]
 theorem removeNone_optionCongr (e : α ≃ β) : removeNone e.optionCongr = e :=

@@ -235,23 +235,23 @@ theorem isFractionRing_iff_of_base_ringEquiv (h : R ≃+* P) :
   erw [Submonoid.map_equiv_eq_comap_symm]
   simp only [MulEquiv.coe_toMonoidHom, RingEquiv.toMulEquiv_eq_coe, Submonoid.mem_comap]
   constructor
-  · rintro hx z (hz : z * h.symm x = 0)
-    rw [← h.map_eq_zero_iff]
-    apply hx
-    simpa only [h.map_zero, h.apply_symm_apply, h.map_mul] using congr_arg h hz
-  · rintro (hx : h.symm x ∈ _) z hz
-    rw [← h.symm.map_eq_zero_iff]
-    apply hx
-    rw [← h.symm.map_mul, hz, h.symm.map_zero]
+  rintro hx z (hz : z * h.symm x = 0)
+  rw [← h.map_eq_zero_iff]
+  apply hx
+  simpa only [h.map_zero, h.apply_symm_apply, h.map_mul] using congr_arg h hz
+  rintro (hx : h.symm x ∈ _) z hz
+  rw [← h.symm.map_eq_zero_iff]
+  apply hx
+  rw [← h.symm.map_mul, hz, h.symm.map_zero]
 
 protected theorem nontrivial (R S : Type*) [CommRing R] [Nontrivial R] [CommRing S] [Algebra R S]
     [IsFractionRing R S] : Nontrivial S := by
   apply nontrivial_of_ne
-  · intro h
-    apply @zero_ne_one R
-    exact
-      IsLocalization.injective S (le_of_eq rfl)
-        (((algebraMap R S).map_zero.trans h).trans (algebraMap R S).map_one.symm)
+  intro h
+  apply @zero_ne_one R
+  exact
+    IsLocalization.injective S (le_of_eq rfl)
+      (((algebraMap R S).map_zero.trans h).trans (algebraMap R S).map_one.symm)
 
 end IsFractionRing
 

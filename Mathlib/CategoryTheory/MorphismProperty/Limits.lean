@@ -201,14 +201,14 @@ theorem diagonal_iff {X Y : C} {f : X ⟶ Y} : P.diagonal f ↔ P (pullback.diag
 
 instance RespectsIso.diagonal [P.RespectsIso] : P.diagonal.RespectsIso := by
   constructor
-  · introv H
-    rwa [diagonal_iff, pullback.diagonal_comp, P.cancel_left_of_respectsIso,
-      P.cancel_left_of_respectsIso, ← P.cancel_right_of_respectsIso _
-        (pullback.map (e.hom ≫ f) (e.hom ≫ f) f f e.hom e.hom (𝟙 Z) (by simp) (by simp)),
-      ← pullback.condition, P.cancel_left_of_respectsIso]
-  · introv H
-    delta diagonal
-    rwa [pullback.diagonal_comp, P.cancel_right_of_respectsIso]
+  introv H
+  rwa [diagonal_iff, pullback.diagonal_comp, P.cancel_left_of_respectsIso,
+    P.cancel_left_of_respectsIso, ← P.cancel_right_of_respectsIso _
+      (pullback.map (e.hom ≫ f) (e.hom ≫ f) f f e.hom e.hom (𝟙 Z) (by simp) (by simp)),
+    ← pullback.condition, P.cancel_left_of_respectsIso]
+  introv H
+  delta diagonal
+  rwa [pullback.diagonal_comp, P.cancel_right_of_respectsIso]
 
 theorem diagonal_isStableUnderComposition [P.IsStableUnderComposition] [RespectsIso P]
     (hP'' : StableUnderBaseChange P) : P.diagonal.IsStableUnderComposition where
@@ -236,17 +236,17 @@ def universally (P : MorphismProperty C) : MorphismProperty C := fun X Y f =>
 
 instance universally_respectsIso (P : MorphismProperty C) : P.universally.RespectsIso := by
   constructor
-  · intro X Y Z e f hf X' Z' i₁ i₂ f' H
-    have : IsPullback (𝟙 _) (i₁ ≫ e.hom) i₁ e.inv :=
-      IsPullback.of_horiz_isIso
-        ⟨by rw [Category.id_comp, Category.assoc, e.hom_inv_id, Category.comp_id]⟩
-    exact hf _ _ _
-      (by simpa only [Iso.inv_hom_id_assoc, Category.id_comp] using this.paste_horiz H)
-  · intro X Y Z e f hf X' Z' i₁ i₂ f' H
-    have : IsPullback (𝟙 _) i₂ (i₂ ≫ e.inv) e.inv :=
-      IsPullback.of_horiz_isIso ⟨Category.id_comp _⟩
-    exact hf _ _ _ (by simpa only [Category.assoc, Iso.hom_inv_id,
-      Category.comp_id, Category.comp_id] using H.paste_horiz this)
+  intro X Y Z e f hf X' Z' i₁ i₂ f' H
+  have : IsPullback (𝟙 _) (i₁ ≫ e.hom) i₁ e.inv :=
+    IsPullback.of_horiz_isIso
+      ⟨by rw [Category.id_comp, Category.assoc, e.hom_inv_id, Category.comp_id]⟩
+  exact hf _ _ _
+    (by simpa only [Iso.inv_hom_id_assoc, Category.id_comp] using this.paste_horiz H)
+  intro X Y Z e f hf X' Z' i₁ i₂ f' H
+  have : IsPullback (𝟙 _) i₂ (i₂ ≫ e.inv) e.inv :=
+    IsPullback.of_horiz_isIso ⟨Category.id_comp _⟩
+  exact hf _ _ _ (by simpa only [Category.assoc, Iso.hom_inv_id,
+    Category.comp_id, Category.comp_id] using H.paste_horiz this)
 
 theorem universally_stableUnderBaseChange (P : MorphismProperty C) :
     P.universally.StableUnderBaseChange := fun _ _ _ _ _ _ _ _ H h₁ _ _ _ _ _ H' =>

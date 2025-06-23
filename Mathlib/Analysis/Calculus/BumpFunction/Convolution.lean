@@ -117,19 +117,19 @@ theorem ae_convolution_tendsto_right_of_locallyIntegrable
   have := (h₀.comp (Besicovitch.tendsto_filterAt μ x₀)).comp hφ'
   simp only [Function.comp] at this
   apply tendsto_integral_smul_of_tendsto_average_norm_sub (K ^ (FiniteDimensional.finrank ℝ G)) this
-  · filter_upwards with i using
-      hg.integrableOn_isCompact (isCompact_closedBall _ _)
-  · apply tendsto_const_nhds.congr (fun i ↦ ?_)
-    rw [← integral_neg_eq_self]
-    simp only [sub_neg_eq_add, integral_add_left_eq_self, integral_normed]
-  · filter_upwards with i
-    change support ((ContDiffBump.normed (φ i) μ) ∘ (fun y ↦ x₀ - y)) ⊆ closedBall x₀ (φ i).rOut
-    simp only [support_comp_eq_preimage, support_normed_eq]
-    intro x hx
-    simp only [mem_preimage, mem_ball, dist_zero_right] at hx
-    simpa [dist_eq_norm_sub'] using hx.le
-  · filter_upwards [h'φ] with i hi x
-    rw [abs_of_nonneg (nonneg_normed _ _), addHaar_closedBall_center]
-    exact (φ i).normed_le_div_measure_closedBall_rOut _ _ hi _
+  filter_upwards with i using
+    hg.integrableOn_isCompact (isCompact_closedBall _ _)
+  apply tendsto_const_nhds.congr (fun i ↦ ?_)
+  rw [← integral_neg_eq_self]
+  simp only [sub_neg_eq_add, integral_add_left_eq_self, integral_normed]
+  filter_upwards with i
+  change support ((ContDiffBump.normed (φ i) μ) ∘ (fun y ↦ x₀ - y)) ⊆ closedBall x₀ (φ i).rOut
+  simp only [support_comp_eq_preimage, support_normed_eq]
+  intro x hx
+  simp only [mem_preimage, mem_ball, dist_zero_right] at hx
+  simpa [dist_eq_norm_sub'] using hx.le
+  filter_upwards [h'φ] with i hi x
+  rw [abs_of_nonneg (nonneg_normed _ _), addHaar_closedBall_center]
+  exact (φ i).normed_le_div_measure_closedBall_rOut _ _ hi _
 
 end ContDiffBump

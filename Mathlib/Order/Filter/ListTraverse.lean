@@ -36,17 +36,17 @@ theorem mem_traverse_iff (fs : List β) (t : Set (List α)) :
     t ∈ traverse f fs ↔
       ∃ us : List (Set α), Forall₂ (fun b (s : Set α) => s ∈ f b) fs us ∧ sequence us ⊆ t := by
   constructor
-  · induction fs generalizing t with
-    | nil =>
-      simp only [sequence, mem_pure, imp_self, forall₂_nil_left_iff, exists_eq_left, Set.pure_def,
-        singleton_subset_iff, traverse_nil]
-    | cons b fs ih =>
-      intro ht
-      rcases mem_seq_iff.1 ht with ⟨u, hu, v, hv, ht⟩
-      rcases mem_map_iff_exists_image.1 hu with ⟨w, hw, hwu⟩
-      rcases ih v hv with ⟨us, hus, hu⟩
-      exact ⟨w::us, Forall₂.cons hw hus, (Set.seq_mono hwu hu).trans ht⟩
-  · rintro ⟨us, hus, hs⟩
-    exact mem_of_superset (mem_traverse _ _ hus) hs
+  induction fs generalizing t with
+  | nil =>
+    simp only [sequence, mem_pure, imp_self, forall₂_nil_left_iff, exists_eq_left, Set.pure_def,
+      singleton_subset_iff, traverse_nil]
+  | cons b fs ih =>
+    intro ht
+    rcases mem_seq_iff.1 ht with ⟨u, hu, v, hv, ht⟩
+    rcases mem_map_iff_exists_image.1 hu with ⟨w, hw, hwu⟩
+    rcases ih v hv with ⟨us, hus, hu⟩
+    exact ⟨w::us, Forall₂.cons hw hus, (Set.seq_mono hwu hu).trans ht⟩
+  rintro ⟨us, hus, hs⟩
+  exact mem_of_superset (mem_traverse _ _ hus) hs
 
 end Filter

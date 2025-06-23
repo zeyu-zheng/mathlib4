@@ -53,26 +53,26 @@ theorem modByMonic_eq_of_dvd_sub (hq : q.Monic) {p₁ p₂ : R[X]} (h : q ∣ p�
 
 theorem add_modByMonic (p₁ p₂ : R[X]) : (p₁ + p₂) %ₘ q = p₁ %ₘ q + p₂ %ₘ q := by
   by_cases hq : q.Monic
-  · cases' subsingleton_or_nontrivial R with hR hR
-    · simp only [eq_iff_true_of_subsingleton]
-    · exact
-      (div_modByMonic_unique (p₁ /ₘ q + p₂ /ₘ q) _ hq
-          ⟨by
-            rw [mul_add, add_left_comm, add_assoc, modByMonic_add_div _ hq, ← add_assoc,
-              add_comm (q * _), modByMonic_add_div _ hq],
-            (degree_add_le _ _).trans_lt
-              (max_lt (degree_modByMonic_lt _ hq) (degree_modByMonic_lt _ hq))⟩).2
-  · simp_rw [modByMonic_eq_of_not_monic _ hq]
+  cases' subsingleton_or_nontrivial R with hR hR
+  simp only [eq_iff_true_of_subsingleton]
+  exact
+  (div_modByMonic_unique (p₁ /ₘ q + p₂ /ₘ q) _ hq
+      ⟨by
+        rw [mul_add, add_left_comm, add_assoc, modByMonic_add_div _ hq, ← add_assoc,
+          add_comm (q * _), modByMonic_add_div _ hq],
+        (degree_add_le _ _).trans_lt
+          (max_lt (degree_modByMonic_lt _ hq) (degree_modByMonic_lt _ hq))⟩).2
+  simp_rw [modByMonic_eq_of_not_monic _ hq]
 
 theorem smul_modByMonic (c : R) (p : R[X]) : c • p %ₘ q = c • (p %ₘ q) := by
   by_cases hq : q.Monic
-  · cases' subsingleton_or_nontrivial R with hR hR
-    · simp only [eq_iff_true_of_subsingleton]
-    · exact
-      (div_modByMonic_unique (c • (p /ₘ q)) (c • (p %ₘ q)) hq
-          ⟨by rw [mul_smul_comm, ← smul_add, modByMonic_add_div p hq],
-            (degree_smul_le _ _).trans_lt (degree_modByMonic_lt _ hq)⟩).2
-  · simp_rw [modByMonic_eq_of_not_monic _ hq]
+  cases' subsingleton_or_nontrivial R with hR hR
+  simp only [eq_iff_true_of_subsingleton]
+  exact
+  (div_modByMonic_unique (c • (p /ₘ q)) (c • (p %ₘ q)) hq
+      ⟨by rw [mul_smul_comm, ← smul_add, modByMonic_add_div p hq],
+        (degree_smul_le _ _).trans_lt (degree_modByMonic_lt _ hq)⟩).2
+  simp_rw [modByMonic_eq_of_not_monic _ hq]
 
 /-- `_ %ₘ q` as an `R`-linear map. -/
 @[simps]
@@ -119,18 +119,18 @@ theorem natDegree_mul (hp : p ≠ 0) (hq : q ≠ 0) : (p*q).natDegree = p.natDeg
 
 theorem trailingDegree_mul : (p * q).trailingDegree = p.trailingDegree + q.trailingDegree := by
   by_cases hp : p = 0
-  · rw [hp, zero_mul, trailingDegree_zero, top_add]
+  rw [hp, zero_mul, trailingDegree_zero, top_add]
   by_cases hq : q = 0
-  · rw [hq, mul_zero, trailingDegree_zero, add_top]
-  · rw [trailingDegree_eq_natTrailingDegree hp, trailingDegree_eq_natTrailingDegree hq,
-    trailingDegree_eq_natTrailingDegree (mul_ne_zero hp hq), natTrailingDegree_mul hp hq]
-    apply WithTop.coe_add
+  rw [hq, mul_zero, trailingDegree_zero, add_top]
+  rw [trailingDegree_eq_natTrailingDegree hp, trailingDegree_eq_natTrailingDegree hq,
+  trailingDegree_eq_natTrailingDegree (mul_ne_zero hp hq), natTrailingDegree_mul hp hq]
+  apply WithTop.coe_add
 
 open Classical in
 @[simp]
 theorem natDegree_pow (p : R[X]) (n : ℕ) : natDegree (p ^ n) = n * natDegree p := by
   obtain rfl | hp := eq_or_ne p 0
-  · obtain rfl | hn := eq_or_ne n 0 <;> simp [*]
+  obtain rfl | hn := eq_or_ne n 0 <;> simp [*]
   exact natDegree_pow' $ by
     rw [← leadingCoeff_pow, Ne, leadingCoeff_eq_zero]; exact pow_ne_zero _ hp
 
@@ -203,7 +203,7 @@ theorem isUnit_iff : IsUnit p ↔ ∃ r : R, IsUnit r ∧ C r = p :=
 theorem not_isUnit_of_degree_pos (p : R[X])
     (hpl : 0 < p.degree) : ¬ IsUnit p := by
   cases subsingleton_or_nontrivial R
-  · simp [Subsingleton.elim p 0] at hpl
+  simp [Subsingleton.elim p 0] at hpl
   intro h
   simp [degree_eq_zero_of_isUnit h] at hpl
 
@@ -227,10 +227,10 @@ theorem irreducible_of_monic (hp : p.Monic) (hp1 : p ≠ 1) :
         (h (g * C f.leadingCoeff) (f * C g.leadingCoeff) ?_ ?_ ?_).symm.imp
           (isUnit_of_mul_eq_one f _)
           (isUnit_of_mul_eq_one g _)⟩⟩
-  · rwa [Monic, leadingCoeff_mul, leadingCoeff_C, ← leadingCoeff_mul, mul_comm, ← hfg, ← Monic]
-  · rwa [Monic, leadingCoeff_mul, leadingCoeff_C, ← leadingCoeff_mul, ← hfg, ← Monic]
-  · rw [mul_mul_mul_comm, ← C_mul, ← leadingCoeff_mul, ← hfg, hp.leadingCoeff, C_1, mul_one,
-      mul_comm, ← hfg]
+  rwa [Monic, leadingCoeff_mul, leadingCoeff_C, ← leadingCoeff_mul, mul_comm, ← hfg, ← Monic]
+  rwa [Monic, leadingCoeff_mul, leadingCoeff_C, ← leadingCoeff_mul, ← hfg, ← Monic]
+  rw [mul_mul_mul_comm, ← C_mul, ← leadingCoeff_mul, ← hfg, hp.leadingCoeff, C_1, mul_one,
+    mul_comm, ← hfg]
 
 theorem Monic.irreducible_iff_natDegree (hp : p.Monic) :
     Irreducible p ↔
@@ -245,13 +245,13 @@ theorem Monic.irreducible_iff_natDegree' (hp : p.Monic) : Irreducible p ↔ p �
   simp_rw [hp.irreducible_iff_natDegree, mem_Ioc, Nat.le_div_iff_mul_le zero_lt_two, mul_two]
   apply and_congr_right'
   constructor <;> intro h f g hf hg he <;> subst he
-  · rw [hf.natDegree_mul hg, add_le_add_iff_right]
-    exact fun ha => (h f g hf hg rfl).elim (ha.1.trans_le ha.2).ne' ha.1.ne'
-  · simp_rw [hf.natDegree_mul hg, pos_iff_ne_zero] at h
-    contrapose! h
-    obtain hl | hl := le_total f.natDegree g.natDegree
-    · exact ⟨g, f, hg, hf, mul_comm g f, h.1, add_le_add_left hl _⟩
-    · exact ⟨f, g, hf, hg, rfl, h.2, add_le_add_right hl _⟩
+  rw [hf.natDegree_mul hg, add_le_add_iff_right]
+  exact fun ha => (h f g hf hg rfl).elim (ha.1.trans_le ha.2).ne' ha.1.ne'
+  simp_rw [hf.natDegree_mul hg, pos_iff_ne_zero] at h
+  contrapose! h
+  obtain hl | hl := le_total f.natDegree g.natDegree
+  exact ⟨g, f, hg, hf, mul_comm g f, h.1, add_le_add_left hl _⟩
+  exact ⟨f, g, hf, hg, rfl, h.2, add_le_add_right hl _⟩
 
 /-- Alternate phrasing of `Polynomial.Monic.irreducible_iff_natDegree'` where we only have to check
 one divisor at a time. -/
@@ -259,34 +259,34 @@ theorem Monic.irreducible_iff_lt_natDegree_lt {p : R[X]} (hp : p.Monic) (hp1 : p
     Irreducible p ↔ ∀ q, Monic q → natDegree q ∈ Finset.Ioc 0 (natDegree p / 2) → ¬ q ∣ p := by
   rw [hp.irreducible_iff_natDegree', and_iff_right hp1]
   constructor
-  · rintro h g hg hdg ⟨f, rfl⟩
-    exact h f g (hg.of_mul_monic_left hp) hg (mul_comm f g) hdg
-  · rintro h f g - hg rfl hdg
-    exact h g hg hdg (dvd_mul_left g f)
+  rintro h g hg hdg ⟨f, rfl⟩
+  exact h f g (hg.of_mul_monic_left hp) hg (mul_comm f g) hdg
+  rintro h f g - hg rfl hdg
+  exact h g hg hdg (dvd_mul_left g f)
 
 theorem Monic.not_irreducible_iff_exists_add_mul_eq_coeff (hm : p.Monic) (hnd : p.natDegree = 2) :
     ¬Irreducible p ↔ ∃ c₁ c₂, p.coeff 0 = c₁ * c₂ ∧ p.coeff 1 = c₁ + c₂ := by
   cases subsingleton_or_nontrivial R
-  · simp [natDegree_of_subsingleton] at hnd
+  simp [natDegree_of_subsingleton] at hnd
   rw [hm.irreducible_iff_natDegree', and_iff_right, hnd]
-  · push_neg
-    constructor
-    · rintro ⟨a, b, ha, hb, rfl, hdb⟩
-      simp only [zero_lt_two, Nat.div_self, Nat.Ioc_succ_singleton, zero_add, mem_singleton] at hdb
-      have hda := hnd
-      rw [ha.natDegree_mul hb, hdb] at hda
-      use a.coeff 0, b.coeff 0, mul_coeff_zero a b
-      simpa only [nextCoeff, hnd, add_right_cancel hda, hdb] using ha.nextCoeff_mul hb
-    · rintro ⟨c₁, c₂, hmul, hadd⟩
-      refine
-        ⟨X + C c₁, X + C c₂, monic_X_add_C _, monic_X_add_C _, ?_, ?_⟩
-      · rw [p.as_sum_range_C_mul_X_pow, hnd, Finset.sum_range_succ, Finset.sum_range_succ,
-          Finset.sum_range_one, ← hnd, hm.coeff_natDegree, hnd, hmul, hadd, C_mul, C_add, C_1]
-        ring
-      · rw [mem_Ioc, natDegree_X_add_C _]
-        simp
-  · rintro rfl
-    simp [natDegree_one] at hnd
+  push_neg
+  constructor
+  rintro ⟨a, b, ha, hb, rfl, hdb⟩
+  simp only [zero_lt_two, Nat.div_self, Nat.Ioc_succ_singleton, zero_add, mem_singleton] at hdb
+  have hda := hnd
+  rw [ha.natDegree_mul hb, hdb] at hda
+  use a.coeff 0, b.coeff 0, mul_coeff_zero a b
+  simpa only [nextCoeff, hnd, add_right_cancel hda, hdb] using ha.nextCoeff_mul hb
+  rintro ⟨c₁, c₂, hmul, hadd⟩
+  refine
+    ⟨X + C c₁, X + C c₂, monic_X_add_C _, monic_X_add_C _, ?_, ?_⟩
+  rw [p.as_sum_range_C_mul_X_pow, hnd, Finset.sum_range_succ, Finset.sum_range_succ,
+    Finset.sum_range_one, ← hnd, hm.coeff_natDegree, hnd, hmul, hadd, C_mul, C_add, C_1]
+  ring
+  rw [mem_Ioc, natDegree_X_add_C _]
+  simp
+  rintro rfl
+  simp [natDegree_one] at hnd
 
 theorem root_mul : IsRoot (p * q) a ↔ IsRoot p a ∨ IsRoot q a := by
   simp_rw [IsRoot, eval_mul, mul_eq_zero]
@@ -348,13 +348,13 @@ theorem eq_zero_of_mul_eq_zero_of_smul (P : R[X]) (h : ∀ r : R, r • P = 0 �
     apply h
     simpa [ext_iff, mul_comm Q.leadingCoeff] using fun i ↦ congr_arg (·.coeff Q.natDegree) (this i)
   apply Nat.strong_decreasing_induction
-  · use P.natDegree
-    intro i hi
-    rw [coeff_eq_zero_of_natDegree_lt hi, zero_smul]
+  use P.natDegree
+  intro i hi
+  rw [coeff_eq_zero_of_natDegree_lt hi, zero_smul]
   intro l IH
   obtain _|hl := (natDegree_smul_le (P.coeff l) Q).lt_or_eq
-  · apply eq_zero_of_mul_eq_zero_of_smul _ h (P.coeff l • Q)
-    rw [smul_eq_C_mul, mul_left_comm, hQ, mul_zero]
+  apply eq_zero_of_mul_eq_zero_of_smul _ h (P.coeff l • Q)
+  rw [smul_eq_C_mul, mul_left_comm, hQ, mul_zero]
   suffices P.coeff l * Q.leadingCoeff = 0 by
     rwa [← leadingCoeff_eq_zero, ← coeff_natDegree, coeff_smul, hl, coeff_natDegree, smul_eq_mul]
   let m := Q.natDegree
@@ -364,10 +364,10 @@ theorem eq_zero_of_mul_eq_zero_of_smul (P : R[X]) (h : ∀ r : R, r • P = 0 �
   simp only [Finset.mem_antidiagonal, ne_eq, Prod.forall, Prod.mk.injEq, not_and]
   intro i j hij H
   obtain hi|rfl|hi := lt_trichotomy i l
-  · have hj : m < j := by omega
-    rw [coeff_eq_zero_of_natDegree_lt hj, mul_zero]
-  · omega
-  · rw [← coeff_C_mul, ← smul_eq_C_mul, IH _ hi, coeff_zero]
+  have hj : m < j := by omega
+  rw [coeff_eq_zero_of_natDegree_lt hj, mul_zero]
+  omega
+  rw [← coeff_C_mul, ← smul_eq_C_mul, IH _ hi, coeff_zero]
 termination_by Q => Q.natDegree
 
 open nonZeroDivisors in
@@ -406,9 +406,9 @@ theorem le_rootMultiplicity_iff {p : R[X]} (p0 : p ≠ 0) {a : R} {n : ℕ} :
   simp_rw [Classical.not_not]
   refine ⟨fun h => ?_, fun h m hm => (pow_dvd_pow _ hm).trans h⟩
   cases' n with n
-  · rw [pow_zero]
-    apply one_dvd
-  · exact h n n.lt_succ_self
+  rw [pow_zero]
+  apply one_dvd
+  exact h n n.lt_succ_self
 
 theorem rootMultiplicity_le_iff {p : R[X]} (p0 : p ≠ 0) (a : R) (n : ℕ) :
     rootMultiplicity a p ≤ n ↔ ¬(X - C a) ^ (n + 1) ∣ p := by
@@ -440,13 +440,13 @@ theorem rootMultiplicity_eq_rootMultiplicity {p : R[X]} {t : R} :
 theorem rootMultiplicity_eq_natTrailingDegree' {p : R[X]} :
     p.rootMultiplicity 0 = p.natTrailingDegree := by
   by_cases h : p = 0
-  · simp only [h, rootMultiplicity_zero, natTrailingDegree_zero]
+  simp only [h, rootMultiplicity_zero, natTrailingDegree_zero]
   refine le_antisymm ?_ ?_
-  · rw [rootMultiplicity_le_iff h, map_zero, sub_zero, X_pow_dvd_iff, not_forall]
-    exact ⟨p.natTrailingDegree,
-      fun h' ↦ trailingCoeff_nonzero_iff_nonzero.2 h <| h' <| Nat.lt.base _⟩
-  · rw [le_rootMultiplicity_iff h, map_zero, sub_zero, X_pow_dvd_iff]
-    exact fun _ ↦ coeff_eq_zero_of_lt_natTrailingDegree
+  rw [rootMultiplicity_le_iff h, map_zero, sub_zero, X_pow_dvd_iff, not_forall]
+  exact ⟨p.natTrailingDegree,
+    fun h' ↦ trailingCoeff_nonzero_iff_nonzero.2 h <| h' <| Nat.lt.base _⟩
+  rw [le_rootMultiplicity_iff h, map_zero, sub_zero, X_pow_dvd_iff]
+  exact fun _ ↦ coeff_eq_zero_of_lt_natTrailingDegree
 
 theorem rootMultiplicity_eq_natTrailingDegree {p : R[X]} {t : R} :
     p.rootMultiplicity t = (p.comp (X + C t)).natTrailingDegree :=
@@ -455,7 +455,7 @@ theorem rootMultiplicity_eq_natTrailingDegree {p : R[X]} {t : R} :
 theorem eval_divByMonic_eq_trailingCoeff_comp {p : R[X]} {t : R} :
     (p /ₘ (X - C t) ^ p.rootMultiplicity t).eval t = (p.comp (X + C t)).trailingCoeff := by
   obtain rfl | hp := eq_or_ne p 0
-  · rw [zero_divByMonic, eval_zero, zero_comp, trailingCoeff_zero]
+  rw [zero_divByMonic, eval_zero, zero_comp, trailingCoeff_zero]
   have mul_eq := p.pow_mul_divByMonic_rootMultiplicity_eq t
   set m := p.rootMultiplicity t
   set g := p /ₘ (X - C t) ^ m
@@ -485,11 +485,11 @@ theorem rootMultiplicity_mul_X_sub_C_pow {p : R[X]} {a : R} {n : ℕ} (h : p ≠
     (p * (X - C a) ^ n).rootMultiplicity a = p.rootMultiplicity a + n := by
   have h2 := monic_X_sub_C a |>.pow n |>.mul_left_ne_zero h
   refine le_antisymm ?_ ?_
-  · rw [rootMultiplicity_le_iff h2, add_assoc, add_comm n, ← add_assoc, pow_add,
-      dvd_cancel_right_mem_nonZeroDivisors (monic_X_sub_C a |>.pow n |>.mem_nonZeroDivisors)]
-    exact pow_rootMultiplicity_not_dvd h a
-  · rw [le_rootMultiplicity_iff h2, pow_add]
-    exact mul_dvd_mul_right (pow_rootMultiplicity_dvd p a) _
+  rw [rootMultiplicity_le_iff h2, add_assoc, add_comm n, ← add_assoc, pow_add,
+    dvd_cancel_right_mem_nonZeroDivisors (monic_X_sub_C a |>.pow n |>.mem_nonZeroDivisors)]
+  exact pow_rootMultiplicity_not_dvd h a
+  rw [le_rootMultiplicity_iff h2, pow_add]
+  exact mul_dvd_mul_right (pow_rootMultiplicity_dvd p a) _
 
 /-- The multiplicity of `a` as root of `(X - a) ^ n` is `n`. -/
 theorem rootMultiplicity_X_sub_C_pow [Nontrivial R] (a : R) (n : ℕ) :
@@ -505,8 +505,8 @@ theorem rootMultiplicity_X_sub_C_self [Nontrivial R] {x : R} :
 theorem rootMultiplicity_X_sub_C [Nontrivial R] [DecidableEq R] {x y : R} :
     rootMultiplicity x (X - C y) = if x = y then 1 else 0 := by
   split_ifs with hxy
-  · rw [hxy]
-    exact rootMultiplicity_X_sub_C_self
+  rw [hxy]
+  exact rootMultiplicity_X_sub_C_self
   exact rootMultiplicity_eq_zero (mt root_X_sub_C.mp (Ne.symm hxy))
 
 /-- The multiplicity of `p + q` is at least the minimum of the multiplicities. -/
@@ -569,7 +569,7 @@ theorem leadingCoeff_divByMonic_X_sub_C (p : R[X]) (hp : degree p ≠ 0) (a : R)
     leadingCoeff (p /ₘ (X - C a)) = leadingCoeff p := by
   nontriviality
   cases' hp.lt_or_lt with hd hd
-  · rw [degree_eq_bot.mp <| Nat.WithBot.lt_zero_iff.mp hd, zero_divByMonic]
+  rw [degree_eq_bot.mp <| Nat.WithBot.lt_zero_iff.mp hd, zero_divByMonic]
   refine leadingCoeff_divByMonic_of_monic (monic_X_sub_C a) ?_
   rwa [degree_X_sub_C, Nat.WithBot.one_le_iff_zero_lt]
 
@@ -577,7 +577,7 @@ theorem eq_of_dvd_of_natDegree_le_of_leadingCoeff {p q : R[X]} (hpq : p ∣ q)
     (h₁ : q.natDegree ≤ p.natDegree) (h₂ : p.leadingCoeff = q.leadingCoeff) :
     p = q := by
   by_cases hq : q = 0
-  · rwa [hq, leadingCoeff_zero, leadingCoeff_eq_zero, ← hq] at h₂
+  rwa [hq, leadingCoeff_zero, leadingCoeff_eq_zero, ← hq] at h₂
   replace h₁ := (natDegree_le_of_dvd hpq hq).antisymm h₁
   obtain ⟨u, rfl⟩ := hpq
   replace hq := mul_ne_zero_iff.mp hq
@@ -611,13 +611,13 @@ theorem eq_leadingCoeff_mul_of_monic_of_dvd_of_natDegree_le {R} [CommRing R] {p 
   obtain rfl | hq := eq_or_ne q 0; · simp
   have rzero : r ≠ 0 := fun h => by simp [h, hq] at hr
   rw [hr, natDegree_mul'] at hdeg; swap
-  · rw [hp.leadingCoeff, one_mul, leadingCoeff_ne_zero]
-    exact rzero
+  rw [hp.leadingCoeff, one_mul, leadingCoeff_ne_zero]
+  exact rzero
   rw [mul_comm, @eq_C_of_natDegree_eq_zero _ _ r] at hr
-  · convert hr
-    convert leadingCoeff_C (coeff r 0) using 1
-    rw [hr, leadingCoeff_mul_monic hp]
-  · exact (add_right_inj _).1 (le_antisymm hdeg <| Nat.le.intro rfl)
+  convert hr
+  convert leadingCoeff_C (coeff r 0) using 1
+  rw [hr, leadingCoeff_mul_monic hp]
+  exact (add_right_inj _).1 (le_antisymm hdeg <| Nat.le.intro rfl)
 
 theorem eq_of_monic_of_dvd_of_natDegree_le {R} [CommRing R] {p q : R[X]} (hp : p.Monic)
     (hq : q.Monic) (hdiv : p ∣ q) (hdeg : q.natDegree ≤ p.natDegree) : q = p := by
@@ -650,9 +650,9 @@ theorem Monic.irreducible_of_degree_eq_one (hp1 : degree p = 1) (hm : Monic p) :
 theorem natDegree_multiset_prod_X_sub_C_eq_card (s : Multiset R) :
     (s.map fun a => X - C a).prod.natDegree = Multiset.card s := by
   rw [natDegree_multiset_prod_of_monic, Multiset.map_map]
-  · simp only [(· ∘ ·), natDegree_X_sub_C, Multiset.map_const', Multiset.sum_replicate, smul_eq_mul,
-      mul_one]
-  · exact Multiset.forall_mem_map_iff.2 fun a _ => monic_X_sub_C a
+  simp only [(· ∘ ·), natDegree_X_sub_C, Multiset.map_const', Multiset.sum_replicate, smul_eq_mul,
+    mul_one]
+  exact Multiset.forall_mem_map_iff.2 fun a _ => monic_X_sub_C a
 
 theorem Monic.comp (hp : p.Monic) (hq : q.Monic) (h : q.natDegree ≠ 0) : (p.comp q).Monic := by
   rw [Monic.def, leadingCoeff_comp h, Monic.def.1 hp, Monic.def.1 hq, one_pow, one_mul]
@@ -670,17 +670,17 @@ theorem units_coeff_zero_smul (c : R[X]ˣ) (p : R[X]) : (c : R[X]).coeff 0 • p
 
 theorem comp_eq_zero_iff : p.comp q = 0 ↔ p = 0 ∨ p.eval (q.coeff 0) = 0 ∧ q = C (q.coeff 0) := by
   constructor
-  · intro h
-    have key : p.natDegree = 0 ∨ q.natDegree = 0
-    rw [← mul_eq_zero, ← natDegree_comp, h, natDegree_zero]
-    replace key := Or.imp eq_C_of_natDegree_eq_zero eq_C_of_natDegree_eq_zero key
-    cases' key with key key
-    · rw [key, C_comp] at h
-      exact Or.inl (key.trans h)
-    · rw [key, comp_C, C_eq_zero] at h
-      exact Or.inr ⟨h, key⟩
-  · exact fun h =>
-      Or.rec (fun h => by rw [h, zero_comp]) (fun h => by rw [h.2, comp_C, h.1, C_0]) h
+  intro h
+  have key : p.natDegree = 0 ∨ q.natDegree = 0
+  rw [← mul_eq_zero, ← natDegree_comp, h, natDegree_zero]
+  replace key := Or.imp eq_C_of_natDegree_eq_zero eq_C_of_natDegree_eq_zero key
+  cases' key with key key
+  rw [key, C_comp] at h
+  exact Or.inl (key.trans h)
+  rw [key, comp_C, C_eq_zero] at h
+  exact Or.inr ⟨h, key⟩
+  exact fun h =>
+    Or.rec (fun h => by rw [h, zero_comp]) (fun h => by rw [h.2, comp_C, h.1, C_0]) h
 
 lemma aeval_ne_zero_of_isCoprime [CommSemiring R] [Nontrivial S] [Semiring S] [Algebra R S]
     {p q : R[X]} (h : IsCoprime p q) (s : S) : aeval s p ≠ 0 ∨ aeval s q ≠ 0 := by
@@ -745,8 +745,8 @@ theorem exists_multiset_roots [DecidableEq R] :
           rw [rootMultiplicity_mul (mul_ne_zero (X_sub_C_ne_zero x) hdiv0),
             rootMultiplicity_X_sub_C, ← htr a]
           split_ifs with ha
-          · rw [ha, count_cons_self, add_comm]
-          · rw [count_cons_of_ne ha, zero_add]⟩
+          rw [ha, count_cons_self, add_comm]
+          rw [count_cons_of_ne ha, zero_add]⟩
     else
       ⟨0, (degree_eq_natDegree hp).symm ▸ WithBot.coe_le_coe.2 (Nat.zero_le _), by
         intro a
@@ -768,18 +768,18 @@ theorem isUnit_of_isUnit_leadingCoeff_of_isUnit_map {f : R[X]} (hf : IsUnit f.le
     (H : IsUnit (map φ f)) : IsUnit f := by
   have dz := degree_eq_zero_of_isUnit H
   rw [degree_map_eq_of_leadingCoeff_ne_zero] at dz
-  · rw [eq_C_of_degree_eq_zero dz]
-    refine IsUnit.map C ?_
-    convert hf
-    change coeff f 0 = coeff f (natDegree f)
-    rw [(degree_eq_iff_natDegree_eq _).1 dz]
-    · rfl
-    rintro rfl
-    simp at H
-  · intro h
-    have u : IsUnit (φ f.leadingCoeff) := IsUnit.map φ hf
-    rw [h] at u
-    simp at u
+  rw [eq_C_of_degree_eq_zero dz]
+  refine IsUnit.map C ?_
+  convert hf
+  change coeff f 0 = coeff f (natDegree f)
+  rw [(degree_eq_iff_natDegree_eq _).1 dz]
+  rfl
+  rintro rfl
+  simp at H
+  intro h
+  have u : IsUnit (φ f.leadingCoeff) := IsUnit.map φ hf
+  rw [h] at u
+  simp at u
 
 end
 
@@ -803,9 +803,9 @@ theorem Monic.irreducible_of_irreducible_map (f : R[X]) (h_mon : Monic f)
     (congr_arg (Polynomial.map φ) h).trans (Polynomial.map_mul φ)).imp ?_ ?_ <;>
       apply isUnit_of_isUnit_leadingCoeff_of_isUnit_map <;>
     apply isUnit_of_mul_eq_one
-  · exact q
-  · rw [mul_comm]
-    exact q
+  exact q
+  rw [mul_comm]
+  exact q
 
 end
 

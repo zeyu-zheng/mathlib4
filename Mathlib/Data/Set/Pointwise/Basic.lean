@@ -728,10 +728,10 @@ theorem pow_subset_pow_of_one_mem (hs : (1 : α) ∈ s) (hn : m ≤ n) : s ^ m �
   -- Porting note: `Nat.le_induction` didn't work as an induction principle in mathlib3, this was
   -- `refine Nat.le_induction ...`
   induction' n, hn using Nat.le_induction with _ _ ih
-  · exact Subset.rfl
-  · dsimp only
-    rw [pow_succ']
-    exact ih.trans (subset_mul_right _ hs)
+  exact Subset.rfl
+  dsimp only
+  rw [pow_succ']
+  exact ih.trans (subset_mul_right _ hs)
 
 @[to_additive (attr := simp)]
 theorem empty_pow {n : ℕ} (hn : n ≠ 0) : (∅ : Set α) ^ n = ∅ := by
@@ -785,16 +785,16 @@ variable [DivisionMonoid α] {s t : Set α}
 @[to_additive]
 protected theorem mul_eq_one_iff : s * t = 1 ↔ ∃ a b, s = {a} ∧ t = {b} ∧ a * b = 1 := by
   refine ⟨fun h => ?_, ?_⟩
-  · have hst : (s * t).Nonempty := h.symm.subst one_nonempty
-    obtain ⟨a, ha⟩ := hst.of_image2_left
-    obtain ⟨b, hb⟩ := hst.of_image2_right
-    have H : ∀ {a b}, a ∈ s → b ∈ t → a * b = (1 : α) := fun {a b} ha hb =>
-      h.subset <| mem_image2_of_mem ha hb
-    refine ⟨a, b, ?_, ?_, H ha hb⟩ <;> refine eq_singleton_iff_unique_mem.2 ⟨‹_›, fun x hx => ?_⟩
-    · exact (eq_inv_of_mul_eq_one_left <| H hx hb).trans (inv_eq_of_mul_eq_one_left <| H ha hb)
-    · exact (eq_inv_of_mul_eq_one_right <| H ha hx).trans (inv_eq_of_mul_eq_one_right <| H ha hb)
-  · rintro ⟨b, c, rfl, rfl, h⟩
-    rw [singleton_mul_singleton, h, singleton_one]
+  have hst : (s * t).Nonempty := h.symm.subst one_nonempty
+  obtain ⟨a, ha⟩ := hst.of_image2_left
+  obtain ⟨b, hb⟩ := hst.of_image2_right
+  have H : ∀ {a b}, a ∈ s → b ∈ t → a * b = (1 : α) := fun {a b} ha hb =>
+    h.subset <| mem_image2_of_mem ha hb
+  refine ⟨a, b, ?_, ?_, H ha hb⟩ <;> refine eq_singleton_iff_unique_mem.2 ⟨‹_›, fun x hx => ?_⟩
+  exact (eq_inv_of_mul_eq_one_left <| H hx hb).trans (inv_eq_of_mul_eq_one_left <| H ha hb)
+  exact (eq_inv_of_mul_eq_one_right <| H ha hx).trans (inv_eq_of_mul_eq_one_right <| H ha hb)
+  rintro ⟨b, c, rfl, rfl, h⟩
+  rw [singleton_mul_singleton, h, singleton_one]
 
 /-- `Set α` is a division monoid under pointwise operations if `α` is. -/
 @[to_additive subtractionMonoid
@@ -816,13 +816,13 @@ scoped[Pointwise] attribute [instance] Set.divisionMonoid Set.subtractionMonoid
 @[to_additive (attr := simp 500)]
 theorem isUnit_iff : IsUnit s ↔ ∃ a, s = {a} ∧ IsUnit a := by
   constructor
-  · rintro ⟨u, rfl⟩
-    obtain ⟨a, b, ha, hb, h⟩ := Set.mul_eq_one_iff.1 u.mul_inv
-    refine ⟨a, ha, ⟨a, b, h, singleton_injective ?_⟩, rfl⟩
-    rw [← singleton_mul_singleton, ← ha, ← hb]
-    exact u.inv_mul
-  · rintro ⟨a, rfl, ha⟩
-    exact ha.set
+  rintro ⟨u, rfl⟩
+  obtain ⟨a, b, ha, hb, h⟩ := Set.mul_eq_one_iff.1 u.mul_inv
+  refine ⟨a, ha, ⟨a, b, h, singleton_injective ?_⟩, rfl⟩
+  rw [← singleton_mul_singleton, ← ha, ← hb]
+  exact u.inv_mul
+  rintro ⟨a, rfl, ha⟩
+  exact ha.set
 
 @[to_additive (attr := simp)]
 lemma univ_div_univ : (univ / univ : Set α) = univ := by simp [div_eq_mul_inv]

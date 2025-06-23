@@ -43,28 +43,28 @@ theorem mem_sumLift₂ :
       (∃ a₁ b₁ c₁, a = inl a₁ ∧ b = inl b₁ ∧ c = inl c₁ ∧ c₁ ∈ f a₁ b₁) ∨
         ∃ a₂ b₂ c₂, a = inr a₂ ∧ b = inr b₂ ∧ c = inr c₂ ∧ c₂ ∈ g a₂ b₂ := by
   constructor
-  · cases' a with a a <;> cases' b with b b
-    · rw [sumLift₂, mem_map]
-      rintro ⟨c, hc, rfl⟩
-      exact Or.inl ⟨a, b, c, rfl, rfl, rfl, hc⟩
-    · refine fun h ↦ (not_mem_empty _ h).elim
-    · refine fun h ↦ (not_mem_empty _ h).elim
-    · rw [sumLift₂, mem_map]
-      rintro ⟨c, hc, rfl⟩
-      exact Or.inr ⟨a, b, c, rfl, rfl, rfl, hc⟩
-  · rintro (⟨a, b, c, rfl, rfl, rfl, h⟩ | ⟨a, b, c, rfl, rfl, rfl, h⟩) <;> exact mem_map_of_mem _ h
+  cases' a with a a <;> cases' b with b b
+  rw [sumLift₂, mem_map]
+  rintro ⟨c, hc, rfl⟩
+  exact Or.inl ⟨a, b, c, rfl, rfl, rfl, hc⟩
+  refine fun h ↦ (not_mem_empty _ h).elim
+  refine fun h ↦ (not_mem_empty _ h).elim
+  rw [sumLift₂, mem_map]
+  rintro ⟨c, hc, rfl⟩
+  exact Or.inr ⟨a, b, c, rfl, rfl, rfl, hc⟩
+  rintro (⟨a, b, c, rfl, rfl, rfl, h⟩ | ⟨a, b, c, rfl, rfl, rfl, h⟩) <;> exact mem_map_of_mem _ h
 
 theorem inl_mem_sumLift₂ {c₁ : γ₁} :
     inl c₁ ∈ sumLift₂ f g a b ↔ ∃ a₁ b₁, a = inl a₁ ∧ b = inl b₁ ∧ c₁ ∈ f a₁ b₁ := by
   rw [mem_sumLift₂, or_iff_left]
-  · simp only [inl.injEq, exists_and_left, exists_eq_left']
+  simp only [inl.injEq, exists_and_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inl_ne_inr h
 
 theorem inr_mem_sumLift₂ {c₂ : γ₂} :
     inr c₂ ∈ sumLift₂ f g a b ↔ ∃ a₂ b₂, a = inr a₂ ∧ b = inr b₂ ∧ c₂ ∈ g a₂ b₂ := by
   rw [mem_sumLift₂, or_iff_right]
-  · simp only [inr.injEq, exists_and_left, exists_eq_left']
+  simp only [inr.injEq, exists_and_left, exists_eq_left']
   rintro ⟨_, _, c₂, _, _, h, _⟩
   exact inr_ne_inl h
 
@@ -73,14 +73,14 @@ theorem sumLift₂_eq_empty :
       (∀ a₁ b₁, a = inl a₁ → b = inl b₁ → f a₁ b₁ = ∅) ∧
         ∀ a₂ b₂, a = inr a₂ → b = inr b₂ → g a₂ b₂ = ∅ := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · constructor <;>
-    · rintro a b rfl rfl
-      exact map_eq_empty.1 h
+  constructor <;>
+  · rintro a b rfl rfl
+    exact map_eq_empty.1 h
   cases a <;> cases b
-  · exact map_eq_empty.2 (h.1 _ _ rfl rfl)
-  · rfl
-  · rfl
-  · exact map_eq_empty.2 (h.2 _ _ rfl rfl)
+  exact map_eq_empty.2 (h.1 _ _ rfl rfl)
+  rfl
+  rfl
+  exact map_eq_empty.2 (h.2 _ _ rfl rfl)
 
 theorem sumLift₂_nonempty :
     (sumLift₂ f g a b).Nonempty ↔
@@ -134,25 +134,25 @@ lemma mem_sumLexLift :
           (∃ a₁ b₂ c₂, a = inl a₁ ∧ b = inr b₂ ∧ c = inr c₂ ∧ c₂ ∈ g₂ a₁ b₂) ∨
             ∃ a₂ b₂ c₂, a = inr a₂ ∧ b = inr b₂ ∧ c = inr c₂ ∧ c₂ ∈ f₂ a₂ b₂ := by
   constructor
-  · obtain a | a := a <;> obtain b | b := b
-    · rw [sumLexLift, mem_map]
-      rintro ⟨c, hc, rfl⟩
-      exact Or.inl ⟨a, b, c, rfl, rfl, rfl, hc⟩
-    · refine fun h ↦ (mem_disjSum.1 h).elim ?_ ?_
-      · rintro ⟨c, hc, rfl⟩
-        exact Or.inr (Or.inl ⟨a, b, c, rfl, rfl, rfl, hc⟩)
-      · rintro ⟨c, hc, rfl⟩
-        exact Or.inr (Or.inr <| Or.inl ⟨a, b, c, rfl, rfl, rfl, hc⟩)
-    · exact fun h ↦ (not_mem_empty _ h).elim
-    · rw [sumLexLift, mem_map]
-      rintro ⟨c, hc, rfl⟩
-      exact Or.inr (Or.inr <| Or.inr <| ⟨a, b, c, rfl, rfl, rfl, hc⟩)
-  · rintro (⟨a, b, c, rfl, rfl, rfl, hc⟩ | ⟨a, b, c, rfl, rfl, rfl, hc⟩ |
-      ⟨a, b, c, rfl, rfl, rfl, hc⟩ | ⟨a, b, c, rfl, rfl, rfl, hc⟩)
-    · exact mem_map_of_mem _ hc
-    · exact inl_mem_disjSum.2 hc
-    · exact inr_mem_disjSum.2 hc
-    · exact mem_map_of_mem _ hc
+  obtain a | a := a <;> obtain b | b := b
+  rw [sumLexLift, mem_map]
+  rintro ⟨c, hc, rfl⟩
+  exact Or.inl ⟨a, b, c, rfl, rfl, rfl, hc⟩
+  refine fun h ↦ (mem_disjSum.1 h).elim ?_ ?_
+  rintro ⟨c, hc, rfl⟩
+  exact Or.inr (Or.inl ⟨a, b, c, rfl, rfl, rfl, hc⟩)
+  rintro ⟨c, hc, rfl⟩
+  exact Or.inr (Or.inr <| Or.inl ⟨a, b, c, rfl, rfl, rfl, hc⟩)
+  exact fun h ↦ (not_mem_empty _ h).elim
+  rw [sumLexLift, mem_map]
+  rintro ⟨c, hc, rfl⟩
+  exact Or.inr (Or.inr <| Or.inr <| ⟨a, b, c, rfl, rfl, rfl, hc⟩)
+  rintro (⟨a, b, c, rfl, rfl, rfl, hc⟩ | ⟨a, b, c, rfl, rfl, rfl, hc⟩ |
+    ⟨a, b, c, rfl, rfl, rfl, hc⟩ | ⟨a, b, c, rfl, rfl, rfl, hc⟩)
+  exact mem_map_of_mem _ hc
+  exact inl_mem_disjSum.2 hc
+  exact inr_mem_disjSum.2 hc
+  exact mem_map_of_mem _ hc
 
 lemma inl_mem_sumLexLift {c₁ : γ₁} :
     inl c₁ ∈ sumLexLift f₁ f₂ g₁ g₂ a b ↔
@@ -180,12 +180,12 @@ lemma sumLexLift_eq_empty :
           ∀ a₂ b₂, a = inr a₂ → b = inr b₂ → f₂ a₂ b₂ = ∅ := by
   refine ⟨fun h ↦ ⟨?_, ?_, ?_⟩, fun h ↦ ?_⟩
   any_goals rintro a b rfl rfl; exact map_eq_empty.1 h
-  · rintro a b rfl rfl; exact disjSum_eq_empty.1 h
+  rintro a b rfl rfl; exact disjSum_eq_empty.1 h
   cases a <;> cases b
-  · exact map_eq_empty.2 (h.1 _ _ rfl rfl)
-  · simp [h.2.1 _ _ rfl rfl]
-  · rfl
-  · exact map_eq_empty.2 (h.2.2 _ _ rfl rfl)
+  exact map_eq_empty.2 (h.1 _ _ rfl rfl)
+  simp [h.2.1 _ _ rfl rfl]
+  rfl
+  exact map_eq_empty.2 (h.2.2 _ _ rfl rfl)
 
 lemma sumLexLift_nonempty :
     (sumLexLift f₁ f₂ g₁ g₂ a b).Nonempty ↔

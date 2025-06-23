@@ -50,12 +50,12 @@ theorem forall₂_refl [IsRefl α Rₐ] (l : List α) : Forall₂ Rₐ l l :=
 theorem forall₂_eq_eq_eq : Forall₂ ((· = ·) : α → α → Prop) = Eq := by
   funext a b; apply propext
   constructor
-  · intro h
-    induction h
-    · rfl
-    simp only [*]
-  · rintro rfl
-    exact forall₂_refl _
+  intro h
+  induction h
+  rfl
+  simp only [*]
+  rintro rfl
+  exact forall₂_refl _
 
 @[simp]
 theorem forall₂_nil_left_iff {l} : Forall₂ R nil l ↔ l = nil :=
@@ -176,15 +176,15 @@ theorem forall₂_iff_zip {l₁ l₂} :
   ⟨fun h => ⟨Forall₂.length_eq h, @forall₂_zip _ _ _ _ _ h⟩, fun h => by
     cases' h with h₁ h₂
     induction' l₁ with a l₁ IH generalizing l₂
-    · cases length_eq_zero.1 h₁.symm
-      constructor
-    · cases' l₂ with b l₂
-      · simp at h₁
-      · simp only [length_cons, succ.injEq] at h₁
-        exact Forall₂.cons (h₂ <| by simp [zip])
-          (IH h₁ fun h => h₂ <| by
-            simp only [zip, zipWith, find?, mem_cons, Prod.mk.injEq]; right
-            simpa [zip] using h)⟩
+    cases length_eq_zero.1 h₁.symm
+    constructor
+    cases' l₂ with b l₂
+    simp at h₁
+    simp only [length_cons, succ.injEq] at h₁
+    exact Forall₂.cons (h₂ <| by simp [zip])
+      (IH h₁ fun h => h₂ <| by
+        simp only [zip, zipWith, find?, mem_cons, Prod.mk.injEq]; right
+        simpa [zip] using h)⟩
 
 theorem forall₂_take : ∀ (n) {l₁ l₂}, Forall₂ R l₁ l₂ → Forall₂ R (take n l₁) (take n l₂)
   | 0, _, _, _ => by simp only [Forall₂.nil, take]
@@ -258,11 +258,11 @@ theorem rel_filter {p : α → Bool} {q : β → Bool}
   | a :: as, b :: bs, Forall₂.cons h₁ h₂ => by
     dsimp [LiftFun] at hpq
     by_cases h : p a
-    · have : q b := by rwa [← hpq h₁]
-      simp only [filter_cons_of_pos _ h, filter_cons_of_pos _ this, forall₂_cons, h₁, true_and_iff,
-        rel_filter hpq h₂]
-    · have : ¬q b := by rwa [← hpq h₁]
-      simp only [filter_cons_of_neg _ h, filter_cons_of_neg _ this, rel_filter hpq h₂]
+    have : q b := by rwa [← hpq h₁]
+    simp only [filter_cons_of_pos _ h, filter_cons_of_pos _ this, forall₂_cons, h₁, true_and_iff,
+      rel_filter hpq h₂]
+    have : ¬q b := by rwa [← hpq h₁]
+    simp only [filter_cons_of_neg _ h, filter_cons_of_neg _ this, rel_filter hpq h₂]
 
 theorem rel_filterMap : ((R ⇒ Option.Rel P) ⇒ Forall₂ R ⇒ Forall₂ P) filterMap filterMap
   | _, _, _, _, _, Forall₂.nil => Forall₂.nil
@@ -283,20 +283,20 @@ inductive SublistForall₂ (R : α → β → Prop) : List α → List β → Pr
 theorem sublistForall₂_iff {l₁ : List α} {l₂ : List β} :
     SublistForall₂ R l₁ l₂ ↔ ∃ l, Forall₂ R l₁ l ∧ l <+ l₂ := by
   constructor <;> intro h
-  · induction' h with _ a b l1 l2 rab _ ih b l1 l2 _ ih
-    · exact ⟨nil, Forall₂.nil, nil_sublist _⟩
-    · obtain ⟨l, hl1, hl2⟩ := ih
-      exact ⟨b :: l, Forall₂.cons rab hl1, hl2.cons_cons b⟩
-    · obtain ⟨l, hl1, hl2⟩ := ih
-      exact ⟨l, hl1, hl2.trans (Sublist.cons _ (Sublist.refl _))⟩
-  · obtain ⟨l, hl1, hl2⟩ := h
-    revert l₁
-    induction' hl2 with _ _ _ _ ih _ _ _ _ ih <;> intro l₁ hl1
-    · rw [forall₂_nil_right_iff.1 hl1]
-      exact SublistForall₂.nil
-    · exact SublistForall₂.cons_right (ih hl1)
-    · cases' hl1 with _ _ _ _ hr hl _
-      exact SublistForall₂.cons hr (ih hl)
+  induction' h with _ a b l1 l2 rab _ ih b l1 l2 _ ih
+  exact ⟨nil, Forall₂.nil, nil_sublist _⟩
+  obtain ⟨l, hl1, hl2⟩ := ih
+  exact ⟨b :: l, Forall₂.cons rab hl1, hl2.cons_cons b⟩
+  obtain ⟨l, hl1, hl2⟩ := ih
+  exact ⟨l, hl1, hl2.trans (Sublist.cons _ (Sublist.refl _))⟩
+  obtain ⟨l, hl1, hl2⟩ := h
+  revert l₁
+  induction' hl2 with _ _ _ _ ih _ _ _ _ ih <;> intro l₁ hl1
+  rw [forall₂_nil_right_iff.1 hl1]
+  exact SublistForall₂.nil
+  exact SublistForall₂.cons_right (ih hl1)
+  cases' hl1 with _ _ _ _ hr hl _
+  exact SublistForall₂.cons hr (ih hl)
 
 instance SublistForall₂.is_refl [IsRefl α Rₐ] : IsRefl (List α) (SublistForall₂ Rₐ) :=
   ⟨fun l => sublistForall₂_iff.2 ⟨l, forall₂_refl l, Sublist.refl l⟩⟩
@@ -305,18 +305,18 @@ instance SublistForall₂.is_trans [IsTrans α Rₐ] : IsTrans (List α) (Sublis
   ⟨fun a b c => by
     revert a b
     induction' c with _ _ ih
-    · rintro _ _ h1 h2
-      cases h2
-      exact h1
-    · rintro a b h1 h2
-      cases' h2 with _ _ _ _ _ hbc tbc _ _ y1 btc
-      · cases h1
-        exact SublistForall₂.nil
-      · cases' h1 with _ _ _ _ _ hab tab _ _ _ atb
-        · exact SublistForall₂.nil
-        · exact SublistForall₂.cons (_root_.trans hab hbc) (ih _ _ tab tbc)
-        · exact SublistForall₂.cons_right (ih _ _ atb tbc)
-      · exact SublistForall₂.cons_right (ih _ _ h1 btc)⟩
+    rintro _ _ h1 h2
+    cases h2
+    exact h1
+    rintro a b h1 h2
+    cases' h2 with _ _ _ _ _ hbc tbc _ _ y1 btc
+    cases h1
+    exact SublistForall₂.nil
+    cases' h1 with _ _ _ _ _ hab tab _ _ _ atb
+    exact SublistForall₂.nil
+    exact SublistForall₂.cons (_root_.trans hab hbc) (ih _ _ tab tbc)
+    exact SublistForall₂.cons_right (ih _ _ atb tbc)
+    exact SublistForall₂.cons_right (ih _ _ h1 btc)⟩
 
 theorem Sublist.sublistForall₂ {l₁ l₂ : List α} (h : l₁ <+ l₂) [IsRefl α Rₐ] :
     SublistForall₂ Rₐ l₁ l₂ :=

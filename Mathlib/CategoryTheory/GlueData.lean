@@ -116,9 +116,9 @@ theorem t'_comp_eq_pullbackSymmetry (i j k : D.J) :
     D.t' j k i ≫ D.t' k i j =
       (pullbackSymmetry _ _).hom ≫ D.t' j i k ≫ (pullbackSymmetry _ _).hom := by
   trans inv (D.t' i j k)
-  · exact IsIso.eq_inv_of_hom_inv_id (D.cocycle _ _ _)
-  · rw [← cancel_mono (pullback.fst (D.f i j) (D.f i k))]
-    simp [t_fac, t_fac_assoc]
+  exact IsIso.eq_inv_of_hom_inv_id (D.cocycle _ _ _)
+  rw [← cancel_mono (pullback.fst (D.f i j) (D.f i k))]
+  simp [t_fac, t_fac_assoc]
 
 /-- (Implementation) The disjoint union of `U i`. -/
 def sigmaOpens [HasCoproduct D.U] : C :=

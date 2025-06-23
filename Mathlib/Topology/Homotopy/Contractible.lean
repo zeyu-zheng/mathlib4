@@ -60,8 +60,8 @@ theorem id_nullhomotopic (X : Type*) [TopologicalSpace X] [ContractibleSpace X] 
 theorem contractible_iff_id_nullhomotopic (Y : Type*) [TopologicalSpace Y] :
     ContractibleSpace Y ↔ (ContinuousMap.id Y).Nullhomotopic := by
   constructor
-  · intro
-    apply id_nullhomotopic
+  intro
+  apply id_nullhomotopic
   rintro ⟨p, h⟩
   refine
     { hequiv_unit' :=
@@ -69,8 +69,8 @@ theorem contractible_iff_id_nullhomotopic (Y : Type*) [TopologicalSpace Y] :
             invFun := ContinuousMap.const _ p
             left_inv := ?_
             right_inv := ?_ }⟩ }
-  · exact h.symm
-  · convert Homotopic.refl (ContinuousMap.id Unit)
+  exact h.symm
+  convert Homotopic.refl (ContinuousMap.id Unit)
 
 variable {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
 

@@ -33,18 +33,18 @@ theorem map_eq_C_mul_X_pow_of_forall_coeff_mem {f : R[X]} {P : Ideal R}
     map (mk P) f = C ((mk P) f.leadingCoeff) * X ^ f.natDegree :=
   Polynomial.ext fun n => by
     by_cases hf0 : f = 0
-    · simp [hf0]
+    simp [hf0]
     rcases lt_trichotomy (n : WithBot ℕ) (degree f) with (h | h | h)
-    · erw [coeff_map, eq_zero_iff_mem.2 (hfP n h), coeff_C_mul, coeff_X_pow, if_neg,
-        mul_zero]
-      rintro rfl
-      exact not_lt_of_ge degree_le_natDegree h
-    · have : natDegree f = n := natDegree_eq_of_degree_eq_some h.symm
-      rw [coeff_C_mul, coeff_X_pow, if_pos this.symm, mul_one, leadingCoeff, this, coeff_map]
-    · rw [coeff_eq_zero_of_degree_lt, coeff_eq_zero_of_degree_lt]
-      · refine lt_of_le_of_lt (degree_C_mul_X_pow_le _ _) ?_
-        rwa [← degree_eq_natDegree hf0]
-      · exact lt_of_le_of_lt (degree_map_le _ _) h
+    erw [coeff_map, eq_zero_iff_mem.2 (hfP n h), coeff_C_mul, coeff_X_pow, if_neg,
+      mul_zero]
+    rintro rfl
+    exact not_lt_of_ge degree_le_natDegree h
+    have : natDegree f = n := natDegree_eq_of_degree_eq_some h.symm
+    rw [coeff_C_mul, coeff_X_pow, if_pos this.symm, mul_one, leadingCoeff, this, coeff_map]
+    rw [coeff_eq_zero_of_degree_lt, coeff_eq_zero_of_degree_lt]
+    refine lt_of_le_of_lt (degree_C_mul_X_pow_le _ _) ?_
+    rwa [← degree_eq_natDegree hf0]
+    exact lt_of_le_of_lt (degree_map_le _ _) h
 
 theorem le_natDegree_of_map_eq_mul_X_pow {n : ℕ} {P : Ideal R} (hP : P.IsPrime) {q : R[X]}
     {c : Polynomial (R ⧸ P)} (hq : map (mk P) q = c * X ^ n) (hc0 : c.degree = 0) :
@@ -116,15 +116,15 @@ theorem irreducible_of_eisenstein_criterion {f : R[X]} {P : Ideal R} (hP : P.IsP
       apply ne_of_lt
       rw [not_and_or] at hmnd
       cases' hmnd with hmnd hmnd
-      · exact add_lt_add_of_lt_of_le (lt_of_le_of_ne hmp (Ne.symm hmnd)) hnq
-      · exact add_lt_add_of_le_of_lt hmp (lt_of_le_of_ne hnq (Ne.symm hmnd))
+      exact add_lt_add_of_lt_of_le (lt_of_le_of_ne hmp (Ne.symm hmnd)) hnq
+      exact add_lt_add_of_le_of_lt hmp (lt_of_le_of_ne hnq (Ne.symm hmnd))
     obtain rfl | rfl : m = 0 ∨ n = 0 := by
       rwa [pos_iff_ne_zero, pos_iff_ne_zero, imp_false, Classical.not_not, ← or_iff_not_imp_left]
         at hmn
-    · exact Or.inl (isUnit_of_natDegree_eq_zero_of_isPrimitive hu hpmqn.1)
-    · exact Or.inr
-          (isUnit_of_natDegree_eq_zero_of_isPrimitive
-            (show IsPrimitive (q * p) by simpa [mul_comm] using hu)
-            hpmqn.2)⟩
+    exact Or.inl (isUnit_of_natDegree_eq_zero_of_isPrimitive hu hpmqn.1)
+    exact Or.inr
+        (isUnit_of_natDegree_eq_zero_of_isPrimitive
+          (show IsPrimitive (q * p) by simpa [mul_comm] using hu)
+          hpmqn.2)⟩
 
 end Polynomial

@@ -52,20 +52,20 @@ instance setLike : SetLike (TwoSidedIdeal R) R where
     rintro ⟨t₁⟩ ⟨t₂⟩ (h : {x | _} = {x | _})
     congr 1
     refine RingCon.ext fun a b ↦ ⟨fun H ↦ ?_, fun H ↦ ?_⟩
-    · have H' : a - b ∈ {x | t₁ x 0} := sub_self b ▸ t₁.sub H (t₁.refl b)
-      rw [h] at H'
-      convert t₂.add H' (t₂.refl b) using 1 <;> abel
-    · have H' : a - b ∈ {x | t₂ x 0} := sub_self b ▸ t₂.sub H (t₂.refl b)
-      rw [← h] at H'
-      convert t₁.add H' (t₁.refl b) using 1 <;> abel
+    have H' : a - b ∈ {x | t₁ x 0} := sub_self b ▸ t₁.sub H (t₁.refl b)
+    rw [h] at H'
+    convert t₂.add H' (t₂.refl b) using 1 <;> abel
+    have H' : a - b ∈ {x | t₂ x 0} := sub_self b ▸ t₂.sub H (t₂.refl b)
+    rw [← h] at H'
+    convert t₁.add H' (t₁.refl b) using 1 <;> abel
 
 lemma mem_iff (x : R) : x ∈ I ↔ I.ringCon x 0 := Iff.rfl
 
 lemma rel_iff (x y : R) : I.ringCon x y ↔ x - y ∈ I := by
   rw [mem_iff]
   constructor
-  · intro h; convert I.ringCon.sub h (I.ringCon.refl y); abel
-  · intro h; convert I.ringCon.add h (I.ringCon.refl y) <;> abel
+  intro h; convert I.ringCon.sub h (I.ringCon.refl y); abel
+  intro h; convert I.ringCon.add h (I.ringCon.refl y) <;> abel
 
 /--
 the coercion from two-sided-ideals to sets is an order embedding

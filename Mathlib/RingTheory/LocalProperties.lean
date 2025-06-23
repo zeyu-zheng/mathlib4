@@ -146,10 +146,10 @@ theorem RingHom.ofLocalizationSpan_iff_finite :
   -- TODO: Using `refine` here breaks `resetI`.
   intros
   constructor
-  · intro h s; exact h s
-  · intro h s hs hs'
-    obtain ⟨s', h₁, h₂⟩ := (Ideal.span_eq_top_iff_finite s).mp hs
-    exact h s' h₂ fun x => hs' ⟨_, h₁ x.prop⟩
+  intro h s; exact h s
+  intro h s hs hs'
+  obtain ⟨s', h₁, h₂⟩ := (Ideal.span_eq_top_iff_finite s).mp hs
+  exact h s' h₂ fun x => hs' ⟨_, h₁ x.prop⟩
 
 theorem RingHom.ofLocalizationSpanTarget_iff_finite :
     RingHom.OfLocalizationSpanTarget @P ↔ RingHom.OfLocalizationFiniteSpanTarget @P := by
@@ -158,10 +158,10 @@ theorem RingHom.ofLocalizationSpanTarget_iff_finite :
   -- TODO: Using `refine` here breaks `resetI`.
   intros
   constructor
-  · intro h s; exact h s
-  · intro h s hs hs'
-    obtain ⟨s', h₁, h₂⟩ := (Ideal.span_eq_top_iff_finite s).mp hs
-    exact h s' h₂ fun x => hs' ⟨_, h₁ x.prop⟩
+  intro h s; exact h s
+  intro h s hs hs'
+  obtain ⟨s', h₁, h₂⟩ := (Ideal.span_eq_top_iff_finite s).mp hs
+  exact h s' h₂ fun x => hs' ⟨_, h₁ x.prop⟩
 
 theorem RingHom.HoldsForLocalizationAway.of_bijective
     (H : RingHom.HoldsForLocalizationAway P) (hf : Function.Bijective f) :
@@ -297,7 +297,7 @@ theorem localization_isReduced : LocalizationPreserves fun R hR => IsReduced R :
   introv R _ _
   constructor
   rintro x ⟨_ | n, e⟩
-  · simpa using congr_arg (· * x) e
+  simpa using congr_arg (· * x) e
   obtain ⟨⟨y, m⟩, hx⟩ := IsLocalization.surj M x
   dsimp only at hx
   let hx' := congr_arg (· ^ n.succ) hx
@@ -364,11 +364,11 @@ theorem surjective_localRingHom_of_surjective (h : Function.Surjective f) (P : I
 
 lemma surjective_respectsIso : RingHom.RespectsIso (fun f ↦ Function.Surjective f) := by
   apply RingHom.StableUnderComposition.respectsIso
-  · intro R S T _ _ _ f g hf hg
-    simp only [RingHom.coe_comp]
-    exact Function.Surjective.comp hg hf
-  · intro R S _ _ e
-    exact EquivLike.surjective e
+  intro R S T _ _ _ f g hf hg
+  simp only [RingHom.coe_comp]
+  exact Function.Surjective.comp hg hf
+  intro R S _ _ e
+  exact EquivLike.surjective e
 
 end Surjective
 
@@ -465,8 +465,8 @@ theorem IsLocalization.smul_mem_finsetIntegerMultiple_span [Algebra R S] [Algebr
     (IsLocalization.finsetIntegerMultiple (Submonoid.map (algebraMap R S) M) s : Set S)).smul_mem
       a hx' using 1
   convert ha₂.symm using 1
-  · rw [Subtype.coe_mk, Submonoid.smul_def, Submonoid.coe_mul, ← smul_smul]
-    exact Algebra.smul_def _ _
+  rw [Subtype.coe_mk, Submonoid.smul_def, Submonoid.coe_mul, ← smul_smul]
+  exact Algebra.smul_def _ _
   · exact Algebra.smul_def _ _
 
 open Classical in
@@ -478,10 +478,10 @@ theorem multiple_mem_span_of_mem_localization_span
     (hx : x ∈ Submodule.span R' s) : ∃ (t : M), t • x ∈ Submodule.span R s := by
   obtain ⟨s', hss', hs'⟩ := Submodule.mem_span_finite_of_mem_span hx
   rsuffices ⟨t, ht⟩ : ∃ t : M, t • x ∈ Submodule.span R (s' : Set N)
-  · exact ⟨t, Submodule.span_mono hss' ht⟩
+  exact ⟨t, Submodule.span_mono hss' ht⟩
   clear hx hss' s
   induction s' using Finset.induction_on generalizing x
-  · use 1; simpa using hs'
+  use 1; simpa using hs'
   rename_i a s _ hs
   simp only [Finset.coe_insert, Finset.image_insert, Finset.coe_image, Subtype.coe_mk,
     Submodule.mem_span_insert] at hs' ⊢

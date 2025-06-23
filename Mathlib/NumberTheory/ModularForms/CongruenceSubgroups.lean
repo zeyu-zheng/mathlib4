@@ -54,13 +54,13 @@ theorem Gamma_mem (N : ℕ) (γ : SL(2, ℤ)) : γ ∈ Gamma N ↔ ((↑ₘγ 0 
     ((↑ₘγ 0 1 : ℤ) : ZMod N) = 0 ∧ ((↑ₘγ 1 0 : ℤ) : ZMod N) = 0 ∧ ((↑ₘγ 1 1 : ℤ) : ZMod N) = 1 := by
   rw [Gamma_mem']
   constructor
-  · intro h
-    simp [← SL_reduction_mod_hom_val N γ, h]
-  · intro h
-    ext i j
-    rw [SL_reduction_mod_hom_val N γ]
-    fin_cases i <;> fin_cases j <;> simp only [h]
-    exacts [h.1, h.2.1, h.2.2.1, h.2.2.2]
+  intro h
+  simp [← SL_reduction_mod_hom_val N γ, h]
+  intro h
+  ext i j
+  rw [SL_reduction_mod_hom_val N γ]
+  fin_cases i <;> fin_cases j <;> simp only [h]
+  exacts [h.1, h.2.1, h.2.2.1, h.2.2.2]
 
 theorem Gamma_normal (N : ℕ) : Subgroup.Normal (Gamma N) :=
   SLMOD(N).normal_ker
@@ -78,8 +78,8 @@ theorem Gamma_zero_bot : Gamma 0 = ⊥ := by
     ext i j
     fin_cases i <;> fin_cases j <;> simp only [h]
     exacts [h.1, h.2.1, h.2.2.1, h.2.2.2]
-  · intro h
-    simp [h]
+  intro h
+  simp [h]
 
 lemma ModularGroup_T_pow_mem_Gamma (N M : ℤ) (hNM : N ∣ M) :
     (ModularGroup.T ^ M) ∈ Gamma (Int.natAbs N) := by
@@ -143,20 +143,20 @@ theorem Gamma1_mem' (N : ℕ) (γ : Gamma0 N) : γ ∈ Gamma1' N ↔ (Gamma0Map 
 theorem Gamma1_to_Gamma0_mem (N : ℕ) (A : Gamma0 N) : A ∈ Gamma1' N ↔
     ((↑ₘA 0 0 : ℤ) : ZMod N) = 1 ∧ ((↑ₘA 1 1 : ℤ) : ZMod N) = 1 ∧ ((↑ₘA 1 0 : ℤ) : ZMod N) = 0 := by
   constructor
-  · intro ha
-    have hA := A.property
-    rw [Gamma0_mem] at hA
-    have adet := Gamma0_det N A
-    rw [Matrix.det_fin_two] at adet
-    simp only [Gamma0Map, coe_matrix_coe, Int.coe_castRingHom, map_apply, Gamma1_mem',
-      MonoidHom.coe_mk, OneHom.coe_mk, Int.cast_sub, Int.cast_mul] at *
-    rw [hA, ha] at adet
-    simp only [mul_one, mul_zero, sub_zero] at adet
-    simp only [adet, hA, ha, eq_self_iff_true, and_self_iff]
-  · intro ha
-    simp only [Gamma1_mem', Gamma0Map, MonoidHom.coe_mk, coe_matrix_coe,
-      Int.coe_castRingHom, map_apply]
-    exact ha.2.1
+  intro ha
+  have hA := A.property
+  rw [Gamma0_mem] at hA
+  have adet := Gamma0_det N A
+  rw [Matrix.det_fin_two] at adet
+  simp only [Gamma0Map, coe_matrix_coe, Int.coe_castRingHom, map_apply, Gamma1_mem',
+    MonoidHom.coe_mk, OneHom.coe_mk, Int.cast_sub, Int.cast_mul] at *
+  rw [hA, ha] at adet
+  simp only [mul_one, mul_zero, sub_zero] at adet
+  simp only [adet, hA, ha, eq_self_iff_true, and_self_iff]
+  intro ha
+  simp only [Gamma1_mem', Gamma0Map, MonoidHom.coe_mk, coe_matrix_coe,
+    Int.coe_castRingHom, map_apply]
+  exact ha.2.1
 
 /-- The congruence subgroup `Gamma1` of `SL(2, ℤ)` consisting of matrices whose bottom
 row is congruent to `(0,1)` modulo `N`. -/
@@ -167,23 +167,23 @@ def Gamma1 (N : ℕ) : Subgroup SL(2, ℤ) :=
 theorem Gamma1_mem (N : ℕ) (A : SL(2, ℤ)) : A ∈ Gamma1 N ↔
     ((↑ₘA 0 0 : ℤ) : ZMod N) = 1 ∧ ((↑ₘA 1 1 : ℤ) : ZMod N) = 1 ∧ ((↑ₘA 1 0 : ℤ) : ZMod N) = 0 := by
   constructor
-  · intro ha
-    simp_rw [Gamma1, Subgroup.mem_map] at ha
-    obtain ⟨⟨x, hx⟩, hxx⟩ := ha
-    rw [Gamma1_to_Gamma0_mem] at hx
-    simp only [Subgroup.mem_top, true_and] at hxx
-    rw [← hxx]
-    convert hx
-  · intro ha
-    simp_rw [Gamma1, Subgroup.mem_map]
-    have hA : A ∈ Gamma0 N
-    simp [ha.right.right, Gamma0_mem]
-    have HA : (⟨A, hA⟩ : Gamma0 N) ∈ Gamma1' N
-    simp only [Gamma1_to_Gamma0_mem, Subgroup.coe_mk, coe_matrix_coe,
-      Int.coe_castRingHom, map_apply]
-    exact ha
-    refine ⟨(⟨(⟨A, hA⟩ : Gamma0 N), HA⟩ : (Gamma1' N : Subgroup (Gamma0 N))), ?_⟩
-    simp
+  intro ha
+  simp_rw [Gamma1, Subgroup.mem_map] at ha
+  obtain ⟨⟨x, hx⟩, hxx⟩ := ha
+  rw [Gamma1_to_Gamma0_mem] at hx
+  simp only [Subgroup.mem_top, true_and] at hxx
+  rw [← hxx]
+  convert hx
+  intro ha
+  simp_rw [Gamma1, Subgroup.mem_map]
+  have hA : A ∈ Gamma0 N
+  simp [ha.right.right, Gamma0_mem]
+  have HA : (⟨A, hA⟩ : Gamma0 N) ∈ Gamma1' N
+  simp only [Gamma1_to_Gamma0_mem, Subgroup.coe_mk, coe_matrix_coe,
+    Int.coe_castRingHom, map_apply]
+  exact ha
+  refine ⟨(⟨(⟨A, hA⟩ : Gamma0 N), HA⟩ : (Gamma1' N : Subgroup (Gamma0 N))), ?_⟩
+  simp
 
 theorem Gamma1_in_Gamma0 (N : ℕ) : Gamma1 N ≤ Gamma0 N := by
   intro x HA

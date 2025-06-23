@@ -244,8 +244,8 @@ theorem toBlock_diagonal_self (d : m → α) (p : m → Prop) :
     Matrix.toBlock (diagonal d) p p = diagonal fun i : Subtype p => d ↑i := by
   ext i j
   by_cases h : i = j
-  · simp [h]
-  · simp [One.one, h, Subtype.val_injective.ne h]
+  simp [h]
+  simp [One.one, h, Subtype.val_injective.ne h]
 
 theorem toBlock_diagonal_disjoint (d : m → α) {p q : m → Prop} (hpq : Disjoint p q) :
     Matrix.toBlock (diagonal d) p q = 0 := by
@@ -351,8 +351,8 @@ theorem blockDiagonal_transpose (M : o → Matrix m n α) :
   ext
   simp only [transpose_apply, blockDiagonal_apply, eq_comm]
   split_ifs with h
-  · rw [h]
-  · rfl
+  rw [h]
+  rfl
 
 @[simp]
 theorem blockDiagonal_conjTranspose {α : Type*} [AddMonoid α] [StarAddMonoid α]
@@ -488,9 +488,9 @@ theorem blockDiag_diagonal [DecidableEq o] [DecidableEq m] (d : m × o → α) (
     blockDiag (diagonal d) k = diagonal fun i => d (i, k) :=
   ext fun i j => by
     obtain rfl | hij := Decidable.eq_or_ne i j
-    · rw [blockDiag_apply, diagonal_apply_eq, diagonal_apply_eq]
-    · rw [blockDiag_apply, diagonal_apply_ne _ hij, diagonal_apply_ne _ (mt _ hij)]
-      exact Prod.fst_eq_iff.mpr
+    rw [blockDiag_apply, diagonal_apply_eq, diagonal_apply_eq]
+    rw [blockDiag_apply, diagonal_apply_ne _ hij, diagonal_apply_ne _ (mt _ hij)]
+    exact Prod.fst_eq_iff.mpr
 
 @[simp]
 theorem blockDiag_blockDiagonal [DecidableEq o] (M : o → Matrix m n α) :
@@ -626,8 +626,8 @@ theorem blockDiagonal'_diagonal [∀ i, DecidableEq (m' i)] (d : ∀ i, m' i →
   ext ⟨i, k⟩ ⟨j, k'⟩
   simp only [blockDiagonal'_apply, diagonal]
   obtain rfl | hij := Decidable.eq_or_ne i j
-  · simp
-  · simp [hij]
+  simp
+  simp [hij]
 
 @[simp]
 theorem blockDiagonal'_one [∀ i, DecidableEq (m' i)] [One α] :
@@ -675,10 +675,10 @@ theorem blockDiagonal'_mul [NonUnitalNonAssocSemiring α] [∀ i, Fintype (n' i)
   ext ⟨k, i⟩ ⟨k', j⟩
   simp only [blockDiagonal'_apply, mul_apply, ← Finset.univ_sigma_univ, Finset.sum_sigma]
   rw [Fintype.sum_eq_single k]
-  · simp only [if_pos, dif_pos] -- Porting note: added
-    split_ifs <;> simp
-  · intro j' hj'
-    exact Finset.sum_eq_zero fun _ _ => by rw [dif_neg hj'.symm, zero_mul]
+  simp only [if_pos, dif_pos] -- Porting note: added
+  split_ifs <;> simp
+  intro j' hj'
+  exact Finset.sum_eq_zero fun _ _ => by rw [dif_neg hj'.symm, zero_mul]
 
 section
 
@@ -749,10 +749,10 @@ theorem blockDiag'_diagonal [DecidableEq o] [∀ i, DecidableEq (m' i)] (d : (Σ
     blockDiag' (diagonal d) k = diagonal fun i => d ⟨k, i⟩ :=
   ext fun i j => by
     obtain rfl | hij := Decidable.eq_or_ne i j
-    · rw [blockDiag'_apply, diagonal_apply_eq, diagonal_apply_eq]
-    · rw [blockDiag'_apply, diagonal_apply_ne _ hij, diagonal_apply_ne _ (mt (fun h => ?_) hij)]
-      cases h
-      rfl
+    rw [blockDiag'_apply, diagonal_apply_eq, diagonal_apply_eq]
+    rw [blockDiag'_apply, diagonal_apply_ne _ hij, diagonal_apply_ne _ (mt (fun h => ?_) hij)]
+    cases h
+    rfl
 
 @[simp]
 theorem blockDiag'_blockDiagonal' [DecidableEq o] (M : ∀ i, Matrix (m' i) (n' i) α) :

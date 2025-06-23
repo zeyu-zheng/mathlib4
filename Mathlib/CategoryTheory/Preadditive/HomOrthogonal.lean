@@ -129,13 +129,13 @@ theorem matrixDecomposition_id (o : HomOrthogonal s) {α : Type} [Finite α] {f 
   simp only [Category.comp_id, Category.id_comp, Category.assoc, End.one_def, eqToHom_refl,
     Matrix.one_apply, HomOrthogonal.matrixDecomposition_apply, biproduct.components]
   split_ifs with h
-  · cases h
-    simp
-  · simp only [Subtype.mk.injEq] at h
-    -- Porting note: used to be `convert comp_zero`, but that does not work anymore
-    have : biproduct.ι (fun a ↦ s (f a)) a ≫ biproduct.π (fun b ↦ s (f b)) b = 0
-    simpa using biproduct.ι_π_ne _ (Ne.symm h)
-    rw [this, comp_zero]
+  cases h
+  simp
+  simp only [Subtype.mk.injEq] at h
+  -- Porting note: used to be `convert comp_zero`, but that does not work anymore
+  have : biproduct.ι (fun a ↦ s (f a)) a ≫ biproduct.π (fun b ↦ s (f b)) b = 0
+  simpa using biproduct.ι_π_ne _ (Ne.symm h)
+  rw [this, comp_zero]
 
 theorem matrixDecomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Finite α] [Fintype β]
     [Finite γ] {f : α → ι} {g : β → ι} {h : γ → ι} (z : (⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b))
@@ -149,14 +149,14 @@ theorem matrixDecomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Finite
   conv_lhs => rw [← Category.id_comp w, ← biproduct.total]
   simp only [Preadditive.sum_comp, Preadditive.comp_sum]
   apply Finset.sum_congr_set
-  · simp
-  · intro b nm
-    simp only [Set.mem_preimage, Set.mem_singleton_iff] at nm
-    simp only [Category.assoc]
-    -- Porting note: this used to be 4 times `convert comp_zero`
-    have : biproduct.ι (fun b ↦ s (g b)) b ≫ w ≫ biproduct.π (fun b ↦ s (h b)) c = 0
-    apply o.eq_zero nm
-    simp only [this, comp_zero]
+  simp
+  intro b nm
+  simp only [Set.mem_preimage, Set.mem_singleton_iff] at nm
+  simp only [Category.assoc]
+  -- Porting note: this used to be 4 times `convert comp_zero`
+  have : biproduct.ι (fun b ↦ s (g b)) b ≫ w ≫ biproduct.π (fun b ↦ s (h b)) c = 0
+  apply o.eq_zero nm
+  simp only [this, comp_zero]
 
 section
 

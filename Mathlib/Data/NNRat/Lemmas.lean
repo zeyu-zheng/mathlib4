@@ -44,9 +44,9 @@ variable {p q : ℚ}
 
 lemma toNNRat_inv (q : ℚ) : toNNRat q⁻¹ = (toNNRat q)⁻¹ := by
   obtain hq | hq := le_total q 0
-  · rw [toNNRat_eq_zero.mpr hq, inv_zero, toNNRat_eq_zero.mpr (inv_nonpos (α := ℚ) |>.mpr hq)]
-  · nth_rw 1 [← Rat.coe_toNNRat q hq]
-    rw [← coe_inv, toNNRat_coe]
+  rw [toNNRat_eq_zero.mpr hq, inv_zero, toNNRat_eq_zero.mpr (inv_nonpos (α := ℚ) |>.mpr hq)]
+  nth_rw 1 [← Rat.coe_toNNRat q hq]
+  rw [← coe_inv, toNNRat_coe]
 
 lemma toNNRat_div (hp : 0 ≤ p) : toNNRat (p / q) = toNNRat p / toNNRat q := by
   rw [div_eq_mul_inv, div_eq_mul_inv, ← toNNRat_inv, ← toNNRat_mul hp]

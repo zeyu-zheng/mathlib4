@@ -41,13 +41,13 @@ theorem Duplicate.duplicate_cons (h : x ∈+ l) (y : α) : x ∈+ y :: l :=
 
 theorem Duplicate.mem (h : x ∈+ l) : x ∈ l := by
   induction' h with l' _ y l' _ hm
-  · exact mem_cons_self _ _
-  · exact mem_cons_of_mem _ hm
+  exact mem_cons_self _ _
+  exact mem_cons_of_mem _ hm
 
 theorem Duplicate.mem_cons_self (h : x ∈+ x :: l) : x ∈ l := by
   cases' h with _ h _ _ h
-  · exact h
-  · exact h.mem
+  exact h
+  exact h.mem
 
 @[simp]
 theorem duplicate_cons_self_iff : x ∈+ x :: l ↔ x ∈ l :=
@@ -60,8 +60,8 @@ theorem not_duplicate_nil (x : α) : ¬x ∈+ [] := fun H => H.ne_nil rfl
 
 theorem Duplicate.ne_singleton (h : x ∈+ l) (y : α) : l ≠ [y] := by
   induction' h with l' h z l' h _
-  · simp [ne_nil_of_mem h]
-  · simp [ne_nil_of_mem h.mem]
+  simp [ne_nil_of_mem h]
+  simp [ne_nil_of_mem h.mem]
 
 @[simp]
 theorem not_duplicate_singleton (x y : α) : ¬x ∈+ [y] := fun H => H.ne_singleton _ rfl
@@ -74,12 +74,12 @@ theorem Duplicate.elim_singleton {y : α} (h : x ∈+ [y]) : False :=
 
 theorem duplicate_cons_iff {y : α} : x ∈+ y :: l ↔ y = x ∧ x ∈ l ∨ x ∈+ l := by
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · cases' h with _ hm _ _ hm
-    · exact Or.inl ⟨rfl, hm⟩
-    · exact Or.inr hm
-  · rcases h with (⟨rfl | h⟩ | h)
-    · simpa
-    · exact h.cons_duplicate
+  cases' h with _ hm _ _ hm
+  exact Or.inl ⟨rfl, hm⟩
+  exact Or.inr hm
+  rcases h with (⟨rfl | h⟩ | h)
+  simpa
+  exact h.cons_duplicate
 
 theorem Duplicate.of_duplicate_cons {y : α} (h : x ∈+ y :: l) (hx : x ≠ y) : x ∈+ l := by
   simpa [duplicate_cons_iff, hx.symm] using h
@@ -89,24 +89,24 @@ theorem duplicate_cons_iff_of_ne {y : α} (hne : x ≠ y) : x ∈+ y :: l ↔ x 
 
 theorem Duplicate.mono_sublist {l' : List α} (hx : x ∈+ l) (h : l <+ l') : x ∈+ l' := by
   induction' h with l₁ l₂ y _ IH l₁ l₂ y h IH
-  · exact hx
-  · exact (IH hx).duplicate_cons _
-  · rw [duplicate_cons_iff] at hx ⊢
-    rcases hx with (⟨rfl, hx⟩ | hx)
-    · simp [h.subset hx]
-    · simp [IH hx]
+  exact hx
+  exact (IH hx).duplicate_cons _
+  rw [duplicate_cons_iff] at hx ⊢
+  rcases hx with (⟨rfl, hx⟩ | hx)
+  simp [h.subset hx]
+  simp [IH hx]
 
 /-- The contrapositive of `List.nodup_iff_sublist`. -/
 theorem duplicate_iff_sublist : x ∈+ l ↔ [x, x] <+ l := by
   induction' l with y l IH
-  · simp
-  · by_cases hx : x = y
-    · simp [hx, cons_sublist_cons, singleton_sublist]
-    · rw [duplicate_cons_iff_of_ne hx, IH]
-      refine ⟨sublist_cons_of_sublist y, fun h => ?_⟩
-      cases h
-      · assumption
-      · contradiction
+  simp
+  by_cases hx : x = y
+  simp [hx, cons_sublist_cons, singleton_sublist]
+  rw [duplicate_cons_iff_of_ne hx, IH]
+  refine ⟨sublist_cons_of_sublist y, fun h => ?_⟩
+  cases h
+  assumption
+  contradiction
 
 theorem nodup_iff_forall_not_duplicate : Nodup l ↔ ∀ x : α, ¬x ∈+ l := by
   simp_rw [nodup_iff_sublist, duplicate_iff_sublist]

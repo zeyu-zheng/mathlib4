@@ -130,25 +130,25 @@ theorem contDiffWithinAt_localInvariantProp (n : ℕ∞) :
     simp only [hx, mfld_simps]
     have := (mem_groupoid_of_pregroupoid.2 he).2.contDiffWithinAt this
     convert (h.comp' _ (this.of_le le_top)).mono_of_mem _ using 1
-    · ext y; simp only [mfld_simps]
+    ext y; simp only [mfld_simps]
     refine mem_nhdsWithin.mpr
       ⟨I.symm ⁻¹' e.target, e.open_target.preimage I.continuous_symm, by
         simp_rw [mem_preimage, I.left_inv, e.mapsTo hx], ?_⟩
     mfld_set_tac
   congr_of_forall {s x f g} h hx hf := by
     apply hf.congr
-    · intro y hy
-      simp only [mfld_simps] at hy
-      simp only [h, hy, mfld_simps]
-    · simp only [hx, mfld_simps]
+    intro y hy
+    simp only [mfld_simps] at hy
+    simp only [h, hy, mfld_simps]
+    simp only [hx, mfld_simps]
   left_invariance' {s x f e'} he' hs hx h := by
     rw [ContDiffWithinAtProp] at h ⊢
     have A : (I' ∘ f ∘ I.symm) (I x) ∈ I'.symm ⁻¹' e'.source ∩ range I'
     simp only [hx, mfld_simps]
     have := (mem_groupoid_of_pregroupoid.2 he').1.contDiffWithinAt A
     convert (this.of_le le_top).comp _ h _
-    · ext y; simp only [mfld_simps]
-    · intro y hy; simp only [mfld_simps] at hy; simpa only [hy, mfld_simps] using hs hy.1
+    ext y; simp only [mfld_simps]
+    intro y hy; simp only [mfld_simps] at hy; simpa only [hy, mfld_simps] using hs hy.1
 
 theorem contDiffWithinAtProp_mono_of_mem (n : ℕ∞) ⦃s x t⦄ ⦃f : H → H'⦄ (hts : s ∈ 𝓝[t] x)
     (h : ContDiffWithinAtProp I I' n f s x) : ContDiffWithinAtProp I I' n f t x := by
@@ -160,8 +160,8 @@ theorem contDiffWithinAtProp_id (x : H) : ContDiffWithinAtProp I I n id univ x :
   simp only [ContDiffWithinAtProp, id_comp, preimage_univ, univ_inter]
   have : ContDiffWithinAt 𝕜 n id (range I) (I x) := contDiff_id.contDiffAt.contDiffWithinAt
   refine this.congr (fun y hy => ?_) ?_
-  · simp only [ModelWithCorners.right_inv I hy, mfld_simps]
-  · simp only [mfld_simps]
+  simp only [ModelWithCorners.right_inv I hy, mfld_simps]
+  simp only [mfld_simps]
 
 /-- A function is `n` times continuously differentiable within a set at a point in a manifold if
 it is continuous and it is `n` times continuously differentiable in this set around this point, when
@@ -498,26 +498,26 @@ theorem contMDiffOn_iff :
             ((extChartAt I x).target ∩
               (extChartAt I x).symm ⁻¹' (s ∩ f ⁻¹' (extChartAt I' y).source)) := by
   constructor
-  · intro h
-    refine ⟨fun x hx => (h x hx).1, fun x y z hz => ?_⟩
-    simp only [mfld_simps] at hz
-    let w := (extChartAt I x).symm z
-    have : w ∈ s
-    simp only [w, hz, mfld_simps]
-    specialize h w this
-    have w1 : w ∈ (chartAt H x).source
-    simp only [w, hz, mfld_simps]
-    have w2 : f w ∈ (chartAt H' y).source
-    simp only [w, hz, mfld_simps]
-    convert ((contMDiffWithinAt_iff_of_mem_source w1 w2).mp h).2.mono _
-    · simp only [w, hz, mfld_simps]
-    · mfld_set_tac
-  · rintro ⟨hcont, hdiff⟩ x hx
-    refine (contDiffWithinAt_localInvariantProp I I' n).liftPropWithinAt_iff.mpr ?_
-    refine ⟨hcont x hx, ?_⟩
-    dsimp [ContDiffWithinAtProp]
-    convert hdiff x (f x) (extChartAt I x x) (by simp only [hx, mfld_simps]) using 1
-    mfld_set_tac
+  intro h
+  refine ⟨fun x hx => (h x hx).1, fun x y z hz => ?_⟩
+  simp only [mfld_simps] at hz
+  let w := (extChartAt I x).symm z
+  have : w ∈ s
+  simp only [w, hz, mfld_simps]
+  specialize h w this
+  have w1 : w ∈ (chartAt H x).source
+  simp only [w, hz, mfld_simps]
+  have w2 : f w ∈ (chartAt H' y).source
+  simp only [w, hz, mfld_simps]
+  convert ((contMDiffWithinAt_iff_of_mem_source w1 w2).mp h).2.mono _
+  simp only [w, hz, mfld_simps]
+  mfld_set_tac
+  rintro ⟨hcont, hdiff⟩ x hx
+  refine (contDiffWithinAt_localInvariantProp I I' n).liftPropWithinAt_iff.mpr ?_
+  refine ⟨hcont x hx, ?_⟩
+  dsimp [ContDiffWithinAtProp]
+  convert hdiff x (f x) (extChartAt I x x) (by simp only [hx, mfld_simps]) using 1
+  mfld_set_tac
 
 /-- One can reformulate smoothness on a set as continuity on this set, and smoothness in any
 extended chart in the target. -/
@@ -531,11 +531,11 @@ theorem contMDiffOn_iff_target :
     PartialHomeomorph.extend, Set.preimage_univ, Set.inter_univ, and_congr_right_iff]
   intro h
   constructor
-  · refine fun h' y => ⟨?_, fun x _ => h' x y⟩
-    have h'' : ContinuousOn _ univ := (ModelWithCorners.continuous I').continuousOn
-    convert (h''.comp' (chartAt H' y).continuousOn_toFun).comp' h
-    simp
-  · exact fun h' x y => (h' y).2 x 0
+  refine fun h' y => ⟨?_, fun x _ => h' x y⟩
+  have h'' : ContinuousOn _ univ := (ModelWithCorners.continuous I').continuousOn
+  convert (h''.comp' (chartAt H' y).continuousOn_toFun).comp' h
+  simp
+  exact fun h' x y => (h' y).2 x 0
 
 theorem smoothOn_iff :
     SmoothOn I I' f s ↔
@@ -638,8 +638,8 @@ theorem contMDiffWithinAt_iff_nat :
     ContMDiffWithinAt I I' n f s x ↔ ∀ m : ℕ, (m : ℕ∞) ≤ n → ContMDiffWithinAt I I' m f s x := by
   refine ⟨fun h m hm => h.of_le hm, fun h => ?_⟩
   cases' n with n
-  · exact contMDiffWithinAt_top.2 fun n => h n le_top
-  · exact h n le_rfl
+  exact contMDiffWithinAt_top.2 fun n => h n le_top
+  exact h n le_rfl
 
 /-! ### Restriction to a smaller set -/
 
@@ -726,7 +726,7 @@ theorem contMDiffWithinAt_iff_contMDiffOn_nhds {n : ℕ} :
     ContMDiffWithinAt I I' n f s x ↔ ∃ u ∈ 𝓝[insert x s] x, ContMDiffOn I I' n f u := by
   -- WLOG, `x ∈ s`, otherwise we add `x` to `s`
   wlog hxs : x ∈ s generalizing s
-  · rw [← contMDiffWithinAt_insert_self, this (mem_insert _ _), insert_idem]
+  rw [← contMDiffWithinAt_insert_self, this (mem_insert _ _), insert_idem]
   rw [insert_eq_of_mem hxs]
   -- The `←` implication is trivial
   refine ⟨fun h ↦ ?_, fun ⟨u, hmem, hu⟩ ↦ (hu _ (mem_of_mem_nhdsWithin hxs hmem)).mono_of_mem hmem⟩
@@ -740,16 +740,16 @@ theorem contMDiffWithinAt_iff_contMDiffOn_nhds {n : ℕ} :
   rw [insert_eq_of_mem hxs'] at hmem hsub
   -- Then `(extChartAt I x).symm '' v` is the neighborhood we are looking for.
   refine ⟨(extChartAt I x).symm '' v, ?_, ?_⟩
-  · rw [← map_extChartAt_symm_nhdsWithin I,
-      h.1.nhdsWithin_extChartAt_symm_preimage_inter_range I I']
-    exact image_mem_map hmem
-  · have hv₁ : (extChartAt I x).symm '' v ⊆ (extChartAt I x).source :=
-      image_subset_iff.2 fun y hy ↦ (extChartAt I x).map_target (hsub hy).1
-    have hv₂ : MapsTo f ((extChartAt I x).symm '' v) (extChartAt I' (f x)).source := by
-      rintro _ ⟨y, hy, rfl⟩
-      exact (hsub hy).2.2
-    rwa [contMDiffOn_iff_of_subset_source' hv₁ hv₂, PartialEquiv.image_symm_image_of_subset_target]
-    exact hsub.trans inter_subset_left
+  rw [← map_extChartAt_symm_nhdsWithin I,
+    h.1.nhdsWithin_extChartAt_symm_preimage_inter_range I I']
+  exact image_mem_map hmem
+  have hv₁ : (extChartAt I x).symm '' v ⊆ (extChartAt I x).source :=
+    image_subset_iff.2 fun y hy ↦ (extChartAt I x).map_target (hsub hy).1
+  have hv₂ : MapsTo f ((extChartAt I x).symm '' v) (extChartAt I' (f x)).source := by
+    rintro _ ⟨y, hy, rfl⟩
+    exact (hsub hy).2.2
+  rwa [contMDiffOn_iff_of_subset_source' hv₁ hv₂, PartialEquiv.image_symm_image_of_subset_target]
+  exact hsub.trans inter_subset_left
 
 /-- A function is `C^n` at a point, for `n : ℕ`, if and only if it is `C^n` on
 a neighborhood of this point. -/

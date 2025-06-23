@@ -418,15 +418,15 @@ lemma OpenCover.ext_elem {X : Scheme.{u}} {U : X.Opens} (f g : Γ(X, U)) (𝒰 :
     (h : ∀ i : 𝒰.J, (𝒰.map i).app U f = (𝒰.map i).app U g) : f = g := by
   fapply TopCat.Sheaf.eq_of_locally_eq' X.sheaf
     (fun i ↦ (𝒰.map (𝒰.f i)).opensRange ⊓ U) _ (fun _ ↦ homOfLE inf_le_right)
-  · intro x hx
-    simp only [Opens.iSup_mk, Opens.carrier_eq_coe, Opens.coe_inf, Hom.opensRange_coe, Opens.coe_mk,
-      Set.mem_iUnion, Set.mem_inter_iff, Set.mem_range, SetLike.mem_coe, exists_and_right]
-    refine ⟨?_, hx⟩
-    simpa using ⟨_, 𝒰.covers x⟩
-  · intro x
-    replace h := h (𝒰.f x)
-    rw [← IsOpenImmersion.map_ΓIso_inv] at h
-    exact (IsOpenImmersion.ΓIso (𝒰.map (𝒰.f x)) U).commRingCatIsoToRingEquiv.symm.injective h
+  intro x hx
+  simp only [Opens.iSup_mk, Opens.carrier_eq_coe, Opens.coe_inf, Hom.opensRange_coe, Opens.coe_mk,
+    Set.mem_iUnion, Set.mem_inter_iff, Set.mem_range, SetLike.mem_coe, exists_and_right]
+  refine ⟨?_, hx⟩
+  simpa using ⟨_, 𝒰.covers x⟩
+  intro x
+  replace h := h (𝒰.f x)
+  rw [← IsOpenImmersion.map_ΓIso_inv] at h
+  exact (IsOpenImmersion.ΓIso (𝒰.map (𝒰.f x)) U).commRingCatIsoToRingEquiv.symm.injective h
 
 /-- If the restriction of a global section to each member of an open cover is zero, then it is
 globally zero. -/
@@ -494,20 +494,20 @@ theorem affineBasisCover_is_basis (X : Scheme.{u}) :
       {x : Set X |
         ∃ a : X.affineBasisCover.J, x = Set.range (X.affineBasisCover.map a).1.base} := by
   apply TopologicalSpace.isTopologicalBasis_of_isOpen_of_nhds
-  · rintro _ ⟨a, rfl⟩
-    exact IsOpenImmersion.isOpen_range (X.affineBasisCover.map a)
-  · rintro a U haU hU
-    rcases X.affineCover.covers a with ⟨x, e⟩
-    let U' := (X.affineCover.map (X.affineCover.f a)).1.base ⁻¹' U
-    have hxU' : x ∈ U'
-    rw [← e] at haU; exact haU
-    rcases PrimeSpectrum.isBasis_basic_opens.exists_subset_of_mem_open hxU'
-        ((X.affineCover.map (X.affineCover.f a)).1.base.continuous_toFun.isOpen_preimage _
-          hU) with
-      ⟨_, ⟨_, ⟨s, rfl⟩, rfl⟩, hxV, hVU⟩
-    refine ⟨_, ⟨⟨_, s⟩, rfl⟩, ?_, ?_⟩ <;> erw [affineBasisCover_map_range]
-    · exact ⟨x, hxV, e⟩
-    · rw [Set.image_subset_iff]; exact hVU
+  rintro _ ⟨a, rfl⟩
+  exact IsOpenImmersion.isOpen_range (X.affineBasisCover.map a)
+  rintro a U haU hU
+  rcases X.affineCover.covers a with ⟨x, e⟩
+  let U' := (X.affineCover.map (X.affineCover.f a)).1.base ⁻¹' U
+  have hxU' : x ∈ U'
+  rw [← e] at haU; exact haU
+  rcases PrimeSpectrum.isBasis_basic_opens.exists_subset_of_mem_open hxU'
+      ((X.affineCover.map (X.affineCover.f a)).1.base.continuous_toFun.isOpen_preimage _
+        hU) with
+    ⟨_, ⟨_, ⟨s, rfl⟩, rfl⟩, hxV, hVU⟩
+  refine ⟨_, ⟨⟨_, s⟩, rfl⟩, ?_, ?_⟩ <;> erw [affineBasisCover_map_range]
+  exact ⟨x, hxV, e⟩
+  rw [Set.image_subset_iff]; exact hVU
 
 end deprecated
 

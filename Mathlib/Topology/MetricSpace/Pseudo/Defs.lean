@@ -61,12 +61,12 @@ abbrev Bornology.ofDist {α : Type*} (dist : α → α → ℝ) (dist_comm : ∀
     ⟨0, fun x hx y => hx.elim⟩ (fun s ⟨c, hc⟩ t h => ⟨c, fun x hx y hy => hc (h hx) (h hy)⟩)
     (fun s hs t ht => by
       rcases s.eq_empty_or_nonempty with rfl | ⟨x, hx⟩
-      · rwa [empty_union]
+      rwa [empty_union]
       rcases t.eq_empty_or_nonempty with rfl | ⟨y, hy⟩
-      · rwa [union_empty]
+      rwa [union_empty]
       rsuffices ⟨C, hC⟩ : ∃ C, ∀ z ∈ s ∪ t, dist x z ≤ C
-      · refine ⟨C + C, fun a ha b hb => (dist_triangle a x b).trans ?_⟩
-        simpa only [dist_comm] using add_le_add (hC _ ha) (hC _ hb)
+      refine ⟨C + C, fun a ha b hb => (dist_triangle a x b).trans ?_⟩
+      simpa only [dist_comm] using add_le_add (hC _ ha) (hC _ hb)
       rcases hs with ⟨Cs, hs⟩; rcases ht with ⟨Ct, ht⟩
       refine ⟨max Cs (dist x y + Ct), fun z hz => hz.elim
         (fun hz => (hs hx hz).trans (le_max_left _ _))
@@ -125,11 +125,11 @@ theorem PseudoMetricSpace.ext {α : Type*} {m m' : PseudoMetricSpace α}
   cases' m' with d' _ _ _ ed' hed' U' hU' B' hB'
   obtain rfl : d = d' := h
   congr
-  · ext x y : 2
-    rw [hed, hed']
-  · exact UniformSpace.ext (hU.trans hU'.symm)
-  · ext : 2
-    rw [← Filter.mem_sets, ← Filter.mem_sets, hB, hB']
+  ext x y : 2
+  rw [hed, hed']
+  exact UniformSpace.ext (hU.trans hU'.symm)
+  ext : 2
+  rw [← Filter.mem_sets, ← Filter.mem_sets, hB, hB']
 
 variable [PseudoMetricSpace α]
 
@@ -626,10 +626,10 @@ protected theorem mk_uniformity_basis {β : Type*} {p : β → Prop} {f : β →
     (𝓤 α).HasBasis p fun i => { p : α × α | dist p.1 p.2 < f i } := by
   refine ⟨fun s => uniformity_basis_dist.mem_iff.trans ?_⟩
   constructor
-  · rintro ⟨ε, ε₀, hε⟩
-    rcases hf ε₀ with ⟨i, hi, H⟩
-    exact ⟨i, hi, fun x (hx : _ < _) => hε <| lt_of_lt_of_le hx H⟩
-  · exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, H⟩
+  rintro ⟨ε, ε₀, hε⟩
+  rcases hf ε₀ with ⟨i, hi, H⟩
+  exact ⟨i, hi, fun x (hx : _ < _) => hε <| lt_of_lt_of_le hx H⟩
+  exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, H⟩
 
 theorem uniformity_basis_dist_rat :
     (𝓤 α).HasBasis (fun r : ℚ => 0 < r) fun r => { p : α × α | dist p.1 p.2 < r } :=
@@ -671,11 +671,11 @@ protected theorem mk_uniformity_basis_le {β : Type*} {p : β → Prop} {f : β 
     (𝓤 α).HasBasis p fun x => { p : α × α | dist p.1 p.2 ≤ f x } := by
   refine ⟨fun s => uniformity_basis_dist.mem_iff.trans ?_⟩
   constructor
-  · rintro ⟨ε, ε₀, hε⟩
-    rcases exists_between ε₀ with ⟨ε', hε'⟩
-    rcases hf ε' hε'.1 with ⟨i, hi, H⟩
-    exact ⟨i, hi, fun x (hx : _ ≤ _) => hε <| lt_of_le_of_lt (le_trans hx H) hε'.2⟩
-  · exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, fun x (hx : _ < _) => H (mem_setOf.2 hx.le)⟩
+  rintro ⟨ε, ε₀, hε⟩
+  rcases exists_between ε₀ with ⟨ε', hε'⟩
+  rcases hf ε' hε'.1 with ⟨i, hi, H⟩
+  exact ⟨i, hi, fun x (hx : _ ≤ _) => hε <| lt_of_le_of_lt (le_trans hx H) hε'.2⟩
+  exact fun ⟨i, hi, H⟩ => ⟨f i, hf₀ i hi, fun x (hx : _ < _) => H (mem_setOf.2 hx.le)⟩
 
 /-- Constant size closed neighborhoods of the diagonal form a basis
 of the uniformity filter. -/
@@ -741,8 +741,8 @@ theorem totallyBounded_of_finite_discretization {s : Set α}
         ∃ (β : Type u) (_ : Fintype β) (F : s → β), ∀ x y, F x = F y → dist (x : α) y < ε) :
     TotallyBounded s := by
   rcases s.eq_empty_or_nonempty with hs | hs
-  · rw [hs]
-    exact totallyBounded_empty
+  rw [hs]
+  exact totallyBounded_empty
   rcases hs with ⟨x0, hx0⟩
   haveI : Inhabited s := ⟨⟨x0, hx0⟩⟩
   refine totallyBounded_iff.2 fun ε ε0 => ?_
@@ -833,8 +833,8 @@ theorem eventually_prod_nhds_iff {f : Filter ι} {x₀ : α} {p : ι × α → P
       ∃ ε > 0, ∀ {i}, pa i → ∀ {x}, dist x x₀ < ε → p (i, x) := by
   rw [eventually_swap_iff, Metric.eventually_nhds_prod_iff]
   constructor <;>
-    · rintro ⟨a1, a2, a3, a4, a5⟩
-      exact ⟨a3, a4, a1, a2, fun b1 b2 b3 => a5 b3 b1⟩
+  · rintro ⟨a1, a2, a3, a4, a5⟩
+    exact ⟨a3, a4, a1, a2, fun b1 b2 b3 => a5 b3 b1⟩
 
 theorem nhds_basis_closedBall : (𝓝 x).HasBasis (fun ε : ℝ => 0 < ε) (closedBall x) :=
   nhds_basis_uniformity uniformity_basis_dist_le
@@ -995,12 +995,12 @@ theorem Metric.uniformity_edist_aux {α} (d : α → α → ℝ≥0) :
       ⨅ ε > (0 : ℝ≥0∞), 𝓟 { p : α × α | ↑(d p.1 p.2) < ε } := by
   simp only [le_antisymm_iff, le_iInf_iff, le_principal_iff]
   refine ⟨fun ε hε => ?_, fun ε hε => ?_⟩
-  · rcases ENNReal.lt_iff_exists_nnreal_btwn.1 hε with ⟨ε', ε'0, ε'ε⟩
-    refine mem_iInf_of_mem (ε' : ℝ) (mem_iInf_of_mem (ENNReal.coe_pos.1 ε'0) ?_)
-    exact fun x hx => lt_trans (ENNReal.coe_lt_coe.2 hx) ε'ε
-  · lift ε to ℝ≥0 using le_of_lt hε
-    refine mem_iInf_of_mem (ε : ℝ≥0∞) (mem_iInf_of_mem (ENNReal.coe_pos.2 hε) ?_)
-    exact fun _ => ENNReal.coe_lt_coe.1
+  rcases ENNReal.lt_iff_exists_nnreal_btwn.1 hε with ⟨ε', ε'0, ε'ε⟩
+  refine mem_iInf_of_mem (ε' : ℝ) (mem_iInf_of_mem (ENNReal.coe_pos.1 ε'0) ?_)
+  exact fun x hx => lt_trans (ENNReal.coe_lt_coe.2 hx) ε'ε
+  lift ε to ℝ≥0 using le_of_lt hε
+  refine mem_iInf_of_mem (ε : ℝ≥0∞) (mem_iInf_of_mem (ENNReal.coe_pos.2 hε) ?_)
+  exact fun _ => ENNReal.coe_lt_coe.1
 
 theorem Metric.uniformity_edist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | edist p.1 p.2 < ε } := by
   simp only [PseudoMetricSpace.uniformity_dist, dist_nndist, edist_nndist,
@@ -1015,8 +1015,8 @@ instance (priority := 100) PseudoMetricSpace.toPseudoEMetricSpace : PseudoEMetri
     edist_triangle := fun x y z => by
       simp only [edist_dist, ← ENNReal.ofReal_add, dist_nonneg]
       rw [ENNReal.ofReal_le_ofReal_iff _]
-      · exact dist_triangle _ _ _
-      · simpa using add_le_add (dist_nonneg : 0 ≤ dist x y) dist_nonneg
+      exact dist_triangle _ _ _
+      simpa using add_le_add (dist_nonneg : 0 ≤ dist x y) dist_nonneg
     uniformity_edist := Metric.uniformity_edist }
 
 /-- In a pseudometric space, an open ball of infinite radius is the whole space -/

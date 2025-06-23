@@ -45,9 +45,9 @@ theorem seq_eq : ∀ {m} (f : Fin m → α → β) (v : Fin m → α), seq f v =
     funext fun i => by
       simp_rw [seq, seq_eq]
       refine i.cases ?_ fun i => ?_
-      · rfl
-      · rw [Matrix.cons_val_succ]
-        rfl
+      rfl
+      rw [Matrix.cons_val_succ]
+      rfl
 
 example {f₁ f₂ : α → β} (a₁ a₂ : α) : seq ![f₁, f₂] ![a₁, a₂] = ![f₁ a₁, f₂ a₂] := rfl
 

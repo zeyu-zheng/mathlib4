@@ -154,14 +154,14 @@ def FamilyOfElements.PullbackCompatible (x : FamilyOfElements P R) [R.hasPullbac
 theorem pullbackCompatible_iff (x : FamilyOfElements P R) [R.hasPullbacks] :
     x.Compatible ↔ x.PullbackCompatible := by
   constructor
-  · intro t Y₁ Y₂ f₁ f₂ hf₁ hf₂
-    apply t
-    haveI := hasPullbacks.has_pullbacks hf₁ hf₂
-    apply pullback.condition
-  · intro t Y₁ Y₂ Z g₁ g₂ f₁ f₂ hf₁ hf₂ comm
-    haveI := hasPullbacks.has_pullbacks hf₁ hf₂
-    rw [← pullback.lift_fst _ _ comm, op_comp, FunctorToTypes.map_comp_apply, t hf₁ hf₂,
-      ← FunctorToTypes.map_comp_apply, ← op_comp, pullback.lift_snd]
+  intro t Y₁ Y₂ f₁ f₂ hf₁ hf₂
+  apply t
+  haveI := hasPullbacks.has_pullbacks hf₁ hf₂
+  apply pullback.condition
+  intro t Y₁ Y₂ Z g₁ g₂ f₁ f₂ hf₁ hf₂ comm
+  haveI := hasPullbacks.has_pullbacks hf₁ hf₂
+  rw [← pullback.lift_fst _ _ comm, op_comp, FunctorToTypes.map_comp_apply, t hf₁ hf₂,
+    ← FunctorToTypes.map_comp_apply, ← op_comp, pullback.lift_snd]
 
 /-- The restriction of a compatible family is compatible. -/
 theorem FamilyOfElements.Compatible.restrict {R₁ R₂ : Presieve X} (h : R₁ ≤ R₂)
@@ -189,9 +189,9 @@ theorem extend_agrees {x : FamilyOfElements P R} (t : x.Compatible) {f : Y ⟶ X
   have h := (le_generate R Y hf).choose_spec
   unfold FamilyOfElements.sieveExtend
   rw [t h.choose (𝟙 _) _ hf _]
-  · simp
-  · rw [id_comp]
-    exact h.choose_spec.choose_spec.2
+  simp
+  rw [id_comp]
+  exact h.choose_spec.choose_spec.2
 
 /-- The restriction of an extension is the original. -/
 @[simp]
@@ -215,11 +215,11 @@ def FamilyOfElements.SieveCompatible (x : FamilyOfElements P (S : Presieve X)) :
 theorem compatible_iff_sieveCompatible (x : FamilyOfElements P (S : Presieve X)) :
     x.Compatible ↔ x.SieveCompatible := by
   constructor
-  · intro h Y Z f g hf
-    simpa using h (𝟙 _) g (S.downward_closed hf g) hf (id_comp _)
-  · intro h Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ k
-    simp_rw [← h f₁ g₁ h₁, ← h f₂ g₂ h₂]
-    congr
+  intro h Y Z f g hf
+  simpa using h (𝟙 _) g (S.downward_closed hf g) hf (id_comp _)
+  intro h Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ k
+  simp_rw [← h f₁ g₁ h₁, ← h f₂ g₂ h₂]
+  congr
 
 theorem FamilyOfElements.Compatible.to_sieveCompatible {x : FamilyOfElements P (S : Presieve X)}
     (t : x.Compatible) : x.SieveCompatible :=
@@ -383,14 +383,14 @@ theorem IsSeparatedFor.ext {R : Presieve X} (hR : IsSeparatedFor P R) {t₁ t₂
 theorem isSeparatedFor_iff_generate :
     IsSeparatedFor P R ↔ IsSeparatedFor P (generate R : Presieve X) := by
   constructor
-  · intro h x t₁ t₂ ht₁ ht₂
-    apply h (x.restrict (le_generate R)) t₁ t₂ _ _
-    · exact isAmalgamation_restrict _ x t₁ ht₁
-    · exact isAmalgamation_restrict _ x t₂ ht₂
-  · intro h x t₁ t₂ ht₁ ht₂
-    apply h x.sieveExtend
-    · exact isAmalgamation_sieveExtend x t₁ ht₁
-    · exact isAmalgamation_sieveExtend x t₂ ht₂
+  intro h x t₁ t₂ ht₁ ht₂
+  apply h (x.restrict (le_generate R)) t₁ t₂ _ _
+  exact isAmalgamation_restrict _ x t₁ ht₁
+  exact isAmalgamation_restrict _ x t₂ ht₂
+  intro h x t₁ t₂ ht₁ ht₂
+  apply h x.sieveExtend
+  exact isAmalgamation_sieveExtend x t₁ ht₁
+  exact isAmalgamation_sieveExtend x t₂ ht₂
 
 theorem isSeparatedFor_top (P : Cᵒᵖ ⥤ Type w) : IsSeparatedFor P (⊤ : Presieve X) :=
   fun x t₁ t₂ h₁ h₂ => by
@@ -458,17 +458,17 @@ theorem extension_iff_amalgamation {P : Cᵒᵖ ⥤ Type v₁} (x : S.functor �
       (natTransEquivCompatibleFamily x).1.IsAmalgamation (yonedaEquiv g) := by
   change _ ↔ ∀ ⦃Y : C⦄ (f : Y ⟶ X) (h : S f), P.map f.op (yonedaEquiv g) = x.app (op Y) ⟨f, h⟩
   constructor
-  · rintro rfl Y f hf
-    rw [yonedaEquiv_naturality]
-    dsimp
-    simp [yonedaEquiv_apply]
+  rintro rfl Y f hf
+  rw [yonedaEquiv_naturality]
+  dsimp
+  simp [yonedaEquiv_apply]
   -- See note [dsimp, simp].
-  · intro h
-    ext Y ⟨f, hf⟩
-    convert h f hf
-    rw [yonedaEquiv_naturality]
-    dsimp [yonedaEquiv]
-    simp
+  intro h
+  ext Y ⟨f, hf⟩
+  convert h f hf
+  rw [yonedaEquiv_naturality]
+  dsimp [yonedaEquiv]
+  simp
 
 /-- The yoneda version of the sheaf condition is equivalent to the sheaf condition.
 
@@ -533,13 +533,13 @@ theorem isSeparatedFor_and_exists_isAmalgamation_iff_isSheafFor :
   apply forall_congr'
   intro x
   constructor
-  · intro z hx
-    exact exists_unique_of_exists_of_unique (z.2 hx) z.1
-  · intro h
-    refine ⟨?_, ExistsUnique.exists ∘ h⟩
-    intro t₁ t₂ ht₁ ht₂
-    apply (h _).unique ht₁ ht₂
-    exact is_compatible_of_exists_amalgamation x ⟨_, ht₂⟩
+  intro z hx
+  exact exists_unique_of_exists_of_unique (z.2 hx) z.1
+  intro h
+  refine ⟨?_, ExistsUnique.exists ∘ h⟩
+  intro t₁ t₂ ht₁ ht₂
+  apply (h _).unique ht₁ ht₂
+  exact is_compatible_of_exists_amalgamation x ⟨_, ht₂⟩
 
 /-- If `P` is separated for `R` and every family has an amalgamation, then `P` is a sheaf for `R`.
 -/
@@ -574,14 +574,14 @@ theorem isSheafFor_iff_generate (R : Presieve X) :
   rw [← isSeparatedFor_iff_generate]
   apply and_congr (Iff.refl _)
   constructor
-  · intro q x hx
-    apply Exists.imp _ (q _ (hx.restrict (le_generate R)))
-    intro t ht
-    simpa [hx] using isAmalgamation_sieveExtend _ _ ht
-  · intro q x hx
-    apply Exists.imp _ (q _ hx.sieveExtend)
-    intro t ht
-    simpa [hx] using isAmalgamation_restrict (le_generate R) _ _ ht
+  intro q x hx
+  apply Exists.imp _ (q _ (hx.restrict (le_generate R)))
+  intro t ht
+  simpa [hx] using isAmalgamation_sieveExtend _ _ ht
+  intro q x hx
+  apply Exists.imp _ (q _ hx.sieveExtend)
+  intro t ht
+  simpa [hx] using isAmalgamation_restrict (le_generate R) _ _ ht
 
 /-- Every presheaf is a sheaf for the family {𝟙 X}.
 
@@ -590,10 +590,10 @@ theorem isSheafFor_iff_generate (R : Presieve X) :
 theorem isSheafFor_singleton_iso (P : Cᵒᵖ ⥤ Type w) : IsSheafFor P (Presieve.singleton (𝟙 X)) := by
   intro x _
   refine ⟨x _ (Presieve.singleton_self _), ?_, ?_⟩
-  · rintro _ _ ⟨rfl, rfl⟩
-    simp
-  · intro t ht
-    simpa using ht _ (Presieve.singleton_self _)
+  rintro _ _ ⟨rfl, rfl⟩
+  simp
+  intro t ht
+  simpa using ht _ (Presieve.singleton_self _)
 
 /-- Every presheaf is a sheaf for the maximal sieve.
 
@@ -614,11 +614,11 @@ theorem isSheafFor_iso {P' : Cᵒᵖ ⥤ Type w} (i : P ≅ P') : IsSheafFor P R
   obtain ⟨t, ht1, ht2⟩ := h x' this
   use i.hom.app _ t
   fconstructor
-  · convert FamilyOfElements.IsAmalgamation.compPresheafMap i.hom ht1
-    simp [x']
-  · intro y hy
-    rw [show y = (i.inv.app (op X) ≫ i.hom.app (op X)) y by simp]
-    simp [ht2 (i.inv.app _ y) (FamilyOfElements.IsAmalgamation.compPresheafMap i.inv hy)]
+  convert FamilyOfElements.IsAmalgamation.compPresheafMap i.hom ht1
+  simp [x']
+  intro y hy
+  rw [show y = (i.inv.app (op X) ≫ i.hom.app (op X)) y by simp]
+  simp [ht2 (i.inv.app _ y) (FamilyOfElements.IsAmalgamation.compPresheafMap i.inv hy)]
 
 /-- If a presieve `R` on `X` has a subsieve `S` such that:
 
@@ -635,18 +635,18 @@ theorem isSheafFor_subsieve_aux (P : Cᵒᵖ ⥤ Type w) {S : Sieve X} {R : Pres
     IsSheafFor P R := by
   rw [← isSeparatedFor_and_exists_isAmalgamation_iff_isSheafFor]
   constructor
-  · intro x t₁ t₂ ht₁ ht₂
-    exact
-      hS.isSeparatedFor _ _ _ (isAmalgamation_restrict h x t₁ ht₁)
-        (isAmalgamation_restrict h x t₂ ht₂)
-  · intro x hx
-    use hS.amalgamate _ (hx.restrict h)
-    intro W j hj
-    apply (trans hj).ext
-    intro Y f hf
-    rw [← FunctorToTypes.map_comp_apply, ← op_comp, hS.valid_glue (hx.restrict h) _ hf,
-      FamilyOfElements.restrict, ← hx (𝟙 _) f (h _ hf) _ (id_comp _)]
-    simp
+  intro x t₁ t₂ ht₁ ht₂
+  exact
+    hS.isSeparatedFor _ _ _ (isAmalgamation_restrict h x t₁ ht₁)
+      (isAmalgamation_restrict h x t₂ ht₂)
+  intro x hx
+  use hS.amalgamate _ (hx.restrict h)
+  intro W j hj
+  apply (trans hj).ext
+  intro Y f hf
+  rw [← FunctorToTypes.map_comp_apply, ← op_comp, hS.valid_glue (hx.restrict h) _ hf,
+    FamilyOfElements.restrict, ← hx (𝟙 _) f (h _ hf) _ (id_comp _)]
+  simp
 
 /--
 If `P` is a sheaf for every pullback of the sieve `S`, then `P` is a sheaf for any presieve which
@@ -710,13 +710,13 @@ theorem isSheafFor_arrows_iff : (ofArrows X π).IsSheafFor P ↔
     (∀ (x : (i : I) → P.obj (op (X i))), Arrows.Compatible P π x →
     ∃! t, ∀ i, P.map (π i).op t = x i) := by
   refine ⟨fun h x hx ↦ ?_, fun h x hx ↦ ?_⟩
-  · obtain ⟨t, ht₁, ht₂⟩ := h _ hx.familyOfElements_compatible
-    refine ⟨t, fun i ↦ ?_, fun t' ht' ↦ ht₂ _ fun _ _ ⟨i⟩ ↦ ?_⟩
-    · rw [ht₁ _ (ofArrows.mk i), hx.familyOfElements_ofArrows_mk]
-    · rw [ht', hx.familyOfElements_ofArrows_mk]
-  · obtain ⟨t, hA, ht⟩ := h (fun i ↦ x (π i) (ofArrows.mk _))
-      (fun i j Z gi gj ↦ hx gi gj (ofArrows.mk _) (ofArrows.mk _))
-    exact ⟨t, fun Y f ⟨i⟩ ↦ hA i, fun y hy ↦ ht y (fun i ↦ hy (π i) (ofArrows.mk _))⟩
+  obtain ⟨t, ht₁, ht₂⟩ := h _ hx.familyOfElements_compatible
+  refine ⟨t, fun i ↦ ?_, fun t' ht' ↦ ht₂ _ fun _ _ ⟨i⟩ ↦ ?_⟩
+  rw [ht₁ _ (ofArrows.mk i), hx.familyOfElements_ofArrows_mk]
+  rw [ht', hx.familyOfElements_ofArrows_mk]
+  obtain ⟨t, hA, ht⟩ := h (fun i ↦ x (π i) (ofArrows.mk _))
+    (fun i j Z gi gj ↦ hx gi gj (ofArrows.mk _) (ofArrows.mk _))
+  exact ⟨t, fun Y f ⟨i⟩ ↦ hA i, fun y hy ↦ ht y (fun i ↦ hy (π i) (ofArrows.mk _))⟩
 
 variable [(ofArrows X π).hasPullbacks]
 
@@ -730,10 +730,10 @@ def Arrows.PullbackCompatible (x : (i : I) → P.obj (op (X i))) : Prop :=
 theorem Arrows.pullbackCompatible_iff (x : (i : I) → P.obj (op (X i))) :
     Compatible P π x ↔ PullbackCompatible P π x := by
   refine ⟨fun t i j ↦ ?_, fun t i j Z gi gj comm ↦ ?_⟩
-  · apply t
-    exact pullback.condition
-  · rw [← pullback.lift_fst _ _ comm, op_comp, FunctorToTypes.map_comp_apply, t i j,
-      ← FunctorToTypes.map_comp_apply, ← op_comp, pullback.lift_snd]
+  apply t
+  exact pullback.condition
+  rw [← pullback.lift_fst _ _ comm, op_comp, FunctorToTypes.map_comp_apply, t i j,
+    ← FunctorToTypes.map_comp_apply, ← op_comp, pullback.lift_snd]
 
 theorem isSheafFor_arrows_iff_pullbacks : (ofArrows X π).IsSheafFor P ↔
     (∀ (x : (i : I) → P.obj (op (X i))), Arrows.PullbackCompatible P π x →

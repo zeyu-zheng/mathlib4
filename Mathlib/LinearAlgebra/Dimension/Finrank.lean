@@ -68,20 +68,20 @@ lemma rank_eq_ofNat_iff_finrank_eq_ofNat (n : ℕ) [Nat.AtLeastTwo n] :
 
 theorem finrank_le_of_rank_le {n : ℕ} (h : Module.rank R M ≤ ↑n) : finrank R M ≤ n := by
   rwa [← Cardinal.toNat_le_iff_le_of_lt_aleph0, toNat_natCast] at h
-  · exact h.trans_lt (nat_lt_aleph0 n)
-  · exact nat_lt_aleph0 n
+  exact h.trans_lt (nat_lt_aleph0 n)
+  exact nat_lt_aleph0 n
 
 theorem finrank_lt_of_rank_lt {n : ℕ} (h : Module.rank R M < ↑n) : finrank R M < n := by
   rwa [← Cardinal.toNat_lt_iff_lt_of_lt_aleph0, toNat_natCast] at h
-  · exact h.trans (nat_lt_aleph0 n)
-  · exact nat_lt_aleph0 n
+  exact h.trans (nat_lt_aleph0 n)
+  exact nat_lt_aleph0 n
 
 theorem lt_rank_of_lt_finrank {n : ℕ} (h : n < finrank R M) : ↑n < Module.rank R M := by
   rwa [← Cardinal.toNat_lt_iff_lt_of_lt_aleph0, toNat_natCast]
-  · exact nat_lt_aleph0 n
-  · contrapose! h
-    rw [finrank, Cardinal.toNat_apply_of_aleph0_le h]
-    exact n.zero_le
+  exact nat_lt_aleph0 n
+  contrapose! h
+  rw [finrank, Cardinal.toNat_apply_of_aleph0_le h]
+  exact n.zero_le
 
 theorem one_lt_rank_of_one_lt_finrank (h : 1 < finrank R M) : 1 < Module.rank R M := by
   simpa using lt_rank_of_lt_finrank h

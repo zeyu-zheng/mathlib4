@@ -180,10 +180,10 @@ theorem prod_induction_nonempty (p : α → Prop) (p_mul : ∀ a b, p a → p b 
     (p_s : ∀ a ∈ s, p a) : p s.prod := by
   -- Porting note: used to be `refine' Multiset.induction _ _`
   induction' s using Multiset.induction_on with a s hsa
-  · simp at hs
+  simp at hs
   rw [prod_cons]
   by_cases hs_empty : s = ∅
-  · simp [hs_empty, p_s a]
+  simp [hs_empty, p_s a]
   have hps : ∀ x, x ∈ s → p x := fun x hxs => p_s x (mem_cons_of_mem hxs)
   exact p_mul a s.prod (p_s a (mem_cons_self a s)) (hsa hs_empty hps)
 
@@ -213,7 +213,7 @@ end CommMonoid
 theorem prod_dvd_prod_of_dvd [CommMonoid β] {S : Multiset α} (g1 g2 : α → β)
     (h : ∀ a ∈ S, g1 a ∣ g2 a) : (Multiset.map g1 S).prod ∣ (Multiset.map g2 S).prod := by
   apply Multiset.induction_on' S
-  · simp
+  simp
   intro a T haS _ IH
   simp [mul_dvd_mul (h a haS) IH]
 

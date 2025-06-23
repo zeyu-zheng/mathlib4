@@ -66,7 +66,7 @@ theorem getElem?_ofFn {n} (f : Fin n → α) (i) : (ofFn f)[i]? = ofFnNthVal f i
   if h : i < (ofFn f).length
   then by
     rw [getElem?_eq_getElem h, getElem_ofFn]
-    · simp only [length_ofFn] at h; simp [ofFnNthVal, h]
+    simp only [length_ofFn] at h; simp [ofFnNthVal, h]
   else by
     rw [ofFnNthVal, dif_neg] <;>
     simpa using h
@@ -117,16 +117,16 @@ theorem ofFn_zero (f : Fin 0 → α) : ofFn f = [] :=
 theorem ofFn_succ {n} (f : Fin (succ n) → α) : ofFn f = f 0 :: ofFn fun i => f i.succ :=
   ext_get (by simp) (fun i hi₁ hi₂ => by
     cases i
-    · simp
-    · simp)
+    simp
+    simp)
 
 theorem ofFn_succ' {n} (f : Fin (succ n) → α) :
     ofFn f = (ofFn fun i => f (Fin.castSucc i)).concat (f (Fin.last _)) := by
   induction' n with n IH
-  · rw [ofFn_zero, concat_nil, ofFn_succ, ofFn_zero]
-    rfl
-  · rw [ofFn_succ, IH, ofFn_succ, concat_cons, Fin.castSucc_zero]
-    congr
+  rw [ofFn_zero, concat_nil, ofFn_succ, ofFn_zero]
+  rfl
+  rw [ofFn_succ, IH, ofFn_succ, concat_cons, Fin.castSucc_zero]
+  congr
 
 @[simp]
 theorem ofFn_eq_nil_iff {n : ℕ} {f : Fin n → α} : ofFn f = [] ↔ n = 0 := by
@@ -146,10 +146,10 @@ theorem ofFn_add {m n} (f : Fin (m + n) → α) :
     List.ofFn f =
       (List.ofFn fun i => f (Fin.castAdd n i)) ++ List.ofFn fun j => f (Fin.natAdd m j) := by
   induction' n with n IH
-  · rw [ofFn_zero, append_nil, Fin.castAdd_zero, Fin.cast_refl]
-    rfl
-  · rw [ofFn_succ', ofFn_succ', IH, append_concat]
-    rfl
+  rw [ofFn_zero, append_nil, Fin.castAdd_zero, Fin.cast_refl]
+  rfl
+  rw [ofFn_succ', ofFn_succ', IH, append_concat]
+  rfl
 
 @[simp]
 theorem ofFn_fin_append {m n} (a : Fin m → α) (b : Fin n → α) :
@@ -164,9 +164,9 @@ theorem ofFn_mul {m n} (f : Fin (m * n) → α) :
         (Nat.add_lt_add_left j.prop _).trans_eq (by rw [Nat.add_mul, Nat.one_mul])
       _ ≤ _ := Nat.mul_le_mul_right _ i.prop⟩) := by
   induction' m with m IH
-  · simp [ofFn_zero, Nat.zero_mul, ofFn_zero, join]
-  · simp_rw [ofFn_succ', succ_mul, join_concat, ofFn_add, IH]
-    rfl
+  simp [ofFn_zero, Nat.zero_mul, ofFn_zero, join]
+  simp_rw [ofFn_succ', succ_mul, join_concat, ofFn_add, IH]
+  rfl
 
 /-- This breaks a list of `m*n` items into `n` groups each containing `m` elements. -/
 theorem ofFn_mul' {m n} (f : Fin (m * n) → α) :

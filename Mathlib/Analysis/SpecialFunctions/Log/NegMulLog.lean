@@ -28,7 +28,7 @@ lemma continuous_mul_log : Continuous fun x ↦ x * log x := by
   rw [continuous_iff_continuousAt]
   intro x
   obtain hx | rfl := ne_or_eq x 0
-  · exact (continuous_id'.continuousAt).mul (continuousAt_log hx)
+  exact (continuous_id'.continuousAt).mul (continuousAt_log hx)
   rw [ContinuousAt, zero_mul]
   simp_rw [mul_comm _ (log _)]
   nth_rewrite 1 [← nhdsWithin_univ]
@@ -37,9 +37,9 @@ lemma continuous_mul_log : Continuous fun x ↦ x * log x := by
   rw [this, nhdsWithin_union, nhdsWithin_union]
   simp only [nhdsWithin_singleton, sup_le_iff, Filter.nonpos_iff, Filter.tendsto_sup]
   refine ⟨⟨tendsto_log_mul_self_nhds_zero_left, ?_⟩, ?_⟩
-  · simpa only [rpow_one] using tendsto_log_mul_rpow_nhds_zero zero_lt_one
-  · convert tendsto_pure_nhds (fun x ↦ log x * x) 0
-    simp
+  simpa only [rpow_one] using tendsto_log_mul_rpow_nhds_zero zero_lt_one
+  convert tendsto_pure_nhds (fun x ↦ log x * x) 0
+  simp
 
 lemma differentiableOn_mul_log : DifferentiableOn ℝ (fun x ↦ x * log x) {0}ᶜ :=
   differentiable_id'.differentiableOn.mul differentiableOn_log
@@ -96,9 +96,9 @@ lemma negMulLog_nonneg {x : ℝ} (h1 : 0 ≤ x) (h2 : x ≤ 1) : 0 ≤ negMulLog
 lemma negMulLog_mul (x y : ℝ) : negMulLog (x * y) = y * negMulLog x + x * negMulLog y := by
   simp only [negMulLog, neg_mul, neg_add_rev]
   by_cases hx : x = 0
-  · simp [hx]
+  simp [hx]
   by_cases hy : y = 0
-  · simp [hy]
+  simp [hy]
   rw [log_mul hx hy]
   ring
 

@@ -90,14 +90,14 @@ theorem aeval_pow_two_pow_dvd_aeval_iterate_newtonMap
     rw [eval_map_algebraMap, eval_map_algebraMap] at hd
     rw [iterate_succ', comp_apply, newtonMap_apply, sub_eq_add_neg, neg_mul_eq_neg_mul, hd]
     refine dvd_add ?_ (dvd_mul_of_dvd_right ?_ _)
-    · convert dvd_zero _
-      have : IsUnit (aeval (P.newtonMap^[n] x) <| derivative P) :=
-        isUnit_aeval_of_isUnit_aeval_of_isNilpotent_sub h' <|
-        isNilpotent_iterate_newtonMap_sub_of_isNilpotent h n
-      rw [derivative_map, eval_map_algebraMap, ← mul_assoc, mul_neg, Ring.mul_inverse_cancel _ this,
-        neg_mul, one_mul, add_right_neg]
-    · rw [neg_mul, even_two.neg_pow, mul_pow, pow_succ, pow_mul]
-      exact dvd_mul_of_dvd_right (pow_dvd_pow_of_dvd ih 2) _
+    convert dvd_zero _
+    have : IsUnit (aeval (P.newtonMap^[n] x) <| derivative P) :=
+      isUnit_aeval_of_isUnit_aeval_of_isNilpotent_sub h' <|
+      isNilpotent_iterate_newtonMap_sub_of_isNilpotent h n
+    rw [derivative_map, eval_map_algebraMap, ← mul_assoc, mul_neg, Ring.mul_inverse_cancel _ this,
+      neg_mul, one_mul, add_right_neg]
+    rw [neg_mul, even_two.neg_pow, mul_pow, pow_succ, pow_mul]
+    exact dvd_mul_of_dvd_right (pow_dvd_pow_of_dvd ih 2) _
 
 /-- If `x` is almost a root of `P` in the sense that `P(x)` is nilpotent (and `P'(x)` is a
 unit) then we may write `x` as a sum `x = n + r` where `n` is nilpotent and `r` is a root of `P`.
@@ -109,21 +109,21 @@ theorem exists_unique_nilpotent_sub_and_aeval_eq_zero
     ∃! r, IsNilpotent (x - r) ∧ aeval r P = 0 := by
   simp_rw [(neg_sub _ x).symm, isNilpotent_neg_iff]
   refine exists_unique_of_exists_of_unique ?_ fun r₁ r₂ ⟨hr₁, hr₁'⟩ ⟨hr₂, hr₂'⟩ ↦ ?_
-  · -- Existence
-    obtain ⟨n, hn⟩ := id h
-    refine ⟨P.newtonMap^[n] x, isNilpotent_iterate_newtonMap_sub_of_isNilpotent h n, ?_⟩
-    rw [← zero_dvd_iff, ← pow_eq_zero_of_le n.lt_two_pow.le hn]
-    exact aeval_pow_two_pow_dvd_aeval_iterate_newtonMap h h' n
-  · -- Uniqueness
-    have ⟨u, hu⟩ := binomExpansion (P.map (algebraMap R S)) r₁ (r₂ - r₁)
-    suffices IsUnit (aeval r₁ (derivative P) + u * (r₂ - r₁)) by
-      rwa [derivative_map, eval_map_algebraMap, eval_map_algebraMap, eval_map_algebraMap,
-        add_sub_cancel, hr₂', hr₁', zero_add, pow_two, ← mul_assoc, ← add_mul, eq_comm,
-        this.mul_right_eq_zero, sub_eq_zero, eq_comm] at hu
-    have : IsUnit (aeval r₁ (derivative P)) :=
-      isUnit_aeval_of_isUnit_aeval_of_isNilpotent_sub h' hr₁
-    rw [← sub_sub_sub_cancel_right r₂ r₁ x]
-    refine IsNilpotent.isUnit_add_left_of_commute ?_ this (Commute.all _ _)
-    exact (Commute.all _ _).isNilpotent_mul_right <| (Commute.all _ _).isNilpotent_sub hr₂ hr₁
+  -- Existence
+  obtain ⟨n, hn⟩ := id h
+  refine ⟨P.newtonMap^[n] x, isNilpotent_iterate_newtonMap_sub_of_isNilpotent h n, ?_⟩
+  rw [← zero_dvd_iff, ← pow_eq_zero_of_le n.lt_two_pow.le hn]
+  exact aeval_pow_two_pow_dvd_aeval_iterate_newtonMap h h' n
+  -- Uniqueness
+  have ⟨u, hu⟩ := binomExpansion (P.map (algebraMap R S)) r₁ (r₂ - r₁)
+  suffices IsUnit (aeval r₁ (derivative P) + u * (r₂ - r₁)) by
+    rwa [derivative_map, eval_map_algebraMap, eval_map_algebraMap, eval_map_algebraMap,
+      add_sub_cancel, hr₂', hr₁', zero_add, pow_two, ← mul_assoc, ← add_mul, eq_comm,
+      this.mul_right_eq_zero, sub_eq_zero, eq_comm] at hu
+  have : IsUnit (aeval r₁ (derivative P)) :=
+    isUnit_aeval_of_isUnit_aeval_of_isNilpotent_sub h' hr₁
+  rw [← sub_sub_sub_cancel_right r₂ r₁ x]
+  refine IsNilpotent.isUnit_add_left_of_commute ?_ this (Commute.all _ _)
+  exact (Commute.all _ _).isNilpotent_mul_right <| (Commute.all _ _).isNilpotent_sub hr₂ hr₁
 
 end Polynomial

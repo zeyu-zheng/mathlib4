@@ -50,11 +50,11 @@ theorem fg_iff_exists_fin_generating_family {N : L.Substructure M} :
     N.FG ↔ ∃ (n : ℕ) (s : Fin n → M), closure L (range s) = N := by
   rw [fg_def]
   constructor
-  · rintro ⟨S, Sfin, hS⟩
-    obtain ⟨n, f, rfl⟩ := Sfin.fin_embedding
-    exact ⟨n, f, hS⟩
-  · rintro ⟨n, s, hs⟩
-    exact ⟨range s, finite_range s, hs⟩
+  rintro ⟨S, Sfin, hS⟩
+  obtain ⟨n, f, rfl⟩ := Sfin.fin_embedding
+  exact ⟨n, f, hS⟩
+  rintro ⟨n, s, hs⟩
+  exact ⟨range s, finite_range s, hs⟩
 
 theorem fg_bot : (⊥ : L.Substructure M).FG :=
   ⟨∅, by rw [Finset.coe_empty, closure_empty]⟩
@@ -104,22 +104,22 @@ theorem cg_iff_empty_or_exists_nat_generating_family {N : L.Substructure M} :
     N.CG ↔ N = (∅ : Set M) ∨ ∃ s : ℕ → M, closure L (range s) = N := by
   rw [cg_def]
   constructor
-  · rintro ⟨S, Scount, hS⟩
-    rcases eq_empty_or_nonempty (N : Set M) with h | h
-    · exact Or.intro_left _ h
-    obtain ⟨f, h'⟩ :=
-      (Scount.union (Set.countable_singleton h.some)).exists_eq_range
-        (singleton_nonempty h.some).inr
-    refine Or.intro_right _ ⟨f, ?_⟩
-    rw [← h', closure_union, hS, sup_eq_left, closure_le]
-    exact singleton_subset_iff.2 h.some_mem
-  · intro h
-    cases' h with h h
-    · refine ⟨∅, countable_empty, closure_eq_of_le (empty_subset _) ?_⟩
-      rw [← SetLike.coe_subset_coe, h]
-      exact empty_subset _
-    · obtain ⟨f, rfl⟩ := h
-      exact ⟨range f, countable_range _, rfl⟩
+  rintro ⟨S, Scount, hS⟩
+  rcases eq_empty_or_nonempty (N : Set M) with h | h
+  exact Or.intro_left _ h
+  obtain ⟨f, h'⟩ :=
+    (Scount.union (Set.countable_singleton h.some)).exists_eq_range
+      (singleton_nonempty h.some).inr
+  refine Or.intro_right _ ⟨f, ?_⟩
+  rw [← h', closure_union, hS, sup_eq_left, closure_le]
+  exact singleton_subset_iff.2 h.some_mem
+  intro h
+  cases' h with h h
+  refine ⟨∅, countable_empty, closure_eq_of_le (empty_subset _) ?_⟩
+  rw [← SetLike.coe_subset_coe, h]
+  exact empty_subset _
+  obtain ⟨f, rfl⟩ := h
+  exact ⟨range f, countable_range _, rfl⟩
 
 theorem cg_bot : (⊥ : L.Substructure M).CG :=
   fg_bot.cg
@@ -231,11 +231,11 @@ theorem Equiv.fg_iff {N : Type*} [L.Structure N] (f : M ≃[L] N) :
 theorem Substructure.fg_iff_structure_fg (S : L.Substructure M) : S.FG ↔ Structure.FG L S := by
   rw [Structure.fg_def]
   refine ⟨fun h => FG.of_map_embedding S.subtype ?_, fun h => ?_⟩
-  · rw [← Hom.range_eq_map, range_subtype]
-    exact h
-  · have h := h.map S.subtype.toHom
-    rw [← Hom.range_eq_map, range_subtype] at h
-    exact h
+  rw [← Hom.range_eq_map, range_subtype]
+  exact h
+  have h := h.map S.subtype.toHom
+  rw [← Hom.range_eq_map, range_subtype] at h
+  exact h
 
 theorem Equiv.cg_iff {N : Type*} [L.Structure N] (f : M ≃[L] N) :
     Structure.CG L M ↔ Structure.CG L N :=
@@ -245,11 +245,11 @@ theorem Equiv.cg_iff {N : Type*} [L.Structure N] (f : M ≃[L] N) :
 theorem Substructure.cg_iff_structure_cg (S : L.Substructure M) : S.CG ↔ Structure.CG L S := by
   rw [Structure.cg_def]
   refine ⟨fun h => CG.of_map_embedding S.subtype ?_, fun h => ?_⟩
-  · rw [← Hom.range_eq_map, range_subtype]
-    exact h
-  · have h := h.map S.subtype.toHom
-    rw [← Hom.range_eq_map, range_subtype] at h
-    exact h
+  rw [← Hom.range_eq_map, range_subtype]
+  exact h
+  have h := h.map S.subtype.toHom
+  rw [← Hom.range_eq_map, range_subtype] at h
+  exact h
 
 end Language
 

@@ -105,11 +105,11 @@ theorem mem_cons_of_mem {a : α} {s : Stream' α} (b : α) : a ∈ s → a ∈ b
 theorem eq_or_mem_of_mem_cons {a b : α} {s : Stream' α} : (a ∈ b::s) → a = b ∨ a ∈ s :=
     fun ⟨n, h⟩ => by
   cases' n with n'
-  · left
-    exact h
-  · right
-    rw [get_succ, tail_cons] at h
-    exact ⟨n', h⟩
+  left
+  exact h
+  right
+  rw [get_succ, tail_cons] at h
+  exact ⟨n', h⟩
 
 theorem mem_of_get_eq {n : ℕ} {s : Stream' α} {a : α} : a = get s n → a ∈ s := fun h =>
   Exists.intro n h
@@ -226,8 +226,8 @@ theorem tail_iterate (f : α → α) (a : α) : tail (iterate f a) = iterate f (
   ext n
   rw [get_tail]
   induction' n with n' ih
-  · rfl
-  · rw [get_succ_iterate', ih, get_succ_iterate']
+  rfl
+  rw [get_succ_iterate', ih, get_succ_iterate']
 
 theorem iterate_eq (f : α → α) (a : α) : iterate f a = a::iterate f (f a) := by
   rw [← Stream'.eta (iterate f a)]
@@ -271,7 +271,7 @@ theorem bisim_simple (s₁ s₂ : Stream' α) :
   eq_of_bisim (fun s₁ s₂ => head s₁ = head s₂ ∧ s₁ = tail s₁ ∧ s₂ = tail s₂)
     (fun s₁ s₂ ⟨h₁, h₂, h₃⟩ => by
       constructor
-      · exact h₁
+      exact h₁
       rw [← h₂, ← h₃]
       (repeat' constructor) <;> assumption)
     (And.intro hh (And.intro ht₁ ht₂))
@@ -302,11 +302,11 @@ theorem iterate_id (a : α) : iterate id a = const a :=
 theorem map_iterate (f : α → α) (a : α) : iterate f (f a) = map f (iterate f a) := by
   funext n
   induction' n with n' ih
-  · rfl
-  · unfold map iterate get
-    rw [map, get] at ih
-    rw [iterate]
-    exact congrArg f ih
+  rfl
+  unfold map iterate get
+  rw [map, get] at ih
+  rw [iterate]
+  exact congrArg f ih
 
 section Corec
 
@@ -337,10 +337,10 @@ theorem unfolds_eq (g : α → β) (f : α → α) (a : α) : unfolds g f a = g 
 theorem get_unfolds_head_tail : ∀ (n : ℕ) (s : Stream' α),
     get (unfolds head tail s) n = get s n := by
   intro n; induction' n with n' ih
-  · intro s
-    rfl
-  · intro s
-    rw [get_succ, get_succ, unfolds_eq, tail_cons, ih]
+  intro s
+  rfl
+  intro s
+  rw [get_succ, get_succ, unfolds_eq, tail_cons, ih]
 
 theorem unfolds_head_eq : ∀ s : Stream' α, unfolds head tail s = s := fun s =>
   Stream'.ext fun n => get_unfolds_head_tail n s
@@ -404,16 +404,16 @@ theorem even_interleave (s₁ s₂ : Stream' α) : even (s₁ ⋈ s₂) = s₁ :
     (fun s₁' s₁ ⟨s₂, h₁⟩ => by
       rw [h₁]
       constructor
-      · rfl
-      · exact ⟨tail s₂, by rw [interleave_eq, even_cons_cons, tail_cons]⟩)
+      rfl
+      exact ⟨tail s₂, by rw [interleave_eq, even_cons_cons, tail_cons]⟩)
     (Exists.intro s₂ rfl)
 
 theorem interleave_even_odd (s₁ : Stream' α) : even s₁ ⋈ odd s₁ = s₁ :=
   eq_of_bisim (fun s' s => s' = even s ⋈ odd s)
     (fun s' s (h : s' = even s ⋈ odd s) => by
       rw [h]; constructor
-      · rfl
-      · simp [odd_eq, odd_eq, tail_interleave, tail_even])
+      rfl
+      simp [odd_eq, odd_eq, tail_interleave, tail_even])
     rfl
 
 theorem get_even : ∀ (n : ℕ) (s : Stream' α), get (even s) n = get s (2 * n)
@@ -519,23 +519,23 @@ theorem append_take_drop : ∀ (n : ℕ) (s : Stream' α),
     appendStream' (take n s) (drop n s) = s := by
   intro n
   induction' n with n' ih
-  · intro s
-    rfl
-  · intro s
-    rw [take_succ, drop_succ, cons_append_stream, ih (tail s), Stream'.eta]
+  intro s
+  rfl
+  intro s
+  rw [take_succ, drop_succ, cons_append_stream, ih (tail s), Stream'.eta]
 
 -- Take theorem reduces a proof of equality of infinite streams to an
 -- induction over all their finite approximations.
 theorem take_theorem (s₁ s₂ : Stream' α) : (∀ n : ℕ, take n s₁ = take n s₂) → s₁ = s₂ := by
   intro h; apply Stream'.ext; intro n
   induction' n with n _
-  · have aux := h 1
-    simp? [take] at aux says
-      simp only [take, List.cons.injEq, and_true] at aux
-    exact aux
-  · have h₁ : some (get s₁ (succ n)) = some (get s₂ (succ n)) := by
-      rw [← get?_take_succ, ← get?_take_succ, h (succ (succ n))]
-    injection h₁
+  have aux := h 1
+  simp? [take] at aux says
+    simp only [take, List.cons.injEq, and_true] at aux
+  exact aux
+  have h₁ : some (get s₁ (succ n)) = some (get s₂ (succ n)) := by
+    rw [← get?_take_succ, ← get?_take_succ, h (succ (succ n))]
+  injection h₁
 
 protected theorem cycle_g_cons (a : α) (a₁ : α) (l₁ : List α) (a₀ : α) (l₀ : List α) :
     Stream'.cycleG (a, a₁::l₁, a₀, l₀) = (a₁, l₁, a₀, l₀) :=
@@ -548,12 +548,12 @@ theorem cycle_eq : ∀ (l : List α) (h : l ≠ []), cycle l h = l ++ₛ cycle l
         (a'::l') ++ₛ corec Stream'.cycleF Stream'.cycleG (a, l, a, l) := by
       intro l'
       induction' l' with a₁ l₁ ih
-      · intros
-        rw [corec_eq]
-        rfl
-      · intros
-        rw [corec_eq, Stream'.cycle_g_cons, ih a₁]
-        rfl
+      intros
+      rw [corec_eq]
+      rfl
+      intros
+      rw [corec_eq, Stream'.cycle_g_cons, ih a₁]
+      rfl
     gen l a
 
 theorem mem_cycle {a : α} {l : List α} : ∀ h : l ≠ [], a ∈ l → a ∈ cycle l h := fun h ainl => by
@@ -569,10 +569,10 @@ theorem tails_eq (s : Stream' α) : tails s = tail s::tails (tail s) := by
 @[simp]
 theorem get_tails : ∀ (n : ℕ) (s : Stream' α), get (tails s) n = drop n (tail s) := by
   intro n; induction' n with n' ih
-  · intros
-    rfl
-  · intro s
-    rw [get_succ, drop_succ, tails_eq, tail_cons, ih]
+  intros
+  rfl
+  intro s
+  rw [get_succ, drop_succ, tails_eq, tail_cons, ih]
 
 theorem tails_eq_iterate (s : Stream' α) : tails s = iterate tail (tail s) :=
   rfl
@@ -595,27 +595,27 @@ theorem cons_get_inits_core :
       (a::get (initsCore l s) n) = get (initsCore (a::l) s) n := by
   intro a n
   induction' n with n' ih
-  · intros
-    rfl
-  · intro l s
-    rw [get_succ, inits_core_eq, tail_cons, ih, inits_core_eq (a::l) s]
-    rfl
+  intros
+  rfl
+  intro l s
+  rw [get_succ, inits_core_eq, tail_cons, ih, inits_core_eq (a::l) s]
+  rfl
 
 @[simp]
 theorem get_inits : ∀ (n : ℕ) (s : Stream' α), get (inits s) n = take (succ n) s := by
   intro n; induction' n with n' ih
-  · intros
-    rfl
-  · intros
-    rw [get_succ, take_succ, ← ih, tail_inits, inits_tail, cons_get_inits_core]
+  intros
+  rfl
+  intros
+  rw [get_succ, take_succ, ← ih, tail_inits, inits_tail, cons_get_inits_core]
 
 theorem inits_eq (s : Stream' α) :
     inits s = [head s]::map (List.cons (head s)) (inits (tail s)) := by
   apply Stream'.ext; intro n
   cases n
-  · rfl
-  · rw [get_inits, get_succ, tail_cons, get_map, get_inits]
-    rfl
+  rfl
+  rw [get_inits, get_succ, tail_cons, get_map, get_inits]
+  rfl
 
 theorem zip_inits_tails (s : Stream' α) : zip appendStream' (inits s) (tails s) = const s := by
   apply Stream'.ext; intro n
@@ -645,7 +645,7 @@ theorem get_nats (n : ℕ) : get nats n = n :=
 theorem nats_eq : nats = cons 0 (map succ nats) := by
   apply Stream'.ext; intro n
   cases n
-  · rfl
+  rfl
   rw [get_succ]; rfl
 
 end Stream'

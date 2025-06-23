@@ -68,9 +68,9 @@ lemma bodd_add (m n : ℕ) : bodd (m + n) = bxor (bodd m) (bodd n) := by
 @[simp]
 lemma bodd_mul (m n : ℕ) : bodd (m * n) = (bodd m && bodd n) := by
   induction' n with n IH
-  · simp
-  · simp only [mul_succ, bodd_add, IH, bodd_succ]
-    cases bodd m <;> cases bodd n <;> rfl
+  simp
+  simp only [mul_succ, bodd_add, IH, bodd_succ]
+  cases bodd m <;> cases bodd n <;> rfl
 
 lemma mod_two_of_bodd (n : ℕ) : n % 2 = cond (bodd n) 1 0 := by
   have := congr_arg bodd (mod_add_div n 2)
@@ -107,8 +107,8 @@ lemma bodd_add_div2 : ∀ n, cond (bodd n) 1 0 + 2 * div2 n = n
     simp only [bodd_succ, Bool.cond_not, div2_succ, Nat.mul_comm]
     refine Eq.trans ?_ (congr_arg succ (bodd_add_div2 n))
     cases bodd n
-    · simp
-    · simp; omega
+    simp
+    simp; omega
 
 lemma div2_val (n) : div2 n = n / 2 := by
   refine Nat.eq_of_mul_eq_mul_left (by decide)
@@ -228,8 +228,8 @@ lemma shiftLeft_sub : ∀ (m : Nat) {n k}, k ≤ n → m <<< (n - k) = (m <<< n)
 lemma testBit_bit_zero (b n) : testBit (bit b n) 0 = b := by
   rw [testBit, bit]
   cases b
-  · simp [← Nat.mul_two]
-  · simp [← Nat.mul_two]
+  simp [← Nat.mul_two]
+  simp [← Nat.mul_two]
 
 lemma bodd_eq_one_and_ne_zero : ∀ n, bodd n = (1 &&& n != 0)
   | 0 => rfl
@@ -248,20 +248,20 @@ lemma binaryRec_eq {C : Nat → Sort u} {z : C 0} {f : ∀ b n, C n → C (bit b
     (h : f false 0 z = z) (b n) : binaryRec z f (bit b n) = f b n (binaryRec z f n) := by
   rw [binaryRec]
   split_ifs with h'
-  · generalize binaryRec z f (bit b n) = e
-    revert e
-    have bf := bodd_bit b n
-    have n0 := div2_bit b n
-    rw [h'] at bf n0
-    simp only [bodd_zero, div2_zero] at bf n0
-    subst bf n0
-    rw [binaryRec_zero]
-    intros
-    rw [h, eq_mpr_eq_cast, cast_eq]
-  · simp only; generalize_proofs h
-    revert h
-    rw [bodd_bit, div2_bit]
-    intros; simp only [eq_mpr_eq_cast, cast_eq]
+  generalize binaryRec z f (bit b n) = e
+  revert e
+  have bf := bodd_bit b n
+  have n0 := div2_bit b n
+  rw [h'] at bf n0
+  simp only [bodd_zero, div2_zero] at bf n0
+  subst bf n0
+  rw [binaryRec_zero]
+  intros
+  rw [h, eq_mpr_eq_cast, cast_eq]
+  simp only; generalize_proofs h
+  revert h
+  rw [bodd_bit, div2_bit]
+  intros; simp only [eq_mpr_eq_cast, cast_eq]
 
 /-! ### `boddDiv2_eq` and `bodd` -/
 
@@ -318,9 +318,9 @@ theorem bit_cases_on_inj {C : ℕ → Sort u} (H₁ H₂ : ∀ b n, C (bit b n))
 
 theorem bit_eq_zero_iff {n : ℕ} {b : Bool} : bit b n = 0 ↔ n = 0 ∧ b = false := by
   constructor
-  · cases b <;> simp [Nat.bit]; omega
-  · rintro ⟨rfl, rfl⟩
-    rfl
+  cases b <;> simp [Nat.bit]; omega
+  rintro ⟨rfl, rfl⟩
+  rfl
 
 lemma bit_le : ∀ (b : Bool) {m n : ℕ}, m ≤ n → bit b m ≤ bit b n
   | true, _, _, h => by dsimp [bit]; omega
@@ -340,16 +340,16 @@ theorem binaryRec_eq' {C : ℕ → Sort*} {z : C 0} {f : ∀ b n, C n → C (bit
     binaryRec z f (bit b n) = f b n (binaryRec z f n) := by
   rw [binaryRec]
   split_ifs with h'
-  · rcases bit_eq_zero_iff.mp h' with ⟨rfl, rfl⟩
-    rw [binaryRec_zero]
-    simp only [imp_false, or_false_iff, eq_self_iff_true, not_true] at h
-    exact h.symm
-  · dsimp only []
-    generalize_proofs e
-    revert e
-    rw [bodd_bit, div2_bit]
-    intros
-    rfl
+  rcases bit_eq_zero_iff.mp h' with ⟨rfl, rfl⟩
+  rw [binaryRec_zero]
+  simp only [imp_false, or_false_iff, eq_self_iff_true, not_true] at h
+  exact h.symm
+  dsimp only []
+  generalize_proofs e
+  revert e
+  rw [bodd_bit, div2_bit]
+  intros
+  rfl
 
 /-- The same as `binaryRec`, but the induction step can assume that if `n=0`,
   the bit being appended is `true`-/

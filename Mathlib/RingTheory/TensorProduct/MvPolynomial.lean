@@ -216,13 +216,13 @@ lemma algebraTensorAlgEquiv_symm_X (s : σ) :
 lemma algebraTensorAlgEquiv_symm_monomial (m : σ →₀ ℕ) (a : A) :
     (algebraTensorAlgEquiv R A).symm (monomial m a) = a ⊗ₜ monomial m 1 := by
   apply @Finsupp.induction σ ℕ _ _ m
-  · simp [algebraTensorAlgEquiv]
-  · intro i n f _ _ hfa
-    simp only [algebraTensorAlgEquiv, AlgEquiv.ofAlgHom_symm_apply] at hfa ⊢
-    simp only [add_comm, monomial_add_single, _root_.map_mul, map_pow, aeval_X,
-      Algebra.TensorProduct.tmul_pow, one_pow, hfa]
-    nth_rw 2 [← mul_one a]
-    rw [Algebra.TensorProduct.tmul_mul_tmul]
+  simp [algebraTensorAlgEquiv]
+  intro i n f _ _ hfa
+  simp only [algebraTensorAlgEquiv, AlgEquiv.ofAlgHom_symm_apply] at hfa ⊢
+  simp only [add_comm, monomial_add_single, _root_.map_mul, map_pow, aeval_X,
+    Algebra.TensorProduct.tmul_pow, one_pow, hfa]
+  nth_rw 2 [← mul_one a]
+  rw [Algebra.TensorProduct.tmul_mul_tmul]
 
 end Algebra
 

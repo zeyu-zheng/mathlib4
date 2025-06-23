@@ -42,13 +42,13 @@ theorem MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersets {α : Type
       { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ (p ∈ s → q ∈ s → p < q → μ (u ∩ v) = 0) := by
     intro p q
     by_cases H : p ∈ s ∧ q ∈ s ∧ p < q
-    · rcases h p H.1 q H.2.1 H.2.2 with ⟨u, v, hu, hv, h'u, h'v, hμ⟩
-      exact ⟨u, v, hu, hv, h'u, h'v, fun _ _ _ => hμ⟩
-    · refine
-        ⟨univ, univ, MeasurableSet.univ, MeasurableSet.univ, subset_univ _, subset_univ _,
-          fun ps qs pq => ?_⟩
-      simp only [not_and] at H
-      exact (H ps qs pq).elim
+    rcases h p H.1 q H.2.1 H.2.2 with ⟨u, v, hu, hv, h'u, h'v, hμ⟩
+    exact ⟨u, v, hu, hv, h'u, h'v, fun _ _ _ => hμ⟩
+    refine
+      ⟨univ, univ, MeasurableSet.univ, MeasurableSet.univ, subset_univ _, subset_univ _,
+        fun ps qs pq => ?_⟩
+    simp only [not_and] at H
+    exact (H ps qs pq).elim
   choose! u v huv using h'
   let u' : β → Set α := fun p => ⋂ q ∈ s ∩ Ioi p, u p q
   have u'_meas : ∀ i, MeasurableSet (u' i)
@@ -85,24 +85,24 @@ theorem MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersets {α : Type
       simp only [not_exists, exists_prop, mem_setOf_eq, mem_compl_iff, not_not_mem]
     filter_upwards [this] with x hx
     apply (iInf_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
-    · intro i
-      by_cases H : x ∈ u' i
-      swap
-      · simp only [H, le_top, not_false_iff, piecewise_eq_of_not_mem]
-      simp only [H, piecewise_eq_of_mem]
-      contrapose! hx
-      obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (i : β) (f x) ∩ s :=
-        dense_iff_inter_open.1 s_dense (Ioo i (f x)) isOpen_Ioo (nonempty_Ioo.2 hx)
-      have A : x ∈ v i r := (huv i r).2.2.2.1 rq
-      refine mem_iUnion.2 ⟨i, ?_⟩
-      refine mem_iUnion.2 ⟨⟨r, ⟨rs, xr⟩⟩, ?_⟩
-      exact ⟨H, A⟩
-    · intro q hq
-      obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (f x) q ∩ s :=
-        dense_iff_inter_open.1 s_dense (Ioo (f x) q) isOpen_Ioo (nonempty_Ioo.2 hq)
-      refine ⟨⟨r, rs⟩, ?_⟩
-      have A : x ∈ u' r := mem_biInter fun i _ => (huv r i).2.2.1 xr
-      simp only [A, rq, piecewise_eq_of_mem, Subtype.coe_mk]
+    intro i
+    by_cases H : x ∈ u' i
+    swap
+    simp only [H, le_top, not_false_iff, piecewise_eq_of_not_mem]
+    simp only [H, piecewise_eq_of_mem]
+    contrapose! hx
+    obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (i : β) (f x) ∩ s :=
+      dense_iff_inter_open.1 s_dense (Ioo i (f x)) isOpen_Ioo (nonempty_Ioo.2 hx)
+    have A : x ∈ v i r := (huv i r).2.2.2.1 rq
+    refine mem_iUnion.2 ⟨i, ?_⟩
+    refine mem_iUnion.2 ⟨⟨r, ⟨rs, xr⟩⟩, ?_⟩
+    exact ⟨H, A⟩
+    intro q hq
+    obtain ⟨r, ⟨xr, rq⟩, rs⟩ : ∃ r, r ∈ Ioo (f x) q ∩ s :=
+      dense_iff_inter_open.1 s_dense (Ioo (f x) q) isOpen_Ioo (nonempty_Ioo.2 hq)
+    refine ⟨⟨r, rs⟩, ?_⟩
+    have A : x ∈ u' r := mem_biInter fun i _ => (huv r i).2.2.1 xr
+    simp only [A, rq, piecewise_eq_of_mem, Subtype.coe_mk]
   exact ⟨f', f'_meas, ff'⟩
 
 /-- If a function `f : α → ℝ≥0∞` is such that the level sets `{f < p}` and `{q < f}` have measurable

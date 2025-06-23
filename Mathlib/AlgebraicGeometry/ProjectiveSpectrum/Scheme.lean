@@ -177,10 +177,10 @@ theorem mk_mem_carrier (z : HomogeneousLocalization.NumDenSameDeg 𝒜 (.powers 
     HomogeneousLocalization.val_mk, Localization.mk_eq_mk', IsLocalization.mk'_eq_mul_mk'_one,
     mul_comm, Ideal.unit_mul_mem_iff_mem, ← Ideal.mem_comap,
     IsLocalization.comap_map_of_isPrime_disjoint (.powers f)]
-  · rfl
-  · infer_instance
-  · exact (disjoint_powers_iff_not_mem _ (Ideal.IsPrime.isRadical inferInstance)).mpr x.2
-  · exact isUnit_of_invertible _
+  rfl
+  infer_instance
+  exact (disjoint_powers_iff_not_mem _ (Ideal.IsPrime.isRadical inferInstance)).mpr x.2
+  exact isUnit_of_invertible _
 
 theorem isPrime_carrier : Ideal.IsPrime (carrier x) := by
   refine Ideal.IsPrime.comap _ (hK := ?_)
@@ -281,12 +281,12 @@ theorem mem_carrier_iff' (q : Spec.T A⁰_ f) (a : A) :
   (mem_carrier_iff f_deg q a).trans
     (by
       constructor <;> intro h i <;> specialize h i
-      · rw [Set.mem_image]; refine ⟨_, h, rfl⟩
-      · rw [Set.mem_image] at h; rcases h with ⟨x, h, hx⟩
-        change x ∈ q.asIdeal at h
-        convert h
-        rw [HomogeneousLocalization.ext_iff_val, HomogeneousLocalization.val_mk]
-        dsimp only [Subtype.coe_mk]; rw [← hx]; rfl)
+      rw [Set.mem_image]; refine ⟨_, h, rfl⟩
+      rw [Set.mem_image] at h; rcases h with ⟨x, h, hx⟩
+      change x ∈ q.asIdeal at h
+      convert h
+      rw [HomogeneousLocalization.ext_iff_val, HomogeneousLocalization.val_mk]
+      dsimp only [Subtype.coe_mk]; rw [← hx]; rfl)
 
 theorem mem_carrier_iff_of_mem (hm : 0 < m) (q : Spec.T A⁰_ f) (a : A) {n} (hn : a ∈ 𝒜 n) :
     a ∈ carrier f_deg q ↔
@@ -294,12 +294,12 @@ theorem mem_carrier_iff_of_mem (hm : 0 < m) (q : Spec.T A⁰_ f) (a : A) {n} (hn
         ⟨f ^ n, by rw [mul_comm]; mem_tac⟩, ⟨_, rfl⟩⟩ : A⁰_ f) ∈ q.asIdeal := by
   trans (HomogeneousLocalization.mk ⟨m * n, ⟨proj 𝒜 n a ^ m, by mem_tac⟩,
     ⟨f ^ n, by rw [mul_comm]; mem_tac⟩, ⟨_, rfl⟩⟩ : A⁰_ f) ∈ q.asIdeal
-  · refine ⟨fun h ↦ h n, fun h i ↦ if hi : i = n then hi ▸ h else ?_⟩
-    convert zero_mem q.asIdeal
-    apply HomogeneousLocalization.val_injective
-    simp only [proj_apply, decompose_of_mem_ne _ hn (Ne.symm hi), zero_pow hm.ne',
-      HomogeneousLocalization.val_mk, Localization.mk_zero, HomogeneousLocalization.val_zero]
-  · simp only [proj_apply, decompose_of_mem_same _ hn]
+  refine ⟨fun h ↦ h n, fun h i ↦ if hi : i = n then hi ▸ h else ?_⟩
+  convert zero_mem q.asIdeal
+  apply HomogeneousLocalization.val_injective
+  simp only [proj_apply, decompose_of_mem_ne _ hn (Ne.symm hi), zero_pow hm.ne',
+    HomogeneousLocalization.val_mk, Localization.mk_zero, HomogeneousLocalization.val_zero]
+  simp only [proj_apply, decompose_of_mem_same _ hn]
 
 theorem mem_carrier_iff_of_mem_mul (hm : 0 < m)
     (q : Spec.T A⁰_ f) (a : A) {n} (hn : a ∈ 𝒜 (n * m)) :
@@ -321,9 +321,9 @@ theorem num_mem_carrier_iff (hm : 0 < m) (q : Spec.T A⁰_ f)
     have := HomogeneousLocalization.subsingleton 𝒜 (x := .powers f) ⟨n, e⟩
     exact IsEmpty.elim (inferInstanceAs (IsEmpty (PrimeSpectrum (A⁰_ f)))) q
   convert mem_carrier_iff_of_mem_mul f_deg hm q z.num.1 (n := n) ?_ using 2
-  · apply HomogeneousLocalization.val_injective; simp only [hn, HomogeneousLocalization.val_mk]
-  · have := degree_eq_of_mem_mem 𝒜 (SetLike.pow_mem_graded n f_deg) (hn.symm ▸ z.den.2) this
-    rw [← smul_eq_mul, this]; exact z.num.2
+  apply HomogeneousLocalization.val_injective; simp only [hn, HomogeneousLocalization.val_mk]
+  have := degree_eq_of_mem_mem 𝒜 (SetLike.pow_mem_graded n f_deg) (hn.symm ▸ z.den.2) this
+  rw [← smul_eq_mul, this]; exact z.num.2
 
 theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg q)
     (hb : b ∈ carrier f_deg q) : a + b ∈ carrier f_deg q := by
@@ -351,13 +351,13 @@ theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg
               ⟨_, by rw [mul_comm]; mem_tac⟩, ⟨i, rfl⟩⟩
           l * r
   rotate_left
-  · rw [(_ : m * i = _)]
-    -- Porting note: it seems unification with mul_mem is more fiddly reducing value of mem_tac
-    apply GradedMonoid.toGradedMul.mul_mem (i := j • i) (j := (m - j) • i) <;> mem_tac_aux
-    rw [← add_smul, Nat.add_sub_of_le h1]; rfl
-  · rw [(_ : m * i = _)]
-    apply GradedMonoid.toGradedMul.mul_mem (i := (j-m) • i) (j := (m + m - j) • i) <;> mem_tac_aux
-    rw [← add_smul]; congr; zify [le_of_not_lt h2, le_of_not_le h1]; abel
+  rw [(_ : m * i = _)]
+  -- Porting note: it seems unification with mul_mem is more fiddly reducing value of mem_tac
+  apply GradedMonoid.toGradedMul.mul_mem (i := j • i) (j := (m - j) • i) <;> mem_tac_aux
+  rw [← add_smul, Nat.add_sub_of_le h1]; rfl
+  rw [(_ : m * i = _)]
+  apply GradedMonoid.toGradedMul.mul_mem (i := (j-m) • i) (j := (m + m - j) • i) <;> mem_tac_aux
+  rw [← add_smul]; congr; zify [le_of_not_lt h2, le_of_not_le h1]; abel
   convert_to ∑ i ∈ range (m + m + 1), g i ∈ q.1; swap
   · refine q.1.sum_mem fun j _ => nsmul_mem ?_ _; split_ifs
     exacts [q.1.zero_mem, q.1.mul_mem_left _ (hb i), q.1.mul_mem_right _ (ha i)]
@@ -369,13 +369,13 @@ theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg
   change _ = HomogeneousLocalization.val _
   rw [HomogeneousLocalization.val_smul]
   split_ifs with h2 h1
-  · exact ((Finset.mem_range.1 hj).not_le h2).elim
+  exact ((Finset.mem_range.1 hj).not_le h2).elim
   all_goals simp only [HomogeneousLocalization.val_mul, HomogeneousLocalization.val_zero,
     HomogeneousLocalization.val_mk, Subtype.coe_mk, Localization.mk_mul, ← smul_mk]; congr 2
-  · dsimp; rw [mul_assoc, ← pow_add, add_comm (m - j), Nat.add_sub_assoc h1]
-  · simp_rw [pow_add]; rfl
-  · dsimp; rw [← mul_assoc, ← pow_add, Nat.add_sub_of_le (le_of_not_le h1)]
-  · simp_rw [pow_add]; rfl
+  dsimp; rw [mul_assoc, ← pow_add, add_comm (m - j), Nat.add_sub_assoc h1]
+  simp_rw [pow_add]; rfl
+  dsimp; rw [← mul_assoc, ← pow_add, Nat.add_sub_of_le (le_of_not_le h1)]
+  simp_rw [pow_add]; rfl
 
 variable (hm : 0 < m) (q : Spec.T A⁰_ f)
 
@@ -388,30 +388,30 @@ theorem carrier.zero_mem : (0 : A) ∈ carrier f_deg q := fun i => by
 theorem carrier.smul_mem (c x : A) (hx : x ∈ carrier f_deg q) : c • x ∈ carrier f_deg q := by
   revert c
   refine DirectSum.Decomposition.inductionOn 𝒜 ?_ ?_ ?_
-  · rw [zero_smul]; exact carrier.zero_mem f_deg hm _
-  · rintro n ⟨a, ha⟩ i
-    simp_rw [proj_apply, smul_eq_mul, coe_decompose_mul_of_left_mem 𝒜 i ha]
-    -- Porting note: having trouble with Mul instance
-    let product : A⁰_ f :=
-      Mul.mul (HomogeneousLocalization.mk ⟨_, ⟨a ^ m, pow_mem_graded m ha⟩, ⟨_, ?_⟩, ⟨n, rfl⟩⟩)
-        (HomogeneousLocalization.mk ⟨_, ⟨proj 𝒜 (i - n) x ^ m, by mem_tac⟩, ⟨_, ?_⟩, ⟨i - n, rfl⟩⟩)
-    · split_ifs with h
-      · convert_to product ∈ q.1
-        · dsimp [product]
-          erw [HomogeneousLocalization.ext_iff_val, HomogeneousLocalization.val_mk,
-            HomogeneousLocalization.val_mul, HomogeneousLocalization.val_mk,
-            HomogeneousLocalization.val_mk]
-          · simp_rw [mul_pow]; rw [Localization.mk_mul]
-            · congr; erw [← pow_add, Nat.add_sub_of_le h]
-        · apply Ideal.mul_mem_left (α := A⁰_ f) _ _ (hx _)
-          rw [(_ : m • n = _)]
-          · mem_tac
-          · simp only [smul_eq_mul, mul_comm]
-      · simpa only [map_zero, zero_pow hm.ne'] using zero_mem f_deg hm q i
-    rw [(_ : m • (i - n) = _)]
-    · mem_tac
-    · simp only [smul_eq_mul, mul_comm]
-  · simp_rw [add_smul]; exact fun _ _ => carrier.add_mem f_deg q
+  rw [zero_smul]; exact carrier.zero_mem f_deg hm _
+  rintro n ⟨a, ha⟩ i
+  simp_rw [proj_apply, smul_eq_mul, coe_decompose_mul_of_left_mem 𝒜 i ha]
+  -- Porting note: having trouble with Mul instance
+  let product : A⁰_ f :=
+    Mul.mul (HomogeneousLocalization.mk ⟨_, ⟨a ^ m, pow_mem_graded m ha⟩, ⟨_, ?_⟩, ⟨n, rfl⟩⟩)
+      (HomogeneousLocalization.mk ⟨_, ⟨proj 𝒜 (i - n) x ^ m, by mem_tac⟩, ⟨_, ?_⟩, ⟨i - n, rfl⟩⟩)
+  split_ifs with h
+  convert_to product ∈ q.1
+  dsimp [product]
+  erw [HomogeneousLocalization.ext_iff_val, HomogeneousLocalization.val_mk,
+    HomogeneousLocalization.val_mul, HomogeneousLocalization.val_mk,
+    HomogeneousLocalization.val_mk]
+  simp_rw [mul_pow]; rw [Localization.mk_mul]
+  congr; erw [← pow_add, Nat.add_sub_of_le h]
+  apply Ideal.mul_mem_left (α := A⁰_ f) _ _ (hx _)
+  rw [(_ : m • n = _)]
+  mem_tac
+  simp only [smul_eq_mul, mul_comm]
+  simpa only [map_zero, zero_pow hm.ne'] using zero_mem f_deg hm q i
+  rw [(_ : m • (i - n) = _)]
+  mem_tac
+  simp only [smul_eq_mul, mul_comm]
+  simp_rw [add_smul]; exact fun _ _ => carrier.add_mem f_deg q
 
 /-- For a prime ideal `q` in `A⁰_f`, the set `{a | aᵢᵐ/fⁱ ∈ q}` as an ideal.
 -/
@@ -456,21 +456,21 @@ theorem carrier.asIdeal.prime : (carrier.asIdeal f_deg hm q).IsPrime :=
     (carrier.asIdeal.ne_top f_deg hm q) fun {x y} ⟨nx, hnx⟩ ⟨ny, hny⟩ hxy =>
     show (∀ i, _ ∈ _) ∨ ∀ i, _ ∈ _ by
       rw [← and_forall_ne nx, and_iff_left, ← and_forall_ne ny, and_iff_left]
-      · apply q.2.mem_or_mem; convert hxy (nx + ny) using 1
-        dsimp
-        simp_rw [decompose_of_mem_same 𝒜 hnx, decompose_of_mem_same 𝒜 hny,
-          decompose_of_mem_same 𝒜 (SetLike.GradedMonoid.toGradedMul.mul_mem hnx hny),
-          mul_pow, pow_add]
-        simp only [HomogeneousLocalization.ext_iff_val, HomogeneousLocalization.val_mk,
-          HomogeneousLocalization.val_mul, Localization.mk_mul]
-        simp only [Submonoid.mk_mul_mk, mk_eq_monoidOf_mk']
+      apply q.2.mem_or_mem; convert hxy (nx + ny) using 1
+      dsimp
+      simp_rw [decompose_of_mem_same 𝒜 hnx, decompose_of_mem_same 𝒜 hny,
+        decompose_of_mem_same 𝒜 (SetLike.GradedMonoid.toGradedMul.mul_mem hnx hny),
+        mul_pow, pow_add]
+      simp only [HomogeneousLocalization.ext_iff_val, HomogeneousLocalization.val_mk,
+        HomogeneousLocalization.val_mul, Localization.mk_mul]
+      simp only [Submonoid.mk_mul_mk, mk_eq_monoidOf_mk']
       all_goals
         intro n hn; convert q.1.zero_mem using 1
         rw [HomogeneousLocalization.ext_iff_val, HomogeneousLocalization.val_mk,
           HomogeneousLocalization.val_zero]; simp_rw [proj_apply]
         convert mk_zero (S := Submonoid.powers f) _
         rw [decompose_of_mem_ne 𝒜 _ hn.symm, zero_pow hm.ne']
-        · first | exact hnx | exact hny
+        first | exact hnx | exact hny
 
 /-- The function `Spec A⁰_f → Proj|D(f)` sending `q` to `{a | aᵢᵐ/fⁱ ∈ q}`. -/
 def toFun : (Spec.T A⁰_ f) → Proj.T| pbo f := fun q =>
@@ -701,51 +701,51 @@ lemma isLocalization_atPrime (f) (x : pbo f) {m} (f_deg : f ∈ 𝒜 m) (hm : 0 
   letI : Algebra (Away 𝒜 f) (AtPrime 𝒜 x.1.asHomogeneousIdeal.toIdeal) :=
     (mapId 𝒜 (Submonoid.powers_le.mpr x.2)).toAlgebra
   constructor
-  · rintro ⟨y, hy⟩
-    obtain ⟨y, rfl⟩ := y.mk_surjective
-    refine isUnit_of_mul_eq_one _
-      (.mk ⟨y.deg, y.den, y.num, (mk_mem_toSpec_base_apply _ _ _).not.mp hy⟩) <| val_injective _ ?_
-    simp only [RingHom.algebraMap_toAlgebra, map_mk, RingHom.id_apply, val_mul, val_mk, mk_eq_mk',
-      val_one, IsLocalization.mk'_mul_mk'_eq_one']
-  · intro z
-    obtain ⟨⟨i, a, ⟨b, hb⟩, (hb' : b ∉ x.1.1)⟩, rfl⟩ := z.mk_surjective
-    refine ⟨⟨.mk ⟨i * m, ⟨a * b ^ (m - 1), ?_⟩, ⟨f ^ i, SetLike.pow_mem_graded _ f_deg⟩, ⟨_, rfl⟩⟩,
-      ⟨.mk ⟨i * m, ⟨b ^ m, mul_comm m i ▸ SetLike.pow_mem_graded _ hb⟩,
-        ⟨f ^ i, SetLike.pow_mem_graded _ f_deg⟩, ⟨_, rfl⟩⟩,
-        (mk_mem_toSpec_base_apply _ _ _).not.mpr <| x.1.1.toIdeal.primeCompl.pow_mem hb' m⟩⟩,
-        val_injective _ ?_⟩
-    · convert SetLike.mul_mem_graded a.2 (SetLike.pow_mem_graded (m - 1) hb) using 2
-      rw [← succ_nsmul', tsub_add_cancel_of_le (by omega), mul_comm, smul_eq_mul]
-    · simp only [RingHom.algebraMap_toAlgebra, map_mk, RingHom.id_apply, val_mul, val_mk,
-        mk_eq_mk', ← IsLocalization.mk'_mul, Submonoid.mk_mul_mk, IsLocalization.mk'_eq_iff_eq]
-      rw [mul_comm b, mul_mul_mul_comm, ← pow_succ', mul_assoc, tsub_add_cancel_of_le (by omega)]
-  · intros y z e
-    obtain ⟨y, rfl⟩ := y.mk_surjective
-    obtain ⟨z, rfl⟩ := z.mk_surjective
-    obtain ⟨i, c, hc, hc', e⟩ : ∃ i, ∃ c ∈ 𝒜 i, c ∉ x.1.asHomogeneousIdeal ∧
-        c * (z.den.1 * y.num.1) = c * (y.den.1 * z.num.1) := by
-      apply_fun HomogeneousLocalization.val at e
-      simp only [RingHom.algebraMap_toAlgebra, map_mk, RingHom.id_apply, val_mk, mk_eq_mk',
-        IsLocalization.mk'_eq_iff_eq] at e
-      obtain ⟨⟨c, hcx⟩, hc⟩ := IsLocalization.exists_of_eq (M := x.1.1.toIdeal.primeCompl) e
-      obtain ⟨i, hi⟩ := not_forall.mp ((x.1.1.isHomogeneous.mem_iff _).not.mp hcx)
-      refine ⟨i, _, (decompose 𝒜 c i).2, hi, ?_⟩
-      apply_fun fun x ↦ (decompose 𝒜 x (i + z.deg + y.deg)).1 at hc
-      conv_rhs at hc => rw [add_right_comm]
-      rwa [← mul_assoc, coe_decompose_mul_add_of_right_mem, coe_decompose_mul_add_of_right_mem,
-        ← mul_assoc, coe_decompose_mul_add_of_right_mem, coe_decompose_mul_add_of_right_mem,
-        mul_assoc, mul_assoc] at hc
-      exacts [y.den.2, z.num.2, z.den.2, y.num.2]
-
-    refine ⟨⟨.mk ⟨m * i, ⟨c ^ m, SetLike.pow_mem_graded _ hc⟩,
-      ⟨f ^ i, mul_comm m i ▸ SetLike.pow_mem_graded _ f_deg⟩, ⟨_, rfl⟩⟩,
-      (mk_mem_toSpec_base_apply _ _ _).not.mpr <| x.1.1.toIdeal.primeCompl.pow_mem hc' _⟩,
+  rintro ⟨y, hy⟩
+  obtain ⟨y, rfl⟩ := y.mk_surjective
+  refine isUnit_of_mul_eq_one _
+    (.mk ⟨y.deg, y.den, y.num, (mk_mem_toSpec_base_apply _ _ _).not.mp hy⟩) <| val_injective _ ?_
+  simp only [RingHom.algebraMap_toAlgebra, map_mk, RingHom.id_apply, val_mul, val_mk, mk_eq_mk',
+    val_one, IsLocalization.mk'_mul_mk'_eq_one']
+  intro z
+  obtain ⟨⟨i, a, ⟨b, hb⟩, (hb' : b ∉ x.1.1)⟩, rfl⟩ := z.mk_surjective
+  refine ⟨⟨.mk ⟨i * m, ⟨a * b ^ (m - 1), ?_⟩, ⟨f ^ i, SetLike.pow_mem_graded _ f_deg⟩, ⟨_, rfl⟩⟩,
+    ⟨.mk ⟨i * m, ⟨b ^ m, mul_comm m i ▸ SetLike.pow_mem_graded _ hb⟩,
+      ⟨f ^ i, SetLike.pow_mem_graded _ f_deg⟩, ⟨_, rfl⟩⟩,
+      (mk_mem_toSpec_base_apply _ _ _).not.mpr <| x.1.1.toIdeal.primeCompl.pow_mem hb' m⟩⟩,
       val_injective _ ?_⟩
-    simp only [val_mul, val_mk, mk_eq_mk', ← IsLocalization.mk'_mul, Submonoid.mk_mul_mk,
-      IsLocalization.mk'_eq_iff_eq, mul_assoc]
-    congr 2
-    rw [mul_left_comm, mul_left_comm y.den.1, ← tsub_add_cancel_of_le (show 1 ≤ m from hm),
-      pow_succ, mul_assoc, mul_assoc, e]
+  convert SetLike.mul_mem_graded a.2 (SetLike.pow_mem_graded (m - 1) hb) using 2
+  rw [← succ_nsmul', tsub_add_cancel_of_le (by omega), mul_comm, smul_eq_mul]
+  simp only [RingHom.algebraMap_toAlgebra, map_mk, RingHom.id_apply, val_mul, val_mk,
+    mk_eq_mk', ← IsLocalization.mk'_mul, Submonoid.mk_mul_mk, IsLocalization.mk'_eq_iff_eq]
+  rw [mul_comm b, mul_mul_mul_comm, ← pow_succ', mul_assoc, tsub_add_cancel_of_le (by omega)]
+  intros y z e
+  obtain ⟨y, rfl⟩ := y.mk_surjective
+  obtain ⟨z, rfl⟩ := z.mk_surjective
+  obtain ⟨i, c, hc, hc', e⟩ : ∃ i, ∃ c ∈ 𝒜 i, c ∉ x.1.asHomogeneousIdeal ∧
+      c * (z.den.1 * y.num.1) = c * (y.den.1 * z.num.1) := by
+    apply_fun HomogeneousLocalization.val at e
+    simp only [RingHom.algebraMap_toAlgebra, map_mk, RingHom.id_apply, val_mk, mk_eq_mk',
+      IsLocalization.mk'_eq_iff_eq] at e
+    obtain ⟨⟨c, hcx⟩, hc⟩ := IsLocalization.exists_of_eq (M := x.1.1.toIdeal.primeCompl) e
+    obtain ⟨i, hi⟩ := not_forall.mp ((x.1.1.isHomogeneous.mem_iff _).not.mp hcx)
+    refine ⟨i, _, (decompose 𝒜 c i).2, hi, ?_⟩
+    apply_fun fun x ↦ (decompose 𝒜 x (i + z.deg + y.deg)).1 at hc
+    conv_rhs at hc => rw [add_right_comm]
+    rwa [← mul_assoc, coe_decompose_mul_add_of_right_mem, coe_decompose_mul_add_of_right_mem,
+      ← mul_assoc, coe_decompose_mul_add_of_right_mem, coe_decompose_mul_add_of_right_mem,
+      mul_assoc, mul_assoc] at hc
+    exacts [y.den.2, z.num.2, z.den.2, y.num.2]
+
+  refine ⟨⟨.mk ⟨m * i, ⟨c ^ m, SetLike.pow_mem_graded _ hc⟩,
+    ⟨f ^ i, mul_comm m i ▸ SetLike.pow_mem_graded _ f_deg⟩, ⟨_, rfl⟩⟩,
+    (mk_mem_toSpec_base_apply _ _ _).not.mpr <| x.1.1.toIdeal.primeCompl.pow_mem hc' _⟩,
+    val_injective _ ?_⟩
+  simp only [val_mul, val_mk, mk_eq_mk', ← IsLocalization.mk'_mul, Submonoid.mk_mul_mk,
+    IsLocalization.mk'_eq_iff_eq, mul_assoc]
+  congr 2
+  rw [mul_left_comm, mul_left_comm y.den.1, ← tsub_add_cancel_of_le (show 1 ≤ m from hm),
+    pow_succ, mul_assoc, mul_assoc, e]
 
 /--
 For an element `f ∈ A` with positive degree and a homogeneous ideal in `D(f)`, we have that the

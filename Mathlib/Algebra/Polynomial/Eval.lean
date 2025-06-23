@@ -107,8 +107,8 @@ def eval₂AddMonoidHom : R[X] →+ S where
 theorem eval₂_natCast (n : ℕ) : (n : R[X]).eval₂ f x = n := by
   induction' n with n ih
   -- Porting note: `Nat.zero_eq` is required.
-  · simp only [eval₂_zero, Nat.cast_zero, Nat.zero_eq]
-  · rw [n.cast_succ, eval₂_add, ih, eval₂_one, n.cast_succ]
+  simp only [eval₂_zero, Nat.cast_zero, Nat.zero_eq]
+  rw [n.cast_succ, eval₂_add, ih, eval₂_one, n.cast_succ]
 
 @[deprecated (since := "2024-04-17")]
 alias eval₂_nat_cast := eval₂_natCast
@@ -158,8 +158,8 @@ theorem eval₂_mul_noncomm (hf : ∀ k, Commute (f <| q.coeff k) x) :
 theorem eval₂_mul_X : eval₂ f x (p * X) = eval₂ f x p * x := by
   refine _root_.trans (eval₂_mul_noncomm _ _ fun k => ?_) (by rw [eval₂_X])
   rcases em (k = 1) with (rfl | hk)
-  · simp
-  · simp [coeff_X_of_ne_one hk]
+  simp
+  simp [coeff_X_of_ne_one hk]
 
 @[simp]
 theorem eval₂_X_mul : eval₂ f x (X * p) = eval₂ f x p * x := by rw [X_mul, eval₂_mul_X]
@@ -168,16 +168,16 @@ theorem eval₂_mul_C' (h : Commute (f a) x) : eval₂ f x (p * C a) = eval₂ f
   rw [eval₂_mul_noncomm, eval₂_C]
   intro k
   by_cases hk : k = 0
-  · simp only [hk, h, coeff_C_zero, coeff_C_ne_zero]
-  · simp only [coeff_C_ne_zero hk, RingHom.map_zero, Commute.zero_left]
+  simp only [hk, h, coeff_C_zero, coeff_C_ne_zero]
+  simp only [coeff_C_ne_zero hk, RingHom.map_zero, Commute.zero_left]
 
 theorem eval₂_list_prod_noncomm (ps : List R[X])
     (hf : ∀ p ∈ ps, ∀ (k), Commute (f <| coeff p k) x) :
     eval₂ f x ps.prod = (ps.map (Polynomial.eval₂ f x)).prod := by
   induction' ps using List.reverseRecOn with ps p ihp
-  · simp
-  · simp only [List.forall_mem_append, List.forall_mem_singleton] at hf
-    simp [eval₂_mul_noncomm _ _ hf.2, ihp hf.1]
+  simp
+  simp only [List.forall_mem_append, List.forall_mem_singleton] at hf
+  simp [eval₂_mul_noncomm _ _ hf.2, ihp hf.1]
 
 /-- `eval₂` as a `RingHom` for noncommutative rings -/
 @[simps]
@@ -366,12 +366,12 @@ theorem eval_monomial_one_add_sub [CommRing S] (d : ℕ) (y : S) :
   -- Porting note: `apply_congr` hadn't been ported yet, so `congr` & `ext` is used.
   conv_lhs =>
     congr
-    · congr
-      · skip
-      · congr
-        · skip
-        · ext
-          rw [one_pow, mul_one, mul_comm]
+    congr
+    · skip
+    congr
+    · skip
+    ext
+    rw [one_pow, mul_one, mul_comm]
   rw [sum_range_succ, mul_add, Nat.choose_self, Nat.cast_one, one_mul, add_sub_cancel_right,
     mul_sum, sum_range_succ', Nat.cast_zero, zero_mul, mul_zero, add_zero]
   refine sum_congr rfl fun y _hy => ?_
@@ -404,8 +404,8 @@ theorem eval_mul_X : (p * X).eval x = p.eval x * x := by
 @[simp]
 theorem eval_mul_X_pow {k : ℕ} : (p * X ^ k).eval x = p.eval x * x ^ k := by
   induction' k with k ih
-  · simp
-  · simp [pow_succ, ← mul_assoc, ih]
+  simp
+  simp [pow_succ, ← mul_assoc, ih]
 
 theorem eval_sum (p : R[X]) (f : ℕ → R → R[X]) (x : R) :
     (p.sum f).eval x = p.sum fun n a => (f n a).eval x :=
@@ -515,14 +515,14 @@ theorem mul_X_comp : (p * X).comp r = p.comp r * r := by
 @[simp]
 theorem X_pow_comp {k : ℕ} : (X ^ k).comp p = p ^ k := by
   induction' k with k ih
-  · simp
-  · simp [pow_succ, mul_X_comp, ih]
+  simp
+  simp [pow_succ, mul_X_comp, ih]
 
 @[simp]
 theorem mul_X_pow_comp {k : ℕ} : (p * X ^ k).comp r = p.comp r * r ^ k := by
   induction' k with k ih
-  · simp
-  · simp [ih, pow_succ, ← mul_assoc, mul_X_comp]
+  simp
+  simp [ih, pow_succ, ← mul_assoc, mul_X_comp]
 
 @[simp]
 theorem C_mul_comp : (C a * p).comp r = C a * p.comp r := by
@@ -565,8 +565,8 @@ theorem smul_comp [Monoid S] [DistribMulAction S R] [IsScalarTower S R R] (s : S
 theorem comp_assoc {R : Type*} [CommSemiring R] (φ ψ χ : R[X]) :
     (φ.comp ψ).comp χ = φ.comp (ψ.comp χ) := by
   refine Polynomial.induction_on φ ?_ ?_ ?_ <;>
-    · intros
-      simp_all only [add_comp, mul_comp, C_comp, X_comp, pow_succ, ← mul_assoc]
+  · intros
+    simp_all only [add_comp, mul_comp, C_comp, X_comp, pow_succ, ← mul_assoc]
 
 theorem coeff_comp_degree_mul_degree (hqd0 : natDegree q ≠ 0) :
     coeff (p.comp q) (natDegree p * natDegree q) =
@@ -787,16 +787,16 @@ protected theorem map_pow (n : ℕ) : (p ^ n).map f = p.map f ^ n :=
 
 theorem mem_map_rangeS {p : S[X]} : p ∈ (mapRingHom f).rangeS ↔ ∀ n, p.coeff n ∈ f.rangeS := by
   constructor
-  · rintro ⟨p, rfl⟩ n
-    rw [coe_mapRingHom, coeff_map]
-    exact Set.mem_range_self _
-  · intro h
-    rw [p.as_sum_range_C_mul_X_pow]
-    refine (mapRingHom f).rangeS.sum_mem ?_
-    intro i _hi
-    rcases h i with ⟨c, hc⟩
-    use C c * X ^ i
-    rw [coe_mapRingHom, Polynomial.map_mul, map_C, hc, Polynomial.map_pow, map_X]
+  rintro ⟨p, rfl⟩ n
+  rw [coe_mapRingHom, coeff_map]
+  exact Set.mem_range_self _
+  intro h
+  rw [p.as_sum_range_C_mul_X_pow]
+  refine (mapRingHom f).rangeS.sum_mem ?_
+  intro i _hi
+  rcases h i with ⟨c, hc⟩
+  use C c * X ^ i
+  rw [coe_mapRingHom, Polynomial.map_mul, map_C, hc, Polynomial.map_pow, map_X]
 
 theorem mem_map_range {R S : Type*} [Ring R] [Ring S] (f : R →+* S) {p : S[X]} :
     p ∈ (mapRingHom f).range ↔ ∀ n, p.coeff n ∈ f.range :=
@@ -902,8 +902,8 @@ theorem eval₂_comp {x : S} : eval₂ f x (p.comp q) = eval₂ f (eval₂ f x q
 theorem iterate_comp_eval₂ (k : ℕ) (t : S) :
     eval₂ f t (p.comp^[k] q) = (fun x => eval₂ f x p)^[k] (eval₂ f t q) := by
   induction' k with k IH
-  · simp
-  · rw [Function.iterate_succ_apply', Function.iterate_succ_apply', eval₂_comp, IH]
+  simp
+  rw [Function.iterate_succ_apply', Function.iterate_succ_apply', eval₂_comp, IH]
 
 end
 

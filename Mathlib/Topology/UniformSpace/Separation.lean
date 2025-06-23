@@ -261,9 +261,9 @@ theorem lift'_mk [T0Space β] {f : α → β} (h : UniformContinuous f) (a : α)
 
 theorem uniformContinuous_lift' [T0Space β] (f : α → β) : UniformContinuous (lift' f) := by
   by_cases hf : UniformContinuous f
-  · rwa [lift', dif_pos hf, uniformContinuous_lift]
-  · rw [lift', dif_neg hf]
-    exact uniformContinuous_of_const fun a _ => rfl
+  rwa [lift', dif_pos hf, uniformContinuous_lift]
+  rw [lift', dif_neg hf]
+  exact uniformContinuous_of_const fun a _ => rfl
 
 /-- The separation quotient functor acting on functions. -/
 def map (f : α → β) : SeparationQuotient α → SeparationQuotient β := lift' (mk ∘ f)

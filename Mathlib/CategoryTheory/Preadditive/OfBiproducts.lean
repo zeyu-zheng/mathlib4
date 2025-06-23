@@ -52,13 +52,13 @@ theorem isUnital_leftAdd : EckmannHilton.IsUnital (· +ₗ ·) 0 := by
   have hr : ∀ f : X ⟶ Y, biprod.lift (0 : X ⟶ Y) f = f ≫ biprod.inr
   intro f
   ext
-  · aesop_cat
-  · simp [biprod.lift_fst, Category.assoc, biprod.inr_fst, comp_zero]
+  aesop_cat
+  simp [biprod.lift_fst, Category.assoc, biprod.inr_fst, comp_zero]
   have hl : ∀ f : X ⟶ Y, biprod.lift f (0 : X ⟶ Y) = f ≫ biprod.inl
   intro f
   ext
-  · aesop_cat
-  · simp [biprod.lift_snd, Category.assoc, biprod.inl_snd, comp_zero]
+  aesop_cat
+  simp [biprod.lift_snd, Category.assoc, biprod.inl_snd, comp_zero]
   exact {
     left_id := fun f => by simp [hr f, leftAdd, Category.assoc, Category.comp_id, biprod.inr_desc],
     right_id := fun f => by simp [hl f, leftAdd, Category.assoc, Category.comp_id, biprod.inl_desc]
@@ -68,13 +68,13 @@ theorem isUnital_rightAdd : EckmannHilton.IsUnital (· +ᵣ ·) 0 := by
   have h₂ : ∀ f : X ⟶ Y, biprod.desc (0 : X ⟶ Y) f = biprod.snd ≫ f
   intro f
   ext
-  · aesop_cat
-  · simp only [biprod.inr_desc, BinaryBicone.inr_snd_assoc]
+  aesop_cat
+  simp only [biprod.inr_desc, BinaryBicone.inr_snd_assoc]
   have h₁ : ∀ f : X ⟶ Y, biprod.desc f (0 : X ⟶ Y) = biprod.fst ≫ f
   intro f
   ext
-  · aesop_cat
-  · simp only [biprod.inr_desc, BinaryBicone.inr_fst_assoc, zero_comp]
+  aesop_cat
+  simp only [biprod.inr_desc, BinaryBicone.inr_fst_assoc, zero_comp]
   exact {
     left_id := fun f => by simp [h₂ f, rightAdd, biprod.lift_snd_assoc, Category.id_comp],
     right_id := fun f => by simp [h₁ f, rightAdd, biprod.lift_fst_assoc, Category.id_comp]

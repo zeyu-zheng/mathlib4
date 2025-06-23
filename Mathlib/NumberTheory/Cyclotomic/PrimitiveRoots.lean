@@ -185,9 +185,9 @@ theorem _root_.IsPrimitiveRoot.lcm_totient_le_finrank [FiniteDimensional K L] {p
     (hirr : Irreducible (cyclotomic (Nat.lcm p q) K)) :
     (Nat.lcm p q).totient ≤ FiniteDimensional.finrank K L := by
   rcases Nat.eq_zero_or_pos p with (rfl | hppos)
-  · simp
+  simp
   rcases Nat.eq_zero_or_pos q with (rfl | hqpos)
-  · simp
+  simp
   let z := x ^ (p / factorizationLCMLeft p q) * y ^ (q / factorizationLCMRight p q)
   let k := PNat.lcm ⟨p, hppos⟩ ⟨q, hqpos⟩
   have : IsPrimitiveRoot z k := hx.pow_mul_pow_lcm hy hppos.ne' hqpos.ne'
@@ -228,11 +228,11 @@ theorem dvd_of_isCyclotomicExtension [NumberField K] [IsCyclotomicExtension {n} 
   exact hl.1 hr
   replace key := (Nat.dvd_prime Nat.prime_two).1 (Nat.dvd_two_of_totient_le_one rpos key)
   rcases key with (key | key)
-  · rw [key, mul_one] at hr
-    rw [← hr]
-    exact dvd_mul_of_dvd_right (_root_.dvd_lcm_left l ↑n) 2
-  · rw [key, mul_comm] at hr
-    simpa [← hr] using _root_.dvd_lcm_left _ _
+  rw [key, mul_one] at hr
+  rw [← hr]
+  exact dvd_mul_of_dvd_right (_root_.dvd_lcm_left l ↑n) 2
+  rw [key, mul_comm] at hr
+  simpa [← hr] using _root_.dvd_lcm_left _ _
 
 /-- If `x` is a root of unity (spelled as `IsOfFinOrder x`) in an `n`-th cyclotomic extension of
 `ℚ`, where `n` is odd, and `ζ` is a primitive `n`-th root of unity, then there exist `r`
@@ -243,8 +243,8 @@ theorem exists_neg_pow_of_isOfFinOrder [NumberField K] [IsCyclotomicExtension {n
   have hnegζ : IsPrimitiveRoot (-ζ) (2 * n)
   convert IsPrimitiveRoot.orderOf (-ζ)
   rw [neg_eq_neg_one_mul, (Commute.all _ _).orderOf_mul_eq_mul_orderOf_of_coprime]
-  · simp [hζ.eq_orderOf]
-  · simp [← hζ.eq_orderOf, Nat.odd_iff_not_even.1 hno]
+  simp [hζ.eq_orderOf]
+  simp [← hζ.eq_orderOf, Nat.odd_iff_not_even.1 hno]
   obtain ⟨k, hkpos, hkn⟩ := isOfFinOrder_iff_pow_eq_one.1 hx
   obtain ⟨l, hl, hlroot⟩ := (isRoot_of_unity_iff hkpos _).1 hkn
   have hlzero : NeZero l := ⟨fun h ↦ by simp [h] at hl⟩
@@ -284,17 +284,16 @@ theorem norm_eq_one [IsDomain L] [IsCyclotomicExtension {n} K L] (hn : n ≠ 2)
     (hirr : Irreducible (cyclotomic n K)) : norm K ζ = 1 := by
   haveI := IsCyclotomicExtension.neZero' n K L
   by_cases h1 : n = 1
-  · rw [h1, one_coe, one_right_iff] at hζ
-    rw [hζ, show 1 = algebraMap K L 1 by simp, Algebra.norm_algebraMap, one_pow]
-  · replace h1 : 2 ≤ n := by
-      by_contra! h
-      exact h1 (PNat.eq_one_of_lt_two h)
--- Porting note: specyfing the type of `cyclotomic_coeff_zero K h1` was not needed.
-    rw [← hζ.powerBasis_gen K, PowerBasis.norm_gen_eq_coeff_zero_minpoly, hζ.powerBasis_gen K, ←
-      hζ.minpoly_eq_cyclotomic_of_irreducible hirr,
-      (cyclotomic_coeff_zero K h1 : coeff (cyclotomic n K) 0 = 1), mul_one,
-      hζ.powerBasis_dim K, ← hζ.minpoly_eq_cyclotomic_of_irreducible hirr, natDegree_cyclotomic]
-    exact (totient_even <| h1.lt_of_ne hn.symm).neg_one_pow
+  rw [h1, one_coe, one_right_iff] at hζ
+  rw [hζ, show 1 = algebraMap K L 1 by simp, Algebra.norm_algebraMap, one_pow]
+  replace h1 : 2 ≤ n := by
+    by_contra! h
+    exact h1 (PNat.eq_one_of_lt_two h)
+  rw [← hζ.powerBasis_gen K, PowerBasis.norm_gen_eq_coeff_zero_minpoly, hζ.powerBasis_gen K, ←
+    hζ.minpoly_eq_cyclotomic_of_irreducible hirr,
+    (cyclotomic_coeff_zero K h1 : coeff (cyclotomic n K) 0 = 1), mul_one,
+    hζ.powerBasis_dim K, ← hζ.minpoly_eq_cyclotomic_of_irreducible hirr, natDegree_cyclotomic]
+  exact (totient_even <| h1.lt_of_ne hn.symm).neg_one_pow
 
 /-- If `K` is linearly ordered, the norm of a primitive root is `1` if `n` is odd. -/
 theorem norm_eq_one_of_linearly_ordered {K : Type*} [LinearOrderedField K] [Algebra K L]
@@ -306,10 +305,10 @@ theorem norm_eq_one_of_linearly_ordered {K : Type*} [LinearOrderedField K] [Alge
 theorem norm_of_cyclotomic_irreducible [IsDomain L] [IsCyclotomicExtension {n} K L]
     (hirr : Irreducible (cyclotomic n K)) : norm K ζ = ite (n = 2) (-1) 1 := by
   split_ifs with hn
-  · subst hn
-    convert norm_eq_neg_one_pow (K := K) hζ
-    erw [IsCyclotomicExtension.finrank _ hirr, totient_two, pow_one]
-  · exact hζ.norm_eq_one hn hirr
+  subst hn
+  convert norm_eq_neg_one_pow (K := K) hζ
+  erw [IsCyclotomicExtension.finrank _ hirr, totient_two, pow_one]
+  exact hζ.norm_eq_one hn hirr
 
 end CommRing
 
@@ -400,11 +399,11 @@ theorem norm_pow_sub_one_of_prime_pow_ne_two {k s : ℕ} (hζ : IsPrimitiveRoot 
         simp only [IntermediateField.adjoin_simple_toSubalgebra_of_integral
             ((integral {p ^ (k + 1)} K L).isIntegral _)]
         refine Subalgebra.ext fun x => ⟨fun hx => adjoin_le ?_ hx, fun hx => adjoin_le ?_ hx⟩
-        · simp only [Set.singleton_subset_iff, SetLike.mem_coe]
-          exact Subalgebra.add_mem _ (subset_adjoin (mem_singleton η)) (Subalgebra.one_mem _)
-        · simp only [Set.singleton_subset_iff, SetLike.mem_coe]
-          nth_rw 1 [← add_sub_cancel_right η 1]
-          exact Subalgebra.sub_mem _ (subset_adjoin (mem_singleton _)) (Subalgebra.one_mem _)
+        simp only [Set.singleton_subset_iff, SetLike.mem_coe]
+        exact Subalgebra.add_mem _ (subset_adjoin (mem_singleton η)) (Subalgebra.one_mem _)
+        simp only [Set.singleton_subset_iff, SetLike.mem_coe]
+        nth_rw 1 [← add_sub_cancel_right η 1]
+        exact Subalgebra.sub_mem _ (subset_adjoin (mem_singleton _)) (Subalgebra.one_mem _)
 -- Porting note: the previous proof was `rw [H] at this; exact this` but it now fails.
       exact IsCyclotomicExtension.equiv _ _ _ (Subalgebra.equivOfEq _ _ H)
 -- Porting note: the next `refine` was `rw [H]`, abusing defeq, and it now fails.
@@ -429,8 +428,8 @@ theorem norm_pow_sub_one_of_prime_pow_ne_two {k s : ℕ} (hζ : IsPrimitiveRoot 
   rw [add_sub_cancel_right] at H
   rw [H]
   congr
-  · rw [PNat.pow_coe, Nat.pow_minFac, hpri.1.minFac_eq]
-    exact Nat.succ_ne_zero _
+  rw [PNat.pow_coe, Nat.pow_minFac, hpri.1.minFac_eq]
+  exact Nat.succ_ne_zero _
   have := FiniteDimensional.finrank_mul_finrank K K⟮η⟯ L
   rw [IsCyclotomicExtension.finrank L hirr, IsCyclotomicExtension.finrank K⟮η⟯ hirr₁,
     PNat.pow_coe, PNat.pow_coe, Nat.totient_prime_pow hpri.out (k - s).succ_pos,
@@ -519,25 +518,24 @@ theorem norm_pow_sub_one_eq_prime_pow_of_ne_zero {k s : ℕ} (hζ : IsPrimitiveR
     (hirr : Irreducible (cyclotomic (↑(p ^ (k + 1)) : ℕ) K)) (hs : s ≤ k) (hk : k ≠ 0) :
     norm K (ζ ^ (p : ℕ) ^ s - 1) = (p : K) ^ (p : ℕ) ^ s := by
   by_cases htwo : p ^ (k - s + 1) = 2
-  · have hp : p = 2 := by
-      rw [← PNat.coe_inj, PNat.pow_coe, ← pow_one 2] at htwo
-      replace htwo :=
-        eq_of_prime_pow_eq (prime_iff.1 hpri.out) (prime_iff.1 Nat.prime_two) (succ_pos _) htwo
-      rwa [show 2 = ((2 : ℕ+) : ℕ) by decide, PNat.coe_inj] at htwo
-    replace hs : s = k := by
-      rw [hp, ← PNat.coe_inj, PNat.pow_coe] at htwo
-      nth_rw 2 [← pow_one 2] at htwo
-      replace htwo := Nat.pow_right_injective rfl.le htwo
-      rw [add_left_eq_self, Nat.sub_eq_zero_iff_le] at htwo
-      exact le_antisymm hs htwo
-    simp only [hs, hp, one_coe, cast_one, pow_coe, show ((2 : ℕ+) : ℕ) = 2 from rfl]
-      at hζ hirr hcycl ⊢
-    obtain ⟨k₁, hk₁⟩ := Nat.exists_eq_succ_of_ne_zero hk
--- Porting note: the proof is slightly different because of coercions.
-    rw [hζ.norm_pow_sub_one_two hirr, hk₁, _root_.pow_succ', pow_mul, neg_eq_neg_one_mul,
-      mul_pow, neg_one_sq, one_mul, ← pow_mul, ← _root_.pow_succ']
-    simp
-  · exact hζ.norm_pow_sub_one_of_prime_pow_ne_two hirr hs htwo
+  have hp : p = 2 := by
+    rw [← PNat.coe_inj, PNat.pow_coe, ← pow_one 2] at htwo
+    replace htwo :=
+      eq_of_prime_pow_eq (prime_iff.1 hpri.out) (prime_iff.1 Nat.prime_two) (succ_pos _) htwo
+    rwa [show 2 = ((2 : ℕ+) : ℕ) by decide, PNat.coe_inj] at htwo
+  replace hs : s = k := by
+    rw [hp, ← PNat.coe_inj, PNat.pow_coe] at htwo
+    nth_rw 2 [← pow_one 2] at htwo
+    replace htwo := Nat.pow_right_injective rfl.le htwo
+    rw [add_left_eq_self, Nat.sub_eq_zero_iff_le] at htwo
+    exact le_antisymm hs htwo
+  simp only [hs, hp, one_coe, cast_one, pow_coe, show ((2 : ℕ+) : ℕ) = 2 from rfl]
+    at hζ hirr hcycl ⊢
+  obtain ⟨k₁, hk₁⟩ := Nat.exists_eq_succ_of_ne_zero hk
+  rw [hζ.norm_pow_sub_one_two hirr, hk₁, _root_.pow_succ', pow_mul, neg_eq_neg_one_mul,
+    mul_pow, neg_one_sq, one_mul, ← pow_mul, ← _root_.pow_succ']
+  simp
+  exact hζ.norm_pow_sub_one_of_prime_pow_ne_two hirr hs htwo
 
 end Field
 

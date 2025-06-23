@@ -86,28 +86,28 @@ private theorem pairMap_mem_pairs {k : ℕ} (t : Finset σ × σ) (h : t ∈ pai
     pairMap σ t ∈ pairs σ k := by
   rw [mem_pairs] at h ⊢
   rcases (em (t.snd ∈ t.fst)) with h1 | h1
-  · rw [pairMap_of_snd_mem_fst σ h1]
-    simp only [h1, implies_true, and_true] at h
-    simp only [card_erase_of_mem h1, tsub_le_iff_right, mem_erase, ne_eq, h1]
-    refine ⟨le_step h, ?_⟩
-    by_contra h2
-    simp only [not_true_eq_false, and_true, not_forall, not_false_eq_true, exists_prop] at h2
-    rw [← h2] at h
-    exact not_le_of_lt (sub_lt (card_pos.mpr ⟨t.snd, h1⟩) zero_lt_one) h
-  · rw [pairMap_of_snd_nmem_fst σ h1]
-    simp only [h1] at h
-    simp only [card_cons, mem_cons, true_or, implies_true, and_true]
-    exact (le_iff_eq_or_lt.mp h.left).resolve_left h.right
+  rw [pairMap_of_snd_mem_fst σ h1]
+  simp only [h1, implies_true, and_true] at h
+  simp only [card_erase_of_mem h1, tsub_le_iff_right, mem_erase, ne_eq, h1]
+  refine ⟨le_step h, ?_⟩
+  by_contra h2
+  simp only [not_true_eq_false, and_true, not_forall, not_false_eq_true, exists_prop] at h2
+  rw [← h2] at h
+  exact not_le_of_lt (sub_lt (card_pos.mpr ⟨t.snd, h1⟩) zero_lt_one) h
+  rw [pairMap_of_snd_nmem_fst σ h1]
+  simp only [h1] at h
+  simp only [card_cons, mem_cons, true_or, implies_true, and_true]
+  exact (le_iff_eq_or_lt.mp h.left).resolve_left h.right
 
 @[simp]
 private theorem pairMap_involutive : (pairMap σ).Involutive := by
   intro t
   rw [pairMap, pairMap]
   split_ifs with h1 h2 h3
-  · simp at h2
-  · simp [insert_erase h1]
-  · simp_all
-  · simp at h3
+  simp at h2
+  simp [insert_erase h1]
+  simp_all
+  simp at h3
 
 private theorem weight_add_weight_pairMap {k : ℕ} (t : Finset σ × σ) (h : t ∈ pairs σ k) :
     weight σ R k t + weight σ R k (pairMap σ t) = 0 := by
@@ -116,22 +116,22 @@ private theorem weight_add_weight_pairMap {k : ℕ} (t : Finset σ × σ) (h : t
   have h2 (n : ℕ) : -(-1 : MvPolynomial σ R) ^ n = (-1) ^ (n + 1)
   rw [← neg_one_mul ((-1 : MvPolynomial σ R) ^ n), pow_add, pow_one, mul_comm]
   rcases (em (t.snd ∈ t.fst)) with h1 | h1
-  · rw [pairMap_of_snd_mem_fst σ h1]
-    simp only [← prod_erase_mul t.fst (fun j ↦ (X j : MvPolynomial σ R)) h1,
-      mul_assoc (∏ a ∈ erase t.fst t.snd, X a), card_erase_of_mem h1]
-    nth_rewrite 1 [← pow_one (X t.snd)]
-    simp only [← pow_add, add_comm]
-    have h3 : 1 ≤ card t.fst := lt_iff_add_one_le.mp (card_pos.mpr ⟨t.snd, h1⟩)
-    rw [← tsub_tsub_assoc h.left h3, ← neg_neg ((-1 : MvPolynomial σ R) ^ (card t.fst - 1)),
-      h2 (card t.fst - 1), Nat.sub_add_cancel h3]
-    simp
-  · rw [pairMap_of_snd_nmem_fst σ h1]
-    simp only [mul_comm, mul_assoc (∏ a ∈ t.fst, X a), card_cons, prod_cons]
-    nth_rewrite 2 [← pow_one (X t.snd)]
-    simp only [← pow_add, ← Nat.add_sub_assoc (Nat.lt_of_le_of_ne h.left (mt h.right h1)), add_comm,
-      Nat.succ_eq_add_one, Nat.add_sub_add_right]
-    rw [← neg_neg ((-1 : MvPolynomial σ R) ^ card t.fst), h2]
-    simp
+  rw [pairMap_of_snd_mem_fst σ h1]
+  simp only [← prod_erase_mul t.fst (fun j ↦ (X j : MvPolynomial σ R)) h1,
+    mul_assoc (∏ a ∈ erase t.fst t.snd, X a), card_erase_of_mem h1]
+  nth_rewrite 1 [← pow_one (X t.snd)]
+  simp only [← pow_add, add_comm]
+  have h3 : 1 ≤ card t.fst := lt_iff_add_one_le.mp (card_pos.mpr ⟨t.snd, h1⟩)
+  rw [← tsub_tsub_assoc h.left h3, ← neg_neg ((-1 : MvPolynomial σ R) ^ (card t.fst - 1)),
+    h2 (card t.fst - 1), Nat.sub_add_cancel h3]
+  simp
+  rw [pairMap_of_snd_nmem_fst σ h1]
+  simp only [mul_comm, mul_assoc (∏ a ∈ t.fst, X a), card_cons, prod_cons]
+  nth_rewrite 2 [← pow_one (X t.snd)]
+  simp only [← pow_add, ← Nat.add_sub_assoc (Nat.lt_of_le_of_ne h.left (mt h.right h1)), add_comm,
+    Nat.succ_eq_add_one, Nat.add_sub_add_right]
+  rw [← neg_neg ((-1 : MvPolynomial σ R) ^ card t.fst), h2]
+  simp
 
 private theorem weight_sum (k : ℕ) : ∑ t ∈ pairs σ k, weight σ R k t = 0 :=
   sum_involution (fun t _ ↦ pairMap σ t) (weight_add_weight_pairMap σ R)

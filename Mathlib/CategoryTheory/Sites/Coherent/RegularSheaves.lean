@@ -74,11 +74,11 @@ theorem equalizerCondition_precomp_of_preservesPullback (P : Cᵒᵖ ⥤ D) (F :
   have h : P.map (F.map π).op = (F.op ⋙ P).map π.op
   simp
   refine ⟨(IsLimit.equivIsoLimit (ForkOfι.ext ?_ _ h)) ?_⟩
-  · simp only [Functor.comp_map, op_map, Quiver.Hom.unop_op, ← map_comp, ← op_comp, c.condition]
-  · refine (hP (F.map π) (PullbackCone.mk (F.map c.fst) (F.map c.snd) ?_) ?_).some
-    · simp only [← map_comp, c.condition]
-    · exact (isLimitMapConePullbackConeEquiv F c.condition)
-        (isLimitOfPreserves F (hc.ofIsoLimit (PullbackCone.ext (Iso.refl _) (by simp) (by simp))))
+  simp only [Functor.comp_map, op_map, Quiver.Hom.unop_op, ← map_comp, ← op_comp, c.condition]
+  refine (hP (F.map π) (PullbackCone.mk (F.map c.fst) (F.map c.snd) ?_) ?_).some
+  simp only [← map_comp, c.condition]
+  exact (isLimitMapConePullbackConeEquiv F c.condition)
+    (isLimitOfPreserves F (hc.ofIsoLimit (PullbackCone.ext (Iso.refl _) (by simp) (by simp))))
 
 /-- The canonical map to the explicit equalizer. -/
 def MapToEqualizer (P : Cᵒᵖ ⥤ Type*) {W X B : C} (f : X ⟶ B)
@@ -97,8 +97,8 @@ theorem EqualizerCondition.bijective_mapToEqualizer_pullback (P : Cᵒᵖ ⥤ Ty
   intro ⟨b, hb⟩
   obtain ⟨a, ha₁, ha₂⟩ := hP b hb
   refine ⟨a, ?_, ?_⟩
-  · simpa [MapToEqualizer] using ha₁
-  · simpa [MapToEqualizer] using ha₂
+  simpa [MapToEqualizer] using ha₁
+  simpa [MapToEqualizer] using ha₂
 
 theorem EqualizerCondition.mk (P : Cᵒᵖ ⥤ Type*)
     (hP : ∀ (X B : C) (π : X ⟶ B) [EffectiveEpi π] [HasPullback π π], Function.Bijective
@@ -117,8 +117,8 @@ theorem EqualizerCondition.mk (P : Cᵒᵖ ⥤ Type*)
   simp [← FunctorToTypes.map_comp_apply, ← op_comp]
   obtain ⟨a, ha₁, ha₂⟩ := hP ⟨b, hb'⟩
   refine ⟨a, ?_, ?_⟩
-  · simpa [MapToEqualizer] using ha₁
-  · simpa [MapToEqualizer] using ha₂
+  simpa [MapToEqualizer] using ha₁
+  simpa [MapToEqualizer] using ha₂
 
 lemma equalizerCondition_w' (P : Cᵒᵖ ⥤ Type*) {X B : C} (π : X ⟶ B)
     [HasPullback π π] : P.map π.op ≫ P.map (pullback.fst π π).op =
@@ -138,17 +138,17 @@ theorem equalizerCondition_iff_isIso_lift (P : Cᵒᵖ ⥤ Type*) : EqualizerCon
     ∀ (X B : C) (π : X ⟶ B) [EffectiveEpi π] [HasPullback π π],
       IsIso (equalizer.lift (P.map π.op) (equalizerCondition_w' P π)) := by
   constructor
-  · intro hP X B π _ _
-    have h := hP.bijective_mapToEqualizer_pullback _ X B π
-    rw [← isIso_iff_bijective, mapToEqualizer_eq_comp] at h
-    exact IsIso.of_isIso_comp_right (equalizer.lift (P.map π.op)
-      (equalizerCondition_w' P π))
-      (Types.equalizerIso _ _).hom
-  · intro hP
-    apply EqualizerCondition.mk
-    intro X B π _ _
-    rw [mapToEqualizer_eq_comp, ← isIso_iff_bijective]
-    infer_instance
+  intro hP X B π _ _
+  have h := hP.bijective_mapToEqualizer_pullback _ X B π
+  rw [← isIso_iff_bijective, mapToEqualizer_eq_comp] at h
+  exact IsIso.of_isIso_comp_right (equalizer.lift (P.map π.op)
+    (equalizerCondition_w' P π))
+    (Types.equalizerIso _ _).hom
+  intro hP
+  apply EqualizerCondition.mk
+  intro X B π _ _
+  rw [mapToEqualizer_eq_comp, ← isIso_iff_bijective]
+  infer_instance
 
 /-- `P` satisfies the equalizer condition iff its precomposition by an equivalence does. -/
 theorem equalizerCondition_iff_of_equivalence (P : Cᵒᵖ ⥤ D)
@@ -166,17 +166,17 @@ theorem parallelPair_pullback_initial {X B : C} (π : X ⟶ B)
     (Quiver.Hom.op (Over.homMk c.fst))
     (Quiver.Hom.op (Over.homMk c.snd c.condition.symm))).Initial := by
   apply Limits.parallelPair_initial_mk
-  · intro ⟨Z⟩
-    obtain ⟨_, f, g, ⟨⟩, hh⟩ := Z.property
-    let X' : (Presieve.ofArrows (fun () ↦ X) (fun () ↦ π)).category :=
-      Presieve.categoryMk _ π (ofArrows.mk ())
-    let f' : Z.obj.left ⟶ X'.obj.left := f
-    exact ⟨(Over.homMk f').op⟩
-  · intro ⟨Z⟩ ⟨i⟩ ⟨j⟩
-    let ij := PullbackCone.IsLimit.lift hc i.left j.left (by erw [i.w, j.w]; rfl)
-    refine ⟨Quiver.Hom.op (Over.homMk ij (by simpa [ij] using i.w)), ?_, ?_⟩
-    all_goals congr
-    all_goals exact Comma.hom_ext _ _ (by erw [Over.comp_left]; simp [ij]) rfl
+  intro ⟨Z⟩
+  obtain ⟨_, f, g, ⟨⟩, hh⟩ := Z.property
+  let X' : (Presieve.ofArrows (fun () ↦ X) (fun () ↦ π)).category :=
+    Presieve.categoryMk _ π (ofArrows.mk ())
+  let f' : Z.obj.left ⟶ X'.obj.left := f
+  exact ⟨(Over.homMk f').op⟩
+  intro ⟨Z⟩ ⟨i⟩ ⟨j⟩
+  let ij := PullbackCone.IsLimit.lift hc i.left j.left (by erw [i.w, j.w]; rfl)
+  refine ⟨Quiver.Hom.op (Over.homMk ij (by simpa [ij] using i.w)), ?_, ?_⟩
+  all_goals congr
+  all_goals exact Comma.hom_ext _ _ (by erw [Over.comp_left]; simp [ij]) rfl
 
 /--
 Given a limiting pullback cone, the fork in `SingleEqualizerCondition` is limiting iff the diagram
@@ -206,10 +206,10 @@ lemma equalizerConditionMap_iff_nonempty_isLimit (P : Cᵒᵖ ⥤ D) ⦃X B : C�
       Nonempty (IsLimit (P.mapCone
         (Sieve.ofArrows (fun (_ : Unit) => X) (fun _ => π)).arrows.cocone.op)) := by
   constructor
-  · intro h
-    exact ⟨isLimit_forkOfι_equiv _ _ _ (pullbackIsPullback π π) (h _ (pullbackIsPullback π π)).some⟩
-  · intro ⟨h⟩
-    exact fun c hc ↦ ⟨(isLimit_forkOfι_equiv _ _ _ hc).symm h⟩
+  intro h
+  exact ⟨isLimit_forkOfι_equiv _ _ _ (pullbackIsPullback π π) (h _ (pullbackIsPullback π π)).some⟩
+  intro ⟨h⟩
+  exact fun c hc ↦ ⟨(isLimit_forkOfι_equiv _ _ _ hc).symm h⟩
 
 lemma equalizerCondition_iff_isSheaf (F : Cᵒᵖ ⥤ D) [Preregular C]
     [∀ {Y X : C} (f : Y ⟶ X) [EffectiveEpi f], HasPullback f f] :
@@ -217,19 +217,19 @@ lemma equalizerCondition_iff_isSheaf (F : Cᵒᵖ ⥤ D) [Preregular C]
   dsimp [regularTopology]
   rw [Presheaf.isSheaf_iff_isLimit_coverage]
   constructor
-  · rintro hF X _ ⟨Y, f, rfl, _⟩
-    exact (equalizerConditionMap_iff_nonempty_isLimit F f).1 (hF f)
-  · intro hF Y X f _
-    exact (equalizerConditionMap_iff_nonempty_isLimit F f).2 (hF _ ⟨_, f, rfl, inferInstance⟩)
+  rintro hF X _ ⟨Y, f, rfl, _⟩
+  exact (equalizerConditionMap_iff_nonempty_isLimit F f).1 (hF f)
+  intro hF Y X f _
+  exact (equalizerConditionMap_iff_nonempty_isLimit F f).2 (hF _ ⟨_, f, rfl, inferInstance⟩)
 
 lemma isSheafFor_regular_of_projective {X : C} (S : Presieve X) [S.regular] [Projective X]
     (F : Cᵒᵖ ⥤ Type*) : S.IsSheafFor F := by
   obtain ⟨Y, f, rfl, hf⟩ := Presieve.regular.single_epi (R := S)
   rw [isSheafFor_arrows_iff]
   refine fun x hx ↦ ⟨F.map (Projective.factorThru (𝟙 _) f).op <| x (), fun _ ↦ ?_, fun y h ↦ ?_⟩
-  · simpa using (hx () () Y (𝟙 Y) (f ≫ (Projective.factorThru (𝟙 _) f)) (by simp)).symm
-  · simp only [← h (), ← FunctorToTypes.map_comp_apply, ← op_comp, Projective.factorThru_comp,
-      op_id, FunctorToTypes.map_id_apply]
+  simpa using (hx () () Y (𝟙 Y) (f ≫ (Projective.factorThru (𝟙 _) f)) (by simp)).symm
+  simp only [← h (), ← FunctorToTypes.map_comp_apply, ← op_comp, Projective.factorThru_comp,
+    op_id, FunctorToTypes.map_id_apply]
 
 /-- Every presheaf is a sheaf for the regular topology if every object of `C` is projective. -/
 theorem isSheaf_of_projective (F : Cᵒᵖ ⥤ D) [Preregular C] [∀ (X : C), Projective X] :
@@ -253,10 +253,10 @@ lemma isSheaf_yoneda_obj [Preregular C] (W : C)  :
   obtain ⟨t, t_amalg, t_uniq⟩ :=
     (Sieve.forallYonedaIsSheaf_iff_colimit S).mpr ⟨h_colim⟩ W x_ext hx_ext
   refine ⟨t, ?_, ?_⟩
-  · convert Presieve.isAmalgamation_restrict (Sieve.le_generate
-      (Presieve.ofArrows (fun () ↦ Y) (fun () ↦ f))) _ _ t_amalg
-    exact (Presieve.restrict_extend hx).symm
-  · exact fun y hy ↦ t_uniq y <| Presieve.isAmalgamation_sieveExtend x y hy
+  convert Presieve.isAmalgamation_restrict (Sieve.le_generate
+    (Presieve.ofArrows (fun () ↦ Y) (fun () ↦ f))) _ _ t_amalg
+  exact (Presieve.restrict_extend hx).symm
+  exact fun y hy ↦ t_uniq y <| Presieve.isAmalgamation_sieveExtend x y hy
 
 /-- The regular topology on any preregular category is subcanonical. -/
 theorem subcanonical [Preregular C] : Sheaf.Subcanonical (regularTopology C) :=

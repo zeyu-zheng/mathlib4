@@ -409,8 +409,8 @@ theorem mem_roots_iff [IsDomain R] (h0 : P.toPoly ≠ 0) (x : R) :
 theorem card_roots_le [IsDomain R] [DecidableEq R] : P.roots.toFinset.card ≤ 3 := by
   apply (toFinset_card_le P.toPoly.roots).trans
   by_cases hP : P.toPoly = 0
-  · exact (card_roots' P.toPoly).trans (by rw [hP, natDegree_zero]; exact zero_le 3)
-  · exact WithBot.coe_le_coe.1 ((card_roots hP).trans degree_cubic_le)
+  exact (card_roots' P.toPoly).trans (by rw [hP, natDegree_zero]; exact zero_le 3)
+  exact WithBot.coe_le_coe.1 ((card_roots hP).trans degree_cubic_le)
 
 end Extension
 
@@ -445,8 +445,8 @@ theorem eq_sum_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) 
     map φ P =
       ⟨φ P.a, φ P.a * -(x + y + z), φ P.a * (x * y + x * z + y * z), φ P.a * -(x * y * z)⟩ := by
   apply_fun @toPoly _ _
-  · rw [eq_prod_three_roots ha h3, C_mul_prod_X_sub_C_eq]
-  · exact fun P Q ↦ (toPoly_injective P Q).mp
+  rw [eq_prod_three_roots ha h3, C_mul_prod_X_sub_C_eq]
+  exact fun P Q ↦ (toPoly_injective P Q).mp
 
 theorem b_eq_three_roots (ha : P.a ≠ 0) (h3 : (map φ P).roots = {x, y, z}) :
     φ P.b = φ P.a * -(x + y + z) := by

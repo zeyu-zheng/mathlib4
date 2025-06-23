@@ -321,16 +321,16 @@ open List in
 /-- There are several equivalent ways to say that a number `z` is in fact a real number. -/
 theorem is_real_TFAE (z : K) : TFAE [conj z = z, ∃ r : ℝ, (r : K) = z, ↑(re z) = z, im z = 0] := by
   tfae_have 1 → 4
-  · intro h
-    rw [← @ofReal_inj K, im_eq_conj_sub, h, sub_self, mul_zero, zero_div,
-      ofReal_zero]
+  intro h
+  rw [← @ofReal_inj K, im_eq_conj_sub, h, sub_self, mul_zero, zero_div,
+    ofReal_zero]
   tfae_have 4 → 3
-  · intro h
-    conv_rhs => rw [← re_add_im z, h, ofReal_zero, zero_mul, add_zero]
+  intro h
+  conv_rhs => rw [← re_add_im z, h, ofReal_zero, zero_mul, add_zero]
   tfae_have 3 → 2
-  · exact fun h => ⟨_, h⟩
+  exact fun h => ⟨_, h⟩
   tfae_have 2 → 1
-  · exact fun ⟨r, hr⟩ => hr ▸ conj_ofReal _
+  exact fun ⟨r, hr⟩ => hr ▸ conj_ofReal _
   tfae_finish
 
 theorem conj_eq_iff_real {z : K} : conj z = z ↔ ∃ r : ℝ, z = (r : K) :=
@@ -465,13 +465,13 @@ lemma conj_div (x y : K) : conj (x / y) = conj x / conj y := map_div' conj conj_
 --TODO: Do we rather want the map as an explicit definition?
 lemma exists_norm_eq_mul_self (x : K) : ∃ c, ‖c‖ = 1 ∧ ↑‖x‖ = c * x := by
   obtain rfl | hx := eq_or_ne x 0
-  · exact ⟨1, by simp⟩
-  · exact ⟨‖x‖ / x, by simp [norm_ne_zero_iff.2, hx]⟩
+  exact ⟨1, by simp⟩
+  exact ⟨‖x‖ / x, by simp [norm_ne_zero_iff.2, hx]⟩
 
 lemma exists_norm_mul_eq_self (x : K) : ∃ c, ‖c‖ = 1 ∧ c * ‖x‖ = x := by
   obtain rfl | hx := eq_or_ne x 0
-  · exact ⟨1, by simp⟩
-  · exact ⟨x / ‖x‖, by simp [norm_ne_zero_iff.2, hx]⟩
+  exact ⟨1, by simp⟩
+  exact ⟨x / ‖x‖, by simp [norm_ne_zero_iff.2, hx]⟩
 
 @[rclike_simps, norm_cast]
 theorem ofReal_div (r s : ℝ) : ((r / s : ℝ) : K) = r / s :=
@@ -490,8 +490,8 @@ theorem I_mul_I_of_nonzero : (I : K) ≠ 0 → (I : K) * I = -1 :=
 @[simp, rclike_simps]
 theorem inv_I : (I : K)⁻¹ = -I := by
   by_cases h : (I : K) = 0
-  · simp [h]
-  · field_simp [I_mul_I_of_nonzero h]
+  simp [h]
+  field_simp [I_mul_I_of_nonzero h]
 
 @[simp, rclike_simps]
 theorem div_I (z : K) : z / I = -(z * I) := by rw [div_eq_mul_inv, inv_I, mul_neg]
@@ -699,10 +699,10 @@ variable {z w : K}
 theorem lt_iff_re_im : z < w ↔ re z < re w ∧ im z = im w := by
   simp_rw [lt_iff_le_and_ne, @RCLike.le_iff_re_im K]
   constructor
-  · rintro ⟨⟨hr, hi⟩, heq⟩
-    exact ⟨⟨hr, mt (fun hreq => ext hreq hi) heq⟩, hi⟩
-  · rintro ⟨⟨hr, hrn⟩, hi⟩
-    exact ⟨⟨hr, hi⟩, ne_of_apply_ne _ hrn⟩
+  rintro ⟨⟨hr, hi⟩, heq⟩
+  exact ⟨⟨hr, mt (fun hreq => ext hreq hi) heq⟩, hi⟩
+  rintro ⟨⟨hr, hrn⟩, hi⟩
+  exact ⟨⟨hr, hi⟩, ne_of_apply_ne _ hrn⟩
 
 theorem nonneg_iff : 0 ≤ z ↔ 0 ≤ re z ∧ im z = 0 := by
   simpa only [map_zero, eq_comm] using le_iff_re_im (z := 0) (w := z)

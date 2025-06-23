@@ -68,10 +68,10 @@ theorem union_left {s'} (h : IsMetricSeparated s t) (h' : IsMetricSeparated s' t
     IsMetricSeparated (s ∪ s') t := by
   rcases h, h' with ⟨⟨r, r0, hr⟩, ⟨r', r0', hr'⟩⟩
   refine ⟨min r r', ?_, fun x hx y hy => hx.elim ?_ ?_⟩
-  · rw [← pos_iff_ne_zero] at r0 r0' ⊢
-    exact lt_min r0 r0'
-  · exact fun hx => (min_le_left _ _).trans (hr _ hx _ hy)
-  · exact fun hx => (min_le_right _ _).trans (hr' _ hx _ hy)
+  rw [← pos_iff_ne_zero] at r0 r0' ⊢
+  exact lt_min r0 r0'
+  exact fun hx => (min_le_left _ _).trans (hr _ hx _ hy)
+  exact fun hx => (min_le_right _ _).trans (hr' _ hx _ hy)
 
 @[simp]
 theorem union_left_iff {s'} :

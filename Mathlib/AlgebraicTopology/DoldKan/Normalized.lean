@@ -49,11 +49,11 @@ theorem HigherFacesVanish.inclusionOfMooreComplexMap (n : ℕ) :
 theorem factors_normalizedMooreComplex_PInfty (n : ℕ) :
     Subobject.Factors (NormalizedMooreComplex.objX X n) (PInfty.f n) := by
   rcases n with _|n
-  · apply top_factors
-  · rw [PInfty_f, NormalizedMooreComplex.objX, finset_inf_factors]
-    intro i _
-    apply kernelSubobject_factors
-    exact (HigherFacesVanish.of_P (n + 1) n) i le_add_self
+  apply top_factors
+  rw [PInfty_f, NormalizedMooreComplex.objX, finset_inf_factors]
+  intro i _
+  apply kernelSubobject_factors
+  exact (HigherFacesVanish.of_P (n + 1) n) i le_add_self
 
 /-- `PInfty` factors through the normalized Moore complex -/
 @[simps!]
@@ -84,9 +84,9 @@ theorem PInfty_comp_PInftyToNormalizedMooreComplex (X : SimplicialObject A) :
 theorem inclusionOfMooreComplexMap_comp_PInfty (X : SimplicialObject A) :
     inclusionOfMooreComplexMap X ≫ PInfty = inclusionOfMooreComplexMap X := by
   ext (_|n)
-  · dsimp
-    simp only [comp_id]
-  · exact (HigherFacesVanish.inclusionOfMooreComplexMap n).comp_P_eq_self
+  dsimp
+  simp only [comp_id]
+  exact (HigherFacesVanish.inclusionOfMooreComplexMap n).comp_P_eq_self
 
 instance : Mono (inclusionOfMooreComplexMap X) :=
   ⟨fun _ _ hf => by

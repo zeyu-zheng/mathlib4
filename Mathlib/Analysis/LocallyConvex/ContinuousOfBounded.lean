@@ -99,20 +99,20 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   simp only [_root_.id] at bE
   have bE' : (𝓝 (0 : E)).HasBasis (fun x : ℕ => x ≠ 0) fun n : ℕ => (n : 𝕜)⁻¹ • b n
   refine bE.1.to_hasBasis ?_ ?_
-  · intro n _
-    use n + 1
-    simp only [Ne, Nat.succ_ne_zero, not_false_iff, Nat.cast_add, Nat.cast_one, true_and_iff]
-    -- `b (n + 1) ⊆ b n` follows from `Antitone`.
-    have h : b (n + 1) ⊆ b n := bE.2 (by simp)
-    refine _root_.trans ?_ h
-    rintro y ⟨x, hx, hy⟩
-    -- Since `b (n + 1)` is balanced `(n+1)⁻¹ b (n + 1) ⊆ b (n + 1)`
-    rw [← hy]
-    refine (bE1 (n + 1)).2.smul_mem ?_ hx
-    have h' : 0 < (n : ℝ) + 1 := n.cast_add_one_pos
-    rw [norm_inv, ← Nat.cast_one, ← Nat.cast_add, RCLike.norm_natCast, Nat.cast_add,
-      Nat.cast_one, inv_le h' zero_lt_one]
-    simp
+  intro n _
+  use n + 1
+  simp only [Ne, Nat.succ_ne_zero, not_false_iff, Nat.cast_add, Nat.cast_one, true_and_iff]
+  -- `b (n + 1) ⊆ b n` follows from `Antitone`.
+  have h : b (n + 1) ⊆ b n := bE.2 (by simp)
+  refine _root_.trans ?_ h
+  rintro y ⟨x, hx, hy⟩
+  -- Since `b (n + 1)` is balanced `(n+1)⁻¹ b (n + 1) ⊆ b (n + 1)`
+  rw [← hy]
+  refine (bE1 (n + 1)).2.smul_mem ?_ hx
+  have h' : 0 < (n : ℝ) + 1 := n.cast_add_one_pos
+  rw [norm_inv, ← Nat.cast_one, ← Nat.cast_add, RCLike.norm_natCast, Nat.cast_add,
+    Nat.cast_one, inv_le h' zero_lt_one]
+  simp
   intro n hn
   -- The converse direction follows from continuity of the scalar multiplication
   have hcont : ContinuousAt (fun x : E => (n : 𝕜) • x) 0 :=
@@ -133,8 +133,8 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
   apply bE.tendsto
   intro n
   by_cases h : n = 0
-  · rw [h, Nat.cast_zero, zero_smul]
-    exact mem_of_mem_nhds (bE.1.mem_of_mem <| by trivial)
+  rw [h, Nat.cast_zero, zero_smul]
+  exact mem_of_mem_nhds (bE.1.mem_of_mem <| by trivial)
   rcases hu n h with ⟨y, hy, hu1⟩
   convert hy
   rw [← hu1, ← mul_smul]

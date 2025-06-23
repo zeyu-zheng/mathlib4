@@ -62,8 +62,8 @@ theorem PairwiseDisjoint.biUnion_finset {s : Set ι'} {g : ι' → Finset ι} {f
   obtain ⟨c, hc, ha⟩ := ha
   obtain ⟨d, hd, hb⟩ := hb
   obtain hcd | hcd := eq_or_ne (g c) (g d)
-  · exact hg d hd (by rwa [hcd] at ha) hb hab
-  · exact (hs hc hd (ne_of_apply_ne _ hcd)).mono (Finset.le_sup ha) (Finset.le_sup hb)
+  exact hg d hd (by rwa [hcd] at ha) hb hab
+  exact (hs hc hd (ne_of_apply_ne _ hcd)).mono (Finset.le_sup ha) (Finset.le_sup hb)
 
 end Set
 

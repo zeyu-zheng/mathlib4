@@ -350,7 +350,7 @@ def normalize : ProbabilityMeasure Ω :=
 @[simp]
 theorem self_eq_mass_mul_normalize (s : Set Ω) : μ s = μ.mass * μ.normalize s := by
   obtain rfl | h := eq_or_ne μ 0
-  · simp
+  simp
   have mass_nonzero : μ.mass ≠ 0
   rwa [μ.mass_nonzero_iff]
   simp only [normalize, dif_neg mass_nonzero]
@@ -417,9 +417,9 @@ theorem tendsto_testAgainstNN_of_tendsto_normalize_testAgainstNN_of_tendsto_mass
     (mass_lim : Tendsto (fun i => (μs i).mass) F (𝓝 μ.mass)) (f : Ω →ᵇ ℝ≥0) :
     Tendsto (fun i => (μs i).testAgainstNN f) F (𝓝 (μ.testAgainstNN f)) := by
   by_cases h_mass : μ.mass = 0
-  · simp only [μ.mass_zero_iff.mp h_mass, zero_testAgainstNN_apply, zero_mass,
-      eq_self_iff_true] at *
-    exact tendsto_zero_testAgainstNN_of_tendsto_zero_mass mass_lim f
+  simp only [μ.mass_zero_iff.mp h_mass, zero_testAgainstNN_apply, zero_mass,
+    eq_self_iff_true] at *
+  exact tendsto_zero_testAgainstNN_of_tendsto_zero_mass mass_lim f
   simp_rw [fun i => (μs i).testAgainstNN_eq_mass_mul f, μ.testAgainstNN_eq_mass_mul f]
   rw [ProbabilityMeasure.tendsto_nhds_iff_toFiniteMeasure_tendsto_nhds] at μs_lim
   rw [tendsto_iff_forall_testAgainstNN_tendsto] at μs_lim
@@ -450,8 +450,8 @@ theorem tendsto_normalize_testAgainstNN_of_tendsto {γ : Type*} {F : Filter γ}
     Tendsto (fun i => (⟨(μs i).mass⁻¹, (μs i).testAgainstNN f⟩ : ℝ≥0 × ℝ≥0)) F
       (𝓝 ⟨μ.mass⁻¹, μ.testAgainstNN f⟩) := by
     refine (Prod.tendsto_iff _ _).mpr ⟨?_, ?_⟩
-    · exact (continuousOn_inv₀.continuousAt aux).tendsto.comp lim_mass
-    · exact tendsto_iff_forall_testAgainstNN_tendsto.mp μs_lim f
+    exact (continuousOn_inv₀.continuousAt aux).tendsto.comp lim_mass
+    exact tendsto_iff_forall_testAgainstNN_tendsto.mp μs_lim f
   exact tendsto_mul.comp lim_pair
 
 /-- If the normalized versions of finite measures converge weakly and their total masses
@@ -480,10 +480,10 @@ theorem tendsto_normalize_iff_tendsto {γ : Type*} {F : Filter γ} {μs : γ →
         Tendsto (fun i => (μs i).mass) F (𝓝 μ.mass) ↔
       Tendsto μs F (𝓝 μ) := by
   constructor
-  · rintro ⟨normalized_lim, mass_lim⟩
-    exact tendsto_of_tendsto_normalize_testAgainstNN_of_tendsto_mass normalized_lim mass_lim
-  · intro μs_lim
-    exact ⟨tendsto_normalize_of_tendsto μs_lim nonzero, μs_lim.mass⟩
+  rintro ⟨normalized_lim, mass_lim⟩
+  exact tendsto_of_tendsto_normalize_testAgainstNN_of_tendsto_mass normalized_lim mass_lim
+  intro μs_lim
+  exact ⟨tendsto_normalize_of_tendsto μs_lim nonzero, μs_lim.mass⟩
 
 end FiniteMeasure --namespace
 

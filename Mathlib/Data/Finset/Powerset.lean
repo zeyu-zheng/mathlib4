@@ -87,16 +87,16 @@ theorem powerset_insert [DecidableEq α] (s : Finset α) (a : α) :
   ext t
   simp only [exists_prop, mem_powerset, mem_image, mem_union, subset_insert_iff]
   by_cases h : a ∈ t
-  · constructor
-    · exact fun H => Or.inr ⟨_, H, insert_erase h⟩
-    · intro H
-      cases' H with H H
-      · exact Subset.trans (erase_subset a t) H
-      · rcases H with ⟨u, hu⟩
-        rw [← hu.2]
-        exact Subset.trans (erase_insert_subset a u) hu.1
-  · have : ¬∃ u : Finset α, u ⊆ s ∧ insert a u = t := by simp [Ne.symm (ne_insert_of_not_mem _ _ h)]
-    simp [Finset.erase_eq_of_not_mem h, this]
+  constructor
+  exact fun H => Or.inr ⟨_, H, insert_erase h⟩
+  intro H
+  cases' H with H H
+  exact Subset.trans (erase_subset a t) H
+  rcases H with ⟨u, hu⟩
+  rw [← hu.2]
+  exact Subset.trans (erase_insert_subset a u) hu.1
+  have : ¬∃ u : Finset α, u ⊆ s ∧ insert a u = t := by simp [Ne.symm (ne_insert_of_not_mem _ _ h)]
+  simp [Finset.erase_eq_of_not_mem h, this]
 
 /-- For predicate `p` decidable on subsets, it is decidable whether `p` holds for any subset. -/
 instance decidableExistsOfDecidableSubsets {s : Finset α} {p : ∀ t ⊆ s, Prop}
@@ -244,9 +244,9 @@ theorem powersetCard_self (s : Finset α) : powersetCard s.card s = {s} := by
   ext
   rw [mem_powersetCard, mem_singleton]
   constructor
-  · exact fun ⟨hs, hc⟩ => eq_of_subset_of_card_le hs hc.ge
-  · rintro rfl
-    simp
+  exact fun ⟨hs, hc⟩ => eq_of_subset_of_card_le hs hc.ge
+  rintro rfl
+  simp
 
 theorem pairwise_disjoint_powersetCard (s : Finset α) :
     Pairwise fun i j => Disjoint (s.powersetCard i) (s.powersetCard j) := fun _i _j hij =>
@@ -258,12 +258,12 @@ theorem powerset_card_disjiUnion (s : Finset α) :
       (range (s.card + 1)).disjiUnion (fun i => powersetCard i s)
         (s.pairwise_disjoint_powersetCard.set_pairwise _) := by
   refine ext fun a => ⟨fun ha => ?_, fun ha => ?_⟩
-  · rw [mem_disjiUnion]
-    exact
-      ⟨a.card, mem_range.mpr (Nat.lt_succ_of_le (card_le_card (mem_powerset.mp ha))),
-        mem_powersetCard.mpr ⟨mem_powerset.mp ha, rfl⟩⟩
-  · rcases mem_disjiUnion.mp ha with ⟨i, _hi, ha⟩
-    exact mem_powerset.mpr (mem_powersetCard.mp ha).1
+  rw [mem_disjiUnion]
+  exact
+    ⟨a.card, mem_range.mpr (Nat.lt_succ_of_le (card_le_card (mem_powerset.mp ha))),
+      mem_powersetCard.mpr ⟨mem_powerset.mp ha, rfl⟩⟩
+  rcases mem_disjiUnion.mp ha with ⟨i, _hi, ha⟩
+  exact mem_powerset.mpr (mem_powersetCard.mp ha).1
 
 theorem powerset_card_biUnion [DecidableEq (Finset α)] (s : Finset α) :
     Finset.powerset s = (range (s.card + 1)).biUnion fun i => powersetCard i s := by
@@ -272,17 +272,17 @@ theorem powerset_card_biUnion [DecidableEq (Finset α)] (s : Finset α) :
 theorem powersetCard_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.card) :
     (powersetCard n.succ u).sup id = u := by
   apply le_antisymm
-  · simp_rw [Finset.sup_le_iff, mem_powersetCard]
-    rintro x ⟨h, -⟩
-    exact h
-  · rw [sup_eq_biUnion, le_iff_subset, subset_iff]
-    intro x hx
-    simp only [mem_biUnion, exists_prop, id]
-    obtain ⟨t, ht⟩ : ∃ t, t ∈ powersetCard n (u.erase x) := powersetCard_nonempty.2
-      (le_trans (Nat.le_sub_one_of_lt hn) pred_card_le_card_erase)
-    refine ⟨insert x t, ?_, mem_insert_self _ _⟩
-    rw [← insert_erase hx, powersetCard_succ_insert (not_mem_erase _ _)]
-    exact mem_union_right _ (mem_image_of_mem _ ht)
+  simp_rw [Finset.sup_le_iff, mem_powersetCard]
+  rintro x ⟨h, -⟩
+  exact h
+  rw [sup_eq_biUnion, le_iff_subset, subset_iff]
+  intro x hx
+  simp only [mem_biUnion, exists_prop, id]
+  obtain ⟨t, ht⟩ : ∃ t, t ∈ powersetCard n (u.erase x) := powersetCard_nonempty.2
+    (le_trans (Nat.le_sub_one_of_lt hn) pred_card_le_card_erase)
+  refine ⟨insert x t, ?_, mem_insert_self _ _⟩
+  rw [← insert_erase hx, powersetCard_succ_insert (not_mem_erase _ _)]
+  exact mem_union_right _ (mem_image_of_mem _ ht)
 
 open Classical in
 theorem powersetCard_map {β : Type*} (f : α ↪ β) (n : ℕ) (s : Finset α) :
@@ -290,19 +290,19 @@ theorem powersetCard_map {β : Type*} (f : α ↪ β) (n : ℕ) (s : Finset α) 
   ext fun t => by
     simp only [card_map, mem_powersetCard, le_eq_subset, gt_iff_lt, mem_map, mapEmbedding_apply]
     constructor
-    · intro h
-      have : map f (filter (fun x => (f x ∈ t)) s) = t := by
-        ext x
-        simp only [mem_map, mem_filter, decide_eq_true_eq]
-        exact ⟨fun ⟨_y, ⟨_hy₁, hy₂⟩, hy₃⟩ => hy₃ ▸ hy₂,
-          fun hx => let ⟨y, hy⟩ := mem_map.1 (h.1 hx); ⟨y, ⟨hy.1, hy.2 ▸ hx⟩, hy.2⟩⟩
-      refine ⟨_, ?_, this⟩
-      rw [← card_map f, this, h.2]; simp
-    · rintro ⟨a, ⟨has, rfl⟩, rfl⟩
-      dsimp [RelEmbedding.coe_toEmbedding]
-      -- Porting note: Why is `rw` required here and not `simp`?
-      rw [mapEmbedding_apply]
-      simp [has]
+    intro h
+    have : map f (filter (fun x => (f x ∈ t)) s) = t := by
+      ext x
+      simp only [mem_map, mem_filter, decide_eq_true_eq]
+      exact ⟨fun ⟨_y, ⟨_hy₁, hy₂⟩, hy₃⟩ => hy₃ ▸ hy₂,
+        fun hx => let ⟨y, hy⟩ := mem_map.1 (h.1 hx); ⟨y, ⟨hy.1, hy.2 ▸ hx⟩, hy.2⟩⟩
+    refine ⟨_, ?_, this⟩
+    rw [← card_map f, this, h.2]; simp
+    rintro ⟨a, ⟨has, rfl⟩, rfl⟩
+    dsimp [RelEmbedding.coe_toEmbedding]
+    -- Porting note: Why is `rw` required here and not `simp`?
+    rw [mapEmbedding_apply]
+    simp [has]
 
 end powersetCard
 

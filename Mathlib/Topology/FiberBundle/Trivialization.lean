@@ -91,9 +91,9 @@ lemma ext {e e' : Pretrivialization F proj} (h₁ : ∀ x, e x = e' x)
     (h₂ : ∀ x, e.toPartialEquiv.symm x = e'.toPartialEquiv.symm x) (h₃ : e.baseSet = e'.baseSet) :
     e = e' := by
   ext1 <;> [ext1; exact h₃]
-  · apply h₁
-  · apply h₂
-  · rw [e.source_eq, e'.source_eq, h₃]
+  apply h₁
+  apply h₂
+  rw [e.source_eq, e'.source_eq, h₃]
 
 /-- If the fiber is nonempty, then the projection also is. -/
 lemma toPartialEquiv_injective [Nonempty F] :
@@ -395,12 +395,12 @@ theorem tendsto_nhds_iff {α : Type*} {l : Filter α} {f : α → Z} {z : Z} (hz
   rw [e.nhds_eq_comap_inf_principal hz, tendsto_inf, tendsto_comap_iff, Prod.tendsto_iff, coe_coe,
     tendsto_principal, coe_fst _ hz]
   by_cases hl : ∀ᶠ x in l, f x ∈ e.source
-  · simp only [hl, and_true]
-    refine (tendsto_congr' ?_).and Iff.rfl
-    exact hl.mono fun x ↦ e.coe_fst
-  · simp only [hl, and_false, false_iff, not_and]
-    rw [e.source_eq] at hl hz
-    exact fun h _ ↦ hl <| h <| e.open_baseSet.mem_nhds hz
+  simp only [hl, and_true]
+  refine (tendsto_congr' ?_).and Iff.rfl
+  exact hl.mono fun x ↦ e.coe_fst
+  simp only [hl, and_false, false_iff, not_and]
+  rw [e.source_eq] at hl hz
+  exact fun h _ ↦ hl <| h <| e.open_baseSet.mem_nhds hz
 
 theorem nhds_eq_inf_comap {z : Z} (hz : z ∈ e.source) :
     𝓝 z = comap proj (𝓝 (proj z)) ⊓ comap (Prod.snd ∘ e) (𝓝 (e z).2) := by
@@ -499,7 +499,7 @@ theorem continuousAt_of_comp_left {X : Type*} [TopologicalSpace X] {f : X → Z}
     (e : Trivialization F proj) (hf_proj : ContinuousAt (proj ∘ f) x) (he : proj (f x) ∈ e.baseSet)
     (hf : ContinuousAt (e ∘ f) x) : ContinuousAt f x := by
   rw [e.continuousAt_iff_continuousAt_comp_left]
-  · exact hf
+  exact hf
   rw [e.source_eq, ← preimage_comp]
   exact hf_proj.preimage_mem_nhds (e.open_baseSet.mem_nhds he)
 
@@ -599,8 +599,8 @@ theorem mk_coordChange (e₁ e₂ : Trivialization F proj) {b : B} (h₁ : b ∈
     (b, e₁.coordChange e₂ b x) = e₂ (e₁.toPartialHomeomorph.symm (b, x)) := by
   refine Prod.ext ?_ rfl
   rw [e₂.coe_fst', ← e₁.coe_fst', e₁.apply_symm_apply' h₁]
-  · rwa [e₁.proj_symm_apply' h₁]
-  · rwa [e₁.proj_symm_apply' h₁]
+  rwa [e₁.proj_symm_apply' h₁]
+  rwa [e₁.proj_symm_apply' h₁]
 
 theorem coordChange_apply_snd (e₁ e₂ : Trivialization F proj) {p : Z} (h : proj p ∈ e₁.baseSet) :
     e₁.coordChange e₂ (proj p) (e₁ p).snd = (e₂ p).snd := by
@@ -623,10 +623,10 @@ theorem continuous_coordChange (e₁ e₂ : Trivialization F proj) {b : B} (h₁
     (h₂ : b ∈ e₂.baseSet) : Continuous (e₁.coordChange e₂ b) := by
   refine continuous_snd.comp (e₂.toPartialHomeomorph.continuousOn.comp_continuous
     (e₁.toPartialHomeomorph.continuousOn_symm.comp_continuous ?_ ?_) ?_)
-  · exact continuous_const.prod_mk continuous_id
-  · exact fun x => e₁.mem_target.2 h₁
-  · intro x
-    rwa [e₂.mem_source, e₁.proj_symm_apply' h₁]
+  exact continuous_const.prod_mk continuous_id
+  exact fun x => e₁.mem_target.2 h₁
+  intro x
+  rwa [e₂.mem_source, e₁.proj_symm_apply' h₁]
 
 /-- Coordinate transformation in the fiber induced by a pair of bundle trivializations,
 as a homeomorphism. -/

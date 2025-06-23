@@ -91,9 +91,9 @@ theorem hasDerivAt_tsum_of_isPreconnected (hu : Summable u) (ht : IsOpen t)
     (hy : y ∈ t) : HasDerivAt (fun z => ∑' n, g n z) (∑' n, g' n y) y := by
   simp_rw [hasDerivAt_iff_hasFDerivAt] at hg ⊢
   convert hasFDerivAt_tsum_of_isPreconnected hu ht h't hg ?_ hy₀ hg0 hy
-  · exact (ContinuousLinearMap.smulRightL 𝕜 𝕜 F 1).map_tsum <|
-      .of_norm_bounded u hu fun n ↦ hg' n y hy
-  · simpa? says simpa only [ContinuousLinearMap.norm_smulRight_apply, norm_one, one_mul]
+  exact (ContinuousLinearMap.smulRightL 𝕜 𝕜 F 1).map_tsum <|
+    .of_norm_bounded u hu fun n ↦ hg' n y hy
+  simpa? says simpa only [ContinuousLinearMap.norm_smulRight_apply, norm_one, one_mul]
 
 /-- Consider a series of functions `∑' n, f n x`. If the series converges at a
 point, and all functions in the series are differentiable with a summable bound on the derivatives,
@@ -140,14 +140,14 @@ convergence then the series is zero everywhere so the result still holds. -/
 theorem differentiable_tsum (hu : Summable u) (hf : ∀ n x, HasFDerivAt (f n) (f' n x) x)
     (hf' : ∀ n x, ‖f' n x‖ ≤ u n) : Differentiable 𝕜 fun y => ∑' n, f n y := by
   by_cases h : ∃ x₀, Summable fun n => f n x₀
-  · rcases h with ⟨x₀, hf0⟩
-    intro x
-    exact (hasFDerivAt_tsum hu hf hf' hf0 x).differentiableAt
-  · push_neg at h
-    have : (fun x => ∑' n, f n x) = 0
-    ext1 x; exact tsum_eq_zero_of_not_summable (h x)
-    rw [this]
-    exact differentiable_const 0
+  rcases h with ⟨x₀, hf0⟩
+  intro x
+  exact (hasFDerivAt_tsum hu hf hf' hf0 x).differentiableAt
+  push_neg at h
+  have : (fun x => ∑' n, f n x) = 0
+  ext1 x; exact tsum_eq_zero_of_not_summable (h x)
+  rw [this]
+  exact differentiable_const 0
 
 /-- Consider a series of functions `∑' n, f n x`. If all functions in the series are differentiable
 with a summable bound on the derivatives, then the series is differentiable.
@@ -191,20 +191,20 @@ theorem iteratedFDeriv_tsum (hf : ∀ i, ContDiff 𝕜 N (f i))
     (hk : (k : ℕ∞) ≤ N) :
     (iteratedFDeriv 𝕜 k fun y => ∑' n, f n y) = fun x => ∑' n, iteratedFDeriv 𝕜 k (f n) x := by
   induction' k with k IH
-  · ext1 x
-    simp_rw [iteratedFDeriv_zero_eq_comp]
-    exact (continuousMultilinearCurryFin0 𝕜 E F).symm.toContinuousLinearEquiv.map_tsum
-  · have h'k : (k : ℕ∞) < N := lt_of_lt_of_le (WithTop.coe_lt_coe.2 (Nat.lt_succ_self _)) hk
-    have A : Summable fun n => iteratedFDeriv 𝕜 k (f n) 0 :=
-      .of_norm_bounded (v k) (hv k h'k.le) fun n => h'f k n 0 h'k.le
-    simp_rw [iteratedFDeriv_succ_eq_comp_left, IH h'k.le]
-    rw [fderiv_tsum (hv _ hk) (fun n => (hf n).differentiable_iteratedFDeriv h'k) _ A]
-    · ext1 x
-      exact (continuousMultilinearCurryLeftEquiv 𝕜
-        (fun _ : Fin (k + 1) => E) F).toContinuousLinearEquiv.map_tsum
-    · intro n x
-      simpa only [iteratedFDeriv_succ_eq_comp_left, LinearIsometryEquiv.norm_map, comp_apply]
-        using h'f k.succ n x hk
+  ext1 x
+  simp_rw [iteratedFDeriv_zero_eq_comp]
+  exact (continuousMultilinearCurryFin0 𝕜 E F).symm.toContinuousLinearEquiv.map_tsum
+  have h'k : (k : ℕ∞) < N := lt_of_lt_of_le (WithTop.coe_lt_coe.2 (Nat.lt_succ_self _)) hk
+  have A : Summable fun n => iteratedFDeriv 𝕜 k (f n) 0 :=
+    .of_norm_bounded (v k) (hv k h'k.le) fun n => h'f k n 0 h'k.le
+  simp_rw [iteratedFDeriv_succ_eq_comp_left, IH h'k.le]
+  rw [fderiv_tsum (hv _ hk) (fun n => (hf n).differentiable_iteratedFDeriv h'k) _ A]
+  ext1 x
+  exact (continuousMultilinearCurryLeftEquiv 𝕜
+    (fun _ : Fin (k + 1) => E) F).toContinuousLinearEquiv.map_tsum
+  intro n x
+  simpa only [iteratedFDeriv_succ_eq_comp_left, LinearIsometryEquiv.norm_map, comp_apply]
+    using h'f k.succ n x hk
 
 /-- Consider a series of smooth functions, with summable uniform bounds on the successive
 derivatives. Then the iterated derivative of the sum is the sum of the iterated derivative. -/
@@ -223,23 +223,23 @@ theorem contDiff_tsum (hf : ∀ i, ContDiff 𝕜 N (f i)) (hv : ∀ k : ℕ, (k 
     ContDiff 𝕜 N fun x => ∑' i, f i x := by
   rw [contDiff_iff_continuous_differentiable]
   constructor
-  · intro m hm
-    rw [iteratedFDeriv_tsum hf hv h'f hm]
-    refine continuous_tsum ?_ (hv m hm) ?_
-    · intro i
-      exact ContDiff.continuous_iteratedFDeriv hm (hf i)
-    · intro n x
-      exact h'f _ _ _ hm
-  · intro m hm
-    have h'm : ((m + 1 : ℕ) : ℕ∞) ≤ N
-    simpa only [ENat.coe_add, ENat.coe_one] using ENat.add_one_le_of_lt hm
-    rw [iteratedFDeriv_tsum hf hv h'f hm.le]
-    have A :
-      ∀ n x, HasFDerivAt (iteratedFDeriv 𝕜 m (f n)) (fderiv 𝕜 (iteratedFDeriv 𝕜 m (f n)) x) x :=
-      fun n x => (ContDiff.differentiable_iteratedFDeriv hm (hf n)).differentiableAt.hasFDerivAt
-    refine differentiable_tsum (hv _ h'm) A fun n x => ?_
-    rw [fderiv_iteratedFDeriv, comp_apply, LinearIsometryEquiv.norm_map]
-    exact h'f _ _ _ h'm
+  intro m hm
+  rw [iteratedFDeriv_tsum hf hv h'f hm]
+  refine continuous_tsum ?_ (hv m hm) ?_
+  intro i
+  exact ContDiff.continuous_iteratedFDeriv hm (hf i)
+  intro n x
+  exact h'f _ _ _ hm
+  intro m hm
+  have h'm : ((m + 1 : ℕ) : ℕ∞) ≤ N
+  simpa only [ENat.coe_add, ENat.coe_one] using ENat.add_one_le_of_lt hm
+  rw [iteratedFDeriv_tsum hf hv h'f hm.le]
+  have A :
+    ∀ n x, HasFDerivAt (iteratedFDeriv 𝕜 m (f n)) (fderiv 𝕜 (iteratedFDeriv 𝕜 m (f n)) x) x :=
+    fun n x => (ContDiff.differentiable_iteratedFDeriv hm (hf n)).differentiableAt.hasFDerivAt
+  refine differentiable_tsum (hv _ h'm) A fun n x => ?_
+  rw [fderiv_iteratedFDeriv, comp_apply, LinearIsometryEquiv.norm_map]
+  exact h'f _ _ _ h'm
 
 open Classical in
 /-- Consider a series of functions `∑' i, f i x`. Assume that each individual function `f i` is of

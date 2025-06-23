@@ -374,29 +374,29 @@ theorem compare_eq_iff_eq {a b : α} : (compare a b = .eq) ↔ a = b := by
 
 theorem compare_le_iff_le {a b : α} : (compare a b ≠ .gt) ↔ a ≤ b := by
   cases h : compare a b <;> simp
-  · exact le_of_lt <| compare_lt_iff_lt.1 h
-  · exact le_of_eq <| compare_eq_iff_eq.1 h
-  · exact compare_gt_iff_gt.1 h
+  exact le_of_lt <| compare_lt_iff_lt.1 h
+  exact le_of_eq <| compare_eq_iff_eq.1 h
+  exact compare_gt_iff_gt.1 h
 
 theorem compare_ge_iff_ge {a b : α} : (compare a b ≠ .lt) ↔ a ≥ b := by
   cases h : compare a b <;> simp
-  · exact compare_lt_iff_lt.1 h
-  · exact le_of_eq <| (·.symm) <| compare_eq_iff_eq.1 h
-  · exact le_of_lt <| compare_gt_iff_gt.1 h
+  exact compare_lt_iff_lt.1 h
+  exact le_of_eq <| (·.symm) <| compare_eq_iff_eq.1 h
+  exact le_of_lt <| compare_gt_iff_gt.1 h
 
 theorem compare_iff (a b : α) {o : Ordering} : compare a b = o ↔ o.toRel a b := by
   cases o <;> simp only [Ordering.toRel]
-  · exact compare_lt_iff_lt
-  · exact compare_eq_iff_eq
-  · exact compare_gt_iff_gt
+  exact compare_lt_iff_lt
+  exact compare_eq_iff_eq
+  exact compare_gt_iff_gt
 
 instance : Batteries.TransCmp (compare (α := α)) where
   symm a b := by
     cases h : compare a b <;>
     simp only [Ordering.swap] <;> symm
-    · exact compare_gt_iff_gt.2 <| compare_lt_iff_lt.1 h
-    · exact compare_eq_iff_eq.2 <| compare_eq_iff_eq.1 h |>.symm
-    · exact compare_lt_iff_lt.2 <| compare_gt_iff_gt.1 h
+    exact compare_gt_iff_gt.2 <| compare_lt_iff_lt.1 h
+    exact compare_eq_iff_eq.2 <| compare_eq_iff_eq.1 h |>.symm
+    exact compare_lt_iff_lt.2 <| compare_gt_iff_gt.1 h
   le_trans := fun h₁ h₂ ↦
     compare_le_iff_le.2 <| le_trans (compare_le_iff_le.1 h₁) (compare_le_iff_le.1 h₂)
 

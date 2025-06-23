@@ -164,10 +164,10 @@ theorem exists_eq_u (a : α) : (∃ b : β, a = u b) ↔ a = u (l a) :=
 
 theorem u_eq (gc : GaloisConnection l u) {z : α} {y : β} : u y = z ↔ ∀ x, x ≤ z ↔ l x ≤ y := by
   constructor
-  · rintro rfl x
-    exact (gc x y).symm
-  · intro H
-    exact ((H <| u y).mpr (gc.l_u_le y)).antisymm ((gc _ _).mp <| (H z).mp le_rfl)
+  rintro rfl x
+  exact (gc x y).symm
+  intro H
+  exact ((H <| u y).mpr (gc.l_u_le y)).antisymm ((gc _ _).mp <| (H z).mp le_rfl)
 
 end PartialOrder
 

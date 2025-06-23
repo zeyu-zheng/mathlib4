@@ -252,16 +252,16 @@ abbrev StrictOrderedSemiring.toOrderedSemiring' [@DecidableRel α (· ≤ ·)] :
   { ‹StrictOrderedSemiring α› with
     mul_le_mul_of_nonneg_left := fun a b c hab hc => by
       obtain rfl | hab := Decidable.eq_or_lt_of_le hab
-      · rfl
+      rfl
       obtain rfl | hc := Decidable.eq_or_lt_of_le hc
-      · simp
-      · exact (mul_lt_mul_of_pos_left hab hc).le,
+      simp
+      exact (mul_lt_mul_of_pos_left hab hc).le,
     mul_le_mul_of_nonneg_right := fun a b c hab hc => by
       obtain rfl | hab := Decidable.eq_or_lt_of_le hab
-      · rfl
+      rfl
       obtain rfl | hc := Decidable.eq_or_lt_of_le hc
-      · simp
-      · exact (mul_lt_mul_of_pos_right hab hc).le }
+      simp
+      exact (mul_lt_mul_of_pos_right hab hc).le }
 
 -- see Note [lower instance priority]
 instance (priority := 100) StrictOrderedSemiring.toOrderedSemiring : OrderedSemiring α :=
@@ -321,10 +321,10 @@ abbrev StrictOrderedRing.toOrderedRing' [@DecidableRel α (· ≤ ·)] : Ordered
   { ‹StrictOrderedRing α›, (Ring.toSemiring : Semiring α) with
     mul_nonneg := fun a b ha hb => by
       obtain ha | ha := Decidable.eq_or_lt_of_le ha
-      · rw [← ha, zero_mul]
+      rw [← ha, zero_mul]
       obtain hb | hb := Decidable.eq_or_lt_of_le hb
-      · rw [← hb, mul_zero]
-      · exact (StrictOrderedRing.mul_pos _ _ ha hb).le }
+      rw [← hb, mul_zero]
+      exact (StrictOrderedRing.mul_pos _ _ ha hb).le }
 
 -- see Note [lower instance priority]
 instance (priority := 100) StrictOrderedRing.toOrderedRing : OrderedRing α where

@@ -895,8 +895,8 @@ theorem sInter_empty : ⋂₀ (∅ : ZFSet) = ∅ := dif_neg <| by simp
 
 theorem mem_of_mem_sInter {x y z : ZFSet} (hy : y ∈ ⋂₀ x) (hz : z ∈ x) : y ∈ z := by
   rcases eq_empty_or_nonempty x with (rfl | hx)
-  · exact (not_mem_empty z hz).elim
-  · exact (mem_sInter hx).1 hy z hz
+  exact (not_mem_empty z hz).elim
+  exact (mem_sInter hx).1 hy z hz
 
 theorem mem_sUnion_of_mem {x y z : ZFSet} (hy : y ∈ z) (hz : z ∈ x) : y ∈ ⋃₀ x :=
   mem_sUnion.2 ⟨z, hz, hy⟩
@@ -1058,11 +1058,11 @@ theorem mem_range {α : Type u} {f : α → ZFSet.{max u v}} {x : ZFSet.{max u v
     x ∈ range.{u, v} f ↔ x ∈ Set.range f :=
   Quotient.inductionOn x fun y => by
     constructor
-    · rintro ⟨z, hz⟩
-      exact ⟨z.down, Quotient.eq_mk_iff_out.2 hz.symm⟩
-    · rintro ⟨z, hz⟩
-      use ULift.up z
-      simpa [hz] using PSet.Equiv.symm (Quotient.mk_out y)
+    rintro ⟨z, hz⟩
+    exact ⟨z.down, Quotient.eq_mk_iff_out.2 hz.symm⟩
+    rintro ⟨z, hz⟩
+    use ULift.up z
+    simpa [hz] using PSet.Equiv.symm (Quotient.mk_out y)
 
 @[simp]
 theorem toSet_range {α : Type u} (f : α → ZFSet.{max u v}) :
@@ -1088,30 +1088,30 @@ theorem mem_pairSep {p} {x y z : ZFSet.{u}} :
   rcases e with ⟨a, ax, b, bY, rfl, pab⟩
   simp only [mem_powerset, subset_def, mem_union, pair, mem_pair]
   rintro u (rfl | rfl) v <;> simp only [mem_singleton, mem_pair]
-  · rintro rfl
-    exact Or.inl ax
-  · rintro (rfl | rfl) <;> [left; right] <;> assumption
+  rintro rfl
+  exact Or.inl ax
+  rintro (rfl | rfl) <;> [left; right] <;> assumption
 
 theorem pair_injective : Function.Injective2 pair := fun x x' y y' H => by
   have ae := ZFSet.ext_iff.1 H
   simp only [pair, mem_pair] at ae
   obtain rfl : x = x' := by
     cases' (ae {x}).1 (by simp) with h h
-    · exact singleton_injective h
-    · have m : x' ∈ ({x} : ZFSet) := by simp [h]
-      rw [mem_singleton.mp m]
+    exact singleton_injective h
+    have m : x' ∈ ({x} : ZFSet) := by simp [h]
+    rw [mem_singleton.mp m]
   have he : x = y → y = y'
   rintro rfl
   cases' (ae {x, y'}).2 (by simp only [eq_self_iff_true, or_true_iff]) with xy'x xy'xx
-  · rw [eq_comm, ← mem_singleton, ← xy'x, mem_pair]
-    exact Or.inr rfl
-  · simpa [eq_comm] using (ZFSet.ext_iff.1 xy'xx y').1 (by simp)
+  rw [eq_comm, ← mem_singleton, ← xy'x, mem_pair]
+  exact Or.inr rfl
+  simpa [eq_comm] using (ZFSet.ext_iff.1 xy'xx y').1 (by simp)
   obtain xyx | xyy' := (ae {x, y}).1 (by simp)
-  · obtain rfl := mem_singleton.mp ((ZFSet.ext_iff.1 xyx y).1 <| by simp)
-    simp [he rfl]
-  · obtain rfl | yy' := mem_pair.mp ((ZFSet.ext_iff.1 xyy' y).1 <| by simp)
-    · simp [he rfl]
-    · simp [yy']
+  obtain rfl := mem_singleton.mp ((ZFSet.ext_iff.1 xyx y).1 <| by simp)
+  simp [he rfl]
+  obtain rfl | yy' := mem_pair.mp ((ZFSet.ext_iff.1 xyy' y).1 <| by simp)
+  simp [he rfl]
+  simp [yy']
 
 @[simp]
 theorem pair_inj {x y x' y' : ZFSet} : pair x y = pair x' y' ↔ x = x' ∧ y = y' :=
@@ -1201,8 +1201,8 @@ theorem Hereditarily.empty : Hereditarily p x → p ∅ := by
   apply @ZFSet.inductionOn _ x
   intro y IH h
   rcases ZFSet.eq_empty_or_nonempty y with (rfl | ⟨a, ha⟩)
-  · exact h.self
-  · exact IH a ha (h.mem ha)
+  exact h.self
+  exact IH a ha (h.mem ha)
 
 end Hereditarily
 
@@ -1405,9 +1405,9 @@ theorem powerset_apply {A : Class.{u}} {x : ZFSet.{u}} : powerset A x ↔ ↑x �
 @[simp]
 theorem sUnion_apply {x : Class} {y : ZFSet} : (⋃₀ x) y ↔ ∃ z : ZFSet, x z ∧ y ∈ z := by
   constructor
-  · rintro ⟨-, ⟨z, rfl, hxz⟩, hyz⟩
-    exact ⟨z, hxz, hyz⟩
-  · exact fun ⟨z, hxz, hyz⟩ => ⟨_, coe_mem.2 hxz, hyz⟩
+  rintro ⟨-, ⟨z, rfl, hxz⟩, hyz⟩
+  exact ⟨z, hxz, hyz⟩
+  exact fun ⟨z, hxz, hyz⟩ => ⟨_, coe_mem.2 hxz, hyz⟩
 
 @[simp, norm_cast]
 theorem coe_sUnion (x : ZFSet.{u}) : ↑(⋃₀ x : ZFSet) = ⋃₀ (x : Class.{u}) :=
@@ -1417,10 +1417,10 @@ theorem coe_sUnion (x : ZFSet.{u}) : ↑(⋃₀ x : ZFSet) = ⋃₀ (x : Class.{
 @[simp]
 theorem mem_sUnion {x y : Class.{u}} : y ∈ ⋃₀ x ↔ ∃ z, z ∈ x ∧ y ∈ z := by
   constructor
-  · rintro ⟨w, rfl, z, hzx, hwz⟩
-    exact ⟨z, hzx, coe_mem.2 hwz⟩
-  · rintro ⟨w, hwx, z, rfl, hwz⟩
-    exact ⟨z, rfl, w, hwx, hwz⟩
+  rintro ⟨w, rfl, z, hzx, hwz⟩
+  exact ⟨z, hzx, coe_mem.2 hwz⟩
+  rintro ⟨w, hwx, z, rfl, hwz⟩
+  exact ⟨z, rfl, w, hwx, hwz⟩
 
 theorem sInter_apply {x : Class.{u}} {y : ZFSet.{u}} : (⋂₀ x) y ↔ ∀ z : ZFSet.{u}, x z → y ∈ z := by
   refine ⟨fun hxy z hxz => hxy _ ⟨z, rfl, hxz⟩, ?_⟩
@@ -1534,10 +1534,10 @@ private lemma toSet_equiv_aux {s : Set ZFSet.{u}} (hs : Small.{u} s) :
     ext x
     rw [mem_toSet, ← mk_out x, mk_mem_iff, mk_out]
     refine ⟨?_, fun xs ↦ ⟨equivShrink s (Subtype.mk x xs), ?_⟩⟩
-    · rintro ⟨b, h2⟩
-      rw [← ZFSet.eq, ZFSet.mk_out] at h2
-      simp [h2]
-    · simp [PSet.Equiv.refl]
+    rintro ⟨b, h2⟩
+    rw [← ZFSet.eq, ZFSet.mk_out] at h2
+    simp [h2]
+    simp [PSet.Equiv.refl]
 
 /-- `ZFSet.toSet` as an equivalence. -/
 @[simps apply_coe]

@@ -307,12 +307,12 @@ theorem isClosed_zeroLocus (s : Set A) : IsClosed (zeroLocus 𝒜 s) := by
 theorem zeroLocus_vanishingIdeal_eq_closure (t : Set (ProjectiveSpectrum 𝒜)) :
     zeroLocus 𝒜 (vanishingIdeal t : Set A) = closure t := by
   apply Set.Subset.antisymm
-  · rintro x hx t' ⟨ht', ht⟩
-    obtain ⟨fs, rfl⟩ : ∃ s, t' = zeroLocus 𝒜 s := by rwa [isClosed_iff_zeroLocus] at ht'
-    rw [subset_zeroLocus_iff_subset_vanishingIdeal] at ht
-    exact Set.Subset.trans ht hx
-  · rw [(isClosed_zeroLocus _ _).closure_subset_iff]
-    exact subset_zeroLocus_vanishingIdeal 𝒜 t
+  rintro x hx t' ⟨ht', ht⟩
+  obtain ⟨fs, rfl⟩ : ∃ s, t' = zeroLocus 𝒜 s := by rwa [isClosed_iff_zeroLocus] at ht'
+  rw [subset_zeroLocus_iff_subset_vanishingIdeal] at ht
+  exact Set.Subset.trans ht hx
+  rw [(isClosed_zeroLocus _ _).closure_subset_iff]
+  exact subset_zeroLocus_vanishingIdeal 𝒜 t
 
 theorem vanishingIdeal_closure (t : Set (ProjectiveSpectrum 𝒜)) :
     vanishingIdeal (closure t) = vanishingIdeal t := by
@@ -375,26 +375,26 @@ theorem basicOpen_eq_union_of_projection (f : A) :
     Set.ext fun z => by
       erw [mem_coe_basicOpen, TopologicalSpace.Opens.mem_sSup]
       constructor <;> intro hz
-      · rcases show ∃ i, GradedAlgebra.proj 𝒜 i f ∉ z.asHomogeneousIdeal by
-          contrapose! hz with H
-          rw [← DirectSum.sum_support_decompose 𝒜 f]
-          apply Ideal.sum_mem _ fun i _ => H i with ⟨i, hi⟩
-        exact ⟨basicOpen 𝒜 (GradedAlgebra.proj 𝒜 i f), ⟨i, rfl⟩, by rwa [mem_basicOpen]⟩
-      · obtain ⟨_, ⟨i, rfl⟩, hz⟩ := hz
-        exact fun rid => hz (z.1.2 i rid)
+      rcases show ∃ i, GradedAlgebra.proj 𝒜 i f ∉ z.asHomogeneousIdeal by
+        contrapose! hz with H
+        rw [← DirectSum.sum_support_decompose 𝒜 f]
+        apply Ideal.sum_mem _ fun i _ => H i with ⟨i, hi⟩
+      exact ⟨basicOpen 𝒜 (GradedAlgebra.proj 𝒜 i f), ⟨i, rfl⟩, by rwa [mem_basicOpen]⟩
+      obtain ⟨_, ⟨i, rfl⟩, hz⟩ := hz
+      exact fun rid => hz (z.1.2 i rid)
 
 theorem isTopologicalBasis_basic_opens :
     TopologicalSpace.IsTopologicalBasis
       (Set.range fun r : A => (basicOpen 𝒜 r : Set (ProjectiveSpectrum 𝒜))) := by
   apply TopologicalSpace.isTopologicalBasis_of_isOpen_of_nhds
-  · rintro _ ⟨r, rfl⟩
-    exact isOpen_basicOpen 𝒜
-  · rintro p U hp ⟨s, hs⟩
-    rw [← compl_compl U, Set.mem_compl_iff, ← hs, mem_zeroLocus, Set.not_subset] at hp
-    obtain ⟨f, hfs, hfp⟩ := hp
-    refine ⟨basicOpen 𝒜 f, ⟨f, rfl⟩, hfp, ?_⟩
-    rw [← Set.compl_subset_compl, ← hs, basicOpen_eq_zeroLocus_compl, compl_compl]
-    exact zeroLocus_anti_mono 𝒜 (Set.singleton_subset_iff.mpr hfs)
+  rintro _ ⟨r, rfl⟩
+  exact isOpen_basicOpen 𝒜
+  rintro p U hp ⟨s, hs⟩
+  rw [← compl_compl U, Set.mem_compl_iff, ← hs, mem_zeroLocus, Set.not_subset] at hp
+  obtain ⟨f, hfs, hfp⟩ := hp
+  refine ⟨basicOpen 𝒜 f, ⟨f, rfl⟩, hfp, ?_⟩
+  rw [← Set.compl_subset_compl, ← hs, basicOpen_eq_zeroLocus_compl, compl_compl]
+  exact zeroLocus_anti_mono 𝒜 (Set.singleton_subset_iff.mpr hfs)
 
 end BasicOpen
 

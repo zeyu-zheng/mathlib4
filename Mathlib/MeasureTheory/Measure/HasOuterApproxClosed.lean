@@ -62,8 +62,8 @@ theorem tendsto_lintegral_nn_filter_of_le_const {ι : Type*} {L : Filter ι} [L.
   refine tendsto_lintegral_filter_of_dominated_convergence (fun _ ↦ c)
     (eventually_of_forall fun i ↦ (ENNReal.continuous_coe.comp (fs i).continuous).measurable) ?_
     (@lintegral_const_lt_top _ _ μ _ _ (@ENNReal.coe_ne_top c)).ne ?_
-  · simpa only [Function.comp_apply, ENNReal.coe_le_coe] using fs_le_const
-  · simpa only [Function.comp_apply, ENNReal.tendsto_coe] using fs_lim
+  simpa only [Function.comp_apply, ENNReal.coe_le_coe] using fs_le_const
+  simpa only [Function.comp_apply, ENNReal.tendsto_coe] using fs_lim
 
 /-- If bounded continuous functions tend to the indicator of a measurable set and are
 uniformly bounded, then their integrals against a finite measure tend to the measure of the set.
@@ -155,21 +155,21 @@ lemma indicator_le_apprSeq (n : ℕ) :
     indicator F (fun _ ↦ 1) ≤ hF.apprSeq n := by
   intro x
   by_cases hxF : x ∈ F
-  · simp only [hxF, indicator_of_mem, apprSeq_apply_eq_one hF n, le_refl]
-  · simp only [hxF, not_false_eq_true, indicator_of_not_mem, zero_le]
+  simp only [hxF, indicator_of_mem, apprSeq_apply_eq_one hF n, le_refl]
+  simp only [hxF, not_false_eq_true, indicator_of_not_mem, zero_le]
 
 /-- The measure of a closed set is at most the integral of any function in a decreasing
 approximating sequence to the indicator of the set. -/
 theorem measure_le_lintegral [MeasurableSpace X] [OpensMeasurableSpace X] (μ : Measure X) (n : ℕ) :
     μ F ≤ ∫⁻ x, (hF.apprSeq n x : ℝ≥0∞) ∂μ := by
   convert_to ∫⁻ x, (F.indicator (fun _ ↦ (1 : ℝ≥0∞))) x ∂μ ≤ ∫⁻ x, hF.apprSeq n x ∂μ
-  · rw [lintegral_indicator _ hF.measurableSet]
-    simp only [lintegral_one, MeasurableSet.univ, Measure.restrict_apply, univ_inter]
-  · apply lintegral_mono
-    intro x
-    by_cases hxF : x ∈ F
-    · simp only [hxF, indicator_of_mem, apprSeq_apply_eq_one hF n hxF, ENNReal.coe_one, le_refl]
-    · simp only [hxF, not_false_eq_true, indicator_of_not_mem, zero_le]
+  rw [lintegral_indicator _ hF.measurableSet]
+  simp only [lintegral_one, MeasurableSet.univ, Measure.restrict_apply, univ_inter]
+  apply lintegral_mono
+  intro x
+  by_cases hxF : x ∈ F
+  simp only [hxF, indicator_of_mem, apprSeq_apply_eq_one hF n hxF, ENNReal.coe_one, le_refl]
+  simp only [hxF, not_false_eq_true, indicator_of_not_mem, zero_le]
 
 /-- The integrals along a decreasing approximating sequence to the indicator of a closed set
 tend to the measure of the closed set. -/
@@ -187,15 +187,15 @@ noncomputable instance (X : Type*) [TopologicalSpace X]
   refine ⟨fun F hF ↦ ?_⟩
   use fun n ↦ thickenedIndicator (δ := (1 : ℝ) / (n + 1)) Nat.one_div_pos_of_nat F
   refine ⟨?_, ⟨?_, ?_⟩⟩
-  · exact fun n x ↦ thickenedIndicator_le_one Nat.one_div_pos_of_nat F x
-  · exact fun n x hxF ↦ one_le_thickenedIndicator_apply X Nat.one_div_pos_of_nat hxF
-  · have key := thickenedIndicator_tendsto_indicator_closure
-              (δseq := fun (n : ℕ) ↦ (1 : ℝ) / (n + 1))
-              (fun _ ↦ Nat.one_div_pos_of_nat) tendsto_one_div_add_atTop_nhds_zero_nat F
-    rw [tendsto_pi_nhds] at *
-    intro x
-    nth_rw 2 [← IsClosed.closure_eq hF]
-    exact key x
+  exact fun n x ↦ thickenedIndicator_le_one Nat.one_div_pos_of_nat F x
+  exact fun n x hxF ↦ one_le_thickenedIndicator_apply X Nat.one_div_pos_of_nat hxF
+  have key := thickenedIndicator_tendsto_indicator_closure
+            (δseq := fun (n : ℕ) ↦ (1 : ℝ) / (n + 1))
+            (fun _ ↦ Nat.one_div_pos_of_nat) tendsto_one_div_add_atTop_nhds_zero_nat F
+  rw [tendsto_pi_nhds] at *
+  intro x
+  nth_rw 2 [← IsClosed.closure_eq hF]
+  exact key x
 
 namespace MeasureTheory
 
@@ -226,9 +226,9 @@ theorem ext_of_forall_lintegral_eq_of_IsFiniteMeasure {Ω : Type*}
     μ = ν := by
   have key := @measure_isClosed_eq_of_forall_lintegral_eq_of_isFiniteMeasure Ω _ _ _ _ μ ν _ h
   apply ext_of_generate_finite _ ?_ isPiSystem_isClosed
-  · exact fun F F_closed ↦ key F_closed
-  · exact key isClosed_univ
-  · rw [BorelSpace.measurable_eq (α := Ω), borel_eq_generateFrom_isClosed]
+  exact fun F F_closed ↦ key F_closed
+  exact key isClosed_univ
+  rw [BorelSpace.measurable_eq (α := Ω), borel_eq_generateFrom_isClosed]
 
 end MeasureTheory -- namespace
 

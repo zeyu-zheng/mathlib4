@@ -56,9 +56,9 @@ lemma strictMono_eulerMascheroniSeq : StrictMono eulerMascheroniSeq := by
     Nat.cast_add_one, div_self (by positivity), sub_pos, one_div, Rat.cast_inv, Rat.cast_add,
     Rat.cast_one, Rat.cast_natCast]
   refine (log_lt_sub_one_of_pos ?_ (ne_of_gt <| lt_add_of_pos_right _ ?_)).trans_le (le_of_eq ?_)
-  · positivity
-  · positivity
-  · simp only [add_sub_cancel_left]
+  positivity
+  positivity
+  simp only [add_sub_cancel_left]
 
 lemma one_half_lt_eulerMascheroniSeq_six : 1 / 2 < eulerMascheroniSeq 6 := by
   have : eulerMascheroniSeq 6 = 49 / 20 - log 7
@@ -84,16 +84,16 @@ lemma eulerMascheroniSeq'_one : eulerMascheroniSeq' 1 = 1 := by
 lemma strictAnti_eulerMascheroniSeq' : StrictAnti eulerMascheroniSeq' := by
   refine strictAnti_nat_of_succ_lt (fun n ↦ ?_)
   rcases Nat.eq_zero_or_pos n with rfl | hn
-  · simp [eulerMascheroniSeq']
+  simp [eulerMascheroniSeq']
   simp_rw [eulerMascheroniSeq', eq_false_intro hn.ne', if_false]
   rw [← sub_pos, sub_sub_sub_comm,
     harmonic_succ, Rat.cast_add, ← sub_sub, sub_self, zero_sub, sub_eq_add_neg, neg_sub,
     ← sub_eq_neg_add, sub_pos, ← log_div (by positivity) (by positivity), ← neg_lt_neg_iff,
     ← log_inv]
   refine (log_lt_sub_one_of_pos ?_ ?_).trans_le (le_of_eq ?_)
-  · positivity
-  · field_simp
-  · field_simp
+  positivity
+  field_simp
+  field_simp
 
 lemma eulerMascheroniSeq'_six_lt_two_thirds : eulerMascheroniSeq' 6 < 2 / 3 := by
   have h1 : eulerMascheroniSeq' 6 = 49 / 20 - log 6
@@ -106,14 +106,14 @@ lemma eulerMascheroniSeq'_six_lt_two_thirds : eulerMascheroniSeq' 6 < 2 / 3 := b
   refine lt_trans this ?_
   rw [← rpow_lt_rpow_iff (z := 60), ← rpow_mul, div_mul_cancel₀, ← Nat.cast_ofNat,
     ← Nat.cast_ofNat, rpow_natCast, Nat.cast_ofNat, ← Nat.cast_ofNat (n := 60), rpow_natCast]
-  · norm_num
+  norm_num
   all_goals positivity
 
 lemma eulerMascheroniSeq_lt_eulerMascheroniSeq' (m n : ℕ) :
     eulerMascheroniSeq m < eulerMascheroniSeq' n := by
   have (r : ℕ) : eulerMascheroniSeq r < eulerMascheroniSeq' r
   rcases eq_zero_or_pos r with rfl | hr
-  · simp [eulerMascheroniSeq, eulerMascheroniSeq']
+  simp [eulerMascheroniSeq, eulerMascheroniSeq']
   simp only [eulerMascheroniSeq, eulerMascheroniSeq', hr.ne', if_false]
   gcongr
   linarith
@@ -128,8 +128,8 @@ noncomputable def eulerMascheroniConstant : ℝ := limUnder atTop eulerMascheron
 lemma tendsto_eulerMascheroniSeq :
     Tendsto eulerMascheroniSeq atTop (𝓝 eulerMascheroniConstant) := by
   have := tendsto_atTop_ciSup strictMono_eulerMascheroniSeq.monotone ?_
-  · rwa [eulerMascheroniConstant, this.limUnder_eq]
-  · exact ⟨_, fun _ ⟨_, hn⟩ ↦ hn ▸ (eulerMascheroniSeq_lt_eulerMascheroniSeq' _ 1).le⟩
+  rwa [eulerMascheroniConstant, this.limUnder_eq]
+  exact ⟨_, fun _ ⟨_, hn⟩ ↦ hn ▸ (eulerMascheroniSeq_lt_eulerMascheroniSeq' _ 1).le⟩
 
 lemma tendsto_harmonic_sub_log_add_one :
     Tendsto (fun n : ℕ ↦ harmonic n - log (n + 1)) atTop (𝓝 eulerMascheroniConstant) :=

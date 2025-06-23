@@ -97,9 +97,9 @@ theorem stream_succ_of_some {p : IntFractPair K} (h : IntFractPair.stream v n = 
 -/
 theorem stream_succ_of_int (a : ℤ) (n : ℕ) : IntFractPair.stream (a : K) (n + 1) = none := by
   induction' n with n ih
-  · refine IntFractPair.stream_eq_none_of_fr_eq_zero (IntFractPair.stream_zero (a : K)) ?_
-    simp only [IntFractPair.of, Int.fract_intCast]
-  · exact IntFractPair.succ_nth_stream_eq_none_iff.mpr (Or.inl ih)
+  refine IntFractPair.stream_eq_none_of_fr_eq_zero (IntFractPair.stream_zero (a : K)) ?_
+  simp only [IntFractPair.of, Int.fract_intCast]
+  exact IntFractPair.succ_nth_stream_eq_none_iff.mpr (Or.inl ih)
 
 theorem exists_succ_nth_stream_of_fr_zero {ifp_succ_n : IntFractPair K}
     (stream_succ_nth_eq : IntFractPair.stream v (n + 1) = some ifp_succ_n)
@@ -119,17 +119,17 @@ the inverse of the fractional part of `v`.
 theorem stream_succ (h : Int.fract v ≠ 0) (n : ℕ) :
     IntFractPair.stream v (n + 1) = IntFractPair.stream (Int.fract v)⁻¹ n := by
   induction' n with n ih
-  · have H : (IntFractPair.of v).fr = Int.fract v := rfl
-    rw [stream_zero, stream_succ_of_some (stream_zero v) (ne_of_eq_of_ne H h), H]
-  · rcases eq_or_ne (IntFractPair.stream (Int.fract v)⁻¹ n) none with hnone | hsome
-    · rw [hnone] at ih
-      rw [succ_nth_stream_eq_none_iff.mpr (Or.inl hnone),
-        succ_nth_stream_eq_none_iff.mpr (Or.inl ih)]
-    · obtain ⟨p, hp⟩ := Option.ne_none_iff_exists'.mp hsome
-      rw [hp] at ih
-      rcases eq_or_ne p.fr 0 with hz | hnz
-      · rw [stream_eq_none_of_fr_eq_zero hp hz, stream_eq_none_of_fr_eq_zero ih hz]
-      · rw [stream_succ_of_some hp hnz, stream_succ_of_some ih hnz]
+  have H : (IntFractPair.of v).fr = Int.fract v := rfl
+  rw [stream_zero, stream_succ_of_some (stream_zero v) (ne_of_eq_of_ne H h), H]
+  rcases eq_or_ne (IntFractPair.stream (Int.fract v)⁻¹ n) none with hnone | hsome
+  rw [hnone] at ih
+  rw [succ_nth_stream_eq_none_iff.mpr (Or.inl hnone),
+    succ_nth_stream_eq_none_iff.mpr (Or.inl ih)]
+  obtain ⟨p, hp⟩ := Option.ne_none_iff_exists'.mp hsome
+  rw [hp] at ih
+  rcases eq_or_ne p.fr 0 with hz | hnz
+  rw [stream_eq_none_of_fr_eq_zero hp hz, stream_eq_none_of_fr_eq_zero ih hz]
+  rw [stream_succ_of_some hp hnz, stream_succ_of_some ih hnz]
 
 end IntFractPair
 
@@ -265,8 +265,8 @@ theorem of_s_of_int (a : ℤ) : (of (a : K)).s = Stream'.Seq.nil :=
   haveI h : ∀ n, (of (a : K)).s.get? n = none := by
     intro n
     induction' n with n ih
-    · rw [of_s_head_aux, stream_succ_of_int, Option.bind]
-    · exact (of (a : K)).s.prop ih
+    rw [of_s_head_aux, stream_succ_of_int, Option.bind]
+    exact (of (a : K)).s.prop ih
   Stream'.Seq.ext fun n => (h n).trans (Stream'.Seq.get?_nil n).symm
 
 variable {K} (v)
@@ -276,18 +276,18 @@ the fractional part of `v`.
 -/
 theorem of_s_succ (n : ℕ) : (of v).s.get? (n + 1) = (of (fract v)⁻¹).s.get? n := by
   rcases eq_or_ne (fract v) 0 with h | h
-  · obtain ⟨a, rfl⟩ : ∃ a : ℤ, v = a := ⟨⌊v⌋, eq_of_sub_eq_zero h⟩
-    rw [fract_intCast, inv_zero, of_s_of_int, ← cast_zero, of_s_of_int,
-      Stream'.Seq.get?_nil, Stream'.Seq.get?_nil]
+  obtain ⟨a, rfl⟩ : ∃ a : ℤ, v = a := ⟨⌊v⌋, eq_of_sub_eq_zero h⟩
+  rw [fract_intCast, inv_zero, of_s_of_int, ← cast_zero, of_s_of_int,
+    Stream'.Seq.get?_nil, Stream'.Seq.get?_nil]
   rcases eq_or_ne ((of (fract v)⁻¹).s.get? n) none with h₁ | h₁
-  · rwa [h₁, ← terminatedAt_iff_s_none,
-      of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none, stream_succ h, ←
-      of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none, terminatedAt_iff_s_none]
-  · obtain ⟨p, hp⟩ := Option.ne_none_iff_exists'.mp h₁
-    obtain ⟨p', hp'₁, _⟩ := exists_succ_get?_stream_of_gcf_of_get?_eq_some hp
-    have Hp := get?_of_eq_some_of_succ_get?_intFractPair_stream hp'₁
-    rw [← stream_succ h] at hp'₁
-    rw [Hp, get?_of_eq_some_of_succ_get?_intFractPair_stream hp'₁]
+  rwa [h₁, ← terminatedAt_iff_s_none,
+    of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none, stream_succ h, ←
+    of_terminatedAt_n_iff_succ_nth_intFractPair_stream_eq_none, terminatedAt_iff_s_none]
+  obtain ⟨p, hp⟩ := Option.ne_none_iff_exists'.mp h₁
+  obtain ⟨p', hp'₁, _⟩ := exists_succ_get?_stream_of_gcf_of_get?_eq_some hp
+  have Hp := get?_of_eq_some_of_succ_get?_intFractPair_stream hp'₁
+  rw [← stream_succ h] at hp'₁
+  rw [Hp, get?_of_eq_some_of_succ_get?_intFractPair_stream hp'₁]
 
 /-- This expresses the tail of the coefficient sequence of the `GenContFract.of` an element `v` of
 `K` as the coefficient sequence of that of the inverse of the fractional part of `v`.
@@ -302,9 +302,9 @@ are all equal to `a`.
 -/
 theorem convs'_of_int (a : ℤ) : (of (a : K)).convs' n = a := by
   induction' n with n
-  · simp only [zeroth_conv'_eq_h, of_h_eq_floor, floor_intCast, Nat.zero_eq]
-  · rw [convs', of_h_eq_floor, floor_intCast, add_right_eq_self]
-    exact convs'Aux_succ_none ((of_s_of_int K a).symm ▸ Stream'.Seq.get?_nil 0) _
+  simp only [zeroth_conv'_eq_h, of_h_eq_floor, floor_intCast, Nat.zero_eq]
+  rw [convs', of_h_eq_floor, floor_intCast, add_right_eq_self]
+  exact convs'Aux_succ_none ((of_s_of_int K a).symm ▸ Stream'.Seq.get?_nil 0) _
 
 variable {K}
 
@@ -314,11 +314,11 @@ of an element `v` of `K` in terms of the convergents of the inverse of its fract
 theorem convs'_succ :
     (of v).convs' (n + 1) = ⌊v⌋ + 1 / (of (fract v)⁻¹).convs' n := by
   rcases eq_or_ne (fract v) 0 with h | h
-  · obtain ⟨a, rfl⟩ : ∃ a : ℤ, v = a := ⟨⌊v⌋, eq_of_sub_eq_zero h⟩
-    rw [convs'_of_int, fract_intCast, inv_zero, ← cast_zero, convs'_of_int, cast_zero,
-      div_zero, add_zero, floor_intCast]
-  · rw [convs', of_h_eq_floor, add_right_inj, convs'Aux_succ_some (of_s_head h)]
-    exact congr_arg (1 / ·) (by rw [convs', of_h_eq_floor, add_right_inj, of_s_tail])
+  obtain ⟨a, rfl⟩ : ∃ a : ℤ, v = a := ⟨⌊v⌋, eq_of_sub_eq_zero h⟩
+  rw [convs'_of_int, fract_intCast, inv_zero, ← cast_zero, convs'_of_int, cast_zero,
+    div_zero, add_zero, floor_intCast]
+  rw [convs', of_h_eq_floor, add_right_inj, convs'Aux_succ_some (of_s_head h)]
+  exact congr_arg (1 / ·) (by rw [convs', of_h_eq_floor, add_right_inj, of_s_tail])
 
 end Values
 

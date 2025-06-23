@@ -103,17 +103,17 @@ lemma PresheafHom.isAmalgamation_iff {X : C} (S : Sieve X)
     x.IsAmalgamation y ↔ ∀ (Y : C) (g : Y ⟶ X) (hg : S g),
       y.app (op (Over.mk g)) = (x g hg).app (op (Over.mk (𝟙 Y))) := by
   constructor
-  · intro h Y g hg
-    rw [← h g hg, presheafHom_map_app_op_mk_id]
-  · intro h Y g hg
-    dsimp
-    ext ⟨W : Over Y⟩
-    refine (h W.left (W.hom ≫ g) (S.downward_closed hg _)).trans ?_
-    have H := hx (𝟙 _) W.hom (S.downward_closed hg W.hom) hg (by simp)
-    dsimp at H
-    simp only [Functor.map_id, FunctorToTypes.map_id_apply] at H
-    rw [H, presheafHom_map_app_op_mk_id]
-    rfl
+  intro h Y g hg
+  rw [← h g hg, presheafHom_map_app_op_mk_id]
+  intro h Y g hg
+  dsimp
+  ext ⟨W : Over Y⟩
+  refine (h W.left (W.hom ≫ g) (S.downward_closed hg _)).trans ?_
+  have H := hx (𝟙 _) W.hom (S.downward_closed hg W.hom) hg (by simp)
+  dsimp at H
+  simp only [Functor.map_id, FunctorToTypes.map_id_apply] at H
+  rw [H, presheafHom_map_app_op_mk_id]
+  rfl
 
 section
 
@@ -165,34 +165,34 @@ lemma presheafHom_isSheafFor  :
     Presieve.IsSheafFor (presheafHom F G) S.arrows := by
   intro x hx
   apply exists_unique_of_exists_of_unique
-  · refine ⟨
-      { app := fun Y => app hG x hx Y.unop.hom
-        naturality := by
-          rintro ⟨Y₁ : Over X⟩ ⟨Y₂ : Over X⟩ ⟨φ : Y₂ ⟶ Y₁⟩
-          apply (hG Y₂.hom).hom_ext
-          rintro ⟨Z : Over Y₂.left, hZ⟩
-          dsimp
-          rw [assoc, assoc, app_cond hG x hx Y₂.hom Z.hom hZ, ← G.map_comp, ← op_comp]
-          erw [app_cond hG x hx Y₁.hom (Z.hom ≫ φ.left) (by simpa using hZ),
-            ← F.map_comp_assoc, op_comp]
-          congr 3
-          simp }, ?_⟩
-    rw [PresheafHom.isAmalgamation_iff _ _ hx]
-    intro Y g hg
-    dsimp
-    have H := app_cond hG x hx g (𝟙 _) (by simpa using hg)
-    rw [op_id, G.map_id, comp_id, F.map_id, id_comp] at H
-    exact H.trans (by congr; simp)
-  · intro y₁ y₂ hy₁ hy₂
-    rw [PresheafHom.isAmalgamation_iff _ _ hx] at hy₁ hy₂
-    apply NatTrans.ext
-    ext ⟨Y : Over X⟩
-    apply (hG Y.hom).hom_ext
-    rintro ⟨Z : Over Y.left, hZ⟩
-    dsimp
-    let φ : Over.mk (Z.hom ≫ Y.hom) ⟶ Y := Over.homMk Z.hom
-    refine (y₁.naturality φ.op).symm.trans (Eq.trans ?_ (y₂.naturality φ.op))
-    rw [(hy₁ _ _ hZ), ← ((hy₂ _ _ hZ))]
+  refine ⟨
+    { app := fun Y => app hG x hx Y.unop.hom
+      naturality := by
+        rintro ⟨Y₁ : Over X⟩ ⟨Y₂ : Over X⟩ ⟨φ : Y₂ ⟶ Y₁⟩
+        apply (hG Y₂.hom).hom_ext
+        rintro ⟨Z : Over Y₂.left, hZ⟩
+        dsimp
+        rw [assoc, assoc, app_cond hG x hx Y₂.hom Z.hom hZ, ← G.map_comp, ← op_comp]
+        erw [app_cond hG x hx Y₁.hom (Z.hom ≫ φ.left) (by simpa using hZ),
+          ← F.map_comp_assoc, op_comp]
+        congr 3
+        simp }, ?_⟩
+  rw [PresheafHom.isAmalgamation_iff _ _ hx]
+  intro Y g hg
+  dsimp
+  have H := app_cond hG x hx g (𝟙 _) (by simpa using hg)
+  rw [op_id, G.map_id, comp_id, F.map_id, id_comp] at H
+  exact H.trans (by congr; simp)
+  intro y₁ y₂ hy₁ hy₂
+  rw [PresheafHom.isAmalgamation_iff _ _ hx] at hy₁ hy₂
+  apply NatTrans.ext
+  ext ⟨Y : Over X⟩
+  apply (hG Y.hom).hom_ext
+  rintro ⟨Z : Over Y.left, hZ⟩
+  dsimp
+  let φ : Over.mk (Z.hom ≫ Y.hom) ⟶ Y := Over.homMk Z.hom
+  refine (y₁.naturality φ.op).symm.trans (Eq.trans ?_ (y₂.naturality φ.op))
+  rw [(hy₁ _ _ hZ), ← ((hy₂ _ _ hZ))]
 
 end
 

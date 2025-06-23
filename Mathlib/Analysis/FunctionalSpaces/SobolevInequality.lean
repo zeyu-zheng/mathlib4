@@ -133,12 +133,12 @@ theorem T_insert_le_T_lmarginal_singleton (hp₀ : 0 ≤ p) (s : Finset ι)
             * ∏ j in (insert i s), (∫⋯∫⁻_{j}, f ∂μ) (update x i t) ^ p)  ∂ (μ i)) ∂μ := by
           -- pull out the integral over `xᵢ`
           rw [lmarginal_insert' _ _ hi]
-          · congr! with x t
-            simp only [Pi.mul_apply, Pi.pow_apply, Finset.prod_apply]
-          · change Measurable (fun x ↦ _)
-            simp only [Pi.mul_apply, Pi.pow_apply, Finset.prod_apply]
-            refine (hf.pow_const _).mul <| Finset.measurable_prod _ ?_
-            exact fun _ _ ↦ hf.lmarginal μ |>.pow_const _
+          congr! with x t
+          simp only [Pi.mul_apply, Pi.pow_apply, Finset.prod_apply]
+          change Measurable (fun x ↦ _)
+          simp only [Pi.mul_apply, Pi.pow_apply, Finset.prod_apply]
+          refine (hf.pow_const _).mul <| Finset.measurable_prod _ ?_
+          exact fun _ _ ↦ hf.lmarginal μ |>.pow_const _
     _ ≤ T μ p (∫⋯∫⁻_{i}, f ∂μ) s := lmarginal_mono (s := s) (fun x ↦ ?_)
   -- The remainder of the computation happens within an `|s|`-fold iterated integral
   simp only [Pi.mul_apply, Pi.pow_apply, Finset.prod_apply]
@@ -173,18 +173,18 @@ theorem T_insert_le_T_lmarginal_singleton (hp₀ : 0 ≤ p) (s : Finset ι)
               -- apply Hölder's inequality
               gcongr
               apply ENNReal.lintegral_mul_prod_norm_pow_le
-              · exact hF₀.aemeasurable
-              · intros
-                exact hF₁.aemeasurable
-              · simp only [sum_const, nsmul_eq_mul]
-                ring
-              · exact hk'
-              · exact fun _ _ ↦ hp₀
+              exact hF₀.aemeasurable
+              intros
+              exact hF₁.aemeasurable
+              simp only [sum_const, nsmul_eq_mul]
+              ring
+              exact hk'
+              exact fun _ _ ↦ hp₀
     _ = (∫⋯∫⁻_{i}, f ∂μ) x ^ p *
           ((∫⋯∫⁻_{i}, f ∂μ) x ^ (1 - k * p) * ∏ j in s, (∫⋯∫⁻_{i, j}, f ∂μ) x ^ p) := by
               -- absorb the newly-created integrals into `∫⋯∫`
               congr! 2
-              · rw [lmarginal_singleton]
+              rw [lmarginal_singleton]
               refine prod_congr rfl fun j hj => ?_
               have hi' : i ∉ ({j} : Finset ι) := by
                 simp only [Finset.mem_singleton, Finset.mem_insert, Finset.mem_compl] at hj ⊢
@@ -193,22 +193,22 @@ theorem T_insert_le_T_lmarginal_singleton (hp₀ : 0 ≤ p) (s : Finset ι)
     _ = (∫⋯∫⁻_{i}, f ∂μ) x ^ (p + (1 - k * p)) *  ∏ j in s, (∫⋯∫⁻_{i, j}, f ∂μ) x ^ p := by
               -- combine two `(∫⋯∫⁻_insert i s, f ∂μ) x` terms
               rw [ENNReal.rpow_add_of_nonneg]
-              · ring
-              · exact hp₀
-              · exact hk'
+              ring
+              exact hp₀
+              exact hk'
     _ ≤ (∫⋯∫⁻_{i}, f ∂μ) x ^ (1 - (s.card - 1 : ℝ) * p) *
           ∏ j in s, (∫⋯∫⁻_{j}, (∫⋯∫⁻_{i}, f ∂μ) ∂μ) x ^ p := by
               -- identify the result with the RHS integrand
               congr! 2 with j hj
-              · ring_nf
-              · congr! 1
-                rw [← lmarginal_union μ f hf]
-                · congr
-                  rw [Finset.union_comm]
-                  rfl
-                · rw [Finset.disjoint_singleton]
-                  simp only [Finset.mem_insert, Finset.mem_compl] at hj
-                  exact fun h ↦ hi (h ▸ hj)
+              ring_nf
+              congr! 1
+              rw [← lmarginal_union μ f hf]
+              congr
+              rw [Finset.union_comm]
+              rfl
+              rw [Finset.disjoint_singleton]
+              simp only [Finset.mem_insert, Finset.mem_compl] at hj
+              exact fun h ↦ hi (h ▸ hj)
 
 /-- Auxiliary result for the grid-lines lemma.  Given a nonnegative function on a finitary product
 type indexed by `ι`, and a set `s` in `ι`, consider partially integrating over the variables in
@@ -224,21 +224,21 @@ theorem T_lmarginal_antitone (hp₀ : 0 ≤ p) (hp : (#ι - 1 : ℝ) * p ≤ 1)
   intro s i hi
   -- apply the lemma designed to encapsulate the inductive step
   convert T_insert_le_T_lmarginal_singleton μ hp₀ s ?_ i hi (hf.lmarginal μ) using 2
-  · rw [← lmarginal_union μ f hf]
-    · rw [← insert_compl_insert hi]
-      rfl
-    rw [Finset.disjoint_singleton_left, not_mem_compl]
-    exact mem_insert_self i s
-  · -- the main nontrivial point is to check that an exponent `p` satisfying `0 ≤ p` and
-    -- `(#ι - 1) * p ≤ 1` is in the valid range for the inductive-step lemma
-    refine le_trans ?_ hp
-    gcongr
-    suffices (s.card : ℝ) + 1 ≤ #ι by linarith
-    rw [← card_add_card_compl s]
-    norm_cast
-    gcongr
-    have hi' : sᶜ.Nonempty := ⟨i, by rwa [Finset.mem_compl]⟩
-    rwa [← card_pos] at hi'
+  rw [← lmarginal_union μ f hf]
+  rw [← insert_compl_insert hi]
+  rfl
+  rw [Finset.disjoint_singleton_left, not_mem_compl]
+  exact mem_insert_self i s
+  -- the main nontrivial point is to check that an exponent `p` satisfying `0 ≤ p` and
+  -- `(#ι - 1) * p ≤ 1` is in the valid range for the inductive-step lemma
+  refine le_trans ?_ hp
+  gcongr
+  suffices (s.card : ℝ) + 1 ≤ #ι by linarith
+  rw [← card_add_card_compl s]
+  norm_cast
+  gcongr
+  have hi' : sᶜ.Nonempty := ⟨i, by rwa [Finset.mem_compl]⟩
+  rwa [← card_pos] at hi'
 
 end GridLines
 
@@ -260,7 +260,7 @@ theorem lintegral_mul_prod_lintegral_pow_le {p : ℝ} (hp₀ : 0 ≤ p)
     ∫⁻ x, f x ^ (1 - (#ι - 1 : ℝ) * p) * ∏ i, (∫⁻ xᵢ, f (update x i xᵢ) ∂μ i) ^ p ∂.pi μ
     ≤ (∫⁻ x, f x ∂.pi μ) ^ (1 + p) := by
   cases isEmpty_or_nonempty (∀ i, A i)
-  · simp_rw [lintegral_of_isEmpty]; refine zero_le _
+  simp_rw [lintegral_of_isEmpty]; refine zero_le _
   inhabit ∀ i, A i
   have H : (∅ : Finset ι) ≤ Finset.univ := Finset.empty_subset _
   simpa [lmarginal_univ] using GridLines.T_lmarginal_antitone μ hp₀ hp hf H default
@@ -334,11 +334,11 @@ theorem lintegral_pow_le_pow_lintegral_fderiv_aux
   calc (‖u x‖₊ : ℝ≥0∞)
     _ ≤ ∫⁻ xᵢ in Iic (x i), ‖deriv (u ∘ update x i) xᵢ‖₊ := by
         apply le_trans (by simp) (HasCompactSupport.ennnorm_le_lintegral_Ici_deriv _ _ _)
-        · exact hu.comp (by convert contDiff_update 1 x i)
-        · exact h2u.comp_closedEmbedding (closedEmbedding_update x i)
+        exact hu.comp (by convert contDiff_update 1 x i)
+        exact h2u.comp_closedEmbedding (closedEmbedding_update x i)
     _ ≤ ∫⁻ xᵢ, (‖fderiv ℝ u (update x i xᵢ)‖₊ : ℝ≥0∞) := ?_
   gcongr with y; swap
-  · exact Measure.restrict_le_self
+  exact Measure.restrict_le_self
   -- bound the derivative which appears
   calc ‖deriv (u ∘ update x i) y‖₊ = ‖fderiv ℝ u (update x i y) (deriv (update x i) y)‖₊ := by
         rw [fderiv.comp_deriv _ (hu.differentiable le_rfl).differentiableAt
@@ -484,7 +484,7 @@ theorem eLpNorm_le_eLpNorm_fderiv_of_eq_inner  {u : E → F'}
   The proof requires that `x ↦ |x|^p` is smooth in the codomain, so we require that it is a
   Hilbert space. -/
   by_cases hp'0 : p' = 0
-  · simp [hp'0]
+  simp [hp'0]
   set n := finrank ℝ E
   let n' := NNReal.conjExponent n
   have h2p : (p : ℝ) < n
@@ -502,13 +502,13 @@ theorem eLpNorm_le_eLpNorm_fderiv_of_eq_inner  {u : E → F'}
   simp_rw [sub_pos]; exact h2p
   rcases hp.eq_or_lt with rfl|hp
   -- the case `p = 1`
-  · convert eLpNorm_le_eLpNorm_fderiv_one μ hu h2u hn using 2
-    · suffices (p' : ℝ) = n' by simpa using this
-      rw [← inv_inj, hp']
-      field_simp [n', NNReal.conjExponent]
-    · norm_cast
-      simp_rw [eLpNormLESNormFDerivOfEqInnerConst]
-      field_simp
+  convert eLpNorm_le_eLpNorm_fderiv_one μ hu h2u hn using 2
+  suffices (p' : ℝ) = n' by simpa using this
+  rw [← inv_inj, hp']
+  field_simp [n', NNReal.conjExponent]
+  norm_cast
+  simp_rw [eLpNormLESNormFDerivOfEqInnerConst]
+  field_simp
   -- the case `p > 1`
   let q := Real.conjExponent p
   have hq : Real.IsConjExponent p q := .conjExponent hp
@@ -537,7 +537,7 @@ theorem eLpNorm_le_eLpNorm_fderiv_of_eq_inner  {u : E → F'}
   field_simp [this]; ring
   have h4γ : (γ : ℝ) ≠ 0 := (zero_lt_one.trans h1γ).ne'
   by_cases h3u : ∫⁻ x, ‖u x‖₊ ^ (p' : ℝ) ∂μ = 0
-  · rw [eLpNorm_nnreal_eq_lintegral h0p', h3u, ENNReal.zero_rpow_of_pos] <;> positivity
+  rw [eLpNorm_nnreal_eq_lintegral h0p', h3u, ENNReal.zero_rpow_of_pos] <;> positivity
   have h4u : ∫⁻ x, ‖u x‖₊ ^ (p' : ℝ) ∂μ ≠ ∞
   refine lintegral_rpow_nnnorm_lt_top_of_eLpNorm'_lt_top (pos_iff_ne_zero.mpr h0p') ?_ |>.ne
   dsimp only
@@ -571,10 +571,10 @@ theorem eLpNorm_le_eLpNorm_fderiv_of_eq_inner  {u : E → F'}
         gcongr
         convert ENNReal.lintegral_mul_le_Lp_mul_Lq μ
           (.symm <| .conjExponent <| show 1 < (p : ℝ) from hp) ?_ ?_ using 5
-        · simp_rw [← ENNReal.rpow_mul, ← h3γ]
-        · borelize F'
-          fun_prop
-        · fun_prop
+        simp_rw [← ENNReal.rpow_mul, ← h3γ]
+        borelize F'
+        fun_prop
+        fun_prop
     _ = C * γ * (∫⁻ x, ‖fderiv ℝ u x‖₊ ^ (p : ℝ) ∂μ) ^ (1 / (p : ℝ)) *
       (∫⁻ x, ‖u x‖₊ ^ (p' : ℝ) ∂μ) ^ (1 / q) := by ring
   calc
@@ -679,22 +679,22 @@ theorem eLpNorm_le_eLpNorm_fderiv_of_le [FiniteDimensional ℝ F]
     (hs : Bornology.IsBounded s) :
     eLpNorm u q μ ≤ eLpNormLESNormFDerivOfLeConst F μ s p q * eLpNorm (fderiv ℝ u) p μ := by
   by_cases hq0 : q = 0
-  · simp [hq0]
+  simp [hq0]
   let p' : ℝ≥0 := (p⁻¹ - (finrank ℝ E : ℝ≥0)⁻¹)⁻¹
   have hp' : p'⁻¹ = p⁻¹ - (finrank ℝ E : ℝ)⁻¹
   rw [inv_inv, NNReal.coe_sub]
-  · simp
-  · gcongr
+  simp
+  gcongr
   have : (q : ℝ≥0∞) ≤ p'
   have H : (p' : ℝ)⁻¹ ≤ (↑q)⁻¹ := trans hp' hpq
   norm_cast at H ⊢
   rwa [inv_le_inv] at H
-  · dsimp
-    have : 0 < p⁻¹ - (finrank ℝ E : ℝ≥0)⁻¹
-    simp only [tsub_pos_iff_lt]
-    gcongr
-    positivity
-  · positivity
+  dsimp
+  have : 0 < p⁻¹ - (finrank ℝ E : ℝ≥0)⁻¹
+  simp only [tsub_pos_iff_lt]
+  gcongr
+  positivity
+  positivity
   set t := (μ s).toNNReal ^ (1 / q - 1 / p' : ℝ)
   let C := SNormLESNormFDerivOfEqConst F μ p
   calc eLpNorm u q μ
@@ -702,11 +702,11 @@ theorem eLpNorm_le_eLpNorm_fderiv_of_le [FiniteDimensional ℝ F]
     _ ≤ eLpNorm u p' (μ.restrict s) * t := by
         convert eLpNorm_le_eLpNorm_mul_rpow_measure_univ this hu.continuous.aestronglyMeasurable
         rw [← ENNReal.coe_rpow_of_nonneg]
-        · simp [ENNReal.coe_toNNReal hs.measure_lt_top.ne]
-        · rw [one_div, one_div]
-          norm_cast
-          rw [hp']
-          simpa using hpq
+        simp [ENNReal.coe_toNNReal hs.measure_lt_top.ne]
+        rw [one_div, one_div]
+        norm_cast
+        rw [hp']
+        simpa using hpq
     _ = eLpNorm u p' μ * t := by rw [eLpNorm_restrict_eq_of_support_subset h2u]
     _ ≤ (C * eLpNorm (fderiv ℝ u) p μ) * t := by
         have h2u' : HasCompactSupport u

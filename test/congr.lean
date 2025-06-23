@@ -58,8 +58,8 @@ theorem ex13 (x y : α) (h : x = y) (f : α → Nat) : f x = f y := by
 theorem ex14 {α : Type} (f : Nat → Nat) (h : ∀ x, f x = 0) (z : α) (hz : HEq z 0) :
     HEq f (fun (_ : α) => z) := by
   congr!
-  · guard_target = Nat = α
-    exact type_eq_of_heq hz.symm
+  guard_target = Nat = α
+  exact type_eq_of_heq hz.symm
   next n x _ =>
     guard_target = HEq (f n) z
     rw [h]
@@ -84,10 +84,10 @@ example (s t : Set α) : (ℕ × Subtype s) = (ℕ × Subtype t) := by
 example (s t : Set α) (f : Subtype s → α) (g : Subtype t → α) :
     Set.image f Set.univ = Set.image g Set.univ := by
   congr!
-  · guard_target = s = t
-    exact test_sorry
-  · guard_target = HEq f g
-    exact test_sorry
+  guard_target = s = t
+  exact test_sorry
+  guard_target = HEq f g
+  exact test_sorry
 
 set_option linter.unusedTactic false in
 /- `ι = κ` is not plausible -/
@@ -100,10 +100,10 @@ example {ι κ : Type u} (f : ι → α) (g : κ → α) :
   congr!
   guard_target = Set.image f Set.univ = Set.image g Set.univ
   congr! (config := {typeEqs := true})
-  · guard_target = ι = κ
-    exact test_sorry
-  · guard_target = HEq f g
-    exact test_sorry
+  guard_target = ι = κ
+  exact test_sorry
+  guard_target = HEq f g
+  exact test_sorry
 
 /- Generating type equalities is not OK if they're not likely to be the same type. -/
 example (s : Set α) (t : Set β) : (ℕ × Subtype s) = (ℕ × Subtype t) := by
@@ -142,18 +142,18 @@ example (α β) [inst1 : Add α] [inst2 : Add β] (x : α) (y : β) : HEq (x + x
 example (prime : Nat → Prop) (n : Nat) :
     prime (2 * n + 1) = prime (n + n + 1) := by
   congr!
-  · guard_target =ₛ (HMul.hMul : Nat → Nat → Nat) = HAdd.hAdd
-    exact test_sorry
-  · guard_target = 2 = n
-    exact test_sorry
+  guard_target =ₛ (HMul.hMul : Nat → Nat → Nat) = HAdd.hAdd
+  exact test_sorry
+  guard_target = 2 = n
+  exact test_sorry
 
 example (prime : Nat → Prop) (n : Nat) :
     prime (2 * n + 1) = prime (n + n + 1) := by
   congr! (config := {etaExpand := true})
-  · guard_target =ₛ (fun (x y : Nat) => x * y) = (fun (x y : Nat) => x + y)
-    exact test_sorry
-  · guard_target = 2 = n
-    exact test_sorry
+  guard_target =ₛ (fun (x y : Nat) => x * y) = (fun (x y : Nat) => x + y)
+  exact test_sorry
+  guard_target = 2 = n
+  exact test_sorry
 
 example (prime : Nat → Prop) (n : Nat) :
     prime (2 * n + 1) = prime (n + n + 1) := by

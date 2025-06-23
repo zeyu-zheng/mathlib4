@@ -431,11 +431,11 @@ theorem conGen_eq (r : M → M → Prop) : conGen r = sInf { s : Con M | ∀ x y
     (le_sInf (fun s hs x y (hxy : (conGen r) x y) =>
       show s x y by
         apply ConGen.Rel.recOn (motive := fun x y _ => s x y) hxy
-        · exact fun x y h => hs x y h
-        · exact s.refl'
-        · exact fun _ => s.symm'
-        · exact fun _ _ => s.trans'
-        · exact fun _ _ => s.mul))
+        exact fun x y h => hs x y h
+        exact s.refl'
+        exact fun _ => s.symm'
+        exact fun _ _ => s.trans'
+        exact fun _ _ => s.mul))
     (sInf_le ConGen.Rel.of)
 
 /-- The smallest congruence relation containing a binary relation `r` is contained in any

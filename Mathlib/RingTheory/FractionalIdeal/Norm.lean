@@ -39,16 +39,16 @@ theorem absNorm_div_norm_eq_absNorm_div_norm {I : FractionalIdeal R⁰ K} (a : R
     (Ideal.absNorm I.num : ℚ) / |Algebra.norm ℤ (I.den : R)| =
       (Ideal.absNorm I₀ : ℚ) / |Algebra.norm ℤ (a : R)| := by
   rw [div_eq_div_iff]
-  · replace h := congr_arg (I.den • ·) h
-    have h' := congr_arg (a • ·) (den_mul_self_eq_num I)
-    dsimp only at h h'
-    rw [smul_comm] at h
-    rw [h, Submonoid.smul_def, Submonoid.smul_def, ← Submodule.ideal_span_singleton_smul,
-      ← Submodule.ideal_span_singleton_smul, ← Submodule.map_smul'', ← Submodule.map_smul'',
-      (LinearMap.map_injective ?_).eq_iff, smul_eq_mul, smul_eq_mul] at h'
-    · simp_rw [← Int.cast_natAbs, ← Nat.cast_mul, ← Ideal.absNorm_span_singleton]
-      rw [← _root_.map_mul, ← _root_.map_mul, mul_comm, ← h', mul_comm]
-    · exact LinearMap.ker_eq_bot.mpr (IsFractionRing.injective R K)
+  replace h := congr_arg (I.den • ·) h
+  have h' := congr_arg (a • ·) (den_mul_self_eq_num I)
+  dsimp only at h h'
+  rw [smul_comm] at h
+  rw [h, Submonoid.smul_def, Submonoid.smul_def, ← Submodule.ideal_span_singleton_smul,
+    ← Submodule.ideal_span_singleton_smul, ← Submodule.map_smul'', ← Submodule.map_smul'',
+    (LinearMap.map_injective ?_).eq_iff, smul_eq_mul, smul_eq_mul] at h'
+  simp_rw [← Int.cast_natAbs, ← Nat.cast_mul, ← Ideal.absNorm_span_singleton]
+  rw [← _root_.map_mul, ← _root_.map_mul, mul_comm, ← h', mul_comm]
+  exact LinearMap.ker_eq_bot.mpr (IsFractionRing.injective R K)
   all_goals simp [Algebra.norm_eq_zero_iff]
 
 /-- The absolute norm of the fractional ideal `I` extending by multiplicativity the absolute norm
@@ -135,17 +135,17 @@ theorem absNorm_span_singleton [Module.Finite ℚ K] (x : K) :
   have : IsDomain K := IsFractionRing.isDomain R
   obtain ⟨d, ⟨r, hr⟩⟩ := IsLocalization.exists_integer_multiple R⁰ x
   rw [absNorm_eq' d (Ideal.span {r})]
-  · rw [Ideal.absNorm_span_singleton]
-    simp_rw [Int.cast_natAbs, Int.cast_abs, show ((Algebra.norm ℤ _) : ℚ) = algebraMap ℤ ℚ
-      (Algebra.norm ℤ _) by rfl, ← Algebra.norm_localization ℤ ℤ⁰ (Sₘ := K) _]
-    rw [hr, Algebra.smul_def, _root_.map_mul, abs_mul, mul_div_assoc, mul_div_cancel₀ _ (by
-      rw [ne_eq, abs_eq_zero, Algebra.norm_eq_zero_iff, IsFractionRing.to_map_eq_zero_iff]
-      exact nonZeroDivisors.coe_ne_zero _)]
-  · ext
-    simp_rw [← SetLike.mem_coe, Submodule.coe_pointwise_smul, Set.mem_smul_set, SetLike.mem_coe,
-      mem_coe, mem_spanSingleton, Submodule.mem_map, Algebra.linearMap_apply, Submonoid.smul_def,
-      Ideal.mem_span_singleton', exists_exists_eq_and, _root_.map_mul, hr, ← Algebra.smul_def,
-      smul_comm (d : R)]
+  rw [Ideal.absNorm_span_singleton]
+  simp_rw [Int.cast_natAbs, Int.cast_abs, show ((Algebra.norm ℤ _) : ℚ) = algebraMap ℤ ℚ
+    (Algebra.norm ℤ _) by rfl, ← Algebra.norm_localization ℤ ℤ⁰ (Sₘ := K) _]
+  rw [hr, Algebra.smul_def, _root_.map_mul, abs_mul, mul_div_assoc, mul_div_cancel₀ _ (by
+    rw [ne_eq, abs_eq_zero, Algebra.norm_eq_zero_iff, IsFractionRing.to_map_eq_zero_iff]
+    exact nonZeroDivisors.coe_ne_zero _)]
+  ext
+  simp_rw [← SetLike.mem_coe, Submodule.coe_pointwise_smul, Set.mem_smul_set, SetLike.mem_coe,
+    mem_coe, mem_spanSingleton, Submodule.mem_map, Algebra.linearMap_apply, Submonoid.smul_def,
+    Ideal.mem_span_singleton', exists_exists_eq_and, _root_.map_mul, hr, ← Algebra.smul_def,
+    smul_comm (d : R)]
 
 end IsLocalization
 

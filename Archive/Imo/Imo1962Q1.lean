@@ -40,13 +40,13 @@ abbrev ProblemPredicate' (c n : ℕ) : Prop :=
 theorem without_digits {n : ℕ} (h1 : ProblemPredicate n) : ∃ c : ℕ, ProblemPredicate' c n := by
   use n / 10
   cases' n with n
-  · have h2 : ¬ProblemPredicate 0 := by norm_num [ProblemPredicate]
-    contradiction
-  · rw [ProblemPredicate, digits_def' (by decide : 2 ≤ 10) n.succ_pos, List.headI, List.tail_cons,
-      List.concat_eq_append] at h1
-    constructor
-    · rw [← h1.left, div_add_mod (n + 1) 10]
-    · rw [← h1.right, ofDigits_append, ofDigits_digits, ofDigits_singleton, add_comm, mul_comm]
+  have h2 : ¬ProblemPredicate 0 := by norm_num [ProblemPredicate]
+  contradiction
+  rw [ProblemPredicate, digits_def' (by decide : 2 ≤ 10) n.succ_pos, List.headI, List.tail_cons,
+    List.concat_eq_append] at h1
+  constructor
+  rw [← h1.left, div_add_mod (n + 1) 10]
+  rw [← h1.right, ofDigits_append, ofDigits_digits, ofDigits_singleton, add_comm, mul_comm]
 
 /-!
 Now we can eliminate possibilities for `(digits 10 c).length` until we get to the one that works.
@@ -146,15 +146,15 @@ theorem no_smaller_solutions (n : ℕ) (h1 : ProblemPredicate n) : n ≥ 153846 
   | inr h3 => exact case_more_digits h3 h2
   | inl h3 =>
     interval_cases h : (digits 10 c).length
-    · exfalso; exact case_0_digit h h2
-    · exfalso; exact case_1_digit h h2
-    · exfalso; exact case_2_digit h h2
-    · exfalso; exact case_3_digit h h2
-    · exfalso; exact case_4_digit h h2
-    · have h4 : c = 15384 := case_5_digit h h2
-      have h5 : n = 10 * 15384 + 6 := h4 ▸ h2.left
-      norm_num at h5
-      exact h5.ge
+    exfalso; exact case_0_digit h h2
+    exfalso; exact case_1_digit h h2
+    exfalso; exact case_2_digit h h2
+    exfalso; exact case_3_digit h h2
+    exfalso; exact case_4_digit h h2
+    have h4 : c = 15384 := case_5_digit h h2
+    have h5 : n = 10 * 15384 + 6 := h4 ▸ h2.left
+    norm_num at h5
+    exact h5.ge
 
 end Imo1962Q1
 

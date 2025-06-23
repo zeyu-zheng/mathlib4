@@ -168,10 +168,10 @@ theorem isCyclic_of_card_dvd_prime {α : Type u} [Group α] {p : ℕ} [hp : Fact
     (h : Nat.card α ∣ p) : IsCyclic α := by
   have : Finite α := Nat.finite_of_card_ne_zero (ne_zero_of_dvd_ne_zero hp.1.ne_zero h)
   rcases (Nat.dvd_prime hp.out).mp h with h | h
-  · exact @isCyclic_of_subsingleton α _ (Nat.card_eq_one_iff_unique.mp h).1
-  · have : Fintype α := Fintype.ofFinite α
-    rw [Nat.card_eq_fintype_card] at h
-    exact isCyclic_of_prime_card h
+  exact @isCyclic_of_subsingleton α _ (Nat.card_eq_one_iff_unique.mp h).1
+  have : Fintype α := Fintype.ofFinite α
+  rw [Nat.card_eq_fintype_card] at h
+  exact isCyclic_of_prime_card h
 
 @[to_additive]
 theorem isCyclic_of_surjective {H G F : Type*} [Group H] [Group G] [hH : IsCyclic H]
@@ -220,7 +220,7 @@ theorem Infinite.orderOf_eq_zero_of_forall_mem_zpowers [Infinite α] {g : α}
     obtain ⟨k, hk⟩ := h x
     dsimp at hk
     obtain ⟨k, rfl | rfl⟩ := k.eq_nat_or_neg
-    · exact ⟨k, mod_cast hk⟩
+    exact ⟨k, mod_cast hk⟩
     rw [← zpow_mod_orderOf] at hk
     have : 0 ≤ (-k % orderOf g : ℤ) := Int.emod_nonneg (-k) (mod_cast ho.orderOf_pos.ne')
     refine ⟨(-k % orderOf g : ℤ).toNat, ?_⟩
@@ -243,9 +243,9 @@ instance Subgroup.isCyclic {α : Type u} [Group α] [IsCyclic α] (H : Subgroup 
         Nat.pos_of_ne_zero fun h => hx₂ <| by
           rw [← hk, Int.natAbs_eq_zero.mp h, zpow_zero], by
             cases' k with k k
-            · rw [Int.ofNat_eq_coe, Int.natAbs_cast k, ← zpow_natCast, ← Int.ofNat_eq_coe, hk]
-              exact hx₁
-            · rw [Int.natAbs_negSucc, ← Subgroup.inv_mem_iff H]; simp_all⟩
+            rw [Int.ofNat_eq_coe, Int.natAbs_cast k, ← zpow_natCast, ← Int.ofNat_eq_coe, hk]
+            exact hx₁
+            rw [Int.natAbs_negSucc, ← Subgroup.inv_mem_iff H]; simp_all⟩
     ⟨⟨⟨g ^ Nat.find hex, (Nat.find_spec hex).2⟩, fun ⟨x, hx⟩ =>
         let ⟨k, hk⟩ := hg x
         have hk : g ^ k = x := hk
@@ -369,11 +369,11 @@ theorem IsCyclic.unique_zpow_zmod (ha : ∀ x : α, x ∈ zpowers a) (x : α) :
     ∃! n : ZMod (Fintype.card α), x = a ^ n.val := by
   obtain ⟨n, rfl⟩ := ha x
   refine ⟨n, (?_ : a ^ n = _), fun y (hy : a ^ n = _) ↦ ?_⟩
-  · rw [← zpow_natCast, zpow_eq_zpow_iff_modEq, orderOf_eq_card_of_forall_mem_zpowers ha,
-      Int.modEq_comm, Int.modEq_iff_add_fac, ← ZMod.intCast_eq_iff]
-  · rw [← zpow_natCast, zpow_eq_zpow_iff_modEq, orderOf_eq_card_of_forall_mem_zpowers ha,
-      ← ZMod.intCast_eq_intCast_iff] at hy
-    simp [hy]
+  rw [← zpow_natCast, zpow_eq_zpow_iff_modEq, orderOf_eq_card_of_forall_mem_zpowers ha,
+    Int.modEq_comm, Int.modEq_iff_add_fac, ← ZMod.intCast_eq_iff]
+  rw [← zpow_natCast, zpow_eq_zpow_iff_modEq, orderOf_eq_card_of_forall_mem_zpowers ha,
+    ← ZMod.intCast_eq_intCast_iff] at hy
+  simp [hy]
 
 @[to_additive]
 lemma IsCyclic.ext {G : Type*} [Group G] [Fintype G] [IsCyclic G] {d : ℕ} {a b : ZMod d}
@@ -425,7 +425,7 @@ private theorem card_orderOf_eq_totient_aux₁ :
   intro d hd hpos
   induction' d using Nat.strongRec' with d IH
   rcases Decidable.eq_or_ne d 0 with (rfl | hd0)
-  · cases Fintype.card_ne_zero (eq_zero_of_zero_dvd hd)
+  cases Fintype.card_ne_zero (eq_zero_of_zero_dvd hd)
   rcases card_pos.1 hpos with ⟨a, ha'⟩
   have ha : orderOf a = d := (mem_filter.1 ha').2
   have h1 :
@@ -472,8 +472,8 @@ theorem card_orderOf_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
       simp only [mem_erase, mem_divisors] at hm
       tauto
       rcases (filter (fun a : α => orderOf a = m) univ).card.eq_zero_or_pos with (h1 | h1)
-      · simp [h1]
-      · simp [card_orderOf_eq_totient_aux₁ hn hmc h1]
+      simp [h1]
+      simp [card_orderOf_eq_totient_aux₁ hn hmc h1]
     _ < ∑ m ∈ c.divisors, φ m :=
       sum_erase_lt_of_pos (mem_divisors.2 ⟨hd, hc0.ne'⟩) (totient_pos.2 (pos_of_dvd_of_pos hd hc0))
     _ = c := sum_totient _
@@ -563,16 +563,16 @@ variable [CommGroup α] [IsSimpleGroup α]
 @[to_additive]
 instance (priority := 100) isCyclic : IsCyclic α := by
   cases' subsingleton_or_nontrivial α with hi hi <;> haveI := hi
-  · apply isCyclic_of_subsingleton
-  · obtain ⟨g, hg⟩ := exists_ne (1 : α)
-    refine ⟨⟨g, fun x => ?_⟩⟩
-    cases' IsSimpleOrder.eq_bot_or_eq_top (Subgroup.zpowers g) with hb ht
-    · exfalso
-      apply hg
-      rw [← Subgroup.mem_bot, ← hb]
-      apply Subgroup.mem_zpowers
-    · rw [ht]
-      apply Subgroup.mem_top
+  apply isCyclic_of_subsingleton
+  obtain ⟨g, hg⟩ := exists_ne (1 : α)
+  refine ⟨⟨g, fun x => ?_⟩⟩
+  cases' IsSimpleOrder.eq_bot_or_eq_top (Subgroup.zpowers g) with hb ht
+  exfalso
+  apply hg
+  rw [← Subgroup.mem_bot, ← hb]
+  apply Subgroup.mem_zpowers
+  rw [ht]
+  apply Subgroup.mem_top
 
 @[to_additive]
 theorem prime_card [Fintype α] : (Fintype.card α).Prime := by
@@ -581,21 +581,21 @@ theorem prime_card [Fintype α] : (Fintype.card α).Prime := by
   rw [Nat.prime_def_lt'']
   refine ⟨Fintype.one_lt_card_iff_nontrivial.2 inferInstance, fun n hn => ?_⟩
   refine (IsSimpleOrder.eq_bot_or_eq_top (Subgroup.zpowers (g ^ n))).symm.imp ?_ ?_
-  · intro h
-    have hgo := orderOf_pow (n := n) g
-    rw [orderOf_eq_card_of_forall_mem_zpowers hg, Nat.gcd_eq_right_iff_dvd.1 hn,
-      orderOf_eq_card_of_forall_mem_zpowers, eq_comm,
-      Nat.div_eq_iff_eq_mul_left (Nat.pos_of_dvd_of_pos hn h0) hn] at hgo
-    · exact (mul_left_cancel₀ (ne_of_gt h0) ((mul_one (Fintype.card α)).trans hgo)).symm
-    · intro x
-      rw [h]
-      exact Subgroup.mem_top _
-  · intro h
-    apply le_antisymm (Nat.le_of_dvd h0 hn)
-    rw [← orderOf_eq_card_of_forall_mem_zpowers hg]
-    apply orderOf_le_of_pow_eq_one (Nat.pos_of_dvd_of_pos hn h0)
-    rw [← Subgroup.mem_bot, ← h]
-    exact Subgroup.mem_zpowers _
+  intro h
+  have hgo := orderOf_pow (n := n) g
+  rw [orderOf_eq_card_of_forall_mem_zpowers hg, Nat.gcd_eq_right_iff_dvd.1 hn,
+    orderOf_eq_card_of_forall_mem_zpowers, eq_comm,
+    Nat.div_eq_iff_eq_mul_left (Nat.pos_of_dvd_of_pos hn h0) hn] at hgo
+  exact (mul_left_cancel₀ (ne_of_gt h0) ((mul_one (Fintype.card α)).trans hgo)).symm
+  intro x
+  rw [h]
+  exact Subgroup.mem_top _
+  intro h
+  apply le_antisymm (Nat.le_of_dvd h0 hn)
+  rw [← orderOf_eq_card_of_forall_mem_zpowers hg]
+  apply orderOf_le_of_pow_eq_one (Nat.pos_of_dvd_of_pos hn h0)
+  rw [← Subgroup.mem_bot, ← h]
+  exact Subgroup.mem_zpowers _
 
 end CommGroup
 
@@ -605,11 +605,11 @@ end IsSimpleGroup
 theorem CommGroup.is_simple_iff_isCyclic_and_prime_card [Fintype α] [CommGroup α] :
     IsSimpleGroup α ↔ IsCyclic α ∧ (Fintype.card α).Prime := by
   constructor
-  · intro h
-    exact ⟨IsSimpleGroup.isCyclic, IsSimpleGroup.prime_card⟩
-  · rintro ⟨_, hp⟩
-    haveI : Fact (Fintype.card α).Prime := ⟨hp⟩
-    exact isSimpleGroup_of_prime_card rfl
+  intro h
+  exact ⟨IsSimpleGroup.isCyclic, IsSimpleGroup.prime_card⟩
+  rintro ⟨_, hp⟩
+  haveI : Fact (Fintype.card α).Prime := ⟨hp⟩
+  exact isSimpleGroup_of_prime_card rfl
 
 section SpecificInstances
 
@@ -633,8 +633,8 @@ theorem IsCyclic.exponent_eq_card [Group α] [IsCyclic α] [Fintype α] :
     exponent α = Fintype.card α := by
   obtain ⟨g, hg⟩ := IsCyclic.exists_generator (α := α)
   apply Nat.dvd_antisymm
-  · rw [← lcm_orderOf_eq_exponent, Finset.lcm_dvd_iff]
-    exact fun b _ => orderOf_dvd_card
+  rw [← lcm_orderOf_eq_exponent, Finset.lcm_dvd_iff]
+  exact fun b _ => orderOf_dvd_card
   rw [← orderOf_eq_card_of_forall_mem_zpowers hg]
   exact order_dvd_exponent _
 
@@ -658,8 +658,8 @@ theorem IsCyclic.exponent_eq_zero_of_infinite [Group α] [IsCyclic α] [Infinite
 @[simp]
 protected theorem ZMod.exponent (n : ℕ) : AddMonoid.exponent (ZMod n) = n := by
   cases n
-  · rw [IsAddCyclic.exponent_eq_zero_of_infinite]
-  · rw [IsAddCyclic.exponent_eq_card, card]
+  rw [IsAddCyclic.exponent_eq_zero_of_infinite]
+  rw [IsAddCyclic.exponent_eq_card, card]
 
 /-- A group of order `p ^ 2` is not cyclic if and only if its exponent is `p`. -/
 @[to_additive]
@@ -675,8 +675,8 @@ lemma not_isCyclic_iff_exponent_eq_prime [Group α] {p : ℕ} (hp : p.Prime)
   immediately because if `α` has exponent `p`, it has no element of order `p ^ 2`. -/
   refine ⟨fun h_cyc ↦ (Monoid.exponent_eq_prime_iff hp).mpr fun g hg ↦ ?_, fun h_exp h_cyc ↦ by
     obtain (rfl|rfl) := eq_zero_or_one_of_sq_eq_self <| hα' ▸ h_exp ▸ (h_cyc.exponent_eq_card).symm
-    · exact Nat.not_prime_zero hp
-    · exact Nat.not_prime_one hp⟩
+    exact Nat.not_prime_zero hp
+    exact Nat.not_prime_one hp⟩
   /- we must show every non-identity element has order `p`. By Lagrange's theorem, the only possible
   orders of `g` are `1`, `p`, or `p ^ 2`. It can't be the former because `g ≠ 1`, and it can't
   the latter because the group isn't cyclic. -/
@@ -686,9 +686,9 @@ lemma not_isCyclic_iff_exponent_eq_prime [Group α] {p : ℕ} (hp : p.Prime)
       Function.Embedding.coeFn_mk] at this
   obtain ⟨a, ha, ha'⟩ := this
   interval_cases a
-  · exact False.elim <| hg <| orderOf_eq_one_iff.mp <| by aesop
-  · aesop
-  · exact False.elim <| h_cyc <| isCyclic_of_orderOf_eq_card g <| by aesop
+  exact False.elim <| hg <| orderOf_eq_one_iff.mp <| by aesop
+  aesop
+  exact False.elim <| h_cyc <| isCyclic_of_orderOf_eq_card g <| by aesop
 
 end Exponent
 

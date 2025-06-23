@@ -57,14 +57,14 @@ theorem norm_coe_mul (x : ℝ) (t : ℝ) :
   show
     (∃ y, y - t * x ∈ zmultiples (t * p) ∧ |y| = z) ↔ ∃ w, w - x ∈ zmultiples p ∧ |w| = |t|⁻¹ * z
   constructor
-  · rintro ⟨y, hy, rfl⟩
-    refine ⟨t⁻¹ * y, ?_, by rw [abs_mul, abs_inv]⟩
-    rw [← inv_mul_cancel_left₀ ht x, ← inv_mul_cancel_left₀ ht p, ← mul_sub]
-    exact aux hy
-  · rintro ⟨w, hw, hw'⟩
-    refine ⟨t * w, ?_, by rw [← (eq_inv_mul_iff_mul_eq₀ ht').mp hw', abs_mul]⟩
-    rw [← mul_sub]
-    exact aux hw
+  rintro ⟨y, hy, rfl⟩
+  refine ⟨t⁻¹ * y, ?_, by rw [abs_mul, abs_inv]⟩
+  rw [← inv_mul_cancel_left₀ ht x, ← inv_mul_cancel_left₀ ht p, ← mul_sub]
+  exact aux hy
+  rintro ⟨w, hw, hw'⟩
+  refine ⟨t * w, ?_, by rw [← (eq_inv_mul_iff_mul_eq₀ ht').mp hw', abs_mul]⟩
+  rw [← mul_sub]
+  exact aux hw
 
 theorem norm_neg_period (x : ℝ) : ‖(x : AddCircle (-p))‖ = ‖(x : AddCircle p)‖ := by
   suffices ‖(↑(-1 * x) : AddCircle (-1 * p))‖ = ‖(x : AddCircle p)‖ by
@@ -82,7 +82,7 @@ theorem norm_eq_of_zero {x : ℝ} : ‖(x : AddCircle (0 : ℝ))‖ = |x| := by
 theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * p| := by
   suffices ∀ x : ℝ, ‖(x : AddCircle (1 : ℝ))‖ = |x - round x| by
     rcases eq_or_ne p 0 with (rfl | hp)
-    · simp
+    simp
     have hx := norm_coe_mul p x p⁻¹
     rw [abs_inv, eq_inv_mul_iff_mul_eq₀ ((not_congr abs_eq_zero).mpr hp)] at hx
     rw [← hx, inv_mul_cancel hp, this, ← abs_mul, mul_sub, mul_inv_cancel_left₀ hp, mul_comm p]
@@ -93,24 +93,24 @@ theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * 
     ⟨0, by simp [mem_lowerBounds]⟩
   have h₂ : (abs '' { m : ℝ | (m : AddCircle (1 : ℝ)) = x }).Nonempty := ⟨|x|, ⟨x, rfl, rfl⟩⟩
   apply le_antisymm
-  · simp_rw [Real.norm_eq_abs, csInf_le_iff h₁ h₂, le_min_iff]
-    intro b h
-    refine
-      ⟨mem_lowerBounds.1 h _ ⟨fract x, ?_, abs_fract⟩,
-        mem_lowerBounds.1 h _ ⟨fract x - 1, ?_, by rw [abs_sub_comm, abs_one_sub_fract]⟩⟩
-    · simp only [mem_setOf, fract, sub_eq_self, QuotientAddGroup.mk_sub,
-        QuotientAddGroup.eq_zero_iff, intCast_mem_zmultiples_one]
-    · simp only [mem_setOf, fract, sub_eq_self, QuotientAddGroup.mk_sub,
-        QuotientAddGroup.eq_zero_iff, intCast_mem_zmultiples_one, sub_sub,
-        (by norm_cast : (⌊x⌋ : ℝ) + 1 = (↑(⌊x⌋ + 1) : ℝ))]
-  · simp only [QuotientAddGroup.mk'_apply, Real.norm_eq_abs, le_csInf_iff h₁ h₂]
-    rintro b' ⟨b, hb, rfl⟩
-    simp only [mem_setOf, QuotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff,
-      smul_one_eq_cast] at hb
-    obtain ⟨z, hz⟩ := hb
-    rw [(by rw [hz]; abel : x = b - z), fract_sub_int, ← abs_sub_round_eq_min]
-    convert round_le b 0
-    simp
+  simp_rw [Real.norm_eq_abs, csInf_le_iff h₁ h₂, le_min_iff]
+  intro b h
+  refine
+    ⟨mem_lowerBounds.1 h _ ⟨fract x, ?_, abs_fract⟩,
+      mem_lowerBounds.1 h _ ⟨fract x - 1, ?_, by rw [abs_sub_comm, abs_one_sub_fract]⟩⟩
+  simp only [mem_setOf, fract, sub_eq_self, QuotientAddGroup.mk_sub,
+    QuotientAddGroup.eq_zero_iff, intCast_mem_zmultiples_one]
+  simp only [mem_setOf, fract, sub_eq_self, QuotientAddGroup.mk_sub,
+    QuotientAddGroup.eq_zero_iff, intCast_mem_zmultiples_one, sub_sub,
+    (by norm_cast : (⌊x⌋ : ℝ) + 1 = (↑(⌊x⌋ + 1) : ℝ))]
+  simp only [QuotientAddGroup.mk'_apply, Real.norm_eq_abs, le_csInf_iff h₁ h₂]
+  rintro b' ⟨b, hb, rfl⟩
+  simp only [mem_setOf, QuotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff,
+    smul_one_eq_cast] at hb
+  obtain ⟨z, hz⟩ := hb
+  rw [(by rw [hz]; abel : x = b - z), fract_sub_int, ← abs_sub_round_eq_min]
+  convert round_le b 0
+  simp
 
 theorem norm_eq' (hp : 0 < p) {x : ℝ} : ‖(x : AddCircle p)‖ = p * |p⁻¹ * x - round (p⁻¹ * x)| := by
   conv_rhs =>
@@ -136,24 +136,24 @@ theorem norm_coe_eq_abs_iff {x : ℝ} (hp : p ≠ 0) : ‖(x : AddCircle p)‖ =
   suffices ∀ p : ℝ, 0 < p → |x| ≤ p / 2 → ‖(x : AddCircle p)‖ = |x| by
     -- Porting note: replaced `lt_trichotomy` which had trouble substituting `p = 0`.
     rcases hp.symm.lt_or_lt with (hp | hp)
-    · rw [abs_eq_self.mpr hp.le] at hx
-      exact this p hp hx
-    · rw [← norm_neg_period]
-      rw [abs_eq_neg_self.mpr hp.le] at hx
-      exact this (-p) (neg_pos.mpr hp) hx
+    rw [abs_eq_self.mpr hp.le] at hx
+    exact this p hp hx
+    rw [← norm_neg_period]
+    rw [abs_eq_neg_self.mpr hp.le] at hx
+    exact this (-p) (neg_pos.mpr hp) hx
   clear hx
   intro p hp hx
   rcases eq_or_ne x (p / (2 : ℝ)) with (rfl | hx')
-  · simp [abs_div, abs_two]
+  simp [abs_div, abs_two]
   suffices round (p⁻¹ * x) = 0 by simp [norm_eq, this]
   rw [round_eq_zero_iff]
   obtain ⟨hx₁, hx₂⟩ := abs_le.mp hx
   replace hx₂ := Ne.lt_of_le hx' hx₂
   constructor
-  · rwa [← mul_le_mul_left hp, ← mul_assoc, mul_inv_cancel hp.ne.symm, one_mul, mul_neg, ←
-      mul_div_assoc, mul_one]
-  · rwa [← mul_lt_mul_left hp, ← mul_assoc, mul_inv_cancel hp.ne.symm, one_mul, ← mul_div_assoc,
-      mul_one]
+  rwa [← mul_le_mul_left hp, ← mul_assoc, mul_inv_cancel hp.ne.symm, one_mul, mul_neg, ←
+    mul_div_assoc, mul_one]
+  rwa [← mul_lt_mul_left hp, ← mul_assoc, mul_inv_cancel hp.ne.symm, one_mul, ← mul_div_assoc,
+    mul_one]
 
 open Metric
 
@@ -173,7 +173,7 @@ theorem coe_real_preimage_closedBall_period_zero (x ε : ℝ) :
 theorem coe_real_preimage_closedBall_eq_iUnion (x ε : ℝ) :
     (↑) ⁻¹' closedBall (x : AddCircle p) ε = ⋃ z : ℤ, closedBall (x + z • p) ε := by
   rcases eq_or_ne p 0 with (rfl | hp)
-  · simp [iUnion_const]
+  simp [iUnion_const]
   ext y
   simp only [dist_eq_norm, mem_preimage, mem_closedBall, zsmul_eq_mul, mem_iUnion, Real.norm_eq_abs,
     ← QuotientAddGroup.mk_sub, norm_eq, ← sub_sub]
@@ -187,39 +187,39 @@ theorem coe_real_preimage_closedBall_inter_eq {x ε : ℝ} (s : Set ℝ)
     (hs : s ⊆ closedBall x (|p| / 2)) :
     (↑) ⁻¹' closedBall (x : AddCircle p) ε ∩ s = if ε < |p| / 2 then closedBall x ε ∩ s else s := by
   rcases le_or_lt (|p| / 2) ε with hε | hε
-  · rcases eq_or_ne p 0 with (rfl | hp)
-    · simp only [abs_zero, zero_div] at hε
-      simp only [not_lt.mpr hε, coe_real_preimage_closedBall_period_zero, abs_zero, zero_div,
-        if_false, inter_eq_right]
-      exact hs.trans (closedBall_subset_closedBall <| by simp [hε])
-    -- Porting note: was
-    -- simp [closedBall_eq_univ_of_half_period_le p hp (↑x) hε, not_lt.mpr hε]
-    simp only [not_lt.mpr hε, ite_false, inter_eq_right]
-    rw [closedBall_eq_univ_of_half_period_le p hp (↑x : ℝ ⧸ zmultiples p) hε, preimage_univ]
-    apply subset_univ
-  · suffices ∀ z : ℤ, closedBall (x + z • p) ε ∩ s = if z = 0 then closedBall x ε ∩ s else ∅ by
-      simp [-zsmul_eq_mul, ← QuotientAddGroup.mk_zero, coe_real_preimage_closedBall_eq_iUnion,
-        iUnion_inter, iUnion_ite, this, hε]
-    intro z
-    simp only [Real.closedBall_eq_Icc, zero_sub, zero_add] at hs ⊢
-    rcases eq_or_ne z 0 with (rfl | hz)
-    · simp
-    simp only [hz, zsmul_eq_mul, if_false, eq_empty_iff_forall_not_mem]
-    rintro y ⟨⟨hy₁, hy₂⟩, hy₀⟩
-    obtain ⟨hy₃, hy₄⟩ := hs hy₀
-    rcases lt_trichotomy 0 p with (hp | (rfl : 0 = p) | hp)
-    · cases' Int.cast_le_neg_one_or_one_le_cast_of_ne_zero ℝ hz with hz' hz'
-      · have : ↑z * p ≤ -p := by nlinarith
-        linarith [abs_eq_self.mpr hp.le]
-      · have : p ≤ ↑z * p := by nlinarith
-        linarith [abs_eq_self.mpr hp.le]
-    · simp only [mul_zero, add_zero, abs_zero, zero_div] at hy₁ hy₂ hε
-      linarith
-    · cases' Int.cast_le_neg_one_or_one_le_cast_of_ne_zero ℝ hz with hz' hz'
-      · have : -p ≤ ↑z * p := by nlinarith
-        linarith [abs_eq_neg_self.mpr hp.le]
-      · have : ↑z * p ≤ p := by nlinarith
-        linarith [abs_eq_neg_self.mpr hp.le]
+  rcases eq_or_ne p 0 with (rfl | hp)
+  simp only [abs_zero, zero_div] at hε
+  simp only [not_lt.mpr hε, coe_real_preimage_closedBall_period_zero, abs_zero, zero_div,
+    if_false, inter_eq_right]
+  exact hs.trans (closedBall_subset_closedBall <| by simp [hε])
+  -- Porting note: was
+  -- simp [closedBall_eq_univ_of_half_period_le p hp (↑x) hε, not_lt.mpr hε]
+  simp only [not_lt.mpr hε, ite_false, inter_eq_right]
+  rw [closedBall_eq_univ_of_half_period_le p hp (↑x : ℝ ⧸ zmultiples p) hε, preimage_univ]
+  apply subset_univ
+  suffices ∀ z : ℤ, closedBall (x + z • p) ε ∩ s = if z = 0 then closedBall x ε ∩ s else ∅ by
+    simp [-zsmul_eq_mul, ← QuotientAddGroup.mk_zero, coe_real_preimage_closedBall_eq_iUnion,
+      iUnion_inter, iUnion_ite, this, hε]
+  intro z
+  simp only [Real.closedBall_eq_Icc, zero_sub, zero_add] at hs ⊢
+  rcases eq_or_ne z 0 with (rfl | hz)
+  simp
+  simp only [hz, zsmul_eq_mul, if_false, eq_empty_iff_forall_not_mem]
+  rintro y ⟨⟨hy₁, hy₂⟩, hy₀⟩
+  obtain ⟨hy₃, hy₄⟩ := hs hy₀
+  rcases lt_trichotomy 0 p with (hp | (rfl : 0 = p) | hp)
+  cases' Int.cast_le_neg_one_or_one_le_cast_of_ne_zero ℝ hz with hz' hz'
+  have : ↑z * p ≤ -p := by nlinarith
+  linarith [abs_eq_self.mpr hp.le]
+  have : p ≤ ↑z * p := by nlinarith
+  linarith [abs_eq_self.mpr hp.le]
+  simp only [mul_zero, add_zero, abs_zero, zero_div] at hy₁ hy₂ hε
+  linarith
+  cases' Int.cast_le_neg_one_or_one_le_cast_of_ne_zero ℝ hz with hz' hz'
+  have : -p ≤ ↑z * p := by nlinarith
+  linarith [abs_eq_neg_self.mpr hp.le]
+  have : ↑z * p ≤ p := by nlinarith
+  linarith [abs_eq_neg_self.mpr hp.le]
 
 section FiniteOrderPoints
 

@@ -237,30 +237,30 @@ theorem mem_fix_iff {f : α →. β ⊕ α} {a : α} {b : β} :
    fun h => by
     simp only [fix, Part.mem_assert_iff]
     rcases h with (⟨h₁, h₂⟩ | ⟨a', h, h₃⟩)
-    · refine ⟨⟨_, fun y h' => ?_⟩, ?_⟩
-      · injection Part.mem_unique ⟨h₁, h₂⟩ h'
-      · rw [WellFounded.fixFEq]
-        -- Porting note: used to be simp [h₁, h₂]
-        apply Part.mem_assert h₁
-        split
-        next e =>
-          injection h₂.symm.trans e with h; simp [h]
-        next e =>
-          injection h₂.symm.trans e
-    · simp only [fix, Part.mem_assert_iff] at h₃
-      cases' h₃ with h₃ h₄
-      refine ⟨⟨_, fun y h' => ?_⟩, ?_⟩
-      · injection Part.mem_unique h h' with e
-        exact e ▸ h₃
-      · cases' h with h₁ h₂
-        rw [WellFounded.fixFEq]
-        -- Porting note: used to be simp [h₁, h₂, h₄]
-        apply Part.mem_assert h₁
-        split
-        next e =>
-          injection h₂.symm.trans e
-        next e =>
-          injection h₂.symm.trans e; subst a'; exact h₄⟩
+    refine ⟨⟨_, fun y h' => ?_⟩, ?_⟩
+    injection Part.mem_unique ⟨h₁, h₂⟩ h'
+    rw [WellFounded.fixFEq]
+    -- Porting note: used to be simp [h₁, h₂]
+    apply Part.mem_assert h₁
+    split
+    next e =>
+      injection h₂.symm.trans e with h; simp [h]
+    next e =>
+      injection h₂.symm.trans e
+    simp only [fix, Part.mem_assert_iff] at h₃
+    cases' h₃ with h₃ h₄
+    refine ⟨⟨_, fun y h' => ?_⟩, ?_⟩
+    injection Part.mem_unique h h' with e
+    exact e ▸ h₃
+    cases' h with h₁ h₂
+    rw [WellFounded.fixFEq]
+    -- Porting note: used to be simp [h₁, h₂, h₄]
+    apply Part.mem_assert h₁
+    split
+    next e =>
+      injection h₂.symm.trans e
+    next e =>
+      injection h₂.symm.trans e; subst a'; exact h₄⟩
 
 /-- If advancing one step from `a` leads to `b : β`, then `f.fix a = b` -/
 theorem fix_stop {f : α →. β ⊕ α} {b : β} {a : α} (hb : Sum.inl b ∈ f a) : b ∈ f.fix a := by
@@ -270,12 +270,12 @@ theorem fix_stop {f : α →. β ⊕ α} {b : β} {a : α} (hb : Sum.inl b ∈ f
 /-- If advancing one step from `a` on `f` leads to `a' : α`, then `f.fix a = f.fix a'` -/
 theorem fix_fwd_eq {f : α →. β ⊕ α} {a a' : α} (ha' : Sum.inr a' ∈ f a) : f.fix a = f.fix a' := by
   ext b; constructor
-  · intro h
-    obtain h' | ⟨a, h', e'⟩ := mem_fix_iff.1 h <;> cases Part.mem_unique ha' h'
-    exact e'
-  · intro h
-    rw [PFun.mem_fix_iff]
-    exact Or.inr ⟨a', ha', h⟩
+  intro h
+  obtain h' | ⟨a, h', e'⟩ := mem_fix_iff.1 h <;> cases Part.mem_unique ha' h'
+  exact e'
+  intro h
+  rw [PFun.mem_fix_iff]
+  exact Or.inr ⟨a', ha', h⟩
 
 theorem fix_fwd {f : α →. β ⊕ α} {b : β} {a a' : α} (hb : b ∈ f.fix a) (ha' : Sum.inr a' ∈ f a) :
     b ∈ f.fix a' := by rwa [← fix_fwd_eq ha']
@@ -550,9 +550,9 @@ theorem prodLift_apply (f : α →. β) (g : α →. γ) (x : α) :
 theorem mem_prodLift {f : α →. β} {g : α →. γ} {x : α} {y : β × γ} :
     y ∈ f.prodLift g x ↔ y.1 ∈ f x ∧ y.2 ∈ g x := by
   trans ∃ hp hq, (f x).get hp = y.1 ∧ (g x).get hq = y.2
-  · simp only [prodLift, Part.mem_mk_iff, And.exists, Prod.ext_iff]
+  simp only [prodLift, Part.mem_mk_iff, And.exists, Prod.ext_iff]
   -- Porting note: was just `[exists_and_left, exists_and_right]`
-  · simp only [exists_and_left, exists_and_right, (· ∈ ·), Part.Mem]
+  simp only [exists_and_left, exists_and_right, (· ∈ ·), Part.Mem]
 
 /-- Product of partial functions. -/
 def prodMap (f : α →. γ) (g : β →. δ) : α × β →. γ × δ := fun x =>
@@ -575,8 +575,8 @@ theorem prodMap_apply (f : α →. γ) (g : β →. δ) (x : α × β) :
 theorem mem_prodMap {f : α →. γ} {g : β →. δ} {x : α × β} {y : γ × δ} :
     y ∈ f.prodMap g x ↔ y.1 ∈ f x.1 ∧ y.2 ∈ g x.2 := by
   trans ∃ hp hq, (f x.1).get hp = y.1 ∧ (g x.2).get hq = y.2
-  · simp only [prodMap, Part.mem_mk_iff, And.exists, Prod.ext_iff]
-  · simp only [exists_and_left, exists_and_right, (· ∈ ·), Part.Mem]
+  simp only [prodMap, Part.mem_mk_iff, And.exists, Prod.ext_iff]
+  simp only [exists_and_left, exists_and_right, (· ∈ ·), Part.Mem]
 
 @[simp]
 theorem prodLift_fst_comp_snd_comp (f : α →. γ) (g : β →. δ) :

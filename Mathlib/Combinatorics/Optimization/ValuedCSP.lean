@@ -140,10 +140,10 @@ lemma Function.HasMaxCutPropertyAt.rows_lt_aux
   intro equ
   have asymm : r 0 ≠ r 1
   rcases (mcf.right (r 0) (r 1)).right equ with ⟨ha0, hb1⟩ | ⟨ha1, hb0⟩
-  · rw [ha0, hb1] at hab
-    exact hab
-  · rw [ha1, hb0] at hab
-    exact hab.symm
+  rw [ha0, hb1] at hab
+  exact hab
+  rw [ha1, hb0] at hab
+  exact hab.symm
   apply asymm
   obtain ⟨o, in_omega, rfl⟩ := rin
   show o (fun j => ![![a, b], ![b, a]] j 0) = o (fun j => ![![a, b], ![b, a]] j 1)
@@ -165,13 +165,13 @@ lemma Function.HasMaxCutProperty.forbids_commutativeFractionalPolymorphism
       ((ω.tt ![![a, b], ![b, a]]).map (fun _ => f ![a, b])).sum <
       ((ω.tt ![![a, b], ![b, a]]).map (fun r => f r)).sum := by
       apply Multiset.sum_lt_sum
-      · intro r rin
-        exact le_of_lt (mcfab.rows_lt_aux hab symmega rin)
-      · obtain ⟨g, _⟩ := valid.contains
-        have : (fun i => g ((Function.swap ![![a, b], ![b, a]]) i)) ∈ ω.tt ![![a, b], ![b, a]]
-        simp only [FractionalOperation.tt, Multiset.mem_map]
-        use g
-        exact ⟨_, this, mcfab.rows_lt_aux hab symmega this⟩
+      intro r rin
+      exact le_of_lt (mcfab.rows_lt_aux hab symmega rin)
+      obtain ⟨g, _⟩ := valid.contains
+      have : (fun i => g ((Function.swap ![![a, b], ![b, a]]) i)) ∈ ω.tt ![![a, b], ![b, a]]
+      simp only [FractionalOperation.tt, Multiset.mem_map]
+      use g
+      exact ⟨_, this, mcfab.rows_lt_aux hab symmega this⟩
     rw [two_nsmul, two_nsmul]
     exact add_lt_add half_sharp half_sharp
   have impos : 2 • (ω.map (fun _ => f ![a, b])).sum < ω.size • 2 • f ![a, b]

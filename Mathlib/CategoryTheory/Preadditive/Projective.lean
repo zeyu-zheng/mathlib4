@@ -236,10 +236,10 @@ def projectivePresentationOfMapProjectivePresentation (X : C)
 theorem enoughProjectives_iff (F : C ≌ D) : EnoughProjectives C ↔ EnoughProjectives D := by
   constructor
   all_goals intro H; constructor; intro X; constructor
-  · exact F.symm.projectivePresentationOfMapProjectivePresentation _
-      (Nonempty.some (H.presentation (F.inverse.obj X)))
-  · exact F.projectivePresentationOfMapProjectivePresentation X
-      (Nonempty.some (H.presentation (F.functor.obj X)))
+  exact F.symm.projectivePresentationOfMapProjectivePresentation _
+    (Nonempty.some (H.presentation (F.inverse.obj X)))
+  exact F.projectivePresentationOfMapProjectivePresentation X
+    (Nonempty.some (H.presentation (F.functor.obj X)))
 
 end Equivalence
 

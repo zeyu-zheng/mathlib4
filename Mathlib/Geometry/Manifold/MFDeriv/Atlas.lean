@@ -95,8 +95,8 @@ theorem mdifferentiableAt_atlas (h : e ∈ atlas H M) {x : M} (hx : x ∈ e.sour
   have B := A.differentiableOn le_top (I ((chartAt H x : M → H) x)) mem
   simp only [mfld_simps] at B
   rw [inter_comm, differentiableWithinAt_inter] at B
-  · simpa only [mfld_simps]
-  · apply IsOpen.mem_nhds ((PartialHomeomorph.open_source _).preimage I.continuous_symm) mem.1
+  simpa only [mfld_simps]
+  apply IsOpen.mem_nhds ((PartialHomeomorph.open_source _).preimage I.continuous_symm) mem.1
 
 theorem mdifferentiableOn_atlas (h : e ∈ atlas H M) : MDifferentiableOn I I e e.source :=
   fun _x hx => (mdifferentiableAt_atlas I h hx).mdifferentiableWithinAt
@@ -116,8 +116,8 @@ theorem mdifferentiableAt_atlas_symm (h : e ∈ atlas H M) {x : H} (hx : x ∈ e
   have B := A.differentiableOn le_top (I x) mem
   simp only [mfld_simps] at B
   rw [inter_comm, differentiableWithinAt_inter] at B
-  · simpa only [mfld_simps]
-  · apply IsOpen.mem_nhds ((PartialHomeomorph.open_source _).preimage I.continuous_symm) mem.1
+  simpa only [mfld_simps]
+  apply IsOpen.mem_nhds ((PartialHomeomorph.open_source _).preimage I.continuous_symm) mem.1
 
 theorem mdifferentiableOn_atlas_symm (h : e ∈ atlas H M) : MDifferentiableOn I I e.symm e.target :=
   fun _x hx => (mdifferentiableAt_atlas_symm I h hx).mdifferentiableWithinAt
@@ -136,8 +136,8 @@ theorem tangentMap_chart {p q : TangentBundle I M} (h : q.1 ∈ (chartAt H p.1).
         ((chartAt (ModelProd H E) p : TangentBundle I M → ModelProd H E) q) := by
   dsimp [tangentMap]
   rw [MDifferentiableAt.mfderiv]
-  · rfl
-  · exact mdifferentiableAt_atlas _ (chart_mem_atlas _ _) h
+  rfl
+  exact mdifferentiableAt_atlas _ (chart_mem_atlas _ _) h
 
 /-- The derivative of the inverse of the chart at a base point is the inverse of the chart of the
 tangent bundle, composed with the identification between the tangent bundle of the model space and
@@ -235,15 +235,15 @@ theorem range_mfderiv_eq_univ {x : M} (hx : x ∈ e.source) : range (mfderiv I I
 
 theorem trans (he' : e'.MDifferentiable I' I'') : (e.trans e').MDifferentiable I I'' := by
   constructor
-  · intro x hx
-    simp only [mfld_simps] at hx
-    exact
-      ((he'.mdifferentiableAt hx.2).comp _ (he.mdifferentiableAt hx.1)).mdifferentiableWithinAt
-  · intro x hx
-    simp only [mfld_simps] at hx
-    exact
-      ((he.symm.mdifferentiableAt hx.2).comp _
-          (he'.symm.mdifferentiableAt hx.1)).mdifferentiableWithinAt
+  intro x hx
+  simp only [mfld_simps] at hx
+  exact
+    ((he'.mdifferentiableAt hx.2).comp _ (he.mdifferentiableAt hx.1)).mdifferentiableWithinAt
+  intro x hx
+  simp only [mfld_simps] at hx
+  exact
+    ((he.symm.mdifferentiableAt hx.2).comp _
+        (he'.symm.mdifferentiableAt hx.1)).mdifferentiableWithinAt
 
 end PartialHomeomorph.MDifferentiable
 

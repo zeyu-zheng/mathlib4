@@ -90,14 +90,14 @@ theorem lie_top_eq_of_span_sup_eq_top (N : LieSubmodule R L M) :
   simp only [lieIdeal_oper_eq_linear_span', Submodule.sup_span, mem_top, exists_prop,
     true_and, Submodule.map_coe, toEnd_apply_apply]
   refine le_antisymm (Submodule.span_le.mpr ?_) (Submodule.span_mono fun z hz => ?_)
-  · rintro z ⟨y, n, hn : n ∈ N, rfl⟩
-    obtain ⟨t, z, hz, rfl⟩ := exists_smul_add_of_span_sup_eq_top hxI y
-    simp only [SetLike.mem_coe, Submodule.span_union, Submodule.mem_sup]
-    exact
-      ⟨t • ⁅x, n⁆, Submodule.subset_span ⟨t • n, N.smul_mem' t hn, lie_smul t x n⟩, ⁅z, n⁆,
-        Submodule.subset_span ⟨z, hz, n, hn, rfl⟩, by simp⟩
-  · rcases hz with (⟨m, hm, rfl⟩ | ⟨y, -, m, hm, rfl⟩)
-    exacts [⟨x, m, hm, rfl⟩, ⟨y, m, hm, rfl⟩]
+  rintro z ⟨y, n, hn : n ∈ N, rfl⟩
+  obtain ⟨t, z, hz, rfl⟩ := exists_smul_add_of_span_sup_eq_top hxI y
+  simp only [SetLike.mem_coe, Submodule.span_union, Submodule.mem_sup]
+  exact
+    ⟨t • ⁅x, n⁆, Submodule.subset_span ⟨t • n, N.smul_mem' t hn, lie_smul t x n⟩, ⁅z, n⁆,
+      Submodule.subset_span ⟨z, hz, n, hn, rfl⟩, by simp⟩
+  rcases hz with (⟨m, hm, rfl⟩ | ⟨y, -, m, hm, rfl⟩)
+  exacts [⟨x, m, hm, rfl⟩, ⟨y, m, hm, rfl⟩]
 
 theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ}
     (hxn : toEnd R L M x ^ n = 0) (hIM : lowerCentralSeries R L M i ≤ I.lcs M j) :
@@ -110,16 +110,16 @@ theorem lcs_le_lcs_of_is_nilpotent_span_sup_eq_top {n i j : ℕ}
     by simpa only [bot_sup_eq, LieIdeal.incl_coe, Submodule.map_zero, hxn] using this n
   intro l
   induction' l with l ih
-  · simp only [Nat.zero_eq, add_zero, LieIdeal.lcs_succ, pow_zero, LinearMap.one_eq_id,
-      Submodule.map_id]
-    exact le_sup_of_le_left hIM
-  · simp only [LieIdeal.lcs_succ, i.add_succ l, lie_top_eq_of_span_sup_eq_top hxI, sup_le_iff]
-    refine ⟨(Submodule.map_mono ih).trans ?_, le_sup_of_le_right ?_⟩
-    · rw [Submodule.map_sup, ← Submodule.map_comp, ← LinearMap.mul_eq_comp, ← pow_succ', ←
-        I.lcs_succ]
-      exact sup_le_sup_left coe_map_toEnd_le _
-    · refine le_trans (mono_lie_right I ?_) (mono_lie_right I hIM)
-      exact antitone_lowerCentralSeries R L M le_self_add
+  simp only [Nat.zero_eq, add_zero, LieIdeal.lcs_succ, pow_zero, LinearMap.one_eq_id,
+    Submodule.map_id]
+  exact le_sup_of_le_left hIM
+  simp only [LieIdeal.lcs_succ, i.add_succ l, lie_top_eq_of_span_sup_eq_top hxI, sup_le_iff]
+  refine ⟨(Submodule.map_mono ih).trans ?_, le_sup_of_le_right ?_⟩
+  rw [Submodule.map_sup, ← Submodule.map_comp, ← LinearMap.mul_eq_comp, ← pow_succ', ←
+    I.lcs_succ]
+  exact sup_le_sup_left coe_map_toEnd_le _
+  refine le_trans (mono_lie_right I ?_) (mono_lie_right I hIM)
+  exact antitone_lowerCentralSeries R L M le_self_add
 
 theorem isNilpotentOfIsNilpotentSpanSupEqTop (hnp : IsNilpotent <| toEnd R L M x)
     (hIM : IsNilpotent R I M) : IsNilpotent R L M := by
@@ -132,8 +132,8 @@ theorem isNilpotentOfIsNilpotentSpanSupEqTop (hnp : IsNilpotent <| toEnd R L M x
     simpa [hk'] using this k
   intro l
   induction' l with l ih
-  · simp
-  · exact (l.succ_mul n).symm ▸ lcs_le_lcs_of_is_nilpotent_span_sup_eq_top hxI hn ih
+  simp
+  exact (l.succ_mul n).symm ▸ lcs_le_lcs_of_is_nilpotent_span_sup_eq_top hxI hn ih
 
 end LieSubmodule
 

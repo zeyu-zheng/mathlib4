@@ -60,16 +60,16 @@ private theorem ghostComponent_teichmullerFun (r : R) (n : ℕ) :
     ghostComponent n (teichmullerFun p r) = r ^ p ^ n := by
   rw [ghostComponent_apply, aeval_wittPolynomial, Finset.sum_eq_single 0, pow_zero, one_mul,
     tsub_zero]
-  · rfl
-  · intro i _ h0
-    simp [teichmullerFun, h0, hp.1.ne_zero]
-  · rw [Finset.mem_range]; intro h; exact (h (Nat.succ_pos n)).elim
+  rfl
+  intro i _ h0
+  simp [teichmullerFun, h0, hp.1.ne_zero]
+  rw [Finset.mem_range]; intro h; exact (h (Nat.succ_pos n)).elim
 
 private theorem map_teichmullerFun (f : R →+* S) (r : R) :
     map f (teichmullerFun p r) = teichmullerFun p (f r) := by
   ext n; cases n
-  · rfl
-  · exact f.map_zero
+  rfl
+  exact f.map_zero
 
 private theorem teichmuller_mul_aux₁ (x y : MvPolynomial R ℚ) :
     teichmullerFun p (x * y) = teichmullerFun p x * teichmullerFun p y := by

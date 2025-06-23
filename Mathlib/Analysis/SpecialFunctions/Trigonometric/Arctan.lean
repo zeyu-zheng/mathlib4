@@ -65,20 +65,20 @@ theorem continuousOn_tan_Ioo : ContinuousOn tan (Ioo (-(π / 2)) (π / 2)) := by
   rw [cos_eq_zero_iff]
   rintro hx_gt hx_lt ⟨r, hxr_eq⟩
   rcases le_or_lt 0 r with h | h
-  · rw [lt_iff_not_ge] at hx_lt
-    refine hx_lt ?_
-    rw [hxr_eq, ← one_mul (π / 2), mul_div_assoc, ge_iff_le, mul_le_mul_right (half_pos pi_pos)]
-    simp [h]
-  · rw [lt_iff_not_ge] at hx_gt
-    refine hx_gt ?_
-    rw [hxr_eq, ← one_mul (π / 2), mul_div_assoc, ge_iff_le, neg_mul_eq_neg_mul,
-      mul_le_mul_right (half_pos pi_pos)]
-    have hr_le : r ≤ -1
-    rwa [Int.lt_iff_add_one_le, ← le_neg_iff_add_nonpos_right] at h
-    rw [← le_sub_iff_add_le, mul_comm, ← le_div_iff]
-    · norm_num
-      rw [← Int.cast_one, ← Int.cast_neg]; norm_cast
-    · exact zero_lt_two
+  rw [lt_iff_not_ge] at hx_lt
+  refine hx_lt ?_
+  rw [hxr_eq, ← one_mul (π / 2), mul_div_assoc, ge_iff_le, mul_le_mul_right (half_pos pi_pos)]
+  simp [h]
+  rw [lt_iff_not_ge] at hx_gt
+  refine hx_gt ?_
+  rw [hxr_eq, ← one_mul (π / 2), mul_div_assoc, ge_iff_le, neg_mul_eq_neg_mul,
+    mul_le_mul_right (half_pos pi_pos)]
+  have hr_le : r ≤ -1
+  rwa [Int.lt_iff_add_one_le, ← le_neg_iff_add_nonpos_right] at h
+  rw [← le_sub_iff_add_le, mul_comm, ← le_div_iff]
+  norm_num
+  rw [← Int.cast_one, ← Int.cast_neg]; norm_cast
+  exact zero_lt_two
 
 theorem surjOn_tan : SurjOn tan (Ioo (-(π / 2)) (π / 2)) univ :=
   have := neg_lt_self pi_div_two_pos
@@ -182,16 +182,16 @@ theorem arctan_eq_arccos {x : ℝ} (h : 0 ≤ x) : arctan x = arccos (√(1 + x 
 theorem arccos_eq_arctan {x : ℝ} (h : 0 < x) : arccos x = arctan (√(1 - x ^ 2) / x) := by
   rw [arccos, eq_comm]
   refine arctan_eq_of_tan_eq ?_ ⟨?_, ?_⟩
-  · rw_mod_cast [tan_pi_div_two_sub, tan_arcsin, inv_div]
-  · linarith only [arcsin_le_pi_div_two x, pi_pos]
-  · linarith only [arcsin_pos.2 h]
+  rw_mod_cast [tan_pi_div_two_sub, tan_arcsin, inv_div]
+  linarith only [arcsin_le_pi_div_two x, pi_pos]
+  linarith only [arcsin_pos.2 h]
 
 theorem arctan_inv_of_pos {x : ℝ} (h : 0 < x) : arctan x⁻¹ = π / 2 - arctan x := by
   rw [← arctan_tan (x := _ - _), tan_pi_div_two_sub, tan_arctan]
-  · norm_num
-    exact (arctan_lt_pi_div_two x).trans (half_lt_self_iff.mpr pi_pos)
-  · rw [sub_lt_self_iff, ← arctan_zero]
-    exact tanOrderIso.symm.strictMono h
+  norm_num
+  exact (arctan_lt_pi_div_two x).trans (half_lt_self_iff.mpr pi_pos)
+  rw [sub_lt_self_iff, ← arctan_zero]
+  exact tanOrderIso.symm.strictMono h
 
 theorem arctan_inv_of_neg {x : ℝ} (h : x < 0) : arctan x⁻¹ = -(π / 2) - arctan x := by
   have := arctan_inv_of_pos (neg_pos.mpr h)
@@ -209,22 +209,22 @@ lemma arctan_ne_mul_pi_div_two {x : ℝ} : ∀ (k : ℤ), arctan x ≠ (2 * k + 
 
 lemma arctan_add_arctan_lt_pi_div_two {x y : ℝ} (h : x * y < 1) : arctan x + arctan y < π / 2 := by
   cases' le_or_lt y 0 with hy hy
-  · rw [← add_zero (π / 2), ← arctan_zero]
-    exact add_lt_add_of_lt_of_le (arctan_lt_pi_div_two _) (tanOrderIso.symm.monotone hy)
-  · rw [← lt_div_iff hy, ← inv_eq_one_div] at h
-    replace h : arctan x < arctan y⁻¹ := tanOrderIso.symm.strictMono h
-    rwa [arctan_inv_of_pos hy, lt_tsub_iff_right] at h
+  rw [← add_zero (π / 2), ← arctan_zero]
+  exact add_lt_add_of_lt_of_le (arctan_lt_pi_div_two _) (tanOrderIso.symm.monotone hy)
+  rw [← lt_div_iff hy, ← inv_eq_one_div] at h
+  replace h : arctan x < arctan y⁻¹ := tanOrderIso.symm.strictMono h
+  rwa [arctan_inv_of_pos hy, lt_tsub_iff_right] at h
 
 theorem arctan_add {x y : ℝ} (h : x * y < 1) :
     arctan x + arctan y = arctan ((x + y) / (1 - x * y)) := by
   rw [← arctan_tan (x := _ + _)]
-  · congr
-    conv_rhs => rw [← tan_arctan x, ← tan_arctan y]
-    exact tan_add' ⟨arctan_ne_mul_pi_div_two, arctan_ne_mul_pi_div_two⟩
-  · rw [neg_lt, neg_add, ← arctan_neg, ← arctan_neg]
-    rw [← neg_mul_neg] at h
-    exact arctan_add_arctan_lt_pi_div_two h
-  · exact arctan_add_arctan_lt_pi_div_two h
+  congr
+  conv_rhs => rw [← tan_arctan x, ← tan_arctan y]
+  exact tan_add' ⟨arctan_ne_mul_pi_div_two, arctan_ne_mul_pi_div_two⟩
+  rw [neg_lt, neg_add, ← arctan_neg, ← arctan_neg]
+  rw [← neg_mul_neg] at h
+  exact arctan_add_arctan_lt_pi_div_two h
+  exact arctan_add_arctan_lt_pi_div_two h
 
 theorem arctan_add_eq_add_pi {x y : ℝ} (h : 1 < x * y) (hx : 0 < x) :
     arctan x + arctan y = arctan ((x + y) / (1 - x * y)) + π := by

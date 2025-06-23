@@ -87,12 +87,12 @@ theorem Nat.Primes.not_summable_one_div : ¬ Summable (fun p : Nat.Primes ↦ (1
 theorem Nat.Primes.summable_rpow {r : ℝ} :
     Summable (fun p : Nat.Primes ↦ (p : ℝ) ^ r) ↔ r < -1 := by
   by_cases h : r < -1
-  · -- case `r < -1`
-    simp only [h, iff_true]
-    exact (Real.summable_nat_rpow.mpr h).subtype _
-  · -- case `-1 ≤ r`
-    simp only [h, iff_false]
-    refine fun H ↦ Nat.Primes.not_summable_one_div <| H.of_nonneg_of_le (fun _ ↦ by positivity) ?_
-    intro p
-    rw [one_div, ← Real.rpow_neg_one]
-    exact Real.rpow_le_rpow_of_exponent_le (by exact_mod_cast p.prop.one_lt.le) <| not_lt.mp h
+  -- case `r < -1`
+  simp only [h, iff_true]
+  exact (Real.summable_nat_rpow.mpr h).subtype _
+  -- case `-1 ≤ r`
+  simp only [h, iff_false]
+  refine fun H ↦ Nat.Primes.not_summable_one_div <| H.of_nonneg_of_le (fun _ ↦ by positivity) ?_
+  intro p
+  rw [one_div, ← Real.rpow_neg_one]
+  exact Real.rpow_le_rpow_of_exponent_le (by exact_mod_cast p.prop.one_lt.le) <| not_lt.mp h

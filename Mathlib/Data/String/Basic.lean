@@ -62,41 +62,41 @@ theorem ltb_cons_addChar (c : Char) (cs₁ cs₂ : List Char) (i₁ i₂ : Pos) 
   intros <;>
   (conv => lhs; unfold ltb) <;> (conv => rhs; unfold ltb) <;>
   simp only [Iterator.hasNext_cons_addChar, ite_false, ite_true, *]
-  · rename_i h₂ h₁ heq ih
-    simp only [Iterator.next, next, heq, Iterator.curr, get_cons_addChar, ite_true] at ih ⊢
-    repeat rw [Pos.addChar_right_comm _ c]
-    exact ih
-  · rename_i h₂ h₁ hne
-    simp [Iterator.curr, get_cons_addChar, hne]
+  rename_i h₂ h₁ heq ih
+  simp only [Iterator.next, next, heq, Iterator.curr, get_cons_addChar, ite_true] at ih ⊢
+  repeat rw [Pos.addChar_right_comm _ c]
+  exact ih
+  rename_i h₂ h₁ hne
+  simp [Iterator.curr, get_cons_addChar, hne]
 
 @[simp]
 theorem lt_iff_toList_lt : ∀ {s₁ s₂ : String}, s₁ < s₂ ↔ s₁.toList < s₂.toList
   | ⟨s₁⟩, ⟨s₂⟩ => show ltb ⟨⟨s₁⟩, 0⟩ ⟨⟨s₂⟩, 0⟩ ↔ s₁ < s₂ by
     induction s₁ generalizing s₂ <;> cases s₂
-    · unfold ltb; decide
-    · rename_i c₂ cs₂; apply iff_of_true
-      · unfold ltb
-        #adaptation_note /-- v4.7.0-rc1 exclude reduceMk from simp -/
-        simp [-reduceMk, Iterator.hasNext, Char.utf8Size_pos]
-      · apply List.nil_lt_cons
-    · rename_i c₁ cs₁ ih; apply iff_of_false
-      · unfold ltb
-        #adaptation_note /-- v4.7.0-rc1 exclude reduceMk from simp -/
-        simp [-reduceMk, Iterator.hasNext]
-      · apply not_lt_of_lt; apply List.nil_lt_cons
-    · rename_i c₁ cs₁ ih c₂ cs₂; unfold ltb
-      simp only [Iterator.hasNext, Pos.byteIdx_zero, endPos, utf8ByteSize, utf8ByteSize.go,
-        add_pos_iff, Char.utf8Size_pos, or_true, decide_eq_true_eq, ↓reduceIte, Iterator.curr, get,
-        utf8GetAux, Iterator.next, next, Bool.ite_eq_true_distrib]
-      split_ifs with h
-      · subst c₂
-        suffices ltb ⟨⟨c₁ :: cs₁⟩, (0 : Pos) + c₁⟩ ⟨⟨c₁ :: cs₂⟩, (0 : Pos) + c₁⟩ =
-          ltb ⟨⟨cs₁⟩, 0⟩ ⟨⟨cs₂⟩, 0⟩ by rw [this]; exact (ih cs₂).trans List.Lex.cons_iff.symm
-        apply ltb_cons_addChar
-      · refine ⟨List.Lex.rel, fun e ↦ ?_⟩
-        cases e <;> rename_i h'
-        · contradiction
-        · assumption
+    unfold ltb; decide
+    rename_i c₂ cs₂; apply iff_of_true
+    unfold ltb
+    #adaptation_note /-- v4.7.0-rc1 exclude reduceMk from simp -/
+    simp [-reduceMk, Iterator.hasNext, Char.utf8Size_pos]
+    apply List.nil_lt_cons
+    rename_i c₁ cs₁ ih; apply iff_of_false
+    unfold ltb
+    #adaptation_note /-- v4.7.0-rc1 exclude reduceMk from simp -/
+    simp [-reduceMk, Iterator.hasNext]
+    apply not_lt_of_lt; apply List.nil_lt_cons
+    rename_i c₁ cs₁ ih c₂ cs₂; unfold ltb
+    simp only [Iterator.hasNext, Pos.byteIdx_zero, endPos, utf8ByteSize, utf8ByteSize.go,
+      add_pos_iff, Char.utf8Size_pos, or_true, decide_eq_true_eq, ↓reduceIte, Iterator.curr, get,
+      utf8GetAux, Iterator.next, next, Bool.ite_eq_true_distrib]
+    split_ifs with h
+    subst c₂
+    suffices ltb ⟨⟨c₁ :: cs₁⟩, (0 : Pos) + c₁⟩ ⟨⟨c₁ :: cs₂⟩, (0 : Pos) + c₁⟩ =
+      ltb ⟨⟨cs₁⟩, 0⟩ ⟨⟨cs₂⟩, 0⟩ by rw [this]; exact (ih cs₂).trans List.Lex.cons_iff.symm
+    apply ltb_cons_addChar
+    refine ⟨List.Lex.rel, fun e ↦ ?_⟩
+    cases e <;> rename_i h'
+    contradiction
+    assumption
 
 instance LE : LE String :=
   ⟨fun s₁ s₂ ↦ ¬s₂ < s₁⟩

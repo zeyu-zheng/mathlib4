@@ -167,37 +167,37 @@ theorem Equicontinuous.tendsto_uniformFun_iff_pi [CompactSpace X]
     Tendsto F ℱ (𝓝 f) := by
   -- Assume `ℱ` is non trivial.
   rcases ℱ.eq_or_neBot with rfl | ℱ_ne
-  · simp
+  simp
   constructor <;> intro H
   -- The forward direction is always true, the interesting part is the converse.
-  · exact UniformFun.uniformContinuous_toFun.continuous.tendsto _|>.comp H
+  exact UniformFun.uniformContinuous_toFun.continuous.tendsto _|>.comp H
   -- To prove it, assume that `F` tends to `f` *pointwise* along `ℱ`.
-  · set S : Set (X → α) := closure (range F)
-    set 𝒢 : Filter S := comap (↑) (map F ℱ)
-    -- We would like to use `Equicontinuous.comap_uniformFun_eq`, but applying it to `F` is not
-    -- enough since `f` has no reason to be in the range of `F`.
-    -- Instead, we will apply it to the inclusion `(↑) : S → (X → α)` where `S` is the closure of
-    -- the range of `F` *for the product topology*.
-    -- We know that `S` is still equicontinuous...
-    have hS : S.Equicontinuous := closure' (by rwa [equicontinuous_iff_range] at F_eqcont)
-      continuous_id
-    -- ... hence, as announced, the product topology and uniform convergence topology
-    -- coincide on `S`.
-    have ind : Inducing (UniformFun.ofFun ∘ (↑) : S → X →ᵤ α) :=
-      hS.inducing_uniformFun_iff_pi.mpr ⟨rfl⟩
-    -- By construction, `f` is in `S`.
-    have f_mem : f ∈ S := mem_closure_of_tendsto H range_mem_map
-    -- To conclude, we just have to translate our hypothesis and goal as statements about
-    -- `S`, on which we know the two topologies at play coincide.
-    -- For this, we define a filter on `S` by `𝒢 := comap (↑) (map F ℱ)`, and note that
-    -- it satisfies `map (↑) 𝒢 = map F ℱ`. Thus, both our hypothesis and our goal
-    -- can be rewritten as `𝒢 ≤ 𝓝 f`, where the neighborhood filter in the RHS corresponds
-    -- to one of the two topologies at play on `S`. Since they coincide, we are done.
-    have h𝒢ℱ : map (↑) 𝒢 = map F ℱ := Filter.map_comap_of_mem
-      (Subtype.range_coe ▸ mem_of_superset range_mem_map subset_closure)
-    have H' : Tendsto id 𝒢 (𝓝 ⟨f, f_mem⟩) := by
-      rwa [tendsto_id', nhds_induced, ← map_le_iff_le_comap, h𝒢ℱ]
-    rwa [ind.tendsto_nhds_iff, comp_id, ← tendsto_map'_iff, h𝒢ℱ] at H'
+  set S : Set (X → α) := closure (range F)
+  set 𝒢 : Filter S := comap (↑) (map F ℱ)
+  -- We would like to use `Equicontinuous.comap_uniformFun_eq`, but applying it to `F` is not
+  -- enough since `f` has no reason to be in the range of `F`.
+  -- Instead, we will apply it to the inclusion `(↑) : S → (X → α)` where `S` is the closure of
+  -- the range of `F` *for the product topology*.
+  -- We know that `S` is still equicontinuous...
+  have hS : S.Equicontinuous := closure' (by rwa [equicontinuous_iff_range] at F_eqcont)
+    continuous_id
+  -- ... hence, as announced, the product topology and uniform convergence topology
+  -- coincide on `S`.
+  have ind : Inducing (UniformFun.ofFun ∘ (↑) : S → X →ᵤ α) :=
+    hS.inducing_uniformFun_iff_pi.mpr ⟨rfl⟩
+  -- By construction, `f` is in `S`.
+  have f_mem : f ∈ S := mem_closure_of_tendsto H range_mem_map
+  -- To conclude, we just have to translate our hypothesis and goal as statements about
+  -- `S`, on which we know the two topologies at play coincide.
+  -- For this, we define a filter on `S` by `𝒢 := comap (↑) (map F ℱ)`, and note that
+  -- it satisfies `map (↑) 𝒢 = map F ℱ`. Thus, both our hypothesis and our goal
+  -- can be rewritten as `𝒢 ≤ 𝓝 f`, where the neighborhood filter in the RHS corresponds
+  -- to one of the two topologies at play on `S`. Since they coincide, we are done.
+  have h𝒢ℱ : map (↑) 𝒢 = map F ℱ := Filter.map_comap_of_mem
+    (Subtype.range_coe ▸ mem_of_superset range_mem_map subset_closure)
+  have H' : Tendsto id 𝒢 (𝓝 ⟨f, f_mem⟩) := by
+    rwa [tendsto_id', nhds_induced, ← map_le_iff_le_comap, h𝒢ℱ]
+  rwa [ind.tendsto_nhds_iff, comp_id, ← tendsto_map'_iff, h𝒢ℱ] at H'
 
 /-- Let `X` be a topological space, `𝔖` a family of compact subsets of `X`, `α` a uniform space,
 and `F : ι → (X → α)` a family which is equicontinuous on each `K ∈ 𝔖`. Then, the uniform
@@ -374,7 +374,7 @@ theorem EquicontinuousOn.isClosed_range_pi_of_uniformOnFun'
     IsClosed (range <| (⋃₀ 𝔖).restrict ∘ F) := by
   -- Do we have no equivalent of `nontriviality`?
   rcases isEmpty_or_nonempty α with _ | _
-  · simp [isClosed_discrete]
+  simp [isClosed_discrete]
   -- This follows from the previous lemmas and the characterization of the closure using filters.
   simp_rw [isClosed_iff_clusterPt, ← Filter.map_top, ← mapClusterPt_def,
     mapClusterPt_iff_ultrafilter, range_comp, Subtype.coe_injective.surjective_comp_right.forall,
@@ -496,7 +496,7 @@ theorem ArzelaAscoli.isCompact_of_equicontinuous
     rw [isCompact_iff_compactSpace] at hS1 ⊢
     exact (Equiv.toHomeomorphOfInducing _ h).symm.compactSpace
   rw [← inducing_subtype_val.of_comp_iff, ← EquicontinuousOn.inducing_uniformOnFun_iff_pi _ _ _]
-  · exact ContinuousMap.uniformEmbedding_toUniformOnFunIsCompact.inducing.comp inducing_subtype_val
-  · exact eq_univ_iff_forall.mpr (fun x ↦ mem_sUnion_of_mem (mem_singleton x) isCompact_singleton)
-  · exact fun _ ↦ id
-  · exact fun K _ ↦ hS2.equicontinuousOn K
+  exact ContinuousMap.uniformEmbedding_toUniformOnFunIsCompact.inducing.comp inducing_subtype_val
+  exact eq_univ_iff_forall.mpr (fun x ↦ mem_sUnion_of_mem (mem_singleton x) isCompact_singleton)
+  exact fun _ ↦ id
+  exact fun K _ ↦ hS2.equicontinuousOn K

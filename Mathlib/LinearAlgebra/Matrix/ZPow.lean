@@ -42,8 +42,8 @@ section NatPow
 @[simp]
 theorem inv_pow' (A : M) (n : ℕ) : A⁻¹ ^ n = (A ^ n)⁻¹ := by
   induction' n with n ih
-  · simp
-  · rw [pow_succ A, mul_inv_rev, ← ih, ← pow_succ']
+  simp
+  rw [pow_succ A, mul_inv_rev, ← ih, ← pow_succ']
 
 theorem pow_sub' (A : M) {m n : ℕ} (ha : IsUnit A.det) (h : n ≤ m) :
     A ^ (m - n) = A ^ m * (A ^ n)⁻¹ := by
@@ -53,18 +53,18 @@ theorem pow_sub' (A : M) {m n : ℕ} (ha : IsUnit A.det) (h : n ≤ m) :
 
 theorem pow_inv_comm' (A : M) (m n : ℕ) : A⁻¹ ^ m * A ^ n = A ^ n * A⁻¹ ^ m := by
   induction' n with n IH generalizing m
-  · simp
+  simp
   cases' m with m m
-  · simp
+  simp
   rcases nonsing_inv_cancel_or_zero A with (⟨h, h'⟩ | h)
-  · calc
-       A⁻¹ ^ (m + 1) * A ^ (n + 1) = A⁻¹ ^ m * (A⁻¹ * A) * A ^ n := by
-        simp only [pow_succ A⁻¹, pow_succ' A, Matrix.mul_assoc]
-      _ = A ^ n * A⁻¹ ^ m := by simp only [h, Matrix.mul_one, Matrix.one_mul, IH m]
-      _ = A ^ n * (A * A⁻¹) * A⁻¹ ^ m := by simp only [h', Matrix.mul_one, Matrix.one_mul]
-      _ = A ^ (n + 1) * A⁻¹ ^ (m + 1) := by
-        simp only [pow_succ A, pow_succ' A⁻¹, Matrix.mul_assoc]
-  · simp [h]
+  calc
+     A⁻¹ ^ (m + 1) * A ^ (n + 1) = A⁻¹ ^ m * (A⁻¹ * A) * A ^ n := by
+      simp only [pow_succ A⁻¹, pow_succ' A, Matrix.mul_assoc]
+    _ = A ^ n * A⁻¹ ^ m := by simp only [h, Matrix.mul_one, Matrix.one_mul, IH m]
+    _ = A ^ n * (A * A⁻¹) * A⁻¹ ^ m := by simp only [h', Matrix.mul_one, Matrix.one_mul]
+    _ = A ^ (n + 1) * A⁻¹ ^ (m + 1) := by
+      simp only [pow_succ A, pow_succ' A⁻¹, Matrix.mul_assoc]
+  simp [h]
 
 end NatPow
 
@@ -85,8 +85,8 @@ theorem zero_zpow : ∀ z : ℤ, z ≠ 0 → (0 : M) ^ z = 0
 
 theorem zero_zpow_eq (n : ℤ) : (0 : M) ^ n = if n = 0 then 1 else 0 := by
   split_ifs with h
-  · rw [h, zpow_zero]
-  · rw [zero_zpow _ h]
+  rw [h, zpow_zero]
+  rw [zero_zpow _ h]
 
 theorem inv_zpow (A : M) : ∀ n : ℤ, A⁻¹ ^ n = (A ^ n)⁻¹
   | (n : ℕ) => by rw [zpow_natCast, zpow_natCast, inv_pow']
@@ -100,25 +100,25 @@ theorem zpow_neg_one (A : M) : A ^ (-1 : ℤ) = A⁻¹ := by
 @[simp]
 theorem zpow_neg_natCast (A : M) (n : ℕ) : A ^ (-n : ℤ) = (A ^ n)⁻¹ := by
   cases n
-  · simp
-  · exact DivInvMonoid.zpow_neg' _ _
+  simp
+  exact DivInvMonoid.zpow_neg' _ _
 
 @[deprecated (since := "2024-04-05")] alias zpow_neg_coe_nat := zpow_neg_natCast
 
 theorem _root_.IsUnit.det_zpow {A : M} (h : IsUnit A.det) (n : ℤ) : IsUnit (A ^ n).det := by
   cases' n with n n
-  · simpa using h.pow n
-  · simpa using h.pow n.succ
+  simpa using h.pow n
+  simpa using h.pow n.succ
 
 theorem isUnit_det_zpow_iff {A : M} {z : ℤ} : IsUnit (A ^ z).det ↔ IsUnit A.det ∨ z = 0 := by
   induction' z using Int.induction_on with z _ z _
-  · simp
-  · rw [← Int.ofNat_succ, zpow_natCast, det_pow, isUnit_pow_succ_iff, ← Int.ofNat_zero,
-      Int.ofNat_inj]
-    simp
-  · rw [← neg_add', ← Int.ofNat_succ, zpow_neg_natCast, isUnit_nonsing_inv_det_iff, det_pow,
-      isUnit_pow_succ_iff, neg_eq_zero, ← Int.ofNat_zero, Int.ofNat_inj]
-    simp
+  simp
+  rw [← Int.ofNat_succ, zpow_natCast, det_pow, isUnit_pow_succ_iff, ← Int.ofNat_zero,
+    Int.ofNat_inj]
+  simp
+  rw [← neg_add', ← Int.ofNat_succ, zpow_neg_natCast, isUnit_nonsing_inv_det_iff, det_pow,
+    isUnit_pow_succ_iff, neg_eq_zero, ← Int.ofNat_zero, Int.ofNat_inj]
+  simp
 
 theorem zpow_neg {A : M} (h : IsUnit A.det) : ∀ n : ℤ, A ^ (-n) = (A ^ n)⁻¹
   | (n : ℕ) => zpow_neg_natCast _ _
@@ -156,10 +156,10 @@ theorem zpow_add {A : M} (ha : IsUnit A.det) (m n : ℤ) : A ^ (m + n) = A ^ m *
 theorem zpow_add_of_nonpos {A : M} {m n : ℤ} (hm : m ≤ 0) (hn : n ≤ 0) :
     A ^ (m + n) = A ^ m * A ^ n := by
   rcases nonsing_inv_cancel_or_zero A with (⟨h, _⟩ | h)
-  · exact zpow_add (isUnit_det_of_left_inverse h) m n
-  · obtain ⟨k, rfl⟩ := exists_eq_neg_ofNat hm
-    obtain ⟨l, rfl⟩ := exists_eq_neg_ofNat hn
-    simp_rw [← neg_add, ← Int.ofNat_add, zpow_neg_natCast, ← inv_pow', h, pow_add]
+  exact zpow_add (isUnit_det_of_left_inverse h) m n
+  obtain ⟨k, rfl⟩ := exists_eq_neg_ofNat hm
+  obtain ⟨l, rfl⟩ := exists_eq_neg_ofNat hn
+  simp_rw [← neg_add, ← Int.ofNat_add, zpow_neg_natCast, ← inv_pow', h, pow_add]
 
 theorem zpow_add_of_nonneg {A : M} {m n : ℤ} (hm : 0 ≤ m) (hn : 0 ≤ n) :
     A ^ (m + n) = A ^ m * A ^ n := by
@@ -190,10 +190,10 @@ theorem SemiconjBy.zpow_right {A X Y : M} (hx : IsUnit X.det) (hy : IsUnit Y.det
 
 theorem Commute.zpow_right {A B : M} (h : Commute A B) (m : ℤ) : Commute A (B ^ m) := by
   rcases nonsing_inv_cancel_or_zero B with (⟨hB, _⟩ | hB)
-  · refine SemiconjBy.zpow_right ?_ ?_ h _ <;> exact isUnit_det_of_left_inverse hB
-  · cases m
-    · simpa using h.pow_right _
-    · simp [← inv_pow', hB]
+  refine SemiconjBy.zpow_right ?_ ?_ h _ <;> exact isUnit_det_of_left_inverse hB
+  cases m
+  simpa using h.pow_right _
+  simp [← inv_pow', hB]
 
 theorem Commute.zpow_left {A B : M} (h : Commute A B) (m : ℤ) : Commute (A ^ m) B :=
   (Commute.zpow_right h.symm m).symm
@@ -215,9 +215,9 @@ theorem zpow_add_one_of_ne_neg_one {A : M} : ∀ n : ℤ, n ≠ -1 → A ^ (n + 
   | -1, h => absurd rfl h
   | -((n : ℕ) + 2), _ => by
     rcases nonsing_inv_cancel_or_zero A with (⟨h, _⟩ | h)
-    · apply zpow_add_one (isUnit_det_of_left_inverse h)
-    · show A ^ (-((n + 1 : ℕ) : ℤ)) = A ^ (-((n + 2 : ℕ) : ℤ)) * A
-      simp_rw [zpow_neg_natCast, ← inv_pow', h, zero_pow $ Nat.succ_ne_zero _, zero_mul]
+    apply zpow_add_one (isUnit_det_of_left_inverse h)
+    show A ^ (-((n + 1 : ℕ) : ℤ)) = A ^ (-((n + 2 : ℕ) : ℤ)) * A
+    simp_rw [zpow_neg_natCast, ← inv_pow', h, zero_pow $ Nat.succ_ne_zero _, zero_mul]
 
 theorem zpow_mul (A : M) (h : IsUnit A.det) : ∀ m n : ℤ, A ^ (m * n) = (A ^ m) ^ n
   | (m : ℕ), (n : ℕ) => by rw [zpow_natCast, zpow_natCast, ← pow_mul, ← zpow_natCast, Int.ofNat_mul]

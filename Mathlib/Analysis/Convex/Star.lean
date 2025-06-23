@@ -73,10 +73,10 @@ variable {𝕜 x s} {t : Set E}
 
 theorem starConvex_iff_segment_subset : StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y ∈ s → [x -[𝕜] y] ⊆ s := by
   constructor
-  · rintro h y hy z ⟨a, b, ha, hb, hab, rfl⟩
-    exact h hy ha hb hab
-  · rintro h y hy a b ha hb hab
-    exact h hy ⟨a, b, ha, hb, hab, rfl⟩
+  rintro h y hy z ⟨a, b, ha, hb, hab, rfl⟩
+  exact h hy ha hb hab
+  rintro h y hy a b ha hb hab
+  exact h hy ⟨a, b, ha, hb, hab, rfl⟩
 
 theorem StarConvex.segment_subset (h : StarConvex 𝕜 x s) {y : E} (hy : y ∈ s) : [x -[𝕜] y] ⊆ s :=
   starConvex_iff_segment_subset.1 h hy
@@ -111,8 +111,8 @@ theorem starConvex_iInter {ι : Sort*} {s : ι → Set E} (h : ∀ i, StarConvex
 theorem StarConvex.union (hs : StarConvex 𝕜 x s) (ht : StarConvex 𝕜 x t) :
     StarConvex 𝕜 x (s ∪ t) := by
   rintro y (hy | hy) a b ha hb hab
-  · exact Or.inl (hs hy ha hb hab)
-  · exact Or.inr (ht hy ha hb hab)
+  exact Or.inl (hs hy ha hb hab)
+  exact Or.inr (ht hy ha hb hab)
 
 theorem starConvex_iUnion {ι : Sort*} {s : ι → Set E} (hs : ∀ i, StarConvex 𝕜 x (s i)) :
     StarConvex 𝕜 x (⋃ i, s i) := by
@@ -150,11 +150,11 @@ theorem starConvex_iff_forall_pos (hx : x ∈ s) : StarConvex 𝕜 x s ↔
   refine ⟨fun h y hy a b ha hb hab => h hy ha.le hb.le hab, ?_⟩
   intro h y hy a b ha hb hab
   obtain rfl | ha := ha.eq_or_lt
-  · rw [zero_add] at hab
-    rwa [hab, one_smul, zero_smul, zero_add]
+  rw [zero_add] at hab
+  rwa [hab, one_smul, zero_smul, zero_add]
   obtain rfl | hb := hb.eq_or_lt
-  · rw [add_zero] at hab
-    rwa [hab, one_smul, zero_smul, add_zero]
+  rw [add_zero] at hab
+  rwa [hab, one_smul, zero_smul, add_zero]
   exact h hy ha hb hab
 
 theorem starConvex_iff_forall_ne_pos (hx : x ∈ s) :
@@ -163,13 +163,13 @@ theorem starConvex_iff_forall_ne_pos (hx : x ∈ s) :
   refine ⟨fun h y hy _ a b ha hb hab => h hy ha.le hb.le hab, ?_⟩
   intro h y hy a b ha hb hab
   obtain rfl | ha' := ha.eq_or_lt
-  · rw [zero_add] at hab
-    rwa [hab, zero_smul, one_smul, zero_add]
+  rw [zero_add] at hab
+  rwa [hab, zero_smul, one_smul, zero_add]
   obtain rfl | hb' := hb.eq_or_lt
-  · rw [add_zero] at hab
-    rwa [hab, zero_smul, one_smul, add_zero]
+  rw [add_zero] at hab
+  rwa [hab, zero_smul, one_smul, add_zero]
   obtain rfl | hxy := eq_or_ne x y
-  · rwa [Convex.combo_self hab]
+  rwa [Convex.combo_self hab]
   exact h hy hxy ha' hb' hab
 
 theorem starConvex_iff_openSegment_subset (hx : x ∈ s) :
@@ -284,10 +284,10 @@ theorem starConvex_zero_iff :
     StarConvex 𝕜 0 s ↔ ∀ ⦃x : E⦄, x ∈ s → ∀ ⦃a : 𝕜⦄, 0 ≤ a → a ≤ 1 → a • x ∈ s := by
   refine
     forall_congr' fun x => forall_congr' fun _ => ⟨fun h a ha₀ ha₁ => ?_, fun h a b ha hb hab => ?_⟩
-  · simpa only [sub_add_cancel, eq_self_iff_true, forall_true_left, zero_add, smul_zero] using
-      h (sub_nonneg_of_le ha₁) ha₀
-  · rw [smul_zero, zero_add]
-    exact h hb (by rw [← hab]; exact le_add_of_nonneg_left ha)
+  simpa only [sub_add_cancel, eq_self_iff_true, forall_true_left, zero_add, smul_zero] using
+    h (sub_nonneg_of_le ha₁) ha₀
+  rw [smul_zero, zero_add]
+  exact h hb (by rw [← hab]; exact le_add_of_nonneg_left ha)
 
 end AddCommMonoid
 
@@ -373,10 +373,10 @@ theorem starConvex_iff_div : StarConvex 𝕜 x s ↔ ∀ ⦃y⦄, y ∈ s →
     ∀ ⦃a b : 𝕜⦄, 0 ≤ a → 0 ≤ b → 0 < a + b → (a / (a + b)) • x + (b / (a + b)) • y ∈ s :=
   ⟨fun h y hy a b ha hb hab => by
     apply h hy
-    · positivity
-    · positivity
-    · rw [← add_div]
-      exact div_self hab.ne',
+    positivity
+    positivity
+    rw [← add_div]
+    exact div_self hab.ne',
   fun h y hy a b ha hb hab => by
     have h' := h hy ha hb
     rw [hab, div_one, div_one] at h'
@@ -406,20 +406,20 @@ theorem Set.OrdConnected.starConvex [OrderedSemiring 𝕜] [OrderedAddCommMonoid
     (h : ∀ y ∈ s, x ≤ y ∨ y ≤ x) : StarConvex 𝕜 x s := by
   intro y hy a b ha hb hab
   obtain hxy | hyx := h _ hy
-  · refine hs.out hx hy (mem_Icc.2 ⟨?_, ?_⟩)
-    · calc
-        x = a • x + b • x := (Convex.combo_self hab _).symm
-        _ ≤ a • x + b • y := by gcongr
-    calc
-      a • x + b • y ≤ a • y + b • y := by gcongr
-      _ = y := Convex.combo_self hab _
-  · refine hs.out hy hx (mem_Icc.2 ⟨?_, ?_⟩)
-    · calc
-        y = a • y + b • y := (Convex.combo_self hab _).symm
-        _ ≤ a • x + b • y := by gcongr
-    calc
-      a • x + b • y ≤ a • x + b • x := by gcongr
-      _ = x := Convex.combo_self hab _
+  refine hs.out hx hy (mem_Icc.2 ⟨?_, ?_⟩)
+  calc
+    x = a • x + b • x := (Convex.combo_self hab _).symm
+    _ ≤ a • x + b • y := by gcongr
+  calc
+    a • x + b • y ≤ a • y + b • y := by gcongr
+    _ = y := Convex.combo_self hab _
+  refine hs.out hy hx (mem_Icc.2 ⟨?_, ?_⟩)
+  calc
+    y = a • y + b • y := (Convex.combo_self hab _).symm
+    _ ≤ a • x + b • y := by gcongr
+  calc
+    a • x + b • y ≤ a • x + b • x := by gcongr
+    _ = x := Convex.combo_self hab _
 
 theorem starConvex_iff_ordConnected [LinearOrderedField 𝕜] {x : 𝕜} {s : Set 𝕜} (hx : x ∈ s) :
     StarConvex 𝕜 x s ↔ s.OrdConnected := by

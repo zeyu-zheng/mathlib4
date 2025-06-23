@@ -107,8 +107,8 @@ theorem rcomap_rcomap (r : Rel α β) (s : Rel β γ) (l : Filter γ) :
   filter_eq <| by
     ext t; simp only [rcomap_sets, Rel.image, Filter.mem_sets, Set.mem_setOf_eq, Rel.core_comp]
     constructor
-    · rintro ⟨u, ⟨v, vsets, hv⟩, h⟩
-      exact ⟨v, vsets, Set.Subset.trans (Rel.core_mono _ hv) h⟩
+    rintro ⟨u, ⟨v, vsets, hv⟩, h⟩
+    exact ⟨v, vsets, Set.Subset.trans (Rel.core_mono _ hv) h⟩
     rintro ⟨t, tsets, ht⟩
     exact ⟨Rel.core s t, ⟨t, tsets, Set.Subset.rfl⟩, ht⟩
 
@@ -121,8 +121,8 @@ theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter
   rw [rtendsto_def]
   simp_rw [← l₂.mem_sets]
   constructor
-  · simpa [Filter.le_def, rcomap, Rel.mem_image] using fun h s t tl₂ => mem_of_superset (h t tl₂)
-  · simpa [Filter.le_def, rcomap, Rel.mem_image] using fun h t tl₂ => h _ t tl₂ Set.Subset.rfl
+  simpa [Filter.le_def, rcomap, Rel.mem_image] using fun h s t tl₂ => mem_of_superset (h t tl₂)
+  simpa [Filter.le_def, rcomap, Rel.mem_image] using fun h t tl₂ => h _ t tl₂ Set.Subset.rfl
 
 -- Interestingly, there does not seem to be a way to express this relation using a forward map.
 -- Given a filter `f` on `α`, we want a filter `f'` on `β` such that `r.preimage s ∈ f` if
@@ -152,8 +152,8 @@ theorem rcomap'_rcomap' (r : Rel α β) (s : Rel β γ) (l : Filter γ) :
   Filter.ext fun t => by
     simp only [mem_rcomap', Rel.preimage_comp]
     constructor
-    · rintro ⟨u, ⟨v, vsets, hv⟩, h⟩
-      exact ⟨v, vsets, (Rel.preimage_mono _ hv).trans h⟩
+    rintro ⟨u, ⟨v, vsets, hv⟩, h⟩
+    exact ⟨v, vsets, (Rel.preimage_mono _ hv).trans h⟩
     rintro ⟨t, tsets, ht⟩
     exact ⟨s.preimage t, ⟨t, tsets, Set.Subset.rfl⟩, ht⟩
 

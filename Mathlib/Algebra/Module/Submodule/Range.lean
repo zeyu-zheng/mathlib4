@@ -208,22 +208,22 @@ theorem range_toAddSubgroup [RingHomSurjective τ₁₂] (f : M →ₛₗ[τ₁�
 theorem ker_le_iff [RingHomSurjective τ₁₂] {p : Submodule R M} :
     ker f ≤ p ↔ ∃ y ∈ range f, f ⁻¹' {y} ⊆ p := by
   constructor
-  · intro h
-    use 0
-    rw [← SetLike.mem_coe, range_coe]
-    exact ⟨⟨0, map_zero f⟩, h⟩
-  · rintro ⟨y, h₁, h₂⟩
-    rw [SetLike.le_def]
-    intro z hz
-    simp only [mem_ker, SetLike.mem_coe] at hz
-    rw [← SetLike.mem_coe, range_coe, Set.mem_range] at h₁
-    obtain ⟨x, hx⟩ := h₁
-    have hx' : x ∈ p := h₂ hx
-    have hxz : z + x ∈ p
-    apply h₂
-    simp [hx, hz]
-    suffices z + x - x ∈ p by simpa only [this, add_sub_cancel_right]
-    exact p.sub_mem hxz hx'
+  intro h
+  use 0
+  rw [← SetLike.mem_coe, range_coe]
+  exact ⟨⟨0, map_zero f⟩, h⟩
+  rintro ⟨y, h₁, h₂⟩
+  rw [SetLike.le_def]
+  intro z hz
+  simp only [mem_ker, SetLike.mem_coe] at hz
+  rw [← SetLike.mem_coe, range_coe, Set.mem_range] at h₁
+  obtain ⟨x, hx⟩ := h₁
+  have hx' : x ∈ p := h₂ hx
+  have hxz : z + x ∈ p
+  apply h₂
+  simp [hx, hz]
+  suffices z + x - x ∈ p by simpa only [this, add_sub_cancel_right]
+  exact p.sub_mem hxz hx'
 
 end Ring
 
@@ -359,19 +359,19 @@ theorem mem_submoduleImage {M' : Type*} [AddCommMonoid M'] [Module R M'] {O : Su
     {ϕ : O →ₗ[R] M'} {N : Submodule R M} {x : M'} :
     x ∈ ϕ.submoduleImage N ↔ ∃ (y : _) (yO : y ∈ O), y ∈ N ∧ ϕ ⟨y, yO⟩ = x := by
   refine Submodule.mem_map.trans ⟨?_, ?_⟩ <;> simp_rw [Submodule.mem_comap]
-  · rintro ⟨⟨y, yO⟩, yN : y ∈ N, h⟩
-    exact ⟨y, yO, yN, h⟩
-  · rintro ⟨y, yO, yN, h⟩
-    exact ⟨⟨y, yO⟩, yN, h⟩
+  rintro ⟨⟨y, yO⟩, yN : y ∈ N, h⟩
+  exact ⟨y, yO, yN, h⟩
+  rintro ⟨y, yO, yN, h⟩
+  exact ⟨⟨y, yO⟩, yN, h⟩
 
 theorem mem_submoduleImage_of_le {M' : Type*} [AddCommMonoid M'] [Module R M'] {O : Submodule R M}
     {ϕ : O →ₗ[R] M'} {N : Submodule R M} (hNO : N ≤ O) {x : M'} :
     x ∈ ϕ.submoduleImage N ↔ ∃ (y : _) (yN : y ∈ N), ϕ ⟨y, hNO yN⟩ = x := by
   refine mem_submoduleImage.trans ⟨?_, ?_⟩
-  · rintro ⟨y, yO, yN, h⟩
-    exact ⟨y, yN, h⟩
-  · rintro ⟨y, yN, h⟩
-    exact ⟨y, hNO yN, yN, h⟩
+  rintro ⟨y, yO, yN, h⟩
+  exact ⟨y, yN, h⟩
+  rintro ⟨y, yN, h⟩
+  exact ⟨y, hNO yN, yN, h⟩
 
 theorem submoduleImage_apply_of_le {M' : Type*} [AddCommGroup M'] [Module R M']
     {O : Submodule R M} (ϕ : O →ₗ[R] M') (N : Submodule R M) (hNO : N ≤ O) :

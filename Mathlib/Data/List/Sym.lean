@@ -61,11 +61,11 @@ theorem left_mem_of_mk_mem_sym2 {xs : List α} {a b : α}
     rw [mem_cons]
     rw [mem_sym2_cons_iff] at h
     obtain (h | ⟨c, hc, h⟩ | h) := h
-    · rw [Sym2.eq_iff, ← and_or_left] at h
-      exact .inl h.1
-    · rw [Sym2.eq_iff] at h
-      obtain (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) := h <;> simp [hc]
-    · exact .inr <| ih h
+    rw [Sym2.eq_iff, ← and_or_left] at h
+    exact .inl h.1
+    rw [Sym2.eq_iff] at h
+    obtain (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) := h <;> simp [hc]
+    exact .inr <| ih h
 
 theorem right_mem_of_mk_mem_sym2 {xs : List α} {a b : α}
     (h : s(a, b) ∈ xs.sym2) : b ∈ xs := by
@@ -80,18 +80,18 @@ theorem mk_mem_sym2 {xs : List α} {a b : α} (ha : a ∈ xs) (hb : b ∈ xs) :
     rw [mem_sym2_cons_iff]
     rw [mem_cons] at ha hb
     obtain (rfl | ha) := ha <;> obtain (rfl | hb) := hb
-    · left; rfl
-    · right; left; use b
-    · right; left; rw [Sym2.eq_swap]; use a
-    · right; right; exact ih ha hb
+    left; rfl
+    right; left; use b
+    right; left; rw [Sym2.eq_swap]; use a
+    right; right; exact ih ha hb
 
 theorem mk_mem_sym2_iff {xs : List α} {a b : α} :
     s(a, b) ∈ xs.sym2 ↔ a ∈ xs ∧ b ∈ xs := by
   constructor
-  · intro h
-    exact ⟨left_mem_of_mk_mem_sym2 h, right_mem_of_mk_mem_sym2 h⟩
-  · rintro ⟨ha, hb⟩
-    exact mk_mem_sym2 ha hb
+  intro h
+  exact ⟨left_mem_of_mk_mem_sym2 h, right_mem_of_mk_mem_sym2 h⟩
+  rintro ⟨ha, hb⟩
+  exact mk_mem_sym2 ha hb
 
 theorem mem_sym2_iff {xs : List α} {z : Sym2 α} :
     z ∈ xs.sym2 ↔ ∀ y ∈ z, y ∈ xs := by
@@ -144,24 +144,24 @@ theorem map_mk_disjoint_sym2 (x : α) (xs : List α) (h : x ∉ xs) :
     rw [List.sym2, map_cons, map_cons, disjoint_cons_left, disjoint_append_right,
       disjoint_cons_right]
     refine ⟨?_, ⟨?_, ?_⟩, ?_⟩
-    · refine not_mem_cons_of_ne_of_not_mem ?_ (not_mem_append ?_ ?_)
-      · simp [h.1]
-      · simp_rw [mem_map, not_exists, not_and]
-        intro x'' hx
-        simp_rw [Sym2.mk_eq_mk_iff, Prod.swap_prod_mk, Prod.mk.injEq, true_and]
-        rintro (⟨rfl, rfl⟩ | rfl)
-        · exact h.2 hx
-        · exact h.2 hx
-      · simp [mk_mem_sym2_iff, h.2]
-    · simp [h.1]
-    · intro z hx hy
-      rw [List.mem_map] at hx hy
-      obtain ⟨a, hx, rfl⟩ := hx
-      obtain ⟨b, hy, hx⟩ := hy
-      simp [Sym2.mk_eq_mk_iff, Ne.symm h.1] at hx
-      obtain ⟨rfl, rfl⟩ := hx
-      exact h.2 hy
-    · exact ih h.2
+    refine not_mem_cons_of_ne_of_not_mem ?_ (not_mem_append ?_ ?_)
+    simp [h.1]
+    simp_rw [mem_map, not_exists, not_and]
+    intro x'' hx
+    simp_rw [Sym2.mk_eq_mk_iff, Prod.swap_prod_mk, Prod.mk.injEq, true_and]
+    rintro (⟨rfl, rfl⟩ | rfl)
+    exact h.2 hx
+    exact h.2 hx
+    simp [mk_mem_sym2_iff, h.2]
+    simp [h.1]
+    intro z hx hy
+    rw [List.mem_map] at hx hy
+    obtain ⟨a, hx, rfl⟩ := hx
+    obtain ⟨b, hy, hx⟩ := hy
+    simp [Sym2.mk_eq_mk_iff, Ne.symm h.1] at hx
+    obtain ⟨rfl, rfl⟩ := hx
+    exact h.2 hy
+    exact ih h.2
 
 theorem dedup_sym2 [DecidableEq α] (xs : List α) : xs.sym2.dedup = xs.dedup.sym2 := by
   induction xs with
@@ -169,16 +169,16 @@ theorem dedup_sym2 [DecidableEq α] (xs : List α) : xs.sym2.dedup = xs.dedup.sy
   | cons x xs ih =>
     simp only [List.sym2, map_cons, cons_append]
     obtain hm | hm := Decidable.em (x ∈ xs)
-    · rw [dedup_cons_of_mem hm, ← ih, dedup_cons_of_mem,
-        List.Subset.dedup_append_right (map_mk_sublist_sym2 _ _ hm).subset]
-      refine mem_append_of_mem_left _ ?_
-      rw [mem_map]
-      exact ⟨_, hm, Sym2.eq_swap⟩
-    · rw [dedup_cons_of_not_mem hm, List.sym2, map_cons, ← ih, dedup_cons_of_not_mem, cons_append,
-        List.Disjoint.dedup_append, dedup_map_of_injective]
-      · exact (Sym2.mkEmbedding _).injective
-      · exact map_mk_disjoint_sym2 x xs hm
-      · simp [hm, mem_sym2_iff]
+    rw [dedup_cons_of_mem hm, ← ih, dedup_cons_of_mem,
+      List.Subset.dedup_append_right (map_mk_sublist_sym2 _ _ hm).subset]
+    refine mem_append_of_mem_left _ ?_
+    rw [mem_map]
+    exact ⟨_, hm, Sym2.eq_swap⟩
+    rw [dedup_cons_of_not_mem hm, List.sym2, map_cons, ← ih, dedup_cons_of_not_mem, cons_append,
+      List.Disjoint.dedup_append, dedup_map_of_injective]
+    exact (Sym2.mkEmbedding _).injective
+    exact map_mk_disjoint_sym2 x xs hm
+    simp [hm, mem_sym2_iff]
 
 protected theorem Perm.sym2 {xs ys : List α} (h : xs ~ ys) :
     xs.sym2 ~ ys.sym2 := by
@@ -266,8 +266,8 @@ protected theorem Sublist.sym (n : ℕ) {xs ys : List α} (h : xs <+ ys) : xs.sy
   | n + 1, .cons₂ a h => by
     rw [List.sym, List.sym]
     apply Sublist.append
-    · exact ((cons₂ a h).sym n).map _
-    · exact h.sym (n + 1)
+    exact ((cons₂ a h).sym n).map _
+    exact h.sym (n + 1)
 
 theorem sym_sublist_sym_cons {a : α} : xs.sym n <+ (a :: xs).sym n :=
   (sublist_cons a xs).sym n
@@ -282,13 +282,13 @@ theorem mem_of_mem_of_mem_sym {n : ℕ} {xs : List α} {a : α} {z : Sym α n}
   | n + 1, x :: xs => by
     rw [List.sym, mem_append, mem_map] at hz
     obtain ⟨z, hz, rfl⟩ | hz := hz
-    · rw [Sym.mem_cons] at ha
-      obtain rfl | ha := ha
-      · simp
-      · exact mem_of_mem_of_mem_sym ha hz
-    · rw [mem_cons]
-      right
-      exact mem_of_mem_of_mem_sym ha hz
+    rw [Sym.mem_cons] at ha
+    obtain rfl | ha := ha
+    simp
+    exact mem_of_mem_of_mem_sym ha hz
+    rw [mem_cons]
+    right
+    exact mem_of_mem_of_mem_sym ha hz
 
 theorem first_mem_of_cons_mem_sym {xs : List α} {n : ℕ} {a : α} {z : Sym α n}
     (h : a ::ₛ z ∈ xs.sym (n + 1)) : a ∈ xs :=

@@ -246,12 +246,12 @@ variable {p}
 
 theorem subsingleton_quotient_iff_eq_top : Subsingleton (M ⧸ p) ↔ p = ⊤ := by
   constructor
-  · rintro h
-    refine eq_top_iff.mpr fun x _ => ?_
-    have : x - 0 ∈ p := (Submodule.Quotient.eq p).mp (Subsingleton.elim _ _)
-    rwa [sub_zero] at this
-  · rintro rfl
-    infer_instance
+  rintro h
+  refine eq_top_iff.mpr fun x _ => ?_
+  have : x - 0 ∈ p := (Submodule.Quotient.eq p).mp (Subsingleton.elim _ _)
+  rwa [sub_zero] at this
+  rintro rfl
+  infer_instance
 
 theorem unique_quotient_iff_eq_top : Nonempty (Unique (M ⧸ p)) ↔ p = ⊤ :=
   ⟨fun ⟨h⟩ => subsingleton_quotient_iff_eq_top.mp (@Unique.instSubsingleton _ h),
@@ -388,13 +388,13 @@ theorem mapQ_pow {f : M →ₗ[R] M} (h : p ≤ p.comap f) (k : ℕ)
     (h' : p ≤ p.comap (f ^ k) := p.le_comap_pow_of_le_comap h k) :
     p.mapQ p (f ^ k) h' = p.mapQ p f h ^ k := by
   induction' k with k ih
-  · simp [LinearMap.one_eq_id]
-  · simp only [LinearMap.iterate_succ]
-    -- Porting note: why does any of these `optParams` need to be applied? Why didn't `simp` handle
-    -- all of this for us?
-    convert mapQ_comp p p p f (f ^ k) h (p.le_comap_pow_of_le_comap h k)
-      (h.trans (comap_mono <| p.le_comap_pow_of_le_comap h k))
-    exact (ih _).symm
+  simp [LinearMap.one_eq_id]
+  simp only [LinearMap.iterate_succ]
+  -- Porting note: why does any of these `optParams` need to be applied? Why didn't `simp` handle
+  -- all of this for us?
+  convert mapQ_comp p p p f (f ^ k) h (p.le_comap_pow_of_le_comap h k)
+    (h.trans (comap_mono <| p.le_comap_pow_of_le_comap h k))
+  exact (ih _).symm
 
 theorem comap_liftQ (f : M →ₛₗ[τ₁₂] M₂) (h) : q.comap (p.liftQ f h) = (q.comap f).map (mkQ p) :=
   le_antisymm (by rintro ⟨x⟩ hx; exact ⟨_, hx, rfl⟩)

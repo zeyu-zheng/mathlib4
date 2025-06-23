@@ -695,12 +695,12 @@ theorem closure_induction' {s : Set R} {p : closure s → Prop} (a : closure s)
     refine
       closure_induction hb (fun x hx => ⟨subset_closure hx, mem x hx⟩)
         ⟨zero_mem (closure s), zero⟩ ?_ ?_ ?_
-    · rintro x y ⟨hx, hpx⟩ ⟨hy, hpy⟩
-      exact ⟨add_mem hx hy, add _ _ hpx hpy⟩
-    · rintro x ⟨hx, hpx⟩
-      exact ⟨neg_mem hx, neg _ hpx⟩
-    · rintro x y ⟨hx, hpx⟩ ⟨hy, hpy⟩
-      exact ⟨mul_mem hx hy, mul _ _ hpx hpy⟩
+    rintro x y ⟨hx, hpx⟩ ⟨hy, hpy⟩
+    exact ⟨add_mem hx hy, add _ _ hpx hpy⟩
+    rintro x ⟨hx, hpx⟩
+    exact ⟨neg_mem hx, neg _ hpx⟩
+    rintro x y ⟨hx, hpx⟩ ⟨hy, hpy⟩
+    exact ⟨mul_mem hx hy, mul _ _ hpx hpy⟩
 
 /-- An induction principle for closure membership, for predicates with two arguments. -/
 @[elab_as_elim]
@@ -713,9 +713,9 @@ theorem closure_induction₂ {s : Set R} {p : R → R → Prop} {a b : R} (ha : 
     (Hmul_right : ∀ x y₁ y₂, p x y₁ → p x y₂ → p x (y₁ * y₂)) : p a b := by
   refine closure_induction hb ?_ (H0_right _) (Hadd_right a) (Hneg_right a) (Hmul_right a)
   refine closure_induction ha Hs (fun x _ => H0_left x) ?_ ?_ ?_
-  · exact fun x y H₁ H₂ z zs => Hadd_left x y z (H₁ z zs) (H₂ z zs)
-  · exact fun x hx z zs => Hneg_left x z (hx z zs)
-  · exact fun x y H₁ H₂ z zs => Hmul_left x y z (H₁ z zs) (H₂ z zs)
+  exact fun x y H₁ H₂ z zs => Hadd_left x y z (H₁ z zs) (H₂ z zs)
+  exact fun x hx z zs => Hneg_left x z (hx z zs)
+  exact fun x y H₁ H₂ z zs => Hmul_left x y z (H₁ z zs) (H₂ z zs)
 
 theorem mem_closure_iff {s : Set R} {x} :
     x ∈ closure s ↔ x ∈ AddSubgroup.closure (Subsemigroup.closure s : Set R) :=

@@ -242,10 +242,10 @@ instance : Mul PGame.{u} :=
     induction' y with yl yr yL yR IHyl IHyr
     have y := mk yl yr yL yR
     refine ⟨(xl × yl) ⊕ (xr × yr), (xl × yr) ⊕ (xr × yl), ?_, ?_⟩ <;> rintro (⟨i, j⟩ | ⟨i, j⟩)
-    · exact IHxl i y + IHyl j - IHxl i (yL j)
-    · exact IHxr i y + IHyr j - IHxr i (yR j)
-    · exact IHxl i y + IHyr j - IHxl i (yR j)
-    · exact IHxr i y + IHyl j - IHxr i (yL j)⟩
+    exact IHxl i y + IHyl j - IHxl i (yL j)
+    exact IHxr i y + IHyr j - IHxr i (yR j)
+    exact IHxl i y + IHyr j - IHxl i (yR j)
+    exact IHxr i y + IHyl j - IHxr i (yL j)⟩
 
 theorem leftMoves_mul :
     ∀ x y : PGame.{u},
@@ -358,16 +358,16 @@ theorem leftMoves_mul_cases {x y : PGame} (k) {P : (x * y).LeftMoves → Prop}
     (hr : ∀ jx jy, P <| toLeftMovesMul (Sum.inr ⟨jx, jy⟩)) : P k := by
   rw [← toLeftMovesMul.apply_symm_apply k]
   rcases toLeftMovesMul.symm k with (⟨ix, iy⟩ | ⟨jx, jy⟩)
-  · apply hl
-  · apply hr
+  apply hl
+  apply hr
 
 theorem rightMoves_mul_cases {x y : PGame} (k) {P : (x * y).RightMoves → Prop}
     (hl : ∀ ix jy, P <| toRightMovesMul (Sum.inl ⟨ix, jy⟩))
     (hr : ∀ jx iy, P <| toRightMovesMul (Sum.inr ⟨jx, iy⟩)) : P k := by
   rw [← toRightMovesMul.apply_symm_apply k]
   rcases toRightMovesMul.symm k with (⟨ix, iy⟩ | ⟨jx, jy⟩)
-  · apply hl
-  · apply hr
+  apply hl
+  apply hr
 
 /-- `x * y` and `y * x` have the same moves. -/
 def mulCommRelabelling (x y : PGame.{u}) : x * y ≡r y * x :=
@@ -471,93 +471,93 @@ theorem quot_left_distrib (x y z : PGame) : (⟦x * (y + z)⟧ : Game) = ⟦x * 
     let y := mk yl yr yL yR
     let z := mk zl zr zL zR
     refine quot_eq_of_mk'_quot_eq ?_ ?_ ?_ ?_
-    · fconstructor
-      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;>
-          -- Porting note: we've increased `maxDepth` here from `5` to `6`.
-          -- Likely this sort of off-by-one error is just a change in the implementation
-          -- of `solve_by_elim`.
-          solve_by_elim (config := { maxDepth := 6 }) [Sum.inl, Sum.inr, Prod.mk]
-      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;>
-          solve_by_elim (config := { maxDepth := 6 }) [Sum.inl, Sum.inr, Prod.mk]
-      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> rfl
-      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;> rfl
-    · fconstructor
-      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;>
-          solve_by_elim (config := { maxDepth := 6 }) [Sum.inl, Sum.inr, Prod.mk]
-      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;>
-          solve_by_elim (config := { maxDepth := 6 }) [Sum.inl, Sum.inr, Prod.mk]
-      · rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> rfl
-      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;> rfl
+    fconstructor
+    rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;>
+      -- Porting note: we've increased `maxDepth` here from `5` to `6`.
+      -- Likely this sort of off-by-one error is just a change in the implementation
+      -- of `solve_by_elim`.
+      solve_by_elim (config := { maxDepth := 6 }) [Sum.inl, Sum.inr, Prod.mk]
+    rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;>
+      solve_by_elim (config := { maxDepth := 6 }) [Sum.inl, Sum.inr, Prod.mk]
+    rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> rfl
+    rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;> rfl
+    fconstructor
+    rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;>
+      solve_by_elim (config := { maxDepth := 6 }) [Sum.inl, Sum.inr, Prod.mk]
+    rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;>
+      solve_by_elim (config := { maxDepth := 6 }) [Sum.inl, Sum.inr, Prod.mk]
+    rintro (⟨_, _ | _⟩ | ⟨_, _ | _⟩) <;> rfl
+    rintro (⟨⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, _⟩ | ⟨_, _⟩) <;> rfl
     -- Porting note: explicitly wrote out arguments to each recursive
     -- quot_left_distrib reference below, because otherwise the decreasing_by block
     -- failed. Previously, each branch ended with: `simp [quot_left_distrib]; abel`
     -- See https://github.com/leanprover/lean4/issues/2288
-    · rintro (⟨i, j | k⟩ | ⟨i, j | k⟩)
-      · change
-          ⟦xL i * (y + z) + x * (yL j + z) - xL i * (yL j + z)⟧ =
-            ⟦xL i * y + x * yL j - xL i * yL j + x * z⟧
-        simp only [quot_sub, quot_add]
-        rw [quot_left_distrib (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_left_distrib (mk xl xr xL xR) (yL j) (mk zl zr zL zR)]
-        rw [quot_left_distrib (xL i) (yL j) (mk zl zr zL zR)]
-        abel
-      · change
-          ⟦xL i * (y + z) + x * (y + zL k) - xL i * (y + zL k)⟧ =
-            ⟦x * y + (xL i * z + x * zL k - xL i * zL k)⟧
-        simp only [quot_sub, quot_add]
-        rw [quot_left_distrib (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_left_distrib (mk xl xr xL xR) (mk yl yr yL yR) (zL k)]
-        rw [quot_left_distrib (xL i) (mk yl yr yL yR) (zL k)]
-        abel
-      · change
-          ⟦xR i * (y + z) + x * (yR j + z) - xR i * (yR j + z)⟧ =
-            ⟦xR i * y + x * yR j - xR i * yR j + x * z⟧
-        simp only [quot_sub, quot_add]
-        rw [quot_left_distrib (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_left_distrib (mk xl xr xL xR) (yR j) (mk zl zr zL zR)]
-        rw [quot_left_distrib (xR i) (yR j) (mk zl zr zL zR)]
-        abel
-      · change
-          ⟦xR i * (y + z) + x * (y + zR k) - xR i * (y + zR k)⟧ =
-            ⟦x * y + (xR i * z + x * zR k - xR i * zR k)⟧
-        simp only [quot_sub, quot_add]
-        rw [quot_left_distrib (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_left_distrib (mk xl xr xL xR) (mk yl yr yL yR) (zR k)]
-        rw [quot_left_distrib (xR i) (mk yl yr yL yR) (zR k)]
-        abel
-    · rintro (⟨i, j | k⟩ | ⟨i, j | k⟩)
-      · change
-          ⟦xL i * (y + z) + x * (yR j + z) - xL i * (yR j + z)⟧ =
-            ⟦xL i * y + x * yR j - xL i * yR j + x * z⟧
-        simp only [quot_sub, quot_add]
-        rw [quot_left_distrib (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_left_distrib (mk xl xr xL xR) (yR j) (mk zl zr zL zR)]
-        rw [quot_left_distrib (xL i) (yR j) (mk zl zr zL zR)]
-        abel
-      · change
-          ⟦xL i * (y + z) + x * (y + zR k) - xL i * (y + zR k)⟧ =
-            ⟦x * y + (xL i * z + x * zR k - xL i * zR k)⟧
-        simp only [quot_sub, quot_add]
-        rw [quot_left_distrib (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_left_distrib (mk xl xr xL xR) (mk yl yr yL yR) (zR k)]
-        rw [quot_left_distrib (xL i) (mk yl yr yL yR) (zR k)]
-        abel
-      · change
-          ⟦xR i * (y + z) + x * (yL j + z) - xR i * (yL j + z)⟧ =
-            ⟦xR i * y + x * yL j - xR i * yL j + x * z⟧
-        simp only [quot_sub, quot_add]
-        rw [quot_left_distrib (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_left_distrib (mk xl xr xL xR) (yL j) (mk zl zr zL zR)]
-        rw [quot_left_distrib (xR i) (yL j) (mk zl zr zL zR)]
-        abel
-      · change
-          ⟦xR i * (y + z) + x * (y + zL k) - xR i * (y + zL k)⟧ =
-            ⟦x * y + (xR i * z + x * zL k - xR i * zL k)⟧
-        simp only [quot_sub, quot_add]
-        rw [quot_left_distrib (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_left_distrib (mk xl xr xL xR) (mk yl yr yL yR) (zL k)]
-        rw [quot_left_distrib (xR i) (mk yl yr yL yR) (zL k)]
-        abel
+    rintro (⟨i, j | k⟩ | ⟨i, j | k⟩)
+    change
+      ⟦xL i * (y + z) + x * (yL j + z) - xL i * (yL j + z)⟧ =
+        ⟦xL i * y + x * yL j - xL i * yL j + x * z⟧
+    simp only [quot_sub, quot_add]
+    rw [quot_left_distrib (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_left_distrib (mk xl xr xL xR) (yL j) (mk zl zr zL zR)]
+    rw [quot_left_distrib (xL i) (yL j) (mk zl zr zL zR)]
+    abel
+    change
+      ⟦xL i * (y + z) + x * (y + zL k) - xL i * (y + zL k)⟧ =
+        ⟦x * y + (xL i * z + x * zL k - xL i * zL k)⟧
+    simp only [quot_sub, quot_add]
+    rw [quot_left_distrib (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_left_distrib (mk xl xr xL xR) (mk yl yr yL yR) (zL k)]
+    rw [quot_left_distrib (xL i) (mk yl yr yL yR) (zL k)]
+    abel
+    change
+      ⟦xR i * (y + z) + x * (yR j + z) - xR i * (yR j + z)⟧ =
+        ⟦xR i * y + x * yR j - xR i * yR j + x * z⟧
+    simp only [quot_sub, quot_add]
+    rw [quot_left_distrib (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_left_distrib (mk xl xr xL xR) (yR j) (mk zl zr zL zR)]
+    rw [quot_left_distrib (xR i) (yR j) (mk zl zr zL zR)]
+    abel
+    change
+      ⟦xR i * (y + z) + x * (y + zR k) - xR i * (y + zR k)⟧ =
+        ⟦x * y + (xR i * z + x * zR k - xR i * zR k)⟧
+    simp only [quot_sub, quot_add]
+    rw [quot_left_distrib (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_left_distrib (mk xl xr xL xR) (mk yl yr yL yR) (zR k)]
+    rw [quot_left_distrib (xR i) (mk yl yr yL yR) (zR k)]
+    abel
+    rintro (⟨i, j | k⟩ | ⟨i, j | k⟩)
+    change
+      ⟦xL i * (y + z) + x * (yR j + z) - xL i * (yR j + z)⟧ =
+        ⟦xL i * y + x * yR j - xL i * yR j + x * z⟧
+    simp only [quot_sub, quot_add]
+    rw [quot_left_distrib (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_left_distrib (mk xl xr xL xR) (yR j) (mk zl zr zL zR)]
+    rw [quot_left_distrib (xL i) (yR j) (mk zl zr zL zR)]
+    abel
+    change
+      ⟦xL i * (y + z) + x * (y + zR k) - xL i * (y + zR k)⟧ =
+        ⟦x * y + (xL i * z + x * zR k - xL i * zR k)⟧
+    simp only [quot_sub, quot_add]
+    rw [quot_left_distrib (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_left_distrib (mk xl xr xL xR) (mk yl yr yL yR) (zR k)]
+    rw [quot_left_distrib (xL i) (mk yl yr yL yR) (zR k)]
+    abel
+    change
+      ⟦xR i * (y + z) + x * (yL j + z) - xR i * (yL j + z)⟧ =
+        ⟦xR i * y + x * yL j - xR i * yL j + x * z⟧
+    simp only [quot_sub, quot_add]
+    rw [quot_left_distrib (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_left_distrib (mk xl xr xL xR) (yL j) (mk zl zr zL zR)]
+    rw [quot_left_distrib (xR i) (yL j) (mk zl zr zL zR)]
+    abel
+    change
+      ⟦xR i * (y + z) + x * (y + zL k) - xR i * (y + zL k)⟧ =
+        ⟦x * y + (xR i * z + x * zL k - xR i * zL k)⟧
+    simp only [quot_sub, quot_add]
+    rw [quot_left_distrib (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_left_distrib (mk xl xr xL xR) (mk yl yr yL yR) (zL k)]
+    rw [quot_left_distrib (xR i) (mk yl yr yL yR) (zL k)]
+    abel
   termination_by (x, y, z)
 
 /-- `x * (y + z)` is equivalent to `x * y + x * z.`-/
@@ -626,147 +626,147 @@ theorem quot_mul_assoc (x y z : PGame) : (⟦x * y * z⟧ : Game) = ⟦x * (y * 
     let y := mk yl yr yL yR
     let z := mk zl zr zL zR
     refine quot_eq_of_mk'_quot_eq ?_ ?_ ?_ ?_
-    · fconstructor
-      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;>
-          -- Porting note: as above, increased the `maxDepth` here by 1.
-          solve_by_elim (config := { maxDepth := 8 }) [Sum.inl, Sum.inr, Prod.mk]
-      · rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;>
-          solve_by_elim (config := { maxDepth := 8 }) [Sum.inl, Sum.inr, Prod.mk]
-      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;> rfl
-      · rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;> rfl
-    · fconstructor
-      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;>
-          solve_by_elim (config := { maxDepth := 8 }) [Sum.inl, Sum.inr, Prod.mk]
-      · rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;>
-          solve_by_elim (config := { maxDepth := 8 }) [Sum.inl, Sum.inr, Prod.mk]
-      · rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;> rfl
-      · rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;> rfl
+    fconstructor
+    rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;>
+      -- Porting note: as above, increased the `maxDepth` here by 1.
+      solve_by_elim (config := { maxDepth := 8 }) [Sum.inl, Sum.inr, Prod.mk]
+    rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;>
+      solve_by_elim (config := { maxDepth := 8 }) [Sum.inl, Sum.inr, Prod.mk]
+    rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;> rfl
+    rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;> rfl
+    fconstructor
+    rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;>
+      solve_by_elim (config := { maxDepth := 8 }) [Sum.inl, Sum.inr, Prod.mk]
+    rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;>
+      solve_by_elim (config := { maxDepth := 8 }) [Sum.inl, Sum.inr, Prod.mk]
+    rintro (⟨⟨_, _⟩ | ⟨_, _⟩, _⟩ | ⟨⟨_, _⟩ | ⟨_, _⟩, _⟩) <;> rfl
+    rintro (⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩ | ⟨_, ⟨_, _⟩ | ⟨_, _⟩⟩) <;> rfl
     -- Porting note: explicitly wrote out arguments to each recursive
     -- quot_mul_assoc reference below, because otherwise the decreasing_by block
     -- failed. Each branch previously ended with: `simp [quot_mul_assoc]; abel`
     -- See https://github.com/leanprover/lean4/issues/2288
-    · rintro (⟨⟨i, j⟩ | ⟨i, j⟩, k⟩ | ⟨⟨i, j⟩ | ⟨i, j⟩, k⟩)
-      · change
-          ⟦(xL i * y + x * yL j - xL i * yL j) * z + x * y * zL k -
-                (xL i * y + x * yL j - xL i * yL j) * zL k⟧ =
-            ⟦xL i * (y * z) + x * (yL j * z + y * zL k - yL j * zL k) -
-                xL i * (yL j * z + y * zL k - yL j * zL k)⟧
-        simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
-                   quot_left_distrib_sub, quot_left_distrib]
-        rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (xL i) (yL j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zL k)]
-        rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (zL k)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (zL k)]
-        rw [quot_mul_assoc (xL i) (yL j) (zL k)]
-        abel
-      · change
-          ⟦(xR i * y + x * yR j - xR i * yR j) * z + x * y * zL k -
-                (xR i * y + x * yR j - xR i * yR j) * zL k⟧ =
-            ⟦xR i * (y * z) + x * (yR j * z + y * zL k - yR j * zL k) -
-                xR i * (yR j * z + y * zL k - yR j * zL k)⟧
-        simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
-                   quot_left_distrib_sub, quot_left_distrib]
-        rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (xR i) (yR j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zL k)]
-        rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (zL k)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (zL k)]
-        rw [quot_mul_assoc (xR i) (yR j) (zL k)]
-        abel
-      · change
-          ⟦(xL i * y + x * yR j - xL i * yR j) * z + x * y * zR k -
-                (xL i * y + x * yR j - xL i * yR j) * zR k⟧ =
-            ⟦xL i * (y * z) + x * (yR j * z + y * zR k - yR j * zR k) -
-                xL i * (yR j * z + y * zR k - yR j * zR k)⟧
-        simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
-                   quot_left_distrib_sub, quot_left_distrib]
-        rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (xL i) (yR j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zR k)]
-        rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (zR k)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (zR k)]
-        rw [quot_mul_assoc (xL i) (yR j) (zR k)]
-        abel
-      · change
-          ⟦(xR i * y + x * yL j - xR i * yL j) * z + x * y * zR k -
-                (xR i * y + x * yL j - xR i * yL j) * zR k⟧ =
-            ⟦xR i * (y * z) + x * (yL j * z + y * zR k - yL j * zR k) -
-                xR i * (yL j * z + y * zR k - yL j * zR k)⟧
-        simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
-                   quot_left_distrib_sub, quot_left_distrib]
-        rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (xR i) (yL j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zR k)]
-        rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (zR k)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (zR k)]
-        rw [quot_mul_assoc (xR i) (yL j) (zR k)]
-        abel
-    · rintro (⟨⟨i, j⟩ | ⟨i, j⟩, k⟩ | ⟨⟨i, j⟩ | ⟨i, j⟩, k⟩)
-      · change
-          ⟦(xL i * y + x * yL j - xL i * yL j) * z + x * y * zR k -
-                (xL i * y + x * yL j - xL i * yL j) * zR k⟧ =
-            ⟦xL i * (y * z) + x * (yL j * z + y * zR k - yL j * zR k) -
-                xL i * (yL j * z + y * zR k - yL j * zR k)⟧
-        simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
-                   quot_left_distrib_sub, quot_left_distrib]
-        rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (xL i) (yL j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zR k)]
-        rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (zR k)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (zR k)]
-        rw [quot_mul_assoc (xL i) (yL j) (zR k)]
-        abel
-      · change
-          ⟦(xR i * y + x * yR j - xR i * yR j) * z + x * y * zR k -
-                (xR i * y + x * yR j - xR i * yR j) * zR k⟧ =
-            ⟦xR i * (y * z) + x * (yR j * z + y * zR k - yR j * zR k) -
-                xR i * (yR j * z + y * zR k - yR j * zR k)⟧
-        simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
-                   quot_left_distrib_sub, quot_left_distrib]
-        rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (xR i) (yR j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zR k)]
-        rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (zR k)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (zR k)]
-        rw [quot_mul_assoc (xR i) (yR j) (zR k)]
-        abel
-      · change
-          ⟦(xL i * y + x * yR j - xL i * yR j) * z + x * y * zL k -
-                (xL i * y + x * yR j - xL i * yR j) * zL k⟧ =
-            ⟦xL i * (y * z) + x * (yR j * z + y * zL k - yR j * zL k) -
-                xL i * (yR j * z + y * zL k - yR j * zL k)⟧
-        simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
-                   quot_left_distrib_sub, quot_left_distrib]
-        rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (xL i) (yR j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zL k)]
-        rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (zL k)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (zL k)]
-        rw [quot_mul_assoc (xL i) (yR j) (zL k)]
-        abel
-      · change
-          ⟦(xR i * y + x * yL j - xR i * yL j) * z + x * y * zL k -
-                (xR i * y + x * yL j - xR i * yL j) * zL k⟧ =
-            ⟦xR i * (y * z) + x * (yL j * z + y * zL k - yL j * zL k) -
-                xR i * (yL j * z + y * zL k - yL j * zL k)⟧
-        simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
-                   quot_left_distrib_sub, quot_left_distrib]
-        rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (xR i) (yL j) (mk zl zr zL zR)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zL k)]
-        rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (zL k)]
-        rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (zL k)]
-        rw [quot_mul_assoc (xR i) (yL j) (zL k)]
-        abel
+    rintro (⟨⟨i, j⟩ | ⟨i, j⟩, k⟩ | ⟨⟨i, j⟩ | ⟨i, j⟩, k⟩)
+    change
+      ⟦(xL i * y + x * yL j - xL i * yL j) * z + x * y * zL k -
+            (xL i * y + x * yL j - xL i * yL j) * zL k⟧ =
+        ⟦xL i * (y * z) + x * (yL j * z + y * zL k - yL j * zL k) -
+            xL i * (yL j * z + y * zL k - yL j * zL k)⟧
+    simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
+               quot_left_distrib_sub, quot_left_distrib]
+    rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (xL i) (yL j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zL k)]
+    rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (zL k)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (zL k)]
+    rw [quot_mul_assoc (xL i) (yL j) (zL k)]
+    abel
+    change
+      ⟦(xR i * y + x * yR j - xR i * yR j) * z + x * y * zL k -
+            (xR i * y + x * yR j - xR i * yR j) * zL k⟧ =
+        ⟦xR i * (y * z) + x * (yR j * z + y * zL k - yR j * zL k) -
+            xR i * (yR j * z + y * zL k - yR j * zL k)⟧
+    simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
+               quot_left_distrib_sub, quot_left_distrib]
+    rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (xR i) (yR j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zL k)]
+    rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (zL k)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (zL k)]
+    rw [quot_mul_assoc (xR i) (yR j) (zL k)]
+    abel
+    change
+      ⟦(xL i * y + x * yR j - xL i * yR j) * z + x * y * zR k -
+            (xL i * y + x * yR j - xL i * yR j) * zR k⟧ =
+        ⟦xL i * (y * z) + x * (yR j * z + y * zR k - yR j * zR k) -
+            xL i * (yR j * z + y * zR k - yR j * zR k)⟧
+    simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
+               quot_left_distrib_sub, quot_left_distrib]
+    rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (xL i) (yR j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zR k)]
+    rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (zR k)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (zR k)]
+    rw [quot_mul_assoc (xL i) (yR j) (zR k)]
+    abel
+    change
+      ⟦(xR i * y + x * yL j - xR i * yL j) * z + x * y * zR k -
+            (xR i * y + x * yL j - xR i * yL j) * zR k⟧ =
+        ⟦xR i * (y * z) + x * (yL j * z + y * zR k - yL j * zR k) -
+            xR i * (yL j * z + y * zR k - yL j * zR k)⟧
+    simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
+               quot_left_distrib_sub, quot_left_distrib]
+    rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (xR i) (yL j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zR k)]
+    rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (zR k)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (zR k)]
+    rw [quot_mul_assoc (xR i) (yL j) (zR k)]
+    abel
+    rintro (⟨⟨i, j⟩ | ⟨i, j⟩, k⟩ | ⟨⟨i, j⟩ | ⟨i, j⟩, k⟩)
+    change
+      ⟦(xL i * y + x * yL j - xL i * yL j) * z + x * y * zR k -
+            (xL i * y + x * yL j - xL i * yL j) * zR k⟧ =
+        ⟦xL i * (y * z) + x * (yL j * z + y * zR k - yL j * zR k) -
+            xL i * (yL j * z + y * zR k - yL j * zR k)⟧
+    simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
+               quot_left_distrib_sub, quot_left_distrib]
+    rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (xL i) (yL j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zR k)]
+    rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (zR k)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (zR k)]
+    rw [quot_mul_assoc (xL i) (yL j) (zR k)]
+    abel
+    change
+      ⟦(xR i * y + x * yR j - xR i * yR j) * z + x * y * zR k -
+            (xR i * y + x * yR j - xR i * yR j) * zR k⟧ =
+        ⟦xR i * (y * z) + x * (yR j * z + y * zR k - yR j * zR k) -
+            xR i * (yR j * z + y * zR k - yR j * zR k)⟧
+    simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
+               quot_left_distrib_sub, quot_left_distrib]
+    rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (xR i) (yR j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zR k)]
+    rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (zR k)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (zR k)]
+    rw [quot_mul_assoc (xR i) (yR j) (zR k)]
+    abel
+    change
+      ⟦(xL i * y + x * yR j - xL i * yR j) * z + x * y * zL k -
+            (xL i * y + x * yR j - xL i * yR j) * zL k⟧ =
+        ⟦xL i * (y * z) + x * (yR j * z + y * zL k - yR j * zL k) -
+            xL i * (yR j * z + y * zL k - yR j * zL k)⟧
+    simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
+               quot_left_distrib_sub, quot_left_distrib]
+    rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (xL i) (yR j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zL k)]
+    rw [quot_mul_assoc (xL i) (mk yl yr yL yR) (zL k)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yR j) (zL k)]
+    rw [quot_mul_assoc (xL i) (yR j) (zL k)]
+    abel
+    change
+      ⟦(xR i * y + x * yL j - xR i * yL j) * z + x * y * zL k -
+            (xR i * y + x * yL j - xR i * yL j) * zL k⟧ =
+        ⟦xR i * (y * z) + x * (yL j * z + y * zL k - yL j * zL k) -
+            xR i * (yL j * z + y * zL k - yL j * zL k)⟧
+    simp only [quot_sub, quot_add, quot_right_distrib_sub, quot_right_distrib,
+               quot_left_distrib_sub, quot_left_distrib]
+    rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (xR i) (yL j) (mk zl zr zL zR)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (mk yl yr yL yR) (zL k)]
+    rw [quot_mul_assoc (xR i) (mk yl yr yL yR) (zL k)]
+    rw [quot_mul_assoc (mk xl xr xL xR) (yL j) (zL k)]
+    rw [quot_mul_assoc (xR i) (yL j) (zL k)]
+    abel
   termination_by (x, y, z)
 
 /-- `x * y * z` is equivalent to `x * (y * z).`-/
@@ -783,7 +783,7 @@ lemma mulOption_neg_neg {x} (y) {i j} :
     mulOption x y i j = mulOption x (-(-y)) i (toLeftMovesNeg <| toRightMovesNeg j) := by
   dsimp only [mulOption]
   congr 2
-  · rw [neg_neg]
+  rw [neg_neg]
   iterate 2 rw [moveLeft_neg, moveRight_neg, neg_neg]
 
 /-- The left options of `x * y` agree with that of `y * x` up to equivalence. -/
@@ -803,11 +803,11 @@ lemma leftMoves_mul_iff {x y : PGame} (P : Game → Prop) :
   constructor <;> intro h
   on_goal 1 =>
     constructor <;> intros i j
-    · exact h (Sum.inl (i, j))
+    exact h (Sum.inl (i, j))
     convert h (Sum.inr (i, j)) using 1
   on_goal 2 =>
     rintro (⟨i, j⟩ | ⟨i, j⟩)
-    · exact h.1 i j
+    exact h.1 i j
     convert h.2 i j using 1
   all_goals
     dsimp only [mk_mul_moveLeft_inr, quot_sub, quot_add, neg_def, mulOption, moveLeft_mk]
@@ -859,7 +859,7 @@ instance uniqueInvTy (l r : Type u) [IsEmpty l] [IsEmpty r] : Unique (InvTy l r 
   { InvTy.instInhabited l r with
     uniq := by
       rintro (a | a | a)
-      · rfl
+      rfl
       all_goals exact isEmptyElim a }
 
 /-- Because the two halves of the definition of `inv` produce more elements
@@ -877,7 +877,7 @@ def invVal {l r} (L : l → PGame) (R : r → PGame) (IHl : l → PGame) (IHr : 
 theorem invVal_isEmpty {l r : Type u} {b} (L R IHl IHr) (i : InvTy l r b) (x) [IsEmpty l]
     [IsEmpty r] : invVal L R IHl IHr x i = 0 := by
   cases' i with a _ a _ a _ a
-  · rfl
+  rfl
   all_goals exact isEmptyElim a
 
 /-- The inverse of a positive surreal number `x = {L | R}` is

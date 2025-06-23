@@ -37,9 +37,9 @@ inductive Foo (α β)
 
 example (x : Foo α β) : True := by
   cases' x with a₀ a₁ _ a₂ b₂ c₂
-  · guard_hyp a₀ : α; trivial
-  · guard_hyp a₁ : α; have : β := (by assumption); trivial
-  · guard_hyp a₂ : α; guard_hyp b₂ : β; guard_hyp c₂ : Foo α β; trivial
+  guard_hyp a₀ : α; trivial
+  guard_hyp a₁ : α; have : β := (by assumption); trivial
+  guard_hyp a₂ : α; guard_hyp b₂ : β; guard_hyp c₂ : Foo α β; trivial
 
 inductive Bar : ℕ → Type
   | A (a b : Nat) : Bar 1
@@ -47,37 +47,37 @@ inductive Bar : ℕ → Type
 
 example (x : Bar 0) : True := by
   cases' x with a b c d h
-  · guard_hyp d : ℕ; guard_hyp h : Bar (0 + 1); trivial
+  guard_hyp d : ℕ; guard_hyp h : Bar (0 + 1); trivial
 
 example (n : Nat) : n = n := by
   induction' n with n ih
-  · guard_target =ₛ 0 = 0; rfl
-  · guard_hyp n : Nat; guard_hyp ih : n = n
-    guard_target =ₛ n + 1 = n + 1; exact congr_arg (· + 1) ih
+  guard_target =ₛ 0 = 0; rfl
+  guard_hyp n : Nat; guard_hyp ih : n = n
+  guard_target =ₛ n + 1 = n + 1; exact congr_arg (· + 1) ih
 
 example (n : Nat) (h : n < 5) : n = n := by
   induction' n with n ih
-  · guard_target =ₛ 0 = 0; rfl
-  · guard_hyp n : Nat; guard_hyp ih : n < 5 → n = n; guard_hyp h :ₛ n + 1 < 5
-    guard_target =ₛ n + 1 = n + 1; rfl
+  guard_target =ₛ 0 = 0; rfl
+  guard_hyp n : Nat; guard_hyp ih : n < 5 → n = n; guard_hyp h :ₛ n + 1 < 5
+  guard_target =ₛ n + 1 = n + 1; rfl
 
 example (n : Nat) {m} (h : m < 5) : n = n := by
   induction' n with n ih
-  · guard_target = Nat.zero = Nat.zero; rfl
-  · guard_hyp n : Nat; guard_hyp ih : n = n; guard_hyp h : m < 5
-    guard_target = Nat.succ n = Nat.succ n; rfl
+  guard_target = Nat.zero = Nat.zero; rfl
+  guard_hyp n : Nat; guard_hyp ih : n = n; guard_hyp h : m < 5
+  guard_target = Nat.succ n = Nat.succ n; rfl
 
 example (n : Nat) {m} (h : m < 5) : n = n := by
   induction' n with n ih generalizing m
-  · guard_target = Nat.zero = Nat.zero; rfl
-  · guard_hyp n : Nat; guard_hyp ih : ∀ {m}, m < 5 → n = n; guard_hyp h : m < 5
-    guard_target = Nat.succ n = Nat.succ n; rfl
+  guard_target = Nat.zero = Nat.zero; rfl
+  guard_hyp n : Nat; guard_hyp ih : ∀ {m}, m < 5 → n = n; guard_hyp h : m < 5
+  guard_target = Nat.succ n = Nat.succ n; rfl
 
 example (n : Nat) : n = n := by
   induction' e : n with m ih
-  · guard_hyp e : n = Nat.zero; guard_target = Nat.zero = Nat.zero; rfl
-  · guard_hyp m : Nat; guard_hyp ih : n = m → m = m
-    guard_hyp e : n = Nat.succ m; guard_target = Nat.succ m = Nat.succ m; rfl
+  guard_hyp e : n = Nat.zero; guard_target = Nat.zero = Nat.zero; rfl
+  guard_hyp m : Nat; guard_hyp ih : n = m → m = m
+  guard_hyp e : n = Nat.succ m; guard_target = Nat.succ m = Nat.succ m; rfl
 
 example (n : Nat) : n = n := by
   induction' e : n using my_rec with m ih
@@ -110,23 +110,23 @@ example (p q : Prop) : (p → ¬ q) → ¬ (p ∧ q) := by
 -- Ensure that `induction'` removes generalized variables. Here: `a` and `h`
 example (a b : ℕ) (h : a + b = a) : b = 0 := by
   induction' a with d hd
-  · -- Test the generalized vars have been removed
-    revert h
-    fail_if_success (guard_hyp a : Nat)
-    fail_if_success (guard_hyp h : a + b = a)
-    intro h
-    -- Sample proof
-    rw [Nat.zero_add] at h
-    assumption
-  · -- Test the generalized vars have been removed
-    revert h
-    fail_if_success (guard_hyp a : Nat)
-    fail_if_success (guard_hyp h : a + b = a)
-    intro h
-    -- Sample proof
-    rw [Nat.succ_add, Nat.succ.injEq] at h
-    apply hd
-    assumption
+  -- Test the generalized vars have been removed
+  revert h
+  fail_if_success (guard_hyp a : Nat)
+  fail_if_success (guard_hyp h : a + b = a)
+  intro h
+  -- Sample proof
+  rw [Nat.zero_add] at h
+  assumption
+  -- Test the generalized vars have been removed
+  revert h
+  fail_if_success (guard_hyp a : Nat)
+  fail_if_success (guard_hyp h : a + b = a)
+  intro h
+  -- Sample proof
+  rw [Nat.succ_add, Nat.succ.injEq] at h
+  apply hd
+  assumption
 
 /-- error: unnecessary 'generalizing' argument, variable 'a' is generalized automatically -/
 #guard_msgs in

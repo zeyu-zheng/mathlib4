@@ -134,8 +134,8 @@ instance isLocallySurjective_comp {F₁ F₂ F₃ : Cᵒᵖ ⥤ A} (f₁ : F₁ 
       elementwise_of% f₂.naturality, H.choose_spec]
     apply J.superset_covering this
     apply J.bind_covering
-    · apply imageSieve_mem
-    · intros; apply imageSieve_mem
+    apply imageSieve_mem
+    intros; apply imageSieve_mem
 
 lemma isLocallySurjective_of_isLocallySurjective
     {F₁ F₂ F₃ : Cᵒᵖ ⥤ A} (f₁ : F₁ ⟶ F₂) (f₂ : F₂ ⟶ F₃)
@@ -158,11 +158,11 @@ lemma isLocallySurjective_iff_of_fac
     [IsLocallySurjective J f₁] :
     IsLocallySurjective J f₃ ↔ IsLocallySurjective J f₂ := by
   constructor
-  · intro
-    exact isLocallySurjective_of_isLocallySurjective_fac J fac
-  · intro
-    rw [← fac]
-    infer_instance
+  intro
+  exact isLocallySurjective_of_isLocallySurjective_fac J fac
+  intro
+  rw [← fac]
+  infer_instance
 
 lemma comp_isLocallySurjective_iff
     {F₁ F₂ F₃ : Cᵒᵖ ⥤ A} (f₁ : F₁ ⟶ F₂) (f₂ : F₂ ⟶ F₃)
@@ -188,14 +188,14 @@ lemma isLocallyInjective_of_isLocallyInjective_of_isLocallySurjective
     let T : ∀ ⦃Y : C⦄ (f : Y ⟶ X.unop) (_ : S f), Sieve Y := fun Y f hf =>
       equalizerSieve (localPreimage f₁ x₁ f hf.1) (localPreimage f₁ x₂ f hf.2)
     refine J.superset_covering ?_ (J.transitive hS (Sieve.bind S.1 T) ?_)
-    · rintro Y f ⟨Z, a, g, hg, ha, rfl⟩
-      simpa using congr_arg (f₁.app _) ha
-    · intro Y f hf
-      apply J.superset_covering (Sieve.le_pullback_bind _ _ _ hf)
-      apply equalizerSieve_mem J (f₁ ≫ f₂)
-      dsimp
-      rw [comp_apply, comp_apply, app_localPreimage, app_localPreimage,
-        NatTrans.naturality_apply, NatTrans.naturality_apply, h]
+    rintro Y f ⟨Z, a, g, hg, ha, rfl⟩
+    simpa using congr_arg (f₁.app _) ha
+    intro Y f hf
+    apply J.superset_covering (Sieve.le_pullback_bind _ _ _ hf)
+    apply equalizerSieve_mem J (f₁ ≫ f₂)
+    dsimp
+    rw [comp_apply, comp_apply, app_localPreimage, app_localPreimage,
+      NatTrans.naturality_apply, NatTrans.naturality_apply, h]
 
 lemma isLocallyInjective_of_isLocallyInjective_of_isLocallySurjective_fac
     {F₁ F₂ F₃ : Cᵒᵖ ⥤ A} {f₁ : F₁ ⟶ F₂} {f₂ : F₂ ⟶ F₃} (f₃ : F₁ ⟶ F₃) (fac : f₁ ≫ f₂ = f₃)
@@ -214,13 +214,13 @@ lemma isLocallySurjective_of_isLocallySurjective_of_isLocallyInjective
       equalizerSieve (f₁.app _ (localPreimage (f₁ ≫ f₂) (f₂.app _ x) f hf)) (F₂.map f.op x)
     refine J.superset_covering ?_ (J.transitive (imageSieve_mem J (f₁ ≫ f₂) (f₂.app _ x))
       (Sieve.bind S.1 T) ?_)
-    · rintro Y _ ⟨Z, a, g, hg, ha, rfl⟩
-      exact ⟨F₁.map a.op (localPreimage (f₁ ≫ f₂) _ _ hg), by simpa using ha⟩
-    · intro Y f hf
-      apply J.superset_covering (Sieve.le_pullback_bind _ _ _ hf)
-      apply equalizerSieve_mem J f₂
-      rw [NatTrans.naturality_apply, ← app_localPreimage (f₁ ≫ f₂) _ _ hf,
-        NatTrans.comp_app, comp_apply]
+    rintro Y _ ⟨Z, a, g, hg, ha, rfl⟩
+    exact ⟨F₁.map a.op (localPreimage (f₁ ≫ f₂) _ _ hg), by simpa using ha⟩
+    intro Y f hf
+    apply J.superset_covering (Sieve.le_pullback_bind _ _ _ hf)
+    apply equalizerSieve_mem J f₂
+    rw [NatTrans.naturality_apply, ← app_localPreimage (f₁ ≫ f₂) _ _ hf,
+      NatTrans.comp_app, comp_apply]
 
 lemma isLocallySurjective_of_isLocallySurjective_of_isLocallyInjective_fac
     {F₁ F₂ F₃ : Cᵒᵖ ⥤ A} {f₁ : F₁ ⟶ F₂} {f₂ : F₂ ⟶ F₃} (f₃ : F₁ ⟶ F₃) (fac : f₁ ≫ f₂ = f₃)
@@ -234,20 +234,20 @@ lemma comp_isLocallyInjective_iff
     [IsLocallyInjective J f₁] [IsLocallySurjective J f₁] :
     IsLocallyInjective J (f₁ ≫ f₂) ↔ IsLocallyInjective J f₂ := by
   constructor
-  · intro
-    exact isLocallyInjective_of_isLocallyInjective_of_isLocallySurjective J f₁ f₂
-  · intro
-    infer_instance
+  intro
+  exact isLocallyInjective_of_isLocallyInjective_of_isLocallySurjective J f₁ f₂
+  intro
+  infer_instance
 
 lemma isLocallySurjective_comp_iff
     {F₁ F₂ F₃ : Cᵒᵖ ⥤ A} (f₁ : F₁ ⟶ F₂) (f₂ : F₂ ⟶ F₃)
     [IsLocallyInjective J f₂] [IsLocallySurjective J f₂] :
     IsLocallySurjective J (f₁ ≫ f₂) ↔ IsLocallySurjective J f₁ := by
   constructor
-  · intro
-    exact isLocallySurjective_of_isLocallySurjective_of_isLocallyInjective J f₁ f₂
-  · intro
-    infer_instance
+  intro
+  exact isLocallySurjective_of_isLocallySurjective_of_isLocallyInjective J f₁ f₂
+  intro
+  infer_instance
 
 instance {F₁ F₂ : Cᵒᵖ ⥤ Type w} (f : F₁ ⟶ F₂) :
     IsLocallySurjective J (toImagePresheafSheafify J f) where
@@ -368,12 +368,12 @@ lemma isLocallySurjective_iff_epi {F G : Sheaf J (Type w)} (φ : F ⟶ G)
     [HasSheafify J (Type w)] :
     IsLocallySurjective φ ↔ Epi φ := by
   constructor
-  · intro
-    infer_instance
-  · intro
-    have := epi_of_epi_fac (toImageSheaf_ι φ)
-    rw [isLocallySurjective_iff_isIso φ]
-    apply isIso_of_mono_of_epi
+  intro
+  infer_instance
+  intro
+  have := epi_of_epi_fac (toImageSheaf_ι φ)
+  rw [isLocallySurjective_iff_isIso φ]
+  apply isIso_of_mono_of_epi
 
 end Sheaf
 

@@ -74,9 +74,9 @@ theorem divX_C_mul : divX (C a * p) = C a * divX p := by
 
 theorem divX_X_pow : divX (X ^ n : R[X]) = if (n = 0) then 0 else X ^ (n - 1) := by
   cases n
-  · simp
-  · ext n
-    simp [coeff_X_pow]
+  simp
+  ext n
+  simp [coeff_X_pow]
 
 /-- `divX` as an additive homomorphism. -/
 noncomputable
@@ -89,13 +89,13 @@ def divX_hom : R[X] →+ R[X] :=
 
 theorem natDegree_divX_eq_natDegree_tsub_one : p.divX.natDegree = p.natDegree - 1 := by
   apply map_natDegree_eq_sub (φ := divX_hom)
-  · intro f
-    simpa [divX_hom, divX_eq_zero_iff] using eq_C_of_natDegree_eq_zero
-  · intros n c c0
-    rw [← C_mul_X_pow_eq_monomial, divX_hom_toFun, divX_C_mul, divX_X_pow]
-    split_ifs with n0
-    · simp [n0]
-    · exact natDegree_C_mul_X_pow (n - 1) c c0
+  intro f
+  simpa [divX_hom, divX_eq_zero_iff] using eq_C_of_natDegree_eq_zero
+  intros n c c0
+  rw [← C_mul_X_pow_eq_monomial, divX_hom_toFun, divX_C_mul, divX_X_pow]
+  split_ifs with n0
+  simp [n0]
+  exact natDegree_C_mul_X_pow (n - 1) c c0
 
 theorem natDegree_divX_le : p.divX.natDegree ≤ p.natDegree :=
   natDegree_divX_eq_natDegree_tsub_one.trans_le (Nat.pred_le _)
@@ -193,23 +193,23 @@ theorem natDegree_ne_zero_induction_on {M : R[X] → Prop} {f : R[X]} (f0 : f.na
     (h_monomial : ∀ {n : ℕ} {a : R}, a ≠ 0 → n ≠ 0 → M (monomial n a)) : M f := by
   suffices f.natDegree = 0 ∨ M f from Or.recOn this (fun h => (f0 h).elim) id
   refine Polynomial.induction_on f ?_ ?_ ?_
-  · exact fun a => Or.inl (natDegree_C _)
-  · rintro p q (hp | hp) (hq | hq)
-    · refine Or.inl ?_
-      rw [eq_C_of_natDegree_eq_zero hp, eq_C_of_natDegree_eq_zero hq, ← C_add, natDegree_C]
-    · refine Or.inr ?_
-      rw [eq_C_of_natDegree_eq_zero hp]
-      exact h_C_add hq
-    · refine Or.inr ?_
-      rw [eq_C_of_natDegree_eq_zero hq, add_comm]
-      exact h_C_add hp
-    · exact Or.inr (h_add hp hq)
-  · intro n a _
-    by_cases a0 : a = 0
-    · exact Or.inl (by rw [a0, C_0, zero_mul, natDegree_zero])
-    · refine Or.inr ?_
-      rw [C_mul_X_pow_eq_monomial]
-      exact h_monomial a0 n.succ_ne_zero
+  exact fun a => Or.inl (natDegree_C _)
+  rintro p q (hp | hp) (hq | hq)
+  refine Or.inl ?_
+  rw [eq_C_of_natDegree_eq_zero hp, eq_C_of_natDegree_eq_zero hq, ← C_add, natDegree_C]
+  refine Or.inr ?_
+  rw [eq_C_of_natDegree_eq_zero hp]
+  exact h_C_add hq
+  refine Or.inr ?_
+  rw [eq_C_of_natDegree_eq_zero hq, add_comm]
+  exact h_C_add hp
+  exact Or.inr (h_add hp hq)
+  intro n a _
+  by_cases a0 : a = 0
+  exact Or.inl (by rw [a0, C_0, zero_mul, natDegree_zero])
+  refine Or.inr ?_
+  rw [C_mul_X_pow_eq_monomial]
+  exact h_monomial a0 n.succ_ne_zero
 
 end Semiring
 

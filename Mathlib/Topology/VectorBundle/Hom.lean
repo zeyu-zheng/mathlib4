@@ -95,17 +95,17 @@ theorem continuousOn_continuousLinearMapCoordChange [VectorBundle 𝕜₁ F₁ E
   have h₃ := continuousOn_coordChange 𝕜₁ e₁' e₁
   have h₄ := continuousOn_coordChange 𝕜₂ e₂ e₂'
   refine ((h₁.comp_continuousOn (h₄.mono ?_)).clm_comp (h₂.comp_continuousOn (h₃.mono ?_))).congr ?_
-  · mfld_set_tac
-  · mfld_set_tac
-  · intro b _; ext L v
-    -- Porting note: was
-    -- simp only [continuousLinearMapCoordChange, ContinuousLinearEquiv.coe_coe,
-    --   ContinuousLinearEquiv.arrowCongrₛₗ_apply, LinearEquiv.toFun_eq_coe, coe_comp',
-    --   ContinuousLinearEquiv.arrowCongrSL_apply, comp_apply, Function.comp, compSL_apply,
-    --   flip_apply, ContinuousLinearEquiv.symm_symm]
-    -- Now `simp` fails to use `ContinuousLinearMap.comp_apply` in this case
-    dsimp [continuousLinearMapCoordChange]
-    rw [ContinuousLinearEquiv.symm_symm]
+  mfld_set_tac
+  mfld_set_tac
+  intro b _; ext L v
+  -- Porting note: was
+  -- simp only [continuousLinearMapCoordChange, ContinuousLinearEquiv.coe_coe,
+  --   ContinuousLinearEquiv.arrowCongrₛₗ_apply, LinearEquiv.toFun_eq_coe, coe_comp',
+  --   ContinuousLinearEquiv.arrowCongrSL_apply, comp_apply, Function.comp, compSL_apply,
+  --   flip_apply, ContinuousLinearEquiv.symm_symm]
+  -- Now `simp` fails to use `ContinuousLinearMap.comp_apply` in this case
+  dsimp [continuousLinearMapCoordChange]
+  rw [ContinuousLinearEquiv.symm_symm]
 
 variable (σ e₁ e₁' e₂ e₂')
 variable [e₁.IsLinear 𝕜₁] [e₁'.IsLinear 𝕜₁] [e₂.IsLinear 𝕜₂] [e₂'.IsLinear 𝕜₂]
@@ -170,8 +170,8 @@ theorem continuousLinearMap_symm_apply' {b : B} (hb : b ∈ e₁.baseSet ∩ e�
     (continuousLinearMap σ e₁ e₂).symm b L =
       (e₂.symmL 𝕜₂ b).comp (L.comp <| e₁.continuousLinearMapAt 𝕜₁ b) := by
   rw [symm_apply]
-  · rfl
-  · exact hb
+  rfl
+  exact hb
 
 theorem continuousLinearMapCoordChange_apply (b : B)
     (hb : b ∈ e₁.baseSet ∩ e₂.baseSet ∩ (e₁'.baseSet ∩ e₂'.baseSet)) (L : F₁ →SL[σ] F₂) :

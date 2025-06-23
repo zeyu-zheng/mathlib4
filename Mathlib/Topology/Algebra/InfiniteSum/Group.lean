@@ -69,9 +69,9 @@ theorem HasProd.update (hf : HasProd f a₁) (b : β) [DecidableEq β] (a : α) 
     HasProd (update f b a) (a / f b * a₁) := by
   convert (hasProd_ite_eq b (a / f b)).mul hf with b'
   by_cases h : b' = b
-  · rw [h, update_same]
-    simp [eq_self_iff_true, if_true, sub_add_cancel]
-  · simp only [h, update_noteq, if_false, Ne, one_mul, not_false_iff]
+  rw [h, update_same]
+  simp [eq_self_iff_true, if_true, sub_add_cancel]
+  simp only [h, update_noteq, if_false, Ne, one_mul, not_false_iff]
 
 @[to_additive]
 theorem Multipliable.update (hf : Multipliable f) (b : β) [DecidableEq β] (a : α) :
@@ -121,9 +121,9 @@ theorem Set.Finite.multipliable_compl_iff {s : Set β} (hs : s.Finite) :
 theorem hasProd_ite_div_hasProd [DecidableEq β] (hf : HasProd f a) (b : β) :
     HasProd (fun n ↦ ite (n = b) 1 (f n)) (a / f b) := by
   convert hf.update b 1 using 1
-  · ext n
-    rw [Function.update_apply]
-  · rw [div_mul_eq_mul_div, one_mul]
+  ext n
+  rw [Function.update_apply]
+  rw [div_mul_eq_mul_div, one_mul]
 
 section tprod
 
@@ -132,9 +132,9 @@ variable [T2Space α]
 @[to_additive]
 theorem tprod_inv : ∏' b, (f b)⁻¹ = (∏' b, f b)⁻¹ := by
   by_cases hf : Multipliable f
-  · exact hf.hasProd.inv.tprod_eq
-  · simp [tprod_eq_one_of_not_multipliable hf,
-      tprod_eq_one_of_not_multipliable (mt Multipliable.of_inv hf)]
+  exact hf.hasProd.inv.tprod_eq
+  simp [tprod_eq_one_of_not_multipliable hf,
+    tprod_eq_one_of_not_multipliable (mt Multipliable.of_inv hf)]
 
 @[to_additive]
 theorem tprod_div (hf : Multipliable f) (hg : Multipliable g) :
@@ -183,21 +183,21 @@ theorem cauchySeq_finset_iff_prod_vanishing :
     uniformity_eq_comap_nhds_one α, tendsto_comap_iff, (· ∘ ·), atTop_neBot, true_and]
   rw [tendsto_atTop']
   constructor
-  · intro h e he
-    obtain ⟨⟨s₁, s₂⟩, h⟩ := h e he
-    use s₁ ∪ s₂
-    intro t ht
-    specialize h (s₁ ∪ s₂, s₁ ∪ s₂ ∪ t) ⟨le_sup_left, le_sup_of_le_left le_sup_right⟩
-    simpa only [Finset.prod_union ht.symm, mul_div_cancel_left] using h
-  · rintro h e he
-    rcases exists_nhds_split_inv he with ⟨d, hd, hde⟩
-    rcases h d hd with ⟨s, h⟩
-    use (s, s)
-    rintro ⟨t₁, t₂⟩ ⟨ht₁, ht₂⟩
-    have : ((∏ b ∈ t₂, f b) / ∏ b ∈ t₁, f b) = (∏ b ∈ t₂ \ s, f b) / ∏ b ∈ t₁ \ s, f b
-    rw [← Finset.prod_sdiff ht₁, ← Finset.prod_sdiff ht₂, mul_div_mul_right_eq_div]
-    simp only [this]
-    exact hde _ (h _ Finset.sdiff_disjoint) _ (h _ Finset.sdiff_disjoint)
+  intro h e he
+  obtain ⟨⟨s₁, s₂⟩, h⟩ := h e he
+  use s₁ ∪ s₂
+  intro t ht
+  specialize h (s₁ ∪ s₂, s₁ ∪ s₂ ∪ t) ⟨le_sup_left, le_sup_of_le_left le_sup_right⟩
+  simpa only [Finset.prod_union ht.symm, mul_div_cancel_left] using h
+  rintro h e he
+  rcases exists_nhds_split_inv he with ⟨d, hd, hde⟩
+  rcases h d hd with ⟨s, h⟩
+  use (s, s)
+  rintro ⟨t₁, t₂⟩ ⟨ht₁, ht₂⟩
+  have : ((∏ b ∈ t₂, f b) / ∏ b ∈ t₁, f b) = (∏ b ∈ t₂ \ s, f b) / ∏ b ∈ t₁ \ s, f b
+  rw [← Finset.prod_sdiff ht₁, ← Finset.prod_sdiff ht₂, mul_div_mul_right_eq_div]
+  simp only [this]
+  exact hde _ (h _ Finset.sdiff_disjoint) _ (h _ Finset.sdiff_disjoint)
 
 open Classical in
 @[to_additive]
@@ -206,19 +206,19 @@ theorem cauchySeq_finset_iff_tprod_vanishing :
       ∀ e ∈ 𝓝 (1 : α), ∃ s : Finset β, ∀ t : Set β, Disjoint t s → (∏' b : t, f b) ∈ e := by
   simp_rw [cauchySeq_finset_iff_prod_vanishing, Set.disjoint_left, disjoint_left]
   refine ⟨fun vanish e he ↦ ?_, fun vanish e he ↦ ?_⟩
-  · obtain ⟨o, ho, o_closed, oe⟩ := exists_mem_nhds_isClosed_subset he
-    obtain ⟨s, hs⟩ := vanish o ho
-    refine ⟨s, fun t hts ↦ oe ?_⟩
-    by_cases ht : Multipliable fun a : t ↦ f a
-    refine o_closed.mem_of_tendsto ht.hasProd (eventually_of_forall fun t' ↦ ?_)
-    rw [← prod_subtype_map_embedding fun _ _ ↦ by rfl]
-    apply hs
-    simp_rw [Finset.mem_map]
-    rintro _ ⟨b, -, rfl⟩
-    exact hts b.prop
-    · exact tprod_eq_one_of_not_multipliable ht ▸ mem_of_mem_nhds ho
-  · obtain ⟨s, hs⟩ := vanish _ he
-    exact ⟨s, fun t hts ↦ (t.tprod_subtype f).symm ▸ hs _ hts⟩
+  obtain ⟨o, ho, o_closed, oe⟩ := exists_mem_nhds_isClosed_subset he
+  obtain ⟨s, hs⟩ := vanish o ho
+  refine ⟨s, fun t hts ↦ oe ?_⟩
+  by_cases ht : Multipliable fun a : t ↦ f a
+  refine o_closed.mem_of_tendsto ht.hasProd (eventually_of_forall fun t' ↦ ?_)
+  rw [← prod_subtype_map_embedding fun _ _ ↦ by rfl]
+  apply hs
+  simp_rw [Finset.mem_map]
+  rintro _ ⟨b, -, rfl⟩
+  exact hts b.prop
+  exact tprod_eq_one_of_not_multipliable ht ▸ mem_of_mem_nhds ho
+  obtain ⟨s, hs⟩ := vanish _ he
+  exact ⟨s, fun t hts ↦ (t.tprod_subtype f).symm ▸ hs _ hts⟩
 
 variable [CompleteSpace α]
 
@@ -316,12 +316,12 @@ the whole space. This does not need a summability assumption, as otherwise all s
 theorem tendsto_tprod_compl_atTop_one (f : α → G) :
     Tendsto (fun s : Finset α ↦ ∏' a : { x // x ∉ s }, f a) atTop (𝓝 1) := by
   by_cases H : Multipliable f
-  · intro e he
-    obtain ⟨s, hs⟩ := H.tprod_vanishing he
-    rw [Filter.mem_map, mem_atTop_sets]
-    exact ⟨s, fun t hts ↦ hs _ <| Set.disjoint_left.mpr fun a ha has ↦ ha (hts has)⟩
-  · refine tendsto_const_nhds.congr fun _ ↦ (tprod_eq_one_of_not_multipliable ?_).symm
-    rwa [Finset.multipliable_compl_iff]
+  intro e he
+  obtain ⟨s, hs⟩ := H.tprod_vanishing he
+  rw [Filter.mem_map, mem_atTop_sets]
+  exact ⟨s, fun t hts ↦ hs _ <| Set.disjoint_left.mpr fun a ha has ↦ ha (hts has)⟩
+  refine tendsto_const_nhds.congr fun _ ↦ (tprod_eq_one_of_not_multipliable ?_).symm
+  rwa [Finset.multipliable_compl_iff]
 
 /-- Product divergence test: if `f` is unconditionally multipliable, then `f x` tends to one along
 `cofinite`. -/
@@ -332,7 +332,7 @@ theorem Multipliable.tendsto_cofinite_one (hf : Multipliable f) : Tendsto f cofi
   rw [Filter.mem_map]
   rcases hf.vanishing he with ⟨s, hs⟩
   refine s.eventually_cofinite_nmem.mono fun x hx ↦ ?_
-  · simpa using hs {x} (disjoint_singleton_left.2 hx)
+  simpa using hs {x} (disjoint_singleton_left.2 hx)
 
 @[to_additive]
 theorem Multipliable.countable_mulSupport [FirstCountableTopology G] [T1Space G]
@@ -343,24 +343,24 @@ theorem Multipliable.countable_mulSupport [FirstCountableTopology G] [T1Space G]
 theorem multipliable_const_iff [Infinite β] [T2Space G] (a : G) :
     Multipliable (fun _ : β ↦ a) ↔ a = 1 := by
   refine ⟨fun h ↦ ?_, ?_⟩
-  · by_contra ha
-    have : {a}ᶜ ∈ 𝓝 1 := compl_singleton_mem_nhds (Ne.symm ha)
-    have : Finite β
-    simpa [← Set.finite_univ_iff] using h.tendsto_cofinite_one this
-    exact not_finite β
-  · rintro rfl
-    exact multipliable_one
+  by_contra ha
+  have : {a}ᶜ ∈ 𝓝 1 := compl_singleton_mem_nhds (Ne.symm ha)
+  have : Finite β
+  simpa [← Set.finite_univ_iff] using h.tendsto_cofinite_one this
+  exact not_finite β
+  rintro rfl
+  exact multipliable_one
 
 @[to_additive (attr := simp)]
 theorem tprod_const [T2Space G] (a : G) : ∏' _ : β, a = a ^ (Nat.card β) := by
   rcases finite_or_infinite β with hβ|hβ
-  · letI : Fintype β := Fintype.ofFinite β
-    rw [tprod_eq_prod (s := univ) (fun x hx ↦ (hx (mem_univ x)).elim)]
-    simp only [prod_const, Nat.card_eq_fintype_card, Fintype.card]
-  · simp only [Nat.card_eq_zero_of_infinite, pow_zero]
-    rcases eq_or_ne a 1 with rfl|ha
-    · simp
-    · apply tprod_eq_one_of_not_multipliable
-      simpa [multipliable_const_iff] using ha
+  letI : Fintype β := Fintype.ofFinite β
+  rw [tprod_eq_prod (s := univ) (fun x hx ↦ (hx (mem_univ x)).elim)]
+  simp only [prod_const, Nat.card_eq_fintype_card, Fintype.card]
+  simp only [Nat.card_eq_zero_of_infinite, pow_zero]
+  rcases eq_or_ne a 1 with rfl|ha
+  simp
+  apply tprod_eq_one_of_not_multipliable
+  simpa [multipliable_const_iff] using ha
 
 end TopologicalGroup

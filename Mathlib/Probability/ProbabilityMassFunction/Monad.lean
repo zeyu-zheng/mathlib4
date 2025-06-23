@@ -67,10 +67,10 @@ variable (s : Set α)
 theorem toOuterMeasure_pure_apply : (pure a).toOuterMeasure s = if a ∈ s then 1 else 0 := by
   refine (toOuterMeasure_apply (pure a) s).trans ?_
   split_ifs with ha
-  · refine (tsum_congr fun b => ?_).trans (tsum_ite_eq a 1)
-    exact ite_eq_left_iff.2 fun hb => symm (ite_eq_right_iff.2 fun h => (hb <| h.symm ▸ ha).elim)
-  · refine (tsum_congr fun b => ?_).trans tsum_zero
-    exact ite_eq_right_iff.2 fun hb => ite_eq_right_iff.2 fun h => (ha <| h ▸ hb).elim
+  refine (tsum_congr fun b => ?_).trans (tsum_ite_eq a 1)
+  exact ite_eq_left_iff.2 fun hb => symm (ite_eq_right_iff.2 fun h => (hb <| h.symm ▸ ha).elim)
+  refine (tsum_congr fun b => ?_).trans tsum_zero
+  exact ite_eq_right_iff.2 fun hb => ite_eq_right_iff.2 fun h => (ha <| h ▸ hb).elim
 
 variable [MeasurableSpace α]
 
@@ -256,10 +256,10 @@ theorem bindOnSupport_bindOnSupport (p : PMF α) (f : ∀ a ∈ p.support, PMF �
   refine ENNReal.tsum_comm.trans (tsum_congr fun a' => tsum_congr fun b => ?_)
   split_ifs with h _ h_1 _ h_2
   any_goals ring1
-  · have := h_1 a'
-    simp? [h] at this says simp only [h, ↓reduceDIte, mul_eq_zero, false_or] at this
-    contradiction
-  · simp [h_2]
+  have := h_1 a'
+  simp? [h] at this says simp only [h, ↓reduceDIte, mul_eq_zero, false_or] at this
+  contradiction
+  simp [h_2]
 
 theorem bindOnSupport_comm (p : PMF α) (q : PMF β) (f : ∀ a ∈ p.support, ∀ b ∈ q.support, PMF γ) :
     (p.bindOnSupport fun a ha => q.bindOnSupport (f a ha)) =

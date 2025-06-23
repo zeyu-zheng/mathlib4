@@ -169,9 +169,9 @@ lemma condexpKernel_ae_eq_trim_condexp [IsFiniteMeasure μ]
     (hm : m ≤ mΩ) {s : Set Ω} (hs : MeasurableSet s) :
     (fun ω ↦ (condexpKernel μ m ω s).toReal) =ᵐ[μ.trim hm] μ⟦s | m⟧ := by
   rw [ae_eq_trim_iff hm _ stronglyMeasurable_condexp]
-  · exact condexpKernel_ae_eq_condexp hm hs
-  · refine Measurable.stronglyMeasurable ?_
-    exact @Measurable.ennreal_toReal _ m _ (measurable_condexpKernel hs)
+  exact condexpKernel_ae_eq_condexp hm hs
+  refine Measurable.stronglyMeasurable ?_
+  exact @Measurable.ennreal_toReal _ m _ (measurable_condexpKernel hs)
 
 theorem condexp_ae_eq_integral_condexpKernel' [NormedAddCommGroup F] {f : Ω → F}
     [NormedSpace ℝ F] [CompleteSpace F] (hf_int : Integrable f μ) :

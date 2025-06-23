@@ -31,17 +31,17 @@ theorem map_inv_natCast_smul [AddCommMonoid M] [AddCommMonoid M₂] {F : Type*} 
     [DivisionSemiring R] [DivisionSemiring S] [Module R M]
     [Module S M₂] (n : ℕ) (x : M) : f ((n⁻¹ : R) • x) = (n⁻¹ : S) • f x := by
   by_cases hR : (n : R) = 0 <;> by_cases hS : (n : S) = 0
-  · simp [hR, hS, map_zero f]
-  · suffices ∀ y, f y = 0 by rw [this, this, smul_zero]
-    clear x
-    intro x
-    rw [← inv_smul_smul₀ hS (f x), ← map_natCast_smul f R S]
-    simp [hR, map_zero f]
-  · suffices ∀ y, f y = 0 by simp [this]
-    clear x
-    intro x
-    rw [← smul_inv_smul₀ hR x, map_natCast_smul f R S, hS, zero_smul]
-  · rw [← inv_smul_smul₀ hS (f _), ← map_natCast_smul f R S, smul_inv_smul₀ hR]
+  simp [hR, hS, map_zero f]
+  suffices ∀ y, f y = 0 by rw [this, this, smul_zero]
+  clear x
+  intro x
+  rw [← inv_smul_smul₀ hS (f x), ← map_natCast_smul f R S]
+  simp [hR, map_zero f]
+  suffices ∀ y, f y = 0 by simp [this]
+  clear x
+  intro x
+  rw [← smul_inv_smul₀ hR x, map_natCast_smul f R S, hS, zero_smul]
+  rw [← inv_smul_smul₀ hS (f _), ← map_natCast_smul f R S, smul_inv_smul₀ hR]
 
 @[deprecated (since := "2024-04-17")]
 alias map_inv_nat_cast_smul := map_inv_natCast_smul
@@ -50,9 +50,9 @@ theorem map_inv_intCast_smul [AddCommGroup M] [AddCommGroup M₂] {F : Type*} [F
     [AddMonoidHomClass F M M₂] (f : F) (R S : Type*) [DivisionRing R] [DivisionRing S] [Module R M]
     [Module S M₂] (z : ℤ) (x : M) : f ((z⁻¹ : R) • x) = (z⁻¹ : S) • f x := by
   obtain ⟨n, rfl | rfl⟩ := z.eq_nat_or_neg
-  · rw [Int.cast_natCast, Int.cast_natCast, map_inv_natCast_smul _ R S]
-  · simp_rw [Int.cast_neg, Int.cast_natCast, inv_neg, neg_smul, map_neg,
-      map_inv_natCast_smul _ R S]
+  rw [Int.cast_natCast, Int.cast_natCast, map_inv_natCast_smul _ R S]
+  simp_rw [Int.cast_neg, Int.cast_natCast, inv_neg, neg_smul, map_neg,
+    map_inv_natCast_smul _ R S]
 
 @[deprecated (since := "2024-04-17")]
 alias map_inv_int_cast_smul := map_inv_intCast_smul

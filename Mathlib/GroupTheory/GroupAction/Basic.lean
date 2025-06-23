@@ -161,12 +161,12 @@ theorem mem_fixedPoints_iff_card_orbit_eq_one {a : α} [Fintype (orbit M a)] :
     a ∈ fixedPoints M α ↔ Fintype.card (orbit M a) = 1 := by
   rw [Fintype.card_eq_one_iff, mem_fixedPoints]
   constructor
-  · exact fun h => ⟨⟨a, mem_orbit_self _⟩, fun ⟨a, ⟨x, hx⟩⟩ => Subtype.eq <| by simp [h x, hx.symm]⟩
-  · intro h x
-    rcases h with ⟨⟨z, hz⟩, hz₁⟩
-    calc
-      x • a = z := Subtype.mk.inj (hz₁ ⟨x • a, mem_orbit _ _⟩)
-      _ = a := (Subtype.mk.inj (hz₁ ⟨a, mem_orbit_self _⟩)).symm
+  exact fun h => ⟨⟨a, mem_orbit_self _⟩, fun ⟨a, ⟨x, hx⟩⟩ => Subtype.eq <| by simp [h x, hx.symm]⟩
+  intro h x
+  rcases h with ⟨⟨z, hz⟩, hz₁⟩
+  calc
+    x • a = z := Subtype.mk.inj (hz₁ ⟨x • a, mem_orbit _ _⟩)
+    _ = a := (Subtype.mk.inj (hz₁ ⟨a, mem_orbit_self _⟩)).symm
 
 end FixedPoints
 
@@ -346,14 +346,14 @@ lemma mem_orbit_symm {a₁ a₂ : α} : a₁ ∈ orbit G a₂ ↔ a₂ ∈ orbit
 lemma mem_subgroup_orbit_iff {H : Subgroup G} {x : α} {a b : orbit G x} :
     a ∈ MulAction.orbit H b ↔ (a : α) ∈ MulAction.orbit H (b : α) := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · rcases h with ⟨g, rfl⟩
-    simp_rw [Submonoid.smul_def, Subgroup.coe_toSubmonoid, orbit.coe_smul, ← Submonoid.smul_def]
-    exact MulAction.mem_orbit _ g
-  · rcases h with ⟨g, h⟩
-    simp_rw [Submonoid.smul_def, Subgroup.coe_toSubmonoid, ← orbit.coe_smul,
-             ← Submonoid.smul_def, ← Subtype.ext_iff] at h
-    subst h
-    exact MulAction.mem_orbit _ g
+  rcases h with ⟨g, rfl⟩
+  simp_rw [Submonoid.smul_def, Subgroup.coe_toSubmonoid, orbit.coe_smul, ← Submonoid.smul_def]
+  exact MulAction.mem_orbit _ g
+  rcases h with ⟨g, h⟩
+  simp_rw [Submonoid.smul_def, Subgroup.coe_toSubmonoid, ← orbit.coe_smul,
+           ← Submonoid.smul_def, ← Subtype.ext_iff] at h
+  subst h
+  exact MulAction.mem_orbit _ g
 
 variable (G α)
 
@@ -391,18 +391,18 @@ theorem quotient_preimage_image_eq_union_mul (U : Set α) :
   set f : α → Quotient (MulAction.orbitRel G α) := Quotient.mk'
   ext a
   constructor
-  · rintro ⟨b, hb, hab⟩
-    obtain ⟨g, rfl⟩ := Quotient.exact hab
-    rw [Set.mem_iUnion]
-    exact ⟨g⁻¹, g • a, hb, inv_smul_smul g a⟩
-  · intro hx
-    rw [Set.mem_iUnion] at hx
-    obtain ⟨g, u, hu₁, hu₂⟩ := hx
-    rw [Set.mem_preimage, Set.mem_image]
-    refine ⟨g⁻¹ • a, ?_, by simp only [f, Quotient.eq']; use g⁻¹⟩
-    rw [← hu₂]
-    convert hu₁
-    simp only [inv_smul_smul]
+  rintro ⟨b, hb, hab⟩
+  obtain ⟨g, rfl⟩ := Quotient.exact hab
+  rw [Set.mem_iUnion]
+  exact ⟨g⁻¹, g • a, hb, inv_smul_smul g a⟩
+  intro hx
+  rw [Set.mem_iUnion] at hx
+  obtain ⟨g, u, hu₁, hu₂⟩ := hx
+  rw [Set.mem_preimage, Set.mem_image]
+  refine ⟨g⁻¹ • a, ?_, by simp only [f, Quotient.eq']; use g⁻¹⟩
+  rw [← hu₂]
+  convert hu₁
+  simp only [inv_smul_smul]
 
 @[to_additive]
 theorem disjoint_image_image_iff {U V : Set α} :
@@ -413,12 +413,12 @@ theorem disjoint_image_image_iff {U V : Set α} :
   refine
     ⟨fun h a a_in_U g g_in_V =>
       h.le_bot ⟨⟨a, a_in_U, Quotient.sound ⟨g⁻¹, ?_⟩⟩, ⟨g • a, g_in_V, rfl⟩⟩, ?_⟩
-  · simp
-  · intro h
-    rw [Set.disjoint_left]
-    rintro _ ⟨b, hb₁, hb₂⟩ ⟨c, hc₁, hc₂⟩
-    obtain ⟨g, rfl⟩ := Quotient.exact (hc₂.trans hb₂.symm)
-    exact h b hb₁ g hc₁
+  simp
+  intro h
+  rw [Set.disjoint_left]
+  rintro _ ⟨b, hb₁, hb₂⟩ ⟨c, hc₁, hc₂⟩
+  obtain ⟨g, rfl⟩ := Quotient.exact (hc₂.trans hb₂.symm)
+  exact h b hb₁ g hc₁
 
 @[to_additive]
 theorem image_inter_image_iff (U V : Set α) :
@@ -441,10 +441,10 @@ subsingleton. -/
 theorem pretransitive_iff_subsingleton_quotient :
     IsPretransitive G α ↔ Subsingleton (orbitRel.Quotient G α) := by
   refine ⟨fun _ ↦ ⟨fun a b ↦ ?_⟩, fun _ ↦ ⟨fun a b ↦ ?_⟩⟩
-  · refine Quot.inductionOn a (fun x ↦ ?_)
-    exact Quot.inductionOn b (fun y ↦ Quot.sound <| exists_smul_eq G y x)
-  · have h : Quotient.mk (orbitRel G α) b = ⟦a⟧ := Subsingleton.elim _ _
-    exact Quotient.eq_rel.mp h
+  refine Quot.inductionOn a (fun x ↦ ?_)
+  exact Quot.inductionOn b (fun y ↦ Quot.sound <| exists_smul_eq G y x)
+  have h : Quotient.mk (orbitRel G α) b = ⟦a⟧ := Subsingleton.elim _ _
+  exact Quotient.eq_rel.mp h
 
 /-- If `α` is non-empty, an action is pretransitive if and only if the quotient has exactly one
 element. -/
@@ -545,14 +545,14 @@ instance (x : orbitRel.Quotient G α) : IsPretransitive G x.orbit where
 lemma orbitRel.Quotient.mem_subgroup_orbit_iff {H : Subgroup G} {x : orbitRel.Quotient G α}
     {a b : x.orbit} : (a : α) ∈ MulAction.orbit H (b : α) ↔ a ∈ MulAction.orbit H b := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · rcases h with ⟨g, h⟩
-    simp_rw [Submonoid.smul_def, Subgroup.coe_toSubmonoid, ← orbit.coe_smul,
-      ← Submonoid.smul_def, ← Subtype.ext_iff] at h
-    subst h
-    exact MulAction.mem_orbit _ g
-  · rcases h with ⟨g, rfl⟩
-    simp_rw [Submonoid.smul_def, Subgroup.coe_toSubmonoid, orbit.coe_smul, ← Submonoid.smul_def]
-    exact MulAction.mem_orbit _ g
+  rcases h with ⟨g, h⟩
+  simp_rw [Submonoid.smul_def, Subgroup.coe_toSubmonoid, ← orbit.coe_smul,
+    ← Submonoid.smul_def, ← Subtype.ext_iff] at h
+  subst h
+  exact MulAction.mem_orbit _ g
+  rcases h with ⟨g, rfl⟩
+  simp_rw [Submonoid.smul_def, Subgroup.coe_toSubmonoid, orbit.coe_smul, ← Submonoid.smul_def]
+  exact MulAction.mem_orbit _ g
 
 @[to_additive]
 lemma orbitRel.Quotient.subgroup_quotient_eq_iff {H : Subgroup G} {x : orbitRel.Quotient G α}
@@ -732,19 +732,19 @@ variable {G : Type*} [Group G] {α : Type*} [MulAction G α]
 theorem le_stabilizer_iff_smul_le (s : Set α) (H : Subgroup G) :
     H ≤ stabilizer G s ↔ ∀ g ∈ H, g • s ⊆ s := by
   constructor
-  · intro hyp g hg
-    apply Eq.subset
-    rw [← mem_stabilizer_iff]
-    exact hyp hg
-  · intro hyp g hg
-    rw [mem_stabilizer_iff]
-    apply subset_antisymm (hyp g hg)
-    intro x hx
-    use g⁻¹ • x
-    constructor
-    · apply hyp g⁻¹ (inv_mem hg)
-      simp only [Set.smul_mem_smul_set_iff, hx]
-    · simp only [smul_inv_smul]
+  intro hyp g hg
+  apply Eq.subset
+  rw [← mem_stabilizer_iff]
+  exact hyp hg
+  intro hyp g hg
+  rw [mem_stabilizer_iff]
+  apply subset_antisymm (hyp g hg)
+  intro x hx
+  use g⁻¹ • x
+  constructor
+  apply hyp g⁻¹ (inv_mem hg)
+  simp only [Set.smul_mem_smul_set_iff, hx]
+  simp only [smul_inv_smul]
 
 /-- To prove membership to stabilizer of a *finite set*, it is enough to prove one inclusion. -/
 theorem mem_stabilizer_of_finite_iff_smul_le (s : Set α) (hs : s.Finite) (g : G) :
@@ -753,16 +753,16 @@ theorem mem_stabilizer_of_finite_iff_smul_le (s : Set α) (hs : s.Finite) (g : G
   haveI : Fintype (g • s : Set α) := Fintype.ofFinite _
   rw [mem_stabilizer_iff]
   constructor
-  · exact Eq.subset
-  · rw [← Set.toFinset_inj, ← Set.toFinset_subset_toFinset]
-    intro h
-    apply Finset.eq_of_subset_of_card_le h
-    apply le_of_eq
-    suffices (g • s).toFinset = Finset.map ⟨_, MulAction.injective g⟩ hs.toFinset by
-      rw [this, Finset.card_map, Set.toFinite_toFinset]
-    rw [← Finset.coe_inj]
-    simp only [Set.coe_toFinset, Set.toFinite_toFinset, Finset.coe_map,
-      Function.Embedding.coeFn_mk, Set.image_smul]
+  exact Eq.subset
+  rw [← Set.toFinset_inj, ← Set.toFinset_subset_toFinset]
+  intro h
+  apply Finset.eq_of_subset_of_card_le h
+  apply le_of_eq
+  suffices (g • s).toFinset = Finset.map ⟨_, MulAction.injective g⟩ hs.toFinset by
+    rw [this, Finset.card_map, Set.toFinite_toFinset]
+  rw [← Finset.coe_inj]
+  simp only [Set.coe_toFinset, Set.toFinite_toFinset, Finset.coe_map,
+    Function.Embedding.coeFn_mk, Set.image_smul]
 
 /-- To prove membership to stabilizer of a *finite set*, it is enough to prove one inclusion. -/
 theorem mem_stabilizer_of_finite_iff_le_smul (s : Set α) (hs : s.Finite) (g : G) :

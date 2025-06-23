@@ -76,12 +76,12 @@ theorem continuousOn_exp {s : Set ℂ} : ContinuousOn exp s :=
 lemma exp_sub_sum_range_isBigO_pow (n : ℕ) :
     (fun x ↦ exp x - ∑ i ∈ Finset.range n, x ^ i / i !) =O[𝓝 0] (· ^ n) := by
   rcases (zero_le n).eq_or_lt with rfl | hn
-  · simpa using continuous_exp.continuousAt.norm.isBoundedUnder_le
-  · refine .of_bound (n.succ / (n ! * n)) ?_
-    rw [NormedAddCommGroup.nhds_zero_basis_norm_lt.eventually_iff]
-    refine ⟨1, one_pos, fun x hx ↦ ?_⟩
-    convert exp_bound hx.out.le hn using 1
-    field_simp [mul_comm]
+  simpa using continuous_exp.continuousAt.norm.isBoundedUnder_le
+  refine .of_bound (n.succ / (n ! * n)) ?_
+  rw [NormedAddCommGroup.nhds_zero_basis_norm_lt.eventually_iff]
+  refine ⟨1, one_pos, fun x hx ↦ ?_⟩
+  convert exp_bound hx.out.le hn using 1
+  field_simp [mul_comm]
 
 lemma exp_sub_sum_range_succ_isLittleO_pow (n : ℕ) :
     (fun x ↦ exp x - ∑ i ∈ Finset.range (n + 1), x ^ i / i !) =o[𝓝 0] (· ^ n) :=
@@ -259,8 +259,8 @@ alias tendsto_pow_mul_exp_neg_atTop_nhds_0 := tendsto_pow_mul_exp_neg_atTop_nhds
 theorem tendsto_mul_exp_add_div_pow_atTop (b c : ℝ) (n : ℕ) (hb : 0 < b) :
     Tendsto (fun x => (b * exp x + c) / x ^ n) atTop atTop := by
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp only [pow_zero, div_one]
-    exact (tendsto_exp_atTop.const_mul_atTop hb).atTop_add tendsto_const_nhds
+  simp only [pow_zero, div_one]
+  exact (tendsto_exp_atTop.const_mul_atTop hb).atTop_add tendsto_const_nhds
   simp only [add_div, mul_div_assoc]
   exact
     ((tendsto_exp_div_pow_atTop n).const_mul_atTop hb).atTop_add
@@ -276,12 +276,12 @@ theorem tendsto_div_pow_mul_exp_add_atTop (b c : ℝ) (n : ℕ) (hb : 0 ≠ b) :
   ext x
   simp
   cases' lt_or_gt_of_ne hb with h h
-  · exact H b c h
-  · convert (H (-b) (-c) (neg_pos.mpr h)).neg using 1
-    · ext x
-      field_simp
-      rw [← neg_add (b * exp x) c, neg_div_neg_eq]
-    · rw [neg_zero]
+  exact H b c h
+  convert (H (-b) (-c) (neg_pos.mpr h)).neg using 1
+  ext x
+  field_simp
+  rw [← neg_add (b * exp x) c, neg_div_neg_eq]
+  rw [neg_zero]
 
 /-- `Real.exp` as an order isomorphism between `ℝ` and `(0, +∞)`. -/
 def expOrderIso : ℝ ≃o Ioi (0 : ℝ) :=

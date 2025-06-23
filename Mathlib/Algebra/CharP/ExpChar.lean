@@ -48,10 +48,10 @@ instance expChar_zero [CharZero R] : ExpChar R 1 := ExpChar.zero
 
 instance (S : Type*) [Semiring S] (p) [ExpChar R p] [ExpChar S p] : ExpChar (R × S) p := by
   obtain hp | ⟨hp⟩ := ‹ExpChar R p›
-  · have := Prod.charZero_of_left R S; exact .zero
+  have := Prod.charZero_of_left R S; exact .zero
   obtain _ | _ := ‹ExpChar S p›
-  · exact (Nat.not_prime_one hp).elim
-  · have := Prod.charP R S p; exact .prime hp
+  exact (Nat.not_prime_one hp).elim
+  have := Prod.charP R S p; exact .prime hp
 
 variable {R} in
 /-- The exponential characteristic is unique. -/
@@ -59,9 +59,9 @@ theorem ExpChar.eq {p q : ℕ} (hp : ExpChar R p) (hq : ExpChar R q) : p = q := 
   cases' hp with hp _ hp' hp
   · cases' hq with hq _ hq' hq
     exacts [rfl, False.elim (Nat.not_prime_zero (CharP.eq R hq (CharP.ofCharZero R) ▸ hq'))]
-  · cases' hq with hq _ hq' hq
-    exacts [False.elim (Nat.not_prime_zero (CharP.eq R hp (CharP.ofCharZero R) ▸ hp')),
-      CharP.eq R hp hq]
+  cases' hq with hq _ hq' hq
+  exacts [False.elim (Nat.not_prime_zero (CharP.eq R hp (CharP.ofCharZero R) ▸ hp')),
+    CharP.eq R hp hq]
 
 theorem ExpChar.congr {p : ℕ} (q : ℕ) [hq : ExpChar R q] (h : q = p) : ExpChar R p := h ▸ hq
 
@@ -70,8 +70,8 @@ noncomputable def ringExpChar (R : Type*) [NonAssocSemiring R] : ℕ := max (rin
 
 theorem ringExpChar.eq (q : ℕ) [h : ExpChar R q] : ringExpChar R = q := by
   cases' h with _ _ h _
-  · haveI := CharP.ofCharZero R
-    rw [ringExpChar, ringChar.eq R 0]; rfl
+  haveI := CharP.ofCharZero R
+  rw [ringExpChar, ringChar.eq R 0]; rfl
   rw [ringExpChar, ringChar.eq R q]
   exact Nat.max_eq_left h.one_lt.le
 
@@ -82,15 +82,15 @@ theorem ringExpChar.eq_one (R : Type*) [NonAssocSemiring R] [CharZero R] : ringE
 /-- The exponential characteristic is one if the characteristic is zero. -/
 theorem expChar_one_of_char_zero (q : ℕ) [hp : CharP R 0] [hq : ExpChar R q] : q = 1 := by
   cases' hq with q hq_one hq_prime hq_hchar
-  · rfl
-  · exact False.elim <| hq_prime.ne_zero <| hq_hchar.eq R hp
+  rfl
+  exact False.elim <| hq_prime.ne_zero <| hq_hchar.eq R hp
 
 /-- The characteristic equals the exponential characteristic iff the former is prime. -/
 theorem char_eq_expChar_iff (p q : ℕ) [hp : CharP R p] [hq : ExpChar R q] : p = q ↔ p.Prime := by
   cases' hq with q hq_one hq_prime hq_hchar
-  · rw [(CharP.eq R hp inferInstance : p = 0)]
-    decide
-  · exact ⟨fun hpq => hpq.symm ▸ hq_prime, fun _ => CharP.eq R hp hq_hchar⟩
+  rw [(CharP.eq R hp inferInstance : p = 0)]
+  decide
+  exact ⟨fun hpq => hpq.symm ▸ hq_prime, fun _ => CharP.eq R hp hq_hchar⟩
 
 section Nontrivial
 
@@ -99,23 +99,23 @@ variable [Nontrivial R]
 /-- The exponential characteristic is one if the characteristic is zero. -/
 theorem char_zero_of_expChar_one (p : ℕ) [hp : CharP R p] [hq : ExpChar R 1] : p = 0 := by
   cases hq
-  · exact CharP.eq R hp inferInstance
-  · exact False.elim (CharP.char_ne_one R 1 rfl)
+  exact CharP.eq R hp inferInstance
+  exact False.elim (CharP.char_ne_one R 1 rfl)
 
 -- This could be an instance, but there are no `ExpChar R 1` instances in mathlib.
 /-- The characteristic is zero if the exponential characteristic is one. -/
 theorem charZero_of_expChar_one' [hq : ExpChar R 1] : CharZero R := by
   cases hq
-  · assumption
-  · exact False.elim (CharP.char_ne_one R 1 rfl)
+  assumption
+  exact False.elim (CharP.char_ne_one R 1 rfl)
 
 /-- The exponential characteristic is one iff the characteristic is zero. -/
 theorem expChar_one_iff_char_zero (p q : ℕ) [CharP R p] [ExpChar R q] : q = 1 ↔ p = 0 := by
   constructor
-  · rintro rfl
-    exact char_zero_of_expChar_one R p
-  · rintro rfl
-    exact expChar_one_of_char_zero R q
+  rintro rfl
+  exact char_zero_of_expChar_one R p
+  rintro rfl
+  exact expChar_one_of_char_zero R q
 
 section NoZeroDivisors
 
@@ -124,8 +124,8 @@ variable [NoZeroDivisors R]
 /-- A helper lemma: the characteristic is prime if it is non-zero. -/
 theorem char_prime_of_ne_zero {p : ℕ} [hp : CharP R p] (p_ne_zero : p ≠ 0) : Nat.Prime p := by
   cases' CharP.char_is_prime_or_zero R p with h h
-  · exact h
-  · contradiction
+  exact h
+  contradiction
 
 /-- The exponential characteristic is a prime number or one.
 See also `CharP.char_is_prime_or_zero`. -/
@@ -175,7 +175,7 @@ theorem expChar_of_injective_ringHom {R A : Type*}
     [Semiring R] [Semiring A] {f : R →+* A} (h : Function.Injective f)
     (q : ℕ) [hR : ExpChar R q] : ExpChar A q := by
   cases' hR with _ _ hprime _
-  · haveI := charZero_of_injective_ringHom h; exact .zero
+  haveI := charZero_of_injective_ringHom h; exact .zero
   haveI := charP_of_injective_ringHom h q; exact .prime hprime
 
 /-- If `R →+* A` is injective, and `A` is of exponential characteristic `p`, then `R` is also of
@@ -201,61 +201,61 @@ theorem expChar_of_injective_algebraMap {R A : Type*}
 theorem add_pow_expChar_of_commute [Semiring R] {q : ℕ} [hR : ExpChar R q]
     (x y : R) (h : Commute x y) : (x + y) ^ q = x ^ q + y ^ q := by
   cases' hR with _ _ hprime _
-  · simp only [pow_one]
+  simp only [pow_one]
   haveI := Fact.mk hprime; exact add_pow_char_of_commute R x y h
 
 theorem add_pow_expChar_pow_of_commute [Semiring R] {q : ℕ} [hR : ExpChar R q]
     {n : ℕ} (x y : R) (h : Commute x y) : (x + y) ^ q ^ n = x ^ q ^ n + y ^ q ^ n := by
   cases' hR with _ _ hprime _
-  · simp only [one_pow, pow_one]
+  simp only [one_pow, pow_one]
   haveI := Fact.mk hprime; exact add_pow_char_pow_of_commute R x y h
 
 theorem sub_pow_expChar_of_commute [Ring R] {q : ℕ} [hR : ExpChar R q]
     (x y : R) (h : Commute x y) : (x - y) ^ q = x ^ q - y ^ q := by
   cases' hR with _ _ hprime _
-  · simp only [pow_one]
+  simp only [pow_one]
   haveI := Fact.mk hprime; exact sub_pow_char_of_commute R x y h
 
 theorem sub_pow_expChar_pow_of_commute [Ring R] {q : ℕ} [hR : ExpChar R q]
     {n : ℕ} (x y : R) (h : Commute x y) : (x - y) ^ q ^ n = x ^ q ^ n - y ^ q ^ n := by
   cases' hR with _ _ hprime _
-  · simp only [one_pow, pow_one]
+  simp only [one_pow, pow_one]
   haveI := Fact.mk hprime; exact sub_pow_char_pow_of_commute R x y h
 
 theorem add_pow_expChar [CommSemiring R] {q : ℕ} [hR : ExpChar R q]
     (x y : R) : (x + y) ^ q = x ^ q + y ^ q := by
   cases' hR with _ _ hprime _
-  · simp only [pow_one]
+  simp only [pow_one]
   haveI := Fact.mk hprime; exact add_pow_char R x y
 
 theorem add_pow_expChar_pow [CommSemiring R] {q : ℕ} [hR : ExpChar R q]
     {n : ℕ} (x y : R) : (x + y) ^ q ^ n = x ^ q ^ n + y ^ q ^ n := by
   cases' hR with _ _ hprime _
-  · simp only [one_pow, pow_one]
+  simp only [one_pow, pow_one]
   haveI := Fact.mk hprime; exact add_pow_char_pow R x y
 
 theorem sub_pow_expChar [CommRing R] {q : ℕ} [hR : ExpChar R q]
     (x y : R) : (x - y) ^ q = x ^ q - y ^ q := by
   cases' hR with _ _ hprime _
-  · simp only [pow_one]
+  simp only [pow_one]
   haveI := Fact.mk hprime; exact sub_pow_char R x y
 
 theorem sub_pow_expChar_pow [CommRing R] {q : ℕ} [hR : ExpChar R q]
     {n : ℕ} (x y : R) : (x - y) ^ q ^ n = x ^ q ^ n - y ^ q ^ n := by
   cases' hR with _ _ hprime _
-  · simp only [one_pow, pow_one]
+  simp only [one_pow, pow_one]
   haveI := Fact.mk hprime; exact sub_pow_char_pow R x y
 
 theorem ExpChar.neg_one_pow_expChar [Ring R] (q : ℕ) [hR : ExpChar R q] :
     (-1 : R) ^ q = -1 := by
   cases' hR with _ _ hprime _
-  · simp only [pow_one]
+  simp only [pow_one]
   haveI := Fact.mk hprime; exact CharP.neg_one_pow_char R q
 
 theorem ExpChar.neg_one_pow_expChar_pow [Ring R] (q n : ℕ) [hR : ExpChar R q] :
     (-1 : R) ^ q ^ n = -1 := by
   cases' hR with _ _ hprime _
-  · simp only [one_pow, pow_one]
+  simp only [one_pow, pow_one]
   haveI := Fact.mk hprime; exact CharP.neg_one_pow_char_pow R q n
 
 section frobenius

@@ -569,20 +569,20 @@ theorem single_injective {i} : Function.Injective (single i : β i → Π₀ i, 
 theorem single_eq_single_iff (i j : ι) (xi : β i) (xj : β j) :
     DFinsupp.single i xi = DFinsupp.single j xj ↔ i = j ∧ HEq xi xj ∨ xi = 0 ∧ xj = 0 := by
   constructor
-  · intro h
-    by_cases hij : i = j
-    · subst hij
-      exact Or.inl ⟨rfl, heq_of_eq (DFinsupp.single_injective h)⟩
-    · have h_coe : ⇑(DFinsupp.single i xi) = DFinsupp.single j xj := congr_arg (⇑) h
-      have hci := congr_fun h_coe i
-      have hcj := congr_fun h_coe j
-      rw [DFinsupp.single_eq_same] at hci hcj
-      rw [DFinsupp.single_eq_of_ne (Ne.symm hij)] at hci
-      rw [DFinsupp.single_eq_of_ne hij] at hcj
-      exact Or.inr ⟨hci, hcj.symm⟩
-  · rintro (⟨rfl, hxi⟩ | ⟨hi, hj⟩)
-    · rw [eq_of_heq hxi]
-    · rw [hi, hj, DFinsupp.single_zero, DFinsupp.single_zero]
+  intro h
+  by_cases hij : i = j
+  subst hij
+  exact Or.inl ⟨rfl, heq_of_eq (DFinsupp.single_injective h)⟩
+  have h_coe : ⇑(DFinsupp.single i xi) = DFinsupp.single j xj := congr_arg (⇑) h
+  have hci := congr_fun h_coe i
+  have hcj := congr_fun h_coe j
+  rw [DFinsupp.single_eq_same] at hci hcj
+  rw [DFinsupp.single_eq_of_ne (Ne.symm hij)] at hci
+  rw [DFinsupp.single_eq_of_ne hij] at hcj
+  exact Or.inr ⟨hci, hcj.symm⟩
+  rintro (⟨rfl, hxi⟩ | ⟨hi, hj⟩)
+  rw [eq_of_heq hxi]
+  rw [hi, hj, DFinsupp.single_zero, DFinsupp.single_zero]
 
 /-- `DFinsupp.single a b` is injective in `a`. For the statement that it is injective in `b`, see
 `DFinsupp.single_injective` -/
@@ -602,8 +602,8 @@ theorem filter_single (p : ι → Prop) [DecidablePred p] (i : ι) (x : β i) :
   dsimp at this
   rw [filter_apply, this]
   obtain rfl | hij := Decidable.eq_or_ne i j
-  · rfl
-  · rw [single_eq_of_ne hij, ite_self, ite_self]
+  rfl
+  rw [single_eq_of_ne hij, ite_self, ite_self]
 
 @[simp]
 theorem filter_single_pos {p : ι → Prop} [DecidablePred p] (i : ι) (x : β i) (h : p i) :
@@ -642,8 +642,8 @@ theorem zipWith_single_single (f : ∀ i, β₁ i → β₂ i → β i) (hf : �
   ext j
   rw [zipWith_apply]
   obtain rfl | hij := Decidable.eq_or_ne i j
-  · rw [single_eq_same, single_eq_same, single_eq_same]
-  · rw [single_eq_of_ne hij, single_eq_of_ne hij, single_eq_of_ne hij, hf]
+  rw [single_eq_same, single_eq_same, single_eq_same]
+  rw [single_eq_of_ne hij, single_eq_of_ne hij, single_eq_of_ne hij, hf]
 
 end SingleAndZipWith
 
@@ -665,15 +665,15 @@ theorem piecewise_single_erase (x : Π₀ i, β i) (i : ι)
     [∀ i' : ι, Decidable <| (i' ∈ ({i} : Set ι))] : -- Porting note: added Decidable hypothesis
     (single i (x i)).piecewise (x.erase i) {i} = x := by
   ext j; rw [piecewise_apply]; split_ifs with h
-  · rw [(id h : j = i), single_eq_same]
-  · exact erase_ne h
+  rw [(id h : j = i), single_eq_same]
+  exact erase_ne h
 
 theorem erase_eq_sub_single {β : ι → Type*} [∀ i, AddGroup (β i)] (f : Π₀ i, β i) (i : ι) :
     f.erase i = f - single i (f i) := by
   ext j
   rcases eq_or_ne i j with (rfl | h)
-  · simp
-  · simp [erase_ne h.symm, single_eq_of_ne h, @eq_comm _ j, h]
+  simp
+  simp [erase_ne h.symm, single_eq_of_ne h, @eq_comm _ j, h]
 
 @[simp]
 theorem erase_zero (i : ι) : erase i (0 : Π₀ i, β i) = 0 :=
@@ -734,22 +734,22 @@ theorem update_self : f.update i (f i) = f := by
 theorem update_eq_erase : f.update i 0 = f.erase i := by
   ext j
   rcases eq_or_ne i j with (rfl | hi)
-  · simp
-  · simp [hi.symm]
+  simp
+  simp [hi.symm]
 
 theorem update_eq_single_add_erase {β : ι → Type*} [∀ i, AddZeroClass (β i)] (f : Π₀ i, β i)
     (i : ι) (b : β i) : f.update i b = single i b + f.erase i := by
   ext j
   rcases eq_or_ne i j with (rfl | h)
-  · simp
-  · simp [Function.update_noteq h.symm, h, erase_ne, h.symm]
+  simp
+  simp [Function.update_noteq h.symm, h, erase_ne, h.symm]
 
 theorem update_eq_erase_add_single {β : ι → Type*} [∀ i, AddZeroClass (β i)] (f : Π₀ i, β i)
     (i : ι) (b : β i) : f.update i b = f.erase i + single i b := by
   ext j
   rcases eq_or_ne i j with (rfl | h)
-  · simp
-  · simp [Function.update_noteq h.symm, h, erase_ne, h.symm]
+  simp
+  simp [Function.update_noteq h.symm, h, erase_ne, h.symm]
 
 theorem update_eq_sub_add_single {β : ι → Type*} [∀ i, AddGroup (β i)] (f : Π₀ i, β i) (i : ι)
     (b : β i) : f.update i b = f - single i (f i) + single i b := by
@@ -829,18 +829,18 @@ protected theorem induction {p : (Π₀ i, β i) → Prop} (f : Π₀ i, β i) (
   induction' s using Trunc.induction_on with s
   cases' s with s H
   induction' s using Multiset.induction_on with i s ih generalizing f
-  · have : f = 0 := funext fun i => (H i).resolve_left (Multiset.not_mem_zero _)
-    subst this
-    exact h0
+  have : f = 0 := funext fun i => (H i).resolve_left (Multiset.not_mem_zero _)
+  subst this
+  exact h0
   have H2 : p (erase i ⟨f, Trunc.mk ⟨i ::ₘ s, H⟩⟩)
   dsimp only [erase, Trunc.map, Trunc.bind, Trunc.liftOn, Trunc.lift_mk,
     Function.comp, Subtype.coe_mk]
   have H2 : ∀ j, j ∈ s ∨ ite (j = i) 0 (f j) = 0
   intro j
   cases' H j with H2 H2
-  · cases' Multiset.mem_cons.1 H2 with H3 H3
-    · right; exact if_pos H3
-    · left; exact H3
+  cases' Multiset.mem_cons.1 H2 with H3 H3
+  right; exact if_pos H3
+  left; exact H3
   right
   split_ifs <;> [rfl; exact H2]
   have H3 : ∀ aux, (⟨fun j : ι => ite (j = i) 0 (f j), Trunc.mk ⟨i ::ₘ s, aux⟩⟩ : Π₀ i, β i) =
@@ -852,8 +852,8 @@ protected theorem induction {p : (Π₀ i, β i) → Prop} (f : Π₀ i, β i) (
   rw [← H3]
   change p (single i (f i) + _)
   cases' Classical.em (f i = 0) with h h
-  · rw [h, single_zero, zero_add]
-    exact H2
+  rw [h, single_zero, zero_add]
+  exact H2
   refine ha _ _ _ ?_ h H2
   rw [erase_same]
 
@@ -862,9 +862,9 @@ theorem induction₂ {p : (Π₀ i, β i) → Prop} (f : Π₀ i, β i) (h0 : p 
   DFinsupp.induction f h0 fun i b f h1 h2 h3 =>
     have h4 : f + single i b = single i b + f := by
       ext j; by_cases H : i = j
-      · subst H
-        simp [h1]
-      · simp [H]
+      subst H
+      simp [h1]
+      simp [H]
     Eq.recOn h4 <| ha i b f h1 h2 h3
 
 @[simp]
@@ -872,7 +872,7 @@ theorem add_closure_iUnion_range_single :
     AddSubmonoid.closure (⋃ i : ι, Set.range (single i : β i → Π₀ i, β i)) = ⊤ :=
   top_unique fun x _ => by
     apply DFinsupp.induction x
-    · exact AddSubmonoid.zero_mem _
+    exact AddSubmonoid.zero_mem _
     exact fun a b f _ _ hf =>
       AddSubmonoid.add_mem _
         (AddSubmonoid.subset_closure <| Set.mem_iUnion.2 ⟨a, Set.mem_range_self _⟩) hf
@@ -938,8 +938,8 @@ theorem single_smul {i : ι} (c : γ) (x : β i) : single i (c • x) = c • si
   ext fun i => by
     simp only [smul_apply, single_apply]
     split_ifs with h
-    · cases h; rfl
-    · rw [smul_zero]
+    cases h; rfl
+    rw [smul_zero]
 
 end
 
@@ -1037,8 +1037,8 @@ theorem support_subset_iff {s : Set ι} {f : Π₀ i, β i} : ↑f.support ⊆ s
 
 theorem support_single_ne_zero {i : ι} {b : β i} (hb : b ≠ 0) : (single i b).support = {i} := by
   ext j; by_cases h : i = j
-  · subst h
-    simp [hb]
+  subst h
+  simp [hb]
   simp [Ne.symm h, h]
 
 theorem support_single_subset {i : ι} {b : β i} : (single i b).support ⊆ {i} :=
@@ -1059,9 +1059,9 @@ theorem mapRange_single {f : ∀ i, β₁ i → β₂ i} {hf : ∀ i, f i 0 = 0}
     mapRange f hf (single i b) = single i (f i b) :=
   DFinsupp.ext fun i' => by
     by_cases h : i = i'
-    · subst i'
-      simp
-    · simp [h, hf]
+    subst i'
+    simp
+    simp [h, hf]
 
 variable [∀ (i) (x : β₁ i), Decidable (x ≠ 0)] [∀ (i) (x : β₂ i), Decidable (x ≠ 0)]
 
@@ -1091,24 +1091,24 @@ theorem erase_def (i : ι) (f : Π₀ i, β i) : f.erase i = mk (f.support.erase
 theorem support_erase (i : ι) (f : Π₀ i, β i) : (f.erase i).support = f.support.erase i := by
   ext j
   by_cases h1 : j = i
-  · simp only [h1, mem_support_toFun, erase_apply, ite_true, ne_eq, not_true, not_not,
-      Finset.mem_erase, false_and]
+  simp only [h1, mem_support_toFun, erase_apply, ite_true, ne_eq, not_true, not_not,
+    Finset.mem_erase, false_and]
   by_cases h2 : f j ≠ 0 <;> simp at h2 <;> simp [h1, h2]
 
 theorem support_update_ne_zero (f : Π₀ i, β i) (i : ι) {b : β i} (h : b ≠ 0) :
     support (f.update i b) = insert i f.support := by
   ext j
   rcases eq_or_ne i j with (rfl | hi)
-  · simp [h]
-  · simp [hi.symm]
+  simp [h]
+  simp [hi.symm]
 
 theorem support_update (f : Π₀ i, β i) (i : ι) (b : β i) [Decidable (b = 0)] :
     support (f.update i b) = if b = 0 then support (f.erase i) else insert i f.support := by
   ext j
   split_ifs with hb
-  · subst hb
-    simp [update_eq_erase, support_erase]
-  · rw [support_update_ne_zero f _ hb]
+  subst hb
+  simp [update_eq_erase, support_erase]
+  rw [support_update_ne_zero f _ hb]
 
 section FilterAndSubtypeDomain
 
@@ -1201,8 +1201,8 @@ theorem comapDomain_single [DecidableEq κ] [∀ i, Zero (β i)] (h : κ → ι)
   ext i
   rw [comapDomain_apply]
   obtain rfl | hik := Decidable.eq_or_ne i k
-  · rw [single_eq_same, single_eq_same]
-  · rw [single_eq_of_ne hik.symm, single_eq_of_ne (hh.ne hik.symm)]
+  rw [single_eq_same, single_eq_same]
+  rw [single_eq_of_ne hik.symm, single_eq_of_ne (hh.ne hik.symm)]
 
 /-- A computable version of comap_domain when an explicit left inverse is provided. -/
 def comapDomain' [∀ i, Zero (β i)] (h : κ → ι) {h' : ι → κ} (hh' : Function.LeftInverse h' h)
@@ -1245,8 +1245,8 @@ theorem comapDomain'_single [DecidableEq ι] [DecidableEq κ] [∀ i, Zero (β i
   ext i
   rw [comapDomain'_apply]
   obtain rfl | hik := Decidable.eq_or_ne i k
-  · rw [single_eq_same, single_eq_same]
-  · rw [single_eq_of_ne hik.symm, single_eq_of_ne (hh'.injective.ne hik.symm)]
+  rw [single_eq_same, single_eq_same]
+  rw [single_eq_of_ne hik.symm, single_eq_of_ne (hh'.injective.ne hik.symm)]
 
 /-- Reindexing terms of a dfinsupp.
 
@@ -1332,13 +1332,13 @@ theorem sigmaCurry_single [∀ i, DecidableEq (α i)] [∀ i j, Zero (δ i j)]
   dsimp only
   rw [sigmaCurry_apply]
   obtain rfl | hi := eq_or_ne i i'
-  · rw [single_eq_same]
-    obtain rfl | hj := eq_or_ne j j'
-    · rw [single_eq_same, single_eq_same]
-    · rw [single_eq_of_ne, single_eq_of_ne hj]
-      simpa using hj
-  · rw [single_eq_of_ne, single_eq_of_ne hi, zero_apply]
-    simp [hi]
+  rw [single_eq_same]
+  obtain rfl | hj := eq_or_ne j j'
+  rw [single_eq_same, single_eq_same]
+  rw [single_eq_of_ne, single_eq_of_ne hj]
+  simpa using hj
+  rw [single_eq_of_ne, single_eq_of_ne hi, zero_apply]
+  simp [hi]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The natural map between `Π₀ i (j : α i), δ i j` and `Π₀ (i : Σ i, α i), δ i.1 i.2`, inverse of
@@ -1398,13 +1398,13 @@ theorem sigmaUncurry_single [∀ i j, Zero (δ i j)] [DecidableEq ι] [∀ i, De
   dsimp only
   rw [sigmaUncurry_apply]
   obtain rfl | hi := eq_or_ne i i'
-  · rw [single_eq_same]
-    obtain rfl | hj := eq_or_ne j j'
-    · rw [single_eq_same, single_eq_same]
-    · rw [single_eq_of_ne hj, single_eq_of_ne]
-      simpa using hj
-  · rw [single_eq_of_ne hi, single_eq_of_ne, zero_apply]
-    simp [hi]
+  rw [single_eq_same]
+  obtain rfl | hj := eq_or_ne j j'
+  rw [single_eq_same, single_eq_same]
+  rw [single_eq_of_ne hj, single_eq_of_ne]
+  simpa using hj
+  rw [single_eq_of_ne hi, single_eq_of_ne, zero_apply]
+  simp [hi]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /-- The natural bijection between `Π₀ (i : Σ i, α i), δ i.1 i.2` and `Π₀ i (j : α i), δ i j`.
@@ -1452,18 +1452,18 @@ theorem extendWith_some [∀ i, Zero (α i)] (f : Π₀ i, α (some i)) (a : α 
 theorem extendWith_single_zero [DecidableEq ι] [∀ i, Zero (α i)] (i : ι) (x : α (some i)) :
     (single i x).extendWith 0 = single (some i) x := by
   ext (_ | j)
-  · rw [extendWith_none, single_eq_of_ne (Option.some_ne_none _)]
-  · rw [extendWith_some]
-    obtain rfl | hij := Decidable.eq_or_ne i j
-    · rw [single_eq_same, single_eq_same]
-    · rw [single_eq_of_ne hij, single_eq_of_ne ((Option.some_injective _).ne hij)]
+  rw [extendWith_none, single_eq_of_ne (Option.some_ne_none _)]
+  rw [extendWith_some]
+  obtain rfl | hij := Decidable.eq_or_ne i j
+  rw [single_eq_same, single_eq_same]
+  rw [single_eq_of_ne hij, single_eq_of_ne ((Option.some_injective _).ne hij)]
 
 @[simp]
 theorem extendWith_zero [DecidableEq ι] [∀ i, Zero (α i)] (x : α none) :
     (0 : Π₀ i, α (some i)).extendWith x = single none x := by
   ext (_ | j)
-  · rw [extendWith_none, single_eq_same]
-  · rw [extendWith_some, single_eq_of_ne (Option.some_ne_none _).symm, zero_apply]
+  rw [extendWith_none, single_eq_same]
+  rw [extendWith_some, single_eq_of_ne (Option.some_ne_none _).symm, zero_apply]
 
 /-- Bijection obtained by separating the term of index `none` of a dfinsupp over `Option ι`.
 
@@ -1515,15 +1515,15 @@ theorem prod_mapRange_index {β₁ : ι → Type v₁} {β₂ : ι → Type v₂
     (h0 : ∀ i, h i 0 = 1) : (mapRange f hf g).prod h = g.prod fun i b => h i (f i b) := by
   rw [mapRange_def]
   refine (Finset.prod_subset support_mk_subset ?_).trans ?_
-  · intro i h1 h2
-    simp only [mem_support_toFun, ne_eq] at h1
-    simp only [Finset.coe_sort_coe, mem_support_toFun, mk_apply, ne_eq, h1, not_false_iff,
-      dite_eq_ite, ite_true, not_not] at h2
-    simp [h2, h0]
-  · refine Finset.prod_congr rfl ?_
-    intro i h1
-    simp only [mem_support_toFun, ne_eq] at h1
-    simp [h1]
+  intro i h1 h2
+  simp only [mem_support_toFun, ne_eq] at h1
+  simp only [Finset.coe_sort_coe, mem_support_toFun, mk_apply, ne_eq, h1, not_false_iff,
+    dite_eq_ite, ite_true, not_not] at h2
+  simp [h2, h0]
+  refine Finset.prod_congr rfl ?_
+  intro i h1
+  simp only [mem_support_toFun, ne_eq] at h1
+  simp [h1]
 
 @[to_additive]
 theorem prod_zero_index [∀ i, AddCommMonoid (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)]
@@ -1534,10 +1534,10 @@ theorem prod_zero_index [∀ i, AddCommMonoid (β i)] [∀ (i) (x : β i), Decid
 theorem prod_single_index [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)] [CommMonoid γ]
     {i : ι} {b : β i} {h : ∀ i, β i → γ} (h_zero : h i 0 = 1) : (single i b).prod h = h i b := by
   by_cases h : b ≠ 0
-  · simp [DFinsupp.prod, support_single_ne_zero h]
-  · rw [not_not] at h
-    simp [h, prod_zero_index, h_zero]
-    rfl
+  simp [DFinsupp.prod, support_single_ne_zero h]
+  rw [not_not] at h
+  simp [h, prod_zero_index, h_zero]
+  rfl
 
 @[to_additive]
 theorem prod_neg_index [∀ i, AddGroup (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)] [CommMonoid γ]
@@ -1713,8 +1713,8 @@ theorem sumAddHom_apply [∀ i, AddZeroClass (β i)] [∀ (i) (x : β i), Decida
   intro i _
   dsimp only [coe_mk', Subtype.coe_mk] at *
   split_ifs with h
-  · rfl
-  · rw [not_not.mp h, AddMonoidHom.map_zero]
+  rfl
+  rw [not_not.mp h, AddMonoidHom.map_zero]
 
 open Classical in
 theorem _root_.dfinsupp_sumAddHom_mem [∀ i, AddZeroClass (β i)] [AddCommMonoid γ] {S : Type*}
@@ -1730,11 +1730,11 @@ theorem _root_.AddSubmonoid.iSup_eq_mrange_dfinsupp_sumAddHom
     [AddCommMonoid γ] (S : ι → AddSubmonoid γ) :
     iSup S = AddMonoidHom.mrange (DFinsupp.sumAddHom fun i => (S i).subtype) := by
   apply le_antisymm
-  · apply iSup_le _
-    intro i y hy
-    exact ⟨DFinsupp.single i ⟨y, hy⟩, DFinsupp.sumAddHom_single _ _ _⟩
-  · rintro x ⟨v, rfl⟩
-    exact dfinsupp_sumAddHom_mem _ v _ fun i _ => (le_iSup S i : S i ≤ _) (v i).prop
+  apply iSup_le _
+  intro i y hy
+  exact ⟨DFinsupp.single i ⟨y, hy⟩, DFinsupp.sumAddHom_single _ _ _⟩
+  rintro x ⟨v, rfl⟩
+  exact dfinsupp_sumAddHom_mem _ v _ fun i _ => (le_iSup S i : S i ≤ _) (v i).prop
 
 /-- The bounded supremum of a family of commutative additive submonoids is equal to the range of
 `DFinsupp.sumAddHom` composed with `DFinsupp.filterAddMonoidHom`; that is, every element in the
@@ -1745,15 +1745,15 @@ theorem _root_.AddSubmonoid.bsupr_eq_mrange_dfinsupp_sumAddHom (p : ι → Prop)
     ⨆ (i) (_ : p i), S i =
       AddMonoidHom.mrange ((sumAddHom fun i => (S i).subtype).comp (filterAddMonoidHom _ p)) := by
   apply le_antisymm
-  · refine iSup₂_le fun i hi y hy => ⟨DFinsupp.single i ⟨y, hy⟩, ?_⟩
-    rw [AddMonoidHom.comp_apply, filterAddMonoidHom_apply, filter_single_pos _ _ hi]
-    exact sumAddHom_single _ _ _
-  · rintro x ⟨v, rfl⟩
-    refine dfinsupp_sumAddHom_mem _ _ _ fun i _ => ?_
-    refine AddSubmonoid.mem_iSup_of_mem i ?_
-    by_cases hp : p i
-    · simp [hp]
-    · simp [hp]
+  refine iSup₂_le fun i hi y hy => ⟨DFinsupp.single i ⟨y, hy⟩, ?_⟩
+  rw [AddMonoidHom.comp_apply, filterAddMonoidHom_apply, filter_single_pos _ _ hi]
+  exact sumAddHom_single _ _ _
+  rintro x ⟨v, rfl⟩
+  refine dfinsupp_sumAddHom_mem _ _ _ fun i _ => ?_
+  refine AddSubmonoid.mem_iSup_of_mem i ?_
+  by_cases hp : p i
+  simp [hp]
+  simp [hp]
 
 theorem _root_.AddSubmonoid.mem_iSup_iff_exists_dfinsupp [AddCommMonoid γ] (S : ι → AddSubmonoid γ)
     (x : γ) : x ∈ iSup S ↔ ∃ f : Π₀ i, S i, DFinsupp.sumAddHom (fun i => (S i).subtype) f = x :=
@@ -1921,9 +1921,9 @@ theorem mapRange.addMonoidHom_comp (f : ∀ i, β₁ i →+ β₂ i) (f₂ : ∀
     (mapRange.addMonoidHom fun i => (f i).comp (f₂ i)) =
       (mapRange.addMonoidHom f).comp (mapRange.addMonoidHom f₂) := by
   refine AddMonoidHom.ext <| mapRange_comp (fun i x => f i x) (fun i x => f₂ i x) ?_ ?_ ?_
-  · intros; apply map_zero
-  · intros; apply map_zero
-  · intros; dsimp; simp only [map_zero]
+  intros; apply map_zero
+  intros; apply map_zero
+  intros; dsimp; simp only [map_zero]
 
 /-- `DFinsupp.mapRange.addMonoidHom` as an `AddEquiv`. -/
 @[simps apply]
@@ -1950,9 +1950,9 @@ theorem mapRange.addEquiv_trans (f : ∀ i, β i ≃+ β₁ i) (f₂ : ∀ i, β
     (mapRange.addEquiv fun i => (f i).trans (f₂ i)) =
       (mapRange.addEquiv f).trans (mapRange.addEquiv f₂) := by
   refine AddEquiv.ext <| mapRange_comp (fun i x => f₂ i x) (fun i x => f i x) ?_ ?_ ?_
-  · intros; apply map_zero
-  · intros; apply map_zero
-  · intros; dsimp; simp only [map_zero]
+  intros; apply map_zero
+  intros; apply map_zero
+  intros; dsimp; simp only [map_zero]
 
 @[simp]
 theorem mapRange.addEquiv_symm (e : ∀ i, β₁ i ≃+ β₂ i) :

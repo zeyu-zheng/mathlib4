@@ -169,12 +169,12 @@ lemma exact₁ (S : ComposableArrows C 1) : S.Exact where
 lemma isComplex₂_iff (S : ComposableArrows C 2) :
     S.IsComplex ↔ S.map' 0 1 ≫ S.map' 1 2 = 0 := by
   constructor
-  · intro h
-    exact h.zero 0 (by omega)
-  · intro h
-    refine IsComplex.mk (fun i hi => ?_)
-    obtain rfl : i = 0 := by omega
-    exact h
+  intro h
+  exact h.zero 0 (by omega)
+  intro h
+  refine IsComplex.mk (fun i hi => ?_)
+  obtain rfl : i = 0 := by omega
+  exact h
 
 lemma isComplex₂_mk (S : ComposableArrows C 2) (w : S.map' 0 1 ≫ S.map' 1 2 = 0) :
     S.IsComplex :=
@@ -193,12 +193,12 @@ lemma _root_.CategoryTheory.ShortComplex.isComplex_toComposableArrows (S : Short
 lemma exact₂_iff (S : ComposableArrows C 2) (hS : S.IsComplex) :
     S.Exact ↔ (S.sc' hS 0 1 2).Exact := by
   constructor
-  · intro h
-    exact h.exact 0 (by omega)
-  · intro h
-    refine Exact.mk hS (fun i hi => ?_)
-    obtain rfl : i = 0 := by omega
-    exact h
+  intro h
+  exact h.exact 0 (by omega)
+  intro h
+  refine Exact.mk hS (fun i hi => ?_)
+  obtain rfl : i = 0 := by omega
+  exact h
 
 lemma exact₂_mk (S : ComposableArrows C 2) (w : S.map' 0 1 ≫ S.map' 1 2 = 0)
     (h : (ShortComplex.mk _ _ w).Exact) : S.Exact :=
@@ -217,22 +217,22 @@ lemma _root_.CategoryTheory.ShortComplex.exact_iff_exact_toComposableArrows
 lemma exact_iff_δ₀ (S : ComposableArrows C (n + 2)) :
     S.Exact ↔ (mk₂ (S.map' 0 1) (S.map' 1 2)).Exact ∧ S.δ₀.Exact := by
   constructor
-  · intro h
-    constructor
-    · rw [exact₂_iff]; swap
-      · rw [isComplex₂_iff]
-        exact h.toIsComplex.zero 0
-      exact h.exact 0 (by omega)
-    · exact Exact.mk (IsComplex.mk (fun i hi => h.toIsComplex.zero (i + 1)))
-        (fun i hi => h.exact (i + 1))
-  · rintro ⟨h, h₀⟩
-    refine Exact.mk (IsComplex.mk (fun i hi => ?_)) (fun i hi => ?_)
-    · obtain _ | i := i
-      · exact h.toIsComplex.zero 0
-      · exact h₀.toIsComplex.zero i
-    · obtain _ | i := i
-      · exact h.exact 0
-      · exact h₀.exact i
+  intro h
+  constructor
+  rw [exact₂_iff]; swap
+  rw [isComplex₂_iff]
+  exact h.toIsComplex.zero 0
+  exact h.exact 0 (by omega)
+  exact Exact.mk (IsComplex.mk (fun i hi => h.toIsComplex.zero (i + 1)))
+    (fun i hi => h.exact (i + 1))
+  rintro ⟨h, h₀⟩
+  refine Exact.mk (IsComplex.mk (fun i hi => ?_)) (fun i hi => ?_)
+  obtain _ | i := i
+  exact h.toIsComplex.zero 0
+  exact h₀.toIsComplex.zero i
+  obtain _ | i := i
+  exact h.exact 0
+  exact h₀.exact i
 
 lemma Exact.δ₀ {S : ComposableArrows C (n + 2)} (hS : S.Exact) :
     S.δ₀.Exact := by
@@ -251,24 +251,24 @@ lemma exact_of_δ₀ {S : ComposableArrows C (n + 2)}
 lemma exact_iff_δlast {n : ℕ} (S : ComposableArrows C (n + 2)) :
     S.Exact ↔ S.δlast.Exact ∧ (mk₂ (S.map' n (n + 1)) (S.map' (n + 1) (n + 2))).Exact := by
   constructor
-  · intro h
-    constructor
-    · exact Exact.mk (IsComplex.mk (fun i hi => h.toIsComplex.zero i))
-        (fun i hi => h.exact i)
-    · rw [exact₂_iff]; swap
-      · rw [isComplex₂_iff]
-        exact h.toIsComplex.zero n
-      exact h.exact n (by omega)
-  · rintro ⟨h, h'⟩
-    refine Exact.mk (IsComplex.mk (fun i hi => ?_)) (fun i hi => ?_)
-    · simp only [Nat.add_le_add_iff_right] at hi
-      obtain hi | rfl := hi.lt_or_eq
-      · exact h.toIsComplex.zero i
-      · exact h'.toIsComplex.zero 0
-    · simp only [Nat.add_le_add_iff_right] at hi
-      obtain hi | rfl := hi.lt_or_eq
-      · exact h.exact i
-      · exact h'.exact 0
+  intro h
+  constructor
+  exact Exact.mk (IsComplex.mk (fun i hi => h.toIsComplex.zero i))
+    (fun i hi => h.exact i)
+  rw [exact₂_iff]; swap
+  rw [isComplex₂_iff]
+  exact h.toIsComplex.zero n
+  exact h.exact n (by omega)
+  rintro ⟨h, h'⟩
+  refine Exact.mk (IsComplex.mk (fun i hi => ?_)) (fun i hi => ?_)
+  simp only [Nat.add_le_add_iff_right] at hi
+  obtain hi | rfl := hi.lt_or_eq
+  exact h.toIsComplex.zero i
+  exact h'.toIsComplex.zero 0
+  simp only [Nat.add_le_add_iff_right] at hi
+  obtain hi | rfl := hi.lt_or_eq
+  exact h.exact i
+  exact h'.exact 0
 
 lemma Exact.δlast {S : ComposableArrows C (n + 2)} (hS : S.Exact) :
     S.δlast.Exact := by

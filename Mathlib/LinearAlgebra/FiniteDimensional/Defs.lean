@@ -146,11 +146,11 @@ theorem of_finite_basis {ι : Type w} {s : Set ι} (h : Basis s K V) (hs : Set.F
 instance finiteDimensional_submodule [FiniteDimensional K V] (S : Submodule K V) :
     FiniteDimensional K S := by
   letI : IsNoetherian K V := iff_fg.2 ?_
-  · exact
-      iff_fg.1
-        (IsNoetherian.iff_rank_lt_aleph0.2
-          (lt_of_le_of_lt (rank_submodule_le _) (_root_.rank_lt_aleph0 K V)))
-  · infer_instance
+  exact
+    iff_fg.1
+      (IsNoetherian.iff_rank_lt_aleph0.2
+        (lt_of_le_of_lt (rank_submodule_le _) (_root_.rank_lt_aleph0 K V)))
+  infer_instance
 
 /-- A quotient of a finite-dimensional space is also finite-dimensional. -/
 instance finiteDimensional_quotient [FiniteDimensional K V] (S : Submodule K V) :
@@ -581,17 +581,17 @@ theorem ker_noncommProd_eq_of_supIndep_ker [FiniteDimensional K V] {ι : Type*} 
     (s : Finset ι) (comm) (h : s.SupIndep fun i ↦ ker (f i)) :
     ker (s.noncommProd f comm) = ⨆ i ∈ s, ker (f i) := by
   induction' s using Finset.induction_on with i s hi ih
-  · set_option tactic.skipAssignedInstances false in
-    simpa using LinearMap.ker_id
+  set_option tactic.skipAssignedInstances false in
+  simpa using LinearMap.ker_id
   replace ih : ker (Finset.noncommProd s f <| Set.Pairwise.mono (s.subset_insert i) comm) =
       ⨆ x ∈ s, ker (f x) := ih _ (h.subset (s.subset_insert i))
   rw [Finset.noncommProd_insert_of_not_mem _ _ _ _ hi, mul_eq_comp,
     ker_comp_eq_of_commute_of_disjoint_ker]
-  · simp_rw [Finset.mem_insert_coe, iSup_insert, Finset.mem_coe, ih]
-  · exact s.noncommProd_commute _ _ _ fun j hj ↦
-      comm (s.mem_insert_self i) (Finset.mem_insert_of_mem hj) (by aesop)
-  · replace h := Finset.supIndep_iff_disjoint_erase.mp h i (s.mem_insert_self i)
-    simpa [ih, hi, Finset.sup_eq_iSup] using h
+  simp_rw [Finset.mem_insert_coe, iSup_insert, Finset.mem_coe, ih]
+  exact s.noncommProd_commute _ _ _ fun j hj ↦
+    comm (s.mem_insert_self i) (Finset.mem_insert_of_mem hj) (by aesop)
+  replace h := Finset.supIndep_iff_disjoint_erase.mp h i (s.mem_insert_self i)
+  simpa [ih, hi, Finset.sup_eq_iSup] using h
 
 end DivisionRing
 
@@ -632,13 +632,13 @@ variable [DivisionRing K] [AddCommGroup V] [Module K V]
 theorem isUnit_iff_ker_eq_bot [FiniteDimensional K V] (f : V →ₗ[K] V) :
     IsUnit f ↔ (LinearMap.ker f) = ⊥ := by
   constructor
-  · rintro ⟨u, rfl⟩
-    exact LinearMap.ker_eq_bot_of_inverse u.inv_mul
-  · intro h_inj
-    rw [ker_eq_bot] at h_inj
-    exact ⟨⟨f, (LinearEquiv.ofInjectiveEndo f h_inj).symm.toLinearMap,
-      LinearEquiv.ofInjectiveEndo_right_inv f h_inj, LinearEquiv.ofInjectiveEndo_left_inv f h_inj⟩,
-      rfl⟩
+  rintro ⟨u, rfl⟩
+  exact LinearMap.ker_eq_bot_of_inverse u.inv_mul
+  intro h_inj
+  rw [ker_eq_bot] at h_inj
+  exact ⟨⟨f, (LinearEquiv.ofInjectiveEndo f h_inj).symm.toLinearMap,
+    LinearEquiv.ofInjectiveEndo_right_inv f h_inj, LinearEquiv.ofInjectiveEndo_left_inv f h_inj⟩,
+    rfl⟩
 
 theorem isUnit_iff_range_eq_top [FiniteDimensional K V] (f : V →ₗ[K] V) :
     IsUnit f ↔ (LinearMap.range f) = ⊤ := by
@@ -716,10 +716,10 @@ open Submodule
 
 theorem finrank_span_singleton {v : V} (hv : v ≠ 0) : finrank K (K ∙ v) = 1 := by
   apply le_antisymm
-  · exact finrank_span_le_card ({v} : Set V)
-  · rw [Nat.succ_le_iff, finrank_pos_iff]
-    use ⟨v, mem_span_singleton_self v⟩, 0
-    simp [hv]
+  exact finrank_span_le_card ({v} : Set V)
+  rw [Nat.succ_le_iff, finrank_pos_iff]
+  use ⟨v, mem_span_singleton_self v⟩, 0
+  simp [hv]
 
 /-- In a one-dimensional space, any vector is a multiple of any nonzero vector -/
 lemma exists_smul_eq_of_finrank_eq_one
@@ -828,11 +828,11 @@ theorem ker_pow_constant {f : End K V} {k : ℕ}
   | 0 => by simp
   | m + 1 => by
     apply le_antisymm
-    · rw [add_comm, pow_add]
-      apply LinearMap.ker_le_ker_comp
-    · rw [ker_pow_constant h m, add_comm m 1, ← add_assoc, pow_add, pow_add f k m,
-        LinearMap.mul_eq_comp, LinearMap.mul_eq_comp, LinearMap.ker_comp, LinearMap.ker_comp, h,
-        Nat.add_one]
+    rw [add_comm, pow_add]
+    apply LinearMap.ker_le_ker_comp
+    rw [ker_pow_constant h m, add_comm m 1, ← add_assoc, pow_add, pow_add f k m,
+      LinearMap.mul_eq_comp, LinearMap.mul_eq_comp, LinearMap.ker_comp, LinearMap.ker_comp, h,
+      Nat.add_one]
 
 end End
 

@@ -72,10 +72,10 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
       ∃ i₀ i₁, i₀ ≠ i₁ ∧ ∀ k, (abv (A i₁ k % b - A i₀ k % b) : ℝ) < abv b • ε := by
   haveI := Classical.decEq R
   induction' n with n ih
-  · intro ε _hε b _hb A
-    refine ⟨0, 1, ?_, ?_⟩
-    · simp
-    rintro ⟨i, ⟨⟩⟩
+  intro ε _hε b _hb A
+  refine ⟨0, 1, ?_, ?_⟩
+  simp
+  rintro ⟨i, ⟨⟩⟩
   intro ε hε b hb A
   let M := h.card ε
   -- By the "nicer" pigeonhole principle, we can find a collection `s`
@@ -96,24 +96,24 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
         (by simpa only [Fintype.card_fin, pow_succ'] using Nat.lt_succ_self (M ^ n.succ))
     refine ⟨fun i ↦ (Finset.univ.filter fun x ↦ t x = s).toList.get <| i.castLE ?_, fun i j h ↦ ?_,
       fun i₀ i₁ ↦ ht _ _ ?_⟩
-    · rwa [Finset.length_toList]
-    · ext
-      simpa [(Finset.nodup_toList _).getElem_inj_iff] using h
-    · #adaptation_note
-      /-- This proof was nicer prior to leanprover/lean4#4400.
-      Please feel welcome to improve it, by avoiding use of `List.get` in favour of `GetElem`. -/
-      have : ∀ i h, t ((Finset.univ.filter fun x ↦ t x = s).toList.get ⟨i, h⟩) = s := fun i h ↦
-        (Finset.mem_filter.mp (Finset.mem_toList.mp (List.get_mem _ i h))).2
-      simp only [Nat.succ_eq_add_one, Finset.length_toList, List.get_eq_getElem] at this
-      simp only [Nat.succ_eq_add_one, List.get_eq_getElem, Fin.coe_castLE]
-      rw [this _ (Nat.lt_of_le_of_lt (Nat.le_of_lt_succ i₁.2) hs),
-        this _ (Nat.lt_of_le_of_lt (Nat.le_of_lt_succ i₀.2) hs)]
+    rwa [Finset.length_toList]
+    ext
+    simpa [(Finset.nodup_toList _).getElem_inj_iff] using h
+    #adaptation_note
+    /-- This proof was nicer prior to leanprover/lean4#4400.
+    Please feel welcome to improve it, by avoiding use of `List.get` in favour of `GetElem`. -/
+    have : ∀ i h, t ((Finset.univ.filter fun x ↦ t x = s).toList.get ⟨i, h⟩) = s := fun i h ↦
+      (Finset.mem_filter.mp (Finset.mem_toList.mp (List.get_mem _ i h))).2
+    simp only [Nat.succ_eq_add_one, Finset.length_toList, List.get_eq_getElem] at this
+    simp only [Nat.succ_eq_add_one, List.get_eq_getElem, Fin.coe_castLE]
+    rw [this _ (Nat.lt_of_le_of_lt (Nat.le_of_lt_succ i₁.2) hs),
+      this _ (Nat.lt_of_le_of_lt (Nat.le_of_lt_succ i₀.2) hs)]
   -- Since `s` is large enough, there are two elements of `A ∘ s`
   -- where the second components lie close together.
   obtain ⟨k₀, k₁, hk, h⟩ := ih hε hb fun x ↦ Fin.tail (A (s x))
   refine ⟨s k₀, s k₁, fun h ↦ hk (s_inj h), fun i ↦ Fin.cases ?_ (fun i ↦ ?_) i⟩
-  · exact hs k₀ k₁
-  · exact h i
+  exact hs k₀ k₁
+  exact h i
 
 /-- Any large enough family of vectors in `R^ι` has a pair of elements
 whose remainders are close together, pointwise. -/

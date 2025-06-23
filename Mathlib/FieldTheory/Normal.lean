@@ -69,7 +69,7 @@ theorem Normal.exists_isSplittingField [h : Normal F K] [FiniteDimensional F K] 
         (mem_roots <|
               mt (Polynomial.map_eq_zero <| algebraMap F K).1 <|
                 Finset.prod_ne_zero_iff.2 fun x _ => ?_).2 ?_)
-  · exact minpoly.ne_zero (h.isIntegral (s x))
+  exact minpoly.ne_zero (h.isIntegral (s x))
   rw [IsRoot.def, eval_map, ← aeval_def, map_prod]
   exact Finset.prod_eq_zero (Finset.mem_univ _) (minpoly.aeval _ _)
 
@@ -107,27 +107,27 @@ open IntermediateField
 
 theorem Normal.of_isSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : Normal F E := by
   rcases eq_or_ne p 0 with (rfl | hp)
-  · have := hFEp.adjoin_rootSet
-    rw [rootSet_zero, Algebra.adjoin_empty] at this
-    exact Normal.of_algEquiv
-      (AlgEquiv.ofBijective (Algebra.ofId F E) (Algebra.bijective_algebraMap_iff.2 this.symm))
+  have := hFEp.adjoin_rootSet
+  rw [rootSet_zero, Algebra.adjoin_empty] at this
+  exact Normal.of_algEquiv
+    (AlgEquiv.ofBijective (Algebra.ofId F E) (Algebra.bijective_algebraMap_iff.2 this.symm))
   refine normal_iff.mpr fun x ↦ ?_
   haveI : FiniteDimensional F E := IsSplittingField.finiteDimensional E p
   have hx := IsIntegral.of_finite F x
   let L := (p * minpoly F x).SplittingField
   have hL := splits_of_splits_mul' _ ?_ (SplittingField.splits (p * minpoly F x))
-  · let j : E →ₐ[F] L := IsSplittingField.lift E p hL.1
-    refine ⟨hx, splits_of_comp _ (j : E →+* L) (j.comp_algebraMap ▸ hL.2) fun a ha ↦ ?_⟩
-    rw [j.comp_algebraMap] at ha
-    letI : Algebra F⟮x⟯ L := ((algHomAdjoinIntegralEquiv F hx).symm ⟨a, ha⟩).toRingHom.toAlgebra
-    let j' : E →ₐ[F⟮x⟯] L := IsSplittingField.lift E (p.map (algebraMap F F⟮x⟯)) ?_
-    · change a ∈ j.range
-      rw [← IsSplittingField.adjoin_rootSet_eq_range E p j,
-            IsSplittingField.adjoin_rootSet_eq_range E p (j'.restrictScalars F)]
-      exact ⟨x, (j'.commutes _).trans (algHomAdjoinIntegralEquiv_symm_apply_gen F hx _)⟩
-    · rw [splits_map_iff, ← IsScalarTower.algebraMap_eq]; exact hL.1
-  · rw [Polynomial.map_ne_zero_iff (algebraMap F L).injective, mul_ne_zero_iff]
-    exact ⟨hp, minpoly.ne_zero hx⟩
+  let j : E →ₐ[F] L := IsSplittingField.lift E p hL.1
+  refine ⟨hx, splits_of_comp _ (j : E →+* L) (j.comp_algebraMap ▸ hL.2) fun a ha ↦ ?_⟩
+  rw [j.comp_algebraMap] at ha
+  letI : Algebra F⟮x⟯ L := ((algHomAdjoinIntegralEquiv F hx).symm ⟨a, ha⟩).toRingHom.toAlgebra
+  let j' : E →ₐ[F⟮x⟯] L := IsSplittingField.lift E (p.map (algebraMap F F⟮x⟯)) ?_
+  change a ∈ j.range
+  rw [← IsSplittingField.adjoin_rootSet_eq_range E p j,
+        IsSplittingField.adjoin_rootSet_eq_range E p (j'.restrictScalars F)]
+  exact ⟨x, (j'.commutes _).trans (algHomAdjoinIntegralEquiv_symm_apply_gen F hx _)⟩
+  rw [splits_map_iff, ← IsScalarTower.algebraMap_eq]; exact hL.1
+  rw [Polynomial.map_ne_zero_iff (algebraMap F L).injective, mul_ne_zero_iff]
+  exact ⟨hp, minpoly.ne_zero hx⟩
 
 instance Polynomial.SplittingField.instNormal (p : F[X]) : Normal F p.SplittingField :=
   Normal.of_isSplittingField p
@@ -145,8 +145,8 @@ instance normal_iSup {ι : Type*} (t : ι → IntermediateField F K) [h : ∀ i,
   have hF : Normal F E
   haveI : IsSplittingField F E (∏ i ∈ s, minpoly F i.snd) := by
     refine isSplittingField_iSup ?_ fun i _ => adjoin_rootSet_isSplittingField ?_
-    · exact Finset.prod_ne_zero_iff.mpr fun i _ => minpoly.ne_zero ((h i.1).isIntegral i.2)
-    · exact Polynomial.splits_comp_of_splits _ (algebraMap (t i.1) K) ((h i.1).splits i.2)
+    exact Finset.prod_ne_zero_iff.mpr fun i _ => minpoly.ne_zero ((h i.1).isIntegral i.2)
+    exact Polynomial.splits_comp_of_splits _ (algebraMap (t i.1) K) ((h i.1).splits i.2)
   apply Normal.of_isSplittingField (∏ i ∈ s, minpoly F i.2)
   have hE : E ≤ ⨆ i, t i
   refine iSup_le fun i => iSup_le fun _ => le_iSup_of_le i.1 ?_

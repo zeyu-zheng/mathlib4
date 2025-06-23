@@ -162,12 +162,12 @@ theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f
     A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
   refine (congr rfl ?_).mp (h.preimage_comp f.symm)
   rw [image_eq_preimage_of_inverse]
-  · intro i
-    ext b
-    simp only [Function.comp_apply, Equiv.apply_symm_apply]
-  · intro i
-    ext a
-    simp
+  intro i
+  ext b
+  simp only [Function.comp_apply, Equiv.apply_symm_apply]
+  intro i
+  ext a
+  simp
 
 theorem definable_iff_finitely_definable :
     A.Definable L s ↔ ∃ (A0 : Finset M), (A0 : Set M) ⊆ A ∧
@@ -175,26 +175,26 @@ theorem definable_iff_finitely_definable :
   letI := Classical.decEq M
   letI := Classical.decEq α
   constructor
-  · simp only [definable_iff_exists_formula_sum]
-    rintro ⟨φ, rfl⟩
-    let A0 := (φ.freeVarFinset.preimage Sum.inl
-      (Function.Injective.injOn Sum.inl_injective)).image Subtype.val
-    have hA0 : (A0 : Set M) ⊆ A
-    simp [A0]
-    refine ⟨A0, hA0, (φ.restrictFreeVar
-      (Set.inclusion (Set.Subset.refl _))).relabel ?_, ?_⟩
-    · rintro ⟨a | a, ha⟩
-      · exact Sum.inl (Sum.inl ⟨a, by simpa [A0] using ha⟩)
-      · exact Sum.inl (Sum.inr a)
-    · ext v
-      simp only [Formula.Realize, BoundedFormula.realize_relabel,
-        Set.mem_setOf_eq]
-      apply Iff.symm
-      convert BoundedFormula.realize_restrictFreeVar _
-      ext a
-      rcases a with ⟨_ | _, _⟩ <;> simp
-  · rintro ⟨A0, hA0, hd⟩
-    exact Definable.mono hd hA0
+  simp only [definable_iff_exists_formula_sum]
+  rintro ⟨φ, rfl⟩
+  let A0 := (φ.freeVarFinset.preimage Sum.inl
+    (Function.Injective.injOn Sum.inl_injective)).image Subtype.val
+  have hA0 : (A0 : Set M) ⊆ A
+  simp [A0]
+  refine ⟨A0, hA0, (φ.restrictFreeVar
+    (Set.inclusion (Set.Subset.refl _))).relabel ?_, ?_⟩
+  rintro ⟨a | a, ha⟩
+  exact Sum.inl (Sum.inl ⟨a, by simpa [A0] using ha⟩)
+  exact Sum.inl (Sum.inr a)
+  ext v
+  simp only [Formula.Realize, BoundedFormula.realize_relabel,
+    Set.mem_setOf_eq]
+  apply Iff.symm
+  convert BoundedFormula.realize_restrictFreeVar _
+  ext a
+  rcases a with ⟨_ | _, _⟩ <;> simp
+  rintro ⟨A0, hA0, hd⟩
+  exact Definable.mono hd hA0
 
 /-- This lemma is only intended as a helper for `Definable.image_comp`. -/
 theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Fin m) → M)}
@@ -205,11 +205,11 @@ theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Fin m) → 
   simp only [Set.mem_image, mem_setOf_eq, BoundedFormula.realize_exs,
     BoundedFormula.realize_relabel, Function.comp_id, Fin.castAdd_zero, Fin.cast_refl]
   constructor
-  · rintro ⟨y, hy, rfl⟩
-    exact
-      ⟨y ∘ Sum.inr, (congr (congr rfl (Sum.elim_comp_inl_inr y).symm) (funext finZeroElim)).mp hy⟩
-  · rintro ⟨y, hy⟩
-    exact ⟨Sum.elim x y, (congr rfl (funext finZeroElim)).mp hy, Sum.elim_comp_inl _ _⟩
+  rintro ⟨y, hy, rfl⟩
+  exact
+    ⟨y ∘ Sum.inr, (congr (congr rfl (Sum.elim_comp_inl_inr y).symm) (funext finZeroElim)).mp hy⟩
+  rintro ⟨y, hy⟩
+  exact ⟨Sum.elim x y, (congr rfl (funext finZeroElim)).mp hy, Sum.elim_comp_inl _ _⟩
 
 open Classical in
 /-- Shows that definability is closed under finite projections. -/
@@ -250,17 +250,17 @@ theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α 
     simp only [Equiv.coe_trans, mem_inter_iff, mem_preimage, mem_image, exists_exists_and_eq_and,
       mem_setOf_eq]
     constructor
-    · rintro ⟨⟨y, ys, hy⟩, hx⟩
-      refine ⟨y, ys, ?_⟩
-      ext a
-      rw [hx a, ← Function.comp_apply (f := x), ← hy]
-      simp
-    · rintro ⟨y, ys, rfl⟩
-      refine ⟨⟨y, ys, ?_⟩, fun a => ?_⟩
-      · ext
-        simp [Set.apply_rangeSplitting f]
-      · rw [Function.comp_apply, Function.comp_apply, apply_rangeSplitting f,
-          rangeFactorization_coe]
+    rintro ⟨⟨y, ys, hy⟩, hx⟩
+    refine ⟨y, ys, ?_⟩
+    ext a
+    rw [hx a, ← Function.comp_apply (f := x), ← hy]
+    simp
+    rintro ⟨y, ys, rfl⟩
+    refine ⟨⟨y, ys, ?_⟩, fun a => ?_⟩
+    ext
+    simp [Set.apply_rangeSplitting f]
+    rw [Function.comp_apply, Function.comp_apply, apply_rangeSplitting f,
+      rangeFactorization_coe]
 
 variable (L A)
 

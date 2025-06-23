@@ -51,11 +51,11 @@ theorem LinearMap.exists_map_addHaar_eq_smul_addHaar' (h : Function.Surjective L
   have : FiniteDimensional 𝕜 E := .of_locallyCompactSpace 𝕜
   have : ProperSpace F
   rcases subsingleton_or_nontrivial E with hE|hE
-  · have : Subsingleton F := Function.Surjective.subsingleton h
-    infer_instance
-  · have : ProperSpace 𝕜 := .of_locallyCompact_module 𝕜 E
-    have : FiniteDimensional 𝕜 F := Module.Finite.of_surjective L h
-    exact FiniteDimensional.proper 𝕜 F
+  have : Subsingleton F := Function.Surjective.subsingleton h
+  infer_instance
+  have : ProperSpace 𝕜 := .of_locallyCompact_module 𝕜 E
+  have : FiniteDimensional 𝕜 F := Module.Finite.of_surjective L h
+  exact FiniteDimensional.proper 𝕜 F
   let S : Submodule 𝕜 E := LinearMap.ker L
   obtain ⟨T, hT⟩ : ∃ T : Submodule 𝕜 E, IsCompl S T := Submodule.exists_isCompl S
   let M : (S × T) ≃ₗ[𝕜] E := Submodule.prodEquivOfIsCompl S T hT
@@ -75,11 +75,11 @@ theorem LinearMap.exists_map_addHaar_eq_smul_addHaar' (h : Function.Surjective L
     simp [L', P, M, this]
   have I : μ.map L = ((μ.map M.symm).map P).map L' := by
     rw [Measure.map_map, Measure.map_map, A]
-    · rfl
-    · exact L'_cont.measurable.comp P_cont.measurable
-    · exact M_cont.measurable
-    · exact L'_cont.measurable
-    · exact P_cont.measurable
+    rfl
+    exact L'_cont.measurable.comp P_cont.measurable
+    exact M_cont.measurable
+    exact L'_cont.measurable
+    exact P_cont.measurable
   let μS : Measure S := addHaar
   let μT : Measure T := addHaar
   obtain ⟨c₀, c₀_pos, c₀_fin, h₀⟩ :
@@ -139,8 +139,8 @@ lemma ae_ae_add_linearMap_mem_iff [LocallyCompactSpace F] {s : Set F} (hs : Meas
   have A : ∀ x, M x ∈ s ↔ x ∈ M ⁻¹' s := fun x ↦ Iff.rfl
   simp_rw [← ae_comp_linearMap_mem_iff M (ν.prod μ) ν hM hs, A]
   rw [Measure.ae_prod_mem_iff_ae_ae_mem]
-  · simp only [M, mem_preimage, LinearMap.coprod_apply, LinearMap.id_coe, id_eq]
-  · exact M_cont.measurable hs
+  simp only [M, mem_preimage, LinearMap.coprod_apply, LinearMap.id_coe, id_eq]
+  exact M_cont.measurable hs
 
 /-- To check that a property holds almost everywhere with respect to an additive Haar measure, it
 suffices to check it almost everywhere along all translates of a given vector subspace. This is an

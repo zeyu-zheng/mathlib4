@@ -49,14 +49,14 @@ theorem mem_withSign_neg_one {x : ℤ} : x ∈ ℤ≤0 ↔ x ≤ 0 :=
 /-- The two submodules are complements. -/
 theorem withSign.isCompl : IsCompl ℤ≥0 ℤ≤0 := by
   constructor
-  · apply Submodule.disjoint_def.2
-    intro x hx hx'
-    exact le_antisymm (mem_withSign_neg_one.mp hx') (mem_withSign_one.mp hx)
-  · rw [codisjoint_iff_le_sup]
-    intro x _hx
-    obtain hp | hn := (le_refl (0 : ℤ)).le_or_le x
-    · exact Submodule.mem_sup_left (mem_withSign_one.mpr hp)
-    · exact Submodule.mem_sup_right (mem_withSign_neg_one.mpr hn)
+  apply Submodule.disjoint_def.2
+  intro x hx hx'
+  exact le_antisymm (mem_withSign_neg_one.mp hx') (mem_withSign_one.mp hx)
+  rw [codisjoint_iff_le_sup]
+  intro x _hx
+  obtain hp | hn := (le_refl (0 : ℤ)).le_or_le x
+  exact Submodule.mem_sup_left (mem_withSign_one.mpr hp)
+  exact Submodule.mem_sup_right (mem_withSign_neg_one.mpr hn)
 
 def withSign.independent : CompleteLattice.Independent withSign := by
   apply

@@ -98,13 +98,13 @@ protected lemma _root_.IsCompact.everywherePosSubset (hs : IsCompact s) :
 lemma measure_eq_zero_of_subset_diff_everywherePosSubset
     (hk : IsCompact k) (h'k : k ⊆ s \ μ.everywherePosSubset s) : μ k = 0 := by
   apply hk.induction_on (p := fun t ↦ μ t = 0)
-  · exact measure_empty
-  · exact fun s t hst ht ↦ measure_mono_null hst ht
-  · exact fun s t hs ht ↦ measure_union_null hs ht
-  · intro x hx
-    obtain ⟨u, ux, hu⟩ : ∃ u ∈ 𝓝[s] x, μ u = 0 := by
-      simpa [everywherePosSubset, (h'k hx).1] using (h'k hx).2
-    exact ⟨u, nhdsWithin_mono x (h'k.trans diff_subset) ux, hu⟩
+  exact measure_empty
+  exact fun s t hst ht ↦ measure_mono_null hst ht
+  exact fun s t hs ht ↦ measure_union_null hs ht
+  intro x hx
+  obtain ⟨u, ux, hu⟩ : ∃ u ∈ 𝓝[s] x, μ u = 0 := by
+    simpa [everywherePosSubset, (h'k hx).1] using (h'k hx).2
+  exact ⟨u, nhdsWithin_mono x (h'k.trans diff_subset) ux, hu⟩
 
 /-- In a space with an inner regular measure, any measurable set coincides almost everywhere with
 its everywhere positive subset. -/
@@ -284,19 +284,19 @@ theorem innerRegularWRT_preimage_one_hasCompactSupport_measure_ne_top_of_group :
   have L_comp : IsCompact L := K_comp.everywherePosSubset
   have L_closed : IsClosed L := K_closed.everywherePosSubset
   refine ⟨L, everywherePosSubset_subset μ K, ?_, ?_⟩
-  · have : μ.IsEverywherePos L :=
-      isEverywherePos_everywherePosSubset_of_measure_ne_top K_closed.measurableSet
-      K_comp.measure_lt_top.ne
-    have L_Gδ : IsGδ L := this.IsGdelta_of_isMulLeftInvariant L_comp L_closed
-    obtain ⟨⟨f, f_cont⟩, Lf, -, f_comp, -⟩ : ∃ f : C(G, ℝ), L = f ⁻¹' {1} ∧ EqOn f 0 ∅
-        ∧ HasCompactSupport f ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 :=
-      exists_continuous_one_zero_of_isCompact_of_isGδ L_comp L_Gδ isClosed_empty
-        (disjoint_empty L)
-    exact ⟨f, f_cont, f_comp, Lf⟩
-  · convert hr using 1
-    apply measure_congr
-    exact everywherePosSubset_ae_eq_of_measure_ne_top K_closed.measurableSet
-      K_comp.measure_lt_top.ne
+  have : μ.IsEverywherePos L :=
+    isEverywherePos_everywherePosSubset_of_measure_ne_top K_closed.measurableSet
+    K_comp.measure_lt_top.ne
+  have L_Gδ : IsGδ L := this.IsGdelta_of_isMulLeftInvariant L_comp L_closed
+  obtain ⟨⟨f, f_cont⟩, Lf, -, f_comp, -⟩ : ∃ f : C(G, ℝ), L = f ⁻¹' {1} ∧ EqOn f 0 ∅
+      ∧ HasCompactSupport f ∧ ∀ x, f x ∈ Icc (0 : ℝ) 1 :=
+    exists_continuous_one_zero_of_isCompact_of_isGδ L_comp L_Gδ isClosed_empty
+      (disjoint_empty L)
+  exact ⟨f, f_cont, f_comp, Lf⟩
+  convert hr using 1
+  apply measure_congr
+  exact everywherePosSubset_ae_eq_of_measure_ne_top K_closed.measurableSet
+    K_comp.measure_lt_top.ne
 
 end TopologicalGroup
 

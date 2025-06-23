@@ -153,7 +153,7 @@ theorem coeff_def {s : Unit →₀ ℕ} {n : ℕ} (h : s () = n) : coeff R n = M
 theorem ext {φ ψ : R⟦X⟧} (h : ∀ n, coeff R n φ = coeff R n ψ) : φ = ψ :=
   MvPowerSeries.ext fun n => by
     rw [← coeff_def]
-    · apply h
+    apply h
     rfl
 
 /-- Two formal power series are equal if all their coefficients are equal. -/
@@ -365,47 +365,47 @@ theorem coeff_C_mul_X_pow (x : R) (k n : ℕ) :
 theorem coeff_mul_X_pow (p : R⟦X⟧) (n d : ℕ) :
     coeff R (d + n) (p * X ^ n) = coeff R d p := by
   rw [coeff_mul, Finset.sum_eq_single (d, n), coeff_X_pow, if_pos rfl, mul_one]
-  · rintro ⟨i, j⟩ h1 h2
-    rw [coeff_X_pow, if_neg, mul_zero]
-    rintro rfl
-    apply h2
-    rw [mem_antidiagonal, add_right_cancel_iff] at h1
-    subst h1
-    rfl
-  · exact fun h1 => (h1 (mem_antidiagonal.2 rfl)).elim
+  rintro ⟨i, j⟩ h1 h2
+  rw [coeff_X_pow, if_neg, mul_zero]
+  rintro rfl
+  apply h2
+  rw [mem_antidiagonal, add_right_cancel_iff] at h1
+  subst h1
+  rfl
+  exact fun h1 => (h1 (mem_antidiagonal.2 rfl)).elim
 
 @[simp]
 theorem coeff_X_pow_mul (p : R⟦X⟧) (n d : ℕ) :
     coeff R (d + n) (X ^ n * p) = coeff R d p := by
   rw [coeff_mul, Finset.sum_eq_single (n, d), coeff_X_pow, if_pos rfl, one_mul]
-  · rintro ⟨i, j⟩ h1 h2
-    rw [coeff_X_pow, if_neg, zero_mul]
-    rintro rfl
-    apply h2
-    rw [mem_antidiagonal, add_comm, add_right_cancel_iff] at h1
-    subst h1
-    rfl
-  · rw [add_comm]
-    exact fun h1 => (h1 (mem_antidiagonal.2 rfl)).elim
+  rintro ⟨i, j⟩ h1 h2
+  rw [coeff_X_pow, if_neg, zero_mul]
+  rintro rfl
+  apply h2
+  rw [mem_antidiagonal, add_comm, add_right_cancel_iff] at h1
+  subst h1
+  rfl
+  rw [add_comm]
+  exact fun h1 => (h1 (mem_antidiagonal.2 rfl)).elim
 
 theorem coeff_mul_X_pow' (p : R⟦X⟧) (n d : ℕ) :
     coeff R d (p * X ^ n) = ite (n ≤ d) (coeff R (d - n) p) 0 := by
   split_ifs with h
-  · rw [← tsub_add_cancel_of_le h, coeff_mul_X_pow, add_tsub_cancel_right]
-  · refine (coeff_mul _ _ _).trans (Finset.sum_eq_zero fun x hx => ?_)
-    rw [coeff_X_pow, if_neg, mul_zero]
-    exact ((le_of_add_le_right (mem_antidiagonal.mp hx).le).trans_lt <| not_le.mp h).ne
+  rw [← tsub_add_cancel_of_le h, coeff_mul_X_pow, add_tsub_cancel_right]
+  refine (coeff_mul _ _ _).trans (Finset.sum_eq_zero fun x hx => ?_)
+  rw [coeff_X_pow, if_neg, mul_zero]
+  exact ((le_of_add_le_right (mem_antidiagonal.mp hx).le).trans_lt <| not_le.mp h).ne
 
 theorem coeff_X_pow_mul' (p : R⟦X⟧) (n d : ℕ) :
     coeff R d (X ^ n * p) = ite (n ≤ d) (coeff R (d - n) p) 0 := by
   split_ifs with h
-  · rw [← tsub_add_cancel_of_le h, coeff_X_pow_mul]
-    simp
-  · refine (coeff_mul _ _ _).trans (Finset.sum_eq_zero fun x hx => ?_)
-    rw [coeff_X_pow, if_neg, zero_mul]
-    have := mem_antidiagonal.mp hx
-    rw [add_comm] at this
-    exact ((le_of_add_le_right this.le).trans_lt <| not_le.mp h).ne
+  rw [← tsub_add_cancel_of_le h, coeff_X_pow_mul]
+  simp
+  refine (coeff_mul _ _ _).trans (Finset.sum_eq_zero fun x hx => ?_)
+  rw [coeff_X_pow, if_neg, zero_mul]
+  have := mem_antidiagonal.mp hx
+  rw [add_comm] at this
+  exact ((le_of_add_le_right this.le).trans_lt <| not_le.mp h).ne
 
 end
 
@@ -417,19 +417,19 @@ theorem isUnit_constantCoeff (φ : R⟦X⟧) (h : IsUnit φ) : IsUnit (constantC
 theorem eq_shift_mul_X_add_const (φ : R⟦X⟧) :
     φ = (mk fun p => coeff R (p + 1) φ) * X + C R (constantCoeff R φ) := by
   ext (_ | n)
-  · simp only [Nat.zero_eq, coeff_zero_eq_constantCoeff, map_add, map_mul, constantCoeff_X,
-      mul_zero, coeff_zero_C, zero_add]
-  · simp only [coeff_succ_mul_X, coeff_mk, LinearMap.map_add, coeff_C, n.succ_ne_zero, sub_zero,
-      if_false, add_zero]
+  simp only [Nat.zero_eq, coeff_zero_eq_constantCoeff, map_add, map_mul, constantCoeff_X,
+    mul_zero, coeff_zero_C, zero_add]
+  simp only [coeff_succ_mul_X, coeff_mk, LinearMap.map_add, coeff_C, n.succ_ne_zero, sub_zero,
+    if_false, add_zero]
 
 /-- Split off the constant coefficient. -/
 theorem eq_X_mul_shift_add_const (φ : R⟦X⟧) :
     φ = (X * mk fun p => coeff R (p + 1) φ) + C R (constantCoeff R φ) := by
   ext (_ | n)
-  · simp only [Nat.zero_eq, coeff_zero_eq_constantCoeff, map_add, map_mul, constantCoeff_X,
-      zero_mul, coeff_zero_C, zero_add]
-  · simp only [coeff_succ_X_mul, coeff_mk, LinearMap.map_add, coeff_C, n.succ_ne_zero, sub_zero,
-      if_false, add_zero]
+  simp only [Nat.zero_eq, coeff_zero_eq_constantCoeff, map_add, map_mul, constantCoeff_X,
+    zero_mul, coeff_zero_C, zero_add]
+  simp only [coeff_succ_X_mul, coeff_mk, LinearMap.map_add, coeff_C, n.succ_ne_zero, sub_zero,
+    if_false, add_zero]
 
 section Map
 
@@ -467,17 +467,17 @@ theorem X_pow_dvd_iff {n : ℕ} {φ : R⟦X⟧} :
     (X : R⟦X⟧) ^ n ∣ φ ↔ ∀ m, m < n → coeff R m φ = 0 := by
   convert@MvPowerSeries.X_pow_dvd_iff Unit R _ () n φ
   constructor <;> intro h m hm
-  · rw [Finsupp.unique_single m]
-    convert h _ hm
-  · apply h
-    simpa only [Finsupp.single_eq_same] using hm
+  rw [Finsupp.unique_single m]
+  convert h _ hm
+  apply h
+  simpa only [Finsupp.single_eq_same] using hm
 
 theorem X_dvd_iff {φ : R⟦X⟧} : (X : R⟦X⟧) ∣ φ ↔ constantCoeff R φ = 0 := by
   rw [← pow_one (X : R⟦X⟧), X_pow_dvd_iff, ← coeff_zero_eq_constantCoeff_apply]
   constructor <;> intro h
-  · exact h 0 zero_lt_one
-  · intro m hm
-    rwa [Nat.eq_zero_of_le_zero (Nat.le_of_succ_le_succ hm)]
+  exact h 0 zero_lt_one
+  intro m hm
+  rwa [Nat.eq_zero_of_le_zero (Nat.le_of_succ_le_succ hm)]
 
 end Semiring
 
@@ -589,33 +589,33 @@ lemma coeff_one_mul (φ ψ : R⟦X⟧) : coeff R 1 (φ * ψ) =
 lemma coeff_one_pow (n : ℕ) (φ : R⟦X⟧) :
     coeff R 1 (φ ^ n) = n * coeff R 1 φ * (constantCoeff R φ) ^ (n - 1) := by
   rcases Nat.eq_zero_or_pos n with (rfl | hn)
-  · simp
+  simp
   induction n with
   | zero => by_contra; linarith
   | succ n' ih =>
       have h₁ (m : ℕ) : φ ^ (m + 1) = φ ^ m * φ := by exact rfl
       have h₂ : Finset.antidiagonal 1 = {(0, 1), (1, 0)} := by exact rfl
       rw [h₁, coeff_mul, h₂, Finset.sum_insert, Finset.sum_singleton]
-      · simp only [coeff_zero_eq_constantCoeff, map_pow, Nat.cast_add, Nat.cast_one,
-          add_tsub_cancel_right]
-        have h₀ : n' = 0 ∨ 1 ≤ n' := by omega
-        rcases h₀ with h' | h'
-        · by_contra h''
-          rw [h'] at h''
-          simp only [pow_zero, one_mul, coeff_one, one_ne_zero, ↓reduceIte, zero_mul, add_zero,
-            CharP.cast_eq_zero, zero_add, mul_one, not_true_eq_false] at h''
-          norm_num at h''
-        · rw [ih]
-          conv => lhs; arg 2; rw [mul_comm, ← mul_assoc]
-          move_mul [← (constantCoeff R) φ ^ (n' - 1)]
-          conv => enter [1, 2, 1, 1, 2]; rw [← pow_one (a := constantCoeff R φ)]
-          rw [← pow_add (a := constantCoeff R φ)]
-          conv => enter [1, 2, 1, 1]; rw [Nat.sub_add_cancel h']
-          conv => enter [1, 2, 1]; rw [mul_comm]
-          rw [mul_assoc, ← one_add_mul, add_comm, mul_assoc]
-          conv => enter [1, 2]; rw [mul_comm]
-          exact h'
-      · decide
+      simp only [coeff_zero_eq_constantCoeff, map_pow, Nat.cast_add, Nat.cast_one,
+        add_tsub_cancel_right]
+      have h₀ : n' = 0 ∨ 1 ≤ n' := by omega
+      rcases h₀ with h' | h'
+      by_contra h''
+      rw [h'] at h''
+      simp only [pow_zero, one_mul, coeff_one, one_ne_zero, ↓reduceIte, zero_mul, add_zero,
+        CharP.cast_eq_zero, zero_add, mul_one, not_true_eq_false] at h''
+      norm_num at h''
+      rw [ih]
+      conv => lhs; arg 2; rw [mul_comm, ← mul_assoc]
+      move_mul [← (constantCoeff R) φ ^ (n' - 1)]
+      conv => enter [1, 2, 1, 1, 2]; rw [← pow_one (a := constantCoeff R φ)]
+      rw [← pow_add (a := constantCoeff R φ)]
+      conv => enter [1, 2, 1, 1]; rw [Nat.sub_add_cancel h']
+      conv => enter [1, 2, 1]; rw [mul_comm]
+      rw [mul_assoc, ← one_add_mul, add_comm, mul_assoc]
+      conv => enter [1, 2]; rw [mul_comm]
+      exact h'
+      decide
 
 end CommSemiring
 
@@ -625,16 +625,16 @@ variable {A : Type*} [CommRing A]
 
 theorem not_isField : ¬IsField A⟦X⟧ := by
   by_cases hA : Subsingleton A
-  · exact not_isField_of_subsingleton _
-  · nontriviality A
-    rw [Ring.not_isField_iff_exists_ideal_bot_lt_and_lt_top]
-    use Ideal.span {X}
-    constructor
-    · rw [bot_lt_iff_ne_bot, Ne, Ideal.span_singleton_eq_bot]
-      exact X_ne_zero
-    · rw [lt_top_iff_ne_top, Ne, Ideal.eq_top_iff_one, Ideal.mem_span_singleton,
-        X_dvd_iff, constantCoeff_one]
-      exact one_ne_zero
+  exact not_isField_of_subsingleton _
+  nontriviality A
+  rw [Ring.not_isField_iff_exists_ideal_bot_lt_and_lt_top]
+  use Ideal.span {X}
+  constructor
+  rw [bot_lt_iff_ne_bot, Ne, Ideal.span_singleton_eq_bot]
+  exact X_ne_zero
+  rw [lt_top_iff_ne_top, Ne, Ideal.eq_top_iff_one, Ideal.mem_span_singleton,
+    X_dvd_iff, constantCoeff_one]
+  exact one_ne_zero
 
 @[simp]
 theorem rescale_X (a : A) : rescale a X = C A a * X := by
@@ -675,28 +675,28 @@ theorem eq_zero_or_eq_zero_of_mul_eq_zero [NoZeroDivisors R] (φ ψ : R⟦X⟧) 
   induction' n using Nat.strong_induction_on with n ih
   replace h := congr_arg (coeff R (m + n)) h
   rw [LinearMap.map_zero, coeff_mul, Finset.sum_eq_single (m, n)] at h
-  · replace h := NoZeroDivisors.eq_zero_or_eq_zero_of_mul_eq_zero h
-    rw [or_iff_not_imp_left] at h
-    exact h hm₁
-  · rintro ⟨i, j⟩ hij hne
-    by_cases hj : j < n
-    · rw [ih j hj, mul_zero]
-    by_cases hi : i < m
-    · specialize hm₂ _ hi
-      push_neg at hm₂
-      rw [hm₂, zero_mul]
-    rw [mem_antidiagonal] at hij
-    push_neg at hi hj
-    suffices m < i by
-      have : m + n < i + j := add_lt_add_of_lt_of_le this hj
-      exfalso
-      exact ne_of_lt this hij.symm
-    contrapose! hne
-    obtain rfl := le_antisymm hi hne
-    simpa [Ne, Prod.mk.inj_iff] using (add_right_inj m).mp hij
-  · contrapose!
-    intro
-    rw [mem_antidiagonal]
+  replace h := NoZeroDivisors.eq_zero_or_eq_zero_of_mul_eq_zero h
+  rw [or_iff_not_imp_left] at h
+  exact h hm₁
+  rintro ⟨i, j⟩ hij hne
+  by_cases hj : j < n
+  rw [ih j hj, mul_zero]
+  by_cases hi : i < m
+  specialize hm₂ _ hi
+  push_neg at hm₂
+  rw [hm₂, zero_mul]
+  rw [mem_antidiagonal] at hij
+  push_neg at hi hj
+  suffices m < i by
+    have : m + n < i + j := add_lt_add_of_lt_of_le this hj
+    exfalso
+    exact ne_of_lt this hij.symm
+  contrapose! hne
+  obtain rfl := le_antisymm hi hne
+  simpa [Ne, Prod.mk.inj_iff] using (add_right_inj m).mp hij
+  contrapose!
+  intro
+  rw [mem_antidiagonal]
 
 instance [NoZeroDivisors R] : NoZeroDivisors R⟦X⟧ where
   eq_zero_or_eq_zero_of_mul_eq_zero := eq_zero_or_eq_zero_of_mul_eq_zero _ _
@@ -723,9 +723,9 @@ theorem span_X_isPrime : (Ideal.span ({X} : Set R⟦X⟧)).IsPrime := by
 /-- The variable of the power series ring over an integral domain is prime. -/
 theorem X_prime : Prime (X : R⟦X⟧) := by
   rw [← Ideal.span_singleton_prime]
-  · exact span_X_isPrime
-  · intro h
-    simpa [map_zero (coeff R 1)] using congr_arg (coeff R 1) h
+  exact span_X_isPrime
+  intro h
+  simpa [map_zero (coeff R 1)] using congr_arg (coeff R 1) h
 
 /-- The variable of the power series ring over an integral domain is irreducible. -/
 theorem X_irreducible : Irreducible (X : R⟦X⟧) := X_prime.irreducible

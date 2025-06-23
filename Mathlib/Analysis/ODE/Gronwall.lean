@@ -53,15 +53,15 @@ theorem gronwallBound_of_K_ne_0 {δ K ε : ℝ} (hK : K ≠ 0) :
 theorem hasDerivAt_gronwallBound (δ K ε x : ℝ) :
     HasDerivAt (gronwallBound δ K ε) (K * gronwallBound δ K ε x + ε) x := by
   by_cases hK : K = 0
-  · subst K
-    simp only [gronwallBound_K0, zero_mul, zero_add]
-    convert ((hasDerivAt_id x).const_mul ε).const_add δ
-    rw [mul_one]
-  · simp only [gronwallBound_of_K_ne_0 hK]
-    convert (((hasDerivAt_id x).const_mul K).exp.const_mul δ).add
-      ((((hasDerivAt_id x).const_mul K).exp.sub_const 1).const_mul (ε / K)) using 1
-    simp only [id, mul_add, (mul_assoc _ _ _).symm, mul_comm _ K, mul_div_cancel₀ _ hK]
-    ring
+  subst K
+  simp only [gronwallBound_K0, zero_mul, zero_add]
+  convert ((hasDerivAt_id x).const_mul ε).const_add δ
+  rw [mul_one]
+  simp only [gronwallBound_of_K_ne_0 hK]
+  convert (((hasDerivAt_id x).const_mul K).exp.const_mul δ).add
+    ((((hasDerivAt_id x).const_mul K).exp.sub_const 1).const_mul (ε / K)) using 1
+  simp only [id, mul_add, (mul_assoc _ _ _).symm, mul_comm _ K, mul_div_cancel₀ _ hK]
+  ring
 
 theorem hasDerivAt_gronwallBound_shift (δ K ε x a : ℝ) :
     HasDerivAt (fun y => gronwallBound δ K ε (y - a)) (K * gronwallBound δ K ε (x - a) + ε) x := by
@@ -70,24 +70,24 @@ theorem hasDerivAt_gronwallBound_shift (δ K ε x a : ℝ) :
 
 theorem gronwallBound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ := by
   by_cases hK : K = 0
-  · simp only [gronwallBound, if_pos hK, mul_zero, add_zero]
-  · simp only [gronwallBound, if_neg hK, mul_zero, exp_zero, sub_self, mul_one,
-      add_zero]
+  simp only [gronwallBound, if_pos hK, mul_zero, add_zero]
+  simp only [gronwallBound, if_neg hK, mul_zero, exp_zero, sub_self, mul_one,
+    add_zero]
 
 theorem gronwallBound_ε0 (δ K x : ℝ) : gronwallBound δ K 0 x = δ * exp (K * x) := by
   by_cases hK : K = 0
-  · simp only [gronwallBound_K0, hK, zero_mul, exp_zero, add_zero, mul_one]
-  · simp only [gronwallBound_of_K_ne_0 hK, zero_div, zero_mul, add_zero]
+  simp only [gronwallBound_K0, hK, zero_mul, exp_zero, add_zero, mul_one]
+  simp only [gronwallBound_of_K_ne_0 hK, zero_div, zero_mul, add_zero]
 
 theorem gronwallBound_ε0_δ0 (K x : ℝ) : gronwallBound 0 K 0 x = 0 := by
   simp only [gronwallBound_ε0, zero_mul]
 
 theorem gronwallBound_continuous_ε (δ K x : ℝ) : Continuous fun ε => gronwallBound δ K ε x := by
   by_cases hK : K = 0
-  · simp only [gronwallBound_K0, hK]
-    exact continuous_const.add (continuous_id.mul continuous_const)
-  · simp only [gronwallBound_of_K_ne_0 hK]
-    exact continuous_const.add ((continuous_id.mul continuous_const).mul continuous_const)
+  simp only [gronwallBound_K0, hK]
+  exact continuous_const.add (continuous_id.mul continuous_const)
+  simp only [gronwallBound_of_K_ne_0 hK]
+  exact continuous_const.add ((continuous_id.mul continuous_const).mul continuous_const)
 
 /-! ### Inequality and corollaries -/
 
@@ -106,17 +106,17 @@ theorem le_gronwallBound_of_liminf_deriv_right_le {f f' : ℝ → ℝ} {δ K ε 
   have H : ∀ x ∈ Icc a b, ∀ ε' ∈ Ioi ε, f x ≤ gronwallBound δ K ε' (x - a)
   intro x hx ε' hε'
   apply image_le_of_liminf_slope_right_lt_deriv_boundary hf hf'
-  · rwa [sub_self, gronwallBound_x0]
-  · exact fun x => hasDerivAt_gronwallBound_shift δ K ε' x a
-  · intro x hx hfB
-    rw [← hfB]
-    apply lt_of_le_of_lt (bound x hx)
-    exact add_lt_add_left (mem_Ioi.1 hε') _
-  · exact hx
+  rwa [sub_self, gronwallBound_x0]
+  exact fun x => hasDerivAt_gronwallBound_shift δ K ε' x a
+  intro x hx hfB
+  rw [← hfB]
+  apply lt_of_le_of_lt (bound x hx)
+  exact add_lt_add_left (mem_Ioi.1 hε') _
+  exact hx
   intro x hx
   change f x ≤ (fun ε' => gronwallBound δ K ε' (x - a)) ε
   convert continuousWithinAt_const.closure_le _ _ (H x hx)
-  · simp only [closure_Ioi, left_mem_Ici]
+  simp only [closure_Ioi, left_mem_Ici]
   exact (gronwallBound_continuous_ε δ K (x - a)).continuousWithinAt
 
 /-- A Grönwall-like inequality: if `f : ℝ → E` is continuous on `[a, b]`, has right derivative
@@ -263,14 +263,14 @@ theorem ODE_solution_unique_of_mem_Icc_left
   apply ODE_solution_unique_of_mem_Icc_right hv'
     (hf.comp continuousOn_neg hmt1) _ (fun _ ht ↦ hfs _ (hmt2 ht))
     (hg.comp continuousOn_neg hmt1) _ (fun _ ht ↦ hgs _ (hmt2 ht)) (by simp [hb])
-  · intros t ht
-    convert HasFDerivWithinAt.comp_hasDerivWithinAt t (hf' (-t) (hmt2 ht))
-      (hasDerivAt_neg t).hasDerivWithinAt (hmt3 t)
-    simp
-  · intros t ht
-    convert HasFDerivWithinAt.comp_hasDerivWithinAt t (hg' (-t) (hmt2 ht))
-      (hasDerivAt_neg t).hasDerivWithinAt (hmt3 t)
-    simp
+  intros t ht
+  convert HasFDerivWithinAt.comp_hasDerivWithinAt t (hf' (-t) (hmt2 ht))
+    (hasDerivAt_neg t).hasDerivWithinAt (hmt3 t)
+  simp
+  intros t ht
+  convert HasFDerivWithinAt.comp_hasDerivWithinAt t (hg' (-t) (hmt2 ht))
+    (hasDerivAt_neg t).hasDerivWithinAt (hmt3 t)
+  simp
 
 /-- A version of `ODE_solution_unique_of_mem_Icc_right` for uniqueness in a closed interval whose
 interior contains the initial time. -/
@@ -286,18 +286,18 @@ theorem ODE_solution_unique_of_mem_Icc
     EqOn f g (Icc a b) := by
   rw [← Icc_union_Icc_eq_Icc (le_of_lt ht.1) (le_of_lt ht.2)]
   apply EqOn.union
-  · have hss : Ioc a t₀ ⊆ Ioo a b := Ioc_subset_Ioo_right ht.2
-    exact ODE_solution_unique_of_mem_Icc_left hv
-      (hf.mono <| Icc_subset_Icc_right <| le_of_lt ht.2)
-      (fun _ ht' ↦ (hf' _ (hss ht')).hasDerivWithinAt) (fun _ ht' ↦ (hfs _ (hss ht')))
-      (hg.mono <| Icc_subset_Icc_right <| le_of_lt ht.2)
-      (fun _ ht' ↦ (hg' _ (hss ht')).hasDerivWithinAt) (fun _ ht' ↦ (hgs _ (hss ht'))) heq
-  · have hss : Ico t₀ b ⊆ Ioo a b := Ico_subset_Ioo_left ht.1
-    exact ODE_solution_unique_of_mem_Icc_right hv
-      (hf.mono <| Icc_subset_Icc_left <| le_of_lt ht.1)
-      (fun _ ht' ↦ (hf' _ (hss ht')).hasDerivWithinAt) (fun _ ht' ↦ (hfs _ (hss ht')))
-      (hg.mono <| Icc_subset_Icc_left <| le_of_lt ht.1)
-      (fun _ ht' ↦ (hg' _ (hss ht')).hasDerivWithinAt) (fun _ ht' ↦ (hgs _ (hss ht'))) heq
+  have hss : Ioc a t₀ ⊆ Ioo a b := Ioc_subset_Ioo_right ht.2
+  exact ODE_solution_unique_of_mem_Icc_left hv
+    (hf.mono <| Icc_subset_Icc_right <| le_of_lt ht.2)
+    (fun _ ht' ↦ (hf' _ (hss ht')).hasDerivWithinAt) (fun _ ht' ↦ (hfs _ (hss ht')))
+    (hg.mono <| Icc_subset_Icc_right <| le_of_lt ht.2)
+    (fun _ ht' ↦ (hg' _ (hss ht')).hasDerivWithinAt) (fun _ ht' ↦ (hgs _ (hss ht'))) heq
+  have hss : Ico t₀ b ⊆ Ioo a b := Ico_subset_Ioo_left ht.1
+  exact ODE_solution_unique_of_mem_Icc_right hv
+    (hf.mono <| Icc_subset_Icc_left <| le_of_lt ht.1)
+    (fun _ ht' ↦ (hf' _ (hss ht')).hasDerivWithinAt) (fun _ ht' ↦ (hfs _ (hss ht')))
+    (hg.mono <| Icc_subset_Icc_left <| le_of_lt ht.1)
+    (fun _ ht' ↦ (hg' _ (hss ht')).hasDerivWithinAt) (fun _ ht' ↦ (hgs _ (hss ht'))) heq
 
 /-- A version of `ODE_solution_unique_of_mem_Icc` for uniqueness in an open interval. -/
 theorem ODE_solution_unique_of_mem_Ioo
@@ -308,26 +308,26 @@ theorem ODE_solution_unique_of_mem_Ioo
     EqOn f g (Ioo a b) := by
   intros t' ht'
   rcases lt_or_le t' t₀ with (h | h)
-  · have hss : Icc t' t₀ ⊆ Ioo a b :=
-      fun _ ht'' ↦ ⟨lt_of_lt_of_le ht'.1 ht''.1, lt_of_le_of_lt ht''.2 ht.2⟩
-    exact ODE_solution_unique_of_mem_Icc_left hv
-      (ContinuousAt.continuousOn fun _ ht'' ↦ (hf _ <| hss ht'').1.continuousAt)
-      (fun _ ht'' ↦ (hf _ <| hss <| Ioc_subset_Icc_self ht'').1.hasDerivWithinAt)
-      (fun _ ht'' ↦ (hf _ <| hss <| Ioc_subset_Icc_self ht'').2)
-      (ContinuousAt.continuousOn fun _ ht'' ↦ (hg _ <| hss ht'').1.continuousAt)
-      (fun _ ht'' ↦ (hg _ <| hss <| Ioc_subset_Icc_self ht'').1.hasDerivWithinAt)
-      (fun _ ht'' ↦ (hg _ <| hss <| Ioc_subset_Icc_self ht'').2) heq
-      ⟨le_rfl, le_of_lt h⟩
-  · have hss : Icc t₀ t' ⊆ Ioo a b :=
-      fun _ ht'' ↦ ⟨lt_of_lt_of_le ht.1 ht''.1, lt_of_le_of_lt ht''.2 ht'.2⟩
-    exact ODE_solution_unique_of_mem_Icc_right hv
-      (ContinuousAt.continuousOn fun _ ht'' ↦ (hf _ <| hss ht'').1.continuousAt)
-      (fun _ ht'' ↦ (hf _ <| hss <| Ico_subset_Icc_self ht'').1.hasDerivWithinAt)
-      (fun _ ht'' ↦ (hf _ <| hss <| Ico_subset_Icc_self ht'').2)
-      (ContinuousAt.continuousOn fun _ ht'' ↦ (hg _ <| hss ht'').1.continuousAt)
-      (fun _ ht'' ↦ (hg _ <| hss <| Ico_subset_Icc_self ht'').1.hasDerivWithinAt)
-      (fun _ ht'' ↦ (hg _ <| hss <| Ico_subset_Icc_self ht'').2) heq
-      ⟨h, le_rfl⟩
+  have hss : Icc t' t₀ ⊆ Ioo a b :=
+    fun _ ht'' ↦ ⟨lt_of_lt_of_le ht'.1 ht''.1, lt_of_le_of_lt ht''.2 ht.2⟩
+  exact ODE_solution_unique_of_mem_Icc_left hv
+    (ContinuousAt.continuousOn fun _ ht'' ↦ (hf _ <| hss ht'').1.continuousAt)
+    (fun _ ht'' ↦ (hf _ <| hss <| Ioc_subset_Icc_self ht'').1.hasDerivWithinAt)
+    (fun _ ht'' ↦ (hf _ <| hss <| Ioc_subset_Icc_self ht'').2)
+    (ContinuousAt.continuousOn fun _ ht'' ↦ (hg _ <| hss ht'').1.continuousAt)
+    (fun _ ht'' ↦ (hg _ <| hss <| Ioc_subset_Icc_self ht'').1.hasDerivWithinAt)
+    (fun _ ht'' ↦ (hg _ <| hss <| Ioc_subset_Icc_self ht'').2) heq
+    ⟨le_rfl, le_of_lt h⟩
+  have hss : Icc t₀ t' ⊆ Ioo a b :=
+    fun _ ht'' ↦ ⟨lt_of_lt_of_le ht.1 ht''.1, lt_of_le_of_lt ht''.2 ht'.2⟩
+  exact ODE_solution_unique_of_mem_Icc_right hv
+    (ContinuousAt.continuousOn fun _ ht'' ↦ (hf _ <| hss ht'').1.continuousAt)
+    (fun _ ht'' ↦ (hf _ <| hss <| Ico_subset_Icc_self ht'').1.hasDerivWithinAt)
+    (fun _ ht'' ↦ (hf _ <| hss <| Ico_subset_Icc_self ht'').2)
+    (ContinuousAt.continuousOn fun _ ht'' ↦ (hg _ <| hss ht'').1.continuousAt)
+    (fun _ ht'' ↦ (hg _ <| hss <| Ico_subset_Icc_self ht'').1.hasDerivWithinAt)
+    (fun _ ht'' ↦ (hg _ <| hss <| Ico_subset_Icc_self ht'').2) heq
+    ⟨h, le_rfl⟩
 
 /-- Local unqueness of ODE solutions. -/
 theorem ODE_solution_unique_of_eventually

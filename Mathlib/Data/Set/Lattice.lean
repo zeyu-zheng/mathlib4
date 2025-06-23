@@ -510,13 +510,13 @@ theorem image_projection_prod {ι : Type*} {α : ι → Type*} {v : ∀ i : ι, 
     (hv : (pi univ v).Nonempty) (i : ι) :
     ((fun x : ∀ i : ι, α i => x i) '' ⋂ k, (fun x : ∀ j : ι, α j => x k) ⁻¹' v k) = v i := by
     apply Subset.antisymm
-    · simp [iInter_subset]
-    · intro y y_in
-      simp only [mem_image, mem_iInter, mem_preimage]
-      rcases hv with ⟨z, hz⟩
-      refine ⟨Function.update z i y, ?_, update_same i y z⟩
-      rw [@forall_update_iff ι α _ z i y fun i t => t ∈ v i]
-      exact ⟨y_in, fun j _ => by simpa using hz j⟩
+    simp [iInter_subset]
+    intro y y_in
+    simp only [mem_image, mem_iInter, mem_preimage]
+    rcases hv with ⟨z, hz⟩
+    refine ⟨Function.update z i y, ?_, update_same i y z⟩
+    rw [@forall_update_iff ι α _ z i y fun i t => t ∈ v i]
+    exact ⟨y_in, fun j _ => by simpa using hz j⟩
 
 /-! ### Unions and intersections indexed by `Prop` -/
 
@@ -1062,11 +1062,11 @@ theorem iUnion_image_preimage_sigma_mk_eq_self {ι : Type*} {σ : ι → Type*} 
   ext x
   simp only [mem_iUnion, mem_image, mem_preimage]
   constructor
-  · rintro ⟨i, a, h, rfl⟩
-    exact h
-  · intro h
-    cases' x with i a
-    exact ⟨i, a, h, rfl⟩
+  rintro ⟨i, a, h, rfl⟩
+  exact h
+  intro h
+  cases' x with i a
+  exact ⟨i, a, h, rfl⟩
 
 theorem Sigma.univ (X : α → Type*) : (Set.univ : Set (Σa, X a)) = ⋃ a, range (Sigma.mk a) :=
   Set.ext fun x =>
@@ -1137,22 +1137,22 @@ theorem sInter_iUnion (s : ι → Set (Set α)) : ⋂₀ ⋃ i, s i = ⋂ i, ⋂
 theorem iUnion_range_eq_sUnion {α β : Type*} (C : Set (Set α)) {f : ∀ s : C, β → (s : Type _)}
     (hf : ∀ s : C, Surjective (f s)) : ⋃ y : β, range (fun s : C => (f s y).val) = ⋃₀C := by
   ext x; constructor
-  · rintro ⟨s, ⟨y, rfl⟩, ⟨s, hs⟩, rfl⟩
-    refine ⟨_, hs, ?_⟩
-    exact (f ⟨s, hs⟩ y).2
-  · rintro ⟨s, hs, hx⟩
-    cases' hf ⟨s, hs⟩ ⟨x, hx⟩ with y hy
-    refine ⟨_, ⟨y, rfl⟩, ⟨s, hs⟩, ?_⟩
-    exact congr_arg Subtype.val hy
+  rintro ⟨s, ⟨y, rfl⟩, ⟨s, hs⟩, rfl⟩
+  refine ⟨_, hs, ?_⟩
+  exact (f ⟨s, hs⟩ y).2
+  rintro ⟨s, hs, hx⟩
+  cases' hf ⟨s, hs⟩ ⟨x, hx⟩ with y hy
+  refine ⟨_, ⟨y, rfl⟩, ⟨s, hs⟩, ?_⟩
+  exact congr_arg Subtype.val hy
 
 theorem iUnion_range_eq_iUnion (C : ι → Set α) {f : ∀ x : ι, β → C x}
     (hf : ∀ x : ι, Surjective (f x)) : ⋃ y : β, range (fun x : ι => (f x y).val) = ⋃ x, C x := by
   ext x; rw [mem_iUnion, mem_iUnion]; constructor
-  · rintro ⟨y, i, rfl⟩
-    exact ⟨i, (f i y).2⟩
-  · rintro ⟨i, hx⟩
-    cases' hf i ⟨x, hx⟩ with y hy
-    exact ⟨y, i, congr_arg Subtype.val hy⟩
+  rintro ⟨y, i, rfl⟩
+  exact ⟨i, (f i y).2⟩
+  rintro ⟨i, hx⟩
+  cases' hf i ⟨x, hx⟩ with y hy
+  exact ⟨y, i, congr_arg Subtype.val hy⟩
 
 theorem union_distrib_iInter_left (s : ι → Set α) (t : Set α) : (t ∪ ⋂ i, s i) = ⋂ i, t ∪ s i :=
   sup_iInf_eq _ _
@@ -1303,8 +1303,8 @@ theorem InjOn.image_biInter_eq {p : ι → Prop} {s : ∀ i, p i → Set α} (hp
 theorem image_iInter {f : α → β} (hf : Bijective f) (s : ι → Set α) :
     (f '' ⋂ i, s i) = ⋂ i, f '' s i := by
   cases isEmpty_or_nonempty ι
-  · simp_rw [iInter_of_empty, image_univ_of_surjective hf.surjective]
-  · exact hf.injective.injOn.image_iInter_eq
+  simp_rw [iInter_of_empty, image_univ_of_surjective hf.surjective]
+  exact hf.injective.injOn.image_iInter_eq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
@@ -1445,10 +1445,10 @@ theorem image_sUnion {f : α → β} {s : Set (Set α)} : (f '' ⋃₀ s) = ⋃�
   ext b
   simp only [mem_image, mem_sUnion, exists_prop, sUnion_image, mem_iUnion]
   constructor
-  · rintro ⟨a, ⟨t, ht₁, ht₂⟩, rfl⟩
-    exact ⟨t, ht₁, a, ht₂, rfl⟩
-  · rintro ⟨t, ht₁, a, ht₂, rfl⟩
-    exact ⟨a, ⟨t, ht₁, ht₂⟩, rfl⟩
+  rintro ⟨a, ⟨t, ht₁, ht₂⟩, rfl⟩
+  exact ⟨t, ht₁, a, ht₂, rfl⟩
+  rintro ⟨t, ht₁, a, ht₂, rfl⟩
+  exact ⟨a, ⟨t, ht₁, ht₂⟩, rfl⟩
 
 @[simp]
 theorem preimage_sUnion {f : α → β} {s : Set (Set β)} : f ⁻¹' ⋃₀s = ⋃ t ∈ s, f ⁻¹' t := by
@@ -1514,10 +1514,10 @@ lemma iUnion_prod' (f : β × γ → Set α) : ⋃ x : β × γ, f x = ⋃ (i : 
 theorem iUnion_prod_of_monotone [SemilatticeSup α] {s : α → Set β} {t : α → Set γ} (hs : Monotone s)
     (ht : Monotone t) : ⋃ x, s x ×ˢ t x = (⋃ x, s x) ×ˢ ⋃ x, t x := by
   ext ⟨z, w⟩; simp only [mem_prod, mem_iUnion, exists_imp, and_imp, iff_def]; constructor
-  · intro x hz hw
-    exact ⟨⟨x, hz⟩, x, hw⟩
-  · intro x hz x' hw
-    exact ⟨x ⊔ x', hs le_sup_left hz, ht le_sup_right hw⟩
+  intro x hz hw
+  exact ⟨⟨x, hz⟩, x, hw⟩
+  intro x hz x' hw
+  exact ⟨x ⊔ x', hs le_sup_left hz, ht le_sup_right hw⟩
 
 theorem sInter_prod_sInter_subset (S : Set (Set α)) (T : Set (Set β)) :
     ⋂₀ S ×ˢ ⋂₀ T ⊆ ⋂ r ∈ S ×ˢ T, r.1 ×ˢ r.2 :=

@@ -148,10 +148,10 @@ noncomputable def isInitialPunit : IsInitial (PEmpty : Type u) :=
 /-- An object in `Type u` is initial if and only if it is empty. -/
 lemma initial_iff_empty (X : Type u) : Nonempty (IsInitial X) ↔ IsEmpty X := by
   constructor
-  · intro ⟨h⟩
-    exact Function.isEmpty (IsInitial.to h PEmpty)
-  · intro h
-    exact ⟨IsInitial.ofIso Types.isInitialPunit <| Equiv.toIso <| Equiv.equivOfIsEmpty PEmpty X⟩
+  intro ⟨h⟩
+  exact Function.isEmpty (IsInitial.to h PEmpty)
+  intro h
+  exact ⟨IsInitial.ofIso Types.isInitialPunit <| Equiv.toIso <| Equiv.equivOfIsEmpty PEmpty X⟩
 
 open CategoryTheory.Limits.WalkingPair
 
@@ -284,47 +284,47 @@ theorem binaryCofan_isColimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
     Nonempty (IsColimit c) ↔
       Injective c.inl ∧ Injective c.inr ∧ IsCompl (Set.range c.inl) (Set.range c.inr) := by
     constructor
-    · rintro ⟨h⟩
-      rw [← show _ = c.inl from
-          h.comp_coconePointUniqueUpToIso_inv (binaryCoproductColimit X Y) ⟨WalkingPair.left⟩,
-        ← show _ = c.inr from
-          h.comp_coconePointUniqueUpToIso_inv (binaryCoproductColimit X Y) ⟨WalkingPair.right⟩]
-      dsimp [binaryCoproductCocone]
-      refine
-        ⟨(h.coconePointUniqueUpToIso (binaryCoproductColimit X Y)).symm.toEquiv.injective.comp
-            Sum.inl_injective,
-          (h.coconePointUniqueUpToIso (binaryCoproductColimit X Y)).symm.toEquiv.injective.comp
-            Sum.inr_injective, ?_⟩
-      erw [Set.range_comp, ← eq_compl_iff_isCompl, Set.range_comp _ Sum.inr, ←
-        Set.image_compl_eq
-          (h.coconePointUniqueUpToIso (binaryCoproductColimit X Y)).symm.toEquiv.bijective]
-      simp
-    · rintro ⟨h₁, h₂, h₃⟩
-      have : ∀ x, x ∈ Set.range c.inl ∨ x ∈ Set.range c.inr
-      rw [eq_compl_iff_isCompl.mpr h₃.symm]
-      exact fun _ => or_not
-      refine ⟨BinaryCofan.IsColimit.mk _ ?_ ?_ ?_ ?_⟩
-      · intro T f g x
-        exact
-          if h : x ∈ Set.range c.inl then f ((Equiv.ofInjective _ h₁).symm ⟨x, h⟩)
-          else g ((Equiv.ofInjective _ h₂).symm ⟨x, (this x).resolve_left h⟩)
-      · intro T f g
-        funext x
-        dsimp
-        simp [h₁.eq_iff]
-      · intro T f g
-        funext x
-        dsimp
-        simp only [Set.mem_range, Equiv.ofInjective_symm_apply,
-          dite_eq_right_iff, forall_exists_index]
-        intro y e
-        have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
-        rw [disjoint_iff.mp h₃.1] at this
-        exact this.elim
-      · rintro T _ _ m rfl rfl
-        funext x
-        dsimp
-        split_ifs <;> exact congr_arg _ (Equiv.apply_ofInjective_symm _ ⟨_, _⟩).symm
+    rintro ⟨h⟩
+    rw [← show _ = c.inl from
+        h.comp_coconePointUniqueUpToIso_inv (binaryCoproductColimit X Y) ⟨WalkingPair.left⟩,
+      ← show _ = c.inr from
+        h.comp_coconePointUniqueUpToIso_inv (binaryCoproductColimit X Y) ⟨WalkingPair.right⟩]
+    dsimp [binaryCoproductCocone]
+    refine
+      ⟨(h.coconePointUniqueUpToIso (binaryCoproductColimit X Y)).symm.toEquiv.injective.comp
+          Sum.inl_injective,
+        (h.coconePointUniqueUpToIso (binaryCoproductColimit X Y)).symm.toEquiv.injective.comp
+          Sum.inr_injective, ?_⟩
+    erw [Set.range_comp, ← eq_compl_iff_isCompl, Set.range_comp _ Sum.inr, ←
+      Set.image_compl_eq
+        (h.coconePointUniqueUpToIso (binaryCoproductColimit X Y)).symm.toEquiv.bijective]
+    simp
+    rintro ⟨h₁, h₂, h₃⟩
+    have : ∀ x, x ∈ Set.range c.inl ∨ x ∈ Set.range c.inr
+    rw [eq_compl_iff_isCompl.mpr h₃.symm]
+    exact fun _ => or_not
+    refine ⟨BinaryCofan.IsColimit.mk _ ?_ ?_ ?_ ?_⟩
+    intro T f g x
+    exact
+      if h : x ∈ Set.range c.inl then f ((Equiv.ofInjective _ h₁).symm ⟨x, h⟩)
+      else g ((Equiv.ofInjective _ h₂).symm ⟨x, (this x).resolve_left h⟩)
+    intro T f g
+    funext x
+    dsimp
+    simp [h₁.eq_iff]
+    intro T f g
+    funext x
+    dsimp
+    simp only [Set.mem_range, Equiv.ofInjective_symm_apply,
+      dite_eq_right_iff, forall_exists_index]
+    intro y e
+    have : c.inr x ∈ Set.range c.inl ⊓ Set.range c.inr := ⟨⟨_, e⟩, ⟨_, rfl⟩⟩
+    rw [disjoint_iff.mp h₃.1] at this
+    exact this.elim
+    rintro T _ _ m rfl rfl
+    funext x
+    dsimp
+    split_ifs <;> exact congr_arg _ (Equiv.apply_ofInjective_symm _ ⟨_, _⟩).symm
 
 /-- Any monomorphism in `Type` is a coproduct injection. -/
 noncomputable def isCoprodOfMono {X Y : Type u} (f : X ⟶ Y) [Mono f] :
@@ -543,18 +543,18 @@ theorem coequalizer_preimage_image_eq_of_preimage_eq (π : Y ⟶ Z) (e : f ≫ �
       trans := by tauto }
   ext
   constructor
-  · rw [←
-      show _ = π from
-        h.comp_coconePointUniqueUpToIso_inv (coequalizerColimit f g).2
-          WalkingParallelPair.one]
-    rintro ⟨y, hy, e'⟩
-    dsimp at e'
-    replace e' :=
-      (mono_iff_injective
-            (h.coconePointUniqueUpToIso (coequalizerColimit f g).isColimit).inv).mp
-        inferInstance e'
-    exact (eqv.eqvGen_iff.mp (EqvGen.mono lem (Quot.exact _ e'))).mp hy
-  · exact fun hx => ⟨_, hx, rfl⟩
+  rw [←
+    show _ = π from
+      h.comp_coconePointUniqueUpToIso_inv (coequalizerColimit f g).2
+        WalkingParallelPair.one]
+  rintro ⟨y, hy, e'⟩
+  dsimp at e'
+  replace e' :=
+    (mono_iff_injective
+          (h.coconePointUniqueUpToIso (coequalizerColimit f g).isColimit).inv).mp
+      inferInstance e'
+  exact (eqv.eqvGen_iff.mp (EqvGen.mono lem (Quot.exact _ e'))).mp hy
+  exact fun hx => ⟨_, hx, rfl⟩
 
 /-- The categorical coequalizer in `Type u` is the quotient by `f g ~ g x`. -/
 noncomputable def coequalizerIso : coequalizer f g ≅ _root_.Quot (CoequalizerRel f g) :=
@@ -787,41 +787,41 @@ lemma inl_rel'_inl_iff (x₁ y₁ : X₁) :
     Rel' f g (Sum.inl x₁) (Sum.inl y₁) ↔ x₁ = y₁ ∨
       ∃ (x₀ y₀ : S) (_ : g x₀ = g y₀), x₁ = f x₀ ∧ y₁ = f y₀ := by
   constructor
-  · rintro (_|⟨_, _, h⟩)
-    · exact Or.inl rfl
-    · exact Or.inr ⟨_, _, h, rfl, rfl⟩
-  · rintro (rfl | ⟨_,_ , h, rfl, rfl⟩)
-    · apply Rel'.refl
-    · exact Rel'.inl_inl _ _ h
+  rintro (_|⟨_, _, h⟩)
+  exact Or.inl rfl
+  exact Or.inr ⟨_, _, h, rfl, rfl⟩
+  rintro (rfl | ⟨_,_ , h, rfl, rfl⟩)
+  apply Rel'.refl
+  exact Rel'.inl_inl _ _ h
 
 @[simp]
 lemma inl_rel'_inr_iff (x₁ : X₁) (x₂ : X₂) :
     Rel' f g (Sum.inl x₁) (Sum.inr x₂) ↔
       ∃ (s : S), x₁ = f s ∧ x₂ = g s := by
   constructor
-  · rintro ⟨_⟩
-    exact ⟨_, rfl, rfl⟩
-  · rintro ⟨s, rfl, rfl⟩
-    exact Rel'.inl_inr _
+  rintro ⟨_⟩
+  exact ⟨_, rfl, rfl⟩
+  rintro ⟨s, rfl, rfl⟩
+  exact Rel'.inl_inr _
 
 @[simp]
 lemma inr_rel'_inr_iff (x₂ y₂ : X₂) :
     Rel' f g (Sum.inr x₂) (Sum.inr y₂) ↔ x₂ = y₂ := by
   constructor
-  · rintro ⟨_⟩
-    rfl
-  · rintro rfl
-    apply Rel'.refl
+  rintro ⟨_⟩
+  rfl
+  rintro rfl
+  apply Rel'.refl
 
 variable {f g}
 
 lemma Rel'.symm {x y : X₁ ⊕ X₂} (h : Rel' f g x y) :
     Rel' f g y x := by
   obtain _|⟨_, _, h⟩|_|_ := h
-  · apply Rel'.refl
-  · exact Rel'.inl_inl _ _ h.symm
-  · exact Rel'.inr_inl _
-  · exact Rel'.inl_inr _
+  apply Rel'.refl
+  exact Rel'.inl_inl _ _ h.symm
+  exact Rel'.inr_inl _
+  exact Rel'.inl_inr _
 
 variable (f g)
 
@@ -830,37 +830,37 @@ lemma equivalence_rel' [Mono f] : _root_.Equivalence (Rel' f g) where
   symm h := h.symm
   trans := by
     rintro x y z (_|⟨_, _, h⟩|s|_) hyz
-    · exact hyz
-    · obtain z₁|z₂ := z
-      · rw [inl_rel'_inl_iff] at hyz
-        obtain rfl|⟨_, _, h', h'', rfl⟩ := hyz
-        · exact Rel'.inl_inl _ _ h
-        · obtain rfl := (mono_iff_injective f).1 inferInstance h''
-          exact Rel'.inl_inl _ _ (h.trans h')
-      · rw [inl_rel'_inr_iff] at hyz
-        obtain ⟨s, hs, rfl⟩ := hyz
-        obtain rfl := (mono_iff_injective f).1 inferInstance hs
-        rw [← h]
-        apply Rel'.inl_inr
-    · obtain z₁|z₂ := z
-      · replace hyz := hyz.symm
-        rw [inl_rel'_inr_iff] at hyz
-        obtain ⟨s', rfl, hs'⟩ := hyz
-        exact Rel'.inl_inl _ _ hs'
-      · rw [inr_rel'_inr_iff] at hyz
-        subst hyz
-        apply Rel'.inl_inr
-    · obtain z₁|z₂ := z
-      · rw [inl_rel'_inl_iff] at hyz
-        obtain rfl|⟨_, _, h, h', rfl⟩  := hyz
-        · apply Rel'.inr_inl
-        · obtain rfl := (mono_iff_injective f).1 inferInstance h'
-          rw [h]
-          apply Rel'.inr_inl
-      · rw [inl_rel'_inr_iff] at hyz
-        obtain ⟨s, hs, rfl⟩ := hyz
-        obtain rfl := (mono_iff_injective f).1 inferInstance hs
-        apply Rel'.refl
+    exact hyz
+    obtain z₁|z₂ := z
+    rw [inl_rel'_inl_iff] at hyz
+    obtain rfl|⟨_, _, h', h'', rfl⟩ := hyz
+    exact Rel'.inl_inl _ _ h
+    obtain rfl := (mono_iff_injective f).1 inferInstance h''
+    exact Rel'.inl_inl _ _ (h.trans h')
+    rw [inl_rel'_inr_iff] at hyz
+    obtain ⟨s, hs, rfl⟩ := hyz
+    obtain rfl := (mono_iff_injective f).1 inferInstance hs
+    rw [← h]
+    apply Rel'.inl_inr
+    obtain z₁|z₂ := z
+    replace hyz := hyz.symm
+    rw [inl_rel'_inr_iff] at hyz
+    obtain ⟨s', rfl, hs'⟩ := hyz
+    exact Rel'.inl_inl _ _ hs'
+    rw [inr_rel'_inr_iff] at hyz
+    subst hyz
+    apply Rel'.inl_inr
+    obtain z₁|z₂ := z
+    rw [inl_rel'_inl_iff] at hyz
+    obtain rfl|⟨_, _, h, h', rfl⟩  := hyz
+    apply Rel'.inr_inl
+    obtain rfl := (mono_iff_injective f).1 inferInstance h'
+    rw [h]
+    apply Rel'.inr_inl
+    rw [inl_rel'_inr_iff] at hyz
+    obtain ⟨s, hs, rfl⟩ := hyz
+    obtain rfl := (mono_iff_injective f).1 inferInstance hs
+    apply Rel'.refl
 
 /-- The obvious equivalence `Pushout f g ≃ Pushout' f g`. -/
 def equivPushout' : Pushout f g ≃ Pushout' f g where
@@ -895,10 +895,10 @@ lemma inl_eq_inr_iff [Mono f] (x₁ : X₁) (x₂ : X₂) :
       ∃ (s : S), f s = x₁ ∧ g s = x₂ := by
   refine (Pushout.quot_mk_eq_iff f g (Sum.inl x₁) (Sum.inr x₂)).trans ?_
   constructor
-  · rintro ⟨⟩
-    exact ⟨_, rfl, rfl⟩
-  · rintro ⟨s, rfl, rfl⟩
-    apply Rel'.inl_inr
+  rintro ⟨⟩
+  exact ⟨_, rfl, rfl⟩
+  rintro ⟨s, rfl, rfl⟩
+  apply Rel'.inl_inr
 
 end Pushout
 
@@ -908,15 +908,15 @@ lemma pushoutCocone_inl_eq_inr_imp_of_iso {c c' : PushoutCocone f g} (e : c ≅ 
     (x₁ : X₁) (x₂ : X₂) (h : c.inl x₁ = c.inr x₂) :
     c'.inl x₁ = c'.inr x₂ := by
   convert congr_arg e.hom.hom h
-  · exact congr_fun (e.hom.w WalkingSpan.left).symm x₁
-  · exact congr_fun (e.hom.w WalkingSpan.right).symm x₂
+  exact congr_fun (e.hom.w WalkingSpan.left).symm x₁
+  exact congr_fun (e.hom.w WalkingSpan.right).symm x₂
 
 lemma pushoutCocone_inl_eq_inr_iff_of_iso {c c' : PushoutCocone f g} (e : c ≅ c')
     (x₁ : X₁) (x₂ : X₂) :
     c.inl x₁ = c.inr x₂ ↔ c'.inl x₁ = c'.inr x₂ := by
   constructor
-  · apply pushoutCocone_inl_eq_inr_imp_of_iso e
-  · apply pushoutCocone_inl_eq_inr_imp_of_iso e.symm
+  apply pushoutCocone_inl_eq_inr_imp_of_iso e
+  apply pushoutCocone_inl_eq_inr_imp_of_iso e.symm
 
 lemma pushoutCocone_inl_eq_inr_iff_of_isColimit {c : PushoutCocone f g} (hc : IsColimit c)
     (h₁ : Function.Injective f) (x₁ : X₁) (x₂ : X₂) :

@@ -64,7 +64,7 @@ section dual
     use e
     simp_rw [mem_diff, insert_subset_iff, and_iff_left heI, and_iff_right heE, and_iff_right hIE]
     refine ⟨by_contra (fun heX ↦ heB'' (hB''₁ ⟨?_, heI⟩)), ⟨B'', hB'', ?_⟩⟩
-    · rw [hX]; exact ⟨heE, heX⟩
+    rw [hX]; exact ⟨heE, heX⟩
     rw [← union_singleton, disjoint_union_left, disjoint_singleton_left, and_iff_left heB'']
     exact disjoint_of_subset_left hB''₂.2 disjoint_compl_left
   indep_maximal := by
@@ -74,12 +74,12 @@ section dual
     refine ⟨(X \ B') ∩ M.E,
       ⟨?_, subset_inter (subset_diff.mpr ?_) hI'E, inter_subset_left.trans
         diff_subset⟩, ?_⟩
-    · simp only [inter_subset_right, true_and]
-      exact ⟨B', hB', disjoint_of_subset_left inter_subset_left disjoint_sdiff_left⟩
-    · rw [and_iff_right hI'X]
-      refine disjoint_of_subset_right hB'IB ?_
-      rw [disjoint_union_right, and_iff_left hI'B]
-      exact disjoint_of_subset hI'X hI.subset disjoint_sdiff_right
+    simp only [inter_subset_right, true_and]
+    exact ⟨B', hB', disjoint_of_subset_left inter_subset_left disjoint_sdiff_left⟩
+    rw [and_iff_right hI'X]
+    refine disjoint_of_subset_right hB'IB ?_
+    rw [disjoint_union_right, and_iff_left hI'B]
+    exact disjoint_of_subset hI'X hI.subset disjoint_sdiff_right
     simp only [mem_setOf_eq, subset_inter_iff, and_imp, forall_exists_index]
     intros J hJE B'' hB'' hdj _ hJX hssJ
     rw [and_iff_left hJE]
@@ -110,7 +110,7 @@ section dual
     refine subset_diff.mpr ⟨hJX, by_contra (fun hne ↦ ?_)⟩
     obtain ⟨e, heJ, heB'⟩ := not_disjoint_iff.mp hne
     obtain (heB'' | ⟨-,heX⟩ ) := hB₁I heB'
-    · exact hdj.ne_of_mem heJ heB'' rfl
+    exact hdj.ne_of_mem heJ heB'' rfl
     exact heX (hJX heJ)
   subset_ground := by tauto
 
@@ -183,8 +183,8 @@ theorem Base.compl_base_dual (h : M.Base B) : M✶.Base (M.E \ B) := by
 theorem Base.compl_inter_basis_of_inter_basis (hB : M.Base B) (hBX : M.Basis (B ∩ X) X) :
     M✶.Basis ((M.E \ B) ∩ (M.E \ X)) (M.E \ X) := by
   refine Indep.basis_of_forall_insert ?_ inter_subset_right (fun e he ↦ ?_)
-  · rw [dual_indep_iff_exists]
-    exact ⟨B, hB, disjoint_of_subset_left inter_subset_left disjoint_sdiff_left⟩
+  rw [dual_indep_iff_exists]
+  exact ⟨B, hB, disjoint_of_subset_left inter_subset_left disjoint_sdiff_left⟩
   simp only [diff_inter_self_eq_diff, mem_diff, not_and, not_not, imp_iff_right he.1.1] at he
   simp_rw [dual_dep_iff_forall, insert_subset_iff, and_iff_right he.1.1,
     and_iff_left (inter_subset_left.trans diff_subset)]

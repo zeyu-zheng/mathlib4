@@ -80,14 +80,14 @@ theorem continuous_hatInv [CompletableTopField K] {x : hat K} (h : x ≠ 0) :
   rw [this, ← Filter.map_map]
   apply Cauchy.map _ (Completion.uniformContinuous_coe K)
   apply CompletableTopField.nice
-  · haveI := denseInducing_coe.comap_nhds_neBot y
-    apply cauchy_nhds.comap
-    rw [Completion.comap_coe_eq_uniformity]
-  · have eq_bot : 𝓝 (0 : hat K) ⊓ 𝓝 y = ⊥ := by
-      by_contra h
-      exact y_ne (eq_of_nhds_neBot <| neBot_iff.mpr h).symm
-    erw [denseInducing_coe.nhds_eq_comap (0 : K), ← Filter.comap_inf, eq_bot]
-    exact comap_bot
+  haveI := denseInducing_coe.comap_nhds_neBot y
+  apply cauchy_nhds.comap
+  rw [Completion.comap_coe_eq_uniformity]
+  have eq_bot : 𝓝 (0 : hat K) ⊓ 𝓝 y = ⊥ := by
+    by_contra h
+    exact y_ne (eq_of_nhds_neBot <| neBot_iff.mpr h).symm
+  erw [denseInducing_coe.nhds_eq_comap (0 : K), ← Filter.comap_inf, eq_bot]
+  exact comap_bot
 
 /-
 The value of `hat_inv` at zero is not really specified, although it's probably zero.
@@ -106,14 +106,14 @@ variable [CompletableTopField K]
 @[norm_cast]
 theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) := by
   by_cases h : x = 0
-  · rw [h, inv_zero]
-    dsimp [Inv.inv]
-    norm_cast
-    simp
-  · conv_lhs => dsimp [Inv.inv]
-    rw [if_neg]
-    · exact hatInv_extends h
-    · exact fun H => h (denseEmbedding_coe.inj H)
+  rw [h, inv_zero]
+  dsimp [Inv.inv]
+  norm_cast
+  simp
+  conv_lhs => dsimp [Inv.inv]
+  rw [if_neg]
+  exact hatInv_extends h
+  exact fun H => h (denseEmbedding_coe.inj H)
 
 variable [UniformAddGroup K]
 

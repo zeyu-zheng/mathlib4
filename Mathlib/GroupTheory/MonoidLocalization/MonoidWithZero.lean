@@ -22,15 +22,15 @@ theorem toMap_injective_iff
     Injective (LocalizationMap.toMap f) ↔ ∀ ⦃x⦄, x ∈ S → IsLeftRegular x := by
   rw [Injective]
   constructor <;> intro h
-  · intro x hx y z hyz
-    simp_rw [LocalizationMap.eq_iff_exists] at h
-    apply (fun y z _ => h) y z x
-    lift x to S using hx
-    use x
-  · intro a b hab
-    rw [LocalizationMap.eq_iff_exists] at hab
-    obtain ⟨c,hc⟩ := hab
-    apply (fun x a => h a) c (SetLike.coe_mem c) hc
+  intro x hx y z hyz
+  simp_rw [LocalizationMap.eq_iff_exists] at h
+  apply (fun y z _ => h) y z x
+  lift x to S using hx
+  use x
+  intro a b hab
+  rw [LocalizationMap.eq_iff_exists] at hab
+  obtain ⟨c,hc⟩ := hab
+  apply (fun x a => h a) c (SetLike.coe_mem c) hc
 
 end Submonoid.LocalizationMap
 

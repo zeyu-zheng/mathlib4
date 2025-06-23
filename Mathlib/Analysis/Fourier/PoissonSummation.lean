@@ -113,10 +113,10 @@ theorem Real.tsum_eq_tsum_fourierIntegral {f : C(ℝ, ℂ)}
     convert h_sum
     exact Real.fourierCoeff_tsum_comp_add h_norm _
   convert (has_pointwise_sum_fourier_series_of_summable this x).tsum_eq.symm using 1
-  · simpa only [F, coe_mk, ← QuotientAddGroup.mk_zero, Periodic.lift_coe, zsmul_one, comp_apply,
-      coe_addRight, zero_add]
-       using (hasSum_apply (summable_of_locally_summable_norm h_norm).hasSum x).tsum_eq
-  · simp_rw [← Real.fourierCoeff_tsum_comp_add h_norm, smul_eq_mul, F, coe_mk]
+  simpa only [F, coe_mk, ← QuotientAddGroup.mk_zero, Periodic.lift_coe, zsmul_one, comp_apply,
+    coe_addRight, zero_add]
+     using (hasSum_apply (summable_of_locally_summable_norm h_norm).hasSum x).tsum_eq
+  simp_rw [← Real.fourierCoeff_tsum_comp_add h_norm, smul_eq_mul, F, coe_mk]
 
 section RpowDecay
 
@@ -149,8 +149,8 @@ theorem isBigO_norm_Icc_restrict_atTop {f : C(ℝ, E)} {b : ℝ} (hb : 0 < b)
   have A : ∀ x : ℝ, 0 ≤ |x| ^ (-b) := fun x => by positivity
   rw [mul_assoc, mul_le_mul_left hc, norm_of_nonneg (A _), norm_of_nonneg (A _)]
   convert claim x (by linarith only [hx.1]) y.1 y.2.1
-  · apply abs_of_nonneg; linarith [y.2.1]
-  · exact abs_of_pos hx'.1
+  apply abs_of_nonneg; linarith [y.2.1]
+  exact abs_of_pos hx'.1
 
 theorem isBigO_norm_Icc_restrict_atBot {f : C(ℝ, E)} {b : ℝ} (hb : 0 < b)
     (hf : f =O[atBot] fun x : ℝ => |x| ^ (-b)) (R S : ℝ) :
@@ -168,9 +168,9 @@ theorem isBigO_norm_Icc_restrict_atBot {f : C(ℝ, E)} {b : ℝ} (hb : 0 < b)
   rintro ⟨x, hx⟩
   rw [ContinuousMap.restrict_apply_mk]
   refine (le_of_eq ?_).trans (ContinuousMap.norm_coe_le_norm _ ⟨-x, ?_⟩)
-  · rw [ContinuousMap.restrict_apply_mk, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
-      ContinuousMap.coe_mk, neg_neg]
-  · exact ⟨by linarith [hx.2], by linarith [hx.1]⟩
+  rw [ContinuousMap.restrict_apply_mk, ContinuousMap.comp_apply, ContinuousMap.coe_mk,
+    ContinuousMap.coe_mk, neg_neg]
+  exact ⟨by linarith [hx.2], by linarith [hx.1]⟩
 
 theorem isBigO_norm_restrict_cocompact (f : C(ℝ, E)) {b : ℝ} (hb : 0 < b)
     (hf : f =O[cocompact ℝ] fun x : ℝ => |x| ^ (-b)) (K : Compacts ℝ) :
@@ -183,14 +183,14 @@ theorem isBigO_norm_restrict_cocompact (f : C(ℝ, E)) {b : ℝ} (hb : 0 < b)
     rw [ContinuousMap.norm_le _ (norm_nonneg _)]
     rintro ⟨y, hy⟩
     refine (le_of_eq ?_).trans (ContinuousMap.norm_coe_le_norm _ ⟨y + x, ?_⟩)
-    · simp_rw [ContinuousMap.restrict_apply, ContinuousMap.comp_apply, ContinuousMap.coe_addRight]
-    · exact ⟨by linarith [(hr hy).1], by linarith [(hr hy).2]⟩
+    simp_rw [ContinuousMap.restrict_apply, ContinuousMap.comp_apply, ContinuousMap.coe_addRight]
+    exact ⟨by linarith [(hr hy).1], by linarith [(hr hy).2]⟩
   simp_rw [cocompact_eq_atBot_atTop, isBigO_sup] at hf ⊢
   constructor
-  · refine (isBigO_of_le atBot ?_).trans (isBigO_norm_Icc_restrict_atBot hb hf.1 (-r) r)
-    simp_rw [norm_norm]; exact this
-  · refine (isBigO_of_le atTop ?_).trans (isBigO_norm_Icc_restrict_atTop hb hf.2 (-r) r)
-    simp_rw [norm_norm]; exact this
+  refine (isBigO_of_le atBot ?_).trans (isBigO_norm_Icc_restrict_atBot hb hf.1 (-r) r)
+  simp_rw [norm_norm]; exact this
+  refine (isBigO_of_le atTop ?_).trans (isBigO_norm_Icc_restrict_atTop hb hf.2 (-r) r)
+  simp_rw [norm_norm]; exact this
 
 /-- **Poisson's summation formula**, assuming that `f` decays as
 `|x| ^ (-b)` for some `1 < b` and its Fourier transform is summable. -/

@@ -125,7 +125,7 @@ theorem coe_add_eq_top_iff {y : WithTop α} : ↑x + y = ⊤ ↔ y = ⊤ := by s
 theorem add_right_cancel_iff [IsRightCancelAdd α] (ha : a ≠ ⊤) : b + a = c + a ↔ b = c := by
   lift a to α using ha
   obtain rfl | hb := eq_or_ne b ⊤
-  · rw [top_add, eq_comm, WithTop.add_coe_eq_top_iff, eq_comm]
+  rw [top_add, eq_comm, WithTop.add_coe_eq_top_iff, eq_comm]
   lift b to α using hb
   simp_rw [← WithTop.coe_add, eq_comm, WithTop.add_eq_coe, coe_eq_coe, exists_and_left,
     exists_eq_left, add_left_inj, exists_eq_right, eq_comm]
@@ -136,7 +136,7 @@ theorem add_right_cancel [IsRightCancelAdd α] (ha : a ≠ ⊤) (h : b + a = c +
 theorem add_left_cancel_iff [IsLeftCancelAdd α] (ha : a ≠ ⊤) : a + b = a + c ↔ b = c := by
   lift a to α using ha
   obtain rfl | hb := eq_or_ne b ⊤
-  · rw [add_top, eq_comm, WithTop.coe_add_eq_top_iff, eq_comm]
+  rw [add_top, eq_comm, WithTop.coe_add_eq_top_iff, eq_comm]
   lift b to α using hb
   simp_rw [← WithTop.coe_add, eq_comm, WithTop.add_eq_coe, eq_comm, coe_eq_coe,
     exists_and_left, exists_eq_left', add_right_inj, exists_eq_right']
@@ -164,51 +164,51 @@ instance contravariantClass_add_lt [LT α] [ContravariantClass α α (· + ·) (
     induction a; · exact (WithTop.not_top_lt _ h).elim
     induction b; · exact (WithTop.not_top_lt _ h).elim
     induction c
-    · exact coe_lt_top _
-    · exact coe_lt_coe.2 (lt_of_add_lt_add_left <| coe_lt_coe.1 h)⟩
+    exact coe_lt_top _
+    exact coe_lt_coe.2 (lt_of_add_lt_add_left <| coe_lt_coe.1 h)⟩
 
 instance contravariantClass_swap_add_lt [LT α] [ContravariantClass α α (swap (· + ·)) (· < ·)] :
     ContravariantClass (WithTop α) (WithTop α) (swap (· + ·)) (· < ·) :=
   ⟨fun a b c h => by
     cases a <;> cases b <;> try exact (WithTop.not_top_lt _ h).elim
     cases c
-    · exact coe_lt_top _
-    · exact coe_lt_coe.2 (lt_of_add_lt_add_right <| coe_lt_coe.1 h)⟩
+    exact coe_lt_top _
+    exact coe_lt_coe.2 (lt_of_add_lt_add_right <| coe_lt_coe.1 h)⟩
 
 protected theorem le_of_add_le_add_left [LE α] [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊤)
     (h : a + b ≤ a + c) : b ≤ c := by
   lift a to α using ha
   induction c
-  · exact le_top
-  · induction b
-    · exact (not_top_le_coe _ h).elim
-    · simp only [← coe_add, coe_le_coe] at h ⊢
-      exact le_of_add_le_add_left h
+  exact le_top
+  induction b
+  exact (not_top_le_coe _ h).elim
+  simp only [← coe_add, coe_le_coe] at h ⊢
+  exact le_of_add_le_add_left h
 
 protected theorem le_of_add_le_add_right [LE α] [ContravariantClass α α (swap (· + ·)) (· ≤ ·)]
     (ha : a ≠ ⊤) (h : b + a ≤ c + a) : b ≤ c := by
   lift a to α using ha
   cases c
-  · exact le_top
-  · cases b
-    · exact (not_top_le_coe _ h).elim
-    · exact coe_le_coe.2 (le_of_add_le_add_right <| coe_le_coe.1 h)
+  exact le_top
+  cases b
+  exact (not_top_le_coe _ h).elim
+  exact coe_le_coe.2 (le_of_add_le_add_right <| coe_le_coe.1 h)
 
 protected theorem add_lt_add_left [LT α] [CovariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊤)
     (h : b < c) : a + b < a + c := by
   lift a to α using ha
   rcases lt_iff_exists_coe.1 h with ⟨b, rfl, h'⟩
   cases c
-  · exact coe_lt_top _
-  · exact coe_lt_coe.2 (add_lt_add_left (coe_lt_coe.1 h) _)
+  exact coe_lt_top _
+  exact coe_lt_coe.2 (add_lt_add_left (coe_lt_coe.1 h) _)
 
 protected theorem add_lt_add_right [LT α] [CovariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊤)
     (h : b < c) : b + a < c + a := by
   lift a to α using ha
   rcases lt_iff_exists_coe.1 h with ⟨b, rfl, h'⟩
   cases c
-  · exact coe_lt_top _
-  · exact coe_lt_coe.2 (add_lt_add_right (coe_lt_coe.1 h) _)
+  exact coe_lt_top _
+  exact coe_lt_coe.2 (add_lt_add_right (coe_lt_coe.1 h) _)
 
 protected theorem add_le_add_iff_left [LE α] [CovariantClass α α (· + ·) (· ≤ ·)]
     [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊤) : a + b ≤ a + c ↔ b ≤ c :=
@@ -242,11 +242,11 @@ protected theorem map_add {F} [Add β] [FunLike F α β] [AddHomClass F α β]
     (f : F) (a b : WithTop α) :
     (a + b).map f = a.map f + b.map f := by
   induction a
-  · exact (top_add _).symm
-  · induction b
-    · exact (add_top _).symm
-    · rw [map_coe, map_coe, ← coe_add, ← coe_add, ← map_add]
-      rfl
+  exact (top_add _).symm
+  induction b
+  exact (add_top _).symm
+  rw [map_coe, map_coe, ← coe_add, ← coe_add, ← map_add]
+  rfl
 
 end Add
 

@@ -187,16 +187,16 @@ lemma liftBaseChange_comp {P} [AddCommMonoid P] [Module A P] [Module R P] [IsSca
 lemma range_liftBaseChange (l : M →ₗ[R] N) :
     LinearMap.range (l.liftBaseChange A) = Submodule.span A (LinearMap.range l) := by
   apply le_antisymm
-  · rintro _ ⟨x, rfl⟩
-    induction x using TensorProduct.induction_on
-    · simp
-    · rw [LinearMap.liftBaseChange_tmul]
-      exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨_, rfl⟩)
-    · rw [map_add]
-      exact add_mem ‹_› ‹_›
-  · rw [Submodule.span_le]
-    rintro _ ⟨x, rfl⟩
-    exact ⟨1 ⊗ₜ x, by simp⟩
+  rintro _ ⟨x, rfl⟩
+  induction x using TensorProduct.induction_on
+  simp
+  rw [LinearMap.liftBaseChange_tmul]
+  exact Submodule.smul_mem _ _ (Submodule.subset_span ⟨_, rfl⟩)
+  rw [map_add]
+  exact add_mem ‹_› ‹_›
+  rw [Submodule.span_le]
+  rintro _ ⟨x, rfl⟩
+  exact ⟨1 ⊗ₜ x, by simp⟩
 
 end liftBaseChange
 
@@ -376,8 +376,8 @@ instance instSemiring : Semiring (A ⊗[R] B) where
 @[simp]
 theorem tmul_pow (a : A) (b : B) (k : ℕ) : a ⊗ₜ[R] b ^ k = (a ^ k) ⊗ₜ[R] (b ^ k) := by
   induction' k with k ih
-  · simp [one_def]
-  · simp [pow_succ, ih]
+  simp [one_def]
+  simp [pow_succ, ih]
 
 /-- The ring morphism `A →+* A ⊗[R] B` sending `a` to `a ⊗ₜ 1`. -/
 @[simps]
@@ -531,16 +531,16 @@ instance instCommSemiring : CommSemiring (A ⊗[R] B) where
   toSemiring := inferInstance
   mul_comm x y := by
     refine TensorProduct.induction_on x ?_ ?_ ?_
-    · simp
-    · intro a₁ b₁
-      refine TensorProduct.induction_on y ?_ ?_ ?_
-      · simp
-      · intro a₂ b₂
-        simp [mul_comm]
-      · intro a₂ b₂ ha hb
-        simp [mul_add, add_mul, ha, hb]
-    · intro x₁ x₂ h₁ h₂
-      simp [mul_add, add_mul, h₁, h₂]
+    simp
+    intro a₁ b₁
+    refine TensorProduct.induction_on y ?_ ?_ ?_
+    simp
+    intro a₂ b₂
+    simp [mul_comm]
+    intro a₂ b₂ ha hb
+    simp [mul_add, add_mul, ha, hb]
+    intro x₁ x₂ h₁ h₂
+    simp [mul_add, add_mul, h₁, h₂]
 
 end CommSemiring
 
@@ -905,12 +905,12 @@ theorem map_comp_includeRight (f : A →ₐ[R] B) (g : C →ₐ[R] D) :
 theorem map_range (f : A →ₐ[R] B) (g : C →ₐ[R] D) :
     (map f g).range = (includeLeft.comp f).range ⊔ (includeRight.comp g).range := by
   apply le_antisymm
-  · rw [← map_top, ← adjoin_tmul_eq_top, ← adjoin_image, adjoin_le_iff]
-    rintro _ ⟨_, ⟨a, b, rfl⟩, rfl⟩
-    rw [map_tmul, ← _root_.mul_one (f a), ← _root_.one_mul (g b), ← tmul_mul_tmul]
-    exact mul_mem_sup (AlgHom.mem_range_self _ a) (AlgHom.mem_range_self _ b)
-  · rw [← map_comp_includeLeft f g, ← map_comp_includeRight f g]
-    exact sup_le (AlgHom.range_comp_le_range _ _) (AlgHom.range_comp_le_range _ _)
+  rw [← map_top, ← adjoin_tmul_eq_top, ← adjoin_image, adjoin_le_iff]
+  rintro _ ⟨_, ⟨a, b, rfl⟩, rfl⟩
+  rw [map_tmul, ← _root_.mul_one (f a), ← _root_.one_mul (g b), ← tmul_mul_tmul]
+  exact mul_mem_sup (AlgHom.mem_range_self _ a) (AlgHom.mem_range_self _ b)
+  rw [← map_comp_includeLeft f g, ← map_comp_includeRight f g]
+  exact sup_le (AlgHom.range_comp_le_range _ _) (AlgHom.range_comp_le_range _ _)
 
 /-- Construct an isomorphism between tensor products of an S-algebra with an R-algebra
 from S- and R- isomorphisms between the tensor factors.

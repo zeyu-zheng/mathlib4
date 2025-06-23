@@ -154,8 +154,8 @@ theorem multipliable_of_ne_finset_one (hf : ∀ b ∉ s, f b = 1) : Multipliable
 theorem Multipliable.hasProd (ha : Multipliable f) : HasProd f (∏' b, f b) := by
   simp only [tprod_def, ha, dite_true]
   by_cases H : (mulSupport f).Finite
-  · simp [H, hasProd_prod_of_ne_finset_one, finprod_eq_prod]
-  · simpa [H] using ha.choose_spec
+  simp [H, hasProd_prod_of_ne_finset_one, finprod_eq_prod]
+  simpa [H] using ha.choose_spec
 
 @[to_additive]
 theorem HasProd.unique {a₁ a₂ : α} [T2Space α] : HasProd f a₁ → HasProd f a₂ → a₁ = a₂ := by

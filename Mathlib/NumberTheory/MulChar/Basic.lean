@@ -132,8 +132,8 @@ theorem ext {χ χ' : MulChar R R'} (h : ∀ a : Rˣ, χ a = χ' a) : χ = χ' :
   apply ext'
   intro a
   by_cases ha : IsUnit a
-  · exact h ha.unit
-  · rw [map_nonunit χ ha, map_nonunit χ' ha]
+  exact h ha.unit
+  rw [map_nonunit χ ha, map_nonunit χ' ha]
 
 theorem ext_iff {χ χ' : MulChar R R'} : χ = χ' ↔ ∀ a : Rˣ, χ a = χ' a :=
   ⟨by
@@ -300,16 +300,16 @@ applied to `a`, is `χ` applied to the inverse of `a`. -/
 theorem inv_apply {R : Type*} [CommMonoidWithZero R] (χ : MulChar R R') (a : R) :
     χ⁻¹ a = χ (Ring.inverse a) := by
   by_cases ha : IsUnit a
-  · rw [inv_apply_eq_inv]
-    have h := IsUnit.map χ ha
-    apply_fun (χ a * ·) using IsUnit.mul_right_injective h
-    dsimp only
-    rw [Ring.mul_inverse_cancel _ h, ← map_mul, Ring.mul_inverse_cancel _ ha, map_one]
-  · revert ha
-    nontriviality R
-    intro ha
-    -- `nontriviality R` by itself doesn't do it
-    rw [map_nonunit _ ha, Ring.inverse_non_unit a ha, MulChar.map_zero χ]
+  rw [inv_apply_eq_inv]
+  have h := IsUnit.map χ ha
+  apply_fun (χ a * ·) using IsUnit.mul_right_injective h
+  dsimp only
+  rw [Ring.mul_inverse_cancel _ h, ← map_mul, Ring.mul_inverse_cancel _ ha, map_one]
+  revert ha
+  nontriviality R
+  intro ha
+  -- `nontriviality R` by itself doesn't do it
+  rw [map_nonunit _ ha, Ring.inverse_non_unit a ha, MulChar.map_zero χ]
 
 /-- When the domain has a zero, then the inverse of a multiplicative character `χ`,
 applied to `a`, is `χ` applied to the inverse of `a`. -/
@@ -344,14 +344,14 @@ noncomputable instance commGroup : CommGroup (MulChar R R') :=
 /-- If `a` is a unit and `n : ℕ`, then `(χ ^ n) a = (χ a) ^ n`. -/
 theorem pow_apply_coe (χ : MulChar R R') (n : ℕ) (a : Rˣ) : (χ ^ n) a = χ a ^ n := by
   induction' n with n ih
-  · rw [pow_zero, pow_zero, one_apply_coe]
-  · rw [pow_succ, pow_succ, mul_apply, ih]
+  rw [pow_zero, pow_zero, one_apply_coe]
+  rw [pow_succ, pow_succ, mul_apply, ih]
 
 /-- If `n` is positive, then `(χ ^ n) a = (χ a) ^ n`. -/
 theorem pow_apply' (χ : MulChar R R') {n : ℕ} (hn : n ≠ 0) (a : R) : (χ ^ n) a = χ a ^ n := by
   by_cases ha : IsUnit a
-  · exact pow_apply_coe χ n ha.unit
-  · rw [map_nonunit (χ ^ n) ha, map_nonunit χ ha, zero_pow hn]
+  exact pow_apply_coe χ n ha.unit
+  rw [map_nonunit (χ ^ n) ha, map_nonunit χ ha, zero_pow hn]
 
 lemma equivToUnitHom_mul_apply (χ₁ χ₂ : MulChar R R') (a : Rˣ) :
     equivToUnitHom (χ₁ * χ₂) a = equivToUnitHom χ₁ a * equivToUnitHom χ₂ a := by
@@ -488,13 +488,13 @@ theorem IsQuadratic.inv {χ : MulChar R R'} (hχ : χ.IsQuadratic) : χ⁻¹ = �
   ext x
   rw [inv_apply_eq_inv]
   rcases hχ x with (h₀ | h₁ | h₂)
-  · rw [h₀, Ring.inverse_zero]
-  · rw [h₁, Ring.inverse_one]
-  · -- Porting note: was `by norm_cast`
-    have : (-1 : R') = (-1 : R'ˣ)
-    rw [Units.val_neg, Units.val_one]
-    rw [h₂, this, Ring.inverse_unit (-1 : R'ˣ)]
-    rfl
+  rw [h₀, Ring.inverse_zero]
+  rw [h₁, Ring.inverse_one]
+  -- Porting note: was `by norm_cast`
+  have : (-1 : R') = (-1 : R'ˣ)
+  rw [Units.val_neg, Units.val_one]
+  rw [h₂, this, Ring.inverse_unit (-1 : R'ˣ)]
+  rfl
 
 /-- The square of a quadratic character is the trivial character. -/
 theorem IsQuadratic.sq_eq_one {χ : MulChar R R'} (hχ : χ.IsQuadratic) : χ ^ 2 = 1 := by
@@ -507,9 +507,9 @@ theorem IsQuadratic.pow_char {χ : MulChar R R'} (hχ : χ.IsQuadratic) (p : ℕ
   ext x
   rw [pow_apply_coe]
   rcases hχ x with (hx | hx | hx) <;> rw [hx]
-  · rw [zero_pow (@Fact.out p.Prime).ne_zero]
-  · rw [one_pow]
-  · exact CharP.neg_one_pow_char R' p
+  rw [zero_pow (@Fact.out p.Prime).ne_zero]
+  rw [one_pow]
+  exact CharP.neg_one_pow_char R' p
 
 /-- The `n`th power of a quadratic character is the trivial character, when `n` is even. -/
 theorem IsQuadratic.pow_even {χ : MulChar R R'} (hχ : χ.IsQuadratic) {n : ℕ} (hn : Even n) :
@@ -579,13 +579,13 @@ theorem sum_one_eq_card_units [DecidableEq R] :
     _ = ((Finset.univ : Finset R).filter IsUnit).card := Finset.sum_boole _ _
     _ = (Finset.univ.map ⟨((↑) : Rˣ → R), Units.ext⟩).card := ?_
     _ = Fintype.card Rˣ := congr_arg _ (Finset.card_map _)
-  · split_ifs with h
-    · exact one_apply_coe h.unit
-    · exact map_nonunit _ h
-  · congr
-    ext a
-    simp only [Finset.mem_filter, Finset.mem_univ, true_and_iff, Finset.mem_map,
-      Function.Embedding.coeFn_mk, exists_true_left, IsUnit]
+  split_ifs with h
+  exact one_apply_coe h.unit
+  exact map_nonunit _ h
+  congr
+  ext a
+  simp only [Finset.mem_filter, Finset.mem_univ, true_and_iff, Finset.mem_map,
+    Function.Embedding.coeFn_mk, exists_true_left, IsUnit]
 
 end sum
 

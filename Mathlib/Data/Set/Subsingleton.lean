@@ -90,17 +90,17 @@ theorem subsingleton_isBot (α : Type*) [PartialOrder α] : Set.Subsingleton { x
 theorem exists_eq_singleton_iff_nonempty_subsingleton :
     (∃ a : α, s = {a}) ↔ s.Nonempty ∧ s.Subsingleton := by
   refine ⟨?_, fun h => ?_⟩
-  · rintro ⟨a, rfl⟩
-    exact ⟨singleton_nonempty a, subsingleton_singleton⟩
-  · exact h.2.eq_empty_or_singleton.resolve_left h.1.ne_empty
+  rintro ⟨a, rfl⟩
+  exact ⟨singleton_nonempty a, subsingleton_singleton⟩
+  exact h.2.eq_empty_or_singleton.resolve_left h.1.ne_empty
 
 /-- `s`, coerced to a type, is a subsingleton type if and only if `s` is a subsingleton set. -/
 @[simp, norm_cast]
 theorem subsingleton_coe (s : Set α) : Subsingleton s ↔ s.Subsingleton := by
   constructor
-  · refine fun h => fun a ha b hb => ?_
-    exact SetCoe.ext_iff.2 (@Subsingleton.elim s h ⟨a, ha⟩ ⟨b, hb⟩)
-  · exact fun h => Subsingleton.intro fun a b => SetCoe.ext (h a.property b.property)
+  refine fun h => fun a ha b hb => ?_
+  exact SetCoe.ext_iff.2 (@Subsingleton.elim s h ⟨a, ha⟩ ⟨b, hb⟩)
+  exact fun h => Subsingleton.intro fun a b => SetCoe.ext (h a.property b.property)
 
 theorem Subsingleton.coe_sort {s : Set α} : s.Subsingleton → Subsingleton s :=
   s.subsingleton_coe.2

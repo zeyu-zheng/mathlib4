@@ -52,11 +52,11 @@ namespace Isδ₀
 
 theorem iff {j : ℕ} {i : Fin (j + 2)} : Isδ₀ (SimplexCategory.δ i) ↔ i = 0 := by
   constructor
-  · rintro ⟨_, h₂⟩
-    by_contra h
-    exact h₂ (Fin.succAbove_ne_zero_zero h)
-  · rintro rfl
-    exact ⟨rfl, by dsimp; exact Fin.succ_ne_zero (0 : Fin (j + 1))⟩
+  rintro ⟨_, h₂⟩
+  by_contra h
+  exact h₂ (Fin.succAbove_ne_zero_zero h)
+  rintro rfl
+  exact ⟨rfl, by dsimp; exact Fin.succ_ne_zero (0 : Fin (j + 1))⟩
 
 theorem eq_δ₀ {n : ℕ} {i : ([n] : SimplexCategory) ⟶ [n + 1]} [Mono i] (hi : Isδ₀ i) :
     i = SimplexCategory.δ 0 := by
@@ -125,10 +125,10 @@ theorem mapMono_naturality (i : Δ ⟶ Δ') [Mono i] :
     mapMono K i ≫ f.f Δ.len = f.f Δ'.len ≫ mapMono K' i := by
   unfold mapMono
   split_ifs with h
-  · subst h
-    simp only [id_comp, eqToHom_refl, comp_id]
-  · rw [HomologicalComplex.Hom.comm]
-  · rw [zero_comp, comp_zero]
+  subst h
+  simp only [id_comp, eqToHom_refl, comp_id]
+  rw [HomologicalComplex.Hom.comm]
+  rw [zero_comp, comp_zero]
 
 variable (K)
 
@@ -137,29 +137,29 @@ theorem mapMono_comp (i' : Δ'' ⟶ Δ') (i : Δ' ⟶ Δ) [Mono i'] [Mono i] :
     mapMono K i ≫ mapMono K i' = mapMono K (i' ≫ i) := by
   -- case where i : Δ' ⟶ Δ is the identity
   by_cases h₁ : Δ = Δ'
-  · subst h₁
-    simp only [SimplexCategory.eq_id_of_mono i, comp_id, id_comp, mapMono_id K, eqToHom_refl]
+  subst h₁
+  simp only [SimplexCategory.eq_id_of_mono i, comp_id, id_comp, mapMono_id K, eqToHom_refl]
   -- case where i' : Δ'' ⟶ Δ' is the identity
   by_cases h₂ : Δ' = Δ''
-  · subst h₂
-    simp only [SimplexCategory.eq_id_of_mono i', comp_id, id_comp, mapMono_id K, eqToHom_refl]
+  subst h₂
+  simp only [SimplexCategory.eq_id_of_mono i', comp_id, id_comp, mapMono_id K, eqToHom_refl]
   -- then the RHS is always zero
   obtain ⟨k, hk⟩ := Nat.exists_eq_add_of_lt (len_lt_of_mono i h₁)
   obtain ⟨k', hk'⟩ := Nat.exists_eq_add_of_lt (len_lt_of_mono i' h₂)
   have eq : Δ.len = Δ''.len + (k + k' + 2)
   omega
   rw [mapMono_eq_zero K (i' ≫ i) _ _]; rotate_left
-  · by_contra h
-    simp only [self_eq_add_right, h, add_eq_zero_iff, and_false] at eq
-  · by_contra h
-    simp only [h.1, add_right_inj] at eq
-    omega
+  by_contra h
+  simp only [self_eq_add_right, h, add_eq_zero_iff, and_false] at eq
+  by_contra h
+  simp only [h.1, add_right_inj] at eq
+  omega
   -- in all cases, the LHS is also zero, either by definition, or because d ≫ d = 0
   by_cases h₃ : Isδ₀ i
-  · by_cases h₄ : Isδ₀ i'
-    · rw [mapMono_δ₀' K i h₃, mapMono_δ₀' K i' h₄, HomologicalComplex.d_comp_d]
-    · simp only [mapMono_eq_zero K i' h₂ h₄, comp_zero]
-  · simp only [mapMono_eq_zero K i h₁ h₃, zero_comp]
+  by_cases h₄ : Isδ₀ i'
+  rw [mapMono_δ₀' K i h₃, mapMono_δ₀' K i' h₄, HomologicalComplex.d_comp_d]
+  simp only [mapMono_eq_zero K i' h₂ h₄, comp_zero]
+  simp only [mapMono_eq_zero K i h₁ h₃, zero_comp]
 
 end Termwise
 
@@ -183,10 +183,10 @@ theorem map_on_summand₀ {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexS
   have h := SimplexCategory.image_eq fac
   subst h
   congr
-  · exact SimplexCategory.image_ι_eq fac
-  · dsimp only [SimplicialObject.Splitting.IndexSet.pull]
-    congr
-    exact SimplexCategory.factorThruImage_eq fac
+  exact SimplexCategory.image_ι_eq fac
+  dsimp only [SimplicialObject.Splitting.IndexSet.pull]
+  congr
+  exact SimplexCategory.factorThruImage_eq fac
 
 @[reassoc]
 theorem map_on_summand₀' {Δ Δ' : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) (θ : Δ ⟶ Δ') :
@@ -317,9 +317,9 @@ theorem HigherFacesVanish.on_Γ₀_summand_id (K : ChainComplex C ℕ) (n : ℕ)
   intro j _
   have eq := Γ₀.Obj.mapMono_on_summand_id K (SimplexCategory.δ j.succ)
   rw [Γ₀.Obj.Termwise.mapMono_eq_zero K, zero_comp] at eq; rotate_left
-  · intro h
-    exact (Nat.succ_ne_self n) (congr_arg SimplexCategory.len h)
-  · exact fun h => Fin.succ_ne_zero j (by simpa only [Isδ₀.iff] using h)
+  intro h
+  exact (Nat.succ_ne_self n) (congr_arg SimplexCategory.len h)
+  exact fun h => Fin.succ_ne_zero j (by simpa only [Isδ₀.iff] using h)
   exact eq
 
 @[reassoc (attr := simp)]
@@ -329,8 +329,8 @@ theorem PInfty_on_Γ₀_splitting_summand_eq_self (K : ChainComplex C ℕ) {n : 
       ((Γ₀.splitting K).cofan _).inj (Splitting.IndexSet.id (op [n])) := by
   rw [PInfty_f]
   rcases n with _|n
-  · simpa only [P_f_0_eq] using comp_id _
-  · exact (HigherFacesVanish.on_Γ₀_summand_id K n).comp_P_eq_self
+  simpa only [P_f_0_eq] using comp_id _
+  exact (HigherFacesVanish.on_Γ₀_summand_id K n).comp_P_eq_self
 
 end DoldKan
 

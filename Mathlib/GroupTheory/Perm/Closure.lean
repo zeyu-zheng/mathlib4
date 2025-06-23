@@ -49,23 +49,23 @@ theorem closure_cycle_adjacent_swap {σ : Perm α} (h1 : IsCycle σ) (h2 : σ.su
   have step1 : ∀ n : ℕ, swap ((σ ^ n) x) ((σ ^ (n + 1) : Perm α) x) ∈ H
   intro n
   induction' n with n ih
-  · exact subset_closure (Set.mem_insert_of_mem _ (Set.mem_singleton _))
-  · convert H.mul_mem (H.mul_mem h3 ih) (H.inv_mem h3)
-    simp_rw [mul_swap_eq_swap_mul, mul_inv_cancel_right, pow_succ']
-    rfl
+  exact subset_closure (Set.mem_insert_of_mem _ (Set.mem_singleton _))
+  convert H.mul_mem (H.mul_mem h3 ih) (H.inv_mem h3)
+  simp_rw [mul_swap_eq_swap_mul, mul_inv_cancel_right, pow_succ']
+  rfl
   have step2 : ∀ n : ℕ, swap x ((σ ^ n) x) ∈ H
   intro n
   induction' n with n ih
-  · simp only [Nat.zero_eq, pow_zero, coe_one, id_eq, swap_self, Set.mem_singleton_iff]
-    convert H.one_mem
-  · by_cases h5 : x = (σ ^ n) x
-    · rw [pow_succ', mul_apply, ← h5]
-      exact h4
-    by_cases h6 : x = (σ ^ (n + 1) : Perm α) x
-    · rw [← h6, swap_self]
-      exact H.one_mem
-    rw [swap_comm, ← swap_mul_swap_mul_swap h5 h6]
-    exact H.mul_mem (H.mul_mem (step1 n) ih) (step1 n)
+  simp only [Nat.zero_eq, pow_zero, coe_one, id_eq, swap_self, Set.mem_singleton_iff]
+  convert H.one_mem
+  by_cases h5 : x = (σ ^ n) x
+  rw [pow_succ', mul_apply, ← h5]
+  exact h4
+  by_cases h6 : x = (σ ^ (n + 1) : Perm α) x
+  rw [← h6, swap_self]
+  exact H.one_mem
+  rw [swap_comm, ← swap_mul_swap_mul_swap h5 h6]
+  exact H.mul_mem (H.mul_mem (step1 n) ih) (step1 n)
   have step3 : ∀ y : α, swap x y ∈ H
   intro y
   have hx : x ∈ (⊤ : Finset α) := Finset.mem_univ x
@@ -78,11 +78,11 @@ theorem closure_cycle_adjacent_swap {σ : Perm α} (h1 : IsCycle σ) (h2 : σ.su
   have step4 : ∀ y z : α, swap y z ∈ H
   intro y z
   by_cases h5 : z = x
-  · rw [h5, swap_comm]
-    exact step3 y
+  rw [h5, swap_comm]
+  exact step3 y
   by_cases h6 : z = y
-  · rw [h6, swap_self]
-    exact H.one_mem
+  rw [h6, swap_self]
+  exact H.one_mem
   rw [← swap_mul_swap_mul_swap h5 h6, swap_comm z x]
   exact H.mul_mem (H.mul_mem (step3 y) (step3 z)) (step3 y)
   rw [eq_top_iff, ← closure_isSwap, closure_le]

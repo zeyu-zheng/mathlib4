@@ -348,10 +348,10 @@ theorem upperClosure_sups [SemilatticeSup α] (s t : Set α) :
   simp only [SetLike.mem_coe, mem_upperClosure, Set.mem_sups, exists_and_left, exists_prop,
     UpperSet.coe_sup, Set.mem_inter_iff]
   constructor
-  · rintro ⟨_, ⟨b, hb, c, hc, rfl⟩, ha⟩
-    exact ⟨⟨b, hb, le_sup_left.trans ha⟩, c, hc, le_sup_right.trans ha⟩
-  · rintro ⟨⟨b, hb, hab⟩, c, hc, hac⟩
-    exact ⟨_, ⟨b, hb, c, hc, rfl⟩, sup_le hab hac⟩
+  rintro ⟨_, ⟨b, hb, c, hc, rfl⟩, ha⟩
+  exact ⟨⟨b, hb, le_sup_left.trans ha⟩, c, hc, le_sup_right.trans ha⟩
+  rintro ⟨⟨b, hb, hab⟩, c, hc, hac⟩
+  exact ⟨_, ⟨b, hb, c, hc, rfl⟩, sup_le hab hac⟩
 
 @[simp]
 theorem lowerClosure_infs [SemilatticeInf α] (s t : Set α) :
@@ -360,7 +360,7 @@ theorem lowerClosure_infs [SemilatticeInf α] (s t : Set α) :
   simp only [SetLike.mem_coe, mem_lowerClosure, Set.mem_infs, exists_and_left, exists_prop,
     LowerSet.coe_sup, Set.mem_inter_iff]
   constructor
-  · rintro ⟨_, ⟨b, hb, c, hc, rfl⟩, ha⟩
-    exact ⟨⟨b, hb, ha.trans inf_le_left⟩, c, hc, ha.trans inf_le_right⟩
-  · rintro ⟨⟨b, hb, hab⟩, c, hc, hac⟩
-    exact ⟨_, ⟨b, hb, c, hc, rfl⟩, le_inf hab hac⟩
+  rintro ⟨_, ⟨b, hb, c, hc, rfl⟩, ha⟩
+  exact ⟨⟨b, hb, ha.trans inf_le_left⟩, c, hc, ha.trans inf_le_right⟩
+  rintro ⟨⟨b, hb, hab⟩, c, hc, hac⟩
+  exact ⟨_, ⟨b, hb, c, hc, rfl⟩, le_inf hab hac⟩

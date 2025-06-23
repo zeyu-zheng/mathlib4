@@ -49,20 +49,20 @@ theorem add_pow (h : Commute x y) (n : ℕ) :
     dsimp only [t]
     rw [choose_succ_succ, Nat.cast_add, mul_add]
     congr 1
-    · rw [pow_succ' x, succ_sub_succ, mul_assoc, mul_assoc, mul_assoc]
-    · rw [← mul_assoc y, ← mul_assoc y, (h.symm.pow_right i.succ).eq]
-      by_cases h_eq : i = n
-      · rw [h_eq, choose_succ_self, Nat.cast_zero, mul_zero, mul_zero]
-      · rw [succ_sub (lt_of_le_of_ne h_le h_eq)]
-        rw [pow_succ' y, mul_assoc, mul_assoc, mul_assoc, mul_assoc]
+    rw [pow_succ' x, succ_sub_succ, mul_assoc, mul_assoc, mul_assoc]
+    rw [← mul_assoc y, ← mul_assoc y, (h.symm.pow_right i.succ).eq]
+    by_cases h_eq : i = n
+    rw [h_eq, choose_succ_self, Nat.cast_zero, mul_zero, mul_zero]
+    rw [succ_sub (lt_of_le_of_ne h_le h_eq)]
+    rw [pow_succ' y, mul_assoc, mul_assoc, mul_assoc, mul_assoc]
   induction' n with n ih
-  · rw [_root_.pow_zero, sum_range_succ, range_zero, sum_empty, zero_add]
-    dsimp only [t]
-    rw [_root_.pow_zero, _root_.pow_zero, choose_self, Nat.cast_one, mul_one, mul_one]
-  · rw [sum_range_succ', h_first, sum_congr rfl (h_middle n), sum_add_distrib, add_assoc,
-      pow_succ' (x + y), ih, add_mul, mul_sum, mul_sum]
-    congr 1
-    rw [sum_range_succ', sum_range_succ, h_first, h_last, mul_zero, add_zero, _root_.pow_succ']
+  rw [_root_.pow_zero, sum_range_succ, range_zero, sum_empty, zero_add]
+  dsimp only [t]
+  rw [_root_.pow_zero, _root_.pow_zero, choose_self, Nat.cast_one, mul_one, mul_one]
+  rw [sum_range_succ', h_first, sum_congr rfl (h_middle n), sum_add_distrib, add_assoc,
+    pow_succ' (x + y), ih, add_mul, mul_sum, mul_sum]
+  congr 1
+  rw [sum_range_succ', sum_range_succ, h_first, h_last, mul_zero, add_zero, _root_.pow_succ']
 
 /-- A version of `Commute.add_pow` that avoids ℕ-subtraction by summing over the antidiagonal and
 also with the binomial coefficient applied via scalar action of ℕ. -/
@@ -97,13 +97,13 @@ theorem sum_range_choose_halfway (m : Nat) : (∑ i ∈ range (m + 1), choose (2
       _ = (∑ i ∈ range (m + 1), choose (2 * m + 1) i) +
             ∑ i ∈ Ico (m + 1) (2 * m + 2), choose (2 * m + 1) i := by
         { rw [range_eq_Ico, sum_Ico_reflect]
-          · congr
-            have A : m + 1 ≤ 2 * m + 1 := by omega
-            rw [add_comm, add_tsub_assoc_of_le A, ← add_comm]
-            congr
-            rw [tsub_eq_iff_eq_add_of_le A]
-            ring
-          · omega }
+          congr
+          have A : m + 1 ≤ 2 * m + 1 := by omega
+          rw [add_comm, add_tsub_assoc_of_le A, ← add_comm]
+          congr
+          rw [tsub_eq_iff_eq_add_of_le A]
+          ring
+          omega }
       _ = ∑ i ∈ range (2 * m + 2), choose (2 * m + 1) i := sum_range_add_sum_Ico _ (by omega)
       _ = 2 ^ (2 * m + 1) := sum_range_choose (2 * m + 1)
       _ = 2 * 4 ^ m := by rw [Nat.pow_succ, pow_mul, mul_comm]; rfl
@@ -124,10 +124,10 @@ theorem four_pow_le_two_mul_add_one_mul_central_binom (n : ℕ) :
 /-- **Zhu Shijie's identity** aka hockey-stick identity. -/
 theorem sum_Icc_choose (n k : ℕ) : ∑ m ∈ Icc k n, m.choose k = (n + 1).choose (k + 1) := by
   cases' le_or_gt k n with h h
-  · induction' n, h using le_induction with n _ ih; · simp
-    rw [← Ico_insert_right (by omega), sum_insert (by simp),
-      show Ico k (n + 1) = Icc k n by rfl, ih, choose_succ_succ' (n + 1)]
-  · rw [choose_eq_zero_of_lt (by omega), Icc_eq_empty_of_lt h, sum_empty]
+  induction' n, h using le_induction with n _ ih; · simp
+  rw [← Ico_insert_right (by omega), sum_insert (by simp),
+    show Ico k (n + 1) = Icc k n by rfl, ih, choose_succ_succ' (n + 1)]
+  rw [choose_eq_zero_of_lt (by omega), Icc_eq_empty_of_lt h, sum_empty]
 
 end Nat
 
@@ -149,15 +149,15 @@ namespace Finset
 theorem sum_powerset_apply_card {α β : Type*} [AddCommMonoid α] (f : ℕ → α) {x : Finset β} :
     ∑ m ∈ x.powerset, f m.card = ∑ m ∈ range (x.card + 1), x.card.choose m • f m := by
   trans ∑ m ∈ range (x.card + 1), ∑ j ∈ x.powerset.filter fun z ↦ z.card = m, f j.card
-  · refine (sum_fiberwise_of_maps_to ?_ _).symm
-    intro y hy
-    rw [mem_range, Nat.lt_succ_iff]
-    rw [mem_powerset] at hy
-    exact card_le_card hy
-  · refine sum_congr rfl fun y _ ↦ ?_
-    rw [← card_powersetCard, ← sum_const]
-    refine sum_congr powersetCard_eq_filter.symm fun z hz ↦ ?_
-    rw [(mem_powersetCard.1 hz).2]
+  refine (sum_fiberwise_of_maps_to ?_ _).symm
+  intro y hy
+  rw [mem_range, Nat.lt_succ_iff]
+  rw [mem_powerset] at hy
+  exact card_le_card hy
+  refine sum_congr rfl fun y _ ↦ ?_
+  rw [← card_powersetCard, ← sum_const]
+  refine sum_congr powersetCard_eq_filter.symm fun z hz ↦ ?_
+  rw [(mem_powersetCard.1 hz).2]
 
 theorem sum_powerset_neg_one_pow_card {α : Type*} [DecidableEq α] {x : Finset α} :
     (∑ m ∈ x.powerset, (-1 : ℤ) ^ m.card) = if x = ∅ then 1 else 0 := by
@@ -193,10 +193,10 @@ theorem prod_antidiagonal_pow_choose_succ {M : Type*} [CommMonoid M] (f : ℕ �
   simp only [Nat.prod_antidiagonal_eq_prod_range_succ_mk, prod_pow_choose_succ]
   have : ∀ i ∈ range (n + 1), i ≤ n := fun i hi ↦ by simpa [Nat.lt_succ_iff] using hi
   congr 1
-  · refine prod_congr rfl fun i hi ↦ ?_
-    rw [tsub_add_eq_add_tsub (this _ hi)]
-  · refine prod_congr rfl fun i hi ↦ ?_
-    rw [Nat.choose_symm (this _ hi)]
+  refine prod_congr rfl fun i hi ↦ ?_
+  rw [tsub_add_eq_add_tsub (this _ hi)]
+  refine prod_congr rfl fun i hi ↦ ?_
+  rw [Nat.choose_symm (this _ hi)]
 
 -- Porting note: moved from `Mathlib.Analysis.Calculus.ContDiff`
 /-- The sum of `(n+1).choose i * f i (n+1-i)` can be split into two sums at rank `n`,

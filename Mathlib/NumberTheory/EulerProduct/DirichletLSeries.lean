@@ -81,9 +81,9 @@ lemma tsum_dirichletSummand {N : ℕ} (χ : DirichletCharacter ℂ N) (hs : 1 < 
   simp only [LSeries, LSeries.term, dirichletSummandHom]
   refine tsum_congr (fun n ↦ ?_)
   rcases eq_or_ne n 0 with rfl | hn
-  · simp only [map_zero, ↓reduceIte]
-  · simp only [cpow_neg, MonoidWithZeroHom.coe_mk, ZeroHom.coe_mk, hn, ↓reduceIte,
-      Field.div_eq_mul_inv]
+  simp only [map_zero, ↓reduceIte]
+  simp only [cpow_neg, MonoidWithZeroHom.coe_mk, ZeroHom.coe_mk, hn, ↓reduceIte,
+    Field.div_eq_mul_inv]
 
 open Filter Nat Topology EulerProduct
 

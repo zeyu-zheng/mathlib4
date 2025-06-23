@@ -130,8 +130,8 @@ theorem expSeries_apply_zero (n : ℕ) :
     (expSeries 𝕂 𝔸 n fun _ => (0 : 𝔸)) = Pi.single (f := fun _ => 𝔸) 0 1 n := by
   rw [expSeries_apply_eq]
   cases' n with n
-  · rw [pow_zero, Nat.factorial_zero, Nat.cast_one, inv_one, one_smul, Pi.single_eq_same]
-  · rw [zero_pow (Nat.succ_ne_zero _), smul_zero, Pi.single_eq_of_ne n.succ_ne_zero]
+  rw [pow_zero, Nat.factorial_zero, Nat.cast_one, inv_one, one_smul, Pi.single_eq_same]
+  rw [zero_pow (Nat.succ_ne_zero _), smul_zero, Pi.single_eq_of_ne n.succ_ne_zero]
 
 @[simp]
 theorem exp_zero : exp 𝕂 (0 : 𝔸) = 1 := by
@@ -248,9 +248,9 @@ theorem continuousOn_exp : ContinuousOn (exp 𝕂 : 𝔸 → 𝔸) (EMetric.ball
 theorem analyticAt_exp_of_mem_ball (x : 𝔸) (hx : x ∈ EMetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius) :
     AnalyticAt 𝕂 (exp 𝕂) x := by
   by_cases h : (expSeries 𝕂 𝔸).radius = 0
-  · rw [h] at hx; exact (ENNReal.not_lt_zero hx).elim
-  · have h := pos_iff_ne_zero.mpr h
-    exact (hasFPowerSeriesOnBall_exp_of_radius_pos h).analyticAt_of_mem hx
+  rw [h] at hx; exact (ENNReal.not_lt_zero hx).elim
+  have h := pos_iff_ne_zero.mpr h
+  exact (hasFPowerSeriesOnBall_exp_of_radius_pos h).analyticAt_of_mem hx
 
 /-- In a Banach-algebra `𝔸` over a normed field `𝕂` of characteristic zero, if `x` and `y` are
 in the disk of convergence and commute, then `exp 𝕂 (x + y) = (exp 𝕂 x) * (exp 𝕂 y)`. -/
@@ -471,7 +471,7 @@ theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → 𝔸)
     exp 𝕂 (∑ i ∈ s, f i) =
       s.noncommProd (fun i => exp 𝕂 (f i)) fun i hi j hj _ => (h.of_refl hi hj).exp 𝕂 := by
     induction' s using Finset.induction_on with a s ha ih
-    · simp
+    simp
     rw [Finset.noncommProd_insert_of_not_mem _ _ _ _ ha, Finset.sum_insert ha, exp_add_of_commute,
       ih (h.mono <| Finset.subset_insert _ _)]
     refine Commute.sum_right _ _ _ fun i hi => ?_
@@ -479,8 +479,8 @@ theorem exp_sum_of_commute {ι} (s : Finset ι) (f : ι → 𝔸)
 
 theorem exp_nsmul (n : ℕ) (x : 𝔸) : exp 𝕂 (n • x) = exp 𝕂 x ^ n := by
   induction' n with n ih
-  · rw [zero_smul, pow_zero, exp_zero]
-  · rw [succ_nsmul, pow_succ, exp_add_of_commute ((Commute.refl x).smul_left n), ih]
+  rw [zero_smul, pow_zero, exp_zero]
+  rw [succ_nsmul, pow_succ, exp_add_of_commute ((Commute.refl x).smul_left n), ih]
 
 variable (𝕂)
 
@@ -558,8 +558,8 @@ theorem exp_neg (x : 𝔸) : exp 𝕂 (-x) = (exp 𝕂 x)⁻¹ :=
 
 theorem exp_zsmul (z : ℤ) (x : 𝔸) : exp 𝕂 (z • x) = exp 𝕂 x ^ z := by
   obtain ⟨n, rfl | rfl⟩ := z.eq_nat_or_neg
-  · rw [zpow_natCast, natCast_zsmul, exp_nsmul]
-  · rw [zpow_neg, zpow_natCast, neg_smul, exp_neg, natCast_zsmul, exp_nsmul]
+  rw [zpow_natCast, natCast_zsmul, exp_nsmul]
+  rw [zpow_neg, zpow_natCast, neg_smul, exp_neg, natCast_zsmul, exp_nsmul]
 
 theorem exp_conj (y : 𝔸) (x : 𝔸) (hy : y ≠ 0) : exp 𝕂 (y * x * y⁻¹) = y * exp 𝕂 x * y⁻¹ :=
   exp_units_conj _ (Units.mk0 y hy) x

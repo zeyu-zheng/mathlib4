@@ -116,10 +116,10 @@ theorem lcm_pos {m n : ℕ} : 0 < m → 0 < n → 0 < m.lcm n := by
 
 theorem lcm_mul_left {m n k : ℕ} : (m * n).lcm (m * k) = m * n.lcm k := by
   apply dvd_antisymm
-  · exact lcm_dvd (mul_dvd_mul_left m (dvd_lcm_left n k)) (mul_dvd_mul_left m (dvd_lcm_right n k))
-  · have h : m ∣ lcm (m * n) (m * k) := (dvd_mul_right m n).trans (dvd_lcm_left (m * n) (m * k))
-    rw [← dvd_div_iff_mul_dvd h, lcm_dvd_iff, dvd_div_iff_mul_dvd h, dvd_div_iff_mul_dvd h,
-      ← lcm_dvd_iff]
+  exact lcm_dvd (mul_dvd_mul_left m (dvd_lcm_left n k)) (mul_dvd_mul_left m (dvd_lcm_right n k))
+  have h : m ∣ lcm (m * n) (m * k) := (dvd_mul_right m n).trans (dvd_lcm_left (m * n) (m * k))
+  rw [← dvd_div_iff_mul_dvd h, lcm_dvd_iff, dvd_div_iff_mul_dvd h, dvd_div_iff_mul_dvd h,
+    ← lcm_dvd_iff]
 
 theorem lcm_mul_right {m n k : ℕ} : (m * n).lcm (k * n) = m.lcm k * n := by
  rw [mul_comm, mul_comm k n, lcm_mul_left, mul_comm]
@@ -259,16 +259,16 @@ def prodDvdAndDvdOfDvdProd {m n k : ℕ} (H : k ∣ m * n) :
 
 theorem dvd_mul {x m n : ℕ} : x ∣ m * n ↔ ∃ y z, y ∣ m ∧ z ∣ n ∧ y * z = x := by
   constructor
-  · intro h
-    obtain ⟨⟨⟨y, hy⟩, ⟨z, hz⟩⟩, rfl⟩ := prod_dvd_and_dvd_of_dvd_prod h
-    exact ⟨y, z, hy, hz, rfl⟩
-  · rintro ⟨y, z, hy, hz, rfl⟩
-    exact mul_dvd_mul hy hz
+  intro h
+  obtain ⟨⟨⟨y, hy⟩, ⟨z, hz⟩⟩, rfl⟩ := prod_dvd_and_dvd_of_dvd_prod h
+  exact ⟨y, z, hy, hz, rfl⟩
+  rintro ⟨y, z, hy, hz, rfl⟩
+  exact mul_dvd_mul hy hz
 
 theorem pow_dvd_pow_iff {a b n : ℕ} (n0 : n ≠ 0) : a ^ n ∣ b ^ n ↔ a ∣ b := by
   refine ⟨fun h => ?_, fun h => pow_dvd_pow_of_dvd h _⟩
   rcases Nat.eq_zero_or_pos (gcd a b) with g0 | g0
-  · simp [eq_zero_of_gcd_eq_zero_right g0]
+  simp [eq_zero_of_gcd_eq_zero_right g0]
   rcases exists_coprime' g0 with ⟨g, a', b', g0', co, rfl, rfl⟩
   rw [mul_pow, mul_pow] at h
   replace h := Nat.dvd_of_mul_dvd_mul_right (Nat.pos_pow_of_pos _ g0') h

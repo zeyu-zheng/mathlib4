@@ -196,8 +196,8 @@ theorem LinearIndependent.ne_zero [Nontrivial R] (i : ι) (hv : LinearIndependen
       (by
         suffices (Finsupp.single i 1 : ι →₀ R) i = 0 by simpa
         rw [linearIndependent_iff.1 hv (Finsupp.single i 1)]
-        · simp
-        · simp [h])
+        simp
+        simp [h])
 
 lemma LinearIndependent.eq_zero_of_pair {x y : M} (h : LinearIndependent R ![x, y])
     {s t : R} (h' : s • x + t • y = 0) : s = 0 ∧ t = 0 := by
@@ -296,8 +296,8 @@ theorem LinearIndependent.map_of_surjective_injective {R' : Type*} {M' : Type*}
     (hc : ∀ (r : R) (m : M), j (r • m) = i r • j m) : LinearIndependent R' (j ∘ v) := by
   obtain ⟨i', hi'⟩ := hi.hasRightInverse
   refine hv.map_of_injective_injective i' j (fun _ h ↦ ?_) hj fun r m ↦ ?_
-  · apply_fun i at h
-    rwa [hi', i.map_zero] at h
+  apply_fun i at h
+  rwa [hi', i.map_zero] at h
   rw [hc (i' r) m, hi']
 
 /-- If the image of a family of vectors under a linear map is linearly independent, then so is
@@ -411,16 +411,16 @@ theorem linearIndependent_comp_subtype {s : Set ι} :
   simp only [linearIndependent_iff, (· ∘ ·), Finsupp.mem_supported, Finsupp.total_apply,
     Set.subset_def, Finset.mem_coe]
   constructor
-  · intro h l hl₁ hl₂
-    have := h (l.subtypeDomain s) ((Finsupp.sum_subtypeDomain_index hl₁).trans hl₂)
-    exact (Finsupp.subtypeDomain_eq_zero_iff hl₁).1 this
-  · intro h l hl
-    refine Finsupp.embDomain_eq_zero.1 (h (l.embDomain <| Function.Embedding.subtype s) ?_ ?_)
-    · suffices ∀ i hi, ¬l ⟨i, hi⟩ = 0 → i ∈ s by simpa
-      intros
-      assumption
-    · rwa [Finsupp.embDomain_eq_mapDomain, Finsupp.sum_mapDomain_index]
-      exacts [fun _ => zero_smul _ _, fun _ _ _ => add_smul _ _ _]
+  intro h l hl₁ hl₂
+  have := h (l.subtypeDomain s) ((Finsupp.sum_subtypeDomain_index hl₁).trans hl₂)
+  exact (Finsupp.subtypeDomain_eq_zero_iff hl₁).1 this
+  intro h l hl
+  refine Finsupp.embDomain_eq_zero.1 (h (l.embDomain <| Function.Embedding.subtype s) ?_ ?_)
+  suffices ∀ i hi, ¬l ⟨i, hi⟩ = 0 → i ∈ s by simpa
+  intros
+  assumption
+  rwa [Finsupp.embDomain_eq_mapDomain, Finsupp.sum_mapDomain_index]
+  exacts [fun _ => zero_smul _ _, fun _ _ _ => add_smul _ _ _]
 
 theorem linearDependent_comp_subtype' {s : Set ι} :
     ¬LinearIndependent R (v ∘ (↑) : s → M) ↔
@@ -481,13 +481,13 @@ theorem linearIndependent_iUnion_of_directed {η : Type*} {s : η → Set M} (hs
     (h : ∀ i, LinearIndependent R (fun x => x : s i → M)) :
     LinearIndependent R (fun x => x : (⋃ i, s i) → M) := by
   by_cases hη : Nonempty η
-  · refine linearIndependent_of_finite (⋃ i, s i) fun t ht ft => ?_
-    rcases finite_subset_iUnion ft ht with ⟨I, fi, hI⟩
-    rcases hs.finset_le fi.toFinset with ⟨i, hi⟩
-    exact (h i).mono (Subset.trans hI <| iUnion₂_subset fun j hj => hi j (fi.mem_toFinset.2 hj))
-  · refine (linearIndependent_empty R M).mono (t := iUnion (s ·)) ?_
-    rintro _ ⟨_, ⟨i, _⟩, _⟩
-    exact hη ⟨i⟩
+  refine linearIndependent_of_finite (⋃ i, s i) fun t ht ft => ?_
+  rcases finite_subset_iUnion ft ht with ⟨I, fi, hI⟩
+  rcases hs.finset_le fi.toFinset with ⟨i, hi⟩
+  exact (h i).mono (Subset.trans hI <| iUnion₂_subset fun j hj => hi j (fi.mem_toFinset.2 hj))
+  refine (linearIndependent_empty R M).mono (t := iUnion (s ·)) ?_
+  rintro _ ⟨_, ⟨i, _⟩, _⟩
+  exact hη ⟨i⟩
 
 theorem linearIndependent_sUnion_of_directed {s : Set (Set M)} (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀ a ∈ s, LinearIndependent R ((↑) : ((a : Set M) : Type _) → M)) :
@@ -562,12 +562,12 @@ theorem LinearIndependent.group_smul {G : Type*} [hG : Group G] [DistribMulActio
   intro s g hgs hsum i
   refine (smul_eq_zero_iff_eq (w i)).1 ?_
   refine hv s (fun i => w i • g i) (fun i hi => ?_) ?_ i
-  · dsimp only
-    exact (hgs i hi).symm ▸ smul_zero _
-  · rw [← hsum, Finset.sum_congr rfl _]
-    intros
-    dsimp
-    rw [smul_assoc, smul_comm]
+  dsimp only
+  exact (hgs i hi).symm ▸ smul_zero _
+  rw [← hsum, Finset.sum_congr rfl _]
+  intros
+  dsimp
+  rw [smul_assoc, smul_comm]
 
 -- This lemma cannot be proved with `LinearIndependent.group_smul` since the action of
 -- `Rˣ` on `R` is not commutative.
@@ -577,12 +577,12 @@ theorem LinearIndependent.units_smul {v : ι → M} (hv : LinearIndependent R v)
   intro s g hgs hsum i
   rw [← (w i).mul_left_eq_zero]
   refine hv s (fun i => g i • (w i : R)) (fun i hi => ?_) ?_ i
-  · dsimp only
-    exact (hgs i hi).symm ▸ zero_smul _ _
-  · rw [← hsum, Finset.sum_congr rfl _]
-    intros
-    erw [Pi.smul_apply, smul_assoc]
-    rfl
+  dsimp only
+  exact (hgs i hi).symm ▸ zero_smul _ _
+  rw [← hsum, Finset.sum_congr rfl _]
+  intros
+  erw [Pi.smul_apply, smul_assoc]
+  rfl
 
 lemma LinearIndependent.eq_of_pair {x y : M} (h : LinearIndependent R ![x, y])
     {s t s' t' : R} (h' : s • x + t • y = s' • x + t' • y) : s = s' ∧ t = t' := by
@@ -638,20 +638,20 @@ theorem LinearIndependent.maximal_iff {ι : Type w} {R : Type u} [Ring R] [Nontr
       ∀ (κ : Type v) (w : κ → M) (_i' : LinearIndependent R w) (j : ι → κ) (_h : w ∘ j = v),
         Surjective j := by
   constructor
-  · rintro p κ w i' j rfl
-    specialize p (range w) i'.coe_range (range_comp_subset_range _ _)
-    rw [range_comp, ← image_univ (f := w)] at p
-    exact range_iff_surjective.mp (image_injective.mpr i'.injective p)
-  · intro p w i' h
-    specialize
-      p w ((↑) : w → M) i' (fun i => ⟨v i, range_subset_iff.mp h i⟩)
-        (by
-          ext
-          simp)
-    have q := congr_arg (fun s => ((↑) : w → M) '' s) p.range_eq
-    dsimp at q
-    rw [← image_univ, image_image] at q
-    simpa using q
+  rintro p κ w i' j rfl
+  specialize p (range w) i'.coe_range (range_comp_subset_range _ _)
+  rw [range_comp, ← image_univ (f := w)] at p
+  exact range_iff_surjective.mp (image_injective.mpr i'.injective p)
+  intro p w i' h
+  specialize
+    p w ((↑) : w → M) i' (fun i => ⟨v i, range_subset_iff.mp h i⟩)
+      (by
+        ext
+        simp)
+  have q := congr_arg (fun s => ((↑) : w → M) '' s) p.range_eq
+  dsimp at q
+  rw [← image_univ, image_image] at q
+  simpa using q
 
 end Maximal
 
@@ -667,8 +667,8 @@ theorem LinearIndependent.eq_of_smul_apply_eq_smul_apply {M : Type*} [AddCommGro
   rw [linearIndependent_iff] at li
   simp [eq_add_of_sub_eq' (li l h_total)]
   rcases (Finsupp.single_eq_single_iff ..).mp h_single_eq with (⟨H, _⟩ | ⟨hc, _⟩)
-  · exact H
-  · contradiction
+  exact H
+  contradiction
 
 section Subtype
 
@@ -711,11 +711,11 @@ theorem linearIndependent_sum {v : ι ⊕ ι' → M} :
             (Submodule.span R (range (v ∘ Sum.inr))) := by
   rw [range_comp v, range_comp v]
   refine ⟨?_, ?_⟩
-  · intro h
-    refine ⟨h.comp _ Sum.inl_injective, h.comp _ Sum.inr_injective, ?_⟩
-    refine h.disjoint_span_image ?_
-    -- Porting note: `isCompl_range_inl_range_inr.1` timeouts.
-    exact IsCompl.disjoint isCompl_range_inl_range_inr
+  intro h
+  refine ⟨h.comp _ Sum.inl_injective, h.comp _ Sum.inr_injective, ?_⟩
+  refine h.disjoint_span_image ?_
+  -- Porting note: `isCompl_range_inl_range_inr.1` timeouts.
+  exact IsCompl.disjoint isCompl_range_inl_range_inr
   rintro ⟨hl, hr, hlr⟩
   rw [linearIndependent_iff'] at *
   intro s g hg i hi
@@ -726,21 +726,21 @@ theorem linearIndependent_sum {v : ι ⊕ ι' → M} :
     -- Porting note: `g` must be specified.
     rw [Finset.sum_preimage' (g := fun x => g x • v x),
       Finset.sum_preimage' (g := fun x => g x • v x), ← Finset.sum_union, ← Finset.filter_or]
-    · simpa only [← mem_union, range_inl_union_range_inr, mem_univ, Finset.filter_True]
-    · -- Porting note: Here was one `exact`, but timeouted.
-      refine Finset.disjoint_filter.2 fun x _ hx =>
-        disjoint_left.1 ?_ hx
-      exact IsCompl.disjoint isCompl_range_inl_range_inr
+    simpa only [← mem_union, range_inl_union_range_inr, mem_univ, Finset.filter_True]
+    -- Porting note: Here was one `exact`, but timeouted.
+    refine Finset.disjoint_filter.2 fun x _ hx =>
+      disjoint_left.1 ?_ hx
+    exact IsCompl.disjoint isCompl_range_inl_range_inr
   rw [← eq_neg_iff_add_eq_zero] at this
   rw [disjoint_def'] at hlr
   have A := by
     refine hlr _ (sum_mem fun i _ => ?_) _ (neg_mem <| sum_mem fun i _ => ?_) this
-    · exact smul_mem _ _ (subset_span ⟨Sum.inl i, mem_range_self _, rfl⟩)
-    · exact smul_mem _ _ (subset_span ⟨Sum.inr i, mem_range_self _, rfl⟩)
+    exact smul_mem _ _ (subset_span ⟨Sum.inl i, mem_range_self _, rfl⟩)
+    exact smul_mem _ _ (subset_span ⟨Sum.inr i, mem_range_self _, rfl⟩)
   cases' i with i i
-  · exact hl _ _ A i (Finset.mem_preimage.2 hi)
-  · rw [this, neg_eq_zero] at A
-    exact hr _ _ A i (Finset.mem_preimage.2 hi)
+  exact hl _ _ A i (Finset.mem_preimage.2 hi)
+  rw [this, neg_eq_zero] at A
+  exact hr _ _ A i (Finset.mem_preimage.2 hi)
 
 theorem LinearIndependent.sum_type {v' : ι' → M} (hv : LinearIndependent R v)
     (hv' : LinearIndependent R v')
@@ -760,16 +760,16 @@ theorem linearIndependent_iUnion_finite_subtype {ι : Type*} {f : ι → Set M}
     LinearIndependent R (fun x => x : (⋃ i, f i) → M) := by
   rw [iUnion_eq_iUnion_finset f]
   apply linearIndependent_iUnion_of_directed
-  · apply directed_of_isDirected_le
-    exact fun t₁ t₂ ht => iUnion_mono fun i => iUnion_subset_iUnion_const fun h => ht h
+  apply directed_of_isDirected_le
+  exact fun t₁ t₂ ht => iUnion_mono fun i => iUnion_subset_iUnion_const fun h => ht h
   intro t
   induction' t using Finset.induction_on with i s his ih
-  · refine (linearIndependent_empty R M).mono ?_
-    simp
-  · rw [Finset.set_biUnion_insert]
-    refine (hl _).union ih ?_
-    rw [span_iUnion₂]
-    exact hd i s s.finite_toSet his
+  refine (linearIndependent_empty R M).mono ?_
+  simp
+  rw [Finset.set_biUnion_insert]
+  refine (hl _).union ih ?_
+  rw [span_iUnion₂]
+  exact hd i s s.finite_toSet his
 
 theorem linearIndependent_iUnion_finite {η : Type*} {ιs : η → Type*} {f : ∀ j : η, ιs j → M}
     (hindep : ∀ j, LinearIndependent R (f j))
@@ -778,20 +778,20 @@ theorem linearIndependent_iUnion_finite {η : Type*} {ιs : η → Type*} {f : �
     LinearIndependent R fun ji : Σ j, ιs j => f ji.1 ji.2 := by
   nontriviality R
   apply LinearIndependent.of_subtype_range
-  · rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ hxy
-    by_cases h_cases : x₁ = y₁
-    · subst h_cases
-      refine Sigma.eq rfl ?_
-      rw [LinearIndependent.injective (hindep _) hxy]
-    · have h0 : f x₁ x₂ = 0 := by
-        apply
-          disjoint_def.1 (hd x₁ {y₁} (finite_singleton y₁) fun h => h_cases (eq_of_mem_singleton h))
-            (f x₁ x₂) (subset_span (mem_range_self _))
-        rw [iSup_singleton]
-        simp only at hxy
-        rw [hxy]
-        exact subset_span (mem_range_self y₂)
-      exact False.elim ((hindep x₁).ne_zero _ h0)
+  rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩ hxy
+  by_cases h_cases : x₁ = y₁
+  subst h_cases
+  refine Sigma.eq rfl ?_
+  rw [LinearIndependent.injective (hindep _) hxy]
+  have h0 : f x₁ x₂ = 0 := by
+    apply
+      disjoint_def.1 (hd x₁ {y₁} (finite_singleton y₁) fun h => h_cases (eq_of_mem_singleton h))
+        (f x₁ x₂) (subset_span (mem_range_self _))
+    rw [iSup_singleton]
+    simp only at hxy
+    rw [hxy]
+    exact subset_span (mem_range_self y₂)
+  exact False.elim ((hindep x₁).ne_zero _ h0)
   rw [range_sigma_eq_iUnion_range]
   apply linearIndependent_iUnion_finite_subtype (fun j => (hindep j).to_subtype_range) hd
 
@@ -890,13 +890,13 @@ theorem linearIndependent_iff_not_smul_mem_span :
       by_contra hn
       refine hn (H i _ ?_)
       refine (Finsupp.mem_span_image_iff_total R).2 ⟨Finsupp.single i (l i) - l, ?_, ?_⟩
-      · rw [Finsupp.mem_supported']
-        intro j hj
-        have hij : j = i :=
-          Classical.not_not.1 fun hij : j ≠ i =>
-            hj ((mem_diff _).2 ⟨mem_univ _, fun h => hij (eq_of_mem_singleton h)⟩)
-        simp [hij]
-      · simp [hl]⟩
+      rw [Finsupp.mem_supported']
+      intro j hj
+      have hij : j = i :=
+        Classical.not_not.1 fun hij : j ≠ i =>
+          hj ((mem_diff _).2 ⟨mem_univ _, fun h => hij (eq_of_mem_singleton h)⟩)
+      simp [hij]
+      simp [hl]⟩
 
 /-- See also `CompleteLattice.independent_iff_linearIndependent_of_ne_zero`. -/
 theorem LinearIndependent.independent_span_singleton (hv : LinearIndependent R v) :
@@ -930,7 +930,7 @@ theorem exists_maximal_independent' (s : ι → M) :
   rw [linearIndependent_comp_subtype]
   intro f hsupport hsum
   rcases eq_empty_or_nonempty c with (rfl | hn)
-  · simpa using hsupport
+  simpa using hsupport
   haveI : IsRefl X r := ⟨fun _ => Set.Subset.refl _⟩
   obtain ⟨I, _I_mem, hI⟩ : ∃ I ∈ c, (f.support : Set ι) ⊆ I :=
     hc.directedOn.exists_mem_subset_of_finset_subset_biUnion hn hsupport
@@ -957,9 +957,9 @@ theorem exists_maximal_independent (s : ι → M) :
     simp [J]
     have h := by
       refine mt hImaximal ?_
-      · intro h2
-        rw [h2] at hi
-        exact absurd hiJ hi
+      intro h2
+      rw [h2] at hi
+      exact absurd hiJ hi
     obtain ⟨f, supp_f, sum_f, f_ne⟩ := linearDependent_comp_subtype.mp h
     have hfi : f i ≠ 0
     contrapose hIlinind
@@ -1121,13 +1121,13 @@ theorem linearIndependent_monoidHom (G : Type*) [Monoid G] (L : Type*) [CommRing
             _ = (g a • (a : G → L)) 1 := by rw [← a.map_one]; rfl
             _ = (∑ i ∈ insert a s, (g i • (i : G → L))) 1 := by
               rw [Finset.sum_eq_single a]
-              · intro i his hia
-                rw [Finset.mem_insert] at his
-                rw [h3 i (his.resolve_left hia), zero_smul]
-              · intro haas
-                exfalso
-                apply haas
-                exact Finset.mem_insert_self a s
+              intro i his hia
+              rw [Finset.mem_insert] at his
+              rw [h3 i (his.resolve_left hia), zero_smul]
+              intro haas
+              exfalso
+              apply haas
+              exact Finset.mem_insert_self a s
             _ = 0 := by rw [hg]; rfl
         -- Now we're done; the last two facts together imply that `g` vanishes on every element
         -- of `insert a s`.
@@ -1213,11 +1213,11 @@ theorem linearIndependent_iff_not_mem_span :
     LinearIndependent K v ↔ ∀ i, v i ∉ span K (v '' (univ \ {i})) := by
   apply linearIndependent_iff_not_smul_mem_span.trans
   constructor
-  · intro h i h_in_span
-    apply one_ne_zero (h i 1 (by simp [h_in_span]))
-  · intro h i a ha
-    by_contra ha'
-    exact False.elim (h _ ((smul_mem_iff _ ha').1 ha))
+  intro h i h_in_span
+  apply one_ne_zero (h i 1 (by simp [h_in_span]))
+  intro h i a ha
+  by_contra ha'
+  exact False.elim (h _ ((smul_mem_iff _ ha').1 ha))
 
 protected theorem LinearIndependent.insert (hs : LinearIndependent K (fun b => b : s → V))
     (hx : x ∉ span K s) : LinearIndependent K (fun b => b : ↥(insert x s) → V) := by
@@ -1274,15 +1274,15 @@ theorem LinearIndependent.pair_iff' {x y : V} (hx : x ≠ 0) :
     LinearIndependent K ![x, y] ↔ ∀ a : K, a • x ≠ y := by
   rw [LinearIndependent.pair_iff]
   constructor
-  · intro H a ha
-    have := (H a (-1) (by simpa [← sub_eq_add_neg, sub_eq_zero])).2
-    simp only [neg_eq_zero, one_ne_zero] at this
-  · intro H s t hst
-    by_cases ht : t = 0
-    · exact ⟨by simpa [ht, hx] using hst, ht⟩
-    apply_fun (t⁻¹ • ·) at hst
-    simp only [smul_add, smul_smul, inv_mul_cancel ht, one_smul, smul_zero] at hst
-    cases H (-(t⁻¹ * s)) (by rwa [neg_smul, neg_eq_iff_eq_neg, eq_neg_iff_add_eq_zero])
+  intro H a ha
+  have := (H a (-1) (by simpa [← sub_eq_add_neg, sub_eq_zero])).2
+  simp only [neg_eq_zero, one_ne_zero] at this
+  intro H s t hst
+  by_cases ht : t = 0
+  exact ⟨by simpa [ht, hx] using hst, ht⟩
+  apply_fun (t⁻¹ • ·) at hst
+  simp only [smul_add, smul_smul, inv_mul_cancel ht, one_smul, smul_zero] at hst
+  cases H (-(t⁻¹ * s)) (by rwa [neg_smul, neg_eq_iff_eq_neg, eq_neg_iff_add_eq_zero])
 
 theorem linearIndependent_fin_cons {n} {v : Fin n → V} :
     LinearIndependent K (Fin.cons x v : Fin (n + 1) → V) ↔
@@ -1340,10 +1340,10 @@ theorem exists_linearIndependent_extension (hs : LinearIndependent K ((↑) : s 
   -- Porting note: The placeholder should be solved before `rcases`.
   have := by
     refine zorn_subset_nonempty { b | b ⊆ t ∧ LinearIndependent K ((↑) : b → V) } ?_ _ ⟨hst, hs⟩
-    · refine fun c hc cc _c0 => ⟨⋃₀ c, ⟨?_, ?_⟩, fun x => ?_⟩
-      · exact sUnion_subset fun x xc => (hc xc).1
-      · exact linearIndependent_sUnion_of_directed cc.directedOn fun x xc => (hc xc).2
-      · exact subset_sUnion_of_mem
+    refine fun c hc cc _c0 => ⟨⋃₀ c, ⟨?_, ?_⟩, fun x => ?_⟩
+    exact sUnion_subset fun x xc => (hc xc).1
+    exact linearIndependent_sUnion_of_directed cc.directedOn fun x xc => (hc xc).2
+    exact subset_sUnion_of_mem
   rcases this with
     ⟨b, ⟨bt, bi⟩, sb, h⟩
   refine ⟨b, bt, sb, fun x xt => ?_, bi⟩

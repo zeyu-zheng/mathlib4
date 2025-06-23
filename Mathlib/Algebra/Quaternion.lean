@@ -1137,7 +1137,7 @@ variable [LinearOrderedCommRing R] {a : ℍ[R]}
 theorem normSq_eq_zero : normSq a = 0 ↔ a = 0 := by
   refine ⟨fun h => ?_, fun h => h.symm ▸ normSq.map_zero⟩
   rw [normSq_def', add_eq_zero_iff', add_eq_zero_iff', add_eq_zero_iff'] at h
-  · exact ext a 0 (pow_eq_zero h.1.1.1) (pow_eq_zero h.1.1.2) (pow_eq_zero h.1.2) (pow_eq_zero h.2)
+  exact ext a 0 (pow_eq_zero h.1.1.1) (pow_eq_zero h.1.1.2) (pow_eq_zero h.1.2) (pow_eq_zero h.2)
   all_goals apply_rules [sq_nonneg, add_nonneg]
 
 theorem normSq_ne_zero : normSq a ≠ 0 ↔ a ≠ 0 := normSq_eq_zero.not
@@ -1168,8 +1168,8 @@ theorem sq_eq_normSq : a ^ 2 = normSq a ↔ a = a.re := by
 theorem sq_eq_neg_normSq : a ^ 2 = -normSq a ↔ a.re = 0 := by
   simp_rw [← star_eq_neg]
   obtain rfl | hq0 := eq_or_ne a 0
-  · simp
-  · rw [← star_mul_self, ← mul_neg, ← neg_sq, sq, mul_left_inj' (neg_ne_zero.mpr hq0), eq_comm]
+  simp
+  rw [← star_mul_self, ← mul_neg, ← neg_sq, sq, mul_left_inj' (neg_ne_zero.mpr hq0), eq_comm]
 
 end LinearOrderedCommRing
 

@@ -114,32 +114,32 @@ instance actionGroupoidIsFree {G A : Type u} [Group G] [IsFreeGroup G] [MulActio
       ⟨fun b => @f ⟨(), _⟩ ⟨(), b⟩ ⟨e, smul_inv_smul _ b⟩, IsFreeGroup.of e⟩
     rcases IsFreeGroup.unique_lift f' with ⟨F', hF', uF'⟩
     refine ⟨uncurry F' ?_, ?_, ?_⟩
-    · suffices SemidirectProduct.rightHom.comp F' = MonoidHom.id _ by
-        -- Porting note: `MonoidHom.ext_iff` has been deprecated.
-        exact DFunLike.ext_iff.mp this
-      apply IsFreeGroup.ext_hom (fun x ↦ ?_)
-      rw [MonoidHom.comp_apply, hF']
+    suffices SemidirectProduct.rightHom.comp F' = MonoidHom.id _ by
+      -- Porting note: `MonoidHom.ext_iff` has been deprecated.
+      exact DFunLike.ext_iff.mp this
+    apply IsFreeGroup.ext_hom (fun x ↦ ?_)
+    rw [MonoidHom.comp_apply, hF']
+    rfl
+    rintro ⟨⟨⟩, a : A⟩ ⟨⟨⟩, b⟩ ⟨e, h : IsFreeGroup.of e • a = b⟩
+    change (F' (IsFreeGroup.of _)).left _ = _
+    rw [hF']
+    cases inv_smul_eq_iff.mpr h.symm
+    rfl
+    intro E hE
+    have : curry E = F' := by
+      apply uF'
+      intro e
+      ext
+      convert hE _ _ _
       rfl
-    · rintro ⟨⟨⟩, a : A⟩ ⟨⟨⟩, b⟩ ⟨e, h : IsFreeGroup.of e • a = b⟩
-      change (F' (IsFreeGroup.of _)).left _ = _
-      rw [hF']
-      cases inv_smul_eq_iff.mpr h.symm
       rfl
-    · intro E hE
-      have : curry E = F' := by
-        apply uF'
-        intro e
-        ext
-        · convert hE _ _ _
-          rfl
-        · rfl
-      apply Functor.hext
-      · intro
-        apply Unit.ext
-      · refine ActionCategory.cases ?_
-        intros
-        simp only [← this, uncurry_map, curry_apply_left, coe_back, homOfPair.val]
-        rfl
+    apply Functor.hext
+    intro
+    apply Unit.ext
+    refine ActionCategory.cases ?_
+    intros
+    simp only [← this, uncurry_map, curry_apply_left, coe_back, homOfPair.val]
+    rfl
 
 namespace SpanningTree
 
@@ -185,10 +185,10 @@ theorem loopOfHom_eq_id {a b : Generators G} (e) (H : e ∈ wideSubquiverSymmetr
     loopOfHom T (of e) = 𝟙 (root' T) := by
   rw [loopOfHom, ← Category.assoc, IsIso.comp_inv_eq, Category.id_comp]
   cases' H with H H
-  · rw [treeHom_eq T (Path.cons default ⟨Sum.inl e, H⟩), homOfPath]
-    rfl
-  · rw [treeHom_eq T (Path.cons default ⟨Sum.inr e, H⟩), homOfPath]
-    simp only [IsIso.inv_hom_id, Category.comp_id, Category.assoc, treeHom]
+  rw [treeHom_eq T (Path.cons default ⟨Sum.inl e, H⟩), homOfPath]
+  rfl
+  rw [treeHom_eq T (Path.cons default ⟨Sum.inr e, H⟩), homOfPath]
+  simp only [IsIso.inv_hom_id, Category.comp_id, Category.assoc, treeHom]
 
 /-- Since a hom gives a loop, any homomorphism from the vertex group at the root
     extends to a functor on the whole groupoid. -/
@@ -218,35 +218,35 @@ lemma endIsFree : IsFreeGroup (End (root' T)) :=
         if h : e ∈ wideSubquiverSymmetrify T a b then 1 else f ⟨⟨a, b, e⟩, h⟩
       rcases unique_lift f' with ⟨F', hF', uF'⟩
       refine ⟨F'.mapEnd _, ?_, ?_⟩
-      · suffices ∀ {x y} (q : x ⟶ y), F'.map (loopOfHom T q) = (F'.map q : X) by
-          rintro ⟨⟨a, b, e⟩, h⟩
-          erw [Functor.mapEnd_apply, this, hF']
-          exact dif_neg h
-        intros x y q
-        suffices ∀ {a} (p : Path (root T) a), F'.map (homOfPath T p) = 1 by
-          simp only [this, treeHom, comp_as_mul, inv_as_inv, loopOfHom, inv_one, mul_one,
-            one_mul, Functor.map_inv, Functor.map_comp]
-        intro a p
-        induction' p with b c p e ih
-        · rw [homOfPath, F'.map_id, id_as_one]
-        rw [homOfPath, F'.map_comp, comp_as_mul, ih, mul_one]
-        rcases e with ⟨e | e, eT⟩
-        · rw [hF']
-          exact dif_pos (Or.inl eT)
-        · rw [F'.map_inv, inv_as_inv, inv_eq_one, hF']
-          exact dif_pos (Or.inr eT)
-      · intro E hE
-        ext x
-        suffices (functorOfMonoidHom T E).map x = F'.map x by
-          simpa only [loopOfHom, functorOfMonoidHom, IsIso.inv_id, treeHom_root,
-            Category.id_comp, Category.comp_id] using this
-        congr
-        apply uF'
-        intro a b e
-        change E (loopOfHom T _) = dite _ _ _
-        split_ifs with h
-        · rw [loopOfHom_eq_id T e h, ← End.one_def, E.map_one]
-        · exact hE ⟨⟨a, b, e⟩, h⟩)
+      suffices ∀ {x y} (q : x ⟶ y), F'.map (loopOfHom T q) = (F'.map q : X) by
+        rintro ⟨⟨a, b, e⟩, h⟩
+        erw [Functor.mapEnd_apply, this, hF']
+        exact dif_neg h
+      intros x y q
+      suffices ∀ {a} (p : Path (root T) a), F'.map (homOfPath T p) = 1 by
+        simp only [this, treeHom, comp_as_mul, inv_as_inv, loopOfHom, inv_one, mul_one,
+          one_mul, Functor.map_inv, Functor.map_comp]
+      intro a p
+      induction' p with b c p e ih
+      rw [homOfPath, F'.map_id, id_as_one]
+      rw [homOfPath, F'.map_comp, comp_as_mul, ih, mul_one]
+      rcases e with ⟨e | e, eT⟩
+      rw [hF']
+      exact dif_pos (Or.inl eT)
+      rw [F'.map_inv, inv_as_inv, inv_eq_one, hF']
+      exact dif_pos (Or.inr eT)
+      intro E hE
+      ext x
+      suffices (functorOfMonoidHom T E).map x = F'.map x by
+        simpa only [loopOfHom, functorOfMonoidHom, IsIso.inv_id, treeHom_root,
+          Category.id_comp, Category.comp_id] using this
+      congr
+      apply uF'
+      intro a b e
+      change E (loopOfHom T _) = dite _ _ _
+      split_ifs with h
+      rw [loopOfHom_eq_id T e h, ← End.one_def, E.map_one]
+      exact hE ⟨⟨a, b, e⟩, h⟩)
 
 end SpanningTree
 

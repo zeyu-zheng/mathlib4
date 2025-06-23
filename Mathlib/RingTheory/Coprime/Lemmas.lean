@@ -31,13 +31,13 @@ section
 
 theorem Int.isCoprime_iff_gcd_eq_one {m n : ℤ} : IsCoprime m n ↔ Int.gcd m n = 1 := by
   constructor
-  · rintro ⟨a, b, h⟩
-    have : 1 = m * a + n * b
-    rwa [mul_comm m, mul_comm n, eq_comm]
-    exact Nat.dvd_one.mp (Int.gcd_dvd_iff.mpr ⟨a, b, this⟩)
-  · rw [← Int.ofNat_inj, IsCoprime, Int.gcd_eq_gcd_ab, mul_comm m, mul_comm n, Nat.cast_one]
-    intro h
-    exact ⟨_, _, h⟩
+  rintro ⟨a, b, h⟩
+  have : 1 = m * a + n * b
+  rwa [mul_comm m, mul_comm n, eq_comm]
+  exact Nat.dvd_one.mp (Int.gcd_dvd_iff.mpr ⟨a, b, this⟩)
+  rw [← Int.ofNat_inj, IsCoprime, Int.gcd_eq_gcd_ab, mul_comm m, mul_comm n, Nat.cast_one]
+  intro h
+  exact ⟨_, _, h⟩
 
 theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.Coprime m n := by
   rw [Int.isCoprime_iff_gcd_eq_one, Int.gcd_natCast_natCast]
@@ -118,50 +118,50 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
       rw [mem_sdiff, mem_singleton]
       exact ⟨mem_insert_self _ _, fun ha ↦ hat (ha ▸ hx)⟩
     constructor
-    · rintro ⟨μ, hμ⟩
-      rw [sum_cons, cons_eq_insert, sdiff_singleton_eq_erase, erase_insert hat] at hμ
-      refine ⟨ih.mp ⟨Pi.single h.choose (μ a * s h.choose) + μ * fun _ ↦ s a, ?_⟩, fun b hb ↦ ?_⟩
-      · rw [prod_eq_mul_prod_diff_singleton h.choose_spec, ← mul_assoc, ←
-          @if_pos _ _ h.choose_spec R (_ * _) 0, ← sum_pi_single', ← sum_add_distrib] at hμ
-        rw [← hμ, sum_congr rfl]
-        intro x hx
-        dsimp -- Porting note: terms were showing as sort of `HAdd.hadd` instead of `+`
-        -- this whole proof pretty much breaks and has to be rewritten from scratch
-        rw [add_mul]
-        congr 1
-        · by_cases hx : x = h.choose
-          · rw [hx, Pi.single_eq_same, Pi.single_eq_same]
-          · rw [Pi.single_eq_of_ne hx, Pi.single_eq_of_ne hx, zero_mul]
-        · rw [mul_assoc]
-          congr
-          rw [prod_eq_prod_diff_singleton_mul (mem x hx) _, mul_comm]
-          congr 2
-          rw [sdiff_sdiff_comm, sdiff_singleton_eq_erase a, erase_insert hat]
-      · have : IsCoprime (s b) (s a) :=
-          ⟨μ a * ∏ i ∈ t \ {b}, s i, ∑ i ∈ t, μ i * ∏ j ∈ t \ {i}, s j, ?_⟩
-        · exact ⟨this.symm, this⟩
-        rw [mul_assoc, ← prod_eq_prod_diff_singleton_mul hb, sum_mul, ← hμ, sum_congr rfl]
-        intro x hx
-        rw [mul_assoc]
-        congr
-        rw [prod_eq_prod_diff_singleton_mul (mem x hx) _]
-        congr 2
-        rw [sdiff_sdiff_comm, sdiff_singleton_eq_erase a, erase_insert hat]
-    · rintro ⟨hs, Hb⟩
-      obtain ⟨μ, hμ⟩ := ih.mpr hs
-      obtain ⟨u, v, huv⟩ := IsCoprime.prod_left fun b hb ↦ (Hb b hb).right
-      use fun i ↦ if i = a then u else v * μ i
-      have hμ' : (∑ i ∈ t, v * ((μ i * ∏ j ∈ t \ {i}, s j) * s a)) = v * s a := by
-        rw [← mul_sum, ← sum_mul, hμ, one_mul]
-      rw [sum_cons, cons_eq_insert, sdiff_singleton_eq_erase, erase_insert hat, if_pos rfl,
-        ← huv, ← hμ', sum_congr rfl]
-      intro x hx
-      rw [mul_assoc, if_neg fun ha : x = a ↦ hat (ha.casesOn hx)]
-      rw [mul_assoc]
-      congr
-      rw [prod_eq_prod_diff_singleton_mul (mem x hx) _]
-      congr 2
-      rw [sdiff_sdiff_comm, sdiff_singleton_eq_erase a, erase_insert hat]
+    rintro ⟨μ, hμ⟩
+    rw [sum_cons, cons_eq_insert, sdiff_singleton_eq_erase, erase_insert hat] at hμ
+    refine ⟨ih.mp ⟨Pi.single h.choose (μ a * s h.choose) + μ * fun _ ↦ s a, ?_⟩, fun b hb ↦ ?_⟩
+    rw [prod_eq_mul_prod_diff_singleton h.choose_spec, ← mul_assoc, ←
+      @if_pos _ _ h.choose_spec R (_ * _) 0, ← sum_pi_single', ← sum_add_distrib] at hμ
+    rw [← hμ, sum_congr rfl]
+    intro x hx
+    dsimp -- Porting note: terms were showing as sort of `HAdd.hadd` instead of `+`
+    -- this whole proof pretty much breaks and has to be rewritten from scratch
+    rw [add_mul]
+    congr 1
+    by_cases hx : x = h.choose
+    rw [hx, Pi.single_eq_same, Pi.single_eq_same]
+    rw [Pi.single_eq_of_ne hx, Pi.single_eq_of_ne hx, zero_mul]
+    rw [mul_assoc]
+    congr
+    rw [prod_eq_prod_diff_singleton_mul (mem x hx) _, mul_comm]
+    congr 2
+    rw [sdiff_sdiff_comm, sdiff_singleton_eq_erase a, erase_insert hat]
+    have : IsCoprime (s b) (s a) :=
+      ⟨μ a * ∏ i ∈ t \ {b}, s i, ∑ i ∈ t, μ i * ∏ j ∈ t \ {i}, s j, ?_⟩
+    exact ⟨this.symm, this⟩
+    rw [mul_assoc, ← prod_eq_prod_diff_singleton_mul hb, sum_mul, ← hμ, sum_congr rfl]
+    intro x hx
+    rw [mul_assoc]
+    congr
+    rw [prod_eq_prod_diff_singleton_mul (mem x hx) _]
+    congr 2
+    rw [sdiff_sdiff_comm, sdiff_singleton_eq_erase a, erase_insert hat]
+    rintro ⟨hs, Hb⟩
+    obtain ⟨μ, hμ⟩ := ih.mpr hs
+    obtain ⟨u, v, huv⟩ := IsCoprime.prod_left fun b hb ↦ (Hb b hb).right
+    use fun i ↦ if i = a then u else v * μ i
+    have hμ' : (∑ i ∈ t, v * ((μ i * ∏ j ∈ t \ {i}, s j) * s a)) = v * s a := by
+      rw [← mul_sum, ← sum_mul, hμ, one_mul]
+    rw [sum_cons, cons_eq_insert, sdiff_singleton_eq_erase, erase_insert hat, if_pos rfl,
+      ← huv, ← hμ', sum_congr rfl]
+    intro x hx
+    rw [mul_assoc, if_neg fun ha : x = a ↦ hat (ha.casesOn hx)]
+    rw [mul_assoc]
+    congr
+    rw [prod_eq_prod_diff_singleton_mul (mem x hx) _]
+    congr 2
+    rw [sdiff_sdiff_comm, sdiff_singleton_eq_erase a, erase_insert hat]
 
 theorem exists_sum_eq_one_iff_pairwise_coprime' [Fintype I] [Nonempty I] [DecidableEq I] :
     (∃ μ : I → R, (∑ i : I, μ i * ∏ j ∈ {i}ᶜ, s j) = 1) ↔ Pairwise (IsCoprime on s) := by
@@ -172,13 +172,13 @@ theorem exists_sum_eq_one_iff_pairwise_coprime' [Fintype I] [Nonempty I] [Decida
 theorem pairwise_coprime_iff_coprime_prod [DecidableEq I] :
     Pairwise (IsCoprime on fun i : t ↦ s i) ↔ ∀ i ∈ t, IsCoprime (s i) (∏ j ∈ t \ {i}, s j) := by
   refine ⟨fun hp i hi ↦ IsCoprime.prod_right_iff.mpr fun j hj ↦ ?_, fun hp ↦ ?_⟩
-  · rw [Finset.mem_sdiff, Finset.mem_singleton] at hj
-    obtain ⟨hj, ji⟩ := hj
-    refine @hp ⟨i, hi⟩ ⟨j, hj⟩ fun h ↦ ji (congrArg Subtype.val h).symm
-    -- Porting note: is there a better way compared to the old `congr_arg coe h`?
-  · rintro ⟨i, hi⟩ ⟨j, hj⟩ h
-    apply IsCoprime.prod_right_iff.mp (hp i hi)
-    exact Finset.mem_sdiff.mpr ⟨hj, fun f ↦ h <| Subtype.ext (Finset.mem_singleton.mp f).symm⟩
+  rw [Finset.mem_sdiff, Finset.mem_singleton] at hj
+  obtain ⟨hj, ji⟩ := hj
+  refine @hp ⟨i, hi⟩ ⟨j, hj⟩ fun h ↦ ji (congrArg Subtype.val h).symm
+  -- Porting note: is there a better way compared to the old `congr_arg coe h`?
+  rintro ⟨i, hi⟩ ⟨j, hj⟩ h
+  apply IsCoprime.prod_right_iff.mp (hp i hi)
+  exact Finset.mem_sdiff.mpr ⟨hj, fun f ↦ h <| Subtype.ext (Finset.mem_singleton.mp f).symm⟩
 
 variable {m n : ℕ}
 
@@ -261,12 +261,12 @@ theorem Fintype.prod_dvd_of_isRelPrime [Fintype I] (Hs : Pairwise (IsRelPrime on
 theorem pairwise_isRelPrime_iff_isRelPrime_prod [DecidableEq I] :
     Pairwise (IsRelPrime on fun i : t ↦ s i) ↔ ∀ i ∈ t, IsRelPrime (s i) (∏ j ∈ t \ {i}, s j) := by
   refine ⟨fun hp i hi ↦ IsRelPrime.prod_right_iff.mpr fun j hj ↦ ?_, fun hp ↦ ?_⟩
-  · rw [Finset.mem_sdiff, Finset.mem_singleton] at hj
-    obtain ⟨hj, ji⟩ := hj
-    exact @hp ⟨i, hi⟩ ⟨j, hj⟩ fun h ↦ ji (congrArg Subtype.val h).symm
-  · rintro ⟨i, hi⟩ ⟨j, hj⟩ h
-    apply IsRelPrime.prod_right_iff.mp (hp i hi)
-    exact Finset.mem_sdiff.mpr ⟨hj, fun f ↦ h <| Subtype.ext (Finset.mem_singleton.mp f).symm⟩
+  rw [Finset.mem_sdiff, Finset.mem_singleton] at hj
+  obtain ⟨hj, ji⟩ := hj
+  exact @hp ⟨i, hi⟩ ⟨j, hj⟩ fun h ↦ ji (congrArg Subtype.val h).symm
+  rintro ⟨i, hi⟩ ⟨j, hj⟩ h
+  apply IsRelPrime.prod_right_iff.mp (hp i hi)
+  exact Finset.mem_sdiff.mpr ⟨hj, fun f ↦ h <| Subtype.ext (Finset.mem_singleton.mp f).symm⟩
 
 namespace IsRelPrime
 

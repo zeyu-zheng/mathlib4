@@ -297,36 +297,36 @@ theorem eq_one_of_smul_normalized (w : CoprodI.Word G) {i : ι} (h : H)
       (Word.equivPair i w).head := by
     rw [Word.equivPair_head]
     split_ifs with h
-    · rcases h with ⟨_, rfl⟩
-      exact hw _ _ (List.head_mem _)
-    · rw [equiv_one (d.compl i) (one_mem _) (d.one_mem _)]
+    rcases h with ⟨_, rfl⟩
+    exact hw _ _ (List.head_mem _)
+    rw [equiv_one (d.compl i) (one_mem _) (d.one_mem _)]
   by_contra hh1
   have := hφw i (φ i h * (Word.equivPair i w).head) ?_
-  · apply hh1
-    rw [equiv_mul_left_of_mem (d.compl i) ⟨_, rfl⟩, hhead] at this
-    simpa [((injective_iff_map_eq_one' _).1 (d.injective i))] using this
-  · simp only [Word.mem_smul_iff, not_true, false_and, ne_eq, Option.mem_def, mul_right_inj,
-      exists_eq_right', mul_right_eq_self, exists_prop, true_and, false_or]
-    constructor
-    · intro h
-      apply_fun (d.compl i).equiv at h
-      simp only [Prod.ext_iff, equiv_one (d.compl i) (one_mem _) (d.one_mem _),
-        equiv_mul_left_of_mem (d.compl i) ⟨_, rfl⟩ , hhead, Subtype.ext_iff,
-        Prod.ext_iff, Subgroup.coe_mul] at h
-      rcases h with ⟨h₁, h₂⟩
-      rw [h₂, equiv_one (d.compl i) (one_mem _) (d.one_mem _), mul_one,
-        ((injective_iff_map_eq_one' _).1 (d.injective i))] at h₁
-      contradiction
-    · rw [Word.equivPair_head]
-      dsimp
-      split_ifs with hep
-      · rcases hep with ⟨hnil, rfl⟩
-        rw [head?_eq_head _ hnil]
-        simp_all
-      · push_neg at hep
-        by_cases hw : w.toList = []
-        · simp [hw, Word.fstIdx]
-        · simp [head?_eq_head _ hw, Word.fstIdx, hep hw]
+  apply hh1
+  rw [equiv_mul_left_of_mem (d.compl i) ⟨_, rfl⟩, hhead] at this
+  simpa [((injective_iff_map_eq_one' _).1 (d.injective i))] using this
+  simp only [Word.mem_smul_iff, not_true, false_and, ne_eq, Option.mem_def, mul_right_inj,
+    exists_eq_right', mul_right_eq_self, exists_prop, true_and, false_or]
+  constructor
+  intro h
+  apply_fun (d.compl i).equiv at h
+  simp only [Prod.ext_iff, equiv_one (d.compl i) (one_mem _) (d.one_mem _),
+    equiv_mul_left_of_mem (d.compl i) ⟨_, rfl⟩ , hhead, Subtype.ext_iff,
+    Prod.ext_iff, Subgroup.coe_mul] at h
+  rcases h with ⟨h₁, h₂⟩
+  rw [h₂, equiv_one (d.compl i) (one_mem _) (d.one_mem _), mul_one,
+    ((injective_iff_map_eq_one' _).1 (d.injective i))] at h₁
+  contradiction
+  rw [Word.equivPair_head]
+  dsimp
+  split_ifs with hep
+  rcases hep with ⟨hnil, rfl⟩
+  rw [head?_eq_head _ hnil]
+  simp_all
+  push_neg at hep
+  by_cases hw : w.toList = []
+  simp [hw, Word.fstIdx]
+  simp [head?_eq_head _ hw, Word.fstIdx, hep hw]
 
 theorem ext_smul {w₁ w₂ : NormalWord d} (i : ι)
     (h : CoprodI.of (φ i w₁.head) • w₁.toWord =
@@ -633,9 +633,9 @@ theorem Reduced.exists_normalWord_prod_eq (d : Transversal φ) {w : Word G} (hw 
     rcases ih (fun _ hg => hw _ (List.mem_cons_of_mem _ hg)) with
       ⟨w', hw'prod, hw'map⟩
     refine ⟨cons g w' ?_ ?_, ?_⟩
-    · rwa [Word.fstIdx, ← List.head?_map, hw'map, List.head?_map]
-    · exact hw _ (List.mem_cons_self _ _)
-    · simp [hw'prod, hw'map]
+    rwa [Word.fstIdx, ← List.head?_map, hw'map, List.head?_map]
+    exact hw _ (List.mem_cons_self _ _)
+    simp [hw'prod, hw'map]
 
 /-- For any word `w` in the coproduct,
 if `w` is reduced (i.e none its letters are in the image of the base monoid), and nonempty, then

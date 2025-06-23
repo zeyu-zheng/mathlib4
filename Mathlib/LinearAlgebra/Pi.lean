@@ -225,8 +225,8 @@ def diag (i j : ι) : φ i →ₗ[R] φ j :=
 theorem update_apply (f : (i : ι) → M₂ →ₗ[R] φ i) (c : M₂) (i j : ι) (b : M₂ →ₗ[R] φ i) :
     (update f i b j) c = update (fun i => f i c) i (b c) j := by
   by_cases h : j = i
-  · rw [h, update_same, update_same]
-  · rw [update_noteq h, update_noteq h]
+  rw [h, update_same, update_same]
+  rw [update_noteq h, update_noteq h]
 
 end
 
@@ -290,11 +290,11 @@ theorem iSup_map_single [DecidableEq ι] [Finite ι] :
     ⨆ i, map (LinearMap.single i : φ i →ₗ[R] (i : ι) → φ i) (p i) = pi Set.univ p := by
   cases nonempty_fintype ι
   refine (iSup_le fun i => ?_).antisymm ?_
-  · rintro _ ⟨x, hx : x ∈ p i, rfl⟩ j -
-    rcases em (j = i) with (rfl | hj) <;> simp [*]
-  · intro x hx
-    rw [← Finset.univ_sum_single x]
-    exact sum_mem_iSup fun i => mem_map_of_mem (hx i trivial)
+  rintro _ ⟨x, hx : x ∈ p i, rfl⟩ j -
+  rcases em (j = i) with (rfl | hj) <;> simp [*]
+  intro x hx
+  rw [← Finset.univ_sum_single x]
+  exact sum_mem_iSup fun i => mem_map_of_mem (hx i trivial)
 
 theorem le_comap_single_pi [DecidableEq ι] (p : (i : ι) → Submodule R (φ i)) {i} :
     p i ≤ Submodule.comap (LinearMap.single i : φ i →ₗ[R] _) (Submodule.pi Set.univ p) := by
@@ -302,9 +302,9 @@ theorem le_comap_single_pi [DecidableEq ι] (p : (i : ι) → Submodule R (φ i)
   rw [Submodule.mem_comap, Submodule.mem_pi]
   rintro j -
   by_cases h : j = i
-  · rwa [h, LinearMap.coe_single, Pi.single_eq_same]
-  · rw [LinearMap.coe_single, Pi.single_eq_of_ne h]
-    exact (p j).zero_mem
+  rwa [h, LinearMap.coe_single, Pi.single_eq_same]
+  rw [LinearMap.coe_single, Pi.single_eq_of_ne h]
+  exact (p j).zero_mem
 
 end Submodule
 

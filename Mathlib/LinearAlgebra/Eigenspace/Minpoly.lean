@@ -51,12 +51,12 @@ theorem ker_aeval_ring_hom'_unit_polynomial (f : End K V) (c : K[X]ˣ) :
 theorem aeval_apply_of_hasEigenvector {f : End K V} {p : K[X]} {μ : K} {x : V}
     (h : f.HasEigenvector μ x) : aeval f p x = p.eval μ • x := by
   refine p.induction_on ?_ ?_ ?_
-  · intro a; simp [Module.algebraMap_end_apply]
-  · intro p q hp hq; simp [hp, hq, add_smul]
-  · intro n a hna
-    rw [mul_comm, pow_succ', mul_assoc, map_mul, LinearMap.mul_apply, mul_comm, hna]
-    simp only [mem_eigenspace_iff.1 h.1, smul_smul, aeval_X, eval_mul, eval_C, eval_pow, eval_X,
-      LinearMap.map_smulₛₗ, RingHom.id_apply, mul_comm]
+  intro a; simp [Module.algebraMap_end_apply]
+  intro p q hp hq; simp [hp, hq, add_smul]
+  intro n a hna
+  rw [mul_comm, pow_succ', mul_assoc, map_mul, LinearMap.mul_apply, mul_comm, hna]
+  simp only [mem_eigenspace_iff.1 h.1, smul_smul, aeval_X, eval_mul, eval_C, eval_pow, eval_X,
+    LinearMap.map_smulₛₗ, RingHom.id_apply, mul_comm]
 
 theorem isRoot_of_hasEigenvalue {f : End K V} {μ : K} (h : f.HasEigenvalue μ) :
     (minpoly K f).IsRoot μ := by

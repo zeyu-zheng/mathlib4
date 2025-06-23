@@ -275,14 +275,14 @@ theorem factorMultiset_ofPrime (p : Nat.Primes) :
  of positive integers. -/
 theorem factorMultiset_le_iff {m n : ℕ+} : factorMultiset m ≤ factorMultiset n ↔ m ∣ n := by
   constructor
-  · intro h
-    rw [← prod_factorMultiset m, ← prod_factorMultiset m]
-    apply Dvd.intro (n.factorMultiset - m.factorMultiset).prod
-    rw [← PrimeMultiset.prod_add, PrimeMultiset.factorMultiset_prod, add_tsub_cancel_of_le h,
-      prod_factorMultiset]
-  · intro h
-    rw [← mul_div_exact h, factorMultiset_mul]
-    exact le_self_add
+  intro h
+  rw [← prod_factorMultiset m, ← prod_factorMultiset m]
+  apply Dvd.intro (n.factorMultiset - m.factorMultiset).prod
+  rw [← PrimeMultiset.prod_add, PrimeMultiset.factorMultiset_prod, add_tsub_cancel_of_le h,
+    prod_factorMultiset]
+  intro h
+  rw [← mul_div_exact h, factorMultiset_mul]
+  exact le_self_add
 
 theorem factorMultiset_le_iff' {m : ℕ+} {v : PrimeMultiset} :
     factorMultiset m ≤ v ↔ m ∣ v.prod := by
@@ -313,24 +313,24 @@ namespace PNat
 theorem factorMultiset_gcd (m n : ℕ+) :
     factorMultiset (gcd m n) = factorMultiset m ⊓ factorMultiset n := by
   apply le_antisymm
-  · apply le_inf_iff.mpr; constructor <;> apply factorMultiset_le_iff.mpr
-    · exact gcd_dvd_left m n
-    · exact gcd_dvd_right m n
-  · rw [← PrimeMultiset.prod_dvd_iff, prod_factorMultiset]
-    apply dvd_gcd <;> rw [PrimeMultiset.prod_dvd_iff']
-    · exact inf_le_left
-    · exact inf_le_right
+  apply le_inf_iff.mpr; constructor <;> apply factorMultiset_le_iff.mpr
+  exact gcd_dvd_left m n
+  exact gcd_dvd_right m n
+  rw [← PrimeMultiset.prod_dvd_iff, prod_factorMultiset]
+  apply dvd_gcd <;> rw [PrimeMultiset.prod_dvd_iff']
+  exact inf_le_left
+  exact inf_le_right
 
 theorem factorMultiset_lcm (m n : ℕ+) :
     factorMultiset (lcm m n) = factorMultiset m ⊔ factorMultiset n := by
   apply le_antisymm
-  · rw [← PrimeMultiset.prod_dvd_iff, prod_factorMultiset]
-    apply lcm_dvd <;> rw [← factorMultiset_le_iff']
-    · exact le_sup_left
-    · exact le_sup_right
-  · apply sup_le_iff.mpr; constructor <;> apply factorMultiset_le_iff.mpr
-    · exact dvd_lcm_left m n
-    · exact dvd_lcm_right m n
+  rw [← PrimeMultiset.prod_dvd_iff, prod_factorMultiset]
+  apply lcm_dvd <;> rw [← factorMultiset_le_iff']
+  exact le_sup_left
+  exact le_sup_right
+  apply sup_le_iff.mpr; constructor <;> apply factorMultiset_le_iff.mpr
+  exact dvd_lcm_left m n
+  exact dvd_lcm_right m n
 
 /-- The number of occurrences of p in the factor multiset of m
  is the same as the p-adic valuation of m. -/
@@ -341,10 +341,10 @@ theorem count_factorMultiset (m : ℕ+) (p : Nat.Primes) (k : ℕ) :
   congr! 2
   apply Multiset.eq_replicate.mpr
   constructor
-  · rw [Multiset.card_nsmul, PrimeMultiset.card_ofPrime, mul_one]
-  · intro q h
-    rw [PrimeMultiset.ofPrime, Multiset.nsmul_singleton _ k] at h
-    exact Multiset.eq_of_mem_replicate h
+  rw [Multiset.card_nsmul, PrimeMultiset.card_ofPrime, mul_one]
+  intro q h
+  rw [PrimeMultiset.ofPrime, Multiset.nsmul_singleton _ k] at h
+  exact Multiset.eq_of_mem_replicate h
 
 end PNat
 

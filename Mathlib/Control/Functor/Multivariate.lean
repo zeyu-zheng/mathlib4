@@ -113,11 +113,11 @@ theorem exists_iff_exists_of_mono {P : F α → Prop} {q : F β → Prop}
     (h₁ : ∀ u : F α, P u ↔ q (f <$$> u)) :
     (∃ u : F α, P u) ↔ ∃ u : F β, q u := by
   constructor <;> rintro ⟨u, h₂⟩
-  · refine ⟨f <$$> u, ?_⟩
-    apply (h₁ u).mp h₂
-  · refine ⟨g <$$> u, ?_⟩
-    rw [h₁]
-    simp only [MvFunctor.map_map, h₀, LawfulMvFunctor.id_map, h₂]
+  refine ⟨f <$$> u, ?_⟩
+  apply (h₁ u).mp h₂
+  refine ⟨g <$$> u, ?_⟩
+  rw [h₁]
+  simp only [MvFunctor.map_map, h₀, LawfulMvFunctor.id_map, h₂]
 
 variable {F}
 
@@ -172,14 +172,14 @@ theorem LiftP_PredLast_iff {β} (P : β → Prop) (x : F (α ::: β)) :
     LiftP' (PredLast' _ P) x ↔ LiftP (PredLast _ P) x := by
   dsimp only [LiftP, LiftP']
   apply exists_iff_exists_of_mono F (f _ n α) (g _ n α)
-  · ext i ⟨x, _⟩
-    cases i <;> rfl
-  · intros
-    rw [MvFunctor.map_map]
-    dsimp (config := { unfoldPartialApp := true }) [(· ⊚ ·)]
-    suffices (fun i => Subtype.val) = (fun i x => (MvFunctor.f P n α i x).val) by rw [this]
-    ext i ⟨x, _⟩
-    cases i <;> rfl
+  ext i ⟨x, _⟩
+  cases i <;> rfl
+  intros
+  rw [MvFunctor.map_map]
+  dsimp (config := { unfoldPartialApp := true }) [(· ⊚ ·)]
+  suffices (fun i => Subtype.val) = (fun i x => (MvFunctor.f P n α i x).val) by rw [this]
+  ext i ⟨x, _⟩
+  cases i <;> rfl
 
 open Function
 
@@ -207,17 +207,17 @@ theorem LiftR_RelLast_iff (x y : F (α ::: β)) :
     LiftR' (RelLast' _ rr) x y ↔ LiftR (RelLast (i := _) _ rr) x y := by
   dsimp only [LiftR, LiftR']
   apply exists_iff_exists_of_mono F (f' rr _ _) (g' rr _ _)
-  · ext i ⟨x, _⟩ : 2
-    cases i <;> rfl
-  · intros
-    simp (config := { unfoldPartialApp := true }) only [map_map, TypeVec.comp]
-    -- Porting note: proof was
-    -- rw [MvFunctor.map_map, MvFunctor.map_map, (· ⊚ ·), (· ⊚ ·)]
-    -- congr <;> ext i ⟨x, _⟩ <;> cases i <;> rfl
-    suffices  (fun i t => t.val.fst) = ((fun i x => (MvFunctor.f' rr n α i x).val.fst))
-            ∧ (fun i t => t.val.snd) = ((fun i x => (MvFunctor.f' rr n α i x).val.snd)) by
-      rw [this.1, this.2]
-    constructor <;> ext i ⟨x, _⟩ <;> cases i <;> rfl
+  ext i ⟨x, _⟩ : 2
+  cases i <;> rfl
+  intros
+  simp (config := { unfoldPartialApp := true }) only [map_map, TypeVec.comp]
+  -- Porting note: proof was
+  -- rw [MvFunctor.map_map, MvFunctor.map_map, (· ⊚ ·), (· ⊚ ·)]
+  -- congr <;> ext i ⟨x, _⟩ <;> cases i <;> rfl
+  suffices  (fun i t => t.val.fst) = ((fun i x => (MvFunctor.f' rr n α i x).val.fst))
+          ∧ (fun i t => t.val.snd) = ((fun i x => (MvFunctor.f' rr n α i x).val.snd)) by
+    rw [this.1, this.2]
+  constructor <;> ext i ⟨x, _⟩ <;> cases i <;> rfl
 
 end LiftPLastPredIff
 

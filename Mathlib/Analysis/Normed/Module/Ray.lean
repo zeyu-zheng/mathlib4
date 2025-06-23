@@ -36,9 +36,9 @@ theorem norm_add (h : SameRay ℝ x y) : ‖x + y‖ = ‖x‖ + ‖y‖ := by
 theorem norm_sub (h : SameRay ℝ x y) : ‖x - y‖ = |‖x‖ - ‖y‖| := by
   rcases h.exists_eq_smul with ⟨u, a, b, ha, hb, -, rfl, rfl⟩
   wlog hab : b ≤ a generalizing a b with H
-  · rw [SameRay.sameRay_comm] at h
-    rw [norm_sub_rev, abs_sub_comm]
-    exact H b a hb ha h (le_of_not_le hab)
+  rw [SameRay.sameRay_comm] at h
+  rw [norm_sub_rev, abs_sub_comm]
+  exact H b a hb ha h (le_of_not_le hab)
   rw [← sub_nonneg] at hab
   rw [← sub_smul, norm_smul_of_nonneg hab, norm_smul_of_nonneg ha, norm_smul_of_nonneg hb, ←
     sub_mul, abs_of_nonneg (mul_nonneg hab (norm_nonneg _))]
@@ -87,9 +87,9 @@ theorem sameRay_iff_inv_norm_smul_eq : SameRay ℝ x y ↔ x = 0 ∨ y = 0 ∨ �
 /-- Two vectors of the same norm are on the same ray if and only if they are equal. -/
 theorem sameRay_iff_of_norm_eq (h : ‖x‖ = ‖y‖) : SameRay ℝ x y ↔ x = y := by
   obtain rfl | hy := eq_or_ne y 0
-  · rw [norm_zero, norm_eq_zero] at h
-    exact iff_of_true (SameRay.zero_right _) h
-  · exact ⟨fun hxy => norm_injOn_ray_right hy hxy SameRay.rfl h, fun hxy => hxy ▸ SameRay.rfl⟩
+  rw [norm_zero, norm_eq_zero] at h
+  exact iff_of_true (SameRay.zero_right _) h
+  exact ⟨fun hxy => norm_injOn_ray_right hy hxy SameRay.rfl h, fun hxy => hxy ▸ SameRay.rfl⟩
 
 theorem not_sameRay_iff_of_norm_eq (h : ‖x‖ = ‖y‖) : ¬SameRay ℝ x y ↔ x ≠ y :=
   (sameRay_iff_of_norm_eq h).not

@@ -44,13 +44,13 @@ theorem StrictMonoOn.continuousWithinAt_right_of_exists_between {f : α → β} 
   have ha : a ∈ Ici a := left_mem_Ici
   have has : a ∈ s := mem_of_mem_nhdsWithin ha hs
   refine tendsto_order.2 ⟨fun b hb => ?_, fun b hb => ?_⟩
-  · filter_upwards [hs, @self_mem_nhdsWithin _ _ a (Ici a)] with _ hxs hxa using hb.trans_le
-      ((h_mono.le_iff_le has hxs).2 hxa)
-  · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
-    rw [h_mono.lt_iff_lt has hcs] at hac
-    filter_upwards [hs, Ico_mem_nhdsWithin_Ici (left_mem_Ico.2 hac)]
-    rintro x hx ⟨_, hxc⟩
-    exact ((h_mono.lt_iff_lt hx hcs).2 hxc).trans_le hcb
+  filter_upwards [hs, @self_mem_nhdsWithin _ _ a (Ici a)] with _ hxs hxa using hb.trans_le
+    ((h_mono.le_iff_le has hxs).2 hxa)
+  rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
+  rw [h_mono.lt_iff_lt has hcs] at hac
+  filter_upwards [hs, Ico_mem_nhdsWithin_Ici (left_mem_Ico.2 hac)]
+  rintro x hx ⟨_, hxc⟩
+  exact ((h_mono.lt_iff_lt hx hcs).2 hxc).trans_le hcb
 
 /-- If `f` is a monotone function on a right neighborhood of `a` and the image of this neighborhood
 under `f` meets every interval `(f a, b)`, `b > f a`, then `f` is continuous at `a` from the right.
@@ -64,13 +64,13 @@ theorem continuousWithinAt_right_of_monotoneOn_of_exists_between {f : α → β}
   have ha : a ∈ Ici a := left_mem_Ici
   have has : a ∈ s := mem_of_mem_nhdsWithin ha hs
   refine tendsto_order.2 ⟨fun b hb => ?_, fun b hb => ?_⟩
-  · filter_upwards [hs, @self_mem_nhdsWithin _ _ a (Ici a)] with _ hxs hxa using hb.trans_le
-      (h_mono has hxs hxa)
-  · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
-    have : a < c := not_le.1 fun h => hac.not_le <| h_mono hcs has h
-    filter_upwards [hs, Ico_mem_nhdsWithin_Ici (left_mem_Ico.2 this)]
-    rintro x hx ⟨_, hxc⟩
-    exact (h_mono hx hcs hxc.le).trans_lt hcb
+  filter_upwards [hs, @self_mem_nhdsWithin _ _ a (Ici a)] with _ hxs hxa using hb.trans_le
+    (h_mono has hxs hxa)
+  rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
+  have : a < c := not_le.1 fun h => hac.not_le <| h_mono hcs has h
+  filter_upwards [hs, Ico_mem_nhdsWithin_Ici (left_mem_Ico.2 this)]
+  rintro x hx ⟨_, hxc⟩
+  exact (h_mono hx hcs hxc.le).trans_lt hcb
 
 /-- If a function `f` with a densely ordered codomain is monotone on a right neighborhood of `a` and
 the closure of the image of this neighborhood under `f` is a right neighborhood of `f a`, then `f`
@@ -281,10 +281,10 @@ variable {α β : Type*} [PartialOrder α] [PartialOrder β] [TopologicalSpace �
 protected theorem continuous (e : α ≃o β) : Continuous e := by
   rw [‹OrderTopology β›.topology_eq_generate_intervals, continuous_generateFrom_iff]
   rintro s ⟨a, rfl | rfl⟩
-  · rw [e.preimage_Ioi]
-    apply isOpen_lt'
-  · rw [e.preimage_Iio]
-    apply isOpen_gt'
+  rw [e.preimage_Ioi]
+  apply isOpen_lt'
+  rw [e.preimage_Iio]
+  apply isOpen_gt'
 
 /-- An order isomorphism between two linear order `OrderTopology` spaces is a homeomorphism. -/
 def toHomeomorph (e : α ≃o β) : α ≃ₜ β :=

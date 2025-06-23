@@ -119,10 +119,10 @@ theorem vars_one : (1 : MvPolynomial σ R).vars = ∅ :=
 open Classical in
 theorem vars_pow (φ : MvPolynomial σ R) (n : ℕ) : (φ ^ n).vars ⊆ φ.vars := by
   induction' n with n ih
-  · simp
-  · rw [pow_succ']
-    apply Finset.Subset.trans (vars_mul _ _)
-    exact Finset.union_subset (Finset.Subset.refl _) ih
+  simp
+  rw [pow_succ']
+  apply Finset.Subset.trans (vars_mul _ _)
+  exact Finset.union_subset (Finset.Subset.refl _) ih
 
 open Classical in
 /-- The variables of the product of a family of polynomials
@@ -230,8 +230,8 @@ theorem eval₂Hom_eq_constantCoeff_of_vars (f : R →+* S) {g : σ → S} {p : 
     intro d hd
   on_goal 2 =>
     rw [Finset.sum_eq_single (0 : σ →₀ ℕ)]
-    · rw [Finsupp.prod_zero_index, mul_one]
-      rfl
+    rw [Finsupp.prod_zero_index, mul_one]
+    rfl
     on_goal 1 => intro d hd hd0
   on_goal 3 =>
     rw [constantCoeff_eq, coeff, ← Ne, ← Finsupp.mem_support_iff] at h0
@@ -287,12 +287,12 @@ theorem exists_rename_eq_of_vars_subset_range (p : MvPolynomial σ R) (f : τ �
     by
       show (rename f).toRingHom.comp _ p = RingHom.id _ p
       refine hom_congr_vars ?_ ?_ ?_
-      · ext1
-        simp [algebraMap_eq]
-      · intro i hip _
-        rcases hf hip with ⟨i, rfl⟩
-        simp [partialInv_left hfi]
-      · rfl⟩
+      ext1
+      simp [algebraMap_eq]
+      intro i hip _
+      rcases hf hip with ⟨i, rfl⟩
+      simp [partialInv_left hfi]
+      rfl⟩
 
 open Classical in
 theorem vars_rename [DecidableEq τ] (f : σ → τ) (φ : MvPolynomial σ R) :

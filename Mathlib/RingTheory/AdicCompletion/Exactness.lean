@@ -71,10 +71,10 @@ theorem map_surjective : Function.Surjective (map I f) := fun y ↦ by
   apply AdicCompletion.induction_on I N y (fun b ↦ ?_)
   let a := mapPreimage hf b
   refine ⟨AdicCompletion.mk I M (AdicCauchySequence.mk I M (fun n ↦ (a n : M)) ?_), ?_⟩
-  · refine fun n ↦ SModEq.symm ?_
-    simp only [SModEq.symm, SModEq, mapPreimage, Submodule.Quotient.mk_sub,
-      sub_eq_self, Submodule.Quotient.mk_eq_zero, SetLike.coe_mem, a]
-  · exact _root_.AdicCompletion.ext fun n ↦ congrArg _ ((a n).property)
+  refine fun n ↦ SModEq.symm ?_
+  simp only [SModEq.symm, SModEq, mapPreimage, Submodule.Quotient.mk_sub,
+    sub_eq_self, Submodule.Quotient.mk_eq_zero, SetLike.coe_mem, a]
+  exact _root_.AdicCompletion.ext fun n ↦ congrArg _ ((a n).property)
 
 end Surjectivity
 
@@ -181,24 +181,24 @@ end
 /-- `AdicCompletion` over a Noetherian ring is exact on finitely generated modules. -/
 theorem map_exact : Function.Exact (map I f) (map I g) := by
   refine LinearMap.exact_of_comp_eq_zero_of_ker_le_range ?_ (fun y ↦ ?_)
-  · rw [map_comp, hfg.linearMap_comp_eq_zero, AdicCompletion.map_zero]
-  · apply AdicCompletion.induction_on I N y (fun b ↦ ?_)
-    intro hz
-    obtain ⟨k, hk⟩ := Ideal.exists_pow_inf_eq_pow_smul I (LinearMap.range f)
-    have hb (n : ℕ) : g (b n) ∈ (I ^ n • ⊤ : Submodule R P)
-    simpa using congrArg (fun x ↦ x.val n) hz
-    let a := mapExactAux hf hfg hg hk b hb
-    refine ⟨AdicCompletion.mk I M (AdicCauchySequence.mk I M (fun n ↦ (a n : M)) ?_), ?_⟩
-    · refine fun n ↦ SModEq.symm ?_
-      simp [a, mapExactAux, SModEq]
-    · ext n
-      suffices h : Submodule.Quotient.mk (p := (I ^ n • ⊤ : Submodule R N)) (f (a n)) =
-            Submodule.Quotient.mk (p := (I ^ n • ⊤ : Submodule R N)) (b (k + n)) by
-        simp [h, AdicCauchySequence.mk_eq_mk (show n ≤ k + n by omega)]
-      rw [Submodule.Quotient.eq]
-      have hle : (I ^ (k + n) • ⊤ : Submodule R N) ≤ (I ^ n • ⊤ : Submodule R N) :=
-        Submodule.smul_mono_left (Ideal.pow_le_pow_right (by omega))
-      exact hle (a n).property
+  rw [map_comp, hfg.linearMap_comp_eq_zero, AdicCompletion.map_zero]
+  apply AdicCompletion.induction_on I N y (fun b ↦ ?_)
+  intro hz
+  obtain ⟨k, hk⟩ := Ideal.exists_pow_inf_eq_pow_smul I (LinearMap.range f)
+  have hb (n : ℕ) : g (b n) ∈ (I ^ n • ⊤ : Submodule R P)
+  simpa using congrArg (fun x ↦ x.val n) hz
+  let a := mapExactAux hf hfg hg hk b hb
+  refine ⟨AdicCompletion.mk I M (AdicCauchySequence.mk I M (fun n ↦ (a n : M)) ?_), ?_⟩
+  refine fun n ↦ SModEq.symm ?_
+  simp [a, mapExactAux, SModEq]
+  ext n
+  suffices h : Submodule.Quotient.mk (p := (I ^ n • ⊤ : Submodule R N)) (f (a n)) =
+        Submodule.Quotient.mk (p := (I ^ n • ⊤ : Submodule R N)) (b (k + n)) by
+    simp [h, AdicCauchySequence.mk_eq_mk (show n ≤ k + n by omega)]
+  rw [Submodule.Quotient.eq]
+  have hle : (I ^ (k + n) • ⊤ : Submodule R N) ≤ (I ^ n • ⊤ : Submodule R N) :=
+    Submodule.smul_mono_left (Ideal.pow_le_pow_right (by omega))
+  exact hle (a n).property
 
 end
 

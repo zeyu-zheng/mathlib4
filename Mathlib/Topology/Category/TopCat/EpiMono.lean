@@ -29,17 +29,17 @@ theorem epi_iff_surjective {X Y : TopCat.{u}} (f : X ⟶ Y) : Epi f ↔ Function
     rw [this, CategoryTheory.epi_iff_surjective]
     rfl
   constructor
-  · intro
-    infer_instance
-  · apply Functor.epi_of_epi_map
+  intro
+  infer_instance
+  apply Functor.epi_of_epi_map
 
 theorem mono_iff_injective {X Y : TopCat.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f := by
   suffices Mono f ↔ Mono ((forget TopCat).map f) by
     rw [this, CategoryTheory.mono_iff_injective]
     rfl
   constructor
-  · intro
-    infer_instance
-  · apply Functor.mono_of_mono_map
+  intro
+  infer_instance
+  apply Functor.mono_of_mono_map
 
 end TopCat

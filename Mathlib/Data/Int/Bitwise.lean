@@ -174,10 +174,10 @@ theorem bodd_add_div2 : ∀ n, cond (bodd n) 1 0 + 2 * div2 n = n
   | -[n+1] => by
     refine Eq.trans ?_ (congr_arg negSucc n.bodd_add_div2)
     dsimp [bodd]; cases Nat.bodd n <;> dsimp [cond, not, div2, Int.mul]
-    · change -[2 * Nat.div2 n+1] = _
-      rw [zero_add]
-    · rw [zero_add, add_comm]
-      rfl
+    change -[2 * Nat.div2 n+1] = _
+    rw [zero_add]
+    rw [zero_add, add_comm]
+    rfl
 
 theorem div2_val : ∀ n, div2 n = n / 2
   | (n : ℕ) => congr_arg ofNat n.div2_val
@@ -185,8 +185,8 @@ theorem div2_val : ∀ n, div2 n = n / 2
 
 theorem bit_val (b n) : bit b n = 2 * n + cond b 1 0 := by
   cases b
-  · apply (add_zero _).symm
-  · rfl
+  apply (add_zero _).symm
+  rfl
 
 theorem bit_decomp (n : ℤ) : bit (bodd n) (div2 n) = n :=
   (bit_val _ _).trans <| (add_comm _ _).trans <| bodd_add_div2 _
@@ -242,16 +242,16 @@ theorem bitwise_or : bitwise or = lor := by
   cases' m with m m <;> cases' n with n n <;> try {rfl}
     <;> simp only [bitwise, natBitwise, Bool.not_false, Bool.or_true, cond_true, lor, Nat.ldiff,
       negSucc.injEq, Bool.true_or, Nat.land]
-  · rw [Nat.bitwise_swap, Function.swap]
-    congr
-    funext x y
-    cases x <;> cases y <;> rfl
-  · congr
-    funext x y
-    cases x <;> cases y <;> rfl
-  · congr
-    funext x y
-    cases x <;> cases y <;> rfl
+  rw [Nat.bitwise_swap, Function.swap]
+  congr
+  funext x y
+  cases x <;> cases y <;> rfl
+  congr
+  funext x y
+  cases x <;> cases y <;> rfl
+  congr
+  funext x y
+  cases x <;> cases y <;> rfl
 
 -- Porting note: Was `bitwise_tac` in mathlib
 theorem bitwise_and : bitwise and = land := by
@@ -260,13 +260,13 @@ theorem bitwise_and : bitwise and = land := by
     <;> simp only [bitwise, natBitwise, Bool.not_false, Bool.or_true,
       cond_false, cond_true, lor, Nat.ldiff, Bool.and_true, negSucc.injEq,
       Bool.and_false, Nat.land]
-  · rw [Nat.bitwise_swap, Function.swap]
-    congr
-    funext x y
-    cases x <;> cases y <;> rfl
-  · congr
-    funext x y
-    cases x <;> cases y <;> rfl
+  rw [Nat.bitwise_swap, Function.swap]
+  congr
+  funext x y
+  cases x <;> cases y <;> rfl
+  congr
+  funext x y
+  cases x <;> cases y <;> rfl
 
 -- Porting note: Was `bitwise_tac` in mathlib
 theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff := by
@@ -275,16 +275,16 @@ theorem bitwise_diff : (bitwise fun a b => a && not b) = ldiff := by
     <;> simp only [bitwise, natBitwise, Bool.not_false, Bool.or_true,
       cond_false, cond_true, lor, Nat.ldiff, Bool.and_true, negSucc.injEq,
       Bool.and_false, Nat.land, Bool.not_true, ldiff, Nat.lor]
-  · congr
-    funext x y
-    cases x <;> cases y <;> rfl
-  · congr
-    funext x y
-    cases x <;> cases y <;> rfl
-  · rw [Nat.bitwise_swap, Function.swap]
-    congr
-    funext x y
-    cases x <;> cases y <;> rfl
+  congr
+  funext x y
+  cases x <;> cases y <;> rfl
+  congr
+  funext x y
+  cases x <;> cases y <;> rfl
+  rw [Nat.bitwise_swap, Function.swap]
+  congr
+  funext x y
+  cases x <;> cases y <;> rfl
 
 -- Porting note: Was `bitwise_tac` in mathlib
 theorem bitwise_xor : bitwise xor = Int.xor := by
@@ -294,15 +294,15 @@ theorem bitwise_xor : bitwise xor = Int.xor := by
       cond_false, cond_true, lor, Nat.ldiff, Bool.and_true, negSucc.injEq, Bool.false_xor,
       Bool.true_xor, Bool.and_false, Nat.land, Bool.not_true, ldiff,
       HOr.hOr, OrOp.or, Nat.lor, Int.xor, HXor.hXor, Xor.xor, Nat.xor]
-  · congr
-    funext x y
-    cases x <;> cases y <;> rfl
-  · congr
-    funext x y
-    cases x <;> cases y <;> rfl
-  · congr
-    funext x y
-    cases x <;> cases y <;> rfl
+  congr
+  funext x y
+  cases x <;> cases y <;> rfl
+  congr
+  funext x y
+  cases x <;> cases y <;> rfl
+  congr
+  funext x y
+  cases x <;> cases y <;> rfl
 
 @[simp]
 theorem bitwise_bit (f : Bool → Bool → Bool) (a m b n) :
@@ -310,10 +310,10 @@ theorem bitwise_bit (f : Bool → Bool → Bool) (a m b n) :
   cases' m with m m <;> cases' n with n n <;>
   simp [bitwise, ofNat_eq_coe, bit_coe_nat, natBitwise, Bool.not_false, Bool.not_eq_false',
     bit_negSucc]
-  · by_cases h : f false false <;> simp (config := {decide := true}) [h]
-  · by_cases h : f false true <;> simp (config := {decide := true}) [h]
-  · by_cases h : f true false <;> simp (config := {decide := true}) [h]
-  · by_cases h : f true true <;> simp (config := {decide := true}) [h]
+  by_cases h : f false false <;> simp (config := {decide := true}) [h]
+  by_cases h : f false true <;> simp (config := {decide := true}) [h]
+  by_cases h : f true false <;> simp (config := {decide := true}) [h]
+  by_cases h : f true true <;> simp (config := {decide := true}) [h]
 
 @[simp]
 theorem lor_bit (a m b n) : lor (bit a m) (bit b n) = bit (a || b) (lor m n) := by
@@ -340,10 +340,10 @@ theorem lnot_bit (b) : ∀ n, lnot (bit b n) = bit (not b) (lnot n)
 theorem testBit_bitwise (f : Bool → Bool → Bool) (m n k) :
     testBit (bitwise f m n) k = f (testBit m k) (testBit n k) := by
   cases m <;> cases n <;> simp only [testBit, bitwise, natBitwise]
-  · by_cases h : f false false <;> simp [h]
-  · by_cases h : f false true <;> simp [h]
-  · by_cases h : f true false <;> simp [h]
-  · by_cases h : f true true <;> simp [h]
+  by_cases h : f false false <;> simp [h]
+  by_cases h : f false true <;> simp [h]
+  by_cases h : f true false <;> simp [h]
+  by_cases h : f true true <;> simp [h]
 
 @[simp]
 theorem testBit_lor (m n k) : testBit (lor m n) k = (testBit m k || testBit n k) := by

@@ -240,21 +240,21 @@ theorem Cofix.bisim_rel {α : TypeVec n} (r : Cofix F α → Cofix F α → Prop
   let r' (x y) := x = y ∨ r x y
   intro x y rxy
   apply Cofix.bisim_aux r'
-  · intro x
-    left
-    rfl
-  · intro x y r'xy
-    cases r'xy with
-    | inl h =>
-      rw [h]
-    | inr r'xy =>
-      have : ∀ x y, r x y → r' x y := fun x y h => Or.inr h
-      rw [← Quot.factor_mk_eq _ _ this]
-      dsimp [r']
-      rw [appendFun_comp_id]
-      rw [@comp_map _ _ q _ _ _ (appendFun id (Quot.mk r)),
-        @comp_map _ _ q _ _ _ (appendFun id (Quot.mk r))]
-      rw [h _ _ r'xy]
+  intro x
+  left
+  rfl
+  intro x y r'xy
+  cases r'xy with
+  | inl h =>
+    rw [h]
+  | inr r'xy =>
+    have : ∀ x y, r x y → r' x y := fun x y h => Or.inr h
+    rw [← Quot.factor_mk_eq _ _ this]
+    dsimp [r']
+    rw [appendFun_comp_id]
+    rw [@comp_map _ _ q _ _ _ (appendFun id (Quot.mk r)),
+      @comp_map _ _ q _ _ _ (appendFun id (Quot.mk r))]
+    rw [h _ _ r'xy]
   right; exact rxy
 
 /-- Bisimulation principle using `LiftR` to match and relate children of two trees. -/
@@ -270,10 +270,10 @@ theorem Cofix.bisim {α : TypeVec n} (r : Cofix F α → Cofix F α → Prop)
   rw [appendFun_comp_splitFun, appendFun_comp_splitFun]
   rw [id_comp, id_comp]
   congr 2 with (i j); cases' i with _ i
-  · apply Quot.sound
-    apply h' _ j
-  · change f₀ _ j = f₁ _ j
-    apply h' _ j
+  apply Quot.sound
+  apply h' _ j
+  change f₀ _ j = f₁ _ j
+  apply h' _ j
 
 open MvFunctor
 
@@ -301,9 +301,9 @@ theorem Cofix.bisim' {α : TypeVec n} {β : Type*} (Q : β → Prop) (u v : β �
         ⟨a, q.P.appendContents f' f₀, q.P.appendContents f' f₁, xeq.symm ▸ ux'eq,
           yeq.symm ▸ vx'eq, ?_⟩
       intro i; cases i
-      · apply h'
-      · intro j
-        apply Eq.refl)
+      apply h'
+      intro j
+      apply Eq.refl)
     _ _ ⟨x, Qx, rfl, rfl⟩
 
 theorem Cofix.mk_dest {α : TypeVec n} (x : Cofix F α) : Cofix.mk (Cofix.dest x) = x := by
@@ -371,16 +371,16 @@ theorem liftR_map_last [lawful : LawfulMvFunctor F]
       ((id ::: f) ⊗' (id ::: g)) ⊚ prod.diag := by
     dsimp [b]
     apply eq_of_drop_last_eq
-    · dsimp
-      simp only [prod_map_id, dropFun_prod, dropFun_appendFun, dropFun_diag, TypeVec.id_comp,
-        dropFun_toSubtype]
-      erw [toSubtype_of_subtype_assoc, TypeVec.id_comp]
-      clear liftR_map_last q lawful F x R f g hh h b c
-      ext (i x) : 2
-      induction i with
-      | fz => rfl
-      | fs _ ih =>
-        apply ih
+    dsimp
+    simp only [prod_map_id, dropFun_prod, dropFun_appendFun, dropFun_diag, TypeVec.id_comp,
+      dropFun_toSubtype]
+    erw [toSubtype_of_subtype_assoc, TypeVec.id_comp]
+    clear liftR_map_last q lawful F x R f g hh h b c
+    ext (i x) : 2
+    induction i with
+    | fz => rfl
+    | fs _ ih =>
+      apply ih
     simp only [lastFun_from_append1_drop_last, lastFun_toSubtype, lastFun_appendFun,
       lastFun_subtypeVal, Function.id_comp, lastFun_comp, lastFun_prod]
     ext1
@@ -494,17 +494,17 @@ theorem Cofix.dest_corec' {α : TypeVec.{u} n} {β : Type u}
       appendFun id (Sum.elim _root_.id (Cofix.corec' g)) <$$> g x := by
   rw [Cofix.corec', Cofix.dest_corec]; dsimp
   congr!; ext (i | i) <;> erw [corec_roll] <;> dsimp [Cofix.corec']
-  · mv_bisim i with R a b x Ha Hb
-    rw [Ha, Hb, Cofix.dest_corec]
-    dsimp [Function.comp_def]
-    repeat rw [MvFunctor.map_map, ← appendFun_comp_id]
-    apply liftR_map_last'
-    dsimp [Function.comp_def]
-    intros
-    exact ⟨_, rfl, rfl⟩
-  · congr with y
-    erw [appendFun_id_id]
-    simp [MvFunctor.id_map, Sum.elim]
+  mv_bisim i with R a b x Ha Hb
+  rw [Ha, Hb, Cofix.dest_corec]
+  dsimp [Function.comp_def]
+  repeat rw [MvFunctor.map_map, ← appendFun_comp_id]
+  apply liftR_map_last'
+  dsimp [Function.comp_def]
+  intros
+  exact ⟨_, rfl, rfl⟩
+  congr with y
+  erw [appendFun_id_id]
+  simp [MvFunctor.id_map, Sum.elim]
 
 theorem Cofix.dest_corec₁ {α : TypeVec n} {β : Type u}
     (g : ∀ {X}, (Cofix F α → X) → (β → X) → β → F (α.append1 X)) (x : β)

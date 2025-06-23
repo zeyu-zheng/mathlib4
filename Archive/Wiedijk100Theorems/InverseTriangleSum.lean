@@ -30,7 +30,7 @@ theorem Theorems100.inverse_triangle_sum :
     ∀ n, ∑ k ∈ range n, (2 : ℚ) / (k * (k + 1)) = if n = 0 then 0 else 2 - (2 : ℚ) / n := by
   refine sum_range_induction _ _ (if_pos rfl) ?_
   rintro (_ | n)
-  · rw [if_neg, if_pos] <;> norm_num
+  rw [if_neg, if_pos] <;> norm_num
   simp only [Nat.succ_ne_zero, ↓reduceIte, Nat.cast_succ]
   have A : (n + 1 + 1 : ℚ) ≠ 0
   norm_cast

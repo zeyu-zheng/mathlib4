@@ -67,8 +67,8 @@ lemma isOfFinOrder_iff_zpow_eq_one {G} [Group G] {x : G} :
   refine ⟨fun ⟨n, hn, hn'⟩ ↦ ⟨n, Int.natCast_ne_zero_iff_pos.mpr hn, zpow_natCast x n ▸ hn'⟩,
     fun ⟨n, hn, hn'⟩ ↦ ⟨n.natAbs, Int.natAbs_pos.mpr hn, ?_⟩⟩
   cases' (Int.natAbs_eq_iff (a := n)).mp rfl with h h
-  · rwa [h, zpow_natCast] at hn'
-  · rwa [h, zpow_neg, inv_eq_one, zpow_natCast] at hn'
+  rwa [h, zpow_natCast] at hn'
+  rwa [h, zpow_neg, inv_eq_one, zpow_natCast] at hn'
 
 /-- See also `injective_pow_iff_not_isOfFinOrder`. -/
 @[to_additive "See also `injective_nsmul_iff_not_isOfFinAddOrder`."]
@@ -170,9 +170,9 @@ theorem orderOf_eq_iff {n} (h : 0 < n) :
   simp only [h, true_and]
   push_neg
   rfl
-  · rw [iff_false_left h.ne]
-    rintro ⟨h', -⟩
-    exact h1 ⟨n, h, h'⟩
+  rw [iff_false_left h.ne]
+  rintro ⟨h', -⟩
+  exact h1 ⟨n, h, h'⟩
 
 /-- A group element has finite order iff its order is positive. -/
 @[to_additive
@@ -256,10 +256,10 @@ theorem orderOf_map_dvd {H : Type*} [Monoid H] (ψ : G →* H) (x : G) :
 @[to_additive]
 theorem exists_pow_eq_self_of_coprime (h : n.Coprime (orderOf x)) : ∃ m : ℕ, (x ^ n) ^ m = x := by
   by_cases h0 : orderOf x = 0
-  · rw [h0, coprime_zero_right] at h
-    exact ⟨1, by rw [h, pow_one, pow_one]⟩
+  rw [h0, coprime_zero_right] at h
+  exact ⟨1, by rw [h, pow_one, pow_one]⟩
   by_cases h1 : orderOf x = 1
-  · exact ⟨0, by rw [orderOf_eq_one_iff.mp h1, one_pow, one_pow]⟩
+  exact ⟨0, by rw [orderOf_eq_one_iff.mp h1, one_pow, one_pow]⟩
   obtain ⟨m, h⟩ := exists_mul_emod_eq_one_of_coprime h (one_lt_iff_ne_zero_and_ne_one.mpr ⟨h0, h1⟩)
   exact ⟨m, by rw [← pow_mul, ← pow_mod_orderOf, h, pow_one]⟩
 
@@ -282,9 +282,9 @@ theorem orderOf_eq_of_pow_and_pow_div_prime (hn : 0 < n) (hx : x ^ n = 1)
   refine hd a.minFac (Nat.minFac_prime h) a_min_fac_dvd_p_sub_one ?_
   rw [← orderOf_dvd_iff_pow_eq_one, Nat.dvd_div_iff_mul_dvd a_min_fac_dvd_p_sub_one, ha, mul_comm,
     Nat.mul_dvd_mul_iff_left (IsOfFinOrder.orderOf_pos _)]
-  · exact Nat.minFac_dvd a
-  · rw [isOfFinOrder_iff_pow_eq_one]
-    exact Exists.intro n (id ⟨hn, hx⟩)
+  exact Nat.minFac_dvd a
+  rw [isOfFinOrder_iff_pow_eq_one]
+  exact Exists.intro n (id ⟨hn, hx⟩)
 
 @[to_additive]
 theorem orderOf_eq_orderOf_iff {H : Type*} [Monoid H] {y : H} :
@@ -354,8 +354,8 @@ protected lemma IsOfFinOrder.orderOf_pow (h : IsOfFinOrder x) :
 @[to_additive]
 lemma Nat.Coprime.orderOf_pow (h : (orderOf y).Coprime m) : orderOf (y ^ m) = orderOf y := by
   by_cases hg : IsOfFinOrder y
-  · rw [hg.orderOf_pow y m , h.gcd_eq_one, Nat.div_one]
-  · rw [m.coprime_zero_left.1 (orderOf_eq_zero hg ▸ h), pow_one]
+  rw [hg.orderOf_pow y m , h.gcd_eq_one, Nat.div_one]
+  rw [m.coprime_zero_left.1 (orderOf_eq_zero hg ▸ h), pow_one]
 
 open Classical in
 @[to_additive]
@@ -382,8 +382,8 @@ theorem orderOf_mul_dvd_lcm (h : Commute x y) :
 theorem orderOf_dvd_lcm_mul (h : Commute x y):
     orderOf y ∣ Nat.lcm (orderOf x) (orderOf (x * y)) := by
   by_cases h0 : orderOf x = 0
-  · rw [h0, lcm_zero_left]
-    apply dvd_zero
+  rw [h0, lcm_zero_left]
+  apply dvd_zero
   conv_lhs =>
     rw [← one_mul y, ← pow_orderOf_eq_one x, ← succ_pred_eq_of_pos (Nat.pos_of_ne_zero h0),
       _root_.pow_succ, mul_assoc]
@@ -421,7 +421,7 @@ theorem orderOf_mul_eq_right_of_forall_prime_mul_dvd (h : Commute x y) (hy : IsO
   have hoy := hy.orderOf_pos
   have hxy := dvd_of_forall_prime_mul_dvd hdvd
   apply orderOf_eq_of_pow_and_pow_div_prime hoy <;> simp only [Ne, ← orderOf_dvd_iff_pow_eq_one]
-  · exact h.orderOf_mul_dvd_lcm.trans (lcm_dvd hxy dvd_rfl)
+  exact h.orderOf_mul_dvd_lcm.trans (lcm_dvd hxy dvd_rfl)
   refine fun p hp hpy hd => hp.ne_one ?_
   rw [← Nat.dvd_one, ← mul_dvd_mul_iff_right hoy.ne', one_mul, ← dvd_div_iff_mul_dvd hpy]
   refine (orderOf_dvd_lcm_mul h).trans (lcm_dvd ((dvd_div_iff_mul_dvd hpy).2 ?_) hd)
@@ -459,7 +459,7 @@ variable [LeftCancelMonoid G] {x y : G} {a : G} {m n : ℕ}
 @[to_additive]
 theorem pow_eq_pow_iff_modEq : x ^ n = x ^ m ↔ n ≡ m [MOD orderOf x] := by
   wlog hmn : m ≤ n generalizing m n
-  · rw [eq_comm, ModEq.comm, this (le_of_not_le hmn)]
+  rw [eq_comm, ModEq.comm, this (le_of_not_le hmn)]
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le hmn
   rw [← mul_one (x ^ m), pow_add, mul_left_cancel_iff, pow_eq_one_iff_modEq]
   exact ⟨fun h => Nat.ModEq.add_left _ h, fun h => Nat.ModEq.add_left_cancel' _ h⟩
@@ -527,9 +527,9 @@ open Classical in
 @[to_additive "See also `addOrder_eq_card_multiples`."]
 lemma Nat.card_submonoidPowers : Nat.card (powers a) = orderOf a := by
   by_cases ha : IsOfFinOrder a
-  · exact (Nat.card_congr (finEquivPowers _ ha).symm).trans <| by simp
-  · have := (infinite_powers.2 ha).to_subtype
-    rw [orderOf_eq_zero ha, Nat.card_eq_zero_of_infinite]
+  exact (Nat.card_congr (finEquivPowers _ ha).symm).trans <| by simp
+  have := (infinite_powers.2 ha).to_subtype
+  rw [orderOf_eq_zero ha, Nat.card_eq_zero_of_infinite]
 
 end CancelMonoid
 
@@ -548,9 +548,9 @@ theorem isOfFinOrder_inv_iff {x : G} : IsOfFinOrder x⁻¹ ↔ IsOfFinOrder x :=
 @[to_additive]
 theorem orderOf_dvd_iff_zpow_eq_one : (orderOf x : ℤ) ∣ i ↔ x ^ i = 1 := by
   rcases Int.eq_nat_or_neg i with ⟨i, rfl | rfl⟩
-  · rw [Int.natCast_dvd_natCast, orderOf_dvd_iff_pow_eq_one, zpow_natCast]
-  · rw [dvd_neg, Int.natCast_dvd_natCast, zpow_neg, inv_eq_one, zpow_natCast,
-      orderOf_dvd_iff_pow_eq_one]
+  rw [Int.natCast_dvd_natCast, orderOf_dvd_iff_pow_eq_one, zpow_natCast]
+  rw [dvd_neg, Int.natCast_dvd_natCast, zpow_neg, inv_eq_one, zpow_natCast,
+    orderOf_dvd_iff_pow_eq_one]
 
 @[to_additive (attr := simp)]
 theorem orderOf_inv (x : G) : orderOf x⁻¹ = orderOf x := by simp [orderOf_eq_orderOf_iff]
@@ -577,8 +577,8 @@ lemma zpow_mod_orderOf (x : G) (z : ℤ) : x ^ (z % (orderOf x : ℤ)) = x ^ z :
 @[to_additive (attr := simp) zsmul_smul_addOrderOf]
 theorem zpow_pow_orderOf : (x ^ i) ^ orderOf x = 1 := by
   by_cases h : IsOfFinOrder x
-  · rw [← zpow_natCast, ← zpow_mul, mul_comm, zpow_mul, zpow_natCast, pow_orderOf_eq_one, one_zpow]
-  · rw [orderOf_eq_zero h, _root_.pow_zero]
+  rw [← zpow_natCast, ← zpow_mul, mul_comm, zpow_mul, zpow_natCast, pow_orderOf_eq_one, one_zpow]
+  rw [orderOf_eq_zero h, _root_.pow_zero]
 
 @[to_additive]
 theorem IsOfFinOrder.zpow (h : IsOfFinOrder x) {i : ℤ} : IsOfFinOrder (x ^ i) :=
@@ -789,9 +789,9 @@ theorem zpow_eq_zpow_iff_modEq {m n : ℤ} : x ^ m = x ^ n ↔ m ≡ n [ZMOD ord
 @[to_additive (attr := simp)]
 theorem injective_zpow_iff_not_isOfFinOrder : (Injective fun n : ℤ => x ^ n) ↔ ¬IsOfFinOrder x := by
   refine ⟨?_, fun h n m hnm => ?_⟩
-  · simp_rw [isOfFinOrder_iff_pow_eq_one]
-    rintro h ⟨n, hn, hx⟩
-    exact Nat.cast_ne_zero.2 hn.ne' (h <| by simpa using hx)
+  simp_rw [isOfFinOrder_iff_pow_eq_one]
+  rintro h ⟨n, hn, hx⟩
+  exact Nat.cast_ne_zero.2 hn.ne' (h <| by simpa using hx)
   rwa [zpow_eq_zpow_iff_modEq, orderOf_eq_zero_iff.2 h, Nat.cast_zero, Int.modEq_zero_iff] at hnm
 
 /-- The equivalence between `Subgroup.zpowers` of two elements `x, y` of the same order, mapping
@@ -859,8 +859,8 @@ theorem orderOf_dvd_card : orderOf x ∣ Fintype.card G := by
 @[to_additive]
 theorem orderOf_dvd_natCard {G : Type*} [Group G] (x : G) : orderOf x ∣ Nat.card G := by
   cases' fintypeOrInfinite G with h h
-  · simp only [Nat.card_eq_fintype_card, orderOf_dvd_card]
-  · simp only [card_eq_zero_of_infinite, dvd_zero]
+  simp only [Nat.card_eq_fintype_card, orderOf_dvd_card]
+  simp only [card_eq_zero_of_infinite, dvd_zero]
 
 @[to_additive]
 nonrec lemma Subgroup.orderOf_dvd_natCard (s : Subgroup G) (hx : x ∈ s) :
@@ -1023,14 +1023,14 @@ theorem orderOf_abs_ne_one (h : |x| ≠ 1) : orderOf x = 0 := by
   intro n hn hx
   replace hx : |x| ^ n = 1 := by simpa only [abs_one, abs_pow] using congr_arg abs hx
   cases' h.lt_or_lt with h h
-  · exact ((pow_lt_one (abs_nonneg x) h hn.ne').ne hx).elim
-  · exact ((one_lt_pow h hn.ne').ne' hx).elim
+  exact ((pow_lt_one (abs_nonneg x) h hn.ne').ne hx).elim
+  exact ((one_lt_pow h hn.ne').ne' hx).elim
 
 theorem LinearOrderedRing.orderOf_le_two : orderOf x ≤ 2 := by
   cases' ne_or_eq |x| 1 with h h
-  · simp [orderOf_abs_ne_one h]
+  simp [orderOf_abs_ne_one h]
   rcases eq_or_eq_neg_of_abs_eq h with (rfl | rfl)
-  · simp
+  simp
   apply orderOf_le_of_pow_eq_one <;> norm_num
 
 end LinearOrderedRing
@@ -1092,14 +1092,14 @@ lemma charP_of_ne_zero (hn : card R = p) (hR : ∀ i < p, (i : R) = 0 → i = 0)
     have H : (p : R) = 0
     rw [← hn, Nat.cast_card_eq_zero]
     constructor
-    · intro h
-      rw [← Nat.mod_add_div n p, Nat.cast_add, Nat.cast_mul, H, zero_mul, add_zero] at h
-      rw [Nat.dvd_iff_mod_eq_zero]
-      apply hR _ (Nat.mod_lt _ _) h
-      rw [← hn, gt_iff_lt, Fintype.card_pos_iff]
-      exact ⟨0⟩
-    · rintro ⟨n, rfl⟩
-      rw [Nat.cast_mul, H, zero_mul]
+    intro h
+    rw [← Nat.mod_add_div n p, Nat.cast_add, Nat.cast_mul, H, zero_mul, add_zero] at h
+    rw [Nat.dvd_iff_mod_eq_zero]
+    apply hR _ (Nat.mod_lt _ _) h
+    rw [← hn, gt_iff_lt, Fintype.card_pos_iff]
+    exact ⟨0⟩
+    rintro ⟨n, rfl⟩
+    rw [Nat.cast_mul, H, zero_mul]
 
 end NonAssocRing
 

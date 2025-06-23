@@ -152,14 +152,14 @@ theorem epi_of_surjective {X Y : CompHausLike.{u} P} (f : X ⟶ Y) (hf : Functio
 theorem mono_iff_injective {X Y : CompHausLike.{u} P} (f : X ⟶ Y) :
     Mono f ↔ Function.Injective f := by
   constructor
-  · intro hf x₁ x₂ h
-    let g₁ : X ⟶ X := ⟨fun _ => x₁, continuous_const⟩
-    let g₂ : X ⟶ X := ⟨fun _ => x₂, continuous_const⟩
-    have : g₁ ≫ f = g₂ ≫ f
-    ext; exact h
-    exact ContinuousMap.congr_fun ((cancel_mono _).mp this) x₁
-  · rw [← CategoryTheory.mono_iff_injective]
-    apply (forget (CompHausLike P)).mono_of_mono_map
+  intro hf x₁ x₂ h
+  let g₁ : X ⟶ X := ⟨fun _ => x₁, continuous_const⟩
+  let g₂ : X ⟶ X := ⟨fun _ => x₂, continuous_const⟩
+  have : g₁ ≫ f = g₂ ≫ f
+  ext; exact h
+  exact ContinuousMap.congr_fun ((cancel_mono _).mp this) x₁
+  rw [← CategoryTheory.mono_iff_injective]
+  apply (forget (CompHausLike P)).mono_of_mono_map
 
 /-- Any continuous function on compact Hausdorff spaces is a closed map. -/
 theorem isClosedMap {X Y : CompHausLike.{u} P} (f : X ⟶ Y) : IsClosedMap f := fun _ hC =>
@@ -175,10 +175,10 @@ theorem isIso_of_bijective {X Y : CompHausLike.{u} P} (f : X ⟶ Y) (bij : Funct
   rw [← E.image_eq_preimage]
   exact isClosedMap f S hS
   refine ⟨⟨⟨E.symm, hE⟩, ?_, ?_⟩⟩
-  · ext x
-    apply E.symm_apply_apply
-  · ext x
-    apply E.apply_symm_apply
+  ext x
+  apply E.symm_apply_apply
+  ext x
+  apply E.apply_symm_apply
 
 instance forget_reflectsIsomorphisms :
     (forget (CompHausLike.{u} P)).ReflectsIsomorphisms :=

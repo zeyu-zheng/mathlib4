@@ -112,17 +112,17 @@ protected theorem cfc (f : C(S, R)) (halg : UniformEmbedding (algebraMap R S)) (
       simp only [← @spectrum.preimage_algebraMap (R := R) S, cfcHom_map_spectrum]
       ext x
       constructor
-      · rintro ⟨y, hy⟩
-        have := congr_arg f hy
-        simp only [ContinuousMap.coe_mk, ContinuousMap.comp_apply, StarAlgHom.ofId_apply] at this
-        rw [((h a).mp ha).2.left_inv _, ((h a).mp ha).2.left_inv _] at this
-        exact ⟨_, this⟩
-      · rintro ⟨y, rfl⟩
-        rw [Set.mem_preimage]
-        refine ⟨⟨algebraMap R S y, spectrum.algebraMap_mem S y.prop⟩, ?_⟩
-        simp only [ContinuousMap.coe_mk, ContinuousMap.comp_apply, StarAlgHom.ofId_apply]
-        congr
-        exact Subtype.ext (((h a).mp ha).2.left_inv y)
+      rintro ⟨y, hy⟩
+      have := congr_arg f hy
+      simp only [ContinuousMap.coe_mk, ContinuousMap.comp_apply, StarAlgHom.ofId_apply] at this
+      rw [((h a).mp ha).2.left_inv _, ((h a).mp ha).2.left_inv _] at this
+      exact ⟨_, this⟩
+      rintro ⟨y, rfl⟩
+      rw [Set.mem_preimage]
+      refine ⟨⟨algebraMap R S y, spectrum.algebraMap_mem S y.prop⟩, ?_⟩
+      simp only [ContinuousMap.coe_mk, ContinuousMap.comp_apply, StarAlgHom.ofId_apply]
+      congr
+      exact Subtype.ext (((h a).mp ha).2.left_inv y)
     case predicate_hom =>
       intro g
       rw [h]
@@ -138,24 +138,24 @@ lemma cfcHom_eq_restrict (f : C(S, R)) (halg : UniformEmbedding (algebraMap R S)
     {a : A} (hpa : p a) (hqa : q a) (h : SpectrumRestricts a f) [CompactSpace (spectrum S a)] :
     cfcHom hpa = h.starAlgHom (cfcHom hqa) := by
   apply cfcHom_eq_of_continuous_of_map_id
-  · exact h.closedEmbedding_starAlgHom (cfcHom_closedEmbedding hqa) halg |>.continuous
-  · exact h.starAlgHom_id (cfcHom_id hqa)
+  exact h.closedEmbedding_starAlgHom (cfcHom_closedEmbedding hqa) halg |>.continuous
+  exact h.starAlgHom_id (cfcHom_id hqa)
 
 lemma cfc_eq_restrict (f : C(S, R)) (halg : UniformEmbedding (algebraMap R S)) {a : A} (hpa : p a)
     (hqa : q a) (h : SpectrumRestricts a f) [CompactSpace (spectrum S a)] (g : R → R) :
     cfc g a = cfc (fun x ↦ algebraMap R S (g (f x))) a := by
   by_cases hg : ContinuousOn g (spectrum R a)
-  · rw [cfc_apply g a, cfcHom_eq_restrict f halg hpa hqa h, SpectrumRestricts.starAlgHom_apply,
-      cfcHom_eq_cfc_extend 0]
-    apply cfc_congr fun x hx ↦ ?_
-    lift x to spectrum S a using hx
-    simp [Function.comp, Subtype.val_injective.extend_apply]
-  · have : ¬ ContinuousOn (fun x ↦ algebraMap R S (g (f x)) : S → S) (spectrum S a) := by
-      refine fun hg' ↦ hg ?_
-      rw [halg.embedding.continuousOn_iff]
-      simpa [halg.embedding.continuousOn_iff, Function.comp, h.left_inv _] using
-        hg'.comp halg.embedding.continuous.continuousOn (fun _ : R ↦ spectrum.algebraMap_mem S)
-    rw [cfc_apply_of_not_continuousOn a hg, cfc_apply_of_not_continuousOn a this]
+  rw [cfc_apply g a, cfcHom_eq_restrict f halg hpa hqa h, SpectrumRestricts.starAlgHom_apply,
+    cfcHom_eq_cfc_extend 0]
+  apply cfc_congr fun x hx ↦ ?_
+  lift x to spectrum S a using hx
+  simp [Function.comp, Subtype.val_injective.extend_apply]
+  have : ¬ ContinuousOn (fun x ↦ algebraMap R S (g (f x)) : S → S) (spectrum S a) := by
+    refine fun hg' ↦ hg ?_
+    rw [halg.embedding.continuousOn_iff]
+    simpa [halg.embedding.continuousOn_iff, Function.comp, h.left_inv _] using
+      hg'.comp halg.embedding.continuous.continuousOn (fun _ : R ↦ spectrum.algebraMap_mem S)
+  rw [cfc_apply_of_not_continuousOn a hg, cfc_apply_of_not_continuousOn a this]
 
 end SpectrumRestricts
 
@@ -248,20 +248,20 @@ protected theorem cfc (f : C(S, R)) (halg : UniformEmbedding (algebraMap R S)) (
       simp only [← @quasispectrum.preimage_algebraMap (R := R) S, cfcₙHom_map_quasispectrum]
       ext x
       constructor
-      · rintro ⟨y, hy⟩
-        have := congr_arg f hy
-        simp only [nonUnitalStarAlgHom_postcomp_apply, NonUnitalStarAlgHom.coe_coe,
-          Function.comp_apply, comp_apply, coe_mk, ContinuousMap.coe_mk, StarAlgHom.ofId_apply]
-          at this
-        rw [((h a).mp ha).2.left_inv _, ((h a).mp ha).2.left_inv _] at this
-        exact ⟨_, this⟩
-      · rintro ⟨y, rfl⟩
-        rw [Set.mem_preimage]
-        refine ⟨⟨algebraMap R S y, quasispectrum.algebraMap_mem S y.prop⟩, ?_⟩
-        simp only [nonUnitalStarAlgHom_postcomp_apply, NonUnitalStarAlgHom.coe_coe,
-          Function.comp_apply, comp_apply, coe_mk, ContinuousMap.coe_mk, StarAlgHom.ofId_apply]
-        congr
-        exact Subtype.ext (((h a).mp ha).2.left_inv y)
+      rintro ⟨y, hy⟩
+      have := congr_arg f hy
+      simp only [nonUnitalStarAlgHom_postcomp_apply, NonUnitalStarAlgHom.coe_coe,
+        Function.comp_apply, comp_apply, coe_mk, ContinuousMap.coe_mk, StarAlgHom.ofId_apply]
+        at this
+      rw [((h a).mp ha).2.left_inv _, ((h a).mp ha).2.left_inv _] at this
+      exact ⟨_, this⟩
+      rintro ⟨y, rfl⟩
+      rw [Set.mem_preimage]
+      refine ⟨⟨algebraMap R S y, quasispectrum.algebraMap_mem S y.prop⟩, ?_⟩
+      simp only [nonUnitalStarAlgHom_postcomp_apply, NonUnitalStarAlgHom.coe_coe,
+        Function.comp_apply, comp_apply, coe_mk, ContinuousMap.coe_mk, StarAlgHom.ofId_apply]
+      congr
+      exact Subtype.ext (((h a).mp ha).2.left_inv y)
     case predicate_hom =>
       intro g
       rw [h]
@@ -279,28 +279,28 @@ lemma cfcₙHom_eq_restrict (f : C(S, R)) (halg : UniformEmbedding (algebraMap R
     (hpa : p a) (hqa : q a) (h : QuasispectrumRestricts a f) [CompactSpace (σₙ S a)] :
     cfcₙHom hpa = h.nonUnitalStarAlgHom (cfcₙHom hqa) := by
   apply cfcₙHom_eq_of_continuous_of_map_id
-  · exact h.closedEmbedding_nonUnitalStarAlgHom (cfcₙHom_closedEmbedding hqa) halg |>.continuous
-  · exact h.nonUnitalStarAlgHom_id (cfcₙHom_id hqa)
+  exact h.closedEmbedding_nonUnitalStarAlgHom (cfcₙHom_closedEmbedding hqa) halg |>.continuous
+  exact h.nonUnitalStarAlgHom_id (cfcₙHom_id hqa)
 
 lemma cfcₙ_eq_restrict (f : C(S, R)) (halg : UniformEmbedding (algebraMap R S)) {a : A} (hpa : p a)
     (hqa : q a) (h : QuasispectrumRestricts a f) [CompactSpace (σₙ S a)] (g : R → R) :
     cfcₙ g a = cfcₙ (fun x ↦ algebraMap R S (g (f x))) a := by
   by_cases hg : ContinuousOn g (σₙ R a) ∧ g 0 = 0
-  · obtain ⟨hg, hg0⟩ := hg
-    rw [cfcₙ_apply g a, cfcₙHom_eq_restrict f halg hpa hqa h, nonUnitalStarAlgHom_apply,
-      cfcₙHom_eq_cfcₙ_extend 0]
-    apply cfcₙ_congr fun x hx ↦ ?_
-    lift x to σₙ S a using hx
-    simp [Function.comp, Subtype.val_injective.extend_apply]
-  · simp only [not_and_or] at hg
-    obtain (hg | hg) := hg
-    · have : ¬ ContinuousOn (fun x ↦ algebraMap R S (g (f x)) : S → S) (σₙ S a) := by
-        refine fun hg' ↦ hg ?_
-        rw [halg.embedding.continuousOn_iff]
-        simpa [halg.embedding.continuousOn_iff, Function.comp, h.left_inv _] using
-          hg'.comp halg.embedding.continuous.continuousOn
-          (fun _ : R ↦ quasispectrum.algebraMap_mem S)
-      rw [cfcₙ_apply_of_not_continuousOn a hg, cfcₙ_apply_of_not_continuousOn a this]
-    · rw [cfcₙ_apply_of_not_map_zero a hg, cfcₙ_apply_of_not_map_zero a (by simpa [h.map_zero])]
+  obtain ⟨hg, hg0⟩ := hg
+  rw [cfcₙ_apply g a, cfcₙHom_eq_restrict f halg hpa hqa h, nonUnitalStarAlgHom_apply,
+    cfcₙHom_eq_cfcₙ_extend 0]
+  apply cfcₙ_congr fun x hx ↦ ?_
+  lift x to σₙ S a using hx
+  simp [Function.comp, Subtype.val_injective.extend_apply]
+  simp only [not_and_or] at hg
+  obtain (hg | hg) := hg
+  have : ¬ ContinuousOn (fun x ↦ algebraMap R S (g (f x)) : S → S) (σₙ S a) := by
+    refine fun hg' ↦ hg ?_
+    rw [halg.embedding.continuousOn_iff]
+    simpa [halg.embedding.continuousOn_iff, Function.comp, h.left_inv _] using
+      hg'.comp halg.embedding.continuous.continuousOn
+      (fun _ : R ↦ quasispectrum.algebraMap_mem S)
+  rw [cfcₙ_apply_of_not_continuousOn a hg, cfcₙ_apply_of_not_continuousOn a this]
+  rw [cfcₙ_apply_of_not_map_zero a hg, cfcₙ_apply_of_not_map_zero a (by simpa [h.map_zero])]
 
 end QuasispectrumRestricts

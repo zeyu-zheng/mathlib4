@@ -21,8 +21,8 @@ open LSeries
 
 lemma LSeries.term_add (f g : ℕ → ℂ) (s : ℂ) : term (f + g) s = term f s + term g s := by
   ext ⟨- | n⟩
-  · simp only [term_zero, Pi.add_apply, add_zero]
-  · simp only [term_of_ne_zero (Nat.succ_ne_zero _), Pi.add_apply, add_div]
+  simp only [term_zero, Pi.add_apply, add_zero]
+  simp only [term_of_ne_zero (Nat.succ_ne_zero _), Pi.add_apply, add_div]
 
 lemma LSeries.term_add_apply (f g : ℕ → ℂ) (s : ℂ) (n : ℕ) :
     term (f + g) s n = term f s n + term g s n := by
@@ -49,8 +49,8 @@ lemma LSeries_add {f g : ℕ → ℂ} {s : ℂ} (hf : LSeriesSummable f s) (hg :
 
 lemma LSeries.term_neg (f : ℕ → ℂ) (s : ℂ) : term (-f) s = -term f s := by
   ext ⟨- | n⟩
-  · simp only [Nat.zero_eq, term_zero, Pi.neg_apply, neg_zero]
-  · simp only [term_of_ne_zero (Nat.succ_ne_zero _), Pi.neg_apply, Nat.cast_succ, neg_div]
+  simp only [Nat.zero_eq, term_zero, Pi.neg_apply, neg_zero]
+  simp only [term_of_ne_zero (Nat.succ_ne_zero _), Pi.neg_apply, Nat.cast_succ, neg_div]
 
 lemma LSeries.term_neg_apply (f : ℕ → ℂ) (s : ℂ) (n : ℕ) : term (-f) s n = -term f s n := by
   rw [term_neg, Pi.neg_apply]
@@ -106,9 +106,9 @@ lemma LSeries_sub {f g : ℕ → ℂ} {s : ℂ} (hf : LSeriesSummable f s) (hg :
 
 lemma LSeries.term_smul (f : ℕ → ℂ) (c s : ℂ) : term (c • f) s = c • term f s := by
   ext ⟨- | n⟩
-  · simp only [Nat.zero_eq, term_zero, Pi.smul_apply, smul_eq_mul, mul_zero]
-  · simp only [term_of_ne_zero (Nat.succ_ne_zero _), Pi.smul_apply, smul_eq_mul, Nat.cast_succ,
-      mul_div_assoc]
+  simp only [Nat.zero_eq, term_zero, Pi.smul_apply, smul_eq_mul, mul_zero]
+  simp only [term_of_ne_zero (Nat.succ_ne_zero _), Pi.smul_apply, smul_eq_mul, Nat.cast_succ,
+    mul_div_assoc]
 
 lemma LSeries.term_smul_apply (f : ℕ → ℂ) (c s : ℂ) (n : ℕ) :
     term (c • f) s n = c * term f s n := by

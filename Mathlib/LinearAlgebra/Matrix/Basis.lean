@@ -81,8 +81,8 @@ theorem toMatrix_update [DecidableEq ι'] (x : M) :
   ext i' k
   rw [Basis.toMatrix, Matrix.updateColumn_apply, e.toMatrix_apply]
   split_ifs with h
-  · rw [h, update_same j x v]
-  · rw [update_noteq h]
+  rw [h, update_same j x v]
+  rw [update_noteq h]
 
 /-- The basis constructed by `unitsSMul` has vectors given by a diagonal matrix. -/
 @[simp]
@@ -90,8 +90,8 @@ theorem toMatrix_unitsSMul [DecidableEq ι] (e : Basis ι R₂ M₂) (w : ι →
     e.toMatrix (e.unitsSMul w) = diagonal ((↑) ∘ w) := by
   ext i j
   by_cases h : i = j
-  · simp [h, toMatrix_apply, unitsSMul_apply, Units.smul_def]
-  · simp [h, toMatrix_apply, unitsSMul_apply, Units.smul_def, Ne.symm h]
+  simp [h, toMatrix_apply, unitsSMul_apply, Units.smul_def]
+  simp [h, toMatrix_apply, unitsSMul_apply, Units.smul_def, Ne.symm h]
 
 /-- The basis constructed by `isUnitSMul` has vectors given by a diagonal matrix. -/
 @[simp]

@@ -147,9 +147,9 @@ scoped instance (priority := 100) orderClosedTopology : OrderClosedTopology Γ�
 scoped instance (priority := 100) t5Space : T5Space Γ₀ where
   completely_normal := fun s t h₁ h₂ => by
     by_cases hs : 0 ∈ s
-    · have ht : 0 ∉ t := fun ht => disjoint_left.1 h₁ (subset_closure hs) ht
-      rwa [(isOpen_iff.2 (.inl ht)).nhdsSet_eq, disjoint_nhdsSet_principal]
-    · rwa [(isOpen_iff.2 (.inl hs)).nhdsSet_eq, disjoint_principal_nhdsSet]
+    have ht : 0 ∉ t := fun ht => disjoint_left.1 h₁ (subset_closure hs) ht
+    rwa [(isOpen_iff.2 (.inl ht)).nhdsSet_eq, disjoint_nhdsSet_principal]
+    rwa [(isOpen_iff.2 (.inl hs)).nhdsSet_eq, disjoint_principal_nhdsSet]
 
 /-- The topology on a linearly ordered group with zero element adjoined makes it a topological
 monoid. -/
@@ -159,22 +159,22 @@ scoped instance (priority := 100) : ContinuousMul Γ₀ where
     simp only [continuous_iff_continuousAt, ContinuousAt]
     rintro ⟨x, y⟩
     wlog hle : x ≤ y generalizing x y
-    · have := (this y x (le_of_not_le hle)).comp (continuous_swap.tendsto (x, y))
-      simpa only [mul_comm, Function.comp, Prod.swap] using this
+    have := (this y x (le_of_not_le hle)).comp (continuous_swap.tendsto (x, y))
+    simpa only [mul_comm, Function.comp, Prod.swap] using this
     rcases eq_or_ne x 0 with (rfl | hx) <;> [rcases eq_or_ne y 0 with (rfl | hy); skip]
-    · rw [zero_mul]
-      refine ((hasBasis_nhds_zero.prod_nhds hasBasis_nhds_zero).tendsto_iff hasBasis_nhds_zero).2
-        fun γ hγ => ⟨(γ, 1), ⟨hγ, one_ne_zero⟩, ?_⟩
-      rintro ⟨x, y⟩ ⟨hx : x < γ, hy : y < 1⟩
-      exact (mul_lt_mul₀ hx hy).trans_eq (mul_one γ)
-    · rw [zero_mul, nhds_prod_eq, nhds_of_ne_zero hy, prod_pure, tendsto_map'_iff]
-      refine (hasBasis_nhds_zero.tendsto_iff hasBasis_nhds_zero).2 fun γ hγ => ?_
-      refine ⟨γ / y, div_ne_zero hγ hy, fun x hx => ?_⟩
-      calc x * y < γ / y * y := mul_lt_right₀ _ hx hy
+    rw [zero_mul]
+    refine ((hasBasis_nhds_zero.prod_nhds hasBasis_nhds_zero).tendsto_iff hasBasis_nhds_zero).2
+      fun γ hγ => ⟨(γ, 1), ⟨hγ, one_ne_zero⟩, ?_⟩
+    rintro ⟨x, y⟩ ⟨hx : x < γ, hy : y < 1⟩
+    exact (mul_lt_mul₀ hx hy).trans_eq (mul_one γ)
+    rw [zero_mul, nhds_prod_eq, nhds_of_ne_zero hy, prod_pure, tendsto_map'_iff]
+    refine (hasBasis_nhds_zero.tendsto_iff hasBasis_nhds_zero).2 fun γ hγ => ?_
+    refine ⟨γ / y, div_ne_zero hγ hy, fun x hx => ?_⟩
+    calc x * y < γ / y * y := mul_lt_right₀ _ hx hy
       _ = γ := div_mul_cancel₀ _ hy
-    · have hy : y ≠ 0 := ((zero_lt_iff.mpr hx).trans_le hle).ne'
-      rw [nhds_prod_eq, nhds_of_ne_zero hx, nhds_of_ne_zero hy, prod_pure_pure]
-      exact pure_le_nhds (x * y)
+    have hy : y ≠ 0 := ((zero_lt_iff.mpr hx).trans_le hle).ne'
+    rw [nhds_prod_eq, nhds_of_ne_zero hx, nhds_of_ne_zero hy, prod_pure_pure]
+    exact pure_le_nhds (x * y)
 
 @[nolint defLemma]
 scoped instance (priority := 100) : HasContinuousInv₀ Γ₀ :=

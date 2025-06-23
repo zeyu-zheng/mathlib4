@@ -67,16 +67,16 @@ lemma Module.mem_support_iff_exists_annihilator :
 lemma Module.mem_support_iff_of_span_eq_top {s : Set M} (hs : Submodule.span R s = ⊤) :
     p ∈ Module.support R M ↔ ∃ m ∈ s, (R ∙ m).annihilator ≤ p.asIdeal := by
   constructor
-  · contrapose
-    rw [not_mem_support_iff, LocalizedModule.subsingleton_iff_ker_eq_top, ← top_le_iff,
-      ← hs, Submodule.span_le, Set.subset_def]
-    simp_rw [SetLike.le_def, Submodule.mem_annihilator_span_singleton, SetLike.mem_coe,
-      LocalizedModule.mem_ker_mkLinearMap_iff]
-    push_neg
-    simp_rw [and_comm]
-    exact id
-  · intro ⟨m, _, hm⟩
-    exact mem_support_iff_exists_annihilator.mpr ⟨m, hm⟩
+  contrapose
+  rw [not_mem_support_iff, LocalizedModule.subsingleton_iff_ker_eq_top, ← top_le_iff,
+    ← hs, Submodule.span_le, Set.subset_def]
+  simp_rw [SetLike.le_def, Submodule.mem_annihilator_span_singleton, SetLike.mem_coe,
+    LocalizedModule.mem_ker_mkLinearMap_iff]
+  push_neg
+  simp_rw [and_comm]
+  exact id
+  intro ⟨m, _, hm⟩
+  exact mem_support_iff_exists_annihilator.mpr ⟨m, hm⟩
 
 lemma Module.annihilator_le_of_mem_support (hp : p ∈ Module.support R M) :
     Module.annihilator R M ≤ p.asIdeal := by
@@ -88,20 +88,20 @@ lemma LocalizedModule.subsingleton_iff_support_subset {f : R} :
       Module.support R M ⊆ PrimeSpectrum.zeroLocus {f} := by
   rw [LocalizedModule.subsingleton_iff]
   constructor
-  · rintro H x hx' f rfl
-    obtain ⟨m, hm⟩ := Module.mem_support_iff_exists_annihilator.mp hx'
-    obtain ⟨_, ⟨n, rfl⟩, e⟩ := H m
-    exact Ideal.IsPrime.mem_of_pow_mem inferInstance n
-      (hm ((Submodule.mem_annihilator_span_singleton _ _).mpr e))
-  · intro H m
-    by_cases h : (Submodule.span R {m}).annihilator = ⊤
-    · rw [Submodule.annihilator_eq_top_iff, Submodule.span_singleton_eq_bot] at h
-      exact ⟨1, one_mem _, by simpa using h⟩
-    obtain ⟨n, hn⟩ : f ∈ (Submodule.span R {m}).annihilator.radical := by
-      rw [Ideal.radical_eq_sInf, Ideal.mem_sInf]
-      rintro p ⟨hp, hp'⟩
-      simpa using H (Module.mem_support_iff_exists_annihilator (p := ⟨p, hp'⟩).mpr ⟨_, hp⟩)
-    exact ⟨_, ⟨n, rfl⟩, (Submodule.mem_annihilator_span_singleton _ _).mp hn⟩
+  rintro H x hx' f rfl
+  obtain ⟨m, hm⟩ := Module.mem_support_iff_exists_annihilator.mp hx'
+  obtain ⟨_, ⟨n, rfl⟩, e⟩ := H m
+  exact Ideal.IsPrime.mem_of_pow_mem inferInstance n
+    (hm ((Submodule.mem_annihilator_span_singleton _ _).mpr e))
+  intro H m
+  by_cases h : (Submodule.span R {m}).annihilator = ⊤
+  rw [Submodule.annihilator_eq_top_iff, Submodule.span_singleton_eq_bot] at h
+  exact ⟨1, one_mem _, by simpa using h⟩
+  obtain ⟨n, hn⟩ : f ∈ (Submodule.span R {m}).annihilator.radical := by
+    rw [Ideal.radical_eq_sInf, Ideal.mem_sInf]
+    rintro p ⟨hp, hp'⟩
+    simpa using H (Module.mem_support_iff_exists_annihilator (p := ⟨p, hp'⟩).mpr ⟨_, hp⟩)
+  exact ⟨_, ⟨n, rfl⟩, (Submodule.mem_annihilator_span_singleton _ _).mp hn⟩
 
 lemma Module.support_eq_empty_iff :
     Module.support R M = ∅ ↔ Subsingleton M := by
@@ -119,8 +119,8 @@ lemma Module.support_of_algebra {A : Type*} [Ring A] [Algebra R A] :
   ext p
   simp only [mem_support_iff', ne_eq, PrimeSpectrum.mem_zeroLocus, SetLike.coe_subset_coe]
   refine ⟨fun ⟨m, hm⟩ x hx ↦ not_not.mp fun hx' ↦ ?_, fun H ↦ ⟨1, fun r hr e ↦ ?_⟩⟩
-  · simpa [Algebra.smul_def, (show _ = _ from hx)] using hm _ hx'
-  · exact hr (H ((Algebra.algebraMap_eq_smul_one _).trans e))
+  simpa [Algebra.smul_def, (show _ = _ from hx)] using hm _ hx'
+  exact hr (H ((Algebra.algebraMap_eq_smul_one _).trans e))
 
 lemma Module.support_of_noZeroSMulDivisors [NoZeroSMulDivisors R M] [Nontrivial M] :
     Module.support R M = Set.univ := by
@@ -137,11 +137,11 @@ lemma Module.mem_support_iff_of_finite [Module.Finite R M] :
   contrapose! H
   choose x hx hx' using Subtype.forall'.mp H
   refine ⟨s.attach.prod x, ?_, ?_⟩
-  · rw [← Submodule.annihilator_top, ← hs, Submodule.mem_annihilator_span]
-    intro m
-    obtain ⟨k, hk⟩ := Finset.dvd_prod_of_mem x (Finset.mem_attach _ m)
-    rw [hk, mul_comm, mul_smul, hx, smul_zero]
-  · exact p.asIdeal.primeCompl.prod_mem (fun x _ ↦ hx' x)
+  rw [← Submodule.annihilator_top, ← hs, Submodule.mem_annihilator_span]
+  intro m
+  obtain ⟨k, hk⟩ := Finset.dvd_prod_of_mem x (Finset.mem_attach _ m)
+  rw [hk, mul_comm, mul_smul, hx, smul_zero]
+  exact p.asIdeal.primeCompl.prod_mem (fun x _ ↦ hx' x)
 
 variable {N P : Type*} [AddCommGroup N] [Module R N] [AddCommGroup P] [Module R P]
 variable (f : M →ₗ[R] N) (g : N →ₗ[R] P)

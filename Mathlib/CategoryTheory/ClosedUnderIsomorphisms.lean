@@ -55,9 +55,9 @@ lemma monotone_isoClosure (h : P ≤ Q) : isoClosure P ≤ isoClosure Q := by
 
 lemma isoClosure_eq_self [ClosedUnderIsomorphisms P] : isoClosure P = P := by
   apply le_antisymm
-  · intro X ⟨Y, hY, ⟨e⟩⟩
-    exact mem_of_iso P e.symm hY
-  · exact le_isoClosure P
+  intro X ⟨Y, hY, ⟨e⟩⟩
+  exact mem_of_iso P e.symm hY
+  exact le_isoClosure P
 
 lemma isoClosure_le_iff [ClosedUnderIsomorphisms Q] : isoClosure P ≤ Q ↔ P ≤ Q :=
   ⟨(le_isoClosure P).trans,

@@ -108,18 +108,18 @@ lemma from_single_hom_ext {K : HomologicalComplex V c} {j : ι} {A : V}
     {f g : (single V c j).obj A ⟶ K} (hfg : f.f j = g.f j) : f = g := by
   ext i
   by_cases h : i = j
-  · subst h
-    exact hfg
-  · apply (isZero_single_obj_X c j A i h).eq_of_src
+  subst h
+  exact hfg
+  apply (isZero_single_obj_X c j A i h).eq_of_src
 
 @[ext]
 lemma to_single_hom_ext {K : HomologicalComplex V c} {j : ι} {A : V}
     {f g : K ⟶ (single V c j).obj A} (hfg : f.f j = g.f j) : f = g := by
   ext i
   by_cases h : i = j
-  · subst h
-    exact hfg
-  · apply (isZero_single_obj_X c j A i h).eq_of_tgt
+  subst h
+  exact hfg
+  apply (isZero_single_obj_X c j A i h).eq_of_tgt
 
 instance (j : ι) : (single V c j).Faithful where
   map_injective {A B f g} w := by

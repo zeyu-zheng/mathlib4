@@ -159,14 +159,14 @@ theorem map_map (g : β → γ) (f : α → β) (l : Language α) : map g (map f
 lemma mem_kstar_iff_exists_nonempty {x : List α} :
     x ∈ l∗ ↔ ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l ∧ y ≠ [] := by
   constructor
-  · rintro ⟨S, rfl, h⟩
-    refine ⟨S.filter fun l ↦ !List.isEmpty l, by simp, fun y hy ↦ ?_⟩
-    -- Porting note: The previous code was:
-    -- rw [mem_filter, empty_iff_eq_nil] at hy
-    rw [mem_filter, Bool.not_eq_true', ← Bool.bool_iff_false, isEmpty_iff_eq_nil] at hy
-    exact ⟨h y hy.1, hy.2⟩
-  · rintro ⟨S, hx, h⟩
-    exact ⟨S, hx, fun y hy ↦ (h y hy).1⟩
+  rintro ⟨S, rfl, h⟩
+  refine ⟨S.filter fun l ↦ !List.isEmpty l, by simp, fun y hy ↦ ?_⟩
+  -- Porting note: The previous code was:
+  -- rw [mem_filter, empty_iff_eq_nil] at hy
+  rw [mem_filter, Bool.not_eq_true', ← Bool.bool_iff_false, isEmpty_iff_eq_nil] at hy
+  exact ⟨h y hy.1, hy.2⟩
+  rintro ⟨S, hx, h⟩
+  exact ⟨S, hx, fun y hy ↦ (h y hy).1⟩
 
 theorem kstar_def_nonempty (l : Language α) :
     l∗ = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l ∧ y ≠ [] } := by
@@ -205,28 +205,28 @@ theorem add_iSup {ι : Sort v} [Nonempty ι] (l : ι → Language α) (m : Langu
 theorem mem_pow {l : Language α} {x : List α} {n : ℕ} :
     x ∈ l ^ n ↔ ∃ S : List (List α), x = S.join ∧ S.length = n ∧ ∀ y ∈ S, y ∈ l := by
   induction' n with n ihn generalizing x
-  · simp only [mem_one, pow_zero, length_eq_zero]
-    constructor
-    · rintro rfl
-      exact ⟨[], rfl, rfl, fun _ h ↦ by contradiction⟩
-    · rintro ⟨_, rfl, rfl, _⟩
-      rfl
-  · simp only [pow_succ', mem_mul, ihn]
-    constructor
-    · rintro ⟨a, ha, b, ⟨S, rfl, rfl, hS⟩, rfl⟩
-      exact ⟨a :: S, rfl, rfl, forall_mem_cons.2 ⟨ha, hS⟩⟩
-    · rintro ⟨_ | ⟨a, S⟩, rfl, hn, hS⟩ <;> cases hn
-      rw [forall_mem_cons] at hS
-      exact ⟨a, hS.1, _, ⟨S, rfl, rfl, hS.2⟩, rfl⟩
+  simp only [mem_one, pow_zero, length_eq_zero]
+  constructor
+  rintro rfl
+  exact ⟨[], rfl, rfl, fun _ h ↦ by contradiction⟩
+  rintro ⟨_, rfl, rfl, _⟩
+  rfl
+  simp only [pow_succ', mem_mul, ihn]
+  constructor
+  rintro ⟨a, ha, b, ⟨S, rfl, rfl, hS⟩, rfl⟩
+  exact ⟨a :: S, rfl, rfl, forall_mem_cons.2 ⟨ha, hS⟩⟩
+  rintro ⟨_ | ⟨a, S⟩, rfl, hn, hS⟩ <;> cases hn
+  rw [forall_mem_cons] at hS
+  exact ⟨a, hS.1, _, ⟨S, rfl, rfl, hS.2⟩, rfl⟩
 
 theorem kstar_eq_iSup_pow (l : Language α) : l∗ = ⨆ i : ℕ, l ^ i := by
   ext x
   simp only [mem_kstar, mem_iSup, mem_pow]
   constructor
-  · rintro ⟨S, rfl, hS⟩
-    exact ⟨_, S, rfl, rfl, hS⟩
-  · rintro ⟨_, S, rfl, rfl, hS⟩
-    exact ⟨S, rfl, hS⟩
+  rintro ⟨S, rfl, hS⟩
+  exact ⟨_, S, rfl, rfl, hS⟩
+  rintro ⟨_, S, rfl, rfl, hS⟩
+  exact ⟨S, rfl, hS⟩
 
 @[simp]
 theorem map_kstar (f : α → β) (l : Language α) : map f l∗ = (map f l)∗ := by
@@ -256,14 +256,14 @@ instance : KleeneAlgebra (Language α) :=
       rw [kstar_eq_iSup_pow, iSup_mul]
       refine iSup_le (fun n ↦ ?_)
       induction' n with n ih
-      · simp
+      simp
       rw [pow_succ, mul_assoc (l^n) l m]
       exact le_trans (le_mul_congr le_rfl h) ih,
     mul_kstar_le_self := fun l m h ↦ by
       rw [kstar_eq_iSup_pow, mul_iSup]
       refine iSup_le (fun n ↦ ?_)
       induction' n with n ih
-      · simp
+      simp
       rw [pow_succ, ← mul_assoc m (l^n) l]
       exact le_trans (le_mul_congr ih le_rfl) h }
 

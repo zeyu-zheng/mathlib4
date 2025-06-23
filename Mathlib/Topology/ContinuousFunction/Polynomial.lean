@@ -72,10 +72,10 @@ variable {α : Type*} [TopologicalSpace α] [CommSemiring R] [TopologicalSpace R
 theorem aeval_continuousMap_apply (g : R[X]) (f : C(α, R)) (x : α) :
     ((Polynomial.aeval f) g) x = g.eval (f x) := by
   refine Polynomial.induction_on' g ?_ ?_
-  · intro p q hp hq
-    simp [hp, hq]
-  · intro n a
-    simp [Pi.pow_apply]
+  intro p q hp hq
+  simp [hp, hq]
+  intro n a
+  simp [Pi.pow_apply]
 
 end
 
@@ -169,40 +169,40 @@ theorem polynomialFunctions.comap_compRightAlgHom_iccHomeoI (a b : ℝ) (h : a <
       polynomialFunctions (Set.Icc a b) := by
   ext f
   fconstructor
-  · rintro ⟨p, ⟨-, w⟩⟩
-    rw [DFunLike.ext_iff] at w
-    dsimp at w
-    let q := p.comp ((b - a)⁻¹ • Polynomial.X + Polynomial.C (-a * (b - a)⁻¹))
-    refine ⟨q, ⟨?_, ?_⟩⟩
-    · simp
-    · ext x
-      simp only [q, neg_mul, RingHom.map_neg, RingHom.map_mul, AlgHom.coe_toRingHom,
-        Polynomial.eval_X, Polynomial.eval_neg, Polynomial.eval_C, Polynomial.eval_smul,
-        smul_eq_mul, Polynomial.eval_mul, Polynomial.eval_add, Polynomial.coe_aeval_eq_eval,
-        Polynomial.eval_comp, Polynomial.toContinuousMapOnAlgHom_apply,
-        Polynomial.toContinuousMapOn_apply, Polynomial.toContinuousMap_apply]
-      convert w ⟨_, _⟩
-      · ext
-        simp only [iccHomeoI_symm_apply_coe, Subtype.coe_mk]
-        replace h : b - a ≠ 0 := sub_ne_zero_of_ne h.ne.symm
-        simp only [mul_add]
-        field_simp
-        ring
-      · change _ + _ ∈ I
-        rw [mul_comm (b - a)⁻¹, ← neg_mul, ← add_mul, ← sub_eq_add_neg]
-        have w₁ : 0 < (b - a)⁻¹ := inv_pos.mpr (sub_pos.mpr h)
-        have w₂ : 0 ≤ (x : ℝ) - a := sub_nonneg.mpr x.2.1
-        have w₃ : (x : ℝ) - a ≤ b - a := sub_le_sub_right x.2.2 a
-        fconstructor
-        · exact mul_nonneg w₂ (le_of_lt w₁)
-        · rw [← div_eq_mul_inv, div_le_one (sub_pos.mpr h)]
-          exact w₃
-  · rintro ⟨p, ⟨-, rfl⟩⟩
-    let q := p.comp ((b - a) • Polynomial.X + Polynomial.C a)
-    refine ⟨q, ⟨?_, ?_⟩⟩
-    · simp
-    · ext x
-      simp [q, mul_comm]
+  rintro ⟨p, ⟨-, w⟩⟩
+  rw [DFunLike.ext_iff] at w
+  dsimp at w
+  let q := p.comp ((b - a)⁻¹ • Polynomial.X + Polynomial.C (-a * (b - a)⁻¹))
+  refine ⟨q, ⟨?_, ?_⟩⟩
+  simp
+  ext x
+  simp only [q, neg_mul, RingHom.map_neg, RingHom.map_mul, AlgHom.coe_toRingHom,
+    Polynomial.eval_X, Polynomial.eval_neg, Polynomial.eval_C, Polynomial.eval_smul,
+    smul_eq_mul, Polynomial.eval_mul, Polynomial.eval_add, Polynomial.coe_aeval_eq_eval,
+    Polynomial.eval_comp, Polynomial.toContinuousMapOnAlgHom_apply,
+    Polynomial.toContinuousMapOn_apply, Polynomial.toContinuousMap_apply]
+  convert w ⟨_, _⟩
+  ext
+  simp only [iccHomeoI_symm_apply_coe, Subtype.coe_mk]
+  replace h : b - a ≠ 0 := sub_ne_zero_of_ne h.ne.symm
+  simp only [mul_add]
+  field_simp
+  ring
+  change _ + _ ∈ I
+  rw [mul_comm (b - a)⁻¹, ← neg_mul, ← add_mul, ← sub_eq_add_neg]
+  have w₁ : 0 < (b - a)⁻¹ := inv_pos.mpr (sub_pos.mpr h)
+  have w₂ : 0 ≤ (x : ℝ) - a := sub_nonneg.mpr x.2.1
+  have w₃ : (x : ℝ) - a ≤ b - a := sub_le_sub_right x.2.2 a
+  fconstructor
+  exact mul_nonneg w₂ (le_of_lt w₁)
+  rw [← div_eq_mul_inv, div_le_one (sub_pos.mpr h)]
+  exact w₃
+  rintro ⟨p, ⟨-, rfl⟩⟩
+  let q := p.comp ((b - a) • Polynomial.X + Polynomial.C a)
+  refine ⟨q, ⟨?_, ?_⟩⟩
+  simp
+  ext x
+  simp [q, mul_comm]
 
 theorem polynomialFunctions.eq_adjoin_X (s : Set R) :
     polynomialFunctions s = Algebra.adjoin R {toContinuousMapOnAlgHom s X} := by
@@ -211,12 +211,12 @@ theorem polynomialFunctions.eq_adjoin_X (s : Set R) :
   rintro - ⟨p, -, rfl⟩
   rw [AlgHom.coe_toRingHom]
   refine p.induction_on (fun r => ?_) (fun f g hf hg => ?_) fun n r hn => ?_
-  · rw [Polynomial.C_eq_algebraMap, AlgHomClass.commutes]
-    exact Subalgebra.algebraMap_mem _ r
-  · rw [map_add]
-    exact add_mem hf hg
-  · rw [pow_succ, ← mul_assoc, map_mul]
-    exact mul_mem hn (Algebra.subset_adjoin <| Set.mem_singleton _)
+  rw [Polynomial.C_eq_algebraMap, AlgHomClass.commutes]
+  exact Subalgebra.algebraMap_mem _ r
+  rw [map_add]
+  exact add_mem hf hg
+  rw [pow_succ, ← mul_assoc, map_mul]
+  exact mul_mem hn (Algebra.subset_adjoin <| Set.mem_singleton _)
 
 theorem polynomialFunctions.le_equalizer {A : Type*} [Semiring A] [Algebra R A] (s : Set R)
     (φ ψ : C(s, R) →ₐ[R] A)

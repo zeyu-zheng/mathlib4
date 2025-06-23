@@ -90,20 +90,20 @@ theorem mk' (h : ∀ A B : C, ∃ (c : BinaryCofan A B) (_ : IsColimit c), Mono 
 instance monoCoprodType : MonoCoprod (Type u) :=
   MonoCoprod.mk' fun A B => by
     refine ⟨BinaryCofan.mk (Sum.inl : A ⟶ A ⊕ B) Sum.inr, ?_, ?_⟩
-    · exact BinaryCofan.IsColimit.mk _
-        (fun f₁ f₂ x => by
-          rcases x with x | x
-          exacts [f₁ x, f₂ x])
-        (fun f₁ f₂ => by rfl)
-        (fun f₁ f₂ => by rfl)
-        (fun f₁ f₂ m h₁ h₂ => by
-          funext x
-          rcases x with x | x
-          · exact congr_fun h₁ x
-          · exact congr_fun h₂ x)
-    · rw [mono_iff_injective]
-      intro a₁ a₂ h
-      simpa using h
+    exact BinaryCofan.IsColimit.mk _
+      (fun f₁ f₂ x => by
+        rcases x with x | x
+        exacts [f₁ x, f₂ x])
+      (fun f₁ f₂ => by rfl)
+      (fun f₁ f₂ => by rfl)
+      (fun f₁ f₂ m h₁ h₂ => by
+        funext x
+        rcases x with x | x
+        exact congr_fun h₁ x
+        exact congr_fun h₂ x)
+    rw [mono_iff_injective]
+    intro a₁ a₂ h
+    simpa using h
 
 section
 

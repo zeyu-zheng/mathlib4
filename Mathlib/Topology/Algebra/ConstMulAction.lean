@@ -296,11 +296,11 @@ theorem closure_smul₀' {c : G₀} (hc : c ≠ 0) (s : Set α) :
 theorem closure_smul₀ {E} [Zero E] [MulActionWithZero G₀ E] [TopologicalSpace E] [T1Space E]
     [ContinuousConstSMul G₀ E] (c : G₀) (s : Set E) : closure (c • s) = c • closure s := by
   rcases eq_or_ne c 0 with (rfl | hc)
-  · rcases eq_empty_or_nonempty s with (rfl | hs)
-    · simp
-    · rw [zero_smul_set hs, zero_smul_set hs.closure]
-      exact closure_singleton
-  · exact closure_smul₀' hc s
+  rcases eq_empty_or_nonempty s with (rfl | hs)
+  simp
+  rw [zero_smul_set hs, zero_smul_set hs.closure]
+  exact closure_singleton
+  exact closure_smul₀' hc s
 
 /-- `smul` is a closed map in the second argument.
 
@@ -320,9 +320,9 @@ normed field) is `isClosedMap_smul_left` in `Analysis.Normed.Module.FiniteDimens
 theorem isClosedMap_smul₀ {E : Type*} [Zero E] [MulActionWithZero G₀ E] [TopologicalSpace E]
     [T1Space E] [ContinuousConstSMul G₀ E] (c : G₀) : IsClosedMap fun x : E => c • x := by
   rcases eq_or_ne c 0 with (rfl | hne)
-  · simp only [zero_smul]
-    exact isClosedMap_const
-  · exact (Homeomorph.smulOfNeZero c hne).isClosedMap
+  simp only [zero_smul]
+  exact isClosedMap_const
+  exact (Homeomorph.smulOfNeZero c hne).isClosedMap
 
 theorem IsClosed.smul₀ {E : Type*} [Zero E] [MulActionWithZero G₀ E] [TopologicalSpace E]
     [T1Space E] [ContinuousConstSMul G₀ E] (c : G₀) {s : Set E} (hs : IsClosed s) :
@@ -456,10 +456,10 @@ instance (priority := 100) t2Space_of_properlyDiscontinuousSMul_of_t2Space [T2Sp
   refine ⟨f '' U₀, U_nhds, f '' V₀, V_nhds, MulAction.disjoint_image_image_iff.2 ?_⟩
   rintro x ⟨x_in_U₀₀, x_in_K₀⟩ γ
   by_cases H : γ ∈ bad_Γ_set
-  · exact fun h => (u_v_disjoint γ).le_bot ⟨mem_iInter₂.mp x_in_U₀₀ γ H, mem_iInter₂.mp h.1 γ H⟩
-  · rintro ⟨-, h'⟩
-    simp only [bad_Γ_set, image_smul, Classical.not_not, mem_setOf_eq, Ne] at H
-    exact eq_empty_iff_forall_not_mem.mp H (γ • x) ⟨mem_image_of_mem _ x_in_K₀, h'⟩
+  exact fun h => (u_v_disjoint γ).le_bot ⟨mem_iInter₂.mp x_in_U₀₀ γ H, mem_iInter₂.mp h.1 γ H⟩
+  rintro ⟨-, h'⟩
+  simp only [bad_Γ_set, image_smul, Classical.not_not, mem_setOf_eq, Ne] at H
+  exact eq_empty_iff_forall_not_mem.mp H (γ • x) ⟨mem_image_of_mem _ x_in_K₀, h'⟩
 
 /-- The quotient of a second countable space by a group action is second countable. -/
 @[to_additive "The quotient of a second countable space by an additive group action is second

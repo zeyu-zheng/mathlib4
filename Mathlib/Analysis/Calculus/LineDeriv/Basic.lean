@@ -331,9 +331,9 @@ theorem Filter.EventuallyEq.lineDifferentiableAt_iff (h : f₀ =ᶠ[𝓝 x] f₁
 theorem Filter.EventuallyEq.hasLineDerivWithinAt_iff (h : f₀ =ᶠ[𝓝[s] x] f₁) (hx : f₀ x = f₁ x) :
     HasLineDerivWithinAt 𝕜 f₀ f' s x v ↔ HasLineDerivWithinAt 𝕜 f₁ f' s x v := by
   apply hasDerivWithinAt_iff
-  · have A : Continuous (fun (t : 𝕜) ↦ x + t • v) := by fun_prop
-    exact A.continuousWithinAt.preimage_mem_nhdsWithin'' h (by simp)
-  · simpa using hx
+  have A : Continuous (fun (t : 𝕜) ↦ x + t • v) := by fun_prop
+  exact A.continuousWithinAt.preimage_mem_nhdsWithin'' h (by simp)
+  simpa using hx
 
 theorem Filter.EventuallyEq.hasLineDerivWithinAt_iff_of_mem (h : f₀ =ᶠ[𝓝[s] x] f₁) (hx : x ∈ s) :
     HasLineDerivWithinAt 𝕜 f₀ f' s x v ↔ HasLineDerivWithinAt 𝕜 f₁ f' s x v :=
@@ -550,12 +550,12 @@ theorem lineDifferentiableAt_smul_iff {c : 𝕜} (hc : c ≠ 0) :
 
 theorem lineDeriv_smul {c : 𝕜} : lineDeriv 𝕜 f x (c • v) = c • lineDeriv 𝕜 f x v := by
   rcases eq_or_ne c 0 with rfl|hc
-  · simp [lineDeriv_zero]
+  simp [lineDeriv_zero]
   by_cases H : LineDifferentiableAt 𝕜 f x v
-  · exact (H.hasLineDerivAt.smul c).lineDeriv
-  · have H' : ¬ (LineDifferentiableAt 𝕜 f x (c • v)) := by
-      simpa [lineDifferentiableAt_smul_iff hc] using H
-    simp [lineDeriv_zero_of_not_lineDifferentiableAt, H, H']
+  exact (H.hasLineDerivAt.smul c).lineDeriv
+  have H' : ¬ (LineDifferentiableAt 𝕜 f x (c • v)) := by
+    simpa [lineDifferentiableAt_smul_iff hc] using H
+  simp [lineDeriv_zero_of_not_lineDifferentiableAt, H, H']
 
 theorem lineDeriv_neg : lineDeriv 𝕜 f x (-v) = - lineDeriv 𝕜 f x v := by
   rw [← neg_one_smul (R := 𝕜) v, lineDeriv_smul, neg_one_smul]

@@ -155,13 +155,13 @@ theorem exp_zero : exp 0 = 1 := by
   refine lim_eq_of_equiv_const fun ε ε0 => ⟨1, fun j hj => ?_⟩
   convert (config := .unfoldSameFun) ε0 -- Porting note: ε0 : ε > 0 but goal is _ < ε
   cases' j with j j
-  · exact absurd hj (not_le_of_gt zero_lt_one)
-  · dsimp [exp']
-    induction' j with j ih
-    · dsimp [exp']; simp [show Nat.succ 0 = 1 from rfl]
-    · rw [← ih (by simp [Nat.succ_le_succ])]
-      simp only [sum_range_succ, pow_succ]
-      simp
+  exact absurd hj (not_le_of_gt zero_lt_one)
+  dsimp [exp']
+  induction' j with j ih
+  dsimp [exp']; simp [show Nat.succ 0 = 1 from rfl]
+  rw [← ih (by simp [Nat.succ_le_succ])]
+  simp only [sum_range_succ, pow_succ]
+  simp
 
 theorem exp_add : exp (x + y) = exp x * exp y := by
   have hj : ∀ j : ℕ, (∑ m ∈ range j, (x + y) ^ m / m.factorial) =
@@ -220,8 +220,8 @@ theorem exp_sub : exp (x - y) = exp x / exp y := by
 
 theorem exp_int_mul (z : ℂ) (n : ℤ) : Complex.exp (n * z) = Complex.exp z ^ n := by
   cases n
-  · simp [exp_nat_mul]
-  · simp [exp_add, add_mul, pow_add, exp_neg, exp_nat_mul]
+  simp [exp_nat_mul]
+  simp [exp_add, add_mul, pow_add, exp_neg, exp_nat_mul]
 
 @[simp]
 theorem exp_conj : exp (conj x) = conj (exp x) := by
@@ -512,8 +512,8 @@ theorem cos_add_cos : cos x + cos y = 2 * cos ((x + y) / 2) * cos ((x - y) / 2) 
       ?_
     _ = 2 * cos ((x + y) / 2) * cos ((x - y) / 2) := ?_
 
-  · congr <;> field_simp
-  · rw [cos_add, cos_sub]
+  congr <;> field_simp
+  rw [cos_add, cos_sub]
   ring
 
 theorem sin_conj : sin (conj x) = conj (sin x) := by
@@ -679,8 +679,8 @@ theorem cos_add_sin_mul_I_pow (n : ℕ) (z : ℂ) :
     (cos z + sin z * I) ^ n = cos (↑n * z) + sin (↑n * z) * I := by
   rw [← exp_mul_I, ← exp_mul_I]
   induction' n with n ih
-  · rw [pow_zero, Nat.cast_zero, zero_mul, zero_mul, exp_zero]
-  · rw [pow_succ, ih, Nat.cast_succ, add_mul, add_mul, one_mul, exp_add]
+  rw [pow_zero, Nat.cast_zero, zero_mul, zero_mul, exp_zero]
+  rw [pow_succ, ih, Nat.cast_succ, add_mul, add_mul, one_mul, exp_add]
 
 end Complex
 
@@ -983,7 +983,7 @@ private theorem add_one_lt_exp_of_pos {x : ℝ} (hx : 0 < x) : x + 1 < exp x :=
 
 private theorem add_one_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) : x + 1 ≤ exp x := by
   rcases eq_or_lt_of_le hx with (rfl | h)
-  · simp
+  simp
   exact (add_one_lt_exp_of_pos h).le
 
 theorem one_le_exp {x : ℝ} (hx : 0 ≤ x) : 1 ≤ exp x := by linarith [add_one_le_exp_of_nonneg hx]
@@ -1139,20 +1139,20 @@ theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
     _ ≤ ∑ i ∈ range k, abs x ^ (n + i) / ((n.factorial : ℝ) * (n.succ : ℝ) ^ i) := ?_
     _ = ∑ i ∈ range k, abs x ^ n / n.factorial * (abs x ^ i / (n.succ : ℝ) ^ i) := ?_
     _ ≤ abs x ^ n / ↑n.factorial * 2 := ?_
-  · gcongr
-    exact mod_cast Nat.factorial_mul_pow_le_factorial
-  · refine Finset.sum_congr rfl fun _ _ => ?_
-    simp only [pow_add, div_eq_inv_mul, mul_inv, mul_left_comm, mul_assoc]
-  · rw [← mul_sum]
-    gcongr
-    simp_rw [← div_pow]
-    rw [geom_sum_eq, div_le_iff_of_neg]
-    · trans (-1 : ℝ)
-      · linarith
-      · simp only [neg_le_sub_iff_le_add, div_pow, Nat.cast_succ, le_add_iff_nonneg_left]
-        positivity
-    · linarith
-    · linarith
+  gcongr
+  exact mod_cast Nat.factorial_mul_pow_le_factorial
+  refine Finset.sum_congr rfl fun _ _ => ?_
+  simp only [pow_add, div_eq_inv_mul, mul_inv, mul_left_comm, mul_assoc]
+  rw [← mul_sum]
+  gcongr
+  simp_rw [← div_pow]
+  rw [geom_sum_eq, div_le_iff_of_neg]
+  trans (-1 : ℝ)
+  linarith
+  simp only [neg_le_sub_iff_le_add, div_pow, Nat.cast_succ, le_add_iff_nonneg_left]
+  positivity
+  linarith
+  linarith
 
 theorem abs_exp_sub_one_le {x : ℂ} (hx : abs x ≤ 1) : abs (exp x - 1) ≤ 2 * abs x :=
   calc
@@ -1238,8 +1238,8 @@ theorem exp_approx_end (n m : ℕ) (x : ℝ) (e₁ : n + 1 = m) (h : |x| ≤ 1) 
     |exp x - expNear m x 0| ≤ |x| ^ m / m.factorial * ((m + 1) / m) := by
   simp only [expNear, mul_zero, add_zero]
   convert exp_bound (n := m) h ?_ using 1
-  · field_simp [mul_comm]
-  · omega
+  field_simp [mul_comm]
+  omega
 
 theorem exp_approx_succ {n} {x a₁ b₁ : ℝ} (m : ℕ) (e₁ : n + 1 = m) (a₂ b₂ : ℝ)
     (e : |1 + x / m * a₂ - a₁| ≤ b₁ - |x| / m * b₂)
@@ -1249,9 +1249,9 @@ theorem exp_approx_succ {n} {x a₁ b₁ : ℝ} (m : ℕ) (e₁ : n + 1 = m) (a�
   subst e₁; rw [expNear_succ, expNear_sub, abs_mul]
   convert mul_le_mul_of_nonneg_left (a := |x| ^ n / ↑(Nat.factorial n))
       (le_sub_iff_add_le'.1 e) ?_ using 1
-  · simp [mul_add, pow_succ', div_eq_mul_inv, abs_mul, abs_inv, ← pow_abs, mul_inv, Nat.factorial]
-    ac_rfl
-  · simp [div_nonneg, abs_nonneg]
+  simp [mul_add, pow_succ', div_eq_mul_inv, abs_mul, abs_inv, ← pow_abs, mul_inv, Nat.factorial]
+  ac_rfl
+  simp [div_nonneg, abs_nonneg]
 
 theorem exp_approx_end' {n} {x a b : ℝ} (m : ℕ) (e₁ : n + 1 = m) (rm : ℝ) (er : ↑m = rm)
     (h : |x| ≤ 1) (e : |1 - a| ≤ b - |x| / rm * ((rm + 1) / rm)) :
@@ -1296,8 +1296,8 @@ theorem cos_bound {x : ℝ} (hx : |x| ≤ 1) : |cos x - (1 - x ^ 2 / 2)| ≤ |x|
     _ ≤ Complex.abs (x * I) ^ 4 * (Nat.succ 4 * ((Nat.factorial 4) * (4 : ℕ) : ℝ)⁻¹) / 2 +
           Complex.abs (-x * I) ^ 4 * (Nat.succ 4 * ((Nat.factorial 4) * (4 : ℕ) : ℝ)⁻¹) / 2 := by
       gcongr
-      · exact Complex.exp_bound (by simpa) (by decide)
-      · exact Complex.exp_bound (by simpa) (by decide)
+      exact Complex.exp_bound (by simpa) (by decide)
+      exact Complex.exp_bound (by simpa) (by decide)
     _ ≤ |x| ^ 4 * (5 / 96) := by norm_num [Nat.factorial]
 
 theorem sin_bound {x : ℝ} (hx : |x| ≤ 1) : |sin x - (x - x ^ 3 / 6)| ≤ |x| ^ 4 * (5 / 96) :=
@@ -1327,8 +1327,8 @@ theorem sin_bound {x : ℝ} (hx : |x| ≤ 1) : |sin x - (x - x ^ 3 / 6)| ≤ |x|
     _ ≤ Complex.abs (x * I) ^ 4 * (Nat.succ 4 * (Nat.factorial 4 * (4 : ℕ) : ℝ)⁻¹) / 2 +
           Complex.abs (-x * I) ^ 4 * (Nat.succ 4 * (Nat.factorial 4 * (4 : ℕ) : ℝ)⁻¹) / 2 := by
       gcongr
-      · exact Complex.exp_bound (by simpa) (by decide)
-      · exact Complex.exp_bound (by simpa) (by decide)
+      exact Complex.exp_bound (by simpa) (by decide)
+      exact Complex.exp_bound (by simpa) (by decide)
     _ ≤ |x| ^ 4 * (5 / 96) := by norm_num [Nat.factorial]
 
 theorem cos_pos_of_le_one {x : ℝ} (hx : |x| ≤ 1) : 0 < cos x :=
@@ -1338,9 +1338,9 @@ theorem cos_pos_of_le_one {x : ℝ} (hx : |x| ≤ 1) : 0 < cos x :=
           (calc
             |x| ^ 4 * (5 / 96) + x ^ 2 / 2 ≤ 1 * (5 / 96) + 1 / 2 := by
                   gcongr
-                  · exact pow_le_one _ (abs_nonneg _) hx
-                  · rw [sq, ← abs_mul_self, abs_mul]
-                    exact mul_le_one hx (abs_nonneg _) hx
+                  exact pow_le_one _ (abs_nonneg _) hx
+                  rw [sq, ← abs_mul_self, abs_mul]
+                  exact mul_le_one hx (abs_nonneg _) hx
             _ < 1 := by norm_num)
     _ ≤ cos x := sub_le_comm.1 (abs_sub_le_iff.1 (cos_bound hx)).2
 
@@ -1350,14 +1350,14 @@ theorem sin_pos_of_pos_of_le_one {x : ℝ} (hx0 : 0 < x) (hx : x ≤ 1) : 0 < si
           (calc
             |x| ^ 4 * (5 / 96) + x ^ 3 / 6 ≤ x * (5 / 96) + x / 6 := by
                 gcongr
-                · calc
-                    |x| ^ 4 ≤ |x| ^ 1 :=
-                      pow_le_pow_of_le_one (abs_nonneg _)
-                        (by rwa [_root_.abs_of_nonneg (le_of_lt hx0)]) (by decide)
-                    _ = x := by simp [_root_.abs_of_nonneg (le_of_lt hx0)]
-                · calc
-                    x ^ 3 ≤ x ^ 1 := pow_le_pow_of_le_one (le_of_lt hx0) hx (by decide)
-                    _ = x := pow_one _
+                calc
+                  |x| ^ 4 ≤ |x| ^ 1 :=
+                    pow_le_pow_of_le_one (abs_nonneg _)
+                      (by rwa [_root_.abs_of_nonneg (le_of_lt hx0)]) (by decide)
+                  _ = x := by simp [_root_.abs_of_nonneg (le_of_lt hx0)]
+                calc
+                  x ^ 3 ≤ x ^ 1 := pow_le_pow_of_le_one (le_of_lt hx0) hx (by decide)
+                  _ = x := pow_one _
             _ < x := by linarith)
     _ ≤ sin x :=
       sub_le_comm.1 (abs_sub_le_iff.1 (sin_bound (by rwa [_root_.abs_of_nonneg (le_of_lt hx0)]))).2
@@ -1384,8 +1384,8 @@ theorem cos_two_neg : cos 2 < 0 :=
     _ = _ := Real.cos_two_mul 1
     _ ≤ 2 * (2 / 3) ^ 2 - 1 := by
       gcongr
-      · exact cos_one_pos.le
-      · apply cos_one_le
+      exact cos_one_pos.le
+      apply cos_one_le
     _ < 0 := by norm_num
 
 theorem exp_bound_div_one_sub_of_interval' {x : ℝ} (h1 : 0 < x) (h2 : x < 1) :
@@ -1407,14 +1407,14 @@ theorem exp_bound_div_one_sub_of_interval' {x : ℝ} (h1 : 0 < x) (h2 : x < 1) :
 theorem exp_bound_div_one_sub_of_interval {x : ℝ} (h1 : 0 ≤ x) (h2 : x < 1) :
     Real.exp x ≤ 1 / (1 - x) := by
   rcases eq_or_lt_of_le h1 with (rfl | h1)
-  · simp
-  · exact (exp_bound_div_one_sub_of_interval' h1 h2).le
+  simp
+  exact (exp_bound_div_one_sub_of_interval' h1 h2).le
 
 theorem add_one_lt_exp {x : ℝ} (hx : x ≠ 0) : x + 1 < Real.exp x := by
   obtain hx | hx := hx.symm.lt_or_lt
-  · exact add_one_lt_exp_of_pos hx
+  exact add_one_lt_exp_of_pos hx
   obtain h' | h' := le_or_lt 1 (-x)
-  · linarith [x.exp_pos]
+  linarith [x.exp_pos]
   have hx' : 0 < x + 1
   linarith
   simpa [add_comm, exp_neg, inv_lt_inv (exp_pos _) hx']
@@ -1422,8 +1422,8 @@ theorem add_one_lt_exp {x : ℝ} (hx : x ≠ 0) : x + 1 < Real.exp x := by
 
 theorem add_one_le_exp (x : ℝ) : x + 1 ≤ Real.exp x := by
   obtain rfl | hx := eq_or_ne x 0
-  · simp
-  · exact (add_one_lt_exp hx).le
+  simp
+  exact (add_one_lt_exp hx).le
 
 lemma one_sub_lt_exp_neg {x : ℝ} (hx : x ≠ 0) : 1 - x < exp (-x) :=
   (sub_eq_neg_add _ _).trans_lt <| add_one_lt_exp <| neg_ne_zero.2 hx
@@ -1433,15 +1433,15 @@ lemma one_sub_le_exp_neg (x : ℝ) : 1 - x ≤ exp (-x) :=
 
 theorem one_sub_div_pow_le_exp_neg {n : ℕ} {t : ℝ} (ht' : t ≤ n) : (1 - t / n) ^ n ≤ exp (-t) := by
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp
-    rwa [Nat.cast_zero] at ht'
+  simp
+  rwa [Nat.cast_zero] at ht'
   convert pow_le_pow_left ?_ (one_sub_le_exp_neg (t / n)) n using 2
-  · rw [← Real.exp_nat_mul]
-    congr 1
-    field_simp
-    ring_nf
-  · rwa [sub_nonneg, div_le_one]
-    positivity
+  rw [← Real.exp_nat_mul]
+  congr 1
+  field_simp
+  ring_nf
+  rwa [sub_nonneg, div_le_one]
+  positivity
 
 end Real
 

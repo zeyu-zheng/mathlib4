@@ -371,10 +371,10 @@ theorem ext {φ₁ φ₂ : (⨂[R] i, s i) →ₗ[R] E}
   refine LinearMap.ext ?_
   refine fun z ↦
     PiTensorProduct.induction_on' z ?_ fun {x y} hx hy ↦ by rw [φ₁.map_add, φ₂.map_add, hx, hy]
-  · intro r f
-    rw [tprodCoeff_eq_smul_tprod, φ₁.map_smul, φ₂.map_smul]
-    apply congr_arg
-    exact MultilinearMap.congr_fun H f
+  intro r f
+  rw [tprodCoeff_eq_smul_tprod, φ₁.map_smul, φ₂.map_smul]
+  apply congr_arg
+  exact MultilinearMap.congr_fun H f
 
 /-- The pure tensors (i.e. the elements of the image of `PiTensorProduct.tprod`) span
 the tensor product. -/
@@ -427,10 +427,10 @@ theorem liftAux_tprodCoeff (φ : MultilinearMap R s E) (z : R) (f : Π i, s i) :
 theorem liftAux.smul {φ : MultilinearMap R s E} (r : R) (x : ⨂[R] i, s i) :
     liftAux φ (r • x) = r • liftAux φ x := by
   refine PiTensorProduct.induction_on' x ?_ ?_
-  · intro z f
-    rw [smul_tprodCoeff' r z f, liftAux_tprodCoeff, liftAux_tprodCoeff, smul_assoc]
-  · intro z y ihz ihy
-    rw [smul_add, (liftAux φ).map_add, ihz, ihy, (liftAux φ).map_add, smul_add]
+  intro z f
+  rw [smul_tprodCoeff' r z f, liftAux_tprodCoeff, liftAux_tprodCoeff, smul_assoc]
+  intro z y ihz ihy
+  rw [smul_add, (liftAux φ).map_add, ihz, ihy, (liftAux φ).map_add, smul_add]
 
 /-- Constructing a linear map `(⨂[R] i, s i) → E` given a `MultilinearMap R s E` with the
 property that its composition with the canonical `MultilinearMap R s E` is

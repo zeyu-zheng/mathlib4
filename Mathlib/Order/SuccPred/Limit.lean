@@ -88,9 +88,9 @@ variable [IsSuccArchimedean α]
 
 theorem IsSuccLimit.isMin_of_noMax [NoMaxOrder α] (h : IsSuccLimit a) : IsMin a := fun b hb => by
   rcases hb.exists_succ_iterate with ⟨_ | n, rfl⟩
-  · exact le_rfl
-  · rw [iterate_succ_apply'] at h
-    exact (not_isSuccLimit_succ _ h).elim
+  exact le_rfl
+  rw [iterate_succ_apply'] at h
+  exact (not_isSuccLimit_succ _ h).elim
 
 @[simp]
 theorem isSuccLimit_iff_of_noMax [NoMaxOrder α] : IsSuccLimit a ↔ IsMin a :=
@@ -126,11 +126,11 @@ theorem isSuccLimit_of_succ_lt (H : ∀ a < b, succ a < b) : IsSuccLimit b := fu
 
 theorem IsSuccLimit.succ_lt (hb : IsSuccLimit b) (ha : a < b) : succ a < b := by
   by_cases h : IsMax a
-  · rwa [h.succ_eq]
-  · rw [lt_iff_le_and_ne, succ_le_iff_of_not_isMax h]
-    refine ⟨ha, fun hab => ?_⟩
-    subst hab
-    exact (h hb.isMax).elim
+  rwa [h.succ_eq]
+  rw [lt_iff_le_and_ne, succ_le_iff_of_not_isMax h]
+  refine ⟨ha, fun hab => ?_⟩
+  subst hab
+  exact (h hb.isMax).elim
 
 theorem IsSuccLimit.succ_lt_iff (hb : IsSuccLimit b) : succ a < b ↔ a < b :=
   ⟨fun h => (le_succ a).trans_lt h, hb.succ_lt⟩

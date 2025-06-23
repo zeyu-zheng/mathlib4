@@ -83,14 +83,14 @@ theorem noetherianSpace_TFAE :
       ∀ s : Set α, IsCompact s,
       ∀ s : Opens α, IsCompact (s : Set α)] := by
   tfae_have 1 ↔ 2
-  · refine (noetherianSpace_iff α).trans (Opens.compl_bijective.2.wellFounded_iff ?_)
-    exact (@OrderIso.compl (Set α)).lt_iff_lt.symm
+  refine (noetherianSpace_iff α).trans (Opens.compl_bijective.2.wellFounded_iff ?_)
+  exact (@OrderIso.compl (Set α)).lt_iff_lt.symm
   tfae_have 1 ↔ 4
-  · exact noetherianSpace_iff_opens α
+  exact noetherianSpace_iff_opens α
   tfae_have 1 → 3
-  · exact @NoetherianSpace.isCompact α _
+  exact @NoetherianSpace.isCompact α _
   tfae_have 3 → 4
-  · exact fun h s => h s
+  exact fun h s => h s
   tfae_finish
 
 variable {α}
@@ -107,9 +107,9 @@ instance {α} : NoetherianSpace (CofiniteTopology α) := by
     CofiniteTopology.nhds_eq, Ultrafilter.le_sup_iff, Filter.le_principal_iff]
   intro s f hs
   rcases f.le_cofinite_or_eq_pure with (hf | ⟨a, rfl⟩)
-  · rcases Filter.nonempty_of_mem hs with ⟨a, ha⟩
-    exact ⟨a, ha, Or.inr hf⟩
-  · exact ⟨a, hs, Or.inl le_rfl⟩
+  rcases Filter.nonempty_of_mem hs with ⟨a, ha⟩
+  exact ⟨a, ha, Or.inr hf⟩
+  exact ⟨a, hs, Or.inl le_rfl⟩
 
 theorem noetherianSpace_of_surjective [NoetherianSpace α] (f : α → β) (hf : Continuous f)
     (hf' : Function.Surjective f) : NoetherianSpace β :=
@@ -160,18 +160,18 @@ theorem NoetherianSpace.exists_finite_set_closeds_irreducible [NoetherianSpace �
   apply wellFounded_closeds.induction s; clear s
   intro s H
   rcases eq_or_ne s ⊥ with rfl | h₀
-  · use ∅; simp
-  · by_cases h₁ : IsPreirreducible (s : Set α)
-    · replace h₁ : IsIrreducible (s : Set α) := ⟨Closeds.coe_nonempty.2 h₀, h₁⟩
-      use {s}; simp [h₁]
-    · simp only [isPreirreducible_iff_closed_union_closed, not_forall, not_or] at h₁
-      obtain ⟨z₁, z₂, hz₁, hz₂, h, hz₁', hz₂'⟩ := h₁
-      lift z₁ to Closeds α using hz₁
-      lift z₂ to Closeds α using hz₂
-      rcases H (s ⊓ z₁) (inf_lt_left.2 hz₁') with ⟨S₁, hSf₁, hS₁, h₁⟩
-      rcases H (s ⊓ z₂) (inf_lt_left.2 hz₂') with ⟨S₂, hSf₂, hS₂, h₂⟩
-      refine ⟨S₁ ∪ S₂, hSf₁.union hSf₂, Set.union_subset_iff.2 ⟨hS₁, hS₂⟩, ?_⟩
-      rwa [sSup_union, ← h₁, ← h₂, ← inf_sup_left, left_eq_inf]
+  use ∅; simp
+  by_cases h₁ : IsPreirreducible (s : Set α)
+  replace h₁ : IsIrreducible (s : Set α) := ⟨Closeds.coe_nonempty.2 h₀, h₁⟩
+  use {s}; simp [h₁]
+  simp only [isPreirreducible_iff_closed_union_closed, not_forall, not_or] at h₁
+  obtain ⟨z₁, z₂, hz₁, hz₂, h, hz₁', hz₂'⟩ := h₁
+  lift z₁ to Closeds α using hz₁
+  lift z₂ to Closeds α using hz₂
+  rcases H (s ⊓ z₁) (inf_lt_left.2 hz₁') with ⟨S₁, hSf₁, hS₁, h₁⟩
+  rcases H (s ⊓ z₂) (inf_lt_left.2 hz₂') with ⟨S₂, hSf₂, hS₂, h₂⟩
+  refine ⟨S₁ ∪ S₂, hSf₁.union hSf₂, Set.union_subset_iff.2 ⟨hS₁, hS₂⟩, ?_⟩
+  rwa [sSup_union, ← h₁, ← h₂, ← inf_sup_left, left_eq_inf]
 
 /-- In a Noetherian space, every closed set is a finite union of irreducible closed sets. -/
 theorem NoetherianSpace.exists_finite_set_isClosed_irreducible [NoetherianSpace α]
@@ -232,15 +232,15 @@ theorem NoetherianSpace.exists_open_ne_empty_le_irreducibleComponent [Noetherian
   rw [Set.union_comm, ← Set.sUnion_eq_iUnion, ← Set.sUnion_insert]
   rintro a -
   by_cases h : a ∈ U
-  · exact ⟨U, Set.mem_insert _ _, h⟩
-  · rw [Set.mem_diff, Decidable.not_and_iff_or_not_not, not_not, Set.mem_iUnion] at h
-    rcases h with (h|⟨i, hi⟩)
-    · refine ⟨irreducibleComponent a, Or.inr ?_, mem_irreducibleComponent⟩
-      simp only [ι, Set.mem_diff, Set.mem_singleton_iff]
-      refine ⟨irreducibleComponent_mem_irreducibleComponents _, ?_⟩
-      rintro rfl
-      exact h mem_irreducibleComponent
-    · exact ⟨i, Or.inr i.2, hi⟩
+  exact ⟨U, Set.mem_insert _ _, h⟩
+  rw [Set.mem_diff, Decidable.not_and_iff_or_not_not, not_not, Set.mem_iUnion] at h
+  rcases h with (h|⟨i, hi⟩)
+  refine ⟨irreducibleComponent a, Or.inr ?_, mem_irreducibleComponent⟩
+  simp only [ι, Set.mem_diff, Set.mem_singleton_iff]
+  refine ⟨irreducibleComponent_mem_irreducibleComponents _, ?_⟩
+  rintro rfl
+  exact h mem_irreducibleComponent
+  exact ⟨i, Or.inr i.2, hi⟩
 
   refine ⟨U, hU1 ▸ isOpen_compl_iff.mpr ?_, hU0, sdiff_le⟩
   exact isClosed_iUnion_of_finite fun i ↦ isClosed_of_mem_irreducibleComponents i.1 i.2.1

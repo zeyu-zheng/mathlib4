@@ -127,8 +127,8 @@ theorem eq_one_of_inv_eq' (h : a⁻¹ = a) : a = 1 :=
 theorem exists_one_lt' [Nontrivial α] : ∃ a : α, 1 < a := by
   obtain ⟨y, hy⟩ := Decidable.exists_ne (1 : α)
   obtain h|h := hy.lt_or_lt
-  · exact ⟨y⁻¹, one_lt_inv'.mpr h⟩
-  · exact ⟨y, h⟩
+  exact ⟨y⁻¹, one_lt_inv'.mpr h⟩
+  exact ⟨y, h⟩
 
 -- see Note [lower instance priority]
 @[to_additive]

@@ -149,9 +149,9 @@ lemma add'_zero (f : L.obj X ⟶ L.obj Y) :
     add' W f (L.map 0) = f := by
   obtain ⟨α, hα⟩ := exists_leftFraction L W f
   rw [add'_eq W f (L.map 0) (LeftFraction₂.mk α.f 0 α.s α.hs) hα, hα]; swap
-  · have := inverts L W _ α.hs
-    rw [← cancel_mono (L.map α.s), ← L.map_comp, Limits.zero_comp,
-      LeftFraction.map_comp_map_s]
+  have := inverts L W _ α.hs
+  rw [← cancel_mono (L.map α.s), ← L.map_comp, Limits.zero_comp,
+    LeftFraction.map_comp_map_s]
   dsimp [LeftFraction₂.add]
   rw [add_zero]
 
@@ -186,10 +186,10 @@ lemma add'_comp (f₁ f₂ : L.obj X ⟶ L.obj Y) (g : L.obj Y ⟶ L.obj Z) :
   rw [add'_eq W f₁ f₂ α h₁ h₂, add'_eq W (f₁ ≫ g) (f₂ ≫ g)
     (LeftFraction₂.mk (α.f ≫ γ.f) (α.f' ≫ γ.f) (β.s ≫ γ.s)
     (W.comp_mem _ _ β.hs γ.hs))]; rotate_left
-  · rw [h₁, hβ]
-    exact LeftFraction.map_comp_map_eq_map _ _ _ hγ _
-  · rw [h₂, hβ]
-    exact LeftFraction.map_comp_map_eq_map _ _ _ hγ _
+  rw [h₁, hβ]
+  exact LeftFraction.map_comp_map_eq_map _ _ _ hγ _
+  rw [h₂, hβ]
+  exact LeftFraction.map_comp_map_eq_map _ _ _ hγ _
   rw [hβ, LeftFraction.map_comp_map_eq_map _ _ γ hγ]
   dsimp [LeftFraction₂.add]
   rw [add_comp]
@@ -322,25 +322,25 @@ lemma functor_additive_iff {E : Type*} [Category E] [Preadditive E] [Preadditive
     (G : D ⥤ E) :
     G.Additive ↔ (L ⋙ G).Additive := by
   constructor
-  · intro
-    infer_instance
-  · intro h
-    suffices ∀ ⦃X Y : C⦄ (f g : L.obj X ⟶ L.obj Y), G.map (f + g) = G.map f + G.map g by
-      refine ⟨fun {X Y f g} => ?_⟩
-      have hL := essSurj L W
-      have eq := this ((L.objObjPreimageIso X).hom ≫ f ≫ (L.objObjPreimageIso Y).inv)
-        ((L.objObjPreimageIso X).hom ≫ g ≫ (L.objObjPreimageIso Y).inv)
-      rw [Functor.map_comp, Functor.map_comp, Functor.map_comp, Functor.map_comp,
-        ← comp_add, ← comp_add, ← add_comp, ← add_comp, Functor.map_comp, Functor.map_comp] at eq
-      rw [← cancel_mono (G.map (L.objObjPreimageIso Y).inv),
-        ← cancel_epi (G.map (L.objObjPreimageIso X).hom), eq]
-    intros X Y f g
-    obtain ⟨φ, rfl, rfl⟩ := exists_leftFraction₂ L W f g
-    have := Localization.inverts L W φ.s φ.hs
-    rw [← φ.map_add L (inverts L W), ← cancel_mono (G.map (L.map φ.s)), ← G.map_comp,
-      add_comp, ← G.map_comp, ← G.map_comp, LeftFraction.map_comp_map_s,
-      LeftFraction.map_comp_map_s, LeftFraction.map_comp_map_s, ← Functor.comp_map,
-      Functor.map_add, Functor.comp_map, Functor.comp_map]
+  intro
+  infer_instance
+  intro h
+  suffices ∀ ⦃X Y : C⦄ (f g : L.obj X ⟶ L.obj Y), G.map (f + g) = G.map f + G.map g by
+    refine ⟨fun {X Y f g} => ?_⟩
+    have hL := essSurj L W
+    have eq := this ((L.objObjPreimageIso X).hom ≫ f ≫ (L.objObjPreimageIso Y).inv)
+      ((L.objObjPreimageIso X).hom ≫ g ≫ (L.objObjPreimageIso Y).inv)
+    rw [Functor.map_comp, Functor.map_comp, Functor.map_comp, Functor.map_comp,
+      ← comp_add, ← comp_add, ← add_comp, ← add_comp, Functor.map_comp, Functor.map_comp] at eq
+    rw [← cancel_mono (G.map (L.objObjPreimageIso Y).inv),
+      ← cancel_epi (G.map (L.objObjPreimageIso X).hom), eq]
+  intros X Y f g
+  obtain ⟨φ, rfl, rfl⟩ := exists_leftFraction₂ L W f g
+  have := Localization.inverts L W φ.s φ.hs
+  rw [← φ.map_add L (inverts L W), ← cancel_mono (G.map (L.map φ.s)), ← G.map_comp,
+    add_comp, ← G.map_comp, ← G.map_comp, LeftFraction.map_comp_map_s,
+    LeftFraction.map_comp_map_s, LeftFraction.map_comp_map_s, ← Functor.comp_map,
+    Functor.map_add, Functor.comp_map, Functor.comp_map]
 
 noncomputable instance : Preadditive W.Localization := preadditive W.Q W
 instance : W.Q.Additive := functor_additive W.Q W

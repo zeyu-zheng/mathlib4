@@ -1005,13 +1005,13 @@ variable [LinearOrder α]
 
 theorem exists_square_le [CovariantClass α α (· * ·) (· < ·)] (a : α) : ∃ b : α, b * b ≤ a := by
   by_cases h : a < 1
-  · use a
-    have : a * a < a * 1 := mul_lt_mul_left' h a
-    rw [mul_one] at this
-    exact le_of_lt this
-  · use 1
-    push_neg at h
-    rwa [mul_one]
+  use a
+  have : a * a < a * 1 := mul_lt_mul_left' h a
+  rw [mul_one] at this
+  exact le_of_lt this
+  use 1
+  push_neg at h
+  rwa [mul_one]
 
 end LinearOrder
 

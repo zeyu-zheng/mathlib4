@@ -50,21 +50,21 @@ theorem upper_bound {k n : ℕ} (hk : k > 0)
   apply _root_.ne_of_gt _ h
   calc ∏ i ∈ range n, ((2:ℤ) ^ n - (2:ℤ) ^ i) ≤ ∏ __ ∈ range n, (2:ℤ) ^ n := ?_
     _ < ↑ k ! := ?_
-  · gcongr
-    · intro i hi
-      simp only [mem_range] at hi
-      have : (2:ℤ) ^ i ≤ (2:ℤ) ^ n
-      gcongr; norm_num
-      linarith
-    · apply sub_le_self
-      positivity
+  gcongr
+  intro i hi
+  simp only [mem_range] at hi
+  have : (2:ℤ) ^ i ≤ (2:ℤ) ^ n
+  gcongr; norm_num
+  linarith
+  apply sub_le_self
+  positivity
   norm_cast
   calc ∏ __ ∈ range n, 2 ^ n = 2 ^ (n * n) := by rw [prod_const, card_range, ← pow_mul]
     _ < (∑ i ∈ range n, i)! := ?_
     _ ≤ k ! := by gcongr
   clear h h2
   induction' n, hn using Nat.le_induction with n' hn' IH
-  · decide
+  decide
   let A := ∑ i ∈ range n', i
   have le_sum : ∑ i ∈ range 6, i ≤ A
   apply sum_le_sum_of_subset
@@ -85,20 +85,20 @@ theorem imo2019_q4 {k n : ℕ} (hk : k > 0) (hn : n > 0) :
   -- The implication `←` holds.
   constructor
   swap
-  · rintro (h | h) <;> simp [Prod.ext_iff] at h <;> rcases h with ⟨rfl, rfl⟩ <;> decide
+  rintro (h | h) <;> simp [Prod.ext_iff] at h <;> rcases h with ⟨rfl, rfl⟩ <;> decide
   intro h
   -- We know that n < 6.
   have := Imo2019Q4.upper_bound hk h
   interval_cases n
   -- n = 1
-  · norm_num at h; simp [le_antisymm h (succ_le_of_lt hk)]
+  norm_num at h; simp [le_antisymm h (succ_le_of_lt hk)]
   -- n = 2
-  · right; congr; norm_num [prod_range_succ] at h; norm_cast at h; rwa [← factorial_inj']
-    norm_num
+  right; congr; norm_num [prod_range_succ] at h; norm_cast at h; rwa [← factorial_inj']
+  norm_num
   all_goals exfalso; norm_num [prod_range_succ] at h; norm_cast at h
   -- n = 3
-  · refine monotone_factorial.ne_of_lt_of_lt_nat 5 ?_ ?_ _ h <;> decide
+  refine monotone_factorial.ne_of_lt_of_lt_nat 5 ?_ ?_ _ h <;> decide
   -- n = 4
-  · refine monotone_factorial.ne_of_lt_of_lt_nat 7 ?_ ?_ _ h <;> decide
+  refine monotone_factorial.ne_of_lt_of_lt_nat 7 ?_ ?_ _ h <;> decide
   -- n = 5
-  · refine monotone_factorial.ne_of_lt_of_lt_nat 10 ?_ ?_ _ h <;> decide
+  refine monotone_factorial.ne_of_lt_of_lt_nat 10 ?_ ?_ _ h <;> decide

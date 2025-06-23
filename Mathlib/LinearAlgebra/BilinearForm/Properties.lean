@@ -183,12 +183,12 @@ theorem IsAdjointPair.eq (h : IsAdjointPair B B' f g) : ∀ {x y}, B' (f x) y = 
 theorem isAdjointPair_iff_compLeft_eq_compRight (f g : Module.End R M) :
     IsAdjointPair B F f g ↔ F.compLeft f = B.compRight g := by
   constructor <;> intro h
-  · ext x
-    simp only [compLeft_apply, compRight_apply]
-    apply h
-  · intro x y
-    rw [← compLeft_apply, ← compRight_apply]
-    rw [h]
+  ext x
+  simp only [compLeft_apply, compRight_apply]
+  apply h
+  intro x y
+  rw [← compLeft_apply, ← compRight_apply]
+  rw [h]
 
 theorem isAdjointPair_zero : IsAdjointPair B B' 0 0 := fun x y => by
   simp only [BilinForm.zero_left, BilinForm.zero_right, LinearMap.zero_apply]
@@ -344,13 +344,13 @@ theorem nondegenerate_iff_ker_eq_bot {B : BilinForm R M} :
     B.Nondegenerate ↔ LinearMap.ker B = ⊥ := by
   rw [LinearMap.ker_eq_bot']
   constructor <;> intro h
-  · refine fun m hm => h _ fun x => ?_
-    rw [hm]
-    rfl
-  · intro m hm
-    apply h
-    ext x
-    exact hm x
+  refine fun m hm => h _ fun x => ?_
+  rw [hm]
+  rfl
+  intro m hm
+  apply h
+  ext x
+  exact hm x
 
 theorem Nondegenerate.ker_eq_bot {B : BilinForm R M} (h : B.Nondegenerate) :
     LinearMap.ker B = ⊥ := nondegenerate_iff_ker_eq_bot.mp h

@@ -287,28 +287,28 @@ theorem exists_tendsto_compactOpen_iff_forall [WeaklyLocallyCompactSpace X] [T2S
     (∃ f, Filter.Tendsto F l (𝓝 f)) ↔
       ∀ s : Set X, IsCompact s → ∃ f, Filter.Tendsto (fun i => (F i).restrict s) l (𝓝 f) := by
   constructor
-  · rintro ⟨f, hf⟩ s _
-    exact ⟨f.restrict s, tendsto_compactOpen_restrict hf s⟩
-  · intro h
-    choose f hf using h
-    -- By uniqueness of limits in a `T2Space`, since `fun i ↦ F i x` tends to both `f s₁ hs₁ x` and
-    -- `f s₂ hs₂ x`, we have `f s₁ hs₁ x = f s₂ hs₂ x`
-    have h :
-      ∀ (s₁) (hs₁ : IsCompact s₁) (s₂) (hs₂ : IsCompact s₂) (x : X) (hxs₁ : x ∈ s₁) (hxs₂ : x ∈ s₂),
-        f s₁ hs₁ ⟨x, hxs₁⟩ = f s₂ hs₂ ⟨x, hxs₂⟩ := by
-      rintro s₁ hs₁ s₂ hs₂ x hxs₁ hxs₂
-      haveI := isCompact_iff_compactSpace.mp hs₁
-      haveI := isCompact_iff_compactSpace.mp hs₂
-      have h₁ := (continuous_eval_const (⟨x, hxs₁⟩ : s₁)).continuousAt.tendsto.comp (hf s₁ hs₁)
-      have h₂ := (continuous_eval_const (⟨x, hxs₂⟩ : s₂)).continuousAt.tendsto.comp (hf s₂ hs₂)
-      exact tendsto_nhds_unique h₁ h₂
-    -- So glue the `f s hs` together and prove that this glued function `f₀` is a limit on each
-    -- compact set `s`
-    refine ⟨liftCover' _ _ h exists_compact_mem_nhds, ?_⟩
-    rw [tendsto_compactOpen_iff_forall]
-    intro s hs
-    rw [liftCover_restrict']
-    exact hf s hs
+  rintro ⟨f, hf⟩ s _
+  exact ⟨f.restrict s, tendsto_compactOpen_restrict hf s⟩
+  intro h
+  choose f hf using h
+  -- By uniqueness of limits in a `T2Space`, since `fun i ↦ F i x` tends to both `f s₁ hs₁ x` and
+  -- `f s₂ hs₂ x`, we have `f s₁ hs₁ x = f s₂ hs₂ x`
+  have h :
+    ∀ (s₁) (hs₁ : IsCompact s₁) (s₂) (hs₂ : IsCompact s₂) (x : X) (hxs₁ : x ∈ s₁) (hxs₂ : x ∈ s₂),
+      f s₁ hs₁ ⟨x, hxs₁⟩ = f s₂ hs₂ ⟨x, hxs₂⟩ := by
+    rintro s₁ hs₁ s₂ hs₂ x hxs₁ hxs₂
+    haveI := isCompact_iff_compactSpace.mp hs₁
+    haveI := isCompact_iff_compactSpace.mp hs₂
+    have h₁ := (continuous_eval_const (⟨x, hxs₁⟩ : s₁)).continuousAt.tendsto.comp (hf s₁ hs₁)
+    have h₂ := (continuous_eval_const (⟨x, hxs₂⟩ : s₂)).continuousAt.tendsto.comp (hf s₂ hs₂)
+    exact tendsto_nhds_unique h₁ h₂
+  -- So glue the `f s hs` together and prove that this glued function `f₀` is a limit on each
+  -- compact set `s`
+  refine ⟨liftCover' _ _ h exists_compact_mem_nhds, ?_⟩
+  rw [tendsto_compactOpen_iff_forall]
+  intro s hs
+  rw [liftCover_restrict']
+  exact hf s hs
 
 end InfInduced
 

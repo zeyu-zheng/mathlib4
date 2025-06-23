@@ -79,8 +79,8 @@ theorem differentiableOn_inv : DifferentiableOn 𝕜 (fun x : 𝕜 => x⁻¹) { 
 
 theorem deriv_inv : deriv (fun x => x⁻¹) x = -(x ^ 2)⁻¹ := by
   rcases eq_or_ne x 0 with (rfl | hne)
-  · simp [deriv_zero_of_not_differentiableAt (mt differentiableAt_inv.1 (not_not.2 rfl))]
-  · exact (hasDerivAt_inv hne).deriv
+  simp [deriv_zero_of_not_differentiableAt (mt differentiableAt_inv.1 (not_not.2 rfl))]
+  exact (hasDerivAt_inv hne).deriv
 
 @[simp]
 theorem deriv_inv' : (deriv fun x : 𝕜 => x⁻¹) = fun x => -(x ^ 2)⁻¹ :=
@@ -157,16 +157,16 @@ theorem HasDerivWithinAt.div (hc : HasDerivWithinAt c c' s x) (hd : HasDerivWith
     (hx : d x ≠ 0) :
     HasDerivWithinAt (fun y => c y / d y) ((c' * d x - c x * d') / d x ^ 2) s x := by
   convert hc.mul ((hasDerivAt_inv hx).comp_hasDerivWithinAt x hd) using 1
-  · simp only [div_eq_mul_inv, (· ∘ ·)]
-  · field_simp
-    ring
+  simp only [div_eq_mul_inv, (· ∘ ·)]
+  field_simp
+  ring
 
 theorem HasStrictDerivAt.div (hc : HasStrictDerivAt c c' x) (hd : HasStrictDerivAt d d' x)
     (hx : d x ≠ 0) : HasStrictDerivAt (fun y => c y / d y) ((c' * d x - c x * d') / d x ^ 2) x := by
   convert hc.mul ((hasStrictDerivAt_inv hx).comp x hd) using 1
-  · simp only [div_eq_mul_inv, (· ∘ ·)]
-  · field_simp
-    ring
+  simp only [div_eq_mul_inv, (· ∘ ·)]
+  field_simp
+  ring
 
 theorem HasDerivAt.div (hc : HasDerivAt c c' x) (hd : HasDerivAt d d' x) (hx : d x ≠ 0) :
     HasDerivAt (fun y => c y / d y) ((c' * d x - c x * d') / d x ^ 2) x := by

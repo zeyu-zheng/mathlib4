@@ -107,15 +107,15 @@ theorem structure_simpleGraphOfStructure [S : Language.graph.Structure V] [V ⊨
   case RelMap n r xs =>
     rw [iff_eq_eq]
     cases' n with n
-    · exact r.elim
-    · cases' n with n
-      · exact r.elim
-      · cases' n with n
-        · cases r
-          change RelMap adj ![xs 0, xs 1] = _
-          refine congr rfl (funext ?_)
-          simp [Fin.forall_fin_two]
-        · exact r.elim
+    exact r.elim
+    cases' n with n
+    exact r.elim
+    cases' n with n
+    cases r
+    change RelMap adj ![xs 0, xs 1] = _
+    refine congr rfl (funext ?_)
+    simp [Fin.forall_fin_two]
+    exact r.elim
 
 theorem Theory.simpleGraph_isSatisfiable : Theory.IsSatisfiable Theory.simpleGraph :=
   ⟨@Theory.ModelType.of _ _ Unit (SimpleGraph.structure ⊥) _ _⟩

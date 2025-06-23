@@ -447,24 +447,24 @@ of a rotation of another by `π / 2`. -/
 theorem oangle_add_right_smul_rotation_pi_div_two {x : V} (h : x ≠ 0) (r : ℝ) :
     o.oangle x (x + r • o.rotation (π / 2 : ℝ) x) = Real.arctan r := by
   rcases lt_trichotomy r 0 with (hr | rfl | hr)
-  · have ha : o.oangle x (r • o.rotation (π / 2 : ℝ) x) = -(π / 2 : ℝ) := by
-      rw [o.oangle_smul_right_of_neg _ _ hr, o.oangle_neg_right h, o.oangle_rotation_self_right h, ←
-        sub_eq_zero, add_comm, sub_neg_eq_add, ← Real.Angle.coe_add, ← Real.Angle.coe_add,
-        add_assoc, add_halves, ← two_mul, Real.Angle.coe_two_pi]
-      simpa using h
-    -- Porting note: if the type is not given in `neg_neg` then Lean "forgets" about the instance
-    -- `Neg (Orientation ℝ V (Fin 2))`
-    rw [← neg_inj, ← oangle_neg_orientation_eq_neg, @neg_neg Real.Angle] at ha
-    rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj, oangle_rev,
-      (-o).oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two ha, norm_smul,
-      LinearIsometryEquiv.norm_map, mul_div_assoc, div_self (norm_ne_zero_iff.2 h), mul_one,
-      Real.norm_eq_abs, abs_of_neg hr, Real.arctan_neg, Real.Angle.coe_neg, neg_neg]
-  · rw [zero_smul, add_zero, oangle_self, Real.arctan_zero, Real.Angle.coe_zero]
-  · have ha : o.oangle x (r • o.rotation (π / 2 : ℝ) x) = (π / 2 : ℝ) := by
-      rw [o.oangle_smul_right_of_pos _ _ hr, o.oangle_rotation_self_right h]
-    rw [o.oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two ha, norm_smul,
-      LinearIsometryEquiv.norm_map, mul_div_assoc, div_self (norm_ne_zero_iff.2 h), mul_one,
-      Real.norm_eq_abs, abs_of_pos hr]
+  have ha : o.oangle x (r • o.rotation (π / 2 : ℝ) x) = -(π / 2 : ℝ) := by
+    rw [o.oangle_smul_right_of_neg _ _ hr, o.oangle_neg_right h, o.oangle_rotation_self_right h, ←
+      sub_eq_zero, add_comm, sub_neg_eq_add, ← Real.Angle.coe_add, ← Real.Angle.coe_add,
+      add_assoc, add_halves, ← two_mul, Real.Angle.coe_two_pi]
+    simpa using h
+  -- Porting note: if the type is not given in `neg_neg` then Lean "forgets" about the instance
+  -- `Neg (Orientation ℝ V (Fin 2))`
+  rw [← neg_inj, ← oangle_neg_orientation_eq_neg, @neg_neg Real.Angle] at ha
+  rw [← neg_inj, oangle_rev, ← oangle_neg_orientation_eq_neg, neg_inj, oangle_rev,
+    (-o).oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two ha, norm_smul,
+    LinearIsometryEquiv.norm_map, mul_div_assoc, div_self (norm_ne_zero_iff.2 h), mul_one,
+    Real.norm_eq_abs, abs_of_neg hr, Real.arctan_neg, Real.Angle.coe_neg, neg_neg]
+  rw [zero_smul, add_zero, oangle_self, Real.arctan_zero, Real.Angle.coe_zero]
+  have ha : o.oangle x (r • o.rotation (π / 2 : ℝ) x) = (π / 2 : ℝ) := by
+    rw [o.oangle_smul_right_of_pos _ _ hr, o.oangle_rotation_self_right h]
+  rw [o.oangle_add_right_eq_arctan_of_oangle_eq_pi_div_two ha, norm_smul,
+    LinearIsometryEquiv.norm_map, mul_div_assoc, div_self (norm_ne_zero_iff.2 h), mul_one,
+    Real.norm_eq_abs, abs_of_pos hr]
 
 /-- An angle in a right-angled triangle expressed using `arctan`, where one side is a multiple
 of a rotation of another by `π / 2`. -/

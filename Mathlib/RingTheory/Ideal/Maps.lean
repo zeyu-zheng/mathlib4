@@ -127,9 +127,9 @@ theorem map_map {T : Type*} [Semiring T] {I : Ideal R} (f : R →+* S) (g : S �
 
 theorem map_span (f : F) (s : Set R) : map f (span s) = span (f '' s) := by
   refine (Submodule.span_eq_of_le _ ?_ ?_).symm
-  · rintro _ ⟨x, hx, rfl⟩; exact mem_map_of_mem f (subset_span hx)
-  · rw [map_le_iff_le_comap, span_le, coe_comap, ← Set.image_subset_iff]
-    exact subset_span
+  rintro _ ⟨x, hx, rfl⟩; exact mem_map_of_mem f (subset_span hx)
+  rw [map_le_iff_le_comap, span_le, coe_comap, ← Set.image_subset_iff]
+  exact subset_span
 
 variable {f I J K L}
 
@@ -379,11 +379,11 @@ def orderEmbeddingOfSurjective (hf : Function.Surjective f) : Ideal S ↪o Ideal
 theorem map_eq_top_or_isMaximal_of_surjective (hf : Function.Surjective f) {I : Ideal R}
     (H : IsMaximal I) : map f I = ⊤ ∨ IsMaximal (map f I) := by
   refine or_iff_not_imp_left.2 fun ne_top => ⟨⟨fun h => ne_top h, fun J hJ => ?_⟩⟩
-  · refine
-      (relIsoOfSurjective f hf).injective
-        (Subtype.ext_iff.2 (Eq.trans (H.1.2 (comap f J) (lt_of_le_of_ne ?_ ?_)) comap_top.symm))
-    · exact map_le_iff_le_comap.1 (le_of_lt hJ)
-    · exact fun h => hJ.right (le_map_of_comap_le_of_surjective f hf (le_of_eq h.symm))
+  refine
+    (relIsoOfSurjective f hf).injective
+      (Subtype.ext_iff.2 (Eq.trans (H.1.2 (comap f J) (lt_of_le_of_ne ?_ ?_)) comap_top.symm))
+  exact map_le_iff_le_comap.1 (le_of_lt hJ)
+  exact fun h => hJ.right (le_map_of_comap_le_of_surjective f hf (le_of_eq h.symm))
 
 theorem comap_isMaximal_of_surjective (hf : Function.Surjective f) {K : Ideal S} [H : IsMaximal K]:
     IsMaximal (comap f K) := by
@@ -496,10 +496,10 @@ theorem le_comap_mul : comap f K * comap f L ≤ comap f (K * L) :=
 
 theorem le_comap_pow (n : ℕ) : K.comap f ^ n ≤ (K ^ n).comap f := by
   induction' n with n n_ih
-  · rw [pow_zero, pow_zero, Ideal.one_eq_top, Ideal.one_eq_top]
-    exact rfl.le
-  · rw [pow_succ, pow_succ]
-    exact (Ideal.mul_mono_left n_ih).trans (Ideal.le_comap_mul f)
+  rw [pow_zero, pow_zero, Ideal.one_eq_top, Ideal.one_eq_top]
+  exact rfl.le
+  rw [pow_succ, pow_succ]
+  exact (Ideal.mul_mono_left n_ih).trans (Ideal.le_comap_mul f)
 
 end CommRing
 
@@ -640,39 +640,39 @@ variable [Ring R] [Ring S] [FunLike F R S] [rc : RingHomClass F R S]
 theorem map_sInf {A : Set (Ideal R)} {f : F} (hf : Function.Surjective f) :
     (∀ J ∈ A, RingHom.ker f ≤ J) → map f (sInf A) = sInf (map f '' A) := by
   refine fun h => le_antisymm (le_sInf ?_) ?_
-  · intro j hj y hy
-    cases' (mem_map_iff_of_surjective f hf).1 hy with x hx
-    cases' (Set.mem_image _ _ _).mp hj with J hJ
-    rw [← hJ.right, ← hx.right]
-    exact mem_map_of_mem f (sInf_le_of_le hJ.left (le_of_eq rfl) hx.left)
-  · intro y hy
-    cases' hf y with x hx
-    refine hx ▸ mem_map_of_mem f ?_
-    have : ∀ I ∈ A, y ∈ map f I
-    simpa using hy
-    rw [Submodule.mem_sInf]
-    intro J hJ
-    rcases (mem_map_iff_of_surjective f hf).1 (this J hJ) with ⟨x', hx', rfl⟩
-    have : x - x' ∈ J
-    apply h J hJ
-    rw [RingHom.mem_ker, map_sub, hx, sub_self]
-    simpa only [sub_add_cancel] using J.add_mem this hx'
+  intro j hj y hy
+  cases' (mem_map_iff_of_surjective f hf).1 hy with x hx
+  cases' (Set.mem_image _ _ _).mp hj with J hJ
+  rw [← hJ.right, ← hx.right]
+  exact mem_map_of_mem f (sInf_le_of_le hJ.left (le_of_eq rfl) hx.left)
+  intro y hy
+  cases' hf y with x hx
+  refine hx ▸ mem_map_of_mem f ?_
+  have : ∀ I ∈ A, y ∈ map f I
+  simpa using hy
+  rw [Submodule.mem_sInf]
+  intro J hJ
+  rcases (mem_map_iff_of_surjective f hf).1 (this J hJ) with ⟨x', hx', rfl⟩
+  have : x - x' ∈ J
+  apply h J hJ
+  rw [RingHom.mem_ker, map_sub, hx, sub_self]
+  simpa only [sub_add_cancel] using J.add_mem this hx'
 
 theorem map_isPrime_of_surjective {f : F} (hf : Function.Surjective f) {I : Ideal R} [H : IsPrime I]
     (hk : RingHom.ker f ≤ I) : IsPrime (map f I) := by
   refine ⟨fun h => H.ne_top (eq_top_iff.2 ?_), fun {x y} => ?_⟩
-  · replace h := congr_arg (comap f) h
-    rw [comap_map_of_surjective _ hf, comap_top] at h
-    exact h ▸ sup_le (le_of_eq rfl) hk
-  · refine fun hxy => (hf x).recOn fun a ha => (hf y).recOn fun b hb => ?_
-    rw [← ha, ← hb, ← _root_.map_mul f, mem_map_iff_of_surjective _ hf] at hxy
-    rcases hxy with ⟨c, hc, hc'⟩
-    rw [← sub_eq_zero, ← map_sub] at hc'
-    have : a * b ∈ I
-    convert I.sub_mem hc (hk (hc' : c - a * b ∈ RingHom.ker f)) using 1
-    abel
-    exact
-      (H.mem_or_mem this).imp (fun h => ha ▸ mem_map_of_mem f h) fun h => hb ▸ mem_map_of_mem f h
+  replace h := congr_arg (comap f) h
+  rw [comap_map_of_surjective _ hf, comap_top] at h
+  exact h ▸ sup_le (le_of_eq rfl) hk
+  refine fun hxy => (hf x).recOn fun a ha => (hf y).recOn fun b hb => ?_
+  rw [← ha, ← hb, ← _root_.map_mul f, mem_map_iff_of_surjective _ hf] at hxy
+  rcases hxy with ⟨c, hc, hc'⟩
+  rw [← sub_eq_zero, ← map_sub] at hc'
+  have : a * b ∈ I
+  convert I.sub_mem hc (hk (hc' : c - a * b ∈ RingHom.ker f)) using 1
+  abel
+  exact
+    (H.mem_or_mem this).imp (fun h => ha ▸ mem_map_of_mem f h) fun h => hb ▸ mem_map_of_mem f h
 
 theorem map_eq_bot_iff_of_injective {I : Ideal R} {f : F} (hf : Function.Injective f) :
     I.map f = ⊥ ↔ I = ⊥ := by
@@ -695,13 +695,13 @@ theorem map_radical_of_surjective {f : R →+* S} (hf : Function.Surjective f) {
   have : ∀ J ∈ {J : Ideal R | I ≤ J ∧ J.IsPrime}, RingHom.ker f ≤ J := fun J hJ => h.trans hJ.left
   convert map_sInf hf this
   refine funext fun j => propext ⟨?_, ?_⟩
-  · rintro ⟨hj, hj'⟩
-    haveI : j.IsPrime := hj'
-    exact
-      ⟨comap f j, ⟨⟨map_le_iff_le_comap.1 hj, comap_isPrime f j⟩, map_comap_of_surjective f hf j⟩⟩
-  · rintro ⟨J, ⟨hJ, hJ'⟩⟩
-    haveI : J.IsPrime := hJ.right
-    exact ⟨hJ' ▸ map_mono hJ.left, hJ' ▸ map_isPrime_of_surjective hf (le_trans h hJ.left)⟩
+  rintro ⟨hj, hj'⟩
+  haveI : j.IsPrime := hj'
+  exact
+    ⟨comap f j, ⟨⟨map_le_iff_le_comap.1 hj, comap_isPrime f j⟩, map_comap_of_surjective f hf j⟩⟩
+  rintro ⟨J, ⟨hJ, hJ'⟩⟩
+  haveI : J.IsPrime := hJ.right
+  exact ⟨hJ' ▸ map_mono hJ.left, hJ' ▸ map_isPrime_of_surjective hf (le_trans h hJ.left)⟩
 
 end CommRing
 

@@ -179,20 +179,20 @@ theorem destruct_eq_nil {s : Seq α} : destruct s = none → s = nil := by
     funext n
     induction' n with n IH
     exacts [f0, s.2 IH]
-  · contradiction
+  contradiction
 
 theorem destruct_eq_cons {s : Seq α} {a s'} : destruct s = some (a, s') → s = cons a s' := by
   dsimp [destruct]
   induction' f0 : get? s 0 with a' <;> intro h
-  · contradiction
-  · cases' s with f al
-    injections _ h1 h2
-    rw [← h2]
-    apply Subtype.eq
-    dsimp [tail, cons]
-    rw [h1] at f0
-    rw [← f0]
-    exact (Stream'.eta f).symm
+  contradiction
+  cases' s with f al
+  injections _ h1 h2
+  rw [← h2]
+  apply Subtype.eq
+  dsimp [tail, cons]
+  rw [h1] at f0
+  rw [← f0]
+  exact (Stream'.eta f).symm
 
 @[simp]
 theorem destruct_nil : destruct (nil : Seq α) = none :=
@@ -245,21 +245,21 @@ theorem mem_rec_on {C : Seq α → Prop} {a s} (M : a ∈ s)
     (h1 : ∀ b s', a = b ∨ C s' → C (cons b s')) : C s := by
   cases' M with k e; unfold Stream'.get at e
   induction' k with k IH generalizing s
-  · have TH : s = cons a (tail s) := by
-      apply destruct_eq_cons
-      unfold destruct get? Functor.map
-      rw [← e]
-      rfl
-    rw [TH]
-    apply h1 _ _ (Or.inl rfl)
+  have TH : s = cons a (tail s) := by
+    apply destruct_eq_cons
+    unfold destruct get? Functor.map
+    rw [← e]
+    rfl
+  rw [TH]
+  apply h1 _ _ (Or.inl rfl)
   -- Porting note: had to reshuffle `intro`
   revert e; apply s.recOn _ fun b s' => _
-  · intro e; injection e
-  · intro b s' e
-    have h_eq : (cons b s').val (Nat.succ k) = s'.val k
-    cases s'; rfl
-    rw [h_eq] at e
-    apply h1 _ _ (Or.inr (IH e))
+  intro e; injection e
+  intro b s' e
+  have h_eq : (cons b s').val (Nat.succ k) = s'.val k
+  cases s'; rfl
+  rw [h_eq] at e
+  apply h1 _ _ (Or.inr (IH e))
 
 /-- Corecursor over pairs of `Option` values-/
 def Corec.f (f : β → Option (α × β)) : Option β → Option α × Option β
@@ -327,33 +327,33 @@ def IsBisimulation :=
 theorem eq_of_bisim (bisim : IsBisimulation R) {s₁ s₂} (r : s₁ ~ s₂) : s₁ = s₂ := by
   apply Subtype.eq
   apply Stream'.eq_of_bisim fun x y => ∃ s s' : Seq α, s.1 = x ∧ s'.1 = y ∧ R s s'
-  · dsimp [Stream'.IsBisimulation]
-    intro t₁ t₂ e
-    exact
-    match t₁, t₂, e with
-    | _, _, ⟨s, s', rfl, rfl, r⟩ => by
-      suffices head s = head s' ∧ R (tail s) (tail s') from
-        And.imp id (fun r => ⟨tail s, tail s', by cases s; rfl, by cases s'; rfl, r⟩) this
-      have := bisim r; revert r this
-      apply recOn s _ _ <;> apply recOn s' _ _
-      · intro r _
-        constructor
-        · rfl
-        · assumption
-      · intro x s _ this
-        rw [destruct_nil, destruct_cons] at this
-        exact False.elim this
-      · intro x s _ this
-        rw [destruct_nil, destruct_cons] at this
-        exact False.elim this
-      · intro x s x' s' _ this
-        rw [destruct_cons, destruct_cons] at this
-        rw [head_cons, head_cons, tail_cons, tail_cons]
-        cases' this with h1 h2
-        constructor
-        · rw [h1]
-        · exact h2
-  · exact ⟨s₁, s₂, rfl, rfl, r⟩
+  dsimp [Stream'.IsBisimulation]
+  intro t₁ t₂ e
+  exact
+  match t₁, t₂, e with
+  | _, _, ⟨s, s', rfl, rfl, r⟩ => by
+    suffices head s = head s' ∧ R (tail s) (tail s') from
+      And.imp id (fun r => ⟨tail s, tail s', by cases s; rfl, by cases s'; rfl, r⟩) this
+    have := bisim r; revert r this
+    apply recOn s _ _ <;> apply recOn s' _ _
+    intro r _
+    constructor
+    rfl
+    assumption
+    intro x s _ this
+    rw [destruct_nil, destruct_cons] at this
+    exact False.elim this
+    intro x s _ this
+    rw [destruct_nil, destruct_cons] at this
+    exact False.elim this
+    intro x s x' s' _ this
+    rw [destruct_cons, destruct_cons] at this
+    rw [head_cons, head_cons, tail_cons, tail_cons]
+    cases' this with h1 h2
+    constructor
+    rw [h1]
+    exact h2
+  exact ⟨s₁, s₂, rfl, rfl, r⟩
 
 end Bisim
 
@@ -569,11 +569,11 @@ theorem nil_append (s : Seq α) : append nil s = s := by
   apply coinduction2; intro s
   dsimp [append]; rw [corec_eq]
   dsimp [append]; apply recOn s _ _
-  · trivial
-  · intro x s
-    rw [destruct_cons]
-    dsimp
-    exact ⟨rfl, s, rfl, rfl⟩
+  trivial
+  intro x s
+  rw [destruct_cons]
+  dsimp
+  exact ⟨rfl, s, rfl, rfl⟩
 
 @[simp]
 theorem cons_append (a : α) (s t) : append (cons a s) t = cons a (append s t) :=
@@ -585,29 +585,29 @@ theorem cons_append (a : α) (s t) : append (cons a s) t = cons a (append s t) :
 theorem append_nil (s : Seq α) : append s nil = s := by
   apply coinduction2 s; intro s
   apply recOn s _ _
-  · trivial
-  · intro x s
-    rw [cons_append, destruct_cons, destruct_cons]
-    dsimp
-    exact ⟨rfl, s, rfl, rfl⟩
+  trivial
+  intro x s
+  rw [cons_append, destruct_cons, destruct_cons]
+  dsimp
+  exact ⟨rfl, s, rfl, rfl⟩
 
 @[simp]
 theorem append_assoc (s t u : Seq α) : append (append s t) u = append s (append t u) := by
   apply eq_of_bisim fun s1 s2 => ∃ s t u, s1 = append (append s t) u ∧ s2 = append s (append t u)
-  · intro s1 s2 h
-    exact
-      match s1, s2, h with
-      | _, _, ⟨s, t, u, rfl, rfl⟩ => by
-        apply recOn s <;> simp
-        · apply recOn t <;> simp
-          · apply recOn u <;> simp
-            · intro _ u
-              refine ⟨nil, nil, u, ?_, ?_⟩ <;> simp
-          · intro _ t
-            refine ⟨nil, t, u, ?_, ?_⟩ <;> simp
-        · intro _ s
-          exact ⟨s, t, u, rfl, rfl⟩
-  · exact ⟨s, t, u, rfl, rfl⟩
+  intro s1 s2 h
+  exact
+    match s1, s2, h with
+    | _, _, ⟨s, t, u, rfl, rfl⟩ => by
+      apply recOn s <;> simp
+      apply recOn t <;> simp
+      apply recOn u <;> simp
+      intro _ u
+      refine ⟨nil, nil, u, ?_, ?_⟩ <;> simp
+      intro _ t
+      refine ⟨nil, t, u, ?_, ?_⟩ <;> simp
+      intro _ s
+      exact ⟨s, t, u, rfl, rfl⟩
+  exact ⟨s, t, u, rfl, rfl⟩
 
 @[simp]
 theorem map_nil (f : α → β) : map f nil = nil :=
@@ -643,11 +643,11 @@ theorem map_append (f : α → β) (s t) : map f (append s t) = append (map f s)
     match s1, s2, h with
     | _, _, ⟨s, t, rfl, rfl⟩ => by
       apply recOn s <;> simp
-      · apply recOn t <;> simp
-        · intro _ t
-          refine ⟨nil, t, ?_, ?_⟩ <;> simp
-      · intro _ s
-        exact ⟨s, t, rfl, rfl⟩
+      apply recOn t <;> simp
+      intro _ t
+      refine ⟨nil, t, ?_, ?_⟩ <;> simp
+      intro _ s
+      exact ⟨s, t, rfl, rfl⟩
 
 @[simp]
 theorem map_get? (f : α → β) : ∀ s n, get? (map f s) n = (get? s n).map f
@@ -684,37 +684,37 @@ theorem join_cons (a : α) (s S) : join (cons (a, s) S) = cons a (append s (join
     match s1, s2, h with
     | s, _, Or.inl <| Eq.refl s => by
       apply recOn s; · trivial
-      · intro x s
-        rw [destruct_cons]
-        exact ⟨rfl, Or.inl rfl⟩
+      intro x s
+      rw [destruct_cons]
+      exact ⟨rfl, Or.inl rfl⟩
     | _, _, Or.inr ⟨a, s, S, rfl, rfl⟩ => by
       apply recOn s
-      · simp [join_cons_cons, join_cons_nil]
-      · intro x s
-        simpa [join_cons_cons, join_cons_nil] using Or.inr ⟨x, s, S, rfl, rfl⟩
+      simp [join_cons_cons, join_cons_nil]
+      intro x s
+      simpa [join_cons_cons, join_cons_nil] using Or.inr ⟨x, s, S, rfl, rfl⟩
 
 @[simp]
 theorem join_append (S T : Seq (Seq1 α)) : join (append S T) = append (join S) (join T) := by
   apply
     eq_of_bisim fun s1 s2 =>
       ∃ s S T, s1 = append s (join (append S T)) ∧ s2 = append s (append (join S) (join T))
-  · intro s1 s2 h
-    exact
-      match s1, s2, h with
-      | _, _, ⟨s, S, T, rfl, rfl⟩ => by
-        apply recOn s <;> simp
-        · apply recOn S <;> simp
-          · apply recOn T
-            · simp
-            · intro s T
-              cases' s with a s; simp only [join_cons, destruct_cons, true_and]
-              refine ⟨s, nil, T, ?_, ?_⟩ <;> simp
-          · intro s S
-            cases' s with a s
-            simpa using ⟨s, S, T, rfl, rfl⟩
-        · intro _ s
-          exact ⟨s, S, T, rfl, rfl⟩
-  · refine ⟨nil, S, T, ?_, ?_⟩ <;> simp
+  intro s1 s2 h
+  exact
+    match s1, s2, h with
+    | _, _, ⟨s, S, T, rfl, rfl⟩ => by
+      apply recOn s <;> simp
+      apply recOn S <;> simp
+      apply recOn T
+      simp
+      intro s T
+      cases' s with a s; simp only [join_cons, destruct_cons, true_and]
+      refine ⟨s, nil, T, ?_, ?_⟩ <;> simp
+      intro s S
+      cases' s with a s
+      simpa using ⟨s, S, T, rfl, rfl⟩
+      intro _ s
+      exact ⟨s, S, T, rfl, rfl⟩
+  refine ⟨nil, S, T, ?_, ?_⟩ <;> simp
 
 @[simp]
 theorem ofStream_cons (a : α) (s) : ofStream (a::s) = cons a (ofStream s) := by
@@ -760,8 +760,8 @@ theorem exists_of_mem_map {f} {b : β} : ∀ {s : Seq α}, b ∈ map f s → ∃
   | ⟨g, al⟩ =>
     let ⟨o, om, oe⟩ := @Stream'.exists_of_mem_map _ _ (Option.map f) (some b) g h
     cases' o with a
-    · injection oe
-    · injection oe with h'; exact ⟨a, om, h'⟩
+    injection oe
+    injection oe with h'; exact ⟨a, om, h'⟩
 
 theorem of_mem_append {s₁ s₂ : Seq α} {a : α} (h : a ∈ append s₁ s₂) : a ∈ s₁ ∨ a ∈ s₂ := by
   have := h; revert this
@@ -769,18 +769,18 @@ theorem of_mem_append {s₁ s₂ : Seq α} {a : α} (h : a ∈ append s₁ s₂)
   apply mem_rec_on h _
   intro b s' o s₁
   apply s₁.recOn _ fun c t₁ => _
-  · intro m _
-    apply Or.inr
-    simpa using m
-  · intro c t₁ m e
-    have this := congr_arg destruct e
-    cases' show a = c ∨ a ∈ append t₁ s₂ by simpa using m with e' m
-    · rw [e']
-      exact Or.inl (mem_cons _ _)
-    · cases' show c = b ∧ append t₁ s₂ = s' by simpa with i1 i2
-      cases' o with e' IH
-      · simp [i1, e']
-      · exact Or.imp_left (mem_cons_of_mem _) (IH m i2)
+  intro m _
+  apply Or.inr
+  simpa using m
+  intro c t₁ m e
+  have this := congr_arg destruct e
+  cases' show a = c ∨ a ∈ append t₁ s₂ by simpa using m with e' m
+  rw [e']
+  exact Or.inl (mem_cons _ _)
+  cases' show c = b ∧ append t₁ s₂ = s' by simpa with i1 i2
+  cases' o with e' IH
+  simp [i1, e']
+  exact Or.imp_left (mem_cons_of_mem _) (IH m i2)
 
 theorem mem_append_left {s₁ s₂ : Seq α} {a : α} (h : a ∈ s₁) : a ∈ append s₁ s₂ := by
   apply mem_rec_on h; intros; simp [*]
@@ -789,9 +789,9 @@ theorem mem_append_left {s₁ s₂ : Seq α} {a : α} (h : a ∈ s₁) : a ∈ a
 theorem enum_cons (s : Seq α) (x : α) :
     enum (cons x s) = cons (0, x) (map (Prod.map Nat.succ id) (enum s)) := by
   ext ⟨n⟩ : 1
-  · simp
-  · simp only [get?_enum, get?_cons_succ, map_get?, Option.map_map]
-    congr
+  simp
+  simp only [get?_enum, get?_cons_succ, map_get?, Option.map_map]
+  congr
 
 end Seq
 
@@ -872,18 +872,18 @@ theorem map_join' (f : α → β) (S) : Seq.map f (Seq.join S) = Seq.join (Seq.m
     Seq.eq_of_bisim fun s1 s2 =>
       ∃ s S,
         s1 = Seq.append s (Seq.map f (Seq.join S)) ∧ s2 = append s (Seq.join (Seq.map (map f) S))
-  · intro s1 s2 h
-    exact
-      match s1, s2, h with
-      | _, _, ⟨s, S, rfl, rfl⟩ => by
-        apply recOn s <;> simp
-        · apply recOn S <;> simp
-          · intro x S
-            cases' x with a s
-            simpa [map] using ⟨_, _, rfl, rfl⟩
-        · intro _ s
-          exact ⟨s, S, rfl, rfl⟩
-  · refine ⟨nil, S, ?_, ?_⟩ <;> simp
+  intro s1 s2 h
+  exact
+    match s1, s2, h with
+    | _, _, ⟨s, S, rfl, rfl⟩ => by
+      apply recOn s <;> simp
+      apply recOn S <;> simp
+      intro x S
+      cases' x with a s
+      simpa [map] using ⟨_, _, rfl, rfl⟩
+      intro _ s
+      exact ⟨s, S, rfl, rfl⟩
+  refine ⟨nil, S, ?_, ?_⟩ <;> simp
 
 @[simp]
 theorem map_join (f : α → β) : ∀ S, map f (join S) = join (map (map f) S)
@@ -896,22 +896,22 @@ theorem join_join (SS : Seq (Seq1 (Seq1 α))) :
     Seq.eq_of_bisim fun s1 s2 =>
       ∃ s SS,
         s1 = Seq.append s (Seq.join (Seq.join SS)) ∧ s2 = Seq.append s (Seq.join (Seq.map join SS))
-  · intro s1 s2 h
-    exact
-      match s1, s2, h with
-      | _, _, ⟨s, SS, rfl, rfl⟩ => by
-        apply recOn s <;> simp
-        · apply recOn SS <;> simp
-          · intro S SS
-            cases' S with s S; cases' s with x s
-            simp only [Seq.join_cons, join_append, destruct_cons]
-            apply recOn s <;> simp
-            · exact ⟨_, _, rfl, rfl⟩
-            · intro x s
-              refine ⟨Seq.cons x (append s (Seq.join S)), SS, ?_, ?_⟩ <;> simp
-        · intro _ s
-          exact ⟨s, SS, rfl, rfl⟩
-  · refine ⟨nil, SS, ?_, ?_⟩ <;> simp
+  intro s1 s2 h
+  exact
+    match s1, s2, h with
+    | _, _, ⟨s, SS, rfl, rfl⟩ => by
+      apply recOn s <;> simp
+      apply recOn SS <;> simp
+      intro S SS
+      cases' S with s S; cases' s with x s
+      simp only [Seq.join_cons, join_append, destruct_cons]
+      apply recOn s <;> simp
+      exact ⟨_, _, rfl, rfl⟩
+      intro x s
+      refine ⟨Seq.cons x (append s (Seq.join S)), SS, ?_, ?_⟩ <;> simp
+      intro _ s
+      exact ⟨s, SS, rfl, rfl⟩
+  refine ⟨nil, SS, ?_, ?_⟩ <;> simp
 
 @[simp]
 theorem bind_assoc (s : Seq1 α) (f : α → Seq1 β) (g : β → Seq1 γ) :
@@ -927,9 +927,9 @@ theorem bind_assoc (s : Seq1 α) (f : α → Seq1 β) (g : β → Seq1 γ) :
   -- Porting note: Instead of `apply recOn s <;> intros`, `induction'` are used to
   --   give names to variables.
   induction' s using recOn with x s_1 <;> induction' S using recOn with x_1 s_2 <;> simp
-  · cases' x_1 with x t
-    apply recOn t <;> intros <;> simp
-  · cases' x_1 with y t; simp
+  cases' x_1 with x t
+  apply recOn t <;> intros <;> simp
+  cases' x_1 with y t; simp
 
 instance monad : Monad Seq1 where
   map := @map

@@ -133,19 +133,19 @@ lemma whiskerRight_app_snd {F₁ F₁' : J ⥤ C} (f : F₁ ⟶ F₁') (F₂ : J
 lemma associator_hom_app (F₁ F₂ F₃ : J ⥤ C) (j : J) :
     (α_ F₁ F₂ F₃).hom.app j = (α_ _ _ _).hom := by
   apply hom_ext
-  · change _ ≫ (fst F₁ (F₂ ⊗ F₃)).app j = _
-    rw [← NatTrans.comp_app, associator_hom_fst]
-    erw [associator_hom_fst]
-    rfl
-  · apply hom_ext
-    · change (_ ≫ (snd F₁ (F₂ ⊗ F₃)).app j) ≫ (fst F₂ F₃).app j = _
-      rw [← NatTrans.comp_app, ← NatTrans.comp_app, assoc, associator_hom_snd_fst, assoc]
-      erw [associator_hom_snd_fst]
-      rfl
-    · change (_ ≫ (snd F₁ (F₂ ⊗ F₃)).app j) ≫ (snd F₂ F₃).app j = _
-      rw [← NatTrans.comp_app, ← NatTrans.comp_app, assoc, associator_hom_snd_snd, assoc]
-      erw [associator_hom_snd_snd]
-      rfl
+  change _ ≫ (fst F₁ (F₂ ⊗ F₃)).app j = _
+  rw [← NatTrans.comp_app, associator_hom_fst]
+  erw [associator_hom_fst]
+  rfl
+  apply hom_ext
+  change (_ ≫ (snd F₁ (F₂ ⊗ F₃)).app j) ≫ (fst F₂ F₃).app j = _
+  rw [← NatTrans.comp_app, ← NatTrans.comp_app, assoc, associator_hom_snd_fst, assoc]
+  erw [associator_hom_snd_fst]
+  rfl
+  change (_ ≫ (snd F₁ (F₂ ⊗ F₃)).app j) ≫ (snd F₂ F₃).app j = _
+  rw [← NatTrans.comp_app, ← NatTrans.comp_app, assoc, associator_hom_snd_snd, assoc]
+  erw [associator_hom_snd_snd]
+  rfl
 
 @[simp]
 lemma associator_inv_app (F₁ F₂ F₃ : J ⥤ C) (j : J) :

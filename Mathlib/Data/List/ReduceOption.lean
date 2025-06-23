@@ -33,10 +33,10 @@ theorem reduceOption_nil : @reduceOption α [] = [] :=
 theorem reduceOption_map {l : List (Option α)} {f : α → β} :
     reduceOption (map (Option.map f) l) = map f (reduceOption l) := by
   induction' l with hd tl hl
-  · simp only [reduceOption_nil, map_nil]
-  · cases hd <;>
-      simpa [true_and_iff, Option.map_some', map, eq_self_iff_true,
-        reduceOption_cons_of_some] using hl
+  simp only [reduceOption_nil, map_nil]
+  cases hd <;>
+    simpa [true_and_iff, Option.map_some', map, eq_self_iff_true,
+      reduceOption_cons_of_some] using hl
 
 theorem reduceOption_append (l l' : List (Option α)) :
     (l ++ l').reduceOption = l.reduceOption ++ l'.reduceOption :=
@@ -45,8 +45,8 @@ theorem reduceOption_append (l l' : List (Option α)) :
 theorem reduceOption_length_eq {l : List (Option α)} :
     l.reduceOption.length = (l.filter Option.isSome).length := by
   induction' l with hd tl hl
-  · simp_rw [reduceOption_nil, filter_nil, length]
-  · cases hd <;> simp [hl]
+  simp_rw [reduceOption_nil, filter_nil, length]
+  cases hd <;> simp [hl]
 
 theorem length_eq_reduceOption_length_add_filter_none {l : List (Option α)} :
     l.length = l.reduceOption.length + (l.filter Option.isNone).length := by
@@ -72,9 +72,9 @@ theorem reduceOption_singleton (x : Option α) : [x].reduceOption = x.toList := 
 theorem reduceOption_concat (l : List (Option α)) (x : Option α) :
     (l.concat x).reduceOption = l.reduceOption ++ x.toList := by
   induction' l with hd tl hl generalizing x
-  · cases x <;> simp [Option.toList]
-  · simp only [concat_eq_append, reduceOption_append] at hl
-    cases hd <;> simp [hl, reduceOption_append]
+  cases x <;> simp [Option.toList]
+  simp only [concat_eq_append, reduceOption_append] at hl
+  cases hd <;> simp [hl, reduceOption_append]
 
 theorem reduceOption_concat_of_some (l : List (Option α)) (x : α) :
     (l.concat (some x)).reduceOption = l.reduceOption.concat x := by

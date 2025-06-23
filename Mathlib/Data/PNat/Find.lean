@@ -64,10 +64,10 @@ variable {n m : ℕ+}
 
 theorem find_eq_iff : PNat.find h = m ↔ p m ∧ ∀ n < m, ¬p n := by
   constructor
-  · rintro rfl
-    exact ⟨PNat.find_spec h, fun _ => PNat.find_min h⟩
-  · rintro ⟨hm, hlt⟩
-    exact le_antisymm (PNat.find_min' h hm) (not_lt.1 <| imp_not_comm.1 (hlt _) <| PNat.find_spec h)
+  rintro rfl
+  exact ⟨PNat.find_spec h, fun _ => PNat.find_min h⟩
+  rintro ⟨hm, hlt⟩
+  exact le_antisymm (PNat.find_min' h hm) (not_lt.1 <| imp_not_comm.1 (hlt _) <| PNat.find_spec h)
 
 @[simp]
 theorem find_lt_iff (n : ℕ+) : PNat.find h < n ↔ ∃ m < n, p m :=
@@ -103,7 +103,7 @@ theorem find_le {h : ∃ n, p n} (hn : p n) : PNat.find h ≤ n :=
 theorem find_comp_succ (h : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h1 : ¬p 1) :
     PNat.find h = PNat.find h₂ + 1 := by
   refine (find_eq_iff _).2 ⟨PNat.find_spec h₂, fun n => PNat.recOn n ?_ ?_⟩
-  · simp [h1]
+  simp [h1]
   intro m _ hm
   simp only [add_lt_add_iff_right, lt_find_iff] at hm
   exact hm _ le_rfl

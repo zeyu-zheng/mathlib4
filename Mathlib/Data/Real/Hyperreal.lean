@@ -269,15 +269,15 @@ theorem exists_st_of_not_infinite {x : ℝ*} (hni : ¬Infinite x) : ∃ r : ℝ,
 
 theorem st_eq_sSup {x : ℝ*} : st x = sSup { y : ℝ | (y : ℝ*) < x } := by
   rcases _root_.em (Infinite x) with (hx|hx)
-  · rw [hx.st_eq]
-    cases hx with
-    | inl hx =>
-      convert Real.sSup_univ.symm
-      exact Set.eq_univ_of_forall hx
-    | inr hx =>
-      convert Real.sSup_empty.symm
-      exact Set.eq_empty_of_forall_not_mem fun y hy ↦ hy.out.not_lt (hx _)
-  · exact (isSt_sSup hx).st_eq
+  rw [hx.st_eq]
+  cases hx with
+  | inl hx =>
+    convert Real.sSup_univ.symm
+    exact Set.eq_univ_of_forall hx
+  | inr hx =>
+    convert Real.sSup_empty.symm
+    exact Set.eq_empty_of_forall_not_mem fun y hy ↦ hy.out.not_lt (hx _)
+  exact (isSt_sSup hx).st_eq
 
 theorem exists_st_iff_not_infinite {x : ℝ*} : (∃ r : ℝ, IsSt x r) ↔ ¬Infinite x :=
   ⟨not_infinite_of_exists_st, exists_st_of_not_infinite⟩
@@ -619,8 +619,8 @@ theorem infinitesimal_inv_of_infinite {x : ℝ*} : Infinite x → Infinitesimal 
 theorem infinite_of_infinitesimal_inv {x : ℝ*} (h0 : x ≠ 0) (hi : Infinitesimal x⁻¹) :
     Infinite x := by
   cases' lt_or_gt_of_ne h0 with hn hp
-  · exact Or.inr (infiniteNeg_iff_infinitesimal_inv_neg.mpr ⟨hi, inv_lt_zero.mpr hn⟩)
-  · exact Or.inl (infinitePos_iff_infinitesimal_inv_pos.mpr ⟨hi, inv_pos.mpr hp⟩)
+  exact Or.inr (infiniteNeg_iff_infinitesimal_inv_neg.mpr ⟨hi, inv_lt_zero.mpr hn⟩)
+  exact Or.inl (infinitePos_iff_infinitesimal_inv_pos.mpr ⟨hi, inv_pos.mpr hp⟩)
 
 theorem infinite_iff_infinitesimal_inv {x : ℝ*} (h0 : x ≠ 0) : Infinite x ↔ Infinitesimal x⁻¹ :=
   ⟨infinitesimal_inv_of_infinite, infinite_of_infinitesimal_inv h0⟩
@@ -645,11 +645,11 @@ theorem IsSt.inv {x : ℝ*} {r : ℝ} (hi : ¬Infinitesimal x) (hr : IsSt x r) :
 
 theorem st_inv (x : ℝ*) : st x⁻¹ = (st x)⁻¹ := by
   by_cases h0 : x = 0
-  · rw [h0, inv_zero, ← coe_zero, st_id_real, inv_zero]
+  rw [h0, inv_zero, ← coe_zero, st_id_real, inv_zero]
   by_cases h1 : Infinitesimal x
-  · rw [((infinitesimal_iff_infinite_inv h0).mp h1).st_eq, h1.st_eq, inv_zero]
+  rw [((infinitesimal_iff_infinite_inv h0).mp h1).st_eq, h1.st_eq, inv_zero]
   by_cases h2 : Infinite x
-  · rw [(infinitesimal_inv_of_infinite h2).st_eq, h2.st_eq, inv_zero]
+  rw [(infinitesimal_inv_of_infinite h2).st_eq, h2.st_eq, inv_zero]
   exact ((isSt_st' h2).inv h1).st_eq
 
 /-!

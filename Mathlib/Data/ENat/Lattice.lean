@@ -50,15 +50,15 @@ lemma iInf_eq_top_of_isEmpty [IsEmpty ι] : ⨅ i, (f i : ℕ∞) = ⊤ :=
 
 lemma iInf_toNat : (⨅ i, (f i : ℕ∞)).toNat = ⨅ i, f i := by
   cases isEmpty_or_nonempty ι
-  · simp
-  · norm_cast
+  simp
+  norm_cast
 
 lemma iInf_eq_zero : ⨅ i, (f i : ℕ∞) = 0 ↔ ∃ i, f i = 0 := by
   cases isEmpty_or_nonempty ι
-  · simp
-  · norm_cast
-    rw [iInf, Nat.sInf_eq_zero]
-    exact ⟨fun h ↦ by simp_all, .inl⟩
+  simp
+  norm_cast
+  rw [iInf, Nat.sInf_eq_zero]
+  exact ⟨fun h ↦ by simp_all, .inl⟩
 
 variable {f : ι → ℕ∞} {s : Set ℕ∞}
 

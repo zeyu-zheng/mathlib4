@@ -123,12 +123,12 @@ theorem variance {n : ℕ} (h : 0 < (n : ℝ)) (x : I) :
     simp only [nsmul_eq_mul, Finset.sum_range, map_sum, map_mul, map_pow, map_sub, map_natCast,
       Polynomial.aeval_X, Polynomial.coe_aeval_eq_eval, map_one] at this
   convert this using 1
-  · congr 1; funext k
-    rw [mul_comm _ (n : ℝ), mul_comm _ (n : ℝ), ← mul_assoc, ← mul_assoc]
-    congr 1
-    field_simp [h]
-    ring
-  · ring
+  congr 1; funext k
+  rw [mul_comm _ (n : ℝ), mul_comm _ (n : ℝ), ← mul_assoc, ← mul_assoc]
+  congr 1
+  field_simp [h]
+  ring
+  ring
 
 end bernstein
 
@@ -247,42 +247,42 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
     _ < ε / 2 + ε / 2 :=
       (add_lt_add_of_le_of_lt ?_ ?_)
     _ = ε := add_halves ε
-  · -- We now work on the terms in `S`: uniform continuity and `bernstein.probability`
-    -- quickly give us a bound.
-    calc
-      ∑ k ∈ S, |f k/ₙ - f x| * bernstein n k x ≤ ∑ k ∈ S, ε / 2 * bernstein n k x := by
-        gcongr with _ m
-        exact le_of_lt (lt_of_mem_S m)
-      _ = ε / 2 * ∑ k ∈ S, bernstein n k x := by rw [Finset.mul_sum]
-      -- In this step we increase the sum over `S` back to a sum over all of `Fin (n+1)`,
-      -- so that we can use `bernstein.probability`.
-      _ ≤ ε / 2 * ∑ k : Fin (n + 1), bernstein n k x := by
-        gcongr
-        exact Finset.sum_le_univ_sum_of_nonneg fun k => bernstein_nonneg
-      _ = ε / 2 := by rw [bernstein.probability, mul_one]
-  · -- We now turn to working on `Sᶜ`: we control the difference term just using `‖f‖`,
-    -- and then insert a `δ^(-2) * (x - k/n)^2` factor
-    -- (which is at least one because we are not in `S`).
-    calc
-      ∑ k ∈ Sᶜ, |f k/ₙ - f x| * bernstein n k x ≤ ∑ k ∈ Sᶜ, 2 * ‖f‖ * bernstein n k x := by
-        gcongr
-        apply f.dist_le_two_norm
-      _ = 2 * ‖f‖ * ∑ k ∈ Sᶜ, bernstein n k x := by rw [Finset.mul_sum]
-      _ ≤ 2 * ‖f‖ * ∑ k ∈ Sᶜ, δ ^ (-2 : ℤ) * ((x : ℝ) - k/ₙ) ^ 2 * bernstein n k x := by
-        gcongr with _ m
-        conv_lhs => rw [← one_mul (bernstein _ _ _)]
-        gcongr
-        exact le_of_mem_S_compl m
-      -- Again enlarging the sum from `Sᶜ` to all of `Fin (n+1)`
-      _ ≤ 2 * ‖f‖ * ∑ k : Fin (n + 1), δ ^ (-2 : ℤ) * ((x : ℝ) - k/ₙ) ^ 2 * bernstein n k x := by
-        gcongr
-        refine Finset.sum_le_univ_sum_of_nonneg fun k => ?_
-        positivity
-      _ = 2 * ‖f‖ * δ ^ (-2 : ℤ) * ∑ k : Fin (n + 1), ((x : ℝ) - k/ₙ) ^ 2 * bernstein n k x := by
-        conv_rhs =>
-          rw [mul_assoc, Finset.mul_sum]
-          simp only [← mul_assoc]
-      -- `bernstein.variance` and `x ∈ [0,1]` gives the uniform bound
-      _ = 2 * ‖f‖ * δ ^ (-2 : ℤ) * x * (1 - x) / n := by rw [variance npos]; ring
-      _ ≤ 2 * ‖f‖ * δ ^ (-2 : ℤ) * 1 * 1 / n := by gcongr <;> unit_interval
-      _ < ε / 2 := by simp only [mul_one]; exact nh
+  -- We now work on the terms in `S`: uniform continuity and `bernstein.probability`
+  -- quickly give us a bound.
+  calc
+    ∑ k ∈ S, |f k/ₙ - f x| * bernstein n k x ≤ ∑ k ∈ S, ε / 2 * bernstein n k x := by
+      gcongr with _ m
+      exact le_of_lt (lt_of_mem_S m)
+    _ = ε / 2 * ∑ k ∈ S, bernstein n k x := by rw [Finset.mul_sum]
+    -- In this step we increase the sum over `S` back to a sum over all of `Fin (n+1)`,
+    -- so that we can use `bernstein.probability`.
+    _ ≤ ε / 2 * ∑ k : Fin (n + 1), bernstein n k x := by
+      gcongr
+      exact Finset.sum_le_univ_sum_of_nonneg fun k => bernstein_nonneg
+    _ = ε / 2 := by rw [bernstein.probability, mul_one]
+  -- We now turn to working on `Sᶜ`: we control the difference term just using `‖f‖`,
+  -- and then insert a `δ^(-2) * (x - k/n)^2` factor
+  -- (which is at least one because we are not in `S`).
+  calc
+    ∑ k ∈ Sᶜ, |f k/ₙ - f x| * bernstein n k x ≤ ∑ k ∈ Sᶜ, 2 * ‖f‖ * bernstein n k x := by
+      gcongr
+      apply f.dist_le_two_norm
+    _ = 2 * ‖f‖ * ∑ k ∈ Sᶜ, bernstein n k x := by rw [Finset.mul_sum]
+    _ ≤ 2 * ‖f‖ * ∑ k ∈ Sᶜ, δ ^ (-2 : ℤ) * ((x : ℝ) - k/ₙ) ^ 2 * bernstein n k x := by
+      gcongr with _ m
+      conv_lhs => rw [← one_mul (bernstein _ _ _)]
+      gcongr
+      exact le_of_mem_S_compl m
+    -- Again enlarging the sum from `Sᶜ` to all of `Fin (n+1)`
+    _ ≤ 2 * ‖f‖ * ∑ k : Fin (n + 1), δ ^ (-2 : ℤ) * ((x : ℝ) - k/ₙ) ^ 2 * bernstein n k x := by
+      gcongr
+      refine Finset.sum_le_univ_sum_of_nonneg fun k => ?_
+      positivity
+    _ = 2 * ‖f‖ * δ ^ (-2 : ℤ) * ∑ k : Fin (n + 1), ((x : ℝ) - k/ₙ) ^ 2 * bernstein n k x := by
+      conv_rhs =>
+        rw [mul_assoc, Finset.mul_sum]
+        simp only [← mul_assoc]
+    -- `bernstein.variance` and `x ∈ [0,1]` gives the uniform bound
+    _ = 2 * ‖f‖ * δ ^ (-2 : ℤ) * x * (1 - x) / n := by rw [variance npos]; ring
+    _ ≤ 2 * ‖f‖ * δ ^ (-2 : ℤ) * 1 * 1 / n := by gcongr <;> unit_interval
+    _ < ε / 2 := by simp only [mul_one]; exact nh

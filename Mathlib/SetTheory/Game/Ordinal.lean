@@ -159,22 +159,22 @@ noncomputable def toPGameEmbedding : Ordinal.{u} ↪o PGame.{u} where
 theorem toPGame_add : ∀ a b : Ordinal.{u}, a.toPGame + b.toPGame ≈ (a ♯ b).toPGame
   | a, b => by
     refine ⟨le_of_forall_lf (fun i => ?_) isEmptyElim, le_of_forall_lf (fun i => ?_) isEmptyElim⟩
-    · apply leftMoves_add_cases i <;>
-      intro i <;>
-      let wf := toLeftMovesToPGame_symm_lt i <;>
-      (try rw [add_moveLeft_inl]) <;>
-      (try rw [add_moveLeft_inr]) <;>
-      rw [toPGame_moveLeft', lf_congr_left (toPGame_add _ _), toPGame_lf_iff]
-      · exact nadd_lt_nadd_right wf _
-      · exact nadd_lt_nadd_left wf _
-    · rw [toPGame_moveLeft']
-      rcases lt_nadd_iff.1 (toLeftMovesToPGame_symm_lt i) with (⟨c, hc, hc'⟩ | ⟨c, hc, hc'⟩) <;>
-      rw [← toPGame_le_iff, ← le_congr_right (toPGame_add _ _)] at hc' <;>
-      apply lf_of_le_of_lf hc'
-      · apply add_lf_add_right
-        rwa [toPGame_lf_iff]
-      · apply add_lf_add_left
-        rwa [toPGame_lf_iff]
+    apply leftMoves_add_cases i <;>
+    intro i <;>
+    let wf := toLeftMovesToPGame_symm_lt i <;>
+    (try rw [add_moveLeft_inl]) <;>
+    (try rw [add_moveLeft_inr]) <;>
+    rw [toPGame_moveLeft', lf_congr_left (toPGame_add _ _), toPGame_lf_iff]
+    exact nadd_lt_nadd_right wf _
+    exact nadd_lt_nadd_left wf _
+    rw [toPGame_moveLeft']
+    rcases lt_nadd_iff.1 (toLeftMovesToPGame_symm_lt i) with (⟨c, hc, hc'⟩ | ⟨c, hc, hc'⟩) <;>
+    rw [← toPGame_le_iff, ← le_congr_right (toPGame_add _ _)] at hc' <;>
+    apply lf_of_le_of_lf hc'
+    apply add_lf_add_right
+    rwa [toPGame_lf_iff]
+    apply add_lf_add_left
+    rwa [toPGame_lf_iff]
 termination_by a b => (a, b)
 
 @[simp]

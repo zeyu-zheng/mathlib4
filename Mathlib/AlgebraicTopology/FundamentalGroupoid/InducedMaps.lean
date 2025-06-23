@@ -191,12 +191,12 @@ theorem eq_diag_path : (πₘ f).map p ≫ ⟦H.evalAt x₁⟧ = H.diagonalPath'
   erw [H.evalAt_eq] -- Porting note: `rw` didn't work, so using `erw`
   dsimp only [prodToProdTopI]
   constructor
-  · slice_lhs 2 4 => rw [eqToHom_trans, eqToHom_refl] -- Porting note: this ↓ `simp` didn't do this
-    slice_lhs 2 4 => simp [← CategoryTheory.Functor.map_comp]
-    rfl
-  · slice_lhs 2 4 => rw [eqToHom_trans, eqToHom_refl] -- Porting note: this ↓ `simp` didn't do this
-    slice_lhs 2 4 => simp [← CategoryTheory.Functor.map_comp]
-    rfl
+  slice_lhs 2 4 => rw [eqToHom_trans, eqToHom_refl] -- Porting note: this ↓ `simp` didn't do this
+  slice_lhs 2 4 => simp [← CategoryTheory.Functor.map_comp]
+  rfl
+  slice_lhs 2 4 => rw [eqToHom_trans, eqToHom_refl] -- Porting note: this ↓ `simp` didn't do this
+  slice_lhs 2 4 => simp [← CategoryTheory.Functor.map_comp]
+  rfl
 
 end ContinuousMap.Homotopy
 

@@ -20,11 +20,11 @@ theorem polynomial_eval_eval₂ [CommSemiring R] [CommSemiring S]
     Polynomial.eval x (eval₂ f g p) =
       eval₂ ((Polynomial.evalRingHom x).comp f) (fun s => Polynomial.eval x (g s)) p := by
   apply induction_on p
-  · simp
-  · intro p q hp hq
-    simp [hp, hq]
-  · intro p n hp
-    simp [hp]
+  simp
+  intro p q hp hq
+  simp [hp, hq]
+  intro p n hp
+  simp [hp]
 
 theorem eval_polynomial_eval_finSuccEquiv {n : ℕ} {x : Fin n → R}
     [CommSemiring R] (f : MvPolynomial (Fin (n + 1)) R) (q : MvPolynomial (Fin n) R) :

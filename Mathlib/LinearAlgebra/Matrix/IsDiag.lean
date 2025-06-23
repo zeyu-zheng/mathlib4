@@ -44,8 +44,8 @@ theorem IsDiag.diagonal_diag [Zero α] [DecidableEq n] {A : Matrix n n α} (h : 
     diagonal (diag A) = A :=
   ext fun i j => by
     obtain rfl | hij := Decidable.eq_or_ne i j
-    · rw [diagonal_apply_eq, diag]
-    · rw [diagonal_apply_ne _ hij, h hij]
+    rw [diagonal_apply_eq, diag]
+    rw [diagonal_apply_ne _ hij, h hij]
 
 /-- `Matrix.IsDiag.diagonal_diag` as an iff. -/
 theorem isDiag_iff_diagonal_diag [Zero α] [DecidableEq n] (A : Matrix n n α) :
@@ -125,8 +125,8 @@ theorem IsDiag.kronecker [MulZeroClass α] {A : Matrix m m α} {B : Matrix n n �
   rintro ⟨a, b⟩ ⟨c, d⟩ h
   simp only [Prod.mk.inj_iff, Ne, not_and_or] at h
   cases' h with hac hbd
-  · simp [hA hac]
-  · simp [hB hbd]
+  simp [hA hac]
+  simp [hB hbd]
 
 theorem IsDiag.isSymm [Zero α] {A : Matrix n n α} (h : A.IsDiag) : A.IsSymm := by
   ext i j
@@ -137,23 +137,23 @@ theorem IsDiag.isSymm [Zero α] {A : Matrix n n α} (h : A.IsDiag) : A.IsSymm :=
 theorem IsDiag.fromBlocks [Zero α] {A : Matrix m m α} {D : Matrix n n α} (ha : A.IsDiag)
     (hd : D.IsDiag) : (A.fromBlocks 0 0 D).IsDiag := by
   rintro (i | i) (j | j) hij
-  · exact ha (ne_of_apply_ne _ hij)
-  · rfl
-  · rfl
-  · exact hd (ne_of_apply_ne _ hij)
+  exact ha (ne_of_apply_ne _ hij)
+  rfl
+  rfl
+  exact hd (ne_of_apply_ne _ hij)
 
 /-- This is the `iff` version of `Matrix.IsDiag.fromBlocks`. -/
 theorem isDiag_fromBlocks_iff [Zero α] {A : Matrix m m α} {B : Matrix m n α} {C : Matrix n m α}
     {D : Matrix n n α} : (A.fromBlocks B C D).IsDiag ↔ A.IsDiag ∧ B = 0 ∧ C = 0 ∧ D.IsDiag := by
   constructor
-  · intro h
-    refine ⟨fun i j hij => ?_, ext fun i j => ?_, ext fun i j => ?_, fun i j hij => ?_⟩
-    · exact h (Sum.inl_injective.ne hij)
-    · exact h Sum.inl_ne_inr
-    · exact h Sum.inr_ne_inl
-    · exact h (Sum.inr_injective.ne hij)
-  · rintro ⟨ha, hb, hc, hd⟩
-    convert IsDiag.fromBlocks ha hd
+  intro h
+  refine ⟨fun i j hij => ?_, ext fun i j => ?_, ext fun i j => ?_, fun i j hij => ?_⟩
+  exact h (Sum.inl_injective.ne hij)
+  exact h Sum.inl_ne_inr
+  exact h Sum.inr_ne_inl
+  exact h (Sum.inr_injective.ne hij)
+  rintro ⟨ha, hb, hc, hd⟩
+  convert IsDiag.fromBlocks ha hd
 
 /-- A symmetric block matrix `A.fromBlocks B C D` is diagonal
     if `A` and `D` are diagonal and `B` is `0`. -/

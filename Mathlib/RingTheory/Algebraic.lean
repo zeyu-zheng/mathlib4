@@ -178,8 +178,8 @@ theorem IsAlgebraic.of_pow {r : A} {n : ℕ} (hn : 0 < n) (ht : IsAlgebraic R (r
     IsAlgebraic R r := by
   obtain ⟨p, p_nonzero, hp⟩ := ht
   refine ⟨Polynomial.expand _ n p, ?_, ?_⟩
-  · rwa [Polynomial.expand_ne_zero hn]
-  · rwa [Polynomial.expand_aeval n p r]
+  rwa [Polynomial.expand_ne_zero hn]
+  rwa [Polynomial.expand_aeval n p r]
 
 theorem Transcendental.pow {r : A} (ht : Transcendental R r) {n : ℕ} (hn : 0 < n) :
     Transcendental R (r ^ n) := fun ht' ↦ ht <| ht'.of_pow hn
@@ -196,7 +196,7 @@ lemma IsAlgebraic.invOf_iff {x : S} [Invertible x] :
 lemma IsAlgebraic.inv_iff {K} [Field K] [Algebra R K] {x : K} :
     IsAlgebraic R (x⁻¹) ↔ IsAlgebraic R x := by
   by_cases hx : x = 0
-  · simp [hx]
+  simp [hx]
   letI := invertibleOfNonzero hx
   exact IsAlgebraic.invOf_iff (R := R) (x := x)
 
@@ -407,14 +407,14 @@ theorem inv_eq_of_aeval_divX_ne_zero {x : L} {p : K[X]} (aeval_ne : aeval x (div
     x⁻¹ = aeval x (divX p) / (aeval x p - algebraMap _ _ (p.coeff 0)) := by
   rw [inv_eq_iff_eq_inv, inv_div, eq_comm, div_eq_iff, sub_eq_iff_eq_add, mul_comm]
   conv_lhs => rw [← divX_mul_X_add p]
-  · rw [map_add, map_mul, aeval_X, aeval_C]
-  · exact aeval_ne
+  rw [map_add, map_mul, aeval_X, aeval_C]
+  exact aeval_ne
 
 theorem inv_eq_of_root_of_coeff_zero_ne_zero {x : L} {p : K[X]} (aeval_eq : aeval x p = 0)
     (coeff_zero_ne : p.coeff 0 ≠ 0) : x⁻¹ = -(aeval x (divX p) / algebraMap _ _ (p.coeff 0)) := by
   convert inv_eq_of_aeval_divX_ne_zero (p := p) (L := L)
     (mt (fun h => (algebraMap K L).injective ?_) coeff_zero_ne) using 1
-  · rw [aeval_eq, zero_sub, div_neg]
+  rw [aeval_eq, zero_sub, div_neg]
   rw [RingHom.map_zero]
   convert aeval_eq
   conv_rhs => rw [← divX_mul_X_add p]
@@ -439,17 +439,17 @@ theorem Subalgebra.inv_mem_of_algebraic {x : A} (hx : _root_.IsAlgebraic K (x : 
   rw [Subalgebra.aeval_coe, Subalgebra.coe_eq_zero] at aeval_eq
   revert ne_zero aeval_eq
   refine p.recOnHorner ?_ ?_ ?_
-  · intro h
-    contradiction
-  · intro p a hp ha _ih _ne_zero aeval_eq
-    refine A.inv_mem_of_root_of_coeff_zero_ne_zero aeval_eq ?_
-    rwa [coeff_add, hp, zero_add, coeff_C, if_pos rfl]
-  · intro p hp ih _ne_zero aeval_eq
-    rw [map_mul, aeval_X, mul_eq_zero] at aeval_eq
-    cases' aeval_eq with aeval_eq x_eq
-    · exact ih hp aeval_eq
-    · rw [x_eq, Subalgebra.coe_zero, inv_zero]
-      exact A.zero_mem
+  intro h
+  contradiction
+  intro p a hp ha _ih _ne_zero aeval_eq
+  refine A.inv_mem_of_root_of_coeff_zero_ne_zero aeval_eq ?_
+  rwa [coeff_add, hp, zero_add, coeff_C, if_pos rfl]
+  intro p hp ih _ne_zero aeval_eq
+  rw [map_mul, aeval_X, mul_eq_zero] at aeval_eq
+  cases' aeval_eq with aeval_eq x_eq
+  exact ih hp aeval_eq
+  rw [x_eq, Subalgebra.coe_zero, inv_zero]
+  exact A.zero_mem
 
 /-- In an algebraic extension L/K, an intermediate subalgebra is a field. -/
 theorem Subalgebra.isField_of_algebraic [Algebra.IsAlgebraic K L] : IsField A :=

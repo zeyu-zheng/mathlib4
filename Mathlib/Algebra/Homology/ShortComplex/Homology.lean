@@ -1072,10 +1072,10 @@ lemma isIso_homologyMap_of_isIso_cyclesMap_of_epi {φ : S₁ ⟶ S₂}
   have ⟨z, hz⟩ := CokernelCofork.IsColimit.desc' S₂.homologyIsCokernel _ h
   dsimp at hz
   refine ⟨⟨z, ?_, ?_⟩⟩
-  · rw [← cancel_epi S₁.homologyπ, homologyπ_naturality_assoc, hz,
-      IsIso.hom_inv_id_assoc, comp_id]
-  · rw [← cancel_epi S₂.homologyπ, reassoc_of% hz, homologyπ_naturality,
-      IsIso.inv_hom_id_assoc, comp_id]
+  rw [← cancel_epi S₁.homologyπ, homologyπ_naturality_assoc, hz,
+    IsIso.hom_inv_id_assoc, comp_id]
+  rw [← cancel_epi S₂.homologyπ, reassoc_of% hz, homologyπ_naturality,
+    IsIso.inv_hom_id_assoc, comp_id]
 
 lemma isIso_homologyMap_of_isIso_opcyclesMap_of_mono {φ : S₁ ⟶ S₂}
     [S₁.HasHomology] [S₂.HasHomology] (h₁ : IsIso (opcyclesMap φ)) (h₂ : Mono φ.τ₃) :
@@ -1086,10 +1086,10 @@ lemma isIso_homologyMap_of_isIso_opcyclesMap_of_mono {φ : S₁ ⟶ S₂}
   have ⟨z, hz⟩ := KernelFork.IsLimit.lift' S₁.homologyIsKernel _ h
   dsimp at hz
   refine ⟨⟨z, ?_, ?_⟩⟩
-  · rw [← cancel_mono S₁.homologyι, id_comp, assoc, hz, homologyι_naturality_assoc,
-      IsIso.hom_inv_id, comp_id]
-  · rw [← cancel_mono S₂.homologyι, assoc, homologyι_naturality, reassoc_of% hz,
-      IsIso.inv_hom_id, comp_id, id_comp]
+  rw [← cancel_mono S₁.homologyι, id_comp, assoc, hz, homologyι_naturality_assoc,
+    IsIso.hom_inv_id, comp_id]
+  rw [← cancel_mono S₂.homologyι, assoc, homologyι_naturality, reassoc_of% hz,
+    IsIso.inv_hom_id, comp_id, id_comp]
 
 lemma isZero_homology_of_isZero_X₂ (hS : IsZero S.X₂) [S.HasHomology] :
     IsZero S.homology :=

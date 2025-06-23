@@ -123,28 +123,28 @@ lemma F_nat_zero_le {a : ℝ} (ha : 0 ≤ a) {t : ℝ} (ht : 0 < t) :
 lemma F_nat_zero_zero_sub_le {t : ℝ} (ht : 0 < t) :
     ‖F_nat 0 0 t - 1‖ ≤ rexp (-π * t) / (1 - rexp (-π * t)) := by
   convert F_nat_zero_le zero_le_one ht using 2
-  · rw [F_nat, tsum_eq_zero_add (summable_f_nat 0 0 ht), f_nat, Nat.cast_zero, add_zero, pow_zero,
-      one_mul, pow_two, mul_zero, mul_zero, zero_mul, exp_zero, add_comm, add_sub_cancel_right]
-    simp_rw [F_nat, f_nat, Nat.cast_add, Nat.cast_one, add_zero]
-  · rw [one_pow, mul_one]
+  rw [F_nat, tsum_eq_zero_add (summable_f_nat 0 0 ht), f_nat, Nat.cast_zero, add_zero, pow_zero,
+    one_mul, pow_two, mul_zero, mul_zero, zero_mul, exp_zero, add_comm, add_sub_cancel_right]
+  simp_rw [F_nat, f_nat, Nat.cast_add, Nat.cast_one, add_zero]
+  rw [one_pow, mul_one]
 
 lemma isBigO_atTop_F_nat_zero_sub {a : ℝ} (ha : 0 ≤ a) : ∃ p, 0 < p ∧
     (fun t ↦ F_nat 0 a t - (if a = 0 then 1 else 0)) =O[atTop] fun t ↦ exp (-p * t) := by
   split_ifs with h
-  · rw [h]
-    have : (fun t ↦ F_nat 0 0 t - 1) =O[atTop] fun t ↦ rexp (-π * t) / (1 - rexp (-π * t))
-    apply Eventually.isBigO
-    filter_upwards [eventually_gt_atTop 0] with t ht
-    exact F_nat_zero_zero_sub_le ht
-    refine ⟨_, pi_pos, this.trans ?_⟩
-    simpa using (isBigO_refl (fun t ↦ rexp (-π * t)) _).mul isBigO_one_aux
-  · simp_rw [sub_zero]
-    have : (fun t ↦ F_nat 0 a t) =O[atTop] fun t ↦ rexp (-π * a ^ 2 * t) / (1 - rexp (-π * t))
-    apply Eventually.isBigO
-    filter_upwards [eventually_gt_atTop 0] with t ht
-    exact F_nat_zero_le ha ht
-    refine ⟨π * a ^ 2, mul_pos pi_pos (sq_pos_of_ne_zero h), this.trans ?_⟩
-    simpa only [neg_mul π (a ^ 2), mul_one] using (isBigO_refl _ _).mul isBigO_one_aux
+  rw [h]
+  have : (fun t ↦ F_nat 0 0 t - 1) =O[atTop] fun t ↦ rexp (-π * t) / (1 - rexp (-π * t))
+  apply Eventually.isBigO
+  filter_upwards [eventually_gt_atTop 0] with t ht
+  exact F_nat_zero_zero_sub_le ht
+  refine ⟨_, pi_pos, this.trans ?_⟩
+  simpa using (isBigO_refl (fun t ↦ rexp (-π * t)) _).mul isBigO_one_aux
+  simp_rw [sub_zero]
+  have : (fun t ↦ F_nat 0 a t) =O[atTop] fun t ↦ rexp (-π * a ^ 2 * t) / (1 - rexp (-π * t))
+  apply Eventually.isBigO
+  filter_upwards [eventually_gt_atTop 0] with t ht
+  exact F_nat_zero_le ha ht
+  refine ⟨π * a ^ 2, mul_pos pi_pos (sq_pos_of_ne_zero h), this.trans ?_⟩
+  simpa only [neg_mul π (a ^ 2), mul_one] using (isBigO_refl _ _).mul isBigO_one_aux
 
 end k_eq_zero
 
@@ -163,17 +163,17 @@ lemma F_nat_one_le {a : ℝ} (ha : 0 ≤ a) {t : ℝ} (ht : 0 < t) :
   unfold g_nat
   simp_rw [pow_one, add_mul]
   apply HasSum.add
-  · have h0' : ‖rexp (-π * t)‖ < 1 := by
-      simpa only [norm_eq_abs, abs_exp] using exp_lt_aux ht
-    convert (hasSum_coe_mul_geometric_of_norm_lt_one h0').mul_left (exp (-π * a ^ 2 * t)) using 1
-    · ext1 n
-      rw [mul_comm (exp _), ← Real.exp_nat_mul, mul_assoc (n : ℝ), ← Real.exp_add]
-      ring_nf
-    · rw [mul_add, add_mul, mul_one, exp_add, mul_div_assoc]
-  · convert (hasSum_geometric_of_lt_one (exp_pos _).le <| exp_lt_aux ht).mul_left _ using 1
-    ext1 n
-    rw [← Real.exp_nat_mul, mul_assoc _ (exp _), ← Real.exp_add]
-    ring_nf
+  have h0' : ‖rexp (-π * t)‖ < 1 := by
+    simpa only [norm_eq_abs, abs_exp] using exp_lt_aux ht
+  convert (hasSum_coe_mul_geometric_of_norm_lt_one h0').mul_left (exp (-π * a ^ 2 * t)) using 1
+  ext1 n
+  rw [mul_comm (exp _), ← Real.exp_nat_mul, mul_assoc (n : ℝ), ← Real.exp_add]
+  ring_nf
+  rw [mul_add, add_mul, mul_one, exp_add, mul_div_assoc]
+  convert (hasSum_geometric_of_lt_one (exp_pos _).le <| exp_lt_aux ht).mul_left _ using 1
+  ext1 n
+  rw [← Real.exp_nat_mul, mul_assoc _ (exp _), ← Real.exp_add]
+  ring_nf
 
 lemma isBigO_atTop_F_nat_one {a : ℝ} (ha : 0 ≤ a) : ∃ p, 0 < p ∧
     F_nat 1 a =O[atTop] fun t ↦ exp (-p * t) := by
@@ -186,17 +186,17 @@ lemma isBigO_atTop_F_nat_one {a : ℝ} (ha : 0 ≤ a) : ∃ p, 0 < p ∧
   have aux' : IsBigO atTop (fun t : ℝ ↦ ((1 - rexp (-π * t)) ^ 2)⁻¹) (fun _ ↦ (1 : ℝ))
   simpa only [inv_pow, one_pow] using isBigO_one_aux.pow 2
   rcases eq_or_lt_of_le ha with rfl | ha'
-  · exact ⟨_, pi_pos, by simpa only [zero_pow two_ne_zero, zero_add, mul_one, zero_mul, zero_div,
-      add_zero] using (isBigO_refl _ _).mul aux'⟩
-  · refine ⟨π * a ^ 2, mul_pos pi_pos <| pow_pos ha' _, IsBigO.add ?_ ?_⟩
-    · conv_rhs => enter [t]; rw [← mul_one (rexp _)]
-      refine (Eventually.isBigO ?_).mul aux'
-      filter_upwards [eventually_gt_atTop 0] with t ht
-      rw [norm_of_nonneg (exp_pos _).le, exp_le_exp]
-      nlinarith [pi_pos]
-    · simp_rw [mul_div_assoc, ← neg_mul]
-      apply IsBigO.const_mul_left
-      simpa only [mul_one] using (isBigO_refl _ _).mul isBigO_one_aux
+  exact ⟨_, pi_pos, by simpa only [zero_pow two_ne_zero, zero_add, mul_one, zero_mul, zero_div,
+    add_zero] using (isBigO_refl _ _).mul aux'⟩
+  refine ⟨π * a ^ 2, mul_pos pi_pos <| pow_pos ha' _, IsBigO.add ?_ ?_⟩
+  conv_rhs => enter [t]; rw [← mul_one (rexp _)]
+  refine (Eventually.isBigO ?_).mul aux'
+  filter_upwards [eventually_gt_atTop 0] with t ht
+  rw [norm_of_nonneg (exp_pos _).le, exp_le_exp]
+  nlinarith [pi_pos]
+  simp_rw [mul_div_assoc, ← neg_mul]
+  apply IsBigO.const_mul_left
+  simpa only [mul_one] using (isBigO_refl _ _).mul isBigO_one_aux
 
 end k_eq_one
 
@@ -224,10 +224,10 @@ lemma summable_f_int (k : ℕ) (a : ℝ) {t : ℝ} (ht : 0 < t) : Summable (f_in
       (summable_f_nat k (1 - a) ht).hasSum).summable.norm
   intro n
   cases' n with m m
-  · simp only [f_int, f_nat, Int.ofNat_eq_coe, Int.cast_natCast, norm_mul, norm_eq_abs, abs_pow,
-      abs_abs]
-  · simp only [f_int, f_nat, Int.cast_negSucc, norm_mul, norm_eq_abs, abs_pow, abs_abs,
-      (by { push_cast; ring } : -↑(m + 1) + a = -(m + (1 - a))), abs_neg, neg_sq]
+  simp only [f_int, f_nat, Int.ofNat_eq_coe, Int.cast_natCast, norm_mul, norm_eq_abs, abs_pow,
+    abs_abs]
+  simp only [f_int, f_nat, Int.cast_negSucc, norm_mul, norm_eq_abs, abs_pow, abs_abs,
+    (by { push_cast; ring } : -↑(m + 1) + a = -(m + (1 - a))), abs_neg, neg_sq]
 
 /-- The sum to be bounded (`ℤ` version). -/
 def F_int (k : ℕ) (a : UnitAddCircle) (t : ℝ) : ℝ :=
@@ -243,8 +243,8 @@ lemma F_int_eq_of_mem_Icc (k : ℕ) {a : ℝ} (ha : a ∈ Icc 0 1) {t : ℝ} (ht
   convert ((summable_f_nat k a ht).hasSum.int_rec (summable_f_nat k (1 - a) ht).hasSum).tsum_eq
     using 3 with n
   cases' n with m m
-  · rw [f_int_ofNat _ ha.1]
-  · rw [f_int_negSucc _ ha.2]
+  rw [f_int_ofNat _ ha.1]
+  rw [f_int_negSucc _ ha.2]
 
 lemma isBigO_atTop_F_int_zero_sub (a : UnitAddCircle) : ∃ p, 0 < p ∧
     (fun t ↦ F_int 0 a t - (if a = 0 then 1 else 0)) =O[atTop] fun t ↦ exp (-p * t) := by
@@ -253,8 +253,8 @@ lemma isBigO_atTop_F_int_zero_sub (a : UnitAddCircle) : ∃ p, 0 < p ∧
   obtain ⟨q, hq, hq'⟩ := isBigO_atTop_F_nat_zero_sub (sub_nonneg.mpr ha.2.le)
   have ha' : (a : UnitAddCircle) = 0 ↔ a = 0
   rw [← AddCircle.coe_eq_coe_iff_of_mem_Ico (hp := ⟨zero_lt_one' ℝ⟩), QuotientAddGroup.mk_zero]
-  · rw [zero_add]; exact ha
-  · simp
+  rw [zero_add]; exact ha
+  simp
   simp_rw [ha']
   simp_rw [eq_false_intro (by linarith [ha.2] : 1 - a ≠ 0), if_false, sub_zero] at hq'
   refine ⟨_, lt_min hp hq, ?_⟩

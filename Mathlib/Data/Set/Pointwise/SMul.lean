@@ -662,13 +662,13 @@ variable [NoZeroSMulDivisors α β] {a : α}
 theorem zero_mem_smul_iff :
     (0 : β) ∈ s • t ↔ (0 : α) ∈ s ∧ t.Nonempty ∨ (0 : β) ∈ t ∧ s.Nonempty := by
   constructor
-  · rintro ⟨a, ha, b, hb, h⟩
-    obtain rfl | rfl := eq_zero_or_eq_zero_of_smul_eq_zero h
-    · exact Or.inl ⟨ha, b, hb⟩
-    · exact Or.inr ⟨hb, a, ha⟩
-  · rintro (⟨hs, b, hb⟩ | ⟨ht, a, ha⟩)
-    · exact ⟨0, hs, b, hb, zero_smul _ _⟩
-    · exact ⟨a, ha, 0, ht, smul_zero _⟩
+  rintro ⟨a, ha, b, hb, h⟩
+  obtain rfl | rfl := eq_zero_or_eq_zero_of_smul_eq_zero h
+  exact Or.inl ⟨ha, b, hb⟩
+  exact Or.inr ⟨hb, a, ha⟩
+  rintro (⟨hs, b, hb⟩ | ⟨ht, a, ha⟩)
+  exact ⟨0, hs, b, hb, zero_smul _ _⟩
+  exact ⟨a, ha, 0, ht, smul_zero _⟩
 
 end SMulWithZero
 
@@ -769,11 +769,11 @@ theorem smul_inter_ne_empty_iff {s t : Set α} {x : α} :
     x • s ∩ t ≠ ∅ ↔ ∃ a b, (a ∈ t ∧ b ∈ s) ∧ a * b⁻¹ = x := by
   rw [← nonempty_iff_ne_empty]
   constructor
-  · rintro ⟨a, h, ha⟩
-    obtain ⟨b, hb, rfl⟩ := mem_smul_set.mp h
-    exact ⟨x • b, b, ⟨ha, hb⟩, by simp⟩
-  · rintro ⟨a, b, ⟨ha, hb⟩, rfl⟩
-    exact ⟨a, mem_inter (mem_smul_set.mpr ⟨b, hb, by simp⟩) ha⟩
+  rintro ⟨a, h, ha⟩
+  obtain ⟨b, hb, rfl⟩ := mem_smul_set.mp h
+  exact ⟨x • b, b, ⟨ha, hb⟩, by simp⟩
+  rintro ⟨a, b, ⟨ha, hb⟩, rfl⟩
+  exact ⟨a, mem_inter (mem_smul_set.mpr ⟨b, hb, by simp⟩) ha⟩
 
 @[to_additive]
 theorem smul_inter_ne_empty_iff' {s t : Set α} {x : α} :
@@ -785,12 +785,12 @@ theorem op_smul_inter_ne_empty_iff {s t : Set α} {x : αᵐᵒᵖ} :
     x • s ∩ t ≠ ∅ ↔ ∃ a b, (a ∈ s ∧ b ∈ t) ∧ a⁻¹ * b = MulOpposite.unop x := by
   rw [← nonempty_iff_ne_empty]
   constructor
-  · rintro ⟨a, h, ha⟩
-    obtain ⟨b, hb, rfl⟩ := mem_smul_set.mp h
-    exact ⟨b, x • b, ⟨hb, ha⟩, by simp⟩
-  · rintro ⟨a, b, ⟨ha, hb⟩, H⟩
-    have : MulOpposite.op (a⁻¹ * b) = x := congr_arg MulOpposite.op H
-    exact ⟨b, mem_inter (mem_smul_set.mpr ⟨a, ha, by simp [← this]⟩) hb⟩
+  rintro ⟨a, h, ha⟩
+  obtain ⟨b, hb, rfl⟩ := mem_smul_set.mp h
+  exact ⟨b, x • b, ⟨hb, ha⟩, by simp⟩
+  rintro ⟨a, b, ⟨ha, hb⟩, H⟩
+  have : MulOpposite.op (a⁻¹ * b) = x := congr_arg MulOpposite.op H
+  exact ⟨b, mem_inter (mem_smul_set.mpr ⟨a, ha, by simp [← this]⟩) hb⟩
 
 @[to_additive (attr := simp)]
 theorem iUnion_inv_smul : ⋃ g : α, g⁻¹ • s = ⋃ g : α, g • s :=
@@ -868,13 +868,13 @@ theorem smul_univ₀' {s : Set α} (hs : s.Nontrivial) : s • (univ : Set β) =
 
 @[simp] lemma inv_smul_set_distrib₀ (a : α) (s : Set α) : (a • s)⁻¹ = op a⁻¹ • s⁻¹ := by
   obtain rfl | ha := eq_or_ne a 0
-  · obtain rfl | hs := s.eq_empty_or_nonempty <;> simp [*]
-  · ext; simp [mem_smul_set_iff_inv_smul_mem₀, *]
+  obtain rfl | hs := s.eq_empty_or_nonempty <;> simp [*]
+  ext; simp [mem_smul_set_iff_inv_smul_mem₀, *]
 
 @[simp] lemma inv_op_smul_set_distrib₀ (a : α) (s : Set α) : (op a • s)⁻¹ = a⁻¹ • s⁻¹ := by
   obtain rfl | ha := eq_or_ne a 0
-  · obtain rfl | hs := s.eq_empty_or_nonempty <;> simp [*]
-  · ext; simp [mem_smul_set_iff_inv_smul_mem₀, *]
+  obtain rfl | hs := s.eq_empty_or_nonempty <;> simp [*]
+  ext; simp [mem_smul_set_iff_inv_smul_mem₀, *]
 
 end GroupWithZero
 

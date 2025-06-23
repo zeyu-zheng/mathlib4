@@ -209,13 +209,13 @@ theorem act_invAct_eq (x y : R) : x ◃ x ◃⁻¹ y = y :=
 
 theorem left_cancel (x : R) {y y' : R} : x ◃ y = x ◃ y' ↔ y = y' := by
   constructor
-  · apply (act' x).injective
+  apply (act' x).injective
   rintro rfl
   rfl
 
 theorem left_cancel_inv (x : R) {y y' : R} : x ◃⁻¹ y = x ◃⁻¹ y' ↔ y = y' := by
   constructor
-  · apply (act' x).symm.injective
+  apply (act' x).symm.injective
   rintro rfl
   rfl
 
@@ -279,11 +279,11 @@ theorem self_invAct_act_eq {x y : R} : (x ◃⁻¹ x) ◃ y = x ◃ y := by
 
 theorem self_act_eq_iff_eq {x y : R} : x ◃ x = y ◃ y ↔ x = y := by
   constructor; swap
-  · rintro rfl; rfl
+  rintro rfl; rfl
   intro h
   trans (x ◃ x) ◃⁻¹ x ◃ x
-  · rw [← left_cancel (x ◃ x), right_inv, self_act_act_eq]
-  · rw [h, ← left_cancel (y ◃ y), right_inv, self_act_act_eq]
+  rw [← left_cancel (x ◃ x), right_inv, self_act_act_eq]
+  rw [h, ← left_cancel (y ◃ y), right_inv, self_act_act_eq]
 
 theorem self_invAct_eq_iff_eq {x y : R} : x ◃⁻¹ x = y ◃⁻¹ y ↔ x = y := by
   have h := @self_act_eq_iff_eq _ _ (op x) (op y)
@@ -590,9 +590,9 @@ instance PreEnvelGroup.setoid (R : Type*) [Rack R] : Setoid (PreEnvelGroup R) wh
   r := PreEnvelGroupRel R
   iseqv := by
     constructor
-    · apply PreEnvelGroupRel.refl
-    · apply PreEnvelGroupRel.symm
-    · apply PreEnvelGroupRel.trans
+    apply PreEnvelGroupRel.refl
+    apply PreEnvelGroupRel.symm
+    apply PreEnvelGroupRel.trans
 /-- The universal enveloping group for the rack R.
 -/
 def EnvelGroup (R : Type*) [Rack R] :=

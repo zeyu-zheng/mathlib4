@@ -53,16 +53,16 @@ theorem tail_cons : tail (cons y s) = s :=
 theorem cons_tail : cons (t 0) (tail t) = t := by
   ext a
   by_cases c_a : a = 0
-  · rw [c_a, cons_zero]
-  · rw [← Fin.succ_pred a c_a, cons_succ, ← tail_apply]
+  rw [c_a, cons_zero]
+  rw [← Fin.succ_pred a c_a, cons_succ, ← tail_apply]
 
 @[simp]
 theorem cons_zero_zero : cons 0 (0 : Fin n →₀ M) = 0 := by
   ext a
   by_cases c : a = 0
-  · simp [c]
-  · rw [← Fin.succ_pred a c, cons_succ]
-    simp
+  simp [c]
+  rw [← Fin.succ_pred a c, cons_succ]
+  simp
 
 variable {s} {y}
 

@@ -264,7 +264,7 @@ theorem cons_mul [Fintype n'] (v : n' → α) (A : Fin m → n' → α) (B : Mat
     of (vecCons v A) * B = of (vecCons (v ᵥ* B) (of.symm (of A * B))) := by
   ext i j
   refine Fin.cases ?_ ?_ i
-  · rfl
+  rfl
   simp [mul_val_succ]
 
 end Mul

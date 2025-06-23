@@ -194,9 +194,9 @@ theorem hasMFDerivWithinAt_inter (h : t ∈ 𝓝 x) :
 theorem HasMFDerivWithinAt.union (hs : HasMFDerivWithinAt I I' f s x f')
     (ht : HasMFDerivWithinAt I I' f t x f') : HasMFDerivWithinAt I I' f (s ∪ t) x f' := by
   constructor
-  · exact ContinuousWithinAt.union hs.1 ht.1
-  · convert HasFDerivWithinAt.union hs.2 ht.2 using 1
-    simp only [union_inter_distrib_right, preimage_union]
+  exact ContinuousWithinAt.union hs.1 ht.1
+  convert HasFDerivWithinAt.union hs.2 ht.2 using 1
+  simp only [union_inter_distrib_right, preimage_union]
 
 theorem HasMFDerivWithinAt.mono_of_mem (h : HasMFDerivWithinAt I I' f s x f') (ht : s ∈ 𝓝[t] x) :
     HasMFDerivWithinAt I I' f t x f' :=
@@ -467,13 +467,13 @@ theorem HasMFDerivWithinAt.congr_of_eventuallyEq (h : HasMFDerivWithinAt I I' f 
     (h₁ : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) : HasMFDerivWithinAt I I' f₁ s x f' := by
   refine ⟨ContinuousWithinAt.congr_of_eventuallyEq h.1 h₁ hx, ?_⟩
   apply HasFDerivWithinAt.congr_of_eventuallyEq h.2
-  · have :
-      (extChartAt I x).symm ⁻¹' {y | f₁ y = f y} ∈
-        𝓝[(extChartAt I x).symm ⁻¹' s ∩ range I] (extChartAt I x) x :=
-      extChartAt_preimage_mem_nhdsWithin I h₁
-    apply Filter.mem_of_superset this fun y => _
-    simp (config := { contextual := true }) only [hx, mfld_simps]
-  · simp only [hx, mfld_simps]
+  have :
+    (extChartAt I x).symm ⁻¹' {y | f₁ y = f y} ∈
+      𝓝[(extChartAt I x).symm ⁻¹' s ∩ range I] (extChartAt I x) x :=
+    extChartAt_preimage_mem_nhdsWithin I h₁
+  apply Filter.mem_of_superset this fun y => _
+  simp (config := { contextual := true }) only [hx, mfld_simps]
+  simp only [hx, mfld_simps]
 
 theorem HasMFDerivWithinAt.congr_mono (h : HasMFDerivWithinAt I I' f s x f')
     (ht : ∀ x ∈ t, f₁ x = f x) (hx : f₁ x = f x) (h₁ : t ⊆ s) : HasMFDerivWithinAt I I' f₁ t x f' :=
@@ -494,13 +494,13 @@ variable (I I')
 theorem Filter.EventuallyEq.mdifferentiableWithinAt_iff (h₁ : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) :
     MDifferentiableWithinAt I I' f s x ↔ MDifferentiableWithinAt I I' f₁ s x := by
   constructor
-  · intro h
-    apply h.congr_of_eventuallyEq h₁ hx
-  · intro h
-    apply h.congr_of_eventuallyEq _ hx.symm
-    apply h₁.mono
-    intro y
-    apply Eq.symm
+  intro h
+  apply h.congr_of_eventuallyEq h₁ hx
+  intro h
+  apply h.congr_of_eventuallyEq _ hx.symm
+  apply h₁.mono
+  intro y
+  apply Eq.symm
 
 variable {I I'}
 
@@ -529,10 +529,10 @@ theorem MDifferentiableWithinAt.mfderivWithin_congr_mono (h : MDifferentiableWit
 theorem Filter.EventuallyEq.mfderivWithin_eq (hs : UniqueMDiffWithinAt I s x) (hL : f₁ =ᶠ[𝓝[s] x] f)
     (hx : f₁ x = f x) : mfderivWithin I I' f₁ s x = (mfderivWithin I I' f s x : _) := by
   by_cases h : MDifferentiableWithinAt I I' f s x
-  · exact (h.hasMFDerivWithinAt.congr_of_eventuallyEq hL hx).mfderivWithin hs
-  · unfold mfderivWithin
-    rw [if_neg h, if_neg]
-    rwa [← hL.mdifferentiableWithinAt_iff I I' hx]
+  exact (h.hasMFDerivWithinAt.congr_of_eventuallyEq hL hx).mfderivWithin hs
+  unfold mfderivWithin
+  rw [if_neg h, if_neg]
+  rwa [← hL.mdifferentiableWithinAt_iff I I' hx]
 
 theorem mfderivWithin_congr (hs : UniqueMDiffWithinAt I s x) (hL : ∀ x ∈ s, f₁ x = f x)
     (hx : f₁ x = f x) : mfderivWithin I I' f₁ s x = (mfderivWithin I I' f s x : _) :=

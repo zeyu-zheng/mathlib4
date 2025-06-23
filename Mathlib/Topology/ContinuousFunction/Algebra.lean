@@ -740,8 +740,8 @@ By an affine transformation in the field we can arrange so that `f x = a` and `f
 theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h : s.SeparatesPoints) :
     (s : Set C(α, 𝕜)).SeparatesPointsStrongly := fun v x y => by
   by_cases n : x = y
-  · subst n
-    exact ⟨_, (v x • (1 : s) : s).prop, mul_one _, mul_one _⟩
+  subst n
+  exact ⟨_, (v x • (1 : s) : s).prop, mul_one _, mul_one _⟩
   obtain ⟨_, ⟨f, hf, rfl⟩, hxy⟩ := h n
   replace hxy : f x - f y ≠ 0 := sub_ne_zero_of_ne hxy
   let a := v x
@@ -749,8 +749,8 @@ theorem Subalgebra.SeparatesPoints.strongly {s : Subalgebra 𝕜 C(α, 𝕜)} (h
   let f' : s :=
     ((b - a) * (f x - f y)⁻¹) • (algebraMap _ s (f x) - (⟨f, hf⟩ : s)) + algebraMap _ s a
   refine ⟨f', f'.prop, ?_, ?_⟩
-  · simp [f']
-  · simp [f', inv_mul_cancel_right₀ hxy]
+  simp [f']
+  simp [f', inv_mul_cancel_right₀ hxy]
 
 end ContinuousMap
 
@@ -759,17 +759,17 @@ instance ContinuousMap.subsingleton_subalgebra (α : Type*) [TopologicalSpace α
     Subsingleton (Subalgebra R C(α, R)) :=
   ⟨fun s₁ s₂ => by
     cases isEmpty_or_nonempty α
-    · have : Subsingleton C(α, R) := DFunLike.coe_injective.subsingleton
-      subsingleton
-    · inhabit α
-      ext f
-      have h : f = algebraMap R C(α, R) (f default) := by
-        ext x'
-        simp only [mul_one, Algebra.id.smul_eq_mul, algebraMap_apply]
-        congr
-        simp [eq_iff_true_of_subsingleton]
-      rw [h]
-      simp only [Subalgebra.algebraMap_mem]⟩
+    have : Subsingleton C(α, R) := DFunLike.coe_injective.subsingleton
+    subsingleton
+    inhabit α
+    ext f
+    have h : f = algebraMap R C(α, R) (f default) := by
+      ext x'
+      simp only [mul_one, Algebra.id.smul_eq_mul, algebraMap_apply]
+      congr
+      simp [eq_iff_true_of_subsingleton]
+    rw [h]
+    simp only [Subalgebra.algebraMap_mem]⟩
 
 end AlgebraStructure
 
@@ -982,17 +982,17 @@ theorem periodic_tsum_comp_add_zsmul [AddCommGroup X] [TopologicalAddGroup X] [A
     Function.Periodic (⇑(∑' n : ℤ, f.comp (ContinuousMap.addRight (n • p)))) p := by
   intro x
   by_cases h : Summable fun n : ℤ => f.comp (ContinuousMap.addRight (n • p))
-  · convert congr_arg (fun f : C(X, Y) => f x) ((Equiv.addRight (1 : ℤ)).tsum_eq _) using 1
-    -- Porting note: in mathlib3 the proof from here was:
-    -- simp_rw [← tsum_apply h, ← tsum_apply ((equiv.add_right (1 : ℤ)).summable_iff.mpr h),
-    --   equiv.coe_add_right, comp_apply, coe_add_right, add_one_zsmul, add_comm (_ • p) p,
-    --   ← add_assoc]
-    -- However now the second `← tsum_apply` doesn't fire unless we use `erw`.
-    simp_rw [← tsum_apply h]
-    erw [← tsum_apply ((Equiv.addRight (1 : ℤ)).summable_iff.mpr h)]
-    simp [coe_addRight, add_one_zsmul, add_comm (_ • p) p, ← add_assoc]
-  · rw [tsum_eq_zero_of_not_summable h]
-    simp only [coe_zero, Pi.zero_apply]
+  convert congr_arg (fun f : C(X, Y) => f x) ((Equiv.addRight (1 : ℤ)).tsum_eq _) using 1
+  -- Porting note: in mathlib3 the proof from here was:
+  -- simp_rw [← tsum_apply h, ← tsum_apply ((equiv.add_right (1 : ℤ)).summable_iff.mpr h),
+  --   equiv.coe_add_right, comp_apply, coe_add_right, add_one_zsmul, add_comm (_ • p) p,
+  --   ← add_assoc]
+  -- However now the second `← tsum_apply` doesn't fire unless we use `erw`.
+  simp_rw [← tsum_apply h]
+  erw [← tsum_apply ((Equiv.addRight (1 : ℤ)).summable_iff.mpr h)]
+  simp [coe_addRight, add_one_zsmul, add_comm (_ • p) p, ← add_assoc]
+  rw [tsum_eq_zero_of_not_summable h]
+  simp only [coe_zero, Pi.zero_apply]
 
 end Periodicity
 

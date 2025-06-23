@@ -148,15 +148,15 @@ theorem injective_of_increasing (r : α → α → Prop) (s : β → β → Prop
     [IsIrrefl β s] (f : α → β) (hf : ∀ {x y}, r x y → s (f x) (f y)) : Injective f := by
   intro x y hxy
   rcases trichotomous_of r x y with (h | h | h)
-  · have := hf h
-    rw [hxy] at this
-    exfalso
-    exact irrefl_of s (f y) this
-  · exact h
-  · have := hf h
-    rw [hxy] at this
-    exfalso
-    exact irrefl_of s (f y) this
+  have := hf h
+  rw [hxy] at this
+  exfalso
+  exact irrefl_of s (f y) this
+  exact h
+  have := hf h
+  rw [hxy] at this
+  exfalso
+  exact irrefl_of s (f y) this
 
 /-- An increasing function is injective -/
 theorem RelHom.injective_of_increasing [IsTrichotomous α r] [IsIrrefl β s] (f : r →r s) :
@@ -372,12 +372,12 @@ theorem acc_lift₂_iff [Setoid α] {r : α → α → Prop}
     {H : ∀ (a₁ b₁ a₂ b₂ : α), a₁ ≈ a₂ → b₁ ≈ b₂ → r a₁ b₁ = r a₂ b₂} {a} :
     Acc (Quotient.lift₂ r H) ⟦a⟧ ↔ Acc r a := by
   constructor
-  · exact RelHomClass.acc (Quotient.mkRelHom H) a
-  · intro ac
-    induction' ac with _ _ IH
-    refine ⟨_, fun q h => ?_⟩
-    obtain ⟨a', rfl⟩ := q.exists_rep
-    exact IH a' h
+  exact RelHomClass.acc (Quotient.mkRelHom H) a
+  intro ac
+  induction' ac with _ _ IH
+  refine ⟨_, fun q h => ?_⟩
+  obtain ⟨a', rfl⟩ := q.exists_rep
+  exact IH a' h
 
 @[simp]
 theorem acc_liftOn₂'_iff {s : Setoid α} {r : α → α → Prop} {H} {a} :
@@ -390,10 +390,10 @@ theorem wellFounded_lift₂_iff [Setoid α] {r : α → α → Prop}
     {H : ∀ (a₁ b₁ a₂ b₂ : α), a₁ ≈ a₂ → b₁ ≈ b₂ → r a₁ b₁ = r a₂ b₂} :
     WellFounded (Quotient.lift₂ r H) ↔ WellFounded r := by
   constructor
-  · exact RelHomClass.wellFounded (Quotient.mkRelHom H)
-  · refine fun wf => ⟨fun q => ?_⟩
-    obtain ⟨a, rfl⟩ := q.exists_rep
-    exact acc_lift₂_iff.2 (wf.apply a)
+  exact RelHomClass.wellFounded (Quotient.mkRelHom H)
+  refine fun wf => ⟨fun q => ?_⟩
+  obtain ⟨a, rfl⟩ := q.exists_rep
+  exact acc_lift₂_iff.2 (wf.apply a)
 
 alias ⟨WellFounded.of_quotient_lift₂, WellFounded.quotient_lift₂⟩ := wellFounded_lift₂_iff
 

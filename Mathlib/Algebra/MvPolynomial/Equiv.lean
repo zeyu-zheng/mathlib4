@@ -309,10 +309,10 @@ theorem finSuccEquiv_eq :
       eval₂Hom (Polynomial.C.comp (C : R →+* MvPolynomial (Fin n) R)) fun i : Fin (n + 1) =>
         Fin.cases Polynomial.X (fun k => Polynomial.C (X k)) i := by
   ext i : 2
-  · simp only [finSuccEquiv, optionEquivLeft_apply, aeval_C, AlgEquiv.coe_trans, RingHom.coe_coe,
-      coe_eval₂Hom, comp_apply, renameEquiv_apply, eval₂_C, RingHom.coe_comp, rename_C]
-    rfl
-  · refine Fin.cases ?_ ?_ i <;> simp [finSuccEquiv]
+  simp only [finSuccEquiv, optionEquivLeft_apply, aeval_C, AlgEquiv.coe_trans, RingHom.coe_coe,
+    coe_eval₂Hom, comp_apply, renameEquiv_apply, eval₂_C, RingHom.coe_comp, rename_C]
+  rfl
+  refine Fin.cases ?_ ?_ i <;> simp [finSuccEquiv]
 
 @[simp]
 theorem finSuccEquiv_apply (p : MvPolynomial (Fin (n + 1)) R) :
@@ -345,24 +345,24 @@ theorem finSuccEquiv_coeff_coeff (m : Fin n →₀ ℕ) (f : MvPolynomial (Fin (
     coeff m (Polynomial.coeff (finSuccEquiv R n f) i) = coeff (m.cons i) f := by
   induction' f using MvPolynomial.induction_on' with j r p q hp hq generalizing i m
   swap
-  · simp only [map_add, Polynomial.coeff_add, coeff_add, hp, hq]
+  simp only [map_add, Polynomial.coeff_add, coeff_add, hp, hq]
   simp only [finSuccEquiv_apply, coe_eval₂Hom, eval₂_monomial, RingHom.coe_comp, prod_pow,
     Polynomial.coeff_C_mul, coeff_C_mul, coeff_monomial, Fin.prod_univ_succ, Fin.cases_zero,
     Fin.cases_succ, ← map_prod, ← RingHom.map_pow, Function.comp_apply]
   rw [← mul_boole, mul_comm (Polynomial.X ^ j 0), Polynomial.coeff_C_mul_X_pow]; congr 1
   obtain rfl | hjmi := eq_or_ne j (m.cons i)
-  · simpa only [cons_zero, cons_succ, if_pos rfl, monomial_eq, C_1, one_mul, prod_pow] using
-      coeff_monomial m m (1 : R)
-  · simp only [hjmi, if_false]
-    obtain hij | rfl := ne_or_eq i (j 0)
-    · simp only [hij, if_false, coeff_zero]
-    simp only [eq_self_iff_true, if_true]
-    have hmj : m ≠ j.tail
-    rintro rfl
-    rw [cons_tail] at hjmi
-    contradiction
-    simpa only [monomial_eq, C_1, one_mul, prod_pow, Finsupp.tail_apply, if_neg hmj.symm] using
-      coeff_monomial m j.tail (1 : R)
+  simpa only [cons_zero, cons_succ, if_pos rfl, monomial_eq, C_1, one_mul, prod_pow] using
+    coeff_monomial m m (1 : R)
+  simp only [hjmi, if_false]
+  obtain hij | rfl := ne_or_eq i (j 0)
+  simp only [hij, if_false, coeff_zero]
+  simp only [eq_self_iff_true, if_true]
+  have hmj : m ≠ j.tail
+  rintro rfl
+  rw [cons_tail] at hjmi
+  contradiction
+  simpa only [monomial_eq, C_1, one_mul, prod_pow, Finsupp.tail_apply, if_neg hmj.symm] using
+    coeff_monomial m j.tail (1 : R)
 
 theorem eval_eq_eval_mv_eval' (s : Fin n → R) (y : R) (f : MvPolynomial (Fin (n + 1)) R) :
     eval (Fin.cons y s : Fin (n + 1) → R) f =
@@ -394,10 +394,10 @@ theorem coeff_eval_eq_eval_coeff (s' : Fin n → R) (f : Polynomial (MvPolynomia
 theorem support_coeff_finSuccEquiv {f : MvPolynomial (Fin (n + 1)) R} {i : ℕ} {m : Fin n →₀ ℕ} :
     m ∈ (Polynomial.coeff ((finSuccEquiv R n) f) i).support ↔ Finsupp.cons i m ∈ f.support := by
   apply Iff.intro
-  · intro h
-    simpa [← finSuccEquiv_coeff_coeff] using h
-  · intro h
-    simpa [mem_support_iff, ← finSuccEquiv_coeff_coeff m f i] using h
+  intro h
+  simpa [← finSuccEquiv_coeff_coeff] using h
+  intro h
+  simpa [mem_support_iff, ← finSuccEquiv_coeff_coeff m f i] using h
 
 /--
 The `totalDegree` of a multivariable polynomial `p` is at least `i` more than the `totalDegree` of
@@ -415,22 +415,22 @@ lemma totalDegree_coeff_finSuccEquiv_add_le (f : MvPolynomial (Fin (n + 1)) R) (
   -- Then cons i σ is a monomial index of p with total degree equal to the desired bound
   let σ' : Fin (n+1) →₀ ℕ := cons i σ
   convert le_totalDegree (s := σ') _
-  · rw [totalDegree, hσ2, sum_cons, add_comm]
-  · rw [← support_coeff_finSuccEquiv]
-    exact hσ1
+  rw [totalDegree, hσ2, sum_cons, add_comm]
+  rw [← support_coeff_finSuccEquiv]
+  exact hσ1
 
 theorem finSuccEquiv_support (f : MvPolynomial (Fin (n + 1)) R) :
     (finSuccEquiv R n f).support = Finset.image (fun m : Fin (n + 1) →₀ ℕ => m 0) f.support := by
   ext i
   rw [Polynomial.mem_support_iff, Finset.mem_image, Finsupp.ne_iff]
   constructor
-  · rintro ⟨m, hm⟩
-    refine ⟨cons i m, ?_, cons_zero _ _⟩
-    rw [← support_coeff_finSuccEquiv]
-    simpa using hm
-  · rintro ⟨m, h, rfl⟩
-    refine ⟨tail m, ?_⟩
-    rwa [← coeff, zero_apply, ← mem_support_iff, support_coeff_finSuccEquiv, cons_tail]
+  rintro ⟨m, hm⟩
+  refine ⟨cons i m, ?_, cons_zero _ _⟩
+  rw [← support_coeff_finSuccEquiv]
+  simpa using hm
+  rintro ⟨m, h, rfl⟩
+  refine ⟨tail m, ?_⟩
+  rwa [← coeff, zero_apply, ← mem_support_iff, support_coeff_finSuccEquiv, cons_tail]
 
 theorem finSuccEquiv_support' {f : MvPolynomial (Fin (n + 1)) R} {i : ℕ} :
     Finset.image (Finsupp.cons i) (Polynomial.coeff ((finSuccEquiv R n) f) i).support =
@@ -442,13 +442,13 @@ theorem finSuccEquiv_support' {f : MvPolynomial (Fin (n + 1)) R} {i : ℕ} :
     ext
     rw [mem_support_iff, finSuccEquiv_coeff_coeff, Ne]
   constructor
-  · rintro ⟨m', ⟨h, hm'⟩⟩
-    simp only [← hm']
-    exact ⟨h, by rw [cons_zero]⟩
-  · intro h
-    use tail m
-    rw [← h.2, cons_tail]
-    simp [h.1]
+  rintro ⟨m', ⟨h, hm'⟩⟩
+  simp only [← hm']
+  exact ⟨h, by rw [cons_zero]⟩
+  intro h
+  use tail m
+  rw [← h.2, cons_tail]
+  simp [h.1]
 
 -- TODO: generalize `finSuccEquiv R n` to an arbitrary ZeroHom
 theorem support_finSuccEquiv_nonempty {f : MvPolynomial (Fin (n + 1)) R} (h : f ≠ 0) :
@@ -470,10 +470,10 @@ theorem degree_finSuccEquiv {f : MvPolynomial (Fin (n + 1)) R} (h : f ≠ 0) :
 theorem natDegree_finSuccEquiv (f : MvPolynomial (Fin (n + 1)) R) :
     (finSuccEquiv R n f).natDegree = degreeOf 0 f := by
   by_cases c : f = 0
-  · rw [c, map_zero, Polynomial.natDegree_zero, degreeOf_zero]
-  · rw [Polynomial.natDegree, degree_finSuccEquiv (by simpa only [Ne] )]
-    erw [WithBot.unbot'_coe]
-    simp
+  rw [c, map_zero, Polynomial.natDegree_zero, degreeOf_zero]
+  rw [Polynomial.natDegree, degree_finSuccEquiv (by simpa only [Ne] )]
+  erw [WithBot.unbot'_coe]
+  simp
 
 theorem degreeOf_coeff_finSuccEquiv (p : MvPolynomial (Fin (n + 1)) R) (j : Fin n) (i : ℕ) :
     degreeOf j (Polynomial.coeff (finSuccEquiv R n p) i) ≤ degreeOf j.succ p := by
@@ -502,8 +502,8 @@ lemma finSuccEquiv_rename_finSuccEquiv (e : σ ≃ Fin n) (φ : MvPolynomial (Op
       (Polynomial.mapRingHom (rename e).toRingHom).comp (optionEquivLeft R σ) by
     exact DFunLike.congr_fun this φ
   apply ringHom_ext
-  · simp [Polynomial.algebraMap_apply, algebraMap_eq]
-  · rintro (i|i) <;> simp
+  simp [Polynomial.algebraMap_apply, algebraMap_eq]
+  rintro (i|i) <;> simp
 
 end
 

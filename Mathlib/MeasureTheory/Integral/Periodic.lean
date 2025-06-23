@@ -109,8 +109,8 @@ theorem volume_closedBall {x : AddCircle T} (ε : ℝ) :
   rw [addHaar_closedBall_center, add_projection_respects_measure T (-(T/2))
     measurableSet_closedBall, (by linarith : -(T / 2) + T = T / 2), h₂]
   by_cases hε : ε < T / 2
-  · simp [hε, min_eq_right (by linarith : 2 * ε ≤ T)]
-  · simp [I, hε, min_eq_left (by linarith : T ≤ 2 * ε)]
+  simp [hε, min_eq_right (by linarith : 2 * ε ≤ T)]
+  simp [I, hε, min_eq_left (by linarith : T ≤ 2 * ε)]
 
 instance : IsUnifLocDoublingMeasure (volume : Measure (AddCircle T)) := by
   refine ⟨⟨Real.toNNReal 2, Filter.eventually_of_forall fun ε x => ?_⟩⟩
@@ -149,14 +149,14 @@ protected theorem lintegral_preimage (t : ℝ) (f : AddCircle T → ℝ≥0∞) 
     MeasurableEquiv.coe_mk, Equiv.coe_fn_symm_mk] at this
   rw [← (AddCircle.measurePreserving_mk T t).map_eq]
   convert this.symm using 1
-  · rw [← map_comap_subtype_coe m _]
-    exact MeasurableEmbedding.lintegral_map (MeasurableEmbedding.subtype_coe m) _
-  · congr 1
-    have : ((↑) : Ioc t (t + T) → AddCircle T) = ((↑) : ℝ → AddCircle T) ∘ ((↑) : _ → ℝ)
-    ext1 x; rfl
-    simp_rw [this]
-    rw [← map_map AddCircle.measurable_mk' measurable_subtype_coe, ← map_comap_subtype_coe m]
-    rfl
+  rw [← map_comap_subtype_coe m _]
+  exact MeasurableEmbedding.lintegral_map (MeasurableEmbedding.subtype_coe m) _
+  congr 1
+  have : ((↑) : Ioc t (t + T) → AddCircle T) = ((↑) : ℝ → AddCircle T) ∘ ((↑) : _ → ℝ)
+  ext1 x; rfl
+  simp_rw [this]
+  rw [← map_map AddCircle.measurable_mk' measurable_subtype_coe, ← map_comap_subtype_coe m]
+  rfl
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
@@ -244,11 +244,11 @@ depend on `t`. -/
 theorem intervalIntegral_add_eq (hf : Periodic f T) (t s : ℝ) :
     ∫ x in t..t + T, f x = ∫ x in s..s + T, f x := by
   rcases lt_trichotomy (0 : ℝ) T with (hT | rfl | hT)
-  · exact hf.intervalIntegral_add_eq_of_pos hT t s
-  · simp
-  · rw [← neg_inj, ← integral_symm, ← integral_symm]
-    simpa only [← sub_eq_add_neg, add_sub_cancel_right] using
-      hf.neg.intervalIntegral_add_eq_of_pos (neg_pos.2 hT) (t + T) (s + T)
+  exact hf.intervalIntegral_add_eq_of_pos hT t s
+  simp
+  rw [← neg_inj, ← integral_symm, ← integral_symm]
+  simpa only [← sub_eq_add_neg, add_sub_cancel_right] using
+    hf.neg.intervalIntegral_add_eq_of_pos (neg_pos.2 hT) (t + T) (s + T)
 
 /-- If `f` is an integrable periodic function with period `T`, then its integral over `[t, s + T]`
 is the sum of its integrals over the intervals `[t, s]` and `[t, t + T]`. -/
@@ -269,17 +269,17 @@ theorem intervalIntegral_add_zsmul_eq (hf : Periodic f T) (n : ℤ) (t : ℝ)
   -- First prove it for natural numbers
   have : ∀ m : ℕ, (∫ x in (0)..m • T, f x) = m • ∫ x in (0)..T, f x := fun m ↦ by
     induction' m with m ih
-    · simp
-    · simp only [succ_nsmul, hf.intervalIntegral_add_eq_add 0 (m • T) h_int, ih, zero_add]
+    simp
+    simp only [succ_nsmul, hf.intervalIntegral_add_eq_add 0 (m • T) h_int, ih, zero_add]
   -- Then prove it for all integers
   cases' n with n n
-  · simp [← this n]
-  · conv_rhs => rw [negSucc_zsmul]
-    have h₀ : Int.negSucc n • T + (n + 1) • T = 0
-    simp; linarith
-    rw [integral_symm, ← (hf.nsmul (n + 1)).funext, neg_inj]
-    simp_rw [integral_comp_add_right, h₀, zero_add, this (n + 1), add_comm T,
-      hf.intervalIntegral_add_eq ((n + 1) • T) 0, zero_add]
+  simp [← this n]
+  conv_rhs => rw [negSucc_zsmul]
+  have h₀ : Int.negSucc n • T + (n + 1) • T = 0
+  simp; linarith
+  rw [integral_symm, ← (hf.nsmul (n + 1)).funext, neg_inj]
+  simp_rw [integral_comp_add_right, h₀, zero_add, this (n + 1), add_comm T,
+    hf.intervalIntegral_add_eq ((n + 1) • T) 0, zero_add]
 
 section RealValued
 

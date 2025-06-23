@@ -113,14 +113,14 @@ theorem mul_rat (h : LiouvilleWith p x) (hr : r ≠ 0) : LiouvilleWith p (x * r)
   have A : (↑(r.num * m) : ℝ) / ↑(r.den • id n) = m / n * r
   simp [← div_mul_div_comm, ← r.cast_def, mul_comm]
   refine ⟨r.num * m, ?_, ?_⟩
-  · rw [A]; simp [hne, hr]
-  · rw [A, ← sub_mul, abs_mul]
-    simp only [smul_eq_mul, id, Nat.cast_mul]
-    calc _ < C / ↑n ^ p * |↑r| := by gcongr
-      _ = ↑r.den ^ p * (↑|r| * C) / (↑r.den * ↑n) ^ p := ?_
-    rw [mul_rpow, mul_div_mul_left, mul_comm, mul_div_assoc]
-    · simp only [Rat.cast_abs, le_refl]
-    all_goals positivity
+  rw [A]; simp [hne, hr]
+  rw [A, ← sub_mul, abs_mul]
+  simp only [smul_eq_mul, id, Nat.cast_mul]
+  calc _ < C / ↑n ^ p * |↑r| := by gcongr
+    _ = ↑r.den ^ p * (↑|r| * C) / (↑r.den * ↑n) ^ p := ?_
+  rw [mul_rpow, mul_div_mul_left, mul_comm, mul_div_assoc]
+  simp only [Rat.cast_abs, le_refl]
+  all_goals positivity
 
 /-- The product `x * r`, `r : ℚ`, `r ≠ 0`, is a Liouville number with exponent `p` if and only if
 `x` satisfies the same condition. -/
@@ -282,10 +282,10 @@ theorem ne_cast_int (h : LiouvilleWith p x) (hp : 1 < p) (m : ℤ) : x ≠ m := 
 protected theorem irrational (h : LiouvilleWith p x) (hp : 1 < p) : Irrational x := by
   rintro ⟨r, rfl⟩
   rcases eq_or_ne r 0 with (rfl | h0)
-  · refine h.ne_cast_int hp 0 ?_; rw [Rat.cast_zero, Int.cast_zero]
-  · refine (h.mul_rat (inv_ne_zero h0)).ne_cast_int hp 1 ?_
-    rw [Rat.cast_inv, mul_inv_cancel]
-    exacts [Int.cast_one.symm, Rat.cast_ne_zero.mpr h0]
+  refine h.ne_cast_int hp 0 ?_; rw [Rat.cast_zero, Int.cast_zero]
+  refine (h.mul_rat (inv_ne_zero h0)).ne_cast_int hp 1 ?_
+  rw [Rat.cast_inv, mul_inv_cancel]
+  exacts [Int.cast_one.symm, Rat.cast_ne_zero.mpr h0]
 
 end LiouvilleWith
 
@@ -315,10 +315,10 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
   rcases hx m with ⟨a, b, hb, hne, hlt⟩
   lift b to ℕ using zero_le_one.trans hb.le; norm_cast at hb; push_cast at hne hlt
   rcases le_or_lt N b with h | h
-  · refine (hN b h a hne).not_lt (hlt.trans_le ?_)
-    gcongr
-    exact_mod_cast hb.le
-  · exact (hm b h hb _).not_lt hlt
+  refine (hN b h a hne).not_lt (hlt.trans_le ?_)
+  gcongr
+  exact_mod_cast hb.le
+  exact (hm b h hb _).not_lt hlt
 
 /-- A Liouville number is a Liouville number with any real exponent. -/
 protected theorem liouvilleWith (hx : Liouville x) (p : ℝ) : LiouvilleWith p x := by

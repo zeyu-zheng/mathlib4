@@ -143,25 +143,25 @@ theorem le_degrees_add {p q : MvPolynomial σ R} (h : p.degrees.Disjoint q.degre
   intro d hd
   rw [Multiset.disjoint_iff_ne] at h
   obtain rfl | h0 := eq_or_ne d 0
-  · rw [toMultiset_zero]; apply Multiset.zero_le
-  · refine Finset.le_sup_of_le (b := d) ?_ le_rfl
-    rw [mem_support_iff, coeff_add]
-    suffices q.coeff d = 0 by rwa [this, add_zero, coeff, ← Finsupp.mem_support_iff]
-    rw [Ne, ← Finsupp.support_eq_empty, ← Ne, ← Finset.nonempty_iff_ne_empty] at h0
-    obtain ⟨j, hj⟩ := h0
-    contrapose! h
-    rw [mem_support_iff] at hd
-    refine ⟨j, ?_, j, ?_, rfl⟩
-    all_goals rw [mem_degrees]; refine ⟨d, ?_, hj⟩; assumption
+  rw [toMultiset_zero]; apply Multiset.zero_le
+  refine Finset.le_sup_of_le (b := d) ?_ le_rfl
+  rw [mem_support_iff, coeff_add]
+  suffices q.coeff d = 0 by rwa [this, add_zero, coeff, ← Finsupp.mem_support_iff]
+  rw [Ne, ← Finsupp.support_eq_empty, ← Ne, ← Finset.nonempty_iff_ne_empty] at h0
+  obtain ⟨j, hj⟩ := h0
+  contrapose! h
+  rw [mem_support_iff] at hd
+  refine ⟨j, ?_, j, ?_, rfl⟩
+  all_goals rw [mem_degrees]; refine ⟨d, ?_, hj⟩; assumption
 
 theorem degrees_add_of_disjoint [DecidableEq σ] {p q : MvPolynomial σ R}
     (h : Multiset.Disjoint p.degrees q.degrees) : (p + q).degrees = p.degrees ∪ q.degrees := by
   apply le_antisymm
-  · apply degrees_add
-  · apply Multiset.union_le
-    · apply le_degrees_add h
-    · rw [add_comm]
-      apply le_degrees_add h.symm
+  apply degrees_add
+  apply Multiset.union_le
+  apply le_degrees_add h
+  rw [add_comm]
+  apply le_degrees_add h.symm
 
 open Classical in
 theorem degrees_map [CommSemiring S] (p : MvPolynomial σ R) (f : R →+* S) :
@@ -242,7 +242,7 @@ open Classical in
 theorem degreeOf_X [DecidableEq σ] (i j : σ) [Nontrivial R] :
     degreeOf i (X j : MvPolynomial σ R) = if i = j then 1 else 0 := by
   by_cases c : i = j
-  · simp only [c, if_true, eq_self_iff_true, degreeOf_def, degrees_X, Multiset.count_singleton]
+  simp only [c, if_true, eq_self_iff_true, degreeOf_def, degrees_X, Multiset.count_singleton]
   simp [c, if_false, degreeOf_def, degrees_X]
 
 theorem degreeOf_add_le (n : σ) (f g : MvPolynomial σ R) :
@@ -357,10 +357,10 @@ open Classical in
 theorem totalDegree_add_eq_left_of_totalDegree_lt {p q : MvPolynomial σ R}
     (h : q.totalDegree < p.totalDegree) : (p + q).totalDegree = p.totalDegree := by
     apply le_antisymm
-    · rw [← max_eq_left_of_lt h]
-      exact totalDegree_add p q
+    rw [← max_eq_left_of_lt h]
+    exact totalDegree_add p q
     by_cases hp : p = 0
-    · simp [hp]
+    simp [hp]
     obtain ⟨b, hb₁, hb₂⟩ :=
       p.support.exists_mem_eq_sup (Finsupp.support_nonempty_iff.mpr hp) fun m : σ →₀ ℕ =>
         Multiset.card (toMultiset m)
@@ -432,9 +432,9 @@ theorem totalDegree_finset_prod {ι : Type*} (s : Finset ι) (f : ι → MvPolyn
 theorem totalDegree_finset_sum {ι : Type*} (s : Finset ι) (f : ι → MvPolynomial σ R) :
     (s.sum f).totalDegree ≤ Finset.sup s fun i => (f i).totalDegree := by
   induction' s using Finset.cons_induction with a s has hind
-  · exact zero_le _
-  · rw [Finset.sum_cons, Finset.sup_cons, sup_eq_max]
-    exact (MvPolynomial.totalDegree_add _ _).trans (max_le_max le_rfl hind)
+  exact zero_le _
+  rw [Finset.sum_cons, Finset.sup_cons, sup_eq_max]
+  exact (MvPolynomial.totalDegree_add _ _).trans (max_le_max le_rfl hind)
 
 lemma totalDegree_finsetSum_le {ι : Type*} {s : Finset ι} {f : ι → MvPolynomial σ R} {d : ℕ}
     (hf : ∀ i ∈ s, (f i).totalDegree ≤ d) : (s.sum f).totalDegree ≤ d :=
@@ -462,11 +462,11 @@ open Classical in
 theorem coeff_eq_zero_of_totalDegree_lt {f : MvPolynomial σ R} {d : σ →₀ ℕ}
     (h : f.totalDegree < ∑ i ∈ d.support, d i) : coeff d f = 0 := by
     rw [totalDegree, Finset.sup_lt_iff] at h
-    · specialize h d
-      rw [mem_support_iff] at h
-      refine not_not.mp (mt h ?_)
-      exact lt_irrefl _
-    · exact lt_of_le_of_lt (Nat.zero_le _) h
+    specialize h d
+    rw [mem_support_iff] at h
+    refine not_not.mp (mt h ?_)
+    exact lt_irrefl _
+    exact lt_of_le_of_lt (Nat.zero_le _) h
 
 open Classical in
 theorem totalDegree_rename_le (f : σ → τ) (p : MvPolynomial σ R) :

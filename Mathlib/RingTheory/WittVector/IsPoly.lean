@@ -291,22 +291,22 @@ def onePoly (n : ℕ) : MvPolynomial ℕ ℤ :=
 theorem bind₁_onePoly_wittPolynomial [hp : Fact p.Prime] (n : ℕ) :
     bind₁ onePoly (wittPolynomial p ℤ n) = 1 := by
   rw [wittPolynomial_eq_sum_C_mul_X_pow, map_sum, Finset.sum_eq_single 0]
-  · simp only [onePoly, one_pow, one_mul, map_pow, C_1, pow_zero, bind₁_X_right, if_true,
-      eq_self_iff_true]
-  · intro i _hi hi0
-    simp only [onePoly, if_neg hi0, zero_pow (pow_ne_zero _ hp.1.ne_zero), mul_zero, map_pow,
-      bind₁_X_right, map_mul]
-  · simp
+  simp only [onePoly, one_pow, one_mul, map_pow, C_1, pow_zero, bind₁_X_right, if_true,
+    eq_self_iff_true]
+  intro i _hi hi0
+  simp only [onePoly, if_neg hi0, zero_pow (pow_ne_zero _ hp.1.ne_zero), mul_zero, map_pow,
+    bind₁_X_right, map_mul]
+  simp
 
 /-- The function that is constantly one on Witt vectors is a polynomial function. -/
 instance oneIsPoly [Fact p.Prime] : IsPoly p fun _ _ _ => 1 :=
   ⟨⟨onePoly, by
       intros; funext n; cases n
-      · -- Porting note: was `simp only [...]` but with slightly different `[...]`.
-        simp only [Nat.zero_eq, lt_self_iff_false, one_coeff_zero, onePoly, ite_true, map_one]
-      · -- Porting note: was `simp only [...]` but with slightly different `[...]`.
-        simp only [Nat.succ_pos', one_coeff_eq_of_pos, onePoly, Nat.succ_ne_zero, ite_false,
-          map_zero]
+      -- Porting note: was `simp only [...]` but with slightly different `[...]`.
+      simp only [Nat.zero_eq, lt_self_iff_false, one_coeff_zero, onePoly, ite_true, map_one]
+      -- Porting note: was `simp only [...]` but with slightly different `[...]`.
+      simp only [Nat.succ_pos', one_coeff_eq_of_pos, onePoly, Nat.succ_ne_zero, ite_false,
+        map_zero]
   ⟩⟩
 
 end ZeroOne

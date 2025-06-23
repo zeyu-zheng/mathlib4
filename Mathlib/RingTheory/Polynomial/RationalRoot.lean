@@ -68,13 +68,13 @@ theorem num_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) : num A r ∣
     simp only [coeff_scaleRoots, tsub_zero] at this
     haveI inst := Classical.propDecidable
     by_cases hr : num A r = 0
-    · simp_all [nonZeroDivisors.coe_ne_zero]
-    · refine dvd_of_dvd_mul_left_of_no_prime_factors hr ?_ this
-      intro q dvd_num dvd_denom_pow hq
-      apply hq.not_unit
-      exact num_den_reduced A r dvd_num (hq.dvd_of_dvd_pow dvd_denom_pow)
+    simp_all [nonZeroDivisors.coe_ne_zero]
+    refine dvd_of_dvd_mul_left_of_no_prime_factors hr ?_ this
+    intro q dvd_num dvd_denom_pow hq
+    apply hq.not_unit
+    exact num_den_reduced A r dvd_num (hq.dvd_of_dvd_pow dvd_denom_pow)
   convert dvd_term_of_isRoot_of_dvd_terms 0 (num_isRoot_scaleRoots_of_aeval_eq_zero hr) _
-  · rw [pow_zero, mul_one]
+  rw [pow_zero, mul_one]
   intro j hj
   apply dvd_mul_of_dvd_right
   convert pow_dvd_pow (num A r) (Nat.succ_le_of_lt (bot_lt_iff_ne_bot.mpr hj))
@@ -96,11 +96,11 @@ theorem den_dvd_of_is_root {p : A[X]} {r : K} (hr : aeval r p = 0) :
   apply dvd_term_of_isRoot_of_dvd_terms _ (num_isRoot_scaleRoots_of_aeval_eq_zero hr)
   intro j hj
   by_cases h : j < p.natDegree
-  · rw [coeff_scaleRoots]
-    refine (dvd_mul_of_dvd_right ?_ _).mul_right _
-    convert pow_dvd_pow (den A r : A) (Nat.succ_le_iff.mpr (lt_tsub_iff_left.mpr _))
-    · exact (pow_one _).symm
-    simpa using h
+  rw [coeff_scaleRoots]
+  refine (dvd_mul_of_dvd_right ?_ _).mul_right _
+  convert pow_dvd_pow (den A r : A) (Nat.succ_le_iff.mpr (lt_tsub_iff_left.mpr _))
+  exact (pow_one _).symm
+  simpa using h
   rw [← natDegree_scaleRoots p (den A r)] at *
   rw [coeff_eq_zero_of_natDegree_lt (lt_of_le_of_ne (le_of_not_gt h) hj.symm),
     zero_mul]
@@ -119,13 +119,13 @@ theorem exists_integer_of_is_root_of_monic {p : A[X]} (hp : Monic p) {r : K} (hr
     but the divisibility condition is annoying -/
   obtain ⟨inv, h_inv⟩ := hp ▸ den_dvd_of_is_root hr
   use num A r * inv, ?_
-  · have h : inv ∣ 1 := ⟨den A r, by simpa [mul_comm] using h_inv⟩
-    simpa using mul_dvd_mul (num_dvd_of_is_root hr) h
-  · have d_ne_zero : algebraMap A K (den A r) ≠ 0 :=
-      IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors (den A r).prop
-    nth_rw 1 [← mk'_num_den' A r]
-    rw [div_eq_iff d_ne_zero, map_mul, mul_assoc, mul_comm ((algebraMap A K) inv),
-      ← map_mul, ← h_inv, map_one, mul_one]
+  have h : inv ∣ 1 := ⟨den A r, by simpa [mul_comm] using h_inv⟩
+  simpa using mul_dvd_mul (num_dvd_of_is_root hr) h
+  have d_ne_zero : algebraMap A K (den A r) ≠ 0 :=
+    IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors (den A r).prop
+  nth_rw 1 [← mk'_num_den' A r]
+  rw [div_eq_iff d_ne_zero, map_mul, mul_assoc, mul_comm ((algebraMap A K) inv),
+    ← map_mul, ← h_inv, map_one, mul_one]
 
 namespace UniqueFactorizationMonoid
 

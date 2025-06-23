@@ -217,10 +217,10 @@ theorem coe_units_inv (A : (Matrix n n α)ˣ) : ↑A⁻¹ = (A⁻¹ : Matrix n n
 /-- The nonsingular inverse is the same as the general `Ring.inverse`. -/
 theorem nonsing_inv_eq_ring_inverse : A⁻¹ = Ring.inverse A := by
   by_cases h_det : IsUnit A.det
-  · cases (A.isUnit_iff_isUnit_det.mpr h_det).nonempty_invertible
-    rw [← invOf_eq_nonsing_inv, Ring.inverse_invertible]
-  · have h := mt A.isUnit_iff_isUnit_det.mp h_det
-    rw [Ring.inverse_non_unit _ h, nonsing_inv_apply_not_isUnit A h_det]
+  cases (A.isUnit_iff_isUnit_det.mpr h_det).nonempty_invertible
+  rw [← invOf_eq_nonsing_inv, Ring.inverse_invertible]
+  have h := mt A.isUnit_iff_isUnit_det.mp h_det
+  rw [Ring.inverse_non_unit _ h, nonsing_inv_apply_not_isUnit A h_det]
 
 theorem transpose_nonsing_inv : A⁻¹ᵀ = Aᵀ⁻¹ := by
   rw [inv_def, inv_def, transpose_smul, det_transpose, adjugate_transpose]
@@ -374,8 +374,8 @@ theorem mulVec_surjective_iff_isUnit {A : Matrix m m R} :
 theorem vecMul_injective_iff_isUnit {A : Matrix m m K} :
     Function.Injective A.vecMul ↔ IsUnit A := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · rw [← vecMul_surjective_iff_isUnit]
-    exact LinearMap.surjective_of_injective (f := A.vecMulLinear) h
+  rw [← vecMul_surjective_iff_isUnit]
+  exact LinearMap.surjective_of_injective (f := A.vecMulLinear) h
   change Function.Injective A.vecMulLinear
   rw [← LinearMap.ker_eq_bot, LinearMap.ker_eq_bot']
   intro c hc
@@ -428,8 +428,8 @@ variable (A : Matrix n n α) (B : Matrix n n α)
 
 theorem nonsing_inv_cancel_or_zero : A⁻¹ * A = 1 ∧ A * A⁻¹ = 1 ∨ A⁻¹ = 0 := by
   by_cases h : IsUnit A.det
-  · exact Or.inl ⟨nonsing_inv_mul _ h, mul_nonsing_inv _ h⟩
-  · exact Or.inr (nonsing_inv_apply_not_isUnit _ h)
+  exact Or.inl ⟨nonsing_inv_mul _ h, mul_nonsing_inv _ h⟩
+  exact Or.inr (nonsing_inv_apply_not_isUnit _ h)
 
 theorem det_nonsing_inv_mul_det (h : IsUnit A.det) : A⁻¹.det * A.det = 1 := by
   rw [← det_mul, A.nonsing_inv_mul h, det_one]
@@ -437,12 +437,12 @@ theorem det_nonsing_inv_mul_det (h : IsUnit A.det) : A⁻¹.det * A.det = 1 := b
 @[simp]
 theorem det_nonsing_inv : A⁻¹.det = Ring.inverse A.det := by
   by_cases h : IsUnit A.det
-  · cases h.nonempty_invertible
-    letI := invertibleOfDetInvertible A
-    rw [Ring.inverse_invertible, ← invOf_eq_nonsing_inv, det_invOf]
+  cases h.nonempty_invertible
+  letI := invertibleOfDetInvertible A
+  rw [Ring.inverse_invertible, ← invOf_eq_nonsing_inv, det_invOf]
   cases isEmpty_or_nonempty n
-  · rw [det_isEmpty, det_isEmpty, Ring.inverse_one]
-  · rw [Ring.inverse_non_unit _ h, nonsing_inv_apply_not_isUnit _ h, det_zero ‹_›]
+  rw [det_isEmpty, det_isEmpty, Ring.inverse_one]
+  rw [Ring.inverse_non_unit _ h, nonsing_inv_apply_not_isUnit _ h, det_zero ‹_›]
 
 theorem isUnit_nonsing_inv_det (h : IsUnit A.det) : IsUnit A⁻¹.det :=
   isUnit_of_mul_eq_one _ _ (A.det_nonsing_inv_mul_det h)
@@ -514,15 +514,15 @@ variable (A)
 @[simp]
 theorem inv_zero : (0 : Matrix n n α)⁻¹ = 0 := by
   cases' subsingleton_or_nontrivial α with ht ht
-  · simp [eq_iff_true_of_subsingleton]
+  simp [eq_iff_true_of_subsingleton]
   rcases (Fintype.card n).zero_le.eq_or_lt with hc | hc
-  · rw [eq_comm, Fintype.card_eq_zero_iff] at hc
-    haveI := hc
-    ext i
-    exact (IsEmpty.false i).elim
-  · have hn : Nonempty n := Fintype.card_pos_iff.mp hc
-    refine nonsing_inv_apply_not_isUnit _ ?_
-    simp [hn]
+  rw [eq_comm, Fintype.card_eq_zero_iff] at hc
+  haveI := hc
+  ext i
+  exact (IsEmpty.false i).elim
+  have hn : Nonempty n := Fintype.card_pos_iff.mp hc
+  refine nonsing_inv_apply_not_isUnit _ ?_
+  simp [hn]
 
 noncomputable instance : InvOneClass (Matrix n n α) :=
   { Matrix.one, Matrix.inv with inv_one := inv_eq_left_inv (by simp) }
@@ -586,20 +586,20 @@ theorem isUnit_diagonal {v : n → α} : IsUnit (diagonal v) ↔ IsUnit v := by
 theorem inv_diagonal (v : n → α) : (diagonal v)⁻¹ = diagonal (Ring.inverse v) := by
   rw [nonsing_inv_eq_ring_inverse]
   by_cases h : IsUnit v
-  · have := isUnit_diagonal.mpr h
-    cases this.nonempty_invertible
-    cases h.nonempty_invertible
-    rw [Ring.inverse_invertible, Ring.inverse_invertible, invOf_diagonal_eq]
-  · have := isUnit_diagonal.not.mpr h
-    rw [Ring.inverse_non_unit _ h, Pi.zero_def, diagonal_zero, Ring.inverse_non_unit _ this]
+  have := isUnit_diagonal.mpr h
+  cases this.nonempty_invertible
+  cases h.nonempty_invertible
+  rw [Ring.inverse_invertible, Ring.inverse_invertible, invOf_diagonal_eq]
+  have := isUnit_diagonal.not.mpr h
+  rw [Ring.inverse_non_unit _ h, Pi.zero_def, diagonal_zero, Ring.inverse_non_unit _ this]
 
 end Diagonal
 
 @[simp]
 theorem inv_inv_inv (A : Matrix n n α) : A⁻¹⁻¹⁻¹ = A⁻¹ := by
   by_cases h : IsUnit A.det
-  · rw [nonsing_inv_nonsing_inv _ h]
-  · simp [nonsing_inv_apply_not_isUnit _ h]
+  rw [nonsing_inv_nonsing_inv _ h]
+  simp [nonsing_inv_apply_not_isUnit _ h]
 
 /-- The `Matrix` version of `inv_add_inv'` -/
 theorem inv_add_inv {A B : Matrix n n α} (h : IsUnit A ↔ IsUnit B) :
@@ -695,12 +695,12 @@ theorem isUnit_submatrix_equiv {A : Matrix m m α} (e₁ e₂ : n ≃ m) :
 theorem inv_submatrix_equiv (A : Matrix m m α) (e₁ e₂ : n ≃ m) :
     (A.submatrix e₁ e₂)⁻¹ = A⁻¹.submatrix e₂ e₁ := by
   by_cases h : IsUnit A
-  · cases h.nonempty_invertible
-    letI := submatrixEquivInvertible A e₁ e₂
-    rw [← invOf_eq_nonsing_inv, ← invOf_eq_nonsing_inv, invOf_submatrix_equiv_eq A]
-  · have := (isUnit_submatrix_equiv e₁ e₂).not.mpr h
-    simp_rw [nonsing_inv_eq_ring_inverse, Ring.inverse_non_unit _ h, Ring.inverse_non_unit _ this,
-      submatrix_zero, Pi.zero_apply]
+  cases h.nonempty_invertible
+  letI := submatrixEquivInvertible A e₁ e₂
+  rw [← invOf_eq_nonsing_inv, ← invOf_eq_nonsing_inv, invOf_submatrix_equiv_eq A]
+  have := (isUnit_submatrix_equiv e₁ e₂).not.mpr h
+  simp_rw [nonsing_inv_eq_ring_inverse, Ring.inverse_non_unit _ h, Ring.inverse_non_unit _ this,
+    submatrix_zero, Pi.zero_apply]
 
 theorem inv_reindex (e₁ e₂ : n ≃ m) (A : Matrix n n α) : (reindex e₁ e₂ A)⁻¹ = reindex e₂ e₁ A⁻¹ :=
   inv_submatrix_equiv A e₁.symm e₂.symm

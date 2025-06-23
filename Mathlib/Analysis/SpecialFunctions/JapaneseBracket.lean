@@ -112,28 +112,28 @@ theorem finite_integral_one_add_norm {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r)
     ∫⁻ t in Ioi 0, f t ≤ ∫⁻ t in Ioc 0 1 ∪ Ioi 1, f t := lintegral_mono_set Ioi_subset_Ioc_union_Ioi
     _ ≤ (∫⁻ t in Ioc 0 1, f t) + ∫⁻ t in Ioi 1, f t := lintegral_union_le _ _ _
     _ < ∞ := ENNReal.add_lt_top.2 ⟨?_, ?_⟩
-  · -- We use estimates from auxiliary lemmas to deal with integral from `0` to `1`
-    have h_int' : ∀ t ∈ Ioc (0 : ℝ) 1,
-        f t = ENNReal.ofReal ((t ^ (-r⁻¹) - 1) ^ finrank ℝ E) * mB := fun t ht ↦ by
-      refine μ.addHaar_closedBall (0 : E) ?_
-      rw [sub_nonneg]
-      exact Real.one_le_rpow_of_pos_of_le_one_of_nonpos ht.1 ht.2 (by simp [hr.le])
-    rw [setLIntegral_congr_fun measurableSet_Ioc (ae_of_all _ h_int'),
-      lintegral_mul_const' _ _ measure_ball_lt_top.ne]
-    exact ENNReal.mul_lt_top
-      (finite_integral_rpow_sub_one_pow_aux (finrank ℝ E) hnr).ne measure_ball_lt_top.ne
-  · -- The integral from 1 to ∞ is zero:
-    have h_int'' : ∀ t ∈ Ioi (1 : ℝ), f t = 0 := fun t ht => by
-      simp only [f, closedBall_rpow_sub_one_eq_empty_aux E hr ht, measure_empty]
-    -- The integral over the constant zero function is finite:
-    rw [setLIntegral_congr_fun measurableSet_Ioi (ae_of_all volume <| h_int''), lintegral_const 0,
-      zero_mul]
-    exact WithTop.zero_lt_top
+  -- We use estimates from auxiliary lemmas to deal with integral from `0` to `1`
+  have h_int' : ∀ t ∈ Ioc (0 : ℝ) 1,
+      f t = ENNReal.ofReal ((t ^ (-r⁻¹) - 1) ^ finrank ℝ E) * mB := fun t ht ↦ by
+    refine μ.addHaar_closedBall (0 : E) ?_
+    rw [sub_nonneg]
+    exact Real.one_le_rpow_of_pos_of_le_one_of_nonpos ht.1 ht.2 (by simp [hr.le])
+  rw [setLIntegral_congr_fun measurableSet_Ioc (ae_of_all _ h_int'),
+    lintegral_mul_const' _ _ measure_ball_lt_top.ne]
+  exact ENNReal.mul_lt_top
+    (finite_integral_rpow_sub_one_pow_aux (finrank ℝ E) hnr).ne measure_ball_lt_top.ne
+  -- The integral from 1 to ∞ is zero:
+  have h_int'' : ∀ t ∈ Ioi (1 : ℝ), f t = 0 := fun t ht => by
+    simp only [f, closedBall_rpow_sub_one_eq_empty_aux E hr ht, measure_empty]
+  -- The integral over the constant zero function is finite:
+  rw [setLIntegral_congr_fun measurableSet_Ioi (ae_of_all volume <| h_int''), lintegral_const 0,
+    zero_mul]
+  exact WithTop.zero_lt_top
 
 theorem integrable_one_add_norm {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r) :
     Integrable (fun x ↦ (1 + ‖x‖) ^ (-r)) μ := by
   constructor
-  · apply Measurable.aestronglyMeasurable (by fun_prop)
+  apply Measurable.aestronglyMeasurable (by fun_prop)
   -- Lower Lebesgue integral
   have : (∫⁻ a : E, ‖(1 + ‖a‖) ^ (-r)‖₊ ∂μ) = ∫⁻ a : E, ENNReal.ofReal ((1 + ‖a‖) ^ (-r)) ∂μ :=
     lintegral_nnnorm_eq_of_nonneg fun _ => rpow_nonneg (by positivity) _
@@ -145,6 +145,6 @@ theorem integrable_rpow_neg_one_add_norm_sq {r : ℝ} (hnr : (finrank ℝ E : �
   have hr : 0 < r := lt_of_le_of_lt (finrank ℝ E).cast_nonneg hnr
   refine ((integrable_one_add_norm hnr).const_mul <| (2 : ℝ) ^ (r / 2)).mono'
     ?_ (eventually_of_forall fun x => ?_)
-  · apply Measurable.aestronglyMeasurable (by fun_prop)
+  apply Measurable.aestronglyMeasurable (by fun_prop)
   refine (abs_of_pos ?_).trans_le (rpow_neg_one_add_norm_sq_le x hr)
   positivity

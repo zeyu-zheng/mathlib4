@@ -156,10 +156,10 @@ theorem injective_iff_surjective_of_finrank_eq_finrank [FiniteDimensional K V]
     Function.Injective f ↔ Function.Surjective f := by
   have := finrank_range_add_finrank_ker f
   rw [← ker_eq_bot, ← range_eq_top]; refine ⟨fun h => ?_, fun h => ?_⟩
-  · rw [h, finrank_bot, add_zero, H] at this
-    exact eq_top_of_finrank_eq this
-  · rw [h, finrank_top, H] at this
-    exact Submodule.finrank_eq_zero.1 (add_right_injective _ this)
+  rw [h, finrank_bot, add_zero, H] at this
+  exact eq_top_of_finrank_eq this
+  rw [h, finrank_top, H] at this
+  exact Submodule.finrank_eq_zero.1 (add_right_injective _ this)
 
 theorem ker_eq_bot_iff_range_eq_top_of_finrank_eq_finrank [FiniteDimensional K V]
     [FiniteDimensional K V₂] (H : finrank K V = finrank K V₂) {f : V →ₗ[K] V₂} :
@@ -314,12 +314,12 @@ theorem Subalgebra.isSimpleOrder_of_finrank (hr : finrank F E = 2) :
       have : finrank F S ≤ 2 := hr ▸ S.toSubmodule.finrank_le
       have : 0 < finrank F S := finrank_pos_iff.mpr inferInstance
       interval_cases h : finrank F { x // x ∈ S }
-      · left
-        exact Subalgebra.eq_bot_of_finrank_one h
-      · right
-        rw [← hr] at h
-        rw [← Algebra.toSubmodule_eq_top]
-        exact eq_top_of_finrank_eq h }
+      left
+      exact Subalgebra.eq_bot_of_finrank_one h
+      right
+      rw [← hr] at h
+      rw [← Algebra.toSubmodule_eq_top]
+      exact eq_top_of_finrank_eq h }
 
 end SubalgebraRank
 
@@ -338,18 +338,18 @@ theorem exists_ker_pow_eq_ker_pow_succ [FiniteDimensional K V] (f : End K V) :
         n ≤ finrank K (LinearMap.ker (f ^ n)) := by
       intro n hn
       induction' n with n ih
-      · exact zero_le (finrank _ _)
-      · have h_ker_lt_ker : LinearMap.ker (f ^ n) < LinearMap.ker (f ^ n.succ) := by
-          refine lt_of_le_of_ne ?_ (h_contra n (Nat.le_of_succ_le_succ hn))
-          rw [pow_succ']
-          apply LinearMap.ker_le_ker_comp
-        have h_finrank_lt_finrank :
-            finrank K (LinearMap.ker (f ^ n)) < finrank K (LinearMap.ker (f ^ n.succ)) := by
-          apply Submodule.finrank_lt_finrank_of_lt h_ker_lt_ker
-        calc
-          n.succ ≤ (finrank K ↑(LinearMap.ker (f ^ n))).succ :=
-            Nat.succ_le_succ (ih (Nat.le_of_succ_le hn))
-          _ ≤ finrank K ↑(LinearMap.ker (f ^ n.succ)) := Nat.succ_le_of_lt h_finrank_lt_finrank
+      exact zero_le (finrank _ _)
+      have h_ker_lt_ker : LinearMap.ker (f ^ n) < LinearMap.ker (f ^ n.succ) := by
+        refine lt_of_le_of_ne ?_ (h_contra n (Nat.le_of_succ_le_succ hn))
+        rw [pow_succ']
+        apply LinearMap.ker_le_ker_comp
+      have h_finrank_lt_finrank :
+          finrank K (LinearMap.ker (f ^ n)) < finrank K (LinearMap.ker (f ^ n.succ)) := by
+        apply Submodule.finrank_lt_finrank_of_lt h_ker_lt_ker
+      calc
+        n.succ ≤ (finrank K ↑(LinearMap.ker (f ^ n))).succ :=
+          Nat.succ_le_succ (ih (Nat.le_of_succ_le hn))
+        _ ≤ finrank K ↑(LinearMap.ker (f ^ n.succ)) := Nat.succ_le_of_lt h_finrank_lt_finrank
     have h_any_n_lt : ∀ n, n ≤ (finrank K V).succ → n ≤ finrank K V := fun n hn =>
       (h_le_ker_pow n hn).trans (Submodule.finrank_le _)
     show False
@@ -370,9 +370,9 @@ theorem ker_pow_eq_ker_pow_finrank_of_le [FiniteDimensional K V] {f : End K V} {
 theorem ker_pow_le_ker_pow_finrank [FiniteDimensional K V] (f : End K V) (m : ℕ) :
     LinearMap.ker (f ^ m) ≤ LinearMap.ker (f ^ finrank K V) := by
   by_cases h_cases : m < finrank K V
-  · rw [← add_tsub_cancel_of_le (Nat.le_of_lt h_cases), add_comm, pow_add]
-    apply LinearMap.ker_le_ker_comp
-  · rw [ker_pow_eq_ker_pow_finrank_of_le (le_of_not_lt h_cases)]
+  rw [← add_tsub_cancel_of_le (Nat.le_of_lt h_cases), add_comm, pow_add]
+  apply LinearMap.ker_le_ker_comp
+  rw [ker_pow_eq_ker_pow_finrank_of_le (le_of_not_lt h_cases)]
 
 end End
 

@@ -295,8 +295,8 @@ protected theorem intCast_mem (n : ℤ) : (n : K) ∈ s := intCast_mem s n
 
 theorem zpow_mem {x : K} (hx : x ∈ s) (n : ℤ) : x ^ n ∈ s := by
   cases n
-  · simpa using s.pow_mem hx _
-  · simpa [pow_succ'] using s.inv_mem (s.mul_mem hx (s.pow_mem hx _))
+  simpa using s.pow_mem hx _
+  simpa [pow_succ'] using s.inv_mem (s.mul_mem hx (s.pow_mem hx _))
 
 instance : Ring s :=
   s.toSubring.toRing

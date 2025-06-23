@@ -51,10 +51,10 @@ theorem lieCharacter_apply_of_mem_derived (χ : LieCharacter R L) {x : L}
   rw [derivedSeries_def, derivedSeriesOfIdeal_succ, derivedSeriesOfIdeal_zero, ←
     LieSubmodule.mem_coeSubmodule, LieSubmodule.lieIdeal_oper_eq_linear_span] at h
   refine Submodule.span_induction h ?_ ?_ ?_ ?_
-  · rintro y ⟨⟨z, hz⟩, ⟨⟨w, hw⟩, rfl⟩⟩; apply lieCharacter_apply_lie
-  · exact χ.map_zero
-  · intro y z hy hz; rw [LieHom.map_add, hy, hz, add_zero]
-  · intro t y hy; rw [LieHom.map_smul, hy, smul_zero]
+  rintro y ⟨⟨z, hz⟩, ⟨⟨w, hw⟩, rfl⟩⟩; apply lieCharacter_apply_lie
+  exact χ.map_zero
+  intro y z hy hz; rw [LieHom.map_add, hy, hz, add_zero]
+  intro t y hy; rw [LieHom.map_smul, hy, smul_zero]
 
 /-- For an Abelian Lie algebra, characters are just linear forms. -/
 @[simps! apply symm_apply]

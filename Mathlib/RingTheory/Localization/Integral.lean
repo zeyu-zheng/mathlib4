@@ -76,12 +76,12 @@ theorem integerNormalization_spec (p : S[X]) :
   intro i
   rw [integerNormalization_coeff, coeffIntegerNormalization]
   split_ifs with hi
-  · exact
-      Classical.choose_spec
-        (Classical.choose_spec (exist_integer_multiples_of_finset M (p.support.image p.coeff))
-          (p.coeff i) (Finset.mem_image.mpr ⟨i, hi, rfl⟩))
-  · rw [RingHom.map_zero, not_mem_support_iff.mp hi, smul_zero]
-    -- Porting note: was `convert (smul_zero _).symm, ...`
+  exact
+    Classical.choose_spec
+      (Classical.choose_spec (exist_integer_multiples_of_finset M (p.support.image p.coeff))
+        (p.coeff i) (Finset.mem_image.mpr ⟨i, hi, rfl⟩))
+  rw [RingHom.map_zero, not_mem_support_iff.mp hi, smul_zero]
+  -- Porting note: was `convert (smul_zero _).symm, ...`
 
 theorem integerNormalization_map_to_map (p : S[X]) :
     ∃ b : M, (integerNormalization M p).map (algebraMap R S) = (b : R) • p :=
@@ -120,14 +120,14 @@ theorem integerNormalization_eq_zero_iff {p : K[X]} :
   refine Polynomial.ext_iff.trans (Polynomial.ext_iff.trans ?_).symm
   obtain ⟨⟨b, nonzero⟩, hb⟩ := integerNormalization_spec (nonZeroDivisors A) p
   constructor <;> intro h i
-  · -- Porting note: avoided some defeq abuse
-    rw [coeff_zero, ← to_map_eq_zero_iff (K := K), hb i, h i, coeff_zero, smul_zero]
-  · have hi := h i
-    rw [Polynomial.coeff_zero, ← @to_map_eq_zero_iff A _ K, hb i, Algebra.smul_def] at hi
-    apply Or.resolve_left (eq_zero_or_eq_zero_of_mul_eq_zero hi)
-    intro h
-    apply mem_nonZeroDivisors_iff_ne_zero.mp nonzero
-    exact to_map_eq_zero_iff.mp h
+  -- Porting note: avoided some defeq abuse
+  rw [coeff_zero, ← to_map_eq_zero_iff (K := K), hb i, h i, coeff_zero, smul_zero]
+  have hi := h i
+  rw [Polynomial.coeff_zero, ← @to_map_eq_zero_iff A _ K, hb i, Algebra.smul_def] at hi
+  apply Or.resolve_left (eq_zero_or_eq_zero_of_mul_eq_zero hi)
+  intro h
+  apply mem_nonZeroDivisors_iff_ne_zero.mp nonzero
+  exact to_map_eq_zero_iff.mp h
 
 variable (A K C)
 
@@ -137,14 +137,14 @@ over the field of fractions of `A`.
 theorem isAlgebraic_iff [Algebra A C] [Algebra K C] [IsScalarTower A K C] {x : C} :
     IsAlgebraic A x ↔ IsAlgebraic K x := by
   constructor <;> rintro ⟨p, hp, px⟩
-  · refine ⟨p.map (algebraMap A K), fun h => hp (Polynomial.ext fun i => ?_), ?_⟩
-    · have : algebraMap A K (p.coeff i) = 0 :=
-        _root_.trans (Polynomial.coeff_map _ _).symm (by simp [h])
-      exact to_map_eq_zero_iff.mp this
-    · exact (Polynomial.aeval_map_algebraMap K _ _).trans px
-  · exact
-      ⟨integerNormalization _ p, mt integerNormalization_eq_zero_iff.mp hp,
-        integerNormalization_aeval_eq_zero _ p px⟩
+  refine ⟨p.map (algebraMap A K), fun h => hp (Polynomial.ext fun i => ?_), ?_⟩
+  have : algebraMap A K (p.coeff i) = 0 :=
+    _root_.trans (Polynomial.coeff_map _ _).symm (by simp [h])
+  exact to_map_eq_zero_iff.mp this
+  exact (Polynomial.aeval_map_algebraMap K _ _).trans px
+  exact
+    ⟨integerNormalization _ p, mt integerNormalization_eq_zero_iff.mp hp,
+      integerNormalization_aeval_eq_zero _ p px⟩
 
 variable {A K C}
 
@@ -174,17 +174,17 @@ theorem RingHom.isIntegralElem_localization_at_leadingCoeff {R S : Type*} [CommR
     [IsLocalization M Rₘ] [Algebra S Sₘ] [IsLocalization (M.map f : Submonoid S) Sₘ] :
     (map Sₘ f M.le_comap_map : Rₘ →+* _).IsIntegralElem (algebraMap S Sₘ x) := by
   by_cases triv : (1 : Rₘ) = 0
-  · exact ⟨0, ⟨_root_.trans leadingCoeff_zero triv.symm, eval₂_zero _ _⟩⟩
+  exact ⟨0, ⟨_root_.trans leadingCoeff_zero triv.symm, eval₂_zero _ _⟩⟩
   haveI : Nontrivial Rₘ := nontrivial_of_ne 1 0 triv
   obtain ⟨b, hb⟩ := isUnit_iff_exists_inv.mp (map_units Rₘ ⟨p.leadingCoeff, hM⟩)
   refine ⟨p.map (algebraMap R Rₘ) * C b, ⟨?_, ?_⟩⟩
-  · refine monic_mul_C_of_leadingCoeff_mul_eq_one ?_
-    rwa [leadingCoeff_map_of_leadingCoeff_ne_zero (algebraMap R Rₘ)]
-    refine fun hfp => zero_ne_one
-      (_root_.trans (zero_mul b).symm (hfp ▸ hb) : (0 : Rₘ) = 1)
-  · refine eval₂_mul_eq_zero_of_left _ _ _ ?_
-    erw [eval₂_map, IsLocalization.map_comp, ← hom_eval₂ _ f (algebraMap S Sₘ) x]
-    exact _root_.trans (congr_arg (algebraMap S Sₘ) hf) (RingHom.map_zero _)
+  refine monic_mul_C_of_leadingCoeff_mul_eq_one ?_
+  rwa [leadingCoeff_map_of_leadingCoeff_ne_zero (algebraMap R Rₘ)]
+  refine fun hfp => zero_ne_one
+    (_root_.trans (zero_mul b).symm (hfp ▸ hb) : (0 : Rₘ) = 1)
+  refine eval₂_mul_eq_zero_of_left _ _ _ ?_
+  erw [eval₂_map, IsLocalization.map_comp, ← hom_eval₂ _ f (algebraMap S Sₘ) x]
+  exact _root_.trans (congr_arg (algebraMap S Sₘ) hf) (RingHom.map_zero _)
 
 /-- Given a particular witness to an element being algebraic over an algebra `R → S`,
 We can localize to a submonoid containing the leading coefficient to make it integral.
@@ -213,14 +213,14 @@ theorem isIntegral_localization [Algebra.IsIntegral R S] :
   obtain ⟨v, hv⟩ := hu
   obtain ⟨v', hv'⟩ := isUnit_iff_exists_inv'.1 (map_units Rₘ ⟨v, hv.1⟩)
   refine @IsIntegral.of_mul_unit Rₘ _ _ _ (localizationAlgebra M S) x (algebraMap S Sₘ u) v' ?_ ?_
-  · replace hv' := congr_arg (@algebraMap Rₘ Sₘ _ _ (localizationAlgebra M S)) hv'
-    rw [RingHom.map_mul, RingHom.map_one, ← RingHom.comp_apply _ (algebraMap R Rₘ)] at hv'
-    -- Porting note: added argument
-    erw [IsLocalization.map_comp
-      (show _ ≤ (Algebra.algebraMapSubmonoid S M).comap _ from M.le_comap_map)] at hv'
-    exact hv.2 ▸ hv'
-  · obtain ⟨p, hp⟩ := Algebra.IsIntegral.isIntegral (R := R) s
-    exact hx.symm ▸ is_integral_localization_at_leadingCoeff p hp.2 (hp.1.symm ▸ M.one_mem)
+  replace hv' := congr_arg (@algebraMap Rₘ Sₘ _ _ (localizationAlgebra M S)) hv'
+  rw [RingHom.map_mul, RingHom.map_one, ← RingHom.comp_apply _ (algebraMap R Rₘ)] at hv'
+  -- Porting note: added argument
+  erw [IsLocalization.map_comp
+    (show _ ≤ (Algebra.algebraMapSubmonoid S M).comap _ from M.le_comap_map)] at hv'
+  exact hv.2 ▸ hv'
+  obtain ⟨p, hp⟩ := Algebra.IsIntegral.isIntegral (R := R) s
+  exact hx.symm ▸ is_integral_localization_at_leadingCoeff p hp.2 (hp.1.symm ▸ M.one_mem)
 
 @[nolint unusedHavesSuffices] -- It claims the `have : IsLocalization` line is unnecessary,
                               -- but remove it and the proof won't work.
@@ -247,36 +247,36 @@ theorem IsLocalization.scaleRoots_commonDenom_mem_lifts (p : Rₘ[X])
   rw [Polynomial.coeff_scaleRoots]
   by_cases h₁ : n ∈ p.support
   on_goal 1 => by_cases h₂ : n = p.natDegree
-  · rwa [h₂, Polynomial.coeff_natDegree, tsub_self, pow_zero, _root_.mul_one]
-  · have : n + 1 ≤ p.natDegree := lt_of_le_of_ne (Polynomial.le_natDegree_of_mem_supp _ h₁) h₂
-    rw [← tsub_add_cancel_of_le (le_tsub_of_add_le_left this), pow_add, pow_one, mul_comm,
-      _root_.mul_assoc, ← map_pow]
-    change _ ∈ (algebraMap R Rₘ).range
-    apply mul_mem
-    · exact RingHom.mem_range_self _ _
-    · rw [← Algebra.smul_def]
-      exact ⟨_, IsLocalization.map_integerMultiple M p.support p.coeff ⟨n, h₁⟩⟩
-  · rw [Polynomial.not_mem_support_iff] at h₁
-    rw [h₁, zero_mul]
-    exact zero_mem (algebraMap R Rₘ).range
+  rwa [h₂, Polynomial.coeff_natDegree, tsub_self, pow_zero, _root_.mul_one]
+  have : n + 1 ≤ p.natDegree := lt_of_le_of_ne (Polynomial.le_natDegree_of_mem_supp _ h₁) h₂
+  rw [← tsub_add_cancel_of_le (le_tsub_of_add_le_left this), pow_add, pow_one, mul_comm,
+    _root_.mul_assoc, ← map_pow]
+  change _ ∈ (algebraMap R Rₘ).range
+  apply mul_mem
+  exact RingHom.mem_range_self _ _
+  rw [← Algebra.smul_def]
+  exact ⟨_, IsLocalization.map_integerMultiple M p.support p.coeff ⟨n, h₁⟩⟩
+  rw [Polynomial.not_mem_support_iff] at h₁
+  rw [h₁, zero_mul]
+  exact zero_mem (algebraMap R Rₘ).range
 
 theorem IsIntegral.exists_multiple_integral_of_isLocalization [Algebra Rₘ S] [IsScalarTower R Rₘ S]
     (x : S) (hx : IsIntegral Rₘ x) : ∃ m : M, IsIntegral R (m • x) := by
   cases' subsingleton_or_nontrivial Rₘ with _ nontriv
-  · haveI := (_root_.algebraMap Rₘ S).codomain_trivial
-    exact ⟨1, Polynomial.X, Polynomial.monic_X, Subsingleton.elim _ _⟩
+  haveI := (_root_.algebraMap Rₘ S).codomain_trivial
+  exact ⟨1, Polynomial.X, Polynomial.monic_X, Subsingleton.elim _ _⟩
   obtain ⟨p, hp₁, hp₂⟩ := hx
   -- Porting note: obtain doesn't support side goals
   have :=
     lifts_and_natDegree_eq_and_monic (IsLocalization.scaleRoots_commonDenom_mem_lifts M p ?_) ?_
-  · obtain ⟨p', hp'₁, -, hp'₂⟩ := this
-    refine ⟨IsLocalization.commonDenom M p.support p.coeff, p', hp'₂, ?_⟩
-    rw [IsScalarTower.algebraMap_eq R Rₘ S, ← Polynomial.eval₂_map, hp'₁, Submonoid.smul_def,
-      Algebra.smul_def, IsScalarTower.algebraMap_apply R Rₘ S]
-    exact Polynomial.scaleRoots_eval₂_eq_zero _ hp₂
-  · rw [hp₁.leadingCoeff]
-    exact one_mem _
-  · rwa [Polynomial.monic_scaleRoots_iff]
+  obtain ⟨p', hp'₁, -, hp'₂⟩ := this
+  refine ⟨IsLocalization.commonDenom M p.support p.coeff, p', hp'₂, ?_⟩
+  rw [IsScalarTower.algebraMap_eq R Rₘ S, ← Polynomial.eval₂_map, hp'₁, Submonoid.smul_def,
+    Algebra.smul_def, IsScalarTower.algebraMap_apply R Rₘ S]
+  exact Polynomial.scaleRoots_eval₂_eq_zero _ hp₂
+  rw [hp₁.leadingCoeff]
+  exact one_mem _
+  rwa [Polynomial.monic_scaleRoots_iff]
 
 end IsIntegral
 
@@ -358,42 +358,42 @@ theorem isAlgebraic_iff' [Field K] [IsDomain R] [IsDomain S] [Algebra R K] [Alge
     Algebra.IsAlgebraic R S ↔ Algebra.IsAlgebraic R K := by
   simp only [Algebra.isAlgebraic_def]
   constructor
-  · intro h x
-    letI := FractionRing.liftAlgebra R K
-    have := FractionRing.isScalarTower_liftAlgebra R K
-    rw [IsFractionRing.isAlgebraic_iff R (FractionRing R) K, isAlgebraic_iff_isIntegral]
-    obtain ⟨a : S, b, ha, rfl⟩ := @div_surjective S _ _ _ _ _ _ x
-    obtain ⟨f, hf₁, hf₂⟩ := h b
-    rw [div_eq_mul_inv]
-    refine IsIntegral.mul ?_ ?_
-    · rw [← isAlgebraic_iff_isIntegral]
-      refine .tower_top_of_injective
-        (NoZeroSMulDivisors.algebraMap_injective R (FractionRing R)) ?_
-      exact .algebraMap (h a)
-    · rw [← isAlgebraic_iff_isIntegral]
-      use (f.map (algebraMap R (FractionRing R))).reverse
-      constructor
-      · rwa [Ne, Polynomial.reverse_eq_zero, ← Polynomial.degree_eq_bot,
-          Polynomial.degree_map_eq_of_injective
-            (NoZeroSMulDivisors.algebraMap_injective R (FractionRing R)),
-          Polynomial.degree_eq_bot]
-      · have : Invertible (algebraMap S K b) :=
-          IsUnit.invertible
-            (isUnit_of_mem_nonZeroDivisors
-              (mem_nonZeroDivisors_iff_ne_zero.2 fun h =>
-                nonZeroDivisors.ne_zero ha
-                  ((injective_iff_map_eq_zero (algebraMap S K)).1
-                    (NoZeroSMulDivisors.algebraMap_injective _ _) b h)))
-        rw [Polynomial.aeval_def, ← invOf_eq_inv, Polynomial.eval₂_reverse_eq_zero_iff,
-          Polynomial.eval₂_map, ← IsScalarTower.algebraMap_eq, ← Polynomial.aeval_def,
-          Polynomial.aeval_algebraMap_apply, hf₂, RingHom.map_zero]
-  · intro h x
-    obtain ⟨f, hf₁, hf₂⟩ := h (algebraMap S K x)
-    use f, hf₁
-    rw [Polynomial.aeval_algebraMap_apply] at hf₂
-    exact
-      (injective_iff_map_eq_zero (algebraMap S K)).1 (NoZeroSMulDivisors.algebraMap_injective _ _) _
-        hf₂
+  intro h x
+  letI := FractionRing.liftAlgebra R K
+  have := FractionRing.isScalarTower_liftAlgebra R K
+  rw [IsFractionRing.isAlgebraic_iff R (FractionRing R) K, isAlgebraic_iff_isIntegral]
+  obtain ⟨a : S, b, ha, rfl⟩ := @div_surjective S _ _ _ _ _ _ x
+  obtain ⟨f, hf₁, hf₂⟩ := h b
+  rw [div_eq_mul_inv]
+  refine IsIntegral.mul ?_ ?_
+  rw [← isAlgebraic_iff_isIntegral]
+  refine .tower_top_of_injective
+    (NoZeroSMulDivisors.algebraMap_injective R (FractionRing R)) ?_
+  exact .algebraMap (h a)
+  rw [← isAlgebraic_iff_isIntegral]
+  use (f.map (algebraMap R (FractionRing R))).reverse
+  constructor
+  rwa [Ne, Polynomial.reverse_eq_zero, ← Polynomial.degree_eq_bot,
+    Polynomial.degree_map_eq_of_injective
+      (NoZeroSMulDivisors.algebraMap_injective R (FractionRing R)),
+    Polynomial.degree_eq_bot]
+  have : Invertible (algebraMap S K b) :=
+    IsUnit.invertible
+      (isUnit_of_mem_nonZeroDivisors
+        (mem_nonZeroDivisors_iff_ne_zero.2 fun h =>
+          nonZeroDivisors.ne_zero ha
+            ((injective_iff_map_eq_zero (algebraMap S K)).1
+              (NoZeroSMulDivisors.algebraMap_injective _ _) b h)))
+  rw [Polynomial.aeval_def, ← invOf_eq_inv, Polynomial.eval₂_reverse_eq_zero_iff,
+    Polynomial.eval₂_map, ← IsScalarTower.algebraMap_eq, ← Polynomial.aeval_def,
+    Polynomial.aeval_algebraMap_apply, hf₂, RingHom.map_zero]
+  intro h x
+  obtain ⟨f, hf₁, hf₂⟩ := h (algebraMap S K x)
+  use f, hf₁
+  rw [Polynomial.aeval_algebraMap_apply] at hf₂
+  exact
+    (injective_iff_map_eq_zero (algebraMap S K)).1 (NoZeroSMulDivisors.algebraMap_injective _ _) _
+      hf₂
 
 open nonZeroDivisors
 
@@ -440,16 +440,16 @@ lemma isAlgebraic_of_isLocalization {R} [CommRing R] (M : Submonoid R) (S) [Comm
   intro x
   obtain ⟨x, s, rfl⟩ := IsLocalization.mk'_surjective M x
   by_cases hs : (s : R) = 0
-  · have := IsLocalization.mk'_spec S x s
-    rw [hs, map_zero, mul_zero] at this
-    exact ⟨X, X_ne_zero, by simp [IsLocalization.mk'_eq_mul_mk'_one x, ← this]⟩
+  have := IsLocalization.mk'_spec S x s
+  rw [hs, map_zero, mul_zero] at this
+  exact ⟨X, X_ne_zero, by simp [IsLocalization.mk'_eq_mul_mk'_one x, ← this]⟩
   refine ⟨s • X - C x, ?_, ?_⟩
-  · intro e; apply hs
-    simpa only [coeff_sub, coeff_smul, coeff_X_one, coeff_C_succ, sub_zero, coeff_zero,
-      ← Algebra.algebraMap_eq_smul_one, Submonoid.smul_def,
-      Algebra.id.map_eq_id, RingHom.id_apply] using congr_arg (Polynomial.coeff · 1) e
-  · simp only [map_sub, Algebra.smul_def, Submonoid.smul_def,
-      map_mul, AlgHom.commutes, aeval_X, IsLocalization.mk'_spec', aeval_C, sub_self]
+  intro e; apply hs
+  simpa only [coeff_sub, coeff_smul, coeff_X_one, coeff_C_succ, sub_zero, coeff_zero,
+    ← Algebra.algebraMap_eq_smul_one, Submonoid.smul_def,
+    Algebra.id.map_eq_id, RingHom.id_apply] using congr_arg (Polynomial.coeff · 1) e
+  simp only [map_sub, Algebra.smul_def, Submonoid.smul_def,
+    map_mul, AlgHom.commutes, aeval_X, IsLocalization.mk'_spec', aeval_C, sub_self]
 
 open nonZeroDivisors in
 lemma isAlgebraic_of_isFractionRing {R S} (K L) [CommRing R] [CommRing S] [Field K] [CommRing L]
@@ -462,11 +462,11 @@ lemma isAlgebraic_of_isFractionRing {R S} (K L) [CommRing R] [CommRing S] [Field
   apply IsIntegral.isAlgebraic
   rw [IsLocalization.mk'_eq_mul_mk'_one]
   apply RingHom.IsIntegralElem.mul
-  · apply IsIntegral.tower_top (R := R)
-    apply IsIntegral.map (IsScalarTower.toAlgHom R S L)
-    exact Algebra.IsIntegral.isIntegral x
-  · show IsIntegral _ _
-    rw [← isAlgebraic_iff_isIntegral, ← IsAlgebraic.invOf_iff, isAlgebraic_iff_isIntegral]
-    apply IsIntegral.tower_top (R := R)
-    apply IsIntegral.map (IsScalarTower.toAlgHom R S L)
-    exact Algebra.IsIntegral.isIntegral (s : S)
+  apply IsIntegral.tower_top (R := R)
+  apply IsIntegral.map (IsScalarTower.toAlgHom R S L)
+  exact Algebra.IsIntegral.isIntegral x
+  show IsIntegral _ _
+  rw [← isAlgebraic_iff_isIntegral, ← IsAlgebraic.invOf_iff, isAlgebraic_iff_isIntegral]
+  apply IsIntegral.tower_top (R := R)
+  apply IsIntegral.map (IsScalarTower.toAlgHom R S L)
+  exact Algebra.IsIntegral.isIntegral (s : S)

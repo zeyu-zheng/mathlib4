@@ -20,21 +20,21 @@ axiom qp : Q → P
 
 example : TFAE [P, Q] := by
   tfae_have 1 → 2
-  · exact pq
+  exact pq
   tfae_have 2 → 1
-  · exact qp
+  exact qp
   tfae_finish
 
 example : TFAE [P, Q] := by
   tfae_have 1 ↔ 2
-  · exact Iff.intro pq qp
+  exact Iff.intro pq qp
   tfae_finish
 
 example : TFAE [P, Q] := by
   tfae_have 2 ← 1
-  · exact pq
+  exact pq
   tfae_have 1 ← 2
-  · exact qp
+  exact qp
   tfae_finish
 
 end two
@@ -50,27 +50,27 @@ axiom rp : R → P
 
 example : TFAE [P, Q, R] := by
   tfae_have 1 → 2
-  · exact pq
+  exact pq
   tfae_have 2 → 3
-  · exact qr
+  exact qr
   tfae_have 3 → 1
-  · exact rp
+  exact rp
   tfae_finish
 
 example : TFAE [P, Q, R] := by
   tfae_have 1 ↔ 2
-  · exact Iff.intro pq (rp ∘ qr)
+  exact Iff.intro pq (rp ∘ qr)
   tfae_have 3 ↔ 2
-  · exact Iff.intro (pq ∘ rp) qr
+  exact Iff.intro (pq ∘ rp) qr
   tfae_finish
 
 example : TFAE [P, Q, R] := by
   tfae_have 1 → 2
-  · exact pq
+  exact pq
   tfae_have 2 → 1
-  · exact rp ∘ qr
+  exact rp ∘ qr
   tfae_have 2 ↔ 3
-  · exact Iff.intro qr (pq ∘ rp)
+  exact Iff.intro qr (pq ∘ rp)
   tfae_finish
 
 end three
@@ -94,19 +94,19 @@ axiom h₇ : P₃ → P₂
 
 example : TFAE [P₁, P₂, P₃, P₄, P₅, P₆, P₇] := by
   tfae_have 1 ↔ 2
-  · exact h₁
+  exact h₁
   tfae_have 1 → 6
-  · exact h₂
+  exact h₂
   tfae_have 6 → 7
-  · exact h₃
+  exact h₃
   tfae_have 7 → 4
-  · exact h₄
+  exact h₄
   tfae_have 4 → 5
-  · exact h₅
+  exact h₅
   tfae_have 5 → 3
-  · exact h₆
+  exact h₆
   tfae_have 3 → 2
-  · exact h₇
+  exact h₇
   tfae_finish
 
 end seven

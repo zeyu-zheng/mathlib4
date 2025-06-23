@@ -808,19 +808,19 @@ instance add_covariantClass_le : CovariantClass Ordinal.{u} Ordinal.{u} (· + ·
     rintro c ⟨⟨⟨f, fo⟩, fi⟩⟩
     refine inductionOn c (fun β s _ ↦ ?_)
     refine ⟨⟨⟨(Embedding.refl.{u+1} _).sumMap f, ?_⟩, ?_⟩⟩
-    · intros a b
-      match a, b with
-      | Sum.inl a, Sum.inl b => exact Sum.lex_inl_inl.trans Sum.lex_inl_inl.symm
-      | Sum.inl a, Sum.inr b => apply iff_of_true <;> apply Sum.Lex.sep
-      | Sum.inr a, Sum.inl b => apply iff_of_false <;> exact Sum.lex_inr_inl
-      | Sum.inr a, Sum.inr b => exact Sum.lex_inr_inr.trans <| fo.trans Sum.lex_inr_inr.symm
-    · intros a b H
-      match a, b, H with
-      | _, Sum.inl b, _ => exact ⟨Sum.inl b, rfl⟩
-      | Sum.inl a, Sum.inr b, H => exact (Sum.lex_inr_inl H).elim
-      | Sum.inr a, Sum.inr b, H =>
-        let ⟨w, h⟩ := fi _ _ (Sum.lex_inr_inr.1 H)
-        exact ⟨Sum.inr w, congr_arg Sum.inr h⟩
+    intros a b
+    match a, b with
+    | Sum.inl a, Sum.inl b => exact Sum.lex_inl_inl.trans Sum.lex_inl_inl.symm
+    | Sum.inl a, Sum.inr b => apply iff_of_true <;> apply Sum.Lex.sep
+    | Sum.inr a, Sum.inl b => apply iff_of_false <;> exact Sum.lex_inr_inl
+    | Sum.inr a, Sum.inr b => exact Sum.lex_inr_inr.trans <| fo.trans Sum.lex_inr_inr.symm
+    intros a b H
+    match a, b, H with
+    | _, Sum.inl b, _ => exact ⟨Sum.inl b, rfl⟩
+    | Sum.inl a, Sum.inr b, H => exact (Sum.lex_inr_inl H).elim
+    | Sum.inr a, Sum.inr b, H =>
+      let ⟨w, h⟩ := fi _ _ (Sum.lex_inr_inr.1 H)
+      exact ⟨Sum.inr w, congr_arg Sum.inr h⟩
 
 -- Porting note: Rewritten proof of elim, previous version was difficult to debug
 instance add_swap_covariantClass_le :
@@ -835,9 +835,9 @@ instance add_swap_covariantClass_le :
               ⟨f.sumMap (Embedding.refl _), by
                 intro a b
                 constructor <;> intro H
-                · cases' a with a a <;> cases' b with b b <;> cases H <;> constructor <;>
-                    [rwa [← fo]; assumption]
-                · cases H <;> constructor <;> [rwa [fo]; assumption]⟩
+                cases' a with a a <;> cases' b with b b <;> cases H <;> constructor <;>
+                  [rwa [← fo]; assumption]
+                cases H <;> constructor <;> [rwa [fo]; assumption]⟩
 
 theorem le_add_right (a b : Ordinal) : a ≤ a + b := by
   simpa only [add_zero] using add_le_add_left (Ordinal.zero_le b) a
@@ -898,21 +898,21 @@ private theorem succ_le_iff' {a b : Ordinal} : a + 1 ≤ b ↔ a < b :=
       inductionOn b fun β s hs ⟨⟨f, t, hf⟩⟩ => by
         haveI := hs
         refine ⟨⟨RelEmbedding.ofMonotone (Sum.rec f fun _ => t) (fun a b ↦ ?_), fun a b ↦ ?_⟩⟩
-        · rcases a with (a | _) <;> rcases b with (b | _)
-          · simpa only [Sum.lex_inl_inl] using f.map_rel_iff.2
-          · intro
-            rw [hf]
-            exact ⟨_, rfl⟩
-          · exact False.elim ∘ Sum.lex_inr_inl
-          · exact False.elim ∘ Sum.lex_inr_inr.1
-        · rcases a with (a | _)
-          · intro h
-            have := @PrincipalSeg.init _ _ _ _ _ ⟨f, t, hf⟩ _ _ h
-            cases' this with w h
-            exact ⟨Sum.inl w, h⟩
-          · intro h
-            cases' (hf b).1 h with w h
-            exact ⟨Sum.inl w, h⟩⟩
+        rcases a with (a | _) <;> rcases b with (b | _)
+        simpa only [Sum.lex_inl_inl] using f.map_rel_iff.2
+        intro
+        rw [hf]
+        exact ⟨_, rfl⟩
+        exact False.elim ∘ Sum.lex_inr_inl
+        exact False.elim ∘ Sum.lex_inr_inr.1
+        rcases a with (a | _)
+        intro h
+        have := @PrincipalSeg.init _ _ _ _ _ ⟨f, t, hf⟩ _ _ h
+        cases' this with w h
+        exact ⟨Sum.inl w, h⟩
+        intro h
+        cases' (hf b).1 h with w h
+        exact ⟨Sum.inl w, h⟩⟩
 
 instance noMaxOrder : NoMaxOrder Ordinal :=
   ⟨fun _ => ⟨_, succ_le_iff'.1 le_rfl⟩⟩
@@ -1175,14 +1175,14 @@ theorem ord_le {c o} : ord c ≤ o ↔ c ≤ o.card :=
     Ordinal.inductionOn o fun β s _ => by
       let ⟨r, _, e⟩ := ord_eq α
       simp only [card_type]; constructor <;> intro h
-      · rw [e] at h
-        exact
-          let ⟨f⟩ := h
-          ⟨f.toEmbedding⟩
-      · cases' h with f
-        have g := RelEmbedding.preimage f s
-        haveI := RelEmbedding.isWellOrder g
-        exact le_trans (ord_le_type _) g.ordinal_type_le
+      rw [e] at h
+      exact
+        let ⟨f⟩ := h
+        ⟨f.toEmbedding⟩
+      cases' h with f
+      have g := RelEmbedding.preimage f s
+      haveI := RelEmbedding.isWellOrder g
+      exact le_trans (ord_le_type _) g.ordinal_type_le
 
 theorem gc_ord_card : GaloisConnection ord card := fun _ _ => ord_le
 
@@ -1244,8 +1244,8 @@ theorem ord_nat (n : ℕ) : ord n = n :=
   (ord_le.2 (card_nat n).ge).antisymm
     (by
       induction' n with n IH
-      · apply Ordinal.zero_le
-      · exact succ_le_of_lt (IH.trans_lt <| ord_lt_ord.2 <| natCast_lt.2 (Nat.lt_succ_self n)))
+      apply Ordinal.zero_le
+      exact succ_le_of_lt (IH.trans_lt <| ord_lt_ord.2 <| natCast_lt.2 (Nat.lt_succ_self n)))
 
 @[simp]
 theorem ord_one : ord 1 = 1 := by simpa using ord_nat 1
@@ -1258,9 +1258,9 @@ theorem ord_ofNat (n : ℕ) [n.AtLeastTwo] : ord (no_index (OfNat.ofNat n)) = Of
 @[simp]
 theorem lift_ord (c) : Ordinal.lift.{u,v} (ord c) = ord (lift.{u,v} c) := by
   refine le_antisymm (le_of_forall_lt fun a ha => ?_) ?_
-  · rcases Ordinal.lt_lift_iff.1 ha with ⟨a, rfl, _⟩
-    rwa [lt_ord, ← lift_card, lift_lt, ← lt_ord, ← Ordinal.lift_lt]
-  · rw [ord_le, ← lift_card, card_ord]
+  rcases Ordinal.lt_lift_iff.1 ha with ⟨a, rfl, _⟩
+  rwa [lt_ord, ← lift_card, lift_lt, ← lt_ord, ← Ordinal.lift_lt]
+  rw [ord_le, ← lift_card, card_ord]
 
 theorem mk_ord_out (c : Cardinal) : #c.ord.out.α = c := by simp
 
@@ -1346,10 +1346,10 @@ theorem small_iff_lift_mk_lt_univ {α : Type u} :
     Small.{v} α ↔ Cardinal.lift.{v+1,_} #α < univ.{v, max u (v + 1)} := by
   rw [lt_univ']
   constructor
-  · rintro ⟨β, e⟩
-    exact ⟨#β, lift_mk_eq.{u, _, v + 1}.2 e⟩
-  · rintro ⟨c, hc⟩
-    exact ⟨⟨c.out, lift_mk_eq.{u, _, v + 1}.1 (hc.trans (congr rfl c.mk_out.symm))⟩⟩
+  rintro ⟨β, e⟩
+  exact ⟨#β, lift_mk_eq.{u, _, v + 1}.2 e⟩
+  rintro ⟨c, hc⟩
+  exact ⟨⟨c.out, lift_mk_eq.{u, _, v + 1}.1 (hc.trans (congr rfl c.mk_out.symm))⟩⟩
 
 end Cardinal
 

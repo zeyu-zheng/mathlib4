@@ -379,23 +379,23 @@ theorem LocallyFinite.exists_finset_nhd_mulSupport_subset {U : ι → Set X} [On
   refine
     ⟨is, (n ∩ ⋂ j ∈ js, (mulTSupport (f j))ᶜ) ∩ ⋂ i ∈ is, U i, inter_mem (inter_mem hn ?_) ?_,
       inter_subset_right, fun z hz => ?_⟩
-  · exact (biInter_finset_mem js).mpr fun j hj => IsClosed.compl_mem_nhds (isClosed_mulTSupport _)
-      (Set.not_mem_subset (hso j) (Finset.mem_filter.mp hj).2)
-  · exact (biInter_finset_mem is).mpr fun i hi => (ho i).mem_nhds (Finset.mem_filter.mp hi).2
-  · have hzn : z ∈ n := by
-      rw [inter_assoc] at hz
-      exact mem_of_mem_inter_left hz
-    replace hz := mem_of_mem_inter_right (mem_of_mem_inter_left hz)
-    simp only [js, Finset.mem_filter, Finite.mem_toFinset, mem_setOf_eq, mem_iInter,
-      and_imp] at hz
-    suffices (mulSupport fun i => f i z) ⊆ hnf.toFinset by
-      refine hnf.toFinset.subset_coe_filter_of_subset_forall _ this fun i hi => ?_
-      specialize hz i ⟨z, ⟨hi, hzn⟩⟩
-      contrapose hz
-      simp [hz, subset_mulTSupport (f i) hi]
-    intro i hi
-    simp only [Finite.coe_toFinset, mem_setOf_eq]
-    exact ⟨z, ⟨hi, hzn⟩⟩
+  exact (biInter_finset_mem js).mpr fun j hj => IsClosed.compl_mem_nhds (isClosed_mulTSupport _)
+    (Set.not_mem_subset (hso j) (Finset.mem_filter.mp hj).2)
+  exact (biInter_finset_mem is).mpr fun i hi => (ho i).mem_nhds (Finset.mem_filter.mp hi).2
+  have hzn : z ∈ n := by
+    rw [inter_assoc] at hz
+    exact mem_of_mem_inter_left hz
+  replace hz := mem_of_mem_inter_right (mem_of_mem_inter_left hz)
+  simp only [js, Finset.mem_filter, Finite.mem_toFinset, mem_setOf_eq, mem_iInter,
+    and_imp] at hz
+  suffices (mulSupport fun i => f i z) ⊆ hnf.toFinset by
+    refine hnf.toFinset.subset_coe_filter_of_subset_forall _ this fun i hi => ?_
+    specialize hz i ⟨z, ⟨hi, hzn⟩⟩
+    contrapose hz
+    simp [hz, subset_mulTSupport (f i) hi]
+  intro i hi
+  simp only [Finite.coe_toFinset, mem_setOf_eq]
+  exact ⟨z, ⟨hi, hzn⟩⟩
 
 @[to_additive]
 theorem locallyFinite_mulSupport_iff [CommMonoid M] {f : ι → X → M} :

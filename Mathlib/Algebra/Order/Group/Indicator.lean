@@ -66,8 +66,8 @@ variable [LE M] [One M] {s t : Set α} {f g : α → M} {a : α} {y : M}
 lemma mulIndicator_apply_le' (hfg : a ∈ s → f a ≤ y) (hg : a ∉ s → 1 ≤ y) :
     mulIndicator s f a ≤ y := by
   by_cases ha : a ∈ s
-  · simpa [ha] using hfg ha
-  · simpa [ha] using hg ha
+  simpa [ha] using hfg ha
+  simpa [ha] using hg ha
 
 @[to_additive]
 lemma mulIndicator_le' (hfg : ∀ a ∈ s, f a ≤ g a) (hg : ∀ a, a ∉ s → 1 ≤ g a) :
@@ -145,14 +145,14 @@ variable [CompleteLattice M] [One M] {s t : Set α} {f g : α → M} {a : α} {y
 lemma mulIndicator_iUnion_apply (h1 : (⊥ : M) = 1) (s : ι → Set α) (f : α → M) (x : α) :
     mulIndicator (⋃ i, s i) f x = ⨆ i, mulIndicator (s i) f x := by
   by_cases hx : x ∈ ⋃ i, s i
-  · rw [mulIndicator_of_mem hx]
-    rw [mem_iUnion] at hx
-    refine le_antisymm ?_ (iSup_le fun i ↦ mulIndicator_le_self' (fun x _ ↦ h1 ▸ bot_le) x)
-    rcases hx with ⟨i, hi⟩
-    exact le_iSup_of_le i (ge_of_eq <| mulIndicator_of_mem hi _)
-  · rw [mulIndicator_of_not_mem hx]
-    simp only [mem_iUnion, not_exists] at hx
-    simp [hx, ← h1]
+  rw [mulIndicator_of_mem hx]
+  rw [mem_iUnion] at hx
+  refine le_antisymm ?_ (iSup_le fun i ↦ mulIndicator_le_self' (fun x _ ↦ h1 ▸ bot_le) x)
+  rcases hx with ⟨i, hi⟩
+  exact le_iSup_of_le i (ge_of_eq <| mulIndicator_of_mem hi _)
+  rw [mulIndicator_of_not_mem hx]
+  simp only [mem_iUnion, not_exists] at hx
+  simp [hx, ← h1]
 
 variable [Nonempty ι]
 
@@ -160,15 +160,15 @@ variable [Nonempty ι]
 lemma mulIndicator_iInter_apply (h1 : (⊥ : M) = 1) (s : ι → Set α) (f : α → M) (x : α) :
     mulIndicator (⋂ i, s i) f x = ⨅ i, mulIndicator (s i) f x := by
   by_cases hx : x ∈ ⋂ i, s i
-  · rw [mulIndicator_of_mem hx]
-    rw [mem_iInter] at hx
-    refine le_antisymm ?_ (by simp only [mulIndicator_of_mem (hx _), ciInf_const, le_refl])
-    exact le_iInf (fun j ↦ by simp only [mulIndicator_of_mem (hx j), le_refl])
-  · rw [mulIndicator_of_not_mem hx]
-    simp only [mem_iInter, not_exists, not_forall] at hx
-    rcases hx with ⟨j, hj⟩
-    refine le_antisymm (by simp only [← h1, le_iInf_iff, bot_le, forall_const]) ?_
-    simpa [mulIndicator_of_not_mem hj] using (iInf_le (fun i ↦ (s i).mulIndicator f) j) x
+  rw [mulIndicator_of_mem hx]
+  rw [mem_iInter] at hx
+  refine le_antisymm ?_ (by simp only [mulIndicator_of_mem (hx _), ciInf_const, le_refl])
+  exact le_iInf (fun j ↦ by simp only [mulIndicator_of_mem (hx j), le_refl])
+  rw [mulIndicator_of_not_mem hx]
+  simp only [mem_iInter, not_exists, not_forall] at hx
+  rcases hx with ⟨j, hj⟩
+  refine le_antisymm (by simp only [← h1, le_iInf_iff, bot_le, forall_const]) ?_
+  simpa [mulIndicator_of_not_mem hj] using (iInf_le (fun i ↦ (s i).mulIndicator f) j) x
 
 end CompleteLattice
 

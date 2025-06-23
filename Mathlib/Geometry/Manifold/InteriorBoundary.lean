@@ -169,14 +169,14 @@ lemma ModelWithCorners.interior_prod :
   have aux : (interior (range ↑I)) ×ˢ (interior (range J)) = interior (range (I.prod J))
   rw [← interior_prod_eq, ← Set.range_prod_map, modelWithCorners_prod_coe]
   constructor <;> intro hp
-  · replace hp : (I.prod J).IsInteriorPoint p := hp
-    rw [ModelWithCorners.IsInteriorPoint, ← aux] at hp
-    exact hp
-  · obtain ⟨h₁, h₂⟩ := Set.mem_prod.mp hp
-    rw [ModelWithCorners.interior] at h₁ h₂
-    show (I.prod J).IsInteriorPoint p
-    rw [ModelWithCorners.IsInteriorPoint, ← aux, mem_prod]
-    exact ⟨h₁, h₂⟩
+  replace hp : (I.prod J).IsInteriorPoint p := hp
+  rw [ModelWithCorners.IsInteriorPoint, ← aux] at hp
+  exact hp
+  obtain ⟨h₁, h₂⟩ := Set.mem_prod.mp hp
+  rw [ModelWithCorners.interior] at h₁ h₂
+  show (I.prod J).IsInteriorPoint p
+  rw [ModelWithCorners.IsInteriorPoint, ← aux, mem_prod]
+  exact ⟨h₁, h₂⟩
 
 /-- The boundary of `M × N` is `∂M × N ∪ (M × ∂N)`. -/
 lemma ModelWithCorners.boundary_prod :

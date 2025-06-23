@@ -173,10 +173,10 @@ theorem none_ne_some (x : α) : none ≠ some x :=
 
 theorem ne_none_iff {o : Part α} : o ≠ none ↔ ∃ x, o = some x := by
   constructor
-  · rw [Ne, eq_none_iff', not_not]
-    exact fun h => ⟨o.get h, eq_some_iff.2 (get_mem h)⟩
-  · rintro ⟨x, rfl⟩
-    apply some_ne_none
+  rw [Ne, eq_none_iff', not_not]
+  exact fun h => ⟨o.get h, eq_some_iff.2 (get_mem h)⟩
+  rintro ⟨x, rfl⟩
+  apply some_ne_none
 
 theorem eq_none_or_eq_some (o : Part α) : o = none ∨ ∃ x, o = some x :=
   or_iff_not_imp_left.2 ne_none_iff.1
@@ -244,8 +244,8 @@ theorem getOrElse_some (a : α) (d : α) [Decidable (some a).Dom] : getOrElse (s
 theorem mem_toOption {o : Part α} [Decidable o.Dom] {a : α} : a ∈ toOption o ↔ a ∈ o := by
   unfold toOption
   by_cases h : o.Dom <;> simp [h]
-  · exact ⟨fun h => ⟨_, h⟩, fun ⟨_, h⟩ => h⟩
-  · exact mt Exists.fst h
+  exact ⟨fun h => ⟨_, h⟩, fun ⟨_, h⟩ => h⟩
+  exact mt Exists.fst h
 
 @[simp]
 theorem toOption_eq_some_iff {o : Part α} [Decidable o.Dom] {a : α} :
@@ -263,10 +263,10 @@ theorem toOption_eq_none_iff {a : Part α} [Decidable a.Dom] : a.toOption = Opti
 theorem elim_toOption {α β : Type*} (a : Part α) [Decidable a.Dom] (b : β) (f : α → β) :
     a.toOption.elim b f = if h : a.Dom then f (a.get h) else b := by
   split_ifs with h
-  · rw [h.toOption]
-    rfl
-  · rw [Part.toOption_eq_none_iff.2 h]
-    rfl
+  rw [h.toOption]
+  rfl
+  rw [Part.toOption_eq_none_iff.2 h]
+  rfl
 
 /-- Converts an `Option α` into a `Part α`. -/
 @[coe]
@@ -287,8 +287,8 @@ theorem ofOption_dom {α} : ∀ o : Option α, (ofOption o).Dom ↔ o.isSome
 theorem ofOption_eq_get {α} (o : Option α) : ofOption o = ⟨_, @Option.get _ o⟩ :=
   Part.ext' (ofOption_dom o) fun h₁ h₂ => by
     cases o
-    · simp at h₂
-    · rfl
+    simp at h₂
+    rfl
 
 instance : Coe (Option α) (Part α) :=
   ⟨ofOption⟩
@@ -342,9 +342,9 @@ instance : OrderBot (Part α) where
 theorem le_total_of_le_of_le {x y : Part α} (z : Part α) (hx : x ≤ z) (hy : y ≤ z) :
     x ≤ y ∨ y ≤ x := by
   rcases Part.eq_none_or_eq_some x with (h | ⟨b, h₀⟩)
-  · rw [h]
-    left
-    apply OrderBot.bot_le _
+  rw [h]
+  left
+  apply OrderBot.bot_le _
   right; intro b' h₁
   rw [Part.eq_some_iff] at h₀
   have hx := hx _ h₀; have hy := hy _ h₁
@@ -397,15 +397,15 @@ theorem assert_pos {p : Prop} {f : p → Part α} (h : p) : assert p f = f h := 
   cases h' : f h
   simp only [h', mk.injEq, h, exists_prop_of_true, true_and]
   apply Function.hfunext
-  · simp only [h, h', exists_prop_of_true]
-  · aesop
+  simp only [h, h', exists_prop_of_true]
+  aesop
 
 theorem assert_neg {p : Prop} {f : p → Part α} (h : ¬p) : assert p f = none := by
   dsimp [assert, none]; congr
-  · simp only [h, not_false_iff, exists_prop_of_false]
-  · apply Function.hfunext
-    · simp only [h, not_false_iff, exists_prop_of_false]
-    simp at *
+  simp only [h, not_false_iff, exists_prop_of_false]
+  apply Function.hfunext
+  simp only [h, not_false_iff, exists_prop_of_false]
+  simp at *
 
 theorem mem_bind {f : Part α} {g : α → Part β} : ∀ {a b}, a ∈ f → b ∈ g a → b ∈ f.bind g
   | _, _, ⟨h, rfl⟩, ⟨h₂, rfl⟩ => ⟨⟨h, h₂⟩, rfl⟩
@@ -444,10 +444,10 @@ theorem bind_toOption (f : α → Part β) (o : Part α) [Decidable o.Dom] [∀ 
     [Decidable (o.bind f).Dom] :
     (o.bind f).toOption = o.toOption.elim Option.none fun a => (f a).toOption := by
   by_cases h : o.Dom
-  · simp_rw [h.toOption, h.bind]
-    rfl
-  · rw [Part.toOption_eq_none_iff.2 h]
-    exact Part.toOption_eq_none_iff.2 fun ho => h ho.of_bind
+  simp_rw [h.toOption, h.bind]
+  rfl
+  rw [Part.toOption_eq_none_iff.2 h]
+  exact Part.toOption_eq_none_iff.2 fun ho => h ho.of_bind
 
 theorem bind_assoc {γ} (f : Part α) (g : α → Part β) (k : β → Part γ) :
     (f.bind g).bind k = f.bind fun x => (g x).bind k :=
@@ -520,14 +520,14 @@ theorem bind_eq_bind {α β} (f : Part α) (g : α → Part β) : f >>= g = f.bi
 theorem bind_le {α} (x : Part α) (f : α → Part β) (y : Part β) :
     x >>= f ≤ y ↔ ∀ a, a ∈ x → f a ≤ y := by
   constructor <;> intro h
-  · intro a h' b
-    have h := h b
-    simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp] at h
-    apply h _ h'
-  · intro b h'
-    simp only [exists_prop, bind_eq_bind, mem_bind_iff] at h'
-    rcases h' with ⟨a, h₀, h₁⟩
-    apply h _ h₀ _ h₁
+  intro a h' b
+  have h := h b
+  simp only [and_imp, exists_prop, bind_eq_bind, mem_bind_iff, exists_imp] at h
+  apply h _ h'
+  intro b h'
+  simp only [exists_prop, bind_eq_bind, mem_bind_iff] at h'
+  rcases h' with ⟨a, h₀, h₁⟩
+  apply h _ h₀ _ h₁
 
 -- Porting note: No MonadFail in Lean4 yet
 -- instance : MonadFail Part :=
@@ -542,8 +542,8 @@ def restrict (p : Prop) (o : Part α) (H : p → o.Dom) : Part α :=
 theorem mem_restrict (p : Prop) (o : Part α) (h : p → o.Dom) (a : α) :
     a ∈ restrict p o h ↔ p ∧ a ∈ o := by
   dsimp [restrict, mem_eq]; constructor
-  · rintro ⟨h₀, h₁⟩
-    exact ⟨h₀, ⟨_, h₁⟩⟩
+  rintro ⟨h₀, h₁⟩
+  exact ⟨h₀, ⟨_, h₁⟩⟩
   rintro ⟨h₀, _, h₂⟩; exact ⟨h₀, h₂⟩
 
 /-- `unwrap o` gets the value at `o`, ignoring the condition. This function is unsound. -/

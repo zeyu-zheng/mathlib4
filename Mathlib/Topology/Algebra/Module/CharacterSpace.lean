@@ -111,8 +111,8 @@ theorem union_zero :
     characterSpace 𝕜 A ∪ {0} = {φ : WeakDual 𝕜 A | ∀ x y : A, φ (x * y) = φ x * φ y} :=
   le_antisymm (by
       rintro φ (hφ | rfl)
-      · exact hφ.2
-      · exact fun _ _ => by exact (zero_mul (0 : 𝕜)).symm)
+      exact hφ.2
+      exact fun _ _ => by exact (zero_mul (0 : 𝕜)).symm)
     fun φ hφ => Or.elim (em <| φ = 0) Or.inr fun h₀ => Or.inl ⟨h₀, hφ⟩
 
 /-- The `characterSpace 𝕜 A` along with `0` is always a closed set in `WeakDual 𝕜 A`. -/
@@ -136,9 +136,9 @@ instance instAlgHomClass : AlgHomClass (characterSpace 𝕜 A) 𝕜 A 𝕜 :=
   haveI map_one' : ∀ φ : characterSpace 𝕜 A, φ 1 = 1 := fun φ => by
     have h₁ : φ 1 * (1 - φ 1) = 0 := by rw [mul_sub, sub_eq_zero, mul_one, ← map_mul φ, one_mul]
     rcases mul_eq_zero.mp h₁ with (h₂ | h₂)
-    · have : ∀ a, φ (a * 1) = 0 := fun a => by simp only [map_mul φ, h₂, mul_zero]
-      exact False.elim (φ.prop.1 <| ContinuousLinearMap.ext <| by simpa only [mul_one] using this)
-    · exact (sub_eq_zero.mp h₂).symm
+    have : ∀ a, φ (a * 1) = 0 := fun a => by simp only [map_mul φ, h₂, mul_zero]
+    exact False.elim (φ.prop.1 <| ContinuousLinearMap.ext <| by simpa only [mul_one] using this)
+    exact (sub_eq_zero.mp h₂).symm
   { CharacterSpace.instNonUnitalAlgHomClass with
     map_one := map_one'
     commutes := fun φ r => by
@@ -156,13 +156,13 @@ theorem eq_set_map_one_map_mul [Nontrivial 𝕜] :
     characterSpace 𝕜 A = {φ : WeakDual 𝕜 A | φ 1 = 1 ∧ ∀ x y : A, φ (x * y) = φ x * φ y} := by
   ext φ
   refine ⟨?_, ?_⟩
-  · rintro hφ
-    lift φ to characterSpace 𝕜 A using hφ
-    exact ⟨map_one φ, map_mul φ⟩
-  · rintro ⟨hφ₁, hφ₂⟩
-    refine ⟨?_, hφ₂⟩
-    rintro rfl
-    exact zero_ne_one hφ₁
+  rintro hφ
+  lift φ to characterSpace 𝕜 A using hφ
+  exact ⟨map_one φ, map_mul φ⟩
+  rintro ⟨hφ₁, hφ₂⟩
+  refine ⟨?_, hφ₂⟩
+  rintro rfl
+  exact zero_ne_one hφ₁
 
 /-- under suitable mild assumptions on `𝕜`, the character space is a closed set in
 `WeakDual 𝕜 A`. -/

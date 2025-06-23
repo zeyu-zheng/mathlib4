@@ -106,9 +106,9 @@ theorem sum_left {ι : Type*} [Countable ι] {μ : ι → Measure α} : sum μ �
   refine ⟨fun h i => h.mono (le_sum _ _) le_rfl, fun H => ?_⟩
   choose s hsm hsμ hsν using H
   refine ⟨⋂ i, s i, MeasurableSet.iInter hsm, ?_, ?_⟩
-  · rw [sum_apply _ (MeasurableSet.iInter hsm), ENNReal.tsum_eq_zero]
-    exact fun i => measure_mono_null (iInter_subset _ _) (hsμ i)
-  · rwa [compl_iInter, measure_iUnion_null_iff]
+  rw [sum_apply _ (MeasurableSet.iInter hsm), ENNReal.tsum_eq_zero]
+  exact fun i => measure_mono_null (iInter_subset _ _) (hsμ i)
+  rwa [compl_iInter, measure_iUnion_null_iff]
 
 @[simp]
 theorem sum_right {ι : Type*} [Countable ι] {ν : ι → Measure α} : μ ⟂ₘ sum ν ↔ ∀ i, μ ⟂ₘ ν i :=
@@ -151,8 +151,8 @@ lemma _root_.MeasurableEmbedding.mutuallySingular_map {β : Type*} {_ : Measurab
     {f : α → β} (hf : MeasurableEmbedding f) (hμν : μ ⟂ₘ ν) :
     μ.map f ⟂ₘ ν.map f := by
   refine ⟨f '' hμν.nullSet, hf.measurableSet_image' hμν.measurableSet_nullSet, ?_, ?_⟩
-  · rw [hf.map_apply, hf.injective.preimage_image, hμν.measure_nullSet]
-  · rw [hf.map_apply, Set.preimage_compl, hf.injective.preimage_image, hμν.measure_compl_nullSet]
+  rw [hf.map_apply, hf.injective.preimage_image, hμν.measure_nullSet]
+  rw [hf.map_apply, Set.preimage_compl, hf.injective.preimage_image, hμν.measure_compl_nullSet]
 
 end Measure
 

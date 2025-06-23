@@ -38,8 +38,8 @@ theorem hasProd_pi_single [DecidableEq β] (b : β) (a : α) : HasProd (Pi.mulSi
 @[to_additive (attr := simp)]
 theorem tprod_pi_single [DecidableEq β] (b : β) (a : α) : ∏' b', Pi.mulSingle b a b' = a := by
   rw [tprod_eq_mulSingle b]
-  · simp
-  · intro b' hb'; simp [hb']
+  simp
+  intro b' hb'; simp [hb']
 
 @[to_additive tsum_setProd_singleton_left]
 lemma tprod_setProd_singleton_left (b : β) (t : Set γ) (f : β × γ → α) :
@@ -257,9 +257,9 @@ theorem summable_unop {f : β → αᵐᵒᵖ} : (Summable fun a ↦ unop (f a))
 theorem tsum_op [T2Space α] :
     ∑' x, op (f x) = op (∑' x, f x) := by
   by_cases h : Summable f
-  · exact h.hasSum.op.tsum_eq
-  · have ho := summable_op.not.mpr h
-    rw [tsum_eq_zero_of_not_summable h, tsum_eq_zero_of_not_summable ho, op_zero]
+  exact h.hasSum.op.tsum_eq
+  have ho := summable_op.not.mpr h
+  rw [tsum_eq_zero_of_not_summable h, tsum_eq_zero_of_not_summable ho, op_zero]
 
 theorem tsum_unop [T2Space α] {f : β → αᵐᵒᵖ} :
     ∑' x, unop (f x) = unop (∑' x, f x) :=
@@ -293,8 +293,8 @@ theorem summable_star_iff' : Summable (star f) ↔ Summable f :=
 
 theorem tsum_star [T2Space α] : star (∑' b, f b) = ∑' b, star (f b) := by
   by_cases hf : Summable f
-  · exact hf.hasSum.star.tsum_eq.symm
-  · rw [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable (mt Summable.ofStar hf),
-      star_zero]
+  exact hf.hasSum.star.tsum_eq.symm
+  rw [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable (mt Summable.ofStar hf),
+    star_zero]
 
 end ContinuousStar

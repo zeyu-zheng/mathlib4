@@ -194,9 +194,9 @@ instance instPow : Pow 𝓜(𝕜, A) ℕ where
   pow a n :=
     ⟨a.toProd ^ n, fun x y => by
       induction' n with k hk generalizing x y
-      · rfl
-      · rw [Prod.pow_snd, Prod.pow_fst] at hk ⊢
-        rw [pow_succ' a.snd, mul_apply, a.central, hk, pow_succ a.fst, mul_apply]⟩
+      rfl
+      rw [Prod.pow_snd, Prod.pow_fst] at hk ⊢
+      rw [pow_succ' a.snd, mul_apply, a.central, hk, pow_succ a.fst, mul_apply]⟩
 
 instance instInhabited : Inhabited 𝓜(𝕜, A) :=
   ⟨0⟩
@@ -476,9 +476,9 @@ theorem coe_snd (a : A) : (a : 𝓜(𝕜, A)).snd = (ContinuousLinearMap.mul �
 
 theorem coe_eq_algebraMap : (DoubleCentralizer.coe 𝕜 : 𝕜 → 𝓜(𝕜, 𝕜)) = algebraMap 𝕜 𝓜(𝕜, 𝕜) := by
   ext x : 3
-  · rfl -- `fst` is defeq
-  · refine ContinuousLinearMap.ext fun y => ?_
-    exact mul_comm y x  -- `snd` multiplies on the wrong side
+  rfl -- `fst` is defeq
+  refine ContinuousLinearMap.ext fun y => ?_
+  exact mul_comm y x  -- `snd` multiplies on the wrong side
 
 /-- The coercion of an algebra into its multiplier algebra as a non-unital star algebra
 homomorphism. -/
@@ -543,9 +543,9 @@ instance [CompleteSpace A] : CompleteSpace 𝓜(𝕜, A) := by
   apply IsClosed.isComplete
   simp only [range_toProdMulOpposite, Set.setOf_forall]
   refine isClosed_iInter fun x => isClosed_iInter fun y => isClosed_eq ?_ ?_
-  · exact
-      ((ContinuousLinearMap.apply 𝕜 A _).continuous.comp <| continuous_unop.comp continuous_snd).mul
-        continuous_const
+  exact
+    ((ContinuousLinearMap.apply 𝕜 A _).continuous.comp <| continuous_unop.comp continuous_snd).mul
+      continuous_const
   exact continuous_const.mul ((ContinuousLinearMap.apply 𝕜 A _).continuous.comp continuous_fst)
 
 variable [StarRing A] [CstarRing A]
@@ -563,9 +563,9 @@ theorem norm_fst_eq_snd (a : 𝓜(𝕜, A)) : ‖a.fst‖ = ‖a.snd‖ := by
   have := NNReal.div_le_of_le_mul $ f.opNNNorm_le_bound _ $ by
     simpa only [sqrt_sq, sqrt_mul] using fun b ↦ sqrt_le_sqrt.2 $ (h b).trans (h1 b)
   convert NNReal.rpow_le_rpow this two_pos.le
-  · simp only [NNReal.rpow_two, div_pow, sq_sqrt]
-    simp only [sq, mul_self_div_self]
-  · simp only [NNReal.rpow_two, sq_sqrt]
+  simp only [NNReal.rpow_two, div_pow, sq_sqrt]
+  simp only [sq, mul_self_div_self]
+  simp only [NNReal.rpow_two, sq_sqrt]
   have h1 : ∀ b, ‖a.fst b‖₊ ^ 2 ≤ ‖a.snd‖₊ * ‖a.fst b‖₊ * ‖b‖₊
   intro b
   calc
@@ -645,22 +645,22 @@ instance instCstarRing : CstarRing 𝓜(𝕜, A) where
       simp only [← @opNNNorm_mul_apply 𝕜 _ A]
       simp only [← sSup_closed_unit_ball_eq_nnnorm, mul_apply']
       refine csSup_eq_of_forall_le_of_forall_lt_exists_gt (hball.image _) ?_ fun r hr => ?_
-      · rintro - ⟨x, hx, rfl⟩
-        refine csSup_le (hball.image _) ?_
-        rintro - ⟨y, hy, rfl⟩
-        exact key x y (mem_closedBall_zero_iff.1 hx) (mem_closedBall_zero_iff.1 hy)
-      · simp only [Set.mem_image, Set.mem_setOf_eq, exists_prop, exists_exists_and_eq_and]
-        have hr' : NNReal.sqrt r < ‖a‖₊ := ‖a‖₊.sqrt_mul_self ▸ NNReal.sqrt_lt_sqrt.2 hr
-        simp_rw [← nnnorm_fst, ← sSup_closed_unit_ball_eq_nnnorm] at hr'
-        obtain ⟨_, ⟨x, hx, rfl⟩, hxr⟩ := exists_lt_of_lt_csSup (hball.image _) hr'
-        have hx' : ‖x‖₊ ≤ 1 := mem_closedBall_zero_iff.1 hx
-        refine ⟨star x, mem_closedBall_zero_iff.2 ((nnnorm_star x).trans_le hx'), ?_⟩
-        refine lt_csSup_of_lt ?_ ⟨x, hx, rfl⟩ ?_
-        · refine ⟨‖a‖₊ * ‖a‖₊, ?_⟩
-          rintro - ⟨y, hy, rfl⟩
-          exact key (star x) y ((nnnorm_star x).trans_le hx') (mem_closedBall_zero_iff.1 hy)
-        · simpa only [a.central, star_star, CstarRing.nnnorm_star_mul_self, NNReal.sq_sqrt, ← sq]
-            using pow_lt_pow_left hxr zero_le' two_ne_zero
+      rintro - ⟨x, hx, rfl⟩
+      refine csSup_le (hball.image _) ?_
+      rintro - ⟨y, hy, rfl⟩
+      exact key x y (mem_closedBall_zero_iff.1 hx) (mem_closedBall_zero_iff.1 hy)
+      simp only [Set.mem_image, Set.mem_setOf_eq, exists_prop, exists_exists_and_eq_and]
+      have hr' : NNReal.sqrt r < ‖a‖₊ := ‖a‖₊.sqrt_mul_self ▸ NNReal.sqrt_lt_sqrt.2 hr
+      simp_rw [← nnnorm_fst, ← sSup_closed_unit_ball_eq_nnnorm] at hr'
+      obtain ⟨_, ⟨x, hx, rfl⟩, hxr⟩ := exists_lt_of_lt_csSup (hball.image _) hr'
+      have hx' : ‖x‖₊ ≤ 1 := mem_closedBall_zero_iff.1 hx
+      refine ⟨star x, mem_closedBall_zero_iff.2 ((nnnorm_star x).trans_le hx'), ?_⟩
+      refine lt_csSup_of_lt ?_ ⟨x, hx, rfl⟩ ?_
+      refine ⟨‖a‖₊ * ‖a‖₊, ?_⟩
+      rintro - ⟨y, hy, rfl⟩
+      exact key (star x) y ((nnnorm_star x).trans_le hx') (mem_closedBall_zero_iff.1 hy)
+      simpa only [a.central, star_star, CstarRing.nnnorm_star_mul_self, NNReal.sq_sqrt, ← sq]
+        using pow_lt_pow_left hxr zero_le' two_ne_zero
 
 end DenselyNormed
 

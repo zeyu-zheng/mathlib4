@@ -57,11 +57,11 @@ lemma inr_le_iff (a b : A) (ha : IsSelfAdjoint a := by cfc_tac)
 @[simp, norm_cast]
 lemma inr_nonneg_iff {a : A} : 0 ≤ (a : Unitization ℂ A) ↔ 0 ≤ a := by
   by_cases ha : IsSelfAdjoint a
-  · exact inr_zero ℂ (A := A) ▸ inr_le_iff 0 a
-  · refine ⟨?_, ?_⟩
-    all_goals refine fun h ↦ (ha ?_).elim
-    · exact isSelfAdjoint_inr (R := ℂ) |>.mp <| .of_nonneg h
-    · exact .of_nonneg h
+  exact inr_zero ℂ (A := A) ▸ inr_le_iff 0 a
+  refine ⟨?_, ?_⟩
+  all_goals refine fun h ↦ (ha ?_).elim
+  exact isSelfAdjoint_inr (R := ℂ) |>.mp <| .of_nonneg h
+  exact .of_nonneg h
 
 end Unitization
 
@@ -73,11 +73,11 @@ variable [NormedAlgebra ℂ A] [StarModule ℂ A] [PartialOrder A] [StarOrderedR
 lemma IsSelfAdjoint.le_algebraMap_norm_self {a : A} (ha : IsSelfAdjoint a := by cfc_tac) :
     a ≤ algebraMap ℝ A ‖a‖ := by
   by_cases nontriv : Nontrivial A
-  · refine le_algebraMap_of_spectrum_le fun r hr => ?_
-    calc r ≤ ‖r‖ := Real.le_norm_self r
-      _ ≤ ‖a‖ := spectrum.norm_le_norm_of_mem hr
-  · rw [not_nontrivial_iff_subsingleton] at nontriv
-    simp
+  refine le_algebraMap_of_spectrum_le fun r hr => ?_
+  calc r ≤ ‖r‖ := Real.le_norm_self r
+    _ ≤ ‖a‖ := spectrum.norm_le_norm_of_mem hr
+  rw [not_nontrivial_iff_subsingleton] at nontriv
+  simp
 
 lemma IsSelfAdjoint.neg_algebraMap_norm_le_self {a : A} (ha : IsSelfAdjoint a := by cfc_tac) :
     - (algebraMap ℝ A ‖a‖) ≤ a := by
@@ -108,8 +108,8 @@ lemma CstarRing.nnnorm_mem_spectrum_of_nonneg [Nontrivial A] {a : A} (ha : 0 ≤
     ‖a‖₊ ∈ spectrum ℝ≥0 a := by
   have : IsSelfAdjoint a := .of_nonneg ha
   convert NNReal.spectralRadius_mem_spectrum (a := a) ?_ (.nnreal_of_nonneg ha)
-  · simp [this.spectrumRestricts.spectralRadius_eq, this.spectralRadius_eq_nnnorm]
-  · exact this.spectrumRestricts.image ▸ (spectrum.nonempty a).image _
+  simp [this.spectrumRestricts.spectralRadius_eq, this.spectralRadius_eq_nnnorm]
+  exact this.spectrumRestricts.image ▸ (spectrum.nonempty a).image _
 
 lemma CstarRing.norm_mem_spectrum_of_nonneg [Nontrivial A] {a : A} (ha : 0 ≤ a := by cfc_tac) :
     ‖a‖ ∈ spectrum ℝ a := by

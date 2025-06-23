@@ -35,7 +35,7 @@ example : True := by
 example (h : True) : False := by
   guard_hyp h : True
   replace h
-  · exact true
+  exact true
   guard_hyp h : Bool
   rename_i h'
   guard_hyp h' : True

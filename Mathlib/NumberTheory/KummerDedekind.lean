@@ -89,21 +89,21 @@ lemma mem_coeSubmodule_conductor {L} [CommRing L] [Algebra S L] [Algebra R L]
     y ∈ coeSubmodule L (conductor R x) ↔ ∀ z : S,
       y * (algebraMap S L) z ∈ Algebra.adjoin R {algebraMap S L x} := by
   cases subsingleton_or_nontrivial L
-  · rw [Subsingleton.elim (coeSubmodule L _) ⊤, Subsingleton.elim (Algebra.adjoin R _) ⊤]; simp
+  rw [Subsingleton.elim (coeSubmodule L _) ⊤, Subsingleton.elim (Algebra.adjoin R _) ⊤]; simp
   trans ∀ z, y * (algebraMap S L) z ∈ (Algebra.adjoin R {x}).map (IsScalarTower.toAlgHom R S L)
-  · simp only [coeSubmodule, Submodule.mem_map, Algebra.linearMap_apply, Subalgebra.mem_map,
-      IsScalarTower.coe_toAlgHom']
-    constructor
-    · rintro ⟨y, hy, rfl⟩ z
-      exact ⟨_, hy z, map_mul _ _ _⟩
-    · intro H
-      obtain ⟨y, _, e⟩ := H 1
-      rw [_root_.map_one, mul_one] at e
-      subst e
-      simp only [← _root_.map_mul, (NoZeroSMulDivisors.algebraMap_injective S L).eq_iff,
-        exists_eq_right] at H
-      exact ⟨_, H, rfl⟩
-  · rw [AlgHom.map_adjoin, Set.image_singleton]; rfl
+  simp only [coeSubmodule, Submodule.mem_map, Algebra.linearMap_apply, Subalgebra.mem_map,
+    IsScalarTower.coe_toAlgHom']
+  constructor
+  rintro ⟨y, hy, rfl⟩ z
+  exact ⟨_, hy z, map_mul _ _ _⟩
+  intro H
+  obtain ⟨y, _, e⟩ := H 1
+  rw [_root_.map_one, mul_one] at e
+  subst e
+  simp only [← _root_.map_mul, (NoZeroSMulDivisors.algebraMap_injective S L).eq_iff,
+    exists_eq_right] at H
+  exact ⟨_, H, rfl⟩
+  rw [AlgHom.map_adjoin, Set.image_singleton]; rfl
 
 variable {I : Ideal R}
 
@@ -126,19 +126,19 @@ theorem prod_mem_ideal_map_of_mem_conductor {p : R} {z : S}
     case h =>
       rw [mul_comm]
       exact mem_conductor_iff.mp (Ideal.mem_comap.mp hp) _
-    · refine ⟨?_, ?_⟩
-      · rw [mul_comm]
-        apply Ideal.mul_mem_left (I.map (algebraMap R R<x>)) _ (Ideal.mem_map_of_mem _ ha)
-      · simp only [RingHom.map_mul, mul_comm (algebraMap R S p) (l a)]
-        rfl
+    refine ⟨?_, ?_⟩
+    rw [mul_comm]
+    apply Ideal.mul_mem_left (I.map (algebraMap R R<x>)) _ (Ideal.mem_map_of_mem _ ha)
+    simp only [RingHom.map_mul, mul_comm (algebraMap R S p) (l a)]
+    rfl
   refine Finset.sum_induction _ (fun u => u ∈ algebraMap R<x> S '' I.map (algebraMap R R<x>))
       (fun a b => ?_) ?_ ?_
-  · rintro ⟨z, hz, rfl⟩ ⟨y, hy, rfl⟩
-    rw [← RingHom.map_add]
-    exact ⟨z + y, Ideal.add_mem _ (SetLike.mem_coe.mp hz) hy, rfl⟩
-  · exact ⟨0, SetLike.mem_coe.mpr <| Ideal.zero_mem _, RingHom.map_zero _⟩
-  · intro y hy
-    exact lem ((Finsupp.mem_supported _ l).mp H hy)
+  rintro ⟨z, hz, rfl⟩ ⟨y, hy, rfl⟩
+  rw [← RingHom.map_add]
+  exact ⟨z + y, Ideal.add_mem _ (SetLike.mem_coe.mp hz) hy, rfl⟩
+  exact ⟨0, SetLike.mem_coe.mpr <| Ideal.zero_mem _, RingHom.map_zero _⟩
+  intro y hy
+  exact lem ((Finsupp.mem_supported _ l).mp H hy)
 
 /-- A technical result telling us that `(I * S) ∩ R<x> = I * R<x>` for any ideal `I` of `R`. -/
 theorem comap_map_eq_map_adjoin_of_coprime_conductor
@@ -146,36 +146,36 @@ theorem comap_map_eq_map_adjoin_of_coprime_conductor
     (h_alg : Function.Injective (algebraMap R<x> S)) :
     (I.map (algebraMap R S)).comap (algebraMap R<x> S) = I.map (algebraMap R R<x>) := by
   apply le_antisymm
-  · -- This is adapted from [Neukirch1992]. Let `C = (conductor R x)`. The idea of the proof
-    -- is that since `I` and `C ∩ R` are coprime, we have
-    -- `(I * S) ∩ R<x> ⊆ (I + C) * ((I * S) ∩ R<x>) ⊆ I * R<x> + I * C * S ⊆ I * R<x>`.
-    intro y hy
-    obtain ⟨z, hz⟩ := y
-    obtain ⟨p, hp, q, hq, hpq⟩ := Submodule.mem_sup.mp ((Ideal.eq_top_iff_one _).mp hx)
-    have temp : algebraMap R S p * z + algebraMap R S q * z = z
-    simp only [← add_mul, ← RingHom.map_add (algebraMap R S), hpq, map_one, one_mul]
-    suffices z ∈ algebraMap R<x> S '' I.map (algebraMap R R<x>) ↔
-        (⟨z, hz⟩ : R<x>) ∈ I.map (algebraMap R R<x>) by
-      rw [← this, ← temp]
-      obtain ⟨a, ha⟩ := (Set.mem_image _ _ _).mp (prod_mem_ideal_map_of_mem_conductor hp
-          (show z ∈ I.map (algebraMap R S) by rwa [Ideal.mem_comap] at hy))
-      use a + algebraMap R R<x> q * ⟨z, hz⟩
-      refine ⟨Ideal.add_mem (I.map (algebraMap R R<x>)) ha.left ?_, by
-          simp only [ha.right, map_add, _root_.map_mul, add_right_inj]; rfl⟩
-      rw [mul_comm]
-      exact Ideal.mul_mem_left (I.map (algebraMap R R<x>)) _ (Ideal.mem_map_of_mem _ hq)
-    refine ⟨fun h => ?_,
-      fun h => (Set.mem_image _ _ _).mpr (Exists.intro ⟨z, hz⟩ ⟨by simp [h], rfl⟩)⟩
-    obtain ⟨x₁, hx₁, hx₂⟩ := (Set.mem_image _ _ _).mp h
-    have : x₁ = ⟨z, hz⟩
-    apply h_alg
-    simp [hx₂, algebraMap_eq_smul_one]
-    rwa [← this]
-  · -- The converse inclusion is trivial
-    have : algebraMap R S = (algebraMap _ S).comp (algebraMap R R<x>)
-    ext; rfl
-    rw [this, ← Ideal.map_map]
-    apply Ideal.le_comap_map
+  -- This is adapted from [Neukirch1992]. Let `C = (conductor R x)`. The idea of the proof
+  -- is that since `I` and `C ∩ R` are coprime, we have
+  -- `(I * S) ∩ R<x> ⊆ (I + C) * ((I * S) ∩ R<x>) ⊆ I * R<x> + I * C * S ⊆ I * R<x>`.
+  intro y hy
+  obtain ⟨z, hz⟩ := y
+  obtain ⟨p, hp, q, hq, hpq⟩ := Submodule.mem_sup.mp ((Ideal.eq_top_iff_one _).mp hx)
+  have temp : algebraMap R S p * z + algebraMap R S q * z = z
+  simp only [← add_mul, ← RingHom.map_add (algebraMap R S), hpq, map_one, one_mul]
+  suffices z ∈ algebraMap R<x> S '' I.map (algebraMap R R<x>) ↔
+      (⟨z, hz⟩ : R<x>) ∈ I.map (algebraMap R R<x>) by
+    rw [← this, ← temp]
+    obtain ⟨a, ha⟩ := (Set.mem_image _ _ _).mp (prod_mem_ideal_map_of_mem_conductor hp
+        (show z ∈ I.map (algebraMap R S) by rwa [Ideal.mem_comap] at hy))
+    use a + algebraMap R R<x> q * ⟨z, hz⟩
+    refine ⟨Ideal.add_mem (I.map (algebraMap R R<x>)) ha.left ?_, by
+        simp only [ha.right, map_add, _root_.map_mul, add_right_inj]; rfl⟩
+    rw [mul_comm]
+    exact Ideal.mul_mem_left (I.map (algebraMap R R<x>)) _ (Ideal.mem_map_of_mem _ hq)
+  refine ⟨fun h => ?_,
+    fun h => (Set.mem_image _ _ _).mpr (Exists.intro ⟨z, hz⟩ ⟨by simp [h], rfl⟩)⟩
+  obtain ⟨x₁, hx₁, hx₂⟩ := (Set.mem_image _ _ _).mp h
+  have : x₁ = ⟨z, hz⟩
+  apply h_alg
+  simp [hx₂, algebraMap_eq_smul_one]
+  rwa [← this]
+  -- The converse inclusion is trivial
+  have : algebraMap R S = (algebraMap _ S).comp (algebraMap R R<x>)
+  ext; rfl
+  rw [this, ← Ideal.map_map]
+  apply Ideal.le_comap_map
 
 /-- The canonical morphism of rings from `R<x> ⧸ (I*R<x>)` to `S ⧸ (I*S)` is an isomorphism
     when `I` and `(conductor R x) ∩ R` are coprime. -/
@@ -279,37 +279,37 @@ theorem normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map (hI : I
   -- WLOG, assume J is a normalized factor
   by_cases hJ : J ∈ normalizedFactors (I.map (algebraMap R S))
   swap
-  · rw [Multiset.count_eq_zero.mpr hJ, eq_comm, Multiset.count_eq_zero, Multiset.mem_map]
-    simp only [Multiset.mem_attach, true_and_iff, not_exists]
-    rintro J' rfl
-    exact
-      hJ ((normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx').symm J').prop
+  rw [Multiset.count_eq_zero.mpr hJ, eq_comm, Multiset.count_eq_zero, Multiset.mem_map]
+  simp only [Multiset.mem_attach, true_and_iff, not_exists]
+  rintro J' rfl
+  exact
+    hJ ((normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx').symm J').prop
   -- Then we just have to compare the multiplicities, which we already proved are equal.
   have := multiplicity_factors_map_eq_multiplicity hI hI' hx hx' hJ
   rw [multiplicity_eq_count_normalizedFactors, multiplicity_eq_count_normalizedFactors,
     UniqueFactorizationMonoid.normalize_normalized_factor _ hJ,
     UniqueFactorizationMonoid.normalize_normalized_factor, PartENat.natCast_inj] at this
-  · refine this.trans ?_
-    -- Get rid of the `map` by applying the equiv to both sides.
-    generalize hJ' :
-      (normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx') ⟨J, hJ⟩ = J'
-    have : ((normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx').symm J' : Ideal S) =
-        J := by
-      rw [← hJ', Equiv.symm_apply_apply _ _, Subtype.coe_mk]
-    subst this
-    -- Get rid of the `attach` by applying the subtype `coe` to both sides.
-    rw [Multiset.count_map_eq_count' fun f =>
-        ((normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx').symm f :
-          Ideal S),
-      Multiset.count_attach]
-    · exact Subtype.coe_injective.comp (Equiv.injective _)
-  · exact (normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx' _).prop
-  · exact irreducible_of_normalized_factor _
-        (normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx' _).prop
-  · exact Polynomial.map_monic_ne_zero (minpoly.monic hx')
-  · exact irreducible_of_normalized_factor _ hJ
-  · rwa [← bot_eq_zero, Ne,
-      map_eq_bot_iff_of_injective (NoZeroSMulDivisors.algebraMap_injective R S)]
+  refine this.trans ?_
+  -- Get rid of the `map` by applying the equiv to both sides.
+  generalize hJ' :
+    (normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx') ⟨J, hJ⟩ = J'
+  have : ((normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx').symm J' : Ideal S) =
+      J := by
+    rw [← hJ', Equiv.symm_apply_apply _ _, Subtype.coe_mk]
+  subst this
+  -- Get rid of the `attach` by applying the subtype `coe` to both sides.
+  rw [Multiset.count_map_eq_count' fun f =>
+      ((normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx').symm f :
+        Ideal S),
+    Multiset.count_attach]
+  exact Subtype.coe_injective.comp (Equiv.injective _)
+  exact (normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx' _).prop
+  exact irreducible_of_normalized_factor _
+      (normalizedFactorsMapEquivNormalizedFactorsMinPolyMk hI hI' hx hx' _).prop
+  exact Polynomial.map_monic_ne_zero (minpoly.monic hx')
+  exact irreducible_of_normalized_factor _ hJ
+  rwa [← bot_eq_zero, Ne,
+    map_eq_bot_iff_of_injective (NoZeroSMulDivisors.algebraMap_injective R S)]
 
 theorem Ideal.irreducible_map_of_irreducible_minpoly (hI : IsMaximal I) (hI' : I ≠ ⊥)
     (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤) (hx' : IsIntegral R x)

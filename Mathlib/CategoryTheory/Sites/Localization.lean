@@ -34,10 +34,10 @@ lemma W_eq_W_range_sheafToPresheaf_obj :
   apply congr_arg
   ext P
   constructor
-  · intro hP
-    exact ⟨⟨P, hP⟩, rfl⟩
-  · rintro ⟨F, rfl⟩
-    exact F.cond
+  intro hP
+  exact ⟨⟨P, hP⟩, rfl⟩
+  rintro ⟨F, rfl⟩
+  exact F.cond
 
 lemma W_sheafToPreheaf_map_iff_isIso {F₁ F₂ : Sheaf J A} (φ : F₁ ⟶ F₂) :
     J.W ((sheafToPresheaf J A).map φ) ↔ IsIso φ := by

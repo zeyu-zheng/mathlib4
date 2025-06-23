@@ -174,12 +174,12 @@ theorem le_index_mul (K₀ : PositiveCompacts G) (K : Compacts G) {V : Set G}
 theorem index_pos (K : PositiveCompacts G) {V : Set G} (hV : (interior V).Nonempty) :
     0 < index (K : Set G) V := by
   unfold index; rw [Nat.sInf_def, Nat.find_pos, mem_image]
-  · rintro ⟨t, h1t, h2t⟩; rw [Finset.card_eq_zero] at h2t; subst h2t
-    obtain ⟨g, hg⟩ := K.interior_nonempty
-    show g ∈ (∅ : Set G)
-    convert h1t (interior_subset hg); symm
-    simp only [Finset.not_mem_empty, iUnion_of_empty, iUnion_empty]
-  · exact index_defined K.isCompact hV
+  rintro ⟨t, h1t, h2t⟩; rw [Finset.card_eq_zero] at h2t; subst h2t
+  obtain ⟨g, hg⟩ := K.interior_nonempty
+  show g ∈ (∅ : Set G)
+  convert h1t (interior_subset hg); symm
+  simp only [Finset.not_mem_empty, iUnion_of_empty, iUnion_empty]
+  exact index_defined K.isCompact hV
 
 @[to_additive addIndex_mono]
 theorem index_mono {K K' V : Set G} (hK' : IsCompact K') (h : K ⊆ K') (hV : (interior V).Nonempty) :
@@ -213,26 +213,26 @@ theorem index_union_eq (K₁ K₂ : Compacts G) {V : Set G} (hV : (interior V).N
   intro g hg; rcases hK hg with ⟨_, ⟨g₀, rfl⟩, _, ⟨h1g₀, rfl⟩, h2g₀⟩
   simp only [mem_preimage] at h2g₀
   simp only [mem_iUnion]; use g₀; constructor; swap
-  · simp only [Finset.mem_filter, h1g₀, true_and_iff]; use g
-    simp only [hg, h2g₀, mem_inter_iff, mem_preimage, and_self_iff]
+  simp only [Finset.mem_filter, h1g₀, true_and_iff]; use g
+  simp only [hg, h2g₀, mem_inter_iff, mem_preimage, and_self_iff]
   exact h2g₀
   refine
     le_trans
       (add_le_add (this K₁.1 <| Subset.trans subset_union_left h1s)
         (this K₂.1 <| Subset.trans subset_union_right h1s)) ?_
   rw [← Finset.card_union_of_disjoint, Finset.filter_union_right]
-  · exact s.card_filter_le _
+  exact s.card_filter_le _
   apply Finset.disjoint_filter.mpr
   rintro g₁ _ ⟨g₂, h1g₂, h2g₂⟩ ⟨g₃, h1g₃, h2g₃⟩
   simp only [mem_preimage] at h1g₃ h1g₂
   refine h.le_bot (?_ : g₁⁻¹ ∈ _)
   constructor <;> simp only [Set.mem_inv, Set.mem_mul, exists_exists_and_eq_and, exists_and_left]
-  · refine ⟨_, h2g₂, (g₁ * g₂)⁻¹, ?_, ?_⟩
-    · simp only [inv_inv, h1g₂]
-    · simp only [mul_inv_rev, mul_inv_cancel_left]
-  · refine ⟨_, h2g₃, (g₁ * g₃)⁻¹, ?_, ?_⟩
-    · simp only [inv_inv, h1g₃]
-    · simp only [mul_inv_rev, mul_inv_cancel_left]
+  refine ⟨_, h2g₂, (g₁ * g₂)⁻¹, ?_, ?_⟩
+  simp only [inv_inv, h1g₂]
+  simp only [mul_inv_rev, mul_inv_cancel_left]
+  refine ⟨_, h2g₃, (g₁ * g₃)⁻¹, ?_, ?_⟩
+  simp only [inv_inv, h1g₃]
+  simp only [mul_inv_rev, mul_inv_cancel_left]
 
 @[to_additive add_left_addIndex_le]
 theorem mul_left_index_le {K : Set G} (hK : IsCompact K) {V : Set G} (hV : (interior V).Nonempty)
@@ -263,23 +263,23 @@ theorem is_left_invariant_index {K : Set G} (hK : IsCompact K) (g : G) {V : Set 
 theorem prehaar_le_index (K₀ : PositiveCompacts G) {U : Set G} (K : Compacts G)
     (hU : (interior U).Nonempty) : prehaar (K₀ : Set G) U K ≤ index (K : Set G) K₀ := by
   unfold prehaar; rw [div_le_iff] <;> norm_cast
-  · apply le_index_mul K₀ K hU
-  · exact index_pos K₀ hU
+  apply le_index_mul K₀ K hU
+  exact index_pos K₀ hU
 
 @[to_additive]
 theorem prehaar_pos (K₀ : PositiveCompacts G) {U : Set G} (hU : (interior U).Nonempty) {K : Set G}
     (h1K : IsCompact K) (h2K : (interior K).Nonempty) : 0 < prehaar (K₀ : Set G) U ⟨K, h1K⟩ := by
   apply div_pos <;> norm_cast
-  · apply index_pos ⟨⟨K, h1K⟩, h2K⟩ hU
-  · exact index_pos K₀ hU
+  apply index_pos ⟨⟨K, h1K⟩, h2K⟩ hU
+  exact index_pos K₀ hU
 
 @[to_additive]
 theorem prehaar_mono {K₀ : PositiveCompacts G} {U : Set G} (hU : (interior U).Nonempty)
     {K₁ K₂ : Compacts G} (h : (K₁ : Set G) ⊆ K₂.1) :
     prehaar (K₀ : Set G) U K₁ ≤ prehaar (K₀ : Set G) U K₂ := by
   simp only [prehaar]; rw [div_le_div_right]
-  · exact mod_cast index_mono K₂.2 h hU
-  · exact mod_cast index_pos K₀ hU
+  exact mod_cast index_mono K₂.2 h hU
+  exact mod_cast index_pos K₀ hU
 
 @[to_additive]
 theorem prehaar_self {K₀ : PositiveCompacts G} {U : Set G} (hU : (interior U).Nonempty) :
@@ -291,8 +291,8 @@ theorem prehaar_sup_le {K₀ : PositiveCompacts G} {U : Set G} (K₁ K₂ : Comp
     (hU : (interior U).Nonempty) :
     prehaar (K₀ : Set G) U (K₁ ⊔ K₂) ≤ prehaar (K₀ : Set G) U K₁ + prehaar (K₀ : Set G) U K₂ := by
   simp only [prehaar]; rw [div_add_div_same, div_le_div_right]
-  · exact mod_cast index_union_le K₁ K₂ hU
-  · exact mod_cast index_pos K₀ hU
+  exact mod_cast index_union_le K₁ K₂ hU
+  exact mod_cast index_pos K₀ hU
 
 @[to_additive]
 theorem prehaar_sup_eq {K₀ : PositiveCompacts G} {U : Set G} {K₁ K₂ : Compacts G}
@@ -330,10 +330,10 @@ theorem nonempty_iInter_clPrehaar (K₀ : PositiveCompacts G) :
   simp only [V₀, mem_iInter]; rintro ⟨⟨V, hV₁⟩, hV₂⟩ _; exact hV₂
   refine ⟨prehaar K₀ V₀, ?_⟩
   constructor
-  · apply prehaar_mem_haarProduct K₀; use 1; rwa [h1V₀.interior_eq]
-  · simp only [mem_iInter]; rintro ⟨V, hV⟩ h2V; apply subset_closure
-    apply mem_image_of_mem; rw [mem_setOf_eq]
-    exact ⟨Subset.trans (iInter_subset _ ⟨V, hV⟩) (iInter_subset _ h2V), h1V₀, h2V₀⟩
+  apply prehaar_mem_haarProduct K₀; use 1; rwa [h1V₀.interior_eq]
+  simp only [mem_iInter]; rintro ⟨V, hV⟩ h2V; apply subset_closure
+  apply mem_image_of_mem; rw [mem_setOf_eq]
+  exact ⟨Subset.trans (iInter_subset _ ⟨V, hV⟩) (iInter_subset _ h2V), h1V₀, h2V₀⟩
 
 /-!
 ### Lemmas about `chaar`
@@ -371,8 +371,8 @@ theorem chaar_empty (K₀ : PositiveCompacts G) : chaar K₀ ⊥ = 0 := by
   show chaar K₀ ∈ eval ⁻¹' {(0 : ℝ)}
   apply mem_of_subset_of_mem _ (chaar_mem_clPrehaar K₀ ⊤)
   unfold clPrehaar; rw [IsClosed.closure_subset_iff]
-  · rintro _ ⟨U, _, rfl⟩; apply prehaar_empty
-  · apply continuous_iff_isClosed.mp this; exact isClosed_singleton
+  rintro _ ⟨U, _, rfl⟩; apply prehaar_empty
+  apply continuous_iff_isClosed.mp this; exact isClosed_singleton
 
 @[to_additive addCHaar_self]
 theorem chaar_self (K₀ : PositiveCompacts G) : chaar K₀ K₀.toCompacts = 1 := by
@@ -382,9 +382,9 @@ theorem chaar_self (K₀ : PositiveCompacts G) : chaar K₀ K₀.toCompacts = 1 
   show chaar K₀ ∈ eval ⁻¹' {(1 : ℝ)}
   apply mem_of_subset_of_mem _ (chaar_mem_clPrehaar K₀ ⊤)
   unfold clPrehaar; rw [IsClosed.closure_subset_iff]
-  · rintro _ ⟨U, ⟨_, h2U, h3U⟩, rfl⟩; apply prehaar_self
-    rw [h2U.interior_eq]; exact ⟨1, h3U⟩
-  · apply continuous_iff_isClosed.mp this; exact isClosed_singleton
+  rintro _ ⟨U, ⟨_, h2U, h3U⟩, rfl⟩; apply prehaar_self
+  rw [h2U.interior_eq]; exact ⟨1, h3U⟩
+  apply continuous_iff_isClosed.mp this; exact isClosed_singleton
 
 @[to_additive addCHaar_mono]
 theorem chaar_mono {K₀ : PositiveCompacts G} {K₁ K₂ : Compacts G} (h : (K₁ : Set G) ⊆ K₂) :
@@ -394,9 +394,9 @@ theorem chaar_mono {K₀ : PositiveCompacts G} {K₁ K₂ : Compacts G} (h : (K�
   rw [← sub_nonneg]; show chaar K₀ ∈ eval ⁻¹' Ici (0 : ℝ)
   apply mem_of_subset_of_mem _ (chaar_mem_clPrehaar K₀ ⊤)
   unfold clPrehaar; rw [IsClosed.closure_subset_iff]
-  · rintro _ ⟨U, ⟨_, h2U, h3U⟩, rfl⟩; simp only [eval, mem_preimage, mem_Ici, sub_nonneg]
-    apply prehaar_mono _ h; rw [h2U.interior_eq]; exact ⟨1, h3U⟩
-  · apply continuous_iff_isClosed.mp this; exact isClosed_Ici
+  rintro _ ⟨U, ⟨_, h2U, h3U⟩, rfl⟩; simp only [eval, mem_preimage, mem_Ici, sub_nonneg]
+  apply prehaar_mono _ h; rw [h2U.interior_eq]; exact ⟨1, h3U⟩
+  apply continuous_iff_isClosed.mp this; exact isClosed_Ici
 
 @[to_additive addCHaar_sup_le]
 theorem chaar_sup_le {K₀ : PositiveCompacts G} (K₁ K₂ : Compacts G) :
@@ -407,9 +407,9 @@ theorem chaar_sup_le {K₀ : PositiveCompacts G} (K₁ K₂ : Compacts G) :
   rw [← sub_nonneg]; show chaar K₀ ∈ eval ⁻¹' Ici (0 : ℝ)
   apply mem_of_subset_of_mem _ (chaar_mem_clPrehaar K₀ ⊤)
   unfold clPrehaar; rw [IsClosed.closure_subset_iff]
-  · rintro _ ⟨U, ⟨_, h2U, h3U⟩, rfl⟩; simp only [eval, mem_preimage, mem_Ici, sub_nonneg]
-    apply prehaar_sup_le; rw [h2U.interior_eq]; exact ⟨1, h3U⟩
-  · apply continuous_iff_isClosed.mp this; exact isClosed_Ici
+  rintro _ ⟨U, ⟨_, h2U, h3U⟩, rfl⟩; simp only [eval, mem_preimage, mem_Ici, sub_nonneg]
+  apply prehaar_sup_le; rw [h2U.interior_eq]; exact ⟨1, h3U⟩
+  apply continuous_iff_isClosed.mp this; exact isClosed_Ici
 
 @[to_additive addCHaar_sup_eq]
 theorem chaar_sup_eq {K₀ : PositiveCompacts G}
@@ -435,16 +435,16 @@ theorem chaar_sup_eq {K₀ : PositiveCompacts G}
         ⟨⟨V⁻¹, (h2V₁.inter h2V₂).preimage continuous_inv⟩, by
           simp only [V, mem_inv, inv_one, h3V₁, h3V₂, mem_inter_iff, true_and_iff]⟩)
   unfold clPrehaar; rw [IsClosed.closure_subset_iff]
-  · rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
-    simp only [eval, mem_preimage, sub_eq_zero, mem_singleton_iff]; rw [eq_comm]
-    apply prehaar_sup_eq
-    · rw [h2U.interior_eq]; exact ⟨1, h3U⟩
-    · refine disjoint_of_subset ?_ ?_ hU
-      · refine Subset.trans (mul_subset_mul Subset.rfl ?_) h2L₁
-        exact Subset.trans (inv_subset.mpr h1U) inter_subset_left
-      · refine Subset.trans (mul_subset_mul Subset.rfl ?_) h2L₂
-        exact Subset.trans (inv_subset.mpr h1U) inter_subset_right
-  · apply continuous_iff_isClosed.mp this; exact isClosed_singleton
+  rintro _ ⟨U, ⟨h1U, h2U, h3U⟩, rfl⟩
+  simp only [eval, mem_preimage, sub_eq_zero, mem_singleton_iff]; rw [eq_comm]
+  apply prehaar_sup_eq
+  rw [h2U.interior_eq]; exact ⟨1, h3U⟩
+  refine disjoint_of_subset ?_ ?_ hU
+  refine Subset.trans (mul_subset_mul Subset.rfl ?_) h2L₁
+  exact Subset.trans (inv_subset.mpr h1U) inter_subset_left
+  refine Subset.trans (mul_subset_mul Subset.rfl ?_) h2L₂
+  exact Subset.trans (inv_subset.mpr h1U) inter_subset_right
+  apply continuous_iff_isClosed.mp this; exact isClosed_singleton
 
 @[to_additive is_left_invariant_addCHaar]
 theorem is_left_invariant_chaar {K₀ : PositiveCompacts G} (g : G) (K : Compacts G) :
@@ -455,10 +455,10 @@ theorem is_left_invariant_chaar {K₀ : PositiveCompacts G} (g : G) (K : Compact
   rw [← sub_eq_zero]; show chaar K₀ ∈ eval ⁻¹' {(0 : ℝ)}
   apply mem_of_subset_of_mem _ (chaar_mem_clPrehaar K₀ ⊤)
   unfold clPrehaar; rw [IsClosed.closure_subset_iff]
-  · rintro _ ⟨U, ⟨_, h2U, h3U⟩, rfl⟩
-    simp only [eval, mem_singleton_iff, mem_preimage, sub_eq_zero]
-    apply is_left_invariant_prehaar; rw [h2U.interior_eq]; exact ⟨1, h3U⟩
-  · apply continuous_iff_isClosed.mp this; exact isClosed_singleton
+  rintro _ ⟨U, ⟨_, h2U, h3U⟩, rfl⟩
+  simp only [eval, mem_singleton_iff, mem_preimage, sub_eq_zero]
+  apply is_left_invariant_prehaar; rw [h2U.interior_eq]; exact ⟨1, h3U⟩
+  apply continuous_iff_isClosed.mp this; exact isClosed_singleton
 
 /-- The function `chaar` interpreted in `ℝ≥0`, as a content -/
 @[to_additive "additive version of `MeasureTheory.Measure.haar.haarContent`"]
@@ -543,8 +543,8 @@ theorem haarMeasure_self {K₀ : PositiveCompacts G} : haarMeasure K₀ K₀ = 1
   simp only [haarMeasure, coe_smul, Pi.smul_apply, smul_eq_mul]
   rw [← K₀.isCompact.measure_closure,
     Content.measure_apply _ isClosed_closure.measurableSet, ENNReal.inv_mul_cancel]
-  · exact (haarContent_outerMeasure_closure_pos K₀).ne'
-  · exact (Content.outerMeasure_lt_top_of_isCompact _ K₀.isCompact.closure).ne
+  exact (haarContent_outerMeasure_closure_pos K₀).ne'
+  exact (Content.outerMeasure_lt_top_of_isCompact _ K₀.isCompact.closure).ne
 
 /-- The Haar measure is regular. -/
 @[to_additive "The additive Haar measure is regular."]
@@ -574,8 +574,8 @@ instance isHaarMeasure_haarMeasure (K₀ : PositiveCompacts G) : IsHaarMeasure (
   apply
     isHaarMeasure_of_isCompact_nonempty_interior (haarMeasure K₀) K₀ K₀.isCompact
       K₀.interior_nonempty
-  · simp only [haarMeasure_self]; exact one_ne_zero
-  · simp only [haarMeasure_self, ne_eq, ENNReal.one_ne_top, not_false_eq_true]
+  simp only [haarMeasure_self]; exact one_ne_zero
+  simp only [haarMeasure_self, ne_eq, ENNReal.one_ne_top, not_false_eq_true]
 
 /-- `haar` is some choice of a Haar measure, on a locally compact group. -/
 @[to_additive (attr := reducible)
@@ -610,8 +610,8 @@ theorem div_mem_nhds_one_of_haar_pos (μ : Measure G) [IsHaarMeasure μ] [Locall
       ∃ (K : Set G), K ⊆ E ∧ IsCompact K ∧ IsClosed K ∧ 0 < μ K := by
     rcases MeasurableSet.exists_lt_isCompact hE hEpos with ⟨K, KE, K_comp, K_meas⟩
     refine ⟨closure K, ?_, K_comp.closure, isClosed_closure, ?_⟩
-    · exact K_comp.closure_subset_measurableSet hE KE
-    · rwa [K_comp.measure_closure]
+    exact K_comp.closure_subset_measurableSet hE KE
+    rwa [K_comp.measure_closure]
   filter_upwards [eventually_nhds_one_measure_smul_diff_lt hK K_closed hKpos.ne' (μ := μ)] with g hg
   have : ¬Disjoint (g • K) K
   exact fun hd => by

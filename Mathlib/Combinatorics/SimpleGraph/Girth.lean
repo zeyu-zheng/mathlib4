@@ -42,20 +42,20 @@ lemma egirth_anti : Antitone (egirth : SimpleGraph α → ℕ∞) :=
 lemma exists_egirth_eq_length :
     (∃ (a : α) (w : G.Walk a a), w.IsCycle ∧ G.egirth = w.length) ↔ ¬ G.IsAcyclic := by
   refine ⟨?_, fun h ↦ ?_⟩
-  · rintro ⟨a, w, hw, _⟩ hG
-    exact hG _ hw
-  · simp_rw [← egirth_eq_top, ← Ne.eq_def, egirth, iInf_subtype', iInf_sigma', ENat.iInf_coe_ne_top,
-      ← exists_prop, Subtype.exists', Sigma.exists', eq_comm] at h ⊢
-    exact ciInf_mem _
+  rintro ⟨a, w, hw, _⟩ hG
+  exact hG _ hw
+  simp_rw [← egirth_eq_top, ← Ne.eq_def, egirth, iInf_subtype', iInf_sigma', ENat.iInf_coe_ne_top,
+    ← exists_prop, Subtype.exists', Sigma.exists', eq_comm] at h ⊢
+  exact ciInf_mem _
 
 lemma three_le_egirth : 3 ≤ G.egirth := by
   by_cases h : G.IsAcyclic
-  · rw [← egirth_eq_top] at h
-    rw [h]
-    apply le_top
-  · rw [← exists_egirth_eq_length] at h
-    have ⟨_, _, _⟩ := h
-    simp_all only [Nat.cast_inj, Nat.ofNat_le_cast, Walk.IsCycle.three_le_length]
+  rw [← egirth_eq_top] at h
+  rw [h]
+  apply le_top
+  rw [← exists_egirth_eq_length] at h
+  have ⟨_, _, _⟩ := h
+  simp_all only [Nat.cast_inj, Nat.ofNat_le_cast, Walk.IsCycle.three_le_length]
 
 @[simp] lemma egirth_bot : egirth (⊥ : SimpleGraph α) = ⊤ := by simp
 

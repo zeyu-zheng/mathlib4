@@ -577,17 +577,17 @@ theorem map_pullback [HasPullbacks C] {X Y Z W : C} {f : X ⟶ Y} {g : X ⟶ Z} 
   intro a
   apply Quotient.sound
   apply ThinSkeleton.equiv_of_both_ways
-  · refine MonoOver.homMk (pullback.lift (pullback.fst _ _) _ ?_) (pullback.lift_snd _ _ _)
-    change _ ≫ a.arrow ≫ h = (pullback.snd _ _ ≫ g) ≫ _
-    rw [assoc, ← comm, pullback.condition_assoc]
-  · refine MonoOver.homMk (pullback.lift (pullback.fst _ _)
-      (PullbackCone.IsLimit.lift t (pullback.fst _ _ ≫ a.arrow) (pullback.snd _ _) _)
-      (PullbackCone.IsLimit.lift_fst _ _ _ ?_).symm) ?_
-    · rw [← pullback.condition, assoc]
-      rfl
-    · dsimp
-      rw [pullback.lift_snd_assoc]
-      apply PullbackCone.IsLimit.lift_snd
+  refine MonoOver.homMk (pullback.lift (pullback.fst _ _) _ ?_) (pullback.lift_snd _ _ _)
+  change _ ≫ a.arrow ≫ h = (pullback.snd _ _ ≫ g) ≫ _
+  rw [assoc, ← comm, pullback.condition_assoc]
+  refine MonoOver.homMk (pullback.lift (pullback.fst _ _)
+    (PullbackCone.IsLimit.lift t (pullback.fst _ _ ≫ a.arrow) (pullback.snd _ _) _)
+    (PullbackCone.IsLimit.lift_fst _ _ _ ?_).symm) ?_
+  rw [← pullback.condition, assoc]
+  rfl
+  dsimp
+  rw [pullback.lift_snd_assoc]
+  apply PullbackCone.IsLimit.lift_snd
 
 end Map
 

@@ -199,10 +199,10 @@ theorem r_iff_oreEqv_r {x y : M × S} : r S x y ↔ (OreLocalization.oreEqv S M)
   simp only [r_iff_exists, Subtype.exists, exists_prop, OreLocalization.oreEqv, smul_eq_mul,
     Submonoid.mk_smul]
   constructor
-  · rintro ⟨u, hu, e⟩
-    exact ⟨_, mul_mem hu x.2.2, u * y.2, by rw [mul_assoc, mul_assoc, ← e], mul_right_comm _ _ _⟩
-  · rintro ⟨u, hu, v, e₁, e₂⟩
-    exact ⟨u, hu, by rw [← mul_assoc, e₂, mul_right_comm, ← e₁, mul_assoc, mul_comm y.1]⟩
+  rintro ⟨u, hu, e⟩
+  exact ⟨_, mul_mem hu x.2.2, u * y.2, by rw [mul_assoc, mul_assoc, ← e], mul_right_comm _ _ _⟩
+  rintro ⟨u, hu, v, e₁, e₂⟩
+  exact ⟨u, hu, by rw [← mul_assoc, e₂, mul_right_comm, ← e₁, mul_assoc, mul_comm y.1]⟩
 
 end Localization
 
@@ -413,10 +413,10 @@ theorem surj₂ (f : LocalizationMap S N) (z w : N) : ∃ z' w' : M, ∃ d : S,
   let ⟨a, ha⟩ := surj f z
   let ⟨b, hb⟩ := surj f w
   refine ⟨a.1 * b.2, a.2 * b.1, a.2 * b.2, ?_, ?_⟩
-  · simp_rw [mul_def, map_mul, ← ha]
-    exact (mul_assoc z _ _).symm
-  · simp_rw [mul_def, map_mul, ← hb]
-    exact mul_left_comm w _ _
+  simp_rw [mul_def, map_mul, ← ha]
+  exact (mul_assoc z _ _).symm
+  simp_rw [mul_def, map_mul, ← hb]
+  exact mul_left_comm w _ _
 
 @[to_additive]
 theorem eq_iff_exists (f : LocalizationMap S N) {x y} :
@@ -835,32 +835,32 @@ theorem lift_left_inverse {k : LocalizationMap S P} (z : N) :
 theorem lift_surjective_iff :
     Function.Surjective (f.lift hg) ↔ ∀ v : P, ∃ x : M × S, v * g x.2 = g x.1 := by
   constructor
-  · intro H v
-    obtain ⟨z, hz⟩ := H v
-    obtain ⟨x, hx⟩ := f.surj z
-    use x
-    rw [← hz, f.eq_mk'_iff_mul_eq.2 hx, lift_mk', mul_assoc, mul_comm _ (g ↑x.2)]
-    erw [IsUnit.mul_liftRight_inv (g.restrict S) hg, mul_one]
-  · intro H v
-    obtain ⟨x, hx⟩ := H v
-    use f.mk' x.1 x.2
-    rw [lift_mk', mul_inv_left hg, mul_comm, ← hx]
+  intro H v
+  obtain ⟨z, hz⟩ := H v
+  obtain ⟨x, hx⟩ := f.surj z
+  use x
+  rw [← hz, f.eq_mk'_iff_mul_eq.2 hx, lift_mk', mul_assoc, mul_comm _ (g ↑x.2)]
+  erw [IsUnit.mul_liftRight_inv (g.restrict S) hg, mul_one]
+  intro H v
+  obtain ⟨x, hx⟩ := H v
+  use f.mk' x.1 x.2
+  rw [lift_mk', mul_inv_left hg, mul_comm, ← hx]
 
 @[to_additive]
 theorem lift_injective_iff :
     Function.Injective (f.lift hg) ↔ ∀ x y, f.toMap x = f.toMap y ↔ g x = g y := by
   constructor
-  · intro H x y
-    constructor
-    · exact f.eq_of_eq hg
-    · intro h
-      rw [← f.lift_eq hg, ← f.lift_eq hg] at h
-      exact H h
-  · intro H z w h
-    obtain ⟨_, _⟩ := f.surj z
-    obtain ⟨_, _⟩ := f.surj w
-    rw [← f.mk'_sec z, ← f.mk'_sec w]
-    exact (mul_inv f.map_units).2 ((H _ _).2 <| (mul_inv hg).1 h)
+  intro H x y
+  constructor
+  exact f.eq_of_eq hg
+  intro h
+  rw [← f.lift_eq hg, ← f.lift_eq hg] at h
+  exact H h
+  intro H z w h
+  obtain ⟨_, _⟩ := f.surj z
+  obtain ⟨_, _⟩ := f.surj w
+  rw [← f.mk'_sec z, ← f.mk'_sec w]
+  exact (mul_inv f.map_units).2 ((H _ _).2 <| (mul_inv hg).1 h)
 
 variable {T : Submonoid P} (hy : ∀ y : S, g y ∈ T) {Q : Type*} [CommMonoid Q]
   (k : LocalizationMap T Q)

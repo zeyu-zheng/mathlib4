@@ -61,24 +61,24 @@ thanks to the convention that a non-integrable function has integral zero. -/
 theorem integral_comp_smul (f : E → F) (R : ℝ) :
     ∫ x, f (R • x) ∂μ = |(R ^ finrank ℝ E)⁻¹| • ∫ x, f x ∂μ := by
   by_cases hF : CompleteSpace F; swap
-  · simp [integral, hF]
+  simp [integral, hF]
   rcases eq_or_ne R 0 with (rfl | hR)
-  · simp only [zero_smul, integral_const]
-    rcases Nat.eq_zero_or_pos (finrank ℝ E) with (hE | hE)
-    · have : Subsingleton E := finrank_zero_iff.1 hE
-      have : f = fun _ => f 0
-      ext x; rw [Subsingleton.elim x 0]
-      conv_rhs => rw [this]
-      simp only [hE, pow_zero, inv_one, abs_one, one_smul, integral_const]
-    · have : Nontrivial E := finrank_pos_iff.1 hE
-      simp only [zero_pow hE.ne', measure_univ_of_isAddLeftInvariant, ENNReal.top_toReal, zero_smul,
-        inv_zero, abs_zero]
-  · calc
-      (∫ x, f (R • x) ∂μ) = ∫ y, f y ∂Measure.map (fun x => R • x) μ :=
-        (integral_map_equiv (Homeomorph.smul (isUnit_iff_ne_zero.2 hR).unit).toMeasurableEquiv
-            f).symm
-      _ = |(R ^ finrank ℝ E)⁻¹| • ∫ x, f x ∂μ := by
-        simp only [map_addHaar_smul μ hR, integral_smul_measure, ENNReal.toReal_ofReal, abs_nonneg]
+  simp only [zero_smul, integral_const]
+  rcases Nat.eq_zero_or_pos (finrank ℝ E) with (hE | hE)
+  have : Subsingleton E := finrank_zero_iff.1 hE
+  have : f = fun _ => f 0
+  ext x; rw [Subsingleton.elim x 0]
+  conv_rhs => rw [this]
+  simp only [hE, pow_zero, inv_one, abs_one, one_smul, integral_const]
+  have : Nontrivial E := finrank_pos_iff.1 hE
+  simp only [zero_pow hE.ne', measure_univ_of_isAddLeftInvariant, ENNReal.top_toReal, zero_smul,
+    inv_zero, abs_zero]
+  calc
+    (∫ x, f (R • x) ∂μ) = ∫ y, f y ∂Measure.map (fun x => R • x) μ :=
+      (integral_map_equiv (Homeomorph.smul (isUnit_iff_ne_zero.2 hR).unit).toMeasurableEquiv
+          f).symm
+    _ = |(R ^ finrank ℝ E)⁻¹| • ∫ x, f x ∂μ := by
+      simp only [map_addHaar_smul μ hR, integral_smul_measure, ENNReal.toReal_ofReal, abs_nonneg]
 
 /-- The integral of `f (R • x)` with respect to an additive Haar measure is a multiple of the
 integral of `f`. The formula we give works even when `f` is not integrable or `R = 0`

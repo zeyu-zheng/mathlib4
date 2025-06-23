@@ -142,22 +142,22 @@ theorem vanishesTrivially_of_sum_tmul_eq_zero (hm : Submodule.span R (Set.range 
   use fun i ⟨⟨kj, _⟩, _⟩ ↦ (kj : ι →₀ R) i
   use fun ⟨⟨_, yj⟩, _⟩ ↦ yj
   constructor
-  · intro i
-    apply_fun finsuppScalarLeft R N ι at hkn
-    apply_fun (· i) at hkn
-    symm at hkn
-    simp only [map_sum, finsuppScalarLeft_apply_tmul, zero_smul, Finsupp.single_zero,
-      Finsupp.sum_single_index, one_smul, Finsupp.finset_sum_apply, Finsupp.single_apply,
-      Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte, rTensor_tmul, coeSubtype, Finsupp.sum_apply,
-      Finsupp.sum_ite_eq', Finsupp.mem_support_iff, ne_eq, ite_not, en] at hkn
-    simp only [Finset.univ_eq_attach, Finset.sum_attach ma (fun x ↦ (x.1 : ι →₀ R) i • x.2)]
-    convert hkn using 2 with x _
-    split
-    · next h'x => rw [h'x, zero_smul]
-    · rfl
-  · rintro ⟨⟨⟨k, hk⟩, _⟩, _⟩
-    simpa only [hG, Finsupp.total_apply, zero_smul, implies_true, Finsupp.sum_fintype] using
-      mem_ker.mp hk
+  intro i
+  apply_fun finsuppScalarLeft R N ι at hkn
+  apply_fun (· i) at hkn
+  symm at hkn
+  simp only [map_sum, finsuppScalarLeft_apply_tmul, zero_smul, Finsupp.single_zero,
+    Finsupp.sum_single_index, one_smul, Finsupp.finset_sum_apply, Finsupp.single_apply,
+    Finset.sum_ite_eq', Finset.mem_univ, ↓reduceIte, rTensor_tmul, coeSubtype, Finsupp.sum_apply,
+    Finsupp.sum_ite_eq', Finsupp.mem_support_iff, ne_eq, ite_not, en] at hkn
+  simp only [Finset.univ_eq_attach, Finset.sum_attach ma (fun x ↦ (x.1 : ι →₀ R) i • x.2)]
+  convert hkn using 2 with x _
+  split
+  next h'x => rw [h'x, zero_smul]
+  rfl
+  rintro ⟨⟨⟨k, hk⟩, _⟩, _⟩
+  simpa only [hG, Finsupp.total_apply, zero_smul, implies_true, Finsupp.sum_fintype] using
+    mem_ker.mp hk
 
 /-- **Equational criterion for vanishing**
 [A. Altman and S. Kleiman, *A term of commutative algebra* (Lemma 8.16)][altman2021term].
@@ -235,10 +235,10 @@ theorem forall_vanishesTrivially_iff_forall_rTensor_injective :
       ∑ i, m i ⊗ₜ n i = (0 : M ⊗[R] N) → VanishesTrivially R m n) ↔
     ∀ M' : Submodule R M, Injective (rTensor N M'.subtype) := by
   constructor
-  · intro h
-    exact rTensor_injective_of_forall_vanishesTrivially R h
-  · intro h ι _ m n hmn
-    exact vanishesTrivially_of_sum_tmul_eq_zero_of_rTensor_injective R (h _) hmn
+  intro h
+  exact rTensor_injective_of_forall_vanishesTrivially R h
+  intro h ι _ m n hmn
+  exact vanishesTrivially_of_sum_tmul_eq_zero_of_rTensor_injective R (h _) hmn
 
 /-- Every expression $\sum_i m_i \otimes n_i$ which vanishes also vanishes trivially if and only if
 for every finitely generated submodule $M' \subseteq M$, the map $M' \otimes N \to M \otimes N$ is
@@ -248,11 +248,11 @@ theorem forall_vanishesTrivially_iff_forall_FG_rTensor_injective :
       ∑ i, m i ⊗ₜ n i = (0 : M ⊗[R] N) → VanishesTrivially R m n) ↔
     ∀ (M' : Submodule R M) (_ : M'.FG), Injective (rTensor N M'.subtype) := by
   constructor
-  · intro h M' _
-    exact rTensor_injective_of_forall_vanishesTrivially R h M'
-  · intro h ι _ m n hmn
-    exact vanishesTrivially_of_sum_tmul_eq_zero_of_rTensor_injective R
-      (h _ (fg_span (Set.finite_range _))) hmn
+  intro h M' _
+  exact rTensor_injective_of_forall_vanishesTrivially R h M'
+  intro h ι _ m n hmn
+  exact vanishesTrivially_of_sum_tmul_eq_zero_of_rTensor_injective R
+    (h _ (fg_span (Set.finite_range _))) hmn
 
 /-- If the map $M' \otimes N \to M \otimes N$ is injective for every finitely generated submodule
 $M' \subseteq M$, then it is in fact injective for every submodule $M' \subseteq M$. -/

@@ -58,15 +58,15 @@ theorem Subsingleton.exists_eq_pure [l.NeBot] (hl : l.Subsingleton) : ∃ a, l =
 /-- A filter is a subsingleton iff it is equal to `⊥` or to `pure a` for some `a`. -/
 theorem subsingleton_iff_bot_or_pure : l.Subsingleton ↔ l = ⊥ ∨ ∃ a, l = pure a := by
   refine ⟨fun hl ↦ ?_, ?_⟩
-  · exact (eq_or_neBot l).imp_right (@Subsingleton.exists_eq_pure _ _ · hl)
-  · rintro (rfl | ⟨a, rfl⟩) <;> simp
+  exact (eq_or_neBot l).imp_right (@Subsingleton.exists_eq_pure _ _ · hl)
+  rintro (rfl | ⟨a, rfl⟩) <;> simp
 
 /-- In a nonempty type, a filter is a subsingleton iff
 it is less than or equal to a pure filter. -/
 theorem subsingleton_iff_exists_le_pure [Nonempty α] : l.Subsingleton ↔ ∃ a, l ≤ pure a := by
   rcases eq_or_neBot l with rfl | hbot
-  · simp
-  · simp [subsingleton_iff_bot_or_pure, ← hbot.le_pure_iff, hbot.ne]
+  simp
+  simp [subsingleton_iff_bot_or_pure, ← hbot.le_pure_iff, hbot.ne]
 
 theorem subsingleton_iff_exists_singleton_mem [Nonempty α] : l.Subsingleton ↔ ∃ a, {a} ∈ l := by
   simp only [subsingleton_iff_exists_le_pure, le_pure_iff]
@@ -76,7 +76,7 @@ alias ⟨Subsingleton.exists_le_pure, _⟩ := subsingleton_iff_exists_le_pure
 
 lemma Subsingleton.isCountablyGenerated (hl : l.Subsingleton) : IsCountablyGenerated l := by
   rcases subsingleton_iff_bot_or_pure.1 hl with rfl|⟨x, rfl⟩
-  · exact isCountablyGenerated_bot
-  · exact isCountablyGenerated_pure x
+  exact isCountablyGenerated_bot
+  exact isCountablyGenerated_pure x
 
 end Filter

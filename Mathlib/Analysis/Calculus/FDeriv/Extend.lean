@@ -39,7 +39,7 @@ theorem hasFDerivWithinAt_closure_of_tendsto_fderiv {f : E → F} {s : Set E} {x
     -- one can assume without loss of generality that `x` belongs to the closure of `s`, as the
     -- statement is empty otherwise
     by_cases hx : x ∉ closure s
-    · rw [← closure_closure] at hx; exact hasFDerivWithinAt_of_nmem_closure hx
+    rw [← closure_closure] at hx; exact hasFDerivWithinAt_of_nmem_closure hx
     push_neg at hx
     rw [HasFDerivWithinAt, hasFDerivAtFilter_iff_isLittleO, Asymptotics.isLittleO_iff]
     /- One needs to show that `‖f y - f x - f' (y - x)‖ ≤ ε ‖y - x‖` for `y` close to `x` in
@@ -88,18 +88,18 @@ theorem hasFDerivWithinAt_closure_of_tendsto_fderiv {f : E → F} {s : Set E} {x
         simpa [closure_prod_eq] using closure_mono this uv_in
       apply ContinuousWithinAt.mono _ this
       simp only [ContinuousWithinAt]
-    · rw [nhdsWithin_prod_eq]
-      have : ∀ u v, f v - f u - (f' v - f' u) = f v - f' v - (f u - f' u) := by intros; abel
-      simp only [this]
-      exact
-        Tendsto.comp continuous_norm.continuousAt
-          ((Tendsto.comp (f_cont' v v_in) tendsto_snd).sub <|
-            Tendsto.comp (f_cont' u u_in) tendsto_fst)
-    · apply tendsto_nhdsWithin_of_tendsto_nhds
-      rw [nhds_prod_eq]
-      exact
-        tendsto_const_nhds.mul
-          (Tendsto.comp continuous_norm.continuousAt <| tendsto_snd.sub tendsto_fst)
+    rw [nhdsWithin_prod_eq]
+    have : ∀ u v, f v - f u - (f' v - f' u) = f v - f' v - (f u - f' u) := by intros; abel
+    simp only [this]
+    exact
+      Tendsto.comp continuous_norm.continuousAt
+        ((Tendsto.comp (f_cont' v v_in) tendsto_snd).sub <|
+          Tendsto.comp (f_cont' u u_in) tendsto_fst)
+    apply tendsto_nhdsWithin_of_tendsto_nhds
+    rw [nhds_prod_eq]
+    exact
+      tendsto_const_nhds.mul
+        (Tendsto.comp continuous_norm.continuousAt <| tendsto_snd.sub tendsto_fst)
 
 @[deprecated (since := "2024-07-10")] alias has_fderiv_at_boundary_of_tendsto_fderiv :=
   hasFDerivWithinAt_closure_of_tendsto_fderiv
@@ -124,9 +124,9 @@ theorem hasDerivWithinAt_Ici_of_tendsto_deriv {s : Set ℝ} {e : E} {a : ℝ} {f
   rw [t_closure]
   intro y hy
   by_cases h : y = a
-  · rw [h]; exact f_lim.mono ts
-  · have : y ∈ s := sab ⟨lt_of_le_of_ne hy.1 (Ne.symm h), hy.2⟩
-    exact (f_diff.continuousOn y this).mono ts
+  rw [h]; exact f_lim.mono ts
+  have : y ∈ s := sab ⟨lt_of_le_of_ne hy.1 (Ne.symm h), hy.2⟩
+  exact (f_diff.continuousOn y this).mono ts
   have t_diff' : Tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smulRight (1 : ℝ →L[ℝ] ℝ) e))
   simp only [deriv_fderiv.symm]
   exact Tendsto.comp
@@ -162,9 +162,9 @@ theorem hasDerivWithinAt_Iic_of_tendsto_deriv {s : Set ℝ} {e : E} {a : ℝ}
   rw [t_closure]
   intro y hy
   by_cases h : y = a
-  · rw [h]; exact f_lim.mono ts
-  · have : y ∈ s := sab ⟨hy.1, lt_of_le_of_ne hy.2 h⟩
-    exact (f_diff.continuousOn y this).mono ts
+  rw [h]; exact f_lim.mono ts
+  have : y ∈ s := sab ⟨hy.1, lt_of_le_of_ne hy.2 h⟩
+  exact (f_diff.continuousOn y this).mono ts
   have t_diff' : Tendsto (fun x => fderiv ℝ f x) (𝓝[t] a) (𝓝 (smulRight (1 : ℝ →L[ℝ] ℝ) e))
   simp only [deriv_fderiv.symm]
   exact Tendsto.comp
@@ -218,5 +218,5 @@ theorem hasDerivAt_of_hasDerivAt_of_ne' {f g : ℝ → E} {x : ℝ}
     (f_diff : ∀ y ≠ x, HasDerivAt f (g y) y) (hf : ContinuousAt f x)
     (hg : ContinuousAt g x) (y : ℝ) : HasDerivAt f (g y) y := by
   rcases eq_or_ne y x with (rfl | hne)
-  · exact hasDerivAt_of_hasDerivAt_of_ne f_diff hf hg
-  · exact f_diff y hne
+  exact hasDerivAt_of_hasDerivAt_of_ne f_diff hf hg
+  exact f_diff y hne

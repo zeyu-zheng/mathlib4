@@ -120,7 +120,7 @@ protected theorem InClosure.recOn {C : R → Prop} {x : R} (hx : x ∈ closure s
   rcases exists_list_of_mem_closure hx with ⟨L, HL, rfl⟩
   clear hx
   induction' L with hd tl ih
-  · exact h0
+  exact h0
   rw [List.forall_mem_cons] at HL
   suffices C (List.prod hd) by
     rw [List.map_cons, List.sum_cons]
@@ -130,28 +130,28 @@ protected theorem InClosure.recOn {C : R → Prop} {x : R} (hx : x ∈ closure s
   -- Porting note: Expanded `rsuffices`
   suffices ∃ L, (∀ x ∈ L, x ∈ s) ∧ (List.prod hd = List.prod L ∨ List.prod hd = -List.prod L) by
     rcases this with ⟨L, HL', HP | HP⟩ <;> rw [HP] <;> clear HP HL
-    · induction' L with hd tl ih
-      · exact h1
-      rw [List.forall_mem_cons] at HL'
-      rw [List.prod_cons]
-      exact hs _ HL'.1 _ (ih HL'.2)
-    · induction' L with hd tl ih
-      · exact hneg1
-      rw [List.prod_cons, neg_mul_eq_mul_neg]
-      rw [List.forall_mem_cons] at HL'
-      exact hs _ HL'.1 _ (ih HL'.2)
+    induction' L with hd tl ih
+    exact h1
+    rw [List.forall_mem_cons] at HL'
+    rw [List.prod_cons]
+    exact hs _ HL'.1 _ (ih HL'.2)
+    induction' L with hd tl ih
+    exact hneg1
+    rw [List.prod_cons, neg_mul_eq_mul_neg]
+    rw [List.forall_mem_cons] at HL'
+    exact hs _ HL'.1 _ (ih HL'.2)
   induction' hd with hd tl ih
-  · exact ⟨[], List.forall_mem_nil _, Or.inl rfl⟩
+  exact ⟨[], List.forall_mem_nil _, Or.inl rfl⟩
   rw [List.forall_mem_cons] at HL
   rcases ih HL.2 with ⟨L, HL', HP | HP⟩ <;> cases' HL.1 with hhd hhd
-  · exact
-      ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩,
-        Or.inl <| by rw [List.prod_cons, List.prod_cons, HP]⟩
-  · exact ⟨L, HL', Or.inr <| by rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
-  · exact
-      ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩,
-        Or.inr <| by rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
-  · exact ⟨L, HL', Or.inl <| by rw [List.prod_cons, hhd, HP, neg_one_mul, neg_neg]⟩
+  exact
+    ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩,
+      Or.inl <| by rw [List.prod_cons, List.prod_cons, HP]⟩
+  exact ⟨L, HL', Or.inr <| by rw [List.prod_cons, hhd, neg_one_mul, HP]⟩
+  exact
+    ⟨hd::L, List.forall_mem_cons.2 ⟨hhd, HL'⟩,
+      Or.inr <| by rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
+  exact ⟨L, HL', Or.inl <| by rw [List.prod_cons, hhd, HP, neg_one_mul, neg_neg]⟩
 
 theorem closure.isSubring : IsSubring (closure s) :=
   { AddGroup.closure.isAddSubgroup _ with
@@ -190,17 +190,17 @@ theorem image_closure {S : Type*} [Ring S] (f : R →+* S) (s : Set R) :
     Set.image_subset _ subset_closure)
   rintro _ ⟨x, hx, rfl⟩
   apply AddGroup.InClosure.recOn (motive := fun {x} _ ↦ f x ∈ closure (f '' s)) hx _ <;> intros
-  · rw [f.map_zero]
-    apply closure.isSubring.zero_mem
-  · rw [f.map_neg]
-    apply closure.isSubring.neg_mem
-    assumption
-  · rw [f.map_add]
-    apply closure.isSubring.add_mem
-    assumption'
-  · apply AddGroup.mem_closure
-    rw [← Monoid.image_closure f.to_isMonoidHom]
-    apply Set.mem_image_of_mem
-    assumption
+  rw [f.map_zero]
+  apply closure.isSubring.zero_mem
+  rw [f.map_neg]
+  apply closure.isSubring.neg_mem
+  assumption
+  rw [f.map_add]
+  apply closure.isSubring.add_mem
+  assumption'
+  apply AddGroup.mem_closure
+  rw [← Monoid.image_closure f.to_isMonoidHom]
+  apply Set.mem_image_of_mem
+  assumption
 
 end Ring

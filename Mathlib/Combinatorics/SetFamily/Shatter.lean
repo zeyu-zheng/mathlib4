@@ -91,10 +91,10 @@ lemma subset_shatterer (h : IsLowerSet (𝒜 : Set (Finset α))) : 𝒜 ⊆ 𝒜
 
 @[simp] lemma shatterer_eq : 𝒜.shatterer = 𝒜 ↔ IsLowerSet (𝒜 : Set (Finset α)) := by
   refine ⟨fun h ↦ ?_, fun h ↦ Subset.antisymm (fun s hs ↦ ?_) <| subset_shatterer h⟩
-  · rw [← h]
-    exact isLowerSet_shatterer _
-  · obtain ⟨t, ht, hst⟩ := (mem_shatterer.1 hs).exists_superset
-    exact h hst ht
+  rw [← h]
+  exact isLowerSet_shatterer _
+  obtain ⟨t, ht, hst⟩ := (mem_shatterer.1 hs).exists_superset
+  exact h hst ht
 
 @[simp] lemma shatterer_idem : 𝒜.shatterer.shatterer = 𝒜.shatterer := by simp
 
@@ -109,8 +109,8 @@ private lemma aux (h : ∀ t ∈ 𝒜, a ∉ t) (ht : 𝒜.Shatters t) : a ∉ t
 /-- Pajor's variant of the **Sauer-Shelah lemma**. -/
 lemma card_le_card_shatterer (𝒜 : Finset (Finset α)) : 𝒜.card ≤ 𝒜.shatterer.card := by
   refine memberFamily_induction_on 𝒜 ?_ ?_ ?_
-  · simp
-  · rfl
+  simp
+  rfl
   intros a 𝒜 ih₀ ih₁
   set ℬ : Finset (Finset α) :=
     ((memberSubfamily a 𝒜).shatterer ∩ (nonMemberSubfamily a 𝒜).shatterer).image (insert a)
@@ -124,54 +124,54 @@ lemma card_le_card_shatterer (𝒜 : Finset (Finset α)) : 𝒜.card ≤ 𝒜.sh
   refine (Nat.add_le_add ih₁ ih₀).trans ?_
   rw [← card_union_add_card_inter, ← hℬ, ← card_union_of_disjoint]
   swap
-  · simp only [ℬ, disjoint_left, mem_union, mem_shatterer, mem_image, not_exists, not_and]
-    rintro _ (hs | hs) s - rfl
-    · exact aux (fun t ht ↦ (mem_memberSubfamily.1 ht).2) hs <| mem_insert_self _ _
-    · exact aux (fun t ht ↦ (mem_nonMemberSubfamily.1 ht).2) hs <| mem_insert_self _ _
+  simp only [ℬ, disjoint_left, mem_union, mem_shatterer, mem_image, not_exists, not_and]
+  rintro _ (hs | hs) s - rfl
+  exact aux (fun t ht ↦ (mem_memberSubfamily.1 ht).2) hs <| mem_insert_self _ _
+  exact aux (fun t ht ↦ (mem_nonMemberSubfamily.1 ht).2) hs <| mem_insert_self _ _
   refine card_mono <| union_subset (union_subset ?_ <| shatterer_mono <| filter_subset _ _) ?_
-  · simp only [subset_iff, mem_shatterer]
-    rintro s hs t ht
-    obtain ⟨u, hu, rfl⟩ := hs ht
-    rw [mem_memberSubfamily] at hu
-    refine ⟨insert a u, hu.1, inter_insert_of_not_mem fun ha ↦ ?_⟩
-    obtain ⟨v, hv, hsv⟩ := hs.exists_inter_eq_singleton ha
-    rw [mem_memberSubfamily] at hv
-    rw [← singleton_subset_iff (a := a), ← hsv] at hv
-    exact hv.2 inter_subset_right
-  · refine forall_image.2 fun s hs ↦ mem_shatterer.2 fun t ht ↦ ?_
-    simp only [mem_inter, mem_shatterer] at hs
-    rw [subset_insert_iff] at ht
-    by_cases ha : a ∈ t
-    · obtain ⟨u, hu, hsu⟩ := hs.1 ht
-      rw [mem_memberSubfamily] at hu
-      refine ⟨_, hu.1, ?_⟩
-      rw [← insert_inter_distrib, hsu, insert_erase ha]
-    · obtain ⟨u, hu, hsu⟩ := hs.2 ht
-      rw [mem_nonMemberSubfamily] at hu
-      refine ⟨_, hu.1, ?_⟩
-      rwa [insert_inter_of_not_mem hu.2, hsu, erase_eq_self]
+  simp only [subset_iff, mem_shatterer]
+  rintro s hs t ht
+  obtain ⟨u, hu, rfl⟩ := hs ht
+  rw [mem_memberSubfamily] at hu
+  refine ⟨insert a u, hu.1, inter_insert_of_not_mem fun ha ↦ ?_⟩
+  obtain ⟨v, hv, hsv⟩ := hs.exists_inter_eq_singleton ha
+  rw [mem_memberSubfamily] at hv
+  rw [← singleton_subset_iff (a := a), ← hsv] at hv
+  exact hv.2 inter_subset_right
+  refine forall_image.2 fun s hs ↦ mem_shatterer.2 fun t ht ↦ ?_
+  simp only [mem_inter, mem_shatterer] at hs
+  rw [subset_insert_iff] at ht
+  by_cases ha : a ∈ t
+  obtain ⟨u, hu, hsu⟩ := hs.1 ht
+  rw [mem_memberSubfamily] at hu
+  refine ⟨_, hu.1, ?_⟩
+  rw [← insert_inter_distrib, hsu, insert_erase ha]
+  obtain ⟨u, hu, hsu⟩ := hs.2 ht
+  rw [mem_nonMemberSubfamily] at hu
+  refine ⟨_, hu.1, ?_⟩
+  rwa [insert_inter_of_not_mem hu.2, hsu, erase_eq_self]
 
 lemma Shatters.of_compression (hs : (𝓓 a 𝒜).Shatters s) : 𝒜.Shatters s := by
   intros t ht
   obtain ⟨u, hu, rfl⟩ := hs ht
   rw [Down.mem_compression] at hu
   obtain hu | hu := hu
-  · exact ⟨u, hu.1, rfl⟩
+  exact ⟨u, hu.1, rfl⟩
   by_cases ha : a ∈ s
-  · obtain ⟨v, hv, hsv⟩ := hs <| insert_subset ha ht
-    rw [Down.mem_compression] at hv
-    obtain hv | hv := hv
-    · refine ⟨erase v a, hv.2, ?_⟩
-      rw [inter_erase, hsv, erase_insert]
-      rintro ha
-      rw [insert_eq_self.2 (mem_inter.1 ha).2] at hu
-      exact hu.1 hu.2
-    rw [insert_eq_self.2 <| inter_subset_right (s₁ := s) ?_] at hv
-    cases hv.1 hv.2
-    rw [hsv]
-    exact mem_insert_self _ _
-  · refine ⟨insert a u, hu.2, ?_⟩
-    rw [inter_insert_of_not_mem ha]
+  obtain ⟨v, hv, hsv⟩ := hs <| insert_subset ha ht
+  rw [Down.mem_compression] at hv
+  obtain hv | hv := hv
+  refine ⟨erase v a, hv.2, ?_⟩
+  rw [inter_erase, hsv, erase_insert]
+  rintro ha
+  rw [insert_eq_self.2 (mem_inter.1 ha).2] at hu
+  exact hu.1 hu.2
+  rw [insert_eq_self.2 <| inter_subset_right (s₁ := s) ?_] at hv
+  cases hv.1 hv.2
+  rw [hsv]
+  exact mem_insert_self _ _
+  refine ⟨insert a u, hu.2, ?_⟩
+  rw [inter_insert_of_not_mem ha]
 
 lemma shatterer_compress_subset_shatterer (a : α) (𝒜 : Finset (Finset α)) :
     (𝓓 a 𝒜).shatterer ⊆ 𝒜.shatterer := by

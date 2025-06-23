@@ -359,9 +359,9 @@ lemma IsLimit.hom_ext (hK : IsLimit K) {T : C} {f g : T ⟶ K.pt}
     (h : ∀ a, f ≫ K.ι a = g ≫ K.ι a) : f = g := by
   apply hK.hom_ext
   rintro (_|b)
-  · apply h
-  · dsimp
-    rw [app_right_eq_ι_comp_fst, reassoc_of% h]
+  apply h
+  dsimp
+  rw [app_right_eq_ι_comp_fst, reassoc_of% h]
 
 /-- Constructor for morphisms to the point of a limit multifork. -/
 def IsLimit.lift (hK : IsLimit K) {T : C} (k : ∀ a, T ⟶ I.left a)
@@ -805,8 +805,8 @@ theorem hom_ext {W : C} (i j : multicoequalizer I ⟶ W)
   colimit.hom_ext
     (by
       rintro (a | b)
-      · simp_rw [← colimit.w I.multispan (WalkingMultispan.Hom.fst a), Category.assoc, h]
-      · apply h)
+      simp_rw [← colimit.w I.multispan (WalkingMultispan.Hom.fst a), Category.assoc, h]
+      apply h)
 
 variable [HasCoproduct I.left] [HasCoproduct I.right]
 

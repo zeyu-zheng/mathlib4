@@ -80,27 +80,27 @@ variable (S : Subgroupoid C)
 theorem inv_mem_iff {c d : C} (f : c ⟶ d) :
     Groupoid.inv f ∈ S.arrows d c ↔ f ∈ S.arrows c d := by
   constructor
-  · intro h
-    simpa only [inv_eq_inv, IsIso.inv_inv] using S.inv h
-  · apply S.inv
+  intro h
+  simpa only [inv_eq_inv, IsIso.inv_inv] using S.inv h
+  apply S.inv
 
 theorem mul_mem_cancel_left {c d e : C} {f : c ⟶ d} {g : d ⟶ e} (hf : f ∈ S.arrows c d) :
     f ≫ g ∈ S.arrows c e ↔ g ∈ S.arrows d e := by
   constructor
-  · rintro h
-    suffices Groupoid.inv f ≫ f ≫ g ∈ S.arrows d e by
-      simpa only [inv_eq_inv, IsIso.inv_hom_id_assoc] using this
-    apply S.mul (S.inv hf) h
-  · apply S.mul hf
+  rintro h
+  suffices Groupoid.inv f ≫ f ≫ g ∈ S.arrows d e by
+    simpa only [inv_eq_inv, IsIso.inv_hom_id_assoc] using this
+  apply S.mul (S.inv hf) h
+  apply S.mul hf
 
 theorem mul_mem_cancel_right {c d e : C} {f : c ⟶ d} {g : d ⟶ e} (hg : g ∈ S.arrows d e) :
     f ≫ g ∈ S.arrows c e ↔ f ∈ S.arrows c d := by
   constructor
-  · rintro h
-    suffices (f ≫ g) ≫ Groupoid.inv g ∈ S.arrows c d by
-      simpa only [inv_eq_inv, IsIso.hom_inv_id, Category.comp_id, Category.assoc] using this
-    apply S.mul h (S.inv hg)
-  · exact fun hf => S.mul hf hg
+  rintro h
+  suffices (f ≫ g) ≫ Groupoid.inv g ∈ S.arrows c d by
+    simpa only [inv_eq_inv, IsIso.hom_inv_id, Category.comp_id, Category.assoc] using this
+  apply S.mul h (S.inv hg)
+  exact fun hf => S.mul hf hg
 
 /-- The vertices of `C` on which `S` has non-trivial isotropy -/
 def objs : Set C :=
@@ -279,13 +279,13 @@ structure IsWide : Prop where
 
 theorem isWide_iff_objs_eq_univ : S.IsWide ↔ S.objs = Set.univ := by
   constructor
-  · rintro h
-    ext x; constructor <;> simp only [top_eq_univ, mem_univ, imp_true_iff, forall_true_left]
-    apply mem_objs_of_src S (h.wide x)
-  · rintro h
-    refine ⟨fun c => ?_⟩
-    obtain ⟨γ, γS⟩ := (le_of_eq h.symm : ⊤ ⊆ S.objs) (Set.mem_univ c)
-    exact id_mem_of_src S γS
+  rintro h
+  ext x; constructor <;> simp only [top_eq_univ, mem_univ, imp_true_iff, forall_true_left]
+  apply mem_objs_of_src S (h.wide x)
+  rintro h
+  refine ⟨fun c => ?_⟩
+  obtain ⟨γ, γS⟩ := (le_of_eq h.symm : ⊤ ⊆ S.objs) (Set.mem_univ c)
+  exact id_mem_of_src S γS
 
 theorem IsWide.id_mem {S : Subgroupoid C} (Sw : S.IsWide) (c : C) : 𝟙 c ∈ S.arrows c c :=
   Sw.wide c
@@ -305,10 +305,10 @@ theorem IsNormal.conjugation_bij (Sn : IsNormal S) {c d} (p : c ⟶ d) :
     Set.BijOn (fun γ : c ⟶ c => Groupoid.inv p ≫ γ ≫ p) (S.arrows c c) (S.arrows d d) := by
   refine ⟨fun γ γS => Sn.conj p γS, fun γ₁ _ γ₂ _ h => ?_, fun δ δS =>
     ⟨p ≫ δ ≫ Groupoid.inv p, Sn.conj' p δS, ?_⟩⟩
-  · simpa only [inv_eq_inv, Category.assoc, IsIso.hom_inv_id, Category.comp_id,
-      IsIso.hom_inv_id_assoc] using p ≫= h =≫ inv p
-  · simp only [inv_eq_inv, Category.assoc, IsIso.inv_hom_id, Category.comp_id,
-      IsIso.inv_hom_id_assoc]
+  simpa only [inv_eq_inv, Category.assoc, IsIso.hom_inv_id, Category.comp_id,
+    IsIso.hom_inv_id_assoc] using p ≫= h =≫ inv p
+  simp only [inv_eq_inv, Category.assoc, IsIso.inv_hom_id, Category.comp_id,
+    IsIso.inv_hom_id_assoc]
 
 theorem top_isNormal : IsNormal (⊤ : Subgroupoid C) :=
   { wide := fun _ => trivial
@@ -356,13 +356,13 @@ theorem generatedNormal_isNormal : (generatedNormal X).IsNormal :=
 theorem IsNormal.generatedNormal_le {S : Subgroupoid C} (Sn : S.IsNormal) :
     generatedNormal X ≤ S ↔ ∀ c d, X c d ⊆ S.arrows c d := by
   constructor
-  · rintro h c d
-    have h' := generated_le_generatedNormal X
-    rw [le_iff] at h h'
-    exact ((subset_generated X c d).trans (@h' c d)).trans (@h c d)
-  · rintro h
-    apply @sInf_le (Subgroupoid C) _
-    exact ⟨h, Sn⟩
+  rintro h c d
+  have h' := generated_le_generatedNormal X
+  rw [le_iff] at h h'
+  exact ((subset_generated X c d).trans (@h' c d)).trans (@h c d)
+  rintro h
+  apply @sInf_le (Subgroupoid C) _
+  exact ⟨h, Sn⟩
 
 end GeneratedSubgroupoid
 
@@ -418,8 +418,8 @@ theorem Map.arrows_iff (hφ : Function.Injective φ.obj) (S : Subgroupoid C) {c 
       ∃ (a b : C) (g : a ⟶ b) (ha : φ.obj a = c) (hb : φ.obj b = d) (_hg : g ∈ S.arrows a b),
         f = eqToHom ha.symm ≫ φ.map g ≫ eqToHom hb := by
   constructor
-  · rintro ⟨g, hg⟩; exact ⟨_, _, g, rfl, rfl, hg, eq_conj_eqToHom _⟩
-  · rintro ⟨a, b, g, rfl, rfl, hg, rfl⟩; rw [← eq_conj_eqToHom]; constructor; exact hg
+  rintro ⟨g, hg⟩; exact ⟨_, _, g, rfl, rfl, hg, eq_conj_eqToHom _⟩
+  rintro ⟨a, b, g, rfl, rfl, hg, rfl⟩; rw [← eq_conj_eqToHom]; constructor; exact hg
 
 /-- The "forward" image of a subgroupoid under a functor injective on objects -/
 def map (hφ : Function.Injective φ.obj) (S : Subgroupoid C) : Subgroupoid D where
@@ -443,9 +443,9 @@ theorem mem_map_iff (hφ : Function.Injective φ.obj) (S : Subgroupoid C) {c d :
 theorem galoisConnection_map_comap (hφ : Function.Injective φ.obj) :
     GaloisConnection (map φ hφ) (comap φ) := by
   rintro S T; simp_rw [le_iff]; constructor
-  · exact fun h c d f fS => h (Map.Arrows.im f fS)
-  · rintro h _ _ g ⟨a, gφS⟩
-    exact h gφS
+  exact fun h c d f fS => h (Map.Arrows.im f fS)
+  rintro h _ _ g ⟨a, gφS⟩
+  exact h gφS
 
 theorem map_mono (hφ : Function.Injective φ.obj) (S T : Subgroupoid C) :
     S ≤ T → map φ hφ S ≤ map φ hφ T := fun h => (galoisConnection_map_comap φ hφ).monotone_l h
@@ -466,12 +466,12 @@ theorem mem_map_objs_iff (hφ : Function.Injective φ.obj) (d : D) :
     d ∈ (map φ hφ S).objs ↔ ∃ c ∈ S.objs, φ.obj c = d := by
   dsimp [objs, map]
   constructor
-  · rintro ⟨f, hf⟩
-    change Map.Arrows φ hφ S d d f at hf; rw [Map.arrows_iff] at hf
-    obtain ⟨c, d, g, ec, ed, eg, gS, eg⟩ := hf
-    exact ⟨c, ⟨mem_objs_of_src S eg, ec⟩⟩
-  · rintro ⟨c, ⟨γ, γS⟩, rfl⟩
-    exact ⟨φ.map γ, ⟨γ, γS⟩⟩
+  rintro ⟨f, hf⟩
+  change Map.Arrows φ hφ S d d f at hf; rw [Map.arrows_iff] at hf
+  obtain ⟨c, d, g, ec, ed, eg, gS, eg⟩ := hf
+  exact ⟨c, ⟨mem_objs_of_src S eg, ec⟩⟩
+  rintro ⟨c, ⟨γ, γS⟩, rfl⟩
+  exact ⟨φ.map γ, ⟨γ, γS⟩⟩
 
 @[simp]
 theorem map_objs_eq (hφ : Function.Injective φ.obj) : (map φ hφ S).objs = φ.obj '' S.objs := by
@@ -540,12 +540,12 @@ nonrec abbrev IsTotallyDisconnected :=
 theorem isTotallyDisconnected_iff :
     S.IsTotallyDisconnected ↔ ∀ c d, (S.arrows c d).Nonempty → c = d := by
   constructor
-  · rintro h c d ⟨f, fS⟩
-    have := h ⟨c, mem_objs_of_src S fS⟩ ⟨d, mem_objs_of_tgt S fS⟩ ⟨f, fS⟩
-    exact congr_arg Subtype.val this
-  · rintro h ⟨c, hc⟩ ⟨d, hd⟩ ⟨f, fS⟩
-    simp only [Subtype.mk_eq_mk]
-    exact h c d ⟨f, fS⟩
+  rintro h c d ⟨f, fS⟩
+  have := h ⟨c, mem_objs_of_src S fS⟩ ⟨d, mem_objs_of_tgt S fS⟩ ⟨f, fS⟩
+  exact congr_arg Subtype.val this
+  rintro h ⟨c, hc⟩ ⟨d, hd⟩ ⟨f, fS⟩
+  simp only [Subtype.mk_eq_mk]
+  exact h c d ⟨f, fS⟩
 
 /-- The isotropy subgroupoid of `S` -/
 def disconnect : Subgroupoid C where

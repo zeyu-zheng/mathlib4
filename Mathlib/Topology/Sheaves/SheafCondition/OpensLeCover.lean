@@ -217,15 +217,15 @@ def isLimitOpensLeEquivGenerate₂ (R : Presieve Y)
 theorem isSheaf_iff_isSheafOpensLeCover : F.IsSheaf ↔ F.IsSheafOpensLeCover := by
   refine (Presheaf.isSheaf_iff_isLimit _ _).trans ?_
   constructor
-  · intro h ι U
-    rw [(isLimitOpensLeEquivGenerate₁ F U rfl).nonempty_congr]
-    apply h
-    apply presieveOfCovering.mem_grothendieckTopology
-  · intro h Y S
-    rw [← Sieve.generate_sieve S]
-    intro hS
-    rw [← (isLimitOpensLeEquivGenerate₂ F S.1 hS).nonempty_congr]
-    apply h
+  intro h ι U
+  rw [(isLimitOpensLeEquivGenerate₁ F U rfl).nonempty_congr]
+  apply h
+  apply presieveOfCovering.mem_grothendieckTopology
+  intro h Y S
+  rw [← Sieve.generate_sieve S]
+  intro hS
+  rw [← (isLimitOpensLeEquivGenerate₂ F S.1 hS).nonempty_congr]
+  apply h
 
 end
 

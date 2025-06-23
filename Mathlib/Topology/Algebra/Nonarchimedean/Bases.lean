@@ -137,10 +137,10 @@ theorem hasBasis_nhds_zero : HasBasis (@nhds A hB.topology 0) (fun _ => True) fu
     intro s
     rw [hB.toRingFilterBasis.toAddGroupFilterBasis.nhds_zero_hasBasis.mem_iff]
     constructor
-    · rintro ⟨-, ⟨i, rfl⟩, hi⟩
-      exact ⟨i, trivial, hi⟩
-    · rintro ⟨i, -, hi⟩
-      exact ⟨B i, ⟨i, rfl⟩, hi⟩⟩
+    rintro ⟨-, ⟨i, rfl⟩, hi⟩
+    exact ⟨i, trivial, hi⟩
+    rintro ⟨i, -, hi⟩
+    exact ⟨B i, ⟨i, rfl⟩, hi⟩⟩
 
 theorem hasBasis_nhds (a : A) :
     HasBasis (@nhds A hB.topology a) (fun _ => True) fun i => { b | b - a ∈ B i } :=
@@ -149,22 +149,22 @@ theorem hasBasis_nhds (a : A) :
     rw [(hB.toRingFilterBasis.toAddGroupFilterBasis.nhds_hasBasis a).mem_iff]
     simp only [true_and]
     constructor
-    · rintro ⟨-, ⟨i, rfl⟩, hi⟩
-      use i
-      suffices h : { b : A | b - a ∈ B i } = (fun y => a + y) '' ↑(B i) by
-        rw [h]
-        assumption
-      simp only [image_add_left, neg_add_eq_sub]
-      ext b
-      simp
-    · rintro ⟨i, hi⟩
-      use B i
-      constructor
-      · use i
-      · rw [image_subset_iff]
-        rintro b b_in
-        apply hi
-        simpa using b_in⟩
+    rintro ⟨-, ⟨i, rfl⟩, hi⟩
+    use i
+    suffices h : { b : A | b - a ∈ B i } = (fun y => a + y) '' ↑(B i) by
+      rw [h]
+      assumption
+    simp only [image_add_left, neg_add_eq_sub]
+    ext b
+    simp
+    rintro ⟨i, hi⟩
+    use B i
+    constructor
+    use i
+    rw [image_subset_iff]
+    rintro b b_in
+    apply hi
+    simpa using b_in⟩
 
 /-- Given a subgroups basis, the basis elements as open additive subgroups in the associated
 topology. -/

@@ -99,10 +99,10 @@ protected theorem ContMDiffAt.mfderiv {x₀ : N} (f : N → M → M') (g : N →
     simp_rw [Function.comp, uncurry, extChartAt_prod, PartialEquiv.prod_coe_symm,
       ModelWithCorners.range_prod] at hf ⊢
     refine ContDiffWithinAt.fderivWithin ?_ hg.2 I.unique_diff hmn (mem_range_self _) ?_
-    · simp_rw [extChartAt_to_inv]; exact hf.2
-    · rw [← image_subset_iff]
-      rintro _ ⟨x, -, rfl⟩
-      exact mem_range_self _
+    simp_rw [extChartAt_to_inv]; exact hf.2
+    rw [← image_subset_iff]
+    rintro _ ⟨x, -, rfl⟩
+    exact mem_range_self _
   have :
     ContMDiffAt J 𝓘(𝕜, E →L[𝕜] E') m
       (fun x =>
@@ -136,9 +136,9 @@ protected theorem ContMDiffAt.mfderiv {x₀ : N} (f : N → M → M') (g : N →
       rw [(extChartAt I (g x₂)).left_inv hx, (extChartAt I' (f x₂ (g x₂))).left_inv h2x]
     refine Filter.EventuallyEq.fderivWithin_eq_nhds ?_
     refine eventually_of_mem (inter_mem ?_ ?_) this
-    · exact extChartAt_preimage_mem_nhds' _ hx₂ (extChartAt_source_mem_nhds I (g x₂))
-    · refine extChartAt_preimage_mem_nhds' _ hx₂ ?_
-      exact h2x₂.continuousAt.preimage_mem_nhds (extChartAt_source_mem_nhds _ _)
+    exact extChartAt_preimage_mem_nhds' _ hx₂ (extChartAt_source_mem_nhds I (g x₂))
+    refine extChartAt_preimage_mem_nhds' _ hx₂ ?_
+    exact h2x₂.continuousAt.preimage_mem_nhds (extChartAt_source_mem_nhds _ _)
   /- The conclusion is equal to the following, when unfolding coord_change of
       `tangentBundleCore` -/
   -- Porting note: added
@@ -168,17 +168,17 @@ protected theorem ContMDiffAt.mfderiv {x₀ : N} (f : N → M → M') (g : N →
               h3x₂).differentiableWithinAt le_top
     have h3f := (h2x₂.mdifferentiableAt le_rfl).differentiableWithinAt_writtenInExtChartAt
     refine fderivWithin.comp₃ _ hI' h3f hI ?_ ?_ ?_ ?_ (I.unique_diff _ <| mem_range_self _)
-    · exact fun x _ => mem_range_self _
-    · exact fun x _ => mem_range_self _
-    · simp_rw [writtenInExtChartAt, Function.comp_apply,
-        (extChartAt I (g x₂)).left_inv (mem_extChartAt_source I (g x₂))]
-    · simp_rw [Function.comp_apply, (extChartAt I (g x₀)).left_inv hx₂]
+    exact fun x _ => mem_range_self _
+    exact fun x _ => mem_range_self _
+    simp_rw [writtenInExtChartAt, Function.comp_apply,
+      (extChartAt I (g x₂)).left_inv (mem_extChartAt_source I (g x₂))]
+    simp_rw [Function.comp_apply, (extChartAt I (g x₀)).left_inv hx₂]
   refine this.congr_of_eventuallyEq ?_
   filter_upwards [h2g, h4f] with x hx h2x
   rw [inTangentCoordinates_eq]
-  · rfl
-  · rwa [extChartAt_source] at hx
-  · rwa [extChartAt_source] at h2x
+  rfl
+  rwa [extChartAt_source] at hx
+  rwa [extChartAt_source] at h2x
 
 /-- The derivative `D_yf(y)` is `C^m` at `x₀`, where the derivative is taken as a continuous
 linear map. We have to assume that `f` is `C^n` at `x₀` for some `n ≥ m + 1`.
@@ -298,11 +298,11 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
       ((range I ∩ I.symm ⁻¹' s) ×ˢ univ) by
     -- Porting note: was `simpa [(· ∘ ·)] using h`
     convert h using 1
-    · ext1 ⟨x, y⟩
-      simp only [mfld_simps]; rfl
-    · simp only [mfld_simps]
-      rw [inter_prod, prod_univ, prod_univ]
-      rfl
+    ext1 ⟨x, y⟩
+    simp only [mfld_simps]; rfl
+    simp only [mfld_simps]
+    rw [inter_prod, prod_univ, prod_univ]
+    rfl
   change
     ContDiffOn 𝕜 m
       (fun p : E × E =>
@@ -374,19 +374,19 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (
   rcases continuousOn_iff'.1 hf'.1 r.source r.open_source with ⟨o, o_open, ho⟩
   suffices h : ContMDiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) s'_lift by
     refine ⟨π E (TangentSpace I) ⁻¹' (o ∩ l.source), ?_, ?_, ?_⟩
-    · show IsOpen (π E (TangentSpace I) ⁻¹' (o ∩ l.source))
-      exact (o_open.inter l.open_source).preimage (FiberBundle.continuous_proj E _)
-    · show p ∈ π E (TangentSpace I) ⁻¹' (o ∩ l.source)
-      simp only [l, preimage_inter, mem_inter_iff, mem_preimage, mem_chart_source, and_true]
-      have : p.proj ∈ f ⁻¹' r.source ∩ s
-      simp [r, hp]
-      rw [ho] at this
-      exact this.1
-    · have : π E (TangentSpace I) ⁻¹' s ∩ π E (TangentSpace I) ⁻¹' (o ∩ l.source) = s'_lift := by
-        unfold_let s'_lift s'
-        rw [ho]; mfld_set_tac
-      rw [this]
-      exact h
+    show IsOpen (π E (TangentSpace I) ⁻¹' (o ∩ l.source))
+    exact (o_open.inter l.open_source).preimage (FiberBundle.continuous_proj E _)
+    show p ∈ π E (TangentSpace I) ⁻¹' (o ∩ l.source)
+    simp only [l, preimage_inter, mem_inter_iff, mem_preimage, mem_chart_source, and_true]
+    have : p.proj ∈ f ⁻¹' r.source ∩ s
+    simp [r, hp]
+    rw [ho] at this
+    exact this.1
+    have : π E (TangentSpace I) ⁻¹' s ∩ π E (TangentSpace I) ⁻¹' (o ∩ l.source) = s'_lift := by
+      unfold_let s'_lift s'
+      rw [ho]; mfld_set_tac
+    rw [this]
+    exact h
   /- Second step: check that all functions are smooth, and use the chain rule to write the bundled
     derivative as a composition of a function between model spaces and of charts.
     Convention: statements about the differentiability of `a ∘ b ∘ c` are named `diff_abc`.
@@ -456,11 +456,11 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (
       tangentMapWithin I I' ((r ∘ f) ∘ l.symm) s'l (il.symm (Dl q)) =
         tangentMapWithin I I' (r ∘ f) s' (tangentMapWithin I I l.symm s'l (il.symm (Dl q))) := by
       refine tangentMapWithin_comp_at (il.symm (Dl q)) ?_ ?_ (fun p hp => ?_) U'lq
-      · apply diff_rf.mdifferentiableOn one_le_n
-        simp only [hq, s', Dl, l, il, mfld_simps]
-      · apply diff_l.mdifferentiableOn one_le_n
-        simp only [Dl, s'l, il, s', hq, mfld_simps]
-      · simp only [s'l, s', l, mfld_simps] at hp; simp only [s', hp, mfld_simps]
+      apply diff_rf.mdifferentiableOn one_le_n
+      simp only [hq, s', Dl, l, il, mfld_simps]
+      apply diff_l.mdifferentiableOn one_le_n
+      simp only [Dl, s'l, il, s', hq, mfld_simps]
+      simp only [s'l, s', l, mfld_simps] at hp; simp only [s', hp, mfld_simps]
     have B : tangentMapWithin I I l.symm s'l (il.symm (Dl q)) = q := by
       have : tangentMapWithin I I l.symm s'l (il.symm (Dl q)) =
           tangentMap I I l.symm (il.symm (Dl q)) := by
@@ -469,20 +469,20 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (
         refine mdifferentiableAt_atlas_symm I (chart_mem_atlas H (TotalSpace.proj p)) ?_
         simp only [Dl, il, hq, mfld_simps]
       rw [this, tangentMap_chart_symm, hDl]
-      · simp only [il, hq, mfld_simps]
-        have : q ∈ (chartAt (ModelProd H E) p).source := by simp only [hq, mfld_simps]
-        exact (chartAt (ModelProd H E) p).left_inv this
-      · simp only [il, Dl, hq, mfld_simps]
+      simp only [il, hq, mfld_simps]
+      have : q ∈ (chartAt (ModelProd H E) p).source := by simp only [hq, mfld_simps]
+      exact (chartAt (ModelProd H E) p).left_inv this
+      simp only [il, Dl, hq, mfld_simps]
     have C :
       tangentMapWithin I I' (r ∘ f) s' q =
         tangentMapWithin I' I' r r.source (tangentMapWithin I I' f s' q) := by
       refine tangentMapWithin_comp_at q ?_ ?_ (fun r hr => ?_) U'q
-      · apply diff_r.mdifferentiableOn one_le_n
-        simp only [hq, mfld_simps]
-      · apply diff_f.mdifferentiableOn one_le_n
-        simp only [s', hq, mfld_simps]
-      · simp only [s', mfld_simps] at hr
-        simp only [hr, mfld_simps]
+      apply diff_r.mdifferentiableOn one_le_n
+      simp only [hq, mfld_simps]
+      apply diff_f.mdifferentiableOn one_le_n
+      simp only [s', hq, mfld_simps]
+      simp only [s', mfld_simps] at hr
+      simp only [hr, mfld_simps]
     have D :
       Dr.symm (ir (tangentMapWithin I' I' r r.source (tangentMapWithin I I' f s' q))) =
         tangentMapWithin I I' f s' q := by
@@ -490,20 +490,20 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (
         tangentMapWithin I' I' r r.source (tangentMapWithin I I' f s' q) =
           tangentMap I' I' r (tangentMapWithin I I' f s' q) := by
         apply tangentMapWithin_eq_tangentMap
-        · apply r.open_source.uniqueMDiffWithinAt _
-          simp [hq]
-        · exact mdifferentiableAt_atlas I' (chart_mem_atlas H' (f p.proj)) hq.1.1
+        apply r.open_source.uniqueMDiffWithinAt _
+        simp [hq]
+        exact mdifferentiableAt_atlas I' (chart_mem_atlas H' (f p.proj)) hq.1.1
       have : f p.proj = (tangentMapWithin I I' f s p).1 := rfl
       rw [A]
       dsimp [Dr, ir, s', r, l]
       rw [this, tangentMap_chart]
-      · simp only [hq, mfld_simps]
-        have :
-          tangentMapWithin I I' f s' q ∈
-            (chartAt (ModelProd H' E') (tangentMapWithin I I' f s p)).source := by
-          simp only [hq, mfld_simps]
-        exact (chartAt (ModelProd H' E') (tangentMapWithin I I' f s p)).left_inv this
-      · simp only [hq, mfld_simps]
+      simp only [hq, mfld_simps]
+      have :
+        tangentMapWithin I I' f s' q ∈
+          (chartAt (ModelProd H' E') (tangentMapWithin I I' f s p)).source := by
+        simp only [hq, mfld_simps]
+      exact (chartAt (ModelProd H' E') (tangentMapWithin I I' f s p)).left_inv this
+      simp only [hq, mfld_simps]
     have E : tangentMapWithin I I' f s' q = tangentMapWithin I I' f s q := by
       refine tangentMapWithin_subset (by unfold_let; mfld_set_tac) U'q ?_
       apply hf.mdifferentiableOn one_le_n
@@ -564,8 +564,8 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
   rcases p with ⟨x, v⟩
   have N : I.symm ⁻¹' (chartAt H x).target ∈ 𝓝 (I ((chartAt H x) x))
   apply IsOpen.mem_nhds
-  · apply (PartialHomeomorph.open_target _).preimage I.continuous_invFun
-  · simp only [mfld_simps]
+  apply (PartialHomeomorph.open_target _).preimage I.continuous_invFun
+  simp only [mfld_simps]
   have A : MDifferentiableAt I I.tangent (fun x => @TotalSpace.mk M E (TangentSpace I) x 0) x :=
     haveI : Smooth I (I.prod 𝓘(𝕜, E)) (zeroSection E (TangentSpace I : M → Type _)) :=
       Bundle.smooth_zeroSection 𝕜 (TangentSpace I : M → Type _)
@@ -573,11 +573,11 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
   have B : fderivWithin 𝕜 (fun x' : E ↦ (x', (0 : E))) (Set.range I) (I ((chartAt H x) x)) v
       = (v, 0) := by
     rw [fderivWithin_eq_fderiv, DifferentiableAt.fderiv_prod]
-    · simp
-    · exact differentiableAt_id'
-    · exact differentiableAt_const _
-    · exact ModelWithCorners.unique_diff_at_image I
-    · exact differentiableAt_id'.prod (differentiableAt_const _)
+    simp
+    exact differentiableAt_id'
+    exact differentiableAt_const _
+    exact ModelWithCorners.unique_diff_at_image I
+    exact differentiableAt_id'.prod (differentiableAt_const _)
   simp (config := { unfoldPartialApp := true }) only [Bundle.zeroSection, tangentMap, mfderiv, A,
     if_pos, chartAt, FiberBundle.chartedSpace_chartAt, TangentBundle.trivializationAt_apply,
     tangentBundleCore, Function.comp_def, ContinuousLinearMap.map_zero, mfld_simps]
@@ -585,9 +585,9 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
   rw [← fderivWithin_inter N, ← B]
   congr 1
   refine fderivWithin_congr (fun y hy => ?_) ?_
-  · simp only [mfld_simps] at hy
-    simp only [hy, Prod.mk.inj_iff, mfld_simps]
-  · simp only [Prod.mk.inj_iff, mfld_simps]
+  simp only [mfld_simps] at hy
+  simp only [hy, Prod.mk.inj_iff, mfld_simps]
+  simp only [Prod.mk.inj_iff, mfld_simps]
 
 end TangentBundle
 

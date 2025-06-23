@@ -133,12 +133,12 @@ lemma card_image_le {f : α → β} (hs : s.Finite) : Nat.card (f '' s) ≤ Nat.
 open Classical in
 lemma card_image_of_injOn {f : α → β} (hf : s.InjOn f) : Nat.card (f '' s) = Nat.card s := by
   obtain hs | hs := s.finite_or_infinite
-  · have := hs.fintype
-    have := fintypeImage s f
-    simp_rw [Nat.card_eq_fintype_card, Set.card_image_of_inj_on hf]
-  · have := hs.to_subtype
-    have := (hs.image hf).to_subtype
-    simp [Nat.card_eq_zero_of_infinite]
+  have := hs.fintype
+  have := fintypeImage s f
+  simp_rw [Nat.card_eq_fintype_card, Set.card_image_of_inj_on hf]
+  have := hs.to_subtype
+  have := (hs.image hf).to_subtype
+  simp [Nat.card_eq_zero_of_infinite]
 
 lemma card_image_of_injective {f : α → β} (hf : Injective f) (s : Set α) :
     Nat.card (f '' s) = Nat.card s := card_image_of_injOn hf.injOn
@@ -211,8 +211,8 @@ theorem card_fun [Finite α] : Nat.card (α → β) = Nat.card β ^ Nat.card α 
 @[simp]
 theorem card_zmod (n : ℕ) : Nat.card (ZMod n) = n := by
   cases n
-  · exact @Nat.card_eq_zero_of_infinite _ Int.infinite
-  · rw [Nat.card_eq_fintype_card, ZMod.card]
+  exact @Nat.card_eq_zero_of_infinite _ Int.infinite
+  rw [Nat.card_eq_fintype_card, ZMod.card]
 
 end Nat
 

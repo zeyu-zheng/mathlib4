@@ -69,11 +69,11 @@ theorem effectiveEpi_tfae
     , Function.Surjective π
     ] := by
   tfae_have 1 → 2
-  · intro; infer_instance
+  intro; infer_instance
   tfae_have 2 ↔ 3
-  · exact epi_iff_surjective π
+  exact epi_iff_surjective π
   tfae_have 3 → 1
-  · exact fun hπ ↦ ⟨⟨struct π hπ⟩⟩
+  exact fun hπ ↦ ⟨⟨struct π hπ⟩⟩
   tfae_finish
 
 instance : Stonean.toCompHaus.PreservesEffectiveEpis where
@@ -113,15 +113,15 @@ theorem effectiveEpiFamily_tfae
     , ∀ b : B, ∃ (a : α) (x : X a), π a x = b
     ] := by
   tfae_have 2 → 1
-  · intro
-    simpa [← effectiveEpi_desc_iff_effectiveEpiFamily, (effectiveEpi_tfae (Sigma.desc π)).out 0 1]
+  intro
+  simpa [← effectiveEpi_desc_iff_effectiveEpiFamily, (effectiveEpi_tfae (Sigma.desc π)).out 0 1]
   tfae_have 1 → 2
-  · intro; infer_instance
+  intro; infer_instance
   tfae_have 3 ↔ 1
-  · erw [((CompHaus.effectiveEpiFamily_tfae
-      (fun a ↦ Stonean.toCompHaus.obj (X a)) (fun a ↦ Stonean.toCompHaus.map (π a))).out 2 0 : )]
-    exact ⟨fun h ↦ Stonean.toCompHaus.finite_effectiveEpiFamily_of_map _ _ h,
-      fun _ ↦ inferInstance⟩
+  erw [((CompHaus.effectiveEpiFamily_tfae
+    (fun a ↦ Stonean.toCompHaus.obj (X a)) (fun a ↦ Stonean.toCompHaus.map (π a))).out 2 0 : )]
+  exact ⟨fun h ↦ Stonean.toCompHaus.finite_effectiveEpiFamily_of_map _ _ h,
+    fun _ ↦ inferInstance⟩
   tfae_finish
 
 theorem effectiveEpiFamily_of_jointly_surjective

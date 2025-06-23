@@ -143,8 +143,8 @@ theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l�
   refine ⟨fun h => ?_, fun ⟨⟨a', m, e⟩, s⟩ => Subset.cons e m s⟩
   generalize h' : Lists'.cons a l₁ = l₁' at h
   cases' h with l a' a'' l l' e m s
-  · cases a
-    cases h'
+  cases a
+  cases h'
   cases a; cases a'; cases h'; exact ⟨⟨_, m, e⟩, s⟩
 
 theorem ofList_subset {l₁ l₂ : List (Lists α)} (h : l₁ ⊆ l₂) :
@@ -160,8 +160,8 @@ theorem Subset.refl {l : Lists' α true} : l ⊆ l := by
 theorem subset_nil {l : Lists' α true} : l ⊆ Lists'.nil → l = Lists'.nil := by
   rw [← of_toList l]
   induction toList l <;> intro h
-  · rfl
-  · rcases cons_subset.1 h with ⟨⟨_, ⟨⟩, _⟩, _⟩
+  rfl
+  rcases cons_subset.1 h with ⟨⟨_, ⟨⟩, _⟩, _⟩
 
 theorem mem_of_subset' {a} : ∀ {l₁ l₂ : Lists' α true} (_ : l₁ ⊆ l₂) (_ : a ∈ l₁.toList), a ∈ l₂
   | nil, _, Lists'.Subset.nil, h => by cases h
@@ -169,8 +169,8 @@ theorem mem_of_subset' {a} : ∀ {l₁ l₂ : Lists' α true} (_ : l₁ ⊆ l₂
     cases' s with _ _ _ _ _ e m s
     simp only [toList, Sigma.eta, List.find?, List.mem_cons] at h
     rcases h with (rfl | h)
-    · exact ⟨_, m, e⟩
-    · exact mem_of_subset' s h
+    exact ⟨_, m, e⟩
+    exact mem_of_subset' s h
 
 theorem subset_def {l₁ l₂ : Lists' α true} : l₁ ⊆ l₂ ↔ ∀ a ∈ l₁.toList, a ∈ l₂ :=
   ⟨fun H a => mem_of_subset' H, fun H => by
@@ -257,8 +257,8 @@ theorem isList_of_mem {a : Lists α} : ∀ {l : Lists α}, a ∈ l → IsList l
 theorem Equiv.antisymm_iff {l₁ l₂ : Lists' α true} : of' l₁ ~ of' l₂ ↔ l₁ ⊆ l₂ ∧ l₂ ⊆ l₁ := by
   refine ⟨fun h => ?_, fun ⟨h₁, h₂⟩ => Equiv.antisymm h₁ h₂⟩
   cases' h with _ _ _ h₁ h₂
-  · simp [Lists'.Subset.refl]
-  · exact ⟨h₁, h₂⟩
+  simp [Lists'.Subset.refl]
+  exact ⟨h₁, h₂⟩
 
 attribute [refl] Equiv.refl
 
@@ -273,27 +273,27 @@ theorem Equiv.trans : ∀ {l₁ l₂ l₃ : Lists α}, l₁ ~ l₂ → l₂ ~ l�
   let trans := fun l₁ : Lists α => ∀ ⦃l₂ l₃⦄, l₁ ~ l₂ → l₂ ~ l₃ → l₁ ~ l₃
   suffices PProd (∀ l₁, trans l₁) (∀ (l : Lists' α true), ∀ l' ∈ l.toList, trans l') by exact this.1
   apply inductionMut
-  · intro a l₂ l₃ h₁ h₂
-    rwa [← equiv_atom.1 h₁] at h₂
-  · intro l₁ IH l₂ l₃ h₁ h₂
-    cases' id h₁ with _ _ l₂
-    · exact h₂
-    cases' id h₂ with _ _ l₃
-    · exact h₁
-    cases' Equiv.antisymm_iff.1 h₁ with hl₁ hr₁
-    cases' Equiv.antisymm_iff.1 h₂ with hl₂ hr₂
-    apply Equiv.antisymm_iff.2; constructor <;> apply Lists'.subset_def.2
-    · intro a₁ m₁
-      rcases Lists'.mem_of_subset' hl₁ m₁ with ⟨a₂, m₂, e₁₂⟩
-      rcases Lists'.mem_of_subset' hl₂ m₂ with ⟨a₃, m₃, e₂₃⟩
-      exact ⟨a₃, m₃, IH _ m₁ e₁₂ e₂₃⟩
-    · intro a₃ m₃
-      rcases Lists'.mem_of_subset' hr₂ m₃ with ⟨a₂, m₂, e₃₂⟩
-      rcases Lists'.mem_of_subset' hr₁ m₂ with ⟨a₁, m₁, e₂₁⟩
-      exact ⟨a₁, m₁, (IH _ m₁ e₂₁.symm e₃₂.symm).symm⟩
-  · rintro _ ⟨⟩
-  · intro a l IH₁ IH₂
-    simpa using ⟨IH₁, IH₂⟩
+  intro a l₂ l₃ h₁ h₂
+  rwa [← equiv_atom.1 h₁] at h₂
+  intro l₁ IH l₂ l₃ h₁ h₂
+  cases' id h₁ with _ _ l₂
+  exact h₂
+  cases' id h₂ with _ _ l₃
+  exact h₁
+  cases' Equiv.antisymm_iff.1 h₁ with hl₁ hr₁
+  cases' Equiv.antisymm_iff.1 h₂ with hl₂ hr₂
+  apply Equiv.antisymm_iff.2; constructor <;> apply Lists'.subset_def.2
+  intro a₁ m₁
+  rcases Lists'.mem_of_subset' hl₁ m₁ with ⟨a₂, m₂, e₁₂⟩
+  rcases Lists'.mem_of_subset' hl₂ m₂ with ⟨a₃, m₃, e₂₃⟩
+  exact ⟨a₃, m₃, IH _ m₁ e₁₂ e₂₃⟩
+  intro a₃ m₃
+  rcases Lists'.mem_of_subset' hr₂ m₃ with ⟨a₂, m₂, e₃₂⟩
+  rcases Lists'.mem_of_subset' hr₁ m₂ with ⟨a₁, m₁, e₂₁⟩
+  exact ⟨a₁, m₁, (IH _ m₁ e₂₁.symm e₃₂.symm).symm⟩
+  rintro _ ⟨⟩
+  intro a l IH₁ IH₂
+  simpa using ⟨IH₁, IH₂⟩
 
 instance instSetoidLists : Setoid (Lists α) :=
   ⟨(· ~ ·), Equiv.refl, @Equiv.symm _, @Equiv.trans _⟩

@@ -141,7 +141,7 @@ theorem map_gfp_comp : f (gfp (g.comp f)) = gfp (f.comp g) :=
 theorem lfp_lfp (h : α →o α →o α) : lfp (lfp.comp h) = lfp h.onDiag := by
   let a := lfp (lfp.comp h)
   refine (lfp_le _ ?_).antisymm (lfp_le _ (Eq.le ?_))
-  · exact lfp_le _ h.onDiag.map_lfp.le
+  exact lfp_le _ h.onDiag.map_lfp.le
   have ha : (lfp ∘ h) a = a := (lfp.comp h).map_lfp
   calc
     h a a = h a (lfp (h a)) := congr_arg (h a) ha.symm

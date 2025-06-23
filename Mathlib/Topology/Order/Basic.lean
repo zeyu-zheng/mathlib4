@@ -195,16 +195,16 @@ theorem induced_topology_eq_preorder [Preorder α] [Preorder β] [TopologicalSpa
   refine le_of_nhds_le_nhds fun a => ?_
   simp only [nhds_eq_order, nhds_induced, comap_inf, comap_iInf, comap_principal]
   refine inf_le_inf (le_iInf₂ fun b hb => ?_) (le_iInf₂ fun b hb => ?_)
-  · rcases em (∃ x, ¬(b < f x)) with (⟨x, hx⟩ | hb)
-    · rcases H₁ hb hx with ⟨y, hya, hyb⟩
-      exact iInf₂_le_of_le y hya (principal_mono.2 fun z hz => hyb.trans_lt (hf.2 hz))
-    · push_neg at hb
-      exact le_principal_iff.2 (univ_mem' hb)
-  · rcases em (∃ x, ¬(f x < b)) with (⟨x, hx⟩ | hb)
-    · rcases H₂ hb hx with ⟨y, hya, hyb⟩
-      exact iInf₂_le_of_le y hya (principal_mono.2 fun z hz => (hf.2 hz).trans_le hyb)
-    · push_neg at hb
-      exact le_principal_iff.2 (univ_mem' hb)
+  rcases em (∃ x, ¬(b < f x)) with (⟨x, hx⟩ | hb)
+  rcases H₁ hb hx with ⟨y, hya, hyb⟩
+  exact iInf₂_le_of_le y hya (principal_mono.2 fun z hz => hyb.trans_lt (hf.2 hz))
+  push_neg at hb
+  exact le_principal_iff.2 (univ_mem' hb)
+  rcases em (∃ x, ¬(f x < b)) with (⟨x, hx⟩ | hb)
+  rcases H₂ hb hx with ⟨y, hya, hyb⟩
+  exact iInf₂_le_of_le y hya (principal_mono.2 fun z hz => (hf.2 hz).trans_le hyb)
+  push_neg at hb
+  exact le_principal_iff.2 (univ_mem' hb)
 
 theorem induced_orderTopology' {α : Type u} {β : Type v} [Preorder α] [ta : TopologicalSpace β]
     [Preorder β] [OrderTopology β] (f : α → β) (hf : ∀ {x y}, f x < f y ↔ x < y)
@@ -226,10 +226,10 @@ nonrec theorem StrictMono.induced_topology_eq_preorder {α β : Type*} [LinearOr
     [LinearOrder β] [t : TopologicalSpace β] [OrderTopology β] {f : α → β}
     (hf : StrictMono f) (hc : OrdConnected (range f)) : t.induced f = Preorder.topology α := by
   refine induced_topology_eq_preorder hf.lt_iff_lt (fun h₁ h₂ => ?_) fun h₁ h₂ => ?_
-  · rcases hc.out (mem_range_self _) (mem_range_self _) ⟨not_lt.1 h₂, h₁.le⟩ with ⟨y, rfl⟩
-    exact ⟨y, hf.lt_iff_lt.1 h₁, le_rfl⟩
-  · rcases hc.out (mem_range_self _) (mem_range_self _) ⟨h₁.le, not_lt.1 h₂⟩ with ⟨y, rfl⟩
-    exact ⟨y, hf.lt_iff_lt.1 h₁, le_rfl⟩
+  rcases hc.out (mem_range_self _) (mem_range_self _) ⟨not_lt.1 h₂, h₁.le⟩ with ⟨y, rfl⟩
+  exact ⟨y, hf.lt_iff_lt.1 h₁, le_rfl⟩
+  rcases hc.out (mem_range_self _) (mem_range_self _) ⟨h₁.le, not_lt.1 h₂⟩ with ⟨y, rfl⟩
+  exact ⟨y, hf.lt_iff_lt.1 h₁, le_rfl⟩
 
 /-- A strictly monotone function between linear orders with order topology is a topological
 embedding provided that the range of `f` is order-connected. -/
@@ -370,14 +370,14 @@ theorem exists_Ico_subset_of_mem_nhds [OrderTopology α] {a : α} {s : Set α} (
 theorem exists_Icc_mem_subset_of_mem_nhdsWithin_Ici [OrderTopology α] {a : α} {s : Set α}
     (hs : s ∈ 𝓝[≥] a) : ∃ b, a ≤ b ∧ Icc a b ∈ 𝓝[≥] a ∧ Icc a b ⊆ s := by
   rcases (em (IsMax a)).imp_right not_isMax_iff.mp with (ha | ha)
-  · use a
-    simpa [ha.Ici_eq] using hs
-  · rcases (nhdsWithin_Ici_basis' ha).mem_iff.mp hs with ⟨b, hab, hbs⟩
-    rcases eq_empty_or_nonempty (Ioo a b) with (H | ⟨c, hac, hcb⟩)
-    · have : Ico a b = Icc a a := by rw [← Icc_union_Ioo_eq_Ico le_rfl hab, H, union_empty]
-      exact ⟨a, le_rfl, this ▸ ⟨Ico_mem_nhdsWithin_Ici' hab, hbs⟩⟩
-    · refine ⟨c, hac.le, Icc_mem_nhdsWithin_Ici' hac, ?_⟩
-      exact (Icc_subset_Ico_right hcb).trans hbs
+  use a
+  simpa [ha.Ici_eq] using hs
+  rcases (nhdsWithin_Ici_basis' ha).mem_iff.mp hs with ⟨b, hab, hbs⟩
+  rcases eq_empty_or_nonempty (Ioo a b) with (H | ⟨c, hac, hcb⟩)
+  have : Ico a b = Icc a a := by rw [← Icc_union_Ioo_eq_Ico le_rfl hab, H, union_empty]
+  exact ⟨a, le_rfl, this ▸ ⟨Ico_mem_nhdsWithin_Ici' hab, hbs⟩⟩
+  refine ⟨c, hac.le, Icc_mem_nhdsWithin_Ici' hac, ?_⟩
+  exact (Icc_subset_Ico_right hcb).trans hbs
 
 theorem exists_Icc_mem_subset_of_mem_nhdsWithin_Iic [OrderTopology α] {a : α} {s : Set α}
     (hs : s ∈ 𝓝[≤] a) : ∃ b ≤ a, Icc b a ∈ 𝓝[≤] a ∧ Icc b a ⊆ s := by
@@ -399,13 +399,13 @@ theorem IsOpen.exists_Ioo_subset [OrderTopology α] [Nontrivial α] {s : Set α}
   obtain ⟨x, hx⟩ : ∃ x, x ∈ s := h
   obtain ⟨y, hy⟩ : ∃ y, y ≠ x := exists_ne x
   rcases lt_trichotomy x y with (H | rfl | H)
-  · obtain ⟨u, xu, hu⟩ : ∃ u, x < u ∧ Ico x u ⊆ s :=
-      exists_Ico_subset_of_mem_nhds (hs.mem_nhds hx) ⟨y, H⟩
-    exact ⟨x, u, xu, Ioo_subset_Ico_self.trans hu⟩
-  · exact (hy rfl).elim
-  · obtain ⟨l, lx, hl⟩ : ∃ l, l < x ∧ Ioc l x ⊆ s :=
-      exists_Ioc_subset_of_mem_nhds (hs.mem_nhds hx) ⟨y, H⟩
-    exact ⟨l, x, lx, Ioo_subset_Ioc_self.trans hl⟩
+  obtain ⟨u, xu, hu⟩ : ∃ u, x < u ∧ Ico x u ⊆ s :=
+    exists_Ico_subset_of_mem_nhds (hs.mem_nhds hx) ⟨y, H⟩
+  exact ⟨x, u, xu, Ioo_subset_Ico_self.trans hu⟩
+  exact (hy rfl).elim
+  obtain ⟨l, lx, hl⟩ : ∃ l, l < x ∧ Ioc l x ⊆ s :=
+    exists_Ioc_subset_of_mem_nhds (hs.mem_nhds hx) ⟨y, H⟩
+  exact ⟨l, x, lx, Ioo_subset_Ioc_self.trans hl⟩
 
 theorem dense_of_exists_between [OrderTopology α] [Nontrivial α] {s : Set α}
     (h : ∀ ⦃a b⦄, a < b → ∃ c ∈ s, a < c ∧ c < b) : Dense s := by
@@ -426,12 +426,12 @@ provided `a` is neither a bottom element nor a top element. -/
 theorem mem_nhds_iff_exists_Ioo_subset' [OrderTopology α] {a : α} {s : Set α} (hl : ∃ l, l < a)
     (hu : ∃ u, a < u) : s ∈ 𝓝 a ↔ ∃ l u, a ∈ Ioo l u ∧ Ioo l u ⊆ s := by
   constructor
-  · intro h
-    rcases exists_Ico_subset_of_mem_nhds h hu with ⟨u, au, hu⟩
-    rcases exists_Ioc_subset_of_mem_nhds h hl with ⟨l, la, hl⟩
-    exact ⟨l, u, ⟨la, au⟩, Ioc_union_Ico_eq_Ioo la au ▸ union_subset hl hu⟩
-  · rintro ⟨l, u, ha, h⟩
-    apply mem_of_superset (Ioo_mem_nhds ha.1 ha.2) h
+  intro h
+  rcases exists_Ico_subset_of_mem_nhds h hu with ⟨u, au, hu⟩
+  rcases exists_Ioc_subset_of_mem_nhds h hl with ⟨l, la, hl⟩
+  exact ⟨l, u, ⟨la, au⟩, Ioc_union_Ico_eq_Ioo la au ▸ union_subset hl hu⟩
+  rintro ⟨l, u, ha, h⟩
+  apply mem_of_superset (Ioo_mem_nhds ha.1 ha.2) h
 
 /-- A set is a neighborhood of `a` if and only if it contains an interval `(l, u)` containing `a`.
 -/
@@ -455,15 +455,15 @@ theorem Dense.topology_eq_generateFrom [OrderTopology α] [DenselyOrdered α] {s
     (hs : Dense s) : ‹TopologicalSpace α› = .generateFrom (Ioi '' s ∪ Iio '' s) := by
   refine (OrderTopology.topology_eq_generate_intervals (α := α)).trans ?_
   refine le_antisymm (generateFrom_anti ?_) (le_generateFrom ?_)
-  · simp only [union_subset_iff, image_subset_iff]
-    exact ⟨fun a _ ↦ ⟨a, .inl rfl⟩, fun a _ ↦ ⟨a, .inr rfl⟩⟩
-  · rintro _ ⟨a, rfl | rfl⟩
-    · rw [hs.Ioi_eq_biUnion]
-      let _ := generateFrom (Ioi '' s ∪ Iio '' s)
-      exact isOpen_iUnion fun x ↦ isOpen_iUnion fun h ↦ .basic _ <| .inl <| mem_image_of_mem _ h.1
-    · rw [hs.Iio_eq_biUnion]
-      let _ := generateFrom (Ioi '' s ∪ Iio '' s)
-      exact isOpen_iUnion fun x ↦ isOpen_iUnion fun h ↦ .basic _ <| .inr <| mem_image_of_mem _ h.1
+  simp only [union_subset_iff, image_subset_iff]
+  exact ⟨fun a _ ↦ ⟨a, .inl rfl⟩, fun a _ ↦ ⟨a, .inr rfl⟩⟩
+  rintro _ ⟨a, rfl | rfl⟩
+  rw [hs.Ioi_eq_biUnion]
+  let _ := generateFrom (Ioi '' s ∪ Iio '' s)
+  exact isOpen_iUnion fun x ↦ isOpen_iUnion fun h ↦ .basic _ <| .inl <| mem_image_of_mem _ h.1
+  rw [hs.Iio_eq_biUnion]
+  let _ := generateFrom (Ioi '' s ∪ Iio '' s)
+  exact isOpen_iUnion fun x ↦ isOpen_iUnion fun h ↦ .basic _ <| .inr <| mem_image_of_mem _ h.1
 
 @[deprecated OrderBot.atBot_eq (since := "2024-02-14")]
 theorem atBot_le_nhds_bot [OrderBot α] : (atBot : Filter α) ≤ 𝓝 ⊥ := by
@@ -515,14 +515,14 @@ theorem countable_setOf_covBy_right [OrderTopology α] [SecondCountableTopology 
   choose! z hz h'z using this
   have : PairwiseDisjoint t fun x => Ioc (z x) x := fun x xt x' x't hxx' => by
     rcases hxx'.lt_or_lt with (h' | h')
-    · refine disjoint_left.2 fun u ux ux' => xt.2.2.1 ?_
-      refine h'z x' x't ⟨ux'.1.trans_le (ux.2.trans (hy x xt.1).le), ?_⟩
-      by_contra! H
-      exact lt_irrefl _ ((Hy _ _ xt.1 H).trans_lt h')
-    · refine disjoint_left.2 fun u ux ux' => x't.2.2.1 ?_
-      refine h'z x xt ⟨ux.1.trans_le (ux'.2.trans (hy x' x't.1).le), ?_⟩
-      by_contra! H
-      exact lt_irrefl _ ((Hy _ _ x't.1 H).trans_lt h')
+    refine disjoint_left.2 fun u ux ux' => xt.2.2.1 ?_
+    refine h'z x' x't ⟨ux'.1.trans_le (ux.2.trans (hy x xt.1).le), ?_⟩
+    by_contra! H
+    exact lt_irrefl _ ((Hy _ _ xt.1 H).trans_lt h')
+    refine disjoint_left.2 fun u ux ux' => x't.2.2.1 ?_
+    refine h'z x xt ⟨ux.1.trans_le (ux'.2.trans (hy x' x't.1).le), ?_⟩
+    by_contra! H
+    exact lt_irrefl _ ((Hy _ _ x't.1 H).trans_lt h')
   refine this.countable_of_isOpen (fun x hx => ?_) fun x hx => ⟨x, hz x hx, le_rfl⟩
   suffices H : Ioc (z x) x = Ioo (z x) (y x) by
     rw [H]
@@ -579,7 +579,7 @@ theorem countable_image_lt_image_Ioi [OrderTopology α] [LinearOrder β] (f : β
   have A : (f '' s).PairwiseDisjoint fun x => Ioo x (z (invFunOn f s x))
   rintro _ ⟨u, us, rfl⟩ _ ⟨v, vs, rfl⟩ huv
   wlog hle : u ≤ v generalizing u v
-  · exact (this v vs u us huv.symm (le_of_not_le hle)).symm
+  exact (this v vs u us huv.symm (le_of_not_le hle)).symm
   have hlt : u < v := hle.lt_of_ne (ne_of_apply_ne _ huv)
   apply disjoint_iff_forall_ne.2
   rintro a ha b hb rfl
@@ -611,33 +611,33 @@ theorem countable_image_gt_image_Iio [OrderTopology α] [LinearOrder β] (f : β
 instance instIsCountablyGenerated_atTop [OrderTopology α] [SecondCountableTopology α] :
     IsCountablyGenerated (atTop : Filter α) := by
   by_cases h : ∃ (x : α), IsTop x
-  · rcases h with ⟨x, hx⟩
-    rw [atTop_eq_pure_of_isTop hx]
-    exact isCountablyGenerated_pure x
-  · rcases exists_countable_basis α with ⟨b, b_count, b_ne, hb⟩
-    have : Countable b
-    exact Iff.mpr countable_coe_iff b_count
-    have A : ∀ (s : b), ∃ (x : α), x ∈ (s : Set α)
-    intro s
-    have : (s : Set α) ≠ ∅
-    intro H
-    apply b_ne
-    convert s.2
-    exact H.symm
-    exact Iff.mp nmem_singleton_empty this
-    choose a ha using A
-    have : (atTop : Filter α) = (generate (Ici '' (range a)))
-    apply atTop_eq_generate_of_not_bddAbove
-    intro ⟨x, hx⟩
-    simp only [IsTop, not_exists, not_forall, not_le] at h
-    rcases h x with ⟨y, hy⟩
-    obtain ⟨s, sb, -, hs⟩ : ∃ s, s ∈ b ∧ y ∈ s ∧ s ⊆ Ioi x :=
-      hb.exists_subset_of_mem_open hy isOpen_Ioi
-    have I : a ⟨s, sb⟩ ≤ x := hx (mem_range_self _)
-    have J : x < a ⟨s, sb⟩ := hs (ha ⟨s, sb⟩)
-    exact lt_irrefl _ (I.trans_lt J)
-    rw [this]
-    exact ⟨_, (countable_range _).image _, rfl⟩
+  rcases h with ⟨x, hx⟩
+  rw [atTop_eq_pure_of_isTop hx]
+  exact isCountablyGenerated_pure x
+  rcases exists_countable_basis α with ⟨b, b_count, b_ne, hb⟩
+  have : Countable b
+  exact Iff.mpr countable_coe_iff b_count
+  have A : ∀ (s : b), ∃ (x : α), x ∈ (s : Set α)
+  intro s
+  have : (s : Set α) ≠ ∅
+  intro H
+  apply b_ne
+  convert s.2
+  exact H.symm
+  exact Iff.mp nmem_singleton_empty this
+  choose a ha using A
+  have : (atTop : Filter α) = (generate (Ici '' (range a)))
+  apply atTop_eq_generate_of_not_bddAbove
+  intro ⟨x, hx⟩
+  simp only [IsTop, not_exists, not_forall, not_le] at h
+  rcases h x with ⟨y, hy⟩
+  obtain ⟨s, sb, -, hs⟩ : ∃ s, s ∈ b ∧ y ∈ s ∧ s ⊆ Ioi x :=
+    hb.exists_subset_of_mem_open hy isOpen_Ioi
+  have I : a ⟨s, sb⟩ ≤ x := hx (mem_range_self _)
+  have J : x < a ⟨s, sb⟩ := hs (ha ⟨s, sb⟩)
+  exact lt_irrefl _ (I.trans_lt J)
+  rw [this]
+  exact ⟨_, (countable_range _).image _, rfl⟩
 
 instance instIsCountablyGenerated_atBot [OrderTopology α] [SecondCountableTopology α] :
     IsCountablyGenerated (atBot : Filter α) :=

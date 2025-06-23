@@ -68,14 +68,14 @@ lemma eq_condKernel_of_measure_eq_compProd_real {ρ : Measure (α × ℝ)} [IsFi
     ext t ht; exact hx ht
   apply MeasurableSpace.ae_induction_on_inter Real.borel_eq_generateFrom_Iic_rat
     Real.isPiSystem_Iic_rat
-  · simp
-  · simp only [iUnion_singleton_eq_range, mem_range, forall_exists_index, forall_apply_eq_imp_iff]
-    exact ae_all_iff.2 fun q ↦ eq_condKernel_of_measure_eq_compProd' κ hκ measurableSet_Iic
-  · filter_upwards [huniv] with x hxuniv t ht heq
-    rw [measure_compl ht <| measure_ne_top _ _, heq, hxuniv, measure_compl ht <| measure_ne_top _ _]
-  · refine ae_of_all _ (fun x f hdisj hf heq ↦ ?_)
-    rw [measure_iUnion hdisj hf, measure_iUnion hdisj hf]
-    exact tsum_congr heq
+  simp
+  simp only [iUnion_singleton_eq_range, mem_range, forall_exists_index, forall_apply_eq_imp_iff]
+  exact ae_all_iff.2 fun q ↦ eq_condKernel_of_measure_eq_compProd' κ hκ measurableSet_Iic
+  filter_upwards [huniv] with x hxuniv t ht heq
+  rw [measure_compl ht <| measure_ne_top _ _, heq, hxuniv, measure_compl ht <| measure_ne_top _ _]
+  refine ae_of_all _ (fun x f hdisj hf heq ↦ ?_)
+  rw [measure_iUnion hdisj hf, measure_iUnion hdisj hf]
+  exact tsum_congr heq
 
 /-- A finite kernel which satisfies the disintegration property is almost everywhere equal to the
 disintegration kernel. -/
@@ -123,7 +123,7 @@ theorem eq_condKernel_of_measure_eq_compProd (κ : Kernel α Ω) [IsFiniteKernel
   · congr with a
     rw [Kernel.map_apply']
     exacts [rfl, measurable_prod_mk_left hs]
-  · exact measurable_id.prod_map hf.measurable hs
+  exact measurable_id.prod_map hf.measurable hs
 
 end Measure
 

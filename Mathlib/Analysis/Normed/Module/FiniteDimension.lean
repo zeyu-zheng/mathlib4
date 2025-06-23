@@ -152,16 +152,16 @@ theorem ContinuousLinearMap.continuous_det : Continuous fun f : E →L[𝕜] E =
   change Continuous fun f : E →L[𝕜] E => LinearMap.det (f : E →ₗ[𝕜] E)
   -- Porting note: this could be easier with `det_cases`
   by_cases h : ∃ s : Finset E, Nonempty (Basis (↥s) 𝕜 E)
-  · rcases h with ⟨s, ⟨b⟩⟩
-    haveI : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis b
-    simp_rw [LinearMap.det_eq_det_toMatrix_of_finset b]
-    refine Continuous.matrix_det ?_
-    exact
-      ((LinearMap.toMatrix b b).toLinearMap.comp
-          (ContinuousLinearMap.coeLM 𝕜)).continuous_of_finiteDimensional
-  · -- Porting note: was `unfold LinearMap.det`
-    rw [LinearMap.det_def]
-    simpa only [h, MonoidHom.one_apply, dif_neg, not_false_iff] using continuous_const
+  rcases h with ⟨s, ⟨b⟩⟩
+  haveI : FiniteDimensional 𝕜 E := FiniteDimensional.of_fintype_basis b
+  simp_rw [LinearMap.det_eq_det_toMatrix_of_finset b]
+  refine Continuous.matrix_det ?_
+  exact
+    ((LinearMap.toMatrix b b).toLinearMap.comp
+        (ContinuousLinearMap.coeLM 𝕜)).continuous_of_finiteDimensional
+  -- Porting note: was `unfold LinearMap.det`
+  rw [LinearMap.det_def]
+  simpa only [h, MonoidHom.one_apply, dif_neg, not_false_iff] using continuous_const
 
 /-- Any `K`-Lipschitz map from a subset `s` of a metric space `α` to a finite-dimensional real
 vector space `E'` can be extended to a Lipschitz map on the whole space `α`, with a slightly worse
@@ -196,22 +196,22 @@ theorem LipschitzOnWith.extend_finite_dimension {α : Type*} [PseudoMetricSpace 
     ∃ g : α → ι → ℝ, LipschitzWith (‖A.toContinuousLinearMap‖₊ * K) g ∧ EqOn (A ∘ f) g s :=
     L.extend_pi
   refine ⟨A.symm ∘ g, ?_, ?_⟩
-  · have LAsymm : LipschitzWith ‖A.symm.toContinuousLinearMap‖₊ A.symm := by
-      apply A.symm.lipschitz
-    apply (LAsymm.comp hg).weaken
-    rw [lipschitzExtensionConstant, ← mul_assoc]
-    exact mul_le_mul' (le_max_left _ _) le_rfl
-  · intro x hx
-    have : A (f x) = g x := gs hx
-    simp only [(· ∘ ·), ← this, A.symm_apply_apply]
+  have LAsymm : LipschitzWith ‖A.symm.toContinuousLinearMap‖₊ A.symm := by
+    apply A.symm.lipschitz
+  apply (LAsymm.comp hg).weaken
+  rw [lipschitzExtensionConstant, ← mul_assoc]
+  exact mul_le_mul' (le_max_left _ _) le_rfl
+  intro x hx
+  have : A (f x) = g x := gs hx
+  simp only [(· ∘ ·), ← this, A.symm_apply_apply]
 
 theorem LinearMap.exists_antilipschitzWith [FiniteDimensional 𝕜 E] (f : E →ₗ[𝕜] F)
     (hf : LinearMap.ker f = ⊥) : ∃ K > 0, AntilipschitzWith K f := by
   cases subsingleton_or_nontrivial E
-  · exact ⟨1, zero_lt_one, AntilipschitzWith.of_subsingleton⟩
-  · rw [LinearMap.ker_eq_bot] at hf
-    let e : E ≃L[𝕜] LinearMap.range f := (LinearEquiv.ofInjective f hf).toContinuousLinearEquiv
-    exact ⟨_, e.nnnorm_symm_pos, e.antilipschitz⟩
+  exact ⟨1, zero_lt_one, AntilipschitzWith.of_subsingleton⟩
+  rw [LinearMap.ker_eq_bot] at hf
+  let e : E ≃L[𝕜] LinearMap.range f := (LinearEquiv.ofInjective f hf).toContinuousLinearEquiv
+  exact ⟨_, e.nnnorm_symm_pos, e.antilipschitz⟩
 
 open Function in
 /-- A `LinearMap` on a finite-dimensional space over a complete field
@@ -219,10 +219,10 @@ open Function in
 theorem LinearMap.injective_iff_antilipschitz [FiniteDimensional 𝕜 E] (f : E →ₗ[𝕜] F) :
     Injective f ↔ ∃ K > 0, AntilipschitzWith K f := by
   constructor
-  · rw [← LinearMap.ker_eq_bot]
-    exact f.exists_antilipschitzWith
-  · rintro ⟨K, -, H⟩
-    exact H.injective
+  rw [← LinearMap.ker_eq_bot]
+  exact f.exists_antilipschitzWith
+  rintro ⟨K, -, H⟩
+  exact H.injective
 
 open Function in
 /-- The set of injective continuous linear maps `E → F` is open,
@@ -442,8 +442,8 @@ theorem FiniteDimensional.of_isCompact_closedBall₀ {r : ℝ} (rpos : 0 < r)
     calc
       ‖c‖ * ‖f n‖ ≤ r / R * R := by
         gcongr
-        · exact hc.2.le
-        · apply fle
+        exact hc.2.le
+        apply fle
       _ = r := by field_simp [(zero_lt_one.trans Rgt).ne']
   -- Porting note: moved type ascriptions because of exists_prop changes
   obtain ⟨x : E, _ : x ∈ Metric.closedBall (0 : E) r, φ : ℕ → ℕ, φmono : StrictMono φ,
@@ -632,15 +632,15 @@ nonrec theorem IsCompact.exists_mem_frontier_infDist_compl_eq_dist {E : Type*}
   obtain hx' | hx' : x ∈ interior K ∪ frontier K := by
     rw [← closure_eq_interior_union_frontier]
     exact subset_closure hx
-  · rw [mem_interior_iff_mem_nhds, Metric.nhds_basis_closedBall.mem_iff] at hx'
-    rcases hx' with ⟨r, hr₀, hrK⟩
-    have : FiniteDimensional ℝ E :=
-      .of_isCompact_closedBall ℝ hr₀
-        (hK.of_isClosed_subset Metric.isClosed_ball hrK)
-    exact exists_mem_frontier_infDist_compl_eq_dist hx hK.ne_univ
-  · refine ⟨x, hx', ?_⟩
-    rw [frontier_eq_closure_inter_closure] at hx'
-    rw [Metric.infDist_zero_of_mem_closure hx'.2, dist_self]
+  rw [mem_interior_iff_mem_nhds, Metric.nhds_basis_closedBall.mem_iff] at hx'
+  rcases hx' with ⟨r, hr₀, hrK⟩
+  have : FiniteDimensional ℝ E :=
+    .of_isCompact_closedBall ℝ hr₀
+      (hK.of_isClosed_subset Metric.isClosed_ball hrK)
+  exact exists_mem_frontier_infDist_compl_eq_dist hx hK.ne_univ
+  refine ⟨x, hx', ?_⟩
+  rw [frontier_eq_closure_inter_closure] at hx'
+  rw [Metric.infDist_zero_of_mem_closure hx'.2, dist_self]
 
 /-- In a finite dimensional vector space over `ℝ`, the series `∑ x, ‖f x‖` is unconditionally
 summable if and only if the series `∑ x, f x` is unconditionally summable. One implication holds in
@@ -661,9 +661,9 @@ theorem summable_norm_iff {α E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ
   have : ∀ i, Summable fun x => ‖g x i‖ := fun i => (Pi.summable.1 hg i).abs
   refine .of_norm_bounded _ (summable_sum fun i (_ : i ∈ Finset.univ) => this i) fun x => ?_
   rw [norm_norm, pi_norm_le_iff_of_nonneg]
-  · refine fun i => Finset.single_le_sum (f := fun i => ‖g x i‖) (fun i _ => ?_) (Finset.mem_univ i)
-    exact norm_nonneg (g x i)
-  · exact Finset.sum_nonneg fun _ _ => norm_nonneg _
+  refine fun i => Finset.single_le_sum (f := fun i => ‖g x i‖) (fun i _ => ?_) (Finset.mem_univ i)
+  exact norm_nonneg (g x i)
+  exact Finset.sum_nonneg fun _ _ => norm_nonneg _
 
 alias ⟨_, Summable.norm⟩ := summable_norm_iff
 

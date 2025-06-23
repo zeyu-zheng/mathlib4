@@ -404,16 +404,16 @@ theorem ext_of_generateFrom_of_cover {S T : Set (Set α)} (h_gen : ‹_› = gen
   ext1 u hu
   simp only [restrict_apply hu]
   refine induction_on_inter h_gen h_inter ?_ (ST_eq t ht) ?_ ?_ hu
-  · simp only [Set.empty_inter, measure_empty]
-  · intro v hv hvt
-    have := T_eq t ht
-    rw [Set.inter_comm] at hvt ⊢
-    rwa [← measure_inter_add_diff t hv, ← measure_inter_add_diff t hv, ← hvt,
-      ENNReal.add_right_inj] at this
-    exact ne_top_of_le_ne_top (htop t ht) (measure_mono Set.inter_subset_left)
-  · intro f hfd hfm h_eq
-    simp only [← restrict_apply (hfm _), ← restrict_apply (MeasurableSet.iUnion hfm)] at h_eq ⊢
-    simp only [measure_iUnion hfd hfm, h_eq]
+  simp only [Set.empty_inter, measure_empty]
+  intro v hv hvt
+  have := T_eq t ht
+  rw [Set.inter_comm] at hvt ⊢
+  rwa [← measure_inter_add_diff t hv, ← measure_inter_add_diff t hv, ← hvt,
+    ENNReal.add_right_inj] at this
+  exact ne_top_of_le_ne_top (htop t ht) (measure_mono Set.inter_subset_left)
+  intro f hfd hfm h_eq
+  simp only [← restrict_apply (hfm _), ← restrict_apply (MeasurableSet.iUnion hfm)] at h_eq ⊢
+  simp only [measure_iUnion hfd hfm, h_eq]
 
 /-- Two measures are equal if they are equal on the π-system generating the σ-algebra,
   and they are both finite on an increasing spanning sequence of sets in the π-system.
@@ -423,8 +423,8 @@ theorem ext_of_generateFrom_of_cover_subset {S T : Set (Set α)} (h_gen : ‹_�
     (htop : ∀ s ∈ T, μ s ≠ ∞) (h_eq : ∀ s ∈ S, μ s = ν s) : μ = ν := by
   refine ext_of_generateFrom_of_cover h_gen hc h_inter hU htop ?_ fun t ht => h_eq t (h_sub ht)
   intro t ht s hs; rcases (s ∩ t).eq_empty_or_nonempty with H | H
-  · simp only [H, measure_empty]
-  · exact h_eq _ (h_inter _ hs _ (h_sub ht) H)
+  simp only [H, measure_empty]
+  exact h_eq _ (h_inter _ hs _ (h_sub ht) H)
 
 /-- Two measures are equal if they are equal on the π-system generating the σ-algebra,
   and they are both finite on an increasing spanning sequence of sets in the π-system.
@@ -434,10 +434,10 @@ theorem ext_of_generateFrom_of_iUnion (C : Set (Set α)) (B : ℕ → Set α) (h
     (hC : IsPiSystem C) (h1B : ⋃ i, B i = univ) (h2B : ∀ i, B i ∈ C) (hμB : ∀ i, μ (B i) ≠ ∞)
     (h_eq : ∀ s ∈ C, μ s = ν s) : μ = ν := by
   refine ext_of_generateFrom_of_cover_subset hA hC ?_ (countable_range B) h1B ?_ h_eq
-  · rintro _ ⟨i, rfl⟩
-    apply h2B
-  · rintro _ ⟨i, rfl⟩
-    apply hμB
+  rintro _ ⟨i, rfl⟩
+  apply h2B
+  rintro _ ⟨i, rfl⟩
+  apply hμB
 
 @[simp]
 theorem restrict_sum (μ : ι → Measure α) {s : Set α} (hs : MeasurableSet s) :
@@ -606,16 +606,16 @@ theorem ae_eq_comp {f : α → β} {g g' : β → δ} (hf : AEMeasurable f μ) (
 @[to_additive]
 theorem div_ae_eq_one {β} [Group β] (f g : α → β) : f / g =ᵐ[μ] 1 ↔ f =ᵐ[μ] g := by
   refine ⟨fun h ↦ h.mono fun x hx ↦ ?_, fun h ↦ h.mono fun x hx ↦ ?_⟩
-  · rwa [Pi.div_apply, Pi.one_apply, div_eq_one] at hx
-  · rwa [Pi.div_apply, Pi.one_apply, div_eq_one]
+  rwa [Pi.div_apply, Pi.one_apply, div_eq_one] at hx
+  rwa [Pi.div_apply, Pi.one_apply, div_eq_one]
 
 @[to_additive sub_nonneg_ae]
 lemma one_le_div_ae {β : Type*} [Group β] [LE β]
     [CovariantClass β β (Function.swap (· * ·)) (· ≤ ·)] (f g : α → β) :
     1 ≤ᵐ[μ] g / f ↔ f ≤ᵐ[μ] g := by
   refine ⟨fun h ↦ h.mono fun a ha ↦ ?_, fun h ↦ h.mono fun a ha ↦ ?_⟩
-  · rwa [Pi.one_apply, Pi.div_apply, one_le_div'] at ha
-  · rwa [Pi.one_apply, Pi.div_apply, one_le_div']
+  rwa [Pi.one_apply, Pi.div_apply, one_le_div'] at ha
+  rwa [Pi.one_apply, Pi.div_apply, one_le_div']
 
 theorem le_ae_restrict : ae μ ⊓ 𝓟 s ≤ ae (μ.restrict s) := fun _s hs =>
   eventually_inf_principal.2 (ae_imp_of_ae_restrict hs)
@@ -670,18 +670,18 @@ lemma NullMeasurable.measure_preimage_eq_measure_restrict_preimage_of_ae_compl_e
     μ (f ⁻¹' t) = μ.restrict s (f ⁻¹' t) := by
   rw [Measure.restrict_apply₀ (f_mble t_mble)]
   rw [EventuallyEq, ae_iff, Measure.restrict_apply₀] at hs
-  · apply le_antisymm _ (measure_mono inter_subset_left)
-    apply (measure_mono (Eq.symm (inter_union_compl (f ⁻¹' t) s)).le).trans
-    apply (measure_union_le _ _).trans
-    have obs : μ ((f ⁻¹' t) ∩ sᶜ) = 0
-    apply le_antisymm _ (zero_le _)
-    rw [← hs]
-    apply measure_mono (inter_subset_inter_left _ _)
-    intro x hx hfx
-    simp only [mem_preimage, mem_setOf_eq] at hx hfx
-    exact ht (hfx ▸ hx)
-    simp only [obs, add_zero, le_refl]
-  · exact NullMeasurableSet.of_null hs
+  apply le_antisymm _ (measure_mono inter_subset_left)
+  apply (measure_mono (Eq.symm (inter_union_compl (f ⁻¹' t) s)).le).trans
+  apply (measure_union_le _ _).trans
+  have obs : μ ((f ⁻¹' t) ∩ sᶜ) = 0
+  apply le_antisymm _ (zero_le _)
+  rw [← hs]
+  apply measure_mono (inter_subset_inter_left _ _)
+  intro x hx hfx
+  simp only [mem_preimage, mem_setOf_eq] at hx hfx
+  exact ht (hfx ▸ hx)
+  simp only [obs, add_zero, le_refl]
+  exact NullMeasurableSet.of_null hs
 
 namespace Measure
 
@@ -697,17 +697,17 @@ theorem MeasurableSet.nullMeasurableSet_subtype_coe {t : Set s} (hs : NullMeasur
   refine
     generateFrom_induction (p := fun t : Set s => NullMeasurableSet ((↑) '' t) μ)
       { t : Set s | ∃ s' : Set α, MeasurableSet s' ∧ (↑) ⁻¹' s' = t } ?_ ?_ ?_ ?_ ht
-  · rintro t' ⟨s', hs', rfl⟩
-    rw [Subtype.image_preimage_coe]
-    exact hs.inter (hs'.nullMeasurableSet)
-  · simp only [image_empty, nullMeasurableSet_empty]
-  · intro t'
-    simp only [← range_diff_image Subtype.coe_injective, Subtype.range_coe_subtype, setOf_mem_eq]
-    exact hs.diff
-  · intro f
-    dsimp only []
-    rw [image_iUnion]
-    exact NullMeasurableSet.iUnion
+  rintro t' ⟨s', hs', rfl⟩
+  rw [Subtype.image_preimage_coe]
+  exact hs.inter (hs'.nullMeasurableSet)
+  simp only [image_empty, nullMeasurableSet_empty]
+  intro t'
+  simp only [← range_diff_image Subtype.coe_injective, Subtype.range_coe_subtype, setOf_mem_eq]
+  exact hs.diff
+  intro f
+  dsimp only []
+  rw [image_iUnion]
+  exact NullMeasurableSet.iUnion
 
 theorem NullMeasurableSet.subtype_coe {t : Set s} (hs : NullMeasurableSet s μ)
     (ht : NullMeasurableSet t (μ.comap Subtype.val)) : NullMeasurableSet (((↑) : s → α) '' t) μ :=
@@ -743,10 +743,10 @@ theorem Subtype.volume_def : (volume : Measure u) = volume.comap Subtype.val :=
 
 theorem Subtype.volume_univ (hu : NullMeasurableSet u) : volume (univ : Set u) = volume u := by
   rw [Subtype.volume_def, comap_apply₀ _ _ _ _ MeasurableSet.univ.nullMeasurableSet]
-  · congr
-    simp only [image_univ, Subtype.range_coe_subtype, setOf_mem_eq]
-  · exact Subtype.coe_injective
-  · exact fun t => MeasurableSet.nullMeasurableSet_subtype_coe hu
+  congr
+  simp only [image_univ, Subtype.range_coe_subtype, setOf_mem_eq]
+  exact Subtype.coe_injective
+  exact fun t => MeasurableSet.nullMeasurableSet_subtype_coe hu
 
 theorem volume_subtype_coe_le_volume (hu : NullMeasurableSet u) (t : Set u) :
     volume (((↑) : u → δ) '' t) ≤ volume t :=
@@ -907,8 +907,8 @@ theorem map_restrict_ae_le_map_indicator_ae [Zero β] (hs : MeasurableSet s) :
     Filter.map f (ae <| μ.restrict s) ≤ Filter.map (s.indicator f) (ae μ) := by
   intro t
   by_cases ht : (0 : β) ∈ t
-  · rw [mem_map_indicator_ae_iff_mem_map_restrict_ae_of_zero_mem ht hs]
-    exact id
+  rw [mem_map_indicator_ae_iff_mem_map_restrict_ae_of_zero_mem ht hs]
+  exact id
   rw [mem_map_indicator_ae_iff_of_zero_nmem ht, mem_map_restrict_ae_iff hs]
   exact fun h => measure_mono_null (Set.inter_subset_left.trans Set.subset_union_left) h
 
@@ -926,16 +926,16 @@ theorem indicator_ae_eq_of_restrict_compl_ae_eq_zero (hs : MeasurableSet s)
   rw [Filter.EventuallyEq, ae_restrict_iff' hs.compl] at hf
   filter_upwards [hf] with x hx
   by_cases hxs : x ∈ s
-  · simp only [hxs, Set.indicator_of_mem]
-  · simp only [hx hxs, Pi.zero_apply, Set.indicator_apply_eq_zero, eq_self_iff_true, imp_true_iff]
+  simp only [hxs, Set.indicator_of_mem]
+  simp only [hx hxs, Pi.zero_apply, Set.indicator_apply_eq_zero, eq_self_iff_true, imp_true_iff]
 
 theorem indicator_ae_eq_zero_of_restrict_ae_eq_zero (hs : MeasurableSet s)
     (hf : f =ᵐ[μ.restrict s] 0) : s.indicator f =ᵐ[μ] 0 := by
   rw [Filter.EventuallyEq, ae_restrict_iff' hs] at hf
   filter_upwards [hf] with x hx
   by_cases hxs : x ∈ s
-  · simp only [hxs, hx hxs, Set.indicator_of_mem]
-  · simp [hx, hxs]
+  simp only [hxs, hx hxs, Set.indicator_of_mem]
+  simp [hx, hxs]
 
 theorem indicator_ae_eq_of_ae_eq_set (hst : s =ᵐ[μ] t) : s.indicator f =ᵐ[μ] t.indicator f := by
   classical exact piecewise_ae_eq_of_ae_eq_set hst
@@ -947,10 +947,10 @@ theorem ae_eq_restrict_iff_indicator_ae_eq {g : α → β} (hs : MeasurableSet s
     f =ᵐ[μ.restrict s] g ↔ s.indicator f =ᵐ[μ] s.indicator g := by
   rw [Filter.EventuallyEq, ae_restrict_iff' hs]
   refine ⟨fun h => ?_, fun h => ?_⟩ <;> filter_upwards [h] with x hx
-  · by_cases hxs : x ∈ s
-    · simp [hxs, hx hxs]
-    · simp [hxs]
-  · intro hxs
-    simpa [hxs] using hx
+  by_cases hxs : x ∈ s
+  simp [hxs, hx hxs]
+  simp [hxs]
+  intro hxs
+  simpa [hxs] using hx
 
 end IndicatorFunction

@@ -131,8 +131,8 @@ theorem lift_rank_le_of_surjective_injective (i : ZeroHom R R') (j : M →+ M')
     lift.{v'} (Module.rank R M) ≤ lift.{v} (Module.rank R' M') := by
   obtain ⟨i', hi'⟩ := hi.hasRightInverse
   refine lift_rank_le_of_injective_injective i' j (fun _ h ↦ ?_) hj fun r m ↦ ?_
-  · apply_fun i at h
-    rwa [hi', i.map_zero] at h
+  apply_fun i at h
+  rwa [hi', i.map_zero] at h
   rw [hc (i' r) m, hi']
 
 /-- If `M / R` and `M' / R'` are modules, `i : R → R'` is a bijective map which maps zero to zero,
@@ -256,11 +256,11 @@ theorem lift_rank_range_le (f : M →ₗ[R] M') : Cardinal.lift.{v}
   rintro ⟨s, li⟩
   apply le_trans
   swap
-  · apply Cardinal.lift_le.mpr
-    refine le_ciSup (Cardinal.bddAbove_range.{v, v} _) ⟨rangeSplitting f '' s, ?_⟩
-    apply LinearIndependent.of_comp f.rangeRestrict
-    convert li.comp (Equiv.Set.rangeSplittingImageEquiv f s) (Equiv.injective _) using 1
-  · exact (Cardinal.lift_mk_eq'.mpr ⟨Equiv.Set.rangeSplittingImageEquiv f s⟩).ge
+  apply Cardinal.lift_le.mpr
+  refine le_ciSup (Cardinal.bddAbove_range.{v, v} _) ⟨rangeSplitting f '' s, ?_⟩
+  apply LinearIndependent.of_comp f.rangeRestrict
+  convert li.comp (Equiv.Set.rangeSplittingImageEquiv f s) (Equiv.injective _) using 1
+  exact (Cardinal.lift_mk_eq'.mpr ⟨Equiv.Set.rangeSplittingImageEquiv f s⟩).ge
 
 theorem rank_range_le (f : M →ₗ[R] M₁) : Module.rank R (LinearMap.range f) ≤ Module.rank R M := by
   simpa using lift_rank_range_le f
@@ -283,8 +283,8 @@ universes. -/
 theorem LinearEquiv.lift_rank_eq (f : M ≃ₗ[R] M') :
     Cardinal.lift.{v'} (Module.rank R M) = Cardinal.lift.{v} (Module.rank R M') := by
   apply le_antisymm
-  · exact f.toLinearMap.lift_rank_le_of_injective f.injective
-  · exact f.symm.toLinearMap.lift_rank_le_of_injective f.symm.injective
+  exact f.toLinearMap.lift_rank_le_of_injective f.injective
+  exact f.symm.toLinearMap.lift_rank_le_of_injective f.symm.injective
 
 /-- Two linearly equivalent vector spaces have the same dimension. -/
 theorem LinearEquiv.rank_eq (f : M ≃ₗ[R] M₁) : Module.rank R M = Module.rank R M₁ :=
@@ -339,14 +339,14 @@ theorem rank_subsingleton [Subsingleton R] : Module.rank R M = 1 := by
   have : Nonempty { s : Set M // LinearIndependent R ((↑) : s → M) } :=
     ⟨⟨∅, linearIndependent_empty _ _⟩⟩
   rw [Module.rank_def, ciSup_eq_of_forall_le_of_forall_lt_exists_gt]
-  · rintro ⟨s, hs⟩
-    rw [Cardinal.mk_le_one_iff_set_subsingleton]
-    apply subsingleton_of_subsingleton
+  rintro ⟨s, hs⟩
+  rw [Cardinal.mk_le_one_iff_set_subsingleton]
+  apply subsingleton_of_subsingleton
   intro w hw
   refine ⟨⟨{0}, ?_⟩, ?_⟩
-  · rw [linearIndependent_iff']
-    subsingleton
-  · exact hw.trans_eq (Cardinal.mk_singleton _).symm
+  rw [linearIndependent_iff']
+  subsingleton
+  exact hw.trans_eq (Cardinal.mk_singleton _).symm
 
 end
 

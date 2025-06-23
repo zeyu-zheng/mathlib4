@@ -130,11 +130,11 @@ theorem ideal_oper_maxTrivSubmodule_eq_bot (I : LieIdeal R L) :
 theorem le_max_triv_iff_bracket_eq_bot {N : LieSubmodule R L M} :
     N ≤ maxTrivSubmodule R L M ↔ ⁅(⊤ : LieIdeal R L), N⁆ = ⊥ := by
   refine ⟨fun h => ?_, fun h m hm => ?_⟩
-  · rw [← le_bot_iff, ← ideal_oper_maxTrivSubmodule_eq_bot R L M ⊤]
-    exact LieSubmodule.mono_lie_right ⊤ h
-  · rw [mem_maxTrivSubmodule]
-    rw [LieSubmodule.lie_eq_bot_iff] at h
-    exact fun x => h x (LieSubmodule.mem_top x) m hm
+  rw [← le_bot_iff, ← ideal_oper_maxTrivSubmodule_eq_bot R L M ⊤]
+  exact LieSubmodule.mono_lie_right ⊤ h
+  rw [mem_maxTrivSubmodule]
+  rw [LieSubmodule.lie_eq_bot_iff] at h
+  exact fun x => h x (LieSubmodule.mem_top x) m hm
 
 theorem trivial_iff_le_maximal_trivial (N : LieSubmodule R L M) :
     IsTrivial L N ↔ N ≤ maxTrivSubmodule R L M :=
@@ -143,9 +143,9 @@ theorem trivial_iff_le_maximal_trivial (N : LieSubmodule R L M) :
 
 theorem isTrivial_iff_max_triv_eq_top : IsTrivial L M ↔ maxTrivSubmodule R L M = ⊤ := by
   constructor
-  · rintro ⟨h⟩; ext; simp only [mem_maxTrivSubmodule, h, forall_const, LieSubmodule.mem_top]
-  · intro h; constructor; intro x m; revert x
-    rw [← mem_maxTrivSubmodule R L M, h]; exact LieSubmodule.mem_top m
+  rintro ⟨h⟩; ext; simp only [mem_maxTrivSubmodule, h, forall_const, LieSubmodule.mem_top]
+  intro h; constructor; intro x m; revert x
+  rw [← mem_maxTrivSubmodule R L M, h]; exact LieSubmodule.mem_top m
 
 variable {R L M N}
 

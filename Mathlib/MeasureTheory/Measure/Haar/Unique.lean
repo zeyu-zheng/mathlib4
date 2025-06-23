@@ -79,20 +79,20 @@ lemma IsCompact.measure_eq_biInf_integral_hasCompactSupport
     μ k = ⨅ (f : X → ℝ) (_ : Continuous f) (_ : HasCompactSupport f) (_ : EqOn f 1 k)
       (_ : 0 ≤ f), ENNReal.ofReal (∫ x, f x ∂μ) := by
   apply le_antisymm
-  · simp only [le_iInf_iff]
-    intro f f_cont f_comp fk f_nonneg
-    apply (f_cont.integrable_of_hasCompactSupport f_comp).measure_le_integral
-    · exact eventually_of_forall f_nonneg
-    · exact fun x hx ↦ by simp [fk hx]
-  · apply le_of_forall_lt' (fun r hr ↦ ?_)
-    simp only [iInf_lt_iff, exists_prop, exists_and_left]
-    obtain ⟨U, kU, U_open, mu_U⟩ : ∃ U, k ⊆ U ∧ IsOpen U ∧ μ U < r :=
-      hk.exists_isOpen_lt_of_lt r hr
-    obtain ⟨⟨f, f_cont⟩, fk, fU, f_comp, f_range⟩ : ∃ (f : C(X, ℝ)), EqOn f 1 k ∧ EqOn f 0 Uᶜ
-        ∧ HasCompactSupport f ∧ ∀ (x : X), f x ∈ Icc 0 1 := exists_continuous_one_zero_of_isCompact
-      hk U_open.isClosed_compl (disjoint_compl_right_iff_subset.mpr kU)
-    refine ⟨f, f_cont, f_comp, fk, fun x ↦ (f_range x).1, ?_⟩
-    exact (integral_le_measure (fun x _hx ↦ (f_range x).2) (fun x hx ↦ (fU hx).le)).trans_lt mu_U
+  simp only [le_iInf_iff]
+  intro f f_cont f_comp fk f_nonneg
+  apply (f_cont.integrable_of_hasCompactSupport f_comp).measure_le_integral
+  exact eventually_of_forall f_nonneg
+  exact fun x hx ↦ by simp [fk hx]
+  apply le_of_forall_lt' (fun r hr ↦ ?_)
+  simp only [iInf_lt_iff, exists_prop, exists_and_left]
+  obtain ⟨U, kU, U_open, mu_U⟩ : ∃ U, k ⊆ U ∧ IsOpen U ∧ μ U < r :=
+    hk.exists_isOpen_lt_of_lt r hr
+  obtain ⟨⟨f, f_cont⟩, fk, fU, f_comp, f_range⟩ : ∃ (f : C(X, ℝ)), EqOn f 1 k ∧ EqOn f 0 Uᶜ
+      ∧ HasCompactSupport f ∧ ∀ (x : X), f x ∈ Icc 0 1 := exists_continuous_one_zero_of_isCompact
+    hk U_open.isClosed_compl (disjoint_compl_right_iff_subset.mpr kU)
+  refine ⟨f, f_cont, f_comp, fk, fun x ↦ (f_range x).1, ?_⟩
+  exact (integral_le_measure (fun x _hx ↦ (f_range x).2) (fun x hx ↦ (fU hx).le)).trans_lt mu_U
 
 namespace MeasureTheory
 
@@ -115,11 +115,11 @@ lemma continuous_integral_apply_inv_mul
   have k'_comp : IsCompact k' := t_comp.smul_set k_comp.inv
   have A : ContinuousOn (fun (x : G) ↦ ∫ y, g (y⁻¹ * x) ∂μ) t
   apply continuousOn_integral_of_compact_support k'_comp
-  · exact (hg.comp (continuous_snd.inv.mul continuous_fst)).continuousOn
-  · intro p x hp hx
-    contrapose! hx
-    refine ⟨p, hp, p⁻¹ * x, ?_, by simp⟩
-    simpa only [Set.mem_inv, mul_inv_rev, inv_inv] using subset_tsupport _ hx
+  exact (hg.comp (continuous_snd.inv.mul continuous_fst)).continuousOn
+  intro p x hp hx
+  contrapose! hx
+  refine ⟨p, hp, p⁻¹ * x, ?_, by simp⟩
+  simpa only [Set.mem_inv, mul_inv_rev, inv_inv] using subset_tsupport _ hx
   exact A.continuousAt ht
 
 namespace Measure
@@ -154,84 +154,84 @@ lemma integral_isMulLeftInvariant_isMulRightInvariant_combo
     ∫ x, f x ∂μ = (∫ y, f y * (∫ z, g (z⁻¹ * y) ∂ν)⁻¹ ∂ν) * ∫ x, g x ∂μ := by
   -- The group has to be locally compact, otherwise all integrals vanish and the result is trivial.
   rcases h'f.eq_zero_or_locallyCompactSpace_of_group hf with Hf|Hf
-  · simp [Hf]
+  simp [Hf]
   let D : G → ℝ := fun (x : G) ↦ ∫ y, g (y⁻¹ * x) ∂ν
   have D_cont : Continuous D := continuous_integral_apply_inv_mul hg h'g
   have D_pos : ∀ x, 0 < D x
   intro x
   have C : Continuous (fun y ↦ g (y⁻¹ * x)) := hg.comp (continuous_inv.mul continuous_const)
   apply (integral_pos_iff_support_of_nonneg _ _).2
-  · apply C.isOpen_support.measure_pos ν
-    exact ⟨x * x₀⁻¹, by simpa using g_pos⟩
-  · exact fun y ↦ g_nonneg (y⁻¹ * x)
-  · apply C.integrable_of_hasCompactSupport
-    exact h'g.comp_homeomorph ((Homeomorph.inv G).trans (Homeomorph.mulRight x))
+  apply C.isOpen_support.measure_pos ν
+  exact ⟨x * x₀⁻¹, by simpa using g_pos⟩
+  exact fun y ↦ g_nonneg (y⁻¹ * x)
+  apply C.integrable_of_hasCompactSupport
+  exact h'g.comp_homeomorph ((Homeomorph.inv G).trans (Homeomorph.mulRight x))
   calc
   ∫ x, f x ∂μ = ∫ x, f x * (D x)⁻¹ * D x ∂μ := by
     congr with x; rw [mul_assoc, inv_mul_cancel (D_pos x).ne', mul_one]
   _ = ∫ x, (∫ y, f x * (D x)⁻¹ * g (y⁻¹ * x) ∂ν) ∂μ := by simp_rw [integral_mul_left]
   _ = ∫ y, (∫ x, f x * (D x)⁻¹ * g (y⁻¹ * x) ∂μ) ∂ν := by
       apply integral_integral_swap_of_hasCompactSupport
-      · apply Continuous.mul
-        · exact (hf.comp continuous_fst).mul
-            ((D_cont.comp continuous_fst).inv₀ (fun x ↦ (D_pos _).ne'))
-        · exact hg.comp (continuous_snd.inv.mul continuous_fst)
-      · let K := tsupport f
-        have K_comp : IsCompact K
-        apply h'f
-        let L := tsupport g
-        have L_comp : IsCompact L
-        apply h'g
-        let M := (fun (p : G × G) ↦ p.1 * p.2⁻¹) '' (K ×ˢ L)
-        have M_comp : IsCompact M
-        apply (K_comp.prod L_comp).image (continuous_fst.mul continuous_snd.inv)
-        have M'_comp : IsCompact (closure M) := M_comp.closure
-        have : ∀ (p : G × G), p ∉ K ×ˢ closure M → f p.1 * (D p.1)⁻¹ * g (p.2⁻¹ * p.1) = 0
-        rintro ⟨x, y⟩ hxy
-        by_cases H : x ∈ K; swap
-        · simp [image_eq_zero_of_nmem_tsupport H]
-        have : g (y⁻¹ * x) = 0
-        apply image_eq_zero_of_nmem_tsupport
-        contrapose! hxy
-        simp only [mem_prod, H, true_and]
-        apply subset_closure
-        simp only [M, mem_image, mem_prod, Prod.exists]
-        exact ⟨x, y⁻¹ * x, ⟨H, hxy⟩, by group⟩
-        simp [this]
-        apply HasCompactSupport.intro' (K_comp.prod M'_comp) ?_ this
-        exact (isClosed_tsupport f).prod isClosed_closure
+      apply Continuous.mul
+      exact (hf.comp continuous_fst).mul
+        ((D_cont.comp continuous_fst).inv₀ (fun x ↦ (D_pos _).ne'))
+      exact hg.comp (continuous_snd.inv.mul continuous_fst)
+      let K := tsupport f
+      have K_comp : IsCompact K
+      apply h'f
+      let L := tsupport g
+      have L_comp : IsCompact L
+      apply h'g
+      let M := (fun (p : G × G) ↦ p.1 * p.2⁻¹) '' (K ×ˢ L)
+      have M_comp : IsCompact M
+      apply (K_comp.prod L_comp).image (continuous_fst.mul continuous_snd.inv)
+      have M'_comp : IsCompact (closure M) := M_comp.closure
+      have : ∀ (p : G × G), p ∉ K ×ˢ closure M → f p.1 * (D p.1)⁻¹ * g (p.2⁻¹ * p.1) = 0
+      rintro ⟨x, y⟩ hxy
+      by_cases H : x ∈ K; swap
+      simp [image_eq_zero_of_nmem_tsupport H]
+      have : g (y⁻¹ * x) = 0
+      apply image_eq_zero_of_nmem_tsupport
+      contrapose! hxy
+      simp only [mem_prod, H, true_and]
+      apply subset_closure
+      simp only [M, mem_image, mem_prod, Prod.exists]
+      exact ⟨x, y⁻¹ * x, ⟨H, hxy⟩, by group⟩
+      simp [this]
+      apply HasCompactSupport.intro' (K_comp.prod M'_comp) ?_ this
+      exact (isClosed_tsupport f).prod isClosed_closure
   _ = ∫ y, (∫ x, f (y * x) * (D (y * x))⁻¹ * g x ∂μ) ∂ν := by
       congr with y
       rw [← integral_mul_left_eq_self _ y]
       simp
   _ = ∫ x, (∫ y, f (y * x) * (D (y * x))⁻¹ * g x ∂ν) ∂μ := by
       apply (integral_integral_swap_of_hasCompactSupport _ _).symm
-      · apply Continuous.mul ?_ (hg.comp continuous_fst)
-        exact (hf.comp (continuous_snd.mul continuous_fst)).mul
-          ((D_cont.comp (continuous_snd.mul continuous_fst)).inv₀ (fun x ↦ (D_pos _).ne'))
-      · let K := tsupport f
-        have K_comp : IsCompact K := h'f
-        let L := tsupport g
-        have L_comp : IsCompact L := h'g
-        let M := (fun (p : G × G) ↦ p.1 * p.2⁻¹) '' (K ×ˢ L)
-        have M_comp : IsCompact M :=
-          (K_comp.prod L_comp).image (continuous_fst.mul continuous_snd.inv)
-        have M'_comp : IsCompact (closure M) := M_comp.closure
-        have : ∀ (p : G × G), p ∉ L ×ˢ closure M →
-            f (p.2 * p.1) * (D (p.2 * p.1))⁻¹ * g p.1 = 0
-        rintro ⟨x, y⟩ hxy
-        by_cases H : x ∈ L; swap
-        · simp [image_eq_zero_of_nmem_tsupport H]
-        have : f (y * x) = 0
-        apply image_eq_zero_of_nmem_tsupport
-        contrapose! hxy
-        simp only [mem_prod, H, true_and]
-        apply subset_closure
-        simp only [M, mem_image, mem_prod, Prod.exists]
-        exact ⟨y * x, x, ⟨hxy, H⟩, by group⟩
-        simp [this]
-        apply HasCompactSupport.intro' (L_comp.prod M'_comp) ?_ this
-        exact (isClosed_tsupport g).prod isClosed_closure
+      apply Continuous.mul ?_ (hg.comp continuous_fst)
+      exact (hf.comp (continuous_snd.mul continuous_fst)).mul
+        ((D_cont.comp (continuous_snd.mul continuous_fst)).inv₀ (fun x ↦ (D_pos _).ne'))
+      let K := tsupport f
+      have K_comp : IsCompact K := h'f
+      let L := tsupport g
+      have L_comp : IsCompact L := h'g
+      let M := (fun (p : G × G) ↦ p.1 * p.2⁻¹) '' (K ×ˢ L)
+      have M_comp : IsCompact M :=
+        (K_comp.prod L_comp).image (continuous_fst.mul continuous_snd.inv)
+      have M'_comp : IsCompact (closure M) := M_comp.closure
+      have : ∀ (p : G × G), p ∉ L ×ˢ closure M →
+          f (p.2 * p.1) * (D (p.2 * p.1))⁻¹ * g p.1 = 0
+      rintro ⟨x, y⟩ hxy
+      by_cases H : x ∈ L; swap
+      simp [image_eq_zero_of_nmem_tsupport H]
+      have : f (y * x) = 0
+      apply image_eq_zero_of_nmem_tsupport
+      contrapose! hxy
+      simp only [mem_prod, H, true_and]
+      apply subset_closure
+      simp only [M, mem_image, mem_prod, Prod.exists]
+      exact ⟨y * x, x, ⟨hxy, H⟩, by group⟩
+      simp [this]
+      apply HasCompactSupport.intro' (L_comp.prod M'_comp) ?_ this
+      exact (isClosed_tsupport g).prod isClosed_closure
   _ = ∫ x, (∫ y, f y * (D y)⁻¹ ∂ν) * g x ∂μ := by
       simp_rw [integral_mul_right]
       congr with x
@@ -248,10 +248,10 @@ lemma exists_integral_isMulLeftInvariant_eq_smul_of_hasCompactSupport (μ' μ : 
       ∫ x, f x ∂μ' = ∫ x, f x ∂(c • μ) := by
   -- The group has to be locally compact, otherwise all integrals vanish and the result is trivial.
   by_cases H : LocallyCompactSpace G; swap
-  · refine ⟨0, fun f f_cont f_comp ↦ ?_⟩
-    rcases f_comp.eq_zero_or_locallyCompactSpace_of_group f_cont with hf|hf
-    · simp [hf]
-    · exact (H hf).elim
+  refine ⟨0, fun f f_cont f_comp ↦ ?_⟩
+  rcases f_comp.eq_zero_or_locallyCompactSpace_of_group f_cont with hf|hf
+  simp [hf]
+  exact (H hf).elim
   -- Fix some nonzero continuous function with compact support `g`.
   obtain ⟨⟨g, g_cont⟩, g_comp, g_nonneg, g_one⟩ :
     ∃ (g : C(G, ℝ)), HasCompactSupport g ∧ 0 ≤ g ∧ g 1 ≠ 0 := exists_continuous_nonneg_pos 1
@@ -315,10 +315,10 @@ theorem integral_isMulLeftInvariant_eq_smul_of_hasCompactSupport
     {f : G → ℝ} (hf : Continuous f) (h'f : HasCompactSupport f) :
     ∫ x, f x ∂μ' = ∫ x, f x ∂(haarScalarFactor μ' μ • μ) := by
   rcases h'f.eq_zero_or_locallyCompactSpace_of_group hf with Hf|Hf
-  · simp [Hf]
-  · simp only [haarScalarFactor, Hf, not_true_eq_false, ite_false]
-    exact (exists_integral_isMulLeftInvariant_eq_smul_of_hasCompactSupport μ' μ).choose_spec
-      f hf h'f
+  simp [Hf]
+  simp only [haarScalarFactor, Hf, not_true_eq_false, ite_false]
+  exact (exists_integral_isMulLeftInvariant_eq_smul_of_hasCompactSupport μ' μ).choose_spec
+    f hf h'f
 
 @[to_additive addHaarScalarFactor_eq_integral_div]
 lemma haarScalarFactor_eq_integral_div (μ' μ : Measure G) [IsHaarMeasure μ]
@@ -350,7 +350,7 @@ lemma haarScalarFactor_smul [LocallyCompactSpace G] (μ' μ : Measure G) [IsHaar
 lemma haarScalarFactor_self (μ : Measure G) [IsHaarMeasure μ] :
     haarScalarFactor μ μ = 1 := by
   by_cases hG : LocallyCompactSpace G; swap
-  · simp [haarScalarFactor, hG]
+  simp [haarScalarFactor, hG]
   obtain ⟨⟨g, g_cont⟩, g_comp, g_nonneg, g_one⟩ :
     ∃ g : C(G, ℝ), HasCompactSupport g ∧ 0 ≤ g ∧ g 1 ≠ 0 := exists_continuous_nonneg_pos 1
   have int_g_ne_zero : ∫ x, g x ∂μ ≠ 0 :=
@@ -367,7 +367,7 @@ lemma haarScalarFactor_eq_mul (μ' μ ν : Measure G)
     haarScalarFactor μ' ν = haarScalarFactor μ' μ * haarScalarFactor μ ν := by
   -- The group has to be locally compact, otherwise the scalar factor is 1 by definition.
   by_cases hG : LocallyCompactSpace G; swap
-  · simp [haarScalarFactor, hG]
+  simp [haarScalarFactor, hG]
   -- Fix some nonzero continuous function with compact support `g`.
   obtain ⟨⟨g, g_cont⟩, g_comp, g_nonneg, g_one⟩ :
     ∃ (g : C(G, ℝ)), HasCompactSupport g ∧ 0 ≤ g ∧ g 1 ≠ 0 := exists_continuous_nonneg_pos 1
@@ -377,8 +377,8 @@ lemma haarScalarFactor_eq_mul (μ' μ ν : Measure G)
     integral_isMulLeftInvariant_eq_smul_of_hasCompactSupport μ ν g_cont g_comp] at Z
   have int_g_pos : 0 < ∫ x, g x ∂ν
   apply (integral_pos_iff_support_of_nonneg g_nonneg _).2
-  · exact IsOpen.measure_pos ν g_cont.isOpen_support ⟨1, g_one⟩
-  · exact g_cont.integrable_of_hasCompactSupport g_comp
+  exact IsOpen.measure_pos ν g_cont.isOpen_support ⟨1, g_one⟩
+  exact g_cont.integrable_of_hasCompactSupport g_comp
   change (haarScalarFactor μ' ν : ℝ) * ∫ (x : G), g x ∂ν =
     (haarScalarFactor μ' μ * haarScalarFactor μ ν : ℝ≥0) * ∫ (x : G), g x ∂ν at Z
   simpa only [mul_eq_mul_right_iff (M₀ := ℝ), int_g_pos.ne', or_false, NNReal.eq_iff] using Z
@@ -468,31 +468,31 @@ lemma measure_preimage_isMulLeftInvariant_eq_smul_of_hasCompactSupport
   intro ν hν
   apply tendsto_integral_of_dominated_convergence
       (bound := (tsupport f).indicator (fun (_ : G) ↦ (1 : ℝ)) )
-  · exact fun n ↦ (vf_cont n).aestronglyMeasurable
-  · apply IntegrableOn.integrable_indicator _ (isClosed_tsupport f).measurableSet
-    simpa using IsCompact.measure_lt_top h'f
-  · refine fun n ↦ eventually_of_forall (fun x ↦ ?_)
-    by_cases hx : x ∈ tsupport f
-    · simp only [v, Real.norm_eq_abs, NNReal.abs_eq, hx, indicator_of_mem]
-      norm_cast
-      exact thickenedIndicator_le_one _ _ _
-    · simp only [v, Real.norm_eq_abs, NNReal.abs_eq, hx, not_false_eq_true, indicator_of_not_mem]
-      rw [thickenedIndicator_zero]
-      · simp
-      · simpa [image_eq_zero_of_nmem_tsupport hx] using (u_mem n).2.le
-  · filter_upwards with x
-    have T := tendsto_pi_nhds.1 (thickenedIndicator_tendsto_indicator_closure
-      (fun n ↦ (u_mem n).1) u_lim ({1} : Set ℝ)) (f x)
-    simp only [thickenedIndicator_toFun, closure_singleton] at T
-    convert NNReal.tendsto_coe.2 T
-    simp
+  exact fun n ↦ (vf_cont n).aestronglyMeasurable
+  apply IntegrableOn.integrable_indicator _ (isClosed_tsupport f).measurableSet
+  simpa using IsCompact.measure_lt_top h'f
+  refine fun n ↦ eventually_of_forall (fun x ↦ ?_)
+  by_cases hx : x ∈ tsupport f
+  simp only [v, Real.norm_eq_abs, NNReal.abs_eq, hx, indicator_of_mem]
+  norm_cast
+  exact thickenedIndicator_le_one _ _ _
+  simp only [v, Real.norm_eq_abs, NNReal.abs_eq, hx, not_false_eq_true, indicator_of_not_mem]
+  rw [thickenedIndicator_zero]
+  simp
+  simpa [image_eq_zero_of_nmem_tsupport hx] using (u_mem n).2.le
+  filter_upwards with x
+  have T := tendsto_pi_nhds.1 (thickenedIndicator_tendsto_indicator_closure
+    (fun n ↦ (u_mem n).1) u_lim ({1} : Set ℝ)) (f x)
+  simp only [thickenedIndicator_toFun, closure_singleton] at T
+  convert NNReal.tendsto_coe.2 T
+  simp
   have M n : ∫ (x : G), v n (f x) ∂μ' = ∫ (x : G), v n (f x) ∂(haarScalarFactor μ' μ • μ)
   apply integral_isMulLeftInvariant_eq_smul_of_hasCompactSupport μ' μ (vf_cont n)
   apply h'f.comp_left
   simp only [v, thickenedIndicator_toFun, NNReal.coe_eq_zero]
   rw [thickenedIndicatorAux_zero (u_mem n).1]
-  · simp only [ENNReal.zero_toNNReal]
-  · simpa using (u_mem n).2.le
+  simp only [ENNReal.zero_toNNReal]
+  simpa using (u_mem n).2.le
   have I1 := I μ' (by infer_instance)
   simp_rw [M] at I1
   have J1 : ∫ (x : G), indicator {1} (fun _ ↦ (1 : ℝ)) (f x) ∂μ'
@@ -577,10 +577,10 @@ lemma measure_isMulInvariant_eq_smul_of_isCompact_closure_of_innerRegularCompact
   have B : μ' t = ν t :=
     measure_preimage_isMulLeftInvariant_eq_smul_of_hasCompactSupport _ _ f_cont f_comp
   rwa [measure_diff st hs, measure_diff st hs, ← B, ENNReal.sub_le_sub_iff_left] at A
-  · exact measure_mono st
-  · exact t_comp.measure_lt_top.ne
-  · exact ((measure_mono st).trans_lt t_comp.measure_lt_top).ne
-  · exact ((measure_mono st).trans_lt t_comp.measure_lt_top).ne
+  exact measure_mono st
+  exact t_comp.measure_lt_top.ne
+  exact ((measure_mono st).trans_lt t_comp.measure_lt_top).ne
+  exact ((measure_mono st).trans_lt t_comp.measure_lt_top).ne
 
 /-- Given an invariant measure then it gives the same mass to measurable sets with
 compact closure as any other invariant measure, up to the scalar `haarScalarFactor μ' μ`.
@@ -621,22 +621,22 @@ theorem measure_isMulInvariant_eq_smul_of_isCompact_closure [LocallyCompactSpace
     μ' s = haarScalarFactor μ' μ • μ s := by
   let ν := haarScalarFactor μ' μ • μ
   apply le_antisymm
-  · calc
+  calc
     μ' s ≤ μ' ((toMeasurable ν s) ∩ (closure s)) :=
       measure_mono <| subset_inter (subset_toMeasurable ν s) subset_closure
     _ = ν ((toMeasurable ν s) ∩ (closure s)) := by
       apply measure_isMulInvariant_eq_smul_of_isCompact_closure_of_measurableSet _ _ _ _
-      · exact (measurableSet_toMeasurable ν s).inter isClosed_closure.measurableSet
-      · exact h's.closure_of_subset inter_subset_right
+      exact (measurableSet_toMeasurable ν s).inter isClosed_closure.measurableSet
+      exact h's.closure_of_subset inter_subset_right
     _ ≤ ν (toMeasurable ν s) := measure_mono inter_subset_left
     _ = ν s := measure_toMeasurable s
-  · calc
+  calc
     ν s ≤ ν ((toMeasurable μ' s) ∩ (closure s)) :=
       measure_mono <| subset_inter (subset_toMeasurable μ' s) subset_closure
     _ = μ' ((toMeasurable μ' s) ∩ (closure s)) := by
       apply (measure_isMulInvariant_eq_smul_of_isCompact_closure_of_measurableSet _ _ _ _).symm
-      · exact (measurableSet_toMeasurable μ' s).inter isClosed_closure.measurableSet
-      · exact h's.closure_of_subset inter_subset_right
+      exact (measurableSet_toMeasurable μ' s).inter isClosed_closure.measurableSet
+      exact h's.closure_of_subset inter_subset_right
     _ ≤ μ' (toMeasurable μ' s) := measure_mono inter_subset_left
     _ = μ' s := measure_toMeasurable s
 
@@ -716,87 +716,87 @@ theorem measure_isHaarMeasure_eq_smul_of_isEverywherePos [LocallyCompactSpace G]
     apply zorn_subset
     intro c cA hc
     refine ⟨⋃ a ∈ c, a, ⟨?_, ?_⟩, ?_⟩
-    · simp only [iUnion_subset_iff]
-      intro a ac x hx
-      simp only [A, subset_def, mem_setOf_eq] at cA
-      exact (cA _ ac).1 x hx
-    · rintro x hx y hy hxy
-      simp only [mem_iUnion, exists_prop] at hx hy
-      rcases hx with ⟨a, ac, xa⟩
-      rcases hy with ⟨b, bc, yb⟩
-      obtain ⟨m, mc, am, bm⟩ : ∃ m ∈ c, a ⊆ m ∧ b ⊆ m := hc.directedOn _ ac _ bc
-      exact (cA mc).2 (am xa) (bm yb) hxy
-    · intro a ac
-      exact subset_biUnion_of_mem (u := id) ac
+    simp only [iUnion_subset_iff]
+    intro a ac x hx
+    simp only [A, subset_def, mem_setOf_eq] at cA
+    exact (cA _ ac).1 x hx
+    rintro x hx y hy hxy
+    simp only [mem_iUnion, exists_prop] at hx hy
+    rcases hx with ⟨a, ac, xa⟩
+    rcases hy with ⟨b, bc, yb⟩
+    obtain ⟨m, mc, am, bm⟩ : ∃ m ∈ c, a ⊆ m ∧ b ⊆ m := hc.directedOn _ ac _ bc
+    exact (cA mc).2 (am xa) (bm yb) hxy
+    intro a ac
+    exact subset_biUnion_of_mem (u := id) ac
   change m ⊆ s ∧ PairwiseDisjoint m (fun x ↦ x • k) at mA
   have sm : s ⊆ ⋃ x ∈ m, x • (k * k⁻¹)
   intro y hy
   by_cases h'y : m ∪ {y} ∈ A
-  · have : m ∪ {y} = m := m_max _ h'y subset_union_left
-    have ym : y ∈ m
-    simpa using subset_union_right.trans this.subset
-    have : y ∈ y • (k * k⁻¹)
-    simpa using mem_leftCoset y (Set.mul_mem_mul one_k (Set.inv_mem_inv.mpr one_k))
-    exact mem_biUnion ym this
-  · obtain ⟨x, xm, -, z, zy, zx⟩ : ∃ x ∈ m, y ≠ x ∧ ∃ z, z ∈ y • k ∧ z ∈ x • k := by
-      simpa [A, mA.1, hy, insert_subset_iff, pairwiseDisjoint_insert, mA.2, not_disjoint_iff]
-        using h'y
-    have : y ∈ x • (k * k⁻¹)
-    rw [show y = x * ((x⁻¹ * z) * (y⁻¹ * z)⁻¹) by group]
-    have : (x⁻¹ * z) * (y⁻¹ * z)⁻¹ ∈ k * k⁻¹ := Set.mul_mem_mul ((mem_leftCoset_iff x).mp zx)
-      (Set.inv_mem_inv.mpr ((mem_leftCoset_iff y).mp zy))
-    exact mem_leftCoset x this
-    exact mem_biUnion xm this
+  have : m ∪ {y} = m := m_max _ h'y subset_union_left
+  have ym : y ∈ m
+  simpa using subset_union_right.trans this.subset
+  have : y ∈ y • (k * k⁻¹)
+  simpa using mem_leftCoset y (Set.mul_mem_mul one_k (Set.inv_mem_inv.mpr one_k))
+  exact mem_biUnion ym this
+  obtain ⟨x, xm, -, z, zy, zx⟩ : ∃ x ∈ m, y ≠ x ∧ ∃ z, z ∈ y • k ∧ z ∈ x • k := by
+    simpa [A, mA.1, hy, insert_subset_iff, pairwiseDisjoint_insert, mA.2, not_disjoint_iff]
+      using h'y
+  have : y ∈ x • (k * k⁻¹)
+  rw [show y = x * ((x⁻¹ * z) * (y⁻¹ * z)⁻¹) by group]
+  have : (x⁻¹ * z) * (y⁻¹ * z)⁻¹ ∈ k * k⁻¹ := Set.mul_mem_mul ((mem_leftCoset_iff x).mp zx)
+    (Set.inv_mem_inv.mpr ((mem_leftCoset_iff y).mp zy))
+  exact mem_leftCoset x this
+  exact mem_biUnion xm this
   rcases eq_empty_or_nonempty m with rfl|hm
-  · simp only [mem_empty_iff_false, iUnion_of_empty, iUnion_empty, subset_empty_iff] at sm
-    simp [sm]
+  simp only [mem_empty_iff_false, iUnion_of_empty, iUnion_empty, subset_empty_iff] at sm
+  simp [sm]
   by_cases h'm : Set.Countable m
-  · rcases h'm.exists_eq_range hm with ⟨f, rfl⟩
-    have M i : MeasurableSet (disjointed (fun n ↦ s ∩ f n • (k * k⁻¹)) i)
-    apply MeasurableSet.disjointed (fun j ↦ hs.inter ?_)
-    have : IsClosed (k • k⁻¹) := IsClosed.smul_left_of_isCompact k_closed.inv k_comp
-    exact (IsClosed.smul this (f j)).measurableSet
-    simp only [mem_range, iUnion_exists, iUnion_iUnion_eq'] at sm
-    have s_eq : s = ⋃ n, s ∩ (f n • (k * k⁻¹))
-    rwa [← inter_iUnion, eq_comm, inter_eq_left]
-    have I : μ' s = ∑' n, μ' (disjointed (fun n ↦ s ∩ f n • (k * k⁻¹)) n)
-    rw [← measure_iUnion (disjoint_disjointed _) M, iUnion_disjointed, ← s_eq]
-    have J : ν s = ∑' n, ν (disjointed (fun n ↦ s ∩ f n • (k * k⁻¹)) n)
-    rw [← measure_iUnion (disjoint_disjointed _) M, iUnion_disjointed, ← s_eq]
-    rw [I, J]
-    congr with n
+  rcases h'm.exists_eq_range hm with ⟨f, rfl⟩
+  have M i : MeasurableSet (disjointed (fun n ↦ s ∩ f n • (k * k⁻¹)) i)
+  apply MeasurableSet.disjointed (fun j ↦ hs.inter ?_)
+  have : IsClosed (k • k⁻¹) := IsClosed.smul_left_of_isCompact k_closed.inv k_comp
+  exact (IsClosed.smul this (f j)).measurableSet
+  simp only [mem_range, iUnion_exists, iUnion_iUnion_eq'] at sm
+  have s_eq : s = ⋃ n, s ∩ (f n • (k * k⁻¹))
+  rwa [← inter_iUnion, eq_comm, inter_eq_left]
+  have I : μ' s = ∑' n, μ' (disjointed (fun n ↦ s ∩ f n • (k * k⁻¹)) n)
+  rw [← measure_iUnion (disjoint_disjointed _) M, iUnion_disjointed, ← s_eq]
+  have J : ν s = ∑' n, ν (disjointed (fun n ↦ s ∩ f n • (k * k⁻¹)) n)
+  rw [← measure_iUnion (disjoint_disjointed _) M, iUnion_disjointed, ← s_eq]
+  rw [I, J]
+  congr with n
+  apply measure_isMulInvariant_eq_smul_of_isCompact_closure
+  have : IsCompact (f n • (k * k⁻¹)) := IsCompact.smul (f n) (k_comp.mul k_comp.inv)
+  exact this.closure_of_subset <| (disjointed_subset _ _).trans inter_subset_right
+  have H : ∀ (ρ : Measure G), IsEverywherePos ρ s → ρ s = ∞ := by
+    intro ρ hρ
+    have M : ∀ (i : ↑m), MeasurableSet (s ∩ (i : G) • k) :=
+      fun i ↦ hs.inter (IsClosed.smul k_closed _).measurableSet
+    contrapose! h'm
+    have : ∑' (x : m), ρ (s ∩ ((x : G) • k)) < ∞ := by
+      apply lt_of_le_of_lt (MeasureTheory.tsum_meas_le_meas_iUnion_of_disjoint _ M _) _
+      have I : PairwiseDisjoint m fun x ↦ s ∩ x • k :=
+        mA.2.mono (fun x ↦ inter_subset_right)
+      exact I.on_injective Subtype.val_injective (fun x ↦ x.2)
+      exact lt_of_le_of_lt (measure_mono (by simp [inter_subset_left])) h'm.lt_top
+    have C : Set.Countable (support fun (i : m) ↦ ρ (s ∩ (i : G) • k)) :=
+      Summable.countable_support_ennreal this.ne
+    have : support (fun (i : m) ↦ ρ (s ∩ (i : G) • k)) = univ := by
+      apply eq_univ_iff_forall.2 (fun i ↦ ?_)
+      apply ne_of_gt (hρ (i : G) (mA.1 i.2) _ _)
+      exact inter_mem_nhdsWithin s (by simpa using smul_mem_nhds (i : G) k_mem)
+    rw [this] at C
+    have : Countable m := countable_univ_iff.mp C
+    exact to_countable m
+  have Hν : IsEverywherePos ν s :=
+    h's.smul_measure_nnreal (haarScalarFactor_pos_of_isHaarMeasure _ _).ne'
+  have Hμ' : IsEverywherePos μ' s := by
+    apply Hν.of_forall_exists_nhds_eq (fun x _hx ↦ ?_)
+    obtain ⟨t, t_comp, t_mem⟩ : ∃ t, IsCompact t ∧ t ∈ 𝓝 x := exists_compact_mem_nhds x
+    refine ⟨t, t_mem, fun u hu ↦ ?_⟩
     apply measure_isMulInvariant_eq_smul_of_isCompact_closure
-    have : IsCompact (f n • (k * k⁻¹)) := IsCompact.smul (f n) (k_comp.mul k_comp.inv)
-    exact this.closure_of_subset <| (disjointed_subset _ _).trans inter_subset_right
-  · have H : ∀ (ρ : Measure G), IsEverywherePos ρ s → ρ s = ∞ := by
-      intro ρ hρ
-      have M : ∀ (i : ↑m), MeasurableSet (s ∩ (i : G) • k) :=
-        fun i ↦ hs.inter (IsClosed.smul k_closed _).measurableSet
-      contrapose! h'm
-      have : ∑' (x : m), ρ (s ∩ ((x : G) • k)) < ∞ := by
-        apply lt_of_le_of_lt (MeasureTheory.tsum_meas_le_meas_iUnion_of_disjoint _ M _) _
-        · have I : PairwiseDisjoint m fun x ↦ s ∩ x • k :=
-            mA.2.mono (fun x ↦ inter_subset_right)
-          exact I.on_injective Subtype.val_injective (fun x ↦ x.2)
-        · exact lt_of_le_of_lt (measure_mono (by simp [inter_subset_left])) h'm.lt_top
-      have C : Set.Countable (support fun (i : m) ↦ ρ (s ∩ (i : G) • k)) :=
-        Summable.countable_support_ennreal this.ne
-      have : support (fun (i : m) ↦ ρ (s ∩ (i : G) • k)) = univ := by
-        apply eq_univ_iff_forall.2 (fun i ↦ ?_)
-        apply ne_of_gt (hρ (i : G) (mA.1 i.2) _ _)
-        exact inter_mem_nhdsWithin s (by simpa using smul_mem_nhds (i : G) k_mem)
-      rw [this] at C
-      have : Countable m := countable_univ_iff.mp C
-      exact to_countable m
-    have Hν : IsEverywherePos ν s :=
-      h's.smul_measure_nnreal (haarScalarFactor_pos_of_isHaarMeasure _ _).ne'
-    have Hμ' : IsEverywherePos μ' s := by
-      apply Hν.of_forall_exists_nhds_eq (fun x _hx ↦ ?_)
-      obtain ⟨t, t_comp, t_mem⟩ : ∃ t, IsCompact t ∧ t ∈ 𝓝 x := exists_compact_mem_nhds x
-      refine ⟨t, t_mem, fun u hu ↦ ?_⟩
-      apply measure_isMulInvariant_eq_smul_of_isCompact_closure
-      exact t_comp.closure_of_subset hu
-    rw [H ν Hν, H μ' Hμ']
+    exact t_comp.closure_of_subset hu
+  rw [H ν Hν, H μ' Hμ']
 
 /-- **Uniqueness of Haar measures**:
 Given two Haar measures, they coincide in the following sense: they give the same value to open
@@ -843,18 +843,18 @@ lemma measure_isMulLeftInvariant_eq_smul_of_ne_top [LocallyCompactSpace G]
   have st : s ⊆ t := subset_inter (subset_toMeasurable μ' s) (subset_toMeasurable μ s)
   have mu'_t : μ' t = μ' s
   apply le_antisymm
-  · exact (measure_mono inter_subset_left).trans (measure_toMeasurable s).le
-  · exact measure_mono st
+  exact (measure_mono inter_subset_left).trans (measure_toMeasurable s).le
+  exact measure_mono st
   have mu_t : μ t = μ s
   apply le_antisymm
-  · exact (measure_mono inter_subset_right).trans (measure_toMeasurable s).le
-  · exact measure_mono st
+  exact (measure_mono inter_subset_right).trans (measure_toMeasurable s).le
+  exact measure_mono st
   simp only [← mu'_t, smul_toOuterMeasure, OuterMeasure.coe_smul, Pi.smul_apply, ← mu_t,
     nnreal_smul_coe_apply]
   apply B
-  · exact (measurableSet_toMeasurable _ _).inter (measurableSet_toMeasurable _ _)
-  · exact mu_t.le.trans_lt hs.lt_top
-  · exact mu'_t.le.trans_lt h's.lt_top
+  exact (measurableSet_toMeasurable _ _).inter (measurableSet_toMeasurable _ _)
+  exact mu_t.le.trans_lt hs.lt_top
+  exact mu'_t.le.trans_lt h's.lt_top
 
 /-- **Uniqueness of left-invariant measures**:
 Given two left-invariant measures which are finite

@@ -222,8 +222,8 @@ theorem tmul_one_mul_one_tmul (a₁ : A) (b₂ : B) :
     (a₁ ᵍ⊗ₜ[R] (1 : B) * (1 : A) ᵍ⊗ₜ[R] b₂ : 𝒜 ᵍ⊗[R] ℬ) = (a₁ : A) ᵍ⊗ₜ (b₂ : B) := by
   convert tmul_coe_mul_zero_coe_tmul 𝒜 ℬ
     a₁ (@GradedMonoid.GOne.one _ (ℬ ·) _ _) (@GradedMonoid.GOne.one _ (𝒜 ·) _ _) b₂
-  · rw [SetLike.coe_gOne, mul_one]
-  · rw [SetLike.coe_gOne, one_mul]
+  rw [SetLike.coe_gOne, mul_one]
+  rw [SetLike.coe_gOne, one_mul]
 
 open Classical in
 /-- The ring morphism `A →+* A ⊗[R] B` sending `a` to `a ⊗ₜ 1`. -/

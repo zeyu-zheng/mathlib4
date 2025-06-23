@@ -51,15 +51,15 @@ theorem powersetAux'_cons (a : α) (l : List α) :
 
 theorem powerset_aux'_perm {l₁ l₂ : List α} (p : l₁ ~ l₂) : powersetAux' l₁ ~ powersetAux' l₂ := by
   induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ _ _ IH₁ IH₂
-  · simp
-  · simp only [powersetAux'_cons]
-    exact IH.append (IH.map _)
-  · simp only [powersetAux'_cons, map_append, List.map_map, append_assoc]
-    apply Perm.append_left
-    rw [← append_assoc, ← append_assoc,
-      (by funext s; simp [cons_swap] : cons b ∘ cons a = cons a ∘ cons b)]
-    exact perm_append_comm.append_right _
-  · exact IH₁.trans IH₂
+  simp
+  simp only [powersetAux'_cons]
+  exact IH.append (IH.map _)
+  simp only [powersetAux'_cons, map_append, List.map_map, append_assoc]
+  apply Perm.append_left
+  rw [← append_assoc, ← append_assoc,
+    (by funext s; simp [cons_swap] : cons b ∘ cons a = cons a ∘ cons b)]
+  exact perm_append_comm.append_right _
+  exact IH₁.trans IH₂
 
 theorem powersetAux_perm {l₁ l₂ : List α} (p : l₁ ~ l₂) : powersetAux l₁ ~ powersetAux l₂ :=
   powersetAux_perm_powersetAux'.trans <|
@@ -178,20 +178,20 @@ theorem powersetCardAux_cons (n : ℕ) (a : α) (l : List α) :
 theorem powersetCardAux_perm {n} {l₁ l₂ : List α} (p : l₁ ~ l₂) :
     powersetCardAux n l₁ ~ powersetCardAux n l₂ := by
   induction' n with n IHn generalizing l₁ l₂
-  · simp
+  simp
   induction' p with a l₁ l₂ p IH a b l l₁ l₂ l₃ _ _ IH₁ IH₂
-  · rfl
-  · simp only [powersetCardAux_cons]
-    exact IH.append ((IHn p).map _)
-  · simp only [powersetCardAux_cons, append_assoc]
-    apply Perm.append_left
-    cases n
-    · simp [Perm.swap]
-    simp only [powersetCardAux_cons, map_append, List.map_map]
-    rw [← append_assoc, ← append_assoc,
-      (by funext s; simp [cons_swap] : cons b ∘ cons a = cons a ∘ cons b)]
-    exact perm_append_comm.append_right _
-  · exact IH₁.trans IH₂
+  rfl
+  simp only [powersetCardAux_cons]
+  exact IH.append ((IHn p).map _)
+  simp only [powersetCardAux_cons, append_assoc]
+  apply Perm.append_left
+  cases n
+  simp [Perm.swap]
+  simp only [powersetCardAux_cons, map_append, List.map_map]
+  rw [← append_assoc, ← append_assoc,
+    (by funext s; simp [cons_swap] : cons b ∘ cons a = cons a ∘ cons b)]
+  exact perm_append_comm.append_right _
+  exact IH₁.trans IH₂
 
 /-- `powersetCard n s` is the multiset of all submultisets of `s` of length `n`. -/
 def powersetCard (n : ℕ) (s : Multiset α) : Multiset (Multiset α) :=
@@ -254,8 +254,8 @@ theorem powersetCard_card_add (s : Multiset α) {i : ℕ} (hi : 0 < i) :
 theorem powersetCard_map {β : Type*} (f : α → β) (n : ℕ) (s : Multiset α) :
     powersetCard n (s.map f) = (powersetCard n s).map (map f) := by
   induction' s using Multiset.induction with t s ih generalizing n
-  · cases n <;> simp [powersetCard_zero_left, powersetCard_zero_right]
-  · cases n <;> simp [ih, map_comp_cons]
+  cases n <;> simp [powersetCard_zero_left, powersetCard_zero_right]
+  cases n <;> simp [ih, map_comp_cons]
 
 theorem pairwise_disjoint_powersetCard (s : Multiset α) :
     _root_.Pairwise fun i j => Multiset.Disjoint (s.powersetCard i) (s.powersetCard j) :=

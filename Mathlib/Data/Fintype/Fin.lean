@@ -41,12 +41,12 @@ theorem Ioi_succ (i : Fin n) : Ioi i.succ = (Ioi i).map (Fin.succEmb _) := by
   simp only [mem_filter, mem_Ioi, mem_map, mem_univ, true_and_iff, Function.Embedding.coeFn_mk,
     exists_true_left]
   constructor
-  · refine cases ?_ ?_ i
-    · rintro ⟨⟨⟩⟩
-    · intro i hi
-      exact ⟨i, succ_lt_succ_iff.mp hi, rfl⟩
-  · rintro ⟨i, hi, rfl⟩
-    simpa
+  refine cases ?_ ?_ i
+  rintro ⟨⟨⟩⟩
+  intro i hi
+  exact ⟨i, succ_lt_succ_iff.mp hi, rfl⟩
+  rintro ⟨i, hi, rfl⟩
+  simpa
 
 @[simp]
 theorem Iio_castSucc (i : Fin n) : Iio (castSucc i) = (Iio i).map Fin.castSuccEmb := by
@@ -67,8 +67,8 @@ theorem card_filter_univ_succ (p : Fin (n + 1) → Prop) [DecidablePred p] :
 theorem card_filter_univ_eq_vector_get_eq_count [DecidableEq α] (a : α) (v : Vector α n) :
     (univ.filter fun i => a = v.get i).card = v.toList.count a := by
   induction' v with n x xs hxs
-  · simp
-  · simp_rw [card_filter_univ_succ', Vector.get_cons_zero, Vector.toList_cons, Function.comp,
-      Vector.get_cons_succ, hxs, List.count_cons, add_comm (ite (a = x) 1 0)]
+  simp
+  simp_rw [card_filter_univ_succ', Vector.get_cons_zero, Vector.toList_cons, Function.comp,
+    Vector.get_cons_succ, hxs, List.count_cons, add_comm (ite (a = x) 1 0)]
 
 end Fin

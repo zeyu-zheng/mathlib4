@@ -439,21 +439,21 @@ theorem isBounded_iff_subset_smul_ball {s : Set E} :
     Bornology.IsBounded s ↔ ∃ a : 𝕜, s ⊆ a • Metric.ball (0 : E) 1 := by
   rw [← isVonNBounded_iff 𝕜]
   constructor
-  · intro h
-    rcases (h (Metric.ball_mem_nhds 0 zero_lt_one)).exists_pos with ⟨ρ, _, hρball⟩
-    rcases NormedField.exists_lt_norm 𝕜 ρ with ⟨a, ha⟩
-    exact ⟨a, hρball a ha.le⟩
-  · rintro ⟨a, ha⟩
-    exact ((isVonNBounded_ball 𝕜 E 1).image (a • (1 : E →L[𝕜] E))).subset ha
+  intro h
+  rcases (h (Metric.ball_mem_nhds 0 zero_lt_one)).exists_pos with ⟨ρ, _, hρball⟩
+  rcases NormedField.exists_lt_norm 𝕜 ρ with ⟨a, ha⟩
+  exact ⟨a, hρball a ha.le⟩
+  rintro ⟨a, ha⟩
+  exact ((isVonNBounded_ball 𝕜 E 1).image (a • (1 : E →L[𝕜] E))).subset ha
 
 theorem isBounded_iff_subset_smul_closedBall {s : Set E} :
     Bornology.IsBounded s ↔ ∃ a : 𝕜, s ⊆ a • Metric.closedBall (0 : E) 1 := by
   constructor
-  · rw [isBounded_iff_subset_smul_ball 𝕜]
-    exact Exists.imp fun a ha => ha.trans <| Set.smul_set_mono <| Metric.ball_subset_closedBall
-  · rw [← isVonNBounded_iff 𝕜]
-    rintro ⟨a, ha⟩
-    exact ((isVonNBounded_closedBall 𝕜 E 1).image (a • (1 : E →L[𝕜] E))).subset ha
+  rw [isBounded_iff_subset_smul_ball 𝕜]
+  exact Exists.imp fun a ha => ha.trans <| Set.smul_set_mono <| Metric.ball_subset_closedBall
+  rw [← isVonNBounded_iff 𝕜]
+  rintro ⟨a, ha⟩
+  exact ((isVonNBounded_closedBall 𝕜 E 1).image (a • (1 : E →L[𝕜] E))).subset ha
 
 end NormedSpace
 

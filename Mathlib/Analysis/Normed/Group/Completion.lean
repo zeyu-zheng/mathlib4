@@ -37,9 +37,9 @@ theorem norm_coe {E} [SeminormedAddCommGroup E] (x : E) : ‖(x : Completion E)�
 instance [SeminormedAddCommGroup E] : NormedAddCommGroup (Completion E) where
   dist_eq x y := by
     induction x, y using Completion.induction_on₂
-    · refine isClosed_eq (Completion.uniformContinuous_extension₂ _).continuous ?_
-      exact Continuous.comp Completion.continuous_extension continuous_sub
-    · rw [← Completion.coe_sub, norm_coe, Completion.dist_eq, dist_eq_norm]
+    refine isClosed_eq (Completion.uniformContinuous_extension₂ _).continuous ?_
+    exact Continuous.comp Completion.continuous_extension continuous_sub
+    rw [← Completion.coe_sub, norm_coe, Completion.dist_eq, dist_eq_norm]
 
 @[simp]
 theorem nnnorm_coe {E} [SeminormedAddCommGroup E] (x : E) : ‖(x : Completion E)‖₊ = ‖x‖₊ := by

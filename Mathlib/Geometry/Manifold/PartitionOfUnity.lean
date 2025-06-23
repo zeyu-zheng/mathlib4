@@ -203,9 +203,9 @@ theorem contMDiffAt_finsum {x₀ : M} {g : ι → M → F}
     ContMDiffAt I 𝓘(ℝ, F) n (fun x ↦ ∑ᶠ i, f i x • g i x) x₀ := by
   refine _root_.contMDiffAt_finsum (f.locallyFinite.smul_left _) fun i ↦ ?_
   by_cases hx : x₀ ∈ tsupport (f i)
-  · exact ContMDiffAt.smul ((f i).smooth.of_le le_top).contMDiffAt (hφ i hx)
-  · exact contMDiffAt_of_not_mem (compl_subset_compl.mpr
-      (tsupport_smul_subset_left (f i) (g i)) hx) n
+  exact ContMDiffAt.smul ((f i).smooth.of_le le_top).contMDiffAt (hφ i hx)
+  exact contMDiffAt_of_not_mem (compl_subset_compl.mpr
+    (tsupport_smul_subset_left (f i) (g i)) hx) n
 
 theorem contDiffAt_finsum {s : Set E} (f : SmoothPartitionOfUnity ι 𝓘(ℝ, E) E s) {x₀ : E}
     {g : ι → E → F} (hφ : ∀ i, x₀ ∈ tsupport (f i) → ContDiffAt ℝ n (g i) x₀) :
@@ -393,11 +393,11 @@ theorem exists_isSubordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s)
     (fun x _ => hfin.point_finite x) hsub' with ⟨V, hsV, hVc, hVf⟩
   choose r hrR hr using fun i => (f i).exists_r_pos_lt_subset_ball (hVc i) (hVf i)
   refine ⟨ι, ⟨c, fun i => (f i).updateRIn (r i) (hrR i), hcs, ?_, fun x hx => ?_⟩, fun i => ?_⟩
-  · simpa only [SmoothBumpFunction.support_updateRIn]
-  · refine (mem_iUnion.1 <| hsV hx).imp fun i hi => ?_
-    exact ((f i).updateRIn _ _).eventuallyEq_one_of_dist_lt
-      ((f i).support_subset_source <| hVf _ hi) (hr i hi).2
-  · simpa only [SmoothBumpFunction.support_updateRIn, tsupport] using hfU i
+  simpa only [SmoothBumpFunction.support_updateRIn]
+  refine (mem_iUnion.1 <| hsV hx).imp fun i hi => ?_
+  exact ((f i).updateRIn _ _).eventuallyEq_one_of_dist_lt
+    ((f i).support_subset_source <| hVf _ hi) (hr i hi).2
+  simpa only [SmoothBumpFunction.support_updateRIn, tsupport] using hfU i
 
 variable {I}
 
@@ -530,8 +530,8 @@ theorem exists_smooth_zero_one_nhds_of_isClosed [T2Space M] [NormalSpace M] [Sig
   obtain ⟨f, hfu, hfv, hf⟩ := exists_smooth_zero_one_of_isClosed I isClosed_closure isClosed_closure
     (subset_compl_iff_disjoint_left.mp hvu)
   refine ⟨f, ?_, ?_, hf⟩
-  · exact eventually_of_mem (mem_of_superset (u_op.mem_nhdsSet.mpr hsu) subset_closure) hfu
-  · exact eventually_of_mem (mem_of_superset (v_op.mem_nhdsSet.mpr htv) subset_closure) hfv
+  exact eventually_of_mem (mem_of_superset (u_op.mem_nhdsSet.mpr hsu) subset_closure) hfu
+  exact eventually_of_mem (mem_of_superset (v_op.mem_nhdsSet.mpr htv) subset_closure) hfv
 
 /-- Given two sets `s, t` in a Hausdorff normal σ-compact finite-dimensional manifold `M`
 with `s` open and `s ⊆ interior t`, there is a smooth function `f : M → [0,1]` which is equal to `s`
@@ -569,11 +569,11 @@ theorem exists_isSubordinate {s : Set M} (hs : IsClosed s) (U : ι → Set M) (h
   -- porting note(https://github.com/leanprover/std4/issues/116):
   -- split `rcases` into `have` + `rcases`
   have := BumpCovering.exists_isSubordinate_of_prop (Smooth I 𝓘(ℝ)) ?_ hs U ho hU
-  · rcases this with ⟨f, hf, hfU⟩
-    exact ⟨f.toSmoothPartitionOfUnity hf, hfU.toSmoothPartitionOfUnity hf⟩
-  · intro s t hs ht hd
-    rcases exists_smooth_zero_one_of_isClosed I hs ht hd with ⟨f, hf⟩
-    exact ⟨f, f.smooth, hf⟩
+  rcases this with ⟨f, hf, hfU⟩
+  exact ⟨f.toSmoothPartitionOfUnity hf, hfU.toSmoothPartitionOfUnity hf⟩
+  intro s t hs ht hd
+  rcases exists_smooth_zero_one_of_isClosed I hs ht hd with ⟨f, hf⟩
+  exact ⟨f, f.smooth, hf⟩
 
 theorem exists_isSubordinate_chartAt_source_of_isClosed {s : Set M} (hs : IsClosed s) :
     ∃ f : SmoothPartitionOfUnity s I M s,
@@ -666,10 +666,10 @@ lemma IsOpen.exists_msmooth_support_eq_aux {s : Set H} (hs : IsOpen s) :
   have h's : IsOpen (I.symm ⁻¹' s) := I.continuous_symm.isOpen_preimage _ hs
   rcases h's.exists_smooth_support_eq with ⟨f, f_supp, f_diff, f_range⟩
   refine ⟨f ∘ I, ?_, ?_, ?_⟩
-  · rw [support_comp_eq_preimage, f_supp, ← preimage_comp]
-    simp only [ModelWithCorners.symm_comp_self, preimage_id_eq, id_eq]
-  · exact f_diff.comp_contMDiff contMDiff_model
-  · exact Subset.trans (range_comp_subset_range _ _) f_range
+  rw [support_comp_eq_preimage, f_supp, ← preimage_comp]
+  simp only [ModelWithCorners.symm_comp_self, preimage_id_eq, id_eq]
+  exact f_diff.comp_contMDiff contMDiff_model
+  exact Subset.trans (range_comp_subset_range _ _) f_range
 
 /-- Given an open set in a finite-dimensional real manifold, there exists a nonnegative smooth
 function with support equal to `s`. -/
@@ -687,38 +687,38 @@ theorem IsOpen.exists_msmooth_support_eq {s : Set M} (hs : IsOpen s) :
   have h''g : ∀ c x, 0 ≤ f c x * g c (chartAt H c x) :=
     fun c x ↦ mul_nonneg (f.nonneg c x) (h'g c _)
   refine ⟨fun x ↦ ∑ᶠ c, f c x * g c (chartAt H c x), ?_, ?_, ?_⟩
-  · refine support_eq_iff.2 ⟨fun x hx ↦ ?_, fun x hx ↦ ?_⟩
-    · apply ne_of_gt
-      have B : ∃ c, 0 < f c x * g c (chartAt H c x) := by
-        obtain ⟨c, hc⟩ : ∃ c, 0 < f c x := f.exists_pos_of_mem (mem_univ x)
-        refine ⟨c, mul_pos hc ?_⟩
-        apply lt_of_le_of_ne (h'g _ _) (Ne.symm _)
-        rw [← mem_support, g_supp, ← mem_preimage, preimage_inter]
-        have Hx : x ∈ tsupport (f c) := subset_tsupport _ (ne_of_gt hc)
-        simp [(chartAt H c).left_inv (hf c Hx), hx, (chartAt H c).map_source (hf c Hx)]
-      apply finsum_pos' (fun c ↦ h''g c x) B
-      apply (f.locallyFinite.point_finite x).subset
-      apply compl_subset_compl.2
-      rintro c (hc : f c x = 0)
-      simpa only [mul_eq_zero] using Or.inl hc
-    · apply finsum_eq_zero_of_forall_eq_zero
-      intro c
-      by_cases Hx : x ∈ tsupport (f c)
-      · suffices g c (chartAt H c x) = 0 by simp only [this, mul_zero]
-        rw [← nmem_support, g_supp, ← mem_preimage, preimage_inter]
-        contrapose! hx
-        simp only [mem_inter_iff, mem_preimage, (chartAt H c).left_inv (hf c Hx)] at hx
-        exact hx.2
-      · have : x ∉ support (f c) := by contrapose! Hx; exact subset_tsupport _ Hx
-        rw [nmem_support] at this
-        simp [this]
-  · apply SmoothPartitionOfUnity.smooth_finsum_smul
-    intro c x hx
-    apply (g_diff c (chartAt H c x)).comp
-    exact contMDiffAt_of_mem_maximalAtlas (SmoothManifoldWithCorners.chart_mem_maximalAtlas I _)
-      (hf c hx)
-  · intro x
-    apply finsum_nonneg (fun c ↦ h''g c x)
+  refine support_eq_iff.2 ⟨fun x hx ↦ ?_, fun x hx ↦ ?_⟩
+  apply ne_of_gt
+  have B : ∃ c, 0 < f c x * g c (chartAt H c x) := by
+    obtain ⟨c, hc⟩ : ∃ c, 0 < f c x := f.exists_pos_of_mem (mem_univ x)
+    refine ⟨c, mul_pos hc ?_⟩
+    apply lt_of_le_of_ne (h'g _ _) (Ne.symm _)
+    rw [← mem_support, g_supp, ← mem_preimage, preimage_inter]
+    have Hx : x ∈ tsupport (f c) := subset_tsupport _ (ne_of_gt hc)
+    simp [(chartAt H c).left_inv (hf c Hx), hx, (chartAt H c).map_source (hf c Hx)]
+  apply finsum_pos' (fun c ↦ h''g c x) B
+  apply (f.locallyFinite.point_finite x).subset
+  apply compl_subset_compl.2
+  rintro c (hc : f c x = 0)
+  simpa only [mul_eq_zero] using Or.inl hc
+  apply finsum_eq_zero_of_forall_eq_zero
+  intro c
+  by_cases Hx : x ∈ tsupport (f c)
+  suffices g c (chartAt H c x) = 0 by simp only [this, mul_zero]
+  rw [← nmem_support, g_supp, ← mem_preimage, preimage_inter]
+  contrapose! hx
+  simp only [mem_inter_iff, mem_preimage, (chartAt H c).left_inv (hf c Hx)] at hx
+  exact hx.2
+  have : x ∉ support (f c) := by contrapose! Hx; exact subset_tsupport _ Hx
+  rw [nmem_support] at this
+  simp [this]
+  apply SmoothPartitionOfUnity.smooth_finsum_smul
+  intro c x hx
+  apply (g_diff c (chartAt H c x)).comp
+  exact contMDiffAt_of_mem_maximalAtlas (SmoothManifoldWithCorners.chart_mem_maximalAtlas I _)
+    (hf c hx)
+  intro x
+  apply finsum_nonneg (fun c ↦ h''g c x)
 
 /-- Given an open set `s` containing a closed set `t` in a finite-dimensional real manifold, there
 exists a smooth function with support equal to `s`, taking values in `[0,1]`, and equal to `1`
@@ -734,28 +734,28 @@ theorem exists_msmooth_support_eq_eq_one_iff
   have A : ∀ x, 0 < f x + g x
   intro x
   by_cases xs : x ∈ support f
-  · have : 0 < f x := lt_of_le_of_ne (f_pos x) (Ne.symm xs)
-    linarith [g_pos x]
-  · have : 0 < g x := by
-      apply lt_of_le_of_ne (g_pos x) (Ne.symm ?_)
-      rw [← mem_support, g_supp]
-      contrapose! xs
-      simp? at xs says simp only [mem_compl_iff, Decidable.not_not] at xs
-      exact h.trans f_supp.symm.subset xs
-    linarith [f_pos x]
+  have : 0 < f x := lt_of_le_of_ne (f_pos x) (Ne.symm xs)
+  linarith [g_pos x]
+  have : 0 < g x := by
+    apply lt_of_le_of_ne (g_pos x) (Ne.symm ?_)
+    rw [← mem_support, g_supp]
+    contrapose! xs
+    simp? at xs says simp only [mem_compl_iff, Decidable.not_not] at xs
+    exact h.trans f_supp.symm.subset xs
+  linarith [f_pos x]
   refine ⟨fun x ↦ f x / (f x + g x), ?_, ?_, ?_, ?_⟩
   -- show that `f / (f + g)` is smooth
-  · exact f_diff.div₀ (f_diff.add g_diff) (fun x ↦ ne_of_gt (A x))
+  exact f_diff.div₀ (f_diff.add g_diff) (fun x ↦ ne_of_gt (A x))
   -- show that the range is included in `[0, 1]`
-  · refine range_subset_iff.2 (fun x ↦ ⟨div_nonneg (f_pos x) (A x).le, ?_⟩)
-    apply div_le_one_of_le _ (A x).le
-    simpa only [le_add_iff_nonneg_right] using g_pos x
+  refine range_subset_iff.2 (fun x ↦ ⟨div_nonneg (f_pos x) (A x).le, ?_⟩)
+  apply div_le_one_of_le _ (A x).le
+  simpa only [le_add_iff_nonneg_right] using g_pos x
   -- show that the support is `s`
-  · have B : support (fun x ↦ f x + g x) = univ := eq_univ_of_forall (fun x ↦ (A x).ne')
-    simp only [support_div, f_supp, B, inter_univ]
+  have B : support (fun x ↦ f x + g x) = univ := eq_univ_of_forall (fun x ↦ (A x).ne')
+  simp only [support_div, f_supp, B, inter_univ]
   -- show that the function equals one exactly on `t`
-  · intro x
-    simp [div_eq_one_iff_eq (A x).ne', self_eq_add_right, ← nmem_support, g_supp]
+  intro x
+  simp [div_eq_one_iff_eq (A x).ne', self_eq_add_right, ← nmem_support, g_supp]
 
 /-- Given two disjoint closed sets `s, t` in a Hausdorff σ-compact finite dimensional manifold,
 there exists an infinitely smooth function that is equal to `0` exactly on `s` and to `1`

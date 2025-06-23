@@ -143,17 +143,17 @@ private lemma card_S_lt_card_T : (S).card < (T).card := by
   ∏ x : α, (∑ x_1 : β, ↑B * ↑(A x x_1)⁺ - ∑ x_1 : β, ↑B * -↑(A x x_1)⁻ + 1)
     ≤ ∏ x : α, (n * max 1 ‖A‖ * B + 1) := by
       refine Finset.prod_le_prod (fun i _ ↦ ?_) (fun i _ ↦ ?_)
-      · have h := N_le_P_add_one A i
-        rify at h
-        linarith only [h]
-      · simp only [mul_neg, sum_neg_distrib, sub_neg_eq_add, add_le_add_iff_right]
-        have h1 : n * max 1 ‖A‖ * B = ∑ _ : β, max 1 ‖A‖ * B
-        simp only [sum_const, card_univ, nsmul_eq_mul]
-        ring
-        simp_rw [h1, ← Finset.sum_add_distrib, ← mul_add, mul_comm (max 1 ‖A‖), ← Int.cast_add]
-        gcongr with j _
-        rw [posPart_add_negPart (A i j), Int.cast_abs]
-        exact le_trans (norm_entry_le_entrywise_sup_norm A) (le_max_right ..)
+      have h := N_le_P_add_one A i
+      rify at h
+      linarith only [h]
+      simp only [mul_neg, sum_neg_distrib, sub_neg_eq_add, add_le_add_iff_right]
+      have h1 : n * max 1 ‖A‖ * B = ∑ _ : β, max 1 ‖A‖ * B
+      simp only [sum_const, card_univ, nsmul_eq_mul]
+      ring
+      simp_rw [h1, ← Finset.sum_add_distrib, ← mul_add, mul_comm (max 1 ‖A‖), ← Int.cast_add]
+      gcongr with j _
+      rw [posPart_add_negPart (A i j), Int.cast_abs]
+      exact le_trans (norm_entry_le_entrywise_sup_norm A) (le_max_right ..)
   _  = (n * max 1 ‖A‖ * B + 1) ^ m := by simp only [prod_const, card_univ]
   _  ≤ (n * max 1 ‖A‖) ^ m * (B + 1) ^ m := by
         rw [← mul_pow, mul_add, mul_one]
@@ -167,8 +167,8 @@ private lemma card_S_lt_card_T : (S).card < (T).card := by
         exact sub_ne_zero_of_ne (mod_cast hn.ne')
   _ < (B + 1) ^ ((n : ℝ) - m) * (B + 1) ^ m := by
         gcongr
-        · exact sub_pos.mpr (mod_cast hn)
-        · exact Nat.lt_floor_add_one ((n * max 1 ‖A‖) ^ e)
+        exact sub_pos.mpr (mod_cast hn)
+        exact Nat.lt_floor_add_one ((n * max 1 ‖A‖) ^ e)
   _ = (B + 1) ^ n := by
         rw [← rpow_natCast, ← rpow_add (Nat.cast_add_one_pos B), ← rpow_natCast, sub_add_cancel]
 
@@ -195,16 +195,16 @@ theorem exists_ne_zero_int_vec_norm_le : ∃ t : β → ℤ, t ≠ 0 ∧
   rw [abs_le]
   rw [Finset.mem_Icc] at hxT hyT
   constructor
-  · simp only [neg_le_sub_iff_le_add]
-    apply le_trans (hyT.2 i)
-    norm_cast
-    simp only [le_add_iff_nonneg_left]
-    exact hxT.1 i
-  · simp only [tsub_le_iff_right]
-    apply le_trans (hxT.2 i)
-    norm_cast
-    simp only [le_add_iff_nonneg_right]
-    exact hyT.1 i
+  simp only [neg_le_sub_iff_le_add]
+  apply le_trans (hyT.2 i)
+  norm_cast
+  simp only [le_add_iff_nonneg_left]
+  exact hxT.1 i
+  simp only [tsub_le_iff_right]
+  apply le_trans (hxT.2 i)
+  norm_cast
+  simp only [le_add_iff_nonneg_right]
+  exact hyT.1 i
 
 
 theorem exists_ne_zero_int_vec_norm_le' (hA : A ≠ 0) : ∃ t : β → ℤ, t ≠ 0 ∧

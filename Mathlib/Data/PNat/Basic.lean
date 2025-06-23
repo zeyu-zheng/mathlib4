@@ -243,21 +243,21 @@ instance instSub : Sub ℕ+ :=
 theorem sub_coe (a b : ℕ+) : ((a - b : ℕ+) : ℕ) = ite (b < a) (a - b : ℕ) 1 := by
   change (toPNat' _ : ℕ) = ite _ _ _
   split_ifs with h
-  · exact toPNat'_coe (tsub_pos_of_lt h)
-  · rw [tsub_eq_zero_iff_le.mpr (le_of_not_gt h : (a : ℕ) ≤ b)]
-    rfl
+  exact toPNat'_coe (tsub_pos_of_lt h)
+  rw [tsub_eq_zero_iff_le.mpr (le_of_not_gt h : (a : ℕ) ≤ b)]
+  rfl
 
 theorem sub_le (a b : ℕ+) : a - b ≤ a := by
   rw [← coe_le_coe, sub_coe]
   split_ifs with h
-  · exact Nat.sub_le a b
-  · exact a.2
+  exact Nat.sub_le a b
+  exact a.2
 
 theorem le_sub_one_of_lt {a b : ℕ+} (hab : a < b) : a ≤ b - (1 : ℕ+) := by
   rw [← coe_le_coe, sub_coe]
   split_ifs with h
-  · exact Nat.le_pred_of_lt hab
-  · exact hab.le.trans (le_of_not_lt h)
+  exact Nat.le_pred_of_lt hab
+  exact hab.le.trans (le_of_not_lt h)
 
 theorem add_sub_of_lt {a b : ℕ+} : a < b → a + (b - a) = b :=
   fun h =>
@@ -304,42 +304,42 @@ theorem mod_le (m k : ℕ+) : mod m k ≤ m ∧ mod m k ≤ k := by
   change (mod m k : ℕ) ≤ (m : ℕ) ∧ (mod m k : ℕ) ≤ (k : ℕ)
   rw [mod_coe]
   split_ifs with h
-  · have hm : (m : ℕ) > 0 := m.pos
-    rw [← Nat.mod_add_div (m : ℕ) (k : ℕ), h, zero_add] at hm ⊢
-    by_cases h₁ : (m : ℕ) / (k : ℕ) = 0
-    · rw [h₁, mul_zero] at hm
-      exact (lt_irrefl _ hm).elim
-    · let h₂ : (k : ℕ) * 1 ≤ k * (m / k) :=
-        -- Porting note: Specified type of `h₂` explicitly because `rw` could not unify
-        -- `succ 0` with `1`.
-        Nat.mul_le_mul_left (k : ℕ) (Nat.succ_le_of_lt (Nat.pos_of_ne_zero h₁))
-      rw [mul_one] at h₂
-      exact ⟨h₂, le_refl (k : ℕ)⟩
-  · exact ⟨Nat.mod_le (m : ℕ) (k : ℕ), (Nat.mod_lt (m : ℕ) k.pos).le⟩
+  have hm : (m : ℕ) > 0 := m.pos
+  rw [← Nat.mod_add_div (m : ℕ) (k : ℕ), h, zero_add] at hm ⊢
+  by_cases h₁ : (m : ℕ) / (k : ℕ) = 0
+  rw [h₁, mul_zero] at hm
+  exact (lt_irrefl _ hm).elim
+  let h₂ : (k : ℕ) * 1 ≤ k * (m / k) :=
+    -- Porting note: Specified type of `h₂` explicitly because `rw` could not unify
+    -- `succ 0` with `1`.
+    Nat.mul_le_mul_left (k : ℕ) (Nat.succ_le_of_lt (Nat.pos_of_ne_zero h₁))
+  rw [mul_one] at h₂
+  exact ⟨h₂, le_refl (k : ℕ)⟩
+  exact ⟨Nat.mod_le (m : ℕ) (k : ℕ), (Nat.mod_lt (m : ℕ) k.pos).le⟩
 
 theorem dvd_iff {k m : ℕ+} : k ∣ m ↔ (k : ℕ) ∣ (m : ℕ) := by
   constructor <;> intro h
-  · rcases h with ⟨_, rfl⟩
-    apply dvd_mul_right
-  · rcases h with ⟨a, h⟩
-    obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (n := a) <| by
-      rintro rfl
-      simp only [mul_zero, ne_zero] at h
-    use ⟨n.succ, n.succ_pos⟩
-    rw [← coe_inj, h, mul_coe, mk_coe]
+  rcases h with ⟨_, rfl⟩
+  apply dvd_mul_right
+  rcases h with ⟨a, h⟩
+  obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero (n := a) <| by
+    rintro rfl
+    simp only [mul_zero, ne_zero] at h
+  use ⟨n.succ, n.succ_pos⟩
+  rw [← coe_inj, h, mul_coe, mk_coe]
 
 theorem dvd_iff' {k m : ℕ+} : k ∣ m ↔ mod m k = k := by
   rw [dvd_iff]
   rw [Nat.dvd_iff_mod_eq_zero]; constructor
-  · intro h
-    apply PNat.eq
-    rw [mod_coe, if_pos h]
-  · intro h
-    by_cases h' : (m : ℕ) % (k : ℕ) = 0
-    · exact h'
-    · replace h : (mod m k : ℕ) = (k : ℕ) := congr_arg _ h
-      rw [mod_coe, if_neg h'] at h
-      exact ((Nat.mod_lt (m : ℕ) k.pos).ne h).elim
+  intro h
+  apply PNat.eq
+  rw [mod_coe, if_pos h]
+  intro h
+  by_cases h' : (m : ℕ) % (k : ℕ) = 0
+  exact h'
+  replace h : (mod m k : ℕ) = (k : ℕ) := congr_arg _ h
+  rw [mod_coe, if_neg h'] at h
+  exact ((Nat.mod_lt (m : ℕ) k.pos).ne h).elim
 
 theorem le_of_dvd {m n : ℕ+} : m ∣ n → m ≤ n := by
   rw [dvd_iff']

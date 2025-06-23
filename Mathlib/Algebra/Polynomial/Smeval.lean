@@ -104,13 +104,13 @@ variable (R : Type*) [Semiring R] (p q : R[X]) {S : Type*} [AddCommMonoid S] [Po
 theorem smeval_add : (p + q).smeval x = p.smeval x + q.smeval x := by
   simp only [smeval_eq_sum, smul_pow]
   refine sum_add_index p q (smul_pow x) (fun _ ↦ ?_) (fun _ _ _ ↦ ?_)
-  · rw [smul_pow, zero_smul]
-  · rw [smul_pow, smul_pow, smul_pow, add_smul]
+  rw [smul_pow, zero_smul]
+  rw [smul_pow, smul_pow, smul_pow, add_smul]
 
 theorem smeval_natCast (n : ℕ) : (n : R[X]).smeval x = n • x ^ 0 := by
   induction' n with n ih
-  · simp only [smeval_zero, Nat.cast_zero, Nat.zero_eq, zero_smul]
-  · rw [n.cast_succ, smeval_add, ih, smeval_one, ← add_nsmul]
+  simp only [smeval_zero, Nat.cast_zero, Nat.zero_eq, zero_smul]
+  rw [n.cast_succ, smeval_add, ih, smeval_one, ← add_nsmul]
 
 @[deprecated (since := "2024-04-17")]
 alias smeval_nat_cast := smeval_natCast

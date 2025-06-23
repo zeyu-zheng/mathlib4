@@ -70,30 +70,30 @@ theorem cancel_factors_lt {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α
     (ha : ad * a = a') (hb : bd * b = b') (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) :
     (a < b) = (1 / gcd * (bd * a') < 1 / gcd * (ad * b')) := by
   rw [mul_lt_mul_left, ← ha, ← hb, ← mul_assoc, ← mul_assoc, mul_comm bd, mul_lt_mul_left]
-  · exact mul_pos had hbd
-  · exact one_div_pos (α := α) |>.2 hgcd
+  exact mul_pos had hbd
+  exact one_div_pos (α := α) |>.2 hgcd
 
 theorem cancel_factors_le {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α}
     (ha : ad * a = a') (hb : bd * b = b') (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) :
     (a ≤ b) = (1 / gcd * (bd * a') ≤ 1 / gcd * (ad * b')) := by
   rw [mul_le_mul_left, ← ha, ← hb, ← mul_assoc, ← mul_assoc, mul_comm bd, mul_le_mul_left]
-  · exact mul_pos had hbd
-  · exact one_div_pos (α := α) |>.2 hgcd
+  exact mul_pos had hbd
+  exact one_div_pos (α := α) |>.2 hgcd
 
 theorem cancel_factors_eq {α} [Field α] {a b ad bd a' b' gcd : α} (ha : ad * a = a')
     (hb : bd * b = b') (had : ad ≠ 0) (hbd : bd ≠ 0) (hgcd : gcd ≠ 0) :
     (a = b) = (1 / gcd * (bd * a') = 1 / gcd * (ad * b')) := by
   rw [← ha, ← hb, ← mul_assoc bd, ← mul_assoc ad, mul_comm bd]
   ext; constructor
-  · rintro rfl
-    rfl
-  · intro h
-    simp only [← mul_assoc] at h
-    refine mul_left_cancel₀ (mul_ne_zero ?_ ?_) h
-    on_goal 1 => apply mul_ne_zero
-    on_goal 1 => apply div_ne_zero
-    · exact one_ne_zero
-    all_goals assumption
+  rintro rfl
+  rfl
+  intro h
+  simp only [← mul_assoc] at h
+  refine mul_left_cancel₀ (mul_ne_zero ?_ ?_) h
+  on_goal 1 => apply mul_ne_zero
+  on_goal 1 => apply div_ne_zero
+  exact one_ne_zero
+  all_goals assumption
 
 open Classical in
 theorem cancel_factors_ne {α} [Field α] {a b ad bd a' b' gcd : α} (ha : ad * a = a')

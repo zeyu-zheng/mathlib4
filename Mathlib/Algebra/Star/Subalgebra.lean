@@ -464,17 +464,17 @@ theorem adjoin_induction₂ {s : Set A} {p : A → A → Prop} {a b : A} (ha : a
   refine
     Algebra.adjoin_induction₂ ha hb (fun x hx y hy => ?_) Halg (fun r x hx => ?_) (fun r x hx => ?_)
       Hadd_left Hadd_right Hmul_left Hmul_right
-  · cases' hx with hx hx <;> cases' hy with hy hy
-    · exact Hs x hx y hy
-    · exact star_star y ▸ Hstar_right _ _ (Hs _ hx _ hy)
-    · exact star_star x ▸ Hstar_left _ _ (Hs _ hx _ hy)
-    · exact star_star x ▸ star_star y ▸ Hstar _ _ (Hs _ hx _ hy)
-  · cases' hx with hx hx
-    · exact Halg_left _ _ hx
-    · exact star_star x ▸ Hstar_right _ _ (Halg_left r _ hx)
-  · cases' hx with hx hx
-    · exact Halg_right _ _ hx
-    · exact star_star x ▸ Hstar_left _ _ (Halg_right r _ hx)
+  cases' hx with hx hx <;> cases' hy with hy hy
+  exact Hs x hx y hy
+  exact star_star y ▸ Hstar_right _ _ (Hs _ hx _ hy)
+  exact star_star x ▸ Hstar_left _ _ (Hs _ hx _ hy)
+  exact star_star x ▸ star_star y ▸ Hstar _ _ (Hs _ hx _ hy)
+  cases' hx with hx hx
+  exact Halg_left _ _ hx
+  exact star_star x ▸ Hstar_right _ _ (Halg_left r _ hx)
+  cases' hx with hx hx
+  exact Halg_right _ _ hx
+  exact star_star x ▸ Hstar_left _ _ (Halg_right r _ hx)
 
 /-- The difference with `StarSubalgebra.adjoin_induction` is that this acts on the subtype. -/
 @[elab_as_elim]
@@ -511,10 +511,10 @@ abbrev adjoinCommSemiringOfComm {s : Set A}
           (by
             intro a ha b hb
             cases' ha with ha ha <;> cases' hb with hb hb
-            · exact hcomm _ ha _ hb
-            · exact star_star b ▸ hcomm_star _ ha _ hb
-            · exact star_star a ▸ (hcomm_star _ hb _ ha).symm
-            · simpa only [star_mul, star_star] using congr_arg star (hcomm _ hb _ ha))
+            exact hcomm _ ha _ hb
+            exact star_star b ▸ hcomm_star _ ha _ hb
+            exact star_star a ▸ (hcomm_star _ hb _ ha).symm
+            simpa only [star_mul, star_star] using congr_arg star (hcomm _ hb _ ha))
       exact congr_arg Subtype.val (mul_comm (⟨x, hx⟩ : Algebra.adjoin R (s ∪ star s)) ⟨y, hy⟩) }
 
 /-- If all elements of `s : Set A` commute pairwise and also commute pairwise with elements of
@@ -682,11 +682,11 @@ theorem ext_adjoin {s : Set A} [FunLike F (adjoin R s) B]
   refine DFunLike.ext f g fun a =>
     adjoin_induction' (p := fun y => f y = g y) a (fun x hx => ?_) (fun r => ?_)
     (fun x y hx hy => ?_) (fun x y hx hy => ?_) fun x hx => ?_
-  · exact h ⟨x, subset_adjoin R s hx⟩ hx
-  · simp only [AlgHomClass.commutes]
-  · simp only [map_add, map_add, hx, hy]
-  · simp only [map_mul, map_mul, hx, hy]
-  · simp only [map_star, hx]
+  exact h ⟨x, subset_adjoin R s hx⟩ hx
+  simp only [AlgHomClass.commutes]
+  simp only [map_add, map_add, hx, hy]
+  simp only [map_mul, map_mul, hx, hy]
+  simp only [map_star, hx]
 
 theorem ext_adjoin_singleton {a : A} [FunLike F (adjoin R ({a} : Set A)) B]
     [AlgHomClass F R (adjoin R ({a} : Set A)) B] [StarAlgHomClass F R (adjoin R ({a} : Set A)) B]

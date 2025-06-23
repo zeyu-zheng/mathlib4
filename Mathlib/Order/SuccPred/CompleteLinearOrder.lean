@@ -70,8 +70,8 @@ lemma csSup_mem_of_not_isSuccLimit'
     (hbdd : BddAbove s) (hlim : ¬ IsSuccLimit (sSup s)) :
     sSup s ∈ s := by
   obtain (rfl|hs) := s.eq_empty_or_nonempty
-  · simp [isSuccLimit_bot] at hlim
-  · exact csSup_mem_of_not_isSuccLimit hs hbdd hlim
+  simp [isSuccLimit_bot] at hlim
+  exact csSup_mem_of_not_isSuccLimit hs hbdd hlim
 
 /-- See `exists_eq_ciSup_of_not_isSuccLimit` for the
 `ConditionallyCompleteLinearOrder` version. -/
@@ -83,8 +83,8 @@ lemma exists_eq_ciSup_of_not_isSuccLimit'
 lemma IsLUB.mem_of_not_isSuccLimit (hs : IsLUB s x) (hx : ¬ IsSuccLimit x) :
     x ∈ s := by
   obtain (rfl|hs') := s.eq_empty_or_nonempty
-  · simp [show x = ⊥ by simpa using hs, isSuccLimit_bot] at hx
-  · exact hs.mem_of_nonempty_of_not_isSuccLimit hs' hx
+  simp [show x = ⊥ by simpa using hs, isSuccLimit_bot] at hx
+  exact hs.mem_of_nonempty_of_not_isSuccLimit hs' hx
 
 lemma IsLUB.exists_of_not_isSuccLimit (hf : IsLUB (Set.range f) x) (hx : ¬ IsSuccLimit x) :
     ∃ i, f i = x := hf.mem_of_not_isSuccLimit hx

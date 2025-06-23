@@ -95,45 +95,45 @@ theorem mem_insertNth {a b : α} :
 theorem insertNth_of_length_lt (l : List α) (x : α) (n : ℕ) (h : l.length < n) :
     insertNth n x l = l := by
   induction' l with hd tl IH generalizing n
-  · cases n
-    · simp at h
-    · simp
-  · cases n
-    · simp at h
-    · simp only [Nat.succ_lt_succ_iff, length] at h
-      simpa using IH _ h
+  cases n
+  simp at h
+  simp
+  cases n
+  simp at h
+  simp only [Nat.succ_lt_succ_iff, length] at h
+  simpa using IH _ h
 
 @[simp]
 theorem insertNth_length_self (l : List α) (x : α) : insertNth l.length x l = l ++ [x] := by
   induction' l with hd tl IH
-  · simp
-  · simpa using IH
+  simp
+  simpa using IH
 
 theorem length_le_length_insertNth (l : List α) (x : α) (n : ℕ) :
     l.length ≤ (insertNth n x l).length := by
   rcases le_or_lt n l.length with hn | hn
-  · rw [length_insertNth _ _ hn]
-    exact (Nat.lt_succ_self _).le
-  · rw [insertNth_of_length_lt _ _ _ hn]
+  rw [length_insertNth _ _ hn]
+  exact (Nat.lt_succ_self _).le
+  rw [insertNth_of_length_lt _ _ _ hn]
 
 theorem length_insertNth_le_succ (l : List α) (x : α) (n : ℕ) :
     (insertNth n x l).length ≤ l.length + 1 := by
   rcases le_or_lt n l.length with hn | hn
-  · rw [length_insertNth _ _ hn]
-  · rw [insertNth_of_length_lt _ _ _ hn]
-    exact (Nat.lt_succ_self _).le
+  rw [length_insertNth _ _ hn]
+  rw [insertNth_of_length_lt _ _ _ hn]
+  exact (Nat.lt_succ_self _).le
 
 theorem getElem_insertNth_of_lt (l : List α) (x : α) (n k : ℕ) (hn : k < n) (hk : k < l.length)
     (hk' : k < (insertNth n x l).length := hk.trans_le (length_le_length_insertNth _ _ _)) :
     (insertNth n x l)[k] = l[k] := by
   induction' n with n IH generalizing k l
-  · simp at hn
-  · cases' l with hd tl
-    · simp
-    · cases k
-      · simp [get]
-      · rw [Nat.succ_lt_succ_iff] at hn
-        simpa using IH _ _ hn _
+  simp at hn
+  cases' l with hd tl
+  simp
+  cases k
+  simp [get]
+  rw [Nat.succ_lt_succ_iff] at hn
+  simpa using IH _ _ hn _
 
 theorem get_insertNth_of_lt (l : List α) (x : α) (n k : ℕ) (hn : k < n) (hk : k < l.length)
     (hk' : k < (insertNth n x l).length := hk.trans_le (length_le_length_insertNth _ _ _)) :
@@ -151,13 +151,13 @@ theorem getElem_insertNth_self (l : List α) (x : α) (n : ℕ) (hn : n ≤ l.le
     (hn' : n < (insertNth n x l).length := (by rwa [length_insertNth _ _ hn, Nat.lt_succ_iff])) :
     (insertNth n x l)[n] = x := by
   induction' l with hd tl IH generalizing n
-  · simp only [length] at hn
-    cases hn
-    simp only [insertNth_zero, getElem_singleton]
-  · cases n
-    · simp
-    · simp only [Nat.succ_le_succ_iff, length] at hn
-      simpa using IH _ hn
+  simp only [length] at hn
+  cases hn
+  simp only [insertNth_zero, getElem_singleton]
+  cases n
+  simp
+  simp only [Nat.succ_le_succ_iff, length] at hn
+  simpa using IH _ hn
 
 theorem get_insertNth_self (l : List α) (x : α) (n : ℕ) (hn : n ≤ l.length)
     (hn' : n < (insertNth n x l).length := (by rwa [length_insertNth _ _ hn, Nat.lt_succ_iff])) :
@@ -175,10 +175,10 @@ theorem getElem_insertNth_add_succ (l : List α) (x : α) (n k : ℕ) (hk' : n +
       rwa [length_insertNth _ _ (by omega), Nat.succ_lt_succ_iff])) :
     (insertNth n x l)[n + k + 1] = l[n + k] := by
   induction' l with hd tl IH generalizing n k
-  · simp at hk'
-  · cases n
-    · simp
-    · simpa [Nat.add_right_comm] using IH _ _ _
+  simp at hk'
+  cases n
+  simp
+  simpa [Nat.add_right_comm] using IH _ _ _
 
 theorem get_insertNth_add_succ (l : List α) (x : α) (n k : ℕ) (hk' : n + k < l.length)
     (hk : n + k + 1 < (insertNth n x l).length := (by
@@ -197,9 +197,9 @@ theorem nthLe_insertNth_add_succ : ∀ (l : List α) (x : α) (n k : ℕ) (hk' :
 set_option linter.unnecessarySimpa false in
 theorem insertNth_injective (n : ℕ) (x : α) : Function.Injective (insertNth n x) := by
   induction' n with n IH
-  · have : insertNth 0 x = cons x := funext fun _ => rfl
-    simp [this]
-  · rintro (_ | ⟨a, as⟩) (_ | ⟨b, bs⟩) h <;> simpa [IH.eq_iff] using h
+  have : insertNth 0 x = cons x := funext fun _ => rfl
+  simp [this]
+  rintro (_ | ⟨a, as⟩) (_ | ⟨b, bs⟩) h <;> simpa [IH.eq_iff] using h
 
 end InsertNth
 

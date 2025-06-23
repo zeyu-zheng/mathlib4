@@ -578,17 +578,17 @@ theorem snd_pow_of_smul_comm [Monoid R] [AddMonoid M] [DistribMulAction R M]
   | (Nat.succ n) =>
     simp_rw [Nat.pred_succ]
     refine (List.sum_eq_card_nsmul _ (x.fst ^ n • x.snd) ?_).trans ?_
-    · rintro m hm
-      simp_rw [List.mem_map, List.mem_range] at hm
-      obtain ⟨i, hi, rfl⟩ := hm
-      rw [Nat.sub_add_cancel (Nat.lt_succ_iff.mp hi)]
-    · rw [List.length_map, List.length_range]
+    rintro m hm
+    simp_rw [List.mem_map, List.mem_range] at hm
+    obtain ⟨i, hi, rfl⟩ := hm
+    rw [Nat.sub_add_cancel (Nat.lt_succ_iff.mp hi)]
+    rw [List.length_map, List.length_range]
 where
   aux : ∀ n : ℕ, x.snd <• x.fst ^ n = x.fst ^ n •> x.snd := by
     intro n
     induction' n with n ih
-    · simp
-    · rw [pow_succ, op_mul, mul_smul, mul_smul, ← h, smul_comm (_ : R) (op x.fst) x.snd, ih]
+    simp
+    rw [pow_succ, op_mul, mul_smul, mul_smul, ← h, smul_comm (_ : R) (op x.fst) x.snd, ih]
 
 theorem snd_pow_of_smul_comm' [Monoid R] [AddMonoid M] [DistribMulAction R M]
     [DistribMulAction Rᵐᵒᵖ M] [SMulCommClass R Rᵐᵒᵖ M] (x : tsze R M) (n : ℕ)
@@ -621,7 +621,7 @@ instance monoid [Monoid R] [AddMonoid M] [DistribMulAction R M] [DistribMulActio
         (by
           simp_rw [snd_mul, snd_pow_eq_sum, Nat.pred_succ]
           cases n
-          · simp [List.range_succ]
+          simp [List.range_succ]
           rw [List.sum_range_succ']
           simp only [pow_zero, op_one, Nat.sub_zero, one_smul, Nat.succ_sub_succ_eq_sub, fst_pow,
             Nat.pred_succ, List.smul_sum, List.map_map, Function.comp]
@@ -644,13 +644,13 @@ theorem snd_list_prod [Semiring R] [AddCommMonoid M] [Module R M] [Module Rᵐ�
       (l.enum.map fun x : ℕ × tsze R M =>
           ((l.map fst).take x.1).prod •> x.snd.snd <• ((l.map fst).drop x.1.succ).prod).sum := by
   induction' l with x xs ih
-  · simp
-  · rw [List.enum_cons, ← List.map_fst_add_enum_eq_enumFrom]
-    simp_rw [List.map_cons, List.map_map, Function.comp, Prod.map_snd, Prod.map_fst, id,
-      List.take_zero, List.take_cons, List.prod_nil, List.prod_cons, snd_mul, one_smul, List.drop,
-      mul_smul, List.sum_cons, fst_list_prod, ih, List.smul_sum, List.map_map,
-      ← smul_comm (_ : R) (_ : Rᵐᵒᵖ)]
-    exact add_comm _ _
+  simp
+  rw [List.enum_cons, ← List.map_fst_add_enum_eq_enumFrom]
+  simp_rw [List.map_cons, List.map_map, Function.comp, Prod.map_snd, Prod.map_fst, id,
+    List.take_zero, List.take_cons, List.prod_nil, List.prod_cons, snd_mul, one_smul, List.drop,
+    mul_smul, List.sum_cons, fst_list_prod, ih, List.smul_sum, List.map_map,
+    ← smul_comm (_ : R) (_ : Rᵐᵒᵖ)]
+  exact add_comm _ _
 
 instance ring [Ring R] [AddCommGroup M] [Module R M] [Module Rᵐᵒᵖ M] [SMulCommClass R Rᵐᵒᵖ M] :
     Ring (tsze R M) :=
@@ -708,14 +708,14 @@ variable [DivisionSemiring R] [AddCommGroup M] [Module Rᵐᵒᵖ M] [Module R M
 protected theorem inv_inl (r : R) :
     (inl r)⁻¹ = (inl (r⁻¹ : R) : tsze R M) := by
   ext
-  · rw [fst_inv, fst_inl, fst_inl]
-  · rw [snd_inv, fst_inl, snd_inl, snd_inl, smul_zero, smul_zero, neg_zero]
+  rw [fst_inv, fst_inl, fst_inl]
+  rw [snd_inv, fst_inl, snd_inl, snd_inl, smul_zero, smul_zero, neg_zero]
 
 @[simp]
 theorem inv_inr (m : M) : (inr m)⁻¹ = (0 : tsze R M) := by
   ext
-  · rw [fst_inv, fst_inr, fst_zero, inv_zero]
-  · rw [snd_inv, snd_inr, fst_inr, inv_zero, op_zero, zero_smul, snd_zero, neg_zero]
+  rw [fst_inv, fst_inr, fst_zero, inv_zero]
+  rw [snd_inv, snd_inr, fst_inr, inv_zero, op_zero, zero_smul, snd_zero, neg_zero]
 
 @[simp]
 protected theorem inv_zero : (0 : tsze R M)⁻¹ = (0 : tsze R M) := by
@@ -727,28 +727,28 @@ protected theorem inv_one : (1 : tsze R M)⁻¹ = (1 : tsze R M) := by
 
 protected theorem mul_inv_cancel {x : tsze R M} (hx : fst x ≠ 0) : x * x⁻¹ = 1 := by
   ext
-  · rw [fst_mul, fst_inv, fst_one, mul_inv_cancel hx]
-  · rw [snd_mul, snd_inv, snd_one, smul_neg, smul_comm, smul_smul, mul_inv_cancel hx, one_smul,
-      fst_inv, add_left_neg]
+  rw [fst_mul, fst_inv, fst_one, mul_inv_cancel hx]
+  rw [snd_mul, snd_inv, snd_one, smul_neg, smul_comm, smul_smul, mul_inv_cancel hx, one_smul,
+    fst_inv, add_left_neg]
 
 protected theorem inv_mul_cancel {x : tsze R M} (hx : fst x ≠ 0) : x⁻¹ * x = 1 := by
   ext
-  · rw [fst_mul, fst_inv, inv_mul_cancel hx, fst_one]
-  · rw [snd_mul, snd_inv, snd_one, smul_neg, op_smul_op_smul, inv_mul_cancel hx, op_one, one_smul,
-      fst_inv, add_right_neg]
+  rw [fst_mul, fst_inv, inv_mul_cancel hx, fst_one]
+  rw [snd_mul, snd_inv, snd_one, smul_neg, op_smul_op_smul, inv_mul_cancel hx, op_one, one_smul,
+    fst_inv, add_right_neg]
 
 protected theorem mul_inv_rev (a b : tsze R M) :
     (a * b)⁻¹ = b⁻¹ * a⁻¹ := by
   ext
-  · rw [fst_inv, fst_mul, fst_mul, mul_inv_rev, fst_inv, fst_inv]
-  · simp only [snd_inv, snd_mul, fst_mul, fst_inv]
-    simp only [neg_smul, smul_neg, smul_add]
-    simp_rw [mul_inv_rev, smul_comm (_ : R), op_smul_op_smul, smul_smul, add_comm, neg_add]
-    obtain ha0 | ha := eq_or_ne (fst a) 0
-    · simp [ha0]
-    obtain hb0 | hb := eq_or_ne (fst b) 0
-    · simp [hb0]
-    rw [inv_mul_cancel_right₀ ha, mul_inv_cancel_left₀ hb]
+  rw [fst_inv, fst_mul, fst_mul, mul_inv_rev, fst_inv, fst_inv]
+  simp only [snd_inv, snd_mul, fst_mul, fst_inv]
+  simp only [neg_smul, smul_neg, smul_add]
+  simp_rw [mul_inv_rev, smul_comm (_ : R), op_smul_op_smul, smul_smul, add_comm, neg_add]
+  obtain ha0 | ha := eq_or_ne (fst a) 0
+  simp [ha0]
+  obtain hb0 | hb := eq_or_ne (fst b) 0
+  simp [hb0]
+  rw [inv_mul_cancel_right₀ ha, mul_inv_cancel_left₀ hb]
 
 protected theorem inv_inv {x : tsze R M} (hx : fst x ≠ 0) : x⁻¹⁻¹ = x :=
   -- adapted from `Matrix.nonsing_inv_nonsing_inv`

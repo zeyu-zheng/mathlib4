@@ -44,20 +44,20 @@ theorem zero_pow_le_one : ∀ n : ℕ, (0 : R) ^ n ≤ 1
 theorem pow_add_pow_le (hx : 0 ≤ x) (hy : 0 ≤ y) (hn : n ≠ 0) : x ^ n + y ^ n ≤ (x + y) ^ n := by
   rcases Nat.exists_eq_add_one_of_ne_zero hn with ⟨k, rfl⟩
   induction' k with k ih
-  · simp only [zero_add, pow_one, le_refl]
-  · let n := k.succ
-    have h1 := add_nonneg (mul_nonneg hx (pow_nonneg hy n)) (mul_nonneg hy (pow_nonneg hx n))
-    have h2 := add_nonneg hx hy
-    calc
-      x ^ (n + 1) + y ^ (n + 1) ≤ x * x ^ n + y * y ^ n + (x * y ^ n + y * x ^ n) := by
-        rw [pow_succ' _ n, pow_succ' _ n]
-        exact le_add_of_nonneg_right h1
-      _ = (x + y) * (x ^ n + y ^ n) := by
-        rw [add_mul, mul_add, mul_add, add_comm (y * x ^ n), ← add_assoc, ← add_assoc,
-          add_assoc (x * x ^ n) (x * y ^ n), add_comm (x * y ^ n) (y * y ^ n), ← add_assoc]
-      _ ≤ (x + y) ^ (n + 1) := by
-        rw [pow_succ' _ n]
-        exact mul_le_mul_of_nonneg_left (ih (Nat.succ_ne_zero k)) h2
+  simp only [zero_add, pow_one, le_refl]
+  let n := k.succ
+  have h1 := add_nonneg (mul_nonneg hx (pow_nonneg hy n)) (mul_nonneg hy (pow_nonneg hx n))
+  have h2 := add_nonneg hx hy
+  calc
+    x ^ (n + 1) + y ^ (n + 1) ≤ x * x ^ n + y * y ^ n + (x * y ^ n + y * x ^ n) := by
+      rw [pow_succ' _ n, pow_succ' _ n]
+      exact le_add_of_nonneg_right h1
+    _ = (x + y) * (x ^ n + y ^ n) := by
+      rw [add_mul, mul_add, mul_add, add_comm (y * x ^ n), ← add_assoc, ← add_assoc,
+        add_assoc (x * x ^ n) (x * y ^ n), add_comm (x * y ^ n) (y * y ^ n), ← add_assoc]
+    _ ≤ (x + y) ^ (n + 1) := by
+      rw [pow_succ' _ n]
+      exact mul_le_mul_of_nonneg_left (ih (Nat.succ_ne_zero k)) h2
 
 theorem pow_le_one : ∀ n : ℕ, 0 ≤ a → a ≤ 1 → a ^ n ≤ 1
   | 0, _, _ => (pow_zero a).le
@@ -176,8 +176,8 @@ lemma pow_left_inj (ha : 0 ≤ a) (hb : 0 ≤ b) (hn : n ≠ 0) : a ^ n = b ^ n 
 
 lemma pow_right_injective (ha₀ : 0 < a) (ha₁ : a ≠ 1) : Injective (a ^ ·) := by
   obtain ha₁ | ha₁ := ha₁.lt_or_lt
-  · exact (pow_right_strictAnti ha₀ ha₁).injective
-  · exact (pow_right_strictMono ha₁).injective
+  exact (pow_right_strictAnti ha₀ ha₁).injective
+  exact (pow_right_strictMono ha₁).injective
 
 @[simp]
 lemma pow_right_inj (ha₀ : 0 < a) (ha₁ : a ≠ 1) : a ^ m = a ^ n ↔ m = n :=
@@ -243,8 +243,8 @@ lemma add_sq_le : (a + b) ^ 2 ≤ 2 * (a ^ 2 + b ^ 2) := by
     _ ≤ a ^ 2 + b ^ 2 + (a * a + b * b) := add_le_add_left ?_ _
     _ = _ := by simp_rw [pow_succ', pow_zero, mul_one, two_mul]
   cases le_total a b
-  · exact mul_add_mul_le_mul_add_mul ‹_› ‹_›
-  · exact mul_add_mul_le_mul_add_mul' ‹_› ‹_›
+  exact mul_add_mul_le_mul_add_mul ‹_› ‹_›
+  exact mul_add_mul_le_mul_add_mul' ‹_› ‹_›
 
 -- TODO: Use `gcongr`, `positivity`, `ring` once those tactics are made available here
 lemma add_pow_le (ha : 0 ≤ a) (hb : 0 ≤ b) : ∀ n, (a + b) ^ n ≤ 2 ^ (n - 1) * (a ^ n + b ^ n)
@@ -261,9 +261,9 @@ lemma add_pow_le (ha : 0 ≤ a) (hb : 0 ≤ b) : ∀ n, (a + b) ^ n ≤ 2 ^ (n -
       _ ≤ 2 ^ n * (a ^ (n + 2) + b ^ (n + 2) + (a ^ (n + 1) * a + b ^ (n + 1) * b)) :=
           mul_le_mul_of_nonneg_left (add_le_add_left ?_ _) $ pow_nonneg (zero_le_two (α := R)) _
       _ = _ := by simp only [← pow_succ, ← two_mul, ← mul_assoc]; rfl
-    · obtain hab | hba := le_total a b
-      · exact mul_add_mul_le_mul_add_mul (pow_le_pow_left ha hab _) hab
-      · exact mul_add_mul_le_mul_add_mul' (pow_le_pow_left hb hba _) hba
+    obtain hab | hba := le_total a b
+    exact mul_add_mul_le_mul_add_mul (pow_le_pow_left ha hab _) hab
+    exact mul_add_mul_le_mul_add_mul' (pow_le_pow_left hb hba _) hba
 
 protected lemma Even.add_pow_le (hn : Even n) :
     (a + b) ^ n ≤ 2 ^ (n - 1) * (a ^ n + b ^ n) := by
@@ -278,8 +278,8 @@ protected lemma Even.add_pow_le (hn : Even n) :
     _ = _ := by
       simp only [← mul_assoc, ← pow_add, ← pow_mul]
       cases n
-      · rfl
-      · simp [Nat.two_mul]
+      rfl
+      simp [Nat.two_mul]
 
 lemma Even.pow_nonneg (hn : Even n) (a : R) : 0 ≤ a ^ n := by
   obtain ⟨k, rfl⟩ := hn; rw [pow_add]; exact mul_self_nonneg _
@@ -313,9 +313,9 @@ lemma Odd.strictMono_pow (hn : Odd n) : StrictMono fun a : R => a ^ n := by
   rintro rfl; simp [Odd, eq_comm (a := 0)] at hn
   intro a b hab
   obtain ha | ha := le_total 0 a
-  · exact pow_lt_pow_left hab ha hn₀
+  exact pow_lt_pow_left hab ha hn₀
   obtain hb | hb := lt_or_le 0 b
-  · exact (hn.pow_nonpos ha).trans_lt (pow_pos hb _)
+  exact (hn.pow_nonpos ha).trans_lt (pow_pos hb _)
   obtain ⟨c, hac⟩ := exists_add_of_le ha
   obtain ⟨d, hbd⟩ := exists_add_of_le hb
   have hd := nonneg_of_le_add_right (hb.trans_eq hbd)

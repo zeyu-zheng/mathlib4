@@ -117,25 +117,25 @@ theorem isComplement_singleton_right {g : G} : IsComplement S {g} ↔ S = univ :
 theorem isComplement_univ_left : IsComplement univ S ↔ ∃ g : G, S = {g} := by
   refine
     ⟨fun h => Set.exists_eq_singleton_iff_nonempty_subsingleton.mpr ⟨?_, fun a ha b hb => ?_⟩, ?_⟩
-  · obtain ⟨a, _⟩ := h.2 1
-    exact ⟨a.2.1, a.2.2⟩
-  · have : (⟨⟨_, mem_top a⁻¹⟩, ⟨a, ha⟩⟩ : (⊤ : Set G) × S) = ⟨⟨_, mem_top b⁻¹⟩, ⟨b, hb⟩⟩ :=
-      h.1 ((inv_mul_self a).trans (inv_mul_self b).symm)
-    exact Subtype.ext_iff.mp (Prod.ext_iff.mp this).2
-  · rintro ⟨g, rfl⟩
-    exact isComplement_univ_singleton
+  obtain ⟨a, _⟩ := h.2 1
+  exact ⟨a.2.1, a.2.2⟩
+  have : (⟨⟨_, mem_top a⁻¹⟩, ⟨a, ha⟩⟩ : (⊤ : Set G) × S) = ⟨⟨_, mem_top b⁻¹⟩, ⟨b, hb⟩⟩ :=
+    h.1 ((inv_mul_self a).trans (inv_mul_self b).symm)
+  exact Subtype.ext_iff.mp (Prod.ext_iff.mp this).2
+  rintro ⟨g, rfl⟩
+  exact isComplement_univ_singleton
 
 @[to_additive]
 theorem isComplement_univ_right : IsComplement S univ ↔ ∃ g : G, S = {g} := by
   refine
     ⟨fun h => Set.exists_eq_singleton_iff_nonempty_subsingleton.mpr ⟨?_, fun a ha b hb => ?_⟩, ?_⟩
-  · obtain ⟨a, _⟩ := h.2 1
-    exact ⟨a.1.1, a.1.2⟩
-  · have : (⟨⟨a, ha⟩, ⟨_, mem_top a⁻¹⟩⟩ : S × (⊤ : Set G)) = ⟨⟨b, hb⟩, ⟨_, mem_top b⁻¹⟩⟩ :=
-      h.1 ((mul_inv_self a).trans (mul_inv_self b).symm)
-    exact Subtype.ext_iff.mp (Prod.ext_iff.mp this).1
-  · rintro ⟨g, rfl⟩
-    exact isComplement_singleton_univ
+  obtain ⟨a, _⟩ := h.2 1
+  exact ⟨a.1.1, a.1.2⟩
+  have : (⟨⟨a, ha⟩, ⟨_, mem_top a⁻¹⟩⟩ : S × (⊤ : Set G)) = ⟨⟨b, hb⟩, ⟨_, mem_top b⁻¹⟩⟩ :=
+    h.1 ((mul_inv_self a).trans (mul_inv_self b).symm)
+  exact Subtype.ext_iff.mp (Prod.ext_iff.mp this).1
+  rintro ⟨g, rfl⟩
+  exact isComplement_singleton_univ
 
 @[to_additive]
 lemma IsComplement.mul_eq (h : IsComplement S T) : S * T = univ :=
@@ -174,28 +174,28 @@ theorem mem_leftTransversals_iff_existsUnique_inv_mul_mem :
     S ∈ leftTransversals T ↔ ∀ g : G, ∃! s : S, (s : G)⁻¹ * g ∈ T := by
   rw [leftTransversals, Set.mem_setOf_eq, isComplement_iff_existsUnique]
   refine ⟨fun h g => ?_, fun h g => ?_⟩
-  · obtain ⟨x, h1, h2⟩ := h g
-    exact
-      ⟨x.1, (congr_arg (· ∈ T) (eq_inv_mul_of_mul_eq h1)).mp x.2.2, fun y hy =>
-        (Prod.ext_iff.mp (h2 ⟨y, (↑y)⁻¹ * g, hy⟩ (mul_inv_cancel_left ↑y g))).1⟩
-  · obtain ⟨x, h1, h2⟩ := h g
-    refine ⟨⟨x, (↑x)⁻¹ * g, h1⟩, mul_inv_cancel_left (↑x) g, fun y hy => ?_⟩
-    have hf := h2 y.1 ((congr_arg (· ∈ T) (eq_inv_mul_of_mul_eq hy)).mp y.2.2)
-    exact Prod.ext hf (Subtype.ext (eq_inv_mul_of_mul_eq (hf ▸ hy)))
+  obtain ⟨x, h1, h2⟩ := h g
+  exact
+    ⟨x.1, (congr_arg (· ∈ T) (eq_inv_mul_of_mul_eq h1)).mp x.2.2, fun y hy =>
+      (Prod.ext_iff.mp (h2 ⟨y, (↑y)⁻¹ * g, hy⟩ (mul_inv_cancel_left ↑y g))).1⟩
+  obtain ⟨x, h1, h2⟩ := h g
+  refine ⟨⟨x, (↑x)⁻¹ * g, h1⟩, mul_inv_cancel_left (↑x) g, fun y hy => ?_⟩
+  have hf := h2 y.1 ((congr_arg (· ∈ T) (eq_inv_mul_of_mul_eq hy)).mp y.2.2)
+  exact Prod.ext hf (Subtype.ext (eq_inv_mul_of_mul_eq (hf ▸ hy)))
 
 @[to_additive]
 theorem mem_rightTransversals_iff_existsUnique_mul_inv_mem :
     S ∈ rightTransversals T ↔ ∀ g : G, ∃! s : S, g * (s : G)⁻¹ ∈ T := by
   rw [rightTransversals, Set.mem_setOf_eq, isComplement_iff_existsUnique]
   refine ⟨fun h g => ?_, fun h g => ?_⟩
-  · obtain ⟨x, h1, h2⟩ := h g
-    exact
-      ⟨x.2, (congr_arg (· ∈ T) (eq_mul_inv_of_mul_eq h1)).mp x.1.2, fun y hy =>
-        (Prod.ext_iff.mp (h2 ⟨⟨g * (↑y)⁻¹, hy⟩, y⟩ (inv_mul_cancel_right g y))).2⟩
-  · obtain ⟨x, h1, h2⟩ := h g
-    refine ⟨⟨⟨g * (↑x)⁻¹, h1⟩, x⟩, inv_mul_cancel_right g x, fun y hy => ?_⟩
-    have hf := h2 y.2 ((congr_arg (· ∈ T) (eq_mul_inv_of_mul_eq hy)).mp y.1.2)
-    exact Prod.ext (Subtype.ext (eq_mul_inv_of_mul_eq (hf ▸ hy))) hf
+  obtain ⟨x, h1, h2⟩ := h g
+  exact
+    ⟨x.2, (congr_arg (· ∈ T) (eq_mul_inv_of_mul_eq h1)).mp x.1.2, fun y hy =>
+      (Prod.ext_iff.mp (h2 ⟨⟨g * (↑y)⁻¹, hy⟩, y⟩ (inv_mul_cancel_right g y))).2⟩
+  obtain ⟨x, h1, h2⟩ := h g
+  refine ⟨⟨⟨g * (↑x)⁻¹, h1⟩, x⟩, inv_mul_cancel_right g x, fun y hy => ?_⟩
+  have hf := h2 y.2 ((congr_arg (· ∈ T) (eq_mul_inv_of_mul_eq hy)).mp y.1.2)
+  exact Prod.ext (Subtype.ext (eq_mul_inv_of_mul_eq (hf ▸ hy))) hf
 
 @[to_additive]
 theorem mem_leftTransversals_iff_existsUnique_quotient_mk''_eq :
@@ -261,9 +261,9 @@ lemma exists_left_transversal (H : Subgroup G) (g : G) :
       ⟨Set.range (Function.update Quotient.out' _ g), range_mem_leftTransversals fun q => ?_,
         Quotient.mk'' g, Function.update_same (Quotient.mk'' g) g Quotient.out'⟩
     by_cases hq : q = Quotient.mk'' g
-    · exact hq.symm ▸ congr_arg _ (Function.update_same (Quotient.mk'' g) g Quotient.out')
-    · refine (Function.update_noteq ?_ g Quotient.out') ▸ q.out_eq'
-      exact hq
+    exact hq.symm ▸ congr_arg _ (Function.update_same (Quotient.mk'' g) g Quotient.out')
+    refine (Function.update_noteq ?_ g Quotient.out') ▸ q.out_eq'
+    exact hq
 
 open Classical in
 @[to_additive]
@@ -273,8 +273,8 @@ lemma exists_right_transversal (H : Subgroup G) (g : G) :
       ⟨Set.range (Function.update Quotient.out' _ g), range_mem_rightTransversals fun q => ?_,
         Quotient.mk'' g, Function.update_same (Quotient.mk'' g) g Quotient.out'⟩
     by_cases hq : q = Quotient.mk'' g
-    · exact hq.symm ▸ congr_arg _ (Function.update_same (Quotient.mk'' g) g Quotient.out')
-    · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotient.out')) q.out_eq'
+    exact hq.symm ▸ congr_arg _ (Function.update_same (Quotient.mk'' g) g Quotient.out')
+    exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotient.out')) q.out_eq'
 
 /-- Given two subgroups `H' ⊆ H`, there exists a left transversal to `H'` inside `H`. -/
 @[to_additive "Given two subgroups `H' ⊆ H`, there exists a transversal to `H'` inside `H`"]
@@ -286,12 +286,12 @@ lemma exists_left_transversal_of_le {H' H : Subgroup G} (h : H' ≤ H) :
   rw [this]
   obtain ⟨S, cmem, -⟩ := H''.exists_left_transversal 1
   refine ⟨H.subtype '' S, ?_, ?_⟩
-  · have : H.subtype '' (S * H'') = H.subtype '' S * H''.map H.subtype := image_mul H.subtype
-    rw [← this, cmem.mul_eq]
-    simp [Set.ext_iff]
-  · rw [← cmem.card_mul_card]
-    refine congr_arg₂ (· * ·) ?_ ?_ <;>
-      exact Nat.card_congr (Equiv.Set.image _ _ <| subtype_injective H).symm
+  have : H.subtype '' (S * H'') = H.subtype '' S * H''.map H.subtype := image_mul H.subtype
+  rw [← this, cmem.mul_eq]
+  simp [Set.ext_iff]
+  rw [← cmem.card_mul_card]
+  refine congr_arg₂ (· * ·) ?_ ?_ <;>
+    exact Nat.card_congr (Equiv.Set.image _ _ <| subtype_injective H).symm
 
 /-- Given two subgroups `H' ⊆ H`, there exists a right transversal to `H'` inside `H`. -/
 @[to_additive "Given two subgroups `H' ⊆ H`, there exists a transversal to `H'` inside `H`"]
@@ -303,13 +303,13 @@ lemma exists_right_transversal_of_le {H' H : Subgroup G} (h : H' ≤ H) :
   rw [this]
   obtain ⟨S, cmem, -⟩ := H''.exists_right_transversal 1
   refine ⟨H.subtype '' S, ?_, ?_⟩
-  · have : H.subtype '' (H'' * S) = H''.map H.subtype * H.subtype '' S := image_mul H.subtype
-    rw [← this, cmem.mul_eq]
-    simp [Set.ext_iff]
-  · have : Nat.card H'' * Nat.card S = Nat.card H := cmem.card_mul_card
-    rw [← this]
-    refine congr_arg₂ (· * ·) ?_ ?_ <;>
-      exact Nat.card_congr (Equiv.Set.image _ _ <| subtype_injective H).symm
+  have : H.subtype '' (H'' * S) = H''.map H.subtype * H.subtype '' S := image_mul H.subtype
+  rw [← this, cmem.mul_eq]
+  simp [Set.ext_iff]
+  have : Nat.card H'' * Nat.card S = Nat.card H := cmem.card_mul_card
+  rw [← this]
+  refine congr_arg₂ (· * ·) ?_ ?_ <;>
+    exact Nat.card_congr (Equiv.Set.image _ _ <| subtype_injective H).symm
 
 namespace IsComplement
 
@@ -335,33 +335,33 @@ theorem equiv_fst_eq_iff_leftCosetEquivalence {g₁ g₂ : G} :
     (hSK.equiv g₁).fst = (hSK.equiv g₂).fst ↔ LeftCosetEquivalence K g₁ g₂ := by
   rw [LeftCosetEquivalence, leftCoset_eq_iff]
   constructor
-  · intro h
-    rw [← hSK.equiv_fst_mul_equiv_snd g₂, ← hSK.equiv_fst_mul_equiv_snd g₁, ← h,
-      mul_inv_rev, ← mul_assoc, inv_mul_cancel_right, ← coe_inv, ← coe_mul]
-    exact Subtype.property _
-  · intro h
-    apply (mem_leftTransversals_iff_existsUnique_inv_mul_mem.1 hSK g₁).unique
-    · -- This used to be `simp [...]` before leanprover/lean4#2644
-      rw [equiv_fst_eq_mul_inv]; simp
-    · rw [SetLike.mem_coe, ← mul_mem_cancel_right h]
-      -- This used to be `simp [...]` before leanprover/lean4#2644
-      rw [equiv_fst_eq_mul_inv]; simp [equiv_fst_eq_mul_inv, ← mul_assoc]
+  intro h
+  rw [← hSK.equiv_fst_mul_equiv_snd g₂, ← hSK.equiv_fst_mul_equiv_snd g₁, ← h,
+    mul_inv_rev, ← mul_assoc, inv_mul_cancel_right, ← coe_inv, ← coe_mul]
+  exact Subtype.property _
+  intro h
+  apply (mem_leftTransversals_iff_existsUnique_inv_mul_mem.1 hSK g₁).unique
+  -- This used to be `simp [...]` before leanprover/lean4#2644
+  rw [equiv_fst_eq_mul_inv]; simp
+  rw [SetLike.mem_coe, ← mul_mem_cancel_right h]
+  -- This used to be `simp [...]` before leanprover/lean4#2644
+  rw [equiv_fst_eq_mul_inv]; simp [equiv_fst_eq_mul_inv, ← mul_assoc]
 
 theorem equiv_snd_eq_iff_rightCosetEquivalence {g₁ g₂ : G} :
     (hHT.equiv g₁).snd = (hHT.equiv g₂).snd ↔ RightCosetEquivalence H g₁ g₂ := by
   rw [RightCosetEquivalence, rightCoset_eq_iff]
   constructor
-  · intro h
-    rw [← hHT.equiv_fst_mul_equiv_snd g₂, ← hHT.equiv_fst_mul_equiv_snd g₁, ← h,
-      mul_inv_rev, mul_assoc, mul_inv_cancel_left, ← coe_inv, ← coe_mul]
-    exact Subtype.property _
-  · intro h
-    apply (mem_rightTransversals_iff_existsUnique_mul_inv_mem.1 hHT g₁).unique
-    · -- This used to be `simp [...]` before leanprover/lean4#2644
-      rw [equiv_snd_eq_inv_mul]; simp
-    · rw [SetLike.mem_coe, ← mul_mem_cancel_left h]
-      -- This used to be `simp [...]` before leanprover/lean4#2644
-      rw [equiv_snd_eq_inv_mul, mul_assoc]; simp
+  intro h
+  rw [← hHT.equiv_fst_mul_equiv_snd g₂, ← hHT.equiv_fst_mul_equiv_snd g₁, ← h,
+    mul_inv_rev, mul_assoc, mul_inv_cancel_left, ← coe_inv, ← coe_mul]
+  exact Subtype.property _
+  intro h
+  apply (mem_rightTransversals_iff_existsUnique_mul_inv_mem.1 hHT g₁).unique
+  -- This used to be `simp [...]` before leanprover/lean4#2644
+  rw [equiv_snd_eq_inv_mul]; simp
+  rw [SetLike.mem_coe, ← mul_mem_cancel_left h]
+  -- This used to be `simp [...]` before leanprover/lean4#2644
+  rw [equiv_snd_eq_inv_mul, mul_assoc]; simp
 
 theorem leftCosetEquivalence_equiv_fst (g : G) :
     LeftCosetEquivalence K g ((hSK.equiv g).fst : G) := by
@@ -403,8 +403,8 @@ theorem equiv_mul_right (g : G) (k : K) :
     hSK.equiv_fst_eq_iff_leftCosetEquivalence.2
       (by simp [LeftCosetEquivalence, leftCoset_eq_iff])
   ext
-  · rw [this]
-  · rw [coe_mul, equiv_snd_eq_inv_mul, this, equiv_snd_eq_inv_mul, mul_assoc]
+  rw [this]
+  rw [coe_mul, equiv_snd_eq_inv_mul, this, equiv_snd_eq_inv_mul, mul_assoc]
 
 theorem equiv_mul_right_of_mem {g k : G} (h : k ∈ K) :
     hSK.equiv (g * k) = ((hSK.equiv g).fst, (hSK.equiv g).snd * ⟨k, h⟩) :=
@@ -415,10 +415,10 @@ theorem equiv_mul_right_of_mem {g k : G} (h : k ∈ K) :
 theorem equiv_mul_left (h : H) (g : G) :
     hHT.equiv (h * g) = (h * (hHT.equiv g).fst, (hHT.equiv g).snd) := by
   have : (hHT.equiv (h * g)).2 = (hHT.equiv g).2 := hHT.equiv_snd_eq_iff_rightCosetEquivalence.2 ?_
-  · ext
-    · rw [coe_mul, equiv_fst_eq_mul_inv, this, equiv_fst_eq_mul_inv, mul_assoc]
-    · rw [this]
-  · simp [RightCosetEquivalence, ← smul_smul]
+  ext
+  rw [coe_mul, equiv_fst_eq_mul_inv, this, equiv_fst_eq_mul_inv, mul_assoc]
+  rw [this]
+  simp [RightCosetEquivalence, ← smul_smul]
 
 theorem equiv_mul_left_of_mem {h g : G} (hh : h ∈ H) :
     hHT.equiv (h * g) = (⟨h, hh⟩ * (hHT.equiv g).fst, (hHT.equiv g).snd) :=
@@ -431,20 +431,20 @@ theorem equiv_one (hs1 : 1 ∈ S) (ht1 : 1 ∈ T) :
 theorem equiv_fst_eq_self_iff_mem {g : G} (h1 : 1 ∈ T) :
     ((hST.equiv g).fst : G) = g ↔ g ∈ S := by
   constructor
-  · intro h
-    rw [← h]
-    exact Subtype.prop _
-  · intro h
-    rw [hST.equiv_fst_eq_self_of_mem_of_one_mem h1 h]
+  intro h
+  rw [← h]
+  exact Subtype.prop _
+  intro h
+  rw [hST.equiv_fst_eq_self_of_mem_of_one_mem h1 h]
 
 theorem equiv_snd_eq_self_iff_mem {g : G} (h1 : 1 ∈ S) :
     ((hST.equiv g).snd : G) = g ↔ g ∈ T := by
   constructor
-  · intro h
-    rw [← h]
-    exact Subtype.prop _
-  · intro h
-    rw [hST.equiv_snd_eq_self_of_mem_of_one_mem h1 h]
+  intro h
+  rw [← h]
+  exact Subtype.prop _
+  intro h
+  rw [hST.equiv_snd_eq_self_of_mem_of_one_mem h1 h]
 
 theorem coe_equiv_fst_eq_one_iff_mem {g : G} (h1 : 1 ∈ S) :
     ((hST.equiv g).fst : G) = 1 ↔ g ∈ T := by
@@ -560,11 +560,11 @@ noncomputable instance : MulAction F (leftTransversals (H : Set G)) where
       refine mem_leftTransversals_iff_existsUnique_inv_mul_mem.mpr fun g => ?_
       obtain ⟨t, ht1, ht2⟩ := mem_leftTransversals_iff_existsUnique_inv_mul_mem.mp T.2 (f⁻¹ • g)
       refine ⟨⟨f • (t : G), Set.smul_mem_smul_set t.2⟩, ?_, ?_⟩
-      · exact smul_inv_smul f g ▸ QuotientAction.inv_mul_mem f ht1
-      · rintro ⟨-, t', ht', rfl⟩ h
-        replace h := QuotientAction.inv_mul_mem f⁻¹ h
-        simp only [Subtype.ext_iff, Subtype.coe_mk, smul_left_cancel_iff, inv_smul_smul] at h ⊢
-        exact Subtype.ext_iff.mp (ht2 ⟨t', ht'⟩ h)⟩
+      exact smul_inv_smul f g ▸ QuotientAction.inv_mul_mem f ht1
+      rintro ⟨-, t', ht', rfl⟩ h
+      replace h := QuotientAction.inv_mul_mem f⁻¹ h
+      simp only [Subtype.ext_iff, Subtype.coe_mk, smul_left_cancel_iff, inv_smul_smul] at h ⊢
+      exact Subtype.ext_iff.mp (ht2 ⟨t', ht'⟩ h)⟩
   one_smul T := Subtype.ext (one_smul F (T : Set G))
   mul_smul f₁ f₂ T := Subtype.ext (mul_smul f₁ f₂ (T : Set G))
 
@@ -734,7 +734,7 @@ theorem transferTransversal_apply'' (q : orbitRel.Quotient (zpowers g) (G ⧸ H)
     ← zpow_one_add, Int.cast_add, Int.cast_neg, Int.cast_one, intCast_cast, cast_id', id, ←
     sub_eq_neg_add, cast_sub_one, add_sub_cancel]
   by_cases hk : k = 0
-  · rw [if_pos hk, if_pos hk, zpow_natCast]
-  · rw [if_neg hk, if_neg hk]
+  rw [if_pos hk, if_pos hk, zpow_natCast]
+  rw [if_neg hk, if_neg hk]
 
 end Subgroup

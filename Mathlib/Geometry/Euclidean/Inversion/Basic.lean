@@ -76,9 +76,9 @@ theorem inversion_mul (c : P) (a R : ℝ) (x : P) :
 @[simp]
 theorem inversion_dist_center (c x : P) : inversion c (dist x c) x = x := by
   rcases eq_or_ne x c with (rfl | hne)
-  · apply inversion_self
-  · rw [inversion, div_self, one_pow, one_smul, vsub_vadd]
-    rwa [dist_ne_zero]
+  apply inversion_self
+  rw [inversion, div_self, one_pow, one_smul, vsub_vadd]
+  rwa [dist_ne_zero]
 
 @[simp]
 theorem inversion_dist_center' (c x : P) : inversion c (dist c x) x = x := by
@@ -91,7 +91,7 @@ theorem inversion_of_mem_sphere (h : x ∈ Metric.sphere c R) : inversion c R x 
 works for `x = c`. -/
 theorem dist_inversion_center (c x : P) (R : ℝ) : dist (inversion c R x) c = R ^ 2 / dist x c := by
   rcases eq_or_ne x c with (rfl | hx)
-  · simp
+  simp
   have : dist x c ≠ 0 := dist_ne_zero.2 hx
   field_simp [inversion, norm_smul, abs_div, ← dist_eq_norm_vsub, sq, mul_assoc]
 
@@ -104,11 +104,11 @@ theorem dist_center_inversion (c x : P) (R : ℝ) : dist c (inversion c R x) = R
 theorem inversion_inversion (c : P) {R : ℝ} (hR : R ≠ 0) (x : P) :
     inversion c R (inversion c R x) = x := by
   rcases eq_or_ne x c with (rfl | hne)
-  · rw [inversion_self, inversion_self]
-  · rw [inversion, dist_inversion_center, inversion_vsub_center, smul_smul, ← mul_pow,
-      div_mul_div_comm, div_mul_cancel₀ _ (dist_ne_zero.2 hne), ← sq, div_self, one_pow, one_smul,
-      vsub_vadd]
-    exact pow_ne_zero _ hR
+  rw [inversion_self, inversion_self]
+  rw [inversion, dist_inversion_center, inversion_vsub_center, smul_smul, ← mul_pow,
+    div_mul_div_comm, div_mul_cancel₀ _ (dist_ne_zero.2 hne), ← sq, div_self, one_pow, one_smul,
+    vsub_vadd]
+  exact pow_ne_zero _ hR
 
 theorem inversion_involutive (c : P) {R : ℝ} (hR : R ≠ 0) : Involutive (inversion c R) :=
   inversion_inversion c hR
@@ -174,12 +174,12 @@ theorem mul_dist_le_mul_dist_add_mul_dist (a b c d : P) :
     dist a c * dist b d ≤ dist a b * dist c d + dist b c * dist a d := by
   -- If one of the points `b`, `c`, `d` is equal to `a`, then the inequality is trivial.
   rcases eq_or_ne b a with (rfl | hb)
-  · rw [dist_self, zero_mul, zero_add]
+  rw [dist_self, zero_mul, zero_add]
   rcases eq_or_ne c a with (rfl | hc)
-  · rw [dist_self, zero_mul]
-    apply_rules [add_nonneg, mul_nonneg, dist_nonneg]
+  rw [dist_self, zero_mul]
+  apply_rules [add_nonneg, mul_nonneg, dist_nonneg]
   rcases eq_or_ne d a with (rfl | hd)
-  · rw [dist_self, mul_zero, add_zero, dist_comm d, dist_comm d, mul_comm]
+  rw [dist_self, mul_zero, add_zero, dist_comm d, dist_comm d, mul_comm]
   /- Otherwise, we apply the triangle inequality to `EuclideanGeometry.inversion a 1 b`,
     `EuclideanGeometry.inversion a 1 c`, and `EuclideanGeometry.inversion a 1 d`. -/
   have H := dist_triangle (inversion a 1 b) (inversion a 1 c) (inversion a 1 d)

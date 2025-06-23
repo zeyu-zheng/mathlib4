@@ -381,8 +381,8 @@ theorem MapsTo.iterate_restrict {f : α → α} {s : Set α} (h : MapsTo f s s) 
   funext x
   rw [Subtype.ext_iff, MapsTo.val_restrict_apply]
   induction' n with n ihn generalizing x
-  · rfl
-  · simp [Nat.iterate, ihn]
+  rfl
+  simp [Nat.iterate, ihn]
 
 lemma mapsTo_of_subsingleton' [Subsingleton β] (f : α → β) (h : s.Nonempty → t.Nonempty) :
     MapsTo f s t :=
@@ -554,12 +554,12 @@ theorem InjOn.mono (h : s₁ ⊆ s₂) (ht : InjOn f s₂) : InjOn f s₁ := fun
 theorem injOn_union (h : Disjoint s₁ s₂) :
     InjOn f (s₁ ∪ s₂) ↔ InjOn f s₁ ∧ InjOn f s₂ ∧ ∀ x ∈ s₁, ∀ y ∈ s₂, f x ≠ f y := by
   refine ⟨fun H => ⟨H.mono subset_union_left, H.mono subset_union_right, ?_⟩, ?_⟩
-  · intro x hx y hy hxy
-    obtain rfl : x = y := H (Or.inl hx) (Or.inr hy) hxy
-    exact h.le_bot ⟨hx, hy⟩
-  · rintro ⟨h₁, h₂, h₁₂⟩
-    rintro x (hx | hx) y (hy | hy) hxy
-    exacts [h₁ hx hy hxy, (h₁₂ _ hx _ hy hxy).elim, (h₁₂ _ hy _ hx hxy.symm).elim, h₂ hx hy hxy]
+  intro x hx y hy hxy
+  obtain rfl : x = y := H (Or.inl hx) (Or.inr hy) hxy
+  exact h.le_bot ⟨hx, hy⟩
+  rintro ⟨h₁, h₂, h₁₂⟩
+  rintro x (hx | hx) y (hy | hy) hxy
+  exacts [h₁ hx hy hxy, (h₁₂ _ hx _ hy hxy).elim, (h₁₂ _ hy _ hx hxy.symm).elim, h₂ hx hy hxy]
 
 theorem injOn_insert {f : α → β} {s : Set α} {a : α} (has : a ∉ s) :
     Set.InjOn f (insert a s) ↔ Set.InjOn f s ∧ f a ∉ f '' s := by
@@ -712,15 +712,15 @@ lemma image_fst_graphOn (f : α → β) (s : Set α) : Prod.fst '' graphOn f s =
 lemma exists_eq_graphOn_image_fst [Nonempty β] {s : Set (α × β)} :
     (∃ f : α → β, s = graphOn f (Prod.fst '' s)) ↔ InjOn Prod.fst s := by
   refine ⟨?_, fun h ↦ ?_⟩
-  · rintro ⟨f, hf⟩
-    rw [hf]
-    exact InjOn.image_of_comp <| injOn_id _
-  · have : ∀ x ∈ Prod.fst '' s, ∃ y, (x, y) ∈ s := forall_mem_image.2 fun (x, y) h ↦ ⟨y, h⟩
-    choose! f hf using this
-    rw [forall_mem_image] at hf
-    use f
-    rw [graphOn, image_image, EqOn.image_eq_self]
-    exact fun x hx ↦ h (hf hx) hx rfl
+  rintro ⟨f, hf⟩
+  rw [hf]
+  exact InjOn.image_of_comp <| injOn_id _
+  have : ∀ x ∈ Prod.fst '' s, ∃ y, (x, y) ∈ s := forall_mem_image.2 fun (x, y) h ↦ ⟨y, h⟩
+  choose! f hf using this
+  rw [forall_mem_image] at hf
+  use f
+  rw [graphOn, image_image, EqOn.image_eq_self]
+  exact fun x hx ↦ h (hf hx) hx rfl
 
 lemma exists_eq_graphOn [Nonempty β] {s : Set (α × β)} :
     (∃ f t, s = graphOn f t) ↔ InjOn Prod.fst s :=
@@ -825,12 +825,12 @@ theorem surjOn_iff_surjective : SurjOn f s univ ↔ Surjective (s.restrict f) :=
 theorem MapsTo.restrict_surjective_iff (h : MapsTo f s t) :
     Surjective (MapsTo.restrict _ _ _ h) ↔ SurjOn f s t := by
   refine ⟨fun h' b hb ↦ ?_, fun h' ⟨b, hb⟩ ↦ ?_⟩
-  · obtain ⟨⟨a, ha⟩, ha'⟩ := h' ⟨b, hb⟩
-    replace ha' : f a = b := by simpa [Subtype.ext_iff] using ha'
-    rw [← ha']
-    exact mem_image_of_mem f ha
-  · obtain ⟨a, ha, rfl⟩ := h' hb
-    exact ⟨⟨a, ha⟩, rfl⟩
+  obtain ⟨⟨a, ha⟩, ha'⟩ := h' ⟨b, hb⟩
+  replace ha' : f a = b := by simpa [Subtype.ext_iff] using ha'
+  rw [← ha']
+  exact mem_image_of_mem f ha
+  obtain ⟨a, ha, rfl⟩ := h' hb
+  exact ⟨⟨a, ha⟩, rfl⟩
 
 theorem SurjOn.image_eq_of_mapsTo (h₁ : SurjOn f s t) (h₂ : MapsTo f s t) : f '' s = t :=
   eq_of_subset_of_subset h₂.image_subset h₁
@@ -1030,10 +1030,10 @@ theorem mono (hf : LeftInvOn f' f s) (ht : s₁ ⊆ s) : LeftInvOn f' f s₁ := 
 
 theorem image_inter' (hf : LeftInvOn f' f s) : f '' (s₁ ∩ s) = f' ⁻¹' s₁ ∩ f '' s := by
   apply Subset.antisymm
-  · rintro _ ⟨x, ⟨h₁, h⟩, rfl⟩
-    exact ⟨by rwa [mem_preimage, hf h], mem_image_of_mem _ h⟩
-  · rintro _ ⟨h₁, ⟨x, h, rfl⟩⟩
-    exact mem_image_of_mem _ ⟨by rwa [← hf h], h⟩
+  rintro _ ⟨x, ⟨h₁, h⟩, rfl⟩
+  exact ⟨by rwa [mem_preimage, hf h], mem_image_of_mem _ h⟩
+  rintro _ ⟨h₁, ⟨x, h, rfl⟩⟩
+  exact mem_image_of_mem _ ⟨by rwa [← hf h], h⟩
 
 theorem image_inter (hf : LeftInvOn f' f s) :
     f '' (s₁ ∩ s) = f' ⁻¹' (s₁ ∩ s) ∩ f '' s := by
@@ -1231,13 +1231,13 @@ theorem SurjOn.bijOn_subset [Nonempty α] (h : SurjOn f s t) : BijOn f (invFunOn
 
 theorem surjOn_iff_exists_bijOn_subset : SurjOn f s t ↔ ∃ s' ⊆ s, BijOn f s' t := by
   constructor
-  · rcases eq_empty_or_nonempty t with (rfl | ht)
-    · exact fun _ => ⟨∅, empty_subset _, bijOn_empty f⟩
-    · intro h
-      haveI : Nonempty α := ⟨Classical.choose (h.comap_nonempty ht)⟩
-      exact ⟨_, h.mapsTo_invFunOn.image_subset, h.bijOn_subset⟩
-  · rintro ⟨s', hs', hfs'⟩
-    exact hfs'.surjOn.mono hs' (Subset.refl _)
+  rcases eq_empty_or_nonempty t with (rfl | ht)
+  exact fun _ => ⟨∅, empty_subset _, bijOn_empty f⟩
+  intro h
+  haveI : Nonempty α := ⟨Classical.choose (h.comap_nonempty ht)⟩
+  exact ⟨_, h.mapsTo_invFunOn.image_subset, h.bijOn_subset⟩
+  rintro ⟨s', hs', hfs'⟩
+  exact hfs'.surjOn.mono hs' (Subset.refl _)
 
 alias ⟨SurjOn.exists_bijOn_subset, _⟩ := Set.surjOn_iff_exists_bijOn_subset
 
@@ -1263,14 +1263,14 @@ theorem BijOn.exists_extend_of_subset {t' : Set β} (h : BijOn f s t) (hss₁ : 
   obtain ⟨r, hrss, hbij⟩ := exists_subset_bijOn ((s₁ ∩ f ⁻¹' t') \ f ⁻¹' t) f
   rw [image_diff_preimage, image_inter_preimage] at hbij
   refine ⟨s ∪ r, subset_union_left, ?_, ?_, ?_, fun y hyt' ↦ ?_⟩
-  · exact union_subset hss₁ <| hrss.trans <| diff_subset.trans inter_subset_left
-  · rw [mapsTo', image_union, hbij.image_eq, h.image_eq, union_subset_iff]
-    exact ⟨htt', diff_subset.trans inter_subset_right⟩
-  · rw [injOn_union, and_iff_right h.injOn, and_iff_right hbij.injOn]
-    · refine fun x hxs y hyr hxy ↦ (hrss hyr).2 ?_
-      rw [← h.image_eq]
-      exact ⟨x, hxs, hxy⟩
-    exact (subset_diff.1 hrss).2.symm.mono_left h.mapsTo
+  exact union_subset hss₁ <| hrss.trans <| diff_subset.trans inter_subset_left
+  rw [mapsTo', image_union, hbij.image_eq, h.image_eq, union_subset_iff]
+  exact ⟨htt', diff_subset.trans inter_subset_right⟩
+  rw [injOn_union, and_iff_right h.injOn, and_iff_right hbij.injOn]
+  refine fun x hxs y hyr hxy ↦ (hrss hyr).2 ?_
+  rw [← h.image_eq]
+  exact ⟨x, hxs, hxy⟩
+  exact (subset_diff.1 hrss).2.symm.mono_left h.mapsTo
   rw [image_union, h.image_eq, hbij.image_eq, union_diff_self]
   exact .inr ⟨ht' hyt', hyt'⟩
 
@@ -1290,17 +1290,17 @@ theorem preimage_invFun_of_mem [n : Nonempty α] {f : α → β} (hf : Injective
     (h : Classical.choice n ∈ s) : invFun f ⁻¹' s = f '' s ∪ (range f)ᶜ := by
   ext x
   rcases em (x ∈ range f) with (⟨a, rfl⟩ | hx)
-  · simp only [mem_preimage, mem_union, mem_compl_iff, mem_range_self, not_true, or_false,
-      leftInverse_invFun hf _, hf.mem_set_image]
-  · simp only [mem_preimage, invFun_neg hx, h, hx, mem_union, mem_compl_iff, not_false_iff, or_true]
+  simp only [mem_preimage, mem_union, mem_compl_iff, mem_range_self, not_true, or_false,
+    leftInverse_invFun hf _, hf.mem_set_image]
+  simp only [mem_preimage, invFun_neg hx, h, hx, mem_union, mem_compl_iff, not_false_iff, or_true]
 
 theorem preimage_invFun_of_not_mem [n : Nonempty α] {f : α → β} (hf : Injective f) {s : Set α}
     (h : Classical.choice n ∉ s) : invFun f ⁻¹' s = f '' s := by
   ext x
   rcases em (x ∈ range f) with (⟨a, rfl⟩ | hx)
-  · rw [mem_preimage, leftInverse_invFun hf, hf.mem_set_image]
-  · have : x ∉ f '' s := fun h' => hx (image_subset_range _ _ h')
-    simp only [mem_preimage, invFun_neg hx, h, this]
+  rw [mem_preimage, leftInverse_invFun hf, hf.mem_set_image]
+  have : x ∉ f '' s := fun h' => hx (image_subset_range _ _ h')
+  simp only [mem_preimage, invFun_neg hx, h, this]
 
 lemma BijOn.symm {g : β → α} (h : InvOn f g t s) (hf : BijOn f s t) : BijOn g t s :=
   ⟨h.2.mapsTo hf.surjOn, h.1.injOn, h.2.surjOn hf.mapsTo⟩
@@ -1358,9 +1358,9 @@ theorem piecewise_insert [DecidableEq α] (j : α) [∀ i, Decidable (i ∈ inse
   simp (config := { unfoldPartialApp := true }) only [piecewise, mem_insert_iff]
   ext i
   by_cases h : i = j
-  · rw [h]
-    simp
-  · by_cases h' : i ∈ s <;> simp [h, h']
+  rw [h]
+  simp
+  by_cases h' : i ∈ s <;> simp [h, h']
 
 @[simp]
 theorem piecewise_eq_of_mem {i : α} (hi : i ∈ s) : s.piecewise f g i = f i :=
@@ -1374,9 +1374,9 @@ theorem piecewise_singleton (x : α) [∀ y, Decidable (y ∈ ({x} : Set α))] [
     (f g : α → β) : piecewise {x} f g = Function.update g x (f x) := by
   ext y
   by_cases hy : y = x
-  · subst y
-    simp
-  · simp [hy]
+  subst y
+  simp
+  simp [hy]
 
 theorem piecewise_eqOn (f g : α → β) : EqOn (s.piecewise f g) f s := fun _ =>
   piecewise_eq_of_mem _ _ _
@@ -1461,9 +1461,9 @@ theorem piecewise_same : s.piecewise f f = f := by
 
 theorem range_piecewise (f g : α → β) : range (s.piecewise f g) = f '' s ∪ g '' sᶜ := by
   ext y; constructor
-  · rintro ⟨x, rfl⟩
-    by_cases h : x ∈ s <;> [left; right] <;> use x <;> simp [h]
-  · rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩) <;> use x <;> simp_all
+  rintro ⟨x, rfl⟩
+  by_cases h : x ∈ s <;> [left; right] <;> use x <;> simp [h]
+  rintro (⟨x, hx, rfl⟩ | ⟨x, hx, rfl⟩) <;> use x <;> simp_all
 
 theorem injective_piecewise_iff {f g : α → β} :
     Injective (s.piecewise f g) ↔
@@ -1624,11 +1624,11 @@ theorem monotoneOn_of_rightInvOn_of_mapsTo {α β : Type*} [PartialOrder α] [Li
     (φψs : Set.RightInvOn ψ φ s) (ψts : Set.MapsTo ψ s t) : MonotoneOn ψ s := by
   rintro x xs y ys l
   rcases le_total (ψ x) (ψ y) with (ψxy|ψyx)
-  · exact ψxy
-  · have := hφ (ψts ys) (ψts xs) ψyx
-    rw [φψs.eq ys, φψs.eq xs] at this
-    induction le_antisymm l this
-    exact le_refl _
+  exact ψxy
+  have := hφ (ψts ys) (ψts xs) ψyx
+  rw [φψs.eq ys, φψs.eq xs] at this
+  induction le_antisymm l this
+  exact le_refl _
 
 theorem antitoneOn_of_rightInvOn_of_mapsTo [PartialOrder α] [LinearOrder β]
     {φ : β → α} {ψ : α → β} {t : Set β} {s : Set α} (hφ : AntitoneOn φ t)

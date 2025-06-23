@@ -230,11 +230,11 @@ instance instSMul : SMul 𝕜 𝓢(E, F) :=
         refine ⟨f.seminormAux k n * (‖c‖ + 1), fun x => ?_⟩
         have hc : 0 ≤ ‖c‖ := by positivity
         refine le_trans ?_ ((mul_le_mul_of_nonneg_right (f.le_seminormAux k n x) hc).trans ?_)
-        · apply Eq.le
-          rw [mul_comm _ ‖c‖, ← mul_assoc]
-          exact decay_smul_aux k n f c x
-        · apply mul_le_mul_of_nonneg_left _ (f.seminormAux_nonneg k n)
-          linarith }⟩
+        apply Eq.le
+        rw [mul_comm _ ‖c‖, ← mul_assoc]
+        exact decay_smul_aux k n f c x
+        apply mul_le_mul_of_nonneg_left _ (f.seminormAux_nonneg k n)
+        linarith }⟩
 
 @[simp]
 theorem smul_apply {f : 𝓢(E, F)} {c : 𝕜} {x : E} : (c • f) x = c • f x :=
@@ -471,11 +471,11 @@ theorem one_add_le_sup_seminorm_apply {m : ℕ × ℕ} {k n : ℕ} (hk : k ≤ m
   gcongr ∑ _i ∈ Finset.range (m.1 + 1), ?_ with i hi
   move_mul [(Nat.choose k i : ℝ), (Nat.choose m.1 i : ℝ)]
   gcongr
-  · apply (le_seminorm 𝕜 i n f x).trans
-    apply Seminorm.le_def.1
-    exact Finset.le_sup_of_le (Finset.mem_Iic.2 <|
-      Prod.mk_le_mk.2 ⟨Finset.mem_range_succ_iff.mp hi, hn⟩) le_rfl
-  · exact mod_cast Nat.choose_le_choose i hk
+  apply (le_seminorm 𝕜 i n f x).trans
+  apply Seminorm.le_def.1
+  exact Finset.le_sup_of_le (Finset.mem_Iic.2 <|
+    Prod.mk_le_mk.2 ⟨Finset.mem_range_succ_iff.mp hi, hn⟩) le_rfl
+  exact mod_cast Nat.choose_le_choose i hk
 
 end Seminorms
 
@@ -540,11 +540,11 @@ theorem _root_.Function.HasTemperateGrowth.norm_iteratedFDeriv_le_uniform_aux {f
   intro N hN x
   rw [← Finset.mem_range_succ_iff] at hN
   refine le_trans (f N x) (mul_le_mul ?_ ?_ (by positivity) hC')
-  · simp only [C', Finset.le_sup'_iff, le_max_iff]
-    right
-    exact ⟨N, hN, rfl.le⟩
+  simp only [C', Finset.le_sup'_iff, le_max_iff]
+  right
+  exact ⟨N, hN, rfl.le⟩
   gcongr
-  · simp
+  simp
   exact Finset.le_sup hN
 
 lemma _root_.Function.HasTemperateGrowth.of_fderiv {f : E → F}
@@ -553,10 +553,10 @@ lemma _root_.Function.HasTemperateGrowth.of_fderiv {f : E → F}
     Function.HasTemperateGrowth f := by
   refine ⟨contDiff_top_iff_fderiv.2 ⟨hf, h'f.1⟩ , fun n ↦ ?_⟩
   rcases n with rfl|m
-  · exact ⟨k, C, fun x ↦ by simpa using h x⟩
-  · rcases h'f.2 m with ⟨k', C', h'⟩
-    refine ⟨k', C', ?_⟩
-    simpa [iteratedFDeriv_succ_eq_comp_right] using h'
+  exact ⟨k, C, fun x ↦ by simpa using h x⟩
+  rcases h'f.2 m with ⟨k', C', h'⟩
+  refine ⟨k', C', ?_⟩
+  simpa [iteratedFDeriv_succ_eq_comp_right] using h'
 
 lemma _root_.Function.HasTemperateGrowth.zero :
     Function.HasTemperateGrowth (fun _ : E ↦ (0 : F)) := by
@@ -571,9 +571,9 @@ lemma _root_.Function.HasTemperateGrowth.const (c : F) :
 lemma _root_.ContinuousLinearMap.hasTemperateGrowth (f : E →L[ℝ] F) :
     Function.HasTemperateGrowth f := by
   apply Function.HasTemperateGrowth.of_fderiv ?_ f.differentiable (k := 1) (C := ‖f‖) (fun x ↦ ?_)
-  · have : fderiv ℝ f = fun _ ↦ f := by ext1 v; simp only [ContinuousLinearMap.fderiv]
-    simpa [this] using .const _
-  · exact (f.le_opNorm x).trans (by simp [mul_add])
+  have : fderiv ℝ f = fun _ ↦ f := by ext1 v; simp only [ContinuousLinearMap.fderiv]
+  simpa [this] using .const _
+  exact (f.le_opNorm x).trans (by simp [mul_add])
 
 variable [NormedAddCommGroup D] [NormedSpace ℝ D]
 variable [MeasurableSpace D] [BorelSpace D] [SecondCountableTopology D] [FiniteDimensional ℝ D]
@@ -617,21 +617,21 @@ lemma pow_mul_le_of_le_of_pow_mul_le {C₁ C₂ : ℝ} {k l : ℕ} {x f : ℝ} (
   ring
   rw [this]
   rcases le_total x 1 with h'x|h'x
-  · gcongr
-    · apply (pow_le_one k hx h'x).trans
-      apply Real.one_le_rpow_of_pos_of_le_one_of_nonpos
-      · linarith
-      · linarith
-      · simp
-    · linarith
-  · calc
-    x ^ k * f = x ^ (-(l : ℝ)) * (x ^ (k + l) * f) := by
-      rw [← Real.rpow_natCast, ← Real.rpow_natCast, ← mul_assoc, ← Real.rpow_add (by linarith)]
-      simp
-    _ ≤ ((1 + x) / 2) ^ (-(l : ℝ)) * (C₁ + C₂) := by
-      apply mul_le_mul _ _ (by positivity) (by positivity)
-      · exact Real.rpow_le_rpow_of_nonpos (by linarith) (by linarith) (by simp)
-      · exact h₂.trans (by linarith)
+  gcongr
+  apply (pow_le_one k hx h'x).trans
+  apply Real.one_le_rpow_of_pos_of_le_one_of_nonpos
+  linarith
+  linarith
+  simp
+  linarith
+  calc
+  x ^ k * f = x ^ (-(l : ℝ)) * (x ^ (k + l) * f) := by
+    rw [← Real.rpow_natCast, ← Real.rpow_natCast, ← mul_assoc, ← Real.rpow_add (by linarith)]
+    simp
+  _ ≤ ((1 + x) / 2) ^ (-(l : ℝ)) * (C₁ + C₂) := by
+    apply mul_le_mul _ _ (by positivity) (by positivity)
+    exact Real.rpow_le_rpow_of_nonpos (by linarith) (by linarith) (by simp)
+    exact h₂.trans (by linarith)
 
 /-- Given a function such that `f` and `x ^ (k + l) * f` are bounded for a suitable `l`, then
 `x ^ k * f` is integrable. The bounds are not relevant for the integrability conclusion, but they
@@ -643,10 +643,10 @@ lemma integrable_of_le_of_pow_mul_le
     (h''f : AEStronglyMeasurable f μ) :
     Integrable (fun x ↦ ‖x‖ ^ k * ‖f x‖) μ := by
   apply ((integrable_pow_neg_integrablePower μ).const_mul (2 ^ μ.integrablePower * (C₁ + C₂))).mono'
-  · exact AEStronglyMeasurable.mul (aestronglyMeasurable_id.norm.pow _) h''f.norm
-  · filter_upwards with v
-    simp only [norm_mul, norm_pow, norm_norm]
-    apply pow_mul_le_of_le_of_pow_mul_le (norm_nonneg _) (norm_nonneg _) (hf v) (h'f v)
+  exact AEStronglyMeasurable.mul (aestronglyMeasurable_id.norm.pow _) h''f.norm
+  filter_upwards with v
+  simp only [norm_mul, norm_pow, norm_norm]
+  apply pow_mul_le_of_le_of_pow_mul_le (norm_nonneg _) (norm_nonneg _) (hf v) (h'f v)
 
 /-- Given a function such that `f` and `x ^ (k + l) * f` are bounded for a suitable `l`, then
 one can bound explicitly the integral of `x ^ k * f`. -/
@@ -657,8 +657,8 @@ lemma integral_pow_mul_le_of_le_of_pow_mul_le
       (∫ x, (1 + ‖x‖) ^ (- (μ.integrablePower : ℝ)) ∂μ) * (C₁ + C₂) := by
   rw [← integral_mul_left, ← integral_mul_right]
   apply integral_mono_of_nonneg
-  · filter_upwards with v using by positivity
-  · exact ((integrable_pow_neg_integrablePower μ).const_mul _).mul_const _
+  filter_upwards with v using by positivity
+  exact ((integrable_pow_neg_integrablePower μ).const_mul _).mul_const _
   filter_upwards with v
   exact (pow_mul_le_of_le_of_pow_mul_le (norm_nonneg _) (norm_nonneg _) (hf v) (h'f v)).trans
     (le_of_eq (by ring))
@@ -1000,8 +1000,8 @@ theorem iteratedPDeriv_succ_left {n : ℕ} (m : Fin (n + 1) → E) (f : 𝓢(E, 
 theorem iteratedPDeriv_succ_right {n : ℕ} (m : Fin (n + 1) → E) (f : 𝓢(E, F)) :
     iteratedPDeriv 𝕜 m f = iteratedPDeriv 𝕜 (Fin.init m) (pderivCLM 𝕜 (m (Fin.last n)) f) := by
   induction' n with n IH
-  · rw [iteratedPDeriv_zero, iteratedPDeriv_one]
-    rfl
+  rw [iteratedPDeriv_zero, iteratedPDeriv_one]
+  rfl
   -- The proof is `∂^{n + 2} = ∂ ∂^{n + 1} = ∂ ∂^n ∂ = ∂^{n+1} ∂`
   have hmzero : Fin.init m 0 = m 0
   simp only [Fin.init_def, Fin.castSucc_zero]
@@ -1022,8 +1022,8 @@ theorem iteratedPDeriv_eq_iteratedFDeriv {n : ℕ} {m : Fin n → E} {f : 𝓢(E
   | succ n ih =>
     simp only [iteratedPDeriv_succ_left, iteratedFDeriv_succ_apply_left]
     rw [← fderiv_continuousMultilinear_apply_const_apply]
-    · simp [← ih]
-    · exact f.smooth'.differentiable_iteratedFDeriv (WithTop.coe_lt_top n) _
+    simp [← ih]
+    exact f.smooth'.differentiable_iteratedFDeriv (WithTop.coe_lt_top n) _
 
 end Derivatives
 

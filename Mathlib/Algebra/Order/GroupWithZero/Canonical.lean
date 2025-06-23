@@ -117,8 +117,8 @@ theorem le_mul_inv_of_mul_le (h : c ≠ 0) (hab : a * c ≤ b) : a ≤ b * c⁻�
 
 theorem mul_inv_le_of_le_mul (hab : a ≤ b * c) : a * c⁻¹ ≤ b := by
   by_cases h : c = 0
-  · simp [h]
-  · exact le_of_le_mul_right h (by simpa [h] using hab)
+  simp [h]
+  exact le_of_le_mul_right h (by simpa [h] using hab)
 
 theorem inv_le_one₀ (ha : a ≠ 0) : a⁻¹ ≤ 1 ↔ 1 ≤ a :=
   inv_le_one' (a := Units.mk0 a ha)
@@ -315,24 +315,24 @@ protected lemma covariantClass_add_le [AddZeroClass α] [CovariantClass α α (�
     (h : ∀ a : α, 0 ≤ a) : CovariantClass (WithZero α) (WithZero α) (· + ·) (· ≤ ·) := by
   refine ⟨fun a b c hbc => ?_⟩
   induction a
-  · rwa [zero_add, zero_add]
+  rwa [zero_add, zero_add]
   induction b
-  · rw [add_zero]
-    induction c
-    · rw [add_zero]
-    · rw [← coe_add, coe_le_coe]
-      exact le_add_of_nonneg_right (h _)
-  · rcases WithBot.coe_le_iff.1 hbc with ⟨c, rfl, hbc'⟩
-    refine le_trans ?_ (le_of_eq <| coe_add _ _)
-    rw [← coe_add, coe_le_coe]
-    exact add_le_add_left hbc' _
+  rw [add_zero]
+  induction c
+  rw [add_zero]
+  rw [← coe_add, coe_le_coe]
+  exact le_add_of_nonneg_right (h _)
+  rcases WithBot.coe_le_iff.1 hbc with ⟨c, rfl, hbc'⟩
+  refine le_trans ?_ (le_of_eq <| coe_add _ _)
+  rw [← coe_add, coe_le_coe]
+  exact add_le_add_left hbc' _
 
 instance existsAddOfLE [Add α] [ExistsAddOfLE α] : ExistsAddOfLE (WithZero α) :=
   ⟨fun {a b} => by
     induction a
-    · exact fun _ => ⟨b, (zero_add b).symm⟩
+    exact fun _ => ⟨b, (zero_add b).symm⟩
     induction b
-    · exact fun h => (WithBot.not_coe_le_bot _ h).elim
+    exact fun h => (WithBot.not_coe_le_bot _ h).elim
     intro h
     obtain ⟨c, rfl⟩ := exists_add_of_le (WithZero.coe_le_coe.1 h)
     exact ⟨c, rfl⟩⟩
@@ -349,9 +349,9 @@ instance contravariantClass_mul_lt [Mul α] [ContravariantClass α α (· * ·) 
   refine ⟨fun a b c h => ?_⟩
   have := ((zero_le _).trans_lt h).ne'
   induction a
-  · simp at this
+  simp at this
   induction c
-  · simp at this
+  simp at this
   induction b
   exacts [zero_lt_coe _, coe_lt_coe.mpr (lt_of_mul_lt_mul_left' <| coe_lt_coe.mp h)]
 
@@ -401,10 +401,10 @@ instance canonicallyOrderedAddCommMonoid [CanonicallyOrderedAddCommMonoid α] :
     WithZero.existsAddOfLE with
     le_self_add := fun a b => by
       induction a
-      · exact bot_le
+      exact bot_le
       induction b
-      · exact le_rfl
-      · exact WithZero.coe_le_coe.2 le_self_add }
+      exact le_rfl
+      exact WithZero.coe_le_coe.2 le_self_add }
 
 instance canonicallyLinearOrderedAddCommMonoid [CanonicallyLinearOrderedAddCommMonoid α] :
     CanonicallyLinearOrderedAddCommMonoid (WithZero α) :=

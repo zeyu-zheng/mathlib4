@@ -148,42 +148,42 @@ lemma forget_map_apply {A B : NonemptyFinLinOrd.{u}} (f : A ⟶ B) (a : A) :
 theorem epi_iff_surjective {A B : NonemptyFinLinOrd.{u}} (f : A ⟶ B) :
     Epi f ↔ Function.Surjective f := by
   constructor
-  · intro
-    dsimp only [Function.Surjective]
-    by_contra! hf'
-    rcases hf' with ⟨m, hm⟩
-    let Y := NonemptyFinLinOrd.of (ULift (Fin 2))
-    let p₁ : B ⟶ Y :=
-      ⟨fun b => if b < m then ULift.up 0 else ULift.up 1, fun x₁ x₂ h => by
-        simp only
-        split_ifs with h₁ h₂ h₂
-        any_goals apply Fin.zero_le
-        · exfalso
-          exact h₁ (lt_of_le_of_lt h h₂)
-        · rfl⟩
-    let p₂ : B ⟶ Y :=
-      ⟨fun b => if b ≤ m then ULift.up 0 else ULift.up 1, fun x₁ x₂ h => by
-        simp only
-        split_ifs with h₁ h₂ h₂
-        any_goals apply Fin.zero_le
-        · exfalso
-          exact h₁ (h.trans h₂)
-        · rfl⟩
-    have h : p₁ m = p₂ m := by
-      congr
-      rw [← cancel_epi f]
-      ext a
-      simp only [coe_of, comp_apply]
-      change ite _ _ _ = ite _ _ _
+  intro
+  dsimp only [Function.Surjective]
+  by_contra! hf'
+  rcases hf' with ⟨m, hm⟩
+  let Y := NonemptyFinLinOrd.of (ULift (Fin 2))
+  let p₁ : B ⟶ Y :=
+    ⟨fun b => if b < m then ULift.up 0 else ULift.up 1, fun x₁ x₂ h => by
+      simp only
       split_ifs with h₁ h₂ h₂
-      any_goals rfl
-      · exfalso
-        exact h₂ (le_of_lt h₁)
-      · exfalso
-        exact hm a (eq_of_le_of_not_lt h₂ h₁)
-    simp [Y, DFunLike.coe] at h
-  · intro h
-    exact ConcreteCategory.epi_of_surjective f h
+      any_goals apply Fin.zero_le
+      exfalso
+      exact h₁ (lt_of_le_of_lt h h₂)
+      rfl⟩
+  let p₂ : B ⟶ Y :=
+    ⟨fun b => if b ≤ m then ULift.up 0 else ULift.up 1, fun x₁ x₂ h => by
+      simp only
+      split_ifs with h₁ h₂ h₂
+      any_goals apply Fin.zero_le
+      exfalso
+      exact h₁ (h.trans h₂)
+      rfl⟩
+  have h : p₁ m = p₂ m := by
+    congr
+    rw [← cancel_epi f]
+    ext a
+    simp only [coe_of, comp_apply]
+    change ite _ _ _ = ite _ _ _
+    split_ifs with h₁ h₂ h₂
+    any_goals rfl
+    exfalso
+    exact h₂ (le_of_lt h₁)
+    exfalso
+    exact hm a (eq_of_le_of_not_lt h₂ h₁)
+  simp [Y, DFunLike.coe] at h
+  intro h
+  exact ConcreteCategory.epi_of_surjective f h
 
 instance : SplitEpiCategory NonemptyFinLinOrd.{u} :=
   ⟨fun {X Y} f hf => by
@@ -195,19 +195,19 @@ instance : SplitEpiCategory NonemptyFinLinOrd.{u} :=
     have hφ : ∀ y : Y, f (φ y) = y := fun y => (H y).some.2
     refine IsSplitEpi.mk' ⟨⟨φ, ?_⟩, ?_⟩
     swap
-    · ext b
-      apply hφ
-    · intro a b
-      contrapose
-      intro h
-      simp only [not_le] at h ⊢
-      suffices b ≤ a by
-        apply lt_of_le_of_ne this
-        rintro rfl
-        exfalso
-        simp at h
-      have H : f (φ b) ≤ f (φ a) := f.monotone (le_of_lt h)
-      simpa only [hφ] using H⟩
+    ext b
+    apply hφ
+    intro a b
+    contrapose
+    intro h
+    simp only [not_le] at h ⊢
+    suffices b ≤ a by
+      apply lt_of_le_of_ne this
+      rintro rfl
+      exfalso
+      simp at h
+    have H : f (φ b) ≤ f (φ a) := f.monotone (le_of_lt h)
+    simpa only [hφ] using H⟩
 
 instance : HasStrongEpiMonoFactorisations NonemptyFinLinOrd.{u} :=
   ⟨fun {X Y} f => by

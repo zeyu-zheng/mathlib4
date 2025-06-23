@@ -137,8 +137,8 @@ theorem convex_iff_pairwise_pos : Convex 𝕜 s ↔
   refine convex_iff_forall_pos.trans ⟨fun h x hx y hy _ => h hx hy, ?_⟩
   intro h x hx y hy a b ha hb hab
   obtain rfl | hxy := eq_or_ne x y
-  · rwa [Convex.combo_self hab]
-  · exact h hx hy hxy ha hb hab
+  rwa [Convex.combo_self hab]
+  exact h hx hy hxy ha hb hab
 
 theorem Convex.starConvex_iff (hs : Convex 𝕜 s) (h : s.Nonempty) : StarConvex 𝕜 x s ↔ x ∈ s :=
   ⟨fun hxs => hxs.mem h, hs.starConvex⟩
@@ -157,9 +157,9 @@ theorem convex_segment (x y : E) : Convex 𝕜 [x -[𝕜] y] := by
   refine
     ⟨a * ap + b * aq, a * bp + b * bq, add_nonneg (mul_nonneg ha hap) (mul_nonneg hb haq),
       add_nonneg (mul_nonneg ha hbp) (mul_nonneg hb hbq), ?_, ?_⟩
-  · rw [add_add_add_comm, ← mul_add, ← mul_add, habp, habq, mul_one, mul_one, hab]
-  · simp_rw [add_smul, mul_smul, smul_add]
-    exact add_add_add_comm _ _ _ _
+  rw [add_add_add_comm, ← mul_add, ← mul_add, habp, habq, mul_one, mul_one, hab]
+  simp_rw [add_smul, mul_smul, smul_add]
+  exact add_add_add_comm _ _ _ _
 
 theorem Convex.linear_image (hs : Convex 𝕜 s) (f : E →ₗ[𝕜] F) : Convex 𝕜 (f '' s) := by
   rintro _ ⟨x, hx, rfl⟩ _ ⟨y, hy, rfl⟩ a b ha hb hab
@@ -265,8 +265,8 @@ variable [OrderedCancelAddCommMonoid β] [Module 𝕜 β] [OrderedSMul 𝕜 β]
 theorem convex_Iio (r : β) : Convex 𝕜 (Iio r) := by
   intro x hx y hy a b ha hb hab
   obtain rfl | ha' := ha.eq_or_lt
-  · rw [zero_add] at hab
-    rwa [zero_smul, zero_add, hab, one_smul]
+  rw [zero_add] at hab
+  rwa [zero_smul, zero_add, hab, one_smul]
   rw [mem_Iio] at hx hy
   calc
     a • x + b • y < a • r + b • r := add_lt_add_of_lt_of_le
@@ -406,8 +406,8 @@ theorem convex_openSegment (a b : E) : Convex 𝕜 (openSegment 𝕜 a b) := by
   rw [convex_iff_openSegment_subset]
   rintro p ⟨ap, bp, hap, hbp, habp, rfl⟩ q ⟨aq, bq, haq, hbq, habq, rfl⟩ z ⟨a, b, ha, hb, hab, rfl⟩
   refine ⟨a * ap + b * aq, a * bp + b * bq, by positivity, by positivity, ?_, ?_⟩
-  · rw [add_add_add_comm, ← mul_add, ← mul_add, habp, habq, mul_one, mul_one, hab]
-  · simp_rw [add_smul, mul_smul, smul_add, add_add_add_comm]
+  rw [add_add_add_comm, ← mul_add, ← mul_add, habp, habq, mul_one, mul_one, hab]
+  simp_rw [add_smul, mul_smul, smul_add, add_add_add_comm]
 
 end StrictOrderedCommSemiring
 
@@ -510,11 +510,11 @@ theorem Convex.mem_smul_of_zero_mem (h : Convex 𝕜 s) {x : E} (zero_mem : (0 :
 theorem Convex.exists_mem_add_smul_eq (h : Convex 𝕜 s) {x y : E} {p q : 𝕜} (hx : x ∈ s) (hy : y ∈ s)
     (hp : 0 ≤ p) (hq : 0 ≤ q) : ∃ z ∈ s, (p + q) • z = p • x + q • y := by
   rcases _root_.em (p = 0 ∧ q = 0) with (⟨rfl, rfl⟩ | hpq)
-  · use x, hx
-    simp
-  · replace hpq : 0 < p + q := (add_nonneg hp hq).lt_of_ne' (mt (add_eq_zero_iff' hp hq).1 hpq)
-    refine ⟨_, convex_iff_div.1 h hx hy hp hq hpq, ?_⟩
-    simp only [smul_add, smul_smul, mul_div_cancel₀ _ hpq.ne']
+  use x, hx
+  simp
+  replace hpq : 0 < p + q := (add_nonneg hp hq).lt_of_ne' (mt (add_eq_zero_iff' hp hq).1 hpq)
+  refine ⟨_, convex_iff_div.1 h hx hy hp hq hpq, ?_⟩
+  simp only [smul_add, smul_smul, mul_div_cancel₀ _ hpq.ne']
 
 theorem Convex.add_smul (h_conv : Convex 𝕜 s) {p q : 𝕜} (hp : 0 ≤ p) (hq : 0 ≤ q) :
     (p + q) • s = p • s + q • s := (add_smul_subset _ _ _).antisymm <| by
@@ -537,9 +537,9 @@ theorem Set.OrdConnected.convex_of_chain [OrderedSemiring 𝕜] [OrderedAddCommM
     [OrderedSMul 𝕜 E] {s : Set E} (hs : s.OrdConnected) (h : IsChain (· ≤ ·) s) : Convex 𝕜 s := by
   refine convex_iff_segment_subset.mpr fun x hx y hy => ?_
   obtain hxy | hyx := h.total hx hy
-  · exact (segment_subset_Icc hxy).trans (hs.out hx hy)
-  · rw [segment_symm]
-    exact (segment_subset_Icc hyx).trans (hs.out hy hx)
+  exact (segment_subset_Icc hxy).trans (hs.out hx hy)
+  rw [segment_symm]
+  exact (segment_subset_Icc hyx).trans (hs.out hy hx)
 
 theorem Set.OrdConnected.convex [OrderedSemiring 𝕜] [LinearOrderedAddCommMonoid E] [Module 𝕜 E]
     [OrderedSMul 𝕜 E] {s : Set E} (hs : s.OrdConnected) : Convex 𝕜 s :=
@@ -589,12 +589,12 @@ theorem stdSimplex_eq_inter : stdSimplex 𝕜 ι = (⋂ x, { f | 0 ≤ f x }) �
 
 theorem convex_stdSimplex : Convex 𝕜 (stdSimplex 𝕜 ι) := by
   refine fun f hf g hg a b ha hb hab => ⟨fun x => ?_, ?_⟩
-  · apply_rules [add_nonneg, mul_nonneg, hf.1, hg.1]
-  · erw [Finset.sum_add_distrib]
-    simp only [Pi.smul_apply] -- Porting note: `erw` failed to rewrite with `← Finset.smul_sum`
-    rw [← Finset.smul_sum, ← Finset.smul_sum, hf.2, hg.2, smul_eq_mul,
-      smul_eq_mul, mul_one, mul_one]
-    exact hab
+  apply_rules [add_nonneg, mul_nonneg, hf.1, hg.1]
+  erw [Finset.sum_add_distrib]
+  simp only [Pi.smul_apply] -- Porting note: `erw` failed to rewrite with `← Finset.smul_sum`
+  rw [← Finset.smul_sum, ← Finset.smul_sum, hf.2, hg.2, smul_eq_mul,
+    smul_eq_mul, mul_one, mul_one]
+  exact hab
 
 @[nontriviality] lemma stdSimplex_of_subsingleton [Subsingleton 𝕜] : stdSimplex 𝕜 ι = univ :=
   eq_univ_of_forall fun _ ↦ ⟨fun _ ↦ (Subsingleton.elim _ _).le, Subsingleton.elim _ _⟩

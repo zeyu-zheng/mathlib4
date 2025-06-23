@@ -483,28 +483,28 @@ lemma addPolynomial_slope {x₁ x₂ y₁ y₂ : F} (h₁ : W.Equation x₁ y₁
       -((X - C x₁) * (X - C x₂) * (X - C (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂))) := by
   rw [addPolynomial_eq, neg_inj, Cubic.prod_X_sub_C_eq, Cubic.toPoly_injective]
   by_cases hx : x₁ = x₂
-  · rcases hx, Y_eq_of_Y_ne h₁ h₂ hx (hxy hx) with ⟨rfl, rfl⟩
-    rw [equation_iff] at h₁ h₂
-    rw [slope_of_Y_ne rfl <| hxy rfl]
-    rw [negY, ← sub_ne_zero] at hxy
-    ext
-    · rfl
-    · simp only [addX]
-      ring1
-    · field_simp [hxy rfl]
-      ring1
-    · linear_combination (norm := (field_simp [hxy rfl]; ring1)) -h₁
-  · rw [equation_iff] at h₁ h₂
-    rw [slope_of_X_ne hx]
-    rw [← sub_eq_zero] at hx
-    ext
-    · rfl
-    · simp only [addX]
-      ring1
-    · apply mul_right_injective₀ hx
-      linear_combination (norm := (field_simp [hx]; ring1)) h₂ - h₁
-    · apply mul_right_injective₀ hx
-      linear_combination (norm := (field_simp [hx]; ring1)) x₂ * h₁ - x₁ * h₂
+  rcases hx, Y_eq_of_Y_ne h₁ h₂ hx (hxy hx) with ⟨rfl, rfl⟩
+  rw [equation_iff] at h₁ h₂
+  rw [slope_of_Y_ne rfl <| hxy rfl]
+  rw [negY, ← sub_ne_zero] at hxy
+  ext
+  rfl
+  simp only [addX]
+  ring1
+  field_simp [hxy rfl]
+  ring1
+  linear_combination (norm := (field_simp [hxy rfl]; ring1)) -h₁
+  rw [equation_iff] at h₁ h₂
+  rw [slope_of_X_ne hx]
+  rw [← sub_eq_zero] at hx
+  ext
+  rfl
+  simp only [addX]
+  ring1
+  apply mul_right_injective₀ hx
+  linear_combination (norm := (field_simp [hx]; ring1)) h₂ - h₁
+  apply mul_right_injective₀ hx
+  linear_combination (norm := (field_simp [hx]; ring1)) x₂ * h₁ - x₁ * h₂
 
 /-- The negated addition of two affine points in `W` on a sloped line lies in `W`. -/
 lemma equation_negAdd {x₁ x₂ y₁ y₂ : F} (h₁ : W.Equation x₁ y₁) (h₂ : W.Equation x₂ y₂)
@@ -534,18 +534,18 @@ lemma nonsingular_negAdd {x₁ x₂ y₁ y₂ : F} (h₁ : W.Nonsingular x₁ y�
     (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) : W.Nonsingular
       (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.negAddY x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) := by
   by_cases hx₁ : W.addX x₁ x₂ (W.slope x₁ x₂ y₁ y₂) = x₁
-  · rwa [negAddY, hx₁, sub_self, mul_zero, zero_add]
-  · by_cases hx₂ : W.addX x₁ x₂ (W.slope x₁ x₂ y₁ y₂) = x₂
-    · by_cases hx : x₁ = x₂
-      · subst hx
-        contradiction
-      · rwa [negAddY, ← neg_sub, mul_neg, hx₂, slope_of_X_ne hx,
-          div_mul_cancel₀ _ <| sub_ne_zero_of_ne hx, neg_sub, sub_add_cancel]
-    · apply nonsingular_negAdd_of_eval_derivative_ne_zero <| equation_negAdd h₁.1 h₂.1 hxy
-      rw [derivative_addPolynomial_slope h₁.left h₂.left hxy]
-      eval_simp
-      simpa only [neg_ne_zero, sub_self, mul_zero, add_zero] using
-        mul_ne_zero (sub_ne_zero_of_ne hx₁) (sub_ne_zero_of_ne hx₂)
+  rwa [negAddY, hx₁, sub_self, mul_zero, zero_add]
+  by_cases hx₂ : W.addX x₁ x₂ (W.slope x₁ x₂ y₁ y₂) = x₂
+  by_cases hx : x₁ = x₂
+  subst hx
+  contradiction
+  rwa [negAddY, ← neg_sub, mul_neg, hx₂, slope_of_X_ne hx,
+    div_mul_cancel₀ _ <| sub_ne_zero_of_ne hx, neg_sub, sub_add_cancel]
+  apply nonsingular_negAdd_of_eval_derivative_ne_zero <| equation_negAdd h₁.1 h₂.1 hxy
+  rw [derivative_addPolynomial_slope h₁.left h₂.left hxy]
+  eval_simp
+  simpa only [neg_ne_zero, sub_self, mul_zero, add_zero] using
+    mul_ne_zero (sub_ne_zero_of_ne hx₁) (sub_ne_zero_of_ne hx₂)
 
 /-- The addition of two nonsingular affine points in `W` on a sloped line is nonsingular. -/
 lemma nonsingular_add {x₁ x₂ y₁ y₂ : F} (h₁ : W.Nonsingular x₁ y₁) (h₂ : W.Nonsingular x₂ y₂)
@@ -797,13 +797,13 @@ lemma map_slope {F : Type u} [Field F] (W : Affine F) {K : Type v} [Field K] (f 
     (x₁ x₂ y₁ y₂ : F) : (W.map f).toAffine.slope (f x₁) (f x₂) (f y₁) (f y₂) =
       f (W.slope x₁ x₂ y₁ y₂) := by
   by_cases hx : x₁ = x₂
-  · by_cases hy : y₁ = W.negY x₂ y₂
-    · rw [slope_of_Y_eq (congr_arg f hx) <| by rw [hy, map_negY], slope_of_Y_eq hx hy, map_zero]
-    · rw [slope_of_Y_ne (congr_arg f hx) <| W.map_negY f x₂ y₂ ▸ fun h => hy <| f.injective h,
-        map_negY, slope_of_Y_ne hx hy]
-      map_simp
-  · rw [slope_of_X_ne fun h => hx <| f.injective h, slope_of_X_ne hx]
-    map_simp
+  by_cases hy : y₁ = W.negY x₂ y₂
+  rw [slope_of_Y_eq (congr_arg f hx) <| by rw [hy, map_negY], slope_of_Y_eq hx hy, map_zero]
+  rw [slope_of_Y_ne (congr_arg f hx) <| W.map_negY f x₂ y₂ ▸ fun h => hy <| f.injective h,
+    map_negY, slope_of_Y_ne hx hy]
+  map_simp
+  rw [slope_of_X_ne fun h => hx <| f.injective h, slope_of_X_ne hx]
+  map_simp
 
 end Map
 
@@ -927,8 +927,8 @@ lemma map_map (P : W⟮F⟯) : map W g (map W f P) = map W (g.comp f) P := by
 lemma map_injective : Function.Injective <| map W f := by
   rintro (_ | _) (_ | _) h
   any_goals contradiction
-  · rfl
-  · simpa only [some.injEq] using ⟨f.injective (some.inj h).left, f.injective (some.inj h).right⟩
+  rfl
+  simpa only [some.injEq] using ⟨f.injective (some.inj h).left, f.injective (some.inj h).right⟩
 
 variable (F K) in
 /-- The group homomorphism from `W⟮F⟯` to `W⟮K⟯` induced by the base change from `F` to `K`,

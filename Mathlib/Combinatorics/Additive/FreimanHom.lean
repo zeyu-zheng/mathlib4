@@ -140,8 +140,8 @@ lemma isMulFreimanHom_two :
     rw [← map_map, ← map_map]
     refine hg.map_prod_eq_map_prod ?_ ?_ (by rwa [card_map]) (by rwa [card_map])
       (hf.map_prod_eq_map_prod hsA htA hs ht h)
-    · simpa using fun a h ↦ hf.mapsTo (hsA h)
-    · simpa using fun a h ↦ hf.mapsTo (htA h)
+    simpa using fun a h ↦ hf.mapsTo (hsA h)
+    simpa using fun a h ↦ hf.mapsTo (htA h)
 
 @[to_additive] lemma IsMulFreimanIso.comp (hg : IsMulFreimanIso n B C g)
     (hf : IsMulFreimanIso n A B f) : IsMulFreimanIso n A C (g ∘ f) where
@@ -150,8 +150,8 @@ lemma isMulFreimanHom_two :
     rw [← map_map, ← map_map]
     rw [hg.map_prod_eq_map_prod _ _ (by rwa [card_map]) (by rwa [card_map]),
       hf.map_prod_eq_map_prod hsA htA hs ht]
-    · simpa using fun a h ↦ hf.bijOn.mapsTo (hsA h)
-    · simpa using fun a h ↦ hf.bijOn.mapsTo (htA h)
+    simpa using fun a h ↦ hf.bijOn.mapsTo (hsA h)
+    simpa using fun a h ↦ hf.bijOn.mapsTo (htA h)
 
 @[to_additive] lemma IsMulFreimanHom.subset (hA : A₁ ⊆ A₂) (hf : IsMulFreimanHom n A₂ B₂ f)
     (hf' : MapsTo f A₁ B₁) : IsMulFreimanHom n A₁ B₁ f where
@@ -208,8 +208,8 @@ lemma IsMulFreimanHom.mono (hmn : m ≤ n) (hf : IsMulFreimanHom n A B f) :
   mapsTo := hf.mapsTo
   map_prod_eq_map_prod s t hsA htA hs ht h := by
     obtain rfl | hm := m.eq_zero_or_pos
-    · rw [card_eq_zero] at hs ht
-      rw [hs, ht]
+    rw [card_eq_zero] at hs ht
+    rw [hs, ht]
     simp only [← hs, card_pos_iff_exists_mem] at hm
     obtain ⟨a, ha⟩ := hm
     suffices ((s + replicate (n - m) a).map f).prod = ((t + replicate (n - m) a).map f).prod by
@@ -217,17 +217,17 @@ lemma IsMulFreimanHom.mono (hmn : m ≤ n) (hf : IsMulFreimanHom n A B f) :
       exact mul_right_cancel this
     replace ha := hsA ha
     refine hf.map_prod_eq_map_prod (fun a ha ↦ ?_) (fun a ha ↦ ?_) ?_ ?_ ?_
-    · rw [Multiset.mem_add] at ha
-      obtain ha | ha := ha
-      · exact hsA ha
-      · rwa [eq_of_mem_replicate ha]
-    · rw [Multiset.mem_add] at ha
-      obtain ha | ha := ha
-      · exact htA ha
-      · rwa [eq_of_mem_replicate ha]
-    · rw [_root_.map_add, card_replicate, hs, Nat.add_sub_cancel' hmn]
-    · rw [_root_.map_add, card_replicate, ht, Nat.add_sub_cancel' hmn]
-    · rw [prod_add, prod_add, h]
+    rw [Multiset.mem_add] at ha
+    obtain ha | ha := ha
+    exact hsA ha
+    rwa [eq_of_mem_replicate ha]
+    rw [Multiset.mem_add] at ha
+    obtain ha | ha := ha
+    exact htA ha
+    rwa [eq_of_mem_replicate ha]
+    rw [_root_.map_add, card_replicate, hs, Nat.add_sub_cancel' hmn]
+    rw [_root_.map_add, card_replicate, ht, Nat.add_sub_cancel' hmn]
+    rw [prod_add, prod_add, h]
 
 end CancelCommMonoid
 
@@ -240,8 +240,8 @@ lemma IsMulFreimanIso.mono {hmn : m ≤ n} (hf : IsMulFreimanIso n A B f) :
   bijOn := hf.bijOn
   map_prod_eq_map_prod s t hsA htA hs ht := by
     obtain rfl | hm := m.eq_zero_or_pos
-    · rw [card_eq_zero] at hs ht
-      simp [hs, ht]
+    rw [card_eq_zero] at hs ht
+    simp [hs, ht]
     simp only [← hs, card_pos_iff_exists_mem] at hm
     obtain ⟨a, ha⟩ := hm
     suffices
@@ -250,16 +250,16 @@ lemma IsMulFreimanIso.mono {hmn : m ≤ n} (hf : IsMulFreimanIso n A B f) :
       simpa only [Multiset.map_add, prod_add, mul_right_cancel_iff] using this
     replace ha := hsA ha
     refine hf.map_prod_eq_map_prod (fun a ha ↦ ?_) (fun a ha ↦ ?_) ?_ ?_
-    · rw [Multiset.mem_add] at ha
-      obtain ha | ha := ha
-      · exact hsA ha
-      · rwa [eq_of_mem_replicate ha]
-    · rw [Multiset.mem_add] at ha
-      obtain ha | ha := ha
-      · exact htA ha
-      · rwa [eq_of_mem_replicate ha]
-    · rw [_root_.map_add, card_replicate, hs, Nat.add_sub_cancel' hmn]
-    · rw [_root_.map_add, card_replicate, ht, Nat.add_sub_cancel' hmn]
+    rw [Multiset.mem_add] at ha
+    obtain ha | ha := ha
+    exact hsA ha
+    rwa [eq_of_mem_replicate ha]
+    rw [Multiset.mem_add] at ha
+    obtain ha | ha := ha
+    exact htA ha
+    rwa [eq_of_mem_replicate ha]
+    rw [_root_.map_add, card_replicate, hs, Nat.add_sub_cancel' hmn]
+    rw [_root_.map_add, card_replicate, ht, Nat.add_sub_cancel' hmn]
 
 end CancelCommMonoid
 
@@ -349,13 +349,13 @@ assuming there is no wrap-around. -/
 lemma isAddFreimanIso_Iio (hm : m ≠ 0) (hkmn : m * k ≤ n) :
     IsAddFreimanIso m (Iio (k : Fin (n + 1))) (Iio k) val := by
   obtain _ | k := k
-  · simp [← bot_eq_zero]; simp [← _root_.bot_eq_zero, -Nat.bot_eq_zero, -bot_eq_zero']
+  simp [← bot_eq_zero]; simp [← _root_.bot_eq_zero, -Nat.bot_eq_zero, -bot_eq_zero']
   have hkmn' : m * k ≤ n := (Nat.mul_le_mul_left _ k.le_succ).trans hkmn
   convert isAddFreimanIso_Iic hm hkmn' using 1 <;> ext x
-  · simp [lt_iff_val_lt_val, le_iff_val_le_val, -val_fin_le, -val_fin_lt, Nat.mod_eq_of_lt,
-      aux hm hkmn']
-    simp_rw [← Nat.cast_add_one]
-    rw [Fin.val_cast_of_lt (aux hm hkmn), Nat.lt_succ_iff]
-  · simp [Nat.lt_succ_iff]
+  simp [lt_iff_val_lt_val, le_iff_val_le_val, -val_fin_le, -val_fin_lt, Nat.mod_eq_of_lt,
+    aux hm hkmn']
+  simp_rw [← Nat.cast_add_one]
+  rw [Fin.val_cast_of_lt (aux hm hkmn), Nat.lt_succ_iff]
+  simp [Nat.lt_succ_iff]
 
 end Fin

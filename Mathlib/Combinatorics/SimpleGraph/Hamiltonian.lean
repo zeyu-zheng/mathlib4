@@ -79,7 +79,7 @@ lemma IsHamiltonianCycle.map {H : SimpleGraph β} (f : G →g H) (hf : Bijective
       List.count_map_of_injective]
     intro x
     rcases p with (_ | ⟨y, p⟩)
-    · cases hp.ne_nil rfl
+    cases hp.ne_nil rfl
     simp only [support_cons, List.count_cons, List.map_cons, List.head_cons, hf.injective.eq_iff,
       add_tsub_cancel_right]
     exact hp.isHamiltonian_tail _
@@ -127,7 +127,7 @@ lemma IsHamiltonian.mono {H : SimpleGraph α} (hGH : G ≤ H) (hG : G.IsHamilton
 lemma IsHamiltonian.connected (hG : G.IsHamiltonian) : G.Connected where
   preconnected a b := by
     obtain rfl | hab := eq_or_ne a b
-    · rfl
+    rfl
     have : Nontrivial α := ⟨a, b, hab⟩
     obtain ⟨_, p, hp⟩ := hG Fintype.one_lt_card.ne'
     have a_mem := hp.mem_support a

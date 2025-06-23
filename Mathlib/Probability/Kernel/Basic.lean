@@ -280,8 +280,8 @@ instance (priority := 100) IsFiniteKernel.isSFiniteKernel [h : IsFiniteKernel κ
     IsSFiniteKernel κ :=
   ⟨⟨fun n => if n = 0 then κ else 0, fun n => by
       simp only; split_ifs
-      · exact h
-      · infer_instance, by
+      exact h
+      infer_instance, by
       ext a s hs
       rw [Kernel.sum_apply' _ _ hs]
       have : (fun i => ((ite (i = 0) κ 0) a) s) = fun i => ite (i = 0) (κ a s) 0 := by
@@ -316,12 +316,12 @@ open Classical in
 theorem IsSFiniteKernel.finset_sum {κs : ι → Kernel α β} (I : Finset ι)
     (h : ∀ i ∈ I, IsSFiniteKernel (κs i)) : IsSFiniteKernel (∑ i ∈ I, κs i) := by
   induction' I using Finset.induction with i I hi_nmem_I h_ind h
-  · rw [Finset.sum_empty]; infer_instance
-  · rw [Finset.sum_insert hi_nmem_I]
-    haveI : IsSFiniteKernel (κs i) := h i (Finset.mem_insert_self _ _)
-    have : IsSFiniteKernel (∑ x ∈ I, κs x) :=
-      h_ind fun i hiI => h i (Finset.mem_insert_of_mem hiI)
-    exact IsSFiniteKernel.add _ _
+  rw [Finset.sum_empty]; infer_instance
+  rw [Finset.sum_insert hi_nmem_I]
+  haveI : IsSFiniteKernel (κs i) := h i (Finset.mem_insert_self _ _)
+  have : IsSFiniteKernel (∑ x ∈ I, κs x) :=
+    h_ind fun i hiI => h i (Finset.mem_insert_of_mem hiI)
+  exact IsSFiniteKernel.add _ _
 
 theorem isSFiniteKernel_sum_of_denumerable [Denumerable ι] {κs : ι → Kernel α β}
     (hκs : ∀ n, IsSFiniteKernel (κs n)) : IsSFiniteKernel (Kernel.sum κs) := by
@@ -339,8 +339,8 @@ theorem isSFiniteKernel_sum_of_denumerable [Denumerable ι] {κs : ι → Kernel
 theorem isSFiniteKernel_sum [Countable ι] {κs : ι → Kernel α β}
     (hκs : ∀ n, IsSFiniteKernel (κs n)) : IsSFiniteKernel (Kernel.sum κs) := by
   cases fintypeOrInfinite ι
-  · rw [sum_fintype]
-    exact IsSFiniteKernel.finset_sum Finset.univ fun i _ => hκs i
+  rw [sum_fintype]
+  exact IsSFiniteKernel.finset_sum Finset.univ fun i _ => hκs i
   cases nonempty_denumerable ι
   exact isSFiniteKernel_sum_of_denumerable hκs
 
@@ -648,7 +648,7 @@ instance IsMarkovKernel.piecewise [IsMarkovKernel κ] [IsMarkovKernel η] :
 instance IsFiniteKernel.piecewise [IsFiniteKernel κ] [IsFiniteKernel η] :
     IsFiniteKernel (piecewise hs κ η) := by
   refine ⟨⟨max (IsFiniteKernel.bound κ) (IsFiniteKernel.bound η), ?_, fun a => ?_⟩⟩
-  · exact max_lt (IsFiniteKernel.bound_lt_top κ) (IsFiniteKernel.bound_lt_top η)
+  exact max_lt (IsFiniteKernel.bound_lt_top κ) (IsFiniteKernel.bound_lt_top η)
   rw [piecewise_apply']
   exact (ite_le_sup _ _ _).trans (sup_le_sup (measure_le_bound _ _ _) (measure_le_bound _ _ _))
 

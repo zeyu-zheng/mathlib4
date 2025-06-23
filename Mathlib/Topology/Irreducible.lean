@@ -105,12 +105,12 @@ theorem irreducibleComponents_eq_maximals_closed (X : Type*) [TopologicalSpace X
     irreducibleComponents X = maximals (· ≤ ·) { s : Set X | IsClosed s ∧ IsIrreducible s } := by
   ext s
   constructor
-  · intro H
-    exact ⟨⟨isClosed_of_mem_irreducibleComponents _ H, H.1⟩, fun x h e => H.2 h.2 e⟩
-  · intro H
-    refine ⟨H.1.2, fun x h e => ?_⟩
-    have : closure x ≤ s := H.2 ⟨isClosed_closure, h.closure⟩ (e.trans subset_closure)
-    exact le_trans subset_closure this
+  intro H
+  exact ⟨⟨isClosed_of_mem_irreducibleComponents _ H, H.1⟩, fun x h e => H.2 h.2 e⟩
+  intro H
+  refine ⟨H.1.2, fun x h e => ?_⟩
+  have : closure x ≤ s := H.2 ⟨isClosed_closure, h.closure⟩ (e.trans subset_closure)
+  exact le_trans subset_closure this
 
 /-- A maximal irreducible set that contains a given point. -/
 def irreducibleComponent (x : X) : Set X :=
@@ -222,15 +222,15 @@ theorem isIrreducible_iff_sInter :
       ∀ (U : Finset (Set X)), (∀ u ∈ U, IsOpen u) → (∀ u ∈ U, (s ∩ u).Nonempty) →
         (s ∩ ⋂₀ ↑U).Nonempty := by
   refine ⟨fun h U hu hU => ?_, fun h => ⟨?_, ?_⟩⟩
-  · induction U using Finset.induction_on with
-    | empty => simpa using h.nonempty
-    | @insert u U _ IH =>
-      rw [Finset.coe_insert, sInter_insert]
-      rw [Finset.forall_mem_insert] at hu hU
-      exact h.2 _ _ hu.1 (U.finite_toSet.isOpen_sInter hu.2) hU.1 (IH hu.2 hU.2)
-  · simpa using h ∅
-  · intro u v hu hv hu' hv'
-    simpa [*] using h {u, v}
+  induction U using Finset.induction_on with
+  | empty => simpa using h.nonempty
+  | @insert u U _ IH =>
+    rw [Finset.coe_insert, sInter_insert]
+    rw [Finset.forall_mem_insert] at hu hU
+    exact h.2 _ _ hu.1 (U.finite_toSet.isOpen_sInter hu.2) hU.1 (IH hu.2 hU.2)
+  simpa using h ∅
+  intro u v hu hv hu' hv'
+  simpa [*] using h {u, v}
 
 /-- A set is preirreducible if and only if
 for every cover by two closed sets, it is contained in one of the two covering sets. -/
@@ -274,11 +274,11 @@ theorem IsPreirreducible.subset_irreducible {S U : Set X} (ht : IsPreirreducible
   rintro u v hu hv ⟨x, hx, hx'⟩ ⟨y, hy, hy'⟩
   obtain ⟨x, -, hx'⟩ : Set.Nonempty (t ∩ ⋂₀ ↑({U, u, v} : Finset (Set X))) := by
     refine isIrreducible_iff_sInter.mp ht {U, u, v} ?_ ?_
-    · simp [*]
-    · intro U H
-      simp only [Finset.mem_insert, Finset.mem_singleton] at H
-      rcases H with (rfl | rfl | rfl)
-      exacts [⟨z, h₂ (h₁ hz), hz⟩, ⟨x, h₂ hx, hx'⟩, ⟨y, h₂ hy, hy'⟩]
+    simp [*]
+    intro U H
+    simp only [Finset.mem_insert, Finset.mem_singleton] at H
+    rcases H with (rfl | rfl | rfl)
+    exacts [⟨z, h₂ (h₁ hz), hz⟩, ⟨x, h₂ hx, hx'⟩, ⟨y, h₂ hy, hy'⟩]
   replace hx' : x ∈ U ∧ x ∈ u ∧ x ∈ v := by simpa using hx'
   exact ⟨x, h₁ hx'.1, hx'.2⟩
 

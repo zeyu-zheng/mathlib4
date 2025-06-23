@@ -247,11 +247,11 @@ theorem measurable_toNNReal : Measurable ENNReal.toNNReal :=
 
 instance instMeasurableMul₂ : MeasurableMul₂ ℝ≥0∞ := by
   refine ⟨measurable_of_measurable_nnreal_nnreal ?_ ?_ ?_⟩
-  · simp only [← ENNReal.coe_mul, measurable_mul.coe_nnreal_ennreal]
-  · simp only [ENNReal.top_mul', ENNReal.coe_eq_zero]
-    exact measurable_const.piecewise (measurableSet_singleton _) measurable_const
-  · simp only [ENNReal.mul_top', ENNReal.coe_eq_zero]
-    exact measurable_const.piecewise (measurableSet_singleton _) measurable_const
+  simp only [← ENNReal.coe_mul, measurable_mul.coe_nnreal_ennreal]
+  simp only [ENNReal.top_mul', ENNReal.coe_eq_zero]
+  exact measurable_const.piecewise (measurableSet_singleton _) measurable_const
+  simp only [ENNReal.mul_top', ENNReal.coe_eq_zero]
+  exact measurable_const.piecewise (measurableSet_singleton _) measurable_const
 
 instance instMeasurableSub₂ : MeasurableSub₂ ℝ≥0∞ :=
   ⟨by
@@ -307,14 +307,14 @@ lemma aemeasurable_of_tendsto' {ι : Type*} {f : ι → α → ℝ≥0∞} {g : 
   set aeSeqLim := fun x ↦ ite (x ∈ aeSeqSet h'f p) (g x) (⟨f (v 0) x⟩ : Nonempty ℝ≥0∞).some
   refine ⟨aeSeqLim, measurable_of_tendsto' atTop (aeSeq.measurable h'f p)
     (tendsto_pi_nhds.mpr fun x ↦ ?_), ?_⟩
-  · unfold_let aeSeqLim
-    simp_rw [aeSeq]
-    split_ifs with hx
-    · simp_rw [aeSeq.mk_eq_fun_of_mem_aeSeqSet h'f hx]
-      exact aeSeq.fun_prop_of_mem_aeSeqSet h'f hx
-    · exact tendsto_const_nhds
-  · exact (ite_ae_eq_of_measure_compl_zero g (fun x ↦ (⟨f (v 0) x⟩ : Nonempty ℝ≥0∞).some)
-      (aeSeqSet h'f p) (aeSeq.measure_compl_aeSeqSet_eq_zero h'f hp)).symm
+  unfold_let aeSeqLim
+  simp_rw [aeSeq]
+  split_ifs with hx
+  simp_rw [aeSeq.mk_eq_fun_of_mem_aeSeqSet h'f hx]
+  exact aeSeq.fun_prop_of_mem_aeSeqSet h'f hx
+  exact tendsto_const_nhds
+  exact (ite_ae_eq_of_measure_compl_zero g (fun x ↦ (⟨f (v 0) x⟩ : Nonempty ℝ≥0∞).some)
+    (aeSeqSet h'f p) (aeSeq.measure_compl_aeSeqSet_eq_zero h'f hp)).symm
 
 /-- A limit of a.e.-measurable `ℝ≥0∞` valued functions is a.e.-measurable. -/
 lemma aemeasurable_of_tendsto {f : ℕ → α → ℝ≥0∞} {g : α → ℝ≥0∞} {μ : Measure α}
@@ -481,20 +481,20 @@ theorem exists_spanning_measurableSet_le {m : MeasurableSpace α} {f : α → �
   let sets n := sigma_finite_sets n ∩ norm_sets n
   have h_meas : ∀ n, MeasurableSet (sets n)
   refine fun n => MeasurableSet.inter ?_ ?_
-  · exact measurable_spanningSets μ n
-  · exact hf measurableSet_Iic
+  exact measurable_spanningSets μ n
+  exact hf measurableSet_Iic
   have h_finite : ∀ n, μ (sets n) < ∞
   refine fun n => (measure_mono Set.inter_subset_left).trans_lt ?_
   exact measure_spanningSets_lt_top μ n
   refine ⟨sets, fun n => ⟨h_meas n, h_finite n, ?_⟩, ?_⟩
-  · exact fun x hx => hx.2
-  · have :
-      ⋃ i, sigma_finite_sets i ∩ norm_sets i = (⋃ i, sigma_finite_sets i) ∩ ⋃ i, norm_sets i := by
-      refine Set.iUnion_inter_of_monotone (monotone_spanningSets μ) fun i j hij x => ?_
-      simp only [norm_sets, Set.mem_setOf_eq]
-      refine fun hif => hif.trans ?_
-      exact mod_cast hij
-    rw [this, norm_sets_spanning, iUnion_spanningSets μ, Set.inter_univ]
+  exact fun x hx => hx.2
+  have :
+    ⋃ i, sigma_finite_sets i ∩ norm_sets i = (⋃ i, sigma_finite_sets i) ∩ ⋃ i, norm_sets i := by
+    refine Set.iUnion_inter_of_monotone (monotone_spanningSets μ) fun i j hij x => ?_
+    simp only [norm_sets, Set.mem_setOf_eq]
+    refine fun hif => hif.trans ?_
+    exact mod_cast hij
+  rw [this, norm_sets_spanning, iUnion_spanningSets μ, Set.inter_univ]
 
 variable (μ : Measure ℝ) [IsFiniteMeasureOnCompacts μ]
 
@@ -502,9 +502,9 @@ lemma tendsto_measure_Icc_nhdsWithin_right' (b : ℝ) :
     Tendsto (fun δ ↦ μ (Icc (b - δ) (b + δ))) (𝓝[>] (0 : ℝ)) (𝓝 (μ {b})) := by
   rw [Real.singleton_eq_inter_Icc]
   apply tendsto_measure_biInter_gt (fun r hr ↦ measurableSet_Icc)
-  · intro r s _rpos hrs
-    exact Icc_subset_Icc (by linarith) (by linarith)
-  · exact ⟨1, zero_lt_one, isCompact_Icc.measure_ne_top⟩
+  intro r s _rpos hrs
+  exact Icc_subset_Icc (by linarith) (by linarith)
+  exact ⟨1, zero_lt_one, isCompact_Icc.measure_ne_top⟩
 
 lemma tendsto_measure_Icc_nhdsWithin_right (b : ℝ) :
     Tendsto (fun δ ↦ μ (Icc (b - δ) (b + δ))) (𝓝[≥] (0 : ℝ)) (𝓝 (μ {b})) := by
@@ -517,7 +517,7 @@ lemma tendsto_measure_Icc [NoAtoms μ] (b : ℝ) :
     Tendsto (fun δ ↦ μ (Icc (b - δ) (b + δ))) (𝓝 (0 : ℝ)) (𝓝 0) := by
   rw [← nhds_left'_sup_nhds_right, tendsto_sup]
   constructor
-  · apply tendsto_const_nhds.congr'
-    filter_upwards [self_mem_nhdsWithin] with r (hr : r < 0)
-    rw [Icc_eq_empty (by linarith), measure_empty]
-  · simpa only [measure_singleton] using tendsto_measure_Icc_nhdsWithin_right μ b
+  apply tendsto_const_nhds.congr'
+  filter_upwards [self_mem_nhdsWithin] with r (hr : r < 0)
+  rw [Icc_eq_empty (by linarith), measure_empty]
+  simpa only [measure_singleton] using tendsto_measure_Icc_nhdsWithin_right μ b

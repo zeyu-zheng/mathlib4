@@ -111,10 +111,10 @@ theorem SupIndep.image [DecidableEq ι] {s : Finset ι'} {g : ι' → ι} (hs : 
 open Classical in
 theorem supIndep_map {s : Finset ι'} {g : ι' ↪ ι} : (s.map g).SupIndep f ↔ s.SupIndep (f ∘ g) := by
   refine ⟨fun hs t ht i hi hit => ?_, fun hs => ?_⟩
-  · rw [← sup_map]
-    exact hs (map_subset_map.2 ht) ((mem_map' _).2 hi) (by rwa [mem_map'])
-  · rw [map_eq_image]
-    exact hs.image
+  rw [← sup_map]
+  exact hs (map_subset_map.2 ht) ((mem_map' _).2 hi) (by rwa [mem_map'])
+  rw [map_eq_image]
+  exact hs.image
 
 @[simp]
 theorem supIndep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
@@ -125,17 +125,17 @@ theorem supIndep_pair [DecidableEq ι] {i j : ι} (hij : i ≠ j) :
     intro k hk
     rw [Finset.mem_insert, Finset.mem_singleton] at hk
     obtain rfl | rfl := hk
-    · convert h using 1
-      rw [Finset.erase_insert, Finset.sup_singleton]
-      simpa using hij
-    · convert h.symm using 1
-      have : ({i, k} : Finset ι).erase k = {i} := by
-        ext
-        rw [mem_erase, mem_insert, mem_singleton, mem_singleton, and_or_left, Ne,
-          not_and_self_iff, or_false_iff, and_iff_right_of_imp]
-        rintro rfl
-        exact hij
-      rw [this, Finset.sup_singleton]⟩
+    convert h using 1
+    rw [Finset.erase_insert, Finset.sup_singleton]
+    simpa using hij
+    convert h.symm using 1
+    have : ({i, k} : Finset ι).erase k = {i} := by
+      ext
+      rw [mem_erase, mem_insert, mem_singleton, mem_singleton, and_or_left, Ne,
+        not_and_self_iff, or_false_iff, and_iff_right_of_imp]
+      rintro rfl
+      exact hij
+    rw [this, Finset.sup_singleton]⟩
 
 theorem supIndep_univ_bool (f : Bool → α) :
     (Finset.univ : Finset Bool).SupIndep f ↔ Disjoint (f false) (f true) :=
@@ -218,10 +218,10 @@ theorem SupIndep.sigma {β : ι → Type*} {s : Finset ι} {g : ∀ i, Finset (�
   replace hj := ht hj
   rw [mem_sigma] at hi hj
   obtain rfl | hij := eq_or_ne i j
-  · exact (hg _ hj.1).pairwiseDisjoint hi.2 hj.2 (sigma_mk_injective.ne_iff.1 hbc)
-  · refine (hs.pairwiseDisjoint hi.1 hj.1 hij).mono ?_ ?_
-    · convert le_sup (α := α) hi.2; simp
-    · convert le_sup (α := α) hj.2; simp
+  exact (hg _ hj.1).pairwiseDisjoint hi.2 hj.2 (sigma_mk_injective.ne_iff.1 hbc)
+  refine (hs.pairwiseDisjoint hi.1 hj.1 hij).mono ?_ ?_
+  convert le_sup (α := α) hi.2; simp
+  convert le_sup (α := α) hj.2; simp
 
 theorem SupIndep.product {s : Finset ι} {t : Finset ι'} {f : ι × ι' → α}
     (hs : s.SupIndep fun i => t.sup fun i' => f (i, i'))
@@ -233,12 +233,12 @@ theorem SupIndep.product {s : Finset ι} {t : Finset ι'} {f : ι × ι' → α}
   replace hj := hu hj
   rw [mem_product] at hi hj
   obtain rfl | hij := eq_or_ne i j
-  · refine (ht.pairwiseDisjoint hi.2 hj.2 <| (Prod.mk.inj_left _).ne_iff.1 hij).mono ?_ ?_
-    · convert le_sup (α := α) hi.1; simp
-    · convert le_sup (α := α) hj.1; simp
-  · refine (hs.pairwiseDisjoint hi.1 hj.1 hij).mono ?_ ?_
-    · convert le_sup (α := α) hi.2; simp
-    · convert le_sup (α := α) hj.2; simp
+  refine (ht.pairwiseDisjoint hi.2 hj.2 <| (Prod.mk.inj_left _).ne_iff.1 hij).mono ?_ ?_
+  convert le_sup (α := α) hi.1; simp
+  convert le_sup (α := α) hj.1; simp
+  refine (hs.pairwiseDisjoint hi.1 hj.1 hij).mono ?_ ?_
+  convert le_sup (α := α) hi.2; simp
+  convert le_sup (α := α) hj.2; simp
 
 theorem supIndep_product_iff {s : Finset ι} {t : Finset ι'} {f : ι × ι' → α} :
     (s.product t).SupIndep f ↔ (s.SupIndep fun i => t.sup fun i' => f (i, i'))
@@ -248,8 +248,8 @@ theorem supIndep_product_iff {s : Finset ι} {t : Finset ι'} {f : ι × ι' →
   refine fun h => ⟨fun i hi j hj hij => ?_, fun i hi j hj hij => ?_⟩ <;>
       simp_rw [Finset.disjoint_sup_left, Finset.disjoint_sup_right] <;>
     intro i' hi' j' hj'
-  · exact h (mk_mem_product hi hi') (mk_mem_product hj hj') (ne_of_apply_ne Prod.fst hij)
-  · exact h (mk_mem_product hi' hi) (mk_mem_product hj' hj) (ne_of_apply_ne Prod.snd hij)
+  exact h (mk_mem_product hi hi') (mk_mem_product hj hj') (ne_of_apply_ne Prod.fst hij)
+  exact h (mk_mem_product hi' hi) (mk_mem_product hj' hj) (ne_of_apply_ne Prod.snd hij)
 
 end DistribLattice
 
@@ -288,13 +288,13 @@ theorem setIndependent_singleton (a : α) : SetIndependent ({a} : Set α) := fun
 theorem setIndependent_pair {a b : α} (hab : a ≠ b) :
     SetIndependent ({a, b} : Set α) ↔ Disjoint a b := by
   constructor
-  · intro h
-    exact h.pairwiseDisjoint (mem_insert _ _) (mem_insert_of_mem _ (mem_singleton _)) hab
-  · rintro h c ((rfl : c = a) | (rfl : c = b))
-    · convert h using 1
-      simp [hab, sSup_singleton]
-    · convert h.symm using 1
-      simp [hab, sSup_singleton]
+  intro h
+  exact h.pairwiseDisjoint (mem_insert _ _) (mem_insert_of_mem _ (mem_singleton _)) hab
+  rintro h c ((rfl : c = a) | (rfl : c = b))
+  convert h using 1
+  simp [hab, sSup_singleton]
+  convert h.symm using 1
+  simp [hab, sSup_singleton]
 
 /-- If the elements of a set are independent, then any element is disjoint from the `sSup` of some
 subset of the rest. -/
@@ -404,13 +404,13 @@ theorem Independent.injective (ht : Independent t) (h_ne_bot : ∀ i, t i ≠ �
 theorem independent_pair {i j : ι} (hij : i ≠ j) (huniv : ∀ k, k = i ∨ k = j) :
     Independent t ↔ Disjoint (t i) (t j) := by
   constructor
-  · exact fun h => h.pairwiseDisjoint hij
-  · rintro h k
-    obtain rfl | rfl := huniv k
-    · refine h.mono_right (iSup_le fun i => iSup_le fun hi => Eq.le ?_)
-      rw [(huniv i).resolve_left hi]
-    · refine h.symm.mono_right (iSup_le fun j => iSup_le fun hj => Eq.le ?_)
-      rw [(huniv j).resolve_right hj]
+  exact fun h => h.pairwiseDisjoint hij
+  rintro h k
+  obtain rfl | rfl := huniv k
+  refine h.mono_right (iSup_le fun i => iSup_le fun hi => Eq.le ?_)
+  rw [(huniv i).resolve_left hi]
+  refine h.symm.mono_right (iSup_le fun j => iSup_le fun hj => Eq.le ?_)
+  rw [(huniv j).resolve_right hj]
 
 /-- Composing an independent indexed family with an order isomorphism on the elements results in
 another independent indexed family. -/

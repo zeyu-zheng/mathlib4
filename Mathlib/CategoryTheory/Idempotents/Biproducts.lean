@@ -79,11 +79,11 @@ theorem karoubi_hasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproduct
             biproduct.bicone_π, biproduct.map_π, Biproducts.bicone_ι_f, biproduct.ι_map, assoc,
             idem_assoc, id_f, Biproducts.bicone_pt_p, comp_sum]
           rw [Finset.sum_eq_single j]
-          · simp only [bicone_ι_π_self_assoc]
-          · intro b _ hb
-            simp only [biproduct.ι_π_ne_assoc _ hb.symm, zero_comp]
-          · intro hj
-            simp only [Finset.mem_univ, not_true] at hj } }
+          simp only [bicone_ι_π_self_assoc]
+          intro b _ hb
+          simp only [biproduct.ι_π_ne_assoc _ hb.symm, zero_comp]
+          intro hj
+          simp only [Finset.mem_univ, not_true] at hj } }
 
 attribute [instance] karoubi_hasFiniteBiproducts
 

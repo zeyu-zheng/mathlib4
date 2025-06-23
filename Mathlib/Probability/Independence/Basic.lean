@@ -559,10 +559,10 @@ theorem indepFun_iff_map_prod_eq_prod_map_map {mβ : MeasurableSpace β} {mβ' :
     ⟨by rw [Measure.map_apply_of_aemeasurable hf hs, Measure.map_apply_of_aemeasurable hg ht],
       (Measure.map_apply_of_aemeasurable (hf.prod_mk hg) (hs.prod ht)).symm⟩
   constructor
-  · refine fun h ↦ (Measure.prod_eq fun s t hs ht ↦ ?_).symm
-    rw [← (h₀ hs ht).1, ← (h₀ hs ht).2, h s t hs ht]
-  · intro h s t hs ht
-    rw [(h₀ hs ht).1, (h₀ hs ht).2, h, Measure.prod_prod]
+  refine fun h ↦ (Measure.prod_eq fun s t hs ht ↦ ?_).symm
+  rw [← (h₀ hs ht).1, ← (h₀ hs ht).2, h s t hs ht]
+  intro h s t hs ht
+  rw [(h₀ hs ht).1, (h₀ hs ht).2, h, Measure.prod_prod]
 
 @[symm]
 nonrec theorem IndepFun.symm {_ : MeasurableSpace β} {_ : MeasurableSpace β'}

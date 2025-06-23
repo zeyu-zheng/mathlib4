@@ -55,14 +55,14 @@ theorem mem_nonZeroDivisors_of_constantCoeff {φ : MvPowerSeries σ R}
   rw [map_zero, ← mul_right_mem_nonZeroDivisors_eq_zero_iff hφ, ← map_zero (f := coeff R e), ← hx]
   convert (coeff_mul e x φ).symm
   rw [Finset.sum_eq_single (e,0), coeff_zero_eq_constantCoeff]
-  · rintro ⟨u, _⟩ huv _
-    suffices u < e by simp only [he u this, zero_mul, map_zero]
-    apply lt_of_le_of_ne
-    · simp only [← mem_antidiagonal.mp huv, le_add_iff_nonneg_right, zero_le]
-    · rintro rfl
-      simp_all
-  · simp only [mem_antidiagonal, add_zero, not_true_eq_false, coeff_zero_eq_constantCoeff,
-      false_implies]
+  rintro ⟨u, _⟩ huv _
+  suffices u < e by simp only [he u this, zero_mul, map_zero]
+  apply lt_of_le_of_ne
+  simp only [← mem_antidiagonal.mp huv, le_add_iff_nonneg_right, zero_le]
+  rintro rfl
+  simp_all
+  simp only [mem_antidiagonal, add_zero, not_true_eq_false, coeff_zero_eq_constantCoeff,
+    false_implies]
 
 end Semiring
 

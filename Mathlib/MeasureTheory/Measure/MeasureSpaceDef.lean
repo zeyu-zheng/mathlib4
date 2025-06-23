@@ -212,9 +212,9 @@ theorem exists_measurable_superset_iff_measure_eq_zero :
 theorem measure_biUnion_lt_top {s : Set β} {f : β → Set α} (hs : s.Finite)
     (hfin : ∀ i ∈ s, μ (f i) ≠ ∞) : μ (⋃ i ∈ s, f i) < ∞ := by
   convert (measure_biUnion_finset_le (μ := μ) hs.toFinset f).trans_lt _ using 3
-  · ext
-    rw [Finite.mem_toFinset]
-  · apply ENNReal.sum_lt_top; simpa only [Finite.mem_toFinset]
+  ext
+  rw [Finite.mem_toFinset]
+  apply ENNReal.sum_lt_top; simpa only [Finite.mem_toFinset]
 
 @[deprecated measure_iUnion_null_iff (since := "2024-01-14")]
 theorem measure_iUnion_null_iff' {ι : Prop} {s : ι → Set α} : μ (⋃ i, s i) = 0 ↔ ∀ i, μ (s i) = 0 :=
@@ -226,8 +226,8 @@ theorem measure_union_lt_top (hs : μ s < ∞) (ht : μ t < ∞) : μ (s ∪ t) 
 @[simp]
 theorem measure_union_lt_top_iff : μ (s ∪ t) < ∞ ↔ μ s < ∞ ∧ μ t < ∞ := by
   refine ⟨fun h => ⟨?_, ?_⟩, fun h => measure_union_lt_top h.1 h.2⟩
-  · exact (measure_mono Set.subset_union_left).trans_lt h
-  · exact (measure_mono Set.subset_union_right).trans_lt h
+  exact (measure_mono Set.subset_union_left).trans_lt h
+  exact (measure_mono Set.subset_union_right).trans_lt h
 
 theorem measure_union_ne_top (hs : μ s ≠ ∞) (ht : μ t ≠ ∞) : μ (s ∪ t) ≠ ∞ :=
   (measure_union_lt_top hs.lt_top ht.lt_top).ne
@@ -317,9 +317,9 @@ theorem measurableSet_toMeasurable (μ : Measure α) (s : Set α) :
 @[simp]
 theorem measure_toMeasurable (s : Set α) : μ (toMeasurable μ s) = μ s := by
   rw [toMeasurable_def]; split_ifs with hs h's
-  · exact measure_congr hs.choose_spec.2.2
-  · simpa only [inter_univ] using h's.choose_spec.2.2 univ MeasurableSet.univ
-  · exact (exists_measurable_superset μ s).choose_spec.2.2
+  exact measure_congr hs.choose_spec.2.2
+  simpa only [inter_univ] using h's.choose_spec.2.2 univ MeasurableSet.univ
+  exact (exists_measurable_superset μ s).choose_spec.2.2
 
 /-- A measure space is a measurable space equipped with a
   measure, referred to as `volume`. -/

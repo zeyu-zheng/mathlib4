@@ -80,7 +80,7 @@ theorem spanEval_ne_top : spanEval k ≠ ⊤ := by
   rintro ⟨v, _, hv⟩
   replace hv := congr_arg (toSplittingField k v.support) hv
   rw [map_one, Finsupp.total_apply, Finsupp.sum, map_sum, Finset.sum_eq_zero] at hv
-  · exact zero_ne_one hv
+  exact zero_ne_one hv
   intro j hj
   rw [smul_eq_mul, map_mul, toSplittingField_evalXSelf (s := v.support) hj,
     mul_zero]
@@ -237,25 +237,25 @@ private theorem toStepOfLE.succ (n : ℕ) (h : 0 ≤ n) :
 
 theorem Step.isIntegral (n) : ∀ z : Step k n, IsIntegral k z := by
   induction' n with a h
-  · intro z
-    exact isIntegral_algebraMap
-  · intro z
-    change RingHom.IsIntegralElem _ _
-    revert z
-    change RingHom.IsIntegral _
-    unfold algebraMap
-    unfold Algebra.toRingHom
-    unfold algebra
-    unfold RingHom.toAlgebra
-    unfold RingHom.toAlgebra'
-    simp only
-    rw [toStepOfLE.succ k a a.zero_le]
-    apply @RingHom.IsIntegral.trans (Step k 0) (Step k a) (Step k (a + 1)) _ _ _
-        (toStepOfLE k 0 a (a.zero_le : 0 ≤ a)) (toStepSucc k a) _
-    · intro z
-      have := AdjoinMonic.isIntegral (Step k a) (z : Step k (a + 1))
-      convert this
-    · convert h -- Porting note: This times out at 500000
+  intro z
+  exact isIntegral_algebraMap
+  intro z
+  change RingHom.IsIntegralElem _ _
+  revert z
+  change RingHom.IsIntegral _
+  unfold algebraMap
+  unfold Algebra.toRingHom
+  unfold algebra
+  unfold RingHom.toAlgebra
+  unfold RingHom.toAlgebra'
+  simp only
+  rw [toStepOfLE.succ k a a.zero_le]
+  apply @RingHom.IsIntegral.trans (Step k 0) (Step k a) (Step k (a + 1)) _ _ _
+      (toStepOfLE k 0 a (a.zero_le : 0 ≤ a)) (toStepSucc k a) _
+  intro z
+  have := AdjoinMonic.isIntegral (Step k a) (z : Step k (a + 1))
+  convert this
+  convert h -- Porting note: This times out at 500000
 
 instance toStepOfLE.directedSystem : DirectedSystem (Step k) fun i j h => toStepOfLE k i j h :=
   ⟨fun _ x _ => Nat.leRecOn_self x, fun h₁₂ h₂₃ x => (Nat.leRecOn_trans h₁₂ h₂₃ x).symm⟩

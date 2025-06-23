@@ -195,16 +195,16 @@ theorem IsSemisimple.of_mem_adjoin_pair {a : End K M} (ha : a ∈ Algebra.adjoin
   let φ : S →ₐ[K] End K M := Ideal.Quotient.liftₐ _ (eval₂AlgHom' (Ideal.Quotient.liftₐ _ (aeval f)
     fun a ↦ ?_) g ?_) ((Ideal.span_singleton_le_iff_mem _).mpr ?_ : _ ≤ RingHom.ker _)
   rotate_left 1
-  · rw [Ideal.span, ← minpoly.ker_aeval_eq_span_minpoly]; exact id
-  · rintro ⟨p⟩; exact p.induction_on (fun k ↦ by simp [R, Algebra.commute_algebraMap_left])
-      (fun p q hp hq ↦ by simpa using hp.add_left hq)
-      fun n k ↦ by simpa [R, pow_succ, ← mul_assoc _ _ X] using (·.mul_left comm)
-  · simpa only [RingHom.mem_ker, eval₂AlgHom'_apply, eval₂_map, AlgHom.comp_algebraMap_of_tower]
-      using minpoly.aeval K g
+  rw [Ideal.span, ← minpoly.ker_aeval_eq_span_minpoly]; exact id
+  rintro ⟨p⟩; exact p.induction_on (fun k ↦ by simp [R, Algebra.commute_algebraMap_left])
+    (fun p q hp hq ↦ by simpa using hp.add_left hq)
+    fun n k ↦ by simpa [R, pow_succ, ← mul_assoc _ _ X] using (·.mul_left comm)
+  simpa only [RingHom.mem_ker, eval₂AlgHom'_apply, eval₂_map, AlgHom.comp_algebraMap_of_tower]
+    using minpoly.aeval K g
   have : Algebra.adjoin K {f, g} ≤ φ.range := Algebra.adjoin_le fun x ↦ by
     rintro (hx | hx) <;> rw [hx]
-    · exact ⟨AdjoinRoot.of _ (AdjoinRoot.root _), (eval₂_C _ _).trans (aeval_X f)⟩
-    · exact ⟨AdjoinRoot.root _, eval₂_X _ _⟩
+    exact ⟨AdjoinRoot.of _ (AdjoinRoot.root _), (eval₂_C _ _).trans (aeval_X f)⟩
+    exact ⟨AdjoinRoot.root _, eval₂_X _ _⟩
   obtain ⟨p, rfl⟩ := (AlgHom.mem_range _).mp (this ha)
   refine isSemisimple_of_squarefree_aeval_eq_zero
     ((minpoly.isRadical K p).squarefree <| minpoly.ne_zero <| .of_finite K p) ?_

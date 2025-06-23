@@ -49,19 +49,19 @@ theorem zero_cpow {x : ℂ} (h : x ≠ 0) : (0 : ℂ) ^ x = 0 := by simp [cpow_d
 
 theorem zero_cpow_eq_iff {x : ℂ} {a : ℂ} : (0 : ℂ) ^ x = a ↔ x ≠ 0 ∧ a = 0 ∨ x = 0 ∧ a = 1 := by
   constructor
-  · intro hyp
-    simp only [cpow_def, eq_self_iff_true, if_true] at hyp
-    by_cases h : x = 0
-    · subst h
-      simp only [if_true, eq_self_iff_true] at hyp
-      right
-      exact ⟨rfl, hyp.symm⟩
-    · rw [if_neg h] at hyp
-      left
-      exact ⟨h, hyp.symm⟩
-  · rintro (⟨h, rfl⟩ | ⟨rfl, rfl⟩)
-    · exact zero_cpow h
-    · exact cpow_zero _
+  intro hyp
+  simp only [cpow_def, eq_self_iff_true, if_true] at hyp
+  by_cases h : x = 0
+  subst h
+  simp only [if_true, eq_self_iff_true] at hyp
+  right
+  exact ⟨rfl, hyp.symm⟩
+  rw [if_neg h] at hyp
+  left
+  exact ⟨h, hyp.symm⟩
+  rintro (⟨h, rfl⟩ | ⟨rfl, rfl⟩)
+  exact zero_cpow h
+  exact cpow_zero _
 
 theorem eq_zero_cpow_iff {x : ℂ} {a : ℂ} : a = (0 : ℂ) ^ x ↔ x ≠ 0 ∧ a = 0 ∨ x = 0 ∧ a = 1 := by
   rw [← zero_cpow_eq_iff, eq_comm]
@@ -97,10 +97,10 @@ theorem cpow_neg_one (x : ℂ) : x ^ (-1 : ℂ) = x⁻¹ := by simpa using cpow_
 /-- See also `Complex.cpow_int_mul'`. -/
 lemma cpow_int_mul (x : ℂ) (n : ℤ) (y : ℂ) : x ^ (n * y) = (x ^ y) ^ n := by
   rcases eq_or_ne x 0 with rfl | hx
-  · rcases eq_or_ne n 0 with rfl | hn
-    · simp
-    · rcases eq_or_ne y 0 with rfl | hy <;> simp [*, zero_zpow]
-  · rw [cpow_def_of_ne_zero hx, cpow_def_of_ne_zero hx, mul_left_comm, exp_int_mul]
+  rcases eq_or_ne n 0 with rfl | hn
+  simp
+  rcases eq_or_ne y 0 with rfl | hy <;> simp [*, zero_zpow]
+  rw [cpow_def_of_ne_zero hx, cpow_def_of_ne_zero hx, mul_left_comm, exp_int_mul]
 
 lemma cpow_mul_int (x y : ℂ) (n : ℤ) : x ^ (y * n) = (x ^ y) ^ n := by rw [mul_comm, cpow_int_mul]
 
@@ -176,8 +176,8 @@ lemma cpow_ofNat_mul' {x : ℂ} {n : ℕ} [n.AtLeastTwo] (hlt : -π < OfNat.ofNa
 lemma pow_cpow_nat_inv {x : ℂ} {n : ℕ} (h₀ : n ≠ 0) (hlt : -(π / n) < x.arg) (hle : x.arg ≤ π / n) :
     (x ^ n) ^ (n⁻¹ : ℂ) = x := by
   rw [← cpow_nat_mul', mul_inv_cancel (Nat.cast_ne_zero.2 h₀), cpow_one]
-  · rwa [← div_lt_iff' (Nat.cast_pos.2 h₀.bot_lt), neg_div]
-  · rwa [← le_div_iff' (Nat.cast_pos.2 h₀.bot_lt)]
+  rwa [← div_lt_iff' (Nat.cast_pos.2 h₀.bot_lt), neg_div]
+  rwa [← le_div_iff' (Nat.cast_pos.2 h₀.bot_lt)]
 
 lemma pow_cpow_ofNat_inv {x : ℂ} {n : ℕ} [n.AtLeastTwo] (hlt : -(π / OfNat.ofNat n) < x.arg)
     (hle : x.arg ≤ π / OfNat.ofNat n) :
@@ -192,11 +192,11 @@ lemma sq_cpow_two_inv {x : ℂ} (hx : 0 < x.re) : (x ^ (2 : ℕ)) ^ (2⁻¹ : �
 theorem mul_cpow_ofReal_nonneg {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (r : ℂ) :
     ((a : ℂ) * (b : ℂ)) ^ r = (a : ℂ) ^ r * (b : ℂ) ^ r := by
   rcases eq_or_ne r 0 with (rfl | hr)
-  · simp only [cpow_zero, mul_one]
+  simp only [cpow_zero, mul_one]
   rcases eq_or_lt_of_le ha with (rfl | ha')
-  · rw [ofReal_zero, zero_mul, zero_cpow hr, zero_mul]
+  rw [ofReal_zero, zero_mul, zero_cpow hr, zero_mul]
   rcases eq_or_lt_of_le hb with (rfl | hb')
-  · rw [ofReal_zero, mul_zero, zero_cpow hr, mul_zero]
+  rw [ofReal_zero, mul_zero, zero_cpow hr, mul_zero]
   have ha'' : (a : ℂ) ≠ 0 := ofReal_ne_zero.mpr ha'.ne'
   have hb'' : (b : ℂ) ≠ 0 := ofReal_ne_zero.mpr hb'.ne'
   rw [cpow_def_of_ne_zero (mul_ne_zero ha'' hb''), log_ofReal_mul ha' hb'', ofReal_log ha,
@@ -207,8 +207,8 @@ lemma natCast_mul_natCast_cpow (m n : ℕ) (s : ℂ) : (m * n : ℂ) ^ s = m ^ s
 
 lemma natCast_cpow_natCast_mul (n m : ℕ) (z : ℂ) : (n : ℂ) ^ (m * z) = ((n : ℂ) ^ m) ^ z := by
   refine cpow_nat_mul' (x := n) (n := m) ?_ ?_ z
-  · simp only [natCast_arg, mul_zero, Left.neg_neg_iff, pi_pos]
-  · simp only [natCast_arg, mul_zero, pi_pos.le]
+  simp only [natCast_arg, mul_zero, Left.neg_neg_iff, pi_pos]
+  simp only [natCast_arg, mul_zero, pi_pos.le]
 
 theorem inv_cpow_eq_ite (x : ℂ) (n : ℂ) :
     x⁻¹ ^ n = if x.arg = π then conj (x ^ conj n)⁻¹ else (x ^ n)⁻¹ := by
@@ -225,8 +225,8 @@ theorem inv_cpow_eq_ite' (x : ℂ) (n : ℂ) :
     (x ^ n)⁻¹ = if x.arg = π then conj (x⁻¹ ^ conj n) else x⁻¹ ^ n := by
   rw [inv_cpow_eq_ite, apply_ite conj, conj_conj, conj_conj]
   split_ifs with h
-  · rfl
-  · rw [inv_cpow _ _ h]
+  rfl
+  rw [inv_cpow _ _ h]
 
 theorem conj_cpow_eq_ite (x : ℂ) (n : ℂ) :
     conj x ^ n = if x.arg = π then x ^ n else conj (x ^ conj n) := by

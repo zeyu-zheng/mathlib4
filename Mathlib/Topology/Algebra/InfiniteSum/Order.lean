@@ -62,10 +62,10 @@ theorem hasProd_le_inj {g : κ → α} (e : ι → κ) (he : Injective e)
   rw [← hasProd_extend_one he] at hf
   refine hasProd_le (fun c ↦ ?_) hf hg
   obtain ⟨i, rfl⟩ | h := em (c ∈ Set.range e)
-  · rw [he.extend_apply]
-    exact h _
-  · rw [extend_apply' _ _ _ h]
-    exact hs _ h
+  rw [he.extend_apply]
+  exact h _
+  rw [extend_apply' _ _ _ h]
+  exact hs _ h
 
 @[to_additive]
 theorem tprod_le_tprod_of_inj {g : κ → α} (e : ι → κ) (he : Injective e)
@@ -127,9 +127,9 @@ theorem tprod_le_of_prod_le (hf : Multipliable f) (h : ∀ s, ∏ i ∈ s, f i �
 @[to_additive]
 theorem tprod_le_of_prod_le' (ha₂ : 1 ≤ a₂) (h : ∀ s, ∏ i ∈ s, f i ≤ a₂) : ∏' i, f i ≤ a₂ := by
   by_cases hf : Multipliable f
-  · exact tprod_le_of_prod_le hf h
-  · rw [tprod_eq_one_of_not_multipliable hf]
-    exact ha₂
+  exact tprod_le_of_prod_le hf h
+  rw [tprod_eq_one_of_not_multipliable hf]
+  exact ha₂
 
 @[to_additive]
 theorem HasProd.one_le (h : ∀ i, 1 ≤ g i) (ha : HasProd g a) : 1 ≤ a :=
@@ -142,23 +142,23 @@ theorem HasProd.le_one (h : ∀ i, g i ≤ 1) (ha : HasProd g a) : a ≤ 1 :=
 @[to_additive tsum_nonneg]
 theorem one_le_tprod (h : ∀ i, 1 ≤ g i) : 1 ≤ ∏' i, g i := by
   by_cases hg : Multipliable g
-  · exact hg.hasProd.one_le h
-  · rw [tprod_eq_one_of_not_multipliable hg]
+  exact hg.hasProd.one_le h
+  rw [tprod_eq_one_of_not_multipliable hg]
 
 @[to_additive]
 theorem tprod_le_one (h : ∀ i, f i ≤ 1) : ∏' i, f i ≤ 1 := by
   by_cases hf : Multipliable f
-  · exact hf.hasProd.le_one h
-  · rw [tprod_eq_one_of_not_multipliable hf]
+  exact hf.hasProd.le_one h
+  rw [tprod_eq_one_of_not_multipliable hf]
 
 -- Porting note: generalized from `OrderedAddCommGroup` to `OrderedAddCommMonoid`
 @[to_additive]
 theorem hasProd_one_iff_of_one_le (hf : ∀ i, 1 ≤ f i) : HasProd f 1 ↔ f = 1 := by
   refine ⟨fun hf' ↦ ?_, ?_⟩
-  · ext i
-    exact (hf i).antisymm' (le_hasProd hf' _ fun j _ ↦ hf j)
-  · rintro rfl
-    exact hasProd_one
+  ext i
+  exact (hf i).antisymm' (le_hasProd hf' _ fun j _ ↦ hf j)
+  rintro rfl
+  exact hasProd_one
 
 end OrderedCommMonoid
 

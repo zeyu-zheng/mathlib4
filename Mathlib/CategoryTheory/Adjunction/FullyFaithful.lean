@@ -188,11 +188,11 @@ instance [L.Faithful] [L.Full] {Y : D} : IsIso (R.map (h.counit.app Y)) :=
 lemma isIso_counit_app_iff_mem_essImage [L.Faithful] [L.Full] {X : D} :
     IsIso (h.counit.app X) ↔ X ∈ L.essImage := by
   constructor
-  · intro
-    exact ⟨R.obj X, ⟨asIso (h.counit.app X)⟩⟩
-  · rintro ⟨_, ⟨i⟩⟩
-    rw [NatTrans.isIso_app_iff_of_iso _ i.symm]
-    infer_instance
+  intro
+  exact ⟨R.obj X, ⟨asIso (h.counit.app X)⟩⟩
+  rintro ⟨_, ⟨i⟩⟩
+  rw [NatTrans.isIso_app_iff_of_iso _ i.symm]
+  infer_instance
 
 lemma mem_essImage_of_counit_isIso (A : D)
     [IsIso (h.counit.app A)] : A ∈ L.essImage :=
@@ -211,11 +211,11 @@ instance [R.Faithful] [R.Full] {X : C} : IsIso (L.map (h.unit.app X)) :=
 lemma isIso_unit_app_iff_mem_essImage [R.Faithful] [R.Full] {Y : C} :
     IsIso (h.unit.app Y) ↔ Y ∈ R.essImage := by
   constructor
-  · intro
-    exact ⟨L.obj Y, ⟨(asIso (h.unit.app Y)).symm⟩⟩
-  · rintro ⟨_, ⟨i⟩⟩
-    rw [NatTrans.isIso_app_iff_of_iso _ i.symm]
-    infer_instance
+  intro
+  exact ⟨L.obj Y, ⟨(asIso (h.unit.app Y)).symm⟩⟩
+  rintro ⟨_, ⟨i⟩⟩
+  rw [NatTrans.isIso_app_iff_of_iso _ i.symm]
+  infer_instance
 
 /-- If `η_A` is an isomorphism, then `A` is in the essential image of `i`. -/
 theorem mem_essImage_of_unit_isIso (A : C)

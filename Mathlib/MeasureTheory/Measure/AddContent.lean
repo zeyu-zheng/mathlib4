@@ -90,22 +90,22 @@ open Classical in
 lemma addContent_union' (hs : s ∈ C) (ht : t ∈ C) (hst : s ∪ t ∈ C) (h_dis : Disjoint s t) :
     m (s ∪ t) = m s + m t := by
   by_cases hs_empty : s = ∅
-  · simp only [hs_empty, Set.empty_union, addContent_empty, zero_add]
+  simp only [hs_empty, Set.empty_union, addContent_empty, zero_add]
   have h := addContent_sUnion (m := m) (I := {s, t}) ?_ ?_ ?_
   rotate_left
-  · simp only [coe_pair, Set.insert_subset_iff, hs, ht, Set.singleton_subset_iff, and_self_iff]
-  · simp only [coe_pair, Set.pairwiseDisjoint_insert, pairwiseDisjoint_singleton,
-      mem_singleton_iff, Ne, id, forall_eq, true_and_iff]
-    exact fun _ => h_dis
-  · simp only [coe_pair, sUnion_insert, sUnion_singleton]
-    exact hst
+  simp only [coe_pair, Set.insert_subset_iff, hs, ht, Set.singleton_subset_iff, and_self_iff]
+  simp only [coe_pair, Set.pairwiseDisjoint_insert, pairwiseDisjoint_singleton,
+    mem_singleton_iff, Ne, id, forall_eq, true_and_iff]
+  exact fun _ => h_dis
+  simp only [coe_pair, sUnion_insert, sUnion_singleton]
+  exact hst
   convert h
-  · simp only [coe_pair, sUnion_insert, sUnion_singleton]
-  · rw [sum_insert, sum_singleton]
-    simp only [Finset.mem_singleton]
-    refine fun hs_eq_t => hs_empty ?_
-    rw [← hs_eq_t] at h_dis
-    exact Disjoint.eq_bot_of_self h_dis
+  simp only [coe_pair, sUnion_insert, sUnion_singleton]
+  rw [sum_insert, sum_singleton]
+  simp only [Finset.mem_singleton]
+  refine fun hs_eq_t => hs_empty ?_
+  rw [← hs_eq_t] at h_dis
+  exact Disjoint.eq_bot_of_self h_dis
 
 section IsSetSemiring
 
@@ -116,13 +116,13 @@ lemma addContent_eq_add_diffFinset₀_of_subset (hC : IsSetSemiring C)
     m s = ∑ i ∈ I, m i + ∑ i ∈ hC.diffFinset₀ hs hI, m i := by
   conv_lhs => rw [← hC.sUnion_union_diffFinset₀_of_subset hs hI hI_ss]
   rw [addContent_sUnion]
-  · rw [sum_union]
-    exact hC.disjoint_diffFinset₀ hs hI
-  · rw [coe_union]
-    exact Set.union_subset hI (hC.diffFinset₀_subset hs hI)
-  · rw [coe_union]
-    exact hC.pairwiseDisjoint_union_diffFinset₀ hs hI h_dis
-  · rwa [hC.sUnion_union_diffFinset₀_of_subset hs hI hI_ss]
+  rw [sum_union]
+  exact hC.disjoint_diffFinset₀ hs hI
+  rw [coe_union]
+  exact Set.union_subset hI (hC.diffFinset₀_subset hs hI)
+  rw [coe_union]
+  exact hC.pairwiseDisjoint_union_diffFinset₀ hs hI h_dis
+  rwa [hC.sUnion_union_diffFinset₀_of_subset hs hI hI_ss]
 
 open Classical in
 lemma sum_addContent_le_of_subset (hC : IsSetSemiring C)
@@ -136,10 +136,10 @@ lemma addContent_mono (hC : IsSetSemiring C) (hs : s ∈ C) (ht : t ∈ C)
     (hst : s ⊆ t) :
     m s ≤ m t := by
   have h := sum_addContent_le_of_subset (m := m) hC (I := {s}) ?_ ?_ ht ?_
-  · simpa only [sum_singleton] using h
-  · rwa [singleton_subset_set_iff]
-  · simp only [coe_singleton, pairwiseDisjoint_singleton]
-  · simp [hst]
+  simpa only [sum_singleton] using h
+  rwa [singleton_subset_set_iff]
+  simp only [coe_singleton, pairwiseDisjoint_singleton]
+  simp [hst]
 
 end IsSetSemiring
 
@@ -153,21 +153,21 @@ lemma addContent_union (hC : IsSetRing C) (hs : s ∈ C) (ht : t ∈ C)
 lemma addContent_union_le (hC : IsSetRing C) (hs : s ∈ C) (ht : t ∈ C) :
     m (s ∪ t) ≤ m s + m t := by
   rw [← union_diff_self, addContent_union hC hs (hC.diff_mem ht hs)]
-  · exact add_le_add le_rfl
-      (addContent_mono hC.isSetSemiring (hC.diff_mem ht hs) ht diff_subset)
-  · rw [Set.disjoint_iff_inter_eq_empty, inter_diff_self]
+  exact add_le_add le_rfl
+    (addContent_mono hC.isSetSemiring (hC.diff_mem ht hs) ht diff_subset)
+  rw [Set.disjoint_iff_inter_eq_empty, inter_diff_self]
 
 open Classical in
 lemma addContent_biUnion_le {ι : Type*} (hC : IsSetRing C) {s : ι → Set α}
     {S : Finset ι} (hs : ∀ n ∈ S, s n ∈ C) :
     m (⋃ i ∈ S, s i) ≤ ∑ i ∈ S, m (s i) := by
   induction' S using Finset.induction with i S hiS h hs
-  · simp
-  · rw [Finset.sum_insert hiS]
-    simp_rw [← Finset.mem_coe, Finset.coe_insert, Set.biUnion_insert]
-    simp only [Finset.mem_insert, forall_eq_or_imp] at hs
-    refine (addContent_union_le hC hs.1 (hC.biUnion_mem S hs.2)).trans ?_
-    exact add_le_add le_rfl (h hs.2)
+  simp
+  rw [Finset.sum_insert hiS]
+  simp_rw [← Finset.mem_coe, Finset.coe_insert, Set.biUnion_insert]
+  simp only [Finset.mem_insert, forall_eq_or_imp] at hs
+  refine (addContent_union_le hC hs.1 (hC.biUnion_mem S hs.2)).trans ?_
+  exact add_le_add le_rfl (h hs.2)
 
 lemma le_addContent_diff (m : AddContent C) (hC : IsSetRing C) (hs : s ∈ C) (ht : t ∈ C) :
     m s - m t ≤ m (s \ t) := by

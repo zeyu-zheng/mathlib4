@@ -1099,10 +1099,10 @@ private lemma nonsingular_neg_of_Z_ne_zero {P : Fin 3 → F} (hP : W.Nonsingular
 
 lemma nonsingular_neg {P : Fin 3 → F} (hP : W.Nonsingular P) : W.Nonsingular <| W.neg P := by
   by_cases hPz : P z = 0
-  · simp only [neg_of_Z_eq_zero hP hPz, nonsingular_smul _
-        ((isUnit_Y_of_Z_eq_zero hP hPz).div <| isUnit_X_of_Z_eq_zero hP hPz).neg, nonsingular_zero]
-  · simp only [neg_of_Z_ne_zero hPz, nonsingular_smul _ <| Ne.isUnit hPz,
-      nonsingular_neg_of_Z_ne_zero hP hPz]
+  simp only [neg_of_Z_eq_zero hP hPz, nonsingular_smul _
+      ((isUnit_Y_of_Z_eq_zero hP hPz).div <| isUnit_X_of_Z_eq_zero hP hPz).neg, nonsingular_zero]
+  simp only [neg_of_Z_ne_zero hPz, nonsingular_smul _ <| Ne.isUnit hPz,
+    nonsingular_neg_of_Z_ne_zero hP hPz]
 
 lemma addZ_neg {P : Fin 3 → R} : addZ P (W'.neg P) = 0 := addZ_of_X_eq rfl
 
@@ -1189,8 +1189,8 @@ lemma add_smul_of_not_equiv {P Q : Fin 3 → R} (h : ¬P ≈ Q) {u v : R} (hu : 
 lemma add_smul_equiv (P Q : Fin 3 → R) {u v : R} (hu : IsUnit u) (hv : IsUnit v) :
     W'.add (u • P) (v • Q) ≈ W'.add P Q := by
   by_cases h : P ≈ Q
-  · exact ⟨hu.unit ^ 4, by convert (add_smul_of_equiv h hu hv).symm⟩
-  · exact ⟨(hu.unit * hv.unit) ^ 2, by convert (add_smul_of_not_equiv h hu hv).symm⟩
+  exact ⟨hu.unit ^ 4, by convert (add_smul_of_equiv h hu hv).symm⟩
+  exact ⟨(hu.unit * hv.unit) ^ 2, by convert (add_smul_of_not_equiv h hu hv).symm⟩
 
 lemma add_equiv {P P' Q Q' : Fin 3 → R} (hP : P ≈ P') (hQ : Q ≈ Q') :
     W'.add P Q ≈ W'.add P' Q' := by
@@ -1253,28 +1253,28 @@ private lemma nonsingular_add_of_Z_ne_zero {P Q : Fin 3 → F} (hP : W.Nonsingul
 lemma nonsingular_add {P Q : Fin 3 → F} (hP : W.Nonsingular P) (hQ : W.Nonsingular Q) :
     W.Nonsingular <| W.add P Q := by
   by_cases hPz : P z = 0
-  · by_cases hQz : Q z = 0
-    · simp only [add_of_Z_eq_zero hP hQ hPz hQz,
-        nonsingular_smul _ <| (isUnit_X_of_Z_eq_zero hP hPz).pow 2, nonsingular_zero]
-    · simpa only [add_of_Z_eq_zero_left hP.left hPz hQz,
-        nonsingular_smul _ <| (isUnit_X_of_Z_eq_zero hP hPz).mul <| Ne.isUnit hQz]
-  · by_cases hQz : Q z = 0
-    · simpa only [add_of_Z_eq_zero_right hQ.left hPz hQz,
-        nonsingular_smul _ ((isUnit_X_of_Z_eq_zero hQ hQz).mul <| Ne.isUnit hPz).neg]
-    · by_cases hxy : P x * Q z ^ 2 = Q x * P z ^ 2 → P y * Q z ^ 3 ≠ W.negY Q * P z ^ 3
-      · by_cases hx : P x * Q z ^ 2 = Q x * P z ^ 2
-        · simp only [add_of_Y_ne' hP.left hQ.left hPz hQz hx <| hxy hx,
-            nonsingular_smul _ <| isUnit_dblZ_of_Y_ne' hP.left hQ.left hPz hx <| hxy hx,
-            nonsingular_add_of_Z_ne_zero hP hQ hPz hQz hxy]
-        · simp only [add_of_X_ne hP.left hQ.left hPz hQz hx,
-            nonsingular_smul _ <| isUnit_addZ_of_X_ne hx,
-            nonsingular_add_of_Z_ne_zero hP hQ hPz hQz hxy]
-      · rw [_root_.not_imp, not_ne_iff] at hxy
-        by_cases hy : P y * Q z ^ 3 = Q y * P z ^ 3
-        · simp only [add_of_Y_eq hPz hQz hxy.left hy hxy.right, nonsingular_smul _ <|
-              isUnit_dblU_of_Y_eq hP hPz hQz hxy.left hy hxy.right, nonsingular_zero]
-        · simp only [add_of_Y_ne hP.left hQ.left hPz hQz hxy.left hy,
-            nonsingular_smul _ <| isUnit_addU_of_Y_ne hPz hQz hy, nonsingular_zero]
+  by_cases hQz : Q z = 0
+  simp only [add_of_Z_eq_zero hP hQ hPz hQz,
+    nonsingular_smul _ <| (isUnit_X_of_Z_eq_zero hP hPz).pow 2, nonsingular_zero]
+  simpa only [add_of_Z_eq_zero_left hP.left hPz hQz,
+    nonsingular_smul _ <| (isUnit_X_of_Z_eq_zero hP hPz).mul <| Ne.isUnit hQz]
+  by_cases hQz : Q z = 0
+  simpa only [add_of_Z_eq_zero_right hQ.left hPz hQz,
+    nonsingular_smul _ ((isUnit_X_of_Z_eq_zero hQ hQz).mul <| Ne.isUnit hPz).neg]
+  by_cases hxy : P x * Q z ^ 2 = Q x * P z ^ 2 → P y * Q z ^ 3 ≠ W.negY Q * P z ^ 3
+  by_cases hx : P x * Q z ^ 2 = Q x * P z ^ 2
+  simp only [add_of_Y_ne' hP.left hQ.left hPz hQz hx <| hxy hx,
+    nonsingular_smul _ <| isUnit_dblZ_of_Y_ne' hP.left hQ.left hPz hx <| hxy hx,
+    nonsingular_add_of_Z_ne_zero hP hQ hPz hQz hxy]
+  simp only [add_of_X_ne hP.left hQ.left hPz hQz hx,
+    nonsingular_smul _ <| isUnit_addZ_of_X_ne hx,
+    nonsingular_add_of_Z_ne_zero hP hQ hPz hQz hxy]
+  rw [_root_.not_imp, not_ne_iff] at hxy
+  by_cases hy : P y * Q z ^ 3 = Q y * P z ^ 3
+  simp only [add_of_Y_eq hPz hQz hxy.left hy hxy.right, nonsingular_smul _ <|
+      isUnit_dblU_of_Y_eq hP hPz hQz hxy.left hy hxy.right, nonsingular_zero]
+  simp only [add_of_Y_ne hP.left hQ.left hPz hQz hxy.left hy,
+    nonsingular_smul _ <| isUnit_addU_of_Y_ne hPz hQz hy, nonsingular_zero]
 
 variable (W') in
 /-- The addition of two point classes. If `P` is a point representative,
@@ -1289,32 +1289,32 @@ lemma addMap_of_Z_eq_zero_left {P : Fin 3 → F} {Q : PointClass F} (hP : W.Nons
     (hQ : W.NonsingularLift Q) (hPz : P z = 0) : W.addMap ⟦P⟧ Q = Q := by
   rcases Q with ⟨Q⟩
   by_cases hQz : Q z = 0
-  · erw [addMap_eq, add_of_Z_eq_zero hP hQ hPz hQz,
-      smul_eq _ <| (isUnit_X_of_Z_eq_zero hP hPz).pow 2, Quotient.eq]
-    exact Setoid.symm <| equiv_zero_of_Z_eq_zero hQ hQz
-  · erw [addMap_eq, add_of_Z_eq_zero_left hP.left hPz hQz,
-      smul_eq _ <| (isUnit_X_of_Z_eq_zero hP hPz).mul <| Ne.isUnit hQz]
-    rfl
+  erw [addMap_eq, add_of_Z_eq_zero hP hQ hPz hQz,
+    smul_eq _ <| (isUnit_X_of_Z_eq_zero hP hPz).pow 2, Quotient.eq]
+  exact Setoid.symm <| equiv_zero_of_Z_eq_zero hQ hQz
+  erw [addMap_eq, add_of_Z_eq_zero_left hP.left hPz hQz,
+    smul_eq _ <| (isUnit_X_of_Z_eq_zero hP hPz).mul <| Ne.isUnit hQz]
+  rfl
 
 lemma addMap_of_Z_eq_zero_right {P : PointClass F} {Q : Fin 3 → F} (hP : W.NonsingularLift P)
     (hQ : W.Nonsingular Q) (hQz : Q z = 0) : W.addMap P ⟦Q⟧ = P := by
   rcases P with ⟨P⟩
   by_cases hPz : P z = 0
-  · erw [addMap_eq, add_of_Z_eq_zero hP hQ hPz hQz,
-      smul_eq _ <| (isUnit_X_of_Z_eq_zero hP hPz).pow 2, Quotient.eq]
-    exact Setoid.symm <| equiv_zero_of_Z_eq_zero hP hPz
-  · erw [addMap_eq, add_of_Z_eq_zero_right hQ.left hPz hQz,
-      smul_eq _ ((isUnit_X_of_Z_eq_zero hQ hQz).mul <| Ne.isUnit hPz).neg]
-    rfl
+  erw [addMap_eq, add_of_Z_eq_zero hP hQ hPz hQz,
+    smul_eq _ <| (isUnit_X_of_Z_eq_zero hP hPz).pow 2, Quotient.eq]
+  exact Setoid.symm <| equiv_zero_of_Z_eq_zero hP hPz
+  erw [addMap_eq, add_of_Z_eq_zero_right hQ.left hPz hQz,
+    smul_eq _ ((isUnit_X_of_Z_eq_zero hQ hQz).mul <| Ne.isUnit hPz).neg]
+  rfl
 
 lemma addMap_of_Y_eq {P Q : Fin 3 → F} (hP : W.Nonsingular P) (hQ : W.Equation Q) (hPz : P z ≠ 0)
     (hQz : Q z ≠ 0) (hx : P x * Q z ^ 2 = Q x * P z ^ 2)
     (hy' : P y * Q z ^ 3 = W.negY Q * P z ^ 3) : W.addMap ⟦P⟧ ⟦Q⟧ = ⟦![1, 1, 0]⟧ := by
   by_cases hy : P y * Q z ^ 3 = Q y * P z ^ 3
-  · rw [addMap_eq, add_of_Y_eq hPz hQz hx hy hy',
-      smul_eq _ <| isUnit_dblU_of_Y_eq hP hPz hQz hx hy hy']
-  · rw [addMap_eq, add_of_Y_ne hP.left hQ hPz hQz hx hy,
-      smul_eq _ <| isUnit_addU_of_Y_ne hPz hQz hy]
+  rw [addMap_eq, add_of_Y_eq hPz hQz hx hy hy',
+    smul_eq _ <| isUnit_dblU_of_Y_eq hP hPz hQz hx hy hy']
+  rw [addMap_eq, add_of_Y_ne hP.left hQ hPz hQz hx hy,
+    smul_eq _ <| isUnit_addU_of_Y_ne hPz hQz hy]
 
 lemma addMap_of_Z_ne_zero {P Q : Fin 3 → F} (hP : W.Equation P) (hQ : W.Equation Q) (hPz : P z ≠ 0)
     (hQz : Q z ≠ 0) (hxy : P x * Q z ^ 2 = Q x * P z ^ 2 → P y * Q z ^ 3 ≠ W.negY Q * P z ^ 3) :
@@ -1325,9 +1325,9 @@ lemma addMap_of_Z_ne_zero {P Q : Fin 3 → F} (hP : W.Equation P) (hQ : W.Equati
           (W.toAffine.slope (P x / P z ^ 2) (Q x / Q z ^ 2) (P y / P z ^ 3) (Q y / Q z ^ 3)),
         1]⟧ := by
   by_cases hx : P x * Q z ^ 2 = Q x * P z ^ 2
-  · rw [addMap_eq, add_of_Y_ne' hP hQ hPz hQz hx <| hxy hx,
-      smul_eq _ <| isUnit_dblZ_of_Y_ne' hP hQ hPz hx <| hxy hx]
-  · rw [addMap_eq, add_of_X_ne hP hQ hPz hQz hx, smul_eq _ <| isUnit_addZ_of_X_ne hx]
+  rw [addMap_eq, add_of_Y_ne' hP hQ hPz hQz hx <| hxy hx,
+    smul_eq _ <| isUnit_dblZ_of_Y_ne' hP hQ hPz hx <| hxy hx]
+  rw [addMap_eq, add_of_X_ne hP hQ hPz hQz hx, smul_eq _ <| isUnit_addZ_of_X_ne hx]
 
 lemma nonsingularLift_addMap {P Q : PointClass F} (hP : W.NonsingularLift P)
     (hQ : W.NonsingularLift Q) : W.NonsingularLift <| W.addMap P Q := by
@@ -1444,12 +1444,12 @@ lemma toAffine_some {X Y : F} (h : W.Nonsingular ![X, Y, 1]) :
 lemma toAffine_smul (P : Fin 3 → F) {u : F} (hu : IsUnit u) :
     toAffine W (u • P) = toAffine W P := by
   by_cases hP : W.Nonsingular P
-  · by_cases hPz : P z = 0
-    · rw [toAffine_of_Z_eq_zero <| mul_eq_zero_of_right u hPz, toAffine_of_Z_eq_zero hPz]
-    · rw [toAffine_of_Z_ne_zero ((nonsingular_smul P hu).mpr hP) <| mul_ne_zero hu.ne_zero hPz,
-        toAffine_of_Z_ne_zero hP hPz, Affine.Point.some.injEq]
-      simp only [smul_fin3_ext, mul_pow, mul_div_mul_left _ _ (hu.pow _).ne_zero, and_self]
-  · rw [toAffine_of_singular <| hP.comp (nonsingular_smul P hu).mp, toAffine_of_singular hP]
+  by_cases hPz : P z = 0
+  rw [toAffine_of_Z_eq_zero <| mul_eq_zero_of_right u hPz, toAffine_of_Z_eq_zero hPz]
+  rw [toAffine_of_Z_ne_zero ((nonsingular_smul P hu).mpr hP) <| mul_ne_zero hu.ne_zero hPz,
+    toAffine_of_Z_ne_zero hP hPz, Affine.Point.some.injEq]
+  simp only [smul_fin3_ext, mul_pow, mul_div_mul_left _ _ (hu.pow _).ne_zero, and_self]
+  rw [toAffine_of_singular <| hP.comp (nonsingular_smul P hu).mp, toAffine_of_singular hP]
 
 lemma toAffine_of_equiv {P Q : Fin 3 → F} (h : P ≈ Q) : toAffine W P = toAffine W Q := by
   rcases h with ⟨u, rfl⟩
@@ -1458,12 +1458,12 @@ lemma toAffine_of_equiv {P Q : Fin 3 → F} (h : P ≈ Q) : toAffine W P = toAff
 lemma toAffine_neg {P : Fin 3 → F} (hP : W.Nonsingular P) :
     toAffine W (W.neg P) = -toAffine W P := by
   by_cases hPz : P z = 0
-  · rw [neg_of_Z_eq_zero hP hPz,
-      toAffine_smul _ ((isUnit_Y_of_Z_eq_zero hP hPz).div <| isUnit_X_of_Z_eq_zero hP hPz).neg,
-      toAffine_zero, toAffine_of_Z_eq_zero hPz, Affine.Point.neg_zero]
-  · rw [neg_of_Z_ne_zero hPz, toAffine_smul _ <| Ne.isUnit hPz, toAffine_some <|
-        (nonsingular_smul _ <| Ne.isUnit hPz).mp <| neg_of_Z_ne_zero hPz ▸ nonsingular_neg hP,
-      toAffine_of_Z_ne_zero hP hPz, Affine.Point.neg_some]
+  rw [neg_of_Z_eq_zero hP hPz,
+    toAffine_smul _ ((isUnit_Y_of_Z_eq_zero hP hPz).div <| isUnit_X_of_Z_eq_zero hP hPz).neg,
+    toAffine_zero, toAffine_of_Z_eq_zero hPz, Affine.Point.neg_zero]
+  rw [neg_of_Z_ne_zero hPz, toAffine_smul _ <| Ne.isUnit hPz, toAffine_some <|
+      (nonsingular_smul _ <| Ne.isUnit hPz).mp <| neg_of_Z_ne_zero hPz ▸ nonsingular_neg hP,
+    toAffine_of_Z_ne_zero hP hPz, Affine.Point.neg_some]
 
 private lemma toAffine_add_of_Z_ne_zero {P Q : Fin 3 → F} (hP : W.Nonsingular P)
     (hQ : W.Nonsingular Q) (hPz : P z ≠ 0) (hQz : Q z ≠ 0)
@@ -1481,31 +1481,31 @@ private lemma toAffine_add_of_Z_ne_zero {P Q : Fin 3 → F} (hP : W.Nonsingular 
 lemma toAffine_add {P Q : Fin 3 → F} (hP : W.Nonsingular P) (hQ : W.Nonsingular Q) :
     toAffine W (W.add P Q) = toAffine W P + toAffine W Q := by
   by_cases hPz : P z = 0
-  · rw [toAffine_of_Z_eq_zero hPz, zero_add]
-    by_cases hQz : Q z = 0
-    · rw [add_of_Z_eq_zero hP hQ hPz hQz, toAffine_smul _ <| (isUnit_X_of_Z_eq_zero hP hPz).pow 2,
-        toAffine_zero, toAffine_of_Z_eq_zero hQz]
-    · rw [add_of_Z_eq_zero_left hP.left hPz hQz,
-        toAffine_smul _ <| (isUnit_X_of_Z_eq_zero hP hPz).mul <| Ne.isUnit hQz]
-  · by_cases hQz : Q z = 0
-    · rw [add_of_Z_eq_zero_right hQ.left hPz hQz,
-        toAffine_smul _ ((isUnit_X_of_Z_eq_zero hQ hQz).mul <| Ne.isUnit hPz).neg,
-        toAffine_of_Z_eq_zero hQz, add_zero]
-    · by_cases hxy : P x * Q z ^ 2 = Q x * P z ^ 2 → P y * Q z ^ 3 ≠ W.negY Q * P z ^ 3
-      · by_cases hx : P x * Q z ^ 2 = Q x * P z ^ 2
-        · rw [add_of_Y_ne' hP.left hQ.left hPz hQz hx <| hxy hx,
-            toAffine_smul _ <| isUnit_dblZ_of_Y_ne' hP.left hQ.left hPz hx <| hxy hx,
-            toAffine_add_of_Z_ne_zero hP hQ hPz hQz hxy]
-        · rw [add_of_X_ne hP.left hQ.left hPz hQz hx, toAffine_smul _ <| isUnit_addZ_of_X_ne hx,
-            toAffine_add_of_Z_ne_zero hP hQ hPz hQz hxy]
-      · rw [_root_.not_imp, not_ne_iff] at hxy
-        rw [toAffine_of_Z_ne_zero hP hPz, toAffine_of_Z_ne_zero hQ hQz, Affine.Point.add_of_Y_eq
-            ((X_eq_iff hPz hQz).mp hxy.left) ((Y_eq_iff' hPz hQz).mp hxy.right)]
-        by_cases hy : P y * Q z ^ 3 = Q y * P z ^ 3
-        · rw [add_of_Y_eq hPz hQz hxy.left hy hxy.right,
-            toAffine_smul _ <| isUnit_dblU_of_Y_eq hP hPz hQz hxy.left hy hxy.right, toAffine_zero]
-        · rw [add_of_Y_ne hP.left hQ.left hPz hQz hxy.left hy,
-            toAffine_smul _ <| isUnit_addU_of_Y_ne hPz hQz hy, toAffine_zero]
+  rw [toAffine_of_Z_eq_zero hPz, zero_add]
+  by_cases hQz : Q z = 0
+  rw [add_of_Z_eq_zero hP hQ hPz hQz, toAffine_smul _ <| (isUnit_X_of_Z_eq_zero hP hPz).pow 2,
+    toAffine_zero, toAffine_of_Z_eq_zero hQz]
+  rw [add_of_Z_eq_zero_left hP.left hPz hQz,
+    toAffine_smul _ <| (isUnit_X_of_Z_eq_zero hP hPz).mul <| Ne.isUnit hQz]
+  by_cases hQz : Q z = 0
+  rw [add_of_Z_eq_zero_right hQ.left hPz hQz,
+    toAffine_smul _ ((isUnit_X_of_Z_eq_zero hQ hQz).mul <| Ne.isUnit hPz).neg,
+    toAffine_of_Z_eq_zero hQz, add_zero]
+  by_cases hxy : P x * Q z ^ 2 = Q x * P z ^ 2 → P y * Q z ^ 3 ≠ W.negY Q * P z ^ 3
+  by_cases hx : P x * Q z ^ 2 = Q x * P z ^ 2
+  rw [add_of_Y_ne' hP.left hQ.left hPz hQz hx <| hxy hx,
+    toAffine_smul _ <| isUnit_dblZ_of_Y_ne' hP.left hQ.left hPz hx <| hxy hx,
+    toAffine_add_of_Z_ne_zero hP hQ hPz hQz hxy]
+  rw [add_of_X_ne hP.left hQ.left hPz hQz hx, toAffine_smul _ <| isUnit_addZ_of_X_ne hx,
+    toAffine_add_of_Z_ne_zero hP hQ hPz hQz hxy]
+  rw [_root_.not_imp, not_ne_iff] at hxy
+  rw [toAffine_of_Z_ne_zero hP hPz, toAffine_of_Z_ne_zero hQ hQz, Affine.Point.add_of_Y_eq
+      ((X_eq_iff hPz hQz).mp hxy.left) ((Y_eq_iff' hPz hQz).mp hxy.right)]
+  by_cases hy : P y * Q z ^ 3 = Q y * P z ^ 3
+  rw [add_of_Y_eq hPz hQz hxy.left hy hxy.right,
+    toAffine_smul _ <| isUnit_dblU_of_Y_eq hP hPz hQz hxy.left hy hxy.right, toAffine_zero]
+  rw [add_of_Y_ne hP.left hQ.left hPz hQz hxy.left hy,
+    toAffine_smul _ <| isUnit_addU_of_Y_ne hPz hQz hy, toAffine_zero]
 
 /-- The map from a nonsingular rational point on a Weierstrass curve `W` in Jacobian coordinates
 to the corresponding nonsingular rational point on `W` in affine coordinates. -/

@@ -207,12 +207,12 @@ theorem map_surjective {f : α → γ} {g : β → δ} :
   ⟨ fun h => ⟨
       (fun c => by
         obtain ⟨a | b, h⟩ := h (inl c)
-        · exact ⟨a, inl_injective h⟩
-        · cases h),
+        exact ⟨a, inl_injective h⟩
+        cases h),
       (fun d => by
         obtain ⟨a | b, h⟩ := h (inr d)
-        · cases h
-        · exact ⟨b, inr_injective h⟩)⟩,
+        cases h
+        exact ⟨b, inr_injective h⟩)⟩,
     fun h => h.1.sum_map h.2⟩
 
 @[simp]
@@ -224,21 +224,21 @@ theorem elim_update_left [DecidableEq α] [DecidableEq β] (f : α → γ) (g : 
     Sum.elim (Function.update f i c) g = Function.update (Sum.elim f g) (inl i) c := by
   ext x
   rcases x with x | x
-  · by_cases h : x = i
-    · subst h
-      simp
-    · simp [h]
-  · simp
+  by_cases h : x = i
+  subst h
+  simp
+  simp [h]
+  simp
 
 theorem elim_update_right [DecidableEq α] [DecidableEq β] (f : α → γ) (g : β → γ) (i : β) (c : γ) :
     Sum.elim f (Function.update g i c) = Function.update (Sum.elim f g) (inr i) c := by
   ext x
   rcases x with x | x
-  · simp
-  · by_cases h : x = i
-    · subst h
-      simp
-    · simp [h]
+  simp
+  by_cases h : x = i
+  subst h
+  simp
+  simp [h]
 
 end Sum
 

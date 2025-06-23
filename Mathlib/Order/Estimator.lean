@@ -130,15 +130,15 @@ theorem Estimator.improveUntilAux_spec (a : Thunk α) (p : α → Bool)
     | .ok e' => p (bound a e') := by
   rw [Estimator.improveUntilAux]
   by_cases h : p (bound a e)
-  · simp only [h]; exact h
-  · simp only [h]
-    match improve a e, improve_spec e with
-    | none, eq =>
-      simp only [Bool.not_eq_true]
-      rw [eq] at h
-      exact Bool.bool_eq_false h
-    | some e', _ =>
-      exact Estimator.improveUntilAux_spec a p e' true
+  simp only [h]; exact h
+  simp only [h]
+  match improve a e, improve_spec e with
+  | none, eq =>
+    simp only [Bool.not_eq_true]
+    rw [eq] at h
+    exact Bool.bool_eq_false h
+  | some e', _ =>
+    exact Estimator.improveUntilAux_spec a p e' true
 termination_by (⟨_, mem_range_self e⟩ : range (bound a))
 
 /--
@@ -179,9 +179,9 @@ instance (a b : Thunk ℕ) {εa εb : Type*} [Estimator a εa] [Estimator b εb]
     have s₂ := Estimator.improve_spec (a := b) e.2
     revert s₁ s₂
     cases improve a e.fst <;> cases improve b e.snd <;> intro s₁ s₂ <;> simp_all only
-    · apply Nat.add_lt_add_left s₂
-    · apply Nat.add_lt_add_right s₁
-    · apply Nat.add_lt_add_right s₁
+    apply Nat.add_lt_add_left s₂
+    apply Nat.add_lt_add_right s₁
+    apply Nat.add_lt_add_right s₁
 
 end add
 

@@ -580,8 +580,8 @@ theorem closure_closure_coe_preimage {s : Set M} : closure (((↑) : closure s �
     Subtype.recOn x fun x hx _ => by
       refine closure_induction' (p := fun y hy ↦ ⟨y, hy⟩ ∈ closure (((↑) : closure s → M) ⁻¹' s))
         (fun g hg => subset_closure hg) ?_ (fun g₁ g₂ hg₁ hg₂ => ?_) hx
-      · exact Submonoid.one_mem _
-      · exact Submonoid.mul_mem _
+      exact Submonoid.one_mem _
+      exact Submonoid.mul_mem _
 
 /-- Given submonoids `s`, `t` of monoids `M`, `N` respectively, `s × t` as a submonoid
 of `M × N`. -/
@@ -678,35 +678,35 @@ theorem map_equiv_top (f : M ≃* N) : (⊤ : Submonoid M).map f = ⊤ :=
 theorem le_prod_iff {s : Submonoid M} {t : Submonoid N} {u : Submonoid (M × N)} :
     u ≤ s.prod t ↔ u.map (fst M N) ≤ s ∧ u.map (snd M N) ≤ t := by
   constructor
-  · intro h
-    constructor
-    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
-      exact (h hy1).1
-    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
-      exact (h hy1).2
-  · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ h
-    exact ⟨hH ⟨_, h, rfl⟩, hK ⟨_, h, rfl⟩⟩
+  intro h
+  constructor
+  rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
+  exact (h hy1).1
+  rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
+  exact (h hy1).2
+  rintro ⟨hH, hK⟩ ⟨x1, x2⟩ h
+  exact ⟨hH ⟨_, h, rfl⟩, hK ⟨_, h, rfl⟩⟩
 
 @[to_additive prod_le_iff]
 theorem prod_le_iff {s : Submonoid M} {t : Submonoid N} {u : Submonoid (M × N)} :
     s.prod t ≤ u ↔ s.map (inl M N) ≤ u ∧ t.map (inr M N) ≤ u := by
   constructor
-  · intro h
-    constructor
-    · rintro _ ⟨x, hx, rfl⟩
-      apply h
-      exact ⟨hx, Submonoid.one_mem _⟩
-    · rintro _ ⟨x, hx, rfl⟩
-      apply h
-      exact ⟨Submonoid.one_mem _, hx⟩
-  · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ ⟨h1, h2⟩
-    have h1' : inl M N x1 ∈ u
-    apply hH
-    simpa using h1
-    have h2' : inr M N x2 ∈ u
-    apply hK
-    simpa using h2
-    simpa using Submonoid.mul_mem _ h1' h2'
+  intro h
+  constructor
+  rintro _ ⟨x, hx, rfl⟩
+  apply h
+  exact ⟨hx, Submonoid.one_mem _⟩
+  rintro _ ⟨x, hx, rfl⟩
+  apply h
+  exact ⟨Submonoid.one_mem _, hx⟩
+  rintro ⟨hH, hK⟩ ⟨x1, x2⟩ ⟨h1, h2⟩
+  have h1' : inl M N x1 ∈ u
+  apply hH
+  simpa using h1
+  have h2' : inr M N x2 ∈ u
+  apply hK
+  simpa using h2
+  simpa using Submonoid.mul_mem _ h1' h2'
 
 end Submonoid
 

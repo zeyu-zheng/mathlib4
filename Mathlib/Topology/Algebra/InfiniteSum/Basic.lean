@@ -217,16 +217,16 @@ theorem Inducing.multipliable_iff_tprod_comp_mem_range [CommMonoid γ] [Topologi
     [T2Space γ] {G} [FunLike G α γ] [MonoidHomClass G α γ] {g : G} (hg : Inducing g) (f : β → α) :
     Multipliable f ↔ Multipliable (g ∘ f) ∧ ∏' i, g (f i) ∈ Set.range g := by
   constructor
-  · intro hf
-    constructor
-    · exact hf.map g hg.continuous
-    · use ∏' i, f i
-      exact hf.map_tprod g hg.continuous
-  · rintro ⟨hgf, a, ha⟩
-    use a
-    have := hgf.hasProd
-    simp_rw [comp_apply, ← ha] at this
-    exact (hg.hasProd_iff f a).mp this
+  intro hf
+  constructor
+  exact hf.map g hg.continuous
+  use ∏' i, f i
+  exact hf.map_tprod g hg.continuous
+  rintro ⟨hgf, a, ha⟩
+  use a
+  have := hgf.hasProd
+  simp_rw [comp_apply, ← ha] at this
+  exact (hg.hasProd_iff f a).mp this
 
 /-- "A special case of `Multipliable.map_iff_of_leftInverse` for convenience" -/
 @[to_additive "A special case of `Summable.map_iff_of_leftInverse` for convenience"]
@@ -323,8 +323,8 @@ theorem HasProd.update' {α β : Type*} [TopologicalSpace α] [CommMonoid α] [T
   have : ∀ b', f b' * ite (b' = b) x 1 = update f b x b' * ite (b' = b) (f b) 1
   intro b'
   split_ifs with hb'
-  · simpa only [Function.update_apply, hb', eq_self_iff_true] using mul_comm (f b) x
-  · simp only [Function.update_apply, hb', if_false]
+  simpa only [Function.update_apply, hb', eq_self_iff_true] using mul_comm (f b) x
+  simp only [Function.update_apply, hb', if_false]
   have h := hf.mul (hasProd_ite_eq b x)
   simp_rw [this] at h
   exact HasProd.unique h (hf'.mul (hasProd_ite_eq b (f b)))
@@ -414,8 +414,8 @@ theorem tprod_tprod_eq_mulSingle (f : β → γ → α) (b : β) (c : γ) (hfb :
 theorem tprod_ite_eq (b : β) [DecidablePred (· = b)] (a : α) :
     ∏' b', (if b' = b then a else 1) = a := by
   rw [tprod_eq_mulSingle b]
-  · simp
-  · intro b' hb'; simp [hb']
+  simp
+  intro b' hb'; simp [hb']
 
 -- Porting note: Added nolint simpNF, simpNF falsely claims that lhs does not simplify under simp
 @[to_additive (attr := simp, nolint simpNF)]
@@ -440,16 +440,16 @@ theorem Function.Injective.tprod_eq {g : γ → β} (hg : Injective g) {f : β �
   rw [mulSupport_comp_eq_preimage, Set.image_preimage_eq_iff.2 hf]
   rw [← Function.comp_def]
   by_cases hf_fin : (mulSupport f).Finite
-  · have hfg_fin : (mulSupport (f ∘ g)).Finite := hf_fin.preimage hg.injOn
-    lift g to γ ↪ β using hg
-    simp_rw [tprod_eq_prod' hf_fin.coe_toFinset.ge, tprod_eq_prod' hfg_fin.coe_toFinset.ge,
-      comp_apply, ← Finset.prod_map]
-    refine Finset.prod_congr (Finset.coe_injective ?_) fun _ _ ↦ rfl
-    simp [this]
-  · have hf_fin' : ¬ Set.Finite (mulSupport (f ∘ g)) := by
-      rwa [this, Set.finite_image_iff hg.injOn] at hf_fin
-    simp_rw [tprod_def, if_neg hf_fin, if_neg hf_fin', Multipliable,
-      funext fun a => propext <| hg.hasProd_iff (mulSupport_subset_iff'.1 hf) (a := a)]
+  have hfg_fin : (mulSupport (f ∘ g)).Finite := hf_fin.preimage hg.injOn
+  lift g to γ ↪ β using hg
+  simp_rw [tprod_eq_prod' hf_fin.coe_toFinset.ge, tprod_eq_prod' hfg_fin.coe_toFinset.ge,
+    comp_apply, ← Finset.prod_map]
+  refine Finset.prod_congr (Finset.coe_injective ?_) fun _ _ ↦ rfl
+  simp [this]
+  have hf_fin' : ¬ Set.Finite (mulSupport (f ∘ g)) := by
+    rwa [this, Set.finite_image_iff hg.injOn] at hf_fin
+  simp_rw [tprod_def, if_neg hf_fin, if_neg hf_fin', Multipliable,
+    funext fun a => propext <| hg.hasProd_iff (mulSupport_subset_iff'.1 hf) (a := a)]
 
 @[to_additive]
 theorem Equiv.tprod_eq (e : γ ≃ β) (f : β → α) : ∏' c, f (e c) = ∏' b, f b :=

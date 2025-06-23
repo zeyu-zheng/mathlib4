@@ -111,14 +111,14 @@ private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => compRel s s) �
     (((𝓤 α).lift' gen).lift' fun s => compRel s s) =
         (𝓤 α).lift' fun s => compRel (gen s) (gen s) := by
       rw [lift'_lift'_assoc]
-      · exact monotone_gen
-      · exact monotone_id.compRel monotone_id
+      exact monotone_gen
+      exact monotone_id.compRel monotone_id
     _ ≤ (𝓤 α).lift' fun s => gen <| compRel s s :=
       lift'_mono' fun s _hs => compRel_gen_gen_subset_gen_compRel
     _ = ((𝓤 α).lift' fun s : Set (α × α) => compRel s s).lift' gen := by
       rw [lift'_lift'_assoc]
-      · exact monotone_id.compRel monotone_id
-      · exact monotone_gen
+      exact monotone_id.compRel monotone_id
+      exact monotone_gen
     _ ≤ (𝓤 α).lift' gen := lift'_mono comp_le_uniformity le_rfl
 
 instance : UniformSpace (CauchyFilter α) :=
@@ -177,11 +177,11 @@ theorem denseRange_pureCauchy : DenseRange (pureCauchy : α → CauchyFilter α)
   simp only [closure_eq_cluster_pts, ClusterPt, nhds_eq_uniformity, lift'_inf_principal_eq,
     Set.inter_comm _ (range pureCauchy), mem_setOf_eq]
   refine (lift'_neBot_iff ?_).mpr (fun s hs => ?_)
-  · exact monotone_const.inter monotone_preimage
-  · let ⟨y, hy⟩ := h_ex s hs
-    have : pureCauchy y ∈ range pureCauchy ∩ { y : CauchyFilter α | (f, y) ∈ s } :=
-      ⟨mem_range_self y, hy⟩
-    exact ⟨_, this⟩
+  exact monotone_const.inter monotone_preimage
+  let ⟨y, hy⟩ := h_ex s hs
+  have : pureCauchy y ∈ range pureCauchy ∩ { y : CauchyFilter α | (f, y) ∈ s } :=
+    ⟨mem_range_self y, hy⟩
+  exact ⟨_, this⟩
 
 theorem denseInducing_pureCauchy : DenseInducing (pureCauchy : α → CauchyFilter α) :=
   uniformInducing_pureCauchy.denseInducing denseRange_pureCauchy
@@ -191,10 +191,10 @@ theorem denseEmbedding_pureCauchy : DenseEmbedding (pureCauchy : α → CauchyFi
 
 theorem nonempty_cauchyFilter_iff : Nonempty (CauchyFilter α) ↔ Nonempty α := by
   constructor <;> rintro ⟨c⟩
-  · have := eq_univ_iff_forall.1 denseEmbedding_pureCauchy.toDenseInducing.closure_range c
-    obtain ⟨_, ⟨_, a, _⟩⟩ := mem_closure_iff.1 this _ isOpen_univ trivial
-    exact ⟨a⟩
-  · exact ⟨pureCauchy c⟩
+  have := eq_univ_iff_forall.1 denseEmbedding_pureCauchy.toDenseInducing.closure_range c
+  obtain ⟨_, ⟨_, a, _⟩⟩ := mem_closure_iff.1 this _ isOpen_univ trivial
+  exact ⟨a⟩
+  exact ⟨pureCauchy c⟩
 
 section
 
@@ -244,10 +244,10 @@ variable [CompleteSpace β]
 
 theorem uniformContinuous_extend {f : α → β} : UniformContinuous (extend f) := by
   by_cases hf : UniformContinuous f
-  · rw [extend, if_pos hf]
-    exact uniformContinuous_uniformly_extend uniformInducing_pureCauchy denseRange_pureCauchy hf
-  · rw [extend, if_neg hf]
-    exact uniformContinuous_of_const fun a _b => by congr
+  rw [extend, if_pos hf]
+  exact uniformContinuous_uniformly_extend uniformInducing_pureCauchy denseRange_pureCauchy hf
+  rw [extend, if_neg hf]
+  exact uniformContinuous_of_const fun a _b => by congr
 
 end Extend
 

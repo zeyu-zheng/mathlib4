@@ -69,9 +69,9 @@ theorem pderiv_monomial {i : σ} :
     simp only [pderiv_def, mkDerivation_monomial, Finsupp.smul_sum, smul_eq_mul, ← smul_mul_assoc,
       ← (monomial _).map_smul]
     refine (Finset.sum_eq_single i (fun j _ hne => ?_) fun hi => ?_).trans ?_
-    · simp [Pi.single_eq_of_ne hne]
-    · rw [Finsupp.not_mem_support_iff] at hi; simp [hi]
-    · simp
+    simp [Pi.single_eq_of_ne hne]
+    rw [Finsupp.not_mem_support_iff] at hi; simp [hi]
+    simp
 
 theorem pderiv_C {i : σ} : pderiv i (C a) = 0 :=
   derivation_C _ _
@@ -113,8 +113,8 @@ theorem pderiv_map {S} [CommSemiring S] {φ : R →+* S} {f : MvPolynomial σ R}
     pderiv i (map φ f) = map φ (pderiv i f) := by
   apply induction_on f (fun r ↦ by simp) (fun p q hp hq ↦ by simp [hp, hq]) fun p j eq ↦ ?_
   obtain rfl | h := eq_or_ne j i
-  · simp [eq]
-  · simp [eq, h]
+  simp [eq]
+  simp [eq, h]
 
 end PDeriv
 

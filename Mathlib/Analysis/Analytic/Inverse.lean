@@ -105,8 +105,8 @@ theorem leftInv_comp (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F)
         {c | Composition.length c < n + 2}.toFinset ∪ {Composition.ones (n + 2)} := by
       refine Subset.antisymm (fun c _ => ?_) (subset_univ _)
       by_cases h : c.length < n + 2
-      · simp [h, Set.mem_toFinset (s := {c | Composition.length c < n + 2})]
-      · simp [Composition.eq_ones_iff_le_length.2 (not_lt.1 h)]
+      simp [h, Set.mem_toFinset (s := {c | Composition.length c < n + 2})]
+      simp [Composition.eq_ones_iff_le_length.2 (not_lt.1 h)]
     have B :
       Disjoint ({c | Composition.length c < n + 2} : Set (Composition (n + 2))).toFinset
         {Composition.ones (n + 2)} := by
@@ -200,11 +200,11 @@ theorem comp_rightInv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries �
       {c | 1 < Composition.length c}.toFinset ∪ {Composition.single n hn} := by
     refine Subset.antisymm (fun c _ => ?_) (subset_univ _)
     by_cases h : 1 < c.length
-    · simp [h, Set.mem_toFinset (s := {c | 1 < Composition.length c})]
-    · have : c.length = 1 := by
-        refine (eq_iff_le_not_lt.2 ⟨?_, h⟩).symm; exact c.length_pos_of_pos hn
-      rw [← Composition.eq_single_iff_length hn] at this
-      simp [this]
+    simp [h, Set.mem_toFinset (s := {c | 1 < Composition.length c})]
+    have : c.length = 1 := by
+      refine (eq_iff_le_not_lt.2 ⟨?_, h⟩).symm; exact c.length_pos_of_pos hn
+    rw [← Composition.eq_single_iff_length hn] at this
+    simp [this]
   have B :
     Disjoint ({c | 1 < Composition.length c} : Set (Composition n)).toFinset
       {Composition.single n hn} := by
@@ -512,29 +512,29 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
   let S n := ∑ k ∈ Ico 1 n, a ^ k * ‖p.rightInv i k‖
   have IRec : ∀ n, 1 ≤ n → S n ≤ (I + 1) * a := by
     apply Nat.le_induction
-    · simp only [S]
-      rw [Ico_eq_empty_of_le (le_refl 1), sum_empty]
-      exact mul_nonneg (add_nonneg (norm_nonneg _) zero_le_one) apos.le
-    · intro n one_le_n hn
-      have In : 2 ≤ n + 1 := by linarith only [one_le_n]
-      have rSn : r * S n ≤ 1 / 2 :=
-        calc
-          r * S n ≤ r * ((I + 1) * a) := by gcongr
-          _ ≤ 1 / 2 := by rwa [← mul_assoc]
+    simp only [S]
+    rw [Ico_eq_empty_of_le (le_refl 1), sum_empty]
+    exact mul_nonneg (add_nonneg (norm_nonneg _) zero_le_one) apos.le
+    intro n one_le_n hn
+    have In : 2 ≤ n + 1 := by linarith only [one_le_n]
+    have rSn : r * S n ≤ 1 / 2 :=
       calc
-        S (n + 1) ≤ I * a + I * C * ∑ k ∈ Ico 2 (n + 1), (r * S n) ^ k :=
-          radius_rightInv_pos_of_radius_pos_aux2 In p i rpos.le apos.le Cpos.le ple
-        _ = I * a + I * C * (((r * S n) ^ 2 - (r * S n) ^ (n + 1)) / (1 - r * S n)) := by
-          rw [geom_sum_Ico' _ In]; exact ne_of_lt (rSn.trans_lt (by norm_num))
-        _ ≤ I * a + I * C * ((r * S n) ^ 2 / (1 / 2)) := by
-          gcongr
-          · simp only [sub_le_self_iff]
-            positivity
-          · linarith only [rSn]
-        _ = I * a + 2 * I * C * (r * S n) ^ 2 := by ring
-        _ ≤ I * a + 2 * I * C * (r * ((I + 1) * a)) ^ 2 := by gcongr
-        _ = (I + 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a) * a := by ring
-        _ ≤ (I + 1) * a := by gcongr
+        r * S n ≤ r * ((I + 1) * a) := by gcongr
+        _ ≤ 1 / 2 := by rwa [← mul_assoc]
+    calc
+      S (n + 1) ≤ I * a + I * C * ∑ k ∈ Ico 2 (n + 1), (r * S n) ^ k :=
+        radius_rightInv_pos_of_radius_pos_aux2 In p i rpos.le apos.le Cpos.le ple
+      _ = I * a + I * C * (((r * S n) ^ 2 - (r * S n) ^ (n + 1)) / (1 - r * S n)) := by
+        rw [geom_sum_Ico' _ In]; exact ne_of_lt (rSn.trans_lt (by norm_num))
+      _ ≤ I * a + I * C * ((r * S n) ^ 2 / (1 / 2)) := by
+        gcongr
+        simp only [sub_le_self_iff]
+        positivity
+        linarith only [rSn]
+      _ = I * a + 2 * I * C * (r * S n) ^ 2 := by ring
+      _ ≤ I * a + 2 * I * C * (r * ((I + 1) * a)) ^ 2 := by gcongr
+      _ = (I + 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a) * a := by ring
+      _ ≤ (I + 1) * a := by gcongr
   -- conclude that all coefficients satisfy `aⁿ Qₙ ≤ (I + 1) a`.
   let a' : NNReal := ⟨a, apos.le⟩
   suffices H : (a' : ENNReal) ≤ (p.rightInv i).radius by
@@ -543,15 +543,15 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
     simpa only [ENNReal.coe_pos]
   apply le_radius_of_bound _ ((I + 1) * a) fun n => ?_
   by_cases hn : n = 0
-  · have : ‖p.rightInv i n‖ = ‖p.rightInv i 0‖ := by congr <;> try rw [hn]
-    simp only [this, norm_zero, zero_mul, rightInv_coeff_zero]
-    positivity
-  · have one_le_n : 1 ≤ n := bot_lt_iff_ne_bot.2 hn
-    calc
-      ‖p.rightInv i n‖ * (a' : ℝ) ^ n = a ^ n * ‖p.rightInv i n‖ := mul_comm _ _
-      _ ≤ ∑ k ∈ Ico 1 (n + 1), a ^ k * ‖p.rightInv i k‖ :=
-        (haveI : ∀ k ∈ Ico 1 (n + 1), 0 ≤ a ^ k * ‖p.rightInv i k‖ := fun k _ => by positivity
-        single_le_sum this (by simp [one_le_n]))
-      _ ≤ (I + 1) * a := IRec (n + 1) (by norm_num)
+  have : ‖p.rightInv i n‖ = ‖p.rightInv i 0‖ := by congr <;> try rw [hn]
+  simp only [this, norm_zero, zero_mul, rightInv_coeff_zero]
+  positivity
+  have one_le_n : 1 ≤ n := bot_lt_iff_ne_bot.2 hn
+  calc
+    ‖p.rightInv i n‖ * (a' : ℝ) ^ n = a ^ n * ‖p.rightInv i n‖ := mul_comm _ _
+    _ ≤ ∑ k ∈ Ico 1 (n + 1), a ^ k * ‖p.rightInv i k‖ :=
+      (haveI : ∀ k ∈ Ico 1 (n + 1), 0 ≤ a ^ k * ‖p.rightInv i k‖ := fun k _ => by positivity
+      single_le_sum this (by simp [one_le_n]))
+    _ ≤ (I + 1) * a := IRec (n + 1) (by norm_num)
 
 end FormalMultilinearSeries

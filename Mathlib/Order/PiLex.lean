@@ -66,17 +66,17 @@ theorem isTrichotomous_lex [∀ i, IsTrichotomous (β i) s] (wf : WellFounded r)
     IsTrichotomous (∀ i, β i) (Pi.Lex r @s) :=
   { trichotomous := fun a b => by
       rcases eq_or_ne a b with hab | hab
-      · exact Or.inr (Or.inl hab)
-      · rw [Function.ne_iff] at hab
-        let i := wf.min _ hab
-        have hri : ∀ j, r j i → a j = b j := by
-          intro j
-          rw [← not_imp_not]
-          exact fun h' => wf.not_lt_min _ _ h'
-        have hne : a i ≠ b i := wf.min_mem _ hab
-        cases' trichotomous_of s (a i) (b i) with hi hi
-        exacts [Or.inl ⟨i, hri, hi⟩,
-          Or.inr <| Or.inr <| ⟨i, fun j hj => (hri j hj).symm, hi.resolve_left hne⟩] }
+      exact Or.inr (Or.inl hab)
+      rw [Function.ne_iff] at hab
+      let i := wf.min _ hab
+      have hri : ∀ j, r j i → a j = b j := by
+        intro j
+        rw [← not_imp_not]
+        exact fun h' => wf.not_lt_min _ _ h'
+      have hne : a i ≠ b i := wf.min_mem _ hab
+      cases' trichotomous_of s (a i) (b i) with hi hi
+      exacts [Or.inl ⟨i, hri, hi⟩,
+        Or.inr <| Or.inr <| ⟨i, fun j hj => (hri j hj).symm, hi.resolve_left hne⟩] }
 
 instance [LT ι] [∀ a, LT (β a)] : LT (Lex (∀ i, β i)) :=
   ⟨Pi.Lex (· < ·) @fun _ => (· < ·)⟩
@@ -175,12 +175,12 @@ instance [Preorder ι] [∀ i, LT (β i)] [∀ i, DenselyOrdered (β i)] :
     rintro _ a₂ ⟨i, h, hi⟩
     obtain ⟨a, ha₁, ha₂⟩ := exists_between hi
     refine ⟨Function.update a₂ _ a, ⟨i, fun j hj => ?_, ?_⟩, i, fun j hj => ?_, ?_⟩
-    · rw [h j hj]
-      dsimp only at hj
-      rw [Function.update_noteq hj.ne a]
-    · rwa [Function.update_same i a]
-    · rw [Function.update_noteq hj.ne a]
-    · rwa [Function.update_same i a]⟩
+    rw [h j hj]
+    dsimp only at hj
+    rw [Function.update_noteq hj.ne a]
+    rwa [Function.update_same i a]
+    rw [Function.update_noteq hj.ne a]
+    rwa [Function.update_same i a]⟩
 
 open Classical in
 theorem Lex.noMaxOrder' [Preorder ι] [∀ i, LT (β i)] (i : ι) [NoMaxOrder (β i)] :

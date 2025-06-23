@@ -129,9 +129,9 @@ theorem univBall_target (c : P) {r : ℝ} (hr : 0 < r) : (univBall c r).target =
 
 theorem ball_subset_univBall_target (c : P) (r : ℝ) : ball c r ⊆ (univBall c r).target := by
   by_cases hr : 0 < r
-  · rw [univBall_target c hr]
-  · rw [univBall, dif_neg hr]
-    exact subset_univ _
+  rw [univBall_target c hr]
+  rw [univBall, dif_neg hr]
+  exact subset_univ _
 
 @[simp]
 theorem univBall_apply_zero (c : P) (r : ℝ) : univBall c r 0 = c := by

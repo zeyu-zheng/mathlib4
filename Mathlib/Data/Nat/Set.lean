@@ -37,9 +37,9 @@ theorem range_rec {α : Type*} (x : α) (f : ℕ → α → α) :
   dsimp
   rename_i n
   induction' n with n ihn
-  · rfl
-  · dsimp at ihn ⊢
-    rw [ihn]
+  rfl
+  dsimp at ihn ⊢
+  rw [ihn]
 
 theorem range_casesOn {α : Type*} (x : α) (f : ℕ → α) :
     (Set.range fun n => Nat.casesOn n x f : Set α) = {x} ∪ Set.range f :=

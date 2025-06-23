@@ -106,7 +106,7 @@ theorem IsSymmetric.continuous [CompleteSpace E] {T : E →ₗ[𝕜] E} (hT : Is
 theorem IsSymmetric.coe_reApplyInnerSelf_apply {T : E →L[𝕜] E} (hT : IsSymmetric (T : E →ₗ[𝕜] E))
     (x : E) : (T.reApplyInnerSelf x : 𝕜) = ⟪T x, x⟫ := by
   rsuffices ⟨r, hr⟩ : ∃ r : ℝ, ⟪T x, x⟫ = r
-  · simp [hr, T.reApplyInnerSelf_apply]
+  simp [hr, T.reApplyInnerSelf_apply]
   rw [← conj_eq_iff_real]
   exact hT.conj_inner_sym x x
 
@@ -130,18 +130,18 @@ variable {V : Type*} [NormedAddCommGroup V] [InnerProductSpace ℂ V]
 theorem isSymmetric_iff_inner_map_self_real (T : V →ₗ[ℂ] V) :
     IsSymmetric T ↔ ∀ v : V, conj ⟪T v, v⟫_ℂ = ⟪T v, v⟫_ℂ := by
   constructor
-  · intro hT v
-    apply IsSymmetric.conj_inner_sym hT
-  · intro h x y
-    rw [← inner_conj_symm x (T y)]
-    rw [inner_map_polarization T x y]
-    simp only [starRingEnd_apply, star_div', star_sub, star_add, star_mul]
-    simp only [← starRingEnd_apply]
-    rw [h (x + y), h (x - y), h (x + Complex.I • y), h (x - Complex.I • y)]
-    simp only [Complex.conj_I]
-    rw [inner_map_polarization']
-    norm_num
-    ring
+  intro hT v
+  apply IsSymmetric.conj_inner_sym hT
+  intro h x y
+  rw [← inner_conj_symm x (T y)]
+  rw [inner_map_polarization T x y]
+  simp only [starRingEnd_apply, star_div', star_sub, star_add, star_mul]
+  simp only [← starRingEnd_apply]
+  rw [h (x + y), h (x - y), h (x + Complex.I • y), h (x - Complex.I • y)]
+  simp only [Complex.conj_I]
+  rw [inner_map_polarization']
+  norm_num
+  ring
 
 end Complex
 
@@ -153,18 +153,18 @@ theorem IsSymmetric.inner_map_polarization {T : E →ₗ[𝕜] E} (hT : T.IsSymm
           I * ⟪T (x - (I : 𝕜) • y), x - (I : 𝕜) • y⟫) /
         4 := by
   rcases@I_mul_I_ax 𝕜 _ with (h | h)
-  · simp_rw [h, zero_mul, sub_zero, add_zero, map_add, map_sub, inner_add_left,
-      inner_add_right, inner_sub_left, inner_sub_right, hT x, ← inner_conj_symm x (T y)]
-    suffices (re ⟪T y, x⟫ : 𝕜) = ⟪T y, x⟫ by
-      rw [conj_eq_iff_re.mpr this]
-      ring
-    rw [← re_add_im ⟪T y, x⟫]
-    simp_rw [h, mul_zero, add_zero]
-    norm_cast
-  · simp_rw [map_add, map_sub, inner_add_left, inner_add_right, inner_sub_left, inner_sub_right,
-      LinearMap.map_smul, inner_smul_left, inner_smul_right, RCLike.conj_I, mul_add, mul_sub,
-      sub_sub, ← mul_assoc, mul_neg, h, neg_neg, one_mul, neg_one_mul]
+  simp_rw [h, zero_mul, sub_zero, add_zero, map_add, map_sub, inner_add_left,
+    inner_add_right, inner_sub_left, inner_sub_right, hT x, ← inner_conj_symm x (T y)]
+  suffices (re ⟪T y, x⟫ : 𝕜) = ⟪T y, x⟫ by
+    rw [conj_eq_iff_re.mpr this]
     ring
+  rw [← re_add_im ⟪T y, x⟫]
+  simp_rw [h, mul_zero, add_zero]
+  norm_cast
+  simp_rw [map_add, map_sub, inner_add_left, inner_add_right, inner_sub_left, inner_sub_right,
+    LinearMap.map_smul, inner_smul_left, inner_smul_right, RCLike.conj_I, mul_add, mul_sub,
+    sub_sub, ← mul_assoc, mul_neg, h, neg_neg, one_mul, neg_one_mul]
+  ring
 
 /-- A symmetric linear map `T` is zero if and only if `⟪T x, x⟫_ℝ = 0` for all `x`.
 See `inner_map_self_eq_zero` for the complex version without the symmetric assumption. -/

@@ -49,20 +49,20 @@ theorem invOf_sub_invOf [Ring α] (a b : α) [Invertible a] [Invertible b] :
 theorem Ring.inverse_add_inverse [Semiring α] {a b : α} (h : IsUnit a ↔ IsUnit b) :
     Ring.inverse a + Ring.inverse b = Ring.inverse a * (a + b) * Ring.inverse b := by
   by_cases ha : IsUnit a
-  · have hb := h.mp ha
-    obtain ⟨ia⟩ := ha.nonempty_invertible
-    obtain ⟨ib⟩ := hb.nonempty_invertible
-    simp_rw [inverse_invertible, invOf_add_invOf]
-  · have hb := h.not.mp ha
-    simp [inverse_non_unit, ha, hb]
+  have hb := h.mp ha
+  obtain ⟨ia⟩ := ha.nonempty_invertible
+  obtain ⟨ib⟩ := hb.nonempty_invertible
+  simp_rw [inverse_invertible, invOf_add_invOf]
+  have hb := h.not.mp ha
+  simp [inverse_non_unit, ha, hb]
 
 /-- A version of `inv_sub_inv'` for `Ring.inverse`. -/
 theorem Ring.inverse_sub_inverse [Ring α] {a b : α} (h : IsUnit a ↔ IsUnit b) :
     Ring.inverse a - Ring.inverse b = Ring.inverse a * (b - a) * Ring.inverse b := by
   by_cases ha : IsUnit a
-  · have hb := h.mp ha
-    obtain ⟨ia⟩ := ha.nonempty_invertible
-    obtain ⟨ib⟩ := hb.nonempty_invertible
-    simp_rw [inverse_invertible, invOf_sub_invOf]
-  · have hb := h.not.mp ha
-    simp [inverse_non_unit, ha, hb]
+  have hb := h.mp ha
+  obtain ⟨ia⟩ := ha.nonempty_invertible
+  obtain ⟨ib⟩ := hb.nonempty_invertible
+  simp_rw [inverse_invertible, invOf_sub_invOf]
+  have hb := h.not.mp ha
+  simp [inverse_non_unit, ha, hb]

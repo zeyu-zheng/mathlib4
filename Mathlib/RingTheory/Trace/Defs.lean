@@ -100,8 +100,8 @@ theorem trace_algebraMap_of_basis (x : R) : trace R S (algebraMap R S x) = Finty
 theorem trace_algebraMap [StrongRankCondition R] [Module.Free R S] (x : R) :
     trace R S (algebraMap R S x) = finrank R S • x := by
   by_cases H : ∃ s : Finset S, Nonempty (Basis s R S)
-  · rw [trace_algebraMap_of_basis H.choose_spec.some, finrank_eq_card_basis H.choose_spec.some]
-  · simp [trace_eq_zero_of_not_exists_basis R H, finrank_eq_zero_of_not_exists_basis_finset H]
+  rw [trace_algebraMap_of_basis H.choose_spec.some, finrank_eq_card_basis H.choose_spec.some]
+  simp [trace_eq_zero_of_not_exists_basis R H, finrank_eq_zero_of_not_exists_basis_finset H]
 
 theorem trace_trace_of_basis [Algebra S T] [IsScalarTower R S T] {ι κ : Type*} [Finite ι]
     [Finite κ] (b : Basis ι R S) (c : Basis κ S T) (x : T) :

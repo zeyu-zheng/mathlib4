@@ -14,10 +14,10 @@ theorem euclid (n : ℕ) : ∃ N, n < N ∧ N.Prime := by
   observe : n.factorial > 0
   omega
   constructor
-  · by_contra!
-    observe : p ∣ n.factorial
-    observe : p ∣ N
-    observe : p ∣ 1
-    observe : ¬ p ∣ 1
-    contradiction
-  · exact prime
+  by_contra!
+  observe : p ∣ n.factorial
+  observe : p ∣ N
+  observe : p ∣ 1
+  observe : ¬ p ∣ 1
+  contradiction
+  exact prime

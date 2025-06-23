@@ -81,11 +81,11 @@ theorem convexHull_empty : convexHull 𝕜 (∅ : Set E) = ∅ :=
 @[simp]
 theorem convexHull_empty_iff : convexHull 𝕜 s = ∅ ↔ s = ∅ := by
   constructor
-  · intro h
-    rw [← Set.subset_empty_iff, ← h]
-    exact subset_convexHull 𝕜 _
-  · rintro rfl
-    exact convexHull_empty
+  intro h
+  rw [← Set.subset_empty_iff, ← h]
+  exact subset_convexHull 𝕜 _
+  rintro rfl
+  exact convexHull_empty
 
 @[simp]
 theorem convexHull_nonempty_iff : (convexHull 𝕜 s).Nonempty ↔ s.Nonempty := by
@@ -123,9 +123,9 @@ theorem convexHull_convexHull_union_right (s t : Set E) :
 theorem Convex.convex_remove_iff_not_mem_convexHull_remove {s : Set E} (hs : Convex 𝕜 s) (x : E) :
     Convex 𝕜 (s \ {x}) ↔ x ∉ convexHull 𝕜 (s \ {x}) := by
   constructor
-  · rintro hsx hx
-    rw [hsx.convexHull_eq] at hx
-    exact hx.2 (mem_singleton _)
+  rintro hsx hx
+  rw [hsx.convexHull_eq] at hx
+  exact hx.2 (mem_singleton _)
   rintro hx
   suffices h : s \ {x} = convexHull 𝕜 (s \ {x}) by
     rw [h]
@@ -173,12 +173,12 @@ variable [AddCommGroup E] [AddCommGroup F] [Module 𝕜 E] [Module 𝕜 F]
 theorem AffineMap.image_convexHull (f : E →ᵃ[𝕜] F) (s : Set E) :
     f '' convexHull 𝕜 s = convexHull 𝕜 (f '' s) := by
   apply Set.Subset.antisymm
-  · rw [Set.image_subset_iff]
-    refine convexHull_min ?_ ((convex_convexHull 𝕜 (f '' s)).affine_preimage f)
-    rw [← Set.image_subset_iff]
-    exact subset_convexHull 𝕜 (f '' s)
-  · exact convexHull_min (Set.image_subset _ (subset_convexHull 𝕜 s))
-      ((convex_convexHull 𝕜 s).affine_image f)
+  rw [Set.image_subset_iff]
+  refine convexHull_min ?_ ((convex_convexHull 𝕜 (f '' s)).affine_preimage f)
+  rw [← Set.image_subset_iff]
+  exact subset_convexHull 𝕜 (f '' s)
+  exact convexHull_min (Set.image_subset _ (subset_convexHull 𝕜 s))
+    ((convex_convexHull 𝕜 s).affine_image f)
 
 theorem convexHull_subset_affineSpan (s : Set E) : convexHull 𝕜 s ⊆ (affineSpan 𝕜 s : Set E) :=
   convexHull_min (subset_affineSpan 𝕜 s) (affineSpan 𝕜 s).convex

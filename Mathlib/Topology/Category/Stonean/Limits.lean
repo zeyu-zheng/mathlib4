@@ -215,17 +215,17 @@ lemma pullback.condition {X Y Z : Stonean.{u}} (f : X ⟶ Z) {i : Y ⟶ Z}
   let t : TopologicalSpace (pullback f hi) := inferInstance
   -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
   erw [← hy, @ContinuousMap.coe_mk _ _ t _ _ ?_]
-  · congr
-    apply_fun (Homeomorph.ofEmbedding i hi.toEmbedding)
-    simp only [Homeomorph.ofEmbedding, Homeomorph.homeomorph_mk_coe,
-      Homeomorph.homeomorph_mk_coe_symm, Set.MapsTo.restrict, Subtype.mk.injEq]
-    erw [Function.comp_apply, Subtype.map, Equiv.ofInjective_apply]
-    simpa using hy
-  · simp_all only [Set.mem_preimage, Set.mem_range, t]
-    refine Continuous.comp (Homeomorph.continuous _) ?_
-    apply ContinuousOn.restrict_mapsTo
-    apply Continuous.continuousOn
-    exact f.continuous
+  congr
+  apply_fun (Homeomorph.ofEmbedding i hi.toEmbedding)
+  simp only [Homeomorph.ofEmbedding, Homeomorph.homeomorph_mk_coe,
+    Homeomorph.homeomorph_mk_coe_symm, Set.MapsTo.restrict, Subtype.mk.injEq]
+  erw [Function.comp_apply, Subtype.map, Equiv.ofInjective_apply]
+  simpa using hy
+  simp_all only [Set.mem_preimage, Set.mem_range, t]
+  refine Continuous.comp (Homeomorph.continuous _) ?_
+  apply ContinuousOn.restrict_mapsTo
+  apply Continuous.continuousOn
+  exact f.continuous
 -- this proof is temporarily uglified because of the refactor. It will be removed later.
 
 @[reassoc (attr := simp)]

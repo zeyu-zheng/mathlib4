@@ -223,13 +223,13 @@ open Classical in
 -/
 theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (X ⟶ S) := by
   induction' O using Finset.induction with X O' nm h
-  · exact ⟨Classical.choice IsFiltered.nonempty, by intro; simp⟩
-  · obtain ⟨S', w'⟩ := h
-    use max X S'
-    rintro Y mY
-    obtain rfl | h := eq_or_ne Y X
-    · exact ⟨leftToMax _ _⟩
-    · exact ⟨(w' (Finset.mem_of_mem_insert_of_ne mY h)).some ≫ rightToMax _ _⟩
+  exact ⟨Classical.choice IsFiltered.nonempty, by intro; simp⟩
+  obtain ⟨S', w'⟩ := h
+  use max X S'
+  rintro Y mY
+  obtain rfl | h := eq_or_ne Y X
+  exact ⟨leftToMax _ _⟩
+  exact ⟨(w' (Finset.mem_of_mem_insert_of_ne mY h)).some ≫ rightToMax _ _⟩
 
 variable (O : Finset C) (H : Finset (Σ' (X Y : C) (_ : X ∈ O) (_ : Y ∈ O), X ⟶ Y))
 
@@ -245,29 +245,29 @@ theorem sup_exists :
         (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C) (_ : X ∈ O) (_ : Y ∈ O), X ⟶ Y) ∈ H →
           f ≫ T mY = T mX := by
   induction' H using Finset.induction with h' H' nmf h''
-  · obtain ⟨S, f⟩ := sup_objs_exists O
-    exact ⟨S, fun mX => (f mX).some, by rintro - - - - - ⟨⟩⟩
-  · obtain ⟨X, Y, mX, mY, f⟩ := h'
-    obtain ⟨S', T', w'⟩ := h''
-    refine ⟨coeq (f ≫ T' mY) (T' mX), fun mZ => T' mZ ≫ coeqHom (f ≫ T' mY) (T' mX), ?_⟩
-    intro X' Y' mX' mY' f' mf'
-    rw [← Category.assoc]
-    by_cases h : X = X' ∧ Y = Y'
-    · rcases h with ⟨rfl, rfl⟩
-      by_cases hf : f = f'
-      · subst hf
-        apply coeq_condition
-      · rw [@w' _ _ mX mY f']
-        simp only [Finset.mem_insert, PSigma.mk.injEq, heq_eq_eq, true_and] at mf'
-        rcases mf' with mf' | mf'
-        · exfalso
-          exact hf mf'.symm
-        · exact mf'
-    · rw [@w' _ _ mX' mY' f' _]
-      apply Finset.mem_of_mem_insert_of_ne mf'
-      contrapose! h
-      obtain ⟨rfl, h⟩ := h
-      trivial
+  obtain ⟨S, f⟩ := sup_objs_exists O
+  exact ⟨S, fun mX => (f mX).some, by rintro - - - - - ⟨⟩⟩
+  obtain ⟨X, Y, mX, mY, f⟩ := h'
+  obtain ⟨S', T', w'⟩ := h''
+  refine ⟨coeq (f ≫ T' mY) (T' mX), fun mZ => T' mZ ≫ coeqHom (f ≫ T' mY) (T' mX), ?_⟩
+  intro X' Y' mX' mY' f' mf'
+  rw [← Category.assoc]
+  by_cases h : X = X' ∧ Y = Y'
+  rcases h with ⟨rfl, rfl⟩
+  by_cases hf : f = f'
+  subst hf
+  apply coeq_condition
+  rw [@w' _ _ mX mY f']
+  simp only [Finset.mem_insert, PSigma.mk.injEq, heq_eq_eq, true_and] at mf'
+  rcases mf' with mf' | mf'
+  exfalso
+  exact hf mf'.symm
+  exact mf'
+  rw [@w' _ _ mX' mY' f' _]
+  apply Finset.mem_of_mem_insert_of_ne mf'
+  contrapose! h
+  obtain ⟨rfl, h⟩ := h
+  trivial
 
 /-- An arbitrary choice of object "to the right"
 of a finite collection of objects `O` and morphisms `H`,
@@ -346,15 +346,15 @@ theorem of_cocone_nonempty (h : ∀ {J : Type w} [SmallCategory J] [FinCategory 
   exact ⟨c.pt⟩
   have : IsFilteredOrEmpty C
   refine ⟨?_, ?_⟩
-  · intros X Y
-    obtain ⟨c⟩ := h (ULiftHom.down ⋙ ULift.downFunctor ⋙ pair X Y)
-    exact ⟨c.pt, c.ι.app ⟨⟨WalkingPair.left⟩⟩, c.ι.app ⟨⟨WalkingPair.right⟩⟩, trivial⟩
-  · intros X Y f g
-    obtain ⟨c⟩ := h (ULiftHom.down ⋙ ULift.downFunctor ⋙ parallelPair f g)
-    refine ⟨c.pt, c.ι.app ⟨WalkingParallelPair.one⟩, ?_⟩
-    have h₁ := c.ι.naturality ⟨WalkingParallelPairHom.left⟩
-    have h₂ := c.ι.naturality ⟨WalkingParallelPairHom.right⟩
-    simp_all
+  intros X Y
+  obtain ⟨c⟩ := h (ULiftHom.down ⋙ ULift.downFunctor ⋙ pair X Y)
+  exact ⟨c.pt, c.ι.app ⟨⟨WalkingPair.left⟩⟩, c.ι.app ⟨⟨WalkingPair.right⟩⟩, trivial⟩
+  intros X Y f g
+  obtain ⟨c⟩ := h (ULiftHom.down ⋙ ULift.downFunctor ⋙ parallelPair f g)
+  refine ⟨c.pt, c.ι.app ⟨WalkingParallelPair.one⟩, ?_⟩
+  have h₁ := c.ι.naturality ⟨WalkingParallelPairHom.left⟩
+  have h₂ := c.ι.naturality ⟨WalkingParallelPairHom.right⟩
+  simp_all
   apply IsFiltered.mk
 
 theorem of_hasFiniteColimits [HasFiniteColimits C] : IsFiltered C :=
@@ -670,13 +670,13 @@ open Classical in
 -/
 theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (S ⟶ X) := by
   induction' O using Finset.induction with X O' nm h
-  · exact ⟨Classical.choice IsCofiltered.nonempty, by intro; simp⟩
-  · obtain ⟨S', w'⟩ := h
-    use min X S'
-    rintro Y mY
-    obtain rfl | h := eq_or_ne Y X
-    · exact ⟨minToLeft _ _⟩
-    · exact ⟨minToRight _ _ ≫ (w' (Finset.mem_of_mem_insert_of_ne mY h)).some⟩
+  exact ⟨Classical.choice IsCofiltered.nonempty, by intro; simp⟩
+  obtain ⟨S', w'⟩ := h
+  use min X S'
+  rintro Y mY
+  obtain rfl | h := eq_or_ne Y X
+  exact ⟨minToLeft _ _⟩
+  exact ⟨minToRight _ _ ≫ (w' (Finset.mem_of_mem_insert_of_ne mY h)).some⟩
 
 variable (O : Finset C) (H : Finset (Σ' (X Y : C) (_ : X ∈ O) (_ : Y ∈ O), X ⟶ Y))
 
@@ -692,29 +692,29 @@ theorem inf_exists :
         (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C) (_ : X ∈ O) (_ : Y ∈ O), X ⟶ Y) ∈ H →
           T mX ≫ f = T mY := by
   induction' H using Finset.induction with h' H' nmf h''
-  · obtain ⟨S, f⟩ := inf_objs_exists O
-    exact ⟨S, fun mX => (f mX).some, by rintro - - - - - ⟨⟩⟩
-  · obtain ⟨X, Y, mX, mY, f⟩ := h'
-    obtain ⟨S', T', w'⟩ := h''
-    refine ⟨eq (T' mX ≫ f) (T' mY), fun mZ => eqHom (T' mX ≫ f) (T' mY) ≫ T' mZ, ?_⟩
-    intro X' Y' mX' mY' f' mf'
-    rw [Category.assoc]
-    by_cases h : X = X' ∧ Y = Y'
-    · rcases h with ⟨rfl, rfl⟩
-      by_cases hf : f = f'
-      · subst hf
-        apply eq_condition
-      · rw [@w' _ _ mX mY f']
-        simp only [Finset.mem_insert, PSigma.mk.injEq, heq_eq_eq, true_and] at mf'
-        rcases mf' with mf' | mf'
-        · exfalso
-          exact hf mf'.symm
-        · exact mf'
-    · rw [@w' _ _ mX' mY' f' _]
-      apply Finset.mem_of_mem_insert_of_ne mf'
-      contrapose! h
-      obtain ⟨rfl, h⟩ := h
-      trivial
+  obtain ⟨S, f⟩ := inf_objs_exists O
+  exact ⟨S, fun mX => (f mX).some, by rintro - - - - - ⟨⟩⟩
+  obtain ⟨X, Y, mX, mY, f⟩ := h'
+  obtain ⟨S', T', w'⟩ := h''
+  refine ⟨eq (T' mX ≫ f) (T' mY), fun mZ => eqHom (T' mX ≫ f) (T' mY) ≫ T' mZ, ?_⟩
+  intro X' Y' mX' mY' f' mf'
+  rw [Category.assoc]
+  by_cases h : X = X' ∧ Y = Y'
+  rcases h with ⟨rfl, rfl⟩
+  by_cases hf : f = f'
+  subst hf
+  apply eq_condition
+  rw [@w' _ _ mX mY f']
+  simp only [Finset.mem_insert, PSigma.mk.injEq, heq_eq_eq, true_and] at mf'
+  rcases mf' with mf' | mf'
+  exfalso
+  exact hf mf'.symm
+  exact mf'
+  rw [@w' _ _ mX' mY' f' _]
+  apply Finset.mem_of_mem_insert_of_ne mf'
+  contrapose! h
+  obtain ⟨rfl, h⟩ := h
+  trivial
 
 /-- An arbitrary choice of object "to the left"
 of a finite collection of objects `O` and morphisms `H`,
@@ -796,15 +796,15 @@ theorem of_cone_nonempty (h : ∀ {J : Type w} [SmallCategory J] [FinCategory J]
   exact ⟨c.pt⟩
   have : IsCofilteredOrEmpty C
   refine ⟨?_, ?_⟩
-  · intros X Y
-    obtain ⟨c⟩ := h (ULiftHom.down ⋙ ULift.downFunctor ⋙ pair X Y)
-    exact ⟨c.pt, c.π.app ⟨⟨WalkingPair.left⟩⟩, c.π.app ⟨⟨WalkingPair.right⟩⟩, trivial⟩
-  · intros X Y f g
-    obtain ⟨c⟩ := h (ULiftHom.down ⋙ ULift.downFunctor ⋙ parallelPair f g)
-    refine ⟨c.pt, c.π.app ⟨WalkingParallelPair.zero⟩, ?_⟩
-    have h₁ := c.π.naturality ⟨WalkingParallelPairHom.left⟩
-    have h₂ := c.π.naturality ⟨WalkingParallelPairHom.right⟩
-    simp_all
+  intros X Y
+  obtain ⟨c⟩ := h (ULiftHom.down ⋙ ULift.downFunctor ⋙ pair X Y)
+  exact ⟨c.pt, c.π.app ⟨⟨WalkingPair.left⟩⟩, c.π.app ⟨⟨WalkingPair.right⟩⟩, trivial⟩
+  intros X Y f g
+  obtain ⟨c⟩ := h (ULiftHom.down ⋙ ULift.downFunctor ⋙ parallelPair f g)
+  refine ⟨c.pt, c.π.app ⟨WalkingParallelPair.zero⟩, ?_⟩
+  have h₁ := c.π.naturality ⟨WalkingParallelPairHom.left⟩
+  have h₂ := c.π.naturality ⟨WalkingParallelPairHom.right⟩
+  simp_all
   apply IsCofiltered.mk
 
 theorem of_hasFiniteLimits [HasFiniteLimits C] : IsCofiltered C :=

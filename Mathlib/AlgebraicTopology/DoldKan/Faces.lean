@@ -77,32 +77,32 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
   -- cleaning up the first sum
   rw [← Fin.sum_congr' _ (hnaq_shift 2).symm, Fin.sum_trunc]
   swap
-  · rintro ⟨k, hk⟩
-    suffices φ ≫ X.δ (⟨a + 2 + k, by omega⟩ : Fin (n + 2)) = 0 by
-      simp only [this, Fin.natAdd_mk, Fin.cast_mk, zero_comp, smul_zero]
-    convert v ⟨a + k + 1, by omega⟩ (by rw [Fin.val_mk]; omega)
-    dsimp
-    omega
+  rintro ⟨k, hk⟩
+  suffices φ ≫ X.δ (⟨a + 2 + k, by omega⟩ : Fin (n + 2)) = 0 by
+    simp only [this, Fin.natAdd_mk, Fin.cast_mk, zero_comp, smul_zero]
+  convert v ⟨a + k + 1, by omega⟩ (by rw [Fin.val_mk]; omega)
+  dsimp
+  omega
   -- cleaning up the second sum
   rw [← Fin.sum_congr' _ (hnaq_shift 3).symm, @Fin.sum_trunc _ _ (a + 3)]
   swap
-  · rintro ⟨k, hk⟩
-    rw [assoc, X.δ_comp_σ_of_gt', v.comp_δ_eq_zero_assoc, zero_comp, zsmul_zero]
-    · simp only [Fin.lt_iff_val_lt_val]
-      dsimp [Fin.natAdd, Fin.cast]
-      omega
-    · intro h
-      rw [Fin.pred_eq_iff_eq_succ, Fin.ext_iff] at h
-      dsimp [Fin.cast] at h
-      omega
-    · dsimp [Fin.cast, Fin.pred]
-      rw [Nat.add_right_comm, Nat.add_sub_assoc (by norm_num : 1 ≤ 3)]
-      omega
+  rintro ⟨k, hk⟩
+  rw [assoc, X.δ_comp_σ_of_gt', v.comp_δ_eq_zero_assoc, zero_comp, zsmul_zero]
+  simp only [Fin.lt_iff_val_lt_val]
+  dsimp [Fin.natAdd, Fin.cast]
+  omega
+  intro h
+  rw [Fin.pred_eq_iff_eq_succ, Fin.ext_iff] at h
+  dsimp [Fin.cast] at h
+  omega
+  dsimp [Fin.cast, Fin.pred]
+  rw [Nat.add_right_comm, Nat.add_sub_assoc (by norm_num : 1 ≤ 3)]
+  omega
   simp only [assoc]
   conv_lhs =>
     congr
     · rw [Fin.sum_univ_castSucc]
-    · rw [Fin.sum_univ_castSucc, Fin.sum_univ_castSucc]
+    rw [Fin.sum_univ_castSucc, Fin.sum_univ_castSucc]
   dsimp [Fin.cast, Fin.castLE, Fin.castLT]
   /- the purpose of the following `simplif` is to create three subgoals in order
       to finish the proof -/
@@ -111,54 +111,54 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     intro a b c d e f h1 h2 h3
     rw [add_assoc c d e, h2, add_zero, add_comm a, add_assoc, add_comm a, h3, add_zero, h1]
   apply simplif
-  · -- b = f
-    rw [← pow_add, Odd.neg_one_pow, neg_smul, one_zsmul]
-    exact ⟨a, by omega⟩
-  · -- d + e = 0
-    rw [X.δ_comp_σ_self' (Fin.castSucc_mk _ _ _).symm,
-      X.δ_comp_σ_succ' (Fin.succ_mk _ _ _).symm]
-    simp only [comp_id, pow_add _ (a + 1) 1, pow_one, mul_neg, mul_one, neg_mul, neg_smul,
-      add_right_neg]
-  · -- c + a = 0
-    rw [← Finset.sum_add_distrib]
-    apply Finset.sum_eq_zero
-    rintro ⟨i, hi⟩ _
-    simp only
-    have hia : (⟨i, by omega⟩ : Fin (n + 2)) ≤
-        Fin.castSucc (⟨a, by omega⟩ : Fin (n + 1)) := by
-      rw [Fin.le_iff_val_le_val]
-      dsimp
-      omega
-    erw [δ_comp_σ_of_le X hia, add_eq_zero_iff_eq_neg, ← neg_zsmul]
-    congr 2
-    ring
+  -- b = f
+  rw [← pow_add, Odd.neg_one_pow, neg_smul, one_zsmul]
+  exact ⟨a, by omega⟩
+  -- d + e = 0
+  rw [X.δ_comp_σ_self' (Fin.castSucc_mk _ _ _).symm,
+    X.δ_comp_σ_succ' (Fin.succ_mk _ _ _).symm]
+  simp only [comp_id, pow_add _ (a + 1) 1, pow_one, mul_neg, mul_one, neg_mul, neg_smul,
+    add_right_neg]
+  -- c + a = 0
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_eq_zero
+  rintro ⟨i, hi⟩ _
+  simp only
+  have hia : (⟨i, by omega⟩ : Fin (n + 2)) ≤
+      Fin.castSucc (⟨a, by omega⟩ : Fin (n + 1)) := by
+    rw [Fin.le_iff_val_le_val]
+    dsimp
+    omega
+  erw [δ_comp_σ_of_le X hia, add_eq_zero_iff_eq_neg, ← neg_zsmul]
+  congr 2
+  ring
 
 theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ)
     (hqn : n < q) : φ ≫ (Hσ q).f (n + 1) = 0 := by
   simp only [Hσ, Homotopy.nullHomotopicMap'_f (c_mk (n + 2) (n + 1) rfl) (c_mk (n + 1) n rfl)]
   rw [hσ'_eq_zero hqn (c_mk (n + 1) n rfl), comp_zero, zero_add]
   by_cases hqn' : n + 1 < q
-  · rw [hσ'_eq_zero hqn' (c_mk (n + 2) (n + 1) rfl), zero_comp, comp_zero]
-  · simp only [hσ'_eq (show n + 1 = 0 + q by omega) (c_mk (n + 2) (n + 1) rfl), pow_zero,
-      Fin.mk_zero, one_zsmul, eqToHom_refl, comp_id, comp_sum,
-      AlternatingFaceMapComplex.obj_d_eq]
-    rw [← Fin.sum_congr' _ (show 2 + (n + 1) = n + 1 + 2 by omega), Fin.sum_trunc]
-    · simp only [Fin.sum_univ_castSucc, Fin.sum_univ_zero, zero_add, Fin.last, Fin.castLE_mk,
-        Fin.cast_mk, Fin.castSucc_mk]
-      simp only [Fin.mk_zero, Fin.val_zero, pow_zero, one_zsmul, Fin.mk_one, Fin.val_one, pow_one,
-        neg_smul, comp_neg]
-      erw [δ_comp_σ_self, δ_comp_σ_succ, add_right_neg]
-    · intro j
-      dsimp [Fin.cast, Fin.castLE, Fin.castLT]
-      rw [comp_zsmul, comp_zsmul, δ_comp_σ_of_gt', v.comp_δ_eq_zero_assoc, zero_comp, zsmul_zero]
-      · simp only [Fin.lt_iff_val_lt_val]
-        dsimp [Fin.succ]
-        omega
-      · intro h
-        simp only [Fin.pred, Fin.subNat, Fin.ext_iff, Nat.succ_add_sub_one,
-          Fin.val_zero, add_eq_zero, false_and] at h
-      · simp only [Fin.pred, Fin.subNat, Nat.pred_eq_sub_one, Nat.succ_add_sub_one]
-        omega
+  rw [hσ'_eq_zero hqn' (c_mk (n + 2) (n + 1) rfl), zero_comp, comp_zero]
+  simp only [hσ'_eq (show n + 1 = 0 + q by omega) (c_mk (n + 2) (n + 1) rfl), pow_zero,
+    Fin.mk_zero, one_zsmul, eqToHom_refl, comp_id, comp_sum,
+    AlternatingFaceMapComplex.obj_d_eq]
+  rw [← Fin.sum_congr' _ (show 2 + (n + 1) = n + 1 + 2 by omega), Fin.sum_trunc]
+  simp only [Fin.sum_univ_castSucc, Fin.sum_univ_zero, zero_add, Fin.last, Fin.castLE_mk,
+    Fin.cast_mk, Fin.castSucc_mk]
+  simp only [Fin.mk_zero, Fin.val_zero, pow_zero, one_zsmul, Fin.mk_one, Fin.val_one, pow_one,
+    neg_smul, comp_neg]
+  erw [δ_comp_σ_self, δ_comp_σ_succ, add_right_neg]
+  intro j
+  dsimp [Fin.cast, Fin.castLE, Fin.castLT]
+  rw [comp_zsmul, comp_zsmul, δ_comp_σ_of_gt', v.comp_δ_eq_zero_assoc, zero_comp, zsmul_zero]
+  simp only [Fin.lt_iff_val_lt_val]
+  dsimp [Fin.succ]
+  omega
+  intro h
+  simp only [Fin.pred, Fin.subNat, Fin.ext_iff, Nat.succ_add_sub_one,
+    Fin.val_zero, add_eq_zero, false_and] at h
+  simp only [Fin.pred, Fin.subNat, Nat.pred_eq_sub_one, Nat.succ_add_sub_one]
+  omega
 
 theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) :
     HigherFacesVanish (q + 1) (φ ≫ (𝟙 _ + Hσ q).f (n + 1)) := by
@@ -167,20 +167,20 @@ theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVa
   simp only [comp_add, add_comp, comp_id]
   -- when n < q, the result follows immediately from the assumption
   by_cases hqn : n < q
-  · rw [v.comp_Hσ_eq_zero hqn, zero_comp, add_zero, v j (by omega)]
+  rw [v.comp_Hσ_eq_zero hqn, zero_comp, add_zero, v j (by omega)]
   -- we now assume that n≥q, and write n=a+q
   cases' Nat.le.dest (not_lt.mp hqn) with a ha
   rw [v.comp_Hσ_eq (show n = a + q by omega), neg_comp, add_neg_eq_zero, assoc, assoc]
   cases' n with m hm
   -- the boundary case n=0
-  · simp only [Nat.eq_zero_of_add_eq_zero_left ha, Fin.eq_zero j, Fin.mk_zero, Fin.mk_one,
-      δ_comp_σ_succ, comp_id]
-    rfl
+  simp only [Nat.eq_zero_of_add_eq_zero_left ha, Fin.eq_zero j, Fin.mk_zero, Fin.mk_one,
+    δ_comp_σ_succ, comp_id]
+  rfl
   -- in the other case, we need to write n as m+1
   -- then, we first consider the particular case j = a
   by_cases hj₂ : a = (j : ℕ)
-  · simp only [hj₂, Fin.eta, δ_comp_σ_succ, comp_id]
-    rfl
+  simp only [hj₂, Fin.eta, δ_comp_σ_succ, comp_id]
+  rfl
   -- now, we assume j ≠ a (i.e. a < j)
   have haj : a < j := (Ne.le_iff_lt hj₂).mp (by omega)
   have ham : a ≤ m
@@ -189,25 +189,25 @@ theorem induction {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVa
   omega
   rw [X.δ_comp_σ_of_gt', j.pred_succ]
   swap
-  · rw [Fin.lt_iff_val_lt_val]
-    simpa only [Fin.val_mk, Fin.val_succ, add_lt_add_iff_right] using haj
+  rw [Fin.lt_iff_val_lt_val]
+  simpa only [Fin.val_mk, Fin.val_succ, add_lt_add_iff_right] using haj
   obtain _ | ham'' := ham.lt_or_eq
-  · -- case where `a<m`
-    rw [← X.δ_comp_δ''_assoc]
-    swap
-    · rw [Fin.le_iff_val_le_val]
-      dsimp
-      linarith
-    simp only [← assoc, v j (by omega), zero_comp]
-  · -- in the last case, a=m, q=1 and j=a+1
-    rw [X.δ_comp_δ_self'_assoc]
-    swap
-    · ext
-      cases j
-      dsimp
-      dsimp only [Nat.succ_eq_add_one] at *
-      omega
-    simp only [← assoc, v j (by omega), zero_comp]
+  -- case where `a<m`
+  rw [← X.δ_comp_δ''_assoc]
+  swap
+  rw [Fin.le_iff_val_le_val]
+  dsimp
+  linarith
+  simp only [← assoc, v j (by omega), zero_comp]
+  -- in the last case, a=m, q=1 and j=a+1
+  rw [X.δ_comp_δ_self'_assoc]
+  swap
+  ext
+  cases j
+  dsimp
+  dsimp only [Nat.succ_eq_add_one] at *
+  omega
+  simp only [← assoc, v j (by omega), zero_comp]
 
 end HigherFacesVanish
 

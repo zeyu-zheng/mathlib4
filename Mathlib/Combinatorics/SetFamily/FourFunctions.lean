@@ -77,8 +77,8 @@ private lemma ineq {a₀ a₁ b₀ b₁ c₀ c₁ d₀ d₁ : β}
     _ ≤ c₀ * d₀ + (c₀ * d₁ + c₁ * d₀) + c₁ * d₁ := add_le_add_three h₀₀ ?_ h₁₁
     _ = (c₀ + c₁) * (d₀ + d₁) := by ring
   obtain hcd | hcd := (mul_nonneg hc₀ hd₁).eq_or_gt
-  · rw [hcd] at h₀₁ h₁₀
-    rw [h₀₁.antisymm, h₁₀.antisymm, add_zero] <;> positivity
+  rw [hcd] at h₀₁ h₁₀
+  rw [h₀₁.antisymm, h₁₀.antisymm, add_zero] <;> positivity
   refine le_of_mul_le_mul_right ?_ hcd
   calc (a₀ * b₁ + a₁ * b₀) * (c₀ * d₁)
       = a₀ * b₁ * (c₀ * d₁) + c₀ * d₁ * (a₁ * b₀) := by ring
@@ -119,15 +119,15 @@ lemma le_collapse_of_mem (ha : a ∉ s) (hf : 0 ≤ f) (hts : t = s) (ht : t ∈
   subst hts
   rw [collapse_eq ha, if_pos ht]
   split_ifs
-  · exact le_add_of_nonneg_right <| hf _
-  · rw [add_zero]
+  exact le_add_of_nonneg_right <| hf _
+  rw [add_zero]
 
 lemma le_collapse_of_insert_mem (ha : a ∉ s) (hf : 0 ≤ f) (hts : t = insert a s) (ht : t ∈ 𝒜) :
     f t ≤ collapse 𝒜 a f s := by
   rw [collapse_eq ha, ← hts, if_pos ht]
   split_ifs
-  · exact le_add_of_nonneg_left <| hf _
-  · rw [zero_add]
+  exact le_add_of_nonneg_left <| hf _
+  rw [zero_add]
 
 lemma collapse_nonneg (hf : 0 ≤ f) : 0 ≤ collapse 𝒜 a f := fun _s ↦ sum_nonneg fun _t _ ↦ hf _
 
@@ -148,70 +148,70 @@ lemma collapse_modular (hu : a ∉ u) (h₁ : 0 ≤ f₁) (h₂ : 0 ≤ f₂) (h
   have := not_mem_union.2 ⟨has, hat⟩
   rw [collapse_eq has]
   split_ifs
-  · rw [collapse_eq hat]
-    split_ifs
-    · rw [collapse_of_mem ‹_› (inter_mem_infs ‹_› ‹_›) (inter_mem_infs ‹_› ‹_›) rfl
-        (insert_inter_distrib _ _ _).symm, collapse_of_mem ‹_› (union_mem_sups ‹_› ‹_›)
-        (union_mem_sups ‹_› ‹_›) rfl (insert_union_distrib _ _ _).symm]
-      refine ineq (h₁ _) (h₁ _) (h₂ _) (h₂ _) (h₃ _) (h₃ _) (h₄ _) (h₄ _) (h ‹_› ‹_›) ?_ ?_ ?_
-      · simpa [*] using h ‹insert a s ⊆ _› ‹t ⊆ _›
-      · simpa [*] using h ‹s ⊆ _› ‹insert a t ⊆ _›
-      · simpa [*] using h ‹insert a s ⊆ _› ‹insert a t ⊆ _›
-    · rw [add_zero, add_mul]
-      refine (add_le_add (h ‹_› ‹_›) <| h ‹_› ‹_›).trans ?_
-      rw [collapse_of_mem ‹_› (union_mem_sups ‹_› ‹_›) (union_mem_sups ‹_› ‹_›) rfl
-        (insert_union _ _ _), insert_inter_of_not_mem ‹_›, ← mul_add]
-      exact mul_le_mul_of_nonneg_right (le_collapse_of_mem ‹_› h₃ rfl <| inter_mem_infs ‹_› ‹_›) <|
-        add_nonneg (h₄ _) <| h₄ _
-    · rw [zero_add, add_mul]
-      refine (add_le_add (h ‹_› ‹_›) <| h ‹_› ‹_›).trans ?_
-      rw [collapse_of_mem ‹_› (inter_mem_infs ‹_› ‹_›) (inter_mem_infs ‹_› ‹_›)
-        (inter_insert_of_not_mem ‹_›) (insert_inter_distrib _ _ _).symm, union_insert,
-        insert_union_distrib, ← add_mul]
-      exact mul_le_mul_of_nonneg_left (le_collapse_of_insert_mem ‹_› h₄
-        (insert_union_distrib _ _ _).symm <| union_mem_sups ‹_› ‹_›) <| add_nonneg (h₃ _) <| h₃ _
-    · rw [add_zero, mul_zero]
-      exact mul_nonneg (collapse_nonneg h₃ _) <| collapse_nonneg h₄ _
-  · rw [add_zero, collapse_eq hat, mul_add]
-    split_ifs
-    · refine (add_le_add (h ‹_› ‹_›) <| h ‹_› ‹_›).trans ?_
-      rw [collapse_of_mem ‹_› (union_mem_sups ‹_› ‹_›) (union_mem_sups ‹_› ‹_›) rfl
-        (union_insert _ _ _), inter_insert_of_not_mem ‹_›, ← mul_add]
-      exact mul_le_mul_of_nonneg_right (le_collapse_of_mem ‹_› h₃ rfl <| inter_mem_infs ‹_› ‹_›) <|
-        add_nonneg (h₄ _) <| h₄ _
-    · rw [mul_zero, add_zero]
-      exact (h ‹_› ‹_›).trans <| mul_le_mul (le_collapse_of_mem ‹_› h₃ rfl <|
-        inter_mem_infs ‹_› ‹_›) (le_collapse_of_mem ‹_› h₄ rfl <| union_mem_sups ‹_› ‹_›)
-        (h₄ _) <| collapse_nonneg h₃ _
-    · rw [mul_zero, zero_add]
-      refine (h ‹_› ‹_›).trans <| mul_le_mul ?_ (le_collapse_of_insert_mem ‹_› h₄
-        (union_insert _ _ _) <| union_mem_sups ‹_› ‹_›) (h₄ _) <| collapse_nonneg h₃ _
-      exact le_collapse_of_mem (not_mem_mono inter_subset_left ‹_›) h₃
-        (inter_insert_of_not_mem ‹_›) <| inter_mem_infs ‹_› ‹_›
-    · simp_rw [mul_zero, add_zero]
-      exact mul_nonneg (collapse_nonneg h₃ _) <| collapse_nonneg h₄ _
-  · rw [zero_add, collapse_eq hat, mul_add]
-    split_ifs
-    · refine (add_le_add (h ‹_› ‹_›) <| h ‹_› ‹_›).trans ?_
-      rw [collapse_of_mem ‹_› (inter_mem_infs ‹_› ‹_›) (inter_mem_infs ‹_› ‹_›)
-        (insert_inter_of_not_mem ‹_›) (insert_inter_distrib _ _ _).symm,
-        insert_inter_of_not_mem ‹_›, ← insert_inter_distrib, insert_union, insert_union_distrib,
-        ← add_mul]
-      exact mul_le_mul_of_nonneg_left (le_collapse_of_insert_mem ‹_› h₄
-        (insert_union_distrib _ _ _).symm <| union_mem_sups ‹_› ‹_›) <| add_nonneg (h₃ _) <| h₃ _
-    · rw [mul_zero, add_zero]
-      refine (h ‹_› ‹_›).trans <| mul_le_mul (le_collapse_of_mem ‹_› h₃
-        (insert_inter_of_not_mem ‹_›) <| inter_mem_infs ‹_› ‹_›) (le_collapse_of_insert_mem ‹_› h₄
-        (insert_union _ _ _) <| union_mem_sups ‹_› ‹_›) (h₄ _) <| collapse_nonneg h₃ _
-    · rw [mul_zero, zero_add]
-      exact (h ‹_› ‹_›).trans <| mul_le_mul (le_collapse_of_insert_mem ‹_› h₃
-        (insert_inter_distrib _ _ _).symm <| inter_mem_infs ‹_› ‹_›) (le_collapse_of_insert_mem ‹_›
-        h₄ (insert_union_distrib _ _ _).symm <| union_mem_sups ‹_› ‹_›) (h₄ _) <|
-        collapse_nonneg h₃ _
-    · simp_rw [mul_zero, add_zero]
-      exact mul_nonneg (collapse_nonneg h₃ _) <| collapse_nonneg h₄ _
-  · simp_rw [add_zero, zero_mul]
-    exact mul_nonneg (collapse_nonneg h₃ _) <| collapse_nonneg h₄ _
+  rw [collapse_eq hat]
+  split_ifs
+  rw [collapse_of_mem ‹_› (inter_mem_infs ‹_› ‹_›) (inter_mem_infs ‹_› ‹_›) rfl
+    (insert_inter_distrib _ _ _).symm, collapse_of_mem ‹_› (union_mem_sups ‹_› ‹_›)
+    (union_mem_sups ‹_› ‹_›) rfl (insert_union_distrib _ _ _).symm]
+  refine ineq (h₁ _) (h₁ _) (h₂ _) (h₂ _) (h₃ _) (h₃ _) (h₄ _) (h₄ _) (h ‹_› ‹_›) ?_ ?_ ?_
+  simpa [*] using h ‹insert a s ⊆ _› ‹t ⊆ _›
+  simpa [*] using h ‹s ⊆ _› ‹insert a t ⊆ _›
+  simpa [*] using h ‹insert a s ⊆ _› ‹insert a t ⊆ _›
+  rw [add_zero, add_mul]
+  refine (add_le_add (h ‹_› ‹_›) <| h ‹_› ‹_›).trans ?_
+  rw [collapse_of_mem ‹_› (union_mem_sups ‹_› ‹_›) (union_mem_sups ‹_› ‹_›) rfl
+    (insert_union _ _ _), insert_inter_of_not_mem ‹_›, ← mul_add]
+  exact mul_le_mul_of_nonneg_right (le_collapse_of_mem ‹_› h₃ rfl <| inter_mem_infs ‹_› ‹_›) <|
+    add_nonneg (h₄ _) <| h₄ _
+  rw [zero_add, add_mul]
+  refine (add_le_add (h ‹_› ‹_›) <| h ‹_› ‹_›).trans ?_
+  rw [collapse_of_mem ‹_› (inter_mem_infs ‹_› ‹_›) (inter_mem_infs ‹_› ‹_›)
+    (inter_insert_of_not_mem ‹_›) (insert_inter_distrib _ _ _).symm, union_insert,
+    insert_union_distrib, ← add_mul]
+  exact mul_le_mul_of_nonneg_left (le_collapse_of_insert_mem ‹_› h₄
+    (insert_union_distrib _ _ _).symm <| union_mem_sups ‹_› ‹_›) <| add_nonneg (h₃ _) <| h₃ _
+  rw [add_zero, mul_zero]
+  exact mul_nonneg (collapse_nonneg h₃ _) <| collapse_nonneg h₄ _
+  rw [add_zero, collapse_eq hat, mul_add]
+  split_ifs
+  refine (add_le_add (h ‹_› ‹_›) <| h ‹_› ‹_›).trans ?_
+  rw [collapse_of_mem ‹_› (union_mem_sups ‹_› ‹_›) (union_mem_sups ‹_› ‹_›) rfl
+    (union_insert _ _ _), inter_insert_of_not_mem ‹_›, ← mul_add]
+  exact mul_le_mul_of_nonneg_right (le_collapse_of_mem ‹_› h₃ rfl <| inter_mem_infs ‹_› ‹_›) <|
+    add_nonneg (h₄ _) <| h₄ _
+  rw [mul_zero, add_zero]
+  exact (h ‹_› ‹_›).trans <| mul_le_mul (le_collapse_of_mem ‹_› h₃ rfl <|
+    inter_mem_infs ‹_› ‹_›) (le_collapse_of_mem ‹_› h₄ rfl <| union_mem_sups ‹_› ‹_›)
+    (h₄ _) <| collapse_nonneg h₃ _
+  rw [mul_zero, zero_add]
+  refine (h ‹_› ‹_›).trans <| mul_le_mul ?_ (le_collapse_of_insert_mem ‹_› h₄
+    (union_insert _ _ _) <| union_mem_sups ‹_› ‹_›) (h₄ _) <| collapse_nonneg h₃ _
+  exact le_collapse_of_mem (not_mem_mono inter_subset_left ‹_›) h₃
+    (inter_insert_of_not_mem ‹_›) <| inter_mem_infs ‹_› ‹_›
+  simp_rw [mul_zero, add_zero]
+  exact mul_nonneg (collapse_nonneg h₃ _) <| collapse_nonneg h₄ _
+  rw [zero_add, collapse_eq hat, mul_add]
+  split_ifs
+  refine (add_le_add (h ‹_› ‹_›) <| h ‹_› ‹_›).trans ?_
+  rw [collapse_of_mem ‹_› (inter_mem_infs ‹_› ‹_›) (inter_mem_infs ‹_› ‹_›)
+    (insert_inter_of_not_mem ‹_›) (insert_inter_distrib _ _ _).symm,
+    insert_inter_of_not_mem ‹_›, ← insert_inter_distrib, insert_union, insert_union_distrib,
+    ← add_mul]
+  exact mul_le_mul_of_nonneg_left (le_collapse_of_insert_mem ‹_› h₄
+    (insert_union_distrib _ _ _).symm <| union_mem_sups ‹_› ‹_›) <| add_nonneg (h₃ _) <| h₃ _
+  rw [mul_zero, add_zero]
+  refine (h ‹_› ‹_›).trans <| mul_le_mul (le_collapse_of_mem ‹_› h₃
+    (insert_inter_of_not_mem ‹_›) <| inter_mem_infs ‹_› ‹_›) (le_collapse_of_insert_mem ‹_› h₄
+    (insert_union _ _ _) <| union_mem_sups ‹_› ‹_›) (h₄ _) <| collapse_nonneg h₃ _
+  rw [mul_zero, zero_add]
+  exact (h ‹_› ‹_›).trans <| mul_le_mul (le_collapse_of_insert_mem ‹_› h₃
+    (insert_inter_distrib _ _ _).symm <| inter_mem_infs ‹_› ‹_›) (le_collapse_of_insert_mem ‹_›
+    h₄ (insert_union_distrib _ _ _).symm <| union_mem_sups ‹_› ‹_›) (h₄ _) <|
+    collapse_nonneg h₃ _
+  simp_rw [mul_zero, add_zero]
+  exact mul_nonneg (collapse_nonneg h₃ _) <| collapse_nonneg h₄ _
+  simp_rw [add_zero, zero_mul]
+  exact mul_nonneg (collapse_nonneg h₃ _) <| collapse_nonneg h₄ _
 
 lemma sum_collapse (h𝒜 : 𝒜 ⊆ (insert a u).powerset) (hu : a ∉ u) :
     ∑ s ∈ u.powerset, collapse 𝒜 a f s = ∑ s ∈ 𝒜, f s := by
@@ -219,21 +219,21 @@ lemma sum_collapse (h𝒜 : 𝒜 ⊆ (insert a u).powerset) (hu : a ∉ u) :
     _ = ∑ s ∈ u.powerset ∩ 𝒜, f s + ∑ s ∈ u.powerset.image (insert a) ∩ 𝒜, f s := ?_
     _ = ∑ s ∈ u.powerset ∩ 𝒜, f s + ∑ s ∈ ((insert a u).powerset \ u.powerset) ∩ 𝒜, f s := ?_
     _ = ∑ s ∈ 𝒜, f s := ?_
-  · rw [← sum_ite_mem, ← sum_ite_mem, sum_image, ← sum_add_distrib]
-    · exact sum_congr rfl fun s hs ↦ collapse_eq (not_mem_mono (mem_powerset.1 hs) hu) _ _
-    · exact (insert_erase_invOn.2.injOn).mono fun s hs ↦ not_mem_mono (mem_powerset.1 hs) hu
-  · congr with s
-    simp only [mem_image, mem_powerset, mem_sdiff, subset_insert_iff]
-    refine ⟨?_, fun h ↦ ⟨_, h.1, ?_⟩⟩
-    · rintro ⟨s, hs, rfl⟩
-      exact ⟨subset_insert_iff.1 <| insert_subset_insert _ hs, fun h ↦
-        hu <| h <| mem_insert_self _ _⟩
-    · rw [insert_erase (erase_ne_self.1 fun hs ↦ ?_)]
-      rw [hs] at h
-      exact h.2 h.1
-  · rw [← sum_union (disjoint_sdiff_self_right.mono inf_le_left inf_le_left),
-      ← union_inter_distrib_right, union_sdiff_of_subset (powerset_mono.2 <| subset_insert _ _),
-      inter_eq_right.2 h𝒜]
+  rw [← sum_ite_mem, ← sum_ite_mem, sum_image, ← sum_add_distrib]
+  exact sum_congr rfl fun s hs ↦ collapse_eq (not_mem_mono (mem_powerset.1 hs) hu) _ _
+  exact (insert_erase_invOn.2.injOn).mono fun s hs ↦ not_mem_mono (mem_powerset.1 hs) hu
+  congr with s
+  simp only [mem_image, mem_powerset, mem_sdiff, subset_insert_iff]
+  refine ⟨?_, fun h ↦ ⟨_, h.1, ?_⟩⟩
+  rintro ⟨s, hs, rfl⟩
+  exact ⟨subset_insert_iff.1 <| insert_subset_insert _ hs, fun h ↦
+    hu <| h <| mem_insert_self _ _⟩
+  rw [insert_erase (erase_ne_self.1 fun hs ↦ ?_)]
+  rw [hs] at h
+  exact h.2 h.1
+  rw [← sum_union (disjoint_sdiff_self_right.mono inf_le_left inf_le_left),
+    ← union_inter_distrib_right, union_sdiff_of_subset (powerset_mono.2 <| subset_insert _ _),
+    inter_eq_right.2 h𝒜]
 
 /-- The **Four Functions Theorem** on a powerset algebra. See `four_functions_theorem` for the
 finite distributive lattice generalisation. -/
@@ -243,8 +243,8 @@ protected lemma Finset.four_functions_theorem (u : Finset α)
     {𝒜 ℬ : Finset (Finset α)} (h𝒜 : 𝒜 ⊆ u.powerset) (hℬ : ℬ ⊆ u.powerset) :
     (∑ s ∈ 𝒜, f₁ s) * ∑ s ∈ ℬ, f₂ s ≤ (∑ s ∈ 𝒜 ⊼ ℬ, f₃ s) * ∑ s ∈ 𝒜 ⊻ ℬ, f₄ s := by
   induction' u using Finset.induction with a u hu ih generalizing f₁ f₂ f₃ f₄ 𝒜 ℬ
-  · simp only [Finset.powerset_empty, Finset.subset_singleton_iff] at h𝒜 hℬ
-    obtain rfl | rfl := h𝒜 <;> obtain rfl | rfl := hℬ <;> simp; exact h (subset_refl ∅) subset_rfl
+  simp only [Finset.powerset_empty, Finset.subset_singleton_iff] at h𝒜 hℬ
+  obtain rfl | rfl := h𝒜 <;> obtain rfl | rfl := hℬ <;> simp; exact h (subset_refl ∅) subset_rfl
   specialize ih (collapse_nonneg h₁) (collapse_nonneg h₂) (collapse_nonneg h₃) (collapse_nonneg h₄)
     (collapse_modular hu h₁ h₂ h₃ h₄ h 𝒜 ℬ) Subset.rfl Subset.rfl
   have : 𝒜 ⊼ ℬ ⊆ powerset (insert a u)
@@ -289,17 +289,17 @@ lemma four_functions_theorem [DecidableEq α] (h₁ : 0 ≤ f₁) (h₂ : 0 ≤ 
     (extend g (f₃ ∘ (↑)) 0) (extend g (f₄ ∘ (↑)) 0) (extend_nonneg (fun _ ↦ h₁ _) le_rfl)
     (extend_nonneg (fun _ ↦ h₂ _) le_rfl) (extend_nonneg (fun _ ↦ h₃ _) le_rfl)
     (extend_nonneg (fun _ ↦ h₄ _) le_rfl) ?_ (s'.map ⟨g, hg⟩) (t'.map ⟨g, hg⟩)
-  · simpa only [← hs', ← ht', ← map_sups, ← map_infs, sum_map, Embedding.coeFn_mk, hg.extend_apply]
-      using this
+  simpa only [← hs', ← ht', ← map_sups, ← map_infs, sum_map, Embedding.coeFn_mk, hg.extend_apply]
+    using this
   rintro s t
   obtain ⟨a, rfl⟩ | hs := Classical.em (∃ a, g a = s)
-  · obtain ⟨b, rfl⟩ | ht := Classical.em (∃ b, g b = t)
-    · simp_rw [← sup_eq_union, ← inf_eq_inter, ← map_sup, ← map_inf, hg.extend_apply]
-      exact h _ _
-    · simpa [extend_apply' _ _ _ ht] using mul_nonneg
-        (extend_nonneg (fun a : L ↦ h₃ a) le_rfl _) (extend_nonneg (fun a : L ↦ h₄ a) le_rfl _)
-  · simpa [extend_apply' _ _ _ hs] using mul_nonneg
-      (extend_nonneg (fun a : L ↦ h₃ a) le_rfl _) (extend_nonneg (fun a : L ↦ h₄ a) le_rfl _)
+  obtain ⟨b, rfl⟩ | ht := Classical.em (∃ b, g b = t)
+  simp_rw [← sup_eq_union, ← inf_eq_inter, ← map_sup, ← map_inf, hg.extend_apply]
+  exact h _ _
+  simpa [extend_apply' _ _ _ ht] using mul_nonneg
+    (extend_nonneg (fun a : L ↦ h₃ a) le_rfl _) (extend_nonneg (fun a : L ↦ h₄ a) le_rfl _)
+  simpa [extend_apply' _ _ _ hs] using mul_nonneg
+    (extend_nonneg (fun a : L ↦ h₃ a) le_rfl _) (extend_nonneg (fun a : L ↦ h₄ a) le_rfl _)
 
 /-- An inequality of Daykin. Interestingly, any lattice in which this inequality holds is
 distributive. -/
@@ -322,17 +322,17 @@ lemma holley (hμ₀ : 0 ≤ μ) (hf : 0 ≤ f) (hg : 0 ≤ g) (hμ : Monotone �
     (hfg : ∑ a, f a = ∑ a, g a) (h : ∀ a b, f a * g b ≤ f (a ⊓ b) * g (a ⊔ b)) :
     ∑ a, μ a * f a ≤ ∑ a, μ a * g a := by
   obtain rfl | hf := hf.eq_or_lt
-  · simp only [Pi.zero_apply, sum_const_zero, eq_comm, Fintype.sum_eq_zero_iff_of_nonneg hg] at hfg
-    simp [hfg]
+  simp only [Pi.zero_apply, sum_const_zero, eq_comm, Fintype.sum_eq_zero_iff_of_nonneg hg] at hfg
+  simp [hfg]
   obtain rfl | hg := hg.eq_or_lt
-  · simp only [Pi.zero_apply, sum_const_zero, Fintype.sum_eq_zero_iff_of_nonneg hf.le] at hfg
-    simp [hfg]
+  simp only [Pi.zero_apply, sum_const_zero, Fintype.sum_eq_zero_iff_of_nonneg hf.le] at hfg
+  simp [hfg]
   have := four_functions_theorem g (μ * f) f (μ * g) hg.le (mul_nonneg hμ₀ hf.le) hf.le
     (mul_nonneg hμ₀ hg.le) (fun a b ↦ ?_) univ univ
-  · simpa [hfg, sum_pos hg] using this
-  · simp_rw [Pi.mul_apply, mul_left_comm _ (μ _), mul_comm (g _)]
-    rw [sup_comm, inf_comm]
-    exact mul_le_mul (hμ le_sup_left) (h _ _) (mul_nonneg (hf.le _) <| hg.le _) <| hμ₀ _
+  simpa [hfg, sum_pos hg] using this
+  simp_rw [Pi.mul_apply, mul_left_comm _ (μ _), mul_comm (g _)]
+  rw [sup_comm, inf_comm]
+  exact mul_le_mul (hμ le_sup_left) (h _ _) (mul_nonneg (hf.le _) <| hg.le _) <| hμ₀ _
 
 /-- The **Fortuin-Kastelyn-Ginibre Inequality**. -/
 lemma fkg (hμ₀ : 0 ≤ μ) (hf₀ : 0 ≤ f) (hg₀ : 0 ≤ g) (hf : Monotone f) (hg : Monotone g)

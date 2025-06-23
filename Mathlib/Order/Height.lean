@@ -88,16 +88,16 @@ theorem exists_chain_of_le_chainHeight {n : ℕ} (hn : ↑n ≤ s.chainHeight) :
     ∃ l ∈ s.subchain, length l = n := by
   rcases (le_top : s.chainHeight ≤ ⊤).eq_or_lt with ha | ha <;>
     rw [chainHeight_eq_iSup_subtype] at ha
-  · obtain ⟨_, ⟨⟨l, h₁, h₂⟩, rfl⟩, h₃⟩ :=
-      not_bddAbove_iff'.mp (WithTop.iSup_coe_eq_top.1 ha) n
-    exact ⟨l.take n, ⟨h₁.take _, fun x h ↦ h₂ _ <| take_subset _ _ h⟩,
-      (l.length_take n).trans <| min_eq_left <| le_of_not_ge h₃⟩
-  · rw [ENat.iSup_coe_lt_top] at ha
-    obtain ⟨⟨l, h₁, h₂⟩, e : l.length = _⟩ := Nat.sSup_mem (Set.range_nonempty _) ha
-    refine
-      ⟨l.take n, ⟨h₁.take _, fun x h ↦ h₂ _ <| take_subset _ _ h⟩,
-        (l.length_take n).trans <| min_eq_left <| ?_⟩
-    rwa [e, ← Nat.cast_le (α := ℕ∞), sSup_range, ENat.coe_iSup ha, ← chainHeight_eq_iSup_subtype]
+  obtain ⟨_, ⟨⟨l, h₁, h₂⟩, rfl⟩, h₃⟩ :=
+    not_bddAbove_iff'.mp (WithTop.iSup_coe_eq_top.1 ha) n
+  exact ⟨l.take n, ⟨h₁.take _, fun x h ↦ h₂ _ <| take_subset _ _ h⟩,
+    (l.length_take n).trans <| min_eq_left <| le_of_not_ge h₃⟩
+  rw [ENat.iSup_coe_lt_top] at ha
+  obtain ⟨⟨l, h₁, h₂⟩, e : l.length = _⟩ := Nat.sSup_mem (Set.range_nonempty _) ha
+  refine
+    ⟨l.take n, ⟨h₁.take _, fun x h ↦ h₂ _ <| take_subset _ _ h⟩,
+      (l.length_take n).trans <| min_eq_left <| ?_⟩
+  rwa [e, ← Nat.cast_le (α := ℕ∞), sSup_range, ENat.coe_iSup ha, ← chainHeight_eq_iSup_subtype]
 
 theorem le_chainHeight_TFAE (n : ℕ) :
     TFAE [↑n ≤ s.chainHeight, ∃ l ∈ s.subchain, length l = n, ∃ l ∈ s.subchain, n ≤ length l] := by
@@ -152,29 +152,29 @@ theorem chainHeight_add_le_chainHeight_add (s : Set α) (t : Set β) (n m : ℕ)
         ((add_le_add_right (length_le_chainHeight_of_mem_subchain h) _).trans e),
       fun H ↦ ?_⟩
   by_cases h : s.chainHeight = ⊤
-  · suffices t.chainHeight = ⊤ by
-      rw [this, top_add]
-      exact le_top
-    rw [chainHeight_eq_top_iff] at h ⊢
-    intro k
-    have := (le_chainHeight_TFAE t k).out 1 2
-    rw [this]
-    obtain ⟨l, hs, hl⟩ := h (k + m)
-    obtain ⟨l', ht, hl'⟩ := H l hs
-    exact ⟨l', ht, (add_le_add_iff_right m).1 <| _root_.trans (hl.symm.trans_le le_self_add) hl'⟩
-  · obtain ⟨k, hk⟩ := WithTop.ne_top_iff_exists.1 h
-    obtain ⟨l, hs, hl⟩ := le_chainHeight_iff.1 hk.le
-    rw [← hk, ← hl]
-    exact le_chainHeight_add_nat_iff.2 (H l hs)
+  suffices t.chainHeight = ⊤ by
+    rw [this, top_add]
+    exact le_top
+  rw [chainHeight_eq_top_iff] at h ⊢
+  intro k
+  have := (le_chainHeight_TFAE t k).out 1 2
+  rw [this]
+  obtain ⟨l, hs, hl⟩ := h (k + m)
+  obtain ⟨l', ht, hl'⟩ := H l hs
+  exact ⟨l', ht, (add_le_add_iff_right m).1 <| _root_.trans (hl.symm.trans_le le_self_add) hl'⟩
+  obtain ⟨k, hk⟩ := WithTop.ne_top_iff_exists.1 h
+  obtain ⟨l, hs, hl⟩ := le_chainHeight_iff.1 hk.le
+  rw [← hk, ← hl]
+  exact le_chainHeight_add_nat_iff.2 (H l hs)
 
 theorem chainHeight_le_chainHeight_TFAE (s : Set α) (t : Set β) :
     TFAE [s.chainHeight ≤ t.chainHeight, ∀ l ∈ s.subchain, ∃ l' ∈ t.subchain, length l = length l',
       ∀ l ∈ s.subchain, ∃ l' ∈ t.subchain, length l ≤ length l'] := by
   tfae_have 1 ↔ 3
-  · convert ← chainHeight_add_le_chainHeight_add s t 0 0 <;> apply add_zero
+  convert ← chainHeight_add_le_chainHeight_add s t 0 0 <;> apply add_zero
   tfae_have 2 ↔ 3
-  · refine forall₂_congr fun l hl ↦ ?_
-    simp_rw [← (le_chainHeight_TFAE t l.length).out 1 2, eq_comm]
+  refine forall₂_congr fun l hl ↦ ?_
+  simp_rw [← (le_chainHeight_TFAE t l.length).out 1 2, eq_comm]
   tfae_finish
 
 theorem chainHeight_le_chainHeight_iff {t : Set β} :
@@ -191,29 +191,29 @@ theorem chainHeight_mono (h : s ⊆ t) : s.chainHeight ≤ t.chainHeight :=
 theorem chainHeight_image (f : α → β) (hf : ∀ {x y}, x < y ↔ f x < f y) (s : Set α) :
     (f '' s).chainHeight = s.chainHeight := by
   apply le_antisymm <;> rw [chainHeight_le_chainHeight_iff]
-  · suffices ∀ l ∈ (f '' s).subchain, ∃ l' ∈ s.subchain, map f l' = l by
-      intro l hl
-      obtain ⟨l', h₁, rfl⟩ := this l hl
-      exact ⟨l', h₁, length_map _ _⟩
-    intro l
-    induction' l with x xs hx
-    · exact fun _ ↦ ⟨nil, ⟨trivial, fun x h ↦ (not_mem_nil x h).elim⟩, rfl⟩
-    · intro h
-      rw [cons_mem_subchain_iff] at h
-      obtain ⟨⟨x, hx', rfl⟩, h₁, h₂⟩ := h
-      obtain ⟨l', h₃, rfl⟩ := hx h₁
-      refine ⟨x::l', Set.cons_mem_subchain_iff.mpr ⟨hx', h₃, ?_⟩, rfl⟩
-      cases l'
-      · simp
-      · simpa [← hf] using h₂
-  · intro l hl
-    refine ⟨l.map f, ⟨?_, ?_⟩, ?_⟩
-    · simp_rw [chain'_map, ← hf]
-      exact hl.1
-    · intro _ e
-      obtain ⟨a, ha, rfl⟩ := mem_map.mp e
-      exact Set.mem_image_of_mem _ (hl.2 _ ha)
-    · rw [length_map]
+  suffices ∀ l ∈ (f '' s).subchain, ∃ l' ∈ s.subchain, map f l' = l by
+    intro l hl
+    obtain ⟨l', h₁, rfl⟩ := this l hl
+    exact ⟨l', h₁, length_map _ _⟩
+  intro l
+  induction' l with x xs hx
+  exact fun _ ↦ ⟨nil, ⟨trivial, fun x h ↦ (not_mem_nil x h).elim⟩, rfl⟩
+  intro h
+  rw [cons_mem_subchain_iff] at h
+  obtain ⟨⟨x, hx', rfl⟩, h₁, h₂⟩ := h
+  obtain ⟨l', h₃, rfl⟩ := hx h₁
+  refine ⟨x::l', Set.cons_mem_subchain_iff.mpr ⟨hx', h₃, ?_⟩, rfl⟩
+  cases l'
+  simp
+  simpa [← hf] using h₂
+  intro l hl
+  refine ⟨l.map f, ⟨?_, ?_⟩, ?_⟩
+  simp_rw [chain'_map, ← hf]
+  exact hl.1
+  intro _ e
+  obtain ⟨a, ha, rfl⟩ := mem_map.mp e
+  exact Set.mem_image_of_mem _ (hl.2 _ ha)
+  rw [length_map]
 
 variable (s)
 
@@ -233,18 +233,18 @@ variable (s t : Set α) [Preorder α]
 
 theorem chainHeight_eq_iSup_Ici : s.chainHeight = ⨆ i ∈ s, (s ∩ Set.Ici i).chainHeight := by
   apply le_antisymm
-  · refine iSup₂_le ?_
-    rintro (_ | ⟨x, xs⟩) h
-    · exact zero_le _
-    · apply le_trans _ (le_iSup₂ x (cons_mem_subchain_iff.mp h).1)
-      apply length_le_chainHeight_of_mem_subchain
-      refine ⟨h.1, fun i hi ↦ ⟨h.2 i hi, ?_⟩⟩
-      cases hi
-      · exact left_mem_Ici
-      rename_i hi
-      cases' chain'_iff_pairwise.mp h.1 with _ _ h'
-      exact (h' _ hi).le
-  · exact iSup₂_le fun i _ ↦ chainHeight_mono Set.inter_subset_left
+  refine iSup₂_le ?_
+  rintro (_ | ⟨x, xs⟩) h
+  exact zero_le _
+  apply le_trans _ (le_iSup₂ x (cons_mem_subchain_iff.mp h).1)
+  apply length_le_chainHeight_of_mem_subchain
+  refine ⟨h.1, fun i hi ↦ ⟨h.2 i hi, ?_⟩⟩
+  cases hi
+  exact left_mem_Ici
+  rename_i hi
+  cases' chain'_iff_pairwise.mp h.1 with _ _ h'
+  exact (h' _ hi).le
+  exact iSup₂_le fun i _ ↦ chainHeight_mono Set.inter_subset_left
 
 theorem chainHeight_eq_iSup_Iic : s.chainHeight = ⨆ i ∈ s, (s ∩ Set.Iic i).chainHeight := by
   simp_rw [← chainHeight_dual (_ ∩ _)]
@@ -259,26 +259,26 @@ theorem chainHeight_insert_of_forall_gt (a : α) (hx : ∀ b ∈ s, a < b) :
   change (insert a s).chainHeight + (0 : ℕ) = s.chainHeight + (1 : ℕ)
   apply le_antisymm <;> rw [chainHeight_add_le_chainHeight_add]
   · rintro (_ | ⟨y, ys⟩) h
-    · exact ⟨[], nil_mem_subchain _, zero_le _⟩
-    · have h' := cons_mem_subchain_iff.mp h
-      refine ⟨ys, ⟨h'.2.1.1, fun i hi ↦ ?_⟩, by simp⟩
-      apply (h'.2.1.2 i hi).resolve_left
-      rintro rfl
-      cases' chain'_iff_pairwise.mp h.1 with _ _ hy
-      cases' h'.1 with h' h'
-      exacts [(hy _ hi).ne h', not_le_of_gt (hy _ hi) (hx _ h').le]
-  · intro l hl
-    refine ⟨a::l, ⟨?_, ?_⟩, by simp⟩
-    · rw [chain'_cons']
-      exact ⟨fun y hy ↦ hx _ (hl.2 _ (mem_of_mem_head? hy)), hl.1⟩
-    · -- Porting note: originally this was
-        -- rintro x (rfl | hx)
-        -- exacts [Or.inl (Set.mem_singleton x), Or.inr (hl.2 x hx)]
-      -- but this fails because `List.Mem` is now an inductive prop.
-      -- I couldn't work out how to drive `rcases` here but asked at
-      -- https://leanprover.zulipchat.com/#narrow/stream/348111-std4/topic/rcases.3F/near/347976083
-      rintro x (_ | _)
-      exacts [Or.inl (Set.mem_singleton a), Or.inr (hl.2 x ‹_›)]
+    exact ⟨[], nil_mem_subchain _, zero_le _⟩
+    have h' := cons_mem_subchain_iff.mp h
+    refine ⟨ys, ⟨h'.2.1.1, fun i hi ↦ ?_⟩, by simp⟩
+    apply (h'.2.1.2 i hi).resolve_left
+    rintro rfl
+    cases' chain'_iff_pairwise.mp h.1 with _ _ hy
+    cases' h'.1 with h' h'
+    exacts [(hy _ hi).ne h', not_le_of_gt (hy _ hi) (hx _ h').le]
+  intro l hl
+  refine ⟨a::l, ⟨?_, ?_⟩, by simp⟩
+  rw [chain'_cons']
+  exact ⟨fun y hy ↦ hx _ (hl.2 _ (mem_of_mem_head? hy)), hl.1⟩
+  -- Porting note: originally this was
+    -- rintro x (rfl | hx)
+    -- exacts [Or.inl (Set.mem_singleton x), Or.inr (hl.2 x hx)]
+  -- but this fails because `List.Mem` is now an inductive prop.
+  -- I couldn't work out how to drive `rcases` here but asked at
+  -- https://leanprover.zulipchat.com/#narrow/stream/348111-std4/topic/rcases.3F/near/347976083
+  rintro x (_ | _)
+  exacts [Or.inl (Set.mem_singleton a), Or.inr (hl.2 x ‹_›)]
 
 theorem chainHeight_insert_of_forall_lt (a : α) (ha : ∀ b ∈ s, b < a) :
     (insert a s).chainHeight = s.chainHeight + 1 := by
@@ -305,20 +305,20 @@ theorem chainHeight_union_le : (s ∪ t).chainHeight ≤ s.chainHeight + t.chain
 theorem chainHeight_union_eq (s t : Set α) (H : ∀ a ∈ s, ∀ b ∈ t, a < b) :
     (s ∪ t).chainHeight = s.chainHeight + t.chainHeight := by
   cases h : t.chainHeight
-  · rw [add_top, eq_top_iff, ← h]
-    exact Set.chainHeight_mono subset_union_right
+  rw [add_top, eq_top_iff, ← h]
+  exact Set.chainHeight_mono subset_union_right
   apply le_antisymm
-  · rw [← h]
-    exact chainHeight_union_le
+  rw [← h]
+  exact chainHeight_union_le
   rw [← add_zero (s ∪ t).chainHeight, ← WithTop.coe_zero,
     ENat.some_eq_coe, chainHeight_add_le_chainHeight_add]
   intro l hl
   obtain ⟨l', hl', rfl⟩ := exists_chain_of_le_chainHeight t h.symm.le
   refine ⟨l ++ l', ⟨Chain'.append hl.1 hl'.1 fun x hx y hy ↦ ?_, fun i hi ↦ ?_⟩, by simp⟩
-  · exact H x (hl.2 _ <| mem_of_mem_getLast? hx) y (hl'.2 _ <| mem_of_mem_head? hy)
-  · rw [mem_append] at hi
-    cases' hi with hi hi
-    exacts [Or.inl (hl.2 _ hi), Or.inr (hl'.2 _ hi)]
+  exact H x (hl.2 _ <| mem_of_mem_getLast? hx) y (hl'.2 _ <| mem_of_mem_head? hy)
+  rw [mem_append] at hi
+  cases' hi with hi hi
+  exacts [Or.inl (hl.2 _ hi), Or.inr (hl'.2 _ hi)]
 
 theorem wellFoundedGT_of_chainHeight_ne_top (s : Set α) (hs : s.chainHeight ≠ ⊤) :
     WellFoundedGT s := by
@@ -331,10 +331,10 @@ theorem wellFoundedGT_of_chainHeight_ne_top (s : Set α) (hs : s.chainHeight ≠
   refine le_iSup₂_of_le ((ofFn (n := n.succ) fun i ↦ f i).map Subtype.val)
     ⟨chain'_map_of_chain' ((↑) : {x // x ∈ s} → α) (fun _ _ ↦ id)
       (chain'_iff_pairwise.2 <| pairwise_ofFn.2 fun i j ↦ f.map_rel_iff.2), fun i h ↦ ?_⟩ ?_
-  · obtain ⟨a, -, rfl⟩ := mem_map.1 h
-    exact a.prop
-  · rw [length_map, length_ofFn]
-    exact le_rfl
+  obtain ⟨a, -, rfl⟩ := mem_map.1 h
+  exact a.prop
+  rw [length_map, length_ofFn]
+  exact le_rfl
 
 theorem wellFoundedLT_of_chainHeight_ne_top (s : Set α) (hs : s.chainHeight ≠ ⊤) :
     WellFoundedLT s :=

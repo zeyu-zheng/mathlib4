@@ -165,10 +165,10 @@ lemma isZero_quotient_obj_iff (C : HomologicalComplex V c) :
     IsZero ((quotient _ _).obj C) ↔ Nonempty (Homotopy (𝟙 C) 0) := by
   rw [IsZero.iff_id_eq_zero]
   constructor
-  · intro h
-    exact ⟨(homotopyOfEq _ _ (by simp [h]))⟩
-  · rintro ⟨h⟩
-    simpa using (eq_of_homotopy _ _ h)
+  intro h
+  exact ⟨(homotopyOfEq _ _ (by simp [h]))⟩
+  rintro ⟨h⟩
+  simpa using (eq_of_homotopy _ _ h)
 
 variable (V c)
 

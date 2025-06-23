@@ -58,35 +58,35 @@ theorem finiteType_ofLocalizationSpanTarget : OfLocalizationSpanTarget @FiniteTy
   -- the algebra for each `sᵢ` and some `nᵢ`.
   rintro x -
   apply Subalgebra.mem_of_span_eq_top_of_smul_pow_mem _ (s : Set S) l hl _ _ x _
-  · intro x hx
-    apply Algebra.subset_adjoin
-    rw [Finset.coe_union, Finset.coe_union]
-    exact Or.inl (Or.inr hx)
-  · intro i
-    by_cases h : l i = 0; · rw [h]; exact zero_mem _
-    apply Algebra.subset_adjoin
-    rw [Finset.coe_union, Finset.coe_image]
-    exact Or.inr (Set.mem_image_of_mem _ (Finsupp.mem_support_iff.mpr h))
-  · intro r
-    rw [Finset.coe_union, Finset.coe_union, Finset.coe_biUnion]
-    -- Since all `sᵢ` and numerators of `t r` are in the algebra, it suffices to show that the
-    -- image of `x` in `Sᵣ` falls in the `R`-adjoin of `t r`, which is of course true.
-    -- Porting note: The following `obtain` fails because Lean wants to know right away what the
-    -- placeholders are, so we need to provide a little more guidance
-    -- obtain ⟨⟨_, n₂, rfl⟩, hn₂⟩ := IsLocalization.exists_smul_mem_of_mem_adjoin
-    --   (Submonoid.powers (r : S)) x (t r) (Algebra.adjoin R _) _ _ _
-    rw [show ∀ A : Set S, (∃ n, (r : S) ^ n • x ∈ Algebra.adjoin R A) ↔
-      (∃ m : (Submonoid.powers (r : S)), (m : S) • x ∈ Algebra.adjoin R A) by
-      { exact fun _ => by simp [Submonoid.mem_powers_iff] }]
-    refine IsLocalization.exists_smul_mem_of_mem_adjoin
-      (Submonoid.powers (r : S)) x (t r) (Algebra.adjoin R _) ?_ ?_ ?_
-    · intro x hx
-      apply Algebra.subset_adjoin
-      exact Or.inl (Or.inl ⟨_, ⟨r, rfl⟩, _, ⟨s.mem_attach r, rfl⟩, hx⟩)
-    · rw [Submonoid.powers_eq_closure, Submonoid.closure_le, Set.singleton_subset_iff]
-      apply Algebra.subset_adjoin
-      exact Or.inl (Or.inr r.2)
-    · rw [ht]; trivial
+  intro x hx
+  apply Algebra.subset_adjoin
+  rw [Finset.coe_union, Finset.coe_union]
+  exact Or.inl (Or.inr hx)
+  intro i
+  by_cases h : l i = 0; · rw [h]; exact zero_mem _
+  apply Algebra.subset_adjoin
+  rw [Finset.coe_union, Finset.coe_image]
+  exact Or.inr (Set.mem_image_of_mem _ (Finsupp.mem_support_iff.mpr h))
+  intro r
+  rw [Finset.coe_union, Finset.coe_union, Finset.coe_biUnion]
+  -- Since all `sᵢ` and numerators of `t r` are in the algebra, it suffices to show that the
+  -- image of `x` in `Sᵣ` falls in the `R`-adjoin of `t r`, which is of course true.
+  -- Porting note: The following `obtain` fails because Lean wants to know right away what the
+  -- placeholders are, so we need to provide a little more guidance
+  -- obtain ⟨⟨_, n₂, rfl⟩, hn₂⟩ := IsLocalization.exists_smul_mem_of_mem_adjoin
+  --   (Submonoid.powers (r : S)) x (t r) (Algebra.adjoin R _) _ _ _
+  rw [show ∀ A : Set S, (∃ n, (r : S) ^ n • x ∈ Algebra.adjoin R A) ↔
+    (∃ m : (Submonoid.powers (r : S)), (m : S) • x ∈ Algebra.adjoin R A) by
+    { exact fun _ => by simp [Submonoid.mem_powers_iff] }]
+  refine IsLocalization.exists_smul_mem_of_mem_adjoin
+    (Submonoid.powers (r : S)) x (t r) (Algebra.adjoin R _) ?_ ?_ ?_
+  intro x hx
+  apply Algebra.subset_adjoin
+  exact Or.inl (Or.inl ⟨_, ⟨r, rfl⟩, _, ⟨s.mem_attach r, rfl⟩, hx⟩)
+  rw [Submonoid.powers_eq_closure, Submonoid.closure_le, Set.singleton_subset_iff]
+  apply Algebra.subset_adjoin
+  exact Or.inl (Or.inr r.2)
+  rw [ht]; trivial
 
 theorem finiteType_is_local : PropertyIsLocal @FiniteType :=
   ⟨localization_finiteType, finiteType_ofLocalizationSpanTarget, finiteType_stableUnderComposition,
@@ -97,12 +97,12 @@ theorem finiteType_respectsIso : RingHom.RespectsIso @RingHom.FiniteType :=
 
 theorem finiteType_stableUnderBaseChange : StableUnderBaseChange @FiniteType := by
   apply StableUnderBaseChange.mk
-  · exact finiteType_respectsIso
-  · introv h
-    replace h : Algebra.FiniteType R T := by
-      rw [RingHom.FiniteType] at h; convert h; ext; simp_rw [Algebra.smul_def]; rfl
-    suffices Algebra.FiniteType S (S ⊗[R] T) by
-      rw [RingHom.FiniteType]; convert this; ext; simp_rw [Algebra.smul_def]; rfl
-    infer_instance
+  exact finiteType_respectsIso
+  introv h
+  replace h : Algebra.FiniteType R T := by
+    rw [RingHom.FiniteType] at h; convert h; ext; simp_rw [Algebra.smul_def]; rfl
+  suffices Algebra.FiniteType S (S ⊗[R] T) by
+    rw [RingHom.FiniteType]; convert this; ext; simp_rw [Algebra.smul_def]; rfl
+  infer_instance
 
 end RingHom

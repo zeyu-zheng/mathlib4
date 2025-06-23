@@ -257,10 +257,10 @@ theorem simple_induction_left {p : W → Prop} (w : W) (one : p 1)
     fun w _ ↦ p w
   have := cs.submonoid_closure_range_simple.symm ▸ Submonoid.mem_top w
   apply Submonoid.closure_induction_left (p := p')
-  · exact one
-  · rintro _ ⟨i, rfl⟩ y _
-    exact mul_simple_left y i
-  · exact this
+  exact one
+  rintro _ ⟨i, rfl⟩ y _
+  exact mul_simple_left y i
+  exact this
 
 /-- If `p : W → Prop` holds for the identity and it is preserved under multiplying on the right
 by a simple reflection, then it holds for all elements of `W`. -/
@@ -270,10 +270,10 @@ theorem simple_induction_right {p : W → Prop} (w : W) (one : p 1)
     fun w _ ↦ p w
   have := cs.submonoid_closure_range_simple.symm ▸ Submonoid.mem_top w
   apply Submonoid.closure_induction_right (p := p')
-  · exact one
-  · rintro x _ _ ⟨i, rfl⟩
-    exact mul_simple_right x i
-  · exact this
+  exact one
+  rintro x _ _ ⟨i, rfl⟩
+  exact mul_simple_right x i
+  exact this
 
 /-! ### Homomorphisms from a Coxeter group -/
 
@@ -366,17 +366,17 @@ theorem wordProd_append (ω ω' : List B) : π (ω ++ ω') = π ω * π ω' := b
 
 @[simp] theorem wordProd_reverse (ω : List B) : π (reverse ω) = (π ω)⁻¹ := by
   induction' ω with x ω' ih
-  · simp
-  · simpa [wordProd_cons, wordProd_append] using ih
+  simp
+  simpa [wordProd_cons, wordProd_append] using ih
 
 theorem wordProd_surjective : Surjective cs.wordProd := by
   intro w
   apply cs.simple_induction_left w
-  · use []
-    rw [wordProd_nil]
-  · rintro _ i ⟨ω, rfl⟩
-    use i :: ω
-    rw [wordProd_cons]
+  use []
+  rw [wordProd_nil]
+  rintro _ i ⟨ω, rfl⟩
+  use i :: ω
+  rw [wordProd_cons]
 
 /-- The word of length `m` that alternates between `i` and `i'`, ending with `i'`. -/
 def alternatingWord (i i' : B) (m : ℕ) : List B :=
@@ -393,31 +393,31 @@ theorem alternatingWord_succ (i i' : B) (m : ℕ) :
 theorem alternatingWord_succ' (i i' : B) (m : ℕ) :
     alternatingWord i i' (m + 1) = (if Even m then i' else i) :: alternatingWord i i' m := by
   induction' m with m ih generalizing i i'
-  · simp [alternatingWord]
-  · rw [alternatingWord]
-    nth_rw 1 [ih i' i]
-    rw [alternatingWord]
-    simp [Nat.even_add_one]
+  simp [alternatingWord]
+  rw [alternatingWord]
+  nth_rw 1 [ih i' i]
+  rw [alternatingWord]
+  simp [Nat.even_add_one]
 
 @[simp]
 theorem length_alternatingWord (i i' : B) (m : ℕ) :
     List.length (alternatingWord i i' m) = m := by
   induction' m with m ih generalizing i i'
-  · dsimp [alternatingWord]
-  · simpa [alternatingWord] using ih i' i
+  dsimp [alternatingWord]
+  simpa [alternatingWord] using ih i' i
 
 theorem prod_alternatingWord_eq_mul_pow (i i' : B) (m : ℕ) :
     π (alternatingWord i i' m) = (if Even m then 1 else s i') * (s i * s i') ^ (m / 2) := by
   induction' m with m ih
-  · simp [alternatingWord]
-  · rw [alternatingWord_succ', wordProd_cons, ih]
-    by_cases hm : Even m
-    · have h₁ : ¬ Even (m + 1) := by simp [hm, parity_simps]
-      have h₂ : (m + 1) / 2 = m / 2 := Nat.succ_div_of_not_dvd <| by rwa [← even_iff_two_dvd]
-      simp [hm, h₁, h₂]
-    · have h₁ : Even (m + 1) := by simp [hm, parity_simps]
-      have h₂ : (m + 1) / 2 = m / 2 + 1 := Nat.succ_div_of_dvd h₁.two_dvd
-      simp [hm, h₁, h₂, ← pow_succ', ← mul_assoc]
+  simp [alternatingWord]
+  rw [alternatingWord_succ', wordProd_cons, ih]
+  by_cases hm : Even m
+  have h₁ : ¬ Even (m + 1) := by simp [hm, parity_simps]
+  have h₂ : (m + 1) / 2 = m / 2 := Nat.succ_div_of_not_dvd <| by rwa [← even_iff_two_dvd]
+  simp [hm, h₁, h₂]
+  have h₁ : Even (m + 1) := by simp [hm, parity_simps]
+  have h₂ : (m + 1) / 2 = m / 2 + 1 := Nat.succ_div_of_dvd h₁.two_dvd
+  simp [hm, h₁, h₂, ← pow_succ', ← mul_assoc]
 
 theorem prod_alternatingWord_eq_prod_alternatingWord_sub (i i' : B) (m : ℕ) (hm : m ≤ M i i' * 2) :
     π (alternatingWord i i' m) = π (alternatingWord i' i (M i i' * 2 - m)) := by
@@ -431,24 +431,24 @@ theorem prod_alternatingWord_eq_prod_alternatingWord_sub (i i' : B) (m : ℕ) (h
   push_cast
 
   rcases Int.even_or_odd' m' with ⟨k, rfl | rfl⟩
-  · rw [if_pos (by use k; ring), if_pos (by use -k + (M i i'); ring), mul_comm 2 k, ← sub_mul]
-    repeat rw [Int.mul_ediv_cancel _ (by norm_num)]
-    rw [zpow_sub, zpow_natCast, simple_mul_simple_pow' cs i i', ← inv_zpow]
-    simp
-  · have : ¬Even (2 * k + 1) := Int.odd_iff_not_even.mp ⟨k, rfl⟩
-    rw [if_neg this]
-    have : ¬Even (↑(M i i') * 2 - (2 * k + 1)) :=
-      Int.odd_iff_not_even.mp ⟨↑(M i i') - k - 1, by ring⟩
-    rw [if_neg this]
+  rw [if_pos (by use k; ring), if_pos (by use -k + (M i i'); ring), mul_comm 2 k, ← sub_mul]
+  repeat rw [Int.mul_ediv_cancel _ (by norm_num)]
+  rw [zpow_sub, zpow_natCast, simple_mul_simple_pow' cs i i', ← inv_zpow]
+  simp
+  have : ¬Even (2 * k + 1) := Int.odd_iff_not_even.mp ⟨k, rfl⟩
+  rw [if_neg this]
+  have : ¬Even (↑(M i i') * 2 - (2 * k + 1)) :=
+    Int.odd_iff_not_even.mp ⟨↑(M i i') - k - 1, by ring⟩
+  rw [if_neg this]
 
-    rw [(by ring : ↑(M i i') * 2 - (2 * k + 1) = -1 + (-k + ↑(M i i')) * 2),
-      (by ring : 2 * k + 1 = 1 + k * 2)]
-    repeat rw [Int.add_mul_ediv_right _ _ (by norm_num)]
-    norm_num
+  rw [(by ring : ↑(M i i') * 2 - (2 * k + 1) = -1 + (-k + ↑(M i i')) * 2),
+    (by ring : 2 * k + 1 = 1 + k * 2)]
+  repeat rw [Int.add_mul_ediv_right _ _ (by norm_num)]
+  norm_num
 
-    rw [zpow_add, zpow_add, zpow_natCast, simple_mul_simple_pow', zpow_neg, ← inv_zpow, zpow_neg,
-      ← inv_zpow]
-    simp [← mul_assoc]
+  rw [zpow_add, zpow_add, zpow_natCast, simple_mul_simple_pow', zpow_neg, ← inv_zpow, zpow_neg,
+    ← inv_zpow]
+  simp [← mul_assoc]
 
 /-- The two words of length `M i i'` that alternate between `i` and `i'` have the same product.
 This is known as the "braid relation" or "Artin-Tits relation". -/

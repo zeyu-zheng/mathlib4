@@ -93,9 +93,9 @@ elab (name := mfldSetTac) "mfld_set_tac" : tactic => withMainContext do
     evalTactic (← `(tactic| (
       apply Set.ext; intro my_y
       constructor <;>
-        · intro h_my_y
-          try simp only [*, mfld_simps] at h_my_y
-          try simp only [*, mfld_simps])))
+      · intro h_my_y
+        try simp only [*, mfld_simps] at h_my_y
+        try simp only [*, mfld_simps])))
   | (``Subset, #[_ty, _inst, _e₁, _e₂]) =>
     evalTactic (← `(tactic| (
       intro my_y h_my_y
@@ -390,9 +390,9 @@ theorem leftInvOn_piecewise {e' : PartialEquiv α β} [∀ i, Decidable (i ∈ s
     [∀ i, Decidable (i ∈ t)] (h : e.IsImage s t) (h' : e'.IsImage s t) :
     LeftInvOn (t.piecewise e.symm e'.symm) (s.piecewise e e') (s.ite e.source e'.source) := by
   rintro x (⟨he, hs⟩ | ⟨he, hs : x ∉ s⟩)
-  · rw [piecewise_eq_of_mem _ _ _ hs, piecewise_eq_of_mem _ _ _ ((h he).2 hs), e.left_inv he]
-  · rw [piecewise_eq_of_not_mem _ _ _ hs, piecewise_eq_of_not_mem _ _ _ ((h'.compl he).2 hs),
-      e'.left_inv he]
+  rw [piecewise_eq_of_mem _ _ _ hs, piecewise_eq_of_mem _ _ _ ((h he).2 hs), e.left_inv he]
+  rw [piecewise_eq_of_not_mem _ _ _ hs, piecewise_eq_of_not_mem _ _ _ ((h'.compl he).2 hs),
+    e'.left_inv he]
 
 theorem inter_eq_of_inter_eq_of_eqOn {e' : PartialEquiv α β} (h : e.IsImage s t)
     (h' : e'.IsImage s t) (hs : e.source ∩ s = e'.source ∩ s) (heq : EqOn e e' (e.source ∩ s)) :
@@ -703,20 +703,20 @@ theorem EqOnSource.symm_eqOn {e e' : PartialEquiv α β} (h : e ≈ e') :
 theorem EqOnSource.trans' {e e' : PartialEquiv α β} {f f' : PartialEquiv β γ} (he : e ≈ e')
     (hf : f ≈ f') : e.trans f ≈ e'.trans f' := by
   constructor
-  · rw [trans_source'', trans_source'', ← target_eq he, ← hf.1]
-    exact (he.symm'.eqOn.mono inter_subset_left).image_eq
-  · intro x hx
-    rw [trans_source] at hx
-    simp [Function.comp_apply, PartialEquiv.coe_trans, (he.2 hx.1).symm, hf.2 hx.2]
+  rw [trans_source'', trans_source'', ← target_eq he, ← hf.1]
+  exact (he.symm'.eqOn.mono inter_subset_left).image_eq
+  intro x hx
+  rw [trans_source] at hx
+  simp [Function.comp_apply, PartialEquiv.coe_trans, (he.2 hx.1).symm, hf.2 hx.2]
 
 /-- Restriction of partial equivs respects equivalence. -/
 theorem EqOnSource.restr {e e' : PartialEquiv α β} (he : e ≈ e') (s : Set α) :
     e.restr s ≈ e'.restr s := by
   constructor
-  · simp [he.1]
-  · intro x hx
-    simp only [mem_inter_iff, restr_source] at hx
-    exact he.2 hx.1
+  simp [he.1]
+  intro x hx
+  simp only [mem_inter_iff, restr_source] at hx
+  exact he.2 hx.1
 
 /-- Preimages are respected by equivalence. -/
 theorem EqOnSource.source_inter_preimage_eq {e e' : PartialEquiv α β} (he : e ≈ e') (s : Set β) :
@@ -740,12 +740,12 @@ theorem symm_trans_self : e.symm.trans e ≈ ofSet e.target :=
 theorem eq_of_eqOnSource_univ (e e' : PartialEquiv α β) (h : e ≈ e') (s : e.source = univ)
     (t : e.target = univ) : e = e' := by
   refine PartialEquiv.ext (fun x => ?_) (fun x => ?_) h.1
-  · apply h.2
-    rw [s]
-    exact mem_univ _
-  · apply h.symm'.2
-    rw [symm_source, t]
-    exact mem_univ _
+  apply h.2
+  rw [s]
+  exact mem_univ _
+  apply h.symm'.2
+  rw [symm_source, t]
+  exact mem_univ _
 
 section Prod
 

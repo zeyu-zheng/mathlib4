@@ -184,8 +184,8 @@ private theorem candidates_lipschitz_aux (fA : f ∈ candidates X Y) :
       gcongr <;> apply candidates_dist_bound fA
     _ ≤ maxVar X Y * max (dist x z) (dist t y) + maxVar X Y * max (dist x z) (dist t y) := by
       gcongr
-      · apply le_max_left
-      · apply le_max_right
+      apply le_max_left
+      apply le_max_right
     _ = 2 * maxVar X Y * max (dist x z) (dist y t) := by
       rw [dist_comm t y]
       ring
@@ -261,15 +261,15 @@ private theorem closed_candidatesB : IsClosed (candidatesB X Y) := by
 private theorem isCompact_candidatesB : IsCompact (candidatesB X Y) := by
   refine arzela_ascoli₂
       (Icc 0 (maxVar X Y) : Set ℝ) isCompact_Icc (candidatesB X Y) closed_candidatesB ?_ ?_
-  · rintro f ⟨x1, x2⟩ hf
-    simp only [Set.mem_Icc]
-    exact ⟨candidates_nonneg hf, candidates_le_maxVar hf⟩
-  · refine equicontinuous_of_continuity_modulus (fun t => 2 * maxVar X Y * t) ?_ _ ?_
-    · have : Tendsto (fun t : ℝ => 2 * (maxVar X Y : ℝ) * t) (𝓝 0) (𝓝 (2 * maxVar X Y * 0)) :=
-        tendsto_const_nhds.mul tendsto_id
-      simpa using this
-    · rintro x y ⟨f, hf⟩
-      exact (candidates_lipschitz hf).dist_le_mul _ _
+  rintro f ⟨x1, x2⟩ hf
+  simp only [Set.mem_Icc]
+  exact ⟨candidates_nonneg hf, candidates_le_maxVar hf⟩
+  refine equicontinuous_of_continuity_modulus (fun t => 2 * maxVar X Y * t) ?_ _ ?_
+  have : Tendsto (fun t : ℝ => 2 * (maxVar X Y : ℝ) * t) (𝓝 0) (𝓝 (2 * maxVar X Y * 0)) :=
+    tendsto_const_nhds.mul tendsto_id
+  simpa using this
+  rintro x y ⟨f, hf⟩
+  exact (candidates_lipschitz hf).dist_le_mul _ _
 
 /-- We will then choose the candidate minimizing the Hausdorff distance. Except that we are not
 in a metric space setting, so we need to define our custom version of Hausdorff distance,
@@ -313,24 +313,24 @@ be sufficient to look for functions with `HD(f)` bounded by this bound. -/
 theorem HD_candidatesBDist_le :
     HD (candidatesBDist X Y) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := by
   refine max_le (ciSup_le fun x => ?_) (ciSup_le fun y => ?_)
-  · have A : ⨅ y, candidatesBDist X Y (inl x, inr y) ≤ candidatesBDist X Y (inl x, inr default) :=
-      ciInf_le (by simpa using HD_below_aux1 0) default
-    have B : dist (inl x) (inr default) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
-      calc
-        dist (inl x) (inr (default : Y)) = dist x (default : X) + 1 + dist default default := rfl
-        _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := by
-          gcongr <;>
-            exact dist_le_diam_of_mem isBounded_of_compactSpace (mem_univ _) (mem_univ _)
-    exact le_trans A B
-  · have A : ⨅ x, candidatesBDist X Y (inl x, inr y) ≤ candidatesBDist X Y (inl default, inr y) :=
-      ciInf_le (by simpa using HD_below_aux2 0) default
-    have B : dist (inl default) (inr y) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
-      calc
-        dist (inl (default : X)) (inr y) = dist default default + 1 + dist default y := rfl
-        _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := by
-          gcongr <;>
-            exact dist_le_diam_of_mem isBounded_of_compactSpace (mem_univ _) (mem_univ _)
-    exact le_trans A B
+  have A : ⨅ y, candidatesBDist X Y (inl x, inr y) ≤ candidatesBDist X Y (inl x, inr default) :=
+    ciInf_le (by simpa using HD_below_aux1 0) default
+  have B : dist (inl x) (inr default) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
+    calc
+      dist (inl x) (inr (default : Y)) = dist x (default : X) + 1 + dist default default := rfl
+      _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := by
+        gcongr <;>
+          exact dist_le_diam_of_mem isBounded_of_compactSpace (mem_univ _) (mem_univ _)
+  exact le_trans A B
+  have A : ⨅ x, candidatesBDist X Y (inl x, inr y) ≤ candidatesBDist X Y (inl default, inr y) :=
+    ciInf_le (by simpa using HD_below_aux2 0) default
+  have B : dist (inl default) (inr y) ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) :=
+    calc
+      dist (inl (default : X)) (inr y) = dist default default + 1 + dist default y := rfl
+      _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := by
+        gcongr <;>
+          exact dist_le_diam_of_mem isBounded_of_compactSpace (mem_univ _) (mem_univ _)
+  exact le_trans A B
 
 /- To check that `HD` is continuous, we check that it is Lipschitz. As `HD` is a max, we
 prove separately inequalities controlling the two terms (relying too heavily on copy-paste...) -/
@@ -350,15 +350,15 @@ private theorem HD_lipschitz_aux1 (f g : Cb X Y) :
   have E1 : ∀ x, (⨅ y, g (inl x, inr y)) + dist f g = ⨅ y, g (inl x, inr y) + dist f g := by
     intro x
     refine Monotone.map_ciInf_of_continuousAt (continuousAt_id.add continuousAt_const) ?_ ?_
-    · intro x y hx
-      simpa
-    · show BddBelow (range fun y : Y => g (inl x, inr y))
-      exact ⟨cg, forall_mem_range.2 fun i => Hcg _⟩
+    intro x y hx
+    simpa
+    show BddBelow (range fun y : Y => g (inl x, inr y))
+    exact ⟨cg, forall_mem_range.2 fun i => Hcg _⟩
   have E2 : (⨆ x, ⨅ y, g (inl x, inr y)) + dist f g = ⨆ x, (⨅ y, g (inl x, inr y)) + dist f g := by
     refine Monotone.map_ciSup_of_continuousAt (continuousAt_id.add continuousAt_const) ?_ ?_
-    · intro x y hx
-      simpa
-    · simpa using HD_bound_aux1 _ 0
+    intro x y hx
+    simpa
+    simpa using HD_bound_aux1 _ 0
   -- deduce the result from the above two steps
   simpa [E2, E1, Function.comp]
 
@@ -378,15 +378,15 @@ private theorem HD_lipschitz_aux2 (f g : Cb X Y) :
   have E1 : ∀ y, (⨅ x, g (inl x, inr y)) + dist f g = ⨅ x, g (inl x, inr y) + dist f g := by
     intro y
     refine Monotone.map_ciInf_of_continuousAt (continuousAt_id.add continuousAt_const) ?_ ?_
-    · intro x y hx
-      simpa
-    · show BddBelow (range fun x : X => g (inl x, inr y))
-      exact ⟨cg, forall_mem_range.2 fun i => Hcg _⟩
+    intro x y hx
+    simpa
+    show BddBelow (range fun x : X => g (inl x, inr y))
+    exact ⟨cg, forall_mem_range.2 fun i => Hcg _⟩
   have E2 : (⨆ y, ⨅ x, g (inl x, inr y)) + dist f g = ⨆ y, (⨅ x, g (inl x, inr y)) + dist f g := by
     refine Monotone.map_ciSup_of_continuousAt (continuousAt_id.add continuousAt_const) ?_ ?_
-    · intro x y hx
-      simpa
-    · simpa using HD_bound_aux2 _ 0
+    intro x y hx
+    simpa
+    simpa using HD_bound_aux2 _ 0
   -- deduce the result from the above two steps
   simpa [E2, E1]
 
@@ -489,19 +489,19 @@ theorem hausdorffDist_optimal_le_HD {f} (h : f ∈ candidatesB X Y) :
   rcases exists_lt_of_csInf_lt (range_nonempty _) I with ⟨r', ⟨z', rfl⟩, hr'⟩
   exact ⟨optimalGHInjr X Y z', mem_range_self _, le_of_lt hr'⟩
   refine hausdorffDist_le_of_mem_dist ?_ A ?_
-  · inhabit X
-    rcases A _ (mem_range_self default) with ⟨y, -, hy⟩
-    exact le_trans dist_nonneg hy
-  · rintro _ ⟨z, rfl⟩
-    have I1 : (⨆ y, ⨅ x, optimalGHDist X Y (inl x, inr y)) < r :=
-      lt_of_le_of_lt (le_max_right _ _) hr
-    have I2 :
-        ⨅ x, optimalGHDist X Y (inl x, inr z) ≤ ⨆ y, ⨅ x, optimalGHDist X Y (inl x, inr y) :=
-      le_csSup (by simpa using HD_bound_aux2 _ 0) (mem_range_self _)
-    have I : ⨅ x, optimalGHDist X Y (inl x, inr z) < r := lt_of_le_of_lt I2 I1
-    rcases exists_lt_of_csInf_lt (range_nonempty _) I with ⟨r', ⟨z', rfl⟩, hr'⟩
-    refine ⟨optimalGHInjl X Y z', mem_range_self _, le_of_lt ?_⟩
-    rwa [dist_comm]
+  inhabit X
+  rcases A _ (mem_range_self default) with ⟨y, -, hy⟩
+  exact le_trans dist_nonneg hy
+  rintro _ ⟨z, rfl⟩
+  have I1 : (⨆ y, ⨅ x, optimalGHDist X Y (inl x, inr y)) < r :=
+    lt_of_le_of_lt (le_max_right _ _) hr
+  have I2 :
+      ⨅ x, optimalGHDist X Y (inl x, inr z) ≤ ⨆ y, ⨅ x, optimalGHDist X Y (inl x, inr y) :=
+    le_csSup (by simpa using HD_bound_aux2 _ 0) (mem_range_self _)
+  have I : ⨅ x, optimalGHDist X Y (inl x, inr z) < r := lt_of_le_of_lt I2 I1
+  rcases exists_lt_of_csInf_lt (range_nonempty _) I with ⟨r', ⟨z', rfl⟩, hr'⟩
+  refine ⟨optimalGHInjl X Y z', mem_range_self _, le_of_lt ?_⟩
+  rwa [dist_comm]
 
 end Consequences
 

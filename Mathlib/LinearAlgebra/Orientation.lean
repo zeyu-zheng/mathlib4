@@ -281,9 +281,9 @@ theorem orientation_adjustToOrientation [Nonempty ι] (e : Basis ι R M)
     (x : Orientation R M ι) : (e.adjustToOrientation x).orientation = x := by
   rw [adjustToOrientation]
   split_ifs with h
-  · exact h
-  · rw [orientation_neg_single, eq_comm, ← orientation_ne_iff_eq_neg, ne_comm]
-    exact h
+  exact h
+  rw [orientation_neg_single, eq_comm, ← orientation_ne_iff_eq_neg, ne_comm]
+  exact h
 
 /-- Every basis vector from `adjust_to_orientation` is either that from the original basis or its
 negation. -/
@@ -292,21 +292,21 @@ theorem adjustToOrientation_apply_eq_or_eq_neg [Nonempty ι] (e : Basis ι R M)
     e.adjustToOrientation x i = e i ∨ e.adjustToOrientation x i = -e i := by
   rw [adjustToOrientation]
   split_ifs with h
-  · simp
-  · by_cases hi : i = Classical.arbitrary ι <;> simp [unitsSMul_apply, hi]
+  simp
+  by_cases hi : i = Classical.arbitrary ι <;> simp [unitsSMul_apply, hi]
 
 theorem det_adjustToOrientation [Nonempty ι] (e : Basis ι R M)
     (x : Orientation R M ι) :
     (e.adjustToOrientation x).det = e.det ∨ (e.adjustToOrientation x).det = -e.det := by
   dsimp [Basis.adjustToOrientation]
   split_ifs
-  · left
-    rfl
-  · right
-    simp only [e.det_unitsSMul, ne_eq, Finset.mem_univ, Finset.prod_update_of_mem, not_true,
-      Pi.one_apply, Finset.prod_const_one, mul_one, inv_neg', inv_one, Units.val_neg, Units.val_one]
-    ext
-    simp
+  left
+  rfl
+  right
+  simp only [e.det_unitsSMul, ne_eq, Finset.mem_univ, Finset.prod_update_of_mem, not_true,
+    Pi.one_apply, Finset.prod_const_one, mul_one, inv_neg', inv_one, Units.val_neg, Units.val_one]
+  ext
+  simp
 
 @[simp]
 theorem abs_det_adjustToOrientation [Nonempty ι] (e : Basis ι R M)
@@ -365,8 +365,8 @@ theorem map_eq_iff_det_pos (x : Orientation R M ι) (f : M ≃ₗ[R] M)
     (h : Fintype.card ι = finrank R M) :
     Orientation.map ι f x = x ↔ 0 < LinearMap.det (f : M →ₗ[R] M) := by
   cases isEmpty_or_nonempty ι
-  · have H : finrank R M = 0 := h.symm.trans Fintype.card_eq_zero
-    simp [LinearMap.det_eq_one_of_finrank_eq_zero H]
+  have H : finrank R M = 0 := h.symm.trans Fintype.card_eq_zero
+  simp [LinearMap.det_eq_one_of_finrank_eq_zero H]
   rw [map_eq_det_inv_smul _ _ h, units_inv_smul, units_smul_eq_self_iff, LinearEquiv.coe_det]
 
 /-- If the index type has cardinality equal to the finite dimension, composing an alternating
@@ -376,8 +376,8 @@ theorem map_eq_neg_iff_det_neg (x : Orientation R M ι) (f : M ≃ₗ[R] M)
     (h : Fintype.card ι = finrank R M) :
     Orientation.map ι f x = -x ↔ LinearMap.det (f : M →ₗ[R] M) < 0 := by
   cases isEmpty_or_nonempty ι
-  · have H : finrank R M = 0 := h.symm.trans Fintype.card_eq_zero
-    simp [LinearMap.det_eq_one_of_finrank_eq_zero H, Module.Ray.ne_neg_self x]
+  have H : finrank R M = 0 := h.symm.trans Fintype.card_eq_zero
+  simp [LinearMap.det_eq_one_of_finrank_eq_zero H, Module.Ray.ne_neg_self x]
   have H : 0 < finrank R M
   rw [← h]
   exact Fintype.card_pos

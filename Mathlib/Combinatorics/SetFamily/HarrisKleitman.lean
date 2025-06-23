@@ -52,13 +52,13 @@ theorem IsLowerSet.le_card_inter_finset' (h𝒜 : IsLowerSet (𝒜 : Set (Finset
     (hℬ : IsLowerSet (ℬ : Set (Finset α))) (h𝒜s : ∀ t ∈ 𝒜, t ⊆ s) (hℬs : ∀ t ∈ ℬ, t ⊆ s) :
     𝒜.card * ℬ.card ≤ 2 ^ s.card * (𝒜 ∩ ℬ).card := by
   induction' s using Finset.induction with a s hs ih generalizing 𝒜 ℬ
-  · simp_rw [subset_empty, ← subset_singleton_iff', subset_singleton_iff] at h𝒜s hℬs
-    obtain rfl | rfl := h𝒜s
-    · simp only [card_empty, zero_mul, empty_inter, mul_zero, le_refl]
-    obtain rfl | rfl := hℬs
-    · simp only [card_empty, inter_empty, mul_zero, zero_mul, le_refl]
-    · simp only [card_empty, pow_zero, inter_singleton_of_mem, mem_singleton, card_singleton,
-        le_refl]
+  simp_rw [subset_empty, ← subset_singleton_iff', subset_singleton_iff] at h𝒜s hℬs
+  obtain rfl | rfl := h𝒜s
+  simp only [card_empty, zero_mul, empty_inter, mul_zero, le_refl]
+  obtain rfl | rfl := hℬs
+  simp only [card_empty, inter_empty, mul_zero, zero_mul, le_refl]
+  simp only [card_empty, pow_zero, inter_singleton_of_mem, mem_singleton, card_singleton,
+    le_refl]
   rw [card_insert_of_not_mem hs, ← card_memberSubfamily_add_card_nonMemberSubfamily a 𝒜, ←
     card_memberSubfamily_add_card_nonMemberSubfamily a ℬ, add_mul, mul_add, mul_add,
     add_comm (_ * _), add_add_add_comm]
@@ -119,6 +119,6 @@ theorem IsUpperSet.le_card_inter_finset (h𝒜 : IsUpperSet (𝒜 : Set (Finset 
   rwa [card_compl, Fintype.card_finset, tsub_mul, le_tsub_iff_le_tsub, ← mul_tsub, ←
     card_sdiff inter_subset_right, sdiff_inter_self_right, sdiff_compl,
     _root_.inf_comm] at this
-  · exact mul_le_mul_left' (card_le_card inter_subset_right) _
-  · rw [← Fintype.card_finset]
-    exact mul_le_mul_right' (card_le_univ _) _
+  exact mul_le_mul_left' (card_le_card inter_subset_right) _
+  rw [← Fintype.card_finset]
+  exact mul_le_mul_right' (card_le_univ _) _

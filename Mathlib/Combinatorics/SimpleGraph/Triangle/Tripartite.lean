@@ -168,16 +168,16 @@ lemma exists_mem_toTriangle {x y : α ⊕ β ⊕ γ} (hxy : (graph t).Adj x y) :
 nonrec lemma is3Clique_iff [NoAccidental t] {s : Finset (α ⊕ β ⊕ γ)} :
     (graph t).IsNClique 3 s ↔ ∃ x, x ∈ t ∧ toTriangle x = s := by
   refine ⟨fun h ↦ ?_, ?_⟩
-  · rw [is3Clique_iff] at h
-    obtain ⟨x, y, z, hxy, hxz, hyz, rfl⟩ := h
-    obtain ⟨a, b, c, habc, hab, hac, hbc⟩ := graph_triple hxy hxz hyz
-    refine ⟨(a, b, c), ?_, habc⟩
-    obtain ⟨c', hc'⟩ := in₀₁_iff.1 hab
-    obtain ⟨b', hb'⟩ := in₀₂_iff.1 hac
-    obtain ⟨a', ha'⟩ := in₁₂_iff.1 hbc
-    obtain rfl | rfl | rfl := NoAccidental.eq_or_eq_or_eq ha' hb' hc' <;> assumption
-  · rintro ⟨x, hx, rfl⟩
-    exact toTriangle_is3Clique hx
+  rw [is3Clique_iff] at h
+  obtain ⟨x, y, z, hxy, hxz, hyz, rfl⟩ := h
+  obtain ⟨a, b, c, habc, hab, hac, hbc⟩ := graph_triple hxy hxz hyz
+  refine ⟨(a, b, c), ?_, habc⟩
+  obtain ⟨c', hc'⟩ := in₀₁_iff.1 hab
+  obtain ⟨b', hb'⟩ := in₀₂_iff.1 hac
+  obtain ⟨a', ha'⟩ := in₁₂_iff.1 hbc
+  obtain rfl | rfl | rfl := NoAccidental.eq_or_eq_or_eq ha' hb' hc' <;> assumption
+  rintro ⟨x, hx, rfl⟩
+  exact toTriangle_is3Clique hx
 
 lemma toTriangle_surjOn [NoAccidental t] :
     (t : Set (α × β × γ)).SurjOn toTriangle ((graph t).cliqueSet 3) := fun _ ↦ is3Clique_iff.1
@@ -199,12 +199,12 @@ lemma map_toTriangle_disjoint [ExplicitDisjoint t] :
     true_and, and_true, Set.Subsingleton]
   suffices ¬ (a = x ∧ b = y) ∧ ¬ (a = x ∧ c = z) ∧ ¬ (b = y ∧ c = z) by aesop
   refine ⟨?_, ?_, ?_⟩
-  · rintro ⟨rfl, rfl⟩
-    exact this rfl rfl (ExplicitDisjoint.inj₂ habc hxyz)
-  · rintro ⟨rfl, rfl⟩
-    exact this rfl (ExplicitDisjoint.inj₁ habc hxyz) rfl
-  · rintro ⟨rfl, rfl⟩
-    exact this (ExplicitDisjoint.inj₀ habc hxyz) rfl rfl
+  rintro ⟨rfl, rfl⟩
+  exact this rfl rfl (ExplicitDisjoint.inj₂ habc hxyz)
+  rintro ⟨rfl, rfl⟩
+  exact this rfl (ExplicitDisjoint.inj₁ habc hxyz) rfl
+  rintro ⟨rfl, rfl⟩
+  exact this (ExplicitDisjoint.inj₀ habc hxyz) rfl rfl
 
 lemma cliqueSet_eq_image [NoAccidental t] : (graph t).cliqueSet 3 = toTriangle '' t := by
   ext; exact is3Clique_iff
@@ -236,11 +236,11 @@ variable (t)
 open Classical in
 lemma locallyLinear [ExplicitDisjoint t] [NoAccidental t] : (graph t).LocallyLinear := by
   refine ⟨?_, fun x y hxy ↦ ?_⟩
-  · unfold EdgeDisjointTriangles
-    convert map_toTriangle_disjoint t
-    rw [cliqueSet_eq_image, coe_map]
-  · obtain ⟨z, hz, hxy⟩ := exists_mem_toTriangle hxy
-    exact ⟨_, toTriangle_is3Clique hz, hxy⟩
+  unfold EdgeDisjointTriangles
+  convert map_toTriangle_disjoint t
+  rw [cliqueSet_eq_image, coe_map]
+  obtain ⟨z, hz, hxy⟩ := exists_mem_toTriangle hxy
+  exact ⟨_, toTriangle_is3Clique hz, hxy⟩
 
 end TripartiteFromTriangles
 end SimpleGraph

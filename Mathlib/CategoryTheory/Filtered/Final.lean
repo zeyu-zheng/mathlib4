@@ -63,14 +63,14 @@ theorem isFiltered_structuredArrow_of_isFiltered_of_exists [IsFilteredOrEmpty C]
   exact ⟨.mk f⟩
   suffices IsFilteredOrEmpty (StructuredArrow d F) from IsFiltered.mk
   refine ⟨fun f g => ?_, fun f g η μ => ?_⟩
-  · obtain ⟨c, ⟨t, ht⟩⟩ := h₂ (f.hom ≫ F.map (IsFiltered.leftToMax f.right g.right))
-        (g.hom ≫ F.map (IsFiltered.rightToMax f.right g.right))
-    refine ⟨.mk (f.hom ≫ F.map (IsFiltered.leftToMax f.right g.right ≫ t)), ?_, ?_, trivial⟩
-    · exact StructuredArrow.homMk (IsFiltered.leftToMax _ _ ≫ t) rfl
-    · exact StructuredArrow.homMk (IsFiltered.rightToMax _ _ ≫ t) (by simpa using ht.symm)
-  · refine ⟨.mk (f.hom ≫ F.map (η.right ≫ IsFiltered.coeqHom η.right μ.right)),
-      StructuredArrow.homMk (IsFiltered.coeqHom η.right μ.right) (by simp), ?_⟩
-    simpa using IsFiltered.coeq_condition _ _
+  obtain ⟨c, ⟨t, ht⟩⟩ := h₂ (f.hom ≫ F.map (IsFiltered.leftToMax f.right g.right))
+      (g.hom ≫ F.map (IsFiltered.rightToMax f.right g.right))
+  refine ⟨.mk (f.hom ≫ F.map (IsFiltered.leftToMax f.right g.right ≫ t)), ?_, ?_, trivial⟩
+  exact StructuredArrow.homMk (IsFiltered.leftToMax _ _ ≫ t) rfl
+  exact StructuredArrow.homMk (IsFiltered.rightToMax _ _ ≫ t) (by simpa using ht.symm)
+  refine ⟨.mk (f.hom ≫ F.map (η.right ≫ IsFiltered.coeqHom η.right μ.right)),
+    StructuredArrow.homMk (IsFiltered.coeqHom η.right μ.right) (by simp), ?_⟩
+  simpa using IsFiltered.coeq_condition _ _
 
 theorem isCofiltered_costructuredArrow_of_isCofiltered_of_exists [IsCofilteredOrEmpty C]
     (h₁ : ∀ d, ∃ c, Nonempty (F.obj c ⟶ d)) (h₂ : ∀ {d : D} {c : C} (s s' : F.obj c ⟶ d),
@@ -80,12 +80,12 @@ theorem isCofiltered_costructuredArrow_of_isCofiltered_of_exists [IsCofilteredOr
   suffices IsFiltered (StructuredArrow (op d) F.op) from
     IsFiltered.of_equivalence (costructuredArrowOpEquivalence _ _).symm
   apply isFiltered_structuredArrow_of_isFiltered_of_exists
-  · intro d
-    obtain ⟨c, ⟨t⟩⟩ := h₁ d.unop
-    exact ⟨op c, ⟨Quiver.Hom.op t⟩⟩
-  · intro d c s s'
-    obtain ⟨c', t, ht⟩ := h₂ s.unop s'.unop
-    exact ⟨op c', Quiver.Hom.op t, Quiver.Hom.unop_inj ht⟩
+  intro d
+  obtain ⟨c, ⟨t⟩⟩ := h₁ d.unop
+  exact ⟨op c, ⟨Quiver.Hom.op t⟩⟩
+  intro d c s s'
+  obtain ⟨c', t, ht⟩ := h₂ s.unop s'.unop
+  exact ⟨op c', Quiver.Hom.op t, Quiver.Hom.unop_inj ht⟩
 
 /-- If `C` is filtered, then we can give an explicit condition for a functor `F : C ⥤ D` to
     be final. The converse is also true, see `final_iff_of_isFiltered`. -/
@@ -177,18 +177,18 @@ theorem Functor.final_iff_of_isFiltered [IsFilteredOrEmpty C] :
     Final F ↔ (∀ d, ∃ c, Nonempty (d ⟶ F.obj c)) ∧ (∀ {d : D} {c : C} (s s' : d ⟶ F.obj c),
       ∃ (c' : C) (t : c ⟶ c'), s ≫ F.map t = s' ≫ F.map t) := by
   refine ⟨fun hF => ⟨?_, ?_⟩, fun h => final_of_exists_of_isFiltered F h.1 h.2⟩
-  · intro d
-    obtain ⟨f⟩ : Nonempty (StructuredArrow d F) := IsConnected.is_nonempty
-    exact ⟨_, ⟨f.hom⟩⟩
-  · intro d c s s'
-    have : colimit.ι (F ⋙ coyoneda.obj (op d)) c s = colimit.ι (F ⋙ coyoneda.obj (op d)) c s'
-    apply (Final.colimitCompCoyonedaIso F d).toEquiv.injective
-    subsingleton
-    obtain ⟨c', t₁, t₂, h⟩ := (Types.FilteredColimit.colimit_eq_iff.{v₁, v₁, v₁} _).mp this
-    refine ⟨IsFiltered.coeq t₁ t₂, t₁ ≫ IsFiltered.coeqHom t₁ t₂, ?_⟩
-    conv_rhs => rw [IsFiltered.coeq_condition t₁ t₂]
-    dsimp only [comp_obj, coyoneda_obj_obj, unop_op, Functor.comp_map, coyoneda_obj_map] at h
-    simp [reassoc_of% h]
+  intro d
+  obtain ⟨f⟩ : Nonempty (StructuredArrow d F) := IsConnected.is_nonempty
+  exact ⟨_, ⟨f.hom⟩⟩
+  intro d c s s'
+  have : colimit.ι (F ⋙ coyoneda.obj (op d)) c s = colimit.ι (F ⋙ coyoneda.obj (op d)) c s'
+  apply (Final.colimitCompCoyonedaIso F d).toEquiv.injective
+  subsingleton
+  obtain ⟨c', t₁, t₂, h⟩ := (Types.FilteredColimit.colimit_eq_iff.{v₁, v₁, v₁} _).mp this
+  refine ⟨IsFiltered.coeq t₁ t₂, t₁ ≫ IsFiltered.coeqHom t₁ t₂, ?_⟩
+  conv_rhs => rw [IsFiltered.coeq_condition t₁ t₂]
+  dsimp only [comp_obj, coyoneda_obj_obj, unop_op, Functor.comp_map, coyoneda_obj_map] at h
+  simp [reassoc_of% h]
 
 /-- If `C` is cofiltered, then we can give an explicit condition for a functor `F : C ⥤ D` to
     be initial. -/
@@ -198,12 +198,12 @@ theorem Functor.initial_iff_of_isCofiltered [IsCofilteredOrEmpty C] :
   refine ⟨fun hF => ?_, fun h => initial_of_exists_of_isCofiltered F h.1 h.2⟩
   obtain ⟨h₁, h₂⟩ := F.op.final_iff_of_isFiltered.mp inferInstance
   refine ⟨?_, ?_⟩
-  · intro d
-    obtain ⟨c, ⟨t⟩⟩ := h₁ (op d)
-    exact ⟨c.unop, ⟨t.unop⟩⟩
-  · intro d c s s'
-    obtain ⟨c', t, ht⟩ := h₂ (Quiver.Hom.op s) (Quiver.Hom.op s')
-    exact ⟨c'.unop, t.unop, Quiver.Hom.op_inj ht⟩
+  intro d
+  obtain ⟨c, ⟨t⟩⟩ := h₁ (op d)
+  exact ⟨c.unop, ⟨t.unop⟩⟩
+  intro d c s s'
+  obtain ⟨c', t, ht⟩ := h₂ (Quiver.Hom.op s) (Quiver.Hom.op s')
+  exact ⟨c'.unop, t.unop, Quiver.Hom.op_inj ht⟩
 
 theorem Functor.Final.exists_coeq [IsFilteredOrEmpty C] [Final F] {d : D} {c : C}
     (s s' : d ⟶ F.obj c) : ∃ (c' : C) (t : c ⟶ c'), s ≫ F.map t = s' ≫ F.map t :=

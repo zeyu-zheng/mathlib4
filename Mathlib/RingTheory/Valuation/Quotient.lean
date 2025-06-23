@@ -60,12 +60,12 @@ theorem comap_onQuot_eq (J : Ideal R) (v : Valuation (R ⧸ J) Γ₀) :
 theorem supp_quot {J : Ideal R} (hJ : J ≤ supp v) :
     supp (v.onQuot hJ) = (supp v).map (Ideal.Quotient.mk J) := by
   apply le_antisymm
-  · rintro ⟨x⟩ hx
-    apply Ideal.subset_span
-    exact ⟨x, hx, rfl⟩
-  · rw [Ideal.map_le_iff_le_comap]
-    intro x hx
-    exact hx
+  rintro ⟨x⟩ hx
+  apply Ideal.subset_span
+  exact ⟨x, hx, rfl⟩
+  rw [Ideal.map_le_iff_le_comap]
+  intro x hx
+  exact hx
 
 theorem supp_quot_supp : supp (v.onQuot le_rfl) = 0 := by
   rw [supp_quot]

@@ -348,16 +348,16 @@ theorem contDiff_unitBallBall_symm (hr : 0 < r) : ContDiff ℝ n (unitBallBall c
 
 theorem contDiff_univBall : ContDiff ℝ n (univBall c r) := by
   unfold univBall; split_ifs with h
-  · exact (contDiff_unitBallBall h).comp contDiff_univUnitBall
-  · exact contDiff_id.add contDiff_const
+  exact (contDiff_unitBallBall h).comp contDiff_univUnitBall
+  exact contDiff_id.add contDiff_const
 
 theorem contDiffOn_univBall_symm :
     ContDiffOn ℝ n (univBall c r).symm (ball c r) := by
   unfold univBall; split_ifs with h
-  · refine contDiffOn_univUnitBall_symm.comp (contDiff_unitBallBall_symm h).contDiffOn ?_
-    rw [← unitBallBall_source c r h, ← unitBallBall_target c r h]
-    apply PartialHomeomorph.symm_mapsTo
-  · exact contDiffOn_id.sub contDiffOn_const
+  refine contDiffOn_univUnitBall_symm.comp (contDiff_unitBallBall_symm h).contDiffOn ?_
+  rw [← unitBallBall_source c r h, ← unitBallBall_target c r h]
+  apply PartialHomeomorph.symm_mapsTo
+  exact contDiffOn_id.sub contDiffOn_const
 
 end PartialHomeomorph
 

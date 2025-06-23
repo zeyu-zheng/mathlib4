@@ -61,9 +61,9 @@ theorem stirlingSeq_one : stirlingSeq 1 = exp 1 / √2 := by
 theorem log_stirlingSeq_formula (n : ℕ) :
     log (stirlingSeq n) = Real.log n ! - 1 / 2 * Real.log (2 * n) - n * log (n / exp 1) := by
   cases n
-  · simp
-  · rw [stirlingSeq, log_div, log_mul, sqrt_eq_rpow, log_rpow, Real.log_pow, tsub_tsub]
-      <;> positivity
+  simp
+  rw [stirlingSeq, log_div, log_mul, sqrt_eq_rpow, log_rpow, Real.log_pow, tsub_tsub]
+    <;> positivity
 
 /-- The sequence `log (stirlingSeq (m + 1)) - log (stirlingSeq (m + 2))` has the series expansion
    `∑ 1 / (2 * (k + 1) + 1) * (1 / 2 * (m + 1) + 1)^(2 * (k + 1))`
@@ -75,16 +75,16 @@ theorem log_stirlingSeq_diff_hasSum (m : ℕ) :
   change HasSum (fun k => f (k + 1)) _
   rw [hasSum_nat_add_iff]
   convert (hasSum_log_one_add_inv m.cast_add_one_pos).mul_left ((↑(m + 1) : ℝ) + 1 / 2) using 1
-  · ext k
-    dsimp only [f]
-    rw [← pow_mul, pow_add]
-    push_cast
-    field_simp
-    ring
-  · have h : ∀ x ≠ (0 : ℝ), 1 + x⁻¹ = (x + 1) / x := fun x hx ↦ by field_simp [hx]
-    simp (disch := positivity) only [log_stirlingSeq_formula, log_div, log_mul, log_exp,
-      factorial_succ, cast_mul, cast_succ, cast_zero, range_one, sum_singleton, h]
-    ring
+  ext k
+  dsimp only [f]
+  rw [← pow_mul, pow_add]
+  push_cast
+  field_simp
+  ring
+  have h : ∀ x ≠ (0 : ℝ), 1 + x⁻¹ = (x + 1) / x := fun x hx ↦ by field_simp [hx]
+  simp (disch := positivity) only [log_stirlingSeq_formula, log_div, log_mul, log_exp,
+    factorial_succ, cast_mul, cast_succ, cast_zero, range_one, sum_singleton, h]
+  ring
 
 /-- The sequence `log ∘ stirlingSeq ∘ succ` is monotone decreasing -/
 theorem log_stirlingSeq'_antitone : Antitone (Real.log ∘ stirlingSeq ∘ succ) :=
@@ -100,8 +100,8 @@ theorem log_stirlingSeq_diff_le_geo_sum (n : ℕ) :
   have g : HasSum (fun k : ℕ => (((1 : ℝ) / (2 * ↑(n + 1) + 1)) ^ 2) ^ ↑(k + 1))
       (((1 : ℝ) / (2 * ↑(n + 1) + 1)) ^ 2 / (1 - ((1 : ℝ) / (2 * ↑(n + 1) + 1)) ^ 2)) := by
     have := (hasSum_geometric_of_lt_one h_nonneg ?_).mul_left (((1 : ℝ) / (2 * ↑(n + 1) + 1)) ^ 2)
-    · simp_rw [← _root_.pow_succ'] at this
-      exact this
+    simp_rw [← _root_.pow_succ'] at this
+    exact this
     rw [one_div, inv_pow]
     exact inv_lt_one (one_lt_pow ((lt_add_iff_pos_left 1).mpr <| by positivity) two_ne_zero)
   have hab (k : ℕ) : (1 : ℝ) / (2 * ↑(k + 1) + 1) * ((1 / (2 * ↑(n + 1) + 1)) ^ 2) ^ ↑(k + 1) ≤
@@ -244,12 +244,12 @@ theorem tendsto_stirlingSeq_sqrt_pi : Tendsto stirlingSeq atTop (𝓝 (√π)) :
 lemma factorial_isEquivalent_stirling :
     (fun n ↦ n ! : ℕ → ℝ) ~[atTop] fun n ↦ Real.sqrt (2 * n * π) * (n / exp 1) ^ n := by
   refine Asymptotics.isEquivalent_of_tendsto_one ?_ ?_
-  · filter_upwards [eventually_ne_atTop 0] with n hn h
-    exact absurd h (by positivity)
-  · have : sqrt π ≠ 0 := by positivity
-    nth_rewrite 2 [← div_self this]
-    convert tendsto_stirlingSeq_sqrt_pi.div tendsto_const_nhds this using 1
-    ext n
-    field_simp [stirlingSeq, mul_right_comm]
+  filter_upwards [eventually_ne_atTop 0] with n hn h
+  exact absurd h (by positivity)
+  have : sqrt π ≠ 0 := by positivity
+  nth_rewrite 2 [← div_self this]
+  convert tendsto_stirlingSeq_sqrt_pi.div tendsto_const_nhds this using 1
+  ext n
+  field_simp [stirlingSeq, mul_right_comm]
 
 end Stirling

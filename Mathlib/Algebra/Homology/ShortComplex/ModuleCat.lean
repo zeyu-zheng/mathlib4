@@ -50,25 +50,25 @@ lemma moduleCat_exact_iff_ker_sub_range :
     S.Exact ↔ LinearMap.ker S.g ≤ LinearMap.range S.f := by
   rw [moduleCat_exact_iff]
   constructor
-  · intro h x₂ hx₂
-    exact h x₂ hx₂
-  · intro h x₂ hx₂
-    exact h hx₂
+  intro h x₂ hx₂
+  exact h x₂ hx₂
+  intro h x₂ hx₂
+  exact h hx₂
 
 lemma moduleCat_exact_iff_range_eq_ker :
     S.Exact ↔ LinearMap.range S.f = LinearMap.ker S.g := by
   rw [moduleCat_exact_iff_ker_sub_range]
   constructor
-  · intro h
-    ext x
-    constructor
-    · rintro ⟨y, hy⟩
-      rw [← hy]
-      simp only [LinearMap.mem_ker, moduleCat_zero_apply]
-    · intro hx
-      exact h hx
-  · intro h
-    rw [h]
+  intro h
+  ext x
+  constructor
+  rintro ⟨y, hy⟩
+  rw [← hy]
+  simp only [LinearMap.mem_ker, moduleCat_zero_apply]
+  intro hx
+  exact h hx
+  intro h
+  rw [h]
 
 variable {S}
 

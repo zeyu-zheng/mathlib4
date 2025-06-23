@@ -52,10 +52,10 @@ theorem orbit.pairwiseDisjoint :
 theorem IsPartition.of_orbits :
     Setoid.IsPartition (Set.range fun a : X => orbit G a) := by
   apply orbit.pairwiseDisjoint.isPartition_of_exists_of_ne_empty
-  · intro x
-    exact ⟨_, ⟨x, rfl⟩, mem_orbit_self x⟩
-  · rintro ⟨a, ha : orbit G a = ∅⟩
-    exact (MulAction.orbit_nonempty a).ne_empty ha
+  intro x
+  exact ⟨_, ⟨x, rfl⟩, mem_orbit_self x⟩
+  rintro ⟨a, ha : orbit G a = ∅⟩
+  exact (MulAction.orbit_nonempty a).ne_empty ha
 
 end orbits
 
@@ -130,14 +130,14 @@ theorem IsBlock.def_one {B : Set X} :
   rw [IsBlock.def]
   intro hB g g'
   apply (hB (g'⁻¹ * g)).imp
-  · rw [← smul_smul, ← eq_inv_smul_iff, inv_inv]
-    exact id
-  · intro h
-    rw [Set.disjoint_iff] at h ⊢
-    rintro x hx
-    suffices g'⁻¹ • x ∈ (g'⁻¹ * g) • B ∩ B by apply h this
-    simp only [Set.mem_inter_iff, ← Set.mem_smul_set_iff_inv_smul_mem, ← smul_smul, smul_inv_smul]
-    exact hx
+  rw [← smul_smul, ← eq_inv_smul_iff, inv_inv]
+  exact id
+  intro h
+  rw [Set.disjoint_iff] at h ⊢
+  rintro x hx
+  suffices g'⁻¹ • x ∈ (g'⁻¹ * g) • B ∩ B by apply h this
+  simp only [Set.mem_inter_iff, ← Set.mem_smul_set_iff_inv_smul_mem, ← smul_smul, smul_inv_smul]
+  exact hx
 
 theorem IsBlock.mk_notempty_one {B : Set X} :
     IsBlock G B ↔ ∀ g : G, g • B ∩ B ≠ ∅ → g • B = B := by
@@ -149,12 +149,12 @@ theorem IsBlock.mk_mem {B : Set X} :
   simp only [← Set.nonempty_iff_ne_empty, Set.nonempty_def, Set.mem_inter_iff,
     exists_imp, and_imp, Set.mem_smul_set_iff_inv_smul_mem]
   constructor
-  · intro H g a ha hga
-    apply H g (g • a) _ hga
-    simpa only [inv_smul_smul] using ha
-  · intro H g a ha hga
-    rw [← eq_inv_smul_iff, eq_comm]
-    exact H g⁻¹ a hga ha
+  intro H g a ha hga
+  apply H g (g • a) _ hga
+  simpa only [inv_smul_smul] using ha
+  intro H g a ha hga
+  rw [← eq_inv_smul_iff, eq_comm]
+  exact H g⁻¹ a hga ha
 
 theorem IsBlock.def_mem {B : Set X} (hB : IsBlock G B) {a : X} {g : G} :
     a ∈ B → g • a ∈ B → g • B = B :=
@@ -164,14 +164,14 @@ theorem IsBlock.mk_subset {B : Set X} :
     IsBlock G B ↔ ∀ {g : G} {b : X} (_ : b ∈ B) (_ : b ∈ g • B), g • B ⊆ B := by
   simp_rw [IsBlock.mk_notempty_one, ← Set.nonempty_iff_ne_empty]
   constructor
-  · intro hB g b hb hgb
-    exact (hB g ⟨b, hgb, hb⟩).le
-  · intro hB g ⟨b, hb', hb⟩
-    apply le_antisymm (hB hb hb')
-    suffices g⁻¹ • B ≤ B by
-      rw [Set.le_iff_subset] at this ⊢
-      rwa [← inv_inv g, ← Set.set_smul_subset_iff]
-    exact hB (Set.mem_smul_set_iff_inv_smul_mem.mp hb') (Set.smul_mem_smul_set_iff.mpr hb)
+  intro hB g b hb hgb
+  exact (hB g ⟨b, hgb, hb⟩).le
+  intro hB g ⟨b, hb', hb⟩
+  apply le_antisymm (hB hb hb')
+  suffices g⁻¹ • B ≤ B by
+    rw [Set.le_iff_subset] at this ⊢
+    rwa [← inv_inv g, ← Set.set_smul_subset_iff]
+  exact hB (Set.mem_smul_set_iff_inv_smul_mem.mp hb') (Set.smul_mem_smul_set_iff.mpr hb)
 
 /-- An invariant block is a fixed block -/
 theorem IsInvariantBlock.isFixedBlock {B : Set X} (hfB : IsInvariantBlock G B) :
@@ -221,9 +221,9 @@ theorem IsBlock.preimage {H Y : Type*} [Group H] [MulAction H Y]
   intro g
   rw [← Group.preimage_smul_setₛₗ Y X φ j]
   apply (hB.smul_eq_or_disjoint (φ g)).imp
-  · intro heq
-    rw [heq]
-  · exact Disjoint.preimage _
+  intro heq
+  rw [heq]
+  exact Disjoint.preimage _
 
 theorem IsBlock.image {H Y : Type*} [Group H] [MulAction H Y]
     {φ : G →* H} (j : X →ₑ[φ] Y)
@@ -236,8 +236,8 @@ theorem IsBlock.image {H Y : Type*} [Group H] [MulAction H Y]
   obtain ⟨g', rfl⟩ := hφ h'
   simp only [← image_smul_setₛₗ X Y φ j]
   cases' IsBlock.def.mp hB g g' with h h
-  · left; rw [h]
-  · right; exact Set.disjoint_image_of_injective hj h
+  left; rw [h]
+  right; exact Set.disjoint_image_of_injective hj h
 
 theorem IsBlock.subtype_val_preimage {C : SubMulAction G X} {B : Set X} (hB : IsBlock G B) :
     IsBlock G (Subtype.val ⁻¹' B : Set C) :=
@@ -258,8 +258,8 @@ theorem IsBlock.iff_top (B : Set X) :
     IsBlock G B ↔ IsBlock (⊤ : Subgroup G) B := by
   simp only [IsBlock.def_one]
   constructor
-  · intro h g; exact h g
-  · intro h g; exact h ⟨g, Subgroup.mem_top g⟩
+  intro h g; exact h g
+  intro h g; exact h ⟨g, Subgroup.mem_top g⟩
 
 /-- The intersection of two blocks is a block -/
 theorem IsBlock.inter {B₁ B₂ : Set X} (h₁ : IsBlock G B₁) (h₂ : IsBlock G B₂) :
@@ -268,33 +268,33 @@ theorem IsBlock.inter {B₁ B₂ : Set X} (h₁ : IsBlock G B₁) (h₂ : IsBloc
   intro g
   rw [Set.smul_set_inter]
   cases' h₁.smul_eq_or_disjoint g with h₁ h₁
-  · cases' h₂.smul_eq_or_disjoint g with h₂ h₂
-    · left; rw [h₁, h₂]
-    right
-    apply Disjoint.inter_left'; apply Disjoint.inter_right'
-    exact h₂
-  · right
-    apply Disjoint.inter_left; apply Disjoint.inter_right
-    exact h₁
+  cases' h₂.smul_eq_or_disjoint g with h₂ h₂
+  left; rw [h₁, h₂]
+  right
+  apply Disjoint.inter_left'; apply Disjoint.inter_right'
+  exact h₂
+  right
+  apply Disjoint.inter_left; apply Disjoint.inter_right
+  exact h₁
 
 /-- An intersection of blocks is a block -/
 theorem IsBlock.iInter {ι : Type*} {B : ι → Set X} (hB : ∀ i : ι, IsBlock G (B i)) :
     IsBlock G (⋂ i, B i) := by
   by_cases hι : (IsEmpty ι)
-  · -- ι = ∅, block = ⊤
-    suffices (⋂ i : ι, B i) = Set.univ by simpa only [this] using isBlock_top X
-    simpa only [Set.top_eq_univ, Set.iInter_eq_univ] using (hι.elim' ·)
+  -- ι = ∅, block = ⊤
+  suffices (⋂ i : ι, B i) = Set.univ by simpa only [this] using isBlock_top X
+  simpa only [Set.top_eq_univ, Set.iInter_eq_univ] using (hι.elim' ·)
   rw [IsBlock.def_one]
   intro g
   rw [Set.smul_set_iInter]
   by_cases h : ∃ i : ι, Disjoint (g • B i) (B i)
-  · right
-    obtain ⟨j, hj⟩ := h
-    refine Disjoint.mono ?_ ?_ hj <;> apply Set.iInter_subset
-  · left
-    simp only [not_exists] at h
-    have : ∀ i : ι, g • B i = B i := fun i => ((hB i).smul_eq_or_disjoint g).resolve_right (h i)
-    rw [Set.iInter_congr this]
+  right
+  obtain ⟨j, hj⟩ := h
+  refine Disjoint.mono ?_ ?_ hj <;> apply Set.iInter_subset
+  left
+  simp only [not_exists] at h
+  have : ∀ i : ι, g • B i = B i := fun i => ((hB i).smul_eq_or_disjoint g).resolve_right (h i)
+  rw [Set.iInter_congr this]
 
 theorem IsBlock.of_subgroup_of_conjugate {B : Set X} {H : Subgroup G} (hB : IsBlock H B) (g : G) :
     IsBlock (Subgroup.map (MulEquiv.toMonoidHom (MulAut.conj g)) H) (g • B) := by
@@ -305,8 +305,8 @@ theorem IsBlock.of_subgroup_of_conjugate {B : Set X} {H : Subgroup G} (hB : IsBl
   suffices h' • g • B = g • h • B by
     simp only [this]
     apply (hB.smul_eq_or_disjoint ⟨h, hH⟩).imp
-    · intro; congr
-    · exact Set.disjoint_image_of_injective (MulAction.injective g)
+    intro; congr
+    exact Set.disjoint_image_of_injective (MulAction.injective g)
   suffices (h' : G) • g • B = g • h • B by
     rw [← this]; rfl
   rw [← hh, smul_smul (g * h * g⁻¹) g B, smul_smul g h B, inv_mul_cancel_right]
@@ -331,21 +331,21 @@ theorem IsBlock.isBlockSystem [hGX : MulAction.IsPretransitive G X]
     IsBlockSystem G (Set.range fun g : G => g • B) := by
   refine ⟨⟨?nonempty, ?cover⟩, ?mem_blocks⟩
   case mem_blocks => rintro B' ⟨g, rfl⟩; exact hB.translate g
-  · simp only [Set.mem_range, not_exists]
-    intro g hg
-    apply hBe.ne_empty
-    simpa only [Set.smul_set_eq_empty] using hg
-  · intro a
-    obtain ⟨b : X, hb : b ∈ B⟩ := hBe
-    obtain ⟨g, rfl⟩ := exists_smul_eq G b a
-    use g • B
-    simp only [Set.smul_mem_smul_set_iff, hb, exists_unique_iff_exists, Set.mem_range,
-      exists_apply_eq_apply, exists_const, exists_prop, and_imp, forall_exists_index,
-      forall_apply_eq_imp_iff, true_and]
-    intro g' ha
-    apply (IsBlock.def.mp hB g' g).resolve_right
-    rw [Set.not_disjoint_iff]
-    refine ⟨g • b, ha, ⟨b, hb, rfl⟩⟩
+  simp only [Set.mem_range, not_exists]
+  intro g hg
+  apply hBe.ne_empty
+  simpa only [Set.smul_set_eq_empty] using hg
+  intro a
+  obtain ⟨b : X, hb : b ∈ B⟩ := hBe
+  obtain ⟨g, rfl⟩ := exists_smul_eq G b a
+  use g • B
+  simp only [Set.smul_mem_smul_set_iff, hb, exists_unique_iff_exists, Set.mem_range,
+    exists_apply_eq_apply, exists_const, exists_prop, and_imp, forall_exists_index,
+    forall_apply_eq_imp_iff, true_and]
+  intro g' ha
+  apply (IsBlock.def.mp hB g' g).resolve_right
+  rw [Set.not_disjoint_iff]
+  refine ⟨g • b, ha, ⟨b, hb, rfl⟩⟩
 
 section Normal
 
@@ -355,14 +355,14 @@ lemma smul_orbit_eq_orbit_smul (N : Subgroup G) [nN : N.Normal] (a : X) (g : G) 
   ext
   simp only [Set.mem_range]
   constructor
-  · rintro ⟨⟨k, hk⟩, rfl⟩
-    use ⟨g * k * g⁻¹, nN.conj_mem k hk g⟩
-    simp only [Submonoid.mk_smul]
-    rw [smul_smul, inv_mul_cancel_right, ← smul_smul]
-  · rintro ⟨⟨k, hk⟩, rfl⟩
-    use ⟨g⁻¹ * k * g, nN.conj_mem' k hk g⟩
-    simp only [Submonoid.mk_smul]
-    simp only [← mul_assoc, ← smul_smul, smul_inv_smul, inv_inv]
+  rintro ⟨⟨k, hk⟩, rfl⟩
+  use ⟨g * k * g⁻¹, nN.conj_mem k hk g⟩
+  simp only [Submonoid.mk_smul]
+  rw [smul_smul, inv_mul_cancel_right, ← smul_smul]
+  rintro ⟨⟨k, hk⟩, rfl⟩
+  use ⟨g⁻¹ * k * g, nN.conj_mem' k hk g⟩
+  simp only [Submonoid.mk_smul]
+  simp only [← mul_assoc, ← smul_smul, smul_inv_smul, inv_inv]
 
 /-- An orbit of a normal subgroup is a block -/
 theorem orbit.isBlock_of_normal {N : Subgroup G} [N.Normal] (a : X) :
@@ -376,9 +376,9 @@ theorem orbit.isBlock_of_normal {N : Subgroup G} [N.Normal] (a : X) :
 theorem IsBlockSystem.of_normal {N : Subgroup G} [N.Normal] :
     IsBlockSystem G (Set.range fun a : X => orbit N a) := by
   constructor
-  · apply IsPartition.of_orbits
-  · intro b; rintro ⟨a, rfl⟩
-    exact orbit.isBlock_of_normal a
+  apply IsPartition.of_orbits
+  intro b; rintro ⟨a, rfl⟩
+  exact orbit.isBlock_of_normal a
 
 end Normal
 
@@ -419,13 +419,13 @@ theorem IsBlock.orbit_stabilizer_eq
     MulAction.orbit (stabilizer G B) a = B := by
   ext x
   constructor
-  · rintro ⟨⟨k, k_mem⟩, rfl⟩
-    simp only [Submonoid.mk_smul]
-    rw [← k_mem, Set.smul_mem_smul_set_iff]
-    exact ha
-  · intro hx
-    obtain ⟨k, rfl⟩ := exists_smul_eq G a x
-    exact ⟨⟨k, hB.def_mem ha hx⟩, rfl⟩
+  rintro ⟨⟨k, k_mem⟩, rfl⟩
+  simp only [Submonoid.mk_smul]
+  rw [← k_mem, Set.smul_mem_smul_set_iff]
+  exact ha
+  intro hx
+  obtain ⟨k, rfl⟩ := exists_smul_eq G a x
+  exact ⟨⟨k, hB.def_mem ha hx⟩, rfl⟩
 
 /-- A subgroup containing the stabilizer of `a`
   is the stabilizer of the orbit of `a` under that subgroup -/
@@ -433,13 +433,13 @@ theorem stabilizer_orbit_eq {a : X} {H : Subgroup G} (hH : stabilizer G a ≤ H)
     stabilizer G (orbit H a) = H := by
   ext g
   constructor
-  · intro hg
-    obtain ⟨-, ⟨b, rfl⟩, h⟩ := hg.symm ▸ mem_orbit_self a
-    simp_rw [H.smul_def, ← mul_smul, ← mem_stabilizer_iff] at h
-    exact (mul_mem_cancel_right b.2).mp (hH h)
-  · intro hg
-    rw [mem_stabilizer_iff, ← Subgroup.coe_mk H g hg, ← Submonoid.smul_def]
-    apply smul_orbit
+  intro hg
+  obtain ⟨-, ⟨b, rfl⟩, h⟩ := hg.symm ▸ mem_orbit_self a
+  simp_rw [H.smul_def, ← mul_smul, ← mem_stabilizer_iff] at h
+  exact (mul_mem_cancel_right b.2).mp (hH h)
+  intro hg
+  rw [mem_stabilizer_iff, ← Subgroup.coe_mk H g hg, ← Submonoid.smul_def]
+  apply smul_orbit
 
 variable (G)
 

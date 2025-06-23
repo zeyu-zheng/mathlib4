@@ -112,18 +112,18 @@ lemma triangle_counting'
     triangle_split_helper _
   refine le_trans ?_ (Nat.cast_le.2 $ card_le_card this)
   rw [card_biUnion, Nat.cast_sum]
-  · apply le_trans _ (card_nsmul_le_sum X' _ _ $ G.good_vertices_triangle_card dst dsu dtu utu)
-    rw [nsmul_eq_mul]
-    have := hst.pos.le
-    suffices hX' : (1 - 2 * ε) * s.card ≤ X'.card by
-      exact Eq.trans_le (by ring) (mul_le_mul_of_nonneg_right hX' $ by positivity)
-    have i : badVertices G ε s t ∪ badVertices G ε s u ⊆ s :=
-      union_subset (filter_subset _ _) (filter_subset _ _)
-    rw [sub_mul, one_mul, card_sdiff i, Nat.cast_sub (card_le_card i), sub_le_sub_iff_left,
-      mul_assoc, mul_comm ε, two_mul]
-    refine (Nat.cast_le.2 $ card_union_le _ _).trans ?_
-    rw [Nat.cast_add]
-    exact add_le_add h₁ h₂
+  apply le_trans _ (card_nsmul_le_sum X' _ _ $ G.good_vertices_triangle_card dst dsu dtu utu)
+  rw [nsmul_eq_mul]
+  have := hst.pos.le
+  suffices hX' : (1 - 2 * ε) * s.card ≤ X'.card by
+    exact Eq.trans_le (by ring) (mul_le_mul_of_nonneg_right hX' $ by positivity)
+  have i : badVertices G ε s t ∪ badVertices G ε s u ⊆ s :=
+    union_subset (filter_subset _ _) (filter_subset _ _)
+  rw [sub_mul, one_mul, card_sdiff i, Nat.cast_sub (card_le_card i), sub_le_sub_iff_left,
+    mul_assoc, mul_comm ε, two_mul]
+  refine (Nat.cast_le.2 $ card_union_le _ _).trans ?_
+  rw [Nat.cast_add]
+  exact add_le_add h₁ h₂
   rintro a _ b _ t
   rw [disjoint_left]
   simp only [Prod.forall, mem_image, not_exists, exists_prop, mem_filter, Prod.mk.inj_iff,
@@ -160,9 +160,9 @@ lemma triangle_counting
   apply (G.triangle_counting' dst ust dsu usu dtu utu).trans _
   rw [Nat.cast_le]
   refine card_le_card_of_injOn (fun (x, y, z) ↦ {x, y, z}) ?_ ?_
-  · rintro ⟨x, y, z⟩
-    simp only [and_imp, mem_filter, mem_product, mem_cliqueFinset_iff, is3Clique_triple_iff]
-    exact fun _ _ _ hxy hxz hyz ↦ ⟨hxy, hxz, hyz⟩
+  rintro ⟨x, y, z⟩
+  simp only [and_imp, mem_filter, mem_product, mem_cliqueFinset_iff, is3Clique_triple_iff]
+  exact fun _ _ _ hxy hxz hyz ↦ ⟨hxy, hxz, hyz⟩
   rintro ⟨x₁, y₁, z₁⟩ h₁ ⟨x₂, y₂, z₂⟩ h₂ t
   simp only [mem_coe, mem_filter, mem_product] at h₁ h₂
   apply triple_eq_triple_of_mem hst hsu htu t <;> tauto

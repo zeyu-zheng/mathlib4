@@ -80,12 +80,12 @@ lemma epi_iff_surjective_up_to_refinements (f : X ⟶ Y) :
     Epi f ↔ ∀ ⦃A : C⦄ (y : A ⟶ Y),
       ∃ (A' : C) (π : A' ⟶ A) (_ : Epi π) (x : A' ⟶ X), π ≫ y = x ≫ f := by
   constructor
-  · intro _ A a
-    exact ⟨pullback a f, pullback.fst a f, inferInstance, pullback.snd a f, pullback.condition⟩
-  · intro hf
-    obtain ⟨A, π, hπ, a', fac⟩ := hf (𝟙 Y)
-    rw [comp_id] at fac
-    exact epi_of_epi_fac fac.symm
+  intro _ A a
+  exact ⟨pullback a f, pullback.fst a f, inferInstance, pullback.snd a f, pullback.condition⟩
+  intro hf
+  obtain ⟨A, π, hπ, a', fac⟩ := hf (𝟙 Y)
+  rw [comp_id] at fac
+  exact epi_of_epi_fac fac.symm
 
 lemma surjective_up_to_refinements_of_epi (f : X ⟶ Y) [Epi f] {A : C} (y : A ⟶ Y) :
     ∃ (A' : C) (π : A' ⟶ A) (_ : Epi π) (x : A' ⟶ X), π ≫ y = x ≫ f :=
@@ -96,12 +96,12 @@ lemma ShortComplex.exact_iff_exact_up_to_refinements :
       ∃ (A' : C) (π : A' ⟶ A) (_ : Epi π) (x₁ : A' ⟶ S.X₁), π ≫ x₂ = x₁ ≫ S.f := by
   rw [S.exact_iff_epi_toCycles, epi_iff_surjective_up_to_refinements]
   constructor
-  · intro hS A a ha
-    obtain ⟨A', π, hπ, x₁, fac⟩ := hS (S.liftCycles a ha)
-    exact ⟨A', π, hπ, x₁, by simpa only [assoc, liftCycles_i, toCycles_i] using fac =≫ S.iCycles⟩
-  · intro hS A a
-    obtain ⟨A', π, hπ, x₁, fac⟩ := hS (a ≫ S.iCycles) (by simp)
-    exact ⟨A', π, hπ, x₁, by simp only [← cancel_mono S.iCycles, assoc, toCycles_i, fac]⟩
+  intro hS A a ha
+  obtain ⟨A', π, hπ, x₁, fac⟩ := hS (S.liftCycles a ha)
+  exact ⟨A', π, hπ, x₁, by simpa only [assoc, liftCycles_i, toCycles_i] using fac =≫ S.iCycles⟩
+  intro hS A a
+  obtain ⟨A', π, hπ, x₁, fac⟩ := hS (a ≫ S.iCycles) (by simp)
+  exact ⟨A', π, hπ, x₁, by simp only [← cancel_mono S.iCycles, assoc, toCycles_i, fac]⟩
 
 variable {S}
 

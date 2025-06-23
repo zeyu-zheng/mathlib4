@@ -173,15 +173,15 @@ theorem dist_lt_of_nonempty_compact [Nonempty α] [CompactSpace α]
 theorem dist_lt_iff_of_compact [CompactSpace α] (C0 : (0 : ℝ) < C) :
     dist f g < C ↔ ∀ x : α, dist (f x) (g x) < C := by
   fconstructor
-  · intro w x
-    exact lt_of_le_of_lt (dist_coe_le_dist x) w
-  · by_cases h : Nonempty α
-    · exact dist_lt_of_nonempty_compact
-    · rintro -
-      convert C0
-      apply le_antisymm _ dist_nonneg'
-      rw [dist_eq]
-      exact csInf_le ⟨0, fun C => And.left⟩ ⟨le_rfl, fun x => False.elim (h (Nonempty.intro x))⟩
+  intro w x
+  exact lt_of_le_of_lt (dist_coe_le_dist x) w
+  by_cases h : Nonempty α
+  exact dist_lt_of_nonempty_compact
+  rintro -
+  convert C0
+  apply le_antisymm _ dist_nonneg'
+  rw [dist_eq]
+  exact csInf_le ⟨0, fun C => And.left⟩ ⟨le_rfl, fun x => False.elim (h (Nonempty.intro x))⟩
 
 theorem dist_lt_iff_of_nonempty_compact [Nonempty α] [CompactSpace α] :
     dist f g < C ↔ ∀ x : α, dist (f x) (g x) < C :=
@@ -219,7 +219,7 @@ theorem dist_zero_of_empty [IsEmpty α] : dist f g = 0 := by
 
 theorem dist_eq_iSup : dist f g = ⨆ x : α, dist (f x) (g x) := by
   cases isEmpty_or_nonempty α
-  · rw [iSup_of_empty', Real.sSup_empty, dist_zero_of_empty]
+  rw [iSup_of_empty', Real.sSup_empty, dist_zero_of_empty]
   refine (dist_le_iff_of_nonempty.mpr <| le_ciSup ?_).antisymm (ciSup_le dist_coe_le_dist)
   exact dist_set_exists.imp fun C hC => forall_mem_range.2 hC.2
 
@@ -305,23 +305,23 @@ instance instCompleteSpace [CompleteSpace β] : CompleteSpace (α →ᵇ β) :=
       fun x N => le_of_tendsto (tendsto_const_nhds.dist (hF x))
         (Filter.eventually_atTop.2 ⟨N, fun n hn => f_bdd x N n N (le_refl N) hn⟩)
     refine ⟨⟨⟨F, ?_⟩, ?_⟩, ?_⟩
-    · -- Check that `F` is continuous, as a uniform limit of continuous functions
-      have : TendstoUniformly (fun n x => f n x) F atTop := by
-        refine Metric.tendstoUniformly_iff.2 fun ε ε0 => ?_
-        refine ((tendsto_order.1 b_lim).2 ε ε0).mono fun n hn x => ?_
-        rw [dist_comm]
-        exact lt_of_le_of_lt (fF_bdd x n) hn
-      exact this.continuous (eventually_of_forall fun N => (f N).continuous)
-    · -- Check that `F` is bounded
-      rcases (f 0).bounded with ⟨C, hC⟩
-      refine ⟨C + (b 0 + b 0), fun x y => ?_⟩
-      calc
-        dist (F x) (F y) ≤ dist (f 0 x) (f 0 y) + (dist (f 0 x) (F x) + dist (f 0 y) (F y)) :=
-          dist_triangle4_left _ _ _ _
-        _ ≤ C + (b 0 + b 0) := by mono
-    · -- Check that `F` is close to `f N` in distance terms
-      refine tendsto_iff_dist_tendsto_zero.2 (squeeze_zero (fun _ => dist_nonneg) ?_ b_lim)
-      exact fun N => (dist_le (b0 _)).2 fun x => fF_bdd x N
+    -- Check that `F` is continuous, as a uniform limit of continuous functions
+    have : TendstoUniformly (fun n x => f n x) F atTop := by
+      refine Metric.tendstoUniformly_iff.2 fun ε ε0 => ?_
+      refine ((tendsto_order.1 b_lim).2 ε ε0).mono fun n hn x => ?_
+      rw [dist_comm]
+      exact lt_of_le_of_lt (fF_bdd x n) hn
+    exact this.continuous (eventually_of_forall fun N => (f N).continuous)
+    -- Check that `F` is bounded
+    rcases (f 0).bounded with ⟨C, hC⟩
+    refine ⟨C + (b 0 + b 0), fun x y => ?_⟩
+    calc
+      dist (F x) (F y) ≤ dist (f 0 x) (f 0 y) + (dist (f 0 x) (F x) + dist (f 0 y) (F y)) :=
+        dist_triangle4_left _ _ _ _
+      _ ≤ C + (b 0 + b 0) := by mono
+    -- Check that `F` is close to `f N` in distance terms
+    refine tendsto_iff_dist_tendsto_zero.2 (squeeze_zero (fun _ => dist_nonneg) ?_ b_lim)
+    exact fun N => (dist_le (b0 _)).2 fun x => fF_bdd x N
 
 /-- Composition of a bounded continuous function and a continuous function. -/
 def compContinuous {δ : Type*} [TopologicalSpace δ] (f : α →ᵇ β) (g : C(δ, α)) : δ →ᵇ β where
@@ -422,23 +422,23 @@ theorem dist_extend_extend (f : α ↪ δ) (g₁ g₂ : α →ᵇ β) (h₁ h₂
     dist (g₁.extend f h₁) (g₂.extend f h₂) =
       max (dist g₁ g₂) (dist (h₁.restrict (range f)ᶜ) (h₂.restrict (range f)ᶜ)) := by
   refine le_antisymm ((dist_le <| le_max_iff.2 <| Or.inl dist_nonneg).2 fun x => ?_) (max_le ?_ ?_)
-  · rcases em (∃ y, f y = x) with (⟨x, rfl⟩ | hx)
-    · simp only [extend_apply]
-      exact (dist_coe_le_dist x).trans (le_max_left _ _)
-    · simp only [extend_apply' hx]
-      lift x to ((range f)ᶜ : Set δ) using hx
-      calc
-        dist (h₁ x) (h₂ x) = dist (h₁.restrict (range f)ᶜ x) (h₂.restrict (range f)ᶜ x) := rfl
-        _ ≤ dist (h₁.restrict (range f)ᶜ) (h₂.restrict (range f)ᶜ) := dist_coe_le_dist x
-        _ ≤ _ := le_max_right _ _
-  · refine (dist_le dist_nonneg).2 fun x => ?_
-    rw [← extend_apply f g₁ h₁, ← extend_apply f g₂ h₂]
-    exact dist_coe_le_dist _
-  · refine (dist_le dist_nonneg).2 fun x => ?_
-    calc
-      dist (h₁ x) (h₂ x) = dist (extend f g₁ h₁ x) (extend f g₂ h₂ x) := by
-        rw [extend_apply' x.coe_prop, extend_apply' x.coe_prop]
-      _ ≤ _ := dist_coe_le_dist _
+  rcases em (∃ y, f y = x) with (⟨x, rfl⟩ | hx)
+  simp only [extend_apply]
+  exact (dist_coe_le_dist x).trans (le_max_left _ _)
+  simp only [extend_apply' hx]
+  lift x to ((range f)ᶜ : Set δ) using hx
+  calc
+    dist (h₁ x) (h₂ x) = dist (h₁.restrict (range f)ᶜ x) (h₂.restrict (range f)ᶜ x) := rfl
+    _ ≤ dist (h₁.restrict (range f)ᶜ) (h₂.restrict (range f)ᶜ) := dist_coe_le_dist x
+    _ ≤ _ := le_max_right _ _
+  refine (dist_le dist_nonneg).2 fun x => ?_
+  rw [← extend_apply f g₁ h₁, ← extend_apply f g₂ h₂]
+  exact dist_coe_le_dist _
+  refine (dist_le dist_nonneg).2 fun x => ?_
+  calc
+    dist (h₁ x) (h₂ x) = dist (extend f g₁ h₁ x) (extend f g₂ h₂ x) := by
+      rw [extend_apply' x.coe_prop, extend_apply' x.coe_prop]
+    _ ≤ _ := dist_coe_le_dist _
 
 theorem isometry_extend (f : α ↪ δ) (h : δ →ᵇ β) : Isometry fun g : α →ᵇ β => extend f g h :=
   Isometry.of_dist_eq fun g₁ g₂ => by simp [dist_nonneg]
@@ -503,16 +503,16 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
       dist_triangle4_right _ _ _ _
     _ ≤ ε₂ + ε₂ + ε₁ / 2 := by
       refine le_of_lt (add_lt_add (add_lt_add ?_ ?_) ?_)
-      · exact (hU x').2.2 _ hx' _ (hU x').1 hf
-      · exact (hU x').2.2 _ hx' _ (hU x').1 hg
-      · have F_f_g : F (f x') = F (g x') :=
-          (congr_arg (fun f : tα → tβ => (f ⟨x', x'tα⟩ : β)) f_eq_g : _)
-        calc
-          dist (f x') (g x') ≤ dist (f x') (F (f x')) + dist (g x') (F (f x')) :=
-            dist_triangle_right _ _ _
-          _ = dist (f x') (F (f x')) + dist (g x') (F (g x')) := by rw [F_f_g]
-          _ < ε₂ + ε₂ := (add_lt_add (hF (f x')).2 (hF (g x')).2)
-          _ = ε₁ / 2 := add_halves _
+      exact (hU x').2.2 _ hx' _ (hU x').1 hf
+      exact (hU x').2.2 _ hx' _ (hU x').1 hg
+      have F_f_g : F (f x') = F (g x') :=
+        (congr_arg (fun f : tα → tβ => (f ⟨x', x'tα⟩ : β)) f_eq_g : _)
+      calc
+        dist (f x') (g x') ≤ dist (f x') (F (f x')) + dist (g x') (F (f x')) :=
+          dist_triangle_right _ _ _
+        _ = dist (f x') (F (f x')) + dist (g x') (F (g x')) := by rw [F_f_g]
+        _ < ε₂ + ε₂ := (add_lt_add (hF (f x')).2 (hF (g x')).2)
+        _ = ε₁ / 2 := add_halves _
     _ = ε₁ := by rw [add_halves, add_halves]
 
 /-- Second version, with pointwise equicontinuity and range in a compact subset. -/
@@ -525,13 +525,13 @@ theorem arzela_ascoli₂ (s : Set β) (hs : IsCompact s) (A : Set (α →ᵇ β)
   let F : (α →ᵇ s) → α →ᵇ β := comp (↑) M
   refine IsCompact.of_isClosed_subset ((?_ : IsCompact (F ⁻¹' A)).image (continuous_comp M)) closed
       fun f hf => ?_
-  · haveI : CompactSpace s := isCompact_iff_compactSpace.1 hs
-    refine arzela_ascoli₁ _ (continuous_iff_isClosed.1 (continuous_comp M) _ closed) ?_
-    rw [uniformEmbedding_subtype_val.toUniformInducing.equicontinuous_iff]
-    exact H.comp (A.restrictPreimage F)
-  · let g := codRestrict s f fun x => in_s f x hf
-    rw [show f = F g by ext; rfl] at hf ⊢
-    exact ⟨g, hf, rfl⟩
+  haveI : CompactSpace s := isCompact_iff_compactSpace.1 hs
+  refine arzela_ascoli₁ _ (continuous_iff_isClosed.1 (continuous_comp M) _ closed) ?_
+  rw [uniformEmbedding_subtype_val.toUniformInducing.equicontinuous_iff]
+  exact H.comp (A.restrictPreimage F)
+  let g := codRestrict s f fun x => in_s f x hf
+  rw [show f = F g by ext; rfl] at hf ⊢
+  exact ⟨g, hf, rfl⟩
 
 /-- Third (main) version, with pointwise equicontinuity and range in a compact subset, but
 without closedness. The closure is then compact. -/

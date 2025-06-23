@@ -44,8 +44,8 @@ theorem cast_pow_eq_one {R : Type*} [Semiring R] [CharZero R] (q : ℕ) (n : ℕ
 theorem cast_div_charZero {k : Type*} [DivisionSemiring k] [CharZero k] {m n : ℕ} (n_dvd : n ∣ m) :
     ((m / n : ℕ) : k) = m / n := by
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp
-  · exact cast_div n_dvd (cast_ne_zero.2 hn)
+  simp
+  exact cast_div n_dvd (cast_ne_zero.2 hn)
 
 end Nat
 

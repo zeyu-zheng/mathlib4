@@ -304,11 +304,11 @@ theorem add_eq_iff {x y z : Tropical R} : x + y = z ↔ x = z ∧ x ≤ y ∨ y 
 theorem add_eq_zero_iff {a b : Tropical (WithTop R)} : a + b = 0 ↔ a = 0 ∧ b = 0 := by
   rw [add_eq_iff]
   constructor
-  · rintro (⟨rfl, h⟩ | ⟨rfl, h⟩)
-    · exact ⟨rfl, le_antisymm (le_zero _) h⟩
-    · exact ⟨le_antisymm (le_zero _) h, rfl⟩
-  · rintro ⟨rfl, rfl⟩
-    simp
+  rintro (⟨rfl, h⟩ | ⟨rfl, h⟩)
+  exact ⟨rfl, le_antisymm (le_zero _) h⟩
+  exact ⟨le_antisymm (le_zero _) h, rfl⟩
+  rintro ⟨rfl, rfl⟩
+  simp
 
 instance instAddCommMonoidTropical [OrderTop R] : AddCommMonoid (Tropical R) :=
   { instZeroTropical, instAddCommSemigroupTropical with
@@ -443,11 +443,11 @@ instance covariant_swap_mul [LE R] [Add R] [CovariantClass R R (Function.swap (�
 instance covariant_add [LinearOrder R] : CovariantClass (Tropical R) (Tropical R) (· + ·) (· ≤ ·) :=
   ⟨fun x y z h => by
     rcases le_total x y with hx | hy
-    · rw [add_eq_left hx, add_eq_left (hx.trans h)]
-    · rw [add_eq_right hy]
-      rcases le_total x z with hx | hx
-      · rwa [add_eq_left hx]
-      · rwa [add_eq_right hx]⟩
+    rw [add_eq_left hx, add_eq_left (hx.trans h)]
+    rw [add_eq_right hy]
+    rcases le_total x z with hx | hx
+    rwa [add_eq_left hx]
+    rwa [add_eq_right hx]⟩
 
 instance covariant_mul_lt [LT R] [Add R] [CovariantClass R R (· + ·) (· < ·)] :
     CovariantClass (Tropical R) (Tropical R) (· * ·) (· < ·) :=
@@ -471,8 +471,8 @@ theorem add_pow [LinearOrder R] [AddMonoid R] [CovariantClass R R (· + ·) (· 
     [CovariantClass R R (Function.swap (· + ·)) (· ≤ ·)] (x y : Tropical R) (n : ℕ) :
     (x + y) ^ n = x ^ n + y ^ n := by
   rcases le_total x y with h | h
-  · rw [add_eq_left h, add_eq_left (pow_le_pow_left' h _)]
-  · rw [add_eq_right h, add_eq_right (pow_le_pow_left' h _)]
+  rw [add_eq_left h, add_eq_left (pow_le_pow_left' h _)]
+  rw [add_eq_right h, add_eq_right (pow_le_pow_left' h _)]
 
 end Distrib
 
@@ -491,8 +491,8 @@ instance : CommSemiring (Tropical R) :=
 @[simp]
 theorem succ_nsmul {R} [LinearOrder R] [OrderTop R] (x : Tropical R) (n : ℕ) : (n + 1) • x = x := by
   induction' n with n IH
-  · simp
-  · rw [add_nsmul, IH, one_nsmul, add_self]
+  simp
+  rw [add_nsmul, IH, one_nsmul, add_self]
 
 -- TODO: find/create the right classes to make this hold (for enat, ennreal, etc)
 -- Requires `zero_eq_bot` to be true

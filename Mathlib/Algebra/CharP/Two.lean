@@ -95,9 +95,9 @@ theorem neg_one_eq_one_iff [Nontrivial R] : (-1 : R) = 1 ↔ ringChar R = 2 := b
 @[simp]
 theorem orderOf_neg_one [Nontrivial R] : orderOf (-1 : R) = if ringChar R = 2 then 1 else 2 := by
   split_ifs with h
-  · rw [neg_one_eq_one_iff.2 h, orderOf_one]
+  rw [neg_one_eq_one_iff.2 h, orderOf_one]
   apply orderOf_eq_prime
-  · simp
+  simp
   simpa [neg_one_eq_one_iff] using h
 
 end ringChar

@@ -58,12 +58,12 @@ theorem separatingLeft_dualProd :
   change Function.Injective h_d ↔ _
   have : h_d = prodMap id (Module.Dual.eval R M)
   refine ext fun x => Prod.ext ?_ ?_
-  · ext
-    dsimp [e, h_d, Module.Dual.eval, LinearEquiv.prodComm]
-    simp
-  · ext
-    dsimp [e, h_d, Module.Dual.eval, LinearEquiv.prodComm]
-    simp
+  ext
+  dsimp [e, h_d, Module.Dual.eval, LinearEquiv.prodComm]
+  simp
+  ext
+  dsimp [e, h_d, Module.Dual.eval, LinearEquiv.prodComm]
+  simp
   rw [this, coe_prodMap]
   refine Prod.map_injective.trans ?_
   exact and_iff_right Function.injective_id

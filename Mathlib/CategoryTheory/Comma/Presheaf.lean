@@ -445,8 +445,8 @@ lemma unitForward_unitBackward {F : Cᵒᵖ ⥤ Type v} (η : F ⟶ A) (X : C) :
 lemma unitBackward_unitForward {F : Cᵒᵖ ⥤ Type v} (η : F ⟶ A) (X : C) :
     unitBackward η X ∘ unitForward η X = id := by
   refine funext fun p => YonedaCollection.ext ?_ (OverArrows.ext ?_)
-  · simpa [unitForward, unitBackward] using congrArg yonedaEquiv.symm p.snd.app_val
-  · simp [unitForward, unitBackward]
+  simpa [unitForward, unitBackward] using congrArg yonedaEquiv.symm p.snd.app_val
+  simp [unitForward, unitBackward]
 
 /-- Intermediate stage of assembling the unit. -/
 @[simps]

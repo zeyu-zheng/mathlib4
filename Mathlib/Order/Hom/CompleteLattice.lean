@@ -328,8 +328,8 @@ instance : PartialOrder (sSupHom α β) :=
 instance : Bot (sSupHom α β) :=
   ⟨⟨fun _ => ⊥, fun s => by
       obtain rfl | hs := s.eq_empty_or_nonempty
-      · rw [Set.image_empty, sSup_empty]
-      · rw [hs.image_const, sSup_singleton]⟩⟩
+      rw [Set.image_empty, sSup_empty]
+      rw [hs.image_const, sSup_singleton]⟩⟩
 
 instance : OrderBot (sSupHom α β) where
   bot := ⊥
@@ -449,8 +449,8 @@ instance : PartialOrder (sInfHom α β) :=
 instance : Top (sInfHom α β) :=
   ⟨⟨fun _ => ⊤, fun s => by
       obtain rfl | hs := s.eq_empty_or_nonempty
-      · rw [Set.image_empty, sInf_empty]
-      · rw [hs.image_const, sInf_singleton]⟩⟩
+      rw [Set.image_empty, sInf_empty]
+      rw [hs.image_const, sInf_singleton]⟩⟩
 
 instance : OrderTop (sInfHom α β) where
   top := ⊤

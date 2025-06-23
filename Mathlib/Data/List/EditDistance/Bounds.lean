@@ -36,23 +36,23 @@ theorem suffixLevenshtein_minimum_le_levenshtein_cons (xs : List α) (y ys) :
         (suffixLevenshtein C (x :: xs) ys).1.minimum ≤ (C.substitute x y + levenshtein C xs ys) by
       simpa [suffixLevenshtein_eq_tails_map]
     refine ⟨?_, ?_, ?_⟩
-    · calc
-        _ ≤ (suffixLevenshtein C xs ys).1.minimum := by
-            simp [suffixLevenshtein_cons₁_fst, List.minimum_cons]
-        _ ≤ ↑(levenshtein C xs (y :: ys)) := ih
-        _ ≤ _ := by simp
-    · calc
-        (suffixLevenshtein C (x :: xs) ys).1.minimum ≤ (levenshtein C (x :: xs) ys) := by
-            simp [suffixLevenshtein_cons₁_fst, List.minimum_cons]
-        _ ≤ _ := by simp
-    · calc
-        (suffixLevenshtein C (x :: xs) ys).1.minimum ≤ (levenshtein C xs ys) := by
-            simp only [suffixLevenshtein_cons₁_fst, List.minimum_cons]
-            apply min_le_of_right_le
-            cases xs
-            · simp [suffixLevenshtein_nil']
-            · simp [suffixLevenshtein_cons₁, List.minimum_cons]
-        _ ≤ _ := by simp
+    calc
+      _ ≤ (suffixLevenshtein C xs ys).1.minimum := by
+          simp [suffixLevenshtein_cons₁_fst, List.minimum_cons]
+      _ ≤ ↑(levenshtein C xs (y :: ys)) := ih
+      _ ≤ _ := by simp
+    calc
+      (suffixLevenshtein C (x :: xs) ys).1.minimum ≤ (levenshtein C (x :: xs) ys) := by
+          simp [suffixLevenshtein_cons₁_fst, List.minimum_cons]
+      _ ≤ _ := by simp
+    calc
+      (suffixLevenshtein C (x :: xs) ys).1.minimum ≤ (levenshtein C xs ys) := by
+          simp only [suffixLevenshtein_cons₁_fst, List.minimum_cons]
+          apply min_le_of_right_le
+          cases xs
+          simp [suffixLevenshtein_nil']
+          simp [suffixLevenshtein_cons₁, List.minimum_cons]
+      _ ≤ _ := by simp
 
 theorem le_suffixLevenshtein_cons_minimum (xs : List α) (y ys) :
     (suffixLevenshtein C xs ys).1.minimum ≤ (suffixLevenshtein C xs (y :: ys)).1.minimum := by

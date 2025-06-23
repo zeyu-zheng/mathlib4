@@ -108,9 +108,9 @@ instance (X : Type u₁) [Nonempty X] : Injective X where
       ext y
       change dite (f y ∈ Set.range f) (fun h => g (Classical.choose h)) _ = _
       split_ifs <;> rename_i h
-      · rw [mono_iff_injective] at mono
-        erw [mono (Classical.choose_spec h)]
-      · exact False.elim (h ⟨y, rfl⟩)⟩
+      rw [mono_iff_injective] at mono
+      erw [mono (Classical.choose_spec h)]
+      exact False.elim (h ⟨y, rfl⟩)⟩
 
 instance Type.enoughInjectives : EnoughInjectives (Type u₁) where
   presentation X :=
@@ -127,8 +127,8 @@ instance {P Q : C} [HasBinaryProduct P Q] [Injective P] [Injective Q] : Injectiv
     use Limits.prod.lift (factorThru (g ≫ Limits.prod.fst) f) (factorThru (g ≫ Limits.prod.snd) f)
     simp only [prod.comp_lift, comp_factorThru]
     ext
-    · simp only [prod.lift_fst]
-    · simp only [prod.lift_snd]
+    simp only [prod.lift_fst]
+    simp only [prod.lift_snd]
 
 instance {β : Type v} (c : β → C) [HasProduct c] [∀ b, Injective (c b)] : Injective (∏ᶜ c) where
   factors g f mono := by
@@ -141,8 +141,8 @@ instance {P Q : C} [HasZeroMorphisms C] [HasBinaryBiproduct P Q] [Injective P] [
   factors g f mono := by
     refine ⟨biprod.lift (factorThru (g ≫ biprod.fst) f) (factorThru (g ≫ biprod.snd) f), ?_⟩
     ext
-    · simp only [Category.assoc, biprod.lift_fst, comp_factorThru]
-    · simp only [Category.assoc, biprod.lift_snd, comp_factorThru]
+    simp only [Category.assoc, biprod.lift_fst, comp_factorThru]
+    simp only [Category.assoc, biprod.lift_snd, comp_factorThru]
 
 instance {β : Type v} (c : β → C) [HasZeroMorphisms C] [HasBiproduct c] [∀ b, Injective (c b)] :
     Injective (⨁ c) where

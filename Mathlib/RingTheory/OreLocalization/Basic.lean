@@ -215,10 +215,10 @@ private theorem smul'_char (r₁ : R) (r₂ : X) (s₁ s₂ : S) (u : S) (v : R)
   use s₄ * r₃
   simp only [Submonoid.coe_mul, Submonoid.smul_def, smul_eq_mul]
   constructor
-  · rw [smul_smul, mul_assoc (c := v₀), ← hs₄]
-    simp only [smul_smul, mul_assoc]
-  · rw [← mul_assoc (b := (u₀ : R)), mul_assoc (c := (u₀ : R)), h₃]
-    simp only [mul_assoc]
+  rw [smul_smul, mul_assoc (c := v₀), ← hs₄]
+  simp only [smul_smul, mul_assoc]
+  rw [← mul_assoc (b := (u₀ : R)), mul_assoc (c := (u₀ : R)), h₃]
+  simp only [mul_assoc]
 
 /-- The multiplication on the Ore localization of monoids. -/
 @[to_additive]
@@ -366,7 +366,7 @@ protected theorem mul_smul (x y : R[S⁻¹]) (z : X[S⁻¹]) : (x * y) • z = x
   rcases oreDivSMulChar' r₂ r₃ s₂ s₃ with ⟨rb, sb, hb, hb'⟩; rw [hb']; clear hb'
   rcases oreCondition ra sb with ⟨rc, sc, hc⟩
   rw [oreDiv_smul_char (ra * r₂) r₃ (sa * s₁) s₃ (rc * rb) sc]; swap
-  · rw [← mul_assoc _ ra, hc, mul_assoc, hb, ← mul_assoc]
+  rw [← mul_assoc _ ra, hc, mul_assoc, hb, ← mul_assoc]
   rw [← mul_assoc, mul_smul]
   symm; apply oreDiv_smul_char
   rw [Submonoid.coe_mul, Submonoid.coe_mul, ← mul_assoc, ← hc, mul_assoc _ ra, ← ha, mul_assoc]
@@ -690,8 +690,8 @@ private theorem add''_char (r₁ : X) (s₁ : S) (r₂ : X) (s₂ : S) (rb : R) 
   use sd * rc
   simp only [smul_add, smul_smul, Submonoid.smul_def, Submonoid.coe_mul]
   constructor
-  · rw [mul_assoc _ _ rb, hd, mul_assoc, hc, mul_assoc, mul_assoc]
-  · rw [mul_assoc, ← mul_assoc (sc : R), hc, mul_assoc, mul_assoc]
+  rw [mul_assoc _ _ rb, hd, mul_assoc, hc, mul_assoc, mul_assoc]
+  rw [mul_assoc, ← mul_assoc (sc : R), hc, mul_assoc, mul_assoc]
 
 attribute [local instance] OreLocalization.oreEqv
 
@@ -777,8 +777,8 @@ protected theorem add_assoc (x y z : X[S⁻¹]) : x + y + z = x + (y + z) := by
   simp only [smul_add, mul_assoc, add_assoc]
   simp_rw [← add_oreDiv, ← OreLocalization.expand']
   congr 2
-  · rw [OreLocalization.expand r₂ s₂ ra (ha.symm ▸ (sa * s₁).2)]; congr; ext; exact ha
-  · rw [OreLocalization.expand r₃ s₃ rc (hc.symm ▸ (sc * (sa * s₁)).2)]; congr; ext; exact hc
+  rw [OreLocalization.expand r₂ s₂ ra (ha.symm ▸ (sa * s₁).2)]; congr; ext; exact ha
+  rw [OreLocalization.expand r₃ s₃ rc (hc.symm ▸ (sc * (sa * s₁)).2)]; congr; ext; exact hc
 
 @[simp]
 theorem zero_oreDiv (s : S) : (0 : X) /ₒ s = 0 := by

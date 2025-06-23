@@ -92,13 +92,13 @@ theorem adjointAux_adjointAux (A : E →L[𝕜] F) : adjointAux (adjointAux A) =
 @[simp]
 theorem adjointAux_norm (A : E →L[𝕜] F) : ‖adjointAux A‖ = ‖A‖ := by
   refine le_antisymm ?_ ?_
-  · refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) fun x => ?_
-    rw [adjointAux_apply, LinearIsometryEquiv.norm_map]
-    exact toSesqForm_apply_norm_le
-  · nth_rw 1 [← adjointAux_adjointAux A]
-    refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) fun x => ?_
-    rw [adjointAux_apply, LinearIsometryEquiv.norm_map]
-    exact toSesqForm_apply_norm_le
+  refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) fun x => ?_
+  rw [adjointAux_apply, LinearIsometryEquiv.norm_map]
+  exact toSesqForm_apply_norm_le
+  nth_rw 1 [← adjointAux_adjointAux A]
+  refine ContinuousLinearMap.opNorm_le_bound _ (norm_nonneg _) fun x => ?_
+  rw [adjointAux_apply, LinearIsometryEquiv.norm_map]
+  exact toSesqForm_apply_norm_le
 
 /-- The adjoint of a bounded operator from Hilbert space `E` to Hilbert space `F`. -/
 def adjoint : (E →L[𝕜] F) ≃ₗᵢ⋆[𝕜] F →L[𝕜] E :=
@@ -202,21 +202,21 @@ theorem isSelfAdjoint_iff' {A : E →L[𝕜] E} : IsSelfAdjoint A ↔ Continuous
 theorem norm_adjoint_comp_self (A : E →L[𝕜] F) :
     ‖ContinuousLinearMap.adjoint A ∘L A‖ = ‖A‖ * ‖A‖ := by
   refine le_antisymm ?_ ?_
-  · calc
-      ‖A† ∘L A‖ ≤ ‖A†‖ * ‖A‖ := opNorm_comp_le _ _
-      _ = ‖A‖ * ‖A‖ := by rw [LinearIsometryEquiv.norm_map]
-  · rw [← sq, ← Real.sqrt_le_sqrt_iff (norm_nonneg _), Real.sqrt_sq (norm_nonneg _)]
-    refine opNorm_le_bound _ (Real.sqrt_nonneg _) fun x => ?_
-    have :=
-      calc
-        re ⟪(A† ∘L A) x, x⟫ ≤ ‖(A† ∘L A) x‖ * ‖x‖ := re_inner_le_norm _ _
-        _ ≤ ‖A† ∘L A‖ * ‖x‖ * ‖x‖ := mul_le_mul_of_nonneg_right (le_opNorm _ _) (norm_nonneg _)
+  calc
+    ‖A† ∘L A‖ ≤ ‖A†‖ * ‖A‖ := opNorm_comp_le _ _
+    _ = ‖A‖ * ‖A‖ := by rw [LinearIsometryEquiv.norm_map]
+  rw [← sq, ← Real.sqrt_le_sqrt_iff (norm_nonneg _), Real.sqrt_sq (norm_nonneg _)]
+  refine opNorm_le_bound _ (Real.sqrt_nonneg _) fun x => ?_
+  have :=
     calc
-      ‖A x‖ = √(re ⟪(A† ∘L A) x, x⟫) := by rw [apply_norm_eq_sqrt_inner_adjoint_left]
-      _ ≤ √(‖A† ∘L A‖ * ‖x‖ * ‖x‖) := Real.sqrt_le_sqrt this
-      _ = √‖A† ∘L A‖ * ‖x‖ := by
-        simp_rw [mul_assoc, Real.sqrt_mul (norm_nonneg _) (‖x‖ * ‖x‖),
-          Real.sqrt_mul_self (norm_nonneg x)]
+      re ⟪(A† ∘L A) x, x⟫ ≤ ‖(A† ∘L A) x‖ * ‖x‖ := re_inner_le_norm _ _
+      _ ≤ ‖A† ∘L A‖ * ‖x‖ * ‖x‖ := mul_le_mul_of_nonneg_right (le_opNorm _ _) (norm_nonneg _)
+  calc
+    ‖A x‖ = √(re ⟪(A† ∘L A) x, x⟫) := by rw [apply_norm_eq_sqrt_inner_adjoint_left]
+    _ ≤ √(‖A† ∘L A‖ * ‖x‖ * ‖x‖) := Real.sqrt_le_sqrt this
+    _ = √‖A† ∘L A‖ * ‖x‖ := by
+      simp_rw [mul_assoc, Real.sqrt_mul (norm_nonneg _) (‖x‖ * ‖x‖),
+        Real.sqrt_mul_self (norm_nonneg x)]
 
 instance : CstarRing (E →L[𝕜] E) where
   norm_mul_self_le x := le_of_eq <| Eq.symm <| norm_adjoint_comp_self x
@@ -463,9 +463,9 @@ variable {K : Type*} [NormedAddCommGroup K] [InnerProductSpace 𝕜 K] [Complete
 theorem inner_map_map_iff_adjoint_comp_self (u : H →L[𝕜] K) :
     (∀ x y : H, ⟪u x, u y⟫_𝕜 = ⟪x, y⟫_𝕜) ↔ adjoint u ∘L u = 1 := by
   refine ⟨fun h ↦ ext fun x ↦ ?_, fun h ↦ ?_⟩
-  · refine ext_inner_right 𝕜 fun y ↦ ?_
-    simpa [star_eq_adjoint, adjoint_inner_left] using h x y
-  · simp [← adjoint_inner_left, ← comp_apply, h]
+  refine ext_inner_right 𝕜 fun y ↦ ?_
+  simpa [star_eq_adjoint, adjoint_inner_left] using h x y
+  simp [← adjoint_inner_left, ← comp_apply, h]
 
 theorem norm_map_iff_adjoint_comp_self (u : H →L[𝕜] K) :
     (∀ x : H, ‖u x‖ = ‖x‖) ↔ adjoint u ∘L u = 1 := by

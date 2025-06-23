@@ -116,7 +116,7 @@ open Topology
 lemma hasDerivAt_neg_exp_mul_exp {r x : ℝ} :
     HasDerivAt (fun a ↦ -exp (-(r * a))) (r * exp (-(r * x))) x := by
   convert (((hasDerivAt_id x).const_mul (-r)).exp.const_mul (-1)) using 1
-  · simp only [one_mul, id_eq, neg_mul]
+  simp only [one_mul, id_eq, neg_mul]
   simp only [id_eq, neg_mul, mul_one, mul_neg, one_mul, neg_neg, mul_comm]
 
 /-- A negative exponential function is integrable on intervals in `R≥0` -/
@@ -141,26 +141,26 @@ lemma lintegral_exponentialPDF_eq_antiDeriv {r : ℝ} (hr : 0 < r) (x : ℝ) :
         (by intro a ⟨(hle : _ ≤ a), _⟩; rw [if_pos hle]))]
     rw [← ENNReal.toReal_eq_toReal _ ENNReal.ofReal_ne_top, ← integral_eq_lintegral_of_nonneg_ae
         (eventually_of_forall fun _ ↦ le_of_lt (mul_pos hr (exp_pos _)))]
-    · have : ∫ a in uIoc 0 x, r * rexp (-(r * a)) = ∫ a in (0)..x, r * rexp (-(r * a)) := by
-        rw [intervalIntegral.intervalIntegral_eq_integral_uIoc, smul_eq_mul, if_pos h, one_mul]
-      rw [integral_Icc_eq_integral_Ioc, ← uIoc_of_le h, this]
-      rw [intervalIntegral.integral_eq_sub_of_hasDeriv_right_of_le h
-        (f := fun a ↦ -1 * rexp (-(r * a))) _ _]
-      · rw [ENNReal.toReal_ofReal_eq_iff.2 (by norm_num; positivity)]
-        norm_num; ring
-      · simp only [intervalIntegrable_iff, uIoc_of_le h]
-        exact Integrable.const_mul (exp_neg_integrableOn_Ioc hr) _
-      · have : Continuous (fun a ↦ rexp (-(r * a))) := by
-          simp only [← neg_mul]; exact (continuous_mul_left (-r)).rexp
-        exact Continuous.continuousOn (Continuous.comp' (continuous_mul_left (-1)) this)
-      · simp only [neg_mul, one_mul]
-        exact fun _ _ ↦ HasDerivAt.hasDerivWithinAt hasDerivAt_neg_exp_mul_exp
-    · apply Integrable.aestronglyMeasurable (Integrable.const_mul _ _)
-      rw [← IntegrableOn, integrableOn_Icc_iff_integrableOn_Ioc]
-      exact exp_neg_integrableOn_Ioc hr
-    · refine ne_of_lt (IntegrableOn.setLIntegral_lt_top ?_)
-      rw [integrableOn_Icc_iff_integrableOn_Ioc]
-      exact Integrable.const_mul (exp_neg_integrableOn_Ioc hr) _
+    have : ∫ a in uIoc 0 x, r * rexp (-(r * a)) = ∫ a in (0)..x, r * rexp (-(r * a)) := by
+      rw [intervalIntegral.intervalIntegral_eq_integral_uIoc, smul_eq_mul, if_pos h, one_mul]
+    rw [integral_Icc_eq_integral_Ioc, ← uIoc_of_le h, this]
+    rw [intervalIntegral.integral_eq_sub_of_hasDeriv_right_of_le h
+      (f := fun a ↦ -1 * rexp (-(r * a))) _ _]
+    rw [ENNReal.toReal_ofReal_eq_iff.2 (by norm_num; positivity)]
+    norm_num; ring
+    simp only [intervalIntegrable_iff, uIoc_of_le h]
+    exact Integrable.const_mul (exp_neg_integrableOn_Ioc hr) _
+    have : Continuous (fun a ↦ rexp (-(r * a))) := by
+      simp only [← neg_mul]; exact (continuous_mul_left (-r)).rexp
+    exact Continuous.continuousOn (Continuous.comp' (continuous_mul_left (-1)) this)
+    simp only [neg_mul, one_mul]
+    exact fun _ _ ↦ HasDerivAt.hasDerivWithinAt hasDerivAt_neg_exp_mul_exp
+    apply Integrable.aestronglyMeasurable (Integrable.const_mul _ _)
+    rw [← IntegrableOn, integrableOn_Icc_iff_integrableOn_Ioc]
+    exact exp_neg_integrableOn_Ioc hr
+    refine ne_of_lt (IntegrableOn.setLIntegral_lt_top ?_)
+    rw [integrableOn_Icc_iff_integrableOn_Ioc]
+    exact Integrable.const_mul (exp_neg_integrableOn_Ioc hr) _
 
 /-- The CDF of the exponential distribution equals ``1 - exp (-(r * x))``-/
 lemma exponentialCDFReal_eq {r : ℝ} (hr : 0 < r) (x : ℝ) :
@@ -168,9 +168,9 @@ lemma exponentialCDFReal_eq {r : ℝ} (hr : 0 < r) (x : ℝ) :
   rw [exponentialCDFReal_eq_lintegral hr, lintegral_exponentialPDF_eq_antiDeriv hr x,
     ENNReal.toReal_ofReal_eq_iff]
   split_ifs with h
-  · simp only [sub_nonneg, exp_le_one_iff, Left.neg_nonpos_iff]
-    exact mul_nonneg hr.le h
-  · exact le_rfl
+  simp only [sub_nonneg, exp_le_one_iff, Left.neg_nonpos_iff]
+  exact mul_nonneg hr.le h
+  exact le_rfl
 
 end ExponentialCDF
 

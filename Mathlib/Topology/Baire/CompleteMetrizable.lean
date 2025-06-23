@@ -42,16 +42,16 @@ instance (priority := 100) BaireSpace.of_pseudoEMetricSpace_completeSpace : Bair
   obtain ⟨r, rpos, hr⟩ : ∃ r > 0, closedBall y r ⊆ f n :=
     nhds_basis_closed_eball.mem_iff.1 (isOpen_iff_mem_nhds.1 (ho n) y ys)
   refine ⟨y, min (min (δ / 2) r) (B (n + 1)), ?_, ?_, fun z hz => ⟨?_, ?_⟩⟩
-  · show 0 < min (min (δ / 2) r) (B (n + 1))
-    exact lt_min (lt_min (ENNReal.half_pos δpos) rpos) (Bpos (n + 1))
-  · show min (min (δ / 2) r) (B (n + 1)) ≤ B (n + 1)
-    exact min_le_right _ _
-  · show z ∈ closedBall x δ
-    calc
-      edist z x ≤ edist z y + edist y x := edist_triangle _ _ _
-      _ ≤ min (min (δ / 2) r) (B (n + 1)) + δ / 2 := add_le_add hz (le_of_lt xy)
-      _ ≤ δ / 2 + δ / 2 := (add_le_add (le_trans (min_le_left _ _) (min_le_left _ _)) le_rfl)
-      _ = δ := ENNReal.add_halves δ
+  show 0 < min (min (δ / 2) r) (B (n + 1))
+  exact lt_min (lt_min (ENNReal.half_pos δpos) rpos) (Bpos (n + 1))
+  show min (min (δ / 2) r) (B (n + 1)) ≤ B (n + 1)
+  exact min_le_right _ _
+  show z ∈ closedBall x δ
+  calc
+    edist z x ≤ edist z y + edist y x := edist_triangle _ _ _
+    _ ≤ min (min (δ / 2) r) (B (n + 1)) + δ / 2 := add_le_add hz (le_of_lt xy)
+    _ ≤ δ / 2 + δ / 2 := (add_le_add (le_trans (min_le_left _ _) (min_le_left _ _)) le_rfl)
+    _ = δ := ENNReal.add_halves δ
   show z ∈ f n
   exact hr (calc
     edist z y ≤ min (min (δ / 2) r) (B (n + 1)) := hz
@@ -100,18 +100,18 @@ instance (priority := 100) BaireSpace.of_pseudoEMetricSpace_completeSpace : Bair
   have I : ∀ n, ∀ m ≥ n, closedBall (c m) (r m) ⊆ closedBall (c n) (r n) := by
     intro n
     refine Nat.le_induction ?_ fun m _ h => ?_
-    · exact Subset.refl _
-    · exact Subset.trans (incl m) (Subset.trans inter_subset_left h)
+    exact Subset.refl _
+    exact Subset.trans (incl m) (Subset.trans inter_subset_left h)
   have yball : ∀ n, y ∈ closedBall (c n) (r n) := by
     intro n
     refine isClosed_ball.mem_of_tendsto ylim ?_
     refine (Filter.eventually_ge_atTop n).mono fun m hm => ?_
     exact I n m hm mem_closedBall_self
   constructor
-  · show ∀ n, y ∈ f n
-    intro n
-    have : closedBall (c (n + 1)) (r (n + 1)) ⊆ f n :=
-      Subset.trans (incl n) inter_subset_right
-    exact this (yball (n + 1))
+  show ∀ n, y ∈ f n
+  intro n
+  have : closedBall (c (n + 1)) (r (n + 1)) ⊆ f n :=
+    Subset.trans (incl n) inter_subset_right
+  exact this (yball (n + 1))
   show edist y x ≤ ε
   exact le_trans (yball 0) (min_le_left _ _)

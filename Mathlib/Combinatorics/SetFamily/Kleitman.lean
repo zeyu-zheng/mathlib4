@@ -40,12 +40,12 @@ theorem Finset.card_biUnion_le_of_intersecting (s : Finset ι) (f : ι → Finse
   have : DecidableEq ι
   infer_instance
   obtain hs | hs := le_total (Fintype.card α) s.card
-  · rw [tsub_eq_zero_of_le hs, pow_zero]
-    refine (card_le_card <| biUnion_subset.2 fun i hi a ha ↦
-      mem_compl.2 <| not_mem_singleton.2 <| (hf _ hi).ne_bot ha).trans_eq ?_
-    rw [card_compl, Fintype.card_finset, card_singleton]
+  rw [tsub_eq_zero_of_le hs, pow_zero]
+  refine (card_le_card <| biUnion_subset.2 fun i hi a ha ↦
+    mem_compl.2 <| not_mem_singleton.2 <| (hf _ hi).ne_bot ha).trans_eq ?_
+  rw [card_compl, Fintype.card_finset, card_singleton]
   induction' s using Finset.cons_induction with i s hi ih generalizing f
-  · simp
+  simp
   set f' : ι → Finset (Finset α) :=
     fun j ↦ if hj : j ∈ cons i s hi then (hf j hj).exists_card_eq.choose else ∅
   have hf₁ : ∀ j, j ∈ cons i s hi → f j ⊆ f' j ∧ 2 * (f' j).card =
@@ -68,10 +68,10 @@ theorem Finset.card_biUnion_le_of_intersecting (s : Finset ι) (f : ι → Finse
       ((mul_le_mul_left <| pow_pos (zero_lt_two' ℕ) _).2
       (hf₁ _ <| mem_cons_self _ _).2.2.card_le) <|
       (mul_le_mul_left <| zero_lt_two' ℕ).2 <| IsUpperSet.card_inter_le_finset ?_ ?_).trans ?_
-  · rw [coe_biUnion]
-    exact isUpperSet_iUnion₂ fun i hi ↦ hf₂ _ <| subset_cons _ hi
-  · rw [coe_compl]
-    exact (hf₂ _ <| mem_cons_self _ _).compl
+  rw [coe_biUnion]
+  exact isUpperSet_iUnion₂ fun i hi ↦ hf₂ _ <| subset_cons _ hi
+  rw [coe_compl]
+  exact (hf₂ _ <| mem_cons_self _ _).compl
   rw [mul_tsub, card_compl, Fintype.card_finset, mul_left_comm, mul_tsub,
     (hf₁ _ <| mem_cons_self _ _).2.1, two_mul, add_tsub_cancel_left, ← mul_tsub, ← mul_two,
     mul_assoc, ← add_mul, mul_comm]

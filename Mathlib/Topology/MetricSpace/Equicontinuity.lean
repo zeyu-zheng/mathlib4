@@ -58,12 +58,12 @@ protected theorem equicontinuousAt_iff_pair {ι : Type*} [TopologicalSpace β] {
       ∀ ε > 0, ∃ U ∈ 𝓝 x₀, ∀ x ∈ U, ∀ x' ∈ U, ∀ i, dist (F i x) (F i x') < ε := by
   rw [equicontinuousAt_iff_pair]
   constructor <;> intro H
-  · intro ε hε
-    exact H _ (dist_mem_uniformity hε)
-  · intro U hU
-    rcases mem_uniformity_dist.mp hU with ⟨ε, hε, hεU⟩
-    refine Exists.imp (fun V => And.imp_right fun h => ?_) (H _ hε)
-    exact fun x hx x' hx' i => hεU (h _ hx _ hx' i)
+  intro ε hε
+  exact H _ (dist_mem_uniformity hε)
+  intro U hU
+  rcases mem_uniformity_dist.mp hU with ⟨ε, hε, hεU⟩
+  refine Exists.imp (fun V => And.imp_right fun h => ?_) (H _ hε)
+  exact fun x hx x' hx' i => hεU (h _ hx _ hx' i)
 
 /-- Characterization of uniform equicontinuity for families of functions taking values in a
 (pseudo) metric space. -/

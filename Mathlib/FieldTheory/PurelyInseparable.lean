@@ -232,9 +232,9 @@ theorem isPurelyInseparable_iff_pow_mem (q : ℕ) [ExpChar F q] :
     IsPurelyInseparable F E ↔ ∀ x : E, ∃ n : ℕ, x ^ q ^ n ∈ (algebraMap F E).range := by
   rw [isPurelyInseparable_iff]
   refine ⟨fun h x ↦ ?_, fun h x ↦ ?_⟩
-  · obtain ⟨g, h1, n, h2⟩ := (minpoly.irreducible (h x).1).hasSeparableContraction q
-    exact ⟨n, (h _).2 <| h1.of_dvd <| minpoly.dvd F _ <| by
-      simpa only [expand_aeval, minpoly.aeval] using congr_arg (aeval x) h2⟩
+  obtain ⟨g, h1, n, h2⟩ := (minpoly.irreducible (h x).1).hasSeparableContraction q
+  exact ⟨n, (h _).2 <| h1.of_dvd <| minpoly.dvd F _ <| by
+    simpa only [expand_aeval, minpoly.aeval] using congr_arg (aeval x) h2⟩
   have hdeg := (minpoly.natSepDegree_eq_one_iff_pow_mem q).2 (h x)
   have halg : IsIntegral F x
   apply by_contra fun h' ↦ by
@@ -348,8 +348,8 @@ theorem map_mem_perfectClosure_iff (i : E →ₐ[F] K) {x : E} :
     i x ∈ perfectClosure F K ↔ x ∈ perfectClosure F E := by
   simp_rw [mem_perfectClosure_iff]
   refine ⟨fun ⟨n, y, h⟩ ↦ ⟨n, y, ?_⟩, fun ⟨n, y, h⟩ ↦ ⟨n, y, ?_⟩⟩
-  · apply_fun i using i.injective
-    rwa [AlgHom.commutes, map_pow]
+  apply_fun i using i.injective
+  rwa [AlgHom.commutes, map_pow]
   simpa only [AlgHom.commutes, map_pow] using congr_arg i h
 
 /-- If `i` is an `F`-algebra homomorphism from `E` to `K`, then the preimage of `perfectClosure F K`
@@ -849,8 +849,8 @@ theorem finSepDegree_eq [Algebra.IsAlgebraic F E] :
 to the (finite) field extension degree. -/
 theorem finSepDegree_mul_finInsepDegree : finSepDegree F E * finInsepDegree F E = finrank F E := by
   by_cases halg : Algebra.IsAlgebraic F E
-  · have := congr_arg Cardinal.toNat (sepDegree_mul_insepDegree F E)
-    rwa [Cardinal.toNat_mul, ← finSepDegree_eq F E] at this
+  have := congr_arg Cardinal.toNat (sepDegree_mul_insepDegree F E)
+  rwa [Cardinal.toNat_mul, ← finSepDegree_eq F E] at this
   rw [finInsepDegree, finrank_of_infinite_dimensional (K := F) (V := E) fun _ ↦
       halg (Algebra.IsAlgebraic.of_finite F E),
     finrank_of_infinite_dimensional (K := separableClosure F E) (V := E) fun _ ↦
@@ -914,8 +914,8 @@ theorem LinearIndependent.map_of_isPurelyInseparable_of_isSeparable [IsPurelyIns
   have := (expChar_pow_pos F q n).ne'
   replace hf (i : ι) : l i ^ q ^ n ∈ (algebraMap F E).range := by
     by_cases hs : i ∈ l.support
-    · convert pow_mem (hf i) (q ^ (n - f i)) using 1
-      rw [← pow_mul, ← pow_add, Nat.add_sub_of_le (Finset.le_sup hs)]
+    convert pow_mem (hf i) (q ^ (n - f i)) using 1
+    rw [← pow_mul, ← pow_add, Nat.add_sub_of_le (Finset.le_sup hs)]
     exact ⟨0, by rw [map_zero, Finsupp.not_mem_support_iff.1 hs, zero_pow this]⟩
   choose lF hlF using hf
   let lF₀ := Finsupp.onFinset l.support lF fun i ↦ by

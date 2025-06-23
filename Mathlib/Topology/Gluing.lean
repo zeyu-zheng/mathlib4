@@ -107,8 +107,8 @@ theorem isOpen_iff (U : Set 𝖣.glued) : IsOpen U ↔ ∀ i, IsOpen (𝖣.ι i 
   rw [colimit_isOpen_iff.{_,u}]  -- Porting note: changed `.{u}` to `.{_,u}`.  fun fact: the proof
                                  -- breaks down if this `rw` is merged with the `rw` above.
   constructor
-  · intro h j; exact h ⟨j⟩
-  · intro h j; cases j; apply h
+  intro h j; exact h ⟨j⟩
+  intro h j; cases j; apply h
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : _) (y : D.U i), 𝖣.ι i y = x :=
   𝖣.ι_jointly_surjective (forget TopCat) x
@@ -125,9 +125,9 @@ theorem rel_equiv : Equivalence D.Rel :=
     exacts [Or.inl rfl, Or.inr ⟨D.t _ _ x, e₂, by erw [← e₁, D.t_inv_apply]⟩], by
      -- previous line now `erw` after #13170
     rintro ⟨i, a⟩ ⟨j, b⟩ ⟨k, c⟩ (⟨⟨⟩⟩ | ⟨x, e₁, e₂⟩)
-    · exact id
+    exact id
     rintro (⟨⟨⟩⟩ | ⟨y, e₃, e₄⟩)
-    · exact Or.inr ⟨x, e₁, e₂⟩
+    exact Or.inr ⟨x, e₁, e₂⟩
     let z := (pullbackIsoProdSubtype (D.f j i) (D.f j k)).inv ⟨⟨_, _⟩, e₂.trans e₃.symm⟩
     have eq₁ : (D.t j i) ((pullback.fst _ _ : _ /-(D.f j k)-/ ⟶ D.V (j, i)) z) = x := by
       dsimp only [coe_of, z]
@@ -192,42 +192,42 @@ theorem eqvGen_of_π_eq
 theorem ι_eq_iff_rel (i j : D.J) (x : D.U i) (y : D.U j) :
     𝖣.ι i x = 𝖣.ι j y ↔ D.Rel ⟨i, x⟩ ⟨j, y⟩ := by
   constructor
-  · delta GlueData.ι
-    simp_rw [← Multicoequalizer.ι_sigmaπ]
-    intro h
-    rw [←
-      show _ = Sigma.mk i x from ConcreteCategory.congr_hom (sigmaIsoSigma.{_, u} D.U).inv_hom_id _]
-    rw [←
-      show _ = Sigma.mk j y from ConcreteCategory.congr_hom (sigmaIsoSigma.{_, u} D.U).inv_hom_id _]
-    change InvImage D.Rel (sigmaIsoSigma.{_, u} D.U).hom _ _
-    rw [← (InvImage.equivalence _ _ D.rel_equiv).eqvGen_iff]
-    refine EqvGen.mono ?_ (D.eqvGen_of_π_eq h : _)
-    rintro _ _ ⟨x⟩
-    obtain ⟨⟨⟨i, j⟩, y⟩, rfl⟩ :=
-      (ConcreteCategory.bijective_of_isIso (sigmaIsoSigma.{u, u} _).inv).2 x
-    unfold InvImage MultispanIndex.fstSigmaMap MultispanIndex.sndSigmaMap
-    simp only [forget_map_eq_coe]
-    erw [TopCat.comp_app, sigmaIsoSigma_inv_apply, ← comp_apply, ← comp_apply,
-      colimit.ι_desc_assoc, ← comp_apply, ← comp_apply, colimit.ι_desc_assoc]
-      -- previous line now `erw` after #13170
-    erw [sigmaIsoSigma_hom_ι_apply, sigmaIsoSigma_hom_ι_apply]
-    exact Or.inr ⟨y, ⟨rfl, rfl⟩⟩
-  · rintro (⟨⟨⟩⟩ | ⟨z, e₁, e₂⟩)
-    · rfl
-    dsimp only at *
-    -- Porting note: there were `subst e₁` and `subst e₂`, instead of the `rw`
-    rw [← e₁, ← e₂] at *
-    erw [D.glue_condition_apply] -- now `erw` after #13170
-    rfl -- now `rfl` after #13170
+  delta GlueData.ι
+  simp_rw [← Multicoequalizer.ι_sigmaπ]
+  intro h
+  rw [←
+    show _ = Sigma.mk i x from ConcreteCategory.congr_hom (sigmaIsoSigma.{_, u} D.U).inv_hom_id _]
+  rw [←
+    show _ = Sigma.mk j y from ConcreteCategory.congr_hom (sigmaIsoSigma.{_, u} D.U).inv_hom_id _]
+  change InvImage D.Rel (sigmaIsoSigma.{_, u} D.U).hom _ _
+  rw [← (InvImage.equivalence _ _ D.rel_equiv).eqvGen_iff]
+  refine EqvGen.mono ?_ (D.eqvGen_of_π_eq h : _)
+  rintro _ _ ⟨x⟩
+  obtain ⟨⟨⟨i, j⟩, y⟩, rfl⟩ :=
+    (ConcreteCategory.bijective_of_isIso (sigmaIsoSigma.{u, u} _).inv).2 x
+  unfold InvImage MultispanIndex.fstSigmaMap MultispanIndex.sndSigmaMap
+  simp only [forget_map_eq_coe]
+  erw [TopCat.comp_app, sigmaIsoSigma_inv_apply, ← comp_apply, ← comp_apply,
+    colimit.ι_desc_assoc, ← comp_apply, ← comp_apply, colimit.ι_desc_assoc]
+    -- previous line now `erw` after #13170
+  erw [sigmaIsoSigma_hom_ι_apply, sigmaIsoSigma_hom_ι_apply]
+  exact Or.inr ⟨y, ⟨rfl, rfl⟩⟩
+  rintro (⟨⟨⟩⟩ | ⟨z, e₁, e₂⟩)
+  rfl
+  dsimp only at *
+  -- Porting note: there were `subst e₁` and `subst e₂`, instead of the `rw`
+  rw [← e₁, ← e₂] at *
+  erw [D.glue_condition_apply] -- now `erw` after #13170
+  rfl -- now `rfl` after #13170
 
 theorem ι_injective (i : D.J) : Function.Injective (𝖣.ι i) := by
   intro x y h
   rcases (D.ι_eq_iff_rel _ _ _ _).mp h with (⟨⟨⟩⟩ | ⟨_, e₁, e₂⟩)
-  · rfl
-  · dsimp only at *
-    -- Porting note: there were `cases e₁` and `cases e₂`, instead of the `rw`
-    rw [← e₁, ← e₂]
-    simp
+  rfl
+  dsimp only at *
+  -- Porting note: there were `cases e₁` and `cases e₂`, instead of the `rw`
+  rw [← e₁, ← e₂]
+  simp
 
 instance ι_mono (i : D.J) : Mono (𝖣.ι i) :=
   (TopCat.mono_iff_injective _).mpr (D.ι_injective _)
@@ -236,23 +236,23 @@ theorem image_inter (i j : D.J) :
     Set.range (𝖣.ι i) ∩ Set.range (𝖣.ι j) = Set.range (D.f i j ≫ 𝖣.ι _) := by
   ext x
   constructor
-  · rintro ⟨⟨x₁, eq₁⟩, ⟨x₂, eq₂⟩⟩
-    obtain ⟨⟨⟩⟩ | ⟨y, e₁, -⟩ := (D.ι_eq_iff_rel _ _ _ _).mp (eq₁.trans eq₂.symm)
-    · exact ⟨inv (D.f i i) x₁, by
-        -- porting note (#10745): was `simp [eq₁]`
-        -- See https://github.com/leanprover-community/mathlib4/issues/5026
-        rw [TopCat.comp_app]
-        erw [CategoryTheory.IsIso.inv_hom_id_apply]
-        rw [eq₁]⟩
-    · -- Porting note: was
-      -- dsimp only at *; substs e₁ eq₁; exact ⟨y, by simp⟩
-      dsimp only at *
-      substs eq₁
-      exact ⟨y, by simp [e₁]⟩
-  · rintro ⟨x, hx⟩
-    refine ⟨⟨D.f i j x, hx⟩, ⟨D.f j i (D.t _ _ x), ?_⟩⟩
-    erw [D.glue_condition_apply] -- now `erw` after #13170
-    exact hx
+  rintro ⟨⟨x₁, eq₁⟩, ⟨x₂, eq₂⟩⟩
+  obtain ⟨⟨⟩⟩ | ⟨y, e₁, -⟩ := (D.ι_eq_iff_rel _ _ _ _).mp (eq₁.trans eq₂.symm)
+  exact ⟨inv (D.f i i) x₁, by
+    -- porting note (#10745): was `simp [eq₁]`
+    -- See https://github.com/leanprover-community/mathlib4/issues/5026
+    rw [TopCat.comp_app]
+    erw [CategoryTheory.IsIso.inv_hom_id_apply]
+    rw [eq₁]⟩
+  -- Porting note: was
+  -- dsimp only at *; substs e₁ eq₁; exact ⟨y, by simp⟩
+  dsimp only at *
+  substs eq₁
+  exact ⟨y, by simp [e₁]⟩
+  rintro ⟨x, hx⟩
+  refine ⟨⟨D.f i j x, hx⟩, ⟨D.f j i (D.t _ _ x), ?_⟩⟩
+  erw [D.glue_condition_apply] -- now `erw` after #13170
+  exact hx
 
 theorem preimage_range (i j : D.J) : 𝖣.ι j ⁻¹' Set.range (𝖣.ι i) = Set.range (D.f j i) := by
   rw [← Set.preimage_image_eq (Set.range (D.f j i)) (D.ι_injective j), ← Set.image_univ, ←
@@ -285,8 +285,8 @@ theorem preimage_image_eq_image' (i j : D.J) (U : Set (𝖣.U i)) :
   -- Porting note: `congr 1` was here, instead of `congr_arg`, however, it did nothing.
   refine congr_arg ?_ ?_
   rw [← Set.eq_preimage_iff_image_eq, Set.preimage_preimage]
-  · change _ = (D.t i j ≫ D.t j i ≫ _) ⁻¹' _
-    rw [𝖣.t_inv_assoc]
+  change _ = (D.t i j ≫ D.t j i ≫ _) ⁻¹' _
+  rw [𝖣.t_inv_assoc]
   rw [← isIso_iff_bijective]
   apply (forget TopCat).map_isIso
 
@@ -333,8 +333,8 @@ structure MkCore where
 
 theorem MkCore.t_inv (h : MkCore) (i j : h.J) (x : h.V j i) : h.t i j ((h.t j i) x) = x := by
   have := h.cocycle j i j x ?_
-  · rw [h.t_id] at this
-    · convert Subtype.eq this
+  rw [h.t_id] at this
+  convert Subtype.eq this
   rw [h.V_id]
   trivial
 
@@ -461,18 +461,18 @@ theorem fromOpenSubsetsGlue_isOpenMap : IsOpenMap (fromOpenSubsetsGlue U) := by
   use fromOpenSubsetsGlue U '' s ∩ Set.range (@Opens.inclusion (TopCat.of α) (U i))
   use Set.inter_subset_left
   constructor
-  · erw [← Set.image_preimage_eq_inter_range]
-    apply (Opens.openEmbedding (X := TopCat.of α) (U i)).isOpenMap
-    convert hs i using 1
-    erw [← ι_fromOpenSubsetsGlue, coe_comp, Set.preimage_comp]
-    --  porting note: `congr 1` did nothing, so I replaced it with `apply congr_arg`
-    apply congr_arg
-    exact Set.preimage_image_eq _ (fromOpenSubsetsGlue_injective U)
-  · refine ⟨Set.mem_image_of_mem _ hx, ?_⟩
-    -- Porting note: another `rw ↦ erw`
-    -- See above.
-    erw [ι_fromOpenSubsetsGlue_apply]
-    exact Set.mem_range_self _
+  erw [← Set.image_preimage_eq_inter_range]
+  apply (Opens.openEmbedding (X := TopCat.of α) (U i)).isOpenMap
+  convert hs i using 1
+  erw [← ι_fromOpenSubsetsGlue, coe_comp, Set.preimage_comp]
+  --  porting note: `congr 1` did nothing, so I replaced it with `apply congr_arg`
+  apply congr_arg
+  exact Set.preimage_image_eq _ (fromOpenSubsetsGlue_injective U)
+  refine ⟨Set.mem_image_of_mem _ hx, ?_⟩
+  -- Porting note: another `rw ↦ erw`
+  -- See above.
+  erw [ι_fromOpenSubsetsGlue_apply]
+  exact Set.mem_range_self _
 
 theorem fromOpenSubsetsGlue_openEmbedding : OpenEmbedding (fromOpenSubsetsGlue U) :=
   openEmbedding_of_continuous_injective_open (ContinuousMap.continuous_toFun _)
@@ -481,15 +481,15 @@ theorem fromOpenSubsetsGlue_openEmbedding : OpenEmbedding (fromOpenSubsetsGlue U
 theorem range_fromOpenSubsetsGlue : Set.range (fromOpenSubsetsGlue U) = ⋃ i, (U i : Set α) := by
   ext
   constructor
-  · rintro ⟨x, rfl⟩
-    obtain ⟨i, ⟨x, hx'⟩, rfl⟩ := (ofOpenSubsets U).ι_jointly_surjective x
-    -- Porting note: another `rw ↦ erw`
-    -- See above
-    erw [ι_fromOpenSubsetsGlue_apply]
-    exact Set.subset_iUnion _ i hx'
-  · rintro ⟨_, ⟨i, rfl⟩, hx⟩
-    rename_i x
-    exact ⟨(ofOpenSubsets U).toGlueData.ι i ⟨x, hx⟩, ι_fromOpenSubsetsGlue_apply _ _ _⟩
+  rintro ⟨x, rfl⟩
+  obtain ⟨i, ⟨x, hx'⟩, rfl⟩ := (ofOpenSubsets U).ι_jointly_surjective x
+  -- Porting note: another `rw ↦ erw`
+  -- See above
+  erw [ι_fromOpenSubsetsGlue_apply]
+  exact Set.subset_iUnion _ i hx'
+  rintro ⟨_, ⟨i, rfl⟩, hx⟩
+  rename_i x
+  exact ⟨(ofOpenSubsets U).toGlueData.ι i ⟨x, hx⟩, ι_fromOpenSubsetsGlue_apply _ _ _⟩
 
 /-- The gluing of an open cover is homeomomorphic to the original space. -/
 def openCoverGlueHomeo (h : ⋃ i, (U i : Set α) = Set.univ) :

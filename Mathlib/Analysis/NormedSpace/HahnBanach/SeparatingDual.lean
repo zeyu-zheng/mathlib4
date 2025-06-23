@@ -92,7 +92,7 @@ open Function in
 theorem dualMap_surjective_iff {W} [AddCommGroup W] [Module R W] [FiniteDimensional R W]
     {f : W →ₗ[R] V} : Surjective (f.dualMap ∘ ContinuousLinearMap.toLinearMap) ↔ Injective f := by
   constructor <;> intro hf
-  · exact LinearMap.dualMap_surjective_iff.mp hf.of_comp
+  exact LinearMap.dualMap_surjective_iff.mp hf.of_comp
   have := (separatingDual_iff_injective.mp ‹_›).comp hf
   rw [← LinearMap.coe_comp] at this
   exact LinearMap.flip_surjective_iff₁.mpr this
@@ -106,11 +106,11 @@ theorem exists_eq_one_ne_zero_of_ne_zero_pair {x y : V} (hx : x ≠ 0) (hy : y �
     ∃ f : V →L[R] R, f x = 1 ∧ f y ≠ 0 := by
   obtain ⟨u, ux⟩ : ∃ u : V →L[R] R, u x = 1 := exists_eq_one hx
   rcases ne_or_eq (u y) 0 with uy|uy
-  · exact ⟨u, ux, uy⟩
+  exact ⟨u, ux, uy⟩
   obtain ⟨v, vy⟩ : ∃ v : V →L[R] R, v y = 1 := exists_eq_one hy
   rcases ne_or_eq (v x) 0 with vx|vx
-  · exact ⟨(v x)⁻¹ • v, inv_mul_cancel vx, show (v x)⁻¹ * v y ≠ 0 by simp [vx, vy]⟩
-  · exact ⟨u + v, by simp [ux, vx], by simp [uy, vy]⟩
+  exact ⟨(v x)⁻¹ • v, inv_mul_cancel vx, show (v x)⁻¹ * v y ≠ 0 by simp [vx, vy]⟩
+  exact ⟨u + v, by simp [ux, vx], by simp [uy, vy]⟩
 
 /-- In a topological vector space with separating dual, the group of continuous linear equivalences
 acts transitively on the set of nonzero vectors: given two nonzero vectors `x` and `y`, there

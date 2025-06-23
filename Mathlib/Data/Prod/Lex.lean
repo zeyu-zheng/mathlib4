@@ -66,33 +66,33 @@ instance preorder (α β : Type*) [Preorder α] [Preorder β] : Preorder (α ×�
       match x₁, x₂ with
       | (a₁, b₁), (a₂, b₂) => by
         constructor
-        · rintro (⟨_, _, hlt⟩ | ⟨_, hlt⟩)
-          · constructor
-            · exact left _ _ hlt
-            · rintro ⟨⟩
-              · apply lt_asymm hlt; assumption
-              · exact lt_irrefl _ hlt
-          · constructor
-            · right
-              rw [lt_iff_le_not_le] at hlt
-              exact hlt.1
-            · rintro ⟨⟩
-              · apply lt_irrefl a₁
-                assumption
-              · rw [lt_iff_le_not_le] at hlt
-                apply hlt.2
-                assumption
-        · rintro ⟨⟨⟩, h₂r⟩
-          · left
-            assumption
-          · right
-            rw [lt_iff_le_not_le]
-            constructor
-            · assumption
-            · intro h
-              apply h₂r
-              right
-              exact h }
+        rintro (⟨_, _, hlt⟩ | ⟨_, hlt⟩)
+        constructor
+        exact left _ _ hlt
+        rintro ⟨⟩
+        apply lt_asymm hlt; assumption
+        exact lt_irrefl _ hlt
+        constructor
+        right
+        rw [lt_iff_le_not_le] at hlt
+        exact hlt.1
+        rintro ⟨⟩
+        apply lt_irrefl a₁
+        assumption
+        rw [lt_iff_le_not_le] at hlt
+        apply hlt.2
+        assumption
+        rintro ⟨⟨⟩, h₂r⟩
+        left
+        assumption
+        right
+        rw [lt_iff_le_not_le]
+        constructor
+        assumption
+        intro h
+        apply h₂r
+        right
+        exact h }
 
 theorem monotone_fst [Preorder α] [LE β] (t c : α ×ₗ β) (h : t ≤ c) :
     (ofLex t).1 ≤ (ofLex c).1 := by
@@ -107,14 +107,14 @@ variable [PartialOrder α] [Preorder β]
 theorem toLex_mono : Monotone (toLex : α × β → α ×ₗ β) := by
   rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨ha, hb⟩
   obtain rfl | ha : a₁ = a₂ ∨ _ := ha.eq_or_lt
-  · exact right _ hb
-  · exact left _ _ ha
+  exact right _ hb
+  exact left _ _ ha
 
 theorem toLex_strictMono : StrictMono (toLex : α × β → α ×ₗ β) := by
   rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ h
   obtain rfl | ha : a₁ = a₂ ∨ _ := h.le.1.eq_or_lt
-  · exact right _ (Prod.mk_lt_mk_iff_right.1 h)
-  · exact left _ _ ha
+  exact right _ (Prod.mk_lt_mk_iff_right.1 h)
+  exact left _ _ ha
 
 end Preorder
 
@@ -153,10 +153,10 @@ instance [Preorder α] [Preorder β] [DenselyOrdered α] [DenselyOrdered β] :
     DenselyOrdered (α ×ₗ β) where
   dense := by
     rintro _ _ (@⟨a₁, b₁, a₂, b₂, h⟩ | @⟨a, b₁, b₂, h⟩)
-    · obtain ⟨c, h₁, h₂⟩ := exists_between h
-      exact ⟨(c, b₁), left _ _ h₁, left _ _ h₂⟩
-    · obtain ⟨c, h₁, h₂⟩ := exists_between h
-      exact ⟨(a, c), right _ h₁, right _ h₂⟩
+    obtain ⟨c, h₁, h₂⟩ := exists_between h
+    exact ⟨(c, b₁), left _ _ h₁, left _ _ h₂⟩
+    obtain ⟨c, h₁, h₂⟩ := exists_between h
+    exact ⟨(a, c), right _ h₁, right _ h₂⟩
 
 instance noMaxOrder_of_left [Preorder α] [Preorder β] [NoMaxOrder α] : NoMaxOrder (α ×ₗ β) where
   exists_gt := by

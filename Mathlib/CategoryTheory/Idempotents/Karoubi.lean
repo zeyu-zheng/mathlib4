@@ -98,9 +98,9 @@ instance : Category (Karoubi C) where
 @[simp]
 theorem hom_ext_iff {P Q : Karoubi C} {f g : P ⟶ Q} : f = g ↔ f.f = g.f := by
   constructor
-  · intro h
-    rw [h]
-  · apply Hom.ext
+  intro h
+  rw [h]
+  apply Hom.ext
 
 -- Porting note: added because `Hom.ext` is not triggered automatically
 @[ext]

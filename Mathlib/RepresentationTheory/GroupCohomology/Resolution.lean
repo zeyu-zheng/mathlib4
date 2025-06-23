@@ -108,47 +108,47 @@ def actionDiagonalSucc (G : Type u) [Group G] :
 theorem actionDiagonalSucc_hom_apply {G : Type u} [Group G] {n : ℕ} (f : Fin (n + 1) → G) :
     (actionDiagonalSucc G n).hom.hom f = (f 0, fun i => (f (Fin.castSucc i))⁻¹ * f i.succ) := by
   induction' n with n hn
-  · exact Prod.ext rfl (funext fun x => Fin.elim0 x)
-  · refine Prod.ext rfl (funext fun x => ?_)
-    /- Porting note (#11039): broken proof was
-    · dsimp only [actionDiagonalSucc]
-      simp only [Iso.trans_hom, comp_hom, types_comp_apply, diagonalSucc_hom_hom,
-        leftRegularTensorIso_hom_hom, tensorIso_hom, mkIso_hom_hom, Equiv.toIso_hom,
-        Action.tensorHom, Equiv.piFinSuccAbove_symm_apply, tensor_apply, types_id_apply,
-        tensor_rho, MonoidHom.one_apply, End.one_def, hn fun j : Fin (n + 1) => f j.succ,
-        Fin.insertNth_zero']
-      refine' Fin.cases (Fin.cons_zero _ _) (fun i => _) x
-      · simp only [Fin.cons_succ, mul_left_inj, inv_inj, Fin.castSucc_fin_succ] -/
-    dsimp [actionDiagonalSucc]
-    erw [hn (fun (j : Fin (n + 1)) => f j.succ)]
-    exact Fin.cases rfl (fun i => rfl) x
+  exact Prod.ext rfl (funext fun x => Fin.elim0 x)
+  refine Prod.ext rfl (funext fun x => ?_)
+  /- Porting note (#11039): broken proof was
+  dsimp only [actionDiagonalSucc]
+  simp only [Iso.trans_hom, comp_hom, types_comp_apply, diagonalSucc_hom_hom,
+    leftRegularTensorIso_hom_hom, tensorIso_hom, mkIso_hom_hom, Equiv.toIso_hom,
+    Action.tensorHom, Equiv.piFinSuccAbove_symm_apply, tensor_apply, types_id_apply,
+    tensor_rho, MonoidHom.one_apply, End.one_def, hn fun j : Fin (n + 1) => f j.succ,
+    Fin.insertNth_zero']
+  refine' Fin.cases (Fin.cons_zero _ _) (fun i => _) x
+  simp only [Fin.cons_succ, mul_left_inj, inv_inj, Fin.castSucc_fin_succ] -/
+  dsimp [actionDiagonalSucc]
+  erw [hn (fun (j : Fin (n + 1)) => f j.succ)]
+  exact Fin.cases rfl (fun i => rfl) x
 
 theorem actionDiagonalSucc_inv_apply {G : Type u} [Group G] {n : ℕ} (g : G) (f : Fin n → G) :
     (actionDiagonalSucc G n).inv.hom (g, f) = (g • Fin.partialProd f : Fin (n + 1) → G) := by
   revert g
   induction' n with n hn
-  · intro g
-    funext (x : Fin 1)
-    simp only [Subsingleton.elim x 0, Pi.smul_apply, Fin.partialProd_zero, smul_eq_mul, mul_one]
-    rfl
-  · intro g
-    /- Porting note (#11039): broken proof was
-    ext
-    dsimp only [actionDiagonalSucc]
-    simp only [Iso.trans_inv, comp_hom, hn, diagonalSucc_inv_hom, types_comp_apply, tensorIso_inv,
-      Iso.refl_inv, Action.tensorHom, id_hom, tensor_apply, types_id_apply,
-      leftRegularTensorIso_inv_hom, tensor_rho, leftRegular_ρ_apply, Pi.smul_apply, smul_eq_mul]
-    refine' Fin.cases _ _ x
-    · simp only [Fin.cons_zero, Fin.partialProd_zero, mul_one]
-    · intro i
-      simpa only [Fin.cons_succ, Pi.smul_apply, smul_eq_mul, Fin.partialProd_succ', mul_assoc] -/
-    funext x
-    dsimp [actionDiagonalSucc]
-    erw [hn, Equiv.piFinSuccAbove_symm_apply]
-    refine Fin.cases ?_ (fun i => ?_) x
-    · simp only [Fin.insertNth_zero, Fin.cons_zero, Fin.partialProd_zero, mul_one]
-    · simp only [Fin.cons_succ, Pi.smul_apply, smul_eq_mul, Fin.partialProd_succ', ← mul_assoc]
-      rfl
+  intro g
+  funext (x : Fin 1)
+  simp only [Subsingleton.elim x 0, Pi.smul_apply, Fin.partialProd_zero, smul_eq_mul, mul_one]
+  rfl
+  intro g
+  /- Porting note (#11039): broken proof was
+  ext
+  dsimp only [actionDiagonalSucc]
+  simp only [Iso.trans_inv, comp_hom, hn, diagonalSucc_inv_hom, types_comp_apply, tensorIso_inv,
+    Iso.refl_inv, Action.tensorHom, id_hom, tensor_apply, types_id_apply,
+    leftRegularTensorIso_inv_hom, tensor_rho, leftRegular_ρ_apply, Pi.smul_apply, smul_eq_mul]
+  refine' Fin.cases _ _ x
+  simp only [Fin.cons_zero, Fin.partialProd_zero, mul_one]
+  intro i
+  simpa only [Fin.cons_succ, Pi.smul_apply, smul_eq_mul, Fin.partialProd_succ', mul_assoc] -/
+  funext x
+  dsimp [actionDiagonalSucc]
+  erw [hn, Equiv.piFinSuccAbove_symm_apply]
+  refine Fin.cases ?_ (fun i => ?_) x
+  simp only [Fin.insertNth_zero, Fin.cons_zero, Fin.partialProd_zero, mul_one]
+  simp only [Fin.cons_succ, Pi.smul_apply, smul_eq_mul, Fin.partialProd_succ', ← mul_assoc]
+  rfl
 
 end Action
 
@@ -216,41 +216,41 @@ theorem diagonalSucc_inv_single_left (g : G) (f : Gⁿ →₀ k) (r : k) :
       Finsupp.lift (Gⁿ⁺¹ →₀ k) k Gⁿ (fun f => single (g • partialProd f) r) f := by
   refine f.induction ?_ ?_
 /- Porting note (#11039): broken proof was
-  · simp only [TensorProduct.tmul_zero, map_zero]
-  · intro a b x ha hb hx
-    simp only [lift_apply, smul_single', mul_one, TensorProduct.tmul_add, map_add,
-      diagonalSucc_inv_single_single, hx, Finsupp.sum_single_index, mul_comm b,
-      zero_mul, single_zero] -/
-  · rw [TensorProduct.tmul_zero, map_zero]
-    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [map_zero]
-  · intro _ _ _ _ _ hx
-    rw [TensorProduct.tmul_add, map_add]; erw [map_add, hx]
-    simp_rw [lift_apply, smul_single, smul_eq_mul]
-    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [diagonalSucc_inv_single_single]
-    rw [sum_single_index, mul_comm]
-    rw [zero_mul, single_zero]
+  simp only [TensorProduct.tmul_zero, map_zero]
+  intro a b x ha hb hx
+  simp only [lift_apply, smul_single', mul_one, TensorProduct.tmul_add, map_add,
+    diagonalSucc_inv_single_single, hx, Finsupp.sum_single_index, mul_comm b,
+    zero_mul, single_zero] -/
+  rw [TensorProduct.tmul_zero, map_zero]
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [map_zero]
+  intro _ _ _ _ _ hx
+  rw [TensorProduct.tmul_add, map_add]; erw [map_add, hx]
+  simp_rw [lift_apply, smul_single, smul_eq_mul]
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [diagonalSucc_inv_single_single]
+  rw [sum_single_index, mul_comm]
+  rw [zero_mul, single_zero]
 
 theorem diagonalSucc_inv_single_right (g : G →₀ k) (f : Gⁿ) (r : k) :
     (diagonalSucc k G n).inv.hom (g ⊗ₜ Finsupp.single f r) =
       Finsupp.lift _ k G (fun a => single (a • partialProd f) r) g := by
   refine g.induction ?_ ?_
 /- Porting note (#11039): broken proof was
-  · simp only [TensorProduct.zero_tmul, map_zero]
-  · intro a b x ha hb hx
-    simp only [lift_apply, smul_single', map_add, hx, diagonalSucc_inv_single_single,
-      TensorProduct.add_tmul, Finsupp.sum_single_index, zero_mul, single_zero] -/
-  · rw [TensorProduct.zero_tmul, map_zero]
-    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [map_zero]
-  · intro _ _ _ _ _ hx
-    rw [TensorProduct.add_tmul, map_add]; erw [map_add, hx]
-    simp_rw [lift_apply, smul_single']
-    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [diagonalSucc_inv_single_single]
-    rw [sum_single_index]
-    rw [zero_mul, single_zero]
+  simp only [TensorProduct.zero_tmul, map_zero]
+  intro a b x ha hb hx
+  simp only [lift_apply, smul_single', map_add, hx, diagonalSucc_inv_single_single,
+    TensorProduct.add_tmul, Finsupp.sum_single_index, zero_mul, single_zero] -/
+  rw [TensorProduct.zero_tmul, map_zero]
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [map_zero]
+  intro _ _ _ _ _ hx
+  rw [TensorProduct.add_tmul, map_add]; erw [map_add, hx]
+  simp_rw [lift_apply, smul_single']
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [diagonalSucc_inv_single_single]
+  rw [sum_single_index]
+  rw [zero_mul, single_zero]
 
 end Rep
 
@@ -582,25 +582,25 @@ theorem forget₂ToModuleCatHomotopyEquiv_f_0_eq :
   simp only [HomologicalComplex.comp_f]
   dsimp
   convert Category.id_comp (X := (forget₂ToModuleCat k G).X 0) _
-  · dsimp only [HomotopyEquiv.ofIso, compForgetAugmentedIso]
-    simp only [Iso.symm_hom, eqToIso.inv, HomologicalComplex.eqToHom_f, eqToHom_refl]
+  dsimp only [HomotopyEquiv.ofIso, compForgetAugmentedIso]
+  simp only [Iso.symm_hom, eqToIso.inv, HomologicalComplex.eqToHom_f, eqToHom_refl]
   trans (Finsupp.total _ _ _ fun _ => (1 : k)).comp ((ModuleCat.free k).map (terminal.from _))
-  · dsimp
-    erw [Finsupp.lmapDomain_total (α := Fin 1 → G) (R := k) (α' := ⊤_ Type u)
-        (v := fun _ => (1 : k)) (v' := fun _ => (1 : k))
-        (terminal.from
-          ((classifyingSpaceUniversalCover G).obj (Opposite.op (SimplexCategory.mk 0))).V)
-        LinearMap.id fun i => rfl,
-      LinearMap.id_comp]
-    rfl
-  · congr
-    · ext x
-      dsimp (config := { unfoldPartialApp := true }) [HomotopyEquiv.ofIso,
-        Finsupp.LinearEquiv.finsuppUnique]
-      rw [Finsupp.total_single, one_smul, @Unique.eq_default _ Types.terminalIso.toEquiv.unique x,
-        ChainComplex.single₀_map_f_zero, LinearMap.coe_mk, AddHom.coe_mk, Function.comp_apply,
-        Finsupp.equivFunOnFinite_apply, Finsupp.single_eq_same]
-    · exact @Subsingleton.elim _ (@Unique.instSubsingleton _ (Limits.uniqueToTerminal _)) _ _
+  dsimp
+  erw [Finsupp.lmapDomain_total (α := Fin 1 → G) (R := k) (α' := ⊤_ Type u)
+      (v := fun _ => (1 : k)) (v' := fun _ => (1 : k))
+      (terminal.from
+        ((classifyingSpaceUniversalCover G).obj (Opposite.op (SimplexCategory.mk 0))).V)
+      LinearMap.id fun i => rfl,
+    LinearMap.id_comp]
+  rfl
+  congr
+  ext x
+  dsimp (config := { unfoldPartialApp := true }) [HomotopyEquiv.ofIso,
+    Finsupp.LinearEquiv.finsuppUnique]
+  rw [Finsupp.total_single, one_smul, @Unique.eq_default _ Types.terminalIso.toEquiv.unique x,
+    ChainComplex.single₀_map_f_zero, LinearMap.coe_mk, AddHom.coe_mk, Function.comp_apply,
+    Finsupp.equivFunOnFinite_apply, Finsupp.single_eq_same]
+  exact @Subsingleton.elim _ (@Unique.instSubsingleton _ (Limits.uniqueToTerminal _)) _ _
 
 theorem d_comp_ε : (groupCohomology.resolution k G).d 1 0 ≫ ε k G = 0 := by
   ext : 1

@@ -20,12 +20,12 @@ lemma gaussSum_aux_of_mulShift (χ : DirichletCharacter R N) {d : ℕ}
   suffices e.mulShift u = e by conv_lhs => rw [← this, gaussSum_mulShift]
   rw [(by ring : u.val = (u - 1) + 1), ← mulShift_mul, mulShift_one, mul_left_eq_self]
   rsuffices ⟨a, ha⟩ : (d : ℤ) ∣ (u.val.val - 1 : ℤ)
-  · have : u.val - 1 = ↑(u.val.val - 1 : ℤ) := by simp only [ZMod.natCast_val, Int.cast_sub,
-      ZMod.intCast_cast, ZMod.cast_id', id_eq, Int.cast_one]
-    rw [this, ha]
-    ext1 y
-    simpa only [Int.cast_mul, Int.cast_natCast, mulShift_apply, mul_assoc, one_apply]
-      using DFunLike.ext_iff.mp he (a * y)
+  have : u.val - 1 = ↑(u.val.val - 1 : ℤ) := by simp only [ZMod.natCast_val, Int.cast_sub,
+    ZMod.intCast_cast, ZMod.cast_id', id_eq, Int.cast_one]
+  rw [this, ha]
+  ext1 y
+  simpa only [Int.cast_mul, Int.cast_natCast, mulShift_apply, mul_assoc, one_apply]
+    using DFunLike.ext_iff.mp he (a * y)
   rw [← Units.eq_iff, Units.val_one, ZMod.unitsMap_def, Units.coe_map] at hu
   have : ZMod.castHom hd (ZMod d) u.val = ((u.val.val : ℤ) : ZMod d)
   simp
@@ -58,7 +58,7 @@ lemma gaussSum_mulShift_of_isPrimitive [IsDomain R] {χ : DirichletCharacter R N
     (hχ : IsPrimitive χ) (a : ZMod N) :
     gaussSum χ (e.mulShift a) = χ⁻¹ a * gaussSum χ e := by
   by_cases ha : IsUnit a
-  · conv_rhs => rw [← gaussSum_mulShift χ e ha.unit]
-    rw [IsUnit.unit_spec, MulChar.inv_apply_eq_inv, Ring.inverse_mul_cancel_left _ _ (ha.map χ)]
-  · rw [MulChar.map_nonunit _ ha, zero_mul]
-    exact gaussSum_eq_zero_of_isPrimitive_of_not_isPrimitive _ hχ (not_isPrimitive_mulShift e ha)
+  conv_rhs => rw [← gaussSum_mulShift χ e ha.unit]
+  rw [IsUnit.unit_spec, MulChar.inv_apply_eq_inv, Ring.inverse_mul_cancel_left _ _ (ha.map χ)]
+  rw [MulChar.map_nonunit _ ha, zero_mul]
+  exact gaussSum_eq_zero_of_isPrimitive_of_not_isPrimitive _ hχ (not_isPrimitive_mulShift e ha)

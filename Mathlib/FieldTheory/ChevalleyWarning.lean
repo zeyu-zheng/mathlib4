@@ -124,14 +124,14 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
     _ = if x ∈ S then 1 else 0 := ?_
   simp only [(eval x).map_sub, (eval x).map_pow, (eval x).map_one]
   split_ifs with hx
-  · apply Finset.prod_eq_one
-    intro i hi
-    rw [hS] at hx
-    rw [hx i hi, zero_pow hq.ne', sub_zero]
-  · obtain ⟨i, hi, hx⟩ : ∃ i ∈ s, eval x (f i) ≠ 0 := by
-      simpa [hS, not_forall, Classical.not_imp] using hx
-    apply Finset.prod_eq_zero hi
-    rw [pow_card_sub_one_eq_one (eval x (f i)) hx, sub_self]
+  apply Finset.prod_eq_one
+  intro i hi
+  rw [hS] at hx
+  rw [hx i hi, zero_pow hq.ne', sub_zero]
+  obtain ⟨i, hi, hx⟩ : ∃ i ∈ s, eval x (f i) ≠ 0 := by
+    simpa [hS, not_forall, Classical.not_imp] using hx
+  apply Finset.prod_eq_zero hi
+  rw [pow_card_sub_one_eq_one (eval x (f i)) hx, sub_self]
   -- In particular, we can now show:
   have key : ∑ x, eval x F = Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 }
   rw [Fintype.card_of_subtype S hS, card_eq_sum_ones, Nat.cast_sum, Nat.cast_one, ←

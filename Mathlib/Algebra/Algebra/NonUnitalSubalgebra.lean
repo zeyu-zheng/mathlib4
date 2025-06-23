@@ -572,14 +572,14 @@ lemma adjoin_induction_subtype {s : Set A} {p : adjoin R s → Prop} (a : adjoin
   Subtype.recOn a fun b hb => by
     refine Exists.elim ?_ (fun (hb : b ∈ adjoin R s) (hc : p ⟨b, hb⟩) => hc)
     refine adjoin_induction hb ?_ ?_ ?_ ?_ ?_
-    · exact fun x hx => ⟨subset_adjoin R hx, mem x hx⟩
-    · exact fun x y hx hy => Exists.elim hx fun hx' hx => Exists.elim hy fun hy' hy =>
-        ⟨add_mem hx' hy', add _ _ hx hy⟩
-    · exact ⟨_, zero⟩
-    · exact fun x y hx hy => Exists.elim hx fun hx' hx => Exists.elim hy fun hy' hy =>
-        ⟨mul_mem hx' hy', mul _ _ hx hy⟩
-    · exact fun r x hx => Exists.elim hx fun hx' hx =>
-        ⟨SMulMemClass.smul_mem r hx', smul r _ hx⟩
+    exact fun x hx => ⟨subset_adjoin R hx, mem x hx⟩
+    exact fun x y hx hy => Exists.elim hx fun hx' hx => Exists.elim hy fun hy' hy =>
+      ⟨add_mem hx' hy', add _ _ hx hy⟩
+    exact ⟨_, zero⟩
+    exact fun x y hx hy => Exists.elim hx fun hx' hx => Exists.elim hy fun hy' hy =>
+      ⟨mul_mem hx' hy', mul _ _ hx hy⟩
+    exact fun r x hx => Exists.elim hx fun hx' hx =>
+      ⟨SMulMemClass.smul_mem r hx', smul r _ hx⟩
 
 /-- A dependent version of `NonUnitalAlgebra.adjoin_induction`. -/
 theorem adjoin_induction' {s : Set A} {p : ∀ x, x ∈ adjoin R s → Prop}
@@ -624,22 +624,22 @@ lemma adjoin_eq (s : NonUnitalSubalgebra R A) : adjoin R (s : Set A) = s :=
 open Submodule in
 lemma adjoin_eq_span (s : Set A) : (adjoin R s).toSubmodule = span R (Subsemigroup.closure s) := by
   apply le_antisymm
-  · intro x hx
-    induction hx using adjoin_induction' with
-    | mem x hx => exact subset_span <| Subsemigroup.subset_closure hx
-    | add x _ y _ hpx hpy => exact add_mem hpx hpy
-    | zero => exact zero_mem _
-    | mul x _ y _ hpx hpy =>
-      apply span_induction₂ hpx hpy ?Hs (by simp) (by simp) ?Hadd_l ?Hadd_r ?Hsmul_l ?Hsmul_r
-      case Hs => exact fun x hx y hy ↦ subset_span <| mul_mem hx hy
-      case Hadd_l => exact fun x y z hxz hyz ↦ by simpa [add_mul] using add_mem hxz hyz
-      case Hadd_r => exact fun x y z hxz hyz ↦ by simpa [mul_add] using add_mem hxz hyz
-      case Hsmul_l => exact fun r x y hxy ↦ by simpa [smul_mul_assoc] using smul_mem _ _ hxy
-      case Hsmul_r => exact fun r x y hxy ↦ by simpa [mul_smul_comm] using smul_mem _ _ hxy
-    | smul r x _ hpx => exact smul_mem _ _ hpx
-  · apply span_le.2 _
-    show Subsemigroup.closure s ≤ (adjoin R s).toSubsemigroup
-    exact Subsemigroup.closure_le.2 (subset_adjoin R)
+  intro x hx
+  induction hx using adjoin_induction' with
+  | mem x hx => exact subset_span <| Subsemigroup.subset_closure hx
+  | add x _ y _ hpx hpy => exact add_mem hpx hpy
+  | zero => exact zero_mem _
+  | mul x _ y _ hpx hpy =>
+    apply span_induction₂ hpx hpy ?Hs (by simp) (by simp) ?Hadd_l ?Hadd_r ?Hsmul_l ?Hsmul_r
+    case Hs => exact fun x hx y hy ↦ subset_span <| mul_mem hx hy
+    case Hadd_l => exact fun x y z hxz hyz ↦ by simpa [add_mul] using add_mem hxz hyz
+    case Hadd_r => exact fun x y z hxz hyz ↦ by simpa [mul_add] using add_mem hxz hyz
+    case Hsmul_l => exact fun r x y hxy ↦ by simpa [smul_mul_assoc] using smul_mem _ _ hxy
+    case Hsmul_r => exact fun r x y hxy ↦ by simpa [mul_smul_comm] using smul_mem _ _ hxy
+  | smul r x _ hpx => exact smul_mem _ _ hpx
+  apply span_le.2 _
+  show Subsemigroup.closure s ≤ (adjoin R s).toSubsemigroup
+  exact Subsemigroup.closure_le.2 (subset_adjoin R)
 
 @[simp]
 lemma span_eq_toSubmodule (s : NonUnitalSubalgebra R A) :

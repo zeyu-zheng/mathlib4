@@ -203,10 +203,10 @@ instance mono_left [Mono sq] : Mono sq.left where
     congr 1
     rw [← cancel_mono sq]
     apply CommaMorphism.ext
-    · exact h
-    · rw [Comma.comp_right, Comma.comp_right, this, this, Category.assoc, Category.assoc]
-      rw [← Arrow.w]
-      simp only [← Category.assoc, h]
+    exact h
+    rw [Comma.comp_right, Comma.comp_right, this, this, Category.assoc, Category.assoc]
+    rw [← Arrow.w]
+    simp only [← Category.assoc, h]
 
 instance epi_right [Epi sq] : Epi sq.right where
   left_cancellation {Z} φ ψ h := by
@@ -217,8 +217,8 @@ instance epi_right [Epi sq] : Epi sq.right where
     congr 1
     rw [← cancel_epi sq]
     apply CommaMorphism.ext
-    · rw [Comma.comp_left, Comma.comp_left, Arrow.w_assoc, Arrow.w_assoc, h]
-    · exact h
+    rw [Comma.comp_left, Comma.comp_left, Arrow.w_assoc, Arrow.w_assoc, h]
+    exact h
 
 @[reassoc (attr := simp)]
 lemma hom_inv_id_left (e : f ≅ g) : e.hom.left ≫ e.inv.left = 𝟙 _ := by

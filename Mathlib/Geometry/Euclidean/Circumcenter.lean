@@ -103,76 +103,76 @@ theorem existsUnique_dist_eq_of_insert {s : AffineSubspace ℝ P}
   have hpo : p = (1 : ℝ) • (p -ᵥ orthogonalProjection s p : V) +ᵥ (orthogonalProjection s p : P) :=
     by simp
   constructor
-  · constructor
-    · refine vadd_mem_of_mem_direction ?_ (mem_affineSpan ℝ (Set.mem_insert_of_mem _ hcc))
-      rw [direction_affineSpan]
-      exact
-        Submodule.smul_mem _ _
-          (vsub_mem_vectorSpan ℝ (Set.mem_insert _ _)
-            (Set.mem_insert_of_mem _ (orthogonalProjection_mem _)))
-    · intro p1 hp1
-      rw [Sphere.mem_coe, mem_sphere, ← mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
-        Real.mul_self_sqrt (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _))]
-      cases' hp1 with hp1 hp1
-      · rw [hp1]
-        rw [hpo,
-          dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd (orthogonalProjection_mem p) hcc _ _
-            (vsub_orthogonalProjection_mem_direction_orthogonal s p),
-          ← dist_eq_norm_vsub V p, dist_comm _ cc]
-        field_simp [ycc₂, hy0]
-        ring
-      · rw [dist_sq_eq_dist_orthogonalProjection_sq_add_dist_orthogonalProjection_sq _ (hps hp1),
-          orthogonalProjection_vadd_smul_vsub_orthogonalProjection _ _ hcc, Subtype.coe_mk,
-          dist_of_mem_subset_mk_sphere hp1 hcr, dist_eq_norm_vsub V cc₂ cc, vadd_vsub, norm_smul, ←
-          dist_eq_norm_vsub V, Real.norm_eq_abs, abs_div, abs_of_nonneg dist_nonneg,
-          div_mul_cancel₀ _ hy0, abs_mul_abs_self]
-  · rintro ⟨cc₃, cr₃⟩ ⟨hcc₃, hcr₃⟩
-    simp only at hcc₃ hcr₃
-    obtain ⟨t₃, cc₃', hcc₃', hcc₃''⟩ :
-      ∃ r : ℝ, ∃ p0 ∈ s, cc₃ = r • (p -ᵥ ↑((orthogonalProjection s) p)) +ᵥ p0 := by
-      rwa [mem_affineSpan_insert_iff (orthogonalProjection_mem p)] at hcc₃
-    have hcr₃' : ∃ r, ∀ p1 ∈ ps, dist p1 cc₃ = r :=
-      ⟨cr₃, fun p1 hp1 => dist_of_mem_subset_mk_sphere (Set.mem_insert_of_mem _ hp1) hcr₃⟩
-    rw [exists_dist_eq_iff_exists_dist_orthogonalProjection_eq hps cc₃, hcc₃'',
-      orthogonalProjection_vadd_smul_vsub_orthogonalProjection _ _ hcc₃'] at hcr₃'
-    cases' hcr₃' with cr₃' hcr₃'
-    have hu := hcccru ⟨cc₃', cr₃'⟩
-    simp only at hu
-    replace hu := hu ⟨hcc₃', hcr₃'⟩
-    -- Porting note: was
-    -- cases' hu with hucc hucr
-    -- substs hucc hucr
-    cases' hu
-    have hcr₃val : cr₃ = √(cr * cr + t₃ * y * (t₃ * y)) := by
-      cases' hnps with p0 hp0
-      have h' : ↑(⟨cc, hcc₃'⟩ : s) = cc := rfl
-      rw [← dist_of_mem_subset_mk_sphere (Set.mem_insert_of_mem _ hp0) hcr₃, hcc₃'', ←
-        mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
-        Real.mul_self_sqrt (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _)),
-        dist_sq_eq_dist_orthogonalProjection_sq_add_dist_orthogonalProjection_sq _ (hps hp0),
-        orthogonalProjection_vadd_smul_vsub_orthogonalProjection _ _ hcc₃', h',
-        dist_of_mem_subset_mk_sphere hp0 hcr, dist_eq_norm_vsub V _ cc, vadd_vsub, norm_smul, ←
-        dist_eq_norm_vsub V p, Real.norm_eq_abs, ← mul_assoc, mul_comm _ |t₃|, ← mul_assoc,
-        abs_mul_abs_self]
-      ring
-    replace hcr₃ := dist_of_mem_subset_mk_sphere (Set.mem_insert _ _) hcr₃
-    rw [hpo, hcc₃'', hcr₃val, ← mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
-      dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd (orthogonalProjection_mem p) hcc₃' _ _
-        (vsub_orthogonalProjection_mem_direction_orthogonal s p),
-      dist_comm, ← dist_eq_norm_vsub V p,
-      Real.mul_self_sqrt (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _))] at hcr₃
-    change x * x + _ * (y * y) = _ at hcr₃
-    rw [show
-        x * x + (1 - t₃) * (1 - t₃) * (y * y) = x * x + y * y - 2 * y * (t₃ * y) + t₃ * y * (t₃ * y)
-        by ring,
-      add_left_inj] at hcr₃
-    have ht₃ : t₃ = ycc₂ / y := by field_simp [ycc₂, ← hcr₃, hy0]
-    subst ht₃
-    change cc₃ = cc₂ at hcc₃''
-    congr
-    rw [hcr₃val]
-    congr 2
-    field_simp [hy0]
+  constructor
+  refine vadd_mem_of_mem_direction ?_ (mem_affineSpan ℝ (Set.mem_insert_of_mem _ hcc))
+  rw [direction_affineSpan]
+  exact
+    Submodule.smul_mem _ _
+      (vsub_mem_vectorSpan ℝ (Set.mem_insert _ _)
+        (Set.mem_insert_of_mem _ (orthogonalProjection_mem _)))
+  intro p1 hp1
+  rw [Sphere.mem_coe, mem_sphere, ← mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
+    Real.mul_self_sqrt (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _))]
+  cases' hp1 with hp1 hp1
+  rw [hp1]
+  rw [hpo,
+    dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd (orthogonalProjection_mem p) hcc _ _
+      (vsub_orthogonalProjection_mem_direction_orthogonal s p),
+    ← dist_eq_norm_vsub V p, dist_comm _ cc]
+  field_simp [ycc₂, hy0]
+  ring
+  rw [dist_sq_eq_dist_orthogonalProjection_sq_add_dist_orthogonalProjection_sq _ (hps hp1),
+    orthogonalProjection_vadd_smul_vsub_orthogonalProjection _ _ hcc, Subtype.coe_mk,
+    dist_of_mem_subset_mk_sphere hp1 hcr, dist_eq_norm_vsub V cc₂ cc, vadd_vsub, norm_smul, ←
+    dist_eq_norm_vsub V, Real.norm_eq_abs, abs_div, abs_of_nonneg dist_nonneg,
+    div_mul_cancel₀ _ hy0, abs_mul_abs_self]
+  rintro ⟨cc₃, cr₃⟩ ⟨hcc₃, hcr₃⟩
+  simp only at hcc₃ hcr₃
+  obtain ⟨t₃, cc₃', hcc₃', hcc₃''⟩ :
+    ∃ r : ℝ, ∃ p0 ∈ s, cc₃ = r • (p -ᵥ ↑((orthogonalProjection s) p)) +ᵥ p0 := by
+    rwa [mem_affineSpan_insert_iff (orthogonalProjection_mem p)] at hcc₃
+  have hcr₃' : ∃ r, ∀ p1 ∈ ps, dist p1 cc₃ = r :=
+    ⟨cr₃, fun p1 hp1 => dist_of_mem_subset_mk_sphere (Set.mem_insert_of_mem _ hp1) hcr₃⟩
+  rw [exists_dist_eq_iff_exists_dist_orthogonalProjection_eq hps cc₃, hcc₃'',
+    orthogonalProjection_vadd_smul_vsub_orthogonalProjection _ _ hcc₃'] at hcr₃'
+  cases' hcr₃' with cr₃' hcr₃'
+  have hu := hcccru ⟨cc₃', cr₃'⟩
+  simp only at hu
+  replace hu := hu ⟨hcc₃', hcr₃'⟩
+  -- Porting note: was
+  -- cases' hu with hucc hucr
+  -- substs hucc hucr
+  cases' hu
+  have hcr₃val : cr₃ = √(cr * cr + t₃ * y * (t₃ * y)) := by
+    cases' hnps with p0 hp0
+    have h' : ↑(⟨cc, hcc₃'⟩ : s) = cc := rfl
+    rw [← dist_of_mem_subset_mk_sphere (Set.mem_insert_of_mem _ hp0) hcr₃, hcc₃'', ←
+      mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
+      Real.mul_self_sqrt (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _)),
+      dist_sq_eq_dist_orthogonalProjection_sq_add_dist_orthogonalProjection_sq _ (hps hp0),
+      orthogonalProjection_vadd_smul_vsub_orthogonalProjection _ _ hcc₃', h',
+      dist_of_mem_subset_mk_sphere hp0 hcr, dist_eq_norm_vsub V _ cc, vadd_vsub, norm_smul, ←
+      dist_eq_norm_vsub V p, Real.norm_eq_abs, ← mul_assoc, mul_comm _ |t₃|, ← mul_assoc,
+      abs_mul_abs_self]
+    ring
+  replace hcr₃ := dist_of_mem_subset_mk_sphere (Set.mem_insert _ _) hcr₃
+  rw [hpo, hcc₃'', hcr₃val, ← mul_self_inj_of_nonneg dist_nonneg (Real.sqrt_nonneg _),
+    dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd (orthogonalProjection_mem p) hcc₃' _ _
+      (vsub_orthogonalProjection_mem_direction_orthogonal s p),
+    dist_comm, ← dist_eq_norm_vsub V p,
+    Real.mul_self_sqrt (add_nonneg (mul_self_nonneg _) (mul_self_nonneg _))] at hcr₃
+  change x * x + _ * (y * y) = _ at hcr₃
+  rw [show
+      x * x + (1 - t₃) * (1 - t₃) * (y * y) = x * x + y * y - 2 * y * (t₃ * y) + t₃ * y * (t₃ * y)
+      by ring,
+    add_left_inj] at hcr₃
+  have ht₃ : t₃ = ycc₂ / y := by field_simp [ycc₂, ← hcr₃, hy0]
+  subst ht₃
+  change cc₃ = cc₂ at hcc₃''
+  congr
+  rw [hcr₃val]
+  congr 2
+  field_simp [hy0]
 
 /-- Given a finite nonempty affinely independent family of points,
 there is a unique (circumcenter, circumradius) pair for those points
@@ -182,50 +182,50 @@ theorem _root_.AffineIndependent.existsUnique_dist_eq {ι : Type*} [hne : Nonemp
     ∃! cs : Sphere P, cs.center ∈ affineSpan ℝ (Set.range p) ∧ Set.range p ⊆ (cs : Set P) := by
   cases nonempty_fintype ι
   induction' hn : Fintype.card ι with m hm generalizing ι
-  · exfalso
-    have h := Fintype.card_pos_iff.2 hne
-    rw [hn] at h
-    exact lt_irrefl 0 h
-  · cases' m with m
-    · rw [Fintype.card_eq_one_iff] at hn
-      cases' hn with i hi
-      haveI : Unique ι := ⟨⟨i⟩, hi⟩
-      use ⟨p i, 0⟩
-      simp only [Set.range_unique, AffineSubspace.mem_affineSpan_singleton]
-      constructor
-      · simp_rw [hi default, Set.singleton_subset_iff]
-        exact ⟨⟨⟩, by simp only [Metric.sphere_zero, Set.mem_singleton_iff]⟩
-      · rintro ⟨cc, cr⟩
-        simp only
-        rintro ⟨rfl, hdist⟩
-        simp? [Set.singleton_subset_iff] at hdist says
-          simp only [Set.singleton_subset_iff, Metric.mem_sphere, dist_self] at hdist
-        rw [hi default, hdist]
-    · have i := hne.some
-      let ι2 := { x // x ≠ i }
-      have hc : Fintype.card ι2 = m + 1
-      rw [Fintype.card_of_subtype (Finset.univ.filter fun x => x ≠ i)]
-      · rw [Finset.filter_not]
-        -- Porting note: removed `simp_rw [eq_comm]` and used `filter_eq'` instead of `filter_eq`
-        rw [Finset.filter_eq' _ i, if_pos (Finset.mem_univ _),
-          Finset.card_sdiff (Finset.subset_univ _), Finset.card_singleton, Finset.card_univ, hn]
-        simp
-      · simp
-      haveI : Nonempty ι2 := Fintype.card_pos_iff.1 (hc.symm ▸ Nat.zero_lt_succ _)
-      have ha2 : AffineIndependent ℝ fun i2 : ι2 => p i2 := ha.subtype _
-      replace hm := hm ha2 _ hc
-      have hr : Set.range p = insert (p i) (Set.range fun i2 : ι2 => p i2)
-      change _ = insert _ (Set.range fun i2 : { x | x ≠ i } => p i2)
-      rw [← Set.image_eq_range, ← Set.image_univ, ← Set.image_insert_eq]
-      congr with j
-      simp [Classical.em]
-      rw [hr, ← affineSpan_insert_affineSpan]
-      refine existsUnique_dist_eq_of_insert (Set.range_nonempty _) (subset_spanPoints ℝ _) ?_ hm
-      convert ha.not_mem_affineSpan_diff i Set.univ
-      change (Set.range fun i2 : { x | x ≠ i } => p i2) = _
-      rw [← Set.image_eq_range]
-      congr with j
-      simp
+  exfalso
+  have h := Fintype.card_pos_iff.2 hne
+  rw [hn] at h
+  exact lt_irrefl 0 h
+  cases' m with m
+  rw [Fintype.card_eq_one_iff] at hn
+  cases' hn with i hi
+  haveI : Unique ι := ⟨⟨i⟩, hi⟩
+  use ⟨p i, 0⟩
+  simp only [Set.range_unique, AffineSubspace.mem_affineSpan_singleton]
+  constructor
+  simp_rw [hi default, Set.singleton_subset_iff]
+  exact ⟨⟨⟩, by simp only [Metric.sphere_zero, Set.mem_singleton_iff]⟩
+  rintro ⟨cc, cr⟩
+  simp only
+  rintro ⟨rfl, hdist⟩
+  simp? [Set.singleton_subset_iff] at hdist says
+    simp only [Set.singleton_subset_iff, Metric.mem_sphere, dist_self] at hdist
+  rw [hi default, hdist]
+  have i := hne.some
+  let ι2 := { x // x ≠ i }
+  have hc : Fintype.card ι2 = m + 1
+  rw [Fintype.card_of_subtype (Finset.univ.filter fun x => x ≠ i)]
+  rw [Finset.filter_not]
+  -- Porting note: removed `simp_rw [eq_comm]` and used `filter_eq'` instead of `filter_eq`
+  rw [Finset.filter_eq' _ i, if_pos (Finset.mem_univ _),
+    Finset.card_sdiff (Finset.subset_univ _), Finset.card_singleton, Finset.card_univ, hn]
+  simp
+  simp
+  haveI : Nonempty ι2 := Fintype.card_pos_iff.1 (hc.symm ▸ Nat.zero_lt_succ _)
+  have ha2 : AffineIndependent ℝ fun i2 : ι2 => p i2 := ha.subtype _
+  replace hm := hm ha2 _ hc
+  have hr : Set.range p = insert (p i) (Set.range fun i2 : ι2 => p i2)
+  change _ = insert _ (Set.range fun i2 : { x | x ≠ i } => p i2)
+  rw [← Set.image_eq_range, ← Set.image_univ, ← Set.image_insert_eq]
+  congr with j
+  simp [Classical.em]
+  rw [hr, ← affineSpan_insert_affineSpan]
+  refine existsUnique_dist_eq_of_insert (Set.range_nonempty _) (subset_spanPoints ℝ _) ?_ hm
+  convert ha.not_mem_affineSpan_diff i Set.univ
+  change (Set.range fun i2 : { x | x ≠ i } => p i2) = _
+  rw [← Set.image_eq_range]
+  congr with j
+  simp
 
 end EuclideanGeometry
 
@@ -370,8 +370,8 @@ theorem circumcenter_eq_centroid (s : Simplex ℝ P 1) :
 theorem circumsphere_reindex {m n : ℕ} (s : Simplex ℝ P m) (e : Fin (m + 1) ≃ Fin (n + 1)) :
     (s.reindex e).circumsphere = s.circumsphere := by
   refine s.circumsphere_unique_dist_eq.2 _ ⟨?_, ?_⟩ <;> rw [← s.reindex_range_points e]
-  · exact (s.reindex e).circumsphere_unique_dist_eq.1.1
-  · exact (s.reindex e).circumsphere_unique_dist_eq.1.2
+  exact (s.reindex e).circumsphere_unique_dist_eq.1.1
+  exact (s.reindex e).circumsphere_unique_dist_eq.1.2
 
 /-- Reindexing a simplex along an `Equiv` of index types does not change the circumcenter. -/
 @[simp]
@@ -500,8 +500,8 @@ theorem sum_pointsWithCircumcenter {α : Type*} [AddCommMonoid α] {n : ℕ}
   ext x
   refine ⟨fun h => ?_, fun _ => mem_univ _⟩
   cases' x with i
-  · exact mem_insert_of_mem (mem_map_of_mem _ (mem_univ i))
-  · exact mem_insert_self _ _
+  exact mem_insert_of_mem (mem_map_of_mem _ (mem_univ i))
+  exact mem_insert_self _ _
   change _ = (∑ i, f (pointIndexEmbedding n i)) + _
   rw [add_comm, h, ← sum_map, sum_insert]
   simp_rw [Finset.mem_map, not_exists]
@@ -538,8 +538,8 @@ def pointWeightsWithCircumcenter {n : ℕ} (i : Fin (n + 1)) : PointsWithCircumc
 theorem sum_pointWeightsWithCircumcenter {n : ℕ} (i : Fin (n + 1)) :
     ∑ j, pointWeightsWithCircumcenter i j = 1 := by
   convert sum_ite_eq' univ (pointIndex i) (Function.const _ (1 : ℝ)) with j
-  · cases j <;> simp [pointWeightsWithCircumcenter]
-  · simp
+  cases j <;> simp [pointWeightsWithCircumcenter]
+  simp
 
 /-- A single vertex, in terms of `pointsWithCircumcenter`. -/
 theorem point_eq_affineCombination_of_pointsWithCircumcenter {n : ℕ} (s : Simplex ℝ P n)
@@ -554,9 +554,9 @@ theorem point_eq_affineCombination_of_pointsWithCircumcenter {n : ℕ} (s : Simp
       (by simp [pointWeightsWithCircumcenter]) ?_
   intro i hi hn
   cases i
-  · have h : _ ≠ i := fun h => hn (h ▸ rfl)
-    simp [pointWeightsWithCircumcenter, h]
-  · rfl
+  have h : _ ≠ i := fun h => hn (h ▸ rfl)
+  simp [pointWeightsWithCircumcenter, h]
+  rfl
 
 /-- The weights for the centroid of some vertices of a simplex, in
 terms of `pointsWithCircumcenter`. -/
@@ -598,8 +598,8 @@ def circumcenterWeightsWithCircumcenter (n : ℕ) : PointsWithCircumcenterIndex 
 theorem sum_circumcenterWeightsWithCircumcenter (n : ℕ) :
     ∑ i, circumcenterWeightsWithCircumcenter n i = 1 := by
   convert sum_ite_eq' univ circumcenterIndex (Function.const _ (1 : ℝ)) with j
-  · cases j <;> simp [circumcenterWeightsWithCircumcenter]
-  · simp
+  cases j <;> simp [circumcenterWeightsWithCircumcenter]
+  simp
 
 /-- The circumcenter of a simplex, in terms of `pointsWithCircumcenter`. -/
 theorem circumcenter_eq_affineCombination_of_pointsWithCircumcenter {n : ℕ} (s : Simplex ℝ P n) :
@@ -625,8 +625,8 @@ theorem sum_reflectionCircumcenterWeightsWithCircumcenter {n : ℕ} {i₁ i₂ :
   simp_rw [sum_pointsWithCircumcenter, reflectionCircumcenterWeightsWithCircumcenter, sum_ite,
     sum_const, filter_or, filter_eq']
   rw [card_union_of_disjoint]
-  · set_option simprocs false in simp
-  · simpa only [if_true, mem_univ, disjoint_singleton] using h
+  set_option simprocs false in simp
+  simpa only [if_true, mem_univ, disjoint_singleton] using h
 
 /-- The reflection of the circumcenter of a simplex in an edge, in
 terms of `pointsWithCircumcenter`. -/
@@ -677,10 +677,10 @@ theorem cospherical_iff_exists_mem_of_complete {s : AffineSubspace ℝ P} {ps : 
     [Nonempty s] [HasOrthogonalProjection s.direction] :
     Cospherical ps ↔ ∃ center ∈ s, ∃ radius : ℝ, ∀ p ∈ ps, dist p center = radius := by
   constructor
-  · rintro ⟨c, hcr⟩
-    rw [exists_dist_eq_iff_exists_dist_orthogonalProjection_eq h c] at hcr
-    exact ⟨orthogonalProjection s c, orthogonalProjection_mem _, hcr⟩
-  · exact fun ⟨c, _, hd⟩ => ⟨c, hd⟩
+  rintro ⟨c, hcr⟩
+  rw [exists_dist_eq_iff_exists_dist_orthogonalProjection_eq h c] at hcr
+  exact ⟨orthogonalProjection s c, orthogonalProjection_mem _, hcr⟩
+  exact fun ⟨c, _, hd⟩ => ⟨c, hd⟩
 
 /-- Given a nonempty affine subspace, whose direction is
 finite-dimensional, that contains a set of points, those points are
@@ -862,18 +862,18 @@ theorem eq_or_eq_reflection_of_dist_eq {n : ℕ} {s : Simplex ℝ P n} {p p₁ p
     real_inner_smul_left, real_inner_smul_left, real_inner_smul_right, real_inner_smul_right, ←
     mul_assoc, ← mul_assoc] at hd₁
   by_cases hp : p = s.orthogonalProjectionSpan p
-  · rw [Simplex.orthogonalProjectionSpan] at hp
-    rw [hp₁, hp₂, ← hp]
-    simp only [true_or_iff, eq_self_iff_true, smul_zero, vsub_self]
-  · have hz : ⟪p -ᵥ orthogonalProjection span_s p, p -ᵥ orthogonalProjection span_s p⟫ ≠ 0 := by
-      simpa only [Ne, vsub_eq_zero_iff_eq, inner_self_eq_zero] using hp
-    rw [mul_left_inj' hz, mul_self_eq_mul_self_iff] at hd₁
-    rw [hp₁, hp₂]
-    cases' hd₁ with hd₁ hd₁
-    · left
-      rw [hd₁]
-    · right
-      rw [hd₁, reflection_vadd_smul_vsub_orthogonalProjection p r₂ s.circumcenter_mem_affineSpan,
-        neg_smul]
+  rw [Simplex.orthogonalProjectionSpan] at hp
+  rw [hp₁, hp₂, ← hp]
+  simp only [true_or_iff, eq_self_iff_true, smul_zero, vsub_self]
+  have hz : ⟪p -ᵥ orthogonalProjection span_s p, p -ᵥ orthogonalProjection span_s p⟫ ≠ 0 := by
+    simpa only [Ne, vsub_eq_zero_iff_eq, inner_self_eq_zero] using hp
+  rw [mul_left_inj' hz, mul_self_eq_mul_self_iff] at hd₁
+  rw [hp₁, hp₂]
+  cases' hd₁ with hd₁ hd₁
+  left
+  rw [hd₁]
+  right
+  rw [hd₁, reflection_vadd_smul_vsub_orthogonalProjection p r₂ s.circumcenter_mem_affineSpan,
+    neg_smul]
 
 end EuclideanGeometry

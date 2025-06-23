@@ -83,7 +83,7 @@ theorem exist_integer_multiples {ι : Type*} (s : Finset ι) (f : ι → S) :
     ∃ b : M, ∀ i ∈ s, IsLocalization.IsInteger R ((b : R) • f i) := by
   haveI := Classical.propDecidable
   refine ⟨∏ i ∈ s, (sec M (f i)).2, fun i hi => ⟨?_, ?_⟩⟩
-  · exact (∏ j ∈ s.erase i, (sec M (f j)).2) * (sec M (f i)).1
+  exact (∏ j ∈ s.erase i, (sec M (f j)).2) * (sec M (f i)).1
   rw [RingHom.map_mul, sec_spec', ← mul_assoc, ← (algebraMap R S).map_mul, ← Algebra.smul_def]
   congr 2
   refine _root_.trans ?_ (map_prod (Submonoid.subtype M) _ _).symm
@@ -135,10 +135,10 @@ theorem finsetIntegerMultiple_image [DecidableEq R] (s : Finset S) :
   rw [Finset.coe_image]
   ext
   constructor
-  · rintro ⟨_, ⟨x, -, rfl⟩, rfl⟩
-    rw [map_integerMultiple]
-    exact Set.mem_image_of_mem _ x.prop
-  · rintro ⟨x, hx, rfl⟩
-    exact ⟨_, ⟨⟨x, hx⟩, s.mem_attach _, rfl⟩, map_integerMultiple M s id _⟩
+  rintro ⟨_, ⟨x, -, rfl⟩, rfl⟩
+  rw [map_integerMultiple]
+  exact Set.mem_image_of_mem _ x.prop
+  rintro ⟨x, hx, rfl⟩
+  exact ⟨_, ⟨⟨x, hx⟩, s.mem_attach _, rfl⟩, map_integerMultiple M s id _⟩
 
 end IsLocalization

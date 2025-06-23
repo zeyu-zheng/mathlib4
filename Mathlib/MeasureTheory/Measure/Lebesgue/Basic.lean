@@ -106,18 +106,18 @@ theorem volume_closedBall (a r : ℝ) : volume (Metric.closedBall a r) = ofReal 
 @[simp]
 theorem volume_emetric_ball (a : ℝ) (r : ℝ≥0∞) : volume (EMetric.ball a r) = 2 * r := by
   rcases eq_or_ne r ∞ with (rfl | hr)
-  · rw [Metric.emetric_ball_top, volume_univ, two_mul, _root_.top_add]
-  · lift r to ℝ≥0 using hr
-    rw [Metric.emetric_ball_nnreal, volume_ball, two_mul, ← NNReal.coe_add,
-      ENNReal.ofReal_coe_nnreal, ENNReal.coe_add, two_mul]
+  rw [Metric.emetric_ball_top, volume_univ, two_mul, _root_.top_add]
+  lift r to ℝ≥0 using hr
+  rw [Metric.emetric_ball_nnreal, volume_ball, two_mul, ← NNReal.coe_add,
+    ENNReal.ofReal_coe_nnreal, ENNReal.coe_add, two_mul]
 
 @[simp]
 theorem volume_emetric_closedBall (a : ℝ) (r : ℝ≥0∞) : volume (EMetric.closedBall a r) = 2 * r := by
   rcases eq_or_ne r ∞ with (rfl | hr)
-  · rw [EMetric.closedBall_top, volume_univ, two_mul, _root_.top_add]
-  · lift r to ℝ≥0 using hr
-    rw [Metric.emetric_closedBall_nnreal, volume_closedBall, two_mul, ← NNReal.coe_add,
-      ENNReal.ofReal_coe_nnreal, ENNReal.coe_add, two_mul]
+  rw [EMetric.closedBall_top, volume_univ, two_mul, _root_.top_add]
+  lift r to ℝ≥0 using hr
+  rw [Metric.emetric_closedBall_nnreal, volume_closedBall, two_mul, ← NNReal.coe_add,
+    ENNReal.ofReal_coe_nnreal, ENNReal.coe_add, two_mul]
 
 instance noAtoms_volume : NoAtoms (volume : Measure ℝ) :=
   ⟨fun _ => volume_singleton⟩
@@ -168,9 +168,9 @@ instance isFiniteMeasure_restrict_Ioo (x y : ℝ) : IsFiniteMeasure (volume.rest
 
 theorem volume_le_diam (s : Set ℝ) : volume s ≤ EMetric.diam s := by
   by_cases hs : Bornology.IsBounded s
-  · rw [Real.ediam_eq hs, ← volume_Icc]
-    exact volume.mono hs.subset_Icc_sInf_sSup
-  · rw [Metric.ediam_of_unbounded hs]; exact le_top
+  rw [Real.ediam_eq hs, ← volume_Icc]
+  exact volume.mono hs.subset_Icc_sInf_sSup
+  rw [Metric.ediam_of_unbounded hs]; exact le_top
 
 theorem _root_.Filter.Eventually.volume_pos_of_nhds_real {p : ℝ → Prop} {a : ℝ}
     (h : ∀ᶠ x in 𝓝 a, p x) : (0 : ℝ≥0∞) < volume { x | p x } := by
@@ -258,13 +258,13 @@ theorem smul_map_volume_mul_left {a : ℝ} (h : a ≠ 0) :
     ENNReal.ofReal |a| • Measure.map (a * ·) volume = volume := by
   refine (Real.measure_ext_Ioo_rat fun p q => ?_).symm
   cases' lt_or_gt_of_ne h with h h
-  · simp only [Real.volume_Ioo, Measure.smul_apply, ← ENNReal.ofReal_mul (le_of_lt <| neg_pos.2 h),
-      Measure.map_apply (measurable_const_mul a) measurableSet_Ioo, neg_sub_neg, neg_mul,
-      preimage_const_mul_Ioo_of_neg _ _ h, abs_of_neg h, mul_sub, smul_eq_mul,
-      mul_div_cancel₀ _ (ne_of_lt h)]
-  · simp only [Real.volume_Ioo, Measure.smul_apply, ← ENNReal.ofReal_mul (le_of_lt h),
-      Measure.map_apply (measurable_const_mul a) measurableSet_Ioo, preimage_const_mul_Ioo _ _ h,
-      abs_of_pos h, mul_sub, mul_div_cancel₀ _ (ne_of_gt h), smul_eq_mul]
+  simp only [Real.volume_Ioo, Measure.smul_apply, ← ENNReal.ofReal_mul (le_of_lt <| neg_pos.2 h),
+    Measure.map_apply (measurable_const_mul a) measurableSet_Ioo, neg_sub_neg, neg_mul,
+    preimage_const_mul_Ioo_of_neg _ _ h, abs_of_neg h, mul_sub, smul_eq_mul,
+    mul_div_cancel₀ _ (ne_of_lt h)]
+  simp only [Real.volume_Ioo, Measure.smul_apply, ← ENNReal.ofReal_mul (le_of_lt h),
+    Measure.map_apply (measurable_const_mul a) measurableSet_Ioo, preimage_const_mul_Ioo _ _ h,
+    abs_of_pos h, mul_sub, mul_div_cancel₀ _ (ne_of_gt h), smul_eq_mul]
 
 theorem map_volume_mul_left {a : ℝ} (h : a ≠ 0) :
     Measure.map (a * ·) volume = ENNReal.ofReal |a⁻¹| • volume := by
@@ -358,20 +358,20 @@ theorem map_matrix_volume_pi_eq_smul_volume_pi [DecidableEq ι] {M : Matrix ι �
   -- This follows from the cases we have already proved, of diagonal matrices and transvections,
   -- as these matrices generate all invertible matrices.
   apply diagonal_transvection_induction_of_det_ne_zero _ M hM
-  · intro D hD
-    conv_rhs => rw [← smul_map_diagonal_volume_pi hD]
-    rw [smul_smul, ← ENNReal.ofReal_mul (abs_nonneg _), ← abs_mul, inv_mul_cancel hD, abs_one,
-      ENNReal.ofReal_one, one_smul]
-  · intro t
-    simp_rw [Matrix.TransvectionStruct.det, _root_.inv_one, abs_one, ENNReal.ofReal_one, one_smul,
-      (volume_preserving_transvectionStruct _).map_eq]
-  · intro A B _ _ IHA IHB
-    rw [toLin'_mul, det_mul, LinearMap.coe_comp, ← Measure.map_map, IHB, Measure.map_smul, IHA,
-      smul_smul, ← ENNReal.ofReal_mul (abs_nonneg _), ← abs_mul, mul_comm, mul_inv]
-    · apply Continuous.measurable
-      apply LinearMap.continuous_on_pi
-    · apply Continuous.measurable
-      apply LinearMap.continuous_on_pi
+  intro D hD
+  conv_rhs => rw [← smul_map_diagonal_volume_pi hD]
+  rw [smul_smul, ← ENNReal.ofReal_mul (abs_nonneg _), ← abs_mul, inv_mul_cancel hD, abs_one,
+    ENNReal.ofReal_one, one_smul]
+  intro t
+  simp_rw [Matrix.TransvectionStruct.det, _root_.inv_one, abs_one, ENNReal.ofReal_one, one_smul,
+    (volume_preserving_transvectionStruct _).map_eq]
+  intro A B _ _ IHA IHB
+  rw [toLin'_mul, det_mul, LinearMap.coe_comp, ← Measure.map_map, IHB, Measure.map_smul, IHA,
+    smul_smul, ← ENNReal.ofReal_mul (abs_nonneg _), ← abs_mul, mul_comm, mul_inv]
+  apply Continuous.measurable
+  apply LinearMap.continuous_on_pi
+  apply Continuous.measurable
+  apply LinearMap.continuous_on_pi
 
 open Classical in
 /-- Any invertible linear map rescales Lebesgue measure through the absolute value of its
@@ -460,19 +460,19 @@ theorem volume_regionBetween_eq_lintegral' (hf : Measurable f) (hg : Measurable 
     (hs : MeasurableSet s) :
     μ.prod volume (regionBetween f g s) = ∫⁻ y in s, ENNReal.ofReal ((g - f) y) ∂μ := by
     rw [Measure.prod_apply]
-    · have h :
-        (fun x => volume { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) }) =
-          s.indicator fun x => ENNReal.ofReal (g x - f x) := by
-        funext x
-        rw [indicator_apply]
-        split_ifs with h
-        · have hx : { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) } = Ioo (f x) (g x) := by simp [h, Ioo]
-          simp only [hx, Real.volume_Ioo, sub_zero]
-        · have hx : { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) } = ∅ := by simp [h]
-          simp only [hx, measure_empty]
-      dsimp only [regionBetween, preimage_setOf_eq]
-      rw [h, lintegral_indicator] <;> simp only [hs, Pi.sub_apply]
-    · exact measurableSet_regionBetween hf hg hs
+    have h :
+      (fun x => volume { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) }) =
+        s.indicator fun x => ENNReal.ofReal (g x - f x) := by
+      funext x
+      rw [indicator_apply]
+      split_ifs with h
+      have hx : { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) } = Ioo (f x) (g x) := by simp [h, Ioo]
+      simp only [hx, Real.volume_Ioo, sub_zero]
+      have hx : { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) } = ∅ := by simp [h]
+      simp only [hx, measure_empty]
+    dsimp only [regionBetween, preimage_setOf_eq]
+    rw [h, lintegral_indicator] <;> simp only [hs, Pi.sub_apply]
+    exact measurableSet_regionBetween hf hg hs
 
 /-- The volume of the region between two almost everywhere measurable functions on a measurable set
     can be represented as a Lebesgue integral. -/
@@ -495,12 +495,12 @@ theorem volume_regionBetween_eq_lintegral [SFinite μ] (hf : AEMeasurable f (μ.
   rw [lintegral_congr_ae h₁, ←
     volume_regionBetween_eq_lintegral' hf.measurable_mk hg.measurable_mk hs]
   convert h₂ using 1
-  · rw [Measure.restrict_prod_eq_prod_univ]
-    exact (Measure.restrict_eq_self _ (regionBetween_subset f g s)).symm
-  · rw [Measure.restrict_prod_eq_prod_univ]
-    exact
-      (Measure.restrict_eq_self _
-          (regionBetween_subset (AEMeasurable.mk f hf) (AEMeasurable.mk g hg) s)).symm
+  rw [Measure.restrict_prod_eq_prod_univ]
+  exact (Measure.restrict_eq_self _ (regionBetween_subset f g s)).symm
+  rw [Measure.restrict_prod_eq_prod_univ]
+  exact
+    (Measure.restrict_eq_self _
+        (regionBetween_subset (AEMeasurable.mk f hf) (AEMeasurable.mk g hg) s)).symm
 
 /-- The region between two a.e.-measurable functions on a null-measurable set is null-measurable. -/
 lemma nullMeasurableSet_regionBetween (μ : Measure α)
@@ -509,8 +509,8 @@ lemma nullMeasurableSet_regionBetween (μ : Measure α)
     NullMeasurableSet {p : α × ℝ | p.1 ∈ s ∧ p.snd ∈ Ioo (f p.fst) (g p.fst)} (μ.prod volume) := by
   refine NullMeasurableSet.inter
           (s_mble.preimage quasiMeasurePreserving_fst) (NullMeasurableSet.inter ?_ ?_)
-  · exact nullMeasurableSet_lt (AEMeasurable.fst f_mble) measurable_snd.aemeasurable
-  · exact nullMeasurableSet_lt measurable_snd.aemeasurable (AEMeasurable.fst g_mble)
+  exact nullMeasurableSet_lt (AEMeasurable.fst f_mble) measurable_snd.aemeasurable
+  exact nullMeasurableSet_lt measurable_snd.aemeasurable (AEMeasurable.fst g_mble)
 
 /-- The region between two a.e.-measurable functions on a null-measurable set is null-measurable;
 a version for the region together with the graph of the upper function. -/
@@ -520,12 +520,12 @@ lemma nullMeasurableSet_region_between_oc (μ : Measure α)
     NullMeasurableSet {p : α × ℝ | p.1 ∈ s ∧ p.snd ∈ Ioc (f p.fst) (g p.fst)} (μ.prod volume) := by
   refine NullMeasurableSet.inter
           (s_mble.preimage quasiMeasurePreserving_fst) (NullMeasurableSet.inter ?_ ?_)
-  · exact nullMeasurableSet_lt (AEMeasurable.fst f_mble) measurable_snd.aemeasurable
-  · change NullMeasurableSet {p : α × ℝ | p.snd ≤ g p.fst} (μ.prod volume)
-    rw [show {p : α × ℝ | p.snd ≤ g p.fst} = {p : α × ℝ | g p.fst < p.snd}ᶜ by
-          ext p
-          simp only [mem_setOf_eq, mem_compl_iff, not_lt]]
-    exact (nullMeasurableSet_lt (AEMeasurable.fst g_mble) measurable_snd.aemeasurable).compl
+  exact nullMeasurableSet_lt (AEMeasurable.fst f_mble) measurable_snd.aemeasurable
+  change NullMeasurableSet {p : α × ℝ | p.snd ≤ g p.fst} (μ.prod volume)
+  rw [show {p : α × ℝ | p.snd ≤ g p.fst} = {p : α × ℝ | g p.fst < p.snd}ᶜ by
+        ext p
+        simp only [mem_setOf_eq, mem_compl_iff, not_lt]]
+  exact (nullMeasurableSet_lt (AEMeasurable.fst g_mble) measurable_snd.aemeasurable).compl
 
 /-- The region between two a.e.-measurable functions on a null-measurable set is null-measurable;
 a version for the region together with the graph of the lower function. -/
@@ -535,12 +535,12 @@ lemma nullMeasurableSet_region_between_co (μ : Measure α)
     NullMeasurableSet {p : α × ℝ | p.1 ∈ s ∧ p.snd ∈ Ico (f p.fst) (g p.fst)} (μ.prod volume) := by
   refine NullMeasurableSet.inter
           (s_mble.preimage quasiMeasurePreserving_fst) (NullMeasurableSet.inter ?_ ?_)
-  · change NullMeasurableSet {p : α × ℝ | f p.fst ≤ p.snd} (μ.prod volume)
-    rw [show {p : α × ℝ | f p.fst ≤ p.snd} = {p : α × ℝ | p.snd < f p.fst}ᶜ by
-          ext p
-          simp only [mem_setOf_eq, mem_compl_iff, not_lt]]
-    exact (nullMeasurableSet_lt measurable_snd.aemeasurable (AEMeasurable.fst f_mble)).compl
-  · exact nullMeasurableSet_lt measurable_snd.aemeasurable (AEMeasurable.fst g_mble)
+  change NullMeasurableSet {p : α × ℝ | f p.fst ≤ p.snd} (μ.prod volume)
+  rw [show {p : α × ℝ | f p.fst ≤ p.snd} = {p : α × ℝ | p.snd < f p.fst}ᶜ by
+        ext p
+        simp only [mem_setOf_eq, mem_compl_iff, not_lt]]
+  exact (nullMeasurableSet_lt measurable_snd.aemeasurable (AEMeasurable.fst f_mble)).compl
+  exact nullMeasurableSet_lt measurable_snd.aemeasurable (AEMeasurable.fst g_mble)
 
 /-- The region between two a.e.-measurable functions on a null-measurable set is null-measurable;
 a version for the region together with the graphs of both functions. -/
@@ -550,16 +550,16 @@ lemma nullMeasurableSet_region_between_cc (μ : Measure α)
     NullMeasurableSet {p : α × ℝ | p.1 ∈ s ∧ p.snd ∈ Icc (f p.fst) (g p.fst)} (μ.prod volume) := by
   refine NullMeasurableSet.inter
           (s_mble.preimage quasiMeasurePreserving_fst) (NullMeasurableSet.inter ?_ ?_)
-  · change NullMeasurableSet {p : α × ℝ | f p.fst ≤ p.snd} (μ.prod volume)
-    rw [show {p : α × ℝ | f p.fst ≤ p.snd} = {p : α × ℝ | p.snd < f p.fst}ᶜ by
-          ext p
-          simp only [mem_setOf_eq, mem_compl_iff, not_lt]]
-    exact (nullMeasurableSet_lt measurable_snd.aemeasurable (AEMeasurable.fst f_mble)).compl
-  · change NullMeasurableSet {p : α × ℝ | p.snd ≤ g p.fst} (μ.prod volume)
-    rw [show {p : α × ℝ | p.snd ≤ g p.fst} = {p : α × ℝ | g p.fst < p.snd}ᶜ by
-          ext p
-          simp only [mem_setOf_eq, mem_compl_iff, not_lt]]
-    exact (nullMeasurableSet_lt (AEMeasurable.fst g_mble) measurable_snd.aemeasurable).compl
+  change NullMeasurableSet {p : α × ℝ | f p.fst ≤ p.snd} (μ.prod volume)
+  rw [show {p : α × ℝ | f p.fst ≤ p.snd} = {p : α × ℝ | p.snd < f p.fst}ᶜ by
+        ext p
+        simp only [mem_setOf_eq, mem_compl_iff, not_lt]]
+  exact (nullMeasurableSet_lt measurable_snd.aemeasurable (AEMeasurable.fst f_mble)).compl
+  change NullMeasurableSet {p : α × ℝ | p.snd ≤ g p.fst} (μ.prod volume)
+  rw [show {p : α × ℝ | p.snd ≤ g p.fst} = {p : α × ℝ | g p.fst < p.snd}ᶜ by
+        ext p
+        simp only [mem_setOf_eq, mem_compl_iff, not_lt]]
+  exact (nullMeasurableSet_lt (AEMeasurable.fst g_mble) measurable_snd.aemeasurable).compl
 
 end regionBetween
 
@@ -580,22 +580,22 @@ theorem ae_restrict_of_ae_restrict_inter_Ioo {μ : Measure ℝ} [NoAtoms μ] {s 
   have : s ⊆ s \ u ∪ ⋃ p ∈ A, s ∩ T p := by
     intro x hx
     by_cases h'x : x ∈ ⋃ i : ↥s × ↥s, T i
-    · rw [← hA] at h'x
-      obtain ⟨p, pA, xp⟩ : ∃ p : ↥s × ↥s, p ∈ A ∧ x ∈ T p := by
-        simpa only [mem_iUnion, exists_prop, SetCoe.exists, exists_and_right] using h'x
-      right
-      exact mem_biUnion pA ⟨hx, xp⟩
-    · exact Or.inl ⟨hx, h'x⟩
+    rw [← hA] at h'x
+    obtain ⟨p, pA, xp⟩ : ∃ p : ↥s × ↥s, p ∈ A ∧ x ∈ T p := by
+      simpa only [mem_iUnion, exists_prop, SetCoe.exists, exists_and_right] using h'x
+    right
+    exact mem_biUnion pA ⟨hx, xp⟩
+    exact Or.inl ⟨hx, h'x⟩
   apply ae_restrict_of_ae_restrict_of_subset this
   rw [ae_restrict_union_iff, ae_restrict_biUnion_iff _ A_count]
   constructor
-  · have : μ.restrict (s \ u) = 0 := by simp only [restrict_eq_zero, hfinite.measure_zero]
-    simp only [this, ae_zero, eventually_bot]
-  · rintro ⟨⟨a, as⟩, ⟨b, bs⟩⟩ -
-    dsimp [T]
-    rcases le_or_lt b a with (hba | hab)
-    · simp only [Ioo_eq_empty_of_le hba, inter_empty, restrict_empty, ae_zero, eventually_bot]
-    · exact h a b as bs hab
+  have : μ.restrict (s \ u) = 0 := by simp only [restrict_eq_zero, hfinite.measure_zero]
+  simp only [this, ae_zero, eventually_bot]
+  rintro ⟨⟨a, as⟩, ⟨b, bs⟩⟩ -
+  dsimp [T]
+  rcases le_or_lt b a with (hba | hab)
+  simp only [Ioo_eq_empty_of_le hba, inter_empty, restrict_empty, ae_zero, eventually_bot]
+  exact h a b as bs hab
 
 /-- Consider a real set `s`. If a property is true almost everywhere in `s ∩ (a, b)` for
 all `a, b ∈ s`, then it is true almost everywhere in `s`. Formulated with bare membership.
@@ -617,14 +617,14 @@ theorem ae_of_mem_of_ae_of_mem_inter_Ioo {μ : Measure ℝ} [NoAtoms μ] {s : Se
     rintro ⟨⟨a, as⟩, ⟨b, bs⟩⟩ -
     change ∀ᵐ x : ℝ ∂μ, x ∈ s ∩ Ioo a b → p x
     rcases le_or_lt b a with (hba | hab)
-    · simp only [Ioo_eq_empty_of_le hba, inter_empty, IsEmpty.forall_iff, eventually_true,
-        mem_empty_iff_false]
-    · exact h a b as bs hab
+    simp only [Ioo_eq_empty_of_le hba, inter_empty, IsEmpty.forall_iff, eventually_true,
+      mem_empty_iff_false]
+    exact h a b as bs hab
   filter_upwards [M, M'] with x hx h'x
   intro xs
   by_cases Hx : x ∈ ⋃ i : ↥s × ↥s, T i
-  · rw [← hA] at Hx
-    obtain ⟨p, pA, xp⟩ : ∃ p : ↥s × ↥s, p ∈ A ∧ x ∈ T p := by
-      simpa only [mem_iUnion, exists_prop, SetCoe.exists, exists_and_right] using Hx
-    apply h'x p pA ⟨xs, xp⟩
-  · exact False.elim (hx ⟨xs, Hx⟩)
+  rw [← hA] at Hx
+  obtain ⟨p, pA, xp⟩ : ∃ p : ↥s × ↥s, p ∈ A ∧ x ∈ T p := by
+    simpa only [mem_iUnion, exists_prop, SetCoe.exists, exists_and_right] using Hx
+  apply h'x p pA ⟨xs, xp⟩
+  exact False.elim (hx ⟨xs, Hx⟩)

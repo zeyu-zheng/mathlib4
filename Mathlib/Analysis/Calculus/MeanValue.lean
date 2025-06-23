@@ -104,23 +104,23 @@ theorem image_le_of_liminf_slope_right_lt_deriv_boundary' {f f' : ℝ → ℝ} {
   apply this.Icc_subset_of_forall_exists_gt ha
   rintro x ⟨hxB : f x ≤ B x, xab⟩ y hy
   cases' hxB.lt_or_eq with hxB hxB
-  · -- If `f x < B x`, then all we need is continuity of both sides
-    refine nonempty_of_mem (inter_mem ?_ (Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, hy⟩))
-    have : ∀ᶠ x in 𝓝[Icc a b] x, f x < B x :=
-      A x (Ico_subset_Icc_self xab) (IsOpen.mem_nhds (isOpen_lt continuous_fst continuous_snd) hxB)
-    have : ∀ᶠ x in 𝓝[>] x, f x < B x := nhdsWithin_le_of_mem (Icc_mem_nhdsWithin_Ioi xab) this
-    exact this.mono fun y => le_of_lt
-  · rcases exists_between (bound x xab hxB) with ⟨r, hfr, hrB⟩
-    specialize hf' x xab r hfr
-    have HB : ∀ᶠ z in 𝓝[>] x, r < slope B x z :=
-      (hasDerivWithinAt_iff_tendsto_slope' <| lt_irrefl x).1 (hB' x xab).Ioi_of_Ici
-        (Ioi_mem_nhds hrB)
-    obtain ⟨z, hfz, hzB, hz⟩ : ∃ z, slope f x z < r ∧ r < slope B x z ∧ z ∈ Ioc x y :=
-      (hf'.and_eventually (HB.and (Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, hy⟩))).exists
-    refine ⟨z, ?_, hz⟩
-    have := (hfz.trans hzB).le
-    rwa [slope_def_field, slope_def_field, div_le_div_right (sub_pos.2 hz.1), hxB,
-      sub_le_sub_iff_right] at this
+  -- If `f x < B x`, then all we need is continuity of both sides
+  refine nonempty_of_mem (inter_mem ?_ (Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, hy⟩))
+  have : ∀ᶠ x in 𝓝[Icc a b] x, f x < B x :=
+    A x (Ico_subset_Icc_self xab) (IsOpen.mem_nhds (isOpen_lt continuous_fst continuous_snd) hxB)
+  have : ∀ᶠ x in 𝓝[>] x, f x < B x := nhdsWithin_le_of_mem (Icc_mem_nhdsWithin_Ioi xab) this
+  exact this.mono fun y => le_of_lt
+  rcases exists_between (bound x xab hxB) with ⟨r, hfr, hrB⟩
+  specialize hf' x xab r hfr
+  have HB : ∀ᶠ z in 𝓝[>] x, r < slope B x z :=
+    (hasDerivWithinAt_iff_tendsto_slope' <| lt_irrefl x).1 (hB' x xab).Ioi_of_Ici
+      (Ioi_mem_nhds hrB)
+  obtain ⟨z, hfz, hzB, hz⟩ : ∃ z, slope f x z < r ∧ r < slope B x z ∧ z ∈ Ioc x y :=
+    (hf'.and_eventually (HB.and (Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, hy⟩))).exists
+  refine ⟨z, ?_, hz⟩
+  have := (hfz.trans hzB).le
+  rwa [slope_def_field, slope_def_field, div_le_div_right (sub_pos.2 hz.1), hxB,
+    sub_le_sub_iff_right] at this
 
 /-- General fencing theorem for continuous functions with an estimate on the derivative.
 Let `f` and `B` be continuous functions on `[a, b]` such that
@@ -158,13 +158,13 @@ theorem image_le_of_liminf_slope_right_le_deriv_boundary {f : ℝ → ℝ} {a b 
     ∀ ⦃x⦄, x ∈ Icc a b → f x ≤ B x := by
   have Hr : ∀ x ∈ Icc a b, ∀ r > 0, f x ≤ B x + r * (x - a) := fun x hx r hr => by
     apply image_le_of_liminf_slope_right_lt_deriv_boundary' hf bound
-    · rwa [sub_self, mul_zero, add_zero]
-    · exact hB.add (continuousOn_const.mul (continuousOn_id.sub continuousOn_const))
-    · intro x hx
-      exact (hB' x hx).add (((hasDerivWithinAt_id x (Ici x)).sub_const a).const_mul r)
-    · intro x _ _
-      rw [mul_one]
-      exact (lt_add_iff_pos_right _).2 hr
+    rwa [sub_self, mul_zero, add_zero]
+    exact hB.add (continuousOn_const.mul (continuousOn_id.sub continuousOn_const))
+    intro x hx
+    exact (hB' x hx).add (((hasDerivWithinAt_id x (Ici x)).sub_const a).const_mul r)
+    intro x _ _
+    rw [mul_one]
+    exact (lt_add_iff_pos_right _).2 hr
     exact hx
   intro x hx
   have : ContinuousWithinAt (fun r => B x + r * (x - a)) (Ioi 0) 0 :=
@@ -785,7 +785,7 @@ theorem Convex.mul_sub_le_image_sub_of_le_deriv {D : Set ℝ} (hD : Convex ℝ D
     ∀ᵉ (x ∈ D) (y ∈ D), x ≤ y → C * (y - x) ≤ f y - f x := by
   intro x hx y hy hxy
   cases' eq_or_lt_of_le hxy with hxy' hxy'
-  · rw [hxy', sub_self, sub_self, mul_zero]
+  rw [hxy', sub_self, sub_self, mul_zero]
   have hxyD : Icc x y ⊆ D := hD.ordConnected.out hx hy
   have hxyD' : Ioo x y ⊆ interior D :=
     subset_sUnion_of_mem ⟨isOpen_Ioo, Ioo_subset_Icc_self.trans hxyD⟩
@@ -1006,8 +1006,8 @@ theorem domain_mvt {f : E → ℝ} {s : Set E} {x y : E} {f' : E → E →L[ℝ]
   -- apply 1-variable mean value theorem to pullback
   have hMVT : ∃ t ∈ Ioo (0 : ℝ) 1, f' (g t) (y - x) = (f (g 1) - f (g 0)) / (1 - 0) := by
     refine exists_hasDerivAt_eq_slope (f ∘ g) _ (by norm_num) ?_ ?_
-    · exact fun t Ht => (hfg t Ht).continuousWithinAt
-    · exact fun t Ht => (hfg t <| hsub Ht).hasDerivAt (Icc_mem_nhds Ht.1 Ht.2)
+    exact fun t Ht => (hfg t Ht).continuousWithinAt
+    exact fun t Ht => (hfg t <| hsub Ht).hasDerivAt (Icc_mem_nhds Ht.1 Ht.2)
   -- reinterpret on domain
   rcases hMVT with ⟨t, Ht, hMVT'⟩
   rw [segment_eq_image_lineMap, exists_mem_image]

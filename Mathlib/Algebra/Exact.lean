@@ -117,32 +117,32 @@ lemma of_ladder_addEquiv_of_exact (comm₁₂ : g₁₂.comp e₁ = AddMonoidHom
   have h₂₃ := DFunLike.congr_fun comm₂₃
   dsimp at h₁₂ h₂₃
   apply of_comp_eq_zero_of_ker_in_range
-  · ext y₁
-    obtain ⟨x₁, rfl⟩ := e₁.surjective y₁
-    dsimp
-    rw [h₁₂, h₂₃, H.apply_apply_eq_zero, map_zero]
-  · intro y₂ hx₂
-    obtain ⟨x₂, rfl⟩ := e₂.surjective y₂
-    obtain ⟨x₁, rfl⟩ := (H x₂).1 (e₃.injective (by rw [← h₂₃, hx₂, map_zero]))
-    exact ⟨e₁ x₁, by rw [h₁₂]⟩
+  ext y₁
+  obtain ⟨x₁, rfl⟩ := e₁.surjective y₁
+  dsimp
+  rw [h₁₂, h₂₃, H.apply_apply_eq_zero, map_zero]
+  intro y₂ hx₂
+  obtain ⟨x₂, rfl⟩ := e₂.surjective y₂
+  obtain ⟨x₁, rfl⟩ := (H x₂).1 (e₃.injective (by rw [← h₂₃, hx₂, map_zero]))
+  exact ⟨e₁ x₁, by rw [h₁₂]⟩
 
 lemma of_ladder_addEquiv_of_exact' (comm₁₂ : g₁₂.comp e₁ = AddMonoidHom.comp e₂ f₁₂)
     (comm₂₃ : g₂₃.comp e₂ = AddMonoidHom.comp e₃ f₂₃) (H : Exact g₁₂ g₂₃) : Exact f₁₂ f₂₃ := by
   refine of_ladder_addEquiv_of_exact e₁.symm e₂.symm e₃.symm ?_ ?_ H
-  · ext y₁
-    obtain ⟨x₁, rfl⟩ := e₁.surjective y₁
-    apply e₂.injective
-    simpa using DFunLike.congr_fun comm₁₂.symm x₁
-  · ext y₂
-    obtain ⟨x₂, rfl⟩ := e₂.surjective y₂
-    apply e₃.injective
-    simpa using DFunLike.congr_fun comm₂₃.symm x₂
+  ext y₁
+  obtain ⟨x₁, rfl⟩ := e₁.surjective y₁
+  apply e₂.injective
+  simpa using DFunLike.congr_fun comm₁₂.symm x₁
+  ext y₂
+  obtain ⟨x₂, rfl⟩ := e₂.surjective y₂
+  apply e₃.injective
+  simpa using DFunLike.congr_fun comm₂₃.symm x₂
 
 lemma iff_of_ladder_addEquiv (comm₁₂ : g₁₂.comp e₁ = AddMonoidHom.comp e₂ f₁₂)
     (comm₂₃ : g₂₃.comp e₂ = AddMonoidHom.comp e₃ f₂₃) : Exact g₁₂ g₂₃ ↔ Exact f₁₂ f₂₃ := by
   constructor
-  · exact of_ladder_addEquiv_of_exact' e₁ e₂ e₃ comm₁₂ comm₂₃
-  · exact of_ladder_addEquiv_of_exact e₁ e₂ e₃ comm₁₂ comm₂₃
+  exact of_ladder_addEquiv_of_exact' e₁ e₂ e₃ comm₁₂ comm₂₃
+  exact of_ladder_addEquiv_of_exact e₁ e₂ e₃ comm₁₂ comm₂₃
 
 end
 
@@ -324,19 +324,19 @@ theorem Exact.split_tfae' (h : Function.Exact f g) :
       Function.Surjective g ∧ ∃ l, l ∘ₗ f = LinearMap.id,
       ∃ e : N ≃ₗ[R] M × P, f = e.symm ∘ₗ LinearMap.inl R M P ∧ g = LinearMap.snd R M P ∘ₗ e] := by
   tfae_have 1 → 3
-  · rintro ⟨hf, l, hl⟩
-    exact ⟨_, (h.splitSurjectiveEquiv hf ⟨l, hl⟩).2⟩
+  rintro ⟨hf, l, hl⟩
+  exact ⟨_, (h.splitSurjectiveEquiv hf ⟨l, hl⟩).2⟩
   tfae_have 2 → 3
-  · rintro ⟨hg, l, hl⟩
-    exact ⟨_, (h.splitInjectiveEquiv hg ⟨l, hl⟩).2⟩
+  rintro ⟨hg, l, hl⟩
+  exact ⟨_, (h.splitInjectiveEquiv hg ⟨l, hl⟩).2⟩
   tfae_have 3 → 1
-  · rintro ⟨e, e₁, e₂⟩
-    have : Function.Injective f := e₁ ▸ e.symm.injective.comp LinearMap.inl_injective
-    refine ⟨this, ⟨_, ((h.splitSurjectiveEquiv this).symm ⟨e, e₁, e₂⟩).2⟩⟩
+  rintro ⟨e, e₁, e₂⟩
+  have : Function.Injective f := e₁ ▸ e.symm.injective.comp LinearMap.inl_injective
+  refine ⟨this, ⟨_, ((h.splitSurjectiveEquiv this).symm ⟨e, e₁, e₂⟩).2⟩⟩
   tfae_have 3 → 2
-  · rintro ⟨e, e₁, e₂⟩
-    have : Function.Surjective g := e₂ ▸ Prod.snd_surjective.comp e.surjective
-    refine ⟨this, ⟨_, ((h.splitInjectiveEquiv this).symm ⟨e, e₁, e₂⟩).2⟩⟩
+  rintro ⟨e, e₁, e₂⟩
+  have : Function.Surjective g := e₂ ▸ Prod.snd_surjective.comp e.surjective
+  refine ⟨this, ⟨_, ((h.splitInjectiveEquiv this).symm ⟨e, e₁, e₂⟩).2⟩⟩
   tfae_finish
 
 /-- Equivalent characterizations of split exact sequences. Also known as the **Splitting lemma**. -/
@@ -349,9 +349,9 @@ theorem Exact.split_tfae
       ∃ l, l ∘ₗ f = LinearMap.id,
       ∃ e : N ≃ₗ[R] M × P, f = e.symm ∘ₗ LinearMap.inl R M P ∧ g = LinearMap.snd R M P ∘ₗ e] := by
   tfae_have 1 ↔ 3
-  · simpa using (h.splitSurjectiveEquiv hf).nonempty_congr
+  simpa using (h.splitSurjectiveEquiv hf).nonempty_congr
   tfae_have 2 ↔ 3
-  · simpa using (h.splitInjectiveEquiv hg).nonempty_congr
+  simpa using (h.splitInjectiveEquiv hg).nonempty_congr
   tfae_finish
 
 end split

@@ -203,9 +203,9 @@ lemma isIntegralCurveOn_comp_add {dt : ℝ} :
     IsIntegralCurveOn γ v s ↔ IsIntegralCurveOn (γ ∘ (· + dt)) v { t | t + dt ∈ s } := by
   refine ⟨fun hγ ↦ hγ.comp_add _, fun hγ ↦ ?_⟩
   convert hγ.comp_add (-dt)
-  · ext t
-    simp only [Function.comp_apply, neg_add_cancel_right]
-  · simp only [mem_setOf_eq, neg_add_cancel_right, setOf_mem_eq]
+  ext t
+  simp only [Function.comp_apply, neg_add_cancel_right]
+  simp only [mem_setOf_eq, neg_add_cancel_right, setOf_mem_eq]
 
 lemma IsIntegralCurveAt.comp_add (hγ : IsIntegralCurveAt γ v t₀) (dt : ℝ) :
     IsIntegralCurveAt (γ ∘ (· + dt)) v (t₀ - dt) := by
@@ -220,9 +220,9 @@ lemma isIntegralCurveAt_comp_add {dt : ℝ} :
     IsIntegralCurveAt γ v t₀ ↔ IsIntegralCurveAt (γ ∘ (· + dt)) v (t₀ - dt) := by
   refine ⟨fun hγ ↦ hγ.comp_add _, fun hγ ↦ ?_⟩
   convert hγ.comp_add (-dt)
-  · ext t
-    simp only [Function.comp_apply, neg_add_cancel_right]
-  · simp only [sub_neg_eq_add, sub_add_cancel]
+  ext t
+  simp only [Function.comp_apply, neg_add_cancel_right]
+  simp only [sub_neg_eq_add, sub_add_cancel]
 
 lemma IsIntegralCurve.comp_add (hγ : IsIntegralCurve γ v) (dt : ℝ) :
     IsIntegralCurve (γ ∘ (· + dt)) v := by
@@ -254,10 +254,10 @@ lemma isIntegralCurveOn_comp_mul_ne_zero {a : ℝ} (ha : a ≠ 0) :
     IsIntegralCurveOn γ v s ↔ IsIntegralCurveOn (γ ∘ (· * a)) (a • v) { t | t * a ∈ s } := by
   refine ⟨fun hγ ↦ hγ.comp_mul a, fun hγ ↦ ?_⟩
   convert hγ.comp_mul a⁻¹
-  · ext t
-    simp only [Function.comp_apply, mul_assoc, inv_mul_eq_div, div_self ha, mul_one]
-  · simp only [smul_smul, inv_mul_eq_div, div_self ha, one_smul]
-  · simp only [mem_setOf_eq, mul_assoc, inv_mul_eq_div, div_self ha, mul_one, setOf_mem_eq]
+  ext t
+  simp only [Function.comp_apply, mul_assoc, inv_mul_eq_div, div_self ha, mul_one]
+  simp only [smul_smul, inv_mul_eq_div, div_self ha, one_smul]
+  simp only [mem_setOf_eq, mul_assoc, inv_mul_eq_div, div_self ha, mul_one, setOf_mem_eq]
 
 lemma IsIntegralCurveAt.comp_mul_ne_zero (hγ : IsIntegralCurveAt γ v t₀) {a : ℝ} (ha : a ≠ 0) :
     IsIntegralCurveAt (γ ∘ (· * a)) (a • v) (t₀ / a) := by
@@ -273,10 +273,10 @@ lemma isIntegralCurveAt_comp_mul_ne_zero {a : ℝ} (ha : a ≠ 0) :
     IsIntegralCurveAt γ v t₀ ↔ IsIntegralCurveAt (γ ∘ (· * a)) (a • v) (t₀ / a) := by
   refine ⟨fun hγ ↦ hγ.comp_mul_ne_zero ha, fun hγ ↦ ?_⟩
   convert hγ.comp_mul_ne_zero (inv_ne_zero ha)
-  · ext t
-    simp only [Function.comp_apply, mul_assoc, inv_mul_eq_div, div_self ha, mul_one]
-  · simp only [smul_smul, inv_mul_eq_div, div_self ha, one_smul]
-  · simp only [div_inv_eq_mul, div_mul_cancel₀ _ ha]
+  ext t
+  simp only [Function.comp_apply, mul_assoc, inv_mul_eq_div, div_self ha, mul_one]
+  simp only [smul_smul, inv_mul_eq_div, div_self ha, one_smul]
+  simp only [div_inv_eq_mul, div_mul_cancel₀ _ ha]
 
 lemma IsIntegralCurve.comp_mul (hγ : IsIntegralCurve γ v) (a : ℝ) :
     IsIntegralCurve (γ ∘ (· * a)) (a • v) := by
@@ -287,9 +287,9 @@ lemma isIntegralCurve_comp_mul_ne_zero {a : ℝ} (ha : a ≠ 0) :
     IsIntegralCurve γ v ↔ IsIntegralCurve (γ ∘ (· * a)) (a • v) := by
   refine ⟨fun hγ ↦ hγ.comp_mul _, fun hγ ↦ ?_⟩
   convert hγ.comp_mul a⁻¹
-  · ext t
-    simp only [Function.comp_apply, mul_assoc, inv_mul_eq_div, div_self ha, mul_one]
-  · simp only [smul_smul, inv_mul_eq_div, div_self ha, one_smul]
+  ext t
+  simp only [Function.comp_apply, mul_assoc, inv_mul_eq_div, div_self ha, mul_one]
+  simp only [smul_smul, inv_mul_eq_div, div_self ha, one_smul]
 
 /-- If the vector field `v` vanishes at `x₀`, then the constant curve at `x₀`
 is a global integral curve of `v`. -/
@@ -399,15 +399,15 @@ theorem isIntegralCurveAt_eventuallyEq_of_contMDiffAt (hγt₀ : I.IsInteriorPoi
       HasDerivAt ((extChartAt I (g t₀)) ∘ g) ((fun _ ↦ v') t (((extChartAt I (g t₀)) ∘ g) t)) t ∧
       ((extChartAt I (g t₀)) ∘ g) t ∈ (fun _ ↦ s) t := by
     apply Filter.Eventually.and
-    · apply (hsrc hg |>.and hg.eventually_hasDerivAt).mono
-      rintro t ⟨ht1, ht2⟩
-      rw [hv', h']
-      apply ht2.congr_deriv
-      congr <;>
-      rw [Function.comp_apply, PartialEquiv.left_inv _ (hmem ht1)]
-    · apply ((continuousAt_extChartAt I (g t₀)).comp hg.continuousAt).preimage_mem_nhds
-      rw [Function.comp_apply, ← h']
-      exact hs
+    apply (hsrc hg |>.and hg.eventually_hasDerivAt).mono
+    rintro t ⟨ht1, ht2⟩
+    rw [hv', h']
+    apply ht2.congr_deriv
+    congr <;>
+    rw [Function.comp_apply, PartialEquiv.left_inv _ (hmem ht1)]
+    apply ((continuousAt_extChartAt I (g t₀)).comp hg.continuousAt).preimage_mem_nhds
+    rw [Function.comp_apply, ← h']
+    exact hs
   have heq {g} (hg : IsIntegralCurveAt g v t₀) :
     g =ᶠ[𝓝 t₀] (extChartAt I (g t₀)).symm ∘ ↑(extChartAt I (g t₀)) ∘ g := by
     apply (hsrc hg).mono
@@ -523,13 +523,13 @@ lemma IsIntegralCurve.periodic_xor_injective [BoundarylessManifold I M]
   push_neg at h
   obtain ⟨a, b, heq, hne⟩ := h
   refine ⟨|a - b|, ?_, ?_⟩
-  · rw [gt_iff_lt, abs_pos, sub_ne_zero]
-    exact hne
-  · by_cases hab : a - b < 0
-    · rw [abs_of_neg hab, neg_sub]
-      exact hγ.periodic_of_eq hv heq.symm
-    · rw [not_lt] at hab
-      rw [abs_of_nonneg hab]
-      exact hγ.periodic_of_eq hv heq
+  rw [gt_iff_lt, abs_pos, sub_ne_zero]
+  exact hne
+  by_cases hab : a - b < 0
+  rw [abs_of_neg hab, neg_sub]
+  exact hγ.periodic_of_eq hv heq.symm
+  rw [not_lt] at hab
+  rw [abs_of_nonneg hab]
+  exact hγ.periodic_of_eq hv heq
 
 end ExistUnique

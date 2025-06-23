@@ -218,26 +218,26 @@ end EqToHom
 @[simp]
 theorem pi'_eval (f : ∀ i, A ⥤ C i) (i : I) : pi' f ⋙ Pi.eval C i = f i := by
   apply Functor.ext
-  · intro _ _ _
-    simp
-  · intro _
-    rfl
+  intro _ _ _
+  simp
+  intro _
+  rfl
 
 /-- Two functors to a product category are equal iff they agree on every coordinate. -/
 theorem pi_ext (f f' : A ⥤ ∀ i, C i) (h : ∀ i, f ⋙ (Pi.eval C i) = f' ⋙ (Pi.eval C i)) :
     f = f' := by
   apply Functor.ext; rotate_left
-  · intro X
-    ext i
-    specialize h i
-    have := congr_obj h X
-    simpa
-  · intro X Y g
-    dsimp
-    funext i
-    specialize h i
-    have := congr_hom h g
-    simpa
+  intro X
+  ext i
+  specialize h i
+  have := congr_obj h X
+  simpa
+  intro X Y g
+  dsimp
+  funext i
+  specialize h i
+  have := congr_hom h g
+  simpa
 
 end Functor
 
@@ -293,10 +293,10 @@ variable {C}
 lemma isIso_pi_iff {X Y : ∀ i, C i} (f : X ⟶ Y) :
     IsIso f ↔ ∀ i, IsIso (f i) := by
   constructor
-  · intro _ i
-    exact (Pi.isoApp (asIso f) i).isIso_hom
-  · intro
-    exact ⟨fun i => inv (f i), by aesop_cat, by aesop_cat⟩
+  intro _ i
+  exact (Pi.isoApp (asIso f) i).isIso_hom
+  intro
+  exact ⟨fun i => inv (f i), by aesop_cat, by aesop_cat⟩
 
 variable (C)
 

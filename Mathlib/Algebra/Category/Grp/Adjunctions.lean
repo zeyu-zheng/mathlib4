@@ -92,16 +92,16 @@ example {G H : AddCommGrp.{u}} (f : G ⟶ H) [Mono f] : Function.Injective f :=
 instance : (free.{u}).PreservesMonomorphisms where
   preserves {X Y} f _ := by
     by_cases hX : IsEmpty X
-    · constructor
-      intros
-      apply (IsInitial.isInitialObj free _
-        ((Types.initial_iff_empty X).2 hX).some).isZero.eq_of_tgt
-    · simp only [not_isEmpty_iff] at hX
-      have hf : Function.Injective f
-      rwa [← mono_iff_injective]
-      obtain ⟨g, hg⟩ := hf.hasLeftInverse
-      have : IsSplitMono f := IsSplitMono.mk' { retraction := g }
-      infer_instance
+    constructor
+    intros
+    apply (IsInitial.isInitialObj free _
+      ((Types.initial_iff_empty X).2 hX).some).isZero.eq_of_tgt
+    simp only [not_isEmpty_iff] at hX
+    have hf : Function.Injective f
+    rwa [← mono_iff_injective]
+    obtain ⟨g, hg⟩ := hf.hasLeftInverse
+    have : IsSplitMono f := IsSplitMono.mk' { retraction := g }
+    infer_instance
 
 end AddCommGrp
 

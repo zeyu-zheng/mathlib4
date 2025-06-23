@@ -89,10 +89,10 @@ theorem recF_eq_of_wEquiv (α : TypeVec n) {β : Type u} (u : F (α.append1 β) 
   intro h
   -- Porting note: induction on h doesn't work.
   refine @WEquiv.recOn _ _ _ _ (fun a a' _ ↦ recF u a = recF u a') _ _ h ?_ ?_ ?_
-  · intros a f' f₀ f₁ _h ih; simp only [recF_eq, Function.comp]
-    congr; funext; congr; funext; apply ih
-  · intros a₀ f'₀ f₀ a₁ f'₁ f₁ h; simp only [recF_eq', abs_map, MvPFunctor.wDest'_wMk, h]
-  · intros x y z _e₁ _e₂ ih₁ ih₂; exact Eq.trans ih₁ ih₂
+  intros a f' f₀ f₁ _h ih; simp only [recF_eq, Function.comp]
+  congr; funext; congr; funext; apply ih
+  intros a₀ f'₀ f₀ a₁ f'₁ f₁ h; simp only [recF_eq', abs_map, MvPFunctor.wDest'_wMk, h]
+  intros x y z _e₁ _e₂ ih₁ ih₂; exact Eq.trans ih₁ ih₂
 
 theorem wEquiv.abs' {α : TypeVec n} (x y : q.P.W α)
     (h : MvQPF.abs (q.P.wDest' x) = MvQPF.abs (q.P.wDest' y)) :
@@ -126,8 +126,8 @@ theorem wrepr_wMk {α : TypeVec n} (a : q.P.A) (f' : q.P.drop.B a ⟹ α)
 theorem wrepr_equiv {α : TypeVec n} (x : q.P.W α) : WEquiv (wrepr x) x := by
   apply q.P.w_ind _ x; intro a f' f ih
   apply WEquiv.trans _ (q.P.wMk' (appendFun id wrepr <$$> ⟨a, q.P.appendContents f' f⟩))
-  · apply wEquiv.abs'
-    rw [wrepr_wMk, q.P.wDest'_wMk', q.P.wDest'_wMk', abs_repr]
+  apply wEquiv.abs'
+  rw [wrepr_wMk, q.P.wDest'_wMk', q.P.wDest'_wMk', abs_repr]
   rw [q.P.map_eq, MvPFunctor.wMk', appendFun_comp_splitFun, id_comp]
   apply WEquiv.ind; exact ih
 
@@ -143,8 +143,8 @@ theorem wEquiv_map {α β : TypeVec n} (g : α ⟹ β) (x y : q.P.W α) :
     rw [← q.P.map_objAppend1, ← q.P.map_objAppend1, abs_map, abs_map, h]
   | trans x y z _ _ ih₁ ih₂ =>
     apply MvQPF.WEquiv.trans
-    · apply ih₁
-    · apply ih₂
+    apply ih₁
+    apply ih₂
 
 /-- Define the fixed point as the quotient of trees under the equivalence relation.
 -/
@@ -278,8 +278,8 @@ theorem Fix.ind {α : TypeVec n} (p : Fix F α → Prop)
   refine ⟨_, _, rfl, ?_⟩
   intro i j
   cases i
-  · apply ih
-  · trivial
+  apply ih
+  trivial
 
 instance mvqpfFix : MvQPF (Fix F) where
   P := q.P.wp

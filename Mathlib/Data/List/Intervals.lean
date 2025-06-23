@@ -57,11 +57,11 @@ theorem nodup (n m : ℕ) : Nodup (Ico n m) := by
 theorem mem {n m l : ℕ} : l ∈ Ico n m ↔ n ≤ l ∧ l < m := by
   suffices n ≤ l ∧ l < n + (m - n) ↔ n ≤ l ∧ l < m by simp [Ico, this]
   rcases le_total n m with hnm | hmn
-  · rw [Nat.add_sub_cancel' hnm]
-  · rw [Nat.sub_eq_zero_iff_le.mpr hmn, Nat.add_zero]
-    exact
-      and_congr_right fun hnl =>
-        Iff.intro (fun hln => (not_le_of_gt hln hnl).elim) fun hlm => lt_of_lt_of_le hlm hmn
+  rw [Nat.add_sub_cancel' hnm]
+  rw [Nat.sub_eq_zero_iff_le.mpr hmn, Nat.add_zero]
+  exact
+    and_congr_right fun hnl =>
+      Iff.intro (fun hln => (not_le_of_gt hln hnl).elim) fun hlm => lt_of_lt_of_le hlm hmn
 
 theorem eq_nil_of_le {n m : ℕ} (h : m ≤ n) : Ico n m = [] := by
   simp [Ico, Nat.sub_eq_zero_iff_le.mpr h]
@@ -85,8 +85,8 @@ theorem append_consecutive {n m l : ℕ} (hnm : n ≤ m) (hml : m ≤ l) :
     Ico n m ++ Ico m l = Ico n l := by
   dsimp only [Ico]
   convert range'_append n (m-n) (l-m) 1 using 2
-  · rw [Nat.one_mul, Nat.add_sub_cancel' hnm]
-  · rw [Nat.sub_add_sub_cancel hml hnm]
+  rw [Nat.one_mul, Nat.add_sub_cancel' hnm]
+  rw [Nat.sub_add_sub_cancel hml hnm]
 
 @[simp]
 theorem inter_consecutive (n m l : ℕ) : Ico n m ∩ Ico m l = [] := by
@@ -123,10 +123,10 @@ theorem pred_singleton {m : ℕ} (h : 0 < m) : Ico (m - 1) m = [m - 1] := by
 
 theorem chain'_succ (n m : ℕ) : Chain' (fun a b => b = succ a) (Ico n m) := by
   by_cases h : n < m
-  · rw [eq_cons h]
-    exact chain_succ_range' _ _ 1
-  · rw [eq_nil_of_le (le_of_not_gt h)]
-    trivial
+  rw [eq_cons h]
+  exact chain_succ_range' _ _ 1
+  rw [eq_nil_of_le (le_of_not_gt h)]
+  trivial
 
 -- Porting note (#10618): simp can prove this
 -- @[simp]
@@ -146,16 +146,16 @@ theorem filter_lt_of_le_bot {n m l : ℕ} (hln : l ≤ n) : ((Ico n m).filter fu
 theorem filter_lt_of_ge {n m l : ℕ} (hlm : l ≤ m) :
     ((Ico n m).filter fun x => x < l) = Ico n l := by
   rcases le_total n l with hnl | hln
-  · rw [← append_consecutive hnl hlm, filter_append, filter_lt_of_top_le (le_refl l),
-      filter_lt_of_le_bot (le_refl l), append_nil]
-  · rw [eq_nil_of_le hln, filter_lt_of_le_bot hln]
+  rw [← append_consecutive hnl hlm, filter_append, filter_lt_of_top_le (le_refl l),
+    filter_lt_of_le_bot (le_refl l), append_nil]
+  rw [eq_nil_of_le hln, filter_lt_of_le_bot hln]
 
 @[simp]
 theorem filter_lt (n m l : ℕ) :
     ((Ico n m).filter fun x => x < l) = Ico n (min m l) := by
   rcases le_total m l with hml | hlm
-  · rw [min_eq_left hml, filter_lt_of_top_le hml]
-  · rw [min_eq_right hlm, filter_lt_of_ge hlm]
+  rw [min_eq_left hml, filter_lt_of_top_le hml]
+  rw [min_eq_right hlm, filter_lt_of_ge hlm]
 
 theorem filter_le_of_le_bot {n m l : ℕ} (hln : l ≤ n) :
     ((Ico n m).filter fun x => l ≤ x) = Ico n m :=
@@ -171,15 +171,15 @@ theorem filter_le_of_top_le {n m l : ℕ} (hml : m ≤ l) : ((Ico n m).filter fu
 theorem filter_le_of_le {n m l : ℕ} (hnl : n ≤ l) :
     ((Ico n m).filter fun x => l ≤ x) = Ico l m := by
   rcases le_total l m with hlm | hml
-  · rw [← append_consecutive hnl hlm, filter_append, filter_le_of_top_le (le_refl l),
-      filter_le_of_le_bot (le_refl l), nil_append]
-  · rw [eq_nil_of_le hml, filter_le_of_top_le hml]
+  rw [← append_consecutive hnl hlm, filter_append, filter_le_of_top_le (le_refl l),
+    filter_le_of_le_bot (le_refl l), nil_append]
+  rw [eq_nil_of_le hml, filter_le_of_top_le hml]
 
 @[simp]
 theorem filter_le (n m l : ℕ) : ((Ico n m).filter fun x => l ≤ x) = Ico (max n l) m := by
   rcases le_total n l with hnl | hln
-  · rw [max_eq_right hnl, filter_le_of_le hnl]
-  · rw [max_eq_left hln, filter_le_of_le_bot hln]
+  rw [max_eq_right hnl, filter_le_of_le hnl]
+  rw [max_eq_left hln, filter_le_of_le_bot hln]
 
 theorem filter_lt_of_succ_bot {n m : ℕ} (hnm : n < m) :
     ((Ico n m).filter fun x => x < n + 1) = [n] := by
@@ -199,15 +199,15 @@ theorem filter_le_of_bot {n m : ℕ} (hnm : n < m) : ((Ico n m).filter fun x => 
 -/
 theorem trichotomy (n a b : ℕ) : n < a ∨ b ≤ n ∨ n ∈ Ico a b := by
   by_cases h₁ : n < a
-  · left
-    exact h₁
-  · right
-    by_cases h₂ : n ∈ Ico a b
-    · right
-      exact h₂
-    · left
-      simp only [Ico.mem, not_and, not_lt] at *
-      exact h₂ h₁
+  left
+  exact h₁
+  right
+  by_cases h₂ : n ∈ Ico a b
+  right
+  exact h₂
+  left
+  simp only [Ico.mem, not_and, not_lt] at *
+  exact h₂ h₁
 
 end Ico
 

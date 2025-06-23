@@ -74,11 +74,11 @@ instance functor_category_isIdempotentComplete [IsIdempotentComplete C] :
       naturality := fun j j' φ => equalizer.hom_ext (by simp) }
   use Y, i, e
   constructor
-  · ext j
-    dsimp
-    rw [assoc, equalizer.lift_ι, ← equalizer.condition, id_comp, comp_id]
-  · ext j
-    simp
+  ext j
+  dsimp
+  rw [assoc, equalizer.lift_ι, ← equalizer.condition, id_comp, comp_id]
+  ext j
+  simp
 namespace KaroubiFunctorCategoryEmbedding
 
 variable {J C}
@@ -136,19 +136,19 @@ theorem toKaroubi_comp_karoubiFunctorCategoryEmbedding :
     toKaroubi _ ⋙ karoubiFunctorCategoryEmbedding J C =
       (whiskeringRight J _ _).obj (toKaroubi C) := by
   apply Functor.ext
-  · intro X Y f
-    ext j
-    dsimp [toKaroubi]
-    simp only [eqToHom_app, eqToHom_refl]
-    erw [comp_id, id_comp]
-  · intro X
-    apply Functor.ext
-    · intro j j' φ
-      ext
-      dsimp
-      simp
-    · intro j
-      rfl
+  intro X Y f
+  ext j
+  dsimp [toKaroubi]
+  simp only [eqToHom_app, eqToHom_refl]
+  erw [comp_id, id_comp]
+  intro X
+  apply Functor.ext
+  intro j j' φ
+  ext
+  dsimp
+  simp
+  intro j
+  rfl
 
 end Idempotents
 

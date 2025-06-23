@@ -75,12 +75,12 @@ def pretopology : Pretopology (Opens T) where
 theorem pretopology_ofGrothendieck :
     Pretopology.ofGrothendieck _ (Opens.grothendieckTopology T) = Opens.pretopology T := by
   apply le_antisymm
-  · intro X R hR x hx
-    rcases hR x hx with ⟨U, f, ⟨V, g₁, g₂, hg₂, _⟩, hU⟩
-    exact ⟨V, g₂, hg₂, g₁.le hU⟩
-  · intro X R hR x hx
-    rcases hR x hx with ⟨U, f, hf, hU⟩
-    exact ⟨U, f, Sieve.le_generate R U hf, hU⟩
+  intro X R hR x hx
+  rcases hR x hx with ⟨U, f, ⟨V, g₁, g₂, hg₂, _⟩, hU⟩
+  exact ⟨V, g₂, hg₂, g₁.le hU⟩
+  intro X R hR x hx
+  rcases hR x hx with ⟨U, f, hf, hU⟩
+  exact ⟨U, f, Sieve.le_generate R U hf, hU⟩
 
 /-- The pretopology associated to a space induces the Grothendieck topology associated to the space.
 -/

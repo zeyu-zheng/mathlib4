@@ -84,8 +84,8 @@ theorem div_pow_le (ha : 0 ≤ a) (hb : 1 ≤ b) (k : ℕ) : a / b ^ k ≤ a :=
 
 theorem zpow_injective (h₀ : 0 < a) (h₁ : a ≠ 1) : Injective (a ^ · : ℤ → α) := by
   rcases h₁.lt_or_lt with (H | H)
-  · exact (zpow_strictAnti h₀ H).injective
-  · exact (zpow_strictMono H).injective
+  exact (zpow_strictAnti h₀ H).injective
+  exact (zpow_strictMono H).injective
 
 @[simp]
 theorem zpow_inj (h₀ : 0 < a) (h₁ : a ≠ 1) : a ^ m = a ^ n ↔ m = n :=

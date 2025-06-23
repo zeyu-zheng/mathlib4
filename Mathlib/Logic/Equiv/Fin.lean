@@ -324,14 +324,14 @@ theorem Fin.snoc_eq_cons_rotate {α : Type*} (v : Fin n → α) (a : α) :
     @Fin.snoc _ (fun _ => α) v a = fun i => @Fin.cons _ (fun _ => α) a v (finRotate _ i) := by
   ext ⟨i, h⟩
   by_cases h' : i < n
-  · rw [finRotate_of_lt h', Fin.snoc, Fin.cons, dif_pos h']
-    rfl
-  · have h'' : n = i := by
-      simp only [not_lt] at h'
-      exact (Nat.eq_of_le_of_lt_succ h' h).symm
-    subst h''
-    rw [finRotate_last', Fin.snoc, Fin.cons, dif_neg (lt_irrefl _)]
-    rfl
+  rw [finRotate_of_lt h', Fin.snoc, Fin.cons, dif_pos h']
+  rfl
+  have h'' : n = i := by
+    simp only [not_lt] at h'
+    exact (Nat.eq_of_le_of_lt_succ h' h).symm
+  subst h''
+  rw [finRotate_last', Fin.snoc, Fin.cons, dif_neg (lt_irrefl _)]
+  rfl
 
 @[simp]
 theorem finRotate_one : finRotate 1 = Equiv.refl _ :=
@@ -339,12 +339,12 @@ theorem finRotate_one : finRotate 1 = Equiv.refl _ :=
 
 @[simp] theorem finRotate_succ_apply (i : Fin (n + 1)) : finRotate (n + 1) i = i + 1 := by
   cases n
-  · exact @Subsingleton.elim (Fin 1) _ _ _
+  exact @Subsingleton.elim (Fin 1) _ _ _
   obtain rfl | h := Fin.eq_or_lt_of_le i.le_last
-  · simp [finRotate_last]
-  · cases i
-    simp only [Fin.lt_iff_val_lt_val, Fin.val_last, Fin.val_mk] at h
-    simp [finRotate_of_lt h, Fin.ext_iff, Fin.add_def, Nat.mod_eq_of_lt (Nat.succ_lt_succ h)]
+  simp [finRotate_last]
+  cases i
+  simp only [Fin.lt_iff_val_lt_val, Fin.val_last, Fin.val_mk] at h
+  simp [finRotate_of_lt h, Fin.ext_iff, Fin.add_def, Nat.mod_eq_of_lt (Nat.succ_lt_succ h)]
 
 -- Porting note: was a @[simp]
 theorem finRotate_apply_zero : finRotate n.succ 0 = 1 := by

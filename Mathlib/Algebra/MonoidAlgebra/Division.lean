@@ -138,16 +138,16 @@ theorem of'_mul_modOf (g : G) (x : k[G]) : of' k G g * x %ᵒᶠ g = 0 := by
   refine Finsupp.ext fun g' => ?_  -- Porting note: `ext g'` doesn't work
   rw [Finsupp.zero_apply]
   obtain ⟨d, rfl⟩ | h := em (∃ d, g' = g + d)
-  · rw [modOf_apply_self_add]
-  · rw [modOf_apply_of_not_exists_add _ _ _ h, of'_apply, single_mul_apply_of_not_exists_add _ _ h]
+  rw [modOf_apply_self_add]
+  rw [modOf_apply_of_not_exists_add _ _ _ h, of'_apply, single_mul_apply_of_not_exists_add _ _ h]
 
 theorem mul_of'_modOf (x : k[G]) (g : G) : x * of' k G g %ᵒᶠ g = 0 := by
   refine Finsupp.ext fun g' => ?_  -- Porting note: `ext g'` doesn't work
   rw [Finsupp.zero_apply]
   obtain ⟨d, rfl⟩ | h := em (∃ d, g' = g + d)
-  · rw [modOf_apply_self_add]
-  · rw [modOf_apply_of_not_exists_add _ _ _ h, of'_apply, mul_single_apply_of_not_exists_add]
-    simpa only [add_comm] using h
+  rw [modOf_apply_self_add]
+  rw [modOf_apply_of_not_exists_add _ _ _ h, of'_apply, mul_single_apply_of_not_exists_add]
+  simpa only [add_comm] using h
 
 theorem of'_modOf (g : G) : of' k G g %ᵒᶠ g = 0 := by
   simpa only [one_mul] using mul_of'_modOf (1 : k[G]) g
@@ -158,12 +158,12 @@ theorem divOf_add_modOf (x : k[G]) (g : G) :
   rw [Finsupp.add_apply] -- Porting note: changed from `simp_rw` which can't see through the type
   obtain ⟨d, rfl⟩ | h := em (∃ d, g' = g + d)
   swap
-  · rw [modOf_apply_of_not_exists_add x _ _ h, of'_apply, single_mul_apply_of_not_exists_add _ _ h,
-      zero_add]
-  · rw [modOf_apply_self_add, add_zero]
-    rw [of'_apply, single_mul_apply_aux _ _ _, one_mul, divOf_apply]
-    intro a
-    exact add_right_inj _
+  rw [modOf_apply_of_not_exists_add x _ _ h, of'_apply, single_mul_apply_of_not_exists_add _ _ h,
+    zero_add]
+  rw [modOf_apply_self_add, add_zero]
+  rw [of'_apply, single_mul_apply_aux _ _ _, one_mul, divOf_apply]
+  intro a
+  exact add_right_inj _
 
 theorem modOf_add_divOf (x : k[G]) (g : G) : x %ᵒᶠ g + of' k G g * (x /ᵒᶠ g) = x := by
   rw [add_comm, divOf_add_modOf]
@@ -171,11 +171,11 @@ theorem modOf_add_divOf (x : k[G]) (g : G) : x %ᵒᶠ g + of' k G g * (x /ᵒ�
 theorem of'_dvd_iff_modOf_eq_zero {x : k[G]} {g : G} :
     of' k G g ∣ x ↔ x %ᵒᶠ g = 0 := by
   constructor
-  · rintro ⟨x, rfl⟩
-    rw [of'_mul_modOf]
-  · intro h
-    rw [← divOf_add_modOf x g, h, add_zero]
-    exact dvd_mul_right _ _
+  rintro ⟨x, rfl⟩
+  rw [of'_mul_modOf]
+  intro h
+  rw [← divOf_add_modOf x g, h, add_zero]
+  exact dvd_mul_right _ _
 
 end
 

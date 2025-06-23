@@ -267,34 +267,34 @@ def IsBasis (B : Set (Opens α)) : Prop :=
 theorem isBasis_iff_nbhd {B : Set (Opens α)} :
     IsBasis B ↔ ∀ {U : Opens α} {x}, x ∈ U → ∃ U' ∈ B, x ∈ U' ∧ U' ≤ U := by
   constructor <;> intro h
-  · rintro ⟨sU, hU⟩ x hx
-    rcases h.mem_nhds_iff.mp (IsOpen.mem_nhds hU hx) with ⟨sV, ⟨⟨V, H₁, H₂⟩, hsV⟩⟩
-    refine ⟨V, H₁, ?_⟩
-    cases V
-    dsimp at H₂
-    subst H₂
-    exact hsV
-  · refine isTopologicalBasis_of_isOpen_of_nhds ?_ ?_
-    · rintro sU ⟨U, -, rfl⟩
-      exact U.2
-    · intro x sU hx hsU
-      rcases @h ⟨sU, hsU⟩ x hx with ⟨V, hV, H⟩
-      exact ⟨V, ⟨V, hV, rfl⟩, H⟩
+  rintro ⟨sU, hU⟩ x hx
+  rcases h.mem_nhds_iff.mp (IsOpen.mem_nhds hU hx) with ⟨sV, ⟨⟨V, H₁, H₂⟩, hsV⟩⟩
+  refine ⟨V, H₁, ?_⟩
+  cases V
+  dsimp at H₂
+  subst H₂
+  exact hsV
+  refine isTopologicalBasis_of_isOpen_of_nhds ?_ ?_
+  rintro sU ⟨U, -, rfl⟩
+  exact U.2
+  intro x sU hx hsU
+  rcases @h ⟨sU, hsU⟩ x hx with ⟨V, hV, H⟩
+  exact ⟨V, ⟨V, hV, rfl⟩, H⟩
 
 theorem isBasis_iff_cover {B : Set (Opens α)} :
     IsBasis B ↔ ∀ U : Opens α, ∃ Us, Us ⊆ B ∧ U = sSup Us := by
   constructor
-  · intro hB U
-    refine ⟨{ V : Opens α | V ∈ B ∧ V ≤ U }, fun U hU => hU.left, ext ?_⟩
-    rw [coe_sSup, hB.open_eq_sUnion' U.isOpen]
-    simp_rw [sUnion_eq_biUnion, iUnion, mem_setOf_eq, iSup_and, iSup_image]
-    rfl
-  · intro h
-    rw [isBasis_iff_nbhd]
-    intro U x hx
-    rcases h U with ⟨Us, hUs, rfl⟩
-    rcases mem_sSup.1 hx with ⟨U, Us, xU⟩
-    exact ⟨U, hUs Us, xU, le_sSup Us⟩
+  intro hB U
+  refine ⟨{ V : Opens α | V ∈ B ∧ V ≤ U }, fun U hU => hU.left, ext ?_⟩
+  rw [coe_sSup, hB.open_eq_sUnion' U.isOpen]
+  simp_rw [sUnion_eq_biUnion, iUnion, mem_setOf_eq, iSup_and, iSup_image]
+  rfl
+  intro h
+  rw [isBasis_iff_nbhd]
+  intro U x hx
+  rcases h U with ⟨Us, hUs, rfl⟩
+  rcases mem_sSup.1 hx with ⟨U, Us, xU⟩
+  exact ⟨U, hUs Us, xU, le_sSup Us⟩
 
 /-- If `α` has a basis consisting of compact opens, then an open set in `α` is compact open iff
   it is a finite union of some elements in the basis -/
@@ -302,10 +302,10 @@ theorem IsBasis.isCompact_open_iff_eq_finite_iUnion {ι : Type*} (b : ι → Ope
     (hb : IsBasis (Set.range b)) (hb' : ∀ i, IsCompact (b i : Set α)) (U : Set α) :
     IsCompact U ∧ IsOpen U ↔ ∃ s : Set ι, s.Finite ∧ U = ⋃ i ∈ s, b i := by
   apply isCompact_open_iff_eq_finite_iUnion_of_isTopologicalBasis fun i : ι => (b i).1
-  · convert (config := {transparency := .default}) hb
-    ext
-    simp
-  · exact hb'
+  convert (config := {transparency := .default}) hb
+  ext
+  simp
+  exact hb'
 
 lemma IsBasis.le_iff {α} {t₁ t₂ : TopologicalSpace α}
     {Us : Set (Opens α)} (hUs : @IsBasis α t₂ Us) :
@@ -318,17 +318,17 @@ theorem isCompactElement_iff (s : Opens α) :
     CompleteLattice.IsCompactElement s ↔ IsCompact (s : Set α) := by
   rw [isCompact_iff_finite_subcover, CompleteLattice.isCompactElement_iff]
   refine ⟨?_, fun H ι U hU => ?_⟩
-  · introv H hU hU'
-    obtain ⟨t, ht⟩ := H ι (fun i => ⟨U i, hU i⟩) (by simpa)
-    refine ⟨t, Set.Subset.trans ht ?_⟩
-    rw [coe_finset_sup, Finset.sup_eq_iSup]
-    rfl
-  · obtain ⟨t, ht⟩ :=
-      H (fun i => U i) (fun i => (U i).isOpen) (by simpa using show (s : Set α) ⊆ ↑(iSup U) from hU)
-    refine ⟨t, Set.Subset.trans ht ?_⟩
-    simp only [Set.iUnion_subset_iff]
-    show ∀ i ∈ t, U i ≤ t.sup U
-    exact fun i => Finset.le_sup
+  introv H hU hU'
+  obtain ⟨t, ht⟩ := H ι (fun i => ⟨U i, hU i⟩) (by simpa)
+  refine ⟨t, Set.Subset.trans ht ?_⟩
+  rw [coe_finset_sup, Finset.sup_eq_iSup]
+  rfl
+  obtain ⟨t, ht⟩ :=
+    H (fun i => U i) (fun i => (U i).isOpen) (by simpa using show (s : Set α) ⊆ ↑(iSup U) from hU)
+  refine ⟨t, Set.Subset.trans ht ?_⟩
+  simp only [Set.iUnion_subset_iff]
+  show ∀ i ∈ t, U i ≤ t.sup U
+  exact fun i => Finset.le_sup
 
 /-- The preimage of an open set, as an open set. -/
 def comap (f : C(α, β)) : FrameHom (Opens β) (Opens α) where

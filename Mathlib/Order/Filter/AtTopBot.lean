@@ -102,10 +102,10 @@ theorem disjoint_atBot_atTop [PartialOrder α] [Nontrivial α] :
     Disjoint (atBot : Filter α) atTop := by
   rcases exists_pair_ne α with ⟨x, y, hne⟩
   by_cases hle : x ≤ y
-  · refine disjoint_of_disjoint_of_mem ?_ (Iic_mem_atBot x) (Ici_mem_atTop y)
-    exact Iic_disjoint_Ici.2 (hle.lt_of_ne hne).not_le
-  · refine disjoint_of_disjoint_of_mem ?_ (Iic_mem_atBot y) (Ici_mem_atTop x)
-    exact Iic_disjoint_Ici.2 hle
+  refine disjoint_of_disjoint_of_mem ?_ (Iic_mem_atBot x) (Ici_mem_atTop y)
+  exact Iic_disjoint_Ici.2 (hle.lt_of_ne hne).not_le
+  refine disjoint_of_disjoint_of_mem ?_ (Iic_mem_atBot y) (Ici_mem_atTop x)
+  exact Iic_disjoint_Ici.2 hle
 
 theorem disjoint_atTop_atBot [PartialOrder α] [Nontrivial α] : Disjoint (atTop : Filter α) atBot :=
   disjoint_atBot_atTop.symm
@@ -119,8 +119,8 @@ theorem atTop_basis [Nonempty α] [SemilatticeSup α] : (@atTop α _).HasBasis (
 
 theorem atTop_eq_generate_Ici [SemilatticeSup α] : atTop = generate (range (Ici (α := α))) := by
   rcases isEmpty_or_nonempty α with hα|hα
-  · simp only [eq_iff_true_of_subsingleton]
-  · simp [(atTop_basis (α := α)).eq_generate, range]
+  simp only [eq_iff_true_of_subsingleton]
+  simp [(atTop_basis (α := α)).eq_generate, range]
 
 theorem atTop_basis' [SemilatticeSup α] (a : α) : (@atTop α _).HasBasis (fun x => a ≤ x) Ici :=
   ⟨fun _ =>
@@ -368,15 +368,15 @@ lemma atTop_eq_generate_of_forall_exists_le [LinearOrder α] {s : Set α} (hs : 
     (atTop : Filter α) = generate (Ici '' s) := by
   rw [atTop_eq_generate_Ici]
   apply le_antisymm
-  · rw [le_generate_iff]
-    rintro - ⟨y, -, rfl⟩
-    exact mem_generate_of_mem ⟨y, rfl⟩
-  · rw [le_generate_iff]
-    rintro - ⟨x, -, -, rfl⟩
-    rcases hs x with ⟨y, ys, hy⟩
-    have A : Ici y ∈ generate (Ici '' s) := mem_generate_of_mem (mem_image_of_mem _ ys)
-    have B : Ici y ⊆ Ici x := Ici_subset_Ici.2 hy
-    exact sets_of_superset (generate (Ici '' s)) A B
+  rw [le_generate_iff]
+  rintro - ⟨y, -, rfl⟩
+  exact mem_generate_of_mem ⟨y, rfl⟩
+  rw [le_generate_iff]
+  rintro - ⟨x, -, -, rfl⟩
+  rcases hs x with ⟨y, ys, hy⟩
+  have A : Ici y ∈ generate (Ici '' s) := mem_generate_of_mem (mem_image_of_mem _ ys)
+  have B : Ici y ⊆ Ici x := Ici_subset_Ici.2 hy
+  exact sets_of_superset (generate (Ici '' s)) A B
 
 lemma atTop_eq_generate_of_not_bddAbove [LinearOrder α] {s : Set α} (hs : ¬ BddAbove s) :
     (atTop : Filter α) = generate (Ici '' s) := by
@@ -444,8 +444,8 @@ theorem extraction_of_frequently_atTop' {P : ℕ → Prop} (h : ∀ N, ∃ n > N
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, P (φ n) := by
   choose u hu hu' using h
   refine ⟨fun n => u^[n + 1] 0, strictMono_nat_of_lt_succ fun n => ?_, fun n => ?_⟩
-  · exact Trans.trans (hu _) (Function.iterate_succ_apply' _ _ _).symm
-  · simpa only [Function.iterate_succ_apply'] using hu' _
+  exact Trans.trans (hu _) (Function.iterate_succ_apply' _ _ _).symm
+  simpa only [Function.iterate_succ_apply'] using hu' _
 
 theorem extraction_of_frequently_atTop {P : ℕ → Prop} (h : ∃ᶠ n in atTop, P n) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, P (φ n) := by
@@ -462,11 +462,11 @@ theorem extraction_forall_of_frequently {P : ℕ → ℕ → Prop} (h : ∀ n, �
   choose u hu hu' using h
   use (fun n => Nat.recOn n (u 0 0) fun n v => u (n + 1) v : ℕ → ℕ)
   constructor
-  · apply strictMono_nat_of_lt_succ
-    intro n
-    apply hu
-  · intro n
-    cases n <;> simp [hu']
+  apply strictMono_nat_of_lt_succ
+  intro n
+  apply hu
+  intro n
+  cases n <;> simp [hu']
 
 theorem extraction_forall_of_eventually {P : ℕ → ℕ → Prop} (h : ∀ n, ∀ᶠ k in atTop, P n k) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, P n (φ n) :=
@@ -528,8 +528,8 @@ theorem high_scores [LinearOrder β] [NoMaxOrder β] {u : ℕ → β} (hu : Tend
   rintro (l : ℕ) (hl : l < n)
   have hlk : u l ≤ u k := by
     cases' (le_total l N : l ≤ N ∨ N ≤ l) with H H
-    · exact hku l H
-    · exact hn_min l hl H
+    exact hku l H
+    exact hn_min l hl H
   calc
     u l ≤ u k := hlk
     _ < u n := hnk
@@ -948,10 +948,10 @@ theorem tendsto_const_mul_pow_atTop (hn : n ≠ 0) (hc : 0 < c) :
 theorem tendsto_const_mul_pow_atTop_iff :
     Tendsto (fun x => c * x ^ n) atTop atTop ↔ n ≠ 0 ∧ 0 < c := by
   refine ⟨fun h => ⟨?_, ?_⟩, fun h => tendsto_const_mul_pow_atTop h.1 h.2⟩
-  · rintro rfl
-    simp only [pow_zero, not_tendsto_const_atTop] at h
-  · rcases ((h.eventually_gt_atTop 0).and (eventually_ge_atTop 0)).exists with ⟨k, hck, hk⟩
-    exact pos_of_mul_pos_left hck (pow_nonneg hk _)
+  rintro rfl
+  simp only [pow_zero, not_tendsto_const_atTop] at h
+  rcases ((h.eventually_gt_atTop 0).and (eventually_ge_atTop 0)).exists with ⟨k, hck, hk⟩
+  exact pos_of_mul_pos_left hck (pow_nonneg hk _)
 
 lemma tendsto_zpow_atTop_atTop {n : ℤ} (hn : 0 < n) : Tendsto (fun x : α ↦ x ^ n) atTop atTop := by
   lift n to ℕ+ using hn; simp
@@ -1021,9 +1021,9 @@ if and only if `r > 0` and `f` tends to infinity or `r < 0` and `f` tends to neg
 theorem tendsto_const_mul_atTop_iff [NeBot l] :
     Tendsto (fun x => r * f x) l atTop ↔ 0 < r ∧ Tendsto f l atTop ∨ r < 0 ∧ Tendsto f l atBot := by
   rcases lt_trichotomy r 0 with (hr | rfl | hr)
-  · simp [hr, hr.not_lt, tendsto_const_mul_atTop_of_neg]
-  · simp [not_tendsto_const_atTop]
-  · simp [hr, hr.not_lt, tendsto_const_mul_atTop_of_pos]
+  simp [hr, hr.not_lt, tendsto_const_mul_atTop_of_neg]
+  simp [not_tendsto_const_atTop]
+  simp [hr, hr.not_lt, tendsto_const_mul_atTop_of_pos]
 
 /-- The function `fun x ↦ f x * r` tends to infinity along a nontrivial filter
 if and only if `r > 0` and `f` tends to infinity or `r < 0` and `f` tends to negative infinity. -/
@@ -1318,9 +1318,9 @@ theorem tendsto_finset_preimage_atTop_atTop {f : α → β} (hf : Function.Injec
 theorem prod_atTop_atTop_eq [Preorder α] [Preorder β] :
     (atTop : Filter α) ×ˢ (atTop : Filter β) = (atTop : Filter (α × β)) := by
   cases isEmpty_or_nonempty α
-  · subsingleton
+  subsingleton
   cases isEmpty_or_nonempty β
-  · subsingleton
+  subsingleton
   simpa [atTop, prod_iInf_left, prod_iInf_right, iInf_prod] using iInf_comm
 
 -- Porting note: generalized from `SemilatticeSup` to `Preorder`
@@ -1429,13 +1429,13 @@ theorem map_val_atTop_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (h
   simp only [le_antisymm_iff, atTop, le_iInf_iff, le_principal_iff, mem_map, mem_setOf_eq,
     map_iInf_eq this, map_principal]
   constructor
-  · intro x
-    refine mem_of_superset (mem_iInf_of_mem ⟨x ⊔ a, h le_sup_right⟩ (mem_principal_self _)) ?_
-    rintro _ ⟨y, hy, rfl⟩
-    exact le_trans le_sup_left (Subtype.coe_le_coe.2 hy)
-  · intro x
-    filter_upwards [mem_atTop (↑x ⊔ a)] with b hb
-    exact ⟨⟨b, h <| le_sup_right.trans hb⟩, Subtype.coe_le_coe.1 (le_sup_left.trans hb), rfl⟩
+  intro x
+  refine mem_of_superset (mem_iInf_of_mem ⟨x ⊔ a, h le_sup_right⟩ (mem_principal_self _)) ?_
+  rintro _ ⟨y, hy, rfl⟩
+  exact le_trans le_sup_left (Subtype.coe_le_coe.2 hy)
+  intro x
+  filter_upwards [mem_atTop (↑x ⊔ a)] with b hb
+  exact ⟨⟨b, h <| le_sup_right.trans hb⟩, Subtype.coe_le_coe.1 (le_sup_left.trans hb), rfl⟩
 
 /-- The image of the filter `atTop` on `Ici a` under the coercion equals `atTop`. -/
 @[simp]
@@ -1453,8 +1453,8 @@ theorem map_val_Ioi_atTop [SemilatticeSup α] [NoMaxOrder α] (a : α) :
 order. -/
 theorem atTop_Ioi_eq [SemilatticeSup α] (a : α) : atTop = comap ((↑) : Ioi a → α) atTop := by
   rcases isEmpty_or_nonempty (Ioi a) with h|⟨⟨b, hb⟩⟩
-  · subsingleton
-  · rw [← map_val_atTop_of_Ici_subset (Ici_subset_Ioi.2 hb), comap_map Subtype.coe_injective]
+  subsingleton
+  rw [← map_val_atTop_of_Ici_subset (Ici_subset_Ioi.2 hb), comap_map Subtype.coe_injective]
 
 /-- The `atTop` filter for an open interval `Ici a` comes from the `atTop` filter in the ambient
 order. -/
@@ -1654,7 +1654,7 @@ theorem HasAntitoneBasis.subbasis_with_rel {f : Filter α} {s : ℕ → Set α}
     (hs : f.HasAntitoneBasis s) {r : ℕ → ℕ → Prop} (hr : ∀ m, ∀ᶠ n in atTop, r m n) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ (∀ ⦃m n⦄, m < n → r (φ m) (φ n)) ∧ f.HasAntitoneBasis (s ∘ φ) := by
   rsuffices ⟨φ, hφ, hrφ⟩ : ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ m n, m < n → r (φ m) (φ n)
-  · exact ⟨φ, hφ, hrφ, hs.comp_strictMono hφ⟩
+  exact ⟨φ, hφ, hrφ, hs.comp_strictMono hφ⟩
   have : ∀ t : Set ℕ, t.Finite → ∀ᶠ n in atTop, ∀ m ∈ t, m < n ∧ r m n := fun t ht =>
     (eventually_all_finite ht).2 fun m _ => (eventually_gt_atTop m).and (hr _)
   rcases seq_of_forall_finite_exists fun t ht => (this t ht).exists with ⟨φ, hφ⟩
@@ -1782,11 +1782,11 @@ theorem Monotone.piecewise_eventually_eq_iUnion {β : α → Type*} [Preorder ι
     (hs : Monotone s) (f g : (a : α) → β a) (a : α) :
     ∀ᶠ i in atTop, (s i).piecewise f g a = (⋃ i, s i).piecewise f g a := by
   rcases em (∃ i, a ∈ s i) with ⟨i, hi⟩ | ha
-  · refine (eventually_ge_atTop i).mono fun j hij ↦ ?_
-    simp only [Set.piecewise_eq_of_mem, hs hij hi, subset_iUnion _ _ hi]
-  · filter_upwards with i
-    simp only [Set.piecewise_eq_of_not_mem, not_exists.1 ha i, mt mem_iUnion.1 ha,
-      not_false_eq_true, exists_false]
+  refine (eventually_ge_atTop i).mono fun j hij ↦ ?_
+  simp only [Set.piecewise_eq_of_mem, hs hij hi, subset_iUnion _ _ hi]
+  filter_upwards with i
+  simp only [Set.piecewise_eq_of_not_mem, not_exists.1 ha i, mt mem_iUnion.1 ha,
+    not_false_eq_true, exists_false]
 
 open Classical in
 theorem Antitone.piecewise_eventually_eq_iInter {β : α → Type*} [Preorder ι] {s : ι → Set α}
@@ -1794,8 +1794,8 @@ theorem Antitone.piecewise_eventually_eq_iInter {β : α → Type*} [Preorder ι
     (hs : Antitone s) (f g : (a : α) → β a) (a : α) :
     ∀ᶠ i in atTop, (s i).piecewise f g a = (⋂ i, s i).piecewise f g a := by
   convert ← (compl_anti.comp hs).piecewise_eventually_eq_iUnion g f a using 3
-  · convert congr_fun (Set.piecewise_compl (s _) g f) a
-  · simp only [(· ∘ ·), ← compl_iInter, Set.piecewise_compl]
+  convert congr_fun (Set.piecewise_compl (s _) g f) a
+  simp only [(· ∘ ·), ← compl_iInter, Set.piecewise_compl]
 
 /-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`
 to a commutative monoid. Suppose that `f x = 1` outside of the range of `g`. Then the filters
@@ -1809,17 +1809,17 @@ theorem Function.Injective.map_atTop_finset_prod_eq [CommMonoid α] {g : γ → 
     map (fun s => ∏ i ∈ s, f (g i)) atTop = map (fun s => ∏ i ∈ s, f i) atTop := by
   haveI := Classical.decEq β
   apply le_antisymm <;> refine map_atTop_finset_prod_le_of_prod_eq fun s => ?_
-  · refine ⟨s.preimage g hg.injOn, fun t ht => ?_⟩
-    refine ⟨t.image g ∪ s, Finset.subset_union_right, ?_⟩
-    rw [← Finset.prod_image hg.injOn]
-    refine (prod_subset subset_union_left ?_).symm
-    simp only [Finset.mem_union, Finset.mem_image]
-    refine fun y hy hyt => hf y (mt ?_ hyt)
-    rintro ⟨x, rfl⟩
-    exact ⟨x, ht (Finset.mem_preimage.2 <| hy.resolve_left hyt), rfl⟩
-  · refine ⟨s.image g, fun t ht => ?_⟩
-    simp only [← prod_preimage _ _ hg.injOn _ fun x _ => hf x]
-    exact ⟨_, (image_subset_iff_subset_preimage _).1 ht, rfl⟩
+  refine ⟨s.preimage g hg.injOn, fun t ht => ?_⟩
+  refine ⟨t.image g ∪ s, Finset.subset_union_right, ?_⟩
+  rw [← Finset.prod_image hg.injOn]
+  refine (prod_subset subset_union_left ?_).symm
+  simp only [Finset.mem_union, Finset.mem_image]
+  refine fun y hy hyt => hf y (mt ?_ hyt)
+  rintro ⟨x, rfl⟩
+  exact ⟨x, ht (Finset.mem_preimage.2 <| hy.resolve_left hyt), rfl⟩
+  refine ⟨s.image g, fun t ht => ?_⟩
+  simp only [← prod_preimage _ _ hg.injOn _ fun x _ => hf x]
+  exact ⟨_, (image_subset_iff_subset_preimage _).1 ht, rfl⟩
 
 /-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`
 to an additive commutative monoid. Suppose that `f x = 0` outside of the range of `g`. Then the

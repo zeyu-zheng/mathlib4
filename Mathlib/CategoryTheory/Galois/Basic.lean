@@ -278,8 +278,8 @@ lemma evaluation_aut_injective_of_isConnected (A : C) [IsConnected A] (a : F.obj
     Function.Injective (fun f : Aut A ↦ F.map (f.hom) a) := by
   show Function.Injective ((fun f : A ⟶ A ↦ F.map f a) ∘ (fun f : Aut A ↦ f.hom))
   apply Function.Injective.comp
-  · exact evaluation_injective_of_isConnected F A A a
-  · exact @Aut.ext _ _ A
+  exact evaluation_injective_of_isConnected F A A a
+  exact @Aut.ext _ _ A
 
 /-- A morphism from an object `X` with non-empty fiber to a connected object `A` is an
 epimorphism. -/

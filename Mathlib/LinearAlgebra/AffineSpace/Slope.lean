@@ -48,8 +48,8 @@ theorem slope_def_module (f : k → E) (a b : k) : slope f a b = (b - a)⁻¹ �
 @[simp]
 theorem sub_smul_slope (f : k → PE) (a b : k) : (b - a) • slope f a b = f b -ᵥ f a := by
   rcases eq_or_ne a b with (rfl | hne)
-  · rw [sub_self, zero_smul, vsub_self]
-  · rw [slope, smul_inv_smul₀ (sub_ne_zero.2 hne.symm)]
+  rw [sub_self, zero_smul, vsub_self]
+  rw [slope, smul_inv_smul₀ (sub_ne_zero.2 hne.symm)]
 
 theorem sub_smul_slope_vadd (f : k → PE) (a b : k) : (b - a) • slope f a b +ᵥ f a = f b := by
   rw [sub_smul_slope, vsub_vadd]
@@ -90,14 +90,14 @@ actually an affine combination, see `lineMap_slope_slope_sub_div_sub`. -/
 theorem sub_div_sub_smul_slope_add_sub_div_sub_smul_slope (f : k → PE) (a b c : k) :
     ((b - a) / (c - a)) • slope f a b + ((c - b) / (c - a)) • slope f b c = slope f a c := by
   by_cases hab : a = b
-  · subst hab
-    rw [sub_self, zero_div, zero_smul, zero_add]
-    by_cases hac : a = c
-    · simp [hac]
-    · rw [div_self (sub_ne_zero.2 <| Ne.symm hac), one_smul]
+  subst hab
+  rw [sub_self, zero_div, zero_smul, zero_add]
+  by_cases hac : a = c
+  simp [hac]
+  rw [div_self (sub_ne_zero.2 <| Ne.symm hac), one_smul]
   by_cases hbc : b = c
-  · subst hbc
-    simp [sub_ne_zero.2 (Ne.symm hab)]
+  subst hbc
+  simp [sub_ne_zero.2 (Ne.symm hab)]
   rw [add_comm]
   simp_rw [slope, div_eq_inv_mul, mul_smul, ← smul_add,
     smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hab), smul_inv_smul₀ (sub_ne_zero.2 <| Ne.symm hbc),

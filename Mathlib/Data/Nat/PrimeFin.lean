@@ -68,11 +68,11 @@ lemma le_of_mem_primeFactors (h : p ∈ n.primeFactors) : p ≤ n :=
 
 @[simp] lemma primeFactors_eq_empty : n.primeFactors = ∅ ↔ n = 0 ∨ n = 1 := by
   constructor
-  · contrapose!
-    rintro hn
-    obtain ⟨p, hp, hpn⟩ := exists_prime_and_dvd hn.2
-    exact Nonempty.ne_empty <| ⟨_, mem_primeFactors.2 ⟨hp, hpn, hn.1⟩⟩
-  · rintro (rfl | rfl) <;> simp
+  contrapose!
+  rintro hn
+  obtain ⟨p, hp, hpn⟩ := exists_prime_and_dvd hn.2
+  exact Nonempty.ne_empty <| ⟨_, mem_primeFactors.2 ⟨hp, hpn, hn.1⟩⟩
+  rintro (rfl | rfl) <;> simp
 
 @[simp]
 lemma nonempty_primeFactors {n : ℕ} : n.primeFactors.Nonempty ↔ 1 < n := by
@@ -106,14 +106,14 @@ protected lemma Coprime.disjoint_primeFactors (hab : Coprime a b) :
 
 lemma primeFactors_pow_succ (n k : ℕ) : (n ^ (k + 1)).primeFactors = n.primeFactors := by
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp
+  simp
   induction' k with k ih
-  · simp
-  · rw [pow_succ', primeFactors_mul hn (pow_ne_zero _ hn), ih, Finset.union_idempotent]
+  simp
+  rw [pow_succ', primeFactors_mul hn (pow_ne_zero _ hn), ih, Finset.union_idempotent]
 
 lemma primeFactors_pow (n : ℕ) (hk : k ≠ 0) : (n ^ k).primeFactors = n.primeFactors := by
   cases k
-  · simp at hk
+  simp at hk
   rw [primeFactors_pow_succ]
 
 /-- The only prime divisor of positive prime power `p^k` is `p` itself -/

@@ -70,28 +70,28 @@ instance decidablePsp (n b : ℕ) : Decidable (FermatPsp n b) :=
 theorem coprime_of_probablePrime {n b : ℕ} (h : ProbablePrime n b) (h₁ : 1 ≤ n) (h₂ : 1 ≤ b) :
     Nat.Coprime n b := by
   by_cases h₃ : 2 ≤ n
-  · -- To prove that `n` is coprime with `b`, we need to show that for all prime factors of `n`,
-    -- we can derive a contradiction if `n` divides `b`.
-    apply Nat.coprime_of_dvd
-    -- If `k` is a prime number that divides both `n` and `b`, then we know that `n = m * k` and
-    -- `b = j * k` for some natural numbers `m` and `j`. We substitute these into the hypothesis.
-    rintro k hk ⟨m, rfl⟩ ⟨j, rfl⟩
-    -- Because prime numbers do not divide 1, it suffices to show that `k ∣ 1` to prove a
-    -- contradiction
-    apply Nat.Prime.not_dvd_one hk
-    -- Since `n` divides `b ^ (n - 1) - 1`, `k` also divides `b ^ (n - 1) - 1`
-    replace h := dvd_of_mul_right_dvd h
-    -- Because `k` divides `b ^ (n - 1) - 1`, if we can show that `k` also divides `b ^ (n - 1)`,
-    -- then we know `k` divides 1.
-    rw [Nat.dvd_add_iff_right h, Nat.sub_add_cancel (Nat.one_le_pow _ _ h₂)]
-    -- Since `k` divides `b`, `k` also divides any power of `b` except `b ^ 0`. Therefore, it
-    -- suffices to show that `n - 1` isn't zero. However, we know that `n - 1` isn't zero because we
-    -- assumed `2 ≤ n` when doing `by_cases`.
-    refine dvd_of_mul_right_dvd (dvd_pow_self (k * j) ?_)
-    omega
+  -- To prove that `n` is coprime with `b`, we need to show that for all prime factors of `n`,
+  -- we can derive a contradiction if `n` divides `b`.
+  apply Nat.coprime_of_dvd
+  -- If `k` is a prime number that divides both `n` and `b`, then we know that `n = m * k` and
+  -- `b = j * k` for some natural numbers `m` and `j`. We substitute these into the hypothesis.
+  rintro k hk ⟨m, rfl⟩ ⟨j, rfl⟩
+  -- Because prime numbers do not divide 1, it suffices to show that `k ∣ 1` to prove a
+  -- contradiction
+  apply Nat.Prime.not_dvd_one hk
+  -- Since `n` divides `b ^ (n - 1) - 1`, `k` also divides `b ^ (n - 1) - 1`
+  replace h := dvd_of_mul_right_dvd h
+  -- Because `k` divides `b ^ (n - 1) - 1`, if we can show that `k` also divides `b ^ (n - 1)`,
+  -- then we know `k` divides 1.
+  rw [Nat.dvd_add_iff_right h, Nat.sub_add_cancel (Nat.one_le_pow _ _ h₂)]
+  -- Since `k` divides `b`, `k` also divides any power of `b` except `b ^ 0`. Therefore, it
+  -- suffices to show that `n - 1` isn't zero. However, we know that `n - 1` isn't zero because we
+  -- assumed `2 ≤ n` when doing `by_cases`.
+  refine dvd_of_mul_right_dvd (dvd_pow_self (k * j) ?_)
+  omega
   -- If `n = 1`, then it follows trivially that `n` is coprime with `b`.
-  · rw [show n = 1 by omega]
-    norm_num
+  rw [show n = 1 by omega]
+  norm_num
 
 theorem probablePrime_iff_modEq (n : ℕ) {b : ℕ} (h : 1 ≤ b) :
     ProbablePrime n b ↔ b ^ (n - 1) ≡ 1 [MOD n] := by
@@ -99,11 +99,11 @@ theorem probablePrime_iff_modEq (n : ℕ) {b : ℕ} (h : 1 ≤ b) :
   -- For exact mod_cast
   rw [Nat.ModEq.comm]
   constructor
-  · intro h₁
-    apply Nat.modEq_of_dvd
-    exact mod_cast h₁
-  · intro h₁
-    exact mod_cast Nat.ModEq.dvd h₁
+  intro h₁
+  apply Nat.modEq_of_dvd
+  exact mod_cast h₁
+  intro h₁
+  exact mod_cast Nat.ModEq.dvd h₁
 
 /-- If `n` is a Fermat pseudoprime to base `b`, then `n` is coprime with `b`, assuming that `b` is
 positive.
@@ -312,9 +312,9 @@ private theorem psp_from_prime_gt_p {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_
   rw [Nat.pow_succ (b ^ 2)]
   suffices h : p * b ^ 2 < (b ^ 2) ^ (p - 1) * b ^ 2 by
     apply gt_of_ge_of_gt
-    · exact tsub_le_tsub_left (one_le_of_lt p_gt_two) ((b ^ 2) ^ (p - 1) * b ^ 2)
-    · have : p ≤ p * b ^ 2 := Nat.le_mul_of_pos_right _ (show 0 < b ^ 2 by nlinarith)
-      exact tsub_lt_tsub_right_of_le this h
+    exact tsub_le_tsub_left (one_le_of_lt p_gt_two) ((b ^ 2) ^ (p - 1) * b ^ 2)
+    have : p ≤ p * b ^ 2 := Nat.le_mul_of_pos_right _ (show 0 < b ^ 2 by nlinarith)
+    exact tsub_lt_tsub_right_of_le this h
   suffices h : p < (b ^ 2) ^ (p - 1) by
     have : 4 ≤ b ^ 2 := by nlinarith
     have : 0 < b ^ 2 := by omega
@@ -338,32 +338,32 @@ theorem exists_infinite_pseudoprimes {b : ℕ} (h : 1 ≤ b) (m : ℕ) :
   -- (because `p` can't divide a number less than `p`).
   -- From `p`, we can use the lemmas we proved earlier to show that
   -- `((b^p - 1)/(b - 1)) * ((b^p + 1)/(b + 1))` is a pseudoprime to base `b`.
-  · have h := Nat.exists_infinite_primes (b * (b ^ 2 - 1) + 1 + m)
-    cases' h with p hp
-    cases' hp with hp₁ hp₂
-    have h₁ : 0 < b := pos_of_gt (Nat.succ_le_iff.mp b_ge_two)
-    have h₂ : 4 ≤ b ^ 2 := pow_le_pow_left' b_ge_two 2
-    have h₃ : 0 < b ^ 2 - 1 := tsub_pos_of_lt (gt_of_ge_of_gt h₂ (by norm_num))
-    have h₄ : 0 < b * (b ^ 2 - 1) := mul_pos h₁ h₃
-    have h₅ : b * (b ^ 2 - 1) < p
-    omega
-    have h₆ : ¬p ∣ b * (b ^ 2 - 1) := Nat.not_dvd_of_pos_of_lt h₄ h₅
-    have h₇ : b ≤ b * (b ^ 2 - 1) := Nat.le_mul_of_pos_right _ h₃
-    have h₈ : 2 ≤ b * (b ^ 2 - 1) := le_trans b_ge_two h₇
-    have h₉ : 2 < p := gt_of_gt_of_ge h₅ h₈
-    have h₁₀ := psp_from_prime_gt_p b_ge_two hp₂ h₉
-    use psp_from_prime b p
-    constructor
-    · exact psp_from_prime_psp b_ge_two hp₂ h₉ h₆
-    · exact le_trans (show m ≤ p by omega) (le_of_lt h₁₀)
+  have h := Nat.exists_infinite_primes (b * (b ^ 2 - 1) + 1 + m)
+  cases' h with p hp
+  cases' hp with hp₁ hp₂
+  have h₁ : 0 < b := pos_of_gt (Nat.succ_le_iff.mp b_ge_two)
+  have h₂ : 4 ≤ b ^ 2 := pow_le_pow_left' b_ge_two 2
+  have h₃ : 0 < b ^ 2 - 1 := tsub_pos_of_lt (gt_of_ge_of_gt h₂ (by norm_num))
+  have h₄ : 0 < b * (b ^ 2 - 1) := mul_pos h₁ h₃
+  have h₅ : b * (b ^ 2 - 1) < p
+  omega
+  have h₆ : ¬p ∣ b * (b ^ 2 - 1) := Nat.not_dvd_of_pos_of_lt h₄ h₅
+  have h₇ : b ≤ b * (b ^ 2 - 1) := Nat.le_mul_of_pos_right _ h₃
+  have h₈ : 2 ≤ b * (b ^ 2 - 1) := le_trans b_ge_two h₇
+  have h₉ : 2 < p := gt_of_gt_of_ge h₅ h₈
+  have h₁₀ := psp_from_prime_gt_p b_ge_two hp₂ h₉
+  use psp_from_prime b p
+  constructor
+  exact psp_from_prime_psp b_ge_two hp₂ h₉ h₆
+  exact le_trans (show m ≤ p by omega) (le_of_lt h₁₀)
   -- If `¬2 ≤ b`, then `b = 1`. Since all composite numbers are pseudoprimes to base 1, we can pick
   -- any composite number greater than m. We choose `2 * (m + 2)` because it is greater than `m` and
   -- is composite for all natural numbers `m`.
-  · have h₁ : b = 1 := by omega
-    rw [h₁]
-    use 2 * (m + 2)
-    have : ¬Nat.Prime (2 * (m + 2)) := Nat.not_prime_mul (by omega) (by omega)
-    exact ⟨fermatPsp_base_one (by omega) this, by omega⟩
+  have h₁ : b = 1 := by omega
+  rw [h₁]
+  use 2 * (m + 2)
+  have : ¬Nat.Prime (2 * (m + 2)) := Nat.not_prime_mul (by omega) (by omega)
+  exact ⟨fermatPsp_base_one (by omega) this, by omega⟩
 
 theorem frequently_atTop_fermatPsp {b : ℕ} (h : 1 ≤ b) : ∃ᶠ n in Filter.atTop, FermatPsp n b := by
   -- Based on the proof of `Nat.frequently_atTop_modEq_one`

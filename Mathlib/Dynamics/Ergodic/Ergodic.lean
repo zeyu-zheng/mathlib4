@@ -85,18 +85,18 @@ theorem preErgodic_of_preErgodic_conjugate (hg : MeasurePreserving g μ μ') (hf
     intro s hs₀ hs₁
     replace hs₁ : f ⁻¹' (g ⁻¹' s) = g ⁻¹' s := by rw [← preimage_comp, h_comm, preimage_comp, hs₁]
     cases' hf.ae_empty_or_univ (hg.measurable hs₀) hs₁ with hs₂ hs₂ <;> [left; right]
-    · simpa only [ae_eq_empty, hg.measure_preimage hs₀.nullMeasurableSet] using hs₂
-    · simpa only [ae_eq_univ, ← preimage_compl,
-        hg.measure_preimage hs₀.compl.nullMeasurableSet] using hs₂⟩
+    simpa only [ae_eq_empty, hg.measure_preimage hs₀.nullMeasurableSet] using hs₂
+    simpa only [ae_eq_univ, ← preimage_compl,
+      hg.measure_preimage hs₀.compl.nullMeasurableSet] using hs₂⟩
 
 theorem preErgodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
     PreErgodic (e ∘ f ∘ e.symm) μ' ↔ PreErgodic f μ := by
   refine ⟨fun hf => preErgodic_of_preErgodic_conjugate (h.symm e) hf ?_,
       fun hf => preErgodic_of_preErgodic_conjugate h hf ?_⟩
-  · change (e.symm ∘ e) ∘ f ∘ e.symm = f ∘ e.symm
-    rw [MeasurableEquiv.symm_comp_self, id_comp]
-  · change e ∘ f = e ∘ f ∘ e.symm ∘ e
-    rw [MeasurableEquiv.symm_comp_self, comp_id]
+  change (e.symm ∘ e) ∘ f ∘ e.symm = f ∘ e.symm
+  rw [MeasurableEquiv.symm_comp_self, id_comp]
+  change e ∘ f = e ∘ f ∘ e.symm ∘ e
+  rw [MeasurableEquiv.symm_comp_self, comp_id]
 
 theorem ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
     Ergodic (e ∘ f ∘ e.symm) μ' ↔ Ergodic f μ := by

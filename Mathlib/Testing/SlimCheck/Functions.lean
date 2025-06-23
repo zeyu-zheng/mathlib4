@@ -291,20 +291,20 @@ theorem List.applyId_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nodu
   | nil => cases h₂
   | cons x' xs xs_ih =>
     cases i
-    · simp only [length_cons, lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true,
-        getElem?_eq_getElem, getElem_cons_zero, Option.some.injEq] at h₂
-      subst h₂
-      cases ys
-      · cases h₁
-      · simp only [applyId, map, Prod.toSigma, dlookup_cons_eq, Option.getD_some,
-          getElem?_cons_zero, Option.some.injEq]
-    · cases ys
-      · cases h₁
-      · cases' h₀ with _ _ h₀ h₁
-        simp only [getElem?_cons_succ, zip_cons_cons, applyId_cons] at h₂ ⊢
-        rw [if_neg]
-        · apply xs_ih <;> solve_by_elim [Nat.succ.inj]
-        · apply h₀; apply List.getElem?_mem h₂
+    simp only [length_cons, lt_add_iff_pos_left, add_pos_iff, zero_lt_one, or_true,
+      getElem?_eq_getElem, getElem_cons_zero, Option.some.injEq] at h₂
+    subst h₂
+    cases ys
+    cases h₁
+    simp only [applyId, map, Prod.toSigma, dlookup_cons_eq, Option.getD_some,
+      getElem?_cons_zero, Option.some.injEq]
+    cases ys
+    cases h₁
+    cases' h₀ with _ _ h₀ h₁
+    simp only [getElem?_cons_succ, zip_cons_cons, applyId_cons] at h₂ ⊢
+    rw [if_neg]
+    apply xs_ih <;> solve_by_elim [Nat.succ.inj]
+    apply h₀; apply List.getElem?_mem h₂
 
 theorem applyId_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys)
     (x : α) : List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs := by
@@ -321,30 +321,30 @@ theorem applyId_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs
     | nil => contradiction
     | cons x' xs xs_ih =>
       cases' ys with y ys
-      · cases h₃
+      cases h₃
       dsimp [List.dlookup] at h₃; split_ifs at h₃ with h
-      · rw [Option.some_inj] at h₃
-        subst x'; subst val
-        simp only [List.mem_cons, true_or_iff, eq_self_iff_true]
-      · cases' h₀ with _ _ h₀ h₅
-        cases' h₂ with _ _ h₂ h₄
-        have h₆ := Nat.succ.inj h₁
-        specialize xs_ih h₅ h₃ h₄ h₆
-        simp only [Ne.symm h, xs_ih, List.mem_cons, false_or_iff]
-        suffices val ∈ ys by tauto
-        erw [← Option.mem_def, List.mem_dlookup_iff] at h₃
-        · simp only [Prod.toSigma, List.mem_map, heq_iff_eq, Prod.exists] at h₃
-          rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
-          apply (List.mem_zip h₃).2
-        simp only [List.NodupKeys, List.keys, comp, Prod.fst_toSigma, List.map_map]
-        rwa [List.map_fst_zip _ _ (le_of_eq h₆)]
+      rw [Option.some_inj] at h₃
+      subst x'; subst val
+      simp only [List.mem_cons, true_or_iff, eq_self_iff_true]
+      cases' h₀ with _ _ h₀ h₅
+      cases' h₂ with _ _ h₂ h₄
+      have h₆ := Nat.succ.inj h₁
+      specialize xs_ih h₅ h₃ h₄ h₆
+      simp only [Ne.symm h, xs_ih, List.mem_cons, false_or_iff]
+      suffices val ∈ ys by tauto
+      erw [← Option.mem_def, List.mem_dlookup_iff] at h₃
+      simp only [Prod.toSigma, List.mem_map, heq_iff_eq, Prod.exists] at h₃
+      rcases h₃ with ⟨a, b, h₃, h₄, h₅⟩
+      apply (List.mem_zip h₃).2
+      simp only [List.NodupKeys, List.keys, comp, Prod.fst_toSigma, List.map_map]
+      rwa [List.map_fst_zip _ _ (le_of_eq h₆)]
 
 theorem List.applyId_eq_self [DecidableEq α] {xs ys : List α} (x : α) :
     x ∉ xs → List.applyId.{u} (xs.zip ys) x = x := by
   intro h
   dsimp [List.applyId]
   rw [List.dlookup_eq_none.2]
-  · rfl
+  rfl
   simp only [List.keys, not_exists, Prod.toSigma, exists_and_right, exists_eq_right, List.mem_map,
     Function.comp_apply, List.map_map, Prod.exists]
   intro y hy
@@ -354,27 +354,27 @@ theorem applyId_injective [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup 
     Injective.{u + 1, u + 1} (List.applyId (xs.zip ys)) := by
   intro x y h
   by_cases hx : x ∈ xs <;> by_cases hy : y ∈ xs
-  · rw [List.mem_iff_getElem?] at hx hy
-    cases' hx with i hx
-    cases' hy with j hy
-    suffices some x = some y by injection this
-    have h₂ := h₁.length_eq
-    rw [List.applyId_zip_eq h₀ h₂ _ _ _ hx] at h
-    rw [← hx, ← hy]; congr
-    apply List.getElem?_inj _ (h₁.nodup_iff.1 h₀)
-    · symm; rw [h]
-      rw [← List.applyId_zip_eq] <;> assumption
-    · rw [← h₁.length_eq]
-      rw [List.getElem?_eq_some] at hx
-      cases' hx with hx hx'
-      exact hx
-  · rw [← applyId_mem_iff h₀ h₁] at hx hy
-    rw [h] at hx
-    contradiction
-  · rw [← applyId_mem_iff h₀ h₁] at hx hy
-    rw [h] at hx
-    contradiction
-  · rwa [List.applyId_eq_self, List.applyId_eq_self] at h <;> assumption
+  rw [List.mem_iff_getElem?] at hx hy
+  cases' hx with i hx
+  cases' hy with j hy
+  suffices some x = some y by injection this
+  have h₂ := h₁.length_eq
+  rw [List.applyId_zip_eq h₀ h₂ _ _ _ hx] at h
+  rw [← hx, ← hy]; congr
+  apply List.getElem?_inj _ (h₁.nodup_iff.1 h₀)
+  symm; rw [h]
+  rw [← List.applyId_zip_eq] <;> assumption
+  rw [← h₁.length_eq]
+  rw [List.getElem?_eq_some] at hx
+  cases' hx with hx hx'
+  exact hx
+  rw [← applyId_mem_iff h₀ h₁] at hx hy
+  rw [h] at hx
+  contradiction
+  rw [← applyId_mem_iff h₀ h₁] at hx hy
+  rw [h] at hx
+  contradiction
+  rwa [List.applyId_eq_self, List.applyId_eq_self] at h <;> assumption
 
 open TotalFunction (List.toFinmap')
 
@@ -461,8 +461,8 @@ protected theorem injective [DecidableEq α] (f : InjectiveFunction α) : Inject
   revert hperm hnodup
   rw [hxs]; intros hperm hnodup
   apply InjectiveFunction.applyId_injective
-  · rwa [← h₀, hxs, hperm.nodup_iff]
-  · rwa [← hxs, h₀, h₁] at hperm
+  rwa [← h₀, hxs, hperm.nodup_iff]
+  rwa [← hxs, h₀, h₁] at hperm
 
 instance PiInjective.sampleableExt : SampleableExt { f : ℤ → ℤ // Function.Injective f } where
   proxy := InjectiveFunction ℤ

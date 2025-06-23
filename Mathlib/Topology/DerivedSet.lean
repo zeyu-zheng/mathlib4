@@ -97,14 +97,14 @@ lemma IsPreconnected.inter_derivedSet_nonempty [T1Space X] {U : Set X} (hs : IsP
     (a b : Set X) (h : U ⊆ a ∪ b) (ha : (U ∩ derivedSet a).Nonempty)
     (hb : (U ∩ derivedSet b).Nonempty) : (U ∩ (derivedSet a ∩ derivedSet b)).Nonempty := by
   by_cases hu : U.Nontrivial
-  · apply isPreconnected_closed_iff.mp hs
-    · simp
-    · simp
-    · trans derivedSet U
-      · apply hs.preperfect_of_nontrivial hu
-      · rw [← derivedSet_union]
-        exact derivedSet_mono _ _ h
-    · exact ha
-    · exact hb
-  · obtain ⟨x, hx⟩ := ha.left.exists_eq_singleton_or_nontrivial.resolve_right hu
-    simp_all
+  apply isPreconnected_closed_iff.mp hs
+  simp
+  simp
+  trans derivedSet U
+  apply hs.preperfect_of_nontrivial hu
+  rw [← derivedSet_union]
+  exact derivedSet_mono _ _ h
+  exact ha
+  exact hb
+  obtain ⟨x, hx⟩ := ha.left.exists_eq_singleton_or_nontrivial.resolve_right hu
+  simp_all

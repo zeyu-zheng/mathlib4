@@ -61,15 +61,15 @@ theorem condexp_stopping_time_ae_eq_restrict_eq_const_of_le_const (h : Martingal
     [SigmaFinite (μ.trim (hτ.measurableSpace_le_of_le hτ_le))] (i : ι) :
     μ[f n|hτ.measurableSpace] =ᵐ[μ.restrict {x | τ x = i}] f i := by
   by_cases hin : i ≤ n
-  · refine Filter.EventuallyEq.trans ?_ (ae_restrict_of_ae (h.condexp_ae_eq hin))
-    refine condexp_ae_eq_restrict_of_measurableSpace_eq_on (hτ.measurableSpace_le_of_le hτ_le)
-      (ℱ.le i) (hτ.measurableSet_eq' i) fun t => ?_
-    rw [Set.inter_comm _ t, IsStoppingTime.measurableSet_inter_eq_iff]
-  · suffices {x : Ω | τ x = i} = ∅ by simp [this]; norm_cast
-    ext1 x
-    simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false_iff]
-    rintro rfl
-    exact hin (hτ_le x)
+  refine Filter.EventuallyEq.trans ?_ (ae_restrict_of_ae (h.condexp_ae_eq hin))
+  refine condexp_ae_eq_restrict_of_measurableSpace_eq_on (hτ.measurableSpace_le_of_le hτ_le)
+    (ℱ.le i) (hτ.measurableSet_eq' i) fun t => ?_
+  rw [Set.inter_comm _ t, IsStoppingTime.measurableSet_inter_eq_iff]
+  suffices {x : Ω | τ x = i} = ∅ by simp [this]; norm_cast
+  ext1 x
+  simp only [Set.mem_setOf_eq, Set.mem_empty_iff_false, iff_false_iff]
+  rintro rfl
+  exact hin (hτ_le x)
 
 theorem stoppedValue_ae_eq_restrict_eq (h : Martingale f ℱ μ) (hτ : IsStoppingTime ℱ τ)
     (hτ_le : ∀ x, τ x ≤ n) [SigmaFinite (μ.trim (hτ.measurableSpace_le_of_le hτ_le))] (i : ι) :
@@ -118,9 +118,9 @@ theorem stoppedValue_ae_eq_condexp_of_le_of_countable_range (h : Martingale f �
     (h.stoppedValue_ae_eq_condexp_of_le_const_of_countable_range hτ hτ_le hτ_countable_range)
   refine (Filter.EventuallyEq.trans ?_
     (condexp_condexp_of_le ?_ (hτ.measurableSpace_le_of_le hτ_le)).symm).trans this.symm
-  · exact h.stoppedValue_ae_eq_condexp_of_le_const_of_countable_range hσ
-      (fun x => (hσ_le_τ x).trans (hτ_le x)) hσ_countable_range
-  · exact hσ.measurableSpace_mono hτ hσ_le_τ
+  exact h.stoppedValue_ae_eq_condexp_of_le_const_of_countable_range hσ
+    (fun x => (hσ_le_τ x).trans (hτ_le x)) hσ_countable_range
+  exact hσ.measurableSpace_mono hτ hσ_le_τ
 
 /-- If `τ` and `σ` are two stopping times with `σ ≤ τ` and `τ` is bounded, then the value of a
 martingale `f` at `σ` is the conditional expectation of its value at `τ` with respect to the
@@ -163,15 +163,15 @@ theorem condexp_stoppedValue_stopping_time_ae_eq_restrict_le (h : Martingale f �
     refine StronglyMeasurable.aeStronglyMeasurable' ?_
     refine StronglyMeasurable.stronglyMeasurable_of_measurableSpace_le_on
       (hτ.measurableSet_le_stopping_time hσ) ?_ ?_ ?_
-    · intro t ht
-      rw [Set.inter_comm _ t] at ht ⊢
-      rw [hτ.measurableSet_inter_le_iff hσ, IsStoppingTime.measurableSet_min_iff hτ hσ] at ht
-      exact ht.2
-    · refine StronglyMeasurable.indicator ?_ (hτ.measurableSet_le_stopping_time hσ)
-      refine Measurable.stronglyMeasurable ?_
-      exact measurable_stoppedValue h.adapted.progMeasurable_of_discrete hτ
-    · intro x hx
-      simp only [hx, Set.indicator_of_not_mem, not_false_iff]
+    intro t ht
+    rw [Set.inter_comm _ t] at ht ⊢
+    rw [hτ.measurableSet_inter_le_iff hσ, IsStoppingTime.measurableSet_min_iff hτ hσ] at ht
+    exact ht.2
+    refine StronglyMeasurable.indicator ?_ (hτ.measurableSet_le_stopping_time hσ)
+    refine Measurable.stronglyMeasurable ?_
+    exact measurable_stoppedValue h.adapted.progMeasurable_of_discrete hτ
+    intro x hx
+    simp only [hx, Set.indicator_of_not_mem, not_false_iff]
   exact condexp_of_aestronglyMeasurable' hσ.measurableSpace_le h_meas h_int
 
 /-- **Optional Sampling theorem**. If `τ` is a bounded stopping time and `σ` is another stopping
@@ -185,25 +185,25 @@ theorem stoppedValue_min_ae_eq_condexp [SigmaFiniteFiltration μ ℱ] (h : Marti
   refine
     (h.stoppedValue_ae_eq_condexp_of_le hτ (hσ.min hτ) (fun x => min_le_right _ _) hτ_le).trans ?_
   refine ae_of_ae_restrict_of_ae_restrict_compl {x | σ x ≤ τ x} ?_ ?_
-  · exact condexp_min_stopping_time_ae_eq_restrict_le hσ hτ
-  · suffices μ[stoppedValue f τ|(hσ.min hτ).measurableSpace] =ᵐ[μ.restrict {x | τ x ≤ σ x}]
-        μ[stoppedValue f τ|hσ.measurableSpace] by
-      rw [ae_restrict_iff' (hσ.measurableSpace_le _ (hσ.measurableSet_le_stopping_time hτ).compl)]
-      rw [Filter.EventuallyEq, ae_restrict_iff'] at this
-      swap; · exact hτ.measurableSpace_le _ (hτ.measurableSet_le_stopping_time hσ)
-      filter_upwards [this] with x hx hx_mem
-      simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_le] at hx_mem
-      exact hx hx_mem.le
-    apply Filter.EventuallyEq.trans _ ((condexp_min_stopping_time_ae_eq_restrict_le hτ hσ).trans _)
-    · exact stoppedValue f τ
-    · rw [IsStoppingTime.measurableSpace_min hσ, IsStoppingTime.measurableSpace_min hτ, inf_comm]
-    · have h1 : μ[stoppedValue f τ|hτ.measurableSpace] = stoppedValue f τ := by
-        apply condexp_of_stronglyMeasurable hτ.measurableSpace_le
-        · exact Measurable.stronglyMeasurable <|
-            measurable_stoppedValue h.adapted.progMeasurable_of_discrete hτ
-        · exact integrable_stoppedValue ι hτ h.integrable hτ_le
-      rw [h1]
-      exact (condexp_stoppedValue_stopping_time_ae_eq_restrict_le h hτ hσ hτ_le).symm
+  exact condexp_min_stopping_time_ae_eq_restrict_le hσ hτ
+  suffices μ[stoppedValue f τ|(hσ.min hτ).measurableSpace] =ᵐ[μ.restrict {x | τ x ≤ σ x}]
+      μ[stoppedValue f τ|hσ.measurableSpace] by
+    rw [ae_restrict_iff' (hσ.measurableSpace_le _ (hσ.measurableSet_le_stopping_time hτ).compl)]
+    rw [Filter.EventuallyEq, ae_restrict_iff'] at this
+    swap; · exact hτ.measurableSpace_le _ (hτ.measurableSet_le_stopping_time hσ)
+    filter_upwards [this] with x hx hx_mem
+    simp only [Set.mem_compl_iff, Set.mem_setOf_eq, not_le] at hx_mem
+    exact hx hx_mem.le
+  apply Filter.EventuallyEq.trans _ ((condexp_min_stopping_time_ae_eq_restrict_le hτ hσ).trans _)
+  exact stoppedValue f τ
+  rw [IsStoppingTime.measurableSpace_min hσ, IsStoppingTime.measurableSpace_min hτ, inf_comm]
+  have h1 : μ[stoppedValue f τ|hτ.measurableSpace] = stoppedValue f τ := by
+    apply condexp_of_stronglyMeasurable hτ.measurableSpace_le
+    exact Measurable.stronglyMeasurable <|
+      measurable_stoppedValue h.adapted.progMeasurable_of_discrete hτ
+    exact integrable_stoppedValue ι hτ h.integrable hτ_le
+  rw [h1]
+  exact (condexp_stoppedValue_stopping_time_ae_eq_restrict_le h hτ hσ hτ_le).symm
 
 end SubsetOfNat
 

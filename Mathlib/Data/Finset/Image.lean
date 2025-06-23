@@ -150,10 +150,10 @@ theorem map_subset_map {s₁ s₂ : Finset α} : s₁.map f ⊆ s₂.map f ↔ s
 /-- The `Finset` version of `Equiv.subset_symm_image`. -/
 theorem subset_map_symm {t : Finset β} {f : α ≃ β} : s ⊆ t.map f.symm ↔ s.map f ⊆ t := by
   constructor <;> intro h x hx
-  · simp only [mem_map_equiv, Equiv.symm_symm] at hx
-    simpa using h hx
-  · simp only [mem_map_equiv]
-    exact h (by simp [hx])
+  simp only [mem_map_equiv, Equiv.symm_symm] at hx
+  simpa using h hx
+  simp only [mem_map_equiv]
+  exact h (by simp [hx])
 
 /-- The `Finset` version of `Equiv.symm_image_subset`. -/
 theorem map_symm_subset {t : Finset β} {f : α ≃ β} : t.map f.symm ⊆ s ↔ t ⊆ s.map f := by
@@ -495,13 +495,13 @@ theorem mem_range_iff_mem_finset_range_of_mod_eq' [DecidableEq α] {f : ℕ → 
     (hn : 0 < n) (h : ∀ i, f (i % n) = f i) :
     a ∈ Set.range f ↔ a ∈ (Finset.range n).image fun i => f i := by
   constructor
-  · rintro ⟨i, hi⟩
-    simp only [mem_image, exists_prop, mem_range]
-    exact ⟨i % n, Nat.mod_lt i hn, (rfl.congr hi).mp (h i)⟩
-  · rintro h
-    simp only [mem_image, exists_prop, Set.mem_range, mem_range] at *
-    rcases h with ⟨i, _, ha⟩
-    exact ⟨i, ha⟩
+  rintro ⟨i, hi⟩
+  simp only [mem_image, exists_prop, mem_range]
+  exact ⟨i % n, Nat.mod_lt i hn, (rfl.congr hi).mp (h i)⟩
+  rintro h
+  simp only [mem_image, exists_prop, Set.mem_range, mem_range] at *
+  rcases h with ⟨i, _, ha⟩
+  exact ⟨i, ha⟩
 
 theorem mem_range_iff_mem_finset_range_of_mod_eq [DecidableEq α] {f : ℤ → α} {a : α} {n : ℕ}
     (hn : 0 < n) (h : ∀ i, f (i % n) = f i) :
@@ -698,9 +698,9 @@ then it is equal to the `Finset.image` of a `Finset` subset of that `Set`. -/
 theorem subset_image_iff [DecidableEq β] {s : Set α} {t : Finset β} {f : α → β} :
     ↑t ⊆ f '' s ↔ ∃ s' : Finset α, ↑s' ⊆ s ∧ s'.image f = t := by
   constructor; swap
-  · rintro ⟨t, ht, rfl⟩
-    rw [coe_image]
-    exact Set.image_subset f ht
+  rintro ⟨t, ht, rfl⟩
+  rw [coe_image]
+  exact Set.image_subset f ht
   intro h
   letI : CanLift β s (f ∘ (↑)) fun y => y ∈ f '' s := ⟨fun y ⟨x, hxt, hy⟩ => ⟨⟨x, hxt⟩, hy⟩⟩
   lift t to Finset s using h
@@ -709,7 +709,7 @@ theorem subset_image_iff [DecidableEq β] {s : Set α} {t : Finset β} {f : α �
 
 theorem range_sdiff_zero {n : ℕ} : range (n + 1) \ {0} = (range n).image Nat.succ := by
   induction' n with k hk
-  · simp
+  simp
   conv_rhs => rw [range_succ]
   rw [range_succ, image_insert, ← hk, insert_sdiff_of_not_mem]
   simp

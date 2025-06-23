@@ -40,8 +40,8 @@ lemma toMatrix_directSum_collectedBasis_eq_blockDiagonal' {R M₁ M₂ : Type*} 
   ext ⟨i, _⟩ ⟨j, _⟩
   simp only [toMatrix_apply, Matrix.blockDiagonal'_apply]
   rcases eq_or_ne i j with rfl | hij
-  · simp [h₂.collectedBasis_repr_of_mem _ (hf _ (Subtype.mem _)), restrict_apply]
-  · simp [hij, h₂.collectedBasis_repr_of_mem_ne _ hij.symm (hf _ (Subtype.mem _))]
+  simp [h₂.collectedBasis_repr_of_mem _ (hf _ (Subtype.mem _)), restrict_apply]
+  simp [hij, h₂.collectedBasis_repr_of_mem_ne _ hij.symm (hf _ (Subtype.mem _))]
 
 lemma diag_toMatrix_directSum_collectedBasis_eq_zero_of_mapsTo_ne
     {κ : ι → Type*} [∀ i, Fintype (κ i)] [∀ i, DecidableEq (κ i)]
@@ -52,11 +52,11 @@ lemma diag_toMatrix_directSum_collectedBasis_eq_zero_of_mapsTo_ne
   ext ⟨i, k⟩
   simp only [Matrix.diag_apply, Pi.zero_apply, toMatrix_apply, IsInternal.collectedBasis_coe]
   by_cases hi : σ i ∈ s
-  · let j : s := ⟨σ i, hi⟩
-    replace hσ : j ≠ i := fun hij ↦ hσ i <| Subtype.ext_iff.mp hij
-    exact h.collectedBasis_repr_of_mem_ne b hσ <| hf _ <| Subtype.mem (b i k)
-  · suffices f (b i k) = 0 by simp [this]
-    simpa [hN _ hi] using hf i <| Subtype.mem (b i k)
+  let j : s := ⟨σ i, hi⟩
+  replace hσ : j ≠ i := fun hij ↦ hσ i <| Subtype.ext_iff.mp hij
+  exact h.collectedBasis_repr_of_mem_ne b hσ <| hf _ <| Subtype.mem (b i k)
+  suffices f (b i k) = 0 by simp [this]
+  simpa [hN _ hi] using hf i <| Subtype.mem (b i k)
 
 variable [∀ i, Module.Finite R (N i)] [∀ i, Module.Free R (N i)]
 

@@ -93,8 +93,8 @@ theorem Matrix.vecMul_stdBasis (M : Matrix m n R) (i j) :
   simp only [vecMul, dotProduct]
   convert this
   split_ifs with h <;> simp only [stdBasis_apply]
-  · rw [h, Function.update_same]
-  · rw [Function.update_noteq (Ne.symm h), Pi.zero_apply]
+  rw [h, Function.update_same]
+  rw [Function.update_noteq (Ne.symm h), Pi.zero_apply]
 
 theorem range_vecMulLinear (M : Matrix m n R) :
     LinearMap.range M.vecMulLinear = span R (range M) := by
@@ -112,12 +112,12 @@ theorem Matrix.vecMul_injective_iff {R : Type*} [CommRing R] {M : Matrix m n R} 
   simp only [← LinearMap.ker_eq_bot, Fintype.linearIndependent_iff, Submodule.eq_bot_iff,
     LinearMap.mem_ker, vecMulLinear_apply]
   refine ⟨fun h c h0 ↦ congr_fun <| h c ?_, fun h c h0 ↦ funext <| h c ?_⟩
-  · rw [← h0]
-    ext i
-    simp [vecMul, dotProduct]
-  · rw [← h0]
-    ext j
-    simp [vecMul, dotProduct]
+  rw [← h0]
+  ext i
+  simp [vecMul, dotProduct]
+  rw [← h0]
+  ext j
+  simp [vecMul, dotProduct]
 
 /-- Linear maps `(m → R) →ₗ[R] (n → R)` are linearly equivalent over `Rᵐᵒᵖ` to `Matrix m n R`,
 by having matrices act by right multiplication.
@@ -334,7 +334,7 @@ theorem LinearMap.toMatrix'_apply (f : (n → R) →ₗ[R] m → R) (i j) :
   congr
   ext j'
   split_ifs with h
-  · rw [h, stdBasis_same]
+  rw [h, stdBasis_same]
   apply stdBasis_ne _ _ _ _ h
 
 @[simp]
@@ -530,11 +530,11 @@ theorem LinearMap.toMatrix_apply (f : M₁ →ₗ[R] M₂) (i : m) (j : n) :
   rw [LinearMap.toMatrix, LinearEquiv.trans_apply, LinearMap.toMatrix'_apply,
     LinearEquiv.arrowCongr_apply, Basis.equivFun_symm_apply, Finset.sum_eq_single j, if_pos rfl,
     one_smul, Basis.equivFun_apply]
-  · intro j' _ hj'
-    rw [if_neg hj', zero_smul]
-  · intro hj
-    have := Finset.mem_univ j
-    contradiction
+  intro j' _ hj'
+  rw [if_neg hj', zero_smul]
+  intro hj
+  have := Finset.mem_univ j
+  contradiction
 
 theorem LinearMap.toMatrix_transpose_apply (f : M₁ →ₗ[R] M₂) (j : n) :
     (LinearMap.toMatrix v₁ v₂ f)ᵀ j = v₂.repr (f (v₁ j)) :=
@@ -621,11 +621,11 @@ theorem Matrix.toLin_self (M : Matrix m n R) (i : n) :
   rw [Matrix.toLin_apply, Finset.sum_congr rfl fun j _hj ↦ ?_]
   rw [Basis.repr_self, Matrix.mulVec, dotProduct, Finset.sum_eq_single i, Finsupp.single_eq_same,
     mul_one]
-  · intro i' _ i'_ne
-    rw [Finsupp.single_eq_of_ne i'_ne.symm, mul_zero]
-  · intros
-    have := Finset.mem_univ i
-    contradiction
+  intro i' _ i'_ne
+  rw [Finsupp.single_eq_of_ne i'_ne.symm, mul_zero]
+  intros
+  have := Finset.mem_univ i
+  contradiction
 
 variable {M₃ : Type*} [AddCommMonoid M₃] [Module R M₃] (v₃ : Basis l R M₃)
 

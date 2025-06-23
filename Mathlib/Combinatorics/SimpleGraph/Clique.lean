@@ -52,15 +52,15 @@ theorem isClique_iff : G.IsClique s ↔ s.Pairwise G.Adj :=
 theorem isClique_iff_induce_eq : G.IsClique s ↔ G.induce s = ⊤ := by
   rw [isClique_iff]
   constructor
-  · intro h
-    ext ⟨v, hv⟩ ⟨w, hw⟩
-    simp only [comap_adj, Subtype.coe_mk, top_adj, Ne, Subtype.mk_eq_mk]
-    exact ⟨Adj.ne, h hv hw⟩
-  · intro h v hv w hw hne
-    have h2 : (G.induce s).Adj ⟨v, hv⟩ ⟨w, hw⟩ = _ := rfl
-    conv_lhs at h2 => rw [h]
-    simp only [top_adj, ne_eq, Subtype.mk.injEq, eq_iff_iff] at h2
-    exact h2.1 hne
+  intro h
+  ext ⟨v, hv⟩ ⟨w, hw⟩
+  simp only [comap_adj, Subtype.coe_mk, top_adj, Ne, Subtype.mk_eq_mk]
+  exact ⟨Adj.ne, h hv hw⟩
+  intro h v hv w hw hne
+  have h2 : (G.induce s).Adj ⟨v, hv⟩ ⟨w, hw⟩ = _ := rfl
+  conv_lhs at h2 => rw [h]
+  simp only [top_adj, ne_eq, Subtype.mk.injEq, eq_iff_iff] at h2
+  exact h2.1 hne
 
 instance [DecidableEq α] [DecidableRel G.Adj] {s : Finset α} : Decidable (G.IsClique s) :=
   decidable_of_iff' _ G.isClique_iff
@@ -104,10 +104,10 @@ protected theorem IsClique.map (h : G.IsClique s) {f : α ↪ β} : (G.map f).Is
 theorem isClique_map_iff_of_nontrivial {f : α ↪ β} {t : Set β} (ht : t.Nontrivial) :
     (G.map f).IsClique t ↔ ∃ (s : Set α), G.IsClique s ∧ f '' s = t := by
   refine ⟨fun h ↦ ⟨f ⁻¹' t, ?_, ?_⟩, by rintro ⟨x, hs, rfl⟩; exact hs.map⟩
-  · rintro x (hx : f x ∈ t) y (hy : f y ∈ t) hne
-    obtain ⟨u,v, huv, hux, hvy⟩ := h hx hy (by simpa)
-    rw [EmbeddingLike.apply_eq_iff_eq] at hux hvy
-    rwa [← hux, ← hvy]
+  rintro x (hx : f x ∈ t) y (hy : f y ∈ t) hne
+  obtain ⟨u,v, huv, hux, hvy⟩ := h hx hy (by simpa)
+  rw [EmbeddingLike.apply_eq_iff_eq] at hux hvy
+  rwa [← hux, ← hvy]
   rw [Set.image_preimage_eq_iff]
   intro x hxt
   obtain ⟨y,hyt, hyne⟩ := ht.exists_ne x
@@ -117,14 +117,14 @@ theorem isClique_map_iff_of_nontrivial {f : α ↪ β} {t : Set β} (ht : t.Nont
 theorem isClique_map_iff {f : α ↪ β} {t : Set β} :
     (G.map f).IsClique t ↔ t.Subsingleton ∨ ∃ (s : Set α), G.IsClique s ∧ f '' s = t := by
   obtain (ht | ht) := t.subsingleton_or_nontrivial
-  · simp [IsClique.of_subsingleton, ht]
+  simp [IsClique.of_subsingleton, ht]
   simp [isClique_map_iff_of_nontrivial ht, ht.not_subsingleton]
 
 @[simp] theorem isClique_map_image_iff {f : α ↪ β} :
     (G.map f).IsClique (f '' s) ↔ G.IsClique s := by
   rw [isClique_map_iff, f.injective.subsingleton_image_iff]
   obtain (hs | hs) := s.subsingleton_or_nontrivial
-  · simp [hs, IsClique.of_subsingleton]
+  simp [hs, IsClique.of_subsingleton]
   simp [or_iff_right hs.not_subsingleton, Set.image_eq_image f.injective]
 
 variable {f : α ↪ β} {t : Finset β}
@@ -132,21 +132,21 @@ variable {f : α ↪ β} {t : Finset β}
 theorem isClique_map_finset_iff_of_nontrivial (ht : t.Nontrivial) :
     (G.map f).IsClique t ↔ ∃ (s : Finset α), G.IsClique s ∧ s.map f = t := by
   constructor
-  · rw [isClique_map_iff_of_nontrivial (by simpa)]
-    rintro ⟨s, hs, hst⟩
-    obtain ⟨s, rfl⟩ := Set.Finite.exists_finset_coe <|
-      (show s.Finite from Set.Finite.of_finite_image (by simp [hst]) f.injective.injOn)
-    exact ⟨s,hs, Finset.coe_inj.1 (by simpa)⟩
+  rw [isClique_map_iff_of_nontrivial (by simpa)]
+  rintro ⟨s, hs, hst⟩
+  obtain ⟨s, rfl⟩ := Set.Finite.exists_finset_coe <|
+    (show s.Finite from Set.Finite.of_finite_image (by simp [hst]) f.injective.injOn)
+  exact ⟨s,hs, Finset.coe_inj.1 (by simpa)⟩
   rintro ⟨s, hs, rfl⟩
   simpa using hs.map (f := f)
 
 theorem isClique_map_finset_iff :
     (G.map f).IsClique t ↔ t.card ≤ 1 ∨ ∃ (s : Finset α), G.IsClique s ∧ s.map f = t := by
   obtain (ht | ht) := le_or_lt t.card 1
-  · simp only [ht, true_or, iff_true]
-    exact IsClique.of_subsingleton <| card_le_one.1 ht
+  simp only [ht, true_or, iff_true]
+  exact IsClique.of_subsingleton <| card_le_one.1 ht
   rw [isClique_map_finset_iff_of_nontrivial, ← not_lt]
-  · simp [ht, Finset.map_eq_image]
+  simp [ht, Finset.map_eq_image]
   exact Finset.one_lt_card_iff_nontrivial.mp ht
 
 protected theorem IsClique.finsetMap {f : α ↪ β} {s : Finset α} (h : G.IsClique s) :
@@ -194,8 +194,8 @@ theorem isNClique_map_iff (hn : 1 < n) {t : Finset β} {f : α ↪ β} :
   rw [isNClique_iff, isClique_map_finset_iff, or_and_right,
     or_iff_right (by rintro ⟨h', rfl⟩; exact h'.not_lt hn)]
   constructor
-  · rintro ⟨⟨s, hs, rfl⟩, rfl⟩
-    simp [isNClique_iff, hs]
+  rintro ⟨⟨s, hs, rfl⟩, rfl⟩
+  simp [isNClique_iff, hs]
   rintro ⟨s, hs, rfl⟩
   simp [hs.card_eq, hs.clique]
 
@@ -221,9 +221,9 @@ variable [DecidableEq α]
 theorem IsNClique.insert (hs : G.IsNClique n s) (h : ∀ b ∈ s, G.Adj a b) :
     G.IsNClique (n + 1) (insert a s) := by
   constructor
-  · push_cast
-    exact hs.1.insert fun b hb _ => h _ hb
-  · rw [card_insert_of_not_mem fun ha => (h _ ha).ne rfl, hs.2]
+  push_cast
+  exact hs.1.insert fun b hb _ => h _ hb
+  rw [card_insert_of_not_mem fun ha => (h _ ha).ne rfl, hs.2]
 
 theorem is3Clique_triple_iff : G.IsNClique 3 {a, b, c} ↔ G.Adj a b ∧ G.Adj a c ∧ G.Adj b c := by
   simp only [isNClique_iff, isClique_iff, Set.pairwise_insert_of_symmetric G.symm, coe_insert]
@@ -233,11 +233,11 @@ theorem is3Clique_triple_iff : G.IsNClique 3 {a, b, c} ↔ G.Adj a b ∧ G.Adj a
 theorem is3Clique_iff :
     G.IsNClique 3 s ↔ ∃ a b c, G.Adj a b ∧ G.Adj a c ∧ G.Adj b c ∧ s = {a, b, c} := by
   refine ⟨fun h ↦ ?_, ?_⟩
-  · obtain ⟨a, b, c, -, -, -, hs⟩ := card_eq_three.1 h.card_eq
-    refine ⟨a, b, c, ?_⟩
-    rwa [hs, eq_self_iff_true, and_true, is3Clique_triple_iff.symm, ← hs]
-  · rintro ⟨a, b, c, hab, hbc, hca, rfl⟩
-    exact is3Clique_triple_iff.2 ⟨hab, hbc, hca⟩
+  obtain ⟨a, b, c, -, -, -, hs⟩ := card_eq_three.1 h.card_eq
+  refine ⟨a, b, c, ?_⟩
+  rwa [hs, eq_self_iff_true, and_true, is3Clique_triple_iff.symm, ← hs]
+  rintro ⟨a, b, c, hab, hbc, hca, rfl⟩
+  exact is3Clique_triple_iff.2 ⟨hab, hbc, hca⟩
 
 end DecidableEq
 
@@ -327,9 +327,9 @@ theorem CliqueFree.comap {H : SimpleGraph β} (f : H ↪g G) : G.CliqueFree n �
 @[simp] theorem cliqueFree_map_iff {f : α ↪ β} [Nonempty α] :
     (G.map f).CliqueFree n ↔ G.CliqueFree n := by
   obtain (hle | hlt) := le_or_lt n 1
-  · obtain (rfl | rfl) := Nat.le_one_iff_eq_zero_or_eq_one.1 hle
-    · simp [CliqueFree]
-    simp [CliqueFree, show ∃ (_ : β), True from ⟨f (Classical.arbitrary _), trivial⟩]
+  obtain (rfl | rfl) := Nat.le_one_iff_eq_zero_or_eq_one.1 hle
+  simp [CliqueFree]
+  simp [CliqueFree, show ∃ (_ : β), True from ⟨f (Classical.arbitrary _), trivial⟩]
   simp [CliqueFree, isNClique_map_iff hlt]
 
 /-- See `SimpleGraph.cliqueFree_of_chromaticNumber_lt` for a tighter bound. -/
@@ -355,31 +355,31 @@ protected theorem CliqueFree.replaceVertex [DecidableEq α] (h : G.CliqueFree n)
   obtain ⟨φ, hφ⟩ := topEmbeddingOfNotCliqueFree h
   rw [not_cliqueFree_iff]
   by_cases mt : t ∈ Set.range φ
-  · obtain ⟨x, hx⟩ := mt
-    by_cases ms : s ∈ Set.range φ
-    · obtain ⟨y, hy⟩ := ms
-      have e := @hφ x y
-      simp_rw [hx, hy, adj_comm, not_adj_replaceVertex_same, top_adj, false_iff, not_ne_iff] at e
-      rwa [← hx, e, hy, replaceVertex_self, not_cliqueFree_iff] at h
-    · unfold replaceVertex at hφ
-      use φ.setValue x s
-      intro a b
-      simp only [Embedding.coeFn_mk, Embedding.setValue, not_exists.mp ms, ite_false]
-      rw [apply_ite (G.Adj · _), apply_ite (G.Adj _ ·), apply_ite (G.Adj _ ·)]
-      convert @hφ a b <;> simp only [← φ.apply_eq_iff_eq, SimpleGraph.irrefl, hx]
-  · use φ
-    simp_rw [Set.mem_range, not_exists, ← ne_eq] at mt
-    conv at hφ => enter [a, b]; rw [G.adj_replaceVertex_iff_of_ne _ (mt a) (mt b)]
-    exact hφ
+  obtain ⟨x, hx⟩ := mt
+  by_cases ms : s ∈ Set.range φ
+  obtain ⟨y, hy⟩ := ms
+  have e := @hφ x y
+  simp_rw [hx, hy, adj_comm, not_adj_replaceVertex_same, top_adj, false_iff, not_ne_iff] at e
+  rwa [← hx, e, hy, replaceVertex_self, not_cliqueFree_iff] at h
+  unfold replaceVertex at hφ
+  use φ.setValue x s
+  intro a b
+  simp only [Embedding.coeFn_mk, Embedding.setValue, not_exists.mp ms, ite_false]
+  rw [apply_ite (G.Adj · _), apply_ite (G.Adj _ ·), apply_ite (G.Adj _ ·)]
+  convert @hφ a b <;> simp only [← φ.apply_eq_iff_eq, SimpleGraph.irrefl, hx]
+  use φ
+  simp_rw [Set.mem_range, not_exists, ← ne_eq] at mt
+  conv at hφ => enter [a, b]; rw [G.adj_replaceVertex_iff_of_ne _ (mt a) (mt b)]
+  exact hφ
 
 open Classical in
 @[simp]
 theorem cliqueFree_two : G.CliqueFree 2 ↔ G = ⊥ := by
   constructor
-  · simp_rw [← edgeSet_eq_empty, Set.eq_empty_iff_forall_not_mem, Sym2.forall, mem_edgeSet]
-    exact fun h a b hab => h _ ⟨by simpa [hab.ne], card_pair hab.ne⟩
-  · rintro rfl
-    exact cliqueFree_bot le_rfl
+  simp_rw [← edgeSet_eq_empty, Set.eq_empty_iff_forall_not_mem, Sym2.forall, mem_edgeSet]
+  exact fun h a b hab => h _ ⟨by simpa [hab.ne], card_pair hab.ne⟩
+  rintro rfl
+  exact cliqueFree_bot le_rfl
 
 /-- Adding an edge increases the clique number by at most one. -/
 protected theorem CliqueFree.sup_edge (h : G.CliqueFree n) (v w : α) :
@@ -389,27 +389,27 @@ protected theorem CliqueFree.sup_edge (h : G.CliqueFree n) (v w : α) :
   simp only [ne_eq, top_adj] at ha
   rw [not_cliqueFree_iff]
   by_cases mw : w ∈ Set.range f
-  · obtain ⟨x, hx⟩ := mw
-    use ⟨f ∘ x.succAboveEmb, f.2.comp Fin.succAbove_right_injective⟩
-    intro a b
-    simp_rw [Embedding.coeFn_mk, comp_apply, Fin.succAboveEmb_apply, top_adj]
-    have hs := @ha (x.succAbove a) (x.succAbove b)
-    have ia : w ≠ f (x.succAbove a) :=
-      (hx ▸ f.apply_eq_iff_eq x (x.succAbove a)).ne.mpr (x.succAbove_ne a).symm
-    have ib : w ≠ f (x.succAbove b) :=
-      (hx ▸ f.apply_eq_iff_eq x (x.succAbove b)).ne.mpr (x.succAbove_ne b).symm
-    rw [sup_adj, edge_adj] at hs
-    simp only [ia.symm, ib.symm, and_false, false_and, or_false] at hs
-    rw [hs, Fin.succAbove_right_inj]
-  · use ⟨f ∘ Fin.succEmb n, (f.2.of_comp_iff _).mpr (Fin.succ_injective _)⟩
-    intro a b
-    simp only [Fin.val_succEmb, Embedding.coeFn_mk, comp_apply, top_adj]
-    have hs := @ha a.succ b.succ
-    have ia : f a.succ ≠ w := by simp_all
-    have ib : f b.succ ≠ w := by simp_all
-    rw [sup_adj, edge_adj] at hs
-    simp only [ia, ib, and_false, false_and, or_false] at hs
-    rw [hs, Fin.succ_inj]
+  obtain ⟨x, hx⟩ := mw
+  use ⟨f ∘ x.succAboveEmb, f.2.comp Fin.succAbove_right_injective⟩
+  intro a b
+  simp_rw [Embedding.coeFn_mk, comp_apply, Fin.succAboveEmb_apply, top_adj]
+  have hs := @ha (x.succAbove a) (x.succAbove b)
+  have ia : w ≠ f (x.succAbove a) :=
+    (hx ▸ f.apply_eq_iff_eq x (x.succAbove a)).ne.mpr (x.succAbove_ne a).symm
+  have ib : w ≠ f (x.succAbove b) :=
+    (hx ▸ f.apply_eq_iff_eq x (x.succAbove b)).ne.mpr (x.succAbove_ne b).symm
+  rw [sup_adj, edge_adj] at hs
+  simp only [ia.symm, ib.symm, and_false, false_and, or_false] at hs
+  rw [hs, Fin.succAbove_right_inj]
+  use ⟨f ∘ Fin.succEmb n, (f.2.of_comp_iff _).mpr (Fin.succ_injective _)⟩
+  intro a b
+  simp only [Fin.val_succEmb, Embedding.coeFn_mk, comp_apply, top_adj]
+  have hs := @ha a.succ b.succ
+  have ia : f a.succ ≠ w := by simp_all
+  have ib : f b.succ ≠ w := by simp_all
+  rw [sup_adj, edge_adj] at hs
+  simp only [ia, ib, and_false, false_and, or_false] at hs
+  rw [hs, Fin.succ_inj]
 
 end CliqueFree
 
@@ -455,8 +455,8 @@ open Classical in
 @[simp]
 theorem cliqueFreeOn_two : G.CliqueFreeOn s 2 ↔ s.Pairwise (G.Adjᶜ) := by
   refine ⟨fun h a ha b hb _ hab => h ?_ ⟨by simpa [hab.ne], card_pair hab.ne⟩, ?_⟩
-  · push_cast
-    exact Set.insert_subset_iff.2 ⟨ha, Set.singleton_subset_iff.2 hb⟩
+  push_cast
+  exact Set.insert_subset_iff.2 ⟨ha, Set.singleton_subset_iff.2 hb⟩
   simp only [CliqueFreeOn, isNClique_iff, card_eq_two, coe_subset, not_and, not_exists]
   rintro h t hst ht a b hab rfl
   simp only [coe_insert, coe_singleton, Set.insert_subset_iff, Set.singleton_subset_iff] at hst
@@ -518,26 +518,26 @@ theorem cliqueSet_map (hn : n ≠ 1) (G : SimpleGraph α) (f : α ↪ β) :
     (G.map f).cliqueSet n = map f '' G.cliqueSet n := by
   ext s
   constructor
-  · rintro ⟨hs, rfl⟩
-    have hs' : (s.preimage f f.injective.injOn).map f = s
-    rw [map_eq_image, image_preimage, filter_true_of_mem]
-    rintro a ha
-    obtain ⟨b, hb, hba⟩ := exists_mem_ne (hn.lt_of_le' <| Finset.card_pos.2 ⟨a, ha⟩) a
-    obtain ⟨c, _, _, hc, _⟩ := hs ha hb hba.symm
-    exact ⟨c, hc⟩
-    refine ⟨s.preimage f f.injective.injOn, ⟨?_, by rw [← card_map f, hs']⟩, hs'⟩
-    rw [coe_preimage]
-    exact fun a ha b hb hab => map_adj_apply.1 (hs ha hb <| f.injective.ne hab)
-  · rintro ⟨s, hs, rfl⟩
-    exact hs.map
+  rintro ⟨hs, rfl⟩
+  have hs' : (s.preimage f f.injective.injOn).map f = s
+  rw [map_eq_image, image_preimage, filter_true_of_mem]
+  rintro a ha
+  obtain ⟨b, hb, hba⟩ := exists_mem_ne (hn.lt_of_le' <| Finset.card_pos.2 ⟨a, ha⟩) a
+  obtain ⟨c, _, _, hc, _⟩ := hs ha hb hba.symm
+  exact ⟨c, hc⟩
+  refine ⟨s.preimage f f.injective.injOn, ⟨?_, by rw [← card_map f, hs']⟩, hs'⟩
+  rw [coe_preimage]
+  exact fun a ha b hb hab => map_adj_apply.1 (hs ha hb <| f.injective.ne hab)
+  rintro ⟨s, hs, rfl⟩
+  exact hs.map
 
 @[simp]
 theorem cliqueSet_map_of_equiv (G : SimpleGraph α) (e : α ≃ β) (n : ℕ) :
     (G.map e.toEmbedding).cliqueSet n = map e.toEmbedding '' G.cliqueSet n := by
   obtain rfl | hn := eq_or_ne n 1
-  · ext
-    simp [e.exists_congr_left]
-  · exact cliqueSet_map hn _ _
+  ext
+  simp [e.exists_congr_left]
+  exact cliqueSet_map hn _ _
 
 end CliqueSet
 

@@ -97,8 +97,8 @@ protected theorem case_strong_induction_on {p : Nat → Prop} (a : Nat) (hz : p 
 theorem cond_decide_mod_two (x : ℕ) [d : Decidable (x % 2 = 1)] :
     cond (@decide (x % 2 = 1) d) 1 0 = x % 2 := by
   by_cases h : x % 2 = 1
-  · simp! [*]
-  · cases mod_two_eq_zero_or_one x <;> simp! [*, Nat.zero_ne_one]
+  simp! [*]
+  cases mod_two_eq_zero_or_one x <;> simp! [*, Nat.zero_ne_one]
 
 /-! div -/
 

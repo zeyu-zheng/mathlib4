@@ -526,12 +526,12 @@ theorem dense_univ : Dense (univ : Set X) := fun _ => subset_closure trivial
 theorem dense_iff_inter_open :
     Dense s ↔ ∀ U, IsOpen U → U.Nonempty → (U ∩ s).Nonempty := by
   constructor <;> intro h
-  · rintro U U_op ⟨x, x_in⟩
-    exact mem_closure_iff.1 (h _) U U_op x_in
-  · intro x
-    rw [mem_closure_iff]
-    intro U U_op x_in
-    exact h U U_op ⟨_, x_in⟩
+  rintro U U_op ⟨x, x_in⟩
+  exact mem_closure_iff.1 (h _) U U_op x_in
+  intro x
+  rw [mem_closure_iff]
+  intro U U_op x_in
+  exact h U U_op ⟨_, x_in⟩
 
 alias ⟨Dense.inter_open_nonempty, _⟩ := dense_iff_inter_open
 
@@ -556,11 +556,11 @@ theorem Dense.mono (h : s₁ ⊆ s₂) (hd : Dense s₁) : Dense s₂ := fun x =
 theorem dense_compl_singleton_iff_not_open :
     Dense ({x}ᶜ : Set X) ↔ ¬IsOpen ({x} : Set X) := by
   constructor
-  · intro hd ho
-    exact (hd.inter_open_nonempty _ ho (singleton_nonempty _)).ne_empty (inter_compl_self _)
-  · refine fun ho => dense_iff_inter_open.2 fun U hU hne => inter_compl_nonempty_iff.2 fun hUx => ?_
-    obtain rfl : U = {x} := eq_singleton_iff_nonempty_unique_mem.2 ⟨hne, hUx⟩
-    exact ho hU
+  intro hd ho
+  exact (hd.inter_open_nonempty _ ho (singleton_nonempty _)).ne_empty (inter_compl_self _)
+  refine fun ho => dense_iff_inter_open.2 fun U hU hne => inter_compl_nonempty_iff.2 fun hUx => ?_
+  obtain rfl : U = {x} := eq_singleton_iff_nonempty_unique_mem.2 ⟨hne, hUx⟩
+  exact ho hU
 
 theorem IsOpen.subset_interior_closure {s : Set X} (s_open : IsOpen s) :
     s ⊆ interior (closure s) := s_open.subset_interior_iff.mpr subset_closure
@@ -1041,12 +1041,12 @@ theorem isOpen_iff_ultrafilter :
 
 theorem isOpen_singleton_iff_nhds_eq_pure (x : X) : IsOpen ({x} : Set X) ↔ 𝓝 x = pure x := by
   constructor
-  · intro h
-    apply le_antisymm _ (pure_le_nhds x)
-    rw [le_pure_iff]
-    exact h.mem_nhds (mem_singleton x)
-  · intro h
-    simp [isOpen_iff_nhds, h]
+  intro h
+  apply le_antisymm _ (pure_le_nhds x)
+  rw [le_pure_iff]
+  exact h.mem_nhds (mem_singleton x)
+  intro h
+  simp [isOpen_iff_nhds, h]
 
 theorem isOpen_singleton_iff_punctured_nhds (x : X) : IsOpen ({x} : Set X) ↔ 𝓝[≠] x = ⊥ := by
   rw [isOpen_singleton_iff_nhds_eq_pure, nhdsWithin, ← mem_iff_inf_principal_compl, ← le_pure_iff,
@@ -1101,8 +1101,8 @@ space. -/
 theorem dense_compl_singleton (x : X) [NeBot (𝓝[≠] x)] : Dense ({x}ᶜ : Set X) := by
   intro y
   rcases eq_or_ne y x with (rfl | hne)
-  · rwa [mem_closure_iff_nhdsWithin_neBot]
-  · exact subset_closure hne
+  rwa [mem_closure_iff_nhdsWithin_neBot]
+  exact subset_closure hne
 
 /-- If `x` is not an isolated point of a topological space, then the closure of `{x}ᶜ` is the whole
 space. -/

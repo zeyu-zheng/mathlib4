@@ -387,16 +387,16 @@ theorem testAgainstNN_lipschitz (μ : FiniteMeasure Ω) :
     rwa [NNReal.dist_eq]
   apply abs_le.mpr
   constructor
-  · have key' := μ.testAgainstNN_lipschitz_estimate f₂ f₁
-    rw [mul_comm] at key'
-    suffices ↑(μ.testAgainstNN f₂) ≤ ↑(μ.testAgainstNN f₁) + ↑μ.mass * dist f₁ f₂ by linarith
-    have key := NNReal.coe_mono key'
-    rwa [NNReal.coe_add, NNReal.coe_mul, nndist_comm] at key
-  · have key' := μ.testAgainstNN_lipschitz_estimate f₁ f₂
-    rw [mul_comm] at key'
-    suffices ↑(μ.testAgainstNN f₁) ≤ ↑(μ.testAgainstNN f₂) + ↑μ.mass * dist f₁ f₂ by linarith
-    have key := NNReal.coe_mono key'
-    rwa [NNReal.coe_add, NNReal.coe_mul] at key
+  have key' := μ.testAgainstNN_lipschitz_estimate f₂ f₁
+  rw [mul_comm] at key'
+  suffices ↑(μ.testAgainstNN f₂) ≤ ↑(μ.testAgainstNN f₁) + ↑μ.mass * dist f₁ f₂ by linarith
+  have key := NNReal.coe_mono key'
+  rwa [NNReal.coe_add, NNReal.coe_mul, nndist_comm] at key
+  have key' := μ.testAgainstNN_lipschitz_estimate f₁ f₂
+  rw [mul_comm] at key'
+  suffices ↑(μ.testAgainstNN f₁) ≤ ↑(μ.testAgainstNN f₂) + ↑μ.mass * dist f₁ f₂ by linarith
+  have key := NNReal.coe_mono key'
+  rwa [NNReal.coe_add, NNReal.coe_mul] at key
 
 /-- Finite measures yield elements of the `WeakDual` of bounded continuous nonnegative
 functions via `MeasureTheory.FiniteMeasure.testAgainstNN`, i.e., integration. -/
@@ -517,8 +517,8 @@ lemma injective_toWeakDualBCNN :
   intro f
   have key := congr_fun (congrArg DFunLike.coe hμν) f
   apply (ENNReal.toNNReal_eq_toNNReal_iff' ?_ ?_).mp key
-  · exact (lintegral_lt_top_of_nnreal μ f).ne
-  · exact (lintegral_lt_top_of_nnreal ν f).ne
+  exact (lintegral_lt_top_of_nnreal μ f).ne
+  exact (lintegral_lt_top_of_nnreal ν f).ne
 
 variable (Ω)
 

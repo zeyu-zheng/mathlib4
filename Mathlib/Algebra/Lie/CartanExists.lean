@@ -103,12 +103,12 @@ lemma lieCharpoly_coeff_natDegree (i j : ℕ) (hij : i + j = finrank R M) :
     ((lieCharpoly R M x y).coeff i).natDegree ≤ j := by
   rw [← mul_one j, lieCharpoly, coeff_map]
   apply MvPolynomial.aeval_natDegree_le
-  · apply (polyCharpoly_coeff_isHomogeneous φ (chooseBasis R L) _ _ hij).totalDegree_le
+  apply (polyCharpoly_coeff_isHomogeneous φ (chooseBasis R L) _ _ hij).totalDegree_le
   intro k
   apply Polynomial.natDegree_add_le_of_degree_le
-  · apply (Polynomial.natDegree_C_mul_le _ _).trans
-    simp only [natDegree_X, le_rfl]
-  · simp only [natDegree_C, zero_le]
+  apply (Polynomial.natDegree_C_mul_le _ _).trans
+  simp only [natDegree_X, le_rfl]
+  simp only [natDegree_C, zero_le]
 
 end engel_isBot_of_isMin
 
@@ -146,16 +146,16 @@ lemma engel_isBot_of_isMin (hLK : finrank K L ≤ #K) (U : LieSubalgebra K L)
     lie_mem := by rintro ⟨u, hu⟩ y hy; exact (engel K x).lie_mem (hUle hu) hy }
   -- We may and do assume that `x ≠ 0`, since otherwise the statement is trivial.
   obtain rfl|hx₀ := eq_or_ne x 0
-  · simpa [Ex, Ey] using hmin Ey
+  simpa [Ex, Ey] using hmin Ey
   -- We denote by `Q` the quotient `L / E`, and by `r` the dimension of `E`.
   let Q := L ⧸ E
   let r := finrank K E
   -- If `r = finrank K L`, then `E = L`, and the statement is trivial.
   obtain hr|hr : r = finrank K L ∨ r < finrank K L := (Submodule.finrank_le _).eq_or_lt
-  · suffices engel K y ≤ engel K x from hmin Ey this
-    suffices engel K x = ⊤ by simp_rw [this, le_top]
-    apply LieSubalgebra.to_submodule_injective
-    apply Submodule.eq_top_of_finrank_eq hr
+  suffices engel K y ≤ engel K x from hmin Ey this
+  suffices engel K x = ⊤ by simp_rw [this, le_top]
+  apply LieSubalgebra.to_submodule_injective
+  apply Submodule.eq_top_of_finrank_eq hr
   -- So from now on, we assume that `r < finrank K L`.
   -- We denote by `x'` and `y'` the elements `x` and `y` viewed as terms of `U`.
   set x' : U := ⟨x, hxU⟩
@@ -191,36 +191,36 @@ lemma engel_isBot_of_isMin (hLK : finrank K L ≤ #K) (U : LieSubalgebra K L)
   intro i hi
   -- We separately consider the case `i = 0`.
   obtain rfl|hi0 := eq_or_ne i 0
-  · -- `The polynomial `coeff χ 0` is zero if it evaluates to zero on all elements of `K`,
-    -- provided that its degree is stictly less than `#K`.
-    apply eq_zero_of_forall_eval_zero_of_natDegree_lt_card _ _ ?deg
-    case deg =>
-      -- We need to show `(natDegree (coeff χ 0)) < #K` and know that `finrank K L ≤ #K`
-      apply lt_of_lt_of_le _ hLK
-      rw [Nat.cast_lt]
-      -- So we are left with showing `natDegree (coeff χ 0) < finrank K L`
-      apply lt_of_le_of_lt _ hr
-      apply lieCharpoly_coeff_natDegree _ _ _ _ 0 r (zero_add r)
-    -- Fix an element of `K`.
-    intro α
-    -- We want to show that `α` is a root of `coeff χ 0`.
-    -- So we need to show that there is a `z ≠ 0` in `E` satisfying `⁅α • u + x, z⁆ = 0`.
-    rw [← coe_evalRingHom, ← coeff_map, lieCharpoly_map_eval,
-      ← constantCoeff_apply, LinearMap.charpoly_constantCoeff_eq_zero_iff]
-    -- We consider `z = α • u + x`, and split into the cases `z = 0` and `z ≠ 0`.
-    let z := α • u + x'
-    obtain hz₀|hz₀ := eq_or_ne z 0
-    · -- If `z = 0`, then `⁅α • u + x, x⁆` vanishes and we use our assumption `x ≠ 0`.
-      refine ⟨⟨x, self_mem_engel K x⟩, ?_, ?_⟩
-      · simpa [coe_bracket_of_module, ne_eq, Submodule.mk_eq_zero] using hx₀
-      · dsimp only [z] at hz₀
-        simp only [coe_bracket_of_module, hz₀, LieHom.map_zero, LinearMap.zero_apply]
-    -- If `z ≠ 0`, then `⁅α • u + x, z⁆` vanishes per axiom of Lie algebras
-    refine ⟨⟨z, hUle z.2⟩, ?_, ?_⟩
-    · simpa only [coe_bracket_of_module, ne_eq, Submodule.mk_eq_zero, Subtype.ext_iff] using hz₀
-    · show ⁅z, _⁆ = (0 : E)
-      ext
-      exact lie_self z.1
+  -- `The polynomial `coeff χ 0` is zero if it evaluates to zero on all elements of `K`,
+  -- provided that its degree is stictly less than `#K`.
+  apply eq_zero_of_forall_eval_zero_of_natDegree_lt_card _ _ ?deg
+  case deg =>
+    -- We need to show `(natDegree (coeff χ 0)) < #K` and know that `finrank K L ≤ #K`
+    apply lt_of_lt_of_le _ hLK
+    rw [Nat.cast_lt]
+    -- So we are left with showing `natDegree (coeff χ 0) < finrank K L`
+    apply lt_of_le_of_lt _ hr
+    apply lieCharpoly_coeff_natDegree _ _ _ _ 0 r (zero_add r)
+  -- Fix an element of `K`.
+  intro α
+  -- We want to show that `α` is a root of `coeff χ 0`.
+  -- So we need to show that there is a `z ≠ 0` in `E` satisfying `⁅α • u + x, z⁆ = 0`.
+  rw [← coe_evalRingHom, ← coeff_map, lieCharpoly_map_eval,
+    ← constantCoeff_apply, LinearMap.charpoly_constantCoeff_eq_zero_iff]
+  -- We consider `z = α • u + x`, and split into the cases `z = 0` and `z ≠ 0`.
+  let z := α • u + x'
+  obtain hz₀|hz₀ := eq_or_ne z 0
+  -- If `z = 0`, then `⁅α • u + x, x⁆` vanishes and we use our assumption `x ≠ 0`.
+  refine ⟨⟨x, self_mem_engel K x⟩, ?_, ?_⟩
+  simpa [coe_bracket_of_module, ne_eq, Submodule.mk_eq_zero] using hx₀
+  dsimp only [z] at hz₀
+  simp only [coe_bracket_of_module, hz₀, LieHom.map_zero, LinearMap.zero_apply]
+  -- If `z ≠ 0`, then `⁅α • u + x, z⁆` vanishes per axiom of Lie algebras
+  refine ⟨⟨z, hUle z.2⟩, ?_, ?_⟩
+  simpa only [coe_bracket_of_module, ne_eq, Submodule.mk_eq_zero, Subtype.ext_iff] using hz₀
+  show ⁅z, _⁆ = (0 : E)
+  ext
+  exact lie_self z.1
   -- We are left with the case `i ≠ 0`, and want to show `coeff χ i = 0`.
   -- We will do this once again by showing that `coeff χ i` vanishes
   -- on a sufficiently large subset `s` of `K`.
@@ -274,11 +274,11 @@ lemma engel_isBot_of_isMin (hLK : finrank K L ≤ #K) (U : LieSubalgebra K L)
     obtain ⟨s, hs⟩ := exists_finset_le_card K _ hLK
     use s \ t
     refine ⟨?_, ?_⟩
-    · refine le_trans ?_ (Finset.le_card_sdiff _ _)
-      omega
-    · intro α hα
-      simp only [Finset.mem_sdiff, Multiset.mem_toFinset, mem_roots', IsRoot.def, not_and, t] at hα
-      exact hα.2 hψ
+    refine le_trans ?_ (Finset.le_card_sdiff _ _)
+    omega
+    intro α hα
+    simp only [Finset.mem_sdiff, Multiset.mem_toFinset, mem_roots', IsRoot.def, not_and, t] at hα
+    exact hα.2 hψ
   -- So finally we can continue our proof strategy by showing that `coeff χ i` vanishes on `s`.
   apply eq_zero_of_natDegree_lt_card_of_eval_eq_zero' _ s _ ?hcard
   case hcard =>
@@ -286,9 +286,9 @@ lemma engel_isBot_of_isMin (hLK : finrank K L ≤ #K) (U : LieSubalgebra K L)
     -- Which follows from our assumptions `i < r` and `r ≤ s.card`
     -- and the fact that the degree of `coeff χ i` is less than or equal to `r - i`.
     apply lt_of_le_of_lt (lieCharpoly_coeff_natDegree _ _ _ _ i (r - i) _)
-    · omega
-    · dsimp only [r] at hi ⊢
-      rw [Nat.add_sub_cancel' hi.le]
+    omega
+    dsimp only [r] at hi ⊢
+    rw [Nat.add_sub_cancel' hi.le]
   -- We need to show that for all `α ∈ s`, the polynomial `coeff χ i` evaluates to zero at `α`.
   intro α hα
   -- Once again, we are left with showing that `⁅y, _⁆` acts nilpotently on `E`.
@@ -329,7 +329,7 @@ lemma engel_isBot_of_isMin (hLK : finrank K L ≤ #K) (U : LieSubalgebra K L)
   apply Nat.find_spec hz'
   -- If `n = 0`, then we are done.
   obtain hn₀|⟨k, hk⟩ : n = 0 ∨ ∃ k, n = k + 1 := by cases n <;> simp
-  · simpa only [hn₀, pow_zero, LinearMap.one_apply] using hn
+  simpa only [hn₀, pow_zero, LinearMap.one_apply] using hn
   -- If `n = k + 1`, then we can write `⁅v, _⁆ ^ n = ⁅v, _⁆ ∘ ⁅v, _⁆ ^ k`.
   -- Recall that `constantCoeff ψ` is non-zero on `α`, and `v = α • u + x`.
   specialize hsψ α hα
@@ -341,9 +341,9 @@ lemma engel_isBot_of_isMin (hLK : finrank K L ≤ #K) (U : LieSubalgebra K L)
   -- Indeed `⁅v, _⁆` kills `⁅v, _⁆ ^ k` applied to `z'`.
   use (toEnd K U Q v ^ k) z'
   refine ⟨?_, ?_⟩
-  · -- And `⁅v, _⁆ ^ k` applied to `z'` is non-zero by definition of `n`.
-    apply Nat.find_min hz'; omega
-  · rw [← hn, hk, pow_succ', LinearMap.mul_apply]
+  -- And `⁅v, _⁆ ^ k` applied to `z'` is non-zero by definition of `n`.
+  apply Nat.find_min hz'; omega
+  rw [← hn, hk, pow_succ', LinearMap.mul_apply]
 
 variable (K L)
 

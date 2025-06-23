@@ -110,26 +110,26 @@ theorem ofPowerSeries_C (r : R) : ofPowerSeries Γ R (PowerSeries.C R r) = HahnS
   simp only [ofPowerSeries_apply, C, RingHom.coe_mk, MonoidHom.coe_mk, OneHom.coe_mk, ne_eq,
     single_coeff]
   split_ifs with hn
-  · subst hn
-    convert @embDomain_coeff ℕ R _ _ Γ _ _ _ 0 <;> simp
-  · rw [embDomain_notin_image_support]
-    simp only [not_exists, Set.mem_image, toPowerSeries_symm_apply_coeff, mem_support,
-      PowerSeries.coeff_C]
-    intro
-    simp (config := { contextual := true }) [Ne.symm hn]
+  subst hn
+  convert @embDomain_coeff ℕ R _ _ Γ _ _ _ 0 <;> simp
+  rw [embDomain_notin_image_support]
+  simp only [not_exists, Set.mem_image, toPowerSeries_symm_apply_coeff, mem_support,
+    PowerSeries.coeff_C]
+  intro
+  simp (config := { contextual := true }) [Ne.symm hn]
 
 @[simp]
 theorem ofPowerSeries_X : ofPowerSeries Γ R PowerSeries.X = single 1 1 := by
   ext n
   simp only [single_coeff, ofPowerSeries_apply, RingHom.coe_mk]
   split_ifs with hn
-  · rw [hn]
-    convert @embDomain_coeff ℕ R _ _ Γ _ _ _ 1 <;> simp
-  · rw [embDomain_notin_image_support]
-    simp only [not_exists, Set.mem_image, toPowerSeries_symm_apply_coeff, mem_support,
-      PowerSeries.coeff_X]
-    intro
-    simp (config := { contextual := true }) [Ne.symm hn]
+  rw [hn]
+  convert @embDomain_coeff ℕ R _ _ Γ _ _ _ 1 <;> simp
+  rw [embDomain_notin_image_support]
+  simp only [not_exists, Set.mem_image, toPowerSeries_symm_apply_coeff, mem_support,
+    PowerSeries.coeff_X]
+  intro
+  simp (config := { contextual := true }) [Ne.symm hn]
 
 theorem ofPowerSeries_X_pow {R} [Semiring R] (n : ℕ) :
     ofPowerSeries Γ R (PowerSeries.X ^ n) = single (n : Γ) 1 := by

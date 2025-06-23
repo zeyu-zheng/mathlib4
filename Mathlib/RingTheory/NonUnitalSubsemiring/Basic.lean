@@ -571,8 +571,8 @@ theorem nonUnitalSubsemiringClosure_eq_closure :
     fun hx => (NonUnitalSubsemiring.mem_closure.mp hx) M.nonUnitalSubsemiringClosure fun s sM => ?_⟩
   <;> rintro - ⟨H1, rfl⟩
   <;> rintro - ⟨H2, rfl⟩
-  · exact AddSubmonoid.mem_closure.mp hx H1.toAddSubmonoid H2
-  · exact H2 sM
+  exact AddSubmonoid.mem_closure.mp hx H1.toAddSubmonoid H2
+  exact H2 sM
 
 end Subsemigroup
 

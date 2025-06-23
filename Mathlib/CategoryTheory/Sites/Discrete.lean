@@ -62,9 +62,9 @@ lemma isDiscrete_iff_mem_essImage' {L : A ⥤ Sheaf J A} (adj : L ⊣ (sheafSect
     IsDiscrete J ht F ↔ F ∈ L.essImage := by
   let e : L ≅ constantSheaf J A := adj.leftAdjointUniq (constantSheafAdj _ _ ht)
   refine ⟨fun h ↦ ⟨F.val.obj ⟨t⟩, ⟨?_⟩⟩, fun ⟨Y, ⟨i⟩⟩ ↦ ?_⟩
-  · exact e.app _ ≪≫ asIso ((constantSheafAdj _ _ ht).counit.app _)
-  · rw [isDiscrete_iff_mem_essImage]
-    exact ⟨Y, ⟨e.symm.app _ ≪≫ i⟩⟩
+  exact e.app _ ≪≫ asIso ((constantSheafAdj _ _ ht).counit.app _)
+  rw [isDiscrete_iff_mem_essImage]
+  exact ⟨Y, ⟨e.symm.app _ ≪≫ i⟩⟩
 
 lemma isDiscrete_iff_isIso_counit_app {L : A ⥤ Sheaf J A} (adj : L ⊣ (sheafSections J A).obj ⟨t⟩)
     (F : Sheaf J A) :
@@ -142,14 +142,14 @@ lemma isDiscrete_iff_of_equivalence (F : Sheaf K A) :
     Functor.Full.of_iso (equivCommuteConstant J A ht K G ht')
   simp only [isDiscrete_iff_mem_essImage]
   constructor
-  · intro ⟨Y, ⟨i⟩⟩
-    let j : (constantSheaf K A).obj Y ≅ F :=
-      (equivCommuteConstant J A ht K G ht').symm.app _ ≪≫ e.functor.mapIso i ≪≫ e.counitIso.app _
-    exact ⟨_, ⟨j⟩⟩
-  · intro ⟨Y, ⟨i⟩⟩
-    let j : (constantSheaf J A).obj Y ≅ e.inverse.obj F :=
-      (equivCommuteConstant' J A ht K G ht').app _ ≪≫ e.inverse.mapIso i
-    exact ⟨_, ⟨j⟩⟩
+  intro ⟨Y, ⟨i⟩⟩
+  let j : (constantSheaf K A).obj Y ≅ F :=
+    (equivCommuteConstant J A ht K G ht').symm.app _ ≪≫ e.functor.mapIso i ≪≫ e.counitIso.app _
+  exact ⟨_, ⟨j⟩⟩
+  intro ⟨Y, ⟨i⟩⟩
+  let j : (constantSheaf J A).obj Y ≅ e.inverse.obj F :=
+    (equivCommuteConstant' J A ht K G ht').app _ ≪≫ e.inverse.mapIso i
+  exact ⟨_, ⟨j⟩⟩
 
 end Equivalence
 

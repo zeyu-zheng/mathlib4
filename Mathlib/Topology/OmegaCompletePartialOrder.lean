@@ -97,8 +97,8 @@ open OmegaCompletePartialOrder
 
 theorem isωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : IsωSup c (ωSup c) := by
   constructor
-  · apply le_ωSup
-  · apply ωSup_le
+  apply le_ωSup
+  apply ωSup_le
 
 theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : Scott α → Scott β) (hf : Continuous f) :

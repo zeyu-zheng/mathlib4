@@ -39,12 +39,12 @@ lemma tendsto_iff_forall_inner_apply_tendsto [CompleteSpace F] {α : Type*} {l :
     Tendsto f l (𝓝 A) ↔ ∀ x y, Tendsto (fun a => ⟪y, (f a) x⟫_𝕜) l (𝓝 ⟪y, A x⟫_𝕜) := by
   simp only [← InnerProductSpace.toDual_apply]
   refine ⟨fun h x y => ?_, fun h => ?_⟩
-  · exact (tendsto_iff_forall_dual_apply_tendsto.mp h) _ _
-  · have h' : ∀ (x : E) (y : NormedSpace.Dual 𝕜 F),
-        Tendsto (fun a => y (f a x)) l (𝓝 (y (A x))) := by
-      intro x y
-      convert h x ((InnerProductSpace.toDual 𝕜 F).symm y) <;> simp
-    exact tendsto_iff_forall_dual_apply_tendsto.mpr h'
+  exact (tendsto_iff_forall_dual_apply_tendsto.mp h) _ _
+  have h' : ∀ (x : E) (y : NormedSpace.Dual 𝕜 F),
+      Tendsto (fun a => y (f a x)) l (𝓝 (y (A x))) := by
+    intro x y
+    convert h x ((InnerProductSpace.toDual 𝕜 F).symm y) <;> simp
+  exact tendsto_iff_forall_dual_apply_tendsto.mpr h'
 
 lemma le_nhds_iff_forall_inner_apply_le_nhds [CompleteSpace F] {l : Filter (E →WOT[𝕜] F)}
     {A : E →WOT[𝕜] F} : l ≤ 𝓝 A ↔ ∀ x y, l.map (fun T => ⟪y, T x⟫_𝕜) ≤ 𝓝 (⟪y, A x⟫_𝕜) :=

@@ -58,7 +58,7 @@ private lemma aux {n k : ℕ} (hk : 0 < k) (hn : k ≤ n) : n < 2 * k * (n / k) 
 private lemma card_bound (hP₁ : P.IsEquipartition) (hP₃ : P.parts.card ≤ bound (ε / 8) ⌈4/ε⌉₊)
     (hX : s ∈ P.parts) : card α / (2 * bound (ε / 8) ⌈4 / ε⌉₊ : ℝ) ≤ s.card := by
   cases isEmpty_or_nonempty α
-  · simp [Fintype.card_eq_zero]
+  simp [Fintype.card_eq_zero]
   have := Finset.Nonempty.card_pos ⟨_, hX⟩
   calc
     _ ≤ card α / (2 * P.parts.card : ℝ) := by gcongr
@@ -106,9 +106,9 @@ lemma regularityReduced_edges_card_aux [Nonempty α] (hε : 0 < ε) (hP : P.IsEq
     _ = ↑((univ ×ˢ univ).filter fun (x, y) ↦
         G.Adj x y ∧ ¬(G.regularityReduced P (ε / 8) (ε /4)).Adj x y).card := by
       rw [univ_product_univ, mul_sub, filter_and_not, cast_card_sdiff]
-      · norm_cast
-        rw [two_mul_card_edgeFinset, two_mul_card_edgeFinset]
-      · exact monotone_filter_right _ fun xy hxy ↦ regularityReduced_le hxy
+      norm_cast
+      rw [two_mul_card_edgeFinset, two_mul_card_edgeFinset]
+      exact monotone_filter_right _ fun xy hxy ↦ regularityReduced_le hxy
     _ ≤ ((A ∪ B ∪ C).card : ℝ) := by gcongr; exact unreduced_edges_subset
     _ ≤ ((A ∪ B).card + C.card : ℝ) := mod_cast (card_union_le _ _)
     _ ≤ (A.card + B.card + C.card : ℝ) := by gcongr; exact mod_cast card_union_le _ _
@@ -116,8 +116,8 @@ lemma regularityReduced_edges_card_aux [Nonempty α] (hε : 0 < ε) (hP : P.IsEq
       gcongr; exact hP.sum_nonUniforms_lt univ_nonempty (by positivity) hPε
     _ ≤ _ + ε / 2 * card α ^ 2 + 4 * (ε / 4) * card α ^ 2 := by
       gcongr
-      · exact hP.card_biUnion_offDiag_le hε hP'
-      · exact hP.card_interedges_sparsePairs_le (G := G) (ε := ε / 4) (by positivity)
+      exact hP.card_biUnion_offDiag_le hε hP'
+      exact hP.card_interedges_sparsePairs_le (G := G) (ε := ε / 4) (by positivity)
     _ = 2 * ε * (card α ^ 2 : ℕ) := by norm_cast; ring
 
 /-- **Triangle Removal Lemma**. If not all triangles can be removed by removing few edges (on the
@@ -126,17 +126,17 @@ order of `(card α)^2`), then there were many triangles to start with (on the or
 lemma FarFromTriangleFree.le_card_cliqueFinset (hG : G.FarFromTriangleFree ε) :
     triangleRemovalBound ε * card α ^ 3 ≤ (G.cliqueFinset 3).card := by
   cases isEmpty_or_nonempty α
-  · simp [Fintype.card_eq_zero]
+  simp [Fintype.card_eq_zero]
   obtain hε | hε := le_or_lt ε 0
-  · apply (mul_nonpos_of_nonpos_of_nonneg (triangleRemovalBound_nonpos hε) _).trans <;> positivity
+  apply (mul_nonpos_of_nonpos_of_nonneg (triangleRemovalBound_nonpos hε) _).trans <;> positivity
   let l : ℕ := ⌈4 / ε⌉₊
   have hl : 4/ε ≤ l := le_ceil (4/ε)
   cases' le_total (card α) l with hl' hl'
-  · calc
-      _ ≤ triangleRemovalBound ε * ↑l ^ 3 := by
-        gcongr; exact (triangleRemovalBound_pos hε hG.lt_one.le).le
-      _ ≤ (1 : ℝ) := (triangleRemovalBound_mul_cube_lt hε).le
-      _ ≤ _ := by simpa [one_le_iff_ne_zero] using (hG.cliqueFinset_nonempty hε).card_pos.ne'
+  calc
+    _ ≤ triangleRemovalBound ε * ↑l ^ 3 := by
+      gcongr; exact (triangleRemovalBound_pos hε hG.lt_one.le).le
+    _ ≤ (1 : ℝ) := (triangleRemovalBound_mul_cube_lt hε).le
+    _ ≤ _ := by simpa [one_le_iff_ne_zero] using (hG.cliqueFinset_nonempty hε).card_pos.ne'
   obtain ⟨P, hP₁, hP₂, hP₃, hP₄⟩ := szemeredi_regularity G (by positivity : 0 < ε / 8) hl'
   have : 4/ε ≤ P.parts.card := hl.trans (cast_le.2 hP₂)
   have k := regularityReduced_edges_card_aux hε hP₁ hP₄ this

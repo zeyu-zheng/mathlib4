@@ -52,13 +52,13 @@ theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * �
   refine ⟨C, C_ge_0, ?_⟩
   intro v
   by_cases h : 0 < ‖v‖
-  · refine (mul_le_mul_right h).mp ?_
-    calc
-      C * ‖v‖ * ‖v‖ ≤ B v v := coercivity v
-      _ = ⟪B♯ v, v⟫_ℝ := (continuousLinearMapOfBilin_apply B v v).symm
-      _ ≤ ‖B♯ v‖ * ‖v‖ := real_inner_le_norm (B♯ v) v
-  · have : v = 0 := by simpa using h
-    simp [this]
+  refine (mul_le_mul_right h).mp ?_
+  calc
+    C * ‖v‖ * ‖v‖ ≤ B v v := coercivity v
+    _ = ⟪B♯ v, v⟫_ℝ := (continuousLinearMapOfBilin_apply B v v).symm
+    _ ≤ ‖B♯ v‖ * ‖v‖ := real_inner_le_norm (B♯ v) v
+  have : v = 0 := by simpa using h
+  simp [this]
 
 theorem antilipschitz (coercive : IsCoercive B) : ∃ C : ℝ≥0, 0 < C ∧ AntilipschitzWith C B♯ := by
   rcases coercive.bounded_below with ⟨C, C_pos, below_bound⟩
@@ -89,11 +89,11 @@ theorem range_eq_top (coercive : IsCoercive B) : range B♯ = ⊤ := by
     rw [← norm_eq_zero, ← mul_self_eq_zero, ← mul_right_inj' C_pos.ne', mul_zero, ←
       mul_assoc]
     apply le_antisymm
-    · calc
-        C * ‖w‖ * ‖w‖ ≤ B w w := coercivity w
-        _ = ⟪B♯ w, w⟫_ℝ := (continuousLinearMapOfBilin_apply B w w).symm
-        _ = 0 := mem_w_orthogonal _ ⟨w, rfl⟩
-    · positivity
+    calc
+      C * ‖w‖ * ‖w‖ ≤ B w w := coercivity w
+      _ = ⟪B♯ w, w⟫_ℝ := (continuousLinearMapOfBilin_apply B w w).symm
+      _ = 0 := mem_w_orthogonal _ ⟨w, rfl⟩
+    positivity
   exact inner_zero_left _
 
 /-- The Lax-Milgram equivalence of a coercive bounded bilinear operator:

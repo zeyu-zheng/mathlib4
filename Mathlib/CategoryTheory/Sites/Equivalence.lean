@@ -239,11 +239,11 @@ lemma W_inverseImage_whiskeringLeft :
     apply congr_arg
     ext P
     constructor
-    · rintro ⟨_, ⟨R, rfl⟩, ⟨e⟩⟩
-      exact ⟨_, ⟨_, rfl⟩, ⟨e.trans ((sheafToPresheaf _ _).mapIso
-        ((G.sheafPushforwardContinuous A K J).objObjPreimageIso R).symm)⟩⟩
-    · rintro ⟨_, ⟨R, rfl⟩, ⟨e⟩⟩
-      exact ⟨G.op ⋙ R.val, ⟨(G.sheafPushforwardContinuous A K J).obj R, rfl⟩, ⟨e⟩⟩
+    rintro ⟨_, ⟨R, rfl⟩, ⟨e⟩⟩
+    exact ⟨_, ⟨_, rfl⟩, ⟨e.trans ((sheafToPresheaf _ _).mapIso
+      ((G.sheafPushforwardContinuous A K J).objObjPreimageIso R).symm)⟩⟩
+    rintro ⟨_, ⟨R, rfl⟩, ⟨e⟩⟩
+    exact ⟨G.op ⋙ R.val, ⟨(G.sheafPushforwardContinuous A K J).obj R, rfl⟩, ⟨e⟩⟩
   have h₂ : ∀ (R : Sheaf J A),
     Function.Bijective (fun (g : G.op ⋙ Q ⟶ G.op ⋙ R.val) ↦ whiskerLeft G.op f ≫ g) ↔
       Function.Bijective (fun (g : Q ⟶ R.val) ↦ f ≫ g) := fun R ↦ by
@@ -254,10 +254,10 @@ lemma W_inverseImage_whiskeringLeft :
         (fun g ↦ f ≫ g)
   rw [h₁, J.W_eq_W_range_sheafToPresheaf_obj, MorphismProperty.inverseImage_iff]
   constructor
-  · rintro h _ ⟨R, rfl⟩
-    exact (h₂ R).1 (h _ ⟨R, rfl⟩)
-  · rintro h _ ⟨R, rfl⟩
-    exact (h₂ R).2 (h _ ⟨R, rfl⟩)
+  rintro h _ ⟨R, rfl⟩
+  exact (h₂ R).1 (h _ ⟨R, rfl⟩)
+  rintro h _ ⟨R, rfl⟩
+  exact (h₂ R).2 (h _ ⟨R, rfl⟩)
 
 lemma W_whiskerLeft_iff {P Q : Cᵒᵖ ⥤ A} (f : P ⟶ Q) :
     K.W (whiskerLeft G.op f) ↔ J.W f := by

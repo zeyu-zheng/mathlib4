@@ -844,11 +844,11 @@ theorem EqOnSource.restr {e e' : PartialHomeomorph X Y} (he : e ≈ e') (s : Set
 theorem Set.EqOn.restr_eqOn_source {e e' : PartialHomeomorph X Y}
     (h : EqOn e e' (e.source ∩ e'.source)) : e.restr e'.source ≈ e'.restr e.source := by
   constructor
-  · rw [e'.restr_source' _ e.open_source]
-    rw [e.restr_source' _ e'.open_source]
-    exact Set.inter_comm _ _
-  · rw [e.restr_source' _ e'.open_source]
-    refine (EqOn.trans ?_ h).trans ?_ <;> simp only [mfld_simps, eqOn_refl]
+  rw [e'.restr_source' _ e.open_source]
+  rw [e.restr_source' _ e'.open_source]
+  exact Set.inter_comm _ _
+  rw [e.restr_source' _ e'.open_source]
+  refine (EqOn.trans ?_ h).trans ?_ <;> simp only [mfld_simps, eqOn_refl]
 
 /-- Composition of a partial homeomorphism and its inverse is equivalent to the restriction of the
 identity to the source -/
@@ -1307,9 +1307,9 @@ theorem subtypeRestr_symm_eqOn {U : Opens X} (hU : Nonempty U) :
     EqOn e.symm (Subtype.val ∘ (e.subtypeRestr hU).symm) (e.subtypeRestr hU).target := by
   intro y hy
   rw [eq_comm, eq_symm_apply _ _ hy.1]
-  · change restrict _ e _ = _
-    rw [← subtypeRestr_coe, (e.subtypeRestr hU).right_inv hy]
-  · have := map_target _ hy; rwa [subtypeRestr_source] at this
+  change restrict _ e _ = _
+  rw [← subtypeRestr_coe, (e.subtypeRestr hU).right_inv hy]
+  have := map_target _ hy; rwa [subtypeRestr_source] at this
 
 theorem subtypeRestr_symm_eqOn_of_le {U V : Opens X} (hU : Nonempty U) (hV : Nonempty V)
     (hUV : U ≤ V) : EqOn (e.subtypeRestr hV).symm (Set.inclusion hUV ∘ (e.subtypeRestr hU).symm)
@@ -1321,13 +1321,13 @@ theorem subtypeRestr_symm_eqOn_of_le {U V : Opens X} (hU : Nonempty U) (hV : Non
   rw [Opens.partialHomeomorphSubtypeCoe_target] at hy ⊢
   exact hUV hy.2
   refine (V.partialHomeomorphSubtypeCoe hV).injOn ?_ trivial ?_
-  · rw [← PartialHomeomorph.symm_target]
-    apply PartialHomeomorph.map_source
-    rw [PartialHomeomorph.symm_source]
-    exact hyV
-  · rw [(V.partialHomeomorphSubtypeCoe hV).right_inv hyV]
-    show _ = U.partialHomeomorphSubtypeCoe hU _
-    rw [(U.partialHomeomorphSubtypeCoe hU).right_inv hy.2]
+  rw [← PartialHomeomorph.symm_target]
+  apply PartialHomeomorph.map_source
+  rw [PartialHomeomorph.symm_source]
+  exact hyV
+  rw [(V.partialHomeomorphSubtypeCoe hV).right_inv hyV]
+  show _ = U.partialHomeomorphSubtypeCoe hU _
+  rw [(U.partialHomeomorphSubtypeCoe hU).right_inv hy.2]
 
 end subtypeRestr
 

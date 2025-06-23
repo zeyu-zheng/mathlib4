@@ -844,9 +844,9 @@ instance topologicalGroup_quotient [N.Normal] : TopologicalGroup (G ⧸ N) where
       continuous_quot_mk.comp continuous_mul
     have quot : QuotientMap fun p : G × G ↦ ((p.1 : G ⧸ N), (p.2 : G ⧸ N)) := by
       apply IsOpenMap.to_quotientMap
-      · exact (QuotientGroup.isOpenMap_coe N).prod (QuotientGroup.isOpenMap_coe N)
-      · exact continuous_quot_mk.prod_map continuous_quot_mk
-      · exact (surjective_quot_mk _).prodMap (surjective_quot_mk _)
+      exact (QuotientGroup.isOpenMap_coe N).prod (QuotientGroup.isOpenMap_coe N)
+      exact continuous_quot_mk.prod_map continuous_quot_mk
+      exact (surjective_quot_mk _).prodMap (surjective_quot_mk _)
     exact quot.continuous_iff.2 cont
   continuous_inv := by
     have quot := IsOpenMap.to_quotientMap
@@ -1254,15 +1254,15 @@ lemma subset_mul_closure_one (s : Set G) : s ⊆ s * (closure {1} : Set G) := by
 lemma IsCompact.mul_closure_one_eq_closure {K : Set G} (hK : IsCompact K) :
     K * (closure {1} : Set G) = closure K := by
   apply Subset.antisymm ?_ ?_
-  · calc
+  calc
     K * (closure {1} : Set G) ⊆ closure K * (closure {1} : Set G) :=
       smul_subset_smul_right subset_closure
     _ ⊆ closure (K * ({1} : Set G)) := smul_set_closure_subset _ _
     _ = closure K := by simp
-  · have : IsClosed (K * (closure {1} : Set G)) :=
-      IsClosed.smul_left_of_isCompact isClosed_closure hK
-    rw [IsClosed.closure_subset_iff this]
-    exact subset_mul_closure_one K
+  have : IsClosed (K * (closure {1} : Set G)) :=
+    IsClosed.smul_left_of_isCompact isClosed_closure hK
+  rw [IsClosed.closure_subset_iff this]
+  exact subset_mul_closure_one K
 
 @[to_additive]
 lemma IsClosed.mul_closure_one_eq {F : Set G} (hF : IsClosed F) :
@@ -1440,21 +1440,21 @@ variable [TopologicalSpace G] [MulOneClass G] [ContinuousMul G]
 theorem compact_open_separated_mul_right {K U : Set G} (hK : IsCompact K) (hU : IsOpen U)
     (hKU : K ⊆ U) : ∃ V ∈ 𝓝 (1 : G), K * V ⊆ U := by
   refine hK.induction_on ?_ ?_ ?_ ?_
-  · exact ⟨univ, by simp⟩
-  · rintro s t hst ⟨V, hV, hV'⟩
-    exact ⟨V, hV, (mul_subset_mul_right hst).trans hV'⟩
-  · rintro s t ⟨V, V_in, hV'⟩ ⟨W, W_in, hW'⟩
-    use V ∩ W, inter_mem V_in W_in
-    rw [union_mul]
-    exact
-      union_subset ((mul_subset_mul_left V.inter_subset_left).trans hV')
-        ((mul_subset_mul_left V.inter_subset_right).trans hW')
-  · intro x hx
-    have := tendsto_mul (show U ∈ 𝓝 (x * 1) by simpa using hU.mem_nhds (hKU hx))
-    rw [nhds_prod_eq, mem_map, mem_prod_iff] at this
-    rcases this with ⟨t, ht, s, hs, h⟩
-    rw [← image_subset_iff, image_mul_prod] at h
-    exact ⟨t, mem_nhdsWithin_of_mem_nhds ht, s, hs, h⟩
+  exact ⟨univ, by simp⟩
+  rintro s t hst ⟨V, hV, hV'⟩
+  exact ⟨V, hV, (mul_subset_mul_right hst).trans hV'⟩
+  rintro s t ⟨V, V_in, hV'⟩ ⟨W, W_in, hW'⟩
+  use V ∩ W, inter_mem V_in W_in
+  rw [union_mul]
+  exact
+    union_subset ((mul_subset_mul_left V.inter_subset_left).trans hV')
+      ((mul_subset_mul_left V.inter_subset_right).trans hW')
+  intro x hx
+  have := tendsto_mul (show U ∈ 𝓝 (x * 1) by simpa using hU.mem_nhds (hKU hx))
+  rw [nhds_prod_eq, mem_map, mem_prod_iff] at this
+  rcases this with ⟨t, ht, s, hs, h⟩
+  rw [← image_subset_iff, image_mul_prod] at h
+  exact ⟨t, mem_nhdsWithin_of_mem_nhds ht, s, hs, h⟩
 
 open MulOpposite
 
@@ -1503,14 +1503,14 @@ instance (priority := 100) SeparableWeaklyLocallyCompactGroup.sigmaCompactSpace 
     [WeaklyLocallyCompactSpace G] : SigmaCompactSpace G := by
   obtain ⟨L, hLc, hL1⟩ := exists_compact_mem_nhds (1 : G)
   refine ⟨⟨fun n => (fun x => x * denseSeq G n) ⁻¹' L, ?_, ?_⟩⟩
-  · intro n
-    exact (Homeomorph.mulRight _).isCompact_preimage.mpr hLc
-  · refine iUnion_eq_univ_iff.2 fun x => ?_
-    obtain ⟨_, ⟨n, rfl⟩, hn⟩ : (range (denseSeq G) ∩ (fun y => x * y) ⁻¹' L).Nonempty := by
-      rw [← (Homeomorph.mulLeft x).apply_symm_apply 1] at hL1
-      exact (denseRange_denseSeq G).inter_nhds_nonempty
-          ((Homeomorph.mulLeft x).continuous.continuousAt <| hL1)
-    exact ⟨n, hn⟩
+  intro n
+  exact (Homeomorph.mulRight _).isCompact_preimage.mpr hLc
+  refine iUnion_eq_univ_iff.2 fun x => ?_
+  obtain ⟨_, ⟨n, rfl⟩, hn⟩ : (range (denseSeq G) ∩ (fun y => x * y) ⁻¹' L).Nonempty := by
+    rw [← (Homeomorph.mulLeft x).apply_symm_apply 1] at hL1
+    exact (denseRange_denseSeq G).inter_nhds_nonempty
+        ((Homeomorph.mulLeft x).continuous.continuousAt <| hL1)
+  exact ⟨n, hn⟩
 
 /-- Given two compact sets in a noncompact topological group, there is a translate of the second
 one that is disjoint from the first one. -/
@@ -1547,9 +1547,9 @@ theorem IsCompact.locallyCompactSpace_of_mem_nhds_of_group {K : Set G} (hK : IsC
     (h : K ∈ 𝓝 x) : LocallyCompactSpace G := by
   suffices WeaklyLocallyCompactSpace G from inferInstance
   refine ⟨fun y ↦ ⟨(y * x⁻¹) • K, ?_, ?_⟩⟩
-  · exact hK.smul _
-  · rw [← preimage_smul_inv]
-    exact (continuous_const_smul _).continuousAt.preimage_mem_nhds (by simpa using h)
+  exact hK.smul _
+  rw [← preimage_smul_inv]
+  exact (continuous_const_smul _).continuousAt.preimage_mem_nhds (by simpa using h)
 
 /-- A topological group which is weakly locally compact is automatically locally compact. -/
 @[to_additive

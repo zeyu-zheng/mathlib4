@@ -55,15 +55,15 @@ theorem unique {p : A[X]} (pmonic : p.Monic) (hp : Polynomial.aeval x p = 0)
   by_contra hnz
   apply degree_le_of_ne_zero A x hnz (by simp [hp]) |>.not_lt
   apply degree_sub_lt _ (minpoly.ne_zero hx)
-  · rw [(monic hx).leadingCoeff, pmonic.leadingCoeff]
-  · exact le_antisymm (min A x pmonic hp) (pmin (minpoly A x) (monic hx) (aeval A x))
+  rw [(monic hx).leadingCoeff, pmonic.leadingCoeff]
+  exact le_antisymm (min A x pmonic hp) (pmin (minpoly A x) (monic hx) (aeval A x))
 
 /-- If an element `x` is a root of a polynomial `p`, then the minimal polynomial of `x` divides `p`.
 See also `minpoly.isIntegrallyClosed_dvd` which relaxes the assumptions on `A` in exchange for
 stronger assumptions on `B`. -/
 theorem dvd {p : A[X]} (hp : Polynomial.aeval x p = 0) : minpoly A x ∣ p := by
   by_cases hp0 : p = 0
-  · simp only [hp0, dvd_zero]
+  simp only [hp0, dvd_zero]
   have hx : IsIntegral A x := IsAlgebraic.isIntegral ⟨p, hp0, hp⟩
   rw [← modByMonic_eq_zero_iff_dvd (monic hx)]
   by_contra hnz
@@ -123,23 +123,23 @@ theorem eq_of_irreducible [Nontrivial B] {p : A[X]} (hp1 : Irreducible p)
     (hp2 : Polynomial.aeval x p = 0) : p * C p.leadingCoeff⁻¹ = minpoly A x := by
   have : p.leadingCoeff ≠ 0 := leadingCoeff_ne_zero.mpr hp1.ne_zero
   apply eq_of_irreducible_of_monic
-  · exact Associated.irreducible ⟨⟨C p.leadingCoeff⁻¹, C p.leadingCoeff,
-      by rwa [← C_mul, inv_mul_cancel, C_1], by rwa [← C_mul, mul_inv_cancel, C_1]⟩, rfl⟩ hp1
-  · rw [aeval_mul, hp2, zero_mul]
-  · rwa [Polynomial.Monic, leadingCoeff_mul, leadingCoeff_C, mul_inv_cancel]
+  exact Associated.irreducible ⟨⟨C p.leadingCoeff⁻¹, C p.leadingCoeff,
+    by rwa [← C_mul, inv_mul_cancel, C_1], by rwa [← C_mul, mul_inv_cancel, C_1]⟩, rfl⟩ hp1
+  rw [aeval_mul, hp2, zero_mul]
+  rwa [Polynomial.Monic, leadingCoeff_mul, leadingCoeff_C, mul_inv_cancel]
 
 theorem add_algebraMap {B : Type*} [CommRing B] [Algebra A B] {x : B} (hx : IsIntegral A x)
     (a : A) : minpoly A (x + algebraMap A B a) = (minpoly A x).comp (X - C a) := by
   refine (minpoly.unique _ _ ((minpoly.monic hx).comp_X_sub_C _) ?_ fun q qmo hq => ?_).symm
-  · simp [aeval_comp]
-  · have : (Polynomial.aeval x) (q.comp (X + C a)) = 0 := by simpa [aeval_comp] using hq
-    have H := minpoly.min A x (qmo.comp_X_add_C _) this
-    rw [degree_eq_natDegree qmo.ne_zero,
-      degree_eq_natDegree ((minpoly.monic hx).comp_X_sub_C _).ne_zero, natDegree_comp,
-      natDegree_X_sub_C, mul_one]
-    rwa [degree_eq_natDegree (minpoly.ne_zero hx),
-      degree_eq_natDegree (qmo.comp_X_add_C _).ne_zero, natDegree_comp,
-      natDegree_X_add_C, mul_one] at H
+  simp [aeval_comp]
+  have : (Polynomial.aeval x) (q.comp (X + C a)) = 0 := by simpa [aeval_comp] using hq
+  have H := minpoly.min A x (qmo.comp_X_add_C _) this
+  rw [degree_eq_natDegree qmo.ne_zero,
+    degree_eq_natDegree ((minpoly.monic hx).comp_X_sub_C _).ne_zero, natDegree_comp,
+    natDegree_X_sub_C, mul_one]
+  rwa [degree_eq_natDegree (minpoly.ne_zero hx),
+    degree_eq_natDegree (qmo.comp_X_add_C _).ne_zero, natDegree_comp,
+    natDegree_X_add_C, mul_one] at H
 
 theorem sub_algebraMap {B : Type*} [CommRing B] [Algebra A B] {x : B} (hx : IsIntegral A x)
     (a : A) : minpoly A (x - algebraMap A B a) = (minpoly A x).comp (X + C a) := by
@@ -235,12 +235,12 @@ theorem root {x : B} (hx : IsIntegral A x) {y : A} (h : IsRoot (minpoly A x) y) 
 @[simp]
 theorem coeff_zero_eq_zero (hx : IsIntegral A x) : coeff (minpoly A x) 0 = 0 ↔ x = 0 := by
   constructor
-  · intro h
-    have zero_root := zero_isRoot_of_coeff_zero_eq_zero h
-    rw [← root hx zero_root]
-    exact RingHom.map_zero _
-  · rintro rfl
-    simp
+  intro h
+  have zero_root := zero_isRoot_of_coeff_zero_eq_zero h
+  rw [← root hx zero_root]
+  exact RingHom.map_zero _
+  rintro rfl
+  simp
 
 /-- The minimal polynomial of a nonzero element has nonzero constant coefficient. -/
 theorem coeff_zero_ne_zero (hx : IsIntegral A x) (h : x ≠ 0) : coeff (minpoly A x) 0 ≠ 0 := by
@@ -259,18 +259,18 @@ variable {K L} [Field K] [CommRing L] [IsDomain L] [Algebra K L]
 lemma minpoly_algEquiv_toLinearMap (σ : L ≃ₐ[K] L) (hσ : IsOfFinOrder σ) :
     minpoly K σ.toLinearMap = X ^ (orderOf σ) - C 1 := by
   refine (minpoly.unique _ _ (monic_X_pow_sub_C _ hσ.orderOf_pos.ne.symm) ?_ ?_).symm
-  · rw [map_sub]
-    simp [← AlgEquiv.pow_toLinearMap, pow_orderOf_eq_one]
-  · intros q hq hs
-    rw [degree_eq_natDegree hq.ne_zero, degree_X_pow_sub_C hσ.orderOf_pos, Nat.cast_le, ← not_lt]
-    intro H
-    rw [aeval_eq_sum_range' H, ← Fin.sum_univ_eq_sum_range] at hs
-    simp_rw [← AlgEquiv.pow_toLinearMap] at hs
-    apply hq.ne_zero
-    simpa using Fintype.linearIndependent_iff.mp
-      (((linearIndependent_algHom_toLinearMap' K L L).comp _ AlgEquiv.coe_algHom_injective).comp _
-        (Subtype.val_injective.comp ((finEquivPowers σ hσ).injective)))
-      (q.coeff ∘ (↑)) hs ⟨_, H⟩
+  rw [map_sub]
+  simp [← AlgEquiv.pow_toLinearMap, pow_orderOf_eq_one]
+  intros q hq hs
+  rw [degree_eq_natDegree hq.ne_zero, degree_X_pow_sub_C hσ.orderOf_pos, Nat.cast_le, ← not_lt]
+  intro H
+  rw [aeval_eq_sum_range' H, ← Fin.sum_univ_eq_sum_range] at hs
+  simp_rw [← AlgEquiv.pow_toLinearMap] at hs
+  apply hq.ne_zero
+  simpa using Fintype.linearIndependent_iff.mp
+    (((linearIndependent_algHom_toLinearMap' K L L).comp _ AlgEquiv.coe_algHom_injective).comp _
+      (Subtype.val_injective.comp ((finEquivPowers σ hσ).injective)))
+    (q.coeff ∘ (↑)) hs ⟨_, H⟩
 
 /-- The minimal polynomial (over `K`) of `σ : Gal(L/K)` is `X ^ (orderOf σ) - 1`. -/
 lemma minpoly_algHom_toLinearMap (σ : L →ₐ[K] L) (hσ : IsOfFinOrder σ) :
@@ -279,9 +279,9 @@ lemma minpoly_algHom_toLinearMap (σ : L →ₐ[K] L) (hσ : IsOfFinOrder σ) :
   rw [← MonoidHom.coe_coe, orderOf_injective (AlgEquiv.algHomUnitsEquiv K L)
     (AlgEquiv.algHomUnitsEquiv K L).injective, ← orderOf_units, IsOfFinOrder.val_unit]
   rw [this, ← minpoly_algEquiv_toLinearMap]
-  · apply congr_arg
-    ext
-    simp
-  · rwa [← orderOf_pos_iff, ← this, orderOf_pos_iff]
+  apply congr_arg
+  ext
+  simp
+  rwa [← orderOf_pos_iff, ← this, orderOf_pos_iff]
 
 end AlgHom

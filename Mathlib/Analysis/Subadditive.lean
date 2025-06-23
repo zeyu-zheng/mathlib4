@@ -79,13 +79,13 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
 theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) :
     Tendsto (fun n => u n / n) atTop (𝓝 h.lim) := by
   refine tendsto_order.2 ⟨fun l hl => ?_, fun L hL => ?_⟩
-  · refine eventually_atTop.2
-      ⟨1, fun n hn => hl.trans_le (h.lim_le_div hbdd (zero_lt_one.trans_le hn).ne')⟩
-  · obtain ⟨n, npos, hn⟩ : ∃ n : ℕ, 0 < n ∧ u n / n < L := by
-      rw [Subadditive.lim] at hL
-      rcases exists_lt_of_csInf_lt (by simp) hL with ⟨x, hx, xL⟩
-      rcases (mem_image _ _ _).1 hx with ⟨n, hn, rfl⟩
-      exact ⟨n, zero_lt_one.trans_le hn, xL⟩
-    exact h.eventually_div_lt_of_div_lt npos.ne' hn
+  refine eventually_atTop.2
+    ⟨1, fun n hn => hl.trans_le (h.lim_le_div hbdd (zero_lt_one.trans_le hn).ne')⟩
+  obtain ⟨n, npos, hn⟩ : ∃ n : ℕ, 0 < n ∧ u n / n < L := by
+    rw [Subadditive.lim] at hL
+    rcases exists_lt_of_csInf_lt (by simp) hL with ⟨x, hx, xL⟩
+    rcases (mem_image _ _ _).1 hx with ⟨n, hn, rfl⟩
+    exact ⟨n, zero_lt_one.trans_le hn, xL⟩
+  exact h.eventually_div_lt_of_div_lt npos.ne' hn
 
 end Subadditive

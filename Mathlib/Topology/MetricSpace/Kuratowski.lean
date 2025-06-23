@@ -85,15 +85,15 @@ theorem embeddingOfSubset_isometry (H : DenseRange x) : Isometry (embeddingOfSub
 theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpace α] :
     ∃ f : α → ℓ^∞(ℕ), Isometry f := by
   rcases (univ : Set α).eq_empty_or_nonempty with h | h
-  · use fun _ => 0; intro x; exact absurd h (Nonempty.ne_empty ⟨x, mem_univ x⟩)
-  · -- We construct a map x : ℕ → α with dense image
-    rcases h with ⟨basepoint⟩
-    haveI : Inhabited α := ⟨basepoint⟩
-    have : ∃ s : Set α, s.Countable ∧ Dense s := exists_countable_dense α
-    rcases this with ⟨S, ⟨S_countable, S_dense⟩⟩
-    rcases Set.countable_iff_exists_subset_range.1 S_countable with ⟨x, x_range⟩
-    -- Use embeddingOfSubset to construct the desired isometry
-    exact ⟨embeddingOfSubset x, embeddingOfSubset_isometry x (S_dense.mono x_range)⟩
+  use fun _ => 0; intro x; exact absurd h (Nonempty.ne_empty ⟨x, mem_univ x⟩)
+  -- We construct a map x : ℕ → α with dense image
+  rcases h with ⟨basepoint⟩
+  haveI : Inhabited α := ⟨basepoint⟩
+  have : ∃ s : Set α, s.Countable ∧ Dense s := exists_countable_dense α
+  rcases this with ⟨S, ⟨S_countable, S_dense⟩⟩
+  rcases Set.countable_iff_exists_subset_range.1 S_countable with ⟨x, x_range⟩
+  -- Use embeddingOfSubset to construct the desired isometry
+  exact ⟨embeddingOfSubset x, embeddingOfSubset_isometry x (S_dense.mono x_range)⟩
 
 end KuratowskiEmbedding
 
@@ -136,19 +136,19 @@ theorem LipschitzOnWith.extend_lp_infty [PseudoMetricSpace α] {s : Set α} {ι 
     LipschitzOnWith.extend_real (hfl i) -- use the nonlinear Hahn-Banach theorem here!
   choose g hgl hgeq using this
   rcases s.eq_empty_or_nonempty with rfl | ⟨a₀, ha₀_in_s⟩
-  · exact ⟨0, LipschitzWith.const' 0, by simp⟩
-  · -- Show that the extensions are uniformly bounded
-    have hf_extb : ∀ a : α, Memℓp (swap g a) ∞ := by
-      apply LipschitzWith.uniformly_bounded (swap g) hgl a₀
-      use ‖f a₀‖
-      rintro - ⟨i, rfl⟩
-      simp_rw [← hgeq i ha₀_in_s]
-      exact lp.norm_apply_le_norm top_ne_zero (f a₀) i
-    -- Construct witness by bundling the function with its certificate of membership in ℓ^∞
-    let f_ext' : α → ℓ^∞(ι) := fun i ↦ ⟨swap g i, hf_extb i⟩
-    refine ⟨f_ext', ?_, ?_⟩
-    · rw [LipschitzWith.coordinate]
-      exact hgl
-    · intro a hyp
-      ext i
-      exact (hgeq i) hyp
+  exact ⟨0, LipschitzWith.const' 0, by simp⟩
+  -- Show that the extensions are uniformly bounded
+  have hf_extb : ∀ a : α, Memℓp (swap g a) ∞ := by
+    apply LipschitzWith.uniformly_bounded (swap g) hgl a₀
+    use ‖f a₀‖
+    rintro - ⟨i, rfl⟩
+    simp_rw [← hgeq i ha₀_in_s]
+    exact lp.norm_apply_le_norm top_ne_zero (f a₀) i
+  -- Construct witness by bundling the function with its certificate of membership in ℓ^∞
+  let f_ext' : α → ℓ^∞(ι) := fun i ↦ ⟨swap g i, hf_extb i⟩
+  refine ⟨f_ext', ?_, ?_⟩
+  rw [LipschitzWith.coordinate]
+  exact hgl
+  intro a hyp
+  ext i
+  exact (hgeq i) hyp

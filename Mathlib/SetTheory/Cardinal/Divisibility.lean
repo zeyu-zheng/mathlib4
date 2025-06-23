@@ -45,16 +45,16 @@ theorem isUnit_iff : IsUnit a ↔ a = 1 := by
       rintro rfl
       exact isUnit_one⟩
   rcases eq_or_ne a 0 with (rfl | ha)
-  · exact (not_isUnit_zero h).elim
+  exact (not_isUnit_zero h).elim
   rw [isUnit_iff_forall_dvd] at h
   cases' h 1 with t ht
   rw [eq_comm, mul_eq_one_iff'] at ht
-  · exact ht.1
-  · exact one_le_iff_ne_zero.mpr ha
-  · apply one_le_iff_ne_zero.mpr
-    intro h
-    rw [h, mul_zero] at ht
-    exact zero_ne_one ht
+  exact ht.1
+  exact one_le_iff_ne_zero.mpr ha
+  apply one_le_iff_ne_zero.mpr
+  intro h
+  rw [h, mul_zero] at ht
+  exact zero_ne_one ht
 
 instance : Unique Cardinal.{u}ˣ where
   default := 1
@@ -71,15 +71,15 @@ theorem dvd_of_le_of_aleph0_le (ha : a ≠ 0) (h : a ≤ b) (hb : ℵ₀ ≤ b) 
 @[simp]
 theorem prime_of_aleph0_le (ha : ℵ₀ ≤ a) : Prime a := by
   refine ⟨(aleph0_pos.trans_le ha).ne', ?_, fun b c hbc => ?_⟩
-  · rw [isUnit_iff]
-    exact (one_lt_aleph0.trans_le ha).ne'
+  rw [isUnit_iff]
+  exact (one_lt_aleph0.trans_le ha).ne'
   rcases eq_or_ne (b * c) 0 with hz | hz
-  · rcases mul_eq_zero.mp hz with (rfl | rfl) <;> simp
+  rcases mul_eq_zero.mp hz with (rfl | rfl) <;> simp
   wlog h : c ≤ b
-  · cases le_total c b <;> [solve_by_elim; rw [or_comm]]
-    apply_assumption
-    assumption'
-    all_goals rwa [mul_comm]
+  cases le_total c b <;> [solve_by_elim; rw [or_comm]]
+  apply_assumption
+  assumption'
+  all_goals try rwa [mul_comm]
   left
   have habc := le_of_dvd hz hbc
   rwa [mul_eq_max' <| ha.trans <| habc, max_def', if_pos h] at hbc
@@ -105,16 +105,16 @@ theorem nat_coe_dvd_iff : (n : Cardinal) ∣ m ↔ n ∣ m := by
 theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime := by
   simp only [Prime, Nat.prime_iff]
   refine and_congr (by simp) (and_congr ?_ ⟨fun h b c hbc => ?_, fun h b c hbc => ?_⟩)
-  · simp only [isUnit_iff, Nat.isUnit_iff]
-    exact mod_cast Iff.rfl
-  · exact mod_cast h b c (mod_cast hbc)
+  simp only [isUnit_iff, Nat.isUnit_iff]
+  exact mod_cast Iff.rfl
+  exact mod_cast h b c (mod_cast hbc)
   cases' lt_or_le (b * c) ℵ₀ with h' h'
-  · rcases mul_lt_aleph0_iff.mp h' with (rfl | rfl | ⟨hb, hc⟩)
-    · simp
-    · simp
-    lift b to ℕ using hb
-    lift c to ℕ using hc
-    exact mod_cast h b c (mod_cast hbc)
+  rcases mul_lt_aleph0_iff.mp h' with (rfl | rfl | ⟨hb, hc⟩)
+  simp
+  simp
+  lift b to ℕ using hb
+  lift c to ℕ using hc
+  exact mod_cast h b c (mod_cast hbc)
   rcases aleph0_le_mul_iff.mp h' with ⟨hb, hc, hℵ₀⟩
   have hn : (n : Cardinal) ≠ 0
   intro h
@@ -122,19 +122,19 @@ theorem nat_is_prime_iff : Prime (n : Cardinal) ↔ n.Prime := by
   cases hbc <;> contradiction
   wlog hℵ₀b : ℵ₀ ≤ b
   apply (this h c b _ _ hc hb hℵ₀.symm hn (hℵ₀.resolve_left hℵ₀b)).symm <;> try assumption
-  · rwa [mul_comm] at hbc
-  · rwa [mul_comm] at h'
-  · exact Or.inl (dvd_of_le_of_aleph0_le hn ((nat_lt_aleph0 n).le.trans hℵ₀b) hℵ₀b)
+  rwa [mul_comm] at hbc
+  rwa [mul_comm] at h'
+  exact Or.inl (dvd_of_le_of_aleph0_le hn ((nat_lt_aleph0 n).le.trans hℵ₀b) hℵ₀b)
 
 theorem is_prime_iff {a : Cardinal} : Prime a ↔ ℵ₀ ≤ a ∨ ∃ p : ℕ, a = p ∧ p.Prime := by
   rcases le_or_lt ℵ₀ a with h | h
-  · simp [h]
+  simp [h]
   lift a to ℕ using id h
   simp [not_le.mpr h]
 
 theorem isPrimePow_iff {a : Cardinal} : IsPrimePow a ↔ ℵ₀ ≤ a ∨ ∃ n : ℕ, a = n ∧ IsPrimePow n := by
   by_cases h : ℵ₀ ≤ a
-  · simp [h, (prime_of_aleph0_le h).isPrimePow]
+  simp [h, (prime_of_aleph0_le h).isPrimePow]
   simp only [h, Nat.cast_inj, exists_eq_left', false_or_iff, isPrimePow_nat_iff]
   lift a to ℕ using not_le.mp h
   rw [isPrimePow_def]

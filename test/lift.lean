@@ -16,8 +16,8 @@ example (n : ℤ) (hn : 0 ≤ n) : 0 ≤ n + 1 := by
   lift n to ℕ
   guard_target =ₛ 0 ≤ n
   swap; guard_target =ₛ 0 ≤ (n : Int) + 1; swap
-  · exact hn
-  · exact Int.le_add_one hn
+  exact hn
+  exact Int.le_add_one hn
 
 example (n : ℤ) (hn : 0 ≤ n) : 0 ≤ n + 1 := by
   lift n to ℕ using hn
@@ -132,8 +132,8 @@ example (n : ℤ) (h_ans : n = 5) (hn : 0 ≤ 1 * n) : n = 5 := by
 
 example (n : WithOne Unit) (hn : n ≠ 1) : True := by
   lift n to Unit
-  · guard_target =ₛ n ≠ 1
-    exact hn
+  guard_target =ₛ n ≠ 1
+  exact hn
 
   guard_hyp n : Unit
   guard_hyp hn : (n : WithOne Unit) ≠ 1
@@ -141,8 +141,8 @@ example (n : WithOne Unit) (hn : n ≠ 1) : True := by
 
 example (n : WithZero Unit) (hn : n ≠ 0) : True := by
   lift n to Unit
-  · guard_target =ₛ n ≠ 0
-    exact hn
+  guard_target =ₛ n ≠ 0
+  exact hn
 
   guard_hyp n : Unit
   guard_hyp hn : (n : WithZero Unit) ≠ 0
@@ -150,8 +150,8 @@ example (n : WithZero Unit) (hn : n ≠ 0) : True := by
 
 example (s : Set ℤ) (h : ∀ x ∈ s, 0 ≤ x) : True := by
   lift s to Set ℕ
-  · guard_target =ₛ (∀ x ∈ s, 0 ≤ x)
-    exact h
+  guard_target =ₛ (∀ x ∈ s, 0 ≤ x)
+  exact h
 
   guard_hyp s : Set ℕ
   guard_hyp h : ∀ (x : ℤ), x ∈ (fun (n : ℕ) => (n : ℤ)) '' s → 0 ≤ x
@@ -159,8 +159,8 @@ example (s : Set ℤ) (h : ∀ x ∈ s, 0 ≤ x) : True := by
 
 example (l : List ℤ) (h : ∀ x ∈ l, 0 ≤ x) : True := by
   lift l to List ℕ
-  · guard_target =ₛ (∀ x ∈ l, 0 ≤ x)
-    exact h
+  guard_target =ₛ (∀ x ∈ l, 0 ≤ x)
+  exact h
 
   guard_hyp l : List ℕ
   guard_hyp h : ∀ (x : ℤ), x ∈ List.map (fun (n : ℕ) => (n : ℤ)) l → 0 ≤ x
@@ -168,8 +168,8 @@ example (l : List ℤ) (h : ∀ x ∈ l, 0 ≤ x) : True := by
 
 example (q : ℚ) (h : q.den = 1) : True := by
   lift q to ℤ
-  · guard_target =ₛ q.den = 1
-    exact h
+  guard_target =ₛ q.den = 1
+  exact h
 
   guard_hyp q : ℤ
   guard_hyp h : (q : ℚ).den = 1
@@ -177,8 +177,8 @@ example (q : ℚ) (h : q.den = 1) : True := by
 
 example (x : WithTop Unit) (h : x ≠ ⊤) : True := by
   lift x to Unit
-  · guard_target =ₛ x ≠ ⊤
-    exact h
+  guard_target =ₛ x ≠ ⊤
+  exact h
 
   guard_hyp x : Unit
   guard_hyp h : (x : WithTop Unit) ≠ ⊤
@@ -186,8 +186,8 @@ example (x : WithTop Unit) (h : x ≠ ⊤) : True := by
 
 example (x : WithBot Unit) (h : x ≠ ⊥) : True := by
   lift x to Unit
-  · guard_target =ₛ x ≠ ⊥
-    exact h
+  guard_target =ₛ x ≠ ⊥
+  exact h
 
   guard_hyp x : Unit
   guard_hyp h : (x : WithBot Unit) ≠ ⊥
@@ -195,8 +195,8 @@ example (x : WithBot Unit) (h : x ≠ ⊥) : True := by
 
 example (n : ℕ) (hn : 0 < n) : True := by
   lift n to ℕ+
-  · guard_target =ₛ 0 < n
-    exact hn
+  guard_target =ₛ 0 < n
+  exact hn
 
   guard_hyp n : ℕ+
   guard_hyp hn : 0 < (n : ℕ)
@@ -204,16 +204,16 @@ example (n : ℕ) (hn : 0 < n) : True := by
 
 example (n : ℕ) : n = 0 ∨ ∃ p : ℕ+, n = p := by
   by_cases hn : 0 < n
-  · lift n to ℕ+ using hn
-    right
-    exact ⟨n, rfl⟩
-  · left
-    exact Nat.eq_zero_of_not_pos hn
+  lift n to ℕ+ using hn
+  right
+  exact ⟨n, rfl⟩
+  left
+  exact Nat.eq_zero_of_not_pos hn
 
 example (n : ℤ) (hn : 0 < n) : True := by
   lift n to ℕ+
-  · guard_target =ₛ 0 < n
-    exact hn
+  guard_target =ₛ 0 < n
+  exact hn
 
   guard_hyp n : ℕ+
   guard_hyp hn : 0 < (n : ℤ)

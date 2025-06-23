@@ -310,9 +310,9 @@ theorem apply_mulSingle₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 
     (x : f i) (y : g i) (j : I) :
     f' j (mulSingle i x j) (mulSingle i y j) = mulSingle i (f' i x y) j := by
   by_cases h : j = i
-  · subst h
-    simp only [mulSingle_eq_same]
-  · simp only [mulSingle_eq_of_ne h, hf']
+  subst h
+  simp only [mulSingle_eq_same]
+  simp only [mulSingle_eq_of_ne h, hf']
 
 @[to_additive]
 theorem mulSingle_op {g : I → Type*} [∀ i, One (g i)] (op : ∀ i, f i → g i)

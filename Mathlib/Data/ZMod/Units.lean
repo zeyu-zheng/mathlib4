@@ -50,18 +50,18 @@ theorem unitsMap_surjective [hm : NeZero m] (h : n ∣ m) :
   apply Nat.coprime_of_dvd
   intro p pp hp hpn
   by_cases hpx : p ∣ x
-  · have h := Nat.dvd_sub' hp hpx
-    rw [add_comm, Nat.add_sub_cancel] at h
-    rcases pp.dvd_mul.mp h with h | h
-    · have ⟨q, hq, hq'⟩ := (pp.prime.dvd_finset_prod_iff id).mp h
-      rw [Finset.mem_filter, Nat.mem_primeFactors,
-        ← (Nat.prime_dvd_prime_iff_eq pp hq.1.1).mp hq'] at hq
-      exact hq.2 hpx
-    · exact Nat.Prime.not_coprime_iff_dvd.mpr ⟨p, pp, hpx, h⟩ hx
-  · have pps : p ∈ ps := Finset.mem_filter.mpr ⟨Nat.mem_primeFactors.mpr ⟨pp, hpn, hm.out⟩, hpx⟩
-    have h := Nat.dvd_sub' hp ((Finset.dvd_prod_of_mem id pps).mul_right n)
-    rw [Nat.add_sub_cancel] at h
-    contradiction
+  have h := Nat.dvd_sub' hp hpx
+  rw [add_comm, Nat.add_sub_cancel] at h
+  rcases pp.dvd_mul.mp h with h | h
+  have ⟨q, hq, hq'⟩ := (pp.prime.dvd_finset_prod_iff id).mp h
+  rw [Finset.mem_filter, Nat.mem_primeFactors,
+    ← (Nat.prime_dvd_prime_iff_eq pp hq.1.1).mp hq'] at hq
+  exact hq.2 hpx
+  exact Nat.Prime.not_coprime_iff_dvd.mpr ⟨p, pp, hpx, h⟩ hx
+  have pps : p ∈ ps := Finset.mem_filter.mpr ⟨Nat.mem_primeFactors.mpr ⟨pp, hpn, hm.out⟩, hpx⟩
+  have h := Nat.dvd_sub' hp ((Finset.dvd_prod_of_mem id pps).mul_right n)
+  rw [Nat.add_sub_cancel] at h
+  contradiction
 
 -- This needs `Nat.primeFactors`, so cannot go into `Mathlib.Data.ZMod.Basic`.
 open Nat in
@@ -75,13 +75,13 @@ lemma eq_unit_mul_divisor {N : ℕ} (a : ZMod N) :
     ∃ d : ℕ, d ∣ N ∧ ∃ (u : ZMod N), IsUnit u ∧ a = u * d := by
   rcases eq_or_ne N 0 with rfl | hN
   -- Silly special case : N = 0. Of no mathematical interest, but true, so let's prove it.
-  · change ℤ at a
-    rcases eq_or_ne a 0 with rfl | ha
-    · refine ⟨0, dvd_zero _, 1, isUnit_one, by rw [Nat.cast_zero, mul_zero]⟩
-    refine ⟨a.natAbs, dvd_zero _, Int.sign a, ?_, (Int.sign_mul_natAbs a).symm⟩
-    rcases lt_or_gt_of_ne ha with h | h
-    · simp only [Int.sign_eq_neg_one_of_neg h, IsUnit.neg_iff, isUnit_one]
-    · simp only [Int.sign_eq_one_of_pos h, isUnit_one]
+  change ℤ at a
+  rcases eq_or_ne a 0 with rfl | ha
+  refine ⟨0, dvd_zero _, 1, isUnit_one, by rw [Nat.cast_zero, mul_zero]⟩
+  refine ⟨a.natAbs, dvd_zero _, Int.sign a, ?_, (Int.sign_mul_natAbs a).symm⟩
+  rcases lt_or_gt_of_ne ha with h | h
+  simp only [Int.sign_eq_neg_one_of_neg h, IsUnit.neg_iff, isUnit_one]
+  simp only [Int.sign_eq_one_of_pos h, isUnit_one]
   -- now the interesting case
   have : NeZero N := ⟨hN⟩
   -- Define `d` as the GCD of a lift of `a` and `N`.

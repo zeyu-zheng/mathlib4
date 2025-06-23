@@ -99,7 +99,7 @@ theorem repr_gen_pow_isIntegral [IsDomain S]
   rw [← @aeval_X_pow R _ _ _ _ B.gen, ← modByMonic_add_div (X ^ n) (minpoly.monic hB)]
   simp
   by_cases hQ : Q = 0
-  · simp [this, hQ, isIntegral_zero]
+  simp [this, hQ, isIntegral_zero]
   have hlt : Q.natDegree < B.dim
   rw [← B.natDegree_minpoly, hmin, (minpoly.monic hB).natDegree_map,
     natDegree_lt_natDegree_iff hQ]
@@ -113,10 +113,10 @@ theorem repr_gen_pow_isIntegral [IsDomain S]
     Algebra.smul_def, LinearEquiv.map_smul]
   simp only [algebraMap_smul, Finsupp.coe_smul, Pi.smul_apply, B.basis.repr_self_apply]
   by_cases hij : (⟨j, hj⟩ : Fin _) = i
-  · simp only [hij, eq_self_iff_true, if_true]
-    rw [Algebra.smul_def, mul_one]
-    exact isIntegral_algebraMap
-  · simp [hij, isIntegral_zero]
+  simp only [hij, eq_self_iff_true, if_true]
+  rw [Algebra.smul_def, mul_one]
+  exact isIntegral_algebraMap
+  simp [hij, isIntegral_zero]
 
 /-- Let `B : PowerBasis S A` be such that `IsIntegral R B.gen`, and let `x y : A` be elements with
 integral coordinates in the base `B.basis`. Then `IsIntegral R ((B.basis.repr (x * y) i)` for all
@@ -149,15 +149,15 @@ theorem repr_pow_isIntegral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.ba
     -- Porting note: had to hint what to induct on
     (p := fun n ↦ _ → ∀ (i : Fin B.dim), IsIntegral R (B.basis.repr (x ^ n) i))
     n ?_ fun n hn => ?_
-  · intro _ i
-    rw [pow_zero, ← pow_zero B.gen, ← Fin.val_mk B.dim_pos, ← B.basis_eq_pow,
-      B.basis.repr_self_apply]
-    split_ifs
-    · exact isIntegral_one
-    · exact isIntegral_zero
-  · intro hx
-    rw [pow_succ]
-    exact repr_mul_isIntegral hB (fun _ => hn _ le_rfl (fun _ => hx _) _) hx hmin
+  intro _ i
+  rw [pow_zero, ← pow_zero B.gen, ← Fin.val_mk B.dim_pos, ← B.basis_eq_pow,
+    B.basis.repr_self_apply]
+  split_ifs
+  exact isIntegral_one
+  exact isIntegral_zero
+  intro hx
+  rw [pow_succ]
+  exact repr_mul_isIntegral hB (fun _ => hn _ le_rfl (fun _ => hx _) _) hx hmin
 
 /-- Let `B B' : PowerBasis K S` be such that `IsIntegral R B.gen`, and let `P : R[X]` be such that
 `aeval B.gen P = B'.gen`. Then `IsIntegral R (B.basis.to_matrix B'.basis i j)` for all `i` and `j`

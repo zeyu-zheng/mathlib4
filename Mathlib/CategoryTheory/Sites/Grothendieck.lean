@@ -269,8 +269,8 @@ instance : InfSet (GrothendieckTopology C) where
 /-- See <https://stacks.math.columbia.edu/tag/00Z7> -/
 theorem isGLB_sInf (s : Set (GrothendieckTopology C)) : IsGLB s (sInf s) := by
   refine @IsGLB.of_image _ _ _ _ sieves ?_ _ _ ?_
-  · rfl
-  · exact _root_.isGLB_sInf _
+  rfl
+  exact _root_.isGLB_sInf _
 
 /-- Construct a complete lattice from the `Inf`, but make the trivial and discrete topologies
 definitionally equal to the bottom and top respectively.
@@ -279,16 +279,16 @@ instance : CompleteLattice (GrothendieckTopology C) :=
   CompleteLattice.copy (completeLatticeOfInf _ isGLB_sInf) _ rfl (discrete C)
     (by
       apply le_antisymm
-      · exact @CompleteLattice.le_top _ (completeLatticeOfInf _ isGLB_sInf) (discrete C)
-      · intro X S _
-        apply Set.mem_univ)
+      exact @CompleteLattice.le_top _ (completeLatticeOfInf _ isGLB_sInf) (discrete C)
+      intro X S _
+      apply Set.mem_univ)
     (trivial C)
     (by
       apply le_antisymm
-      · intro X S hS
-        rw [trivial_covering] at hS
-        apply covering_of_eq_top _ hS
-      · exact @CompleteLattice.bot_le _ (completeLatticeOfInf _ isGLB_sInf) (trivial C))
+      intro X S hS
+      rw [trivial_covering] at hS
+      apply covering_of_eq_top _ hS
+      exact @CompleteLattice.bot_le _ (completeLatticeOfInf _ isGLB_sInf) (trivial C))
     _ rfl _ rfl _ rfl sInf rfl
 
 instance : Inhabited (GrothendieckTopology C) :=

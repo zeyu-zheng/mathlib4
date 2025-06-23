@@ -96,10 +96,10 @@ alias ⟨MDifferentiable.differentiable, Differentiable.mdifferentiable⟩ :=
 theorem mfderivWithin_eq_fderivWithin :
     mfderivWithin 𝓘(𝕜, E) 𝓘(𝕜, E') f s x = fderivWithin 𝕜 f s x := by
   by_cases h : MDifferentiableWithinAt 𝓘(𝕜, E) 𝓘(𝕜, E') f s x
-  · simp only [mfderivWithin, h, if_pos, mfld_simps]
-  · simp only [mfderivWithin, h, if_neg, not_false_iff]
-    rw [mdifferentiableWithinAt_iff_differentiableWithinAt] at h
-    exact (fderivWithin_zero_of_not_differentiableWithinAt h).symm
+  simp only [mfderivWithin, h, if_pos, mfld_simps]
+  simp only [mfderivWithin, h, if_neg, not_false_iff]
+  rw [mdifferentiableWithinAt_iff_differentiableWithinAt] at h
+  exact (fderivWithin_zero_of_not_differentiableWithinAt h).symm
 
 /-- For maps between vector spaces, `mfderiv` and `fderiv` coincide -/
 @[simp]

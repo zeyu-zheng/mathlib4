@@ -85,8 +85,8 @@ instance spec_punit_isEmpty : IsEmpty (Spec (CommRingCat.of PUnit.{u+1})) :=
 instance (priority := 100) isOpenImmersion_of_isEmpty {X Y : Scheme} (f : X ⟶ Y)
     [IsEmpty X] : IsOpenImmersion f := by
   apply (config := { allowSynthFailures := true }) IsOpenImmersion.of_stalk_iso
-  · exact .of_isEmpty (X := X) _
-  · intro (i : X); exact isEmptyElim i
+  exact .of_isEmpty (X := X) _
+  intro (i : X); exact isEmptyElim i
 
 instance (priority := 100) isIso_of_isEmpty {X Y : Scheme} (f : X ⟶ Y) [IsEmpty Y] :
     IsIso f := by
@@ -249,20 +249,20 @@ lemma sigmaι_eq_iff (i j : ι) (x y) :
     (Sigma.ι f i).1.base x = (Sigma.ι f j).1.base y ↔
       (Sigma.mk i x : Σ i, f i) = Sigma.mk j y := by
   constructor
-  · intro H
-    rw [← ι_sigmaIsoGlued_inv, ← ι_sigmaIsoGlued_inv] at H
-    erw [(TopCat.homeoOfIso
-      (Scheme.forgetToTop.mapIso (sigmaIsoGlued f))).symm.injective.eq_iff] at H
-    by_cases h : i = j
-    · subst h
-      simp only [Sigma.mk.inj_iff, heq_eq_eq, true_and]
-      exact ((disjointGlueData f).ι i).openEmbedding.inj H
-    · obtain (e | ⟨z, _⟩) := (Scheme.GlueData.ι_eq_iff _ _ _ _ _).mp H
-      · exact (h (Sigma.mk.inj_iff.mp e).1).elim
-      · simp only [disjointGlueData_J, disjointGlueData_V, h, ↓reduceIte] at z
-        cases z
-  · rintro ⟨rfl⟩
-    rfl
+  intro H
+  rw [← ι_sigmaIsoGlued_inv, ← ι_sigmaIsoGlued_inv] at H
+  erw [(TopCat.homeoOfIso
+    (Scheme.forgetToTop.mapIso (sigmaIsoGlued f))).symm.injective.eq_iff] at H
+  by_cases h : i = j
+  subst h
+  simp only [Sigma.mk.inj_iff, heq_eq_eq, true_and]
+  exact ((disjointGlueData f).ι i).openEmbedding.inj H
+  obtain (e | ⟨z, _⟩) := (Scheme.GlueData.ι_eq_iff _ _ _ _ _).mp H
+  exact (h (Sigma.mk.inj_iff.mp e).1).elim
+  simp only [disjointGlueData_J, disjointGlueData_V, h, ↓reduceIte] at z
+  cases z
+  rintro ⟨rfl⟩
+  rfl
 
 /-- The images of each component in the coproduct is disjoint. -/
 lemma disjoint_opensRange_sigmaι (i j : ι) (h : i ≠ j) :

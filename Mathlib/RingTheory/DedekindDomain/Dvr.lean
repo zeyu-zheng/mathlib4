@@ -94,15 +94,15 @@ theorem IsLocalization.isDedekindDomain [IsDedekindDomain A] {M : Submonoid A} (
   haveI : IsFractionRing Aₘ (FractionRing A) :=
     IsFractionRing.isFractionRing_of_isDomain_of_isLocalization M _ _
   refine (isDedekindDomain_iff _ (FractionRing A)).mpr ⟨?_, ?_, ?_, ?_⟩
-  · infer_instance
-  · exact IsLocalization.isNoetherianRing M _ (by infer_instance)
-  · exact Ring.DimensionLEOne.localization Aₘ hM
-  · intro x hx
-    obtain ⟨⟨y, y_mem⟩, hy⟩ := hx.exists_multiple_integral_of_isLocalization M _
-    obtain ⟨z, hz⟩ := (isIntegrallyClosed_iff _).mp IsDedekindRing.toIsIntegralClosure hy
-    refine ⟨IsLocalization.mk' Aₘ z ⟨y, y_mem⟩, (IsLocalization.lift_mk'_spec _ _ _ _).mpr ?_⟩
-    rw [hz, ← Algebra.smul_def]
-    rfl
+  infer_instance
+  exact IsLocalization.isNoetherianRing M _ (by infer_instance)
+  exact Ring.DimensionLEOne.localization Aₘ hM
+  intro x hx
+  obtain ⟨⟨y, y_mem⟩, hy⟩ := hx.exists_multiple_integral_of_isLocalization M _
+  obtain ⟨z, hz⟩ := (isIntegrallyClosed_iff _).mp IsDedekindRing.toIsIntegralClosure hy
+  refine ⟨IsLocalization.mk' Aₘ z ⟨y, y_mem⟩, (IsLocalization.lift_mk'_spec _ _ _ _).mpr ?_⟩
+  rw [hz, ← Algebra.smul_def]
+  rfl
 
 /-- The localization of a Dedekind domain at every nonzero prime ideal is a Dedekind domain. -/
 theorem IsLocalization.AtPrime.isDedekindDomain [IsDedekindDomain A] (P : Ideal A) [P.IsPrime]

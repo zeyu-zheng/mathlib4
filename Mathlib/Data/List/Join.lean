@@ -33,8 +33,8 @@ theorem join_eq_nil : ∀ {L : List (List α)}, join L = [] ↔ ∀ l ∈ L, l =
 @[simp]
 theorem join_append (L₁ L₂ : List (List α)) : join (L₁ ++ L₂) = join L₁ ++ join L₂ := by
   induction L₁
-  · rfl
-  · simp [*]
+  rfl
+  simp [*]
 
 theorem join_concat (L : List (List α)) (l : List α) : join (L.concat l) = join L ++ l := by simp
 
@@ -95,8 +95,8 @@ See `List.take_sum_join` for the corresponding statement using `List.sum`. -/
 theorem take_sum_join' (L : List (List α)) (i : ℕ) :
     L.join.take (Nat.sum ((L.map length).take i)) = (L.take i).join := by
   induction L generalizing i
-  · simp
-  · cases i <;> simp [take_append, *]
+  simp
+  cases i <;> simp [take_append, *]
 
 /-- In a join, dropping all the elements up to an index which is the sum of the lengths of the
 first `i` sublists, is the same as taking the join after dropping the first `i` sublists.
@@ -105,18 +105,18 @@ See `List.drop_sum_join` for the corresponding statement using `List.sum`. -/
 theorem drop_sum_join' (L : List (List α)) (i : ℕ) :
     L.join.drop (Nat.sum ((L.map length).take i)) = (L.drop i).join := by
   induction L generalizing i
-  · simp
-  · cases i <;> simp [drop_append, *]
+  simp
+  cases i <;> simp [drop_append, *]
 
 /-- Taking only the first `i+1` elements in a list, and then dropping the first `i` ones, one is
 left with a list of length `1` made of the `i`-th element of the original list. -/
 theorem drop_take_succ_eq_cons_getElem (L : List α) (i : Nat) (h : i < L.length) :
     (L.take (i + 1)).drop i = [L[i]] := by
   induction' L with head tail ih generalizing i
-  · exact (Nat.not_succ_le_zero i h).elim
+  exact (Nat.not_succ_le_zero i h).elim
   rcases i with _ | i
-  · simp
-  · simpa using ih _ (by simpa using h)
+  simp
+  simpa using ih _ (by simpa using h)
 
 @[deprecated drop_take_succ_eq_cons_getElem (since := "2024-06-11")]
 theorem drop_take_succ_eq_cons_get (L : List α) (i : Fin L.length) :
@@ -130,11 +130,11 @@ left with a list of length `1` made of the `i`-th element of the original list. 
 theorem drop_take_succ_eq_cons_nthLe (L : List α) {i : ℕ} (hi : i < L.length) :
     (L.take (i + 1)).drop i = [nthLe L i hi] := by
   induction' L with head tail generalizing i
-  · simp only [length] at hi
-    exact (Nat.not_succ_le_zero i hi).elim
+  simp only [length] at hi
+  exact (Nat.not_succ_le_zero i hi).elim
   cases' i with i hi
-  · simp
-    rfl
+  simp
+  rfl
   have : i < tail.length
   simpa using hi
   simp [*]
@@ -166,31 +166,31 @@ theorem eq_iff_join_eq (L L' : List (List α)) :
   refine ⟨fun H => by simp [H], ?_⟩
   rintro ⟨join_eq, length_eq⟩
   apply ext_getElem
-  · have : length (map length L) = length (map length L') := by rw [length_eq]
-    simpa using this
-  · intro n h₁ h₂
-    rw [← drop_take_succ_join_eq_getElem', ← drop_take_succ_join_eq_getElem', join_eq, length_eq]
+  have : length (map length L) = length (map length L') := by rw [length_eq]
+  simpa using this
+  intro n h₁ h₂
+  rw [← drop_take_succ_join_eq_getElem', ← drop_take_succ_join_eq_getElem', join_eq, length_eq]
 
 theorem join_drop_length_sub_one {L : List (List α)} (h : L ≠ []) :
     (L.drop (L.length - 1)).join = L.getLast h := by
   induction L using List.reverseRecOn
-  · cases h rfl
-  · simp
+  cases h rfl
+  simp
 
 /-- We can rebracket `x ++ (l₁ ++ x) ++ (l₂ ++ x) ++ ... ++ (lₙ ++ x)` to
 `(x ++ l₁) ++ (x ++ l₂) ++ ... ++ (x ++ lₙ) ++ x` where `L = [l₁, l₂, ..., lₙ]`. -/
 theorem append_join_map_append (L : List (List α)) (x : List α) :
     x ++ (L.map (· ++ x)).join = (L.map (x ++ ·)).join ++ x := by
   induction' L with _ _ ih
-  · rw [map_nil, join, append_nil, map_nil, join, nil_append]
-  · rw [map_cons, join, map_cons, join, append_assoc, ih, append_assoc, append_assoc]
+  rw [map_nil, join, append_nil, map_nil, join, nil_append]
+  rw [map_cons, join, map_cons, join, append_assoc, ih, append_assoc, append_assoc]
 
 /-- Reversing a join is the same as reversing the order of parts and reversing all parts. -/
 theorem reverse_join (L : List (List α)) :
     L.join.reverse = (L.map reverse).reverse.join := by
   induction' L with _ _ ih
-  · rfl
-  · rw [join, reverse_append, ih, map_cons, reverse_cons', join_concat]
+  rfl
+  rw [join, reverse_append, ih, map_cons, reverse_cons', join_concat]
 
 /-- Joining a reverse is the same as reversing all parts and reversing the joined result. -/
 theorem join_reverse (L : List (List α)) :

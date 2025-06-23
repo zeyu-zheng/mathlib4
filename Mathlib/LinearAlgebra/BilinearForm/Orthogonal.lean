@@ -161,13 +161,13 @@ theorem span_singleton_inf_orthogonal_eq_bot {B : BilinForm K V} {x : V} (hx : �
   refine eq_bot_iff.2 fun y h => ?_
   rcases mem_span_finset.1 h.1 with ⟨μ, rfl⟩
   have := h.2 x ?_
-  · rw [Finset.sum_singleton] at this ⊢
-    suffices hμzero : μ x = 0 by rw [hμzero, zero_smul, Submodule.mem_bot]
-    change B x (μ x • x) = 0 at this
-    rw [smul_right] at this
-    exact eq_zero_of_ne_zero_of_mul_right_eq_zero hx this
-  · rw [Submodule.mem_span]
-    exact fun _ hp => hp <| Finset.mem_singleton_self _
+  rw [Finset.sum_singleton] at this ⊢
+  suffices hμzero : μ x = 0 by rw [hμzero, zero_smul, Submodule.mem_bot]
+  change B x (μ x • x) = 0 at this
+  rw [smul_right] at this
+  exact eq_zero_of_ne_zero_of_mul_right_eq_zero hx this
+  rw [Submodule.mem_span]
+  exact fun _ hp => hp <| Finset.mem_singleton_self _
 
 -- ↓ This lemma only applies in fields since we use the `mul_eq_zero`
 theorem orthogonal_span_singleton_eq_toLin_ker {B : BilinForm K V} (x : V) :
@@ -175,10 +175,10 @@ theorem orthogonal_span_singleton_eq_toLin_ker {B : BilinForm K V} (x : V) :
   ext y
   simp_rw [mem_orthogonal_iff, LinearMap.mem_ker, Submodule.mem_span_singleton]
   constructor
-  · exact fun h => h x ⟨1, one_smul _ _⟩
-  · rintro h _ ⟨z, rfl⟩
-    rw [IsOrtho, smul_left, mul_eq_zero]
-    exact Or.intro_right _ h
+  exact fun h => h x ⟨1, one_smul _ _⟩
+  rintro h _ ⟨z, rfl⟩
+  rw [IsOrtho, smul_left, mul_eq_zero]
+  exact Or.intro_right _ h
 
 theorem span_singleton_sup_orthogonal_eq_top {B : BilinForm K V} {x : V} (hx : ¬B.IsOrtho x x) :
     (K ∙ x) ⊔ B.orthogonal (K ∙ x) = ⊤ := by
@@ -225,8 +225,8 @@ theorem iIsOrtho.not_isOrtho_basis_self_of_nondegenerate {n : Type w} [Nontrivia
   rw [smul_right]
   convert mul_zero (vi j) using 2
   obtain rfl | hij := eq_or_ne i j
-  · exact ho
-  · exact h hij
+  exact ho
+  exact h hij
 
 /-- Given an orthogonal basis with respect to a bilinear form, the bilinear form is nondegenerate
 iff the basis has no elements which are self-orthogonal. -/
@@ -241,44 +241,44 @@ theorem iIsOrtho.nondegenerate_iff_not_isOrtho_basis_self {n : Type w} [Nontrivi
   specialize hB (v i)
   simp_rw [Basis.repr_symm_apply, Finsupp.total_apply, Finsupp.sum, sum_left, smul_left] at hB
   rw [Finset.sum_eq_single i] at hB
-  · exact eq_zero_of_ne_zero_of_mul_right_eq_zero (ho i) hB
-  · intro j _ hij
-    convert mul_zero (vi j) using 2
-    exact hO hij
-  · intro hi
-    convert zero_mul (M₀ := R) _ using 2
-    exact Finsupp.not_mem_support_iff.mp hi
+  exact eq_zero_of_ne_zero_of_mul_right_eq_zero (ho i) hB
+  intro j _ hij
+  convert mul_zero (vi j) using 2
+  exact hO hij
+  intro hi
+  convert zero_mul (M₀ := R) _ using 2
+  exact Finsupp.not_mem_support_iff.mp hi
 
 section
 
 theorem toLin_restrict_ker_eq_inf_orthogonal (B : BilinForm K V) (W : Subspace K V) (b : B.IsRefl) :
     (B.domRestrict W).ker.map W.subtype = (W ⊓ B.orthogonal ⊤ : Subspace K V) := by
   ext x; constructor <;> intro hx
-  · rcases hx with ⟨⟨x, hx⟩, hker, rfl⟩
-    erw [LinearMap.mem_ker] at hker
-    constructor
-    · simp [hx]
-    · intro y _
-      rw [IsOrtho, b]
-      change (B.domRestrict W) ⟨x, hx⟩ y = 0
-      rw [hker]
-      rfl
-  · simp_rw [Submodule.mem_map, LinearMap.mem_ker]
-    refine ⟨⟨x, hx.1⟩, ?_, rfl⟩
-    ext y
-    change B x y = 0
-    rw [b]
-    exact hx.2 _ Submodule.mem_top
+  rcases hx with ⟨⟨x, hx⟩, hker, rfl⟩
+  erw [LinearMap.mem_ker] at hker
+  constructor
+  simp [hx]
+  intro y _
+  rw [IsOrtho, b]
+  change (B.domRestrict W) ⟨x, hx⟩ y = 0
+  rw [hker]
+  rfl
+  simp_rw [Submodule.mem_map, LinearMap.mem_ker]
+  refine ⟨⟨x, hx.1⟩, ?_, rfl⟩
+  ext y
+  change B x y = 0
+  rw [b]
+  exact hx.2 _ Submodule.mem_top
 
 theorem toLin_restrict_range_dualCoannihilator_eq_orthogonal (B : BilinForm K V)
     (W : Subspace K V) : (B.domRestrict W).range.dualCoannihilator = B.orthogonal W := by
   ext x; constructor <;> rw [mem_orthogonal_iff] <;> intro hx
-  · intro y hy
-    rw [Submodule.mem_dualCoannihilator] at hx
-    exact hx (B.domRestrict W ⟨y, hy⟩) ⟨⟨y, hy⟩, rfl⟩
-  · rw [Submodule.mem_dualCoannihilator]
-    rintro _ ⟨⟨w, hw⟩, rfl⟩
-    exact hx w hw
+  intro y hy
+  rw [Submodule.mem_dualCoannihilator] at hx
+  exact hx (B.domRestrict W ⟨y, hy⟩) ⟨⟨y, hy⟩, rfl⟩
+  rw [Submodule.mem_dualCoannihilator]
+  rintro _ ⟨⟨w, hw⟩, rfl⟩
+  exact hx w hw
 
 lemma ker_restrict_eq_of_codisjoint {p q : Submodule R M} (hpq : Codisjoint p q)
     {B : LinearMap.BilinForm R M} (hB : ∀ x ∈ p, ∀ y ∈ q, B x y = 0) :
@@ -286,11 +286,11 @@ lemma ker_restrict_eq_of_codisjoint {p q : Submodule R M} (hpq : Codisjoint p q)
   ext ⟨z, hz⟩
   simp only [LinearMap.mem_ker, Submodule.mem_comap, Submodule.coeSubtype]
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · ext w
-    obtain ⟨x, hx, y, hy, rfl⟩ := Submodule.exists_add_eq_of_codisjoint hpq w
-    simpa [hB z hz y hy] using LinearMap.congr_fun h ⟨x, hx⟩
-  · ext ⟨x, hx⟩
-    simpa using LinearMap.congr_fun h x
+  ext w
+  obtain ⟨x, hx, y, hy, rfl⟩ := Submodule.exists_add_eq_of_codisjoint hpq w
+  simpa [hB z hz y hy] using LinearMap.congr_fun h ⟨x, hx⟩
+  ext ⟨x, hx⟩
+  simpa using LinearMap.congr_fun h x
 
 variable [FiniteDimensional K V]
 

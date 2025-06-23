@@ -63,9 +63,9 @@ theorem cons_eta {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a') :
     (cons m a (f _ (mem_cons_self _ _)) fun a' ha' => f a' (mem_cons_of_mem ha')) = f := by
   ext a' h'
   by_cases h : a' = a
-  · subst h
-    rw [Pi.cons_same]
-  · rw [Pi.cons_ne _ h]
+  subst h
+  rw [Pi.cons_same]
+  rw [Pi.cons_ne _ h]
 
 theorem cons_map (b : δ a) (f : ∀ a' ∈ m, δ a')
     {δ' : α → Sort*} (φ : ∀ ⦃a'⦄, δ a' → δ' a') :
@@ -81,9 +81,9 @@ theorem forall_rel_cons_ext {r : ∀ ⦃a⦄, δ a → δ a → Prop} {b₁ b₂
   intro a ha
   dsimp [cons]
   split_ifs with H
-  · cases H
-    exact hb
-  · exact hf _ _
+  cases H
+  exact hb
+  exact hf _ _
 
 theorem cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
     Function.Injective (Pi.cons s a b) := fun f₁ f₂ eq =>
@@ -156,20 +156,20 @@ theorem mem_pi (m : Multiset α) (t : ∀ a, Multiset (β a)) :
     ∀ f : ∀ a ∈ m, β a, f ∈ pi m t ↔ ∀ (a) (h : a ∈ m), f a h ∈ t a := by
   intro f
   induction' m using Multiset.induction_on with a m ih
-  · have : f = Pi.empty β := funext (fun _ => funext fun h => (not_mem_zero _ h).elim)
-    simp only [this, pi_zero, mem_singleton, true_iff]
-    intro _ h; exact (not_mem_zero _ h).elim
+  have : f = Pi.empty β := funext (fun _ => funext fun h => (not_mem_zero _ h).elim)
+  simp only [this, pi_zero, mem_singleton, true_iff]
+  intro _ h; exact (not_mem_zero _ h).elim
   simp_rw [pi_cons, mem_bind, mem_map, ih]
   constructor
-  · rintro ⟨b, hb, f', hf', rfl⟩ a' ha'
-    by_cases h : a' = a
-    · subst h
-      rwa [Pi.cons_same]
-    · rw [Pi.cons_ne _ h]
-      apply hf'
-  · intro hf
-    refine ⟨_, hf a (mem_cons_self _ _), _, fun a ha => hf a (mem_cons_of_mem ha), ?_⟩
-    rw [Pi.cons_eta]
+  rintro ⟨b, hb, f', hf', rfl⟩ a' ha'
+  by_cases h : a' = a
+  subst h
+  rwa [Pi.cons_same]
+  rw [Pi.cons_ne _ h]
+  apply hf'
+  intro hf
+  refine ⟨_, hf a (mem_cons_self _ _), _, fun a ha => hf a (mem_cons_of_mem ha), ?_⟩
+  rw [Pi.cons_eta]
 
 end
 

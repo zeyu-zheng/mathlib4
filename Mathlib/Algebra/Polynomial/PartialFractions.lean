@@ -95,8 +95,8 @@ theorem div_eq_quo_add_sum_rem_div (f : R[X]) {ι : Type*} {g : ι → R[X]} {s 
       (∀ i ∈ s, (r i).degree < (g i).degree) ∧
         ((↑f : K) / ∏ i ∈ s, ↑(g i)) = ↑q + ∑ i ∈ s, (r i : K) / (g i : K) := by
   induction' s using Finset.induction_on with a b hab Hind f generalizing f
-  · refine ⟨f, fun _ : ι => (0 : R[X]), fun i => ?_, by simp⟩
-    rintro ⟨⟩
+  refine ⟨f, fun _ : ι => (0 : R[X]), fun i => ?_, by simp⟩
+  rintro ⟨⟩
   obtain ⟨q₀, r₁, r₂, hdeg₁, _, hf : (↑f : K) / _ = _⟩ :=
     div_eq_quo_add_rem_div_add_rem_div R K f
       (hg a (b.mem_insert_self a) : Monic (g a))
@@ -109,19 +109,19 @@ theorem div_eq_quo_add_sum_rem_div (f : R[X]) {ι : Type*} {g : ι → R[X]} {s 
     Hind _ (fun i hi => hg i (Finset.mem_insert_of_mem hi))
       (Set.Pairwise.mono (Finset.coe_subset.2 fun i hi => Finset.mem_insert_of_mem hi) hcop)
   refine ⟨q₀ + q, fun i => if i = a then r₁ else r i, ?_, ?_⟩
-  · intro i
-    dsimp only
-    split_ifs with h1
-    · cases h1
-      intro
-      exact hdeg₁
-    · intro hi
-      exact hrdeg i (Finset.mem_of_mem_insert_of_ne hi h1)
+  intro i
+  dsimp only
+  split_ifs with h1
+  cases h1
+  intro
+  exact hdeg₁
+  intro hi
+  exact hrdeg i (Finset.mem_of_mem_insert_of_ne hi h1)
   norm_cast at hf IH ⊢
   rw [Finset.prod_insert hab, hf, IH, Finset.sum_insert hab, if_pos rfl]
   trans (↑(q₀ + q : R[X]) : K) + (↑r₁ / ↑(g a) + ∑ i ∈ b, (r i : K) / (g i : K))
-  · push_cast
-    ring
+  push_cast
+  ring
   congr 2
   refine Finset.sum_congr rfl fun x hxb => ?_
   rw [if_neg]

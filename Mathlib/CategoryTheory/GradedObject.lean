@@ -509,8 +509,8 @@ variable {X Y} in
 lemma ιMapObjOrZero_mapMap :
     X.ιMapObjOrZero p i j ≫ mapMap φ p j = φ i ≫ Y.ιMapObjOrZero p i j := by
   by_cases h : p i = j
-  · simp only [ιMapObjOrZero_eq _ _ _ _ h, ι_mapMap]
-  · simp only [ιMapObjOrZero_eq_zero _ _ _ _ h, zero_comp, comp_zero]
+  simp only [ιMapObjOrZero_eq _ _ _ _ h, ι_mapMap]
+  simp only [ιMapObjOrZero_eq_zero _ _ _ _ h, zero_comp, comp_zero]
 
 end GradedObject
 

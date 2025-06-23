@@ -100,9 +100,9 @@ theorem isClosed_singleton_iff_isMaximal (x : PrimeSpectrum R) :
   rw [← closure_subset_iff_isClosed, ← zeroLocus_vanishingIdeal_eq_closure,
       vanishingIdeal_singleton]
   constructor <;> intro H
-  · rcases x.asIdeal.exists_le_maximal x.2.1 with ⟨m, hm, hxm⟩
-    exact (congr_arg asIdeal (@H ⟨m, hm.isPrime⟩ hxm)) ▸ hm
-  · exact fun p hp ↦ PrimeSpectrum.ext _ _ (H.eq_of_le p.2.1 hp).symm
+  rcases x.asIdeal.exists_le_maximal x.2.1 with ⟨m, hm, hxm⟩
+  exact (congr_arg asIdeal (@H ⟨m, hm.isPrime⟩ hxm)) ▸ hm
+  exact fun p hp ↦ PrimeSpectrum.ext _ _ (H.eq_of_le p.2.1 hp).symm
 
 theorem isRadical_vanishingIdeal (s : Set (PrimeSpectrum R)) : (vanishingIdeal s).IsRadical := by
   rw [← vanishingIdeal_closure, ← zeroLocus_vanishingIdeal_eq_closure,
@@ -128,19 +128,19 @@ def closedsEmbedding (R : Type*) [CommSemiring R] :
 
 theorem t1Space_iff_isField [IsDomain R] : T1Space (PrimeSpectrum R) ↔ IsField R := by
   refine ⟨?_, fun h => ?_⟩
-  · intro h
-    have hbot : Ideal.IsPrime (⊥ : Ideal R) := Ideal.bot_prime
-    exact
-      Classical.not_not.1
-        (mt
-          (Ring.ne_bot_of_isMaximal_of_not_isField <|
-            (isClosed_singleton_iff_isMaximal _).1 (T1Space.t1 ⟨⊥, hbot⟩))
-          (by aesop))
-  · refine ⟨fun x => (isClosed_singleton_iff_isMaximal x).2 ?_⟩
-    by_cases hx : x.asIdeal = ⊥
-    · letI := h.toSemifield
-      exact hx.symm ▸ Ideal.bot_isMaximal
-    · exact absurd h (Ring.not_isField_iff_exists_prime.2 ⟨x.asIdeal, ⟨hx, x.2⟩⟩)
+  intro h
+  have hbot : Ideal.IsPrime (⊥ : Ideal R) := Ideal.bot_prime
+  exact
+    Classical.not_not.1
+      (mt
+        (Ring.ne_bot_of_isMaximal_of_not_isField <|
+          (isClosed_singleton_iff_isMaximal _).1 (T1Space.t1 ⟨⊥, hbot⟩))
+        (by aesop))
+  refine ⟨fun x => (isClosed_singleton_iff_isMaximal x).2 ?_⟩
+  by_cases hx : x.asIdeal = ⊥
+  letI := h.toSemifield
+  exact hx.symm ▸ Ideal.bot_isMaximal
+  exact absurd h (Ring.not_isField_iff_exists_prime.2 ⟨x.asIdeal, ⟨hx, x.2⟩⟩)
 
 local notation "Z(" a ")" => zeroLocus (a : Set R)
 
@@ -148,25 +148,25 @@ theorem isIrreducible_zeroLocus_iff_of_radical (I : Ideal R) (hI : I.IsRadical) 
     IsIrreducible (zeroLocus (I : Set R)) ↔ I.IsPrime := by
   rw [Ideal.isPrime_iff, IsIrreducible]
   apply and_congr
-  · rw [Set.nonempty_iff_ne_empty, Ne, zeroLocus_empty_iff_eq_top]
-  · trans ∀ x y : Ideal R, Z(I) ⊆ Z(x) ∪ Z(y) → Z(I) ⊆ Z(x) ∨ Z(I) ⊆ Z(y)
-    · simp_rw [isPreirreducible_iff_closed_union_closed, isClosed_iff_zeroLocus_ideal]
-      constructor
-      · rintro h x y
-        exact h _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
-      · rintro h _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
-        exact h x y
-    · simp_rw [← zeroLocus_inf, subset_zeroLocus_iff_le_vanishingIdeal,
-        vanishingIdeal_zeroLocus_eq_radical, hI.radical]
-      constructor
-      · simp_rw [← SetLike.mem_coe, ← Set.singleton_subset_iff, ← Ideal.span_le, ←
-          Ideal.span_singleton_mul_span_singleton]
-        refine fun h x y h' => h _ _ ?_
-        rw [← hI.radical_le_iff] at h' ⊢
-        simpa only [Ideal.radical_inf, Ideal.radical_mul] using h'
-      · simp_rw [or_iff_not_imp_left, SetLike.not_le_iff_exists]
-        rintro h s t h' ⟨x, hx, hx'⟩ y hy
-        exact h (h' ⟨Ideal.mul_mem_right _ _ hx, Ideal.mul_mem_left _ _ hy⟩) hx'
+  rw [Set.nonempty_iff_ne_empty, Ne, zeroLocus_empty_iff_eq_top]
+  trans ∀ x y : Ideal R, Z(I) ⊆ Z(x) ∪ Z(y) → Z(I) ⊆ Z(x) ∨ Z(I) ⊆ Z(y)
+  simp_rw [isPreirreducible_iff_closed_union_closed, isClosed_iff_zeroLocus_ideal]
+  constructor
+  rintro h x y
+  exact h _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
+  rintro h _ _ ⟨x, rfl⟩ ⟨y, rfl⟩
+  exact h x y
+  simp_rw [← zeroLocus_inf, subset_zeroLocus_iff_le_vanishingIdeal,
+    vanishingIdeal_zeroLocus_eq_radical, hI.radical]
+  constructor
+  simp_rw [← SetLike.mem_coe, ← Set.singleton_subset_iff, ← Ideal.span_le, ←
+    Ideal.span_singleton_mul_span_singleton]
+  refine fun h x y h' => h _ _ ?_
+  rw [← hI.radical_le_iff] at h' ⊢
+  simpa only [Ideal.radical_inf, Ideal.radical_mul] using h'
+  simp_rw [or_iff_not_imp_left, SetLike.not_le_iff_exists]
+  rintro h s t h' ⟨x, hx, hx'⟩ y hy
+  exact h (h' ⟨Ideal.mul_mem_right _ _ hx, Ideal.mul_mem_left _ _ hy⟩) hx'
 
 theorem isIrreducible_zeroLocus_iff (I : Ideal R) :
     IsIrreducible (zeroLocus (I : Set R)) ↔ I.radical.IsPrime :=
@@ -186,7 +186,7 @@ lemma vanishingIdeal_isIrreducible :
 lemma vanishingIdeal_isClosed_isIrreducible :
     vanishingIdeal (R := R) '' {s | IsClosed s ∧ IsIrreducible s} = {P | P.IsPrime} := by
   refine (subset_antisymm ?_ ?_).trans vanishingIdeal_isIrreducible
-  · exact Set.image_subset _ fun _ ↦ And.right
+  exact Set.image_subset _ fun _ ↦ And.right
   rintro _ ⟨s, hs, rfl⟩
   exact ⟨closure s, ⟨isClosed_closure, hs.closure⟩, vanishingIdeal_closure s⟩
 
@@ -263,11 +263,11 @@ theorem localization_comap_inducing [Algebra R S] (M : Submonoid R) [IsLocalizat
   simp_rw [isClosed_induced_iff, isClosed_iff_zeroLocus, @eq_comm _ _ (zeroLocus _),
     exists_exists_eq_and, preimage_comap_zeroLocus]
   constructor
-  · rintro ⟨s, rfl⟩
-    refine ⟨(Ideal.span s).comap (algebraMap R S), ?_⟩
-    rw [← zeroLocus_span, ← zeroLocus_span s, ← Ideal.map, IsLocalization.map_comap M S]
-  · rintro ⟨s, rfl⟩
-    exact ⟨_, rfl⟩
+  rintro ⟨s, rfl⟩
+  refine ⟨(Ideal.span s).comap (algebraMap R S), ?_⟩
+  rw [← zeroLocus_span, ← zeroLocus_span s, ← Ideal.map, IsLocalization.map_comap M S]
+  rintro ⟨s, rfl⟩
+  exact ⟨_, rfl⟩
 
 theorem localization_comap_injective [Algebra R S] (M : Submonoid R) [IsLocalization M S] :
     Function.Injective (comap (algebraMap R S)) := by
@@ -286,13 +286,13 @@ theorem localization_comap_range [Algebra R S] (M : Submonoid R) [IsLocalization
     Set.range (comap (algebraMap R S)) = { p | Disjoint (M : Set R) p.asIdeal } := by
   ext x
   constructor
-  · simp_rw [disjoint_iff_inf_le]
-    rintro ⟨p, rfl⟩ x ⟨hx₁, hx₂⟩
-    exact (p.2.1 : ¬_) (p.asIdeal.eq_top_of_isUnit_mem hx₂ (IsLocalization.map_units S ⟨x, hx₁⟩))
-  · intro h
-    use ⟨x.asIdeal.map (algebraMap R S), IsLocalization.isPrime_of_isPrime_disjoint M S _ x.2 h⟩
-    ext1
-    exact IsLocalization.comap_map_of_isPrime_disjoint M S _ x.2 h
+  simp_rw [disjoint_iff_inf_le]
+  rintro ⟨p, rfl⟩ x ⟨hx₁, hx₂⟩
+  exact (p.2.1 : ¬_) (p.asIdeal.eq_top_of_isUnit_mem hx₂ (IsLocalization.map_units S ⟨x, hx₁⟩))
+  intro h
+  use ⟨x.asIdeal.map (algebraMap R S), IsLocalization.isPrime_of_isPrime_disjoint M S _ x.2 h⟩
+  ext1
+  exact IsLocalization.comap_map_of_isPrime_disjoint M S _ x.2 h
 
 open Function RingHom
 
@@ -343,19 +343,19 @@ theorem image_comap_zeroLocus_eq_zeroLocus_comap (hf : Surjective f) (I : Ideal 
     comap f '' zeroLocus I = zeroLocus (I.comap f) := by
   simp only [Set.ext_iff, Set.mem_image, mem_zeroLocus, SetLike.coe_subset_coe]
   refine fun p => ⟨?_, fun h_I_p => ?_⟩
-  · rintro ⟨p, hp, rfl⟩ a ha
-    exact hp ha
-  · have hp : ker f ≤ p.asIdeal := (Ideal.comap_mono bot_le).trans h_I_p
-    refine ⟨⟨p.asIdeal.map f, Ideal.map_isPrime_of_surjective hf hp⟩, fun x hx => ?_, ?_⟩
-    · obtain ⟨x', rfl⟩ := hf x
-      exact Ideal.mem_map_of_mem f (h_I_p hx)
-    · ext x
-      rw [comap_asIdeal, Ideal.mem_comap, Ideal.mem_map_iff_of_surjective f hf]
-      refine ⟨?_, fun hx => ⟨x, hx, rfl⟩⟩
-      rintro ⟨x', hx', heq⟩
-      rw [← sub_sub_cancel x' x]
-      refine p.asIdeal.sub_mem hx' (hp ?_)
-      rwa [mem_ker, map_sub, sub_eq_zero]
+  rintro ⟨p, hp, rfl⟩ a ha
+  exact hp ha
+  have hp : ker f ≤ p.asIdeal := (Ideal.comap_mono bot_le).trans h_I_p
+  refine ⟨⟨p.asIdeal.map f, Ideal.map_isPrime_of_surjective hf hp⟩, fun x hx => ?_, ?_⟩
+  obtain ⟨x', rfl⟩ := hf x
+  exact Ideal.mem_map_of_mem f (h_I_p hx)
+  ext x
+  rw [comap_asIdeal, Ideal.mem_comap, Ideal.mem_map_iff_of_surjective f hf]
+  refine ⟨?_, fun hx => ⟨x, hx, rfl⟩⟩
+  rintro ⟨x', hx', heq⟩
+  rw [← sub_sub_cancel x' x]
+  refine p.asIdeal.sub_mem hx' (hp ?_)
+  rwa [mem_ker, map_sub, sub_eq_zero]
 
 theorem range_comap_of_surjective (hf : Surjective f) :
     Set.range (comap f) = zeroLocus (ker f) := by
@@ -465,14 +465,14 @@ theorem isTopologicalBasis_basic_opens :
     TopologicalSpace.IsTopologicalBasis
       (Set.range fun r : R => (basicOpen r : Set (PrimeSpectrum R))) := by
   apply TopologicalSpace.isTopologicalBasis_of_isOpen_of_nhds
-  · rintro _ ⟨r, rfl⟩
-    exact isOpen_basicOpen
-  · rintro p U hp ⟨s, hs⟩
-    rw [← compl_compl U, Set.mem_compl_iff, ← hs, mem_zeroLocus, Set.not_subset] at hp
-    obtain ⟨f, hfs, hfp⟩ := hp
-    refine ⟨basicOpen f, ⟨f, rfl⟩, hfp, ?_⟩
-    rw [← Set.compl_subset_compl, ← hs, basicOpen_eq_zeroLocus_compl, compl_compl]
-    exact zeroLocus_anti_mono (Set.singleton_subset_iff.mpr hfs)
+  rintro _ ⟨r, rfl⟩
+  exact isOpen_basicOpen
+  rintro p U hp ⟨s, hs⟩
+  rw [← compl_compl U, Set.mem_compl_iff, ← hs, mem_zeroLocus, Set.not_subset] at hp
+  obtain ⟨f, hfs, hfp⟩ := hp
+  refine ⟨basicOpen f, ⟨f, rfl⟩, hfp, ?_⟩
+  rw [← Set.compl_subset_compl, ← hs, basicOpen_eq_zeroLocus_compl, compl_compl]
+  exact zeroLocus_anti_mono (Set.singleton_subset_iff.mpr hfs)
 
 theorem isBasis_basic_opens : TopologicalSpace.Opens.IsBasis (Set.range (@basicOpen R _)) := by
   unfold TopologicalSpace.Opens.IsBasis
@@ -494,10 +494,10 @@ theorem localization_away_comap_range (S : Type v) [CommSemiring S] [Algebra R S
   simp only [mem_zeroLocus, basicOpen_eq_zeroLocus_compl, SetLike.mem_coe, Set.mem_setOf_eq,
     Set.singleton_subset_iff, Set.mem_compl_iff, disjoint_iff_inf_le]
   constructor
-  · intro h₁ h₂
-    exact h₁ ⟨Submonoid.mem_powers r, h₂⟩
-  · rintro h₁ _ ⟨⟨n, rfl⟩, h₃⟩
-    exact h₁ (x.2.mem_of_pow_mem _ h₃)
+  intro h₁ h₂
+  exact h₁ ⟨Submonoid.mem_powers r, h₂⟩
+  rintro h₁ _ ⟨⟨n, rfl⟩, h₃⟩
+  exact h₁ (x.2.mem_of_pow_mem _ h₃)
 
 theorem localization_away_openEmbedding (S : Type v) [CommSemiring S] [Algebra R S] (r : R)
     [IsLocalization.Away r S] : OpenEmbedding (comap (algebraMap R S)) :=
@@ -640,10 +640,10 @@ variable {R}
 lemma vanishingIdeal_mem_minimalPrimes {s : Set (PrimeSpectrum R)} :
     vanishingIdeal s ∈ minimalPrimes R ↔ closure s ∈ irreducibleComponents (PrimeSpectrum R) := by
   constructor
-  · rw [← zeroLocus_minimalPrimes, ← zeroLocus_vanishingIdeal_eq_closure]
-    exact Set.mem_image_of_mem _
-  · rw [← vanishingIdeal_irreducibleComponents, ← vanishingIdeal_closure]
-    exact Set.mem_image_of_mem _
+  rw [← zeroLocus_minimalPrimes, ← zeroLocus_vanishingIdeal_eq_closure]
+  exact Set.mem_image_of_mem _
+  rw [← vanishingIdeal_irreducibleComponents, ← vanishingIdeal_closure]
+  exact Set.mem_image_of_mem _
 
 lemma zeroLocus_ideal_mem_irreducibleComponents {I : Ideal R} :
     zeroLocus I ∈ irreducibleComponents (PrimeSpectrum R) ↔ I.radical ∈ minimalPrimes R := by
@@ -683,10 +683,10 @@ theorem specializes_closedPoint (x : PrimeSpectrum R) : x ⤳ closedPoint R :=
 theorem closedPoint_mem_iff (U : TopologicalSpace.Opens <| PrimeSpectrum R) :
     closedPoint R ∈ U ↔ U = ⊤ := by
   constructor
-  · rw [eq_top_iff]
-    exact fun h x _ => (specializes_closedPoint x).mem_open U.2 h
-  · rintro rfl
-    trivial
+  rw [eq_top_iff]
+  exact fun h x _ => (specializes_closedPoint x).mem_open U.2 h
+  rintro rfl
+  trivial
 
 @[simp]
 theorem PrimeSpectrum.comap_residue (T : Type u) [CommRing T] [LocalRing T]

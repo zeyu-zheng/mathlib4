@@ -125,8 +125,8 @@ theorem mul_sub_algebraMap_commutes [Ring A] [Algebra R A] (x : A) (r : R) :
 theorem mul_sub_algebraMap_pow_commutes [Ring A] [Algebra R A] (x : A) (r : R) (n : ℕ) :
     x * (x - algebraMap R A r) ^ n = (x - algebraMap R A r) ^ n * x := by
   induction' n with n ih
-  · simp
-  · rw [pow_succ', ← mul_assoc, mul_sub_algebraMap_commutes, mul_assoc, ih, ← mul_assoc]
+  simp
+  rw [pow_succ', ← mul_assoc, mul_sub_algebraMap_commutes, mul_assoc, ih, ← mul_assoc]
 
 end CommSemiring
 
@@ -337,12 +337,12 @@ theorem NoZeroSMulDivisors.trans (R A M : Type*) [CommRing R] [Ring A] [IsDomain
   refine ⟨fun {r m} h => ?_⟩
   rw [algebra_compatible_smul A r m] at h
   cases' smul_eq_zero.1 h with H H
-  · have : Function.Injective (algebraMap R A) :=
-      NoZeroSMulDivisors.iff_algebraMap_injective.1 inferInstance
-    left
-    exact (injective_iff_map_eq_zero _).1 this _ H
-  · right
-    exact H
+  have : Function.Injective (algebraMap R A) :=
+    NoZeroSMulDivisors.iff_algebraMap_injective.1 inferInstance
+  left
+  exact (injective_iff_map_eq_zero _).1 this _ H
+  right
+  exact H
 
 variable {A}
 

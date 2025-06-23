@@ -63,10 +63,10 @@ end convert_to
 example (prime : Nat → Prop) (n : Nat) (h : prime (2 * n + 1)) :
     prime (n + n + 1) := by
   convert h
-  · guard_target = (HAdd.hAdd : Nat → Nat → Nat) = HMul.hMul
-    exact test_sorry
-  · guard_target = n = 2
-    exact test_sorry
+  guard_target = (HAdd.hAdd : Nat → Nat → Nat) = HMul.hMul
+  exact test_sorry
+  guard_target = n = 2
+  exact test_sorry
 
 example (prime : Nat → Prop) (n : Nat) (h : prime (2 * n + 1)) :
     prime (n + n + 1) := by
@@ -105,8 +105,8 @@ example : True := by
   case y => exact 2
   case z => exact 3
   all_goals try infer_instance
-  · simp
-  · simp
+  simp
+  simp
 
 -- This test does not work unless we specify that `α` and `β` lie in the same universe.
 -- Prior to https://github.com/leanprover/lean4/pull/4493 it did,
@@ -116,14 +116,14 @@ example {α β : Type u} [Fintype α] [Fintype β] : Fintype.card α = Fintype.c
   congr!
   guard_target = Fintype.card α = Fintype.card β
   congr! (config := {typeEqs := true})
-  · guard_target = α = β
-    exact test_sorry
-  · rename_i inst1 inst2 h
-    guard_target = HEq inst1 inst2
-    have : Subsingleton (Fintype α) := test_sorry
-    congr!
+  guard_target = α = β
+  exact test_sorry
+  rename_i inst1 inst2 h
+  guard_target = HEq inst1 inst2
+  have : Subsingleton (Fintype α) := test_sorry
+  congr!
 
 example (x y z : Nat) (h : x + y = z) : y + x = z := by
   convert_to y + x = _ at h
-  · rw [Nat.add_comm]
+  rw [Nat.add_comm]
   exact h

@@ -86,12 +86,12 @@ theorem sorted_zero_eq_min'_aux (s : Finset α) (h : 0 < (s.sort (· ≤ ·)).le
     (s.sort (· ≤ ·)).get ⟨0, h⟩ = s.min' H := by
   let l := s.sort (· ≤ ·)
   apply le_antisymm
-  · have : s.min' H ∈ l := (Finset.mem_sort (α := α) (· ≤ ·)).mpr (s.min'_mem H)
-    obtain ⟨i, hi⟩ : ∃ i, l.get i = s.min' H := List.mem_iff_get.1 this
-    rw [← hi]
-    exact (s.sort_sorted (· ≤ ·)).rel_get_of_le (Nat.zero_le i)
-  · have : l.get ⟨0, h⟩ ∈ s := (Finset.mem_sort (α := α) (· ≤ ·)).1 (List.get_mem l 0 h)
-    exact s.min'_le _ this
+  have : s.min' H ∈ l := (Finset.mem_sort (α := α) (· ≤ ·)).mpr (s.min'_mem H)
+  obtain ⟨i, hi⟩ : ∃ i, l.get i = s.min' H := List.mem_iff_get.1 this
+  rw [← hi]
+  exact (s.sort_sorted (· ≤ ·)).rel_get_of_le (Nat.zero_le i)
+  have : l.get ⟨0, h⟩ ∈ s := (Finset.mem_sort (α := α) (· ≤ ·)).1 (List.get_mem l 0 h)
+  exact s.min'_le _ this
 
 theorem sorted_zero_eq_min' {s : Finset α} {h : 0 < (s.sort (· ≤ ·)).length} :
     (s.sort (· ≤ ·)).get ⟨0, h⟩ = s.min' (card_pos.1 <| by rwa [length_sort] at h) :=
@@ -106,13 +106,13 @@ theorem sorted_last_eq_max'_aux (s : Finset α)
     (s.sort (· ≤ ·)).get ⟨(s.sort (· ≤ ·)).length - 1, h⟩ = s.max' H := by
   let l := s.sort (· ≤ ·)
   apply le_antisymm
-  · have : l.get ⟨(s.sort (· ≤ ·)).length - 1, h⟩ ∈ s :=
-      (Finset.mem_sort (α := α) (· ≤ ·)).1 (List.get_mem l _ h)
-    exact s.le_max' _ this
-  · have : s.max' H ∈ l := (Finset.mem_sort (α := α) (· ≤ ·)).mpr (s.max'_mem H)
-    obtain ⟨i, hi⟩ : ∃ i, l.get i = s.max' H := List.mem_iff_get.1 this
-    rw [← hi]
-    exact (s.sort_sorted (· ≤ ·)).rel_get_of_le (Nat.le_sub_one_of_lt i.prop)
+  have : l.get ⟨(s.sort (· ≤ ·)).length - 1, h⟩ ∈ s :=
+    (Finset.mem_sort (α := α) (· ≤ ·)).1 (List.get_mem l _ h)
+  exact s.le_max' _ this
+  have : s.max' H ∈ l := (Finset.mem_sort (α := α) (· ≤ ·)).mpr (s.max'_mem H)
+  obtain ⟨i, hi⟩ : ∃ i, l.get i = s.max' H := List.mem_iff_get.1 this
+  rw [← hi]
+  exact (s.sort_sorted (· ≤ ·)).rel_get_of_le (Nat.le_sub_one_of_lt i.prop)
 
 theorem sorted_last_eq_max' {s : Finset α}
     {h : (s.sort (· ≤ ·)).length - 1 < (s.sort (· ≤ ·)).length} :
@@ -193,9 +193,9 @@ theorem orderEmbOfFin_unique {s : Finset α} {k : ℕ} (h : s.card = k) {f : Fin
   apply Fin.strictMono_unique hmono (s.orderEmbOfFin h).strictMono
   rw [range_orderEmbOfFin, ← Set.image_univ, ← coe_univ, ← coe_image, coe_inj]
   refine eq_of_subset_of_card_le (fun x hx => ?_) ?_
-  · rcases mem_image.1 hx with ⟨x, _, rfl⟩
-    exact hfs x
-  · rw [h, card_image_of_injective _ hmono.injective, card_univ, Fintype.card_fin]
+  rcases mem_image.1 hx with ⟨x, _, rfl⟩
+  exact hfs x
+  rw [h, card_image_of_injective _ hmono.injective, card_univ, Fintype.card_fin]
 
 /-- An order embedding `f` from `Fin k` to a finset of cardinality `k` has to coincide with
 the increasing bijection `orderEmbOfFin s h`. -/

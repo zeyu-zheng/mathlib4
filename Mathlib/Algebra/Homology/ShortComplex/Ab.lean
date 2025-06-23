@@ -103,25 +103,25 @@ lemma ab_exact_iff :
     S.Exact ↔ ∀ (x₂ : S.X₂) (_ : S.g x₂ = 0), ∃ (x₁ : S.X₁), S.f x₁ = x₂ := by
   rw [exact_iff_surjective_abToCycles]
   constructor
-  · intro h x₂ hx₂
-    obtain ⟨x₁, hx₁⟩ := h ⟨x₂, hx₂⟩
-    exact ⟨x₁, by simpa only [Subtype.ext_iff, abToCycles_apply_coe] using hx₁⟩
-  · rintro h ⟨x₂, hx₂⟩
-    obtain ⟨x₁, rfl⟩ := h x₂ hx₂
-    exact ⟨x₁, rfl⟩
+  intro h x₂ hx₂
+  obtain ⟨x₁, hx₁⟩ := h ⟨x₂, hx₂⟩
+  exact ⟨x₁, by simpa only [Subtype.ext_iff, abToCycles_apply_coe] using hx₁⟩
+  rintro h ⟨x₂, hx₂⟩
+  obtain ⟨x₁, rfl⟩ := h x₂ hx₂
+  exact ⟨x₁, rfl⟩
 
 lemma ab_exact_iff_ker_le_range : S.Exact ↔ S.g.ker ≤ S.f.range := S.ab_exact_iff
 
 lemma ab_exact_iff_range_eq_ker : S.Exact ↔ S.f.range = S.g.ker := by
   rw [ab_exact_iff_ker_le_range]
   constructor
-  · intro h
-    refine le_antisymm ?_ h
-    rintro _ ⟨x₁, rfl⟩
-    erw [AddMonoidHom.mem_ker, ← comp_apply, S.zero]
-    rfl
-  · intro h
-    rw [h]
+  intro h
+  refine le_antisymm ?_ h
+  rintro _ ⟨x₁, rfl⟩
+  erw [AddMonoidHom.mem_ker, ← comp_apply, S.zero]
+  rfl
+  intro h
+  rw [h]
 
 variable {S}
 

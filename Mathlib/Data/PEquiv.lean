@@ -166,11 +166,11 @@ theorem injective_of_forall_ne_isSome (f : α ≃. β) (a₂ : α)
   HasLeftInverse.injective
     ⟨fun b => Option.recOn b a₂ fun b' => Option.recOn (f.symm b') a₂ id, fun x => by
         cases hfx : f x
-        · have : x = a₂ := not_imp_comm.1 (h x) (hfx.symm ▸ by simp)
-          simp [this]
-        · dsimp only
-          rw [(eq_some_iff f).2 hfx]
-          rfl⟩
+        have : x = a₂ := not_imp_comm.1 (h x) (hfx.symm ▸ by simp)
+        simp [this]
+        dsimp only
+        rw [(eq_some_iff f).2 hfx]
+        rfl⟩
 
 /-- If the domain of a `PEquiv` is all of `α`, its forward direction is injective. -/
 theorem injective_of_forall_isSome {f : α ≃. β} (h : ∀ a : α, isSome (f a)) : Injective f :=
@@ -202,12 +202,12 @@ theorem mem_ofSet_iff {s : Set α} [DecidablePred (· ∈ s)] {a b : α} :
     a ∈ ofSet s b ↔ a = b ∧ a ∈ s := by
   dsimp [ofSet]
   split_ifs with h
-  · simp only [mem_def, eq_comm, some.injEq, iff_self_and]
-    rintro rfl
-    exact h
-  · simp only [mem_def, false_iff, not_and]
-    rintro rfl
-    exact h
+  simp only [mem_def, eq_comm, some.injEq, iff_self_and]
+  rintro rfl
+  exact h
+  simp only [mem_def, false_iff, not_and]
+  rintro rfl
+  exact h
 
 @[simp]
 theorem ofSet_eq_some_iff {s : Set α} {_ : DecidablePred (· ∈ s)} {a b : α} :
@@ -246,9 +246,9 @@ theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = ofSet { a | (f a).is
   simp only [eq_some_iff f, Option.isSome_iff_exists, Option.mem_def, bind_eq_some',
     ofSet_eq_some_iff]
   constructor
-  · rintro ⟨b, hb₁, hb₂⟩
-    exact ⟨PEquiv.inj _ hb₂ hb₁, b, hb₂⟩
-  · simp (config := { contextual := true })
+  rintro ⟨b, hb₁, hb₂⟩
+  exact ⟨PEquiv.inj _ hb₂ hb₁, b, hb₂⟩
+  simp (config := { contextual := true })
 
 theorem symm_trans_self (f : α ≃. β) : f.symm.trans f = ofSet { b | (f.symm b).isSome } :=
   symm_injective <| by simp [symm_trans_rev, self_trans_symm, -symm_symm]
@@ -372,8 +372,8 @@ instance instPartialOrderPEquiv : PartialOrder (α ≃. β) where
       (by
         intro a
         cases' h : g a with b
-        · exact eq_none_iff_forall_not_mem.2 fun b hb => Option.not_mem_none b <| h ▸ fg a b hb
-        · exact gf _ _ h)
+        exact eq_none_iff_forall_not_mem.2 fun b hb => Option.not_mem_none b <| h ▸ fg a b hb
+        exact gf _ _ h)
 
 theorem le_def {f g : α ≃. β} : f ≤ g ↔ ∀ (a : α) (b : β), b ∈ f a → b ∈ g a :=
   Iff.rfl
@@ -391,16 +391,16 @@ instance [DecidableEq α] [DecidableEq β] : SemilatticeInf (α ≃. β) :=
           have hg := @mem_iff_mem _ _ g a b
           simp only [Option.mem_def] at *
           split_ifs with h1 h2 h2 <;> try simp [hf]
-          · contrapose! h2
-            rw [h2]
-            rw [← h1, hf, h2] at hg
-            simp only [mem_def, true_iff_iff, eq_self_iff_true] at hg
-            rw [hg]
-          · contrapose! h1
-            rw [h1] at hf h2
-            rw [← h2] at hg
-            simp only [iff_true] at hf hg
-            rw [hf, hg] }
+          contrapose! h2
+          rw [h2]
+          rw [← h1, hf, h2] at hg
+          simp only [mem_def, true_iff_iff, eq_self_iff_true] at hg
+          rw [hg]
+          contrapose! h1
+          rw [h1] at hf h2
+          rw [← h2] at hg
+          simp only [iff_true] at hf hg
+          rw [hf, hg] }
     inf_le_left := fun _ _ _ _ => by simp only [coe_mk, mem_def]; split_ifs <;> simp [*]
     inf_le_right := fun _ _ _ _ => by simp only [coe_mk, mem_def]; split_ifs <;> simp [*]
     le_inf := fun f g h fg gh a b => by

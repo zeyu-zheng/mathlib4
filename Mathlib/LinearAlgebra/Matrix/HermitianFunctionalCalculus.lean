@@ -122,15 +122,15 @@ instance instContinuousFunctionalCalculus :
       fun f ↦ ?hermitian⟩
     case map_spec =>
       apply Set.eq_of_subset_of_subset
-      · rw [← ContinuousMap.spectrum_eq_range f]
-        apply AlgHom.spectrum_apply_subset
-      · rw [cfcAux_apply, unitary.spectrum.unitary_conjugate]
-        rintro - ⟨x , rfl⟩
-        apply spectrum.of_algebraMap_mem 𝕜
-        simp only [Function.comp_apply, Set.mem_range, spectrum_diagonal]
-        obtain ⟨x, hx⟩ := x
-        obtain ⟨i, rfl⟩ := ha.eigenvalues_eq_spectrum_real ▸ hx
-        exact ⟨i, rfl⟩
+      rw [← ContinuousMap.spectrum_eq_range f]
+      apply AlgHom.spectrum_apply_subset
+      rw [cfcAux_apply, unitary.spectrum.unitary_conjugate]
+      rintro - ⟨x , rfl⟩
+      apply spectrum.of_algebraMap_mem 𝕜
+      simp only [Function.comp_apply, Set.mem_range, spectrum_diagonal]
+      obtain ⟨x, hx⟩ := x
+      obtain ⟨i, rfl⟩ := ha.eigenvalues_eq_spectrum_real ▸ hx
+      exact ⟨i, rfl⟩
     case hermitian =>
       simp only [isSelfAdjoint_iff, cfcAux_apply, mul_assoc, star_mul, star_star]
       rw [star_eq_conjTranspose, diagonal_conjTranspose]

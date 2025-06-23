@@ -25,9 +25,9 @@ variable [TopologicalSpace α] [LinearOrder α] [OrderTopology α] [DenselyOrder
 element. -/
 theorem closure_Ioi' {a : α} (h : (Ioi a).Nonempty) : closure (Ioi a) = Ici a := by
   apply Subset.antisymm
-  · exact closure_minimal Ioi_subset_Ici_self isClosed_Ici
-  · rw [← diff_subset_closure_iff, Ici_diff_Ioi_same, singleton_subset_iff]
-    exact isGLB_Ioi.mem_closure h
+  exact closure_minimal Ioi_subset_Ici_self isClosed_Ici
+  rw [← diff_subset_closure_iff, Ici_diff_Ioi_same, singleton_subset_iff]
+  exact isGLB_Ioi.mem_closure h
 
 /-- The closure of the interval `(a, +∞)` is the closed interval `[a, +∞)`. -/
 @[simp]
@@ -48,30 +48,30 @@ theorem closure_Iio (a : α) [NoMinOrder α] : closure (Iio a) = Iic a :=
 @[simp]
 theorem closure_Ioo {a b : α} (hab : a ≠ b) : closure (Ioo a b) = Icc a b := by
   apply Subset.antisymm
-  · exact closure_minimal Ioo_subset_Icc_self isClosed_Icc
-  · cases' hab.lt_or_lt with hab hab
-    · rw [← diff_subset_closure_iff, Icc_diff_Ioo_same hab.le]
-      have hab' : (Ioo a b).Nonempty := nonempty_Ioo.2 hab
-      simp only [insert_subset_iff, singleton_subset_iff]
-      exact ⟨(isGLB_Ioo hab).mem_closure hab', (isLUB_Ioo hab).mem_closure hab'⟩
-    · rw [Icc_eq_empty_of_lt hab]
-      exact empty_subset _
+  exact closure_minimal Ioo_subset_Icc_self isClosed_Icc
+  cases' hab.lt_or_lt with hab hab
+  rw [← diff_subset_closure_iff, Icc_diff_Ioo_same hab.le]
+  have hab' : (Ioo a b).Nonempty := nonempty_Ioo.2 hab
+  simp only [insert_subset_iff, singleton_subset_iff]
+  exact ⟨(isGLB_Ioo hab).mem_closure hab', (isLUB_Ioo hab).mem_closure hab'⟩
+  rw [Icc_eq_empty_of_lt hab]
+  exact empty_subset _
 
 /-- The closure of the interval `(a, b]` is the closed interval `[a, b]`. -/
 @[simp]
 theorem closure_Ioc {a b : α} (hab : a ≠ b) : closure (Ioc a b) = Icc a b := by
   apply Subset.antisymm
-  · exact closure_minimal Ioc_subset_Icc_self isClosed_Icc
-  · apply Subset.trans _ (closure_mono Ioo_subset_Ioc_self)
-    rw [closure_Ioo hab]
+  exact closure_minimal Ioc_subset_Icc_self isClosed_Icc
+  apply Subset.trans _ (closure_mono Ioo_subset_Ioc_self)
+  rw [closure_Ioo hab]
 
 /-- The closure of the interval `[a, b)` is the closed interval `[a, b]`. -/
 @[simp]
 theorem closure_Ico {a b : α} (hab : a ≠ b) : closure (Ico a b) = Icc a b := by
   apply Subset.antisymm
-  · exact closure_minimal Ico_subset_Icc_self isClosed_Icc
-  · apply Subset.trans _ (closure_mono Ioo_subset_Ico_self)
-    rw [closure_Ioo hab]
+  exact closure_minimal Ico_subset_Icc_self isClosed_Icc
+  apply Subset.trans _ (closure_mono Ioo_subset_Ico_self)
+  rw [closure_Ioo hab]
 
 @[simp]
 theorem interior_Ici' {a : α} (ha : (Iio a).Nonempty) : interior (Ici a) = Ioi a := by
@@ -121,12 +121,12 @@ theorem closure_interior_Icc {a b : α} (h : a ≠ b) : closure (interior (Icc a
 
 theorem Ioc_subset_closure_interior (a b : α) : Ioc a b ⊆ closure (interior (Ioc a b)) := by
   rcases eq_or_ne a b with (rfl | h)
-  · simp
-  · calc
-      Ioc a b ⊆ Icc a b := Ioc_subset_Icc_self
-      _ = closure (Ioo a b) := (closure_Ioo h).symm
-      _ ⊆ closure (interior (Ioc a b)) :=
-        closure_mono (interior_maximal Ioo_subset_Ioc_self isOpen_Ioo)
+  simp
+  calc
+    Ioc a b ⊆ Icc a b := Ioc_subset_Icc_self
+    _ = closure (Ioo a b) := (closure_Ioo h).symm
+    _ ⊆ closure (interior (Ioc a b)) :=
+      closure_mono (interior_maximal Ioo_subset_Ioc_self isOpen_Ioo)
 
 theorem Ico_subset_closure_interior (a b : α) : Ico a b ⊆ closure (interior (Ico a b)) := by
   simpa only [dual_Ioc] using Ioc_subset_closure_interior (OrderDual.toDual b) (OrderDual.toDual a)
@@ -219,16 +219,16 @@ theorem comap_coe_nhdsWithin_Iio_of_Ioo_subset (hb : s ⊆ Iio b)
   haveI : Nonempty s := nontrivial_iff_nonempty.1 ‹_›
   rcases hs (nonempty_subtype.1 ‹_›) with ⟨a, h, hs⟩
   ext u; constructor
-  · rintro ⟨t, ht, hts⟩
-    obtain ⟨x, ⟨hxa : a ≤ x, hxb : x < b⟩, hxt : Ioo x b ⊆ t⟩ :=
-      (mem_nhdsWithin_Iio_iff_exists_mem_Ico_Ioo_subset h).mp ht
-    obtain ⟨y, hxy, hyb⟩ := exists_between hxb
-    refine mem_of_superset (mem_atTop ⟨y, hs ⟨hxa.trans_lt hxy, hyb⟩⟩) ?_
-    rintro ⟨z, hzs⟩ (hyz : y ≤ z)
-    exact hts (hxt ⟨hxy.trans_le hyz, hb hzs⟩)
-  · intro hu
-    obtain ⟨x : s, hx : ∀ z, x ≤ z → z ∈ u⟩ := mem_atTop_sets.1 hu
-    exact ⟨Ioo x b, Ioo_mem_nhdsWithin_Iio' (hb x.2), fun z hz => hx _ hz.1.le⟩
+  rintro ⟨t, ht, hts⟩
+  obtain ⟨x, ⟨hxa : a ≤ x, hxb : x < b⟩, hxt : Ioo x b ⊆ t⟩ :=
+    (mem_nhdsWithin_Iio_iff_exists_mem_Ico_Ioo_subset h).mp ht
+  obtain ⟨y, hxy, hyb⟩ := exists_between hxb
+  refine mem_of_superset (mem_atTop ⟨y, hs ⟨hxa.trans_lt hxy, hyb⟩⟩) ?_
+  rintro ⟨z, hzs⟩ (hyz : y ≤ z)
+  exact hts (hxt ⟨hxy.trans_le hyz, hb hzs⟩)
+  intro hu
+  obtain ⟨x : s, hx : ∀ z, x ≤ z → z ∈ u⟩ := mem_atTop_sets.1 hu
+  exact ⟨Ioo x b, Ioo_mem_nhdsWithin_Iio' (hb x.2), fun z hz => hx _ hz.1.le⟩
 
 set_option backward.isDefEq.lazyWhnfCore false in -- See https://github.com/leanprover-community/mathlib4/issues/12534
 theorem comap_coe_nhdsWithin_Ioi_of_Ioo_subset (ha : s ⊆ Ioi a)
@@ -239,11 +239,11 @@ theorem comap_coe_nhdsWithin_Ioi_of_Ioo_subset (ha : s ⊆ Ioi a)
 theorem map_coe_atTop_of_Ioo_subset (hb : s ⊆ Iio b) (hs : ∀ a' < b, ∃ a < b, Ioo a b ⊆ s) :
     map ((↑) : s → α) atTop = 𝓝[<] b := by
   rcases eq_empty_or_nonempty (Iio b) with (hb' | ⟨a, ha⟩)
-  · have : IsEmpty s := ⟨fun x => hb'.subset (hb x.2)⟩
-    rw [filter_eq_bot_of_isEmpty atTop, Filter.map_bot, hb', nhdsWithin_empty]
-  · rw [← comap_coe_nhdsWithin_Iio_of_Ioo_subset hb fun _ => hs a ha, map_comap_of_mem]
-    rw [Subtype.range_val]
-    exact (mem_nhdsWithin_Iio_iff_exists_Ioo_subset' ha).2 (hs a ha)
+  have : IsEmpty s := ⟨fun x => hb'.subset (hb x.2)⟩
+  rw [filter_eq_bot_of_isEmpty atTop, Filter.map_bot, hb', nhdsWithin_empty]
+  rw [← comap_coe_nhdsWithin_Iio_of_Ioo_subset hb fun _ => hs a ha, map_comap_of_mem]
+  rw [Subtype.range_val]
+  exact (mem_nhdsWithin_Iio_iff_exists_Ioo_subset' ha).2 (hs a ha)
 
 theorem map_coe_atBot_of_Ioo_subset (ha : s ⊆ Ioi a) (hs : ∀ b' > a, ∃ b > a, Ioo a b ⊆ s) :
     map ((↑) : s → α) atBot = 𝓝[>] a := by
@@ -338,7 +338,7 @@ instance (x : α) [Nontrivial α] : NeBot (𝓝[≠] x) := by
   obtain ⟨a, b, a_lt_b, hab⟩ : ∃ a b : α, a < b ∧ Ioo a b ⊆ u := u_open.exists_Ioo_subset ⟨x, xu⟩
   obtain ⟨y, hy⟩ : ∃ y, a < y ∧ y < b := exists_between a_lt_b
   rcases ne_or_eq x y with (xy | rfl)
-  · exact ⟨y, us ⟨hab hy, xy.symm⟩⟩
+  exact ⟨y, us ⟨hab hy, xy.symm⟩⟩
   obtain ⟨z, hz⟩ : ∃ z, a < z ∧ z < x := exists_between hy.1
   exact ⟨z, us ⟨hab ⟨hz.1, hz.2.trans hy.2⟩, hz.2.ne⟩⟩
 
@@ -350,11 +350,11 @@ theorem Dense.exists_countable_dense_subset_no_bot_top [Nontrivial α] {s : Set 
     ∃ t, t ⊆ s ∧ t.Countable ∧ Dense t ∧ (∀ x, IsBot x → x ∉ t) ∧ ∀ x, IsTop x → x ∉ t := by
   rcases hs.exists_countable_dense_subset with ⟨t, hts, htc, htd⟩
   refine ⟨t \ ({ x | IsBot x } ∪ { x | IsTop x }), ?_, ?_, ?_, fun x hx => ?_, fun x hx => ?_⟩
-  · exact diff_subset.trans hts
-  · exact htc.mono diff_subset
-  · exact htd.diff_finite ((subsingleton_isBot α).finite.union (subsingleton_isTop α).finite)
-  · simp [hx]
-  · simp [hx]
+  exact diff_subset.trans hts
+  exact htc.mono diff_subset
+  exact htd.diff_finite ((subsingleton_isBot α).finite.union (subsingleton_isTop α).finite)
+  simp [hx]
+  simp [hx]
 
 variable (α)
 

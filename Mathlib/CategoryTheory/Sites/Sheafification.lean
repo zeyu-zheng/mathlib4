@@ -131,12 +131,12 @@ variable {D}
 
 theorem isIso_toSheafify {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : IsIso (toSheafify J P) := by
   refine ⟨(sheafificationAdjunction J D |>.counit.app ⟨P, hP⟩).val, ?_, ?_⟩
-  · change _ = (𝟙 (sheafToPresheaf J D ⋙ 𝟭 (Cᵒᵖ ⥤ D)) : _).app ⟨P, hP⟩
-    rw [← sheafificationAdjunction J D |>.right_triangle]
-    rfl
-  · change (sheafToPresheaf _ _).map _ ≫ _ = _
-    change _ ≫ (sheafificationAdjunction J D).unit.app ((sheafToPresheaf J D).obj ⟨P, hP⟩) = _
-    erw [← (sheafificationAdjunction J D).inv_counit_map  (X := ⟨P, hP⟩), comp_inv_eq_id]
+  change _ = (𝟙 (sheafToPresheaf J D ⋙ 𝟭 (Cᵒᵖ ⥤ D)) : _).app ⟨P, hP⟩
+  rw [← sheafificationAdjunction J D |>.right_triangle]
+  rfl
+  change (sheafToPresheaf _ _).map _ ≫ _ = _
+  change _ ≫ (sheafificationAdjunction J D).unit.app ((sheafToPresheaf J D).obj ⟨P, hP⟩) = _
+  erw [← (sheafificationAdjunction J D).inv_counit_map  (X := ⟨P, hP⟩), comp_inv_eq_id]
 
 /-- If `P` is a sheaf, then `P` is isomorphic to `sheafify J P`. -/
 noncomputable def isoSheafify {P : Cᵒᵖ ⥤ D} (hP : Presheaf.IsSheaf J P) : P ≅ sheafify J P :=

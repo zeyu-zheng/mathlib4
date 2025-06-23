@@ -205,14 +205,14 @@ theorem ofModule_asAlgebraHom_apply_apply (r : MonoidAlgebra k G)
     ((ofModule M).asAlgebraHom r) m =
       (RestrictScalars.addEquiv _ _ _).symm (r • RestrictScalars.addEquiv _ _ _ m) := by
   apply MonoidAlgebra.induction_on r
-  · intro g
-    simp only [one_smul, MonoidAlgebra.lift_symm_apply, MonoidAlgebra.of_apply,
-      Representation.asAlgebraHom_single, Representation.ofModule, AddEquiv.apply_eq_iff_eq,
-      RestrictScalars.lsmul_apply_apply]
-  · intro f g fw gw
-    simp only [fw, gw, map_add, add_smul, LinearMap.add_apply]
-  · intro r f w
-    simp only [w, map_smul, LinearMap.smul_apply, RestrictScalars.addEquiv_symm_map_smul_smul]
+  intro g
+  simp only [one_smul, MonoidAlgebra.lift_symm_apply, MonoidAlgebra.of_apply,
+    Representation.asAlgebraHom_single, Representation.ofModule, AddEquiv.apply_eq_iff_eq,
+    RestrictScalars.lsmul_apply_apply]
+  intro f g fw gw
+  simp only [fw, gw, map_add, add_smul, LinearMap.add_apply]
+  intro r f w
+  simp only [w, map_smul, LinearMap.smul_apply, RestrictScalars.addEquiv_symm_map_smul_smul]
 
 @[simp]
 theorem ofModule_asModule_act (g : G) (x : RestrictScalars k (MonoidAlgebra k G) ρ.asModule) :

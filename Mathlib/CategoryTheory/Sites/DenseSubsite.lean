@@ -402,7 +402,7 @@ theorem sheafHom_restrict_eq (α : G.op ⋙ ℱ ⟶ G.op ⋙ ℱ'.val) :
   change (show (ℱ'.val ⋙ coyoneda.obj (op (unop U))).obj (op (G.obj (unop X))) from _) = _
   apply sheaf_eq_amalgamation ℱ' (G.is_cover_of_isCoverDense _ _)
   -- Porting note: next line was not needed in mathlib3
-  · exact (pushforwardFamily_compatible _ _)
+  exact (pushforwardFamily_compatible _ _)
   intro Y f hf
   conv_lhs => rw [← hf.some.fac]
   simp only [pushforwardFamily, Functor.comp_map, yoneda_map_app, coyoneda_obj_map, op_comp,
@@ -431,7 +431,7 @@ theorem sheafHom_eq (α : ℱ ⟶ ℱ'.val) : sheafHom (whiskerLeft G.op α) = �
   change (show (ℱ'.val ⋙ coyoneda.obj (op (unop U))).obj (op (unop X)) from _) = _
   apply sheaf_eq_amalgamation ℱ' (G.is_cover_of_isCoverDense _ _)
   -- Porting note: next line was not needed in mathlib3
-  · exact (pushforwardFamily_compatible _ _)
+  exact (pushforwardFamily_compatible _ _)
   intro Y f hf
   conv_lhs => rw [← hf.some.fac]
   dsimp
@@ -579,60 +579,60 @@ lemma isIso_ranCounit_app_of_isDenseSubsite (Y : Sheaf J A) (U X) :
     IsIso ((yoneda.map ((G.op.ranCounit.app Y.val).app (op U))).app (op X)) := by
   rw [isIso_iff_bijective]
   constructor
-  · intro f₁ f₂ e
-    apply (isPointwiseRightKanExtensionRanCounit G.op Y.1 (.op (G.obj U))).hom_ext
-    rintro ⟨⟨⟨⟩⟩, ⟨W⟩, g⟩
-    obtain ⟨g, rfl⟩ : ∃ g' : G.obj W ⟶ G.obj U, g = g'.op := ⟨g.unop, rfl⟩
-    simp only [id_obj, comp_obj, StructuredArrow.proj_obj, RightExtension.coneAt_pt,
-      RightExtension.mk_left, RightExtension.coneAt_π_app, const_obj_obj, op_obj,
-      whiskeringLeft_obj_obj, RightExtension.mk_hom]
-    apply (Y.2 X _ (IsDenseSubsite.imageSieve_mem J K G g)).isSeparatedFor.ext
-    rintro V iVW ⟨iVU, e'⟩
-    have := congr($e ≫ Y.1.map iVU.op)
-    simp only [comp_obj, yoneda_map_app, Category.assoc, coyoneda_obj_obj, comp_map,
-      coyoneda_obj_map, ← NatTrans.naturality, op_obj, op_map, Quiver.Hom.unop_op, ← map_comp_assoc,
-      ← op_comp, ← e'] at this ⊢
-    erw [← NatTrans.naturality] at this
-    exact this
-  · intro f
-    have (X Y Z) (f : X ⟶ Y) (g : G.obj Y ⟶ G.obj Z) (hf : G.imageSieve g f) : Exists _ := hf
-    choose l hl using this
-    let c : Limits.Cone (StructuredArrow.proj (op (G.obj U)) G.op ⋙ Y.val) := by
-      refine ⟨X, ⟨fun g ↦ ?_, ?_⟩⟩
-      · refine Y.2.amalgamate ⟨_, IsDenseSubsite.imageSieve_mem J K G g.hom.unop⟩
-          (fun I ↦ f ≫ Y.1.map (l _ _ _ _ _ I.hf).op) fun I₁ I₂ r ↦ ?_
-        apply (Y.2 X _ (IsDenseSubsite.equalizer_mem J K G (r.g₁ ≫ l _ _ _ _ _ I₁.hf)
-          (r.g₂ ≫ l _ _ _ _ _ I₂.hf) ?_)).isSeparatedFor.ext fun V iUV (hiUV : _ = _) ↦ ?_
-        · simp only [const_obj_obj, op_obj, map_comp, hl]
-          simp only [← map_comp_assoc, r.w]
-        · simp [← map_comp, ← op_comp, hiUV]
-      · rintro ⟨⟨⟨⟩⟩, ⟨W₁⟩, g₁⟩ ⟨⟨⟨⟩⟩, ⟨W₂⟩, g₂⟩ ⟨⟨⟨⟨⟩⟩⟩, i, hi⟩
-        dsimp at g₁ g₂ i hi
-        obtain rfl : g₂ = g₁ ≫ (G.map i.unop).op := by simpa only [Category.id_comp] using hi
-        obtain ⟨g, rfl⟩ : ∃ g' : G.obj W₁ ⟶ G.obj U, g₁ = g'.op := ⟨g₁.unop, rfl⟩
-        obtain ⟨i, rfl⟩ : ∃ i' : W₂ ⟶ W₁, i = i'.op := ⟨i.unop, rfl⟩
-        simp only [const_obj_obj, id_obj, comp_obj, StructuredArrow.proj_obj, const_obj_map, op_obj,
-          unop_comp, Quiver.Hom.unop_op, Category.id_comp, comp_map, StructuredArrow.proj_map]
-        apply Y.2.hom_ext ⟨_, IsDenseSubsite.imageSieve_mem J K G (G.map i ≫ g)⟩
-        intro I
-        simp only [Presheaf.IsSheaf.amalgamate_map, Category.assoc, ← Functor.map_comp, ← op_comp]
-        let I' : GrothendieckTopology.Cover.Arrow ⟨_, IsDenseSubsite.imageSieve_mem J K G g⟩ :=
-          ⟨_, I.f ≫ i, ⟨l _ _ _ _ _ I.hf, by simp [hl]⟩⟩
-        refine Eq.trans ?_ (Y.2.amalgamate_map _ _ _ I').symm
-        apply (Y.2 X _ (IsDenseSubsite.equalizer_mem J K G (l _ _ _ _ _ I.hf)
-          (l _ _ _ _ _ I'.hf) (by simp [hl]))).isSeparatedFor.ext fun V iUV (hiUV : _ = _) ↦ ?_
-        simp [← Functor.map_comp, ← op_comp, hiUV]
-    refine ⟨(isPointwiseRightKanExtensionRanCounit G.op Y.1 (.op (G.obj U))).lift c, ?_⟩
-    · have := (isPointwiseRightKanExtensionRanCounit G.op Y.1 (.op (G.obj U))).fac c (.mk (𝟙 _))
-      simp only [id_obj, comp_obj, StructuredArrow.proj_obj, StructuredArrow.mk_right,
-        RightExtension.coneAt_pt, RightExtension.mk_left, RightExtension.coneAt_π_app,
-        const_obj_obj, op_obj, StructuredArrow.mk_hom_eq_self, map_id, whiskeringLeft_obj_obj,
-        RightExtension.mk_hom, Category.id_comp, StructuredArrow.mk_left, unop_id] at this
-      simp only [id_obj, yoneda_map_app, this]
-      apply Y.2.hom_ext ⟨_, IsDenseSubsite.imageSieve_mem J K G (𝟙 (G.obj U))⟩ _ _ fun I ↦ ?_
-      apply (Y.2 X _ (IsDenseSubsite.equalizer_mem J K G (l _ _ _ _ _ I.hf)
-        I.f (by simp [hl]))).isSeparatedFor.ext fun V iUV (hiUV : _ = _) ↦ ?_
-      simp [← Functor.map_comp, ← op_comp, hiUV]
+  intro f₁ f₂ e
+  apply (isPointwiseRightKanExtensionRanCounit G.op Y.1 (.op (G.obj U))).hom_ext
+  rintro ⟨⟨⟨⟩⟩, ⟨W⟩, g⟩
+  obtain ⟨g, rfl⟩ : ∃ g' : G.obj W ⟶ G.obj U, g = g'.op := ⟨g.unop, rfl⟩
+  simp only [id_obj, comp_obj, StructuredArrow.proj_obj, RightExtension.coneAt_pt,
+    RightExtension.mk_left, RightExtension.coneAt_π_app, const_obj_obj, op_obj,
+    whiskeringLeft_obj_obj, RightExtension.mk_hom]
+  apply (Y.2 X _ (IsDenseSubsite.imageSieve_mem J K G g)).isSeparatedFor.ext
+  rintro V iVW ⟨iVU, e'⟩
+  have := congr($e ≫ Y.1.map iVU.op)
+  simp only [comp_obj, yoneda_map_app, Category.assoc, coyoneda_obj_obj, comp_map,
+    coyoneda_obj_map, ← NatTrans.naturality, op_obj, op_map, Quiver.Hom.unop_op, ← map_comp_assoc,
+    ← op_comp, ← e'] at this ⊢
+  erw [← NatTrans.naturality] at this
+  exact this
+  intro f
+  have (X Y Z) (f : X ⟶ Y) (g : G.obj Y ⟶ G.obj Z) (hf : G.imageSieve g f) : Exists _ := hf
+  choose l hl using this
+  let c : Limits.Cone (StructuredArrow.proj (op (G.obj U)) G.op ⋙ Y.val) := by
+    refine ⟨X, ⟨fun g ↦ ?_, ?_⟩⟩
+    refine Y.2.amalgamate ⟨_, IsDenseSubsite.imageSieve_mem J K G g.hom.unop⟩
+      (fun I ↦ f ≫ Y.1.map (l _ _ _ _ _ I.hf).op) fun I₁ I₂ r ↦ ?_
+    apply (Y.2 X _ (IsDenseSubsite.equalizer_mem J K G (r.g₁ ≫ l _ _ _ _ _ I₁.hf)
+      (r.g₂ ≫ l _ _ _ _ _ I₂.hf) ?_)).isSeparatedFor.ext fun V iUV (hiUV : _ = _) ↦ ?_
+    simp only [const_obj_obj, op_obj, map_comp, hl]
+    simp only [← map_comp_assoc, r.w]
+    simp [← map_comp, ← op_comp, hiUV]
+    rintro ⟨⟨⟨⟩⟩, ⟨W₁⟩, g₁⟩ ⟨⟨⟨⟩⟩, ⟨W₂⟩, g₂⟩ ⟨⟨⟨⟨⟩⟩⟩, i, hi⟩
+    dsimp at g₁ g₂ i hi
+    obtain rfl : g₂ = g₁ ≫ (G.map i.unop).op := by simpa only [Category.id_comp] using hi
+    obtain ⟨g, rfl⟩ : ∃ g' : G.obj W₁ ⟶ G.obj U, g₁ = g'.op := ⟨g₁.unop, rfl⟩
+    obtain ⟨i, rfl⟩ : ∃ i' : W₂ ⟶ W₁, i = i'.op := ⟨i.unop, rfl⟩
+    simp only [const_obj_obj, id_obj, comp_obj, StructuredArrow.proj_obj, const_obj_map, op_obj,
+      unop_comp, Quiver.Hom.unop_op, Category.id_comp, comp_map, StructuredArrow.proj_map]
+    apply Y.2.hom_ext ⟨_, IsDenseSubsite.imageSieve_mem J K G (G.map i ≫ g)⟩
+    intro I
+    simp only [Presheaf.IsSheaf.amalgamate_map, Category.assoc, ← Functor.map_comp, ← op_comp]
+    let I' : GrothendieckTopology.Cover.Arrow ⟨_, IsDenseSubsite.imageSieve_mem J K G g⟩ :=
+      ⟨_, I.f ≫ i, ⟨l _ _ _ _ _ I.hf, by simp [hl]⟩⟩
+    refine Eq.trans ?_ (Y.2.amalgamate_map _ _ _ I').symm
+    apply (Y.2 X _ (IsDenseSubsite.equalizer_mem J K G (l _ _ _ _ _ I.hf)
+      (l _ _ _ _ _ I'.hf) (by simp [hl]))).isSeparatedFor.ext fun V iUV (hiUV : _ = _) ↦ ?_
+    simp [← Functor.map_comp, ← op_comp, hiUV]
+  refine ⟨(isPointwiseRightKanExtensionRanCounit G.op Y.1 (.op (G.obj U))).lift c, ?_⟩
+  have := (isPointwiseRightKanExtensionRanCounit G.op Y.1 (.op (G.obj U))).fac c (.mk (𝟙 _))
+  simp only [id_obj, comp_obj, StructuredArrow.proj_obj, StructuredArrow.mk_right,
+    RightExtension.coneAt_pt, RightExtension.mk_left, RightExtension.coneAt_π_app,
+    const_obj_obj, op_obj, StructuredArrow.mk_hom_eq_self, map_id, whiskeringLeft_obj_obj,
+    RightExtension.mk_hom, Category.id_comp, StructuredArrow.mk_left, unop_id] at this
+  simp only [id_obj, yoneda_map_app, this]
+  apply Y.2.hom_ext ⟨_, IsDenseSubsite.imageSieve_mem J K G (𝟙 (G.obj U))⟩ _ _ fun I ↦ ?_
+  apply (Y.2 X _ (IsDenseSubsite.equalizer_mem J K G (l _ _ _ _ _ I.hf)
+    I.f (by simp [hl]))).isSeparatedFor.ext fun V iUV (hiUV : _ = _) ↦ ?_
+  simp [← Functor.map_comp, ← op_comp, hiUV]
 
 instance (Y : Sheaf J A) : IsIso ((G.sheafAdjunctionCocontinuous A J K).counit.app Y) := by
   apply (config := { allowSynthFailures := true })

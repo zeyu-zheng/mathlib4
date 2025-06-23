@@ -99,11 +99,11 @@ theorem mk_eq_mk_iff' (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) :
     mk K v hv = mk K w hw ↔ ∃ a : K, a • w = v := by
   rw [mk_eq_mk_iff K v w hv hw]
   constructor
-  · rintro ⟨a, ha⟩
-    exact ⟨a, ha⟩
-  · rintro ⟨a, ha⟩
-    refine ⟨Units.mk0 a fun c => hv.symm ?_, ha⟩
-    rwa [c, zero_smul] at ha
+  rintro ⟨a, ha⟩
+  exact ⟨a, ha⟩
+  rintro ⟨a, ha⟩
+  refine ⟨Units.mk0 a fun c => hv.symm ?_, ha⟩
+  rwa [c, zero_smul] at ha
 
 theorem exists_smul_eq_mk_rep (v : V) (hv : v ≠ 0) : ∃ a : Kˣ, a • v = (mk K v hv).rep :=
   (mk_eq_mk_iff K _ _ (rep_nonzero _) hv).1 (mk_rep _)

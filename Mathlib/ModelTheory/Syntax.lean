@@ -101,8 +101,8 @@ def relabel (g : α → β) : L.Term α → L.Term β
 
 theorem relabel_id (t : L.Term α) : t.relabel id = t := by
   induction' t with _ _ _ _ ih
-  · rfl
-  · simp [ih]
+  rfl
+  simp [ih]
 
 @[simp]
 theorem relabel_id_eq_id : (Term.relabel id : L.Term α → L.Term α) = id :=
@@ -112,8 +112,8 @@ theorem relabel_id_eq_id : (Term.relabel id : L.Term α → L.Term α) = id :=
 theorem relabel_relabel (f : α → β) (g : β → γ) (t : L.Term α) :
     (t.relabel f).relabel g = t.relabel (g ∘ f) := by
   induction' t with _ _ _ _ ih
-  · rfl
-  · simp [ih]
+  rfl
+  simp [ih]
 
 @[simp]
 theorem relabel_comp_relabel (f : α → β) (g : β → γ) :
@@ -247,18 +247,18 @@ def onTerm (φ : L →ᴸ L') : L.Term α → L'.Term α
 theorem id_onTerm : ((LHom.id L).onTerm : L.Term α → L.Term α) = id := by
   ext t
   induction' t with _ _ _ _ ih
-  · rfl
-  · simp_rw [onTerm, ih]
-    rfl
+  rfl
+  simp_rw [onTerm, ih]
+  rfl
 
 @[simp]
 theorem comp_onTerm {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →ᴸ L') :
     ((φ.comp ψ).onTerm : L.Term α → L''.Term α) = φ.onTerm ∘ ψ.onTerm := by
   ext t
   induction' t with _ _ _ _ ih
-  · rfl
-  · simp_rw [onTerm, ih]
-    rfl
+  rfl
+  simp_rw [onTerm, ih]
+  rfl
 
 end LHom
 
@@ -389,24 +389,24 @@ def castLE : ∀ {m n : ℕ} (_h : m ≤ n), L.BoundedFormula α m → L.Bounded
 @[simp]
 theorem castLE_rfl {n} (h : n ≤ n) (φ : L.BoundedFormula α n) : φ.castLE h = φ := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
-  · rfl
-  · simp [Fin.castLE_of_eq]
-  · simp [Fin.castLE_of_eq]
-  · simp [Fin.castLE_of_eq, ih1, ih2]
-  · simp [Fin.castLE_of_eq, ih3]
+  rfl
+  simp [Fin.castLE_of_eq]
+  simp [Fin.castLE_of_eq]
+  simp [Fin.castLE_of_eq, ih1, ih2]
+  simp [Fin.castLE_of_eq, ih3]
 
 @[simp]
 theorem castLE_castLE {k m n} (km : k ≤ m) (mn : m ≤ n) (φ : L.BoundedFormula α k) :
     (φ.castLE km).castLE mn = φ.castLE (km.trans mn) := by
   revert m n
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3 <;> intro m n km mn
-  · rfl
-  · simp
-  · simp only [castLE, eq_self_iff_true, heq_iff_eq, true_and_iff]
-    rw [← Function.comp.assoc, Term.relabel_comp_relabel]
-    simp
-  · simp [ih1, ih2]
-  · simp only [castLE, ih3]
+  rfl
+  simp
+  simp only [castLE, eq_self_iff_true, heq_iff_eq, true_and_iff]
+  rw [← Function.comp.assoc, Term.relabel_comp_relabel]
+  simp
+  simp [ih1, ih2]
+  simp only [castLE, ih3]
 
 @[simp]
 theorem castLE_comp_castLE {k m n} (km : k ≤ m) (mn : m ≤ n) :
@@ -470,21 +470,21 @@ theorem mapTermRel_mapTermRel {L'' : Language}
     ((φ.mapTermRel ft fr fun _ => id).mapTermRel ft' fr' fun _ => id) =
       φ.mapTermRel (fun _ => ft' _ ∘ ft _) (fun _ => fr' _ ∘ fr _) fun _ => id := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
-  · rfl
-  · simp [mapTermRel]
-  · simp [mapTermRel]
-  · simp [mapTermRel, ih1, ih2]
-  · simp [mapTermRel, ih3]
+  rfl
+  simp [mapTermRel]
+  simp [mapTermRel]
+  simp [mapTermRel, ih1, ih2]
+  simp [mapTermRel, ih3]
 
 @[simp]
 theorem mapTermRel_id_id_id {n} (φ : L.BoundedFormula α n) :
     (φ.mapTermRel (fun _ => id) (fun _ => id) fun _ => id) = φ := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
-  · rfl
-  · simp [mapTermRel]
-  · simp [mapTermRel]
-  · simp [mapTermRel, ih1, ih2]
-  · simp [mapTermRel, ih3]
+  rfl
+  simp [mapTermRel]
+  simp [mapTermRel]
+  simp [mapTermRel, ih1, ih2]
+  simp [mapTermRel, ih3]
 
 /-- An equivalence of bounded formulas given by an equivalence of terms and an equivalence of
 relations. -/
@@ -505,9 +505,9 @@ theorem sum_elim_comp_relabelAux {m : ℕ} {g : α → β ⊕ (Fin n)} {v : β �
     Sum.elim (Sum.elim v (xs ∘ castAdd m) ∘ g) (xs ∘ natAdd n) := by
   ext x
   cases' x with x x
-  · simp only [BoundedFormula.relabelAux, Function.comp_apply, Sum.map_inl, Sum.elim_inl]
-    cases' g x with l r <;> simp
-  · simp [BoundedFormula.relabelAux]
+  simp only [BoundedFormula.relabelAux, Function.comp_apply, Sum.map_inl, Sum.elim_inl]
+  cases' g x with l r <;> simp
+  simp [BoundedFormula.relabelAux]
 
 @[simp]
 theorem relabelAux_sum_inl (k : ℕ) :
@@ -558,11 +558,11 @@ theorem relabel_sum_inl (φ : L.BoundedFormula α n) :
     (φ.relabel Sum.inl : L.BoundedFormula α (0 + n)) = φ.castLE (ge_of_eq (zero_add n)) := by
   simp only [relabel, relabelAux_sum_inl]
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
-  · rfl
-  · simp [Fin.natAdd_zero, castLE_of_eq, mapTermRel]
-  · simp [Fin.natAdd_zero, castLE_of_eq, mapTermRel]; rfl
-  · simp [mapTermRel, ih1, ih2]
-  · simp [mapTermRel, ih3, castLE]
+  rfl
+  simp [Fin.natAdd_zero, castLE_of_eq, mapTermRel]
+  simp [Fin.natAdd_zero, castLE_of_eq, mapTermRel]; rfl
+  simp [mapTermRel, ih1, ih2]
+  simp [mapTermRel, ih3, castLE]
 
 /-- Substitutes the variables in a given formula with terms. -/
 def subst {n : ℕ} (φ : L.BoundedFormula α n) (f : α → L.Term β) : L.BoundedFormula β n :=
@@ -614,12 +614,12 @@ theorem id_onBoundedFormula :
     ((LHom.id L).onBoundedFormula : L.BoundedFormula α n → L.BoundedFormula α n) = id := by
   ext f
   induction' f with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
-  · rfl
-  · rw [onBoundedFormula, LHom.id_onTerm, id, id, id, Term.bdEqual]
-  · rw [onBoundedFormula, LHom.id_onTerm]
-    rfl
-  · rw [onBoundedFormula, ih1, ih2, id, id, id]
-  · rw [onBoundedFormula, ih3, id, id]
+  rfl
+  rw [onBoundedFormula, LHom.id_onTerm, id, id, id, Term.bdEqual]
+  rw [onBoundedFormula, LHom.id_onTerm]
+  rfl
+  rw [onBoundedFormula, ih1, ih2, id, id, id]
+  rw [onBoundedFormula, ih3, id, id]
 
 @[simp]
 theorem comp_onBoundedFormula {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →ᴸ L') :
@@ -627,12 +627,12 @@ theorem comp_onBoundedFormula {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →�
       φ.onBoundedFormula ∘ ψ.onBoundedFormula := by
   ext f
   induction' f with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
-  · rfl
-  · simp only [onBoundedFormula, comp_onTerm, Function.comp_apply]
-  · simp only [onBoundedFormula, comp_onRelation, comp_onTerm, Function.comp_apply]
-    rfl
-  · simp only [onBoundedFormula, Function.comp_apply, ih1, ih2, eq_self_iff_true, and_self_iff]
-  · simp only [ih3, onBoundedFormula, Function.comp_apply]
+  rfl
+  simp only [onBoundedFormula, comp_onTerm, Function.comp_apply]
+  simp only [onBoundedFormula, comp_onRelation, comp_onTerm, Function.comp_apply]
+  rfl
+  simp only [onBoundedFormula, Function.comp_apply, ih1, ih2, eq_self_iff_true, and_self_iff]
+  simp only [ih3, onBoundedFormula, Function.comp_apply]
 
 /-- Maps a formula's symbols along a language map. -/
 def onFormula (g : L →ᴸ L') : L.Formula α → L'.Formula α :=
@@ -842,10 +842,10 @@ theorem distinctConstantsTheory_eq_iUnion (s : Set α) :
     simp only [prod_mk_mem_set_prod_eq, Finset.coe_map, Function.Embedding.coe_subtype, mem_iUnion,
       mem_image, Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_right, exists_eq_right]
     refine ⟨fun h => ⟨{⟨i, h.1⟩, ⟨j, h.2⟩}, ⟨h.1, ?_⟩, ⟨h.2, ?_⟩⟩, ?_⟩
-    · simp
-    · simp
-    · rintro ⟨t, ⟨is, _⟩, ⟨js, _⟩⟩
-      exact ⟨is, js⟩
+    simp
+    simp
+    rintro ⟨t, ⟨is, _⟩, ⟨js, _⟩⟩
+    exact ⟨is, js⟩
 
 end Cardinality
 

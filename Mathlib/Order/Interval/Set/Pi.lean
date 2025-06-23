@@ -114,13 +114,13 @@ theorem image_update_Icc (f : ∀ i, α i) (i : ι) (a b : α i) :
   ext x
   rw [← Set.pi_univ_Icc]
   refine ⟨?_, fun h => ⟨x i, ?_, ?_⟩⟩
-  · rintro ⟨c, hc, rfl⟩
-    simpa [update_le_update_iff]
-  · simpa only [Function.update_same] using h i (mem_univ i)
-  · ext j
-    obtain rfl | hij := eq_or_ne i j
-    · exact Function.update_same _ _ _
-    · simpa only [Function.update_noteq hij.symm, le_antisymm_iff] using h j (mem_univ j)
+  rintro ⟨c, hc, rfl⟩
+  simpa [update_le_update_iff]
+  simpa only [Function.update_same] using h i (mem_univ i)
+  ext j
+  obtain rfl | hij := eq_or_ne i j
+  exact Function.update_same _ _ _
+  simpa only [Function.update_noteq hij.symm, le_antisymm_iff] using h j (mem_univ j)
 
 theorem image_update_Ico (f : ∀ i, α i) (i : ι) (a b : α i) :
     update f i '' Ico a b = Ico (update f i a) (update f i b) := by

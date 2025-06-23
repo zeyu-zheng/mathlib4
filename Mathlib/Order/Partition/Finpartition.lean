@@ -176,9 +176,9 @@ variable {P}
 theorem parts_eq_empty_iff : P.parts = ∅ ↔ a = ⊥ := by
   simp_rw [← P.sup_parts]
   refine ⟨fun h ↦ ?_, fun h ↦ eq_empty_iff_forall_not_mem.2 fun b hb ↦ P.not_bot_mem ?_⟩
-  · rw [h]
-    exact Finset.sup_empty
-  · rwa [← le_bot_iff.1 ((le_sup hb).trans h.le)]
+  rw [h]
+  exact Finset.sup_empty
+  rwa [← le_bot_iff.1 ((le_sup hb).trans h.le)]
 
 theorem parts_nonempty_iff : P.parts.Nonempty ↔ a ≠ ⊥ := by
   rw [nonempty_iff_ne_empty, not_iff_not, parts_eq_empty_iff]
@@ -230,29 +230,29 @@ instance : PartialOrder (Finpartition a) :=
     le_antisymm := fun P Q hPQ hQP ↦ by
       ext b
       refine ⟨fun hb ↦ ?_, fun hb ↦ ?_⟩
-      · obtain ⟨c, hc, hbc⟩ := hPQ hb
-        obtain ⟨d, hd, hcd⟩ := hQP hc
-        rwa [hbc.antisymm]
-        rwa [P.disjoint.eq_of_le hb hd (P.ne_bot hb) (hbc.trans hcd)]
-      · obtain ⟨c, hc, hbc⟩ := hQP hb
-        obtain ⟨d, hd, hcd⟩ := hPQ hc
-        rwa [hbc.antisymm]
-        rwa [Q.disjoint.eq_of_le hb hd (Q.ne_bot hb) (hbc.trans hcd)] }
+      obtain ⟨c, hc, hbc⟩ := hPQ hb
+      obtain ⟨d, hd, hcd⟩ := hQP hc
+      rwa [hbc.antisymm]
+      rwa [P.disjoint.eq_of_le hb hd (P.ne_bot hb) (hbc.trans hcd)]
+      obtain ⟨c, hc, hbc⟩ := hQP hb
+      obtain ⟨d, hd, hcd⟩ := hPQ hc
+      rwa [hbc.antisymm]
+      rwa [Q.disjoint.eq_of_le hb hd (Q.ne_bot hb) (hbc.trans hcd)] }
 
 instance [Decidable (a = ⊥)] : OrderTop (Finpartition a) where
   top := if ha : a = ⊥ then (Finpartition.empty α).copy ha.symm else indiscrete ha
   le_top P := by
     split_ifs with h
-    · intro x hx
-      simpa [h, P.ne_bot hx] using P.le hx
-    · exact fun b hb ↦ ⟨a, mem_singleton_self _, P.le hb⟩
+    intro x hx
+    simpa [h, P.ne_bot hx] using P.le hx
+    exact fun b hb ↦ ⟨a, mem_singleton_self _, P.le hb⟩
 
 theorem parts_top_subset (a : α) [Decidable (a = ⊥)] : (⊤ : Finpartition a).parts ⊆ {a} := by
   intro b hb
   have hb : b ∈ Finpartition.parts (dite _ _ _) := hb
   split_ifs at hb
-  · simp only [copy_parts, empty_parts, not_mem_empty] at hb
-  · exact hb
+  simp only [copy_parts, empty_parts, not_mem_empty] at hb
+  exact hb
 
 theorem parts_top_subsingleton (a : α) [Decidable (a = ⊥)] :
     ((⊤ : Finpartition a).parts : Set α).Subsingleton :=
@@ -279,16 +279,16 @@ instance : Inf (Finpartition a) :=
           mem_product, Finset.disjoint_sup_right, mem_erase, Ne]
         rintro _ x₁ y₁ hx₁ hy₁ rfl _ h x₂ y₂ hx₂ hy₂ rfl
         rcases eq_or_ne x₁ x₂ with (rfl | xdiff)
-        · refine Disjoint.mono inf_le_right inf_le_right (Q.disjoint hy₁ hy₂ ?_)
-          intro t
-          simp [t] at h
+        refine Disjoint.mono inf_le_right inf_le_right (Q.disjoint hy₁ hy₂ ?_)
+        intro t
+        simp [t] at h
         exact Disjoint.mono inf_le_left inf_le_left (P.disjoint hx₁ hx₂ xdiff))
       (by
         rw [sup_image, id_comp, sup_product_left]
         trans P.parts.sup id ⊓ Q.parts.sup id
-        · simp_rw [Finset.sup_inf_distrib_right, Finset.sup_inf_distrib_left]
-          rfl
-        · rw [P.sup_parts, Q.sup_parts, inf_idem])⟩
+        simp_rw [Finset.sup_inf_distrib_right, Finset.sup_inf_distrib_left]
+        rfl
+        rw [P.sup_parts, Q.sup_parts, inf_idem])⟩
 
 @[simp]
 theorem parts_inf (P Q : Finpartition a) :
@@ -375,10 +375,10 @@ def bind (P : Finpartition a) (Q : ∀ i ∈ P.parts, Finpartition i) : Finparti
 theorem mem_bind : b ∈ (P.bind Q).parts ↔ ∃ A hA, b ∈ (Q A hA).parts := by
   rw [bind, mem_biUnion]
   constructor
-  · rintro ⟨⟨A, hA⟩, -, h⟩
-    exact ⟨A, hA, h⟩
-  · rintro ⟨A, hA, h⟩
-    exact ⟨⟨A, hA⟩, mem_attach _ ⟨A, hA⟩, h⟩
+  rintro ⟨⟨A, hA⟩, -, h⟩
+  exact ⟨A, hA, h⟩
+  rintro ⟨A, hA, h⟩
+  exact ⟨⟨A, hA⟩, mem_attach _ ⟨A, hA⟩, h⟩
 
 theorem card_bind (Q : ∀ i ∈ P.parts, Finpartition i) :
     (P.bind Q).parts.card = ∑ A ∈ P.parts.attach, (Q _ A.2).parts.card := by
@@ -543,10 +543,10 @@ theorem card_parts_le_card : P.parts.card ≤ s.card := by
 
 lemma card_mod_card_parts_le : s.card % P.parts.card ≤ P.parts.card := by
   rcases P.parts.card.eq_zero_or_pos with h | h
-  · have h' := h
-    rw [Finset.card_eq_zero, parts_eq_empty_iff, bot_eq_empty, ← Finset.card_eq_zero] at h'
-    rw [h, h']
-  · exact (Nat.mod_lt _ h).le
+  have h' := h
+  rw [Finset.card_eq_zero, parts_eq_empty_iff, bot_eq_empty, ← Finset.card_eq_zero] at h'
+  rw [h, h']
+  exact (Nat.mod_lt _ h).le
 
 variable [Fintype α]
 

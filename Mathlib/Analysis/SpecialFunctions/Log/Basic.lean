@@ -61,10 +61,10 @@ theorem exp_log_of_neg (hx : x < 0) : exp (log x) = -x := by
 
 theorem le_exp_log (x : ℝ) : x ≤ exp (log x) := by
   by_cases h_zero : x = 0
-  · rw [h_zero, log, dif_pos rfl, exp_zero]
-    exact zero_le_one
-  · rw [exp_log_eq_abs h_zero]
-    exact le_abs_self _
+  rw [h_zero, log, dif_pos rfl, exp_zero]
+  exact zero_le_one
+  rw [exp_log_eq_abs h_zero]
+  exact le_abs_self _
 
 @[simp]
 theorem log_exp (x : ℝ) : log (exp x) = x :=
@@ -89,8 +89,8 @@ theorem log_one : log 1 = 0 :=
 @[simp]
 theorem log_abs (x : ℝ) : log |x| = log x := by
   by_cases h : x = 0
-  · simp [h]
-  · rw [← exp_eq_exp, exp_log_eq_abs h, exp_log_eq_abs (abs_pos.2 h).ne', abs_abs]
+  simp [h]
+  rw [← exp_eq_exp, exp_log_eq_abs h, exp_log_eq_abs (abs_pos.2 h).ne', abs_abs]
 
 @[simp]
 theorem log_neg_eq_log (x : ℝ) : log (-x) = log x := by rw [← log_abs x, ← log_abs (-x), abs_neg]
@@ -176,7 +176,7 @@ theorem log_nonpos_iff (hx : 0 < x) : log x ≤ 0 ↔ x ≤ 1 := by rw [← not_
 
 theorem log_nonpos_iff' (hx : 0 ≤ x) : log x ≤ 0 ↔ x ≤ 1 := by
   rcases hx.eq_or_lt with (rfl | hx)
-  · simp [le_refl, zero_le_one]
+  simp [le_refl, zero_le_one]
   exact log_nonpos_iff hx
 
 theorem log_nonpos (hx : 0 ≤ x) (h'x : x ≤ 1) : log x ≤ 0 :=
@@ -241,14 +241,14 @@ theorem log_ne_zero_of_pos_of_ne_one {x : ℝ} (hx_pos : 0 < x) (hx : x ≠ 1) :
 @[simp]
 theorem log_eq_zero {x : ℝ} : log x = 0 ↔ x = 0 ∨ x = 1 ∨ x = -1 := by
   constructor
-  · intro h
-    rcases lt_trichotomy x 0 with (x_lt_zero | rfl | x_gt_zero)
-    · refine Or.inr (Or.inr (neg_eq_iff_eq_neg.mp ?_))
-      rw [← log_neg_eq_log x] at h
-      exact eq_one_of_pos_of_log_eq_zero (neg_pos.mpr x_lt_zero) h
-    · exact Or.inl rfl
-    · exact Or.inr (Or.inl (eq_one_of_pos_of_log_eq_zero x_gt_zero h))
-  · rintro (rfl | rfl | rfl) <;> simp only [log_one, log_zero, log_neg_eq_log]
+  intro h
+  rcases lt_trichotomy x 0 with (x_lt_zero | rfl | x_gt_zero)
+  refine Or.inr (Or.inr (neg_eq_iff_eq_neg.mp ?_))
+  rw [← log_neg_eq_log x] at h
+  exact eq_one_of_pos_of_log_eq_zero (neg_pos.mpr x_lt_zero) h
+  exact Or.inl rfl
+  exact Or.inr (Or.inl (eq_one_of_pos_of_log_eq_zero x_gt_zero h))
+  rintro (rfl | rfl | rfl) <;> simp only [log_one, log_zero, log_neg_eq_log]
 
 theorem log_ne_zero {x : ℝ} : log x ≠ 0 ↔ x ≠ 0 ∧ x ≠ 1 ∧ x ≠ -1 := by
   simpa only [not_or] using log_eq_zero.not
@@ -256,15 +256,15 @@ theorem log_ne_zero {x : ℝ} : log x ≠ 0 ↔ x ≠ 0 ∧ x ≠ 1 ∧ x ≠ -1
 @[simp]
 theorem log_pow (x : ℝ) (n : ℕ) : log (x ^ n) = n * log x := by
   induction' n with n ih
-  · simp
+  simp
   rcases eq_or_ne x 0 with (rfl | hx)
-  · simp
+  simp
   rw [pow_succ, log_mul (pow_ne_zero _ hx) hx, ih, Nat.cast_succ, add_mul, one_mul]
 
 @[simp]
 theorem log_zpow (x : ℝ) (n : ℤ) : log (x ^ n) = n * log x := by
   induction n
-  · rw [Int.ofNat_eq_coe, zpow_natCast, log_pow, Int.cast_natCast]
+  rw [Int.ofNat_eq_coe, zpow_natCast, log_pow, Int.cast_natCast]
   rw [zpow_negSucc, log_inv, log_pow, Int.cast_negSucc, Nat.cast_add_one, neg_mul_eq_neg_mul]
 
 theorem log_sqrt {x : ℝ} (hx : 0 ≤ x) : log (√x) = log x / 2 := by
@@ -331,9 +331,9 @@ theorem continuousAt_log_iff : ContinuousAt log x ↔ x ≠ 0 := by
 theorem log_prod {α : Type*} (s : Finset α) (f : α → ℝ) (hf : ∀ x ∈ s, f x ≠ 0) :
     log (∏ i ∈ s, f i) = ∑ i ∈ s, log (f i) := by
   induction' s using Finset.cons_induction_on with a s ha ih
-  · simp
-  · rw [Finset.forall_mem_cons] at hf
-    simp [ih hf.2, log_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
+  simp
+  rw [Finset.forall_mem_cons] at hf
+  simp [ih hf.2, log_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
 
 protected theorem _root_.Finsupp.log_prod {α β : Type*} [Zero β] (f : α →₀ β) (g : α → β → ℝ)
     (hg : ∀ a, g a (f a) = 0 → f a = 0) : log (f.prod g) = f.sum fun a b ↦ log (g a b) :=
@@ -342,11 +342,11 @@ protected theorem _root_.Finsupp.log_prod {α β : Type*} [Zero β] (f : α →�
 theorem log_nat_eq_sum_factorization (n : ℕ) :
     log n = n.factorization.sum fun p t => t * log p := by
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp -- relies on junk values of `log` and `Nat.factorization`
-  · simp only [← log_pow, ← Nat.cast_pow]
-    rw [← Finsupp.log_prod, ← Nat.cast_finsupp_prod, Nat.factorization_prod_pow_eq_self hn]
-    intro p hp
-    rw [pow_eq_zero (Nat.cast_eq_zero.1 hp), Nat.factorization_zero_right]
+  simp -- relies on junk values of `log` and `Nat.factorization`
+  simp only [← log_pow, ← Nat.cast_pow]
+  rw [← Finsupp.log_prod, ← Nat.cast_finsupp_prod, Nat.factorization_prod_pow_eq_self hn]
+  intro p hp
+  rw [pow_eq_zero (Nat.cast_eq_zero.1 hp), Nat.factorization_zero_right]
 
 theorem tendsto_pow_log_div_mul_add_atTop (a b : ℝ) (n : ℕ) (ha : a ≠ 0) :
     Tendsto (fun x => log x ^ n / (a * x + b)) atTop (𝓝 0) :=
@@ -355,7 +355,7 @@ theorem tendsto_pow_log_div_mul_add_atTop (a b : ℝ) (n : ℕ) (ha : a ≠ 0) :
 
 theorem isLittleO_pow_log_id_atTop {n : ℕ} : (fun x => log x ^ n) =o[atTop] id := by
   rw [Asymptotics.isLittleO_iff_tendsto']
-  · simpa using tendsto_pow_log_div_mul_add_atTop 1 0 n one_ne_zero
+  simpa using tendsto_pow_log_div_mul_add_atTop 1 0 n one_ne_zero
   filter_upwards [eventually_ne_atTop (0 : ℝ)] with x h₁ h₂ using (h₁ h₂).elim
 
 theorem isLittleO_log_id_atTop : log =o[atTop] id :=

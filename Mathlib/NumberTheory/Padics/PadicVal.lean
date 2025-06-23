@@ -89,8 +89,8 @@ protected theorem zero : padicValNat p 0 = 0 := by simp [padicValNat]
 protected theorem one : padicValNat p 1 = 0 := by
   unfold padicValNat
   split_ifs
-  · simp
-  · rfl
+  simp
+  rfl
 
 /-- If `p ≠ 0` and `p ≠ 1`, then `padicValNat p p` is `1`. -/
 @[simp]
@@ -126,17 +126,17 @@ theorem maxPowDiv_eq_multiplicity_get {p n : ℕ} (hp : 1 < p) (hn : 0 < n) (h :
 theorem padicValNat_eq_maxPowDiv : @padicValNat = @maxPowDiv := by
   ext p n
   by_cases h : 1 < p ∧ 0 < n
-  · dsimp [padicValNat]
-    rw [dif_pos ⟨Nat.ne_of_gt h.1,h.2⟩, maxPowDiv_eq_multiplicity_get h.1 h.2]
-  · simp only [not_and_or,not_gt_eq,Nat.le_zero] at h
-    apply h.elim
-    · intro h
-      interval_cases p
-      · simp [Classical.em]
-      · dsimp [padicValNat, maxPowDiv]
-        rw [go, if_neg]; simp
-    · intro h
-      simp [h]
+  dsimp [padicValNat]
+  rw [dif_pos ⟨Nat.ne_of_gt h.1,h.2⟩, maxPowDiv_eq_multiplicity_get h.1 h.2]
+  simp only [not_and_or,not_gt_eq,Nat.le_zero] at h
+  apply h.elim
+  intro h
+  interval_cases p
+  simp [Classical.em]
+  dsimp [padicValNat, maxPowDiv]
+  rw [go, if_neg]; simp
+  intro h
+  simp [h]
 
 end padicValNat
 
@@ -226,8 +226,8 @@ theorem multiplicity_sub_multiplicity {q : ℚ} (hp : p ≠ 1) (hq : q ≠ 0) :
             rw [← finite_iff_dom, finite_nat_iff]
             exact ⟨hp, q.pos⟩) := by
   rw [padicValRat, padicValInt.of_ne_one_ne_zero hp, padicValNat, dif_pos]
-  · exact ⟨hp, q.pos⟩
-  · exact Rat.num_ne_zero.2 hq
+  exact ⟨hp, q.pos⟩
+  exact Rat.num_ne_zero.2 hq
 
 /-- The `p`-adic value of an integer `z ≠ 0` is its `p`-adic value as a rational. -/
 @[simp]
@@ -354,9 +354,9 @@ protected theorem pow {q : ℚ} (hq : q ≠ 0) {k : ℕ} :
 /-- A rewrite lemma for `padicValRat p (q⁻¹)` with condition `q ≠ 0`. -/
 protected theorem inv (q : ℚ) : padicValRat p q⁻¹ = -padicValRat p q := by
   by_cases hq : q = 0
-  · simp [hq]
-  · rw [eq_neg_iff_add_eq_zero, ← padicValRat.mul (inv_ne_zero hq) hq, inv_mul_cancel hq,
-      padicValRat.one]
+  simp [hq]
+  rw [eq_neg_iff_add_eq_zero, ← padicValRat.mul (inv_ne_zero hq) hq, inv_mul_cancel hq,
+    padicValRat.one]
 
 /-- A rewrite lemma for `padicValRat p (q / r)` with conditions `q ≠ 0`, `r ≠ 0`. -/
 protected theorem div {q r : ℚ} (hq : q ≠ 0) (hr : r ≠ 0) :
@@ -431,12 +431,12 @@ lemma add_eq_min {q r : ℚ} (hqr : q + r ≠ 0) (hq : q ≠ 0) (hr : r ≠ 0)
   rw [add_neg_cancel_right, padicValRat.neg] at h2 h3
   rw [add_comm] at h3
   refine le_antisymm (le_min ?_ ?_) h1
-  · contrapose! h2
-    rw [min_eq_right h2.le] at h3
-    exact lt_min h2 (lt_of_le_of_ne h3 hval)
-  · contrapose! h3
-    rw [min_eq_right h3.le] at h2
-    exact lt_min h3 (lt_of_le_of_ne h2 hval.symm)
+  contrapose! h2
+  rw [min_eq_right h2.le] at h3
+  exact lt_min h2 (lt_of_le_of_ne h3 hval)
+  contrapose! h3
+  rw [min_eq_right h3.le] at h2
+  exact lt_min h3 (lt_of_le_of_ne h2 hval.symm)
 
 lemma add_eq_of_lt {q r : ℚ} (hqr : q + r ≠ 0)
     (hq : q ≠ 0) (hr : r ≠ 0) (hval : padicValRat p q < padicValRat p r) :
@@ -458,14 +458,14 @@ lemma self_pow_inv (r : ℕ) : padicValRat p ((p : ℚ) ^ r)⁻¹ = -r := by
 theorem sum_pos_of_pos {n : ℕ} {F : ℕ → ℚ} (hF : ∀ i, i < n → 0 < padicValRat p (F i))
     (hn0 : ∑ i ∈ Finset.range n, F i ≠ 0) : 0 < padicValRat p (∑ i ∈ Finset.range n, F i) := by
   induction' n with d hd
-  · exact False.elim (hn0 rfl)
-  · rw [Finset.sum_range_succ] at hn0 ⊢
-    by_cases h : ∑ x ∈ Finset.range d, F x = 0
-    · rw [h, zero_add]
-      exact hF d (lt_add_one _)
-    · refine lt_of_lt_of_le ?_ (min_le_padicValRat_add hn0)
-      refine lt_min (hd (fun i hi => ?_) h) (hF d (lt_add_one _))
-      exact hF _ (lt_trans hi (lt_add_one _))
+  exact False.elim (hn0 rfl)
+  rw [Finset.sum_range_succ] at hn0 ⊢
+  by_cases h : ∑ x ∈ Finset.range d, F x = 0
+  rw [h, zero_add]
+  exact hF d (lt_add_one _)
+  refine lt_of_lt_of_le ?_ (min_le_padicValRat_add hn0)
+  refine lt_min (hd (fun i hi => ?_) h) (hF d (lt_add_one _))
+  exact hF _ (lt_trans hi (lt_add_one _))
 
 /-- If the p-adic valuation of a finite set of positive rationals is greater than a given rational
 number, then the p-adic valuation of their sum is also greater than the same rational number. -/
@@ -473,13 +473,13 @@ theorem lt_sum_of_lt {p j : ℕ} [hp : Fact (Nat.Prime p)] {F : ℕ → ℚ} {S 
     (hS : S.Nonempty) (hF : ∀ i, i ∈ S → padicValRat p (F j) < padicValRat p (F i))
     (hn1 : ∀ i : ℕ, 0 < F i) : padicValRat p (F j) < padicValRat p (∑ i ∈ S, F i) := by
   induction' hS using Finset.Nonempty.cons_induction with k s S' Hnot Hne Hind
-  · rw [Finset.sum_singleton]
-    exact hF k (by simp)
-  · rw [Finset.cons_eq_insert, Finset.sum_insert Hnot]
-    exact padicValRat.lt_add_of_lt
-      (ne_of_gt (add_pos (hn1 s) (Finset.sum_pos (fun i _ => hn1 i) Hne)))
-      (hF _ (by simp [Finset.mem_insert, true_or]))
-      (Hind (fun i hi => hF _ (by rw [Finset.cons_eq_insert,Finset.mem_insert]; exact Or.inr hi)))
+  rw [Finset.sum_singleton]
+  exact hF k (by simp)
+  rw [Finset.cons_eq_insert, Finset.sum_insert Hnot]
+  exact padicValRat.lt_add_of_lt
+    (ne_of_gt (add_pos (hn1 s) (Finset.sum_pos (fun i _ => hn1 i) Hne)))
+    (hF _ (by simp [Finset.mem_insert, true_or]))
+    (Hind (fun i hi => hF _ (by rw [Finset.cons_eq_insert,Finset.mem_insert]; exact Or.inr hi)))
 
 end padicValRat
 
@@ -494,7 +494,7 @@ protected theorem mul : a ≠ 0 → b ≠ 0 → padicValNat p (a * b) = padicVal
 protected theorem div_of_dvd (h : b ∣ a) :
     padicValNat p (a / b) = padicValNat p a - padicValNat p b := by
   rcases eq_or_ne a 0 with (rfl | ha)
-  · simp
+  simp
   obtain ⟨k, rfl⟩ := h
   obtain ⟨hb, hk⟩ := mul_ne_zero_iff.mp ha
   rw [mul_comm, k.mul_div_cancel hb.bot_lt, padicValNat.mul hk hb, Nat.add_sub_cancel]
@@ -542,8 +542,8 @@ theorem padicValNat_dvd_iff_le [hp : Fact p.Prime] {a n : ℕ} (ha : a ≠ 0) :
 theorem padicValNat_dvd_iff (n : ℕ) [hp : Fact p.Prime] (a : ℕ) :
     p ^ n ∣ a ↔ a = 0 ∨ n ≤ padicValNat p a := by
   rcases eq_or_ne a 0 with (rfl | ha)
-  · exact iff_of_true (dvd_zero _) (Or.inl rfl)
-  · rw [padicValNat_dvd_iff_le ha, or_iff_right ha]
+  exact iff_of_true (dvd_zero _) (Or.inl rfl)
+  rw [padicValNat_dvd_iff_le ha, or_iff_right ha]
 
 theorem pow_succ_padicValNat_not_dvd {n : ℕ} [hp : Fact p.Prime] (hn : n ≠ 0) :
     ¬p ^ (padicValNat p n + 1) ∣ n := by
@@ -572,10 +572,10 @@ theorem padicValNat_mul_pow_right {q : ℕ} [hp : Fact p.Prime] [hq : Fact q.Pri
 /-- The p-adic valuation of `n` is less than or equal to its logarithm w.r.t `p`. -/
 lemma padicValNat_le_nat_log (n : ℕ) : padicValNat p n ≤ Nat.log p n := by
   rcases n with _ | n
-  · simp
+  simp
   rcases p with _ | _ | p
-  · simp
-  · simp
+  simp
+  simp
   exact Nat.le_log_of_pow_le p.one_lt_succ_succ (le_of_dvd n.succ_pos pow_padicValNat_dvd)
 
 /-- The p-adic valuation of `n` is equal to the logarithm w.r.t `p` iff
@@ -615,7 +615,7 @@ theorem range_pow_padicValNat_subset_divisors {n : ℕ} (hn : n ≠ 0) :
 theorem range_pow_padicValNat_subset_divisors' {n : ℕ} [hp : Fact p.Prime] :
     ((Finset.range (padicValNat p n)).image fun t => p ^ (t + 1)) ⊆ n.divisors.erase 1 := by
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp
+  simp
   intro t ht
   simp only [exists_prop, Finset.mem_image, Finset.mem_range] at ht
   obtain ⟨k, hk, rfl⟩ := ht
@@ -640,13 +640,13 @@ theorem padicValNat_eq_zero_of_mem_Ioo {m k : ℕ}
 theorem padicValNat_factorial_mul_add {n : ℕ} (m : ℕ) [hp : Fact p.Prime] (h : n < p) :
     padicValNat p (p * m + n) ! = padicValNat p (p * m) ! := by
   induction' n with n hn
-  · rw [add_zero]
-  · rw [add_succ, factorial_succ,
-      padicValNat.mul (succ_ne_zero (p * m + n)) <| factorial_ne_zero (p * m + _),
-      hn <| lt_of_succ_lt h, ← add_succ,
-      padicValNat_eq_zero_of_mem_Ioo ⟨(Nat.lt_add_of_pos_right <| succ_pos n),
-        (Nat.mul_add _ _ _▸ Nat.mul_one _ ▸ ((add_lt_add_iff_left (p * m)).mpr h))⟩,
-      zero_add]
+  rw [add_zero]
+  rw [add_succ, factorial_succ,
+    padicValNat.mul (succ_ne_zero (p * m + n)) <| factorial_ne_zero (p * m + _),
+    hn <| lt_of_succ_lt h, ← add_succ,
+    padicValNat_eq_zero_of_mem_Ioo ⟨(Nat.lt_add_of_pos_right <| succ_pos n),
+      (Nat.mul_add _ _ _▸ Nat.mul_one _ ▸ ((add_lt_add_iff_left (p * m)).mpr h))⟩,
+    zero_add]
 
 /-- The `p`-adic valuation of `n!` is equal to the `p`-adic valuation of the factorial of the
 largest multiple of `p` below `n`, i.e. `(p * ⌊n / p⌋)!`. -/

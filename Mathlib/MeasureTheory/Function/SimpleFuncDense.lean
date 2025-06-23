@@ -95,15 +95,15 @@ theorem nearestPtInd_le (e : ℕ → α) (N : ℕ) (x : α) : nearestPtInd e N x
 theorem edist_nearestPt_le (e : ℕ → α) (x : α) {k N : ℕ} (hk : k ≤ N) :
     edist (nearestPt e N x) x ≤ edist (e k) x := by
   induction' N with N ihN generalizing k
-  · simp [nonpos_iff_eq_zero.1 hk, le_refl]
-  · simp only [nearestPt, nearestPtInd_succ, map_apply]
-    split_ifs with h
-    · rcases hk.eq_or_lt with (rfl | hk)
-      exacts [le_rfl, (h k (Nat.lt_succ_iff.1 hk)).le]
-    · push_neg at h
-      rcases h with ⟨l, hlN, hxl⟩
-      rcases hk.eq_or_lt with (rfl | hk)
-      exacts [(ihN hlN).trans hxl, ihN (Nat.lt_succ_iff.1 hk)]
+  simp [nonpos_iff_eq_zero.1 hk, le_refl]
+  simp only [nearestPt, nearestPtInd_succ, map_apply]
+  split_ifs with h
+  · rcases hk.eq_or_lt with (rfl | hk)
+    exacts [le_rfl, (h k (Nat.lt_succ_iff.1 hk)).le]
+  push_neg at h
+  rcases h with ⟨l, hlN, hxl⟩
+  rcases hk.eq_or_lt with (rfl | hk)
+  exacts [(ihN hlN).trans hxl, ihN (Nat.lt_succ_iff.1 hk)]
 
 theorem tendsto_nearestPt {e : ℕ → α} {x : α} (hx : x ∈ closure (range e)) :
     Tendsto (fun N => nearestPt e N x) atTop (𝓝 x) := by
@@ -195,34 +195,34 @@ lemma HasCompactSupport.exists_simpleFunc_approx_of_prod [PseudoMetricSpace α]
     apply IsCompact.induction_on
       (p := fun t ↦ ∃ (g : SimpleFunc (X × Y) α), ∃ (s : Set (X × Y)), MeasurableSet s ∧ t ⊆ s ∧
         ∀ x ∈ s, dist (f x) (g x) < ε) hK
-    · exact ⟨0, ∅, by simp⟩
-    · intro t t' htt' ⟨g, s, s_meas, ts, hg⟩
-      exact ⟨g, s, s_meas, htt'.trans ts, hg⟩
-    · intro t t' ⟨g, s, s_meas, ts, hg⟩ ⟨g', s', s'_meas, t's', hg'⟩
-      refine ⟨g.piecewise s s_meas g', s ∪ s', s_meas.union s'_meas,
-        union_subset_union ts t's', fun p hp ↦ ?_⟩
-      by_cases H : p ∈ s
-      · simpa [H, SimpleFunc.piecewise_apply] using hg p H
-      · simp only [SimpleFunc.piecewise_apply, H, ite_false]
-        apply hg'
-        simpa [H] using (mem_union _ _ _).1 hp
-    · rintro ⟨x, y⟩ -
-      obtain ⟨u, v, hu, xu, hv, yv, huv⟩ : ∃ u v, IsOpen u ∧ x ∈ u ∧ IsOpen v ∧ y ∈ v ∧
-        u ×ˢ v ⊆ {z | dist (f z) (f (x, y)) < ε} :=
-          mem_nhds_prod_iff'.1 <| Metric.continuousAt_iff'.1 hf.continuousAt ε hε
-      refine ⟨u ×ˢ v, nhdsWithin_le_nhds <| (hu.prod hv).mem_nhds (mk_mem_prod xu yv), ?_⟩
-      exact ⟨SimpleFunc.const _ (f (x, y)), u ×ˢ v, hu.measurableSet.prod hv.measurableSet,
-        Subset.rfl, fun z hz ↦ huv hz⟩
+    exact ⟨0, ∅, by simp⟩
+    intro t t' htt' ⟨g, s, s_meas, ts, hg⟩
+    exact ⟨g, s, s_meas, htt'.trans ts, hg⟩
+    intro t t' ⟨g, s, s_meas, ts, hg⟩ ⟨g', s', s'_meas, t's', hg'⟩
+    refine ⟨g.piecewise s s_meas g', s ∪ s', s_meas.union s'_meas,
+      union_subset_union ts t's', fun p hp ↦ ?_⟩
+    by_cases H : p ∈ s
+    simpa [H, SimpleFunc.piecewise_apply] using hg p H
+    simp only [SimpleFunc.piecewise_apply, H, ite_false]
+    apply hg'
+    simpa [H] using (mem_union _ _ _).1 hp
+    rintro ⟨x, y⟩ -
+    obtain ⟨u, v, hu, xu, hv, yv, huv⟩ : ∃ u v, IsOpen u ∧ x ∈ u ∧ IsOpen v ∧ y ∈ v ∧
+      u ×ˢ v ⊆ {z | dist (f z) (f (x, y)) < ε} :=
+        mem_nhds_prod_iff'.1 <| Metric.continuousAt_iff'.1 hf.continuousAt ε hε
+    refine ⟨u ×ˢ v, nhdsWithin_le_nhds <| (hu.prod hv).mem_nhds (mk_mem_prod xu yv), ?_⟩
+    exact ⟨SimpleFunc.const _ (f (x, y)), u ×ˢ v, hu.measurableSet.prod hv.measurableSet,
+      Subset.rfl, fun z hz ↦ huv hz⟩
   obtain ⟨g, s, s_meas, fs, hg⟩ : ∃ g s, MeasurableSet s ∧ tsupport f ⊆ s ∧
     ∀ (x : X × Y), x ∈ s → dist (f x) (g x) < ε := M _ h'f
   refine ⟨g.piecewise s s_meas 0, fun p ↦ ?_⟩
   by_cases H : p ∈ s
-  · simpa [H, SimpleFunc.piecewise_apply] using hg p H
-  · have : f p = 0 := by
-      contrapose! H
-      rw [← Function.mem_support] at H
-      exact fs (subset_tsupport _ H)
-    simp [SimpleFunc.piecewise_apply, H, ite_false, this, hε]
+  simpa [H, SimpleFunc.piecewise_apply] using hg p H
+  have : f p = 0 := by
+    contrapose! H
+    rw [← Function.mem_support] at H
+    exact fs (subset_tsupport _ H)
+  simp [SimpleFunc.piecewise_apply, H, ite_false, this, hε]
 
 /-- A continuous function with compact support on a product space is measurable for the product
 sigma-algebra. The subtlety is that we do not assume that the spaces are separable, so the

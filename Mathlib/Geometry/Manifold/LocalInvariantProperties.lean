@@ -116,14 +116,14 @@ theorem left_invariance {s : Set H} {x : H} {f : H → H'} {e' : PartialHomeomor
     ((e'.continuousAt hxe').comp_continuousWithinAt hfs).preimage_mem_nhdsWithin <|
       e'.symm.open_source.mem_nhds <| e'.mapsTo hxe'
   constructor
-  · intro h
-    rw [hG.is_local_nhds h3f] at h
-    have h2 := hG.left_invariance' (G'.symm he') inter_subset_right (e'.mapsTo hxe') h
-    rw [← hG.is_local_nhds h3f] at h2
-    refine hG.congr_nhdsWithin ?_ (e'.left_inv hxe') h2
-    exact eventually_of_mem h2f fun x' ↦ e'.left_inv
-  · simp_rw [hG.is_local_nhds h2f]
-    exact hG.left_invariance' he' inter_subset_right hxe'
+  intro h
+  rw [hG.is_local_nhds h3f] at h
+  have h2 := hG.left_invariance' (G'.symm he') inter_subset_right (e'.mapsTo hxe') h
+  rw [← hG.is_local_nhds h3f] at h2
+  refine hG.congr_nhdsWithin ?_ (e'.left_inv hxe') h2
+  exact eventually_of_mem h2f fun x' ↦ e'.left_inv
+  simp_rw [hG.is_local_nhds h2f]
+  exact hG.left_invariance' he' inter_subset_right hxe'
 
 theorem right_invariance {s : Set H} {x : H} {f : H → H'} {e : PartialHomeomorph H H} (he : e ∈ G)
     (hxe : x ∈ e.source) : P (f ∘ e.symm) (e.symm ⁻¹' s) (e x) ↔ P f s x := by
@@ -131,11 +131,11 @@ theorem right_invariance {s : Set H} {x : H} {f : H → H'} {e : PartialHomeomor
   have := hG.right_invariance' (G.symm he) (e.mapsTo hxe) h
   rw [e.symm_symm, e.left_inv hxe] at this
   refine hG.congr ?_ ((hG.congr_set ?_).mp this)
-  · refine eventually_of_mem (e.open_source.mem_nhds hxe) fun x' hx' ↦ ?_
-    simp_rw [Function.comp_apply, e.left_inv hx']
-  · rw [eventuallyEq_set]
-    refine eventually_of_mem (e.open_source.mem_nhds hxe) fun x' hx' ↦ ?_
-    simp_rw [mem_preimage, e.left_inv hx']
+  refine eventually_of_mem (e.open_source.mem_nhds hxe) fun x' hx' ↦ ?_
+  simp_rw [Function.comp_apply, e.left_inv hx']
+  rw [eventuallyEq_set]
+  refine eventually_of_mem (e.open_source.mem_nhds hxe) fun x' hx' ↦ ?_
+  simp_rw [mem_preimage, e.left_inv hx']
 
 end LocalInvariantProp
 
@@ -235,15 +235,15 @@ theorem liftPropWithinAt_indep_chart_source_aux (g : M → H') (he : e ∈ G.max
   swap; · simp only [xe, xe', mfld_simps]
   simp_rw [PartialHomeomorph.trans_apply, e.left_inv xe]
   rw [hG.congr_iff]
-  · refine hG.congr_set ?_
-    refine (eventually_of_mem ?_ fun y (hy : y ∈ e'.symm ⁻¹' e.source) ↦ ?_).set_eq
-    · refine (e'.symm.continuousAt <| e'.mapsTo xe').preimage_mem_nhds (e.open_source.mem_nhds ?_)
-      simp_rw [e'.left_inv xe', xe]
-    simp_rw [mem_preimage, PartialHomeomorph.coe_trans_symm, PartialHomeomorph.symm_symm,
-      Function.comp_apply, e.left_inv hy]
-  · refine ((e'.eventually_nhds' _ xe').mpr <| e.eventually_left_inverse xe).mono fun y hy ↦ ?_
-    simp only [mfld_simps]
-    rw [hy]
+  refine hG.congr_set ?_
+  refine (eventually_of_mem ?_ fun y (hy : y ∈ e'.symm ⁻¹' e.source) ↦ ?_).set_eq
+  refine (e'.symm.continuousAt <| e'.mapsTo xe').preimage_mem_nhds (e.open_source.mem_nhds ?_)
+  simp_rw [e'.left_inv xe', xe]
+  simp_rw [mem_preimage, PartialHomeomorph.coe_trans_symm, PartialHomeomorph.symm_symm,
+    Function.comp_apply, e.left_inv hy]
+  refine ((e'.eventually_nhds' _ xe').mpr <| e.eventually_left_inverse xe).mono fun y hy ↦ ?_
+  simp only [mfld_simps]
+  rw [hy]
 
 theorem liftPropWithinAt_indep_chart_target_aux2 (g : H → M') {x : H} {s : Set H}
     (hf : f ∈ G'.maximalAtlas M') (xf : g x ∈ f.source) (hf' : f' ∈ G'.maximalAtlas M')
@@ -490,20 +490,20 @@ theorem liftPropAt_iff_comp_subtype_val (hG : LocalInvariantProp G G' P) {U : Op
     LiftPropAt P f x ↔ LiftPropAt P (f ∘ Subtype.val) x := by
   simp only [LiftPropAt, liftPropWithinAt_iff']
   congrm ?_ ∧ ?_
-  · simp_rw [continuousWithinAt_univ, U.openEmbedding'.continuousAt_iff]
-  · apply hG.congr_iff
-    exact (U.chartAt_subtype_val_symm_eventuallyEq).fun_comp (chartAt H' (f x) ∘ f)
+  simp_rw [continuousWithinAt_univ, U.openEmbedding'.continuousAt_iff]
+  apply hG.congr_iff
+  exact (U.chartAt_subtype_val_symm_eventuallyEq).fun_comp (chartAt H' (f x) ∘ f)
 
 theorem liftPropAt_iff_comp_inclusion (hG : LocalInvariantProp G G' P) {U V : Opens M} (hUV : U ≤ V)
     (f : V → M') (x : U) :
     LiftPropAt P f (Set.inclusion hUV x) ↔ LiftPropAt P (f ∘ Set.inclusion hUV : U → M') x := by
   simp only [LiftPropAt, liftPropWithinAt_iff']
   congrm ?_ ∧ ?_
-  · simp_rw [continuousWithinAt_univ,
-      (TopologicalSpace.Opens.openEmbedding_of_le hUV).continuousAt_iff]
-  · apply hG.congr_iff
-    exact (TopologicalSpace.Opens.chartAt_inclusion_symm_eventuallyEq hUV).fun_comp
-      (chartAt H' (f (Set.inclusion hUV x)) ∘ f)
+  simp_rw [continuousWithinAt_univ,
+    (TopologicalSpace.Opens.openEmbedding_of_le hUV).continuousAt_iff]
+  apply hG.congr_iff
+  exact (TopologicalSpace.Opens.chartAt_inclusion_symm_eventuallyEq hUV).fun_comp
+    (chartAt H' (f (Set.inclusion hUV x)) ∘ f)
 
 theorem liftProp_subtype_val {Q : (H → H) → Set H → H → Prop} (hG : LocalInvariantProp G G Q)
     (hQ : ∀ y, Q id univ y) (U : Opens M) :
@@ -542,26 +542,26 @@ theorem isLocalStructomorphWithinAt_localInvariantProp [ClosedUnderRestriction G
   { is_local := by
       intro s x u f hu hux
       constructor
-      · rintro h hx
-        rcases h hx.1 with ⟨e, heG, hef, hex⟩
-        have : s ∩ u ∩ e.source ⊆ s ∩ e.source := by mfld_set_tac
-        exact ⟨e, heG, hef.mono this, hex⟩
-      · rintro h hx
-        rcases h ⟨hx, hux⟩ with ⟨e, heG, hef, hex⟩
-        refine ⟨e.restr (interior u), ?_, ?_, ?_⟩
-        · exact closedUnderRestriction' heG isOpen_interior
-        · have : s ∩ u ∩ e.source = s ∩ (e.source ∩ u) := by mfld_set_tac
-          simpa only [this, interior_interior, hu.interior_eq, mfld_simps] using hef
-        · simp only [*, interior_interior, hu.interior_eq, mfld_simps]
+      rintro h hx
+      rcases h hx.1 with ⟨e, heG, hef, hex⟩
+      have : s ∩ u ∩ e.source ⊆ s ∩ e.source := by mfld_set_tac
+      exact ⟨e, heG, hef.mono this, hex⟩
+      rintro h hx
+      rcases h ⟨hx, hux⟩ with ⟨e, heG, hef, hex⟩
+      refine ⟨e.restr (interior u), ?_, ?_, ?_⟩
+      exact closedUnderRestriction' heG isOpen_interior
+      have : s ∩ u ∩ e.source = s ∩ (e.source ∩ u) := by mfld_set_tac
+      simpa only [this, interior_interior, hu.interior_eq, mfld_simps] using hef
+      simp only [*, interior_interior, hu.interior_eq, mfld_simps]
     right_invariance' := by
       intro s x f e' he'G he'x h hx
       have hxs : x ∈ s := by simpa only [e'.left_inv he'x, mfld_simps] using hx
       rcases h hxs with ⟨e, heG, hef, hex⟩
       refine ⟨e'.symm.trans e, G.trans (G.symm he'G) heG, ?_, ?_⟩
-      · intro y hy
-        simp only [mfld_simps] at hy
-        simp only [hef ⟨hy.1, hy.2.2⟩, mfld_simps]
-      · simp only [hex, he'x, mfld_simps]
+      intro y hy
+      simp only [mfld_simps] at hy
+      simp only [hef ⟨hy.1, hy.2.2⟩, mfld_simps]
+      simp only [hex, he'x, mfld_simps]
     congr_of_forall := by
       intro s x f g hfgs _ h hx
       rcases h hx with ⟨e, heG, hef, hex⟩
@@ -572,10 +572,10 @@ theorem isLocalStructomorphWithinAt_localInvariantProp [ClosedUnderRestriction G
       intro s x f e' he'G _ hfx h hx
       rcases h hx with ⟨e, heG, hef, hex⟩
       refine ⟨e.trans e', G.trans heG he'G, ?_, ?_⟩
-      · intro y hy
-        simp only [mfld_simps] at hy
-        simp only [hef ⟨hy.1, hy.2.1⟩, mfld_simps]
-      · simpa only [hex, hef ⟨hx, hex⟩, mfld_simps] using hfx }
+      intro y hy
+      simp only [mfld_simps] at hy
+      simp only [hef ⟨hy.1, hy.2.1⟩, mfld_simps]
+      simpa only [hex, hef ⟨hx, hex⟩, mfld_simps] using hfx }
 
 /-- A slight reformulation of `IsLocalStructomorphWithinAt` when `f` is a partial homeomorph.
   This gives us an `e` that is defined on a subset of `f.source`. -/
@@ -586,18 +586,18 @@ theorem _root_.PartialHomeomorph.isLocalStructomorphWithinAt_iff {G : StructureG
       x ∈ s → ∃ e : PartialHomeomorph H H,
       e ∈ G ∧ e.source ⊆ f.source ∧ EqOn f (⇑e) (s ∩ e.source) ∧ x ∈ e.source := by
   constructor
-  · intro hf h2x
-    obtain ⟨e, he, hfe, hxe⟩ := hf h2x
-    refine ⟨e.restr f.source, closedUnderRestriction' he f.open_source, ?_, ?_, hxe, ?_⟩
-    · simp_rw [PartialHomeomorph.restr_source]
-      exact inter_subset_right.trans interior_subset
-    · intro x' hx'
-      exact hfe ⟨hx'.1, hx'.2.1⟩
-    · rw [f.open_source.interior_eq]
-      exact Or.resolve_right hx (not_not.mpr h2x)
-  · intro hf hx
-    obtain ⟨e, he, _, hfe, hxe⟩ := hf hx
-    exact ⟨e, he, hfe, hxe⟩
+  intro hf h2x
+  obtain ⟨e, he, hfe, hxe⟩ := hf h2x
+  refine ⟨e.restr f.source, closedUnderRestriction' he f.open_source, ?_, ?_, hxe, ?_⟩
+  simp_rw [PartialHomeomorph.restr_source]
+  exact inter_subset_right.trans interior_subset
+  intro x' hx'
+  exact hfe ⟨hx'.1, hx'.2.1⟩
+  rw [f.open_source.interior_eq]
+  exact Or.resolve_right hx (not_not.mpr h2x)
+  intro hf hx
+  obtain ⟨e, he, _, hfe, hxe⟩ := hf hx
+  exact ⟨e, he, hfe, hxe⟩
 
 /-- A slight reformulation of `IsLocalStructomorphWithinAt` when `f` is a partial homeomorph and
   the set we're considering is a superset of `f.source`. -/
@@ -646,11 +646,11 @@ theorem HasGroupoid.comp
       have hs : IsOpen (f.symm ≫ₕ e.symm ≫ₕ e' ≫ₕ f').source :=
         (f.symm ≫ₕ e.symm ≫ₕ e' ≫ₕ f').open_source
       refine ⟨_, hs.inter φ.open_source, ?_, ?_⟩
-      · simp only [hx, hφ_dom, mfld_simps]
-      · refine G₁.mem_of_eqOnSource (closedUnderRestriction' hφG₁ hs) ?_
-        rw [PartialHomeomorph.restr_source_inter]
-        refine PartialHomeomorph.Set.EqOn.restr_eqOn_source (hφ.mono ?_)
-        mfld_set_tac }
+      simp only [hx, hφ_dom, mfld_simps]
+      refine G₁.mem_of_eqOnSource (closedUnderRestriction' hφG₁ hs) ?_
+      rw [PartialHomeomorph.restr_source_inter]
+      refine PartialHomeomorph.Set.EqOn.restr_eqOn_source (hφ.mono ?_)
+      mfld_set_tac }
 
 end LocalStructomorph
 

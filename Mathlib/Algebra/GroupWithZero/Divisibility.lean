@@ -63,12 +63,12 @@ def DvdNotUnit (a b : α) : Prop :=
 
 theorem dvdNotUnit_of_dvd_of_not_dvd {a b : α} (hd : a ∣ b) (hnd : ¬b ∣ a) : DvdNotUnit a b := by
   constructor
-  · rintro rfl
-    exact hnd (dvd_zero _)
-  · rcases hd with ⟨c, rfl⟩
-    refine ⟨c, ?_, rfl⟩
-    rintro ⟨u, rfl⟩
-    simp at hnd
+  rintro rfl
+  exact hnd (dvd_zero _)
+  rcases hd with ⟨c, rfl⟩
+  refine ⟨c, ?_, rfl⟩
+  rintro ⟨u, rfl⟩
+  simp at hnd
 
 variable {x y : α}
 
@@ -160,15 +160,15 @@ end Subsingleton
 
 lemma pow_dvd_pow_iff (ha₀ : a ≠ 0) (ha : ¬IsUnit a) : a ^ n ∣ a ^ m ↔ n ≤ m := by
   constructor
-  · intro h
-    rw [← not_lt]
-    intro hmn
-    apply ha
-    have : a ^ m * a ∣ a ^ m * 1
-    rw [← pow_succ, mul_one]
-    exact (pow_dvd_pow _ (Nat.succ_le_of_lt hmn)).trans h
-    rwa [mul_dvd_mul_iff_left, ← isUnit_iff_dvd_one] at this
-    apply pow_ne_zero m ha₀
-  · apply pow_dvd_pow
+  intro h
+  rw [← not_lt]
+  intro hmn
+  apply ha
+  have : a ^ m * a ∣ a ^ m * 1
+  rw [← pow_succ, mul_one]
+  exact (pow_dvd_pow _ (Nat.succ_le_of_lt hmn)).trans h
+  rwa [mul_dvd_mul_iff_left, ← isUnit_iff_dvd_one] at this
+  apply pow_ne_zero m ha₀
+  apply pow_dvd_pow
 
 end CancelCommMonoidWithZero

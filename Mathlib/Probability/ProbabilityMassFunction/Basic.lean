@@ -151,13 +151,13 @@ theorem toOuterMeasure_caratheodory : p.toOuterMeasure.caratheodory = ⊤ := by
 @[simp]
 theorem toOuterMeasure_apply_finset (s : Finset α) : p.toOuterMeasure s = ∑ x ∈ s, p x := by
   refine (toOuterMeasure_apply p s).trans ((tsum_eq_sum (s := s) ?_).trans ?_)
-  · exact fun x hx => Set.indicator_of_not_mem (Finset.mem_coe.not.2 hx) _
-  · exact Finset.sum_congr rfl fun x hx => Set.indicator_of_mem (Finset.mem_coe.2 hx) _
+  exact fun x hx => Set.indicator_of_not_mem (Finset.mem_coe.not.2 hx) _
+  exact Finset.sum_congr rfl fun x hx => Set.indicator_of_mem (Finset.mem_coe.2 hx) _
 
 theorem toOuterMeasure_apply_singleton (a : α) : p.toOuterMeasure {a} = p a := by
   refine (p.toOuterMeasure_apply {a}).trans ((tsum_eq_single a fun b hb => ?_).trans ?_)
-  · exact ite_eq_right_iff.2 fun hb' => False.elim <| hb hb'
-  · exact ite_eq_left_iff.2 fun ha' => False.elim <| ha' rfl
+  exact ite_eq_right_iff.2 fun hb' => False.elim <| hb hb'
+  exact ite_eq_left_iff.2 fun ha' => False.elim <| ha' rfl
 
 theorem toOuterMeasure_injective : (toOuterMeasure : PMF α → OuterMeasure α).Injective :=
   fun p q h => PMF.ext fun x => (p.toOuterMeasure_apply_singleton x).symm.trans
@@ -173,15 +173,15 @@ theorem toOuterMeasure_apply_eq_zero_iff : p.toOuterMeasure s = 0 ↔ Disjoint p
 
 theorem toOuterMeasure_apply_eq_one_iff : p.toOuterMeasure s = 1 ↔ p.support ⊆ s := by
   refine (p.toOuterMeasure_apply s).symm ▸ ⟨fun h a hap => ?_, fun h => ?_⟩
-  · refine by_contra fun hs => ne_of_lt ?_ (h.trans p.tsum_coe.symm)
-    have hs' : s.indicator p a = 0 := Set.indicator_apply_eq_zero.2 fun hs' => False.elim <| hs hs'
-    have hsa : s.indicator p a < p a := hs'.symm ▸ (p.apply_pos_iff a).2 hap
-    exact ENNReal.tsum_lt_tsum (p.tsum_coe_indicator_ne_top s)
-      (fun x => Set.indicator_apply_le fun _ => le_rfl) hsa
-  · suffices ∀ (x) (_ : x ∉ s), p x = 0 from
-      _root_.trans (tsum_congr
-        fun a => (Set.indicator_apply s p a).trans (ite_eq_left_iff.2 <| symm ∘ this a)) p.tsum_coe
-    exact fun a ha => (p.apply_eq_zero_iff a).2 <| Set.not_mem_subset h ha
+  refine by_contra fun hs => ne_of_lt ?_ (h.trans p.tsum_coe.symm)
+  have hs' : s.indicator p a = 0 := Set.indicator_apply_eq_zero.2 fun hs' => False.elim <| hs hs'
+  have hsa : s.indicator p a < p a := hs'.symm ▸ (p.apply_pos_iff a).2 hap
+  exact ENNReal.tsum_lt_tsum (p.tsum_coe_indicator_ne_top s)
+    (fun x => Set.indicator_apply_le fun _ => le_rfl) hsa
+  suffices ∀ (x) (_ : x ∉ s), p x = 0 from
+    _root_.trans (tsum_congr
+      fun a => (Set.indicator_apply s p a).trans (ite_eq_left_iff.2 <| symm ∘ this a)) p.tsum_coe
+  exact fun a ha => (p.apply_eq_zero_iff a).2 <| Set.not_mem_subset h ha
 
 @[simp]
 theorem toOuterMeasure_apply_inter_support :

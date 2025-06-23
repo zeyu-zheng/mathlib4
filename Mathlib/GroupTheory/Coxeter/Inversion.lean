@@ -111,9 +111,9 @@ end IsReflection
 theorem isReflection_conj_iff (w t : W) :
     cs.IsReflection (w * t * w⁻¹) ↔ cs.IsReflection t := by
   constructor
-  · intro h
-    simpa [← mul_assoc] using h.conj w⁻¹
-  · exact IsReflection.conj (w := w)
+  intro h
+  simpa [← mul_assoc] using h.conj w⁻¹
+  exact IsReflection.conj (w := w)
 
 /-- The proposition that `t` is a right inversion of `w`; i.e., `t` is a reflection and
 $\ell (w t) < \ell(w)$. -/
@@ -144,8 +144,8 @@ theorem isRightInversion_mul_left_iff {w : W} :
   unfold IsRightInversion
   simp only [mul_assoc, ht.inv, ht.mul_self, mul_one, ht, true_and, not_lt]
   constructor
-  · exact le_of_lt
-  · exact (lt_of_le_of_ne' · (ht.length_mul_left_ne w))
+  exact le_of_lt
+  exact (lt_of_le_of_ne' · (ht.length_mul_left_ne w))
 
 theorem not_isRightInversion_mul_left_iff {w : W} :
     ¬cs.IsRightInversion (w * t) t ↔ cs.IsRightInversion w t :=
@@ -207,19 +207,19 @@ local prefix:100 "lis" => cs.leftInvSeq
 theorem rightInvSeq_concat (ω : List B) (i : B) :
     ris (ω.concat i) = (List.map (MulAut.conj (s i)) (ris ω)).concat (s i) := by
   induction' ω with j ω ih
-  · simp
-  · dsimp [rightInvSeq]
-    rw [ih]
-    simp only [concat_eq_append, wordProd_append, wordProd_cons, wordProd_nil, mul_one, mul_inv_rev,
-      inv_simple, cons_append, cons.injEq, and_true]
-    group
+  simp
+  dsimp [rightInvSeq]
+  rw [ih]
+  simp only [concat_eq_append, wordProd_append, wordProd_cons, wordProd_nil, mul_one, mul_inv_rev,
+    inv_simple, cons_append, cons.injEq, and_true]
+  group
 
 private theorem leftInvSeq_eq_reverse_rightInvSeq_reverse (ω : List B) :
     lis ω = (ris ω.reverse).reverse := by
   induction' ω with i ω ih
-  · simp
-  · rw [leftInvSeq, reverse_cons, ← concat_eq_append, rightInvSeq_concat, ih]
-    simp [map_reverse]
+  simp
+  rw [leftInvSeq, reverse_cons, ← concat_eq_append, rightInvSeq_concat, ih]
+  simp [map_reverse]
 
 theorem leftInvSeq_concat (ω : List B) (i : B) :
     lis (ω.concat i) = (lis ω).concat ((π ω) * (s i) * (π ω)⁻¹) := by
@@ -235,8 +235,8 @@ theorem leftInvSeq_reverse (ω : List B) :
 
 @[simp] theorem length_rightInvSeq (ω : List B) : (ris ω).length = ω.length := by
   induction' ω with i ω ih
-  · simp
-  · simpa [rightInvSeq]
+  simp
+  simpa [rightInvSeq]
 
 @[simp] theorem length_leftInvSeq (ω : List B) : (lis ω).length = ω.length := by
   simp [leftInvSeq_eq_reverse_rightInvSeq_reverse]
@@ -247,12 +247,12 @@ theorem getD_rightInvSeq (ω : List B) (j : ℕ) :
         * (Option.map (cs.simple) (ω.get? j)).getD 1
         * π (ω.drop (j + 1)) := by
   induction' ω with i ω ih generalizing j
-  · simp
-  · dsimp only [rightInvSeq]
-    rcases j with _ | j'
-    · simp [getD_cons_zero]
-    · simp only [getD_eq_getElem?, get?_eq_getElem?] at ih
-      simp [getD_cons_succ, ih j']
+  simp
+  dsimp only [rightInvSeq]
+  rcases j with _ | j'
+  simp [getD_cons_zero]
+  simp only [getD_eq_getElem?, get?_eq_getElem?] at ih
+  simp [getD_cons_succ, ih j']
 
 theorem getD_leftInvSeq (ω : List B) (j : ℕ) :
     (lis ω).getD j 1 =
@@ -260,61 +260,61 @@ theorem getD_leftInvSeq (ω : List B) (j : ℕ) :
         * (Option.map (cs.simple) (ω.get? j)).getD 1
         * (π (ω.take j))⁻¹ := by
   induction' ω with i ω ih generalizing j
-  · simp
-  · dsimp [leftInvSeq]
-    rcases j with _ | j'
-    · simp [getD_cons_zero]
-    · rw [getD_cons_succ]
-      rw [(by simp : 1 = ⇑(MulAut.conj (s i)) 1)]
-      rw [getD_map]
-      rw [ih j']
-      simp [← mul_assoc, wordProd_cons]
+  simp
+  dsimp [leftInvSeq]
+  rcases j with _ | j'
+  simp [getD_cons_zero]
+  rw [getD_cons_succ]
+  rw [(by simp : 1 = ⇑(MulAut.conj (s i)) 1)]
+  rw [getD_map]
+  rw [ih j']
+  simp [← mul_assoc, wordProd_cons]
 
 theorem getD_rightInvSeq_mul_self (ω : List B) (j : ℕ) :
     ((ris ω).getD j 1) * ((ris ω).getD j 1) = 1 := by
   simp_rw [getD_rightInvSeq, mul_assoc]
   rcases em (j < ω.length) with hj | nhj
-  · rw [get?_eq_get hj]
-    simp [← mul_assoc]
-  · rw [get?_eq_none.mpr (by omega)]
-    simp
+  rw [get?_eq_get hj]
+  simp [← mul_assoc]
+  rw [get?_eq_none.mpr (by omega)]
+  simp
 
 theorem getD_leftInvSeq_mul_self (ω : List B) (j : ℕ) :
     ((lis ω).getD j 1) * ((lis ω).getD j 1) = 1 := by
   simp_rw [getD_leftInvSeq, mul_assoc]
   rcases em (j < ω.length) with hj | nhj
-  · rw [get?_eq_get hj]
-    simp [← mul_assoc]
-  · rw [get?_eq_none.mpr (by omega)]
-    simp
+  rw [get?_eq_get hj]
+  simp [← mul_assoc]
+  rw [get?_eq_none.mpr (by omega)]
+  simp
 
 theorem rightInvSeq_drop (ω : List B) (j : ℕ) :
     ris (ω.drop j) = (ris ω).drop j := by
   induction' j with j ih₁ generalizing ω
-  · simp
-  · induction' ω with k ω _
-    · simp
-    · rw [drop_succ_cons, ih₁ ω, rightInvSeq, drop_succ_cons]
+  simp
+  induction' ω with k ω _
+  simp
+  rw [drop_succ_cons, ih₁ ω, rightInvSeq, drop_succ_cons]
 
 theorem leftInvSeq_take (ω : List B) (j : ℕ) :
     lis (ω.take j) = (lis ω).take j := by
   obtain le | ge := Nat.le_or_ge j ω.length
-  · simp only [leftInvSeq_eq_reverse_rightInvSeq_reverse]
-    rw [List.take_reverse j (by simpa)]
-    nth_rw 1 [← List.reverse_reverse ω]
-    rw [List.take_reverse j (by simpa)]
-    simp [rightInvSeq_drop]
-  · rw [take_length_le ge, take_length_le (by simpa)]
+  simp only [leftInvSeq_eq_reverse_rightInvSeq_reverse]
+  rw [List.take_reverse j (by simpa)]
+  nth_rw 1 [← List.reverse_reverse ω]
+  rw [List.take_reverse j (by simpa)]
+  simp [rightInvSeq_drop]
+  rw [take_length_le ge, take_length_le (by simpa)]
 
 theorem isReflection_of_mem_rightInvSeq (ω : List B) {t : W} (ht : t ∈ ris ω) :
     cs.IsReflection t := by
   induction' ω with i ω ih
-  · simp at ht
-  · dsimp [rightInvSeq] at ht
-    rcases ht with _ | ⟨_, mem⟩
-    · use (π ω)⁻¹, i
-      group
-    · exact ih mem
+  simp at ht
+  dsimp [rightInvSeq] at ht
+  rcases ht with _ | ⟨_, mem⟩
+  use (π ω)⁻¹, i
+  group
+  exact ih mem
 
 theorem isReflection_of_mem_leftInvSeq (ω : List B) {t : W} (ht : t ∈ lis ω) :
     cs.IsReflection t := by
@@ -327,10 +327,10 @@ theorem wordProd_mul_getD_rightInvSeq (ω : List B) (j : ℕ) :
   nth_rw 1 [← take_append_drop (j + 1) ω]
   rw [take_succ]
   obtain lt | le := lt_or_le j ω.length
-  · simp only [get?_eq_getElem?, getElem?_eq_getElem lt, wordProd_append, wordProd_cons, mul_assoc]
-    simp
-  · simp only [get?_eq_getElem?, getElem?_eq_none le]
-    simp
+  simp only [get?_eq_getElem?, getElem?_eq_getElem lt, wordProd_append, wordProd_cons, mul_assoc]
+  simp
+  simp only [get?_eq_getElem?, getElem?_eq_none le]
+  simp
 
 theorem getD_leftInvSeq_mul_wordProd (ω : List B) (j : ℕ) :
     ((lis ω).getD j 1) * π ω = π (ω.eraseIdx j) := by
@@ -338,41 +338,41 @@ theorem getD_leftInvSeq_mul_wordProd (ω : List B) (j : ℕ) :
   nth_rw 4 [← take_append_drop (j + 1) ω]
   rw [take_succ]
   obtain lt | le := lt_or_le j ω.length
-  · simp only [get?_eq_getElem?, getElem?_eq_getElem lt, wordProd_append, wordProd_cons, mul_assoc]
-    simp
-  · simp only [get?_eq_getElem?, getElem?_eq_none le]
-    simp
+  simp only [get?_eq_getElem?, getElem?_eq_getElem lt, wordProd_append, wordProd_cons, mul_assoc]
+  simp
+  simp only [get?_eq_getElem?, getElem?_eq_none le]
+  simp
 
 theorem isRightInversion_of_mem_rightInvSeq {ω : List B} (hω : cs.IsReduced ω) {t : W}
     (ht : t ∈ ris ω) : cs.IsRightInversion (π ω) t := by
   constructor
-  · exact cs.isReflection_of_mem_rightInvSeq ω ht
-  · obtain ⟨⟨j, hj⟩, rfl⟩ := List.mem_iff_get.mp ht
-    rw [← List.getD_eq_get _ 1 hj, wordProd_mul_getD_rightInvSeq]
-    rw [cs.length_rightInvSeq] at hj
-    calc
-      ℓ (π (ω.eraseIdx j))
-      _ ≤ (ω.eraseIdx j).length   := cs.length_wordProd_le _
-      _ < ω.length                := by rw [← List.length_eraseIdx_add_one hj]; exact lt_add_one _
-      _ = ℓ (π ω)                 := hω.symm
+  exact cs.isReflection_of_mem_rightInvSeq ω ht
+  obtain ⟨⟨j, hj⟩, rfl⟩ := List.mem_iff_get.mp ht
+  rw [← List.getD_eq_get _ 1 hj, wordProd_mul_getD_rightInvSeq]
+  rw [cs.length_rightInvSeq] at hj
+  calc
+    ℓ (π (ω.eraseIdx j))
+    _ ≤ (ω.eraseIdx j).length   := cs.length_wordProd_le _
+    _ < ω.length                := by rw [← List.length_eraseIdx_add_one hj]; exact lt_add_one _
+    _ = ℓ (π ω)                 := hω.symm
 
 theorem isLeftInversion_of_mem_leftInvSeq {ω : List B} (hω : cs.IsReduced ω) {t : W}
     (ht : t ∈ lis ω) : cs.IsLeftInversion (π ω) t := by
   constructor
-  · exact cs.isReflection_of_mem_leftInvSeq ω ht
-  · obtain ⟨⟨j, hj⟩, rfl⟩ := List.mem_iff_get.mp ht
-    rw [← List.getD_eq_get _ 1 hj, getD_leftInvSeq_mul_wordProd]
-    rw [cs.length_leftInvSeq] at hj
-    calc
-      ℓ (π (ω.eraseIdx j))
-      _ ≤ (ω.eraseIdx j).length   := cs.length_wordProd_le _
-      _ < ω.length                := by rw [← List.length_eraseIdx_add_one hj]; exact lt_add_one _
-      _ = ℓ (π ω)                 := hω.symm
+  exact cs.isReflection_of_mem_leftInvSeq ω ht
+  obtain ⟨⟨j, hj⟩, rfl⟩ := List.mem_iff_get.mp ht
+  rw [← List.getD_eq_get _ 1 hj, getD_leftInvSeq_mul_wordProd]
+  rw [cs.length_leftInvSeq] at hj
+  calc
+    ℓ (π (ω.eraseIdx j))
+    _ ≤ (ω.eraseIdx j).length   := cs.length_wordProd_le _
+    _ < ω.length                := by rw [← List.length_eraseIdx_add_one hj]; exact lt_add_one _
+    _ = ℓ (π ω)                 := hω.symm
 
 theorem prod_rightInvSeq (ω : List B) : prod (ris ω) = (π ω)⁻¹ := by
   induction' ω with i ω ih
-  · simp
-  · simp [rightInvSeq, ih, wordProd_cons]
+  simp
+  simp [rightInvSeq, ih, wordProd_cons]
 
 theorem prod_leftInvSeq (ω : List B) : prod (lis ω) = (π ω)⁻¹ := by
   simp [leftInvSeq_eq_reverse_rightInvSeq_reverse, prod_reverse_noncomm]

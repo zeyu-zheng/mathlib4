@@ -73,15 +73,15 @@ theorem image_multilinear' [Nonempty ι] {s : Set (∀ i, E i)} (hs : IsVonNBoun
           inv_smul_smul₀ hc₀']
       _ ∈ V := hft fun i hi ↦ by
         rcases eq_or_ne i i₀ with rfl | hne
-        · simp_rw [update_same, y, I.piecewise_eq_of_mem _ _ hi, smul_smul]
-          refine hc _ _ ?_ _ hx
-          calc
-            ‖(a / ∏ i ∈ I, c i) * c i‖ ≤ (‖∏ i ∈ I, c i‖ / ‖∏ i ∈ I, c i‖) * ‖c i‖ := by
-              rw [norm_mul, norm_div]; gcongr; exact ha.out.le
-            _ ≤ 1 * ‖c i‖ := by gcongr; apply div_self_le_one
-            _ = ‖c i‖ := one_mul _
-        · simp_rw [update_noteq hne, y, I.piecewise_eq_of_mem _ _ hi]
-          exact hc _ _ le_rfl _ hx
+        simp_rw [update_same, y, I.piecewise_eq_of_mem _ _ hi, smul_smul]
+        refine hc _ _ ?_ _ hx
+        calc
+          ‖(a / ∏ i ∈ I, c i) * c i‖ ≤ (‖∏ i ∈ I, c i‖ / ‖∏ i ∈ I, c i‖) * ‖c i‖ := by
+            rw [norm_mul, norm_div]; gcongr; exact ha.out.le
+          _ ≤ 1 * ‖c i‖ := by gcongr; apply div_self_le_one
+          _ = ‖c i‖ := one_mul _
+        simp_rw [update_noteq hne, y, I.piecewise_eq_of_mem _ _ hi]
+        exact hc _ _ le_rfl _ hx
 
 /-- The image of a von Neumann bounded set under a continuous multilinear map
 is von Neumann bounded.

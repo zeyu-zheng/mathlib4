@@ -64,9 +64,9 @@ protected theorem isAntisymm (h : IsAntichain r univ) : IsAntisymm α r :=
 protected theorem subsingleton [IsTrichotomous α r] (h : IsAntichain r s) : s.Subsingleton := by
   rintro a ha b hb
   obtain hab | hab | hab := trichotomous_of r a b
-  · exact h.eq ha hb hab
-  · exact hab
-  · exact h.eq' ha hb hab
+  exact h.eq ha hb hab
+  exact hab
+  exact h.eq' ha hb hab
 
 protected theorem flip (hs : IsAntichain r s) : IsAntichain (flip r) s := fun _ ha _ hb h =>
   hs hb ha h.symm

@@ -49,12 +49,12 @@ theorem piQuotientLift_single [Fintype ι] [DecidableEq ι] (p : ∀ i, Submodul
     (x : Ms i ⧸ p i) : piQuotientLift p q f hf (Pi.single i x) = mapQ _ _ (f i) (hf i) x := by
   simp_rw [piQuotientLift, lsum_apply, sum_apply, comp_apply, proj_apply]
   rw [Finset.sum_eq_single i]
-  · rw [Pi.single_eq_same]
-  · rintro j - hj
-    rw [Pi.single_eq_of_ne hj, _root_.map_zero]
-  · intros
-    have := Finset.mem_univ i
-    contradiction
+  rw [Pi.single_eq_same]
+  rintro j - hj
+  rw [Pi.single_eq_of_ne hj, _root_.map_zero]
+  intros
+  have := Finset.mem_univ i
+  contradiction
 
 /-- Lift a family of maps to a quotient of direct sums. -/
 def quotientPiLift (p : ∀ i, Submodule R (Ms i)) (f : ∀ i, Ms i →ₗ[R] Ns i)
@@ -97,9 +97,9 @@ theorem right_inv : Function.RightInverse (invFun p) (toFun p) := by
   rw [comp_apply, piQuotientLift_single, Quotient.mk''_eq_mk, mapQ_apply,
     quotientPiLift_mk, id_apply]
   by_cases hij : i = j <;> simp only [mkQ_apply, coe_single]
-  · subst hij
-    rw [Pi.single_eq_same, Pi.single_eq_same]
-  · rw [Pi.single_eq_of_ne (Ne.symm hij), Pi.single_eq_of_ne (Ne.symm hij), Quotient.mk_zero]
+  subst hij
+  rw [Pi.single_eq_same, Pi.single_eq_same]
+  rw [Pi.single_eq_of_ne (Ne.symm hij), Pi.single_eq_of_ne (Ne.symm hij), Quotient.mk_zero]
 
 theorem map_add (x y : ((i : ι) → Ms i) ⧸ pi Set.univ p) :
     toFun p (x + y) = toFun p x + toFun p y :=

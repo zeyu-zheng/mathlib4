@@ -47,42 +47,42 @@ lemma totalFlipIsoX_hom_D₁ (j j' : J) :
     (K.totalFlipIsoX c j).hom ≫ K.D₁ c j j' =
       K.flip.D₂ c j j' ≫ (K.totalFlipIsoX c j').hom := by
   by_cases h₀ : c.Rel j j'
-  · ext i₂ i₁ h₁
-    dsimp [totalFlipIsoX]
-    rw [ι_totalDesc_assoc, Linear.units_smul_comp, ι_D₁, ι_D₂_assoc]
-    dsimp
-    by_cases h₂ : c₁.Rel i₁ (c₁.next i₁)
-    · have h₃ : ComplexShape.π c₂ c₁ c ⟨i₂, c₁.next i₁⟩ = j' := by
-        rw [← ComplexShape.next_π₂ c₂ c i₂ h₂, h₁, c.next_eq' h₀]
-      have h₄ : ComplexShape.π c₁ c₂ c ⟨c₁.next i₁, i₂⟩ = j'
-      rw [← h₃, ComplexShape.π_symm c₁ c₂ c]
-      rw [K.d₁_eq _ h₂ _ _ h₄, K.flip.d₂_eq _ _ h₂ _ h₃, Linear.units_smul_comp,
-        assoc, ι_totalDesc, Linear.comp_units_smul, smul_smul, smul_smul,
-        ComplexShape.σ_ε₁ c₂ c h₂ i₂]
-      dsimp only [flip_X_X, flip_X_d]
-    · rw [K.d₁_eq_zero _ _ _ _ h₂, K.flip.d₂_eq_zero _ _ _ _ h₂, smul_zero, zero_comp]
-  · rw [K.D₁_shape _ _ _ h₀, K.flip.D₂_shape c _ _ h₀, zero_comp, comp_zero]
+  ext i₂ i₁ h₁
+  dsimp [totalFlipIsoX]
+  rw [ι_totalDesc_assoc, Linear.units_smul_comp, ι_D₁, ι_D₂_assoc]
+  dsimp
+  by_cases h₂ : c₁.Rel i₁ (c₁.next i₁)
+  have h₃ : ComplexShape.π c₂ c₁ c ⟨i₂, c₁.next i₁⟩ = j' := by
+    rw [← ComplexShape.next_π₂ c₂ c i₂ h₂, h₁, c.next_eq' h₀]
+  have h₄ : ComplexShape.π c₁ c₂ c ⟨c₁.next i₁, i₂⟩ = j'
+  rw [← h₃, ComplexShape.π_symm c₁ c₂ c]
+  rw [K.d₁_eq _ h₂ _ _ h₄, K.flip.d₂_eq _ _ h₂ _ h₃, Linear.units_smul_comp,
+    assoc, ι_totalDesc, Linear.comp_units_smul, smul_smul, smul_smul,
+    ComplexShape.σ_ε₁ c₂ c h₂ i₂]
+  dsimp only [flip_X_X, flip_X_d]
+  rw [K.d₁_eq_zero _ _ _ _ h₂, K.flip.d₂_eq_zero _ _ _ _ h₂, smul_zero, zero_comp]
+  rw [K.D₁_shape _ _ _ h₀, K.flip.D₂_shape c _ _ h₀, zero_comp, comp_zero]
 
 @[reassoc]
 lemma totalFlipIsoX_hom_D₂ (j j' : J) :
     (K.totalFlipIsoX c j).hom ≫ K.D₂ c j j' =
       K.flip.D₁ c j j' ≫ (K.totalFlipIsoX c j').hom := by
   by_cases h₀ : c.Rel j j'
-  · ext i₂ i₁ h₁
-    dsimp [totalFlipIsoX]
-    rw [ι_totalDesc_assoc, Linear.units_smul_comp, ι_D₂, ι_D₁_assoc]
-    dsimp
-    by_cases h₂ : c₂.Rel i₂ (c₂.next i₂)
-    · have h₃ : ComplexShape.π c₂ c₁ c (ComplexShape.next c₂ i₂, i₁) = j' := by
-        rw [← ComplexShape.next_π₁ c₁ c h₂ i₁, h₁, c.next_eq' h₀]
-      have h₄ : ComplexShape.π c₁ c₂ c (i₁, ComplexShape.next c₂ i₂) = j'
-      rw [← h₃, ComplexShape.π_symm c₁ c₂ c]
-      rw [K.d₂_eq _ _ h₂ _ h₄, K.flip.d₁_eq _ h₂ _ _ h₃, Linear.units_smul_comp,
-        assoc, ι_totalDesc, Linear.comp_units_smul, smul_smul, smul_smul,
-        ComplexShape.σ_ε₂ c₁ c i₁ h₂]
-      rfl
-    · rw [K.d₂_eq_zero _ _ _ _ h₂, K.flip.d₁_eq_zero _ _ _ _ h₂, smul_zero, zero_comp]
-  · rw [K.D₂_shape _ _ _ h₀, K.flip.D₁_shape c _ _ h₀, zero_comp, comp_zero]
+  ext i₂ i₁ h₁
+  dsimp [totalFlipIsoX]
+  rw [ι_totalDesc_assoc, Linear.units_smul_comp, ι_D₂, ι_D₁_assoc]
+  dsimp
+  by_cases h₂ : c₂.Rel i₂ (c₂.next i₂)
+  have h₃ : ComplexShape.π c₂ c₁ c (ComplexShape.next c₂ i₂, i₁) = j' := by
+    rw [← ComplexShape.next_π₁ c₁ c h₂ i₁, h₁, c.next_eq' h₀]
+  have h₄ : ComplexShape.π c₁ c₂ c (i₁, ComplexShape.next c₂ i₂) = j'
+  rw [← h₃, ComplexShape.π_symm c₁ c₂ c]
+  rw [K.d₂_eq _ _ h₂ _ h₄, K.flip.d₁_eq _ h₂ _ _ h₃, Linear.units_smul_comp,
+    assoc, ι_totalDesc, Linear.comp_units_smul, smul_smul, smul_smul,
+    ComplexShape.σ_ε₂ c₁ c i₁ h₂]
+  rfl
+  rw [K.d₂_eq_zero _ _ _ _ h₂, K.flip.d₁_eq_zero _ _ _ _ h₂, smul_zero, zero_comp]
+  rw [K.D₂_shape _ _ _ h₀, K.flip.D₁_shape c _ _ h₀, zero_comp, comp_zero]
 
 /-- The symmetry isomorphism `K.flip.total c ≅ K.total c` of the total complex of a
 bicomplex when we have `[TotalComplexShapeSymmetry c₁ c₂ c]`. -/

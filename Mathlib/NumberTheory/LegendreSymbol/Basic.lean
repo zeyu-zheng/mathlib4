@@ -46,34 +46,34 @@ variable (p : ℕ) [Fact p.Prime]
 /-- Euler's Criterion: A unit `x` of `ZMod p` is a square if and only if `x ^ (p / 2) = 1`. -/
 theorem euler_criterion_units (x : (ZMod p)ˣ) : (∃ y : (ZMod p)ˣ, y ^ 2 = x) ↔ x ^ (p / 2) = 1 := by
   by_cases hc : p = 2
-  · subst hc
-    simp only [eq_iff_true_of_subsingleton, exists_const]
-  · have h₀ := FiniteField.unit_isSquare_iff (by rwa [ringChar_zmod_n]) x
-    have hs : (∃ y : (ZMod p)ˣ, y ^ 2 = x) ↔ IsSquare x
-    rw [isSquare_iff_exists_sq x]
-    simp_rw [eq_comm]
-    rw [hs]
-    rwa [card p] at h₀
+  subst hc
+  simp only [eq_iff_true_of_subsingleton, exists_const]
+  have h₀ := FiniteField.unit_isSquare_iff (by rwa [ringChar_zmod_n]) x
+  have hs : (∃ y : (ZMod p)ˣ, y ^ 2 = x) ↔ IsSquare x
+  rw [isSquare_iff_exists_sq x]
+  simp_rw [eq_comm]
+  rw [hs]
+  rwa [card p] at h₀
 
 /-- Euler's Criterion: a nonzero `a : ZMod p` is a square if and only if `x ^ (p / 2) = 1`. -/
 theorem euler_criterion {a : ZMod p} (ha : a ≠ 0) : IsSquare (a : ZMod p) ↔ a ^ (p / 2) = 1 := by
   apply (iff_congr _ (by simp [Units.ext_iff])).mp (euler_criterion_units p (Units.mk0 a ha))
   simp only [Units.ext_iff, sq, Units.val_mk0, Units.val_mul]
   constructor
-  · rintro ⟨y, hy⟩; exact ⟨y, hy.symm⟩
-  · rintro ⟨y, rfl⟩
-    have hy : y ≠ 0
-    rintro rfl
-    simp [zero_pow, mul_zero, ne_eq, not_true] at ha
-    refine ⟨Units.mk0 y hy, ?_⟩; simp
+  rintro ⟨y, hy⟩; exact ⟨y, hy.symm⟩
+  rintro ⟨y, rfl⟩
+  have hy : y ≠ 0
+  rintro rfl
+  simp [zero_pow, mul_zero, ne_eq, not_true] at ha
+  refine ⟨Units.mk0 y hy, ?_⟩; simp
 
 /-- If `a : ZMod p` is nonzero, then `a^(p/2)` is either `1` or `-1`. -/
 theorem pow_div_two_eq_neg_one_or_one {a : ZMod p} (ha : a ≠ 0) :
     a ^ (p / 2) = 1 ∨ a ^ (p / 2) = -1 := by
   cases' Prime.eq_two_or_odd (@Fact.out p.Prime _) with hp2 hp_odd
-  · subst p; revert a ha; intro a; fin_cases a
-    · tauto
-    · simp
+  subst p; revert a ha; intro a; fin_cases a
+  tauto
+  simp
   rw [← mul_self_eq_one_iff, ← pow_add, ← two_mul, two_mul_odd_div_two hp_odd]
   exact pow_card_sub_one_eq_one ha
 
@@ -110,21 +110,21 @@ namespace legendreSym
 /-- We have the congruence `legendreSym p a ≡ a ^ (p / 2) mod p`. -/
 theorem eq_pow (a : ℤ) : (legendreSym p a : ZMod p) = (a : ZMod p) ^ (p / 2) := by
   rcases eq_or_ne (ringChar (ZMod p)) 2 with hc | hc
-  · by_cases ha : (a : ZMod p) = 0
-    · rw [legendreSym, ha, quadraticChar_zero,
-        zero_pow (Nat.div_pos (@Fact.out p.Prime).two_le (succ_pos 1)).ne']
-      norm_cast
-    · have := (ringChar_zmod_n p).symm.trans hc
-      -- p = 2
-      subst p
-      rw [legendreSym, quadraticChar_eq_one_of_char_two hc ha]
-      revert ha
-      push_cast
-      generalize (a : ZMod 2) = b; fin_cases b
-      · tauto
-      · simp
-  · convert quadraticChar_eq_pow_of_char_ne_two' hc (a : ZMod p)
-    exact (card p).symm
+  by_cases ha : (a : ZMod p) = 0
+  rw [legendreSym, ha, quadraticChar_zero,
+    zero_pow (Nat.div_pos (@Fact.out p.Prime).two_le (succ_pos 1)).ne']
+  norm_cast
+  have := (ringChar_zmod_n p).symm.trans hc
+  -- p = 2
+  subst p
+  rw [legendreSym, quadraticChar_eq_one_of_char_two hc ha]
+  revert ha
+  push_cast
+  generalize (a : ZMod 2) = b; fin_cases b
+  tauto
+  simp
+  convert quadraticChar_eq_pow_of_char_ne_two' hc (a : ZMod p)
+  exact (card p).symm
 
 /-- If `p ∤ a`, then `legendreSym p a` is `1` or `-1`. -/
 theorem eq_one_or_neg_one {a : ℤ} (ha : (a : ZMod p) ≠ 0) :
@@ -178,8 +178,8 @@ theorem eq_one_iff {a : ℤ} (ha0 : (a : ZMod p) ≠ 0) : legendreSym p a = 1 �
 theorem eq_one_iff' {a : ℕ} (ha0 : (a : ZMod p) ≠ 0) :
     legendreSym p a = 1 ↔ IsSquare (a : ZMod p) := by
       rw [eq_one_iff]
-      · norm_cast
-      · exact mod_cast ha0
+      norm_cast
+      exact mod_cast ha0
 
 /-- `legendreSym p a = -1` iff `a` is a nonsquare mod `p`. -/
 theorem eq_neg_one_iff {a : ℤ} : legendreSym p a = -1 ↔ ¬IsSquare (a : ZMod p) :=
@@ -236,10 +236,10 @@ theorem eq_zero_mod_of_eq_neg_one {p : ℕ} [Fact p.Prime] {a : ℤ} (h : legend
   simp at h
   by_contra hf
   cases' imp_iff_or_not.mp (not_and'.mp hf) with hx hy
-  · rw [eq_one_of_sq_sub_mul_sq_eq_zero' ha hx hxy, eq_neg_self_iff] at h
-    exact one_ne_zero h
-  · rw [eq_one_of_sq_sub_mul_sq_eq_zero ha hy hxy, eq_neg_self_iff] at h
-    exact one_ne_zero h
+  rw [eq_one_of_sq_sub_mul_sq_eq_zero' ha hx hxy, eq_neg_self_iff] at h
+  exact one_ne_zero h
+  rw [eq_one_of_sq_sub_mul_sq_eq_zero ha hy hxy, eq_neg_self_iff] at h
+  exact one_ne_zero h
 
 /-- If `legendreSym p a = -1` and `p` divides `x^2 - a*y^2`, then `p` must divide `x` and `y`. -/
 theorem prime_dvd_of_eq_neg_one {p : ℕ} [Fact p.Prime] {a : ℤ} (h : legendreSym p a = -1) {x y : ℤ}

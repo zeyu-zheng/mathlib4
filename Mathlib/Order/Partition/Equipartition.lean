@@ -136,13 +136,13 @@ theorem IsEquipartition.exists_partPreservingEquiv (hP : P.IsEquipartition) : �
   have gl := fun a ↦ (g (f a).1).2
   have less : ∀ a, z a < s.card := fun a ↦ by
     rcases hP.card_parts_eq_average (f a).1.2 with (c | c)
-    · calc
-        _ < P.parts.card * ((f a).2 + 1) := add_lt_add_left (gl a) _
-        _ ≤ P.parts.card * (s.card / P.parts.card) := mul_le_mul_left' (c ▸ (f a).2.2) _
-        _ ≤ P.parts.card * (s.card / P.parts.card) + s.card % P.parts.card := Nat.le_add_right ..
-        _ = _ := Nat.div_add_mod ..
-    · rw [← Nat.div_add_mod s.card P.parts.card]
-      exact add_lt_add_of_le_of_lt (mul_le_mul_left' (by omega) _) ((hg (f a).1).mp c)
+    calc
+      _ < P.parts.card * ((f a).2 + 1) := add_lt_add_left (gl a) _
+      _ ≤ P.parts.card * (s.card / P.parts.card) := mul_le_mul_left' (c ▸ (f a).2.2) _
+      _ ≤ P.parts.card * (s.card / P.parts.card) + s.card % P.parts.card := Nat.le_add_right ..
+      _ = _ := Nat.div_add_mod ..
+    rw [← Nat.div_add_mod s.card P.parts.card]
+    exact add_lt_add_of_le_of_lt (mul_le_mul_left' (by omega) _) ((hg (f a).1).mp c)
   let z' : s → Fin s.card := fun a ↦ ⟨z a, less a⟩
   have bij : z'.Bijective
   refine (bijective_iff_injective_and_card z').mpr ⟨fun a b e ↦ ?_, by simp⟩

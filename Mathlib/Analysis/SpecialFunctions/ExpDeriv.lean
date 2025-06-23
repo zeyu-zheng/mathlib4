@@ -61,10 +61,10 @@ theorem contDiff_exp : ∀ {n}, ContDiff 𝕜 n exp := by
   refine @(contDiff_all_iff_nat.2 fun n => ?_)
   have : ContDiff ℂ (↑n) exp
   induction' n with n ihn
-  · exact contDiff_zero.2 continuous_exp
-  · rw [contDiff_succ_iff_deriv]
-    use differentiable_exp
-    rwa [deriv_exp]
+  exact contDiff_zero.2 continuous_exp
+  rw [contDiff_succ_iff_deriv]
+  use differentiable_exp
+  rwa [deriv_exp]
   exact this.restrict_scalars 𝕜
 
 theorem hasStrictDerivAt_exp (x : ℂ) : HasStrictDerivAt exp (exp x) x :=

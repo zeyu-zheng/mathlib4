@@ -115,14 +115,14 @@ lemma isProperMap_iff_ultrafilter : IsProperMap f ↔ Continuous f ∧
   rw [isProperMap_iff_clusterPt]
   refine and_congr_right (fun _ ↦ ?_)
   constructor <;> intro H
-  · intro 𝒰 y (hY : (Ultrafilter.map f 𝒰 : Filter Y) ≤ _)
-    simp_rw [← Ultrafilter.clusterPt_iff] at hY ⊢
-    exact H hY
-  · simp_rw [MapClusterPt, ClusterPt, ← Filter.push_pull', map_neBot_iff, ← exists_ultrafilter_iff,
-      forall_exists_index]
-    intro ℱ y 𝒰 hy
-    rcases H (tendsto_iff_comap.mpr <| hy.trans inf_le_left) with ⟨x, hxy, hx⟩
-    exact ⟨x, hxy, 𝒰, le_inf hx (hy.trans inf_le_right)⟩
+  intro 𝒰 y (hY : (Ultrafilter.map f 𝒰 : Filter Y) ≤ _)
+  simp_rw [← Ultrafilter.clusterPt_iff] at hY ⊢
+  exact H hY
+  simp_rw [MapClusterPt, ClusterPt, ← Filter.push_pull', map_neBot_iff, ← exists_ultrafilter_iff,
+    forall_exists_index]
+  intro ℱ y 𝒰 hy
+  rcases H (tendsto_iff_comap.mpr <| hy.trans inf_le_left) with ⟨x, hxy, hx⟩
+  exact ⟨x, hxy, 𝒰, le_inf hx (hy.trans inf_le_right)⟩
 
 lemma isProperMap_iff_ultrafilter_of_t2 [T2Space Y] : IsProperMap f ↔ Continuous f ∧
     ∀ ⦃𝒰 : Ultrafilter X⦄, ∀ ⦃y : Y⦄, Tendsto f 𝒰 (𝓝 y) → ∃ x, 𝒰.1 ≤ 𝓝 x :=
@@ -180,23 +180,23 @@ lemma IsProperMap.prod_map {g : Z → W} (hf : IsProperMap f) (hg : IsProperMap 
   simp_rw [isProperMap_iff_ultrafilter] at hf hg ⊢
   constructor
   -- Continuity is clear.
-  · exact hf.1.prod_map hg.1
+  exact hf.1.prod_map hg.1
   -- Let `𝒰 : Ultrafilter (X × Z)`, and assume that `f × g` tends to some `(y, w) : Y × W`
   -- along `𝒰`.
-  · intro 𝒰 ⟨y, w⟩ hyw
+  intro 𝒰 ⟨y, w⟩ hyw
   -- That means that `f` tends to `y` along `map fst 𝒰` and `g` tends to `w` along `map snd 𝒰`.
-    simp_rw [nhds_prod_eq, tendsto_prod_iff'] at hyw
+  simp_rw [nhds_prod_eq, tendsto_prod_iff'] at hyw
   -- Thus, by properness of `f` and `g`, we get some `x : X` and `z : Z` such that `f x = y`,
   -- `g z = w`, `map fst 𝒰` tends to  `x`, and `map snd 𝒰` tends to `y`.
-    rcases hf.2 (show Tendsto f (Ultrafilter.map fst 𝒰) (𝓝 y) by simpa using hyw.1) with
-      ⟨x, hxy, hx⟩
-    rcases hg.2 (show Tendsto g (Ultrafilter.map snd 𝒰) (𝓝 w) by simpa using hyw.2) with
-      ⟨z, hzw, hz⟩
+  rcases hf.2 (show Tendsto f (Ultrafilter.map fst 𝒰) (𝓝 y) by simpa using hyw.1) with
+    ⟨x, hxy, hx⟩
+  rcases hg.2 (show Tendsto g (Ultrafilter.map snd 𝒰) (𝓝 w) by simpa using hyw.2) with
+    ⟨z, hzw, hz⟩
   -- By the properties of the product topology, that means that `𝒰` tends to `(x, z)`,
   -- which completes the proof since `(f × g)(x, z) = (y, w)`.
-    refine ⟨⟨x, z⟩, Prod.ext hxy hzw, ?_⟩
-    rw [nhds_prod_eq, le_prod]
-    exact ⟨hx, hz⟩
+  refine ⟨⟨x, z⟩, Prod.ext hxy hzw, ?_⟩
+  rw [nhds_prod_eq, le_prod]
+  exact ⟨hx, hz⟩
 
 /-- Any product of proper maps is proper. -/
 lemma IsProperMap.pi_map {X Y : ι → Type*} [∀ i, TopologicalSpace (X i)]
@@ -205,20 +205,20 @@ lemma IsProperMap.pi_map {X Y : ι → Type*} [∀ i, TopologicalSpace (X i)]
   simp_rw [isProperMap_iff_ultrafilter] at h ⊢
   constructor
   -- Continuity is clear.
-  · exact continuous_pi fun i ↦ (h i).1.comp (continuous_apply i)
+  exact continuous_pi fun i ↦ (h i).1.comp (continuous_apply i)
   -- Let `𝒰 : Ultrafilter (Π i, X i)`, and assume that `Π i, f i` tends to some `y : Π i, Y i`
   -- along `𝒰`.
-  · intro 𝒰 y hy
+  intro 𝒰 y hy
   -- That means that each `f i` tends to `y i` along `map (eval i) 𝒰`.
-    have : ∀ i, Tendsto (f i) (Ultrafilter.map (eval i) 𝒰) (𝓝 (y i))
-    simpa [tendsto_pi_nhds] using hy
+  have : ∀ i, Tendsto (f i) (Ultrafilter.map (eval i) 𝒰) (𝓝 (y i))
+  simpa [tendsto_pi_nhds] using hy
   -- Thus, by properness of all the `f i`s, we can choose some `x : Π i, X i` such that, for all
   -- `i`, `f i (x i) = y i` and `map (eval i) 𝒰` tends to  `x i`.
-    choose x hxy hx using fun i ↦ (h i).2 (this i)
+  choose x hxy hx using fun i ↦ (h i).2 (this i)
   -- By the properties of the product topology, that means that `𝒰` tends to `x`,
   -- which completes the proof since `(Π i, f i) x = y`.
-    refine ⟨x, funext hxy, ?_⟩
-    rwa [nhds_pi, le_pi]
+  refine ⟨x, funext hxy, ?_⟩
+  rwa [nhds_pi, le_pi]
 
 /-- The preimage of a compact set by a proper map is again compact. See also
 `isProperMap_iff_isCompact_preimage` which proves that this property completely characterizes
@@ -244,25 +244,25 @@ theorem isProperMap_iff_isClosedMap_and_compact_fibers :
   -- Note: In Bourbaki, the direct implication is proved by going through universally closed maps.
   -- We could do the same (using a `TFAE` cycle) but proving it directly from
   -- `IsProperMap.isCompact_preimage` is nice enough already so we don't bother with that.
-  · exact ⟨H.continuous, H.isClosedMap, fun y ↦ H.isCompact_preimage isCompact_singleton⟩
-  · rw [isProperMap_iff_clusterPt]
+  exact ⟨H.continuous, H.isClosedMap, fun y ↦ H.isCompact_preimage isCompact_singleton⟩
+  rw [isProperMap_iff_clusterPt]
   -- Let `ℱ : Filter X` and `y` some cluster point of `map f ℱ`.
-    refine ⟨H.1, fun ℱ y hy ↦ ?_⟩
+  refine ⟨H.1, fun ℱ y hy ↦ ?_⟩
   -- That means that the singleton `pure y` meets the "closure" of `map f ℱ`, by which we mean
   -- `Filter.lift' (map f ℱ) closure`. But `f` is closed, so
   -- `closure (map f ℱ) = map f (closure ℱ)` (see `IsClosedMap.lift'_closure_map_eq`).
   -- Thus `map f (closure ℱ ⊓ 𝓟 (f ⁻¹' {y})) = map f (closure ℱ) ⊓ 𝓟 {y} ≠ ⊥`, hence
   -- `closure ℱ ⊓ 𝓟 (f ⁻¹' {y}) ≠ ⊥`.
-    rw [H.2.1.mapClusterPt_iff_lift'_closure H.1] at hy
+  rw [H.2.1.mapClusterPt_iff_lift'_closure H.1] at hy
   -- Now, applying the compactness of `f ⁻¹' {y}` to the nontrivial filter
   -- `closure ℱ ⊓ 𝓟 (f ⁻¹' {y})`, we obtain that it has a cluster point `x ∈ f ⁻¹' {y}`.
-    rcases H.2.2 y (f := Filter.lift' ℱ closure ⊓ 𝓟 (f ⁻¹' {y})) inf_le_right with ⟨x, hxy, hx⟩
-    refine ⟨x, hxy, ?_⟩
+  rcases H.2.2 y (f := Filter.lift' ℱ closure ⊓ 𝓟 (f ⁻¹' {y})) inf_le_right with ⟨x, hxy, hx⟩
+  refine ⟨x, hxy, ?_⟩
   -- In particular `x` is a cluster point of `closure ℱ`. Since cluster points of `closure ℱ`
   -- are exactly cluster points of `ℱ` (see `clusterPt_lift'_closure_iff`), this completes
   -- the proof.
-    rw [← clusterPt_lift'_closure_iff]
-    exact hx.mono inf_le_left
+  rw [← clusterPt_lift'_closure_iff]
+  exact hx.mono inf_le_left
 
 /-- An injective and continuous function is proper if and only if it is closed. -/
 lemma isProperMap_iff_isClosedMap_of_inj (f_cont : Continuous f) (f_inj : f.Injective) :
@@ -426,36 +426,36 @@ theorem isProperMap_iff_isClosedMap_filter {X : Type u} {Y : Type v} [Topologica
       (Prod.map f id : X × Filter X → Y × Filter X) := by
   constructor <;> intro H
   -- The direct implication is clear.
-  · exact ⟨H.continuous, H.universally_closed _⟩
-  · rw [isProperMap_iff_ultrafilter]
+  exact ⟨H.continuous, H.universally_closed _⟩
+  rw [isProperMap_iff_ultrafilter]
   -- Let `𝒰 : Ultrafilter X`, and assume that `f` tends to some `y` along `𝒰`.
-    refine ⟨H.1, fun 𝒰 y hy ↦ ?_⟩
+  refine ⟨H.1, fun 𝒰 y hy ↦ ?_⟩
   -- In `X × Filter X`, consider the closed set `F := closure {(x, ℱ) | ℱ = pure x}`
-    let F : Set (X × Filter X) := closure {xℱ | xℱ.2 = pure xℱ.1}
+  let F : Set (X × Filter X) := closure {xℱ | xℱ.2 = pure xℱ.1}
   -- Since `f × id` is closed, the set `(f × id) '' F` is also closed.
-    have := H.2 F isClosed_closure
+  have := H.2 F isClosed_closure
   -- Let us show that `(y, 𝒰) ∈ (f × id) '' F`.
-    have : (y, ↑𝒰) ∈ Prod.map f id '' F :=
+  have : (y, ↑𝒰) ∈ Prod.map f id '' F :=
   -- Note that, by the properties of the topology on `Filter X`, the function `pure : X → Filter X`
   -- tends to the point `𝒰` of `Filter X` along the filter `𝒰` on `X`. Since `f` tends to `y` along
   -- `𝒰`, we get that the function `(f, pure) : X → (Y, Filter X)` tends to `(y, 𝒰)` along
   -- `𝒰`. Furthermore, each `(f, pure)(x) = (f × id)(x, pure x)` is clearly an element of
   -- the closed set `(f × id) '' F`, thus the limit `(y, 𝒰)` also belongs to that set.
-      this.mem_of_tendsto (hy.prod_mk_nhds (Filter.tendsto_pure_self (𝒰 : Filter X)))
-        (eventually_of_forall fun x ↦ ⟨⟨x, pure x⟩, subset_closure rfl, rfl⟩)
+    this.mem_of_tendsto (hy.prod_mk_nhds (Filter.tendsto_pure_self (𝒰 : Filter X)))
+      (eventually_of_forall fun x ↦ ⟨⟨x, pure x⟩, subset_closure rfl, rfl⟩)
   -- The above shows that `(y, 𝒰) = (f x, 𝒰)`, for some `x : X` such that `(x, 𝒰) ∈ F`.
-    rcases this with ⟨⟨x, _⟩, hx, ⟨_, _⟩⟩
+  rcases this with ⟨⟨x, _⟩, hx, ⟨_, _⟩⟩
   -- We already know that `f x = y`, so to finish the proof we just have to check that `𝒰` tends
   -- to `x`. So, for `U ∈ 𝓝 x` arbitrary, let's show that `U ∈ 𝒰`. Since `𝒰` is a ultrafilter,
   -- it is enough to show that `Uᶜ` is not in `𝒰`.
-    refine ⟨x, rfl, fun U hU ↦ Ultrafilter.compl_not_mem_iff.mp fun hUc ↦ ?_⟩
-    rw [mem_closure_iff_nhds] at hx
+  refine ⟨x, rfl, fun U hU ↦ Ultrafilter.compl_not_mem_iff.mp fun hUc ↦ ?_⟩
+  rw [mem_closure_iff_nhds] at hx
   -- Indeed, if that was the case, the set `V := {𝒢 : Filter X | Uᶜ ∈ 𝒢}` would be a neighborhood
   -- of `𝒰` in `Filter X`, hence `U ×ˢ V` would be a neighborhood of `(x, 𝒰) : X × Filter X`.
   -- But recall that `(x, 𝒰) ∈ F = closure {(x, ℱ) | ℱ = pure x}`, so the neighborhood `U ×ˢ V`
   -- must contain some element of the form `(z, pure z)`. In other words, we have `z ∈ U` and
   -- `Uᶜ ∈ pure z`, which means `z ∈ Uᶜ` by the definition of pure.
   -- This is a contradiction, which completes the proof.
-    rcases hx (U ×ˢ {𝒢 | Uᶜ ∈ 𝒢}) (prod_mem_nhds hU (isOpen_setOf_mem.mem_nhds hUc)) with
-      ⟨⟨z, 𝒢⟩, ⟨⟨hz : z ∈ U, hz' : Uᶜ ∈ 𝒢⟩, rfl : 𝒢 = pure z⟩⟩
-    exact hz' hz
+  rcases hx (U ×ˢ {𝒢 | Uᶜ ∈ 𝒢}) (prod_mem_nhds hU (isOpen_setOf_mem.mem_nhds hUc)) with
+    ⟨⟨z, 𝒢⟩, ⟨⟨hz : z ∈ U, hz' : Uᶜ ∈ 𝒢⟩, rfl : 𝒢 = pure z⟩⟩
+  exact hz' hz

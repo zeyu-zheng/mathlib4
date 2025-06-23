@@ -51,15 +51,15 @@ private def map_ideal (I : Ideal R) : Ideal S where
 theorem mem_map_algebraMap_iff {I : Ideal R} {z} : z ∈ Ideal.map (algebraMap R S) I ↔
     ∃ x : I × M, z * algebraMap R S x.2 = algebraMap R S x.1 := by
   constructor
-  · change _ → z ∈ map_ideal M S I
-    refine fun h => Ideal.mem_sInf.1 h fun z hz => ?_
-    obtain ⟨y, hy⟩ := hz
-    let Z : { x // x ∈ I } := ⟨y, hy.left⟩
-    use ⟨Z, 1⟩
-    simp [hy.right]
-  · rintro ⟨⟨a, s⟩, h⟩
-    rw [← Ideal.unit_mul_mem_iff_mem _ (map_units S s), mul_comm]
-    exact h.symm ▸ Ideal.mem_map_of_mem _ a.2
+  change _ → z ∈ map_ideal M S I
+  refine fun h => Ideal.mem_sInf.1 h fun z hz => ?_
+  obtain ⟨y, hy⟩ := hz
+  let Z : { x // x ∈ I } := ⟨y, hy.left⟩
+  use ⟨Z, 1⟩
+  simp [hy.right]
+  rintro ⟨⟨a, s⟩, h⟩
+  rw [← Ideal.unit_mul_mem_iff_mem _ (map_units S s), mul_comm]
+  exact h.symm ▸ Ideal.mem_map_of_mem _ a.2
 
 lemma mk'_mem_map_algebraMap_iff (I : Ideal R) (x : R) (s : M) :
     IsLocalization.mk' S x s ∈ I.map (algebraMap R S) ↔ ∃ s ∈ M, s * x ∈ I := by
@@ -113,26 +113,26 @@ theorem isPrime_iff_isPrime_disjoint (J : Ideal S) :
       (Ideal.comap (algebraMap R S) J).IsPrime ∧
         Disjoint (M : Set R) ↑(Ideal.comap (algebraMap R S) J) := by
   constructor
-  · refine fun h =>
-      ⟨⟨?_, ?_⟩,
-        Set.disjoint_left.mpr fun m hm1 hm2 =>
-          h.ne_top (Ideal.eq_top_of_isUnit_mem _ hm2 (map_units S ⟨m, hm1⟩))⟩
-    · refine fun hJ => h.ne_top ?_
-      rw [eq_top_iff, ← (orderEmbedding M S).le_iff_le]
-      exact le_of_eq hJ.symm
-    · intro x y hxy
-      rw [Ideal.mem_comap, RingHom.map_mul] at hxy
-      exact h.mem_or_mem hxy
-  · refine fun h => ⟨fun hJ => h.left.ne_top (eq_top_iff.2 ?_), ?_⟩
-    · rwa [eq_top_iff, ← (orderEmbedding M S).le_iff_le] at hJ
-    · intro x y hxy
-      obtain ⟨a, s, ha⟩ := mk'_surjective M x
-      obtain ⟨b, t, hb⟩ := mk'_surjective M y
-      have : mk' S (a * b) (s * t) ∈ J := by rwa [mk'_mul, ha, hb]
-      rw [mk'_mem_iff, ← Ideal.mem_comap] at this
-      have this₂ := (h.1).mul_mem_iff_mem_or_mem.1 this
-      rw [Ideal.mem_comap, Ideal.mem_comap] at this₂
-      rwa [← ha, ← hb, mk'_mem_iff, mk'_mem_iff]
+  refine fun h =>
+    ⟨⟨?_, ?_⟩,
+      Set.disjoint_left.mpr fun m hm1 hm2 =>
+        h.ne_top (Ideal.eq_top_of_isUnit_mem _ hm2 (map_units S ⟨m, hm1⟩))⟩
+  refine fun hJ => h.ne_top ?_
+  rw [eq_top_iff, ← (orderEmbedding M S).le_iff_le]
+  exact le_of_eq hJ.symm
+  intro x y hxy
+  rw [Ideal.mem_comap, RingHom.map_mul] at hxy
+  exact h.mem_or_mem hxy
+  refine fun h => ⟨fun hJ => h.left.ne_top (eq_top_iff.2 ?_), ?_⟩
+  rwa [eq_top_iff, ← (orderEmbedding M S).le_iff_le] at hJ
+  intro x y hxy
+  obtain ⟨a, s, ha⟩ := mk'_surjective M x
+  obtain ⟨b, t, hb⟩ := mk'_surjective M y
+  have : mk' S (a * b) (s * t) ∈ J := by rwa [mk'_mul, ha, hb]
+  rw [mk'_mem_iff, ← Ideal.mem_comap] at this
+  have this₂ := (h.1).mul_mem_iff_mem_or_mem.1 this
+  rw [Ideal.mem_comap, Ideal.mem_comap] at this₂
+  rwa [← ha, ← hb, mk'_mem_iff, mk'_mem_iff]
 
 /-- If `R` is a ring, then prime ideals in the localization at `M`
 correspond to prime ideals in the original ring `R` that are disjoint from `M`.
@@ -175,33 +175,33 @@ theorem surjective_quotientMap_of_maximal_of_localization {I : Ideal S} [I.IsPri
   obtain ⟨s, rfl⟩ := Ideal.Quotient.mk_surjective s
   obtain ⟨r, ⟨m, hm⟩, rfl⟩ := mk'_surjective M s
   by_cases hM : (Ideal.Quotient.mk (I.comap (algebraMap R S))) m = 0
-  · have : I = ⊤ := by
-      rw [Ideal.eq_top_iff_one]
-      rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_comap] at hM
-      convert I.mul_mem_right (mk' S (1 : R) ⟨m, hm⟩) hM
-      rw [← mk'_eq_mul_mk'_one, mk'_self]
-    exact ⟨0, eq_comm.1 (by simp [Ideal.Quotient.eq_zero_iff_mem, this])⟩
-  · rw [Ideal.Quotient.maximal_ideal_iff_isField_quotient] at hI
-    obtain ⟨n, hn⟩ := hI.3 hM
-    obtain ⟨rn, rfl⟩ := Ideal.Quotient.mk_surjective n
-    refine ⟨(Ideal.Quotient.mk J) (r * rn), ?_⟩
-    -- The rest of the proof is essentially just algebraic manipulations to prove the equality
-    replace hn := congr_arg (Ideal.quotientMap I (algebraMap R S) le_rfl) hn
-    rw [RingHom.map_one, RingHom.map_mul] at hn
-    rw [Ideal.quotientMap_mk, ← sub_eq_zero, ← RingHom.map_sub, Ideal.Quotient.eq_zero_iff_mem, ←
-      Ideal.Quotient.eq_zero_iff_mem, RingHom.map_sub, sub_eq_zero, mk'_eq_mul_mk'_one]
-    simp only [mul_eq_mul_left_iff, RingHom.map_mul]
-    refine
-      Or.inl
-        (mul_left_cancel₀ (M₀ := S ⧸ I)
-          (fun hn =>
-            hM
-              (Ideal.Quotient.eq_zero_iff_mem.2
-                (Ideal.mem_comap.2 (Ideal.Quotient.eq_zero_iff_mem.1 hn))))
-          (_root_.trans hn ?_))
-    -- Porting note (#10691): was `rw`, but this took extremely long.
-    refine Eq.trans ?_ (RingHom.map_mul (Ideal.Quotient.mk I) (algebraMap R S m) (mk' S 1 ⟨m, hm⟩))
-    rw [← mk'_eq_mul_mk'_one, mk'_self, RingHom.map_one]
+  have : I = ⊤ := by
+    rw [Ideal.eq_top_iff_one]
+    rw [Ideal.Quotient.eq_zero_iff_mem, Ideal.mem_comap] at hM
+    convert I.mul_mem_right (mk' S (1 : R) ⟨m, hm⟩) hM
+    rw [← mk'_eq_mul_mk'_one, mk'_self]
+  exact ⟨0, eq_comm.1 (by simp [Ideal.Quotient.eq_zero_iff_mem, this])⟩
+  rw [Ideal.Quotient.maximal_ideal_iff_isField_quotient] at hI
+  obtain ⟨n, hn⟩ := hI.3 hM
+  obtain ⟨rn, rfl⟩ := Ideal.Quotient.mk_surjective n
+  refine ⟨(Ideal.Quotient.mk J) (r * rn), ?_⟩
+  -- The rest of the proof is essentially just algebraic manipulations to prove the equality
+  replace hn := congr_arg (Ideal.quotientMap I (algebraMap R S) le_rfl) hn
+  rw [RingHom.map_one, RingHom.map_mul] at hn
+  rw [Ideal.quotientMap_mk, ← sub_eq_zero, ← RingHom.map_sub, Ideal.Quotient.eq_zero_iff_mem, ←
+    Ideal.Quotient.eq_zero_iff_mem, RingHom.map_sub, sub_eq_zero, mk'_eq_mul_mk'_one]
+  simp only [mul_eq_mul_left_iff, RingHom.map_mul]
+  refine
+    Or.inl
+      (mul_left_cancel₀ (M₀ := S ⧸ I)
+        (fun hn =>
+          hM
+            (Ideal.Quotient.eq_zero_iff_mem.2
+              (Ideal.mem_comap.2 (Ideal.Quotient.eq_zero_iff_mem.1 hn))))
+        (_root_.trans hn ?_))
+  -- Porting note (#10691): was `rw`, but this took extremely long.
+  refine Eq.trans ?_ (RingHom.map_mul (Ideal.Quotient.mk I) (algebraMap R S m) (mk' S 1 ⟨m, hm⟩))
+  rw [← mk'_eq_mul_mk'_one, mk'_self, RingHom.map_one]
 
 open nonZeroDivisors
 
@@ -216,20 +216,20 @@ theorem ideal_eq_iInf_comap_map_away {S : Finset R} (hS : Ideal.span (α := R) S
     I = ⨅ f ∈ S, (I.map (algebraMap R (Localization.Away f))).comap
     (algebraMap R (Localization.Away f)) := by
   apply le_antisymm
-  · simp only [le_iInf₂_iff, ← Ideal.map_le_iff_le_comap, le_refl, implies_true]
-  · intro x hx
-    apply Submodule.mem_of_span_eq_top_of_smul_pow_mem _ _ hS
-    rintro ⟨s, hs⟩
-    simp only [Ideal.mem_iInf, Ideal.mem_comap] at hx
-    obtain ⟨⟨y, ⟨_, n, rfl⟩⟩, e⟩ :=
-      (IsLocalization.mem_map_algebraMap_iff (.powers s) _).mp (hx s hs)
-    dsimp only at e
-    rw [← map_mul, IsLocalization.eq_iff_exists (.powers s)] at e
-    obtain ⟨⟨_, m, rfl⟩, e⟩ := e
-    use m + n
-    dsimp at e ⊢
-    rw [pow_add, mul_assoc, ← mul_comm x, e]
-    exact I.mul_mem_left _ y.2
+  simp only [le_iInf₂_iff, ← Ideal.map_le_iff_le_comap, le_refl, implies_true]
+  intro x hx
+  apply Submodule.mem_of_span_eq_top_of_smul_pow_mem _ _ hS
+  rintro ⟨s, hs⟩
+  simp only [Ideal.mem_iInf, Ideal.mem_comap] at hx
+  obtain ⟨⟨y, ⟨_, n, rfl⟩⟩, e⟩ :=
+    (IsLocalization.mem_map_algebraMap_iff (.powers s) _).mp (hx s hs)
+  dsimp only at e
+  rw [← map_mul, IsLocalization.eq_iff_exists (.powers s)] at e
+  obtain ⟨⟨_, m, rfl⟩, e⟩ := e
+  use m + n
+  dsimp at e ⊢
+  rw [pow_add, mul_assoc, ← mul_comm x, e]
+  exact I.mul_mem_left _ y.2
 
 end CommRing
 

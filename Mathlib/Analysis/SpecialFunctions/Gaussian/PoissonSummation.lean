@@ -57,14 +57,14 @@ lemma cexp_neg_quadratic_isLittleO_abs_rpow_cocompact {a : ℂ} (ha : a.re < 0) 
     (fun x : ℝ ↦ cexp (a * x ^ 2 + b * x)) =o[cocompact ℝ] (|·| ^ s) := by
   rw [cocompact_eq_atBot_atTop, isLittleO_sup]
   constructor
-  · refine ((cexp_neg_quadratic_isLittleO_rpow_atTop ha (-b) s).comp_tendsto
-      Filter.tendsto_neg_atBot_atTop).congr' (eventually_of_forall fun x ↦ ?_) ?_
-    · simp only [neg_mul, Function.comp_apply, ofReal_neg, neg_sq, mul_neg, neg_neg]
-    · refine (eventually_lt_atBot 0).mp (eventually_of_forall fun x hx ↦ ?_)
-      simp only [Function.comp_apply, abs_of_neg hx]
-  · refine (cexp_neg_quadratic_isLittleO_rpow_atTop ha b s).congr' EventuallyEq.rfl ?_
-    refine (eventually_gt_atTop 0).mp (eventually_of_forall fun x hx ↦ ?_)
-    simp_rw [abs_of_pos hx]
+  refine ((cexp_neg_quadratic_isLittleO_rpow_atTop ha (-b) s).comp_tendsto
+    Filter.tendsto_neg_atBot_atTop).congr' (eventually_of_forall fun x ↦ ?_) ?_
+  simp only [neg_mul, Function.comp_apply, ofReal_neg, neg_sq, mul_neg, neg_neg]
+  refine (eventually_lt_atBot 0).mp (eventually_of_forall fun x hx ↦ ?_)
+  simp only [Function.comp_apply, abs_of_neg hx]
+  refine (cexp_neg_quadratic_isLittleO_rpow_atTop ha b s).congr' EventuallyEq.rfl ?_
+  refine (eventually_gt_atTop 0).mp (eventually_of_forall fun x hx ↦ ?_)
+  simp_rw [abs_of_pos hx]
 
 theorem tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact {a : ℝ} (ha : 0 < a) (s : ℝ) :
     Tendsto (fun x : ℝ => |x| ^ s * rexp (-a * x ^ 2)) (cocompact ℝ) (𝓝 0) := by
@@ -79,8 +79,8 @@ theorem tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact {a : ℝ} (ha : 0 < a) (s 
 theorem isLittleO_exp_neg_mul_sq_cocompact {a : ℂ} (ha : 0 < a.re) (s : ℝ) :
     (fun x : ℝ => Complex.exp (-a * x ^ 2)) =o[cocompact ℝ] fun x : ℝ => |x| ^ s := by
   convert cexp_neg_quadratic_isLittleO_abs_rpow_cocompact (?_ : (-a).re < 0) 0 s using 1
-  · simp_rw [zero_mul, add_zero]
-  · rwa [neg_re, neg_lt_zero]
+  simp_rw [zero_mul, add_zero]
+  rwa [neg_re, neg_lt_zero]
 
 /-- Jacobi's theta-function transformation formula for the sum of `exp -Q(x)`, where `Q` is a
 negative definite quadratic form. -/
@@ -90,8 +90,8 @@ theorem Complex.tsum_exp_neg_quadratic {a : ℂ} (ha : 0 < a.re) (b : ℂ) :
   let f : ℝ → ℂ := fun x ↦ cexp (-π * a * x ^ 2 + 2 * π * b * x)
   have hCf : Continuous f
   refine Complex.continuous_exp.comp (Continuous.add ?_ ?_)
-  · exact continuous_const.mul (Complex.continuous_ofReal.pow 2)
-  · exact continuous_const.mul Complex.continuous_ofReal
+  exact continuous_const.mul (Complex.continuous_ofReal.pow 2)
+  exact continuous_const.mul Complex.continuous_ofReal
   have hFf : 𝓕 f = fun x : ℝ ↦ 1 / a ^ (1 / 2 : ℂ) * cexp (-π / a * (x + I * b) ^ 2) :=
     fourierIntegral_gaussian_pi' ha b
   have h1 : 0 < (↑π * a).re := by
@@ -116,9 +116,9 @@ theorem Complex.tsum_exp_neg_quadratic {a : ℂ} (ha : 0 < a.re) (b : ℂ) :
       (?_) (-2 * ↑π * I * b / a) (-2)).isBigO.const_mul_left _).const_mul_left _
     rwa [neg_div, neg_re, neg_lt_zero]
   convert Real.tsum_eq_tsum_fourierIntegral_of_rpow_decay hCf one_lt_two f_bd Ff_bd 0 using 1
-  · simp only [f, zero_add, ofReal_intCast]
-  · rw [← tsum_mul_left]
-    simp only [QuotientAddGroup.mk_zero, fourier_eval_zero, mul_one, hFf, ofReal_intCast]
+  simp only [f, zero_add, ofReal_intCast]
+  rw [← tsum_mul_left]
+  simp only [QuotientAddGroup.mk_zero, fourier_eval_zero, mul_one, hFf, ofReal_intCast]
 
 theorem Complex.tsum_exp_neg_mul_int_sq {a : ℂ} (ha : 0 < a.re) :
     (∑' n : ℤ, cexp (-π * a * (n : ℂ) ^ 2)) =

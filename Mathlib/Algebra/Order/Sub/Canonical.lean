@@ -358,8 +358,8 @@ theorem tsub_pos_iff_lt : 0 < a - b ↔ b < a := by rw [tsub_pos_iff_not_le, not
 
 theorem tsub_eq_tsub_min (a b : α) : a - b = a - min a b := by
   rcases le_total a b with h | h
-  · rw [min_eq_left h, tsub_self, tsub_eq_zero_of_le h]
-  · rw [min_eq_right h]
+  rw [min_eq_left h, tsub_self, tsub_eq_zero_of_le h]
+  rw [min_eq_right h]
 
 namespace AddLECancellable
 
@@ -419,15 +419,15 @@ end Contra
 
 theorem tsub_add_eq_max : a - b + b = max a b := by
   rcases le_total a b with h | h
-  · rw [max_eq_right h, tsub_eq_zero_of_le h, zero_add]
-  · rw [max_eq_left h, tsub_add_cancel_of_le h]
+  rw [max_eq_right h, tsub_eq_zero_of_le h, zero_add]
+  rw [max_eq_left h, tsub_add_cancel_of_le h]
 
 theorem add_tsub_eq_max : a + (b - a) = max a b := by rw [add_comm, max_comm, tsub_add_eq_max]
 
 theorem tsub_min : a - min a b = a - b := by
   rcases le_total a b with h | h
-  · rw [min_eq_left h, tsub_self, tsub_eq_zero_of_le h]
-  · rw [min_eq_right h]
+  rw [min_eq_left h, tsub_self, tsub_eq_zero_of_le h]
+  rw [min_eq_right h]
 
 theorem tsub_add_min : a - b + min a b = a := by
   rw [← tsub_min, @tsub_add_cancel_of_le]
@@ -441,7 +441,7 @@ lemma Even.tsub [CanonicallyLinearOrderedAddCommMonoid α] [Sub α] [OrderedSub 
   obtain ⟨b, rfl⟩ := hn
   refine ⟨a - b, ?_⟩
   obtain h | h := le_total a b
-  · rw [tsub_eq_zero_of_le h, tsub_eq_zero_of_le (add_le_add h h), add_zero]
-  · exact (tsub_add_tsub_comm h h).symm
+  rw [tsub_eq_zero_of_le h, tsub_eq_zero_of_le (add_le_add h h), add_zero]
+  exact (tsub_add_tsub_comm h h).symm
 
 end CanonicallyLinearOrderedAddCommMonoid

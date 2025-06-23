@@ -234,10 +234,10 @@ theorem suffixLevenshtein_cons₁
     dsimp [levenshtein, suffixLevenshtein]
   | cons y ys ih =>
     apply suffixLevenshtein_cons₁_aux
-    · rfl
-    · rw [suffixLevenshtein_cons₂ (x :: xs), ih, impl_cons]
-      · rfl
-      · simp [suffixLevenshtein_length]
+    rfl
+    rw [suffixLevenshtein_cons₂ (x :: xs), ih, impl_cons]
+    rfl
+    simp [suffixLevenshtein_length]
 
 theorem suffixLevenshtein_cons₁_fst (x : α) (xs ys) :
     (suffixLevenshtein C (x :: xs) ys).1 =

@@ -65,12 +65,12 @@ theorem det_eq_prod_roots_charpoly_of_splits (hAps : A.charpoly.Splits (RingHom.
 theorem trace_eq_sum_roots_charpoly_of_splits (hAps : A.charpoly.Splits (RingHom.id R)) :
     A.trace = (Matrix.charpoly A).roots.sum := by
   cases' isEmpty_or_nonempty n with h
-  · rw [Matrix.trace, Fintype.sum_empty, Matrix.charpoly,
-      det_eq_one_of_card_eq_zero (Fintype.card_eq_zero_iff.2 h), Polynomial.roots_one,
-      Multiset.empty_eq_zero, Multiset.sum_zero]
-  · rw [trace_eq_neg_charpoly_coeff, neg_eq_iff_eq_neg,
-      ← Polynomial.sum_roots_eq_nextCoeff_of_monic_of_split A.charpoly_monic hAps, nextCoeff,
-      charpoly_natDegree_eq_dim, if_neg (Fintype.card_ne_zero : Fintype.card n ≠ 0)]
+  rw [Matrix.trace, Fintype.sum_empty, Matrix.charpoly,
+    det_eq_one_of_card_eq_zero (Fintype.card_eq_zero_iff.2 h), Polynomial.roots_one,
+    Multiset.empty_eq_zero, Multiset.sum_zero]
+  rw [trace_eq_neg_charpoly_coeff, neg_eq_iff_eq_neg,
+    ← Polynomial.sum_roots_eq_nextCoeff_of_monic_of_split A.charpoly_monic hAps, nextCoeff,
+    charpoly_natDegree_eq_dim, if_neg (Fintype.card_ne_zero : Fintype.card n ≠ 0)]
 
 variable (A)
 

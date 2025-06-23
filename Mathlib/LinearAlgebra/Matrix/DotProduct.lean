@@ -40,8 +40,8 @@ variable [Semiring R] [Fintype n]
 theorem dotProduct_stdBasis_eq_mul [DecidableEq n] (v : n → R) (c : R) (i : n) :
     dotProduct v (LinearMap.stdBasis R (fun _ => R) i c) = v i * c := by
   rw [dotProduct, Finset.sum_eq_single i, LinearMap.stdBasis_same]
-  · exact fun _ _ hb => by rw [LinearMap.stdBasis_ne _ _ _ _ hb, mul_zero]
-  · exact fun hi => False.elim (hi <| Finset.mem_univ _)
+  exact fun _ _ hb => by rw [LinearMap.stdBasis_ne _ _ _ _ hb, mul_zero]
+  exact fun hi => False.elim (hi <| Finset.mem_univ _)
 
 -- @[simp] -- Porting note (#10618): simp can prove this
 theorem dotProduct_stdBasis_one [DecidableEq n] (v : n → R) (i : n) :

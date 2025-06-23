@@ -154,8 +154,8 @@ lemma card_filter_piFinset_eq (s : ∀ i, Finset (α i)) (i : ι) (a : α i) :
     ((piFinset s).filter fun f ↦ f i = a).card =
       if a ∈ s i then ∏ b ∈ univ.erase i, (s b).card else 0 := by
   split_ifs with h
-  · rw [card_filter_piFinset_eq_of_mem _ _ h]
-  · rw [filter_piFinset_of_not_mem _ _ _ h, Finset.card_empty]
+  rw [card_filter_piFinset_eq_of_mem _ _ h]
+  rw [filter_piFinset_of_not_mem _ _ _ h, Finset.card_empty]
 
 lemma card_filter_piFinset_const (s : Finset κ) (i : ι) (j : κ) :
     ((piFinset fun _ ↦ s).filter fun f ↦ f i = j).card =
@@ -204,8 +204,8 @@ nonrec theorem Fintype.prod_dite [Fintype α] {p : α → Prop} [DecidablePred p
     (∏ a : { a // p a }, f a a.2) * ∏ a : { a // ¬p a }, g a a.2 := by
   simp only [prod_dite, attach_eq_univ]
   congr 1
-  · exact (Equiv.subtypeEquivRight <| by simp).prod_comp fun x : { x // p x } => f x x.2
-  · exact (Equiv.subtypeEquivRight <| by simp).prod_comp fun x : { x // ¬p x } => g x x.2
+  exact (Equiv.subtypeEquivRight <| by simp).prod_comp fun x : { x // p x } => f x x.2
+  exact (Equiv.subtypeEquivRight <| by simp).prod_comp fun x : { x // ¬p x } => g x x.2
 
 section
 

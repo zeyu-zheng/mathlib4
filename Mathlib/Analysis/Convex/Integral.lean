@@ -70,14 +70,14 @@ theorem Convex.integral_mem [IsProbabilityMeasure μ] (hs : Convex ℝ s) (hsc :
   have : Tendsto (fun n => (G n).integral μ) atTop (𝓝 <| ∫ x, g x ∂μ) :=
     tendsto_integral_approxOn_of_measurable hfi _ hg _ (integrable_const _)
   refine hsc.mem_of_tendsto this (eventually_of_forall fun n => hs.sum_mem ?_ ?_ ?_)
-  · exact fun _ _ => ENNReal.toReal_nonneg
-  · rw [← ENNReal.toReal_sum, (G n).sum_range_measure_preimage_singleton, measure_univ,
-      ENNReal.one_toReal]
-    exact fun _ _ => measure_ne_top _ _
-  · simp only [SimpleFunc.mem_range, forall_mem_range]
-    intro x
-    apply (range g).inter_subset_right
-    exact SimpleFunc.approxOn_mem hgm.measurable h₀ _ _
+  exact fun _ _ => ENNReal.toReal_nonneg
+  rw [← ENNReal.toReal_sum, (G n).sum_range_measure_preimage_singleton, measure_univ,
+    ENNReal.one_toReal]
+  exact fun _ _ => measure_ne_top _ _
+  simp only [SimpleFunc.mem_range, forall_mem_range]
+  intro x
+  apply (range g).inter_subset_right
+  exact SimpleFunc.approxOn_mem hgm.measurable h₀ _ _
 
 /-- If `μ` is a non-zero finite measure on `α`, `s` is a convex closed set in `E`, and `f` is an
 integrable function sending `μ`-a.e. points to `s`, then the average value of `f` belongs to `s`:
@@ -223,10 +223,10 @@ theorem ae_eq_const_or_exists_average_ne_compl [IsFiniteMeasure μ] (hfi : Integ
   refine hfi.ae_eq_of_forall_setIntegral_eq _ _ (integrable_const _) fun t ht ht' => ?_; clear ht'
   simp only [const_apply, setIntegral_const]
   by_cases h₀ : μ t = 0
-  · rw [restrict_eq_zero.2 h₀, integral_zero_measure, h₀, ENNReal.zero_toReal, zero_smul]
+  rw [restrict_eq_zero.2 h₀, integral_zero_measure, h₀, ENNReal.zero_toReal, zero_smul]
   by_cases h₀' : μ tᶜ = 0
-  · rw [← ae_eq_univ] at h₀'
-    rw [restrict_congr_set h₀', restrict_univ, measure_congr h₀', measure_smul_average]
+  rw [← ae_eq_univ] at h₀'
+  rw [restrict_congr_set h₀', restrict_univ, measure_congr h₀', measure_smul_average]
   have := average_mem_openSegment_compl_self ht.nullMeasurableSet h₀ h₀' hfi
   rw [← H t ht h₀ h₀', openSegment_same, mem_singleton_iff] at this
   rw [this, measure_smul_setAverage _ (measure_ne_top μ _)]
@@ -239,8 +239,8 @@ theorem Convex.average_mem_interior_of_set [IsFiniteMeasure μ] (hs : Convex ℝ
     (⨍ x, f x ∂μ) ∈ interior s := by
   rw [← measure_toMeasurable] at h0; rw [← restrict_toMeasurable (measure_ne_top μ t)] at ht
   by_cases h0' : μ (toMeasurable μ t)ᶜ = 0
-  · rw [← ae_eq_univ] at h0'
-    rwa [restrict_congr_set h0', restrict_univ] at ht
+  rw [← ae_eq_univ] at h0'
+  rwa [restrict_congr_set h0', restrict_univ] at ht
   exact
     hs.openSegment_interior_closure_subset_interior ht
       (hs.set_average_mem_closure h0' (measure_ne_top _ _) (ae_restrict_of_ae hfs)
@@ -306,9 +306,9 @@ is strictly less than `C`. -/
 theorem ae_eq_const_or_norm_average_lt_of_norm_le_const [StrictConvexSpace ℝ E]
     (h_le : ∀ᵐ x ∂μ, ‖f x‖ ≤ C) : f =ᵐ[μ] const α (⨍ x, f x ∂μ) ∨ ‖⨍ x, f x ∂μ‖ < C := by
   rcases le_or_lt C 0 with hC0 | hC0
-  · have : f =ᵐ[μ] 0 := h_le.mono fun x hx => norm_le_zero_iff.1 (hx.trans hC0)
-    simp only [average_congr this, Pi.zero_apply, average_zero]
-    exact Or.inl this
+  have : f =ᵐ[μ] 0 := h_le.mono fun x hx => norm_le_zero_iff.1 (hx.trans hC0)
+  simp only [average_congr this, Pi.zero_apply, average_zero]
+  exact Or.inl this
   by_cases hfi : Integrable f μ; swap
   · simp [average_eq, integral_undef hfi, hC0, ENNReal.toReal_pos_iff]
   rcases (le_top : μ univ ≤ ∞).eq_or_lt with hμt | hμt; · simp [average_eq, hμt, hC0]

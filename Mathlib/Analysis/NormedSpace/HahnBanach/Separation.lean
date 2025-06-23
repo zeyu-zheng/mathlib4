@@ -49,30 +49,30 @@ theorem separate_convex_open_set [TopologicalSpace E] [AddCommGroup E] [Topologi
   let f : E →ₗ.[ℝ] ℝ := LinearPMap.mkSpanSingleton x₀ 1 (ne_of_mem_of_not_mem hs₀ hx₀).symm
   have := exists_extension_of_le_sublinear f (gauge s) (fun c hc => gauge_smul_of_nonneg hc.le)
     (gauge_add_le hs₁ <| absorbent_nhds_zero <| hs₂.mem_nhds hs₀) ?_
-  · obtain ⟨φ, hφ₁, hφ₂⟩ := this
-    have hφ₃ : φ x₀ = 1
-    rw [← f.domain.coe_mk x₀ (Submodule.mem_span_singleton_self _), hφ₁,
-      LinearPMap.mkSpanSingleton'_apply_self]
-    have hφ₄ : ∀ x ∈ s, φ x < 1 := fun x hx =>
-      (hφ₂ x).trans_lt (gauge_lt_one_of_mem_of_isOpen hs₂ hx)
-    refine ⟨⟨φ, ?_⟩, hφ₃, hφ₄⟩
-    refine
-      φ.continuous_of_nonzero_on_open _ (hs₂.vadd (-x₀)) (Nonempty.vadd_set ⟨0, hs₀⟩)
-        (vadd_set_subset_iff.mpr fun x hx => ?_)
-    change φ (-x₀ + x) ≠ 0
-    rw [map_add, map_neg]
-    specialize hφ₄ x hx
-    linarith
+  obtain ⟨φ, hφ₁, hφ₂⟩ := this
+  have hφ₃ : φ x₀ = 1
+  rw [← f.domain.coe_mk x₀ (Submodule.mem_span_singleton_self _), hφ₁,
+    LinearPMap.mkSpanSingleton'_apply_self]
+  have hφ₄ : ∀ x ∈ s, φ x < 1 := fun x hx =>
+    (hφ₂ x).trans_lt (gauge_lt_one_of_mem_of_isOpen hs₂ hx)
+  refine ⟨⟨φ, ?_⟩, hφ₃, hφ₄⟩
+  refine
+    φ.continuous_of_nonzero_on_open _ (hs₂.vadd (-x₀)) (Nonempty.vadd_set ⟨0, hs₀⟩)
+      (vadd_set_subset_iff.mpr fun x hx => ?_)
+  change φ (-x₀ + x) ≠ 0
+  rw [map_add, map_neg]
+  specialize hφ₄ x hx
+  linarith
   rintro ⟨x, hx⟩
   obtain ⟨y, rfl⟩ := Submodule.mem_span_singleton.1 hx
   rw [LinearPMap.mkSpanSingleton'_apply]
   simp only [mul_one, Algebra.id.smul_eq_mul, Submodule.coe_mk]
   obtain h | h := le_or_lt y 0
-  · exact h.trans (gauge_nonneg _)
-  · rw [gauge_smul_of_nonneg h.le, smul_eq_mul, le_mul_iff_one_le_right h]
-    exact
-      one_le_gauge_of_not_mem (hs₁.starConvex hs₀)
-        (absorbent_nhds_zero <| hs₂.mem_nhds hs₀).absorbs hx₀
+  exact h.trans (gauge_nonneg _)
+  rw [gauge_smul_of_nonneg h.le, smul_eq_mul, le_mul_iff_one_le_right h]
+  exact
+    one_le_gauge_of_not_mem (hs₁.starConvex hs₀)
+      (absorbent_nhds_zero <| hs₂.mem_nhds hs₀).absorbs hx₀
 
 variable [TopologicalSpace E] [AddCommGroup E] [TopologicalAddGroup E] [Module ℝ E]
   [ContinuousSMul ℝ E] {s t : Set E} {x y : E}
@@ -82,9 +82,9 @@ there is a continuous linear functional which separates them. -/
 theorem geometric_hahn_banach_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht : Convex ℝ t)
     (disj : Disjoint s t) : ∃ (f : E →L[ℝ] ℝ) (u : ℝ), (∀ a ∈ s, f a < u) ∧ ∀ b ∈ t, u ≤ f b := by
   obtain rfl | ⟨a₀, ha₀⟩ := s.eq_empty_or_nonempty
-  · exact ⟨0, 0, by simp, fun b _hb => le_rfl⟩
+  exact ⟨0, 0, by simp, fun b _hb => le_rfl⟩
   obtain rfl | ⟨b₀, hb₀⟩ := t.eq_empty_or_nonempty
-  · exact ⟨0, 1, fun a _ha => zero_lt_one, by simp⟩
+  exact ⟨0, 1, fun a _ha => zero_lt_one, by simp⟩
   let x₀ := b₀ - a₀
   let C := x₀ +ᵥ (s - t)
   have : (0 : E) ∈ C :=
@@ -102,12 +102,12 @@ theorem geometric_hahn_banach_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht
     simp only [f.map_add, f.map_sub, hf₁] at this
     linarith
   refine ⟨f, sInf (f '' t), image_subset_iff.1 (?_ : f '' s ⊆ Iio (sInf (f '' t))), fun b hb => ?_⟩
-  · rw [← interior_Iic]
-    refine interior_maximal (image_subset_iff.2 fun a ha => ?_) (f.isOpenMap_of_ne_zero ?_ _ hs₂)
-    · exact le_csInf (Nonempty.image _ ⟨_, hb₀⟩) (forall_mem_image.2 <| forall_le _ ha)
-    · rintro rfl
-      simp at hf₁
-  · exact csInf_le ⟨f a₀, forall_mem_image.2 <| forall_le _ ha₀⟩ (mem_image_of_mem _ hb)
+  rw [← interior_Iic]
+  refine interior_maximal (image_subset_iff.2 fun a ha => ?_) (f.isOpenMap_of_ne_zero ?_ _ hs₂)
+  exact le_csInf (Nonempty.image _ ⟨_, hb₀⟩) (forall_mem_image.2 <| forall_le _ ha)
+  rintro rfl
+  simp at hf₁
+  exact csInf_le ⟨f a₀, forall_mem_image.2 <| forall_le _ ha₀⟩ (mem_image_of_mem _ hb)
 
 theorem geometric_hahn_banach_open_point (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (disj : x ∉ s) :
     ∃ f : E →L[ℝ] ℝ, ∀ a ∈ s, f a < f x :=
@@ -124,9 +124,9 @@ theorem geometric_hahn_banach_open_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s
     (ht₃ : IsOpen t) (disj : Disjoint s t) :
     ∃ (f : E →L[ℝ] ℝ) (u : ℝ), (∀ a ∈ s, f a < u) ∧ ∀ b ∈ t, u < f b := by
   obtain rfl | ⟨a₀, ha₀⟩ := s.eq_empty_or_nonempty
-  · exact ⟨0, -1, by simp, fun b _hb => by norm_num⟩
+  exact ⟨0, -1, by simp, fun b _hb => by norm_num⟩
   obtain rfl | ⟨b₀, hb₀⟩ := t.eq_empty_or_nonempty
-  · exact ⟨0, 1, fun a _ha => by norm_num, by simp⟩
+  exact ⟨0, 1, fun a _ha => by norm_num, by simp⟩
   obtain ⟨f, s, hf₁, hf₂⟩ := geometric_hahn_banach_open hs₁ hs₂ ht₁ disj
   have hf : IsOpenMap f
   refine f.isOpenMap_of_ne_zero ?_
@@ -148,9 +148,9 @@ theorem geometric_hahn_banach_compact_closed (hs₁ : Convex ℝ s) (hs₂ : IsC
     (ht₁ : Convex ℝ t) (ht₂ : IsClosed t) (disj : Disjoint s t) :
     ∃ (f : E →L[ℝ] ℝ) (u v : ℝ), (∀ a ∈ s, f a < u) ∧ u < v ∧ ∀ b ∈ t, v < f b := by
   obtain rfl | hs := s.eq_empty_or_nonempty
-  · exact ⟨0, -2, -1, by simp, by norm_num, fun b _hb => by norm_num⟩
+  exact ⟨0, -2, -1, by simp, by norm_num, fun b _hb => by norm_num⟩
   obtain rfl | _ht := t.eq_empty_or_nonempty
-  · exact ⟨0, 1, 2, fun a _ha => by norm_num, by norm_num, by simp⟩
+  exact ⟨0, 1, 2, fun a _ha => by norm_num, by norm_num, by simp⟩
   obtain ⟨U, V, hU, hV, hU₁, hV₁, sU, tV, disj'⟩ := disj.exists_open_convexes hs₁ hs₂ ht₁ ht₂
   obtain ⟨f, u, hf₁, hf₂⟩ := geometric_hahn_banach_open_open hU₁ hU hV₁ hV disj'
   obtain ⟨x, hx₁, hx₂⟩ := hs₂.exists_isMaxOn hs f.continuous.continuousOn

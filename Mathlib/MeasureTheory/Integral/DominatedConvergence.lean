@@ -57,10 +57,10 @@ theorem tendsto_integral_of_dominated_convergence {F : ℕ → α → G} {f : α
     (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => F n a) atTop (𝓝 (f a))) :
     Tendsto (fun n => ∫ a, F n a ∂μ) atTop (𝓝 <| ∫ a, f a ∂μ) := by
   by_cases hG : CompleteSpace G
-  · simp only [integral, hG, L1.integral]
-    exact tendsto_setToFun_of_dominated_convergence (dominatedFinMeasAdditive_weightedSMul μ)
-      bound F_measurable bound_integrable h_bound h_lim
-  · simp [integral, hG]
+  simp only [integral, hG, L1.integral]
+  exact tendsto_setToFun_of_dominated_convergence (dominatedFinMeasAdditive_weightedSMul μ)
+    bound F_measurable bound_integrable h_bound h_lim
+  simp [integral, hG]
 
 /-- Lebesgue dominated convergence theorem for filters with a countable basis -/
 theorem tendsto_integral_filter_of_dominated_convergence {ι} {l : Filter ι} [l.IsCountablyGenerated]
@@ -69,10 +69,10 @@ theorem tendsto_integral_filter_of_dominated_convergence {ι} {l : Filter ι} [l
     (h_lim : ∀ᵐ a ∂μ, Tendsto (fun n => F n a) l (𝓝 (f a))) :
     Tendsto (fun n => ∫ a, F n a ∂μ) l (𝓝 <| ∫ a, f a ∂μ) := by
   by_cases hG : CompleteSpace G
-  · simp only [integral, hG, L1.integral]
-    exact tendsto_setToFun_filter_of_dominated_convergence (dominatedFinMeasAdditive_weightedSMul μ)
-      bound hF_meas h_bound bound_integrable h_lim
-  · simp [integral, hG, tendsto_const_nhds]
+  simp only [integral, hG, L1.integral]
+  exact tendsto_setToFun_filter_of_dominated_convergence (dominatedFinMeasAdditive_weightedSMul μ)
+    bound hF_meas h_bound bound_integrable h_lim
+  simp [integral, hG, tendsto_const_nhds]
 
 /-- Lebesgue dominated convergence theorem for series. -/
 theorem hasSum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι → α → G} {f : α → G}
@@ -94,19 +94,19 @@ theorem hasSum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι →
   simp only [HasSum, ← integral_finset_sum _ fun n _ => hF_integrable n]
   refine tendsto_integral_filter_of_dominated_convergence
       (fun a => ∑' n, bound n a) ?_ ?_ bound_integrable h_lim
-  · exact eventually_of_forall fun s => s.aestronglyMeasurable_sum fun n _ => hF_meas n
-  · filter_upwards with s
-    filter_upwards [eventually_countable_forall.2 h_bound, hb_nonneg, bound_summable]
-      with a hFa ha0 has
-    calc
-      ‖∑ n ∈ s, F n a‖ ≤ ∑ n ∈ s, bound n a := norm_sum_le_of_le _ fun n _ => hFa n
-      _ ≤ ∑' n, bound n a := sum_le_tsum _ (fun n _ => ha0 n) has
+  exact eventually_of_forall fun s => s.aestronglyMeasurable_sum fun n _ => hF_meas n
+  filter_upwards with s
+  filter_upwards [eventually_countable_forall.2 h_bound, hb_nonneg, bound_summable]
+    with a hFa ha0 has
+  calc
+    ‖∑ n ∈ s, F n a‖ ≤ ∑ n ∈ s, bound n a := norm_sum_le_of_le _ fun n _ => hFa n
+    _ ≤ ∑' n, bound n a := sum_le_tsum _ (fun n _ => ha0 n) has
 
 theorem integral_tsum {ι} [Countable ι] {f : ι → α → G} (hf : ∀ i, AEStronglyMeasurable (f i) μ)
     (hf' : ∑' i, ∫⁻ a : α, ‖f i a‖₊ ∂μ ≠ ∞) :
     ∫ a : α, ∑' i, f i a ∂μ = ∑' i, ∫ a : α, f i a ∂μ := by
   by_cases hG : CompleteSpace G; swap
-  · simp [integral, hG]
+  simp [integral, hG]
   have hf'' : ∀ i, AEMeasurable (fun x => (‖f i x‖₊ : ℝ≥0∞)) μ := fun i => (hf i).ennnorm
   have hhh : ∀ᵐ a : α ∂μ, Summable fun n => (‖f n a‖₊ : ℝ)
   rw [← lintegral_tsum hf''] at hf'
@@ -116,40 +116,40 @@ theorem integral_tsum {ι} [Countable ι] {f : ι → α → G} (hf : ∀ i, AES
   exact hx.ne
   convert (MeasureTheory.hasSum_integral_of_dominated_convergence (fun i a => ‖f i a‖₊) hf _ hhh
           ⟨_, _⟩ _).tsum_eq.symm
-  · intro n
-    filter_upwards with x
-    rfl
-  · simp_rw [← NNReal.coe_tsum]
-    rw [aestronglyMeasurable_iff_aemeasurable]
-    apply AEMeasurable.coe_nnreal_real
-    apply AEMeasurable.nnreal_tsum
-    exact fun i => (hf i).nnnorm.aemeasurable
-  · dsimp [HasFiniteIntegral]
-    have : ∫⁻ a, ∑' n, ‖f n a‖₊ ∂μ < ⊤
-    rwa [lintegral_tsum hf'', lt_top_iff_ne_top]
-    convert this using 1
-    apply lintegral_congr_ae
-    simp_rw [← coe_nnnorm, ← NNReal.coe_tsum, NNReal.nnnorm_eq]
-    filter_upwards [hhh] with a ha
-    exact ENNReal.coe_tsum (NNReal.summable_coe.mp ha)
-  · filter_upwards [hhh] with x hx
-    exact hx.of_norm.hasSum
+  intro n
+  filter_upwards with x
+  rfl
+  simp_rw [← NNReal.coe_tsum]
+  rw [aestronglyMeasurable_iff_aemeasurable]
+  apply AEMeasurable.coe_nnreal_real
+  apply AEMeasurable.nnreal_tsum
+  exact fun i => (hf i).nnnorm.aemeasurable
+  dsimp [HasFiniteIntegral]
+  have : ∫⁻ a, ∑' n, ‖f n a‖₊ ∂μ < ⊤
+  rwa [lintegral_tsum hf'', lt_top_iff_ne_top]
+  convert this using 1
+  apply lintegral_congr_ae
+  simp_rw [← coe_nnnorm, ← NNReal.coe_tsum, NNReal.nnnorm_eq]
+  filter_upwards [hhh] with a ha
+  exact ENNReal.coe_tsum (NNReal.summable_coe.mp ha)
+  filter_upwards [hhh] with x hx
+  exact hx.of_norm.hasSum
 
 lemma hasSum_integral_of_summable_integral_norm {ι} [Countable ι] {F : ι → α → E}
     (hF_int : ∀ i : ι, Integrable (F i) μ) (hF_sum : Summable fun i ↦ ∫ a, ‖F i a‖ ∂μ) :
     HasSum (∫ a, F · a ∂μ) (∫ a, (∑' i, F i a) ∂μ) := by
   by_cases hE : CompleteSpace E; swap
-  · simp [integral, hE, hasSum_zero]
+  simp [integral, hE, hasSum_zero]
   rw [integral_tsum (fun i ↦ (hF_int i).1)]
-  · exact (hF_sum.of_norm_bounded _ fun i ↦ norm_integral_le_integral_norm _).hasSum
+  exact (hF_sum.of_norm_bounded _ fun i ↦ norm_integral_le_integral_norm _).hasSum
   have (i : ι) : ∫⁻ (a : α), ‖F i a‖₊ ∂μ = ‖(∫ a : α, ‖F i a‖ ∂μ)‖₊
   rw [lintegral_coe_eq_integral _ (hF_int i).norm, coe_nnreal_eq, coe_nnnorm,
     Real.norm_of_nonneg (integral_nonneg (fun a ↦ norm_nonneg (F i a)))]
   simp only [coe_nnnorm]
   rw [funext this, ← ENNReal.coe_tsum]
-  · apply coe_ne_top
-  · simp_rw [← NNReal.summable_coe, coe_nnnorm]
-    exact hF_sum.abs
+  apply coe_ne_top
+  simp_rw [← NNReal.summable_coe, coe_nnnorm]
+  exact hF_sum.abs
 
 lemma integral_tsum_of_summable_integral_norm {ι} [Countable ι] {F : ι → α → E}
     (hF_int : ∀ i : ι, Integrable (F i) μ) (hF_sum : Summable fun i ↦ ∫ a, ‖F i a‖ ∂μ) :
@@ -173,15 +173,15 @@ theorem _root_.Antitone.tendsto_setIntegral (hsm : ∀ i, MeasurableSet (s i)) (
   rw [h_int_eq]
   rw [← integral_indicator (MeasurableSet.iInter hsm)]
   refine tendsto_integral_of_dominated_convergence bound ?_ ?_ ?_ ?_
-  · intro n
-    rw [aestronglyMeasurable_indicator_iff (hsm n)]
-    exact (IntegrableOn.mono_set hfi (h_anti (zero_le n))).1
-  · rw [integrable_indicator_iff (hsm 0)]
-    exact hfi.norm
-  · simp_rw [norm_indicator_eq_indicator_norm]
-    refine fun n => eventually_of_forall fun x => ?_
-    exact indicator_le_indicator_of_subset (h_anti (zero_le n)) (fun a => norm_nonneg _) _
-  · filter_upwards [] with a using le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)
+  intro n
+  rw [aestronglyMeasurable_indicator_iff (hsm n)]
+  exact (IntegrableOn.mono_set hfi (h_anti (zero_le n))).1
+  rw [integrable_indicator_iff (hsm 0)]
+  exact hfi.norm
+  simp_rw [norm_indicator_eq_indicator_norm]
+  refine fun n => eventually_of_forall fun x => ?_
+  exact indicator_le_indicator_of_subset (h_anti (zero_le n)) (fun a => norm_nonneg _) _
+  filter_upwards [] with a using le_trans (h_anti.tendsto_indicator _ _ _) (pure_le_nhds _)
 
 @[deprecated (since := "2024-04-17")]
 alias _root_.Antitone.tendsto_set_integral :=  _root_.Antitone.tendsto_setIntegral
@@ -233,20 +233,20 @@ theorem hasSum_intervalIntegral_of_summable_norm [Countable ι] {f : ι → C(�
     (hf_sum : Summable fun i : ι => ‖(f i).restrict (⟨uIcc a b, isCompact_uIcc⟩ : Compacts ℝ)‖) :
     HasSum (fun i : ι => ∫ x in a..b, f i x) (∫ x in a..b, ∑' i : ι, f i x) := by
   by_cases hE : CompleteSpace E; swap
-  · simp [intervalIntegral, integral, hE, hasSum_zero]
+  simp [intervalIntegral, integral, hE, hasSum_zero]
   apply hasSum_integral_of_dominated_convergence
     (fun i (x : ℝ) => ‖(f i).restrict ↑(⟨uIcc a b, isCompact_uIcc⟩ : Compacts ℝ)‖)
     (fun i => (map_continuous <| f i).aestronglyMeasurable)
-  · intro i; filter_upwards with x hx
-    apply ContinuousMap.norm_coe_le_norm ((f i).restrict _) ⟨x, _⟩
-    exact ⟨hx.1.le, hx.2⟩
-  · exact ae_of_all _ fun x _ => hf_sum
-  · exact intervalIntegrable_const
-  · refine ae_of_all _ fun x hx => Summable.hasSum ?_
-    let x : (⟨uIcc a b, isCompact_uIcc⟩ : Compacts ℝ) := ⟨x, ⟨hx.1.le, hx.2⟩⟩
-    have := hf_sum.of_norm
-    simpa only [Compacts.coe_mk, ContinuousMap.restrict_apply]
-      using ContinuousMap.summable_apply this x
+  intro i; filter_upwards with x hx
+  apply ContinuousMap.norm_coe_le_norm ((f i).restrict _) ⟨x, _⟩
+  exact ⟨hx.1.le, hx.2⟩
+  exact ae_of_all _ fun x _ => hf_sum
+  exact intervalIntegrable_const
+  refine ae_of_all _ fun x hx => Summable.hasSum ?_
+  let x : (⟨uIcc a b, isCompact_uIcc⟩ : Compacts ℝ) := ⟨x, ⟨hx.1.le, hx.2⟩⟩
+  have := hf_sum.of_norm
+  simpa only [Compacts.coe_mk, ContinuousMap.restrict_apply]
+    using ContinuousMap.summable_apply this x
 
 theorem tsum_intervalIntegral_eq_of_summable_norm [Countable ι] {f : ι → C(ℝ, E)}
     (hf_sum : Summable fun i : ι => ‖(f i).restrict (⟨uIcc a b, isCompact_uIcc⟩ : Compacts ℝ)‖) :
@@ -312,66 +312,66 @@ theorem continuousWithinAt_primitive (hb₀ : μ {b₀} = 0)
     (h_int : IntervalIntegrable f μ (min a b₁) (max a b₂)) :
     ContinuousWithinAt (fun b => ∫ x in a..b, f x ∂μ) (Icc b₁ b₂) b₀ := by
   by_cases h₀ : b₀ ∈ Icc b₁ b₂
-  · have h₁₂ : b₁ ≤ b₂ := h₀.1.trans h₀.2
-    have min₁₂ : min b₁ b₂ = b₁ := min_eq_left h₁₂
-    have h_int' : ∀ {x}, x ∈ Icc b₁ b₂ → IntervalIntegrable f μ b₁ x
-    rintro x ⟨h₁, h₂⟩
+  have h₁₂ : b₁ ≤ b₂ := h₀.1.trans h₀.2
+  have min₁₂ : min b₁ b₂ = b₁ := min_eq_left h₁₂
+  have h_int' : ∀ {x}, x ∈ Icc b₁ b₂ → IntervalIntegrable f μ b₁ x
+  rintro x ⟨h₁, h₂⟩
+  apply h_int.mono_set
+  apply uIcc_subset_uIcc
+  exact ⟨min_le_of_left_le (min_le_right a b₁),
+    h₁.trans (h₂.trans <| le_max_of_le_right <| le_max_right _ _)⟩
+  exact ⟨min_le_of_left_le <| (min_le_right _ _).trans h₁,
+    le_max_of_le_right <| h₂.trans <| le_max_right _ _⟩
+  have : ∀ b ∈ Icc b₁ b₂,
+      ∫ x in a..b, f x ∂μ = (∫ x in a..b₁, f x ∂μ) + ∫ x in b₁..b, f x ∂μ := by
+    rintro b ⟨h₁, h₂⟩
+    rw [← integral_add_adjacent_intervals _ (h_int' ⟨h₁, h₂⟩)]
     apply h_int.mono_set
     apply uIcc_subset_uIcc
-    · exact ⟨min_le_of_left_le (min_le_right a b₁),
-        h₁.trans (h₂.trans <| le_max_of_le_right <| le_max_right _ _)⟩
-    · exact ⟨min_le_of_left_le <| (min_le_right _ _).trans h₁,
-        le_max_of_le_right <| h₂.trans <| le_max_right _ _⟩
-    have : ∀ b ∈ Icc b₁ b₂,
-        ∫ x in a..b, f x ∂μ = (∫ x in a..b₁, f x ∂μ) + ∫ x in b₁..b, f x ∂μ := by
-      rintro b ⟨h₁, h₂⟩
-      rw [← integral_add_adjacent_intervals _ (h_int' ⟨h₁, h₂⟩)]
-      apply h_int.mono_set
-      apply uIcc_subset_uIcc
-      · exact ⟨min_le_of_left_le (min_le_left a b₁), le_max_of_le_right (le_max_left _ _)⟩
-      · exact ⟨min_le_of_left_le (min_le_right _ _),
-          le_max_of_le_right (h₁.trans <| h₂.trans (le_max_right a b₂))⟩
-    apply ContinuousWithinAt.congr _ this (this _ h₀); clear this
-    refine continuousWithinAt_const.add ?_
-    have :
-      (fun b => ∫ x in b₁..b, f x ∂μ) =ᶠ[𝓝[Icc b₁ b₂] b₀] fun b =>
-        ∫ x in b₁..b₂, indicator {x | x ≤ b} f x ∂μ := by
-      apply eventuallyEq_of_mem self_mem_nhdsWithin
-      exact fun b b_in => (integral_indicator b_in).symm
-    apply ContinuousWithinAt.congr_of_eventuallyEq _ this (integral_indicator h₀).symm
-    have : IntervalIntegrable (fun x => ‖f x‖) μ b₁ b₂ :=
-      IntervalIntegrable.norm (h_int' <| right_mem_Icc.mpr h₁₂)
-    refine continuousWithinAt_of_dominated_interval ?_ ?_ this ?_ <;> clear this
-    · filter_upwards [self_mem_nhdsWithin]
-      intro x hx
-      erw [aestronglyMeasurable_indicator_iff, Measure.restrict_restrict, Iic_inter_Ioc_of_le]
-      · rw [min₁₂]
-        exact (h_int' hx).1.aestronglyMeasurable
-      · exact le_max_of_le_right hx.2
-      exacts [measurableSet_Iic, measurableSet_Iic]
-    · filter_upwards with x; filter_upwards with t
-      dsimp [indicator]
-      split_ifs <;> simp
-    · have : ∀ᵐ t ∂μ, t < b₀ ∨ b₀ < t := by
-        filter_upwards [compl_mem_ae_iff.mpr hb₀] with x hx using Ne.lt_or_lt hx
-      apply this.mono
-      rintro x₀ (hx₀ | hx₀) -
-      · have : ∀ᶠ x in 𝓝[Icc b₁ b₂] b₀, {t : ℝ | t ≤ x}.indicator f x₀ = f x₀ := by
-          apply mem_nhdsWithin_of_mem_nhds
-          apply Eventually.mono (Ioi_mem_nhds hx₀)
-          intro x hx
-          simp [hx.le]
-        apply continuousWithinAt_const.congr_of_eventuallyEq this
-        simp [hx₀.le]
-      · have : ∀ᶠ x in 𝓝[Icc b₁ b₂] b₀, {t : ℝ | t ≤ x}.indicator f x₀ = 0 := by
-          apply mem_nhdsWithin_of_mem_nhds
-          apply Eventually.mono (Iio_mem_nhds hx₀)
-          intro x hx
-          simp [hx]
-        apply continuousWithinAt_const.congr_of_eventuallyEq this
-        simp [hx₀]
-  · apply continuousWithinAt_of_not_mem_closure
-    rwa [closure_Icc]
+    exact ⟨min_le_of_left_le (min_le_left a b₁), le_max_of_le_right (le_max_left _ _)⟩
+    exact ⟨min_le_of_left_le (min_le_right _ _),
+      le_max_of_le_right (h₁.trans <| h₂.trans (le_max_right a b₂))⟩
+  apply ContinuousWithinAt.congr _ this (this _ h₀); clear this
+  refine continuousWithinAt_const.add ?_
+  have :
+    (fun b => ∫ x in b₁..b, f x ∂μ) =ᶠ[𝓝[Icc b₁ b₂] b₀] fun b =>
+      ∫ x in b₁..b₂, indicator {x | x ≤ b} f x ∂μ := by
+    apply eventuallyEq_of_mem self_mem_nhdsWithin
+    exact fun b b_in => (integral_indicator b_in).symm
+  apply ContinuousWithinAt.congr_of_eventuallyEq _ this (integral_indicator h₀).symm
+  have : IntervalIntegrable (fun x => ‖f x‖) μ b₁ b₂ :=
+    IntervalIntegrable.norm (h_int' <| right_mem_Icc.mpr h₁₂)
+  refine continuousWithinAt_of_dominated_interval ?_ ?_ this ?_ <;> clear this
+  · filter_upwards [self_mem_nhdsWithin]
+    intro x hx
+    erw [aestronglyMeasurable_indicator_iff, Measure.restrict_restrict, Iic_inter_Ioc_of_le]
+    rw [min₁₂]
+    exact (h_int' hx).1.aestronglyMeasurable
+    exact le_max_of_le_right hx.2
+    exacts [measurableSet_Iic, measurableSet_Iic]
+  filter_upwards with x; filter_upwards with t
+  dsimp [indicator]
+  split_ifs <;> simp
+  have : ∀ᵐ t ∂μ, t < b₀ ∨ b₀ < t := by
+    filter_upwards [compl_mem_ae_iff.mpr hb₀] with x hx using Ne.lt_or_lt hx
+  apply this.mono
+  rintro x₀ (hx₀ | hx₀) -
+  have : ∀ᶠ x in 𝓝[Icc b₁ b₂] b₀, {t : ℝ | t ≤ x}.indicator f x₀ = f x₀ := by
+    apply mem_nhdsWithin_of_mem_nhds
+    apply Eventually.mono (Ioi_mem_nhds hx₀)
+    intro x hx
+    simp [hx.le]
+  apply continuousWithinAt_const.congr_of_eventuallyEq this
+  simp [hx₀.le]
+  have : ∀ᶠ x in 𝓝[Icc b₁ b₂] b₀, {t : ℝ | t ≤ x}.indicator f x₀ = 0 := by
+    apply mem_nhdsWithin_of_mem_nhds
+    apply Eventually.mono (Iio_mem_nhds hx₀)
+    intro x hx
+    simp [hx]
+  apply continuousWithinAt_const.congr_of_eventuallyEq this
+  simp [hx₀]
+  apply continuousWithinAt_of_not_mem_closure
+  rwa [closure_Icc]
 
 theorem continuousAt_parametric_primitive_of_dominated [FirstCountableTopology X]
     {F : X → ℝ → E} (bound : ℝ → ℝ) (a b : ℝ)
@@ -402,66 +402,66 @@ theorem continuousAt_parametric_primitive_of_dominated [FirstCountableTopology X
         (ae_restrict_of_ae_restrict_of_subset (hsub ha₀ hb₀) hx)
     rw [intervalIntegral.integral_sub, add_assoc, add_sub_cancel,
       intervalIntegral.integral_add_adjacent_intervals]
-    · exact hiF hx ha₀ hb₀
-    · exact hiF hx hb₀ ht
-    · exact hiF hx hb₀ ht
-    · exact hiF hx₀ hb₀ ht
+    exact hiF hx ha₀ hb₀
+    exact hiF hx hb₀ ht
+    exact hiF hx hb₀ ht
+    exact hiF hx₀ hb₀ ht
   rw [continuousAt_congr this]; clear this
   refine (ContinuousAt.add ?_ ?_).add ?_
-  · exact (intervalIntegral.continuousAt_of_dominated_interval
-        (eventually_of_forall fun x ↦ (hF_meas x).mono_set <| hsub ha₀ hb₀)
-          (h_bound.mono fun x hx ↦
-            ae_imp_of_ae_restrict <| ae_restrict_of_ae_restrict_of_subset (hsub ha₀ hb₀) hx)
-          (bound_integrable.mono_set_ae <| eventually_of_forall <| hsub ha₀ hb₀) <|
-          ae_imp_of_ae_restrict <| ae_restrict_of_ae_restrict_of_subset (hsub ha₀ hb₀) h_cont).fst'
-  · refine (?_ : ContinuousAt (fun t ↦ ∫ s in b₀..t, F x₀ s ∂μ) b₀).snd'
-    apply ContinuousWithinAt.continuousAt _ (Icc_mem_nhds hb₀.1 hb₀.2)
-    apply intervalIntegral.continuousWithinAt_primitive hμb₀
-    rw [min_eq_right hb₀.1.le, max_eq_right hb₀.2.le]
-    exact bound_integrable.mono_fun' (hF_meas x₀) hx₀
-  · suffices Tendsto (fun x : X × ℝ ↦ ∫ s in b₀..x.2, F x.1 s - F x₀ s ∂μ) (𝓝 (x₀, b₀)) (𝓝 0) by
-      simpa [ContinuousAt]
-    have : ∀ᶠ p : X × ℝ in 𝓝 (x₀, b₀),
-        ‖∫ s in b₀..p.2, F p.1 s - F x₀ s ∂μ‖ ≤ |∫ s in b₀..p.2, 2 * bound s ∂μ| := by
-      rw [nhds_prod_eq]
-      refine (h_bound.prod_mk Ioo_nhds).mono ?_
-      rintro ⟨x, t⟩ ⟨hx : ∀ᵐ t ∂μ.restrict (Ι a b), ‖F x t‖ ≤ bound t, ht : t ∈ Ioo a b⟩
-      have H : ∀ᵐ t : ℝ ∂μ.restrict (Ι b₀ t), ‖F x t - F x₀ t‖ ≤ 2 * bound t := by
-        apply (ae_restrict_of_ae_restrict_of_subset (hsub hb₀ ht) (hx.and hx₀)).mono
-        rintro s ⟨hs₁, hs₂⟩
-        calc
-          ‖F x s - F x₀ s‖ ≤ ‖F x s‖ + ‖F x₀ s‖ := norm_sub_le _ _
-          _ ≤ 2 * bound s := by linarith only [hs₁, hs₂]
-      exact intervalIntegral.norm_integral_le_of_norm_le H
-        ((bound_integrable.mono_set' <| hsub hb₀ ht).const_mul 2)
-    apply squeeze_zero_norm' this
-    have : Tendsto (fun t ↦ ∫ s in b₀..t, 2 * bound s ∂μ) (𝓝 b₀) (𝓝 0) := by
-      suffices ContinuousAt (fun t ↦ ∫ s in b₀..t, 2 * bound s ∂μ) b₀ by
-        simpa [ContinuousAt] using this
-      apply ContinuousWithinAt.continuousAt _ Icc_nhds
-      apply intervalIntegral.continuousWithinAt_primitive hμb₀
-      apply IntervalIntegrable.const_mul
-      apply bound_integrable.mono_set'
-      rw [min_eq_right hb₀.1.le, max_eq_right hb₀.2.le]
+  exact (intervalIntegral.continuousAt_of_dominated_interval
+      (eventually_of_forall fun x ↦ (hF_meas x).mono_set <| hsub ha₀ hb₀)
+        (h_bound.mono fun x hx ↦
+          ae_imp_of_ae_restrict <| ae_restrict_of_ae_restrict_of_subset (hsub ha₀ hb₀) hx)
+        (bound_integrable.mono_set_ae <| eventually_of_forall <| hsub ha₀ hb₀) <|
+        ae_imp_of_ae_restrict <| ae_restrict_of_ae_restrict_of_subset (hsub ha₀ hb₀) h_cont).fst'
+  refine (?_ : ContinuousAt (fun t ↦ ∫ s in b₀..t, F x₀ s ∂μ) b₀).snd'
+  apply ContinuousWithinAt.continuousAt _ (Icc_mem_nhds hb₀.1 hb₀.2)
+  apply intervalIntegral.continuousWithinAt_primitive hμb₀
+  rw [min_eq_right hb₀.1.le, max_eq_right hb₀.2.le]
+  exact bound_integrable.mono_fun' (hF_meas x₀) hx₀
+  suffices Tendsto (fun x : X × ℝ ↦ ∫ s in b₀..x.2, F x.1 s - F x₀ s ∂μ) (𝓝 (x₀, b₀)) (𝓝 0) by
+    simpa [ContinuousAt]
+  have : ∀ᶠ p : X × ℝ in 𝓝 (x₀, b₀),
+      ‖∫ s in b₀..p.2, F p.1 s - F x₀ s ∂μ‖ ≤ |∫ s in b₀..p.2, 2 * bound s ∂μ| := by
     rw [nhds_prod_eq]
-    exact (continuous_abs.tendsto' _ _ abs_zero).comp (this.comp tendsto_snd)
+    refine (h_bound.prod_mk Ioo_nhds).mono ?_
+    rintro ⟨x, t⟩ ⟨hx : ∀ᵐ t ∂μ.restrict (Ι a b), ‖F x t‖ ≤ bound t, ht : t ∈ Ioo a b⟩
+    have H : ∀ᵐ t : ℝ ∂μ.restrict (Ι b₀ t), ‖F x t - F x₀ t‖ ≤ 2 * bound t := by
+      apply (ae_restrict_of_ae_restrict_of_subset (hsub hb₀ ht) (hx.and hx₀)).mono
+      rintro s ⟨hs₁, hs₂⟩
+      calc
+        ‖F x s - F x₀ s‖ ≤ ‖F x s‖ + ‖F x₀ s‖ := norm_sub_le _ _
+        _ ≤ 2 * bound s := by linarith only [hs₁, hs₂]
+    exact intervalIntegral.norm_integral_le_of_norm_le H
+      ((bound_integrable.mono_set' <| hsub hb₀ ht).const_mul 2)
+  apply squeeze_zero_norm' this
+  have : Tendsto (fun t ↦ ∫ s in b₀..t, 2 * bound s ∂μ) (𝓝 b₀) (𝓝 0) := by
+    suffices ContinuousAt (fun t ↦ ∫ s in b₀..t, 2 * bound s ∂μ) b₀ by
+      simpa [ContinuousAt] using this
+    apply ContinuousWithinAt.continuousAt _ Icc_nhds
+    apply intervalIntegral.continuousWithinAt_primitive hμb₀
+    apply IntervalIntegrable.const_mul
+    apply bound_integrable.mono_set'
+    rw [min_eq_right hb₀.1.le, max_eq_right hb₀.2.le]
+  rw [nhds_prod_eq]
+  exact (continuous_abs.tendsto' _ _ abs_zero).comp (this.comp tendsto_snd)
 
 variable [NoAtoms μ]
 
 theorem continuousOn_primitive (h_int : IntegrableOn f (Icc a b) μ) :
     ContinuousOn (fun x => ∫ t in Ioc a x, f t ∂μ) (Icc a b) := by
   by_cases h : a ≤ b
-  · have : ∀ x ∈ Icc a b, ∫ t in Ioc a x, f t ∂μ = ∫ t in a..x, f t ∂μ := by
-      intro x x_in
-      simp_rw [integral_of_le x_in.1]
-    rw [continuousOn_congr this]
-    intro x₀ _
-    refine continuousWithinAt_primitive (measure_singleton x₀) ?_
-    simp only [intervalIntegrable_iff_integrableOn_Ioc_of_le, min_eq_left, max_eq_right, h,
-      min_self]
-    exact h_int.mono Ioc_subset_Icc_self le_rfl
-  · rw [Icc_eq_empty h]
-    exact continuousOn_empty _
+  have : ∀ x ∈ Icc a b, ∫ t in Ioc a x, f t ∂μ = ∫ t in a..x, f t ∂μ := by
+    intro x x_in
+    simp_rw [integral_of_le x_in.1]
+  rw [continuousOn_congr this]
+  intro x₀ _
+  refine continuousWithinAt_primitive (measure_singleton x₀) ?_
+  simp only [intervalIntegrable_iff_integrableOn_Ioc_of_le, min_eq_left, max_eq_right, h,
+    min_self]
+  exact h_int.mono Ioc_subset_Icc_self le_rfl
+  rw [Icc_eq_empty h]
+  exact continuousOn_empty _
 
 theorem continuousOn_primitive_Icc (h_int : IntegrableOn f (Icc a b) μ) :
     ContinuousOn (fun x => ∫ t in Icc a x, f t ∂μ) (Icc a b) := by
@@ -569,51 +569,51 @@ theorem continuous_parametric_primitive_of_continuous
         + ‖∫ t in a₀..b₀, f p t ∂μ - ∫ t in a₀..b₀, f q t ∂μ‖ := norm_add_le _ _
   _ = ‖∫ t in b₀..s, f p t ∂μ‖ + ‖∫ t in a₀..b₀, (f p t - f q t) ∂μ‖ := by
       congr 2
-      · rw [integral_interval_sub_left (J _ _ _) (J _ _ _)]
-      · rw [integral_sub (J _ _ _) (J _ _ _)]
+      rw [integral_interval_sub_left (J _ _ _) (J _ _ _)]
+      rw [integral_sub (J _ _ _) (J _ _ _)]
   _ ≤ ∫ t in Ι b₀ s, ‖f p t‖ ∂μ + ∫ t in Ι a₀ b₀, ‖f p t - f q t‖ ∂μ := by
       gcongr
-      · exact norm_integral_le_integral_norm_Ioc
-      · exact norm_integral_le_integral_norm_Ioc
+      exact norm_integral_le_integral_norm_Ioc
+      exact norm_integral_le_integral_norm_Ioc
   _ ≤ ∫ t in Icc (b₀ - δ) (b₀ + δ), ‖f p t‖ ∂μ + ∫ t in Icc a b, ‖f p t - f q t‖ ∂μ := by
       gcongr
-      · apply setIntegral_mono_set
-        · exact (hf.uncurry_left _).norm.integrableOn_Icc
-        · exact eventually_of_forall (fun x ↦ norm_nonneg _)
-        · have : Ι b₀ s ⊆ Icc (b₀ - δ) (b₀ + δ) := by
-            apply uIoc_subset_uIcc.trans (uIcc_subset_Icc ?_ ⟨hs.1.le, hs.2.le⟩ )
-            simp [δpos.le]
-          exact eventually_of_forall this
-      · apply setIntegral_mono_set
-        · exact ((hf.uncurry_left _).sub (hf.uncurry_left _)).norm.integrableOn_Icc
-        · exact eventually_of_forall (fun x ↦ norm_nonneg _)
-        · have : Ι a₀ b₀ ⊆ Icc a b := uIoc_subset_uIcc.trans
-            (uIcc_subset_Icc ⟨a_lt.1.le, lt_b.1.le⟩ ⟨a_lt.2.le, lt_b.2.le⟩)
-          exact eventually_of_forall this
+      apply setIntegral_mono_set
+      exact (hf.uncurry_left _).norm.integrableOn_Icc
+      exact eventually_of_forall (fun x ↦ norm_nonneg _)
+      have : Ι b₀ s ⊆ Icc (b₀ - δ) (b₀ + δ) := by
+        apply uIoc_subset_uIcc.trans (uIcc_subset_Icc ?_ ⟨hs.1.le, hs.2.le⟩ )
+        simp [δpos.le]
+      exact eventually_of_forall this
+      apply setIntegral_mono_set
+      exact ((hf.uncurry_left _).sub (hf.uncurry_left _)).norm.integrableOn_Icc
+      exact eventually_of_forall (fun x ↦ norm_nonneg _)
+      have : Ι a₀ b₀ ⊆ Icc a b := uIoc_subset_uIcc.trans
+        (uIcc_subset_Icc ⟨a_lt.1.le, lt_b.1.le⟩ ⟨a_lt.2.le, lt_b.2.le⟩)
+      exact eventually_of_forall this
   _ ≤ ∫ t in Icc (b₀ - δ) (b₀ + δ), M + 1 ∂μ + ∫ _t in Icc a b, δ ∂μ := by
       gcongr
-      · apply setIntegral_mono_on
-        · exact (hf.uncurry_left _).norm.integrableOn_Icc
-        · exact continuous_const.integrableOn_Icc
-        · exact measurableSet_Icc
-        · intro x hx
-          calc ‖f p x‖ = ‖f q x + (f p x - f q x)‖ := by congr; abel
-          _ ≤ ‖f q x‖ + ‖f p x - f q x‖ := norm_add_le _ _
-          _ ≤ M + δ := by
-              gcongr
-              · apply hM
-                change (fun x ↦ ‖Function.uncurry f x‖) (q, x) ∈ _
-                apply mem_image_of_mem
-                simp only [singleton_prod, mem_image, Prod.mk.injEq, true_and, exists_eq_right]
-                exact h'δ hx
-              · exact le_of_lt (hv _ hp _ (h'δ hx))
-          _ ≤ M + 1 := by linarith
-      · apply setIntegral_mono_on
-        · exact ((hf.uncurry_left _).sub (hf.uncurry_left _)).norm.integrableOn_Icc
-        · exact continuous_const.integrableOn_Icc
-        · exact measurableSet_Icc
-        · intro x hx
-          exact le_of_lt (hv _ hp _ hx)
+      apply setIntegral_mono_on
+      exact (hf.uncurry_left _).norm.integrableOn_Icc
+      exact continuous_const.integrableOn_Icc
+      exact measurableSet_Icc
+      intro x hx
+      calc ‖f p x‖ = ‖f q x + (f p x - f q x)‖ := by congr; abel
+        _ ≤ ‖f q x‖ + ‖f p x - f q x‖ := norm_add_le _ _
+        _ ≤ M + δ := by
+            gcongr
+            apply hM
+            change (fun x ↦ ‖Function.uncurry f x‖) (q, x) ∈ _
+            apply mem_image_of_mem
+            simp only [singleton_prod, mem_image, Prod.mk.injEq, true_and, exists_eq_right]
+            exact h'δ hx
+            exact le_of_lt (hv _ hp _ (h'δ hx))
+        _ ≤ M + 1 := by linarith
+      apply setIntegral_mono_on
+      exact ((hf.uncurry_left _).sub (hf.uncurry_left _)).norm.integrableOn_Icc
+      exact continuous_const.integrableOn_Icc
+      exact measurableSet_Icc
+      intro x hx
+      exact le_of_lt (hv _ hp _ hx)
   _ = (M + 1) * (μ (Icc (b₀ - δ) (b₀ + δ))).toReal + δ * (μ (Icc a b)).toReal := by simp [mul_comm]
   _ < ε := h''δ
 

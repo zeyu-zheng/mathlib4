@@ -38,8 +38,8 @@ variable {a b c p q : ℚ}
 
 @[simp] lemma divInt_nonneg {a b : ℤ} (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a /. b := by
   obtain rfl | hb := hb.eq_or_lt
-  · simp
-    rfl
+  simp
+  rfl
   rwa [divInt_nonneg_iff_of_pos_right hb]
 
 @[simp] lemma mkRat_nonneg {a : ℤ} (ha : 0 ≤ a) (b : ℕ) : 0 ≤ mkRat a b := by
@@ -49,12 +49,12 @@ theorem ofScientific_nonneg (m : ℕ) (s : Bool) (e : ℕ) :
     0 ≤ Rat.ofScientific m s e := by
   rw [Rat.ofScientific]
   cases s
-  · rw [if_neg (by decide)]
-    refine num_nonneg.mp ?_
-    rw [num_natCast]
-    exact Int.natCast_nonneg _
-  · rw [if_pos rfl, normalize_eq_mkRat]
-    exact Rat.mkRat_nonneg (Int.natCast_nonneg _) _
+  rw [if_neg (by decide)]
+  refine num_nonneg.mp ?_
+  rw [num_natCast]
+  exact Int.natCast_nonneg _
+  rw [if_pos rfl, normalize_eq_mkRat]
+  exact Rat.mkRat_nonneg (Int.natCast_nonneg _) _
 
 instance _root_.NNRatCast.toOfScientific {K} [NNRatCast K] : OfScientific K where
   ofScientific (m : ℕ) (b : Bool) (d : ℕ) :=
@@ -93,37 +93,37 @@ protected theorem le_iff_sub_nonneg (a b : ℚ) : a ≤ b ↔ 0 ≤ b - a :=
       simp only [Bool.and_eq_true, decide_eq_true_eq, Bool.ite_eq_false_distrib,
         decide_eq_false_iff_not, not_lt, ite_eq_left_iff, not_and, not_le, ← num_nonneg]
       split_ifs with h h'
-      · rw [Rat.sub_def]
-        simp only [false_iff, not_le]
-        simp only [normalize_eq]
-        apply Int.ediv_neg'
-        · rw [sub_neg]
-          apply lt_of_lt_of_le
-          · apply mul_neg_of_neg_of_pos h.1
-            rwa [Int.natCast_pos, Nat.pos_iff_ne_zero]
-          · apply mul_nonneg h.2 (Int.natCast_nonneg _)
-        · simp only [Int.natCast_pos, Nat.pos_iff_ne_zero]
-          exact Nat.gcd_ne_zero_right (Nat.mul_ne_zero hb ha)
-      · simp only [divInt_ofNat, ← zero_iff_num_zero, mkRat_eq_zero hb] at h'
-        simp [h']
-      · simp only [Rat.sub_def, normalize_eq]
-        refine ⟨fun H => ?_, fun H _ => ?_⟩
-        · refine Int.ediv_nonneg ?_ (Int.natCast_nonneg _)
-          rw [sub_nonneg]
-          push_neg at h
-          obtain hb|hb := Ne.lt_or_lt h'
-          · apply H
-            intro H'
-            exact (hb.trans H').false.elim
-          · obtain ha|ha := le_or_lt na 0
-            · apply le_trans <| mul_nonpos_of_nonpos_of_nonneg ha (Int.natCast_nonneg _)
-              exact mul_nonneg hb.le (Int.natCast_nonneg _)
-            · exact H (fun _ => ha)
-        · rw [← sub_nonneg]
-          contrapose! H
-          apply Int.ediv_neg' H
-          simp only [Int.natCast_pos, Nat.pos_iff_ne_zero]
-          exact Nat.gcd_ne_zero_right (Nat.mul_ne_zero hb ha)
+      rw [Rat.sub_def]
+      simp only [false_iff, not_le]
+      simp only [normalize_eq]
+      apply Int.ediv_neg'
+      rw [sub_neg]
+      apply lt_of_lt_of_le
+      apply mul_neg_of_neg_of_pos h.1
+      rwa [Int.natCast_pos, Nat.pos_iff_ne_zero]
+      apply mul_nonneg h.2 (Int.natCast_nonneg _)
+      simp only [Int.natCast_pos, Nat.pos_iff_ne_zero]
+      exact Nat.gcd_ne_zero_right (Nat.mul_ne_zero hb ha)
+      simp only [divInt_ofNat, ← zero_iff_num_zero, mkRat_eq_zero hb] at h'
+      simp [h']
+      simp only [Rat.sub_def, normalize_eq]
+      refine ⟨fun H => ?_, fun H _ => ?_⟩
+      refine Int.ediv_nonneg ?_ (Int.natCast_nonneg _)
+      rw [sub_nonneg]
+      push_neg at h
+      obtain hb|hb := Ne.lt_or_lt h'
+      apply H
+      intro H'
+      exact (hb.trans H').false.elim
+      obtain ha|ha := le_or_lt na 0
+      apply le_trans <| mul_nonpos_of_nonpos_of_nonneg ha (Int.natCast_nonneg _)
+      exact mul_nonneg hb.le (Int.natCast_nonneg _)
+      exact H (fun _ => ha)
+      rw [← sub_nonneg]
+      contrapose! H
+      apply Int.ediv_neg' H
+      simp only [Int.natCast_pos, Nat.pos_iff_ne_zero]
+      exact Nat.gcd_ne_zero_right (Nat.mul_ne_zero hb ha)
 
 protected lemma divInt_le_divInt {a b c d : ℤ} (b0 : 0 < b) (d0 : 0 < d) :
     a /. b ≤ c /. d ↔ a * d ≤ c * b := by
@@ -225,9 +225,9 @@ theorem div_lt_div_iff_mul_lt_mul {a b c d : ℤ} (b_pos : 0 < b) (d_pos : 0 < d
     (a : ℚ) / b < c / d ↔ a * d < c * b := by
   simp only [lt_iff_le_not_le]
   apply and_congr
-  · simp [div_def', Rat.divInt_le_divInt b_pos d_pos]
-  · apply not_congr
-    simp [div_def', Rat.divInt_le_divInt d_pos b_pos]
+  simp [div_def', Rat.divInt_le_divInt b_pos d_pos]
+  apply not_congr
+  simp [div_def', Rat.divInt_le_divInt d_pos b_pos]
 
 theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.den := by simp [Rat.lt_def]
 

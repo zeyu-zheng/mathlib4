@@ -191,7 +191,7 @@ theorem M.dest_corec' {α : TypeVec.{u} n} {β : Type u} (g₀ : β → P.A)
 theorem M.dest_corec {α : TypeVec n} {β : Type u} (g : β → P (α.append1 β)) (x : β) :
     M.dest P (M.corec P g x) = appendFun id (M.corec P g) <$$> g x := by
   trans
-  · apply M.dest_corec'
+  apply M.dest_corec'
   cases' g x with a f; dsimp
   rw [MvPFunctor.map_eq]; congr
   conv_rhs => rw [← split_dropFun_lastFun f, appendFun_comp_splitFun]
@@ -239,8 +239,8 @@ theorem M.bisim {α : TypeVec n} (R : P.M α → P.M α → Prop)
       rcases M.bisim_lemma P e₂ with ⟨g₂', e₂', e₃, rfl⟩
       cases h'.symm.trans e₁'
       cases h'.symm.trans e₂'
-  · exact (congr_fun (congr_fun e₃ i) c : _)
-  · exact IH _ _ (h'' _)
+  exact (congr_fun (congr_fun e₃ i) c : _)
+  exact IH _ _ (h'' _)
 
 theorem M.bisim₀ {α : TypeVec n} (R : P.M α → P.M α → Prop) (h₀ : Equivalence R)
     (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y)
@@ -277,15 +277,15 @@ theorem M.bisim' {α : TypeVec n} (R : P.M α → P.M α → Prop)
     (h : ∀ x y, R x y → (id ::: Quot.mk R) <$$> M.dest _ x = (id ::: Quot.mk R) <$$> M.dest _ y)
     (x y) (r : R x y) : x = y := by
   have := M.bisim₀ P (EqvGen R) ?_ ?_
-  · solve_by_elim [EqvGen.rel]
-  · apply EqvGen.is_equivalence
-  · clear r x y
-    introv Hr
-    have : ∀ x y, R x y → EqvGen R x y := @EqvGen.rel _ R
-    induction Hr
-    · rw [← Quot.factor_mk_eq R (EqvGen R) this]
-      rwa [appendFun_comp_id, ← MvFunctor.map_map, ← MvFunctor.map_map, h]
-    all_goals aesop
+  solve_by_elim [EqvGen.rel]
+  apply EqvGen.is_equivalence
+  clear r x y
+  introv Hr
+  have : ∀ x y, R x y → EqvGen R x y := @EqvGen.rel _ R
+  induction Hr
+  rw [← Quot.factor_mk_eq R (EqvGen R) this]
+  rwa [appendFun_comp_id, ← MvFunctor.map_map, ← MvFunctor.map_map, h]
+  all_goals aesop
 
 theorem M.dest_map {α β : TypeVec n} (g : α ⟹ β) (x : P.M α) :
     M.dest P (g <$$> x) = (appendFun g fun x => g <$$> x) <$$> M.dest P x := by

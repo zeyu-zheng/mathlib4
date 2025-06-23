@@ -99,10 +99,10 @@ theorem differentiableWithinAt_iff_restrictScalars (hf : DifferentiableWithinAt 
     (hs : UniqueDiffWithinAt 𝕜 s x) : DifferentiableWithinAt 𝕜' f s x ↔
       ∃ g' : E →L[𝕜'] F, g'.restrictScalars 𝕜 = fderivWithin 𝕜 f s x := by
   constructor
-  · rintro ⟨g', hg'⟩
-    exact ⟨g', hs.eq (hg'.restrictScalars 𝕜) hf.hasFDerivWithinAt⟩
-  · rintro ⟨f', hf'⟩
-    exact ⟨f', hf.hasFDerivWithinAt.of_restrictScalars 𝕜 hf'⟩
+  rintro ⟨g', hg'⟩
+  exact ⟨g', hs.eq (hg'.restrictScalars 𝕜) hf.hasFDerivWithinAt⟩
+  rintro ⟨f', hf'⟩
+  exact ⟨f', hf.hasFDerivWithinAt.of_restrictScalars 𝕜 hf'⟩
 
 theorem differentiableAt_iff_restrictScalars (hf : DifferentiableAt 𝕜 f x) :
     DifferentiableAt 𝕜' f x ↔ ∃ g' : E →L[𝕜'] F, g'.restrictScalars 𝕜 = fderiv 𝕜 f x := by

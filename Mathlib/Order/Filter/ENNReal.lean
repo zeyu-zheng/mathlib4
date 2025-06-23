@@ -30,8 +30,8 @@ theorem limsup_eq_zero_iff [CountableInterFilter f] {u : α → ℝ≥0∞} :
 theorem limsup_const_mul_of_ne_top {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha_top : a ≠ ⊤) :
     (f.limsup fun x : α => a * u x) = a * f.limsup u := by
   by_cases ha_zero : a = 0
-  · simp_rw [ha_zero, zero_mul, ← ENNReal.bot_eq_zero]
-    exact limsup_const_bot
+  simp_rw [ha_zero, zero_mul, ← ENNReal.bot_eq_zero]
+  exact limsup_const_bot
   let g := fun x : ℝ≥0∞ => a * x
   have hg_bij : Function.Bijective g :=
     Function.bijective_iff_has_inverse.mpr
@@ -46,22 +46,22 @@ theorem limsup_const_mul_of_ne_top {u : α → ℝ≥0∞} {a : ℝ≥0∞} (ha_
 theorem limsup_const_mul [CountableInterFilter f] {u : α → ℝ≥0∞} {a : ℝ≥0∞} :
     f.limsup (a * u ·) = a * f.limsup u := by
   by_cases ha_top : a ≠ ⊤
-  · exact limsup_const_mul_of_ne_top ha_top
+  exact limsup_const_mul_of_ne_top ha_top
   push_neg at ha_top
   by_cases hu : u =ᶠ[f] 0
-  · have hau : (a * u ·) =ᶠ[f] 0 := hu.mono fun x hx => by simp [hx]
-    simp only [limsup_congr hu, limsup_congr hau, Pi.zero_def, ← ENNReal.bot_eq_zero,
-      limsup_const_bot]
-    simp
-  · have hu_mul : ∃ᶠ x : α in f, ⊤ ≤ ite (u x = 0) (0 : ℝ≥0∞) ⊤ := by
-      rw [EventuallyEq, not_eventually] at hu
-      refine hu.mono fun x hx => ?_
-      rw [Pi.zero_apply] at hx
-      simp [hx]
-    have h_top_le : (f.limsup fun x : α => ite (u x = 0) (0 : ℝ≥0∞) ⊤) = ⊤ :=
-      eq_top_iff.mpr (le_limsup_of_frequently_le hu_mul)
-    have hfu : f.limsup u ≠ 0 := mt limsup_eq_zero_iff.1 hu
-    simp only [ha_top, top_mul', h_top_le, hfu, ite_false]
+  have hau : (a * u ·) =ᶠ[f] 0 := hu.mono fun x hx => by simp [hx]
+  simp only [limsup_congr hu, limsup_congr hau, Pi.zero_def, ← ENNReal.bot_eq_zero,
+    limsup_const_bot]
+  simp
+  have hu_mul : ∃ᶠ x : α in f, ⊤ ≤ ite (u x = 0) (0 : ℝ≥0∞) ⊤ := by
+    rw [EventuallyEq, not_eventually] at hu
+    refine hu.mono fun x hx => ?_
+    rw [Pi.zero_apply] at hx
+    simp [hx]
+  have h_top_le : (f.limsup fun x : α => ite (u x = 0) (0 : ℝ≥0∞) ⊤) = ⊤ :=
+    eq_top_iff.mpr (le_limsup_of_frequently_le hu_mul)
+  have hfu : f.limsup u ≠ 0 := mt limsup_eq_zero_iff.1 hu
+  simp only [ha_top, top_mul', h_top_le, hfu, ite_false]
 
 theorem limsup_mul_le [CountableInterFilter f] (u v : α → ℝ≥0∞) :
     f.limsup (u * v) ≤ f.limsup u * f.limsup v :=

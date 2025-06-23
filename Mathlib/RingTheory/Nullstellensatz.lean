@@ -180,15 +180,15 @@ theorem vanishingIdeal_zeroLocus_eq_radical (I : Ideal (MvPolynomial σ k)) :
     vanishingIdeal (zeroLocus I) = I.radical := by
   rw [I.radical_eq_jacobson]
   refine le_antisymm (le_sInf ?_) fun p hp x hx => ?_
-  · rintro J ⟨hJI, hJ⟩
-    obtain ⟨x, hx⟩ := (isMaximal_iff_eq_vanishingIdeal_singleton J).1 hJ
-    refine hx.symm ▸ vanishingIdeal_anti_mono fun y hy p hp => ?_
-    rw [← mem_vanishingIdeal_singleton_iff, Set.mem_singleton_iff.1 hy, ← hx]
-    exact hJI hp
-  · rw [← mem_vanishingIdeal_singleton_iff x p]
-    refine (mem_sInf.mp hp)
-      ⟨le_trans (le_vanishingIdeal_zeroLocus I) (vanishingIdeal_anti_mono fun y hy => hy.symm ▸ hx),
-        MvPolynomial.vanishingIdeal_singleton_isMaximal⟩
+  rintro J ⟨hJI, hJ⟩
+  obtain ⟨x, hx⟩ := (isMaximal_iff_eq_vanishingIdeal_singleton J).1 hJ
+  refine hx.symm ▸ vanishingIdeal_anti_mono fun y hy p hp => ?_
+  rw [← mem_vanishingIdeal_singleton_iff, Set.mem_singleton_iff.1 hy, ← hx]
+  exact hJI hp
+  rw [← mem_vanishingIdeal_singleton_iff x p]
+  refine (mem_sInf.mp hp)
+    ⟨le_trans (le_vanishingIdeal_zeroLocus I) (vanishingIdeal_anti_mono fun y hy => hy.symm ▸ hx),
+      MvPolynomial.vanishingIdeal_singleton_isMaximal⟩
 
 -- Porting note: marked this as high priority to short cut simplifier
 @[simp (high)]

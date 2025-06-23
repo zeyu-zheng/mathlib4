@@ -109,9 +109,9 @@ theorem finitePresentation_ofLocalizationSpanTarget :
   apply finiteType_ofLocalizationSpanTarget f s hs
   intro r
   convert_to Algebra.FiniteType R (Localization.Away r.val)
-  · rw [RingHom.FiniteType]
-    constructor <;> intro h <;> convert h <;> ext <;> simp_rw [Algebra.smul_def] <;> rfl
-  · infer_instance
+  rw [RingHom.FiniteType]
+  constructor <;> intro h <;> convert h <;> ext <;> simp_rw [Algebra.smul_def] <;> rfl
+  infer_instance
   rw [RingHom.FinitePresentation]
   obtain ⟨n, f, hf⟩ := Algebra.FiniteType.iff_quotient_mvPolynomial''.mp hfintype
   obtain ⟨l, hl⟩ := (Finsupp.mem_span_iff_total S (s : Set S) 1).mp
@@ -126,10 +126,10 @@ theorem finitePresentation_ofLocalizationSpanTarget :
   obtain ⟨q, rfl⟩ := hp
   simp only [map_mul, map_sub, map_sum, map_one, hg', hh']
   erw [Finsupp.total_apply_of_mem_supported S (s := s.attach)] at hl
-  · rw [← hl]
-    simp only [Finset.coe_sort_coe, smul_eq_mul, mul_comm, sub_self, mul_zero, zero_mul]
-  · rintro a -
-    simp
+  rw [← hl]
+  simp only [Finset.coe_sort_coe, smul_eq_mul, mul_comm, sub_self, mul_zero, zero_mul]
+  rintro a -
+  simp
   let f' : A →ₐ[R] S := Ideal.Quotient.liftₐ I f hfI
   have hf' : Function.Surjective f' :=
     Ideal.Quotient.lift_surjective_of_surjective I hfI hf
@@ -172,12 +172,12 @@ theorem finitePresentation_respectsIso : RingHom.RespectsIso @RingHom.FinitePres
 /-- Being finitely-presented is stable under base change. -/
 theorem finitePresentation_stableUnderBaseChange : StableUnderBaseChange @FinitePresentation := by
   apply StableUnderBaseChange.mk
-  · exact finitePresentation_respectsIso
-  · introv h
-    replace h : Algebra.FinitePresentation R T := by
-      rw [RingHom.FinitePresentation] at h; convert h; ext; simp_rw [Algebra.smul_def]; rfl
-    suffices Algebra.FinitePresentation S (S ⊗[R] T) by
-      rw [RingHom.FinitePresentation]; convert this; ext; simp_rw [Algebra.smul_def]; rfl
-    infer_instance
+  exact finitePresentation_respectsIso
+  introv h
+  replace h : Algebra.FinitePresentation R T := by
+    rw [RingHom.FinitePresentation] at h; convert h; ext; simp_rw [Algebra.smul_def]; rfl
+  suffices Algebra.FinitePresentation S (S ⊗[R] T) by
+    rw [RingHom.FinitePresentation]; convert this; ext; simp_rw [Algebra.smul_def]; rfl
+  infer_instance
 
 end RingHom

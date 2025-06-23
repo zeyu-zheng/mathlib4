@@ -434,15 +434,15 @@ open Classical in
 theorem sum_tmul {α : Type*} (s : Finset α) (m : α → M) (n : N) :
     (∑ a ∈ s, m a) ⊗ₜ[R] n = ∑ a ∈ s, m a ⊗ₜ[R] n := by
     induction' s using Finset.induction with a s has ih h
-    · simp
-    · simp [Finset.sum_insert has, add_tmul, ih]
+    simp
+    simp [Finset.sum_insert has, add_tmul, ih]
 
 open Classical in
 theorem tmul_sum (m : M) {α : Type*} (s : Finset α) (n : α → N) :
     (m ⊗ₜ[R] ∑ a ∈ s, n a) = ∑ a ∈ s, m ⊗ₜ[R] n a := by
     induction' s using Finset.induction with a s has ih h
-    · simp
-    · simp [Finset.sum_insert has, tmul_add, ih]
+    simp
+    simp [Finset.sum_insert has, tmul_add, ih]
 
 end
 
@@ -452,12 +452,12 @@ variable (R M N)
 theorem span_tmul_eq_top : Submodule.span R { t : M ⊗[R] N | ∃ m n, m ⊗ₜ n = t } = ⊤ := by
   ext t; simp only [Submodule.mem_top, iff_true_iff]
   refine t.induction_on ?_ ?_ ?_
-  · exact Submodule.zero_mem _
-  · intro m n
-    apply Submodule.subset_span
-    use m, n
-  · intro t₁ t₂ ht₁ ht₂
-    exact Submodule.add_mem _ ht₁ ht₂
+  exact Submodule.zero_mem _
+  intro m n
+  apply Submodule.subset_span
+  use m, n
+  intro t₁ t₂ ht₁ ht₂
+  exact Submodule.add_mem _ ht₁ ht₂
 
 @[simp]
 theorem map₂_mk_top_top_eq_top : Submodule.map₂ (mk R M N) ⊤ ⊤ = ⊤ := by
@@ -776,12 +776,12 @@ theorem map_range_eq_span_tmul (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
     Set.mem_setOf_eq]
   congr; ext t
   constructor
-  · rintro ⟨_, ⟨⟨m, n, rfl⟩, rfl⟩⟩
-    use m, n
-    simp only [map_tmul]
-  · rintro ⟨m, n, rfl⟩
-    refine ⟨_, ⟨⟨m, n, rfl⟩, ?_⟩⟩
-    simp only [map_tmul]
+  rintro ⟨_, ⟨⟨m, n, rfl⟩, rfl⟩⟩
+  use m, n
+  simp only [map_tmul]
+  rintro ⟨m, n, rfl⟩
+  refine ⟨_, ⟨⟨m, n, rfl⟩, ?_⟩⟩
+  simp only [map_tmul]
 
 /-- Given submodules `p ⊆ P` and `q ⊆ Q`, this is the natural map: `p ⊗ q → P ⊗ Q`. -/
 @[simp]
@@ -837,8 +837,8 @@ theorem map_mul (f₁ f₂ : M →ₗ[R] M) (g₁ g₂ : N →ₗ[R] N) :
 protected theorem map_pow (f : M →ₗ[R] M) (g : N →ₗ[R] N) (n : ℕ) :
     map f g ^ n = map (f ^ n) (g ^ n) := by
   induction' n with n ih
-  · simp only [Nat.zero_eq, pow_zero, map_one]
-  · simp only [pow_succ', ih, map_mul]
+  simp only [Nat.zero_eq, pow_zero, map_one]
+  simp only [pow_succ', ih, map_mul]
 
 theorem map_add_left (f₁ f₂ : M →ₗ[R] P) (g : N →ₗ[R] Q) :
     map (f₁ + f₂) g = map f₁ g + map f₂ g := by

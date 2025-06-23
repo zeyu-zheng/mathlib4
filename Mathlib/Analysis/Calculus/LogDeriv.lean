@@ -69,16 +69,16 @@ theorem logDeriv_prod {ι : Type*} (s : Finset ι) (f : ι → 𝕜 → 𝕜') (
     rw [Finset.forall_mem_cons] at hf hd
     simp_rw [Finset.prod_cons, Finset.sum_cons]
     rw [logDeriv_mul, ih hf.2 hd.2]
-    · exact hf.1
-    · simpa [Finset.prod_eq_zero_iff] using hf.2
-    · exact hd.1
-    · exact .finset_prod hd.2
+    exact hf.1
+    simpa [Finset.prod_eq_zero_iff] using hf.2
+    exact hd.1
+    exact .finset_prod hd.2
 
 lemma logDeriv_fun_zpow {f : 𝕜 → 𝕜'} {x : 𝕜} (hdf : DifferentiableAt 𝕜 f x) (n : ℤ) :
     logDeriv (f · ^ n) x = n * logDeriv f x := by
   rcases eq_or_ne n 0 with rfl | hn; · simp
   rcases eq_or_ne (f x) 0 with hf | hf
-  · simp [logDeriv_apply, zero_zpow, *]
+  simp [logDeriv_apply, zero_zpow, *]
   · rw [logDeriv_apply, ← comp_def (·^n), deriv.comp _ (differentiableAt_zpow.2 <| .inl hf) hdf,
       deriv_zpow, logDeriv_apply]
     field_simp [zpow_ne_zero, zpow_sub_one₀ hf]

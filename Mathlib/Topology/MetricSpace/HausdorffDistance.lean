@@ -208,18 +208,18 @@ theorem _root_.IsOpen.exists_iUnion_isClosed {U : Set α} (hU : IsOpen U) :
     have : infEdist x Uᶜ ≠ 0 := ((ENNReal.pow_pos a_pos _).trans_le hx).ne'
     exact this (infEdist_zero_of_mem h)
   refine ⟨F, fun n => IsClosed.preimage continuous_infEdist isClosed_Ici, F_subset, ?_, ?_⟩
-  · show ⋃ n, F n = U
-    refine Subset.antisymm (by simp only [iUnion_subset_iff, F_subset, forall_const]) fun x hx => ?_
-    have : ¬x ∈ Uᶜ
-    simpa using hx
-    rw [mem_iff_infEdist_zero_of_closed hU.isClosed_compl] at this
-    have B : 0 < infEdist x Uᶜ
-    simpa [pos_iff_ne_zero] using this
-    have : Filter.Tendsto (fun n => a ^ n) atTop (𝓝 0) :=
-      ENNReal.tendsto_pow_atTop_nhds_zero_of_lt_one a_lt_one
-    rcases ((tendsto_order.1 this).2 _ B).exists with ⟨n, hn⟩
-    simp only [mem_iUnion, mem_Ici, mem_preimage]
-    exact ⟨n, hn.le⟩
+  show ⋃ n, F n = U
+  refine Subset.antisymm (by simp only [iUnion_subset_iff, F_subset, forall_const]) fun x hx => ?_
+  have : ¬x ∈ Uᶜ
+  simpa using hx
+  rw [mem_iff_infEdist_zero_of_closed hU.isClosed_compl] at this
+  have B : 0 < infEdist x Uᶜ
+  simpa [pos_iff_ne_zero] using this
+  have : Filter.Tendsto (fun n => a ^ n) atTop (𝓝 0) :=
+    ENNReal.tendsto_pow_atTop_nhds_zero_of_lt_one a_lt_one
+  rcases ((tendsto_order.1 this).2 _ B).exists with ⟨n, hn⟩
+  simp only [mem_iUnion, mem_Ici, mem_preimage]
+  exact ⟨n, hn.le⟩
   show Monotone F
   intro m n hmn x hx
   simp only [F, mem_Ici, mem_preimage] at hx ⊢
@@ -234,8 +234,8 @@ theorem _root_.IsCompact.exists_infEdist_eq_edist (hs : IsCompact s) (hne : s.No
 theorem exists_pos_forall_lt_edist (hs : IsCompact s) (ht : IsClosed t) (hst : Disjoint s t) :
     ∃ r : ℝ≥0, 0 < r ∧ ∀ x ∈ s, ∀ y ∈ t, (r : ℝ≥0∞) < edist x y := by
   rcases s.eq_empty_or_nonempty with (rfl | hne)
-  · use 1
-    simp
+  use 1
+  simp
   obtain ⟨x, hx, h⟩ := hs.exists_isMinOn hne continuous_infEdist.continuousOn
   have : 0 < infEdist x t :=
     pos_iff_ne_zero.2 fun H => hst.le_bot ⟨hx, (mem_iff_infEdist_zero_of_closed ht).mpr H⟩
@@ -277,10 +277,10 @@ another point in the other set at controlled distance -/
 theorem hausdorffEdist_le_of_mem_edist {r : ℝ≥0∞} (H1 : ∀ x ∈ s, ∃ y ∈ t, edist x y ≤ r)
     (H2 : ∀ x ∈ t, ∃ y ∈ s, edist x y ≤ r) : hausdorffEdist s t ≤ r := by
   refine hausdorffEdist_le_of_infEdist (fun x xs ↦ ?_) (fun x xt ↦ ?_)
-  · rcases H1 x xs with ⟨y, yt, hy⟩
-    exact le_trans (infEdist_le_edist_of_mem yt) hy
-  · rcases H2 x xt with ⟨y, ys, hy⟩
-    exact le_trans (infEdist_le_edist_of_mem ys) hy
+  rcases H1 x xs with ⟨y, yt, hy⟩
+  exact le_trans (infEdist_le_edist_of_mem yt) hy
+  rcases H2 x xt with ⟨y, ys, hy⟩
+  exact le_trans (infEdist_le_edist_of_mem ys) hy
 
 /-- The distance to a set is controlled by the Hausdorff distance. -/
 theorem infEdist_le_hausdorffEdist_of_mem (h : x ∈ s) : infEdist x t ≤ hausdorffEdist s t := by
@@ -328,31 +328,31 @@ theorem hausdorffEdist_le_ediam (hs : s.Nonempty) (ht : t.Nonempty) :
   rcases hs with ⟨x, xs⟩
   rcases ht with ⟨y, yt⟩
   refine hausdorffEdist_le_of_mem_edist ?_ ?_
-  · intro z hz
-    exact ⟨y, yt, edist_le_diam_of_mem (subset_union_left hz) (subset_union_right yt)⟩
-  · intro z hz
-    exact ⟨x, xs, edist_le_diam_of_mem (subset_union_right hz) (subset_union_left xs)⟩
+  intro z hz
+  exact ⟨y, yt, edist_le_diam_of_mem (subset_union_left hz) (subset_union_right yt)⟩
+  intro z hz
+  exact ⟨x, xs, edist_le_diam_of_mem (subset_union_right hz) (subset_union_left xs)⟩
 
 /-- The Hausdorff distance satisfies the triangle inequality. -/
 theorem hausdorffEdist_triangle : hausdorffEdist s u ≤ hausdorffEdist s t + hausdorffEdist t u := by
   rw [hausdorffEdist_def]
   simp only [sup_le_iff, iSup_le_iff]
   constructor
-  · show ∀ x ∈ s, infEdist x u ≤ hausdorffEdist s t + hausdorffEdist t u
-    exact fun x xs =>
-      calc
-        infEdist x u ≤ infEdist x t + hausdorffEdist t u :=
-          infEdist_le_infEdist_add_hausdorffEdist
-        _ ≤ hausdorffEdist s t + hausdorffEdist t u :=
-          add_le_add_right (infEdist_le_hausdorffEdist_of_mem xs) _
-  · show ∀ x ∈ u, infEdist x s ≤ hausdorffEdist s t + hausdorffEdist t u
-    exact fun x xu =>
-      calc
-        infEdist x s ≤ infEdist x t + hausdorffEdist t s :=
-          infEdist_le_infEdist_add_hausdorffEdist
-        _ ≤ hausdorffEdist u t + hausdorffEdist t s :=
-          add_le_add_right (infEdist_le_hausdorffEdist_of_mem xu) _
-        _ = hausdorffEdist s t + hausdorffEdist t u := by simp [hausdorffEdist_comm, add_comm]
+  show ∀ x ∈ s, infEdist x u ≤ hausdorffEdist s t + hausdorffEdist t u
+  exact fun x xs =>
+    calc
+      infEdist x u ≤ infEdist x t + hausdorffEdist t u :=
+        infEdist_le_infEdist_add_hausdorffEdist
+      _ ≤ hausdorffEdist s t + hausdorffEdist t u :=
+        add_le_add_right (infEdist_le_hausdorffEdist_of_mem xs) _
+  show ∀ x ∈ u, infEdist x s ≤ hausdorffEdist s t + hausdorffEdist t u
+  exact fun x xu =>
+    calc
+      infEdist x s ≤ infEdist x t + hausdorffEdist t s :=
+        infEdist_le_infEdist_add_hausdorffEdist
+      _ ≤ hausdorffEdist u t + hausdorffEdist t s :=
+        add_le_add_right (infEdist_le_hausdorffEdist_of_mem xu) _
+      _ = hausdorffEdist s t + hausdorffEdist t u := by simp [hausdorffEdist_comm, add_comm]
 
 /-- Two sets are at zero Hausdorff edistance if and only if they have the same closure. -/
 theorem hausdorffEdist_zero_iff_closure_eq_closure :
@@ -369,12 +369,12 @@ theorem hausdorffEdist_self_closure : hausdorffEdist s (closure s) = 0 := by
 @[simp]
 theorem hausdorffEdist_closure₁ : hausdorffEdist (closure s) t = hausdorffEdist s t := by
   refine le_antisymm ?_ ?_
-  · calc
-      _ ≤ hausdorffEdist (closure s) s + hausdorffEdist s t := hausdorffEdist_triangle
-      _ = hausdorffEdist s t := by simp [hausdorffEdist_comm]
-  · calc
-      _ ≤ hausdorffEdist s (closure s) + hausdorffEdist (closure s) t := hausdorffEdist_triangle
-      _ = hausdorffEdist (closure s) t := by simp
+  calc
+    _ ≤ hausdorffEdist (closure s) s + hausdorffEdist s t := hausdorffEdist_triangle
+    _ = hausdorffEdist s t := by simp [hausdorffEdist_comm]
+  calc
+    _ ≤ hausdorffEdist s (closure s) + hausdorffEdist (closure s) t := hausdorffEdist_triangle
+    _ = hausdorffEdist (closure s) t := by simp
 
 /-- Replacing a set by its closure does not change the Hausdorff edistance. -/
 @[simp]
@@ -405,11 +405,11 @@ theorem nonempty_of_hausdorffEdist_ne_top (hs : s.Nonempty) (fin : hausdorffEdis
 theorem empty_or_nonempty_of_hausdorffEdist_ne_top (fin : hausdorffEdist s t ≠ ⊤) :
     (s = ∅ ∧ t = ∅) ∨ (s.Nonempty ∧ t.Nonempty) := by
   rcases s.eq_empty_or_nonempty with hs | hs
-  · rcases t.eq_empty_or_nonempty with ht | ht
-    · exact Or.inl ⟨hs, ht⟩
-    · rw [hausdorffEdist_comm] at fin
-      exact Or.inr ⟨nonempty_of_hausdorffEdist_ne_top ht fin, ht⟩
-  · exact Or.inr ⟨hs, nonempty_of_hausdorffEdist_ne_top hs fin⟩
+  rcases t.eq_empty_or_nonempty with ht | ht
+  exact Or.inl ⟨hs, ht⟩
+  rw [hausdorffEdist_comm] at fin
+  exact Or.inr ⟨nonempty_of_hausdorffEdist_ne_top ht fin, ht⟩
+  exact Or.inr ⟨hs, nonempty_of_hausdorffEdist_ne_top hs fin⟩
 
 end HausdorffEdist
 
@@ -439,8 +439,8 @@ def infDist (x : α) (s : Set α) : ℝ :=
 
 theorem infDist_eq_iInf : infDist x s = ⨅ y : s, dist x y := by
   rw [infDist, infEdist, iInf_subtype', ENNReal.toReal_iInf]
-  · simp only [dist_edist]
-  · exact fun _ ↦ edist_ne_top _ _
+  simp only [dist_edist]
+  exact fun _ ↦ edist_ne_top _ _
 
 /-- The minimal distance is always nonnegative -/
 theorem infDist_nonneg : 0 ≤ infDist x s := toReal_nonneg
@@ -552,9 +552,9 @@ theorem _root_.IsClosed.not_mem_iff_infDist_pos (h : IsClosed s) (hs : s.Nonempt
 theorem continuousAt_inv_infDist_pt (h : x ∉ closure s) :
     ContinuousAt (fun x ↦ (infDist x s)⁻¹) x := by
   rcases s.eq_empty_or_nonempty with (rfl | hs)
-  · simp only [infDist_empty, continuousAt_const]
-  · refine (continuous_infDist_pt s).continuousAt.inv₀ ?_
-    rwa [Ne, ← mem_closure_iff_infDist_zero hs]
+  simp only [infDist_empty, continuousAt_const]
+  refine (continuous_infDist_pt s).continuousAt.inv₀ ?_
+  rwa [Ne, ← mem_closure_iff_infDist_zero hs]
 
 /-- The infimum distance is invariant under isometries. -/
 theorem infDist_image (hΦ : Isometry Φ) : infDist (Φ x) (Φ '' t) = infDist x t := by
@@ -567,9 +567,9 @@ theorem infDist_inter_closedBall_of_mem (h : y ∈ s) :
   refine not_lt.1 fun hlt => ?_
   rcases (infDist_lt_iff ⟨y, h.1⟩).mp hlt with ⟨z, hzs, hz⟩
   rcases le_or_lt (dist z x) (dist y x) with hle | hlt
-  · exact hz.not_le (infDist_le_dist_of_mem ⟨hzs, hle⟩)
-  · rw [dist_comm z, dist_comm y] at hlt
-    exact (hlt.trans hz).not_le (infDist_le_dist_of_mem h)
+  exact hz.not_le (infDist_le_dist_of_mem ⟨hzs, hle⟩)
+  rw [dist_comm z, dist_comm y] at hlt
+  exact (hlt.trans hz).not_le (infDist_le_dist_of_mem h)
 
 theorem _root_.IsCompact.exists_infDist_eq_dist (h : IsCompact s) (hne : s.Nonempty) (x : α) :
     ∃ y ∈ s, infDist x s = dist x y :=
@@ -633,16 +633,16 @@ theorem hausdorffEdist_ne_top_of_nonempty_of_bounded (hs : s.Nonempty) (ht : t.N
   rcases bt.subset_closedBall cs with ⟨rt, hrt⟩
   have : hausdorffEdist s t ≤ ENNReal.ofReal (max rs rt)
   apply hausdorffEdist_le_of_mem_edist
-  · intro x xs
-    exists ct, hct
-    have : dist x ct ≤ max rs rt := le_trans (hrs xs) (le_max_left _ _)
-    rwa [edist_dist, ENNReal.ofReal_le_ofReal_iff]
-    exact le_trans dist_nonneg this
-  · intro x xt
-    exists cs, hcs
-    have : dist x cs ≤ max rs rt := le_trans (hrt xt) (le_max_right _ _)
-    rwa [edist_dist, ENNReal.ofReal_le_ofReal_iff]
-    exact le_trans dist_nonneg this
+  intro x xs
+  exists ct, hct
+  have : dist x ct ≤ max rs rt := le_trans (hrs xs) (le_max_left _ _)
+  rwa [edist_dist, ENNReal.ofReal_le_ofReal_iff]
+  exact le_trans dist_nonneg this
+  intro x xt
+  exists cs, hcs
+  have : dist x cs ≤ max rs rt := le_trans (hrt xt) (le_max_right _ _)
+  rwa [edist_dist, ENNReal.ofReal_le_ofReal_iff]
+  exact le_trans dist_nonneg this
   exact ne_top_of_le_ne_top ENNReal.ofReal_ne_top this
 
 /-- The Hausdorff distance between a set and itself is zero. -/
@@ -658,8 +658,8 @@ value `∞` instead, use `EMetric.hausdorffEdist`, which takes values in `ℝ≥
 @[simp]
 theorem hausdorffDist_empty : hausdorffDist s ∅ = 0 := by
   rcases s.eq_empty_or_nonempty with h | h
-  · simp [h]
-  · simp [hausdorffDist, hausdorffEdist_empty h]
+  simp [h]
+  simp [hausdorffDist, hausdorffEdist_empty h]
 
 /-- The Hausdorff distance to the empty set vanishes (if you want to have the more reasonable
 value `∞` instead, use `EMetric.hausdorffEdist`, which takes values in `ℝ≥0∞`). -/
@@ -671,21 +671,21 @@ in each set to the other set -/
 theorem hausdorffDist_le_of_infDist {r : ℝ} (hr : 0 ≤ r) (H1 : ∀ x ∈ s, infDist x t ≤ r)
     (H2 : ∀ x ∈ t, infDist x s ≤ r) : hausdorffDist s t ≤ r := by
   by_cases h1 : hausdorffEdist s t = ⊤
-  · rwa [hausdorffDist, h1, ENNReal.top_toReal]
+  rwa [hausdorffDist, h1, ENNReal.top_toReal]
   rcases s.eq_empty_or_nonempty with hs | hs
-  · rwa [hs, hausdorffDist_empty']
+  rwa [hs, hausdorffDist_empty']
   rcases t.eq_empty_or_nonempty with ht | ht
-  · rwa [ht, hausdorffDist_empty]
+  rwa [ht, hausdorffDist_empty]
   have : hausdorffEdist s t ≤ ENNReal.ofReal r
   apply hausdorffEdist_le_of_infEdist _ _
-  · intro x hx
-    have I := H1 x hx
-    rwa [infDist, ← ENNReal.toReal_ofReal hr,
-      ENNReal.toReal_le_toReal (infEdist_ne_top ht) ENNReal.ofReal_ne_top] at I
-  · intro x hx
-    have I := H2 x hx
-    rwa [infDist, ← ENNReal.toReal_ofReal hr,
-      ENNReal.toReal_le_toReal (infEdist_ne_top hs) ENNReal.ofReal_ne_top] at I
+  intro x hx
+  have I := H1 x hx
+  rwa [infDist, ← ENNReal.toReal_ofReal hr,
+    ENNReal.toReal_le_toReal (infEdist_ne_top ht) ENNReal.ofReal_ne_top] at I
+  intro x hx
+  have I := H2 x hx
+  rwa [infDist, ← ENNReal.toReal_ofReal hr,
+    ENNReal.toReal_le_toReal (infEdist_ne_top hs) ENNReal.ofReal_ne_top] at I
   rwa [hausdorffDist, ← ENNReal.toReal_ofReal hr,
     ENNReal.toReal_le_toReal h1 ENNReal.ofReal_ne_top]
 
@@ -694,12 +694,12 @@ another point in the other set at controlled distance -/
 theorem hausdorffDist_le_of_mem_dist {r : ℝ} (hr : 0 ≤ r) (H1 : ∀ x ∈ s, ∃ y ∈ t, dist x y ≤ r)
     (H2 : ∀ x ∈ t, ∃ y ∈ s, dist x y ≤ r) : hausdorffDist s t ≤ r := by
   apply hausdorffDist_le_of_infDist hr
-  · intro x xs
-    rcases H1 x xs with ⟨y, yt, hy⟩
-    exact le_trans (infDist_le_dist_of_mem yt) hy
-  · intro x xt
-    rcases H2 x xt with ⟨y, ys, hy⟩
-    exact le_trans (infDist_le_dist_of_mem ys) hy
+  intro x xs
+  rcases H1 x xs with ⟨y, yt, hy⟩
+  exact le_trans (infDist_le_dist_of_mem yt) hy
+  intro x xt
+  rcases H2 x xt with ⟨y, ys, hy⟩
+  exact le_trans (infDist_le_dist_of_mem ys) hy
 
 /-- The Hausdorff distance is controlled by the diameter of the union. -/
 theorem hausdorffDist_le_diam (hs : s.Nonempty) (bs : IsBounded s) (ht : t.Nonempty)
@@ -707,10 +707,10 @@ theorem hausdorffDist_le_diam (hs : s.Nonempty) (bs : IsBounded s) (ht : t.Nonem
   rcases hs with ⟨x, xs⟩
   rcases ht with ⟨y, yt⟩
   refine hausdorffDist_le_of_mem_dist diam_nonneg ?_ ?_
-  · exact fun z hz => ⟨y, yt, dist_le_diam_of_mem (bs.union bt) (subset_union_left hz)
-      (subset_union_right yt)⟩
-  · exact fun z hz => ⟨x, xs, dist_le_diam_of_mem (bs.union bt) (subset_union_right hz)
-      (subset_union_left xs)⟩
+  exact fun z hz => ⟨y, yt, dist_le_diam_of_mem (bs.union bt) (subset_union_left hz)
+    (subset_union_right yt)⟩
+  exact fun z hz => ⟨x, xs, dist_le_diam_of_mem (bs.union bt) (subset_union_right hz)
+    (subset_union_left xs)⟩
 
 /-- The distance to a set is controlled by the Hausdorff distance. -/
 theorem infDist_le_hausdorffDist_of_mem (hx : x ∈ s) (fin : hausdorffEdist s t ≠ ⊤) :

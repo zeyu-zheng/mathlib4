@@ -163,8 +163,8 @@ lemma ofTensorProduct_surjective_of_finite [Module.Finite R M] :
   have hf : Function.Surjective f
   simp only [hfg, LinearMap.coe_comp, g]
   apply Function.Surjective.comp
-  · exact AdicCompletion.map_surjective I hp
-  · exact (ofTensorProduct_bijective_of_pi_of_fintype I (Fin n)).surjective
+  exact AdicCompletion.map_surjective I hp
+  exact (ofTensorProduct_bijective_of_pi_of_fintype I (Fin n)).surjective
   exact Function.Surjective.of_comp hf
 
 section Noetherian
@@ -290,16 +290,16 @@ private def firstRowToSecondRow : firstRow I M f ⟶ secondRow I M f :=
 private lemma ofTensorProduct_iso : IsIso (ModuleCat.ofHom (ofTensorProduct I M)) := by
   refine Abelian.isIso_of_epi_of_isIso_of_isIso_of_mono
     (firstRow_exact I M f hf) (secondRow_exact I M f hf) (firstRowToSecondRow I M f) ?_ ?_ ?_ ?_
-  · apply ConcreteCategory.epi_of_surjective
-    exact ofTensorProduct_surjective_of_finite I (LinearMap.ker f)
-  · apply (ConcreteCategory.isIso_iff_bijective _).mpr
-    exact ofTensorProduct_bijective_of_pi_of_fintype I ι
-  · show IsIso (ModuleCat.ofHom 0)
-    apply Limits.isIso_of_isTerminal
-      <;> exact Limits.IsZero.isTerminal (ModuleCat.isZero_of_subsingleton _)
-  · apply ConcreteCategory.mono_of_injective
-    intro x y _
-    rfl
+  apply ConcreteCategory.epi_of_surjective
+  exact ofTensorProduct_surjective_of_finite I (LinearMap.ker f)
+  apply (ConcreteCategory.isIso_iff_bijective _).mpr
+  exact ofTensorProduct_bijective_of_pi_of_fintype I ι
+  show IsIso (ModuleCat.ofHom 0)
+  apply Limits.isIso_of_isTerminal
+    <;> exact Limits.IsZero.isTerminal (ModuleCat.isZero_of_subsingleton _)
+  apply ConcreteCategory.mono_of_injective
+  intro x y _
+  rfl
 
 private
 lemma ofTensorProduct_bijective_of_map_from_fin : Function.Bijective (ofTensorProduct I M) := by

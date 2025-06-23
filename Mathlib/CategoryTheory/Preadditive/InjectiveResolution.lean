@@ -122,8 +122,8 @@ def isLimitKernelFork : IsLimit (I.kernelFork) := by
 
 instance (n : ℕ) : Mono (I.ι.f n) := by
   cases n
-  · exact mono_of_isLimit_fork I.isLimitKernelFork
-  · rw [ι_f_succ]; infer_instance
+  exact mono_of_isLimit_fork I.isLimitKernelFork
+  rw [ι_f_succ]; infer_instance
 
 variable (Z)
 

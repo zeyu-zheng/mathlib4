@@ -295,10 +295,10 @@ which takes a constant value `b ≠ 0` on a set `A` and `0` elsewhere. -/
 lemma measurable_indicator_const_iff [Zero β] [MeasurableSingletonClass β] (b : β) [NeZero b] :
     Measurable (s.indicator (fun (_ : α) ↦ b)) ↔ MeasurableSet s := by
   constructor <;> intro h
-  · convert h (MeasurableSet.singleton (0 : β)).compl
-    ext a
-    simp [NeZero.ne b]
-  · exact measurable_const.indicator h
+  convert h (MeasurableSet.singleton (0 : β)).compl
+  ext a
+  simp [NeZero.ne b]
+  exact measurable_const.indicator h
 
 @[to_additive (attr := measurability)]
 theorem measurableSet_mulSupport [One β] [MeasurableSingletonClass β] (hf : Measurable f) :
@@ -329,9 +329,9 @@ theorem measurable_to_countable [MeasurableSpace α] [Countable α] [MeasurableS
   rw [← biUnion_preimage_singleton]
   refine MeasurableSet.iUnion fun y => MeasurableSet.iUnion fun hy => ?_
   by_cases hyf : y ∈ range f
-  · rcases hyf with ⟨y, rfl⟩
-    apply h
-  · simp only [preimage_singleton_eq_empty.2 hyf, MeasurableSet.empty]
+  rcases hyf with ⟨y, rfl⟩
+  apply h
+  simp only [preimage_singleton_eq_empty.2 hyf, MeasurableSet.empty]
 
 theorem measurable_to_countable' [MeasurableSpace α] [Countable α] [MeasurableSpace β] {f : β → α}
     (h : ∀ x, MeasurableSet (f ⁻¹' {x})) : Measurable f :=
@@ -371,16 +371,16 @@ theorem measurable_to_nat {f : α → ℕ} : (∀ y, MeasurableSet (f ⁻¹' {f 
 theorem measurable_to_bool {f : α → Bool} (h : MeasurableSet (f ⁻¹' {true})) : Measurable f := by
   apply measurable_to_countable'
   rintro (- | -)
-  · convert h.compl
-    rw [← preimage_compl, Bool.compl_singleton, Bool.not_true]
+  convert h.compl
+  rw [← preimage_compl, Bool.compl_singleton, Bool.not_true]
   exact h
 
 theorem measurable_to_prop {f : α → Prop} (h : MeasurableSet (f ⁻¹' {True})) : Measurable f := by
   refine measurable_to_countable' fun x => ?_
   by_cases hx : x
-  · simpa [hx] using h
-  · simpa only [hx, ← preimage_compl, Prop.compl_singleton, not_true, preimage_singleton_false]
-      using h.compl
+  simpa [hx] using h
+  simpa only [hx, ← preimage_compl, Prop.compl_singleton, not_true, preimage_singleton_false]
+    using h.compl
 
 theorem measurable_findGreatest' {p : α → ℕ → Prop} [∀ x, DecidablePred (p x)] {N : ℕ}
     (hN : ∀ k ≤ N, MeasurableSet { x | Nat.findGreatest (p x) N = k }) :
@@ -585,15 +585,15 @@ lemma MeasurableSet.measurableAtom_of_countable [Countable β] (x : β) :
   choose! s hs using this
   have : measurableAtom x = ⋂ (y ∈ (measurableAtom x)ᶜ), s y := by
     apply Subset.antisymm
-    · intro z hz
-      simp only [mem_iInter, mem_compl_iff]
-      intro i hi
-      show z ∈ s i
-      exact mem_of_mem_measurableAtom hz (hs i hi).2.1 (hs i hi).1
-    · apply compl_subset_compl.1
-      intro z hz
-      simp only [compl_iInter, mem_iUnion, mem_compl_iff, exists_prop]
-      exact ⟨z, hz, (hs z hz).2.2⟩
+    intro z hz
+    simp only [mem_iInter, mem_compl_iff]
+    intro i hi
+    show z ∈ s i
+    exact mem_of_mem_measurableAtom hz (hs i hi).2.1 (hs i hi).1
+    apply compl_subset_compl.1
+    intro z hz
+    simp only [compl_iInter, mem_iUnion, mem_compl_iff, exists_prop]
+    exact ⟨z, hz, (hs z hz).2.2⟩
   rw [this]
   exact MeasurableSet.biInter (to_countable (measurableAtom x)ᶜ) (fun i hi ↦ (hs i hi).2.1)
 
@@ -693,8 +693,8 @@ theorem measurableSet_prod_of_nonempty {s : Set α} {t : Set β} (h : (s ×ˢ t)
 theorem measurableSet_prod {s : Set α} {t : Set β} :
     MeasurableSet (s ×ˢ t) ↔ MeasurableSet s ∧ MeasurableSet t ∨ s = ∅ ∨ t = ∅ := by
   rcases (s ×ˢ t).eq_empty_or_nonempty with h | h
-  · simp [h, prod_eq_empty_iff.mp h]
-  · simp [← not_nonempty_iff_eq_empty, prod_nonempty_iff.mp h, measurableSet_prod_of_nonempty h]
+  simp [h, prod_eq_empty_iff.mp h]
+  simp [← not_nonempty_iff_eq_empty, prod_nonempty_iff.mp h, measurableSet_prod_of_nonempty h]
 
 theorem measurableSet_swap_iff {s : Set (α × β)} :
     MeasurableSet (Prod.swap ⁻¹' s) ↔ MeasurableSet s :=
@@ -768,8 +768,8 @@ theorem exists_measurable_piecewise {ι} [Countable ι] [Nonempty ι] (t : ι �
   have ht' : ∀ (i j) (x : α) (hxi : x ∈ t i) (hxj : x ∈ t j), g' i ⟨x, hxi⟩ = g' j ⟨x, hxj⟩
   intro i j x hxi hxj
   rcases eq_or_ne i j with rfl | hij
-  · rfl
-  · exact ht hij ⟨hxi, hxj⟩
+  rfl
+  exact ht hij ⟨hxi, hxj⟩
   set f : (⋃ i, t i) → β := iUnionLift t g' ht' _ Subset.rfl
   have hfm : Measurable f := measurable_iUnionLift _ _ t_meas
     (fun i => (hg i).comp measurable_subtype_coe)
@@ -814,10 +814,10 @@ theorem measurable_update'  {a : δ} [DecidableEq δ] :
   intro j
   dsimp [update]
   split_ifs with h
-  · subst h
-    dsimp
-    exact measurable_snd
-  · exact measurable_pi_iff.1 measurable_fst _
+  subst h
+  dsimp
+  exact measurable_snd
+  exact measurable_pi_iff.1 measurable_fst _
 
 theorem measurable_uniqueElim [Unique δ] [∀ i, MeasurableSpace (π i)] :
     Measurable (uniqueElim : π (default : δ) → ∀ i, π i) := by
@@ -880,8 +880,8 @@ theorem measurableSet_pi_of_nonempty {s : Set δ} {t : ∀ i, Set (π i)} (hs : 
 theorem measurableSet_pi {s : Set δ} {t : ∀ i, Set (π i)} (hs : s.Countable) :
     MeasurableSet (pi s t) ↔ (∀ i ∈ s, MeasurableSet (t i)) ∨ pi s t = ∅ := by
   rcases (pi s t).eq_empty_or_nonempty with h | h
-  · simp [h]
-  · simp [measurableSet_pi_of_nonempty hs, h, ← not_nonempty_iff_eq_empty]
+  simp [h]
+  simp [measurableSet_pi_of_nonempty hs, h, ← not_nonempty_iff_eq_empty]
 
 instance Pi.instMeasurableSingletonClass [Countable δ] [∀ a, MeasurableSingletonClass (π a)] :
     MeasurableSingletonClass (∀ a, π a) :=
@@ -894,14 +894,14 @@ theorem measurable_piEquivPiSubtypeProd_symm (p : δ → Prop) [DecidablePred p]
     Measurable (Equiv.piEquivPiSubtypeProd p π).symm := by
   refine measurable_pi_iff.2 fun j => ?_
   by_cases hj : p j
-  · simp only [hj, dif_pos, Equiv.piEquivPiSubtypeProd_symm_apply]
-    have : Measurable fun (f : ∀ i : { x // p x }, π i.1) => f ⟨j, hj⟩ :=
-      measurable_pi_apply (π := fun i : {x // p x} => π i.1) ⟨j, hj⟩
-    exact Measurable.comp this measurable_fst
-  · simp only [hj, Equiv.piEquivPiSubtypeProd_symm_apply, dif_neg, not_false_iff]
-    have : Measurable fun (f : ∀ i : { x // ¬p x }, π i.1) => f ⟨j, hj⟩ :=
-      measurable_pi_apply (π := fun i : {x // ¬p x} => π i.1) ⟨j, hj⟩
-    exact Measurable.comp this measurable_snd
+  simp only [hj, dif_pos, Equiv.piEquivPiSubtypeProd_symm_apply]
+  have : Measurable fun (f : ∀ i : { x // p x }, π i.1) => f ⟨j, hj⟩ :=
+    measurable_pi_apply (π := fun i : {x // p x} => π i.1) ⟨j, hj⟩
+  exact Measurable.comp this measurable_fst
+  simp only [hj, Equiv.piEquivPiSubtypeProd_symm_apply, dif_neg, not_false_iff]
+  have : Measurable fun (f : ∀ i : { x // ¬p x }, π i.1) => f ⟨j, hj⟩ :=
+    measurable_pi_apply (π := fun i : {x // ¬p x} => π i.1) ⟨j, hj⟩
+  exact Measurable.comp this measurable_snd
 
 @[measurability]
 theorem measurable_piEquivPiSubtypeProd (p : δ → Prop) [DecidablePred p] :
@@ -924,18 +924,18 @@ variable {π : δ → Type*} [∀ x, MeasurableSpace (π x)]
 
 theorem measurable_tProd_mk (l : List δ) : Measurable (@TProd.mk δ π l) := by
   induction' l with i l ih
-  · exact measurable_const
-  · exact (measurable_pi_apply i).prod_mk ih
+  exact measurable_const
+  exact (measurable_pi_apply i).prod_mk ih
 
 theorem measurable_tProd_elim [DecidableEq δ] :
     ∀ {l : List δ} {i : δ} (hi : i ∈ l), Measurable fun v : TProd π l => v.elim hi
   | i::is, j, hj => by
     by_cases hji : j = i
-    · subst hji
-      simpa using measurable_fst
-    · simp only [TProd.elim_of_ne _ hji]
-      rw [mem_cons] at hj
-      exact (measurable_tProd_elim (hj.resolve_left hji)).comp measurable_snd
+    subst hji
+    simpa using measurable_fst
+    simp only [TProd.elim_of_ne _ hji]
+    rw [mem_cons] at hj
+    exact (measurable_tProd_elim (hj.resolve_left hji)).comp measurable_snd
 
 theorem measurable_tProd_elim' [DecidableEq δ] {l : List δ} (h : ∀ i, i ∈ l) :
     Measurable (TProd.elim' h : TProd π l → ∀ i, π i) :=
@@ -944,8 +944,8 @@ theorem measurable_tProd_elim' [DecidableEq δ] {l : List δ} (h : ∀ i, i ∈ 
 theorem MeasurableSet.tProd (l : List δ) {s : ∀ i, Set (π i)} (hs : ∀ i, MeasurableSet (s i)) :
     MeasurableSet (Set.tprod l s) := by
   induction' l with i l ih
-  · exact MeasurableSet.univ
-  · exact (hs i).prod ih
+  exact MeasurableSet.univ
+  exact (hs i).prod ih
 
 end TProd
 
@@ -1147,11 +1147,11 @@ instance iInf_isMeasurablyGenerated {f : ι → Filter α} [∀ i, IsMeasurablyG
   rcases hs with ⟨t, ht, ⟨V, hVf, rfl⟩⟩
   choose U hUf hU using fun i => IsMeasurablyGenerated.exists_measurable_subset (hVf i)
   refine ⟨⋂ i : t, U i, ?_, ?_, ?_⟩
-  · rw [← Equiv.plift.surjective.iInf_comp, mem_iInf]
-    exact ⟨t, ht, U, hUf, rfl⟩
-  · haveI := ht.countable.toEncodable.countable
-    exact MeasurableSet.iInter fun i => (hU i).1
-  · exact iInter_mono fun i => (hU i).2
+  rw [← Equiv.plift.surjective.iInf_comp, mem_iInf]
+  exact ⟨t, ht, U, hUf, rfl⟩
+  haveI := ht.countable.toEncodable.countable
+  exact MeasurableSet.iInter fun i => (hU i).1
+  exact iInter_mono fun i => (hU i).2
 
 end Filter
 

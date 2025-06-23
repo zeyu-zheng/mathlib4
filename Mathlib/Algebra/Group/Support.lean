@@ -87,10 +87,10 @@ theorem mulSupport_extend_one_subset {f : α → M'} {g : α → N} :
     mulSupport (f.extend g 1) ⊆ f '' mulSupport g :=
   mulSupport_subset_iff'.mpr fun x hfg ↦ by
     by_cases hf : ∃ a, f a = x
-    · rw [extend, dif_pos hf, ← nmem_mulSupport]
-      rw [← Classical.choose_spec hf] at hfg
-      exact fun hg ↦ hfg ⟨_, hg, rfl⟩
-    · rw [extend_apply' _ _ _ hf]; rfl
+    rw [extend, dif_pos hf, ← nmem_mulSupport]
+    rw [← Classical.choose_spec hf] at hfg
+    exact fun hg ↦ hfg ⟨_, hg, rfl⟩
+    rw [extend_apply' _ _ _ hf]; rfl
 
 @[to_additive]
 theorem mulSupport_extend_one {f : α → M'} {g : α → N} (hf : f.Injective) :
@@ -211,8 +211,8 @@ theorem mulSupport_mul [MulOneClass M] (f g : α → M) :
 theorem mulSupport_pow [Monoid M] (f : α → M) (n : ℕ) :
     (mulSupport fun x => f x ^ n) ⊆ mulSupport f := by
   induction' n with n hfn
-  · simp [pow_zero, mulSupport_one]
-  · simpa only [pow_succ'] using (mulSupport_mul f _).trans (union_subset Subset.rfl hfn)
+  simp [pow_zero, mulSupport_one]
+  simpa only [pow_succ'] using (mulSupport_mul f _).trans (union_subset Subset.rfl hfn)
 
 section DivisionMonoid
 

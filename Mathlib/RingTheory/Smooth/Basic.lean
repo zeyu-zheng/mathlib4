@@ -70,20 +70,20 @@ theorem exists_lift {B : Type u} [CommRing B] [_RB : Algebra R B]
   change Function.Surjective (Ideal.Quotient.mkₐ R I).comp
   revert _RB
   apply Ideal.IsNilpotent.induction_on (R := B) I hI
-  · intro B _ I hI _; exact FormallySmooth.comp_surjective I hI
-  · intro B _ I J hIJ h₁ h₂ _ g
-    let this : ((B ⧸ I) ⧸ J.map (Ideal.Quotient.mk I)) ≃ₐ[R] B ⧸ J :=
-      {
-        (DoubleQuot.quotQuotEquivQuotSup I J).trans
-          (Ideal.quotEquivOfEq (sup_eq_right.mpr hIJ)) with
-        commutes' := fun x => rfl }
-    obtain ⟨g', e⟩ := h₂ (this.symm.toAlgHom.comp g)
-    obtain ⟨g', rfl⟩ := h₁ g'
-    replace e := congr_arg this.toAlgHom.comp e
-    conv_rhs at e =>
-      rw [← AlgHom.comp_assoc, AlgEquiv.toAlgHom_eq_coe, AlgEquiv.toAlgHom_eq_coe,
-        AlgEquiv.comp_symm, AlgHom.id_comp]
-    exact ⟨g', e⟩
+  intro B _ I hI _; exact FormallySmooth.comp_surjective I hI
+  intro B _ I J hIJ h₁ h₂ _ g
+  let this : ((B ⧸ I) ⧸ J.map (Ideal.Quotient.mk I)) ≃ₐ[R] B ⧸ J :=
+    {
+      (DoubleQuot.quotQuotEquivQuotSup I J).trans
+        (Ideal.quotEquivOfEq (sup_eq_right.mpr hIJ)) with
+      commutes' := fun x => rfl }
+  obtain ⟨g', e⟩ := h₂ (this.symm.toAlgHom.comp g)
+  obtain ⟨g', rfl⟩ := h₁ g'
+  replace e := congr_arg this.toAlgHom.comp e
+  conv_rhs at e =>
+    rw [← AlgHom.comp_assoc, AlgEquiv.toAlgHom_eq_coe, AlgEquiv.toAlgHom_eq_coe,
+      AlgEquiv.comp_symm, AlgHom.id_comp]
+  exact ⟨g', e⟩
 
 /-- For a formally smooth `R`-algebra `A` and a map `f : A →ₐ[R] B ⧸ I` with `I` square-zero,
 this is an arbitrary lift `A →ₐ[R] B`. -/
@@ -220,35 +220,35 @@ a retraction. -/
 theorem iff_split_surjection [FormallySmooth R P] :
     FormallySmooth R A ↔ ∃ g, f.kerSquareLift.comp g = AlgHom.id R A := by
   constructor
-  · intro
-    have surj : Function.Surjective f.kerSquareLift := fun x =>
-      ⟨Submodule.Quotient.mk (hf x).choose, (hf x).choose_spec⟩
-    have sqz : RingHom.ker f.kerSquareLift.toRingHom ^ 2 = 0 := by
-      rw [AlgHom.ker_kerSquareLift, Ideal.cotangentIdeal_square, Ideal.zero_eq_bot]
-    refine
-      ⟨FormallySmooth.lift _ ⟨2, sqz⟩ (Ideal.quotientKerAlgEquivOfSurjective surj).symm.toAlgHom,
-        ?_⟩
-    ext x
-    have :=
-      (Ideal.quotientKerAlgEquivOfSurjective surj).toAlgHom.congr_arg
-        (FormallySmooth.mk_lift _ ⟨2, sqz⟩
-          (Ideal.quotientKerAlgEquivOfSurjective surj).symm.toAlgHom x)
-    -- Porting note: was
-    -- dsimp at this
-    -- rw [AlgEquiv.apply_symm_apply] at this
-    erw [AlgEquiv.apply_symm_apply] at this
-    conv_rhs => rw [← this, AlgHom.id_apply]
-    rfl
-    -- Porting note: lean3 was not finished here:
-    -- obtain ⟨y, e⟩ :=
-    --   Ideal.Quotient.mk_surjective
-    --     (FormallySmooth.lift _ ⟨2, sqz⟩
-    --       (Ideal.quotientKerAlgEquivOfSurjective surj).symm.toAlgHom
-    --       x)
-    -- dsimp at e ⊢
-    -- rw [← e]
-    -- rfl
-  · rintro ⟨g, hg⟩; exact FormallySmooth.of_split f g hg
+  intro
+  have surj : Function.Surjective f.kerSquareLift := fun x =>
+    ⟨Submodule.Quotient.mk (hf x).choose, (hf x).choose_spec⟩
+  have sqz : RingHom.ker f.kerSquareLift.toRingHom ^ 2 = 0 := by
+    rw [AlgHom.ker_kerSquareLift, Ideal.cotangentIdeal_square, Ideal.zero_eq_bot]
+  refine
+    ⟨FormallySmooth.lift _ ⟨2, sqz⟩ (Ideal.quotientKerAlgEquivOfSurjective surj).symm.toAlgHom,
+      ?_⟩
+  ext x
+  have :=
+    (Ideal.quotientKerAlgEquivOfSurjective surj).toAlgHom.congr_arg
+      (FormallySmooth.mk_lift _ ⟨2, sqz⟩
+        (Ideal.quotientKerAlgEquivOfSurjective surj).symm.toAlgHom x)
+  -- Porting note: was
+  -- dsimp at this
+  -- rw [AlgEquiv.apply_symm_apply] at this
+  erw [AlgEquiv.apply_symm_apply] at this
+  conv_rhs => rw [← this, AlgHom.id_apply]
+  rfl
+  -- Porting note: lean3 was not finished here:
+  -- obtain ⟨y, e⟩ :=
+  --   Ideal.Quotient.mk_surjective
+  --     (FormallySmooth.lift _ ⟨2, sqz⟩
+  --       (Ideal.quotientKerAlgEquivOfSurjective surj).symm.toAlgHom
+  --       x)
+  -- dsimp at e ⊢
+  -- rw [← e]
+  -- rfl
+  rintro ⟨g, hg⟩; exact FormallySmooth.of_split f g hg
 
 end OfSurjective
 
@@ -266,12 +266,12 @@ instance base_change [FormallySmooth R A] : FormallySmooth B (B ⊗[R] A) := by
   letI := ((algebraMap B C).comp (algebraMap R B)).toAlgebra
   haveI : IsScalarTower R B C := IsScalarTower.of_algebraMap_eq' rfl
   refine ⟨TensorProduct.productLeftAlgHom (Algebra.ofId B C) ?_, ?_⟩
-  · exact FormallySmooth.lift I ⟨2, hI⟩ ((f.restrictScalars R).comp TensorProduct.includeRight)
-  · apply AlgHom.restrictScalars_injective R
-    apply TensorProduct.ext'
-    intro b a
-    suffices algebraMap B _ b * f (1 ⊗ₜ[R] a) = f (b ⊗ₜ[R] a) by simpa [Algebra.ofId_apply]
-    rw [← Algebra.smul_def, ← map_smul, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
+  exact FormallySmooth.lift I ⟨2, hI⟩ ((f.restrictScalars R).comp TensorProduct.includeRight)
+  apply AlgHom.restrictScalars_injective R
+  apply TensorProduct.ext'
+  intro b a
+  suffices algebraMap B _ b * f (1 ⊗ₜ[R] a) = f (b ⊗ₜ[R] a) by simpa [Algebra.ofId_apply]
+  rw [← Algebra.smul_def, ← map_smul, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
 
 end BaseChange
 

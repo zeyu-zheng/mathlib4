@@ -650,9 +650,9 @@ theorem funLeft_surjective_of_injective (f : m → n) (hf : Injective f) :
     ext
     dsimp only [funLeft_apply]
     split_ifs with w
-    · congr
-      exact hf w.choose_spec
-    · simp only [not_true, exists_apply_eq_apply] at w
+    congr
+    exact hf w.choose_spec
+    simp only [not_true, exists_apply_eq_apply] at w
 
 theorem funLeft_injective_of_surjective (f : m → n) (hf : Surjective f) :
     Injective (funLeft R M f) := by

@@ -65,7 +65,7 @@ instance partialOrder : PartialOrder (Localization s) where
     Localization.induction_on₃ a b c fun a b c hab hbc => by
       simp only [mk_le_mk] at hab hbc ⊢
       apply le_of_mul_le_mul_left' _
-      · exact ↑b.2
+      exact ↑b.2
       rw [mul_left_comm]
       refine (mul_le_mul_left' hab _).trans ?_
       rwa [mul_left_comm, mul_left_comm (b.2 : α), mul_le_mul_iff_left]
@@ -73,8 +73,8 @@ instance partialOrder : PartialOrder (Localization s) where
     induction' a using Localization.rec with a₁ a₂
     on_goal 1 =>
       induction' b using Localization.rec with b₁ b₂
-      · simp_rw [mk_le_mk, mk_eq_mk_iff, r_iff_exists]
-        exact fun hab hba => ⟨1, by rw [hab.antisymm hba]⟩
+      simp_rw [mk_le_mk, mk_eq_mk_iff, r_iff_exists]
+      exact fun hab hba => ⟨1, by rw [hab.antisymm hba]⟩
     all_goals rfl
   lt_iff_le_not_le a b := Localization.induction_on₂ a b fun a b => lt_iff_le_not_le
 

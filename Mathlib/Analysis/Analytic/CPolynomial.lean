@@ -285,14 +285,14 @@ theorem HasFiniteFPowerSeriesOnBall.eq_zero_of_bound_zero
 theorem HasFiniteFPowerSeriesOnBall.bound_zero_of_eq_zero (hf : ∀ y ∈ EMetric.ball x r, f y = 0)
     (r_pos : 0 < r) (hp : ∀ n, p n = 0) : HasFiniteFPowerSeriesOnBall f p x 0 r := by
   refine ⟨⟨?_, r_pos, ?_⟩, fun n _ ↦ hp n⟩
-  · rw [p.radius_eq_top_of_forall_image_add_eq_zero 0 (fun n ↦ by rw [add_zero]; exact hp n)]
-    exact le_top
-  · intro y hy
-    rw [hf (x + y)]
-    · convert hasSum_zero
-      rw [hp, ContinuousMultilinearMap.zero_apply]
-    · rwa [EMetric.mem_ball, edist_eq_coe_nnnorm_sub, add_comm, add_sub_cancel_right,
-        ← edist_eq_coe_nnnorm, ← EMetric.mem_ball]
+  rw [p.radius_eq_top_of_forall_image_add_eq_zero 0 (fun n ↦ by rw [add_zero]; exact hp n)]
+  exact le_top
+  intro y hy
+  rw [hf (x + y)]
+  convert hasSum_zero
+  rw [hp, ContinuousMultilinearMap.zero_apply]
+  rwa [EMetric.mem_ball, edist_eq_coe_nnnorm_sub, add_comm, add_sub_cancel_right,
+    ← edist_eq_coe_nnnorm, ← EMetric.mem_ball]
 
 /-- If `f` has a formal power series at `x` bounded by `0`, then `f` is equal to `0` in a
 neighborhood of `x`. -/
@@ -440,14 +440,14 @@ theorem changeOrigin_eval_of_finite (p : FormalMultilinearSeries 𝕜 E F) {n : 
     p.changeOriginSeriesTerm s.1 s.2.1 s.2.2 s.2.2.2 (fun _ ↦ x) fun _ ↦ y
   have finsupp : f.support.Finite := by
     apply Set.Finite.subset (s := changeOriginIndexEquiv ⁻¹' (Sigma.fst ⁻¹' {m | m < n}))
-    · apply Set.Finite.preimage (Equiv.injective _).injOn
-      simp_rw [← {m | m < n}.iUnion_of_singleton_coe, preimage_iUnion, ← range_sigmaMk]
-      exact finite_iUnion fun _ ↦ finite_range _
-    · refine fun s ↦ Not.imp_symm fun hs ↦ ?_
-      simp only [preimage_setOf_eq, changeOriginIndexEquiv_apply_fst, mem_setOf, not_lt] at hs
-      dsimp only [f]
-      rw [changeOriginSeriesTerm_bound p hn _ _ _ hs, ContinuousMultilinearMap.zero_apply,
-        ContinuousMultilinearMap.zero_apply]
+    apply Set.Finite.preimage (Equiv.injective _).injOn
+    simp_rw [← {m | m < n}.iUnion_of_singleton_coe, preimage_iUnion, ← range_sigmaMk]
+    exact finite_iUnion fun _ ↦ finite_range _
+    refine fun s ↦ Not.imp_symm fun hs ↦ ?_
+    simp only [preimage_setOf_eq, changeOriginIndexEquiv_apply_fst, mem_setOf, not_lt] at hs
+    dsimp only [f]
+    rw [changeOriginSeriesTerm_bound p hn _ _ _ hs, ContinuousMultilinearMap.zero_apply,
+      ContinuousMultilinearMap.zero_apply]
   have hfkl k l : HasSum (f ⟨k, l, ·⟩) (changeOriginSeries p k l (fun _ ↦ x) fun _ ↦ y) := by
     simp_rw [changeOriginSeries, ContinuousMultilinearMap.sum_apply]; apply hasSum_fintype
   have hfk k : HasSum (f ⟨k, ·⟩) (changeOrigin p x k fun _ ↦ y) := by

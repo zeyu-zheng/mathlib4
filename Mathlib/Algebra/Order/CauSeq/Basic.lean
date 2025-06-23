@@ -111,12 +111,12 @@ lemma bounded (hf : IsCauSeq abv f) : ∃ r, ∀ i, abv (f i) < r := by
   have : ∀ i, ∀ j ≤ i, abv (f j) ≤ R i
   refine Nat.rec (by simp [hR]) ?_
   rintro i hi j (rfl | hj)
-  · simp [R]
-  · exact (hi j hj).trans (le_max_left _ _)
+  simp [R]
+  exact (hi j hj).trans (le_max_left _ _)
   refine ⟨R i + 1, fun j ↦ ?_⟩
   obtain hji | hij := le_total j i
-  · exact (this i _ hji).trans_lt (lt_add_one _)
-  · simpa using (abv_add abv _ _).trans_lt $ add_lt_add_of_le_of_lt (this i _ le_rfl) (h _ hij)
+  exact (this i _ hji).trans_lt (lt_add_one _)
+  simpa using (abv_add abv _ _).trans_lt $ add_lt_add_of_le_of_lt (this i _ le_rfl) (h _ hij)
 
 lemma bounded' (hf : IsCauSeq abv f) (x : α) : ∃ r > x, ∀ i, abv (f i) < r :=
   let ⟨r, h⟩ := hf.bounded
@@ -519,8 +519,8 @@ theorem smul_equiv_smul {G : Type*} [SMul G β] [IsScalarTower G β β] {f1 f2 :
 
 theorem pow_equiv_pow {f1 f2 : CauSeq β abv} (hf : f1 ≈ f2) (n : ℕ) : f1 ^ n ≈ f2 ^ n := by
   induction' n with n ih
-  · simp only [Nat.zero_eq, pow_zero, Setoid.refl]
-  · simpa only [pow_succ'] using mul_equiv_mul hf ih
+  simp only [Nat.zero_eq, pow_zero, Setoid.refl]
+  simpa only [pow_succ'] using mul_equiv_mul hf ih
 
 end Ring
 
@@ -629,15 +629,15 @@ theorem trichotomy (f : CauSeq α abs) : Pos f ∨ LimZero f ∨ Pos (-f) := by
     refine fun h => ⟨K, K0, i, fun j ij => ?_⟩ <;>
     have := (hi _ ij).1 <;>
     cases' hi _ le_rfl with h₁ h₂
-  · rwa [abs_of_nonneg] at this
-    rw [abs_of_nonneg h] at h₁
-    exact
-      (le_add_iff_nonneg_right _).1
-        (le_trans h₁ <| neg_le_sub_iff_le_add'.1 <| le_of_lt (abs_lt.1 <| h₂ _ ij).1)
-  · rwa [abs_of_nonpos] at this
-    rw [abs_of_nonpos h] at h₁
-    rw [← sub_le_sub_iff_right, zero_sub]
-    exact le_trans (le_of_lt (abs_lt.1 <| h₂ _ ij).2) h₁
+  rwa [abs_of_nonneg] at this
+  rw [abs_of_nonneg h] at h₁
+  exact
+    (le_add_iff_nonneg_right _).1
+      (le_trans h₁ <| neg_le_sub_iff_le_add'.1 <| le_of_lt (abs_lt.1 <| h₂ _ ij).1)
+  rwa [abs_of_nonpos] at this
+  rw [abs_of_nonpos h] at h₁
+  rw [← sub_le_sub_iff_right, zero_sub]
+  exact le_trans (le_of_lt (abs_lt.1 <| h₂ _ ij).2) h₁
 
 instance : LT (CauSeq α abs) :=
   ⟨fun f g => Pos (g - f)⟩
@@ -806,26 +806,26 @@ protected theorem inf_comm (a b : CauSeq α abs) : a ⊓ b = b ⊓ a := Subtype.
 
 protected theorem sup_eq_right {a b : CauSeq α abs} (h : a ≤ b) : a ⊔ b ≈ b := by
   obtain ⟨ε, ε0 : _ < _, i, h⟩ | h := h
-  · intro _ _
-    refine ⟨i, fun j hj => ?_⟩
-    dsimp
-    erw [← max_sub_sub_right]
-    rwa [sub_self, max_eq_right, abs_zero]
-    rw [sub_nonpos, ← sub_nonneg]
-    exact ε0.le.trans (h _ hj)
-  · refine Setoid.trans (sup_equiv_sup h (Setoid.refl _)) ?_
-    rw [CauSeq.sup_idem]
+  intro _ _
+  refine ⟨i, fun j hj => ?_⟩
+  dsimp
+  erw [← max_sub_sub_right]
+  rwa [sub_self, max_eq_right, abs_zero]
+  rw [sub_nonpos, ← sub_nonneg]
+  exact ε0.le.trans (h _ hj)
+  refine Setoid.trans (sup_equiv_sup h (Setoid.refl _)) ?_
+  rw [CauSeq.sup_idem]
 
 protected theorem inf_eq_right {a b : CauSeq α abs} (h : b ≤ a) : a ⊓ b ≈ b := by
   obtain ⟨ε, ε0 : _ < _, i, h⟩ | h := h
-  · intro _ _
-    refine ⟨i, fun j hj => ?_⟩
-    dsimp
-    erw [← min_sub_sub_right]
-    rwa [sub_self, min_eq_right, abs_zero]
-    exact ε0.le.trans (h _ hj)
-  · refine Setoid.trans (inf_equiv_inf (Setoid.symm h) (Setoid.refl _)) ?_
-    rw [CauSeq.inf_idem]
+  intro _ _
+  refine ⟨i, fun j hj => ?_⟩
+  dsimp
+  erw [← min_sub_sub_right]
+  rwa [sub_self, min_eq_right, abs_zero]
+  exact ε0.le.trans (h _ hj)
+  refine Setoid.trans (inf_equiv_inf (Setoid.symm h) (Setoid.refl _)) ?_
+  rw [CauSeq.inf_idem]
 
 protected theorem sup_eq_left {a b : CauSeq α abs} (h : b ≤ a) : a ⊔ b ≈ a := by
   simpa only [CauSeq.sup_comm] using CauSeq.sup_eq_right h
@@ -847,25 +847,25 @@ protected theorem inf_le_right {a b : CauSeq α abs} : a ⊓ b ≤ b :=
 
 protected theorem sup_le {a b c : CauSeq α abs} (ha : a ≤ c) (hb : b ≤ c) : a ⊔ b ≤ c := by
   cases' ha with ha ha
-  · cases' hb with hb hb
-    · exact Or.inl (CauSeq.sup_lt ha hb)
-    · replace ha := le_of_le_of_eq ha.le (Setoid.symm hb)
-      refine le_of_le_of_eq (Or.inr ?_) hb
-      exact CauSeq.sup_eq_right ha
-  · replace hb := le_of_le_of_eq hb (Setoid.symm ha)
-    refine le_of_le_of_eq (Or.inr ?_) ha
-    exact CauSeq.sup_eq_left hb
+  cases' hb with hb hb
+  exact Or.inl (CauSeq.sup_lt ha hb)
+  replace ha := le_of_le_of_eq ha.le (Setoid.symm hb)
+  refine le_of_le_of_eq (Or.inr ?_) hb
+  exact CauSeq.sup_eq_right ha
+  replace hb := le_of_le_of_eq hb (Setoid.symm ha)
+  refine le_of_le_of_eq (Or.inr ?_) ha
+  exact CauSeq.sup_eq_left hb
 
 protected theorem le_inf {a b c : CauSeq α abs} (hb : a ≤ b) (hc : a ≤ c) : a ≤ b ⊓ c := by
   cases' hb with hb hb
-  · cases' hc with hc hc
-    · exact Or.inl (CauSeq.lt_inf hb hc)
-    · replace hb := le_of_eq_of_le (Setoid.symm hc) hb.le
-      refine le_of_eq_of_le hc (Or.inr ?_)
-      exact Setoid.symm (CauSeq.inf_eq_right hb)
-  · replace hc := le_of_eq_of_le (Setoid.symm hb) hc
-    refine le_of_eq_of_le hb (Or.inr ?_)
-    exact Setoid.symm (CauSeq.inf_eq_left hc)
+  cases' hc with hc hc
+  exact Or.inl (CauSeq.lt_inf hb hc)
+  replace hb := le_of_eq_of_le (Setoid.symm hc) hb.le
+  refine le_of_eq_of_le hc (Or.inr ?_)
+  exact Setoid.symm (CauSeq.inf_eq_right hb)
+  replace hc := le_of_eq_of_le (Setoid.symm hb) hc
+  refine le_of_eq_of_le hb (Or.inr ?_)
+  exact Setoid.symm (CauSeq.inf_eq_left hc)
 
 /-! Note that `DistribLattice (CauSeq α abs)` is not true because there is no `PartialOrder`. -/
 

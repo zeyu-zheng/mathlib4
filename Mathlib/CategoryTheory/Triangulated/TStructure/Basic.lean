@@ -92,21 +92,21 @@ lemma predicateShift_LE (a n n' : ℤ) (hn' : a + n = n') :
     (PredicateShift (t.LE n) a) = t.LE n' := by
   ext X
   constructor
-  · intro hX
-    exact (mem_iff_of_iso (LE t n') ((shiftEquiv C a).unitIso.symm.app X)).1
-      (t.LE_shift n (-a) n' (by omega) _ hX)
-  · intro hX
-    exact t.LE_shift _ _ _ hn' X hX
+  intro hX
+  exact (mem_iff_of_iso (LE t n') ((shiftEquiv C a).unitIso.symm.app X)).1
+    (t.LE_shift n (-a) n' (by omega) _ hX)
+  intro hX
+  exact t.LE_shift _ _ _ hn' X hX
 
 lemma predicateShift_GE (a n n' : ℤ) (hn' : a + n = n') :
     (PredicateShift (t.GE n) a) = t.GE n' := by
   ext X
   constructor
-  · intro hX
-    exact (mem_iff_of_iso (GE t n') ((shiftEquiv C a).unitIso.symm.app X)).1
-      (t.GE_shift n (-a) n' (by omega) _ hX)
-  · intro hX
-    exact t.GE_shift _ _ _ hn' X hX
+  intro hX
+  exact (mem_iff_of_iso (GE t n') ((shiftEquiv C a).unitIso.symm.app X)).1
+    (t.GE_shift n (-a) n' (by omega) _ hX)
+  intro hX
+  exact t.GE_shift _ _ _ hn' X hX
 
 lemma LE_monotone : Monotone t.LE := by
   let H := fun (a : ℕ) => ∀ (n : ℤ), t.LE n ≤ t.LE (n + a)
@@ -128,8 +128,8 @@ lemma LE_monotone : Monotone t.LE := by
   exact (ha n).trans (hb (n+a))
   intro a
   induction' a with a ha
-  · exact H_zero
-  · exact H_add a 1 _ rfl ha H_one
+  exact H_zero
+  exact H_add a 1 _ rfl ha H_one
 
 lemma GE_antitone : Antitone t.GE := by
   let H := fun (a : ℕ) => ∀ (n : ℤ), t.GE (n + a) ≤ t.GE n
@@ -151,8 +151,8 @@ lemma GE_antitone : Antitone t.GE := by
   exact (hb (n + a)).trans (ha n)
   intro a
   induction' a with a ha
-  · exact H_zero
-  · exact H_add a 1 _ rfl ha H_one
+  exact H_zero
+  exact H_add a 1 _ rfl ha H_one
 
 /-- Given a t-structure `t` on a pretriangulated category `C`, the property `t.IsLE X n`
 holds if `X : C` is `≤ n` for the t-structure. -/

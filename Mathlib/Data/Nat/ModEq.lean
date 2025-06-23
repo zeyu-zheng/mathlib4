@@ -239,14 +239,14 @@ lemma cancel_left_div_gcd (hm : 0 < m) (h : c * a ≡ c * b [MOD m]) :  a ≡ b 
   have hcd := gcd_dvd_right m c
   rw [modEq_iff_dvd]
   refine @Int.dvd_of_dvd_mul_right_of_gcd_one (m / d) (c / d) (b - a) ?_ ?_
-  · show (m / d : ℤ) ∣ c / d * (b - a)
-    rw [mul_comm, ← Int.mul_ediv_assoc (b - a) (Int.natCast_dvd_natCast.mpr hcd), mul_comm]
-    apply Int.ediv_dvd_ediv (Int.natCast_dvd_natCast.mpr hmd)
-    rw [mul_sub]
-    exact modEq_iff_dvd.mp h
-  · show Int.gcd (m / d) (c / d) = 1
-    simp only [← Int.natCast_div, Int.gcd_natCast_natCast (m / d) (c / d), gcd_div hmd hcd,
-      Nat.div_self (gcd_pos_of_pos_left c hm)]
+  show (m / d : ℤ) ∣ c / d * (b - a)
+  rw [mul_comm, ← Int.mul_ediv_assoc (b - a) (Int.natCast_dvd_natCast.mpr hcd), mul_comm]
+  apply Int.ediv_dvd_ediv (Int.natCast_dvd_natCast.mpr hmd)
+  rw [mul_sub]
+  exact modEq_iff_dvd.mp h
+  show Int.gcd (m / d) (c / d) = 1
+  simp only [← Int.natCast_div, Int.gcd_natCast_natCast (m / d) (c / d), gcd_div hmd hcd,
+    Nat.div_self (gcd_pos_of_pos_left c hm)]
 
 /-- To cancel a common factor `c` from a `ModEq` we must divide the modulus `m` by `gcd m c` -/
 lemma cancel_right_div_gcd (hm : 0 < m) (h : a * c ≡ b * c [MOD m]) : a ≡ b [MOD m / gcd m c] := by
@@ -264,10 +264,10 @@ lemma cancel_right_div_gcd' (hm : 0 < m) (hcd : c ≡ d [MOD m]) (h : a * c ≡ 
 /-- A common factor that's coprime with the modulus can be cancelled from a `ModEq` -/
 lemma cancel_left_of_coprime (hmc : gcd m c = 1) (h : c * a ≡ c * b [MOD m]) : a ≡ b [MOD m] := by
   rcases m.eq_zero_or_pos with (rfl | hm)
-  · simp only [gcd_zero_left] at hmc
-    simp only [gcd_zero_left, hmc, one_mul, modEq_zero_iff] at h
-    subst h
-    rfl
+  simp only [gcd_zero_left] at hmc
+  simp only [gcd_zero_left, hmc, one_mul, modEq_zero_iff] at h
+  subst h
+  rfl
   simpa [hmc] using h.cancel_left_div_gcd hm
 
 /-- A common factor that's coprime with the modulus can be cancelled from a `ModEq` -/
@@ -366,17 +366,17 @@ theorem add_mod_add_ite (a b c : ℕ) :
   else by
     rw [this]
     split_ifs with h
-    · have h2 : (a % c + b % c) / c < 2 :=
-        Nat.div_lt_of_lt_mul
-          (by
-            rw [mul_two]
-            exact
-              add_lt_add (Nat.mod_lt _ (Nat.pos_of_ne_zero hc0))
-                (Nat.mod_lt _ (Nat.pos_of_ne_zero hc0)))
-      have h0 : 0 < (a % c + b % c) / c := Nat.div_pos h (Nat.pos_of_ne_zero hc0)
-      rw [← @add_right_cancel_iff _ _ _ (c * ((a % c + b % c) / c)), add_comm _ c, add_assoc,
-        mod_add_div, le_antisymm (le_of_lt_succ h2) h0, mul_one, add_comm]
-    · rw [Nat.mod_eq_of_lt (lt_of_not_ge h), add_zero]
+    have h2 : (a % c + b % c) / c < 2 :=
+      Nat.div_lt_of_lt_mul
+        (by
+          rw [mul_two]
+          exact
+            add_lt_add (Nat.mod_lt _ (Nat.pos_of_ne_zero hc0))
+              (Nat.mod_lt _ (Nat.pos_of_ne_zero hc0)))
+    have h0 : 0 < (a % c + b % c) / c := Nat.div_pos h (Nat.pos_of_ne_zero hc0)
+    rw [← @add_right_cancel_iff _ _ _ (c * ((a % c + b % c) / c)), add_comm _ c, add_assoc,
+      mod_add_div, le_antisymm (le_of_lt_succ h2) h0, mul_one, add_comm]
+    rw [Nat.mod_eq_of_lt (lt_of_not_ge h), add_zero]
 
 theorem add_mod_of_add_mod_lt {a b c : ℕ} (hc : a % c + b % c < c) :
     (a + b) % c = a % c + b % c := by rw [← add_mod_add_ite, if_neg (not_le_of_lt hc), add_zero]

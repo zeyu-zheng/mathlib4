@@ -27,9 +27,9 @@ protected theorem StrictMonoOn.union {s t : Set α} {c : α} (h₁ : StrictMonoO
   have A : ∀ x, x ∈ s ∪ t → x ≤ c → x ∈ s
   intro x hx hxc
   cases hx
-  · assumption
+  assumption
   rcases eq_or_lt_of_le hxc with (rfl | h'x)
-  · exact hs.1
+  exact hs.1
   exact (lt_irrefl _ (h'x.trans_le (ht.2 (by assumption)))).elim
   have B : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t
   intro x hx hxc
@@ -37,17 +37,17 @@ protected theorem StrictMonoOn.union {s t : Set α} {c : α} (h₁ : StrictMonoO
   | Or.inr hx => exact hx
   | Or.inl hx =>
     rcases eq_or_lt_of_le hxc with (rfl | h'x)
-    · exact ht.1
+    exact ht.1
     exact (lt_irrefl _ (h'x.trans_le (hs.2 hx))).elim
   intro x hx y hy hxy
   rcases lt_or_le x c with (hxc | hcx)
-  · have xs : x ∈ s := A _ hx hxc.le
-    rcases lt_or_le y c with (hyc | hcy)
-    · exact h₁ xs (A _ hy hyc.le) hxy
-    · exact (h₁ xs hs.1 hxc).trans_le (h₂.monotoneOn ht.1 (B _ hy hcy) hcy)
-  · have xt : x ∈ t := B _ hx hcx
-    have yt : y ∈ t := B _ hy (hcx.trans hxy.le)
-    exact h₂ xt yt hxy
+  have xs : x ∈ s := A _ hx hxc.le
+  rcases lt_or_le y c with (hyc | hcy)
+  exact h₁ xs (A _ hy hyc.le) hxy
+  exact (h₁ xs hs.1 hxc).trans_le (h₂.monotoneOn ht.1 (B _ hy hcy) hcy)
+  have xt : x ∈ t := B _ hx hcx
+  have yt : y ∈ t := B _ hy (hcx.trans hxy.le)
+  exact h₂ xt yt hxy
 
 /-- If `f` is strictly monotone both on `(-∞, a]` and `[a, ∞)`, then it is strictly monotone on the
 whole line. -/
@@ -75,9 +75,9 @@ protected theorem MonotoneOn.union_right {s t : Set α} {c : α} (h₁ : Monoton
   have A : ∀ x, x ∈ s ∪ t → x ≤ c → x ∈ s
   intro x hx hxc
   cases hx
-  · assumption
+  assumption
   rcases eq_or_lt_of_le hxc with (rfl | h'x)
-  · exact hs.1
+  exact hs.1
   exact (lt_irrefl _ (h'x.trans_le (ht.2 (by assumption)))).elim
   have B : ∀ x, x ∈ s ∪ t → c ≤ x → x ∈ t
   intro x hx hxc
@@ -85,17 +85,17 @@ protected theorem MonotoneOn.union_right {s t : Set α} {c : α} (h₁ : Monoton
   | Or.inr hx => exact hx
   | Or.inl hx =>
     rcases eq_or_lt_of_le hxc with (rfl | h'x)
-    · exact ht.1
+    exact ht.1
     exact (lt_irrefl _ (h'x.trans_le (hs.2 hx))).elim
   intro x hx y hy hxy
   rcases lt_or_le x c with (hxc | hcx)
-  · have xs : x ∈ s := A _ hx hxc.le
-    rcases lt_or_le y c with (hyc | hcy)
-    · exact h₁ xs (A _ hy hyc.le) hxy
-    · exact (h₁ xs hs.1 hxc.le).trans (h₂ ht.1 (B _ hy hcy) hcy)
-  · have xt : x ∈ t := B _ hx hcx
-    have yt : y ∈ t := B _ hy (hcx.trans hxy)
-    exact h₂ xt yt hxy
+  have xs : x ∈ s := A _ hx hxc.le
+  rcases lt_or_le y c with (hyc | hcy)
+  exact h₁ xs (A _ hy hyc.le) hxy
+  exact (h₁ xs hs.1 hxc.le).trans (h₂ ht.1 (B _ hy hcy) hcy)
+  have xt : x ∈ t := B _ hx hcx
+  have yt : y ∈ t := B _ hy (hcx.trans hxy)
+  exact h₂ xt yt hxy
 
 /-- If `f` is monotone both on `(-∞, a]` and `[a, ∞)`, then it is monotone on the whole line. -/
 protected theorem MonotoneOn.Iic_union_Ici (h₁ : MonotoneOn f (Iic a)) (h₂ : MonotoneOn f (Ici a)) :

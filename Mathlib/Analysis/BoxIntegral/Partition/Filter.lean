@@ -345,13 +345,13 @@ theorem MemBaseSet.exists_common_compl (h₁ : l.MemBaseSet I c₁ r₁ π₁) (
     ∃ π : Prepartition I, π.iUnion = ↑I \ π₁.iUnion ∧
       (l.bDistortion → π.distortion ≤ c₁) ∧ (l.bDistortion → π.distortion ≤ c₂) := by
   wlog hc : c₁ ≤ c₂ with H
-  · simpa [hU, _root_.and_comm] using
-      @H _ _ I J c c₂ c₁ r r₂ r₁ π π₂ π₁ _ l₂ l₁ h₂ h₁ hU.symm (le_of_not_le hc)
+  simpa [hU, _root_.and_comm] using
+    @H _ _ I J c c₂ c₁ r r₂ r₁ π π₂ π₁ _ l₂ l₁ h₂ h₁ hU.symm (le_of_not_le hc)
   by_cases hD : (l.bDistortion : Prop)
-  · rcases h₁.4 hD with ⟨π, hπU, hπc⟩
-    exact ⟨π, hπU, fun _ => hπc, fun _ => hπc.trans hc⟩
-  · exact ⟨π₁.toPrepartition.compl, π₁.toPrepartition.iUnion_compl,
-      fun h => (hD h).elim, fun h => (hD h).elim⟩
+  rcases h₁.4 hD with ⟨π, hπU, hπc⟩
+  exact ⟨π, hπU, fun _ => hπc, fun _ => hπc.trans hc⟩
+  exact ⟨π₁.toPrepartition.compl, π₁.toPrepartition.iUnion_compl,
+    fun h => (hD h).elim, fun h => (hD h).elim⟩
 
 protected theorem MemBaseSet.unionComplToSubordinate (hπ₁ : l.MemBaseSet I c r₁ π₁)
     (hle : ∀ x ∈ Box.Icc I, r₂ x ≤ r₁ x) {π₂ : Prepartition I} (hU : π₂.iUnion = ↑I \ π₁.iUnion)
@@ -373,17 +373,17 @@ protected theorem MemBaseSet.filter (hπ : l.MemBaseSet I c r π) (p : Box ι �
   refine ⟨π₁.disjUnion π₂.toPrepartition this, ?_, ?_⟩
   · suffices ↑I \ π.iUnion ∪ π.iUnion \ (π.filter p).iUnion = ↑I \ (π.filter p).iUnion by
       simp [π₂, *]
-    have h : (π.filter p).iUnion ⊆ π.iUnion :=
-      biUnion_subset_biUnion_left (Finset.filter_subset _ _)
+    have h : (π.filter p).iUnion ⊆ π.iUnion
+    apply biUnion_subset_biUnion_left (Finset.filter_subset _ _)
     ext x
     fconstructor
     · rintro (⟨hxI, hxπ⟩ | ⟨hxπ, hxp⟩)
       exacts [⟨hxI, mt (@h x) hxπ⟩, ⟨π.iUnion_subset hxπ, hxp⟩]
-    · rintro ⟨hxI, hxp⟩
-      by_cases hxπ : x ∈ π.iUnion
-      exacts [Or.inr ⟨hxπ, hxp⟩, Or.inl ⟨hxI, hxπ⟩]
-  · have : (π.filter fun J => ¬p J).distortion ≤ c := (distortion_filter_le _ _).trans (hπ.3 hD)
-    simpa [hc]
+    rintro ⟨hxI, hxp⟩
+    by_cases hxπ : x ∈ π.iUnion
+    exacts [Or.inr ⟨hxπ, hxp⟩, Or.inl ⟨hxI, hxπ⟩]
+  have : (π.filter fun J => ¬p J).distortion ≤ c := (distortion_filter_le _ _).trans (hπ.3 hD)
+  simpa [hc]
 
 theorem biUnionTagged_memBaseSet {π : Prepartition I} {πi : ∀ J, TaggedPrepartition J}
     (h : ∀ J ∈ π, l.MemBaseSet J c r (πi J)) (hp : ∀ J ∈ π, (πi J).IsPartition)
@@ -391,11 +391,11 @@ theorem biUnionTagged_memBaseSet {π : Prepartition I} {πi : ∀ J, TaggedPrepa
   refine ⟨TaggedPrepartition.isSubordinate_biUnionTagged.2 fun J hJ => (h J hJ).1,
     fun hH => TaggedPrepartition.isHenstock_biUnionTagged.2 fun J hJ => (h J hJ).2 hH,
     fun hD => ?_, fun hD => ?_⟩
-  · rw [Prepartition.distortion_biUnionTagged, Finset.sup_le_iff]
-    exact fun J hJ => (h J hJ).3 hD
-  · refine ⟨_, ?_, hc hD⟩
-    rw [π.iUnion_compl, ← π.iUnion_biUnion_partition hp]
-    rfl
+  rw [Prepartition.distortion_biUnionTagged, Finset.sup_le_iff]
+  exact fun J hJ => (h J hJ).3 hD
+  refine ⟨_, ?_, hc hD⟩
+  rw [π.iUnion_compl, ← π.iUnion_biUnion_partition hp]
+  rfl
 
 @[mono]
 theorem RCond.mono {ι : Type*} {r : (ι → ℝ) → Ioi (0 : ℝ)} (h : l₁ ≤ l₂) (hr : l₂.RCond r) :
@@ -469,10 +469,10 @@ theorem tendsto_embedBox_toFilteriUnion_top (l : IntegrationParams) (h : I ≤ J
   refine ⟨r, hr, fun π hπ => ?_⟩
   rw [mem_setOf_eq, Prepartition.iUnion_top] at hπ
   refine ⟨⟨hπ.1.1, hπ.1.2, fun hD => le_trans (hπ.1.3 hD) (le_max_left _ _), fun _ => ?_⟩, ?_⟩
-  · refine ⟨_, π₀.iUnion_compl.trans ?_, le_max_right _ _⟩
-    congr 1
-    exact (Prepartition.iUnion_single h).trans hπ.2.symm
-  · exact hπ.2.trans (Prepartition.iUnion_single _).symm
+  refine ⟨_, π₀.iUnion_compl.trans ?_, le_max_right _ _⟩
+  congr 1
+  exact (Prepartition.iUnion_single h).trans hπ.2.symm
+  exact hπ.2.trans (Prepartition.iUnion_single _).symm
 
 theorem exists_memBaseSet_le_iUnion_eq (l : IntegrationParams) (π₀ : Prepartition I)
     (hc₁ : π₀.distortion ≤ c) (hc₂ : π₀.compl.distortion ≤ c) (r : (ι → ℝ) → Ioi (0 : ℝ)) :

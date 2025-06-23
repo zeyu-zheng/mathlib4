@@ -81,9 +81,9 @@ instance instAddRightCancelSemigroup (n : ℕ) : AddRightCancelSemigroup (Fin n)
 
 lemma coe_sub_one (a : Fin (n + 1)) : ↑(a - 1) = if a = 0 then n else a - 1 := by
   cases n
-  · simp
+  simp
   split_ifs with h
-  · simp [h]
+  simp [h]
   rw [sub_eq_add_neg, val_add_eq_ite, coe_neg_one, if_pos, Nat.add_comm, Nat.add_sub_add_left]
   conv_rhs => rw [Nat.add_comm]
   rw [Nat.add_le_add_iff_left, Nat.one_le_iff_ne_zero]
@@ -92,14 +92,14 @@ lemma coe_sub_one (a : Fin (n + 1)) : ↑(a - 1) = if a = 0 then n else a - 1 :=
 @[simp]
 lemma lt_sub_one_iff {k : Fin (n + 2)} : k < k - 1 ↔ k = 0 := by
   rcases k with ⟨_ | k, hk⟩
-  · simp only [zero_eta, zero_sub, lt_iff_val_lt_val, val_zero, coe_neg_one, zero_lt_succ]
+  simp only [zero_eta, zero_sub, lt_iff_val_lt_val, val_zero, coe_neg_one, zero_lt_succ]
   have : (n + 1 + (k + 1)) % (n + 2) = k % (n + 2)
   rw [Nat.add_comm, Nat.add_right_comm, Nat.add_assoc, Nat.add_assoc, add_mod_right]
   simp [lt_iff_val_lt_val, Fin.ext_iff, Fin.coe_sub, this, mod_eq_of_lt ((lt_succ_self _).trans hk)]
 
 @[simp] lemma le_sub_one_iff {k : Fin (n + 1)} : k ≤ k - 1 ↔ k = 0 := by
   cases n
-  · simp [fin_one_eq_zero k]
+  simp [fin_one_eq_zero k]
   simp [-val_fin_le, le_def]
   rw [← lt_sub_one_iff, le_iff_lt_or_eq, val_fin_lt, val_inj, lt_sub_one_iff, or_iff_left_iff_imp,
     eq_comm, sub_eq_iff_eq_add]

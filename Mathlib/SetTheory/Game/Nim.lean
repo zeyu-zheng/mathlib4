@@ -198,17 +198,17 @@ theorem nim_fuzzy_zero_of_ne_zero {o : Ordinal} (ho : o ≠ 0) : nim o ‖ 0 := 
 @[simp]
 theorem nim_add_equiv_zero_iff (o₁ o₂ : Ordinal) : (nim o₁ + nim o₂ ≈ 0) ↔ o₁ = o₂ := by
   constructor
-  · refine not_imp_not.1 fun hne : _ ≠ _ => (Impartial.not_equiv_zero_iff (nim o₁ + nim o₂)).2 ?_
-    wlog h : o₁ < o₂
-    · exact (fuzzy_congr_left add_comm_equiv).1 (this _ _ hne.symm (hne.lt_or_lt.resolve_left h))
-    rw [Impartial.fuzzy_zero_iff_gf, zero_lf_le, nim_def o₂]
-    refine ⟨toLeftMovesAdd (Sum.inr ?_), ?_⟩
-    · exact (Ordinal.principalSegOut h).top
-    · -- Porting note: squeezed simp
-      simpa only [Ordinal.typein_top, Ordinal.type_lt, PGame.add_moveLeft_inr, PGame.moveLeft_mk]
-        using (Impartial.add_self (nim o₁)).2
-  · rintro rfl
-    exact Impartial.add_self (nim o₁)
+  refine not_imp_not.1 fun hne : _ ≠ _ => (Impartial.not_equiv_zero_iff (nim o₁ + nim o₂)).2 ?_
+  wlog h : o₁ < o₂
+  exact (fuzzy_congr_left add_comm_equiv).1 (this _ _ hne.symm (hne.lt_or_lt.resolve_left h))
+  rw [Impartial.fuzzy_zero_iff_gf, zero_lf_le, nim_def o₂]
+  refine ⟨toLeftMovesAdd (Sum.inr ?_), ?_⟩
+  · exact (Ordinal.principalSegOut h).top
+  · -- Porting note: squeezed simp
+    simpa only [Ordinal.typein_top, Ordinal.type_lt, PGame.add_moveLeft_inr, PGame.moveLeft_mk]
+      using (Impartial.add_self (nim o₁)).2
+  rintro rfl
+  exact Impartial.add_self (nim o₁)
 
 @[simp]
 theorem nim_add_fuzzy_zero_iff {o₁ o₂ : Ordinal} : nim o₁ + nim o₂ ‖ 0 ↔ o₁ ≠ o₂ := by
@@ -234,36 +234,36 @@ theorem equiv_nim_grundyValue : ∀ (G : PGame.{u}) [G.Impartial], G ≈ nim (gr
     rw [Impartial.equiv_iff_add_equiv_zero, ← Impartial.forall_leftMoves_fuzzy_iff_equiv_zero]
     intro i
     apply leftMoves_add_cases i
-    · intro i₁
-      rw [add_moveLeft_inl]
-      apply
-        (fuzzy_congr_left (add_congr_left (Equiv.symm (equiv_nim_grundyValue (G.moveLeft i₁))))).1
-      rw [nim_add_fuzzy_zero_iff]
-      intro heq
-      rw [eq_comm, grundyValue_eq_mex_left G] at heq
-      -- Porting note: added universe annotation, argument
-      have h := Ordinal.ne_mex.{u, u} (fun i ↦ grundyValue (moveLeft G i))
-      rw [heq] at h
-      exact (h i₁).irrefl
-    · intro i₂
-      rw [add_moveLeft_inr, ← Impartial.exists_left_move_equiv_iff_fuzzy_zero]
+    intro i₁
+    rw [add_moveLeft_inl]
+    apply
+      (fuzzy_congr_left (add_congr_left (Equiv.symm (equiv_nim_grundyValue (G.moveLeft i₁))))).1
+    rw [nim_add_fuzzy_zero_iff]
+    intro heq
+    rw [eq_comm, grundyValue_eq_mex_left G] at heq
+    -- Porting note: added universe annotation, argument
+    have h := Ordinal.ne_mex.{u, u} (fun i ↦ grundyValue (moveLeft G i))
+    rw [heq] at h
+    exact (h i₁).irrefl
+    intro i₂
+    rw [add_moveLeft_inr, ← Impartial.exists_left_move_equiv_iff_fuzzy_zero]
+    revert i₂
+    rw [nim_def]
+    intro i₂
+    have h' :
+      ∃ i : G.LeftMoves,
+        grundyValue (G.moveLeft i) = Ordinal.typein (Quotient.out (grundyValue G)).r i₂ := by
       revert i₂
-      rw [nim_def]
+      rw [grundyValue_eq_mex_left]
       intro i₂
-      have h' :
-        ∃ i : G.LeftMoves,
-          grundyValue (G.moveLeft i) = Ordinal.typein (Quotient.out (grundyValue G)).r i₂ := by
-        revert i₂
-        rw [grundyValue_eq_mex_left]
-        intro i₂
-        have hnotin : _ ∉ _ := fun hin =>
-          (le_not_le_of_lt (Ordinal.typein_lt_self i₂)).2 (csInf_le' hin)
-        simpa using hnotin
-      cases' h' with i hi
-      use toLeftMovesAdd (Sum.inl i)
-      rw [add_moveLeft_inl, moveLeft_mk]
-      apply Equiv.trans (add_congr_left (equiv_nim_grundyValue (G.moveLeft i)))
-      simpa only [hi] using Impartial.add_self (nim (grundyValue (G.moveLeft i)))
+      have hnotin : _ ∉ _ := fun hin =>
+        (le_not_le_of_lt (Ordinal.typein_lt_self i₂)).2 (csInf_le' hin)
+      simpa using hnotin
+    cases' h' with i hi
+    use toLeftMovesAdd (Sum.inl i)
+    rw [add_moveLeft_inl, moveLeft_mk]
+    apply Equiv.trans (add_congr_left (equiv_nim_grundyValue (G.moveLeft i)))
+    simpa only [hi] using Impartial.add_self (nim (grundyValue (G.moveLeft i)))
 termination_by G => G
 decreasing_by all_goals pgame_wf_tac
 
@@ -319,35 +319,33 @@ theorem grundyValue_nim_add_nim (n m : ℕ) :
   refine (Ordinal.mex_le_of_ne.{u, u} fun i => ?_).antisymm
     (Ordinal.le_mex_of_forall fun ou hu => ?_)
   -- The Grundy value `n ^^^ m` can't be reached by left moves.
-  · apply leftMoves_add_cases i <;>
-      · -- A left move leaves us with a Grundy value of `k ^^^ m` for `k < n`, or
-        -- `n ^^^ k` for `k < m`.
-        refine fun a => leftMovesNimRecOn a fun ok hk => ?_
-        obtain ⟨k, rfl⟩ := Ordinal.lt_omega.1 (hk.trans (Ordinal.nat_lt_omega _))
-        simp only [add_moveLeft_inl, add_moveLeft_inr, moveLeft_nim', Equiv.symm_apply_apply]
-        -- The inequality follows from injectivity.
-        rw [natCast_lt] at hk
-        first
-        | rw [hn _ hk]
-        | rw [hm _ hk]
-        refine fun h => hk.ne ?_
-        rw [Ordinal.natCast_inj] at h
-        first
-        | rwa [Nat.xor_left_inj] at h
-        | rwa [Nat.xor_right_inj] at h
+  apply leftMoves_add_cases i <;>
+  · refine fun a => leftMovesNimRecOn a fun ok hk => ?_
+    obtain ⟨k, rfl⟩ := Ordinal.lt_omega.1 (hk.trans (Ordinal.nat_lt_omega _))
+    simp only [add_moveLeft_inl, add_moveLeft_inr, moveLeft_nim', Equiv.symm_apply_apply]
+    -- The inequality follows from injectivity.
+    rw [natCast_lt] at hk
+    first
+    | rw [hn _ hk]
+    | rw [hm _ hk]
+    refine fun h => hk.ne ?_
+    rw [Ordinal.natCast_inj] at h
+    first
+    | rwa [Nat.xor_left_inj] at h
+    | rwa [Nat.xor_right_inj] at h
   -- Every other smaller Grundy value can be reached by left moves.
-  · -- If `u < m ^^^ n`, then either `u ^^^ n < m` or `u ^^^ m < n`.
-    obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (hu.trans (Ordinal.nat_lt_omega _))
-    replace hu := Ordinal.natCast_lt.1 hu
-    cases' Nat.lt_xor_cases hu with h h
-    -- In the first case, reducing the `m` pile to `u ^^^ n` gives the desired Grundy value.
-    · refine ⟨toLeftMovesAdd (Sum.inl <| toLeftMovesNim ⟨_, Ordinal.natCast_lt.2 h⟩), ?_⟩
-      simp [Nat.xor_cancel_right, hn _ h]
-    -- In the second case, reducing the `n` pile to `u ^^^ m` gives the desired Grundy value.
-    · refine ⟨toLeftMovesAdd (Sum.inr <| toLeftMovesNim ⟨_, Ordinal.natCast_lt.2 h⟩), ?_⟩
-      have : n ^^^ (u ^^^ n) = u
-      rw [Nat.xor_comm u, Nat.xor_cancel_left]
-      simpa [hm _ h] using this
+  -- If `u < m ^^^ n`, then either `u ^^^ n < m` or `u ^^^ m < n`.
+  obtain ⟨u, rfl⟩ := Ordinal.lt_omega.1 (hu.trans (Ordinal.nat_lt_omega _))
+  replace hu := Ordinal.natCast_lt.1 hu
+  cases' Nat.lt_xor_cases hu with h h
+  -- In the first case, reducing the `m` pile to `u ^^^ n` gives the desired Grundy value.
+  refine ⟨toLeftMovesAdd (Sum.inl <| toLeftMovesNim ⟨_, Ordinal.natCast_lt.2 h⟩), ?_⟩
+  simp [Nat.xor_cancel_right, hn _ h]
+  -- In the second case, reducing the `n` pile to `u ^^^ m` gives the desired Grundy value.
+  refine ⟨toLeftMovesAdd (Sum.inr <| toLeftMovesNim ⟨_, Ordinal.natCast_lt.2 h⟩), ?_⟩
+  have : n ^^^ (u ^^^ n) = u
+  rw [Nat.xor_comm u, Nat.xor_cancel_left]
+  simpa [hm _ h] using this
 
 theorem nim_add_nim_equiv {n m : ℕ} : nim n + nim m ≈ nim (n ^^^ m) := by
   rw [← grundyValue_eq_iff_equiv_nim, grundyValue_nim_add_nim]

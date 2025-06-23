@@ -87,10 +87,10 @@ theorem Module.punctured_nhds_neBot [Nontrivial M] [NeBot (𝓝[≠] (0 : R))] [
   rcases exists_ne (0 : M) with ⟨y, hy⟩
   suffices Tendsto (fun c : R => x + c • y) (𝓝[≠] 0) (𝓝[≠] x) from this.neBot
   refine Tendsto.inf ?_ (tendsto_principal_principal.2 <| ?_)
-  · convert tendsto_const_nhds.add ((@tendsto_id R _).smul_const y)
-    rw [zero_smul, add_zero]
-  · intro c hc
-    simpa [hy] using hc
+  convert tendsto_const_nhds.add ((@tendsto_id R _).smul_const y)
+  rw [zero_smul, add_zero]
+  intro c hc
+  simpa [hy] using hc
 
 end
 
@@ -113,11 +113,11 @@ lemma TopologicalSpace.IsSeparable.span {R M : Type*} [AddCommMonoid M] [Semirin
     IsSeparable (Submodule.span R s : Set M) := by
   rw [span_eq_iUnion_nat]
   refine .iUnion fun n ↦ .image ?_ ?_
-  · have : IsSeparable {f : Fin n → R × M | ∀ (i : Fin n), f i ∈ Set.univ ×ˢ s} := by
-      apply isSeparable_pi (fun i ↦ .prod (.of_separableSpace Set.univ) hs)
-    rwa [Set.univ_prod] at this
-  · apply continuous_finset_sum _ (fun i _ ↦ ?_)
-    exact (continuous_fst.comp (continuous_apply i)).smul (continuous_snd.comp (continuous_apply i))
+  have : IsSeparable {f : Fin n → R × M | ∀ (i : Fin n), f i ∈ Set.univ ×ˢ s} := by
+    apply isSeparable_pi (fun i ↦ .prod (.of_separableSpace Set.univ) hs)
+  rwa [Set.univ_prod] at this
+  apply continuous_finset_sum _ (fun i _ ↦ ?_)
+  exact (continuous_fst.comp (continuous_apply i)).smul (continuous_snd.comp (continuous_apply i))
 
 namespace Submodule
 
@@ -1323,9 +1323,9 @@ theorem intCast_apply [TopologicalAddGroup M] (z : ℤ) (m : M) : (↑z : M →L
 theorem smulRight_one_pow [TopologicalSpace R] [TopologicalRing R] (c : R) (n : ℕ) :
     smulRight (1 : R →L[R] R) c ^ n = smulRight (1 : R →L[R] R) (c ^ n) := by
   induction' n with n ihn
-  · ext
-    simp
-  · rw [pow_succ, ihn, mul_def, smulRight_comp, smul_eq_mul, pow_succ']
+  ext
+  simp
+  rw [pow_succ, ihn, mul_def, smulRight_comp, smul_eq_mul, pow_succ']
 
 section
 
@@ -2295,19 +2295,19 @@ ring of self-maps of the domain. -/
 theorem to_ring_inverse (e : M ≃L[R] M₂) (f : M →L[R] M₂) :
     inverse f = Ring.inverse ((e.symm : M₂ →L[R] M).comp f) ∘L e.symm := by
   by_cases h₁ : ∃ e' : M ≃L[R] M₂, e' = f
-  · obtain ⟨e', he'⟩ := h₁
-    rw [← he']
-    change _ = Ring.inverse (e'.trans e.symm : M →L[R] M) ∘L (e.symm : M₂ →L[R] M)
-    ext
-    simp
-  · suffices ¬IsUnit ((e.symm : M₂ →L[R] M).comp f) by simp [this, h₁]
-    contrapose! h₁
-    rcases h₁ with ⟨F, hF⟩
-    use (ContinuousLinearEquiv.unitsEquiv _ _ F).trans e
-    ext
-    dsimp
-    rw [hF]
-    simp
+  obtain ⟨e', he'⟩ := h₁
+  rw [← he']
+  change _ = Ring.inverse (e'.trans e.symm : M →L[R] M) ∘L (e.symm : M₂ →L[R] M)
+  ext
+  simp
+  suffices ¬IsUnit ((e.symm : M₂ →L[R] M).comp f) by simp [this, h₁]
+  contrapose! h₁
+  rcases h₁ with ⟨F, hF⟩
+  use (ContinuousLinearEquiv.unitsEquiv _ _ F).trans e
+  ext
+  dsimp
+  rw [hF]
+  simp
 
 theorem ring_inverse_eq_map_inverse : Ring.inverse = @inverse R M M _ _ _ _ _ _ _ := by
   ext

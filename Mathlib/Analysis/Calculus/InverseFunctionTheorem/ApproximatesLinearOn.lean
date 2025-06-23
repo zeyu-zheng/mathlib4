@@ -138,11 +138,11 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
     SurjOn f (closedBall b ε) (closedBall (f b) (((f'symm.nnnorm : ℝ)⁻¹ - c) * ε)) := by
   intro y hy
   rcases le_or_lt (f'symm.nnnorm : ℝ)⁻¹ c with hc | hc
-  · refine ⟨b, by simp [ε0], ?_⟩
-    have : dist y (f b) ≤ 0 :=
-      (mem_closedBall.1 hy).trans (mul_nonpos_of_nonpos_of_nonneg (by linarith) ε0)
-    simp only [dist_le_zero] at this
-    rw [this]
+  refine ⟨b, by simp [ε0], ?_⟩
+  have : dist y (f b) ≤ 0 :=
+    (mem_closedBall.1 hy).trans (mul_nonpos_of_nonpos_of_nonneg (by linarith) ε0)
+  simp only [dist_le_zero] at this
+  rw [this]
   have If' : (0 : ℝ) < f'symm.nnnorm := by rw [← inv_pos]; exact (NNReal.coe_nonneg _).trans_lt hc
   have Icf' : (c : ℝ) * f'symm.nnnorm < 1 := by rwa [inv_eq_one_div, lt_div_iff If'] at hc
   have Jf' : (f'symm.nnnorm : ℝ) ≠ 0 := ne_of_gt If'
@@ -227,8 +227,8 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
               f'symm.nnnorm * (1 - ((c : ℝ) * f'symm.nnnorm) ^ n) / (1 - c * f'symm.nnnorm) *
                 dist (f b) y := by
                   gcongr
-                  · exact IH.1
-                  · exact IH.2
+                  exact IH.1
+                  exact IH.2
         _ = f'symm.nnnorm * (1 - ((c : ℝ) * f'symm.nnnorm) ^ n.succ) /
               (1 - (c : ℝ) * f'symm.nnnorm) * dist (f b) y := by
           field_simp [Jcf', pow_succ]; ring
@@ -271,7 +271,7 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
 theorem open_image (hf : ApproximatesLinearOn f f' s c) (f'symm : f'.NonlinearRightInverse)
     (hs : IsOpen s) (hc : Subsingleton F ∨ c < f'symm.nnnorm⁻¹) : IsOpen (f '' s) := by
   cases' hc with hE hc
-  · exact isOpen_discrete _
+  exact isOpen_discrete _
   simp only [isOpen_iff_mem_nhds, nhds_basis_closedBall.mem_iff, forall_mem_image] at hs ⊢
   intro x hx
   rcases hs x hx with ⟨ε, ε0, hε⟩
@@ -308,7 +308,7 @@ local notation "N" => ‖(f'.symm : F →L[𝕜] E)‖₊
 protected theorem antilipschitz (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c)
     (hc : Subsingleton E ∨ c < N⁻¹) : AntilipschitzWith (N⁻¹ - c)⁻¹ (s.restrict f) := by
   cases' hc with hE hc
-  · exact AntilipschitzWith.of_subsingleton
+  exact AntilipschitzWith.of_subsingleton
   convert (f'.antilipschitz.restrict s).add_lipschitzWith hf.lipschitz_sub hc
   simp [restrict]
 
@@ -323,19 +323,19 @@ protected theorem injOn (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c)
 protected theorem surjective [CompleteSpace E] (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) univ c)
     (hc : Subsingleton E ∨ c < N⁻¹) : Surjective f := by
   cases' hc with hE hc
-  · haveI : Subsingleton F := (Equiv.subsingleton_congr f'.toEquiv).1 hE
-    exact surjective_to_subsingleton _
-  · apply forall_of_forall_mem_closedBall (fun y : F => ∃ a, f a = y) (f 0) _
-    have hc' : (0 : ℝ) < N⁻¹ - c
-    rw [sub_pos]; exact hc
-    let p : ℝ → Prop := fun R => closedBall (f 0) R ⊆ Set.range f
-    have hp : ∀ᶠ r : ℝ in atTop, p ((N⁻¹ - c) * r)
-    have hr : ∀ᶠ r : ℝ in atTop, 0 ≤ r := eventually_ge_atTop 0
-    refine hr.mono fun r hr => Subset.trans ?_ (image_subset_range f (closedBall 0 r))
-    refine hf.surjOn_closedBall_of_nonlinearRightInverse f'.toNonlinearRightInverse hr ?_
-    exact subset_univ _
-    refine ((tendsto_id.const_mul_atTop hc').frequently hp.frequently).mono ?_
-    exact fun R h y hy => h hy
+  haveI : Subsingleton F := (Equiv.subsingleton_congr f'.toEquiv).1 hE
+  exact surjective_to_subsingleton _
+  apply forall_of_forall_mem_closedBall (fun y : F => ∃ a, f a = y) (f 0) _
+  have hc' : (0 : ℝ) < N⁻¹ - c
+  rw [sub_pos]; exact hc
+  let p : ℝ → Prop := fun R => closedBall (f 0) R ⊆ Set.range f
+  have hp : ∀ᶠ r : ℝ in atTop, p ((N⁻¹ - c) * r)
+  have hr : ∀ᶠ r : ℝ in atTop, 0 ≤ r := eventually_ge_atTop 0
+  refine hr.mono fun r hr => Subset.trans ?_ (image_subset_range f (closedBall 0 r))
+  refine hf.surjOn_closedBall_of_nonlinearRightInverse f'.toNonlinearRightInverse hr ?_
+  exact subset_univ _
+  refine ((tendsto_id.const_mul_atTop hc').frequently hp.frequently).mono ?_
+  exact fun R h y hy => h hy
 
 /-- A map approximating a linear equivalence on a set defines a partial equivalence on this set.
 Should not be used outside of this file, because it is superseded by `toPartialHomeomorph` below.

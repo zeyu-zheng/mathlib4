@@ -638,9 +638,9 @@ theorem sqrtTwoAddSeries_lt_two : ∀ n : ℕ, sqrtTwoAddSeries 0 n < 2
   | n + 1 => by
     refine lt_of_lt_of_le ?_ (sqrt_sq zero_lt_two.le).le
     rw [sqrtTwoAddSeries, sqrt_lt_sqrt_iff, ← lt_sub_iff_add_lt']
-    · refine (sqrtTwoAddSeries_lt_two n).trans_le ?_
-      norm_num
-    · exact add_nonneg zero_le_two (sqrtTwoAddSeries_zero_nonneg n)
+    refine (sqrtTwoAddSeries_lt_two n).trans_le ?_
+    norm_num
+    exact add_nonneg zero_le_two (sqrtTwoAddSeries_zero_nonneg n)
 
 theorem sqrtTwoAddSeries_succ (x : ℝ) :
     ∀ n : ℕ, sqrtTwoAddSeries x (n + 1) = sqrtTwoAddSeries (√(2 + x)) n
@@ -673,78 +673,78 @@ theorem sin_sq_pi_over_two_pow (n : ℕ) :
 theorem sin_sq_pi_over_two_pow_succ (n : ℕ) :
     sin (π / 2 ^ (n + 2)) ^ 2 = 1 / 2 - sqrtTwoAddSeries 0 n / 4 := by
   rw [sin_sq_pi_over_two_pow, sqrtTwoAddSeries, div_pow, sq_sqrt, add_div, ← sub_sub]
-  · congr
-    · norm_num
-    · norm_num
-  · exact add_nonneg two_pos.le (sqrtTwoAddSeries_zero_nonneg _)
+  congr
+  norm_num
+  norm_num
+  exact add_nonneg two_pos.le (sqrtTwoAddSeries_zero_nonneg _)
 
 @[simp]
 theorem sin_pi_over_two_pow_succ (n : ℕ) :
     sin (π / 2 ^ (n + 2)) = √(2 - sqrtTwoAddSeries 0 n) / 2 := by
   rw [eq_div_iff_mul_eq two_ne_zero, eq_comm, sqrt_eq_iff_sq_eq, mul_pow,
     sin_sq_pi_over_two_pow_succ, sub_mul]
-  · congr <;> norm_num
-  · rw [sub_nonneg]
-    exact (sqrtTwoAddSeries_lt_two _).le
+  congr <;> norm_num
+  rw [sub_nonneg]
+  exact (sqrtTwoAddSeries_lt_two _).le
   refine mul_nonneg (sin_nonneg_of_nonneg_of_le_pi ?_ ?_) zero_le_two
-  · positivity
-  · exact div_le_self pi_pos.le <| one_le_pow_of_one_le one_le_two _
+  positivity
+  exact div_le_self pi_pos.le <| one_le_pow_of_one_le one_le_two _
 
 @[simp]
 theorem cos_pi_div_four : cos (π / 4) = √2 / 2 := by
   trans cos (π / 2 ^ 2)
-  · congr
-    norm_num
-  · simp
+  congr
+  norm_num
+  simp
 
 @[simp]
 theorem sin_pi_div_four : sin (π / 4) = √2 / 2 := by
   trans sin (π / 2 ^ 2)
-  · congr
-    norm_num
-  · simp
+  congr
+  norm_num
+  simp
 
 @[simp]
 theorem cos_pi_div_eight : cos (π / 8) = √(2 + √2) / 2 := by
   trans cos (π / 2 ^ 3)
-  · congr
-    norm_num
-  · simp
+  congr
+  norm_num
+  simp
 
 @[simp]
 theorem sin_pi_div_eight : sin (π / 8) = √(2 - √2) / 2 := by
   trans sin (π / 2 ^ 3)
-  · congr
-    norm_num
-  · simp
+  congr
+  norm_num
+  simp
 
 @[simp]
 theorem cos_pi_div_sixteen : cos (π / 16) = √(2 + √(2 + √2)) / 2 := by
   trans cos (π / 2 ^ 4)
-  · congr
-    norm_num
-  · simp
+  congr
+  norm_num
+  simp
 
 @[simp]
 theorem sin_pi_div_sixteen : sin (π / 16) = √(2 - √(2 + √2)) / 2 := by
   trans sin (π / 2 ^ 4)
-  · congr
-    norm_num
-  · simp
+  congr
+  norm_num
+  simp
 
 @[simp]
 theorem cos_pi_div_thirty_two : cos (π / 32) = √(2 + √(2 + √(2 + √2))) / 2 := by
   trans cos (π / 2 ^ 5)
-  · congr
-    norm_num
-  · simp
+  congr
+  norm_num
+  simp
 
 @[simp]
 theorem sin_pi_div_thirty_two : sin (π / 32) = √(2 - √(2 + √(2 + √2))) / 2 := by
   trans sin (π / 2 ^ 5)
-  · congr
-    norm_num
-  · simp
+  congr
+  norm_num
+  simp
 
 -- This section is also a convenient location for other explicit values of `sin` and `cos`.
 /-- The cosine of `π / 3` is `1 / 2`. -/
@@ -756,10 +756,10 @@ theorem cos_pi_div_three : cos (π / 3) = 1 / 2 := by
   ring
   linarith [cos_pi, cos_three_mul (π / 3)]
   cases' mul_eq_zero.mp h₁ with h h
-  · linarith [pow_eq_zero h]
-  · have : cos π < cos (π / 3) := by
-      refine cos_lt_cos_of_nonneg_of_le_pi ?_ le_rfl ?_ <;> linarith [pi_pos]
-    linarith [cos_pi]
+  linarith [pow_eq_zero h]
+  have : cos π < cos (π / 3) := by
+    refine cos_lt_cos_of_nonneg_of_le_pi ?_ le_rfl ?_ <;> linarith [pi_pos]
+  linarith [cos_pi]
 
 /-- The cosine of `π / 6` is `√3 / 2`. -/
 @[simp]
@@ -912,10 +912,10 @@ theorem tendsto_sin_pi_div_two : Tendsto sin (𝓝[<] (π / 2)) (𝓝 1) := by
 
 theorem tendsto_cos_pi_div_two : Tendsto cos (𝓝[<] (π / 2)) (𝓝[>] 0) := by
   apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
-  · convert continuous_cos.continuousWithinAt.tendsto
-    simp
-  · filter_upwards [Ioo_mem_nhdsWithin_Iio
-        (right_mem_Ioc.mpr (neg_lt_self pi_div_two_pos))] with x hx using cos_pos_of_mem_Ioo hx
+  convert continuous_cos.continuousWithinAt.tendsto
+  simp
+  filter_upwards [Ioo_mem_nhdsWithin_Iio
+      (right_mem_Ioc.mpr (neg_lt_self pi_div_two_pos))] with x hx using cos_pos_of_mem_Ioo hx
 
 theorem tendsto_tan_pi_div_two : Tendsto tan (𝓝[<] (π / 2)) atTop := by
   convert tendsto_cos_pi_div_two.inv_tendsto_zero.atTop_mul zero_lt_one tendsto_sin_pi_div_two
@@ -928,10 +928,10 @@ theorem tendsto_sin_neg_pi_div_two : Tendsto sin (𝓝[>] (-(π / 2))) (𝓝 (-1
 
 theorem tendsto_cos_neg_pi_div_two : Tendsto cos (𝓝[>] (-(π / 2))) (𝓝[>] 0) := by
   apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within
-  · convert continuous_cos.continuousWithinAt.tendsto
-    simp
-  · filter_upwards [Ioo_mem_nhdsWithin_Ioi
-        (left_mem_Ico.mpr (neg_lt_self pi_div_two_pos))] with x hx using cos_pos_of_mem_Ioo hx
+  convert continuous_cos.continuousWithinAt.tendsto
+  simp
+  filter_upwards [Ioo_mem_nhdsWithin_Ioi
+      (left_mem_Ico.mpr (neg_lt_self pi_div_two_pos))] with x hx using cos_pos_of_mem_Ioo hx
 
 theorem tendsto_tan_neg_pi_div_two : Tendsto tan (𝓝[>] (-(π / 2))) atBot := by
   convert tendsto_cos_neg_pi_div_two.inv_tendsto_zero.atTop_mul_neg (by norm_num)
@@ -1177,10 +1177,10 @@ theorem abs_exp_mul_exp_add_exp_neg_le_of_abs_im_le {a b : ℝ} (ha : a ≤ 0) {
   have : Real.exp |z.re| ≤ Real.exp z.re + Real.exp (-z.re) :=
     apply_abs_le_add_of_nonneg (fun x => (Real.exp_pos x).le) z.re
   refine mul_le_mul_of_nonpos_left (mul_le_mul this ?_ ?_ ((Real.exp_pos _).le.trans this)) ha
-  · exact
-      Real.cos_le_cos_of_nonneg_of_le_pi (_root_.abs_nonneg _)
-        (hb.trans <| half_le_self <| Real.pi_pos.le) hz
-  · refine Real.cos_nonneg_of_mem_Icc ⟨?_, hb⟩
-    exact (neg_nonpos.2 <| Real.pi_div_two_pos.le).trans ((_root_.abs_nonneg _).trans hz)
+  exact
+    Real.cos_le_cos_of_nonneg_of_le_pi (_root_.abs_nonneg _)
+      (hb.trans <| half_le_self <| Real.pi_pos.le) hz
+  refine Real.cos_nonneg_of_mem_Icc ⟨?_, hb⟩
+  exact (neg_nonpos.2 <| Real.pi_div_two_pos.le).trans ((_root_.abs_nonneg _).trans hz)
 
 end Complex

@@ -89,9 +89,9 @@ instance estimator' :
     rw [eq]
     simp only [← split]
     constructor
-    · simp only [List.minimum_of_length_pos_le_iff]
-      exact suffixLevenshtein_minimum_le_levenshtein_append _ _ _
-    · exact List.length_le_of_sublist (List.sublist_append_right _ _)
+    simp only [List.minimum_of_length_pos_le_iff]
+    exact suffixLevenshtein_minimum_le_levenshtein_append _ _ _
+    exact List.length_le_of_sublist (List.sublist_append_right _ _)
   improve_spec e := by
     dsimp [EstimatorData.improve]
     match e.pre_rev, e.split, e.bound_eq, e.distances_eq with
@@ -109,10 +109,10 @@ instance estimator' :
         simpa using b_eq
       rw [b_eq]
       constructor
-      · refine (?_ : _ ≤ _).trans (List.minimum_of_length_pos_le_getElem _)
-        simp only [List.minimum_of_length_pos_le_iff, List.coe_minimum_of_length_pos, d_eq]
-        apply le_suffixLevenshtein_cons_minimum
-      · simp [← split]
+      refine (?_ : _ ≤ _).trans (List.minimum_of_length_pos_le_getElem _)
+      simp only [List.minimum_of_length_pos_le_iff, List.coe_minimum_of_length_pos, d_eq]
+      apply le_suffixLevenshtein_cons_minimum
+      simp [← split]
     | y₁ :: y₂ :: t, split, b_eq, d_eq =>
       simp only [EstimatorData.bound, Prod.lt_iff]
       right
@@ -121,9 +121,9 @@ instance estimator' :
         simpa using b_eq
       rw [b_eq]
       constructor
-      · simp only [d_eq, List.minimum_of_length_pos_le_iff, List.coe_minimum_of_length_pos]
-        apply le_suffixLevenshtein_cons_minimum
-      · exact Nat.lt.base _
+      simp only [d_eq, List.minimum_of_length_pos_le_iff, List.coe_minimum_of_length_pos]
+      apply le_suffixLevenshtein_cons_minimum
+      exact Nat.lt.base _
 
 /-- An estimator for Levenshtein distances. -/
 def LevenshteinEstimator : Type _ :=

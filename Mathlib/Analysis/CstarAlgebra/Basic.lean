@@ -94,15 +94,15 @@ instance (priority := 100) to_normedStarGroup : NormedStarGroup E :=
   ⟨by
     intro x
     by_cases htriv : x = 0
-    · simp only [htriv, star_zero]
-    · have hnt : 0 < ‖x‖ := norm_pos_iff.mpr htriv
-      have h₁ : ∀ z : E, ‖z⋆ * z‖ ≤ ‖z⋆‖ * ‖z‖ := fun z => norm_mul_le z⋆ z
-      have h₂ : ∀ z : E, 0 < ‖z‖ → ‖z‖ ≤ ‖z⋆‖ := fun z hz => by
-        rw [← mul_le_mul_right hz]; exact (CstarRing.norm_mul_self_le z).trans (h₁ z)
-      have h₃ : ‖x⋆‖ ≤ ‖x‖ := by
-        conv_rhs => rw [← star_star x]
-        exact h₂ x⋆ (gt_of_ge_of_gt (h₂ x hnt) hnt)
-      exact le_antisymm h₃ (h₂ x hnt)⟩
+    simp only [htriv, star_zero]
+    have hnt : 0 < ‖x‖ := norm_pos_iff.mpr htriv
+    have h₁ : ∀ z : E, ‖z⋆ * z‖ ≤ ‖z⋆‖ * ‖z‖ := fun z => norm_mul_le z⋆ z
+    have h₂ : ∀ z : E, 0 < ‖z‖ → ‖z‖ ≤ ‖z⋆‖ := fun z hz => by
+      rw [← mul_le_mul_right hz]; exact (CstarRing.norm_mul_self_le z).trans (h₁ z)
+    have h₃ : ‖x⋆‖ ≤ ‖x‖ := by
+      conv_rhs => rw [← star_star x]
+      exact h₂ x⋆ (gt_of_ge_of_gt (h₂ x hnt) hnt)
+    exact le_antisymm h₃ (h₂ x hnt)⟩
 
 theorem norm_star_mul_self {x : E} : ‖x⋆ * x‖ = ‖x‖ * ‖x‖ :=
   le_antisymm ((norm_mul_le _ _).trans (by rw [norm_star])) (CstarRing.norm_mul_self_le x)
@@ -197,15 +197,15 @@ theorem norm_of_mem_unitary [Nontrivial E] {U : E} (hU : U ∈ unitary E) : ‖U
 theorem norm_coe_unitary_mul (U : unitary E) (A : E) : ‖(U : E) * A‖ = ‖A‖ := by
   nontriviality E
   refine le_antisymm ?_ ?_
-  · calc
-      _ ≤ ‖(U : E)‖ * ‖A‖ := norm_mul_le _ _
-      _ = ‖A‖ := by rw [norm_coe_unitary, one_mul]
-  · calc
-      _ = ‖(U : E)⋆ * U * A‖ := by rw [unitary.coe_star_mul_self U, one_mul]
-      _ ≤ ‖(U : E)⋆‖ * ‖(U : E) * A‖ := by
-        rw [mul_assoc]
-        exact norm_mul_le _ _
-      _ = ‖(U : E) * A‖ := by rw [norm_star, norm_coe_unitary, one_mul]
+  calc
+    _ ≤ ‖(U : E)‖ * ‖A‖ := norm_mul_le _ _
+    _ = ‖A‖ := by rw [norm_coe_unitary, one_mul]
+  calc
+    _ = ‖(U : E)⋆ * U * A‖ := by rw [unitary.coe_star_mul_self U, one_mul]
+    _ ≤ ‖(U : E)⋆‖ * ‖(U : E) * A‖ := by
+      rw [mul_assoc]
+      exact norm_mul_le _ _
+    _ = ‖(U : E) * A‖ := by rw [norm_star, norm_coe_unitary, one_mul]
 
 @[simp]
 theorem norm_unitary_smul (U : unitary E) (A : E) : ‖U • A‖ = ‖A‖ :=
@@ -232,10 +232,10 @@ end CstarRing
 theorem IsSelfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] {x : E}
     (hx : IsSelfAdjoint x) (n : ℕ) : ‖x ^ 2 ^ n‖₊ = ‖x‖₊ ^ 2 ^ n := by
   induction' n with k hk
-  · simp only [pow_zero, pow_one, Nat.zero_eq]
-  · rw [pow_succ', pow_mul', sq]
-    nth_rw 1 [← selfAdjoint.mem_iff.mp hx]
-    rw [← star_pow, CstarRing.nnnorm_star_mul_self, ← sq, hk, pow_mul']
+  simp only [pow_zero, pow_one, Nat.zero_eq]
+  rw [pow_succ', pow_mul', sq]
+  nth_rw 1 [← selfAdjoint.mem_iff.mp hx]
+  rw [← star_pow, CstarRing.nnnorm_star_mul_self, ← sq, hk, pow_mul']
 
 theorem selfAdjoint.nnnorm_pow_two_pow [NormedRing E] [StarRing E] [CstarRing E] (x : selfAdjoint E)
     (n : ℕ) : ‖x ^ 2 ^ n‖₊ = ‖x‖₊ ^ 2 ^ n :=

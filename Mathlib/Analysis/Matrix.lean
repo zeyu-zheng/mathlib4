@@ -152,12 +152,12 @@ theorem nnnorm_diagonal [DecidableEq n] (v : n → α) : ‖diagonal v‖₊ = �
   simp_rw [nnnorm_def, Pi.nnnorm_def]
   congr 1 with i : 1
   refine le_antisymm (Finset.sup_le fun j hj => ?_) ?_
-  · obtain rfl | hij := eq_or_ne i j
-    · rw [diagonal_apply_eq]
-    · rw [diagonal_apply_ne _ hij, nnnorm_zero]
-      exact zero_le _
-  · refine Eq.trans_le ?_ (Finset.le_sup (Finset.mem_univ i))
-    rw [diagonal_apply_eq]
+  obtain rfl | hij := eq_or_ne i j
+  rw [diagonal_apply_eq]
+  rw [diagonal_apply_ne _ hij, nnnorm_zero]
+  exact zero_le _
+  refine Eq.trans_le ?_ (Finset.le_sup (Finset.mem_univ i))
+  rw [diagonal_apply_eq]
 
 @[simp]
 theorem norm_diagonal [DecidableEq n] (v : n → α) : ‖diagonal v‖ = ‖v‖ :=
@@ -287,8 +287,8 @@ theorem linfty_opNNNorm_diagonal [DecidableEq m] (v : m → α) : ‖diagonal v�
   rw [linfty_opNNNorm_def, Pi.nnnorm_def]
   congr 1 with i : 1
   refine (Finset.sum_eq_single_of_mem _ (Finset.mem_univ i) fun j _hj hij => ?_).trans ?_
-  · rw [diagonal_apply_ne' _ hij, nnnorm_zero]
-  · rw [diagonal_apply_eq]
+  rw [diagonal_apply_ne' _ hij, nnnorm_zero]
+  rw [diagonal_apply_eq]
 
 @[deprecated (since := "2024-02-02")] alias linfty_op_nnnorm_diagonal := linfty_opNNNorm_diagonal
 
@@ -398,16 +398,16 @@ private def unitOf (a : α) : α := by classical exact if a = 0 then 1 else ‖a
 private theorem norm_unitOf (a : α) : ‖unitOf a‖₊ = 1 := by
   rw [unitOf]
   split_ifs with h
-  · simp
-  · rw [← nnnorm_eq_zero] at h
-    rw [nnnorm_smul, nnnorm_inv, nnnorm_norm, mul_inv_cancel h]
+  simp
+  rw [← nnnorm_eq_zero] at h
+  rw [nnnorm_smul, nnnorm_inv, nnnorm_norm, mul_inv_cancel h]
 
 set_option tactic.skipAssignedInstances false in
 private theorem mul_unitOf (a : α) : a * unitOf a = algebraMap _ _ (‖a‖₊ : ℝ)  := by
   simp only [unitOf, coe_nnnorm]
   split_ifs with h
-  · simp [h]
-  · rw [mul_smul_comm, mul_inv_cancel h, Algebra.algebraMap_eq_smul_one]
+  simp [h]
+  rw [mul_smul_comm, mul_inv_cancel h, Algebra.algebraMap_eq_smul_one]
 
 end
 
@@ -425,7 +425,7 @@ lemma linfty_opNNNorm_eq_opNNNorm (A : Matrix m n α) :
   rw [linfty_opNNNorm_def]
   refine Finset.sup_le fun i _ => ?_
   cases isEmpty_or_nonempty n
-  · simp
+  simp
   let x : n → α := fun j => unitOf (A i j)
   have hxn : ‖x‖₊ = 1
   simp_rw [x, Pi.nnnorm_def, norm_unitOf, Finset.sup_const Finset.univ_nonempty]
@@ -578,12 +578,12 @@ theorem frobenius_nnnorm_diagonal [DecidableEq n] (v : n → α) :
     PiLp.nnnorm_eq_of_L2]
   let s := (Finset.univ : Finset n).map ⟨fun i : n => (i, i), fun i j h => congr_arg Prod.fst h⟩
   rw [← Finset.sum_subset (Finset.subset_univ s) fun i _hi his => ?_]
-  · rw [Finset.sum_map, NNReal.sqrt_eq_rpow]
-    dsimp
-    simp_rw [diagonal_apply_eq, NNReal.rpow_two]
-  · suffices i.1 ≠ i.2 by rw [diagonal_apply_ne _ this, nnnorm_zero, NNReal.zero_rpow two_ne_zero]
-    intro h
-    exact Finset.mem_map.not.mp his ⟨i.1, Finset.mem_univ _, Prod.ext rfl h⟩
+  rw [Finset.sum_map, NNReal.sqrt_eq_rpow]
+  dsimp
+  simp_rw [diagonal_apply_eq, NNReal.rpow_two]
+  suffices i.1 ≠ i.2 by rw [diagonal_apply_ne _ this, nnnorm_zero, NNReal.zero_rpow two_ne_zero]
+  intro h
+  exact Finset.mem_map.not.mp his ⟨i.1, Finset.mem_univ _, Prod.ext rfl h⟩
 
 @[simp]
 theorem frobenius_norm_diagonal [DecidableEq n] (v : n → α) :

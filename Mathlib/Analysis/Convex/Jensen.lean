@@ -188,22 +188,22 @@ lemma StrictConvexOn.map_sum_eq_iff {w : ι → 𝕜} {p : ι → E} (hf : Stric
     (h₀ : ∀ i ∈ t, 0 < w i) (h₁ : ∑ i ∈ t, w i = 1) (hmem : ∀ i ∈ t, p i ∈ s) :
     f (∑ i ∈ t, w i • p i) = ∑ i ∈ t, w i • f (p i) ↔ ∀ j ∈ t, p j = ∑ i ∈ t, w i • p i := by
   constructor
-  · obtain rfl | ⟨i₀, hi₀⟩ := t.eq_empty_or_nonempty
-    · simp
-    intro h_eq i hi
-    have H : ∀ j ∈ t, p j = p i₀
-    intro j hj
-    apply hf.eq_of_le_map_sum h₀ h₁ hmem h_eq.ge hj hi₀
-    calc p i = p i₀ := by rw [H _ hi]
-      _ = (1 : 𝕜) • p i₀ := by simp
-      _ = (∑ j ∈ t, w j) • p i₀ := by rw [h₁]
-      _ = ∑ j ∈ t, (w j • p i₀) := by rw [sum_smul]
-      _ = ∑ j ∈ t, (w j • p j) := by congr! 2 with j hj; rw [← H _ hj]
-  · intro h
-    have H : ∀ j ∈ t, w j • f (p j) = w j • f (∑ i ∈ t, w i • p i)
-    intro j hj
-    simp [h j hj]
-    rw [sum_congr rfl H, ← sum_smul, h₁, one_smul]
+  obtain rfl | ⟨i₀, hi₀⟩ := t.eq_empty_or_nonempty
+  simp
+  intro h_eq i hi
+  have H : ∀ j ∈ t, p j = p i₀
+  intro j hj
+  apply hf.eq_of_le_map_sum h₀ h₁ hmem h_eq.ge hj hi₀
+  calc p i = p i₀ := by rw [H _ hi]
+    _ = (1 : 𝕜) • p i₀ := by simp
+    _ = (∑ j ∈ t, w j) • p i₀ := by rw [h₁]
+    _ = ∑ j ∈ t, (w j • p i₀) := by rw [sum_smul]
+    _ = ∑ j ∈ t, (w j • p j) := by congr! 2 with j hj; rw [← H _ hj]
+  intro h
+  have H : ∀ j ∈ t, w j • f (p j) = w j • f (∑ i ∈ t, w i • p i)
+  intro j hj
+  simp [h j hj]
+  rw [sum_congr rfl H, ← sum_smul, h₁, one_smul]
 
 /-- Canonical form of the **equality case of Jensen's equality**.
 
@@ -229,10 +229,10 @@ lemma StrictConvexOn.map_sum_eq_iff' (hf : StrictConvexOn 𝕜 s f) (h₀ : ∀ 
   have hw' (i) (_ : i ∈ t) : w i • f (p i) ≠ 0 → w i ≠ 0
   aesop
   rw [← sum_filter_of_ne hw, ← sum_filter_of_ne hw', hf.map_sum_eq_iff]
-  · simp
-  · simp (config := { contextual := true }) [(h₀ _ _).gt_iff_ne]
-  · rwa [sum_filter_ne_zero]
-  · simp (config := { contextual := true }) [hmem _ _]
+  simp
+  simp (config := { contextual := true }) [(h₀ _ _).gt_iff_ne]
+  rwa [sum_filter_ne_zero]
+  simp (config := { contextual := true }) [hmem _ _]
 
 /-- Canonical form of the **equality case of Jensen's equality**.
 

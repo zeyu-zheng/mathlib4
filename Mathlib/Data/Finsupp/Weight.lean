@@ -110,13 +110,13 @@ theorem le_weight (w : σ → ℕ) {s : σ} (hs : w s ≠ 0) (f : σ →₀ ℕ)
     f s ≤ weight w f := by
   simp only [weight_apply, Finsupp.sum]
   by_cases h : s ∈ f.support
-  · rw [Finset.sum_eq_add_sum_diff_singleton h]
-    refine le_trans ?_ (Nat.le_add_right _ _)
-    apply Nat.le_mul_of_pos_right
-    exact Nat.zero_lt_of_ne_zero hs
-  · simp only [not_mem_support_iff] at h
-    rw [h]
-    apply zero_le
+  rw [Finset.sum_eq_add_sum_diff_singleton h]
+  refine le_trans ?_ (Nat.le_add_right _ _)
+  apply Nat.le_mul_of_pos_right
+  exact Nat.zero_lt_of_ne_zero hs
+  simp only [not_mem_support_iff] at h
+  rw [h]
+  apply zero_le
 
 variable [OrderedAddCommMonoid M] (w : σ → M)
 
@@ -131,12 +131,12 @@ theorem le_weight_of_ne_zero (hw : ∀ s, 0 ≤ w s) {s : σ} {f : σ →₀ ℕ
     w s ≤ weight w f := by
   simp only [weight_apply, Finsupp.sum]
   trans f s • w s
-  · apply le_smul_of_one_le_left (hw s)
-    exact Nat.one_le_iff_ne_zero.mpr hs
-  · rw [← Finsupp.mem_support_iff] at hs
-    rw [Finset.sum_eq_add_sum_diff_singleton hs]
-    exact le_add_of_nonneg_right <| Finset.sum_nonneg <|
-      fun i _ ↦ nsmul_nonneg (hw i) (f i)
+  apply le_smul_of_one_le_left (hw s)
+  exact Nat.one_le_iff_ne_zero.mpr hs
+  rw [← Finsupp.mem_support_iff] at hs
+  rw [Finset.sum_eq_add_sum_diff_singleton hs]
+  exact le_add_of_nonneg_right <| Finset.sum_nonneg <|
+    fun i _ ↦ nsmul_nonneg (hw i) (f i)
 
 end OrderedAddCommMonoid
 
@@ -154,15 +154,15 @@ theorem weight_eq_zero_iff_eq_zero
     (w : σ → M) [NonTorsionWeight w] {f : σ →₀ ℕ} :
     weight w f = 0 ↔ f = 0 := by
   constructor
-  · intro h
-    ext s
-    simp only [Finsupp.coe_zero, Pi.zero_apply]
-    by_contra hs
-    apply NonTorsionWeight.ne_zero w _
-    rw [← nonpos_iff_eq_zero, ← h]
-    exact le_weight_of_ne_zero' w hs
-  · intro h
-    rw [h, map_zero]
+  intro h
+  ext s
+  simp only [Finsupp.coe_zero, Pi.zero_apply]
+  by_contra hs
+  apply NonTorsionWeight.ne_zero w _
+  rw [← nonpos_iff_eq_zero, ← h]
+  exact le_weight_of_ne_zero' w hs
+  intro h
+  rw [h, map_zero]
 
 end CanonicallyOrderedAddCommMonoid
 

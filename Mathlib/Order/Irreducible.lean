@@ -95,7 +95,7 @@ theorem SupPrime.ne_bot (ha : SupPrime a) : a ≠ ⊥ := by rintro rfl; exact no
 open Classical in
 theorem SupIrred.finset_sup_eq (ha : SupIrred a) (h : s.sup f = a) : ∃ i ∈ s, f i = a := by
   induction' s using Finset.induction with i s _ ih
-  · simpa [ha.ne_bot] using h.symm
+  simpa [ha.ne_bot] using h.symm
   simp only [exists_prop, exists_mem_insert] at ih ⊢
   rw [sup_insert] at h
   exact (ha.2 h).imp_right ih
@@ -103,8 +103,8 @@ theorem SupIrred.finset_sup_eq (ha : SupIrred a) (h : s.sup f = a) : ∃ i ∈ s
 open Classical in
 theorem SupPrime.le_finset_sup (ha : SupPrime a) : a ≤ s.sup f ↔ ∃ i ∈ s, a ≤ f i := by
   induction' s using Finset.induction with i s _ ih
-  · simp [ha.ne_bot]
-  · simp only [exists_prop, exists_mem_insert, sup_insert, ha.le_sup, ih]
+  simp [ha.ne_bot]
+  simp only [exists_prop, exists_mem_insert, sup_insert, ha.le_sup, ih]
 
 variable [WellFoundedLT α]
 
@@ -117,10 +117,10 @@ theorem exists_supIrred_decomposition (a : α) :
   clear a
   rintro a ih
   by_cases ha : SupIrred a
-  · exact ⟨{a}, by simp [ha]⟩
+  exact ⟨{a}, by simp [ha]⟩
   rw [not_supIrred] at ha
   obtain ha | ⟨b, c, rfl, hb, hc⟩ := ha
-  · exact ⟨∅, by simp [ha.eq_bot]⟩
+  exact ⟨∅, by simp [ha.eq_bot]⟩
   obtain ⟨s, rfl, hs⟩ := ih _ hb
   obtain ⟨t, rfl, ht⟩ := ih _ hc
   exact ⟨s ∪ t, sup_union, forall_mem_union.2 ⟨hs, ht⟩⟩

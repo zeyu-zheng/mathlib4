@@ -52,30 +52,30 @@ instance {Y Y' : C} (π : Y ⟶ X) [EffectiveEpi π]
     exact fun W => regularTopology.isSheaf_yoneda_obj W _ h₂
   apply Coverage.Saturate.transitive X (Sieve.generate (Presieve.ofArrows (fun () ↦ Y)
       (fun () ↦ π)))
-  · apply Coverage.Saturate.of
-    use Y, π
-  · intro V f ⟨Y₁, h, g, ⟨hY, hf⟩⟩
-    rw [← hf, Sieve.pullback_comp]
-    apply (regularTopology C).pullback_stable'
-    apply regularTopology.mem_sieves_of_hasEffectiveEpi
-    cases hY
-    exact ⟨Y', π', inferInstance, Y', (𝟙 _), π' ≫ π, Presieve.ofArrows.mk (), (by simp)⟩
+  apply Coverage.Saturate.of
+  use Y, π
+  intro V f ⟨Y₁, h, g, ⟨hY, hf⟩⟩
+  rw [← hf, Sieve.pullback_comp]
+  apply (regularTopology C).pullback_stable'
+  apply regularTopology.mem_sieves_of_hasEffectiveEpi
+  cases hY
+  exact ⟨Y', π', inferInstance, Y', (𝟙 _), π' ≫ π, Presieve.ofArrows.mk (), (by simp)⟩
 
 /-- A sieve is a cover for the regular topology if and only if it contains an `EffectiveEpi`. -/
 theorem mem_sieves_iff_hasEffectiveEpi (S : Sieve X) :
     (S ∈ (regularTopology C).sieves  X) ↔
     ∃ (Y : C) (π : Y ⟶ X), EffectiveEpi π ∧ (S.arrows π) := by
   constructor
-  · intro h
-    induction' h with Y T hS Y Y R S _ _ a b
-    · rcases hS with ⟨Y', π, h'⟩
-      refine ⟨Y', π, h'.2, ?_⟩
-      rcases h' with ⟨rfl, _⟩
-      exact ⟨Y', 𝟙 Y', π, Presieve.ofArrows.mk (), (by simp)⟩
-    · exact ⟨Y, (𝟙 Y), inferInstance, by simp only [Sieve.top_apply, forall_const]⟩
-    · rcases a with ⟨Y₁, π, ⟨h₁,h₂⟩⟩
-      choose Y' π' _ H using b h₂
-      exact ⟨Y', π' ≫ π, inferInstance, (by simpa using H)⟩
-  · exact regularTopology.mem_sieves_of_hasEffectiveEpi S
+  intro h
+  induction' h with Y T hS Y Y R S _ _ a b
+  rcases hS with ⟨Y', π, h'⟩
+  refine ⟨Y', π, h'.2, ?_⟩
+  rcases h' with ⟨rfl, _⟩
+  exact ⟨Y', 𝟙 Y', π, Presieve.ofArrows.mk (), (by simp)⟩
+  exact ⟨Y, (𝟙 Y), inferInstance, by simp only [Sieve.top_apply, forall_const]⟩
+  rcases a with ⟨Y₁, π, ⟨h₁,h₂⟩⟩
+  choose Y' π' _ H using b h₂
+  exact ⟨Y', π' ≫ π, inferInstance, (by simpa using H)⟩
+  exact regularTopology.mem_sieves_of_hasEffectiveEpi S
 
 end CategoryTheory.regularTopology

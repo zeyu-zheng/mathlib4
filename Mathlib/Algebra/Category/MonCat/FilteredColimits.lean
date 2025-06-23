@@ -150,14 +150,14 @@ theorem colimitMulAux_eq_of_rel_right {x y y' : Σ j, F.obj j}
 noncomputable instance colimitMul : Mul (M.{v, u} F) :=
 { mul := fun x y => by
     refine Quot.lift₂ (colimitMulAux F) ?_ ?_ x y
-    · intro x y y' h
-      apply colimitMulAux_eq_of_rel_right
-      apply Types.FilteredColimit.rel_of_quot_rel
-      exact h
-    · intro x x' y h
-      apply colimitMulAux_eq_of_rel_left
-      apply Types.FilteredColimit.rel_of_quot_rel
-      exact h }
+    intro x y y' h
+    apply colimitMulAux_eq_of_rel_right
+    apply Types.FilteredColimit.rel_of_quot_rel
+    exact h
+    intro x x' y h
+    apply colimitMulAux_eq_of_rel_left
+    apply Types.FilteredColimit.rel_of_quot_rel
+    exact h }
 
 /-- Multiplication in the colimit is independent of the chosen "maximum" in the filtered category.
 In particular, this lemma allows us to "unfold" the definition of the multiplication of `x` and `y`,

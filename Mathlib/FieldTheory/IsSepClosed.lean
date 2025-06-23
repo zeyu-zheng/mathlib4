@@ -111,10 +111,10 @@ theorem exists_pow_nat_eq [IsSepClosed k] (x : k) (n : ℕ) [hn : NeZero (n : k)
   rw [degree_X_pow_sub_C hn' x]
   exact (WithBot.coe_lt_coe.2 hn').ne'
   by_cases hx : x = 0
-  · exact ⟨0, by rw [hx, pow_eq_zero_iff hn'.ne']⟩
-  · obtain ⟨z, hz⟩ := exists_root _ this <| separable_X_pow_sub_C x hn.out hx
-    use z
-    simpa [eval_C, eval_X, eval_pow, eval_sub, IsRoot.def, sub_eq_zero] using hz
+  exact ⟨0, by rw [hx, pow_eq_zero_iff hn'.ne']⟩
+  obtain ⟨z, hz⟩ := exists_root _ this <| separable_X_pow_sub_C x hn.out hx
+  use z
+  simpa [eval_C, eval_X, eval_pow, eval_sub, IsRoot.def, sub_eq_zero] using hz
 
 theorem exists_eq_mul_self [IsSepClosed k] (x : k) [h2 : NeZero (2 : k)] : ∃ z, x = z * z := by
   rcases exists_pow_nat_eq x 2 with ⟨z, rfl⟩
@@ -124,10 +124,10 @@ theorem roots_eq_zero_iff [IsSepClosed k] {p : k[X]} (hsep : p.Separable) :
     p.roots = 0 ↔ p = Polynomial.C (p.coeff 0) := by
   refine ⟨fun h => ?_, fun hp => by rw [hp, roots_C]⟩
   rcases le_or_lt (degree p) 0 with hd | hd
-  · exact eq_C_of_degree_le_zero hd
-  · obtain ⟨z, hz⟩ := IsSepClosed.exists_root p hd.ne' hsep
-    rw [← mem_roots (ne_zero_of_degree_gt hd), h] at hz
-    simp at hz
+  exact eq_C_of_degree_le_zero hd
+  obtain ⟨z, hz⟩ := IsSepClosed.exists_root p hd.ne' hsep
+  rw [← mem_roots (ne_zero_of_degree_gt hd), h] at hz
+  simp at hz
 
 theorem exists_eval₂_eq_zero [IsSepClosed K] (f : k →+* K)
     (p : k[X]) (hp : p.degree ≠ 0) (hsep : p.Separable) :

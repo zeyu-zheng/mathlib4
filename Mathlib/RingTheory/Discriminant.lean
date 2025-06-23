@@ -239,12 +239,12 @@ theorem discr_powerBasis_eq_norm [Algebra.IsSeparable K L] :
       mem_singleton, true_and, @mem_compl _ _ _ (_), Sigma.forall, Equiv.apply_symm_apply,
       PowerBasis.lift_gen, and_imp, implies_true, forall_const, Equiv.symm_apply_apply,
       Sigma.ext_iff, Equiv.symm_apply_eq, heq_eq_eq, and_true] at *
-  · simpa only [aeval_def, eval₂_eq_eval_map] using hσ.2.2
-  · exact fun a b hba ↦ ⟨fun h ↦ hba <| e.injective <| pb.algHom_ext h.symm, hroots _⟩
-  · rintro a b hba ha
-    rw [ha, PowerBasis.lift_gen] at hba
-    exact hba.1 rfl
-  · exact fun a b _ ↦ pb.algHom_ext <| pb.lift_gen _ _
+  simpa only [aeval_def, eval₂_eq_eval_map] using hσ.2.2
+  exact fun a b hba ↦ ⟨fun h ↦ hba <| e.injective <| pb.algHom_ext h.symm, hroots _⟩
+  rintro a b hba ha
+  rw [ha, PowerBasis.lift_gen] at hba
+  exact hba.1 rfl
+  exact fun a b _ ↦ pb.algHom_ext <| pb.lift_gen _ _
 
 section Integral
 
@@ -291,11 +291,11 @@ theorem discr_mul_isIntegral_mem_adjoin [Algebra.IsSeparable K L] [IsIntegrallyC
   refine
     Subalgebra.sum_mem _ fun σ _ => Subalgebra.zsmul_mem _ (Subalgebra.prod_mem _ fun j _ => ?_) _
   by_cases hji : j = i
-  · simp only [updateColumn_apply, hji, eq_self_iff_true, PowerBasis.coe_basis]
-    exact mem_bot.2 (IsIntegrallyClosed.isIntegral_iff.1 <| isIntegral_trace (hz.mul <| hint.pow _))
-  · simp only [updateColumn_apply, hji, PowerBasis.coe_basis]
-    exact mem_bot.2
-      (IsIntegrallyClosed.isIntegral_iff.1 <| isIntegral_trace <| (hint.pow _).mul (hint.pow _))
+  simp only [updateColumn_apply, hji, eq_self_iff_true, PowerBasis.coe_basis]
+  exact mem_bot.2 (IsIntegrallyClosed.isIntegral_iff.1 <| isIntegral_trace (hz.mul <| hint.pow _))
+  simp only [updateColumn_apply, hji, PowerBasis.coe_basis]
+  exact mem_bot.2
+    (IsIntegrallyClosed.isIntegral_iff.1 <| isIntegral_trace <| (hint.pow _).mul (hint.pow _))
 
 end Integral
 
@@ -307,12 +307,12 @@ section Int
 theorem discr_eq_discr [Fintype ι] (b : Basis ι ℤ A) (b' : Basis ι ℤ A) :
     Algebra.discr ℤ b = Algebra.discr ℤ b' := by
   convert Algebra.discr_of_matrix_vecMul b' (b'.toMatrix b)
-  · rw [Basis.toMatrix_map_vecMul]
-  · suffices IsUnit (b'.toMatrix b).det by
-      rw [Int.isUnit_iff, ← sq_eq_one_iff] at this
-      rw [this, one_mul]
-    rw [← LinearMap.toMatrix_id_eq_basis_toMatrix b b']
-    exact LinearEquiv.isUnit_det (LinearEquiv.refl ℤ A) b b'
+  rw [Basis.toMatrix_map_vecMul]
+  suffices IsUnit (b'.toMatrix b).det by
+    rw [Int.isUnit_iff, ← sq_eq_one_iff] at this
+    rw [this, one_mul]
+  rw [← LinearMap.toMatrix_id_eq_basis_toMatrix b b']
+  exact LinearEquiv.isUnit_det (LinearEquiv.refl ℤ A) b b'
 
 end Int
 

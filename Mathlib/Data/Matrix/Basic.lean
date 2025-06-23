@@ -390,8 +390,8 @@ theorem diagonal_zero [Zero α] : (diagonal fun _ => 0 : Matrix n n α) = 0 := b
 theorem diagonal_transpose [Zero α] (v : n → α) : (diagonal v)ᵀ = diagonal v := by
   ext i j
   by_cases h : i = j
-  · simp [h, transpose]
-  · simp [h, transpose, diagonal_apply_ne' _ h]
+  simp [h, transpose]
+  simp [h, transpose, diagonal_apply_ne' _ h]
 
 @[simp]
 theorem diagonal_add [AddZeroClass α] (d₁ d₂ : n → α) :
@@ -532,9 +532,9 @@ theorem one_eq_pi_single {i j} : (1 : Matrix n n α) i j = Pi.single (f := fun _
 lemma zero_le_one_elem [Preorder α] [ZeroLEOneClass α] (i j : n) :
     0 ≤ (1 : Matrix n n α) i j := by
   by_cases hi : i = j
-  · subst hi
-    simp
-  · simp [hi]
+  subst hi
+  simp
+  simp [hi]
 
 lemma zero_le_one_row [Preorder α] [ZeroLEOneClass α] (i : n) :
     0 ≤ (1 : Matrix n n α) i :=
@@ -2339,9 +2339,9 @@ theorem submatrix_diagonal [Zero α] [DecidableEq m] [DecidableEq l] (d : m → 
   ext fun i j => by
     rw [submatrix_apply]
     by_cases h : i = j
-    · rw [h, diagonal_apply_eq, diagonal_apply_eq]
-      simp only [Function.comp_apply] -- Porting note: (simp) added this
-    · rw [diagonal_apply_ne _ h, diagonal_apply_ne _ (he.ne h)]
+    rw [h, diagonal_apply_eq, diagonal_apply_eq]
+    simp only [Function.comp_apply] -- Porting note: (simp) added this
+    rw [diagonal_apply_ne _ h, diagonal_apply_ne _ (he.ne h)]
 
 theorem submatrix_one [Zero α] [One α] [DecidableEq m] [DecidableEq l] (e : l → m)
     (he : Function.Injective e) : (1 : Matrix m m α).submatrix e e = 1 :=

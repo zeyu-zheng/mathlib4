@@ -109,10 +109,10 @@ theorem Asymptotics.IsLittleO.sum_range {α : Type*} [NormedAddCommGroup α] {f 
     _ ≤ ‖∑ i ∈ range N, f i‖ + ∑ i ∈ range n, ε / 2 * g i := by
       gcongr
       apply sum_le_sum_of_subset_of_nonneg
-      · rw [range_eq_Ico]
-        exact Ico_subset_Ico (zero_le _) le_rfl
-      · intro i _ _
-        exact mul_nonneg (half_pos εpos).le (hg i)
+      rw [range_eq_Ico]
+      exact Ico_subset_Ico (zero_le _) le_rfl
+      intro i _ _
+      exact mul_nonneg (half_pos εpos).le (hg i)
     _ ≤ ε / 2 * ‖∑ i ∈ range n, g i‖ + ε / 2 * ∑ i ∈ range n, g i := by rw [← mul_sum]; gcongr
     _ = ε * ‖∑ i ∈ range n, g i‖ := by
       simp only [B]
@@ -132,13 +132,13 @@ theorem Filter.Tendsto.cesaro_smul {E : Type*} [NormedAddCommGroup E] [NormedSpa
   rw [← tendsto_sub_nhds_zero_iff, ← isLittleO_one_iff ℝ]
   have := Asymptotics.isLittleO_sum_range_of_tendsto_zero (tendsto_sub_nhds_zero_iff.2 h)
   apply ((isBigO_refl (fun n : ℕ => (n : ℝ)⁻¹) atTop).smul_isLittleO this).congr' _ _
-  · filter_upwards [Ici_mem_atTop 1] with n npos
-    have nposℝ : (0 : ℝ) < n := Nat.cast_pos.2 npos
-    simp only [smul_sub, sum_sub_distrib, sum_const, card_range, sub_right_inj]
-    rw [← Nat.cast_smul_eq_nsmul ℝ, smul_smul, inv_mul_cancel nposℝ.ne', one_smul]
-  · filter_upwards [Ici_mem_atTop 1] with n npos
-    have nposℝ : (0 : ℝ) < n := Nat.cast_pos.2 npos
-    rw [Algebra.id.smul_eq_mul, inv_mul_cancel nposℝ.ne']
+  filter_upwards [Ici_mem_atTop 1] with n npos
+  have nposℝ : (0 : ℝ) < n := Nat.cast_pos.2 npos
+  simp only [smul_sub, sum_sub_distrib, sum_const, card_range, sub_right_inj]
+  rw [← Nat.cast_smul_eq_nsmul ℝ, smul_smul, inv_mul_cancel nposℝ.ne', one_smul]
+  filter_upwards [Ici_mem_atTop 1] with n npos
+  have nposℝ : (0 : ℝ) < n := Nat.cast_pos.2 npos
+  rw [Algebra.id.smul_eq_mul, inv_mul_cancel nposℝ.ne']
 
 /-- The Cesaro average of a converging sequence converges to the same limit. -/
 theorem Filter.Tendsto.cesaro {u : ℕ → ℝ} {l : ℝ} (h : Tendsto u atTop (𝓝 l)) :

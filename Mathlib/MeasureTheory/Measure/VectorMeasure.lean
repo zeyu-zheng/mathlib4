@@ -110,13 +110,13 @@ theorem ext_iff' (v w : VectorMeasure α M) : v = w ↔ ∀ i : Set α, v i = w 
 
 theorem ext_iff (v w : VectorMeasure α M) : v = w ↔ ∀ i : Set α, MeasurableSet i → v i = w i := by
   constructor
-  · rintro rfl _ _
-    rfl
-  · rw [ext_iff']
-    intro h i
-    by_cases hi : MeasurableSet i
-    · exact h i hi
-    · simp_rw [not_measurable _ hi]
+  rintro rfl _ _
+  rfl
+  rw [ext_iff']
+  intro h i
+  by_cases hi : MeasurableSet i
+  exact h i hi
+  simp_rw [not_measurable _ hi]
 
 @[ext]
 theorem ext {s t : VectorMeasure α M} (h : ∀ i : Set α, MeasurableSet i → s i = t i) : s = t :=
@@ -141,22 +141,22 @@ theorem hasSum_of_disjoint_iUnion [Countable β] {f : β → Set α} (hf₁ : �
     ext y
     simp only [exists_prop, Set.mem_iUnion, Option.mem_def]
     constructor
-    · intro hy
-      exact ⟨x, (Encodable.decode₂_is_partial_inv _ _).2 rfl, hy⟩
-    · rintro ⟨b, hb₁, hb₂⟩
-      rw [Encodable.decode₂_is_partial_inv _ _] at hb₁
-      rwa [← Encodable.encode_injective hb₁]
+    intro hy
+    exact ⟨x, (Encodable.decode₂_is_partial_inv _ _).2 rfl, hy⟩
+    rintro ⟨b, hb₁, hb₂⟩
+    rw [Encodable.decode₂_is_partial_inv _ _] at hb₁
+    rwa [← Encodable.encode_injective hb₁]
   rw [Summable.hasSum_iff, this, ← tsum_iUnion_decode₂]
-  · exact v.empty
-  · rw [hg₃]
-    change Summable ((fun i => v (g i)) ∘ Encodable.encode)
-    rw [Function.Injective.summable_iff Encodable.encode_injective]
-    · exact (v.m_iUnion hg₁ hg₂).summable
-    · intro x hx
-      convert v.empty
-      simp only [g, Set.iUnion_eq_empty, Option.mem_def, not_exists, Set.mem_range] at hx ⊢
-      intro i hi
-      exact False.elim ((hx i) ((Encodable.decode₂_is_partial_inv _ _).1 hi))
+  exact v.empty
+  rw [hg₃]
+  change Summable ((fun i => v (g i)) ∘ Encodable.encode)
+  rw [Function.Injective.summable_iff Encodable.encode_injective]
+  exact (v.m_iUnion hg₁ hg₂).summable
+  intro x hx
+  convert v.empty
+  simp only [g, Set.iUnion_eq_empty, Option.mem_def, not_exists, Set.mem_range] at hx ⊢
+  intro i hi
+  exact False.elim ((hx i) ((Encodable.decode₂_is_partial_inv _ _).1 hi))
 
 theorem of_disjoint_iUnion [Countable β] {f : β → Set α} (hf₁ : ∀ i, MeasurableSet (f i))
     (hf₂ : Pairwise (Disjoint on f)) : v (⋃ i, f i) = ∑' i, v (f i) :=
@@ -183,15 +183,15 @@ theorem of_diff_of_diff_eq_zero {A B : Set α} (hA : MeasurableSet A) (hB : Meas
     v A = v (A \ B ∪ A ∩ B) := by simp only [Set.diff_union_inter]
     _ = v (A \ B) + v (A ∩ B) := by
       rw [of_union]
-      · rw [disjoint_comm]
-        exact Set.disjoint_of_subset_left A.inter_subset_right disjoint_sdiff_self_right
-      · exact hA.diff hB
-      · exact hA.inter hB
+      rw [disjoint_comm]
+      exact Set.disjoint_of_subset_left A.inter_subset_right disjoint_sdiff_self_right
+      exact hA.diff hB
+      exact hA.inter hB
     _ = v (A \ B) + v (A ∩ B ∪ B \ A) := by
       rw [of_union, h', add_zero]
-      · exact Set.disjoint_of_subset_left A.inter_subset_left disjoint_sdiff_self_right
-      · exact hA.inter hB
-      · exact hB.diff hA
+      exact Set.disjoint_of_subset_left A.inter_subset_left disjoint_sdiff_self_right
+      exact hA.inter hB
+      exact hB.diff hA
     _ = v (A \ B) + v B := by rw [Set.union_comm, Set.inter_comm, Set.diff_union_inter]
 
 theorem of_iUnion_nonneg {M : Type*} [TopologicalSpace M] [OrderedAddCommMonoid M]
@@ -373,13 +373,13 @@ theorem toSignedMeasure_congr {μ ν : Measure α} [IsFiniteMeasure μ] [IsFinit
 theorem toSignedMeasure_eq_toSignedMeasure_iff {μ ν : Measure α} [IsFiniteMeasure μ]
     [IsFiniteMeasure ν] : μ.toSignedMeasure = ν.toSignedMeasure ↔ μ = ν := by
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · ext1 i hi
-    have : μ.toSignedMeasure i = ν.toSignedMeasure i
-    rw [h]
-    rwa [toSignedMeasure_apply_measurable hi, toSignedMeasure_apply_measurable hi,
-        ENNReal.toReal_eq_toReal] at this
-      <;> exact measure_ne_top _ _
-  · congr
+  ext1 i hi
+  have : μ.toSignedMeasure i = ν.toSignedMeasure i
+  rw [h]
+  rwa [toSignedMeasure_apply_measurable hi, toSignedMeasure_apply_measurable hi,
+      ENNReal.toReal_eq_toReal] at this
+    <;> exact measure_ne_top _ _
+  congr
 
 @[simp]
 theorem toSignedMeasure_zero : (0 : Measure α).toSignedMeasure = 0 := by
@@ -510,9 +510,9 @@ theorem map_id : v.map id = v :=
 @[simp]
 theorem map_zero (f : α → β) : (0 : VectorMeasure α M).map f = 0 := by
   by_cases hf : Measurable f
-  · ext i hi
-    rw [map_apply _ hf hi, zero_apply, zero_apply]
-  · exact dif_neg hf
+  ext i hi
+  rw [map_apply _ hf hi, zero_apply, zero_apply]
+  exact dif_neg hf
 
 section
 
@@ -618,9 +618,9 @@ theorem restrict_univ : v.restrict Set.univ = v :=
 @[simp]
 theorem restrict_zero {i : Set α} : (0 : VectorMeasure α M).restrict i = 0 := by
   by_cases hi : MeasurableSet i
-  · ext j hj
-    rw [restrict_apply 0 hi hj, zero_apply, zero_apply]
-  · exact dif_neg hi
+  ext j hj
+  rw [restrict_apply 0 hi hj, zero_apply, zero_apply]
+  exact dif_neg hi
 
 section ContinuousAdd
 
@@ -628,9 +628,9 @@ variable [ContinuousAdd M]
 
 theorem map_add (v w : VectorMeasure α M) (f : α → β) : (v + w).map f = v.map f + w.map f := by
   by_cases hf : Measurable f
-  · ext i hi
-    simp [map_apply _ hf hi]
-  · simp [map, dif_neg hf]
+  ext i hi
+  simp [map_apply _ hf hi]
+  simp [map, dif_neg hf]
 
 /-- `VectorMeasure.map` as an additive monoid homomorphism. -/
 @[simps]
@@ -642,9 +642,9 @@ def mapGm (f : α → β) : VectorMeasure α M →+ VectorMeasure β M where
 theorem restrict_add (v w : VectorMeasure α M) (i : Set α) :
     (v + w).restrict i = v.restrict i + w.restrict i := by
   by_cases hi : MeasurableSet i
-  · ext j hj
-    simp [restrict_apply _ hi hj]
-  · simp [restrict_not_measurable _ hi]
+  ext j hj
+  simp [restrict_apply _ hi hj]
+  simp [restrict_not_measurable _ hi]
 
 /-- `VectorMeasure.restrict` as an additive monoid homomorphism. -/
 @[simps]
@@ -666,23 +666,23 @@ variable {R : Type*} [Semiring R] [DistribMulAction R M] [ContinuousConstSMul R 
 @[simp]
 theorem map_smul {v : VectorMeasure α M} {f : α → β} (c : R) : (c • v).map f = c • v.map f := by
   by_cases hf : Measurable f
-  · ext i hi
-    simp [map_apply _ hf hi]
-  · simp only [map, dif_neg hf]
-    -- `smul_zero` does not work since we do not require `ContinuousAdd`
-    ext i
-    simp
+  ext i hi
+  simp [map_apply _ hf hi]
+  simp only [map, dif_neg hf]
+  -- `smul_zero` does not work since we do not require `ContinuousAdd`
+  ext i
+  simp
 
 @[simp]
 theorem restrict_smul {v : VectorMeasure α M} {i : Set α} (c : R) :
     (c • v).restrict i = c • v.restrict i := by
   by_cases hi : MeasurableSet i
-  · ext j hj
-    simp [restrict_apply _ hi hj]
-  · simp only [restrict_not_measurable _ hi]
-    -- `smul_zero` does not work since we do not require `ContinuousAdd`
-    ext j
-    simp
+  ext j hj
+  simp [restrict_apply _ hi hj]
+  simp only [restrict_not_measurable _ hi]
+  -- `smul_zero` does not work since we do not require `ContinuousAdd`
+  ext j
+  simp
 
 end
 
@@ -728,8 +728,8 @@ theorem le_iff : v ≤ w ↔ ∀ i, MeasurableSet i → v i ≤ w i := Iff.rfl
 theorem le_iff' : v ≤ w ↔ ∀ i, v i ≤ w i := by
   refine ⟨fun h i => ?_, fun h i _ => h i⟩
   by_cases hi : MeasurableSet i
-  · exact h i hi
-  · rw [v.not_measurable hi, w.not_measurable hi]
+  exact h i hi
+  rw [v.not_measurable hi, w.not_measurable hi]
 
 end
 
@@ -753,14 +753,14 @@ theorem restrict_le_restrict_iff {i : Set α} (hi : MeasurableSet i) :
 theorem subset_le_of_restrict_le_restrict {i : Set α} (hi : MeasurableSet i) (hi₂ : v ≤[i] w)
     {j : Set α} (hj : j ⊆ i) : v j ≤ w j := by
   by_cases hj₁ : MeasurableSet j
-  · exact (restrict_le_restrict_iff _ _ hi).1 hi₂ hj₁ hj
-  · rw [v.not_measurable hj₁, w.not_measurable hj₁]
+  exact (restrict_le_restrict_iff _ _ hi).1 hi₂ hj₁ hj
+  rw [v.not_measurable hj₁, w.not_measurable hj₁]
 
 theorem restrict_le_restrict_of_subset_le {i : Set α}
     (h : ∀ ⦃j⦄, MeasurableSet j → j ⊆ i → v j ≤ w j) : v ≤[i] w := by
   by_cases hi : MeasurableSet i
-  · exact (restrict_le_restrict_iff _ _ hi).2 h
-  · rw [restrict_not_measurable v hi, restrict_not_measurable w hi]
+  exact (restrict_le_restrict_iff _ _ hi).2 h
+  rw [restrict_not_measurable v hi, restrict_not_measurable w hi]
 
 theorem restrict_le_restrict_subset {i j : Set α} (hi₁ : MeasurableSet i) (hi₂ : v ≤[i] w)
     (hij : j ⊆ i) : v ≤[j] w :=
@@ -773,14 +773,14 @@ theorem le_restrict_empty : v ≤[∅] w := by
 
 theorem le_restrict_univ_iff_le : v ≤[Set.univ] w ↔ v ≤ w := by
   constructor
-  · intro h s hs
-    have := h s hs
-    rwa [restrict_apply _ MeasurableSet.univ hs, Set.inter_univ,
-      restrict_apply _ MeasurableSet.univ hs, Set.inter_univ] at this
-  · intro h s hs
-    rw [restrict_apply _ MeasurableSet.univ hs, Set.inter_univ,
-      restrict_apply _ MeasurableSet.univ hs, Set.inter_univ]
-    exact h s hs
+  intro h s hs
+  have := h s hs
+  rwa [restrict_apply _ MeasurableSet.univ hs, Set.inter_univ,
+    restrict_apply _ MeasurableSet.univ hs, Set.inter_univ] at this
+  intro h s hs
+  rw [restrict_apply _ MeasurableSet.univ hs, Set.inter_univ,
+    restrict_apply _ MeasurableSet.univ hs, Set.inter_univ]
+  exact h s hs
 
 end
 
@@ -815,37 +815,37 @@ theorem restrict_le_restrict_iUnion {f : ℕ → Set α} (hf₁ : ∀ n, Measura
   have ha₄ : Pairwise (Disjoint on fun n => a ∩ disjointed f n) :=
     (disjoint_disjointed _).mono fun i j => Disjoint.mono inf_le_right inf_le_right
   rw [← ha₃, v.of_disjoint_iUnion_nat _ ha₄, w.of_disjoint_iUnion_nat _ ha₄]
-  · refine tsum_le_tsum (fun n => (restrict_le_restrict_iff v w (hf₁ n)).1 (hf₂ n) ?_ ?_) ?_ ?_
-    · exact ha₁.inter (MeasurableSet.disjointed hf₁ n)
-    · exact Set.Subset.trans Set.inter_subset_right (disjointed_subset _ _)
-    · refine (v.m_iUnion (fun n => ?_) ?_).summable
-      · exact ha₁.inter (MeasurableSet.disjointed hf₁ n)
-      · exact (disjoint_disjointed _).mono fun i j => Disjoint.mono inf_le_right inf_le_right
-    · refine (w.m_iUnion (fun n => ?_) ?_).summable
-      · exact ha₁.inter (MeasurableSet.disjointed hf₁ n)
-      · exact (disjoint_disjointed _).mono fun i j => Disjoint.mono inf_le_right inf_le_right
-  · intro n
-    exact ha₁.inter (MeasurableSet.disjointed hf₁ n)
-  · exact fun n => ha₁.inter (MeasurableSet.disjointed hf₁ n)
+  refine tsum_le_tsum (fun n => (restrict_le_restrict_iff v w (hf₁ n)).1 (hf₂ n) ?_ ?_) ?_ ?_
+  exact ha₁.inter (MeasurableSet.disjointed hf₁ n)
+  exact Set.Subset.trans Set.inter_subset_right (disjointed_subset _ _)
+  refine (v.m_iUnion (fun n => ?_) ?_).summable
+  exact ha₁.inter (MeasurableSet.disjointed hf₁ n)
+  exact (disjoint_disjointed _).mono fun i j => Disjoint.mono inf_le_right inf_le_right
+  refine (w.m_iUnion (fun n => ?_) ?_).summable
+  exact ha₁.inter (MeasurableSet.disjointed hf₁ n)
+  exact (disjoint_disjointed _).mono fun i j => Disjoint.mono inf_le_right inf_le_right
+  intro n
+  exact ha₁.inter (MeasurableSet.disjointed hf₁ n)
+  exact fun n => ha₁.inter (MeasurableSet.disjointed hf₁ n)
 
 theorem restrict_le_restrict_countable_iUnion [Countable β] {f : β → Set α}
     (hf₁ : ∀ b, MeasurableSet (f b)) (hf₂ : ∀ b, v ≤[f b] w) : v ≤[⋃ b, f b] w := by
   cases nonempty_encodable β
   rw [← Encodable.iUnion_decode₂]
   refine restrict_le_restrict_iUnion v w ?_ ?_
-  · intro n
-    measurability
-  · intro n
-    cases' Encodable.decode₂ β n with b
-    · simp
-    · simp [hf₂ b]
+  intro n
+  measurability
+  intro n
+  cases' Encodable.decode₂ β n with b
+  simp
+  simp [hf₂ b]
 
 theorem restrict_le_restrict_union (hi₁ : MeasurableSet i) (hi₂ : v ≤[i] w) (hj₁ : MeasurableSet j)
     (hj₂ : v ≤[j] w) : v ≤[i ∪ j] w := by
   rw [Set.union_eq_iUnion]
   refine restrict_le_restrict_countable_iUnion v w ?_ ?_
-  · measurability
-  · rintro (_ | _) <;> simpa
+  measurability
+  rintro (_ | _) <;> simpa
 
 end
 
@@ -856,13 +856,13 @@ variable (v w : VectorMeasure α M) {i j : Set α}
 
 theorem nonneg_of_zero_le_restrict (hi₂ : 0 ≤[i] v) : 0 ≤ v i := by
   by_cases hi₁ : MeasurableSet i
-  · exact (restrict_le_restrict_iff _ _ hi₁).1 hi₂ hi₁ Set.Subset.rfl
-  · rw [v.not_measurable hi₁]
+  exact (restrict_le_restrict_iff _ _ hi₁).1 hi₂ hi₁ Set.Subset.rfl
+  rw [v.not_measurable hi₁]
 
 theorem nonpos_of_restrict_le_zero (hi₂ : v ≤[i] 0) : v i ≤ 0 := by
   by_cases hi₁ : MeasurableSet i
-  · exact (restrict_le_restrict_iff _ _ hi₁).1 hi₂ hi₁ Set.Subset.rfl
-  · rw [v.not_measurable hi₁]
+  exact (restrict_le_restrict_iff _ _ hi₁).1 hi₂ hi₁ Set.Subset.rfl
+  rw [v.not_measurable hi₁]
 
 theorem zero_le_restrict_not_measurable (hi : ¬MeasurableSet i) : 0 ≤[i] v := by
   rw [restrict_zero, restrict_not_measurable _ hi]
@@ -934,8 +934,8 @@ variable {v : VectorMeasure α M} {w : VectorMeasure α N}
 theorem mk (h : ∀ ⦃s : Set α⦄, MeasurableSet s → w s = 0 → v s = 0) : v ≪ᵥ w := by
   intro s hs
   by_cases hmeas : MeasurableSet s
-  · exact h hmeas hs
-  · exact not_measurable v hmeas
+  exact h hmeas hs
+  exact not_measurable v hmeas
 
 theorem eq {w : VectorMeasure α M} (h : v = w) : v ≪ᵥ w :=
   fun _ hs => h.symm ▸ hs
@@ -981,22 +981,22 @@ theorem smul {R : Type*} [Semiring R] [DistribMulAction R M] [ContinuousConstSMu
 
 theorem map [MeasureSpace β] (h : v ≪ᵥ w) (f : α → β) : v.map f ≪ᵥ w.map f := by
   by_cases hf : Measurable f
-  · refine mk fun s hs hws => ?_
-    rw [map_apply _ hf hs] at hws ⊢
-    exact h hws
-  · intro s _
-    rw [map_not_measurable v hf, zero_apply]
+  refine mk fun s hs hws => ?_
+  rw [map_apply _ hf hs] at hws ⊢
+  exact h hws
+  intro s _
+  rw [map_not_measurable v hf, zero_apply]
 
 theorem ennrealToMeasure {μ : VectorMeasure α ℝ≥0∞} :
     (∀ ⦃s : Set α⦄, μ.ennrealToMeasure s = 0 → v s = 0) ↔ v ≪ᵥ μ := by
   constructor <;> intro h
-  · refine mk fun s hmeas hs => h ?_
-    rw [← hs, ennrealToMeasure_apply hmeas]
-  · intro s hs
-    by_cases hmeas : MeasurableSet s
-    · rw [ennrealToMeasure_apply hmeas] at hs
-      exact h hs
-    · exact not_measurable v hmeas
+  refine mk fun s hmeas hs => h ?_
+  rw [← hs, ennrealToMeasure_apply hmeas]
+  intro s hs
+  by_cases hmeas : MeasurableSet s
+  rw [ennrealToMeasure_apply hmeas] at hs
+  exact h hs
+  exact not_measurable v hmeas
 
 end AbsolutelyContinuous
 
@@ -1020,10 +1020,10 @@ variable {v v₁ v₂ : VectorMeasure α M} {w w₁ w₂ : VectorMeasure α N}
 theorem mk (s : Set α) (hs : MeasurableSet s) (h₁ : ∀ t ⊆ s, MeasurableSet t → v t = 0)
     (h₂ : ∀ t ⊆ sᶜ, MeasurableSet t → w t = 0) : v ⟂ᵥ w := by
   refine ⟨s, hs, fun t hst => ?_, fun t hst => ?_⟩ <;> by_cases ht : MeasurableSet t
-  · exact h₁ t hst ht
-  · exact not_measurable v ht
-  · exact h₂ t hst ht
-  · exact not_measurable w ht
+  exact h₁ t hst ht
+  exact not_measurable v ht
+  exact h₂ t hst ht
+  exact not_measurable w ht
 
 theorem symm (h : v ⟂ᵥ w) : w ⟂ᵥ v :=
   let ⟨s, hmeas, hs₁, hs₂⟩ := h
@@ -1040,20 +1040,20 @@ theorem add_left [T2Space N] [ContinuousAdd M] (h₁ : v₁ ⟂ᵥ w) (h₂ : v�
   obtain ⟨u, hmu, hu₁, hu₂⟩ := h₁
   obtain ⟨v, hmv, hv₁, hv₂⟩ := h₂
   refine mk (u ∩ v) (hmu.inter hmv) (fun t ht _ => ?_) fun t ht hmt => ?_
-  · rw [add_apply, hu₁ _ (Set.subset_inter_iff.1 ht).1, hv₁ _ (Set.subset_inter_iff.1 ht).2,
-      zero_add]
-  · rw [Set.compl_inter] at ht
-    rw [(_ : t = uᶜ ∩ t ∪ vᶜ \ uᶜ ∩ t),
-      of_union _ (hmu.compl.inter hmt) ((hmv.compl.diff hmu.compl).inter hmt), hu₂, hv₂, add_zero]
-    · exact Set.Subset.trans Set.inter_subset_left diff_subset
-    · exact Set.inter_subset_left
-    · exact disjoint_sdiff_self_right.mono Set.inter_subset_left Set.inter_subset_left
-    · apply Set.Subset.antisymm <;> intro x hx
-      · by_cases hxu' : x ∈ uᶜ
-        · exact Or.inl ⟨hxu', hx⟩
-        rcases ht hx with (hxu | hxv)
-        exacts [False.elim (hxu' hxu), Or.inr ⟨⟨hxv, hxu'⟩, hx⟩]
-      · cases' hx with hx hx <;> exact hx.2
+  rw [add_apply, hu₁ _ (Set.subset_inter_iff.1 ht).1, hv₁ _ (Set.subset_inter_iff.1 ht).2,
+    zero_add]
+  rw [Set.compl_inter] at ht
+  rw [(_ : t = uᶜ ∩ t ∪ vᶜ \ uᶜ ∩ t),
+    of_union _ (hmu.compl.inter hmt) ((hmv.compl.diff hmu.compl).inter hmt), hu₂, hv₂, add_zero]
+  exact Set.Subset.trans Set.inter_subset_left diff_subset
+  exact Set.inter_subset_left
+  exact disjoint_sdiff_self_right.mono Set.inter_subset_left Set.inter_subset_left
+  apply Set.Subset.antisymm <;> intro x hx
+  · by_cases hxu' : x ∈ uᶜ
+    exact Or.inl ⟨hxu', hx⟩
+    rcases ht hx with (hxu | hxv)
+    exacts [False.elim (hxu' hxu), Or.inr ⟨⟨hxv, hxu'⟩, hx⟩]
+  cases' hx with hx hx <;> exact hx.2
 
 theorem add_right [T2Space M] [ContinuousAdd N] (h₁ : v ⟂ᵥ w₁) (h₂ : v ⟂ᵥ w₂) : v ⟂ᵥ w₁ + w₂ :=
   (add_left h₁.symm h₂.symm).symm
@@ -1187,8 +1187,8 @@ theorem toMeasureOfLEZero_apply (hi : s ≤[i] 0) (hi₁ : MeasurableSet i) (hj�
       nonneg_of_zero_le_restrict _ (zero_le_restrict_subset _ hi₁ Set.inter_subset_left
       (@neg_zero (VectorMeasure α ℝ) _ ▸ neg_le_neg _ _ hi₁ hi))⟩ := by
   erw [toMeasureOfZeroLE_apply]
-  · simp
-  · assumption
+  simp
+  assumption
 
 /-- `SignedMeasure.toMeasureOfZeroLE` is a finite measure. -/
 instance toMeasureOfZeroLE_finite (hi : 0 ≤[i] s) (hi₁ : MeasurableSet i) :

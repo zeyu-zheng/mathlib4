@@ -75,15 +75,15 @@ theorem Sorted.head!_le [Inhabited α] [Preorder α] {a : α} {l : List α} (h :
     (ha : a ∈ l) : l.head! ≤ a := by
   rw [← List.cons_head!_tail (List.ne_nil_of_mem ha)] at h ha
   cases ha
-  · exact le_rfl
-  · exact le_of_lt (rel_of_sorted_cons h a (by assumption))
+  exact le_rfl
+  exact le_of_lt (rel_of_sorted_cons h a (by assumption))
 
 theorem Sorted.le_head! [Inhabited α] [Preorder α] {a : α} {l : List α} (h : Sorted (· > ·) l)
     (ha : a ∈ l) : a ≤ l.head! := by
   rw [← List.cons_head!_tail (List.ne_nil_of_mem ha)] at h ha
   cases ha
-  · exact le_rfl
-  · exact le_of_lt (rel_of_sorted_cons h a (by assumption))
+  exact le_rfl
+  exact le_of_lt (rel_of_sorted_cons h a (by assumption))
 
 @[simp]
 theorem sorted_cons {a : α} {l : List α} : Sorted r (a :: l) ↔ (∀ b ∈ l, r a b) ∧ Sorted r l :=
@@ -96,20 +96,20 @@ protected theorem Sorted.nodup {r : α → α → Prop} [IsIrrefl α r] {l : Lis
 theorem eq_of_perm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (hp : l₁ ~ l₂) (hs₁ : Sorted r l₁)
     (hs₂ : Sorted r l₂) : l₁ = l₂ := by
   induction' hs₁ with a l₁ h₁ hs₁ IH generalizing l₂
-  · exact hp.nil_eq
-  · have : a ∈ l₂ := hp.subset (mem_cons_self _ _)
-    rcases append_of_mem this with ⟨u₂, v₂, rfl⟩
-    have hp' := (perm_cons a).1 (hp.trans perm_middle)
-    obtain rfl := IH hp' (hs₂.sublist <| by simp)
-    change a :: u₂ ++ v₂ = u₂ ++ ([a] ++ v₂)
-    rw [← append_assoc]
-    congr
-    have : ∀ x ∈ u₂, x = a := fun x m =>
-      antisymm ((pairwise_append.1 hs₂).2.2 _ m a (mem_cons_self _ _)) (h₁ _ (by simp [m]))
-    rw [(@eq_replicate _ a (length u₂ + 1) (a :: u₂)).2,
-        (@eq_replicate _ a (length u₂ + 1) (u₂ ++ [a])).2] <;>
-        constructor <;>
-      simp [iff_true_intro this, or_comm]
+  exact hp.nil_eq
+  have : a ∈ l₂ := hp.subset (mem_cons_self _ _)
+  rcases append_of_mem this with ⟨u₂, v₂, rfl⟩
+  have hp' := (perm_cons a).1 (hp.trans perm_middle)
+  obtain rfl := IH hp' (hs₂.sublist <| by simp)
+  change a :: u₂ ++ v₂ = u₂ ++ ([a] ++ v₂)
+  rw [← append_assoc]
+  congr
+  have : ∀ x ∈ u₂, x = a := fun x m =>
+    antisymm ((pairwise_append.1 hs₂).2.2 _ m a (mem_cons_self _ _)) (h₁ _ (by simp [m]))
+  rw [(@eq_replicate _ a (length u₂ + 1) (a :: u₂)).2,
+      (@eq_replicate _ a (length u₂ + 1) (u₂ ++ [a])).2] <;>
+      constructor <;>
+    simp [iff_true_intro this, or_comm]
 
 theorem sublist_of_subperm_of_sorted [IsAntisymm α r] {l₁ l₂ : List α} (hp : l₁ <+~ l₂)
     (hs₁ : l₁.Sorted r) (hs₂ : l₂.Sorted r) : l₁ <+ l₂ := by
@@ -234,8 +234,8 @@ theorem mem_orderedInsert {a b : α} {l : List α} :
   | x :: xs => by
     rw [orderedInsert]
     split_ifs
-    · simp [orderedInsert]
-    · rw [mem_cons, mem_cons, mem_orderedInsert, or_left_comm]
+    simp [orderedInsert]
+    rw [mem_cons, mem_cons, mem_orderedInsert, or_left_comm]
 
 section Correctness
 
@@ -245,8 +245,8 @@ theorem perm_orderedInsert (a) : ∀ l : List α, orderedInsert r a l ~ a :: l
   | [] => Perm.refl _
   | b :: l => by
     by_cases h : a ≼ b
-    · simp [orderedInsert, h]
-    · simpa [orderedInsert, h] using ((perm_orderedInsert a l).cons _).trans (Perm.swap _ _ _)
+    simp [orderedInsert, h]
+    simpa [orderedInsert, h] using ((perm_orderedInsert a l).cons _).trans (Perm.swap _ _ _)
 
 theorem orderedInsert_count [DecidableEq α] (L : List α) (a b : α) :
     count a (L.orderedInsert r b) = count a L + if a = b then 1 else 0 := by
@@ -294,16 +294,16 @@ theorem orderedInsert_erase [DecidableEq α] [IsAntisymm α r] (x : α) (xs : Li
   | cons y ys ih =>
     rw [sorted_cons] at hxs
     obtain rfl | hxy := Decidable.eq_or_ne x y
-    · rw [erase_cons_head]
-      cases ys with
-      | nil => rfl
-      | cons z zs =>
-        rw [orderedInsert, if_pos (hxs.1 _ (.head zs))]
-    · rw [mem_cons] at hx
-      replace hx := hx.resolve_left hxy
-      rw [erase_cons_tail _ (not_beq_of_ne hxy.symm), orderedInsert, ih _ hx hxs.2, if_neg]
-      refine mt (fun hrxy => ?_) hxy
-      exact antisymm hrxy (hxs.1 _ hx)
+    rw [erase_cons_head]
+    cases ys with
+    | nil => rfl
+    | cons z zs =>
+      rw [orderedInsert, if_pos (hxs.1 _ (.head zs))]
+    rw [mem_cons] at hx
+    replace hx := hx.resolve_left hxy
+    rw [erase_cons_tail _ (not_beq_of_ne hxy.symm), orderedInsert, ih _ hx hxs.2, if_neg]
+    refine mt (fun hrxy => ?_) hxy
+    exact antisymm hrxy (hxs.1 _ hx)
 
 theorem sublist_orderedInsert (x : α) (xs : List α) : xs <+ xs.orderedInsert r x := by
   rw [orderedInsert_eq_take_drop]
@@ -318,17 +318,17 @@ theorem Sorted.orderedInsert (a : α) : ∀ l, Sorted r l → Sorted r (orderedI
   | [], _ => sorted_singleton a
   | b :: l, h => by
     by_cases h' : a ≼ b
-    · -- Porting note: was
-      -- `simpa [orderedInsert, h', h] using fun b' bm => trans h' (rel_of_sorted_cons h _ bm)`
-      rw [List.orderedInsert, if_pos h', sorted_cons]
-      exact ⟨forall_mem_cons.2 ⟨h', fun c hc => _root_.trans h' (rel_of_sorted_cons h _ hc)⟩, h⟩
-    · suffices ∀ b' : α, b' ∈ List.orderedInsert r a l → r b b' by
-        simpa [orderedInsert, h', h.of_cons.orderedInsert a l]
-      intro b' bm
-      cases' (mem_orderedInsert r).mp bm with be bm
-      · subst b'
-        exact (total_of r _ _).resolve_left h'
-      · exact rel_of_sorted_cons h _ bm
+    -- Porting note: was
+    -- `simpa [orderedInsert, h', h] using fun b' bm => trans h' (rel_of_sorted_cons h _ bm)`
+    rw [List.orderedInsert, if_pos h', sorted_cons]
+    exact ⟨forall_mem_cons.2 ⟨h', fun c hc => _root_.trans h' (rel_of_sorted_cons h _ hc)⟩, h⟩
+    suffices ∀ b' : α, b' ∈ List.orderedInsert r a l → r b b' by
+      simpa [orderedInsert, h', h.of_cons.orderedInsert a l]
+    intro b' bm
+    cases' (mem_orderedInsert r).mp bm with be bm
+    subst b'
+    exact (total_of r _ _).resolve_left h'
+    exact rel_of_sorted_cons h _ bm
 
 variable (r)
 
@@ -437,27 +437,27 @@ theorem Sorted.merge : ∀ {l l' : List α}, Sorted r l → Sorted r l' → Sort
   | a :: l, [], h₁, _ => by simpa using h₁
   | a :: l, b :: l', h₁, h₂ => by
     by_cases h : a ≼ b
-    · suffices ∀ b' ∈ List.merge (r · ·) l (b :: l'), r a b' by
-        simpa [h, h₁.of_cons.merge h₂]
-      intro b' bm
-      rcases show b' = b ∨ b' ∈ l ∨ b' ∈ l' by
-          simpa [or_left_comm] using (perm_merge _ _ _).subset bm with
-        (be | bl | bl')
-      · subst b'
-        assumption
-      · exact rel_of_sorted_cons h₁ _ bl
-      · exact _root_.trans h (rel_of_sorted_cons h₂ _ bl')
-    · suffices ∀ b' ∈ List.merge (r · ·) (a :: l) l', r b b' by
-        simpa [h, h₁.merge h₂.of_cons]
-      intro b' bm
-      have ba : b ≼ a := (total_of r _ _).resolve_left h
-      have : b' = a ∨ b' ∈ l ∨ b' ∈ l'
-      simpa using (perm_merge _ _ _).subset bm
-      rcases this with (be | bl | bl')
-      · subst b'
-        assumption
-      · exact _root_.trans ba (rel_of_sorted_cons h₁ _ bl)
-      · exact rel_of_sorted_cons h₂ _ bl'
+    suffices ∀ b' ∈ List.merge (r · ·) l (b :: l'), r a b' by
+      simpa [h, h₁.of_cons.merge h₂]
+    intro b' bm
+    rcases show b' = b ∨ b' ∈ l ∨ b' ∈ l' by
+        simpa [or_left_comm] using (perm_merge _ _ _).subset bm with
+      (be | bl | bl')
+    subst b'
+    assumption
+    exact rel_of_sorted_cons h₁ _ bl
+    exact _root_.trans h (rel_of_sorted_cons h₂ _ bl')
+    suffices ∀ b' ∈ List.merge (r · ·) (a :: l) l', r b b' by
+      simpa [h, h₁.merge h₂.of_cons]
+    intro b' bm
+    have ba : b ≼ a := (total_of r _ _).resolve_left h
+    have : b' = a ∨ b' ∈ l ∨ b' ∈ l'
+    simpa using (perm_merge _ _ _).subset bm
+    rcases this with (be | bl | bl')
+    subst b'
+    assumption
+    exact _root_.trans ba (rel_of_sorted_cons h₁ _ bl)
+    exact rel_of_sorted_cons h₂ _ bl'
 
 variable (r)
 

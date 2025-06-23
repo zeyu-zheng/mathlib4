@@ -150,16 +150,16 @@ theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q
       (s.filter p).card * (t.filter q).card +
         (s.filter (¬ p ·)).card * (t.filter (¬ q ·)).card := by
   rw [← card_product, ← card_product, ← filter_product, ← filter_product, ← card_union_of_disjoint]
-  · apply congr_arg
-    ext ⟨a, b⟩
-    simp only [filter_union_right, mem_filter, mem_product]
-    constructor <;> intro h <;> use h.1
-    · simp only [h.2, Function.comp_apply, Decidable.em, and_self]
-    · revert h
-      simp only [Function.comp_apply, and_imp]
-      rintro _ _ (_|_) <;> simp [*]
-  · apply Finset.disjoint_filter_filter'
-    exact (disjoint_compl_right.inf_left _).inf_right _
+  apply congr_arg
+  ext ⟨a, b⟩
+  simp only [filter_union_right, mem_filter, mem_product]
+  constructor <;> intro h <;> use h.1
+  simp only [h.2, Function.comp_apply, Decidable.em, and_self]
+  revert h
+  simp only [Function.comp_apply, and_imp]
+  rintro _ _ (_|_) <;> simp [*]
+  apply Finset.disjoint_filter_filter'
+  exact (disjoint_compl_right.inf_left _).inf_right _
 
 @[simp]
 theorem empty_product (t : Finset β) : (∅ : Finset α) ×ˢ t = ∅ :=
@@ -283,12 +283,12 @@ theorem diag_card : (diag s).card = s.card := by
   ext ⟨a₁, a₂⟩
   rw [mem_diag]
   constructor <;> intro h <;> rw [Finset.mem_image] at *
-  · use a₁
-    simpa using h
-  · rcases h with ⟨a, h1, h2⟩
-    have h := Prod.mk.inj h2
-    rw [← h.1, ← h.2]
-    use h1
+  use a₁
+  simpa using h
+  rcases h with ⟨a, h1, h2⟩
+  have h := Prod.mk.inj h2
+  rw [← h.1, ← h.2]
+  use h1
 
 @[simp]
 theorem offDiag_card : (offDiag s).card = s.card * s.card - s.card :=

@@ -131,33 +131,33 @@ theorem RemoveNone.fiber_some (a : α) :
     RemoveNone.fiber (some a) = { f : Perm α | fixedPoints f ⊆ {a} } := by
   ext f
   constructor
-  · rw [RemoveNone.mem_fiber]
-    rintro ⟨F, F_derangement, F_none, rfl⟩ x x_fixed
-    rw [mem_fixedPoints_iff] at x_fixed
-    apply_fun some at x_fixed
-    cases' Fx : F (some x) with y
-    · rwa [removeNone_none F Fx, F_none, Option.some_inj, eq_comm] at x_fixed
-    · exfalso
-      rw [removeNone_some F ⟨y, Fx⟩] at x_fixed
-      exact F_derangement _ x_fixed
-  · intro h_opfp
-    use Equiv.Perm.decomposeOption.symm (some a, f)
-    constructor
-    · intro x
-      apply_fun fun x => Equiv.swap none (some a) x
-      simp only [Perm.decomposeOption_symm_apply, swap_apply_self, Perm.coe_mul]
-      cases' x with x
-      · simp
-      simp only [comp, optionCongr_apply, Option.map_some', swap_apply_self]
-      by_cases x_vs_a : x = a
-      · rw [x_vs_a, swap_apply_right]
-        apply Option.some_ne_none
-      have ne_1 : some x ≠ none := Option.some_ne_none _
-      have ne_2 : some x ≠ some a := (Option.some_injective α).ne_iff.mpr x_vs_a
-      rw [swap_apply_of_ne_of_ne ne_1 ne_2, (Option.some_injective α).ne_iff]
-      intro contra
-      exact x_vs_a (h_opfp contra)
-    · rw [apply_symm_apply]
+  rw [RemoveNone.mem_fiber]
+  rintro ⟨F, F_derangement, F_none, rfl⟩ x x_fixed
+  rw [mem_fixedPoints_iff] at x_fixed
+  apply_fun some at x_fixed
+  cases' Fx : F (some x) with y
+  rwa [removeNone_none F Fx, F_none, Option.some_inj, eq_comm] at x_fixed
+  exfalso
+  rw [removeNone_some F ⟨y, Fx⟩] at x_fixed
+  exact F_derangement _ x_fixed
+  intro h_opfp
+  use Equiv.Perm.decomposeOption.symm (some a, f)
+  constructor
+  intro x
+  apply_fun fun x => Equiv.swap none (some a) x
+  simp only [Perm.decomposeOption_symm_apply, swap_apply_self, Perm.coe_mul]
+  cases' x with x
+  simp
+  simp only [comp, optionCongr_apply, Option.map_some', swap_apply_self]
+  by_cases x_vs_a : x = a
+  rw [x_vs_a, swap_apply_right]
+  apply Option.some_ne_none
+  have ne_1 : some x ≠ none := Option.some_ne_none _
+  have ne_2 : some x ≠ some a := (Option.some_injective α).ne_iff.mpr x_vs_a
+  rw [swap_apply_of_ne_of_ne ne_1 ne_2, (Option.some_injective α).ne_iff]
+  intro contra
+  exact x_vs_a (h_opfp contra)
+  rw [apply_symm_apply]
 
 end Equiv
 

@@ -136,21 +136,21 @@ theorem map_natCast (n : ℕ) : D (n : A) = 0 := by
 @[simp]
 theorem leibniz_pow (n : ℕ) : D (a ^ n) = n • a ^ (n - 1) • D a := by
   induction' n with n ihn
-  · rw [pow_zero, map_one_eq_zero, zero_smul]
-  · rcases (zero_le n).eq_or_lt with (rfl | hpos)
-    · erw [pow_one, one_smul, pow_zero, one_smul]
-    · have : a * a ^ (n - 1) = a ^ n := by rw [← pow_succ', Nat.sub_add_cancel hpos]
-      simp only [pow_succ', leibniz, ihn, smul_comm a n (_ : M), smul_smul a, add_smul, this,
-        Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zero, one_nsmul]
+  rw [pow_zero, map_one_eq_zero, zero_smul]
+  rcases (zero_le n).eq_or_lt with (rfl | hpos)
+  erw [pow_one, one_smul, pow_zero, one_smul]
+  have : a * a ^ (n - 1) = a ^ n := by rw [← pow_succ', Nat.sub_add_cancel hpos]
+  simp only [pow_succ', leibniz, ihn, smul_comm a n (_ : M), smul_smul a, add_smul, this,
+    Nat.succ_eq_add_one, Nat.add_succ_sub_one, add_zero, one_nsmul]
 
 open Polynomial in
 @[simp]
 theorem map_aeval (P : R[X]) (x : A) :
     D (aeval x P) = aeval x (derivative P) • D x := by
   induction P using Polynomial.induction_on
-  · simp
-  · simp [add_smul, *]
-  · simp [mul_smul, ← Nat.cast_smul_eq_nsmul A]
+  simp
+  simp [add_smul, *]
+  simp [mul_smul, ← Nat.cast_smul_eq_nsmul A]
 
 theorem eqOn_adjoin {s : Set A} (h : Set.EqOn D1 D2 s) : Set.EqOn D1 D2 (adjoin R s) := fun x hx =>
   Algebra.adjoin_induction hx h (fun r => (D1.map_algebraMap r).trans (D2.map_algebraMap r).symm)
@@ -398,8 +398,8 @@ variable {K : Type*} [Field K] [Module K M] [Algebra R K] (D : Derivation R K M)
 
 theorem leibniz_inv (a : K) : D a⁻¹ = -a⁻¹ ^ 2 • D a := by
   rcases eq_or_ne a 0 with (rfl | ha)
-  · simp
-  · exact D.leibniz_of_mul_eq_one (inv_mul_cancel ha)
+  simp
+  exact D.leibniz_of_mul_eq_one (inv_mul_cancel ha)
 
 theorem leibniz_div (a b : K) : D (a / b) = b⁻¹ ^ 2 • (b • D a - a • D b) := by
   simp only [div_eq_mul_inv, leibniz, leibniz_inv, inv_pow, neg_smul, smul_neg, smul_smul, add_comm,
@@ -414,24 +414,24 @@ theorem leibniz_div_const (a b : K) (h : D b = 0) : D (a / b) = b⁻¹ • D a :
 
 lemma leibniz_zpow (a : K) (n : ℤ) : D (a ^ n) = n • a ^ (n - 1) • D a := by
   by_cases hn : n = 0
-  · simp [hn]
+  simp [hn]
   by_cases ha : a = 0
-  · simp [ha, zero_zpow n hn]
+  simp [ha, zero_zpow n hn]
   rcases Int.natAbs_eq n with h | h
-  · rw [h]
-    simp only [zpow_natCast, leibniz_pow, natCast_zsmul]
-    rw [← zpow_natCast]
-    congr
-    omega
-  · rw [h, zpow_neg, zpow_natCast, leibniz_inv, leibniz_pow, inv_pow, ← pow_mul, ← zpow_natCast,
-      ← zpow_natCast, ← Nat.cast_smul_eq_nsmul K, ← Int.cast_smul_eq_nsmul K, smul_smul, smul_smul,
-      smul_smul]
-    trans (-n.natAbs * (a ^ ((n.natAbs - 1 : ℕ) : ℤ) / (a ^ ((n.natAbs * 2 : ℕ) : ℤ)))) • D a
-    · ring_nf
-    rw [← zpow_sub₀ ha]
-    congr 3
-    · norm_cast
-    omega
+  rw [h]
+  simp only [zpow_natCast, leibniz_pow, natCast_zsmul]
+  rw [← zpow_natCast]
+  congr
+  omega
+  rw [h, zpow_neg, zpow_natCast, leibniz_inv, leibniz_pow, inv_pow, ← pow_mul, ← zpow_natCast,
+    ← zpow_natCast, ← Nat.cast_smul_eq_nsmul K, ← Int.cast_smul_eq_nsmul K, smul_smul, smul_smul,
+    smul_smul]
+  trans (-n.natAbs * (a ^ ((n.natAbs - 1 : ℕ) : ℤ) / (a ^ ((n.natAbs * 2 : ℕ) : ℤ)))) • D a
+  ring_nf
+  rw [← zpow_sub₀ ha]
+  congr 3
+  norm_cast
+  omega
 
 end Field
 

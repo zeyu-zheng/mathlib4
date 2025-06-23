@@ -682,8 +682,8 @@ theorem approx_apply [TopologicalSpace β] [OrderClosedTopology β] [MeasurableS
   congr
   funext k
   rw [restrict_apply]
-  · simp only [coe_const, mem_setOf_eq, indicator_apply, Function.const_apply]
-  · exact hf measurableSet_Ici
+  simp only [coe_const, mem_setOf_eq, indicator_apply, Function.const_apply]
+  exact hf measurableSet_Ici
 
 theorem monotone_approx (i : ℕ → β) (f : α → β) : Monotone (approx i f) := fun _ _ h =>
   Finset.sup_mono <| Finset.range_subset.2 h
@@ -700,16 +700,16 @@ theorem iSup_approx_apply [TopologicalSpace β] [CompleteLattice β] [OrderClose
     [MeasurableSpace β] [OpensMeasurableSpace β] (i : ℕ → β) (f : α → β) (a : α) (hf : Measurable f)
     (h_zero : (0 : β) = ⊥) : ⨆ n, (approx i f n : α →ₛ β) a = ⨆ (k) (_ : i k ≤ f a), i k := by
   refine le_antisymm (iSup_le fun n => ?_) (iSup_le fun k => iSup_le fun hk => ?_)
-  · rw [approx_apply a hf, h_zero]
-    refine Finset.sup_le fun k _ => ?_
-    split_ifs with h
-    · exact le_iSup_of_le k (le_iSup (fun _ : i k ≤ f a => i k) h)
-    · exact bot_le
-  · refine le_iSup_of_le (k + 1) ?_
-    rw [approx_apply a hf]
-    have : k ∈ Finset.range (k + 1) := Finset.mem_range.2 (Nat.lt_succ_self _)
-    refine le_trans (le_of_eq ?_) (Finset.le_sup this)
-    rw [if_pos hk]
+  rw [approx_apply a hf, h_zero]
+  refine Finset.sup_le fun k _ => ?_
+  split_ifs with h
+  exact le_iSup_of_le k (le_iSup (fun _ : i k ≤ f a => i k) h)
+  exact bot_le
+  refine le_iSup_of_le (k + 1) ?_
+  rw [approx_apply a hf]
+  have : k ∈ Finset.range (k + 1) := Finset.mem_range.2 (Nat.lt_succ_self _)
+  refine le_trans (le_of_eq ?_) (Finset.le_sup this)
+  rw [if_pos hk]
 
 end Approx
 
@@ -732,13 +732,13 @@ theorem eapprox_lt_top (f : α → ℝ≥0∞) (n : ℕ) (a : α) : eapprox f n 
   rw [Finset.sup_lt_iff (α := ℝ≥0∞) WithTop.zero_lt_top]
   intro b _
   split_ifs
-  · simp only [coe_zero, coe_piecewise, piecewise_eq_indicator, coe_const]
-    calc
-      { a : α | ennrealRatEmbed b ≤ f a }.indicator (fun _ => ennrealRatEmbed b) a ≤
-          ennrealRatEmbed b :=
-        indicator_le_self _ _ a
-      _ < ⊤ := ENNReal.coe_lt_top
-  · exact WithTop.zero_lt_top
+  simp only [coe_zero, coe_piecewise, piecewise_eq_indicator, coe_const]
+  calc
+    { a : α | ennrealRatEmbed b ≤ f a }.indicator (fun _ => ennrealRatEmbed b) a ≤
+        ennrealRatEmbed b :=
+      indicator_le_self _ _ a
+    _ < ⊤ := ENNReal.coe_lt_top
+  exact WithTop.zero_lt_top
 
 @[mono]
 theorem monotone_eapprox (f : α → ℝ≥0∞) : Monotone (eapprox f) :=
@@ -770,14 +770,14 @@ def eapproxDiff (f : α → ℝ≥0∞) : ℕ → α →ₛ ℝ≥0
 theorem sum_eapproxDiff (f : α → ℝ≥0∞) (n : ℕ) (a : α) :
     (∑ k ∈ Finset.range (n + 1), (eapproxDiff f k a : ℝ≥0∞)) = eapprox f n a := by
   induction' n with n IH
-  · simp only [Nat.zero_eq, Nat.zero_add, Finset.sum_singleton, Finset.range_one]
-    rfl
-  · erw [Finset.sum_range_succ, IH, eapproxDiff, coe_map, Function.comp_apply,
-      coe_sub, Pi.sub_apply, ENNReal.coe_toNNReal,
-      add_tsub_cancel_of_le (monotone_eapprox f (Nat.le_succ _) _)]
-    apply (lt_of_le_of_lt _ (eapprox_lt_top f (n + 1) a)).ne
-    rw [tsub_le_iff_right]
-    exact le_self_add
+  simp only [Nat.zero_eq, Nat.zero_add, Finset.sum_singleton, Finset.range_one]
+  rfl
+  erw [Finset.sum_range_succ, IH, eapproxDiff, coe_map, Function.comp_apply,
+    coe_sub, Pi.sub_apply, ENNReal.coe_toNNReal,
+    add_tsub_cancel_of_le (monotone_eapprox f (Nat.le_succ _) _)]
+  apply (lt_of_le_of_lt _ (eapprox_lt_top f (n + 1) a)).ne
+  rw [tsub_le_iff_right]
+  exact le_self_add
 
 theorem tsum_eapproxDiff (f : α → ℝ≥0∞) (hf : Measurable f) (a : α) :
     (∑' n, (eapproxDiff f n a : ℝ≥0∞)) = f a := by
@@ -800,15 +800,15 @@ theorem lintegral_eq_of_subset (f : α →ₛ ℝ≥0∞) {s : Finset ℝ≥0∞
     (hs : ∀ x, f x ≠ 0 → μ (f ⁻¹' {f x}) ≠ 0 → f x ∈ s) :
     f.lintegral μ = ∑ x ∈ s, x * μ (f ⁻¹' {x}) := by
   refine Finset.sum_bij_ne_zero (fun r _ _ => r) ?_ ?_ ?_ ?_
-  · simpa only [forall_mem_range, mul_ne_zero_iff, and_imp]
-  · intros
-    assumption
-  · intro b _ hb
-    refine ⟨b, ?_, hb, rfl⟩
-    rw [mem_range, ← preimage_singleton_nonempty]
-    exact nonempty_of_measure_ne_zero (mul_ne_zero_iff.1 hb).2
-  · intros
-    rfl
+  simpa only [forall_mem_range, mul_ne_zero_iff, and_imp]
+  intros
+  assumption
+  intro b _ hb
+  refine ⟨b, ?_, hb, rfl⟩
+  rw [mem_range, ← preimage_singleton_nonempty]
+  exact nonempty_of_measure_ne_zero (mul_ne_zero_iff.1 hb).2
+  intros
+  rfl
 
 theorem lintegral_eq_of_subset' (f : α →ₛ ℝ≥0∞) {s : Finset ℝ≥0∞} (hs : f.range \ {0} ⊆ s) :
     f.lintegral μ = ∑ x ∈ s, x * μ (f ⁻¹' {x}) :=
@@ -823,11 +823,11 @@ theorem map_lintegral (g : β → ℝ≥0∞) (f : α →ₛ β) :
   rcases mem_range.1 hb with ⟨a, rfl⟩
   rw [map_preimage_singleton, ← f.sum_measure_preimage_singleton, Finset.mul_sum]
   refine Finset.sum_congr ?_ ?_
-  · congr
-  · intro x
-    simp only [Finset.mem_filter]
-    rintro ⟨_, h⟩
-    rw [h]
+  congr
+  intro x
+  simp only [Finset.mem_filter]
+  rintro ⟨_, h⟩
+  rw [h]
 
 theorem add_lintegral (f g : α →ₛ ℝ≥0∞) : (f + g).lintegral μ = f.lintegral μ + g.lintegral μ :=
   calc
@@ -911,8 +911,8 @@ theorem lintegral_restrict_iUnion_of_directed {ι : Type*} [Countable ι]
 theorem const_lintegral (c : ℝ≥0∞) : (const α c).lintegral μ = c * μ univ := by
   rw [lintegral]
   cases isEmpty_or_nonempty α
-  · simp [μ.eq_zero_of_isEmpty]
-  · simp; unfold Function.const; rw [preimage_const_of_mem (mem_singleton c)]
+  simp [μ.eq_zero_of_isEmpty]
+  simp; unfold Function.const; rw [preimage_const_of_mem (mem_singleton c)]
 
 theorem const_lintegral_restrict (c : ℝ≥0∞) (s : Set α) :
     (const α c).lintegral (μ.restrict s) = c * μ s := by
@@ -930,8 +930,8 @@ theorem le_sup_lintegral (f g : α →ₛ ℝ≥0∞) : f.lintegral μ ⊔ g.lin
     _ ≤ ∑ x ∈ (pair f g).range, (x.1 ⊔ x.2) * μ (pair f g ⁻¹' {x}) := by
       rw [map_lintegral, map_lintegral]
       refine sup_le ?_ ?_ <;> refine Finset.sum_le_sum fun a _ => mul_le_mul_right' ?_ _
-      · exact le_sup_left
-      · exact le_sup_right
+      exact le_sup_left
+      exact le_sup_right
     _ = (f ⊔ g).lintegral μ := by rw [sup_eq_map₂, map_lintegral]
 
 /-- `SimpleFunc.lintegral` is monotone both in function and in measure. -/
@@ -997,12 +997,12 @@ theorem finMeasSupp_iff_support : f.FinMeasSupp μ ↔ μ (support f) < ∞ :=
 
 theorem finMeasSupp_iff : f.FinMeasSupp μ ↔ ∀ y, y ≠ 0 → μ (f ⁻¹' {y}) < ∞ := by
   constructor
-  · refine fun h y hy => lt_of_le_of_lt (measure_mono ?_) h
-    exact fun x hx (H : f x = 0) => hy <| H ▸ Eq.symm hx
-  · intro H
-    rw [finMeasSupp_iff_support, support_eq]
-    refine lt_of_le_of_lt (measure_biUnion_finset_le _ _) (sum_lt_top ?_)
-    exact fun y hy => (H y (Finset.mem_filter.1 hy).2).ne
+  refine fun h y hy => lt_of_le_of_lt (measure_mono ?_) h
+  exact fun x hx (H : f x = 0) => hy <| H ▸ Eq.symm hx
+  intro H
+  rw [finMeasSupp_iff_support, support_eq]
+  refine lt_of_le_of_lt (measure_biUnion_finset_le _ _) (sum_lt_top ?_)
+  exact fun y hy => (H y (Finset.mem_filter.1 hy).2).ne
 
 namespace FinMeasSupp
 
@@ -1046,12 +1046,12 @@ theorem lintegral_lt_top {f : α →ₛ ℝ≥0∞} (hm : f.FinMeasSupp μ) (hf 
     f.lintegral μ < ∞ := by
   refine sum_lt_top fun a ha => ?_
   rcases eq_or_ne a ∞ with (rfl | ha)
-  · simp only [ae_iff, Ne, Classical.not_not] at hf
-    simp [Set.preimage, hf]
-  · by_cases ha0 : a = 0
-    · subst a
-      rwa [zero_mul]
-    · exact mul_ne_top ha (finMeasSupp_iff.1 hm _ ha0).ne
+  simp only [ae_iff, Ne, Classical.not_not] at hf
+  simp [Set.preimage, hf]
+  by_cases ha0 : a = 0
+  subst a
+  rwa [zero_mul]
+  exact mul_ne_top ha (finMeasSupp_iff.1 hm _ ha0).ne
 
 theorem of_lintegral_ne_top {f : α →ₛ ℝ≥0∞} (h : f.lintegral μ ≠ ∞) : f.FinMeasSupp μ := by
   refine finMeasSupp_iff.2 fun b hb => ?_
@@ -1097,20 +1097,20 @@ protected theorem induction {α γ} [MeasurableSpace α] [AddMonoid γ] {P : Sim
       simp only [g, SimpleFunc.coe_piecewise, range_piecewise]
       rw [image_compl_preimage, union_diff_distrib, diff_diff_comm, h, Finset.coe_insert,
         insert_diff_self_of_not_mem, diff_eq_empty.mpr, Set.empty_union]
-      · rw [Set.image_subset_iff]
-        convert Set.subset_univ _
-        exact preimage_const_of_mem (mem_singleton _)
-      · rwa [Finset.mem_coe]
+      rw [Set.image_subset_iff]
+      convert Set.subset_univ _
+      exact preimage_const_of_mem (mem_singleton _)
+      rwa [Finset.mem_coe]
     convert h_add _ Pg (h_ind x mx)
-    · ext1 y
-      by_cases hy : y ∈ f ⁻¹' {x}
-      · simpa [g, piecewise_eq_of_mem _ _ _ hy, -piecewise_eq_indicator]
-      · simp [g, piecewise_eq_of_not_mem _ _ _ hy, -piecewise_eq_indicator]
+    ext1 y
+    by_cases hy : y ∈ f ⁻¹' {x}
+    simpa [g, piecewise_eq_of_mem _ _ _ hy, -piecewise_eq_indicator]
+    simp [g, piecewise_eq_of_not_mem _ _ _ hy, -piecewise_eq_indicator]
     rw [disjoint_iff_inf_le]
     rintro y
     by_cases hy : y ∈ f ⁻¹' {x}
-    · simp [g, piecewise_eq_of_mem _ _ _ hy, -piecewise_eq_indicator]
-    · simp [piecewise_eq_of_not_mem _ _ _ hy, -piecewise_eq_indicator]
+    simp [g, piecewise_eq_of_mem _ _ _ hy, -piecewise_eq_indicator]
+    simp [piecewise_eq_of_not_mem _ _ _ hy, -piecewise_eq_indicator]
 
 open Classical in
 /-- In a topological vector space, the addition of a measurable function and a simple function is
@@ -1120,22 +1120,22 @@ theorem _root_.Measurable.add_simpleFunc
     {g : α → E} (hg : Measurable g) (f : SimpleFunc α E) :
     Measurable (g + (f : α → E)) := by
   induction' f using SimpleFunc.induction with c s hs f f' hff' hf hf'
-  · simp only [SimpleFunc.const_zero, SimpleFunc.coe_piecewise, SimpleFunc.coe_const,
-      SimpleFunc.coe_zero]
-    change Measurable (g + s.piecewise (Function.const α c) (0 : α → E))
-    rw [← s.piecewise_same g, ← piecewise_add]
-    exact Measurable.piecewise hs (hg.add_const _) (hg.add_const _)
-  · have : (g + ↑(f + f'))
-        = (Function.support f).piecewise (g + (f : α → E)) (g + f') := by
-      ext x
-      by_cases hx : x ∈ Function.support f
-      · simpa only [SimpleFunc.coe_add, Pi.add_apply, Function.mem_support, ne_eq, not_not,
-          Set.piecewise_eq_of_mem _ _ _ hx, _root_.add_right_inj, add_right_eq_self]
-          using Set.disjoint_left.1 hff' hx
-      · simpa only [SimpleFunc.coe_add, Pi.add_apply, Function.mem_support, ne_eq, not_not,
-          Set.piecewise_eq_of_not_mem _ _ _ hx, _root_.add_right_inj, add_left_eq_self] using hx
-    rw [this]
-    exact Measurable.piecewise f.measurableSet_support hf hf'
+  simp only [SimpleFunc.const_zero, SimpleFunc.coe_piecewise, SimpleFunc.coe_const,
+    SimpleFunc.coe_zero]
+  change Measurable (g + s.piecewise (Function.const α c) (0 : α → E))
+  rw [← s.piecewise_same g, ← piecewise_add]
+  exact Measurable.piecewise hs (hg.add_const _) (hg.add_const _)
+  have : (g + ↑(f + f'))
+      = (Function.support f).piecewise (g + (f : α → E)) (g + f') := by
+    ext x
+    by_cases hx : x ∈ Function.support f
+    simpa only [SimpleFunc.coe_add, Pi.add_apply, Function.mem_support, ne_eq, not_not,
+      Set.piecewise_eq_of_mem _ _ _ hx, _root_.add_right_inj, add_right_eq_self]
+      using Set.disjoint_left.1 hff' hx
+    simpa only [SimpleFunc.coe_add, Pi.add_apply, Function.mem_support, ne_eq, not_not,
+      Set.piecewise_eq_of_not_mem _ _ _ hx, _root_.add_right_inj, add_left_eq_self] using hx
+  rw [this]
+  exact Measurable.piecewise f.measurableSet_support hf hf'
 
 open Classical in
 /-- In a topological vector space, the addition of a simple function and a measurable function is
@@ -1145,22 +1145,22 @@ theorem _root_.Measurable.simpleFunc_add
     {g : α → E} (hg : Measurable g) (f : SimpleFunc α E) :
     Measurable ((f : α → E) + g) := by
   induction' f using SimpleFunc.induction with c s hs f f' hff' hf hf'
-  · simp only [SimpleFunc.const_zero, SimpleFunc.coe_piecewise, SimpleFunc.coe_const,
-      SimpleFunc.coe_zero]
-    change Measurable (s.piecewise (Function.const α c) (0 : α → E) + g)
-    rw [← s.piecewise_same g, ← piecewise_add]
-    exact Measurable.piecewise hs (hg.const_add _) (hg.const_add _)
-  · have : (↑(f + f') + g)
-        = (Function.support f).piecewise ((f : α → E) + g) (f' + g) := by
-      ext x
-      by_cases hx : x ∈ Function.support f
-      · simpa only [coe_add, Pi.add_apply, Function.mem_support, ne_eq, not_not,
-          Set.piecewise_eq_of_mem _ _ _ hx, _root_.add_left_inj, add_right_eq_self]
-          using Set.disjoint_left.1 hff' hx
-      · simpa only [SimpleFunc.coe_add, Pi.add_apply, Function.mem_support, ne_eq, not_not,
-          Set.piecewise_eq_of_not_mem _ _ _ hx, _root_.add_left_inj, add_left_eq_self] using hx
-    rw [this]
-    exact Measurable.piecewise f.measurableSet_support hf hf'
+  simp only [SimpleFunc.const_zero, SimpleFunc.coe_piecewise, SimpleFunc.coe_const,
+    SimpleFunc.coe_zero]
+  change Measurable (s.piecewise (Function.const α c) (0 : α → E) + g)
+  rw [← s.piecewise_same g, ← piecewise_add]
+  exact Measurable.piecewise hs (hg.const_add _) (hg.const_add _)
+  have : (↑(f + f') + g)
+      = (Function.support f).piecewise ((f : α → E) + g) (f' + g) := by
+    ext x
+    by_cases hx : x ∈ Function.support f
+    simpa only [coe_add, Pi.add_apply, Function.mem_support, ne_eq, not_not,
+      Set.piecewise_eq_of_mem _ _ _ hx, _root_.add_left_inj, add_right_eq_self]
+      using Set.disjoint_left.1 hff' hx
+    simpa only [SimpleFunc.coe_add, Pi.add_apply, Function.mem_support, ne_eq, not_not,
+      Set.piecewise_eq_of_not_mem _ _ _ hx, _root_.add_left_inj, add_left_eq_self] using hx
+  rw [this]
+  exact Measurable.piecewise f.measurableSet_support hf hf'
 
 end SimpleFunc
 
@@ -1187,8 +1187,8 @@ theorem Measurable.ennreal_induction {α} [MeasurableSpace α] {P : (α → ℝ�
         P fun x => ⨆ n, f n x)
     ⦃f : α → ℝ≥0∞⦄ (hf : Measurable f) : P f := by
   convert h_iSup (fun n => (eapprox f n).measurable) (monotone_eapprox f) _ using 1
-  · ext1 x
-    rw [iSup_eapprox_apply f hf]
-  · exact fun n =>
-      SimpleFunc.induction (fun c s hs => h_ind c hs)
-        (fun f g hfg hf hg => h_add hfg f.measurable g.measurable hf hg) (eapprox f n)
+  ext1 x
+  rw [iSup_eapprox_apply f hf]
+  exact fun n =>
+    SimpleFunc.induction (fun c s hs => h_ind c hs)
+      (fun f g hfg hf hg => h_add hfg f.measurable g.measurable hf hg) (eapprox f n)

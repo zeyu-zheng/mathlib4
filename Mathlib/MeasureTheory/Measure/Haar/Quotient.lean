@@ -92,9 +92,9 @@ lemma MeasureTheory.QuotientMeasureEqMeasurePreimage.smulInvariantMeasure_quotie
     rw [this]
     have : ν ((g * ·) ⁻¹' π_preA ∩ 𝓕) = ν (π_preA ∩ (g⁻¹ * ·) ⁻¹' 𝓕)
     trans ν ((g * ·) ⁻¹' (π_preA ∩ (g⁻¹ * ·) ⁻¹' 𝓕))
-    · rw [preimage_inter]
-      congr 2
-      simp [Set.preimage]
+    rw [preimage_inter]
+    congr 2
+    simp [Set.preimage]
     rw [measure_preimage_mul]
     rw [this, ← preimage_smul_inv]; rfl
 
@@ -134,8 +134,8 @@ lemma MeasureTheory.QuotientMeasureEqMeasurePreimage.mulInvariantMeasure_quotien
     ext A hA
     obtain ⟨x₁, h⟩ := @Quotient.exists_rep _ (QuotientGroup.leftRel Γ) x
     convert measure_preimage_smul μ x₁ A using 1
-    · rw [← h, Measure.map_apply (measurable_const_mul _) hA]
-      simp [← MulAction.Quotient.coe_smul_out', ← Quotient.mk''_eq_mk]
+    rw [← h, Measure.map_apply (measurable_const_mul _) hA]
+    simp [← MulAction.Quotient.coe_smul_out', ← Quotient.mk''_eq_mk]
     exact smulInvariantMeasure_quotient ν
 
 variable [IsMulLeftInvariant μ] [SigmaFinite μ]
@@ -174,9 +174,9 @@ theorem MeasureTheory.Measure.IsMulLeftInvariant.quotientMeasureEqMeasurePreimag
   symm
   suffices (μ' V / ν (QuotientGroup.mk ⁻¹' V ∩ s)) = 1 by rw [this, one_smul]
   rw [Measure.map_apply meas_π meas_V, Measure.restrict_apply]
-  · convert ENNReal.div_self ..
-    · exact trans hV.symm neZeroV
-    · exact trans hV.symm neTopV
+  convert ENNReal.div_self ..
+  exact trans hV.symm neZeroV
+  exact trans hV.symm neTopV
   exact measurableSet_quotient.mp meas_V
 
 /-- If a measure `μ` is left-invariant and satisfies the right scaling condition, then it
@@ -191,16 +191,16 @@ theorem MeasureTheory.leftInvariantIsQuotientMeasureEqMeasurePreimage [IsFiniteM
   have finiteCovol : μ univ < ⊤ := measure_lt_top μ univ
   rw [fund_dom_s.covolume_eq_volume] at h
   by_cases meas_s_ne_zero : ν s = 0
-  · convert fund_dom_s.quotientMeasureEqMeasurePreimage_of_zero meas_s_ne_zero
-    rw [← @measure_univ_eq_zero, ← h, meas_s_ne_zero]
+  convert fund_dom_s.quotientMeasureEqMeasurePreimage_of_zero meas_s_ne_zero
+  rw [← @measure_univ_eq_zero, ← h, meas_s_ne_zero]
   apply IsMulLeftInvariant.quotientMeasureEqMeasurePreimage_of_set (fund_dom_s := fund_dom_s)
     (meas_V := MeasurableSet.univ)
-  · rw [← h]
-    exact meas_s_ne_zero
-  · rw [← h]
-    simp
-  · rw [← h]
-    convert finiteCovol.ne
+  rw [← h]
+  exact meas_s_ne_zero
+  rw [← h]
+  simp
+  rw [← h]
+  convert finiteCovol.ne
 
 end mulInvariantMeasure
 
@@ -234,23 +234,23 @@ theorem MeasureTheory.QuotientMeasureEqMeasurePreimage.haarMeasure_quotient [Loc
   -- TODO: why `rw` fails?
   erw [fund_dom_s.projection_respects_measure_apply μ K'.isCompact.measurableSet]
   apply IsHaarMeasure.smul
-  · intro h
-    haveI i' : IsOpenPosMeasure (ν : Measure G) := inferInstance
-    apply IsOpenPosMeasure.open_pos (interior K) (μ := ν) (self := i')
-    · exact isOpen_interior
-    · exact K.interior_nonempty
-    rw [← le_zero_iff,
-      ← fund_dom_s.measure_zero_of_invariant _ (fun g ↦ QuotientGroup.sound _ _ g) h]
-    apply measure_mono
-    refine interior_subset.trans ?_
-    rw [QuotientGroup.coe_mk']
-    show (K : Set G) ⊆ π ⁻¹' (π '' K)
-    exact subset_preimage_image π K
-  · show ν (π ⁻¹' (π '' K) ∩ s) ≠ ⊤
-    apply ne_of_lt
-    refine lt_of_le_of_lt ?_ finiteCovol.lt_top
-    apply measure_mono
-    exact inter_subset_right
+  intro h
+  haveI i' : IsOpenPosMeasure (ν : Measure G) := inferInstance
+  apply IsOpenPosMeasure.open_pos (interior K) (μ := ν) (self := i')
+  exact isOpen_interior
+  exact K.interior_nonempty
+  rw [← le_zero_iff,
+    ← fund_dom_s.measure_zero_of_invariant _ (fun g ↦ QuotientGroup.sound _ _ g) h]
+  apply measure_mono
+  refine interior_subset.trans ?_
+  rw [QuotientGroup.coe_mk']
+  show (K : Set G) ⊆ π ⁻¹' (π '' K)
+  exact subset_preimage_image π K
+  show ν (π ⁻¹' (π '' K) ∩ s) ≠ ⊤
+  apply ne_of_lt
+  refine lt_of_le_of_lt ?_ finiteCovol.lt_top
+  apply measure_mono
+  exact inter_subset_right
 
 /-- Given a normal subgroup `Γ` of a topological group `G` with Haar measure `μ`, which is also
   right-invariant, and a finite volume fundamental domain `𝓕`, the quotient map to `G ⧸ Γ`,
@@ -266,18 +266,18 @@ theorem IsFundamentalDomain.QuotientMeasureEqMeasurePreimage_HaarMeasure {𝓕 :
     QuotientMeasureEqMeasurePreimage ν μ := by
   apply IsMulLeftInvariant.quotientMeasureEqMeasurePreimage_of_set (fund_dom_s := h𝓕)
     (meas_V := meas_V)
-  · rw [hμK]
-    intro c_eq_zero
-    apply IsOpenPosMeasure.open_pos (interior (π ⁻¹' V)) (μ := ν)
-    · simp
-    · apply Set.Nonempty.mono (preimage_interior_subset_interior_preimage continuous_coinduced_rng)
-      apply hV.preimage'
-      simp
-    · apply measure_mono_null (h := interior_subset)
-      apply h𝓕.measure_zero_of_invariant (ht := fun g ↦ QuotientGroup.sound _ _ g)
-      exact c_eq_zero
-  · exact hμK
-  · exact neTopV
+  rw [hμK]
+  intro c_eq_zero
+  apply IsOpenPosMeasure.open_pos (interior (π ⁻¹' V)) (μ := ν)
+  simp
+  apply Set.Nonempty.mono (preimage_interior_subset_interior_preimage continuous_coinduced_rng)
+  apply hV.preimage'
+  simp
+  apply measure_mono_null (h := interior_subset)
+  apply h𝓕.measure_zero_of_invariant (ht := fun g ↦ QuotientGroup.sound _ _ g)
+  exact c_eq_zero
+  exact hμK
+  exact neTopV
 
 variable (K : PositiveCompacts (G ⧸ Γ))
 
@@ -307,10 +307,10 @@ theorem IsFundamentalDomain.QuotientMeasureEqMeasurePreimage_smulHaarMeasure {�
     exact SMul.sigmaFinite c
   apply IsFundamentalDomain.QuotientMeasureEqMeasurePreimage_HaarMeasure (h𝓕 := h𝓕)
     (meas_V := K.isCompact.measurableSet) (μ := μ)
-  · exact K.interior_nonempty
-  · exact hμK
-  · rw [hμK]
-    exact c_ne_top
+  exact K.interior_nonempty
+  exact hμK
+  rw [hμK]
+  exact c_ne_top
 
 end haarMeasure
 
@@ -363,12 +363,12 @@ lemma _root_.MeasureTheory.IsFundamentalDomain.absolutelyContinuous_map
   intro s s_meas hs
   rw [map_apply meas_π s_meas] at hs ⊢
   rw [Measure.restrict_apply] at hs
-  · apply h𝓕.measure_zero_of_invariant _ _ hs
-    intro γ
-    ext g
-    rw [Set.mem_smul_set_iff_inv_smul_mem, mem_preimage, mem_preimage]
-    congr! 1
-    convert QuotientGroup.mk_mul_of_mem g (γ⁻¹).2 using 1
+  apply h𝓕.measure_zero_of_invariant _ _ hs
+  intro γ
+  ext g
+  rw [Set.mem_smul_set_iff_inv_smul_mem, mem_preimage, mem_preimage]
+  congr! 1
+  convert QuotientGroup.mk_mul_of_mem g (γ⁻¹).2 using 1
   exact MeasurableSet.preimage s_meas meas_π
 
 attribute [-instance] Quotient.instMeasurableSpace
@@ -389,10 +389,10 @@ lemma QuotientGroup.integral_eq_integral_automorphize {E : Type*} [NormedAddComm
     _ = ∫ x : G ⧸ Γ, automorphize f x ∂μ_𝓕 :=
       (integral_map continuous_quotient_mk'.aemeasurable hf₂).symm
   rw [integral_tsum]
-  · exact fun i ↦ (hf₁.1.comp_quasiMeasurePreserving
-      (measurePreserving_smul i μ).quasiMeasurePreserving).restrict
-  · rw [← h𝓕.lintegral_eq_tsum'' (fun x ↦ ‖f x‖₊)]
-    exact ne_of_lt hf₁.2
+  exact fun i ↦ (hf₁.1.comp_quasiMeasurePreserving
+    (measurePreserving_smul i μ).quasiMeasurePreserving).restrict
+  rw [← h𝓕.lintegral_eq_tsum'' (fun x ↦ ‖f x‖₊)]
+  exact ne_of_lt hf₁.2
 
 /-- This is the **Unfolding Trick**: Given a subgroup `Γ` of a group `G`, the integral of a
   function `f` on `G` times the lift to `G` of a function `g` on the quotient `G ⧸ Γ` with respect

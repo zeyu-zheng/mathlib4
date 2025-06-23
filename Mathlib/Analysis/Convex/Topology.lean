@@ -233,9 +233,9 @@ protected theorem Convex.strictConvex' {s : Set E} (hs : Convex 𝕜 s)
   refine strictConvex_iff_openSegment_subset.2 ?_
   intro x hx y hy hne
   by_cases hx' : x ∈ interior s
-  · exact hs.openSegment_interior_self_subset_interior hx' hy
+  exact hs.openSegment_interior_self_subset_interior hx' hy
   by_cases hy' : y ∈ interior s
-  · exact hs.openSegment_self_interior_subset_interior hx hy'
+  exact hs.openSegment_self_interior_subset_interior hx hy'
   rcases h ⟨hx, hx'⟩ ⟨hy, hy'⟩ hne with ⟨c, hc⟩
   refine (openSegment_subset_union x y ⟨c, rfl⟩).trans
     (insert_subset_iff.2 ⟨hc, union_subset ?_ ?_⟩)
@@ -360,23 +360,23 @@ theorem isPathConnected_compl_of_isPathConnected_compl_zero [ContinuousSMul ℝ 
     IsPathConnected (qᶜ : Set E) := by
   rw [isPathConnected_iff] at hpc ⊢
   constructor
-  · rcases hpc.1 with ⟨a, ha⟩
-    exact ⟨a, mt (Submodule.eq_zero_of_coe_mem_of_disjoint hpq.disjoint) ha⟩
-  · intro x hx y hy
-    have : π hpq x ≠ 0 ∧ π hpq y ≠ 0
-    constructor <;> intro h <;> rw [Submodule.linearProjOfIsCompl_apply_eq_zero_iff hpq] at h <;>
-      [exact hx h; exact hy h]
-    rcases hpc.2 (π hpq x) this.1 (π hpq y) this.2 with ⟨γ₁, hγ₁⟩
-    let γ₂ := PathConnectedSpace.somePath (π hpq.symm x) (π hpq.symm y)
-    let γ₁' : Path (_ : E) _ := γ₁.map continuous_subtype_val
-    let γ₂' : Path (_ : E) _ := γ₂.map continuous_subtype_val
-    refine ⟨(γ₁'.add γ₂').cast (Submodule.linear_proj_add_linearProjOfIsCompl_eq_self hpq x).symm
-      (Submodule.linear_proj_add_linearProjOfIsCompl_eq_self hpq y).symm, fun t ↦ ?_⟩
-    rw [Path.cast_coe, Path.add_apply]
-    change γ₁ t + (γ₂ t : E) ∉ q
-    rw [← Submodule.linearProjOfIsCompl_apply_eq_zero_iff hpq, LinearMap.map_add,
-      Submodule.linearProjOfIsCompl_apply_right, add_zero,
-      Submodule.linearProjOfIsCompl_apply_eq_zero_iff]
-    exact mt (Submodule.eq_zero_of_coe_mem_of_disjoint hpq.disjoint) (hγ₁ t)
+  rcases hpc.1 with ⟨a, ha⟩
+  exact ⟨a, mt (Submodule.eq_zero_of_coe_mem_of_disjoint hpq.disjoint) ha⟩
+  intro x hx y hy
+  have : π hpq x ≠ 0 ∧ π hpq y ≠ 0
+  constructor <;> intro h <;> rw [Submodule.linearProjOfIsCompl_apply_eq_zero_iff hpq] at h <;>
+    [exact hx h; exact hy h]
+  rcases hpc.2 (π hpq x) this.1 (π hpq y) this.2 with ⟨γ₁, hγ₁⟩
+  let γ₂ := PathConnectedSpace.somePath (π hpq.symm x) (π hpq.symm y)
+  let γ₁' : Path (_ : E) _ := γ₁.map continuous_subtype_val
+  let γ₂' : Path (_ : E) _ := γ₂.map continuous_subtype_val
+  refine ⟨(γ₁'.add γ₂').cast (Submodule.linear_proj_add_linearProjOfIsCompl_eq_self hpq x).symm
+    (Submodule.linear_proj_add_linearProjOfIsCompl_eq_self hpq y).symm, fun t ↦ ?_⟩
+  rw [Path.cast_coe, Path.add_apply]
+  change γ₁ t + (γ₂ t : E) ∉ q
+  rw [← Submodule.linearProjOfIsCompl_apply_eq_zero_iff hpq, LinearMap.map_add,
+    Submodule.linearProjOfIsCompl_apply_right, add_zero,
+    Submodule.linearProjOfIsCompl_apply_eq_zero_iff]
+  exact mt (Submodule.eq_zero_of_coe_mem_of_disjoint hpq.disjoint) (hγ₁ t)
 
 end ComplementsConnected

@@ -39,10 +39,10 @@ theorem adjoin_restrictScalars (C D E : Type*) [CommSemiring C] [CommSemiring D]
     rw [this]
   ext x
   constructor
-  · rintro ⟨y, hy⟩
-    exact ⟨⟨algebraMap D E y, ⟨y, ⟨Algebra.mem_top, rfl⟩⟩⟩, hy⟩
-  · rintro ⟨⟨y, ⟨z, ⟨h0, h1⟩⟩⟩, h2⟩
-    exact ⟨z, Eq.trans h1 h2⟩
+  rintro ⟨y, hy⟩
+  exact ⟨⟨algebraMap D E y, ⟨y, ⟨Algebra.mem_top, rfl⟩⟩⟩, hy⟩
+  rintro ⟨⟨y, ⟨z, ⟨h0, h1⟩⟩⟩, h2⟩
+  exact ⟨z, Eq.trans h1 h2⟩
 
 theorem adjoin_res_eq_adjoin_res (C D E F : Type*) [CommSemiring C] [CommSemiring D]
     [CommSemiring E] [CommSemiring F] [Algebra C D] [Algebra C E] [Algebra C F] [Algebra D F]
@@ -107,21 +107,21 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).FG) (hBC : (⊤ : 
       span (Algebra.adjoin A (↑s : Set B)) (↑(insert 1 y : Finset C) : Set C) := by
     rw [span_mul_span, span_le, coe_insert]
     rintro _ ⟨yi, rfl | hyi, yj, rfl | hyj, rfl⟩ <;> dsimp
-    · rw [mul_one]
-      exact subset_span (Set.mem_insert _ _)
-    · rw [one_mul]
-      exact subset_span (Set.mem_insert_of_mem _ hyj)
-    · rw [mul_one]
-      exact subset_span (Set.mem_insert_of_mem _ hyi)
-    · rw [← hf (yi * yj)]
-      exact
-        SetLike.mem_coe.2
-          (sum_mem fun yk hyk =>
-            smul_mem (span (Algebra.adjoin A (↑s : Set B)) (insert 1 ↑y : Set C))
-              ⟨f (yi * yj) yk,
-                Algebra.subset_adjoin <|
-                  mem_image₂_of_mem (mem_union_right _ <| mul_mem_mul hyi hyj) hyk⟩
-              (subset_span <| Set.mem_insert_of_mem _ hyk : yk ∈ _))
+    rw [mul_one]
+    exact subset_span (Set.mem_insert _ _)
+    rw [one_mul]
+    exact subset_span (Set.mem_insert_of_mem _ hyj)
+    rw [mul_one]
+    exact subset_span (Set.mem_insert_of_mem _ hyi)
+    rw [← hf (yi * yj)]
+    exact
+      SetLike.mem_coe.2
+        (sum_mem fun yk hyk =>
+          smul_mem (span (Algebra.adjoin A (↑s : Set B)) (insert 1 ↑y : Set C))
+            ⟨f (yi * yj) yk,
+              Algebra.subset_adjoin <|
+                mem_image₂_of_mem (mem_union_right _ <| mul_mem_mul hyi hyj) hyk⟩
+            (subset_span <| Set.mem_insert_of_mem _ hyk : yk ∈ _))
   refine ⟨Algebra.adjoin A (↑s : Set B), Subalgebra.fg_adjoin_finset _, insert 1 y, ?_⟩
   convert restrictScalars_injective A (Algebra.adjoin A (s : Set B)) C _
   rw [restrictScalars_top, eq_top_iff, ← Algebra.top_toSubmodule, ← hx, Algebra.adjoin_eq_span,

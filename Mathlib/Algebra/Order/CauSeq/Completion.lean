@@ -191,14 +191,14 @@ noncomputable instance : Inv (Cauchy abv) :=
     (Quotient.liftOn x fun f => mk <| if h : LimZero f then 0 else inv f h) fun f g fg => by
       have := limZero_congr fg
       by_cases hf : LimZero f
-      · simp [hf, this.1 hf, Setoid.refl]
-      · have hg := mt this.2 hf
-        simp only [hf, dite_false, hg]
-        have If : mk (inv f hf) * mk f = 1 := mk_eq.2 (inv_mul_cancel hf)
-        have Ig : mk (inv g hg) * mk g = 1 := mk_eq.2 (inv_mul_cancel hg)
-        have Ig' : mk g * mk (inv g hg) = 1 := mk_eq.2 (mul_inv_cancel hg)
-        rw [mk_eq.2 fg, ← Ig] at If
-        rw [← mul_one (mk (inv f hf)), ← Ig', ← mul_assoc, If, mul_assoc, Ig', mul_one]⟩
+      simp [hf, this.1 hf, Setoid.refl]
+      have hg := mt this.2 hf
+      simp only [hf, dite_false, hg]
+      have If : mk (inv f hf) * mk f = 1 := mk_eq.2 (inv_mul_cancel hf)
+      have Ig : mk (inv g hg) * mk g = 1 := mk_eq.2 (inv_mul_cancel hg)
+      have Ig' : mk g * mk (inv g hg) = 1 := mk_eq.2 (mul_inv_cancel hg)
+      rw [mk_eq.2 fg, ← Ig] at If
+      rw [← mul_one (mk (inv f hf)), ← Ig', ← mul_assoc, If, mul_assoc, Ig', mul_one]⟩
 
 -- porting note (#10618): simp can prove this
 -- @[simp]

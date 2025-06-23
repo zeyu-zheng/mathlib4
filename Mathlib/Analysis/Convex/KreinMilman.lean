@@ -63,20 +63,20 @@ theorem IsCompact.extremePoints_nonempty (hscomp : IsCompact s) (hsnemp : s.None
     (s.extremePoints ℝ).Nonempty := by
   let S : Set (Set E) := { t | t.Nonempty ∧ IsClosed t ∧ IsExtreme ℝ s t }
   rsuffices ⟨t, ⟨⟨x, hxt⟩, htclos, hst⟩, hBmin⟩ : ∃ t ∈ S, ∀ u ∈ S, u ⊆ t → u = t
-  · refine ⟨x, IsExtreme.mem_extremePoints ?_⟩
-    rwa [← eq_singleton_iff_unique_mem.2 ⟨hxt, fun y hyB => ?_⟩]
-    by_contra hyx
-    obtain ⟨l, hl⟩ := geometric_hahn_banach_point_point hyx
-    obtain ⟨z, hzt, hz⟩ :=
-      (hscomp.of_isClosed_subset htclos hst.1).exists_isMaxOn ⟨x, hxt⟩
-        l.continuous.continuousOn
-    have h : IsExposed ℝ t ({ z ∈ t | ∀ w ∈ t, l w ≤ l z }) := fun _ => ⟨l, rfl⟩
-    rw [← hBmin ({ z ∈ t | ∀ w ∈ t, l w ≤ l z })
-      ⟨⟨z, hzt, hz⟩, h.isClosed htclos, hst.trans h.isExtreme⟩ (t.sep_subset _)] at hyB
-    exact hl.not_le (hyB.2 x hxt)
+  refine ⟨x, IsExtreme.mem_extremePoints ?_⟩
+  rwa [← eq_singleton_iff_unique_mem.2 ⟨hxt, fun y hyB => ?_⟩]
+  by_contra hyx
+  obtain ⟨l, hl⟩ := geometric_hahn_banach_point_point hyx
+  obtain ⟨z, hzt, hz⟩ :=
+    (hscomp.of_isClosed_subset htclos hst.1).exists_isMaxOn ⟨x, hxt⟩
+      l.continuous.continuousOn
+  have h : IsExposed ℝ t ({ z ∈ t | ∀ w ∈ t, l w ≤ l z }) := fun _ => ⟨l, rfl⟩
+  rw [← hBmin ({ z ∈ t | ∀ w ∈ t, l w ≤ l z })
+    ⟨⟨z, hzt, hz⟩, h.isClosed htclos, hst.trans h.isExtreme⟩ (t.sep_subset _)] at hyB
+  exact hl.not_le (hyB.2 x hxt)
   refine zorn_superset _ fun F hFS hF => ?_
   obtain rfl | hFnemp := F.eq_empty_or_nonempty
-  · exact ⟨s, ⟨hsnemp, hscomp.isClosed, IsExtreme.rfl⟩, fun _ => False.elim⟩
+  exact ⟨s, ⟨hsnemp, hscomp.isClosed, IsExtreme.rfl⟩, fun _ => False.elim⟩
   refine ⟨⋂₀ F, ⟨?_, isClosed_sInter fun t ht => (hFS ht).2.1,
     isExtreme_sInter hFnemp fun t ht => (hFS ht).2.2⟩, fun t ht => sInter_subset_of_mem ht⟩
   haveI : Nonempty (↥F) := hFnemp.to_subtype

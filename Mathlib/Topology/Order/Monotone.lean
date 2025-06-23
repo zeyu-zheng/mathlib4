@@ -113,8 +113,8 @@ this supremum to the supremum of the image of this set. -/
 theorem Monotone.map_sSup_of_continuousAt {f : α → β} {s : Set α} (Cf : ContinuousAt f (sSup s))
     (Mf : Monotone f) (fbot : f ⊥ = ⊥) : f (sSup s) = sSup (f '' s) := by
   rcases s.eq_empty_or_nonempty with h | h
-  · simp [h, fbot]
-  · exact Mf.map_sSup_of_continuousAt' Cf h
+  simp [h, fbot]
+  exact Mf.map_sSup_of_continuousAt' Cf h
 
 /-- If a monotone function sending `bot` to `bot` is continuous at the indexed supremum over
 a `Sort`, then it sends this indexed supremum to the indexed supremum of the composition. -/
@@ -253,12 +253,12 @@ theorem Monotone.tendsto_nhdsWithin_Iio {α β : Type*} [LinearOrder α] [Topolo
     {f : α → β} (Mf : Monotone f) (x : α) : Tendsto f (𝓝[<] x) (𝓝 (sSup (f '' Iio x))) := by
   rcases eq_empty_or_nonempty (Iio x) with (h | h); · simp [h]
   refine tendsto_order.2 ⟨fun l hl => ?_, fun m hm => ?_⟩
-  · obtain ⟨z, zx, lz⟩ : ∃ a : α, a < x ∧ l < f a := by
-      simpa only [mem_image, exists_prop, exists_exists_and_eq_and] using
-        exists_lt_of_lt_csSup (h.image _) hl
-    exact mem_of_superset (Ioo_mem_nhdsWithin_Iio' zx) fun y hy => lz.trans_le (Mf hy.1.le)
-  · refine mem_of_superset self_mem_nhdsWithin fun _ hy => lt_of_le_of_lt ?_ hm
-    exact le_csSup (Mf.map_bddAbove bddAbove_Iio) (mem_image_of_mem _ hy)
+  obtain ⟨z, zx, lz⟩ : ∃ a : α, a < x ∧ l < f a := by
+    simpa only [mem_image, exists_prop, exists_exists_and_eq_and] using
+      exists_lt_of_lt_csSup (h.image _) hl
+  exact mem_of_superset (Ioo_mem_nhdsWithin_Iio' zx) fun y hy => lz.trans_le (Mf hy.1.le)
+  refine mem_of_superset self_mem_nhdsWithin fun _ hy => lt_of_le_of_lt ?_ hm
+  exact le_csSup (Mf.map_bddAbove bddAbove_Iio) (mem_image_of_mem _ hy)
 
 /-- A monotone map has a limit to the right of any point `x`, equal to `sInf (f '' (Ioi x))`. -/
 theorem Monotone.tendsto_nhdsWithin_Ioi {α β : Type*} [LinearOrder α] [TopologicalSpace α]

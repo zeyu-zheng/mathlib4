@@ -64,13 +64,13 @@ lemma _root_.PresheafOfModules.Sheafify.app_eq_of_isLocallyInjective
     (hm₀ : φ.app _ m₀ = φ.app _ m₀') :
     φ.app _ (r₀ • m₀) = φ.app _ (r₀' • m₀') := by
   apply hA _ (Presheaf.equalizerSieve r₀ r₀' ⊓ Presheaf.equalizerSieve (F := M₀.presheaf) m₀ m₀')
-  · apply J.intersection_covering
-    · exact Presheaf.equalizerSieve_mem J α _ _ hr₀
-    · exact Presheaf.equalizerSieve_mem J φ _ _ hm₀
-  · intro Z g hg
-    erw [← NatTrans.naturality_apply, ← NatTrans.naturality_apply, M₀.map_smul, M₀.map_smul,
-      hg.1, hg.2]
-    rfl
+  apply J.intersection_covering
+  exact Presheaf.equalizerSieve_mem J α _ _ hr₀
+  exact Presheaf.equalizerSieve_mem J φ _ _ hm₀
+  intro Z g hg
+  erw [← NatTrans.naturality_apply, ← NatTrans.naturality_apply, M₀.map_smul, M₀.map_smul,
+    hg.1, hg.2]
+  rfl
 
 lemma isCompatible_map_smul_aux {Y Z : C} (f : Y ⟶ X) (g : Z ⟶ Y)
     (r₀ : R₀.obj (Opposite.op Y)) (r₀' : R₀.obj (Opposite.op Z))
@@ -80,10 +80,10 @@ lemma isCompatible_map_smul_aux {Y Z : C} (f : Y ⟶ X) (g : Z ⟶ Y)
     φ.app _ (M₀.presheaf.map g.op (r₀ • m₀)) = φ.app _ (r₀' • m₀') := by
   rw [← PresheafOfModules.Sheafify.app_eq_of_isLocallyInjective α φ hA (R₀.map g.op r₀) r₀'
     (M₀.presheaf.map g.op m₀) m₀', M₀.map_smul]
-  · rw [hr₀', R.map_comp, comp_apply, ← hr₀, NatTrans.naturality_apply]
-  · rw [hm₀', A.map_comp, AddCommGrp.coe_comp, Function.comp_apply, ← hm₀]
-    erw [NatTrans.naturality_apply]
-    rfl
+  rw [hr₀', R.map_comp, comp_apply, ← hr₀, NatTrans.naturality_apply]
+  rw [hm₀', A.map_comp, AddCommGrp.coe_comp, Function.comp_apply, ← hm₀]
+  erw [NatTrans.naturality_apply]
+  rfl
 
 lemma isCompatible_map_smul : ((r₀.smul m₀).map (whiskerRight φ (forget _))).Compatible := by
   intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ h₁ h₂ fac

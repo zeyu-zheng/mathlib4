@@ -53,31 +53,31 @@ theorem subgroups_basis : RingSubgroupsBasis fun γ : Γ₀ˣ => (v.ltAddSubgrou
     leftMul := by
       rintro x γ
       rcases GroupWithZero.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
-      · use (1 : Γ₀ˣ)
-        rintro y _
-        change v (x * y) < _
-        rw [Valuation.map_mul, Hx, zero_mul]
-        exact Units.zero_lt γ
-      · use γx⁻¹ * γ
-        rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
-        change (v (x * y) : Γ₀) < γ
-        rw [Valuation.map_mul, Hx, mul_comm]
-        rw [Units.val_mul, mul_comm] at vy_lt
-        simpa using mul_inv_lt_of_lt_mul₀ vy_lt
+      use (1 : Γ₀ˣ)
+      rintro y _
+      change v (x * y) < _
+      rw [Valuation.map_mul, Hx, zero_mul]
+      exact Units.zero_lt γ
+      use γx⁻¹ * γ
+      rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
+      change (v (x * y) : Γ₀) < γ
+      rw [Valuation.map_mul, Hx, mul_comm]
+      rw [Units.val_mul, mul_comm] at vy_lt
+      simpa using mul_inv_lt_of_lt_mul₀ vy_lt
     rightMul := by
       rintro x γ
       rcases GroupWithZero.eq_zero_or_unit (v x) with (Hx | ⟨γx, Hx⟩)
-      · use 1
-        rintro y _
-        change v (y * x) < _
-        rw [Valuation.map_mul, Hx, mul_zero]
-        exact Units.zero_lt γ
-      · use γx⁻¹ * γ
-        rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
-        change (v (y * x) : Γ₀) < γ
-        rw [Valuation.map_mul, Hx]
-        rw [Units.val_mul, mul_comm] at vy_lt
-        simpa using mul_inv_lt_of_lt_mul₀ vy_lt }
+      use 1
+      rintro y _
+      change v (y * x) < _
+      rw [Valuation.map_mul, Hx, mul_zero]
+      exact Units.zero_lt γ
+      use γx⁻¹ * γ
+      rintro y (vy_lt : v y < ↑(γx⁻¹ * γ))
+      change (v (y * x) : Γ₀) < γ
+      rw [Valuation.map_mul, Hx]
+      rw [Units.val_mul, mul_comm] at vy_lt
+      simpa using mul_inv_lt_of_lt_mul₀ vy_lt }
 
 end Valuation
 
@@ -152,10 +152,10 @@ theorem cauchy_iff {F : Filter R} : Cauchy F ↔
   apply and_congr Iff.rfl
   simp_rw [Valued.v.subgroups_basis.mem_addGroupFilterBasis_iff]
   constructor
-  · intro h γ
-    exact h _ (Valued.v.subgroups_basis.mem_addGroupFilterBasis _)
-  · rintro h - ⟨γ, rfl⟩
-    exact h γ
+  intro h γ
+  exact h _ (Valued.v.subgroups_basis.mem_addGroupFilterBasis _)
+  rintro h - ⟨γ, rfl⟩
+  exact h γ
 
 variable (R)
 

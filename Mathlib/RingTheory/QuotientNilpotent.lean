@@ -30,23 +30,23 @@ theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I)
   obtain ⟨n, hI : I ^ n = ⊥⟩ := hI
   induction' n using Nat.strong_induction_on with n H generalizing S
   by_cases hI' : I = ⊥
-  · subst hI'
-    apply h₁
-    rw [← Ideal.zero_eq_bot, zero_pow two_ne_zero]
+  subst hI'
+  apply h₁
+  rw [← Ideal.zero_eq_bot, zero_pow two_ne_zero]
   cases' n with n
-  · rw [pow_zero, Ideal.one_eq_top] at hI
-    haveI := subsingleton_of_bot_eq_top hI.symm
-    exact (hI' (Subsingleton.elim _ _)).elim
+  rw [pow_zero, Ideal.one_eq_top] at hI
+  haveI := subsingleton_of_bot_eq_top hI.symm
+  exact (hI' (Subsingleton.elim _ _)).elim
   cases' n with n
-  · rw [pow_one] at hI
-    exact (hI' hI).elim
+  rw [pow_one] at hI
+  exact (hI' hI).elim
   apply h₂ (I ^ 2) _ (Ideal.pow_le_self two_ne_zero)
-  · apply H n.succ _ (I ^ 2)
-    · rw [← pow_mul, eq_bot_iff, ← hI, Nat.succ_eq_add_one]
-      apply Ideal.pow_le_pow_right (by omega)
-    · exact n.succ.lt_succ_self
-  · apply h₁
-    rw [← Ideal.map_pow, Ideal.map_quotient_self]
+  apply H n.succ _ (I ^ 2)
+  rw [← pow_mul, eq_bot_iff, ← hI, Nat.succ_eq_add_one]
+  apply Ideal.pow_le_pow_right (by omega)
+  exact n.succ.lt_succ_self
+  apply h₁
+  rw [← Ideal.map_pow, Ideal.map_quotient_self]
 
 theorem IsNilpotent.isUnit_quotient_mk_iff {R : Type*} [CommRing R] {I : Ideal R}
     (hI : IsNilpotent I) {x : R} : IsUnit (Ideal.Quotient.mk I x) ↔ IsUnit x := by
@@ -54,22 +54,22 @@ theorem IsNilpotent.isUnit_quotient_mk_iff {R : Type*} [CommRing R] {I : Ideal R
   revert x
   apply Ideal.IsNilpotent.induction_on (R := R) (S := R) I hI <;> clear hI I
   swap
-  · introv e h₁ h₂ h₃
-    apply h₁
-    apply h₂
-    exact
-      h₃.map
-        ((DoubleQuot.quotQuotEquivQuotSup I J).trans
-              (Ideal.quotEquivOfEq (sup_eq_right.mpr e))).symm.toRingHom
-  · introv e H
-    obtain ⟨y, hy⟩ := Ideal.Quotient.mk_surjective (↑H.unit⁻¹ : S ⧸ I)
-    have : Ideal.Quotient.mk I (x * y) = Ideal.Quotient.mk I 1
-    rw [map_one, _root_.map_mul, hy, IsUnit.mul_val_inv]
-    rw [Ideal.Quotient.eq] at this
-    have : (x * y - 1) ^ 2 = 0
-    rw [← Ideal.mem_bot, ← e]
-    exact Ideal.pow_mem_pow this _
-    have : x * (y * (2 - x * y)) = 1
-    rw [eq_comm, ← sub_eq_zero, ← this]
-    ring
-    exact isUnit_of_mul_eq_one _ _ this
+  introv e h₁ h₂ h₃
+  apply h₁
+  apply h₂
+  exact
+    h₃.map
+      ((DoubleQuot.quotQuotEquivQuotSup I J).trans
+            (Ideal.quotEquivOfEq (sup_eq_right.mpr e))).symm.toRingHom
+  introv e H
+  obtain ⟨y, hy⟩ := Ideal.Quotient.mk_surjective (↑H.unit⁻¹ : S ⧸ I)
+  have : Ideal.Quotient.mk I (x * y) = Ideal.Quotient.mk I 1
+  rw [map_one, _root_.map_mul, hy, IsUnit.mul_val_inv]
+  rw [Ideal.Quotient.eq] at this
+  have : (x * y - 1) ^ 2 = 0
+  rw [← Ideal.mem_bot, ← e]
+  exact Ideal.pow_mem_pow this _
+  have : x * (y * (2 - x * y)) = 1
+  rw [eq_comm, ← sub_eq_zero, ← this]
+  ring
+  exact isUnit_of_mul_eq_one _ _ this

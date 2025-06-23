@@ -115,10 +115,10 @@ theorem IsCoprime.mul_dvd (H : IsCoprime x y) (H1 : x ∣ z) (H2 : y ∣ z) : x 
   obtain ⟨a, b, h⟩ := H
   rw [← mul_one z, ← h, mul_add]
   apply dvd_add
-  · rw [mul_comm z, mul_assoc]
-    exact (mul_dvd_mul_left _ H2).mul_left _
-  · rw [mul_comm b, ← mul_assoc]
-    exact (mul_dvd_mul_right H1 _).mul_right _
+  rw [mul_comm z, mul_assoc]
+  exact (mul_dvd_mul_left _ H2).mul_left _
+  rw [mul_comm b, ← mul_assoc]
+  exact (mul_dvd_mul_right H1 _).mul_right _
 
 theorem IsCoprime.of_mul_left_left (H : IsCoprime (x * y) z) : IsCoprime x z :=
   let ⟨a, b, h⟩ := H

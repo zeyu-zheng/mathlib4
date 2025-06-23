@@ -294,10 +294,10 @@ theorem mk_coordChangeL (e e' : Trivialization F (π F E)) [e.IsLinear R] [e'.Is
     (hb : b ∈ e.baseSet ∩ e'.baseSet) (y : F) :
     (b, coordChangeL R e e' b y) = e' ⟨b, e.symm b y⟩ := by
   ext
-  · rw [e.mk_symm hb.1 y, e'.coe_fst', e.proj_symm_apply' hb.1]
-    rw [e.proj_symm_apply' hb.1]
-    exact hb.2
-  · exact e.coordChangeL_apply e' hb y
+  rw [e.mk_symm hb.1 y, e'.coe_fst', e.proj_symm_apply' hb.1]
+  rw [e.proj_symm_apply' hb.1]
+  exact hb.2
+  exact e.coordChangeL_apply e' hb y
 
 theorem apply_symm_apply_eq_coordChangeL (e e' : Trivialization F (π F E)) [e.IsLinear R]
     [e'.IsLinear R] {b : B} (hb : b ∈ e.baseSet ∩ e'.baseSet) (v : F) :
@@ -440,10 +440,10 @@ variable (R)
 theorem apply_eq_prod_continuousLinearEquivAt (e : Trivialization F (π F E)) [e.IsLinear R] (b : B)
     (hb : b ∈ e.baseSet) (z : E b) : e ⟨b, z⟩ = (b, e.continuousLinearEquivAt R b hb z) := by
   ext
-  · refine e.coe_fst ?_
-    rw [e.source_eq]
-    exact hb
-  · simp only [coe_coe, continuousLinearEquivAt_apply]
+  refine e.coe_fst ?_
+  rw [e.source_eq]
+  exact hb
+  simp only [coe_coe, continuousLinearEquivAt_apply]
 
 protected theorem zeroSection (e : Trivialization F (π F E)) [e.IsLinear R] {x : B}
     (hx : x ∈ e.baseSet) : e (zeroSection F E x) = (x, 0) := by
@@ -458,9 +458,9 @@ theorem symm_apply_eq_mk_continuousLinearEquivAt_symm (e : Trivialization F (π 
   rw [e.target_eq]
   exact ⟨hb, mem_univ _⟩
   apply e.injOn (e.map_target h)
-  · simpa only [e.source_eq, mem_preimage]
-  · simp_rw [e.right_inv h, coe_coe, e.apply_eq_prod_continuousLinearEquivAt R b hb,
-      ContinuousLinearEquiv.apply_symm_apply]
+  simpa only [e.source_eq, mem_preimage]
+  simp_rw [e.right_inv h, coe_coe, e.apply_eq_prod_continuousLinearEquivAt R b hb,
+    ContinuousLinearEquiv.apply_symm_apply]
 
 theorem comp_continuousLinearEquivAt_eq_coord_change (e e' : Trivialization F (π F E))
     [e.IsLinear R] [e'.IsLinear R] {b : B} (hb : b ∈ e.baseSet ∩ e'.baseSet) :
@@ -780,10 +780,10 @@ theorem mk_coordChange (a : VectorPrebundle R F E) {e e' : Pretrivialization F (
     (hb : b ∈ e.baseSet ∩ e'.baseSet) (v : F) :
     (b, a.coordChange he he' b v) = e' ⟨b, e.symm b v⟩ := by
   ext
-  · rw [e.mk_symm hb.1 v, e'.coe_fst', e.proj_symm_apply' hb.1]
-    rw [e.proj_symm_apply' hb.1]
-    exact hb.2
-  · exact a.coordChange_apply he he' hb v
+  rw [e.mk_symm hb.1 v, e'.coe_fst', e.proj_symm_apply' hb.1]
+  rw [e.proj_symm_apply' hb.1]
+  exact hb.2
+  exact a.coordChange_apply he he' hb v
 
 /-- Natural identification of `VectorPrebundle` as a `FiberPrebundle`. -/
 def toFiberPrebundle (a : VectorPrebundle R F E) : FiberPrebundle F E :=

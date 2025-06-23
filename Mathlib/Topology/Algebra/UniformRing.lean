@@ -186,8 +186,8 @@ theorem map_smul_eq_mul_coe (r : R) :
     Completion.map (r • ·) = ((algebraMap R A r : Completion A) * ·) := by
   ext x
   refine Completion.induction_on x ?_ fun a => ?_
-  · exact isClosed_eq Completion.continuous_map (continuous_mul_left _)
-  · simp_rw [map_coe (uniformContinuous_const_smul r) a, Algebra.smul_def, coe_mul]
+  exact isClosed_eq Completion.continuous_map (continuous_mul_left _)
+  simp_rw [map_coe (uniformContinuous_const_smul r) a, Algebra.smul_def, coe_mul]
 
 instance algebra : Algebra R (Completion A) :=
   { (UniformSpace.Completion.coeRingHom : A →+* Completion A).comp (algebraMap R A) with

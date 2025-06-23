@@ -160,8 +160,8 @@ theorem AEStronglyMeasurable'.aeStronglyMeasurable'_of_measurableSpace_le_on {α
     indicator_ae_eq_of_restrict_compl_ae_eq_zero (hm _ hs_m) hf_zero
   filter_upwards [hf.ae_eq_mk] with x hx
   by_cases hxs : x ∈ s
-  · simp [hxs, hx]
-  · simp [hxs]
+  simp [hxs, hx]
+  simp [hxs]
   suffices StronglyMeasurable[m₂] (s.indicator (hf.mk f)) from
     AEStronglyMeasurable'.congr this.aeStronglyMeasurable' h_ind_eq
   have hf_ind : StronglyMeasurable[m] (s.indicator (hf.mk f)) :=
@@ -360,7 +360,7 @@ theorem lpMeasSubgroupToLpTrim_add (hm : m ≤ m0) (f g : lpMeasSubgroup F m p �
   ext1
   refine EventuallyEq.trans ?_ (Lp.coeFn_add _ _).symm
   refine ae_eq_trim_of_stronglyMeasurable hm (Lp.stronglyMeasurable _) ?_ ?_
-  · exact (Lp.stronglyMeasurable _).add (Lp.stronglyMeasurable _)
+  exact (Lp.stronglyMeasurable _).add (Lp.stronglyMeasurable _)
   refine (lpMeasSubgroupToLpTrim_ae_eq hm _).trans ?_
   refine
     EventuallyEq.trans ?_
@@ -375,7 +375,7 @@ theorem lpMeasSubgroupToLpTrim_neg (hm : m ≤ m0) (f : lpMeasSubgroup F m p μ)
   ext1
   refine EventuallyEq.trans ?_ (Lp.coeFn_neg _).symm
   refine ae_eq_trim_of_stronglyMeasurable hm (Lp.stronglyMeasurable _) ?_ ?_
-  · exact @StronglyMeasurable.neg _ _ _ m _ _ _ (Lp.stronglyMeasurable _)
+  exact @StronglyMeasurable.neg _ _ _ m _ _ _ (Lp.stronglyMeasurable _)
   refine (lpMeasSubgroupToLpTrim_ae_eq hm _).trans ?_
   refine EventuallyEq.trans ?_ (EventuallyEq.neg (lpMeasSubgroupToLpTrim_ae_eq hm f).symm)
   refine (Lp.coeFn_neg _).trans ?_
@@ -393,7 +393,7 @@ theorem lpMeasToLpTrim_smul (hm : m ≤ m0) (c : 𝕜) (f : lpMeas F 𝕜 m p μ
   ext1
   refine EventuallyEq.trans ?_ (Lp.coeFn_smul _ _).symm
   refine ae_eq_trim_of_stronglyMeasurable hm (Lp.stronglyMeasurable _) ?_ ?_
-  · exact (Lp.stronglyMeasurable _).const_smul c
+  exact (Lp.stronglyMeasurable _).const_smul c
   refine (lpMeasToLpTrim_ae_eq hm _).trans ?_
   refine (Lp.coeFn_smul _ _).trans ?_
   refine (lpMeasToLpTrim_ae_eq hm f).mono fun x hx => ?_
@@ -534,31 +534,31 @@ theorem Lp.induction_stronglyMeasurable_aux (hm : m ≤ m0) (hp_ne_top : p ≠ �
   refine
     @Lp.induction α F m _ p (μ.trim hm) _ hp_ne_top
       (fun g => P ((lpMeasToLpTrimLie F ℝ p μ hm).symm g)) ?_ ?_ ?_ g
-  · intro b t ht hμt
-    -- Porting note: needed to pass `m` to `Lp.simpleFunc.coe_indicatorConst` to avoid
-    -- synthesized type class instance is not definitionally equal to expression inferred by typing
-    -- rules, synthesized m0 inferred m
-    rw [@Lp.simpleFunc.coe_indicatorConst _ _ m, lpMeasToLpTrimLie_symm_indicator ht hμt.ne b]
-    have hμt' : μ t < ∞ := (le_trim hm).trans_lt hμt
-    specialize h_ind b ht hμt'
-    rwa [Lp.simpleFunc.coe_indicatorConst] at h_ind
-  · intro f g hf hg h_disj hfP hgP
-    rw [LinearIsometryEquiv.map_add]
-    push_cast
-    have h_eq :
-      ∀ (f : α → F) (hf : Memℒp f p (μ.trim hm)),
-        ((lpMeasToLpTrimLie F ℝ p μ hm).symm (Memℒp.toLp f hf) : Lp F p μ) =
-          (memℒp_of_memℒp_trim hm hf).toLp f :=
-      lpMeasToLpTrimLie_symm_toLp hm
-    rw [h_eq f hf] at hfP ⊢
-    rw [h_eq g hg] at hgP ⊢
-    exact
-      h_add (memℒp_of_memℒp_trim hm hf) (memℒp_of_memℒp_trim hm hg)
-        (aeStronglyMeasurable'_of_aeStronglyMeasurable'_trim hm hf.aestronglyMeasurable)
-        (aeStronglyMeasurable'_of_aeStronglyMeasurable'_trim hm hg.aestronglyMeasurable)
-        h_disj hfP hgP
-  · change IsClosed ((lpMeasToLpTrimLie F ℝ p μ hm).symm ⁻¹' {g : lpMeas F ℝ m p μ | P ↑g})
-    exact IsClosed.preimage (LinearIsometryEquiv.continuous _) h_closed
+  intro b t ht hμt
+  -- Porting note: needed to pass `m` to `Lp.simpleFunc.coe_indicatorConst` to avoid
+  -- synthesized type class instance is not definitionally equal to expression inferred by typing
+  -- rules, synthesized m0 inferred m
+  rw [@Lp.simpleFunc.coe_indicatorConst _ _ m, lpMeasToLpTrimLie_symm_indicator ht hμt.ne b]
+  have hμt' : μ t < ∞ := (le_trim hm).trans_lt hμt
+  specialize h_ind b ht hμt'
+  rwa [Lp.simpleFunc.coe_indicatorConst] at h_ind
+  intro f g hf hg h_disj hfP hgP
+  rw [LinearIsometryEquiv.map_add]
+  push_cast
+  have h_eq :
+    ∀ (f : α → F) (hf : Memℒp f p (μ.trim hm)),
+      ((lpMeasToLpTrimLie F ℝ p μ hm).symm (Memℒp.toLp f hf) : Lp F p μ) =
+        (memℒp_of_memℒp_trim hm hf).toLp f :=
+    lpMeasToLpTrimLie_symm_toLp hm
+  rw [h_eq f hf] at hfP ⊢
+  rw [h_eq g hg] at hgP ⊢
+  exact
+    h_add (memℒp_of_memℒp_trim hm hf) (memℒp_of_memℒp_trim hm hg)
+      (aeStronglyMeasurable'_of_aeStronglyMeasurable'_trim hm hf.aestronglyMeasurable)
+      (aeStronglyMeasurable'_of_aeStronglyMeasurable'_trim hm hg.aestronglyMeasurable)
+      h_disj hfP hgP
+  change IsClosed ((lpMeasToLpTrimLie F ℝ p μ hm).symm ⁻¹' {g : lpMeas F ℝ m p μ | P ↑g})
+  exact IsClosed.preimage (LinearIsometryEquiv.continuous _) h_closed
 
 /-- To prove something for an `Lp` function a.e. strongly measurable with respect to a
 sub-σ-algebra `m` in a normed space, it suffices to show that
@@ -649,16 +649,16 @@ theorem Memℒp.induction_stronglyMeasurable (hm : m ≤ m0) (hp_ne_top : p ≠ 
   -- Porting note: `P` should be an explicit argument to `Lp.induction_stronglyMeasurable`, but
   -- it isn't?
   refine Lp.induction_stronglyMeasurable hm hp_ne_top (P := fun f => P f) ?_ ?_ h_closed f_Lp hfm_Lp
-  · intro c s hs hμs
-    rw [Lp.simpleFunc.coe_indicatorConst]
-    refine h_ae indicatorConstLp_coeFn.symm ?_ (h_ind c hs hμs)
-    exact memℒp_indicator_const p (hm s hs) c (Or.inr hμs.ne)
-  · intro f g hf_mem hg_mem hfm hgm h_disj hfP hgP
-    have hfP' : P f := h_ae hf_mem.coeFn_toLp (Lp.memℒp _) hfP
-    have hgP' : P g := h_ae hg_mem.coeFn_toLp (Lp.memℒp _) hgP
-    specialize h_add h_disj hf_mem hg_mem hfm hgm hfP' hgP'
-    refine h_ae ?_ (hf_mem.add hg_mem) h_add
-    exact (hf_mem.coeFn_toLp.symm.add hg_mem.coeFn_toLp.symm).trans (Lp.coeFn_add _ _).symm
+  intro c s hs hμs
+  rw [Lp.simpleFunc.coe_indicatorConst]
+  refine h_ae indicatorConstLp_coeFn.symm ?_ (h_ind c hs hμs)
+  exact memℒp_indicator_const p (hm s hs) c (Or.inr hμs.ne)
+  intro f g hf_mem hg_mem hfm hgm h_disj hfP hgP
+  have hfP' : P f := h_ae hf_mem.coeFn_toLp (Lp.memℒp _) hfP
+  have hgP' : P g := h_ae hg_mem.coeFn_toLp (Lp.memℒp _) hgP
+  specialize h_add h_disj hf_mem hg_mem hfm hgm hfP' hgP'
+  refine h_ae ?_ (hf_mem.add hg_mem) h_add
+  exact (hf_mem.coeFn_toLp.symm.add hg_mem.coeFn_toLp.symm).trans (Lp.coeFn_add _ _).symm
 
 end Induction
 

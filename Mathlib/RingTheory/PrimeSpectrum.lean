@@ -268,13 +268,13 @@ theorem zeroLocus_singleton_one : zeroLocus ({1} : Set R) = ∅ :=
 
 theorem zeroLocus_empty_iff_eq_top {I : Ideal R} : zeroLocus (I : Set R) = ∅ ↔ I = ⊤ := by
   constructor
-  · contrapose!
-    intro h
-    rcases Ideal.exists_le_maximal I h with ⟨M, hM, hIM⟩
-    exact ⟨⟨M, hM.isPrime⟩, hIM⟩
-  · rintro rfl
-    apply zeroLocus_empty_of_one_mem
-    trivial
+  contrapose!
+  intro h
+  rcases Ideal.exists_le_maximal I h with ⟨M, hM, hIM⟩
+  exact ⟨⟨M, hM.isPrime⟩, hIM⟩
+  rintro rfl
+  apply zeroLocus_empty_of_one_mem
+  trivial
 
 @[simp]
 theorem zeroLocus_univ : zeroLocus (Set.univ : Set R) = ∅ :=
@@ -287,15 +287,15 @@ theorem vanishingIdeal_eq_top_iff {s : Set (PrimeSpectrum R)} : vanishingIdeal s
 theorem zeroLocus_eq_top_iff (s : Set R) :
     zeroLocus s = ⊤ ↔ s ⊆ nilradical R := by
   constructor
-  · intro h x hx
-    refine nilpotent_iff_mem_prime.mpr (fun J hJ ↦ ?_)
-    have hJz : ⟨J, hJ⟩ ∈ zeroLocus s
-    rw [h]
-    trivial
-    exact (mem_zeroLocus _ _).mpr hJz hx
-  · rw [eq_top_iff]
-    intro h p _
-    apply Set.Subset.trans h (nilradical_le_prime p.asIdeal)
+  intro h x hx
+  refine nilpotent_iff_mem_prime.mpr (fun J hJ ↦ ?_)
+  have hJz : ⟨J, hJ⟩ ∈ zeroLocus s
+  rw [h]
+  trivial
+  exact (mem_zeroLocus _ _).mpr hJz hx
+  rw [eq_top_iff]
+  intro h p _
+  apply Set.Subset.trans h (nilradical_le_prime p.asIdeal)
 
 theorem zeroLocus_sup (I J : Ideal R) :
     zeroLocus ((I ⊔ J : Ideal R) : Set R) = zeroLocus I ∩ zeroLocus J :=
@@ -413,11 +413,11 @@ theorem exists_primeSpectrum_prod_le (I : Ideal R) :
     (P := fun I => ∃ Z : Multiset (PrimeSpectrum R), Multiset.prod (Z.map asIdeal) ≤ I)
     (fun (M : Ideal R) hgt => ?_) I
   by_cases h_prM : M.IsPrime
-  · use {⟨M, h_prM⟩}
-    rw [Multiset.map_singleton, Multiset.prod_singleton]
+  use {⟨M, h_prM⟩}
+  rw [Multiset.map_singleton, Multiset.prod_singleton]
   by_cases htop : M = ⊤
-  · rw [htop]
-    exact ⟨0, le_top⟩
+  rw [htop]
+  exact ⟨0, le_top⟩
   have lt_add : ∀ z ∉ M, M < M + span R {z}
   intro z hz
   refine lt_of_le_of_ne le_sup_left fun m_eq => hz ?_
@@ -450,15 +450,15 @@ theorem exists_primeSpectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) {
   intro h_nzM
   have hA_nont : Nontrivial A := IsDomain.toNontrivial
   by_cases h_topM : M = ⊤
-  · rcases h_topM with rfl
-    obtain ⟨p_id, h_nzp, h_pp⟩ : ∃ p : Ideal A, p ≠ ⊥ ∧ p.IsPrime := by
-      apply Ring.not_isField_iff_exists_prime.mp h_fA
-    use ({⟨p_id, h_pp⟩} : Multiset (PrimeSpectrum A)), le_top
-    rwa [Multiset.map_singleton, Multiset.prod_singleton]
+  rcases h_topM with rfl
+  obtain ⟨p_id, h_nzp, h_pp⟩ : ∃ p : Ideal A, p ≠ ⊥ ∧ p.IsPrime := by
+    apply Ring.not_isField_iff_exists_prime.mp h_fA
+  use ({⟨p_id, h_pp⟩} : Multiset (PrimeSpectrum A)), le_top
+  rwa [Multiset.map_singleton, Multiset.prod_singleton]
   by_cases h_prM : M.IsPrime
-  · use ({⟨M, h_prM⟩} : Multiset (PrimeSpectrum A))
-    rw [Multiset.map_singleton, Multiset.prod_singleton]
-    exact ⟨le_rfl, h_nzM⟩
+  use ({⟨M, h_prM⟩} : Multiset (PrimeSpectrum A))
+  rw [Multiset.map_singleton, Multiset.prod_singleton]
+  exact ⟨le_rfl, h_nzM⟩
   obtain ⟨x, hx, y, hy, h_xy⟩ := (Ideal.not_isPrime_iff.mp h_prM).resolve_left h_topM
   have lt_add : ∀ z ∉ M, M < M + span A {z}
   intro z hz
@@ -470,12 +470,12 @@ theorem exists_primeSpectrum_prod_le_and_ne_bot_of_domain (h_fA : ¬IsField A) {
   use Wx + Wy
   rw [Multiset.map_add, Multiset.prod_add]
   refine ⟨le_trans (Submodule.mul_le_mul h_Wx_le h_Wy_le) ?_, mt Ideal.mul_eq_bot.mp ?_⟩
-  · rw [add_mul]
-    apply sup_le (show M * (M + span A {y}) ≤ M from Ideal.mul_le_right)
-    rw [mul_add]
-    apply sup_le (show span A {x} * M ≤ M from Ideal.mul_le_left)
-    rwa [span_mul_span, Set.singleton_mul_singleton, span_singleton_le_iff_mem]
-  · rintro (hx | hy) <;> contradiction
+  rw [add_mul]
+  apply sup_le (show M * (M + span A {y}) ≤ M from Ideal.mul_le_right)
+  rw [mul_add]
+  apply sup_le (show span A {x} * M ≤ M from Ideal.mul_le_left)
+  rwa [span_mul_span, Set.singleton_mul_singleton, span_singleton_le_iff_mem]
+  rintro (hx | hy) <;> contradiction
 
 end Noetherian
 

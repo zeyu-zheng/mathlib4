@@ -81,19 +81,19 @@ theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (
     exact ENNReal.tendsto_nat_tsum _
   rw [ENNReal.tendsto_nhds_top_iff_nnreal] at htends
   refine tendsto_atTop_atTop_of_monotone' ?_ ?_
-  · refine monotone_nat_of_le_succ fun n => ?_
-    rw [← sub_nonneg, Finset.sum_range_succ_sub_sum]
-    exact ENNReal.toReal_nonneg
-  · rintro ⟨B, hB⟩
-    refine not_eventually.2 (frequently_of_forall fun n => ?_) (htends B.toNNReal)
-    rw [mem_upperBounds] at hB
-    specialize hB (∑ k ∈ Finset.range n, μ (s (k + 1))).toReal _
-    · refine ⟨n, ?_⟩
-      rw [ENNReal.toReal_sum]
-      exact fun _ _ => measure_ne_top _ _
-    · rw [not_lt, ← ENNReal.toReal_le_toReal (ENNReal.sum_lt_top _).ne ENNReal.coe_ne_top]
-      · exact hB.trans (by simp)
-      · exact fun _ _ => measure_ne_top _ _
+  refine monotone_nat_of_le_succ fun n => ?_
+  rw [← sub_nonneg, Finset.sum_range_succ_sub_sum]
+  exact ENNReal.toReal_nonneg
+  rintro ⟨B, hB⟩
+  refine not_eventually.2 (frequently_of_forall fun n => ?_) (htends B.toNNReal)
+  rw [mem_upperBounds] at hB
+  specialize hB (∑ k ∈ Finset.range n, μ (s (k + 1))).toReal _
+  refine ⟨n, ?_⟩
+  rw [ENNReal.toReal_sum]
+  exact fun _ _ => measure_ne_top _ _
+  rw [not_lt, ← ENNReal.toReal_le_toReal (ENNReal.sum_lt_top _).ne ENNReal.coe_ne_top]
+  exact hB.trans (by simp)
+  exact fun _ _ => measure_ne_top _ _
 
 end BorelCantelli
 

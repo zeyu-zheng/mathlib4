@@ -57,8 +57,8 @@ theorem pairwise_le_range (n : ℕ) : Pairwise (· ≤ ·) (range n) :=
 
 theorem take_range (m n : ℕ) : take m (range n) = range (min m n) := by
   apply List.ext_getElem
-  · simp
-  · simp (config := { contextual := true }) [← getElem_take, Nat.lt_min]
+  simp
+  simp (config := { contextual := true }) [← getElem_take, Nat.lt_min]
 
 theorem nodup_range (n : ℕ) : Nodup (range n) := by
   simp (config := {decide := true}) only [range_eq_range', nodup_range']
@@ -67,11 +67,11 @@ theorem chain'_range_succ (r : ℕ → ℕ → Prop) (n : ℕ) :
     Chain' r (range n.succ) ↔ ∀ m < n, r m m.succ := by
   rw [range_succ]
   induction' n with n hn
-  · simp
-  · rw [range_succ]
-    simp only [append_assoc, singleton_append, chain'_append_cons_cons, chain'_singleton,
-      and_true_iff]
-    rw [hn, forall_lt_succ]
+  simp
+  rw [range_succ]
+  simp only [append_assoc, singleton_append, chain'_append_cons_cons, chain'_singleton,
+    and_true_iff]
+  rw [hn, forall_lt_succ]
 
 theorem chain_range_succ (r : ℕ → ℕ → Prop) (n a : ℕ) :
     Chain r a (range n.succ) ↔ r a 0 ∧ ∀ m < n, r m m.succ := by
@@ -179,18 +179,18 @@ theorem ranges_disjoint (l : List ℕ) :
   | cons a l hl =>
     simp only [ranges, pairwise_cons]
     constructor
-    · intro s hs
-      obtain ⟨s', _, rfl⟩ := mem_map.mp hs
-      intro u hu
-      rw [mem_map]
-      rintro ⟨v, _, rfl⟩
-      rw [mem_range] at hu
-      omega
-    · rw [pairwise_map]
-      apply Pairwise.imp _ hl
-      intro u v
-      apply disjoint_map
-      exact fun u v => Nat.add_left_cancel
+    intro s hs
+    obtain ⟨s', _, rfl⟩ := mem_map.mp hs
+    intro u hu
+    rw [mem_map]
+    rintro ⟨v, _, rfl⟩
+    rw [mem_range] at hu
+    omega
+    rw [pairwise_map]
+    apply Pairwise.imp _ hl
+    intro u v
+    apply disjoint_map
+    exact fun u v => Nat.add_left_cancel
 
 /-- The lengths of the members of `l.ranges` are those given by `l` -/
 theorem ranges_length (l : List ℕ) :

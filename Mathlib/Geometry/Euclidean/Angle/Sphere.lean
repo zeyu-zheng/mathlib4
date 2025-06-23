@@ -185,18 +185,18 @@ theorem dist_div_cos_oangle_center_div_two_eq_radius {s : Sphere P} {p₁ p₂ :
     div_mul_cancel₀ _ (two_ne_zero' ℝ), @dist_eq_norm_vsub' V, @dist_eq_norm_vsub' V,
     vadd_vsub_assoc, add_comm, o.oangle_add_right_smul_rotation_pi_div_two, Real.Angle.cos_coe,
     Real.cos_arctan]
-  · norm_cast
-    rw [one_div, div_inv_eq_mul, ←
-      mul_self_inj (mul_nonneg (norm_nonneg _) (Real.sqrt_nonneg _)) (norm_nonneg _),
-      norm_add_sq_eq_norm_sq_add_norm_sq_real (o.inner_smul_rotation_pi_div_two_right _ _), ←
-      mul_assoc, mul_comm, mul_comm _ (√_), ← mul_assoc, ← mul_assoc,
-      Real.mul_self_sqrt (add_nonneg zero_le_one (sq_nonneg _)), norm_smul,
-      LinearIsometryEquiv.norm_map]
-    conv_rhs =>
-      rw [← mul_assoc, mul_comm _ ‖Real.Angle.tan _‖, ← mul_assoc, Real.norm_eq_abs,
-        abs_mul_abs_self]
-    ring
-  · simpa using h.symm
+  norm_cast
+  rw [one_div, div_inv_eq_mul, ←
+    mul_self_inj (mul_nonneg (norm_nonneg _) (Real.sqrt_nonneg _)) (norm_nonneg _),
+    norm_add_sq_eq_norm_sq_add_norm_sq_real (o.inner_smul_rotation_pi_div_two_right _ _), ←
+    mul_assoc, mul_comm, mul_comm _ (√_), ← mul_assoc, ← mul_assoc,
+    Real.mul_self_sqrt (add_nonneg zero_le_one (sq_nonneg _)), norm_smul,
+    LinearIsometryEquiv.norm_map]
+  conv_rhs =>
+    rw [← mul_assoc, mul_comm _ ‖Real.Angle.tan _‖, ← mul_assoc, Real.norm_eq_abs,
+      abs_mul_abs_self]
+  ring
+  simpa using h.symm
 
 /-- Given two points on a circle, twice the radius of that circle may be expressed explicitly as
 the distance between those two points divided by the cosine of the angle between the chord and
@@ -370,23 +370,23 @@ theorem cospherical_or_collinear_of_two_zsmul_oangle_eq {p₁ p₂ p₃ p₄ : P
     (h : (2 : ℤ) • ∡ p₁ p₂ p₄ = (2 : ℤ) • ∡ p₁ p₃ p₄) :
     Cospherical ({p₁, p₂, p₃, p₄} : Set P) ∨ Collinear ℝ ({p₁, p₂, p₃, p₄} : Set P) := by
   by_cases hc : Collinear ℝ ({p₁, p₂, p₄} : Set P)
-  · by_cases he : p₁ = p₄
-    · rw [he, Set.insert_eq_self.2
-        (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_singleton _)))]
-      by_cases hl : Collinear ℝ ({p₂, p₃, p₄} : Set P); · exact Or.inr hl
-      rw [or_iff_left hl]
-      let t : Affine.Triangle ℝ P := ⟨![p₂, p₃, p₄], affineIndependent_iff_not_collinear_set.2 hl⟩
-      rw [cospherical_iff_exists_sphere]
-      refine ⟨t.circumsphere, ?_⟩
-      simp_rw [Set.insert_subset_iff, Set.singleton_subset_iff]
-      exact ⟨t.mem_circumsphere 0, t.mem_circumsphere 1, t.mem_circumsphere 2⟩
-    have hc' : Collinear ℝ ({p₁, p₃, p₄} : Set P)
-    rwa [← collinear_iff_of_two_zsmul_oangle_eq h]
-    refine Or.inr ?_
-    rw [Set.insert_comm p₁ p₂] at hc
-    rwa [Set.insert_comm p₁ p₂, hc'.collinear_insert_iff_of_ne (Set.mem_insert _ _)
-      (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_singleton _))) he]
-  · exact Or.inl (cospherical_of_two_zsmul_oangle_eq_of_not_collinear h hc)
+  by_cases he : p₁ = p₄
+  rw [he, Set.insert_eq_self.2
+    (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_singleton _)))]
+  by_cases hl : Collinear ℝ ({p₂, p₃, p₄} : Set P); · exact Or.inr hl
+  rw [or_iff_left hl]
+  let t : Affine.Triangle ℝ P := ⟨![p₂, p₃, p₄], affineIndependent_iff_not_collinear_set.2 hl⟩
+  rw [cospherical_iff_exists_sphere]
+  refine ⟨t.circumsphere, ?_⟩
+  simp_rw [Set.insert_subset_iff, Set.singleton_subset_iff]
+  exact ⟨t.mem_circumsphere 0, t.mem_circumsphere 1, t.mem_circumsphere 2⟩
+  have hc' : Collinear ℝ ({p₁, p₃, p₄} : Set P)
+  rwa [← collinear_iff_of_two_zsmul_oangle_eq h]
+  refine Or.inr ?_
+  rw [Set.insert_comm p₁ p₂] at hc
+  rwa [Set.insert_comm p₁ p₂, hc'.collinear_insert_iff_of_ne (Set.mem_insert _ _)
+    (Set.mem_insert_of_mem _ (Set.mem_insert_of_mem _ (Set.mem_singleton _))) he]
+  exact Or.inl (cospherical_of_two_zsmul_oangle_eq_of_not_collinear h hc)
 
 /-- Converse of "angles in same segment are equal" and "opposite angles of a cyclic quadrilateral
 add to π", for oriented angles mod π, with a "concyclic or collinear" conclusion. -/
@@ -394,7 +394,7 @@ theorem concyclic_or_collinear_of_two_zsmul_oangle_eq {p₁ p₂ p₃ p₄ : P}
     (h : (2 : ℤ) • ∡ p₁ p₂ p₄ = (2 : ℤ) • ∡ p₁ p₃ p₄) :
     Concyclic ({p₁, p₂, p₃, p₄} : Set P) ∨ Collinear ℝ ({p₁, p₂, p₃, p₄} : Set P) := by
   rcases cospherical_or_collinear_of_two_zsmul_oangle_eq h with (hc | hc)
-  · exact Or.inl ⟨hc, coplanar_of_fact_finrank_eq_two _⟩
-  · exact Or.inr hc
+  exact Or.inl ⟨hc, coplanar_of_fact_finrank_eq_two _⟩
+  exact Or.inr hc
 
 end EuclideanGeometry

@@ -265,23 +265,23 @@ lemma isLeftKanExtension_along_yoneda_iff :
     L.IsLeftKanExtension α ↔
       (IsIso α ∧ Nonempty (PreservesColimitsOfSize.{v₁, max u₁ v₁} L)) := by
   constructor
-  · intro
-    exact ⟨inferInstance, ⟨preservesColimitsOfNatIso
-      (Functor.leftKanExtensionUnique _ (yoneda.leftKanExtensionUnit A) _ α)⟩⟩
-  · rintro ⟨_, ⟨_⟩⟩
-    apply Functor.LeftExtension.IsPointwiseLeftKanExtension.isLeftKanExtension
-      (E := Functor.LeftExtension.mk _ α)
-    intro P
-    dsimp [Functor.LeftExtension.IsPointwiseLeftKanExtensionAt]
-    apply IsColimit.ofWhiskerEquivalence (CategoryOfElements.costructuredArrowYonedaEquivalence _)
-    let e : CategoryOfElements.toCostructuredArrow P ⋙ CostructuredArrow.proj yoneda P ⋙ A ≅
-        functorToRepresentables P ⋙ L :=
-      isoWhiskerLeft _ (isoWhiskerLeft _ (asIso α)) ≪≫
-        isoWhiskerLeft _ (Functor.associator _ _ _).symm ≪≫
-        (Functor.associator _ _ _).symm ≪≫ isoWhiskerRight (Iso.refl _) L
-    apply (IsColimit.precomposeHomEquiv e.symm _).1
-    exact IsColimit.ofIsoColimit (isColimitOfPreserves L (colimitOfRepresentable P))
-      (Cocones.ext (Iso.refl _))
+  intro
+  exact ⟨inferInstance, ⟨preservesColimitsOfNatIso
+    (Functor.leftKanExtensionUnique _ (yoneda.leftKanExtensionUnit A) _ α)⟩⟩
+  rintro ⟨_, ⟨_⟩⟩
+  apply Functor.LeftExtension.IsPointwiseLeftKanExtension.isLeftKanExtension
+    (E := Functor.LeftExtension.mk _ α)
+  intro P
+  dsimp [Functor.LeftExtension.IsPointwiseLeftKanExtensionAt]
+  apply IsColimit.ofWhiskerEquivalence (CategoryOfElements.costructuredArrowYonedaEquivalence _)
+  let e : CategoryOfElements.toCostructuredArrow P ⋙ CostructuredArrow.proj yoneda P ⋙ A ≅
+      functorToRepresentables P ⋙ L :=
+    isoWhiskerLeft _ (isoWhiskerLeft _ (asIso α)) ≪≫
+      isoWhiskerLeft _ (Functor.associator _ _ _).symm ≪≫
+      (Functor.associator _ _ _).symm ≪≫ isoWhiskerRight (Iso.refl _) L
+  apply (IsColimit.precomposeHomEquiv e.symm _).1
+  exact IsColimit.ofIsoColimit (isColimitOfPreserves L (colimitOfRepresentable P))
+    (Cocones.ext (Iso.refl _))
 
 lemma isLeftKanExtension_of_preservesColimits
     (L : (Cᵒᵖ ⥤ Type v₁) ⥤ ℰ) (e : A ≅ yoneda ⋙ L)

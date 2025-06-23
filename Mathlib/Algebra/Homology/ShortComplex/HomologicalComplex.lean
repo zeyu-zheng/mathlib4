@@ -117,9 +117,9 @@ noncomputable def toCycles [K.HasHomology j] :
 @[reassoc (attr := simp)]
 lemma iCycles_d : K.iCycles i ≫ K.d i j = 0 := by
   by_cases hij : c.Rel i j
-  · obtain rfl := c.next_eq' hij
-    exact (K.sc i).iCycles_g
-  · rw [K.shape _ _ hij, comp_zero]
+  obtain rfl := c.next_eq' hij
+  exact (K.sc i).iCycles_g
+  rw [K.shape _ _ hij, comp_zero]
 
 /-- `K.cycles i` is the kernel of `K.d i j` when `c.next i = j`. -/
 noncomputable def cyclesIsKernel (hj : c.next i = j) :
@@ -158,12 +158,12 @@ lemma liftCycles_homologyπ_eq_zero_of_boundary {A : C} (k : A ⟶ K.X i) (j : �
     (hj : c.next i = j) {i' : ι} (x : A ⟶ K.X i') (hx : k = x ≫ K.d i' i) :
     K.liftCycles k j hj (by rw [hx, assoc, K.d_comp_d, comp_zero]) ≫ K.homologyπ i = 0 := by
   by_cases h : c.Rel i' i
-  · obtain rfl := c.prev_eq' h
-    exact (K.sc i).liftCycles_homologyπ_eq_zero_of_boundary _ x hx
-  · have : liftCycles K k j hj (by rw [hx, assoc, K.d_comp_d, comp_zero]) = 0 := by
-      rw [K.shape _ _ h, comp_zero] at hx
-      rw [← cancel_mono (K.iCycles i), zero_comp, liftCycles_i, hx]
-    rw [this, zero_comp]
+  obtain rfl := c.prev_eq' h
+  exact (K.sc i).liftCycles_homologyπ_eq_zero_of_boundary _ x hx
+  have : liftCycles K k j hj (by rw [hx, assoc, K.d_comp_d, comp_zero]) = 0 := by
+    rw [K.shape _ _ h, comp_zero] at hx
+    rw [← cancel_mono (K.iCycles i), zero_comp, liftCycles_i, hx]
+  rw [this, zero_comp]
 
 variable (i)
 
@@ -218,9 +218,9 @@ noncomputable def fromOpcycles :
 @[reassoc (attr := simp)]
 lemma d_pOpcycles [K.HasHomology j] : K.d i j ≫ K.pOpcycles j = 0 := by
   by_cases hij : c.Rel i j
-  · obtain rfl := c.prev_eq' hij
-    exact (K.sc j).f_pOpcycles
-  · rw [K.shape _ _ hij, zero_comp]
+  obtain rfl := c.prev_eq' hij
+  exact (K.sc j).f_pOpcycles
+  rw [K.shape _ _ hij, zero_comp]
 
 /-- `K.opcycles j` is the cokernel of `K.d i j` when `c.prev j = i`. -/
 noncomputable def opcyclesIsCokernel (hi : c.prev j = i) [K.HasHomology j] :
@@ -260,12 +260,12 @@ lemma homologyι_descOpcycles_eq_zero_of_boundary {A : C} (k : K.X i ⟶ A) (j :
     (hj : c.prev i = j) {i' : ι} (x : K.X i' ⟶ A) (hx : k = K.d i i' ≫ x) :
     K.homologyι i ≫ K.descOpcycles k j hj (by rw [hx, K.d_comp_d_assoc, zero_comp]) = 0 := by
   by_cases h : c.Rel i i'
-  · obtain rfl := c.next_eq' h
-    exact (K.sc i).homologyι_descOpcycles_eq_zero_of_boundary _ x hx
-  · have : K.descOpcycles k j hj (by rw [hx, K.d_comp_d_assoc, zero_comp]) = 0 := by
-      rw [K.shape _ _ h, zero_comp] at hx
-      rw [← cancel_epi (K.pOpcycles i), comp_zero, p_descOpcycles, hx]
-    rw [this, comp_zero]
+  obtain rfl := c.next_eq' h
+  exact (K.sc i).homologyι_descOpcycles_eq_zero_of_boundary _ x hx
+  have : K.descOpcycles k j hj (by rw [hx, K.d_comp_d_assoc, zero_comp]) = 0 := by
+    rw [K.shape _ _ h, zero_comp] at hx
+    rw [← cancel_epi (K.pOpcycles i), comp_zero, p_descOpcycles, hx]
+  rw [this, comp_zero]
 
 variable (i)
 

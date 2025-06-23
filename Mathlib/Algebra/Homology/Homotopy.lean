@@ -103,17 +103,17 @@ theorem dNext_nat (C D : ChainComplex V ℕ) (i : ℕ) (f : ∀ i j, C.X i ⟶ D
     dNext i f = C.d i (i - 1) ≫ f (i - 1) i := by
   dsimp [dNext]
   cases i
-  · simp only [shape, ChainComplex.next_nat_zero, ComplexShape.down_Rel, Nat.one_ne_zero,
-      not_false_iff, zero_comp]
-  · congr <;> simp
+  simp only [shape, ChainComplex.next_nat_zero, ComplexShape.down_Rel, Nat.one_ne_zero,
+    not_false_iff, zero_comp]
+  congr <;> simp
 
 theorem prevD_nat (C D : CochainComplex V ℕ) (i : ℕ) (f : ∀ i j, C.X i ⟶ D.X j) :
     prevD i f = f i (i - 1) ≫ D.d (i - 1) i := by
   dsimp [prevD]
   cases i
-  · simp only [shape, CochainComplex.prev_nat_zero, ComplexShape.up_Rel, Nat.one_ne_zero,
-      not_false_iff, comp_zero]
-  · congr <;> simp
+  simp only [shape, CochainComplex.prev_nat_zero, ComplexShape.up_Rel, Nat.one_ne_zero,
+    not_false_iff, comp_zero]
+  congr <;> simp
 
 -- Porting note(#5171): removed @[has_nonempty_instance]
 /-- A homotopy `h` between chain maps `f` and `g` consists of components `h i j : C.X i ⟶ D.X j`
@@ -273,8 +273,8 @@ theorem nullHomotopicMap'_comp (hom : ∀ i j, c.Rel j i → (C.X i ⟶ D.X j)) 
   congr
   ext i j
   split_ifs
-  · rfl
-  · rw [zero_comp]
+  rfl
+  rw [zero_comp]
 
 /-- Compatibility of `nullHomotopicMap` with the precomposition by a morphism
 of complexes. -/
@@ -293,8 +293,8 @@ theorem comp_nullHomotopicMap' (f : C ⟶ D) (hom : ∀ i j, c.Rel j i → (D.X 
   congr
   ext i j
   split_ifs
-  · rfl
-  · rw [comp_zero]
+  rfl
+  rw [comp_zero]
 
 /-- Compatibility of `nullHomotopicMap` with the application of additive functors -/
 theorem map_nullHomotopicMap {W : Type*} [Category W] [Preadditive W] (G : V ⥤ W) [G.Additive]
@@ -315,8 +315,8 @@ theorem map_nullHomotopicMap' {W : Type*} [Category W] [Preadditive W] (G : V �
   congr
   ext i j
   split_ifs
-  · rfl
-  · rw [G.map_zero]
+  rfl
+  rw [G.map_zero]
 
 /-- Tautological construction of the `Homotopy` to zero for maps constructed by
 `nullHomotopicMap`, at least when we have the `zero` condition. -/

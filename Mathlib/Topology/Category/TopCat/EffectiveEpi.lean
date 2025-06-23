@@ -65,15 +65,15 @@ theorem effectiveEpi_iff_quotientMap {B X : TopCat.{u}} (π : X ⟶ B) :
     simpa [← Function.comp.assoc] using (homeoOfIso i).symm.quotientMap.comp this
   constructor
   /- Effective epimorphisms are epimorphisms and epimorphisms in `TopCat` are surjective. -/
-  · change Function.Surjective (π ≫ i.hom)
-    rw [← epi_iff_surjective]
-    infer_instance
+  change Function.Surjective (π ≫ i.hom)
+  rw [← epi_iff_surjective]
+  infer_instance
   /- The key to proving that the coequalizer has the quotient topology is
     `TopCat.coequalizer_isOpen_iff` which characterises the open sets in a coequalizer. -/
-  · ext U
-    have : π ≫ i.hom = colimit.ι F WalkingParallelPair.one
-    simp [i, ← Iso.eq_comp_inv]
-    rw [isOpen_coinduced (f := (homeoOfIso i ∘ π)), coequalizer_isOpen_iff _ U, ← this]
-    rfl
+  ext U
+  have : π ≫ i.hom = colimit.ι F WalkingParallelPair.one
+  simp [i, ← Iso.eq_comp_inv]
+  rw [isOpen_coinduced (f := (homeoOfIso i ∘ π)), coequalizer_isOpen_iff _ U, ← this]
+  rfl
 
 end TopCat

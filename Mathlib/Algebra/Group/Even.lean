@@ -125,9 +125,9 @@ variable [DivisionMonoid α] {a : α}
 
 @[to_additive (attr := simp)] lemma isSquare_inv : IsSquare a⁻¹ ↔ IsSquare a := by
   constructor <;> intro h
-  · rw [← isSquare_op_iff, ← inv_inv a]
-    exact h.map (MulEquiv.inv' α)
-  · exact (isSquare_op_iff.mpr h).map (MulEquiv.inv' α).symm
+  rw [← isSquare_op_iff, ← inv_inv a]
+  exact h.map (MulEquiv.inv' α)
+  exact (isSquare_op_iff.mpr h).map (MulEquiv.inv' α).symm
 
 alias ⟨_, IsSquare.inv⟩ := isSquare_inv
 

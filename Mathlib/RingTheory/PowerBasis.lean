@@ -103,13 +103,13 @@ theorem mem_span_pow {x y : S} {d : ℕ} (hd : d ≠ 0) :
       ∃ f : R[X], f.natDegree < d ∧ y = aeval x f := by
   rw [mem_span_pow']
   constructor <;>
-    · rintro ⟨f, h, hy⟩
-      refine ⟨f, ?_, hy⟩
-      by_cases hf : f = 0
-      · simp only [hf, natDegree_zero, degree_zero] at h ⊢
-        first | exact lt_of_le_of_ne (Nat.zero_le d) hd.symm | exact WithBot.bot_lt_coe d
-      simp_all only [degree_eq_natDegree hf]
-      · first | exact WithBot.coe_lt_coe.1 h | exact WithBot.coe_lt_coe.2 h
+  · rintro ⟨f, h, hy⟩
+    refine ⟨f, ?_, hy⟩
+    by_cases hf : f = 0
+    simp only [hf, natDegree_zero, degree_zero] at h ⊢
+    first | exact lt_of_le_of_ne (Nat.zero_le d) hd.symm | exact WithBot.bot_lt_coe d
+    simp_all only [degree_eq_natDegree hf]
+    first | exact WithBot.coe_lt_coe.1 h | exact WithBot.coe_lt_coe.2 h
 
 theorem dim_ne_zero [Nontrivial S] (pb : PowerBasis R S) : pb.dim ≠ 0 := fun h =>
   not_nonempty_iff.mpr (h.symm ▸ Fin.isEmpty : IsEmpty (Fin pb.dim)) pb.basis.index_nonempty
@@ -136,7 +136,7 @@ open Ideal Finset Submodule in
 theorem exists_smodEq (pb : PowerBasis A B) (b : B) :
     ∃ a, SModEq (Ideal.span ({pb.gen})) b (algebraMap A B a) := by
   rcases subsingleton_or_nontrivial B
-  · exact ⟨0, by rw [SModEq, Subsingleton.eq_zero b, _root_.map_zero]⟩
+  exact ⟨0, by rw [SModEq, Subsingleton.eq_zero b, _root_.map_zero]⟩
   refine ⟨pb.basis.repr b ⟨0, pb.dim_pos⟩, ?_⟩
   have H := pb.basis.sum_repr b
   rw [← insert_erase (mem_univ ⟨0, pb.dim_pos⟩), sum_insert (not_mem_erase _ _)] at H
@@ -144,12 +144,12 @@ theorem exists_smodEq (pb : PowerBasis A B) (b : B) :
   nth_rewrite 1 [← H]
   rw [Quotient.mk_add]
   congr 1
-  · simp [Algebra.algebraMap_eq_smul_one ((pb.basis.repr b) _)]
-  · rw [Quotient.mk_zero, Quotient.mk_eq_zero, coe_basis]
-    refine sum_mem _ (fun i hi ↦ ?_)
-    rw [Algebra.smul_def']
-    refine Ideal.mul_mem_left _ _ <| Ideal.pow_mem_of_mem _ (Ideal.subset_span (by simp)) _ <|
-      Nat.pos_of_ne_zero <| fun h ↦ not_mem_erase i univ <| Fin.eq_mk_iff_val_eq.2 h ▸ hi
+  simp [Algebra.algebraMap_eq_smul_one ((pb.basis.repr b) _)]
+  rw [Quotient.mk_zero, Quotient.mk_eq_zero, coe_basis]
+  refine sum_mem _ (fun i hi ↦ ?_)
+  rw [Algebra.smul_def']
+  refine Ideal.mul_mem_left _ _ <| Ideal.pow_mem_of_mem _ (Ideal.subset_span (by simp)) _ <|
+    Nat.pos_of_ne_zero <| fun h ↦ not_mem_erase i univ <| Fin.eq_mk_iff_val_eq.2 h ▸ hi
 
 open Submodule.Quotient in
 theorem exists_gen_dvd_sub (pb : PowerBasis A B) (b : B) : ∃ a, pb.gen ∣ b - algebraMap A B a := by
@@ -226,15 +226,15 @@ protected theorem leftMulMatrix (pb : PowerBasis A S) : Algebra.leftMulMatrix pb
   simp_rw [Matrix.toLin_self, Matrix.of_apply, pb.basis_eq_pow]
   apply (pow_succ' _ _).symm.trans
   split_ifs with h
-  · simp_rw [h, neg_smul, Finset.sum_neg_distrib, eq_neg_iff_add_eq_zero]
-    convert pb.aeval_minpolyGen
-    rw [add_comm, aeval_eq_sum_range, Finset.sum_range_succ, ← leadingCoeff,
-      pb.minpolyGen_monic.leadingCoeff, one_smul, natDegree_minpolyGen, Finset.sum_range]
-  · rw [Fintype.sum_eq_single (⟨(k : ℕ) + 1, lt_of_le_of_ne k.2 h⟩ : Fin pb.dim), if_pos, one_smul]
-    · rfl
-    intro x hx
-    rw [if_neg, zero_smul]
-    apply mt Fin.ext hx
+  simp_rw [h, neg_smul, Finset.sum_neg_distrib, eq_neg_iff_add_eq_zero]
+  convert pb.aeval_minpolyGen
+  rw [add_comm, aeval_eq_sum_range, Finset.sum_range_succ, ← leadingCoeff,
+    pb.minpolyGen_monic.leadingCoeff, one_smul, natDegree_minpolyGen, Finset.sum_range]
+  rw [Fintype.sum_eq_single (⟨(k : ℕ) + 1, lt_of_le_of_ne k.2 h⟩ : Fin pb.dim), if_pos, one_smul]
+  rfl
+  intro x hx
+  rw [if_neg, zero_smul]
+  apply mt Fin.ext hx
 
 end minpoly
 
@@ -245,11 +245,11 @@ variable [Algebra A S] {S' : Type*} [Ring S'] [Algebra A S']
 theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0)
     (f : A[X]) : pb.basis.constr A (fun i => y ^ (i : ℕ)) (aeval pb.gen f) = aeval y f := by
   cases subsingleton_or_nontrivial A
-  · rw [(Subsingleton.elim _ _ : f = 0), aeval_zero, map_zero, aeval_zero]
+  rw [(Subsingleton.elim _ _ : f = 0), aeval_zero, map_zero, aeval_zero]
   rw [← aeval_modByMonic_eq_self_of_root (minpoly.monic pb.isIntegral_gen) (minpoly.aeval _ _), ←
     @aeval_modByMonic_eq_self_of_root _ _ _ _ _ f _ (minpoly.monic pb.isIntegral_gen) y hy]
   by_cases hf : f %ₘ minpoly A pb.gen = 0
-  · simp only [hf, map_zero]
+  simp only [hf, map_zero]
   have : (f %ₘ minpoly A pb.gen).natDegree < pb.dim
   rw [← pb.natDegree_minpoly]
   apply natDegree_lt_natDegree hf
@@ -407,17 +407,17 @@ the powers of `x` less than the degree of `x`'s minimal polynomial are linearly 
 theorem linearIndependent_pow [Algebra K S] (x : S) :
     LinearIndependent K fun i : Fin (minpoly K x).natDegree => x ^ (i : ℕ) := by
   by_cases h : IsIntegral K x; swap
-  · rw [minpoly.eq_zero h, natDegree_zero]
-    exact linearIndependent_empty_type
+  rw [minpoly.eq_zero h, natDegree_zero]
+  exact linearIndependent_empty_type
   refine Fintype.linearIndependent_iff.2 fun g hg i => ?_
   simp only at hg
   simp_rw [Algebra.smul_def, ← aeval_monomial, ← map_sum] at hg
   apply (fun hn0 => (minpoly.degree_le_of_ne_zero K x (mt (fun h0 => ?_) hn0) hg).not_lt).mtr
-  · simp_rw [← C_mul_X_pow_eq_monomial]
-    exact (degree_eq_natDegree <| minpoly.ne_zero h).symm ▸ degree_sum_fin_lt _
-  · apply_fun lcoeff K i at h0
-    simp_rw [map_sum, lcoeff_apply, coeff_monomial, Fin.val_eq_val, Finset.sum_ite_eq'] at h0
-    exact (if_pos <| Finset.mem_univ _).symm.trans h0
+  simp_rw [← C_mul_X_pow_eq_monomial]
+  exact (degree_eq_natDegree <| minpoly.ne_zero h).symm ▸ degree_sum_fin_lt _
+  apply_fun lcoeff K i at h0
+  simp_rw [map_sum, lcoeff_apply, coeff_monomial, Fin.val_eq_val, Finset.sum_ite_eq'] at h0
+  exact (if_pos <| Finset.mem_univ _).symm.trans h0
 
 theorem IsIntegral.mem_span_pow [Nontrivial R] {x y : S} (hx : IsIntegral R x)
     (hy : ∃ f : R[X], y = aeval x f) :

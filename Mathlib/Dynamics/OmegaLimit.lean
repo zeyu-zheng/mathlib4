@@ -117,12 +117,12 @@ theorem mem_omegaLimit_iff_frequently (y : β) :
     y ∈ ω f ϕ s ↔ ∀ n ∈ 𝓝 y, ∃ᶠ t in f, (s ∩ ϕ t ⁻¹' n).Nonempty := by
   simp_rw [frequently_iff, omegaLimit_def, mem_iInter, mem_closure_iff_nhds]
   constructor
-  · intro h _ hn _ hu
-    rcases h _ hu _ hn with ⟨_, _, _, ht, _, hx, rfl⟩
-    exact ⟨_, ht, _, hx, by rwa [mem_preimage]⟩
-  · intro h _ hu _ hn
-    rcases h _ hn hu with ⟨_, ht, _, hx, hϕtx⟩
-    exact ⟨_, hϕtx, _, ht, _, hx, rfl⟩
+  intro h _ hn _ hu
+  rcases h _ hu _ hn with ⟨_, _, _, ht, _, hx, rfl⟩
+  exact ⟨_, ht, _, hx, by rwa [mem_preimage]⟩
+  intro h _ hu _ hn
+  rcases h _ hn hu with ⟨_, ht, _, hx, hϕtx⟩
+  exact ⟨_, hϕtx, _, ht, _, hx, rfl⟩
 
 /-- An element `y` is in the ω-limit set of `s` w.r.t. `f` if the
     forward images of `s` frequently (w.r.t. `f`) intersect arbitrary
@@ -150,7 +150,8 @@ theorem omegaLimit_iInter (p : ι → Set α) : ω f ϕ (⋂ i, p i) ⊆ ⋂ i, 
   subset_iInter fun _i ↦ omegaLimit_mono_right _ _ (iInter_subset _ _)
 
 theorem omegaLimit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s₂ := by
-  ext y; constructor
+  ext y
+  constructor
   · simp only [mem_union, mem_omegaLimit_iff_frequently, union_inter_distrib_right, union_nonempty,
       frequently_or_distrib]
     contrapose!
@@ -159,9 +160,9 @@ theorem omegaLimit_union : ω f ϕ (s₁ ∪ s₂) = ω f ϕ s₁ ∪ ω f ϕ s�
     refine ⟨n₁ ∩ n₂, inter_mem hn₁ hn₂, h₁.mono fun t ↦ ?_, h₂.mono fun t ↦ ?_⟩
     exacts [Subset.trans <| inter_subset_inter_right _ <| preimage_mono inter_subset_left,
       Subset.trans <| inter_subset_inter_right _ <| preimage_mono inter_subset_right]
-  · rintro (hy | hy)
-    exacts [omegaLimit_mono_right _ _ subset_union_left hy,
-      omegaLimit_mono_right _ _ subset_union_right hy]
+  rintro (hy | hy)
+  exacts [omegaLimit_mono_right _ _ subset_union_left hy,
+    omegaLimit_mono_right _ _ subset_union_right hy]
 
 theorem omegaLimit_iUnion (p : ι → Set α) : ⋃ i, ω f ϕ (p i) ⊆ ω f ϕ (⋃ i, p i) := by
   rw [iUnion_subset_iff]
@@ -271,20 +272,20 @@ theorem nonempty_omegaLimit_of_isCompact_absorbing [NeBot f] {c : Set β} (hc₁
   rcases hc₂ with ⟨v, hv₁, hv₂⟩
   rw [omegaLimit_eq_iInter_inter _ _ _ hv₁]
   apply IsCompact.nonempty_iInter_of_directed_nonempty_isCompact_isClosed
-  · rintro ⟨u₁, hu₁⟩ ⟨u₂, hu₂⟩
-    use ⟨u₁ ∩ u₂, inter_mem hu₁ hu₂⟩
-    constructor
-    all_goals exact closure_mono (image2_subset (inter_subset_inter_left _ (by simp)) Subset.rfl)
-  · intro u
-    have hn : (image2 ϕ (u ∩ v) s).Nonempty :=
-      Nonempty.image2 (Filter.nonempty_of_mem (inter_mem u.prop hv₁)) hs
-    exact hn.mono subset_closure
-  · intro
-    apply hc₁.of_isClosed_subset isClosed_closure
-    calc
-      _ ⊆ closure (image2 ϕ v s) := closure_mono (image2_subset inter_subset_right Subset.rfl)
-      _ ⊆ c := hv₂
-  · exact fun _ ↦ isClosed_closure
+  rintro ⟨u₁, hu₁⟩ ⟨u₂, hu₂⟩
+  use ⟨u₁ ∩ u₂, inter_mem hu₁ hu₂⟩
+  constructor
+  all_goals exact closure_mono (image2_subset (inter_subset_inter_left _ (by simp)) Subset.rfl)
+  intro u
+  have hn : (image2 ϕ (u ∩ v) s).Nonempty :=
+    Nonempty.image2 (Filter.nonempty_of_mem (inter_mem u.prop hv₁)) hs
+  exact hn.mono subset_closure
+  intro
+  apply hc₁.of_isClosed_subset isClosed_closure
+  calc
+    _ ⊆ closure (image2 ϕ v s) := closure_mono (image2_subset inter_subset_right Subset.rfl)
+    _ ⊆ c := hv₂
+  exact fun _ ↦ isClosed_closure
 
 theorem nonempty_omegaLimit [CompactSpace β] [NeBot f] (hs : s.Nonempty) : (ω f ϕ s).Nonempty :=
   nonempty_omegaLimit_of_isCompact_absorbing _ _ _ isCompact_univ ⟨univ, univ_mem, subset_univ _⟩ hs

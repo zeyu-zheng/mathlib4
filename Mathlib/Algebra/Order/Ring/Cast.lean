@@ -92,14 +92,14 @@ lemma nneg_mul_add_sq_of_abs_le_one (n : ℤ) (hx : |x| ≤ 1) : (0 : R) ≤ n *
     rwa [add_right_neg] at this
   rw [← mul_add, mul_nonneg_iff]
   rcases lt_trichotomy n 0 with (h | rfl | h)
-  · exact Or.inr ⟨mod_cast h.le, hnx' h⟩
-  · simp [le_total 0 x]
-  · exact Or.inl ⟨mod_cast h.le, hnx h⟩
+  exact Or.inr ⟨mod_cast h.le, hnx' h⟩
+  simp [le_total 0 x]
+  exact Or.inl ⟨mod_cast h.le, hnx h⟩
 
 lemma cast_natAbs : (n.natAbs : R) = |n| := by
   cases n
-  · simp
-  · rw [abs_eq_natAbs, natAbs_negSucc, cast_succ, cast_natCast, cast_succ]
+  simp
+  rw [abs_eq_natAbs, natAbs_negSucc, cast_succ, cast_natCast, cast_succ]
 
 end LinearOrderedRing
 end Int

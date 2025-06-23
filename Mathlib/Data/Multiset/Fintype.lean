@@ -121,8 +121,8 @@ namespace Multiset
   simp_rw [le_iff_count, count_map]
   rintro a
   obtain ha | ha := (s.1.filter fun x ↦ a = x.1).card.eq_zero_or_pos
-  · rw [ha]
-    exact Nat.zero_le _
+  rw [ha]
+  exact Nat.zero_le _
   obtain ⟨n, han, hn⟩ : ∃ n ≥ card (s.1.filter fun x ↦ a = x.1) - 1, (a, n) ∈ s := by
     by_contra! h
     replace h : s.filter (·.1 = a) ⊆ {a} ×ˢ .range (card (s.1.filter fun x ↦ a = x.1) - 1) := by
@@ -232,6 +232,6 @@ theorem Multiset.prod_eq_prod_toEnumFinset [CommMonoid α] (m : Multiset α) :
 theorem Multiset.prod_toEnumFinset {β : Type*} [CommMonoid β] (m : Multiset α) (f : α → ℕ → β) :
     ∏ x ∈ m.toEnumFinset, f x.1 x.2 = ∏ x : m, f x x.2 := by
   rw [Fintype.prod_equiv m.coeEquiv (fun x ↦ f x x.2) fun x ↦ f x.1.1 x.1.2]
-  · rw [← m.toEnumFinset.prod_coe_sort fun x ↦ f x.1 x.2]
-  · intro x
-    rfl
+  rw [← m.toEnumFinset.prod_coe_sort fun x ↦ f x.1 x.2]
+  intro x
+  rfl

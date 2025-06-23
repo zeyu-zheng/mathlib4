@@ -146,9 +146,9 @@ theorem forall_measure_preimage_mul_iff (μ : Measure G) :
     (∀ (g : G) (A : Set G), MeasurableSet A → μ ((fun h => g * h) ⁻¹' A) = μ A) ↔
       IsMulLeftInvariant μ := by
   trans ∀ g, map (g * ·) μ = μ
-  · simp_rw [Measure.ext_iff]
-    refine forall_congr' fun g => forall_congr' fun A => forall_congr' fun hA => ?_
-    rw [map_apply (measurable_const_mul g) hA]
+  simp_rw [Measure.ext_iff]
+  refine forall_congr' fun g => forall_congr' fun A => forall_congr' fun hA => ?_
+  rw [map_apply (measurable_const_mul g) hA]
   exact ⟨fun h => ⟨h⟩, fun h => h.1⟩
 
 /-- An alternative way to prove that `μ` is right invariant under multiplication. -/
@@ -157,9 +157,9 @@ theorem forall_measure_preimage_mul_right_iff (μ : Measure G) :
     (∀ (g : G) (A : Set G), MeasurableSet A → μ ((fun h => h * g) ⁻¹' A) = μ A) ↔
       IsMulRightInvariant μ := by
   trans ∀ g, map (· * g) μ = μ
-  · simp_rw [Measure.ext_iff]
-    refine forall_congr' fun g => forall_congr' fun A => forall_congr' fun hA => ?_
-    rw [map_apply (measurable_mul_const g) hA]
+  simp_rw [Measure.ext_iff]
+  refine forall_congr' fun g => forall_congr' fun A => forall_congr' fun hA => ?_
+  rw [map_apply (measurable_mul_const g) hA]
   exact ⟨fun h => ⟨h⟩, fun h => h.1⟩
 
 @[to_additive]
@@ -563,8 +563,8 @@ instance (priority := 80) isOpenPosMeasure_of_mulLeftInvariant_of_innerRegular
 theorem null_iff_of_isMulLeftInvariant [Regular μ] {s : Set G} (hs : IsOpen s) :
     μ s = 0 ↔ s = ∅ ∨ μ = 0 := by
   rcases eq_zero_or_neZero μ with rfl|hμ
-  · simp
-  · simp only [or_false_iff, hs.measure_eq_zero_iff μ, NeZero.ne μ]
+  simp
+  simp only [or_false_iff, hs.measure_eq_zero_iff μ, NeZero.ne μ]
 
 @[to_additive]
 theorem measure_ne_zero_iff_nonempty_of_isMulLeftInvariant [Regular μ] (hμ : μ ≠ 0) {s : Set G}
@@ -623,25 +623,25 @@ theorem measure_univ_of_isMulLeftInvariant [WeaklyLocallyCompactSpace G] [Noncom
   have Lcompact : ∀ n, IsCompact (L n) := by
     intro n
     induction' n with n IH
-    · exact hK
-    · simp_rw [L, iterate_succ']
-      apply IsCompact.union IH (hK.smul (g (L n)))
+    exact hK
+    simp_rw [L, iterate_succ']
+    apply IsCompact.union IH (hK.smul (g (L n)))
   have Lclosed : ∀ n, IsClosed (L n) := by
     intro n
     induction' n with n IH
-    · exact Kclosed
-    · simp_rw [L, iterate_succ']
-      apply IsClosed.union IH (Kclosed.smul (g (L n)))
+    exact Kclosed
+    simp_rw [L, iterate_succ']
+    apply IsClosed.union IH (Kclosed.smul (g (L n)))
   have M : ∀ n, μ (L n) = (n + 1 : ℕ) * μ K := by
     intro n
     induction' n with n IH
-    · simp only [L, one_mul, Nat.cast_one, iterate_zero, id, Nat.zero_eq, Nat.zero_add]
-    · calc
-        μ (L (n + 1)) = μ (L n) + μ (g (L n) • K) := by
-          simp_rw [L, iterate_succ']
-          exact measure_union' (hg _ (Lcompact _)) (Lclosed _).measurableSet
-        _ = (n + 1 + 1 : ℕ) * μ K := by
-          simp only [IH, measure_smul, add_mul, Nat.cast_add, Nat.cast_one, one_mul]
+    simp only [L, one_mul, Nat.cast_one, iterate_zero, id, Nat.zero_eq, Nat.zero_add]
+    calc
+      μ (L (n + 1)) = μ (L n) + μ (g (L n) • K) := by
+        simp_rw [L, iterate_succ']
+        exact measure_union' (hg _ (Lcompact _)) (Lclosed _).measurableSet
+      _ = (n + 1 + 1 : ℕ) * μ K := by
+        simp only [IH, measure_smul, add_mul, Nat.cast_add, Nat.cast_one, one_mul]
   have N : Tendsto (fun n => μ (L n)) atTop (𝓝 (∞ * μ K)) := by
     simp_rw [M]
     apply ENNReal.Tendsto.mul_const _ (Or.inl ENNReal.top_ne_zero)
@@ -654,12 +654,12 @@ theorem measure_univ_of_isMulLeftInvariant [WeaklyLocallyCompactSpace G] [Noncom
 lemma _root_.MeasurableSet.mul_closure_one_eq {s : Set G} (hs : MeasurableSet s) :
     s * (closure {1} : Set G) = s := by
   apply MeasurableSet.induction_on_open (C := fun t ↦ t • (closure {1} : Set G) = t) ?_ ?_ ?_ hs
-  · intro U hU
-    exact hU.mul_closure_one_eq
-  · rintro t - ht
-    exact compl_mul_closure_one_eq_iff.2 ht
-  · rintro f - - h''f
-    simp only [iUnion_smul, h''f]
+  intro U hU
+  exact hU.mul_closure_one_eq
+  rintro t - ht
+  exact compl_mul_closure_one_eq_iff.2 ht
+  rintro f - - h''f
+  simp only [iUnion_smul, h''f]
 
 /-- If a compact set is included in a measurable set, then so is its closure. -/
 @[to_additive (attr := deprecated IsCompact.closure_subset_measurableSet (since := "2024-01-28"))]
@@ -689,8 +689,8 @@ lemma innerRegularWRT_isCompact_isClosed_measure_ne_top_of_group [h : InnerRegul
   intro s ⟨s_meas, μs⟩ r hr
   rcases h.innerRegular ⟨s_meas, μs⟩ r hr with ⟨K, Ks, K_comp, hK⟩
   refine ⟨closure K, ?_, ⟨K_comp.closure, isClosed_closure⟩, ?_⟩
-  · exact IsCompact.closure_subset_measurableSet K_comp s_meas Ks
-  · rwa [K_comp.measure_closure]
+  exact IsCompact.closure_subset_measurableSet K_comp s_meas Ks
+  rwa [K_comp.measure_closure]
 
 end TopologicalGroup
 

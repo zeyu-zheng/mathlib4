@@ -194,11 +194,11 @@ variable {α β : Type*} [GroupWithZero α] [GroupWithZero β] [MulActionWithZer
 theorem smul_inv₀ [SMulCommClass α β β] [IsScalarTower α β β] (c : α) (x : β) :
     (c • x)⁻¹ = c⁻¹ • x⁻¹ := by
   obtain rfl | hc := eq_or_ne c 0
-  · simp only [inv_zero, zero_smul]
+  simp only [inv_zero, zero_smul]
   obtain rfl | hx := eq_or_ne x 0
-  · simp only [inv_zero, smul_zero]
-  · refine inv_eq_of_mul_eq_one_left ?_
-    rw [smul_mul_smul, inv_mul_cancel hc, inv_mul_cancel hx, one_smul]
+  simp only [inv_zero, smul_zero]
+  refine inv_eq_of_mul_eq_one_left ?_
+  rw [smul_mul_smul, inv_mul_cancel hc, inv_mul_cancel hx, one_smul]
 
 end GroupWithZero
 

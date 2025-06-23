@@ -84,11 +84,11 @@ noncomputable def d (i j : ι) : X K e i ⟶ X K e j :=
 lemma d_comp_d (i j k : ι) : d K e i j ≫ d K e j k = 0 := by
   dsimp [d]
   by_cases hij : c.Rel i j
-  · by_cases hjk : c.Rel j k
-    · rw [dif_pos hij, dif_pos hjk, dif_neg (e.not_boundaryGE_next hij)]
-      split_ifs <;> simp
-    · rw [dif_neg hjk, comp_zero]
-  · rw [dif_neg hij, zero_comp]
+  by_cases hjk : c.Rel j k
+  rw [dif_pos hij, dif_pos hjk, dif_neg (e.not_boundaryGE_next hij)]
+  split_ifs <;> simp
+  rw [dif_neg hjk, comp_zero]
+  rw [dif_neg hij, zero_comp]
 
 end truncGE'
 

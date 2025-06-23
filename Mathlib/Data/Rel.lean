@@ -93,8 +93,8 @@ local infixr:90 " • " => Rel.comp
 theorem comp_assoc {δ : Type*} (r : Rel α β) (s : Rel β γ) (t : Rel γ δ) :
     (r • s) • t = r • (s • t) := by
   unfold comp; ext (x w); constructor
-  · rintro ⟨z, ⟨y, rxy, syz⟩, tzw⟩; exact ⟨y, rxy, z, syz, tzw⟩
-  · rintro ⟨y, rxy, z, syz, tzw⟩; exact ⟨z, ⟨y, rxy, syz⟩, tzw⟩
+  rintro ⟨z, ⟨y, rxy, syz⟩, tzw⟩; exact ⟨y, rxy, z, syz, tzw⟩
+  rintro ⟨y, rxy, z, syz, tzw⟩; exact ⟨z, ⟨y, rxy, syz⟩, tzw⟩
 
 @[simp]
 theorem comp_right_id (r : Rel α β) : r • @Eq β = r := by
@@ -174,8 +174,8 @@ theorem image_id (s : Set α) : image (@Eq α) s = s := by
 
 theorem image_comp (s : Rel β γ) (t : Set α) : image (r • s) t = image s (image r t) := by
   ext z; simp only [mem_image]; constructor
-  · rintro ⟨x, xt, y, rxy, syz⟩; exact ⟨y, ⟨x, xt, rxy⟩, syz⟩
-  · rintro ⟨y, ⟨x, xt, rxy⟩, syz⟩; exact ⟨x, xt, y, rxy, syz⟩
+  rintro ⟨x, xt, y, rxy, syz⟩; exact ⟨y, ⟨x, xt, rxy⟩, syz⟩
+  rintro ⟨y, ⟨x, xt, rxy⟩, syz⟩; exact ⟨x, xt, y, rxy, syz⟩
 
 theorem image_univ : r.image Set.univ = r.codom := by
   ext y
@@ -241,26 +241,26 @@ theorem preimage_top {s : Set β} (h : Set.Nonempty s) :
 theorem image_eq_dom_of_codomain_subset {s : Set β} (h : r.codom ⊆ s) : r.preimage s = r.dom := by
   rw [← preimage_univ]
   apply Set.eq_of_subset_of_subset
-  · exact image_subset _ (Set.subset_univ _)
-  · intro x hx
-    simp only [mem_preimage, Set.mem_univ, true_and] at hx
-    rcases hx with ⟨y, ryx⟩
-    have hy : y ∈ s := h ⟨x, ryx⟩
-    exact ⟨y, ⟨hy, ryx⟩⟩
+  exact image_subset _ (Set.subset_univ _)
+  intro x hx
+  simp only [mem_preimage, Set.mem_univ, true_and] at hx
+  rcases hx with ⟨y, ryx⟩
+  have hy : y ∈ s := h ⟨x, ryx⟩
+  exact ⟨y, ⟨hy, ryx⟩⟩
 
 theorem preimage_eq_codom_of_domain_subset {s : Set α} (h : r.dom ⊆ s) : r.image s = r.codom := by
   apply r.inv.image_eq_dom_of_codomain_subset (by rwa [← codom_inv] at h)
 
 theorem image_inter_dom_eq (s : Set α) : r.image (s ∩ r.dom) = r.image s := by
   apply Set.eq_of_subset_of_subset
-  · apply r.image_mono (by simp)
-  · intro x h
-    rw [mem_image] at *
-    rcases h with ⟨y, hy, ryx⟩
-    use y
-    suffices h : y ∈ r.dom by simp_all only [Set.mem_inter_iff, and_self]
-    rw [dom, Set.mem_setOf_eq]
-    use x
+  apply r.image_mono (by simp)
+  intro x h
+  rw [mem_image] at *
+  rcases h with ⟨y, hy, ryx⟩
+  use y
+  suffices h : y ∈ r.dom by simp_all only [Set.mem_inter_iff, and_self]
+  rw [dom, Set.mem_setOf_eq]
+  use x
 
 @[simp]
 theorem preimage_inter_codom_eq (s : Set β) : r.preimage (s ∩ r.codom) = r.preimage s := by
@@ -304,8 +304,8 @@ theorem core_id (s : Set α) : core (@Eq α) s = s := by simp [core]
 
 theorem core_comp (s : Rel β γ) (t : Set γ) : core (r • s) t = core r (core s t) := by
   ext x; simp only [core, comp, forall_exists_index, and_imp, Set.mem_setOf_eq]; constructor
-  · exact fun h y rxy z => h z y rxy
-  · exact fun h z y rzy => h y rzy z
+  exact fun h y rxy z => h z y rxy
+  exact fun h z y rzy => h y rzy z
 
 /-- Restrict the domain of a relation to a subtype. -/
 def restrictDomain (s : Set α) : Rel { x // x ∈ s } β := fun x y => r x.val y
@@ -349,20 +349,20 @@ theorem Equiv.graph_inv (f : α ≃ β) : (f.symm : β → α).graph = Rel.inv (
 theorem Relation.is_graph_iff (r : Rel α β) : (∃! f, Function.graph f = r) ↔ ∀ x, ∃! y, r x y := by
   unfold Function.graph
   constructor
-  · rintro ⟨f, rfl, _⟩ x
-    use f x
-    simp only [forall_eq', and_self]
-  · intro h
-    choose f hf using fun x ↦ (h x).exists
-    use f
-    constructor
-    · ext x _
-      constructor
-      · rintro rfl
-        exact hf x
-      · exact (h x).unique (hf x)
-    · rintro _ rfl
-      exact funext hf
+  rintro ⟨f, rfl, _⟩ x
+  use f x
+  simp only [forall_eq', and_self]
+  intro h
+  choose f hf using fun x ↦ (h x).exists
+  use f
+  constructor
+  ext x _
+  constructor
+  rintro rfl
+  exact hf x
+  exact (h x).unique (hf x)
+  rintro _ rfl
+  exact funext hf
 
 namespace Set
 

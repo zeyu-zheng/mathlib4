@@ -108,7 +108,7 @@ theorem span_singleton_eq_top {m : M} (hm : m ≠ 0) : Submodule.span R {m} = �
 instance (S : Submodule R M) : S.IsPrincipal where
   principal' := by
     obtain rfl | rfl := eq_bot_or_eq_top S
-    · exact ⟨0, Submodule.span_zero.symm⟩
+    exact ⟨0, Submodule.span_zero.symm⟩
     have := IsSimpleModule.nontrivial R M
     have ⟨m, hm⟩ := exists_ne (0 : M)
     exact ⟨m, (span_singleton_eq_top R hm).symm⟩
@@ -130,11 +130,11 @@ open IsSimpleModule in
 theorem isSimpleModule_iff_quot_maximal :
     IsSimpleModule R M ↔ ∃ I : Ideal R, I.IsMaximal ∧ Nonempty (M ≃ₗ[R] R ⧸ I) := by
   refine ⟨fun h ↦ ?_, fun ⟨I, ⟨coatom⟩, ⟨equiv⟩⟩ ↦ ?_⟩
-  · have := IsSimpleModule.nontrivial R M
-    have ⟨m, hm⟩ := exists_ne (0 : M)
-    exact ⟨_, ker_toSpanSingleton_isMaximal R hm,
-      ⟨(LinearMap.quotKerEquivOfSurjective _ <| toSpanSingleton_surjective R hm).symm⟩⟩
-  · convert congr equiv; rwa [isSimpleModule_iff_isCoatom]
+  have := IsSimpleModule.nontrivial R M
+  have ⟨m, hm⟩ := exists_ne (0 : M)
+  exact ⟨_, ker_toSpanSingleton_isMaximal R hm,
+    ⟨(LinearMap.quotKerEquivOfSurjective _ <| toSpanSingleton_surjective R hm).symm⟩⟩
+  convert congr equiv; rwa [isSimpleModule_iff_isCoatom]
 
 /-- In general, the annihilator of a simple module is called a primitive ideal, and it is
 always a two-sided prime ideal, but mathlib's `Ideal.IsPrime` is not the correct definition

@@ -175,51 +175,51 @@ private lemma span_range_relation_eq_ker_baseChange :
     Ideal.span (Set.range fun i ↦ (MvPolynomial.map (algebraMap R T)) (P.relation i)) =
       RingHom.ker (aeval (R := T) (S₁ := T ⊗[R] S) P.baseChange.val) := by
   apply le_antisymm
-  · rw [Ideal.span_le]
-    intro x ⟨y, hy⟩
-    have Z := aeval_val_relation P y
-    apply_fun TensorProduct.includeRight (R := R) (A := T) at Z
-    rw [map_zero] at Z
-    simp only [SetLike.mem_coe, RingHom.mem_ker, ← Z, ← hy, algebraMap_apply,
-      TensorProduct.includeRight_apply]
-    erw [aeval_map_algebraMap]
-    show _ = TensorProduct.includeRight _
-    erw [map_aeval, TensorProduct.includeRight.comp_algebraMap]
-    rfl
-  · intro x hx
-    rw [RingHom.mem_ker] at hx
-    have H := Algebra.TensorProduct.lTensor_ker (A := T) (IsScalarTower.toAlgHom R P.Ring S)
-      P.algebraMap_surjective
-    let e := MvPolynomial.algebraTensorAlgEquiv (R := R) (σ := P.vars) (A := T)
-    have H' : e.symm x ∈ RingHom.ker (TensorProduct.map (AlgHom.id R T)
-        (IsScalarTower.toAlgHom R P.Ring S)) := by
-      rw [RingHom.mem_ker, ← hx]
-      clear hx
-      induction x using MvPolynomial.induction_on with
-      | h_C a =>
-        simp only [Generators.algebraMap_apply, algHom_C, TensorProduct.algebraMap_apply,
-          id.map_eq_id, RingHom.id_apply, e]
-        erw [← MvPolynomial.algebraMap_eq, AlgEquiv.commutes]
-        simp only [TensorProduct.algebraMap_apply, id.map_eq_id, RingHom.id_apply,
-          TensorProduct.map_tmul, AlgHom.coe_id, id_eq, _root_.map_one, algebraMap_eq]
-        erw [aeval_C]
-        simp
-      | h_add p q hp hq => simp only [map_add, hp, hq]
-      | h_X p i hp =>
-        simp only [_root_.map_mul, algebraTensorAlgEquiv_symm_X, hp, TensorProduct.map_tmul,
-          _root_.map_one, IsScalarTower.coe_toAlgHom', Generators.algebraMap_apply, aeval_X, e]
-        congr
-        erw [aeval_X]
-        rw [Generators.baseChange_val]
-    erw [H] at H'
-    replace H' : e.symm x ∈ Ideal.map TensorProduct.includeRight P.ker := H'
-    erw [← P.span_range_relation_eq_ker, ← Ideal.mem_comap, Ideal.comap_symm,
-      Ideal.map_map, Ideal.map_span, ← Set.range_comp] at H'
-    convert H'
-    simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_comp, RingHom.coe_coe, Function.comp_apply,
-      TensorProduct.includeRight_apply, TensorProduct.lift_tmul, _root_.map_one, mapAlgHom_apply,
-      one_mul]
-    rfl
+  rw [Ideal.span_le]
+  intro x ⟨y, hy⟩
+  have Z := aeval_val_relation P y
+  apply_fun TensorProduct.includeRight (R := R) (A := T) at Z
+  rw [map_zero] at Z
+  simp only [SetLike.mem_coe, RingHom.mem_ker, ← Z, ← hy, algebraMap_apply,
+    TensorProduct.includeRight_apply]
+  erw [aeval_map_algebraMap]
+  show _ = TensorProduct.includeRight _
+  erw [map_aeval, TensorProduct.includeRight.comp_algebraMap]
+  rfl
+  intro x hx
+  rw [RingHom.mem_ker] at hx
+  have H := Algebra.TensorProduct.lTensor_ker (A := T) (IsScalarTower.toAlgHom R P.Ring S)
+    P.algebraMap_surjective
+  let e := MvPolynomial.algebraTensorAlgEquiv (R := R) (σ := P.vars) (A := T)
+  have H' : e.symm x ∈ RingHom.ker (TensorProduct.map (AlgHom.id R T)
+      (IsScalarTower.toAlgHom R P.Ring S)) := by
+    rw [RingHom.mem_ker, ← hx]
+    clear hx
+    induction x using MvPolynomial.induction_on with
+    | h_C a =>
+      simp only [Generators.algebraMap_apply, algHom_C, TensorProduct.algebraMap_apply,
+        id.map_eq_id, RingHom.id_apply, e]
+      erw [← MvPolynomial.algebraMap_eq, AlgEquiv.commutes]
+      simp only [TensorProduct.algebraMap_apply, id.map_eq_id, RingHom.id_apply,
+        TensorProduct.map_tmul, AlgHom.coe_id, id_eq, _root_.map_one, algebraMap_eq]
+      erw [aeval_C]
+      simp
+    | h_add p q hp hq => simp only [map_add, hp, hq]
+    | h_X p i hp =>
+      simp only [_root_.map_mul, algebraTensorAlgEquiv_symm_X, hp, TensorProduct.map_tmul,
+        _root_.map_one, IsScalarTower.coe_toAlgHom', Generators.algebraMap_apply, aeval_X, e]
+      congr
+      erw [aeval_X]
+      rw [Generators.baseChange_val]
+  erw [H] at H'
+  replace H' : e.symm x ∈ Ideal.map TensorProduct.includeRight P.ker := H'
+  erw [← P.span_range_relation_eq_ker, ← Ideal.mem_comap, Ideal.comap_symm,
+    Ideal.map_map, Ideal.map_span, ← Set.range_comp] at H'
+  convert H'
+  simp only [AlgHom.toRingHom_eq_coe, RingHom.coe_comp, RingHom.coe_coe, Function.comp_apply,
+    TensorProduct.includeRight_apply, TensorProduct.lift_tmul, _root_.map_one, mapAlgHom_apply,
+    one_mul]
+  rfl
 
 /-- If `P` is a presentation of `S` over `R` and `T` is an `R`-algebra, we
 obtain a natural presentation of `T ⊗[R] S` over `T`. -/

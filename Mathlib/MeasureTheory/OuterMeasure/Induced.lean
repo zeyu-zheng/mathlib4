@@ -54,8 +54,8 @@ theorem smul_extend {R} [Zero R] [SMulWithZero R ℝ≥0∞] [IsScalarTower R �
   ext1 s
   dsimp [extend]
   by_cases h : P s
-  · simp [h]
-  · simp [h, ENNReal.smul_top, hc]
+  simp [h]
+  simp [h, ENNReal.smul_top, hc]
 
 theorem le_extend {s : α} (h : P s) : m s h ≤ extend m s := by
   simp only [extend, le_iInf_iff]
@@ -104,12 +104,12 @@ section Subadditive
 theorem extend_iUnion_le_tsum_nat' (s : ℕ → Set α) :
     extend m (⋃ i, s i) ≤ ∑' i, extend m (s i) := by
   by_cases h : ∀ i, P (s i)
-  · rw [extend_eq _ (PU h), congr_arg tsum _]
-    · apply msU h
-    funext i
-    apply extend_eq _ (h i)
-  · cases' not_forall.1 h with i hi
-    exact le_trans (le_iInf fun h => hi.elim h) (ENNReal.le_tsum i)
+  rw [extend_eq _ (PU h), congr_arg tsum _]
+  apply msU h
+  funext i
+  apply extend_eq _ (h i)
+  cases' not_forall.1 h with i hi
+  exact le_trans (le_iInf fun h => hi.elim h) (ENNReal.le_tsum i)
 
 end Subadditive
 
@@ -129,10 +129,10 @@ theorem extend_iUnion {β} [Countable β] {f : β → Set α} (hd : Pairwise (Di
     (hm : ∀ i, P (f i)) : extend m (⋃ i, f i) = ∑' i, extend m (f i) := by
   cases nonempty_encodable β
   rw [← Encodable.iUnion_decode₂, ← tsum_iUnion_decode₂]
-  · exact
-      extend_iUnion_nat PU (fun n => Encodable.iUnion_decode₂_cases P0 hm)
-        (mU _ (Encodable.iUnion_decode₂_disjoint_on hd))
-  · exact extend_empty P0 m0
+  exact
+    extend_iUnion_nat PU (fun n => Encodable.iUnion_decode₂_cases P0 hm)
+      (mU _ (Encodable.iUnion_decode₂_disjoint_on hd))
+  exact extend_empty P0 m0
 
 theorem extend_union {s₁ s₂ : Set α} (hd : Disjoint s₁ s₂) (h₁ : P s₁) (h₂ : P s₂) :
     extend m (s₁ ∪ s₂) = extend m s₁ + extend m s₂ := by
@@ -177,18 +177,18 @@ theorem inducedOuterMeasure_eq' {s : Set α} (hs : P s) : inducedOuterMeasure m 
 theorem inducedOuterMeasure_eq_iInf (s : Set α) :
     inducedOuterMeasure m P0 m0 s = ⨅ (t : Set α) (ht : P t) (_ : s ⊆ t), m t ht := by
   apply le_antisymm
-  · simp only [le_iInf_iff]
-    intro t ht hs
-    refine le_trans (measure_mono hs) ?_
-    exact le_of_eq (inducedOuterMeasure_eq' _ msU m_mono _)
-  · refine le_iInf ?_
-    intro f
-    refine le_iInf ?_
-    intro hf
-    refine le_trans ?_ (extend_iUnion_le_tsum_nat' _ msU _)
-    refine le_iInf ?_
-    intro h2f
-    exact iInf_le_of_le _ (iInf_le_of_le h2f <| iInf_le _ hf)
+  simp only [le_iInf_iff]
+  intro t ht hs
+  refine le_trans (measure_mono hs) ?_
+  exact le_of_eq (inducedOuterMeasure_eq' _ msU m_mono _)
+  refine le_iInf ?_
+  intro f
+  refine le_iInf ?_
+  intro hf
+  refine le_trans ?_ (extend_iUnion_le_tsum_nat' _ msU _)
+  refine le_iInf ?_
+  intro h2f
+  exact iInf_le_of_le _ (iInf_le_of_le h2f <| iInf_le _ hf)
 
 theorem inducedOuterMeasure_preimage (f : α ≃ α) (Pm : ∀ s : Set α, P (f ⁻¹' s) ↔ P s)
     (mm : ∀ (s : Set α) (hs : P s), m (f ⁻¹' s) ((Pm _).mpr hs) = m s hs) {A : Set α} :
@@ -224,18 +224,18 @@ theorem inducedOuterMeasure_caratheodory (s : Set α) :
             inducedOuterMeasure m P0 m0 t := by
   rw [isCaratheodory_iff_le]
   constructor
-  · intro h t _ht
-    exact h t
-  · intro h u
-    conv_rhs => rw [inducedOuterMeasure_eq_iInf _ msU m_mono]
-    refine le_iInf ?_
-    intro t
-    refine le_iInf ?_
-    intro ht
-    refine le_iInf ?_
-    intro h2t
-    refine le_trans ?_ ((h t ht).trans_eq <| inducedOuterMeasure_eq' _ msU m_mono ht)
-    gcongr
+  intro h t _ht
+  exact h t
+  intro h u
+  conv_rhs => rw [inducedOuterMeasure_eq_iInf _ msU m_mono]
+  refine le_iInf ?_
+  intro t
+  refine le_iInf ?_
+  intro ht
+  refine le_iInf ?_
+  intro h2t
+  refine le_trans ?_ ((h t ht).trans_eq <| inducedOuterMeasure_eq' _ msU m_mono ht)
+  gcongr
 
 end ExtendSet
 
@@ -358,29 +358,29 @@ theorem exists_measurable_superset_eq_trim (m : OuterMeasure α) (s : Set α) :
     ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t = m.trim s := by
   simp only [trim_eq_iInf]; set ms := ⨅ (t : Set α) (_ : s ⊆ t) (_ : MeasurableSet t), m t
   by_cases hs : ms = ∞
-  · simp only [hs]
-    simp only [iInf_eq_top, ms] at hs
-    exact ⟨univ, subset_univ s, MeasurableSet.univ, hs _ (subset_univ s) MeasurableSet.univ⟩
-  · have : ∀ r > ms, ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t < r := by
-      intro r hs
-      have : ∃t, MeasurableSet t ∧ s ⊆ t ∧ m t < r
-      simpa [ms, iInf_lt_iff] using hs
-      rcases this with ⟨t, hmt, hin, hlt⟩
-      exists t
-    have : ∀ n : ℕ, ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t < ms + (n : ℝ≥0∞)⁻¹
-    intro n
-    refine this _ (ENNReal.lt_add_right hs ?_)
-    simp
-    choose t hsub hm hm' using this
-    refine ⟨⋂ n, t n, subset_iInter hsub, MeasurableSet.iInter hm, ?_⟩
-    have : Tendsto (fun n : ℕ => ms + (n : ℝ≥0∞)⁻¹) atTop (𝓝 (ms + 0)) :=
-      tendsto_const_nhds.add ENNReal.tendsto_inv_nat_nhds_zero
-    rw [add_zero] at this
-    refine le_antisymm (ge_of_tendsto' this fun n => ?_) ?_
-    · exact le_trans (measure_mono <| iInter_subset t n) (hm' n).le
-    · refine iInf_le_of_le (⋂ n, t n) ?_
-      refine iInf_le_of_le (subset_iInter hsub) ?_
-      exact iInf_le _ (MeasurableSet.iInter hm)
+  simp only [hs]
+  simp only [iInf_eq_top, ms] at hs
+  exact ⟨univ, subset_univ s, MeasurableSet.univ, hs _ (subset_univ s) MeasurableSet.univ⟩
+  have : ∀ r > ms, ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t < r := by
+    intro r hs
+    have : ∃t, MeasurableSet t ∧ s ⊆ t ∧ m t < r
+    simpa [ms, iInf_lt_iff] using hs
+    rcases this with ⟨t, hmt, hin, hlt⟩
+    exists t
+  have : ∀ n : ℕ, ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t < ms + (n : ℝ≥0∞)⁻¹
+  intro n
+  refine this _ (ENNReal.lt_add_right hs ?_)
+  simp
+  choose t hsub hm hm' using this
+  refine ⟨⋂ n, t n, subset_iInter hsub, MeasurableSet.iInter hm, ?_⟩
+  have : Tendsto (fun n : ℕ => ms + (n : ℝ≥0∞)⁻¹) atTop (𝓝 (ms + 0)) :=
+    tendsto_const_nhds.add ENNReal.tendsto_inv_nat_nhds_zero
+  rw [add_zero] at this
+  refine le_antisymm (ge_of_tendsto' this fun n => ?_) ?_
+  exact le_trans (measure_mono <| iInter_subset t n) (hm' n).le
+  refine iInf_le_of_le (⋂ n, t n) ?_
+  refine iInf_le_of_le (subset_iInter hsub) ?_
+  exact iInf_le _ (MeasurableSet.iInter hm)
 
 theorem exists_measurable_superset_of_trim_eq_zero {m : OuterMeasure α} {s : Set α}
     (h : m.trim s = 0) : ∃ t, s ⊆ t ∧ MeasurableSet t ∧ m t = 0 := by
@@ -441,15 +441,15 @@ This theorem shows that a restricted trimmed outer measure is a trimmed outer me
 theorem restrict_trim {μ : OuterMeasure α} {s : Set α} (hs : MeasurableSet s) :
     (restrict s μ).trim = restrict s μ.trim := by
   refine le_antisymm (fun t => ?_) (le_trim_iff.2 fun t ht => ?_)
-  · rw [restrict_apply]
-    rcases μ.exists_measurable_superset_eq_trim (t ∩ s) with ⟨t', htt', ht', hμt'⟩
-    rw [← hμt']
-    rw [inter_subset] at htt'
-    refine (measure_mono htt').trans ?_
-    rw [trim_eq _ (hs.compl.union ht'), restrict_apply, union_inter_distrib_right, compl_inter_self,
-      Set.empty_union]
-    exact measure_mono inter_subset_left
-  · rw [restrict_apply, trim_eq _ (ht.inter hs), restrict_apply]
+  rw [restrict_apply]
+  rcases μ.exists_measurable_superset_eq_trim (t ∩ s) with ⟨t', htt', ht', hμt'⟩
+  rw [← hμt']
+  rw [inter_subset] at htt'
+  refine (measure_mono htt').trans ?_
+  rw [trim_eq _ (hs.compl.union ht'), restrict_apply, union_inter_distrib_right, compl_inter_self,
+    Set.empty_union]
+  exact measure_mono inter_subset_left
+  rw [restrict_apply, trim_eq _ (ht.inter hs), restrict_apply]
 
 end OuterMeasure
 

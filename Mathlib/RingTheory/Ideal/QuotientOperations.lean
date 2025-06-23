@@ -132,23 +132,23 @@ theorem ker_quotient_lift {I : Ideal R} (f : R →+* S)
   apply Ideal.ext
   intro x
   constructor
-  · intro hx
-    obtain ⟨y, hy⟩ := Quotient.mk_surjective x
-    rw [mem_ker, ← hy, Ideal.Quotient.lift_mk, ← mem_ker] at hx
-    rw [← hy, mem_map_iff_of_surjective (Quotient.mk I) Quotient.mk_surjective]
-    exact ⟨y, hx, rfl⟩
-  · intro hx
-    rw [mem_map_iff_of_surjective (Quotient.mk I) Quotient.mk_surjective] at hx
-    obtain ⟨y, hy⟩ := hx
-    rw [mem_ker, ← hy.right, Ideal.Quotient.lift_mk]
-    exact hy.left
+  intro hx
+  obtain ⟨y, hy⟩ := Quotient.mk_surjective x
+  rw [mem_ker, ← hy, Ideal.Quotient.lift_mk, ← mem_ker] at hx
+  rw [← hy, mem_map_iff_of_surjective (Quotient.mk I) Quotient.mk_surjective]
+  exact ⟨y, hx, rfl⟩
+  intro hx
+  rw [mem_map_iff_of_surjective (Quotient.mk I) Quotient.mk_surjective] at hx
+  obtain ⟨y, hy⟩ := hx
+  rw [mem_ker, ← hy.right, Ideal.Quotient.lift_mk]
+  exact hy.left
 
 lemma injective_lift_iff {I : Ideal R} {f : R →+* S} (H : ∀ (a : R), a ∈ I → f a = 0) :
     Injective (Quotient.lift I f H) ↔ ker f = I := by
   rw [injective_iff_ker_eq_bot, ker_quotient_lift, map_eq_bot_iff_le_ker, mk_ker]
   constructor
-  · exact fun h ↦ le_antisymm h H
-  · rintro rfl; rfl
+  exact fun h ↦ le_antisymm h H
+  rintro rfl; rfl
 
 lemma ker_Pi_Quotient_mk {ι : Type*} (I : ι → Ideal R) :
     ker (Pi.ringHom fun i : ι ↦ Quotient.mk (I i)) = ⨅ i, I i := by
@@ -211,15 +211,15 @@ lemma quotientInfToPiQuotient_surj [Finite ι] {I : ι → Ideal R}
   rcases isCoprime_iff_exists.mp (isCoprime_biInf hI') with ⟨u, hu, e, he, hue⟩
   replace he : ∀ j, j ≠ i → e ∈ I j := by simpa using he
   refine ⟨e, ?_, ?_⟩
-  · simp [eq_sub_of_add_eq' hue, map_sub, eq_zero_iff_mem.mpr hu]
-  · exact fun j hj ↦ eq_zero_iff_mem.mpr (he j hj)
+  simp [eq_sub_of_add_eq' hue, map_sub, eq_zero_iff_mem.mpr hu]
+  exact fun j hj ↦ eq_zero_iff_mem.mpr (he j hj)
   choose e he using key
   use mk _ (∑ i, f i*e i)
   ext i
   rw [quotientInfToPiQuotient_mk', map_sum, Fintype.sum_eq_single i]
-  · simp [(he i).1, hf]
-  · intros j hj
-    simp [(he j).2 i hj.symm]
+  simp [(he i).1, hf]
+  intros j hj
+  simp [(he j).2 i hj.symm]
 
 /-- **Chinese Remainder Theorem**. Eisenbud Ex.2.6.
 Similar to Atiyah-Macdonald 1.10 and Stacks 00DT -/

@@ -44,12 +44,12 @@ lemma zorny_lemma : zorny_statement := by
   apply zorn_subset -- or another variant
   rintro c hcs hc
   obtain rfl | hcnemp := c.eq_empty_or_nonempty -- you might need to disjunct on c empty or not
-  · exact ⟨edge_case_construction,
-      proof_that_edge_case_construction_respects_whatever,
-      proof_that_edge_case_construction_contains_all_stuff_in_c⟩
-  · exact ⟨construction,
-      proof_that_construction_respects_whatever,
-      proof_that_construction_contains_all_stuff_in_c⟩
+  exact ⟨edge_case_construction,
+    proof_that_edge_case_construction_respects_whatever,
+    proof_that_edge_case_construction_contains_all_stuff_in_c⟩
+  exact ⟨construction,
+    proof_that_construction_respects_whatever,
+    proof_that_construction_contains_all_stuff_in_c⟩
 ```
 
 ## Notes
@@ -127,19 +127,19 @@ theorem zorn_nonempty_preorder₀ (s : Set α)
   -- rcases zorn_preorder₀ ({ y ∈ s | x ≤ y }) fun c hcs hc => ?_ with ⟨m, ⟨hms, hxm⟩, hm⟩
   -- · exact ⟨m, hms, hxm, fun z hzs hmz => hm _ ⟨hzs, hxm.trans hmz⟩ hmz⟩
   have H := zorn_preorder₀ ({ y ∈ s | x ≤ y }) fun c hcs hc => ?_
-  · rcases H with ⟨m, ⟨hms, hxm⟩, hm⟩
-    exact ⟨m, hms, hxm, fun z hzs hmz => hm _ ⟨hzs, hxm.trans hmz⟩ hmz⟩
-  · rcases c.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
-    · exact ⟨x, ⟨hxs, le_rfl⟩, fun z => False.elim⟩
-    · rcases ih c (fun z hz => (hcs hz).1) hc y hy with ⟨z, hzs, hz⟩
-      exact ⟨z, ⟨hzs, (hcs hy).2.trans <| hz _ hy⟩, hz⟩
+  rcases H with ⟨m, ⟨hms, hxm⟩, hm⟩
+  exact ⟨m, hms, hxm, fun z hzs hmz => hm _ ⟨hzs, hxm.trans hmz⟩ hmz⟩
+  rcases c.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
+  exact ⟨x, ⟨hxs, le_rfl⟩, fun z => False.elim⟩
+  rcases ih c (fun z hz => (hcs hz).1) hc y hy with ⟨z, hzs, hz⟩
+  exact ⟨z, ⟨hzs, (hcs hy).2.trans <| hz _ hy⟩, hz⟩
 
 theorem zorn_nonempty_Ici₀ (a : α)
     (ih : ∀ c ⊆ Ici a, IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub, ∀ z ∈ c, z ≤ ub)
     (x : α) (hax : a ≤ x) : ∃ m, x ≤ m ∧ ∀ z, m ≤ z → z ≤ m := by
   let ⟨m, _, hxm, hm⟩ := zorn_nonempty_preorder₀ (Ici a) (fun c hca hc y hy ↦ ?_) x hax
-  · exact ⟨m, hxm, fun z hmz => hm _ (hax.trans <| hxm.trans hmz) hmz⟩
-  · have ⟨ub, hub⟩ := ih c hca hc y hy; exact ⟨ub, (hca hy).trans (hub y hy), hub⟩
+  exact ⟨m, hxm, fun z hmz => hm _ (hax.trans <| hxm.trans hmz) hmz⟩
+  have ⟨ub, hub⟩ := ih c hca hc y hy; exact ⟨ub, (hca hy).trans (hub y hy), hub⟩
 
 end Preorder
 
@@ -199,15 +199,15 @@ theorem IsChain.exists_maxChain (hc : IsChain r c) : ∃ M, @IsMaxChain _ r M �
   -- obtain ⟨M, ⟨_, hM₀⟩, hM₁, hM₂⟩ :=
   --   zorn_subset_nonempty { s | c ⊆ s ∧ IsChain r s } _ c ⟨Subset.rfl, hc⟩
   have H := zorn_subset_nonempty { s | c ⊆ s ∧ IsChain r s } ?_ c ⟨Subset.rfl, hc⟩
-  · obtain ⟨M, ⟨_, hM₀⟩, hM₁, hM₂⟩ := H
-    exact ⟨M, ⟨hM₀, fun d hd hMd => (hM₂ _ ⟨hM₁.trans hMd, hd⟩ hMd).symm⟩, hM₁⟩
+  obtain ⟨M, ⟨_, hM₀⟩, hM₁, hM₂⟩ := H
+  exact ⟨M, ⟨hM₀, fun d hd hMd => (hM₂ _ ⟨hM₁.trans hMd, hd⟩ hMd).symm⟩, hM₁⟩
   rintro cs hcs₀ hcs₁ ⟨s, hs⟩
   refine
     ⟨⋃₀cs, ⟨fun _ ha => Set.mem_sUnion_of_mem ((hcs₀ hs).left ha) hs, ?_⟩, fun _ =>
       Set.subset_sUnion_of_mem⟩
   rintro y ⟨sy, hsy, hysy⟩ z ⟨sz, hsz, hzsz⟩ hyz
   obtain rfl | hsseq := eq_or_ne sy sz
-  · exact (hcs₀ hsy).right hysy hzsz hyz
+  exact (hcs₀ hsy).right hysy hzsz hyz
   cases' hcs₁ hsy hsz hsseq with h h
-  · exact (hcs₀ hsz).right (h hysy) hzsz hyz
-  · exact (hcs₀ hsy).right hysy (h hzsz) hyz
+  exact (hcs₀ hsz).right (h hysy) hzsz hyz
+  exact (hcs₀ hsy).right hysy (h hzsz) hyz

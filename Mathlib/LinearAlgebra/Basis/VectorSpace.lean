@@ -145,33 +145,33 @@ variable {K V}
 lattice of submodules. -/
 theorem nonzero_span_atom (v : V) (hv : v ≠ 0) : IsAtom (span K {v} : Submodule K V) := by
   constructor
-  · rw [Submodule.ne_bot_iff]
-    exact ⟨v, ⟨mem_span_singleton_self v, hv⟩⟩
-  · intro T hT
-    by_contra h
-    apply hT.2
-    change span K {v} ≤ T
-    simp_rw [span_singleton_le_iff_mem, ← Ne.eq_def, Submodule.ne_bot_iff] at *
-    rcases h with ⟨s, ⟨hs, hz⟩⟩
-    rcases mem_span_singleton.1 (hT.1 hs) with ⟨a, rfl⟩
-    rcases eq_or_ne a 0 with rfl | h
-    · simp only [zero_smul, ne_eq, not_true] at hz
-    · rwa [T.smul_mem_iff h] at hs
+  rw [Submodule.ne_bot_iff]
+  exact ⟨v, ⟨mem_span_singleton_self v, hv⟩⟩
+  intro T hT
+  by_contra h
+  apply hT.2
+  change span K {v} ≤ T
+  simp_rw [span_singleton_le_iff_mem, ← Ne.eq_def, Submodule.ne_bot_iff] at *
+  rcases h with ⟨s, ⟨hs, hz⟩⟩
+  rcases mem_span_singleton.1 (hT.1 hs) with ⟨a, rfl⟩
+  rcases eq_or_ne a 0 with rfl | h
+  simp only [zero_smul, ne_eq, not_true] at hz
+  rwa [T.smul_mem_iff h] at hs
 
 /-- The atoms of the lattice of submodules of a module over a division ring are the
 submodules equal to the span of a nonzero element of the module. -/
 theorem atom_iff_nonzero_span (W : Submodule K V) :
     IsAtom W ↔ ∃ v ≠ 0, W = span K {v} := by
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · cases' h with hbot h
-    rcases (Submodule.ne_bot_iff W).1 hbot with ⟨v, ⟨hW, hv⟩⟩
-    refine ⟨v, ⟨hv, ?_⟩⟩
-    by_contra heq
-    specialize h (span K {v})
-    rw [span_singleton_eq_bot, lt_iff_le_and_ne] at h
-    exact hv (h ⟨(span_singleton_le_iff_mem v W).2 hW, Ne.symm heq⟩)
-  · rcases h with ⟨v, ⟨hv, rfl⟩⟩
-    exact nonzero_span_atom v hv
+  cases' h with hbot h
+  rcases (Submodule.ne_bot_iff W).1 hbot with ⟨v, ⟨hW, hv⟩⟩
+  refine ⟨v, ⟨hv, ?_⟩⟩
+  by_contra heq
+  specialize h (span K {v})
+  rw [span_singleton_eq_bot, lt_iff_le_and_ne] at h
+  exact hv (h ⟨(span_singleton_le_iff_mem v W).2 hW, Ne.symm heq⟩)
+  rcases h with ⟨v, ⟨hv, rfl⟩⟩
+  exact nonzero_span_atom v hv
 
 /-- The lattice of submodules of a module over a division ring is atomistic. -/
 instance : IsAtomistic (Submodule K V) where
@@ -238,13 +238,13 @@ theorem Submodule.exists_le_ker_of_lt_top (p : Submodule K V) (hp : p < ⊤) :
   rcases SetLike.exists_of_lt hp with ⟨v, -, hpv⟩; clear hp
   rcases (LinearPMap.supSpanSingleton ⟨p, 0⟩ v (1 : K) hpv).toFun.exists_extend with ⟨f, hf⟩
   refine ⟨f, ?_, ?_⟩
-  · rintro rfl
-    rw [LinearMap.zero_comp] at hf
-    have := LinearPMap.supSpanSingleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv 0 p.zero_mem 1
-    simpa using (LinearMap.congr_fun hf _).trans this
-  · refine fun x hx => mem_ker.2 ?_
-    have := LinearPMap.supSpanSingleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv x hx 0
-    simpa using (LinearMap.congr_fun hf _).trans this
+  rintro rfl
+  rw [LinearMap.zero_comp] at hf
+  have := LinearPMap.supSpanSingleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv 0 p.zero_mem 1
+  simpa using (LinearMap.congr_fun hf _).trans this
+  refine fun x hx => mem_ker.2 ?_
+  have := LinearPMap.supSpanSingleton_apply_mk ⟨p, 0⟩ v (1 : K) hpv x hx 0
+  simpa using (LinearMap.congr_fun hf _).trans this
 
 theorem quotient_prod_linearEquiv (p : Submodule K V) : Nonempty (((V ⧸ p) × p) ≃ₗ[K] V) :=
   let ⟨q, hq⟩ := p.exists_isCompl

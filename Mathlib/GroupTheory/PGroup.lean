@@ -119,13 +119,13 @@ theorem index (H : Subgroup G) [H.FiniteIndex] : ∃ n : ℕ, H.index = p ^ n :=
 
 theorem card_eq_or_dvd : Nat.card G = 1 ∨ p ∣ Nat.card G := by
   cases finite_or_infinite G
-  · obtain ⟨n, hn⟩ := iff_card.mp hG
-    rw [hn]
-    cases' n with n n
-    · exact Or.inl rfl
-    · exact Or.inr ⟨p ^ n, by rw [pow_succ']⟩
-  · rw [Nat.card_eq_zero_of_infinite]
-    exact Or.inr ⟨0, rfl⟩
+  obtain ⟨n, hn⟩ := iff_card.mp hG
+  rw [hn]
+  cases' n with n n
+  exact Or.inl rfl
+  exact Or.inr ⟨p ^ n, by rw [pow_succ']⟩
+  rw [Nat.card_eq_zero_of_infinite]
+  exact Or.inr ⟨0, rfl⟩
 
 theorem nontrivial_iff_card [Finite G] : Nontrivial G ↔ ∃ n > 0, Nat.card G = p ^ n :=
   ⟨fun hGnt =>
@@ -312,8 +312,8 @@ theorem disjoint_of_ne (p₁ p₂ : ℕ) [hp₁ : Fact p₁.Prime] [hp₂ : Fact
   have : p₁ ^ n₁ = p₂ ^ n₂
   rw [← hn₁, ← hn₂]
   rcases n₁.eq_zero_or_pos with (rfl | hn₁)
-  · simpa using hn₁
-  · exact absurd (eq_of_prime_pow_eq hp₁.out.prime hp₂.out.prime hn₁ this) hne
+  simpa using hn₁
+  exact absurd (eq_of_prime_pow_eq hp₁.out.prime hp₂.out.prime hn₁ this) hne
 
 section P2comm
 

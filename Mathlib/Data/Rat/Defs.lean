@@ -90,9 +90,9 @@ lemma mkRat_eq_divInt (n d) : mkRat n d = n /. d := rfl
 lemma num_eq_zero {q : ℚ} : q.num = 0 ↔ q = 0 := by
   induction q
   constructor
-  · rintro rfl
-    exact mk'_zero _ _ _
-  · exact congr_arg num
+  rintro rfl
+  exact mk'_zero _ _ _
+  exact congr_arg num
 
 lemma num_ne_zero {q : ℚ} : q.num ≠ 0 ↔ q ≠ 0 := num_eq_zero.not
 
@@ -190,9 +190,9 @@ lemma sub_def'' {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) :
 @[simp]
 lemma divInt_mul_divInt' (n₁ d₁ n₂ d₂ : ℤ) : (n₁ /. d₁) * (n₂ /. d₂) = (n₁ * n₂) /. (d₁ * d₂) := by
   obtain rfl | h₁ := eq_or_ne d₁ 0
-  · simp
+  simp
   obtain rfl | h₂ := eq_or_ne d₂ 0
-  · simp
+  simp
   exact divInt_mul_divInt _ _ h₁ h₂
 
 attribute [simp] mkRat_mul_mkRat
@@ -359,11 +359,11 @@ instance commMonoid : CommMonoid ℚ where
   npow_succ n q := by
     dsimp
     rw [← q.mk'_num_den, mk'_pow, mk'_mul_mk']
-    · congr
-    · rw [mk'_pow, Int.natAbs_pow]
-      exact q.reduced.pow_left _
-    · rw [mk'_pow]
-      exact q.reduced.pow_right _
+    congr
+    rw [mk'_pow, Int.natAbs_pow]
+    exact q.reduced.pow_left _
+    rw [mk'_pow]
+    exact q.reduced.pow_right _
 
 instance monoid : Monoid ℚ := by infer_instance
 
@@ -376,8 +376,8 @@ theorem eq_iff_mul_eq_mul {p q : ℚ} : p = q ↔ p.num * q.den = q.num * p.den 
     lhs
     rw [← num_divInt_den p, ← num_divInt_den q]
   apply Rat.divInt_eq_iff <;>
-    · rw [← Int.natCast_zero, Ne, Int.ofNat_inj]
-      apply den_nz
+  · rw [← Int.natCast_zero, Ne, Int.ofNat_inj]
+    apply den_nz
 
 @[simp]
 theorem den_neg_eq_den (q : ℚ) : (-q).den = q.den :=
@@ -440,8 +440,8 @@ theorem natCast_div_eq_divInt (n d : ℕ) : (n : ℚ) / d = n /. d := Rat.intCas
 
 theorem divInt_mul_divInt_cancel {x : ℤ} (hx : x ≠ 0) (n d : ℤ) : n /. x * (x /. d) = n /. d := by
   by_cases hd : d = 0
-  · rw [hd]
-    simp
+  rw [hd]
+  simp
   rw [divInt_mul_divInt _ _ hx hd, x.mul_comm, divInt_mul_right hx]
 
 theorem coe_int_num_of_den_eq_one {q : ℚ} (hq : q.den = 1) : (q.num : ℚ) = q := by

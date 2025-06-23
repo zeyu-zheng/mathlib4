@@ -117,8 +117,8 @@ theorem laverage_eq_lintegral [IsProbabilityMeasure μ] (f : α → ℝ≥0∞) 
 theorem measure_mul_laverage [IsFiniteMeasure μ] (f : α → ℝ≥0∞) :
     μ univ * ⨍⁻ x, f x ∂μ = ∫⁻ x, f x ∂μ := by
   rcases eq_or_ne μ 0 with hμ | hμ
-  · rw [hμ, lintegral_zero_measure, laverage_zero_measure, mul_zero]
-  · rw [laverage_eq, ENNReal.mul_div_cancel' (measure_univ_ne_zero.2 hμ) (measure_ne_top _ _)]
+  rw [hμ, lintegral_zero_measure, laverage_zero_measure, mul_zero]
+  rw [laverage_eq, ENNReal.mul_div_cancel' (measure_univ_ne_zero.2 hμ) (measure_ne_top _ _)]
 
 theorem setLaverage_eq (f : α → ℝ≥0∞) (s : Set α) :
     ⨍⁻ x in s, f x ∂μ = (∫⁻ x in s, f x ∂μ) / μ s := by rw [laverage_eq, restrict_apply_univ]
@@ -141,9 +141,9 @@ theorem setLaverage_congr_fun (hs : MeasurableSet s) (h : ∀ᵐ x ∂μ, x ∈ 
 
 theorem laverage_lt_top (hf : ∫⁻ x, f x ∂μ ≠ ∞) : ⨍⁻ x, f x ∂μ < ∞ := by
   obtain rfl | hμ := eq_or_ne μ 0
-  · simp
-  · rw [laverage_eq]
-    exact div_lt_top hf (measure_univ_ne_zero.2 hμ)
+  simp
+  rw [laverage_eq]
+  exact div_lt_top hf (measure_univ_ne_zero.2 hμ)
 
 theorem setLaverage_lt_top : ∫⁻ x in s, f x ∂μ ≠ ∞ → ⨍⁻ x in s, f x ∂μ < ∞ :=
   laverage_lt_top
@@ -152,11 +152,11 @@ theorem laverage_add_measure :
     ⨍⁻ x, f x ∂(μ + ν) =
       μ univ / (μ univ + ν univ) * ⨍⁻ x, f x ∂μ + ν univ / (μ univ + ν univ) * ⨍⁻ x, f x ∂ν := by
   by_cases hμ : IsFiniteMeasure μ; swap
-  · rw [not_isFiniteMeasure_iff] at hμ
-    simp [laverage_eq, hμ]
+  rw [not_isFiniteMeasure_iff] at hμ
+  simp [laverage_eq, hμ]
   by_cases hν : IsFiniteMeasure ν; swap
-  · rw [not_isFiniteMeasure_iff] at hν
-    simp [laverage_eq, hν]
+  rw [not_isFiniteMeasure_iff] at hν
+  simp [laverage_eq, hν]
   haveI := hμ; haveI := hν
   simp only [← ENNReal.mul_div_right_comm, measure_mul_laverage, ← ENNReal.add_div,
     ← lintegral_add_measure, ← Measure.add_apply, ← laverage_eq]
@@ -184,13 +184,13 @@ theorem laverage_union_mem_segment (hd : AEDisjoint μ s t) (ht : NullMeasurable
     (hsμ : μ s ≠ ∞) (htμ : μ t ≠ ∞) :
     ⨍⁻ x in s ∪ t, f x ∂μ ∈ [⨍⁻ x in s, f x ∂μ -[ℝ≥0∞] ⨍⁻ x in t, f x ∂μ] := by
   by_cases hs₀ : μ s = 0
-  · rw [← ae_eq_empty] at hs₀
-    rw [restrict_congr_set (hs₀.union EventuallyEq.rfl), empty_union]
-    exact right_mem_segment _ _ _
-  · refine
-      ⟨μ s / (μ s + μ t), μ t / (μ s + μ t), zero_le _, zero_le _, ?_, (laverage_union hd ht).symm⟩
-    rw [← ENNReal.add_div,
-      ENNReal.div_self (add_eq_zero.not.2 fun h => hs₀ h.1) (add_ne_top.2 ⟨hsμ, htμ⟩)]
+  rw [← ae_eq_empty] at hs₀
+  rw [restrict_congr_set (hs₀.union EventuallyEq.rfl), empty_union]
+  exact right_mem_segment _ _ _
+  refine
+    ⟨μ s / (μ s + μ t), μ t / (μ s + μ t), zero_le _, zero_le _, ?_, (laverage_union hd ht).symm⟩
+  rw [← ENNReal.add_div,
+    ENNReal.div_self (add_eq_zero.not.2 fun h => hs₀ h.1) (add_ne_top.2 ⟨hsμ, htμ⟩)]
 
 theorem laverage_mem_openSegment_compl_self [IsFiniteMeasure μ] (hs : NullMeasurableSet s μ)
     (hs₀ : μ s ≠ 0) (hsc₀ : μ sᶜ ≠ 0) :
@@ -219,9 +219,9 @@ theorem setLaverage_one (hs₀ : μ s ≠ 0) (hs : μ s ≠ ∞) : ⨍⁻ _x in 
 theorem lintegral_laverage (μ : Measure α) [IsFiniteMeasure μ] (f : α → ℝ≥0∞) :
     ∫⁻ _x, ⨍⁻ a, f a ∂μ ∂μ = ∫⁻ x, f x ∂μ := by
   obtain rfl | hμ := eq_or_ne μ 0
-  · simp
-  · rw [lintegral_const, laverage_eq,
-      ENNReal.div_mul_cancel (measure_univ_ne_zero.2 hμ) (measure_ne_top _ _)]
+  simp
+  rw [lintegral_const, laverage_eq,
+    ENNReal.div_mul_cancel (measure_univ_ne_zero.2 hμ) (measure_ne_top _ _)]
 
 theorem setLintegral_setLaverage (μ : Measure α) [IsFiniteMeasure μ] (f : α → ℝ≥0∞) (s : Set α) :
     ∫⁻ _x in s, ⨍⁻ a in s, f a ∂μ ∂μ = ∫⁻ x in s, f x ∂μ :=
@@ -304,10 +304,10 @@ theorem average_eq_integral [IsProbabilityMeasure μ] (f : α → E) : ⨍ x, f 
 theorem measure_smul_average [IsFiniteMeasure μ] (f : α → E) :
     (μ univ).toReal • ⨍ x, f x ∂μ = ∫ x, f x ∂μ := by
   rcases eq_or_ne μ 0 with hμ | hμ
-  · rw [hμ, integral_zero_measure, average_zero_measure, smul_zero]
-  · rw [average_eq, smul_inv_smul₀]
-    refine (ENNReal.toReal_pos ?_ <| measure_ne_top _ _).ne'
-    rwa [Ne, measure_univ_eq_zero]
+  rw [hμ, integral_zero_measure, average_zero_measure, smul_zero]
+  rw [average_eq, smul_inv_smul₀]
+  refine (ENNReal.toReal_pos ?_ <| measure_ne_top _ _).ne'
+  rwa [Ne, measure_univ_eq_zero]
 
 theorem setAverage_eq (f : α → E) (s : Set α) :
     ⨍ x in s, f x ∂μ = (μ s).toReal⁻¹ • ∫ x in s, f x ∂μ := by rw [average_eq, restrict_apply_univ]
@@ -367,16 +367,16 @@ theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AEDisjoint
     (hft : IntegrableOn f t μ) :
     ⨍ x in s ∪ t, f x ∂μ ∈ [⨍ x in s, f x ∂μ -[ℝ] ⨍ x in t, f x ∂μ] := by
   by_cases hse : μ s = 0
-  · rw [← ae_eq_empty] at hse
-    rw [restrict_congr_set (hse.union EventuallyEq.rfl), empty_union]
-    exact right_mem_segment _ _ _
-  · refine
-      mem_segment_iff_div.mpr
-        ⟨(μ s).toReal, (μ t).toReal, ENNReal.toReal_nonneg, ENNReal.toReal_nonneg, ?_,
-          (average_union hd ht hsμ htμ hfs hft).symm⟩
-    calc
-      0 < (μ s).toReal := ENNReal.toReal_pos hse hsμ
-      _ ≤ _ := le_add_of_nonneg_right ENNReal.toReal_nonneg
+  rw [← ae_eq_empty] at hse
+  rw [restrict_congr_set (hse.union EventuallyEq.rfl), empty_union]
+  exact right_mem_segment _ _ _
+  refine
+    mem_segment_iff_div.mpr
+      ⟨(μ s).toReal, (μ t).toReal, ENNReal.toReal_nonneg, ENNReal.toReal_nonneg, ?_,
+        (average_union hd ht hsμ htμ hfs hft).symm⟩
+  calc
+    0 < (μ s).toReal := ENNReal.toReal_pos hse hsμ
+    _ ≤ _ := le_add_of_nonneg_right ENNReal.toReal_nonneg
 
 theorem average_mem_openSegment_compl_self [IsFiniteMeasure μ] {f : α → E} {s : Set α}
     (hs : NullMeasurableSet s μ) (hs₀ : μ s ≠ 0) (hsc₀ : μ sᶜ ≠ 0) (hfi : Integrable f μ) :
@@ -405,7 +405,7 @@ theorem setIntegral_setAverage (μ : Measure α) [IsFiniteMeasure μ] (f : α �
 theorem integral_sub_average (μ : Measure α) [IsFiniteMeasure μ] (f : α → E) :
     ∫ x, f x - ⨍ a, f a ∂μ ∂μ = 0 := by
   by_cases hf : Integrable f μ
-  · rw [integral_sub hf (integrable_const _), integral_average, sub_self]
+  rw [integral_sub hf (integrable_const _), integral_average, sub_self]
   refine integral_undef fun h => hf ?_
   convert h.add (integrable_const (⨍ a, f a ∂μ))
   exact (sub_add_cancel _ _).symm
@@ -429,10 +429,10 @@ end NormedAddCommGroup
 theorem ofReal_average {f : α → ℝ} (hf : Integrable f μ) (hf₀ : 0 ≤ᵐ[μ] f) :
     ENNReal.ofReal (⨍ x, f x ∂μ) = (∫⁻ x, ENNReal.ofReal (f x) ∂μ) / μ univ := by
   obtain rfl | hμ := eq_or_ne μ 0
-  · simp
-  · rw [average_eq, smul_eq_mul, ← toReal_inv, ofReal_mul toReal_nonneg,
-      ofReal_toReal (inv_ne_top.2 <| measure_univ_ne_zero.2 hμ),
-      ofReal_integral_eq_lintegral_ofReal hf hf₀, ENNReal.div_eq_inv_mul]
+  simp
+  rw [average_eq, smul_eq_mul, ← toReal_inv, ofReal_mul toReal_nonneg,
+    ofReal_toReal (inv_ne_top.2 <| measure_univ_ne_zero.2 hμ),
+    ofReal_integral_eq_lintegral_ofReal hf hf₀, ENNReal.div_eq_inv_mul]
 
 theorem ofReal_setAverage {f : α → ℝ} (hf : IntegrableOn f s μ) (hf₀ : 0 ≤ᵐ[μ.restrict s] f) :
     ENNReal.ofReal (⨍ x in s, f x ∂μ) = (∫⁻ x in s, ENNReal.ofReal (f x) ∂μ) / μ s := by
@@ -464,13 +464,13 @@ theorem measure_le_setAverage_pos (hμ : μ s ≠ 0) (hμ₁ : μ s ≠ ∞) (hf
   haveI := Fact.mk hμ₁.lt_top
   refine (integral_sub_average (μ.restrict s) f).not_gt ?_
   refine (setIntegral_pos_iff_support_of_nonneg_ae ?_ ?_).2 ?_
-  · refine measure_mono_null (fun x hx ↦ ?_) H
-    simp only [Pi.zero_apply, sub_nonneg, mem_compl_iff, mem_setOf_eq, not_le] at hx
-    exact hx.le
-  · exact hf.sub (integrableOn_const.2 <| Or.inr <| lt_top_iff_ne_top.2 hμ₁)
-  · rwa [pos_iff_ne_zero, inter_comm, ← diff_compl, ← diff_inter_self_eq_diff, measure_diff_null]
-    refine measure_mono_null ?_ (measure_inter_eq_zero_of_restrict H)
-    exact inter_subset_inter_left _ fun a ha => (sub_eq_zero.1 <| of_not_not ha).le
+  refine measure_mono_null (fun x hx ↦ ?_) H
+  simp only [Pi.zero_apply, sub_nonneg, mem_compl_iff, mem_setOf_eq, not_le] at hx
+  exact hx.le
+  exact hf.sub (integrableOn_const.2 <| Or.inr <| lt_top_iff_ne_top.2 hμ₁)
+  rwa [pos_iff_ne_zero, inter_comm, ← diff_compl, ← diff_inter_self_eq_diff, measure_diff_null]
+  refine measure_mono_null ?_ (measure_inter_eq_zero_of_restrict H)
+  exact inter_subset_inter_left _ fun a ha => (sub_eq_zero.1 <| of_not_not ha).le
 
 /-- **First moment method**. An integrable function is greater than its mean on a set of positive
 measure. -/
@@ -584,7 +584,7 @@ measure. -/
 theorem measure_le_setLaverage_pos (hμ : μ s ≠ 0) (hμ₁ : μ s ≠ ∞)
     (hf : AEMeasurable f (μ.restrict s)) : 0 < μ {x ∈ s | f x ≤ ⨍⁻ a in s, f a ∂μ} := by
   obtain h | h := eq_or_ne (∫⁻ a in s, f a ∂μ) ∞
-  · simpa [mul_top, hμ₁, laverage, h, top_div_of_ne_top hμ₁, pos_iff_ne_zero] using hμ
+  simpa [mul_top, hμ₁, laverage, h, top_div_of_ne_top hμ₁, pos_iff_ne_zero] using hμ
   have := measure_le_setAverage_pos hμ hμ₁ (integrable_toReal_of_lintegral_ne_top hf h)
   rw [← setOf_inter_eq_sep, ← Measure.restrict_apply₀
     (hf.aestronglyMeasurable.nullMeasurableSet_le aestronglyMeasurable_const)]
@@ -603,7 +603,7 @@ measure. -/
 theorem measure_setLaverage_le_pos (hμ : μ s ≠ 0) (hs : NullMeasurableSet s μ)
     (hint : ∫⁻ a in s, f a ∂μ ≠ ∞) : 0 < μ {x ∈ s | ⨍⁻ a in s, f a ∂μ ≤ f x} := by
   obtain hμ₁ | hμ₁ := eq_or_ne (μ s) ∞
-  · simp [setLaverage_eq, hμ₁]
+  simp [setLaverage_eq, hμ₁]
   obtain ⟨g, hg, hgf, hfg⟩ := exists_measurable_le_lintegral_eq (μ.restrict s) f
   have hfg' : ⨍⁻ a in s, f a ∂μ = ⨍⁻ a in s, g a ∂μ
   simp_rw [laverage_eq, hfg]
@@ -617,9 +617,9 @@ theorem measure_setLaverage_le_pos (hμ : μ s ≠ 0) (hs : NullMeasurableSet s 
   rintro x ⟨hfx, hx⟩
   dsimp at hfx
   rw [← toReal_laverage hg.aemeasurable, toReal_le_toReal (setLaverage_lt_top hint).ne hx] at hfx
-  · exact hfx.trans (hgf _)
-  · simp_rw [ae_iff, not_ne_iff]
-    exact measure_eq_top_of_lintegral_ne_top hg.aemeasurable hint
+  exact hfx.trans (hgf _)
+  simp_rw [ae_iff, not_ne_iff]
+  exact measure_eq_top_of_lintegral_ne_top hg.aemeasurable hint
 
 /-- **First moment method**. The minimum of a measurable function is smaller than its mean. -/
 theorem exists_le_setLaverage (hμ : μ s ≠ 0) (hμ₁ : μ s ≠ ∞) (hf : AEMeasurable f (μ.restrict s)) :

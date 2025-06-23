@@ -273,12 +273,12 @@ instance nhdsWithin_compl_coe_neBot (x : X) [h : NeBot (𝓝[≠] x)] :
 
 theorem nhdsWithin_compl_infty_eq : 𝓝[≠] (∞ : OnePoint X) = map (↑) (coclosedCompact X) := by
   refine (nhdsWithin_basis_open ∞ _).ext (hasBasis_coclosedCompact.map _) ?_ ?_
-  · rintro s ⟨hs, hso⟩
-    refine ⟨_, (isOpen_iff_of_mem hs).mp hso, ?_⟩
-    simp [Subset.rfl]
-  · rintro s ⟨h₁, h₂⟩
-    refine ⟨_, ⟨mem_compl infty_not_mem_image_coe, isOpen_compl_image_coe.2 ⟨h₁, h₂⟩⟩, ?_⟩
-    simp [compl_image_coe, ← diff_eq, subset_preimage_image]
+  rintro s ⟨hs, hso⟩
+  refine ⟨_, (isOpen_iff_of_mem hs).mp hso, ?_⟩
+  simp [Subset.rfl]
+  rintro s ⟨h₁, h₂⟩
+  refine ⟨_, ⟨mem_compl infty_not_mem_image_coe, isOpen_compl_image_coe.2 ⟨h₁, h₂⟩⟩, ?_⟩
+  simp [compl_image_coe, ← diff_eq, subset_preimage_image]
 
 /-- If `X` is a non-compact space, then `∞` is not an isolated point of `OnePoint X`. -/
 instance nhdsWithin_compl_infty_neBot [NoncompactSpace X] : NeBot (𝓝[≠] (∞ : OnePoint X)) := by
@@ -483,9 +483,9 @@ instance [T0Space X] : T0Space (OnePoint X) := by
 instance [T1Space X] : T1Space (OnePoint X) where
   t1 z := by
     induction z using OnePoint.rec
-    · exact isClosed_infty
-    · rw [← image_singleton, isClosed_image_coe]
-      exact ⟨isClosed_singleton, isCompact_singleton⟩
+    exact isClosed_infty
+    rw [← image_singleton, isClosed_image_coe]
+    exact ⟨isClosed_singleton, isCompact_singleton⟩
 
 /-- The one point compactification of a locally compact R₁ space is a normal topological space. -/
 instance [LocallyCompactSpace X] [R1Space X] : NormalSpace (OnePoint X) := by
@@ -496,11 +496,11 @@ instance [LocallyCompactSpace X] [R1Space X] : NormalSpace (OnePoint X) := by
     exact ⟨disjoint_nhds_cocompact z, range_mem_map⟩
   refine ⟨fun x y ↦ ?_⟩
   induction x using OnePoint.rec <;> induction y using OnePoint.rec
-  · exact .inl le_rfl
-  · exact .inr (key _).symm
-  · exact .inr (key _)
-  · rw [nhds_coe_eq, nhds_coe_eq, disjoint_map coe_injective, specializes_coe]
-    apply specializes_or_disjoint_nhds
+  exact .inl le_rfl
+  exact .inr (key _).symm
+  exact .inr (key _)
+  rw [nhds_coe_eq, nhds_coe_eq, disjoint_map coe_injective, specializes_coe]
+  apply specializes_or_disjoint_nhds
 
 /-- The one point compactification of a weakly locally compact Hausdorff space is a T₄
 (hence, Hausdorff and regular) topological space. -/

@@ -33,8 +33,8 @@ theorem coherentTopology.mem_sieves_of_hasEffectiveEpiFamily (S : Sieve X) :
         (S ∈ GrothendieckTopology.sieves (coherentTopology C) X) := by
   intro ⟨α, _, Y, π, hπ⟩
   apply (coherentCoverage C).mem_toGrothendieck_sieves_of_superset (R := Presieve.ofArrows Y π)
-  · exact fun _ _ h ↦ by cases h; exact hπ.2 _
-  · exact ⟨_, inferInstance, Y, π, rfl, hπ.1⟩
+  exact fun _ _ h ↦ by cases h; exact hπ.2 _
+  exact ⟨_, inferInstance, Y, π, rfl, hπ.1⟩
 
 /--
 Effective epi families in a precoherent category are transitive, in the sense that an
@@ -57,16 +57,16 @@ theorem EffectiveEpiFamily.transitive_of_finite {α : Type} [Finite α] {Y : α 
   -- Show that a covering sieve is a colimit, which implies the original set of arrows is regular
   -- epimorphic. We use the transitivity property of saturation
   apply Coverage.Saturate.transitive X (Sieve.generate (Presieve.ofArrows Y π))
-  · apply Coverage.Saturate.of
-    use α, inferInstance, Y, π
-  · intro V f ⟨Y₁, h, g, ⟨hY, hf⟩⟩
-    rw [← hf, Sieve.pullback_comp]
-    apply (coherentTopology C).pullback_stable'
-    apply coherentTopology.mem_sieves_of_hasEffectiveEpiFamily
-    -- Need to show that the pullback of the family `π_n` to a given `Y i` is effective epimorphic
-    obtain ⟨i⟩ := hY
-    exact ⟨β i, inferInstance, Y_n i, π_n i, H i, fun b ↦
-      ⟨Y_n i b, (𝟙 _), π_n i b ≫ π i, ⟨(⟨i, b⟩ : Σ (i : α), β i)⟩, by simp⟩⟩
+  apply Coverage.Saturate.of
+  use α, inferInstance, Y, π
+  intro V f ⟨Y₁, h, g, ⟨hY, hf⟩⟩
+  rw [← hf, Sieve.pullback_comp]
+  apply (coherentTopology C).pullback_stable'
+  apply coherentTopology.mem_sieves_of_hasEffectiveEpiFamily
+  -- Need to show that the pullback of the family `π_n` to a given `Y i` is effective epimorphic
+  obtain ⟨i⟩ := hY
+  exact ⟨β i, inferInstance, Y_n i, π_n i, H i, fun b ↦
+    ⟨Y_n i b, (𝟙 _), π_n i b ≫ π i, ⟨(⟨i, b⟩ : Σ (i : α), β i)⟩, by simp⟩⟩
 
 instance precoherentEffectiveEpiFamilyCompEffectiveEpis
     {α : Type} [Finite α] {Y Z : α → C} (π : (a : α) → (Y a ⟶ X)) [EffectiveEpiFamily Y π]
@@ -85,18 +85,18 @@ theorem coherentTopology.mem_sieves_iff_hasEffectiveEpiFamily (S : Sieve X) :
     (∃ (α : Type) (_ : Finite α) (Y : α → C) (π : (a : α) → (Y a ⟶ X)),
         EffectiveEpiFamily Y π ∧ (∀ a : α, (S.arrows) (π a)) )  := by
   constructor
-  · intro h
-    induction' h with Y T hS Y Y R S _ _ a b
-    · obtain ⟨a, h, Y', π, h', _⟩ := hS
-      refine ⟨a, h, Y', π, inferInstance, fun a' ↦ ?_⟩
-      obtain ⟨rfl, _⟩ := h'
-      exact ⟨Y' a', 𝟙 Y' a', π a', Presieve.ofArrows.mk a', by simp⟩
-    · exact ⟨Unit, inferInstance, fun _ => Y, fun _ => (𝟙 Y), inferInstance, by simp⟩
-    · obtain ⟨α, w, Y₁, π, ⟨h₁,h₂⟩⟩ := a
-      choose β _ Y_n π_n H using fun a => b (h₂ a)
-      exact ⟨(Σ a, β a), inferInstance, fun ⟨a,b⟩ => Y_n a b, fun ⟨a, b⟩ => (π_n a b) ≫ (π a),
-        EffectiveEpiFamily.transitive_of_finite _ h₁ _ (fun a => (H a).1),
-        fun c => (H c.fst).2 c.snd⟩
-  · exact coherentTopology.mem_sieves_of_hasEffectiveEpiFamily S
+  intro h
+  induction' h with Y T hS Y Y R S _ _ a b
+  obtain ⟨a, h, Y', π, h', _⟩ := hS
+  refine ⟨a, h, Y', π, inferInstance, fun a' ↦ ?_⟩
+  obtain ⟨rfl, _⟩ := h'
+  exact ⟨Y' a', 𝟙 Y' a', π a', Presieve.ofArrows.mk a', by simp⟩
+  exact ⟨Unit, inferInstance, fun _ => Y, fun _ => (𝟙 Y), inferInstance, by simp⟩
+  obtain ⟨α, w, Y₁, π, ⟨h₁,h₂⟩⟩ := a
+  choose β _ Y_n π_n H using fun a => b (h₂ a)
+  exact ⟨(Σ a, β a), inferInstance, fun ⟨a,b⟩ => Y_n a b, fun ⟨a, b⟩ => (π_n a b) ≫ (π a),
+    EffectiveEpiFamily.transitive_of_finite _ h₁ _ (fun a => (H a).1),
+    fun c => (H c.fst).2 c.snd⟩
+  exact coherentTopology.mem_sieves_of_hasEffectiveEpiFamily S
 
 end CategoryTheory

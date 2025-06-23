@@ -447,12 +447,12 @@ def reindexRange : Basis (range b) R M :=
 
 theorem reindexRange_self (i : ι) (h := Set.mem_range_self i) : b.reindexRange ⟨b i, h⟩ = b i := by
   by_cases htr : Nontrivial R
-  · letI := htr
-    simp [htr, reindexRange, reindex_apply, Equiv.apply_ofInjective_symm b.injective,
-      Subtype.coe_mk]
-  · letI : Subsingleton R := not_nontrivial_iff_subsingleton.mp htr
-    letI := Module.subsingleton R M
-    simp [reindexRange, eq_iff_true_of_subsingleton]
+  letI := htr
+  simp [htr, reindexRange, reindex_apply, Equiv.apply_ofInjective_symm b.injective,
+    Subtype.coe_mk]
+  letI : Subsingleton R := not_nontrivial_iff_subsingleton.mp htr
+  letI := Module.subsingleton R M
+  simp [reindexRange, eq_iff_true_of_subsingleton]
 
 theorem reindexRange_repr_self (i : ι) :
     b.reindexRange.repr (b i) = Finsupp.single ⟨b i, mem_range_self i⟩ 1 :=
@@ -471,17 +471,17 @@ theorem reindexRange_repr' (x : M) {bi : M} {i : ι} (h : b i = bi) :
   nontriviality
   subst h
   apply (b.repr_apply_eq (fun x i => b.reindexRange.repr x ⟨b i, _⟩) _ _ _ x i).symm
-  · intro x y
-    ext i
-    simp only [Pi.add_apply, LinearEquiv.map_add, Finsupp.coe_add]
-  · intro c x
-    ext i
-    simp only [Pi.smul_apply, LinearEquiv.map_smul, Finsupp.coe_smul]
-  · intro i
-    ext j
-    simp only [reindexRange_repr_self]
-    apply Finsupp.single_apply_left (f := fun i => (⟨b i, _⟩ : Set.range b))
-    exact fun i j h => b.injective (Subtype.mk.inj h)
+  intro x y
+  ext i
+  simp only [Pi.add_apply, LinearEquiv.map_add, Finsupp.coe_add]
+  intro c x
+  ext i
+  simp only [Pi.smul_apply, LinearEquiv.map_smul, Finsupp.coe_smul]
+  intro i
+  ext j
+  simp only [reindexRange_repr_self]
+  apply Finsupp.single_apply_left (f := fun i => (⟨b i, _⟩ : Set.range b))
+  exact fun i j h => b.injective (Subtype.mk.inj h)
 
 @[simp]
 theorem reindexRange_repr (x : M) (i : ι) (h := Set.mem_range_self i) :
@@ -769,25 +769,25 @@ theorem basis_singleton_iff {R M : Type*} [Ring R] [Nontrivial R] [AddCommGroup 
     [NoZeroSMulDivisors R M] (ι : Type*) [Unique ι] :
     Nonempty (Basis ι R M) ↔ ∃ x ≠ 0, ∀ y : M, ∃ r : R, r • x = y := by
   constructor
-  · rintro ⟨b⟩
-    refine ⟨b default, b.linearIndependent.ne_zero _, ?_⟩
-    simpa [span_singleton_eq_top_iff, Set.range_unique] using b.span_eq
-  · rintro ⟨x, nz, w⟩
-    refine ⟨ofRepr <| LinearEquiv.symm
-      { toFun := fun f => f default • x
-        invFun := fun y => Finsupp.single default (w y).choose
-        left_inv := fun f => Finsupp.unique_ext ?_
-        right_inv := fun y => ?_
-        map_add' := fun y z => ?_
-        map_smul' := fun c y => ?_ }⟩
-    · simp [Finsupp.add_apply, add_smul]
-    · simp only [Finsupp.coe_smul, Pi.smul_apply, RingHom.id_apply]
-      rw [← smul_assoc]
-    · refine smul_left_injective _ nz ?_
-      simp only [Finsupp.single_eq_same]
-      exact (w (f default • x)).choose_spec
-    · simp only [Finsupp.single_eq_same]
-      exact (w y).choose_spec
+  rintro ⟨b⟩
+  refine ⟨b default, b.linearIndependent.ne_zero _, ?_⟩
+  simpa [span_singleton_eq_top_iff, Set.range_unique] using b.span_eq
+  rintro ⟨x, nz, w⟩
+  refine ⟨ofRepr <| LinearEquiv.symm
+    { toFun := fun f => f default • x
+      invFun := fun y => Finsupp.single default (w y).choose
+      left_inv := fun f => Finsupp.unique_ext ?_
+      right_inv := fun y => ?_
+      map_add' := fun y z => ?_
+      map_smul' := fun c y => ?_ }⟩
+  simp [Finsupp.add_apply, add_smul]
+  simp only [Finsupp.coe_smul, Pi.smul_apply, RingHom.id_apply]
+  rw [← smul_assoc]
+  refine smul_left_injective _ nz ?_
+  simp only [Finsupp.single_eq_same]
+  exact (w (f default • x)).choose_spec
+  simp only [Finsupp.single_eq_same]
+  exact (w y).choose_spec
 
 end Singleton
 
@@ -1049,8 +1049,8 @@ theorem mk_coord_apply_ne {i j : ι} (h : j ≠ i) : (Basis.mk hli hsp).coord i 
 theorem mk_coord_apply [DecidableEq ι] {i j : ι} :
     (Basis.mk hli hsp).coord i (v j) = if j = i then 1 else 0 := by
   rcases eq_or_ne j i with h | h
-  · simp only [h, if_true, eq_self_iff_true, mk_coord_apply_eq i]
-  · simp only [h, if_false, mk_coord_apply_ne h]
+  simp only [h, if_true, eq_self_iff_true, mk_coord_apply_eq i]
+  simp only [h, if_false, mk_coord_apply_ne h]
 
 end Mk
 
@@ -1131,8 +1131,8 @@ theorem coord_unitsSMul (e : Basis ι R₂ M) (w : ι → R₂ˣ) (i : ι) :
     apply e.ext
     intro j
     trans ((unitsSMul e w).coord i) ((w j)⁻¹ • (unitsSMul e w) j)
-    · congr
-      simp [Basis.unitsSMul, ← mul_smul]
+    congr
+    simp [Basis.unitsSMul, ← mul_smul]
     simp only [Basis.coord_apply, LinearMap.smul_apply, Basis.repr_self, Units.smul_def,
       map_smul, Finsupp.single_apply]
     split_ifs with h <;> simp [h]
@@ -1270,39 +1270,39 @@ lemma Basis.mem_center_iff {A}
           ∧ (b i * z) * b j = b i * (z * b j)
           ∧ (b i * b j) * z = b i * (b j * z) := by
   constructor
-  · intro h
-    constructor
-    · intro i
-      apply (h.1 (b i)).symm
-    · intros
-      exact ⟨h.2 _ _, ⟨h.3 _ _, h.4 _ _⟩⟩
-  · intro h
-    rw [center, mem_setOf_eq]
-    constructor
-    case comm =>
-      intro y
-      rw [← b.total_repr y, Finsupp.total_apply, Finsupp.sum, Finset.sum_mul, Finset.mul_sum]
-      simp_rw [mul_smul_comm, smul_mul_assoc, (h.1 _).eq]
-    case left_assoc =>
-      intro c d
-      rw [← b.total_repr c, ← b.total_repr d, Finsupp.total_apply, Finsupp.total_apply, Finsupp.sum,
-        Finsupp.sum, Finset.sum_mul, Finset.mul_sum, Finset.mul_sum, Finset.mul_sum]
-      simp_rw [smul_mul_assoc, Finset.mul_sum, Finset.sum_mul, mul_smul_comm, Finset.mul_sum,
-        Finset.smul_sum, smul_mul_assoc, mul_smul_comm, (h.2 _ _).1,
-        (@SMulCommClass.smul_comm R R A)]
-      rw [Finset.sum_comm]
-    case mid_assoc =>
-      intro c d
-      rw [← b.total_repr c, ← b.total_repr d, Finsupp.total_apply, Finsupp.total_apply, Finsupp.sum,
-        Finsupp.sum, Finset.sum_mul, Finset.mul_sum, Finset.mul_sum, Finset.mul_sum]
-      simp_rw [smul_mul_assoc, Finset.sum_mul, mul_smul_comm, smul_mul_assoc, (h.2 _ _).2.1]
-    case right_assoc =>
-      intro c d
-      rw [← b.total_repr c, ← b.total_repr d, Finsupp.total_apply, Finsupp.total_apply, Finsupp.sum,
-        Finsupp.sum, Finset.sum_mul]
-      simp_rw [smul_mul_assoc, Finset.mul_sum, Finset.sum_mul, mul_smul_comm, Finset.mul_sum,
-        Finset.smul_sum, smul_mul_assoc, mul_smul_comm, Finset.sum_mul, smul_mul_assoc,
-        (h.2 _ _).2.2]
+  intro h
+  constructor
+  intro i
+  apply (h.1 (b i)).symm
+  intros
+  exact ⟨h.2 _ _, ⟨h.3 _ _, h.4 _ _⟩⟩
+  intro h
+  rw [center, mem_setOf_eq]
+  constructor
+  case comm =>
+    intro y
+    rw [← b.total_repr y, Finsupp.total_apply, Finsupp.sum, Finset.sum_mul, Finset.mul_sum]
+    simp_rw [mul_smul_comm, smul_mul_assoc, (h.1 _).eq]
+  case left_assoc =>
+    intro c d
+    rw [← b.total_repr c, ← b.total_repr d, Finsupp.total_apply, Finsupp.total_apply, Finsupp.sum,
+      Finsupp.sum, Finset.sum_mul, Finset.mul_sum, Finset.mul_sum, Finset.mul_sum]
+    simp_rw [smul_mul_assoc, Finset.mul_sum, Finset.sum_mul, mul_smul_comm, Finset.mul_sum,
+      Finset.smul_sum, smul_mul_assoc, mul_smul_comm, (h.2 _ _).1,
+      (@SMulCommClass.smul_comm R R A)]
+    rw [Finset.sum_comm]
+  case mid_assoc =>
+    intro c d
+    rw [← b.total_repr c, ← b.total_repr d, Finsupp.total_apply, Finsupp.total_apply, Finsupp.sum,
+      Finsupp.sum, Finset.sum_mul, Finset.mul_sum, Finset.mul_sum, Finset.mul_sum]
+    simp_rw [smul_mul_assoc, Finset.sum_mul, mul_smul_comm, smul_mul_assoc, (h.2 _ _).2.1]
+  case right_assoc =>
+    intro c d
+    rw [← b.total_repr c, ← b.total_repr d, Finsupp.total_apply, Finsupp.total_apply, Finsupp.sum,
+      Finsupp.sum, Finset.sum_mul]
+    simp_rw [smul_mul_assoc, Finset.mul_sum, Finset.sum_mul, mul_smul_comm, Finset.mul_sum,
+      Finset.smul_sum, smul_mul_assoc, mul_smul_comm, Finset.sum_mul, smul_mul_assoc,
+      (h.2 _ _).2.2]
 
 section RestrictScalars
 
@@ -1461,9 +1461,9 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
   exact linearIndependent_iff.mp i _ z
   -- Finally we put those facts together to show the linear combination is trivial.
   ext (_ | a)
-  · simp only [l₀, Finsupp.coe_zero, Pi.zero_apply]
-  · erw [DFunLike.congr_fun l₁ a]
-    simp only [Finsupp.coe_zero, Pi.zero_apply]
+  simp only [l₀, Finsupp.coe_zero, Pi.zero_apply]
+  erw [DFunLike.congr_fun l₁ a]
+  simp only [Finsupp.coe_zero, Pi.zero_apply]
   rw [LinearIndependent.Maximal] at m
   specialize m (range v') i' r
   exact r'' m

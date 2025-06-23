@@ -31,13 +31,13 @@ theorem unitary.spectrum_subset_circle (u : unitary E) :
     spectrum 𝕜 (u : E) ⊆ Metric.sphere 0 1 := by
   nontriviality E
   refine fun k hk => mem_sphere_zero_iff_norm.mpr (le_antisymm ?_ ?_)
-  · simpa only [CstarRing.norm_coe_unitary u] using norm_le_norm_of_mem hk
-  · rw [← unitary.val_toUnits_apply u] at hk
-    have hnk := ne_zero_of_mem_of_unit hk
-    rw [← inv_inv (unitary.toUnits u), ← spectrum.map_inv, Set.mem_inv] at hk
-    have : ‖k‖⁻¹ ≤ ‖(↑(unitary.toUnits u)⁻¹ : E)‖
-    simpa only [norm_inv] using norm_le_norm_of_mem hk
-    simpa using inv_le_of_inv_le (norm_pos_iff.mpr hnk) this
+  simpa only [CstarRing.norm_coe_unitary u] using norm_le_norm_of_mem hk
+  rw [← unitary.val_toUnits_apply u] at hk
+  have hnk := ne_zero_of_mem_of_unit hk
+  rw [← inv_inv (unitary.toUnits u), ← spectrum.map_inv, Set.mem_inv] at hk
+  have : ‖k‖⁻¹ ≤ ‖(↑(unitary.toUnits u)⁻¹ : E)‖
+  simpa only [norm_inv] using norm_le_norm_of_mem hk
+  simpa using inv_le_of_inv_le (norm_pos_iff.mpr hnk) this
 
 theorem spectrum.subset_circle_of_unitary {u : E} (h : u ∈ unitary E) :
     spectrum 𝕜 u ⊆ Metric.sphere 0 1 :=

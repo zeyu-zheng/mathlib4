@@ -238,7 +238,7 @@ theorem separable_X_pow_sub_C_unit {n : ℕ} (u : Rˣ) (hn : IsUnit (n : R)) :
     Separable (X ^ n - C (u : R)) := by
   nontriviality R
   rcases n.eq_zero_or_pos with (rfl | hpos)
-  · simp at hn
+  simp at hn
   apply (separable_def' (X ^ n - C (u : R))).2
   obtain ⟨n', hn'⟩ := hn.exists_left_inv
   refine ⟨-C ↑u⁻¹, C (↑u⁻¹ : R) * C n' * X, ?_⟩
@@ -255,7 +255,7 @@ theorem separable_X_pow_sub_C_unit {n : ℕ} (u : Rˣ) (hn : IsUnit (n : R)) :
 theorem rootMultiplicity_le_one_of_separable [Nontrivial R] {p : R[X]} (hsep : Separable p)
     (x : R) : rootMultiplicity x p ≤ 1 := by
   by_cases hp : p = 0
-  · simp [hp]
+  simp [hp]
   rw [rootMultiplicity_eq_multiplicity, dif_neg hp, ← PartENat.coe_le_coe, PartENat.natCast_get,
     Nat.cast_one]
   exact multiplicity_le_one_of_separable (not_isUnit_X_sub_C _) hsep
@@ -321,10 +321,10 @@ theorem separable_or {f : F[X]} (hf : Irreducible f) :
     f.Separable ∨ ¬f.Separable ∧ ∃ g : F[X], Irreducible g ∧ expand F p g = f :=
   if H : derivative f = 0 then by
     rcases p.eq_zero_or_pos with (rfl | hp)
-    · haveI := CharP.charP_to_charZero F
-      have := natDegree_eq_zero_of_derivative_eq_zero H
-      have := (natDegree_pos_iff_degree_pos.mpr <| degree_pos_of_irreducible hf).ne'
-      contradiction
+    haveI := CharP.charP_to_charZero F
+    have := natDegree_eq_zero_of_derivative_eq_zero H
+    have := (natDegree_pos_iff_degree_pos.mpr <| degree_pos_of_irreducible hf).ne'
+    contradiction
     haveI := isLocalRingHom_expand F hp
     exact
       Or.inr
@@ -339,26 +339,26 @@ theorem exists_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : p 
   replace hp : p.Prime := (CharP.char_is_prime_or_zero F p).resolve_right hp
   induction' hn : f.natDegree using Nat.strong_induction_on with N ih generalizing f
   rcases separable_or p hf with (h | ⟨h1, g, hg, hgf⟩)
-  · refine ⟨0, f, h, ?_⟩
-    rw [pow_zero, expand_one]
-  · cases' N with N
-    · rw [natDegree_eq_zero_iff_degree_le_zero, degree_le_zero_iff] at hn
-      rw [hn, separable_C, isUnit_iff_ne_zero, Classical.not_not] at h1
-      have hf0 : f ≠ 0 := hf.ne_zero
-      rw [h1, C_0] at hn
-      exact absurd hn hf0
-    have hg1 : g.natDegree * p = N.succ
-    rwa [← natDegree_expand, hgf]
-    have hg2 : g.natDegree ≠ 0
-    intro this
-    rw [this, zero_mul] at hg1
-    cases hg1
-    have hg3 : g.natDegree < N.succ
-    rw [← mul_one g.natDegree, ← hg1]
-    exact Nat.mul_lt_mul_of_pos_left hp.one_lt hg2.bot_lt
-    rcases ih _ hg3 hg rfl with ⟨n, g, hg4, rfl⟩
-    refine ⟨n + 1, g, hg4, ?_⟩
-    rw [← hgf, expand_expand, pow_succ']
+  refine ⟨0, f, h, ?_⟩
+  rw [pow_zero, expand_one]
+  cases' N with N
+  rw [natDegree_eq_zero_iff_degree_le_zero, degree_le_zero_iff] at hn
+  rw [hn, separable_C, isUnit_iff_ne_zero, Classical.not_not] at h1
+  have hf0 : f ≠ 0 := hf.ne_zero
+  rw [h1, C_0] at hn
+  exact absurd hn hf0
+  have hg1 : g.natDegree * p = N.succ
+  rwa [← natDegree_expand, hgf]
+  have hg2 : g.natDegree ≠ 0
+  intro this
+  rw [this, zero_mul] at hg1
+  cases hg1
+  have hg3 : g.natDegree < N.succ
+  rw [← mul_one g.natDegree, ← hg1]
+  exact Nat.mul_lt_mul_of_pos_left hp.one_lt hg2.bot_lt
+  rcases ih _ hg3 hg rfl with ⟨n, g, hg4, rfl⟩
+  refine ⟨n + 1, g, hg4, ?_⟩
+  rw [← hgf, expand_expand, pow_succ']
 
 theorem isUnit_or_eq_zero_of_separable_expand {f : F[X]} (n : ℕ) (hp : 0 < p)
     (hf : (expand F (p ^ n) f).Separable) : IsUnit f ∨ n = 0 := by
@@ -378,8 +378,8 @@ theorem unique_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : 0 
   -- Porting note: the variable `K` affects the `wlog` tactic.
   clear! K
   wlog hn : n₁ ≤ n₂
-  · intro g₁ hg₁ Hg₁ g₂ hg₂ Hg₂
-    simpa only [eq_comm] using this p hf hp n₂ n₁ (le_of_not_le hn) g₂ hg₂ Hg₂ g₁ hg₁ Hg₁
+  intro g₁ hg₁ Hg₁ g₂ hg₂ Hg₂
+  simpa only [eq_comm] using this p hf hp n₂ n₁ (le_of_not_le hn) g₂ hg₂ Hg₂ g₁ hg₁ Hg₁
   have hf0 : f ≠ 0 := hf.ne_zero
   intros g₁ hg₁ hgf₁ g₂ hg₂ hgf₂
   rw [le_iff_exists_add] at hn
@@ -388,12 +388,12 @@ theorem unique_separable_of_irreducible {f : F[X]} (hf : Irreducible f) (hp : 0 
   subst hgf₂
   subst hgf₁
   rcases isUnit_or_eq_zero_of_separable_expand p k hp hg₁ with (h | rfl)
-  · rw [isUnit_iff] at h
-    rcases h with ⟨r, hr, rfl⟩
-    simp_rw [expand_C] at hf
-    exact absurd (isUnit_C.2 hr) hf.1
-  · rw [add_zero, pow_zero, expand_one]
-    constructor <;> rfl
+  rw [isUnit_iff] at h
+  rcases h with ⟨r, hr, rfl⟩
+  simp_rw [expand_C] at hf
+  exact absurd (isUnit_C.2 hr) hf.1
+  rw [add_zero, pow_zero, expand_one]
+  constructor <;> rfl
 
 end CharP
 
@@ -453,15 +453,15 @@ theorem eq_X_sub_C_of_separable_of_root_eq {x : F} {h : F[X]} (h_sep : h.Separab
   exact not_separable_zero h_sep
   apply Polynomial.eq_X_sub_C_of_splits_of_single_root i h_splits
   apply Finset.mk.inj
-  · change _ = {i x}
-    rw [Finset.eq_singleton_iff_unique_mem]
-    constructor
-    · apply Finset.mem_mk.mpr
-      · rw [mem_roots (show h.map i ≠ 0 from map_ne_zero h_ne_zero)]
-        rw [IsRoot.def, ← eval₂_eq_eval_map, eval₂_hom, h_root]
-        exact RingHom.map_zero i
-      · exact nodup_roots (Separable.map h_sep)
-    · exact h_roots
+  change _ = {i x}
+  rw [Finset.eq_singleton_iff_unique_mem]
+  constructor
+  apply Finset.mem_mk.mpr
+  rw [mem_roots (show h.map i ≠ 0 from map_ne_zero h_ne_zero)]
+  rw [IsRoot.def, ← eval₂_eq_eval_map, eval₂_hom, h_root]
+  exact RingHom.map_zero i
+  exact nodup_roots (Separable.map h_sep)
+  exact h_roots
 
 theorem exists_finset_of_splits (i : F →+* K) {f : F[X]} (sep : Separable f) (sp : Splits i f) :
     ∃ s : Finset K, f.map i = C (i f.leadingCoeff) * s.prod fun a : K => X - C a := by
@@ -478,7 +478,7 @@ end Splits
 theorem _root_.Irreducible.separable [CharZero F] {f : F[X]} (hf : Irreducible f) :
     f.Separable := by
   rw [separable_iff_derivative_ne_zero hf, Ne, ← degree_eq_bot, degree_derivative_eq]
-  · rintro ⟨⟩
+  rintro ⟨⟩
   rw [pos_iff_ne_zero, Ne, natDegree_eq_zero_iff_degree_le_zero, degree_le_zero_iff]
   refine fun hf1 => hf.not_unit ?_
   rw [hf1, isUnit_C, isUnit_iff_ne_zero]
@@ -531,9 +531,9 @@ variable {F} in
 because the minimal polynomial of a non-integral element is `0`, which is not separable. -/
 theorem IsSeparable.isIntegral {x : K} (h : IsSeparable F x) : IsIntegral F x := by
   cases subsingleton_or_nontrivial F
-  · haveI := Module.subsingleton F K
-    exact ⟨1, monic_one, Subsingleton.elim _ _⟩
-  · exact of_not_not (h.ne_zero <| minpoly.eq_zero ·)
+  haveI := Module.subsingleton F K
+  exact ⟨1, monic_one, Subsingleton.elim _ _⟩
+  exact of_not_not (h.ne_zero <| minpoly.eq_zero ·)
 
 theorem Algebra.IsSeparable.isIntegral [Algebra.IsSeparable F K] : ∀ x : K, IsIntegral F x :=
   fun x ↦ _root_.IsSeparable.isIntegral (Algebra.IsSeparable.isSeparable F x)

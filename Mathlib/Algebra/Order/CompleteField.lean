@@ -114,10 +114,10 @@ theorem coe_mem_cutMap_iff [CharZero β] : (q : β) ∈ cutMap β a ↔ (q : α)
 theorem cutMap_self (a : α) : cutMap α a = Iio a ∩ range (Rat.cast : ℚ → α) := by
   ext
   constructor
-  · rintro ⟨q, h, rfl⟩
-    exact ⟨h, q, rfl⟩
-  · rintro ⟨h, q, rfl⟩
-    exact ⟨q, h, rfl⟩
+  rintro ⟨q, h, rfl⟩
+  exact ⟨h, q, rfl⟩
+  rintro ⟨h, q, rfl⟩
+  exact ⟨q, h, rfl⟩
 
 end DivisionRing
 
@@ -137,17 +137,17 @@ theorem cutMap_bddAbove (a : α) : BddAbove (cutMap β a) := by
 
 theorem cutMap_add (a b : α) : cutMap β (a + b) = cutMap β a + cutMap β b := by
   refine (image_subset_iff.2 fun q hq => ?_).antisymm ?_
-  · rw [mem_setOf_eq, ← sub_lt_iff_lt_add] at hq
-    obtain ⟨q₁, hq₁q, hq₁ab⟩ := exists_rat_btwn hq
-    refine ⟨q₁, by rwa [coe_mem_cutMap_iff], q - q₁, ?_, add_sub_cancel _ _⟩
-    norm_cast
-    rw [coe_mem_cutMap_iff]
-    exact mod_cast sub_lt_comm.mp hq₁q
-  · rintro _ ⟨_, ⟨qa, ha, rfl⟩, _, ⟨qb, hb, rfl⟩, rfl⟩
-    -- After leanprover/lean4#2734, `norm_cast` needs help with beta reduction.
-    refine ⟨qa + qb, ?_, by beta_reduce; norm_cast⟩
-    rw [mem_setOf_eq, cast_add]
-    exact add_lt_add ha hb
+  rw [mem_setOf_eq, ← sub_lt_iff_lt_add] at hq
+  obtain ⟨q₁, hq₁q, hq₁ab⟩ := exists_rat_btwn hq
+  refine ⟨q₁, by rwa [coe_mem_cutMap_iff], q - q₁, ?_, add_sub_cancel _ _⟩
+  norm_cast
+  rw [coe_mem_cutMap_iff]
+  exact mod_cast sub_lt_comm.mp hq₁q
+  rintro _ ⟨_, ⟨qa, ha, rfl⟩, _, ⟨qb, hb, rfl⟩, rfl⟩
+  -- After leanprover/lean4#2734, `norm_cast` needs help with beta reduction.
+  refine ⟨qa + qb, ?_, by beta_reduce; norm_cast⟩
+  rw [mem_setOf_eq, cast_add]
+  exact add_lt_add ha hb
 
 end CutMap
 
@@ -177,12 +177,12 @@ theorem inducedMap_mono : Monotone (inducedMap α β) := fun _ _ h =>
 theorem inducedMap_rat (q : ℚ) : inducedMap α β (q : α) = q := by
   refine csSup_eq_of_forall_le_of_forall_lt_exists_gt
     (cutMap_nonempty β (q : α)) (fun x h => ?_) fun w h => ?_
-  · rw [cutMap_coe] at h
-    obtain ⟨r, h, rfl⟩ := h
-    exact le_of_lt h
-  · obtain ⟨q', hwq, hq⟩ := exists_rat_btwn h
-    rw [cutMap_coe]
-    exact ⟨q', ⟨_, hq, rfl⟩, hwq⟩
+  rw [cutMap_coe] at h
+  obtain ⟨r, h, rfl⟩ := h
+  exact le_of_lt h
+  obtain ⟨q', hwq, hq⟩ := exists_rat_btwn h
+  rw [cutMap_coe]
+  exact ⟨q', ⟨_, hq, rfl⟩, hwq⟩
 
 @[simp]
 theorem inducedMap_zero : inducedMap α β 0 = 0 := mod_cast inducedMap_rat α β 0
@@ -197,11 +197,11 @@ theorem inducedMap_nonneg (ha : 0 ≤ a) : 0 ≤ inducedMap α β a :=
 
 theorem coe_lt_inducedMap_iff : (q : β) < inducedMap α β a ↔ (q : α) < a := by
   refine ⟨fun h => ?_, fun hq => ?_⟩
-  · rw [← inducedMap_rat α] at h
-    exact (inducedMap_mono α β).reflect_lt h
-  · obtain ⟨q', hq, hqa⟩ := exists_rat_btwn hq
-    apply lt_csSup_of_lt (cutMap_bddAbove β a) (coe_mem_cutMap_iff.mpr hqa)
-    exact mod_cast hq
+  rw [← inducedMap_rat α] at h
+  exact (inducedMap_mono α β).reflect_lt h
+  obtain ⟨q', hq, hqa⟩ := exists_rat_btwn hq
+  apply lt_csSup_of_lt (cutMap_bddAbove β a) (coe_mem_cutMap_iff.mpr hqa)
+  exact mod_cast hq
 
 theorem lt_inducedMap_iff : b < inducedMap α β a ↔ ∃ q : ℚ, b < q ∧ (q : α) < a :=
   ⟨fun h => (exists_rat_btwn h).imp fun q => And.imp_right coe_lt_inducedMap_iff.1,
@@ -236,19 +236,19 @@ theorem le_inducedMap_mul_self_of_mem_cutMap (ha : 0 < a) (b : β) (hb : b ∈ c
   obtain ⟨q, hb, rfl⟩ := hb
   obtain ⟨q', hq', hqq', hqa⟩ := exists_rat_pow_btwn two_ne_zero hb (mul_self_pos.2 ha.ne')
   trans (q' : β) ^ 2
-  · exact mod_cast hqq'.le
-  · rw [pow_two] at hqa ⊢
-    exact mul_self_le_mul_self (mod_cast hq'.le)
-      (le_csSup (cutMap_bddAbove β a) <|
-        coe_mem_cutMap_iff.2 <| lt_of_mul_self_lt_mul_self ha.le hqa)
+  exact mod_cast hqq'.le
+  rw [pow_two] at hqa ⊢
+  exact mul_self_le_mul_self (mod_cast hq'.le)
+    (le_csSup (cutMap_bddAbove β a) <|
+      coe_mem_cutMap_iff.2 <| lt_of_mul_self_lt_mul_self ha.le hqa)
 
 /-- Preparatory lemma for `inducedOrderRingHom`. -/
 theorem exists_mem_cutMap_mul_self_of_lt_inducedMap_mul_self (ha : 0 < a) (b : β)
     (hba : b < inducedMap α β a * inducedMap α β a) : ∃ c ∈ cutMap β (a * a), b < c := by
   obtain hb | hb := lt_or_le b 0
-  · refine ⟨0, ?_, hb⟩
-    rw [← Rat.cast_zero, coe_mem_cutMap_iff, Rat.cast_zero]
-    exact mul_self_pos.2 ha.ne'
+  refine ⟨0, ?_, hb⟩
+  rw [← Rat.cast_zero, coe_mem_cutMap_iff, Rat.cast_zero]
+  exact mul_self_pos.2 ha.ne'
   obtain ⟨q, hq, hbq, hqa⟩ := exists_rat_pow_btwn two_ne_zero hba (hb.trans_lt hba)
   rw [← cast_pow] at hbq
   refine ⟨(q ^ 2 : ℚ), coe_mem_cutMap_iff.2 ?_, hbq⟩

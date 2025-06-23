@@ -158,10 +158,10 @@ theorem cells_bot : (⊥ : YoungDiagram).cells = ∅ :=
 @[norm_cast]
 theorem coe_bot : (⊥ : YoungDiagram).cells = (∅ : Set (ℕ × ℕ)) := by
   refine Set.eq_of_subset_of_subset ?_ ?_
-  · intros x h
-    simp? [mem_mk, Finset.coe_empty, Set.mem_empty_iff_false] at h says
-      simp only [cells_bot, Finset.coe_empty, Set.mem_empty_iff_false] at h
-  · simp only [cells_bot, Finset.coe_empty, Set.empty_subset]
+  intros x h
+  simp? [mem_mk, Finset.coe_empty, Set.mem_empty_iff_false] at h says
+    simp only [cells_bot, Finset.coe_empty, Set.mem_empty_iff_false] at h
+  simp only [cells_bot, Finset.coe_empty, Set.empty_subset]
 
 @[simp]
 theorem not_mem_bot (x : ℕ × ℕ) : x ∉ (⊥ : YoungDiagram) :=
@@ -202,8 +202,8 @@ theorem transpose_transpose (μ : YoungDiagram) : μ.transpose.transpose = μ :=
 
 theorem transpose_eq_iff_eq_transpose {μ ν : YoungDiagram} : μ.transpose = ν ↔ μ = ν.transpose := by
   constructor <;>
-    · rintro rfl
-      simp
+  · rintro rfl
+    simp
 
 @[simp]
 theorem transpose_eq_iff {μ ν : YoungDiagram} : μ.transpose = ν.transpose ↔ μ = ν := by
@@ -406,11 +406,11 @@ protected def cellsOfRowLens : List ℕ → Finset (ℕ × ℕ)
 protected theorem mem_cellsOfRowLens {w : List ℕ} {c : ℕ × ℕ} :
     c ∈ YoungDiagram.cellsOfRowLens w ↔ ∃ h : c.fst < w.length, c.snd < w.get ⟨c.fst, h⟩  := by
   induction' w with w_hd w_tl w_ih generalizing c <;> rw [YoungDiagram.cellsOfRowLens]
-  · simp [YoungDiagram.cellsOfRowLens]
-  · rcases c with ⟨⟨_, _⟩, _⟩
-    · simp
-    -- Porting note: was `simpa`
-    · simp [w_ih, -Finset.singleton_product, Nat.succ_lt_succ_iff]
+  simp [YoungDiagram.cellsOfRowLens]
+  rcases c with ⟨⟨_, _⟩, _⟩
+  simp
+  -- Porting note: was `simpa`
+  simp [w_ih, -Finset.singleton_product, Nat.succ_lt_succ_iff]
 
 /-- Young diagram from a sorted list -/
 def ofRowLens (w : List ℕ) (hw : w.Sorted (· ≥ ·)) : YoungDiagram where

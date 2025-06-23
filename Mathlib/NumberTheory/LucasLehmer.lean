@@ -129,9 +129,9 @@ theorem mersenne_int_ne_zero (p : ℕ) (hp : p ≠ 0) : (2 ^ p - 1 : ℤ) ≠ 0 
 
 theorem sMod_nonneg (p : ℕ) (hp : p ≠ 0) (i : ℕ) : 0 ≤ sMod p i := by
   cases i <;> dsimp [sMod]
-  · exact sup_eq_right.mp rfl
-  · apply Int.emod_nonneg
-    exact mersenne_int_ne_zero p hp
+  exact sup_eq_right.mp rfl
+  apply Int.emod_nonneg
+  exact mersenne_int_ne_zero p hp
 
 theorem sMod_mod (p i : ℕ) : sMod p i % (2 ^ p - 1) = sMod p i := by cases i <;> simp [sMod]
 
@@ -142,9 +142,9 @@ theorem sMod_lt (p : ℕ) (hp : p ≠ 0) (i : ℕ) : sMod p i < 2 ^ p - 1 := by
 
 theorem sZMod_eq_s (p' : ℕ) (i : ℕ) : sZMod (p' + 2) i = (s i : ZMod (2 ^ (p' + 2) - 1)) := by
   induction' i with i ih
-  · dsimp [s, sZMod]
-    norm_num
-  · push_cast [s, sZMod, ih]; rfl
+  dsimp [s, sZMod]
+  norm_num
+  push_cast [s, sZMod, ih]; rfl
 
 -- These next two don't make good `norm_cast` lemmas.
 theorem Int.natCast_pow_pred (b p : ℕ) (w : 0 < b) : ((b ^ p - 1 : ℕ) : ℤ) = (b : ℤ) ^ p - 1 := by
@@ -168,18 +168,18 @@ theorem residue_eq_zero_iff_sMod_eq_zero (p : ℕ) (w : 1 < p) :
   dsimp [lucasLehmerResidue]
   rw [sZMod_eq_sMod p]
   constructor
-  · -- We want to use that fact that `0 ≤ s_mod p (p-2) < 2^p - 1`
-    -- and `lucas_lehmer_residue p = 0 → 2^p - 1 ∣ s_mod p (p-2)`.
-    intro h
-    simp? [ZMod.intCast_zmod_eq_zero_iff_dvd] at h says
-      simp only [ZMod.intCast_zmod_eq_zero_iff_dvd, ofNat_pos, pow_pos, cast_pred,
-        cast_pow, cast_ofNat] at h
-    apply Int.eq_zero_of_dvd_of_nonneg_of_lt _ _ h <;> clear h
-    · exact sMod_nonneg _ (by positivity) _
-    · exact sMod_lt _ (by positivity) _
-  · intro h
-    rw [h]
-    simp
+  -- We want to use that fact that `0 ≤ s_mod p (p-2) < 2^p - 1`
+  -- and `lucas_lehmer_residue p = 0 → 2^p - 1 ∣ s_mod p (p-2)`.
+  intro h
+  simp? [ZMod.intCast_zmod_eq_zero_iff_dvd] at h says
+    simp only [ZMod.intCast_zmod_eq_zero_iff_dvd, ofNat_pos, pow_pos, cast_pred,
+      cast_pow, cast_ofNat] at h
+  apply Int.eq_zero_of_dvd_of_nonneg_of_lt _ _ h <;> clear h
+  exact sMod_nonneg _ (by positivity) _
+  exact sMod_lt _ (by positivity) _
+  intro h
+  rw [h]
+  simp
 
 /-- **Lucas-Lehmer Test**: a Mersenne number `2^p-1` is prime if and only if
 the Lucas-Lehmer residue `s p (p-2) % (2^p - 1)` is zero.
@@ -360,16 +360,16 @@ theorem ωb_mul_ω (q : ℕ+) : (ωb : X q) * ω = 1 := by
 /-- A closed form for the recurrence relation. -/
 theorem closed_form (i : ℕ) : (s i : X q) = (ω : X q) ^ 2 ^ i + (ωb : X q) ^ 2 ^ i := by
   induction' i with i ih
-  · dsimp [s, ω, ωb]
-    ext <;> norm_num
-  · calc
-      (s (i + 1) : X q) = (s i ^ 2 - 2 : ℤ) := rfl
-      _ = (s i : X q) ^ 2 - 2 := by push_cast; rfl
-      _ = (ω ^ 2 ^ i + ωb ^ 2 ^ i) ^ 2 - 2 := by rw [ih]
-      _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 + 2 * (ωb ^ 2 ^ i * ω ^ 2 ^ i) - 2 := by ring
-      _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 := by
-        rw [← mul_pow ωb ω, ωb_mul_ω, one_pow, mul_one, add_sub_cancel_right]
-      _ = ω ^ 2 ^ (i + 1) + ωb ^ 2 ^ (i + 1) := by rw [← pow_mul, ← pow_mul, _root_.pow_succ]
+  dsimp [s, ω, ωb]
+  ext <;> norm_num
+  calc
+    (s (i + 1) : X q) = (s i ^ 2 - 2 : ℤ) := rfl
+    _ = (s i : X q) ^ 2 - 2 := by push_cast; rfl
+    _ = (ω ^ 2 ^ i + ωb ^ 2 ^ i) ^ 2 - 2 := by rw [ih]
+    _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 + 2 * (ωb ^ 2 ^ i * ω ^ 2 ^ i) - 2 := by ring
+    _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 := by
+      rw [← mul_pow ωb ω, ωb_mul_ω, one_pow, mul_one, add_sub_cancel_right]
+    _ = ω ^ 2 ^ (i + 1) + ωb ^ 2 ^ (i + 1) := by rw [← pow_mul, ← pow_mul, _root_.pow_succ]
 
 end X
 
@@ -382,9 +382,9 @@ Here and below, we introduce `p' = p - 2`, in order to avoid using subtraction i
 /-- If `1 < p`, then `q p`, the smallest prime factor of `mersenne p`, is more than 2. -/
 theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) := by
   refine (minFac_prime (one_lt_mersenne.2 ?_).ne').two_le.lt_of_ne' ?_
-  · exact le_add_left _ _
-  · rw [Ne, minFac_eq_two_iff, mersenne, Nat.pow_succ']
-    exact Nat.two_not_dvd_two_mul_sub_one Nat.one_le_two_pow
+  exact le_add_left _ _
+  rw [Ne, minFac_eq_two_iff, mersenne, Nat.pow_succ']
+  exact Nat.two_not_dvd_two_mul_sub_one Nat.one_le_two_pow
 
 theorem ω_pow_formula (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     ∃ k : ℤ,
@@ -447,20 +447,20 @@ theorem order_ω (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     orderOf (ωUnit (p' + 2)) = 2 ^ (p' + 2) := by
   apply Nat.eq_prime_pow_of_dvd_least_prime_pow
   -- the order of ω divides 2^p
-  · exact Nat.prime_two
-  · intro o
-    have ω_pow := orderOf_dvd_iff_pow_eq_one.1 o
-    replace ω_pow :=
-      congr_arg (Units.coeHom (X (q (p' + 2))) : Units (X (q (p' + 2))) → X (q (p' + 2))) ω_pow
-    simp? at ω_pow says simp only [map_pow, Units.coeHom_apply, ωUnit_coe, map_one] at ω_pow
-    have h : (1 : ZMod (q (p' + 2))) = -1 :=
-      congr_arg Prod.fst (ω_pow.symm.trans (ω_pow_eq_neg_one p' h))
-    haveI : Fact (2 < (q (p' + 2) : ℕ)) := ⟨two_lt_q _⟩
-    apply ZMod.neg_one_ne_one h.symm
-  · apply orderOf_dvd_iff_pow_eq_one.2
-    apply Units.ext
-    push_cast
-    exact ω_pow_eq_one p' h
+  exact Nat.prime_two
+  intro o
+  have ω_pow := orderOf_dvd_iff_pow_eq_one.1 o
+  replace ω_pow :=
+    congr_arg (Units.coeHom (X (q (p' + 2))) : Units (X (q (p' + 2))) → X (q (p' + 2))) ω_pow
+  simp? at ω_pow says simp only [map_pow, Units.coeHom_apply, ωUnit_coe, map_one] at ω_pow
+  have h : (1 : ZMod (q (p' + 2))) = -1 :=
+    congr_arg Prod.fst (ω_pow.symm.trans (ω_pow_eq_neg_one p' h))
+  haveI : Fact (2 < (q (p' + 2) : ℕ)) := ⟨two_lt_q _⟩
+  apply ZMod.neg_one_ne_one h.symm
+  apply orderOf_dvd_iff_pow_eq_one.2
+  apply Units.ext
+  push_cast
+  exact ω_pow_eq_one p' h
 
 theorem order_ineq (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     2 ^ (p' + 2) < (q (p' + 2) : ℕ) ^ 2 :=

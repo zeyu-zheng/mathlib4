@@ -58,20 +58,20 @@ lemma not_LSeriesSummable_moebius_at_one : ¬ LSeriesSummable ↗μ 1 := by
   simp only [← Pi.neg_def, Set.indicator_comp_of_zero ofReal_zero, ofReal_inv, ofReal_natCast]
   refine (h.indicator {n | n.Prime}).congr (fun n ↦ ?_)
   by_cases hn : n ∈ {p | p.Prime}
-  · simp only [Pi.neg_apply, Set.indicator_of_mem hn, term_of_ne_zero hn.ne_zero,
-      moebius_apply_prime hn, cpow_one, push_cast, neg_div]
-  · simp only [one_div, Pi.neg_apply, Set.indicator_of_not_mem hn, ofReal_zero, neg_zero]
+  simp only [Pi.neg_apply, Set.indicator_of_mem hn, term_of_ne_zero hn.ne_zero,
+    moebius_apply_prime hn, cpow_one, push_cast, neg_div]
+  simp only [one_div, Pi.neg_apply, Set.indicator_of_not_mem hn, ofReal_zero, neg_zero]
 
 /-- The L-series of the Möbius function converges absolutely at `s` if and only if `re s > 1`. -/
 lemma LSeriesSummable_moebius_iff {s : ℂ} : LSeriesSummable ↗μ s ↔ 1 < s.re := by
   refine ⟨fun H ↦ ?_, LSeriesSummable_of_bounded_of_one_lt_re (m := 1) fun n _ ↦ ?_⟩
-  · by_contra! h
-    have h' : s.re ≤ (1 : ℂ).re
-    simp only [one_re, h]
-    exact not_LSeriesSummable_moebius_at_one <| LSeriesSummable.of_re_le_re h' H
-  · rw [abs_intCast] -- not done by `norm_cast`
-    norm_cast
-    exact abs_moebius_le_one
+  by_contra! h
+  have h' : s.re ≤ (1 : ℂ).re
+  simp only [one_re, h]
+  exact not_LSeriesSummable_moebius_at_one <| LSeriesSummable.of_re_le_re h' H
+  rw [abs_intCast] -- not done by `norm_cast`
+  norm_cast
+  exact abs_moebius_le_one
 
 /-- The abscissa of absolute convergence of the L-series of the Möbius function is `1`. -/
 lemma abscissaOfAbsConv_moebius : abscissaOfAbsConv ↗μ = 1 := by
@@ -139,9 +139,9 @@ lemma convolution_mul_moebius {n : ℕ} (χ : DirichletCharacter ℂ n) : ↗χ 
 lemma modZero_eq_delta {χ : DirichletCharacter ℂ 0} : ↗χ = δ := by
   ext n
   rcases eq_or_ne n 0 with rfl | hn
-  · simp_rw [cast_zero, χ.map_nonunit not_isUnit_zero, delta, if_false]
+  simp_rw [cast_zero, χ.map_nonunit not_isUnit_zero, delta, if_false]
   rcases eq_or_ne n 1 with rfl | hn'
-  · simp only [cast_one, map_one, delta, ↓reduceIte]
+  simp only [cast_one, map_one, delta, ↓reduceIte]
   have : ¬ IsUnit (n : ZMod 0) := fun h ↦ hn' <| ZMod.eq_one_of_isUnit_natCast h
   simp only [χ.map_nonunit this, delta, hn', ↓reduceIte]
 
@@ -162,8 +162,8 @@ lemma not_LSeriesSummable_at_one {N : ℕ} (hN : N ≠ 0) (χ : DirichletCharact
     (fun n ↦ ?_)
   rw [norm_term_eq, one_re, Real.rpow_one, Set.indicator]
   split_ifs with h₁ h₂
-  · rw [h₂, cast_zero, div_zero]
-  · rw [h₁, χ.map_one, norm_one]
+  rw [h₂, cast_zero, div_zero]
+  rw [h₁, χ.map_one, norm_one]
   all_goals positivity
 
 /-- The L-series of a Dirichlet character converges absolutely at `s` if `re s > 1`. -/
@@ -265,8 +265,8 @@ lemma LSeries_zeta_eq_riemannZeta {s : ℂ} (hs : 1 < s.re) : L ↗ζ s = rieman
     zeta_eq_tsum_one_div_nat_cpow hs]
   refine tsum_congr fun n ↦ ?_
   rcases eq_or_ne n 0 with rfl | hn
-  · simp only [term_zero, cast_zero, zero_cpow (ne_zero_of_one_lt_re hs), div_zero]
-  · simp only [term_of_ne_zero hn, hn, ↓reduceIte, one_div]
+  simp only [term_zero, cast_zero, zero_cpow (ne_zero_of_one_lt_re hs), div_zero]
+  simp only [term_of_ne_zero hn, hn, ↓reduceIte, one_div]
 
 /-- The L-series of the arithmetic function `ζ` equals the Riemann Zeta Function on its
 domain of convergence `1 < re s`. -/
@@ -369,9 +369,9 @@ equals the negative logarithmic derivative of the L-series of `χ` when `re s > 
 lemma LSeries_twist_vonMangoldt_eq {N : ℕ} (χ : DirichletCharacter ℂ N) {s : ℂ} (hs : 1 < s.re) :
     L (↗χ * ↗Λ) s = - deriv (L ↗χ) s / L ↗χ s := by
   rcases eq_or_ne N 0 with rfl | hN
-  · simpa only [modZero_eq_delta, delta_mul_eq_smul_delta, vonMangoldt_apply_one, ofReal_zero,
-      zero_smul, LSeries_zero, Pi.zero_apply, LSeries_delta, Pi.one_apply, div_one, zero_eq_neg]
-      using deriv_const s 1
+  simpa only [modZero_eq_delta, delta_mul_eq_smul_delta, vonMangoldt_apply_one, ofReal_zero,
+    zero_smul, LSeries_zero, Pi.zero_apply, LSeries_delta, Pi.one_apply, div_one, zero_eq_neg]
+    using deriv_const s 1
   -- now `N ≠ 0`
   have hχ : LSeriesSummable ↗χ s := (LSeriesSummable_iff hN χ).mpr hs
   have hs' : abscissaOfAbsConv ↗χ < s.re

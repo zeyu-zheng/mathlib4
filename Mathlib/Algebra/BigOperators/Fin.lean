@@ -166,9 +166,9 @@ theorem prod_congr' {M : Type*} [CommMonoid M] {a b : ℕ} (f : Fin b → M) (h 
 theorem prod_univ_add {M : Type*} [CommMonoid M] {a b : ℕ} (f : Fin (a + b) → M) :
     (∏ i : Fin (a + b), f i) = (∏ i : Fin a, f (castAdd b i)) * ∏ i : Fin b, f (natAdd a i) := by
   rw [Fintype.prod_equiv finSumFinEquiv.symm f fun i => f (finSumFinEquiv.toFun i)]
-  · apply Fintype.prod_sum_type
-  · intro x
-    simp only [Equiv.toFun_as_coe, Equiv.apply_symm_apply]
+  apply Fintype.prod_sum_type
+  intro x
+  simp only [Equiv.toFun_as_coe, Equiv.apply_symm_apply]
 
 @[to_additive]
 theorem prod_trunc {M : Type*} [CommMonoid M] {a b : ℕ} (f : Fin (a + b) → M)
@@ -239,22 +239,22 @@ theorem inv_partialProd_mul_eq_contractNth {G : Type*} [Group G] (g : Fin (n + 1
     (partialProd g (j.succ.succAbove (Fin.castSucc k)))⁻¹ * partialProd g (j.succAbove k).succ =
       j.contractNth (· * ·) g k := by
   rcases lt_trichotomy (k : ℕ) j with (h | h | h)
-  · rwa [succAbove_of_castSucc_lt, succAbove_of_castSucc_lt, partialProd_right_inv,
-    contractNth_apply_of_lt]
-    · assumption
-    · rw [castSucc_lt_iff_succ_le, succ_le_succ_iff, le_iff_val_le_val]
-      exact le_of_lt h
-  · rwa [succAbove_of_castSucc_lt, succAbove_of_le_castSucc, partialProd_succ,
-    castSucc_fin_succ, ← mul_assoc,
-      partialProd_right_inv, contractNth_apply_of_eq]
-    · simp [le_iff_val_le_val, ← h]
-    · rw [castSucc_lt_iff_succ_le, succ_le_succ_iff, le_iff_val_le_val]
-      exact le_of_eq h
-  · rwa [succAbove_of_le_castSucc, succAbove_of_le_castSucc, partialProd_succ, partialProd_succ,
-      castSucc_fin_succ, partialProd_succ, inv_mul_cancel_left, contractNth_apply_of_gt]
-    · exact le_iff_val_le_val.2 (le_of_lt h)
-    · rw [le_iff_val_le_val, val_succ]
-      exact Nat.succ_le_of_lt h
+  rwa [succAbove_of_castSucc_lt, succAbove_of_castSucc_lt, partialProd_right_inv,
+  contractNth_apply_of_lt]
+  assumption
+  rw [castSucc_lt_iff_succ_le, succ_le_succ_iff, le_iff_val_le_val]
+  exact le_of_lt h
+  rwa [succAbove_of_castSucc_lt, succAbove_of_le_castSucc, partialProd_succ,
+  castSucc_fin_succ, ← mul_assoc,
+    partialProd_right_inv, contractNth_apply_of_eq]
+  simp [le_iff_val_le_val, ← h]
+  rw [castSucc_lt_iff_succ_le, succ_le_succ_iff, le_iff_val_le_val]
+  exact le_of_eq h
+  rwa [succAbove_of_le_castSucc, succAbove_of_le_castSucc, partialProd_succ, partialProd_succ,
+    castSucc_fin_succ, partialProd_succ, inv_mul_cancel_left, contractNth_apply_of_gt]
+  exact le_iff_val_le_val.2 (le_of_lt h)
+  rw [le_iff_val_le_val, val_succ]
+  exact Nat.succ_le_of_lt h
 
 end PartialProd
 
@@ -394,25 +394,25 @@ theorem prod_take_ofFn {n : ℕ} (f : Fin n → α) (i : ℕ) :
     simp
   | succ i IH =>
     by_cases h : i < n
-    · have : i < length (ofFn f) := by rwa [length_ofFn f]
-      rw [prod_take_succ _ _ this]
-      have A : ((Finset.univ : Finset (Fin n)).filter fun j => j.val < i + 1) =
-          ((Finset.univ : Finset (Fin n)).filter fun j => j.val < i) ∪ {(⟨i, h⟩ : Fin n)} := by
-        ext ⟨_, _⟩
-        simp [Nat.lt_succ_iff_lt_or_eq]
-      have B : _root_.Disjoint (Finset.filter (fun j : Fin n => j.val < i) Finset.univ)
-          (singleton (⟨i, h⟩ : Fin n)) := by simp
-      rw [A, Finset.prod_union B, IH]
-      simp
-    · have A : (ofFn f).take i = (ofFn f).take i.succ := by
-        rw [← length_ofFn f] at h
-        have : length (ofFn f) ≤ i := not_lt.mp h
-        rw [take_all_of_le this, take_all_of_le (le_trans this (Nat.le_succ _))]
-      have B : ∀ j : Fin n, ((j : ℕ) < i.succ) = ((j : ℕ) < i) := by
-        intro j
-        have : (j : ℕ) < i := lt_of_lt_of_le j.2 (not_lt.mp h)
-        simp [this, lt_trans this (Nat.lt_succ_self _)]
-      simp [← A, B, IH]
+    have : i < length (ofFn f) := by rwa [length_ofFn f]
+    rw [prod_take_succ _ _ this]
+    have A : ((Finset.univ : Finset (Fin n)).filter fun j => j.val < i + 1) =
+        ((Finset.univ : Finset (Fin n)).filter fun j => j.val < i) ∪ {(⟨i, h⟩ : Fin n)} := by
+      ext ⟨_, _⟩
+      simp [Nat.lt_succ_iff_lt_or_eq]
+    have B : _root_.Disjoint (Finset.filter (fun j : Fin n => j.val < i) Finset.univ)
+        (singleton (⟨i, h⟩ : Fin n)) := by simp
+    rw [A, Finset.prod_union B, IH]
+    simp
+    have A : (ofFn f).take i = (ofFn f).take i.succ := by
+      rw [← length_ofFn f] at h
+      have : length (ofFn f) ≤ i := not_lt.mp h
+      rw [take_all_of_le this, take_all_of_le (le_trans this (Nat.le_succ _))]
+    have B : ∀ j : Fin n, ((j : ℕ) < i.succ) = ((j : ℕ) < i) := by
+      intro j
+      have : (j : ℕ) < i := lt_of_lt_of_le j.2 (not_lt.mp h)
+      simp [this, lt_trans this (Nat.lt_succ_self _)]
+    simp [← A, B, IH]
 
 @[to_additive]
 theorem prod_ofFn {n : ℕ} {f : Fin n → α} : (ofFn f).prod = ∏ i, f i :=

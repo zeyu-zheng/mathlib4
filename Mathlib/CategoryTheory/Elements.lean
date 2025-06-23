@@ -218,30 +218,30 @@ theorem fromCostructuredArrow_obj_mk (F : Cᵒᵖ ⥤ Type v) {X : C} (f : yoned
 theorem from_toCostructuredArrow_eq (F : Cᵒᵖ ⥤ Type v) :
     (toCostructuredArrow F).rightOp ⋙ fromCostructuredArrow F = 𝟭 _ := by
   refine Functor.ext ?_ ?_
-  · intro X
-    exact Functor.Elements.ext _ _ rfl (by simp [yonedaEquiv])
-  · intro X Y f
-    have : ∀ {a b : F.Elements} (H : a = b),
-        (eqToHom H).1 = eqToHom (show a.fst = b.fst by cases H; rfl) := by
-      rintro _ _ rfl
-      simp
-    ext
-    simp [this]
+  intro X
+  exact Functor.Elements.ext _ _ rfl (by simp [yonedaEquiv])
+  intro X Y f
+  have : ∀ {a b : F.Elements} (H : a = b),
+      (eqToHom H).1 = eqToHom (show a.fst = b.fst by cases H; rfl) := by
+    rintro _ _ rfl
+    simp
+  ext
+  simp [this]
 
 /-- The counit of the equivalence `F.Elementsᵒᵖ ≅ (yoneda, F)` is indeed iso. -/
 theorem to_fromCostructuredArrow_eq (F : Cᵒᵖ ⥤ Type v) :
     (fromCostructuredArrow F).rightOp ⋙ toCostructuredArrow F = 𝟭 _ := by
   refine Functor.ext ?_ ?_
-  · intro X
-    cases' X with X_left X_right X_hom
-    cases X_right
-    simp only [Functor.id_obj, Functor.rightOp_obj, toCostructuredArrow_obj, Functor.comp_obj,
-      CostructuredArrow.mk]
-    congr
-    ext x f
-    convert congr_fun (X_hom.naturality f.op).symm (𝟙 X_left)
-    simp
-  · aesop
+  intro X
+  cases' X with X_left X_right X_hom
+  cases X_right
+  simp only [Functor.id_obj, Functor.rightOp_obj, toCostructuredArrow_obj, Functor.comp_obj,
+    CostructuredArrow.mk]
+  congr
+  ext x f
+  convert congr_fun (X_hom.naturality f.op).symm (𝟙 X_left)
+  simp
+  aesop
 
 /-- The equivalence `F.Elementsᵒᵖ ≅ (yoneda, F)` given by yoneda lemma. -/
 @[simps! functor_obj functor_map inverse_obj inverse_map unitIso_inv counitIso_hom counitIso_inv]
@@ -260,13 +260,13 @@ attribute [simps! unitIso_hom] costructuredArrowYonedaEquivalence
 theorem costructuredArrow_yoneda_equivalence_naturality {F₁ F₂ : Cᵒᵖ ⥤ Type v} (α : F₁ ⟶ F₂) :
     (map α).op ⋙ toCostructuredArrow F₂ = toCostructuredArrow F₁ ⋙ CostructuredArrow.map α := by
   fapply Functor.ext
-  · intro X
-    simp only [CostructuredArrow.map_mk, toCostructuredArrow_obj, Functor.op_obj,
-      Functor.comp_obj]
-    congr
-    ext _ f
-    simpa using congr_fun (α.naturality f.op).symm (unop X).snd
-  · simp [autoParam]
+  intro X
+  simp only [CostructuredArrow.map_mk, toCostructuredArrow_obj, Functor.op_obj,
+    Functor.comp_obj]
+  congr
+  ext _ f
+  simpa using congr_fun (α.naturality f.op).symm (unop X).snd
+  simp [autoParam]
 
 /-- The equivalence `F.elementsᵒᵖ ≌ (yoneda, F)` is compatible with the forgetful functors. -/
 @[simps!]

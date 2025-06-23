@@ -32,9 +32,9 @@ noncomputable def wellOrderSucc (a : α) : α :=
 
 lemma self_le_wellOrderSucc (a : α) : a ≤ wellOrderSucc a := by
   by_cases h : ∃ b, a < b
-  · exact (IsWellFounded.wf.lt_succ h).le
-  · dsimp [wellOrderSucc, WellFounded.succ]
-    rw [dif_neg h]
+  exact (IsWellFounded.wf.lt_succ h).le
+  dsimp [wellOrderSucc, WellFounded.succ]
+  rw [dif_neg h]
 
 lemma wellOrderSucc_le {a b : α} (ha : a < b) : wellOrderSucc a ≤ b := by
   dsimp [wellOrderSucc, WellFounded.succ]
@@ -65,8 +65,8 @@ lemma IsWellOrderLimitElement.neq_bot [OrderBot α] : a ≠ ⊥ := by
 
 lemma IsWellOrderLimitElement.bot_lt [OrderBot α] : ⊥ < a := by
   obtain h|h := eq_or_lt_of_le (@bot_le _ _ _ a)
-  · exact (IsWellOrderLimitElement.neq_bot a h.symm).elim
-  · exact h
+  exact (IsWellOrderLimitElement.neq_bot a h.symm).elim
+  exact h
 
 variable {a}
 variable [IsWellOrder α (· < ·)]
@@ -81,8 +81,8 @@ lemma eq_bot_or_eq_succ_or_isWellOrderLimitElement [OrderBot α] (a : α) :
   refine or_iff_not_imp_left.2 <| fun h₁ ↦ or_iff_not_imp_left.2 <| fun h₂ ↦ ?_
   refine (IsWellOrderLimitElement.mk ⟨⊥, Ne.bot_lt h₁⟩ fun b hb ↦ ?_)
   obtain rfl | h₃ := eq_or_lt_of_le (wellOrderSucc_le hb)
-  · exact (h₂ ⟨b, rfl, hb⟩).elim
-  · exact ⟨wellOrderSucc b, self_lt_wellOrderSucc hb, h₃⟩
+  exact (h₂ ⟨b, rfl, hb⟩).elim
+  exact ⟨wellOrderSucc b, self_lt_wellOrderSucc hb, h₃⟩
 
 lemma IsWellOrderLimitElement.neq_succ (a : α) (ha : a < wellOrderSucc a)
     [IsWellOrderLimitElement (wellOrderSucc a)] : False := by
@@ -95,5 +95,5 @@ lemma Nat.wellOrderSucc_eq (a : ℕ) : wellOrderSucc a = succ a :=
 
 lemma Nat.not_isWellOrderLimitElement (a : ℕ) [IsWellOrderLimitElement a] : False := by
   obtain _|a := a
-  · simpa using IsWellOrderLimitElement.neq_bot (0 : ℕ)
-  · simpa using IsWellOrderLimitElement.wellOrderSucc_lt (Nat.lt_succ_self a)
+  simpa using IsWellOrderLimitElement.neq_bot (0 : ℕ)
+  simpa using IsWellOrderLimitElement.wellOrderSucc_lt (Nat.lt_succ_self a)

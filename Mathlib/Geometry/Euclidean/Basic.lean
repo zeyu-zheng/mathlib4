@@ -146,21 +146,21 @@ theorem eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two {s : AffineSubspace �
   let b : Fin 2 → V := ![c₂ -ᵥ c₁, p₂ -ᵥ p₁]
   have hb : LinearIndependent ℝ b := by
     refine linearIndependent_of_ne_zero_of_inner_eq_zero ?_ ?_
-    · intro i
-      fin_cases i <;> simp [b, hc.symm, hp.symm]
-    · intro i j hij
-      fin_cases i <;> fin_cases j <;> try exact False.elim (hij rfl)
-      · exact ho
-      · rw [real_inner_comm]
-        exact ho
+    intro i
+    fin_cases i <;> simp [b, hc.symm, hp.symm]
+    intro i j hij
+    fin_cases i <;> fin_cases j <;> try exact False.elim (hij rfl)
+    exact ho
+    rw [real_inner_comm]
+    exact ho
   have hbs : Submodule.span ℝ (Set.range b) = s.direction := by
     refine eq_of_le_of_finrank_eq ?_ ?_
-    · rw [Submodule.span_le, Set.range_subset_iff]
-      intro i
-      fin_cases i
-      · exact vsub_mem_direction hc₂s hc₁s
-      · exact vsub_mem_direction hp₂s hp₁s
-    · rw [finrank_span_eq_card hb, Fintype.card_fin, hd]
+    rw [Submodule.span_le, Set.range_subset_iff]
+    intro i
+    fin_cases i
+    exact vsub_mem_direction hc₂s hc₁s
+    exact vsub_mem_direction hp₂s hp₁s
+    rw [finrank_span_eq_card hb, Fintype.card_fin, hd]
   have hv : ∀ v ∈ s.direction, ∃ t₁ t₂ : ℝ, v = t₁ • (c₂ -ᵥ c₁) + t₂ • (p₂ -ᵥ p₁) := by
     intro v hv
     have hr : Set.range b = {c₂ -ᵥ c₁, p₂ -ᵥ p₁} := by
@@ -340,12 +340,12 @@ the subspace. -/
 theorem orthogonalProjection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s]
     [HasOrthogonalProjection s.direction] {p : P} : ↑(orthogonalProjection s p) = p ↔ p ∈ s := by
   constructor
-  · exact fun h => h ▸ orthogonalProjection_mem p
-  · intro h
-    have hp : p ∈ (s : Set P) ∩ mk' p s.directionᗮ := ⟨h, self_mem_mk' p _⟩
-    rw [inter_eq_singleton_orthogonalProjection p] at hp
-    symm
-    exact hp
+  exact fun h => h ▸ orthogonalProjection_mem p
+  intro h
+  have hp : p ∈ (s : Set P) ∩ mk' p s.directionᗮ := ⟨h, self_mem_mk' p _⟩
+  rw [inter_eq_singleton_orthogonalProjection p] at hp
+  symm
+  exact hp
 
 @[simp]
 theorem orthogonalProjection_mem_subspace_eq_self {s : AffineSubspace ℝ P} [Nonempty s]
@@ -530,13 +530,13 @@ theorem reflection_eq_self_iff {s : AffineSubspace ℝ P} [Nonempty s]
     [HasOrthogonalProjection s.direction] (p : P) : reflection s p = p ↔ p ∈ s := by
   rw [← orthogonalProjection_eq_self_iff, reflection_apply]
   constructor
-  · intro h
-    rw [← @vsub_eq_zero_iff_eq V, vadd_vsub_assoc, ← two_smul ℝ (↑(orthogonalProjection s p) -ᵥ p),
-      smul_eq_zero] at h
-    norm_num at h
-    exact h
-  · intro h
-    simp [h]
+  intro h
+  rw [← @vsub_eq_zero_iff_eq V, vadd_vsub_assoc, ← two_smul ℝ (↑(orthogonalProjection s p) -ᵥ p),
+    smul_eq_zero] at h
+  norm_num at h
+  exact h
+  intro h
+  simp [h]
 
 /-- Reflecting a point in two subspaces produces the same result if
 and only if the point has the same orthogonal projection in each of
@@ -548,14 +548,14 @@ theorem reflection_eq_iff_orthogonalProjection_eq (s₁ s₂ : AffineSubspace �
       (orthogonalProjection s₁ p : P) = orthogonalProjection s₂ p := by
   rw [reflection_apply, reflection_apply]
   constructor
-  · intro h
-    rw [← @vsub_eq_zero_iff_eq V, vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, add_comm, add_sub_assoc,
-      vsub_sub_vsub_cancel_right, ←
-      two_smul ℝ ((orthogonalProjection s₁ p : P) -ᵥ orthogonalProjection s₂ p), smul_eq_zero] at h
-    norm_num at h
-    exact h
-  · intro h
-    rw [h]
+  intro h
+  rw [← @vsub_eq_zero_iff_eq V, vsub_vadd_eq_vsub_sub, vadd_vsub_assoc, add_comm, add_sub_assoc,
+    vsub_sub_vsub_cancel_right, ←
+    two_smul ℝ ((orthogonalProjection s₁ p : P) -ᵥ orthogonalProjection s₂ p), smul_eq_zero] at h
+  norm_num at h
+  exact h
+  intro h
+  rw [h]
 
 /-- The distance between `p₁` and the reflection of `p₂` equals that
 between the reflection of `p₁` and `p₂`. -/

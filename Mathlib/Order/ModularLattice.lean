@@ -233,8 +233,8 @@ theorem wellFounded_lt_exact_sequence {β γ : Type*} [PartialOrder β] [Preorde
           le_antisymm_iff]
         simp only [gci.l_le_l_iff, gi.u_le_u_iff, ← lt_iff_le_not_le, ← le_antisymm_iff]
         rcases lt_or_eq_of_le (inf_le_inf_right K (le_of_lt hAB)) with h | h
-        · exact Or.inl h
-        · exact Or.inr ⟨h, sup_lt_sup_of_lt_of_inf_le_inf hAB (le_of_eq h.symm)⟩)
+        exact Or.inl h
+        exact Or.inr ⟨h, sup_lt_sup_of_lt_of_inf_le_inf hAB (le_of_eq h.symm)⟩)
     (InvImage.wf _ (h₁.prod_lex h₂))
 
 /-- A generalization of the theorem that if `N` is a submodule of `M` and
@@ -377,9 +377,9 @@ lemma Set.Iic.isCompl_inf_inf_of_isCompl_of_le [Lattice α] [BoundedOrder α] [I
     {a b c : α} (h₁ : IsCompl b c) (h₂ : b ≤ a) :
     IsCompl (⟨a ⊓ b, inf_le_left⟩ : Iic a) (⟨a ⊓ c, inf_le_left⟩ : Iic a) := by
   constructor
-  · simp [disjoint_iff, Subtype.ext_iff, inf_comm a c, inf_assoc a, ← inf_assoc b, h₁.inf_eq_bot]
-  · simp only [Iic.codisjoint_iff, inf_comm a, IsModularLattice.inf_sup_inf_assoc]
-    simp [inf_of_le_left h₂, h₁.sup_eq_top]
+  simp [disjoint_iff, Subtype.ext_iff, inf_comm a c, inf_assoc a, ← inf_assoc b, h₁.inf_eq_bot]
+  simp only [Iic.codisjoint_iff, inf_comm a, IsModularLattice.inf_sup_inf_assoc]
+  simp [inf_of_le_left h₂, h₁.sup_eq_top]
 
 namespace IsModularLattice
 
@@ -400,30 +400,30 @@ instance complementedLattice_Iic : ComplementedLattice (Set.Iic a) :=
     let ⟨y, hy⟩ := exists_isCompl x
     ⟨⟨y ⊓ a, Set.mem_Iic.2 inf_le_right⟩, by
       constructor
-      · rw [disjoint_iff_inf_le]
-        change x ⊓ (y ⊓ a) ≤ ⊥
-        -- improve lattice subtype API
-        rw [← inf_assoc]
-        exact le_trans inf_le_left hy.1.le_bot
-      · rw [codisjoint_iff_le_sup]
-        change a ≤ x ⊔ y ⊓ a
-        -- improve lattice subtype API
-        rw [← sup_inf_assoc_of_le _ (Set.mem_Iic.1 hx), hy.2.eq_top, top_inf_eq]⟩⟩
+      rw [disjoint_iff_inf_le]
+      change x ⊓ (y ⊓ a) ≤ ⊥
+      -- improve lattice subtype API
+      rw [← inf_assoc]
+      exact le_trans inf_le_left hy.1.le_bot
+      rw [codisjoint_iff_le_sup]
+      change a ≤ x ⊔ y ⊓ a
+      -- improve lattice subtype API
+      rw [← sup_inf_assoc_of_le _ (Set.mem_Iic.1 hx), hy.2.eq_top, top_inf_eq]⟩⟩
 
 instance complementedLattice_Ici : ComplementedLattice (Set.Ici a) :=
   ⟨fun ⟨x, hx⟩ =>
     let ⟨y, hy⟩ := exists_isCompl x
     ⟨⟨y ⊔ a, Set.mem_Ici.2 le_sup_right⟩, by
       constructor
-      · rw [disjoint_iff_inf_le]
-        change x ⊓ (y ⊔ a) ≤ a
-        -- improve lattice subtype API
-        rw [← inf_sup_assoc_of_le _ (Set.mem_Ici.1 hx), hy.1.eq_bot, bot_sup_eq]
-      · rw [codisjoint_iff_le_sup]
-        change ⊤ ≤ x ⊔ (y ⊔ a)
-        -- improve lattice subtype API
-        rw [← sup_assoc]
-        exact le_trans hy.2.top_le le_sup_left⟩⟩
+      rw [disjoint_iff_inf_le]
+      change x ⊓ (y ⊔ a) ≤ a
+      -- improve lattice subtype API
+      rw [← inf_sup_assoc_of_le _ (Set.mem_Ici.1 hx), hy.1.eq_bot, bot_sup_eq]
+      rw [codisjoint_iff_le_sup]
+      change ⊤ ≤ x ⊔ (y ⊔ a)
+      -- improve lattice subtype API
+      rw [← sup_assoc]
+      exact le_trans hy.2.top_le le_sup_left⟩⟩
 
 end ComplementedLattice
 

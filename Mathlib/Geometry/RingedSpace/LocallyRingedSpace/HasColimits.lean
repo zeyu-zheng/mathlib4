@@ -178,27 +178,27 @@ theorem imageBasicOpen_image_preimage :
   fapply Types.coequalizer_preimage_image_eq_of_preimage_eq
     -- Porting note: Type of `f.1.base` and `g.1.base` needs to be explicit
     (f.1.base : X.carrier.1 ⟶ Y.carrier.1) (g.1.base : X.carrier.1 ⟶ Y.carrier.1)
-  · ext
-    simp_rw [types_comp_apply, ← TopCat.comp_app, ← PresheafedSpace.comp_base]
-    congr 2
-    exact coequalizer.condition f.1 g.1
-  · apply isColimitCoforkMapOfIsColimit (forget TopCat)
-    apply isColimitCoforkMapOfIsColimit (SheafedSpace.forget _)
-    exact coequalizerIsCoequalizer f.1 g.1
-  · suffices
-      (TopologicalSpace.Opens.map f.1.base).obj (imageBasicOpen f g U s) =
-        (TopologicalSpace.Opens.map g.1.base).obj (imageBasicOpen f g U s)
-      by injection this
-    delta imageBasicOpen
-    rw [preimage_basicOpen f, preimage_basicOpen g]
-    dsimp only [Functor.op, unop_op]
-    -- Porting note (#11224): change `rw` to `erw`
-    erw [← comp_apply, ← SheafedSpace.comp_c_app', ← comp_apply, ← SheafedSpace.comp_c_app',
-      SheafedSpace.congr_app (coequalizer.condition f.1 g.1), comp_apply,
-      X.toRingedSpace.basicOpen_res]
-    apply inf_eq_right.mpr
-    refine (RingedSpace.basicOpen_le _ _).trans ?_
-    rw [coequalizer.condition f.1 g.1]
+  ext
+  simp_rw [types_comp_apply, ← TopCat.comp_app, ← PresheafedSpace.comp_base]
+  congr 2
+  exact coequalizer.condition f.1 g.1
+  apply isColimitCoforkMapOfIsColimit (forget TopCat)
+  apply isColimitCoforkMapOfIsColimit (SheafedSpace.forget _)
+  exact coequalizerIsCoequalizer f.1 g.1
+  suffices
+    (TopologicalSpace.Opens.map f.1.base).obj (imageBasicOpen f g U s) =
+      (TopologicalSpace.Opens.map g.1.base).obj (imageBasicOpen f g U s)
+    by injection this
+  delta imageBasicOpen
+  rw [preimage_basicOpen f, preimage_basicOpen g]
+  dsimp only [Functor.op, unop_op]
+  -- Porting note (#11224): change `rw` to `erw`
+  erw [← comp_apply, ← SheafedSpace.comp_c_app', ← comp_apply, ← SheafedSpace.comp_c_app',
+    SheafedSpace.congr_app (coequalizer.condition f.1 g.1), comp_apply,
+    X.toRingedSpace.basicOpen_res]
+  apply inf_eq_right.mpr
+  refine (RingedSpace.basicOpen_le _ _).trans ?_
+  rw [coequalizer.condition f.1 g.1]
 
 theorem imageBasicOpen_image_open :
     IsOpen ((coequalizer.π f.1 g.1).base '' (imageBasicOpen f g U s).1) := by

@@ -54,10 +54,10 @@ lemma deriv_Gamma_nat (n : ℕ) :
   filter_upwards [eventually_gt_nhds hx] using h_rec
   have hder_nat (n : ℕ) : deriv f (n + 1) = deriv f 1 + harmonic n
   induction' n with n hn
-  · simp
-  · rw [cast_succ, hder_rec (n + 1) (by positivity), hn, harmonic_succ]
-    push_cast
-    ring
+  simp
+  rw [cast_succ, hder_rec (n + 1) (by positivity), hn, harmonic_succ]
+  push_cast
+  ring
   suffices -deriv f 1 = γ by rw [hder_nat n, ← this, neg_neg]
   -- Use convexity to show derivative of `f` at `n + 1` is between `log n` and `log (n + 1)`
   have derivLB (n : ℕ) (hn : 0 < n) : log n ≤ deriv f (n + 1)
@@ -72,14 +72,14 @@ lemma deriv_Gamma_nat (n : ℕ) :
     show n + 2 = (n + 1) + (1 : ℝ) by ring, h_rec (n + 1) (by positivity), add_sub_cancel_left]
   -- deduce `-deriv f 1` is bounded above + below by sequences which both tend to `γ`
   apply le_antisymm
-  · apply ge_of_tendsto tendsto_harmonic_sub_log
-    filter_upwards [eventually_gt_atTop 0] with n hn
-    rw [le_sub_iff_add_le', ← sub_eq_add_neg, sub_le_iff_le_add', ← hder_nat]
-    exact derivLB n hn
-  · apply le_of_tendsto tendsto_harmonic_sub_log_add_one
-    filter_upwards with n
-    rw [sub_le_iff_le_add', ← sub_eq_add_neg, le_sub_iff_add_le', ← hder_nat]
-    exact derivUB n
+  apply ge_of_tendsto tendsto_harmonic_sub_log
+  filter_upwards [eventually_gt_atTop 0] with n hn
+  rw [le_sub_iff_add_le', ← sub_eq_add_neg, sub_le_iff_le_add', ← hder_nat]
+  exact derivLB n hn
+  apply le_of_tendsto tendsto_harmonic_sub_log_add_one
+  filter_upwards with n
+  rw [sub_le_iff_le_add', ← sub_eq_add_neg, le_sub_iff_add_le', ← hder_nat]
+  exact derivUB n
 
 
 lemma hasDerivAt_Gamma_nat (n : ℕ) :
@@ -109,39 +109,39 @@ lemma hasDerivAt_Gamma_one_half : HasDerivAt Gamma (-√π * (γ + 2 * log 2)) (
       add_assoc, ← mul_add, deriv_comp_add_const,
       (by norm_num : 1/2 + 1/2 = (1 : ℝ)), Gamma_one, mul_one,
       eulerMascheroniConstant_eq_neg_deriv, add_neg_self, mul_zero, add_zero]
-    · apply h_diff; norm_num -- s = 1
-    · apply h_diff; norm_num -- s = 1/2
-    · exact ((h_diff (by norm_num)).hasDerivAt.comp_add_const).differentiableAt -- s = 1
+    apply h_diff; norm_num -- s = 1
+    apply h_diff; norm_num -- s = 1/2
+    exact ((h_diff (by norm_num)).hasDerivAt.comp_add_const).differentiableAt -- s = 1
   _ = (deriv (fun s ↦ Gamma (2 * s) * 2 ^ (1 - 2 * s) * √π) (1 / 2)) + √π * γ := by
     rw [funext Gamma_mul_Gamma_add_half]
   _ = √π * (deriv (fun s ↦ Gamma (2 * s) * 2 ^ (1 - 2 * s)) (1 / 2) + γ) := by
     rw [mul_comm √π, mul_comm √π, deriv_mul_const, add_mul]
     apply DifferentiableAt.mul
-    · exact .comp (g := Gamma) _ (by apply h_diff; norm_num) -- s = 1
-        (differentiableAt_id.const_mul _)
-    · exact (differentiableAt_const _).rpow (by fun_prop) two_ne_zero
+    exact .comp (g := Gamma) _ (by apply h_diff; norm_num) -- s = 1
+      (differentiableAt_id.const_mul _)
+    exact (differentiableAt_const _).rpow (by fun_prop) two_ne_zero
   _ = √π * (deriv (fun s ↦ Gamma (2 * s)) (1 / 2) +
               deriv (fun s : ℝ ↦ 2 ^ (1 - 2 * s)) (1 / 2) + γ) := by
     congr 2
     rw [deriv_mul]
-    · congr 1 <;> norm_num
-    · exact h_diff' one_half_pos
-    · exact DifferentiableAt.rpow (by fun_prop) (by fun_prop) two_ne_zero
+    congr 1 <;> norm_num
+    exact h_diff' one_half_pos
+    exact DifferentiableAt.rpow (by fun_prop) (by fun_prop) two_ne_zero
   _ = √π * (-2 * γ + deriv (fun s : ℝ ↦ 2 ^ (1 - 2 * s)) (1 / 2) + γ) := by
     congr 3
     change deriv (Gamma ∘ fun s ↦ 2 * s) _ = _
     rw [deriv.comp, deriv_const_mul, mul_one_div, div_self two_ne_zero, deriv_id''] <;>
     dsimp only
-    · rw [mul_one, mul_comm, hasDerivAt_Gamma_one.deriv, mul_neg, neg_mul]
-    · fun_prop
-    · apply h_diff; norm_num -- s = 1
-    · fun_prop
+    rw [mul_one, mul_comm, hasDerivAt_Gamma_one.deriv, mul_neg, neg_mul]
+    fun_prop
+    apply h_diff; norm_num -- s = 1
+    fun_prop
   _ = √π * (-2 * γ + -(2 * log 2) + γ) := by
     congr 3
     apply HasDerivAt.deriv
     have := HasDerivAt.rpow (hasDerivAt_const (1 / 2 : ℝ) (2 : ℝ))
       (?_ : HasDerivAt (fun s : ℝ ↦ 1 - 2 * s) (-2) (1 / 2)) two_pos
-    · norm_num at this; exact this
+    norm_num at this; exact this
     simp_rw [mul_comm (2 : ℝ) _]
     apply HasDerivAt.const_sub
     exact hasDerivAt_mul_const (2 : ℝ)
@@ -186,11 +186,11 @@ lemma hasDerivAt_Gamma_one : HasDerivAt Gamma (-γ) 1 := by
 lemma hasDerivAt_Gamma_one_half : HasDerivAt Gamma (-√π * (γ + 2 * log 2)) (1 / 2) := by
   have := HasDerivAt.complex_of_real
     (differentiableAt_Gamma _ ?_) Real.hasDerivAt_Gamma_one_half Gamma_ofReal
-  · simpa only [neg_mul, one_div, ofReal_neg, ofReal_mul, ofReal_add, ofReal_ofNat, ofNat_log,
-      ofReal_inv] using this
-  · intro m
-    rw [← ofReal_natCast, ← ofReal_neg, ne_eq, ofReal_inj]
-    exact ((neg_nonpos.mpr m.cast_nonneg).trans_lt one_half_pos).ne'
+  simpa only [neg_mul, one_div, ofReal_neg, ofReal_mul, ofReal_add, ofReal_ofNat, ofNat_log,
+    ofReal_inv] using this
+  intro m
+  rw [← ofReal_natCast, ← ofReal_neg, ne_eq, ofReal_inj]
+  exact ((neg_nonpos.mpr m.cast_nonneg).trans_lt one_half_pos).ne'
 
 lemma hasDerivAt_Gammaℂ_one : HasDerivAt Gammaℂ (-(γ + log (2 * π)) / π) 1 := by
   let f (s : ℂ) : ℂ := 2 * (2 * π) ^ (-s)
@@ -218,8 +218,8 @@ lemma hasDerivAt_Gammaℝ_one : HasDerivAt Gammaℝ (-(γ + log (4 * π)) / 2) 1
   rw [mul_assoc, ← mul_div_assoc, mul_neg_one, neg_div, cpow_neg, ← div_eq_inv_mul, aux]
   have hg : HasDerivAt g (-√π * (γ + 2 * log 2) / 2) 1
   have := hasDerivAt_Gamma_one_half.comp 1 (?_ : HasDerivAt (fun s : ℂ ↦ s / 2) (1 / 2) 1)
-  · rwa [mul_one_div] at this
-  · exact (hasDerivAt_id _).div_const _
+  rwa [mul_one_div] at this
+  exact (hasDerivAt_id _).div_const _
   refine HasDerivAt.congr_deriv (hf.mul hg) ?_
   simp only [f]
   rw [Gamma_one_half_eq, aux, div_mul_cancel₀ _ aux2, neg_div _ (1 : ℂ), cpow_neg, aux,

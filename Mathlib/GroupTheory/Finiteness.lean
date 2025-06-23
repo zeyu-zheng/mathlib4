@@ -201,16 +201,16 @@ theorem Subgroup.fg_iff (P : Subgroup G) :
 and only if it is finitely generated as an additive submonoid."]
 theorem Subgroup.fg_iff_submonoid_fg (P : Subgroup G) : P.FG ↔ P.toSubmonoid.FG := by
   constructor
-  · rintro ⟨S, rfl⟩
-    rw [Submonoid.fg_iff]
-    refine ⟨S ∪ S⁻¹, ?_, S.finite_toSet.union S.finite_toSet.inv⟩
-    exact (Subgroup.closure_toSubmonoid _).symm
-  · rintro ⟨S, hS⟩
-    refine ⟨S, le_antisymm ?_ ?_⟩
-    · rw [Subgroup.closure_le, ← Subgroup.coe_toSubmonoid, ← hS]
-      exact Submonoid.subset_closure
-    · rw [← Subgroup.toSubmonoid_le, ← hS, Submonoid.closure_le]
-      exact Subgroup.subset_closure
+  rintro ⟨S, rfl⟩
+  rw [Submonoid.fg_iff]
+  refine ⟨S ∪ S⁻¹, ?_, S.finite_toSet.union S.finite_toSet.inv⟩
+  exact (Subgroup.closure_toSubmonoid _).symm
+  rintro ⟨S, hS⟩
+  refine ⟨S, le_antisymm ?_ ?_⟩
+  rw [Subgroup.closure_le, ← Subgroup.coe_toSubmonoid, ← hS]
+  exact Submonoid.subset_closure
+  rw [← Subgroup.toSubmonoid_le, ← hS, Submonoid.closure_le]
+  exact Subgroup.subset_closure
 
 theorem Subgroup.fg_iff_add_fg (P : Subgroup G) : P.FG ↔ P.toAddSubgroup.FG := by
   rw [Subgroup.fg_iff_submonoid_fg, AddSubgroup.fg_iff_addSubmonoid_fg]
@@ -331,9 +331,9 @@ theorem Group.rank_le_of_surjective [Group.FG G] [Group.FG G'] (f : G →* G')
     (hf : Function.Surjective f) : Group.rank G' ≤ Group.rank G := by
     obtain ⟨S, hS1, hS2⟩ := Group.rank_spec G
     trans (S.image f).card
-    · apply Group.rank_le
-      rw [Finset.coe_image, ← MonoidHom.map_closure, hS2, Subgroup.map_top_of_surjective f hf]
-    · exact Finset.card_image_le.trans_eq hS1
+    apply Group.rank_le
+    rw [Finset.coe_image, ← MonoidHom.map_closure, hS2, Subgroup.map_top_of_surjective f hf]
+    exact Finset.card_image_le.trans_eq hS1
 
 @[to_additive]
 theorem Group.rank_range_le [Group.FG G] {f : G →* G'} : Group.rank f.range ≤ Group.rank G :=

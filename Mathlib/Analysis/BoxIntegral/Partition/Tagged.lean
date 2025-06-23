@@ -139,10 +139,10 @@ theorem forall_biUnionTagged (p : (ι → ℝ) → Box ι → Prop) (π : Prepar
       ∀ J ∈ π, ∀ J' ∈ πi J, p ((πi J).tag J') J' := by
   simp only [mem_biUnionTagged]
   refine ⟨fun H J hJ J' hJ' => ?_, fun H J' ⟨J, hJ, hJ'⟩ => ?_⟩
-  · rw [← π.tag_biUnionTagged hJ hJ']
-    exact H J' ⟨J, hJ, hJ'⟩
-  · rw [π.tag_biUnionTagged hJ hJ']
-    exact H J hJ J' hJ'
+  rw [← π.tag_biUnionTagged hJ hJ']
+  exact H J' ⟨J, hJ, hJ'⟩
+  rw [π.tag_biUnionTagged hJ hJ']
+  exact H J hJ J' hJ'
 
 theorem IsPartition.biUnionTagged {π : Prepartition I} (h : IsPartition π)
     {πi : ∀ J, TaggedPrepartition J} (hi : ∀ J ∈ π, (πi J).IsPartition) :
@@ -326,18 +326,18 @@ theorem disjUnion_tag_of_mem_right (h : Disjoint π₁.iUnion π₂.iUnion) (hJ 
 theorem IsSubordinate.disjUnion [Fintype ι] (h₁ : IsSubordinate π₁ r) (h₂ : IsSubordinate π₂ r)
     (h : Disjoint π₁.iUnion π₂.iUnion) : IsSubordinate (π₁.disjUnion π₂ h) r := by
   refine fun J hJ => (Finset.mem_union.1 hJ).elim (fun hJ => ?_) fun hJ => ?_
-  · rw [disjUnion_tag_of_mem_left _ hJ]
-    exact h₁ _ hJ
-  · rw [disjUnion_tag_of_mem_right _ hJ]
-    exact h₂ _ hJ
+  rw [disjUnion_tag_of_mem_left _ hJ]
+  exact h₁ _ hJ
+  rw [disjUnion_tag_of_mem_right _ hJ]
+  exact h₂ _ hJ
 
 theorem IsHenstock.disjUnion (h₁ : IsHenstock π₁) (h₂ : IsHenstock π₂)
     (h : Disjoint π₁.iUnion π₂.iUnion) : IsHenstock (π₁.disjUnion π₂ h) := by
   refine fun J hJ => (Finset.mem_union.1 hJ).elim (fun hJ => ?_) fun hJ => ?_
-  · rw [disjUnion_tag_of_mem_left _ hJ]
-    exact h₁ _ hJ
-  · rw [disjUnion_tag_of_mem_right _ hJ]
-    exact h₂ _ hJ
+  rw [disjUnion_tag_of_mem_left _ hJ]
+  exact h₁ _ hJ
+  rw [disjUnion_tag_of_mem_right _ hJ]
+  exact h₂ _ hJ
 
 /-- If `I ≤ J`, then every tagged prepartition of `I` is a tagged prepartition of `J`. -/
 def embedBox (I J : Box ι) (h : I ≤ J) : TaggedPrepartition I ↪ TaggedPrepartition J where

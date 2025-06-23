@@ -138,13 +138,13 @@ theorem polar_subMulAction {S : Type*} [SetLike S E] [SMulMemClass S 𝕜 E] (m 
     B.polar m = { y | ∀ x ∈ m, B x y = 0 } := by
   ext y
   constructor
-  · intro hy x hx
-    obtain ⟨r, hr⟩ := NormedField.exists_lt_norm 𝕜 ‖B x y‖⁻¹
-    contrapose! hr
-    rw [← one_div, le_div_iff (norm_pos_iff.2 hr)]
-    simpa using  hy _ (SMulMemClass.smul_mem r hx)
-  · intro h x hx
-    simp [h x hx]
+  intro hy x hx
+  obtain ⟨r, hr⟩ := NormedField.exists_lt_norm 𝕜 ‖B x y‖⁻¹
+  contrapose! hr
+  rw [← one_div, le_div_iff (norm_pos_iff.2 hr)]
+  simpa using  hy _ (SMulMemClass.smul_mem r hx)
+  intro h x hx
+  simp [h x hx]
 
 /-- The polar of a set closed under scalar multiplication as a submodule -/
 def polarSubmodule {S : Type*} [SetLike S E] [SMulMemClass S 𝕜 E] (m : S) : Submodule 𝕜 F :=

@@ -40,12 +40,12 @@ variable [Module 𝕜 E] [BoundedSMul 𝕜 E]
 theorem ediam_smul₀ (c : 𝕜) (s : Set E) : EMetric.diam (c • s) = ‖c‖₊ • EMetric.diam s := by
   refine le_antisymm (ediam_smul_le c s) ?_
   obtain rfl | hc := eq_or_ne c 0
-  · obtain rfl | hs := s.eq_empty_or_nonempty
-    · simp
-    simp [zero_smul_set hs, ← Set.singleton_zero]
-  · have := (lipschitzWith_smul c⁻¹).ediam_image_le (c • s)
-    rwa [← smul_eq_mul, ← ENNReal.smul_def, Set.image_smul, inv_smul_smul₀ hc s, nnnorm_inv,
-      le_inv_smul_iff_of_pos (nnnorm_pos.2 hc)] at this
+  obtain rfl | hs := s.eq_empty_or_nonempty
+  simp
+  simp [zero_smul_set hs, ← Set.singleton_zero]
+  have := (lipschitzWith_smul c⁻¹).ediam_image_le (c • s)
+  rwa [← smul_eq_mul, ← ENNReal.smul_def, Set.image_smul, inv_smul_smul₀ hc s, nnnorm_inv,
+    le_inv_smul_iff_of_pos (nnnorm_pos.2 hc)] at this
 
 theorem diam_smul₀ (c : 𝕜) (x : Set E) : diam (c • x) = ‖c‖ * diam x := by
   simp_rw [diam, ediam_smul₀, ENNReal.toReal_smul, NNReal.smul_def, coe_nnnorm, smul_eq_mul]
@@ -56,10 +56,10 @@ theorem infEdist_smul₀ {c : 𝕜} (hc : c ≠ 0) (s : Set E) (x : E) :
   have : Function.Surjective ((c • ·) : E → E) :=
     Function.RightInverse.surjective (smul_inv_smul₀ hc)
   trans ⨅ (y) (_ : y ∈ s), ‖c‖₊ • edist x y
-  · refine (this.iInf_congr _ fun y => ?_).symm
-    simp_rw [smul_mem_smul_set_iff₀ hc, edist_smul₀]
-  · have : (‖c‖₊ : ENNReal) ≠ 0 := by simp [hc]
-    simp_rw [ENNReal.smul_def, smul_eq_mul, ENNReal.mul_iInf_of_ne this ENNReal.coe_ne_top]
+  refine (this.iInf_congr _ fun y => ?_).symm
+  simp_rw [smul_mem_smul_set_iff₀ hc, edist_smul₀]
+  have : (‖c‖₊ : ENNReal) ≠ 0 := by simp [hc]
+  simp_rw [ENNReal.smul_def, smul_eq_mul, ENNReal.mul_iInf_of_ne this ENNReal.coe_ne_top]
 
 theorem infDist_smul₀ {c : 𝕜} (hc : c ≠ 0) (s : Set E) (x : E) :
     Metric.infDist (c • x) (c • s) = ‖c‖ * Metric.infDist x s := by
@@ -156,7 +156,7 @@ theorem exists_dist_eq (x z : E) {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (hab 
 theorem exists_dist_le_le (hδ : 0 ≤ δ) (hε : 0 ≤ ε) (h : dist x z ≤ ε + δ) :
     ∃ y, dist x y ≤ δ ∧ dist y z ≤ ε := by
   obtain rfl | hε' := hε.eq_or_lt
-  · exact ⟨z, by rwa [zero_add] at h, (dist_self _).le⟩
+  exact ⟨z, by rwa [zero_add] at h, (dist_self _).le⟩
   have hεδ := add_pos_of_pos_of_nonneg hε' hδ
   refine (exists_dist_eq x z (div_nonneg hε <| add_nonneg hε hδ)
     (div_nonneg hδ <| add_nonneg hε hδ) <| by
@@ -232,14 +232,14 @@ open EMetric ENNReal
 theorem infEdist_thickening (hδ : 0 < δ) (s : Set E) (x : E) :
     infEdist x (thickening δ s) = infEdist x s - ENNReal.ofReal δ := by
   obtain hs | hs := lt_or_le (infEdist x s) (ENNReal.ofReal δ)
-  · rw [infEdist_zero_of_mem, tsub_eq_zero_of_le hs.le]
-    exact hs
+  rw [infEdist_zero_of_mem, tsub_eq_zero_of_le hs.le]
+  exact hs
   refine (tsub_le_iff_right.2 infEdist_le_infEdist_thickening_add).antisymm' ?_
   refine le_sub_of_add_le_right ofReal_ne_top ?_
   refine le_infEdist.2 fun z hz => le_of_forall_lt' fun r h => ?_
   cases' r with r
-  · exact add_lt_top.2 ⟨lt_top_iff_ne_top.2 <| infEdist_ne_top ⟨z, self_subset_thickening hδ _ hz⟩,
-      ofReal_lt_top⟩
+  exact add_lt_top.2 ⟨lt_top_iff_ne_top.2 <| infEdist_ne_top ⟨z, self_subset_thickening hδ _ hz⟩,
+    ofReal_lt_top⟩
   have hr : 0 < ↑r - δ
   refine sub_pos_of_lt ?_
   have := hs.trans_lt ((infEdist_le_edist_of_mem hz).trans_lt h)
@@ -278,15 +278,15 @@ theorem closure_thickening (hδ : 0 < δ) (s : Set E) :
 theorem infEdist_cthickening (δ : ℝ) (s : Set E) (x : E) :
     infEdist x (cthickening δ s) = infEdist x s - ENNReal.ofReal δ := by
   obtain hδ | hδ := le_or_lt δ 0
-  · rw [cthickening_of_nonpos hδ, infEdist_closure, ofReal_of_nonpos hδ, tsub_zero]
-  · rw [← closure_thickening hδ, infEdist_closure, infEdist_thickening hδ]
+  rw [cthickening_of_nonpos hδ, infEdist_closure, ofReal_of_nonpos hδ, tsub_zero]
+  rw [← closure_thickening hδ, infEdist_closure, infEdist_thickening hδ]
 
 @[simp]
 theorem thickening_cthickening (hε : 0 < ε) (hδ : 0 ≤ δ) (s : Set E) :
     thickening ε (cthickening δ s) = thickening (ε + δ) s := by
   obtain rfl | hδ := hδ.eq_or_lt
-  · rw [cthickening_zero, thickening_closure, add_zero]
-  · rw [← closure_thickening hδ, thickening_closure, thickening_thickening hε hδ]
+  rw [cthickening_zero, thickening_closure, add_zero]
+  rw [← closure_thickening hδ, thickening_closure, thickening_thickening hε hδ]
 
 @[simp]
 theorem cthickening_cthickening (hε : 0 ≤ ε) (hδ : 0 ≤ δ) (s : Set E) :
@@ -359,8 +359,8 @@ variable [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 theorem smul_closedBall (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) :
     c • closedBall x r = closedBall (c • x) (‖c‖ * r) := by
   rcases eq_or_ne c 0 with (rfl | hc)
-  · simp [hr, zero_smul_set, Set.singleton_zero, nonempty_closedBall]
-  · exact smul_closedBall' hc x r
+  simp [hr, zero_smul_set, Set.singleton_zero, nonempty_closedBall]
+  exact smul_closedBall' hc x r
 
 theorem smul_closedUnitBall (c : 𝕜) : c • closedBall (0 : E) (1 : ℝ) = closedBall (0 : E) ‖c‖ := by
   rw [smul_closedBall _ _ zero_le_one, smul_zero, mul_one]
@@ -390,8 +390,8 @@ theorem NormedSpace.sphere_nonempty [Nontrivial E] {x : E} {r : ℝ} :
 theorem smul_sphere [Nontrivial E] (c : 𝕜) (x : E) {r : ℝ} (hr : 0 ≤ r) :
     c • sphere x r = sphere (c • x) (‖c‖ * r) := by
   rcases eq_or_ne c 0 with (rfl | hc)
-  · simp [zero_smul_set, Set.singleton_zero, hr]
-  · exact smul_sphere' hc x r
+  simp [zero_smul_set, Set.singleton_zero, hr]
+  exact smul_sphere' hc x r
 
 /-- Any ball `Metric.ball x r`, `0 < r` is the image of the unit ball under `fun y ↦ x + r • y`. -/
 theorem affinity_unitBall {r : ℝ} (hr : 0 < r) (x : E) : x +ᵥ r • ball (0 : E) 1 = ball x r := by

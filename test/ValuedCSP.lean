@@ -43,8 +43,8 @@ example : exampleFiniteValuedInstance.IsOptimumSolution ![(0 : ℚ), (0 : ℚ)] 
   convert_to 0 ≤ exampleFiniteValuedInstance.evalSolution s
   rw [ValuedCSP.Instance.evalSolution, exampleFiniteValuedInstance]
   convert_to 0 ≤ |s 0| + |s 1|
-  · simp [ValuedCSP.unaryTerm, ValuedCSP.Term.evalSolution, Function.OfArity.uncurry]
-    rfl
+  simp [ValuedCSP.unaryTerm, ValuedCSP.Term.evalSolution, Function.OfArity.uncurry]
+  rfl
   positivity
 
 -- ## Example: B ≠ A ≠ C ≠ D ≠ B ≠ C with three available labels (i.e., 3-coloring of K₄⁻)

@@ -613,12 +613,12 @@ protected abbrev algebra (e : α ≃ β) [Semiring β] :
   intros
   letI : Module R α := e.module R
   fapply Algebra.ofModule
-  · intro r x y
-    show e.symm (e (e.symm (r • e x)) * e y) = e.symm (r • e.ringEquiv (x * y))
-    simp only [apply_symm_apply, Algebra.smul_mul_assoc, map_mul, ringEquiv_apply]
-  · intro r x y
-    show e.symm (e x * e (e.symm (r • e y))) = e.symm (r • e (e.symm (e x * e y)))
-    simp only [apply_symm_apply, Algebra.mul_smul_comm]
+  intro r x y
+  show e.symm (e (e.symm (r • e x)) * e y) = e.symm (r • e.ringEquiv (x * y))
+  simp only [apply_symm_apply, Algebra.smul_mul_assoc, map_mul, ringEquiv_apply]
+  intro r x y
+  show e.symm (e x * e (e.symm (r • e y))) = e.symm (r • e (e.symm (e x * e y)))
+  simp only [apply_symm_apply, Algebra.mul_smul_comm]
 
 lemma algebraMap_def (e : α ≃ β) [Semiring β] [Algebra R β] (r : R) :
     let semiring := Equiv.semiring e

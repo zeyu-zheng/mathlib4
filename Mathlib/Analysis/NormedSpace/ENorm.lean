@@ -76,7 +76,7 @@ theorem coe_inj {e₁ e₂ : ENorm 𝕜 V} : (e₁ : V → ℝ≥0∞) = e₂ �
 theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ‖c‖₊ * e x := by
   apply le_antisymm (e.map_smul_le' c x)
   by_cases hc : c = 0
-  · simp [hc]
+  simp [hc]
   calc
     (‖c‖₊ : ℝ≥0∞) * e x = ‖c‖₊ * e (c⁻¹ • c • x) := by rw [inv_smul_smul₀ hc]
     _ ≤ ‖c‖₊ * (‖c⁻¹‖₊ * e (c • x)) := mul_le_mul_left' (e.map_smul_le' _ _) _
@@ -128,11 +128,11 @@ noncomputable instance : Top (ENorm 𝕜 V) :=
       map_smul_le' := fun c x => by
         simp only
         split_ifs with hcx hx hx <;> simp only [smul_eq_zero, not_or] at hcx
-        · simp only [mul_zero, le_refl]
-        · have : c = 0 := by tauto
-          simp [this]
-        · tauto
-        · simpa [mul_top'] using hcx.1 }⟩
+        simp only [mul_zero, le_refl]
+        have : c = 0 := by tauto
+        simp [this]
+        tauto
+        simpa [mul_top'] using hcx.1 }⟩
 
 noncomputable instance : Inhabited (ENorm 𝕜 V) :=
   ⟨⊤⟩

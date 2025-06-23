@@ -117,10 +117,10 @@ theorem tDist_nonneg : 0 ≤ v.tDist :=
 theorem dist_t₀_le (t : Icc v.tMin v.tMax) : dist t v.t₀ ≤ v.tDist := by
   rw [Subtype.dist_eq, Real.dist_eq]
   rcases le_total t v.t₀ with ht | ht
-  · rw [abs_of_nonpos (sub_nonpos.2 <| Subtype.coe_le_coe.2 ht), neg_sub]
-    exact (sub_le_sub_left t.2.1 _).trans (le_max_right _ _)
-  · rw [abs_of_nonneg (sub_nonneg.2 <| Subtype.coe_le_coe.2 ht)]
-    exact (sub_le_sub_right t.2.2 _).trans (le_max_left _ _)
+  rw [abs_of_nonpos (sub_nonpos.2 <| Subtype.coe_le_coe.2 ht), neg_sub]
+  exact (sub_le_sub_left t.2.1 _).trans (le_max_right _ _)
+  rw [abs_of_nonneg (sub_nonneg.2 <| Subtype.coe_le_coe.2 ht)]
+  exact (sub_le_sub_right t.2.2 _).trans (le_max_left _ _)
 
 /-- Projection $ℝ → [t_{\min}, t_{\max}]$ sending $(-∞, t_{\min}]$ to $t_{\min}$ and $[t_{\max}, ∞)$
 to $t_{\max}$. -/
@@ -177,8 +177,8 @@ theorem range_toContinuousMap :
     range toContinuousMap =
       {f : C(Icc v.tMin v.tMax, E) | f v.t₀ = v.x₀ ∧ LipschitzWith v.C f} := by
   ext f; constructor
-  · rintro ⟨⟨f, hf₀, hf_lip⟩, rfl⟩; exact ⟨hf₀, hf_lip⟩
-  · rcases f with ⟨f, hf⟩; rintro ⟨hf₀, hf_lip⟩; exact ⟨⟨f, hf₀, hf_lip⟩, rfl⟩
+  rintro ⟨⟨f, hf₀, hf_lip⟩, rfl⟩; exact ⟨hf₀, hf_lip⟩
+  rcases f with ⟨f, hf⟩; rintro ⟨hf₀, hf_lip⟩; exact ⟨⟨f, hf₀, hf_lip⟩, rfl⟩
 
 theorem map_t₀ : f v.t₀ = v.x₀ :=
   f.map_t₀'
@@ -283,10 +283,10 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
 theorem dist_iterate_next_apply_le (f₁ f₂ : FunSpace v) (n : ℕ) (t : Icc v.tMin v.tMax) :
     dist (next^[n] f₁ t) (next^[n] f₂ t) ≤ (v.L * |t.1 - v.t₀|) ^ n / n ! * dist f₁ f₂ := by
   induction' n with n ihn generalizing t
-  · rw [pow_zero, Nat.factorial_zero, Nat.cast_one, div_one, one_mul]
-    exact dist_apply_le_dist f₁ f₂ t
-  · rw [iterate_succ_apply', iterate_succ_apply']
-    exact dist_next_apply_le_of_le ihn _
+  rw [pow_zero, Nat.factorial_zero, Nat.cast_one, div_one, one_mul]
+  exact dist_apply_le_dist f₁ f₂ t
+  rw [iterate_succ_apply', iterate_succ_apply']
+  exact dist_next_apply_le_of_le ihn _
 
 theorem dist_iterate_next_le (f₁ f₂ : FunSpace v) (n : ℕ) :
     dist (next^[n] f₁) (next^[n] f₂) ≤ (v.L * v.tDist) ^ n / n ! * dist f₁ f₂ := by
@@ -322,10 +322,10 @@ theorem exists_solution :
       HasDerivWithinAt f (v t (f t)) (Icc v.tMin v.tMax) t := by
   rcases v.exists_fixed with ⟨f, hf⟩
   refine ⟨f ∘ v.proj, ?_, fun t ht => ?_⟩
-  · simp only [(· ∘ ·), proj_coe, f.map_t₀]
-  · simp only [(· ∘ ·), v.proj_of_mem ht]
-    lift t to Icc v.tMin v.tMax using ht
-    simpa only [hf, v.proj_coe] using f.hasDerivWithinAt_next t
+  simp only [(· ∘ ·), proj_coe, f.map_t₀]
+  simp only [(· ∘ ·), v.proj_of_mem ht]
+  lift t to Icc v.tMin v.tMax using ht
+  simpa only [hf, v.proj_coe] using f.hasDerivWithinAt_next t
 
 end PicardLindelof
 

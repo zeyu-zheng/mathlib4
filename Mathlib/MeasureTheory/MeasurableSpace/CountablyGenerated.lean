@@ -114,11 +114,11 @@ instance (priority := 100) [MeasurableSpace α] [Countable α] : CountablyGenera
     intro s hs
     have : s = ⋃ y ∈ s, measurableAtom y
     apply Subset.antisymm
-    · intro x hx
-      simpa using ⟨x, hx, by simp⟩
-    · simp only [iUnion_subset_iff]
-      intro x hx
-      exact measurableAtom_subset hs hx
+    intro x hx
+    simpa using ⟨x, hx, by simp⟩
+    simp only [iUnion_subset_iff]
+    intro x hx
+    exact measurableAtom_subset hs hx
     rw [this]
     apply MeasurableSet.biUnion (to_countable s) (fun x _hx ↦ ?_)
     apply measurableSet_generateFrom
@@ -234,7 +234,7 @@ theorem exists_countablyGenerated_le_of_countablySeparated [m : MeasurableSpace 
     ∃ m' : MeasurableSpace α, @CountablyGenerated _ m' ∧ @SeparatesPoints _ m' ∧ m' ≤ m := by
   rcases h with ⟨b, bct, hbm, hb⟩
   refine ⟨generateFrom b, ?_, ?_, generateFrom_le hbm⟩
-  · use b
+  use b
   rw [@separatesPoints_iff]
   exact fun x y hxy ↦ hb _ trivial _ trivial fun _ hs ↦ hxy _ $ measurableSet_generateFrom hs
 
@@ -312,9 +312,9 @@ lemma measurableSet_succ_memPartition (t : ℕ → Set α) (n : ℕ) {s : Set α
     MeasurableSet[generateFrom (memPartition t (n + 1))] s := by
   rw [← diff_union_inter s (t n)]
   refine MeasurableSet.union ?_ ?_ <;>
-    · refine measurableSet_generateFrom ?_
-      rw [memPartition_succ]
-      exact ⟨s, hs, by simp⟩
+  · refine measurableSet_generateFrom ?_
+    rw [memPartition_succ]
+    exact ⟨s, hs, by simp⟩
 
 lemma generateFrom_memPartition_le_succ (t : ℕ → Set α) (n : ℕ) :
     generateFrom (memPartition t n) ≤ generateFrom (memPartition t (n + 1)) :=
@@ -325,38 +325,38 @@ lemma measurableSet_generateFrom_memPartition_iff (t : ℕ → Set α) (n : ℕ)
     MeasurableSet[generateFrom (memPartition t n)] s
       ↔ ∃ S : Finset (Set α), ↑S ⊆ memPartition t n ∧ s = ⋃₀ S := by
   refine ⟨fun h ↦ ?_, fun ⟨S, hS_subset, hS_eq⟩ ↦ ?_⟩
-  · refine MeasurableSpace.generateFrom_induction
-      (p := fun u ↦ ∃ S : Finset (Set α), ↑S ⊆ memPartition t n ∧ u = ⋃₀ ↑S)
-      (C := memPartition t n) ?_ ?_ ?_ ?_ h
-    · exact fun u hu ↦ ⟨{u}, by simp [hu], by simp⟩
-    · exact ⟨∅, by simp, by simp⟩
-    · rintro u ⟨S, hS_subset, rfl⟩
-      refine ⟨(memPartition t n).toFinset \ S, ?_, ?_⟩
-      · simp only [Finset.coe_sdiff, coe_toFinset]
-        exact diff_subset
-      · simp only [Finset.coe_sdiff, coe_toFinset]
-        refine (IsCompl.eq_compl ⟨?_, ?_⟩).symm
-        · refine Set.disjoint_sUnion_right.mpr fun u huS => ?_
-          refine Set.disjoint_sUnion_left.mpr fun v huV => ?_
-          refine disjoint_memPartition t n (mem_of_mem_diff huV) (hS_subset huS) ?_
-          exact ne_of_mem_of_not_mem huS (not_mem_of_mem_diff huV) |>.symm
-        · rw [codisjoint_iff]
-          simp only [sup_eq_union, top_eq_univ]
-          rw [← sUnion_memPartition t n, union_comm, ← sUnion_union, union_diff_cancel hS_subset]
-    · intro f h
-      choose S hS_subset hS_eq using h
-      have : Fintype (⋃ n, (S n : Set (Set α)))
-      refine (Finite.subset (finite_memPartition t n) ?_).fintype
-      simp only [iUnion_subset_iff]
-      exact hS_subset
-      refine ⟨(⋃ n, (S n : Set (Set α))).toFinset, ?_, ?_⟩
-      · simp only [coe_toFinset, iUnion_subset_iff]
-        exact hS_subset
-      · simp only [coe_toFinset, sUnion_iUnion, hS_eq]
-  · rw [hS_eq, sUnion_eq_biUnion]
-    refine MeasurableSet.biUnion ?_ (fun t ht ↦ ?_)
-    · exact S.countable_toSet
-    · exact measurableSet_generateFrom (hS_subset ht)
+  refine MeasurableSpace.generateFrom_induction
+    (p := fun u ↦ ∃ S : Finset (Set α), ↑S ⊆ memPartition t n ∧ u = ⋃₀ ↑S)
+    (C := memPartition t n) ?_ ?_ ?_ ?_ h
+  exact fun u hu ↦ ⟨{u}, by simp [hu], by simp⟩
+  exact ⟨∅, by simp, by simp⟩
+  rintro u ⟨S, hS_subset, rfl⟩
+  refine ⟨(memPartition t n).toFinset \ S, ?_, ?_⟩
+  simp only [Finset.coe_sdiff, coe_toFinset]
+  exact diff_subset
+  simp only [Finset.coe_sdiff, coe_toFinset]
+  refine (IsCompl.eq_compl ⟨?_, ?_⟩).symm
+  refine Set.disjoint_sUnion_right.mpr fun u huS => ?_
+  refine Set.disjoint_sUnion_left.mpr fun v huV => ?_
+  refine disjoint_memPartition t n (mem_of_mem_diff huV) (hS_subset huS) ?_
+  exact ne_of_mem_of_not_mem huS (not_mem_of_mem_diff huV) |>.symm
+  rw [codisjoint_iff]
+  simp only [sup_eq_union, top_eq_univ]
+  rw [← sUnion_memPartition t n, union_comm, ← sUnion_union, union_diff_cancel hS_subset]
+  intro f h
+  choose S hS_subset hS_eq using h
+  have : Fintype (⋃ n, (S n : Set (Set α)))
+  refine (Finite.subset (finite_memPartition t n) ?_).fintype
+  simp only [iUnion_subset_iff]
+  exact hS_subset
+  refine ⟨(⋃ n, (S n : Set (Set α))).toFinset, ?_, ?_⟩
+  simp only [coe_toFinset, iUnion_subset_iff]
+  exact hS_subset
+  simp only [coe_toFinset, sUnion_iUnion, hS_eq]
+  rw [hS_eq, sUnion_eq_biUnion]
+  refine MeasurableSet.biUnion ?_ (fun t ht ↦ ?_)
+  exact S.countable_toSet
+  exact measurableSet_generateFrom (hS_subset ht)
 
 lemma measurableSet_generateFrom_memPartition (t : ℕ → Set α) (n : ℕ) :
     MeasurableSet[generateFrom (memPartition t (n + 1))] (t n) := by
@@ -371,22 +371,22 @@ lemma measurableSet_generateFrom_memPartition (t : ℕ → Set α) (n : ℕ) :
 lemma generateFrom_iUnion_memPartition (t : ℕ → Set α) :
     generateFrom (⋃ n, memPartition t n) = generateFrom (range t) := by
   refine le_antisymm (generateFrom_le fun u hu ↦ ?_) (generateFrom_le fun u hu ↦ ?_)
-  · simp only [mem_iUnion] at hu
-    obtain ⟨n, hun⟩ := hu
-    induction n generalizing u with
-    | zero =>
-      simp only [Nat.zero_eq, memPartition_zero, mem_insert_iff, mem_singleton_iff] at hun
-      rw [hun]
-      exact MeasurableSet.univ
-    | succ n ih =>
-      simp only [memPartition_succ, mem_setOf_eq] at hun
-      obtain ⟨v, hv, huv⟩ := hun
-      rcases huv with rfl | rfl
-      · exact (ih v hv).inter (measurableSet_generateFrom ⟨n, rfl⟩)
-      · exact (ih v hv).diff (measurableSet_generateFrom ⟨n, rfl⟩)
-  · simp only [iUnion_singleton_eq_range, mem_range] at hu
-    obtain ⟨n, rfl⟩ := hu
-    exact generateFrom_mono (subset_iUnion _ _) _ (measurableSet_generateFrom_memPartition t n)
+  simp only [mem_iUnion] at hu
+  obtain ⟨n, hun⟩ := hu
+  induction n generalizing u with
+  | zero =>
+    simp only [Nat.zero_eq, memPartition_zero, mem_insert_iff, mem_singleton_iff] at hun
+    rw [hun]
+    exact MeasurableSet.univ
+  | succ n ih =>
+    simp only [memPartition_succ, mem_setOf_eq] at hun
+    obtain ⟨v, hv, huv⟩ := hun
+    rcases huv with rfl | rfl
+    exact (ih v hv).inter (measurableSet_generateFrom ⟨n, rfl⟩)
+    exact (ih v hv).diff (measurableSet_generateFrom ⟨n, rfl⟩)
+  simp only [iUnion_singleton_eq_range, mem_range] at hu
+  obtain ⟨n, rfl⟩ := hu
+  exact generateFrom_mono (subset_iUnion _ _) _ (measurableSet_generateFrom_memPartition t n)
 
 lemma generateFrom_memPartition_le_range (t : ℕ → Set α) (n : ℕ) :
     generateFrom (memPartition t n) ≤ generateFrom (range t) := by

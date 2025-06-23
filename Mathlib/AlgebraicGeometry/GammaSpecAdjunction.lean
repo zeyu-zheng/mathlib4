@@ -138,8 +138,8 @@ theorem toΓSpecCApp_iff
       (X.isUnit_res_toΓSpecMapBasicOpen r)]
   --pick_goal 5; exact is_localization.to_basic_open _ r
   constructor
-  · intro h
-    exact IsLocalization.ringHom_ext (Submonoid.powers r) h
+  intro h
+  exact IsLocalization.ringHom_ext (Submonoid.powers r) h
   apply congr_arg
 
 theorem toΓSpecCApp_spec : toOpen _ (basicOpen r) ≫ X.toΓSpecCApp r = X.toToΓSpecMapBasicOpen r :=
@@ -305,13 +305,13 @@ theorem right_triangle (R : CommRingCat) :
         Spec.toLocallyRingedSpace.map (SpecΓIdentity.inv.app R).op =
       𝟙 _ := by
   apply LocallyRingedSpace.comp_ring_hom_ext
-  · ext (p : PrimeSpectrum R)
-    dsimp
-    ext x
-    erw [← IsLocalization.AtPrime.to_map_mem_maximal_iff ((structureSheaf R).presheaf.stalk p)
-        p.asIdeal x]
-    rfl
-  · intro r; apply toOpen_res
+  ext (p : PrimeSpectrum R)
+  dsimp
+  ext x
+  erw [← IsLocalization.AtPrime.to_map_mem_maximal_iff ((structureSheaf R).presheaf.stalk p)
+      p.asIdeal x]
+  rfl
+  intro r; apply toOpen_res
 
 /-- The adjunction `Γ ⊣ Spec` from `CommRingᵒᵖ` to `LocallyRingedSpace`. -/
 -- Porting note: `simps` cause a time out, so `Unit` and `counit` will be added manually

@@ -96,60 +96,60 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
   rcases NormedField.exists_one_lt_norm 𝕜 with ⟨c, hc⟩
   refine ⟨(ε / 2)⁻¹ * ‖c‖ * 2 * n, by positivity, fun y => ?_⟩
   rcases eq_or_ne y 0 with rfl | hy
-  · use 0
-    simp
-  · have hc' : 1 < ‖σ c‖ := by simp only [RingHomIsometric.is_iso, hc]
-    rcases rescale_to_shell hc' (half_pos εpos) hy with ⟨d, hd, ydlt, -, dinv⟩
-    let δ := ‖d‖ * ‖y‖ / 4
-    have δpos : 0 < δ := div_pos (mul_pos (norm_pos_iff.2 hd) (norm_pos_iff.2 hy)) (by norm_num)
-    have : a + d • y ∈ ball a ε := by
-      simp [dist_eq_norm, lt_of_le_of_lt ydlt.le (half_lt_self εpos)]
-    rcases Metric.mem_closure_iff.1 (H this) _ δpos with ⟨z₁, z₁im, h₁⟩
-    rcases (mem_image _ _ _).1 z₁im with ⟨x₁, hx₁, xz₁⟩
-    rw [← xz₁] at h₁
-    rw [mem_ball, dist_eq_norm, sub_zero] at hx₁
-    have : a ∈ ball a ε := by
-      simp only [mem_ball, dist_self]
-      exact εpos
-    rcases Metric.mem_closure_iff.1 (H this) _ δpos with ⟨z₂, z₂im, h₂⟩
-    rcases (mem_image _ _ _).1 z₂im with ⟨x₂, hx₂, xz₂⟩
-    rw [← xz₂] at h₂
-    rw [mem_ball, dist_eq_norm, sub_zero] at hx₂
-    let x := x₁ - x₂
-    have I : ‖f x - d • y‖ ≤ 2 * δ :=
-      calc
-        ‖f x - d • y‖ = ‖f x₁ - (a + d • y) - (f x₂ - a)‖ := by
-          congr 1
-          simp only [f.map_sub]
-          abel
-        _ ≤ ‖f x₁ - (a + d • y)‖ + ‖f x₂ - a‖ := norm_sub_le _ _
-        _ ≤ δ + δ := by rw [dist_eq_norm'] at h₁ h₂; gcongr
-        _ = 2 * δ := (two_mul _).symm
-    have J : ‖f (σ' d⁻¹ • x) - y‖ ≤ 1 / 2 * ‖y‖ :=
-      calc
-        ‖f (σ' d⁻¹ • x) - y‖ = ‖d⁻¹ • f x - (d⁻¹ * d) • y‖ := by
-          rwa [f.map_smulₛₗ _, inv_mul_cancel, one_smul, map_inv₀, map_inv₀,
-            RingHomCompTriple.comp_apply, RingHom.id_apply]
-        _ = ‖d⁻¹ • (f x - d • y)‖ := by rw [mul_smul, smul_sub]
-        _ = ‖d‖⁻¹ * ‖f x - d • y‖ := by rw [norm_smul, norm_inv]
-        _ ≤ ‖d‖⁻¹ * (2 * δ) := by gcongr
-        _ = ‖d‖⁻¹ * ‖d‖ * ‖y‖ / 2 := by
-          simp only [δ]
-          ring
-        _ = ‖y‖ / 2 := by
-          rw [inv_mul_cancel, one_mul]
-          simp [norm_eq_zero, hd]
-        _ = 1 / 2 * ‖y‖ := by ring
-    rw [← dist_eq_norm] at J
-    have K : ‖σ' d⁻¹ • x‖ ≤ (ε / 2)⁻¹ * ‖c‖ * 2 * ↑n * ‖y‖ :=
-      calc
-        ‖σ' d⁻¹ • x‖ = ‖d‖⁻¹ * ‖x₁ - x₂‖ := by rw [norm_smul, RingHomIsometric.is_iso, norm_inv]
-        _ ≤ (ε / 2)⁻¹ * ‖c‖ * ‖y‖ * (n + n) := by
-          gcongr
-          · simpa using dinv
-          · exact le_trans (norm_sub_le _ _) (by gcongr)
-        _ = (ε / 2)⁻¹ * ‖c‖ * 2 * ↑n * ‖y‖ := by ring
-    exact ⟨σ' d⁻¹ • x, J, K⟩
+  use 0
+  simp
+  have hc' : 1 < ‖σ c‖ := by simp only [RingHomIsometric.is_iso, hc]
+  rcases rescale_to_shell hc' (half_pos εpos) hy with ⟨d, hd, ydlt, -, dinv⟩
+  let δ := ‖d‖ * ‖y‖ / 4
+  have δpos : 0 < δ := div_pos (mul_pos (norm_pos_iff.2 hd) (norm_pos_iff.2 hy)) (by norm_num)
+  have : a + d • y ∈ ball a ε := by
+    simp [dist_eq_norm, lt_of_le_of_lt ydlt.le (half_lt_self εpos)]
+  rcases Metric.mem_closure_iff.1 (H this) _ δpos with ⟨z₁, z₁im, h₁⟩
+  rcases (mem_image _ _ _).1 z₁im with ⟨x₁, hx₁, xz₁⟩
+  rw [← xz₁] at h₁
+  rw [mem_ball, dist_eq_norm, sub_zero] at hx₁
+  have : a ∈ ball a ε := by
+    simp only [mem_ball, dist_self]
+    exact εpos
+  rcases Metric.mem_closure_iff.1 (H this) _ δpos with ⟨z₂, z₂im, h₂⟩
+  rcases (mem_image _ _ _).1 z₂im with ⟨x₂, hx₂, xz₂⟩
+  rw [← xz₂] at h₂
+  rw [mem_ball, dist_eq_norm, sub_zero] at hx₂
+  let x := x₁ - x₂
+  have I : ‖f x - d • y‖ ≤ 2 * δ :=
+    calc
+      ‖f x - d • y‖ = ‖f x₁ - (a + d • y) - (f x₂ - a)‖ := by
+        congr 1
+        simp only [f.map_sub]
+        abel
+      _ ≤ ‖f x₁ - (a + d • y)‖ + ‖f x₂ - a‖ := norm_sub_le _ _
+      _ ≤ δ + δ := by rw [dist_eq_norm'] at h₁ h₂; gcongr
+      _ = 2 * δ := (two_mul _).symm
+  have J : ‖f (σ' d⁻¹ • x) - y‖ ≤ 1 / 2 * ‖y‖ :=
+    calc
+      ‖f (σ' d⁻¹ • x) - y‖ = ‖d⁻¹ • f x - (d⁻¹ * d) • y‖ := by
+        rwa [f.map_smulₛₗ _, inv_mul_cancel, one_smul, map_inv₀, map_inv₀,
+          RingHomCompTriple.comp_apply, RingHom.id_apply]
+      _ = ‖d⁻¹ • (f x - d • y)‖ := by rw [mul_smul, smul_sub]
+      _ = ‖d‖⁻¹ * ‖f x - d • y‖ := by rw [norm_smul, norm_inv]
+      _ ≤ ‖d‖⁻¹ * (2 * δ) := by gcongr
+      _ = ‖d‖⁻¹ * ‖d‖ * ‖y‖ / 2 := by
+        simp only [δ]
+        ring
+      _ = ‖y‖ / 2 := by
+        rw [inv_mul_cancel, one_mul]
+        simp [norm_eq_zero, hd]
+      _ = 1 / 2 * ‖y‖ := by ring
+  rw [← dist_eq_norm] at J
+  have K : ‖σ' d⁻¹ • x‖ ≤ (ε / 2)⁻¹ * ‖c‖ * 2 * ↑n * ‖y‖ :=
+    calc
+      ‖σ' d⁻¹ • x‖ = ‖d‖⁻¹ * ‖x₁ - x₂‖ := by rw [norm_smul, RingHomIsometric.is_iso, norm_inv]
+      _ ≤ (ε / 2)⁻¹ * ‖c‖ * ‖y‖ * (n + n) := by
+        gcongr
+        simpa using dinv
+        exact le_trans (norm_sub_le _ _) (by gcongr)
+      _ = (ε / 2)⁻¹ * ‖c‖ * 2 * ↑n * ‖y‖ := by ring
+  exact ⟨σ' d⁻¹ • x, J, K⟩
 
 variable [CompleteSpace E]
 
@@ -174,11 +174,11 @@ theorem exists_preimage_norm_le (surj : Surjective f) :
   have hnle : ∀ n : ℕ, ‖h^[n] y‖ ≤ (1 / 2) ^ n * ‖y‖
   intro n
   induction' n with n IH
-  · simp only [one_div, Nat.zero_eq, one_mul, iterate_zero_apply, pow_zero, le_rfl]
-  · rw [iterate_succ']
-    apply le_trans (hle _) _
-    rw [pow_succ', mul_assoc]
-    gcongr
+  simp only [one_div, Nat.zero_eq, one_mul, iterate_zero_apply, pow_zero, le_rfl]
+  rw [iterate_succ']
+  apply le_trans (hle _) _
+  rw [pow_succ', mul_assoc]
+  gcongr
   let u n := g (h^[n] y)
   have ule : ∀ n, ‖u n‖ ≤ (1 / 2) ^ n * (C * ‖y‖) := fun n ↦ by
     apply le_trans (hg _).2
@@ -202,8 +202,8 @@ theorem exists_preimage_norm_le (surj : Surjective f) :
   have fsumeq : ∀ n : ℕ, f (∑ i ∈ Finset.range n, u i) = y - h^[n] y := by
     intro n
     induction' n with n IH
-    · simp [f.map_zero]
-    · rw [sum_range_succ, f.map_add, IH, iterate_succ_apply', sub_add]
+    simp [f.map_zero]
+    rw [sum_range_succ, f.map_add, IH, iterate_succ_apply', sub_add]
   have : Tendsto (fun n => ∑ i ∈ Finset.range n, u i) atTop (𝓝 x) := su.hasSum.tendsto_sum_nat
   have L₁ : Tendsto (fun n => f (∑ i ∈ Finset.range n, u i)) atTop (𝓝 (f x)) :=
     (f.continuous.tendsto _).comp this
@@ -390,10 +390,10 @@ theorem ofBijective_apply_symm_apply (f : E →SL[σ] F) (hinj : ker f = ⊥)
 lemma _root_.ContinuousLinearMap.isUnit_iff_bijective {f : E →L[𝕜] E} :
     IsUnit f ↔ Bijective f := by
   constructor
-  · rintro ⟨f, rfl⟩
-    exact ofUnit f |>.bijective
-  · refine fun h ↦ ⟨toUnit <| .ofBijective f ?_ ?_, rfl⟩ <;>
-    simp only [LinearMap.range_eq_top, LinearMapClass.ker_eq_bot, h.1, h.2]
+  rintro ⟨f, rfl⟩
+  exact ofUnit f |>.bijective
+  refine fun h ↦ ⟨toUnit <| .ofBijective f ?_ ?_, rfl⟩ <;>
+  simp only [LinearMap.range_eq_top, LinearMapClass.ker_eq_bot, h.1, h.2]
 
 end ContinuousLinearEquiv
 

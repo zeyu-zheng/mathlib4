@@ -65,17 +65,17 @@ lemma map_const (μ : Measure α) (c : β) : μ.map (fun _ ↦ c) = (μ Set.univ
     dirac_apply' _ hs, smul_eq_mul]
   rw [Measure.map_apply measurable_const hs, Set.preimage_const]
   by_cases hsc : c ∈ s
-  · rw [(Set.indicator_eq_one_iff_mem _).mpr hsc, mul_one, if_pos hsc]
-  · rw [if_neg hsc, (Set.indicator_eq_zero_iff_not_mem _).mpr hsc, measure_empty, mul_zero]
+  rw [(Set.indicator_eq_one_iff_mem _).mpr hsc, mul_one, if_pos hsc]
+  rw [if_neg hsc, (Set.indicator_eq_zero_iff_not_mem _).mpr hsc, measure_empty, mul_zero]
 
 @[simp]
 theorem restrict_singleton (μ : Measure α) (a : α) : μ.restrict {a} = μ {a} • dirac a := by
   ext1 s hs
   by_cases ha : a ∈ s
-  · have : s ∩ {a} = {a} := by simpa
-    simp [*]
-  · have : s ∩ {a} = ∅ := inter_singleton_eq_empty.2 ha
-    simp [*]
+  have : s ∩ {a} = {a} := by simpa
+  simp [*]
+  have : s ∩ {a} = ∅ := inter_singleton_eq_empty.2 ha
+  simp [*]
 
 /-- If `f` is a map with countable codomain, then `μ.map f` is a sum of Dirac measures. -/
 theorem map_eq_sum [Countable β] [MeasurableSingletonClass β] (μ : Measure α) (f : α → β)
@@ -135,16 +135,16 @@ instance Measure.dirac.instSigmaFinite {a : α} : SigmaFinite (dirac a) := infer
 theorem restrict_dirac' (hs : MeasurableSet s) [Decidable (a ∈ s)] :
     (Measure.dirac a).restrict s = if a ∈ s then Measure.dirac a else 0 := by
   split_ifs with has
-  · apply restrict_eq_self_of_ae_mem
-    rw [ae_dirac_iff] <;> assumption
-  · rw [restrict_eq_zero, dirac_apply' _ hs, indicator_of_not_mem has]
+  apply restrict_eq_self_of_ae_mem
+  rw [ae_dirac_iff] <;> assumption
+  rw [restrict_eq_zero, dirac_apply' _ hs, indicator_of_not_mem has]
 
 theorem restrict_dirac [MeasurableSingletonClass α] [Decidable (a ∈ s)] :
     (Measure.dirac a).restrict s = if a ∈ s then Measure.dirac a else 0 := by
   split_ifs with has
-  · apply restrict_eq_self_of_ae_mem
-    rwa [ae_dirac_eq]
-  · rw [restrict_eq_zero, dirac_apply, indicator_of_not_mem has]
+  apply restrict_eq_self_of_ae_mem
+  rwa [ae_dirac_eq]
+  rw [restrict_eq_zero, dirac_apply, indicator_of_not_mem has]
 
 lemma mutuallySingular_dirac [MeasurableSingletonClass α] (x : α) (μ : Measure α) [NoAtoms μ] :
     Measure.dirac x ⟂ₘ μ :=
@@ -157,22 +157,22 @@ neither of the points. -/
 lemma dirac_eq_dirac_iff_forall_mem_iff_mem {x y : α} :
     Measure.dirac x = Measure.dirac y ↔ ∀ A, MeasurableSet A → (x ∈ A ↔ y ∈ A) := by
   constructor
-  · intro h A A_mble
-    have obs := congr_arg (fun μ ↦ μ A) h
-    simp only [Measure.dirac_apply' _ A_mble] at obs
-    by_cases x_in_A : x ∈ A
-    · simpa only [x_in_A, indicator_of_mem, Pi.one_apply, true_iff, Eq.comm (a := (1 : ℝ≥0∞)),
-                  indicator_eq_one_iff_mem] using obs
-    · simpa only [x_in_A, indicator_of_not_mem, Eq.comm (a := (0 : ℝ≥0∞)), indicator_apply_eq_zero,
-                  false_iff, not_false_eq_true, Pi.one_apply, one_ne_zero, imp_false] using obs
-  · intro h
-    ext A A_mble
-    by_cases x_in_A : x ∈ A
-    · simp only [Measure.dirac_apply' _ A_mble, x_in_A, indicator_of_mem, Pi.one_apply,
-                 (h A A_mble).mp x_in_A]
-    · have y_notin_A : y ∉ A := by simp_all only [false_iff, not_false_eq_true]
-      simp only [Measure.dirac_apply' _ A_mble, x_in_A, y_notin_A,
-                 not_false_eq_true, indicator_of_not_mem]
+  intro h A A_mble
+  have obs := congr_arg (fun μ ↦ μ A) h
+  simp only [Measure.dirac_apply' _ A_mble] at obs
+  by_cases x_in_A : x ∈ A
+  simpa only [x_in_A, indicator_of_mem, Pi.one_apply, true_iff, Eq.comm (a := (1 : ℝ≥0∞)),
+              indicator_eq_one_iff_mem] using obs
+  simpa only [x_in_A, indicator_of_not_mem, Eq.comm (a := (0 : ℝ≥0∞)), indicator_apply_eq_zero,
+              false_iff, not_false_eq_true, Pi.one_apply, one_ne_zero, imp_false] using obs
+  intro h
+  ext A A_mble
+  by_cases x_in_A : x ∈ A
+  simp only [Measure.dirac_apply' _ A_mble, x_in_A, indicator_of_mem, Pi.one_apply,
+             (h A A_mble).mp x_in_A]
+  have y_notin_A : y ∉ A := by simp_all only [false_iff, not_false_eq_true]
+  simp only [Measure.dirac_apply' _ A_mble, x_in_A, y_notin_A,
+             not_false_eq_true, indicator_of_not_mem]
 
 /-- Dirac delta measures at two points are different if and only if there is a measurable set
 containing one of the points but not the other. -/
@@ -182,8 +182,8 @@ lemma dirac_ne_dirac_iff_exists_measurableSet {x y : α} :
   simp only [ne_eq, not_not, not_exists, not_and, dirac_eq_dirac_iff_forall_mem_iff_mem]
   refine ⟨fun h A A_mble ↦ by simp only [h A A_mble, imp_self], fun h A A_mble ↦ ?_⟩
   by_cases x_in_A : x ∈ A
-  · simp only [x_in_A, h A A_mble x_in_A]
-  · simpa only [x_in_A, false_iff] using h Aᶜ (MeasurableSet.compl_iff.mpr A_mble) x_in_A
+  simp only [x_in_A, h A A_mble x_in_A]
+  simpa only [x_in_A, false_iff] using h Aᶜ (MeasurableSet.compl_iff.mpr A_mble) x_in_A
 
 open MeasurableSpace
 /-- Dirac delta measures at two different points are different, assuming the measurable space

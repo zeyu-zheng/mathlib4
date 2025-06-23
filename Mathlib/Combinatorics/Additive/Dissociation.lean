@@ -136,22 +136,22 @@ lemma exists_subset_mulSpan_card_le_of_forall_mulDissociated
   simp only [mem_filter, mem_powerset, lt_eq_subset, and_imp] at hs' hs'max
   refine ⟨s', hs'.1, hs _ hs'.1 hs'.2, fun a ha ↦ ?_⟩
   by_cases ha' : a ∈ s'
-  · exact subset_mulSpan ha'
+  exact subset_mulSpan ha'
   obtain ⟨t, u, ht, hu, htu⟩ := not_mulDissociated_iff_exists_disjoint.1 fun h ↦
     hs'max _ (insert_subset_iff.2 ⟨ha, hs'.1⟩) h $ ssubset_insert ha'
   by_cases hat : a ∈ t
-  · have : a = (∏ b in u, b) / ∏ b in t.erase a, b := by
-      rw [prod_erase_eq_div hat, htu.2.2, div_div_self']
-    rw [this]
-    exact prod_div_prod_mem_mulSpan
-      ((subset_insert_iff_of_not_mem $ disjoint_left.1 htu.1 hat).1 hu) (subset_insert_iff.1 ht)
+  have : a = (∏ b in u, b) / ∏ b in t.erase a, b := by
+    rw [prod_erase_eq_div hat, htu.2.2, div_div_self']
+  rw [this]
+  exact prod_div_prod_mem_mulSpan
+    ((subset_insert_iff_of_not_mem $ disjoint_left.1 htu.1 hat).1 hu) (subset_insert_iff.1 ht)
   rw [coe_subset, subset_insert_iff_of_not_mem hat] at ht
   by_cases hau : a ∈ u
-  · have : a = (∏ b in t, b) / ∏ b in u.erase a, b := by
-      rw [prod_erase_eq_div hau, htu.2.2, div_div_self']
-    rw [this]
-    exact prod_div_prod_mem_mulSpan ht (subset_insert_iff.1 hu)
-  · rw [coe_subset, subset_insert_iff_of_not_mem hau] at hu
-    cases not_mulDissociated_iff_exists_disjoint.2 ⟨t, u, ht, hu, htu⟩ hs'.2
+  have : a = (∏ b in t, b) / ∏ b in u.erase a, b := by
+    rw [prod_erase_eq_div hau, htu.2.2, div_div_self']
+  rw [this]
+  exact prod_div_prod_mem_mulSpan ht (subset_insert_iff.1 hu)
+  rw [coe_subset, subset_insert_iff_of_not_mem hau] at hu
+  cases not_mulDissociated_iff_exists_disjoint.2 ⟨t, u, ht, hu, htu⟩ hs'.2
 
 end Finset

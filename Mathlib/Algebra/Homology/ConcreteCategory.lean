@@ -80,17 +80,17 @@ lemma δ_apply (x₃ : (forget₂ C Ab).obj (S.X₃.X i))
             ← forget₂_comp_apply, HomologicalComplex.d_comp_d, Functor.map_zero, map_zero,
             AddMonoidHom.zero_apply])) := by
   refine hS.δ_apply' i j hij _ ((forget₂ C Ab).map (S.X₂.pOpcycles i) x₂) _ ?_ ?_
-  · erw [← forget₂_comp_apply, ← forget₂_comp_apply,
-      HomologicalComplex.p_opcyclesMap, Functor.map_comp, comp_apply,
-      HomologicalComplex.homology_π_ι, forget₂_comp_apply, hx₂, HomologicalComplex.i_cyclesMk]
-  · apply (Preadditive.mono_iff_injective (S.X₂.iCycles j)).1 inferInstance
-    conv_lhs =>
-      erw [← forget₂_comp_apply, HomologicalComplex.cyclesMap_i, forget₂_comp_apply,
-        HomologicalComplex.i_cyclesMk, hx₁]
-    conv_rhs =>
-      erw [← forget₂_comp_apply, ← forget₂_comp_apply,
-        HomologicalComplex.pOpcycles_opcyclesToCycles_assoc, HomologicalComplex.toCycles_i]
-    rfl
+  erw [← forget₂_comp_apply, ← forget₂_comp_apply,
+    HomologicalComplex.p_opcyclesMap, Functor.map_comp, comp_apply,
+    HomologicalComplex.homology_π_ι, forget₂_comp_apply, hx₂, HomologicalComplex.i_cyclesMk]
+  apply (Preadditive.mono_iff_injective (S.X₂.iCycles j)).1 inferInstance
+  conv_lhs =>
+    erw [← forget₂_comp_apply, HomologicalComplex.cyclesMap_i, forget₂_comp_apply,
+      HomologicalComplex.i_cyclesMk, hx₁]
+  conv_rhs =>
+    erw [← forget₂_comp_apply, ← forget₂_comp_apply,
+      HomologicalComplex.pOpcycles_opcyclesToCycles_assoc, HomologicalComplex.toCycles_i]
+  rfl
 
 end ShortExact
 

@@ -146,12 +146,12 @@ lemma exists_mulChar_orderOf {n : ℕ} (h : n ∣ Fintype.card F - 1) {ζ : R}
   use e.symm ⟨ζ', (mem_rootsOfUnity (Monoid.orderUnits F) ζ').mpr h'⟩
   rw [e.symm.orderOf_eq, orderOf_eq_iff hn₀]
   refine ⟨?_, fun m hm hm₀ h ↦ ?_⟩
-  · ext
-    push_cast
-    exact hζ.pow_eq_one
-  · rw [Subtype.ext_iff, Units.ext_iff] at h
-    push_cast at h
-    exact ((Nat.le_of_dvd hm₀ <| hζ.dvd_of_pow_eq_one _ h).trans_lt hm).false
+  ext
+  push_cast
+  exact hζ.pow_eq_one
+  rw [Subtype.ext_iff, Units.ext_iff] at h
+  push_cast at h
+  exact ((Nat.le_of_dvd hm₀ <| hζ.dvd_of_pow_eq_one _ h).trans_lt hm).false
 
 open Classical in
 /-- If there is a multiplicative character of order `n` on `F`, then `#F ≡ 1 mod n`. -/
@@ -211,11 +211,11 @@ lemma apply_mem_algebraAdjoin_of_pow_eq_one {χ : MulChar F R} {n : ℕ} (hn : n
     {μ : R} (hμ : IsPrimitiveRoot μ n) (a : F) :
     χ a ∈ Algebra.adjoin ℤ {μ} := by
   rcases eq_or_ne a 0 with rfl | h
-  · exact χ.map_zero ▸ Subalgebra.zero_mem _
-  · obtain ⟨ζ, hζ₁, hζ₂⟩ := apply_mem_rootsOfUnity_of_pow_eq_one hn hχ h
-    rw [mem_rootsOfUnity, Units.ext_iff, Units.val_pow_eq_pow_val] at hζ₁
-    obtain ⟨k, _, hk⟩ := IsPrimitiveRoot.eq_pow_of_pow_eq_one hμ hζ₁ (Nat.pos_of_ne_zero hn)
-    exact hζ₂ ▸ hk ▸ Subalgebra.pow_mem _ (Algebra.self_mem_adjoin_singleton ℤ μ) k
+  exact χ.map_zero ▸ Subalgebra.zero_mem _
+  obtain ⟨ζ, hζ₁, hζ₂⟩ := apply_mem_rootsOfUnity_of_pow_eq_one hn hχ h
+  rw [mem_rootsOfUnity, Units.ext_iff, Units.val_pow_eq_pow_val] at hζ₁
+  obtain ⟨k, _, hk⟩ := IsPrimitiveRoot.eq_pow_of_pow_eq_one hμ hζ₁ (Nat.pos_of_ne_zero hn)
+  exact hζ₂ ▸ hk ▸ Subalgebra.pow_mem _ (Algebra.self_mem_adjoin_singleton ℤ μ) k
 
 /-- The values of a multiplicative character of order `n` are contained in `ℤ[μ]` when
 `μ` is a primitive `n`th root of unity. -/

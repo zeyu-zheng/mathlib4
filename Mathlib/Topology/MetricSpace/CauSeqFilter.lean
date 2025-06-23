@@ -68,15 +68,15 @@ theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f := by
   exists { n | n ≥ N }.image f
   simp only [exists_prop, mem_atTop_sets, mem_map, mem_image, mem_setOf_eq]
   constructor
-  · exists N
-    intro b hb
-    exists b
-  · rintro ⟨a, b⟩ ⟨⟨a', ⟨ha'1, ha'2⟩⟩, ⟨b', ⟨hb'1, hb'2⟩⟩⟩
-    dsimp at ha'1 ha'2 hb'1 hb'2
-    rw [← ha'2, ← hb'2]
-    apply hεs
-    rw [dist_eq_norm]
-    apply hN <;> assumption
+  exists N
+  intro b hb
+  exists b
+  rintro ⟨a, b⟩ ⟨⟨a', ⟨ha'1, ha'2⟩⟩, ⟨b', ⟨hb'1, hb'2⟩⟩⟩
+  dsimp at ha'1 ha'2 hb'1 hb'2
+  rw [← ha'2, ← hb'2]
+  apply hεs
+  rw [dist_eq_norm]
+  apply hN <;> assumption
 
 /-- In a normed field, `CauSeq` coincides with the usual notion of Cauchy sequences. -/
 theorem isCauSeq_iff_cauchySeq {α : Type u} [NormedField α] {u : ℕ → α} :

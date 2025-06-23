@@ -64,11 +64,11 @@ theorem isBoundedAtImInfty_eisensteinSeries_SIF {N : ℕ+} (a : Fin 2 → ZMod N
   have hk' : (2 : ℝ) < k
   norm_cast
   apply tsum_le_tsum _ (summable_norm_eisSummand hk _)
-  · exact_mod_cast (summable_one_div_norm_rpow hk').mul_left <| r ⟨⟨N, 2⟩, Nat.ofNat_pos⟩ ^ (-k)
-  · intro x
-    simp_rw [eisSummand, norm_zpow]
-    exact_mod_cast
-      summand_bound_of_mem_verticalStrip (lt_trans two_pos hk').le x two_pos
-      (verticalStrip_anti_right N hz hn)
+  exact_mod_cast (summable_one_div_norm_rpow hk').mul_left <| r ⟨⟨N, 2⟩, Nat.ofNat_pos⟩ ^ (-k)
+  intro x
+  simp_rw [eisSummand, norm_zpow]
+  exact_mod_cast
+    summand_bound_of_mem_verticalStrip (lt_trans two_pos hk').le x two_pos
+    (verticalStrip_anti_right N hz hn)
 
 end EisensteinSeries

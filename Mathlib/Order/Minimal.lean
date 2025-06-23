@@ -115,8 +115,8 @@ theorem minimals_eq_minimals_of_subset_of_forall [IsTrans α r] (hts : t ⊆ s)
     (h : ∀ x ∈ s, ∃ y ∈ t, r y x) : minimals r s = minimals r t := by
   refine Set.ext fun a ↦ ⟨fun ⟨has, hmin⟩ ↦ ⟨?_,fun b hbt ↦ hmin (hts hbt)⟩,
     fun ⟨hat, hmin⟩ ↦ ⟨hts hat, fun b hbs hba ↦ ?_⟩⟩
-  · obtain ⟨a', ha', haa'⟩ := h _ has
-    rwa [antisymm (hmin (hts ha') haa') haa']
+  obtain ⟨a', ha', haa'⟩ := h _ has
+  rwa [antisymm (hmin (hts ha') haa') haa']
   obtain ⟨b', hb't, hb'b⟩ := h b hbs
   rwa [antisymm (hmin hb't (Trans.trans hb'b hba)) (Trans.trans hb'b hba)]
 
@@ -157,7 +157,7 @@ theorem Set.mem_maximals_iff_forall_insert {P : Set α → Prop} (hP : ∀ ⦃s 
     s ∈ maximals (· ⊆ ·) {t | P t} ↔ P s ∧ ∀ x ∉ s, ¬ P (insert x s) := by
   simp only [mem_maximals_iff, mem_setOf_eq, and_congr_right_iff]
   refine fun _ ↦ ⟨fun h x hx hxs ↦ hx ?_, fun h t ht hst ↦ hst.antisymm fun x hxt ↦ ?_⟩
-  · rw [h hxs (subset_insert _ _)]; apply mem_insert
+  rw [h hxs (subset_insert _ _)]; apply mem_insert
   exact by_contra fun hxs ↦ h x hxs (hP ht (insert_subset hxt hst))
 
 theorem Set.mem_minimals_iff_forall_diff_singleton {P : Set α → Prop}
@@ -165,7 +165,7 @@ theorem Set.mem_minimals_iff_forall_diff_singleton {P : Set α → Prop}
     s ∈ minimals (· ⊆ ·) {t | P t} ↔ P s ∧ ∀ x ∈ s, ¬ P (s \ {x}) := by
   simp only [mem_minimals_iff, mem_setOf_eq, and_congr_right_iff]
   refine fun _ ↦ ⟨fun h x hx hxs ↦ ?_, fun h t ht hst ↦ Eq.symm <| hst.antisymm (fun x hxs ↦ ?_)⟩
-  · rw [(h hxs diff_subset)] at hx; simp at hx
+  rw [(h hxs diff_subset)] at hx; simp at hx
   exact by_contra fun hxt ↦ h x hxs (hP ht (subset_diff_singleton hst hxt))
 
 theorem maximals_of_symm [IsSymm α r] : maximals r s = s :=
@@ -204,8 +204,8 @@ theorem minimals_mono [IsAntisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) 
 theorem maximals_union : maximals r (s ∪ t) ⊆ maximals r s ∪ maximals r t := by
   intro a ha
   obtain h | h := ha.1
-  · exact Or.inl ⟨h, fun b hb => ha.2 <| Or.inl hb⟩
-  · exact Or.inr ⟨h, fun b hb => ha.2 <| Or.inr hb⟩
+  exact Or.inl ⟨h, fun b hb => ha.2 <| Or.inl hb⟩
+  exact Or.inr ⟨h, fun b hb => ha.2 <| Or.inr hb⟩
 
 theorem minimals_union : minimals r (s ∪ t) ⊆ minimals r s ∪ minimals r t :=
   maximals_union
@@ -302,8 +302,8 @@ theorem map_mem_maximals_iff (ha : a ∈ x) : f a ∈ maximals s (f '' x) ↔ a 
 
 theorem image_minimals_of_rel_iff_rel : f '' minimals r x = minimals s (f '' x) := by
   ext b; refine ⟨?_, fun h ↦ ?_⟩
-  · rintro ⟨a, ha, rfl⟩; exact map_mem_minimals hf ha
-  · obtain ⟨a, ha, rfl⟩ := h.1; exact ⟨a, (map_mem_minimals_iff hf ha).mp h, rfl⟩
+  rintro ⟨a, ha, rfl⟩; exact map_mem_minimals hf ha
+  obtain ⟨a, ha, rfl⟩ := h.1; exact ⟨a, (map_mem_minimals_iff hf ha).mp h, rfl⟩
 
 theorem image_maximals_of_rel_iff_rel : f '' maximals r x = maximals s (f '' x) :=
   image_minimals_of_rel_iff_rel fun _ _ h₁ h₂ ↦ hf h₂ h₁
@@ -406,8 +406,8 @@ theorem RelEmbedding.inter_preimage_minimals_eq_of_subset {y : Set β} {x : Set 
 theorem RelEmbedding.minimals_preimage_eq (f : r ↪r s) (y : Set β) :
     minimals r (f ⁻¹' y) = f ⁻¹' minimals s (y ∩ range f) := by
   convert (f.inter_preimage_minimals_eq univ y).symm
-  · simp [univ_inter]
-  · simp [inter_comm]
+  simp [univ_inter]
+  simp [inter_comm]
 
 theorem RelIso.minimals_preimage_eq (f : r ≃r s) (y : Set β) :
     minimals r (f ⁻¹' y) = f ⁻¹' (minimals s y) := by
@@ -440,8 +440,8 @@ theorem RelEmbedding.inter_preimage_maximals_eq_of_subset {y : Set β} {x : Set 
 theorem RelEmbedding.maximals_preimage_eq (f : r ↪r s) (y : Set β) :
     maximals r (f ⁻¹' y) = f ⁻¹' maximals s (y ∩ range f) := by
   convert (f.inter_preimage_maximals_eq univ y).symm
-  · simp [univ_inter]
-  · simp [inter_comm]
+  simp [univ_inter]
+  simp [inter_comm]
 
 end Image
 

@@ -242,9 +242,9 @@ lemma dirSupClosed_of_isClosed : IsClosed s → DirSupClosed s := fun h ↦
 
 lemma lowerClosure_subset_closure : ↑(lowerClosure s) ⊆ closure s := by
   convert closure.mono (@upperSet_le_scott α _)
-  · rw [@IsUpperSet.closure_eq_lowerClosure α _ (upperSet α) ?_ s]
-    infer_instance
-  · exact topology_eq α
+  rw [@IsUpperSet.closure_eq_lowerClosure α _ (upperSet α) ?_ s]
+  infer_instance
+  exact topology_eq α
 
 lemma isClosed_Iic : IsClosed (Iic a) :=
   isClosed_iff_isLowerSet_and_dirSupClosed.2 ⟨isLowerSet_Iic _, dirSupClosed_Iic _⟩
@@ -267,19 +267,19 @@ lemma monotone_of_continuous (hf : Continuous f) : Monotone f := fun _ b hab ↦
 
 @[simp] lemma scottContinuous_iff_continuous : ScottContinuous f ↔ Continuous f := by
   refine ⟨fun h ↦ continuous_def.2 fun u hu ↦ ?_, ?_⟩
-  · rw [isOpen_iff_isUpperSet_and_dirSupInacc]
-    exact ⟨(isUpperSet_of_isOpen hu).preimage h.monotone, fun _ hd₁ hd₂ _ hd₃ ha ↦
-      image_inter_nonempty_iff.mp <| (isOpen_iff_isUpperSet_and_dirSupInacc.mp hu).2 (hd₁.image f)
-        (directedOn_image.mpr (hd₂.mono @(h.monotone))) (h hd₁ hd₂ hd₃) ha⟩
-  · refine fun hf _ d₁ d₂ _ d₃ ↦ ⟨(monotone_of_continuous hf).mem_upperBounds_image d₃.1,
-      fun b hb ↦ ?_⟩
-    by_contra h
-    let u := (Iic b)ᶜ
-    have hu : IsOpen (f ⁻¹' u) := (isOpen_compl_iff.2 isClosed_Iic).preimage hf
-    rw [isOpen_iff_isUpperSet_and_dirSupInacc] at hu
-    obtain ⟨c, hcd, hfcb⟩ := hu.2 d₁ d₂ d₃ h
-    simp [upperBounds] at hb
-    exact hfcb <| hb _ hcd
+  rw [isOpen_iff_isUpperSet_and_dirSupInacc]
+  exact ⟨(isUpperSet_of_isOpen hu).preimage h.monotone, fun _ hd₁ hd₂ _ hd₃ ha ↦
+    image_inter_nonempty_iff.mp <| (isOpen_iff_isUpperSet_and_dirSupInacc.mp hu).2 (hd₁.image f)
+      (directedOn_image.mpr (hd₂.mono @(h.monotone))) (h hd₁ hd₂ hd₃) ha⟩
+  refine fun hf _ d₁ d₂ _ d₃ ↦ ⟨(monotone_of_continuous hf).mem_upperBounds_image d₃.1,
+    fun b hb ↦ ?_⟩
+  by_contra h
+  let u := (Iic b)ᶜ
+  have hu : IsOpen (f ⁻¹' u) := (isOpen_compl_iff.2 isClosed_Iic).preimage hf
+  rw [isOpen_iff_isUpperSet_and_dirSupInacc] at hu
+  obtain ⟨c, hcd, hfcb⟩ := hu.2 d₁ d₂ d₃ h
+  simp [upperBounds] at hb
+  exact hfcb <| hb _ hcd
 
 end Preorder
 
@@ -303,19 +303,19 @@ variable [CompleteLinearOrder α] [TopologicalSpace α] [Topology.IsScott α]
 lemma isOpen_iff_Iic_compl_or_univ (U : Set α) :
     IsOpen U ↔ (∃ (a : α), U = (Iic a)ᶜ) ∨ U = univ := by
   constructor
-  · intro hU
-    rcases eq_empty_or_nonempty Uᶜ with eUc | neUc
-    · exact Or.inr (compl_empty_iff.mp eUc)
-    · apply Or.inl
-      use sSup Uᶜ
-      rw [eq_compl_comm, le_antisymm_iff]
-      exact ⟨(isLowerSet_of_isClosed hU.isClosed_compl).Iic_subset
-        (dirSupClosed_iff_forall_sSup.mp (dirSupClosed_of_isClosed  hU.isClosed_compl)
-        neUc (isChain_of_trichotomous Uᶜ).directedOn le_rfl),
-        fun  _ ha ↦ le_sSup ha⟩
-  · rintro (⟨a,rfl⟩ | rfl)
-    · exact isClosed_Iic.isOpen_compl
-    · exact isOpen_univ
+  intro hU
+  rcases eq_empty_or_nonempty Uᶜ with eUc | neUc
+  exact Or.inr (compl_empty_iff.mp eUc)
+  apply Or.inl
+  use sSup Uᶜ
+  rw [eq_compl_comm, le_antisymm_iff]
+  exact ⟨(isLowerSet_of_isClosed hU.isClosed_compl).Iic_subset
+    (dirSupClosed_iff_forall_sSup.mp (dirSupClosed_of_isClosed  hU.isClosed_compl)
+    neUc (isChain_of_trichotomous Uᶜ).directedOn le_rfl),
+    fun  _ ha ↦ le_sSup ha⟩
+  rintro (⟨a,rfl⟩ | rfl)
+  exact isClosed_Iic.isOpen_compl
+  exact isOpen_univ
 
 end CompleteLinearOrder
 

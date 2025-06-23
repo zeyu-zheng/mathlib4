@@ -221,13 +221,13 @@ theorem nadd_lt_nadd_right (h : b < c) (a) : b ♯ a < c ♯ a :=
 
 theorem nadd_le_nadd_left (h : b ≤ c) (a) : a ♯ b ≤ a ♯ c := by
   rcases lt_or_eq_of_le h with (h | rfl)
-  · exact (nadd_lt_nadd_left h a).le
-  · exact le_rfl
+  exact (nadd_lt_nadd_left h a).le
+  exact le_rfl
 
 theorem nadd_le_nadd_right (h : b ≤ c) (a) : b ♯ a ≤ c ♯ a := by
   rcases lt_or_eq_of_le h with (h | rfl)
-  · exact (nadd_lt_nadd_right h a).le
-  · exact le_rfl
+  exact (nadd_lt_nadd_right h a).le
+  exact le_rfl
 
 variable (a b)
 
@@ -244,10 +244,10 @@ theorem blsub_nadd_of_mono {f : ∀ c < a ♯ b, Ordinal.{max u v}}
       max (blsub.{u, v} a fun a' ha' => f (a' ♯ b) <| nadd_lt_nadd_right ha' b)
         (blsub.{u, v} b fun b' hb' => f (a ♯ b') <| nadd_lt_nadd_left hb' a) := by
   apply (blsub_le_iff.2 fun i h => _).antisymm (max_le _ _)
-  · intro i h
-    rcases lt_nadd_iff.1 h with (⟨a', ha', hi⟩ | ⟨b', hb', hi⟩)
-    · exact lt_max_of_lt_left ((hf h (nadd_lt_nadd_right ha' b) hi).trans_lt (lt_blsub _ _ ha'))
-    · exact lt_max_of_lt_right ((hf h (nadd_lt_nadd_left hb' a) hi).trans_lt (lt_blsub _ _ hb'))
+  intro i h
+  rcases lt_nadd_iff.1 h with (⟨a', ha', hi⟩ | ⟨b', hb', hi⟩)
+  exact lt_max_of_lt_left ((hf h (nadd_lt_nadd_right ha' b) hi).trans_lt (lt_blsub _ _ ha'))
+  exact lt_max_of_lt_right ((hf h (nadd_lt_nadd_left hb' a) hi).trans_lt (lt_blsub _ _ hb'))
   all_goals
     apply blsub_le_of_brange_subset.{u, u, v}
     rintro c ⟨d, hd, rfl⟩
@@ -288,8 +288,8 @@ theorem succ_nadd : succ a ♯ b = succ (a ♯ b) := by rw [← one_nadd (a ♯ 
 @[simp]
 theorem nadd_nat (n : ℕ) : a ♯ n = a + n := by
   induction' n with n hn
-  · simp
-  · rw [Nat.cast_succ, add_one_eq_succ, nadd_succ, add_succ, hn]
+  simp
+  rw [Nat.cast_succ, add_one_eq_succ, nadd_succ, add_succ, hn]
 
 @[simp]
 theorem nat_nadd (n : ℕ) : ↑n ♯ a = a + n := by rw [nadd_comm, nadd_nat]
@@ -346,9 +346,9 @@ theorem add_one_eq_succ : ∀ a : NatOrdinal, a + 1 = succ a :=
 @[simp]
 theorem toOrdinal_cast_nat (n : ℕ) : toOrdinal n = n := by
   induction' n with n hn
-  · rfl
-  · change (toOrdinal n) ♯ 1 = n + 1
-    rw [hn]; exact nadd_one n
+  rfl
+  change (toOrdinal n) ♯ 1 = n + 1
+  rw [hn]; exact nadd_one n
 
 end NatOrdinal
 
@@ -450,18 +450,18 @@ theorem nmul_nadd_lt {a' b' : Ordinal} (ha : a' < a) (hb : b' < b) :
 theorem nmul_nadd_le {a' b' : Ordinal} (ha : a' ≤ a) (hb : b' ≤ b) :
     a' ⨳ b ♯ a ⨳ b' ≤ a ⨳ b ♯ a' ⨳ b' := by
   rcases lt_or_eq_of_le ha with (ha | rfl)
-  · rcases lt_or_eq_of_le hb with (hb | rfl)
-    · exact (nmul_nadd_lt ha hb).le
-    · rw [nadd_comm]
-  · exact le_rfl
+  rcases lt_or_eq_of_le hb with (hb | rfl)
+  exact (nmul_nadd_lt ha hb).le
+  rw [nadd_comm]
+  exact le_rfl
 
 theorem lt_nmul_iff : c < a ⨳ b ↔ ∃ a' < a, ∃ b' < b, c ♯ a' ⨳ b' ≤ a' ⨳ b ♯ a ⨳ b' := by
   refine ⟨fun h => ?_, ?_⟩
-  · rw [nmul] at h
-    simpa using not_mem_of_lt_csInf h ⟨0, fun _ _ => bot_le⟩
-  · rintro ⟨a', ha, b', hb, h⟩
-    have := h.trans_lt (nmul_nadd_lt ha hb)
-    rwa [nadd_lt_nadd_iff_right] at this
+  rw [nmul] at h
+  simpa using not_mem_of_lt_csInf h ⟨0, fun _ _ => bot_le⟩
+  rintro ⟨a', ha, b', hb, h⟩
+  have := h.trans_lt (nmul_nadd_lt ha hb)
+  rwa [nadd_lt_nadd_iff_right] at this
 
 theorem nmul_le_iff : a ⨳ b ≤ c ↔ ∀ a' < a, ∀ b' < b, a' ⨳ b ♯ a ⨳ b' < c ♯ a' ⨳ b' := by
   rw [← not_iff_not]; simp [lt_nmul_iff]
@@ -472,10 +472,10 @@ theorem nmul_comm : ∀ a b, a ⨳ b = b ⨳ a
     congr; ext x; constructor <;> intro H c hc d hd
     -- Porting note: had to add additional arguments to `nmul_comm` here
     -- for the termination checker.
-    · rw [nadd_comm, ← nmul_comm d b, ← nmul_comm a c, ← nmul_comm d]
-      exact H _ hd _ hc
-    · rw [nadd_comm, nmul_comm a d, nmul_comm c, nmul_comm c]
-      exact H _ hd _ hc
+    rw [nadd_comm, ← nmul_comm d b, ← nmul_comm a c, ← nmul_comm d]
+    exact H _ hd _ hc
+    rw [nadd_comm, nmul_comm a d, nmul_comm c, nmul_comm c]
+    exact H _ hd _ hc
 termination_by a b => (a, b)
 
 @[simp]
@@ -498,8 +498,8 @@ theorem nmul_one (a : Ordinal) : a ⨳ 1 = a := by
   refine ⟨fun H => le_of_forall_lt fun c hc => ?_, fun ha c hc => ?_⟩
   -- Porting note: had to add arguments to `nmul_one` in the next two lines
   -- for the termination checker.
-  · simpa only [nmul_one c] using H c hc
-  · simpa only [nmul_one c] using hc.trans_le ha
+  simpa only [nmul_one c] using H c hc
+  simpa only [nmul_one c] using hc.trans_le ha
 termination_by a
 
 @[simp]
@@ -513,7 +513,7 @@ theorem nmul_lt_nmul_of_pos_right (h₁ : a < b) (h₂ : 0 < c) : a ⨳ c < b �
 
 theorem nmul_le_nmul_of_nonneg_left (h₁ : a ≤ b) (h₂ : 0 ≤ c) : c ⨳ a ≤ c ⨳ b := by
   rcases lt_or_eq_of_le h₁ with (h₁ | rfl) <;> rcases lt_or_eq_of_le h₂ with (h₂ | rfl)
-  · exact (nmul_lt_nmul_of_pos_left h₁ h₂).le
+  exact (nmul_lt_nmul_of_pos_left h₁ h₂).le
   all_goals simp
 
 theorem nmul_le_nmul_of_nonneg_right (h₁ : a ≤ b) (h₂ : 0 ≤ c) : a ⨳ c ≤ b ⨳ c := by
@@ -524,42 +524,42 @@ theorem nmul_nadd : ∀ a b c, a ⨳ (b ♯ c) = a ⨳ b ♯ a ⨳ c
   | a, b, c => by
     refine le_antisymm (nmul_le_iff.2 fun a' ha d hd => ?_)
       (nadd_le_iff.2 ⟨fun d hd => ?_, fun d hd => ?_⟩)
-    · -- Porting note: adding arguments to `nmul_nadd` for the termination checker.
-      rw [nmul_nadd a' b c]
-      rcases lt_nadd_iff.1 hd with (⟨b', hb, hd⟩ | ⟨c', hc, hd⟩)
-      · have := nadd_lt_nadd_of_lt_of_le (nmul_nadd_lt ha hb) (nmul_nadd_le ha.le hd)
-        -- Porting note: adding arguments to `nmul_nadd` for the termination checker.
-        rw [nmul_nadd a' b' c, nmul_nadd a b' c] at this
-        simp only [nadd_assoc] at this
-        rwa [nadd_left_comm, nadd_left_comm _ (a ⨳ b'), nadd_left_comm (a ⨳ b),
-          nadd_lt_nadd_iff_left, nadd_left_comm (a' ⨳ b), nadd_left_comm (a ⨳ b),
-          nadd_lt_nadd_iff_left, ← nadd_assoc, ← nadd_assoc] at this
-      · have := nadd_lt_nadd_of_le_of_lt (nmul_nadd_le ha.le hd) (nmul_nadd_lt ha hc)
-        -- Porting note: adding arguments to `nmul_nadd` for the termination checker.
-        rw [nmul_nadd a' b c', nmul_nadd a b c'] at this
-        simp only [nadd_assoc] at this
-        rwa [nadd_left_comm, nadd_comm (a ⨳ c), nadd_left_comm (a' ⨳ d), nadd_left_comm (a ⨳ c'),
-          nadd_left_comm (a ⨳ b), nadd_lt_nadd_iff_left, nadd_comm (a' ⨳ c), nadd_left_comm (a ⨳ d),
-          nadd_left_comm (a' ⨳ b), nadd_left_comm (a ⨳ b), nadd_lt_nadd_iff_left, nadd_comm (a ⨳ d),
-          nadd_comm (a' ⨳ d), ← nadd_assoc, ← nadd_assoc] at this
-    · rcases lt_nmul_iff.1 hd with ⟨a', ha, b', hb, hd⟩
-      have := nadd_lt_nadd_of_le_of_lt hd (nmul_nadd_lt ha (nadd_lt_nadd_right hb c))
-      -- Porting note: adding arguments to `nmul_nadd` for the termination checker.
-      rw [nmul_nadd a' b c, nmul_nadd a b' c, nmul_nadd a'] at this
-      simp only [nadd_assoc] at this
-      rwa [nadd_left_comm (a' ⨳ b'), nadd_left_comm, nadd_lt_nadd_iff_left, nadd_left_comm,
-        nadd_left_comm _ (a' ⨳ b'), nadd_left_comm (a ⨳ b'), nadd_lt_nadd_iff_left,
-        nadd_left_comm (a' ⨳ c), nadd_left_comm, nadd_lt_nadd_iff_left, nadd_left_comm,
-        nadd_comm _ (a' ⨳ c), nadd_lt_nadd_iff_left] at this
-    · rcases lt_nmul_iff.1 hd with ⟨a', ha, c', hc, hd⟩
-      have := nadd_lt_nadd_of_lt_of_le (nmul_nadd_lt ha (nadd_lt_nadd_left hc b)) hd
-      -- Porting note: adding arguments to `nmul_nadd` for the termination checker.
-      rw [nmul_nadd a' b c, nmul_nadd a b c', nmul_nadd a'] at this
-      simp only [nadd_assoc] at this
-      rwa [nadd_left_comm _ (a' ⨳ b), nadd_lt_nadd_iff_left, nadd_left_comm (a' ⨳ c'),
-        nadd_left_comm _ (a' ⨳ c), nadd_lt_nadd_iff_left, nadd_left_comm, nadd_comm (a' ⨳ c'),
-        nadd_left_comm _ (a ⨳ c'), nadd_lt_nadd_iff_left, nadd_comm _ (a' ⨳ c'),
-        nadd_comm _ (a' ⨳ c'), nadd_left_comm, nadd_lt_nadd_iff_left] at this
+    -- Porting note: adding arguments to `nmul_nadd` for the termination checker.
+    rw [nmul_nadd a' b c]
+    rcases lt_nadd_iff.1 hd with (⟨b', hb, hd⟩ | ⟨c', hc, hd⟩)
+    have := nadd_lt_nadd_of_lt_of_le (nmul_nadd_lt ha hb) (nmul_nadd_le ha.le hd)
+    -- Porting note: adding arguments to `nmul_nadd` for the termination checker.
+    rw [nmul_nadd a' b' c, nmul_nadd a b' c] at this
+    simp only [nadd_assoc] at this
+    rwa [nadd_left_comm, nadd_left_comm _ (a ⨳ b'), nadd_left_comm (a ⨳ b),
+      nadd_lt_nadd_iff_left, nadd_left_comm (a' ⨳ b), nadd_left_comm (a ⨳ b),
+      nadd_lt_nadd_iff_left, ← nadd_assoc, ← nadd_assoc] at this
+    have := nadd_lt_nadd_of_le_of_lt (nmul_nadd_le ha.le hd) (nmul_nadd_lt ha hc)
+    -- Porting note: adding arguments to `nmul_nadd` for the termination checker.
+    rw [nmul_nadd a' b c', nmul_nadd a b c'] at this
+    simp only [nadd_assoc] at this
+    rwa [nadd_left_comm, nadd_comm (a ⨳ c), nadd_left_comm (a' ⨳ d), nadd_left_comm (a ⨳ c'),
+      nadd_left_comm (a ⨳ b), nadd_lt_nadd_iff_left, nadd_comm (a' ⨳ c), nadd_left_comm (a ⨳ d),
+      nadd_left_comm (a' ⨳ b), nadd_left_comm (a ⨳ b), nadd_lt_nadd_iff_left, nadd_comm (a ⨳ d),
+      nadd_comm (a' ⨳ d), ← nadd_assoc, ← nadd_assoc] at this
+    rcases lt_nmul_iff.1 hd with ⟨a', ha, b', hb, hd⟩
+    have := nadd_lt_nadd_of_le_of_lt hd (nmul_nadd_lt ha (nadd_lt_nadd_right hb c))
+    -- Porting note: adding arguments to `nmul_nadd` for the termination checker.
+    rw [nmul_nadd a' b c, nmul_nadd a b' c, nmul_nadd a'] at this
+    simp only [nadd_assoc] at this
+    rwa [nadd_left_comm (a' ⨳ b'), nadd_left_comm, nadd_lt_nadd_iff_left, nadd_left_comm,
+      nadd_left_comm _ (a' ⨳ b'), nadd_left_comm (a ⨳ b'), nadd_lt_nadd_iff_left,
+      nadd_left_comm (a' ⨳ c), nadd_left_comm, nadd_lt_nadd_iff_left, nadd_left_comm,
+      nadd_comm _ (a' ⨳ c), nadd_lt_nadd_iff_left] at this
+    rcases lt_nmul_iff.1 hd with ⟨a', ha, c', hc, hd⟩
+    have := nadd_lt_nadd_of_lt_of_le (nmul_nadd_lt ha (nadd_lt_nadd_left hc b)) hd
+    -- Porting note: adding arguments to `nmul_nadd` for the termination checker.
+    rw [nmul_nadd a' b c, nmul_nadd a b c', nmul_nadd a'] at this
+    simp only [nadd_assoc] at this
+    rwa [nadd_left_comm _ (a' ⨳ b), nadd_lt_nadd_iff_left, nadd_left_comm (a' ⨳ c'),
+      nadd_left_comm _ (a' ⨳ c), nadd_lt_nadd_iff_left, nadd_left_comm, nadd_comm (a' ⨳ c'),
+      nadd_left_comm _ (a ⨳ c'), nadd_lt_nadd_iff_left, nadd_comm _ (a' ⨳ c'),
+      nadd_comm _ (a' ⨳ c'), nadd_left_comm, nadd_lt_nadd_iff_left] at this
 termination_by a b c => (a, b, c)
 
 theorem nadd_nmul (a b c) : (a ♯ b) ⨳ c = a ⨳ c ♯ b ⨳ c := by
@@ -580,14 +580,14 @@ theorem nmul_nadd_lt₃' {a' b' c' : Ordinal} (ha : a' < a) (hb : b' < b) (hc : 
       a ⨳ (b ⨳ c) ♯ a' ⨳ (b' ⨳ c) ♯ a' ⨳ (b ⨳ c') ♯ a ⨳ (b' ⨳ c') := by
   simp only [nmul_comm _ (_ ⨳ _)]
   convert nmul_nadd_lt₃ hb hc ha using 1 <;>
-    · simp only [nadd_eq_add, NatOrdinal.toOrdinal_toNatOrdinal]; abel_nf
+  · simp only [nadd_eq_add, NatOrdinal.toOrdinal_toNatOrdinal]; abel_nf
 
 theorem nmul_nadd_le₃' {a' b' c' : Ordinal} (ha : a' ≤ a) (hb : b' ≤ b) (hc : c' ≤ c) :
     a' ⨳ (b ⨳ c) ♯ a ⨳ (b' ⨳ c) ♯ a ⨳ (b ⨳ c') ♯ a' ⨳ (b' ⨳ c') ≤
       a ⨳ (b ⨳ c) ♯ a' ⨳ (b' ⨳ c) ♯ a' ⨳ (b ⨳ c') ♯ a ⨳ (b' ⨳ c') := by
   simp only [nmul_comm _ (_ ⨳ _)]
   convert nmul_nadd_le₃ hb hc ha using 1 <;>
-    · simp only [nadd_eq_add, NatOrdinal.toOrdinal_toNatOrdinal]; abel_nf
+  · simp only [nadd_eq_add, NatOrdinal.toOrdinal_toNatOrdinal]; abel_nf
 
 theorem lt_nmul_iff₃ :
     d < a ⨳ b ⨳ c ↔
@@ -595,19 +595,19 @@ theorem lt_nmul_iff₃ :
         d ♯ a' ⨳ b' ⨳ c ♯ a' ⨳ b ⨳ c' ♯ a ⨳ b' ⨳ c' ≤
           a' ⨳ b ⨳ c ♯ a ⨳ b' ⨳ c ♯ a ⨳ b ⨳ c' ♯ a' ⨳ b' ⨳ c' := by
   refine ⟨fun h => ?_, ?_⟩
-  · rcases lt_nmul_iff.1 h with ⟨e, he, c', hc, H₁⟩
-    rcases lt_nmul_iff.1 he with ⟨a', ha, b', hb, H₂⟩
-    refine ⟨a', ha, b', hb, c', hc, ?_⟩
-    have := nadd_le_nadd H₁ (nmul_nadd_le H₂ hc.le)
-    simp only [nadd_nmul, nadd_assoc] at this
-    rw [nadd_left_comm, nadd_left_comm d, nadd_left_comm, nadd_le_nadd_iff_left,
-      nadd_left_comm (a ⨳ b' ⨳ c), nadd_left_comm (a' ⨳ b ⨳ c), nadd_left_comm (a ⨳ b ⨳ c'),
-      nadd_le_nadd_iff_left, nadd_left_comm (a ⨳ b ⨳ c'), nadd_left_comm (a ⨳ b ⨳ c')] at this
-    simpa only [nadd_assoc]
-  · rintro ⟨a', ha, b', hb, c', hc, h⟩
-    have := h.trans_lt (nmul_nadd_lt₃ ha hb hc)
-    repeat' rw [nadd_lt_nadd_iff_right] at this
-    assumption
+  rcases lt_nmul_iff.1 h with ⟨e, he, c', hc, H₁⟩
+  rcases lt_nmul_iff.1 he with ⟨a', ha, b', hb, H₂⟩
+  refine ⟨a', ha, b', hb, c', hc, ?_⟩
+  have := nadd_le_nadd H₁ (nmul_nadd_le H₂ hc.le)
+  simp only [nadd_nmul, nadd_assoc] at this
+  rw [nadd_left_comm, nadd_left_comm d, nadd_left_comm, nadd_le_nadd_iff_left,
+    nadd_left_comm (a ⨳ b' ⨳ c), nadd_left_comm (a' ⨳ b ⨳ c), nadd_left_comm (a ⨳ b ⨳ c'),
+    nadd_le_nadd_iff_left, nadd_left_comm (a ⨳ b ⨳ c'), nadd_left_comm (a ⨳ b ⨳ c')] at this
+  simpa only [nadd_assoc]
+  rintro ⟨a', ha, b', hb, c', hc, h⟩
+  have := h.trans_lt (nmul_nadd_lt₃ ha hb hc)
+  repeat' rw [nadd_lt_nadd_iff_right] at this
+  assumption
 
 theorem nmul_le_iff₃ :
     a ⨳ b ⨳ c ≤ d ↔
@@ -623,8 +623,8 @@ theorem lt_nmul_iff₃' :
           a' ⨳ (b ⨳ c) ♯ a ⨳ (b' ⨳ c) ♯ a ⨳ (b ⨳ c') ♯ a' ⨳ (b' ⨳ c') := by
   simp only [nmul_comm _ (_ ⨳ _), lt_nmul_iff₃, nadd_eq_add, NatOrdinal.toOrdinal_toNatOrdinal]
   constructor <;> rintro ⟨b', hb, c', hc, a', ha, h⟩
-  · use a', ha, b', hb, c', hc; convert h using 1 <;> abel_nf
-  · use c', hc, a', ha, b', hb; convert h using 1 <;> abel_nf
+  use a', ha, b', hb, c', hc; convert h using 1 <;> abel_nf
+  use c', hc, a', ha, b', hb; convert h using 1 <;> abel_nf
 
 theorem nmul_le_iff₃' :
     a ⨳ (b ⨳ c) ≤ d ↔
@@ -636,22 +636,22 @@ theorem nmul_le_iff₃' :
 theorem nmul_assoc : ∀ a b c, a ⨳ b ⨳ c = a ⨳ (b ⨳ c)
   | a, b, c => by
     apply le_antisymm
-    · rw [nmul_le_iff₃]
-      intro a' ha b' hb c' hc
-      -- Porting note: the next line was just
-      -- repeat' rw [nmul_assoc]
-      -- but we need to spell out the arguments for the termination checker.
-      rw [nmul_assoc a' b c, nmul_assoc a b' c, nmul_assoc a b c', nmul_assoc a' b' c',
-        nmul_assoc a' b' c, nmul_assoc a' b c', nmul_assoc a b' c']
-      exact nmul_nadd_lt₃' ha hb hc
-    · rw [nmul_le_iff₃']
-      intro a' ha b' hb c' hc
-      -- Porting note: the next line was just
-      -- repeat' rw [← nmul_assoc]
-      -- but we need to spell out the arguments for the termination checker.
-      rw [← nmul_assoc a' b c, ← nmul_assoc a b' c, ← nmul_assoc a b c', ← nmul_assoc a' b' c',
-        ← nmul_assoc a' b' c, ← nmul_assoc a' b c', ← nmul_assoc a b' c']
-      exact nmul_nadd_lt₃ ha hb hc
+    rw [nmul_le_iff₃]
+    intro a' ha b' hb c' hc
+    -- Porting note: the next line was just
+    -- repeat' rw [nmul_assoc]
+    -- but we need to spell out the arguments for the termination checker.
+    rw [nmul_assoc a' b c, nmul_assoc a b' c, nmul_assoc a b c', nmul_assoc a' b' c',
+      nmul_assoc a' b' c, nmul_assoc a' b c', nmul_assoc a b' c']
+    exact nmul_nadd_lt₃' ha hb hc
+    rw [nmul_le_iff₃']
+    intro a' ha b' hb c' hc
+    -- Porting note: the next line was just
+    -- repeat' rw [← nmul_assoc]
+    -- but we need to spell out the arguments for the termination checker.
+    rw [← nmul_assoc a' b c, ← nmul_assoc a b' c, ← nmul_assoc a b c', ← nmul_assoc a' b' c',
+      ← nmul_assoc a' b' c, ← nmul_assoc a' b c', ← nmul_assoc a b' c']
+    exact nmul_nadd_lt₃ ha hb hc
 termination_by a b c => (a, b, c)
 
 end Ordinal
@@ -709,14 +709,14 @@ open Ordinal
 
 theorem mul_le_nmul (a b : Ordinal.{u}) : a * b ≤ a ⨳ b := by
   refine b.limitRecOn ?_ ?_ ?_
-  · simp
-  · intro c h
-    rw [mul_succ, nmul_succ]
-    exact (add_le_nadd _ a).trans (nadd_le_nadd_right h a)
-  · intro c hc H
-    rcases eq_zero_or_pos a with (rfl | ha)
-    · simp
-    · rw [← IsNormal.blsub_eq.{u, u} (mul_isNormal ha) hc, blsub_le_iff]
-      exact fun i hi => (H i hi).trans_lt (nmul_lt_nmul_of_pos_left hi ha)
+  simp
+  intro c h
+  rw [mul_succ, nmul_succ]
+  exact (add_le_nadd _ a).trans (nadd_le_nadd_right h a)
+  intro c hc H
+  rcases eq_zero_or_pos a with (rfl | ha)
+  simp
+  rw [← IsNormal.blsub_eq.{u, u} (mul_isNormal ha) hc, blsub_le_iff]
+  exact fun i hi => (H i hi).trans_lt (nmul_lt_nmul_of_pos_left hi ha)
 
 end NatOrdinal

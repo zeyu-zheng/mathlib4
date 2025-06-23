@@ -104,43 +104,43 @@ theorem tendsto_iff_forall_compact_tendstoUniformlyOn
     Tendsto F p (𝓝 f) ↔ ∀ K, IsCompact K → TendstoUniformlyOn (fun i a => F i a) f p K := by
   rw [tendsto_nhds_compactOpen]
   constructor
-  · -- Let us prove that convergence in the compact-open topology
-    -- implies uniform convergence on compacts.
-    -- Consider a compact set `K`
-    intro h K hK
-    -- Since `K` is compact, it suffices to prove locally uniform convergence
-    rw [← tendstoLocallyUniformlyOn_iff_tendstoUniformlyOn_of_compact hK]
-    -- Now choose an entourage `U` in the codomain and a point `x ∈ K`.
-    intro U hU x _
-    -- Choose an open symmetric entourage `V` such that `V ○ V ⊆ U`.
-    rcases comp_open_symm_mem_uniformity_sets hU with ⟨V, hV, hVo, hVsymm, hVU⟩
-    -- Then choose a closed entourage `W ⊆ V`
-    rcases mem_uniformity_isClosed hV with ⟨W, hW, hWc, hWU⟩
-    -- Consider `s = {y ∈ K | (f x, f y) ∈ W}`
-    set s := K ∩ f ⁻¹' ball (f x) W
-    -- This is a neighbourhood of `x` within `K`, because `W` is an entourage.
-    have hnhds : s ∈ 𝓝[K] x := inter_mem_nhdsWithin _ <| f.continuousAt _ (ball_mem_nhds _ hW)
-    -- This set is compact because it is an intersection of `K`
-    -- with a closed set `{y | (f x, f y) ∈ W} = f ⁻¹' UniformSpace.ball (f x) W`
-    have hcomp : IsCompact s := hK.inter_right <| (isClosed_ball _ hWc).preimage f.continuous
-    -- `f` maps `s` to the open set `ball (f x) V = {z | (f x, z) ∈ V}`
-    have hmaps : MapsTo f s (ball (f x) V) := fun x hx ↦ hWU hx.2
-    use s, hnhds
-    -- Continuous maps `F i` in a neighbourhood of `f` map `s` to `ball (f x) V` as well.
-    refine (h s hcomp _ (isOpen_ball _ hVo) hmaps).mono fun g hg y hy ↦ ?_
-    -- Then for `y ∈ s` we have `(f y, f x) ∈ V` and `(f x, F i y) ∈ V`, thus `(f y, F i y) ∈ U`
-    exact hVU ⟨f x, hVsymm.mk_mem_comm.2 <| hmaps hy, hg hy⟩
-  · -- Now we prove that uniform convergence on compacts
-    -- implies convergence in the compact-open topology
-    -- Consider a compact set `K`, an open set `U`, and a continuous map `f` that maps `K` to `U`
-    intro h K hK U hU hf
-    -- Due to Lebesgue number lemma, there exists an entourage `V`
-    -- such that `U` includes the `V`-thickening of `f '' K`.
-    rcases lebesgue_number_of_compact_open (hK.image (map_continuous f)) hU hf.image_subset
-        with ⟨V, hV, -, hVf⟩
-    -- Then any continuous map that is uniformly `V`-close to `f` on `K`
-    -- maps `K` to `U` as well
-    filter_upwards [h K hK V hV] with g hg x hx using hVf _ (mem_image_of_mem f hx) (hg x hx)
+  -- Let us prove that convergence in the compact-open topology
+  -- implies uniform convergence on compacts.
+  -- Consider a compact set `K`
+  intro h K hK
+  -- Since `K` is compact, it suffices to prove locally uniform convergence
+  rw [← tendstoLocallyUniformlyOn_iff_tendstoUniformlyOn_of_compact hK]
+  -- Now choose an entourage `U` in the codomain and a point `x ∈ K`.
+  intro U hU x _
+  -- Choose an open symmetric entourage `V` such that `V ○ V ⊆ U`.
+  rcases comp_open_symm_mem_uniformity_sets hU with ⟨V, hV, hVo, hVsymm, hVU⟩
+  -- Then choose a closed entourage `W ⊆ V`
+  rcases mem_uniformity_isClosed hV with ⟨W, hW, hWc, hWU⟩
+  -- Consider `s = {y ∈ K | (f x, f y) ∈ W}`
+  set s := K ∩ f ⁻¹' ball (f x) W
+  -- This is a neighbourhood of `x` within `K`, because `W` is an entourage.
+  have hnhds : s ∈ 𝓝[K] x := inter_mem_nhdsWithin _ <| f.continuousAt _ (ball_mem_nhds _ hW)
+  -- This set is compact because it is an intersection of `K`
+  -- with a closed set `{y | (f x, f y) ∈ W} = f ⁻¹' UniformSpace.ball (f x) W`
+  have hcomp : IsCompact s := hK.inter_right <| (isClosed_ball _ hWc).preimage f.continuous
+  -- `f` maps `s` to the open set `ball (f x) V = {z | (f x, z) ∈ V}`
+  have hmaps : MapsTo f s (ball (f x) V) := fun x hx ↦ hWU hx.2
+  use s, hnhds
+  -- Continuous maps `F i` in a neighbourhood of `f` map `s` to `ball (f x) V` as well.
+  refine (h s hcomp _ (isOpen_ball _ hVo) hmaps).mono fun g hg y hy ↦ ?_
+  -- Then for `y ∈ s` we have `(f y, f x) ∈ V` and `(f x, F i y) ∈ V`, thus `(f y, F i y) ∈ U`
+  exact hVU ⟨f x, hVsymm.mk_mem_comm.2 <| hmaps hy, hg hy⟩
+  -- Now we prove that uniform convergence on compacts
+  -- implies convergence in the compact-open topology
+  -- Consider a compact set `K`, an open set `U`, and a continuous map `f` that maps `K` to `U`
+  intro h K hK U hU hf
+  -- Due to Lebesgue number lemma, there exists an entourage `V`
+  -- such that `U` includes the `V`-thickening of `f '' K`.
+  rcases lebesgue_number_of_compact_open (hK.image (map_continuous f)) hU hf.image_subset
+      with ⟨V, hV, -, hVf⟩
+  -- Then any continuous map that is uniformly `V`-close to `f` on `K`
+  -- maps `K` to `U` as well
+  filter_upwards [h K hK V hV] with g hg x hx using hVf _ (mem_image_of_mem f hx) (hg x hx)
 
 /-- Interpret a bundled continuous map as an element of `α →ᵤ[{K | IsCompact K}] β`.
 

@@ -252,12 +252,12 @@ open Set
 lemma preimage_image_coe (s : Set G) : ((↑) : G → Q) ⁻¹' ((↑) '' s) = N * s := by
   ext a
   constructor
-  · rintro ⟨b, hb, h⟩
-    refine ⟨a / b, (QuotientGroup.eq_one_iff _).1 ?_, b, hb, div_mul_cancel _ _⟩
-    simp only [h, QuotientGroup.mk_div, div_self']
-  · rintro ⟨a, ha, b, hb, rfl⟩
-    refine ⟨b, hb, ?_⟩
-    simpa only [QuotientGroup.mk_mul, self_eq_mul_left, QuotientGroup.eq_one_iff]
+  rintro ⟨b, hb, h⟩
+  refine ⟨a / b, (QuotientGroup.eq_one_iff _).1 ?_, b, hb, div_mul_cancel _ _⟩
+  simp only [h, QuotientGroup.mk_div, div_self']
+  rintro ⟨a, ha, b, hb, rfl⟩
+  refine ⟨b, hb, ?_⟩
+  simpa only [QuotientGroup.mk_mul, self_eq_mul_left, QuotientGroup.eq_one_iff]
 
 @[to_additive]
 lemma image_coe_inj {s t : Set G} : ((↑) : G → Q) '' s = ((↑) : G → Q) '' t ↔ ↑N * s = N * t := by

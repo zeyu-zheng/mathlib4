@@ -294,20 +294,20 @@ variable {α}
 instance finite_quotient_of_pretransitive_of_finite_quotient [IsPretransitive α β] {H : Subgroup α}
     [Finite (α ⧸ H)] : Finite <| orbitRel.Quotient H β := by
   rcases isEmpty_or_nonempty β with he | ⟨⟨b⟩⟩
-  · exact Quotient.finite _
-  · have h' : Finite (Quotient (rightRel H)) :=
-      Finite.of_equiv _ (quotientRightRelEquivQuotientLeftRel _).symm
-    let f : Quotient (rightRel H) → orbitRel.Quotient H β :=
-      fun a ↦ Quotient.liftOn' a (fun g ↦ ⟦g • b⟧) fun g₁ g₂ r ↦ by
-        replace r := Setoid.symm' _ r
-        change (rightRel H).r _ _ at r
-        rw [rightRel_eq] at r
-        simp only [Quotient.eq]
-        change g₁ • b ∈ orbit H (g₂ • b)
-        rw [mem_orbit_iff]
-        exact ⟨⟨g₁ * g₂⁻¹, r⟩, by simp [mul_smul]⟩
-    exact Finite.of_surjective f ((Quotient.surjective_liftOn' _).2
-      (Quotient.surjective_Quotient_mk''.comp (MulAction.surjective_smul _ _)))
+  exact Quotient.finite _
+  have h' : Finite (Quotient (rightRel H)) :=
+    Finite.of_equiv _ (quotientRightRelEquivQuotientLeftRel _).symm
+  let f : Quotient (rightRel H) → orbitRel.Quotient H β :=
+    fun a ↦ Quotient.liftOn' a (fun g ↦ ⟦g • b⟧) fun g₁ g₂ r ↦ by
+      replace r := Setoid.symm' _ r
+      change (rightRel H).r _ _ at r
+      rw [rightRel_eq] at r
+      simp only [Quotient.eq]
+      change g₁ • b ∈ orbit H (g₂ • b)
+      rw [mem_orbit_iff]
+      exact ⟨⟨g₁ * g₂⁻¹, r⟩, by simp [mul_smul]⟩
+  exact Finite.of_surjective f ((Quotient.surjective_liftOn' _).2
+    (Quotient.surjective_Quotient_mk''.comp (MulAction.surjective_smul _ _)))
 
 variable {β}
 
@@ -374,8 +374,8 @@ theorem ConjClasses.card_carrier {G : Type*} [Group G] [Fintype G] (g : G)
       Fintype.card G / Fintype.card (MulAction.stabilizer (ConjAct G) g) := by
   rw [Fintype.card_congr <| ConjAct.toConjAct (G := G) |>.toEquiv]
   rw [← MulAction.card_orbit_mul_card_stabilizer_eq_card_group (ConjAct G) g, Nat.mul_div_cancel]
-  · simp_rw [ConjAct.orbit_eq_carrier_conjClasses]
-  · exact Fintype.card_pos_iff.mpr inferInstance
+  simp_rw [ConjAct.orbit_eq_carrier_conjClasses]
+  exact Fintype.card_pos_iff.mpr inferInstance
 
 namespace Subgroup
 
@@ -383,15 +383,15 @@ variable {G : Type*} [Group G] (H : Subgroup G)
 
 theorem normalCore_eq_ker : H.normalCore = (MulAction.toPermHom G (G ⧸ H)).ker := by
   apply le_antisymm
-  · intro g hg
-    apply Equiv.Perm.ext
-    refine fun q ↦ QuotientGroup.induction_on q ?_
-    refine fun g' => (MulAction.Quotient.smul_mk H g g').trans (QuotientGroup.eq.mpr ?_)
-    rw [smul_eq_mul, mul_inv_rev, ← inv_inv g', inv_inv]
-    exact H.normalCore.inv_mem hg g'⁻¹
-  · refine (Subgroup.normal_le_normalCore.mpr fun g hg => ?_)
-    rw [← H.inv_mem_iff, ← mul_one g⁻¹, ← QuotientGroup.eq, ← mul_one g]
-    exact (MulAction.Quotient.smul_mk H g 1).symm.trans (Equiv.Perm.ext_iff.mp hg (1 : G))
+  intro g hg
+  apply Equiv.Perm.ext
+  refine fun q ↦ QuotientGroup.induction_on q ?_
+  refine fun g' => (MulAction.Quotient.smul_mk H g g').trans (QuotientGroup.eq.mpr ?_)
+  rw [smul_eq_mul, mul_inv_rev, ← inv_inv g', inv_inv]
+  exact H.normalCore.inv_mem hg g'⁻¹
+  refine (Subgroup.normal_le_normalCore.mpr fun g hg => ?_)
+  rw [← H.inv_mem_iff, ← mul_one g⁻¹, ← QuotientGroup.eq, ← mul_one g]
+  exact (MulAction.Quotient.smul_mk H g 1).symm.trans (Equiv.Perm.ext_iff.mp hg (1 : G))
 
 open QuotientGroup
 
@@ -432,7 +432,7 @@ open Classical in
 theorem card_comm_eq_card_conjClasses_mul_card (G : Type*) [Group G] :
     Nat.card { p : G × G // Commute p.1 p.2 } = Nat.card (ConjClasses G) * Nat.card G := by
   rcases fintypeOrInfinite G; swap
-  · rw [mul_comm, Nat.card_eq_zero_of_infinite, Nat.card_eq_zero_of_infinite, zero_mul]
+  rw [mul_comm, Nat.card_eq_zero_of_infinite, Nat.card_eq_zero_of_infinite, zero_mul]
   simp only [Nat.card_eq_fintype_card]
   -- Porting note: Changed `calc` proof into a `rw` proof.
   rw [card_congr (Equiv.subtypeProdEquivSigmaSubtype Commute), card_sigma,

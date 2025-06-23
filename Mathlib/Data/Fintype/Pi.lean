@@ -31,13 +31,13 @@ def piFinset (t : ∀ a, Finset (δ a)) : Finset (∀ a, δ a) :=
 @[simp]
 theorem mem_piFinset {t : ∀ a, Finset (δ a)} {f : ∀ a, δ a} : f ∈ piFinset t ↔ ∀ a, f a ∈ t a := by
   constructor
-  · simp only [piFinset, mem_map, and_imp, forall_prop_of_true, exists_prop, mem_univ, exists_imp,
-      mem_pi]
-    rintro g hg hgf a
-    rw [← hgf]
-    exact hg a
-  · simp only [piFinset, mem_map, forall_prop_of_true, exists_prop, mem_univ, mem_pi]
-    exact fun hf => ⟨fun a _ => f a, hf, rfl⟩
+  simp only [piFinset, mem_map, and_imp, forall_prop_of_true, exists_prop, mem_univ, exists_imp,
+    mem_pi]
+  rintro g hg hgf a
+  rw [← hgf]
+  exact hg a
+  simp only [piFinset, mem_map, forall_prop_of_true, exists_prop, mem_univ, mem_pi]
+  exact fun hf => ⟨fun a _ => f a, hf, rfl⟩
 
 @[simp]
 theorem coe_piFinset (t : ∀ a, Finset (δ a)) :
@@ -94,9 +94,9 @@ lemma eval_image_piFinset (t : ∀ a, Finset (δ a)) (a : α) [DecidableEq (δ a
 lemma eval_image_piFinset_const {β} [DecidableEq β] (t : Finset β) (a : α) :
     ((piFinset fun _i : α ↦ t).image fun f ↦ f a) = t := by
   obtain rfl | ht := t.eq_empty_or_nonempty
-  · haveI : Nonempty α := ⟨a⟩
-    simp
-  · exact eval_image_piFinset (fun _ ↦ t) a fun _ _ ↦ ht
+  haveI : Nonempty α := ⟨a⟩
+  simp
+  exact eval_image_piFinset (fun _ ↦ t) a fun _ _ ↦ ht
 
 variable [∀ a, DecidableEq (δ a)]
 
@@ -110,14 +110,14 @@ lemma piFinset_update_eq_filter_piFinset_mem (s : ∀ i, Finset (δ i)) (i : α)
   ext f
   simp only [mem_piFinset, mem_filter]
   refine ⟨fun h ↦ ?_, fun h j ↦ ?_⟩
-  · have := by simpa using h i
-    refine ⟨fun j ↦ ?_, this⟩
-    obtain rfl | hji := eq_or_ne j i
-    · exact hts this
-    · simpa [hji] using h j
-  · obtain rfl | hji := eq_or_ne j i
-    · simpa using h.2
-    · simpa [hji] using h.1 j
+  have := by simpa using h i
+  refine ⟨fun j ↦ ?_, this⟩
+  obtain rfl | hji := eq_or_ne j i
+  exact hts this
+  simpa [hji] using h j
+  obtain rfl | hji := eq_or_ne j i
+  simpa using h.2
+  simpa [hji] using h.1 j
 
 lemma piFinset_update_singleton_eq_filter_piFinset_eq (s : ∀ i, Finset (δ i)) (i : α) {a : δ i}
     (ha : a ∈ s i) :

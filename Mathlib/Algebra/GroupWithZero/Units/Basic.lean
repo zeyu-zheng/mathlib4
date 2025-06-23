@@ -143,11 +143,11 @@ theorem IsUnit.ring_inverse {a : M₀} : IsUnit a → IsUnit (Ring.inverse a)
 theorem isUnit_ring_inverse {a : M₀} : IsUnit (Ring.inverse a) ↔ IsUnit a :=
   ⟨fun h => by
     cases subsingleton_or_nontrivial M₀
-    · convert h
-    · contrapose h
-      rw [Ring.inverse_non_unit _ h]
-      exact not_isUnit_zero
-      ,
+    convert h
+    contrapose h
+    rw [Ring.inverse_non_unit _ h]
+    exact not_isUnit_zero
+    ,
     IsUnit.ring_inverse⟩
 
 namespace Units
@@ -345,8 +345,8 @@ lemma pow_sub₀ (a : G₀) (ha : a ≠ 0) (h : n ≤ m) : a ^ (m - n) = a ^ m *
 
 lemma pow_sub_of_lt (a : G₀) (h : n < m) : a ^ (m - n) = a ^ m * (a ^ n)⁻¹ := by
   obtain rfl | ha := eq_or_ne a 0
-  · rw [zero_pow (Nat.ne_of_gt <| Nat.sub_pos_of_lt h), zero_pow (by omega), zero_mul]
-  · exact pow_sub₀ _ ha <| Nat.le_of_lt h
+  rw [zero_pow (Nat.ne_of_gt <| Nat.sub_pos_of_lt h), zero_pow (by omega), zero_mul]
+  exact pow_sub₀ _ ha <| Nat.le_of_lt h
 
 lemma inv_pow_sub₀ (ha : a ≠ 0) (h : n ≤ m) : a⁻¹ ^ (m - n) = (a ^ m)⁻¹ * a ^ n := by
   rw [pow_sub₀ _ (inv_ne_zero ha) h, inv_pow, inv_pow, inv_inv]
@@ -376,8 +376,8 @@ lemma zpow_neg_mul_zpow_self (n : ℤ) (ha : a ≠ 0) : a ^ (-n) * a ^ n = 1 := 
 
 theorem Ring.inverse_eq_inv (a : G₀) : Ring.inverse a = a⁻¹ := by
   obtain rfl | ha := eq_or_ne a 0
-  · simp
-  · exact Ring.inverse_unit (Units.mk0 a ha)
+  simp
+  exact Ring.inverse_unit (Units.mk0 a ha)
 
 @[simp]
 theorem Ring.inverse_eq_inv' : (Ring.inverse : G₀ → G₀) = Inv.inv :=

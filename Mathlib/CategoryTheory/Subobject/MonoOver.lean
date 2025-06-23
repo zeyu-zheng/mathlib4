@@ -251,8 +251,8 @@ theorem map_obj_arrow (f : X ⟶ Y) [Mono f] (g : MonoOver X) : ((map f).obj g).
 instance full_map (f : X ⟶ Y) [Mono f] : Functor.Full (map f) where
   map_surjective {g h} e := by
     refine ⟨homMk e.left ?_, rfl⟩
-    · rw [← cancel_mono f, assoc]
-      apply w e
+    rw [← cancel_mono f, assoc]
+    apply w e
 
 instance faithful_map (f : X ⟶ Y) [Mono f] : Functor.Faithful (map f) where
 

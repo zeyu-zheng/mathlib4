@@ -174,11 +174,11 @@ open Functor
 theorem liftp_iff {α : Type u} (p : α → Prop) (x : P α) :
     Liftp p x ↔ ∃ a f, x = ⟨a, f⟩ ∧ ∀ i, p (f i) := by
   constructor
-  · rintro ⟨y, hy⟩
-    cases' h : y with a f
-    refine ⟨a, fun i => (f i).val, ?_, fun i => (f i).property⟩
-    rw [← hy, h, map_eq_map, PFunctor.map_eq]
-    congr
+  rintro ⟨y, hy⟩
+  cases' h : y with a f
+  refine ⟨a, fun i => (f i).val, ?_, fun i => (f i).property⟩
+  rw [← hy, h, map_eq_map, PFunctor.map_eq]
+  congr
   rintro ⟨a, f, xeq, pf⟩
   use ⟨a, fun i => ⟨f i, pf i⟩⟩
   rw [xeq]; rfl
@@ -186,30 +186,30 @@ theorem liftp_iff {α : Type u} (p : α → Prop) (x : P α) :
 theorem liftp_iff' {α : Type u} (p : α → Prop) (a : P.A) (f : P.B a → α) :
     @Liftp.{u} P.Obj _ α p ⟨a, f⟩ ↔ ∀ i, p (f i) := by
   simp only [liftp_iff, Sigma.mk.inj_iff]; constructor <;> intro h
-  · rcases h with ⟨a', f', heq, h'⟩
-    cases heq
-    assumption
+  rcases h with ⟨a', f', heq, h'⟩
+  cases heq
+  assumption
   repeat' first |constructor|assumption
 
 theorem liftr_iff {α : Type u} (r : α → α → Prop) (x y : P α) :
     Liftr r x y ↔ ∃ a f₀ f₁, x = ⟨a, f₀⟩ ∧ y = ⟨a, f₁⟩ ∧ ∀ i, r (f₀ i) (f₁ i) := by
   constructor
-  · rintro ⟨u, xeq, yeq⟩
-    cases' h : u with a f
-    use a, fun i => (f i).val.fst, fun i => (f i).val.snd
-    constructor
-    · rw [← xeq, h]
-      rfl
-    constructor
-    · rw [← yeq, h]
-      rfl
-    intro i
-    exact (f i).property
+  rintro ⟨u, xeq, yeq⟩
+  cases' h : u with a f
+  use a, fun i => (f i).val.fst, fun i => (f i).val.snd
+  constructor
+  rw [← xeq, h]
+  rfl
+  constructor
+  rw [← yeq, h]
+  rfl
+  intro i
+  exact (f i).property
   rintro ⟨a, f₀, f₁, xeq, yeq, h⟩
   use ⟨a, fun i => ⟨(f₀ i, f₁ i), h i⟩⟩
   constructor
-  · rw [xeq]
-    rfl
+  rw [xeq]
+  rfl
   rw [yeq]; rfl
 
 open Set
@@ -218,13 +218,13 @@ theorem supp_eq {α : Type u} (a : P.A) (f : P.B a → α) :
     @supp.{u} P.Obj _ α (⟨a, f⟩ : P α) = f '' univ := by
   ext x; simp only [supp, image_univ, mem_range, mem_setOf_eq]
   constructor <;> intro h
-  · apply @h fun x => ∃ y : P.B a, f y = x
-    rw [liftp_iff']
-    intro
-    exact ⟨_, rfl⟩
-  · simp only [liftp_iff']
-    cases h
-    subst x
-    tauto
+  apply @h fun x => ∃ y : P.B a, f y = x
+  rw [liftp_iff']
+  intro
+  exact ⟨_, rfl⟩
+  simp only [liftp_iff']
+  cases h
+  subst x
+  tauto
 
 end PFunctor

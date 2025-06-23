@@ -69,9 +69,9 @@ theorem hasTrivialRadical_iff_no_abelian_ideals :
     HasTrivialRadical R L ↔ ∀ I : LieIdeal R L, IsLieAbelian I → I = ⊥ := by
   rw [hasTrivialRadical_iff_no_solvable_ideals]
   constructor <;> intro h₁ I h₂
-  · exact h₁ _ <| LieAlgebra.ofAbelianIsSolvable R I
-  · rw [← abelian_of_solvable_ideal_eq_bot_iff]
-    exact h₁ _ <| abelian_derivedAbelianOfIdeal I
+  exact h₁ _ <| LieAlgebra.ofAbelianIsSolvable R I
+  rw [← abelian_of_solvable_ideal_eq_bot_iff]
+  exact h₁ _ <| abelian_derivedAbelianOfIdeal I
 
 namespace IsSimple
 
@@ -130,8 +130,8 @@ lemma isSimple_of_isAtom (I : LieIdeal R L) (hI : IsAtom I) : IsSimple R I where
           nth_rewrite 1 [← sSup_singleton (a := I)]
           rw [← sSup_union, Set.union_diff_self, Set.union_eq_self_of_subset_left,
             IsSemisimple.sSup_atoms_eq_top]
-          · apply LieSubmodule.mem_top
-          · simp only [Set.singleton_subset_iff, Set.mem_setOf_eq, hI]
+          apply LieSubmodule.mem_top
+          simp only [Set.singleton_subset_iff, Set.mem_setOf_eq, hI]
         -- Hence we can write `x` as `a + b` with `a ∈ I`
         -- and `b` in the supremum of the atoms not equal to `I`.
         rw [LieSubmodule.mem_sup] at hx
@@ -141,14 +141,14 @@ lemma isSimple_of_isAtom (I : LieIdeal R L) (hI : IsAtom I) : IsSimple R I where
           Submodule.mem_toAddSubmonoid]
         apply add_mem
         -- Now `⁅a, y⁆ ∈ J` since `a ∈ I`, `y ∈ J`, and `J` is an ideal of `I`.
-        · simp only [Submodule.mem_map, LieSubmodule.mem_coeSubmodule, Submodule.coeSubtype,
-            Subtype.exists, exists_and_right, exists_eq_right, ha, lie_mem_left, exists_true_left]
-          exact lie_mem_right R I J ⟨a, ha⟩ y hy
+        simp only [Submodule.mem_map, LieSubmodule.mem_coeSubmodule, Submodule.coeSubtype,
+          Subtype.exists, exists_and_right, exists_eq_right, ha, lie_mem_left, exists_true_left]
+        exact lie_mem_right R I J ⟨a, ha⟩ y hy
         -- Finally `⁅b, y⁆ = 0`, by the independence of the atoms.
-        · suffices ⁅b, y.val⁆ = 0 by simp only [this, zero_mem]
-          rw [← LieSubmodule.mem_bot (R := R) (L := L),
-              ← (IsSemisimple.setIndependent_isAtom hI).eq_bot]
-          exact ⟨lie_mem_right R L I b y y.2, lie_mem_left _ _ _ _ _ hb⟩ }
+        suffices ⁅b, y.val⁆ = 0 by simp only [this, zero_mem]
+        rw [← LieSubmodule.mem_bot (R := R) (L := L),
+            ← (IsSemisimple.setIndependent_isAtom hI).eq_bot]
+        exact ⟨lie_mem_right R L I b y y.2, lie_mem_left _ _ _ _ _ hb⟩ }
     -- Now that we know that `J` is an ideal of `L`,
     -- we start with the proof that `I` is a simple Lie algebra.
     -- Assume that `J ≠ ⊤`.
@@ -166,8 +166,8 @@ lemma isSimple_of_isAtom (I : LieIdeal R L) (hI : IsAtom I) : IsSimple R I where
     rw [lt_iff_le_and_ne]
     constructor
     -- We know that `J ≤ I` since `J` is an ideal of `I`.
-    · rintro _ ⟨x, -, rfl⟩
-      exact x.2
+    rintro _ ⟨x, -, rfl⟩
+    exact x.2
     -- So we need to show `J ≠ I` as ideals of `L`.
     -- This follows from our assumption that `J ≠ ⊤` as ideals of `I`.
     contrapose! hJ
@@ -194,7 +194,7 @@ lemma finitelyAtomistic : ∀ s : Finset (LieIdeal R L), ↑s ⊆ {I : LieIdeal 
   intro s hs I hI
   let S := {I : LieIdeal R L | IsAtom I}
   obtain rfl | hI := hI.eq_or_lt
-  · exact ⟨s, le_rfl, rfl⟩
+  exact ⟨s, le_rfl, rfl⟩
   -- We assume that `I` is strictly smaller than the supremum of `s`.
   -- Hence there must exist an atom `J` that is not contained in `I`.
   obtain ⟨J, hJs, hJI⟩ : ∃ J ∈ s, ¬ J ≤ I := by
@@ -236,10 +236,10 @@ lemma finitelyAtomistic : ∀ s : Finset (LieIdeal R L), ↑s ⊆ {I : LieIdeal 
   constructor
   -- `j` brackets to `0` with `z`, since `⁅j, z⁆` is contained in `⁅J, K⁆ ≤ J ⊓ K`,
   -- and `J ⊓ K = ⊥` by the independence of the atoms.
-  · apply (setIndependent_isAtom.disjoint_sSup (hs hJs) hs'S (Finset.not_mem_erase _ _)).le_bot
-    apply LieSubmodule.lie_le_inf
-    apply LieSubmodule.lie_mem_lie j.2
-    simpa only [K, Finset.sup_id_eq_sSup] using hz
+  apply (setIndependent_isAtom.disjoint_sSup (hs hJs) hs'S (Finset.not_mem_erase _ _)).le_bot
+  apply LieSubmodule.lie_le_inf
+  apply LieSubmodule.lie_mem_lie j.2
+  simpa only [K, Finset.sup_id_eq_sSup] using hz
   -- By similar reasoning, `j` brackets to `0` with `x = y + z ∈ I`, if we show `J ⊓ I = ⊥`.
   suffices J ⊓ I = ⊥ by
     apply this.le
@@ -247,9 +247,9 @@ lemma finitelyAtomistic : ∀ s : Finset (LieIdeal R L), ↑s ⊆ {I : LieIdeal 
     exact LieSubmodule.lie_mem_lie j.2 hx
   -- Indeed `J ⊓ I = ⊥`, since `J` is an atom that is not contained in `I`.
   apply ((hs hJs).le_iff.mp _).resolve_right
-  · contrapose! hJI
-    rw [← hJI]
-    exact inf_le_right
+  contrapose! hJI
+  rw [← hJI]
+  exact inf_le_right
   exact inf_le_left
 termination_by s => s.card
 decreasing_by exact Finset.card_lt_card hs'
@@ -287,12 +287,12 @@ end IsSemisimple
 instance (priority := 100) IsSimple.instIsSemisimple [IsSimple R L] :
     IsSemisimple R L := by
   constructor
-  · simp
-  · simpa using CompleteLattice.setIndependent_singleton _
-  · intro I hI₁ hI₂
-    apply IsSimple.non_abelian (R := R) (L := L)
-    rw [IsSimple.isAtom_iff_eq_top] at hI₁
-    rwa [hI₁, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquiv] at hI₂
+  simp
+  simpa using CompleteLattice.setIndependent_singleton _
+  intro I hI₁ hI₂
+  apply IsSimple.non_abelian (R := R) (L := L)
+  rw [IsSimple.isAtom_iff_eq_top] at hI₁
+  rwa [hI₁, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquiv] at hI₂
 
 /-- An abelian Lie algebra with trivial radical is trivial. -/
 theorem subsingleton_of_hasTrivialRadical_lie_abelian [HasTrivialRadical R L] [h : IsLieAbelian L] :
@@ -312,10 +312,10 @@ the label 'reductive' should mean when the coefficients are not a field of chara
 theorem abelian_radical_iff_solvable_is_abelian [IsNoetherian R L] :
     IsLieAbelian (radical R L) ↔ ∀ I : LieIdeal R L, IsSolvable R I → IsLieAbelian I := by
   constructor
-  · rintro h₁ I h₂
-    rw [LieIdeal.solvable_iff_le_radical] at h₂
-    exact (LieIdeal.inclusion_injective h₂).isLieAbelian h₁
-  · intro h; apply h; infer_instance
+  rintro h₁ I h₂
+  rw [LieIdeal.solvable_iff_le_radical] at h₂
+  exact (LieIdeal.inclusion_injective h₂).isLieAbelian h₁
+  intro h; apply h; infer_instance
 
 theorem ad_ker_eq_bot_of_hasTrivialRadical [HasTrivialRadical R L] : (ad R L).ker = ⊥ := by simp
 

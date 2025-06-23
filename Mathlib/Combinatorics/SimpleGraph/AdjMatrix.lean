@@ -232,20 +232,20 @@ theorem adjMatrix_pow_apply_eq_card_walk [DecidableEq V] [Semiring α] (n : ℕ)
     (G.adjMatrix α ^ n) u v = Fintype.card { p : G.Walk u v | p.length = n } := by
   rw [card_set_walk_length_eq]
   induction' n with n ih generalizing u v
-  · obtain rfl | h := eq_or_ne u v <;> simp [finsetWalkLength, *]
-  · simp only [pow_succ', finsetWalkLength, ih, adjMatrix_mul_apply]
-    rw [Finset.card_biUnion]
-    · norm_cast
-      simp only [Nat.cast_sum, card_map, neighborFinset_def]
-      apply Finset.sum_toFinset_eq_subtype
-    -- Disjointness for card_bUnion
-    · rintro ⟨x, hx⟩ - ⟨y, hy⟩ - hxy
-      rw [disjoint_iff_inf_le]
-      intro p hp
-      simp only [inf_eq_inter, mem_inter, mem_map, Function.Embedding.coeFn_mk, exists_prop] at hp
-      obtain ⟨⟨px, _, rfl⟩, ⟨py, hpy, hp⟩⟩ := hp
-      cases hp
-      simp at hxy
+  obtain rfl | h := eq_or_ne u v <;> simp [finsetWalkLength, *]
+  simp only [pow_succ', finsetWalkLength, ih, adjMatrix_mul_apply]
+  rw [Finset.card_biUnion]
+  norm_cast
+  simp only [Nat.cast_sum, card_map, neighborFinset_def]
+  apply Finset.sum_toFinset_eq_subtype
+  -- Disjointness for card_bUnion
+  rintro ⟨x, hx⟩ - ⟨y, hy⟩ - hxy
+  rw [disjoint_iff_inf_le]
+  intro p hp
+  simp only [inf_eq_inter, mem_inter, mem_map, Function.Embedding.coeFn_mk, exists_prop] at hp
+  obtain ⟨⟨px, _, rfl⟩, ⟨py, hpy, hp⟩⟩ := hp
+  cases hp
+  simp at hxy
 
 /-- The sum of the identity, the adjacency matrix, and its complement is the all-ones matrix. -/
 theorem one_add_adjMatrix_add_compl_adjMatrix_eq_allOnes [DecidableEq V] [DecidableEq α]
@@ -254,8 +254,8 @@ theorem one_add_adjMatrix_add_compl_adjMatrix_eq_allOnes [DecidableEq V] [Decida
   unfold Matrix.compl
   rw [of_apply, add_apply, adjMatrix_apply, add_apply, adjMatrix_apply, one_apply]
   by_cases h : G.Adj i j
-  · aesop
-  · split_ifs <;> simp_all
+  aesop
+  split_ifs <;> simp_all
 
 theorem dotProduct_mulVec_adjMatrix [NonAssocSemiring α] (x y : V → α) :
     x ⬝ᵥ (G.adjMatrix α).mulVec y = ∑ i : V, ∑ j : V, if G.Adj i j then x i * y j else 0 := by

@@ -116,14 +116,14 @@ theorem valuation_of_unit_eq (x : Rˣ) :
     v.valuationOfNeZero (Units.map (algebraMap R K : R →* K) x) = 1 := by
   rw [← WithZero.coe_inj, valuationOfNeZero_eq, Units.coe_map, eq_iff_le_not_lt]
   constructor
-  · exact v.valuation_le_one x
-  · cases' x with x _ hx _
-    change ¬v.valuation (algebraMap R K x) < 1
-    apply_fun v.intValuation at hx
-    rw [map_one, map_mul] at hx
-    rw [not_lt, ← hx, ← mul_one <| v.valuation _, valuation_of_algebraMap,
-      mul_le_mul_left₀ <| left_ne_zero_of_mul_eq_one hx]
-    exact v.intValuation_le_one _
+  exact v.valuation_le_one x
+  cases' x with x _ hx _
+  change ¬v.valuation (algebraMap R K x) < 1
+  apply_fun v.intValuation at hx
+  rw [map_one, map_mul] at hx
+  rw [not_lt, ← hx, ← mul_one <| v.valuation _, valuation_of_algebraMap,
+    mul_le_mul_left₀ <| left_ne_zero_of_mul_eq_one hx]
+  exact v.intValuation_le_one _
 
 -- Porting note: invalid attribute 'semireducible', declaration is in an imported module
 -- attribute [local semireducible] MulOpposite
@@ -178,11 +178,11 @@ theorem valuation_ker_eq :
     valuation.ker = K⟮(∅ : Set <| HeightOneSpectrum R),n⟯.subgroupOf (K⟮S,n⟯) := by
   ext ⟨_, hx⟩
   constructor
-  · intro hx' v _
-    by_cases hv : v ∈ S
-    · exact congr_fun hx' ⟨v, hv⟩
-    · exact hx v hv
-  · exact fun hx' => funext fun v => hx' v <| Set.not_mem_empty v
+  intro hx' v _
+  by_cases hv : v ∈ S
+  exact congr_fun hx' ⟨v, hv⟩
+  exact hx v hv
+  exact fun hx' => funext fun v => hx' v <| Set.not_mem_empty v
 
 /-- The natural homomorphism from `Rˣ` to `K⟮∅, n⟯`. -/
 def fromUnit {n : ℕ} : Rˣ →* K⟮(∅ : Set <| HeightOneSpectrum R),n⟯ where
@@ -197,28 +197,28 @@ theorem fromUnit_ker [hn : Fact <| 0 < n] :
     (@fromUnit R _ _ K _ _ _ n).ker = (powMonoidHom n : Rˣ →* Rˣ).range := by
   ext ⟨_, _, _, _⟩
   constructor
-  · intro hx
-    rcases (QuotientGroup.eq_one_iff _).mp (Subtype.mk.inj hx) with ⟨⟨v, i, vi, iv⟩, hx⟩
-    have hv : ↑(_ ^ n : Kˣ) = algebraMap R K _ := congr_arg Units.val hx
-    have hi : ↑(_ ^ n : Kˣ)⁻¹ = algebraMap R K _ := congr_arg Units.inv hx
-    rw [Units.val_pow_eq_pow_val] at hv
-    rw [← inv_pow, Units.inv_mk, Units.val_pow_eq_pow_val] at hi
-    rcases IsIntegrallyClosed.exists_algebraMap_eq_of_isIntegral_pow (R := R) (x := v) hn.out
-        (hv.symm ▸ isIntegral_algebraMap) with
-      ⟨v', rfl⟩
-    rcases IsIntegrallyClosed.exists_algebraMap_eq_of_isIntegral_pow (R := R) (x := i) hn.out
-        (hi.symm ▸ isIntegral_algebraMap) with
-      ⟨i', rfl⟩
-    rw [← map_mul, map_eq_one_iff _ <| NoZeroSMulDivisors.algebraMap_injective R K] at vi
-    rw [← map_mul, map_eq_one_iff _ <| NoZeroSMulDivisors.algebraMap_injective R K] at iv
-    rw [Units.val_mk, ← map_pow] at hv
-    exact ⟨⟨v', i', vi, iv⟩, by
-      simpa only [Units.ext_iff, powMonoidHom_apply, Units.val_pow_eq_pow_val] using
-         NoZeroSMulDivisors.algebraMap_injective R K hv⟩
-  · rintro ⟨x, hx⟩
-    rw [← hx]
-    exact Subtype.mk_eq_mk.mpr <| (QuotientGroup.eq_one_iff _).mpr ⟨Units.map (algebraMap R K) x,
-      by simp only [powMonoidHom_apply, RingHom.toMonoidHom_eq_coe, map_pow]⟩
+  intro hx
+  rcases (QuotientGroup.eq_one_iff _).mp (Subtype.mk.inj hx) with ⟨⟨v, i, vi, iv⟩, hx⟩
+  have hv : ↑(_ ^ n : Kˣ) = algebraMap R K _ := congr_arg Units.val hx
+  have hi : ↑(_ ^ n : Kˣ)⁻¹ = algebraMap R K _ := congr_arg Units.inv hx
+  rw [Units.val_pow_eq_pow_val] at hv
+  rw [← inv_pow, Units.inv_mk, Units.val_pow_eq_pow_val] at hi
+  rcases IsIntegrallyClosed.exists_algebraMap_eq_of_isIntegral_pow (R := R) (x := v) hn.out
+      (hv.symm ▸ isIntegral_algebraMap) with
+    ⟨v', rfl⟩
+  rcases IsIntegrallyClosed.exists_algebraMap_eq_of_isIntegral_pow (R := R) (x := i) hn.out
+      (hi.symm ▸ isIntegral_algebraMap) with
+    ⟨i', rfl⟩
+  rw [← map_mul, map_eq_one_iff _ <| NoZeroSMulDivisors.algebraMap_injective R K] at vi
+  rw [← map_mul, map_eq_one_iff _ <| NoZeroSMulDivisors.algebraMap_injective R K] at iv
+  rw [Units.val_mk, ← map_pow] at hv
+  exact ⟨⟨v', i', vi, iv⟩, by
+    simpa only [Units.ext_iff, powMonoidHom_apply, Units.val_pow_eq_pow_val] using
+       NoZeroSMulDivisors.algebraMap_injective R K hv⟩
+  rintro ⟨x, hx⟩
+  rw [← hx]
+  exact Subtype.mk_eq_mk.mpr <| (QuotientGroup.eq_one_iff _).mpr ⟨Units.map (algebraMap R K) x,
+    by simp only [powMonoidHom_apply, RingHom.toMonoidHom_eq_coe, map_pow]⟩
 
 /-- The injection induced by the natural homomorphism from `Rˣ` to `K⟮∅, n⟯`. -/
 def fromUnitLift [Fact <| 0 < n] : (R/n) →* K⟮(∅ : Set <| HeightOneSpectrum R),n⟯ :=

@@ -313,10 +313,10 @@ end LieHom
 theorem Submodule.exists_lieSubalgebra_coe_eq_iff (p : Submodule R L) :
     (∃ K : LieSubalgebra R L, ↑K = p) ↔ ∀ x y : L, x ∈ p → y ∈ p → ⁅x, y⁆ ∈ p := by
   constructor
-  · rintro ⟨K, rfl⟩ _ _
-    exact K.lie_mem'
-  · intro h
-    use { p with lie_mem' := h _ _ }
+  rintro ⟨K, rfl⟩ _ _
+  exact K.lie_mem'
+  intro h
+  use { p with lie_mem' := h _ _ }
 
 namespace LieSubalgebra
 
@@ -547,10 +547,10 @@ def ofLe : LieSubalgebra R K' :=
 theorem mem_ofLe (x : K') : x ∈ ofLe h ↔ (x : L) ∈ K := by
   simp only [ofLe, inclusion_apply, LieHom.mem_range]
   constructor
-  · rintro ⟨y, rfl⟩
-    exact y.property
-  · intro h
-    use ⟨(x : L), h⟩
+  rintro ⟨y, rfl⟩
+  exact y.property
+  intro h
+  use ⟨(x : L), h⟩
 
 theorem ofLe_eq_comap_incl : ofLe h = K.comap K'.incl := by
   ext
@@ -607,10 +607,10 @@ theorem submodule_span_le_lieSpan : Submodule.span R s ≤ lieSpan R L s := by
 
 theorem lieSpan_le {K} : lieSpan R L s ≤ K ↔ s ⊆ K := by
   constructor
-  · exact Set.Subset.trans subset_lieSpan
-  · intro hs m hm
-    rw [mem_lieSpan] at hm
-    exact hm _ hs
+  exact Set.Subset.trans subset_lieSpan
+  intro hs m hm
+  rw [mem_lieSpan] at hm
+  exact hm _ hs
 
 theorem lieSpan_mono {t : Set L} (h : s ⊆ t) : lieSpan R L s ≤ lieSpan R L t := by
   rw [lieSpan_le]
@@ -622,10 +622,10 @@ theorem lieSpan_eq : lieSpan R L (K : Set L) = K :=
 theorem coe_lieSpan_submodule_eq_iff {p : Submodule R L} :
     (lieSpan R L (p : Set L) : Submodule R L) = p ↔ ∃ K : LieSubalgebra R L, ↑K = p := by
   rw [p.exists_lieSubalgebra_coe_eq_iff]; constructor <;> intro h
-  · intro x m hm
-    rw [← h, mem_coe_submodule]
-    exact lie_mem _ (subset_lieSpan hm)
-  · rw [← coe_to_submodule_mk p @h, coe_to_submodule, coe_to_submodule_eq_iff, lieSpan_eq]
+  intro x m hm
+  rw [← h, mem_coe_submodule]
+  exact lie_mem _ (subset_lieSpan hm)
+  rw [← coe_to_submodule_mk p @h, coe_to_submodule, coe_to_submodule_eq_iff, lieSpan_eq]
 
 variable (R L)
 

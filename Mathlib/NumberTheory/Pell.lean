@@ -237,13 +237,13 @@ theorem x_mul_pos {a b : Solution₁ d} (ha : 0 < a.x) (hb : 0 < b.x) : 0 < (a *
     sub_pos]
   ring_nf
   rcases le_or_lt 0 d with h | h
-  · positivity
-  · rw [(eq_zero_of_d_neg h a).resolve_left ha.ne', (eq_zero_of_d_neg h b).resolve_left hb.ne']
-    -- Porting note: was
-    -- rw [zero_pow two_ne_zero, zero_add, zero_mul, zero_add]
-    -- exact one_pos
-    -- but this relied on the exact output of `ring_nf`
-    simp
+  positivity
+  rw [(eq_zero_of_d_neg h a).resolve_left ha.ne', (eq_zero_of_d_neg h b).resolve_left hb.ne']
+  -- Porting note: was
+  -- rw [zero_pow two_ne_zero, zero_add, zero_mul, zero_add]
+  -- exact one_pos
+  -- but this relied on the exact output of `ring_nf`
+  simp
 
 /-- The set of solutions with `x` and `y` positive is closed under multiplication. -/
 theorem y_mul_pos {a b : Solution₁ d} (hax : 0 < a.x) (hay : 0 < a.y) (hbx : 0 < b.x)
@@ -255,18 +255,18 @@ theorem y_mul_pos {a b : Solution₁ d} (hax : 0 < a.x) (hay : 0 < a.y) (hbx : 0
 have positive `x`. -/
 theorem x_pow_pos {a : Solution₁ d} (hax : 0 < a.x) (n : ℕ) : 0 < (a ^ n).x := by
   induction' n with n ih
-  · simp only [Nat.zero_eq, pow_zero, x_one, zero_lt_one]
-  · rw [pow_succ]
-    exact x_mul_pos ih hax
+  simp only [Nat.zero_eq, pow_zero, x_one, zero_lt_one]
+  rw [pow_succ]
+  exact x_mul_pos ih hax
 
 /-- If `(x, y)` is a solution with `x` and `y` positive, then all its powers with positive
 natural exponents have positive `y`. -/
 theorem y_pow_succ_pos {a : Solution₁ d} (hax : 0 < a.x) (hay : 0 < a.y) (n : ℕ) :
     0 < (a ^ n.succ).y := by
   induction' n with n ih
-  · simp only [Nat.zero_eq, ← Nat.one_eq_succ_zero, hay, pow_one]
-  · rw [pow_succ']
-    exact y_mul_pos hax hay (x_pow_pos hax _) ih
+  simp only [Nat.zero_eq, ← Nat.one_eq_succ_zero, hay, pow_one]
+  rw [pow_succ']
+  exact y_mul_pos hax hay (x_pow_pos hax _) ih
 
 /-- If `(x, y)` is a solution with `x` and `y` positive, then all its powers with positive
 exponents have positive `y`. -/
@@ -292,11 +292,11 @@ has the same sign as the exponent. -/
 theorem sign_y_zpow_eq_sign_of_x_pos_of_y_pos {a : Solution₁ d} (hax : 0 < a.x) (hay : 0 < a.y)
     (n : ℤ) : (a ^ n).y.sign = n.sign := by
   rcases n with ((_ | n) | n)
-  · rfl
-  · rw [Int.ofNat_eq_coe, zpow_natCast]
-    exact Int.sign_eq_one_of_pos (y_pow_succ_pos hax hay n)
-  · rw [zpow_negSucc]
-    exact Int.sign_eq_neg_one_of_neg (neg_neg_of_pos (y_pow_succ_pos hax hay n))
+  rfl
+  rw [Int.ofNat_eq_coe, zpow_natCast]
+  exact Int.sign_eq_one_of_pos (y_pow_succ_pos hax hay n)
+  rw [zpow_negSucc]
+  exact Int.sign_eq_neg_one_of_neg (neg_neg_of_pos (y_pow_succ_pos hax hay n))
 
 /-- If `a` is any solution, then one of `a`, `a⁻¹`, `-a`, `-a⁻¹` has
 positive `x` and nonnegative `y`. -/
@@ -380,19 +380,19 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
   replace hm₀ : (m : ℚ) ≠ 0 := Int.cast_ne_zero.mpr hm₀
   refine ⟨(q₁.num * q₂.num - d * (q₁.den * q₂.den)) / m, (q₁.num * q₂.den - q₂.num * q₁.den) / m,
       ?_, ?_⟩
-  · qify [hd₁, hd₂]
-    field_simp [hm₀]
-    norm_cast
-    conv_rhs =>
-      rw [sq]
-      congr
-      · rw [← h₁]
-      · rw [← h₂]
-    push_cast
-    ring
-  · qify [hd₂]
-    refine div_ne_zero_iff.mpr ⟨?_, hm₀⟩
-    exact mod_cast mt sub_eq_zero.mp (mt Rat.eq_iff_mul_eq_mul.mpr hne)
+  qify [hd₁, hd₂]
+  field_simp [hm₀]
+  norm_cast
+  conv_rhs =>
+    rw [sq]
+    congr
+    · rw [← h₁]
+    rw [← h₂]
+  push_cast
+  ring
+  qify [hd₂]
+  refine div_ne_zero_iff.mpr ⟨?_, hm₀⟩
+  exact mod_cast mt sub_eq_zero.mp (mt Rat.eq_iff_mul_eq_mul.mpr hne)
 
 /-- If `d` is a positive integer, then there is a nontrivial solution
 to the Pell equation `x^2 - d*y^2 = 1` if and only if `d` is not a square. -/
@@ -501,16 +501,16 @@ theorem y_strictMono {a : Solution₁ d} (h : IsFundamental a) :
     add_pos_of_pos_of_nonneg (mul_pos (x_zpow_pos h.x_pos _) h.2.1)
       (mul_nonneg ?_ (by rw [sub_nonneg]; exact h.1.le))
   rcases hn.eq_or_lt with (rfl | hn)
-  · simp only [zpow_zero, y_one, le_refl]
-  · exact (y_zpow_pos h.x_pos h.2.1 hn).le
+  simp only [zpow_zero, y_one, le_refl]
+  exact (y_zpow_pos h.x_pos h.2.1 hn).le
   refine strictMono_int_of_lt_succ fun n => ?_
   rcases le_or_lt 0 n with hn | hn
-  · exact H n hn
-  · let m : ℤ := -n - 1
-    have hm : n = -m - 1
-    simp only [m, neg_sub, sub_neg_eq_add, add_tsub_cancel_left]
-    rw [hm, sub_add_cancel, ← neg_add', zpow_neg, zpow_neg, y_inv, y_inv, neg_lt_neg_iff]
-    exact H _ (by omega)
+  exact H n hn
+  let m : ℤ := -n - 1
+  have hm : n = -m - 1
+  simp only [m, neg_sub, sub_neg_eq_add, add_tsub_cancel_left]
+  rw [hm, sub_add_cancel, ← neg_add', zpow_neg, zpow_neg, y_inv, y_inv, neg_lt_neg_iff]
+  exact H _ (by omega)
 
 /-- If `a` is a fundamental solution, then `(a^m).y < (a^n).y` if and only if `m < n`. -/
 theorem zpow_y_lt_iff_lt {a : Solution₁ d} (h : IsFundamental a) (m n : ℤ) :
@@ -609,27 +609,27 @@ theorem eq_pow_of_nonneg {a₁ : Solution₁ d} (h : IsFundamental a₁) {a : So
   clear hax
   induction' ax using Nat.strong_induction_on with x ih generalizing a
   rcases hay.eq_or_lt with hy | hy
-  · -- case 1: `a = 1`
-    refine ⟨0, ?_⟩
-    simp only [pow_zero]
-    ext <;> simp only [x_one, y_one]
-    · have prop := a.prop
-      rw [← hy, sq (0 : ℤ), zero_mul, mul_zero, sub_zero,
-        sq_eq_one_iff] at prop
-      refine prop.resolve_right fun hf => ?_
-      have := (hax.trans_eq hax').le.trans_eq hf
-      norm_num at this
-    · exact hy.symm
-  · -- case 2: `a ≥ a₁`
-    have hx₁ : 1 < a.x
-    nlinarith [a.prop, h.d_pos]
-    have hxx₁ := h.mul_inv_x_pos hx₁ hy
-    have hxx₂ := h.mul_inv_x_lt_x hx₁ hy
-    have hyy := h.mul_inv_y_nonneg hx₁ hy
-    lift (a * a₁⁻¹).x to ℕ using hxx₁.le with x' hx'
-    -- Porting note: `ih` has its arguments in a different order compared to lean 3.
-    obtain ⟨n, hn⟩ := ih x' (mod_cast hxx₂.trans_eq hax'.symm) hyy hx' hxx₁
-    exact ⟨n + 1, by rw [pow_succ', ← hn, mul_comm a, ← mul_assoc, mul_inv_self, one_mul]⟩
+  -- case 1: `a = 1`
+  refine ⟨0, ?_⟩
+  simp only [pow_zero]
+  ext <;> simp only [x_one, y_one]
+  have prop := a.prop
+  rw [← hy, sq (0 : ℤ), zero_mul, mul_zero, sub_zero,
+    sq_eq_one_iff] at prop
+  refine prop.resolve_right fun hf => ?_
+  have := (hax.trans_eq hax').le.trans_eq hf
+  norm_num at this
+  exact hy.symm
+  -- case 2: `a ≥ a₁`
+  have hx₁ : 1 < a.x
+  nlinarith [a.prop, h.d_pos]
+  have hxx₁ := h.mul_inv_x_pos hx₁ hy
+  have hxx₂ := h.mul_inv_x_lt_x hx₁ hy
+  have hyy := h.mul_inv_y_nonneg hx₁ hy
+  lift (a * a₁⁻¹).x to ℕ using hxx₁.le with x' hx'
+  -- Porting note: `ih` has its arguments in a different order compared to lean 3.
+  obtain ⟨n, hn⟩ := ih x' (mod_cast hxx₂.trans_eq hax'.symm) hyy hx' hxx₁
+  exact ⟨n + 1, by rw [pow_succ', ← hn, mul_comm a, ← mul_assoc, mul_inv_self, one_mul]⟩
 
 /-- Every solution is, up to a sign, a power of a given fundamental solution. -/
 theorem eq_zpow_or_neg_zpow {a₁ : Solution₁ d} (h : IsFundamental a₁) (a : Solution₁ d) :
@@ -637,12 +637,12 @@ theorem eq_zpow_or_neg_zpow {a₁ : Solution₁ d} (h : IsFundamental a₁) (a :
   obtain ⟨b, hbx, hby, hb⟩ := exists_pos_variant h.d_pos a
   obtain ⟨n, hn⟩ := h.eq_pow_of_nonneg hbx hby
   rcases hb with (rfl | rfl | rfl | hb)
-  · exact ⟨n, Or.inl (mod_cast hn)⟩
-  · exact ⟨-n, Or.inl (by simp [hn])⟩
-  · exact ⟨n, Or.inr (by simp [hn])⟩
-  · rw [Set.mem_singleton_iff] at hb
-    rw [hb]
-    exact ⟨-n, Or.inr (by simp [hn])⟩
+  exact ⟨n, Or.inl (mod_cast hn)⟩
+  exact ⟨-n, Or.inl (by simp [hn])⟩
+  exact ⟨n, Or.inr (by simp [hn])⟩
+  rw [Set.mem_singleton_iff] at hb
+  rw [hb]
+  exact ⟨-n, Or.inr (by simp [hn])⟩
 
 end IsFundamental
 
@@ -659,21 +659,21 @@ theorem existsUnique_pos_generator (h₀ : 0 < d) (hd : ¬IsSquare d) :
   obtain ⟨n₁, hn₁⟩ := H a₁
   obtain ⟨n₂, hn₂⟩ := ha₁.eq_zpow_or_neg_zpow a
   rcases hn₂ with (rfl | rfl)
-  · rw [← zpow_mul, eq_comm, @eq_comm _ a₁, ← mul_inv_eq_one, ← @mul_inv_eq_one _ _ _ a₁, ←
-      zpow_neg_one, neg_mul, ← zpow_add, ← sub_eq_add_neg] at hn₁
-    cases' hn₁ with hn₁ hn₁
-    · rcases Int.isUnit_iff.mp
-          (isUnit_of_mul_eq_one _ _ <|
-            sub_eq_zero.mp <| (ha₁.zpow_eq_one_iff (n₂ * n₁ - 1)).mp hn₁) with
-        (rfl | rfl)
-      · rw [zpow_one]
-      · rw [zpow_neg_one, y_inv, lt_neg, neg_zero] at Hy
-        exact False.elim (lt_irrefl _ <| ha₁.2.1.trans Hy)
-    · rw [← zpow_zero a₁, eq_comm] at hn₁
-      exact False.elim (ha₁.zpow_ne_neg_zpow hn₁)
-  · rw [x_neg, lt_neg] at Hx
-    have := (x_zpow_pos (zero_lt_one.trans ha₁.1) n₂).trans Hx
-    norm_num at this
+  rw [← zpow_mul, eq_comm, @eq_comm _ a₁, ← mul_inv_eq_one, ← @mul_inv_eq_one _ _ _ a₁, ←
+    zpow_neg_one, neg_mul, ← zpow_add, ← sub_eq_add_neg] at hn₁
+  cases' hn₁ with hn₁ hn₁
+  rcases Int.isUnit_iff.mp
+      (isUnit_of_mul_eq_one _ _ <|
+        sub_eq_zero.mp <| (ha₁.zpow_eq_one_iff (n₂ * n₁ - 1)).mp hn₁) with
+    (rfl | rfl)
+  rw [zpow_one]
+  rw [zpow_neg_one, y_inv, lt_neg, neg_zero] at Hy
+  exact False.elim (lt_irrefl _ <| ha₁.2.1.trans Hy)
+  rw [← zpow_zero a₁, eq_comm] at hn₁
+  exact False.elim (ha₁.zpow_ne_neg_zpow hn₁)
+  rw [x_neg, lt_neg] at Hx
+  have := (x_zpow_pos (zero_lt_one.trans ha₁.1) n₂).trans Hx
+  norm_num at this
 
 /-- A positive solution is a generator (up to sign) of the group of all solutions to the
 Pell equation `x^2 - d*y^2 = 1` if and only if it is a fundamental solution. -/

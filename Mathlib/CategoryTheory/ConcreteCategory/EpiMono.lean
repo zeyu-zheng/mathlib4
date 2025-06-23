@@ -71,36 +71,36 @@ lemma injective_le_monomorphisms :
 lemma surjective_eq_epimorphisms_iff :
     MorphismProperty.surjective C = epimorphisms C ↔ (forget C).PreservesEpimorphisms := by
   constructor
-  · intro h
-    constructor
-    rintro _ _ f (hf : epimorphisms C f)
-    rw [epi_iff_surjective]
-    rw [← h] at hf
-    exact hf
-  · intro
-    apply le_antisymm (surjective_le_epimorphisms C)
-    intro _ _ f hf
-    have : Epi f := hf
-    change Function.Surjective ((forget C).map f)
-    rw [← epi_iff_surjective]
-    infer_instance
+  intro h
+  constructor
+  rintro _ _ f (hf : epimorphisms C f)
+  rw [epi_iff_surjective]
+  rw [← h] at hf
+  exact hf
+  intro
+  apply le_antisymm (surjective_le_epimorphisms C)
+  intro _ _ f hf
+  have : Epi f := hf
+  change Function.Surjective ((forget C).map f)
+  rw [← epi_iff_surjective]
+  infer_instance
 
 lemma injective_eq_monomorphisms_iff :
     MorphismProperty.injective C = monomorphisms C ↔ (forget C).PreservesMonomorphisms := by
   constructor
-  · intro h
-    constructor
-    rintro _ _ f (hf : monomorphisms C f)
-    rw [mono_iff_injective]
-    rw [← h] at hf
-    exact hf
-  · intro
-    apply le_antisymm (injective_le_monomorphisms C)
-    intro _ _ f hf
-    have : Mono f := hf
-    change Function.Injective ((forget C).map f)
-    rw [← mono_iff_injective]
-    infer_instance
+  intro h
+  constructor
+  rintro _ _ f (hf : monomorphisms C f)
+  rw [mono_iff_injective]
+  rw [← h] at hf
+  exact hf
+  intro
+  apply le_antisymm (injective_le_monomorphisms C)
+  intro _ _ f hf
+  have : Mono f := hf
+  change Function.Injective ((forget C).map f)
+  rw [← mono_iff_injective]
+  infer_instance
 
 lemma injective_eq_monomorphisms [(forget C).PreservesMonomorphisms] :
     MorphismProperty.injective C = monomorphisms C := by

@@ -302,11 +302,11 @@ theorem equicontinuousWithinAt_iff_pair {F : ι → X → α} {S : Set X} {x₀ 
     EquicontinuousWithinAt F S x₀ ↔
       ∀ U ∈ 𝓤 α, ∃ V ∈ 𝓝[S] x₀, ∀ x ∈ V, ∀ y ∈ V, ∀ i, (F i x, F i y) ∈ U := by
   constructor <;> intro H U hU
-  · rcases comp_symm_mem_uniformity_sets hU with ⟨V, hV, hVsymm, hVU⟩
-    refine ⟨_, H V hV, fun x hx y hy i => hVU (prod_mk_mem_compRel ?_ (hy i))⟩
-    exact hVsymm.mk_mem_comm.mp (hx i)
-  · rcases H U hU with ⟨V, hV, hVU⟩
-    filter_upwards [hV] using fun x hx i => hVU x₀ (mem_of_mem_nhdsWithin hx₀ hV) x hx i
+  rcases comp_symm_mem_uniformity_sets hU with ⟨V, hV, hVsymm, hVU⟩
+  refine ⟨_, H V hV, fun x hx y hy i => hVU (prod_mk_mem_compRel ?_ (hy i))⟩
+  exact hVsymm.mk_mem_comm.mp (hx i)
+  rcases H U hU with ⟨V, hV, hVU⟩
+  filter_upwards [hV] using fun x hx i => hVU x₀ (mem_of_mem_nhdsWithin hx₀ hV) x hx i
 
 /-- Reformulation of equicontinuity at `x₀` comparing two variables near `x₀` instead of comparing
 only one with `x₀`. -/
@@ -846,8 +846,8 @@ theorem UniformEquicontinuousOn.closure' {A : Set Y} {u : Y → β → α} {S : 
   rw [SetCoe.forall] at *
   change A ⊆ (fun f => (u f x, u f y)) ⁻¹' V at hxy
   refine (closure_minimal hxy <| hVclosed.preimage <| .prod_mk ?_ ?_).trans (preimage_mono hVU)
-  · exact (continuous_apply ⟨x, hxS⟩).comp hu
-  · exact (continuous_apply ⟨y, hyS⟩).comp hu
+  exact (continuous_apply ⟨x, hxS⟩).comp hu
+  exact (continuous_apply ⟨y, hyS⟩).comp hu
 
 /-- If a set of functions is uniformly equicontinuous, the same is true for its closure in *any*
 topology for which evaluation at any point is continuous. Since this will be applied to

@@ -157,16 +157,16 @@ theorem age.countable_quotient [h : Countable M] : (Quotient.mk' '' L.age M).Cou
   refine (congr_arg _ (Set.ext <| Quotient.forall.2 fun N => ?_)).mp
     (countable_range fun s : Finset M => ⟦⟨closure L (s : Set M), inferInstance⟩⟧)
   constructor
-  · rintro ⟨s, hs⟩
-    use Bundled.of (closure L (s : Set M))
-    exact ⟨⟨(fg_iff_structure_fg _).1 (fg_closure s.finite_toSet), ⟨Substructure.subtype _⟩⟩, hs⟩
-  · simp only [mem_range, Quotient.eq]
-    rintro ⟨P, ⟨⟨s, hs⟩, ⟨PM⟩⟩, hP2⟩
-    have : P ≈ N
-    apply Quotient.eq'.mp; rw [hP2]; rfl -- Porting note: added
-    refine ⟨s.image PM, Setoid.trans (b := P) ?_ this⟩
-    rw [← Embedding.coe_toHom, Finset.coe_image, closure_image PM.toHom, hs, ← Hom.range_eq_map]
-    exact ⟨PM.equivRange.symm⟩
+  rintro ⟨s, hs⟩
+  use Bundled.of (closure L (s : Set M))
+  exact ⟨⟨(fg_iff_structure_fg _).1 (fg_closure s.finite_toSet), ⟨Substructure.subtype _⟩⟩, hs⟩
+  simp only [mem_range, Quotient.eq]
+  rintro ⟨P, ⟨⟨s, hs⟩, ⟨PM⟩⟩, hP2⟩
+  have : P ≈ N
+  apply Quotient.eq'.mp; rw [hP2]; rfl -- Porting note: added
+  refine ⟨s.image PM, Setoid.trans (b := P) ?_ this⟩
+  rw [← Embedding.coe_toHom, Finset.coe_image, closure_image PM.toHom, hs, ← Hom.range_eq_map]
+  exact ⟨PM.equivRange.symm⟩
 
 open Classical in
 /-- The age of a direct limit of structures is the union of the ages of the structures. -/
@@ -177,21 +177,21 @@ theorem age_directLimit {ι : Type w} [Preorder ι] [IsDirected ι (· ≤ ·)] 
   ext M
   simp only [mem_iUnion]
   constructor
-  · rintro ⟨Mfg, ⟨e⟩⟩
-    obtain ⟨s, hs⟩ := Mfg.range e.toHom
-    let out := @Quotient.out _ (DirectLimit.setoid G f)
-    obtain ⟨i, hi⟩ := Finset.exists_le (s.image (Sigma.fst ∘ out))
-    have e' := (DirectLimit.of L ι G f i).equivRange.symm.toEmbedding
-    refine ⟨i, Mfg, ⟨e'.comp ((Substructure.inclusion ?_).comp e.equivRange.toEmbedding)⟩⟩
-    rw [← hs, closure_le]
-    intro x hx
-    refine ⟨f (out x).1 i (hi (out x).1 (Finset.mem_image_of_mem _ hx)) (out x).2, ?_⟩
-    rw [Embedding.coe_toHom, DirectLimit.of_apply, @Quotient.mk_eq_iff_out _ (_),
-      DirectLimit.equiv_iff G f _ (hi (out x).1 (Finset.mem_image_of_mem _ hx)),
-      DirectedSystem.map_self]
-    rfl
-  · rintro ⟨i, Mfg, ⟨e⟩⟩
-    exact ⟨Mfg, ⟨Embedding.comp (DirectLimit.of L ι G f i) e⟩⟩
+  rintro ⟨Mfg, ⟨e⟩⟩
+  obtain ⟨s, hs⟩ := Mfg.range e.toHom
+  let out := @Quotient.out _ (DirectLimit.setoid G f)
+  obtain ⟨i, hi⟩ := Finset.exists_le (s.image (Sigma.fst ∘ out))
+  have e' := (DirectLimit.of L ι G f i).equivRange.symm.toEmbedding
+  refine ⟨i, Mfg, ⟨e'.comp ((Substructure.inclusion ?_).comp e.equivRange.toEmbedding)⟩⟩
+  rw [← hs, closure_le]
+  intro x hx
+  refine ⟨f (out x).1 i (hi (out x).1 (Finset.mem_image_of_mem _ hx)) (out x).2, ?_⟩
+  rw [Embedding.coe_toHom, DirectLimit.of_apply, @Quotient.mk_eq_iff_out _ (_),
+    DirectLimit.equiv_iff G f _ (hi (out x).1 (Finset.mem_image_of_mem _ hx)),
+    DirectedSystem.map_self]
+  rfl
+  rintro ⟨i, Mfg, ⟨e⟩⟩
+  exact ⟨Mfg, ⟨Embedding.comp (DirectLimit.of L ι G f i) e⟩⟩
 
 /-- Sufficient conditions for a class to be the age of a countably-generated structure. -/
 theorem exists_cg_is_age_of (hn : K.Nonempty)
@@ -220,15 +220,15 @@ theorem exists_cg_is_age_of (hn : K.Nonempty)
   have : DirectedSystem (fun n ↦ (G n).val) fun i j h ↦ ↑(f i j h)
   dsimp [f, G]; infer_instance
   refine ⟨Bundled.of (@DirectLimit L _ _ (fun n ↦ (G n).val) _ f _ _), ?_, ?_⟩
-  · exact DirectLimit.cg _ (fun n => (fg _ (G n).2).cg)
-  · refine (age_directLimit (fun n ↦ (G n).val) f).trans
-      (subset_antisymm (iUnion_subset fun n N hN => hp (G n).val (G n).2 hN) fun N KN => ?_)
-    have : Quotient.out (Quotient.mk' N) ≈ N := Quotient.eq_mk_iff_out.mp rfl
-    obtain ⟨n, ⟨e⟩⟩ := (hF N).1 ⟨N, KN, this⟩
-    refine mem_iUnion_of_mem n ⟨fg _ KN, ⟨Embedding.comp ?_ e.symm.toEmbedding⟩⟩
-    cases' n with n
-    · dsimp [G]; exact Embedding.refl _ _
-    · dsimp [G]; exact (hFP _ n).some
+  exact DirectLimit.cg _ (fun n => (fg _ (G n).2).cg)
+  refine (age_directLimit (fun n ↦ (G n).val) f).trans
+    (subset_antisymm (iUnion_subset fun n N hN => hp (G n).val (G n).2 hN) fun N KN => ?_)
+  have : Quotient.out (Quotient.mk' N) ≈ N := Quotient.eq_mk_iff_out.mp rfl
+  obtain ⟨n, ⟨e⟩⟩ := (hF N).1 ⟨N, KN, this⟩
+  refine mem_iUnion_of_mem n ⟨fg _ KN, ⟨Embedding.comp ?_ e.symm.toEmbedding⟩⟩
+  cases' n with n
+  dsimp [G]; exact Embedding.refl _ _
+  dsimp [G]; exact (hFP _ n).some
 
 theorem exists_countable_is_age_of_iff [Countable (Σ l, L.Functions l)] :
     (∃ M : Bundled.{w} L.Structure, Countable M ∧ L.age M = K) ↔
@@ -236,12 +236,12 @@ theorem exists_countable_is_age_of_iff [Countable (Σ l, L.Functions l)] :
       (Quotient.mk' '' K).Countable ∧ (∀ M : Bundled.{w} L.Structure, M ∈ K → Structure.FG L M) ∧
       Hereditary K ∧ JointEmbedding K := by
   constructor
-  · rintro ⟨M, h1, h2, rfl⟩
-    refine ⟨age.nonempty M, age.is_equiv_invariant L M, age.countable_quotient M, fun N hN => hN.1,
-      age.hereditary M, age.jointEmbedding M⟩
-  · rintro ⟨Kn, eqinv, cq, hfg, hp, jep⟩
-    obtain ⟨M, hM, rfl⟩ := exists_cg_is_age_of Kn eqinv cq hfg hp jep
-    exact ⟨M, Structure.cg_iff_countable.1 hM, rfl⟩
+  rintro ⟨M, h1, h2, rfl⟩
+  refine ⟨age.nonempty M, age.is_equiv_invariant L M, age.countable_quotient M, fun N hN => hN.1,
+    age.hereditary M, age.jointEmbedding M⟩
+  rintro ⟨Kn, eqinv, cq, hfg, hp, jep⟩
+  obtain ⟨M, hM, rfl⟩ := exists_cg_is_age_of Kn eqinv cq hfg hp jep
+  exact ⟨M, Structure.cg_iff_countable.1 hM, rfl⟩
 
 variable (L)
 

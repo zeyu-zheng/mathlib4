@@ -97,24 +97,24 @@ theorem LinearMap.hasBasis_weakBilin (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜) :
   have h' := Filter.hasBasis_pi fun _ : F => h
   have h'' := Filter.HasBasis.comap (fun x y => B x y) h'
   refine h''.to_hasBasis ?_ ?_
-  · rintro (U : Set F × (F → ℝ)) hU
-    cases' hU with hU₁ hU₂
-    simp only [_root_.id]
-    let U' := hU₁.toFinset
-    by_cases hU₃ : U.fst.Nonempty
-    · have hU₃' : U'.Nonempty := hU₁.toFinset_nonempty.mpr hU₃
-      refine ⟨(U'.sup p).ball 0 <| U'.inf' hU₃' U.snd, p.basisSets_mem _ <|
-        (Finset.lt_inf'_iff _).2 fun y hy => hU₂ y <| hU₁.mem_toFinset.mp hy, fun x hx y hy => ?_⟩
-      simp only [Set.mem_preimage, Set.mem_pi, mem_ball_zero_iff]
-      rw [Seminorm.mem_ball_zero] at hx
-      rw [← LinearMap.toSeminormFamily_apply]
-      have hyU' : y ∈ U' := (Set.Finite.mem_toFinset hU₁).mpr hy
-      have hp : p y ≤ U'.sup p := Finset.le_sup hyU'
-      refine lt_of_le_of_lt (hp x) (lt_of_lt_of_le hx ?_)
-      exact Finset.inf'_le _ hyU'
-    rw [Set.not_nonempty_iff_eq_empty.mp hU₃]
-    simp only [Set.empty_pi, Set.preimage_univ, Set.subset_univ, and_true_iff]
-    exact Exists.intro ((p 0).ball 0 1) (p.basisSets_singleton_mem 0 one_pos)
+  rintro (U : Set F × (F → ℝ)) hU
+  cases' hU with hU₁ hU₂
+  simp only [_root_.id]
+  let U' := hU₁.toFinset
+  by_cases hU₃ : U.fst.Nonempty
+  have hU₃' : U'.Nonempty := hU₁.toFinset_nonempty.mpr hU₃
+  refine ⟨(U'.sup p).ball 0 <| U'.inf' hU₃' U.snd, p.basisSets_mem _ <|
+    (Finset.lt_inf'_iff _).2 fun y hy => hU₂ y <| hU₁.mem_toFinset.mp hy, fun x hx y hy => ?_⟩
+  simp only [Set.mem_preimage, Set.mem_pi, mem_ball_zero_iff]
+  rw [Seminorm.mem_ball_zero] at hx
+  rw [← LinearMap.toSeminormFamily_apply]
+  have hyU' : y ∈ U' := (Set.Finite.mem_toFinset hU₁).mpr hy
+  have hp : p y ≤ U'.sup p := Finset.le_sup hyU'
+  refine lt_of_le_of_lt (hp x) (lt_of_lt_of_le hx ?_)
+  exact Finset.inf'_le _ hyU'
+  rw [Set.not_nonempty_iff_eq_empty.mp hU₃]
+  simp only [Set.empty_pi, Set.preimage_univ, Set.subset_univ, and_true_iff]
+  exact Exists.intro ((p 0).ball 0 1) (p.basisSets_singleton_mem 0 one_pos)
   rintro U (hU : U ∈ p.basisSets)
   rw [SeminormFamily.basisSets_iff] at hU
   rcases hU with ⟨s, r, hr, hU⟩

@@ -170,13 +170,13 @@ theorem analyticSet_empty : AnalyticSet (∅ : Set α) := by
 theorem analyticSet_range_of_polishSpace {β : Type*} [TopologicalSpace β] [PolishSpace β]
     {f : β → α} (f_cont : Continuous f) : AnalyticSet (range f) := by
   cases isEmpty_or_nonempty β
-  · rw [range_eq_empty]
-    exact analyticSet_empty
-  · rw [AnalyticSet]
-    obtain ⟨g, g_cont, hg⟩ : ∃ g : (ℕ → ℕ) → β, Continuous g ∧ Surjective g :=
-      exists_nat_nat_continuous_surjective β
-    refine Or.inr ⟨f ∘ g, f_cont.comp g_cont, ?_⟩
-    rw [hg.range_comp]
+  rw [range_eq_empty]
+  exact analyticSet_empty
+  rw [AnalyticSet]
+  obtain ⟨g, g_cont, hg⟩ : ∃ g : (ℕ → ℕ) → β, Continuous g ∧ Surjective g :=
+    exists_nat_nat_continuous_surjective β
+  refine Or.inr ⟨f ∘ g, f_cont.comp g_cont, ?_⟩
+  rw [hg.range_comp]
 
 /-- The image of an open set under a continuous map is analytic. -/
 theorem _root_.IsOpen.analyticSet_image {β : Type*} [TopologicalSpace β] [PolishSpace β]
@@ -191,16 +191,16 @@ theorem analyticSet_iff_exists_polishSpace_range {s : Set α} :
       ∃ (β : Type) (h : TopologicalSpace β) (_ : @PolishSpace β h) (f : β → α),
         @Continuous _ _ h _ f ∧ range f = s := by
   constructor
-  · intro h
-    rw [AnalyticSet] at h
-    cases' h with h h
-    · refine ⟨Empty, inferInstance, inferInstance, Empty.elim, continuous_bot, ?_⟩
-      rw [h]
-      exact range_eq_empty _
-    · exact ⟨ℕ → ℕ, inferInstance, inferInstance, h⟩
-  · rintro ⟨β, h, h', f, f_cont, f_range⟩
-    rw [← f_range]
-    exact analyticSet_range_of_polishSpace f_cont
+  intro h
+  rw [AnalyticSet] at h
+  cases' h with h h
+  refine ⟨Empty, inferInstance, inferInstance, Empty.elim, continuous_bot, ?_⟩
+  rw [h]
+  exact range_eq_empty _
+  exact ⟨ℕ → ℕ, inferInstance, inferInstance, h⟩
+  rintro ⟨β, h, h', f, f_cont, f_range⟩
+  rw [← f_range]
+  exact analyticSet_range_of_polishSpace f_cont
 
 /-- The continuous image of an analytic set is analytic -/
 theorem AnalyticSet.image_of_continuousOn {β : Type*} [TopologicalSpace β] {s : Set α}
@@ -240,22 +240,22 @@ theorem AnalyticSet.iInter [hι : Nonempty ι] [Countable ι] [T2Space α] {s : 
   have F_cont : Continuous F := (f_cont i₀).comp ((continuous_apply i₀).comp continuous_subtype_val)
   have F_range : range F = ⋂ n : ι, s n := by
     apply Subset.antisymm
-    · rintro y ⟨x, rfl⟩
+    rintro y ⟨x, rfl⟩
+    refine mem_iInter.2 fun n => ?_
+    have : f n ((x : γ) n) = F x := (mem_iInter.1 x.2 n : _)
+    rw [← this, ← f_range n]
+    exact mem_range_self _
+    intro y hy
+    have A : ∀ n, ∃ x : β n, f n x = y := by
+      intro n
+      rw [← mem_range, f_range n]
+      exact mem_iInter.1 hy n
+    choose x hx using A
+    have xt : x ∈ t := by
       refine mem_iInter.2 fun n => ?_
-      have : f n ((x : γ) n) = F x := (mem_iInter.1 x.2 n : _)
-      rw [← this, ← f_range n]
-      exact mem_range_self _
-    · intro y hy
-      have A : ∀ n, ∃ x : β n, f n x = y := by
-        intro n
-        rw [← mem_range, f_range n]
-        exact mem_iInter.1 hy n
-      choose x hx using A
-      have xt : x ∈ t := by
-        refine mem_iInter.2 fun n => ?_
-        simp [hx]
-      refine ⟨⟨x, xt⟩, ?_⟩
-      exact hx i₀
+      simp [hx]
+    refine ⟨⟨x, xt⟩, ?_⟩
+    exact hx i₀
   rw [← F_range]
   exact analyticSet_range_of_polishSpace F_cont
 
@@ -287,9 +287,9 @@ theorem _root_.MeasurableSet.isClopenable [PolishSpace α] [MeasurableSpace α] 
     {s : Set α} (hs : MeasurableSet s) : IsClopenable s := by
   revert s
   apply MeasurableSet.induction_on_open
-  · exact fun u hu => hu.isClopenable
-  · exact fun u _ h'u => h'u.compl
-  · exact fun f _ _ hf => IsClopenable.iUnion hf
+  exact fun u hu => hu.isClopenable
+  exact fun u _ h'u => h'u.compl
+  exact fun f _ _ hf => IsClopenable.iUnion hf
 
 /-- A Borel-measurable set in a Polish space is analytic. -/
 theorem _root_.MeasurableSet.analyticSet {α : Type*} [t : TopologicalSpace α] [PolishSpace α]
@@ -362,14 +362,14 @@ theorem MeasurablySeparable.iUnion [Countable ι] {α : Type*} [MeasurableSpace 
     (h : ∀ m n, MeasurablySeparable (s m) (t n)) : MeasurablySeparable (⋃ n, s n) (⋃ m, t m) := by
   choose u hsu htu hu using h
   refine ⟨⋃ m, ⋂ n, u m n, ?_, ?_, ?_⟩
-  · refine iUnion_subset fun m => subset_iUnion_of_subset m ?_
-    exact subset_iInter fun n => hsu m n
-  · simp_rw [disjoint_iUnion_left, disjoint_iUnion_right]
-    intro n m
-    apply Disjoint.mono_right _ (htu m n)
-    apply iInter_subset
-  · refine MeasurableSet.iUnion fun m => ?_
-    exact MeasurableSet.iInter fun n => hu m n
+  refine iUnion_subset fun m => subset_iUnion_of_subset m ?_
+  exact subset_iInter fun n => hsu m n
+  simp_rw [disjoint_iUnion_left, disjoint_iUnion_right]
+  intro n m
+  apply Disjoint.mono_right _ (htu m n)
+  apply iInter_subset
+  refine MeasurableSet.iUnion fun m => ?_
+  exact MeasurableSet.iInter fun n => hu m n
 
 /-- The hard part of the Lusin separation theorem saying that two disjoint analytic sets are
 contained in disjoint Borel sets (see the full statement in `AnalyticSet.measurablySeparable`).
@@ -415,14 +415,14 @@ theorem measurablySeparable_range_of_disjoint [T2Space α] [MeasurableSpace α]
   have pn_fst : ∀ n, (p n).1.1 = n := by
     intro n
     induction' n with n IH
-    · rfl
-    · simp only [prec, hFn, IH]
+    rfl
+    simp only [prec, hFn, IH]
   -- check that the cylinders we construct are indeed decreasing, by checking that the coordinates
   -- are stationary.
   have Ix : ∀ m n, m + 1 ≤ n → (p n).1.2.1 m = (p (m + 1)).1.2.1 m := by
     intro m
     apply Nat.le_induction
-    · rfl
+    rfl
     intro n hmn IH
     have I : (F (p n)).val.snd.fst m = (p n).val.snd.fst m := by
       apply hFx (p n) m
@@ -432,7 +432,7 @@ theorem measurablySeparable_range_of_disjoint [T2Space α] [MeasurableSpace α]
   have Iy : ∀ m n, m + 1 ≤ n → (p n).1.2.2 m = (p (m + 1)).1.2.2 m := by
     intro m
     apply Nat.le_induction
-    · rfl
+    rfl
     intro n hmn IH
     have I : (F (p n)).val.snd.snd m = (p n).val.snd.snd m := by
       apply hFy (p n) m
@@ -446,14 +446,14 @@ theorem measurablySeparable_range_of_disjoint [T2Space α] [MeasurableSpace α]
   have M : ∀ n, ¬MeasurablySeparable (f '' cylinder x n) (g '' cylinder y n) := by
     intro n
     convert (p n).2 using 3
-    · rw [pn_fst, ← mem_cylinder_iff_eq, mem_cylinder_iff]
-      intro i hi
-      rw [hx]
-      exact (Ix i n hi).symm
-    · rw [pn_fst, ← mem_cylinder_iff_eq, mem_cylinder_iff]
-      intro i hi
-      rw [hy]
-      exact (Iy i n hi).symm
+    rw [pn_fst, ← mem_cylinder_iff_eq, mem_cylinder_iff]
+    intro i hi
+    rw [hx]
+    exact (Ix i n hi).symm
+    rw [pn_fst, ← mem_cylinder_iff_eq, mem_cylinder_iff]
+    intro i hi
+    rw [hy]
+    exact (Iy i n hi).symm
   -- consider two open sets separating `f x` and `g y`.
   obtain ⟨u, v, u_open, v_open, xu, yv, huv⟩ :
       ∃ u v : Set α, IsOpen u ∧ IsOpen v ∧ f x ∈ u ∧ g y ∈ v ∧ Disjoint u v := by
@@ -471,18 +471,18 @@ theorem measurablySeparable_range_of_disjoint [T2Space α] [MeasurableSpace α]
   -- for large enough `n`, these open sets separate the images of long cylinders around `x` and `y`
   have B : MeasurablySeparable (f '' cylinder x n) (g '' cylinder y n) := by
     refine ⟨u, ?_, ?_, u_open.measurableSet⟩
-    · rw [image_subset_iff]
-      apply Subset.trans _ hεx
-      intro z hz
-      rw [mem_cylinder_iff_dist_le] at hz
-      exact hz.trans_lt (hn.trans_le (min_le_left _ _))
-    · refine Disjoint.mono_left ?_ huv.symm
-      change g '' cylinder y n ⊆ v
-      rw [image_subset_iff]
-      apply Subset.trans _ hεy
-      intro z hz
-      rw [mem_cylinder_iff_dist_le] at hz
-      exact hz.trans_lt (hn.trans_le (min_le_right _ _))
+    rw [image_subset_iff]
+    apply Subset.trans _ hεx
+    intro z hz
+    rw [mem_cylinder_iff_dist_le] at hz
+    exact hz.trans_lt (hn.trans_le (min_le_left _ _))
+    refine Disjoint.mono_left ?_ huv.symm
+    change g '' cylinder y n ⊆ v
+    rw [image_subset_iff]
+    apply Subset.trans _ hεy
+    intro z hz
+    rw [mem_cylinder_iff_dist_le] at hz
+    exact hz.trans_lt (hn.trans_le (min_le_right _ _))
   -- this is a contradiction.
   exact M n B
 
@@ -493,9 +493,9 @@ theorem AnalyticSet.measurablySeparable [T2Space α] [MeasurableSpace α] [Opens
     MeasurablySeparable s t := by
   rw [AnalyticSet] at hs ht
   rcases hs with (rfl | ⟨f, f_cont, rfl⟩)
-  · refine ⟨∅, Subset.refl _, by simp, MeasurableSet.empty⟩
+  refine ⟨∅, Subset.refl _, by simp, MeasurableSet.empty⟩
   rcases ht with (rfl | ⟨g, g_cont, rfl⟩)
-  · exact ⟨univ, subset_univ _, by simp, MeasurableSet.univ⟩
+  exact ⟨univ, subset_univ _, by simp, MeasurableSet.univ⟩
   exact measurablySeparable_range_of_disjoint f_cont g_cont h
 
 /-- **Suslin's Theorem**: in a Hausdorff topological space, an analytic set with an analytic
@@ -531,10 +531,10 @@ theorem measurableSet_preimage_iff_of_surjective [CountablySeparated Z]
   refine ⟨fun h => ?_, fun h => hf h⟩
   rcases exists_opensMeasurableSpace_of_countablySeparated Z with ⟨τ, _, _, _⟩
   apply AnalyticSet.measurableSet_of_compl
-  · rw [← image_preimage_eq s hsurj]
-    exact h.analyticSet_image hf
-  · rw [← image_preimage_eq sᶜ hsurj]
-    exact h.compl.analyticSet_image hf
+  rw [← image_preimage_eq s hsurj]
+  exact h.analyticSet_image hf
+  rw [← image_preimage_eq sᶜ hsurj]
+  exact h.compl.analyticSet_image hf
 
 theorem map_measurableSpace_eq [CountablySeparated Z]
     {f : X → Z} (hf : Measurable f)
@@ -696,94 +696,94 @@ theorem measurableSet_range_of_continuous_injective {β : Type*} [TopologicalSpa
   -- we check both inclusions.
   apply Subset.antisymm
   -- we start with the easy inclusion `range f ⊆ ⋂ F n`. One just needs to unfold the definitions.
-  · rintro x ⟨y, rfl⟩
-    refine mem_iInter.2 fun n => ?_
-    obtain ⟨s, sb, ys, hs⟩ : ∃ (s : Set γ), s ∈ b ∧ y ∈ s ∧ s ⊆ ball y (u n / 2) := by
-      apply hb.mem_nhds_iff.1
-      exact ball_mem_nhds _ (half_pos (u_pos n))
-    have diam_s : diam s ≤ u n := by
-      apply (diam_mono hs isBounded_ball).trans
-      convert diam_ball (x := y) (half_pos (u_pos n)).le
-      ring
-    refine mem_iUnion.2 ⟨⟨s, sb⟩, ?_⟩
-    refine mem_iUnion.2 ⟨⟨isBounded_ball.subset hs, diam_s⟩, ?_⟩
-    apply mem_inter (subset_closure (mem_image_of_mem _ ys))
-    refine mem_iInter.2 fun t => mem_iInter.2 fun ht => ⟨?_, ?_⟩
-    · apply hq1
-      exact mem_image_of_mem _ ys
-    · apply disjoint_left.1 (hq2 ⟨(t, ⟨s, sb⟩), ht.symm⟩)
-      exact mem_image_of_mem _ ys
+  rintro x ⟨y, rfl⟩
+  refine mem_iInter.2 fun n => ?_
+  obtain ⟨s, sb, ys, hs⟩ : ∃ (s : Set γ), s ∈ b ∧ y ∈ s ∧ s ⊆ ball y (u n / 2) := by
+    apply hb.mem_nhds_iff.1
+    exact ball_mem_nhds _ (half_pos (u_pos n))
+  have diam_s : diam s ≤ u n := by
+    apply (diam_mono hs isBounded_ball).trans
+    convert diam_ball (x := y) (half_pos (u_pos n)).le
+    ring
+  refine mem_iUnion.2 ⟨⟨s, sb⟩, ?_⟩
+  refine mem_iUnion.2 ⟨⟨isBounded_ball.subset hs, diam_s⟩, ?_⟩
+  apply mem_inter (subset_closure (mem_image_of_mem _ ys))
+  refine mem_iInter.2 fun t => mem_iInter.2 fun ht => ⟨?_, ?_⟩
+  apply hq1
+  exact mem_image_of_mem _ ys
+  apply disjoint_left.1 (hq2 ⟨(t, ⟨s, sb⟩), ht.symm⟩)
+  exact mem_image_of_mem _ ys
   -- Now, let us prove the harder inclusion `⋂ F n ⊆ range f`.
-  · intro x hx
-    -- pick for each `n` a good set `s n` of small diameter for which `x ∈ E (s n)`.
-    have C1 : ∀ n, ∃ (s : b) (_ : IsBounded s.1 ∧ diam s.1 ≤ u n), x ∈ E s := fun n => by
-      simpa only [F, mem_iUnion] using mem_iInter.1 hx n
-    choose s hs hxs using C1
-    have C2 : ∀ n, (s n).1.Nonempty := by
-      intro n
-      rw [nonempty_iff_ne_empty]
-      intro hn
-      have := (s n).2
-      rw [hn] at this
-      exact b_nonempty this
-    -- choose a point `y n ∈ s n`.
-    choose y hy using C2
-    have I : ∀ m n, ((s m).1 ∩ (s n).1).Nonempty := by
-      intro m n
-      rw [← not_disjoint_iff_nonempty_inter]
-      by_contra! h
-      have A : x ∈ q ⟨(s m, s n), h⟩ \ q ⟨(s n, s m), h.symm⟩ :=
-        haveI := mem_iInter.1 (hxs m).2 (s n)
-        (mem_iInter.1 this h : _)
-      have B : x ∈ q ⟨(s n, s m), h.symm⟩ \ q ⟨(s m, s n), h⟩ :=
-        haveI := mem_iInter.1 (hxs n).2 (s m)
-        (mem_iInter.1 this h.symm : _)
-      exact A.2 B.1
-    -- the points `y n` are nearby, and therefore they form a Cauchy sequence.
-    have cauchy_y : CauchySeq y := by
-      have : Tendsto (fun n => 2 * u n) atTop (𝓝 0) := by
-        simpa only [mul_zero] using u_lim.const_mul 2
-      refine cauchySeq_of_le_tendsto_0' (fun n => 2 * u n) (fun m n hmn => ?_) this
-      rcases I m n with ⟨z, zsm, zsn⟩
-      calc
-        dist (y m) (y n) ≤ dist (y m) z + dist z (y n) := dist_triangle _ _ _
-        _ ≤ u m + u n :=
-          (add_le_add ((dist_le_diam_of_mem (hs m).1 (hy m) zsm).trans (hs m).2)
-            ((dist_le_diam_of_mem (hs n).1 zsn (hy n)).trans (hs n).2))
-        _ ≤ 2 * u m := by linarith [u_anti.antitone hmn]
-    haveI : Nonempty γ := ⟨y 0⟩
-    -- let `z` be its limit.
-    let z := limUnder atTop y
-    have y_lim : Tendsto y atTop (𝓝 z) := cauchy_y.tendsto_limUnder
-    suffices f z = x by
-      rw [← this]
-      exact mem_range_self _
-    -- assume for a contradiction that `f z ≠ x`.
-    by_contra! hne
-    -- introduce disjoint open sets `v` and `w` separating `f z` from `x`.
-    obtain ⟨v, w, v_open, w_open, fzv, xw, hvw⟩ := t2_separation hne
-    obtain ⟨δ, δpos, hδ⟩ : ∃ δ > (0 : ℝ), ball z δ ⊆ f ⁻¹' v := by
-      apply Metric.mem_nhds_iff.1
-      exact f_cont.continuousAt.preimage_mem_nhds (v_open.mem_nhds fzv)
-    obtain ⟨n, hn⟩ : ∃ n, u n + dist (y n) z < δ :=
-      haveI : Tendsto (fun n => u n + dist (y n) z) atTop (𝓝 0) := by
-        simpa only [add_zero] using u_lim.add (tendsto_iff_dist_tendsto_zero.1 y_lim)
-      ((tendsto_order.1 this).2 _ δpos).exists
-    -- for large enough `n`, the image of `s n` is contained in `v`, by continuity of `f`.
-    have fsnv : f '' s n ⊆ v := by
-      rw [image_subset_iff]
-      apply Subset.trans _ hδ
-      intro a ha
-      calc
-        dist a z ≤ dist a (y n) + dist (y n) z := dist_triangle _ _ _
-        _ ≤ u n + dist (y n) z :=
-          (add_le_add_right ((dist_le_diam_of_mem (hs n).1 ha (hy n)).trans (hs n).2) _)
-        _ < δ := hn
-    -- as `x` belongs to the closure of `f '' (s n)`, it belongs to the closure of `v`.
-    have : x ∈ closure v := closure_mono fsnv (hxs n).1
-    -- this is a contradiction, as `x` is supposed to belong to `w`, which is disjoint from
-    -- the closure of `v`.
-    exact disjoint_left.1 (hvw.closure_left w_open) this xw
+  intro x hx
+  -- pick for each `n` a good set `s n` of small diameter for which `x ∈ E (s n)`.
+  have C1 : ∀ n, ∃ (s : b) (_ : IsBounded s.1 ∧ diam s.1 ≤ u n), x ∈ E s := fun n => by
+    simpa only [F, mem_iUnion] using mem_iInter.1 hx n
+  choose s hs hxs using C1
+  have C2 : ∀ n, (s n).1.Nonempty := by
+    intro n
+    rw [nonempty_iff_ne_empty]
+    intro hn
+    have := (s n).2
+    rw [hn] at this
+    exact b_nonempty this
+  -- choose a point `y n ∈ s n`.
+  choose y hy using C2
+  have I : ∀ m n, ((s m).1 ∩ (s n).1).Nonempty := by
+    intro m n
+    rw [← not_disjoint_iff_nonempty_inter]
+    by_contra! h
+    have A : x ∈ q ⟨(s m, s n), h⟩ \ q ⟨(s n, s m), h.symm⟩ :=
+      haveI := mem_iInter.1 (hxs m).2 (s n)
+      (mem_iInter.1 this h : _)
+    have B : x ∈ q ⟨(s n, s m), h.symm⟩ \ q ⟨(s m, s n), h⟩ :=
+      haveI := mem_iInter.1 (hxs n).2 (s m)
+      (mem_iInter.1 this h.symm : _)
+    exact A.2 B.1
+  -- the points `y n` are nearby, and therefore they form a Cauchy sequence.
+  have cauchy_y : CauchySeq y := by
+    have : Tendsto (fun n => 2 * u n) atTop (𝓝 0) := by
+      simpa only [mul_zero] using u_lim.const_mul 2
+    refine cauchySeq_of_le_tendsto_0' (fun n => 2 * u n) (fun m n hmn => ?_) this
+    rcases I m n with ⟨z, zsm, zsn⟩
+    calc
+      dist (y m) (y n) ≤ dist (y m) z + dist z (y n) := dist_triangle _ _ _
+      _ ≤ u m + u n :=
+        (add_le_add ((dist_le_diam_of_mem (hs m).1 (hy m) zsm).trans (hs m).2)
+          ((dist_le_diam_of_mem (hs n).1 zsn (hy n)).trans (hs n).2))
+      _ ≤ 2 * u m := by linarith [u_anti.antitone hmn]
+  haveI : Nonempty γ := ⟨y 0⟩
+  -- let `z` be its limit.
+  let z := limUnder atTop y
+  have y_lim : Tendsto y atTop (𝓝 z) := cauchy_y.tendsto_limUnder
+  suffices f z = x by
+    rw [← this]
+    exact mem_range_self _
+  -- assume for a contradiction that `f z ≠ x`.
+  by_contra! hne
+  -- introduce disjoint open sets `v` and `w` separating `f z` from `x`.
+  obtain ⟨v, w, v_open, w_open, fzv, xw, hvw⟩ := t2_separation hne
+  obtain ⟨δ, δpos, hδ⟩ : ∃ δ > (0 : ℝ), ball z δ ⊆ f ⁻¹' v := by
+    apply Metric.mem_nhds_iff.1
+    exact f_cont.continuousAt.preimage_mem_nhds (v_open.mem_nhds fzv)
+  obtain ⟨n, hn⟩ : ∃ n, u n + dist (y n) z < δ :=
+    haveI : Tendsto (fun n => u n + dist (y n) z) atTop (𝓝 0) := by
+      simpa only [add_zero] using u_lim.add (tendsto_iff_dist_tendsto_zero.1 y_lim)
+    ((tendsto_order.1 this).2 _ δpos).exists
+  -- for large enough `n`, the image of `s n` is contained in `v`, by continuity of `f`.
+  have fsnv : f '' s n ⊆ v := by
+    rw [image_subset_iff]
+    apply Subset.trans _ hδ
+    intro a ha
+    calc
+      dist a z ≤ dist a (y n) + dist (y n) z := dist_triangle _ _ _
+      _ ≤ u n + dist (y n) z :=
+        (add_le_add_right ((dist_le_diam_of_mem (hs n).1 ha (hy n)).trans (hs n).2) _)
+      _ < δ := hn
+  -- as `x` belongs to the closure of `f '' (s n)`, it belongs to the closure of `v`.
+  have : x ∈ closure v := closure_mono fsnv (hxs n).1
+  -- this is a contradiction, as `x` is supposed to belong to `w`, which is disjoint from
+  -- the closure of `v`.
+  exact disjoint_left.1 (hvw.closure_left w_open) this xw
 
 theorem _root_.IsClosed.measurableSet_image_of_continuousOn_injOn
     [TopologicalSpace γ] [PolishSpace γ] {β : Type*} [TopologicalSpace β] [T2Space β]
@@ -792,8 +792,8 @@ theorem _root_.IsClosed.measurableSet_image_of_continuousOn_injOn
   rw [image_eq_range]
   haveI : PolishSpace s := IsClosed.polishSpace hs
   apply measurableSet_range_of_continuous_injective
-  · rwa [continuousOn_iff_continuous_restrict] at f_cont
-  · rwa [injOn_iff_injective] at f_inj
+  rwa [continuousOn_iff_continuous_restrict] at f_cont
+  rwa [injOn_iff_injective] at f_inj
 
 variable {α β : Type*} [tβ : TopologicalSpace β] [T2Space β] [MeasurableSpace β]
   [MeasurableSpace α]
@@ -897,7 +897,7 @@ theorem isClopenable_iff_measurableSet
   obtain ⟨t', t't, t'_polish, _, s_open⟩ :
     ∃ t' : TopologicalSpace γ, t' ≤ tγ ∧ @PolishSpace γ t' ∧ IsClosed[t'] s ∧ IsOpen[t'] s := hs
   rw [← borel_eq_borel_of_le t'_polish _ t't]
-  · exact MeasurableSpace.measurableSet_generateFrom s_open
+  exact MeasurableSpace.measurableSet_generateFrom s_open
   infer_instance
 
 /-- The set of points for which a sequence of measurable functions converges to a given function
@@ -920,7 +920,7 @@ theorem measurableSet_exists_tendsto [TopologicalSpace γ] [PolishSpace γ] [Mea
     [l.IsCountablyGenerated] {f : ι → β → γ} (hf : ∀ i, Measurable (f i)) :
     MeasurableSet { x | ∃ c, Tendsto (fun n => f n x) l (𝓝 c) } := by
   rcases l.eq_or_neBot with rfl | hl
-  · simp
+  simp
   letI := upgradePolishSpace γ
   rcases l.exists_antitone_basis with ⟨u, hu⟩
   simp_rw [← cauchy_map_iff_exists_tendsto]

@@ -103,11 +103,11 @@ variable [Module R A] [SMulCommClass R A A] [IsScalarTower R A A] [Semiring C] [
 theorem lift_range_le {f : A →ₙₐ[R] C} {S : Subalgebra R C} :
     (lift f).range ≤ S ↔ NonUnitalAlgHom.range f ≤ S.toNonUnitalSubalgebra := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · rintro - ⟨x, rfl⟩
-    exact @h (f x) ⟨x, by simp⟩
-  · rintro - ⟨x, rfl⟩
-    induction x with
-    | _ r a => simpa using add_mem (algebraMap_mem S r) (h ⟨a, rfl⟩)
+  rintro - ⟨x, rfl⟩
+  exact @h (f x) ⟨x, by simp⟩
+  rintro - ⟨x, rfl⟩
+  induction x with
+  | _ r a => simpa using add_mem (algebraMap_mem S r) (h ⟨a, rfl⟩)
 
 theorem lift_range (f : A →ₙₐ[R] C) :
     (lift f).range = Algebra.adjoin R (NonUnitalAlgHom.range f : Set C) :=
@@ -153,9 +153,9 @@ theorem _root_.AlgHomClass.unitization_injective' {F R S A : Type*} [CommRing R]
   simp_rw [map_add, hf, ← Unitization.algebraMap_eq_inl, AlgHomClass.commutes] at hx
   rw [add_eq_zero_iff_eq_neg] at hx ⊢
   by_cases hr : r = 0
-  · ext <;> simp [hr] at hx ⊢
-    exact hx
-  · exact (h r hr <| hx ▸ (neg_mem a.property)).elim
+  ext <;> simp [hr] at hx ⊢
+  exact hx
+  exact (h r hr <| hx ▸ (neg_mem a.property)).elim
 
 /-- This is a generic version which allows us to prove both
 `NonUnitalSubalgebra.unitization_injective` and `NonUnitalStarSubalgebra.unitization_injective`. -/
@@ -358,11 +358,11 @@ theorem starLift_range_le
     {f : A →⋆ₙₐ[R] C} {S : StarSubalgebra R C} :
     (starLift f).range ≤ S ↔ NonUnitalStarAlgHom.range f ≤ S.toNonUnitalStarSubalgebra := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · rintro - ⟨x, rfl⟩
-    exact @h (f x) ⟨x, by simp⟩
-  · rintro - ⟨x, rfl⟩
-    induction x with
-    | _ r a => simpa using add_mem (algebraMap_mem S r) (h ⟨a, rfl⟩)
+  rintro - ⟨x, rfl⟩
+  exact @h (f x) ⟨x, by simp⟩
+  rintro - ⟨x, rfl⟩
+  induction x with
+  | _ r a => simpa using add_mem (algebraMap_mem S r) (h ⟨a, rfl⟩)
 
 theorem starLift_range (f : A →⋆ₙₐ[R] C) :
     (starLift f).range = StarAlgebra.adjoin R (NonUnitalStarAlgHom.range f : Set C) :=

@@ -43,7 +43,7 @@ theorem dirac_one_mconv [MeasurableMul₂ M] (μ : Measure M) [SFinite μ] :
     (Measure.dirac 1) ∗ μ = μ := by
   unfold mconv
   rw [MeasureTheory.Measure.dirac_prod, map_map (by fun_prop)]
-  · simp only [Function.comp_def, one_mul, map_id']
+  simp only [Function.comp_def, one_mul, map_id']
   fun_prop
 
 /-- Convolution of a measure μ with the dirac measure at 1 returns μ. -/
@@ -52,7 +52,7 @@ theorem mconv_dirac_one [MeasurableMul₂ M]
     (μ : Measure M) [SFinite μ] : μ ∗ (Measure.dirac 1) = μ := by
   unfold mconv
   rw [MeasureTheory.Measure.prod_dirac, map_map (by fun_prop)]
-  · simp only [Function.comp_def, mul_one, map_id']
+  simp only [Function.comp_def, mul_one, map_id']
   fun_prop
 
 /-- Convolution of the zero measure with a measure μ returns the zero measure. -/
@@ -87,7 +87,7 @@ theorem mconv_comm {M : Type*} [CommMonoid M] [MeasurableSpace M] [MeasurableMul
     (ν : Measure M) [SFinite μ] [SFinite ν] : μ ∗ ν = ν ∗ μ := by
   unfold mconv
   rw [← prod_swap, map_map (by fun_prop)]
-  · simp [Function.comp_def, mul_comm]
+  simp [Function.comp_def, mul_comm]
   fun_prop
 
 /-- Convolution of SFinite maps is SFinite. -/

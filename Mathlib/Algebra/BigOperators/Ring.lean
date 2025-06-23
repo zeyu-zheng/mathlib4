@@ -111,31 +111,31 @@ open Classical in
 lemma prod_sum (s : Finset ι) (t : ∀ i, Finset (κ i)) (f : ∀ i, κ i → α) :
     ∏ a ∈ s, ∑ b ∈ t a, f a b = ∑ p ∈ s.pi t, ∏ x ∈ s.attach, f x.1 (p x.1 x.2) := by
   induction' s using Finset.induction with a s ha ih
-  · rw [pi_empty, sum_singleton]
-    rfl
-  · have h₁ : ∀ x ∈ t a, ∀ y ∈ t a, x ≠ y →
-      Disjoint (image (Pi.cons s a x) (pi s t)) (image (Pi.cons s a y) (pi s t)) := by
-      intro x _ y _ h
-      simp only [disjoint_iff_ne, mem_image]
-      rintro _ ⟨p₂, _, eq₂⟩ _ ⟨p₃, _, eq₃⟩ eq
-      have : Pi.cons s a x p₂ a (mem_insert_self _ _)
-              = Pi.cons s a y p₃ a (mem_insert_self _ _) := by rw [eq₂, eq₃, eq]
-      rw [Pi.cons_same, Pi.cons_same] at this
-      exact h this
-    rw [prod_insert ha, pi_insert ha, ih, sum_mul, sum_biUnion h₁]
-    refine sum_congr rfl fun b _ => ?_
-    have h₂ : ∀ p₁ ∈ pi s t, ∀ p₂ ∈ pi s t, Pi.cons s a b p₁ = Pi.cons s a b p₂ → p₁ = p₂ :=
-      fun p₁ _ p₂ _ eq => Pi.cons_injective ha eq
-    rw [sum_image h₂, mul_sum]
-    refine sum_congr rfl fun g _ => ?_
-    rw [attach_insert, prod_insert, prod_image]
-    · simp only [Pi.cons_same]
-      congr with ⟨v, hv⟩
-      congr
-      exact (Pi.cons_ne (by rintro rfl; exact ha hv)).symm
-    · exact fun _ _ _ _ => Subtype.eq ∘ Subtype.mk.inj
-    · simpa only [mem_image, mem_attach, Subtype.mk.injEq, true_and,
-        Subtype.exists, exists_prop, exists_eq_right] using ha
+  rw [pi_empty, sum_singleton]
+  rfl
+  have h₁ : ∀ x ∈ t a, ∀ y ∈ t a, x ≠ y →
+    Disjoint (image (Pi.cons s a x) (pi s t)) (image (Pi.cons s a y) (pi s t)) := by
+    intro x _ y _ h
+    simp only [disjoint_iff_ne, mem_image]
+    rintro _ ⟨p₂, _, eq₂⟩ _ ⟨p₃, _, eq₃⟩ eq
+    have : Pi.cons s a x p₂ a (mem_insert_self _ _)
+            = Pi.cons s a y p₃ a (mem_insert_self _ _) := by rw [eq₂, eq₃, eq]
+    rw [Pi.cons_same, Pi.cons_same] at this
+    exact h this
+  rw [prod_insert ha, pi_insert ha, ih, sum_mul, sum_biUnion h₁]
+  refine sum_congr rfl fun b _ => ?_
+  have h₂ : ∀ p₁ ∈ pi s t, ∀ p₂ ∈ pi s t, Pi.cons s a b p₁ = Pi.cons s a b p₂ → p₁ = p₂ :=
+    fun p₁ _ p₂ _ eq => Pi.cons_injective ha eq
+  rw [sum_image h₂, mul_sum]
+  refine sum_congr rfl fun g _ => ?_
+  rw [attach_insert, prod_insert, prod_image]
+  simp only [Pi.cons_same]
+  congr with ⟨v, hv⟩
+  congr
+  exact (Pi.cons_ne (by rintro rfl; exact ha hv)).symm
+  exact fun _ _ _ _ => Subtype.eq ∘ Subtype.mk.inj
+  simpa only [mem_image, mem_attach, Subtype.mk.injEq, true_and,
+    Subtype.exists, exists_prop, exists_eq_right] using ha
 
 /-- The product over `univ` of a sum can be written as a sum over the product of sets,
 `Fintype.piFinset`. `Finset.prod_sum` is an alternative statement when the product is not
@@ -194,13 +194,13 @@ theorem prod_add_ordered [LinearOrder ι] [CommSemiring α] (s : Finset ι) (f g
   congr 1
   rw [add_comm]
   congr 1
-  · rw [filter_false_of_mem, prod_empty, mul_one]
-    exact (forall_mem_insert _ _ _).2 ⟨lt_irrefl a, fun i hi => (ha i hi).not_lt⟩
-  · rw [mul_sum]
-    refine sum_congr rfl fun i hi => ?_
-    rw [filter_insert, if_neg (ha i hi).not_lt, filter_insert, if_pos (ha i hi), prod_insert,
-      mul_left_comm]
-    exact mt (fun ha => (mem_filter.1 ha).1) ha'
+  rw [filter_false_of_mem, prod_empty, mul_one]
+  exact (forall_mem_insert _ _ _).2 ⟨lt_irrefl a, fun i hi => (ha i hi).not_lt⟩
+  rw [mul_sum]
+  refine sum_congr rfl fun i hi => ?_
+  rw [filter_insert, if_neg (ha i hi).not_lt, filter_insert, if_pos (ha i hi), prod_insert,
+    mul_left_comm]
+  exact mt (fun ha => (mem_filter.1 ha).1) ha'
 
 open Classical in
 /-- Summing `a^s.card * b^(n-s.card)` over all finite subsets `s` of a `Finset`
@@ -249,9 +249,9 @@ theorem prod_range_natCast_sub (n k : ℕ) :
     ∏ i ∈ range k, (n - i : α) = (∏ i ∈ range k, (n - i) : ℕ) := by
   rw [prod_natCast]
   rcases le_or_lt k n with hkn | hnk
-  · exact prod_congr rfl fun i hi => (Nat.cast_sub <| (mem_range.1 hi).le.trans hkn).symm
-  · rw [← mem_range] at hnk
-    rw [prod_eq_zero hnk, prod_eq_zero hnk] <;> simp
+  exact prod_congr rfl fun i hi => (Nat.cast_sub <| (mem_range.1 hi).le.trans hkn).symm
+  rw [← mem_range] at hnk
+  rw [prod_eq_zero hnk, prod_eq_zero hnk] <;> simp
 
 @[deprecated (since := "2024-05-27")] alias prod_range_cast_nat_sub := prod_range_natCast_sub
 
@@ -289,7 +289,7 @@ variable {ι : Type*} {s : Finset ι} {f : ι → ℕ} {n : ℕ}
 
 protected lemma sum_div (hf : ∀ i ∈ s, n ∣ f i) : (∑ i ∈ s, f i) / n = ∑ i ∈ s, f i / n := by
   obtain rfl | hn := n.eq_zero_or_pos
-  · simp
+  simp
   rw [Nat.div_eq_iff_eq_mul_left hn (dvd_sum hf), sum_mul]
   refine sum_congr rfl fun s hs ↦ ?_
   rw [Nat.div_mul_cancel (hf _ hs)]
@@ -328,7 +328,7 @@ variable {ι : Type*} {s : Finset ι} {f : ι → ℤ} {n : ℤ}
 
 protected lemma sum_div (hf : ∀ i ∈ s, n ∣ f i) : (∑ i ∈ s, f i) / n = ∑ i ∈ s, f i / n := by
   obtain rfl | hn := eq_or_ne n 0
-  · simp
+  simp
   rw [Int.ediv_eq_iff_eq_mul_left hn (dvd_sum hf), sum_mul]
   refine sum_congr rfl fun s hs ↦ ?_
   rw [Int.ediv_mul_cancel (hf _ hs)]

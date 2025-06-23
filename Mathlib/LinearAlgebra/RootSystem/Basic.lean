@@ -112,11 +112,11 @@ protected lemma ext [CharZero R] [NoZeroSMulDivisors R M]
   apply P₁.injOn_dualMap_subtype_span_root_coroot (mem_range_self i) (hc ▸ mem_range_self i)
   simp only [LinearMap.coe_comp, LinearEquiv.coe_coe, comp_apply]
   apply Dual.eq_of_preReflection_mapsTo' (P₁.ne_zero i) (finite_range P₁.root)
-  · exact Submodule.subset_span (mem_range_self i)
-  · exact P₁.coroot_root_two i
-  · exact P₁.mapsTo_reflection_root i
-  · exact hr ▸ he ▸ P₂.coroot_root_two i
-  · exact hr ▸ he ▸ P₂.mapsTo_reflection_root i
+  exact Submodule.subset_span (mem_range_self i)
+  exact P₁.coroot_root_two i
+  exact P₁.mapsTo_reflection_root i
+  exact hr ▸ he ▸ P₂.coroot_root_two i
+  exact hr ▸ he ▸ P₂.mapsTo_reflection_root i
 
 private lemma coroot_eq_coreflection_of_root_eq' [CharZero R] [NoZeroSMulDivisors R M]
     (p : PerfectPairing R M N)
@@ -208,10 +208,10 @@ protected lemma ext [CharZero R] [NoZeroSMulDivisors R M]
   use i
   apply P₁.bijectiveRight.injective
   apply Dual.eq_of_preReflection_mapsTo (P₁.ne_zero i) (finite_range P₁.root) P₁.span_eq_top
-  · exact hr ▸ he ▸ P₂.coroot_root_two i
-  · exact hr ▸ he ▸ P₂.mapsTo_reflection_root i
-  · exact P₁.coroot_root_two i
-  · exact P₁.mapsTo_reflection_root i
+  exact hr ▸ he ▸ P₂.coroot_root_two i
+  exact hr ▸ he ▸ P₂.mapsTo_reflection_root i
+  exact P₁.coroot_root_two i
+  exact P₁.mapsTo_reflection_root i
 
 private lemma coroot_eq_coreflection_of_root_eq_of_span_eq_top [CharZero R] [NoZeroSMulDivisors R M]
     (p : PerfectPairing R M N)
@@ -238,11 +238,11 @@ private lemma coroot_eq_coreflection_of_root_eq_of_span_eq_top [CharZero R] [NoZ
   have hk₀ : root k ≠ 0 := fun h ↦ by simpa [h] using hp k
   apply p.bijectiveRight.injective
   apply Dual.eq_of_preReflection_mapsTo hk₀ (finite_range root) hsp (hp k) (hs k)
-  · simp [α, β, α', β', sα, sβ, sα', hk, preReflection_apply, hp i, hp j, mul_two,
-      mul_comm (p.toLin α β')]
-    ring -- v4.7.0-rc1 issues
-  · rw [hk, hij]
-    exact (hs i).comp <| (hs j).comp (hs i)
+  simp [α, β, α', β', sα, sβ, sα', hk, preReflection_apply, hp i, hp j, mul_two,
+    mul_comm (p.toLin α β')]
+  ring -- v4.7.0-rc1 issues
+  rw [hk, hij]
+  exact (hs i).comp <| (hs j).comp (hs i)
 
 /-- In characteristic zero if there is no torsion, to check that a finite family of roots form a
 root system, we do not need to check that the coroots are stable under reflections since this

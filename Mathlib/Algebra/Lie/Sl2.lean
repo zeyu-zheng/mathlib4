@@ -101,11 +101,11 @@ local notation "ψ" n => ((toEnd R L M f) ^ n) m
 lemma lie_h_pow_toEnd_f (n : ℕ) :
     ⁅h, ψ n⁆ = (μ - 2 * n) • ψ n := by
   induction' n with n ih
-  · simpa using P.lie_h
-  · rw [pow_succ', LinearMap.mul_apply, toEnd_apply_apply, Nat.cast_add, Nat.cast_one,
-      leibniz_lie h, t.lie_lie_smul_f R, ← neg_smul, ih, lie_smul, smul_lie, ← add_smul]
-    congr
-    ring
+  simpa using P.lie_h
+  rw [pow_succ', LinearMap.mul_apply, toEnd_apply_apply, Nat.cast_add, Nat.cast_one,
+    leibniz_lie h, t.lie_lie_smul_f R, ← neg_smul, ih, lie_smul, smul_lie, ← add_smul]
+  congr
+  ring
 
 -- Although this is true by definition, we include this lemma (and the assumption) to mirror the API
 -- for `lie_h_pow_toEnd_f` and `lie_e_pow_succ_toEnd_f`.
@@ -118,14 +118,14 @@ lemma lie_f_pow_toEnd_f (P : HasPrimitiveVectorWith t m μ) (n : ℕ) :
 lemma lie_e_pow_succ_toEnd_f (n : ℕ) :
     ⁅e, ψ (n + 1)⁆ = ((n + 1) * (μ - n)) • ψ n := by
   induction' n with n ih
-  · simp only [zero_add, pow_one, toEnd_apply_apply, Nat.cast_zero, sub_zero, one_mul,
-      pow_zero, LinearMap.one_apply, leibniz_lie e, t.lie_e_f, P.lie_e, P.lie_h, lie_zero,
-      add_zero]
-  · rw [pow_succ', LinearMap.mul_apply, toEnd_apply_apply, leibniz_lie e, t.lie_e_f,
-      lie_h_pow_toEnd_f P, ih, lie_smul, lie_f_pow_toEnd_f P, ← add_smul,
-      Nat.cast_add, Nat.cast_one]
-    congr
-    ring
+  simp only [zero_add, pow_one, toEnd_apply_apply, Nat.cast_zero, sub_zero, one_mul,
+    pow_zero, LinearMap.one_apply, leibniz_lie e, t.lie_e_f, P.lie_e, P.lie_h, lie_zero,
+    add_zero]
+  rw [pow_succ', LinearMap.mul_apply, toEnd_apply_apply, leibniz_lie e, t.lie_e_f,
+    lie_h_pow_toEnd_f P, ih, lie_smul, lie_f_pow_toEnd_f P, ← add_smul,
+    Nat.cast_add, Nat.cast_one]
+  congr
+  ring
 
 /-- The eigenvalue of a primitive vector must be a natural number if the representation is
 finite-dimensional. -/
@@ -151,15 +151,15 @@ lemma pow_toEnd_f_ne_zero_of_eq_nat
     {n : ℕ} (hn : μ = n) {i} (hi : i ≤ n) : (ψ i) ≠ 0 := by
   intro H
   induction i
-  · exact P.ne_zero (by simpa using H)
-  · next i IH =>
-    have : ((i + 1) * (n - i) : ℤ) • (toEnd R L M f ^ i) m = 0 := by
-      have := congr_arg (⁅e, ·⁆) H
-      simpa [← Int.cast_smul_eq_nsmul R, P.lie_e_pow_succ_toEnd_f, hn] using this
-    rw [← Int.cast_smul_eq_nsmul R, smul_eq_zero, Int.cast_eq_zero, mul_eq_zero, sub_eq_zero,
-      Nat.cast_inj, ← @Nat.cast_one ℤ, ← Nat.cast_add, Nat.cast_eq_zero] at this
-    simp only [add_eq_zero, one_ne_zero, and_false, false_or] at this
-    exact (hi.trans_eq (this.resolve_right (IH (i.le_succ.trans hi)))).not_lt i.lt_succ_self
+  exact P.ne_zero (by simpa using H)
+  next i IH =>
+  have : ((i + 1) * (n - i) : ℤ) • (toEnd R L M f ^ i) m = 0 := by
+    have := congr_arg (⁅e, ·⁆) H
+    simpa [← Int.cast_smul_eq_nsmul R, P.lie_e_pow_succ_toEnd_f, hn] using this
+  rw [← Int.cast_smul_eq_nsmul R, smul_eq_zero, Int.cast_eq_zero, mul_eq_zero, sub_eq_zero,
+    Nat.cast_inj, ← @Nat.cast_one ℤ, ← Nat.cast_add, Nat.cast_eq_zero] at this
+  simp only [add_eq_zero, one_ne_zero, and_false, false_or] at this
+  exact (hi.trans_eq (this.resolve_right (IH (i.le_succ.trans hi)))).not_lt i.lt_succ_self
 
 lemma pow_toEnd_f_eq_zero_of_eq_nat
     [IsNoetherian R M] [NoZeroSMulDivisors R M] [IsDomain R] [CharZero R]

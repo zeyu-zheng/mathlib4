@@ -163,34 +163,34 @@ theorem pi_mem_of_mulSingle_mem_aux [DecidableEq η] (I : Finset η) {H : Subgro
     (x : ∀ i, f i) (h1 : ∀ i, i ∉ I → x i = 1) (h2 : ∀ i, i ∈ I → Pi.mulSingle i (x i) ∈ H) :
     x ∈ H := by
   induction' I using Finset.induction_on with i I hnmem ih generalizing x
-  · convert one_mem H
-    ext i
-    exact h1 i (Finset.not_mem_empty i)
-  · have : x = Function.update x i 1 * Pi.mulSingle i (x i) := by
-      ext j
-      by_cases heq : j = i
-      · subst heq
-        simp
-      · simp [heq]
-    rw [this]
-    clear this
-    apply mul_mem
-    · apply ih <;> clear ih
-      · intro j hj
-        by_cases heq : j = i
-        · subst heq
-          simp
-        · simp [heq]
-          apply h1 j
-          simpa [heq] using hj
-      · intro j hj
-        have : j ≠ i
-        rintro rfl
-        contradiction
-        simp only [ne_eq, this, not_false_eq_true, Function.update_noteq]
-        exact h2 _ (Finset.mem_insert_of_mem hj)
-    · apply h2
-      simp
+  convert one_mem H
+  ext i
+  exact h1 i (Finset.not_mem_empty i)
+  have : x = Function.update x i 1 * Pi.mulSingle i (x i) := by
+    ext j
+    by_cases heq : j = i
+    subst heq
+    simp
+    simp [heq]
+  rw [this]
+  clear this
+  apply mul_mem
+  apply ih <;> clear ih
+  intro j hj
+  by_cases heq : j = i
+  subst heq
+  simp
+  simp [heq]
+  apply h1 j
+  simpa [heq] using hj
+  intro j hj
+  have : j ≠ i
+  rintro rfl
+  contradiction
+  simp only [ne_eq, this, not_false_eq_true, Function.update_noteq]
+  exact h2 _ (Finset.mem_insert_of_mem hj)
+  apply h2
+  simp
 
 @[to_additive]
 theorem pi_mem_of_mulSingle_mem [Finite η] [DecidableEq η] {H : Subgroup (∀ i, f i)} (x : ∀ i, f i)
@@ -204,10 +204,10 @@ theorem pi_mem_of_mulSingle_mem [Finite η] [DecidableEq η] {H : Subgroup (∀ 
 theorem pi_le_iff [DecidableEq η] [Finite η] {H : ∀ i, Subgroup (f i)} {J : Subgroup (∀ i, f i)} :
     pi univ H ≤ J ↔ ∀ i : η, map (MonoidHom.mulSingle f i) (H i) ≤ J := by
   constructor
-  · rintro h i _ ⟨x, hx, rfl⟩
-    apply h
-    simpa using hx
-  · exact fun h x hx => pi_mem_of_mulSingle_mem x fun i => h i (mem_map_of_mem _ (hx i trivial))
+  rintro h i _ ⟨x, hx, rfl⟩
+  apply h
+  simpa using hx
+  exact fun h x hx => pi_mem_of_mulSingle_mem x fun i => h i (mem_map_of_mem _ (hx i trivial))
 
 end Pi
 

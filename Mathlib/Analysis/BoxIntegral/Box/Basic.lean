@@ -144,14 +144,14 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J := Iff.rfl
 theorem le_TFAE : List.TFAE [I ≤ J, (I : Set (ι → ℝ)) ⊆ J,
     Icc I.lower I.upper ⊆ Icc J.lower J.upper, J.lower ≤ I.lower ∧ I.upper ≤ J.upper] := by
   tfae_have 1 ↔ 2
-  · exact Iff.rfl
+  exact Iff.rfl
   tfae_have 2 → 3
-  · intro h
-    simpa [coe_eq_pi, closure_pi_set, lower_ne_upper] using closure_mono h
+  intro h
+  simpa [coe_eq_pi, closure_pi_set, lower_ne_upper] using closure_mono h
   tfae_have 3 ↔ 4
-  · exact Icc_subset_Icc_iff I.lower_le_upper
+  exact Icc_subset_Icc_iff I.lower_le_upper
   tfae_have 4 → 2
-  · exact fun h x hx i ↦ Ioc_subset_Ioc (h.1 i) (h.2 i) (hx i)
+  exact fun h x hx i ↦ Ioc_subset_Ioc (h.1 i) (h.2 i) (hx i)
   tfae_finish
 
 variable {I J}
@@ -290,18 +290,18 @@ theorem mk'_eq_bot {l u : ι → ℝ} : mk' l u = ⊥ ↔ ∃ i, u i ≤ l i := 
 @[simp]
 theorem mk'_eq_coe {l u : ι → ℝ} : mk' l u = I ↔ l = I.lower ∧ u = I.upper := by
   cases' I with lI uI hI; rw [mk']; split_ifs with h
-  · simp [WithBot.coe_eq_coe]
-  · suffices l = lI → u ≠ uI by simpa
-    rintro rfl rfl
-    exact h hI
+  simp [WithBot.coe_eq_coe]
+  suffices l = lI → u ≠ uI by simpa
+  rintro rfl rfl
+  exact h hI
 
 @[simp]
 theorem coe_mk' (l u : ι → ℝ) : (mk' l u : Set (ι → ℝ)) = pi univ fun i ↦ Ioc (l i) (u i) := by
   rw [mk']; split_ifs with h
-  · exact coe_eq_pi _
-  · rcases not_forall.mp h with ⟨i, hi⟩
-    rw [coe_bot, univ_pi_eq_empty]
-    exact Ioc_eq_empty hi
+  exact coe_eq_pi _
+  rcases not_forall.mp h with ⟨i, hi⟩
+  rw [coe_bot, univ_pi_eq_empty]
+  exact Ioc_eq_empty hi
 
 instance WithBot.inf : Inf (WithBot (Box ι)) :=
   ⟨fun I ↦
@@ -311,11 +311,11 @@ instance WithBot.inf : Inf (WithBot (Box ι)) :=
 @[simp]
 theorem coe_inf (I J : WithBot (Box ι)) : (↑(I ⊓ J) : Set (ι → ℝ)) = (I : Set _) ∩ J := by
   induction I
-  · change ∅ = _
-    simp
+  change ∅ = _
+  simp
   induction J
-  · change ∅ = _
-    simp
+  change ∅ = _
+  simp
   change ((mk' _ _ : WithBot (Box ι)) : Set (ι → ℝ)) = _
   simp only [coe_eq_pi, ← pi_inter_distrib, Ioc_inter_Ioc, Pi.sup_apply, Pi.inf_apply, coe_mk',
     coe_coe]

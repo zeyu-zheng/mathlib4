@@ -170,13 +170,13 @@ theorem prod {ι : Type*} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : �
     (h : ∀ i ∈ s, IsHomogeneous (φ i) (n i)) : IsHomogeneous (∏ i ∈ s, φ i) (∑ i ∈ s, n i) := by
   revert h
   refine Finset.induction_on s ?_ ?_
-  · intro
-    simp only [isHomogeneous_one, Finset.sum_empty, Finset.prod_empty]
-  · intro i s his IH h
-    simp only [his, Finset.prod_insert, Finset.sum_insert, not_false_iff]
-    apply (h i (Finset.mem_insert_self _ _)).mul (IH _)
-    intro j hjs
-    exact h j (Finset.mem_insert_of_mem hjs)
+  intro
+  simp only [isHomogeneous_one, Finset.sum_empty, Finset.prod_empty]
+  intro i s his IH h
+  simp only [his, Finset.prod_insert, Finset.sum_insert, not_false_iff]
+  apply (h i (Finset.mem_insert_self _ _)).mul (IH _)
+  intro j hjs
+  exact h j (Finset.mem_insert_of_mem hjs)
 
 lemma C_mul (hφ : φ.IsHomogeneous m) (r : R) :
     (C r * φ).IsHomogeneous m := by
@@ -210,11 +210,11 @@ lemma eval₂ (hφ : φ.IsHomogeneous m) (f : R →+* MvPolynomial τ S) (g : σ
   rw [← zero_add (n * m)]
   apply IsHomogeneous.mul (hf _) _
   convert IsHomogeneous.prod _ _ (fun k ↦ n * i k) _
-  · rw [Finsupp.mem_support_iff] at hi
-    rw [← Finset.mul_sum, ← hφ hi, weight_apply]
-    simp_rw [smul_eq_mul, Finsupp.sum, Pi.one_apply, mul_one]
-  · rintro k -
-    apply (hg k).pow
+  rw [Finsupp.mem_support_iff] at hi
+  rw [← Finset.mul_sum, ← hφ hi, weight_apply]
+  simp_rw [smul_eq_mul, Finsupp.sum, Pi.one_apply, mul_one]
+  rintro k -
+  apply (hg k).pow
 
 lemma map (hφ : φ.IsHomogeneous n) (f : R →+* S) : (map f φ).IsHomogeneous n := by
   simpa only [one_mul] using hφ.eval₂ _ _ (fun r ↦ isHomogeneous_C _ (f r)) (isHomogeneous_X _)
@@ -270,9 +270,9 @@ theorem rename_isHomogeneous_iff {f : σ → τ} (hf : f.Injective) :
     (rename f φ).IsHomogeneous n ↔ φ.IsHomogeneous n := by
   refine ⟨fun h d hd ↦ ?_, rename_isHomogeneous⟩
   convert ← @h (d.mapDomain f) _
-  · simp only [weight_apply, Pi.one_apply, smul_eq_mul, mul_one]
-    exact Finsupp.sum_mapDomain_index_inj (h := fun _ ↦ id) hf
-  · rwa [coeff_rename_mapDomain f hf]
+  simp only [weight_apply, Pi.one_apply, smul_eq_mul, mul_one]
+  exact Finsupp.sum_mapDomain_index_inj (h := fun _ ↦ id) hf
+  rwa [coeff_rename_mapDomain f hf]
 
 lemma finSuccEquiv_coeff_isHomogeneous {N : ℕ} {φ : MvPolynomial (Fin (N+1)) R} {n : ℕ}
     (hφ : φ.IsHomogeneous n) (i j : ℕ) (h : i + j = n) :
@@ -328,16 +328,16 @@ lemma exists_eval_ne_zero_of_coeff_finSuccEquiv_ne_zero_aux
   ext d
   rw [coeff_zero]
   obtain rfl | hd := eq_or_ne d 0
-  · apply hFn
-  · contrapose! hd
-    ext i
-    rw [Finsupp.coe_zero, Pi.zero_apply]
-    by_cases hi : i ∈ d.support
-    · have := hF.finSuccEquiv_coeff_isHomogeneous n 0 (add_zero _) hd
-      simp only [weight_apply, Pi.one_apply, smul_eq_mul, mul_one, Finsupp.sum] at this
-      rw [Finset.sum_eq_zero_iff_of_nonneg (fun _ _ ↦ zero_le')] at this
-      exact this i hi
-    · simpa using hi
+  apply hFn
+  contrapose! hd
+  ext i
+  rw [Finsupp.coe_zero, Pi.zero_apply]
+  by_cases hi : i ∈ d.support
+  have := hF.finSuccEquiv_coeff_isHomogeneous n 0 (add_zero _) hd
+  simp only [weight_apply, Pi.one_apply, smul_eq_mul, mul_one, Finsupp.sum] at this
+  rw [Finset.sum_eq_zero_iff_of_nonneg (fun _ _ ↦ zero_le')] at this
+  exact this i hi
+  simpa using hi
 
 section IsDomain
 
@@ -366,7 +366,7 @@ lemma exists_eval_ne_zero_of_totalDegree_le_card_aux {N : ℕ} {F : MvPolynomial
       contrapose! hi
       exact coeff_eq_zero_of_natDegree_lt <| (Nat.le_of_lt_succ hdeg).trans_lt hi
     obtain hFn | hFn := ne_or_eq ((finSuccEquiv R N F).coeff n) 0
-    · exact hF.exists_eval_ne_zero_of_coeff_finSuccEquiv_ne_zero_aux hFn
+    exact hF.exists_eval_ne_zero_of_coeff_finSuccEquiv_ne_zero_aux hFn
     have hin : i < n := hin.lt_or_eq.elim id <| by aesop
     obtain ⟨j, hj⟩ : ∃ j, i + (j + 1) = n := (Nat.exists_eq_add_of_lt hin).imp <| by intros; omega
     obtain ⟨r, hr⟩ : ∃ r, (eval r) (Polynomial.coeff ((finSuccEquiv R N) F) i) ≠ 0 :=

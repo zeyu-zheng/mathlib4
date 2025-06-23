@@ -171,15 +171,15 @@ theorem Sigma.curry_update {γ : ∀ a, β a → Type*} [DecidableEq α] [∀ a,
   ext ja jb
   unfold Sigma.curry
   obtain rfl | ha := eq_or_ne ia ja
-  · obtain rfl | hb := eq_or_ne ib jb
-    · simp
-    · simp only [update_same]
-      rw [Function.update_noteq (mt _ hb.symm), Function.update_noteq hb.symm]
-      rintro h
-      injection h
-  · rw [Function.update_noteq (ne_of_apply_ne Sigma.fst _), Function.update_noteq]
-    · exact ha.symm
-    · exact ha.symm
+  obtain rfl | hb := eq_or_ne ib jb
+  simp
+  simp only [update_same]
+  rw [Function.update_noteq (mt _ hb.symm), Function.update_noteq hb.symm]
+  rintro h
+  injection h
+  rw [Function.update_noteq (ne_of_apply_ne Sigma.fst _), Function.update_noteq]
+  exact ha.symm
+  exact ha.symm
 
 /-- Convert a product type to a Σ-type. -/
 def Prod.toSigma {α β} (p : α × β) : Σ_ : α, β :=

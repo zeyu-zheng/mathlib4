@@ -66,12 +66,12 @@ theorem CofreeEqualizer.condition :
 
 instance : IsCoreflexivePair (CofreeEqualizer.topMap X) (CofreeEqualizer.bottomMap X) := by
   apply IsCoreflexivePair.mk' _ _ _
-  · apply (cofree T).map (T.ε.app X.A)
-  · ext
-    dsimp
-    rw [← Functor.map_comp, X.counit, Functor.map_id]
-  · ext
-    apply Comonad.right_counit
+  apply (cofree T).map (T.ε.app X.A)
+  ext
+  dsimp
+  rw [← Functor.map_comp, X.counit, Functor.map_id]
+  ext
+  apply Comonad.right_counit
 
 /-- Construct the Beck fork in the category of coalgebras. This fork is coreflexive as well as an
 equalizer.

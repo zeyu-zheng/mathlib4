@@ -144,12 +144,12 @@ theorem deleteFar_iff :
     G.DeleteFar p r ↔ ∀ ⦃H : SimpleGraph _⦄ [DecidableRel H.Adj],
       H ≤ G → p H → r ≤ G.edgeFinset.card - H.edgeFinset.card := by
   refine ⟨fun h H _ hHG hH ↦ ?_, fun h s hs hG ↦ ?_⟩
-  · have := h (sdiff_subset (t := H.edgeFinset))
-    simp only [deleteEdges_sdiff_eq_of_le hHG, edgeFinset_mono hHG, card_sdiff,
-      card_le_card, coe_sdiff, coe_edgeFinset, Nat.cast_sub] at this
-    exact this hH
-  · simpa [card_sdiff hs, edgeFinset_deleteEdges, -Set.toFinset_card, Nat.cast_sub,
-      card_le_card hs] using h (G.deleteEdges_le s) hG
+  have := h (sdiff_subset (t := H.edgeFinset))
+  simp only [deleteEdges_sdiff_eq_of_le hHG, edgeFinset_mono hHG, card_sdiff,
+    card_le_card, coe_sdiff, coe_edgeFinset, Nat.cast_sub] at this
+  exact this hH
+  simpa [card_sdiff hs, edgeFinset_deleteEdges, -Set.toFinset_card, Nat.cast_sub,
+    card_le_card hs] using h (G.deleteEdges_le s) hG
 
 alias ⟨DeleteFar.le_card_sub_card, _⟩ := deleteFar_iff
 
@@ -366,13 +366,13 @@ degree. -/
 theorem maxDegree_le_of_forall_degree_le [DecidableRel G.Adj] (k : ℕ) (h : ∀ v, G.degree v ≤ k) :
     G.maxDegree ≤ k := by
   by_cases hV : (univ : Finset V).Nonempty
-  · haveI : Nonempty V := univ_nonempty_iff.mp hV
-    obtain ⟨v, hv⟩ := G.exists_maximal_degree_vertex
-    rw [hv]
-    apply h
-  · rw [not_nonempty_iff_eq_empty] at hV
-    rw [maxDegree, hV, image_empty]
-    exact k.zero_le
+  haveI : Nonempty V := univ_nonempty_iff.mp hV
+  obtain ⟨v, hv⟩ := G.exists_maximal_degree_vertex
+  rw [hv]
+  apply h
+  rw [not_nonempty_iff_eq_empty] at hV
+  rw [maxDegree, hV, image_empty]
+  exact k.zero_le
 
 open Classical in
 theorem degree_lt_card_verts [DecidableRel G.Adj] (v : V) : G.degree v < Fintype.card V := by
@@ -413,20 +413,20 @@ theorem Adj.card_commonNeighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.A
   rw [Finset.ssubset_iff]
   use w
   constructor
-  · rw [Set.mem_toFinset]
-    apply not_mem_commonNeighbors_right
-  · rw [Finset.insert_subset_iff]
-    constructor
-    · simpa
-    · rw [neighborFinset, Set.toFinset_subset_toFinset]
-      exact G.commonNeighbors_subset_neighborSet_left _ _
+  rw [Set.mem_toFinset]
+  apply not_mem_commonNeighbors_right
+  rw [Finset.insert_subset_iff]
+  constructor
+  simpa
+  rw [neighborFinset, Set.toFinset_subset_toFinset]
+  exact G.commonNeighbors_subset_neighborSet_left _ _
 
 theorem card_commonNeighbors_top [DecidableEq V] {v w : V} (h : v ≠ w) :
     Fintype.card ((⊤ : SimpleGraph V).commonNeighbors v w) = Fintype.card V - 2 := by
   simp only [commonNeighbors_top_eq, ← Set.toFinset_card, Set.toFinset_diff]
   rw [Finset.card_sdiff]
-  · simp [Finset.card_univ, h]
-  · simp only [Set.toFinset_subset_toFinset, Set.subset_univ]
+  simp [Finset.card_univ, h]
+  simp only [Set.toFinset_subset_toFinset, Set.subset_univ]
 
 end Finite
 

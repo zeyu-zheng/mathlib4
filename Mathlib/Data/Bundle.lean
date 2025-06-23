@@ -86,10 +86,10 @@ theorem TotalSpace.exists {p : TotalSpace F E → Prop} : (∃ x, p x) ↔ ∃ b
 @[simp]
 theorem TotalSpace.range_mk (b : B) : range ((↑) : E b → TotalSpace F E) = π F E ⁻¹' {b} := by
   apply Subset.antisymm
-  · rintro _ ⟨x, rfl⟩
-    rfl
-  · rintro ⟨_, x⟩ rfl
-    exact ⟨x, rfl⟩
+  rintro _ ⟨x, rfl⟩
+  rfl
+  rintro ⟨_, x⟩ rfl
+  exact ⟨x, rfl⟩
 
 /-- Notation for the direct sum of two bundles over the same base. -/
 notation:100 E₁ " ×ᵇ " E₂ => fun x => E₁ x × E₂ x

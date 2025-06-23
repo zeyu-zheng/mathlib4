@@ -77,8 +77,8 @@ private lemma induction_structuredArrow' (g : StructuredArrow (W.Q.obj X) W.Q) :
   | nil => exact hP₀
   | cons f g hf =>
       obtain (g|⟨w, hw⟩) := g
-      · exact hP₁ g _ hf
-      · simpa only [← Construction.wInv_eq_isoOfHom_inv w hw] using hP₂ w hw _ hf
+      exact hP₁ g _ hf
+      simpa only [← Construction.wInv_eq_isoOfHom_inv w hw] using hP₂ w hw _ hf
 
 end
 
@@ -98,14 +98,14 @@ lemma induction_structuredArrow (g : StructuredArrow (L.obj X) L) : P g := by
     fun g ↦ P (structuredArrowEquiv W W.Q L g)
   rw [← (structuredArrowEquiv W W.Q L).apply_symm_apply g]
   apply induction_structuredArrow' W P'
-  · convert hP₀
-    simp
-  · intros Y₁ Y₂ f φ hφ
-    convert hP₁ f (homEquiv W W.Q L φ) hφ
-    simp [homEquiv_comp]
-  · intros Y₁ Y₂ w hw φ hφ
-    convert hP₂ w hw (homEquiv W W.Q L φ) hφ
-    simp [homEquiv_comp, homEquiv_isoOfHom_inv]
+  convert hP₀
+  simp
+  intros Y₁ Y₂ f φ hφ
+  convert hP₁ f (homEquiv W W.Q L φ) hφ
+  simp [homEquiv_comp]
+  intros Y₁ Y₂ w hw φ hφ
+  convert hP₂ w hw (homEquiv W W.Q L φ) hφ
+  simp [homEquiv_comp, homEquiv_isoOfHom_inv]
 
 end
 

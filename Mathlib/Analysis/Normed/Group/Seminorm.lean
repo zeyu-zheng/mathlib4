@@ -391,11 +391,11 @@ instance toOne [DecidableEq E] : One (AddGroupSeminorm E) :=
       map_zero' := if_pos rfl
       add_le' := fun x y => by
         by_cases hx : x = 0
-        · simp only
-          rw [if_pos hx, hx, zero_add, zero_add]
-        · simp only
-          rw [if_neg hx]
-          refine le_add_of_le_of_nonneg ?_ ?_ <;> split_ifs <;> norm_num
+        simp only
+        rw [if_pos hx, hx, zero_add, zero_add]
+        simp only
+        rw [if_neg hx]
+        refine le_add_of_le_of_nonneg ?_ ?_ <;> split_ifs <;> norm_num
       neg' := fun x => by simp_rw [neg_eq_zero] }⟩
 
 @[simp]
@@ -548,11 +548,11 @@ instance toOne [DecidableEq E] : One (GroupSeminorm E) :=
       map_one' := if_pos rfl
       mul_le' := fun x y => by
         by_cases hx : x = 1
-        · simp only
-          rw [if_pos hx, hx, one_mul, zero_add]
-        · simp only
-          rw [if_neg hx]
-          refine le_add_of_le_of_nonneg ?_ ?_ <;> split_ifs <;> norm_num
+        simp only
+        rw [if_pos hx, hx, one_mul, zero_add]
+        simp only
+        rw [if_neg hx]
+        refine le_add_of_le_of_nonneg ?_ ?_ <;> split_ifs <;> norm_num
       inv' := fun x => by simp_rw [inv_eq_one] }⟩
 
 @[to_additive (attr := simp) existing AddGroupSeminorm.apply_one]
@@ -604,10 +604,10 @@ instance [DecidableEq E] : One (NonarchAddGroupSeminorm E) :=
       map_zero' := if_pos rfl
       add_le_max' := fun x y => by
         by_cases hx : x = 0
-        · simp_rw [if_pos hx, hx, zero_add]
-          exact le_max_of_le_right (le_refl _)
-        · simp_rw [if_neg hx]
-          split_ifs <;> simp
+        simp_rw [if_pos hx, hx, zero_add]
+        exact le_max_of_le_right (le_refl _)
+        simp_rw [if_neg hx]
+        split_ifs <;> simp
       neg' := fun x => by simp_rw [neg_eq_zero] }⟩
 
 @[simp]

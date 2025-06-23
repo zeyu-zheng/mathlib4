@@ -107,8 +107,8 @@ theorem A_fibre_over_contestant (c : C) :
   ext p
   simp only [A, Finset.mem_univ, Finset.mem_filter, Finset.mem_image, true_and_iff, exists_prop]
   constructor
-  · rintro ⟨h₁, h₂⟩; refine ⟨(c, p), ?_⟩; tauto
-  · intro h; aesop
+  rintro ⟨h₁, h₂⟩; refine ⟨(c, p), ?_⟩; tauto
+  intro h; aesop
 
 theorem A_fibre_over_contestant_card (c : C) :
     (Finset.univ.filter fun p : JudgePair J => p.Agree r c ∧ p.Distinct).card =
@@ -123,8 +123,8 @@ theorem A_fibre_over_judgePair {p : JudgePair J} (h : p.Distinct) :
     agreedContestants r p = ((A r).filter fun a : AgreedTriple C J => a.judgePair = p).image
     AgreedTriple.contestant := by
   dsimp only [A, agreedContestants]; ext c; constructor <;> intro h
-  · rw [Finset.mem_image]; refine ⟨⟨c, p⟩, ?_⟩; aesop
-  · aesop
+  rw [Finset.mem_image]; refine ⟨⟨c, p⟩, ?_⟩; aesop
+  aesop
 
 theorem A_fibre_over_judgePair_card {p : JudgePair J} (h : p.Distinct) :
     (agreedContestants r p).card =
@@ -182,16 +182,16 @@ theorem distinct_judge_pairs_card_lower_bound {z : ℕ} (hJ : Fintype.card J = 2
   have hs : 2 * z * z + 2 * z + 1 ≤ s.card := judge_pairs_card_lower_bound r hJ c
   have hst : s \ t = Finset.univ.diag
   ext p; constructor <;> intros hp
-  · unfold_let s t at hp
-    aesop
-  · unfold_let s t
-    suffices p.judge₁ = p.judge₂ by simp [this]
-    aesop
+  unfold_let s t at hp
+  aesop
+  unfold_let s t
+  suffices p.judge₁ = p.judge₂ by simp [this]
+  aesop
   have hst' : (s \ t).card = 2 * z + 1
   rw [hst, Finset.diag_card, ← hJ]; rfl
   rw [Finset.filter_and, ← Finset.sdiff_sdiff_self_left s t, Finset.card_sdiff]
-  · rw [hst']; rw [add_assoc] at hs; apply le_tsub_of_add_le_right hs
-  · apply Finset.sdiff_subset
+  rw [hst']; rw [add_assoc] at hs; apply le_tsub_of_add_le_right hs
+  apply Finset.sdiff_subset
 
 theorem A_card_lower_bound [Fintype C] {z : ℕ} (hJ : Fintype.card J = 2 * z + 1) :
     2 * z * z * Fintype.card C ≤ (A r).card := by
@@ -208,9 +208,9 @@ theorem clear_denominators {a b k : ℕ} (ha : 0 < a) (hb : 0 < b) :
     (b - 1 : ℚ) / (2 * b) ≤ k / a ↔ ((b : ℕ) - 1) * a ≤ k * (2 * b) := by
   rw [div_le_div_iff]
   -- Porting note: proof used to finish with `<;> norm_cast <;> simp [ha, hb]`
-  · convert Nat.cast_le (α := ℚ)
-    · aesop
-    · norm_cast
+  convert Nat.cast_le (α := ℚ)
+  aesop
+  norm_cast
   all_goals simp [ha, hb]
 
 end
@@ -236,5 +236,5 @@ theorem imo1998_q2 [Fintype J] [Fintype C] (a b k : ℕ) (hC : Fintype.card C = 
   ring
   rw [hl, hr] at h
   cases' z with z
-  · simp
-  · exact le_of_mul_le_mul_right h z.succ_pos
+  simp
+  exact le_of_mul_le_mul_right h z.succ_pos

@@ -94,35 +94,35 @@ lemma congr {f g : 𝕜 → E} {x : 𝕜} (hf : MeromorphicAt f x) (hfg : f =ᶠ
   rw [eventuallyEq_nhdsWithin_iff] at hfg
   filter_upwards [hfg] with z hz
   rcases eq_or_ne z x with rfl | hn
-  · simp
-  · rw [hz (Set.mem_compl_singleton_iff.mp hn), pow_succ', mul_smul]
+  simp
+  rw [hz (Set.mem_compl_singleton_iff.mp hn), pow_succ', mul_smul]
 
 lemma inv {f : 𝕜 → 𝕜} {x : 𝕜} (hf : MeromorphicAt f x) : MeromorphicAt f⁻¹ x := by
   rcases hf with ⟨m, hf⟩
   by_cases h_eq : (fun z ↦ (z - x) ^ m • f z) =ᶠ[𝓝 x] 0
-  · -- silly case: f locally 0 near x
-    refine (MeromorphicAt.const 0 x).congr ?_
-    rw [eventuallyEq_nhdsWithin_iff]
-    filter_upwards [h_eq] with z hfz hz
-    rw [Pi.inv_apply, (smul_eq_zero_iff_right <| pow_ne_zero _ (sub_ne_zero.mpr hz)).mp hfz,
-      inv_zero]
-  · -- interesting case: use local formula for `f`
-    obtain ⟨n, g, hg_an, hg_ne, hg_eq⟩ := hf.exists_eventuallyEq_pow_smul_nonzero_iff.mpr h_eq
-    have : AnalyticAt 𝕜 (fun z ↦ (z - x) ^ (m + 1)) x :=
-      ((analyticAt_id 𝕜 x).sub analyticAt_const).pow _
-    -- use `m + 1` rather than `m` to damp out any silly issues with the value at `z = x`
-    refine ⟨n + 1, (this.smul <| hg_an.inv hg_ne).congr ?_⟩
-    filter_upwards [hg_eq, hg_an.continuousAt.eventually_ne hg_ne] with z hfg hg_ne'
-    rcases eq_or_ne z x with rfl | hz_ne
-    · simp only [sub_self, pow_succ, mul_zero, zero_smul]
-    · simp_rw [smul_eq_mul] at hfg ⊢
-      have aux1 : f z ≠ 0 := by
-        have : (z - x) ^ n * g z ≠ 0 := mul_ne_zero (pow_ne_zero _ (sub_ne_zero.mpr hz_ne)) hg_ne'
-        rw [← hfg, mul_ne_zero_iff] at this
-        exact this.2
-      field_simp [sub_ne_zero.mpr hz_ne]
-      rw [pow_succ', mul_assoc, hfg]
-      ring
+  -- silly case: f locally 0 near x
+  refine (MeromorphicAt.const 0 x).congr ?_
+  rw [eventuallyEq_nhdsWithin_iff]
+  filter_upwards [h_eq] with z hfz hz
+  rw [Pi.inv_apply, (smul_eq_zero_iff_right <| pow_ne_zero _ (sub_ne_zero.mpr hz)).mp hfz,
+    inv_zero]
+  -- interesting case: use local formula for `f`
+  obtain ⟨n, g, hg_an, hg_ne, hg_eq⟩ := hf.exists_eventuallyEq_pow_smul_nonzero_iff.mpr h_eq
+  have : AnalyticAt 𝕜 (fun z ↦ (z - x) ^ (m + 1)) x :=
+    ((analyticAt_id 𝕜 x).sub analyticAt_const).pow _
+  -- use `m + 1` rather than `m` to damp out any silly issues with the value at `z = x`
+  refine ⟨n + 1, (this.smul <| hg_an.inv hg_ne).congr ?_⟩
+  filter_upwards [hg_eq, hg_an.continuousAt.eventually_ne hg_ne] with z hfg hg_ne'
+  rcases eq_or_ne z x with rfl | hz_ne
+  simp only [sub_self, pow_succ, mul_zero, zero_smul]
+  simp_rw [smul_eq_mul] at hfg ⊢
+  have aux1 : f z ≠ 0 := by
+    have : (z - x) ^ n * g z ≠ 0 := mul_ne_zero (pow_ne_zero _ (sub_ne_zero.mpr hz_ne)) hg_ne'
+    rw [← hfg, mul_ne_zero_iff] at this
+    exact this.2
+  field_simp [sub_ne_zero.mpr hz_ne]
+  rw [pow_succ', mul_assoc, hfg]
+  ring
 
 @[simp]
 lemma inv_iff {f : 𝕜 → 𝕜} {x : 𝕜} :
@@ -135,13 +135,13 @@ lemma div {f g : 𝕜 → 𝕜} {x : 𝕜} (hf : MeromorphicAt f x) (hg : Meromo
 
 lemma pow {f : 𝕜 → 𝕜} {x : 𝕜} (hf : MeromorphicAt f x) (n : ℕ) : MeromorphicAt (f ^ n) x := by
   induction' n with m hm
-  · simpa only [Nat.zero_eq, pow_zero] using MeromorphicAt.const 1 x
-  · simpa only [pow_succ] using hm.mul hf
+  simpa only [Nat.zero_eq, pow_zero] using MeromorphicAt.const 1 x
+  simpa only [pow_succ] using hm.mul hf
 
 lemma zpow {f : 𝕜 → 𝕜} {x : 𝕜} (hf : MeromorphicAt f x) (n : ℤ) : MeromorphicAt (f ^ n) x := by
   induction' n with m m
-  · simpa only [Int.ofNat_eq_coe, zpow_natCast] using hf.pow m
-  · simpa only [zpow_negSucc, inv_iff] using hf.pow (m + 1)
+  simpa only [Int.ofNat_eq_coe, zpow_natCast] using hf.pow m
+  simpa only [zpow_negSucc, inv_iff] using hf.pow (m + 1)
 
 /-- The order of vanishing of a meromorphic function, as an element of `ℤ ∪ ∞` (to include the
 case of functions identically 0 near `x`). -/
@@ -154,67 +154,67 @@ lemma order_eq_top_iff {f : 𝕜 → E} {x : 𝕜} (hf : MeromorphicAt f x) :
     hf.order = ⊤ ↔ ∀ᶠ z in 𝓝[≠] x, f z = 0 := by
   unfold order
   by_cases h : hf.choose_spec.order = ⊤
-  · rw [h, WithTop.map_top, ← WithTop.coe_natCast,
-      top_sub, eq_self, true_iff, eventually_nhdsWithin_iff]
-    rw [AnalyticAt.order_eq_top_iff] at h
-    filter_upwards [h] with z hf hz
-    rwa [smul_eq_zero_iff_right <| pow_ne_zero _ (sub_ne_zero.mpr hz)] at hf
-  · obtain ⟨m, hm⟩ := WithTop.ne_top_iff_exists.mp h
-    rw [← hm, WithTop.map_coe, sub_eq_top_iff, eq_false_intro WithTop.coe_ne_top, false_or]
-    simp only [WithTop.natCast_ne_top, false_iff]
-    contrapose! h
-    rw [AnalyticAt.order_eq_top_iff]
-    rw [← hf.choose_spec.frequently_eq_iff_eventually_eq analyticAt_const]
-    apply Eventually.frequently
-    filter_upwards [h] with z hfz
-    rw [hfz, smul_zero]
+  rw [h, WithTop.map_top, ← WithTop.coe_natCast,
+    top_sub, eq_self, true_iff, eventually_nhdsWithin_iff]
+  rw [AnalyticAt.order_eq_top_iff] at h
+  filter_upwards [h] with z hf hz
+  rwa [smul_eq_zero_iff_right <| pow_ne_zero _ (sub_ne_zero.mpr hz)] at hf
+  obtain ⟨m, hm⟩ := WithTop.ne_top_iff_exists.mp h
+  rw [← hm, WithTop.map_coe, sub_eq_top_iff, eq_false_intro WithTop.coe_ne_top, false_or]
+  simp only [WithTop.natCast_ne_top, false_iff]
+  contrapose! h
+  rw [AnalyticAt.order_eq_top_iff]
+  rw [← hf.choose_spec.frequently_eq_iff_eventually_eq analyticAt_const]
+  apply Eventually.frequently
+  filter_upwards [h] with z hfz
+  rw [hfz, smul_zero]
 
 lemma order_eq_int_iff {f : 𝕜 → E} {x : 𝕜} (hf : MeromorphicAt f x) (n : ℤ) : hf.order = n ↔
     ∃ g : 𝕜 → E, AnalyticAt 𝕜 g x ∧ g x ≠ 0 ∧ ∀ᶠ z in 𝓝[≠] x, f z = (z - x) ^ n • g z := by
   unfold order
   by_cases h : hf.choose_spec.order = ⊤
-  · rw [h, WithTop.map_top, ← WithTop.coe_natCast, top_sub,
-      eq_false_intro WithTop.top_ne_coe, false_iff]
-    rw [AnalyticAt.order_eq_top_iff] at h
-    refine fun ⟨g, hg_an, hg_ne, hg_eq⟩ ↦ hg_ne ?_
-    apply EventuallyEq.eq_of_nhds
-    rw [EventuallyEq, ← AnalyticAt.frequently_eq_iff_eventually_eq hg_an analyticAt_const]
-    apply Eventually.frequently
-    rw [eventually_nhdsWithin_iff] at hg_eq ⊢
-    filter_upwards [h, hg_eq] with z hfz hfz_eq hz
-    rwa [hfz_eq hz, ← mul_smul, smul_eq_zero_iff_right] at hfz
-    exact mul_ne_zero (pow_ne_zero _ (sub_ne_zero.mpr hz)) (zpow_ne_zero _ (sub_ne_zero.mpr hz))
-  · obtain ⟨m, h⟩ := WithTop.ne_top_iff_exists.mp h
-    rw [← h, WithTop.map_coe, ← WithTop.coe_natCast, ← coe_sub, WithTop.coe_inj]
-    obtain ⟨g, hg_an, hg_ne, hg_eq⟩ := (AnalyticAt.order_eq_nat_iff _ _).mp h.symm
-    replace hg_eq : ∀ᶠ (z : 𝕜) in 𝓝[≠] x, f z = (z - x) ^ (↑m - ↑hf.choose : ℤ) • g z := by
-      rw [eventually_nhdsWithin_iff]
-      filter_upwards [hg_eq] with z hg_eq hz
-      rwa [← smul_right_inj <| zpow_ne_zero _ (sub_ne_zero.mpr hz), ← mul_smul,
-        ← zpow_add₀ (sub_ne_zero.mpr hz), ← add_sub_assoc, add_sub_cancel_left, zpow_natCast,
-        zpow_natCast]
-    exact ⟨fun h ↦ ⟨g, hg_an, hg_ne, h ▸ hg_eq⟩,
-      AnalyticAt.unique_eventuallyEq_zpow_smul_nonzero ⟨g, hg_an, hg_ne, hg_eq⟩⟩
+  rw [h, WithTop.map_top, ← WithTop.coe_natCast, top_sub,
+    eq_false_intro WithTop.top_ne_coe, false_iff]
+  rw [AnalyticAt.order_eq_top_iff] at h
+  refine fun ⟨g, hg_an, hg_ne, hg_eq⟩ ↦ hg_ne ?_
+  apply EventuallyEq.eq_of_nhds
+  rw [EventuallyEq, ← AnalyticAt.frequently_eq_iff_eventually_eq hg_an analyticAt_const]
+  apply Eventually.frequently
+  rw [eventually_nhdsWithin_iff] at hg_eq ⊢
+  filter_upwards [h, hg_eq] with z hfz hfz_eq hz
+  rwa [hfz_eq hz, ← mul_smul, smul_eq_zero_iff_right] at hfz
+  exact mul_ne_zero (pow_ne_zero _ (sub_ne_zero.mpr hz)) (zpow_ne_zero _ (sub_ne_zero.mpr hz))
+  obtain ⟨m, h⟩ := WithTop.ne_top_iff_exists.mp h
+  rw [← h, WithTop.map_coe, ← WithTop.coe_natCast, ← coe_sub, WithTop.coe_inj]
+  obtain ⟨g, hg_an, hg_ne, hg_eq⟩ := (AnalyticAt.order_eq_nat_iff _ _).mp h.symm
+  replace hg_eq : ∀ᶠ (z : 𝕜) in 𝓝[≠] x, f z = (z - x) ^ (↑m - ↑hf.choose : ℤ) • g z := by
+    rw [eventually_nhdsWithin_iff]
+    filter_upwards [hg_eq] with z hg_eq hz
+    rwa [← smul_right_inj <| zpow_ne_zero _ (sub_ne_zero.mpr hz), ← mul_smul,
+      ← zpow_add₀ (sub_ne_zero.mpr hz), ← add_sub_assoc, add_sub_cancel_left, zpow_natCast,
+      zpow_natCast]
+  exact ⟨fun h ↦ ⟨g, hg_an, hg_ne, h ▸ hg_eq⟩,
+    AnalyticAt.unique_eventuallyEq_zpow_smul_nonzero ⟨g, hg_an, hg_ne, hg_eq⟩⟩
 
 /-- Compatibility of notions of `order` for analytic and meromorphic functions. -/
 lemma _root_.AnalyticAt.meromorphicAt_order {f : 𝕜 → E} {x : 𝕜} (hf : AnalyticAt 𝕜 f x) :
     hf.meromorphicAt.order = hf.order.map (↑) := by
   rcases eq_or_ne hf.order ⊤ with ho | ho
-  · rw [ho, WithTop.map_top, order_eq_top_iff]
-    exact (hf.order_eq_top_iff.mp ho).filter_mono nhdsWithin_le_nhds
-  · obtain ⟨n, hn⟩ := WithTop.ne_top_iff_exists.mp ho
-    simp_rw [← hn, WithTop.map_coe, order_eq_int_iff, zpow_natCast]
-    rcases (hf.order_eq_nat_iff _).mp hn.symm with ⟨g, h1, h2, h3⟩
-    exact ⟨g, h1, h2, h3.filter_mono nhdsWithin_le_nhds⟩
+  rw [ho, WithTop.map_top, order_eq_top_iff]
+  exact (hf.order_eq_top_iff.mp ho).filter_mono nhdsWithin_le_nhds
+  obtain ⟨n, hn⟩ := WithTop.ne_top_iff_exists.mp ho
+  simp_rw [← hn, WithTop.map_coe, order_eq_int_iff, zpow_natCast]
+  rcases (hf.order_eq_nat_iff _).mp hn.symm with ⟨g, h1, h2, h3⟩
+  exact ⟨g, h1, h2, h3.filter_mono nhdsWithin_le_nhds⟩
 
 lemma iff_eventuallyEq_zpow_smul_analyticAt {f : 𝕜 → E} {x : 𝕜} : MeromorphicAt f x ↔
     ∃ (n : ℤ) (g : 𝕜 → E), AnalyticAt 𝕜 g x ∧ ∀ᶠ z in 𝓝[≠] x, f z = (z - x) ^ n • g z := by
   refine ⟨fun ⟨n, hn⟩ ↦ ⟨-n, _, ⟨hn, eventually_nhdsWithin_iff.mpr ?_⟩⟩, ?_⟩
-  · filter_upwards with z hz
-    rw [← mul_smul, ← zpow_natCast, ← zpow_add₀ (sub_ne_zero.mpr hz), add_left_neg,
-      zpow_zero, one_smul]
-  · refine fun ⟨n, g, hg_an, hg_eq⟩ ↦ MeromorphicAt.congr ?_ (EventuallyEq.symm hg_eq)
-    exact (((MeromorphicAt.id x).sub (.const _ x)).zpow _).smul hg_an.meromorphicAt
+  filter_upwards with z hz
+  rw [← mul_smul, ← zpow_natCast, ← zpow_add₀ (sub_ne_zero.mpr hz), add_left_neg,
+    zpow_zero, one_smul]
+  refine fun ⟨n, g, hg_an, hg_eq⟩ ↦ MeromorphicAt.congr ?_ (EventuallyEq.symm hg_eq)
+  exact (((MeromorphicAt.id x).sub (.const _ x)).zpow _).smul hg_an.meromorphicAt
 
 end MeromorphicAt
 

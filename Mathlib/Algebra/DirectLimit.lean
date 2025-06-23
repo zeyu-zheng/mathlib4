@@ -158,14 +158,14 @@ theorem lift_unique [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →ₗ[R] P
       lift R ι G f (fun i => F.comp <| of R ι G f i)
         (fun i j hij x => by rw [LinearMap.comp_apply, of_f]; rfl) x := by
   cases isEmpty_or_nonempty ι
-  · simp_rw [Subsingleton.elim x 0, _root_.map_zero]
-  · exact DirectLimit.induction_on x fun i x => by rw [lift_of]; rfl
+  simp_rw [Subsingleton.elim x 0, _root_.map_zero]
+  exact DirectLimit.induction_on x fun i x => by rw [lift_of]; rfl
 
 lemma lift_injective [IsDirected ι (· ≤ ·)]
     (injective : ∀ i, Function.Injective <| g i) :
     Function.Injective (lift R ι G f g Hg) := by
   cases isEmpty_or_nonempty ι
-  · apply Function.injective_of_subsingleton
+  apply Function.injective_of_subsingleton
   simp_rw [injective_iff_map_eq_zero] at injective ⊢
   intros z hz
   induction' z using DirectLimit.induction_on with _ g
@@ -295,16 +295,16 @@ theorem of.zero_exact_aux [∀ i (k : G i), Decidable (k ≠ 0)] [Nonempty ι] [
         ⟨k, by
           subst hxy
           constructor
-          · intro i0 hi0
-            rw [DFinsupp.mem_support_iff, DirectSum.sub_apply, ← DirectSum.single_eq_lof, ←
-              DirectSum.single_eq_lof, DFinsupp.single_apply, DFinsupp.single_apply] at hi0
-            split_ifs at hi0 with hi hj hj
-            · rwa [hi] at hik
-            · rwa [hi] at hik
-            · rwa [hj] at hjk
-            exfalso
-            apply hi0
-            rw [sub_zero]
+          intro i0 hi0
+          rw [DFinsupp.mem_support_iff, DirectSum.sub_apply, ← DirectSum.single_eq_lof, ←
+            DirectSum.single_eq_lof, DFinsupp.single_apply, DFinsupp.single_apply] at hi0
+          split_ifs at hi0 with hi hj hj
+          rwa [hi] at hik
+          rwa [hi] at hik
+          rwa [hj] at hjk
+          exfalso
+          apply hi0
+          rw [sub_zero]
           simp [LinearMap.map_sub, totalize_of_le, hik, hjk, DirectedSystem.map_map,
             DirectSum.apply_eq_component, DirectSum.component.of]⟩)
       ⟨ind, fun _ h => (Finset.not_mem_empty _ h).elim, LinearMap.map_zero _⟩
@@ -415,14 +415,14 @@ theorem lift_of (i x) : lift G f P g Hg (of G f i x) = g i x :=
 theorem lift_unique [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+ P) (x) :
     F x = lift G f P (fun i => F.comp (of G f i)) (fun i j hij x => by simp) x := by
   cases isEmpty_or_nonempty ι
-  · simp_rw [Subsingleton.elim x 0, _root_.map_zero]
-  · exact DirectLimit.induction_on x fun i x => by simp
+  simp_rw [Subsingleton.elim x 0, _root_.map_zero]
+  exact DirectLimit.induction_on x fun i x => by simp
 
 lemma lift_injective [IsDirected ι (· ≤ ·)]
     (injective : ∀ i, Function.Injective <| g i) :
     Function.Injective (lift G f P g Hg) := by
   cases isEmpty_or_nonempty ι
-  · apply Function.injective_of_subsingleton
+  apply Function.injective_of_subsingleton
   simp_rw [injective_iff_map_eq_zero] at injective ⊢
   intros z hz
   induction' z using DirectLimit.induction_on with _ g
@@ -633,26 +633,26 @@ theorem of.zero_exact_aux2 {x : FreeCommRing (Σi, G i)} {s t} [DecidablePred (�
     f' j k hjk (lift (fun ix : s => f' ix.1.1 j (hj ix ix.2) ix.1.2) (restriction s x)) =
       lift (fun ix : t => f' ix.1.1 k (hk ix ix.2) ix.1.2) (restriction t x) := by
   refine Subring.InClosure.recOn hxs ?_ ?_ ?_ ?_
-  · rw [(restriction _).map_one, (FreeCommRing.lift _).map_one, (f' j k hjk).map_one,
-      (restriction _).map_one, (FreeCommRing.lift _).map_one]
-  · -- Porting note: Lean 3 had `(FreeCommRing.lift _).map_neg` but I needed to replace it with
+  rw [(restriction _).map_one, (FreeCommRing.lift _).map_one, (f' j k hjk).map_one,
+    (restriction _).map_one, (FreeCommRing.lift _).map_one]
+  -- Porting note: Lean 3 had `(FreeCommRing.lift _).map_neg` but I needed to replace it with
   -- `RingHom.map_neg` to get the rewrite to compile
-    rw [(restriction _).map_neg, (restriction _).map_one, RingHom.map_neg,
-      (FreeCommRing.lift _).map_one, (f' j k hjk).map_neg, (f' j k hjk).map_one,
-      -- Porting note: similarly here I give strictly less information
-      (restriction _).map_neg, (restriction _).map_one, RingHom.map_neg,
-      (FreeCommRing.lift _).map_one]
-  · rintro _ ⟨p, hps, rfl⟩ n ih
-    rw [(restriction _).map_mul, (FreeCommRing.lift _).map_mul, (f' j k hjk).map_mul, ih,
-      (restriction _).map_mul, (FreeCommRing.lift _).map_mul, restriction_of, dif_pos hps, lift_of,
-      restriction_of, dif_pos (hst hps), lift_of]
-    dsimp only
-    -- Porting note: Lean 3 could get away with far fewer hints for inputs in the line below
-    have := DirectedSystem.map_map (fun i j h => f' i j h) (hj p hps) hjk
-    rw [this]
-  · rintro x y ihx ihy
-    rw [(restriction _).map_add, (FreeCommRing.lift _).map_add, (f' j k hjk).map_add, ihx, ihy,
-      (restriction _).map_add, (FreeCommRing.lift _).map_add]
+  rw [(restriction _).map_neg, (restriction _).map_one, RingHom.map_neg,
+    (FreeCommRing.lift _).map_one, (f' j k hjk).map_neg, (f' j k hjk).map_one,
+    -- Porting note: similarly here I give strictly less information
+    (restriction _).map_neg, (restriction _).map_one, RingHom.map_neg,
+    (FreeCommRing.lift _).map_one]
+  rintro _ ⟨p, hps, rfl⟩ n ih
+  rw [(restriction _).map_mul, (FreeCommRing.lift _).map_mul, (f' j k hjk).map_mul, ih,
+    (restriction _).map_mul, (FreeCommRing.lift _).map_mul, restriction_of, dif_pos hps, lift_of,
+    restriction_of, dif_pos (hst hps), lift_of]
+  dsimp only
+  -- Porting note: Lean 3 could get away with far fewer hints for inputs in the line below
+  have := DirectedSystem.map_map (fun i j h => f' i j h) (hj p hps) hjk
+  rw [this]
+  rintro x y ihx ihy
+  rw [(restriction _).map_add, (FreeCommRing.lift _).map_add, (f' j k hjk).map_add, ihx, ihy,
+    (restriction _).map_add, (FreeCommRing.lift _).map_add]
 
 variable {G f f'}
 
@@ -670,91 +670,89 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : FreeCom
         ⟨j, {⟨i, x⟩, ⟨j, f' i j hij x⟩}, ?_,
           isSupported_sub (isSupported_of.2 <| Or.inr (Set.mem_singleton _))
             (isSupported_of.2 <| Or.inl rfl), fun [_] => ?_⟩
-      · rintro k (rfl | ⟨rfl | _⟩)
-        · exact hij
-        · rfl
-      · rw [(restriction _).map_sub, RingHom.map_sub, restriction_of, dif_pos,
-          restriction_of, dif_pos, lift_of, lift_of]
-        on_goal 1 =>
-          dsimp only
-          have := DirectedSystem.map_map (fun i j h => f' i j h) hij (le_refl j : j ≤ j)
-          rw [this]
-          · exact sub_self _
-        exacts [Or.inl rfl, Or.inr rfl]
-    · refine ⟨i, {⟨i, 1⟩}, ?_, isSupported_sub (isSupported_of.2 (Set.mem_singleton _))
-        isSupported_one, fun [_] => ?_⟩
-      · rintro k (rfl | h)
-        rfl
-        -- Porting note: the Lean3 proof contained `rw [restriction_of]`, but this
-        -- lemma does not seem to work here
-      · rw [RingHom.map_sub, RingHom.map_sub]
-        erw [lift_of, dif_pos rfl, RingHom.map_one, lift_of, RingHom.map_one, sub_self]
-    · refine
-        ⟨i, {⟨i, x + y⟩, ⟨i, x⟩, ⟨i, y⟩}, ?_,
-          isSupported_sub (isSupported_of.2 <| Or.inl rfl)
-            (isSupported_add (isSupported_of.2 <| Or.inr <| Or.inl rfl)
-              (isSupported_of.2 <| Or.inr <| Or.inr (Set.mem_singleton _))),
-          fun [_] => ?_⟩
-      · rintro k (rfl | ⟨rfl | ⟨rfl | hk⟩⟩) <;> rfl
-      · rw [(restriction _).map_sub, (restriction _).map_add, restriction_of, restriction_of,
-          restriction_of, dif_pos, dif_pos, dif_pos, RingHom.map_sub,
-          (FreeCommRing.lift _).map_add, lift_of, lift_of, lift_of]
-        on_goal 1 =>
-          dsimp only
-          rw [(f' i i _).map_add]
-          · exact sub_self _
-        all_goals tauto
-    · refine
-        ⟨i, {⟨i, x * y⟩, ⟨i, x⟩, ⟨i, y⟩}, ?_,
-          isSupported_sub (isSupported_of.2 <| Or.inl rfl)
-            (isSupported_mul (isSupported_of.2 <| Or.inr <| Or.inl rfl)
-              (isSupported_of.2 <| Or.inr <| Or.inr (Set.mem_singleton _))), fun [_] => ?_⟩
-      · rintro k (rfl | ⟨rfl | ⟨rfl | hk⟩⟩) <;> rfl
-      · rw [(restriction _).map_sub, (restriction _).map_mul, restriction_of, restriction_of,
-          restriction_of, dif_pos, dif_pos, dif_pos, RingHom.map_sub,
-          (FreeCommRing.lift _).map_mul, lift_of, lift_of, lift_of]
-        on_goal 1 =>
-          dsimp only
-          rw [(f' i i _).map_mul]
-          · exact sub_self _
-        all_goals tauto
-        -- Porting note: was
-        --exacts [sub_self _, Or.inl rfl, Or.inr (Or.inr rfl), Or.inr (Or.inl rfl)]
-  · refine Nonempty.elim (by infer_instance) fun ind : ι => ?_
-    refine ⟨ind, ∅, fun _ => False.elim, isSupported_zero, fun [_] => ?_⟩
-    -- Porting note: `RingHom.map_zero` was `(restriction _).map_zero`
-    rw [RingHom.map_zero, (FreeCommRing.lift _).map_zero]
-  · intro x y ⟨i, s, hi, hxs, ihs⟩ ⟨j, t, hj, hyt, iht⟩
-    obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
-    have : ∀ z : Σi, G i, z ∈ s ∪ t → z.1 ≤ k := by
-      rintro z (hz | hz)
-      · exact le_trans (hi z hz) hik
-      · exact le_trans (hj z hz) hjk
+      rintro k (rfl | ⟨rfl | _⟩)
+      exact hij
+      rfl
+      rw [(restriction _).map_sub, RingHom.map_sub, restriction_of, dif_pos,
+        restriction_of, dif_pos, lift_of, lift_of]
+      on_goal 1 =>
+        dsimp only
+        have := DirectedSystem.map_map (fun i j h => f' i j h) hij (le_refl j : j ≤ j)
+        rw [this]
+        exact sub_self _
+      exacts [Or.inl rfl, Or.inr rfl]
+    refine ⟨i, {⟨i, 1⟩}, ?_, isSupported_sub (isSupported_of.2 (Set.mem_singleton _))
+      isSupported_one, fun [_] => ?_⟩
+    rintro k (rfl | h)
+    rfl
+      -- Porting note: the Lean3 proof contained `rw [restriction_of]`, but this
+      -- lemma does not seem to work here
+    rw [RingHom.map_sub, RingHom.map_sub]
+    erw [lift_of, dif_pos rfl, RingHom.map_one, lift_of, RingHom.map_one, sub_self]
     refine
-      ⟨k, s ∪ t, this,
-        isSupported_add (isSupported_upwards hxs Set.subset_union_left)
-          (isSupported_upwards hyt Set.subset_union_right), fun [_] => ?_⟩
-    -- Porting note: was `(restriction _).map_add`
-    classical rw [RingHom.map_add, (FreeCommRing.lift _).map_add, ←
-      of.zero_exact_aux2 G f' hxs hi this hik Set.subset_union_left, ←
-      of.zero_exact_aux2 G f' hyt hj this hjk Set.subset_union_right, ihs,
-      (f' i k hik).map_zero, iht, (f' j k hjk).map_zero, zero_add]
-  · rintro x y ⟨j, t, hj, hyt, iht⟩
-    rw [smul_eq_mul]
-    rcases exists_finset_support x with ⟨s, hxs⟩
-    rcases (s.image Sigma.fst).exists_le with ⟨i, hi⟩
-    obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
-    have : ∀ z : Σi, G i, z ∈ ↑s ∪ t → z.1 ≤ k := by
-      rintro z (hz | hz)
-      exacts [(hi z.1 <| Finset.mem_image.2 ⟨z, hz, rfl⟩).trans hik, (hj z hz).trans hjk]
+      ⟨i, {⟨i, x + y⟩, ⟨i, x⟩, ⟨i, y⟩}, ?_,
+        isSupported_sub (isSupported_of.2 <| Or.inl rfl)
+          (isSupported_add (isSupported_of.2 <| Or.inr <| Or.inl rfl)
+            (isSupported_of.2 <| Or.inr <| Or.inr (Set.mem_singleton _))),
+        fun [_] => ?_⟩
+    rintro k (rfl | ⟨rfl | ⟨rfl | hk⟩⟩) <;> rfl
+    rw [(restriction _).map_sub, (restriction _).map_add, restriction_of, restriction_of,
+      restriction_of, dif_pos, dif_pos, dif_pos, RingHom.map_sub,
+      (FreeCommRing.lift _).map_add, lift_of, lift_of, lift_of]
+    on_goal 1 =>
+      dsimp only
+      rw [(f' i i _).map_add]
+      · exact sub_self _
+    all_goals tauto
     refine
-      ⟨k, ↑s ∪ t, this,
-        isSupported_mul (isSupported_upwards hxs Set.subset_union_left)
-          (isSupported_upwards hyt Set.subset_union_right), fun [_] => ?_⟩
-    -- Porting note: RingHom.map_mul was `(restriction _).map_mul`
-    classical rw [RingHom.map_mul, (FreeCommRing.lift _).map_mul, ←
-      of.zero_exact_aux2 G f' hyt hj this hjk Set.subset_union_right, iht,
-      (f' j k hjk).map_zero, mul_zero]
+      ⟨i, {⟨i, x * y⟩, ⟨i, x⟩, ⟨i, y⟩}, ?_,
+        isSupported_sub (isSupported_of.2 <| Or.inl rfl)
+          (isSupported_mul (isSupported_of.2 <| Or.inr <| Or.inl rfl)
+            (isSupported_of.2 <| Or.inr <| Or.inr (Set.mem_singleton _))), fun [_] => ?_⟩
+    rintro k (rfl | ⟨rfl | ⟨rfl | hk⟩⟩) <;> rfl
+    rw [(restriction _).map_sub, (restriction _).map_mul, restriction_of, restriction_of,
+      restriction_of, dif_pos, dif_pos, dif_pos, RingHom.map_sub,
+      (FreeCommRing.lift _).map_mul, lift_of, lift_of, lift_of]
+    on_goal 1 =>
+      dsimp only
+      rw [(f' i i _).map_mul]
+      · exact sub_self _
+    all_goals tauto
+  refine Nonempty.elim (by infer_instance) fun ind : ι => ?_
+  refine ⟨ind, ∅, fun _ => False.elim, isSupported_zero, fun [_] => ?_⟩
+  -- Porting note: `RingHom.map_zero` was `(restriction _).map_zero`
+  rw [RingHom.map_zero, (FreeCommRing.lift _).map_zero]
+  intro x y ⟨i, s, hi, hxs, ihs⟩ ⟨j, t, hj, hyt, iht⟩
+  obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
+  have : ∀ z : Σi, G i, z ∈ s ∪ t → z.1 ≤ k := by
+    rintro z (hz | hz)
+    exact le_trans (hi z hz) hik
+    exact le_trans (hj z hz) hjk
+  refine
+    ⟨k, s ∪ t, this,
+      isSupported_add (isSupported_upwards hxs Set.subset_union_left)
+        (isSupported_upwards hyt Set.subset_union_right), fun [_] => ?_⟩
+  -- Porting note: was `(restriction _).map_add`
+  classical rw [RingHom.map_add, (FreeCommRing.lift _).map_add, ←
+    of.zero_exact_aux2 G f' hxs hi this hik Set.subset_union_left, ←
+    of.zero_exact_aux2 G f' hyt hj this hjk Set.subset_union_right, ihs,
+    (f' i k hik).map_zero, iht, (f' j k hjk).map_zero, zero_add]
+  rintro x y ⟨j, t, hj, hyt, iht⟩
+  rw [smul_eq_mul]
+  rcases exists_finset_support x with ⟨s, hxs⟩
+  rcases (s.image Sigma.fst).exists_le with ⟨i, hi⟩
+  obtain ⟨k, hik, hjk⟩ := exists_ge_ge i j
+  have : ∀ z : Σi, G i, z ∈ ↑s ∪ t → z.1 ≤ k := by
+    rintro z (hz | hz)
+    exacts [(hi z.1 <| Finset.mem_image.2 ⟨z, hz, rfl⟩).trans hik, (hj z hz).trans hjk]
+  refine
+    ⟨k, ↑s ∪ t, this,
+      isSupported_mul (isSupported_upwards hxs Set.subset_union_left)
+        (isSupported_upwards hyt Set.subset_union_right), fun [_] => ?_⟩
+  -- Porting note: RingHom.map_mul was `(restriction _).map_mul`
+  classical rw [RingHom.map_mul, (FreeCommRing.lift _).map_mul, ←
+    of.zero_exact_aux2 G f' hyt hj this hjk Set.subset_union_right, iht,
+    (f' j k hjk).map_zero, mul_zero]
 
 /-- A component that corresponds to zero in the direct limit is already zero in some
 bigger module in the directed system. -/
@@ -821,11 +819,11 @@ theorem lift_of (i x) : lift G f P g Hg (of G f i x) = g i x :=
 theorem lift_unique [IsDirected ι (· ≤ ·)] (F : DirectLimit G f →+* P) (x) :
     F x = lift G f P (fun i => F.comp <| of G f i) (fun i j hij x => by simp [of_f]) x := by
   cases isEmpty_or_nonempty ι
-  · apply DFunLike.congr_fun
-    apply Ideal.Quotient.ringHom_ext
-    refine FreeCommRing.hom_ext fun ⟨i, _⟩ ↦ ?_
-    exact IsEmpty.elim' inferInstance i
-  · exact DirectLimit.induction_on x fun i x => by simp [lift_of]
+  apply DFunLike.congr_fun
+  apply Ideal.Quotient.ringHom_ext
+  refine FreeCommRing.hom_ext fun ⟨i, _⟩ ↦ ?_
+  exact IsEmpty.elim' inferInstance i
+  exact DirectLimit.induction_on x fun i x => by simp [lift_of]
 
 lemma lift_injective [Nonempty ι] [IsDirected ι (· ≤ ·)]
     (injective : ∀ i, Function.Injective <| g i) :
@@ -934,9 +932,9 @@ instance nontrivial [DirectedSystem G fun i j h => f' i j h] :
       Nonempty.elim (by infer_instance) fun i : ι => by
         change (0 : Ring.DirectLimit G fun i j h => f' i j h) ≠ 1
         rw [← (Ring.DirectLimit.of _ _ _).map_one]
-        · intro H; rcases Ring.DirectLimit.of.zero_exact H.symm with ⟨j, hij, hf⟩
-          rw [(f' i j hij).map_one] at hf
-          exact one_ne_zero hf⟩⟩
+        intro H; rcases Ring.DirectLimit.of.zero_exact H.symm with ⟨j, hij, hf⟩
+        rw [(f' i j hij).map_one] at hf
+        exact one_ne_zero hf⟩⟩
 
 theorem exists_inv {p : Ring.DirectLimit G f} : p ≠ 0 → ∃ y, p * y = 1 :=
   Ring.DirectLimit.induction_on p fun i x H =>

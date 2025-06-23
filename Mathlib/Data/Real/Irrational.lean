@@ -72,9 +72,9 @@ theorem irrational_nrt_of_n_not_dvd_multiplicity {x : ℝ} (n : ℕ) {m : ℤ} (
     (hv : (multiplicity (p : ℤ) m).get (finite_int_iff.2 ⟨hp.1.ne_one, hm⟩) % n ≠ 0) :
     Irrational x := by
   rcases Nat.eq_zero_or_pos n with (rfl | hnpos)
-  · rw [eq_comm, pow_zero, ← Int.cast_one, Int.cast_inj] at hxr
-    simp [hxr, multiplicity.one_right (mt isUnit_iff_dvd_one.1
-      (mt Int.natCast_dvd_natCast.1 hp.1.not_dvd_one)), Nat.zero_mod] at hv
+  rw [eq_comm, pow_zero, ← Int.cast_one, Int.cast_inj] at hxr
+  simp [hxr, multiplicity.one_right (mt isUnit_iff_dvd_one.1
+    (mt Int.natCast_dvd_natCast.1 hp.1.not_dvd_one)), Nat.zero_mod] at hv
   refine irrational_nrt_of_notint_nrt _ _ hxr ?_ hnpos
   rintro ⟨y, rfl⟩
   rw [← Int.cast_pow, Int.cast_inj] at hxr
@@ -99,18 +99,18 @@ theorem irrational_sqrt_ratCast_iff_of_nonneg {q : ℚ} (hq : 0 ≤ q) :
     Irrational (√q) ↔ ¬IsSquare q := by
   refine Iff.not (?_ : Exists _ ↔ Exists _)
   constructor
-  · rintro ⟨y, hy⟩
-    refine ⟨y, Rat.cast_injective (α := ℝ) ?_⟩
-    rw [Rat.cast_mul, hy, mul_self_sqrt (Rat.cast_nonneg.2 hq)]
-  · rintro ⟨q', rfl⟩
-    exact ⟨|q'|, mod_cast (sqrt_mul_self_eq_abs q').symm⟩
+  rintro ⟨y, hy⟩
+  refine ⟨y, Rat.cast_injective (α := ℝ) ?_⟩
+  rw [Rat.cast_mul, hy, mul_self_sqrt (Rat.cast_nonneg.2 hq)]
+  rintro ⟨q', rfl⟩
+  exact ⟨|q'|, mod_cast (sqrt_mul_self_eq_abs q').symm⟩
 
 theorem irrational_sqrt_ratCast_iff {q : ℚ} :
     Irrational (√q) ↔ ¬IsSquare q ∧ 0 ≤ q := by
   obtain hq | hq := le_or_lt 0 q
-  · simp_rw [irrational_sqrt_ratCast_iff_of_nonneg hq, and_iff_left hq]
-  · rw [sqrt_eq_zero_of_nonpos (Rat.cast_nonpos.2 hq.le)]
-    simp_rw [not_irrational_zero, false_iff, not_and, not_le, hq, implies_true]
+  simp_rw [irrational_sqrt_ratCast_iff_of_nonneg hq, and_iff_left hq]
+  rw [sqrt_eq_zero_of_nonpos (Rat.cast_nonpos.2 hq.le)]
+  simp_rw [not_irrational_zero, false_iff, not_and, not_le, hq, implies_true]
 
 theorem irrational_sqrt_intCast_iff_of_nonneg {z : ℤ} (hz : 0 ≤ z) :
     Irrational (√z) ↔ ¬IsSquare z := by
@@ -467,12 +467,12 @@ theorem one_lt_natDegree_of_irrational_root (hx : Irrational x) (p_nonzero : p �
   have : (a : ℝ) * x = -b
   simpa [eq_neg_iff_add_eq_zero] using x_is_root
   rcases em (a = 0) with (rfl | ha)
-  · obtain rfl : b = 0 := by simpa
-    simp at p_nonzero
-  · rw [mul_comm, ← eq_div_iff_mul_eq, eq_comm] at this
-    · refine hx ⟨-b / a, ?_⟩
-      assumption_mod_cast
-    · assumption_mod_cast
+  obtain rfl : b = 0 := by simpa
+  simp at p_nonzero
+  rw [mul_comm, ← eq_div_iff_mul_eq, eq_comm] at this
+  refine hx ⟨-b / a, ?_⟩
+  assumption_mod_cast
+  assumption_mod_cast
 
 end Polynomial
 

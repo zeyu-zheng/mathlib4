@@ -22,9 +22,9 @@ theorem hasFDerivAt_update (x : ∀ i, E i) {i : ι} (y : E i) :
   ext t j
   dsimp [l, Pi.single, Function.update]
   split_ifs with hji
-  · subst hji
-    simp
-  · simp
+  subst hji
+  simp
+  simp
   rw [update_eq]
   convert (hasFDerivAt_const _ _).add (l.hasFDerivAt.comp y (hasFDerivAt_sub_const (x i)))
   rw [zero_add, ContinuousLinearMap.comp_id]

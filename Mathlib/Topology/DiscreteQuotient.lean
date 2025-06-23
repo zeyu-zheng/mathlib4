@@ -364,10 +364,10 @@ lemma comp_finsetClopens [CompactSpace X] :
     finsetClopens, Set.coe_toFinset, Set.mem_image, Set.mem_range,
     exists_exists_eq_and]
   constructor
-  · refine fun ⟨y, h⟩ ↦ ⟨Quotient.out (s := d.toSetoid) y, ?_⟩
-    ext
-    simpa [← h] using Quotient.mk_eq_iff_out (s := d.toSetoid)
-  · exact fun ⟨y, h⟩ ↦ ⟨d.proj y, by ext; simp [h, proj]⟩
+  refine fun ⟨y, h⟩ ↦ ⟨Quotient.out (s := d.toSetoid) y, ?_⟩
+  ext
+  simpa [← h] using Quotient.mk_eq_iff_out (s := d.toSetoid)
+  exact fun ⟨y, h⟩ ↦ ⟨d.proj y, by ext; simp [h, proj]⟩
 
 /-- `finsetClopens X` is injective. -/
 theorem finsetClopens_inj [CompactSpace X] :

@@ -154,18 +154,18 @@ theorem resolvent_eq {a : A} {r : R} (h : r ∈ resolventSet R a) : resolvent a 
 theorem units_smul_resolvent {r : Rˣ} {s : R} {a : A} :
     r • resolvent a (s : R) = resolvent (r⁻¹ • a) (r⁻¹ • s : R) := by
   by_cases h : s ∈ spectrum R a
-  · rw [mem_iff] at h
-    simp only [resolvent, Algebra.algebraMap_eq_smul_one] at *
-    rw [smul_assoc, ← smul_sub]
-    have h' : ¬IsUnit (r⁻¹ • (s • (1 : A) - a)) := fun hu =>
-      h (by simpa only [smul_inv_smul] using IsUnit.smul r hu)
-    simp only [Ring.inverse_non_unit _ h, Ring.inverse_non_unit _ h', smul_zero]
-  · simp only [resolvent]
-    have h' : IsUnit (r • algebraMap R A (r⁻¹ • s) - a) := by
-      simpa [Algebra.algebraMap_eq_smul_one, smul_assoc] using not_mem_iff.mp h
-    rw [← h'.val_subInvSMul, ← (not_mem_iff.mp h).unit_spec, Ring.inverse_unit, Ring.inverse_unit,
-      h'.val_inv_subInvSMul]
-    simp only [Algebra.algebraMap_eq_smul_one, smul_assoc, smul_inv_smul]
+  rw [mem_iff] at h
+  simp only [resolvent, Algebra.algebraMap_eq_smul_one] at *
+  rw [smul_assoc, ← smul_sub]
+  have h' : ¬IsUnit (r⁻¹ • (s • (1 : A) - a)) := fun hu =>
+    h (by simpa only [smul_inv_smul] using IsUnit.smul r hu)
+  simp only [Ring.inverse_non_unit _ h, Ring.inverse_non_unit _ h', smul_zero]
+  simp only [resolvent]
+  have h' : IsUnit (r • algebraMap R A (r⁻¹ • s) - a) := by
+    simpa [Algebra.algebraMap_eq_smul_one, smul_assoc] using not_mem_iff.mp h
+  rw [← h'.val_subInvSMul, ← (not_mem_iff.mp h).unit_spec, Ring.inverse_unit, Ring.inverse_unit,
+    h'.val_inv_subInvSMul]
+  simp only [Algebra.algebraMap_eq_smul_one, smul_assoc, smul_inv_smul]
 
 theorem units_smul_resolvent_self {r : Rˣ} {a : A} :
     r • resolvent a (r : R) = resolvent (r⁻¹ • a) (1 : R) := by
@@ -214,22 +214,22 @@ theorem unit_smul_eq_smul (a : A) (r : Rˣ) : σ (r • a) = r • σ a := by
   nth_rw 1 [x_eq]
   rw [smul_mem_smul_iff]
   constructor
-  · exact fun h => ⟨r⁻¹ • x, ⟨h, show r • r⁻¹ • x = x by simp⟩⟩
-  · rintro ⟨w, _, (x'_eq : r • w = x)⟩
-    simpa [← x'_eq ]
+  exact fun h => ⟨r⁻¹ • x, ⟨h, show r • r⁻¹ • x = x by simp⟩⟩
+  rintro ⟨w, _, (x'_eq : r • w = x)⟩
+  simpa [← x'_eq ]
 
 -- `r ∈ σ(a*b) ↔ r ∈ σ(b*a)` for any `r : Rˣ`
 theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : Rˣ} : ↑r ∈ σ (a * b) ↔ ↑r ∈ σ (b * a) := by
   have h₁ : ∀ x y : A, IsUnit (1 - x * y) → IsUnit (1 - y * x)
   refine fun x y h => ⟨⟨1 - y * x, 1 + y * h.unit.inv * x, ?_, ?_⟩, rfl⟩
-  · calc
-      (1 - y * x) * (1 + y * (IsUnit.unit h).inv * x) =
-          1 - y * x + y * ((1 - x * y) * h.unit.inv) * x := by noncomm_ring
-      _ = 1 := by simp only [Units.inv_eq_val_inv, IsUnit.mul_val_inv, mul_one, sub_add_cancel]
-  · calc
-      (1 + y * (IsUnit.unit h).inv * x) * (1 - y * x) =
-          1 - y * x + y * (h.unit.inv * (1 - x * y)) * x := by noncomm_ring
-      _ = 1 := by simp only [Units.inv_eq_val_inv, IsUnit.val_inv_mul, mul_one, sub_add_cancel]
+  calc
+    (1 - y * x) * (1 + y * (IsUnit.unit h).inv * x) =
+        1 - y * x + y * ((1 - x * y) * h.unit.inv) * x := by noncomm_ring
+    _ = 1 := by simp only [Units.inv_eq_val_inv, IsUnit.mul_val_inv, mul_one, sub_add_cancel]
+  calc
+    (1 + y * (IsUnit.unit h).inv * x) * (1 - y * x) =
+        1 - y * x + y * (h.unit.inv * (1 - x * y)) * x := by noncomm_ring
+    _ = 1 := by simp only [Units.inv_eq_val_inv, IsUnit.val_inv_mul, mul_one, sub_add_cancel]
   have := Iff.intro (h₁ (r⁻¹ • a) b) (h₁ b (r⁻¹ • a))
   rw [mul_smul_comm r⁻¹ b a] at this
   simpa only [mem_iff, not_iff_not, Algebra.algebraMap_eq_smul_one, ← Units.smul_def,
@@ -332,8 +332,8 @@ further conditions on the algebra `A` and scalar field `𝕜`. -/
 theorem smul_eq_smul [Nontrivial A] (k : 𝕜) (a : A) (ha : (σ a).Nonempty) :
     σ (k • a) = k • σ a := by
   rcases eq_or_ne k 0 with (rfl | h)
-  · simpa [ha, zero_smul_set] using (show {(0 : 𝕜)} = (0 : Set 𝕜) from rfl)
-  · exact unit_smul_eq_smul a (Units.mk0 k h)
+  simpa [ha, zero_smul_set] using (show {(0 : 𝕜)} = (0 : Set 𝕜) from rfl)
+  exact unit_smul_eq_smul a (Units.mk0 k h)
 
 theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a * b) \ {0} = σ (b * a) \ {0} := by
   suffices h : ∀ x y : A, σ (x * y) \ {0} ⊆ σ (y * x) \ {0} from
@@ -344,14 +344,14 @@ theorem nonzero_mul_eq_swap_mul (a b : A) : σ (a * b) \ {0} = σ (b * a) \ {0} 
 
 protected theorem map_inv (a : Aˣ) : (σ (a : A))⁻¹ = σ (↑a⁻¹ : A) := by
   refine Set.eq_of_subset_of_subset (fun k hk => ?_) fun k hk => ?_
-  · rw [Set.mem_inv] at hk
-    have : k ≠ 0
-    simpa only [inv_inv] using inv_ne_zero (ne_zero_of_mem_of_unit hk)
-    lift k to 𝕜ˣ using isUnit_iff_ne_zero.mpr this
-    rw [← Units.val_inv_eq_inv_val k] at hk
-    exact inv_mem_iff.mp hk
-  · lift k to 𝕜ˣ using isUnit_iff_ne_zero.mpr (ne_zero_of_mem_of_unit hk)
-    simpa only [Units.val_inv_eq_inv_val] using inv_mem_iff.mp hk
+  rw [Set.mem_inv] at hk
+  have : k ≠ 0
+  simpa only [inv_inv] using inv_ne_zero (ne_zero_of_mem_of_unit hk)
+  lift k to 𝕜ˣ using isUnit_iff_ne_zero.mpr this
+  rw [← Units.val_inv_eq_inv_val k] at hk
+  exact inv_mem_iff.mp hk
+  lift k to 𝕜ˣ using isUnit_iff_ne_zero.mpr (ne_zero_of_mem_of_unit hk)
+  simpa only [Units.val_inv_eq_inv_val] using inv_mem_iff.mp hk
 
 end ScalarField
 

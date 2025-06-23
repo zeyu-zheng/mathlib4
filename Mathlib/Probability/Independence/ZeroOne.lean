@@ -36,9 +36,9 @@ theorem Kernel.measure_eq_zero_or_one_or_top_of_indepSet_self {t : Set Ω}
     (measurableSet_generateFrom (Set.mem_singleton t))
   filter_upwards [h_indep] with a ha
   by_cases h0 : κ a t = 0
-  · exact Or.inl h0
+  exact Or.inl h0
   by_cases h_top : κ a t = ∞
-  · exact Or.inr (Or.inr h_top)
+  exact Or.inr (Or.inr h_top)
   rw [← one_mul (κ a (t ∩ t)), Set.inter_self, ENNReal.mul_eq_mul_right h0 h_top] at ha
   exact Or.inr (Or.inl ha.symm)
 
@@ -128,14 +128,14 @@ theorem Kernel.indep_iSup_directed_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : 
     (hf : ∀ t, p t → tᶜ ∈ f) (hns : Directed (· ≤ ·) ns) (hnsp : ∀ a, p (ns a)) :
     Indep (⨆ a, ⨆ n ∈ ns a, s n) (limsup s f) κ μα := by
   apply indep_iSup_of_directed_le
-  · exact fun a => indep_biSup_limsup h_le h_indep hf (hnsp a)
-  · exact fun a => iSup₂_le fun n _ => h_le n
-  · exact limsup_le_iSup.trans (iSup_le h_le)
-  · intro a b
-    obtain ⟨c, hc⟩ := hns a b
-    refine ⟨c, ?_, ?_⟩ <;> refine iSup_mono fun n => iSup_mono' fun hn => ⟨?_, le_rfl⟩
-    · exact hc.1 hn
-    · exact hc.2 hn
+  exact fun a => indep_biSup_limsup h_le h_indep hf (hnsp a)
+  exact fun a => iSup₂_le fun n _ => h_le n
+  exact limsup_le_iSup.trans (iSup_le h_le)
+  intro a b
+  obtain ⟨c, hc⟩ := hns a b
+  refine ⟨c, ?_, ?_⟩ <;> refine iSup_mono fun n => iSup_mono' fun hn => ⟨?_, le_rfl⟩
+  exact hc.1 hn
+  exact hc.2 hn
 
 theorem indep_iSup_directed_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ)
     (hf : ∀ t, p t → tᶜ ∈ f) (hns : Directed (· ≤ ·) ns) (hnsp : ∀ a, p (ns a)) :
@@ -236,14 +236,14 @@ theorem Kernel.indep_limsup_atTop_self (h_le : ∀ n, s n ≤ m0) (h_indep : iIn
   let ns : ι → Set ι := Set.Iic
   have hnsp : ∀ i, BddAbove (ns i) := fun i => bddAbove_Iic
   refine indep_limsup_self h_le h_indep ?_ ?_ hnsp ?_
-  · simp only [mem_atTop_sets, Set.mem_compl_iff, BddAbove, upperBounds, Set.Nonempty]
-    rintro t ⟨a, ha⟩
-    obtain ⟨b, hb⟩ : ∃ b, a < b := exists_gt a
-    refine ⟨b, fun c hc hct => ?_⟩
-    suffices ∀ i ∈ t, i < c from lt_irrefl c (this c hct)
-    exact fun i hi => (ha hi).trans_lt (hb.trans_le hc)
-  · exact Monotone.directed_le fun i j hij k hki => le_trans hki hij
-  · exact fun n => ⟨n, le_rfl⟩
+  simp only [mem_atTop_sets, Set.mem_compl_iff, BddAbove, upperBounds, Set.Nonempty]
+  rintro t ⟨a, ha⟩
+  obtain ⟨b, hb⟩ : ∃ b, a < b := exists_gt a
+  refine ⟨b, fun c hc hct => ?_⟩
+  suffices ∀ i ∈ t, i < c from lt_irrefl c (this c hct)
+  exact fun i hi => (ha hi).trans_lt (hb.trans_le hc)
+  exact Monotone.directed_le fun i j hij k hki => le_trans hki hij
+  exact fun n => ⟨n, le_rfl⟩
 
 theorem indep_limsup_atTop_self (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ) :
     Indep (limsup s atTop) (limsup s atTop) μ :=
@@ -288,14 +288,14 @@ theorem Kernel.indep_limsup_atBot_self (h_le : ∀ n, s n ≤ m0) (h_indep : iIn
   let ns : ι → Set ι := Set.Ici
   have hnsp : ∀ i, BddBelow (ns i) := fun i => bddBelow_Ici
   refine indep_limsup_self h_le h_indep ?_ ?_ hnsp ?_
-  · simp only [mem_atBot_sets, Set.mem_compl_iff, BddBelow, lowerBounds, Set.Nonempty]
-    rintro t ⟨a, ha⟩
-    obtain ⟨b, hb⟩ : ∃ b, b < a := exists_lt a
-    refine ⟨b, fun c hc hct => ?_⟩
-    suffices ∀ i ∈ t, c < i from lt_irrefl c (this c hct)
-    exact fun i hi => hc.trans_lt (hb.trans_le (ha hi))
-  · exact Antitone.directed_le fun _ _ ↦ Set.Ici_subset_Ici.2
-  · exact fun n => ⟨n, le_rfl⟩
+  simp only [mem_atBot_sets, Set.mem_compl_iff, BddBelow, lowerBounds, Set.Nonempty]
+  rintro t ⟨a, ha⟩
+  obtain ⟨b, hb⟩ : ∃ b, b < a := exists_lt a
+  refine ⟨b, fun c hc hct => ?_⟩
+  suffices ∀ i ∈ t, c < i from lt_irrefl c (this c hct)
+  exact fun i hi => hc.trans_lt (hb.trans_le (ha hi))
+  exact Antitone.directed_le fun _ _ ↦ Set.Ici_subset_Ici.2
+  exact fun n => ⟨n, le_rfl⟩
 
 theorem indep_limsup_atBot_self (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ) :
     Indep (limsup s atBot) (limsup s atBot) μ :=

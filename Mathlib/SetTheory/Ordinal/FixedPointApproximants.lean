@@ -92,24 +92,24 @@ theorem le_lfpApprox {a : Ordinal} : x ≤ lfpApprox f x a := by
 theorem lfpApprox_add_one (h : x ≤ f x) (a : Ordinal) :
     lfpApprox f x (a+1) = f (lfpApprox f x a) := by
   apply le_antisymm
-  · conv => left; unfold lfpApprox
-    apply sSup_le
-    simp only [Ordinal.add_one_eq_succ, lt_succ_iff, exists_prop, Set.union_singleton,
-      Set.mem_insert_iff, Set.mem_setOf_eq, forall_eq_or_imp, forall_exists_index, and_imp,
-      forall_apply_eq_imp_iff₂]
-    apply And.intro
-    · apply le_trans h
-      apply Monotone.imp f.monotone
-      exact le_lfpApprox f x
-    · intros a' h
-      apply f.2; apply lfpApprox_monotone; exact h
-  · conv => right; unfold lfpApprox
-    apply le_sSup
-    simp only [Ordinal.add_one_eq_succ, lt_succ_iff, exists_prop]
-    rw [Set.mem_union]
-    apply Or.inl
-    simp only [Set.mem_setOf_eq]
-    use a
+  conv => left; unfold lfpApprox
+  apply sSup_le
+  simp only [Ordinal.add_one_eq_succ, lt_succ_iff, exists_prop, Set.union_singleton,
+    Set.mem_insert_iff, Set.mem_setOf_eq, forall_eq_or_imp, forall_exists_index, and_imp,
+    forall_apply_eq_imp_iff₂]
+  apply And.intro
+  apply le_trans h
+  apply Monotone.imp f.monotone
+  exact le_lfpApprox f x
+  intros a' h
+  apply f.2; apply lfpApprox_monotone; exact h
+  conv => right; unfold lfpApprox
+  apply le_sSup
+  simp only [Ordinal.add_one_eq_succ, lt_succ_iff, exists_prop]
+  rw [Set.mem_union]
+  apply Or.inl
+  simp only [Set.mem_setOf_eq]
+  use a
 
 /-- The ordinal approximants of the least fixed point are stabilizing
   when reaching a fixed point of f -/
@@ -118,19 +118,19 @@ theorem lfpApprox_eq_of_mem_fixedPoints {a b : Ordinal} (h_init : x ≤ f x) (h_
   rw [mem_fixedPoints_iff] at h
   induction b using Ordinal.induction with | h b IH =>
   apply le_antisymm
-  · conv => left; unfold lfpApprox
-    apply sSup_le
-    simp only [exists_prop, Set.union_singleton, Set.mem_insert_iff, Set.mem_setOf_eq,
-      forall_eq_or_imp, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
-    apply And.intro (le_lfpApprox f x)
-    intro a' ha'b
-    by_cases haa : a' < a
-    · rw [← lfpApprox_add_one f x h_init]
-      apply lfpApprox_monotone
-      simp only [Ordinal.add_one_eq_succ, succ_le_iff]
-      exact haa
-    · rw [IH a' ha'b (le_of_not_lt haa), h]
-  · exact lfpApprox_monotone f x h_ab
+  conv => left; unfold lfpApprox
+  apply sSup_le
+  simp only [exists_prop, Set.union_singleton, Set.mem_insert_iff, Set.mem_setOf_eq,
+    forall_eq_or_imp, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
+  apply And.intro (le_lfpApprox f x)
+  intro a' ha'b
+  by_cases haa : a' < a
+  rw [← lfpApprox_add_one f x h_init]
+  apply lfpApprox_monotone
+  simp only [Ordinal.add_one_eq_succ, succ_le_iff]
+  exact haa
+  rw [IH a' ha'b (le_of_not_lt haa), h]
+  exact lfpApprox_monotone f x h_ab
 
 /-- There are distinct ordinals smaller than the successor of the domains cardinals
   with equal value -/
@@ -142,8 +142,8 @@ theorem exists_lfpApprox_eq_lfpApprox : ∃ a < ord <| succ #α, ∃ b < ord <| 
   use a.val; apply And.intro a.prop
   use b.val; apply And.intro b.prop
   apply And.intro
-  · intro h_eq; rw [Subtype.coe_inj] at h_eq; exact h_nab h_eq
-  · exact h_fab
+  intro h_eq; rw [Subtype.coe_inj] at h_eq; exact h_nab h_eq
+  exact h_fab
 
 /-- If there are distinct ordinals with equal value then
   every value succeding the smaller ordinal are fixed points -/
@@ -156,9 +156,9 @@ lemma lfpApprox_mem_fixedPoints_of_eq {a b c : Ordinal}
     exact Monotone.eq_of_le_of_le (lfpApprox_monotone f x)
       h_fab (SuccOrder.le_succ a) (SuccOrder.succ_le_of_lt h_ab)
   rw [lfpApprox_eq_of_mem_fixedPoints f x h_init]
-  · exact lfpApprox_mem_fixedPoint
-  · exact h_ac
-  · exact lfpApprox_mem_fixedPoint
+  exact lfpApprox_mem_fixedPoint
+  exact h_ac
+  exact lfpApprox_mem_fixedPoint
 
 /-- A fixed point of f is reached after the successor of the domains cardinality -/
 theorem lfpApprox_ord_mem_fixedPoint (h_init : x ≤ f x) :
@@ -196,14 +196,14 @@ theorem lfpApprox_le_of_mem_fixedPoints {a : α}
 /-- The least fixed point of f is reached after the successor of the domains cardinality -/
 theorem lfpApprox_ord_eq_lfp : lfpApprox f ⊥ (ord <| succ #α) = lfp f := by
   apply le_antisymm
-  · have h_lfp : ∃ y : fixedPoints f, lfp f = y := by use ⊥; exact rfl
-    let ⟨y, h_y⟩ := h_lfp; rw [h_y]
-    exact lfpApprox_le_of_mem_fixedPoints f ⊥ y.2 bot_le (ord <| succ #α)
-  · have h_fix : ∃ y : fixedPoints f, lfpApprox f ⊥ (ord <| succ #α) = y := by
-      simpa only [Subtype.exists, mem_fixedPoints, exists_prop, exists_eq_right'] using
-        lfpApprox_ord_mem_fixedPoint f ⊥ bot_le
-    let ⟨x, h_x⟩ := h_fix; rw [h_x]
-    exact lfp_le_fixed f x.prop
+  have h_lfp : ∃ y : fixedPoints f, lfp f = y := by use ⊥; exact rfl
+  let ⟨y, h_y⟩ := h_lfp; rw [h_y]
+  exact lfpApprox_le_of_mem_fixedPoints f ⊥ y.2 bot_le (ord <| succ #α)
+  have h_fix : ∃ y : fixedPoints f, lfpApprox f ⊥ (ord <| succ #α) = y := by
+    simpa only [Subtype.exists, mem_fixedPoints, exists_prop, exists_eq_right'] using
+      lfpApprox_ord_mem_fixedPoint f ⊥ bot_le
+  let ⟨x, h_x⟩ := h_fix; rw [h_x]
+  exact lfp_le_fixed f x.prop
 
 /-- Some ordinal approximation of the least fixed point is the least fixed point. -/
 theorem lfp_mem_range_lfpApprox : lfp f ∈ Set.range (lfpApprox f ⊥) := by

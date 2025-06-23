@@ -769,10 +769,10 @@ lemma quasiIso_map_iff_of_preservesLeftHomology
   have γ : LeftHomologyMapData φ S₁.leftHomologyData S₂.leftHomologyData := default
   rw [γ.quasiIso_iff, (γ.map F).quasiIso_iff, LeftHomologyMapData.map_φH]
   constructor
-  · intro
-    exact isIso_of_reflects_iso _ F
-  · intro
-    infer_instance
+  intro
+  exact isIso_of_reflects_iso _ F
+  intro
+  infer_instance
 
 instance quasiIso_map_of_preservesRightHomology
     [F.PreservesRightHomologyOf S₁] [F.PreservesRightHomologyOf S₂]
@@ -791,10 +791,10 @@ lemma quasiIso_map_iff_of_preservesRightHomology
   have γ : RightHomologyMapData φ S₁.rightHomologyData S₂.rightHomologyData := default
   rw [γ.quasiIso_iff, (γ.map F).quasiIso_iff, RightHomologyMapData.map_φH]
   constructor
-  · intro
-    exact isIso_of_reflects_iso _ F
-  · intro
-    infer_instance
+  intro
+  exact isIso_of_reflects_iso _ F
+  intro
+  infer_instance
 
 end
 

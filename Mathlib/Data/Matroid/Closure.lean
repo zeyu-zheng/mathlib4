@@ -289,10 +289,10 @@ lemma Indep.closure_eq_setOf_basis_insert (hI : M.Indep I) :
     (insert_subset (Or.inl heX) (hIF.subset.trans subset_union_right))
 
   rw [subset_antisymm_iff, closure_def, subset_sInter_iff, and_iff_right (sInter_subset_of_mem _)]
-  · rintro F' ⟨hF', hIF'⟩ e (he : M.Basis I (insert e I))
-    rw [inter_eq_left.mpr (hIF.subset.trans hIF.subset_ground)] at hIF'
-    obtain ⟨J, hJ, hIJ⟩ := hI.subset_basis_of_subset hIF' hF'.2
-    exact (hF'.1 hJ (he.basis_union_of_subset hJ.indep hIJ)) (Or.inr (mem_insert _ _))
+  rintro F' ⟨hF', hIF'⟩ e (he : M.Basis I (insert e I))
+  rw [inter_eq_left.mpr (hIF.subset.trans hIF.subset_ground)] at hIF'
+  obtain ⟨J, hJ, hIJ⟩ := hI.subset_basis_of_subset hIF' hF'.2
+  exact (hF'.1 hJ (he.basis_union_of_subset hJ.indep hIJ)) (Or.inr (mem_insert _ _))
   exact ⟨hF, inter_subset_left.trans hIF.subset⟩
 
 lemma Indep.insert_basis_iff_mem_closure (hI : M.Indep I) :
@@ -361,19 +361,19 @@ lemma Indep.insert_indep_iff_of_not_mem (hI : M.Indep I) (heI : e ∉ I) :
 lemma Indep.insert_indep_iff (hI : M.Indep I) :
     M.Indep (insert e I) ↔ e ∈ M.E \ M.closure I ∨ e ∈ I := by
   obtain (h | h) := em (e ∈ I)
-  · simp_rw [insert_eq_of_mem h, iff_true_intro hI, true_iff, iff_true_intro h, or_true]
+  simp_rw [insert_eq_of_mem h, iff_true_intro hI, true_iff, iff_true_intro h, or_true]
   rw [hI.insert_indep_iff_of_not_mem h, or_iff_left h]
 
 lemma insert_indep_iff : M.Indep (insert e I) ↔ M.Indep I ∧ (e ∉ I → e ∈ M.E \ M.closure I) := by
   by_cases hI : M.Indep I
-  · rw [hI.insert_indep_iff, and_iff_right hI, or_iff_not_imp_right]
+  rw [hI.insert_indep_iff, and_iff_right hI, or_iff_not_imp_right]
   simp [hI, show ¬ M.Indep (insert e I) from fun h ↦ hI <| h.subset <| subset_insert _ _]
 
 /-- This can be used for rewriting if the LHS is inside a binder and whether `f = e` is unknown.-/
 lemma Indep.insert_diff_indep_iff (hI : M.Indep (I \ {e})) (heI : e ∈ I) :
     M.Indep (insert f I \ {e}) ↔ f ∈ M.E \ M.closure (I \ {e}) ∨ f ∈ I := by
   obtain rfl | hne := eq_or_ne e f
-  · simp [hI, heI]
+  simp [hI, heI]
   rw [← insert_diff_singleton_comm hne.symm, hI.insert_indep_iff, mem_diff_singleton,
     and_iff_left hne.symm]
 
@@ -440,10 +440,10 @@ lemma Indep.closure_sInter_eq_biInter_closure_of_forall_subset {Js : Set (Set α
   refine hfIJ.2 (heJ (mem_insert_of_mem _ fun X hX' ↦ by_contra fun hfX ↦ ?_))
 
   obtain (hd | heX) := ((hI.subset (hIs X hX')).mem_closure_iff).mp (he _ hX')
-  · refine (hJI.indep.subset (insert_subset (heJ (mem_insert _ _)) ?_)).not_dep hd
-    specialize hIs _ hX'
-    rw [← singleton_union, ← diff_subset_iff, diff_singleton_eq_self hfX] at hIs
-    exact hIs.trans diff_subset
+  refine (hJI.indep.subset (insert_subset (heJ (mem_insert _ _)) ?_)).not_dep hd
+  specialize hIs _ hX'
+  rw [← singleton_union, ← diff_subset_iff, diff_singleton_eq_self hfX] at hIs
+  exact hIs.trans diff_subset
   exact heEI.2 (hIs _ hX' heX)
 
 lemma closure_iInter_eq_iInter_closure_of_iUnion_indep [hι : Nonempty ι] (Is : ι → Set α)
@@ -470,7 +470,7 @@ lemma Indep.closure_iInter_eq_biInter_closure_of_forall_subset [hι : Nonempty �
 lemma Indep.closure_inter_eq_inter_closure (h : M.Indep (I ∪ J)) :
     M.closure (I ∩ J) = M.closure I ∩ M.closure J := by
   rw [inter_eq_iInter, closure_iInter_eq_iInter_closure_of_iUnion_indep, inter_eq_iInter]
-  · exact iInter_congr (by simp)
+  exact iInter_congr (by simp)
   rwa [← union_eq_iUnion]
 
 lemma basis_iff_basis_closure_of_subset (hIX : I ⊆ X) (hX : X ⊆ M.E := by aesop_mat) :

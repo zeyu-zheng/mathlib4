@@ -55,8 +55,8 @@ instance fintypeNodupList [Fintype α] : Fintype { l : List α // l.Nodup } :=
   Fintype.subtype ((Finset.univ : Finset α).powerset.biUnion fun s => s.val.lists) fun l => by
     suffices (∃ a : Finset α, a.val = ↑l) ↔ l.Nodup by simpa
     constructor
-    · rintro ⟨s, hs⟩
-      simpa [← Multiset.coe_nodup, ← hs] using s.nodup
-    · intro hl
-      refine ⟨⟨↑l, hl⟩, ?_⟩
-      simp
+    rintro ⟨s, hs⟩
+    simpa [← Multiset.coe_nodup, ← hs] using s.nodup
+    intro hl
+    refine ⟨⟨↑l, hl⟩, ?_⟩
+    simp

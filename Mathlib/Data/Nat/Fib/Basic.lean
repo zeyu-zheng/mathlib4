@@ -122,13 +122,13 @@ lemma fib_lt_fib {m : ℕ} (hm : 2 ≤ m) : ∀ {n}, fib m < fib n ↔ m < n
 
 theorem le_fib_self {n : ℕ} (five_le_n : 5 ≤ n) : n ≤ fib n := by
   induction' five_le_n with n five_le_n IH
-  · -- 5 ≤ fib 5
-    rfl
-  · -- n + 1 ≤ fib (n + 1) for 5 ≤ n
-    rw [succ_le_iff]
-    calc
-      n ≤ fib n := IH
-      _ < fib (n + 1) := fib_lt_fib_succ (le_trans (by decide) five_le_n)
+  -- 5 ≤ fib 5
+  rfl
+  -- n + 1 ≤ fib (n + 1) for 5 ≤ n
+  rw [succ_le_iff]
+  calc
+    n ≤ fib n := IH
+    _ < fib (n + 1) := fib_lt_fib_succ (le_trans (by decide) five_le_n)
 
 lemma le_fib_add_one : ∀ n, n ≤ fib n + 1
   | 0 => zero_le_one
@@ -142,24 +142,24 @@ lemma le_fib_add_one : ∀ n, n ≤ fib n + 1
   see https://proofwiki.org/wiki/Consecutive_Fibonacci_Numbers_are_Coprime -/
 theorem fib_coprime_fib_succ (n : ℕ) : Nat.Coprime (fib n) (fib (n + 1)) := by
   induction' n with n ih
-  · simp
-  · simp only [fib_add_two, coprime_add_self_right, Coprime, ih.symm]
+  simp
+  simp only [fib_add_two, coprime_add_self_right, Coprime, ih.symm]
 
 /-- See https://proofwiki.org/wiki/Fibonacci_Number_in_terms_of_Smaller_Fibonacci_Numbers -/
 theorem fib_add (m n : ℕ) : fib (m + n + 1) = fib m * fib n + fib (m + 1) * fib (n + 1) := by
   induction' n with n ih generalizing m
-  · simp
-  · specialize ih (m + 1)
-    rw [add_assoc m 1 n, add_comm 1 n] at ih
-    simp only [fib_add_two, succ_eq_add_one, ih]
-    ring
+  simp
+  specialize ih (m + 1)
+  rw [add_assoc m 1 n, add_comm 1 n] at ih
+  simp only [fib_add_two, succ_eq_add_one, ih]
+  ring
 
 theorem fib_two_mul (n : ℕ) : fib (2 * n) = fib n * (2 * fib (n + 1) - fib n) := by
   cases n
-  · simp
-  · rw [two_mul, ← add_assoc, fib_add, fib_add_two, two_mul]
-    simp only [← add_assoc, add_tsub_cancel_right]
-    ring
+  simp
+  rw [two_mul, ← add_assoc, fib_add, fib_add_two, two_mul]
+  simp only [← add_assoc, add_tsub_cancel_right]
+  ring
 
 theorem fib_two_mul_add_one (n : ℕ) : fib (2 * n + 1) = fib (n + 1) ^ 2 + fib n ^ 2 := by
   rw [two_mul, fib_add]
@@ -191,30 +191,30 @@ theorem fast_fib_aux_bit_ff (n : ℕ) :
       let p := fastFibAux n
       (p.1 * (2 * p.2 - p.1), p.2 ^ 2 + p.1 ^ 2) := by
   rw [fastFibAux, binaryRec_eq]
-  · rfl
-  · simp
+  rfl
+  simp
 
 theorem fast_fib_aux_bit_tt (n : ℕ) :
     fastFibAux (bit true n) =
       let p := fastFibAux n
       (p.2 ^ 2 + p.1 ^ 2, p.2 * (2 * p.1 + p.2)) := by
   rw [fastFibAux, binaryRec_eq]
-  · rfl
-  · simp
+  rfl
+  simp
 
 theorem fast_fib_aux_eq (n : ℕ) : fastFibAux n = (fib n, fib (n + 1)) := by
   apply Nat.binaryRec _ (fun b n' ih => _) n
-  · simp [fastFibAux]
-  · rintro (_|_) n' ih <;>
-          simp only [fast_fib_aux_bit_ff, fast_fib_aux_bit_tt, congr_arg Prod.fst ih,
-            congr_arg Prod.snd ih, Prod.mk.inj_iff] <;>
-          simp [bit, fib_two_mul, fib_two_mul_add_one, fib_two_mul_add_two]
+  simp [fastFibAux]
+  rintro (_|_) n' ih <;>
+        simp only [fast_fib_aux_bit_ff, fast_fib_aux_bit_tt, congr_arg Prod.fst ih,
+          congr_arg Prod.snd ih, Prod.mk.inj_iff] <;>
+        simp [bit, fib_two_mul, fib_two_mul_add_one, fib_two_mul_add_two]
 
 theorem fast_fib_eq (n : ℕ) : fastFib n = fib n := by rw [fastFib, fast_fib_aux_eq]
 
 theorem gcd_fib_add_self (m n : ℕ) : gcd (fib m) (fib (n + m)) = gcd (fib m) (fib n) := by
   rcases Nat.eq_zero_or_pos n with rfl | h
-  · simp
+  simp
   replace h := Nat.succ_pred_eq_of_pos h; rw [← h, succ_eq_add_one]
   calc
     gcd (fib m) (fib (n.pred + 1 + m)) =
@@ -252,10 +252,10 @@ theorem fib_succ_eq_sum_choose :
 
 theorem fib_succ_eq_succ_sum (n : ℕ) : fib (n + 1) = (∑ k ∈ Finset.range n, fib k) + 1 := by
   induction' n with n ih
-  · simp
-  · calc
-      fib (n + 2) = fib n + fib (n + 1) := fib_add_two
-      _ = (fib n + ∑ k ∈ Finset.range n, fib k) + 1 := by rw [ih, add_assoc]
-      _ = (∑ k ∈ Finset.range (n + 1), fib k) + 1 := by simp [Finset.range_add_one]
+  simp
+  calc
+    fib (n + 2) = fib n + fib (n + 1) := fib_add_two
+    _ = (fib n + ∑ k ∈ Finset.range n, fib k) + 1 := by rw [ih, add_assoc]
+    _ = (∑ k ∈ Finset.range (n + 1), fib k) + 1 := by simp [Finset.range_add_one]
 
 end Nat

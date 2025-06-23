@@ -80,18 +80,18 @@ lemma _root_.induction_on_primes {P : ℕ → Prop} (h₀ : P 0) (h₁ : P 1)
   refine recOnPrimePow h₀ h₁ ?_
   rintro a p n hp - - ha
   induction' n with n ih
-  · simpa using ha
-  · rw [pow_succ', mul_assoc]
-    exact h _ _ hp ih
+  simpa using ha
+  rw [pow_succ', mul_assoc]
+  exact h _ _ hp ih
 
 lemma prime_composite_induction {P : ℕ → Prop} (zero : P 0) (one : P 1)
     (prime : ∀ p : ℕ, p.Prime → P p) (composite : ∀ a, 2 ≤ a → P a → ∀ b, 2 ≤ b → P b → P (a * b))
     (n : ℕ) : P n := by
   refine induction_on_primes zero one ?_ _
   rintro p (_ | _ | a) hp ha
-  · simpa
-  · simpa using prime _ hp
-  · exact composite _ hp.two_le (prime _ hp) _ a.one_lt_succ_succ ha
+  simpa
+  simpa using prime _ hp
+  exact composite _ hp.two_le (prime _ hp) _ a.one_lt_succ_succ ha
 
 /-! ## Lemmas on multiplicative functions -/
 
@@ -101,18 +101,18 @@ theorem multiplicative_factorization {β : Type*} [CommMonoid β] (f : ℕ → �
     (h_mult : ∀ x y : ℕ, Coprime x y → f (x * y) = f x * f y) (hf : f 1 = 1) :
     ∀ {n : ℕ}, n ≠ 0 → f n = n.factorization.prod fun p k => f (p ^ k) := by
   apply Nat.recOnPosPrimePosCoprime
-  · rintro p k hp - -
-    -- Porting note: replaced `simp` with `rw`
-    rw [Prime.factorization_pow hp, Finsupp.prod_single_index _]
-    rwa [pow_zero]
-  · simp
-  · rintro -
-    rw [factorization_one, hf]
-    simp
-  · intro a b _ _ hab ha hb hab_pos
-    rw [h_mult a b hab, ha (left_ne_zero_of_mul hab_pos), hb (right_ne_zero_of_mul hab_pos),
-      factorization_mul_of_coprime hab, ← prod_add_index_of_disjoint]
-    exact hab.disjoint_primeFactors
+  rintro p k hp - -
+  -- Porting note: replaced `simp` with `rw`
+  rw [Prime.factorization_pow hp, Finsupp.prod_single_index _]
+  rwa [pow_zero]
+  simp
+  rintro -
+  rw [factorization_one, hf]
+  simp
+  intro a b _ _ hab ha hb hab_pos
+  rw [h_mult a b hab, ha (left_ne_zero_of_mul hab_pos), hb (right_ne_zero_of_mul hab_pos),
+    factorization_mul_of_coprime hab, ← prod_add_index_of_disjoint]
+  exact hab.disjoint_primeFactors
 
 /-- For any multiplicative function `f` with `f 1 = 1` and `f 0 = 1`,
 we can evaluate `f n` by evaluating `f` at `p ^ k` over the factorization of `n` -/
@@ -120,7 +120,7 @@ theorem multiplicative_factorization' {β : Type*} [CommMonoid β] (f : ℕ → 
     (h_mult : ∀ x y : ℕ, Coprime x y → f (x * y) = f x * f y) (hf0 : f 0 = 1) (hf1 : f 1 = 1) :
     f n = n.factorization.prod fun p k => f (p ^ k) := by
   obtain rfl | hn := eq_or_ne n 0
-  · simpa
-  · exact multiplicative_factorization _ h_mult hf1 hn
+  simpa
+  exact multiplicative_factorization _ h_mult hf1 hn
 
 end Nat

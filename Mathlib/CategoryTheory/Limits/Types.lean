@@ -50,12 +50,12 @@ def sectionOfCone (c : Cone F) (x : c.pt) : F.sections :=
 theorem isLimit_iff (c : Cone F) :
     Nonempty (IsLimit c) ↔ ∀ s ∈ F.sections, ∃! x : c.pt, ∀ j, c.π.app j x = s j := by
   refine ⟨fun ⟨t⟩ s hs ↦ ?_, fun h ↦ ⟨?_⟩⟩
-  · let cs := coneOfSection hs
-    exact ⟨t.lift cs ⟨⟩, fun j ↦ congr_fun (t.fac cs j) ⟨⟩,
-      fun x hx ↦ congr_fun (t.uniq cs (fun _ ↦ x) fun j ↦ funext fun _ ↦ hx j) ⟨⟩⟩
-  · choose x hx using fun c y ↦ h _ (sectionOfCone c y).2
-    exact ⟨x, fun c j ↦ funext fun y ↦ (hx c y).1 j,
-      fun c f hf ↦ funext fun y ↦ (hx c y).2 (f y) (fun j ↦ congr_fun (hf j) y)⟩
+  let cs := coneOfSection hs
+  exact ⟨t.lift cs ⟨⟩, fun j ↦ congr_fun (t.fac cs j) ⟨⟩,
+    fun x hx ↦ congr_fun (t.uniq cs (fun _ ↦ x) fun j ↦ funext fun _ ↦ hx j) ⟨⟩⟩
+  choose x hx using fun c y ↦ h _ (sectionOfCone c y).2
+  exact ⟨x, fun c j ↦ funext fun y ↦ (hx c y).1 j,
+    fun c f hf ↦ funext fun y ↦ (hx c y).2 (f y) (fun j ↦ congr_fun (hf j) y)⟩
 
 theorem isLimit_iff_bijective_sectionOfCone (c : Cone F) :
     Nonempty (IsLimit c) ↔ (Types.sectionOfCone c).Bijective := by
@@ -376,30 +376,30 @@ lemma Quot.desc_toCocone_desc {α : Type u} (f : Quot F → α) (hc : IsColimit 
 open Classical in
 theorem isColimit_iff_bijective_desc : Nonempty (IsColimit c) ↔ (Quot.desc c).Bijective := by
   refine ⟨?_, ?_⟩
-  · refine fun ⟨hc⟩ => ⟨fun x y h => ?_, fun x => ?_⟩
-    · let f : Quot F → ULift.{u} Bool := fun z => ULift.up (x = z)
-      suffices f x = f y by simpa [f] using this
-      rw [← Quot.desc_toCocone_desc c f hc x, h, Quot.desc_toCocone_desc]
-    · let f₁ : c.pt ⟶ ULift.{u} Bool := fun _ => ULift.up true
-      let f₂ : c.pt ⟶ ULift.{u} Bool := fun x => ULift.up (∃ a, Quot.desc c a = x)
-      suffices f₁ = f₂ by simpa [f₁, f₂] using congrFun this x
-      refine hc.hom_ext fun j => funext fun x => ?_
-      simpa [f₁, f₂] using ⟨Quot.ι F j x, by simp⟩
-  · refine fun h => ⟨?_⟩
-    let e := Equiv.ofBijective _ h
-    have h : ∀ j x, e.symm (c.ι.app j x) = Quot.ι F j x :=
-      fun j x => e.injective (Equiv.ofBijective_apply_symm_apply _ _ _)
-    exact
-      { desc := fun s => Quot.desc s ∘ e.symm
-        fac := fun s j => by
-          ext x
-          simp [h]
-        uniq := fun s m hm => by
-          ext x
-          obtain ⟨x, rfl⟩ := e.surjective x
-          obtain ⟨j, x, rfl⟩ := Quot.jointly_surjective x
-          rw [← h, Equiv.apply_symm_apply]
-          simpa [h] using congrFun (hm j) x }
+  refine fun ⟨hc⟩ => ⟨fun x y h => ?_, fun x => ?_⟩
+  let f : Quot F → ULift.{u} Bool := fun z => ULift.up (x = z)
+  suffices f x = f y by simpa [f] using this
+  rw [← Quot.desc_toCocone_desc c f hc x, h, Quot.desc_toCocone_desc]
+  let f₁ : c.pt ⟶ ULift.{u} Bool := fun _ => ULift.up true
+  let f₂ : c.pt ⟶ ULift.{u} Bool := fun x => ULift.up (∃ a, Quot.desc c a = x)
+  suffices f₁ = f₂ by simpa [f₁, f₂] using congrFun this x
+  refine hc.hom_ext fun j => funext fun x => ?_
+  simpa [f₁, f₂] using ⟨Quot.ι F j x, by simp⟩
+  refine fun h => ⟨?_⟩
+  let e := Equiv.ofBijective _ h
+  have h : ∀ j x, e.symm (c.ι.app j x) = Quot.ι F j x :=
+    fun j x => e.injective (Equiv.ofBijective_apply_symm_apply _ _ _)
+  exact
+    { desc := fun s => Quot.desc s ∘ e.symm
+      fac := fun s j => by
+        ext x
+        simp [h]
+      uniq := fun s m hm => by
+        ext x
+        obtain ⟨x, rfl⟩ := e.surjective x
+        obtain ⟨j, x, rfl⟩ := Quot.jointly_surjective x
+        rw [← h, Equiv.apply_symm_apply]
+        simpa [h] using congrFun (hm j) x }
 
 end
 
@@ -561,10 +561,10 @@ theorem jointly_surjective_of_isColimit {F : J ⥤ Type u} {t : Cocone F} (h : I
   by_contra hx
   simp_rw [not_exists] at hx
   apply (_ : (fun _ ↦ ULift.up True) ≠ (⟨· ≠ x⟩))
-  · refine h.hom_ext fun j ↦ ?_
-    ext y
-    exact (true_iff _).mpr (hx j y)
-  · exact fun he ↦ of_eq_true (congr_arg ULift.down <| congr_fun he x).symm rfl
+  refine h.hom_ext fun j ↦ ?_
+  ext y
+  exact (true_iff _).mpr (hx j y)
+  exact fun he ↦ of_eq_true (congr_arg ULift.down <| congr_fun he x).symm rfl
 
 theorem jointly_surjective (F : J ⥤ Type u) {t : Cocone F} (h : IsColimit t) (x : t.pt) :
     ∃ j y, t.ι.app j y = x := jointly_surjective_of_isColimit h x
@@ -675,9 +675,9 @@ lemma surjective_π_app_zero_of_surjective_map
   simp [i]
   rw [this]
   apply Function.Surjective.comp
-  · exact surjective_π_app_zero_of_surjective_map_aux hF
-  · rw [← epi_iff_surjective]
-    infer_instance
+  exact surjective_π_app_zero_of_surjective_map_aux hF
+  rw [← epi_iff_surjective]
+  infer_instance
 
 end Types
 

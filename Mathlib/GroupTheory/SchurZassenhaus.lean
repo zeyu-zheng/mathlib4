@@ -198,15 +198,15 @@ private theorem step2 (K : Subgroup G) [K.Normal] (hK : K ≤ N) : K = ⊥ ∨ K
     exact K.card_quotient_dvd_card
   obtain ⟨H, hH⟩ := h2 (G ⧸ K) h5 h6
   refine ⟨H.comap (QuotientGroup.mk' K), ?_, ?_⟩
-  · have key : (N.map (QuotientGroup.mk' K)).comap (QuotientGroup.mk' K) = N := by
-      refine comap_map_eq_self ?_
-      rwa [QuotientGroup.ker_mk']
-    rwa [← key, comap_sup_eq, hH.symm.sup_eq_top, comap_top]
-  · rw [← comap_top (QuotientGroup.mk' K)]
-    intro hH'
-    rw [comap_injective this hH', isComplement'_top_right, map_eq_bot_iff,
-      QuotientGroup.ker_mk'] at hH
-    exact h4.2 (le_antisymm hK hH)
+  have key : (N.map (QuotientGroup.mk' K)).comap (QuotientGroup.mk' K) = N := by
+    refine comap_map_eq_self ?_
+    rwa [QuotientGroup.ker_mk']
+  rwa [← key, comap_sup_eq, hH.symm.sup_eq_top, comap_top]
+  rw [← comap_top (QuotientGroup.mk' K)]
+  intro hH'
+  rw [comap_injective this hH', isComplement'_top_right, map_eq_bot_iff,
+    QuotientGroup.ker_mk'] at hH
+  exact h4.2 (le_antisymm hK hH)
 
 /-- Do not use this lemma: It is made obsolete by `exists_right_complement'_of_coprime` -/
 private theorem step3 (K : Subgroup N) [(K.map N.subtype).Normal] : K = ⊥ ∨ K = ⊤ := by
@@ -267,14 +267,14 @@ private theorem exists_right_complement'_of_coprime_aux' [Finite G] (hG : Nat.ca
 theorem exists_right_complement'_of_coprime {N : Subgroup G} [N.Normal]
     (hN : Nat.Coprime (Nat.card N) N.index) : ∃ H : Subgroup G, IsComplement' N H := by
   by_cases hN1 : Nat.card N = 0
-  · rw [hN1, Nat.coprime_zero_left, index_eq_one] at hN
-    rw [hN]
-    exact ⟨⊥, isComplement'_top_bot⟩
+  rw [hN1, Nat.coprime_zero_left, index_eq_one] at hN
+  rw [hN]
+  exact ⟨⊥, isComplement'_top_bot⟩
   by_cases hN2 : N.index = 0
-  · rw [hN2, Nat.coprime_zero_right] at hN
-    haveI := (Cardinal.toNat_eq_one_iff_unique.mp hN).1
-    rw [N.eq_bot_of_subsingleton]
-    exact ⟨⊤, isComplement'_bot_top⟩
+  rw [hN2, Nat.coprime_zero_right] at hN
+  haveI := (Cardinal.toNat_eq_one_iff_unique.mp hN).1
+  rw [N.eq_bot_of_subsingleton]
+  exact ⟨⊤, isComplement'_bot_top⟩
   have hN3 : Nat.card G ≠ 0
   rw [← N.card_mul_index]
   exact mul_ne_zero hN1 hN2

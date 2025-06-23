@@ -87,17 +87,17 @@ theorem basis_repr_abs_le_const_mul_house (α : 𝓞 K) (i : K →+* ℂ) :
         * house (algebraMap (𝓞 K) K α) := ?_
     _ = ↑(finrank ℚ K) * ‖((basisMatrix K).transpose)⁻¹‖ * house (algebraMap (𝓞 K) K α) := ?_
 
-  · rw [← inverse_basisMatrix_mulVec_eq_repr]
-    apply le_trans
-    · apply le_trans (AbsoluteValue.sum_le Complex.abs _ _)
-      · exact sum_le_sum (fun _ _ => (AbsoluteValue.map_mul Complex.abs _ _).le)
-    · apply sum_le_sum (fun _ _ => mul_le_mul_of_nonneg_right ?_
-        (AbsoluteValue.nonneg Complex.abs _))
-      · exact norm_entry_le_entrywise_sup_norm ((basisMatrix K).transpose)⁻¹
-  · apply sum_le_sum; intros j _
-    apply mul_le_mul_of_nonneg_left _ (norm_nonneg fun i j ↦ ((basisMatrix K).transpose)⁻¹ i j)
-    · exact norm_le_pi_norm (σ ((algebraMap (𝓞 K) K) α)) j
-  · rw [sum_const, card_univ, nsmul_eq_mul, Embeddings.card, mul_assoc]
+  rw [← inverse_basisMatrix_mulVec_eq_repr]
+  apply le_trans
+  apply le_trans (AbsoluteValue.sum_le Complex.abs _ _)
+  exact sum_le_sum (fun _ _ => (AbsoluteValue.map_mul Complex.abs _ _).le)
+  apply sum_le_sum (fun _ _ => mul_le_mul_of_nonneg_right ?_
+    (AbsoluteValue.nonneg Complex.abs _))
+  exact norm_entry_le_entrywise_sup_norm ((basisMatrix K).transpose)⁻¹
+  apply sum_le_sum; intros j _
+  apply mul_le_mul_of_nonneg_left _ (norm_nonneg fun i j ↦ ((basisMatrix K).transpose)⁻¹ i j)
+  exact norm_le_pi_norm (σ ((algebraMap (𝓞 K) K) α)) j
+  rw [sum_const, card_univ, nsmul_eq_mul, Embeddings.card, mul_assoc]
 
 /-- `newBasis K` defines a reindexed basis of the ring of integers of `K`,
   adjusted by the inverse of the equivalence `equivReindex`. -/
@@ -211,35 +211,35 @@ variable (Apos : 0 ≤ A)
 
 private theorem asiegel_remark : ‖asiegel K a‖ ≤ c₂ K * A := by
   rw [Matrix.norm_le_iff]
-  · intro kr lu
-    calc
-      ‖asiegel K a kr lu‖ = |asiegel K a kr lu| := ?_
-      _ ≤ (c K) *
-        house ((algebraMap (𝓞 K) K) (a kr.1 lu.1 * ((newBasis K) lu.2))) := ?_
-      _ ≤ (c K) * house ((algebraMap (𝓞 K) K) (a kr.1 lu.1)) *
-        house ((algebraMap (𝓞 K) K) ((newBasis K) lu.2)) := ?_
-      _ ≤ (c K) * A * house ((algebraMap (𝓞 K) K) ((newBasis K) lu.2)) := ?_
-      _ ≤ (c K) * A * (supOfBasis K) := ?_
-      _ ≤ (c₂ K) * A := ?_
-    · simp only [Int.cast_abs, ← Real.norm_eq_abs (asiegel K a kr lu)]; rfl
-    · have remark := basis_repr_abs_le_const_mul_house K
-      simp only [Basis.repr_reindex, Finsupp.mapDomain_equiv_apply,
-        integralBasis_repr_apply, eq_intCast, Rat.cast_intCast,
-          Complex.abs_intCast] at remark
-      exact mod_cast remark ((a kr.1 lu.1 * ((newBasis K) lu.2))) kr.2
-    · simp only [house, _root_.map_mul, mul_assoc]
-      exact mul_le_mul_of_nonneg_left (norm_mul_le _ _) (c_nonneg K)
-    · rw [mul_assoc, mul_assoc]
-      apply mul_le_mul_of_nonneg_left ?_ (c_nonneg K)
-      · apply mul_le_mul_of_nonneg_right (habs kr.1 lu.1) ?_
-        · exact norm_nonneg ((canonicalEmbedding K) ((algebraMap (𝓞 K) K)
-            ((newBasis K) lu.2)))
-    ·  apply mul_le_mul_of_nonneg_left ?_ (mul_nonneg (c_nonneg K) Apos)
-       · simp only [supOfBasis, le_sup'_iff, mem_univ]; use lu.2
-    · rw [mul_right_comm]
-      exact mul_le_mul_of_nonneg_right
-        (mul_le_mul_of_nonneg_right (le_max_right ..) (supOfBasis_nonneg K)) Apos
-  · rw [mul_nonneg_iff]; left; exact ⟨c₂_nonneg K, Apos⟩
+  intro kr lu
+  calc
+    ‖asiegel K a kr lu‖ = |asiegel K a kr lu| := ?_
+    _ ≤ (c K) *
+      house ((algebraMap (𝓞 K) K) (a kr.1 lu.1 * ((newBasis K) lu.2))) := ?_
+    _ ≤ (c K) * house ((algebraMap (𝓞 K) K) (a kr.1 lu.1)) *
+      house ((algebraMap (𝓞 K) K) ((newBasis K) lu.2)) := ?_
+    _ ≤ (c K) * A * house ((algebraMap (𝓞 K) K) ((newBasis K) lu.2)) := ?_
+    _ ≤ (c K) * A * (supOfBasis K) := ?_
+    _ ≤ (c₂ K) * A := ?_
+  simp only [Int.cast_abs, ← Real.norm_eq_abs (asiegel K a kr lu)]; rfl
+  have remark := basis_repr_abs_le_const_mul_house K
+  simp only [Basis.repr_reindex, Finsupp.mapDomain_equiv_apply,
+    integralBasis_repr_apply, eq_intCast, Rat.cast_intCast,
+      Complex.abs_intCast] at remark
+  exact mod_cast remark ((a kr.1 lu.1 * ((newBasis K) lu.2))) kr.2
+  simp only [house, _root_.map_mul, mul_assoc]
+  exact mul_le_mul_of_nonneg_left (norm_mul_le _ _) (c_nonneg K)
+  rw [mul_assoc, mul_assoc]
+  apply mul_le_mul_of_nonneg_left ?_ (c_nonneg K)
+  apply mul_le_mul_of_nonneg_right (habs kr.1 lu.1) ?_
+  exact norm_nonneg ((canonicalEmbedding K) ((algebraMap (𝓞 K) K)
+    ((newBasis K) lu.2)))
+  apply mul_le_mul_of_nonneg_left ?_ (mul_nonneg (c_nonneg K) Apos)
+  simp only [supOfBasis, le_sup'_iff, mem_univ]; use lu.2
+  rw [mul_right_comm]
+  exact mul_le_mul_of_nonneg_right
+    (mul_le_mul_of_nonneg_right (le_max_right ..) (supOfBasis_nonneg K)) Apos
+  rw [mul_nonneg_iff]; left; exact ⟨c₂_nonneg K, Apos⟩
 
 /-- `c₁ K` is the product of `finrank ℚ K` and  `c₂ K` and depends on `K`. -/
 private def c₁ := finrank ℚ K * c₂ K
@@ -256,32 +256,32 @@ private theorem house_le_bound : ∀ l, house (ξ K x l).1 ≤ (c₁ K) *
        _ ≤ ∑ _r : K →+* ℂ, ((↑q * h * ‖asiegel K a‖) ^ ((p : ℝ) / (q - p))) * supOfBasis K := ?_
        _ ≤ h * (c₂ K) * ((q * c₁ K * A) ^ ((p : ℝ) / (q - p))) := ?_
        _ ≤ c₁ K * ((c₁ K * ↑q * A) ^ ((p : ℝ) / (q - p))) := ?_
-  · simp_rw [← _root_.map_mul, map_sum]; apply house_sum_le_sum_house
-  · apply sum_le_sum; intros r _; convert house_mul_le ..
-    simp only [map_intCast, house_intCast, Int.cast_abs, Int.norm_eq_abs]
-  · apply sum_le_sum; intros r _; unfold supOfBasis
-    apply mul_le_mul_of_nonneg_left ?_ (norm_nonneg (x (l,r)))
-    · simp only [le_sup'_iff, mem_univ, true_and]; use r
-  · apply sum_le_sum; intros r _
-    apply mul_le_mul_of_nonneg_right ?_ (supOfBasis_nonneg K)
-    exact le_trans (norm_le_pi_norm x ⟨l, r⟩) hxbound
-  · simp only [Nat.cast_mul, sum_const, card_univ, nsmul_eq_mul]
-    rw [Embeddings.card, mul_comm _ (supOfBasis K), c₂, c₁, ← mul_assoc]
-    apply mul_le_mul
-    · apply mul_le_mul_of_nonneg_left ?_ (Nat.cast_nonneg' _)
-      · exact le_mul_of_one_le_left (supOfBasis_nonneg K) (le_max_left ..)
-    · apply Real.rpow_le_rpow (mul_nonneg (mul_nonneg (Nat.cast_nonneg' _) (Nat.cast_nonneg' _))
-        (norm_nonneg _))
-      · rw [← mul_assoc, mul_assoc (_*_)]
-        apply mul_le_mul_of_nonneg_left (asiegel_remark K a habs Apos)
-          (mul_nonneg (Nat.cast_nonneg' _) (Nat.cast_nonneg _))
-      · exact div_nonneg (Nat.cast_nonneg' _) (sub_nonneg.2 (mod_cast hpq.le))
-    · apply Real.rpow_nonneg
-      exact mul_nonneg (mul_nonneg (Nat.cast_nonneg' _) (Nat.cast_nonneg' _))
-        (norm_nonneg _)
-    · exact mul_nonneg (Nat.cast_nonneg' _) (mul_nonneg (le_trans zero_le_one (le_max_left ..))
-        (supOfBasis_nonneg _))
-  · rw [mul_comm (q : ℝ) (c₁ K)]; rfl
+  simp_rw [← _root_.map_mul, map_sum]; apply house_sum_le_sum_house
+  apply sum_le_sum; intros r _; convert house_mul_le ..
+  simp only [map_intCast, house_intCast, Int.cast_abs, Int.norm_eq_abs]
+  apply sum_le_sum; intros r _; unfold supOfBasis
+  apply mul_le_mul_of_nonneg_left ?_ (norm_nonneg (x (l,r)))
+  simp only [le_sup'_iff, mem_univ, true_and]; use r
+  apply sum_le_sum; intros r _
+  apply mul_le_mul_of_nonneg_right ?_ (supOfBasis_nonneg K)
+  exact le_trans (norm_le_pi_norm x ⟨l, r⟩) hxbound
+  simp only [Nat.cast_mul, sum_const, card_univ, nsmul_eq_mul]
+  rw [Embeddings.card, mul_comm _ (supOfBasis K), c₂, c₁, ← mul_assoc]
+  apply mul_le_mul
+  apply mul_le_mul_of_nonneg_left ?_ (Nat.cast_nonneg' _)
+  exact le_mul_of_one_le_left (supOfBasis_nonneg K) (le_max_left ..)
+  apply Real.rpow_le_rpow (mul_nonneg (mul_nonneg (Nat.cast_nonneg' _) (Nat.cast_nonneg' _))
+    (norm_nonneg _))
+  rw [← mul_assoc, mul_assoc (_*_)]
+  apply mul_le_mul_of_nonneg_left (asiegel_remark K a habs Apos)
+    (mul_nonneg (Nat.cast_nonneg' _) (Nat.cast_nonneg _))
+  exact div_nonneg (Nat.cast_nonneg' _) (sub_nonneg.2 (mod_cast hpq.le))
+  apply Real.rpow_nonneg
+  exact mul_nonneg (mul_nonneg (Nat.cast_nonneg' _) (Nat.cast_nonneg' _))
+    (norm_nonneg _)
+  exact mul_nonneg (Nat.cast_nonneg' _) (mul_nonneg (le_trans zero_le_one (le_max_left ..))
+    (supOfBasis_nonneg _))
+  rw [mul_comm (q : ℝ) (c₁ K)]; rfl
 
 open Classical in
 /-- There exists a "small" non-zero algebraic integral solution of an

@@ -234,13 +234,13 @@ instance epi_r {A : C} : Epi (r A) := by
   have hlp : prod.lift (𝟙 A) (0 : A ⟶ A) ≫ Limits.prod.snd = 0 := prod.lift_snd _ _
   let hp1 : IsLimit (KernelFork.ofι (prod.lift (𝟙 A) (0 : A ⟶ A)) hlp) := by
     refine Fork.IsLimit.mk _ (fun s => Fork.ι s ≫ Limits.prod.fst) ?_ ?_
-    · intro s
-      apply prod.hom_ext <;> simp
-    · intro s m h
-      haveI : Mono (prod.lift (𝟙 A) (0 : A ⟶ A)) := mono_of_mono_fac (prod.lift_fst _ _)
-      apply (cancel_mono (prod.lift (𝟙 A) (0 : A ⟶ A))).1
-      convert h
-      apply prod.hom_ext <;> simp
+    intro s
+    apply prod.hom_ext <;> simp
+    intro s m h
+    haveI : Mono (prod.lift (𝟙 A) (0 : A ⟶ A)) := mono_of_mono_fac (prod.lift_fst _ _)
+    apply (cancel_mono (prod.lift (𝟙 A) (0 : A ⟶ A))).1
+    convert h
+    apply prod.hom_ext <;> simp
   let hp2 : IsColimit (CokernelCofork.ofπ (Limits.prod.snd : A ⨯ A ⟶ A) hlp) :=
     epiIsCokernelOfKernel _ hp1
   apply NormalMonoCategory.epi_of_zero_cancel
@@ -338,8 +338,8 @@ theorem lift_sub_lift {X Y : C} (a b c d : X ⟶ Y) :
     prod.lift a b - prod.lift c d = prod.lift (a - c) (b - d) := by
   simp only [sub_def]
   ext
-  · rw [Category.assoc, σ_comp, prod.lift_map_assoc, prod.lift_fst, prod.lift_fst, prod.lift_fst]
-  · rw [Category.assoc, σ_comp, prod.lift_map_assoc, prod.lift_snd, prod.lift_snd, prod.lift_snd]
+  rw [Category.assoc, σ_comp, prod.lift_map_assoc, prod.lift_fst, prod.lift_fst, prod.lift_fst]
+  rw [Category.assoc, σ_comp, prod.lift_map_assoc, prod.lift_snd, prod.lift_snd, prod.lift_snd]
 
 theorem sub_sub_sub {X Y : C} (a b c d : X ⟶ Y) : a - c - (b - d) = a - b - (c - d) := by
   rw [sub_def, ← lift_sub_lift, sub_def, Category.assoc, σ_comp, prod.lift_map_assoc]; rfl

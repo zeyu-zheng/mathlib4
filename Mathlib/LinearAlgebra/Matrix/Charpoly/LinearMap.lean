@@ -89,15 +89,15 @@ theorem Matrix.represents_iff {A : Matrix ι ι R} {f : Module.End R M} :
 theorem Matrix.represents_iff' {A : Matrix ι ι R} {f : Module.End R M} :
     A.Represents b f ↔ ∀ j, ∑ i : ι, A i j • b i = f (b j) := by
   constructor
-  · intro h i
-    have := LinearMap.congr_fun h (Pi.single i 1)
-    rwa [PiToModule.fromEnd_apply_single_one, PiToModule.fromMatrix_apply_single_one] at this
-  · intro h
-    -- Porting note: was `ext`
-    refine LinearMap.pi_ext' (fun i => LinearMap.ext_ring ?_)
-    simp_rw [LinearMap.comp_apply, LinearMap.coe_single, PiToModule.fromEnd_apply_single_one,
-      PiToModule.fromMatrix_apply_single_one]
-    apply h
+  intro h i
+  have := LinearMap.congr_fun h (Pi.single i 1)
+  rwa [PiToModule.fromEnd_apply_single_one, PiToModule.fromMatrix_apply_single_one] at this
+  intro h
+  -- Porting note: was `ext`
+  refine LinearMap.pi_ext' (fun i => LinearMap.ext_ring ?_)
+  simp_rw [LinearMap.comp_apply, LinearMap.coe_single, PiToModule.fromEnd_apply_single_one,
+    PiToModule.fromMatrix_apply_single_one]
+  apply h
 
 theorem Matrix.Represents.mul {A A' : Matrix ι ι R} {f f' : Module.End R M} (h : A.Represents b f)
     (h' : Matrix.Represents b A' f') : (A * A').Represents b (f * f') := by
@@ -205,7 +205,7 @@ theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_s
     [Module.Finite R M] (f : Module.End R M) (I : Ideal R) (hI : LinearMap.range f ≤ I • ⊤) :
     ∃ p : R[X], p.Monic ∧ (∀ k, p.coeff k ∈ I ^ (p.natDegree - k)) ∧ Polynomial.aeval f p = 0 := by
   cases subsingleton_or_nontrivial R
-  · exact ⟨0, Polynomial.monic_of_subsingleton _, by simp⟩
+  exact ⟨0, Polynomial.monic_of_subsingleton _, by simp⟩
   obtain ⟨s : Finset M, hs : Submodule.span R (s : Set M) = ⊤⟩ :=
     Module.Finite.out (R := R) (M := M)
   -- Porting note: `H` was `rfl`
@@ -214,13 +214,13 @@ theorem LinearMap.exists_monic_and_coeff_mem_pow_and_aeval_eq_zero_of_range_le_s
       (by rw [Subtype.range_coe_subtype, Finset.setOf_mem, hs]) f I hI
   rw [← H]
   refine ⟨A.1.charpoly, A.1.charpoly_monic, ?_, ?_⟩
-  · rw [A.1.charpoly_natDegree_eq_dim]
-    exact coeff_charpoly_mem_ideal_pow h
-  · rw [Polynomial.aeval_algHom_apply,
-      ← map_zero (Matrix.isRepresentation.toEnd R ((↑) : s → M) _)]
-    congr 1
-    ext1
-    rw [Polynomial.aeval_subalgebra_coe, Matrix.aeval_self_charpoly, Subalgebra.coe_zero]
+  rw [A.1.charpoly_natDegree_eq_dim]
+  exact coeff_charpoly_mem_ideal_pow h
+  rw [Polynomial.aeval_algHom_apply,
+    ← map_zero (Matrix.isRepresentation.toEnd R ((↑) : s → M) _)]
+  congr 1
+  ext1
+  rw [Polynomial.aeval_subalgebra_coe, Matrix.aeval_self_charpoly, Subalgebra.coe_zero]
 
 theorem LinearMap.exists_monic_and_aeval_eq_zero [Module.Finite R M] (f : Module.End R M) :
     ∃ p : R[X], p.Monic ∧ Polynomial.aeval f p = 0 :=

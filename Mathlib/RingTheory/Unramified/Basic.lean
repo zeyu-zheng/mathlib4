@@ -72,14 +72,14 @@ theorem lift_unique {B : Type u} [CommRing B] [_RB : Algebra R B]
   change Function.Injective (Ideal.Quotient.mkₐ R I).comp
   revert _RB
   apply Ideal.IsNilpotent.induction_on (R := B) I hI
-  · intro B _ I hI _; exact FormallyUnramified.comp_injective I hI
-  · intro B _ I J hIJ h₁ h₂ _ g₁ g₂ e
-    apply h₁
-    apply h₂
-    ext x
-    replace e := AlgHom.congr_fun e x
-    dsimp only [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk] at e ⊢
-    rwa [Ideal.Quotient.eq, ← map_sub, Ideal.mem_quotient_iff_mem hIJ, ← Ideal.Quotient.eq]
+  intro B _ I hI _; exact FormallyUnramified.comp_injective I hI
+  intro B _ I J hIJ h₁ h₂ _ g₁ g₂ e
+  apply h₁
+  apply h₂
+  ext x
+  replace e := AlgHom.congr_fun e x
+  dsimp only [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk] at e ⊢
+  rwa [Ideal.Quotient.eq, ← map_sub, Ideal.mem_quotient_iff_mem hIJ, ← Ideal.Quotient.eq]
 
 theorem ext [FormallyUnramified R A] (hI : IsNilpotent I) {g₁ g₂ : A →ₐ[R] B}
     (H : ∀ x, Ideal.Quotient.mk I (g₁ x) = Ideal.Quotient.mk I (g₂ x)) : g₁ = g₂ :=
@@ -171,8 +171,8 @@ instance base_change [FormallyUnramified R A] :
   letI := ((algebraMap B C).comp (algebraMap R B)).toAlgebra
   haveI : IsScalarTower R B C := IsScalarTower.of_algebraMap_eq' rfl
   ext : 1
-  · subsingleton
-  · exact FormallyUnramified.ext I ⟨2, hI⟩ fun x => AlgHom.congr_fun e (1 ⊗ₜ x)
+  subsingleton
+  exact FormallyUnramified.ext I ⟨2, hI⟩ fun x => AlgHom.congr_fun e (1 ⊗ₜ x)
 
 end BaseChange
 

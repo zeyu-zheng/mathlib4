@@ -478,8 +478,8 @@ theorem isUnit_star [Monoid R] [StarMul R] {a : R} : IsUnit (star a) ↔ IsUnit 
 theorem Ring.inverse_star [Semiring R] [StarRing R] (a : R) :
     Ring.inverse (star a) = star (Ring.inverse a) := by
   by_cases ha : IsUnit a
-  · obtain ⟨u, rfl⟩ := ha
-    rw [Ring.inverse_unit, ← Units.coe_star, Ring.inverse_unit, ← Units.coe_star_inv]
+  obtain ⟨u, rfl⟩ := ha
+  rw [Ring.inverse_unit, ← Units.coe_star, Ring.inverse_unit, ← Units.coe_star_inv]
   rw [Ring.inverse_non_unit _ ha, Ring.inverse_non_unit _ (mt isUnit_star.mp ha), star_zero]
 
 protected instance Invertible.star {R : Type*} [MulOneClass R] [StarMul R] (r : R) [Invertible r] :

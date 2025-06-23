@@ -91,13 +91,13 @@ variable {n}
 
 theorem succ_n_eq (p q : Q n.succ) : p = q ↔ p 0 = q 0 ∧ π p = π q := by
   constructor
-  · rintro rfl; exact ⟨rfl, rfl⟩
-  · rintro ⟨h₀, h⟩
-    ext x
-    by_cases hx : x = 0
-    · rwa [hx]
-    · rw [← Fin.succ_pred x hx]
-      convert congr_fun h (Fin.pred x hx)
+  rintro rfl; exact ⟨rfl, rfl⟩
+  rintro ⟨h₀, h⟩
+  ext x
+  by_cases hx : x = 0
+  rwa [hx]
+  rw [← Fin.succ_pred x hx]
+  convert congr_fun h (Fin.pred x hx)
 
 /-- The adjacency relation defining the graph structure on `Q n`:
 `p.adjacent q` if there is an edge from `p` to `q` in `Q n`. -/
@@ -110,40 +110,40 @@ theorem not_adjacent_zero (p q : Q 0) : q ∉ p.adjacent := by rintro ⟨v, _⟩
 iff their projections to `Q n` are equal. -/
 theorem adj_iff_proj_eq {p q : Q n.succ} (h₀ : p 0 ≠ q 0) : q ∈ p.adjacent ↔ π p = π q := by
   constructor
-  · rintro ⟨i, _, h_uni⟩
-    ext x; by_contra hx
-    apply Fin.succ_ne_zero x
-    rw [h_uni _ hx, h_uni _ h₀]
-  · intro heq
-    use 0, h₀
-    intro y hy
-    contrapose! hy
-    rw [← Fin.succ_pred _ hy]
-    apply congr_fun heq
+  rintro ⟨i, _, h_uni⟩
+  ext x; by_contra hx
+  apply Fin.succ_ne_zero x
+  rw [h_uni _ hx, h_uni _ h₀]
+  intro heq
+  use 0, h₀
+  intro y hy
+  contrapose! hy
+  rw [← Fin.succ_pred _ hy]
+  apply congr_fun heq
 
 /-- If `p` and `q` in `Q n.succ` have the same value at zero then they are adjacent
 iff their projections to `Q n` are adjacent. -/
 theorem adj_iff_proj_adj {p q : Q n.succ} (h₀ : p 0 = q 0) :
     q ∈ p.adjacent ↔ π q ∈ (π p).adjacent := by
   constructor
-  · rintro ⟨i, h_eq, h_uni⟩
-    have h_i : i ≠ 0 := fun h_i => absurd h₀ (by rwa [h_i] at h_eq)
-    use i.pred h_i,
-      show p (Fin.succ (Fin.pred i _)) ≠ q (Fin.succ (Fin.pred i _)) by rwa [Fin.succ_pred]
-    intro y hy
-    simp [Eq.symm (h_uni _ hy)]
-  · rintro ⟨i, h_eq, h_uni⟩
-    use i.succ, h_eq
-    intro y hy
-    rw [← Fin.pred_inj (ha := (?ha : y ≠ 0)) (hb := (?hb : i.succ ≠ 0)),
-      Fin.pred_succ]
-    case ha =>
-      contrapose! hy
-      rw [hy, h₀]
-    case hb =>
-      apply Fin.succ_ne_zero
-    apply h_uni
-    simp [π, hy]
+  rintro ⟨i, h_eq, h_uni⟩
+  have h_i : i ≠ 0 := fun h_i => absurd h₀ (by rwa [h_i] at h_eq)
+  use i.pred h_i,
+    show p (Fin.succ (Fin.pred i _)) ≠ q (Fin.succ (Fin.pred i _)) by rwa [Fin.succ_pred]
+  intro y hy
+  simp [Eq.symm (h_uni _ hy)]
+  rintro ⟨i, h_eq, h_uni⟩
+  use i.succ, h_eq
+  intro y hy
+  rw [← Fin.pred_inj (ha := (?ha : y ≠ 0)) (hb := (?hb : i.succ ≠ 0)),
+    Fin.pred_succ]
+  case ha =>
+    contrapose! hy
+    rw [hy, h₀]
+  case hb =>
+    apply Fin.succ_ne_zero
+  apply h_uni
+  simp [π, hy]
 
 @[symm]
 theorem adjacent.symm {p q : Q n} : q ∈ p.adjacent ↔ p ∈ q.adjacent := by
@@ -196,32 +196,32 @@ variable {n : ℕ}
 
 theorem duality (p q : Q n) : ε p (e q) = if p = q then 1 else 0 := by
   induction' n with n IH
-  · rw [show p = q from Subsingleton.elim (α := Q 0) p q]
-    dsimp [ε, e]
-    simp
-    rfl
-  · dsimp [ε, e]
-    cases hp : p 0 <;> cases hq : q 0
-    all_goals
-      repeat rw [Bool.cond_true]
-      repeat rw [Bool.cond_false]
-      simp only [LinearMap.fst_apply, LinearMap.snd_apply, LinearMap.comp_apply, IH, V]
-      congr 1; rw [Q.succ_n_eq]; simp [hp, hq]
+  rw [show p = q from Subsingleton.elim (α := Q 0) p q]
+  dsimp [ε, e]
+  simp
+  rfl
+  dsimp [ε, e]
+  cases hp : p 0 <;> cases hq : q 0
+  all_goals
+    repeat rw [Bool.cond_true]
+    repeat rw [Bool.cond_false]
+    simp only [LinearMap.fst_apply, LinearMap.snd_apply, LinearMap.comp_apply, IH, V]
+    congr 1; rw [Q.succ_n_eq]; simp [hp, hq]
 
 /-- Any vector in `V n` annihilated by all `ε p`'s is zero. -/
 theorem epsilon_total {v : V n} (h : ∀ p : Q n, (ε p) v = 0) : v = 0 := by
   induction' n with n ih
-  · dsimp [ε] at h; exact h fun _ => true
-  · cases' v with v₁ v₂
-    ext <;> change _ = (0 : V n) <;> simp only <;> apply ih <;> intro p <;>
-      [let q : Q n.succ := fun i => if h : i = 0 then true else p (i.pred h);
-      let q : Q n.succ := fun i => if h : i = 0 then false else p (i.pred h)]
-    all_goals
-      specialize h q
-      first
-      | rw [ε, show q 0 = true from rfl, Bool.cond_true] at h
-      | rw [ε, show q 0 = false from rfl, Bool.cond_false] at h
-      rwa [show p = π q by ext; simp [q, Fin.succ_ne_zero, π]]
+  dsimp [ε] at h; exact h fun _ => true
+  cases' v with v₁ v₂
+  ext <;> change _ = (0 : V n) <;> simp only <;> apply ih <;> intro p <;>
+    [let q : Q n.succ := fun i => if h : i = 0 then true else p (i.pred h);
+    let q : Q n.succ := fun i => if h : i = 0 then false else p (i.pred h)]
+  all_goals
+    specialize h q
+    first
+    | rw [ε, show q 0 = true from rfl, Bool.cond_true] at h
+    | rw [ε, show q 0 = false from rfl, Bool.cond_false] at h
+    rwa [show p = π q by ext; simp [q, Fin.succ_ne_zero, π]]
 
 open Module
 
@@ -279,8 +279,8 @@ using only the addition of `V`. -/
 
 theorem f_squared : ∀ v : V n, (f n) (f n v) = (n : ℝ) • v := by
   induction' n with n IH _ <;> intro v
-  · simp only [Nat.zero_eq, Nat.cast_zero, zero_smul]; rfl
-  · cases v; rw [f_succ_apply, f_succ_apply]; simp [IH, add_smul (n : ℝ) 1, add_assoc, V]; abel
+  simp only [Nat.zero_eq, Nat.cast_zero, zero_smul]; rfl
+  cases v; rw [f_succ_apply, f_succ_apply]; simp [IH, add_smul (n : ℝ) 1, add_assoc, V]; abel
 
 /-! We now compute the matrix of `f` in the `e` basis (`p` is the line index,
 `q` the column index). -/
@@ -288,18 +288,18 @@ theorem f_squared : ∀ v : V n, (f n) (f n v) = (n : ℝ) • v := by
 
 theorem f_matrix : ∀ p q : Q n, |ε q (f n (e p))| = if p ∈ q.adjacent then 1 else 0 := by
   induction' n with n IH
-  · intro p q
-    dsimp [f]
-    simp [Q.not_adjacent_zero]
-  · intro p q
-    have ite_nonneg : ite (π q = π p) (1 : ℝ) 0 ≥ 0
-    split_ifs <;> norm_num
-    dsimp only [e, ε, f, V]; rw [LinearMap.prod_apply]; dsimp; cases hp : p 0 <;> cases hq : q 0
-    all_goals
-      repeat rw [Bool.cond_true]
-      repeat rw [Bool.cond_false]
-      simp [hp, hq, IH, duality, abs_of_nonneg ite_nonneg, Q.adj_iff_proj_eq,
-        Q.adj_iff_proj_adj]
+  intro p q
+  dsimp [f]
+  simp [Q.not_adjacent_zero]
+  intro p q
+  have ite_nonneg : ite (π q = π p) (1 : ℝ) 0 ≥ 0
+  split_ifs <;> norm_num
+  dsimp only [e, ε, f, V]; rw [LinearMap.prod_apply]; dsimp; cases hp : p 0 <;> cases hq : q 0
+  all_goals
+    repeat rw [Bool.cond_true]
+    repeat rw [Bool.cond_false]
+    simp [hp, hq, IH, duality, abs_of_nonneg ite_nonneg, Q.adj_iff_proj_eq,
+      Q.adj_iff_proj_adj]
 
 /-- The linear operator $g_m$ corresponding to Knuth's matrix $B_m$. -/
 noncomputable def g (m : ℕ) : V m →ₗ[ℝ] V m.succ :=

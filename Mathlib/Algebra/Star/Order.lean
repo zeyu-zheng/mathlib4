@@ -92,16 +92,16 @@ lemma of_le_iff [NonUnitalSemiring R] [PartialOrder R] [StarRing R]
     (h_le_iff : ∀ x y : R, x ≤ y ↔ ∃ s, y = x + star s * s) : StarOrderedRing R where
   le_iff x y := by
     refine ⟨fun h => ?_, ?_⟩
-    · obtain ⟨p, hp⟩ := (h_le_iff x y).mp h
-      exact ⟨star p * p, AddSubmonoid.subset_closure ⟨p, rfl⟩, hp⟩
-    · rintro ⟨p, hp, hpxy⟩
-      revert x y hpxy
-      refine AddSubmonoid.closure_induction hp ?_ (fun x y h => add_zero x ▸ h.ge) ?_
-      · rintro _ ⟨s, rfl⟩ x y rfl
-        exact (h_le_iff _ _).mpr ⟨s, rfl⟩
-      · rintro a b ha hb x y rfl
-        rw [← add_assoc]
-        exact (ha _ _ rfl).trans (hb _ _ rfl)
+    obtain ⟨p, hp⟩ := (h_le_iff x y).mp h
+    exact ⟨star p * p, AddSubmonoid.subset_closure ⟨p, rfl⟩, hp⟩
+    rintro ⟨p, hp, hpxy⟩
+    revert x y hpxy
+    refine AddSubmonoid.closure_induction hp ?_ (fun x y h => add_zero x ▸ h.ge) ?_
+    rintro _ ⟨s, rfl⟩ x y rfl
+    exact (h_le_iff _ _).mpr ⟨s, rfl⟩
+    rintro a b ha hb x y rfl
+    rw [← add_assoc]
+    exact (ha _ _ rfl).trans (hb _ _ rfl)
 
 /-- When `R` is a non-unital ring, to construct a `StarOrderedRing` instance it suffices to
 show that the nonnegative elements are precisely those elements in the `AddSubmonoid` generated
@@ -148,13 +148,13 @@ theorem conjugate_nonneg {a : R} (ha : 0 ≤ a) (c : R) : 0 ≤ star c * a * c :
   rw [StarOrderedRing.nonneg_iff] at ha
   refine AddSubmonoid.closure_induction ha (fun x hx => ?_)
     (by rw [mul_zero, zero_mul]) fun x y hx hy => ?_
-  · obtain ⟨x, rfl⟩ := hx
-    convert star_mul_self_nonneg (x * c) using 1
-    rw [star_mul, ← mul_assoc, mul_assoc _ _ c]
-  · calc
-      0 ≤ star c * x * c + 0 := by rw [add_zero]; exact hx
-      _ ≤ star c * x * c + star c * y * c := add_le_add_left hy _
-      _ ≤ _ := by rw [mul_add, add_mul]
+  obtain ⟨x, rfl⟩ := hx
+  convert star_mul_self_nonneg (x * c) using 1
+  rw [star_mul, ← mul_assoc, mul_assoc _ _ c]
+  calc
+    0 ≤ star c * x * c + 0 := by rw [add_zero]; exact hx
+    _ ≤ star c * x * c + star c * y * c := add_le_add_left hy _
+    _ ≤ _ := by rw [mul_add, add_mul]
 
 theorem conjugate_nonneg' {a : R} (ha : 0 ≤ a) (c : R) : 0 ≤ c * a * star c := by
   simpa only [star_star] using conjugate_nonneg ha (star c)
@@ -185,8 +185,8 @@ lemma star_le_star_iff {x y : R} : star x ≤ star y ↔ x ≤ y := by
 @[simp]
 lemma star_lt_star_iff {x y : R} : star x < star y ↔ x < y := by
   by_cases h : x = y
-  · simp [h]
-  · simpa [le_iff_lt_or_eq, h] using star_le_star_iff (x := x) (y := y)
+  simp [h]
+  simpa [le_iff_lt_or_eq, h] using star_le_star_iff (x := x) (y := y)
 
 lemma star_le_iff {x y : R} : star x ≤ y ↔ x ≤ star y := by rw [← star_le_star_iff, star_star]
 
@@ -302,8 +302,8 @@ lemma StarModule.smul_lt_smul_of_pos {a b : A} {c : R} (hab : a < b) (hc : 0 < c
     case add => exact fun x y ↦ by simpa only [smul_add] using add_mem
   case ne =>
     refine (smul_ne_zero ?_ ?_).symm
-    · exact (ne_of_lt hc).symm
-    · exact (ne_of_lt hab).symm
+    exact (ne_of_lt hc).symm
+    exact (ne_of_lt hab).symm
 
 end StarModule
 

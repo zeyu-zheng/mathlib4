@@ -32,8 +32,8 @@ variable {X Y Z : Scheme.{u}} (f : X ⟶ Y) (g : Y ⟶ Z)
 theorem isOpenImmersion_iff_stalk {f : X ⟶ Y} : IsOpenImmersion f ↔
     OpenEmbedding f.1.base ∧ ∀ x, IsIso (f.stalkMap x) := by
   constructor
-  · intro h; exact ⟨h.1, inferInstance⟩
-  · rintro ⟨h₁, h₂⟩; exact IsOpenImmersion.of_stalk_iso f h₁
+  intro h; exact ⟨h.1, inferInstance⟩
+  rintro ⟨h₁, h₂⟩; exact IsOpenImmersion.of_stalk_iso f h₁
 
 theorem isOpenImmersion_eq_inf :
     @IsOpenImmersion = (topologically OpenEmbedding) ⊓

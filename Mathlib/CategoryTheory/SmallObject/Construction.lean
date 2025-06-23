@@ -202,15 +202,15 @@ noncomputable def functorMap : functorObj f πX ⟶ functorObj f πY :=
 @[reassoc (attr := simp)]
 lemma functorMap_π : functorMap f πX πY φ hφ ≫ πFunctorObj f πY = πFunctorObj f πX := by
   ext ⟨i, t, b, w⟩
-  · simp [functorMap, hφ]
-  · simp [functorMap, ι_functorMapTgt_assoc f πX πY φ hφ i t b w _ rfl]
+  simp [functorMap, hφ]
+  simp [functorMap, ι_functorMapTgt_assoc f πX πY φ hφ i t b w _ rfl]
 
 variable (X) in
 @[simp]
 lemma functorMap_id : functorMap f πX πX (𝟙 X) (by simp) = 𝟙 _ := by
   ext ⟨i, t, b, w⟩
-  · simp [functorMap]
-  · simp [functorMap, ι_functorMapTgt_assoc f πX πX (𝟙 X) (by simp) i t b w t (by simp)]
+  simp [functorMap]
+  simp [functorMap, ι_functorMapTgt_assoc f πX πX (𝟙 X) (by simp) i t b w t (by simp)]
 
 @[reassoc (attr := simp)]
 lemma ιFunctorObj_naturality :

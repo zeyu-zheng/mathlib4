@@ -50,9 +50,9 @@ theorem imo2011_q3 (f : ℝ → ℝ) (hf : ∀ x y, f (x + y) ≤ y * f x + f (f
     (h_f_nonpos x).antisymm (h_f_nonneg_of_pos x hxz)
   intro x hx
   obtain (h_x_neg : x < 0) | (rfl : x = 0) := hx.lt_or_eq
-  · exact h_fx_zero_of_neg _ h_x_neg
-  · suffices 0 ≤ f 0 from le_antisymm (h_f_nonpos 0) this
-    have hno : f (-1) = 0 := h_fx_zero_of_neg (-1) neg_one_lt_zero
-    have hp := hxt (-1) (-1)
-    rw [hno] at hp
-    linarith
+  exact h_fx_zero_of_neg _ h_x_neg
+  suffices 0 ≤ f 0 from le_antisymm (h_f_nonpos 0) this
+  have hno : f (-1) = 0 := h_fx_zero_of_neg (-1) neg_one_lt_zero
+  have hp := hxt (-1) (-1)
+  rw [hno] at hp
+  linarith

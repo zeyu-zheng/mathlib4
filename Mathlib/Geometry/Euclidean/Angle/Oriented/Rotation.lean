@@ -97,10 +97,10 @@ theorem rotation_eq_matrix_toLin (θ : Real.Angle) {x : V} (hx : x ≠ 0) :
   apply (o.basisRightAngleRotation x hx).ext
   intro i
   fin_cases i
-  · rw [Matrix.toLin_self]
-    simp [rotation_apply, Fin.sum_univ_succ]
-  · rw [Matrix.toLin_self]
-    simp [rotation_apply, Fin.sum_univ_succ, add_comm]
+  rw [Matrix.toLin_self]
+  simp [rotation_apply, Fin.sum_univ_succ]
+  rw [Matrix.toLin_self]
+  simp [rotation_apply, Fin.sum_univ_succ, add_comm]
 
 /-- The determinant of `rotation` (as a linear map) is equal to `1`. -/
 @[simp]
@@ -205,9 +205,9 @@ theorem oangle_rotation_left {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) (θ : Real.
     o.oangle (o.rotation θ x) y = o.oangle x y - θ := by
   simp only [oangle, o.kahler_rotation_left']
   rw [Complex.arg_mul_coe_angle, Real.Angle.arg_expMapCircle]
-  · abel
-  · exact ne_zero_of_mem_circle _
-  · exact o.kahler_ne_zero hx hy
+  abel
+  exact ne_zero_of_mem_circle _
+  exact o.kahler_ne_zero hx hy
 
 /-- Rotating the second vector by `θ` adds `θ` to the angle between two vectors. -/
 @[simp]
@@ -215,9 +215,9 @@ theorem oangle_rotation_right {x y : V} (hx : x ≠ 0) (hy : y ≠ 0) (θ : Real
     o.oangle x (o.rotation θ y) = o.oangle x y + θ := by
   simp only [oangle, o.kahler_rotation_right]
   rw [Complex.arg_mul_coe_angle, Real.Angle.arg_expMapCircle]
-  · abel
-  · exact ne_zero_of_mem_circle _
-  · exact o.kahler_ne_zero hx hy
+  abel
+  exact ne_zero_of_mem_circle _
+  exact o.kahler_ne_zero hx hy
 
 /-- The rotation of a vector by `θ` has an angle of `-θ` from that vector. -/
 @[simp]
@@ -233,10 +233,10 @@ theorem oangle_rotation_self_right {x : V} (hx : x ≠ 0) (θ : Real.Angle) :
 @[simp]
 theorem oangle_rotation_oangle_left (x y : V) : o.oangle (o.rotation (o.oangle x y) x) y = 0 := by
   by_cases hx : x = 0
-  · simp [hx]
-  · by_cases hy : y = 0
-    · simp [hy]
-    · simp [hx, hy]
+  simp [hx]
+  by_cases hy : y = 0
+  simp [hy]
+  simp [hx, hy]
 
 /-- Rotating the first vector by the angle between the two vectors and swapping the vectors
 results in an angle of 0. -/
@@ -256,11 +256,11 @@ theorem oangle_rotation (x y : V) (θ : Real.Angle) :
 theorem rotation_eq_self_iff_angle_eq_zero {x : V} (hx : x ≠ 0) (θ : Real.Angle) :
     o.rotation θ x = x ↔ θ = 0 := by
   constructor
-  · intro h
-    rw [eq_comm]
-    simpa [hx, h] using o.oangle_rotation_right hx hx θ
-  · intro h
-    simp [h]
+  intro h
+  rw [eq_comm]
+  simpa [hx, h] using o.oangle_rotation_right hx hx θ
+  intro h
+  simp [h]
 
 /-- A nonzero vector equals a rotation of that vector if and only if the angle is zero. -/
 @[simp]
@@ -280,10 +280,10 @@ norms are equal. -/
 @[simp]
 theorem rotation_oangle_eq_iff_norm_eq (x y : V) : o.rotation (o.oangle x y) x = y ↔ ‖x‖ = ‖y‖ := by
   constructor
-  · intro h
-    rw [← h, LinearIsometryEquiv.norm_map]
-  · intro h
-    rw [o.eq_iff_oangle_eq_zero_of_norm_eq] <;> simp [h]
+  intro h
+  rw [← h, LinearIsometryEquiv.norm_map]
+  intro h
+  rw [o.eq_iff_oangle_eq_zero_of_norm_eq] <;> simp [h]
 
 /-- The angle between two nonzero vectors is `θ` if and only if the second vector is the first
 rotated by `θ` and scaled by the ratio of the norms. -/
@@ -291,23 +291,23 @@ theorem oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero {x y : V} (hx : 
     (θ : Real.Angle) : o.oangle x y = θ ↔ y = (‖y‖ / ‖x‖) • o.rotation θ x := by
   have hp := div_pos (norm_pos_iff.2 hy) (norm_pos_iff.2 hx)
   constructor
-  · rintro rfl
-    rw [← LinearIsometryEquiv.map_smul, ← o.oangle_smul_left_of_pos x y hp, eq_comm,
-      rotation_oangle_eq_iff_norm_eq, norm_smul, Real.norm_of_nonneg hp.le,
-      div_mul_cancel₀ _ (norm_ne_zero_iff.2 hx)]
-  · intro hye
-    rw [hye, o.oangle_smul_right_of_pos _ _ hp, o.oangle_rotation_self_right hx]
+  rintro rfl
+  rw [← LinearIsometryEquiv.map_smul, ← o.oangle_smul_left_of_pos x y hp, eq_comm,
+    rotation_oangle_eq_iff_norm_eq, norm_smul, Real.norm_of_nonneg hp.le,
+    div_mul_cancel₀ _ (norm_ne_zero_iff.2 hx)]
+  intro hye
+  rw [hye, o.oangle_smul_right_of_pos _ _ hp, o.oangle_rotation_self_right hx]
 
 /-- The angle between two nonzero vectors is `θ` if and only if the second vector is the first
 rotated by `θ` and scaled by a positive real. -/
 theorem oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero {x y : V} (hx : x ≠ 0) (hy : y ≠ 0)
     (θ : Real.Angle) : o.oangle x y = θ ↔ ∃ r : ℝ, 0 < r ∧ y = r • o.rotation θ x := by
   constructor
-  · intro h
-    rw [o.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero hx hy] at h
-    exact ⟨‖y‖ / ‖x‖, div_pos (norm_pos_iff.2 hy) (norm_pos_iff.2 hx), h⟩
-  · rintro ⟨r, hr, rfl⟩
-    rw [o.oangle_smul_right_of_pos _ _ hr, o.oangle_rotation_self_right hx]
+  intro h
+  rw [o.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero hx hy] at h
+  exact ⟨‖y‖ / ‖x‖, div_pos (norm_pos_iff.2 hy) (norm_pos_iff.2 hx), h⟩
+  rintro ⟨r, hr, rfl⟩
+  rw [o.oangle_smul_right_of_pos _ _ hr, o.oangle_rotation_self_right hx]
 
 /-- The angle between two vectors is `θ` if and only if they are nonzero and the second vector
 is the first rotated by `θ` and scaled by the ratio of the norms, or `θ` and at least one of the
@@ -316,11 +316,11 @@ theorem oangle_eq_iff_eq_norm_div_norm_smul_rotation_or_eq_zero {x y : V} (θ : 
     o.oangle x y = θ ↔
       x ≠ 0 ∧ y ≠ 0 ∧ y = (‖y‖ / ‖x‖) • o.rotation θ x ∨ θ = 0 ∧ (x = 0 ∨ y = 0) := by
   by_cases hx : x = 0
-  · simp [hx, eq_comm]
-  · by_cases hy : y = 0
-    · simp [hy, eq_comm]
-    · rw [o.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero hx hy]
-      simp [hx, hy]
+  simp [hx, eq_comm]
+  by_cases hy : y = 0
+  simp [hy, eq_comm]
+  rw [o.oangle_eq_iff_eq_norm_div_norm_smul_rotation_of_ne_zero hx hy]
+  simp [hx, hy]
 
 /-- The angle between two vectors is `θ` if and only if they are nonzero and the second vector
 is the first rotated by `θ` and scaled by a positive real, or `θ` and at least one of the
@@ -329,11 +329,11 @@ theorem oangle_eq_iff_eq_pos_smul_rotation_or_eq_zero {x y : V} (θ : Real.Angle
     o.oangle x y = θ ↔
       (x ≠ 0 ∧ y ≠ 0 ∧ ∃ r : ℝ, 0 < r ∧ y = r • o.rotation θ x) ∨ θ = 0 ∧ (x = 0 ∨ y = 0) := by
   by_cases hx : x = 0
-  · simp [hx, eq_comm]
-  · by_cases hy : y = 0
-    · simp [hy, eq_comm]
-    · rw [o.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero hx hy]
-      simp [hx, hy]
+  simp [hx, eq_comm]
+  by_cases hy : y = 0
+  simp [hy, eq_comm]
+  rw [o.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero hx hy]
+  simp [hx, hy]
 
 /-- Any linear isometric equivalence in `V` with positive determinant is `rotation`. -/
 theorem exists_linearIsometryEquiv_eq_of_det_pos {f : V ≃ₗᵢ[ℝ] V}
@@ -349,7 +349,7 @@ theorem exists_linearIsometryEquiv_eq_of_det_pos {f : V ≃ₗᵢ[ℝ] V}
   intro i
   symm
   fin_cases i
-  · simp
+  simp
   have : o.oangle (J x) (f (J x)) = o.oangle x (f x) := by
     simp only [oangle, o.linearIsometryEquiv_comp_rightAngleRotation f hd,
       o.kahler_comp_rightAngleRotation]
@@ -434,28 +434,28 @@ theorem inner_eq_zero_iff_eq_zero_or_eq_smul_rotation_pi_div_two {x y : V} :
     ⟪x, y⟫ = 0 ↔ x = 0 ∨ ∃ r : ℝ, r • o.rotation (π / 2 : ℝ) x = y := by
   rw [← o.eq_zero_or_oangle_eq_iff_inner_eq_zero]
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · rcases h with (rfl | rfl | h | h)
-    · exact Or.inl rfl
-    · exact Or.inr ⟨0, zero_smul _ _⟩
-    · obtain ⟨r, _, rfl⟩ :=
-        (o.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero (o.left_ne_zero_of_oangle_eq_pi_div_two h)
-          (o.right_ne_zero_of_oangle_eq_pi_div_two h) _).1 h
-      exact Or.inr ⟨r, rfl⟩
-    · obtain ⟨r, _, rfl⟩ :=
-        (o.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero
-          (o.left_ne_zero_of_oangle_eq_neg_pi_div_two h)
-          (o.right_ne_zero_of_oangle_eq_neg_pi_div_two h) _).1 h
-      refine Or.inr ⟨-r, ?_⟩
-      rw [neg_smul, ← smul_neg, o.neg_rotation_pi_div_two]
-  · rcases h with (rfl | ⟨r, rfl⟩)
-    · exact Or.inl rfl
-    · by_cases hx : x = 0; · exact Or.inl hx
-      rcases lt_trichotomy r 0 with (hr | rfl | hr)
-      · refine Or.inr (Or.inr (Or.inr ?_))
-        rw [o.oangle_smul_right_of_neg _ _ hr, o.neg_rotation_pi_div_two,
-          o.oangle_rotation_self_right hx]
-      · exact Or.inr (Or.inl (zero_smul _ _))
-      · refine Or.inr (Or.inr (Or.inl ?_))
-        rw [o.oangle_smul_right_of_pos _ _ hr, o.oangle_rotation_self_right hx]
+  rcases h with (rfl | rfl | h | h)
+  exact Or.inl rfl
+  exact Or.inr ⟨0, zero_smul _ _⟩
+  obtain ⟨r, _, rfl⟩ :=
+    (o.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero (o.left_ne_zero_of_oangle_eq_pi_div_two h)
+      (o.right_ne_zero_of_oangle_eq_pi_div_two h) _).1 h
+  exact Or.inr ⟨r, rfl⟩
+  obtain ⟨r, _, rfl⟩ :=
+    (o.oangle_eq_iff_eq_pos_smul_rotation_of_ne_zero
+      (o.left_ne_zero_of_oangle_eq_neg_pi_div_two h)
+      (o.right_ne_zero_of_oangle_eq_neg_pi_div_two h) _).1 h
+  refine Or.inr ⟨-r, ?_⟩
+  rw [neg_smul, ← smul_neg, o.neg_rotation_pi_div_two]
+  rcases h with (rfl | ⟨r, rfl⟩)
+  exact Or.inl rfl
+  by_cases hx : x = 0; · exact Or.inl hx
+  rcases lt_trichotomy r 0 with (hr | rfl | hr)
+  refine Or.inr (Or.inr (Or.inr ?_))
+  rw [o.oangle_smul_right_of_neg _ _ hr, o.neg_rotation_pi_div_two,
+    o.oangle_rotation_self_right hx]
+  exact Or.inr (Or.inl (zero_smul _ _))
+  refine Or.inr (Or.inr (Or.inl ?_))
+  rw [o.oangle_smul_right_of_pos _ _ hr, o.oangle_rotation_self_right hx]
 
 end Orientation

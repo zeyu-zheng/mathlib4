@@ -74,8 +74,8 @@ namespace NonUnitalNonAssocSemiring
 theorem toDistrib_injective : Function.Injective (@toDistrib R) := by
   intro _ _ h
   ext x y
-  · exact congrArg (·.toAdd.add x y) h
-  · exact congrArg (·.toMul.mul x y) h
+  exact congrArg (·.toAdd.add x y) h
+  exact congrArg (·.toMul.mul x y) h
 
 theorem ext_iff {inst₁ inst₂ : NonUnitalNonAssocSemiring R} :
     inst₁ = inst₂ ↔
@@ -199,8 +199,8 @@ theorem toNonUnitalNonAssocSemiring_injective :
   intro _ _ h
   -- Use above extensionality lemma to prove injectivity by showing that `h_add` and `h_mul` hold.
   ext x y
-  · exact congrArg (·.toAdd.add x y) h
-  · exact congrArg (·.toMul.mul x y) h
+  exact congrArg (·.toAdd.add x y) h
+  exact congrArg (·.toMul.mul x y) h
 
 theorem ext_iff {inst₁ inst₂ : NonUnitalNonAssocRing R} :
     inst₁ = inst₂ ↔
@@ -227,8 +227,8 @@ theorem toNonUnitalSemiring_injective :
     Function.Injective (@toNonUnitalSemiring R) := by
   intro _ _ h
   ext x y
-  · exact congrArg (·.toAdd.add x y) h
-  · exact congrArg (·.toMul.mul x y) h
+  exact congrArg (·.toAdd.add x y) h
+  exact congrArg (·.toMul.mul x y) h
 
 theorem toNonUnitalNonAssocring_injective :
     Function.Injective (@toNonUnitalNonAssocRing R) := by
@@ -297,8 +297,8 @@ theorem toNonAssocSemiring_injective :
     Function.Injective (@toNonAssocSemiring R) := by
   intro _ _ h
   ext x y
-  · exact congrArg (·.toAdd.add x y) h
-  · exact congrArg (·.toMul.mul x y) h
+  exact congrArg (·.toAdd.add x y) h
+  exact congrArg (·.toMul.mul x y) h
 
 theorem toNonUnitalNonAssocring_injective :
     Function.Injective (@toNonUnitalNonAssocRing R) := by
@@ -335,15 +335,15 @@ theorem toNonUnitalSemiring_injective :
     Function.Injective (@toNonUnitalSemiring R) := by
   intro _ _ h
   ext x y
-  · exact congrArg (·.toAdd.add x y) h
-  · exact congrArg (·.toMul.mul x y) h
+  exact congrArg (·.toAdd.add x y) h
+  exact congrArg (·.toMul.mul x y) h
 
 theorem toNonAssocSemiring_injective :
     Function.Injective (@toNonAssocSemiring R) := by
   intro _ _ h
   ext x y
-  · exact congrArg (·.toAdd.add x y) h
-  · exact congrArg (·.toMul.mul x y) h
+  exact congrArg (·.toAdd.add x y) h
+  exact congrArg (·.toMul.mul x y) h
 
 theorem ext_iff {inst₁ inst₂ : Semiring R} :
     inst₁ = inst₂ ↔
@@ -378,8 +378,8 @@ theorem toNonUnitalRing_injective :
     Function.Injective (@toNonUnitalRing R) := by
   intro _ _ h
   ext x y
-  · exact congrArg (·.toAdd.add x y) h
-  · exact congrArg (·.toMul.mul x y) h
+  exact congrArg (·.toAdd.add x y) h
+  exact congrArg (·.toMul.mul x y) h
 
 theorem toNonAssocRing_injective :
     Function.Injective (@toNonAssocRing R) := by
@@ -390,8 +390,8 @@ theorem toSemiring_injective :
     Function.Injective (@toSemiring R) := by
   intro _ _ h
   ext x y
-  · exact congrArg (·.toAdd.add x y) h
-  · exact congrArg (·.toMul.mul x y) h
+  exact congrArg (·.toAdd.add x y) h
+  exact congrArg (·.toMul.mul x y) h
 
 theorem ext_iff {inst₁ inst₂ : Ring R} :
     inst₁ = inst₂ ↔

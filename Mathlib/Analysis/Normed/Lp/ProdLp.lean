@@ -187,9 +187,9 @@ from `WithLp.instProdPseudoEMetricSpace` so it can be used also for `p < 1`. -/
 theorem prod_edist_self (f : WithLp p (α × β)) : edist f f = 0 := by
   rcases p.trichotomy with (rfl | rfl | h)
   simp
-  · simp [prod_edist_eq_sup]
-  · simp [prod_edist_eq_add h, ENNReal.zero_rpow_of_pos h,
-      ENNReal.zero_rpow_of_pos (inv_pos.2 <| h)]
+  simp [prod_edist_eq_sup]
+  simp [prod_edist_eq_add h, ENNReal.zero_rpow_of_pos h,
+    ENNReal.zero_rpow_of_pos (inv_pos.2 <| h)]
 
 /-- The distance is symmetric.
 
@@ -198,9 +198,9 @@ This holds independent of `p` and does not require `[Fact (1 ≤ p)]`. We keep i
 from `WithLp.instProdPseudoEMetricSpace` so it can be used also for `p < 1`. -/
 theorem prod_edist_comm (f g : WithLp p (α × β)) : edist f g = edist g f := by
   rcases p.trichotomy with (rfl | rfl | h)
-  · simp only [prod_edist_eq_card, edist_comm]
-  · simp only [prod_edist_eq_sup, edist_comm]
-  · simp only [prod_edist_eq_add h, edist_comm]
+  simp only [prod_edist_eq_card, edist_comm]
+  simp only [prod_edist_eq_sup, edist_comm]
+  simp only [prod_edist_eq_add h, edist_comm]
 
 end EDistProp
 
@@ -356,29 +356,29 @@ abbrev prodPseudoMetricAux [PseudoMetricSpace α] [PseudoMetricSpace β] :
   PseudoEMetricSpace.toPseudoMetricSpaceOfDist dist
     (fun f g => by
       rcases p.dichotomy with (rfl | h)
-      · exact prod_sup_edist_ne_top_aux f g
-      · rw [prod_edist_eq_add (zero_lt_one.trans_le h)]
-        refine ENNReal.rpow_ne_top_of_nonneg (by positivity) (ne_of_lt ?_)
-        simp [ENNReal.add_lt_top, ENNReal.rpow_lt_top_of_nonneg, edist_ne_top] )
+      exact prod_sup_edist_ne_top_aux f g
+      rw [prod_edist_eq_add (zero_lt_one.trans_le h)]
+      refine ENNReal.rpow_ne_top_of_nonneg (by positivity) (ne_of_lt ?_)
+      simp [ENNReal.add_lt_top, ENNReal.rpow_lt_top_of_nonneg, edist_ne_top] )
     fun f g => by
     rcases p.dichotomy with (rfl | h)
-    · rw [prod_edist_eq_sup, prod_dist_eq_sup]
-      refine le_antisymm (sup_le ?_ ?_) ?_
-      · rw [← ENNReal.ofReal_le_iff_le_toReal (prod_sup_edist_ne_top_aux f g),
-          ← PseudoMetricSpace.edist_dist]
-        exact le_sup_left
-      · rw [← ENNReal.ofReal_le_iff_le_toReal (prod_sup_edist_ne_top_aux f g),
-          ← PseudoMetricSpace.edist_dist]
-        exact le_sup_right
-      · refine ENNReal.toReal_le_of_le_ofReal ?_ ?_
-        · simp only [le_sup_iff, dist_nonneg, or_self]
-        · simp [edist, PseudoMetricSpace.edist_dist, ENNReal.ofReal_le_ofReal]
-    · have h1 : edist f.fst g.fst ^ p.toReal ≠ ⊤ :=
-        ENNReal.rpow_ne_top_of_nonneg (zero_le_one.trans h) (edist_ne_top _ _)
-      have h2 : edist f.snd g.snd ^ p.toReal ≠ ⊤ :=
-        ENNReal.rpow_ne_top_of_nonneg (zero_le_one.trans h) (edist_ne_top _ _)
-      simp only [prod_edist_eq_add (zero_lt_one.trans_le h), dist_edist, ENNReal.toReal_rpow,
-        prod_dist_eq_add (zero_lt_one.trans_le h), ← ENNReal.toReal_add h1 h2]
+    rw [prod_edist_eq_sup, prod_dist_eq_sup]
+    refine le_antisymm (sup_le ?_ ?_) ?_
+    rw [← ENNReal.ofReal_le_iff_le_toReal (prod_sup_edist_ne_top_aux f g),
+      ← PseudoMetricSpace.edist_dist]
+    exact le_sup_left
+    rw [← ENNReal.ofReal_le_iff_le_toReal (prod_sup_edist_ne_top_aux f g),
+      ← PseudoMetricSpace.edist_dist]
+    exact le_sup_right
+    refine ENNReal.toReal_le_of_le_ofReal ?_ ?_
+    simp only [le_sup_iff, dist_nonneg, or_self]
+    simp [edist, PseudoMetricSpace.edist_dist, ENNReal.ofReal_le_ofReal]
+    have h1 : edist f.fst g.fst ^ p.toReal ≠ ⊤ :=
+      ENNReal.rpow_ne_top_of_nonneg (zero_le_one.trans h) (edist_ne_top _ _)
+    have h2 : edist f.snd g.snd ^ p.toReal ≠ ⊤ :=
+      ENNReal.rpow_ne_top_of_nonneg (zero_le_one.trans h) (edist_ne_top _ _)
+    simp only [prod_edist_eq_add (zero_lt_one.trans_le h), dist_edist, ENNReal.toReal_rpow,
+      prod_dist_eq_add (zero_lt_one.trans_le h), ← ENNReal.toReal_add h1 h2]
 
 attribute [local instance] WithLp.prodPseudoMetricAux
 
@@ -386,43 +386,43 @@ theorem prod_lipschitzWith_equiv_aux [PseudoEMetricSpace α] [PseudoEMetricSpace
     LipschitzWith 1 (WithLp.equiv p (α × β)) := by
   intro x y
   rcases p.dichotomy with (rfl | h)
-  · simp [edist]
-  · have cancel : p.toReal * (1 / p.toReal) = 1 := mul_div_cancel₀ 1 (zero_lt_one.trans_le h).ne'
-    rw [prod_edist_eq_add (zero_lt_one.trans_le h)]
-    simp only [edist, forall_prop_of_true, one_mul, ENNReal.coe_one, sup_le_iff]
-    constructor
-    · calc
-        edist x.fst y.fst ≤ (edist x.fst y.fst ^ p.toReal) ^ (1 / p.toReal) := by
-          simp only [← ENNReal.rpow_mul, cancel, ENNReal.rpow_one, le_refl]
-        _ ≤ (edist x.fst y.fst ^ p.toReal + edist x.snd y.snd ^ p.toReal) ^ (1 / p.toReal) := by
-          gcongr
-          simp only [self_le_add_right]
-    · calc
-        edist x.snd y.snd ≤ (edist x.snd y.snd ^ p.toReal) ^ (1 / p.toReal) := by
-          simp only [← ENNReal.rpow_mul, cancel, ENNReal.rpow_one, le_refl]
-        _ ≤ (edist x.fst y.fst ^ p.toReal + edist x.snd y.snd ^ p.toReal) ^ (1 / p.toReal) := by
-          gcongr
-          simp only [self_le_add_left]
+  simp [edist]
+  have cancel : p.toReal * (1 / p.toReal) = 1 := mul_div_cancel₀ 1 (zero_lt_one.trans_le h).ne'
+  rw [prod_edist_eq_add (zero_lt_one.trans_le h)]
+  simp only [edist, forall_prop_of_true, one_mul, ENNReal.coe_one, sup_le_iff]
+  constructor
+  calc
+    edist x.fst y.fst ≤ (edist x.fst y.fst ^ p.toReal) ^ (1 / p.toReal) := by
+      simp only [← ENNReal.rpow_mul, cancel, ENNReal.rpow_one, le_refl]
+    _ ≤ (edist x.fst y.fst ^ p.toReal + edist x.snd y.snd ^ p.toReal) ^ (1 / p.toReal) := by
+      gcongr
+      simp only [self_le_add_right]
+  calc
+    edist x.snd y.snd ≤ (edist x.snd y.snd ^ p.toReal) ^ (1 / p.toReal) := by
+      simp only [← ENNReal.rpow_mul, cancel, ENNReal.rpow_one, le_refl]
+    _ ≤ (edist x.fst y.fst ^ p.toReal + edist x.snd y.snd ^ p.toReal) ^ (1 / p.toReal) := by
+      gcongr
+      simp only [self_le_add_left]
 
 theorem prod_antilipschitzWith_equiv_aux [PseudoEMetricSpace α] [PseudoEMetricSpace β] :
     AntilipschitzWith ((2 : ℝ≥0) ^ (1 / p).toReal) (WithLp.equiv p (α × β)) := by
   intro x y
   rcases p.dichotomy with (rfl | h)
-  · simp [edist]
-  · have pos : 0 < p.toReal := by positivity
-    have nonneg : 0 ≤ 1 / p.toReal
-    positivity
-    have cancel : p.toReal * (1 / p.toReal) = 1 := mul_div_cancel₀ 1 (ne_of_gt pos)
-    rw [prod_edist_eq_add pos, ENNReal.toReal_div 1 p]
-    simp only [edist, ← one_div, ENNReal.one_toReal]
-    calc
-      (edist x.fst y.fst ^ p.toReal + edist x.snd y.snd ^ p.toReal) ^ (1 / p.toReal) ≤
-          (edist (WithLp.equiv p _ x) (WithLp.equiv p _ y) ^ p.toReal +
-          edist (WithLp.equiv p _ x) (WithLp.equiv p _ y) ^ p.toReal) ^ (1 / p.toReal) := by
-        gcongr <;> simp [edist]
-      _ = (2 ^ (1 / p.toReal) : ℝ≥0) * edist (WithLp.equiv p _ x) (WithLp.equiv p _ y) := by
-        simp only [← two_mul, ENNReal.mul_rpow_of_nonneg _ _ nonneg, ← ENNReal.rpow_mul, cancel,
-          ENNReal.rpow_one, ← ENNReal.coe_rpow_of_nonneg _ nonneg, coe_ofNat]
+  simp [edist]
+  have pos : 0 < p.toReal := by positivity
+  have nonneg : 0 ≤ 1 / p.toReal
+  positivity
+  have cancel : p.toReal * (1 / p.toReal) = 1 := mul_div_cancel₀ 1 (ne_of_gt pos)
+  rw [prod_edist_eq_add pos, ENNReal.toReal_div 1 p]
+  simp only [edist, ← one_div, ENNReal.one_toReal]
+  calc
+    (edist x.fst y.fst ^ p.toReal + edist x.snd y.snd ^ p.toReal) ^ (1 / p.toReal) ≤
+        (edist (WithLp.equiv p _ x) (WithLp.equiv p _ y) ^ p.toReal +
+        edist (WithLp.equiv p _ x) (WithLp.equiv p _ y) ^ p.toReal) ^ (1 / p.toReal) := by
+      gcongr <;> simp [edist]
+    _ = (2 ^ (1 / p.toReal) : ℝ≥0) * edist (WithLp.equiv p _ x) (WithLp.equiv p _ y) := by
+      simp only [← two_mul, ENNReal.mul_rpow_of_nonneg _ _ nonneg, ← ENNReal.rpow_mul, cancel,
+        ENNReal.rpow_one, ← ENNReal.coe_rpow_of_nonneg _ nonneg, coe_ofNat]
 
 theorem prod_aux_uniformity_eq [PseudoEMetricSpace α] [PseudoEMetricSpace β] :
     𝓤 (WithLp p (α × β)) = 𝓤[instUniformSpaceProd] := by
@@ -572,11 +572,11 @@ instance instProdSeminormedAddCommGroup [SeminormedAddCommGroup α] [SeminormedA
     SeminormedAddCommGroup (WithLp p (α × β)) where
   dist_eq x y := by
     rcases p.dichotomy with (rfl | h)
-    · simp only [prod_dist_eq_sup, prod_norm_eq_sup, dist_eq_norm]
-      rfl
-    · simp only [prod_dist_eq_add (zero_lt_one.trans_le h),
-        prod_norm_eq_add (zero_lt_one.trans_le h), dist_eq_norm]
-      rfl
+    simp only [prod_dist_eq_sup, prod_norm_eq_sup, dist_eq_norm]
+    rfl
+    simp only [prod_dist_eq_add (zero_lt_one.trans_le h),
+      prod_norm_eq_add (zero_lt_one.trans_le h), dist_eq_norm]
+    rfl
 
 /-- normed group instance on the product of two normed groups, using the `L^p` norm. -/
 instance instProdNormedAddCommGroup [NormedAddCommGroup α] [NormedAddCommGroup β] :
@@ -741,16 +741,16 @@ variable [SeminormedRing 𝕜] [Module 𝕜 α] [Module 𝕜 β] [BoundedSMul �
 instance instProdBoundedSMul : BoundedSMul 𝕜 (WithLp p (α × β)) :=
   .of_nnnorm_smul_le fun c f => by
     rcases p.dichotomy with (rfl | hp)
-    · simp only [← prod_nnnorm_equiv, WithLp.equiv_smul]
-      exact norm_smul_le _ _
-    · have hp0 : 0 < p.toReal := zero_lt_one.trans_le hp
-      have hpt : p ≠ ⊤ := p.toReal_pos_iff_ne_top.mp hp0
-      rw [prod_nnnorm_eq_add hpt, prod_nnnorm_eq_add hpt, one_div, NNReal.rpow_inv_le_iff hp0,
-        NNReal.mul_rpow, ← NNReal.rpow_mul, inv_mul_cancel hp0.ne', NNReal.rpow_one, mul_add,
-        ← NNReal.mul_rpow, ← NNReal.mul_rpow]
-      exact add_le_add
-        (NNReal.rpow_le_rpow (nnnorm_smul_le _ _) hp0.le)
-        (NNReal.rpow_le_rpow (nnnorm_smul_le _ _) hp0.le)
+    simp only [← prod_nnnorm_equiv, WithLp.equiv_smul]
+    exact norm_smul_le _ _
+    have hp0 : 0 < p.toReal := zero_lt_one.trans_le hp
+    have hpt : p ≠ ⊤ := p.toReal_pos_iff_ne_top.mp hp0
+    rw [prod_nnnorm_eq_add hpt, prod_nnnorm_eq_add hpt, one_div, NNReal.rpow_inv_le_iff hp0,
+      NNReal.mul_rpow, ← NNReal.rpow_mul, inv_mul_cancel hp0.ne', NNReal.rpow_one, mul_add,
+      ← NNReal.mul_rpow, ← NNReal.mul_rpow]
+    exact add_le_add
+      (NNReal.rpow_le_rpow (nnnorm_smul_le _ _) hp0.le)
+      (NNReal.rpow_le_rpow (nnnorm_smul_le _ _) hp0.le)
 
 variable {𝕜 p α β}
 

@@ -225,14 +225,14 @@ end Fewnomials
 theorem coeff_mul_X_pow (p : R[X]) (n d : ℕ) :
     coeff (p * Polynomial.X ^ n) (d + n) = coeff p d := by
   rw [coeff_mul, Finset.sum_eq_single (d, n), coeff_X_pow, if_pos rfl, mul_one]
-  · rintro ⟨i, j⟩ h1 h2
-    rw [coeff_X_pow, if_neg, mul_zero]
-    rintro rfl
-    apply h2
-    rw [mem_antidiagonal, add_right_cancel_iff] at h1
-    subst h1
-    rfl
-  · exact fun h1 => (h1 (mem_antidiagonal.2 rfl)).elim
+  rintro ⟨i, j⟩ h1 h2
+  rw [coeff_X_pow, if_neg, mul_zero]
+  rintro rfl
+  apply h2
+  rw [mem_antidiagonal, add_right_cancel_iff] at h1
+  subst h1
+  rfl
+  exact fun h1 => (h1 (mem_antidiagonal.2 rfl)).elim
 
 @[simp]
 theorem coeff_X_pow_mul (p : R[X]) (n d : ℕ) :
@@ -242,10 +242,10 @@ theorem coeff_X_pow_mul (p : R[X]) (n d : ℕ) :
 theorem coeff_mul_X_pow' (p : R[X]) (n d : ℕ) :
     (p * X ^ n).coeff d = ite (n ≤ d) (p.coeff (d - n)) 0 := by
   split_ifs with h
-  · rw [← tsub_add_cancel_of_le h, coeff_mul_X_pow, add_tsub_cancel_right]
-  · refine (coeff_mul _ _ _).trans (Finset.sum_eq_zero fun x hx => ?_)
-    rw [coeff_X_pow, if_neg, mul_zero]
-    exact ((le_of_add_le_right (mem_antidiagonal.mp hx).le).trans_lt <| not_le.mp h).ne
+  rw [← tsub_add_cancel_of_le h, coeff_mul_X_pow, add_tsub_cancel_right]
+  refine (coeff_mul _ _ _).trans (Finset.sum_eq_zero fun x hx => ?_)
+  rw [coeff_X_pow, if_neg, mul_zero]
+  exact ((le_of_add_le_right (mem_antidiagonal.mp hx).le).trans_lt <| not_le.mp h).ne
 
 theorem coeff_X_pow_mul' (p : R[X]) (n d : ℕ) :
     (X ^ n * p).coeff d = ite (n ≤ d) (p.coeff (d - n)) 0 := by
@@ -294,11 +294,11 @@ theorem coeff_X_add_C_pow (r : R) (n k : ℕ) :
   rw [(commute_X (C r : R[X])).add_pow, ← lcoeff_apply, map_sum]
   simp only [one_pow, mul_one, lcoeff_apply, ← C_eq_natCast, ← C_pow, coeff_mul_C, Nat.cast_id]
   rw [Finset.sum_eq_single k, coeff_X_pow_self, one_mul]
-  · intro _ _ h
-    simp [coeff_X_pow, h.symm]
-  · simp only [coeff_X_pow_self, one_mul, not_lt, Finset.mem_range]
-    intro h
-    rw [Nat.choose_eq_zero_of_lt h, Nat.cast_zero, mul_zero]
+  intro _ _ h
+  simp [coeff_X_pow, h.symm]
+  simp only [coeff_X_pow_self, one_mul, not_lt, Finset.mem_range]
+  intro h
+  rw [Nat.choose_eq_zero_of_lt h, Nat.cast_zero, mul_zero]
 
 theorem coeff_X_add_one_pow (R : Type*) [Semiring R] (n k : ℕ) :
     ((X + 1) ^ n).coeff k = (n.choose k : R) := by rw [← C_1, coeff_X_add_C_pow, one_pow, one_mul]
@@ -309,21 +309,21 @@ theorem coeff_one_add_X_pow (R : Type*) [Semiring R] (n k : ℕ) :
 open Classical in
 theorem C_dvd_iff_dvd_coeff (r : R) (φ : R[X]) : C r ∣ φ ↔ ∀ i, r ∣ φ.coeff i := by
   constructor
-  · rintro ⟨φ, rfl⟩ c
-    rw [coeff_C_mul]
-    apply dvd_mul_right
-  · intro h
-    choose c hc using h
-    let c' : ℕ → R := fun i => if i ∈ φ.support then c i else 0
-    let ψ : R[X] := ∑ i ∈ φ.support, monomial i (c' i)
-    use ψ
-    ext i
-    simp only [c', ψ, coeff_C_mul, mem_support_iff, coeff_monomial, finset_sum_coeff,
-      Finset.sum_ite_eq']
-    split_ifs with hi
-    · rw [hc]
-    · rw [Classical.not_not] at hi
-      rwa [mul_zero]
+  rintro ⟨φ, rfl⟩ c
+  rw [coeff_C_mul]
+  apply dvd_mul_right
+  intro h
+  choose c hc using h
+  let c' : ℕ → R := fun i => if i ∈ φ.support then c i else 0
+  let ψ : R[X] := ∑ i ∈ φ.support, monomial i (c' i)
+  use ψ
+  ext i
+  simp only [c', ψ, coeff_C_mul, mem_support_iff, coeff_monomial, finset_sum_coeff,
+    Finset.sum_ite_eq']
+  split_ifs with hi
+  rw [hc]
+  rw [Classical.not_not] at hi
+  rwa [mul_zero]
 
 theorem smul_eq_C_mul (a : R) : a • p = C a * p := by simp [ext_iff]
 
@@ -347,11 +347,11 @@ alias nat_cast_coeff_zero := natCast_coeff_zero
 theorem natCast_inj {m n : ℕ} {R : Type*} [Semiring R] [CharZero R] :
     (↑m : R[X]) = ↑n ↔ m = n := by
   constructor
-  · intro h
-    apply_fun fun p => p.coeff 0 at h
-    simpa using h
-  · rintro rfl
-    rfl
+  intro h
+  apply_fun fun p => p.coeff 0 at h
+  simpa using h
+  rintro rfl
+  rfl
 
 @[deprecated (since := "2024-04-17")]
 alias nat_cast_inj := natCast_inj
@@ -366,11 +366,11 @@ alias int_cast_coeff_zero := intCast_coeff_zero
 @[norm_cast] -- @[simp] -- Porting note (#10618): simp can prove this
 theorem intCast_inj {m n : ℤ} {R : Type*} [Ring R] [CharZero R] : (↑m : R[X]) = ↑n ↔ m = n := by
   constructor
-  · intro h
-    apply_fun fun p => p.coeff 0 at h
-    simpa using h
-  · rintro rfl
-    rfl
+  intro h
+  apply_fun fun p => p.coeff 0 at h
+  simpa using h
+  rintro rfl
+  rfl
 
 @[deprecated (since := "2024-04-17")]
 alias int_cast_inj := intCast_inj

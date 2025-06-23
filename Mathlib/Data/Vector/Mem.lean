@@ -60,8 +60,8 @@ theorem mem_cons_of_mem (v : Vector α n) (ha' : a' ∈ v.toList) : a' ∈ (a ::
 
 theorem mem_of_mem_tail (v : Vector α n) (ha : a ∈ v.tail.toList) : a ∈ v.toList := by
   induction' n with n _
-  · exact False.elim (Vector.not_mem_zero a v.tail ha)
-  · exact (mem_succ_iff a v).2 (Or.inr ha)
+  exact False.elim (Vector.not_mem_zero a v.tail ha)
+  exact (mem_succ_iff a v).2 (Or.inr ha)
 
 theorem mem_map_iff (b : β) (v : Vector α n) (f : α → β) :
     b ∈ (v.map f).toList ↔ ∃ a : α, a ∈ v.toList ∧ f a = b := by

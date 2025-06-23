@@ -189,38 +189,38 @@ theorem condexpIndL1_add (x y : G) :
   by_cases hs : MeasurableSet s
   swap; · simp_rw [condexpIndL1_of_not_measurableSet hs]; rw [zero_add]
   by_cases hμs : μ s = ∞
-  · simp_rw [condexpIndL1_of_measure_eq_top hμs]; rw [zero_add]
-  · simp_rw [condexpIndL1_of_measurableSet_of_measure_ne_top hs hμs]
-    exact condexpIndL1Fin_add hs hμs x y
+  simp_rw [condexpIndL1_of_measure_eq_top hμs]; rw [zero_add]
+  simp_rw [condexpIndL1_of_measurableSet_of_measure_ne_top hs hμs]
+  exact condexpIndL1Fin_add hs hμs x y
 
 theorem condexpIndL1_smul (c : ℝ) (x : G) :
     condexpIndL1 hm μ s (c • x) = c • condexpIndL1 hm μ s x := by
   by_cases hs : MeasurableSet s
   swap; · simp_rw [condexpIndL1_of_not_measurableSet hs]; rw [smul_zero]
   by_cases hμs : μ s = ∞
-  · simp_rw [condexpIndL1_of_measure_eq_top hμs]; rw [smul_zero]
-  · simp_rw [condexpIndL1_of_measurableSet_of_measure_ne_top hs hμs]
-    exact condexpIndL1Fin_smul hs hμs c x
+  simp_rw [condexpIndL1_of_measure_eq_top hμs]; rw [smul_zero]
+  simp_rw [condexpIndL1_of_measurableSet_of_measure_ne_top hs hμs]
+  exact condexpIndL1Fin_smul hs hμs c x
 
 theorem condexpIndL1_smul' [NormedSpace ℝ F] [SMulCommClass ℝ 𝕜 F] (c : 𝕜) (x : F) :
     condexpIndL1 hm μ s (c • x) = c • condexpIndL1 hm μ s x := by
   by_cases hs : MeasurableSet s
   swap; · simp_rw [condexpIndL1_of_not_measurableSet hs]; rw [smul_zero]
   by_cases hμs : μ s = ∞
-  · simp_rw [condexpIndL1_of_measure_eq_top hμs]; rw [smul_zero]
-  · simp_rw [condexpIndL1_of_measurableSet_of_measure_ne_top hs hμs]
-    exact condexpIndL1Fin_smul' hs hμs c x
+  simp_rw [condexpIndL1_of_measure_eq_top hμs]; rw [smul_zero]
+  simp_rw [condexpIndL1_of_measurableSet_of_measure_ne_top hs hμs]
+  exact condexpIndL1Fin_smul' hs hμs c x
 
 theorem norm_condexpIndL1_le (x : G) : ‖condexpIndL1 hm μ s x‖ ≤ (μ s).toReal * ‖x‖ := by
   by_cases hs : MeasurableSet s
   swap
-  · simp_rw [condexpIndL1_of_not_measurableSet hs]; rw [Lp.norm_zero]
-    exact mul_nonneg ENNReal.toReal_nonneg (norm_nonneg _)
+  simp_rw [condexpIndL1_of_not_measurableSet hs]; rw [Lp.norm_zero]
+  exact mul_nonneg ENNReal.toReal_nonneg (norm_nonneg _)
   by_cases hμs : μ s = ∞
-  · rw [condexpIndL1_of_measure_eq_top hμs x, Lp.norm_zero]
-    exact mul_nonneg ENNReal.toReal_nonneg (norm_nonneg _)
-  · rw [condexpIndL1_of_measurableSet_of_measure_ne_top hs hμs x]
-    exact norm_condexpIndL1Fin_le hs hμs x
+  rw [condexpIndL1_of_measure_eq_top hμs x, Lp.norm_zero]
+  exact mul_nonneg ENNReal.toReal_nonneg (norm_nonneg _)
+  rw [condexpIndL1_of_measurableSet_of_measure_ne_top hs hμs x]
+  exact norm_condexpIndL1Fin_le hs hμs x
 
 theorem continuous_condexpIndL1 : Continuous fun x : G => condexpIndL1 hm μ s x :=
   continuous_of_linear_of_bound condexpIndL1_add condexpIndL1_smul norm_condexpIndL1_le
@@ -370,22 +370,22 @@ theorem setIntegral_condexpL1CLM_of_measure_ne_top (f : α →₁[μ] F') (hs : 
   refine @Lp.induction _ _ _ _ _ _ _ ENNReal.one_ne_top
     (fun f : α →₁[μ] F' => ∫ x in s, condexpL1CLM F' hm μ f x ∂μ = ∫ x in s, f x ∂μ) ?_ ?_
     (isClosed_eq ?_ ?_) f
-  · intro x t ht hμt
-    simp_rw [condexpL1CLM_indicatorConst ht hμt.ne x]
-    rw [Lp.simpleFunc.coe_indicatorConst, setIntegral_indicatorConstLp (hm _ hs)]
-    exact setIntegral_condexpInd hs ht hμs hμt.ne x
-  · intro f g hf_Lp hg_Lp _ hf hg
-    simp_rw [(condexpL1CLM F' hm μ).map_add]
-    rw [setIntegral_congr_ae (hm s hs) ((Lp.coeFn_add (condexpL1CLM F' hm μ (hf_Lp.toLp f))
-      (condexpL1CLM F' hm μ (hg_Lp.toLp g))).mono fun x hx _ => hx)]
-    rw [setIntegral_congr_ae (hm s hs)
-      ((Lp.coeFn_add (hf_Lp.toLp f) (hg_Lp.toLp g)).mono fun x hx _ => hx)]
-    simp_rw [Pi.add_apply]
-    rw [integral_add (L1.integrable_coeFn _).integrableOn (L1.integrable_coeFn _).integrableOn,
-      integral_add (L1.integrable_coeFn _).integrableOn (L1.integrable_coeFn _).integrableOn, hf,
-      hg]
-  · exact (continuous_setIntegral s).comp (condexpL1CLM F' hm μ).continuous
-  · exact continuous_setIntegral s
+  intro x t ht hμt
+  simp_rw [condexpL1CLM_indicatorConst ht hμt.ne x]
+  rw [Lp.simpleFunc.coe_indicatorConst, setIntegral_indicatorConstLp (hm _ hs)]
+  exact setIntegral_condexpInd hs ht hμs hμt.ne x
+  intro f g hf_Lp hg_Lp _ hf hg
+  simp_rw [(condexpL1CLM F' hm μ).map_add]
+  rw [setIntegral_congr_ae (hm s hs) ((Lp.coeFn_add (condexpL1CLM F' hm μ (hf_Lp.toLp f))
+    (condexpL1CLM F' hm μ (hg_Lp.toLp g))).mono fun x hx _ => hx)]
+  rw [setIntegral_congr_ae (hm s hs)
+    ((Lp.coeFn_add (hf_Lp.toLp f) (hg_Lp.toLp g)).mono fun x hx _ => hx)]
+  simp_rw [Pi.add_apply]
+  rw [integral_add (L1.integrable_coeFn _).integrableOn (L1.integrable_coeFn _).integrableOn,
+    integral_add (L1.integrable_coeFn _).integrableOn (L1.integrable_coeFn _).integrableOn, hf,
+    hg]
+  exact (continuous_setIntegral s).comp (condexpL1CLM F' hm μ).continuous
+  exact continuous_setIntegral s
 
 @[deprecated (since := "2024-04-17")]
 alias set_integral_condexpL1CLM_of_measure_ne_top :=
@@ -435,18 +435,18 @@ theorem aestronglyMeasurable'_condexpL1CLM (f : α →₁[μ] F') :
     AEStronglyMeasurable' m (condexpL1CLM F' hm μ f) μ := by
   refine @Lp.induction _ _ _ _ _ _ _ ENNReal.one_ne_top
     (fun f : α →₁[μ] F' => AEStronglyMeasurable' m (condexpL1CLM F' hm μ f) μ) ?_ ?_ ?_ f
-  · intro c s hs hμs
-    rw [condexpL1CLM_indicatorConst hs hμs.ne c]
-    exact aestronglyMeasurable'_condexpInd hs hμs.ne c
-  · intro f g hf hg _ hfm hgm
-    rw [(condexpL1CLM F' hm μ).map_add]
-    refine AEStronglyMeasurable'.congr ?_ (coeFn_add _ _).symm
-    exact AEStronglyMeasurable'.add hfm hgm
-  · have : {f : Lp F' 1 μ | AEStronglyMeasurable' m (condexpL1CLM F' hm μ f) μ} =
-        condexpL1CLM F' hm μ ⁻¹' {f | AEStronglyMeasurable' m f μ} := rfl
-    rw [this]
-    refine IsClosed.preimage (condexpL1CLM F' hm μ).continuous ?_
-    exact isClosed_aeStronglyMeasurable' hm
+  intro c s hs hμs
+  rw [condexpL1CLM_indicatorConst hs hμs.ne c]
+  exact aestronglyMeasurable'_condexpInd hs hμs.ne c
+  intro f g hf hg _ hfm hgm
+  rw [(condexpL1CLM F' hm μ).map_add]
+  refine AEStronglyMeasurable'.congr ?_ (coeFn_add _ _).symm
+  exact AEStronglyMeasurable'.add hfm hgm
+  have : {f : Lp F' 1 μ | AEStronglyMeasurable' m (condexpL1CLM F' hm μ f) μ} =
+      condexpL1CLM F' hm μ ⁻¹' {f | AEStronglyMeasurable' m f μ} := rfl
+  rw [this]
+  refine IsClosed.preimage (condexpL1CLM F' hm μ).continuous ?_
+  exact isClosed_aeStronglyMeasurable' hm
 
 theorem condexpL1CLM_lpMeas (f : lpMeas F' ℝ m 1 μ) :
     condexpL1CLM F' hm μ (f : α →₁[μ] F') = ↑f := by
@@ -457,19 +457,19 @@ theorem condexpL1CLM_lpMeas (f : lpMeas F' ℝ m 1 μ) :
   refine @Lp.induction α F' m _ 1 (μ.trim hm) _ ENNReal.coe_ne_top (fun g : α →₁[μ.trim hm] F' =>
     condexpL1CLM F' hm μ ((lpMeasToLpTrimLie F' ℝ 1 μ hm).symm g : α →₁[μ] F') =
     ↑((lpMeasToLpTrimLie F' ℝ 1 μ hm).symm g)) ?_ ?_ ?_ g
-  · intro c s hs hμs
-    rw [@Lp.simpleFunc.coe_indicatorConst _ _ m, lpMeasToLpTrimLie_symm_indicator hs hμs.ne c,
-      condexpL1CLM_indicatorConstLp]
-    exact condexpInd_of_measurable hs ((le_trim hm).trans_lt hμs).ne c
-  · intro f g hf hg _ hf_eq hg_eq
-    rw [LinearIsometryEquiv.map_add]
-    push_cast
-    rw [map_add, hf_eq, hg_eq]
-  · refine isClosed_eq ?_ ?_
-    · refine (condexpL1CLM F' hm μ).continuous.comp (continuous_induced_dom.comp ?_)
-      exact LinearIsometryEquiv.continuous _
-    · refine continuous_induced_dom.comp ?_
-      exact LinearIsometryEquiv.continuous _
+  intro c s hs hμs
+  rw [@Lp.simpleFunc.coe_indicatorConst _ _ m, lpMeasToLpTrimLie_symm_indicator hs hμs.ne c,
+    condexpL1CLM_indicatorConstLp]
+  exact condexpInd_of_measurable hs ((le_trim hm).trans_lt hμs).ne c
+  intro f g hf hg _ hf_eq hg_eq
+  rw [LinearIsometryEquiv.map_add]
+  push_cast
+  rw [map_add, hf_eq, hg_eq]
+  refine isClosed_eq ?_ ?_
+  refine (condexpL1CLM F' hm μ).continuous.comp (continuous_induced_dom.comp ?_)
+  exact LinearIsometryEquiv.continuous _
+  refine continuous_induced_dom.comp ?_
+  exact LinearIsometryEquiv.continuous _
 
 theorem condexpL1CLM_of_aestronglyMeasurable' (f : α →₁[μ] F') (hfm : AEStronglyMeasurable' m f μ) :
     condexpL1CLM F' hm μ f = f :=
@@ -497,8 +497,8 @@ theorem condexpL1_measure_zero (hm : m ≤ m0) : condexpL1 hm (0 : Measure α) f
 theorem aestronglyMeasurable'_condexpL1 {f : α → F'} :
     AEStronglyMeasurable' m (condexpL1 hm μ f) μ := by
   by_cases hf : Integrable f μ
-  · rw [condexpL1_eq hf]
-    exact aestronglyMeasurable'_condexpL1CLM _
+  rw [condexpL1_eq hf]
+  exact aestronglyMeasurable'_condexpL1CLM _
   · rw [condexpL1_undef hf]
     refine AEStronglyMeasurable'.congr ?_ (coeFn_zero _ _ _).symm
     exact StronglyMeasurable.aeStronglyMeasurable' (@stronglyMeasurable_zero _ _ m _ _)

@@ -574,10 +574,10 @@ theorem mem_toCone : x ∈ hs.toCone s ↔ ∃ c : 𝕜, 0 < c ∧ ∃ y ∈ s, 
 
 theorem mem_toCone' : x ∈ hs.toCone s ↔ ∃ c : 𝕜, 0 < c ∧ c • x ∈ s := by
   refine hs.mem_toCone.trans ⟨?_, ?_⟩
-  · rintro ⟨c, hc, y, hy, rfl⟩
-    exact ⟨c⁻¹, inv_pos.2 hc, by rwa [smul_smul, inv_mul_cancel hc.ne', one_smul]⟩
-  · rintro ⟨c, hc, hcx⟩
-    exact ⟨c⁻¹, inv_pos.2 hc, _, hcx, by rw [smul_smul, inv_mul_cancel hc.ne', one_smul]⟩
+  rintro ⟨c, hc, y, hy, rfl⟩
+  exact ⟨c⁻¹, inv_pos.2 hc, by rwa [smul_smul, inv_mul_cancel hc.ne', one_smul]⟩
+  rintro ⟨c, hc, hcx⟩
+  exact ⟨c⁻¹, inv_pos.2 hc, _, hcx, by rw [smul_smul, inv_mul_cancel hc.ne', one_smul]⟩
 
 theorem subset_toCone : s ⊆ hs.toCone s := fun x hx =>
   hs.mem_toCone'.2 ⟨1, zero_lt_one, by rwa [one_smul]⟩

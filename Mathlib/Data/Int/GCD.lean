@@ -286,12 +286,12 @@ theorem pow_dvd_pow_iff {m n : ℤ} {k : ℕ} (k0 : k ≠ 0) : m ^ k ∣ n ^ k �
 
 theorem gcd_dvd_iff {a b : ℤ} {n : ℕ} : gcd a b ∣ n ↔ ∃ x y : ℤ, ↑n = a * x + b * y := by
   constructor
-  · intro h
-    rw [← Nat.mul_div_cancel' h, Int.ofNat_mul, gcd_eq_gcd_ab, Int.add_mul, mul_assoc, mul_assoc]
-    exact ⟨_, _, rfl⟩
-  · rintro ⟨x, y, h⟩
-    rw [← Int.natCast_dvd_natCast, h]
-    exact Int.dvd_add (dvd_mul_of_dvd_left gcd_dvd_left _) (dvd_mul_of_dvd_left gcd_dvd_right y)
+  intro h
+  rw [← Nat.mul_div_cancel' h, Int.ofNat_mul, gcd_eq_gcd_ab, Int.add_mul, mul_assoc, mul_assoc]
+  exact ⟨_, _, rfl⟩
+  rintro ⟨x, y, h⟩
+  rw [← Int.natCast_dvd_natCast, h]
+  exact Int.dvd_add (dvd_mul_of_dvd_left gcd_dvd_left _) (dvd_mul_of_dvd_left gcd_dvd_right y)
 
 theorem gcd_greatest {a b d : ℤ} (hd_pos : 0 ≤ d) (hda : d ∣ a) (hdb : d ∣ b)
     (hd : ∀ e : ℤ, e ∣ a → e ∣ b → e ∣ d) : d = gcd a b :=
@@ -324,9 +324,9 @@ theorem gcd_least_linear {a b : ℤ} (ha : a ≠ 0) :
     IsLeast { n : ℕ | 0 < n ∧ ∃ x y : ℤ, ↑n = a * x + b * y } (a.gcd b) := by
   simp_rw [← gcd_dvd_iff]
   constructor
-  · simpa [and_true_iff, dvd_refl, Set.mem_setOf_eq] using gcd_pos_of_ne_zero_left b ha
-  · simp only [lowerBounds, and_imp, Set.mem_setOf_eq]
-    exact fun n hn_pos hn => Nat.le_of_dvd hn_pos hn
+  simpa [and_true_iff, dvd_refl, Set.mem_setOf_eq] using gcd_pos_of_ne_zero_left b ha
+  simp only [lowerBounds, and_imp, Set.mem_setOf_eq]
+  exact fun n hn_pos hn => Nat.le_of_dvd hn_pos hn
 
 /-! ### lcm -/
 

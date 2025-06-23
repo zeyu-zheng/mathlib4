@@ -86,10 +86,10 @@ lemma term_one {n : ℕ} (hn : 0 < n) :
     _ = (∫ x : ℝ in n..(n + 1), 1 / x) - n * ∫ x : ℝ in n..(n + 1), 1 / x ^ 2 := by
       simp_rw [← mul_one_div (n : ℝ)]
       rw [intervalIntegral.integral_sub]
-      · simp_rw [intervalIntegral.integral_const_mul]
-      · exact intervalIntegral.intervalIntegrable_one_div (fun x hx ↦ (hv x hx).ne') (by fun_prop)
-      · exact (intervalIntegral.intervalIntegrable_one_div
-          (fun x hx ↦ (sq_pos_of_pos (hv x hx)).ne') (by fun_prop)).const_mul _
+      simp_rw [intervalIntegral.integral_const_mul]
+      exact intervalIntegral.intervalIntegrable_one_div (fun x hx ↦ (hv x hx).ne') (by fun_prop)
+      exact (intervalIntegral.intervalIntegrable_one_div
+        (fun x hx ↦ (sq_pos_of_pos (hv x hx)).ne') (by fun_prop)).const_mul _
     _ = (log (↑n + 1) - log ↑n) - n * ∫ x : ℝ in n..(n + 1), 1 / x ^ 2 := by
       congr 1
       rw [integral_one_div_of_pos, log_div]
@@ -101,23 +101,23 @@ lemma term_one {n : ℕ} (hn : 0 < n) :
       exact (hv x hx).le
     _ = log (↑n + 1) - log ↑n - n * (1 / n - 1 / (n + 1)) := by
       rw [integral_rpow]
-      · simp_rw [sub_div, (by norm_num : (-2 : ℝ) + 1 = -1), div_neg, div_one, neg_sub_neg,
-          rpow_neg_one, ← one_div]
-      · refine Or.inr ⟨by norm_num, not_mem_uIcc_of_lt ?_ ?_⟩
-        all_goals positivity
+      simp_rw [sub_div, (by norm_num : (-2 : ℝ) + 1 = -1), div_neg, div_one, neg_sub_neg,
+        rpow_neg_one, ← one_div]
+      refine Or.inr ⟨by norm_num, not_mem_uIcc_of_lt ?_ ?_⟩
+      all_goals positivity
     _ = log (↑n + 1) - log ↑n - 1 / (↑n + 1) := by
       congr 1
       field_simp
 
 lemma term_sum_one (N : ℕ) : term_sum 1 N = log (N + 1) - harmonic (N + 1) + 1 := by
   induction' N with N hN
-  · simp_rw [term_sum, Finset.sum_range_zero, harmonic_succ, harmonic_zero,
-      Nat.cast_zero, zero_add, Nat.cast_one, inv_one, Rat.cast_one, log_one, sub_add_cancel]
-  · unfold term_sum at hN ⊢
-    rw [Finset.sum_range_succ, hN, harmonic_succ (N + 1),
-      term_one (by positivity : 0 < N + 1)]
-    push_cast
-    ring_nf
+  simp_rw [term_sum, Finset.sum_range_zero, harmonic_succ, harmonic_zero,
+    Nat.cast_zero, zero_add, Nat.cast_one, inv_one, Rat.cast_one, log_one, sub_add_cancel]
+  unfold term_sum at hN ⊢
+  rw [Finset.sum_range_succ, hN, harmonic_succ (N + 1),
+    term_one (by positivity : 0 < N + 1)]
+  push_cast
+  ring_nf
 
 /-- The topological sum of `ZetaAsymptotics.term (n + 1) 1` over all `n : ℕ` is `1 - γ`. This is
 proved by directly evaluating the sum of the first `N` terms and using the limit definition of `γ`.
@@ -159,17 +159,17 @@ lemma term_of_lt {n : ℕ} (hn : 0 < n) {s : ℝ} (hs : 1 < s) :
       rw [intervalIntegral.integral_sub, intervalIntegral.integral_const_mul] <;>
       [skip; apply IntervalIntegrable.const_mul] <;>
       · refine intervalIntegral.intervalIntegrable_rpow (Or.inr <| not_mem_uIcc_of_lt ?_ ?_)
-        · exact_mod_cast hn
-        · linarith
+        exact_mod_cast hn
+        linarith
     _ = 1 / (s - 1) * (1 / n ^ (s - 1) - 1 / (n + 1) ^ (s - 1))
           - n / s * (1 / n ^ s - 1 / (n + 1) ^ s) := by
       have : 0 ∉ uIcc (n : ℝ) (n + 1) := (lt_irrefl _ <| hv _ ·)
       rw [integral_rpow (Or.inr ⟨by linarith, this⟩), integral_rpow (Or.inr ⟨by linarith, this⟩)]
       congr 1
-      · rw [show -s + 1 = -(s - 1) by ring, div_neg, ← neg_div, mul_comm, mul_one_div, neg_sub,
-          rpow_neg (Nat.cast_nonneg _), one_div, rpow_neg (by linarith), one_div]
-      · rw [show -(s + 1) + 1 = -s by ring, div_neg, ← neg_div, neg_sub, div_mul_eq_mul_div,
-          mul_div_assoc, rpow_neg (Nat.cast_nonneg _), one_div, rpow_neg (by linarith), one_div]
+      rw [show -s + 1 = -(s - 1) by ring, div_neg, ← neg_div, mul_comm, mul_one_div, neg_sub,
+        rpow_neg (Nat.cast_nonneg _), one_div, rpow_neg (by linarith), one_div]
+      rw [show -(s + 1) + 1 = -s by ring, div_neg, ← neg_div, neg_sub, div_mul_eq_mul_div,
+        mul_div_assoc, rpow_neg (Nat.cast_nonneg _), one_div, rpow_neg (by linarith), one_div]
 
 lemma term_sum_of_lt (N : ℕ) {s : ℝ} (hs : 1 < s) :
     term_sum s N = 1 / (s - 1) * (1 - 1 / (N + 1) ^ (s - 1))
@@ -178,17 +178,17 @@ lemma term_sum_of_lt (N : ℕ) {s : ℝ} (hs : 1 < s) :
   conv => enter [1, 2, n]; rw [term_of_lt (by simp) hs]
   rw [Finset.sum_sub_distrib]
   congr 1
-  · induction' N with N hN
-    · simp
-    · rw [Finset.sum_range_succ, hN, Nat.cast_add_one]
-      ring_nf
-  · simp_rw [mul_comm (_ / _), ← mul_div_assoc, div_eq_mul_inv _ s, ← Finset.sum_mul, mul_one]
-    congr 1
-    induction' N with N hN
-    · simp
-    · simp_rw [Finset.sum_range_succ, hN, Nat.cast_add_one, sub_eq_add_neg, add_assoc]
-      congr 1
-      ring_nf
+  induction' N with N hN
+  simp
+  rw [Finset.sum_range_succ, hN, Nat.cast_add_one]
+  ring_nf
+  simp_rw [mul_comm (_ / _), ← mul_div_assoc, div_eq_mul_inv _ s, ← Finset.sum_mul, mul_one]
+  congr 1
+  induction' N with N hN
+  simp
+  simp_rw [Finset.sum_range_succ, hN, Nat.cast_add_one, sub_eq_add_neg, add_assoc]
+  congr 1
+  ring_nf
 
 /-- For `1 < s`, the topological sum of `ZetaAsymptotics.term (n + 1) s` over all `n : ℕ` is
 `1 / (s - 1) - ζ s / s`.
@@ -200,30 +200,30 @@ lemma term_tsum_of_lt {s : ℝ} (hs : 1 < s) :
   change Tendsto (fun N ↦ term_sum s N) atTop _
   simp_rw [term_sum_of_lt _ hs]
   apply Tendsto.sub
-  · rw [show 𝓝 (1 / (s - 1)) = 𝓝 (1 / (s - 1) - 1 / (s - 1) * 0) by simp]
-    simp_rw [mul_sub, mul_one]
-    refine tendsto_const_nhds.sub (Tendsto.const_mul _ ?_)
-    refine tendsto_const_nhds.div_atTop <| (tendsto_rpow_atTop (by linarith)).comp ?_
-    exact tendsto_atTop_add_const_right _ _ tendsto_natCast_atTop_atTop
-  · rw [← sub_zero (tsum _)]
-    apply (((Summable.hasSum ?_).tendsto_sum_nat).sub ?_).const_mul
-    · exact_mod_cast (summable_nat_add_iff 1).mpr (summable_one_div_nat_rpow.mpr hs)
-    · apply tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds
-      · change Tendsto (fun n : ℕ ↦ (1 / ↑(n + 1) : ℝ) ^ (s - 1)) ..
-        rw [show 𝓝 (0 : ℝ) = 𝓝 (0 ^ (s - 1)) by rw [zero_rpow]; linarith]
-        refine Tendsto.rpow_const ?_ (Or.inr <| by linarith)
-        exact (tendsto_const_div_atTop_nhds_zero_nat _).comp (tendsto_add_atTop_nat _)
-      · intro n
-        positivity
-      · intro n
-        dsimp only
-        transitivity (n + 1) / (n + 1) ^ s
-        · gcongr
-          linarith
-        · apply le_of_eq
-          rw [rpow_sub_one, ← div_mul, div_one, mul_comm, one_div, inv_rpow, ← div_eq_mul_inv]
-          · norm_cast
-          all_goals positivity
+  rw [show 𝓝 (1 / (s - 1)) = 𝓝 (1 / (s - 1) - 1 / (s - 1) * 0) by simp]
+  simp_rw [mul_sub, mul_one]
+  refine tendsto_const_nhds.sub (Tendsto.const_mul _ ?_)
+  refine tendsto_const_nhds.div_atTop <| (tendsto_rpow_atTop (by linarith)).comp ?_
+  exact tendsto_atTop_add_const_right _ _ tendsto_natCast_atTop_atTop
+  rw [← sub_zero (tsum _)]
+  apply (((Summable.hasSum ?_).tendsto_sum_nat).sub ?_).const_mul
+  exact_mod_cast (summable_nat_add_iff 1).mpr (summable_one_div_nat_rpow.mpr hs)
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds
+  change Tendsto (fun n : ℕ ↦ (1 / ↑(n + 1) : ℝ) ^ (s - 1)) ..
+  rw [show 𝓝 (0 : ℝ) = 𝓝 (0 ^ (s - 1)) by rw [zero_rpow]; linarith]
+  refine Tendsto.rpow_const ?_ (Or.inr <| by linarith)
+  exact (tendsto_const_div_atTop_nhds_zero_nat _).comp (tendsto_add_atTop_nat _)
+  intro n
+  positivity
+  intro n
+  dsimp only
+  transitivity (n + 1) / (n + 1) ^ s
+  gcongr
+  linarith
+  apply le_of_eq
+  rw [rpow_sub_one, ← div_mul, div_one, mul_comm, one_div, inv_rpow, ← div_eq_mul_inv]
+  norm_cast
+  all_goals positivity
 
 /-- Reformulation of `ZetaAsymptotics.term_tsum_of_lt` which is useful for some computations
 below. -/
@@ -271,19 +271,19 @@ lemma continuousOn_term_tsum : ContinuousOn term_tsum (Ici 1) := by
   -- monotone decreasing in `s`.)
   refine continuousOn_tsum (fun i ↦ continuousOn_term _) term_tsum_one.summable (fun n s hs ↦ ?_)
   rw [term, term, norm_of_nonneg]
-  · simp_rw [intervalIntegral.integral_of_le (by linarith : (↑(n + 1) : ℝ) ≤ ↑(n + 1) + 1)]
-    refine setIntegral_mono_on ?_ ?_ measurableSet_Ioc (fun x hx ↦ ?_)
-    · exact (term_welldef n.succ_pos (zero_lt_one.trans_le hs)).1
-    · exact (term_welldef n.succ_pos zero_lt_one).1
-    · rw [div_le_div_left] -- leave side-goals to end and kill them all together
-      · apply rpow_le_rpow_of_exponent_le
-        · exact (lt_of_le_of_lt (by simp) hx.1).le
-        · linarith [mem_Ici.mp hs]
-      · linarith [hx.1]
-      all_goals apply rpow_pos_of_pos ((Nat.cast_nonneg _).trans_lt hx.1)
-  · rw [intervalIntegral.integral_of_le (by linarith)]
-    refine setIntegral_nonneg measurableSet_Ioc (fun x hx ↦ div_nonneg ?_ (rpow_nonneg ?_ _))
-    all_goals linarith [hx.1]
+  simp_rw [intervalIntegral.integral_of_le (by linarith : (↑(n + 1) : ℝ) ≤ ↑(n + 1) + 1)]
+  refine setIntegral_mono_on ?_ ?_ measurableSet_Ioc (fun x hx ↦ ?_)
+  · exact (term_welldef n.succ_pos (zero_lt_one.trans_le hs)).1
+  · exact (term_welldef n.succ_pos zero_lt_one).1
+  · rw [div_le_div_left] -- leave side-goals to end and kill them all together
+    · apply rpow_le_rpow_of_exponent_le
+      · exact (lt_of_le_of_lt (by simp) hx.1).le
+      · linarith [mem_Ici.mp hs]
+    · linarith [hx.1]
+    all_goals apply rpow_pos_of_pos ((Nat.cast_nonneg _).trans_lt hx.1)
+  rw [intervalIntegral.integral_of_le (by linarith)]
+  refine setIntegral_nonneg measurableSet_Ioc (fun x hx ↦ div_nonneg ?_ (rpow_nonneg ?_ _))
+  all_goals linarith [hx.1]
 
 /-- First version of the limit formula, with a limit over real numbers tending to 1 from above. -/
 lemma tendsto_riemannZeta_sub_one_div_nhds_right :
@@ -304,12 +304,12 @@ lemma tendsto_riemannZeta_sub_one_div_nhds_right :
     rw [← term_tsum, eq_sub_iff_add_eq, ← eq_sub_iff_add_eq'] at this
     simpa only [this] using aux2
   apply Tendsto.congr'
-  · filter_upwards [self_mem_nhdsWithin] with s hs using (zeta_limit_aux1 hs).symm
-  · apply tendsto_const_nhds.sub
-    rw [← one_mul (term_tsum 1)]
-    apply (tendsto_id.mono_left nhdsWithin_le_nhds).mul
-    have := continuousOn_term_tsum.continuousWithinAt left_mem_Ici
-    exact Tendsto.mono_left this (nhdsWithin_mono _ Ioi_subset_Ici_self)
+  filter_upwards [self_mem_nhdsWithin] with s hs using (zeta_limit_aux1 hs).symm
+  apply tendsto_const_nhds.sub
+  rw [← one_mul (term_tsum 1)]
+  apply (tendsto_id.mono_left nhdsWithin_le_nhds).mul
+  have := continuousOn_term_tsum.continuousWithinAt left_mem_Ici
+  exact Tendsto.mono_left this (nhdsWithin_mono _ Ioi_subset_Ici_self)
 
 /-- The function `ζ s - 1 / (s - 1)` tends to `γ` as `s → 1`. -/
 theorem _root_.tendsto_riemannZeta_sub_one_div :
@@ -322,28 +322,28 @@ theorem _root_.tendsto_riemannZeta_sub_one_div :
     suffices Tendsto (fun s : ℝ ↦ f s) _ _
       from (tendsto_nhds_unique this tendsto_riemannZeta_sub_one_div_nhds_right) ▸ hC
     refine hC.comp (tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _ ?_ ?_)
-    · exact (Complex.continuous_ofReal.tendsto 1).mono_left (nhdsWithin_le_nhds ..)
-    · filter_upwards [self_mem_nhdsWithin] with a ha
-      rw [mem_compl_singleton_iff, ← Complex.ofReal_one, Ne, Complex.ofReal_inj]
-      exact ne_of_gt ha
+    exact (Complex.continuous_ofReal.tendsto 1).mono_left (nhdsWithin_le_nhds ..)
+    filter_upwards [self_mem_nhdsWithin] with a ha
+    rw [mem_compl_singleton_iff, ← Complex.ofReal_one, Ne, Complex.ofReal_inj]
+    exact ne_of_gt ha
   refine ⟨_, Complex.tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isLittleO ?_ ?_⟩
-  · filter_upwards [self_mem_nhdsWithin] with s hs
-    refine (differentiableAt_riemannZeta hs).sub ((differentiableAt_const _).div ?_ ?_)
-    · fun_prop
-    · rwa [mem_compl_singleton_iff, ← sub_ne_zero] at hs
-  · refine Asymptotics.isLittleO_of_tendsto' ?_ ?_
-    · filter_upwards [self_mem_nhdsWithin] with t ht ht'
-      rw [inv_eq_zero, sub_eq_zero] at ht'
-      tauto
-    · simp_rw [div_eq_mul_inv, inv_inv, sub_mul,
-        (by ring_nf : 𝓝 (0 : ℂ) = 𝓝 ((1 - 1) - f 1 * (1 - 1)))]
-      apply Tendsto.sub
-      · simp_rw [mul_comm (f _), f, mul_sub]
-        apply riemannZeta_residue_one.sub
-        refine Tendsto.congr' ?_ (tendsto_const_nhds.mono_left nhdsWithin_le_nhds)
-        filter_upwards [self_mem_nhdsWithin] with x hx
-        field_simp [sub_ne_zero.mpr <| mem_compl_singleton_iff.mp hx]
-      · exact ((tendsto_id.sub tendsto_const_nhds).mono_left nhdsWithin_le_nhds).const_mul _
+  filter_upwards [self_mem_nhdsWithin] with s hs
+  refine (differentiableAt_riemannZeta hs).sub ((differentiableAt_const _).div ?_ ?_)
+  fun_prop
+  rwa [mem_compl_singleton_iff, ← sub_ne_zero] at hs
+  refine Asymptotics.isLittleO_of_tendsto' ?_ ?_
+  filter_upwards [self_mem_nhdsWithin] with t ht ht'
+  rw [inv_eq_zero, sub_eq_zero] at ht'
+  tauto
+  simp_rw [div_eq_mul_inv, inv_inv, sub_mul,
+    (by ring_nf : 𝓝 (0 : ℂ) = 𝓝 ((1 - 1) - f 1 * (1 - 1)))]
+  apply Tendsto.sub
+  simp_rw [mul_comm (f _), f, mul_sub]
+  apply riemannZeta_residue_one.sub
+  refine Tendsto.congr' ?_ (tendsto_const_nhds.mono_left nhdsWithin_le_nhds)
+  filter_upwards [self_mem_nhdsWithin] with x hx
+  field_simp [sub_ne_zero.mpr <| mem_compl_singleton_iff.mp hx]
+  exact ((tendsto_id.sub tendsto_const_nhds).mono_left nhdsWithin_le_nhds).const_mul _
 
 lemma _root_.isBigO_riemannZeta_sub_one_div {F : Type*} [Norm F] [One F] [NormOneClass F] :
     (fun s : ℂ ↦ riemannZeta s - 1 / (s - 1)) =O[𝓝 1] (fun _ ↦ 1 : ℂ → F) := by
@@ -413,10 +413,10 @@ lemma _root_.riemannZeta_one_ne_zero : riemannZeta 1 ≠ 0 := by
     simpa only [riemannZeta_one, ← ofReal_ne_zero, ofReal_log (by positivity : 0 ≤ 4 * π),
       push_cast]
   refine div_ne_zero (sub_lt_zero.mpr (lt_trans ?_ ?_ (b := 1))).ne two_ne_zero
-  · exact Real.eulerMascheroniConstant_lt_two_thirds.trans (by norm_num)
-  · rw [lt_log_iff_exp_lt (by positivity)]
-    exact (lt_trans Real.exp_one_lt_d9 (by norm_num)).trans_le
-      <| mul_le_mul_of_nonneg_left two_le_pi (by norm_num)
+  exact Real.eulerMascheroniConstant_lt_two_thirds.trans (by norm_num)
+  rw [lt_log_iff_exp_lt (by positivity)]
+  exact (lt_trans Real.exp_one_lt_d9 (by norm_num)).trans_le
+    <| mul_le_mul_of_nonneg_left two_le_pi (by norm_num)
 
 end val_at_one
 

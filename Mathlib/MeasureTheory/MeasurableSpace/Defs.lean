@@ -107,10 +107,10 @@ theorem MeasurableSet.congr {s t : Set α} (hs : MeasurableSet s) (h : s = t) : 
 protected theorem MeasurableSet.iUnion [Countable ι] ⦃f : ι → Set α⦄
     (h : ∀ b, MeasurableSet (f b)) : MeasurableSet (⋃ b, f b) := by
   cases isEmpty_or_nonempty ι
-  · simp
-  · rcases exists_surjective_nat ι with ⟨e, he⟩
-    rw [← iUnion_congr_of_surjective _ he (fun _ => rfl)]
-    exact m.measurableSet_iUnion _ fun _ => h _
+  simp
+  rcases exists_surjective_nat ι with ⟨e, he⟩
+  rw [← iUnion_congr_of_surjective _ he (fun _ => rfl)]
+  exact m.measurableSet_iUnion _ fun _ => h _
 
 protected theorem MeasurableSet.biUnion {f : β → Set α} {s : Set β} (hs : s.Countable)
     (h : ∀ b ∈ s, MeasurableSet (f b)) : MeasurableSet (⋃ b ∈ s, f b) := by
@@ -356,11 +356,11 @@ theorem forall_generateFrom_mem_iff_mem_iff {S : Set (Set α)} {x y : α} :
     (∀ s, MeasurableSet[generateFrom S] s → (x ∈ s ↔ y ∈ s)) ↔ (∀ s ∈ S, x ∈ s ↔ y ∈ s) := by
   refine ⟨fun H s hs ↦ H s (.basic s hs), fun H s ↦ ?_⟩
   apply generateFrom_induction
-  · exact H
-  · rfl
-  · exact fun _ ↦ Iff.not
-  · intro f hf
-    simp only [mem_iUnion, hf]
+  exact H
+  rfl
+  exact fun _ ↦ Iff.not
+  intro f hf
+  simp only [mem_iUnion, hf]
 
 /-- If `g` is a collection of subsets of `α` such that the `σ`-algebra generated from `g` contains
 the same sets as `g`, then `g` was already a `σ`-algebra. -/

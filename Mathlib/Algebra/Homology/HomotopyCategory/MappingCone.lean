@@ -155,10 +155,10 @@ lemma ext_to_iff (i j : ℤ) (hij : i + 1 = j) {A : C} (f g : A ⟶ (mappingCone
     f = g ↔ f ≫ (fst φ).1.v i j hij = g ≫ (fst φ).1.v i j hij ∧
       f ≫ (snd φ).v i i (add_zero i) = g ≫ (snd φ).v i i (add_zero i) := by
   constructor
-  · rintro rfl
-    tauto
-  · rintro ⟨h₁, h₂⟩
-    exact ext_to φ i j hij h₁ h₂
+  rintro rfl
+  tauto
+  rintro ⟨h₁, h₂⟩
+  exact ext_to φ i j hij h₁ h₂
 
 lemma ext_from (i j : ℤ) (hij : j + 1 = i) {A : C} {f g : (mappingCone φ).X j ⟶ A}
     (h₁ : (inl φ).v i j (by omega) ≫ f = (inl φ).v i j (by omega) ≫ g)
@@ -170,10 +170,10 @@ lemma ext_from_iff (i j : ℤ) (hij : j + 1 = i) {A : C} (f g : (mappingCone φ)
     f = g ↔ (inl φ).v i j (by omega) ≫ f = (inl φ).v i j (by omega) ≫ g ∧
       (inr φ).f j ≫ f = (inr φ).f j ≫ g := by
   constructor
-  · rintro rfl
-    tauto
-  · rintro ⟨h₁, h₂⟩
-    exact ext_from φ i j hij h₁ h₂
+  rintro rfl
+  tauto
+  rintro ⟨h₁, h₂⟩
+  exact ext_from φ i j hij h₁ h₂
 
 lemma decomp_to {i : ℤ} {A : C} (f : A ⟶ (mappingCone φ).X i) (j : ℤ) (hij : i + 1 = j) :
     ∃ (a : A ⟶ F.X j) (b : A ⟶ G.X i), f = a ≫ (inl φ).v j i (by omega) + b ≫ (inr φ).f i :=
@@ -191,16 +191,16 @@ lemma ext_cochain_to_iff (i j : ℤ) (hij : i + 1 = j)
     γ₁ = γ₂ ↔ γ₁.comp (fst φ).1 hij = γ₂.comp (fst φ).1 hij ∧
       γ₁.comp (snd φ) (add_zero i) = γ₂.comp (snd φ) (add_zero i) := by
   constructor
-  · rintro rfl
-    tauto
-  · rintro ⟨h₁, h₂⟩
-    ext p q hpq
-    rw [ext_to_iff φ q (q + 1) rfl]
-    replace h₁ := Cochain.congr_v h₁ p (q + 1) (by omega)
-    replace h₂ := Cochain.congr_v h₂ p q hpq
-    simp only [Cochain.comp_v _ _ _ p q (q + 1) hpq rfl] at h₁
-    simp only [Cochain.comp_zero_cochain_v] at h₂
-    exact ⟨h₁, h₂⟩
+  rintro rfl
+  tauto
+  rintro ⟨h₁, h₂⟩
+  ext p q hpq
+  rw [ext_to_iff φ q (q + 1) rfl]
+  replace h₁ := Cochain.congr_v h₁ p (q + 1) (by omega)
+  replace h₂ := Cochain.congr_v h₂ p q hpq
+  simp only [Cochain.comp_v _ _ _ p q (q + 1) hpq rfl] at h₁
+  simp only [Cochain.comp_zero_cochain_v] at h₂
+  exact ⟨h₁, h₂⟩
 
 lemma ext_cochain_from_iff (i j : ℤ) (hij : i + 1 = j)
     {K : CochainComplex C ℤ} {γ₁ γ₂ : Cochain (mappingCone φ) K j} :
@@ -209,16 +209,16 @@ lemma ext_cochain_from_iff (i j : ℤ) (hij : i + 1 = j)
         (Cochain.ofHom (inr φ)).comp γ₁ (zero_add j) =
           (Cochain.ofHom (inr φ)).comp γ₂ (zero_add j) := by
   constructor
-  · rintro rfl
-    tauto
-  · rintro ⟨h₁, h₂⟩
-    ext p q hpq
-    rw [ext_from_iff φ (p + 1) p rfl]
-    replace h₁ := Cochain.congr_v h₁ (p + 1) q (by omega)
-    replace h₂ := Cochain.congr_v h₂ p q (by omega)
-    simp only [Cochain.comp_v (inl φ) _ _ (p + 1) p q (by omega) hpq] at h₁
-    simp only [Cochain.zero_cochain_comp_v, Cochain.ofHom_v] at h₂
-    exact ⟨h₁, h₂⟩
+  rintro rfl
+  tauto
+  rintro ⟨h₁, h₂⟩
+  ext p q hpq
+  rw [ext_from_iff φ (p + 1) p rfl]
+  replace h₁ := Cochain.congr_v h₁ (p + 1) q (by omega)
+  replace h₂ := Cochain.congr_v h₂ p q (by omega)
+  simp only [Cochain.comp_v (inl φ) _ _ (p + 1) p q (by omega) hpq] at h₁
+  simp only [Cochain.zero_cochain_comp_v, Cochain.ofHom_v] at h₂
+  exact ⟨h₁, h₂⟩
 
 lemma id :
     (fst φ).1.comp (inl φ) (add_neg_self 1) +

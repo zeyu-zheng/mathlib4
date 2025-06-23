@@ -89,8 +89,8 @@ theorem bddAbove_range_partialSups {f : ℕ → α} :
 theorem Monotone.partialSups_eq {f : ℕ → α} (hf : Monotone f) : (partialSups f : ℕ → α) = f := by
   ext n
   induction' n with n ih
-  · rfl
-  · rw [partialSups_succ, ih, sup_eq_right.2 (hf (Nat.le_succ _))]
+  rfl
+  rw [partialSups_succ, ih, sup_eq_right.2 (hf (Nat.le_succ _))]
 
 theorem partialSups_mono : Monotone (partialSups : (ℕ → α) → ℕ →o α) := fun _f _g h _n ↦
   partialSups_le_iff.2 fun k hk ↦ (h k).trans (le_partialSups_of_le _ hk)
@@ -150,9 +150,9 @@ theorem partialSups_eq_ciSup_Iic (f : ℕ → α) (n : ℕ) : partialSups f n = 
 theorem ciSup_partialSups_eq {f : ℕ → α} (h : BddAbove (Set.range f)) :
     ⨆ n, partialSups f n = ⨆ n, f n := by
   refine (ciSup_le fun n => ?_).antisymm (ciSup_mono ?_ <| le_partialSups f)
-  · rw [partialSups_eq_ciSup_Iic]
-    exact ciSup_le fun i => le_ciSup h _
-  · rwa [bddAbove_range_partialSups]
+  rw [partialSups_eq_ciSup_Iic]
+  exact ciSup_le fun i => le_ciSup h _
+  rwa [bddAbove_range_partialSups]
 
 end ConditionallyCompleteLattice
 

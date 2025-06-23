@@ -48,8 +48,8 @@ theorem constantCoeff_invUnitsSub (u : Rˣ) : constantCoeff R (invUnitsSub u) = 
 @[simp]
 theorem invUnitsSub_mul_X (u : Rˣ) : invUnitsSub u * X = invUnitsSub u * C R u - 1 := by
   ext (_ | n)
-  · simp
-  · simp [n.succ_ne_zero, pow_succ']
+  simp
+  simp [n.succ_ne_zero, pow_succ']
 
 @[simp]
 theorem invUnitsSub_mul_sub (u : Rˣ) : invUnitsSub u * (C R u - X) = 1 := by
@@ -205,13 +205,13 @@ theorem exp_mul_exp_eq_exp_add [Algebra ℚ A] (a b : A) :
   rw [mul_one_div (↑(n.choose x) : ℚ), one_div_mul_one_div]
   symm
   rw [div_eq_iff, div_mul_eq_mul_div, one_mul, choose_eq_factorial_div_factorial]
-  · norm_cast
-    rw [cast_div_charZero]
-    apply factorial_mul_factorial_dvd_factorial (mem_range_succ_iff.1 hx)
-  · apply mem_range_succ_iff.1 hx
-  · rintro h
-    apply factorial_ne_zero n
-    rw [cast_eq_zero.1 h]
+  norm_cast
+  rw [cast_div_charZero]
+  apply factorial_mul_factorial_dvd_factorial (mem_range_succ_iff.1 hx)
+  apply mem_range_succ_iff.1 hx
+  rintro h
+  apply factorial_ne_zero n
+  rw [cast_eq_zero.1 h]
 
 /-- Shows that $e^{x} * e^{-x} = 1$ -/
 theorem exp_mul_exp_neg_eq_one [Algebra ℚ A] : exp A * evalNegHom (exp A) = 1 := by
@@ -220,10 +220,10 @@ theorem exp_mul_exp_neg_eq_one [Algebra ℚ A] : exp A * evalNegHom (exp A) = 1 
 /-- Shows that $(e^{X})^k = e^{kX}$. -/
 theorem exp_pow_eq_rescale_exp [Algebra ℚ A] (k : ℕ) : exp A ^ k = rescale (k : A) (exp A) := by
   induction' k with k h
-  · simp only [rescale_zero, constantCoeff_exp, Function.comp_apply, map_one, cast_zero, zero_eq,
-      pow_zero (exp A), coe_comp]
-  · simpa only [succ_eq_add_one, cast_add, ← exp_mul_exp_eq_exp_add (k : A), ← h, cast_one,
-    id_apply, rescale_one] using pow_succ (exp A) k
+  simp only [rescale_zero, constantCoeff_exp, Function.comp_apply, map_one, cast_zero, zero_eq,
+    pow_zero (exp A), coe_comp]
+  simpa only [succ_eq_add_one, cast_add, ← exp_mul_exp_eq_exp_add (k : A), ← h, cast_one,
+  id_apply, rescale_one] using pow_succ (exp A) k
 
 /-- Shows that
 $\sum_{k = 0}^{n - 1} (e^{X})^k = \sum_{p = 0}^{\infty} \sum_{k = 0}^{n - 1} \frac{k^p}{p!}X^p$. -/

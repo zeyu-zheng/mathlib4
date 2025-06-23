@@ -71,8 +71,8 @@ theorem mulIndicator_of_not_mem (h : a ∉ s) (f : α → M) : mulIndicator s f 
 theorem mulIndicator_eq_one_or_self (s : Set α) (f : α → M) (a : α) :
     mulIndicator s f a = 1 ∨ mulIndicator s f a = f a := by
   by_cases h : a ∈ s
-  · exact Or.inr (mulIndicator_of_mem h f)
-  · exact Or.inl (mulIndicator_of_not_mem h f)
+  exact Or.inr (mulIndicator_of_mem h f)
+  exact Or.inl (mulIndicator_of_not_mem h f)
 
 @[to_additive (attr := simp)]
 theorem mulIndicator_apply_eq_self : s.mulIndicator f a = f a ↔ a ∉ s → f a = 1 :=
@@ -142,7 +142,7 @@ theorem mulIndicator_congr (h : EqOn f g s) : mulIndicator s f = mulIndicator s 
   funext fun x => by
     simp only [mulIndicator]
     split_ifs with h_1
-    · exact h h_1
+    exact h h_1
     rfl
 
 @[to_additive (attr := simp)]
@@ -298,7 +298,7 @@ theorem mulIndicator_mul (s : Set α) (f g : α → M) :
   funext
   simp only [mulIndicator]
   split_ifs
-  · rfl
+  rfl
   rw [mul_one]
 
 @[to_additive]
@@ -345,10 +345,10 @@ theorem mulIndicator_mul_compl_eq_piecewise [DecidablePred (· ∈ s)] (f g : α
     s.mulIndicator f * sᶜ.mulIndicator g = s.piecewise f g := by
   ext x
   by_cases h : x ∈ s
-  · rw [piecewise_eq_of_mem _ _ _ h, Pi.mul_apply, Set.mulIndicator_of_mem h,
-      Set.mulIndicator_of_not_mem (Set.not_mem_compl_iff.2 h), mul_one]
-  · rw [piecewise_eq_of_not_mem _ _ _ h, Pi.mul_apply, Set.mulIndicator_of_not_mem h,
-      Set.mulIndicator_of_mem (Set.mem_compl h), one_mul]
+  rw [piecewise_eq_of_mem _ _ _ h, Pi.mul_apply, Set.mulIndicator_of_mem h,
+    Set.mulIndicator_of_not_mem (Set.not_mem_compl_iff.2 h), mul_one]
+  rw [piecewise_eq_of_not_mem _ _ _ h, Pi.mul_apply, Set.mulIndicator_of_not_mem h,
+    Set.mulIndicator_of_mem (Set.mem_compl h), one_mul]
 
 /-- `Set.mulIndicator` as a `monoidHom`. -/
 @[to_additive "`Set.indicator` as an `addMonoidHom`."]

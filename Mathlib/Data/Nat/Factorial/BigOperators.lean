@@ -30,9 +30,9 @@ theorem prod_factorial_pos : 0 < ∏ i ∈ s, (f i)! := by positivity
 
 theorem prod_factorial_dvd_factorial_sum : (∏ i ∈ s, (f i)!) ∣ (∑ i ∈ s, f i)! := by
   induction' s using Finset.cons_induction_on with a s has ih
-  · simp
-  · rw [prod_cons, Finset.sum_cons]
-    exact (mul_dvd_mul_left _ ih).trans (Nat.factorial_mul_factorial_dvd_factorial_add _ _)
+  simp
+  rw [prod_cons, Finset.sum_cons]
+  exact (mul_dvd_mul_left _ ih).trans (Nat.factorial_mul_factorial_dvd_factorial_add _ _)
 
 theorem descFactorial_eq_prod_range (n : ℕ) : ∀ k, n.descFactorial k = ∏ i ∈ range k, (n - i)
   | 0 => rfl

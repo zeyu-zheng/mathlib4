@@ -94,17 +94,17 @@ instance : Group (QuaternionGroup n) where
   one := one
   one_mul := by
     rintro (i | i)
-    · exact congr_arg a (zero_add i)
-    · exact congr_arg xa (sub_zero i)
+    exact congr_arg a (zero_add i)
+    exact congr_arg xa (sub_zero i)
   mul_one := by
     rintro (i | i)
-    · exact congr_arg a (add_zero i)
-    · exact congr_arg xa (add_zero i)
+    exact congr_arg a (add_zero i)
+    exact congr_arg xa (add_zero i)
   inv := inv
   mul_left_inv := by
     rintro (i | i)
-    · exact congr_arg a (neg_add_self i)
-    · exact congr_arg a (sub_self (n + i))
+    exact congr_arg a (neg_add_self i)
+    exact congr_arg a (sub_self (n + i))
 
 @[simp]
 theorem a_mul_a (i j : ZMod (2 * n)) : a i * a j = a (i + j) :=
@@ -170,10 +170,10 @@ theorem card [NeZero n] : Fintype.card (QuaternionGroup n) = 4 * n := by
 @[simp]
 theorem a_one_pow (k : ℕ) : (a 1 : QuaternionGroup n) ^ k = a k := by
   induction' k with k IH
-  · rw [Nat.cast_zero]; rfl
-  · rw [pow_succ, IH, a_mul_a]
-    congr 1
-    norm_cast
+  rw [Nat.cast_zero]; rfl
+  rw [pow_succ, IH, a_mul_a]
+  congr 1
+  norm_cast
 
 -- @[simp] -- Porting note: simp changes this to `a 0 = 1`, so this is no longer a good simp lemma.
 theorem a_one_pow_n : (a 1 : QuaternionGroup n) ^ (2 * n) = 1 := by
@@ -199,33 +199,33 @@ theorem orderOf_xa [NeZero n] (i : ZMod (2 * n)) : orderOf (xa i) = 4 := by
   change _ = 2 ^ 2
   haveI : Fact (Nat.Prime 2) := Fact.mk Nat.prime_two
   apply orderOf_eq_prime_pow
-  · intro h
-    simp only [pow_one, xa_sq] at h
-    injection h with h'
-    apply_fun ZMod.val at h'
-    apply_fun (· / n) at h'
-    simp only [ZMod.val_natCast, ZMod.val_zero, Nat.zero_div, Nat.mod_mul_left_div_self,
-      Nat.div_self (NeZero.pos n)] at h'
-  · norm_num
+  intro h
+  simp only [pow_one, xa_sq] at h
+  injection h with h'
+  apply_fun ZMod.val at h'
+  apply_fun (· / n) at h'
+  simp only [ZMod.val_natCast, ZMod.val_zero, Nat.zero_div, Nat.mod_mul_left_div_self,
+    Nat.div_self (NeZero.pos n)] at h'
+  norm_num
 
 /-- In the special case `n = 1`, `Quaternion 1` is a cyclic group (of order `4`). -/
 theorem quaternionGroup_one_isCyclic : IsCyclic (QuaternionGroup 1) := by
   apply isCyclic_of_orderOf_eq_card
-  · rw [card, mul_one]
-    exact orderOf_xa 0
+  rw [card, mul_one]
+  exact orderOf_xa 0
 
 /-- If `0 < n`, then `a 1` has order `2 * n`.
 -/
 @[simp]
 theorem orderOf_a_one : orderOf (a 1 : QuaternionGroup n) = 2 * n := by
   cases' eq_zero_or_neZero n with hn hn
-  · subst hn
-    simp_rw [mul_zero, orderOf_eq_zero_iff']
-    intro n h
-    rw [one_def, a_one_pow]
-    apply mt a.inj
-    haveI : CharZero (ZMod (2 * 0)) := ZMod.charZero
-    simpa using h.ne'
+  subst hn
+  simp_rw [mul_zero, orderOf_eq_zero_iff']
+  intro n h
+  rw [one_def, a_one_pow]
+  apply mt a.inj
+  haveI : CharZero (ZMod (2 * 0)) := ZMod.charZero
+  simpa using h.ne'
   apply (Nat.le_of_dvd
     (NeZero.pos _) (orderOf_dvd_of_pow_eq_one (@a_one_pow_n n))).lt_or_eq.resolve_left
   intro h
@@ -246,21 +246,21 @@ theorem exponent : Monoid.exponent (QuaternionGroup n) = 2 * lcm n 2 := by
   rw [← normalize_eq 2, ← lcm_mul_left, normalize_eq]
   norm_num
   cases' eq_zero_or_neZero n with hn hn
-  · subst hn
-    simp only [lcm_zero_left, mul_zero]
-    exact Monoid.exponent_eq_zero_of_order_zero orderOf_a_one
+  subst hn
+  simp only [lcm_zero_left, mul_zero]
+  exact Monoid.exponent_eq_zero_of_order_zero orderOf_a_one
   apply Nat.dvd_antisymm
-  · apply Monoid.exponent_dvd_of_forall_pow_eq_one
-    rintro (m | m)
-    · rw [← orderOf_dvd_iff_pow_eq_one, orderOf_a]
-      refine Nat.dvd_trans ⟨gcd (2 * n) m.val, ?_⟩ (dvd_lcm_left (2 * n) 4)
-      exact (Nat.div_mul_cancel (Nat.gcd_dvd_left (2 * n) m.val)).symm
-    · rw [← orderOf_dvd_iff_pow_eq_one, orderOf_xa]
-      exact dvd_lcm_right (2 * n) 4
-  · apply lcm_dvd
-    · convert Monoid.order_dvd_exponent (a 1)
-      exact orderOf_a_one.symm
-    · convert Monoid.order_dvd_exponent (xa (0 : ZMod (2 * n)))
-      exact (orderOf_xa 0).symm
+  apply Monoid.exponent_dvd_of_forall_pow_eq_one
+  rintro (m | m)
+  rw [← orderOf_dvd_iff_pow_eq_one, orderOf_a]
+  refine Nat.dvd_trans ⟨gcd (2 * n) m.val, ?_⟩ (dvd_lcm_left (2 * n) 4)
+  exact (Nat.div_mul_cancel (Nat.gcd_dvd_left (2 * n) m.val)).symm
+  rw [← orderOf_dvd_iff_pow_eq_one, orderOf_xa]
+  exact dvd_lcm_right (2 * n) 4
+  apply lcm_dvd
+  convert Monoid.order_dvd_exponent (a 1)
+  exact orderOf_a_one.symm
+  convert Monoid.order_dvd_exponent (xa (0 : ZMod (2 * n)))
+  exact (orderOf_xa 0).symm
 
 end QuaternionGroup

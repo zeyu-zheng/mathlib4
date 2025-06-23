@@ -150,11 +150,11 @@ instance categoryOfPresheafedSpaces : Category (PresheafedSpace C) where
   id_comp _ := by
     dsimp
     ext
-    · dsimp
-      simp
-    · dsimp
-      simp only [map_id, whiskerRight_id', assoc]
-      erw [comp_id, comp_id]
+    dsimp
+    simp
+    dsimp
+    simp only [map_id, whiskerRight_id', assoc]
+    erw [comp_id, comp_id]
 
 variable {C}
 
@@ -315,27 +315,27 @@ instance ofRestrict_mono {U : TopCat} (X : PresheafedSpace C) (f : U ⟶ X.1) (h
   constructor
   intro Z g₁ g₂ eq
   ext1
-  · have := congr_arg PresheafedSpace.Hom.base eq
-    simp only [PresheafedSpace.comp_base, PresheafedSpace.ofRestrict_base] at this
-    rw [cancel_mono] at this
-    exact this
-  · ext V
-    have hV : (Opens.map (X.ofRestrict hf).base).obj (hf.isOpenMap.functor.obj V) = V
-    ext1
-    exact Set.preimage_image_eq _ hf.inj
-    haveI :
-      IsIso (hf.isOpenMap.adjunction.counit.app (unop (op (hf.isOpenMap.functor.obj V)))) :=
-        NatIso.isIso_app_of_isIso
-          (whiskerLeft hf.isOpenMap.functor hf.isOpenMap.adjunction.counit) V
-    have := PresheafedSpace.congr_app eq (op (hf.isOpenMap.functor.obj V))
-    rw [PresheafedSpace.comp_c_app, PresheafedSpace.comp_c_app,
-      PresheafedSpace.ofRestrict_c_app, Category.assoc, cancel_epi] at this
-    have h : _ ≫ _ = _ ≫ _ ≫ _ :=
-      congr_arg (fun f => (X.restrict hf).presheaf.map (eqToHom hV).op ≫ f) this
-    simp only [g₁.c.naturality, g₂.c.naturality_assoc] at h
-    simp only [eqToHom_op, eqToHom_unop, eqToHom_map, eqToHom_trans,
-      ← IsIso.comp_inv_eq, inv_eqToHom, Category.assoc] at h
-    simpa using h
+  have := congr_arg PresheafedSpace.Hom.base eq
+  simp only [PresheafedSpace.comp_base, PresheafedSpace.ofRestrict_base] at this
+  rw [cancel_mono] at this
+  exact this
+  ext V
+  have hV : (Opens.map (X.ofRestrict hf).base).obj (hf.isOpenMap.functor.obj V) = V
+  ext1
+  exact Set.preimage_image_eq _ hf.inj
+  haveI :
+    IsIso (hf.isOpenMap.adjunction.counit.app (unop (op (hf.isOpenMap.functor.obj V)))) :=
+      NatIso.isIso_app_of_isIso
+        (whiskerLeft hf.isOpenMap.functor hf.isOpenMap.adjunction.counit) V
+  have := PresheafedSpace.congr_app eq (op (hf.isOpenMap.functor.obj V))
+  rw [PresheafedSpace.comp_c_app, PresheafedSpace.comp_c_app,
+    PresheafedSpace.ofRestrict_c_app, Category.assoc, cancel_epi] at this
+  have h : _ ≫ _ = _ ≫ _ ≫ _ :=
+    congr_arg (fun f => (X.restrict hf).presheaf.map (eqToHom hV).op ≫ f) this
+  simp only [g₁.c.naturality, g₂.c.naturality_assoc] at h
+  simp only [eqToHom_op, eqToHom_unop, eqToHom_map, eqToHom_trans,
+    ← IsIso.comp_inv_eq, inv_eqToHom, Category.assoc] at h
+  simpa using h
 
 theorem restrict_top_presheaf (X : PresheafedSpace C) :
     (X.restrict (Opens.openEmbedding ⊤)).presheaf =

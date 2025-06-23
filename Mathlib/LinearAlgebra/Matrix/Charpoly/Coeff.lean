@@ -90,21 +90,21 @@ theorem det_of_card_zero (h : Fintype.card n = 0) (M : Matrix n n R) : M.det = 1
 theorem charpoly_degree_eq_dim [Nontrivial R] (M : Matrix n n R) :
     M.charpoly.degree = Fintype.card n := by
   by_cases h : Fintype.card n = 0
-  · rw [h]
-    unfold charpoly
-    rw [det_of_card_zero]
-    · simp
-    · assumption
+  rw [h]
+  unfold charpoly
+  rw [det_of_card_zero]
+  simp
+  assumption
   rw [← sub_add_cancel M.charpoly (∏ i : n, (X - C (M i i)))]
   -- Porting note: added `↑` in front of `Fintype.card n`
   have h1 : (∏ i : n, (X - C (M i i))).degree = ↑(Fintype.card n)
   rw [degree_eq_iff_natDegree_eq_of_pos (Nat.pos_of_ne_zero h), natDegree_prod']
-  · simp_rw [natDegree_X_sub_C]
-    rw [← Finset.card_univ, sum_const, smul_eq_mul, mul_one]
+  simp_rw [natDegree_X_sub_C]
+  rw [← Finset.card_univ, sum_const, smul_eq_mul, mul_one]
   simp_rw [(monic_X_sub_C _).leadingCoeff]
   simp
   rw [degree_add_eq_right_of_degree_lt]
-  · exact h1
+  exact h1
   rw [h1]
   apply lt_trans (charpoly_sub_diagonal_degree_lt M)
   rw [Nat.cast_lt]
@@ -119,8 +119,8 @@ theorem charpoly_degree_eq_dim [Nontrivial R] (M : Matrix n n R) :
 theorem charpoly_monic (M : Matrix n n R) : M.charpoly.Monic := by
   nontriviality R -- Porting note: was simply `nontriviality`
   by_cases h : Fintype.card n = 0
-  · rw [charpoly, det_of_card_zero h]
-    apply monic_one
+  rw [charpoly, det_of_card_zero h]
+  apply monic_one
   have mon : (∏ i : n, (X - C (M i i))).Monic
   apply monic_prod_of_monic univ fun i : n => X - C (M i i)
   simp [monic_X_sub_C]
@@ -150,9 +150,9 @@ theorem matPolyEquiv_symm_map_eval (M : (Matrix n n R)[X]) (r : R) :
         fun x => (scalar_commute _ (Commute.all _) _).symm) from
     DFunLike.congr_fun this M
   ext : 1
-  · ext M : 1
-    simp [Function.comp]
-  · simp [smul_eq_diagonal_mul]
+  ext M : 1
+  simp [Function.comp]
+  simp [smul_eq_diagonal_mul]
 
 theorem matPolyEquiv_eval_eq_map (M : Matrix n n R[X]) (r : R) :
     (matPolyEquiv M).eval (scalar n r) = M.map (eval r) := by
@@ -194,20 +194,20 @@ lemma derivative_det_one_add_X_smul_aux {n} (M : Matrix (Fin n) (Fin n) R) :
       derivative_C, zero_mul, derivative_X, mul_one, zero_add, eval_add, eval_mul, eval_C, eval_X,
       mul_zero, add_zero, eval_det_add_X_smul, eval_pow, eval_neg, eval_one]
     rw [Finset.sum_eq_single 0]
-    · simp only [Fin.val_zero, pow_zero, derivative_one, eval_zero, one_apply_eq, eval_one,
-        mul_one, zero_add, one_mul, Fin.succAbove_zero, submatrix_one _ (Fin.succ_injective _),
-        det_one, IH, trace_submatrix_succ]
-    · intro i _ hi
-      cases n with
-      | zero => exact (hi (Subsingleton.elim i 0)).elim
-      | succ n =>
-        simp only [one_apply_ne' hi, eval_zero, mul_zero, zero_add, zero_mul, add_zero]
-        rw [det_eq_zero_of_column_eq_zero 0, eval_zero, mul_zero]
-        intro j
-        rw [submatrix_apply, Fin.succAbove_of_castSucc_lt, one_apply_ne]
-        · exact (bne_iff_ne (Fin.succ j) (Fin.castSucc 0)).mp rfl
-        · rw [Fin.castSucc_zero]; exact lt_of_le_of_ne (Fin.zero_le _) hi.symm
-    · exact fun H ↦ (H <| Finset.mem_univ _).elim
+    simp only [Fin.val_zero, pow_zero, derivative_one, eval_zero, one_apply_eq, eval_one,
+      mul_one, zero_add, one_mul, Fin.succAbove_zero, submatrix_one _ (Fin.succ_injective _),
+      det_one, IH, trace_submatrix_succ]
+    intro i _ hi
+    cases n with
+    | zero => exact (hi (Subsingleton.elim i 0)).elim
+    | succ n =>
+      simp only [one_apply_ne' hi, eval_zero, mul_zero, zero_add, zero_mul, add_zero]
+      rw [det_eq_zero_of_column_eq_zero 0, eval_zero, mul_zero]
+      intro j
+      rw [submatrix_apply, Fin.succAbove_of_castSucc_lt, one_apply_ne]
+      exact (bne_iff_ne (Fin.succ j) (Fin.castSucc 0)).mp rfl
+      rw [Fin.castSucc_zero]; exact lt_of_le_of_ne (Fin.zero_le _) hi.symm
+    exact fun H ↦ (H <| Finset.mem_univ _).elim
 
 /-- The derivative of `det (1 + M X)` at `0` is the trace of `M`. -/
 lemma derivative_det_one_add_X_smul (M : Matrix n n R) :
@@ -215,10 +215,10 @@ lemma derivative_det_one_add_X_smul (M : Matrix n n R) :
   let e := Matrix.reindexLinearEquiv R R (Fintype.equivFin n) (Fintype.equivFin n)
   rw [← Matrix.det_reindexLinearEquiv_self R[X] (Fintype.equivFin n)]
   convert derivative_det_one_add_X_smul_aux (e M)
-  · ext; simp [e]
-  · delta trace
-    rw [← (Fintype.equivFin n).symm.sum_comp]
-    simp_rw [e, reindexLinearEquiv_apply, reindex_apply, diag_apply, submatrix_apply]
+  ext; simp [e]
+  delta trace
+  rw [← (Fintype.equivFin n).symm.sum_comp]
+  simp_rw [e, reindexLinearEquiv_apply, reindex_apply, diag_apply, submatrix_apply]
 
 lemma coeff_det_one_add_X_smul_one (M : Matrix n n R) :
     (det (1 + (X : R[X]) • M.map C)).coeff 1 = trace M := by
@@ -252,14 +252,14 @@ theorem matPolyEquiv_eq_X_pow_sub_C {K : Type*} (k : ℕ) [Field K] (M : Matrix 
   rw [coeff_sub, coeff_C, matPolyEquiv_coeff_apply, RingHom.mapMatrix_apply, Matrix.map_apply,
     AlgHom.coe_toRingHom, DMatrix.sub_apply, coeff_X_pow]
   by_cases hij : i = j
-  · rw [hij, charmatrix_apply_eq, map_sub, expand_C, expand_X, coeff_sub, coeff_X_pow, coeff_C]
-                             -- Porting note: the second `Matrix.` was `DMatrix.`
-    split_ifs with mp m0 <;> simp only [Matrix.one_apply_eq, Matrix.zero_apply]
-  · rw [charmatrix_apply_ne _ _ _ hij, map_neg, expand_C, coeff_neg, coeff_C]
-    split_ifs with m0 mp <;>
-      -- Porting note: again, the first `Matrix.` that was `DMatrix.`
-      simp only [hij, zero_sub, Matrix.zero_apply, sub_zero, neg_zero, Matrix.one_apply_ne, Ne,
-        not_false_iff]
+  rw [hij, charmatrix_apply_eq, map_sub, expand_C, expand_X, coeff_sub, coeff_X_pow, coeff_C]
+                           -- Porting note: the second `Matrix.` was `DMatrix.`
+  split_ifs with mp m0 <;> simp only [Matrix.one_apply_eq, Matrix.zero_apply]
+  rw [charmatrix_apply_ne _ _ _ hij, map_neg, expand_C, coeff_neg, coeff_C]
+  split_ifs with m0 mp <;>
+    -- Porting note: again, the first `Matrix.` that was `DMatrix.`
+    simp only [hij, zero_sub, Matrix.zero_apply, sub_zero, neg_zero, Matrix.one_apply_ne, Ne,
+      not_false_iff]
 
 namespace Matrix
 
@@ -289,12 +289,12 @@ theorem coeff_charpoly_mem_ideal_pow {I : Ideal R} (h : ∀ i j, M i j ∈ I) (k
   rw [← this]
   apply coeff_prod_mem_ideal_pow_tsub
   rintro i - (_ | k)
-  · rw [tsub_zero, pow_one, charmatrix_apply, coeff_sub, ← smul_one_eq_diagonal, smul_apply,
-      smul_eq_mul, coeff_X_mul_zero, coeff_C_zero, zero_sub]
-    apply neg_mem  -- Porting note: was `rw [neg_mem_iff]`, but Lean could not synth `NegMemClass`
-    exact h (c i) i
-  · rw [add_comm, tsub_self_add, pow_zero, Ideal.one_eq_top]
-    exact Submodule.mem_top
+  rw [tsub_zero, pow_one, charmatrix_apply, coeff_sub, ← smul_one_eq_diagonal, smul_apply,
+    smul_eq_mul, coeff_X_mul_zero, coeff_C_zero, zero_sub]
+  apply neg_mem  -- Porting note: was `rw [neg_mem_iff]`, but Lean could not synth `NegMemClass`
+  exact h (c i) i
+  rw [add_comm, tsub_self_add, pow_zero, Ideal.one_eq_top]
+  exact Submodule.mem_top
 
 end Ideal
 
@@ -343,8 +343,8 @@ lemma reverse_charpoly (M : Matrix n n R) :
     coeff M.charpolyRev 1 = - trace M := by
   nontriviality R
   cases isEmpty_or_nonempty n
-  · simp [charpolyRev, coeff_one]
-  · simp [trace_eq_neg_charpoly_coeff M, ← M.reverse_charpoly, nextCoeff]
+  simp [charpolyRev, coeff_one]
+  simp [trace_eq_neg_charpoly_coeff M, ← M.reverse_charpoly, nextCoeff]
 
 lemma isUnit_charpolyRev_of_isNilpotent (hM : IsNilpotent M) :
     IsUnit M.charpolyRev := by
@@ -359,7 +359,7 @@ lemma isUnit_charpolyRev_of_isNilpotent (hM : IsNilpotent M) :
 lemma isNilpotent_trace_of_isNilpotent (hM : IsNilpotent M) :
     IsNilpotent (trace M) := by
   cases isEmpty_or_nonempty n
-  · simp
+  simp
   suffices IsNilpotent (coeff (charpolyRev M) 1) by simpa using this
   exact (isUnit_iff_coeff_isUnit_isNilpotent.mp (isUnit_charpolyRev_of_isNilpotent hM)).2
     _ one_ne_zero

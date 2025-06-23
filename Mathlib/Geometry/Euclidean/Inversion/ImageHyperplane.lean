@@ -47,8 +47,8 @@ hyperplane. -/
 theorem inversion_mem_perpBisector_inversion_iff' (hR : R ≠ 0) (hy : y ≠ c) :
     inversion c R x ∈ perpBisector c (inversion c R y) ↔ dist x y = dist y c ∧ x ≠ c := by
   rcases eq_or_ne x c with rfl | hx
-  · simp [*]
-  · simp [inversion_mem_perpBisector_inversion_iff hR hx hy, hx]
+  simp [*]
+  simp [inversion_mem_perpBisector_inversion_iff hR hx hy, hx]
 
 theorem preimage_inversion_perpBisector_inversion (hR : R ≠ 0) (hy : y ≠ c) :
     inversion c R ⁻¹' perpBisector c (inversion c R y) = sphere y (dist y c) \ {c} :=

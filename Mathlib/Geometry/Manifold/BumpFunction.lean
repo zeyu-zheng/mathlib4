@@ -125,12 +125,12 @@ theorem image_eq_inter_preimage_of_subset_support {s : Set M} (hs : s ⊆ suppor
   rw [support_eq_inter_preimage, subset_inter_iff, ← extChartAt_source I, ← image_subset_iff] at hs
   cases' hs with hse hsf
   apply Subset.antisymm
-  · refine subset_inter (subset_inter (hsf.trans ball_subset_closedBall) ?_) ?_
-    · rintro _ ⟨x, -, rfl⟩; exact mem_range_self _
-    · rw [(extChartAt I c).image_eq_target_inter_inv_preimage hse]
-      exact inter_subset_right
-  · refine Subset.trans (inter_subset_inter_left _ f.closedBall_subset) ?_
-    rw [(extChartAt I c).image_eq_target_inter_inv_preimage hse]
+  refine subset_inter (subset_inter (hsf.trans ball_subset_closedBall) ?_) ?_
+  rintro _ ⟨x, -, rfl⟩; exact mem_range_self _
+  rw [(extChartAt I c).image_eq_target_inter_inv_preimage hse]
+  exact inter_subset_right
+  refine Subset.trans (inter_subset_inter_left _ f.closedBall_subset) ?_
+  rw [(extChartAt I c).image_eq_target_inter_inv_preimage hse]
 
 theorem mem_Icc : f x ∈ Icc (0 : ℝ) 1 := by
   have : f x = 0 ∨ f x = _ := indicator_eq_zero_or_self _ _ _
@@ -181,10 +181,10 @@ theorem nhdsWithin_range_basis :
       closedBall (extChartAt I c c) f.rOut ∩ range I := by
   refine ((nhdsWithin_hasBasis nhds_basis_closedBall _).restrict_subset
     (extChartAt_target_mem_nhdsWithin _ _)).to_hasBasis' ?_ ?_
-  · rintro R ⟨hR0, hsub⟩
-    exact ⟨⟨⟨R / 2, R, half_pos hR0, half_lt_self hR0⟩, hsub⟩, trivial, Subset.rfl⟩
-  · exact fun f _ => inter_mem (mem_nhdsWithin_of_mem_nhds <| closedBall_mem_nhds _ f.rOut_pos)
-      self_mem_nhdsWithin
+  rintro R ⟨hR0, hsub⟩
+  exact ⟨⟨⟨R / 2, R, half_pos hR0, half_lt_self hR0⟩, hsub⟩, trivial, Subset.rfl⟩
+  exact fun f _ => inter_mem (mem_nhdsWithin_of_mem_nhds <| closedBall_mem_nhds _ f.rOut_pos)
+    self_mem_nhdsWithin
 
 theorem isClosed_image_of_isClosed {s : Set M} (hsc : IsClosed s) (hs : s ⊆ support f) :
     IsClosed (extChartAt I c '' s) := by

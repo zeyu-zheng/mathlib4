@@ -68,21 +68,21 @@ theorem mem_finsuppAntidiag_insert {a : ι} {s : Finset ι}
         f = Finsupp.update g a m.1 ∧ g ∈ finsuppAntidiag s m.2 := by
   simp only [mem_finsuppAntidiag, mem_antidiagonal, Prod.exists, sum_insert h]
   constructor
-  · rintro ⟨rfl, hsupp⟩
-    refine ⟨_, _, rfl, Finsupp.erase a f, ?_, ?_, ?_⟩
-    · rw [update_erase_eq_update, update_self]
-    · apply sum_congr rfl
-      intro x hx
-      rw [Finsupp.erase_ne (ne_of_mem_of_not_mem hx h)]
-    · rwa [support_erase, ← subset_insert_iff]
-  · rintro ⟨n1, n2, rfl, g, rfl, rfl, hgsupp⟩
-    refine ⟨?_, (support_update_subset _ _).trans (insert_subset_insert a hgsupp)⟩
-    simp only [coe_update]
-    apply congr_arg₂
-    · rw [update_same]
-    · apply sum_congr rfl
-      intro x hx
-      rw [update_noteq (ne_of_mem_of_not_mem hx h) n1 ⇑g]
+  rintro ⟨rfl, hsupp⟩
+  refine ⟨_, _, rfl, Finsupp.erase a f, ?_, ?_, ?_⟩
+  rw [update_erase_eq_update, update_self]
+  apply sum_congr rfl
+  intro x hx
+  rw [Finsupp.erase_ne (ne_of_mem_of_not_mem hx h)]
+  rwa [support_erase, ← subset_insert_iff]
+  rintro ⟨n1, n2, rfl, g, rfl, rfl, hgsupp⟩
+  refine ⟨?_, (support_update_subset _ _).trans (insert_subset_insert a hgsupp)⟩
+  simp only [coe_update]
+  apply congr_arg₂
+  rw [update_same]
+  apply sum_congr rfl
+  intro x hx
+  rw [update_noteq (ne_of_mem_of_not_mem hx h) n1 ⇑g]
 
 theorem finsuppAntidiag_insert [DecidableEq μ] {a : ι} {s : Finset ι}
     (h : a ∉ s) (n : μ) :
@@ -95,10 +95,10 @@ theorem finsuppAntidiag_insert [DecidableEq μ] {a : ι} {s : Finset ι}
           simp only [DFunLike.ext_iff] at hfg ⊢
           intro x
           obtain rfl | hx := eq_or_ne x a
-          · replace hf := mt (hf.2 ·) h
-            replace hg := mt (hg.2 ·) h
-            rw [not_mem_support_iff.mp hf, not_mem_support_iff.mp hg]
-          · simpa only [coe_update, Function.update, dif_neg hx] using hfg x)⟩) := by
+          replace hf := mt (hf.2 ·) h
+          replace hg := mt (hg.2 ·) h
+          rw [not_mem_support_iff.mp hf, not_mem_support_iff.mp hg]
+          simpa only [coe_update, Function.update, dif_neg hx] using hfg x)⟩) := by
   ext f
   rw [mem_finsuppAntidiag_insert h, mem_biUnion]
   simp_rw [mem_map, mem_attach, true_and, Subtype.exists, Embedding.coeFn_mk, exists_prop, and_comm,
@@ -115,24 +115,24 @@ lemma mapRange_finsuppAntidiag_subset {e : μ ≃+ μ'} {s : Finset ι} {n : μ}
   simp only [AddEquiv.toEquiv_eq_coe, mapRange.addEquiv_toEquiv, Equiv.coe_toEmbedding,
     mapRange.equiv_apply, EquivLike.coe_coe]
   constructor
-  · rw [sum_mapRange_index (fun _ ↦ rfl), ← hsum, _root_.map_finsupp_sum]
-  · exact subset_trans (support_mapRange) hsupp
+  rw [sum_mapRange_index (fun _ ↦ rfl), ← hsum, _root_.map_finsupp_sum]
+  exact subset_trans (support_mapRange) hsupp
 
 lemma mapRange_finsuppAntidiag_eq {e : μ ≃+ μ'} {s : Finset ι} {n : μ} :
     (finsuppAntidiag s n).map (mapRange.addEquiv e).toEmbedding = finsuppAntidiag s (e n) := by
   ext f
   constructor
-  · apply mapRange_finsuppAntidiag_subset
-  · set h := (mapRange.addEquiv e).toEquiv with hh
-    intro hf
-    have : n = e.symm (e n) := (AddEquiv.eq_symm_apply e).mpr rfl
-    rw [mem_map_equiv, this]
-    apply mapRange_finsuppAntidiag_subset
-    rw [← mem_map_equiv]
-    convert hf
-    rw [map_map, hh]
-    convert map_refl
-    apply Function.Embedding.equiv_symm_toEmbedding_trans_toEmbedding
+  apply mapRange_finsuppAntidiag_subset
+  set h := (mapRange.addEquiv e).toEquiv with hh
+  intro hf
+  have : n = e.symm (e n) := (AddEquiv.eq_symm_apply e).mpr rfl
+  rw [mem_map_equiv, this]
+  apply mapRange_finsuppAntidiag_subset
+  rw [← mem_map_equiv]
+  convert hf
+  rw [map_map, hh]
+  convert map_refl
+  apply Function.Embedding.equiv_symm_toEmbedding_trans_toEmbedding
 
 end AddCommMonoid
 

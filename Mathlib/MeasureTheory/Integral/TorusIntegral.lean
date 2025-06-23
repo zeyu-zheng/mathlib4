@@ -130,7 +130,7 @@ theorem function_integrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :
     IntegrableOn (fun θ : ℝⁿ => (∏ i, R i * exp (θ i * I) * I : ℂ) • f (torusMap c R θ))
       (Icc (0 : ℝⁿ) fun _ => 2 * π) volume := by
   refine (hf.norm.const_mul (∏ i, |R i|)).mono' ?_ ?_
-  · refine (Continuous.aestronglyMeasurable ?_).smul hf.1; fun_prop
+  refine (Continuous.aestronglyMeasurable ?_).smul hf.1; fun_prop
   simp [norm_smul, map_prod]
 
 end TorusIntegrable
@@ -219,17 +219,17 @@ theorem torusIntegral_succAbove {f : ℂⁿ⁺¹ → E} {c : ℂⁿ⁺¹} {R : �
     ((OrderIso.piFinSuccAboveIso (fun _ => ℝ) i).symm.preimage_Icc _ _).trans (Icc_prod_eq _ _)
   rw [torusIntegral, ← hem.map_eq, setIntegral_map_equiv, heπ, Measure.volume_eq_prod,
     setIntegral_prod, circleIntegral_def_Icc]
-  · refine setIntegral_congr measurableSet_Icc fun θ _ => ?_
-    simp (config := { unfoldPartialApp := true }) only [e, torusIntegral, ← integral_smul,
-      deriv_circleMap, i.prod_univ_succAbove _, smul_smul, torusMap, circleMap_zero]
-    refine setIntegral_congr measurableSet_Icc fun Θ _ => ?_
-    simp only [MeasurableEquiv.piFinSuccAbove_symm_apply, i.insertNth_apply_same,
-      i.insertNth_apply_succAbove, (· ∘ ·)]
-    congr 2
-    simp only [funext_iff, i.forall_iff_succAbove, circleMap, Fin.insertNth_apply_same,
-      eq_self_iff_true, Fin.insertNth_apply_succAbove, imp_true_iff, and_self_iff]
-  · have := hf.function_integrable
-    rwa [← hem.integrableOn_comp_preimage e.measurableEmbedding, heπ] at this
+  refine setIntegral_congr measurableSet_Icc fun θ _ => ?_
+  simp (config := { unfoldPartialApp := true }) only [e, torusIntegral, ← integral_smul,
+    deriv_circleMap, i.prod_univ_succAbove _, smul_smul, torusMap, circleMap_zero]
+  refine setIntegral_congr measurableSet_Icc fun Θ _ => ?_
+  simp only [MeasurableEquiv.piFinSuccAbove_symm_apply, i.insertNth_apply_same,
+    i.insertNth_apply_succAbove, (· ∘ ·)]
+  congr 2
+  simp only [funext_iff, i.forall_iff_succAbove, circleMap, Fin.insertNth_apply_same,
+    eq_self_iff_true, Fin.insertNth_apply_succAbove, imp_true_iff, and_self_iff]
+  have := hf.function_integrable
+  rwa [← hem.integrableOn_comp_preimage e.measurableEmbedding, heπ] at this
 
 /-- Recurrent formula for `torusIntegral`, see also `torusIntegral_succAbove`. -/
 theorem torusIntegral_succ {f : ℂⁿ⁺¹ → E} {c : ℂⁿ⁺¹} {R : ℝⁿ⁺¹} (hf : TorusIntegrable f c R) :

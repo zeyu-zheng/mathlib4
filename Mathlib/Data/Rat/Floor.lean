@@ -32,8 +32,8 @@ variable {α : Type*} [LinearOrderedField α] [FloorRing α]
 protected theorem floor_def' (a : ℚ) : a.floor = a.num / a.den := by
   rw [Rat.floor]
   split
-  · next h => simp [h]
-  · next => rfl
+  next h => simp [h]
+  next => rfl
 
 protected theorem le_floor {z : ℤ} : ∀ {r : ℚ}, z ≤ Rat.floor r ↔ (z : ℚ) ≤ r
   | ⟨n, d, h, c⟩ => by
@@ -53,7 +53,7 @@ protected theorem floor_def {q : ℚ} : ⌊q⌋ = q.num / q.den := Rat.floor_def
 theorem floor_int_div_nat_eq_div {n : ℤ} {d : ℕ} : ⌊(↑n : ℚ) / (↑d : ℚ)⌋ = n / (↑d : ℤ) := by
   rw [Rat.floor_def]
   obtain rfl | hd := @eq_zero_or_pos _ _ d
-  · simp
+  simp
   set q := (n : ℚ) / d with q_eq
   obtain ⟨c, n_eq_c_mul_num, d_eq_c_mul_denom⟩ : ∃ c, n = c * q.num ∧ (d : ℤ) = c * q.den := by
     rw [q_eq]
@@ -150,10 +150,10 @@ theorem fract_inv_num_lt_num_of_pos {q : ℚ} (q_pos : 0 < q) : (fract q⁻¹).n
   rw [← this] at coprime_q_denom_q_num
   rw [q_inv_def]
   constructor
-  · exact mod_cast Rat.num_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
-  · suffices (((q.den : ℚ) / q.num).den : ℤ) = q.num.natAbs by exact mod_cast this
-    rw [q_num_abs_eq_q_num]
-    exact mod_cast Rat.den_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
+  exact mod_cast Rat.num_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
+  suffices (((q.den : ℚ) / q.num).den : ℤ) = q.num.natAbs by exact mod_cast this
+  rw [q_num_abs_eq_q_num]
+  exact mod_cast Rat.den_div_eq_of_coprime q_num_pos coprime_q_denom_q_num
   rwa [q_inv_eq, this.left, this.right, q_num_abs_eq_q_num, mul_comm] at q_inv_num_denom_ineq
 
 end Rat

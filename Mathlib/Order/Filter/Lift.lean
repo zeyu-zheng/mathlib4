@@ -44,10 +44,10 @@ theorem HasBasis.mem_lift_iff {ι} {p : ι → Prop} {s : ι → Set α} {f : Fi
     {g : Set α → Filter γ} (hg : ∀ i, (g <| s i).HasBasis (pg i) (sg i)) (gm : Monotone g)
     {s : Set γ} : s ∈ f.lift g ↔ ∃ i, p i ∧ ∃ x, pg i x ∧ sg i x ⊆ s := by
   refine (mem_biInf_of_directed ?_ ⟨univ, univ_sets _⟩).trans ?_
-  · intro t₁ ht₁ t₂ ht₂
-    exact ⟨t₁ ∩ t₂, inter_mem ht₁ ht₂, gm inter_subset_left, gm inter_subset_right⟩
-  · simp only [← (hg _).mem_iff]
-    exact hf.exists_iff fun t₁ t₂ ht H => gm ht H
+  intro t₁ ht₁ t₂ ht₂
+  exact ⟨t₁ ∩ t₂, inter_mem ht₁ ht₂, gm inter_subset_left, gm inter_subset_right⟩
+  simp only [← (hg _).mem_iff]
+  exact hf.exists_iff fun t₁ t₂ ht H => gm ht H
 
 /-- If `(p : ι → Prop, s : ι → Set α)` is a basis of a filter `f`, `g` is a monotone function
 `Set α → Filter γ`, and for each `i`, `(pg : β i → Prop, sg : β i → Set α)` is a basis
@@ -176,10 +176,10 @@ theorem lift_iInf [Nonempty ι] {f : ι → Filter α} {g : Set α → Filter β
   have H : ∀ t ∈ iInf f, ⨅ i, (f i).lift g ≤ g t
   intro t ht
   refine iInf_sets_induct ht ?_ fun hs ht => ?_
-  · inhabit ι
-    exact iInf₂_le_of_le default univ (iInf_le _ univ_mem)
-  · rw [hg]
-    exact le_inf (iInf₂_le_of_le _ _ <| iInf_le _ hs) ht
+  inhabit ι
+  exact iInf₂_le_of_le default univ (iInf_le _ univ_mem)
+  rw [hg]
+  exact le_inf (iInf₂_le_of_le _ _ <| iInf_le _ hs) ht
   simp only [mem_lift_sets (Monotone.of_map_inf hg), exists_imp, and_imp]
   exact fun t ht hs => H t ht hs
 
@@ -193,8 +193,8 @@ theorem lift_iInf_of_map_univ {f : ι → Filter α} {g : Set α → Filter β}
     (hg : ∀ s t, g (s ∩ t) = g s ⊓ g t) (hg' : g univ = ⊤) :
     (iInf f).lift g = ⨅ i, (f i).lift g := by
   cases isEmpty_or_nonempty ι
-  · simp [iInf_of_empty, hg']
-  · exact lift_iInf hg
+  simp [iInf_of_empty, hg']
+  exact lift_iInf hg
 
 end lift
 

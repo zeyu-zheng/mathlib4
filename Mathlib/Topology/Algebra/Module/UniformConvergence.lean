@@ -67,22 +67,22 @@ lemma UniformFun.continuousSMul_induced_of_range_bounded (φ : hom)
     simp only [hφ.nhds_eq_comap, Function.comp_apply, map_zero]
     exact UniformFun.hasBasis_nhds_zero.comap _
   apply ContinuousSMul.of_basis_zero hb
-  · intro U hU
-    have : Tendsto (fun x : 𝕜 × E ↦ x.1 • x.2) (𝓝 0) (𝓝 0) :=
-      continuous_smul.tendsto' _ _ (zero_smul _ _)
-    rcases ((Filter.basis_sets _).prod_nhds (Filter.basis_sets _)).tendsto_left_iff.1 this U hU
-      with ⟨⟨V, W⟩, ⟨hV, hW⟩, hVW⟩
-    refine ⟨V, hV, W, hW, Set.smul_subset_iff.2 fun a ha u hu x ↦ ?_⟩
-    rw [map_smul]
-    exact hVW (Set.mk_mem_prod ha (hu x))
-  · intro c U hU
-    have : Tendsto (c • · : E → E) (𝓝 0) (𝓝 0) :=
-      (continuous_const_smul c).tendsto' _ _ (smul_zero _)
-    refine ⟨_, this hU, fun u hu x ↦ ?_⟩
-    simpa only [map_smul] using hu x
-  · intro u U hU
-    simp only [Set.mem_setOf_eq, map_smul, Pi.smul_apply]
-    simpa only [Set.mapsTo_range_iff] using (h u hU).eventually_nhds_zero (mem_of_mem_nhds hU)
+  intro U hU
+  have : Tendsto (fun x : 𝕜 × E ↦ x.1 • x.2) (𝓝 0) (𝓝 0) :=
+    continuous_smul.tendsto' _ _ (zero_smul _ _)
+  rcases ((Filter.basis_sets _).prod_nhds (Filter.basis_sets _)).tendsto_left_iff.1 this U hU
+    with ⟨⟨V, W⟩, ⟨hV, hW⟩, hVW⟩
+  refine ⟨V, hV, W, hW, Set.smul_subset_iff.2 fun a ha u hu x ↦ ?_⟩
+  rw [map_smul]
+  exact hVW (Set.mk_mem_prod ha (hu x))
+  intro c U hU
+  have : Tendsto (c • · : E → E) (𝓝 0) (𝓝 0) :=
+    (continuous_const_smul c).tendsto' _ _ (smul_zero _)
+  refine ⟨_, this hU, fun u hu x ↦ ?_⟩
+  simpa only [map_smul] using hu x
+  intro u U hU
+  simp only [Set.mem_setOf_eq, map_smul, Pi.smul_apply]
+  simpa only [Set.mapsTo_range_iff] using (h u hU).eventually_nhds_zero (mem_of_mem_nhds hU)
 
 /-- Let `E` be a TVS, `𝔖 : Set (Set α)` and `H` a submodule of `α →ᵤ[𝔖] E`. If the image of any
 `S ∈ 𝔖` by any `u ∈ H` is bounded (in the sense of `Bornology.IsVonNBounded`), then `H`,

@@ -188,9 +188,9 @@ theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ t ⊇ s, MeasurableSet t ∧ t =ᵐ[μ] s := by
   rcases h with ⟨t, htm, hst⟩
   refine ⟨t ∪ toMeasurable μ (s \ t), ?_, htm.union (measurableSet_toMeasurable _ _), ?_⟩
-  · exact diff_subset_iff.1 (subset_toMeasurable _ _)
-  · have : toMeasurable μ (s \ t) =ᵐ[μ] (∅ : Set α) := by simp [ae_le_set.1 hst.le]
-    simpa only [union_empty] using hst.symm.union this
+  exact diff_subset_iff.1 (subset_toMeasurable _ _)
+  have : toMeasurable μ (s \ t) =ᵐ[μ] (∅ : Set α) := by simp [ae_le_set.1 hst.le]
+  simpa only [union_empty] using hst.symm.union this
 
 theorem toMeasurable_ae_eq (h : NullMeasurableSet s μ) : toMeasurable μ s =ᵐ[μ] s := by
   rw [toMeasurable_def, dif_pos]
@@ -229,9 +229,9 @@ theorem measure_iUnion {m0 : MeasurableSpace α} {μ : Measure α} [Countable ι
     μ (⋃ i, f i) = ∑' i, μ (f i) := by
   rw [measure_eq_extend (MeasurableSet.iUnion h),
     extend_iUnion MeasurableSet.empty _ MeasurableSet.iUnion _ hn h]
-  · simp [measure_eq_extend, h]
-  · exact μ.empty
-  · exact μ.m_iUnion
+  simp [measure_eq_extend, h]
+  exact μ.empty
+  exact μ.m_iUnion
 
 theorem measure_iUnion₀ [Countable ι] {f : ι → Set α} (hd : Pairwise (AEDisjoint μ on f))
     (h : ∀ i, NullMeasurableSet (f i) μ) : μ (⋃ i, f i) = ∑' i, μ (f i) := by

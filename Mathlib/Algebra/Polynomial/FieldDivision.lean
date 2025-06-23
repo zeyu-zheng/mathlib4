@@ -41,7 +41,7 @@ theorem derivative_rootMultiplicity_of_root_of_mem_nonZeroDivisors
     (hnzd : (p.rootMultiplicity t : R) ∈ nonZeroDivisors R) :
     (derivative p).rootMultiplicity t = p.rootMultiplicity t - 1 := by
   by_cases h : p = 0
-  · simp only [h, map_zero, rootMultiplicity_zero]
+  simp only [h, map_zero, rootMultiplicity_zero]
   obtain ⟨g, hp, hndvd⟩ := p.exists_eq_pow_rootMultiplicity_mul_and_not_dvd h t
   set m := p.rootMultiplicity t
   have hm : m - 1 + 1 = m := Nat.sub_add_cancel <| (rootMultiplicity_pos h).2 hpt
@@ -67,12 +67,12 @@ theorem eval_iterate_derivative_rootMultiplicity {p : R[X]} {t : R} :
   set m := p.rootMultiplicity t with hm
   conv_lhs => rw [← p.pow_mul_divByMonic_rootMultiplicity_eq t, ← hm]
   rw [iterate_derivative_mul, eval_finset_sum, sum_eq_single_of_mem _ (mem_range.mpr m.succ_pos)]
-  · rw [m.choose_zero_right, one_smul, eval_mul, m.sub_zero, iterate_derivative_X_sub_pow_self,
-      eval_natCast, nsmul_eq_mul]; rfl
-  · intro b hb hb0
-    rw [iterate_derivative_X_sub_pow, eval_smul, eval_mul, eval_smul, eval_pow,
-      Nat.sub_sub_self (mem_range_succ_iff.mp hb), eval_sub, eval_X, eval_C, sub_self,
-      zero_pow hb0, smul_zero, zero_mul, smul_zero]
+  rw [m.choose_zero_right, one_smul, eval_mul, m.sub_zero, iterate_derivative_X_sub_pow_self,
+    eval_natCast, nsmul_eq_mul]; rfl
+  intro b hb hb0
+  rw [iterate_derivative_X_sub_pow, eval_smul, eval_mul, eval_smul, eval_pow,
+    Nat.sub_sub_self (mem_range_succ_iff.mp hb), eval_sub, eval_X, eval_C, sub_self,
+    zero_pow hb0, smul_zero, zero_mul, smul_zero]
 
 theorem lt_rootMultiplicity_of_isRoot_iterate_derivative_of_mem_nonZeroDivisors
     {p : R[X]} {t : R} {n : ℕ} (h : p ≠ 0)
@@ -95,10 +95,10 @@ theorem lt_rootMultiplicity_of_isRoot_iterate_derivative_of_mem_nonZeroDivisors'
   apply lt_rootMultiplicity_of_isRoot_iterate_derivative_of_mem_nonZeroDivisors h hroot
   clear hroot
   induction' n with n ih
-  · simp only [Nat.zero_eq, Nat.factorial_zero, Nat.cast_one]
-    exact Submonoid.one_mem _
-  · rw [Nat.factorial_succ, Nat.cast_mul, mul_mem_nonZeroDivisors]
-    exact ⟨hnzd _ le_rfl n.succ_ne_zero, ih fun m h ↦ hnzd m (h.trans n.le_succ)⟩
+  simp only [Nat.zero_eq, Nat.factorial_zero, Nat.cast_one]
+  exact Submonoid.one_mem _
+  rw [Nat.factorial_succ, Nat.cast_mul, mul_mem_nonZeroDivisors]
+  exact ⟨hnzd _ le_rfl n.succ_ne_zero, ih fun m h ↦ hnzd m (h.trans n.le_succ)⟩
 
 theorem lt_rootMultiplicity_iff_isRoot_iterate_derivative_of_mem_nonZeroDivisors
     {p : R[X]} {t : R} {n : ℕ} (h : p ≠ 0)
@@ -142,16 +142,16 @@ theorem one_lt_rootMultiplicity_iff_isRoot_gcd
 theorem derivative_rootMultiplicity_of_root [CharZero R] {p : R[X]} {t : R} (hpt : p.IsRoot t) :
     p.derivative.rootMultiplicity t = p.rootMultiplicity t - 1 := by
   by_cases h : p = 0
-  · rw [h, map_zero, rootMultiplicity_zero]
+  rw [h, map_zero, rootMultiplicity_zero]
   exact derivative_rootMultiplicity_of_root_of_mem_nonZeroDivisors hpt <|
     mem_nonZeroDivisors_of_ne_zero <| Nat.cast_ne_zero.2 ((rootMultiplicity_pos h).2 hpt).ne'
 
 theorem rootMultiplicity_sub_one_le_derivative_rootMultiplicity [CharZero R] (p : R[X]) (t : R) :
     p.rootMultiplicity t - 1 ≤ p.derivative.rootMultiplicity t := by
   by_cases h : p.IsRoot t
-  · exact (derivative_rootMultiplicity_of_root h).symm.le
-  · rw [rootMultiplicity_eq_zero h, zero_tsub]
-    exact zero_le _
+  exact (derivative_rootMultiplicity_of_root h).symm.le
+  rw [rootMultiplicity_eq_zero h, zero_tsub]
+  exact zero_le _
 
 theorem lt_rootMultiplicity_of_isRoot_iterate_derivative
     [CharZero R] {p : R[X]} {t : R} {n : ℕ} (h : p ≠ 0)
@@ -278,11 +278,11 @@ def mod (p q : R[X]) :=
 
 private theorem quotient_mul_add_remainder_eq_aux (p q : R[X]) : q * div p q + mod p q = p := by
   by_cases h : q = 0
-  · simp only [h, zero_mul, mod, modByMonic_zero, zero_add]
-  · conv =>
-      rhs
-      rw [← modByMonic_add_div p (monic_mul_leadingCoeff_inv h)]
-    rw [div, mod, add_comm, mul_assoc]
+  simp only [h, zero_mul, mod, modByMonic_zero, zero_add]
+  conv =>
+    rhs
+    rw [← modByMonic_add_div p (monic_mul_leadingCoeff_inv h)]
+  rw [div, mod, add_comm, mul_assoc]
 
 private theorem remainder_lt_aux (p : R[X]) (hq : q ≠ 0) : degree (mod p q) < degree q := by
   rw [← degree_mul_leadingCoeff_inv q hq]
@@ -357,8 +357,8 @@ theorem degree_add_div (hq0 : q ≠ 0) (hpq : degree q ≤ degree p) :
 
 theorem degree_div_le (p q : R[X]) : degree (p / q) ≤ degree p := by
   by_cases hq : q = 0
-  · simp [hq]
-  · rw [div_def, mul_comm, degree_mul_leadingCoeff_inv _ hq]; exact degree_divByMonic_le _ _
+  simp [hq]
+  rw [div_def, mul_comm, degree_mul_leadingCoeff_inv _ hq]; exact degree_divByMonic_le _ _
 
 theorem degree_div_lt (hp : p ≠ 0) (hq : 0 < degree q) : degree (p / q) < degree p := by
   have hq0 : q ≠ 0 := fun hq0 => by simp [hq0] at hq
@@ -377,9 +377,9 @@ theorem map_div [Field k] (f : R →+* k) : (p / q).map f = p.map f / q.map f :=
 
 theorem map_mod [Field k] (f : R →+* k) : (p % q).map f = p.map f % q.map f := by
   by_cases hq0 : q = 0
-  · simp [hq0]
-  · rw [mod_def, mod_def, leadingCoeff_map f, ← map_inv₀ f, ← map_C f, ← Polynomial.map_mul f,
-      map_modByMonic f (monic_mul_leadingCoeff_inv hq0)]
+  simp [hq0]
+  rw [mod_def, mod_def, leadingCoeff_map f, ← map_inv₀ f, ← map_C f, ← Polynomial.map_mul f,
+    map_modByMonic f (monic_mul_leadingCoeff_inv hq0)]
 
 section
 
@@ -464,10 +464,10 @@ theorem coeff_inv_units (u : R[X]ˣ) (n : ℕ) : ((↑u : R[X]).coeff n)⁻¹ = 
   rw [eq_C_of_degree_eq_zero (degree_coe_units u), eq_C_of_degree_eq_zero (degree_coe_units u⁻¹),
     coeff_C, coeff_C, inv_eq_one_div]
   split_ifs
-  · rw [div_eq_iff_mul_eq (coeff_coe_units_zero_ne_zero u), coeff_zero_eq_eval_zero,
-        coeff_zero_eq_eval_zero, ← eval_mul, ← Units.val_mul, inv_mul_self]
-    simp
-  · simp
+  rw [div_eq_iff_mul_eq (coeff_coe_units_zero_ne_zero u), coeff_zero_eq_eval_zero,
+      coeff_zero_eq_eval_zero, ← eval_mul, ← Units.val_mul, inv_mul_self]
+  simp
+  simp
 
 theorem monic_normalize [DecidableEq R] (hp0 : p ≠ 0) : Monic (normalize p) := by
   rw [Ne, ← leadingCoeff_eq_zero, ← Ne, ← isUnit_iff_ne_zero] at hp0
@@ -477,7 +477,7 @@ theorem monic_normalize [DecidableEq R] (hp0 : p ≠ 0) : Monic (normalize p) :=
 theorem leadingCoeff_div (hpq : q.degree ≤ p.degree) :
     (p / q).leadingCoeff = p.leadingCoeff / q.leadingCoeff := by
   by_cases hq : q = 0
-  · simp [hq]
+  simp [hq]
   rw [div_def, leadingCoeff_mul, leadingCoeff_C,
     leadingCoeff_divByMonic_of_monic (monic_mul_leadingCoeff_inv hq) _, mul_comm,
     div_eq_mul_inv]
@@ -485,7 +485,7 @@ theorem leadingCoeff_div (hpq : q.degree ≤ p.degree) :
 
 theorem div_C_mul : p / (C a * q) = C a⁻¹ * (p / q) := by
   by_cases ha : a = 0
-  · simp [ha]
+  simp [ha]
   simp only [div_def, leadingCoeff_mul, mul_inv, leadingCoeff_C, C.map_mul, mul_assoc]
   congr 3
   rw [mul_left_comm q, ← mul_assoc, ← C.map_mul, mul_inv_cancel ha, C.map_one, one_mul]
@@ -513,11 +513,11 @@ theorem normalize_monic [DecidableEq R] (h : Monic p) : normalize p = p := by si
 open Classical in
 theorem map_dvd_map' [Field k] (f : R →+* k) {x y : R[X]} : x.map f ∣ y.map f ↔ x ∣ y := by
   by_cases H : x = 0
-  · rw [H, Polynomial.map_zero, zero_dvd_iff, zero_dvd_iff, map_eq_zero]
-  · rw [← normalize_dvd_iff, ← @normalize_dvd_iff R[X], normalize_apply, normalize_apply,
-      coe_normUnit_of_ne_zero H, coe_normUnit_of_ne_zero (mt (map_eq_zero f).1 H),
-      leadingCoeff_map, ← map_inv₀ f, ← map_C, ← Polynomial.map_mul,
-      map_dvd_map _ f.injective (monic_mul_leadingCoeff_inv H)]
+  rw [H, Polynomial.map_zero, zero_dvd_iff, zero_dvd_iff, map_eq_zero]
+  rw [← normalize_dvd_iff, ← @normalize_dvd_iff R[X], normalize_apply, normalize_apply,
+    coe_normUnit_of_ne_zero H, coe_normUnit_of_ne_zero (mt (map_eq_zero f).1 H),
+    leadingCoeff_map, ← map_inv₀ f, ← map_C, ← Polynomial.map_mul,
+    map_dvd_map _ f.injective (monic_mul_leadingCoeff_inv H)]
 
 theorem degree_normalize [DecidableEq R] : degree (normalize p) = degree p := by simp
 
@@ -533,9 +533,9 @@ theorem irreducible_of_degree_eq_one (hp1 : degree p = 1) : Irreducible p :=
 
 theorem not_irreducible_C (x : R) : ¬Irreducible (C x) := by
   by_cases H : x = 0
-  · rw [H, C_0]
-    exact not_irreducible_zero
-  · exact fun hx => Irreducible.not_unit hx <| isUnit_C.2 <| isUnit_iff_ne_zero.2 H
+  rw [H, C_0]
+  exact not_irreducible_zero
+  exact fun hx => Irreducible.not_unit hx <| isUnit_C.2 <| isUnit_iff_ne_zero.2 H
 
 theorem degree_pos_of_irreducible (hp : Irreducible p) : 0 < p.degree :=
   lt_of_not_ge fun hp0 =>
@@ -593,9 +593,9 @@ theorem irreducible_iff_degree_lt (p : R[X]) (hp0 : p ≠ 0) (hpu : ¬ IsUnit p)
     Irreducible p ↔ ∀ q, q.degree ≤ ↑(natDegree p / 2) → q ∣ p → IsUnit q := by
   rw [← irreducible_mul_leadingCoeff_inv,
       (monic_mul_leadingCoeff_inv hp0).irreducible_iff_degree_lt]
-  · simp [hp0, natDegree_mul_leadingCoeff_inv]
-  · contrapose! hpu
-    exact isUnit_of_mul_eq_one _ _ hpu
+  simp [hp0, natDegree_mul_leadingCoeff_inv]
+  contrapose! hpu
+  exact isUnit_of_mul_eq_one _ _ hpu
 
 /-- To check a polynomial `p` over a field is irreducible, it suffices to check there are no
 divisors of degree `0 < d ≤ degree p / 2`.
@@ -622,5 +622,5 @@ theorem Irreducible.natDegree_pos {F : Type*} [Field F] {f : F[X]} (h : Irreduci
     0 < f.natDegree := Nat.pos_of_ne_zero fun H ↦ by
   obtain ⟨x, hf⟩ := natDegree_eq_zero.1 H
   by_cases hx : x = 0
-  · rw [← hf, hx, map_zero] at h; exact not_irreducible_zero h
+  rw [← hf, hx, map_zero] at h; exact not_irreducible_zero h
   exact h.1 (hf ▸ isUnit_C.2 (Ne.isUnit hx))

@@ -50,10 +50,10 @@ lemma Sieve.generateSingleton_eq {X Y : C} (f : Y ⟶ X) :
     Sieve.generate (Presieve.singleton f) = Sieve.generateSingleton f := by
   ext Z g
   constructor
-  · rintro ⟨W,i,p,⟨⟩,rfl⟩
-    exact ⟨i,rfl⟩
-  · rintro ⟨g,h⟩
-    exact ⟨Y,g,f,⟨⟩,h⟩
+  rintro ⟨W,i,p,⟨⟩,rfl⟩
+  exact ⟨i,rfl⟩
+  rintro ⟨g,h⟩
+  exact ⟨Y,g,f,⟨⟩,h⟩
 
 /--
 Implementation: This is a construction which will be used in the proof that
@@ -133,14 +133,14 @@ def effectiveEpiStructOfIsColimit {X Y : C} (f : Y ⟶ X)
 theorem Sieve.effectiveEpimorphic_singleton {X Y : C} (f : Y ⟶ X) :
     (Presieve.singleton f).EffectiveEpimorphic ↔ (EffectiveEpi f) := by
   constructor
-  · intro (h : Nonempty _)
-    rw [Sieve.generateSingleton_eq] at h
-    constructor
-    apply Nonempty.map (effectiveEpiStructOfIsColimit _) h
-  · rintro ⟨h⟩
-    show Nonempty _
-    rw [Sieve.generateSingleton_eq]
-    apply Nonempty.map (isColimitOfEffectiveEpiStruct _) h
+  intro (h : Nonempty _)
+  rw [Sieve.generateSingleton_eq] at h
+  constructor
+  apply Nonempty.map (effectiveEpiStructOfIsColimit _) h
+  rintro ⟨h⟩
+  show Nonempty _
+  rw [Sieve.generateSingleton_eq]
+  apply Nonempty.map (isColimitOfEffectiveEpiStruct _) h
 
 /--
 The sieve of morphisms which factor through a morphism in a given family.
@@ -158,10 +158,10 @@ lemma Sieve.generateFamily_eq {B : C} {α : Type*} (X : α → C) (π : (a : α)
     Sieve.generate (Presieve.ofArrows X π) = Sieve.generateFamily X π := by
   ext Y g
   constructor
-  · rintro ⟨W, g, f, ⟨a⟩, rfl⟩
-    exact ⟨a, g, rfl⟩
-  · rintro ⟨a, g, rfl⟩
-    exact ⟨_, g, π a, ⟨a⟩, rfl⟩
+  rintro ⟨W, g, f, ⟨a⟩, rfl⟩
+  exact ⟨a, g, rfl⟩
+  rintro ⟨a, g, rfl⟩
+  exact ⟨_, g, π a, ⟨a⟩, rfl⟩
 
 /--
 Implementation: This is a construction which will be used in the proof that
@@ -246,13 +246,13 @@ theorem Sieve.effectiveEpimorphic_family {B : C} {α : Type*}
     (X : α → C) (π : (a : α) → (X a ⟶ B)) :
     (Presieve.ofArrows X π).EffectiveEpimorphic ↔ EffectiveEpiFamily X π := by
   constructor
-  · intro (h : Nonempty _)
-    rw [Sieve.generateFamily_eq] at h
-    constructor
-    apply Nonempty.map (effectiveEpiFamilyStructOfIsColimit _ _) h
-  · rintro ⟨h⟩
-    show Nonempty _
-    rw [Sieve.generateFamily_eq]
-    apply Nonempty.map (isColimitOfEffectiveEpiFamilyStruct _ _) h
+  intro (h : Nonempty _)
+  rw [Sieve.generateFamily_eq] at h
+  constructor
+  apply Nonempty.map (effectiveEpiFamilyStructOfIsColimit _ _) h
+  rintro ⟨h⟩
+  show Nonempty _
+  rw [Sieve.generateFamily_eq]
+  apply Nonempty.map (isColimitOfEffectiveEpiFamilyStruct _ _) h
 
 end CategoryTheory

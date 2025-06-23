@@ -265,14 +265,14 @@ theorem preimage_basicOpen {X Y : LocallyRingedSpace.{u}} (f : X ⟶ Y) {U : Ope
       @RingedSpace.basicOpen X.toRingedSpace ((Opens.map f.1.base).obj U) (f.1.c.app _ s) := by
   ext x
   constructor
-  · rintro ⟨⟨y, hyU⟩, hy : IsUnit _, rfl : y = _⟩
-    erw [RingedSpace.mem_basicOpen _ _ ⟨x, show x ∈ (Opens.map f.1.base).obj U from hyU⟩,
-      ← PresheafedSpace.stalkMap_germ_apply]
-    exact (f.val.stalkMap _).isUnit_map hy
-  · rintro ⟨y, hy : IsUnit _, rfl⟩
-    erw [RingedSpace.mem_basicOpen _ _ ⟨f.1.base y.1, y.2⟩]
-    erw [← PresheafedSpace.stalkMap_germ_apply] at hy
-    exact (isUnit_map_iff (f.val.stalkMap _) _).mp hy
+  rintro ⟨⟨y, hyU⟩, hy : IsUnit _, rfl : y = _⟩
+  erw [RingedSpace.mem_basicOpen _ _ ⟨x, show x ∈ (Opens.map f.1.base).obj U from hyU⟩,
+    ← PresheafedSpace.stalkMap_germ_apply]
+  exact (f.val.stalkMap _).isUnit_map hy
+  rintro ⟨y, hy : IsUnit _, rfl⟩
+  erw [RingedSpace.mem_basicOpen _ _ ⟨f.1.base y.1, y.2⟩]
+  erw [← PresheafedSpace.stalkMap_germ_apply] at hy
+  exact (isUnit_map_iff (f.val.stalkMap _) _).mp hy
 
 -- This actually holds for all ringed spaces with nontrivial stalks.
 theorem basicOpen_zero (X : LocallyRingedSpace.{u}) (U : Opens X.carrier) :

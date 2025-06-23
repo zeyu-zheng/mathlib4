@@ -219,8 +219,8 @@ protected theorem StateEq.trans {t : Register} (ζ₁ ζ₂ ζ₃ : State) :
     ζ₁ ≃[t] ζ₂ → ζ₂ ≃[t] ζ₃ → ζ₁ ≃[t] ζ₃ := by
   simp [StateEq]; intros
   constructor
-  · simp_all only
-  · trans ζ₂ <;> assumption
+  simp_all only
+  trans ζ₂ <;> assumption
 
 -- Porting note (#10754): added instance
 instance (t : Register) : Trans (StateEq (t + 1)) (StateEq (t + 1)) (StateEq (t + 1)) :=
@@ -245,10 +245,10 @@ theorem stateEq_implies_write_eq {t : Register} {ζ₁ ζ₂ : State} (h : ζ₁
   intro r hr
   have hr : r ≤ t := Register.le_of_lt_succ hr
   rcases lt_or_eq_of_le hr with hr | hr
-  · cases' h with _ h
-    specialize h r hr
-    simp_all
-  · simp_all
+  cases' h with _ h
+  specialize h r hr
+  simp_all
+  simp_all
 
 /-- Writing the same value to any register preserves `≃[t]/ac`. -/
 theorem stateEqRs_implies_write_eq_rs {t : Register} {ζ₁ ζ₂ : State} (h : ζ₁ ≃[t]/ac ζ₂)
@@ -283,8 +283,8 @@ theorem compiler_correctness
   | var =>
     simp [hmap, StateEq, step] -- Porting note: was `finish [hmap, StateEq, step]`
     constructor
-    · simp_all only [read, loc]
-    · rfl
+    simp_all only [read, loc]
+    rfl
   -- 5.III
   | sum =>
     rename_i e_s₁ e_s₂ e_ih_s₁ e_ih_s₂

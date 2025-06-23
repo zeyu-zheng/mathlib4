@@ -206,10 +206,10 @@ theorem bijection_symm_apply_id (A B : C) :
     ← Adjunction.eq_homEquiv_apply, Adjunction.homEquiv_unit, Iso.comp_inv_eq, assoc]
   rw [PreservesLimitPair.iso_hom i ((reflector i).obj A) ((reflector i).obj B)]
   apply prod.hom_ext
-  · rw [Limits.prod.map_fst, assoc, assoc, prodComparison_fst, ← i.map_comp, prodComparison_fst]
-    apply (reflectorAdjunction i).unit.naturality
-  · rw [Limits.prod.map_snd, assoc, assoc, prodComparison_snd, ← i.map_comp, prodComparison_snd]
-    apply (reflectorAdjunction i).unit.naturality
+  rw [Limits.prod.map_fst, assoc, assoc, prodComparison_fst, ← i.map_comp, prodComparison_fst]
+  apply (reflectorAdjunction i).unit.naturality
+  rw [Limits.prod.map_snd, assoc, assoc, prodComparison_snd, ← i.map_comp, prodComparison_snd]
+  apply (reflectorAdjunction i).unit.naturality
 
 theorem bijection_natural (A B : C) (X X' : D) (f : (reflector i).obj (A ⨯ B) ⟶ X) (g : X ⟶ X') :
     bijection i _ _ _ (f ≫ g) = bijection i _ _ _ f ≫ g := by

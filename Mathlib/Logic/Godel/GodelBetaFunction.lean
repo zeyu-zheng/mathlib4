@@ -50,8 +50,8 @@ lemma coprime_mul_succ {n m a} (h : n ≤ m) (ha : m - n ∣ a) : Coprime (n * a
         Nat.dvd_sub (Nat.succ_le_succ $ Nat.mul_le_mul_right a h) hm hn
     have : p ∣ a := by
       rcases (Nat.Prime.dvd_mul pp).mp this with (hp | hp)
-      · exact Nat.dvd_trans hp ha
-      · exact hp
+      exact Nat.dvd_trans hp ha
+      exact hp
     apply pp.ne_one
     simpa [Nat.add_sub_cancel_left] using Nat.dvd_sub (le_add_right _ _) hn (this.mul_left n)
 
@@ -72,7 +72,7 @@ lemma coprimes_lt (a : Fin m → ℕ) (i) : a i < coprimes a i := by
 private lemma pairwise_coprime_coprimes (a : Fin m → ℕ) : Pairwise (Coprime on coprimes a) := by
   intro i j hij
   wlog ltij : i < j
-  · exact (this a hij.symm (lt_of_le_of_ne (Fin.not_lt.mp ltij) hij.symm)).symm
+  exact (this a hij.symm (lt_of_le_of_ne (Fin.not_lt.mp ltij) hij.symm)).symm
   unfold Function.onFun coprimes
   have hja : j < supOfSeq a := lt_of_lt_of_le j.prop (le_step (le_max_left _ _))
   exact coprime_mul_succ

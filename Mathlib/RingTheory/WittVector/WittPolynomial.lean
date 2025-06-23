@@ -164,11 +164,11 @@ theorem wittPolynomial_vars [CharZero R] (n : ℕ) : (wittPolynomial p R n).vars
   rw [← Nat.cast_pow, Nat.cast_ne_zero]
   exact pow_ne_zero i hp.1
   rw [wittPolynomial, vars_sum_of_disjoint]
-  · simp only [this, biUnion_singleton_eq_self]
-  · simp only [this]
-    intro a b h
-    apply disjoint_singleton_left.mpr
-    rwa [mem_singleton]
+  simp only [this, biUnion_singleton_eq_self]
+  simp only [this]
+  intro a b h
+  apply disjoint_singleton_left.mpr
+  rwa [mem_singleton]
 
 theorem wittPolynomial_vars_subset (n : ℕ) : (wittPolynomial p R n).vars ⊆ range (n + 1) := by
   rw [← map_wittPolynomial p (Int.castRingHom R), ← wittPolynomial_vars p ℤ]
@@ -245,14 +245,14 @@ theorem xInTermsOfW_vars_aux (n : ℕ) :
     rcases H with ⟨j, hj, H⟩
     rw [vars_C_mul] at H
     swap
-    · apply pow_ne_zero
-      exact mod_cast hp.1.ne_zero
+    apply pow_ne_zero
+    exact mod_cast hp.1.ne_zero
     rw [mem_range] at hj
     replace H := (ih j hj).2 (vars_pow _ _ H)
     rw [mem_range] at H
-  · rw [mem_range]
-    omega
-  · omega
+  rw [mem_range]
+  omega
+  omega
 
 theorem xInTermsOfW_vars_subset (n : ℕ) : (xInTermsOfW p ℚ n).vars ⊆ range (n + 1) :=
   (xInTermsOfW_vars_aux p n).2

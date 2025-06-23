@@ -459,7 +459,7 @@ theorem mem_list_toFinmap (a : α) (xs : List (Sigma β)) :
     a ∈ xs.toFinmap ↔ ∃ b : β a, Sigma.mk a b ∈ xs := by
   -- Porting note: golfed
   induction' xs with x xs
-  · simp only [toFinmap_nil, not_mem_empty, find?, not_mem_nil, exists_false]
+  simp only [toFinmap_nil, not_mem_empty, find?, not_mem_nil, exists_false]
   cases' x with fst_i snd_i
   -- Porting note: `Sigma.mk.inj_iff` required because `simp` behaves differently
   simp only [toFinmap_cons, *, exists_or, mem_cons, mem_insert, exists_and_left, Sigma.mk.inj_iff]
@@ -515,8 +515,8 @@ theorem lookup_union_right {a} {s₁ s₂ : Finmap β} : a ∉ s₁ → lookup a
 theorem lookup_union_left_of_not_in {a} {s₁ s₂ : Finmap β} (h : a ∉ s₂) :
     lookup a (s₁ ∪ s₂) = lookup a s₁ := by
   by_cases h' : a ∈ s₁
-  · rw [lookup_union_left h']
-  · rw [lookup_union_right h', lookup_eq_none.mpr h, lookup_eq_none.mpr h']
+  rw [lookup_union_left h']
+  rw [lookup_union_right h', lookup_eq_none.mpr h, lookup_eq_none.mpr h']
 
 -- @[simp] -- Porting note (#10618): simp can prove this
 theorem mem_lookup_union {a} {b : β a} {s₁ s₂ : Finmap β} :
@@ -550,10 +550,10 @@ theorem erase_union_singleton (a : α) (b : β a) (s : Finmap β) (h : s.lookup 
     s.erase a ∪ singleton a b = s :=
   ext_lookup fun x => by
     by_cases h' : x = a
-    · subst a
-      rw [lookup_union_right not_mem_erase_self, lookup_singleton_eq, h]
-    · have : x ∉ singleton a b := by rwa [mem_singleton]
-      rw [lookup_union_left_of_not_in this, lookup_erase_ne h']
+    subst a
+    rw [lookup_union_right not_mem_erase_self, lookup_singleton_eq, h]
+    have : x ∉ singleton a b := by rwa [mem_singleton]
+    rw [lookup_union_left_of_not_in this, lookup_erase_ne h']
 
 end
 
@@ -598,10 +598,10 @@ theorem union_cancel {s₁ s₂ s₃ : Finmap β} (h : Disjoint s₁ s₃) (h' :
     intro x
     have : (s₁ ∪ s₃).lookup x = (s₂ ∪ s₃).lookup x := h'' ▸ rfl
     by_cases hs₁ : x ∈ s₁
-    · rwa [lookup_union_left hs₁, lookup_union_left_of_not_in (h _ hs₁)] at this
-    · by_cases hs₂ : x ∈ s₂
-      · rwa [lookup_union_left_of_not_in (h' _ hs₂), lookup_union_left hs₂] at this
-      · rw [lookup_eq_none.mpr hs₁, lookup_eq_none.mpr hs₂], fun h => h ▸ rfl⟩
+    rwa [lookup_union_left hs₁, lookup_union_left_of_not_in (h _ hs₁)] at this
+    by_cases hs₂ : x ∈ s₂
+    rwa [lookup_union_left_of_not_in (h' _ hs₂), lookup_union_left hs₂] at this
+    rw [lookup_eq_none.mpr hs₁, lookup_eq_none.mpr hs₂], fun h => h ▸ rfl⟩
 
 end
 

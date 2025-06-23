@@ -25,7 +25,7 @@ theorem IsPrimePow.minFac_pow_factorization_eq {n : ℕ} (hn : IsPrimePow n) :
 theorem isPrimePow_of_minFac_pow_factorization_eq {n : ℕ}
     (h : n.minFac ^ n.factorization n.minFac = n) (hn : n ≠ 1) : IsPrimePow n := by
   rcases eq_or_ne n 0 with (rfl | hn')
-  · simp_all
+  simp_all
   refine ⟨_, _, (Nat.minFac_prime hn).prime, ?_, h⟩
   simp [pos_iff_ne_zero, ← Finsupp.mem_support_iff, Nat.support_factorization, hn',
     Nat.minFac_prime hn, Nat.minFac_dvd]
@@ -39,15 +39,15 @@ theorem isPrimePow_iff_factorization_eq_single {n : ℕ} :
   rw [isPrimePow_nat_iff]
   refine exists₂_congr fun p k => ?_
   constructor
-  · rintro ⟨hp, hk, hn⟩
-    exact ⟨hk, by rw [← hn, Nat.Prime.factorization_pow hp]⟩
-  · rintro ⟨hk, hn⟩
-    have hn0 : n ≠ 0
-    rintro rfl
-    simp_all only [Finsupp.single_eq_zero, eq_comm, Nat.factorization_zero, hk.ne']
-    rw [Nat.eq_pow_of_factorization_eq_single hn0 hn]
-    exact ⟨Nat.prime_of_mem_primeFactors <|
-      Finsupp.mem_support_iff.2 (by simp [hn, hk.ne'] : n.factorization p ≠ 0), hk, rfl⟩
+  rintro ⟨hp, hk, hn⟩
+  exact ⟨hk, by rw [← hn, Nat.Prime.factorization_pow hp]⟩
+  rintro ⟨hk, hn⟩
+  have hn0 : n ≠ 0
+  rintro rfl
+  simp_all only [Finsupp.single_eq_zero, eq_comm, Nat.factorization_zero, hk.ne']
+  rw [Nat.eq_pow_of_factorization_eq_single hn0 hn]
+  exact ⟨Nat.prime_of_mem_primeFactors <|
+    Finsupp.mem_support_iff.2 (by simp [hn, hk.ne'] : n.factorization p ≠ 0), hk, rfl⟩
 
 theorem isPrimePow_iff_card_primeFactors_eq_one {n : ℕ} :
     IsPrimePow n ↔ n.primeFactors.card = 1 := by
@@ -59,8 +59,8 @@ theorem IsPrimePow.exists_ord_compl_eq_one {n : ℕ} (h : IsPrimePow n) :
   rcases eq_or_ne n 0 with (rfl | hn0); · cases not_isPrimePow_zero h
   rcases isPrimePow_iff_factorization_eq_single.mp h with ⟨p, k, hk0, h1⟩
   rcases em' p.Prime with (pp | pp)
-  · refine absurd ?_ hk0.ne'
-    simp [← Nat.factorization_eq_zero_of_non_prime n pp, h1]
+  refine absurd ?_ hk0.ne'
+  simp [← Nat.factorization_eq_zero_of_non_prime n pp, h1]
   refine ⟨p, pp, ?_⟩
   refine Nat.eq_of_factorization_eq (Nat.ord_compl_pos p hn0).ne' (by simp) fun q => ?_
   rw [Nat.factorization_ord_compl n p, h1]
@@ -81,13 +81,13 @@ dividing it. -/
 theorem isPrimePow_iff_unique_prime_dvd {n : ℕ} : IsPrimePow n ↔ ∃! p : ℕ, p.Prime ∧ p ∣ n := by
   rw [isPrimePow_nat_iff]
   constructor
-  · rintro ⟨p, k, hp, hk, rfl⟩
-    refine ⟨p, ⟨hp, dvd_pow_self _ hk.ne'⟩, ?_⟩
-    rintro q ⟨hq, hq'⟩
-    exact (Nat.prime_dvd_prime_iff_eq hq hp).1 (hq.dvd_of_dvd_pow hq')
+  rintro ⟨p, k, hp, hk, rfl⟩
+  refine ⟨p, ⟨hp, dvd_pow_self _ hk.ne'⟩, ?_⟩
+  rintro q ⟨hq, hq'⟩
+  exact (Nat.prime_dvd_prime_iff_eq hq hp).1 (hq.dvd_of_dvd_pow hq')
   rintro ⟨p, ⟨hp, hn⟩, hq⟩
   rcases eq_or_ne n 0 with (rfl | hn₀)
-  · cases (hq 2 ⟨Nat.prime_two, dvd_zero 2⟩).trans (hq 3 ⟨Nat.prime_three, dvd_zero 3⟩).symm
+  cases (hq 2 ⟨Nat.prime_two, dvd_zero 2⟩).trans (hq 3 ⟨Nat.prime_three, dvd_zero 3⟩).symm
   refine ⟨p, n.factorization p, hp, hp.factorization_pos_of_dvd hn₀ hn, ?_⟩
   simp only [and_imp] at hq
   apply Nat.dvd_antisymm (Nat.ord_proj_dvd _ _)
@@ -109,11 +109,11 @@ theorem isPrimePow_pow_iff {n k : ℕ} (hk : k ≠ 0) : IsPrimePow (n ^ k) ↔ I
 theorem Nat.Coprime.isPrimePow_dvd_mul {n a b : ℕ} (hab : Nat.Coprime a b) (hn : IsPrimePow n) :
     n ∣ a * b ↔ n ∣ a ∨ n ∣ b := by
   rcases eq_or_ne a 0 with (rfl | ha)
-  · simp only [Nat.coprime_zero_left] at hab
-    simp [hab, Finset.filter_singleton, not_isPrimePow_one]
+  simp only [Nat.coprime_zero_left] at hab
+  simp [hab, Finset.filter_singleton, not_isPrimePow_one]
   rcases eq_or_ne b 0 with (rfl | hb)
-  · simp only [Nat.coprime_zero_right] at hab
-    simp [hab, Finset.filter_singleton, not_isPrimePow_one]
+  simp only [Nat.coprime_zero_right] at hab
+  simp [hab, Finset.filter_singleton, not_isPrimePow_one]
   refine
     ⟨?_, fun h =>
       Or.elim h (fun i => i.trans ((@dvd_mul_right a b a hab).mpr (dvd_refl a)))
@@ -132,11 +132,11 @@ theorem Nat.Coprime.isPrimePow_dvd_mul {n a b : ℕ} (hab : Nat.Coprime a b) (hn
 theorem Nat.mul_divisors_filter_prime_pow {a b : ℕ} (hab : a.Coprime b) :
     (a * b).divisors.filter IsPrimePow = (a.divisors ∪ b.divisors).filter IsPrimePow := by
   rcases eq_or_ne a 0 with (rfl | ha)
-  · simp only [Nat.coprime_zero_left] at hab
-    simp [hab, Finset.filter_singleton, not_isPrimePow_one]
+  simp only [Nat.coprime_zero_left] at hab
+  simp [hab, Finset.filter_singleton, not_isPrimePow_one]
   rcases eq_or_ne b 0 with (rfl | hb)
-  · simp only [Nat.coprime_zero_right] at hab
-    simp [hab, Finset.filter_singleton, not_isPrimePow_one]
+  simp only [Nat.coprime_zero_right] at hab
+  simp [hab, Finset.filter_singleton, not_isPrimePow_one]
   ext n
   simp only [ha, hb, Finset.mem_union, Finset.mem_filter, Nat.mul_eq_zero, and_true_iff, Ne,
     and_congr_left_iff, not_false_iff, Nat.mem_divisors, or_self_iff]

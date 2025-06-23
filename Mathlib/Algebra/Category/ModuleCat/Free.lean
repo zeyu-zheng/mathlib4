@@ -64,8 +64,8 @@ theorem linearIndependent_leftExact : LinearIndependent R u := by
   rw [linearIndependent_sum]
   refine ⟨?_, LinearIndependent.of_comp S.g hw, disjoint_span_sum hS hw huv⟩
   rw [huv, LinearMap.linearIndependent_iff S.f]; swap
-  · rw [LinearMap.ker_eq_bot, ← mono_iff_injective]
-    infer_instance
+  rw [LinearMap.ker_eq_bot, ← mono_iff_injective]
+  infer_instance
   exact hv
 
 /-- Given a short exact sequence `0 ⟶ X₁ ⟶ X₂ ⟶ X₃ ⟶ 0` of `R`-modules and linearly independent
@@ -118,12 +118,12 @@ theorem span_exact {β : Type*} {u : ι ⊕ β → S.X₂} (huv : u ∘ Sum.inl 
     congr; ext a b; rw [← Function.comp_apply (f := S.f), ← huv, Function.comp_apply]
   rw [hn']
   apply add_mem
-  · rw [Finsupp.mem_span_range_iff_exists_finsupp]
-    use cn.mapDomain (Sum.inl)
-    rw [Finsupp.sum_mapDomain_index_inj Sum.inl_injective]
-  · rw [Finsupp.mem_span_range_iff_exists_finsupp]
-    use cm.mapDomain (Sum.inr)
-    rw [Finsupp.sum_mapDomain_index_inj Sum.inr_injective]
+  rw [Finsupp.mem_span_range_iff_exists_finsupp]
+  use cn.mapDomain (Sum.inl)
+  rw [Finsupp.sum_mapDomain_index_inj Sum.inl_injective]
+  rw [Finsupp.mem_span_range_iff_exists_finsupp]
+  use cm.mapDomain (Sum.inr)
+  rw [Finsupp.sum_mapDomain_index_inj Sum.inr_injective]
 
 /-- Given an exact sequence `X₁ ⟶ X₂ ⟶ X₃ ⟶ 0` of `R`-modules and spanning
     families `v : ι → X₁` and `w : ι' → X₃`, we get a spanning family `ι ⊕ ι' → X₂` -/
@@ -131,12 +131,12 @@ theorem span_rightExact {w : ι' → S.X₃} (hv : ⊤ ≤ span R (range v))
     (hw : ⊤ ≤ span R (range w)) (hE : Epi S.g) :
     ⊤ ≤ span R (range (Sum.elim (S.f ∘ v) (S.g.toFun.invFun ∘ w))) := by
   refine span_exact hS ?_ hv ?_
-  · simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, Sum.elim_comp_inl]
-  · convert hw
-    simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, Sum.elim_comp_inr]
-    rw [ModuleCat.epi_iff_surjective] at hE
-    rw [← Function.comp.assoc, Function.RightInverse.comp_eq_id (Function.rightInverse_invFun hE),
-      Function.id_comp]
+  simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, Sum.elim_comp_inl]
+  convert hw
+  simp only [AddHom.toFun_eq_coe, LinearMap.coe_toAddHom, Sum.elim_comp_inr]
+  rw [ModuleCat.epi_iff_surjective] at hE
+  rw [← Function.comp.assoc, Function.RightInverse.comp_eq_id (Function.rightInverse_invFun hE),
+    Function.id_comp]
 
 end Span
 

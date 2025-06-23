@@ -59,9 +59,9 @@ alias snormEssSup_add_le := eLpNormEssSup_add_le
 theorem eLpNorm_add_le {f g : α → E} (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ)
     (hp1 : 1 ≤ p) : eLpNorm (f + g) p μ ≤ eLpNorm f p μ + eLpNorm g p μ := by
   by_cases hp0 : p = 0
-  · simp [hp0]
+  simp [hp0]
   by_cases hp_top : p = ∞
-  · simp [hp_top, eLpNormEssSup_add_le]
+  simp [hp_top, eLpNormEssSup_add_le]
   have hp1_real : 1 ≤ p.toReal
   rwa [← ENNReal.one_toReal, ENNReal.toReal_le_toReal ENNReal.one_ne_top hp_top]
   repeat rw [eLpNorm_eq_eLpNorm' hp0 hp_top]
@@ -88,23 +88,23 @@ theorem LpAddConst_zero : LpAddConst 0 = 1 := by
 theorem LpAddConst_lt_top (p : ℝ≥0∞) : LpAddConst p < ∞ := by
   rw [LpAddConst]
   split_ifs with h
-  · apply ENNReal.rpow_lt_top_of_nonneg _ ENNReal.two_ne_top
-    simp only [one_div, sub_nonneg]
-    apply one_le_inv (ENNReal.toReal_pos h.1.ne' (h.2.trans ENNReal.one_lt_top).ne)
-    simpa using ENNReal.toReal_mono ENNReal.one_ne_top h.2.le
-  · exact ENNReal.one_lt_top
+  apply ENNReal.rpow_lt_top_of_nonneg _ ENNReal.two_ne_top
+  simp only [one_div, sub_nonneg]
+  apply one_le_inv (ENNReal.toReal_pos h.1.ne' (h.2.trans ENNReal.one_lt_top).ne)
+  simpa using ENNReal.toReal_mono ENNReal.one_ne_top h.2.le
+  exact ENNReal.one_lt_top
 
 theorem eLpNorm_add_le' (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ)
     (p : ℝ≥0∞) : eLpNorm (f + g) p μ ≤ LpAddConst p * (eLpNorm f p μ + eLpNorm g p μ) := by
   rcases eq_or_ne p 0 with (rfl | hp)
-  · simp only [eLpNorm_exponent_zero, add_zero, mul_zero, le_zero_iff]
+  simp only [eLpNorm_exponent_zero, add_zero, mul_zero, le_zero_iff]
   rcases lt_or_le p 1 with (h'p | h'p)
-  · simp only [eLpNorm_eq_eLpNorm' hp (h'p.trans ENNReal.one_lt_top).ne]
-    convert eLpNorm'_add_le_of_le_one hf ENNReal.toReal_nonneg _
-    · have : p ∈ Set.Ioo (0 : ℝ≥0∞) 1 := ⟨hp.bot_lt, h'p⟩
-      simp only [LpAddConst, if_pos this]
-    · simpa using ENNReal.toReal_mono ENNReal.one_ne_top h'p.le
-  · simpa [LpAddConst_of_one_le h'p] using eLpNorm_add_le hf hg h'p
+  simp only [eLpNorm_eq_eLpNorm' hp (h'p.trans ENNReal.one_lt_top).ne]
+  convert eLpNorm'_add_le_of_le_one hf ENNReal.toReal_nonneg _
+  have : p ∈ Set.Ioo (0 : ℝ≥0∞) 1 := ⟨hp.bot_lt, h'p⟩
+  simp only [LpAddConst, if_pos this]
+  simpa using ENNReal.toReal_mono ENNReal.one_ne_top h'p.le
+  simpa [LpAddConst_of_one_le h'p] using eLpNorm_add_le hf hg h'p
 
 @[deprecated (since := "2024-07-27")]
 alias snorm_add_le' := eLpNorm_add_le'
@@ -193,10 +193,10 @@ theorem memℒp_finset_sum {ι} (s : Finset ι) {f : ι → α → E} (hf : ∀ 
   haveI : DecidableEq ι := Classical.decEq _
   revert hf
   refine Finset.induction_on s ?_ ?_
-  · simp only [zero_mem_ℒp', Finset.sum_empty, imp_true_iff]
-  · intro i s his ih hf
-    simp only [his, Finset.sum_insert, not_false_iff]
-    exact (hf i (s.mem_insert_self i)).add (ih fun j hj => hf j (Finset.mem_insert_of_mem hj))
+  simp only [zero_mem_ℒp', Finset.sum_empty, imp_true_iff]
+  intro i s his ih hf
+  simp only [his, Finset.sum_insert, not_false_iff]
+  exact (hf i (s.mem_insert_self i)).add (ih fun j hj => hf j (Finset.mem_insert_of_mem hj))
 
 theorem memℒp_finset_sum' {ι} (s : Finset ι) {f : ι → α → E} (hf : ∀ i ∈ s, Memℒp (f i) p μ) :
     Memℒp (∑ i ∈ s, f i) p μ := by

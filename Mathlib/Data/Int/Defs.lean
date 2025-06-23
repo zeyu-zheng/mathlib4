@@ -257,14 +257,14 @@ lemma inductionOn'_sub_one (hz : z ≤ b) :
   obtain ⟨n, hn⟩ := Int.eq_negSucc_of_lt_zero (show z - 1 - b < 0 by omega)
   rw [hn]
   obtain _|n := n
-  · change _ = -1 at hn
-    have : z = b
-    omega
-    subst this; rw [inductionOn'_self]; exact heq_of_eq rfl
-  · have : z = b + -[n+1] := by rw [Int.negSucc_eq] at hn ⊢; omega
-    subst this
-    convert cast_heq _ _
-    rw [Int.inductionOn', cast_eq_iff_heq, show b + -[n+1] - b = -[n+1] by omega]
+  change _ = -1 at hn
+  have : z = b
+  omega
+  subst this; rw [inductionOn'_self]; exact heq_of_eq rfl
+  have : z = b + -[n+1] := by rw [Int.negSucc_eq] at hn ⊢; omega
+  subst this
+  convert cast_heq _ _
+  rw [Int.inductionOn', cast_eq_iff_heq, show b + -[n+1] - b = -[n+1] by omega]
 
 end inductionOn'
 
@@ -278,12 +278,12 @@ end inductionOn'
 protected lemma le_induction {P : ℤ → Prop} {m : ℤ} (h0 : P m)
     (h1 : ∀ n : ℤ, m ≤ n → P n → P (n + 1)) (n : ℤ) : m ≤ n → P n := by
   refine Int.inductionOn' n m ?_ ?_ ?_
-  · intro
-    exact h0
-  · intro k hle hi _
-    exact h1 k hle (hi hle)
-  · intro k hle _ hle'
-    omega
+  intro
+  exact h0
+  intro k hle hi _
+  exact h1 k hle (hi hle)
+  intro k hle _ hle'
+  omega
 
 /-- See `Int.inductionOn'` for an induction in both directions. -/
 protected theorem le_induction_down {P : ℤ → Prop} {m : ℤ} (h0 : P m)
@@ -312,12 +312,12 @@ lemma strongRec_of_ge :
   rw [Int.strongRec, dif_neg (Int.not_lt.mpr hn)]
   congr; revert ih
   refine n.inductionOn' m (fun _ ↦ ?_) (fun k hmk ih' ih ↦ ?_) (fun k hkm ih' _ ↦ ?_) <;> ext l hl
-  · rw [inductionOn'_self, strongRec_of_lt hl]
-  · rw [inductionOn'_add_one hmk]; split_ifs with hlm
-    · rw [strongRec_of_lt hlm]
-    · rw [ih' fun l hl ↦ ih l (Int.lt_trans hl k.lt_succ), ih _ hl]
-  · rw [inductionOn'_sub_one hkm, ih']
-    exact fun l hlk hml ↦ (Int.not_lt.mpr hkm <| Int.lt_of_le_of_lt hml hlk).elim
+  rw [inductionOn'_self, strongRec_of_lt hl]
+  rw [inductionOn'_add_one hmk]; split_ifs with hlm
+  rw [strongRec_of_lt hlm]
+  rw [ih' fun l hl ↦ ih l (Int.lt_trans hl k.lt_succ), ih _ hl]
+  rw [inductionOn'_sub_one hkm, ih']
+  exact fun l hlk hml ↦ (Int.not_lt.mpr hkm <| Int.lt_of_le_of_lt hml hlk).elim
 
 end strongRec
 
@@ -337,8 +337,8 @@ lemma natAbs_surjective : natAbs.Surjective := fun n => ⟨n, natAbs_ofNat n⟩
 
 lemma natAbs_pow (n : ℤ) (k : ℕ) : Int.natAbs (n ^ k) = Int.natAbs n ^ k := by
   induction' k with k ih
-  · rfl
-  · rw [Int.pow_succ, natAbs_mul, Nat.pow_succ, ih, Nat.mul_comm]
+  rfl
+  rw [Int.pow_succ, natAbs_mul, Nat.pow_succ, ih, Nat.mul_comm]
 
 lemma pow_right_injective (h : 1 < a.natAbs) : ((a ^ ·) : ℕ → ℤ).Injective := by
   refine (?_ : (natAbs ∘ (a ^ · : ℕ → ℤ)).Injective).of_comp
@@ -413,9 +413,9 @@ lemma mul_dvd_of_dvd_div (hcb : c ∣ b) (h : a ∣ b / c) : c * a ∣ b :=
 
 lemma dvd_div_of_mul_dvd (h : a * b ∣ c) : b ∣ c / a := by
   obtain rfl | ha := eq_or_ne a 0
-  · simp
-  · obtain ⟨d, rfl⟩ := h
-    simp [Int.mul_assoc, ha]
+  simp
+  obtain ⟨d, rfl⟩ := h
+  simp [Int.mul_assoc, ha]
 
 @[simp] lemma dvd_div_iff_mul_dvd (hbc : c ∣ b) : a ∣ b / c ↔ c * a ∣ b :=
   ⟨mul_dvd_of_dvd_div hbc, dvd_div_of_mul_dvd⟩
@@ -432,24 +432,24 @@ lemma ediv_dvd_ediv : ∀ {a b c : ℤ}, a ∣ b → b ∣ c → b / a ∣ c / a
 lemma exists_lt_and_lt_iff_not_dvd (m : ℤ) (hn : 0 < n) :
     (∃ k, n * k < m ∧ m < n * (k + 1)) ↔ ¬n ∣ m := by
   refine ⟨?_, fun h ↦ ?_⟩
-  · rintro ⟨k, h1k, h2k⟩ ⟨l, rfl⟩
-    replace h1k := lt_of_mul_lt_mul_left h1k (by omega)
-    replace h2k := lt_of_mul_lt_mul_left h2k (by omega)
-    rw [Int.lt_add_one_iff, ← Int.not_lt] at h2k
-    exact h2k h1k
-  · rw [dvd_iff_emod_eq_zero, ← Ne] at h
-    rw [← emod_add_ediv m n]
-    refine ⟨m / n, Int.lt_add_of_pos_left _ ?_, ?_⟩
-    · have := emod_nonneg m (Int.ne_of_gt hn)
-      omega
-    · rw [Int.add_comm _ (1 : ℤ), Int.mul_add, Int.mul_one]
-      exact Int.add_lt_add_right (emod_lt_of_pos _ hn) _
+  rintro ⟨k, h1k, h2k⟩ ⟨l, rfl⟩
+  replace h1k := lt_of_mul_lt_mul_left h1k (by omega)
+  replace h2k := lt_of_mul_lt_mul_left h2k (by omega)
+  rw [Int.lt_add_one_iff, ← Int.not_lt] at h2k
+  exact h2k h1k
+  rw [dvd_iff_emod_eq_zero, ← Ne] at h
+  rw [← emod_add_ediv m n]
+  refine ⟨m / n, Int.lt_add_of_pos_left _ ?_, ?_⟩
+  have := emod_nonneg m (Int.ne_of_gt hn)
+  omega
+  rw [Int.add_comm _ (1 : ℤ), Int.mul_add, Int.mul_one]
+  exact Int.add_lt_add_right (emod_lt_of_pos _ hn) _
 
 @[norm_cast] lemma natCast_dvd_natCast {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n where
   mp := by
     rintro ⟨a, h⟩
     obtain rfl | hm := m.eq_zero_or_pos
-    · simpa using h
+    simpa using h
     have ha : 0 ≤ a := Int.not_lt.1 fun ha ↦ by
       simpa [← h, Int.not_lt.2 (Int.natCast_nonneg _)]
         using Int.mul_neg_of_pos_of_neg (natCast_pos.2 hm) ha
@@ -466,8 +466,8 @@ lemma dvd_natCast {n : ℕ} : m ∣ (n : ℤ) ↔ m.natAbs ∣ n := by
 
 lemma natAbs_ediv (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natAbs b := by
   rcases Nat.eq_zero_or_pos (natAbs b) with (h | h)
-  · rw [natAbs_eq_zero.1 h]
-    simp [Int.ediv_zero]
+  rw [natAbs_eq_zero.1 h]
+  simp [Int.ediv_zero]
   calc
     natAbs (a / b) = natAbs (a / b) * 1 := by rw [Nat.mul_one]
     _ = natAbs (a / b) * (natAbs b / natAbs b) := by rw [Nat.div_self h]
@@ -522,9 +522,9 @@ lemma natAbs_eq_of_dvd_dvd (hmn : m ∣ n) (hnm : n ∣ m) : natAbs m = natAbs n
 
 lemma ediv_dvd_of_dvd (hmn : m ∣ n) : n / m ∣ n := by
   obtain rfl | hm := eq_or_ne m 0
-  · simpa using hmn
-  · obtain ⟨a, ha⟩ := hmn
-    simp [ha, Int.mul_ediv_cancel_left _ hm, Int.dvd_mul_left]
+  simpa using hmn
+  obtain ⟨a, ha⟩ := hmn
+  simp [ha, Int.mul_ediv_cancel_left _ hm, Int.dvd_mul_left]
 
 lemma le_iff_pos_of_dvd (ha : 0 < a) (hab : a ∣ b) : a ≤ b ↔ 0 < b :=
   ⟨Int.lt_of_lt_of_le ha, (Int.le_of_dvd · hab)⟩

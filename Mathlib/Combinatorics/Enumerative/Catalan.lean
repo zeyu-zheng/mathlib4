@@ -117,24 +117,24 @@ theorem catalan_eq_centralBinom_div (n : ℕ) : catalan n = n.centralBinom / (n 
     have h := Nat.succ_dvd_centralBinom n
     exact mod_cast this
   induction' n using Nat.case_strong_induction_on with d hd
-  · simp
-  · simp_rw [catalan_succ, Nat.cast_sum, Nat.cast_mul]
-    trans (∑ i : Fin d.succ, Nat.centralBinom i / (i + 1) *
-                             (Nat.centralBinom (d - i) / (d - i + 1)) : ℚ)
-    · congr
-      ext1 x
-      have m_le_d : x.val ≤ d
-      apply Nat.le_of_lt_succ; apply x.2
-      have d_minus_x_le_d : (d - x.val) ≤ d := tsub_le_self
-      rw [hd _ m_le_d, hd _ d_minus_x_le_d]
-      norm_cast
-    · trans (∑ i : Fin d.succ, (gosperCatalan (d + 1) (i + 1) - gosperCatalan (d + 1) i))
-      · refine sum_congr rfl fun i _ => ?_
-        rw [gosper_trick i.is_le, mul_div]
-      · rw [← sum_range fun i => gosperCatalan (d + 1) (i + 1) - gosperCatalan (d + 1) i,
-            sum_range_sub, Nat.succ_eq_add_one]
-        rw [gosper_catalan_sub_eq_central_binom_div d]
-        norm_cast
+  simp
+  simp_rw [catalan_succ, Nat.cast_sum, Nat.cast_mul]
+  trans (∑ i : Fin d.succ, Nat.centralBinom i / (i + 1) *
+                           (Nat.centralBinom (d - i) / (d - i + 1)) : ℚ)
+  congr
+  ext1 x
+  have m_le_d : x.val ≤ d
+  apply Nat.le_of_lt_succ; apply x.2
+  have d_minus_x_le_d : (d - x.val) ≤ d := tsub_le_self
+  rw [hd _ m_le_d, hd _ d_minus_x_le_d]
+  norm_cast
+  trans (∑ i : Fin d.succ, (gosperCatalan (d + 1) (i + 1) - gosperCatalan (d + 1) i))
+  refine sum_congr rfl fun i _ => ?_
+  rw [gosper_trick i.is_le, mul_div]
+  rw [← sum_range fun i => gosperCatalan (d + 1) (i + 1) - gosperCatalan (d + 1) i,
+      sum_range_sub, Nat.succ_eq_add_one]
+  rw [gosper_catalan_sub_eq_central_binom_div d]
+  norm_cast
 
 theorem succ_mul_catalan_eq_centralBinom (n : ℕ) : (n + 1) * catalan n = n.centralBinom :=
   (Nat.eq_mul_of_div_eq_right n.succ_dvd_centralBinom (catalan_eq_centralBinom_div n).symm).symm
@@ -195,21 +195,21 @@ theorem coe_treesOfNumNodesEq (n : ℕ) :
 
 theorem treesOfNumNodesEq_card_eq_catalan (n : ℕ) : (treesOfNumNodesEq n).card = catalan n := by
   induction' n using Nat.case_strong_induction_on with n ih
-  · simp
+  simp
   rw [treesOfNumNodesEq_succ, card_biUnion, catalan_succ']
-  · apply sum_congr rfl
-    rintro ⟨i, j⟩ H
-    rw [card_map, card_product, ih _ (fst_le H), ih _ (snd_le H)]
-  · simp_rw [disjoint_left]
-    rintro ⟨i, j⟩ _ ⟨i', j'⟩ _
-    -- Porting note: was clear * -; tidy
-    intros h a
-    cases' a with a l r
-    · intro h; simp at h
-    · intro h1 h2
-      apply h
-      trans (numNodes l, numNodes r)
-      · simp at h1; simp [h1]
-      · simp at h2; simp [h2]
+  apply sum_congr rfl
+  rintro ⟨i, j⟩ H
+  rw [card_map, card_product, ih _ (fst_le H), ih _ (snd_le H)]
+  simp_rw [disjoint_left]
+  rintro ⟨i, j⟩ _ ⟨i', j'⟩ _
+  -- Porting note: was clear * -; tidy
+  intros h a
+  cases' a with a l r
+  intro h; simp at h
+  intro h1 h2
+  apply h
+  trans (numNodes l, numNodes r)
+  simp at h1; simp [h1]
+  simp at h2; simp [h2]
 
 end Tree

@@ -101,11 +101,11 @@ theorem hasFDerivAt_inversion (hx : x ≠ c) :
   refine this.congr_fderiv (LinearMap.ext_on_codisjoint
     (Submodule.isCompl_orthogonal_of_completeSpace (K := ℝ ∙ x)).codisjoint
     (LinearMap.eqOn_span' ?_) fun y hy ↦ ?_)
-  · have : ((‖x‖ ^ 2) ^ 2)⁻¹ * (‖x‖ ^ 2) = (‖x‖ ^ 2)⁻¹ := by
-      rw [← div_eq_inv_mul, sq (‖x‖ ^ 2), div_self_mul_self']
-    simp [reflection_orthogonalComplement_singleton_eq_neg, real_inner_self_eq_norm_sq,
-      two_mul, this, div_eq_mul_inv, mul_add, add_smul, mul_pow]
-  · simp [Submodule.mem_orthogonal_singleton_iff_inner_right.1 hy,
-      reflection_mem_subspace_eq_self hy, div_eq_mul_inv, mul_pow]
+  have : ((‖x‖ ^ 2) ^ 2)⁻¹ * (‖x‖ ^ 2) = (‖x‖ ^ 2)⁻¹ := by
+    rw [← div_eq_inv_mul, sq (‖x‖ ^ 2), div_self_mul_self']
+  simp [reflection_orthogonalComplement_singleton_eq_neg, real_inner_self_eq_norm_sq,
+    two_mul, this, div_eq_mul_inv, mul_add, add_smul, mul_pow]
+  simp [Submodule.mem_orthogonal_singleton_iff_inner_right.1 hy,
+    reflection_mem_subspace_eq_self hy, div_eq_mul_inv, mul_pow]
 
 end EuclideanGeometry

@@ -484,14 +484,14 @@ lemma baseChange_span (s : Set M) :
   refine le_antisymm (span_le.mpr ?_) (span_mono <| Set.image_subset _ subset_span)
   rintro - ⟨m : M, hm : m ∈ span R s, rfl⟩
   apply span_induction (p := fun m' ↦ (1 : A) ⊗ₜ[R] m' ∈ span A (TensorProduct.mk R A M 1 '' s)) hm
-  · intro m hm
-    exact subset_span ⟨m, hm, rfl⟩
-  · simp
-  · intro m₁ m₂ hm₁ hm₂
-    rw [tmul_add]
-    exact Submodule.add_mem _ hm₁ hm₂
-  · intro r m' hm'
-    rw [tmul_smul, ← one_smul A ((1 : A) ⊗ₜ[R] m'), ← smul_assoc]
-    exact smul_mem _ (r • 1) hm'
+  intro m hm
+  exact subset_span ⟨m, hm, rfl⟩
+  simp
+  intro m₁ m₂ hm₁ hm₂
+  rw [tmul_add]
+  exact Submodule.add_mem _ hm₁ hm₂
+  intro r m' hm'
+  rw [tmul_smul, ← one_smul A ((1 : A) ⊗ₜ[R] m'), ← smul_assoc]
+  exact smul_mem _ (r • 1) hm'
 
 end Submodule

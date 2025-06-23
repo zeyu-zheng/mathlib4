@@ -72,15 +72,15 @@ def comp : MorphismProperty C := fun _ _ f => Nonempty (MapFactorizationData W�
 
 lemma comp_eq_top_iff : W₁.comp W₂ = ⊤ ↔ HasFactorization W₁ W₂ := by
   constructor
-  · intro h
-    refine ⟨fun f => ?_⟩
-    have : W₁.comp W₂ f
-    simp only [h, top_apply]
-    exact ⟨this.some⟩
-  · intro
-    ext X Y f
-    simp only [top_apply, iff_true]
-    exact ⟨factorizationData W₁ W₂ f⟩
+  intro h
+  refine ⟨fun f => ?_⟩
+  have : W₁.comp W₂ f
+  simp only [h, top_apply]
+  exact ⟨this.some⟩
+  intro
+  ext X Y f
+  simp only [top_apply, iff_true]
+  exact ⟨factorizationData W₁ W₂ f⟩
 
 /-- The data of a functorial factorization of any morphism in `C` as a morphism in `W₁`
 followed by a morphism in `W₂`. -/

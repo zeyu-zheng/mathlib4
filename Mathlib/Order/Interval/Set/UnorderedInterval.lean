@@ -223,8 +223,8 @@ lemma monotone_or_antitone_iff_uIcc :
   contrapose!
   rw [not_monotone_not_antitone_iff_exists_le_le]
   rintro ⟨a, b, c, hab, hbc, ⟨hfab, hfcb⟩ | ⟨hfba, hfbc⟩⟩
-  · exact ⟨a, c, b, Icc_subset_uIcc ⟨hab, hbc⟩, fun h => h.2.not_lt <| max_lt hfab hfcb⟩
-  · exact ⟨a, c, b, Icc_subset_uIcc ⟨hab, hbc⟩, fun h => h.1.not_lt <| lt_min hfba hfbc⟩
+  exact ⟨a, c, b, Icc_subset_uIcc ⟨hab, hbc⟩, fun h => h.2.not_lt <| max_lt hfab hfcb⟩
+  exact ⟨a, c, b, Icc_subset_uIcc ⟨hab, hbc⟩, fun h => h.1.not_lt <| lt_min hfba hfbc⟩
 
 -- Porting note: mathport expands the syntactic sugar `∀ a b c ∈ s` differently than Lean3
 lemma monotoneOn_or_antitoneOn_iff_uIcc :
@@ -294,15 +294,15 @@ lemma uIoc_injective_right (a : α) : Injective fun b => Ι b a := by
   rintro b c h
   rw [Set.ext_iff] at h
   obtain ha | ha := le_or_lt b a
-  · have hb := (h b).not
-    simp only [ha, left_mem_uIoc, not_lt, true_iff_iff, not_mem_uIoc, ← not_le,
-      and_true_iff, not_true, false_and_iff, not_false_iff, true_iff_iff, or_false_iff] at hb
-    refine hb.eq_of_not_lt fun hc => ?_
-    simpa [ha, and_iff_right hc, ← @not_le _ _ _ a, iff_not_self, -not_le] using h c
-  · refine
-      eq_of_mem_uIoc_of_mem_uIoc ((h _).1 <| left_mem_uIoc.2 ha)
-        ((h _).2 <| left_mem_uIoc.2 <| ha.trans_le ?_)
-    simpa [ha, ha.not_le, mem_uIoc] using h b
+  have hb := (h b).not
+  simp only [ha, left_mem_uIoc, not_lt, true_iff_iff, not_mem_uIoc, ← not_le,
+    and_true_iff, not_true, false_and_iff, not_false_iff, true_iff_iff, or_false_iff] at hb
+  refine hb.eq_of_not_lt fun hc => ?_
+  simpa [ha, and_iff_right hc, ← @not_le _ _ _ a, iff_not_self, -not_le] using h c
+  refine
+    eq_of_mem_uIoc_of_mem_uIoc ((h _).1 <| left_mem_uIoc.2 ha)
+      ((h _).2 <| left_mem_uIoc.2 <| ha.trans_le ?_)
+  simpa [ha, ha.not_le, mem_uIoc] using h b
 
 lemma uIoc_injective_left (a : α) : Injective (Ι a) := by
   simpa only [uIoc_comm] using uIoc_injective_right a

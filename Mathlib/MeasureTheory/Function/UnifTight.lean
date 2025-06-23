@@ -84,9 +84,9 @@ theorem eventually_cofinite_indicator (hf : UnifTight f p μ) {ε : ℝ≥0∞} 
   by_cases hε_top : ε = ∞; subst hε_top; simp
   rcases hf (pos_iff_ne_zero.2 (toNNReal_ne_zero.mpr ⟨hε,hε_top⟩)) with ⟨s, hμs, hfs⟩
   refine (eventually_smallSets' ?_).2 ⟨sᶜ, ?_, fun i ↦ (coe_toNNReal hε_top) ▸ hfs i⟩
-  · intro s t hst ht i
-    exact (eLpNorm_mono <| norm_indicator_le_of_subset hst _).trans (ht i)
-  · rwa [Measure.compl_mem_cofinite, lt_top_iff_ne_top]
+  intro s t hst ht i
+  exact (eLpNorm_mono <| norm_indicator_le_of_subset hst _).trans (ht i)
+  rwa [Measure.compl_mem_cofinite, lt_top_iff_ne_top]
 
 protected theorem exists_measurableSet_indicator (hf : UnifTight f p μ) {ε : ℝ≥0∞} (hε : ε ≠ 0) :
     ∃ s, MeasurableSet s ∧ μ s < ∞ ∧ ∀ i, eLpNorm (sᶜ.indicator (f i)) p μ ≤ ε :=
@@ -98,10 +98,10 @@ protected theorem add (hf : UnifTight f p μ) (hg : UnifTight g p μ)
     UnifTight (f + g) p μ := fun ε hε ↦ by
   rcases exists_Lp_half β μ p (coe_ne_zero.mpr hε.ne') with ⟨η, hη_pos, hη⟩
   by_cases hη_top : η = ∞
-  · replace hη := hη_top ▸ hη
-    refine ⟨∅, (by measurability), fun i ↦ ?_⟩
-    simp only [compl_empty, indicator_univ, Pi.add_apply]
-    exact (hη (f i) (g i) (hf_meas i) (hg_meas i) le_top le_top).le
+  replace hη := hη_top ▸ hη
+  refine ⟨∅, (by measurability), fun i ↦ ?_⟩
+  simp only [compl_empty, indicator_univ, Pi.add_apply]
+  exact (hη (f i) (g i) (hf_meas i) (hg_meas i) le_top le_top).le
   obtain ⟨s, hμs, hsm, hfs, hgs⟩ :
       ∃ s ∈ μ.cofinite, MeasurableSet s ∧
         (∀ i, eLpNorm (s.indicator (f i)) p μ ≤ η) ∧
@@ -147,7 +147,7 @@ theorem unifTight_const {g : α → β} (hp_ne_top : p ≠ ∞) (hg : Memℒp g 
     UnifTight (fun _ : ι => g) p μ := by
   intro ε hε
   by_cases hε_top : ε = ∞
-  · exact ⟨∅, (by measurability), fun _ => hε_top.symm ▸ le_top⟩
+  exact ⟨∅, (by measurability), fun _ => hε_top.symm ▸ le_top⟩
   obtain ⟨s, _, hμs, hgε⟩ := hg.exists_eLpNorm_indicator_compl_lt hp_ne_top (coe_ne_zero.mpr hε.ne')
   exact ⟨s, ne_of_lt hμs, fun _ => hgε.le⟩
 
@@ -155,7 +155,7 @@ theorem unifTight_const {g : α → β} (hp_ne_top : p ≠ ∞) (hg : Memℒp g 
 theorem unifTight_of_subsingleton [Subsingleton ι] (hp_top : p ≠ ∞)
     {f : ι → α → β} (hf : ∀ i, Memℒp (f i) p μ) : UnifTight f p μ := fun ε hε ↦ by
   by_cases hε_top : ε = ∞
-  · exact ⟨∅, by measurability, fun _ => hε_top.symm ▸ le_top⟩
+  exact ⟨∅, by measurability, fun _ => hε_top.symm ▸ le_top⟩
   by_cases hι : Nonempty ι
   case neg => exact ⟨∅, (by measurability), fun i => False.elim <| hι <| Nonempty.intro i⟩
   cases' hι with i
@@ -169,12 +169,12 @@ private theorem unifTight_fin (hp_top : p ≠ ∞) {n : ℕ} {f : Fin n → α �
     (hf : ∀ i, Memℒp (f i) p μ) : UnifTight f p μ := by
   revert f
   induction' n with n h
-  · intro f hf
-    have : Subsingleton (Fin Nat.zero) := subsingleton_fin_zero -- Porting note: Added this instance
-    exact unifTight_of_subsingleton hp_top hf
+  intro f hf
+  have : Subsingleton (Fin Nat.zero) := subsingleton_fin_zero -- Porting note: Added this instance
+  exact unifTight_of_subsingleton hp_top hf
   intro f hfLp ε hε
   by_cases hε_top : ε = ∞
-  · exact ⟨∅, (by measurability), fun _ => hε_top.symm ▸ le_top⟩
+  exact ⟨∅, (by measurability), fun _ => hε_top.symm ▸ le_top⟩
   let g : Fin n → α → β := fun k => f k
   have hgLp : ∀ i, Memℒp (g i) p μ := fun i => hfLp i
   obtain ⟨S, hμS, hFε⟩ := h hgLp hε
@@ -182,18 +182,18 @@ private theorem unifTight_fin (hp_top : p ≠ ∞) {n : ℕ} {f : Fin n → α �
     (hfLp n).exists_eLpNorm_indicator_compl_lt hp_top (coe_ne_zero.2 hε.ne')
   refine ⟨s ∪ S, (by measurability), fun i => ?_⟩
   by_cases hi : i.val < n
-  · rw [(_ : f i = g ⟨i.val, hi⟩)]
-    · rw [compl_union, ← indicator_indicator]
-      apply (eLpNorm_indicator_le _).trans
-      exact hFε (Fin.castLT i hi)
-    · simp only [Fin.coe_eq_castSucc, Fin.castSucc_mk, g]
-  · rw [(_ : i = n)]
-    · rw [compl_union, inter_comm, ← indicator_indicator]
-      exact (eLpNorm_indicator_le _).trans hfε.le
-    · have hi' := Fin.is_lt i
-      rw [Nat.lt_succ_iff] at hi'
-      rw [not_lt] at hi
-      simp [← le_antisymm hi' hi]
+  rw [(_ : f i = g ⟨i.val, hi⟩)]
+  rw [compl_union, ← indicator_indicator]
+  apply (eLpNorm_indicator_le _).trans
+  exact hFε (Fin.castLT i hi)
+  simp only [Fin.coe_eq_castSucc, Fin.castSucc_mk, g]
+  rw [(_ : i = n)]
+  rw [compl_union, inter_comm, ← indicator_indicator]
+  exact (eLpNorm_indicator_le _).trans hfε.le
+  have hi' := Fin.is_lt i
+  rw [Nat.lt_succ_iff] at hi'
+  rw [not_lt] at hi
+  simp [← le_antisymm hi' hi]
 
 /-- A finite sequence of Lp functions is uniformly tight. -/
 theorem unifTight_finite [Finite ι] (hp_top : p ≠ ∞) {f : ι → α → β}
@@ -228,8 +228,8 @@ private theorem unifTight_of_tendsto_Lp_zero (hp' : p ≠ ∞) (hf : ∀ n, Mem�
   obtain ⟨s, hμs, hFε⟩ := unifTight_fin hp' hF hε
   refine ⟨s, hμs, fun n => ?_⟩
   by_cases hn : n < N
-  · exact hFε ⟨n, hn⟩
-  · exact (eLpNorm_indicator_le _).trans (hNε n (not_lt.mp hn))
+  exact hFε ⟨n, hn⟩
+  exact (eLpNorm_indicator_le _).trans (hNε n (not_lt.mp hn))
 
 /-- Convergence in Lp implies uniform tightness. -/
 private theorem unifTight_of_tendsto_Lp (hp' : p ≠ ∞) (hf : ∀ n, Memℒp (f n) p μ)
@@ -240,8 +240,8 @@ private theorem unifTight_of_tendsto_Lp (hp' : p ≠ ∞) (hf : ∀ n, Memℒp (
   rw [this]
   refine UnifTight.add ?_ ?_ (fun _ => hg.aestronglyMeasurable)
       fun n => (hf n).1.sub hg.aestronglyMeasurable
-  · exact unifTight_const hp' hg
-  · exact unifTight_of_tendsto_Lp_zero hp' (fun n => (hf n).sub hg) hfg
+  exact unifTight_const hp' hg
+  exact unifTight_of_tendsto_Lp_zero hp' (fun n => (hf n).sub hg) hfg
 
 /- Next we deal with the forward direction. The `Memℒp` and `TendstoInMeasure` hypotheses
 are unwrapped and strengthened (by known lemmas) to also have the `StronglyMeasurable`
@@ -256,9 +256,9 @@ private theorem tendsto_Lp_of_tendsto_ae_of_meas (hp : 1 ≤ p) (hp' : p ≠ ∞
   rw [ENNReal.tendsto_atTop_zero]
   intro ε hε
   by_cases hfinε : ε ≠ ∞; swap
-  · rw [not_ne_iff.mp hfinε]; exact ⟨0, fun n _ => le_top⟩
+  rw [not_ne_iff.mp hfinε]; exact ⟨0, fun n _ => le_top⟩
   by_cases hμ : μ = 0
-  · rw [hμ]; use 0; intro n _; rw [eLpNorm_measure_zero]; exact zero_le ε
+  rw [hμ]; use 0; intro n _; rw [eLpNorm_measure_zero]; exact zero_le ε
   have hε' : 0 < ε / 3 := ENNReal.div_pos hε.ne' (coe_ne_top)
   -- use tightness to divide the domain into interior and exterior
   obtain ⟨Eg, hmEg, hμEg, hgε⟩ := Memℒp.exists_eLpNorm_indicator_compl_lt hp' hg' hε'.ne' --hrε'

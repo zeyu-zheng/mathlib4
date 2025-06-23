@@ -159,17 +159,17 @@ theorem Filter.Tendsto.exists_within_forall_le {α β : Type*} [LinearOrder β] 
     (hs : s.Nonempty) {f : α → β} (hf : Filter.Tendsto f Filter.cofinite Filter.atTop) :
     ∃ a₀ ∈ s, ∀ a ∈ s, f a₀ ≤ f a := by
   rcases em (∃ y ∈ s, ∃ x, f y < x) with (⟨y, hys, x, hx⟩ | not_all_top)
-  · -- the set of points `{y | f y < x}` is nonempty and finite, so we take `min` over this set
-    have : { y | ¬x ≤ f y }.Finite := Filter.eventually_cofinite.mp (tendsto_atTop.1 hf x)
-    simp only [not_le] at this
-    obtain ⟨a₀, ⟨ha₀ : f a₀ < x, ha₀s⟩, others_bigger⟩ :=
-      exists_min_image _ f (this.inter_of_left s) ⟨y, hx, hys⟩
-    refine ⟨a₀, ha₀s, fun a has => (lt_or_le (f a) x).elim ?_ (le_trans ha₀.le)⟩
-    exact fun h => others_bigger a ⟨h, has⟩
-  · -- in this case, f is constant because all values are at top
-    push_neg at not_all_top
-    obtain ⟨a₀, ha₀s⟩ := hs
-    exact ⟨a₀, ha₀s, fun a ha => not_all_top a ha (f a₀)⟩
+  -- the set of points `{y | f y < x}` is nonempty and finite, so we take `min` over this set
+  have : { y | ¬x ≤ f y }.Finite := Filter.eventually_cofinite.mp (tendsto_atTop.1 hf x)
+  simp only [not_le] at this
+  obtain ⟨a₀, ⟨ha₀ : f a₀ < x, ha₀s⟩, others_bigger⟩ :=
+    exists_min_image _ f (this.inter_of_left s) ⟨y, hx, hys⟩
+  refine ⟨a₀, ha₀s, fun a has => (lt_or_le (f a) x).elim ?_ (le_trans ha₀.le)⟩
+  exact fun h => others_bigger a ⟨h, has⟩
+  -- in this case, f is constant because all values are at top
+  push_neg at not_all_top
+  obtain ⟨a₀, ha₀s⟩ := hs
+  exact ⟨a₀, ha₀s, fun a ha => not_all_top a ha (f a₀)⟩
 
 theorem Filter.Tendsto.exists_forall_le [Nonempty α] [LinearOrder β] {f : α → β}
     (hf : Tendsto f cofinite atTop) : ∃ a₀, ∀ a, f a₀ ≤ f a :=

@@ -112,19 +112,19 @@ lemma mono_homologyMap_τ₃ (i : ι)
     (h₃ : ∀ j, c.Rel i j → Mono (homologyMap φ.τ₁ j)) :
     Mono (homologyMap φ.τ₃ i) := by
   by_cases hi : ∃ j, c.Rel i j
-  · obtain ⟨j, hij⟩ := hi
-    apply mono_of_epi_of_mono_of_mono
-      ((δlastFunctor ⋙ δlastFunctor).map (mapComposableArrows₅ φ hS₁ hS₂ i j hij))
-    · exact (composableArrows₅_exact hS₁ i j hij).δlast.δlast
-    · exact (composableArrows₅_exact hS₂ i j hij).δlast.δlast
-    · exact h₁
-    · exact h₂
-    · exact h₃ _ hij
-  · refine mono_of_epi_of_epi_of_mono (mapComposableArrows₂ φ i)
-      (composableArrows₂_exact hS₁ i) (composableArrows₂_exact hS₂ i) ?_ h₁ h₂
-    have := hS₁.epi_g
-    apply epi_homologyMap_of_epi_of_not_rel
-    simpa using hi
+  obtain ⟨j, hij⟩ := hi
+  apply mono_of_epi_of_mono_of_mono
+    ((δlastFunctor ⋙ δlastFunctor).map (mapComposableArrows₅ φ hS₁ hS₂ i j hij))
+  exact (composableArrows₅_exact hS₁ i j hij).δlast.δlast
+  exact (composableArrows₅_exact hS₂ i j hij).δlast.δlast
+  exact h₁
+  exact h₂
+  exact h₃ _ hij
+  refine mono_of_epi_of_epi_of_mono (mapComposableArrows₂ φ i)
+    (composableArrows₂_exact hS₁ i) (composableArrows₂_exact hS₂ i) ?_ h₁ h₂
+  have := hS₁.epi_g
+  apply epi_homologyMap_of_epi_of_not_rel
+  simpa using hi
 
 lemma epi_homologyMap_τ₃ (i : ι)
     (h₁ : Epi (homologyMap φ.τ₂ i))
@@ -132,20 +132,20 @@ lemma epi_homologyMap_τ₃ (i : ι)
     (h₃ : ∀ j, c.Rel i j → Mono (homologyMap φ.τ₂ j)) :
     Epi (homologyMap φ.τ₃ i) := by
   by_cases hi : ∃ j, c.Rel i j
-  · obtain ⟨j, hij⟩ := hi
-    apply epi_of_epi_of_epi_of_mono
-      ((δ₀Functor ⋙ δlastFunctor).map (mapComposableArrows₅ φ hS₁ hS₂ i j hij))
-    · exact (composableArrows₅_exact hS₁ i j hij).δ₀.δlast
-    · exact (composableArrows₅_exact hS₂ i j hij).δ₀.δlast
-    · exact h₁
-    · exact h₂ j hij
-    · exact h₃ j hij
-  · have := hS₂.epi_g
-    have eq := (homologyFunctor C _ i).congr_map φ.comm₂₃
-    dsimp at eq
-    simp only [homologyMap_comp] at eq
-    have := epi_homologyMap_of_epi_of_not_rel S₂.g i (by simpa using hi)
-    exact epi_of_epi_fac eq.symm
+  obtain ⟨j, hij⟩ := hi
+  apply epi_of_epi_of_epi_of_mono
+    ((δ₀Functor ⋙ δlastFunctor).map (mapComposableArrows₅ φ hS₁ hS₂ i j hij))
+  exact (composableArrows₅_exact hS₁ i j hij).δ₀.δlast
+  exact (composableArrows₅_exact hS₂ i j hij).δ₀.δlast
+  exact h₁
+  exact h₂ j hij
+  exact h₃ j hij
+  have := hS₂.epi_g
+  have eq := (homologyFunctor C _ i).congr_map φ.comm₂₃
+  dsimp at eq
+  simp only [homologyMap_comp] at eq
+  have := epi_homologyMap_of_epi_of_not_rel S₂.g i (by simpa using hi)
+  exact epi_of_epi_fac eq.symm
 
 
 lemma isIso_homologyMap_τ₃ (i : ι)

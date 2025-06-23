@@ -102,7 +102,7 @@ theorem GradedAlgebra.lift_ι_eq (i' : ZMod 2) (x' : evenOdd Q i') :
       rw [AlgHom.map_mul, ih, lift_ι_apply, GradedAlgebra.ι_apply Q, DirectSum.of_mul_of]
       refine DirectSum.of_eq_of_gradedMonoid_eq (Sigma.subtype_ext ?_ ?_) <;>
         dsimp only [GradedMonoid.mk, Subtype.coe_mk]
-      · rw [Nat.succ_eq_add_one, add_comm, Nat.cast_add, Nat.cast_one]
+      rw [Nat.succ_eq_add_one, add_comm, Nat.cast_add, Nat.cast_one]
       rfl
   | zero =>
     rw [AlgHom.map_zero]

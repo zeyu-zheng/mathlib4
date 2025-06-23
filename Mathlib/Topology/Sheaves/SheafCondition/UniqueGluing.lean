@@ -106,9 +106,9 @@ theorem isGluing_iff_pairwise {sf s} : IsGluing F U sf s ↔
     ∀ i, (F.mapCone (Pairwise.cocone U).op).π.app i s = objPairwiseOfFamily sf i := by
   refine ⟨fun h ↦ ?_, fun h i ↦ h (op <| Pairwise.single i)⟩
   rintro (i|⟨i,j⟩)
-  · exact h i
-  · rw [← (F.mapCone (Pairwise.cocone U).op).w (op <| Pairwise.Hom.left i j)]
-    exact congr_arg _ (h i)
+  exact h i
+  rw [← (F.mapCone (Pairwise.cocone U).op).w (op <| Pairwise.Hom.left i j)]
+  exact congr_arg _ (h i)
 
 variable (F)
 
@@ -119,12 +119,12 @@ theorem isSheaf_iff_isSheafUniqueGluing_types : F.IsSheaf ↔ F.IsSheafUniqueGlu
   simp_rw [isSheaf_iff_isSheafPairwiseIntersections, IsSheafPairwiseIntersections,
     Types.isLimit_iff, IsSheafUniqueGluing, isGluing_iff_pairwise]
   refine forall₂_congr fun ι U ↦ ⟨fun h sf cpt ↦ ?_, fun h s hs ↦ ?_⟩
-  · exact h _ cpt.sectionPairwise.prop
-  · specialize h (fun i ↦ s <| op <| Pairwise.single i) fun i j ↦
-      (hs <| op <| Pairwise.Hom.left i j).trans (hs <| op <| Pairwise.Hom.right i j).symm
-    convert h; ext (i|⟨i,j⟩)
-    · rfl
-    · exact (hs <| op <| Pairwise.Hom.left i j).symm
+  exact h _ cpt.sectionPairwise.prop
+  specialize h (fun i ↦ s <| op <| Pairwise.single i) fun i j ↦
+    (hs <| op <| Pairwise.Hom.left i j).trans (hs <| op <| Pairwise.Hom.right i j).symm
+  convert h; ext (i|⟨i,j⟩)
+  rfl
+  exact (hs <| op <| Pairwise.Hom.left i j).symm
 
 /-- The usual sheaf condition can be obtained from the sheaf condition
 in terms of unique gluings.
@@ -181,14 +181,14 @@ theorem existsUnique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover
   have V_eq_supr_U : V = iSup U := le_antisymm hcover (iSup_le fun i => (iUV i).le)
   obtain ⟨gl, gl_spec, gl_uniq⟩ := F.existsUnique_gluing U sf h
   refine ⟨F.1.map (eqToHom V_eq_supr_U).op gl, ?_, ?_⟩
-  · intro i
+  intro i
+  rw [← comp_apply, ← F.1.map_comp]
+  exact gl_spec i
+  intro gl' gl'_spec
+  convert congr_arg _ (gl_uniq (F.1.map (eqToHom V_eq_supr_U.symm).op gl') fun i => _) <;>
     rw [← comp_apply, ← F.1.map_comp]
-    exact gl_spec i
-  · intro gl' gl'_spec
-    convert congr_arg _ (gl_uniq (F.1.map (eqToHom V_eq_supr_U.symm).op gl') fun i => _) <;>
-      rw [← comp_apply, ← F.1.map_comp]
-    · rw [eqToHom_op, eqToHom_op, eqToHom_trans, eqToHom_refl, F.1.map_id, id_apply]
-    · convert gl'_spec i
+  rw [eqToHom_op, eqToHom_op, eqToHom_trans, eqToHom_refl, F.1.map_id, id_apply]
+  convert gl'_spec i
 
 @[ext]
 theorem eq_of_locally_eq (s t : F.1.obj (op (iSup U)))
@@ -200,13 +200,13 @@ theorem eq_of_locally_eq (s t : F.1.obj (op (iSup U)))
   rfl
   obtain ⟨gl, -, gl_uniq⟩ := F.existsUnique_gluing U sf sf_compatible
   trans gl
-  · apply gl_uniq
-    intro i
-    rfl
-  · symm
-    apply gl_uniq
-    intro i
-    rw [← h]
+  apply gl_uniq
+  intro i
+  rfl
+  symm
+  apply gl_uniq
+  intro i
+  rw [← h]
 
 /-- In this version of the lemma, the inclusion homs `iUV` can be specified directly by the user,
 which can be more convenient in practice.
@@ -228,15 +228,15 @@ theorem eq_of_locally_eq₂ {U₁ U₂ V : Opens X} (i₁ : U₁ ⟶ V) (i₂ : 
     (s t : F.1.obj (op V)) (h₁ : F.1.map i₁.op s = F.1.map i₁.op t)
     (h₂ : F.1.map i₂.op s = F.1.map i₂.op t) : s = t := by
     fapply F.eq_of_locally_eq' fun t : ULift Bool => if t.1 then U₁ else U₂
-    · exact fun i => if h : i.1 then eqToHom (if_pos h) ≫ i₁ else eqToHom (if_neg h) ≫ i₂
-    · refine le_trans hcover ?_
-      rw [sup_le_iff]
-      constructor
-      · convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up true)
-      · convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up false)
-    · rintro ⟨_ | _⟩
-      any_goals exact h₁
-      any_goals exact h₂
+    exact fun i => if h : i.1 then eqToHom (if_pos h) ≫ i₁ else eqToHom (if_neg h) ≫ i₂
+    refine le_trans hcover ?_
+    rw [sup_le_iff]
+    constructor
+    convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up true)
+    convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up false)
+    rintro ⟨_ | _⟩
+    any_goals exact h₁
+    any_goals exact h₂
 
 end
 
@@ -250,24 +250,24 @@ theorem objSupIsoProdEqLocus_inv_eq_iff {X : TopCat.{u}} (F : X.Sheaf CommRingCa
       F.1.map (homOfLE <| h₂ ▸ inf_le_right).op y := by
   subst h₁ h₂
   constructor
-  · rintro rfl
-    rw [← TopCat.Sheaf.objSupIsoProdEqLocus_inv_fst, ← TopCat.Sheaf.objSupIsoProdEqLocus_inv_snd]
-    -- `simp` doesn't see through the type equality of objects in `CommRingCat`, so use `rw` #8386
-    repeat rw [← comp_apply]
-    simp only [← Functor.map_comp, ← op_comp, Category.assoc, homOfLE_comp, and_self]
-  · rintro ⟨e₁, e₂⟩
-    refine F.eq_of_locally_eq₂
-      (homOfLE (inf_le_right : U ⊓ W ≤ W)) (homOfLE (inf_le_right : V ⊓ W ≤ W)) ?_ _ _ ?_ ?_
-    · rw [← inf_sup_right]
-      exact le_inf e le_rfl
-    · rw [← e₁, ← TopCat.Sheaf.objSupIsoProdEqLocus_inv_fst]
-      -- `simp` doesn't see through the type equality of objects in `CommRingCat`, so use `rw` #8386
-      repeat rw [← comp_apply]
-      simp only [← Functor.map_comp, ← op_comp, Category.assoc, homOfLE_comp]
-    · rw [← e₂, ← TopCat.Sheaf.objSupIsoProdEqLocus_inv_snd]
-      -- `simp` doesn't see through the type equality of objects in `CommRingCat`, so use `rw` #8386
-      repeat rw [← comp_apply]
-      simp only [← Functor.map_comp, ← op_comp, Category.assoc, homOfLE_comp]
+  rintro rfl
+  rw [← TopCat.Sheaf.objSupIsoProdEqLocus_inv_fst, ← TopCat.Sheaf.objSupIsoProdEqLocus_inv_snd]
+  -- `simp` doesn't see through the type equality of objects in `CommRingCat`, so use `rw` #8386
+  repeat rw [← comp_apply]
+  simp only [← Functor.map_comp, ← op_comp, Category.assoc, homOfLE_comp, and_self]
+  rintro ⟨e₁, e₂⟩
+  refine F.eq_of_locally_eq₂
+    (homOfLE (inf_le_right : U ⊓ W ≤ W)) (homOfLE (inf_le_right : V ⊓ W ≤ W)) ?_ _ _ ?_ ?_
+  rw [← inf_sup_right]
+  exact le_inf e le_rfl
+  rw [← e₁, ← TopCat.Sheaf.objSupIsoProdEqLocus_inv_fst]
+  -- `simp` doesn't see through the type equality of objects in `CommRingCat`, so use `rw` #8386
+  repeat rw [← comp_apply]
+  simp only [← Functor.map_comp, ← op_comp, Category.assoc, homOfLE_comp]
+  rw [← e₂, ← TopCat.Sheaf.objSupIsoProdEqLocus_inv_snd]
+  -- `simp` doesn't see through the type equality of objects in `CommRingCat`, so use `rw` #8386
+  repeat rw [← comp_apply]
+  simp only [← Functor.map_comp, ← op_comp, Category.assoc, homOfLE_comp]
 
 end Sheaf
 

@@ -494,8 +494,8 @@ theorem _root_.Pi.orthonormalBasis_apply {η : Type*} [Fintype η] [DecidableEq 
     LinearIsometryEquiv.piLpCurry_apply, WithLp.equiv_single, WithLp.equiv_symm_pi_apply,
     Sigma.curry_single (γ := fun _ _ => 𝕜)]
   obtain rfl | hi := Decidable.eq_or_ne i k
-  · simp only [Pi.single_eq_same, WithLp.equiv_symm_single, OrthonormalBasis.repr_symm_single]
-  · simp only [Pi.single_eq_of_ne' hi, WithLp.equiv_symm_zero, _root_.map_zero]
+  simp only [Pi.single_eq_same, WithLp.equiv_symm_single, OrthonormalBasis.repr_symm_single]
+  simp only [Pi.single_eq_of_ne' hi, WithLp.equiv_symm_zero, _root_.map_zero]
 
 @[simp]
 theorem _root_.Pi.orthonormalBasis_repr {η : Type*} [Fintype η] {ι : η → Type*}
@@ -762,9 +762,9 @@ theorem Orthonormal.exists_orthonormalBasis_extension (hv : Orthonormal 𝕜 ((�
   have hu : Orthonormal 𝕜 ((↑) : u → E)
   simpa using hu₀.comp _ fu.injective
   refine ⟨u, OrthonormalBasis.mkOfOrthogonalEqBot hu ?_, ?_, ?_⟩
-  · simpa [u] using hu₀_max
-  · simpa [u] using hu₀s
-  · simp
+  simpa [u] using hu₀_max
+  simpa [u] using hu₀s
+  simp
 
 theorem Orthonormal.exists_orthonormalBasis_extension_of_card_eq {ι : Type*} [Fintype ι]
     (card_ι : finrank 𝕜 E = Fintype.card ι) {v : ι → E} {s : Set ι}

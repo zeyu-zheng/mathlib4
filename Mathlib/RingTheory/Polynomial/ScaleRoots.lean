@@ -70,7 +70,7 @@ theorem support_scaleRoots_eq (p : R[X]) {s : R} (hs : s ∈ nonZeroDivisors R) 
 theorem degree_scaleRoots (p : R[X]) {s : R} : degree (scaleRoots p s) = degree p := by
   haveI := Classical.propDecidable
   by_cases hp : p = 0
-  · rw [hp, zero_scaleRoots]
+  rw [hp, zero_scaleRoots]
   refine le_antisymm (Finset.sup_mono (support_scaleRoots_le p s)) (degree_le_degree ?_)
   rw [coeff_scaleRoots_natDegree]
   intro h
@@ -104,10 +104,10 @@ lemma scaleRoots_zero (p : R[X]) :
   simp only [coeff_scaleRoots, ne_eq, tsub_eq_zero_iff_le, not_le, zero_pow_eq, mul_ite,
     mul_one, mul_zero, coeff_smul, coeff_X_pow, smul_eq_mul]
   split_ifs with h₁ h₂ h₂
-  · subst h₂; rfl
-  · exact coeff_eq_zero_of_natDegree_lt (lt_of_le_of_ne h₁ (Ne.symm h₂))
-  · exact (h₁ h₂.ge).elim
-  · rfl
+  subst h₂; rfl
+  exact coeff_eq_zero_of_natDegree_lt (lt_of_le_of_ne h₁ (Ne.symm h₂))
+  exact (h₁ h₂.ge).elim
+  rfl
 
 @[simp]
 lemma one_scaleRoots (r : R) :
@@ -149,8 +149,8 @@ theorem scaleRoots_eval₂_eq_zero {p : S[X]} (f : S →+* R) {r : R} {s : S} (h
 theorem scaleRoots_aeval_eq_zero [Algebra R A] {p : R[X]} {a : A} {r : R} (ha : aeval a p = 0) :
     aeval (algebraMap R A r * a) (scaleRoots p r) = 0 := by
   rw [aeval_def, scaleRoots_eval₂_mul_of_commute, ← aeval_def, ha, mul_zero]
-  · apply Algebra.commutes
-  · intros; rw [Commute, SemiconjBy, ← map_mul, ← map_mul, mul_comm]
+  apply Algebra.commutes
+  intros; rw [Commute, SemiconjBy, ← map_mul, ← map_mul, mul_comm]
 
 theorem scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero {p : S[X]} {f : S →+* K}
     (hf : Function.Injective f) {r s : S} (hr : eval₂ f (f r / f s) p = 0)
@@ -181,23 +181,23 @@ lemma mul_scaleRoots (p q : R[X]) (r : R) :
   ext n; simp only [coeff_scaleRoots, coeff_smul, smul_eq_mul]
   trans (∑ x ∈ Finset.antidiagonal n, coeff p x.1 * coeff q x.2) *
     r ^ (natDegree p + natDegree q - n)
-  · rw [← coeff_mul]
-    cases lt_or_le (natDegree (p * q)) n with
+  rw [← coeff_mul]
+  cases lt_or_le (natDegree (p * q)) n with
+  | inl h => simp only [coeff_eq_zero_of_natDegree_lt h, zero_mul, mul_zero]
+  | inr h =>
+    rw [mul_comm, mul_assoc, ← pow_add, add_comm, tsub_add_tsub_cancel natDegree_mul_le h]
+  rw [coeff_mul, Finset.sum_mul]
+  apply Finset.sum_congr rfl
+  simp only [Finset.mem_antidiagonal, coeff_scaleRoots, Prod.forall]
+  intros a b e
+  cases lt_or_le (natDegree p) a with
+  | inl h => simp only [coeff_eq_zero_of_natDegree_lt h, zero_mul, mul_zero]
+  | inr ha =>
+    cases lt_or_le (natDegree q) b with
     | inl h => simp only [coeff_eq_zero_of_natDegree_lt h, zero_mul, mul_zero]
-    | inr h =>
-      rw [mul_comm, mul_assoc, ← pow_add, add_comm, tsub_add_tsub_cancel natDegree_mul_le h]
-  · rw [coeff_mul, Finset.sum_mul]
-    apply Finset.sum_congr rfl
-    simp only [Finset.mem_antidiagonal, coeff_scaleRoots, Prod.forall]
-    intros a b e
-    cases lt_or_le (natDegree p) a with
-    | inl h => simp only [coeff_eq_zero_of_natDegree_lt h, zero_mul, mul_zero]
-    | inr ha =>
-      cases lt_or_le (natDegree q) b with
-      | inl h => simp only [coeff_eq_zero_of_natDegree_lt h, zero_mul, mul_zero]
-      | inr hb =>
-        simp only [← e, mul_assoc, mul_comm (r ^ (_ - a)), ← pow_add]
-        rw [add_comm (_ - _), tsub_add_tsub_comm ha hb]
+    | inr hb =>
+      simp only [← e, mul_assoc, mul_comm (r ^ (_ - a)), ← pow_add]
+      rw [add_comm (_ - _), tsub_add_tsub_comm ha hb]
 
 lemma mul_scaleRoots' (p q : R[X]) (r : R) (h : leadingCoeff p * leadingCoeff q ≠ 0) :
     (p * q).scaleRoots r = p.scaleRoots r * q.scaleRoots r := by

@@ -183,9 +183,9 @@ namespace Scheme
 instance basic_open_isOpenImmersion {R : CommRingCat.{u}} (f : R) :
     IsOpenImmersion (Spec.map (CommRingCat.ofHom (algebraMap R (Localization.Away f)))) := by
   apply SheafedSpace.IsOpenImmersion.of_stalk_iso (H := ?_)
-  · exact (PrimeSpectrum.localization_away_openEmbedding (Localization.Away f) f : _)
-  · intro x
-    exact Spec_map_localization_isIso R (Submonoid.powers f) x
+  exact (PrimeSpectrum.localization_away_openEmbedding (Localization.Away f) f : _)
+  intro x
+  exact Spec_map_localization_isIso R (Submonoid.powers f) x
 
 instance {R} [CommRing R] (f : R) :
     IsOpenImmersion (Spec.map (CommRingCat.ofHom (algebraMap R (Localization.Away f)))) :=
@@ -356,15 +356,15 @@ theorem _root_.AlgebraicGeometry.isIso_iff_stalk_iso {X Y : Scheme.{u}} (f : X �
     IsIso f ↔ IsIso f.1.base ∧ ∀ x, IsIso (f.stalkMap x) := by
   rw [isIso_iff_isOpenImmersion, IsOpenImmersion.iff_stalk_iso, and_comm, ← and_assoc]
   refine and_congr ⟨?_, ?_⟩ Iff.rfl
-  · rintro ⟨h₁, h₂⟩
-    convert_to
-      IsIso
-        (TopCat.isoOfHomeo
-            (Homeomorph.homeomorphOfContinuousOpen
-              (Equiv.ofBijective _ ⟨h₂.inj, (TopCat.epi_iff_surjective _).mp h₁⟩) h₂.continuous
-              h₂.isOpenMap)).hom
-    infer_instance
-  · intro H; exact ⟨inferInstance, (TopCat.homeoOfIso (asIso f.1.base)).openEmbedding⟩
+  rintro ⟨h₁, h₂⟩
+  convert_to
+    IsIso
+      (TopCat.isoOfHomeo
+          (Homeomorph.homeomorphOfContinuousOpen
+            (Equiv.ofBijective _ ⟨h₂.inj, (TopCat.epi_iff_surjective _).mp h₁⟩) h₂.continuous
+            h₂.isOpenMap)).hom
+  infer_instance
+  intro H; exact ⟨inferInstance, (TopCat.homeoOfIso (asIso f.1.base)).openEmbedding⟩
 
 /-- An open immersion induces an isomorphism from the domain onto the image -/
 def isoRestrict : X ≅ (Z.restrict H.base_open : _) where
@@ -446,7 +446,7 @@ instance forgetToTopPreservesOfLeft : PreservesLimit (cospan f g) Scheme.forgetT
   delta Scheme.forgetToTop
   apply @Limits.compPreservesLimit (K := cospan f g) (F := forget)
     (G := LocallyRingedSpace.forgetToTop) ?_ ?_
-  · infer_instance
+  infer_instance
   apply @preservesLimitOfIsoDiagram (F := _) _ _ _ _ _ _ (diagramIsoCospan.{u} _).symm ?_
   dsimp [LocallyRingedSpace.forgetToTop]
   infer_instance
@@ -460,9 +460,9 @@ theorem range_pullback_snd_of_left :
     PreservesPullback.iso_hom_snd Scheme.forgetToTop f g, TopCat.coe_comp, Set.range_comp,
     Set.range_iff_surjective.mpr, ← @Set.preimage_univ _ _ (pullback.fst f.1.base g.1.base)]
   -- Porting note (#10691): was `rw`
-  · erw [TopCat.pullback_snd_image_fst_preimage]
-    rw [Set.image_univ]
-    rfl
+  erw [TopCat.pullback_snd_image_fst_preimage]
+  rw [Set.image_univ]
+  rfl
   rw [← TopCat.epi_iff_surjective]
   infer_instance
 
@@ -477,9 +477,9 @@ theorem range_pullback_fst_of_right :
     PreservesPullback.iso_hom_fst Scheme.forgetToTop g f, TopCat.coe_comp, Set.range_comp,
     Set.range_iff_surjective.mpr, ← @Set.preimage_univ _ _ (pullback.snd g.1.base f.1.base)]
   -- Porting note (#10691): was `rw`
-  · erw [TopCat.pullback_fst_image_snd_preimage]
-    rw [Set.image_univ]
-    rfl
+  erw [TopCat.pullback_fst_image_snd_preimage]
+  rw [Set.image_univ]
+  rfl
   rw [← TopCat.epi_iff_surjective]
   infer_instance
 
@@ -604,9 +604,9 @@ theorem image_basicOpen {X Y : Scheme.{u}} (f : X ⟶ Y) [H : IsOpenImmersion f]
     f ''ᵁ X.basicOpen r = Y.basicOpen ((f.appIso U).inv r) := by
   have e := Scheme.preimage_basicOpen f ((f.appIso U).inv r)
   rw [Scheme.Hom.appIso_inv_app_apply, Scheme.basicOpen_res, inf_eq_right.mpr _] at e
-  · rw [← e, f.image_preimage_eq_opensRange_inter, inf_eq_right]
-    refine Set.Subset.trans (Scheme.basicOpen_le _ _) (Set.image_subset_range _ _)
-  · exact (X.basicOpen_le r).trans (f.preimage_image_eq _).ge
+  rw [← e, f.image_preimage_eq_opensRange_inter, inf_eq_right]
+  refine Set.Subset.trans (Scheme.basicOpen_le _ _) (Set.image_subset_range _ _)
+  exact (X.basicOpen_le r).trans (f.preimage_image_eq _).ge
 
 end Scheme
 

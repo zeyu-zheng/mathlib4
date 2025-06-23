@@ -58,10 +58,10 @@ class UCompactlyGeneratedSpace (X : Type w) [t : TopologicalSpace X] : Prop wher
 lemma eq_compactlyGenerated {X : Type w} [t : TopologicalSpace X] [UCompactlyGeneratedSpace.{u} X] :
     t = compactlyGenerated.{u} X := by
   apply le_antisymm
-  · exact UCompactlyGeneratedSpace.le_compactlyGenerated
-  · simp only [compactlyGenerated, ← continuous_iff_coinduced_le, continuous_sigma_iff,
-      Sigma.forall]
-    exact fun S f ↦ f.2
+  exact UCompactlyGeneratedSpace.le_compactlyGenerated
+  simp only [compactlyGenerated, ← continuous_iff_coinduced_le, continuous_sigma_iff,
+    Sigma.forall]
+  exact fun S f ↦ f.2
 
 instance (X : Type w) [t : TopologicalSpace X] [DiscreteTopology X] :
     UCompactlyGeneratedSpace.{u} X where

@@ -77,10 +77,10 @@ theorem norm_le (a : S) {y : ℤ} (hy : ∀ k, abv (bS.repr a k) ≤ y) :
   simp only [Algebra.norm_apply, map_sum, map_smul, map_sum, map_smul, Algebra.toMatrix_lmul_eq,
     normBound, smul_mul_assoc, ← mul_pow]
   convert Matrix.det_sum_smul_le Finset.univ _ hy using 3
-  · rw [Finset.card_univ, smul_mul_assoc, mul_comm]
-  · intro i j k
-    apply Finset.le_max'
-    exact Finset.mem_image.mpr ⟨⟨i, j, k⟩, Finset.mem_univ _, rfl⟩
+  rw [Finset.card_univ, smul_mul_assoc, mul_comm]
+  intro i j k
+  apply Finset.le_max'
+  exact Finset.mem_image.mpr ⟨⟨i, j, k⟩, Finset.mem_univ _, rfl⟩
 
 /-- If the `R`-integral element `a : S` has coordinates `< y` with respect to some basis `b`,
 its norm is strictly less than `normBound abv b * y ^ dim S`. -/
@@ -105,9 +105,9 @@ theorem norm_lt {T : Type*} [LinearOrderedRing T] (a : S) {y : T}
   apply (Int.cast_le.mpr (norm_le abv bS a hy')).trans_lt
   simp only [Int.cast_mul, Int.cast_pow]
   apply mul_lt_mul' le_rfl
-  · exact pow_lt_pow_left this (Int.cast_nonneg.mpr y'_nonneg) (@Fintype.card_ne_zero _ _ ⟨i⟩)
-  · exact pow_nonneg (Int.cast_nonneg.mpr y'_nonneg) _
-  · exact Int.cast_pos.mpr (normBound_pos abv bS)
+  exact pow_lt_pow_left this (Int.cast_nonneg.mpr y'_nonneg) (@Fintype.card_ne_zero _ _ ⟨i⟩)
+  exact pow_nonneg (Int.cast_nonneg.mpr y'_nonneg) _
+  exact Int.cast_pos.mpr (normBound_pos abv bS)
 
 
 /-- A nonzero ideal has an element of minimal norm. -/
@@ -167,14 +167,14 @@ theorem mem_finsetApprox {x : R} :
     x := by
   simp only [finsetApprox, Finset.mem_erase, Finset.mem_image]
   constructor
-  · rintro ⟨hx, ⟨i, j⟩, _, rfl⟩
-    refine ⟨i, j, ?_, rfl⟩
-    rintro rfl
-    simp at hx
-  · rintro ⟨i, j, hij, rfl⟩
-    refine ⟨?_, ⟨i, j⟩, Finset.mem_univ _, rfl⟩
-    rw [Ne, sub_eq_zero]
-    exact fun h => hij ((distinctElems bS adm).injective h)
+  rintro ⟨hx, ⟨i, j⟩, _, rfl⟩
+  refine ⟨i, j, ?_, rfl⟩
+  rintro rfl
+  simp at hx
+  rintro ⟨i, j, hij, rfl⟩
+  refine ⟨?_, ⟨i, j⟩, Finset.mem_univ _, rfl⟩
+  rw [Ne, sub_eq_zero]
+  exact fun h => hij ((distinctElems bS adm).injective h)
 
 section Real
 
@@ -197,8 +197,8 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
   rw [ε_eq, Algebra.smul_def, eq_intCast, mul_rpow, ← rpow_mul, div_mul_cancel₀, rpow_neg_one,
     mul_left_comm, mul_inv_cancel, mul_one, rpow_natCast] <;>
     try norm_cast; omega
-  · exact Iff.mpr Int.cast_nonneg this
-  · linarith
+  exact Iff.mpr Int.cast_nonneg this
+  linarith
   set μ : Fin (cardM bS adm).succ ↪ R := distinctElems bS adm with hμ
   let s : ι →₀ R := bS.repr a
   have s_eq : ∀ i, s i = bS.repr a i := fun i => rfl
@@ -221,7 +221,7 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
   let q := ∑ i, (qs k i - qs j i) • bS i
   set r := μ k - μ j with r_eq
   refine ⟨q, r, (mem_finsetApprox bS adm).mpr ?_, ?_⟩
-  · exact ⟨k, j, j_ne_k.symm, rfl⟩
+  exact ⟨k, j, j_ne_k.symm, rfl⟩
   have : r • a - b • q = ∑ x : ι, (rs k x • bS x - rs j x • bS x)
   simp only [q, r_eq, sub_smul, μ_mul_a_eq, Finset.smul_sum, ← Finset.sum_add_distrib,
     ← Finset.sum_sub_distrib, smul_sub]
@@ -229,12 +229,12 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
   ring
   rw [this, Algebra.norm_algebraMap_of_basis bS, abv.map_pow]
   refine Int.cast_lt.mp ((norm_lt abv bS _ fun i => lt_of_le_of_lt ?_ (hjk' i)).trans_le ?_)
-  · apply le_of_eq
-    congr
-    simp_rw [map_sum, map_sub, map_smul, Finset.sum_apply',
-      Finsupp.sub_apply, Finsupp.smul_apply, Finset.sum_sub_distrib, Basis.repr_self_apply,
-      smul_eq_mul, mul_boole, Finset.sum_ite_eq', Finset.mem_univ, if_true]
-  · exact mod_cast ε_le
+  apply le_of_eq
+  congr
+  simp_rw [map_sum, map_sub, map_smul, Finset.sum_apply',
+    Finsupp.sub_apply, Finsupp.smul_apply, Finset.sum_sub_distrib, Basis.repr_self_apply,
+    smul_eq_mul, mul_boole, Finset.sum_ite_eq', Finset.mem_univ, if_true]
+  exact mod_cast ε_le
 
 /-- We can approximate `a / b : L` with `q / r`, where `r` has finitely many options for `L`. -/
 theorem exists_mem_finset_approx' [Algebra.IsAlgebraic R L] (a : S) {b : S} (hb : b ≠ 0) :
@@ -281,12 +281,12 @@ theorem exists_mk0_eq_mk0 [IsDedekindDomain S] [Algebra.IsAlgebraic R L] (I : (I
   suffices Ideal.span {b} ∣ Ideal.span {algebraMap _ _ M} * I.1 by
     obtain ⟨J, hJ⟩ := this
     refine ⟨⟨J, ?_⟩, ?_, ?_⟩
-    · rw [mem_nonZeroDivisors_iff_ne_zero]
-      rintro rfl
-      rw [Ideal.zero_eq_bot, Ideal.mul_bot] at hJ
-      exact hM (Ideal.span_singleton_eq_bot.mp (I.2 _ hJ))
-    · rw [ClassGroup.mk0_eq_mk0_iff]
-      exact ⟨algebraMap _ _ M, b, hM, b_ne_zero, hJ⟩
+    rw [mem_nonZeroDivisors_iff_ne_zero]
+    rintro rfl
+    rw [Ideal.zero_eq_bot, Ideal.mul_bot] at hJ
+    exact hM (Ideal.span_singleton_eq_bot.mp (I.2 _ hJ))
+    rw [ClassGroup.mk0_eq_mk0_iff]
+    exact ⟨algebraMap _ _ M, b, hM, b_ne_zero, hJ⟩
     rw [← SetLike.mem_coe, ← Set.singleton_subset_iff, ← Ideal.span_le, ← Ideal.dvd_iff_le]
     apply (mul_dvd_mul_iff_left _).mp _
     swap; · exact mt Ideal.span_singleton_eq_bot.mp b_ne_zero

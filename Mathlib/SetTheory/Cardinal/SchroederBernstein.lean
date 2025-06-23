@@ -46,8 +46,8 @@ Given injections `α → β` and `β → α`, we can get a bijection `α → β`
 theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injective f)
     (hg : Function.Injective g) : ∃ h : α → β, Bijective h := by
   cases' isEmpty_or_nonempty β with hβ hβ
-  · have : IsEmpty α := Function.isEmpty f
-    exact ⟨_, ((Equiv.equivEmpty α).trans (Equiv.equivEmpty β).symm).bijective⟩
+  have : IsEmpty α := Function.isEmpty f
+  exact ⟨_, ((Equiv.equivEmpty α).trans (Equiv.equivEmpty β).symm).bijective⟩
   set F : Set α →o Set α :=
     { toFun := fun s => (g '' (f '' s)ᶜ)ᶜ
       monotone' := fun s t hst =>
@@ -63,15 +63,15 @@ theorem schroeder_bernstein {f : α → β} {g : β → α} (hf : Function.Injec
   have : Surjective h := by rw [← range_iff_surjective, range_piecewise, hg'ns, union_compl_self]
   have : Injective h := by
     refine (injective_piecewise_iff _).2 ⟨hf.injOn, ?_, ?_⟩
-    · intro x hx y hy hxy
-      obtain ⟨x', _, rfl⟩ : x ∈ g '' (f '' s)ᶜ := by rwa [hns]
-      obtain ⟨y', _, rfl⟩ : y ∈ g '' (f '' s)ᶜ := by rwa [hns]
-      rw [g'g _, g'g _] at hxy
-      rw [hxy]
-    · intro x hx y hy hxy
-      obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ := by rwa [hns]
-      rw [g'g _] at hxy
-      exact hy' ⟨x, hx, hxy⟩
+    intro x hx y hy hxy
+    obtain ⟨x', _, rfl⟩ : x ∈ g '' (f '' s)ᶜ := by rwa [hns]
+    obtain ⟨y', _, rfl⟩ : y ∈ g '' (f '' s)ᶜ := by rwa [hns]
+    rw [g'g _, g'g _] at hxy
+    rw [hxy]
+    intro x hx y hy hxy
+    obtain ⟨y', hy', rfl⟩ : y ∈ g '' (f '' s)ᶜ := by rwa [hns]
+    rw [g'g _] at hxy
+    exact hy' ⟨x, hx, hxy⟩
   exact ⟨h, ‹Injective h›, ‹Surjective h›⟩
 
 /-- **The Schröder-Bernstein Theorem**: Given embeddings `α ↪ β` and `β ↪ α`, there exists an
@@ -111,11 +111,11 @@ theorem min_injective [I : Nonempty ι] : ∃ i, Nonempty (∀ j, β i ↪ β j)
         have : f ∈ s :=
           have : insert f s ∈ sets β := fun x hx y hy => by
             cases' hx with hx hx <;> cases' hy with hy hy; · simp [hx, hy]
-            · subst x
-              exact fun i e => (hf i y hy e.symm).elim
-            · subst y
-              exact fun i e => (hf i x hx e).elim
-            · exact hs x hx y hy
+            subst x
+            exact fun i e => (hf i y hy e.symm).elim
+            subst y
+            exact fun i e => (hf i x hx e).elim
+            exact hs x hx y hy
           ms _ this (subset_insert f s) ▸ mem_insert _ _
         let ⟨i⟩ := I
         hf i f this rfl

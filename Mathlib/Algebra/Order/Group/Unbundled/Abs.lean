@@ -111,20 +111,20 @@ variable [CommGroup α] [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α}
 @[to_additive "The absolute value satisfies the triangle inequality."]
 lemma mabs_mul_le (a b : α) : |a * b|ₘ ≤ |a|ₘ * |b|ₘ := by
   apply sup_le
-  · exact mul_le_mul' (le_mabs_self a) (le_mabs_self b)
-  · rw [mul_inv]
-    exact mul_le_mul' (inv_le_mabs _) (inv_le_mabs _)
+  exact mul_le_mul' (le_mabs_self a) (le_mabs_self b)
+  rw [mul_inv]
+  exact mul_le_mul' (inv_le_mabs _) (inv_le_mabs _)
 
 @[to_additive]
 lemma mabs_mabs_div_mabs_le (a b : α) : |(|a|ₘ / |b|ₘ)|ₘ ≤ |a / b|ₘ := by
   rw [mabs, sup_le_iff]
   constructor
-  · apply div_le_iff_le_mul.2
-    convert mabs_mul_le (a / b) b
-    rw [div_mul_cancel]
-  · rw [div_eq_mul_inv, mul_inv_rev, inv_inv, mul_inv_le_iff_le_mul, mabs_div_comm]
-    convert mabs_mul_le (b / a) a
-    · rw [div_mul_cancel]
+  apply div_le_iff_le_mul.2
+  convert mabs_mul_le (a / b) b
+  rw [div_mul_cancel]
+  rw [div_eq_mul_inv, mul_inv_rev, inv_inv, mul_inv_le_iff_le_mul, mabs_div_comm]
+  convert mabs_mul_le (b / a) a
+  rw [div_mul_cancel]
 
 @[to_additive] lemma sup_div_inf_eq_mabs_div (a b : α) : (a ⊔ b) / (a ⊓ b) = |b / a|ₘ := by
   simp_rw [sup_div, div_inf, div_self', sup_comm, sup_sup_sup_comm, sup_idem]
@@ -208,9 +208,9 @@ variable [CovariantClass α α (· * ·) (· ≤ ·)] {a b c : α}
 
 @[to_additive (attr := simp) abs_pos] lemma one_lt_mabs : 1 < |a|ₘ ↔ a ≠ 1 := by
   obtain ha | rfl | ha := lt_trichotomy a 1
-  · simp [mabs_of_lt_one ha, neg_pos, ha.ne, ha]
-  · simp
-  · simp [mabs_of_one_lt ha, ha, ha.ne']
+  simp [mabs_of_lt_one ha, neg_pos, ha.ne, ha]
+  simp
+  simp [mabs_of_one_lt ha, ha, ha.ne']
 
 @[to_additive abs_pos_of_pos] lemma one_lt_mabs_pos_of_one_lt (h : 1 < a) : 1 < |a|ₘ :=
   one_lt_mabs.2 h.ne'
@@ -220,8 +220,8 @@ variable [CovariantClass α α (· * ·) (· ≤ ·)] {a b c : α}
 
 @[to_additive] lemma inv_mabs_le (a : α) : |a|ₘ⁻¹ ≤ a := by
   obtain h | h := le_total 1 a
-  · simpa [mabs_of_one_le h] using (inv_le_one'.2 h).trans h
-  · simp [mabs_of_le_one h]
+  simpa [mabs_of_one_le h] using (inv_le_one'.2 h).trans h
+  simp [mabs_of_le_one h]
 
 @[to_additive add_abs_nonneg] lemma one_le_mul_mabs (a : α) : 1 ≤ a * |a|ₘ := by
   rw [← mul_right_inv a]; exact mul_le_mul_left' (inv_le_mabs a) _
@@ -250,10 +250,10 @@ variable [CovariantClass α α (swap (· * ·)) (· ≤ ·)]
 
 @[to_additive] lemma max_div_min_eq_mabs' (a b : α) : max a b / min a b = |a / b|ₘ := by
   rcases le_total a b with ab | ba
-  · rw [max_eq_right ab, min_eq_left ab, mabs_of_le_one, inv_div]
-    rwa [div_le_one']
-  · rw [max_eq_left ba, min_eq_right ba, mabs_of_one_le]
-    rwa [one_le_div']
+  rw [max_eq_right ab, min_eq_left ab, mabs_of_le_one, inv_div]
+  rwa [div_le_one']
+  rw [max_eq_left ba, min_eq_right ba, mabs_of_one_le]
+  rwa [one_le_div']
 
 @[to_additive] lemma max_div_min_eq_mabs (a b : α) : max a b / min a b = |b / a|ₘ := by
   rw [mabs_div_comm, max_div_min_eq_mabs']

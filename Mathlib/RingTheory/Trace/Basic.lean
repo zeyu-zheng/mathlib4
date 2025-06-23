@@ -99,15 +99,15 @@ theorem trace_gen_eq_zero {x : L} (hx : ¬IsIntegral K x) :
   contrapose! hx
   obtain ⟨s, ⟨b⟩⟩ := hx
   refine .of_mem_of_fg K⟮x⟯.toSubalgebra ?_ x ?_
-  · exact (Submodule.fg_iff_finiteDimensional _).mpr (FiniteDimensional.of_fintype_basis b)
-  · exact subset_adjoin K _ (Set.mem_singleton x)
+  exact (Submodule.fg_iff_finiteDimensional _).mpr (FiniteDimensional.of_fintype_basis b)
+  exact subset_adjoin K _ (Set.mem_singleton x)
 
 theorem trace_gen_eq_sum_roots (x : L) (hf : (minpoly K x).Splits (algebraMap K F)) :
     algebraMap K F (trace K K⟮x⟯ (AdjoinSimple.gen K x)) =
       ((minpoly K x).aroots F).sum := by
   have injKxL := (algebraMap K⟮x⟯ L).injective
   by_cases hx : IsIntegral K x; swap
-  · simp [minpoly.eq_zero hx, trace_gen_eq_zero hx, aroots_def]
+  simp [minpoly.eq_zero hx, trace_gen_eq_zero hx, aroots_def]
   rw [← adjoin.powerBasis_gen hx, (adjoin.powerBasis hx).trace_gen_eq_sum_roots] <;>
     rw [adjoin.powerBasis_gen hx, ← minpoly.algebraMap_eq injKxL] <;>
     try simp only [AdjoinSimple.algebraMap_gen _ _]
@@ -151,13 +151,13 @@ theorem Algebra.isIntegral_trace [FiniteDimensional L F] {x : F} (hx : IsIntegra
     IsIntegral R (Algebra.trace L F x) := by
   have hx' : IsIntegral L x := hx.tower_top
   rw [← isIntegral_algebraMap_iff (algebraMap L (AlgebraicClosure F)).injective, trace_eq_sum_roots]
-  · refine (IsIntegral.multiset_sum ?_).nsmul _
-    intro y hy
-    rw [mem_roots_map (minpoly.ne_zero hx')] at hy
-    use minpoly R x, minpoly.monic hx
-    rw [← aeval_def] at hy ⊢
-    exact minpoly.aeval_of_isScalarTower R x y hy
-  · apply IsAlgClosed.splits_codomain
+  refine (IsIntegral.multiset_sum ?_).nsmul _
+  intro y hy
+  rw [mem_roots_map (minpoly.ne_zero hx')] at hy
+  use minpoly R x, minpoly.monic hx
+  rw [← aeval_def] at hy ⊢
+  exact minpoly.aeval_of_isScalarTower R x y hy
+  apply IsAlgClosed.splits_codomain
 
 lemma Algebra.trace_eq_of_algEquiv {A B C : Type*} [CommRing A] [CommRing B] [CommRing C]
     [Algebra A B] [Algebra A C] (e : B ≃ₐ[A] C) (x) :
@@ -170,16 +170,16 @@ lemma Algebra.trace_eq_of_ringEquiv {A B C : Type*} [CommRing A] [CommRing B] [C
     [Algebra A C] [Algebra B C] (e : A ≃+* B) (he : (algebraMap B C).comp e = algebraMap A C) (x) :
     e (Algebra.trace A C x) = Algebra.trace B C x := by
   by_cases h : ∃ s : Finset C, Nonempty (Basis s B C)
-  · obtain ⟨s, ⟨b⟩⟩ := h
-    letI : Algebra A B := RingHom.toAlgebra e
-    letI : IsScalarTower A B C := IsScalarTower.of_algebraMap_eq' he.symm
-    rw [Algebra.trace_eq_matrix_trace b,
-      Algebra.trace_eq_matrix_trace (b.mapCoeffs e.symm (by simp [Algebra.smul_def, ← he]))]
-    show e.toAddMonoidHom _ = _
-    rw [AddMonoidHom.map_trace]
-    congr
-    ext i j
-    simp [leftMulMatrix_apply, LinearMap.toMatrix_apply]
+  obtain ⟨s, ⟨b⟩⟩ := h
+  letI : Algebra A B := RingHom.toAlgebra e
+  letI : IsScalarTower A B C := IsScalarTower.of_algebraMap_eq' he.symm
+  rw [Algebra.trace_eq_matrix_trace b,
+    Algebra.trace_eq_matrix_trace (b.mapCoeffs e.symm (by simp [Algebra.smul_def, ← he]))]
+  show e.toAddMonoidHom _ = _
+  rw [AddMonoidHom.map_trace]
+  congr
+  ext i j
+  simp [leftMulMatrix_apply, LinearMap.toMatrix_apply]
   rw [trace_eq_zero_of_not_exists_basis _ h, trace_eq_zero_of_not_exists_basis,
     LinearMap.zero_apply, LinearMap.zero_apply, map_zero]
   intro ⟨s, ⟨b⟩⟩
@@ -213,12 +213,12 @@ theorem trace_eq_sum_embeddings_gen (pb : PowerBasis K L)
   rw [pb.trace_gen_eq_sum_roots hE, Fintype.sum_equiv pb.liftEquiv', Finset.sum_mem_multiset,
     Finset.sum_eq_multiset_sum, Multiset.toFinset_val, Multiset.dedup_eq_self.mpr _,
     Multiset.map_id]
-  · exact nodup_roots ((separable_map _).mpr hfx)
+  exact nodup_roots ((separable_map _).mpr hfx)
   -- Porting note: the following goal does not exist in mathlib3.
-  · exact (fun x => x.1)
-  · intro x; rfl
-  · intro σ
-    rw [PowerBasis.liftEquiv'_apply_coe]
+  exact (fun x => x.1)
+  intro x; rfl
+  intro σ
+  rw [PowerBasis.liftEquiv'_apply_coe]
 
 variable [IsAlgClosed E]
 
@@ -231,18 +231,18 @@ theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [Algebra.IsSeparab
   haveI : Algebra.IsSeparable L F := Algebra.isSeparable_tower_top_of_isSeparable K L F
   letI : Fintype (L →ₐ[K] E) := PowerBasis.AlgHom.fintype pb
   letI : ∀ f : L →ₐ[K] E, Fintype (haveI := f.toRingHom.toAlgebra; AlgHom L F E) := ?_
-  · rw [Fintype.sum_equiv algHomEquivSigma (fun σ : F →ₐ[K] E => _) fun σ => σ.1 pb.gen, ←
-      Finset.univ_sigma_univ, Finset.sum_sigma, ← Finset.sum_nsmul]
-    · refine Finset.sum_congr rfl fun σ _ => ?_
-      letI : Algebra L E := σ.toRingHom.toAlgebra
-      -- Porting note: `Finset.card_univ` was inside `simp only`.
-      simp only [Finset.sum_const]
-      congr
-      rw [← AlgHom.card L F E]
-      exact Finset.card_univ (α := F →ₐ[L] E)
-    · intro σ
-      simp only [algHomEquivSigma, Equiv.coe_fn_mk, AlgHom.restrictDomain, AlgHom.comp_apply,
-        IsScalarTower.coe_toAlgHom']
+  rw [Fintype.sum_equiv algHomEquivSigma (fun σ : F →ₐ[K] E => _) fun σ => σ.1 pb.gen, ←
+    Finset.univ_sigma_univ, Finset.sum_sigma, ← Finset.sum_nsmul]
+  refine Finset.sum_congr rfl fun σ _ => ?_
+  letI : Algebra L E := σ.toRingHom.toAlgebra
+  -- Porting note: `Finset.card_univ` was inside `simp only`.
+  simp only [Finset.sum_const]
+  congr
+  rw [← AlgHom.card L F E]
+  exact Finset.card_univ (α := F →ₐ[L] E)
+  intro σ
+  simp only [algHomEquivSigma, Equiv.coe_fn_mk, AlgHom.restrictDomain, AlgHom.comp_apply,
+    IsScalarTower.coe_toAlgHom']
 
 theorem trace_eq_sum_embeddings [FiniteDimensional K L] [Algebra.IsSeparable K L] {x : L} :
     algebraMap K E (Algebra.trace K L x) = ∑ σ : L →ₐ[K] E, σ x := by
@@ -252,24 +252,24 @@ theorem trace_eq_sum_embeddings [FiniteDimensional K L] [Algebra.IsSeparable K L
     trace_eq_sum_embeddings_gen E pb (IsAlgClosed.splits_codomain _)]
   -- Porting note: the following `convert` was `exact`, with `← algebra.smul_def, algebra_map_smul`
   -- in the previous `rw`.
-  · convert (sum_embeddings_eq_finrank_mul L E pb).symm
-    ext
-    simp
-  · haveI := Algebra.isSeparable_tower_bot_of_isSeparable K K⟮x⟯ L
-    exact Algebra.IsSeparable.isSeparable K _
+  convert (sum_embeddings_eq_finrank_mul L E pb).symm
+  ext
+  simp
+  haveI := Algebra.isSeparable_tower_bot_of_isSeparable K K⟮x⟯ L
+  exact Algebra.IsSeparable.isSeparable K _
 
 theorem trace_eq_sum_automorphisms (x : L) [FiniteDimensional K L] [IsGalois K L] :
     algebraMap K L (Algebra.trace K L x) = ∑ σ : L ≃ₐ[K] L, σ x := by
   apply NoZeroSMulDivisors.algebraMap_injective L (AlgebraicClosure L)
   rw [_root_.map_sum (algebraMap L (AlgebraicClosure L))]
   rw [← Fintype.sum_equiv (Normal.algHomEquivAut K (AlgebraicClosure L) L)]
-  · rw [← trace_eq_sum_embeddings (AlgebraicClosure L)]
-    · simp only [algebraMap_eq_smul_one]
-      -- Porting note: `smul_one_smul` was in the `simp only`.
-      apply smul_one_smul
-  · intro σ
-    simp only [Normal.algHomEquivAut, AlgHom.restrictNormal', Equiv.coe_fn_mk,
-      AlgEquiv.coe_ofBijective, AlgHom.restrictNormal_commutes, id.map_eq_id, RingHom.id_apply]
+  rw [← trace_eq_sum_embeddings (AlgebraicClosure L)]
+  simp only [algebraMap_eq_smul_one]
+  -- Porting note: `smul_one_smul` was in the `simp only`.
+  apply smul_one_smul
+  intro σ
+  simp only [Normal.algHomEquivAut, AlgHom.restrictNormal', Equiv.coe_fn_mk,
+    AlgEquiv.coe_ofBijective, AlgHom.restrictNormal_commutes, id.map_eq_id, RingHom.id_apply]
 
 end EqSumEmbeddings
 
@@ -411,14 +411,14 @@ theorem det_traceMatrix_ne_zero' [Algebra.IsSeparable K L] : det (traceMatrix K 
     rw [ht, RingHom.map_zero]
   haveI : FiniteDimensional K L := pb.finite
   let e : Fin pb.dim ≃ (L →ₐ[K] AlgebraicClosure L) := (Fintype.equivFinOfCardEq ?_).symm
-  · rw [RingHom.map_det, RingHom.mapMatrix_apply,
-      traceMatrix_eq_embeddingsMatrixReindex_mul_trans K _ _ e,
-      embeddingsMatrixReindex_eq_vandermonde, det_mul, det_transpose]
-    refine mt mul_self_eq_zero.mp ?_
-    simp only [det_vandermonde, Finset.prod_eq_zero_iff, not_exists, sub_eq_zero]
-    rintro i ⟨_, j, hij, h⟩
-    exact (Finset.mem_Ioi.mp hij).ne' (e.injective <| pb.algHom_ext h)
-  · rw [AlgHom.card, pb.finrank]
+  rw [RingHom.map_det, RingHom.mapMatrix_apply,
+    traceMatrix_eq_embeddingsMatrixReindex_mul_trans K _ _ e,
+    embeddingsMatrixReindex_eq_vandermonde, det_mul, det_transpose]
+  refine mt mul_self_eq_zero.mp ?_
+  simp only [det_vandermonde, Finset.prod_eq_zero_iff, not_exists, sub_eq_zero]
+  rintro i ⟨_, j, hij, h⟩
+  exact (Finset.mem_Ioi.mp hij).ne' (e.injective <| pb.algHom_ext h)
+  rw [AlgHom.card, pb.finrank]
 
 theorem det_traceForm_ne_zero [Algebra.IsSeparable K L] [DecidableEq ι] (b : Basis ι K L) :
     det (BilinForm.toMatrix b (traceForm K L)) ≠ 0 := by
@@ -430,15 +430,15 @@ theorem det_traceForm_ne_zero [Algebra.IsSeparable K L] [DecidableEq ι] (b : Ba
   refine
     mul_ne_zero
       (isUnit_of_mul_eq_one _ ((b.toMatrix pb.basis)ᵀ * b.toMatrix pb.basis).det ?_).ne_zero ?_
-  · calc
-      (pb.basis.toMatrix b * (pb.basis.toMatrix b)ᵀ).det *
-            ((b.toMatrix pb.basis)ᵀ * b.toMatrix pb.basis).det =
-          (pb.basis.toMatrix b * (b.toMatrix pb.basis * pb.basis.toMatrix b)ᵀ *
-              b.toMatrix pb.basis).det := by
-        simp only [← det_mul, Matrix.mul_assoc, Matrix.transpose_mul]
-      _ = 1 := by
-        simp only [Basis.toMatrix_mul_toMatrix_flip, Matrix.transpose_one, Matrix.mul_one,
-          Matrix.det_one]
+  calc
+    (pb.basis.toMatrix b * (pb.basis.toMatrix b)ᵀ).det *
+          ((b.toMatrix pb.basis)ᵀ * b.toMatrix pb.basis).det =
+        (pb.basis.toMatrix b * (b.toMatrix pb.basis * pb.basis.toMatrix b)ᵀ *
+            b.toMatrix pb.basis).det := by
+      simp only [← det_mul, Matrix.mul_assoc, Matrix.transpose_mul]
+    _ = 1 := by
+      simp only [Basis.toMatrix_mul_toMatrix_flip, Matrix.transpose_one, Matrix.mul_one,
+        Matrix.det_one]
   simpa only [traceMatrix_of_basis] using det_traceMatrix_ne_zero' pb
 
 variable (K L)

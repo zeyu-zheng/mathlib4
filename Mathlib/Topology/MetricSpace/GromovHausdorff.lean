@@ -99,18 +99,18 @@ theorem eq_toGHSpace_iff {X : Type u} [MetricSpace X] [CompactSpace X] [Nonempty
     ⟦p⟧ = toGHSpace X ↔ ∃ Ψ : X → ℓ_infty_ℝ, Isometry Ψ ∧ range Ψ = p := by
   simp only [toGHSpace, Quotient.eq]
   refine ⟨fun h => ?_, ?_⟩
-  · rcases Setoid.symm h with ⟨e⟩
-    have f := (kuratowskiEmbedding.isometry X).isometryEquivOnRange.trans e
-    use fun x => f x, isometry_subtype_coe.comp f.isometry
-    erw [range_comp, f.range_eq_univ, Set.image_univ, Subtype.range_coe]
-  · rintro ⟨Ψ, ⟨isomΨ, rangeΨ⟩⟩
-    have f :=
-      ((kuratowskiEmbedding.isometry X).isometryEquivOnRange.symm.trans
-          isomΨ.isometryEquivOnRange).symm
-    have E : (range Ψ ≃ᵢ NonemptyCompacts.kuratowskiEmbedding X)
-        = (p ≃ᵢ range (kuratowskiEmbedding X)) := by
-      dsimp only [NonemptyCompacts.kuratowskiEmbedding]; rw [rangeΨ]; rfl
-    exact ⟨cast E f⟩
+  rcases Setoid.symm h with ⟨e⟩
+  have f := (kuratowskiEmbedding.isometry X).isometryEquivOnRange.trans e
+  use fun x => f x, isometry_subtype_coe.comp f.isometry
+  erw [range_comp, f.range_eq_univ, Set.image_univ, Subtype.range_coe]
+  rintro ⟨Ψ, ⟨isomΨ, rangeΨ⟩⟩
+  have f :=
+    ((kuratowskiEmbedding.isometry X).isometryEquivOnRange.symm.trans
+        isomΨ.isometryEquivOnRange).symm
+  have E : (range Ψ ≃ᵢ NonemptyCompacts.kuratowskiEmbedding X)
+      = (p ≃ᵢ range (kuratowskiEmbedding X)) := by
+    dsimp only [NonemptyCompacts.kuratowskiEmbedding]; rw [rangeΨ]; rfl
+  exact ⟨cast E f⟩
 
 theorem eq_toGHSpace {p : NonemptyCompacts ℓ_infty_ℝ} : ⟦p⟧ = toGHSpace p :=
   eq_toGHSpace_iff.2 ⟨fun x => x, isometry_subtype_coe, Subtype.range_coe⟩
@@ -226,11 +226,11 @@ theorem ghDist_le_hausdorffDist {X : Type u} [MetricSpace X] [CompactSpace X] [N
     rw [eq_toGHSpace_iff]
     exact ⟨fun x => F (Ψ' x), (kuratowskiEmbedding.isometry _).comp IΨ', range_comp _ _⟩
   refine csInf_le ⟨0, ?_⟩ ?_
-  · simp only [lowerBounds, mem_image, mem_prod, mem_setOf_eq, Prod.exists, and_imp,
-      forall_exists_index]
-    intro t _ _ _ _ ht
-    rw [← ht]
-    exact hausdorffDist_nonneg
+  simp only [lowerBounds, mem_image, mem_prod, mem_setOf_eq, Prod.exists, and_imp,
+    forall_exists_index]
+  intro t _ _ _ _ ht
+  rw [← ht]
+  exact hausdorffDist_nonneg
   apply (mem_image _ _ _).2
   exists (⟨A, B⟩ : NonemptyCompacts ℓ_infty_ℝ × NonemptyCompacts ℓ_infty_ℝ)
 
@@ -292,30 +292,30 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
       simp only [F, candidates, forall_const, and_true_iff, add_comm, eq_self_iff_true,
         dist_eq_zero, and_self_iff, Set.mem_setOf_eq]
       repeat' constructor
-      · exact fun x y =>
-          calc
-            F (inl x, inl y) = dist (Φ x) (Φ y) := rfl
-            _ = dist x y := Φisom.dist_eq x y
+      exact fun x y =>
+        calc
+          F (inl x, inl y) = dist (Φ x) (Φ y) := rfl
+          _ = dist x y := Φisom.dist_eq x y
 
-      · exact fun x y =>
-          calc
-            F (inr x, inr y) = dist (Ψ x) (Ψ y) := rfl
-            _ = dist x y := Ψisom.dist_eq x y
+      exact fun x y =>
+        calc
+          F (inr x, inr y) = dist (Ψ x) (Ψ y) := rfl
+          _ = dist x y := Ψisom.dist_eq x y
 
-      · exact fun x y => dist_comm _ _
-      · exact fun x y z => dist_triangle _ _ _
-      · exact fun x y =>
-          calc
-            F (x, y) ≤ diam (range Φ ∪ range Ψ) := by
-              have A : ∀ z : X ⊕ Y, f z ∈ range Φ ∪ range Ψ := by
-                intro z
-                cases z
-                · apply mem_union_left; apply mem_range_self
-                · apply mem_union_right; apply mem_range_self
-              refine dist_le_diam_of_mem ?_ (A _) (A _)
-              rw [Φrange, Ψrange]
-              exact (p ⊔ q).isCompact.isBounded
-            _ ≤ 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) := I
+      exact fun x y => dist_comm _ _
+      exact fun x y z => dist_triangle _ _ _
+      exact fun x y =>
+        calc
+          F (x, y) ≤ diam (range Φ ∪ range Ψ) := by
+            have A : ∀ z : X ⊕ Y, f z ∈ range Φ ∪ range Ψ := by
+              intro z
+              cases z
+              apply mem_union_left; apply mem_range_self
+              apply mem_union_right; apply mem_range_self
+            refine dist_le_diam_of_mem ?_ (A _) (A _)
+            rw [Φrange, Ψrange]
+            exact (p ⊔ q).isCompact.isBounded
+          _ ≤ 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) := I
     let Fb := candidatesBOfCandidates F Fgood
     have : hausdorffDist (range (optimalGHInjl X Y)) (range (optimalGHInjr X Y)) ≤ HD Fb :=
       hausdorffDist_optimal_le_HD _ _ (candidatesBOfCandidates_mem F Fgood)
@@ -365,19 +365,19 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
     intro p q hp hq
     by_cases h :
       hausdorffDist (p : Set ℓ_infty_ℝ) q < diam (univ : Set X) + 1 + diam (univ : Set Y)
-    · exact A p q hp hq h
-    · calc
-        hausdorffDist (range (optimalGHInjl X Y)) (range (optimalGHInjr X Y)) ≤
-            HD (candidatesBDist X Y) :=
-          hausdorffDist_optimal_le_HD _ _ candidatesBDist_mem_candidatesB
-        _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := HD_candidatesBDist_le
-        _ ≤ hausdorffDist (p : Set ℓ_infty_ℝ) q := not_lt.1 h
+    exact A p q hp hq h
+    calc
+      hausdorffDist (range (optimalGHInjl X Y)) (range (optimalGHInjr X Y)) ≤
+          HD (candidatesBDist X Y) :=
+        hausdorffDist_optimal_le_HD _ _ candidatesBDist_mem_candidatesB
+      _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := HD_candidatesBDist_le
+      _ ≤ hausdorffDist (p : Set ℓ_infty_ℝ) q := not_lt.1 h
   refine le_antisymm ?_ ?_
-  · apply le_csInf
-    · refine (Set.Nonempty.prod ?_ ?_).image _ <;> exact ⟨_, rfl⟩
-    · rintro b ⟨⟨p, q⟩, ⟨hp, hq⟩, rfl⟩
-      exact B p q hp hq
-  · exact ghDist_le_hausdorffDist (isometry_optimalGHInjl X Y) (isometry_optimalGHInjr X Y)
+  apply le_csInf
+  refine (Set.Nonempty.prod ?_ ?_).image _ <;> exact ⟨_, rfl⟩
+  rintro b ⟨⟨p, q⟩, ⟨hp, hq⟩, rfl⟩
+  exact B p q hp hq
+  exact ghDist_le_hausdorffDist (isometry_optimalGHInjl X Y) (isometry_optimalGHInjr X Y)
 
 /-- The Gromov-Hausdorff distance can also be realized by a coupling in `ℓ^∞(ℝ)`, by embedding
 the optimal coupling through its Kuratowski embedding. -/
@@ -390,11 +390,11 @@ theorem ghDist_eq_hausdorffDist (X : Type u) [MetricSpace X] [CompactSpace X] [N
   let Φ := F ∘ optimalGHInjl X Y
   let Ψ := F ∘ optimalGHInjr X Y
   refine ⟨Φ, Ψ, ?_, ?_, ?_⟩
-  · exact (kuratowskiEmbedding.isometry _).comp (isometry_optimalGHInjl X Y)
-  · exact (kuratowskiEmbedding.isometry _).comp (isometry_optimalGHInjr X Y)
-  · rw [← image_univ, ← image_univ, image_comp F, image_univ, image_comp F (optimalGHInjr X Y),
-      image_univ, ← hausdorffDist_optimal]
-    exact (hausdorffDist_image (kuratowskiEmbedding.isometry _)).symm
+  exact (kuratowskiEmbedding.isometry _).comp (isometry_optimalGHInjl X Y)
+  exact (kuratowskiEmbedding.isometry _).comp (isometry_optimalGHInjr X Y)
+  rw [← image_univ, ← image_univ, image_comp F, image_univ, image_comp F (optimalGHInjr X Y),
+    image_univ, ← hausdorffDist_optimal]
+  exact (hausdorffDist_image (kuratowskiEmbedding.isometry _)).symm
 
 /-- The Gromov-Hausdorff distance defines a genuine distance on the Gromov-Hausdorff space. -/
 instance : MetricSpace GHSpace where
@@ -402,14 +402,14 @@ instance : MetricSpace GHSpace where
   dist_self x := by
     rcases exists_rep x with ⟨y, hy⟩
     refine le_antisymm ?_ ?_
-    · apply csInf_le
-      · exact ⟨0, by rintro b ⟨⟨u, v⟩, -, rfl⟩; exact hausdorffDist_nonneg⟩
-      · simp only [mem_image, mem_prod, mem_setOf_eq, Prod.exists]
-        exists y, y
-        simpa only [and_self_iff, hausdorffDist_self_zero, eq_self_iff_true, and_true_iff]
-    · apply le_csInf
-      · exact Set.Nonempty.image _ <| Set.Nonempty.prod ⟨y, hy⟩ ⟨y, hy⟩
-      · rintro b ⟨⟨u, v⟩, -, rfl⟩; exact hausdorffDist_nonneg
+    apply csInf_le
+    exact ⟨0, by rintro b ⟨⟨u, v⟩, -, rfl⟩; exact hausdorffDist_nonneg⟩
+    simp only [mem_image, mem_prod, mem_setOf_eq, Prod.exists]
+    exists y, y
+    simpa only [and_self_iff, hausdorffDist_self_zero, eq_self_iff_true, and_true_iff]
+    apply le_csInf
+    exact Set.Nonempty.image _ <| Set.Nonempty.prod ⟨y, hy⟩ ⟨y, hy⟩
+    rintro b ⟨⟨u, v⟩, -, rfl⟩; exact hausdorffDist_nonneg
   dist_comm x y := by
     have A :
       (fun p : NonemptyCompacts ℓ_infty_ℝ × NonemptyCompacts ℓ_infty_ℝ =>
@@ -440,10 +440,10 @@ instance : MetricSpace GHSpace where
       have hΦ : IsCompact (range Φ) := isCompact_range Φisom.continuous
       have hΨ : IsCompact (range Ψ) := isCompact_range Ψisom.continuous
       apply (IsClosed.hausdorffDist_zero_iff_eq _ _ _).1 DΦΨ.symm
-      · exact hΦ.isClosed
-      · exact hΨ.isClosed
-      · exact hausdorffEdist_ne_top_of_nonempty_of_bounded (range_nonempty _) (range_nonempty _)
-          hΦ.isBounded hΨ.isBounded
+      exact hΦ.isClosed
+      exact hΨ.isClosed
+      exact hausdorffEdist_ne_top_of_nonempty_of_bounded (range_nonempty _) (range_nonempty _)
+        hΦ.isBounded hΨ.isBounded
     have T : (range Ψ ≃ᵢ y.Rep) = (range Φ ≃ᵢ y.Rep) := by rw [this]
     have eΨ := cast T Ψisom.isometryEquivOnRange.symm
     have e := Φisom.isometryEquivOnRange.trans eΨ
@@ -481,10 +481,10 @@ instance : MetricSpace GHSpace where
               (range (toGlueR hΦ hΨ ∘ optimalGHInjr Y Z)) := by
         refine hausdorffDist_triangle <| hausdorffEdist_ne_top_of_nonempty_of_bounded
           (range_nonempty _) (range_nonempty _) ?_ ?_
-        · exact (isCompact_range (Isometry.continuous
-            ((toGlueL_isometry hΦ hΨ).comp (isometry_optimalGHInjl X Y)))).isBounded
-        · exact (isCompact_range (Isometry.continuous
-            ((toGlueL_isometry hΦ hΨ).comp (isometry_optimalGHInjr X Y)))).isBounded
+        exact (isCompact_range (Isometry.continuous
+          ((toGlueL_isometry hΦ hΨ).comp (isometry_optimalGHInjl X Y)))).isBounded
+        exact (isCompact_range (Isometry.continuous
+          ((toGlueL_isometry hΦ hΨ).comp (isometry_optimalGHInjr X Y)))).isBounded
       _ = hausdorffDist (toGlueL hΦ hΨ '' range (optimalGHInjl X Y))
               (toGlueL hΦ hΨ '' range (optimalGHInjr X Y)) +
             hausdorffDist (toGlueR hΦ hΨ '' range (optimalGHInjl Y Z))
@@ -603,17 +603,17 @@ theorem ghDist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε�
       ⟨x, mem_univ _, by simpa only [dist_self]⟩
   have : hausdorffDist (Fl '' s) (Fr '' range Φ) ≤ ε₂ / 2 + δ := by
     refine hausdorffDist_le_of_mem_dist (by linarith) ?_ ?_
-    · intro x' hx'
-      rcases (Set.mem_image _ _ _).1 hx' with ⟨x, ⟨x_in_s, xx'⟩⟩
-      rw [← xx']
-      use Fr (Φ ⟨x, x_in_s⟩), mem_image_of_mem Fr (mem_range_self _)
-      exact le_of_eq (glueDist_glued_points (fun x : s => (x : X)) Φ (ε₂ / 2 + δ) ⟨x, x_in_s⟩)
-    · intro x' hx'
-      rcases (Set.mem_image _ _ _).1 hx' with ⟨y, ⟨y_in_s', yx'⟩⟩
-      rcases mem_range.1 y_in_s' with ⟨x, xy⟩
-      use Fl x, mem_image_of_mem _ x.2
-      rw [← yx', ← xy, dist_comm]
-      exact le_of_eq (glueDist_glued_points (Z := s) (@Subtype.val X s) Φ (ε₂ / 2 + δ) x)
+    intro x' hx'
+    rcases (Set.mem_image _ _ _).1 hx' with ⟨x, ⟨x_in_s, xx'⟩⟩
+    rw [← xx']
+    use Fr (Φ ⟨x, x_in_s⟩), mem_image_of_mem Fr (mem_range_self _)
+    exact le_of_eq (glueDist_glued_points (fun x : s => (x : X)) Φ (ε₂ / 2 + δ) ⟨x, x_in_s⟩)
+    intro x' hx'
+    rcases (Set.mem_image _ _ _).1 hx' with ⟨y, ⟨y_in_s', yx'⟩⟩
+    rcases mem_range.1 y_in_s' with ⟨x, xy⟩
+    use Fl x, mem_image_of_mem _ x.2
+    rw [← yx', ← xy, dist_comm]
+    exact le_of_eq (glueDist_glued_points (Z := s) (@Subtype.val X s) Φ (ε₂ / 2 + δ) x)
   have : hausdorffDist (Fr '' range Φ) (range Fr) ≤ ε₃ := by
     rw [← @image_univ _ _ Fr, hausdorffDist_image Ir]
     rcases exists_mem_of_nonempty Y with ⟨xY, _⟩
@@ -669,93 +669,93 @@ instance : SecondCountableTopology GHSpace := by
   -- are within controlled Gromov-Hausdorff distance.
   have main : ghDist p.Rep q.Rep ≤ ε + ε / 2 + ε := by
     refine ghDist_le_of_approx_subsets Φ ?_ ?_ ?_
-    · show ∀ x : p.Rep, ∃ y ∈ s p, dist x y ≤ ε
-      -- by construction, `s p` is `ε`-dense
-      intro x
-      have : x ∈ ⋃ y ∈ s p, ball y ε := (hs p).2 (mem_univ _)
-      rcases mem_iUnion₂.1 this with ⟨y, ys, hy⟩
-      exact ⟨y, ys, le_of_lt hy⟩
-    · show ∀ x : q.Rep, ∃ z : s p, dist x (Φ z) ≤ ε
-      -- by construction, `s q` is `ε`-dense, and it is the range of `Φ`
-      intro x
-      have : x ∈ ⋃ y ∈ s q, ball y ε := (hs q).2 (mem_univ _)
-      rcases mem_iUnion₂.1 this with ⟨y, ys, hy⟩
-      let i : ℕ := E q ⟨y, ys⟩
-      let hi := ((E q) ⟨y, ys⟩).is_lt
-      have ihi_eq : (⟨i, hi⟩ : Fin (N q)) = (E q) ⟨y, ys⟩ := by rw [Fin.ext_iff, Fin.val_mk]
-      have hiq : i < N q := hi
-      have hip : i < N p := by rwa [Npq.symm] at hiq
-      let z := (E p).symm ⟨i, hip⟩
-      use z
-      have C1 : (E p) z = ⟨i, hip⟩ := (E p).apply_symm_apply ⟨i, hip⟩
-      have C2 : Fin.cast Npq ⟨i, hip⟩ = ⟨i, hi⟩ := rfl
-      have C3 : (E q).symm ⟨i, hi⟩ = ⟨y, ys⟩ := by
-        rw [ihi_eq]; exact (E q).symm_apply_apply ⟨y, ys⟩
-      have : Φ z = y := by simp only [Φ, Ψ]; rw [C1, C2, C3]
-      rw [this]
-      exact le_of_lt hy
-    · show ∀ x y : s p, |dist x y - dist (Φ x) (Φ y)| ≤ ε
-      /- the distance between `x` and `y` is encoded in `F p`, and the distance between
-            `Φ x` and `Φ y` (two points of `s q`) is encoded in `F q`, all this up to `ε`.
-            As `F p = F q`, the distances are almost equal. -/
-      -- Porting note: we have to circumvent the absence of `change … with … `
-      intro x y
-      -- have : dist (Φ x) (Φ y) = dist (Ψ x) (Ψ y) := rfl
-      rw [show dist (Φ x) (Φ y) = dist (Ψ x) (Ψ y) from rfl]
-      -- introduce `i`, that codes both `x` and `Φ x` in `fin (N p) = fin (N q)`
-      let i : ℕ := E p x
-      have hip : i < N p := ((E p) x).2
-      have hiq : i < N q := by rwa [Npq] at hip
-      have i' : i = (E q) (Ψ x) := by simp only [Ψ, Equiv.apply_symm_apply, Fin.coe_cast]
-      -- introduce `j`, that codes both `y` and `Φ y` in `fin (N p) = fin (N q)`
-      let j : ℕ := E p y
-      have hjp : j < N p := ((E p) y).2
-      have hjq : j < N q := by rwa [Npq] at hjp
-      have j' : j = ((E q) (Ψ y)).1 := by
-        simp only [Ψ, Equiv.apply_symm_apply, Fin.coe_cast]
-      -- Express `dist x y` in terms of `F p`
-      have : (F p).2 ((E p) x) ((E p) y) = ⌊ε⁻¹ * dist x y⌋ := by
-        simp only [(E p).symm_apply_apply]
-      have Ap : (F p).2 ⟨i, hip⟩ ⟨j, hjp⟩ = ⌊ε⁻¹ * dist x y⌋ := by rw [← this]
-      -- Express `dist (Φ x) (Φ y)` in terms of `F q`
-      have : (F q).2 ((E q) (Ψ x)) ((E q) (Ψ y)) = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋ := by
-        simp only [(E q).symm_apply_apply]
-      have Aq : (F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩ = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋ := by
-        rw [← this]
-        -- Porting note: `congr` fails to make progress
-        refine congr_arg₂ (F q).2 ?_ ?_ <;> ext1
-        exacts [i', j']
-      -- use the equality between `F p` and `F q` to deduce that the distances have equal
-      -- integer parts
-      have : (F p).2 ⟨i, hip⟩ ⟨j, hjp⟩ = (F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩ := by
-        have hpq' : HEq (F p).snd (F q).snd := (Sigma.mk.inj_iff.1 hpq).2
-        rw [Fin.heq_fun₂_iff Npq Npq] at hpq'
-        rw [← hpq']
-        -- Porting note: new version above, because `change … with…` is not implemented
-        -- we want to `subst hpq` where `hpq : F p = F q`, except that `subst` only works
-        -- with a constant, so replace `F q` (and everything that depends on it) by a constant `f`
-        -- then `subst`
-        -- revert hiq hjq
-        -- change N q with (F q).1
-        -- generalize F q = f at hpq ⊢
-        -- subst hpq
-        -- rfl
-      rw [Ap, Aq] at this
-      -- deduce that the distances coincide up to `ε`, by a straightforward computation
-      -- that should be automated
-      have I :=
-        calc
-          |ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)| = |ε⁻¹ * (dist x y - dist (Ψ x) (Ψ y))| :=
-            (abs_mul _ _).symm
-          _ = |ε⁻¹ * dist x y - ε⁻¹ * dist (Ψ x) (Ψ y)| := by congr; ring
-          _ ≤ 1 := le_of_lt (abs_sub_lt_one_of_floor_eq_floor this)
+    show ∀ x : p.Rep, ∃ y ∈ s p, dist x y ≤ ε
+    -- by construction, `s p` is `ε`-dense
+    intro x
+    have : x ∈ ⋃ y ∈ s p, ball y ε := (hs p).2 (mem_univ _)
+    rcases mem_iUnion₂.1 this with ⟨y, ys, hy⟩
+    exact ⟨y, ys, le_of_lt hy⟩
+    show ∀ x : q.Rep, ∃ z : s p, dist x (Φ z) ≤ ε
+    -- by construction, `s q` is `ε`-dense, and it is the range of `Φ`
+    intro x
+    have : x ∈ ⋃ y ∈ s q, ball y ε := (hs q).2 (mem_univ _)
+    rcases mem_iUnion₂.1 this with ⟨y, ys, hy⟩
+    let i : ℕ := E q ⟨y, ys⟩
+    let hi := ((E q) ⟨y, ys⟩).is_lt
+    have ihi_eq : (⟨i, hi⟩ : Fin (N q)) = (E q) ⟨y, ys⟩ := by rw [Fin.ext_iff, Fin.val_mk]
+    have hiq : i < N q := hi
+    have hip : i < N p := by rwa [Npq.symm] at hiq
+    let z := (E p).symm ⟨i, hip⟩
+    use z
+    have C1 : (E p) z = ⟨i, hip⟩ := (E p).apply_symm_apply ⟨i, hip⟩
+    have C2 : Fin.cast Npq ⟨i, hip⟩ = ⟨i, hi⟩ := rfl
+    have C3 : (E q).symm ⟨i, hi⟩ = ⟨y, ys⟩ := by
+      rw [ihi_eq]; exact (E q).symm_apply_apply ⟨y, ys⟩
+    have : Φ z = y := by simp only [Φ, Ψ]; rw [C1, C2, C3]
+    rw [this]
+    exact le_of_lt hy
+    show ∀ x y : s p, |dist x y - dist (Φ x) (Φ y)| ≤ ε
+    /- the distance between `x` and `y` is encoded in `F p`, and the distance between
+          `Φ x` and `Φ y` (two points of `s q`) is encoded in `F q`, all this up to `ε`.
+          As `F p = F q`, the distances are almost equal. -/
+    -- Porting note: we have to circumvent the absence of `change … with … `
+    intro x y
+    -- have : dist (Φ x) (Φ y) = dist (Ψ x) (Ψ y) := rfl
+    rw [show dist (Φ x) (Φ y) = dist (Ψ x) (Ψ y) from rfl]
+    -- introduce `i`, that codes both `x` and `Φ x` in `fin (N p) = fin (N q)`
+    let i : ℕ := E p x
+    have hip : i < N p := ((E p) x).2
+    have hiq : i < N q := by rwa [Npq] at hip
+    have i' : i = (E q) (Ψ x) := by simp only [Ψ, Equiv.apply_symm_apply, Fin.coe_cast]
+    -- introduce `j`, that codes both `y` and `Φ y` in `fin (N p) = fin (N q)`
+    let j : ℕ := E p y
+    have hjp : j < N p := ((E p) y).2
+    have hjq : j < N q := by rwa [Npq] at hjp
+    have j' : j = ((E q) (Ψ y)).1 := by
+      simp only [Ψ, Equiv.apply_symm_apply, Fin.coe_cast]
+    -- Express `dist x y` in terms of `F p`
+    have : (F p).2 ((E p) x) ((E p) y) = ⌊ε⁻¹ * dist x y⌋ := by
+      simp only [(E p).symm_apply_apply]
+    have Ap : (F p).2 ⟨i, hip⟩ ⟨j, hjp⟩ = ⌊ε⁻¹ * dist x y⌋ := by rw [← this]
+    -- Express `dist (Φ x) (Φ y)` in terms of `F q`
+    have : (F q).2 ((E q) (Ψ x)) ((E q) (Ψ y)) = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋ := by
+      simp only [(E q).symm_apply_apply]
+    have Aq : (F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩ = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋ := by
+      rw [← this]
+      -- Porting note: `congr` fails to make progress
+      refine congr_arg₂ (F q).2 ?_ ?_ <;> ext1
+      exacts [i', j']
+    -- use the equality between `F p` and `F q` to deduce that the distances have equal
+    -- integer parts
+    have : (F p).2 ⟨i, hip⟩ ⟨j, hjp⟩ = (F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩ := by
+      have hpq' : HEq (F p).snd (F q).snd := (Sigma.mk.inj_iff.1 hpq).2
+      rw [Fin.heq_fun₂_iff Npq Npq] at hpq'
+      rw [← hpq']
+      -- Porting note: new version above, because `change … with…` is not implemented
+      -- we want to `subst hpq` where `hpq : F p = F q`, except that `subst` only works
+      -- with a constant, so replace `F q` (and everything that depends on it) by a constant `f`
+      -- then `subst`
+      -- revert hiq hjq
+      -- change N q with (F q).1
+      -- generalize F q = f at hpq ⊢
+      -- subst hpq
+      -- rfl
+    rw [Ap, Aq] at this
+    -- deduce that the distances coincide up to `ε`, by a straightforward computation
+    -- that should be automated
+    have I :=
       calc
-        |dist x y - dist (Ψ x) (Ψ y)| = ε * ε⁻¹ * |dist x y - dist (Ψ x) (Ψ y)| := by
-          rw [mul_inv_cancel (ne_of_gt εpos), one_mul]
-        _ = ε * (|ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)|) := by
-          rw [abs_of_nonneg (le_of_lt (inv_pos.2 εpos)), mul_assoc]
-        _ ≤ ε * 1 := mul_le_mul_of_nonneg_left I (le_of_lt εpos)
-        _ = ε := mul_one _
+        |ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)| = |ε⁻¹ * (dist x y - dist (Ψ x) (Ψ y))| :=
+          (abs_mul _ _).symm
+        _ = |ε⁻¹ * dist x y - ε⁻¹ * dist (Ψ x) (Ψ y)| := by congr; ring
+        _ ≤ 1 := le_of_lt (abs_sub_lt_one_of_floor_eq_floor this)
+    calc
+      |dist x y - dist (Ψ x) (Ψ y)| = ε * ε⁻¹ * |dist x y - dist (Ψ x) (Ψ y)| := by
+        rw [mul_inv_cancel (ne_of_gt εpos), one_mul]
+      _ = ε * (|ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)|) := by
+        rw [abs_of_nonneg (le_of_lt (inv_pos.2 εpos)), mul_assoc]
+      _ ≤ ε * 1 := mul_le_mul_of_nonneg_left I (le_of_lt εpos)
+      _ = ε := mul_one _
   calc
     dist p q = ghDist p.Rep q.Rep := dist_ghDist p q
     _ ≤ ε + ε / 2 + ε := main
@@ -789,20 +789,20 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       ∃ s : Set p.Rep, ∃ N ≤ K n, ∃ _ : Equiv s (Fin N), p ∈ t → univ ⊆ ⋃ x ∈ s, ball x (u n) := by
     intro p
     by_cases hp : p ∉ t
-    · have : Nonempty (Equiv (∅ : Set p.Rep) (Fin 0)) := by
-        rw [← Fintype.card_eq]
-        simp only [empty_card', Fintype.card_fin]
-      use ∅, 0, bot_le, this.some
-      -- Porting note: unclear why this next line wasn't needed in Lean 3
-      exact fun hp' => (hp hp').elim
-    · rcases hcov _ (Set.not_not_mem.1 hp) n with ⟨s, ⟨scard, scover⟩⟩
-      rcases Cardinal.lt_aleph0.1 (lt_of_le_of_lt scard (Cardinal.nat_lt_aleph0 _)) with ⟨N, hN⟩
-      rw [hN, Cardinal.natCast_le] at scard
-      have : #s = #(Fin N)
-      rw [hN, Cardinal.mk_fin]
-      cases' Quotient.exact this with E
-      use s, N, scard, E
-      simp only [scover, imp_true_iff]
+    have : Nonempty (Equiv (∅ : Set p.Rep) (Fin 0)) := by
+      rw [← Fintype.card_eq]
+      simp only [empty_card', Fintype.card_fin]
+    use ∅, 0, bot_le, this.some
+    -- Porting note: unclear why this next line wasn't needed in Lean 3
+    exact fun hp' => (hp hp').elim
+    rcases hcov _ (Set.not_not_mem.1 hp) n with ⟨s, ⟨scard, scover⟩⟩
+    rcases Cardinal.lt_aleph0.1 (lt_of_le_of_lt scard (Cardinal.nat_lt_aleph0 _)) with ⟨N, hN⟩
+    rw [hN, Cardinal.natCast_le] at scard
+    have : #s = #(Fin N)
+    rw [hN, Cardinal.mk_fin]
+    cases' Quotient.exact this with E
+    use s, N, scard, E
+    simp only [scover, imp_true_iff]
   choose s N hN E hs using this
   -- Define a function `F` taking values in a finite type and associating to `p` enough data
   -- to reconstruct it up to `ε`, namely the (discretized) distances between elements of `s p`.
@@ -812,7 +812,7 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
       ⟨min M ⌊ε⁻¹ * dist ((E p).symm a) ((E p).symm b)⌋₊,
         (min_le_left _ _).trans_lt (Nat.lt_succ_self _)⟩⟩
   refine ⟨_, ?_, fun p => F p, ?_⟩
-  · infer_instance
+  infer_instance
   -- It remains to show that if `F p = F q`, then `p` and `q` are `ε`-close
   rintro ⟨p, pt⟩ ⟨q, qt⟩ hpq
   have Npq : N p = N q := Fin.ext_iff.1 (Sigma.mk.inj_iff.1 hpq).1
@@ -823,111 +823,111 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
     -- in `q`, and `s p` and `s q` are almost isometric. Then closeness follows
     -- from `ghDist_le_of_approx_subsets`
     refine ghDist_le_of_approx_subsets Φ ?_ ?_ ?_
-    · show ∀ x : p.Rep, ∃ y ∈ s p, dist x y ≤ ε
-      -- by construction, `s p` is `ε`-dense
-      intro x
-      have : x ∈ ⋃ y ∈ s p, ball y (u n) := (hs p pt) (mem_univ _)
-      rcases mem_iUnion₂.1 this with ⟨y, ys, hy⟩
-      exact ⟨y, ys, le_trans (le_of_lt hy) u_le_ε⟩
-    · show ∀ x : q.Rep, ∃ z : s p, dist x (Φ z) ≤ ε
-      -- by construction, `s q` is `ε`-dense, and it is the range of `Φ`
-      intro x
-      have : x ∈ ⋃ y ∈ s q, ball y (u n) := (hs q qt) (mem_univ _)
-      rcases mem_iUnion₂.1 this with ⟨y, ys, hy⟩
-      let i : ℕ := E q ⟨y, ys⟩
-      let hi := ((E q) ⟨y, ys⟩).2
-      have ihi_eq : (⟨i, hi⟩ : Fin (N q)) = (E q) ⟨y, ys⟩ := by rw [Fin.ext_iff, Fin.val_mk]
-      have hiq : i < N q := hi
-      have hip : i < N p := by rwa [Npq.symm] at hiq
-      let z := (E p).symm ⟨i, hip⟩
-      use z
-      have C1 : (E p) z = ⟨i, hip⟩ := (E p).apply_symm_apply ⟨i, hip⟩
-      have C2 : Fin.cast Npq ⟨i, hip⟩ = ⟨i, hi⟩ := rfl
-      have C3 : (E q).symm ⟨i, hi⟩ = ⟨y, ys⟩ := by
-        rw [ihi_eq]; exact (E q).symm_apply_apply ⟨y, ys⟩
-      have : Φ z = y := by simp only [Ψ, Φ]; rw [C1, C2, C3]
-      rw [this]
-      exact le_trans (le_of_lt hy) u_le_ε
-    · show ∀ x y : s p, |dist x y - dist (Φ x) (Φ y)| ≤ ε
-      /- the distance between `x` and `y` is encoded in `F p`, and the distance between
-            `Φ x` and `Φ y` (two points of `s q`) is encoded in `F q`, all this up to `ε`.
-            As `F p = F q`, the distances are almost equal. -/
-      intro x y
-      have : dist (Φ x) (Φ y) = dist (Ψ x) (Ψ y) := rfl
-      rw [this]
-      -- introduce `i`, that codes both `x` and `Φ x` in `fin (N p) = fin (N q)`
-      let i : ℕ := E p x
-      have hip : i < N p := ((E p) x).2
-      have hiq : i < N q := by rwa [Npq] at hip
-      have i' : i = (E q) (Ψ x) := by simp only [Ψ, Equiv.apply_symm_apply, Fin.coe_cast]
-      -- introduce `j`, that codes both `y` and `Φ y` in `fin (N p) = fin (N q)`
-      let j : ℕ := E p y
-      have hjp : j < N p := ((E p) y).2
-      have hjq : j < N q := by rwa [Npq] at hjp
-      have j' : j = (E q) (Ψ y) := by simp only [Ψ, Equiv.apply_symm_apply, Fin.coe_cast]
-      -- Express `dist x y` in terms of `F p`
-      have Ap : ((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1 = ⌊ε⁻¹ * dist x y⌋₊ :=
-        calc
-          ((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1 = ((F p).2 ((E p) x) ((E p) y)).1 := by
-            congr
-          _ = min M ⌊ε⁻¹ * dist x y⌋₊ := by simp only [(E p).symm_apply_apply]
-          _ = ⌊ε⁻¹ * dist x y⌋₊ := by
-            refine min_eq_right (Nat.floor_mono ?_)
-            refine mul_le_mul_of_nonneg_left (le_trans ?_ (le_max_left _ _)) (inv_pos.2 εpos).le
-            change dist (x : p.Rep) y ≤ C
-            refine (dist_le_diam_of_mem isCompact_univ.isBounded (mem_univ _) (mem_univ _)).trans ?_
-            exact hdiam p pt
-      -- Express `dist (Φ x) (Φ y)` in terms of `F q`
-      have Aq : ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1 = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋₊ :=
-        calc
-          ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1 = ((F q).2 ((E q) (Ψ x)) ((E q) (Ψ y))).1 := by
-            -- Porting note: `congr` drops `Fin.val` but fails to make further progress
-            exact congr_arg₂ (Fin.val <| (F q).2 · ·) (Fin.ext i') (Fin.ext j')
-          _ = min M ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋₊ := by simp only [(E q).symm_apply_apply]
-          _ = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋₊ := by
-            refine min_eq_right (Nat.floor_mono ?_)
-            refine mul_le_mul_of_nonneg_left (le_trans ?_ (le_max_left _ _)) (inv_pos.2 εpos).le
-            change dist (Ψ x : q.Rep) (Ψ y) ≤ C
-            refine (dist_le_diam_of_mem isCompact_univ.isBounded (mem_univ _) (mem_univ _)).trans ?_
-            exact hdiam q qt
-      -- use the equality between `F p` and `F q` to deduce that the distances have equal
-      -- integer parts
-      have : ((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1 = ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1 := by
-        have hpq' : HEq (F p).snd (F q).snd := (Sigma.mk.inj_iff.1 hpq).2
-        rw [Fin.heq_fun₂_iff Npq Npq] at hpq'
-        rw [← hpq']
-        -- Porting note: new version above because `subst…` does not work
-        -- we want to `subst hpq` where `hpq : F p = F q`, except that `subst` only works
-        -- with a constant, so replace `F q` (and everything that depends on it) by a constant `f`
-        -- then `subst`
-        -- dsimp only [show N q = (F q).1 from rfl] at hiq hjq ⊢
-        -- generalize F q = f at hpq ⊢
-        -- subst hpq
-        -- intros
-        -- rfl
-      have : ⌊ε⁻¹ * dist x y⌋ = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋ := by
-        rw [Ap, Aq] at this
-        have D : 0 ≤ ⌊ε⁻¹ * dist x y⌋ :=
-          floor_nonneg.2 (mul_nonneg (le_of_lt (inv_pos.2 εpos)) dist_nonneg)
-        have D' : 0 ≤ ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋ :=
-          floor_nonneg.2 (mul_nonneg (le_of_lt (inv_pos.2 εpos)) dist_nonneg)
-        rw [← Int.toNat_of_nonneg D, ← Int.toNat_of_nonneg D', Int.floor_toNat, Int.floor_toNat,
-          this]
-      -- deduce that the distances coincide up to `ε`, by a straightforward computation
-      -- that should be automated
-      have I :=
-        calc
-          |ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)| = |ε⁻¹ * (dist x y - dist (Ψ x) (Ψ y))| :=
-            (abs_mul _ _).symm
-          _ = |ε⁻¹ * dist x y - ε⁻¹ * dist (Ψ x) (Ψ y)| := by congr; ring
-          _ ≤ 1 := le_of_lt (abs_sub_lt_one_of_floor_eq_floor this)
+    show ∀ x : p.Rep, ∃ y ∈ s p, dist x y ≤ ε
+    -- by construction, `s p` is `ε`-dense
+    intro x
+    have : x ∈ ⋃ y ∈ s p, ball y (u n) := (hs p pt) (mem_univ _)
+    rcases mem_iUnion₂.1 this with ⟨y, ys, hy⟩
+    exact ⟨y, ys, le_trans (le_of_lt hy) u_le_ε⟩
+    show ∀ x : q.Rep, ∃ z : s p, dist x (Φ z) ≤ ε
+    -- by construction, `s q` is `ε`-dense, and it is the range of `Φ`
+    intro x
+    have : x ∈ ⋃ y ∈ s q, ball y (u n) := (hs q qt) (mem_univ _)
+    rcases mem_iUnion₂.1 this with ⟨y, ys, hy⟩
+    let i : ℕ := E q ⟨y, ys⟩
+    let hi := ((E q) ⟨y, ys⟩).2
+    have ihi_eq : (⟨i, hi⟩ : Fin (N q)) = (E q) ⟨y, ys⟩ := by rw [Fin.ext_iff, Fin.val_mk]
+    have hiq : i < N q := hi
+    have hip : i < N p := by rwa [Npq.symm] at hiq
+    let z := (E p).symm ⟨i, hip⟩
+    use z
+    have C1 : (E p) z = ⟨i, hip⟩ := (E p).apply_symm_apply ⟨i, hip⟩
+    have C2 : Fin.cast Npq ⟨i, hip⟩ = ⟨i, hi⟩ := rfl
+    have C3 : (E q).symm ⟨i, hi⟩ = ⟨y, ys⟩ := by
+      rw [ihi_eq]; exact (E q).symm_apply_apply ⟨y, ys⟩
+    have : Φ z = y := by simp only [Ψ, Φ]; rw [C1, C2, C3]
+    rw [this]
+    exact le_trans (le_of_lt hy) u_le_ε
+    show ∀ x y : s p, |dist x y - dist (Φ x) (Φ y)| ≤ ε
+    /- the distance between `x` and `y` is encoded in `F p`, and the distance between
+          `Φ x` and `Φ y` (two points of `s q`) is encoded in `F q`, all this up to `ε`.
+          As `F p = F q`, the distances are almost equal. -/
+    intro x y
+    have : dist (Φ x) (Φ y) = dist (Ψ x) (Ψ y) := rfl
+    rw [this]
+    -- introduce `i`, that codes both `x` and `Φ x` in `fin (N p) = fin (N q)`
+    let i : ℕ := E p x
+    have hip : i < N p := ((E p) x).2
+    have hiq : i < N q := by rwa [Npq] at hip
+    have i' : i = (E q) (Ψ x) := by simp only [Ψ, Equiv.apply_symm_apply, Fin.coe_cast]
+    -- introduce `j`, that codes both `y` and `Φ y` in `fin (N p) = fin (N q)`
+    let j : ℕ := E p y
+    have hjp : j < N p := ((E p) y).2
+    have hjq : j < N q := by rwa [Npq] at hjp
+    have j' : j = (E q) (Ψ y) := by simp only [Ψ, Equiv.apply_symm_apply, Fin.coe_cast]
+    -- Express `dist x y` in terms of `F p`
+    have Ap : ((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1 = ⌊ε⁻¹ * dist x y⌋₊ :=
       calc
-        |dist x y - dist (Ψ x) (Ψ y)| = ε * ε⁻¹ * |dist x y - dist (Ψ x) (Ψ y)| := by
-          rw [mul_inv_cancel (ne_of_gt εpos), one_mul]
-        _ = ε * (|ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)|) := by
-          rw [abs_of_nonneg (le_of_lt (inv_pos.2 εpos)), mul_assoc]
-        _ ≤ ε * 1 := mul_le_mul_of_nonneg_left I (le_of_lt εpos)
-        _ = ε := mul_one _
+        ((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1 = ((F p).2 ((E p) x) ((E p) y)).1 := by
+          congr
+        _ = min M ⌊ε⁻¹ * dist x y⌋₊ := by simp only [(E p).symm_apply_apply]
+        _ = ⌊ε⁻¹ * dist x y⌋₊ := by
+          refine min_eq_right (Nat.floor_mono ?_)
+          refine mul_le_mul_of_nonneg_left (le_trans ?_ (le_max_left _ _)) (inv_pos.2 εpos).le
+          change dist (x : p.Rep) y ≤ C
+          refine (dist_le_diam_of_mem isCompact_univ.isBounded (mem_univ _) (mem_univ _)).trans ?_
+          exact hdiam p pt
+    -- Express `dist (Φ x) (Φ y)` in terms of `F q`
+    have Aq : ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1 = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋₊ :=
+      calc
+        ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1 = ((F q).2 ((E q) (Ψ x)) ((E q) (Ψ y))).1 := by
+          -- Porting note: `congr` drops `Fin.val` but fails to make further progress
+          exact congr_arg₂ (Fin.val <| (F q).2 · ·) (Fin.ext i') (Fin.ext j')
+        _ = min M ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋₊ := by simp only [(E q).symm_apply_apply]
+        _ = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋₊ := by
+          refine min_eq_right (Nat.floor_mono ?_)
+          refine mul_le_mul_of_nonneg_left (le_trans ?_ (le_max_left _ _)) (inv_pos.2 εpos).le
+          change dist (Ψ x : q.Rep) (Ψ y) ≤ C
+          refine (dist_le_diam_of_mem isCompact_univ.isBounded (mem_univ _) (mem_univ _)).trans ?_
+          exact hdiam q qt
+    -- use the equality between `F p` and `F q` to deduce that the distances have equal
+    -- integer parts
+    have : ((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1 = ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1 := by
+      have hpq' : HEq (F p).snd (F q).snd := (Sigma.mk.inj_iff.1 hpq).2
+      rw [Fin.heq_fun₂_iff Npq Npq] at hpq'
+      rw [← hpq']
+      -- Porting note: new version above because `subst…` does not work
+      -- we want to `subst hpq` where `hpq : F p = F q`, except that `subst` only works
+      -- with a constant, so replace `F q` (and everything that depends on it) by a constant `f`
+      -- then `subst`
+      -- dsimp only [show N q = (F q).1 from rfl] at hiq hjq ⊢
+      -- generalize F q = f at hpq ⊢
+      -- subst hpq
+      -- intros
+      -- rfl
+    have : ⌊ε⁻¹ * dist x y⌋ = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋ := by
+      rw [Ap, Aq] at this
+      have D : 0 ≤ ⌊ε⁻¹ * dist x y⌋ :=
+        floor_nonneg.2 (mul_nonneg (le_of_lt (inv_pos.2 εpos)) dist_nonneg)
+      have D' : 0 ≤ ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋ :=
+        floor_nonneg.2 (mul_nonneg (le_of_lt (inv_pos.2 εpos)) dist_nonneg)
+      rw [← Int.toNat_of_nonneg D, ← Int.toNat_of_nonneg D', Int.floor_toNat, Int.floor_toNat,
+        this]
+    -- deduce that the distances coincide up to `ε`, by a straightforward computation
+    -- that should be automated
+    have I :=
+      calc
+        |ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)| = |ε⁻¹ * (dist x y - dist (Ψ x) (Ψ y))| :=
+          (abs_mul _ _).symm
+        _ = |ε⁻¹ * dist x y - ε⁻¹ * dist (Ψ x) (Ψ y)| := by congr; ring
+        _ ≤ 1 := le_of_lt (abs_sub_lt_one_of_floor_eq_floor this)
+    calc
+      |dist x y - dist (Ψ x) (Ψ y)| = ε * ε⁻¹ * |dist x y - dist (Ψ x) (Ψ y)| := by
+        rw [mul_inv_cancel (ne_of_gt εpos), one_mul]
+      _ = ε * (|ε⁻¹| * |dist x y - dist (Ψ x) (Ψ y)|) := by
+        rw [abs_of_nonneg (le_of_lt (inv_pos.2 εpos)), mul_assoc]
+      _ ≤ ε * 1 := mul_le_mul_of_nonneg_left I (le_of_lt εpos)
+      _ = ε := mul_one _
   calc
     dist p q = ghDist p.Rep q.Rep := dist_ghDist p q
     _ ≤ ε + ε / 2 + ε := main
@@ -1036,9 +1036,9 @@ instance : CompleteSpace GHSpace := by
   have D2 : ∀ n, hausdorffDist (X2 n) (X2 n.succ) < d n := fun n ↦ by
     rw [X2n n, X2nsucc n, range_comp, range_comp, hausdorffDist_image,
       hausdorffDist_optimal, ← dist_ghDist]
-    · exact hu n n n.succ (le_refl n) (le_succ n)
-    · apply UniformSpace.Completion.coe_isometry.comp _
-      exact (toInductiveLimit_isometry _ _).comp ((ic n).comp (toGlueR_isometry _ _))
+    exact hu n n n.succ (le_refl n) (le_succ n)
+    apply UniformSpace.Completion.coe_isometry.comp _
+    exact (toInductiveLimit_isometry _ _).comp ((ic n).comp (toGlueR_isometry _ _))
   -- consider `X2 n` as a member `X3 n` of the type of nonempty compact subsets of `Z`, which
   -- is a metric space
   let X3 : ℕ → NonemptyCompacts Z := fun n =>

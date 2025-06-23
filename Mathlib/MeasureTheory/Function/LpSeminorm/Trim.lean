@@ -60,9 +60,9 @@ alias snormEssSup_trim := eLpNormEssSup_trim
 theorem eLpNorm_trim (hm : m ≤ m0) {f : α → E} (hf : StronglyMeasurable[m] f) :
     eLpNorm f p (μ.trim hm) = eLpNorm f p μ := by
   by_cases h0 : p = 0
-  · simp [h0]
+  simp [h0]
   by_cases h_top : p = ∞
-  · simpa only [h_top, eLpNorm_exponent_top] using eLpNormEssSup_trim hm hf
+  simpa only [h_top, eLpNorm_exponent_top] using eLpNormEssSup_trim hm hf
   simpa only [eLpNorm_eq_eLpNorm' h0 h_top] using eLpNorm'_trim hm hf
 
 @[deprecated (since := "2024-07-27")]

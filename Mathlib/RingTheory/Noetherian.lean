@@ -124,8 +124,8 @@ theorem isNoetherian_of_linearEquiv (f : M ≃ₗ[R] P) [IsNoetherian R M] : IsN
 
 theorem isNoetherian_top_iff : IsNoetherian R (⊤ : Submodule R M) ↔ IsNoetherian R M := by
   constructor <;> intro h
-  · exact isNoetherian_of_linearEquiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl)
-  · exact isNoetherian_of_linearEquiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl).symm
+  exact isNoetherian_of_linearEquiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl)
+  exact isNoetherian_of_linearEquiv (LinearEquiv.ofTop (⊤ : Submodule R M) rfl).symm
 
 theorem isNoetherian_of_injective [IsNoetherian R P] (f : M →ₗ[R] P) (hf : Function.Injective f) :
     IsNoetherian R M :=
@@ -195,11 +195,11 @@ instance isNoetherian_pi {R ι : Type*} {M : ι → Type*}
     exact isNoetherian_of_linearEquiv (LinearEquiv.piCongrLeft R M coe_e)
   intro s
   induction' s using Finset.induction with a s has ih
-  · exact ⟨fun s => by
-      have : s = ⊥
-      simp only [eq_iff_true_of_subsingleton]
-      rw [this]
-      apply Submodule.fg_bot⟩
+  exact ⟨fun s => by
+    have : s = ⊥
+    simp only [eq_iff_true_of_subsingleton]
+    rw [this]
+    apply Submodule.fg_bot⟩
   refine
     @isNoetherian_of_linearEquiv R (M a × ((i : s) → M i)) _ _ _ _ _ _ ?_ <|
       @isNoetherian_prod R (M a) _ _ _ _ _ _ _ ih
@@ -214,48 +214,48 @@ instance isNoetherian_pi {R ι : Type*} {M : ι → Type*}
     map_smul' := ?_
     left_inv := ?_,
     right_inv := ?_ }
-  · intro f g
-    ext i
-    unfold Or.by_cases
-    cases' i with i hi
-    rcases Finset.mem_insert.1 hi with (rfl | h)
-    · change _ = _ + _
-      simp only [dif_pos]
-      rfl
-    · change _ = _ + _
-      have : ¬i = a := by
-        rintro rfl
-        exact has h
-      simp only [dif_neg this, dif_pos h]
-      rfl
-  · intro c f
-    ext i
-    unfold Or.by_cases
-    cases' i with i hi
-    rcases Finset.mem_insert.1 hi with (rfl | h)
-    · dsimp
-      simp only [dif_pos]
-    · dsimp
-      have : ¬i = a := by
-        rintro rfl
-        exact has h
-      simp only [dif_neg this, dif_pos h]
-  · intro f
-    apply Prod.ext
-    · simp only [Or.by_cases, dif_pos]
-    · ext ⟨i, his⟩
-      have : ¬i = a := by
-        rintro rfl
-        exact has his
-      simp only [Or.by_cases, this, not_false_iff, dif_neg]
-  · intro f
-    ext ⟨i, hi⟩
-    rcases Finset.mem_insert.1 hi with (rfl | h)
-    · simp only [Or.by_cases, dif_pos]
-    · have : ¬i = a := by
-        rintro rfl
-        exact has h
-      simp only [Or.by_cases, dif_neg this, dif_pos h]
+  intro f g
+  ext i
+  unfold Or.by_cases
+  cases' i with i hi
+  rcases Finset.mem_insert.1 hi with (rfl | h)
+  change _ = _ + _
+  simp only [dif_pos]
+  rfl
+  change _ = _ + _
+  have : ¬i = a := by
+    rintro rfl
+    exact has h
+  simp only [dif_neg this, dif_pos h]
+  rfl
+  intro c f
+  ext i
+  unfold Or.by_cases
+  cases' i with i hi
+  rcases Finset.mem_insert.1 hi with (rfl | h)
+  dsimp
+  simp only [dif_pos]
+  dsimp
+  have : ¬i = a := by
+    rintro rfl
+    exact has h
+  simp only [dif_neg this, dif_pos h]
+  intro f
+  apply Prod.ext
+  simp only [Or.by_cases, dif_pos]
+  ext ⟨i, his⟩
+  have : ¬i = a := by
+    rintro rfl
+    exact has his
+  simp only [Or.by_cases, this, not_false_iff, dif_neg]
+  intro f
+  ext ⟨i, hi⟩
+  rcases Finset.mem_insert.1 hi with (rfl | h)
+  simp only [Or.by_cases, dif_pos]
+  have : ¬i = a := by
+    rintro rfl
+    exact has h
+  simp only [Or.by_cases, dif_neg this, dif_pos h]
 
 /-- A version of `isNoetherian_pi` for non-dependent functions. We need this instance because
 sometimes Lean fails to apply the dependent version in non-dependent settings (e.g., it fails to
@@ -305,23 +305,23 @@ theorem isNoetherian_iff_fg_wellFounded :
         ((· > ·) : { N : Submodule R M // N.FG } → { N : Submodule R M // N.FG } → Prop) := by
   let α := { N : Submodule R M // N.FG }
   constructor
-  · intro H
-    let f : α ↪o Submodule R M := OrderEmbedding.subtype _
-    exact OrderEmbedding.wellFounded f.dual (isNoetherian_iff_wellFounded.mp H)
-  · intro H
-    constructor
-    intro N
-    obtain ⟨⟨N₀, h₁⟩, e : N₀ ≤ N, h₂⟩ :=
-      WellFounded.has_min H { N' : α | N'.1 ≤ N } ⟨⟨⊥, Submodule.fg_bot⟩, @bot_le _ _ _ N⟩
-    convert h₁
-    refine (e.antisymm ?_).symm
-    by_contra h₃
-    obtain ⟨x, hx₁ : x ∈ N, hx₂ : x ∉ N₀⟩ := Set.not_subset.mp h₃
-    apply hx₂
-    rw [eq_of_le_of_not_lt (le_sup_right : N₀ ≤ _) (h₂
-      ⟨_, Submodule.FG.sup ⟨{x}, by rw [Finset.coe_singleton]⟩ h₁⟩ <|
-      sup_le ((Submodule.span_singleton_le_iff_mem _ _).mpr hx₁) e)]
-    exact (le_sup_left : (R ∙ x) ≤ _) (Submodule.mem_span_singleton_self _)
+  intro H
+  let f : α ↪o Submodule R M := OrderEmbedding.subtype _
+  exact OrderEmbedding.wellFounded f.dual (isNoetherian_iff_wellFounded.mp H)
+  intro H
+  constructor
+  intro N
+  obtain ⟨⟨N₀, h₁⟩, e : N₀ ≤ N, h₂⟩ :=
+    WellFounded.has_min H { N' : α | N'.1 ≤ N } ⟨⟨⊥, Submodule.fg_bot⟩, @bot_le _ _ _ N⟩
+  convert h₁
+  refine (e.antisymm ?_).symm
+  by_contra h₃
+  obtain ⟨x, hx₁ : x ∈ N, hx₂ : x ∉ N₀⟩ := Set.not_subset.mp h₃
+  apply hx₂
+  rw [eq_of_le_of_not_lt (le_sup_right : N₀ ≤ _) (h₂
+    ⟨_, Submodule.FG.sup ⟨{x}, by rw [Finset.coe_singleton]⟩ h₁⟩ <|
+    sup_le ((Submodule.span_singleton_le_iff_mem _ _).mpr hx₁) e)]
+  exact (le_sup_left : (R ∙ x) ≤ _) (Submodule.mem_span_singleton_self _)
 
 variable (R M)
 
@@ -424,8 +424,8 @@ lemma LinearMap.eventually_iSup_ker_pow_eq (f : M →ₗ[R] M) :
   refine eventually_atTop.mpr ⟨n, fun m hm ↦ ?_⟩
   refine le_antisymm (iSup_le fun l ↦ ?_) (le_iSup (fun i ↦ LinearMap.ker (f ^ i)) m)
   rcases le_or_lt m l with h | h
-  · rw [← hn _ (hm.trans h), hn _ hm]
-  · exact f.iterateKer.monotone h.le
+  rw [← hn _ (hm.trans h), hn _ hm]
+  exact f.iterateKer.monotone h.le
 
 /-- **Orzech's theorem** for Noetherian module: if `R` is a ring (not necessarily commutative),
 `M` and `N` are `R`-modules, `M` is Noetherian, `i : N →ₗ[R] M` is injective,
@@ -470,9 +470,9 @@ theorem IsNoetherian.disjoint_partialSups_eventually_bot
     obtain ⟨n, w⟩ := t
     use n + 1
     rintro (_ | m) p
-    · cases p
-    · apply w
-      exact Nat.succ_le_succ_iff.mp p
+    cases p
+    apply w
+    exact Nat.succ_le_succ_iff.mp p
   obtain ⟨n, w⟩ := monotone_stabilizes_iff_noetherian.mpr inferInstance (partialSups f)
   exact
     ⟨n, fun m p =>
@@ -540,30 +540,30 @@ theorem isNoetherian_of_fg_of_noetherian {R M} [Ring R] [AddCommGroup M] [Module
   refine
     @isNoetherian_of_surjective
       R ((↑s : Set M) → R) N _ _ _ (Pi.module _ _ _) _ ?_ ?_ isNoetherian_pi
-  · fapply LinearMap.mk
-    · fapply AddHom.mk
-      · exact fun f => ⟨∑ i ∈ s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ <| this _ c.2⟩
-      · intro f g
-        apply Subtype.eq
-        change (∑ i ∈ s.attach, (f i + g i) • _) = _
-        simp only [add_smul, Finset.sum_add_distrib]
-        rfl
-    · intro c f
-      apply Subtype.eq
-      change (∑ i ∈ s.attach, (c • f i) • _) = _
-      simp only [smul_eq_mul, mul_smul]
-      exact Finset.smul_sum.symm
-  · rw [LinearMap.range_eq_top]
-    rintro ⟨n, hn⟩
-    change n ∈ N at hn
-    rw [← hs, ← Set.image_id (s : Set M), Finsupp.mem_span_image_iff_total] at hn
-    rcases hn with ⟨l, hl1, hl2⟩
-    refine ⟨fun x => l x, Subtype.ext ?_⟩
-    change (∑ i ∈ s.attach, l i • (i : M)) = n
-    rw [s.sum_attach fun i ↦ l i • i, ← hl2,
-      Finsupp.total_apply, Finsupp.sum, eq_comm]
-    refine Finset.sum_subset hl1 fun x _ hx => ?_
-    rw [Finsupp.not_mem_support_iff.1 hx, zero_smul]
+  fapply LinearMap.mk
+  fapply AddHom.mk
+  exact fun f => ⟨∑ i ∈ s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ <| this _ c.2⟩
+  intro f g
+  apply Subtype.eq
+  change (∑ i ∈ s.attach, (f i + g i) • _) = _
+  simp only [add_smul, Finset.sum_add_distrib]
+  rfl
+  intro c f
+  apply Subtype.eq
+  change (∑ i ∈ s.attach, (c • f i) • _) = _
+  simp only [smul_eq_mul, mul_smul]
+  exact Finset.smul_sum.symm
+  rw [LinearMap.range_eq_top]
+  rintro ⟨n, hn⟩
+  change n ∈ N at hn
+  rw [← hs, ← Set.image_id (s : Set M), Finsupp.mem_span_image_iff_total] at hn
+  rcases hn with ⟨l, hl1, hl2⟩
+  refine ⟨fun x => l x, Subtype.ext ?_⟩
+  change (∑ i ∈ s.attach, l i • (i : M)) = n
+  rw [s.sum_attach fun i ↦ l i • i, ← hl2,
+    Finsupp.total_apply, Finsupp.sum, eq_comm]
+  refine Finset.sum_subset hl1 fun x _ hx => ?_
+  rw [Finsupp.not_mem_support_iff.1 hx, zero_smul]
 
 instance isNoetherian_of_isNoetherianRing_of_finite (R M : Type*)
     [Ring R] [AddCommGroup M] [Module R M] [IsNoetherianRing R] [Module.Finite R M] :

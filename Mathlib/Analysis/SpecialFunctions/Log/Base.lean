@@ -120,9 +120,9 @@ theorem logb_rpow : logb b (b ^ x) = x := by
 
 theorem rpow_logb_eq_abs (hx : x ≠ 0) : b ^ logb b x = |x| := by
   apply log_injOn_pos
-  · simp only [Set.mem_Ioi]
-    apply rpow_pos_of_pos b_pos
-  · simp only [abs_pos, mem_Ioi, Ne, hx, not_false_iff]
+  simp only [Set.mem_Ioi]
+  apply rpow_pos_of_pos b_pos
+  simp only [abs_pos, mem_Ioi, Ne, hx, not_false_iff]
   rw [log_rpow b_pos, logb, log_abs]
   field_simp [log_b_ne_zero b_pos b_ne_one]
 
@@ -137,8 +137,8 @@ theorem rpow_logb_of_neg (hx : x < 0) : b ^ logb b x = -x := by
 
 theorem logb_eq_iff_rpow_eq (hy : 0 < y) : logb b y = x ↔ b ^ x = y := by
   constructor <;> rintro rfl
-  · exact rpow_logb b_pos b_ne_one hy
-  · exact logb_rpow b_pos b_ne_one
+  exact rpow_logb b_pos b_ne_one hy
+  exact logb_rpow b_pos b_ne_one
 
 theorem surjOn_logb : SurjOn (logb b) (Ioi 0) univ := fun x _ =>
   ⟨b ^ x, rpow_pos_of_pos b_pos x, logb_rpow b_pos b_ne_one⟩
@@ -153,9 +153,9 @@ theorem surjOn_logb' : SurjOn (logb b) (Iio 0) univ := by
   intro x _
   use -b ^ x
   constructor
-  · simp only [Right.neg_neg_iff, Set.mem_Iio]
-    apply rpow_pos_of_pos b_pos
-  · rw [logb_neg_eq_logb, logb_rpow b_pos b_ne_one]
+  simp only [Right.neg_neg_iff, Set.mem_Iio]
+  apply rpow_pos_of_pos b_pos
+  rw [logb_neg_eq_logb, logb_rpow b_pos b_ne_one]
 
 end BPosAndNeOne
 
@@ -224,7 +224,7 @@ theorem logb_nonpos_iff (hx : 0 < x) : logb b x ≤ 0 ↔ x ≤ 1 := by
 
 theorem logb_nonpos_iff' (hx : 0 ≤ x) : logb b x ≤ 0 ↔ x ≤ 1 := by
   rcases hx.eq_or_lt with (rfl | hx)
-  · simp [le_refl, zero_le_one]
+  simp [le_refl, zero_le_one]
   exact logb_nonpos_iff hb hx
 
 theorem logb_nonpos (hx : 0 ≤ x) (h'x : x ≤ 1) : logb b x ≤ 0 :=
@@ -335,22 +335,22 @@ theorem tendsto_logb_atTop_of_base_lt_one : Tendsto (logb b) atTop atBot := by
   simp only [and_imp, sup_le_iff]
   intro ha
   rw [logb_le_iff_le_rpow_of_base_lt_one b_pos b_lt_one]
-  · tauto
-  · exact lt_of_lt_of_le zero_lt_one ha
+  tauto
+  exact lt_of_lt_of_le zero_lt_one ha
 
 end BPosAndBLtOne
 
 theorem floor_logb_natCast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) :
     ⌊logb b r⌋ = Int.log b r := by
   obtain rfl | hr := hr.eq_or_lt
-  · rw [logb_zero, Int.log_zero_right, Int.floor_zero]
+  rw [logb_zero, Int.log_zero_right, Int.floor_zero]
   have hb1' : 1 < (b : ℝ) := Nat.one_lt_cast.mpr hb
   apply le_antisymm
-  · rw [← Int.zpow_le_iff_le_log hb hr, ← rpow_intCast b]
-    refine le_of_le_of_eq ?_ (rpow_logb (zero_lt_one.trans hb1') hb1'.ne' hr)
-    exact rpow_le_rpow_of_exponent_le hb1'.le (Int.floor_le _)
-  · rw [Int.le_floor, le_logb_iff_rpow_le hb1' hr, rpow_intCast]
-    exact Int.zpow_log_le_self hb hr
+  rw [← Int.zpow_le_iff_le_log hb hr, ← rpow_intCast b]
+  refine le_of_le_of_eq ?_ (rpow_logb (zero_lt_one.trans hb1') hb1'.ne' hr)
+  exact rpow_le_rpow_of_exponent_le hb1'.le (Int.floor_le _)
+  rw [Int.le_floor, le_logb_iff_rpow_le hb1' hr, rpow_intCast]
+  exact Int.zpow_log_le_self hb hr
 
 @[deprecated (since := "2024-04-17")]
 alias floor_logb_nat_cast := floor_logb_natCast
@@ -358,14 +358,14 @@ alias floor_logb_nat_cast := floor_logb_natCast
 theorem ceil_logb_natCast {b : ℕ} {r : ℝ} (hb : 1 < b) (hr : 0 ≤ r) :
     ⌈logb b r⌉ = Int.clog b r := by
   obtain rfl | hr := hr.eq_or_lt
-  · rw [logb_zero, Int.clog_zero_right, Int.ceil_zero]
+  rw [logb_zero, Int.clog_zero_right, Int.ceil_zero]
   have hb1' : 1 < (b : ℝ) := Nat.one_lt_cast.mpr hb
   apply le_antisymm
-  · rw [Int.ceil_le, logb_le_iff_le_rpow hb1' hr, rpow_intCast]
-    exact Int.self_le_zpow_clog hb r
-  · rw [← Int.le_zpow_iff_clog_le hb hr, ← rpow_intCast b]
-    refine (rpow_logb (zero_lt_one.trans hb1') hb1'.ne' hr).symm.trans_le ?_
-    exact rpow_le_rpow_of_exponent_le hb1'.le (Int.le_ceil _)
+  rw [Int.ceil_le, logb_le_iff_le_rpow hb1' hr, rpow_intCast]
+  exact Int.self_le_zpow_clog hb r
+  rw [← Int.le_zpow_iff_clog_le hb hr, ← rpow_intCast b]
+  refine (rpow_logb (zero_lt_one.trans hb1') hb1'.ne' hr).symm.trans_le ?_
+  exact rpow_le_rpow_of_exponent_le hb1'.le (Int.le_ceil _)
 
 @[deprecated (since := "2024-04-17")]
 alias ceil_logb_nat_cast := ceil_logb_natCast
@@ -381,7 +381,7 @@ open Classical in
 theorem logb_prod {α : Type*} (s : Finset α) (f : α → ℝ) (hf : ∀ x ∈ s, f x ≠ 0) :
     logb b (∏ i ∈ s, f i) = ∑ i ∈ s, logb b (f i) := by
     induction' s using Finset.induction_on with a s ha ih
-    · simp
+    simp
     simp only [Finset.mem_insert, forall_eq_or_imp] at hf
     simp [ha, ih hf.2, logb_mul hf.1 (Finset.prod_ne_zero_iff.2 hf.2)]
 

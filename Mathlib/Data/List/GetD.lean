@@ -37,8 +37,8 @@ theorem getD_eq_get {n : ℕ} (hn : n < l.length) : l.getD n d = l.get ⟨n, hn�
   | nil => simp at hn
   | cons head tail ih =>
     cases n
-    · exact getD_cons_zero
-    · exact ih _
+    exact getD_cons_zero
+    exact ih _
 
 theorem getD_map {n : ℕ} (f : α → β) : (map f l).getD n (f d) = f (l.getD n d) := by simp
 
@@ -47,8 +47,8 @@ theorem getD_eq_default {n : ℕ} (hn : l.length ≤ n) : l.getD n d = d := by
   | nil => exact getD_nil
   | cons head tail ih =>
     cases n
-    · simp at hn
-    · exact ih (Nat.le_of_succ_le_succ hn)
+    simp at hn
+    exact ih (Nat.le_of_succ_le_succ hn)
 
 /-- An empty list can always be decidably checked for the presence of an element.
 Not an instance because it would clash with `DecidableEq α`. -/
@@ -82,9 +82,9 @@ theorem getD_append_right (l l' : List α) (d : α) (n : ℕ) (h : l.length ≤ 
   | inl h' =>
     rw [getD_eq_get (l ++ l') d h', get_eq_getElem, getElem_append_right, getD_eq_get,
       get_eq_getElem]
-    · rw [length_append] at h'
-      exact Nat.sub_lt_left_of_lt_add h h'
-    · exact Nat.not_lt_of_le h
+    rw [length_append] at h'
+    exact Nat.sub_lt_left_of_lt_add h h'
+    exact Nat.not_lt_of_le h
   | inr h' =>
     rw [getD_eq_default _ _ h', getD_eq_default]
     rwa [Nat.le_sub_iff_add_le' h, ← length_append]

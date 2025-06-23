@@ -184,17 +184,17 @@ theorem _root_.Algebra.lmul_isUnit_iff {x : A} :
 theorem mulLeft_eq_zero_iff (a : A) : mulLeft R a = 0 ↔ a = 0 := by
   constructor <;> intro h
   -- Porting note: had to supply `R` explicitly in `@mulLeft_apply` below
-  · rw [← mul_one a, ← @mulLeft_apply R _ _ _ _ _ _ a 1, h, LinearMap.zero_apply]
-  · rw [h]
-    exact mulLeft_zero_eq_zero
+  rw [← mul_one a, ← @mulLeft_apply R _ _ _ _ _ _ a 1, h, LinearMap.zero_apply]
+  rw [h]
+  exact mulLeft_zero_eq_zero
 
 @[simp]
 theorem mulRight_eq_zero_iff (a : A) : mulRight R a = 0 ↔ a = 0 := by
   constructor <;> intro h
   -- Porting note: had to supply `R` explicitly in `@mulRight_apply` below
-  · rw [← one_mul a, ← @mulRight_apply R _ _ _ _ _ _ a 1, h, LinearMap.zero_apply]
-  · rw [h]
-    exact mulRight_zero_eq_zero
+  rw [← one_mul a, ← @mulRight_apply R _ _ _ _ _ _ a 1, h, LinearMap.zero_apply]
+  rw [h]
+  exact mulRight_zero_eq_zero
 
 @[simp]
 theorem mulLeft_one : mulLeft R (1 : A) = LinearMap.id := by

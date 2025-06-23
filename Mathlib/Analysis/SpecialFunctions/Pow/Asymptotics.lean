@@ -163,7 +163,7 @@ theorem ENNReal.tendsto_rpow_at_top {y : ℝ} (hy : 0 < y) :
   have hc' : Set.Ioi ↑c ∈ 𝓝 (⊤ : ℝ≥0∞) := Ioi_mem_nhds ENNReal.coe_lt_top
   filter_upwards [hc'] with a ha
   by_cases ha' : a = ⊤
-  · simp [ha', hy]
+  simp [ha', hy]
   lift a to ℝ≥0 using ha'
   -- Porting note: reduced defeq abuse
   simp only [Set.mem_Ioi, coe_lt_coe] at ha hc
@@ -305,12 +305,12 @@ theorem isLittleO_rpow_exp_atTop (s : ℝ) : (fun x : ℝ => x ^ s) =o[atTop] ex
 theorem isLittleO_exp_neg_mul_rpow_atTop {a : ℝ} (ha : 0 < a) (b : ℝ) :
     IsLittleO atTop (fun x : ℝ => exp (-a * x)) fun x : ℝ => x ^ b := by
   apply isLittleO_of_tendsto'
-  · refine (eventually_gt_atTop 0).mono fun t ht h => ?_
-    rw [rpow_eq_zero_iff_of_nonneg ht.le] at h
-    exact (ht.ne' h.1).elim
-  · refine (tendsto_exp_mul_div_rpow_atTop (-b) a ha).inv_tendsto_atTop.congr' ?_
-    refine (eventually_ge_atTop 0).mono fun t ht => ?_
-    field_simp [Real.exp_neg, rpow_neg ht]
+  refine (eventually_gt_atTop 0).mono fun t ht h => ?_
+  rw [rpow_eq_zero_iff_of_nonneg ht.le] at h
+  exact (ht.ne' h.1).elim
+  refine (tendsto_exp_mul_div_rpow_atTop (-b) a ha).inv_tendsto_atTop.congr' ?_
+  refine (eventually_ge_atTop 0).mono fun t ht => ?_
+  field_simp [Real.exp_neg, rpow_neg ht]
 
 theorem isLittleO_log_rpow_atTop {r : ℝ} (hr : 0 < r) : log =o[atTop] fun x => x ^ r :=
   calc

@@ -118,12 +118,54 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
   ⟨fun V =>
     isConnected_of_zigzag fun A B => by
       rcases A with ⟨⟨⟨⟩⟩, ⟨i⟩ | ⟨i, j⟩, a⟩ <;> rcases B with ⟨⟨⟨⟩⟩, ⟨i'⟩ | ⟨i', j'⟩, b⟩
-      · refine
-          ⟨[{   left := ⟨⟨⟩⟩
-                right := pair i i'
-                hom := (le_inf a.le b.le).hom }, _], ?_, rfl⟩
-        exact
-          List.Chain.cons
+      refine
+        ⟨[{   left := ⟨⟨⟩⟩
+              right := pair i i'
+              hom := (le_inf a.le b.le).hom }, _], ?_, rfl⟩
+      exact
+        List.Chain.cons
+          (Or.inr
+            ⟨{  left := 𝟙 _
+                right := left i i' }⟩)
+          (List.Chain.cons
+            (Or.inl
+              ⟨{  left := 𝟙 _
+                  right := right i i' }⟩)
+            List.Chain.nil)
+      refine
+        ⟨[{   left := ⟨⟨⟩⟩
+              right := pair i' i
+              hom := (le_inf (b.le.trans inf_le_left) a.le).hom },
+            { left := ⟨⟨⟩⟩
+              right := single i'
+              hom := (b.le.trans inf_le_left).hom }, _], ?_, rfl⟩
+      exact
+        List.Chain.cons
+          (Or.inr
+            ⟨{  left := 𝟙 _
+                right := right i' i }⟩)
+          (List.Chain.cons
+            (Or.inl
+              ⟨{  left := 𝟙 _
+                  right := left i' i }⟩)
+            (List.Chain.cons
+              (Or.inr
+                ⟨{  left := 𝟙 _
+                    right := left i' j' }⟩)
+              List.Chain.nil))
+      refine
+        ⟨[{   left := ⟨⟨⟩⟩
+              right := single i
+              hom := (a.le.trans inf_le_left).hom },
+            { left := ⟨⟨⟩⟩
+              right := pair i i'
+              hom := (le_inf (a.le.trans inf_le_left) b.le).hom }, _], ?_, rfl⟩
+      exact
+        List.Chain.cons
+          (Or.inl
+            ⟨{  left := 𝟙 _
+                right := left i j }⟩)
+          (List.Chain.cons
             (Or.inr
               ⟨{  left := 𝟙 _
                   right := left i i' }⟩)
@@ -131,77 +173,35 @@ instance : Functor.Final (pairwiseToOpensLeCover U) :=
               (Or.inl
                 ⟨{  left := 𝟙 _
                     right := right i i' }⟩)
-              List.Chain.nil)
-      · refine
-          ⟨[{   left := ⟨⟨⟩⟩
-                right := pair i' i
-                hom := (le_inf (b.le.trans inf_le_left) a.le).hom },
-              { left := ⟨⟨⟩⟩
-                right := single i'
-                hom := (b.le.trans inf_le_left).hom }, _], ?_, rfl⟩
-        exact
-          List.Chain.cons
+              List.Chain.nil))
+      refine
+        ⟨[{   left := ⟨⟨⟩⟩
+              right := single i
+              hom := (a.le.trans inf_le_left).hom },
+            { left := ⟨⟨⟩⟩
+              right := pair i i'
+              hom := (le_inf (a.le.trans inf_le_left) (b.le.trans inf_le_left)).hom },
+            { left := ⟨⟨⟩⟩
+              right := single i'
+              hom := (b.le.trans inf_le_left).hom }, _], ?_, rfl⟩
+      exact
+        List.Chain.cons
+          (Or.inl
+            ⟨{  left := 𝟙 _
+                right := left i j }⟩)
+          (List.Chain.cons
             (Or.inr
               ⟨{  left := 𝟙 _
-                  right := right i' i }⟩)
+                  right := left i i' }⟩)
             (List.Chain.cons
               (Or.inl
                 ⟨{  left := 𝟙 _
-                    right := left i' i }⟩)
+                    right := right i i' }⟩)
               (List.Chain.cons
                 (Or.inr
                   ⟨{  left := 𝟙 _
                       right := left i' j' }⟩)
-                List.Chain.nil))
-      · refine
-          ⟨[{   left := ⟨⟨⟩⟩
-                right := single i
-                hom := (a.le.trans inf_le_left).hom },
-              { left := ⟨⟨⟩⟩
-                right := pair i i'
-                hom := (le_inf (a.le.trans inf_le_left) b.le).hom }, _], ?_, rfl⟩
-        exact
-          List.Chain.cons
-            (Or.inl
-              ⟨{  left := 𝟙 _
-                  right := left i j }⟩)
-            (List.Chain.cons
-              (Or.inr
-                ⟨{  left := 𝟙 _
-                    right := left i i' }⟩)
-              (List.Chain.cons
-                (Or.inl
-                  ⟨{  left := 𝟙 _
-                      right := right i i' }⟩)
-                List.Chain.nil))
-      · refine
-          ⟨[{   left := ⟨⟨⟩⟩
-                right := single i
-                hom := (a.le.trans inf_le_left).hom },
-              { left := ⟨⟨⟩⟩
-                right := pair i i'
-                hom := (le_inf (a.le.trans inf_le_left) (b.le.trans inf_le_left)).hom },
-              { left := ⟨⟨⟩⟩
-                right := single i'
-                hom := (b.le.trans inf_le_left).hom }, _], ?_, rfl⟩
-        exact
-          List.Chain.cons
-            (Or.inl
-              ⟨{  left := 𝟙 _
-                  right := left i j }⟩)
-            (List.Chain.cons
-              (Or.inr
-                ⟨{  left := 𝟙 _
-                    right := left i i' }⟩)
-              (List.Chain.cons
-                (Or.inl
-                  ⟨{  left := 𝟙 _
-                      right := right i i' }⟩)
-                (List.Chain.cons
-                  (Or.inr
-                    ⟨{  left := 𝟙 _
-                        right := left i' j' }⟩)
-                  List.Chain.nil)))⟩
+                List.Chain.nil)))⟩
 
 /-- The diagram in `Opens X` indexed by pairwise intersections from `U` is isomorphic
 (in fact, equal) to the diagram factored through `OpensLeCover U`.
@@ -272,11 +272,11 @@ theorem isSheaf_iff_isSheafPreservesLimitPairwiseIntersections :
     F.IsSheaf ↔ F.IsSheafPreservesLimitPairwiseIntersections := by
   rw [isSheaf_iff_isSheafPairwiseIntersections]
   constructor
-  · intro h ι U
-    exact ⟨preservesLimitOfPreservesLimitCone (Pairwise.coconeIsColimit U).op (h U).some⟩
-  · intro h ι U
-    haveI := (h U).some
-    exact ⟨PreservesLimit.preserves (Pairwise.coconeIsColimit U).op⟩
+  intro h ι U
+  exact ⟨preservesLimitOfPreservesLimitCone (Pairwise.coconeIsColimit U).op (h U).some⟩
+  intro h ι U
+  haveI := (h U).some
+  exact ⟨PreservesLimit.preserves (Pairwise.coconeIsColimit U).op⟩
 
 end TopCat.Presheaf
 

@@ -217,7 +217,7 @@ instance : (whiskeringLeftFunctor L W E).IsEquivalence := by
         dsimp [Construction.whiskeringLeftEquivalence, equivalenceFromModel, whiskerLeft]
         erw [NatTrans.comp_app, NatTrans.comp_app, eqToHom_app, eqToHom_app, eqToHom_refl,
           eqToHom_refl, comp_id, id_comp]
-        · rfl
+        rfl
         all_goals
           change (W.Q ⋙ Localization.Construction.lift L (inverts L W)) ⋙ _ = L ⋙ _
           rw [Construction.fac])
@@ -248,13 +248,13 @@ theorem whiskeringLeftFunctor'_obj (F : D ⥤ E) : (whiskeringLeftFunctor' L W E
 instance : (whiskeringLeftFunctor' L W E).Full := by
   rw [whiskeringLeftFunctor'_eq]
   apply @Functor.Full.comp _ _ _ _ _ _ _ _ ?_ ?_
-  · infer_instance
+  infer_instance
   apply InducedCategory.full -- why is it not found automatically ???
 
 instance : (whiskeringLeftFunctor' L W E).Faithful := by
   rw [whiskeringLeftFunctor'_eq]
   apply @Functor.Faithful.comp _ _ _ _ _ _ _ _ ?_ ?_
-  · infer_instance
+  infer_instance
   apply InducedCategory.faithful -- why is it not found automatically ???
 
 lemma full_whiskeringLeft (L : C ⥤ D) (W) [L.IsLocalization W] (E : Type*) [Category E] :
@@ -473,16 +473,16 @@ lemma areEqualizedByLocalization_iff [L.IsLocalization W] :
     AreEqualizedByLocalization W f g ↔ L.map f = L.map g := by
   dsimp [AreEqualizedByLocalization]
   constructor
-  · intro h
-    let e := Localization.compUniqFunctor W.Q L W
-    rw [← NatIso.naturality_1 e f, ← NatIso.naturality_1 e g]
-    dsimp
-    rw [h]
-  · intro h
-    let e := Localization.compUniqFunctor L W.Q W
-    rw [← NatIso.naturality_1 e f, ← NatIso.naturality_1 e g]
-    dsimp
-    rw [h]
+  intro h
+  let e := Localization.compUniqFunctor W.Q L W
+  rw [← NatIso.naturality_1 e f, ← NatIso.naturality_1 e g]
+  dsimp
+  rw [h]
+  intro h
+  let e := Localization.compUniqFunctor L W.Q W
+  rw [← NatIso.naturality_1 e f, ← NatIso.naturality_1 e g]
+  dsimp
+  rw [h]
 
 namespace AreEqualizedByLocalization
 

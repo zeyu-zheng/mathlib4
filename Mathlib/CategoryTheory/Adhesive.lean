@@ -64,80 +64,80 @@ theorem IsPushout.IsVanKampen.flip {H : IsPushout f g h i} (H' : H.IsVanKampen) 
 theorem IsPushout.isVanKampen_iff (H : IsPushout f g h i) :
     H.IsVanKampen ↔ IsVanKampenColimit (PushoutCocone.mk h i H.w) := by
   constructor
-  · intro H F' c' α fα eα hα
-    refine Iff.trans ?_
-        ((H (F'.map WalkingSpan.Hom.fst) (F'.map WalkingSpan.Hom.snd) (c'.ι.app _) (c'.ι.app _)
-          (α.app _) (α.app _) (α.app _) fα (by convert hα WalkingSpan.Hom.fst)
-          (by convert hα WalkingSpan.Hom.snd) ?_ ?_ ?_).trans ?_)
-    · have : F'.map WalkingSpan.Hom.fst ≫ c'.ι.app WalkingSpan.left =
-          F'.map WalkingSpan.Hom.snd ≫ c'.ι.app WalkingSpan.right := by
-        simp only [Cocone.w]
-      rw [(IsColimit.equivOfNatIsoOfIso (diagramIsoSpan F') c' (PushoutCocone.mk _ _ this)
-            _).nonempty_congr]
-      · exact ⟨fun h => ⟨⟨this⟩, h⟩, fun h => h.2⟩
-      · refine Cocones.ext (Iso.refl c'.pt) ?_
-        rintro (_ | _ | _) <;> dsimp <;>
-          simp only [c'.w, Category.assoc, Category.id_comp, Category.comp_id]
-    · exact ⟨NatTrans.congr_app eα.symm _⟩
-    · exact ⟨NatTrans.congr_app eα.symm _⟩
-    · exact ⟨by simp⟩
-    constructor
-    · rintro ⟨h₁, h₂⟩ (_ | _ | _)
-      · rw [← c'.w WalkingSpan.Hom.fst]; exact (hα WalkingSpan.Hom.fst).paste_horiz h₁
-      exacts [h₁, h₂]
-    · intro h; exact ⟨h _, h _⟩
-  · introv H W' hf hg hh hi w
-    refine
-      Iff.trans ?_ ((H w.cocone ⟨by rintro (_ | _ | _); exacts [αW, αX, αY], ?_⟩ αZ ?_ ?_).trans ?_)
-    rotate_left
-    · rintro i _ (_ | _ | _)
-      · dsimp; simp only [Functor.map_id, Category.comp_id, Category.id_comp]
-      exacts [hf.w, hg.w]
-    · ext (_ | _ | _)
-      · dsimp; rw [PushoutCocone.condition_zero]; erw [Category.assoc, hh.w, hf.w_assoc]
-      exacts [hh.w.symm, hi.w.symm]
-    · rintro i _ (_ | _ | _)
-      · dsimp; simp_rw [Functor.map_id]
-        exact IsPullback.of_horiz_isIso ⟨by rw [Category.comp_id, Category.id_comp]⟩
-      exacts [hf, hg]
-    · constructor
-      · intro h; exact ⟨h WalkingCospan.left, h WalkingCospan.right⟩
-      · rintro ⟨h₁, h₂⟩ (_ | _ | _)
-        · dsimp; rw [PushoutCocone.condition_zero]; exact hf.paste_horiz h₁
-        exacts [h₁, h₂]
-    · exact ⟨fun h => h.2, fun h => ⟨w, h⟩⟩
+  intro H F' c' α fα eα hα
+  refine Iff.trans ?_
+      ((H (F'.map WalkingSpan.Hom.fst) (F'.map WalkingSpan.Hom.snd) (c'.ι.app _) (c'.ι.app _)
+        (α.app _) (α.app _) (α.app _) fα (by convert hα WalkingSpan.Hom.fst)
+        (by convert hα WalkingSpan.Hom.snd) ?_ ?_ ?_).trans ?_)
+  have : F'.map WalkingSpan.Hom.fst ≫ c'.ι.app WalkingSpan.left =
+      F'.map WalkingSpan.Hom.snd ≫ c'.ι.app WalkingSpan.right
+  simp only [Cocone.w]
+  rw [(IsColimit.equivOfNatIsoOfIso (diagramIsoSpan F') c' (PushoutCocone.mk _ _ this)
+        _).nonempty_congr]
+  exact ⟨fun h => ⟨⟨this⟩, h⟩, fun h => h.2⟩
+  refine Cocones.ext (Iso.refl c'.pt) ?_
+  rintro (_ | _ | _) <;> dsimp <;>
+    simp only [c'.w, Category.assoc, Category.id_comp, Category.comp_id]
+  exact ⟨NatTrans.congr_app eα.symm _⟩
+  exact ⟨NatTrans.congr_app eα.symm _⟩
+  exact ⟨by simp⟩
+  constructor
+  · rintro ⟨h₁, h₂⟩ (_ | _ | _)
+    rw [← c'.w WalkingSpan.Hom.fst]; exact (hα WalkingSpan.Hom.fst).paste_horiz h₁
+    exacts [h₁, h₂]
+  intro h; exact ⟨h _, h _⟩
+  introv H W' hf hg hh hi w
+  refine
+    Iff.trans ?_ ((H w.cocone ⟨by rintro (_ | _ | _); exacts [αW, αX, αY], ?_⟩ αZ ?_ ?_).trans ?_)
+  rotate_left
+  · rintro i _ (_ | _ | _)
+    dsimp; simp only [Functor.map_id, Category.comp_id, Category.id_comp]
+    exacts [hf.w, hg.w]
+  · ext (_ | _ | _)
+    dsimp; rw [PushoutCocone.condition_zero]; erw [Category.assoc, hh.w, hf.w_assoc]
+    exacts [hh.w.symm, hi.w.symm]
+  · rintro i _ (_ | _ | _)
+    dsimp; simp_rw [Functor.map_id]
+    exact IsPullback.of_horiz_isIso ⟨by rw [Category.comp_id, Category.id_comp]⟩
+    exacts [hf, hg]
+  · constructor
+    intro h; exact ⟨h WalkingCospan.left, h WalkingCospan.right⟩
+    rintro ⟨h₁, h₂⟩ (_ | _ | _)
+    dsimp; rw [PushoutCocone.condition_zero]; exact hf.paste_horiz h₁
+    exacts [h₁, h₂]
+  exact ⟨fun h => h.2, fun h => ⟨w, h⟩⟩
 
 theorem is_coprod_iff_isPushout {X E Y YE : C} (c : BinaryCofan X E) (hc : IsColimit c) {f : X ⟶ Y}
     {iY : Y ⟶ YE} {fE : c.pt ⟶ YE} (H : CommSq f c.inl iY fE) :
     Nonempty (IsColimit (BinaryCofan.mk (c.inr ≫ fE) iY)) ↔ IsPushout f c.inl iY fE := by
   constructor
-  · rintro ⟨h⟩
-    refine ⟨H, ⟨Limits.PushoutCocone.isColimitAux' _ ?_⟩⟩
-    intro s
-    dsimp only [PushoutCocone.inr, PushoutCocone.mk] -- Porting note: Originally `dsimp`
-    refine ⟨h.desc (BinaryCofan.mk (c.inr ≫ s.inr) s.inl), h.fac _ ⟨WalkingPair.right⟩, ?_, ?_⟩
-    · apply BinaryCofan.IsColimit.hom_ext hc
-      · rw [← H.w_assoc]; erw [h.fac _ ⟨WalkingPair.right⟩]; exact s.condition
-      · rw [← Category.assoc]; exact h.fac _ ⟨WalkingPair.left⟩
-    · intro m e₁ e₂
-      apply BinaryCofan.IsColimit.hom_ext h
-      · dsimp only [BinaryCofan.mk, id] -- Porting note: Originally `dsimp`
-        rw [Category.assoc, e₂, eq_comm]; exact h.fac _ ⟨WalkingPair.left⟩
-      · refine e₁.trans (Eq.symm ?_); exact h.fac _ _
-  · refine fun H => ⟨?_⟩
-    fapply Limits.BinaryCofan.isColimitMk
-    · exact fun s => H.isColimit.desc (PushoutCocone.mk s.inr _ <|
-        (hc.fac (BinaryCofan.mk (f ≫ s.inr) s.inl) ⟨WalkingPair.left⟩).symm)
-    · intro s
-      erw [Category.assoc, H.isColimit.fac _ WalkingSpan.right, hc.fac]; rfl
-    · intro s; exact H.isColimit.fac _ WalkingSpan.left
-    · intro s m e₁ e₂
-      apply PushoutCocone.IsColimit.hom_ext H.isColimit
-      · symm; exact (H.isColimit.fac _ WalkingSpan.left).trans e₂.symm
-      · erw [H.isColimit.fac _ WalkingSpan.right]
-        apply BinaryCofan.IsColimit.hom_ext hc
-        · erw [hc.fac, ← H.w_assoc, e₂]; rfl
-        · refine ((Category.assoc _ _ _).symm.trans e₁).trans ?_; symm; exact hc.fac _ _
+  rintro ⟨h⟩
+  refine ⟨H, ⟨Limits.PushoutCocone.isColimitAux' _ ?_⟩⟩
+  intro s
+  dsimp only [PushoutCocone.inr, PushoutCocone.mk] -- Porting note: Originally `dsimp`
+  refine ⟨h.desc (BinaryCofan.mk (c.inr ≫ s.inr) s.inl), h.fac _ ⟨WalkingPair.right⟩, ?_, ?_⟩
+  apply BinaryCofan.IsColimit.hom_ext hc
+  rw [← H.w_assoc]; erw [h.fac _ ⟨WalkingPair.right⟩]; exact s.condition
+  rw [← Category.assoc]; exact h.fac _ ⟨WalkingPair.left⟩
+  intro m e₁ e₂
+  apply BinaryCofan.IsColimit.hom_ext h
+  dsimp only [BinaryCofan.mk, id] -- Porting note: Originally `dsimp`
+  rw [Category.assoc, e₂, eq_comm]; exact h.fac _ ⟨WalkingPair.left⟩
+  refine e₁.trans (Eq.symm ?_); exact h.fac _ _
+  refine fun H => ⟨?_⟩
+  fapply Limits.BinaryCofan.isColimitMk
+  exact fun s => H.isColimit.desc (PushoutCocone.mk s.inr _ <|
+    (hc.fac (BinaryCofan.mk (f ≫ s.inr) s.inl) ⟨WalkingPair.left⟩).symm)
+  intro s
+  erw [Category.assoc, H.isColimit.fac _ WalkingSpan.right, hc.fac]; rfl
+  intro s; exact H.isColimit.fac _ WalkingSpan.left
+  intro s m e₁ e₂
+  apply PushoutCocone.IsColimit.hom_ext H.isColimit
+  symm; exact (H.isColimit.fac _ WalkingSpan.left).trans e₂.symm
+  erw [H.isColimit.fac _ WalkingSpan.right]
+  apply BinaryCofan.IsColimit.hom_ext hc
+  erw [hc.fac, ← H.w_assoc, e₂]; rfl
+  refine ((Category.assoc _ _ _).symm.trans e₁).trans ?_; symm; exact hc.fac _ _
 
 theorem IsPushout.isVanKampen_inl {W E X Z : C} (c : BinaryCofan W E) [FinitaryExtensive C]
     [HasPullbacks C] (hc : IsColimit c) (f : W ⟶ X) (h : X ⟶ Z) (i : c.pt ⟶ Z)
@@ -150,34 +150,34 @@ theorem IsPushout.isVanKampen_inl {W E X Z : C} (c : BinaryCofan W E) [FinitaryE
   refine (is_coprod_iff_isPushout _ hc₂ w).symm.trans ?_
   refine ((BinaryCofan.isVanKampen_iff _).mp (FinitaryExtensive.vanKampen _ hc₁)
     (BinaryCofan.mk _ _) (pullback.snd _ _) _ _ ?_ hh.w.symm).trans ?_
-  · dsimp; rw [← pullback.condition_assoc, Category.assoc, hi.w]
+  dsimp; rw [← pullback.condition_assoc, Category.assoc, hi.w]
   constructor
-  · rintro ⟨hc₃, hc₄⟩
-    refine ⟨hc₄, ?_⟩
-    let Y'' := pullback αZ i
-    let cmp : Y' ⟶ Y'' := pullback.lift i' αY hi.w
-    have e₁ : (g' ≫ cmp) ≫ pullback.snd _ _ = αW ≫ c.inl
-    rw [Category.assoc, pullback.lift_snd, hg.w]
-    have e₂ : (pullback.fst _ _ ≫ cmp : pullback αY c.inr ⟶ _) ≫ pullback.snd _ _ =
-        pullback.snd _ _ ≫ c.inr
-    rw [Category.assoc, pullback.lift_snd, pullback.condition]
-    obtain ⟨hc₄⟩ := ((BinaryCofan.isVanKampen_iff _).mp (FinitaryExtensive.vanKampen c hc)
-      (BinaryCofan.mk _ _) αW _ _ e₁.symm e₂.symm).mpr <| by
-        constructor
-        · apply IsPullback.of_right _ e₁ (IsPullback.of_hasPullback _ _)
-          rw [Category.assoc, pullback.lift_fst, ← H.w, ← w.w]; exact hf.paste_horiz hc₄
-        · apply IsPullback.of_right _ e₂ (IsPullback.of_hasPullback _ _)
-          rw [Category.assoc, pullback.lift_fst]; exact hc₃
-    rw [← Category.id_comp αZ, ← show cmp ≫ pullback.snd _ _ = αY from pullback.lift_snd _ _ _]
-    apply IsPullback.paste_vert _ (IsPullback.of_hasPullback αZ i)
-    have : cmp = (hc₂.coconePointUniqueUpToIso hc₄).hom := by
-      apply BinaryCofan.IsColimit.hom_ext hc₂
-      exacts [(hc₂.comp_coconePointUniqueUpToIso_hom hc₄ ⟨WalkingPair.left⟩).symm,
-        (hc₂.comp_coconePointUniqueUpToIso_hom hc₄ ⟨WalkingPair.right⟩).symm]
-    rw [this]
-    exact IsPullback.of_vert_isIso ⟨by rw [← this, Category.comp_id, pullback.lift_fst]⟩
-  · rintro ⟨hc₃, hc₄⟩
-    exact ⟨(IsPullback.of_hasPullback αY c.inr).paste_horiz hc₄, hc₃⟩
+  rintro ⟨hc₃, hc₄⟩
+  refine ⟨hc₄, ?_⟩
+  let Y'' := pullback αZ i
+  let cmp : Y' ⟶ Y'' := pullback.lift i' αY hi.w
+  have e₁ : (g' ≫ cmp) ≫ pullback.snd _ _ = αW ≫ c.inl
+  rw [Category.assoc, pullback.lift_snd, hg.w]
+  have e₂ : (pullback.fst _ _ ≫ cmp : pullback αY c.inr ⟶ _) ≫ pullback.snd _ _ =
+      pullback.snd _ _ ≫ c.inr
+  rw [Category.assoc, pullback.lift_snd, pullback.condition]
+  obtain ⟨hc₄⟩ := ((BinaryCofan.isVanKampen_iff _).mp (FinitaryExtensive.vanKampen c hc)
+    (BinaryCofan.mk _ _) αW _ _ e₁.symm e₂.symm).mpr <| by
+      constructor
+      apply IsPullback.of_right _ e₁ (IsPullback.of_hasPullback _ _)
+      rw [Category.assoc, pullback.lift_fst, ← H.w, ← w.w]; exact hf.paste_horiz hc₄
+      apply IsPullback.of_right _ e₂ (IsPullback.of_hasPullback _ _)
+      rw [Category.assoc, pullback.lift_fst]; exact hc₃
+  rw [← Category.id_comp αZ, ← show cmp ≫ pullback.snd _ _ = αY from pullback.lift_snd _ _ _]
+  apply IsPullback.paste_vert _ (IsPullback.of_hasPullback αZ i)
+  have : cmp = (hc₂.coconePointUniqueUpToIso hc₄).hom := by
+    apply BinaryCofan.IsColimit.hom_ext hc₂
+    exacts [(hc₂.comp_coconePointUniqueUpToIso_hom hc₄ ⟨WalkingPair.left⟩).symm,
+      (hc₂.comp_coconePointUniqueUpToIso_hom hc₄ ⟨WalkingPair.right⟩).symm]
+  rw [this]
+  exact IsPullback.of_vert_isIso ⟨by rw [← this, Category.comp_id, pullback.lift_fst]⟩
+  rintro ⟨hc₃, hc₄⟩
+  exact ⟨(IsPullback.of_hasPullback αY c.inr).paste_horiz hc₄, hc₃⟩
 
 theorem IsPushout.IsVanKampen.isPullback_of_mono_left [Mono f] {H : IsPushout f g h i}
     (H' : H.IsVanKampen) : IsPullback f g h i :=
@@ -314,8 +314,8 @@ theorem adhesive_of_reflective [HasPullbacks D] [Adhesive C] [HasPullbacks C] [H
     (isoWhiskerLeft _ (asIso adj.counit) ≪≫ Functor.rightUnitor _).hom).mp ?_
   refine ((this.precompose_isIso (spanCompIso _ _ _).hom).map_reflective adj).of_iso
     (IsColimit.uniqueUpToIso ?_ ?_)
-  · exact isColimitOfPreserves Gl ((IsColimit.precomposeHomEquiv _ _).symm <| pushoutIsPushout _ _)
-  · exact (IsColimit.precomposeHomEquiv _ _).symm H.isColimit
+  exact isColimitOfPreserves Gl ((IsColimit.precomposeHomEquiv _ _).symm <| pushoutIsPushout _ _)
+  exact (IsColimit.precomposeHomEquiv _ _).symm H.isColimit
 
 end functor
 

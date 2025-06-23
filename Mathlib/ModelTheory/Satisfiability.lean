@@ -146,15 +146,15 @@ theorem isSatisfiable_union_distinctConstantsTheory_of_infinite (T : L.Theory) (
     (M : Type w') [L.Structure M] [M ⊨ T] [Infinite M] :
     ((L.lhomWithConstants α).onTheory T ∪ L.distinctConstantsTheory s).IsSatisfiable := by
     rw [distinctConstantsTheory_eq_iUnion, Set.union_iUnion, isSatisfiable_directed_union_iff]
-    · exact fun t =>
-        isSatisfiable_union_distinctConstantsTheory_of_card_le T _ M
-          ((lift_le_aleph0.2 (finset_card_lt_aleph0 _).le).trans
-            (aleph0_le_lift.2 (aleph0_le_mk M)))
-    · apply Monotone.directed_le
-      refine monotone_const.union (monotone_distinctConstantsTheory.comp ?_)
-      simp only [Finset.coe_map, Function.Embedding.coe_subtype]
-      exact Monotone.comp (g := Set.image ((↑) : s → α)) (f := ((↑) : Finset s → Set s))
-        Set.monotone_image fun _ _ => Finset.coe_subset.2
+    exact fun t =>
+      isSatisfiable_union_distinctConstantsTheory_of_card_le T _ M
+        ((lift_le_aleph0.2 (finset_card_lt_aleph0 _).le).trans
+          (aleph0_le_lift.2 (aleph0_le_mk M)))
+    apply Monotone.directed_le
+    refine monotone_const.union (monotone_distinctConstantsTheory.comp ?_)
+    simp only [Finset.coe_map, Function.Embedding.coe_subtype]
+    exact Monotone.comp (g := Set.image ((↑) : s → α)) (f := ((↑) : Finset s → Set s))
+      Set.monotone_image fun _ _ => Finset.coe_subset.2
 
 /-- Any theory with an infinite model has arbitrarily large models. -/
 theorem exists_large_model_of_infinite_model (T : L.Theory) (κ : Cardinal.{w}) (M : Type w')
@@ -257,8 +257,8 @@ theorem exists_elementarilyEquivalent_card_eq (M : Type w') [L.Structure M] [Inf
     (κ : Cardinal.{w}) (h1 : ℵ₀ ≤ κ) (h2 : lift.{w} L.card ≤ Cardinal.lift.{max u v} κ) :
     ∃ N : CategoryTheory.Bundled L.Structure, (M ≅[L] N) ∧ #N = κ := by
   obtain ⟨N, NM | MN, hNκ⟩ := exists_elementaryEmbedding_card_eq L M κ h1 h2
-  · exact ⟨N, NM.some.elementarilyEquivalent.symm, hNκ⟩
-  · exact ⟨N, MN.some.elementarilyEquivalent, hNκ⟩
+  exact ⟨N, NM.some.elementarilyEquivalent.symm, hNκ⟩
+  exact ⟨N, MN.some.elementarilyEquivalent, hNκ⟩
 
 variable {L}
 
@@ -343,14 +343,14 @@ theorem models_iff_finset_models {φ : L.Sentence} :
   push_neg
   letI := Classical.decEq (Sentence L)
   constructor
-  · intro h T0 hT0
-    simpa using h (T0 ∪ {Formula.not φ})
-      (by
-        simp only [Finset.coe_union, Finset.coe_singleton]
-        exact Set.union_subset_union hT0 (Set.Subset.refl _))
-  · intro h T0 hT0
-    exact IsSatisfiable.mono (h (T0.erase (Formula.not φ))
-      (by simpa using hT0)) (by simp)
+  intro h T0 hT0
+  simpa using h (T0 ∪ {Formula.not φ})
+    (by
+      simp only [Finset.coe_union, Finset.coe_singleton]
+      exact Set.union_subset_union hT0 (Set.Subset.refl _))
+  intro h T0 hT0
+  exact IsSatisfiable.mono (h (T0.erase (Formula.not φ))
+    (by simpa using hT0)) (by simp)
 
 /-- A theory is complete when it is satisfiable and models each sentence or its negation. -/
 def IsComplete (T : L.Theory) : Prop :=
@@ -360,23 +360,23 @@ namespace IsComplete
 
 theorem models_not_iff (h : T.IsComplete) (φ : L.Sentence) : T ⊨ᵇ φ.not ↔ ¬T ⊨ᵇ φ := by
   cases' h.2 φ with hφ hφn
-  · simp only [hφ, not_true, iff_false_iff]
-    rw [models_sentence_iff, not_forall]
-    refine ⟨h.1.some, ?_⟩
-    simp only [Sentence.realize_not, Classical.not_not]
-    exact models_sentence_iff.1 hφ _
-  · simp only [hφn, true_iff_iff]
-    intro hφ
-    rw [models_sentence_iff] at *
-    exact hφn h.1.some (hφ _)
+  simp only [hφ, not_true, iff_false_iff]
+  rw [models_sentence_iff, not_forall]
+  refine ⟨h.1.some, ?_⟩
+  simp only [Sentence.realize_not, Classical.not_not]
+  exact models_sentence_iff.1 hφ _
+  simp only [hφn, true_iff_iff]
+  intro hφ
+  rw [models_sentence_iff] at *
+  exact hφn h.1.some (hφ _)
 
 theorem realize_sentence_iff (h : T.IsComplete) (φ : L.Sentence) (M : Type*) [L.Structure M]
     [M ⊨ T] [Nonempty M] : M ⊨ φ ↔ T ⊨ᵇ φ := by
   cases' h.2 φ with hφ hφn
-  · exact iff_of_true (hφ.realize_sentence M) hφ
-  · exact
-      iff_of_false ((Sentence.realize_not M).1 (hφn.realize_sentence M))
-        ((h.models_not_iff φ).1 hφn)
+  exact iff_of_true (hφ.realize_sentence M) hφ
+  exact
+    iff_of_false ((Sentence.realize_not M).1 (hφn.realize_sentence M))
+      ((h.models_not_iff φ).1 hφn)
 
 end IsComplete
 

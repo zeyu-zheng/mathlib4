@@ -118,46 +118,46 @@ def EqId : Prop :=
 
 theorem eqId_iff_eq : A.EqId ↔ A.1 = Δ := by
   constructor
-  · intro h
-    dsimp at h
-    rw [h]
-    rfl
-  · intro h
-    rcases A with ⟨_, ⟨f, hf⟩⟩
-    simp only at h
-    subst h
-    refine ext _ _ rfl ?_
-    haveI := hf
-    simp only [eqToHom_refl, comp_id]
-    exact eq_id_of_epi f
+  intro h
+  dsimp at h
+  rw [h]
+  rfl
+  intro h
+  rcases A with ⟨_, ⟨f, hf⟩⟩
+  simp only at h
+  subst h
+  refine ext _ _ rfl ?_
+  haveI := hf
+  simp only [eqToHom_refl, comp_id]
+  exact eq_id_of_epi f
 
 theorem eqId_iff_len_eq : A.EqId ↔ A.1.unop.len = Δ.unop.len := by
   rw [eqId_iff_eq]
   constructor
-  · intro h
-    rw [h]
-  · intro h
-    rw [← unop_inj_iff]
-    ext
-    exact h
+  intro h
+  rw [h]
+  intro h
+  rw [← unop_inj_iff]
+  ext
+  exact h
 
 theorem eqId_iff_len_le : A.EqId ↔ Δ.unop.len ≤ A.1.unop.len := by
   rw [eqId_iff_len_eq]
   constructor
-  · intro h
-    rw [h]
-  · exact le_antisymm (len_le_of_epi (inferInstance : Epi A.e))
+  intro h
+  rw [h]
+  exact le_antisymm (len_le_of_epi (inferInstance : Epi A.e))
 
 theorem eqId_iff_mono : A.EqId ↔ Mono A.e := by
   constructor
-  · intro h
-    dsimp at h
-    subst h
-    dsimp only [id, e]
-    infer_instance
-  · intro h
-    rw [eqId_iff_len_le]
-    exact len_le_of_mono h
+  intro h
+  dsimp at h
+  subst h
+  dsimp only [id, e]
+  infer_instance
+  intro h
+  rw [eqId_iff_len_le]
+  exact len_le_of_mono h
 
 /-- Given `A : IndexSet Δ₁`, if `p.unop : unop Δ₂ ⟶ unop Δ₁` is an epi, this
 is the obvious element in `A : IndexSet Δ₂` associated to the composition

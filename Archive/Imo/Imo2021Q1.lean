@@ -57,9 +57,9 @@ theorem exists_numbers_in_interval (n : ℕ) (hn : 100 ≤ n) :
   rw [← Nat.sub_add_cancel hn'] at h₁ h₂ h₃
   set l := (n + 1).sqrt - 1
   refine ⟨l, ?_, ?_⟩
-  · calc n + 4 * l ≤ (l ^ 2 + 4 * l + 2) + 4 * l := by linarith only [h₂]
-      _ ≤ 2 * l ^ 2 := by nlinarith only [h₃]
-  · linarith only [h₁]
+  calc n + 4 * l ≤ (l ^ 2 + 4 * l + 2) + 4 * l := by linarith only [h₂]
+    _ ≤ 2 * l ^ 2 := by nlinarith only [h₃]
+  linarith only [h₁]
 
 theorem exists_triplet_summing_to_squares (n : ℕ) (hn : 100 ≤ n) :
     ∃ a b c : ℕ, n ≤ a ∧ a < b ∧ b < c ∧ c ≤ 2 * n ∧
@@ -85,23 +85,23 @@ theorem exists_finset_3_le_card_with_pairs_summing_to_squares (n : ℕ) (hn : 10
       ∀ c ∈ B, n ≤ c ∧ c ≤ 2 * n := by
   obtain ⟨a, b, c, hna, hab, hbc, hcn, h₁, h₂, h₃⟩ := exists_triplet_summing_to_squares n hn
   refine ⟨{a, b, c}, ?_, ?_, ?_⟩
-  · suffices ({a, b, c} : Finset ℕ).card = 3 by rw [this]
-    suffices a ∉ {b, c} ∧ b ∉ {c} by
-      rw [Finset.card_insert_of_not_mem this.1, Finset.card_insert_of_not_mem this.2,
-        Finset.card_singleton]
-    rw [Finset.mem_insert, Finset.mem_singleton, Finset.mem_singleton]
-    push_neg
-    exact ⟨⟨hab.ne, (hab.trans hbc).ne⟩, hbc.ne⟩
-  · intro x hx y hy hxy
-    simp only [Finset.mem_insert, Finset.mem_singleton] at hx hy
-    rcases hx with (rfl | rfl | rfl) <;> rcases hy with (rfl | rfl | rfl)
-    all_goals
-      first
-      | contradiction
-      | assumption
-      | simpa only [add_comm x y]
-  · simp only [Finset.mem_insert, Finset.mem_singleton]
-    rintro d (rfl | rfl | rfl) <;> constructor <;> linarith only [hna, hab, hbc, hcn]
+  suffices ({a, b, c} : Finset ℕ).card = 3 by rw [this]
+  suffices a ∉ {b, c} ∧ b ∉ {c} by
+    rw [Finset.card_insert_of_not_mem this.1, Finset.card_insert_of_not_mem this.2,
+      Finset.card_singleton]
+  rw [Finset.mem_insert, Finset.mem_singleton, Finset.mem_singleton]
+  push_neg
+  exact ⟨⟨hab.ne, (hab.trans hbc).ne⟩, hbc.ne⟩
+  intro x hx y hy hxy
+  simp only [Finset.mem_insert, Finset.mem_singleton] at hx hy
+  rcases hx with (rfl | rfl | rfl) <;> rcases hy with (rfl | rfl | rfl)
+  all_goals
+    first
+    | contradiction
+    | assumption
+    | simpa only [add_comm x y]
+  simp only [Finset.mem_insert, Finset.mem_singleton]
+  rintro d (rfl | rfl | rfl) <;> constructor <;> linarith only [hna, hab, hbc, hcn]
 
 end Imo2021Q1
 

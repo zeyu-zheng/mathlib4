@@ -43,12 +43,12 @@ instance : T0Space X := by
 instance : QuasiSober X := by
   apply (config := { allowSynthFailures := true })
     quasiSober_of_open_cover (Set.range fun x => Set.range <| (X.affineCover.map x).1.base)
-  · rintro ⟨_, i, rfl⟩; exact (X.affineCover.IsOpen i).base_open.isOpen_range
-  · rintro ⟨_, i, rfl⟩
-    exact @OpenEmbedding.quasiSober _ _ _ _ _ (Homeomorph.ofEmbedding _
-      (X.affineCover.IsOpen i).base_open.toEmbedding).symm.openEmbedding PrimeSpectrum.quasiSober
-  · rw [Set.top_eq_univ, Set.sUnion_range, Set.eq_univ_iff_forall]
-    intro x; exact ⟨_, ⟨_, rfl⟩, X.affineCover.covers x⟩
+  rintro ⟨_, i, rfl⟩; exact (X.affineCover.IsOpen i).base_open.isOpen_range
+  rintro ⟨_, i, rfl⟩
+  exact @OpenEmbedding.quasiSober _ _ _ _ _ (Homeomorph.ofEmbedding _
+    (X.affineCover.IsOpen i).base_open.toEmbedding).symm.openEmbedding PrimeSpectrum.quasiSober
+  rw [Set.top_eq_univ, Set.sUnion_range, Set.eq_univ_iff_forall]
+  intro x; exact ⟨_, ⟨_, rfl⟩, X.affineCover.covers x⟩
 
 /-- A scheme `X` is reduced if all `𝒪ₓ(U)` are reduced. -/
 class IsReduced : Prop where
@@ -139,7 +139,7 @@ theorem reduce_to_affine_nbhd (P : ∀ (X : Scheme) (_ : X), Prop)
   intro X x
   obtain ⟨y, e⟩ := X.affineCover.covers x
   convert h₂ (X.affineCover.map (X.affineCover.f x)) y _
-  · rw [e]
+  rw [e]
   apply h₁
 
 theorem eq_zero_of_basicOpen_eq_bot {X : Scheme} [hX : IsReduced X] {U : X.Opens}
@@ -163,11 +163,11 @@ theorem eq_zero_of_basicOpen_eq_bot {X : Scheme} [hX : IsReduced X] {U : X.Opens
     rintro H hX s hs ⟨_, x, rfl⟩
     haveI := isReduced_of_isOpenImmersion f
     specialize H (f.app _ s) _ ⟨x, by rw [Opens.mem_mk, e]; trivial⟩
-    · rw [← Scheme.preimage_basicOpen, hs]; ext1; simp [Opens.map]
-    · erw [← PresheafedSpace.stalkMap_germ_apply f.1 ⟨_, _⟩ ⟨x, _⟩] at H
-      apply_fun inv <| f.stalkMap x at H
-      erw [CategoryTheory.IsIso.hom_inv_id_apply, map_zero] at H
-      exact H
+    rw [← Scheme.preimage_basicOpen, hs]; ext1; simp [Opens.map]
+    erw [← PresheafedSpace.stalkMap_germ_apply f.1 ⟨_, _⟩ ⟨x, _⟩] at H
+    apply_fun inv <| f.stalkMap x at H
+    erw [CategoryTheory.IsIso.hom_inv_id_apply, map_zero] at H
+    exact H
   | h₃ R =>
     rw [basicOpen_eq_of_affine', PrimeSpectrum.basicOpen_eq_bot_iff] at hs
     replace hs := (hs.map (Scheme.ΓSpecIso R).inv).eq_zero
@@ -196,12 +196,12 @@ instance (priority := 900) isReduced_of_isIntegral [IsIntegral X] : IsReduced X 
   constructor
   intro U
   rcases U.1.eq_empty_or_nonempty with h | h
-  · have : U = ⊥ := SetLike.ext' h
-    haveI : Subsingleton Γ(X, U) :=
-      CommRingCat.subsingleton_of_isTerminal (X.sheaf.isTerminalOfEqEmpty this)
-    infer_instance
-  · haveI : Nonempty U := by simpa
-    infer_instance
+  have : U = ⊥ := SetLike.ext' h
+  haveI : Subsingleton Γ(X, U) :=
+    CommRingCat.subsingleton_of_isTerminal (X.sheaf.isTerminalOfEqEmpty this)
+  infer_instance
+  haveI : Nonempty U := by simpa
+  infer_instance
 
 instance Scheme.component_nontrivial (X : Scheme.{u}) (U : X.Opens) [Nonempty U] :
     Nontrivial Γ(X, U) :=
@@ -223,16 +223,16 @@ instance irreducibleSpace_of_isIntegral [IsIntegral X] : IrreducibleSpace X := b
   let e : Γ(X, _) ≅ CommRingCat.of _ :=
     (X.sheaf.isProductOfDisjoint ⟨_, hS.1⟩ ⟨_, hT.1⟩ ?_).conePointUniqueUpToIso
       (CommRingCat.prodFanIsLimit _ _)
-  · have : IsDomain (Γ(X, ⟨Sᶜ, hS.1⟩) × Γ(X, ⟨Tᶜ, hT.1⟩)) :=
-      e.symm.commRingCatIsoToRingEquiv.toMulEquiv.isDomain _
-    exact false_of_nontrivial_of_product_domain Γ(X, ⟨Sᶜ, hS.1⟩) Γ(X, ⟨Tᶜ, hT.1⟩)
-  · ext x
-    constructor
-    · rintro ⟨hS, hT⟩
-      cases' h₁ (show x ∈ ⊤ by trivial) with h h
-      exacts [hS h, hT h]
-    · intro x
-      exact x.rec (by contradiction)
+  have : IsDomain (Γ(X, ⟨Sᶜ, hS.1⟩) × Γ(X, ⟨Tᶜ, hT.1⟩)) :=
+    e.symm.commRingCatIsoToRingEquiv.toMulEquiv.isDomain _
+  exact false_of_nontrivial_of_product_domain Γ(X, ⟨Sᶜ, hS.1⟩) Γ(X, ⟨Tᶜ, hT.1⟩)
+  ext x
+  constructor
+  · rintro ⟨hS, hT⟩
+    cases' h₁ (show x ∈ ⊤ by trivial) with h h
+    exacts [hS h, hT h]
+  intro x
+  exact x.rec (by contradiction)
 
 theorem isIntegral_of_irreducibleSpace_of_isReduced [IsReduced X] [H : IrreducibleSpace X] :
     IsIntegral X := by
@@ -240,19 +240,19 @@ theorem isIntegral_of_irreducibleSpace_of_isReduced [IsReduced X] [H : Irreducib
   intro U hU
   haveI := (@LocallyRingedSpace.component_nontrivial X.toLocallyRingedSpace U hU).1
   have : NoZeroDivisors
-      (X.toLocallyRingedSpace.toSheafedSpace.toPresheafedSpace.presheaf.obj (op U)) := by
-    refine ⟨fun {a b} e => ?_⟩
-    simp_rw [← basicOpen_eq_bot_iff, ← Opens.not_nonempty_iff_eq_bot]
-    by_contra! h
-    obtain ⟨_, ⟨x, hx₁, rfl⟩, ⟨x, hx₂, e'⟩⟩ :=
-      nonempty_preirreducible_inter (X.basicOpen a).2 (X.basicOpen b).2 h.1 h.2
-    replace e' := Subtype.eq e'
-    subst e'
-    replace e := congr_arg (X.presheaf.germ x) e
-    rw [RingHom.map_mul, RingHom.map_zero] at e
-    refine zero_ne_one' (X.presheaf.stalk x.1) (isUnit_zero_iff.1 ?_)
-    convert hx₁.mul hx₂
-    exact e.symm
+      (X.toLocallyRingedSpace.toSheafedSpace.toPresheafedSpace.presheaf.obj (op U))
+  refine ⟨fun {a b} e => ?_⟩
+  simp_rw [← basicOpen_eq_bot_iff, ← Opens.not_nonempty_iff_eq_bot]
+  by_contra! h
+  obtain ⟨_, ⟨x, hx₁, rfl⟩, ⟨x, hx₂, e'⟩⟩ :=
+    nonempty_preirreducible_inter (X.basicOpen a).2 (X.basicOpen b).2 h.1 h.2
+  replace e' := Subtype.eq e'
+  subst e'
+  replace e := congr_arg (X.presheaf.germ x) e
+  rw [RingHom.map_mul, RingHom.map_zero] at e
+  refine zero_ne_one' (X.presheaf.stalk x.1) (isUnit_zero_iff.1 ?_)
+  convert hx₁.mul hx₂
+  exact e.symm
   exact NoZeroDivisors.to_isDomain _
 
 theorem isIntegral_iff_irreducibleSpace_and_isReduced :

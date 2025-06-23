@@ -72,15 +72,15 @@ lemma overEquiv_pullback {X : C} {Y₁ Y₂ : Over X} (f : Y₁ ⟶ Y₂) (S : S
   ext Z g
   dsimp [overEquiv, Presieve.functorPushforward]
   constructor
-  · rintro ⟨W, a, b, h, rfl⟩
-    exact ⟨W, a ≫ f, b, h, by simp⟩
-  · rintro ⟨W, a, b, h, w⟩
-    let T := Over.mk (b ≫ W.hom)
-    let c : T ⟶ Y₁ := Over.homMk g (by dsimp [T]; rw [← Over.w a, ← reassoc_of% w, Over.w f])
-    let d : T ⟶ W := Over.homMk b
-    refine ⟨T, c, 𝟙 Z, ?_, by simp [c]⟩
-    rw [show c ≫ f = d ≫ a by ext; exact w]
-    exact S.downward_closed h _
+  rintro ⟨W, a, b, h, rfl⟩
+  exact ⟨W, a ≫ f, b, h, by simp⟩
+  rintro ⟨W, a, b, h, w⟩
+  let T := Over.mk (b ≫ W.hom)
+  let c : T ⟶ Y₁ := Over.homMk g (by dsimp [T]; rw [← Over.w a, ← reassoc_of% w, Over.w f])
+  let d : T ⟶ W := Over.homMk b
+  refine ⟨T, c, 𝟙 Z, ?_, by simp [c]⟩
+  rw [show c ≫ f = d ≫ a by ext; exact w]
+  exact S.downward_closed h _
 
 @[simp]
 lemma overEquiv_symm_iff {X : C} {Y : Over X} (S : Sieve Y.left) {Z : Over X} (f : Z ⟶ Y) :
@@ -98,11 +98,11 @@ lemma functorPushforward_over_map {X Y : C} (f : X ⟶ Y) (Z : Over X) (S : Siev
       (Sieve.overEquiv ((Over.map f).obj Z)).symm S := by
   ext W g
   constructor
-  · rintro ⟨T, a, b, ha, rfl⟩
-    exact S.downward_closed ha _
-  · intro hg
-    exact ⟨Over.mk (g.left ≫ Z.hom), Over.homMk g.left,
-      Over.homMk (𝟙 _) (by simpa using Over.w g), hg, by aesop_cat⟩
+  rintro ⟨T, a, b, ha, rfl⟩
+  exact S.downward_closed ha _
+  intro hg
+  exact ⟨Over.mk (g.left ≫ Z.hom), Over.homMk g.left,
+    Over.homMk (𝟙 _) (by simpa using Over.w g), hg, by aesop_cat⟩
 
 end Sieve
 

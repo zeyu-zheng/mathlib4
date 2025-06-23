@@ -68,15 +68,15 @@ theorem ContMDiffWithinAt.comp {t : Set M'} {g : M' → M''} (x : M)
   simp only [e.map_source hx', true_and_iff, e.left_inv hx', st hx's, *]
   refine ((hg.2.comp _ (hf.2.mono inter_subset_right) inter_subset_left).mono_of_mem
     (inter_mem ?_ self_mem_nhdsWithin)).congr_of_eventuallyEq ?_ ?_
-  · filter_upwards [A]
-    rintro x' ⟨ht, hfx'⟩
-    simp only [*, mem_preimage, writtenInExtChartAt, (· ∘ ·), mem_inter_iff, e'.left_inv,
-      true_and_iff]
-    exact mem_range_self _
-  · filter_upwards [A]
-    rintro x' ⟨-, hfx'⟩
-    simp only [*, (· ∘ ·), writtenInExtChartAt, e'.left_inv]
-  · simp only [e, e', writtenInExtChartAt, (· ∘ ·), mem_extChartAt_source, e.left_inv, e'.left_inv]
+  filter_upwards [A]
+  rintro x' ⟨ht, hfx'⟩
+  simp only [*, mem_preimage, writtenInExtChartAt, (· ∘ ·), mem_inter_iff, e'.left_inv,
+    true_and_iff]
+  exact mem_range_self _
+  filter_upwards [A]
+  rintro x' ⟨-, hfx'⟩
+  simp only [*, (· ∘ ·), writtenInExtChartAt, e'.left_inv]
+  simp only [e, e', writtenInExtChartAt, (· ∘ ·), mem_extChartAt_source, e.left_inv, e'.left_inv]
 
 /-- See note [comp_of_eq lemmas] -/
 theorem ContMDiffWithinAt.comp_of_eq {t : Set M'} {g : M' → M''} {x : M} {y : M'}
@@ -283,9 +283,9 @@ theorem contMDiff_of_mulTSupport [One M'] {f : M → M'}
     (hf : ∀ x ∈ mulTSupport f, ContMDiffAt I I' n f x) : ContMDiff I I' n f := by
   intro x
   by_cases hx : x ∈ mulTSupport f
-  · exact hf x hx
-  · exact ContMDiffAt.congr_of_eventuallyEq contMDiffAt_const
-      (not_mem_mulTSupport_iff_eventuallyEq.1 hx)
+  exact hf x hx
+  exact ContMDiffAt.congr_of_eventuallyEq contMDiffAt_const
+    (not_mem_mulTSupport_iff_eventuallyEq.1 hx)
 
 @[deprecated (since := "2024-01-15")] alias contMDiff_of_support := contMDiff_of_tsupport
 
@@ -374,16 +374,16 @@ lemma contMDiff_openEmbedding :
   -- factorise into the chart `e` and the model `id`
   simp only [mfld_simps]
   rw [h.toPartialHomeomorph_right_inv]
-  · rw [I.right_inv]
-    apply mem_of_subset_of_mem _ hz.1
-    exact haveI := h.singletonChartedSpace; extChartAt_target_subset_range I x
-  · -- `hz` implies that `z ∈ range (I ∘ e)`
-    have := hz.1
-    rw [@extChartAt_target _ _ _ _ _ _ _ _ _ _ h.singletonChartedSpace] at this
-    have := this.1
-    rw [mem_preimage, PartialHomeomorph.singletonChartedSpace_chartAt_eq,
-      h.toPartialHomeomorph_target] at this
-    exact this
+  rw [I.right_inv]
+  apply mem_of_subset_of_mem _ hz.1
+  exact haveI := h.singletonChartedSpace; extChartAt_target_subset_range I x
+  -- `hz` implies that `z ∈ range (I ∘ e)`
+  have := hz.1
+  rw [@extChartAt_target _ _ _ _ _ _ _ _ _ _ h.singletonChartedSpace] at this
+  have := this.1
+  rw [mem_preimage, PartialHomeomorph.singletonChartedSpace_chartAt_eq,
+    h.toPartialHomeomorph_target] at this
+  exact this
 
 variable {I}
 /-- If the `ChartedSpace` structure on a manifold `M` is given by an open embedding `e : M → H`,
@@ -394,20 +394,20 @@ lemma contMDiffOn_openEmbedding_symm :
   haveI := h.singleton_smoothManifoldWithCorners I
   rw [@contMDiffOn_iff _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ h.singletonChartedSpace]
   constructor
-  · rw [← h.toPartialHomeomorph_target]
-    exact (h.toPartialHomeomorph e).continuousOn_symm
-  · intros z hz
-    -- show the function is actually the identity on the range of I ∘ e
-    apply contDiffOn_id.congr
-    intros z hz
-    -- factorise into the chart `e` and the model `id`
-    simp only [mfld_simps]
-    have : I.symm z ∈ range e
-    rw [ModelWithCorners.symm, ← mem_preimage]
-    exact hz.2.1
-    rw [h.toPartialHomeomorph_right_inv e this]
-    apply I.right_inv
-    exact mem_of_subset_of_mem (extChartAt_target_subset_range _ _) hz.1
+  rw [← h.toPartialHomeomorph_target]
+  exact (h.toPartialHomeomorph e).continuousOn_symm
+  intros z hz
+  -- show the function is actually the identity on the range of I ∘ e
+  apply contDiffOn_id.congr
+  intros z hz
+  -- factorise into the chart `e` and the model `id`
+  simp only [mfld_simps]
+  have : I.symm z ∈ range e
+  rw [ModelWithCorners.symm, ← mem_preimage]
+  exact hz.2.1
+  rw [h.toPartialHomeomorph_right_inv e this]
+  apply I.right_inv
+  exact mem_of_subset_of_mem (extChartAt_target_subset_range _ _) hz.1
 
 /-- Let `M'` be a manifold whose chart structure is given by an open embedding `e'` into its model
 space `H'`. Then the smoothness of `e' ∘ f : M → H'` implies the smoothness of `f`.

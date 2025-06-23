@@ -68,10 +68,10 @@ variable {V} {c : ComplexShape ι}
 @[reassoc (attr := simp)]
 theorem d_comp_d (C : HomologicalComplex V c) (i j k : ι) : C.d i j ≫ C.d j k = 0 := by
   by_cases hij : c.Rel i j
-  · by_cases hjk : c.Rel j k
-    · exact C.d_comp_d' i j k hij hjk
-    · rw [C.shape j k hjk, comp_zero]
-  · rw [C.shape i j hij, zero_comp]
+  by_cases hjk : c.Rel j k
+  exact C.d_comp_d' i j k hij hjk
+  rw [C.shape j k hjk, comp_zero]
+  rw [C.shape i j hij, zero_comp]
 
 theorem ext {C₁ C₂ : HomologicalComplex V c} (h_X : C₁.X = C₂.X)
     (h_d :
@@ -85,8 +85,8 @@ theorem ext {C₁ C₂ : HomologicalComplex V c} (h_X : C₁.X = C₂.X)
   simp only [mk.injEq, heq_eq_eq, true_and]
   ext i j
   by_cases hij : c.Rel i j
-  · simpa only [comp_id, id_comp, eqToHom_refl] using h_d i j hij
-  · rw [s₁ i j hij, s₂ i j hij]
+  simpa only [comp_id, id_comp, eqToHom_refl] using h_d i j hij
+  rw [s₁ i j hij, s₂ i j hij]
 
 /-- The obvious isomorphism `K.X p ≅ K.X q` when `p = q`. -/
 def XIsoOfEq (K : HomologicalComplex V c) {p q : ι} (h : p = q) : K.X p ≅ K.X q :=
@@ -221,8 +221,8 @@ structure Hom (A B : HomologicalComplex V c) where
 theorem Hom.comm {A B : HomologicalComplex V c} (f : A.Hom B) (i j : ι) :
     f.f i ≫ B.d i j = A.d i j ≫ f.f j := by
   by_cases hij : c.Rel i j
-  · exact f.comm' i j hij
-  · rw [A.shape i j hij, B.shape i j hij, comp_zero, zero_comp]
+  exact f.comm' i j hij
+  rw [A.shape i j hij, B.shape i j hij, comp_zero, zero_comp]
 
 instance (A B : HomologicalComplex V c) : Inhabited (Hom A B) :=
   ⟨{ f := fun i => 0 }⟩

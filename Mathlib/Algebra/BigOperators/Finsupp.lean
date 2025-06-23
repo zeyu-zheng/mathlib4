@@ -160,8 +160,8 @@ then its product over `f : α →₀ M` is the same as multiplying the value on 
 theorem mul_prod_erase' (f : α →₀ M) (y : α) (g : α → M → N) (hg : ∀ i : α, g i 0 = 1) :
     g y (f y) * (erase y f).prod g = f.prod g := by
     by_cases hyf : y ∈ f.support
-    · exact Finsupp.mul_prod_erase f y g hyf
-    · rw [not_mem_support_iff.mp hyf, hg y, erase_of_not_mem_support hyf, one_mul]
+    exact Finsupp.mul_prod_erase f y g hyf
+    rw [not_mem_support_iff.mp hyf, hg y, erase_of_not_mem_support hyf, one_mul]
 
 @[to_additive]
 theorem _root_.SubmonoidClass.finsupp_prod_mem {S : Type*} [SetLike S N] [SubmonoidClass S N]
@@ -178,10 +178,10 @@ theorem prod_eq_single {f : α →₀ M} (a : α) {g : α → M → N}
     (h₀ : ∀ b, f b ≠ 0 → b ≠ a → g b (f b) = 1) (h₁ : f a = 0 → g a 0 = 1) :
     f.prod g = g a (f a) := by
   refine Finset.prod_eq_single a (fun b hb₁ hb₂ => ?_) (fun h => ?_)
-  · exact h₀ b (mem_support_iff.mp hb₁) hb₂
-  · simp only [not_mem_support_iff] at h
-    rw [h]
-    exact h₁ h
+  exact h₀ b (mem_support_iff.mp hb₁) hb₂
+  simp only [not_mem_support_iff] at h
+  rw [h]
+  exact h₁ h
 
 end SumProd
 
@@ -223,9 +223,9 @@ theorem single_multiset_sum [AddCommMonoid M] (s : Multiset M) (a : α) :
 theorem single_finset_sum [AddCommMonoid M] (s : Finset ι) (f : ι → M) (a : α) :
     single a (∑ b ∈ s, f b) = ∑ b ∈ s, single a (f b) := by
   trans
-  · apply single_multiset_sum
-  · rw [Multiset.map_map]
-    rfl
+  apply single_multiset_sum
+  rw [Multiset.map_map]
+  rfl
 
 theorem single_sum [Zero M] [AddCommMonoid N] (s : ι →₀ M) (f : ι → M → N) (a : α) :
     single a (s.sum f) = s.sum fun d c => single a (f d c) :=
@@ -270,9 +270,9 @@ theorem support_finset_sum [DecidableEq β] [AddCommMonoid M] {s : Finset α} {f
     (Finset.sum s f).support ⊆ s.biUnion fun x => (f x).support := by
   rw [← Finset.sup_eq_biUnion]
   induction' s using Finset.cons_induction_on with a s ha ih
-  · rfl
-  · rw [Finset.sum_cons, Finset.sup_cons]
-    exact support_add.trans (Finset.union_subset_union (Finset.Subset.refl _) ih)
+  rfl
+  rw [Finset.sum_cons, Finset.sup_cons]
+  exact support_add.trans (Finset.union_subset_union (Finset.Subset.refl _) ih)
 
 @[simp]
 theorem sum_zero [Zero M] [AddCommMonoid N] {f : α →₀ M} : (f.sum fun _ _ => (0 : N)) = 0 :=
@@ -465,14 +465,14 @@ theorem support_sum_eq_biUnion {α : Type*} {ι : Type*} {M : Type*} [DecidableE
     (∑ i ∈ s, g i).support = s.biUnion fun i => (g i).support := by
   -- Porting note: apply Finset.induction_on s was not working; refine does.
   refine Finset.induction_on s ?_ ?_
-  · simp
-  · intro i s hi
-    simp only [hi, sum_insert, not_false_iff, biUnion_insert]
-    intro hs
-    rw [Finsupp.support_add_eq, hs]
-    rw [hs, Finset.disjoint_biUnion_right]
-    intro j hj
-    exact h _ _ (ne_of_mem_of_not_mem hj hi).symm
+  simp
+  intro i s hi
+  simp only [hi, sum_insert, not_false_iff, biUnion_insert]
+  intro hs
+  rw [Finsupp.support_add_eq, hs]
+  rw [hs, Finset.disjoint_biUnion_right]
+  intro j hj
+  exact h _ _ (ne_of_mem_of_not_mem hj hi).symm
 
 theorem multiset_map_sum [Zero M] {f : α →₀ M} {m : β → γ} {h : α → M → Multiset β} :
     Multiset.map m (f.sum h) = f.sum fun a b => (h a b).map m :=
@@ -512,10 +512,10 @@ theorem prod_dvd_prod_of_subset_of_dvd [AddCommMonoid M] [CommMonoid N] {f1 f2 :
 lemma indicator_eq_sum_attach_single [AddCommMonoid M] {s : Finset α} (f : ∀ a ∈ s, M) :
     indicator s f = ∑ x ∈ s.attach, single ↑x (f x x.2) := by
   rw [← sum_single (indicator s f), sum, sum_subset (support_indicator_subset _ _), ← sum_attach]
-  · refine Finset.sum_congr rfl (fun _ _ => ?_)
-    rw [indicator_of_mem]
-  · intro i _ hi
-    rw [not_mem_support_iff.mp hi, single_zero]
+  refine Finset.sum_congr rfl (fun _ _ => ?_)
+  rw [indicator_of_mem]
+  intro i _ hi
+  rw [not_mem_support_iff.mp hi, single_zero]
 
 lemma indicator_eq_sum_single [AddCommMonoid M] (s : Finset α) (f : α → M) :
     indicator s (fun x _ ↦ f x) = ∑ x ∈ s, single x (f x) :=

@@ -53,10 +53,10 @@ theorem trunc_one (n) : trunc (n + 1) (1 : R⟦X⟧) = 1 :=
   Polynomial.ext fun m => by
     rw [coeff_trunc, coeff_one, Polynomial.coeff_one]
     split_ifs with h _ h'
-    · rfl
-    · rfl
-    · subst h'; simp at h
-    · rfl
+    rfl
+    rfl
+    subst h'; simp at h
+    rfl
 
 @[simp]
 theorem trunc_C (n) (a : R) : trunc (n + 1) (C R a) = Polynomial.C a :=
@@ -69,8 +69,8 @@ theorem trunc_add (n) (φ ψ : R⟦X⟧) : trunc n (φ + ψ) = trunc n φ + trun
   Polynomial.ext fun m => by
     simp only [coeff_trunc, AddMonoidHom.map_add, Polynomial.coeff_add]
     split_ifs with H
-    · rfl
-    · rw [zero_add]
+    rfl
+    rw [zero_add]
 
 theorem trunc_succ (f : R⟦X⟧) (n : ℕ) :
     trunc n.succ f = trunc n f + Polynomial.monomial n (coeff R n f) := by
@@ -81,9 +81,9 @@ theorem natDegree_trunc_lt (f : R⟦X⟧) (n) : (trunc (n + 1) f).natDegree < n 
   intros
   rw [coeff_trunc]
   split_ifs with h
-  · rw [lt_succ, ← not_lt] at h
-    contradiction
-  · rfl
+  rw [lt_succ, ← not_lt] at h
+  contradiction
+  rfl
 
 @[simp] lemma trunc_zero' {f : R⟦X⟧} : trunc 0 f = 0 := rfl
 
@@ -92,9 +92,9 @@ theorem degree_trunc_lt (f : R⟦X⟧) (n) : (trunc n f).degree < n := by
   intros
   rw [coeff_trunc]
   split_ifs with h
-  · rw [← not_le] at h
-    contradiction
-  · rfl
+  rw [← not_le] at h
+  contradiction
+  rfl
 
 theorem eval₂_trunc_eq_sum_range {S : Type*} [Semiring S] (s : S) (G : R →+* S) (n) (f : R⟦X⟧) :
     (trunc n f).eval₂ G s = ∑ i ∈ range n, G (coeff R i f) * s ^ i := by
@@ -114,13 +114,13 @@ theorem eval₂_trunc_eq_sum_range {S : Type*} [Semiring S] (s : S) (G : R →+*
   ext d
   rw [coeff_trunc, coeff_X]
   split_ifs with h₁ h₂
-  · rw [h₂, coeff_X_one]
-  · rw [coeff_X_of_ne_one h₂]
-  · rw [coeff_X_of_ne_one]
-    intro hd
-    apply h₁
-    rw [hd]
-    exact n.one_lt_succ_succ
+  rw [h₂, coeff_X_one]
+  rw [coeff_X_of_ne_one h₂]
+  rw [coeff_X_of_ne_one]
+  intro hd
+  apply h₁
+  rw [hd]
+  exact n.one_lt_succ_succ
 
 lemma trunc_X_of {n : ℕ} (hn : 2 ≤ n) : trunc n X = (Polynomial.X : R[X]) := by
   cases n with
@@ -147,8 +147,8 @@ theorem trunc_trunc_of_le {n m} (f : R⟦X⟧) (hnm : n ≤ m := by rfl) :
   ext d
   rw [coeff_trunc, coeff_trunc, coeff_coe]
   split_ifs with h
-  · rw [coeff_trunc, if_pos <| lt_of_lt_of_le h hnm]
-  · rfl
+  rw [coeff_trunc, if_pos <| lt_of_lt_of_le h hnm]
+  rfl
 
 @[simp] theorem trunc_trunc {n} (f : R⟦X⟧) : trunc n ↑(trunc n f) = trunc n f :=
   trunc_trunc_of_le f
@@ -158,11 +158,11 @@ theorem trunc_trunc_of_le {n m} (f : R⟦X⟧) (hnm : n ≤ m := by rfl) :
   ext m
   rw [coeff_trunc, coeff_trunc]
   split_ifs with h
-  · rw [coeff_mul, coeff_mul, sum_congr rfl]
-    intro _ hab
-    have ha := lt_of_le_of_lt (antidiagonal.fst_le hab) h
-    rw [coeff_coe, coeff_trunc, if_pos ha]
-  · rfl
+  rw [coeff_mul, coeff_mul, sum_congr rfl]
+  intro _ hab
+  have ha := lt_of_le_of_lt (antidiagonal.fst_le hab) h
+  rw [coeff_coe, coeff_trunc, if_pos ha]
+  rfl
 
 @[simp] theorem trunc_mul_trunc {n} (f g : R ⟦X⟧) :
     trunc n (f * (trunc n g) : R⟦X⟧) = trunc n (f * g) := by

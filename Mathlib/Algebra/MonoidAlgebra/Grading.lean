@@ -142,25 +142,25 @@ theorem decomposeAux_coe {i : ι} (x : gradeBy R f i) :
   obtain ⟨x, hx⟩ := x
   revert hx
   refine Finsupp.induction x ?_ ?_
-  · intro hx
-    symm
-    exact AddMonoidHom.map_zero _
-  · intro m b y hmy hb ih hmby
-    have : Disjoint (Finsupp.single m b).support y.support
-    simpa only [Finsupp.support_single_ne_zero _ hb, Finset.disjoint_singleton_left]
-    rw [mem_gradeBy_iff, Finsupp.support_add_eq this, Finset.coe_union, Set.union_subset_iff]
-      at hmby
-    cases' hmby with h1 h2
-    have : f m = i
-    rwa [Finsupp.support_single_ne_zero _ hb, Finset.coe_singleton, Set.singleton_subset_iff]
-      at h1
-    subst this
-    simp only [map_add, Submodule.coe_mk, decomposeAux_single f m]
-    let ih' := ih h2
-    dsimp at ih'
-    rw [ih', ← AddMonoidHom.map_add]
-    apply DirectSum.of_eq_of_gradedMonoid_eq
-    congr 2
+  intro hx
+  symm
+  exact AddMonoidHom.map_zero _
+  intro m b y hmy hb ih hmby
+  have : Disjoint (Finsupp.single m b).support y.support
+  simpa only [Finsupp.support_single_ne_zero _ hb, Finset.disjoint_singleton_left]
+  rw [mem_gradeBy_iff, Finsupp.support_add_eq this, Finset.coe_union, Set.union_subset_iff]
+    at hmby
+  cases' hmby with h1 h2
+  have : f m = i
+  rwa [Finsupp.support_single_ne_zero _ hb, Finset.coe_singleton, Set.singleton_subset_iff]
+    at h1
+  subst this
+  simp only [map_add, Submodule.coe_mk, decomposeAux_single f m]
+  let ih' := ih h2
+  dsimp at ih'
+  rw [ih', ← AddMonoidHom.map_add]
+  apply DirectSum.of_eq_of_gradedMonoid_eq
+  congr 2
 
 instance gradeBy.gradedAlgebra : GradedAlgebra (gradeBy R f) :=
   GradedAlgebra.ofAlgHom _ (decomposeAux f)

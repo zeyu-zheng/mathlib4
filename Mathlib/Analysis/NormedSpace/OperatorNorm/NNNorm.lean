@@ -167,9 +167,9 @@ theorem exists_lt_apply_of_lt_opNorm {𝕜 𝕜₂ E F : Type*} [NormedAddCommGr
     [NormedSpace 𝕜 E] [NormedSpace 𝕜₂ F] [RingHomIsometric σ₁₂] (f : E →SL[σ₁₂] F) {r : ℝ}
     (hr : r < ‖f‖) : ∃ x : E, ‖x‖ < 1 ∧ r < ‖f x‖ := by
   by_cases hr₀ : r < 0
-  · exact ⟨0, by simpa using hr₀⟩
-  · lift r to ℝ≥0 using not_lt.1 hr₀
-    exact f.exists_lt_apply_of_lt_opNNNorm hr
+  exact ⟨0, by simpa using hr₀⟩
+  lift r to ℝ≥0 using not_lt.1 hr₀
+  exact f.exists_lt_apply_of_lt_opNNNorm hr
 
 @[deprecated (since := "2024-02-02")]
 alias exists_lt_apply_of_lt_op_norm := exists_lt_apply_of_lt_opNorm
@@ -180,10 +180,10 @@ theorem sSup_unit_ball_eq_nnnorm {𝕜 𝕜₂ E F : Type*} [NormedAddCommGroup 
     sSup ((fun x => ‖f x‖₊) '' ball 0 1) = ‖f‖₊ := by
   refine csSup_eq_of_forall_le_of_forall_lt_exists_gt ((nonempty_ball.mpr zero_lt_one).image _) ?_
     fun ub hub => ?_
-  · rintro - ⟨x, hx, rfl⟩
-    simpa only [mul_one] using f.le_opNorm_of_le (mem_ball_zero_iff.1 hx).le
-  · obtain ⟨x, hx, hxf⟩ := f.exists_lt_apply_of_lt_opNNNorm hub
-    exact ⟨_, ⟨x, mem_ball_zero_iff.2 hx, rfl⟩, hxf⟩
+  rintro - ⟨x, hx, rfl⟩
+  simpa only [mul_one] using f.le_opNorm_of_le (mem_ball_zero_iff.1 hx).le
+  obtain ⟨x, hx, hxf⟩ := f.exists_lt_apply_of_lt_opNNNorm hub
+  exact ⟨_, ⟨x, mem_ball_zero_iff.2 hx, rfl⟩, hxf⟩
 
 theorem sSup_unit_ball_eq_norm {𝕜 𝕜₂ E F : Type*} [NormedAddCommGroup E] [SeminormedAddCommGroup F]
     [DenselyNormedField 𝕜] [NontriviallyNormedField 𝕜₂] {σ₁₂ : 𝕜 →+* 𝕜₂} [NormedSpace 𝕜 E]

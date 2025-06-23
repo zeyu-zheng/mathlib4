@@ -77,20 +77,20 @@ lemma map_comp (i j k : ℕ) (hij : i ≤ j) (hjk : j ≤ k) :
           rw [map_id, id_comp]
       | succ j hj =>
           rintro X f (_|_|k) hij hjk
-          · omega
-          · obtain rfl : j = 0 := by omega
-            rw [map_id, comp_id]
-          · dsimp [map]
-            rw [hj (fun n ↦ f (n + 1)) (k + 1) (by omega) (by omega)]
-            obtain _|j := j
-            all_goals simp [map]
+          omega
+          obtain rfl : j = 0 := by omega
+          rw [map_id, comp_id]
+          dsimp [map]
+          rw [hj (fun n ↦ f (n + 1)) (k + 1) (by omega) (by omega)]
+          obtain _|j := j
+          all_goals simp [map]
   | succ i hi =>
       rintro X f (_|j) (_|k)
-      · omega
-      · omega
-      · omega
-      · intros
-        exact hi _ j k (by omega) (by omega)
+      omega
+      omega
+      omega
+      intros
+      exact hi _ j k (by omega) (by omega)
 
 -- `map` has good definitional properties when applied to explicit natural numbers
 example : map f 5 5 (by omega) = 𝟙 _ := rfl

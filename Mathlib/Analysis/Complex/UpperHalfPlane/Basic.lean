@@ -201,12 +201,12 @@ theorem denom_ne_zero (g : GL(2, ℝ)⁺) (z : ℍ) : denom g z ≠ 0 := by
   have H1 : (↑ₘg 1 0 : ℝ) = 0 ∨ z.im = 0
   simpa [num, denom] using congr_arg Complex.im H
   cases' H1 with H1
-  · simp only [H1, Complex.ofReal_zero, denom, zero_mul, zero_add,
-      Complex.ofReal_eq_zero] at H
-    rw [Matrix.det_fin_two (↑ₘg : Matrix (Fin 2) (Fin 2) ℝ)] at DET
-    simp only [H, H1, mul_zero, sub_zero, lt_self_iff_false] at DET
-  · change z.im > 0 at hz
-    linarith
+  simp only [H1, Complex.ofReal_zero, denom, zero_mul, zero_add,
+    Complex.ofReal_eq_zero] at H
+  rw [Matrix.det_fin_two (↑ₘg : Matrix (Fin 2) (Fin 2) ℝ)] at DET
+  simp only [H, H1, mul_zero, sub_zero, lt_self_iff_false] at DET
+  change z.im > 0 at hz
+  linarith
 
 theorem normSq_denom_pos (g : GL(2, ℝ)⁺) (z : ℍ) : 0 < Complex.normSq (denom g z) :=
   Complex.normSq_pos.mpr (denom_ne_zero g z)

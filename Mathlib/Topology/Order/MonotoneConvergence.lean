@@ -68,10 +68,10 @@ instance OrderDual.infConvergenceClass [Preorder α] [TopologicalSpace α] [SupC
 instance (priority := 100) LinearOrder.supConvergenceClass [TopologicalSpace α] [LinearOrder α]
     [OrderTopology α] : SupConvergenceClass α := by
   refine ⟨fun a s ha => tendsto_order.2 ⟨fun b hb => ?_, fun b hb => ?_⟩⟩
-  · rcases ha.exists_between hb with ⟨c, hcs, bc, bca⟩
-    lift c to s using hcs
-    exact (eventually_ge_atTop c).mono fun x hx => bc.trans_le hx
-  · exact eventually_of_forall fun x => (ha.1 x.2).trans_lt hb
+  rcases ha.exists_between hb with ⟨c, hcs, bc, bca⟩
+  lift c to s using hcs
+  exact (eventually_ge_atTop c).mono fun x hx => bc.trans_le hx
+  exact eventually_of_forall fun x => (ha.1 x.2).trans_lt hb
 
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrder.infConvergenceClass [TopologicalSpace α] [LinearOrder α]
@@ -216,10 +216,10 @@ theorem tendsto_iff_tendsto_subseq_of_monotone {ι₁ ι₂ α : Type*} [Semilat
     [NoMaxOrder α] {f : ι₂ → α} {φ : ι₁ → ι₂} {l : α} (hf : Monotone f)
     (hg : Tendsto φ atTop atTop) : Tendsto f atTop (𝓝 l) ↔ Tendsto (f ∘ φ) atTop (𝓝 l) := by
   constructor <;> intro h
-  · exact h.comp hg
-  · rcases tendsto_of_monotone hf with (h' | ⟨l', hl'⟩)
-    · exact (not_tendsto_atTop_of_tendsto_nhds h (h'.comp hg)).elim
-    · rwa [tendsto_nhds_unique h (hl'.comp hg)]
+  exact h.comp hg
+  rcases tendsto_of_monotone hf with (h' | ⟨l', hl'⟩)
+  exact (not_tendsto_atTop_of_tendsto_nhds h (h'.comp hg)).elim
+  rwa [tendsto_nhds_unique h (hl'.comp hg)]
 
 theorem tendsto_iff_tendsto_subseq_of_antitone {ι₁ ι₂ α : Type*} [SemilatticeSup ι₁] [Preorder ι₂]
     [Nonempty ι₁] [TopologicalSpace α] [ConditionallyCompleteLinearOrder α] [OrderTopology α]
@@ -260,9 +260,9 @@ theorem isLUB_of_tendsto_atTop [TopologicalSpace α] [Preorder α] [OrderClosedT
     [Nonempty β] [SemilatticeSup β] {f : β → α} {a : α} (hf : Monotone f)
     (ha : Tendsto f atTop (𝓝 a)) : IsLUB (Set.range f) a := by
   constructor
-  · rintro _ ⟨b, rfl⟩
-    exact hf.ge_of_tendsto ha b
-  · exact fun _ hb => le_of_tendsto' ha fun x => hb (Set.mem_range_self x)
+  rintro _ ⟨b, rfl⟩
+  exact hf.ge_of_tendsto ha b
+  exact fun _ hb => le_of_tendsto' ha fun x => hb (Set.mem_range_self x)
 
 theorem isGLB_of_tendsto_atBot [TopologicalSpace α] [Preorder α] [OrderClosedTopology α]
     [Nonempty β] [SemilatticeInf β] {f : β → α} {a : α} (hf : Monotone f)

@@ -279,14 +279,14 @@ theorem cons_vecAppend (ho : o + 1 = m + 1 + n) (x : α) (u : Fin m → α) (v :
   ext i
   simp_rw [vecAppend_eq_ite]
   split_ifs with h
-  · rcases i with ⟨⟨⟩ | i, hi⟩
-    · simp
-    · simp only [Nat.add_lt_add_iff_right, Fin.val_mk] at h
-      simp [h]
-  · rcases i with ⟨⟨⟩ | i, hi⟩
-    · simp at h
-    · rw [not_lt, Fin.val_mk, Nat.add_le_add_iff_right] at h
-      simp [h, not_lt.2 h]
+  rcases i with ⟨⟨⟩ | i, hi⟩
+  simp
+  simp only [Nat.add_lt_add_iff_right, Fin.val_mk] at h
+  simp [h]
+  rcases i with ⟨⟨⟩ | i, hi⟩
+  simp at h
+  rw [not_lt, Fin.val_mk, Nat.add_le_add_iff_right] at h
+  simp [h, not_lt.2 h]
 
 /-- `vecAlt0 v` gives a vector with half the length of `v`, with
 only alternate elements (even-numbered). -/
@@ -304,12 +304,12 @@ theorem vecAlt0_vecAppend (v : Fin n → α) :
   ext i
   simp_rw [Function.comp, vecAlt0, vecAppend_eq_ite]
   split_ifs with h <;> congr
-  · rw [Fin.val_mk] at h
-    exact (Nat.mod_eq_of_lt h).symm
-  · rw [Fin.val_mk, not_lt] at h
-    simp only [Fin.ext_iff, Fin.val_add, Fin.val_mk, Nat.mod_eq_sub_mod h]
-    refine (Nat.mod_eq_of_lt ?_).symm
-    omega
+  rw [Fin.val_mk] at h
+  exact (Nat.mod_eq_of_lt h).symm
+  rw [Fin.val_mk, not_lt] at h
+  simp only [Fin.ext_iff, Fin.val_add, Fin.val_mk, Nat.mod_eq_sub_mod h]
+  refine (Nat.mod_eq_of_lt ?_).symm
+  omega
 
 theorem vecAlt1_vecAppend (v : Fin (n + 1) → α) :
     vecAlt1 rfl (vecAppend rfl v v) = v ∘ (fun n ↦ (n + n) + 1) := by
@@ -321,12 +321,12 @@ theorem vecAlt1_vecAppend (v : Fin (n + 1) → α) :
     simp only [Nat.zero_eq, Nat.zero_add, Nat.lt_one_iff] at hi; subst i; rfl
   | succ n =>
     split_ifs with h <;> congr
-    · simp [Nat.mod_eq_of_lt, h]
-    · rw [Fin.val_mk, not_lt] at h
-      simp only [Fin.ext_iff, Fin.val_add, Fin.val_mk, Nat.mod_add_mod, Fin.val_one,
-        Nat.mod_eq_sub_mod h, show 1 % (n + 2) = 1 from Nat.mod_eq_of_lt (by omega)]
-      refine (Nat.mod_eq_of_lt ?_).symm
-      omega
+    simp [Nat.mod_eq_of_lt, h]
+    rw [Fin.val_mk, not_lt] at h
+    simp only [Fin.ext_iff, Fin.val_add, Fin.val_mk, Nat.mod_add_mod, Fin.val_one,
+      Nat.mod_eq_sub_mod h, show 1 % (n + 2) = 1 from Nat.mod_eq_of_lt (by omega)]
+    refine (Nat.mod_eq_of_lt ?_).symm
+    omega
 
 @[simp]
 theorem vecHead_vecAlt0 (hm : m + 2 = n + 1 + (n + 1)) (v : Fin (m + 2) → α) :
@@ -355,9 +355,9 @@ theorem cons_vecAlt0 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Fin m →
   ext i
   simp_rw [vecAlt0]
   rcases i with ⟨⟨⟩ | i, hi⟩
-  · rfl
-  · simp only [← Nat.add_assoc, Nat.add_right_comm, cons_val_succ',
-      cons_vecAppend, Nat.add_eq, vecAlt0]
+  rfl
+  simp only [← Nat.add_assoc, Nat.add_right_comm, cons_val_succ',
+    cons_vecAppend, Nat.add_eq, vecAlt0]
 
 -- Although proved by simp, extracting element 8 of a five-element
 -- vector does not work by simp unless this lemma is present.
@@ -371,8 +371,8 @@ theorem cons_vecAlt1 (h : m + 1 + 1 = n + 1 + (n + 1)) (x y : α) (u : Fin m →
   ext i
   simp_rw [vecAlt1]
   rcases i with ⟨⟨⟩ | i, hi⟩
-  · rfl
-  · simp [vecAlt1, Nat.add_right_comm, ← Nat.add_assoc]
+  rfl
+  simp [vecAlt1, Nat.add_right_comm, ← Nat.add_assoc]
 
 -- Although proved by simp, extracting element 9 of a five-element
 -- vector does not work by simp unless this lemma is present.

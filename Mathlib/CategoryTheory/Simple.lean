@@ -59,19 +59,19 @@ theorem Simple.of_iso {X Y : C} [Simple Y] (i : X ≅ Y) : Simple X :=
   { mono_isIso_iff_nonzero := fun f m => by
       haveI : Mono (f ≫ i.hom) := mono_comp _ _
       constructor
-      · intro h w
-        have j : IsIso (f ≫ i.hom) := by infer_instance
-        rw [Simple.mono_isIso_iff_nonzero] at j
-        subst w
-        simp at j
-      · intro h
-        have j : IsIso (f ≫ i.hom) := by
-          apply isIso_of_mono_of_nonzero
-          intro w
-          apply h
-          simpa using (cancel_mono i.inv).2 w
-        rw [← Category.comp_id f, ← i.hom_inv_id, ← Category.assoc]
-        infer_instance }
+      intro h w
+      have j : IsIso (f ≫ i.hom) := by infer_instance
+      rw [Simple.mono_isIso_iff_nonzero] at j
+      subst w
+      simp at j
+      intro h
+      have j : IsIso (f ≫ i.hom) := by
+        apply isIso_of_mono_of_nonzero
+        intro w
+        apply h
+        simpa using (cancel_mono i.inv).2 w
+      rw [← Category.comp_id f, ← i.hom_inv_id, ← Category.assoc]
+      infer_instance }
 
 theorem Simple.iff_of_iso {X Y : C} (i : X ≅ Y) : Simple X ↔ Simple Y :=
   ⟨fun _ => Simple.of_iso i.symm, fun _ => Simple.of_iso i⟩
@@ -136,16 +136,16 @@ theorem simple_of_cosimple (X : C) (h : ∀ {Z : C} (f : X ⟶ Z) [Epi f], IsIso
     Simple X :=
   ⟨fun {Y} f I => by
       fconstructor
-      · intros
-        have hx := cokernel.π_of_epi f
-        by_contra h
-        subst h
-        exact (h _).mp (cokernel.π_of_zero _ _) hx
-      · intro hf
-        suffices Epi f by exact isIso_of_mono_of_epi _
-        apply Preadditive.epi_of_cokernel_zero
-        by_contra h'
-        exact cokernel_not_iso_of_nonzero hf ((h _).mpr h')⟩
+      intros
+      have hx := cokernel.π_of_epi f
+      by_contra h
+      subst h
+      exact (h _).mp (cokernel.π_of_zero _ _) hx
+      intro hf
+      suffices Epi f by exact isIso_of_mono_of_epi _
+      apply Preadditive.epi_of_cokernel_zero
+      by_contra h'
+      exact cokernel_not_iso_of_nonzero hf ((h _).mpr h')⟩
 
 /-- A nonzero epimorphism from a simple object is an isomorphism. -/
 theorem isIso_of_epi_of_nonzero {X Y : C} [Simple X] {f : X ⟶ Y} [Epi f] (w : f ≠ 0) : IsIso f :=
@@ -178,12 +178,12 @@ variable [Preadditive C] [HasBinaryBiproducts C]
 theorem Biprod.isIso_inl_iff_isZero (X Y : C) : IsIso (biprod.inl : X ⟶ X ⊞ Y) ↔ IsZero Y := by
   rw [biprod.isIso_inl_iff_id_eq_fst_comp_inl, ← biprod.total, add_right_eq_self]
   constructor
-  · intro h
-    replace h := h =≫ biprod.snd
-    simpa [← IsZero.iff_isSplitEpi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] using h
-  · intro h
-    rw [IsZero.iff_isSplitEpi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] at h
-    rw [h, zero_comp]
+  intro h
+  replace h := h =≫ biprod.snd
+  simpa [← IsZero.iff_isSplitEpi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] using h
+  intro h
+  rw [IsZero.iff_isSplitEpi_eq_zero (biprod.snd : X ⊞ Y ⟶ Y)] at h
+  rw [h, zero_comp]
 
 /-- Any simple object in a preadditive category is indecomposable. -/
 theorem indecomposable_of_simple (X : C) [Simple X] : Indecomposable X :=
@@ -213,22 +213,22 @@ instance {X : C} [Simple X] : IsSimpleOrder (Subobject X) where
     rintro ⟨⟨⟨Y : C, ⟨⟨⟩⟩, f : Y ⟶ X⟩, m : Mono f⟩⟩
     change mk f = ⊥ ∨ mk f = ⊤
     by_cases h : f = 0
-    · exact Or.inl (mk_eq_bot_iff_zero.mpr h)
-    · refine Or.inr ((isIso_iff_mk_eq_top _).mp ((Simple.mono_isIso_iff_nonzero f).mpr h))
+    exact Or.inl (mk_eq_bot_iff_zero.mpr h)
+    refine Or.inr ((isIso_iff_mk_eq_top _).mp ((Simple.mono_isIso_iff_nonzero f).mpr h))
 
 /-- If `X` has subobject lattice `{⊥, ⊤}`, then `X` is simple. -/
 theorem simple_of_isSimpleOrder_subobject (X : C) [IsSimpleOrder (Subobject X)] : Simple X := by
   constructor; intros Y f hf; constructor
-  · intro i
-    rw [Subobject.isIso_iff_mk_eq_top] at i
-    intro w
-    rw [← Subobject.mk_eq_bot_iff_zero] at w
-    exact IsSimpleOrder.bot_ne_top (w.symm.trans i)
-  · intro i
-    rcases IsSimpleOrder.eq_bot_or_eq_top (Subobject.mk f) with (h | h)
-    · rw [Subobject.mk_eq_bot_iff_zero] at h
-      exact False.elim (i h)
-    · exact (Subobject.isIso_iff_mk_eq_top _).mpr h
+  intro i
+  rw [Subobject.isIso_iff_mk_eq_top] at i
+  intro w
+  rw [← Subobject.mk_eq_bot_iff_zero] at w
+  exact IsSimpleOrder.bot_ne_top (w.symm.trans i)
+  intro i
+  rcases IsSimpleOrder.eq_bot_or_eq_top (Subobject.mk f) with (h | h)
+  rw [Subobject.mk_eq_bot_iff_zero] at h
+  exact False.elim (i h)
+  exact (Subobject.isIso_iff_mk_eq_top _).mpr h
 
 /-- `X` is simple iff it has subobject lattice `{⊥, ⊤}`. -/
 theorem simple_iff_subobject_isSimpleOrder (X : C) : Simple X ↔ IsSimpleOrder (Subobject X) :=

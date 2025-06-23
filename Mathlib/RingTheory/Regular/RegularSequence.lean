@@ -557,16 +557,16 @@ lemma map_first_exact_on_four_term_right_exact_of_isSMulRegular_last
     Exact (mapQ _ _ _ (smul_top_le_comap_smul_top (Ideal.ofList rs) f₁))
           (mapQ _ _ _ (smul_top_le_comap_smul_top (Ideal.ofList rs) f₂)) := by
   induction' h₄ with _ _ _ N _ _ r rs h₄ _ ih generalizing M M₂ M₃
-  · apply (Exact.iff_of_ladder_linearEquiv ?_ ?_).mp h₁₂
-    any_goals exact quotEquivOfEqBot _ <|
-      Eq.trans (congrArg (· • ⊤) Ideal.ofList_nil) (bot_smul ⊤)
-    all_goals exact quot_hom_ext _ _ _ fun _ => rfl
-  · specialize ih
-      (map_first_exact_on_four_term_exact_of_isSMulRegular_last h₁₂ h₂₃ h₄)
-      (map_exact r h₂₃ h₃) (map_surjective r h₃)
-    have H₁ := quotOfListConsSMulTopEquivQuotSMulTopInner_naturality r rs f₁
-    have H₂ := quotOfListConsSMulTopEquivQuotSMulTopInner_naturality r rs f₂
-    exact (Exact.iff_of_ladder_linearEquiv H₁.symm H₂.symm).mp ih
+  apply (Exact.iff_of_ladder_linearEquiv ?_ ?_).mp h₁₂
+  any_goals exact quotEquivOfEqBot _ <|
+    Eq.trans (congrArg (· • ⊤) Ideal.ofList_nil) (bot_smul ⊤)
+  all_goals try exact quot_hom_ext _ _ _ fun _ => rfl
+  specialize ih
+    (map_first_exact_on_four_term_exact_of_isSMulRegular_last h₁₂ h₂₃ h₄)
+    (map_exact r h₂₃ h₃) (map_surjective r h₃)
+  have H₁ := quotOfListConsSMulTopEquivQuotSMulTopInner_naturality r rs f₁
+  have H₂ := quotOfListConsSMulTopEquivQuotSMulTopInner_naturality r rs f₂
+  exact (Exact.iff_of_ladder_linearEquiv H₁.symm H₂.symm).mp ih
 
 -- todo: modding out a complex by a regular sequence (prop 1.1.5 in B&H)
 
@@ -580,12 +580,12 @@ private lemma IsWeaklyRegular.swap {a b : R} (h1 : IsWeaklyRegular M [a, b])
   obtain ⟨ha, hb⟩ := h1
   rw [← isSMulRegular_iff_torsionBy_eq_bot] at h2
   specialize h2 (le_antisymm ?_ (smul_le_self_of_tower a (torsionBy R M b)))
-  · refine le_of_eq_of_le ?_ <| smul_top_inf_eq_smul_of_isSMulRegular_on_quot <|
-      ha.of_injective _ <| ker_eq_bot.mp <| ker_liftQ_eq_bot' _ (lsmul R M b) rfl
-    rw [← (isSMulRegular_on_quot_iff_lsmul_comap_eq _ _).mp hb]
-    exact (inf_eq_right.mpr (ker_le_comap _)).symm
-  · rwa [ha.isSMulRegular_on_quot_iff_smul_top_inf_eq_smul, inf_comm, smul_comm,
-      ← h2.isSMulRegular_on_quot_iff_smul_top_inf_eq_smul, and_iff_left hb]
+  refine le_of_eq_of_le ?_ <| smul_top_inf_eq_smul_of_isSMulRegular_on_quot <|
+    ha.of_injective _ <| ker_eq_bot.mp <| ker_liftQ_eq_bot' _ (lsmul R M b) rfl
+  rw [← (isSMulRegular_on_quot_iff_lsmul_comap_eq _ _).mp hb]
+  exact (inf_eq_right.mpr (ker_le_comap _)).symm
+  rwa [ha.isSMulRegular_on_quot_iff_smul_top_inf_eq_smul, inf_comm, smul_comm,
+    ← h2.isSMulRegular_on_quot_iff_smul_top_inf_eq_smul, and_iff_left hb]
 
 -- TODO: Equivalence of permutability of regular sequences to regularity of
 -- subsequences and regularity on poly ring. See [07DW] in stacks project
@@ -664,10 +664,10 @@ lemma _root_.LocalRing.isRegular_of_perm [LocalRing R] [IsNoetherian R M]
     IsRegular M rs' := by
   obtain ⟨h3, h4⟩ := h1
   refine ⟨LocalRing.isWeaklyRegular_of_perm_of_subset_maximalIdeal h3 h2 ?_, ?_⟩
-  · intro x (h6 : x ∈ { r | r ∈ rs })
-    refine LocalRing.le_maximalIdeal ?_ (Ideal.subset_span h6)
-    exact h4 ∘ Eq.trans (top_smul _).symm ∘ Eq.symm ∘ congrArg (· • ⊤)
-  · refine ne_of_ne_of_eq h4 (congrArg (Ideal.span · • ⊤) ?_)
-    exact Set.ext fun _ => h2.mem_iff
+  intro x (h6 : x ∈ { r | r ∈ rs })
+  refine LocalRing.le_maximalIdeal ?_ (Ideal.subset_span h6)
+  exact h4 ∘ Eq.trans (top_smul _).symm ∘ Eq.symm ∘ congrArg (· • ⊤)
+  refine ne_of_ne_of_eq h4 (congrArg (Ideal.span · • ⊤) ?_)
+  exact Set.ext fun _ => h2.mem_iff
 
 end RingTheory.Sequence

@@ -52,24 +52,24 @@ open Classical in
 theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
     (a ∈ ∏ i ∈ t, f i) ↔ ∃ (g : ι → α) (_ : ∀ {i}, i ∈ t → g i ∈ f i), ∏ i ∈ t, g i = a := by
     induction' t using Finset.induction_on with i is hi ih generalizing a
-    · simp_rw [Finset.prod_empty, Set.mem_one]
-      exact ⟨fun h ↦ ⟨fun _ ↦ a, fun hi ↦ False.elim (Finset.not_mem_empty _ hi), h.symm⟩,
-        fun ⟨_, _, hf⟩ ↦ hf.symm⟩
+    simp_rw [Finset.prod_empty, Set.mem_one]
+    exact ⟨fun h ↦ ⟨fun _ ↦ a, fun hi ↦ False.elim (Finset.not_mem_empty _ hi), h.symm⟩,
+      fun ⟨_, _, hf⟩ ↦ hf.symm⟩
     rw [Finset.prod_insert hi, Set.mem_mul]
     simp_rw [Finset.prod_insert hi]
     simp_rw [ih]
     constructor
-    · rintro ⟨x, y, hx, ⟨g, hg, rfl⟩, rfl⟩
-      refine ⟨Function.update g i x, ?_, ?_⟩
-      · intro j hj
-        obtain rfl | hj := Finset.mem_insert.mp hj
-        · rwa [Function.update_same]
-        · rw [update_noteq (ne_of_mem_of_not_mem hj hi)]
-          exact hg hj
-      · rw [Finset.prod_update_of_not_mem hi, Function.update_same]
-    · rintro ⟨g, hg, rfl⟩
-      exact ⟨g i, hg (is.mem_insert_self _), is.prod g,
-        ⟨⟨g, fun hi ↦ hg (Finset.mem_insert_of_mem hi), rfl⟩, rfl⟩⟩
+    rintro ⟨x, y, hx, ⟨g, hg, rfl⟩, rfl⟩
+    refine ⟨Function.update g i x, ?_, ?_⟩
+    intro j hj
+    obtain rfl | hj := Finset.mem_insert.mp hj
+    rwa [Function.update_same]
+    rw [update_noteq (ne_of_mem_of_not_mem hj hi)]
+    exact hg hj
+    rw [Finset.prod_update_of_not_mem hi, Function.update_same]
+    rintro ⟨g, hg, rfl⟩
+    exact ⟨g i, hg (is.mem_insert_self _), is.prod g,
+      ⟨⟨g, fun hi ↦ hg (Finset.mem_insert_of_mem hi), rfl⟩, rfl⟩⟩
 
 /-- A version of `Set.mem_finset_prod` with a simpler RHS for products over a Fintype. -/
 @[to_additive " A version of `Set.mem_finset_sum` with a simpler RHS for sums over a Fintype. "]
@@ -83,20 +83,20 @@ theorem mem_fintype_prod [Fintype ι] (f : ι → Set α) (a : α) :
 theorem list_prod_mem_list_prod (t : List ι) (f : ι → Set α) (g : ι → α) (hg : ∀ i ∈ t, g i ∈ f i) :
     (t.map g).prod ∈ (t.map f).prod := by
   induction' t with h tl ih
-  · simp_rw [List.map_nil, List.prod_nil, Set.mem_one]
-  · simp_rw [List.map_cons, List.prod_cons]
-    exact mul_mem_mul (hg h <| List.mem_cons_self _ _)
-      (ih fun i hi ↦ hg i <| List.mem_cons_of_mem _ hi)
+  simp_rw [List.map_nil, List.prod_nil, Set.mem_one]
+  simp_rw [List.map_cons, List.prod_cons]
+  exact mul_mem_mul (hg h <| List.mem_cons_self _ _)
+    (ih fun i hi ↦ hg i <| List.mem_cons_of_mem _ hi)
 
 /-- An n-ary version of `Set.mul_subset_mul`. -/
 @[to_additive " An n-ary version of `Set.add_subset_add`. "]
 theorem list_prod_subset_list_prod (t : List ι) (f₁ f₂ : ι → Set α) (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) :
     (t.map f₁).prod ⊆ (t.map f₂).prod := by
   induction' t with h tl ih
-  · rfl
-  · simp_rw [List.map_cons, List.prod_cons]
-    exact mul_subset_mul (hf h <| List.mem_cons_self _ _)
-      (ih fun i hi ↦ hf i <| List.mem_cons_of_mem _ hi)
+  rfl
+  simp_rw [List.map_cons, List.prod_cons]
+  exact mul_subset_mul (hf h <| List.mem_cons_self _ _)
+    (ih fun i hi ↦ hf i <| List.mem_cons_of_mem _ hi)
 
 @[to_additive]
 theorem list_prod_singleton {M : Type*} [CommMonoid M] (s : List M) :

@@ -64,11 +64,11 @@ open Classical in
 theorem disjoint_iff [∀ i, OrderBot (α' i)] {f g : ∀ i, α' i} :
     Disjoint f g ↔ ∀ i, Disjoint (f i) (g i) := by
   constructor
-  · intro h i x hf hg
-    exact (update_le_iff.mp <| h (update_le_iff.mpr ⟨hf, fun _ _ => bot_le⟩)
-      (update_le_iff.mpr ⟨hg, fun _ _ => bot_le⟩)).1
-  · intro h x hf hg i
-    apply h i (hf i) (hg i)
+  intro h i x hf hg
+  exact (update_le_iff.mp <| h (update_le_iff.mpr ⟨hf, fun _ _ => bot_le⟩)
+    (update_le_iff.mpr ⟨hg, fun _ _ => bot_le⟩)).1
+  intro h x hf hg i
+  apply h i (hf i) (hg i)
 
 theorem codisjoint_iff [∀ i, OrderTop (α' i)] {f g : ∀ i, α' i} :
     Codisjoint f g ↔ ∀ i, Codisjoint (f i) (g i) :=

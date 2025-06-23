@@ -363,17 +363,17 @@ theorem circleIntegral_sub_center_inv_smul_of_differentiable_on_off_countable_of
     ‖(∮ z in C(c, R), (z - c)⁻¹ • f z) - (2 * ↑π * I) • y‖ =
         ‖(∮ z in C(c, r), (z - c)⁻¹ • f z) - ∮ z in C(c, r), (z - c)⁻¹ • y‖ := by
       congr 2
-      · exact circleIntegral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable hr0
-          hrR hs (hc.mono hsub) fun z hz => hd z ⟨hsub' hz.1, hz.2⟩
-      · simp [hr0.ne']
+      exact circleIntegral_sub_center_inv_smul_eq_of_differentiable_on_annulus_off_countable hr0
+        hrR hs (hc.mono hsub) fun z hz => hd z ⟨hsub' hz.1, hz.2⟩
+      simp [hr0.ne']
     _ = ‖∮ z in C(c, r), (z - c)⁻¹ • (f z - y)‖ := by
       simp only [smul_sub]
       have hc' : ContinuousOn (fun z => (z - c)⁻¹) (sphere c r) :=
         (continuousOn_id.sub continuousOn_const).inv₀ fun z hz => sub_ne_zero.2 <| hzne _ hz
       rw [circleIntegral.integral_sub] <;> refine (hc'.smul ?_).circleIntegrable hr0.le
-      · exact hc.mono <| subset_inter
-          (sphere_subset_closedBall.trans <| closedBall_subset_closedBall hrR) hzne
-      · exact continuousOn_const
+      exact hc.mono <| subset_inter
+        (sphere_subset_closedBall.trans <| closedBall_subset_closedBall hrR) hzne
+      exact continuousOn_const
     _ ≤ 2 * π * r * (r⁻¹ * (ε / (2 * π))) := by
       refine circleIntegral.norm_integral_le_of_norm_le_const hr0.le fun z hz => ?_
       specialize hzne z hz
@@ -505,8 +505,8 @@ theorem _root_.DiffContOnCl.two_pi_i_inv_smul_circleIntegral_sub_inv_smul {R : �
   have hR : 0 < R := not_le.mp (ball_eq_empty.not.mp (Set.nonempty_of_mem hw).ne_empty)
   refine two_pi_I_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_countable
     countable_empty hw ?_ ?_
-  · simpa only [closure_ball c hR.ne.symm] using hf.continuousOn
-  · simpa only [diff_empty] using fun z hz => hf.differentiableAt isOpen_ball hz
+  simpa only [closure_ball c hR.ne.symm] using hf.continuousOn
+  simpa only [diff_empty] using fun z hz => hf.differentiableAt isOpen_ball hz
 
 /-- **Cauchy integral formula**: if `f : ℂ → E` is complex differentiable on a closed disc of radius
 `R`, then for any `w` in its interior we have $\oint_{|z-c|=R}(z-w)^{-1}f(z)\,dz=2πif(w)$. -/
@@ -612,15 +612,15 @@ theorem analyticOn_univ_iff_differentiable {f : ℂ → E} :
 theorem analyticAt_iff_eventually_differentiableAt {f : ℂ → E} {c : ℂ} :
     AnalyticAt ℂ f c ↔ ∀ᶠ z in 𝓝 c, DifferentiableAt ℂ f z := by
   constructor
-  · intro fa
-    filter_upwards [fa.eventually_analyticAt]
-    apply AnalyticAt.differentiableAt
-  · intro d
-    rcases _root_.eventually_nhds_iff.mp d with ⟨s, d, o, m⟩
-    have h : AnalyticOn ℂ f s
-    refine DifferentiableOn.analyticOn ?_ o
-    intro z m
-    exact (d z m).differentiableWithinAt
-    exact h _ m
+  intro fa
+  filter_upwards [fa.eventually_analyticAt]
+  apply AnalyticAt.differentiableAt
+  intro d
+  rcases _root_.eventually_nhds_iff.mp d with ⟨s, d, o, m⟩
+  have h : AnalyticOn ℂ f s
+  refine DifferentiableOn.analyticOn ?_ o
+  intro z m
+  exact (d z m).differentiableWithinAt
+  exact h _ m
 
 end Complex

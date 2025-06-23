@@ -115,11 +115,11 @@ theorem isFiniteMeasure_of_le (μ : Measure α) [IsFiniteMeasure μ] (h : ν ≤
 theorem Measure.isFiniteMeasure_map {m : MeasurableSpace α} (μ : Measure α) [IsFiniteMeasure μ]
     (f : α → β) : IsFiniteMeasure (μ.map f) := by
   by_cases hf : AEMeasurable f μ
-  · constructor
-    rw [map_apply_of_aemeasurable hf MeasurableSet.univ]
-    exact measure_lt_top μ _
-  · rw [map_of_not_aemeasurable hf]
-    exact MeasureTheory.isFiniteMeasureZero
+  constructor
+  rw [map_apply_of_aemeasurable hf MeasurableSet.univ]
+  exact measure_lt_top μ _
+  rw [map_of_not_aemeasurable hf]
+  exact MeasureTheory.isFiniteMeasureZero
 
 @[simp]
 theorem measureUnivNNReal_eq_zero [IsFiniteMeasure μ] : measureUnivNNReal μ = 0 ↔ μ = 0 := by
@@ -518,10 +518,10 @@ lemma sfinite_sum_of_countable [Countable ι]
   obtain ⟨f, hf⟩ : ∃ f : ι → ℕ, Function.Injective f := Countable.exists_injective_nat ι
   refine ⟨_, fun n ↦ ?_, (sum_extend_zero hf m).symm⟩
   rcases Classical.em (n ∈ range f) with ⟨i, rfl⟩ | hn
-  · rw [hf.extend_apply]
-    infer_instance
-  · rw [Function.extend_apply' _ _ _ hn, Pi.zero_apply]
-    infer_instance
+  rw [hf.extend_apply]
+  infer_instance
+  rw [Function.extend_apply' _ _ _ hn, Pi.zero_apply]
+  infer_instance
 
 instance [Countable ι] (m : ι → Measure α) [∀ n, SFinite (m n)] : SFinite (Measure.sum m) := by
   change SFinite (Measure.sum (fun i ↦ m i))
@@ -544,12 +544,12 @@ theorem exists_absolutelyContinuous_isFiniteMeasure [SFinite μ] :
   rcases ENNReal.exists_pos_tsum_mul_lt_of_countable top_ne_zero (sFiniteSeq μ · univ)
     fun _ ↦ measure_ne_top _ _ with ⟨c, hc₀, hc⟩
   refine ⟨.sum fun n ↦ c n • sFiniteSeq μ n, ⟨?_⟩, ?_⟩
-  · simpa [mul_comm] using hc
-  · refine AbsolutelyContinuous.mk fun s hsm hs ↦ ?_
-    have : ∀ n, (sFiniteSeq μ n) s = 0
-    simpa [hsm, (hc₀ _).ne'] using hs
-    rw [← sum_sFiniteSeq μ, sum_apply _ hsm]
-    simp [this]
+  simpa [mul_comm] using hc
+  refine AbsolutelyContinuous.mk fun s hsm hs ↦ ?_
+  have : ∀ n, (sFiniteSeq μ n) s = 0
+  simpa [hsm, (hc₀ _).ne'] using hs
+  rw [← sum_sFiniteSeq μ, sum_apply _ hsm]
+  simp [this]
 
 end SFinite
 
@@ -736,15 +736,15 @@ theorem countable_meas_pos_of_disjoint_iUnion₀ {ι : Type*} {_ : MeasurableSpa
     by_contra con
     simp only [mem_iUnion, mem_setOf_eq, not_exists, not_lt, nonpos_iff_eq_zero] at *
     rw [sum_apply₀] at hi
-    · simp_rw [con] at hi
-      simp at hi
-    · exact As_mble i
+    simp_rw [con] at hi
+    simp at hi
+    exact As_mble i
   apply Countable.mono obs
   refine countable_iUnion fun n ↦ ?_
   apply countable_meas_pos_of_disjoint_of_meas_iUnion_ne_top₀
-  · exact fun i ↦ (As_mble i).mono (le_sum _ _)
-  · exact fun i j hij ↦ AEDisjoint.of_le (As_disj hij) (le_sum _ _)
-  · exact measure_ne_top _ (⋃ i, As i)
+  exact fun i ↦ (As_mble i).mono (le_sum _ _)
+  exact fun i j hij ↦ AEDisjoint.of_le (As_disj hij) (le_sum _ _)
+  exact measure_ne_top _ (⋃ i, As i)
 
 /-- In an s-finite space, among disjoint measurable sets, only countably many can have positive
 measure. -/
@@ -796,9 +796,9 @@ theorem measure_toMeasurable_inter_of_sum {s : Set α} (hs : MeasurableSet s) {t
   -- by `toMeasurable μ t`, which is enough to conclude the proof.
   rw [toMeasurable]
   split_ifs with ht
-  · apply measure_congr
-    exact ae_eq_set_inter ht.choose_spec.2.2 (ae_eq_refl _)
-  · exact A.choose_spec.2.2 s hs
+  apply measure_congr
+  exact ae_eq_set_inter ht.choose_spec.2.2 (ae_eq_refl _)
+  exact A.choose_spec.2.2 s hs
 
 /-- If a set `t` is covered by a countable family of finite measure sets, then its measurable
 superset `toMeasurable μ t` (which has the same measure as `t`) satisfies,
@@ -853,19 +853,19 @@ theorem measure_toMeasurable_inter_of_cover {s : Set α} (hs : MeasurableSet s) 
       exact measurableSet_toMeasurable _ _
     _ = μ.restrict (t ∩ u) (⋃ n, disjointed w n) := by
       rw [measure_iUnion]
-      · exact disjoint_disjointed _
-      · intro i
-        refine MeasurableSet.disjointed (fun n => ?_) i
-        exact measurableSet_toMeasurable _ _
+      exact disjoint_disjointed _
+      intro i
+      refine MeasurableSet.disjointed (fun n => ?_) i
+      exact measurableSet_toMeasurable _ _
     _ ≤ μ.restrict (t ∩ u) univ := measure_mono (subset_univ _)
     _ = μ (t ∩ u) := by rw [restrict_apply MeasurableSet.univ, univ_inter]
   -- thanks to the definition of `toMeasurable`, the previous property will also be shared
   -- by `toMeasurable μ t`, which is enough to conclude the proof.
   rw [toMeasurable]
   split_ifs with ht
-  · apply measure_congr
-    exact ae_eq_set_inter ht.choose_spec.2.2 (ae_eq_refl _)
-  · exact A.choose_spec.2.2 s hs
+  apply measure_congr
+  exact ae_eq_set_inter ht.choose_spec.2.2 (ae_eq_refl _)
+  exact A.choose_spec.2.2 s hs
 
 theorem restrict_toMeasurable_of_cover {s : Set α} {v : ℕ → Set α} (hv : s ⊆ ⋃ n, v n)
     (h'v : ∀ n, μ (s ∩ v n) ≠ ∞) : μ.restrict (toMeasurable μ s) = μ.restrict s :=
@@ -995,8 +995,8 @@ theorem sigmaFinite_bot_iff (μ : @Measure α ⊥) : SigmaFinite μ ↔ IsFinite
   have hs_meas : ∀ i, MeasurableSet[⊥] (s i) := measurable_spanningSets μ
   simp_rw [MeasurableSpace.measurableSet_bot_iff] at hs_meas
   by_cases h_univ_empty : (Set.univ : Set α) = ∅
-  · rw [h_univ_empty, measure_empty]
-    exact ENNReal.zero_ne_top.lt_top
+  rw [h_univ_empty, measure_empty]
+  exact ENNReal.zero_ne_top.lt_top
   obtain ⟨i, hsi⟩ : ∃ i, s i = Set.univ := by
     by_contra! h_not_univ
     have h_empty : ∀ i, s i = ∅
@@ -1019,12 +1019,12 @@ instance sum.sigmaFinite {ι} [Finite ι] (μ : ι → Measure α) [∀ i, Sigma
   apply fun n =>
     MeasurableSet.iInter fun i => measurable_spanningSets (μ i) n
   refine ⟨⟨⟨fun n => ⋂ i, spanningSets (μ i) n, fun _ => trivial, fun n => ?_, ?_⟩⟩⟩
-  · rw [sum_apply _ (this n), tsum_fintype, ENNReal.sum_lt_top_iff]
-    rintro i -
-    exact (measure_mono <| iInter_subset _ i).trans_lt (measure_spanningSets_lt_top (μ i) n)
-  · rw [iUnion_iInter_of_monotone]
-    · simp_rw [iUnion_spanningSets, iInter_univ]
-    exact fun i => monotone_spanningSets (μ i)
+  rw [sum_apply _ (this n), tsum_fintype, ENNReal.sum_lt_top_iff]
+  rintro i -
+  exact (measure_mono <| iInter_subset _ i).trans_lt (measure_spanningSets_lt_top (μ i) n)
+  rw [iUnion_iInter_of_monotone]
+  simp_rw [iUnion_spanningSets, iInter_univ]
+  exact fun i => monotone_spanningSets (μ i)
 
 instance Add.sigmaFinite (μ ν : Measure α) [SigmaFinite μ] [SigmaFinite ν] :
     SigmaFinite (μ + ν) := by
@@ -1053,12 +1053,12 @@ lemma _root_.MeasurableEmbedding.sigmaFinite_map {f : α → β} (hf : Measurabl
     [SigmaFinite μ] :
     SigmaFinite (μ.map f) := by
   refine ⟨fun n ↦ f '' (spanningSets μ n) ∪ (Set.range f)ᶜ, by simp, fun n ↦ ?_, ?_⟩
-  · rw [hf.map_apply, Set.preimage_union]
-    simp only [Set.preimage_compl, Set.preimage_range, Set.compl_univ, Set.union_empty,
-      Set.preimage_image_eq _ hf.injective]
-    exact measure_spanningSets_lt_top μ n
-  · rw [← Set.iUnion_union, ← Set.image_iUnion, iUnion_spanningSets,
-      Set.image_univ, Set.union_compl_self]
+  rw [hf.map_apply, Set.preimage_union]
+  simp only [Set.preimage_compl, Set.preimage_range, Set.compl_univ, Set.union_empty,
+    Set.preimage_image_eq _ hf.injective]
+  exact measure_spanningSets_lt_top μ n
+  rw [← Set.iUnion_union, ← Set.image_iUnion, iUnion_spanningSets,
+    Set.image_univ, Set.union_compl_self]
 
 theorem _root_.MeasurableEquiv.sigmaFinite_map (f : α ≃ᵐ β) [SigmaFinite μ] :
     SigmaFinite (μ.map f) := f.measurableEmbedding.sigmaFinite_map
@@ -1235,14 +1235,14 @@ theorem ext_on_measurableSpace_of_generate_finite {α} (m₀ : MeasurableSpace �
     rw [← h_univ]
     apply IsFiniteMeasure.measure_univ_lt_top
   refine induction_on_inter hA hC (by simp) hμν ?_ ?_ hs
-  · intro t h1t h2t
-    have h1t_ : @MeasurableSet α m₀ t := h _ h1t
-    rw [@measure_compl α m₀ μ t h1t_ (@measure_ne_top α m₀ μ _ t),
-      @measure_compl α m₀ ν t h1t_ (@measure_ne_top α m₀ ν _ t), h_univ, h2t]
-  · intro f h1f h2f h3f
-    have h2f_ : ∀ i : ℕ, @MeasurableSet α m₀ (f i)
-    apply fun i => h _ (h2f i)
-    simp [measure_iUnion, h1f, h3f, h2f_]
+  intro t h1t h2t
+  have h1t_ : @MeasurableSet α m₀ t := h _ h1t
+  rw [@measure_compl α m₀ μ t h1t_ (@measure_ne_top α m₀ μ _ t),
+    @measure_compl α m₀ ν t h1t_ (@measure_ne_top α m₀ ν _ t), h_univ, h2t]
+  intro f h1f h2f h3f
+  have h2f_ : ∀ i : ℕ, @MeasurableSet α m₀ (f i)
+  apply fun i => h _ (h2f i)
+  simp [measure_iUnion, h1f, h3f, h2f_]
 
 /-- Two finite measures are equal if they are equal on the π-system generating the σ-algebra
   (and `univ`). -/
@@ -1346,17 +1346,17 @@ superset of finite measure. -/
 theorem exists_open_superset_measure_lt_top' (h : IsCompact s)
     (hμ : ∀ x ∈ s, μ.FiniteAtFilter (𝓝 x)) : ∃ U ⊇ s, IsOpen U ∧ μ U < ∞ := by
   refine IsCompact.induction_on h ?_ ?_ ?_ ?_
-  · use ∅
-    simp [Superset]
-  · rintro s t hst ⟨U, htU, hUo, hU⟩
-    exact ⟨U, hst.trans htU, hUo, hU⟩
-  · rintro s t ⟨U, hsU, hUo, hU⟩ ⟨V, htV, hVo, hV⟩
-    refine
-      ⟨U ∪ V, union_subset_union hsU htV, hUo.union hVo,
-        (measure_union_le _ _).trans_lt <| ENNReal.add_lt_top.2 ⟨hU, hV⟩⟩
-  · intro x hx
-    rcases (hμ x hx).exists_mem_basis (nhds_basis_opens _) with ⟨U, ⟨hx, hUo⟩, hU⟩
-    exact ⟨U, nhdsWithin_le_nhds (hUo.mem_nhds hx), U, Subset.rfl, hUo, hU⟩
+  use ∅
+  simp [Superset]
+  rintro s t hst ⟨U, htU, hUo, hU⟩
+  exact ⟨U, hst.trans htU, hUo, hU⟩
+  rintro s t ⟨U, hsU, hUo, hU⟩ ⟨V, htV, hVo, hV⟩
+  refine
+    ⟨U ∪ V, union_subset_union hsU htV, hUo.union hVo,
+      (measure_union_le _ _).trans_lt <| ENNReal.add_lt_top.2 ⟨hU, hV⟩⟩
+  intro x hx
+  rcases (hμ x hx).exists_mem_basis (nhds_basis_opens _) with ⟨U, ⟨hx, hUo⟩, hU⟩
+  exact ⟨U, nhdsWithin_le_nhds (hUo.mem_nhds hx), U, Subset.rfl, hUo, hU⟩
 
 /-- If `s` is a compact set and `μ` is a locally finite measure, then `s` admits an open superset of
 finite measure. -/
@@ -1385,8 +1385,8 @@ theorem isFiniteMeasure_iff_isFiniteMeasureOnCompacts_of_compactSpace [Topologic
     [MeasurableSpace α] {μ : Measure α} [CompactSpace α] :
     IsFiniteMeasure μ ↔ IsFiniteMeasureOnCompacts μ := by
   constructor <;> intros
-  · infer_instance
-  · exact CompactSpace.isFiniteMeasure
+  infer_instance
+  exact CompactSpace.isFiniteMeasure
 
 /-- Compact covering of a `σ`-compact topological space as
 `MeasureTheory.Measure.FiniteSpanningSetsIn`. -/

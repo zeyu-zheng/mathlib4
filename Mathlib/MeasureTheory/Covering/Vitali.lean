@@ -109,47 +109,47 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
   obtain ⟨a', a'A, ha'⟩ : ∃ a' ∈ A, m / τ ≤ δ a' := by
     have : 0 ≤ m := (δnonneg a hat).trans (le_csSup bddA (mem_image_of_mem _ ⟨hat, a_disj⟩))
     rcases eq_or_lt_of_le this with (mzero | mpos)
-    · refine ⟨a, ⟨hat, a_disj⟩, ?_⟩
-      simpa only [← mzero, zero_div] using δnonneg a hat
-    · have I : m / τ < m
-      rw [div_lt_iff (zero_lt_one.trans hτ)]
-      conv_lhs => rw [← mul_one m]
-      exact (mul_lt_mul_left mpos).2 hτ
-      rcases exists_lt_of_lt_csSup (Anonempty.image _) I with ⟨x, xA, hx⟩
-      rcases (mem_image _ _ _).1 xA with ⟨a', ha', rfl⟩
-      exact ⟨a', ha', hx.le⟩
+    refine ⟨a, ⟨hat, a_disj⟩, ?_⟩
+    simpa only [← mzero, zero_div] using δnonneg a hat
+    have I : m / τ < m
+    rw [div_lt_iff (zero_lt_one.trans hτ)]
+    conv_lhs => rw [← mul_one m]
+    exact (mul_lt_mul_left mpos).2 hτ
+    rcases exists_lt_of_lt_csSup (Anonempty.image _) I with ⟨x, xA, hx⟩
+    rcases (mem_image _ _ _).1 xA with ⟨a', ha', rfl⟩
+    exact ⟨a', ha', hx.le⟩
   clear hat hu a_disj a
   have a'_ne_u : a' ∉ u := fun H => (hne _ a'A.1).ne_empty (disjoint_self.1 (a'A.2 _ H))
   -- we claim that `u ∪ {a'}` still belongs to `T`, contradicting the maximality of `u`.
   refine ⟨insert a' u, ⟨?_, ?_, ?_⟩, subset_insert _ _, (ne_insert_of_not_mem _ a'_ne_u).symm⟩
-  · -- check that `u ∪ {a'}` is made of elements of `t`.
-    rw [insert_subset_iff]
-    exact ⟨a'A.1, uT.1⟩
-  · -- Check that `u ∪ {a'}` is a disjoint family. This follows from the fact that `a'` does not
-    -- intersect `u`.
-    exact uT.2.1.insert fun b bu _ => a'A.2 b bu
-  · -- check that every element `c` of `t` intersecting `u ∪ {a'}` intersects an element of this
-    -- family with large `δ`.
-    intro c ct b ba'u hcb
-    -- if `c` already intersects an element of `u`, then it intersects an element of `u` with
-    -- large `δ` by the assumption on `u`, and there is nothing left to do.
-    by_cases H : ∃ d ∈ u, (B c ∩ B d).Nonempty
-    · rcases H with ⟨d, du, hd⟩
-      rcases uT.2.2 c ct d du hd with ⟨d', d'u, hd'⟩
-      exact ⟨d', mem_insert_of_mem _ d'u, hd'⟩
-    · -- Otherwise, `c` belongs to `A`. The element of `u ∪ {a'}` that it intersects has to be `a'`.
-      -- Moreover, `δ c` is smaller than the maximum `m` of `δ` over `A`, which is `≤ δ a' / τ`
-      -- thanks to the good choice of `a'`. This is the desired inequality.
-      push_neg at H
-      simp only [← disjoint_iff_inter_eq_empty] at H
-      rcases mem_insert_iff.1 ba'u with (rfl | H')
-      · refine ⟨b, mem_insert _ _, hcb, ?_⟩
-        calc
-          δ c ≤ m := le_csSup bddA (mem_image_of_mem _ ⟨ct, H⟩)
-          _ = τ * (m / τ) := by field_simp [(zero_lt_one.trans hτ).ne']
-          _ ≤ τ * δ b := by gcongr
-      · rw [← not_disjoint_iff_nonempty_inter] at hcb
-        exact (hcb (H _ H')).elim
+  -- check that `u ∪ {a'}` is made of elements of `t`.
+  rw [insert_subset_iff]
+  exact ⟨a'A.1, uT.1⟩
+  -- Check that `u ∪ {a'}` is a disjoint family. This follows from the fact that `a'` does not
+  -- intersect `u`.
+  exact uT.2.1.insert fun b bu _ => a'A.2 b bu
+  -- check that every element `c` of `t` intersecting `u ∪ {a'}` intersects an element of this
+  -- family with large `δ`.
+  intro c ct b ba'u hcb
+  -- if `c` already intersects an element of `u`, then it intersects an element of `u` with
+  -- large `δ` by the assumption on `u`, and there is nothing left to do.
+  by_cases H : ∃ d ∈ u, (B c ∩ B d).Nonempty
+  rcases H with ⟨d, du, hd⟩
+  rcases uT.2.2 c ct d du hd with ⟨d', d'u, hd'⟩
+  exact ⟨d', mem_insert_of_mem _ d'u, hd'⟩
+  -- Otherwise, `c` belongs to `A`. The element of `u ∪ {a'}` that it intersects has to be `a'`.
+  -- Moreover, `δ c` is smaller than the maximum `m` of `δ` over `A`, which is `≤ δ a' / τ`
+  -- thanks to the good choice of `a'`. This is the desired inequality.
+  push_neg at H
+  simp only [← disjoint_iff_inter_eq_empty] at H
+  rcases mem_insert_iff.1 ba'u with (rfl | H')
+  refine ⟨b, mem_insert _ _, hcb, ?_⟩
+  calc
+    δ c ≤ m := le_csSup bddA (mem_image_of_mem _ ⟨ct, H⟩)
+    _ = τ * (m / τ) := by field_simp [(zero_lt_one.trans hτ).ne']
+    _ ≤ τ * δ b := by gcongr
+  rw [← not_disjoint_iff_nonempty_inter] at hcb
+  exact (hcb (H _ H')).elim
 
 /-- Vitali covering theorem, closed balls version: given a family `t` of closed balls, one can
 extract a disjoint subfamily `u ⊆ t` so that all balls in `t` are covered by the τ-times
@@ -160,16 +160,16 @@ theorem exists_disjoint_subfamily_covering_enlargment_closedBall [MetricSpace α
       (u.PairwiseDisjoint fun a => closedBall (x a) (r a)) ∧
         ∀ a ∈ t, ∃ b ∈ u, closedBall (x a) (r a) ⊆ closedBall (x b) (τ * r b) := by
   rcases eq_empty_or_nonempty t with (rfl | _)
-  · exact ⟨∅, Subset.refl _, pairwiseDisjoint_empty, by simp⟩
+  exact ⟨∅, Subset.refl _, pairwiseDisjoint_empty, by simp⟩
   by_cases ht : ∀ a ∈ t, r a < 0
-  · exact ⟨t, Subset.rfl, fun a ha b _ _ => by
-      #adaptation_note /-- nightly-2024-03-16
-      Previously `Function.onFun` unfolded in the following `simp only`,
-      but now needs a separate `rw`.
-      This may be a bug: a no import minimization may be required. -/
-      rw [Function.onFun]
-      simp only [Function.onFun, closedBall_eq_empty.2 (ht a ha), empty_disjoint],
-      fun a ha => ⟨a, ha, by simp only [closedBall_eq_empty.2 (ht a ha), empty_subset]⟩⟩
+  exact ⟨t, Subset.rfl, fun a ha b _ _ => by
+    #adaptation_note /-- nightly-2024-03-16
+    Previously `Function.onFun` unfolded in the following `simp only`,
+    but now needs a separate `rw`.
+    This may be a bug: a no import minimization may be required. -/
+    rw [Function.onFun]
+    simp only [Function.onFun, closedBall_eq_empty.2 (ht a ha), empty_disjoint],
+    fun a ha => ⟨a, ha, by simp only [closedBall_eq_empty.2 (ht a ha), empty_subset]⟩⟩
   push_neg at ht
   let t' := { a ∈ t | 0 ≤ r a }
   rcases exists_disjoint_subfamily_covering_enlargment (fun a => closedBall (x a) (r a)) t' r
@@ -185,10 +185,10 @@ theorem exists_disjoint_subfamily_covering_enlargment_closedBall [MetricSpace α
   linarith
   refine ⟨u, ut'.trans fun a ha => ha.1, u_disj, fun a ha => ?_⟩
   rcases le_or_lt 0 (r a) with (h'a | h'a)
-  · exact A a ⟨ha, h'a⟩
-  · rcases ht with ⟨b, rb⟩
-    rcases A b ⟨rb.1, rb.2⟩ with ⟨c, cu, _⟩
-    exact ⟨c, cu, by simp only [closedBall_eq_empty.2 h'a, empty_subset]⟩
+  exact A a ⟨ha, h'a⟩
+  rcases ht with ⟨b, rb⟩
+  rcases A b ⟨rb.1, rb.2⟩ with ⟨c, cu, _⟩
+  exact ⟨c, cu, by simp only [closedBall_eq_empty.2 h'a, empty_subset]⟩
 
 /-- The measurable Vitali covering theorem. Assume one is given a family `t` of closed sets with
 nonempty interior, such that each `a ∈ t` is included in a ball `B (x, r)` and covers a definite
@@ -270,32 +270,32 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     rcases (mem_image _ _ _).1 hr' with ⟨b, hb, rfl⟩
     exact le_trans (ut' (vu hb)).2 (hR1 (c b))
     rcases le_total R0 (R x) with (H | H)
-    · refine ⟨20 * R x, hRμ x, fun a au hax => ?_⟩
-      refine (hB a (ut au)).trans ?_
-      apply closedBall_subset_closedBall'
-      have : r a ≤ R0 := le_csSup R0_bdd (mem_image_of_mem _ ⟨au, hax⟩)
-      linarith [Idist_v a ⟨au, hax⟩, hR0 x]
-    · have R0pos : 0 < R0 := (hR0 x).trans_le H
-      have vnonempty : v.Nonempty
-      by_contra h
-      rw [nonempty_iff_ne_empty, Classical.not_not] at h
-      rw [h, image_empty, Real.sSup_empty] at R0_def
-      exact lt_irrefl _ (R0pos.trans_le (le_of_eq R0_def))
-      obtain ⟨a, hav, R0a⟩ : ∃ a ∈ v, R0 / 2 < r a := by
-        obtain ⟨r', r'mem, hr'⟩ : ∃ r' ∈ r '' v, R0 / 2 < r' :=
-          exists_lt_of_lt_csSup (vnonempty.image _) (half_lt_self R0pos)
-        rcases (mem_image _ _ _).1 r'mem with ⟨a, hav, rfl⟩
-        exact ⟨a, hav, hr'⟩
-      refine ⟨8 * R0, ?_, ?_⟩
-      · apply lt_of_le_of_lt (measure_mono _) (hRμ (c a))
-        apply closedBall_subset_closedBall'
-        rw [dist_comm]
-        linarith [Idist_v a hav, (ut' (vu hav)).2]
-      · intro b bu hbx
-        refine (hB b (ut bu)).trans ?_
-        apply closedBall_subset_closedBall'
-        have : r b ≤ R0 := le_csSup R0_bdd (mem_image_of_mem _ ⟨bu, hbx⟩)
-        linarith [Idist_v b ⟨bu, hbx⟩]
+    refine ⟨20 * R x, hRμ x, fun a au hax => ?_⟩
+    refine (hB a (ut au)).trans ?_
+    apply closedBall_subset_closedBall'
+    have : r a ≤ R0 := le_csSup R0_bdd (mem_image_of_mem _ ⟨au, hax⟩)
+    linarith [Idist_v a ⟨au, hax⟩, hR0 x]
+    have R0pos : 0 < R0 := (hR0 x).trans_le H
+    have vnonempty : v.Nonempty
+    by_contra h
+    rw [nonempty_iff_ne_empty, Classical.not_not] at h
+    rw [h, image_empty, Real.sSup_empty] at R0_def
+    exact lt_irrefl _ (R0pos.trans_le (le_of_eq R0_def))
+    obtain ⟨a, hav, R0a⟩ : ∃ a ∈ v, R0 / 2 < r a := by
+      obtain ⟨r', r'mem, hr'⟩ : ∃ r' ∈ r '' v, R0 / 2 < r' :=
+        exists_lt_of_lt_csSup (vnonempty.image _) (half_lt_self R0pos)
+      rcases (mem_image _ _ _).1 r'mem with ⟨a, hav, rfl⟩
+      exact ⟨a, hav, hr'⟩
+    refine ⟨8 * R0, ?_, ?_⟩
+    apply lt_of_le_of_lt (measure_mono _) (hRμ (c a))
+    apply closedBall_subset_closedBall'
+    rw [dist_comm]
+    linarith [Idist_v a hav, (ut' (vu hav)).2]
+    intro b bu hbx
+    refine (hB b (ut bu)).trans ?_
+    apply closedBall_subset_closedBall'
+    have : r b ≤ R0 := le_csSup R0_bdd (mem_image_of_mem _ ⟨bu, hbx⟩)
+    linarith [Idist_v b ⟨bu, hbx⟩]
   -- we will show that, in `ball x (R x)`, almost all `s` is covered by the family `u`.
   refine ⟨_ ∩ ball x (R x), inter_mem_nhdsWithin _ (ball_mem_nhds _ (hR0 _)),
     nonpos_iff_eq_zero.mp (le_of_forall_le_of_dense fun ε εpos => ?_)⟩

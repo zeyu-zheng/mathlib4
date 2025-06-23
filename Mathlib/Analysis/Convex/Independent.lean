@@ -123,23 +123,23 @@ points. See `convexIndependent_set_iff_not_mem_convexHull_diff` for the `Set` ve
 theorem convexIndependent_iff_not_mem_convexHull_diff {p : ι → E} :
     ConvexIndependent 𝕜 p ↔ ∀ i s, p i ∉ convexHull 𝕜 (p '' (s \ {i})) := by
   refine ⟨fun hc i s h => ?_, fun h s i hi => ?_⟩
-  · rw [hc.mem_convexHull_iff] at h
-    exact h.2 (Set.mem_singleton _)
-  · by_contra H
-    refine h i s ?_
-    rw [Set.diff_singleton_eq_self H]
-    exact hi
+  rw [hc.mem_convexHull_iff] at h
+  exact h.2 (Set.mem_singleton _)
+  by_contra H
+  refine h i s ?_
+  rw [Set.diff_singleton_eq_self H]
+  exact hi
 
 theorem convexIndependent_set_iff_inter_convexHull_subset {s : Set E} :
     ConvexIndependent 𝕜 ((↑) : s → E) ↔ ∀ t, t ⊆ s → s ∩ convexHull 𝕜 t ⊆ t := by
   constructor
-  · rintro hc t h x ⟨hxs, hxt⟩
-    refine hc { x | ↑x ∈ t } ⟨x, hxs⟩ ?_
-    rw [Subtype.coe_image_of_subset h]
-    exact hxt
-  · intro hc t x h
-    rw [← Subtype.coe_injective.mem_set_image]
-    exact hc (t.image ((↑) : s → E)) (Subtype.coe_image_subset s t) ⟨x.prop, h⟩
+  rintro hc t h x ⟨hxs, hxt⟩
+  refine hc { x | ↑x ∈ t } ⟨x, hxs⟩ ?_
+  rw [Subtype.coe_image_of_subset h]
+  exact hxt
+  intro hc t x h
+  rw [← Subtype.coe_injective.mem_set_image]
+  exact hc (t.image ((↑) : s → E)) (Subtype.coe_image_subset s t) ⟨x.prop, h⟩
 
 /-- If a set is convex independent, a point in the set is not in the convex hull of the other
 points. See `convexIndependent_iff_not_mem_convexHull_diff` for the indexed family version. -/
@@ -147,11 +147,11 @@ theorem convexIndependent_set_iff_not_mem_convexHull_diff {s : Set E} :
     ConvexIndependent 𝕜 ((↑) : s → E) ↔ ∀ x ∈ s, x ∉ convexHull 𝕜 (s \ {x}) := by
   rw [convexIndependent_set_iff_inter_convexHull_subset]
   constructor
-  · rintro hs x hxs hx
-    exact (hs _ Set.diff_subset ⟨hxs, hx⟩).2 (Set.mem_singleton _)
-  · rintro hs t ht x ⟨hxs, hxt⟩
-    by_contra h
-    exact hs _ hxs (convexHull_mono (Set.subset_diff_singleton ht h) hxt)
+  rintro hs x hxs hx
+  exact (hs _ Set.diff_subset ⟨hxs, hx⟩).2 (Set.mem_singleton _)
+  rintro hs t ht x ⟨hxs, hxt⟩
+  by_contra h
+  exact hs _ hxs (convexHull_mono (Set.subset_diff_singleton ht h) hxt)
 
 end OrderedSemiring
 
@@ -164,7 +164,7 @@ theorem convexIndependent_iff_finset {p : ι → E} :
     ConvexIndependent 𝕜 p ↔
       ∀ (s : Finset ι) (x : ι), p x ∈ convexHull 𝕜 (s.image p : Set E) → x ∈ s := by
   refine ⟨fun hc s x hx => hc s x ?_, fun h s x hx => ?_⟩
-  · rwa [Finset.coe_image] at hx
+  rwa [Finset.coe_image] at hx
   have hp : Injective p
   rintro a b hab
   rw [← mem_singleton]

@@ -67,16 +67,16 @@ lemma essFiniteType_cond_iff (σ : Finset S) :
     (∀ s : S, ∃ t ∈ Algebra.adjoin R (σ : Set S),
       IsUnit t ∧ s * t ∈ Algebra.adjoin R (σ : Set S)) := by
   constructor <;> intro hσ
-  · intro s
-    obtain ⟨⟨⟨x, hx⟩, ⟨t, ht⟩, ht'⟩, h⟩ := hσ.2 s
-    exact ⟨t, ht, ht', h ▸ hx⟩
-  · constructor
-    · exact fun y ↦ y.prop
-    · intro s
-      obtain ⟨t, ht, ht', h⟩ := hσ s
-      exact ⟨⟨⟨_, h⟩, ⟨t, ht⟩, ht'⟩, rfl⟩
-    · intros x y e
-      exact ⟨1, by simpa using Subtype.ext e⟩
+  intro s
+  obtain ⟨⟨⟨x, hx⟩, ⟨t, ht⟩, ht'⟩, h⟩ := hσ.2 s
+  exact ⟨t, ht, ht', h ▸ hx⟩
+  constructor
+  exact fun y ↦ y.prop
+  intro s
+  obtain ⟨t, ht, ht', h⟩ := hσ s
+  exact ⟨⟨⟨_, h⟩, ⟨t, ht⟩, ht'⟩, rfl⟩
+  intros x y e
+  exact ⟨1, by simpa using Subtype.ext e⟩
 
 lemma essFiniteType_iff :
     EssFiniteType R S ↔ ∃ (σ : Finset S),
@@ -108,24 +108,24 @@ lemma EssFiniteType.aux (σ : Subalgebra R S)
     (τ : Set T) (t : T) (ht : t ∈ Algebra.adjoin S τ) :
     ∃ s ∈ σ, IsUnit s ∧ s • t ∈ σ.map (IsScalarTower.toAlgHom R S T) ⊔ Algebra.adjoin R τ := by
   refine Algebra.adjoin_induction ht ?_ ?_ ?_ ?_
-  · intro t ht
-    exact ⟨1, Subalgebra.one_mem _, isUnit_one,
-      (one_smul S t).symm ▸ Algebra.mem_sup_right (Algebra.subset_adjoin ht)⟩
-  · intro s
-    obtain ⟨s', hs₁, hs₂, hs₃⟩ := hσ s
-    refine ⟨_, hs₁, hs₂, Algebra.mem_sup_left ?_⟩
-    rw [Algebra.smul_def, ← map_mul, mul_comm]
-    exact ⟨_, hs₃, rfl⟩
-  · rintro x y ⟨sx, hsx, hsx', hsx''⟩ ⟨sy, hsy, hsy', hsy''⟩
-    refine ⟨_, σ.mul_mem hsx hsy, hsx'.mul hsy', ?_⟩
-    rw [smul_add, mul_smul, mul_smul, Algebra.smul_def sx (sy • y), smul_comm,
-      Algebra.smul_def sy (sx • x)]
-    apply add_mem (mul_mem _ hsx'') (mul_mem _ hsy'') <;>
-      exact Algebra.mem_sup_left ⟨_, ‹_›, rfl⟩
-  · rintro x y ⟨sx, hsx, hsx', hsx''⟩ ⟨sy, hsy, hsy', hsy''⟩
-    refine ⟨_, σ.mul_mem hsx hsy, hsx'.mul hsy', ?_⟩
-    rw [mul_smul, ← smul_eq_mul, smul_comm sy x, ← smul_assoc, smul_eq_mul]
-    exact mul_mem hsx'' hsy''
+  intro t ht
+  exact ⟨1, Subalgebra.one_mem _, isUnit_one,
+    (one_smul S t).symm ▸ Algebra.mem_sup_right (Algebra.subset_adjoin ht)⟩
+  intro s
+  obtain ⟨s', hs₁, hs₂, hs₃⟩ := hσ s
+  refine ⟨_, hs₁, hs₂, Algebra.mem_sup_left ?_⟩
+  rw [Algebra.smul_def, ← map_mul, mul_comm]
+  exact ⟨_, hs₃, rfl⟩
+  rintro x y ⟨sx, hsx, hsx', hsx''⟩ ⟨sy, hsy, hsy', hsy''⟩
+  refine ⟨_, σ.mul_mem hsx hsy, hsx'.mul hsy', ?_⟩
+  rw [smul_add, mul_smul, mul_smul, Algebra.smul_def sx (sy • y), smul_comm,
+    Algebra.smul_def sy (sx • x)]
+  apply add_mem (mul_mem _ hsx'') (mul_mem _ hsy'') <;>
+    exact Algebra.mem_sup_left ⟨_, ‹_›, rfl⟩
+  rintro x y ⟨sx, hsx, hsx', hsx''⟩ ⟨sy, hsy, hsy', hsy''⟩
+  refine ⟨_, σ.mul_mem hsx hsy, hsx'.mul hsy', ?_⟩
+  rw [mul_smul, ← smul_eq_mul, smul_comm sy x, ← smul_assoc, smul_eq_mul]
+  exact mul_mem hsx'' hsy''
 
 open Classical in
 lemma EssFiniteType.comp [h₁ : EssFiniteType R S] [h₂ : EssFiniteType S T] :
@@ -140,12 +140,12 @@ lemma EssFiniteType.comp [h₁ : EssFiniteType R S] [h₂ : EssFiniteType S T] :
   obtain ⟨t₁, h₁, h₂, h₃⟩ := EssFiniteType.aux _ _ _ _ hs _ y hy₁
   obtain ⟨t₂, h₄, h₅, h₆⟩ := EssFiniteType.aux _ _ _ _ hs _ _ hy₃
   refine ⟨t₂ • t₁ • y, ?_, ?_, ?_⟩
-  · rw [Algebra.smul_def]
-    exact mul_mem (Algebra.mem_sup_left ⟨_, h₄, rfl⟩) h₃
-  · rw [Algebra.smul_def, Algebra.smul_def]
-    exact (h₅.map _).mul ((h₂.map _).mul hy₂)
-  · rw [← mul_smul, mul_comm, smul_mul_assoc, mul_comm, mul_comm y, mul_smul, Algebra.smul_def]
-    exact mul_mem (Algebra.mem_sup_left ⟨_, h₁, rfl⟩) h₆
+  rw [Algebra.smul_def]
+  exact mul_mem (Algebra.mem_sup_left ⟨_, h₄, rfl⟩) h₃
+  rw [Algebra.smul_def, Algebra.smul_def]
+  exact (h₅.map _).mul ((h₂.map _).mul hy₂)
+  rw [← mul_smul, mul_comm, smul_mul_assoc, mul_comm, mul_comm y, mul_smul, Algebra.smul_def]
+  exact mul_mem (Algebra.mem_sup_left ⟨_, h₁, rfl⟩) h₆
 
 open EssFiniteType in
 lemma essFiniteType_iff_exists_subalgebra : EssFiniteType R S ↔
@@ -162,28 +162,28 @@ instance EssFiniteType.baseChange [h : EssFiniteType R S] : EssFiniteType T (T �
   use σ.image Algebra.TensorProduct.includeRight
   intro s
   induction' s using TensorProduct.induction_on with x y x y hx hy
-  · exact ⟨1, one_mem _, isUnit_one, by simpa using zero_mem _⟩
-  · obtain ⟨t, h₁, h₂, h₃⟩ := hσ y
-    have H (x : S) (hx : x ∈ Algebra.adjoin R (σ : Set S)) :
-        1 ⊗ₜ[R] x ∈ Algebra.adjoin T
-          ((σ.image Algebra.TensorProduct.includeRight : Finset (T ⊗[R] S)) : Set (T ⊗[R] S)) := by
-      have : Algebra.TensorProduct.includeRight x ∈
-          (Algebra.adjoin R (σ : Set S)).map (Algebra.TensorProduct.includeRight (A := T)) :=
-        Subalgebra.mem_map.mpr ⟨_, hx, rfl⟩
-      rw [← Algebra.adjoin_adjoin_of_tower R]
-      apply Algebra.subset_adjoin
-      simpa [← Algebra.adjoin_image] using this
-    refine ⟨Algebra.TensorProduct.includeRight t, H _ h₁, h₂.map _, ?_⟩
-    simp only [Algebra.TensorProduct.includeRight_apply, Algebra.TensorProduct.tmul_mul_tmul,
-      mul_one]
-    rw [← mul_one x, ← smul_eq_mul, ← TensorProduct.smul_tmul']
-    apply Subalgebra.smul_mem
-    exact H _ h₃
-  · obtain ⟨tx, hx₁, hx₂, hx₃⟩ := hx
-    obtain ⟨ty, hy₁, hy₂, hy₃⟩ := hy
-    refine ⟨_, mul_mem hx₁ hy₁, hx₂.mul hy₂, ?_⟩
-    rw [add_mul, ← mul_assoc, mul_comm tx ty, ← mul_assoc]
-    exact add_mem (mul_mem hx₃ hy₁) (mul_mem hy₃ hx₁)
+  exact ⟨1, one_mem _, isUnit_one, by simpa using zero_mem _⟩
+  obtain ⟨t, h₁, h₂, h₃⟩ := hσ y
+  have H (x : S) (hx : x ∈ Algebra.adjoin R (σ : Set S)) :
+      1 ⊗ₜ[R] x ∈ Algebra.adjoin T
+        ((σ.image Algebra.TensorProduct.includeRight : Finset (T ⊗[R] S)) : Set (T ⊗[R] S)) := by
+    have : Algebra.TensorProduct.includeRight x ∈
+        (Algebra.adjoin R (σ : Set S)).map (Algebra.TensorProduct.includeRight (A := T)) :=
+      Subalgebra.mem_map.mpr ⟨_, hx, rfl⟩
+    rw [← Algebra.adjoin_adjoin_of_tower R]
+    apply Algebra.subset_adjoin
+    simpa [← Algebra.adjoin_image] using this
+  refine ⟨Algebra.TensorProduct.includeRight t, H _ h₁, h₂.map _, ?_⟩
+  simp only [Algebra.TensorProduct.includeRight_apply, Algebra.TensorProduct.tmul_mul_tmul,
+    mul_one]
+  rw [← mul_one x, ← smul_eq_mul, ← TensorProduct.smul_tmul']
+  apply Subalgebra.smul_mem
+  exact H _ h₃
+  obtain ⟨tx, hx₁, hx₂, hx₃⟩ := hx
+  obtain ⟨ty, hy₁, hy₂, hy₃⟩ := hy
+  refine ⟨_, mul_mem hx₁ hy₁, hx₂.mul hy₂, ?_⟩
+  rw [add_mul, ← mul_assoc, mul_comm tx ty, ← mul_assoc]
+  exact add_mem (mul_mem hx₃ hy₁) (mul_mem hy₃ hx₁)
 
 open Classical in
 lemma EssFiniteType.of_comp [h : EssFiniteType R T] : EssFiniteType S T := by
@@ -207,13 +207,13 @@ lemma EssFiniteType.algHom_ext [EssFiniteType R S]
   suffices f.comp (IsScalarTower.toAlgHom R _ S) = g.comp (IsScalarTower.toAlgHom R _ S) by
     ext; exact AlgHom.congr_fun this _
   apply AlgHom.ext_of_adjoin_eq_top (s := { x | x.1 ∈ finset R S })
-  · rw [← top_le_iff]
-    rintro x _
-    refine Algebra.adjoin_induction' ?_ ?_ ?_ ?_ x
-    · intro x hx; exact Algebra.subset_adjoin hx
-    · intro r; exact Subalgebra.algebraMap_mem _ _
-    · intro x y hx hy; exact add_mem hx hy
-    · intro x y hx hy; exact mul_mem hx hy
-  · rintro ⟨x, hx⟩ hx'; exact H x hx'
+  rw [← top_le_iff]
+  rintro x _
+  refine Algebra.adjoin_induction' ?_ ?_ ?_ ?_ x
+  intro x hx; exact Algebra.subset_adjoin hx
+  intro r; exact Subalgebra.algebraMap_mem _ _
+  intro x y hx hy; exact add_mem hx hy
+  intro x y hx hy; exact mul_mem hx hy
+  rintro ⟨x, hx⟩ hx'; exact H x hx'
 
 end Algebra

@@ -293,8 +293,8 @@ theorem sumInv_comp_sum : sumInv I M ∘ₗ sum I M = LinearMap.id := by
     mk_apply_coe, AdicCauchySequence.map_apply_coe, Submodule.mkQ_apply, LinearMap.id_comp]
   rw [DirectSum.component.of, DirectSum.component.of]
   split
-  · next h => subst h; simp
-  · simp
+  next h => subst h; simp
+  simp
 
 theorem sum_comp_sumInv : sum I M ∘ₗ sumInv I M = LinearMap.id := by
   ext f n

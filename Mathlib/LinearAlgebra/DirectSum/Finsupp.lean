@@ -88,9 +88,9 @@ variable {R M N ι}
 lemma finsuppLeft_apply_tmul (p : ι →₀ M) (n : N) :
     finsuppLeft R M N ι (p ⊗ₜ[R] n) = p.sum fun i m ↦ Finsupp.single i (m ⊗ₜ[R] n) := by
   apply p.induction_linear
-  · simp
-  · intros f g hf hg; simp [add_tmul, map_add, hf, hg, Finsupp.sum_add_index]
-  · simp [finsuppLeft]
+  simp
+  intros f g hf hg; simp [add_tmul, map_add, hf, hg, Finsupp.sum_add_index]
+  simp [finsuppLeft]
 
 @[simp]
 lemma finsuppLeft_apply_tmul_apply (p : ι →₀ M) (n : N) (i : ι) :
@@ -123,9 +123,9 @@ variable {R M N ι}
 lemma finsuppRight_apply_tmul (m : M) (p : ι →₀ N) :
     finsuppRight R M N ι (m ⊗ₜ[R] p) = p.sum fun i n ↦ Finsupp.single i (m ⊗ₜ[R] n) := by
   apply p.induction_linear
-  · simp
-  · intros f g hf hg; simp [tmul_add, map_add, hf, hg, Finsupp.sum_add_index]
-  · simp [finsuppRight]
+  simp
+  intros f g hf hg; simp [tmul_add, map_add, hf, hg, Finsupp.sum_add_index]
+  simp [finsuppRight]
 
 @[simp]
 lemma finsuppRight_apply_tmul_apply (m : M) (p : ι →₀ N) (i : ι) :
@@ -261,14 +261,14 @@ open Classical in
 theorem finsuppTensorFinsupp_apply (f : ι →₀ M) (g : κ →₀ N) (i : ι) (k : κ) :
     finsuppTensorFinsupp R S M N ι κ (f ⊗ₜ g) (i, k) = f i ⊗ₜ g k := by
   apply Finsupp.induction_linear f
-  · simp
-  · intro f₁ f₂ hf₁ hf₂
-    simp [add_tmul, hf₁, hf₂]
+  simp
+  intro f₁ f₂ hf₁ hf₂
+  simp [add_tmul, hf₁, hf₂]
   intro i' m
   apply Finsupp.induction_linear g
-  · simp
-  · intro g₁ g₂ hg₁ hg₂
-    simp [tmul_add, hg₁, hg₂]
+  simp
+  intro g₁ g₂ hg₁ hg₂
+  simp [tmul_add, hg₁, hg₂]
   intro k' n
   simp_rw [finsuppTensorFinsupp_single, Finsupp.single_apply, Prod.mk.inj_iff, ite_and]
   split_ifs <;> simp

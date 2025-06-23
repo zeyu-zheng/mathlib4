@@ -25,7 +25,7 @@ variable {α : Type*} [DivisionRing α]
 @[simp]
 theorem cast_inv_nat (n : ℕ) : ((n⁻¹ : ℚ) : α) = (n : α)⁻¹ := by
   cases' n with n
-  · simp
+  simp
   rw [cast_def, inv_natCast_num, inv_natCast_den, if_neg n.succ_ne_zero,
     Int.sign_eq_one_of_pos (Nat.cast_pos.mpr n.succ_pos), Int.cast_one, one_div]
 
@@ -33,8 +33,8 @@ theorem cast_inv_nat (n : ℕ) : ((n⁻¹ : ℚ) : α) = (n : α)⁻¹ := by
 @[simp]
 theorem cast_inv_int (n : ℤ) : ((n⁻¹ : ℚ) : α) = (n : α)⁻¹ := by
   cases' n with n n
-  · simp [ofInt_eq_cast, cast_inv_nat]
-  · simp only [ofInt_eq_cast, Int.cast_negSucc, ← Nat.cast_succ, cast_neg, inv_neg, cast_inv_nat]
+  simp [ofInt_eq_cast, cast_inv_nat]
+  simp only [ofInt_eq_cast, Int.cast_negSucc, ← Nat.cast_succ, cast_neg, inv_neg, cast_inv_nat]
 
 @[simp, norm_cast]
 theorem cast_nnratCast {K} [DivisionRing K] (q : ℚ≥0) :
@@ -65,10 +65,10 @@ theorem cast_pow {K} [DivisionSemiring K] (q : ℚ≥0) (n : ℕ) :
 theorem cast_zpow_of_ne_zero {K} [DivisionSemiring K] (q : ℚ≥0) (z : ℤ) (hq : (q.num : K) ≠ 0) :
     NNRat.cast (q ^ z) = (NNRat.cast q : K) ^ z := by
   obtain ⟨n, rfl | rfl⟩ := z.eq_nat_or_neg
-  · simp
-  · simp_rw [zpow_neg, zpow_natCast, ← inv_pow, NNRat.cast_pow]
-    congr
-    rw [cast_inv_of_ne_zero hq]
+  simp
+  simp_rw [zpow_neg, zpow_natCast, ← inv_pow, NNRat.cast_pow]
+  congr
+  rw [cast_inv_of_ne_zero hq]
 
 open OfScientific in
 theorem Nonneg.coe_ofScientific {K} [LinearOrderedField K] (m : ℕ) (s : Bool) (e : ℕ) :

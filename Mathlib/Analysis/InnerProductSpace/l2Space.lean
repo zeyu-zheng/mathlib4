@@ -105,7 +105,7 @@ namespace lp
 theorem summable_inner (f g : lp G 2) : Summable fun i => ⟪f i, g i⟫ := by
   -- Apply the Direct Comparison Test, comparing with ∑' i, ‖f i‖ * ‖g i‖ (summable by Hölder)
   refine .of_norm_bounded (fun i => ‖f i‖ * ‖g i‖) (lp.summable_mul ?_ f g) ?_
-  · rw [Real.isConjExponent_iff]; norm_num
+  rw [Real.isConjExponent_iff]; norm_num
   intro i
   -- Then apply Cauchy-Schwarz pointwise
   exact norm_inner_le_norm (𝕜 := 𝕜) _ _
@@ -124,8 +124,8 @@ instance instInnerProductSpace : InnerProductSpace 𝕜 (lp G 2) :=
           rw [norm_sq_eq_inner (𝕜 := 𝕜)]
           -- Porting note: `simp` couldn't do this anymore
         _ = re (∑' i, ⟪f i, f i⟫) := (RCLike.reCLM.map_tsum ?_).symm
-      · norm_num
-      · exact summable_inner f f
+      norm_num
+      exact summable_inner f f
     conj_symm := fun f g => by
       calc
         conj _ = conj (∑' i, ⟪g i, f i⟫) := by congr
@@ -139,17 +139,17 @@ instance instInnerProductSpace : InnerProductSpace 𝕜 (lp G 2) :=
           simp only [inner_add_left, Pi.add_apply, coeFn_add]
         _ = (∑' i, ⟪f₁ i, g i⟫) + ∑' i, ⟪f₂ i, g i⟫ := tsum_add ?_ ?_
         _ = _ := by congr
-      · congr
-      · exact summable_inner f₁ g
-      · exact summable_inner f₂ g
+      congr
+      exact summable_inner f₁ g
+      exact summable_inner f₂ g
     smul_left := fun f g c => by
       calc
         _ = ∑' i, ⟪c • f i, g i⟫ := ?_
         _ = ∑' i, conj c * ⟪f i, g i⟫ := by simp only [inner_smul_left]
         _ = conj c * ∑' i, ⟪f i, g i⟫ := tsum_mul_left
         _ = _ := ?_
-      · simp only [coeFn_smul, Pi.smul_apply]
-      · congr }
+      simp only [coeFn_smul, Pi.smul_apply]
+      congr }
 
 theorem inner_eq_tsum (f g : lp G 2) : ⟪f, g⟫ = ∑' i, ⟪f i, g i⟫ :=
   rfl
@@ -163,8 +163,8 @@ theorem inner_single_left (i : ι) (a : G i) (f : lp G 2) : ⟪lp.single 2 i a, 
   ext j
   rw [lp.single_apply]
   split_ifs with h
-  · subst h; rfl
-  · simp
+  subst h; rfl
+  simp
 
 theorem inner_single_right (i : ι) (a : G i) (f : lp G 2) : ⟪f, lp.single 2 i a⟫ = ⟪f i, a⟫ := by
   simpa [inner_conj_symm] using congr_arg conj (@inner_single_left _ 𝕜 _ _ _ _ i a f)
@@ -181,8 +181,8 @@ variable {V : ∀ i, G i →ₗᵢ[𝕜] E} (hV : OrthogonalFamily 𝕜 G V)
 protected theorem summable_of_lp (f : lp G 2) : Summable fun i => V i (f i) := by
   rw [hV.summable_iff_norm_sq_summable]
   convert (lp.memℓp f).summable _
-  · norm_cast
-  · norm_num
+  norm_cast
+  norm_num
 
 open Classical in
 /-- A mutually orthogonal family of subspaces of `E` induce a linear isometry from `lp 2` of the
@@ -220,8 +220,8 @@ protected theorem linearIsometry_apply_single {i : ι} (x : G i) :
   ext j
   rw [lp.single_apply]
   split_ifs with h
-  · subst h; simp
-  · simp [h]
+  subst h; simp
+  simp [h]
 
 protected theorem linearIsometry_apply_dfinsupp_sum_single (W₀ : Π₀ i : ι, G i) :
     hV.linearIsometry (W₀.sum (lp.single 2)) = W₀.sum fun i => V i := by
@@ -234,20 +234,20 @@ protected theorem range_linearIsometry [∀ i, CompleteSpace (G i)] :
       (⨆ i, LinearMap.range (V i).toLinearMap).topologicalClosure := by
     -- Porting note: dot notation broken
   refine le_antisymm ?_ ?_
-  · rintro x ⟨f, rfl⟩
-    refine mem_closure_of_tendsto (hV.hasSum_linearIsometry f) (eventually_of_forall ?_)
-    intro s
-    rw [SetLike.mem_coe]
-    refine sum_mem ?_
-    intro i _
-    refine mem_iSup_of_mem i ?_
-    exact LinearMap.mem_range_self _ (f i)
-  · apply topologicalClosure_minimal
-    · refine iSup_le ?_
-      rintro i x ⟨x, rfl⟩
-      use lp.single 2 i x
-      exact hV.linearIsometry_apply_single x
-    exact hV.linearIsometry.isometry.uniformInducing.isComplete_range.isClosed
+  rintro x ⟨f, rfl⟩
+  refine mem_closure_of_tendsto (hV.hasSum_linearIsometry f) (eventually_of_forall ?_)
+  intro s
+  rw [SetLike.mem_coe]
+  refine sum_mem ?_
+  intro i _
+  refine mem_iSup_of_mem i ?_
+  exact LinearMap.mem_range_self _ (f i)
+  apply topologicalClosure_minimal
+  refine iSup_le ?_
+  rintro i x ⟨x, rfl⟩
+  use lp.single 2 i x
+  exact hV.linearIsometry_apply_single x
+  exact hV.linearIsometry.isometry.uniformInducing.isComplete_range.isClosed
 
 end OrthogonalFamily
 

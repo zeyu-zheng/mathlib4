@@ -216,8 +216,8 @@ theorem mem_verts_if_mem_edge {G' : Subgraph G} {e : Sym2 V} {v : V} (he : e ∈
     (hv : v ∈ e) : v ∈ G'.verts := by
   induction e
   rcases Sym2.mem_iff.mp hv with (rfl | rfl)
-  · exact G'.edge_vert he
-  · exact G'.edge_vert (G'.symm he)
+  exact G'.edge_vert he
+  exact G'.edge_vert (G'.symm he)
 
 /-- The `incidenceSet` is the set of edges incident to a given vertex. -/
 def incidenceSet (G' : Subgraph G) (v : V) : Set (Sym2 V) := {e ∈ G'.edgeSet | v ∈ e}
@@ -570,26 +570,26 @@ protected def map {G' : SimpleGraph W} (f : G →g G') (H : G.Subgraph) : G'.Sub
 theorem map_monotone {G' : SimpleGraph W} (f : G →g G') : Monotone (Subgraph.map f) := by
   intro H H' h
   constructor
-  · intro
-    simp only [map_verts, Set.mem_image, forall_exists_index, and_imp]
-    rintro v hv rfl
-    exact ⟨_, h.1 hv, rfl⟩
-  · rintro _ _ ⟨u, v, ha, rfl, rfl⟩
-    exact ⟨_, _, h.2 ha, rfl, rfl⟩
+  intro
+  simp only [map_verts, Set.mem_image, forall_exists_index, and_imp]
+  rintro v hv rfl
+  exact ⟨_, h.1 hv, rfl⟩
+  rintro _ _ ⟨u, v, ha, rfl, rfl⟩
+  exact ⟨_, _, h.2 ha, rfl, rfl⟩
 
 theorem map_sup {G : SimpleGraph V} {G' : SimpleGraph W} (f : G →g G') {H H' : G.Subgraph} :
     (H ⊔ H').map f = H.map f ⊔ H'.map f := by
   ext1
-  · simp only [Set.image_union, map_verts, verts_sup]
-  · ext
-    simp only [Relation.Map, map_adj, sup_adj]
-    constructor
-    · rintro ⟨a, b, h | h, rfl, rfl⟩
-      · exact Or.inl ⟨_, _, h, rfl, rfl⟩
-      · exact Or.inr ⟨_, _, h, rfl, rfl⟩
-    · rintro (⟨a, b, h, rfl, rfl⟩ | ⟨a, b, h, rfl, rfl⟩)
-      · exact ⟨_, _, Or.inl h, rfl, rfl⟩
-      · exact ⟨_, _, Or.inr h, rfl, rfl⟩
+  simp only [Set.image_union, map_verts, verts_sup]
+  ext
+  simp only [Relation.Map, map_adj, sup_adj]
+  constructor
+  rintro ⟨a, b, h | h, rfl, rfl⟩
+  exact Or.inl ⟨_, _, h, rfl, rfl⟩
+  exact Or.inr ⟨_, _, h, rfl, rfl⟩
+  rintro (⟨a, b, h, rfl, rfl⟩ | ⟨a, b, h, rfl, rfl⟩)
+  exact ⟨_, _, Or.inl h, rfl, rfl⟩
+  exact ⟨_, _, Or.inr h, rfl, rfl⟩
 
 /-- Graph homomorphisms induce a contravariant function on subgraphs. -/
 @[simps]
@@ -603,27 +603,27 @@ protected def comap {G' : SimpleGraph W} (f : G →g G') (H : G'.Subgraph) : G.S
 theorem comap_monotone {G' : SimpleGraph W} (f : G →g G') : Monotone (Subgraph.comap f) := by
   intro H H' h
   constructor
-  · intro
-    simp only [comap_verts, Set.mem_preimage]
-    apply h.1
-  · intro v w
-    simp (config := { contextual := true }) only [comap_adj, and_imp, true_and_iff]
-    intro
-    apply h.2
+  intro
+  simp only [comap_verts, Set.mem_preimage]
+  apply h.1
+  intro v w
+  simp (config := { contextual := true }) only [comap_adj, and_imp, true_and_iff]
+  intro
+  apply h.2
 
 theorem map_le_iff_le_comap {G' : SimpleGraph W} (f : G →g G') (H : G.Subgraph) (H' : G'.Subgraph) :
     H.map f ≤ H' ↔ H ≤ H'.comap f := by
   refine ⟨fun h ↦ ⟨fun v hv ↦ ?_, fun v w hvw ↦ ?_⟩, fun h ↦ ⟨fun v ↦ ?_, fun v w ↦ ?_⟩⟩
-  · simp only [comap_verts, Set.mem_preimage]
-    exact h.1 ⟨v, hv, rfl⟩
-  · simp only [H.adj_sub hvw, comap_adj, true_and_iff]
-    exact h.2 ⟨v, w, hvw, rfl, rfl⟩
-  · simp only [map_verts, Set.mem_image, forall_exists_index, and_imp]
-    rintro w hw rfl
-    exact h.1 hw
-  · simp only [Relation.Map, map_adj, forall_exists_index, and_imp]
-    rintro u u' hu rfl rfl
-    exact (h.2 hu).2
+  simp only [comap_verts, Set.mem_preimage]
+  exact h.1 ⟨v, hv, rfl⟩
+  simp only [H.adj_sub hvw, comap_adj, true_and_iff]
+  exact h.2 ⟨v, w, hvw, rfl, rfl⟩
+  simp only [map_verts, Set.mem_image, forall_exists_index, and_imp]
+  rintro w hw rfl
+  exact h.1 hw
+  simp only [Relation.Map, map_adj, forall_exists_index, and_imp]
+  rintro u u' hu rfl rfl
+  exact (h.2 hu).2
 
 /-- Given two subgraphs, one a subgraph of the other, there is an induced injective homomorphism of
 the subgraphs as graphs. -/
@@ -744,8 +744,8 @@ theorem singletonSubgraph_le_iff (v : V) (H : G.Subgraph) :
   refine ⟨fun h ↦ h.1 (Set.mem_singleton v), ?_⟩
   intro h
   constructor
-  · rwa [singletonSubgraph_verts, Set.singleton_subset_iff]
-  · exact fun _ _ ↦ False.elim
+  rwa [singletonSubgraph_verts, Set.singleton_subset_iff]
+  exact fun _ _ ↦ False.elim
 
 @[simp]
 theorem map_singletonSubgraph (f : G →g G') {v : V} :
@@ -767,14 +767,14 @@ theorem eq_singletonSubgraph_iff_verts_eq (H : G.Subgraph) {v : V} :
     H = G.singletonSubgraph v ↔ H.verts = {v} := by
   refine ⟨fun h ↦ by rw [h, singletonSubgraph_verts], fun h ↦ ?_⟩
   ext
-  · rw [h, singletonSubgraph_verts]
-  · simp only [Prop.bot_eq_false, singletonSubgraph_adj, Pi.bot_apply, iff_false_iff]
-    intro ha
-    have ha1 := ha.fst_mem
-    have ha2 := ha.snd_mem
-    rw [h, Set.mem_singleton_iff] at ha1 ha2
-    subst_vars
-    exact ha.ne rfl
+  rw [h, singletonSubgraph_verts]
+  simp only [Prop.bot_eq_false, singletonSubgraph_adj, Pi.bot_apply, iff_false_iff]
+  intro ha
+  have ha1 := ha.fst_mem
+  have ha2 := ha.snd_mem
+  rw [h, Set.mem_singleton_iff] at ha1 ha2
+  subst_vars
+  exact ha.ne rfl
 
 instance nonempty_subgraphOfAdj_verts {v w : V} (hvw : G.Adj v w) :
     Nonempty (G.subgraphOfAdj hvw).verts :=
@@ -791,10 +791,10 @@ theorem edgeSet_subgraphOfAdj {v w : V} (hvw : G.Adj v w) :
 lemma subgraphOfAdj_le_of_adj {v w : V} (H : G.Subgraph) (h : H.Adj v w) :
     G.subgraphOfAdj (H.adj_sub h) ≤ H := by
   constructor
-  · intro x
-    rintro (rfl | rfl) <;> simp [H.edge_vert h, H.edge_vert h.symm]
-  · simp only [subgraphOfAdj_adj, Sym2.eq, Sym2.rel_iff]
-    rintro _ _ (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> simp [h, h.symm]
+  intro x
+  rintro (rfl | rfl) <;> simp [H.edge_vert h, H.edge_vert h.symm]
+  simp only [subgraphOfAdj_adj, Sym2.eq, Sym2.rel_iff]
+  rintro _ _ (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> simp [h, h.symm]
 
 theorem subgraphOfAdj_symm {v w : V} (hvw : G.Adj v w) :
     G.subgraphOfAdj hvw.symm = G.subgraphOfAdj hvw := by
@@ -804,23 +804,23 @@ theorem subgraphOfAdj_symm {v w : V} (hvw : G.Adj v w) :
 theorem map_subgraphOfAdj (f : G →g G') {v w : V} (hvw : G.Adj v w) :
     Subgraph.map f (G.subgraphOfAdj hvw) = G'.subgraphOfAdj (f.map_adj hvw) := by
   ext
-  · simp only [Subgraph.map_verts, subgraphOfAdj_verts, Set.mem_image, Set.mem_insert_iff,
-      Set.mem_singleton_iff]
-    constructor
-    · rintro ⟨u, rfl | rfl, rfl⟩ <;> simp
-    · rintro (rfl | rfl)
-      · use v
-        simp
-      · use w
-        simp
-  · simp only [Relation.Map, Subgraph.map_adj, subgraphOfAdj_adj, Sym2.eq, Sym2.rel_iff]
-    constructor
-    · rintro ⟨a, b, ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩, rfl, rfl⟩ <;> simp
-    · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
-      · use v, w
-        simp
-      · use w, v
-        simp
+  simp only [Subgraph.map_verts, subgraphOfAdj_verts, Set.mem_image, Set.mem_insert_iff,
+    Set.mem_singleton_iff]
+  constructor
+  rintro ⟨u, rfl | rfl, rfl⟩ <;> simp
+  rintro (rfl | rfl)
+  use v
+  simp
+  use w
+  simp
+  simp only [Relation.Map, Subgraph.map_adj, subgraphOfAdj_adj, Sym2.eq, Sym2.rel_iff]
+  constructor
+  rintro ⟨a, b, ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩, rfl, rfl⟩ <;> simp
+  rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
+  use v, w
+  simp
+  use w, v
+  simp
 
 theorem neighborSet_subgraphOfAdj_subset {u v w : V} (hvw : G.Adj v w) :
     (G.subgraphOfAdj hvw).neighborSet u ⊆ {v, w} :=
@@ -901,9 +901,9 @@ lemma restrict_adj {G' G'' : G.Subgraph} (v w : G'.verts) :
 theorem restrict_coeSubgraph {G' : G.Subgraph} (G'' : G'.coe.Subgraph) :
     Subgraph.restrict (Subgraph.coeSubgraph G'') = G'' := by
   ext
-  · simp
-  · rw [restrict_adj, coeSubgraph_adj]
-    simpa using G''.adj_sub
+  simp
+  rw [restrict_adj, coeSubgraph_adj]
+  simpa using G''.adj_sub
 
 theorem coeSubgraph_injective (G' : G.Subgraph) :
     Function.Injective (Subgraph.coeSubgraph : G'.coe.Subgraph → G.Subgraph) :=
@@ -912,18 +912,18 @@ theorem coeSubgraph_injective (G' : G.Subgraph) :
 lemma coeSubgraph_le {H : G.Subgraph} (H' : H.coe.Subgraph) :
     Subgraph.coeSubgraph H' ≤ H := by
   constructor
-  · simp
-  · rintro v w ⟨_, _, h, rfl, rfl⟩
-    exact H'.adj_sub h
+  simp
+  rintro v w ⟨_, _, h, rfl, rfl⟩
+  exact H'.adj_sub h
 
 lemma coeSubgraph_restrict_eq {H : G.Subgraph} (H' : G.Subgraph) :
     Subgraph.coeSubgraph (H.restrict H') = H ⊓ H' := by
   ext
-  · simp [and_comm]
-  · simp_rw [coeSubgraph_adj, restrict_adj]
-    simp only [exists_and_left, exists_prop, inf_adj, and_congr_right_iff]
-    intro h
-    simp [H.edge_vert h, H.edge_vert h.symm]
+  simp [and_comm]
+  simp_rw [coeSubgraph_adj, restrict_adj]
+  simp only [exists_and_left, exists_prop, inf_adj, and_congr_right_iff]
+  intro h
+  simp [H.edge_vert h, H.edge_vert h.symm]
 
 /-! ### Edge deletion -/
 
@@ -973,14 +973,14 @@ theorem deleteEdges_coe_eq (s : Set (Sym2 G'.verts)) :
     not_and, and_congr_right_iff]
   intro
   constructor
-  · intro hs
-    refine Sym2.ind ?_
-    rintro ⟨v', hv'⟩ ⟨w', hw'⟩
-    simp only [Sym2.map_pair_eq, Sym2.eq]
-    contrapose!
-    rintro (_ | _) <;> simpa only [Sym2.eq_swap]
-  · intro h' hs
-    exact h' _ hs rfl
+  intro hs
+  refine Sym2.ind ?_
+  rintro ⟨v', hv'⟩ ⟨w', hw'⟩
+  simp only [Sym2.map_pair_eq, Sym2.eq]
+  contrapose!
+  rintro (_ | _) <;> simpa only [Sym2.eq_swap]
+  intro h' hs
+  exact h' _ hs rfl
 
 theorem coe_deleteEdges_eq (s : Set (Sym2 V)) :
     (G'.deleteEdges s).coe = G'.coe.deleteEdges (Sym2.map (↑) ⁻¹' s) := by
@@ -1044,10 +1044,10 @@ variable {G' G'' : G.Subgraph} {s s' : Set V}
 
 theorem induce_mono (hg : G' ≤ G'') (hs : s ⊆ s') : G'.induce s ≤ G''.induce s' := by
   constructor
-  · simp [hs]
-  · simp (config := { contextual := true }) only [induce_adj, true_and_iff, and_imp]
-    intro v w hv hw ha
-    exact ⟨hs hv, hs hw, hg.2 ha⟩
+  simp [hs]
+  simp (config := { contextual := true }) only [induce_adj, true_and_iff, and_imp]
+  intro v w hv hw ha
+  exact ⟨hs hv, hs hw, hg.2 ha⟩
 
 @[mono]
 theorem induce_mono_left (hg : G' ≤ G'') : G'.induce s ≤ G''.induce s :=
@@ -1064,10 +1064,10 @@ theorem induce_empty : G'.induce ∅ = ⊥ := by
 @[simp]
 theorem induce_self_verts : G'.induce G'.verts = G' := by
   ext
-  · simp
-  · constructor <;>
-      simp (config := { contextual := true }) only [induce_adj, imp_true_iff, and_true_iff]
-    exact fun ha ↦ ⟨G'.edge_vert ha, G'.edge_vert ha.symm⟩
+  simp
+  constructor <;>
+    simp (config := { contextual := true }) only [induce_adj, imp_true_iff, and_true_iff]
+  exact fun ha ↦ ⟨G'.edge_vert ha, G'.edge_vert ha.symm⟩
 
 lemma le_induce_top_verts : G' ≤ (⊤ : G.Subgraph).induce G'.verts :=
   calc G' = G'.induce G'.verts               := Subgraph.induce_self_verts.symm
@@ -1075,9 +1075,9 @@ lemma le_induce_top_verts : G' ≤ (⊤ : G.Subgraph).induce G'.verts :=
 
 lemma le_induce_union : G'.induce s ⊔ G'.induce s' ≤ G'.induce (s ∪ s') := by
   constructor
-  · simp only [verts_sup, induce_verts, Set.Subset.rfl]
-  · simp only [sup_adj, induce_adj, Set.mem_union]
-    rintro v w (h | h) <;> simp [h]
+  simp only [verts_sup, induce_verts, Set.Subset.rfl]
+  simp only [sup_adj, induce_adj, Set.mem_union]
+  rintro v w (h | h) <;> simp [h]
 
 lemma le_induce_union_left : G'.induce s ≤ G'.induce (s ∪ s') := by
   exact (sup_le_iff.mp le_induce_union).1
@@ -1092,14 +1092,14 @@ theorem singletonSubgraph_eq_induce {v : V} :
 theorem subgraphOfAdj_eq_induce {v w : V} (hvw : G.Adj v w) :
     G.subgraphOfAdj hvw = (⊤ : G.Subgraph).induce {v, w} := by
   ext
-  · simp
-  · constructor
-    · intro h
-      simp only [subgraphOfAdj_adj, Sym2.eq, Sym2.rel_iff] at h
-      obtain ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ := h <;> simp [hvw, hvw.symm]
-    · intro h
-      simp only [induce_adj, Set.mem_insert_iff, Set.mem_singleton_iff, top_adj] at h
-      obtain ⟨rfl | rfl, rfl | rfl, ha⟩ := h <;> first |exact (ha.ne rfl).elim|simp
+  simp
+  constructor
+  intro h
+  simp only [subgraphOfAdj_adj, Sym2.eq, Sym2.rel_iff] at h
+  obtain ⟨rfl, rfl⟩ | ⟨rfl, rfl⟩ := h <;> simp [hvw, hvw.symm]
+  intro h
+  simp only [induce_adj, Set.mem_insert_iff, Set.mem_singleton_iff, top_adj] at h
+  obtain ⟨rfl | rfl, rfl | rfl, ha⟩ := h <;> first |exact (ha.ne rfl).elim|simp
 
 end Induce
 

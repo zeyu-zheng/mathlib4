@@ -166,15 +166,15 @@ lemma deriv_const_smul' {f : 𝕜 → F} {x : 𝕜} {R : Type*} [Field R] [Modul
     [ContinuousConstSMul R F] (c : R) :
     deriv (fun y ↦ c • f y) x = c • deriv f x := by
   by_cases hf : DifferentiableAt 𝕜 f x
-  · exact deriv_const_smul c hf
-  · rcases eq_or_ne c 0 with rfl | hc
-    · simp only [zero_smul, deriv_const']
-    · have H : ¬DifferentiableAt 𝕜 (fun y ↦ c • f y) x := by
-        contrapose! hf
-        change DifferentiableAt 𝕜 (fun y ↦ f y) x
-        conv => enter [2, y]; rw [← inv_smul_smul₀ hc (f y)]
-        exact DifferentiableAt.const_smul hf c⁻¹
-      rw [deriv_zero_of_not_differentiableAt hf, deriv_zero_of_not_differentiableAt H, smul_zero]
+  exact deriv_const_smul c hf
+  rcases eq_or_ne c 0 with rfl | hc
+  simp only [zero_smul, deriv_const']
+  have H : ¬DifferentiableAt 𝕜 (fun y ↦ c • f y) x := by
+    contrapose! hf
+    change DifferentiableAt 𝕜 (fun y ↦ f y) x
+    conv => enter [2, y]; rw [← inv_smul_smul₀ hc (f y)]
+    exact DifferentiableAt.const_smul hf c⁻¹
+  rw [deriv_zero_of_not_differentiableAt hf, deriv_zero_of_not_differentiableAt H, smul_zero]
 
 end ConstSMul
 
@@ -245,12 +245,12 @@ theorem deriv_mul_const (hc : DifferentiableAt 𝕜 c x) (d : 𝔸) :
 
 theorem deriv_mul_const_field (v : 𝕜') : deriv (fun y => u y * v) x = deriv u x * v := by
   by_cases hu : DifferentiableAt 𝕜 u x
-  · exact deriv_mul_const hu v
-  · rw [deriv_zero_of_not_differentiableAt hu, zero_mul]
-    rcases eq_or_ne v 0 with (rfl | hd)
-    · simp only [mul_zero, deriv_const]
-    · refine deriv_zero_of_not_differentiableAt (mt (fun H => ?_) hu)
-      simpa only [mul_inv_cancel_right₀ hd] using H.mul_const v⁻¹
+  exact deriv_mul_const hu v
+  rw [deriv_zero_of_not_differentiableAt hu, zero_mul]
+  rcases eq_or_ne v 0 with (rfl | hd)
+  simp only [mul_zero, deriv_const]
+  refine deriv_zero_of_not_differentiableAt (mt (fun H => ?_) hu)
+  simpa only [mul_inv_cancel_right₀ hd] using H.mul_const v⁻¹
 
 @[simp]
 theorem deriv_mul_const_field' (v : 𝕜') : (deriv fun x => u x * v) = fun x => deriv u x * v :=

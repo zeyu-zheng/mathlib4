@@ -58,14 +58,14 @@ theorem prod_X_add_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ Multiset.card s
   convert Polynomial.ext_iff.mp (prod_X_add_C_eq_sum_esymm s) k using 1
   simp_rw [finset_sum_coeff, coeff_C_mul_X_pow]
   rw [Finset.sum_eq_single_of_mem (Multiset.card s - k) _]
-  · rw [if_pos (Nat.sub_sub_self h).symm]
-  · intro j hj1 hj2
-    suffices k ≠ card s - j by rw [if_neg this]
-    intro hn
-    rw [hn, Nat.sub_sub_self (Nat.lt_succ_iff.mp (Finset.mem_range.mp hj1))] at hj2
-    exact Ne.irrefl hj2
-  · rw [Finset.mem_range]
-    exact Nat.lt_succ_of_le (Nat.sub_le (Multiset.card s) k)
+  rw [if_pos (Nat.sub_sub_self h).symm]
+  intro j hj1 hj2
+  suffices k ≠ card s - j by rw [if_neg this]
+  intro hn
+  rw [hn, Nat.sub_sub_self (Nat.lt_succ_iff.mp (Finset.mem_range.mp hj1))] at hj2
+  exact Ne.irrefl hj2
+  rw [Finset.mem_range]
+  exact Nat.lt_succ_of_le (Nat.sub_le (Multiset.card s) k)
 
 theorem prod_X_add_C_coeff' {σ} (s : Multiset σ) (r : σ → R) {k : ℕ} (h : k ≤ Multiset.card s) :
     (s.map fun i => X + C (r i)).prod.coeff k = (s.map r).esymm (Multiset.card s - k) := by
@@ -102,8 +102,8 @@ theorem prod_X_sub_X_eq_sum_esymm (s : Multiset R) :
     rw [sub_eq_add_neg]
     rw [← map_neg C x]
   convert prod_X_add_C_eq_sum_esymm (map (fun t => -t) s) using 1
-  · rw [map_map]; rfl
-  · simp only [esymm_neg, card_map, mul_assoc, map_mul, map_pow, map_neg, map_one]
+  rw [map_map]; rfl
+  simp only [esymm_neg, card_map, mul_assoc, map_mul, map_pow, map_neg, map_one]
 
 theorem prod_X_sub_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ Multiset.card s) :
     (s.map fun t => X - C t).prod.coeff k =
@@ -116,9 +116,9 @@ theorem prod_X_sub_C_coeff (s : Multiset R) {k : ℕ} (h : k ≤ Multiset.card s
     rw [sub_eq_add_neg]
     rw [← map_neg C x]
   convert prod_X_add_C_coeff (map (fun t => -t) s) _ using 1
-  · rw [map_map]; rfl
-  · rw [esymm_neg, card_map]
-  · rwa [card_map]
+  rw [map_map]; rfl
+  rw [esymm_neg, card_map]
+  rwa [card_map]
 
 /-- Vieta's formula for the coefficients and the roots of a polynomial over an integral domain
   with as many roots as its degree. -/

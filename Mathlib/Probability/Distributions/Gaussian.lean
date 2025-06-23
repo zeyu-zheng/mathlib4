@@ -77,7 +77,7 @@ lemma integrable_gaussianPDFReal (μ : ℝ) (v : ℝ≥0) :
     Integrable (gaussianPDFReal μ v) := by
   rw [gaussianPDFReal_def]
   by_cases hv : v = 0
-  · simp [hv]
+  simp [hv]
   let g : ℝ → ℝ := fun x ↦ (√(2 * π * v))⁻¹ * rexp (- x ^ 2 / (2 * v))
   have hg : Integrable g
   suffices g = fun x ↦ (√(2 * π * v))⁻¹ * rexp (- (2 * v)⁻¹ * x ^ 2) by
@@ -109,9 +109,9 @@ lemma lintegral_gaussianPDFReal_eq_one (μ : ℝ) {v : ℝ≥0} (h : v ≠ 0) :
     mul_neg]
   simp_rw [← neg_mul]
   rw [neg_mul, integral_gaussian, ← Real.sqrt_inv, ← Real.sqrt_mul]
-  · field_simp
-    ring
-  · positivity
+  field_simp
+  ring
+  positivity
 
 /-- The gaussian distribution pdf integrates to 1 when the variance is not zero.  -/
 lemma integral_gaussianPDFReal_eq_one (μ : ℝ) {v : ℝ≥0} (hv : v ≠ 0) :
@@ -136,18 +136,18 @@ lemma gaussianPDFReal_inv_mul {μ : ℝ} {v : ℝ≥0} {c : ℝ} (hc : c ≠ 0) 
     Real.sqrt_mul', one_div, mul_inv_rev, NNReal.coe_mul, NNReal.coe_mk, NNReal.coe_pos]
   rw [← mul_assoc]
   refine congr_arg₂ _ ?_ ?_
-  · field_simp
-    rw [Real.sqrt_sq_eq_abs]
-    ring_nf
-    calc (Real.sqrt ↑v)⁻¹ * (Real.sqrt 2)⁻¹ * (Real.sqrt π)⁻¹
+  field_simp
+  rw [Real.sqrt_sq_eq_abs]
+  ring_nf
+  calc (Real.sqrt ↑v)⁻¹ * (Real.sqrt 2)⁻¹ * (Real.sqrt π)⁻¹
       = (Real.sqrt ↑v)⁻¹ * (Real.sqrt 2)⁻¹ * (Real.sqrt π)⁻¹ * (|c| * |c|⁻¹) := by
           rw [mul_inv_cancel, mul_one]
           simp only [ne_eq, abs_eq_zero, hc, not_false_eq_true]
     _ = (Real.sqrt ↑v)⁻¹ * (Real.sqrt 2)⁻¹ * (Real.sqrt π)⁻¹ * |c| * |c|⁻¹ := by ring
-  · congr 1
-    field_simp
-    congr 1
-    ring
+  congr 1
+  field_simp
+  congr 1
+  ring
 
 lemma gaussianPDFReal_mul {μ : ℝ} {v : ℝ≥0} {c : ℝ} (hc : c ≠ 0) (x : ℝ) :
     gaussianPDFReal μ v (c * x)
@@ -206,9 +206,9 @@ lemma gaussianReal_apply (μ : ℝ) {v : ℝ≥0} (hv : v ≠ 0) (s : Set ℝ) :
 lemma gaussianReal_apply_eq_integral (μ : ℝ) {v : ℝ≥0} (hv : v ≠ 0) (s : Set ℝ) :
     gaussianReal μ v s = ENNReal.ofReal (∫ x in s, gaussianPDFReal μ v x) := by
   rw [gaussianReal_apply _ hv s, ofReal_integral_eq_lintegral_ofReal]
-  · rfl
-  · exact (integrable_gaussianPDFReal _ _).restrict
-  · exact ae_of_all _ (gaussianPDFReal_nonneg _ _)
+  rfl
+  exact (integrable_gaussianPDFReal _ _).restrict
+  exact ae_of_all _ (gaussianPDFReal_nonneg _ _)
 
 lemma gaussianReal_absolutelyContinuous (μ : ℝ) {v : ℝ≥0} (hv : v ≠ 0) :
     gaussianReal μ v ≪ volume := by
@@ -219,17 +219,17 @@ lemma gaussianReal_absolutelyContinuous' (μ : ℝ) {v : ℝ≥0} (hv : v ≠ 0)
     volume ≪ gaussianReal μ v := by
   rw [gaussianReal_of_var_ne_zero _ hv]
   refine withDensity_absolutelyContinuous' ?_ ?_
-  · exact (measurable_gaussianPDF _ _).aemeasurable
-  · exact ae_of_all _ (fun _ ↦ (gaussianPDF_pos _ hv _).ne')
+  exact (measurable_gaussianPDF _ _).aemeasurable
+  exact ae_of_all _ (fun _ ↦ (gaussianPDF_pos _ hv _).ne')
 
 lemma rnDeriv_gaussianReal (μ : ℝ) (v : ℝ≥0) :
     ∂(gaussianReal μ v)/∂volume =ₐₛ gaussianPDF μ v := by
   by_cases hv : v = 0
-  · simp only [hv, gaussianReal_zero_var, gaussianPDF_zero_var]
-    refine (Measure.eq_rnDeriv measurable_zero (mutuallySingular_dirac μ volume) ?_).symm
-    rw [withDensity_zero, add_zero]
-  · rw [gaussianReal_of_var_ne_zero _ hv]
-    exact Measure.rnDeriv_withDensity _ (measurable_gaussianPDF μ v)
+  simp only [hv, gaussianReal_zero_var, gaussianPDF_zero_var]
+  refine (Measure.eq_rnDeriv measurable_zero (mutuallySingular_dirac μ volume) ?_).symm
+  rw [withDensity_zero, add_zero]
+  rw [gaussianReal_of_var_ne_zero _ hv]
+  exact Measure.rnDeriv_withDensity _ (measurable_gaussianPDF μ v)
 
 section Transformations
 
@@ -256,8 +256,8 @@ lemma _root_.MeasurableEquiv.gaussianReal_map_symm_apply (hv : v ≠ 0) (f : ℝ
 lemma gaussianReal_map_add_const (y : ℝ) :
     (gaussianReal μ v).map (· + y) = gaussianReal (μ + y) v := by
   by_cases hv : v = 0
-  · simp only [hv, ne_eq, not_true, gaussianReal_zero_var]
-    exact Measure.map_dirac (measurable_id'.add_const _) _
+  simp only [hv, ne_eq, not_true, gaussianReal_zero_var]
+  exact Measure.map_dirac (measurable_id'.add_const _) _
   let e : ℝ ≃ᵐ ℝ := (Homeomorph.addRight y).symm.toMeasurableEquiv
   have he' : ∀ x, HasDerivAt e ((fun _ ↦ 1) x) x := fun _ ↦ (hasDerivAt_id _).sub_const y
   change (gaussianReal μ v).map e.symm = gaussianReal (μ + y) v
@@ -277,15 +277,15 @@ lemma gaussianReal_map_const_add (y : ℝ) :
 lemma gaussianReal_map_const_mul (c : ℝ) :
     (gaussianReal μ v).map (c * ·) = gaussianReal (c * μ) (⟨c^2, sq_nonneg _⟩ * v) := by
   by_cases hv : v = 0
-  · simp only [hv, mul_zero, ne_eq, not_true, gaussianReal_zero_var]
-    exact Measure.map_dirac (measurable_id'.const_mul c) μ
+  simp only [hv, mul_zero, ne_eq, not_true, gaussianReal_zero_var]
+  exact Measure.map_dirac (measurable_id'.const_mul c) μ
   by_cases hc : c = 0
-  · simp only [hc, zero_mul, ne_eq, abs_zero, mul_eq_zero]
-    rw [Measure.map_const]
-    simp only [ne_eq, measure_univ, one_smul, mul_eq_zero]
-    convert (gaussianReal_zero_var 0).symm
-    simp only [ne_eq, zero_pow, mul_eq_zero, hv, or_false, not_false_eq_true]
-    rfl
+  simp only [hc, zero_mul, ne_eq, abs_zero, mul_eq_zero]
+  rw [Measure.map_const]
+  simp only [ne_eq, measure_univ, one_smul, mul_eq_zero]
+  convert (gaussianReal_zero_var 0).symm
+  simp only [ne_eq, zero_pow, mul_eq_zero, hv, or_false, not_false_eq_true]
+  rfl
   let e : ℝ ≃ᵐ ℝ := (Homeomorph.mulLeft₀ c hc).symm.toMeasurableEquiv
   have he' : ∀ x, HasDerivAt e ((fun _ ↦ c⁻¹) x) x
   suffices ∀ x, HasDerivAt (fun x => c⁻¹ * x) (c⁻¹ * 1) x by rwa [mul_one] at this
@@ -295,9 +295,9 @@ lemma gaussianReal_map_const_mul (c : ℝ) :
   rw [MeasurableEquiv.gaussianReal_map_symm_apply hv e he' hs',
     gaussianReal_apply_eq_integral _ _ s']
   swap
-  · simp only [ne_eq, mul_eq_zero, hv, or_false]
-    rw [← NNReal.coe_inj]
-    simp [hc]
+  simp only [ne_eq, mul_eq_zero, hv, or_false]
+  rw [← NNReal.coe_inj]
+  simp [hc]
   simp only [e, Homeomorph.mulLeft₀, Equiv.toFun_as_coe, Equiv.mulLeft₀_apply, Equiv.invFun_as_coe,
     Equiv.mulLeft₀_symm_apply, Homeomorph.toMeasurableEquiv_coe, Homeomorph.homeomorph_mk_coe_symm,
     Equiv.coe_fn_symm_mk, gaussianPDFReal_inv_mul hc]

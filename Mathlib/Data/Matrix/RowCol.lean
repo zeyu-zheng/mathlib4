@@ -191,14 +191,14 @@ theorem updateColumn_ne [DecidableEq n] {j' : n} (j_ne : j' ≠ j) :
 theorem updateRow_apply [DecidableEq m] {i' : m} :
     updateRow M i b i' j = if i' = i then b j else M i' j := by
   by_cases h : i' = i
-  · rw [h, updateRow_self, if_pos rfl]
-  · rw [updateRow_ne h, if_neg h]
+  rw [h, updateRow_self, if_pos rfl]
+  rw [updateRow_ne h, if_neg h]
 
 theorem updateColumn_apply [DecidableEq n] {j' : n} :
     updateColumn M j c i j' = if j' = j then c i else M i j' := by
   by_cases h : j' = j
-  · rw [h, updateColumn_self, if_pos rfl]
-  · rw [updateColumn_ne h, if_neg h]
+  rw [h, updateColumn_self, if_pos rfl]
+  rw [updateColumn_ne h, if_neg h]
 
 @[simp]
 theorem updateColumn_subsingleton [Subsingleton n] (A : Matrix m n R) (i : n) (b : m → R) :
@@ -259,14 +259,14 @@ theorem diagonal_updateColumn_single [DecidableEq n] [Zero α] (v : n → α) (i
     (diagonal v).updateColumn i (Pi.single i x) = diagonal (Function.update v i x) := by
   ext j k
   obtain rfl | hjk := eq_or_ne j k
-  · rw [diagonal_apply_eq]
-    obtain rfl | hji := eq_or_ne j i
-    · rw [updateColumn_self, Pi.single_eq_same, Function.update_same]
-    · rw [updateColumn_ne hji, diagonal_apply_eq, Function.update_noteq hji]
-  · rw [diagonal_apply_ne _ hjk]
-    obtain rfl | hki := eq_or_ne k i
-    · rw [updateColumn_self, Pi.single_eq_of_ne hjk]
-    · rw [updateColumn_ne hki, diagonal_apply_ne _ hjk]
+  rw [diagonal_apply_eq]
+  obtain rfl | hji := eq_or_ne j i
+  rw [updateColumn_self, Pi.single_eq_same, Function.update_same]
+  rw [updateColumn_ne hji, diagonal_apply_eq, Function.update_noteq hji]
+  rw [diagonal_apply_ne _ hjk]
+  obtain rfl | hki := eq_or_ne k i
+  rw [updateColumn_self, Pi.single_eq_of_ne hjk]
+  rw [updateColumn_ne hki, diagonal_apply_ne _ hjk]
 
 theorem diagonal_updateRow_single [DecidableEq n] [Zero α] (v : n → α) (i : n) (x : α) :
     (diagonal v).updateRow i (Pi.single i x) = diagonal (Function.update v i x) := by

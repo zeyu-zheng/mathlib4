@@ -262,11 +262,11 @@ instance IccManifold (x y : ℝ) [h : Fact (x < y)] :
   chartAt z := if z.val < y then IccLeftChart x y else IccRightChart x y
   mem_chart_source z := by
     by_cases h' : z.val < y
-    · simp only [h', if_true]
-      exact h'
-    · simp only [h', if_false]
-      apply lt_of_lt_of_le h.out
-      simpa only [not_lt] using h'
+    simp only [h', if_true]
+    exact h'
+    simp only [h', if_false]
+    apply lt_of_lt_of_le h.out
+    simpa only [not_lt] using h'
   chart_mem_atlas z := by by_cases h' : (z : ℝ) < y <;> simp [h']
 
 /-- The manifold structure on `[x, y]` is smooth.
@@ -282,32 +282,32 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
   /- We need to check that any composition of two charts gives a `C^∞` function. Each chart can be
   either the left chart or the right chart, leaving 4 possibilities that we handle successively. -/
   rcases he with (rfl | rfl) <;> rcases he' with (rfl | rfl)
-  · -- `e = left chart`, `e' = left chart`
-    exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_contDiffGroupoid _ _ _)).1
-  · -- `e = left chart`, `e' = right chart`
-    apply M.contDiffOn.congr
-    rintro _ ⟨⟨hz₁, hz₂⟩, ⟨⟨z, hz₀⟩, rfl⟩⟩
-    simp only [modelWithCornersEuclideanHalfSpace, IccLeftChart, IccRightChart, update_same,
-      max_eq_left, hz₀, lt_sub_iff_add_lt, mfld_simps] at hz₁ hz₂
-    rw [min_eq_left hz₁.le, lt_add_iff_pos_left] at hz₂
-    ext i
-    rw [Subsingleton.elim i 0]
-    simp only [modelWithCornersEuclideanHalfSpace, IccLeftChart, IccRightChart, *, PiLp.add_apply,
-      PiLp.neg_apply, max_eq_left, min_eq_left hz₁.le, update_same, mfld_simps]
-    abel
-  · -- `e = right chart`, `e' = left chart`
-    apply M.contDiffOn.congr
-    rintro _ ⟨⟨hz₁, hz₂⟩, ⟨z, hz₀⟩, rfl⟩
-    simp only [modelWithCornersEuclideanHalfSpace, IccLeftChart, IccRightChart, max_lt_iff,
-      update_same, max_eq_left hz₀, mfld_simps] at hz₁ hz₂
-    rw [lt_sub_comm] at hz₁
-    ext i
-    rw [Subsingleton.elim i 0]
-    simp only [modelWithCornersEuclideanHalfSpace, IccLeftChart, IccRightChart, PiLp.add_apply,
-      PiLp.neg_apply, update_same, max_eq_left, hz₀, hz₁.le, mfld_simps]
-    abel
-  ·-- `e = right chart`, `e' = right chart`
-    exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_contDiffGroupoid _ _ _)).1
+  -- `e = left chart`, `e' = left chart`
+  exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_contDiffGroupoid _ _ _)).1
+  -- `e = left chart`, `e' = right chart`
+  apply M.contDiffOn.congr
+  rintro _ ⟨⟨hz₁, hz₂⟩, ⟨⟨z, hz₀⟩, rfl⟩⟩
+  simp only [modelWithCornersEuclideanHalfSpace, IccLeftChart, IccRightChart, update_same,
+    max_eq_left, hz₀, lt_sub_iff_add_lt, mfld_simps] at hz₁ hz₂
+  rw [min_eq_left hz₁.le, lt_add_iff_pos_left] at hz₂
+  ext i
+  rw [Subsingleton.elim i 0]
+  simp only [modelWithCornersEuclideanHalfSpace, IccLeftChart, IccRightChart, *, PiLp.add_apply,
+    PiLp.neg_apply, max_eq_left, min_eq_left hz₁.le, update_same, mfld_simps]
+  abel
+  -- `e = right chart`, `e' = left chart`
+  apply M.contDiffOn.congr
+  rintro _ ⟨⟨hz₁, hz₂⟩, ⟨z, hz₀⟩, rfl⟩
+  simp only [modelWithCornersEuclideanHalfSpace, IccLeftChart, IccRightChart, max_lt_iff,
+    update_same, max_eq_left hz₀, mfld_simps] at hz₁ hz₂
+  rw [lt_sub_comm] at hz₁
+  ext i
+  rw [Subsingleton.elim i 0]
+  simp only [modelWithCornersEuclideanHalfSpace, IccLeftChart, IccRightChart, PiLp.add_apply,
+    PiLp.neg_apply, update_same, max_eq_left, hz₀, hz₁.le, mfld_simps]
+  abel
+  -- `e = right chart`, `e' = right chart`
+  exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_contDiffGroupoid _ _ _)).1
 
 /-! Register the manifold structure on `Icc 0 1`, and also its zero and one. -/
 

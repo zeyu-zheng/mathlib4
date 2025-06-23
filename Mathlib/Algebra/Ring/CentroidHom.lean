@@ -272,14 +272,14 @@ instance hasNPowNat : Pow (CentroidHom α) ℕ :=
     { toAddMonoidHom := (f.toEnd ^ n : AddMonoid.End α)
       map_mul_left' := fun a b ↦ by
         induction' n with n ih
-        · exact rfl
-        · rw [pow_succ']
-          exact (congr_arg f.toEnd ih).trans (f.map_mul_left' _ _)
+        exact rfl
+        rw [pow_succ']
+        exact (congr_arg f.toEnd ih).trans (f.map_mul_left' _ _)
       map_mul_right' := fun a b ↦ by
         induction' n with n ih
-        · exact rfl
-        · rw [pow_succ']
-          exact (congr_arg f.toEnd ih).trans (f.map_mul_right' _ _)
+        exact rfl
+        rw [pow_succ']
+        exact (congr_arg f.toEnd ih).trans (f.map_mul_right' _ _)
         }⟩
 
 @[simp, norm_cast]
@@ -452,13 +452,13 @@ lemma centroid_eq_centralizer_mulLeftRight :
     RingHom.rangeS (toEndRingHom α) = Subsemiring.centralizer (Set.range L ∪ Set.range R) := by
   ext T
   refine ⟨?_, fun h ↦ ?_⟩
-  · rintro ⟨f, rfl⟩ S (⟨a, rfl⟩ | ⟨b, rfl⟩)
-    · exact AddMonoidHom.ext fun b ↦ (map_mul_left f a b).symm
-    · exact AddMonoidHom.ext fun a ↦ (map_mul_right f a b).symm
-  · rw [Subsemiring.mem_centralizer_iff] at h
-    refine ⟨⟨T, fun a b ↦ ?_, fun a b ↦ ?_⟩, rfl⟩
-    · exact congr($(h (L a) (.inl ⟨a, rfl⟩)) b).symm
-    · exact congr($(h (R b) (.inr ⟨b, rfl⟩)) a).symm
+  rintro ⟨f, rfl⟩ S (⟨a, rfl⟩ | ⟨b, rfl⟩)
+  exact AddMonoidHom.ext fun b ↦ (map_mul_left f a b).symm
+  exact AddMonoidHom.ext fun a ↦ (map_mul_right f a b).symm
+  rw [Subsemiring.mem_centralizer_iff] at h
+  refine ⟨⟨T, fun a b ↦ ?_, fun a b ↦ ?_⟩, rfl⟩
+  exact congr($(h (L a) (.inl ⟨a, rfl⟩)) b).symm
+  exact congr($(h (R b) (.inr ⟨b, rfl⟩)) a).symm
 
 /-- The canonical homomorphism from the center into the center of the centroid -/
 def centerToCentroidCenter :
@@ -502,17 +502,17 @@ lemma centerToCentroid_apply (z : NonUnitalSubsemiring.center α) (a : α) :
 lemma _root_.NonUnitalNonAssocSemiring.mem_center_iff (a : α) :
     a ∈ NonUnitalSubsemiring.center α ↔ R a = L a ∧ (L a) ∈ RingHom.rangeS (toEndRingHom α) := by
   constructor
-  · exact fun ha ↦ ⟨AddMonoidHom.ext <| fun _ => (IsMulCentral.comm ha _).symm,
-      ⟨centerToCentroid ⟨a, ha⟩, rfl⟩⟩
-  · rintro ⟨hc, ⟨T, hT⟩⟩
-    have e1 (d : α) : T d = a * d := congr($hT d)
-    have e2 (d : α) : T d = d * a := congr($(hT.trans hc.symm) d)
-    constructor
-    case comm => exact (congr($hc.symm ·))
-    case left_assoc => simpa [e1] using (map_mul_right T · ·)
-    case mid_assoc => exact fun b c ↦ by simpa [e1 c, e2 b] using
-      (map_mul_right T b c).symm.trans <| map_mul_left T b c
-    case right_assoc => simpa [e2] using (map_mul_left T · ·)
+  exact fun ha ↦ ⟨AddMonoidHom.ext <| fun _ => (IsMulCentral.comm ha _).symm,
+    ⟨centerToCentroid ⟨a, ha⟩, rfl⟩⟩
+  rintro ⟨hc, ⟨T, hT⟩⟩
+  have e1 (d : α) : T d = a * d := congr($hT d)
+  have e2 (d : α) : T d = d * a := congr($(hT.trans hc.symm) d)
+  constructor
+  case comm => exact (congr($hc.symm ·))
+  case left_assoc => simpa [e1] using (map_mul_right T · ·)
+  case mid_assoc => exact fun b c ↦ by simpa [e1 c, e2 b] using
+    (map_mul_right T b c).symm.trans <| map_mul_left T b c
+  case right_assoc => simpa [e2] using (map_mul_left T · ·)
 
 end NonUnitalNonAssocSemiring
 

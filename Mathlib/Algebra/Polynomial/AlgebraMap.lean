@@ -480,15 +480,15 @@ variable [CommRing S] {f : R →+* S}
 theorem dvd_term_of_dvd_eval_of_dvd_terms {z p : S} {f : S[X]} (i : ℕ) (dvd_eval : p ∣ f.eval z)
     (dvd_terms : ∀ j ≠ i, p ∣ f.coeff j * z ^ j) : p ∣ f.coeff i * z ^ i := by
   by_cases hi : i ∈ f.support
-  · rw [eval, eval₂_eq_sum, sum_def] at dvd_eval
-    rw [← Finset.insert_erase hi, Finset.sum_insert (Finset.not_mem_erase _ _)] at dvd_eval
-    refine (dvd_add_left ?_).mp dvd_eval
-    apply Finset.dvd_sum
-    intro j hj
-    exact dvd_terms j (Finset.ne_of_mem_erase hj)
-  · convert dvd_zero p
-    rw [not_mem_support_iff] at hi
-    simp [hi]
+  rw [eval, eval₂_eq_sum, sum_def] at dvd_eval
+  rw [← Finset.insert_erase hi, Finset.sum_insert (Finset.not_mem_erase _ _)] at dvd_eval
+  refine (dvd_add_left ?_).mp dvd_eval
+  apply Finset.dvd_sum
+  intro j hj
+  exact dvd_terms j (Finset.ne_of_mem_erase hj)
+  convert dvd_zero p
+  rw [not_mem_support_iff] at hi
+  simp [hi]
 
 theorem dvd_term_of_isRoot_of_dvd_terms {r p : S} {f : S[X]} (i : ℕ) (hr : f.IsRoot r)
     (h : ∀ j ≠ i, p ∣ f.coeff j * r ^ j) : p ∣ f.coeff i * r ^ i :=
@@ -517,7 +517,7 @@ theorem eval_mul_X_sub_C {p : R[X]} (r : R) : (p * (X - C r)).eval r = 0 := by
       _ < p.natDegree + 2 := lt_add_one _
   rw [sum_over_range' _ _ (p.natDegree + 2) bound]
   swap
-  · simp
+  simp
   rw [sum_range_succ']
   conv_lhs =>
     congr
@@ -547,12 +547,12 @@ lemma aeval_apply_smul_mem_of_le_comap'
     aeval a p • m ∈ q := by
   refine p.induction_on (M := fun f ↦ aeval a f • m ∈ q) (by simpa) (fun f₁ f₂ h₁ h₂ ↦ ?_)
     (fun n t hmq ↦ ?_)
-  · simp_rw [map_add, add_smul]
-    exact Submodule.add_mem q h₁ h₂
-  · dsimp only at hmq ⊢
-    rw [pow_succ', mul_left_comm, map_mul, aeval_X, mul_smul]
-    rw [← q.map_le_iff_le_comap] at hq
-    exact hq ⟨_, hmq, rfl⟩
+  simp_rw [map_add, add_smul]
+  exact Submodule.add_mem q h₁ h₂
+  dsimp only at hmq ⊢
+  rw [pow_succ', mul_left_comm, map_mul, aeval_X, mul_smul]
+  rw [← q.map_le_iff_le_comap] at hq
+  exact hq ⟨_, hmq, rfl⟩
 
 lemma aeval_apply_smul_mem_of_le_comap (f : Module.End R M) (hq : q ≤ q.comap f) :
     aeval f p m ∈ q :=

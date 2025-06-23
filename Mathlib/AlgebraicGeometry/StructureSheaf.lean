@@ -652,9 +652,9 @@ theorem locally_const_basicOpen (U : Opens (PrimeSpectrum.Top R))
   -- Note that the last rewrite here generated an additional goal, which was a parameter
   -- of `res_const`. We prove this goal first
   swap
-  · intro y hy
-    rw [basic_opens_eq] at hy
-    exact (Set.Subset.trans hDhV hVDg : _) hy
+  intro y hy
+  rw [basic_opens_eq] at hy
+  exact (Set.Subset.trans hDhV hVDg : _) hy
   -- All that is left is a simple calculation
   apply const_ext
   rw [mul_assoc f c g, hc]
@@ -724,18 +724,18 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.Top R
   refine
     ⟨fun i => a i * h i ^ N, fun i => h i ^ (N + 1), fun i => eqToHom (basic_opens_eq i) ≫ iDh i,
       ?_, ?_, ?_⟩
-  · simpa only [basic_opens_eq] using h_cover
-  · intro i hi j hj
-    -- Here we need to show that our new fractions `a i / h i` satisfy the normalization condition
-    -- Of course, the power `N` we used to expand the fractions might be bigger than the power
-    -- `n (i, j)` which was originally chosen. We denote their difference by `k`
-    have n_le_N : n (i, j) ≤ N := Finset.le_sup (Finset.mem_product.mpr ⟨hi, hj⟩)
-    cases' Nat.le.dest n_le_N with k hk
-    simp only [← hk, pow_add, pow_one]
-    -- To accommodate for the difference `k`, we multiply both sides of the equation `n_spec (i, j)`
-    -- by `(h i * h j) ^ k`
-    convert congr_arg (fun z => z * (h i * h j) ^ k) (n_spec (i, j)) using 1 <;>
-      · simp only [n, mul_pow]; ring
+  simpa only [basic_opens_eq] using h_cover
+  intro i hi j hj
+  -- Here we need to show that our new fractions `a i / h i` satisfy the normalization condition
+  -- Of course, the power `N` we used to expand the fractions might be bigger than the power
+  -- `n (i, j)` which was originally chosen. We denote their difference by `k`
+  have n_le_N : n (i, j) ≤ N := Finset.le_sup (Finset.mem_product.mpr ⟨hi, hj⟩)
+  cases' Nat.le.dest n_le_N with k hk
+  simp only [← hk, pow_add, pow_one]
+  -- To accommodate for the difference `k`, we multiply both sides of the equation `n_spec (i, j)`
+  -- by `(h i * h j) ^ k`
+  convert congr_arg (fun z => z * (h i * h j) ^ k) (n_spec (i, j)) using 1 <;>
+    · simp only [n, mul_pow]; ring
   -- Lastly, we need to show that the new fractions still represent our original `s`
   intro i _
   rw [op_comp, Functor.map_comp]
@@ -745,7 +745,7 @@ theorem normalize_finite_fraction_representation (U : Opens (PrimeSpectrum.Top R
   rw [← hs, res_const]
   -- additional goal spit out by `res_const`
   swap
-  · exact (basic_opens_eq i).le
+  exact (basic_opens_eq i).le
   apply const_ext
   dsimp
   rw [pow_succ]
@@ -793,8 +793,8 @@ theorem toBasicOpen_surjective (f : R) : Function.Surjective (toBasicOpen R f) :
     replace ht_cover : (PrimeSpectrum.zeroLocus {f})ᶜ ⊆
         ⋃ (i : ι) (x : i ∈ t), (PrimeSpectrum.zeroLocus {h i})ᶜ := by
       convert ht_cover
-      · rw [PrimeSpectrum.basicOpen_eq_zeroLocus_compl]
-      · simp only [Opens.iSup_mk, Opens.carrier_eq_coe, PrimeSpectrum.basicOpen_eq_zeroLocus_compl]
+      rw [PrimeSpectrum.basicOpen_eq_zeroLocus_compl]
+      simp only [Opens.iSup_mk, Opens.carrier_eq_coe, PrimeSpectrum.basicOpen_eq_zeroLocus_compl]
     rw [Set.compl_subset_comm] at ht_cover
     -- Why doesn't `simp_rw` do this?
     simp_rw [Set.compl_iUnion, compl_compl, ← PrimeSpectrum.zeroLocus_iUnion,
@@ -819,25 +819,25 @@ theorem toBasicOpen_surjective (f : R) : Function.Surjective (toBasicOpen R f) :
   apply
     (structureSheaf R).eq_of_locally_eq' (fun i : tt => PrimeSpectrum.basicOpen (h i))
       (PrimeSpectrum.basicOpen f) fun i : tt => iDh i
-  · -- This feels a little redundant, since already have `ht_cover` as a hypothesis
-    -- Unfortunately, `ht_cover` uses a bounded union over the set `t`, while here we have the
-    -- Union indexed by the type `tt`, so we need some boilerplate to translate one to the other
-    intro x hx
-    erw [TopologicalSpace.Opens.mem_iSup]
-    have := ht_cover hx
-    rw [← Finset.set_biUnion_coe, Set.mem_iUnion₂] at this
-    rcases this with ⟨i, i_mem, x_mem⟩
-    exact ⟨⟨i, i_mem⟩, x_mem⟩
+  -- This feels a little redundant, since already have `ht_cover` as a hypothesis
+  -- Unfortunately, `ht_cover` uses a bounded union over the set `t`, while here we have the
+  -- Union indexed by the type `tt`, so we need some boilerplate to translate one to the other
+  intro x hx
+  erw [TopologicalSpace.Opens.mem_iSup]
+  have := ht_cover hx
+  rw [← Finset.set_biUnion_coe, Set.mem_iUnion₂] at this
+  rcases this with ⟨i, i_mem, x_mem⟩
+  exact ⟨⟨i, i_mem⟩, x_mem⟩
   rintro ⟨i, hi⟩
   dsimp
   change (structureSheaf R).1.map _ _ = (structureSheaf R).1.map _ _
   rw [s_eq i hi, res_const]
   -- Again, `res_const` spits out an additional goal
   swap
-  · intro y hy
-    change y ∈ PrimeSpectrum.basicOpen (f ^ (n + 1))
-    rw [PrimeSpectrum.basicOpen_pow f (n + 1) (by omega)]
-    exact (leOfHom (iDh i) : _) hy
+  intro y hy
+  change y ∈ PrimeSpectrum.basicOpen (f ^ (n + 1))
+  rw [PrimeSpectrum.basicOpen_pow f (n + 1) (by omega)]
+  exact (leOfHom (iDh i) : _) hy
   -- The rest of the proof is just computation
   apply const_ext
   rw [← hb, Finset.sum_mul, Finset.mul_sum]

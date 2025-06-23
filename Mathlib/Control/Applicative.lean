@@ -56,8 +56,8 @@ theorem Applicative.ext {F} :
       intros
       exact (pure_seq1 _ _).symm.trans (pure_seq2 _ _)
     congr <;> funext α β x y
-    · exact (seqLeft_eq1 _ (y Unit.unit)).trans (seqLeft_eq2 _ _).symm
-    · exact (seqRight_eq1 _ (y Unit.unit)).trans (seqRight_eq2 _ (y Unit.unit)).symm
+    exact (seqLeft_eq1 _ (y Unit.unit)).trans (seqLeft_eq2 _ _).symm
+    exact (seqRight_eq1 _ (y Unit.unit)).trans (seqRight_eq2 _ (y Unit.unit)).symm
 
 end Lemmas
 

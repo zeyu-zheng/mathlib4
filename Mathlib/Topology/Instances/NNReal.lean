@@ -179,8 +179,8 @@ theorem hasSum_real_toNNReal_of_nonneg {f : α → ℝ} (hf_nonneg : ∀ n, 0 �
 @[norm_cast]
 theorem summable_coe {f : α → ℝ≥0} : (Summable fun a => (f a : ℝ)) ↔ Summable f := by
   constructor
-  · exact fun ⟨a, ha⟩ => ⟨⟨a, ha.nonneg fun x => (f x).2⟩, hasSum_coe.1 ha⟩
-  · exact fun ⟨a, ha⟩ => ⟨a.1, hasSum_coe.2 ha⟩
+  exact fun ⟨a, ha⟩ => ⟨⟨a, ha.nonneg fun x => (f x).2⟩, hasSum_coe.1 ha⟩
+  exact fun ⟨a, ha⟩ => ⟨a.1, hasSum_coe.2 ha⟩
 
 theorem summable_mk {f : α → ℝ} (hf : ∀ n, 0 ≤ f n) :
     (@Summable ℝ≥0 _ _ _ fun n => ⟨f n, hf n⟩) ↔ Summable f :=

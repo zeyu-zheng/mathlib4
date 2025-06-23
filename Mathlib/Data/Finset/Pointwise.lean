@@ -756,8 +756,8 @@ variable [Monoid α] {s t : Finset α} {a : α} {m n : ℕ}
 theorem coe_pow (s : Finset α) (n : ℕ) : ↑(s ^ n) = (s : Set α) ^ n := by
   change ↑(npowRec n s) = (s : Set α) ^ n
   induction' n with n ih
-  · rw [npowRec, pow_zero, coe_one]
-  · rw [npowRec, pow_succ, coe_mul, ih]
+  rw [npowRec, pow_zero, coe_one]
+  rw [npowRec, pow_succ, coe_mul, ih]
 
 /-- `Finset α` is a `Monoid` under pointwise operations if `α` is. -/
 @[to_additive "`Finset α` is an `AddMonoid` under pointwise operations if `α` is. "]
@@ -786,10 +786,10 @@ theorem pow_subset_pow (hst : s ⊆ t) : ∀ n : ℕ, s ^ n ⊆ t ^ n
 @[to_additive]
 theorem pow_subset_pow_of_one_mem (hs : (1 : α) ∈ s) : m ≤ n → s ^ m ⊆ s ^ n := by
   apply Nat.le_induction
-  · exact fun _ hn => hn
-  · intro n _ hmn
-    rw [pow_succ]
-    exact hmn.trans (subset_mul_left (s ^ n) hs)
+  exact fun _ hn => hn
+  intro n _ hmn
+  rw [pow_succ]
+  exact hmn.trans (subset_mul_left (s ^ n) hs)
 
 @[to_additive (attr := simp, norm_cast)]
 theorem coe_list_prod (s : List (Finset α)) : (↑s.prod : Set α) = (s.map (↑)).prod :=
@@ -880,13 +880,13 @@ scoped[Pointwise] attribute [instance] Finset.divisionMonoid Finset.subtractionM
 @[to_additive (attr := simp)]
 theorem isUnit_iff : IsUnit s ↔ ∃ a, s = {a} ∧ IsUnit a := by
   constructor
-  · rintro ⟨u, rfl⟩
-    obtain ⟨a, b, ha, hb, h⟩ := Finset.mul_eq_one_iff.1 u.mul_inv
-    refine ⟨a, ha, ⟨a, b, h, singleton_injective ?_⟩, rfl⟩
-    rw [← singleton_mul_singleton, ← ha, ← hb]
-    exact u.inv_mul
-  · rintro ⟨a, rfl, ha⟩
-    exact ha.finset
+  rintro ⟨u, rfl⟩
+  obtain ⟨a, b, ha, hb, h⟩ := Finset.mul_eq_one_iff.1 u.mul_inv
+  refine ⟨a, ha, ⟨a, b, h, singleton_injective ?_⟩, rfl⟩
+  rw [← singleton_mul_singleton, ← ha, ← hb]
+  exact u.inv_mul
+  rintro ⟨a, rfl, ha⟩
+  exact ha.finset
 
 @[to_additive (attr := simp)]
 theorem isUnit_coe : IsUnit (s : Set α) ↔ IsUnit s := by
@@ -1807,13 +1807,13 @@ variable [DecidableEq α]
 
 @[simp] lemma inv_smul_finset_distrib₀ (a : α) (s : Finset α) : (a • s)⁻¹ = op a⁻¹ • s⁻¹ := by
   obtain rfl | ha := eq_or_ne a 0
-  · obtain rfl | hs := s.eq_empty_or_nonempty <;> simp [*]
-  · ext; simp [← inv_smul_mem_iff₀, *]
+  obtain rfl | hs := s.eq_empty_or_nonempty <;> simp [*]
+  ext; simp [← inv_smul_mem_iff₀, *]
 
 @[simp] lemma inv_op_smul_finset_distrib₀ (a : α) (s : Finset α) : (op a • s)⁻¹ = a⁻¹ • s⁻¹ := by
   obtain rfl | ha := eq_or_ne a 0
-  · obtain rfl | hs := s.eq_empty_or_nonempty <;> simp [*]
-  · ext; simp [← inv_smul_mem_iff₀, *]
+  obtain rfl | hs := s.eq_empty_or_nonempty <;> simp [*]
+  ext; simp [← inv_smul_mem_iff₀, *]
 
 end GroupWithZero
 
@@ -1998,12 +1998,12 @@ open Classical in
 @[to_additive]
 lemma card_mul_le : Nat.card (s * t) ≤ Nat.card s * Nat.card t := by
   obtain h | h := (s * t).infinite_or_finite
-  · simp [Set.Infinite.card_eq_zero h]
+  simp [Set.Infinite.card_eq_zero h]
   obtain ⟨hs, ht⟩ | rfl | rfl := finite_mul.1 h
-  · lift s to Finset α using hs
-    lift t to Finset α using ht
-    rw [← Finset.coe_mul]
-    simpa [-Finset.coe_mul] using Finset.card_mul_le
+  lift s to Finset α using hs
+  lift t to Finset α using ht
+  rw [← Finset.coe_mul]
+  simpa [-Finset.coe_mul] using Finset.card_mul_le
   all_goals simp
 
 end IsCancelMul

@@ -520,16 +520,16 @@ theorem uniformSpace_eq_inf_precomp_of_cover {δ₁ δ₂ : Type*} (φ₁ : δ�
       .comap (ofFun ∘ (· ∘ φ₂) ∘ toFun) 𝒰(δ₂, β, _) := by
   ext : 1
   refine le_antisymm (le_inf ?_ ?_) ?_
-  · exact tendsto_iff_comap.mp UniformFun.precomp_uniformContinuous
-  · exact tendsto_iff_comap.mp UniformFun.precomp_uniformContinuous
-  · refine
-      (UniformFun.hasBasis_uniformity δ₁ β |>.comap _).inf
-      (UniformFun.hasBasis_uniformity δ₂ β |>.comap _)
-        |>.le_basis_iff (UniformFun.hasBasis_uniformity α β) |>.mpr fun U hU ↦
-        ⟨⟨U, U⟩, ⟨hU, hU⟩, fun ⟨f, g⟩ hfg x ↦ ?_⟩
-    rcases h_cover.ge <| mem_univ x with (⟨y, rfl⟩|⟨y, rfl⟩)
-    · exact hfg.1 y
-    · exact hfg.2 y
+  exact tendsto_iff_comap.mp UniformFun.precomp_uniformContinuous
+  exact tendsto_iff_comap.mp UniformFun.precomp_uniformContinuous
+  refine
+    (UniformFun.hasBasis_uniformity δ₁ β |>.comap _).inf
+    (UniformFun.hasBasis_uniformity δ₂ β |>.comap _)
+      |>.le_basis_iff (UniformFun.hasBasis_uniformity α β) |>.mpr fun U hU ↦
+      ⟨⟨U, U⟩, ⟨hU, hU⟩, fun ⟨f, g⟩ hfg x ↦ ?_⟩
+  rcases h_cover.ge <| mem_univ x with (⟨y, rfl⟩|⟨y, rfl⟩)
+  exact hfg.1 y
+  exact hfg.2 y
 
 variable {α} (β) in
 theorem uniformSpace_eq_iInf_precomp_of_cover {δ : ι → Type*} (φ : Π i, δ i → α)
@@ -692,10 +692,10 @@ protected theorem hasAntitoneBasis_uniformity {ι : Type*} [Preorder ι] [IsDire
   have := hb.nonempty
   refine ⟨(UniformOnFun.hasBasis_uniformity_of_covering_of_basis 𝔖
     ht hmono.directed_le hex hb.1).to_hasBasis ?_ fun i _ ↦ ⟨(i, i), trivial, Subset.rfl⟩, ?_⟩
-  · rintro ⟨k, l⟩ -
-    rcases directed_of (· ≤ ·) k l with ⟨n, hkn, hln⟩
-    exact ⟨n, trivial, UniformOnFun.gen_mono (hmono hkn) (hb.2 <| hln)⟩
-  · exact fun k l h ↦ UniformOnFun.gen_mono (hmono h) (hb.2 h)
+  rintro ⟨k, l⟩ -
+  rcases directed_of (· ≤ ·) k l with ⟨n, hkn, hln⟩
+  exact ⟨n, trivial, UniformOnFun.gen_mono (hmono hkn) (hb.2 <| hln)⟩
+  exact fun k l h ↦ UniformOnFun.gen_mono (hmono h) (hb.2 h)
 
 protected theorem isCountablyGenerated_uniformity [IsCountablyGenerated (𝓤 β)] {t : ℕ → Set α}
     (ht : ∀ n, t n ∈ 𝔖) (hmono : Monotone t) (hex : ∀ s ∈ 𝔖, ∃ n, s ⊆ t n) :
@@ -980,21 +980,21 @@ protected lemma continuous_rng_iff {X : Type*} [TopologicalSpace X] {f : X → (
 
 instance [CompleteSpace β] : CompleteSpace (α →ᵤ[𝔖] β) := by
   rcases isEmpty_or_nonempty β
-  · infer_instance
-  · refine ⟨fun {F} hF ↦ ?_⟩
-    have := hF.1
-    have : ∀ x ∈ ⋃₀ 𝔖, ∃ y : β, Tendsto (toFun 𝔖 · x) F (𝓝 y) := fun x hx ↦
-      CompleteSpace.complete (hF.map (uniformContinuous_eval_of_mem_sUnion _ _ hx))
-    choose! g hg using this
-    use ofFun 𝔖 g
-    simp_rw [UniformOnFun.nhds_eq_of_basis _ _ uniformity_hasBasis_closed, le_iInf₂_iff,
-      le_principal_iff]
-    intro s hs U ⟨hU, hUc⟩
-    rcases cauchy_iff.mp hF |>.2 _ <| UniformOnFun.gen_mem_uniformity _ _ hs hU
-      with ⟨V, hV, hVU⟩
-    filter_upwards [hV] with f hf x hx
-    refine hUc.mem_of_tendsto ((hg x ⟨s, hs, hx⟩).prod_mk_nhds tendsto_const_nhds) ?_
-    filter_upwards [hV] with g' hg' using hVU (mk_mem_prod hg' hf) _ hx
+  infer_instance
+  refine ⟨fun {F} hF ↦ ?_⟩
+  have := hF.1
+  have : ∀ x ∈ ⋃₀ 𝔖, ∃ y : β, Tendsto (toFun 𝔖 · x) F (𝓝 y) := fun x hx ↦
+    CompleteSpace.complete (hF.map (uniformContinuous_eval_of_mem_sUnion _ _ hx))
+  choose! g hg using this
+  use ofFun 𝔖 g
+  simp_rw [UniformOnFun.nhds_eq_of_basis _ _ uniformity_hasBasis_closed, le_iInf₂_iff,
+    le_principal_iff]
+  intro s hs U ⟨hU, hUc⟩
+  rcases cauchy_iff.mp hF |>.2 _ <| UniformOnFun.gen_mem_uniformity _ _ hs hU
+    with ⟨V, hV, hVU⟩
+  filter_upwards [hV] with f hf x hx
+  refine hUc.mem_of_tendsto ((hg x ⟨s, hs, hx⟩).prod_mk_nhds tendsto_const_nhds) ?_
+  filter_upwards [hV] with g' hg' using hVU (mk_mem_prod hg' hf) _ hx
 
 /-- The natural bijection between `α → β × γ` and `(α → β) × (α → γ)`, upgraded to a uniform
 isomorphism between `α →ᵤ[𝔖] β × γ` and `(α →ᵤ[𝔖] β) × (α →ᵤ[𝔖] γ)`. -/
@@ -1082,14 +1082,14 @@ theorem uniformSpace_eq_inf_precomp_of_cover {δ₁ δ₂ : Type*} (φ₁ : δ�
   simpa only [← univ_subset_iff, ψ₁, ψ₂, range_restrictPreimage, ← preimage_union,
     ← image_subset_iff, image_univ, Subtype.range_val] using h_cover S hS
   refine le_antisymm (le_inf ?_ ?_) (le_iInf₂ fun S hS ↦ ?_)
-  · rw [← uniformContinuous_iff]
-    exact UniformOnFun.precomp_uniformContinuous h_image₁
-  · rw [← uniformContinuous_iff]
-    exact UniformOnFun.precomp_uniformContinuous h_image₂
-  · simp_rw [this S hS, UniformSpace.comap_iInf, UniformSpace.comap_inf, ← UniformSpace.comap_comap]
-    exact inf_le_inf
-      (iInf₂_le_of_le _ (h_preimage₁ hS) le_rfl)
-      (iInf₂_le_of_le _ (h_preimage₂ hS) le_rfl)
+  rw [← uniformContinuous_iff]
+  exact UniformOnFun.precomp_uniformContinuous h_image₁
+  rw [← uniformContinuous_iff]
+  exact UniformOnFun.precomp_uniformContinuous h_image₂
+  simp_rw [this S hS, UniformSpace.comap_iInf, UniformSpace.comap_inf, ← UniformSpace.comap_comap]
+  exact inf_le_inf
+    (iInf₂_le_of_le _ (h_preimage₁ hS) le_rfl)
+    (iInf₂_le_of_le _ (h_preimage₂ hS) le_rfl)
 
 variable (𝔖) in
 theorem uniformSpace_eq_iInf_precomp_of_cover {δ : ι → Type*} (φ : Π i, δ i → α)
@@ -1106,10 +1106,10 @@ theorem uniformSpace_eq_iInf_precomp_of_cover {δ : ι → Type*} (φ : Π i, δ
   -- With a better theory of ideals we may be able to simplify the following by replacing `𝔗 i`
   -- by `(φ i ⁻¹' ·) '' 𝔖`.
   refine le_antisymm (le_iInf fun i ↦ ?_) (le_iInf₂ fun S hS ↦ ?_)
-  · rw [← uniformContinuous_iff]
-    exact UniformOnFun.precomp_uniformContinuous (h_image i)
-  · simp_rw [this S hS, UniformSpace.comap_iInf, ← UniformSpace.comap_comap]
-    exact iInf_mono fun i ↦ iInf₂_le_of_le _ (h_preimage i hS) le_rfl
+  rw [← uniformContinuous_iff]
+  exact UniformOnFun.precomp_uniformContinuous (h_image i)
+  simp_rw [this S hS, UniformSpace.comap_iInf, ← UniformSpace.comap_comap]
+  exact iInf_mono fun i ↦ iInf₂_le_of_le _ (h_preimage i hS) le_rfl
 
 end UniformOnFun
 

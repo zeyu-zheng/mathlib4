@@ -83,24 +83,24 @@ can always assume that `p` is prime.
 theorem reduce_to_p_prime {P : Prop} :
     (∀ p > 0, MixedCharZero R p → P) ↔ ∀ p : ℕ, p.Prime → MixedCharZero R p → P := by
   constructor
-  · intro h q q_prime q_mixedChar
-    exact h q (Nat.Prime.pos q_prime) q_mixedChar
-  · intro h q q_pos q_mixedChar
-    rcases q_mixedChar.charP_quotient with ⟨I, hI_ne_top, _⟩
-    -- Krull's Thm: There exists a prime ideal `P` such that `I ≤ P`
-    rcases Ideal.exists_le_maximal I hI_ne_top with ⟨M, hM_max, h_IM⟩
-    let r := ringChar (R ⧸ M)
-    have r_pos : r ≠ 0
-    have q_zero :=
-      congr_arg (Ideal.Quotient.factor I M h_IM) (CharP.cast_eq_zero (R ⧸ I) q)
-    simp only [map_natCast, map_zero] at q_zero
-    apply ne_zero_of_dvd_ne_zero (ne_of_gt q_pos)
-    exact (CharP.cast_eq_zero_iff (R ⧸ M) r q).mp q_zero
-    have r_prime : Nat.Prime r :=
-      or_iff_not_imp_right.1 (CharP.char_is_prime_or_zero (R ⧸ M) r) r_pos
-    apply h r r_prime
-    have : CharZero R := q_mixedChar.toCharZero
-    exact ⟨⟨M, hM_max.ne_top, ringChar.of_eq rfl⟩⟩
+  intro h q q_prime q_mixedChar
+  exact h q (Nat.Prime.pos q_prime) q_mixedChar
+  intro h q q_pos q_mixedChar
+  rcases q_mixedChar.charP_quotient with ⟨I, hI_ne_top, _⟩
+  -- Krull's Thm: There exists a prime ideal `P` such that `I ≤ P`
+  rcases Ideal.exists_le_maximal I hI_ne_top with ⟨M, hM_max, h_IM⟩
+  let r := ringChar (R ⧸ M)
+  have r_pos : r ≠ 0
+  have q_zero :=
+    congr_arg (Ideal.Quotient.factor I M h_IM) (CharP.cast_eq_zero (R ⧸ I) q)
+  simp only [map_natCast, map_zero] at q_zero
+  apply ne_zero_of_dvd_ne_zero (ne_of_gt q_pos)
+  exact (CharP.cast_eq_zero_iff (R ⧸ M) r q).mp q_zero
+  have r_prime : Nat.Prime r :=
+    or_iff_not_imp_right.1 (CharP.char_is_prime_or_zero (R ⧸ M) r) r_pos
+  apply h r r_prime
+  have : CharZero R := q_mixedChar.toCharZero
+  exact ⟨⟨M, hM_max.ne_top, ringChar.of_eq rfl⟩⟩
 
 /--
 Reduction to `I` prime ideal: When proving statements about mixed characteristic rings,
@@ -109,25 +109,25 @@ after we reduced to `p` prime, we can assume that the ideal `I` in the definitio
 theorem reduce_to_maximal_ideal {p : ℕ} (hp : Nat.Prime p) :
     (∃ I : Ideal R, I ≠ ⊤ ∧ CharP (R ⧸ I) p) ↔ ∃ I : Ideal R, I.IsMaximal ∧ CharP (R ⧸ I) p := by
   constructor
-  · intro g
-    rcases g with ⟨I, ⟨hI_not_top, _⟩⟩
-    -- Krull's Thm: There exists a prime ideal `M` such that `I ≤ M`.
-    rcases Ideal.exists_le_maximal I hI_not_top with ⟨M, ⟨hM_max, hM_ge⟩⟩
-    use M
-    constructor
-    · exact hM_max
-    · cases CharP.exists (R ⧸ M) with
-      | intro r hr =>
-        convert hr
-        have r_dvd_p : r ∣ p := by
-          rw [← CharP.cast_eq_zero_iff (R ⧸ M) r p]
-          convert congr_arg (Ideal.Quotient.factor I M hM_ge) (CharP.cast_eq_zero (R ⧸ I) p)
-        symm
-        apply (Nat.Prime.eq_one_or_self_of_dvd hp r r_dvd_p).resolve_left
-        exact CharP.char_ne_one (R ⧸ M) r
-  · intro ⟨I, hI_max, h_charP⟩
-    use I
-    exact ⟨Ideal.IsMaximal.ne_top hI_max, h_charP⟩
+  intro g
+  rcases g with ⟨I, ⟨hI_not_top, _⟩⟩
+  -- Krull's Thm: There exists a prime ideal `M` such that `I ≤ M`.
+  rcases Ideal.exists_le_maximal I hI_not_top with ⟨M, ⟨hM_max, hM_ge⟩⟩
+  use M
+  constructor
+  exact hM_max
+  cases CharP.exists (R ⧸ M) with
+  | intro r hr =>
+    convert hr
+    have r_dvd_p : r ∣ p := by
+      rw [← CharP.cast_eq_zero_iff (R ⧸ M) r p]
+      convert congr_arg (Ideal.Quotient.factor I M hM_ge) (CharP.cast_eq_zero (R ⧸ I) p)
+    symm
+    apply (Nat.Prime.eq_one_or_self_of_dvd hp r r_dvd_p).resolve_left
+    exact CharP.char_ne_one (R ⧸ M) r
+  intro ⟨I, hI_max, h_charP⟩
+  use I
+  exact ⟨Ideal.IsMaximal.ne_top hI_max, h_charP⟩
 
 end MixedCharZero
 
@@ -158,7 +158,7 @@ theorem of_algebraRat [Algebra ℚ R] : ∀ I : Ideal R, I ≠ ⊤ → CharZero 
   contrapose! hI
   -- `↑a - ↑b` is a unit contained in `I`, which contradicts `I ≠ ⊤`.
   refine I.eq_top_of_isUnit_mem ?_ (IsUnit.map (algebraMap ℚ R) (IsUnit.mk0 (a - b : ℚ) ?_))
-  · simpa only [← Ideal.Quotient.eq_zero_iff_mem, map_sub, sub_eq_zero, map_natCast]
+  simpa only [← Ideal.Quotient.eq_zero_iff_mem, map_sub, sub_eq_zero, map_natCast]
   simpa only [Ne, sub_eq_zero] using (@Nat.cast_injective ℚ _ _).ne hI
 
 section ConstructionAlgebraRat
@@ -265,12 +265,12 @@ theorem iff_not_mixedCharZero [CharZero R] :
 theorem nonempty_algebraRat_iff :
     Nonempty (Algebra ℚ R) ↔ ∀ I : Ideal R, I ≠ ⊤ → CharZero (R ⧸ I) := by
   constructor
-  · intro h_alg
-    haveI h_alg' : Algebra ℚ R := h_alg.some
-    apply of_algebraRat
-  · intro h
-    apply Nonempty.intro
-    exact algebraRat h
+  intro h_alg
+  haveI h_alg' : Algebra ℚ R := h_alg.some
+  apply of_algebraRat
+  intro h
+  apply Nonempty.intro
+  exact algebraRat h
 
 end EqualCharZero
 
@@ -302,12 +302,12 @@ variable {P : Prop}
 theorem split_equalCharZero_mixedCharZero [CharZero R] (h_equal : Algebra ℚ R → P)
     (h_mixed : ∀ p : ℕ, Nat.Prime p → MixedCharZero R p → P) : P := by
   by_cases h : ∃ p > 0, MixedCharZero R p
-  · rcases h with ⟨p, ⟨H, hp⟩⟩
-    rw [← MixedCharZero.reduce_to_p_prime] at h_mixed
-    exact h_mixed p H hp
-  · apply h_equal
-    rw [← isEmpty_algebraRat_iff_mixedCharZero, not_isEmpty_iff] at h
-    exact h.some
+  rcases h with ⟨p, ⟨H, hp⟩⟩
+  rw [← MixedCharZero.reduce_to_p_prime] at h_mixed
+  exact h_mixed p H hp
+  apply h_equal
+  rw [← isEmpty_algebraRat_iff_mixedCharZero, not_isEmpty_iff] at h
+  exact h.some
 
 example (n : ℕ) (h : n ≠ 0) : 0 < n :=
   zero_lt_iff.mpr h
@@ -323,10 +323,10 @@ theorem split_by_characteristic (h_pos : ∀ p : ℕ, p ≠ 0 → CharP R p → 
   cases CharP.exists R with
   | intro p p_charP =>
     by_cases h : p = 0
-    · rw [h] at p_charP
-      haveI h0 : CharZero R := CharP.charP_to_charZero R
-      exact split_equalCharZero_mixedCharZero R h_equal h_mixed
-    · exact h_pos p h p_charP
+    rw [h] at p_charP
+    haveI h0 : CharZero R := CharP.charP_to_charZero R
+    exact split_equalCharZero_mixedCharZero R h_equal h_mixed
+    exact h_pos p h p_charP
 
 /--
 In an `IsDomain R`, split any `Prop` over `R` into the three cases:

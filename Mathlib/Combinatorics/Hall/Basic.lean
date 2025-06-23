@@ -79,8 +79,8 @@ theorem hallMatchingsOn.nonempty {ι : Type u} {α : Type v} [DecidableEq α] (t
     apply (all_card_le_biUnion_card_iff_existsInjective' fun i : ι' => t i).mp
     intro s'
     convert h (s'.image (↑)) using 1
-    · simp only [card_image_of_injective s' Subtype.coe_injective]
-    · rw [image_biUnion]
+    simp only [card_image_of_injective s' Subtype.coe_injective]
+    rw [image_biUnion]
 
 /-- This is the `hallMatchingsOn` sets assembled into a directed system.
 -/
@@ -121,41 +121,38 @@ theorem Finset.all_card_le_biUnion_card_iff_exists_injective {ι : Type u} {α :
     (∀ s : Finset ι, s.card ≤ (s.biUnion t).card) ↔
       ∃ f : ι → α, Function.Injective f ∧ ∀ x, f x ∈ t x := by
   constructor
-  · intro h
-    -- Set up the functor
-    haveI : ∀ ι' : (Finset ι)ᵒᵖ, Nonempty ((hallMatchingsFunctor t).obj ι') := fun ι' =>
-      hallMatchingsOn.nonempty t h ι'.unop
-    haveI : ∀ ι' : (Finset ι)ᵒᵖ, Finite ((hallMatchingsFunctor t).obj ι') := by
-      intro ι'
-      rw [hallMatchingsFunctor]
-      infer_instance
-    -- Apply the compactness argument
-    obtain ⟨u, hu⟩ := nonempty_sections_of_finite_inverse_system (hallMatchingsFunctor t)
-    -- Interpret the resulting section of the inverse limit
-    refine ⟨?_, ?_, ?_⟩
-    ·-- Build the matching function from the section
-      exact fun i =>
-        (u (Opposite.op ({i} : Finset ι))).val ⟨i, by simp only [Opposite.unop_op, mem_singleton]⟩
-    · -- Show that it is injective
-      intro i i'
-      have subi : ({i} : Finset ι) ⊆ {i, i'} := by simp
-      have subi' : ({i'} : Finset ι) ⊆ {i, i'} := by simp
-      rw [← Finset.le_iff_subset] at subi subi'
-      simp only
-      rw [← hu (CategoryTheory.homOfLE subi).op, ← hu (CategoryTheory.homOfLE subi').op]
-      let uii' := u (Opposite.op ({i, i'} : Finset ι))
-      exact fun h => Subtype.mk_eq_mk.mp (uii'.property.1 h)
-    · -- Show that it maps each index to the corresponding finite set
-      intro i
-      apply (u (Opposite.op ({i} : Finset ι))).property.2
-  · -- The reverse direction is a straightforward cardinality argument
-    rintro ⟨f, hf₁, hf₂⟩ s
-    rw [← Finset.card_image_of_injective s hf₁]
-    apply Finset.card_le_card
-    intro
-    rw [Finset.mem_image, Finset.mem_biUnion]
-    rintro ⟨x, hx, rfl⟩
-    exact ⟨x, hx, hf₂ x⟩
+  intro h
+  -- Set up the functor
+  haveI : ∀ ι' : (Finset ι)ᵒᵖ, Nonempty ((hallMatchingsFunctor t).obj ι') := fun ι' =>
+    hallMatchingsOn.nonempty t h ι'.unop
+  haveI : ∀ ι' : (Finset ι)ᵒᵖ, Finite ((hallMatchingsFunctor t).obj ι') := by
+    intro ι'
+    rw [hallMatchingsFunctor]
+    infer_instance
+  -- Apply the compactness argument
+  obtain ⟨u, hu⟩ := nonempty_sections_of_finite_inverse_system (hallMatchingsFunctor t)
+  -- Interpret the resulting section of the inverse limit
+  refine ⟨?_, ?_, ?_⟩
+  exact fun i =>
+    (u (Opposite.op ({i} : Finset ι))).val ⟨i, by simp only [Opposite.unop_op, mem_singleton]⟩
+  intro i i'
+  have subi : ({i} : Finset ι) ⊆ {i, i'} := by simp
+  have subi' : ({i'} : Finset ι) ⊆ {i, i'} := by simp
+  rw [← Finset.le_iff_subset] at subi subi'
+  simp only
+  rw [← hu (CategoryTheory.homOfLE subi).op, ← hu (CategoryTheory.homOfLE subi').op]
+  let uii' := u (Opposite.op ({i, i'} : Finset ι))
+  exact fun h => Subtype.mk_eq_mk.mp (uii'.property.1 h)
+  intro i
+  apply (u (Opposite.op ({i} : Finset ι))).property.2
+  -- The reverse direction is a straightforward cardinality argument
+  rintro ⟨f, hf₁, hf₂⟩ s
+  rw [← Finset.card_image_of_injective s hf₁]
+  apply Finset.card_le_card
+  intro
+  rw [Finset.mem_image, Finset.mem_biUnion]
+  rintro ⟨x, hx, rfl⟩
+  exact ⟨x, hx, hf₂ x⟩
 
 /-- Given a relation such that the image of every singleton set is finite, then the image of every
 finite set is finite. -/

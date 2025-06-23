@@ -128,13 +128,13 @@ theorem isUnit_toMatrix : IsUnit (b.toMatrix b₂) :=
 theorem isUnit_toMatrix_iff [Nontrivial k] (p : ι → P) :
     IsUnit (b.toMatrix p) ↔ AffineIndependent k p ∧ affineSpan k (range p) = ⊤ := by
   constructor
-  · rintro ⟨⟨B, A, hA, hA'⟩, rfl : B = b.toMatrix p⟩
-    exact ⟨b.affineIndependent_of_toMatrix_right_inv p hA,
-      b.affineSpan_eq_top_of_toMatrix_left_inv p hA'⟩
-  · rintro ⟨h_tot, h_ind⟩
-    let b' : AffineBasis ι k P := ⟨p, h_tot, h_ind⟩
-    change IsUnit (b.toMatrix b')
-    exact b.isUnit_toMatrix b'
+  rintro ⟨⟨B, A, hA, hA'⟩, rfl : B = b.toMatrix p⟩
+  exact ⟨b.affineIndependent_of_toMatrix_right_inv p hA,
+    b.affineSpan_eq_top_of_toMatrix_left_inv p hA'⟩
+  rintro ⟨h_tot, h_ind⟩
+  let b' : AffineBasis ι k P := ⟨p, h_tot, h_ind⟩
+  change IsUnit (b.toMatrix b')
+  exact b.isUnit_toMatrix b'
 
 end Ring
 

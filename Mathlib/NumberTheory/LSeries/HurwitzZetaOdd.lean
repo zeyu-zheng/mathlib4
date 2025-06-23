@@ -165,13 +165,13 @@ lemma continuousOn_oddKernel (a : UnitAddCircle) : ContinuousOn (oddKernel a) (I
     (continuous_re.comp_continuousOn this).congr fun a _ ↦ (ofReal_re _).symm
   simp_rw [oddKernel_def' a]
   refine fun x hx ↦ ((Continuous.continuousAt ?_).mul ?_).continuousWithinAt
-  · fun_prop
-  · have hf : Continuous fun u : ℝ ↦ (a * I * u, I * u) := by fun_prop
-    apply ContinuousAt.add
-    · exact ((continuousAt_jacobiTheta₂' (a * I * x) (by rwa [I_mul_im, ofReal_re])).comp
-        (f := fun u : ℝ ↦ (a * I * u, I * u)) hf.continuousAt).div_const _
-    · exact continuousAt_const.mul <| (continuousAt_jacobiTheta₂ (a * I * x)
-        (by rwa [I_mul_im, ofReal_re])).comp (f := fun u : ℝ ↦ (a * I * u, I * u)) hf.continuousAt
+  fun_prop
+  have hf : Continuous fun u : ℝ ↦ (a * I * u, I * u) := by fun_prop
+  apply ContinuousAt.add
+  exact ((continuousAt_jacobiTheta₂' (a * I * x) (by rwa [I_mul_im, ofReal_re])).comp
+    (f := fun u : ℝ ↦ (a * I * u, I * u)) hf.continuousAt).div_const _
+  exact continuousAt_const.mul <| (continuousAt_jacobiTheta₂ (a * I * x)
+    (by rwa [I_mul_im, ofReal_re])).comp (f := fun u : ℝ ↦ (a * I * u, I * u)) hf.continuousAt
 
 lemma continuousOn_sinKernel (a : UnitAddCircle) : ContinuousOn (sinKernel a) (Ioi 0) := by
   induction' a using QuotientAddGroup.induction_on' with a
@@ -238,9 +238,9 @@ lemma hasSum_int_sinKernel (a : ℝ) {t : ℝ} (ht : 0 < t) : HasSum
     eq_div_iff h, ofReal_mul, ofReal_mul, ofReal_pow, ofReal_neg, ofReal_intCast,
     mul_comm _ (-2 * π : ℂ), ← mul_assoc]
   congrm ?_ * cexp (?_ + ?_)
-  · simp only [neg_mul, mul_neg, neg_neg, mul_assoc]
-  · exact mul_right_comm (2 * π * I) a n
-  · simp only [← mul_assoc, mul_comm _ I, I_mul_I, neg_one_mul]
+  simp only [neg_mul, mul_neg, neg_neg, mul_assoc]
+  exact mul_right_comm (2 * π * I) a n
+  simp only [← mul_assoc, mul_comm _ I, I_mul_I, neg_one_mul]
 
 lemma hasSum_nat_sinKernel (a : ℝ) {t : ℝ} (ht : 0 < t) :
     HasSum (fun n : ℕ ↦ 2 * n * Real.sin (2 * π * a * n) * rexp (-π * n ^ 2 * t))
@@ -285,13 +285,13 @@ lemma isBigO_atTop_sinKernel (a : UnitAddCircle) :
   filter_upwards [eventually_gt_atTop 0] with t ht
   rw [HurwitzKernelBounds.F_nat, ← (hasSum_nat_sinKernel a ht).tsum_eq]
   apply tsum_of_norm_bounded (g := fun n ↦ 2 * HurwitzKernelBounds.f_nat 1 0 t n)
-  · exact (HurwitzKernelBounds.summable_f_nat 1 0 ht).hasSum.mul_left _
-  · intro n
-    rw [norm_mul, norm_mul, norm_mul, norm_two, mul_assoc, mul_assoc,
-      mul_le_mul_iff_of_pos_left two_pos, HurwitzKernelBounds.f_nat, pow_one, add_zero,
-      norm_of_nonneg (exp_pos _).le, Real.norm_eq_abs, Nat.abs_cast, ← mul_assoc,
-      mul_le_mul_iff_of_pos_right (exp_pos _)]
-    exact mul_le_of_le_one_right (Nat.cast_nonneg _) (abs_sin_le_one _)
+  exact (HurwitzKernelBounds.summable_f_nat 1 0 ht).hasSum.mul_left _
+  intro n
+  rw [norm_mul, norm_mul, norm_mul, norm_two, mul_assoc, mul_assoc,
+    mul_le_mul_iff_of_pos_left two_pos, HurwitzKernelBounds.f_nat, pow_one, add_zero,
+    norm_of_nonneg (exp_pos _).le, Real.norm_eq_abs, Nat.abs_cast, ← mul_assoc,
+    mul_le_mul_iff_of_pos_right (exp_pos _)]
+  exact mul_le_of_le_one_right (Nat.cast_nonneg _) (abs_sin_le_one _)
 
 end asymp
 
@@ -429,8 +429,8 @@ lemma hasSum_nat_completedSinZeta (a : ℝ) {s : ℂ} (hs : 1 < re s) :
   refine this.congr_fun fun n ↦ ?_
   rw [div_right_comm]
   rcases eq_or_ne n 0 with rfl | h
-  · simp only [Nat.cast_zero, mul_zero, Real.sin_zero, ofReal_zero, zero_div, mul_neg,
-      Int.sign_zero, Int.cast_zero, Complex.exp_zero, mul_one, neg_zero, add_zero]
+  simp only [Nat.cast_zero, mul_zero, Real.sin_zero, ofReal_zero, zero_div, mul_neg,
+    Int.sign_zero, Int.cast_zero, Complex.exp_zero, mul_one, neg_zero, add_zero]
   simp_rw [Int.sign_natCast_of_ne_zero h, Int.cast_one, ofReal_sin, Complex.sin]
   simp only [← mul_div_assoc, push_cast, mul_assoc (Gammaℝ _), ← mul_add]
   congr 3
@@ -520,9 +520,9 @@ lemma hasSum_nat_hurwitzZetaOdd_of_mem_Icc {a : ℝ} (ha : a ∈ Icc 0 1) {s : �
   intro b hb
   rw [abs_of_nonneg (by positivity), (by simp : (n : ℂ) + b = ↑(n + b))]
   rcases lt_or_eq_of_le (by positivity : 0 ≤ n + b) with hb | hb
-  · rw [sign_pos hb, SignType.coe_one]
-  · rw [← hb, ofReal_zero, zero_cpow ((not_lt.mpr zero_le_one) ∘ (zero_re ▸ · ▸ hs)),
-      div_zero, div_zero]
+  rw [sign_pos hb, SignType.coe_one]
+  rw [← hb, ofReal_zero, zero_cpow ((not_lt.mpr zero_le_one) ∘ (zero_re ▸ · ▸ hs)),
+    div_zero, div_zero]
 
 /-- Formula for `sinZeta` as a Dirichlet series in the convergence range, with sum over `ℤ`. -/
 theorem hasSum_int_sinZeta (a : ℝ) {s : ℂ} (hs : 1 < re s) :
@@ -543,19 +543,19 @@ lemma hasSum_nat_sinZeta (a : ℝ) {s : ℂ} (hs : 1 < re s) :
   simp_rw [push_cast, Complex.sin]
   refine this.congr_fun fun n ↦ ?_
   rcases ne_or_eq n 0 with h | rfl
-  · simp only [neg_mul, sub_mul, div_right_comm _ (2 : ℂ), Int.sign_natCast_of_ne_zero h,
-      Int.cast_one, mul_one, mul_comm I, neg_neg, ← add_div, ← sub_eq_neg_add]
-    congr 5 <;> ring
-  · simp only [Nat.cast_zero, Int.sign_zero, Int.cast_zero, mul_zero, zero_mul, neg_zero,
-      sub_self, zero_div, zero_add]
+  simp only [neg_mul, sub_mul, div_right_comm _ (2 : ℂ), Int.sign_natCast_of_ne_zero h,
+    Int.cast_one, mul_one, mul_comm I, neg_neg, ← add_div, ← sub_eq_neg_add]
+  congr 5 <;> ring
+  simp only [Nat.cast_zero, Int.sign_zero, Int.cast_zero, mul_zero, zero_mul, neg_zero,
+    sub_self, zero_div, zero_add]
 
 /-- Reformulation of `hasSum_nat_sinZeta` using `LSeriesHasSum`. -/
 lemma LSeriesHasSum_sin (a : ℝ) {s : ℂ} (hs : 1 < re s) :
     LSeriesHasSum (Real.sin <| 2 * π * a * ·) s (sinZeta a s) := by
   refine (hasSum_nat_sinZeta a hs).congr_fun (fun n ↦ ?_)
   rcases eq_or_ne n 0 with rfl | hn
-  · rw [LSeries.term_zero, Nat.cast_zero, mul_zero, Real.sin_zero, ofReal_zero, zero_div]
-  · apply LSeries.term_of_ne_zero hn
+  rw [LSeries.term_zero, Nat.cast_zero, mul_zero, Real.sin_zero, ofReal_zero, zero_div]
+  apply LSeries.term_of_ne_zero hn
 
 /-- The trivial zeroes of the odd Hurwitz zeta function. -/
 theorem hurwitzZetaOdd_neg_two_mul_nat_sub_one (a : UnitAddCircle) (n : ℕ) :

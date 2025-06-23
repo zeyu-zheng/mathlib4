@@ -214,19 +214,19 @@ theorem tendsto_lcRow0 {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
   ext ⟨g, rfl⟩ i j : 3
   fin_cases i <;> [fin_cases j; skip]
   -- the following are proved by `simp`, but it is replaced by `simp only` to avoid timeouts.
-  · simp only [mB, mulVec, dotProduct, Fin.sum_univ_two, coe_matrix_coe,
-      Int.coe_castRingHom, lcRow0_apply, Function.comp_apply, cons_val_zero, lcRow0Extend_apply,
-      LinearMap.GeneralLinearGroup.coeFn_generalLinearEquiv, GeneralLinearGroup.coe_toLinear,
-      val_planeConformalMatrix, neg_neg, mulVecLin_apply, cons_val_one, head_cons, of_apply,
-      Fin.mk_zero, Fin.mk_one]
-  · convert congr_arg (fun n : ℤ => (-n : ℝ)) g.det_coe.symm using 1
-    simp only [f₁, mulVec, dotProduct, Fin.sum_univ_two, Matrix.det_fin_two, Function.comp_apply,
-      Subtype.coe_mk, lcRow0Extend_apply, cons_val_zero,
-      LinearMap.GeneralLinearGroup.coeFn_generalLinearEquiv, GeneralLinearGroup.coe_toLinear,
-      val_planeConformalMatrix, mulVecLin_apply, cons_val_one, head_cons, map_apply, neg_mul,
-      Int.cast_sub, Int.cast_mul, neg_sub, of_apply, Fin.mk_zero, Fin.mk_one]
-    ring
-  · rfl
+  simp only [mB, mulVec, dotProduct, Fin.sum_univ_two, coe_matrix_coe,
+    Int.coe_castRingHom, lcRow0_apply, Function.comp_apply, cons_val_zero, lcRow0Extend_apply,
+    LinearMap.GeneralLinearGroup.coeFn_generalLinearEquiv, GeneralLinearGroup.coe_toLinear,
+    val_planeConformalMatrix, neg_neg, mulVecLin_apply, cons_val_one, head_cons, of_apply,
+    Fin.mk_zero, Fin.mk_one]
+  convert congr_arg (fun n : ℤ => (-n : ℝ)) g.det_coe.symm using 1
+  simp only [f₁, mulVec, dotProduct, Fin.sum_univ_two, Matrix.det_fin_two, Function.comp_apply,
+    Subtype.coe_mk, lcRow0Extend_apply, cons_val_zero,
+    LinearMap.GeneralLinearGroup.coeFn_generalLinearEquiv, GeneralLinearGroup.coe_toLinear,
+    val_planeConformalMatrix, mulVecLin_apply, cons_val_one, head_cons, map_apply, neg_mul,
+    Int.cast_sub, Int.cast_mul, neg_sub, of_apply, Fin.mk_zero, Fin.mk_one]
+  ring
+  rfl
 
 /-- This replaces `(g•z).re = a/c + *` in the standard theory with the following novel identity:
   `g • z = (a c + b d) / (c^2 + d^2) + (d z - c) / ((c^2 + d^2) (c z + d))`
@@ -285,10 +285,10 @@ theorem exists_max_im : ∃ g : SL(2, ℤ), ∀ g' : SL(2, ℤ), (g' • z).im �
   refine ⟨g, fun g' => ?_⟩
   rw [ModularGroup.im_smul_eq_div_normSq, ModularGroup.im_smul_eq_div_normSq,
     div_le_div_left]
-  · simpa [← hg] using hp ((↑ₘg') 1) (bottom_row_coprime g')
-  · exact z.im_pos
-  · exact normSq_denom_pos g' z
-  · exact normSq_denom_pos g z
+  simpa [← hg] using hp ((↑ₘg') 1) (bottom_row_coprime g')
+  exact z.im_pos
+  exact normSq_denom_pos g' z
+  exact normSq_denom_pos g z
 
 /-- Given `z : ℍ` and a bottom row `(c,d)`, among the `g : SL(2,ℤ)` with this bottom row, minimize
   `|(g•z).re|`.  -/
@@ -332,14 +332,14 @@ theorem exists_eq_T_zpow_of_c_eq_zero (hc : (↑ₘg) 1 0 = 0) :
   have had := g.det_coe
   replace had : (↑ₘg) 0 0 * (↑ₘg) 1 1 = 1 := by rw [det_fin_two, hc] at had; linarith
   rcases Int.eq_one_or_neg_one_of_mul_eq_one' had with (⟨ha, hd⟩ | ⟨ha, hd⟩)
-  · use (↑ₘg) 0 1
-    suffices g = T ^ (↑ₘg) 0 1 by intro z; conv_lhs => rw [this]
-    ext i j; fin_cases i <;> fin_cases j <;>
-      simp [ha, hc, hd, coe_T_zpow, show (1 : Fin (0 + 2)) = (1 : Fin 2) from rfl]
-  · use -((↑ₘg) 0 1)
-    suffices g = -T ^ (-((↑ₘg) 0 1)) by intro z; conv_lhs => rw [this, SL_neg_smul]
-    ext i j; fin_cases i <;> fin_cases j <;>
-      simp [ha, hc, hd, coe_T_zpow, show (1 : Fin (0 + 2)) = (1 : Fin 2) from rfl]
+  use (↑ₘg) 0 1
+  suffices g = T ^ (↑ₘg) 0 1 by intro z; conv_lhs => rw [this]
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [ha, hc, hd, coe_T_zpow, show (1 : Fin (0 + 2)) = (1 : Fin 2) from rfl]
+  use -((↑ₘg) 0 1)
+  suffices g = -T ^ (-((↑ₘg) 0 1)) by intro z; conv_lhs => rw [this, SL_neg_smul]
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [ha, hc, hd, coe_T_zpow, show (1 : Fin (0 + 2)) = (1 : Fin 2) from rfl]
 
 -- If `c = 1`, then `g` factorises into a product terms involving only `T` and `S`.
 theorem g_eq_of_c_eq_one (hc : (↑ₘg) 1 0 = 1) : g = T ^ (↑ₘg) 0 0 * S * T ^ (↑ₘg) 1 1 := by
@@ -426,23 +426,23 @@ theorem exists_smul_mem_fd (z : ℍ) : ∃ g : SL(2, ℤ), g • z ∈ 𝒟 := b
     denom_apply, denom_apply, hg]
   simpa only [hg''] using hg₀
   constructor
-  · -- Claim: `1 ≤ ⇑norm_sq ↑(g • z)`. If not, then `S•g•z` has larger imaginary part
-    contrapose! hg₀'
-    refine ⟨S * g, ?_⟩
-    rw [mul_smul]
-    exact im_lt_im_S_smul hg₀'
-  · show |(g • z).re| ≤ 1 / 2
-    -- if not, then either `T` or `T'` decrease |Re|.
-    rw [abs_le]
-    constructor
-    · contrapose! hg'
-      refine ⟨T * g, (T_mul_apply_one _).symm, ?_⟩
-      rw [mul_smul, re_T_smul]
-      cases abs_cases ((g • z).re + 1) <;> cases abs_cases (g • z).re <;> linarith
-    · contrapose! hg'
-      refine ⟨T⁻¹ * g, (T_inv_mul_apply_one _).symm, ?_⟩
-      rw [mul_smul, re_T_inv_smul]
-      cases abs_cases ((g • z).re - 1) <;> cases abs_cases (g • z).re <;> linarith
+  -- Claim: `1 ≤ ⇑norm_sq ↑(g • z)`. If not, then `S•g•z` has larger imaginary part
+  contrapose! hg₀'
+  refine ⟨S * g, ?_⟩
+  rw [mul_smul]
+  exact im_lt_im_S_smul hg₀'
+  show |(g • z).re| ≤ 1 / 2
+  -- if not, then either `T` or `T'` decrease |Re|.
+  rw [abs_le]
+  constructor
+  contrapose! hg'
+  refine ⟨T * g, (T_mul_apply_one _).symm, ?_⟩
+  rw [mul_smul, re_T_smul]
+  cases abs_cases ((g • z).re + 1) <;> cases abs_cases (g • z).re <;> linarith
+  contrapose! hg'
+  refine ⟨T⁻¹ * g, (T_inv_mul_apply_one _).symm, ?_⟩
+  rw [mul_smul, re_T_inv_smul]
+  cases abs_cases ((g • z).re - 1) <;> cases abs_cases (g • z).re <;> linarith
 
 section UniqueRepresentative
 
@@ -456,10 +456,10 @@ theorem abs_c_le_one (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : |(↑ₘg
     rwa [sq_le_sq, abs_one] at this
   suffices c ≠ 0 → 9 * c ^ 4 < 16 by
     rcases eq_or_ne c 0 with (hc | hc)
-    · rw [hc]; norm_num
-    · refine (abs_lt_of_sq_lt_sq' ?_ (by norm_num)).2
-      specialize this hc
-      linarith
+    rw [hc]; norm_num
+    refine (abs_lt_of_sq_lt_sq' ?_ (by norm_num)).2
+    specialize this hc
+    linarith
   intro hc
   replace hc : 0 < c ^ 4 := by
     change 0 < c ^ (2 * 2); rw [pow_mul]; apply sq_pos_of_pos (sq_pos_of_ne_zero hc)

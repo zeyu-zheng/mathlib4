@@ -140,9 +140,9 @@ theorem commute_pow_left_of_commute
     {f : M →ₛₗ[σ₁₂] M₂} {g : Module.End R M} {g₂ : Module.End R₂ M₂}
     (h : g₂.comp f = f.comp g) (k : ℕ) : (g₂ ^ k).comp f = f.comp (g ^ k) := by
   induction' k with k ih
-  · simp only [Nat.zero_eq, pow_zero, one_eq_id, id_comp, comp_id]
-  · rw [pow_succ', pow_succ', LinearMap.mul_eq_comp, LinearMap.comp_assoc, ih,
-    ← LinearMap.comp_assoc, h, LinearMap.comp_assoc, LinearMap.mul_eq_comp]
+  simp only [Nat.zero_eq, pow_zero, one_eq_id, id_comp, comp_id]
+  rw [pow_succ', pow_succ', LinearMap.mul_eq_comp, LinearMap.comp_assoc, ih,
+  ← LinearMap.comp_assoc, h, LinearMap.comp_assoc, LinearMap.mul_eq_comp]
 
 @[simp]
 theorem id_pow (n : ℕ) : (id : M →ₗ[R] M) ^ n = id :=
@@ -325,7 +325,7 @@ lemma zero_smulRight (x : M) : (0 : M₁ →ₗ[R] S).smulRight x = 0 := by ext;
 lemma smulRight_apply_eq_zero_iff {f : M₁ →ₗ[R] S} {x : M} [NoZeroSMulDivisors S M] :
     f.smulRight x = 0 ↔ f = 0 ∨ x = 0 := by
   rcases eq_or_ne x 0 with rfl | hx
-  · simp
+  simp
   refine ⟨fun h ↦ Or.inl ?_, fun h ↦ by simp [h.resolve_right hx]⟩
   ext v
   replace h : f v • x = 0 := by simpa only [LinearMap.zero_apply] using LinearMap.congr_fun h v

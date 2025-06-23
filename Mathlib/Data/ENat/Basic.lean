@@ -211,8 +211,8 @@ theorem toNat_add {m n : ℕ∞} (hm : m ≠ ⊤) (hn : n ≠ ⊤) : toNat (m + 
 theorem toNat_sub {n : ℕ∞} (hn : n ≠ ⊤) (m : ℕ∞) : toNat (m - n) = toNat m - toNat n := by
   lift n to ℕ using hn
   induction m
-  · rw [top_sub_coe, toNat_top, zero_tsub]
-  · rw [← coe_sub, toNat_coe, toNat_coe, toNat_coe]
+  rw [top_sub_coe, toNat_top, zero_tsub]
+  rw [← coe_sub, toNat_coe, toNat_coe, toNat_coe]
 
 theorem toNat_eq_iff {m : ℕ∞} {n : ℕ} (hn : n ≠ 0) : toNat m = n ↔ m = n := by
   induction m <;> simp [hn.symm]
@@ -254,7 +254,7 @@ theorem nat_induction {P : ℕ∞ → Prop} (a : ℕ∞) (h0 : P 0) (hsuc : ∀ 
     (htop : (∀ n : ℕ, P n) → P ⊤) : P a := by
   have A : ∀ n : ℕ, P n := fun n => Nat.recOn n h0 hsuc
   cases a
-  · exact htop A
-  · exact A _
+  exact htop A
+  exact A _
 
 end ENat

@@ -107,8 +107,8 @@ theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : NullMeas
   -- Then `N + m > N`, `x ∈ s`, and `f^[N + m] x = f^[N] (f^[m] x) ∈ s`.
   -- This contradicts `x ∈ T ⊆ (⋃ n > N, t n)ᶜ`.
   refine hxt.2 <| mem_iUnion₂.2 ⟨N + m, ?_, hxt.1.1, ?_⟩
-  · simpa [pos_iff_ne_zero]
-  · simpa only [iterate_add] using hmt.1.2
+  simpa [pos_iff_ne_zero]
+  simpa only [iterate_add] using hmt.1.2
 
 /-- If `f` is a conservative map and `s` is a measurable set of nonzero measure, then
 for an arbitrarily large `m` a positive measure of points `x ∈ s` returns back to `s`
@@ -185,7 +185,7 @@ theorem ae_frequently_mem_of_mem_nhds [TopologicalSpace α] [SecondCountableTopo
 protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative f^[n] μ := by
   -- Discharge the trivial case `n = 0`
   cases' n with n
-  · exact Conservative.id μ
+  exact Conservative.id μ
   refine ⟨hf.1.iterate _, fun s hs hs0 => ?_⟩
   rcases (hf.frequently_ae_mem_and_frequently_image_mem hs.nullMeasurableSet hs0).exists
     with ⟨x, _, hx⟩
@@ -199,11 +199,11 @@ protected theorem iterate (hf : Conservative f μ) (n : ℕ) : Conservative f^[n
   apply Nat.mul_div_cancel'
   exact (Nat.modEq_iff_dvd' hkl.le).1 hn
   refine ⟨f^[k] x, hk, m, ?_, ?_⟩
-  · intro hm
-    rw [hm, mul_zero, eq_comm, tsub_eq_zero_iff_le] at this
-    exact this.not_lt hkl
-  · rwa [← iterate_mul, this, ← iterate_add_apply, tsub_add_cancel_of_le]
-    exact hkl.le
+  intro hm
+  rw [hm, mul_zero, eq_comm, tsub_eq_zero_iff_le] at this
+  exact this.not_lt hkl
+  rwa [← iterate_mul, this, ← iterate_add_apply, tsub_add_cancel_of_le]
+  exact hkl.le
 
 end Conservative
 

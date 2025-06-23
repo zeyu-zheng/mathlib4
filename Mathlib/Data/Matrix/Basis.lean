@@ -54,7 +54,7 @@ theorem mulVec_stdBasisMatrix [Fintype m] (i : n) (j : m) (c : α) (x : m → α
   ext i'
   simp [stdBasisMatrix, mulVec, dotProduct]
   rcases eq_or_ne i i' with rfl|h
-  · simp
+  simp
   simp [h, h.symm]
 
 theorem matrix_eq_sum_std_basis [Fintype m] [Fintype n] (x : Matrix m n α) :
@@ -63,15 +63,15 @@ theorem matrix_eq_sum_std_basis [Fintype m] [Fintype n] (x : Matrix m n α) :
   iterate 2 rw [Finset.sum_apply]
   -- Porting note: was `convert`
   refine (Fintype.sum_eq_single i ?_).trans ?_; swap
-  · -- Porting note: `simp` seems unwilling to apply `Fintype.sum_apply`
-    simp (config := { unfoldPartialApp := true }) only [stdBasisMatrix]
-    rw [Fintype.sum_apply, Fintype.sum_apply]
-    simp
-  · intro j' hj'
-    -- Porting note: `simp` seems unwilling to apply `Fintype.sum_apply`
-    simp (config := { unfoldPartialApp := true }) only [stdBasisMatrix]
-    rw [Fintype.sum_apply, Fintype.sum_apply]
-    simp [hj']
+  -- Porting note: `simp` seems unwilling to apply `Fintype.sum_apply`
+  simp (config := { unfoldPartialApp := true }) only [stdBasisMatrix]
+  rw [Fintype.sum_apply, Fintype.sum_apply]
+  simp
+  intro j' hj'
+  -- Porting note: `simp` seems unwilling to apply `Fintype.sum_apply`
+  simp (config := { unfoldPartialApp := true }) only [stdBasisMatrix]
+  rw [Fintype.sum_apply, Fintype.sum_apply]
+  simp [hj']
 
 -- TODO: tie this up with the `Basis` machinery of linear algebra
 -- this is not completely trivial because we are indexing by two types, instead of one
@@ -95,8 +95,8 @@ protected theorem induction_on' [Finite m] [Finite n] {P : Matrix m n α → Pro
   cases nonempty_fintype m; cases nonempty_fintype n
   rw [matrix_eq_sum_std_basis M, ← Finset.sum_product']
   apply Finset.sum_induction _ _ h_add h_zero
-  · intros
-    apply h_std_basis
+  intros
+  apply h_std_basis
 
 @[elab_as_elim]
 protected theorem induction_on [Finite m] [Finite n] [Nonempty m] [Nonempty n]
@@ -189,13 +189,13 @@ theorem mul_of_ne {k l : n} (h : j ≠ k) (d : α) :
   simp only [mul_apply, boole_mul, stdBasisMatrix]
   by_cases h₁ : i = a
   -- porting note (#10745): was `simp [h₁, h, h.symm]`
-  · simp only [h₁, true_and, mul_ite, ite_mul, zero_mul, mul_zero, ← ite_and, zero_apply]
-    refine Finset.sum_eq_zero (fun x _ => ?_)
-    apply if_neg
-    rintro ⟨⟨rfl, rfl⟩, h⟩
-    contradiction
-  · simp only [h₁, false_and, ite_false, mul_ite, zero_mul, mul_zero, ite_self,
-      Finset.sum_const_zero, zero_apply]
+  simp only [h₁, true_and, mul_ite, ite_mul, zero_mul, mul_zero, ← ite_and, zero_apply]
+  refine Finset.sum_eq_zero (fun x _ => ?_)
+  apply if_neg
+  rintro ⟨⟨rfl, rfl⟩, h⟩
+  contradiction
+  simp only [h₁, false_and, ite_false, mul_ite, zero_mul, mul_zero, ite_self,
+    Finset.sum_const_zero, zero_apply]
 
 end
 
@@ -225,19 +225,19 @@ theorem mem_range_scalar_of_commute_stdBasisMatrix {M : Matrix n n α}
     (hM : Pairwise fun i j => Commute (stdBasisMatrix i j 1) M) :
     M ∈ Set.range (Matrix.scalar n) := by
   cases isEmpty_or_nonempty n
-  · exact ⟨0, Subsingleton.elim _ _⟩
+  exact ⟨0, Subsingleton.elim _ _⟩
   obtain ⟨i⟩ := ‹Nonempty n›
   refine ⟨M i i, Matrix.ext fun j k => ?_⟩
   simp only [scalar_apply]
   obtain rfl | hkl := Decidable.eq_or_ne j k
-  · rw [diagonal_apply_eq]
-    obtain rfl | hij := Decidable.eq_or_ne i j
-    · rfl
-    · exact diag_eq_of_commute_stdBasisMatrix (hM hij)
-  · rw [diagonal_apply_ne _ hkl]
-    obtain rfl | hij := Decidable.eq_or_ne i j
-    · rw [col_eq_zero_of_commute_stdBasisMatrix (hM hkl.symm) hkl]
-    · rw [row_eq_zero_of_commute_stdBasisMatrix (hM hij) hkl.symm]
+  rw [diagonal_apply_eq]
+  obtain rfl | hij := Decidable.eq_or_ne i j
+  rfl
+  exact diag_eq_of_commute_stdBasisMatrix (hM hij)
+  rw [diagonal_apply_ne _ hkl]
+  obtain rfl | hij := Decidable.eq_or_ne i j
+  rw [col_eq_zero_of_commute_stdBasisMatrix (hM hkl.symm) hkl]
+  rw [row_eq_zero_of_commute_stdBasisMatrix (hM hij) hkl.symm]
 
 theorem mem_range_scalar_iff_commute_stdBasisMatrix {M : Matrix n n α} :
     M ∈ Set.range (Matrix.scalar n) ↔ ∀ (i j : n), i ≠ j → Commute (stdBasisMatrix i j 1) M := by

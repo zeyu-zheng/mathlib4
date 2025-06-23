@@ -298,8 +298,8 @@ private theorem newton_seq_dist_aux (n : ℕ) :
   | k + 1 =>
     have : 2 ^ n ≤ 2 ^ (n + k) := by
       apply pow_le_pow_right
-      · norm_num
-      · apply Nat.le_add_right
+      norm_num
+      apply Nat.le_add_right
     calc
       ‖newton_seq (n + (k + 1)) - newton_seq n‖ = ‖newton_seq (n + k + 1) - newton_seq n‖ := by
         rw [add_assoc]
@@ -355,9 +355,9 @@ private theorem bound'_sq :
   rw [← mul_zero ‖F.derivative.eval a‖, sq]
   simp only [mul_assoc]
   apply Tendsto.mul
-  · apply tendsto_const_nhds
-  · apply bound'
-    assumption
+  apply tendsto_const_nhds
+  apply bound'
+  assumption
 
 private theorem newton_seq_is_cauchy : IsCauSeq norm newton_seq := fun _ε hε ↦
   (bound hnorm hε).imp fun _N hN _j hj ↦ (newton_seq_dist hnorm hj).trans_lt <| hN le_rfl

@@ -80,16 +80,16 @@ theorem precise_refinement [ParacompactSpace X] (u : ι → Set X) (uo : ∀ a, 
   choose U hxU hU using htf
   -- Send each `i` to the union of `t a` over `a ∈ ind ⁻¹' {i}`
   refine ⟨fun i ↦ ⋃ (a : α) (_ : ind a = i), t a, ?_, ?_, ?_, ?_⟩
-  · exact fun a ↦ isOpen_iUnion fun a ↦ isOpen_iUnion fun _ ↦ hto a
-  · simp only [eq_univ_iff_forall, mem_iUnion]
-    exact fun x ↦ ⟨ind (t_inv x), _, rfl, ht_inv _⟩
-  · refine fun x ↦ ⟨U x, hxU x, ((hU x).image ind).subset ?_⟩
-    simp only [subset_def, mem_iUnion, mem_setOf_eq, Set.Nonempty, mem_inter_iff]
-    rintro i ⟨y, ⟨a, rfl, hya⟩, hyU⟩
-    exact mem_image_of_mem _ ⟨y, hya, hyU⟩
-  · simp only [subset_def, mem_iUnion]
-    rintro i x ⟨a, rfl, hxa⟩
-    exact hind _ hxa
+  exact fun a ↦ isOpen_iUnion fun a ↦ isOpen_iUnion fun _ ↦ hto a
+  simp only [eq_univ_iff_forall, mem_iUnion]
+  exact fun x ↦ ⟨ind (t_inv x), _, rfl, ht_inv _⟩
+  refine fun x ↦ ⟨U x, hxU x, ((hU x).image ind).subset ?_⟩
+  simp only [subset_def, mem_iUnion, mem_setOf_eq, Set.Nonempty, mem_inter_iff]
+  rintro i ⟨y, ⟨a, rfl, hya⟩, hyU⟩
+  exact mem_image_of_mem _ ⟨y, hya, hyU⟩
+  simp only [subset_def, mem_iUnion]
+  rintro i x ⟨a, rfl, hxa⟩
+  exact hind _ hxa
 
 /-- In a paracompact space, every open covering of a closed set admits a locally finite refinement
 indexed by the same type. -/
@@ -99,14 +99,14 @@ theorem precise_refinement_set [ParacompactSpace X] {s : Set X} (hs : IsClosed s
   -- Porting note (#10888): added proof of uc
   have uc : (iUnion fun i => Option.elim' sᶜ u i) = univ
   apply Subset.antisymm (subset_univ _)
-  · simp_rw [← compl_union_self s, Option.elim', iUnion_option]
-    apply union_subset_union_right sᶜ us
+  simp_rw [← compl_union_self s, Option.elim', iUnion_option]
+  apply union_subset_union_right sᶜ us
   rcases precise_refinement (Option.elim' sᶜ u) (Option.forall.2 ⟨isOpen_compl_iff.2 hs, uo⟩)
       uc with
     ⟨v, vo, vc, vf, vu⟩
   refine ⟨v ∘ some, fun i ↦ vo _, ?_, vf.comp_injective (Option.some_injective _), fun i ↦ vu _⟩
-  · simp only [iUnion_option, ← compl_subset_iff_union] at vc
-    exact Subset.trans (subset_compl_comm.1 <| vu Option.none) vc
+  simp only [iUnion_option, ← compl_subset_iff_union] at vc
+  exact Subset.trans (subset_compl_comm.1 <| vu Option.none) vc
 
 theorem ClosedEmbedding.paracompactSpace [ParacompactSpace Y] {e : X → Y} (he : ClosedEmbedding e) :
     ParacompactSpace X where
@@ -144,16 +144,16 @@ instance (priority := 200) [CompactSpace X] [ParacompactSpace Y] : ParacompactSp
       with ⟨E, hEo, hE, hEf, hEA⟩
     refine ⟨Σ y, T y, fun z ↦ U z.2.1 z.1 ×ˢ E z.1, fun _ ↦ (hUo _ _).prod (hEo _),
       iUnion_eq_univ_iff.2 fun (x, y) ↦ ?_, fun (x, y) ↦ ?_, fun ⟨y, x, hx⟩ ↦ ?_⟩
-    · rcases iUnion_eq_univ_iff.1 hE y with ⟨b, hb⟩
-      rcases iUnion₂_eq_univ_iff.1 (hT b) x with ⟨a, ha, hx⟩
-      exact ⟨⟨b, a, ha⟩, hx, hb⟩
-    · rcases hEf y with ⟨t, ht, htf⟩
-      refine ⟨univ ×ˢ t, prod_mem_nhds univ_mem ht, ?_⟩
-      refine (htf.biUnion fun y _ ↦ finite_range (Sigma.mk y)).subset ?_
-      rintro ⟨b, a, ha⟩ ⟨⟨c, d⟩, ⟨-, hd : d ∈ E b⟩, -, hdt : d ∈ t⟩
-      exact mem_iUnion₂.2 ⟨b, ⟨d, hd, hdt⟩, mem_range_self _⟩
-    · refine ⟨a x y, (Set.prod_mono Subset.rfl ?_).trans (hUV x y)⟩
-      exact (hEA _).trans (iInter₂_subset x hx)
+    rcases iUnion_eq_univ_iff.1 hE y with ⟨b, hb⟩
+    rcases iUnion₂_eq_univ_iff.1 (hT b) x with ⟨a, ha, hx⟩
+    exact ⟨⟨b, a, ha⟩, hx, hb⟩
+    rcases hEf y with ⟨t, ht, htf⟩
+    refine ⟨univ ×ˢ t, prod_mem_nhds univ_mem ht, ?_⟩
+    refine (htf.biUnion fun y _ ↦ finite_range (Sigma.mk y)).subset ?_
+    rintro ⟨b, a, ha⟩ ⟨⟨c, d⟩, ⟨-, hd : d ∈ E b⟩, -, hdt : d ∈ t⟩
+    exact mem_iUnion₂.2 ⟨b, ⟨d, hd, hdt⟩, mem_range_self _⟩
+    refine ⟨a x y, (Set.prod_mono Subset.rfl ?_).trans (hUV x y)⟩
+    exact (hEA _).trans (iInter₂_subset x hx)
 
 instance (priority := 200) [ParacompactSpace X] [CompactSpace Y] : ParacompactSpace (X × Y) :=
   (Homeomorph.prodComm X Y).paracompactSpace_iff.2 inferInstance
@@ -218,25 +218,25 @@ theorem refinement_of_locallyCompact_sigmaCompact_of_nhds_basis_set [WeaklyLocal
     set T' : ∀ n, Set ↑(Kdiff (n + 1) ∩ s) := fun n ↦ T n
     -- Finally, we take the union of all these coverings
     refine ⟨Σn, T' n, fun a ↦ a.2, fun a ↦ r a.1 a.2, ?_, ?_, ?_⟩
-    · rintro ⟨n, x, hx⟩
-      exact ⟨x.2.2, hrp _ _⟩
-    · refine fun x hx ↦ mem_iUnion.2 ?_
-      rcases mem_iUnion₂.1 (hT _ ⟨hKcov x, hx⟩) with ⟨⟨c, hc⟩, hcT, hcx⟩
-      exact ⟨⟨_, ⟨c, hc⟩, hcT⟩, hcx⟩
-    · intro x
-      refine
-        ⟨interior (K (K'.find x + 3)),
-          IsOpen.mem_nhds isOpen_interior (K.subset_interior_succ _ (hKcov x).1), ?_⟩
-      have : (⋃ k ≤ K'.find x + 2, range (Sigma.mk k) : Set (Σn, T' n)).Finite :=
-        (finite_le_nat _).biUnion fun k _ ↦ finite_range _
-      apply this.subset
-      rintro ⟨k, c, hc⟩
-      simp only [mem_iUnion, mem_setOf_eq, mem_image, Subtype.coe_mk]
-      rintro ⟨x, hxB : x ∈ B c (r k c), hxK⟩
-      refine ⟨k, ?_, ⟨c, hc⟩, rfl⟩
-      have := (mem_compl_iff _ _).1 (hr k c hxB)
-      contrapose! this with hnk
-      exact K.subset hnk (interior_subset hxK)
+    rintro ⟨n, x, hx⟩
+    exact ⟨x.2.2, hrp _ _⟩
+    refine fun x hx ↦ mem_iUnion.2 ?_
+    rcases mem_iUnion₂.1 (hT _ ⟨hKcov x, hx⟩) with ⟨⟨c, hc⟩, hcT, hcx⟩
+    exact ⟨⟨_, ⟨c, hc⟩, hcT⟩, hcx⟩
+    intro x
+    refine
+      ⟨interior (K (K'.find x + 3)),
+        IsOpen.mem_nhds isOpen_interior (K.subset_interior_succ _ (hKcov x).1), ?_⟩
+    have : (⋃ k ≤ K'.find x + 2, range (Sigma.mk k) : Set (Σn, T' n)).Finite :=
+      (finite_le_nat _).biUnion fun k _ ↦ finite_range _
+    apply this.subset
+    rintro ⟨k, c, hc⟩
+    simp only [mem_iUnion, mem_setOf_eq, mem_image, Subtype.coe_mk]
+    rintro ⟨x, hxB : x ∈ B c (r k c), hxK⟩
+    refine ⟨k, ?_, ⟨c, hc⟩, rfl⟩
+    have := (mem_compl_iff _ _).1 (hr k c hxB)
+    contrapose! this with hnk
+    exact K.subset hnk (interior_subset hxK)
 
 /-- Let `X` be a locally compact sigma compact Hausdorff topological space. Suppose that for each
 `x` the sets `B x : ι x → Set X` with the predicate `p x : ι x → Prop` form a basis of the filter

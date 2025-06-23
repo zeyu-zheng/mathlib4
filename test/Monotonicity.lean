@@ -31,10 +31,10 @@ example (x y z a b : ℕ)
     (h' : z ≤ y) :
     (1 + a + x) - y ≤ (1 + b + x) - z := by
   transitivity (1 + a + x - z)
-  · mono
-  · mono
-    -- mono
-    -- mono
+  mono
+  mono
+  -- mono
+  -- mono
 
 example (x y z a b : ℤ)
     (h : a ≤ (b : ℤ))
@@ -42,20 +42,20 @@ example (x y z a b : ℤ)
     (1 + a + x) - y ≤ (1 + b + x) - z := by
   apply @le_trans ℤ _ _ (1 + a + x - z)
   -- transitivity (1 + a + x - z)
-  · mono
-  · mono
-    -- mono
-    -- mono
+  mono
+  mono
+  -- mono
+  -- mono
 
 example (x y z : ℤ)
     (h' : z ≤ y) :
     (1 + 3 + x) - y ≤ (1 + 4 + x) - z := by
   apply @le_trans ℤ _ _ (1 + 3 + x - z)
   -- transitivity (1 + 3 + x - z)
-  · mono
-  · mono
-    -- mono
-    norm_num
+  mono
+  mono
+  -- mono
+  norm_num
 
 example {x y z : ℕ} : true := by
   have : y + x ≤ y + z

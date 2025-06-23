@@ -290,19 +290,19 @@ theorem map'_id {M : ModuleCat.{v} R} : map' f (𝟙 M) = 𝟙 _ :=
     -- Porting note: this got put in the dsimp by mathport
     rw [ModuleCat.id_apply]
     induction' x using TensorProduct.induction_on with _ _ m s ihx ihy
-    · rw [map_zero] -- Porting note: simp only [map_zero] failed
-    · -- Porting note: issues with synthesizing Algebra R S
-      erw [@LinearMap.baseChange_tmul R S M M _ _ (_), ModuleCat.id_apply]
-    · rw [map_add, ihx, ihy]
+    rw [map_zero] -- Porting note: simp only [map_zero] failed
+    -- Porting note: issues with synthesizing Algebra R S
+    erw [@LinearMap.baseChange_tmul R S M M _ _ (_), ModuleCat.id_apply]
+    rw [map_add, ihx, ihy]
 
 theorem map'_comp {M₁ M₂ M₃ : ModuleCat.{v} R} (l₁₂ : M₁ ⟶ M₂) (l₂₃ : M₂ ⟶ M₃) :
     map' f (l₁₂ ≫ l₂₃) = map' f l₁₂ ≫ map' f l₂₃ :=
   LinearMap.ext fun x : obj' f M₁ => by
     dsimp only [map']
     induction' x using TensorProduct.induction_on with _ _ x y ihx ihy
-    · rfl
-    · rfl
-    · rw [map_add, map_add, ihx, ihy] -- Porting note: simp again failing where rw succeeds
+    rfl
+    rfl
+    rw [map_add, map_add, ihx, ihy] -- Porting note: simp again failing where rw succeeds
 
 end ExtendScalars
 

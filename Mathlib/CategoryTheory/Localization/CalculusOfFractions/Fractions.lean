@@ -195,25 +195,25 @@ lemma map_eq_iff {X Y : C} (φ ψ : W.LeftFraction₂ X Y) :
       LeftFraction₂Rel φ ψ := by
   simp only [LeftFraction.map_eq_iff L W]
   constructor
-  · intro ⟨h, h'⟩
-    obtain ⟨Z, t₁, t₂, hst, hft, ht⟩ := h
-    obtain ⟨Z', t₁', t₂', hst', hft', ht'⟩ := h'
-    dsimp at t₁ t₂ t₁' t₂' hst hft hst' hft' ht ht'
-    have ⟨α, hα⟩ := (RightFraction.mk _ ht (φ.s ≫ t₁')).exists_leftFraction
-    simp only [Category.assoc] at hα
-    obtain ⟨Z'', u, hu, fac⟩ := HasLeftCalculusOfFractions.ext _ _ _ φ.hs hα
-    have hα' : ψ.s ≫ t₂ ≫ α.f ≫ u = ψ.s ≫ t₂' ≫ α.s ≫ u
-    rw [← reassoc_of% hst, ← reassoc_of% hα, ← reassoc_of% hst']
-    obtain ⟨Z''', u', hu', fac'⟩ := HasLeftCalculusOfFractions.ext _ _ _ ψ.hs hα'
-    simp only [Category.assoc] at fac fac'
-    refine ⟨Z''', t₁' ≫ α.s ≫ u ≫ u', t₂' ≫ α.s ≫ u ≫ u', ?_, ?_, ?_, ?_⟩
-    · rw [reassoc_of% hst']
-    · rw [reassoc_of% fac, reassoc_of% hft, fac']
-    · rw [reassoc_of% hft']
-    · rw [← Category.assoc]
-      exact W.comp_mem _ _ ht' (W.comp_mem _ _ α.hs (W.comp_mem _ _ hu hu'))
-  · intro h
-    exact ⟨h.fst, h.snd⟩
+  intro ⟨h, h'⟩
+  obtain ⟨Z, t₁, t₂, hst, hft, ht⟩ := h
+  obtain ⟨Z', t₁', t₂', hst', hft', ht'⟩ := h'
+  dsimp at t₁ t₂ t₁' t₂' hst hft hst' hft' ht ht'
+  have ⟨α, hα⟩ := (RightFraction.mk _ ht (φ.s ≫ t₁')).exists_leftFraction
+  simp only [Category.assoc] at hα
+  obtain ⟨Z'', u, hu, fac⟩ := HasLeftCalculusOfFractions.ext _ _ _ φ.hs hα
+  have hα' : ψ.s ≫ t₂ ≫ α.f ≫ u = ψ.s ≫ t₂' ≫ α.s ≫ u
+  rw [← reassoc_of% hst, ← reassoc_of% hα, ← reassoc_of% hst']
+  obtain ⟨Z''', u', hu', fac'⟩ := HasLeftCalculusOfFractions.ext _ _ _ ψ.hs hα'
+  simp only [Category.assoc] at fac fac'
+  refine ⟨Z''', t₁' ≫ α.s ≫ u ≫ u', t₂' ≫ α.s ≫ u ≫ u', ?_, ?_, ?_, ?_⟩
+  rw [reassoc_of% hst']
+  rw [reassoc_of% fac, reassoc_of% hft, fac']
+  rw [reassoc_of% hft']
+  rw [← Category.assoc]
+  exact W.comp_mem _ _ ht' (W.comp_mem _ _ α.hs (W.comp_mem _ _ hu hu'))
+  intro h
+  exact ⟨h.fst, h.snd⟩
 
 end LeftFraction₂
 
@@ -245,9 +245,9 @@ lemma exists_leftFraction₂ [W.HasLeftCalculusOfFractions] :
   dsimp at hψ₁ hψ₂ hα
   refine ⟨LeftFraction₂.mk (ψ₁.f ≫ α.f) (ψ₂.f ≫ α.s) (ψ₂.s ≫ α.s)
       (W.comp_mem _ _ ψ₂.hs α.hs), ?_, ?_⟩
-  · dsimp
-    rw [hα, reassoc_of% hψ₁]
-  · rw [reassoc_of% hψ₂]
+  dsimp
+  rw [hα, reassoc_of% hψ₁]
+  rw [reassoc_of% hψ₂]
 
 end RightFraction₂
 
@@ -277,13 +277,13 @@ lemma exists_leftFraction₂ {X Y : C} (f f' : L.obj X ⟶ L.obj Y) :
     rw [L.map_comp]
     infer_instance
   refine ⟨ψ, ?_, ?_⟩
-  · rw [← cancel_mono (L.map (φ'.s ≫ α.s)), LeftFraction.map_comp_map_s,
-      hα, L.map_comp, hφ, LeftFraction.map_comp_map_s_assoc,
-      L.map_comp]
-  · rw [← cancel_mono (L.map (φ'.s ≫ α.s)), hφ']
-    nth_rw 1 [L.map_comp]
-    rw [LeftFraction.map_comp_map_s_assoc, LeftFraction.map_comp_map_s,
-      L.map_comp]
+  rw [← cancel_mono (L.map (φ'.s ≫ α.s)), LeftFraction.map_comp_map_s,
+    hα, L.map_comp, hφ, LeftFraction.map_comp_map_s_assoc,
+    L.map_comp]
+  rw [← cancel_mono (L.map (φ'.s ≫ α.s)), hφ']
+  nth_rw 1 [L.map_comp]
+  rw [LeftFraction.map_comp_map_s_assoc, LeftFraction.map_comp_map_s,
+    L.map_comp]
 
 lemma exists_leftFraction₃ {X Y : C} (f f' f'' : L.obj X ⟶ L.obj Y) :
     ∃ (φ : W.LeftFraction₃ X Y), f = φ.fst.map L (inverts L W) ∧
@@ -306,13 +306,13 @@ lemma exists_leftFraction₃ {X Y : C} (f f' f'' : L.obj X ⟶ L.obj Y) :
     rw [L.map_comp]
     infer_instance
   refine ⟨ψ, ?_, ?_, ?_⟩
-  · rw [← cancel_mono (L.map (β.s ≫ γ.s)), LeftFraction.map_comp_map_s, hα, hγ,
-      L.map_comp, LeftFraction.map_comp_map_s_assoc, L.map_comp]
-  · rw [← cancel_mono (L.map (β.s ≫ γ.s)), LeftFraction.map_comp_map_s, hα', hγ,
-      L.map_comp, LeftFraction.map_comp_map_s_assoc, L.map_comp]
-  · rw [← cancel_mono (L.map (β.s ≫ γ.s)), hβ]
-    nth_rw 1 [L.map_comp]
-    rw [LeftFraction.map_comp_map_s_assoc, LeftFraction.map_comp_map_s, L.map_comp]
+  rw [← cancel_mono (L.map (β.s ≫ γ.s)), LeftFraction.map_comp_map_s, hα, hγ,
+    L.map_comp, LeftFraction.map_comp_map_s_assoc, L.map_comp]
+  rw [← cancel_mono (L.map (β.s ≫ γ.s)), LeftFraction.map_comp_map_s, hα', hγ,
+    L.map_comp, LeftFraction.map_comp_map_s_assoc, L.map_comp]
+  rw [← cancel_mono (L.map (β.s ≫ γ.s)), hβ]
+  nth_rw 1 [L.map_comp]
+  rw [LeftFraction.map_comp_map_s_assoc, LeftFraction.map_comp_map_s, L.map_comp]
 
 end Localization
 

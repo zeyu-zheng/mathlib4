@@ -54,11 +54,11 @@ theorem exact_iff_epi_imageToKernel' : S.Exact ↔ Epi (imageToKernel' S.f S.g S
   simp only [← cancel_mono (kernel.ι _), kernel.lift_ι, imageToKernel',
     Category.assoc, image.fac]
   constructor
-  · intro
-    exact epi_of_epi_fac this
-  · intro
-    rw [← this]
-    apply epi_comp
+  intro
+  exact epi_of_epi_fac this
+  intro
+  rw [← this]
+  apply epi_comp
 
 theorem exact_iff_epi_imageToKernel : S.Exact ↔ Epi (imageToKernel S.f S.g S.zero) := by
   rw [S.exact_iff_epi_imageToKernel']
@@ -68,10 +68,10 @@ theorem exact_iff_epi_imageToKernel : S.Exact ↔ Epi (imageToKernel S.f S.g S.z
 theorem exact_iff_isIso_imageToKernel : S.Exact ↔ IsIso (imageToKernel S.f S.g S.zero) := by
   rw [S.exact_iff_epi_imageToKernel]
   constructor
-  · intro
-    apply isIso_of_mono_of_epi
-  · intro
-    infer_instance
+  intro
+  apply isIso_of_mono_of_epi
+  intro
+  infer_instance
 
 /-- In an abelian category, a short complex `S` is exact
 iff `imageSubobject S.f = kernelSubobject S.g`.
@@ -79,10 +79,10 @@ iff `imageSubobject S.f = kernelSubobject S.g`.
 theorem exact_iff_image_eq_kernel : S.Exact ↔ imageSubobject S.f = kernelSubobject S.g := by
   rw [exact_iff_isIso_imageToKernel]
   constructor
-  · intro
-    exact Subobject.eq_of_comm (asIso (imageToKernel _ _ S.zero)) (by simp)
-  · intro h
-    exact ⟨Subobject.ofLE _ _ h.ge, by ext; simp, by ext; simp⟩
+  intro
+  exact Subobject.eq_of_comm (asIso (imageToKernel _ _ S.zero)) (by simp)
+  intro h
+  exact ⟨Subobject.ofLE _ _ h.ge, by ext; simp, by ext; simp⟩
 
 theorem exact_iff_of_forks {cg : KernelFork S.g} (hg : IsLimit cg) {cf : CokernelCofork S.f}
     (hf : IsColimit cf) : S.Exact ↔ cg.ι ≫ cf.π = 0 := by
@@ -171,24 +171,24 @@ open List in
 theorem Abelian.tfae_mono {X Y : C} (f : X ⟶ Y) (Z : C) :
     TFAE [Mono f, kernel.ι f = 0, (ShortComplex.mk (0 : Z ⟶ X) f zero_comp).Exact] := by
   tfae_have 2 → 1
-  · exact mono_of_kernel_ι_eq_zero _
+  exact mono_of_kernel_ι_eq_zero _
   tfae_have 1 → 2
-  · intro
-    rw [← cancel_mono f, kernel.condition, zero_comp]
+  intro
+  rw [← cancel_mono f, kernel.condition, zero_comp]
   tfae_have 3 ↔ 1
-  · exact ShortComplex.exact_iff_mono _ (by simp)
+  exact ShortComplex.exact_iff_mono _ (by simp)
   tfae_finish
 
 open List in
 theorem Abelian.tfae_epi {X Y : C} (f : X ⟶ Y) (Z : C ) :
     TFAE [Epi f, cokernel.π f = 0, (ShortComplex.mk f (0 : Y ⟶ Z) comp_zero).Exact] := by
   tfae_have 2 → 1
-  · exact epi_of_cokernel_π_eq_zero _
+  exact epi_of_cokernel_π_eq_zero _
   tfae_have 1 → 2
-  · intro
-    rw [← cancel_epi f, cokernel.condition, comp_zero]
+  intro
+  rw [← cancel_epi f, cokernel.condition, comp_zero]
   tfae_have 3 ↔ 1
-  · exact ShortComplex.exact_iff_epi _ (by simp)
+  exact ShortComplex.exact_iff_epi _ (by simp)
   tfae_finish
 
 end

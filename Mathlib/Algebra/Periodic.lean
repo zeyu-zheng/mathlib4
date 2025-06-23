@@ -68,9 +68,9 @@ protected theorem Periodic.div [Add α] [Div β] (hf : Periodic f c) (hg : Perio
 theorem _root_.List.periodic_prod [Add α] [Monoid β] (l : List (α → β))
     (hl : ∀ f ∈ l, Periodic f c) : Periodic l.prod c := by
   induction' l with g l ih hl
-  · simp
-  · rw [List.forall_mem_cons] at hl
-    simpa only [List.prod_cons] using hl.1.mul (ih hl.2)
+  simp
+  rw [List.forall_mem_cons] at hl
+  simpa only [List.prod_cons] using hl.1.mul (ih hl.2)
 
 @[to_additive]
 theorem _root_.Multiset.periodic_prod [Add α] [CommMonoid β] (s : Multiset (α → β))
@@ -93,8 +93,8 @@ protected theorem Periodic.const_smul [AddMonoid α] [Group γ] [DistribMulActio
 protected theorem Periodic.const_smul₀ [AddCommMonoid α] [DivisionSemiring γ] [Module γ α]
     (h : Periodic f c) (a : γ) : Periodic (fun x => f (a • x)) (a⁻¹ • c) := fun x => by
   by_cases ha : a = 0
-  · simp only [ha, zero_smul]
-  · simpa only [smul_add, smul_inv_smul₀ ha] using h (a • x)
+  simp only [ha, zero_smul]
+  simpa only [smul_add, smul_inv_smul₀ ha] using h (a • x)
 
 protected theorem Periodic.const_mul [DivisionSemiring α] (h : Periodic f c) (a : α) :
     Periodic (fun x => f (a * x)) (a⁻¹ * c) :=
@@ -184,8 +184,8 @@ theorem Periodic.nat_mul_sub_eq [Ring α] (h : Periodic f c) (n : ℕ) : f (n * 
 
 protected theorem Periodic.zsmul [AddGroup α] (h : Periodic f c) (n : ℤ) : Periodic f (n • c) := by
   cases' n with n n
-  · simpa only [Int.ofNat_eq_coe, natCast_zsmul] using h.nsmul n
-  · simpa only [negSucc_zsmul] using (h.nsmul (n + 1)).neg
+  simpa only [Int.ofNat_eq_coe, natCast_zsmul] using h.nsmul n
+  simpa only [negSucc_zsmul] using (h.nsmul (n + 1)).neg
 
 protected theorem Periodic.int_mul [Ring α] (h : Periodic f c) (n : ℤ) : Periodic f (n * c) := by
   simpa only [zsmul_eq_mul] using h.zsmul n
@@ -378,9 +378,9 @@ theorem Antiperiodic.int_mul_eq_of_eq_zero [Ring α] [SubtractionMonoid β] (h :
 theorem Antiperiodic.add_zsmul_eq [AddGroup α] [AddGroup β] (h : Antiperiodic f c) (n : ℤ) :
     f (x + n • c) = (n.negOnePow : ℤ) • f x := by
   rcases Int.even_or_odd' n with ⟨k, rfl | rfl⟩
-  · rw [h.even_zsmul_periodic, Int.negOnePow_two_mul, Units.val_one, one_zsmul]
-  · rw [h.odd_zsmul_antiperiodic, Int.negOnePow_two_mul_add_one, Units.val_neg,
-      Units.val_one, neg_zsmul, one_zsmul]
+  rw [h.even_zsmul_periodic, Int.negOnePow_two_mul, Units.val_one, one_zsmul]
+  rw [h.odd_zsmul_antiperiodic, Int.negOnePow_two_mul_add_one, Units.val_neg,
+    Units.val_one, neg_zsmul, one_zsmul]
 
 theorem Antiperiodic.sub_zsmul_eq [AddGroup α] [AddGroup β] (h : Antiperiodic f c) (n : ℤ) :
     f (x - n • c) = (n.negOnePow : ℤ) • f x := by
@@ -404,9 +404,9 @@ theorem Antiperiodic.int_mul_sub_eq [Ring α] [Ring β] (h : Antiperiodic f c) (
 theorem Antiperiodic.add_nsmul_eq [AddMonoid α] [AddGroup β] (h : Antiperiodic f c) (n : ℕ) :
     f (x + n • c) = (-1) ^ n • f x := by
   rcases Nat.even_or_odd' n with ⟨k, rfl | rfl⟩
-  · rw [h.even_nsmul_periodic, pow_mul, (by norm_num : (-1) ^ 2 = 1), one_pow, one_zsmul]
-  · rw [h.odd_nsmul_antiperiodic, pow_add, pow_mul, (by norm_num : (-1) ^ 2 = 1), one_pow,
-      pow_one, one_mul, neg_zsmul, one_zsmul]
+  rw [h.even_nsmul_periodic, pow_mul, (by norm_num : (-1) ^ 2 = 1), one_pow, one_zsmul]
+  rw [h.odd_nsmul_antiperiodic, pow_add, pow_mul, (by norm_num : (-1) ^ 2 = 1), one_pow,
+    pow_one, one_mul, neg_zsmul, one_zsmul]
 
 theorem Antiperiodic.sub_nsmul_eq [AddGroup α] [AddGroup β] (h : Antiperiodic f c) (n : ℕ) :
     f (x - n • c) = (-1) ^ n • f x := by

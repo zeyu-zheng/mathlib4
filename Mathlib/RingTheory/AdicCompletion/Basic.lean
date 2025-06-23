@@ -164,8 +164,8 @@ namespace IsPrecomplete
 instance bot : IsPrecomplete (⊥ : Ideal R) M := by
   refine ⟨fun f hf => ⟨f 1, fun n => ?_⟩⟩
   cases' n with n
-  · rw [pow_zero, Ideal.one_eq_top, top_smul]
-    exact SModEq.top
+  rw [pow_zero, Ideal.one_eq_top, top_smul]
+  exact SModEq.top
   specialize hf (Nat.le_add_left 1 n)
   rw [pow_one, bot_smul, SModEq.bot] at hf; rw [hf]
 
@@ -303,10 +303,10 @@ variable (I M)
 instance : IsHausdorff I (AdicCompletion I M) where
   haus' x h := ext fun n ↦ by
     refine smul_induction_on (SModEq.zero.1 <| h n) (fun r hr x _ ↦ ?_) (fun x y hx hy ↦ ?_)
-    · simp only [val_smul, val_zero]
-      exact Quotient.inductionOn' (x.val n)
-        (fun a ↦ SModEq.zero.2 <| smul_mem_smul hr mem_top)
-    · simp only [val_add, hx, val_zero, hy, add_zero]
+    simp only [val_smul, val_zero]
+    exact Quotient.inductionOn' (x.val n)
+      (fun a ↦ SModEq.zero.2 <| smul_mem_smul hr mem_top)
+    simp only [val_add, hx, val_zero, hy, add_zero]
 
 @[simp]
 theorem transitionMap_mk {m n : ℕ} (hmn : m ≤ n) (x : M) :
@@ -438,15 +438,15 @@ end AdicCauchySequence
 theorem isAdicCauchy_iff (f : ℕ → M) :
     IsAdicCauchy I M f ↔ ∀ n, f n ≡ f (n + 1) [SMOD (I ^ n • ⊤ : Submodule R M)] := by
   constructor
-  · intro h n
-    exact h (Nat.le_succ n)
-  · intro h m n hmn
-    induction n, hmn using Nat.le_induction with
-    | base => rfl
-    | succ n hmn ih =>
-        trans
-        · exact ih
-        · refine SModEq.mono (smul_mono (Ideal.pow_le_pow_right hmn) (by rfl)) (h n)
+  intro h n
+  exact h (Nat.le_succ n)
+  intro h m n hmn
+  induction n, hmn using Nat.le_induction with
+  | base => rfl
+  | succ n hmn ih =>
+      trans
+      exact ih
+      refine SModEq.mono (smul_mono (Ideal.pow_le_pow_right hmn) (by rfl)) (h n)
 
 /-- Construct `I`-adic cauchy sequence from sequence satisfying the successive cauchy condition. -/
 @[simps]
@@ -481,10 +481,10 @@ theorem mk_surjective : Function.Surjective (mk I M) := by
   intro x
   choose a ha using fun n ↦ Submodule.Quotient.mk_surjective _ (x.val n)
   refine ⟨⟨a, ?_⟩, ?_⟩
-  · intro m n hmn
-    rw [SModEq.def, ha m, ← transitionMap_mk I M hmn, ha n, x.property hmn]
-  · ext n
-    simp [ha n]
+  intro m n hmn
+  rw [SModEq.def, ha m, ← transitionMap_mk I M hmn, ha n, x.property hmn]
+  ext n
+  simp [ha n]
 
 /-- To show a statement about an element of `adicCompletion I M`, it suffices to check it
 on Cauchy sequences. -/
@@ -561,9 +561,9 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
     convert Ideal.sub_mem _ this (Ideal.mul_mem_left _ (1 + -(x * y)) hL) using 1
     ring
   cases n
-  · simp only [Ideal.one_eq_top, pow_zero, Nat.zero_eq, mem_top]
-  · rw [← neg_sub _ (1 : R), neg_mul, mul_geom_sum, neg_sub, sub_sub, add_comm, ← sub_sub,
-      sub_self, zero_sub, @neg_mem_iff, mul_pow]
-    exact Ideal.mul_mem_right _ (I ^ _) (Ideal.pow_mem_pow hx _)
+  simp only [Ideal.one_eq_top, pow_zero, Nat.zero_eq, mem_top]
+  rw [← neg_sub _ (1 : R), neg_mul, mul_geom_sum, neg_sub, sub_sub, add_comm, ← sub_sub,
+    sub_self, zero_sub, @neg_mem_iff, mul_pow]
+  exact Ideal.mul_mem_right _ (I ^ _) (Ideal.pow_mem_pow hx _)
 
 end IsAdicComplete

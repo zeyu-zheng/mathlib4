@@ -75,17 +75,17 @@ theorem trunc_one (n : σ →₀ ℕ) (hnn : n ≠ 0) : trunc R n 1 = 1 :=
   MvPolynomial.ext _ _ fun m => by
     rw [coeff_trunc, coeff_one]
     split_ifs with H H'
-    · subst m
-      simp
-    · symm
-      rw [MvPolynomial.coeff_one]
-      exact if_neg (Ne.symm H')
-    · symm
-      rw [MvPolynomial.coeff_one]
-      refine if_neg ?_
-      rintro rfl
-      apply H
-      exact Ne.bot_lt hnn
+    subst m
+    simp
+    symm
+    rw [MvPolynomial.coeff_one]
+    exact if_neg (Ne.symm H')
+    symm
+    rw [MvPolynomial.coeff_one]
+    refine if_neg ?_
+    rintro rfl
+    apply H
+    exact Ne.bot_lt hnn
 
 open Classical in
 @[simp]

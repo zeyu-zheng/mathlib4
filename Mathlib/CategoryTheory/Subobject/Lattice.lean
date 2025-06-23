@@ -381,8 +381,8 @@ open Classical in
 theorem finset_inf_factors {I : Type*} {A B : C} {s : Finset I} {P : I → Subobject B} (f : A ⟶ B) :
     (s.inf P).Factors f ↔ ∀ i ∈ s, (P i).Factors f := by
   induction' s using Finset.induction_on with _ _ _ ih
-  · simp [top_factors]
-  · simp [ih]
+  simp [top_factors]
+  simp [ih]
 
 open Classical in
 -- `i` is explicit here because often we'd like to defer a proof of `m`
@@ -390,16 +390,16 @@ theorem finset_inf_arrow_factors {I : Type*} {B : C} (s : Finset I) (P : I → S
     (m : i ∈ s) : (P i).Factors (s.inf P).arrow := by
   revert i m
   induction' s using Finset.induction_on with _ _ _ ih
-  · rintro _ ⟨⟩
-  · intro _ m
-    rw [Finset.inf_insert]
-    simp only [Finset.mem_insert] at m
-    rcases m with (rfl | m)
-    · rw [← factorThru_arrow _ _ (inf_arrow_factors_left _ _)]
-      exact factors_comp_arrow _
-    · rw [← factorThru_arrow _ _ (inf_arrow_factors_right _ _)]
-      apply factors_of_factors_right
-      exact ih _ m
+  rintro _ ⟨⟩
+  intro _ m
+  rw [Finset.inf_insert]
+  simp only [Finset.mem_insert] at m
+  rcases m with (rfl | m)
+  rw [← factorThru_arrow _ _ (inf_arrow_factors_left _ _)]
+  exact factors_comp_arrow _
+  rw [← factorThru_arrow _ _ (inf_arrow_factors_right _ _)]
+  apply factors_of_factors_right
+  exact ih _ m
 
 theorem inf_eq_map_pullback' {A : C} (f₁ : MonoOver A) (f₂ : Subobject A) :
     (Subobject.inf.obj (Quotient.mk'' f₁)).obj f₂ =
@@ -414,9 +414,9 @@ theorem inf_eq_map_pullback {A : C} (f₁ : MonoOver A) (f₂ : Subobject A) :
 theorem prod_eq_inf {A : C} {f₁ f₂ : Subobject A} [HasBinaryProduct f₁ f₂] :
     (f₁ ⨯ f₂) = f₁ ⊓ f₂ := by
   apply le_antisymm
-  · refine le_inf _ _ _ (Limits.prod.fst.le) (Limits.prod.snd.le)
-  · apply leOfHom
-    exact prod.lift (inf_le_left _ _).hom (inf_le_right _ _).hom
+  refine le_inf _ _ _ (Limits.prod.fst.le) (Limits.prod.snd.le)
+  apply leOfHom
+  exact prod.lift (inf_le_left _ _).hom (inf_le_right _ _).hom
 
 theorem inf_def {B : C} (m m' : Subobject B) : m ⊓ m' = (inf.obj m).obj m' :=
   rfl
@@ -474,13 +474,13 @@ theorem finset_sup_factors {I : Type*} {A B : C} {s : Finset I} {P : I → Subob
     (h : ∃ i ∈ s, (P i).Factors f) : (s.sup P).Factors f := by
   revert h
   induction' s using Finset.induction_on with _ _ _ ih
-  · rintro ⟨_, ⟨⟨⟩, _⟩⟩
-  · rintro ⟨j, ⟨m, h⟩⟩
-    simp only [Finset.sup_insert]
-    simp at m
-    rcases m with (rfl | m)
-    · exact sup_factors_of_factors_left h
-    · exact sup_factors_of_factors_right (ih ⟨j, ⟨m, h⟩⟩)
+  rintro ⟨_, ⟨⟨⟩, _⟩⟩
+  rintro ⟨j, ⟨m, h⟩⟩
+  simp only [Finset.sup_insert]
+  simp at m
+  rcases m with (rfl | m)
+  exact sup_factors_of_factors_left h
+  exact sup_factors_of_factors_right (ih ⟨j, ⟨m, h⟩⟩)
 
 end SemilatticeSup
 
@@ -549,11 +549,11 @@ instance widePullbackι_mono {A : C} (s : Set (Subobject A)) : Mono (widePullbac
   ⟨fun u v h =>
     limit.hom_ext fun j => by
       cases j
-      · exact h
-      · apply (cancel_mono ((equivShrink (Subobject A)).symm _).arrow).1
-        rw [assoc, assoc]
-        erw [limit.w (wideCospan s) (WidePullbackShape.Hom.term _)]
-        exact h⟩
+      exact h
+      apply (cancel_mono ((equivShrink (Subobject A)).symm _).arrow).1
+      rw [assoc, assoc]
+      erw [limit.w (wideCospan s) (WidePullbackShape.Hom.term _)]
+      exact h⟩
 
 /-- When `[WellPowered C]` and `[HasWidePullbacks C]`, `Subobject A` has arbitrary infimums.
 -/
@@ -562,23 +562,23 @@ def sInf {A : C} (s : Set (Subobject A)) : Subobject A :=
 
 theorem sInf_le {A : C} (s : Set (Subobject A)) (f) (hf : f ∈ s) : sInf s ≤ f := by
   fapply le_of_comm
-  · exact (underlyingIso _).hom ≫
-      Limits.limit.π (wideCospan s)
-        (some ⟨equivShrink (Subobject A) f,
-          Set.mem_image_of_mem (equivShrink (Subobject A)) hf⟩) ≫
-      eqToHom (congr_arg (fun X : Subobject A => (X : C)) (Equiv.symm_apply_apply _ _))
-  · dsimp [sInf]
-    simp only [Category.comp_id, Category.assoc, ← underlyingIso_hom_comp_eq_mk,
-      Subobject.arrow_congr, congrArg_mpr_hom_left, Iso.cancel_iso_hom_left]
-    convert limit.w (wideCospan s) (WidePullbackShape.Hom.term _)
-    aesop_cat
+  exact (underlyingIso _).hom ≫
+    Limits.limit.π (wideCospan s)
+      (some ⟨equivShrink (Subobject A) f,
+        Set.mem_image_of_mem (equivShrink (Subobject A)) hf⟩) ≫
+    eqToHom (congr_arg (fun X : Subobject A => (X : C)) (Equiv.symm_apply_apply _ _))
+  dsimp [sInf]
+  simp only [Category.comp_id, Category.assoc, ← underlyingIso_hom_comp_eq_mk,
+    Subobject.arrow_congr, congrArg_mpr_hom_left, Iso.cancel_iso_hom_left]
+  convert limit.w (wideCospan s) (WidePullbackShape.Hom.term _)
+  aesop_cat
 
 theorem le_sInf {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, f ≤ g) :
     f ≤ sInf s := by
   fapply le_of_comm
-  · exact Limits.limit.lift _ (leInfCone s f k) ≫ (underlyingIso _).inv
-  · dsimp [sInf]
-    rw [assoc, underlyingIso_arrow, widePullbackι, limit.lift_π, leInfCone_π_app_none]
+  exact Limits.limit.lift _ (leInfCone s f k) ≫ (underlyingIso _).inv
+  dsimp [sInf]
+  rw [assoc, underlyingIso_arrow, widePullbackι, limit.lift_π, leInfCone_π_app_none]
 
 instance completeSemilatticeInf {B : C} : CompleteSemilatticeInf (Subobject B) where
   sInf := sInf
@@ -606,10 +606,10 @@ def sSup {A : C} (s : Set (Subobject A)) : Subobject A :=
 
 theorem le_sSup {A : C} (s : Set (Subobject A)) (f) (hf : f ∈ s) : f ≤ sSup s := by
   fapply le_of_comm
-  · refine eqToHom ?_ ≫ Sigma.ι _ ⟨equivShrink (Subobject A) f, by simpa [Set.mem_image] using hf⟩
-      ≫ factorThruImage _ ≫ (underlyingIso _).inv
-    exact (congr_arg (fun X : Subobject A => (X : C)) (Equiv.symm_apply_apply _ _).symm)
-  · simp [sSup, smallCoproductDesc]
+  refine eqToHom ?_ ≫ Sigma.ι _ ⟨equivShrink (Subobject A) f, by simpa [Set.mem_image] using hf⟩
+    ≫ factorThruImage _ ≫ (underlyingIso _).inv
+  exact (congr_arg (fun X : Subobject A => (X : C)) (Equiv.symm_apply_apply _ _).symm)
+  simp [sSup, smallCoproductDesc]
 
 theorem symm_apply_mem_iff_mem_image {α β : Type*} (e : α ≃ β) (s : Set α) (x : β) :
     e.symm x ∈ s ↔ x ∈ e '' s :=
@@ -620,16 +620,16 @@ theorem symm_apply_mem_iff_mem_image {α β : Type*} (e : α ≃ β) (s : Set α
 theorem sSup_le {A : C} (s : Set (Subobject A)) (f : Subobject A) (k : ∀ g ∈ s, g ≤ f) :
     sSup s ≤ f := by
   fapply le_of_comm
-  · refine(underlyingIso _).hom ≫ image.lift ⟨_, f.arrow, ?_, ?_⟩
-    · refine Sigma.desc ?_
-      rintro ⟨g, m⟩
-      refine underlying.map (homOfLE (k _ ?_))
-      simpa using m
-    · ext
-      dsimp [smallCoproductDesc]
-      simp
-  · dsimp [sSup]
-    rw [assoc, image.lift_fac, underlyingIso_hom_comp_eq_mk]
+  refine(underlyingIso _).hom ≫ image.lift ⟨_, f.arrow, ?_, ?_⟩
+  refine Sigma.desc ?_
+  rintro ⟨g, m⟩
+  refine underlying.map (homOfLE (k _ ?_))
+  simpa using m
+  ext
+  dsimp [smallCoproductDesc]
+  simp
+  dsimp [sSup]
+  rw [assoc, image.lift_fac, underlyingIso_hom_comp_eq_mk]
 
 instance completeSemilatticeSup {B : C} : CompleteSemilatticeSup (Subobject B) where
   sSup := sSup

@@ -139,10 +139,10 @@ protected lemma isCompl_iff {a b : L} :
 
 lemma isComplemented_iff : ComplementedLattice L ↔ ∀ a ∈ L, ∃ b ∈ L, IsCompl a b := by
   refine ⟨fun ⟨h⟩ a ha ↦ ?_, fun h ↦ ⟨fun ⟨a, ha⟩ ↦ ?_⟩⟩
-  · obtain ⟨b, hb⟩ := h ⟨a, ha⟩
-    exact ⟨b, b.property, CompleteSublattice.isCompl_iff.mp hb⟩
-  · obtain ⟨b, hb, hb'⟩ := h a ha
-    exact ⟨⟨b, hb⟩, CompleteSublattice.isCompl_iff.mpr hb'⟩
+  obtain ⟨b, hb⟩ := h ⟨a, ha⟩
+  exact ⟨b, b.property, CompleteSublattice.isCompl_iff.mp hb⟩
+  obtain ⟨b, hb, hb'⟩ := h a ha
+  exact ⟨⟨b, hb⟩, CompleteSublattice.isCompl_iff.mpr hb'⟩
 
 instance : Top (CompleteSublattice α) := ⟨mk' univ (fun _ _ ↦ mem_univ _) (fun _ _ ↦ mem_univ _)⟩
 

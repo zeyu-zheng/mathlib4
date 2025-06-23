@@ -136,10 +136,10 @@ theorem max_eq_right_iff : max a b = b ↔ a ≤ b :=
     Use cases on this lemma to automate linarith in inequalities -/
 theorem min_cases (a b : α) : min a b = a ∧ a ≤ b ∨ min a b = b ∧ b < a := by
   by_cases h : a ≤ b
-  · left
-    exact ⟨min_eq_left h, h⟩
-  · right
-    exact ⟨min_eq_right (le_of_lt (not_le.mp h)), not_le.mp h⟩
+  left
+  exact ⟨min_eq_left h, h⟩
+  right
+  exact ⟨min_eq_right (le_of_lt (not_le.mp h)), not_le.mp h⟩
 
 /-- For elements `a` and `b` of a linear order, either `max a b = a` and `b ≤ a`,
     or `max a b = b` and `a < b`.
@@ -149,9 +149,9 @@ theorem max_cases (a b : α) : max a b = a ∧ b ≤ a ∨ max a b = b ∧ a < b
 
 theorem min_eq_iff : min a b = c ↔ a = c ∧ a ≤ b ∨ b = c ∧ b ≤ a := by
   constructor
-  · intro h
-    refine Or.imp (fun h' => ?_) (fun h' => ?_) (le_total a b) <;> exact ⟨by simpa [h'] using h, h'⟩
-  · rintro (⟨rfl, h⟩ | ⟨rfl, h⟩) <;> simp [h]
+  intro h
+  refine Or.imp (fun h' => ?_) (fun h' => ?_) (le_total a b) <;> exact ⟨by simpa [h'] using h, h'⟩
+  rintro (⟨rfl, h⟩ | ⟨rfl, h⟩) <;> simp [h]
 
 theorem max_eq_iff : max a b = c ↔ a = c ∧ b ≤ a ∨ b = c ∧ a ≤ b :=
   @min_eq_iff αᵒᵈ _ a b c

@@ -176,12 +176,12 @@ instance isIso {X Y : PresheafedSpace.{_, _, v} C} (α : X ⟶ Y) [IsIso α] (x 
       ⟨eqToHom (show X.presheaf.stalk x = X.presheaf.stalk ((α ≫ β).base x) by rw [h_eq]) ≫
           (β.stalkMap (α.base x) : _),
         ?_, ?_⟩
-    · rw [← Category.assoc, congr_point α x ((α ≫ β).base x) h_eq.symm, Category.assoc]
-      erw [← stalkMap.comp β α (α.base x)]
-      rw [congr_hom _ _ (IsIso.inv_hom_id α), stalkMap.id, eqToHom_trans_assoc, eqToHom_refl,
-        Category.id_comp]
-    · rw [Category.assoc, ← stalkMap.comp, congr_hom _ _ (IsIso.hom_inv_id α), stalkMap.id,
-        eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
+    rw [← Category.assoc, congr_point α x ((α ≫ β).base x) h_eq.symm, Category.assoc]
+    erw [← stalkMap.comp β α (α.base x)]
+    rw [congr_hom _ _ (IsIso.inv_hom_id α), stalkMap.id, eqToHom_trans_assoc, eqToHom_refl,
+      Category.id_comp]
+    rw [Category.assoc, ← stalkMap.comp, congr_hom _ _ (IsIso.hom_inv_id α), stalkMap.id,
+      eqToHom_trans_assoc, eqToHom_refl, Category.id_comp]
 
 /-- An isomorphism between presheafed spaces induces an isomorphism of stalks.
 -/

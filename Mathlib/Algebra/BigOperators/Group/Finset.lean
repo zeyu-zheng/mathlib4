@@ -337,8 +337,8 @@ the sum over `s`, as long as `a` is in `s` or `f a = 0`."]
 theorem prod_insert_of_eq_one_if_not_mem [DecidableEq α] (h : a ∉ s → f a = 1) :
     ∏ x ∈ insert a s, f x = ∏ x ∈ s, f x := by
   by_cases hm : a ∈ s
-  · simp_rw [insert_eq_of_mem hm]
-  · rw [prod_insert hm, h hm, one_mul]
+  simp_rw [insert_eq_of_mem hm]
+  rw [prod_insert hm, h hm, one_mul]
 
 /-- The product of `f` over `insert a s` is the same as
 the product over `s`, as long as `f a = 1`. -/
@@ -448,8 +448,8 @@ lemma prod_powerset_insert [DecidableEq α] (ha : a ∉ s) (f : Finset α → β
     ∏ t ∈ (insert a s).powerset, f t =
       (∏ t ∈ s.powerset, f t) * ∏ t ∈ s.powerset, f (insert a t) := by
   rw [powerset_insert, prod_union, prod_image]
-  · exact insert_erase_invOn.2.injOn.mono fun t ht ↦ not_mem_mono (mem_powerset.1 ht) ha
-  · aesop (add simp [disjoint_left, insert_subset_iff])
+  exact insert_erase_invOn.2.injOn.mono fun t ht ↦ not_mem_mono (mem_powerset.1 ht) ha
+  aesop (add simp [disjoint_left, insert_subset_iff])
 
 open Classical in
 /-- A product over all subsets of `s ∪ {x}` is obtained by multiplying the product over all subsets
@@ -859,9 +859,9 @@ theorem prod_eq_single_of_mem {s : Finset α} {f : α → β} (a : α) (h : a �
   calc
     ∏ x ∈ s, f x = ∏ x ∈ {a}, f x := by
       { refine (prod_subset ?_ ?_).symm
-        · intro _ H
-          rwa [mem_singleton.1 H]
-        · simpa only [mem_singleton] }
+        intro _ H
+        rwa [mem_singleton.1 H]
+        simpa only [mem_singleton] }
     _ = f a := prod_singleton _ _
 
 @[to_additive]
@@ -906,19 +906,19 @@ theorem prod_eq_mul {s : Finset α} {f : α → β} (a b : α) (hn : a ≠ b)
     (h₀ : ∀ c ∈ s, c ≠ a ∧ c ≠ b → f c = 1) (ha : a ∉ s → f a = 1) (hb : b ∉ s → f b = 1) :
     ∏ x ∈ s, f x = f a * f b := by
   haveI := Classical.decEq α; by_cases h₁ : a ∈ s <;> by_cases h₂ : b ∈ s
-  · exact prod_eq_mul_of_mem a b h₁ h₂ hn h₀
-  · rw [hb h₂, mul_one]
-    apply prod_eq_single_of_mem a h₁
-    exact fun c hc hca => h₀ c hc ⟨hca, ne_of_mem_of_not_mem hc h₂⟩
-  · rw [ha h₁, one_mul]
-    apply prod_eq_single_of_mem b h₂
-    exact fun c hc hcb => h₀ c hc ⟨ne_of_mem_of_not_mem hc h₁, hcb⟩
-  · rw [ha h₁, hb h₂, mul_one]
-    exact
-      _root_.trans
-        (prod_congr rfl fun c hc =>
-          h₀ c hc ⟨ne_of_mem_of_not_mem hc h₁, ne_of_mem_of_not_mem hc h₂⟩)
-        prod_const_one
+  exact prod_eq_mul_of_mem a b h₁ h₂ hn h₀
+  rw [hb h₂, mul_one]
+  apply prod_eq_single_of_mem a h₁
+  exact fun c hc hca => h₀ c hc ⟨hca, ne_of_mem_of_not_mem hc h₂⟩
+  rw [ha h₁, one_mul]
+  apply prod_eq_single_of_mem b h₂
+  exact fun c hc hcb => h₀ c hc ⟨ne_of_mem_of_not_mem hc h₁, hcb⟩
+  rw [ha h₁, hb h₂, mul_one]
+  exact
+    _root_.trans
+      (prod_congr rfl fun c hc =>
+        h₀ c hc ⟨ne_of_mem_of_not_mem hc h₁, ne_of_mem_of_not_mem hc h₂⟩)
+      prod_const_one
 
 -- Porting note: simpNF linter complains that LHS doesn't simplify, but it does
 /-- A product over `s.subtype p` equals one over `s.filter p`. -/
@@ -1007,12 +1007,12 @@ theorem prod_congr_set {α : Type*} [CommMonoid α] {β : Type*} [Fintype β] (s
     [DecidablePred (· ∈ s)] (f : β → α) (g : s → α) (w : ∀ (x : β) (h : x ∈ s), f x = g ⟨x, h⟩)
     (w' : ∀ x : β, x ∉ s → f x = 1) : Finset.univ.prod f = Finset.univ.prod g := by
   rw [← @Finset.prod_subset _ _ s.toFinset Finset.univ f _ (by simp)]
-  · rw [Finset.prod_subtype]
-    · apply Finset.prod_congr rfl
-      exact fun ⟨x, h⟩ _ => w x h
-    · simp
-  · rintro x _ h
-    exact w' x (by simpa using h)
+  rw [Finset.prod_subtype]
+  apply Finset.prod_congr rfl
+  exact fun ⟨x, h⟩ _ => w x h
+  simp
+  rintro x _ h
+  exact w' x (by simpa using h)
 
 @[to_additive]
 theorem prod_apply_dite {s : Finset α} {p : α → Prop} {hp : DecidablePred p}
@@ -1103,31 +1103,31 @@ theorem prod_ite_mem [DecidableEq α] (s t : Finset α) (f : α → β) :
 theorem prod_dite_eq [DecidableEq α] (s : Finset α) (a : α) (b : ∀ x : α, a = x → β) :
     ∏ x ∈ s, (if h : a = x then b x h else 1) = ite (a ∈ s) (b a rfl) 1 := by
   split_ifs with h
-  · rw [Finset.prod_eq_single a, dif_pos rfl]
-    · intros _ _ h
-      rw [dif_neg]
-      exact h.symm
-    · simp [h]
-  · rw [Finset.prod_eq_one]
-    intros
-    rw [dif_neg]
-    rintro rfl
-    contradiction
+  rw [Finset.prod_eq_single a, dif_pos rfl]
+  intros _ _ h
+  rw [dif_neg]
+  exact h.symm
+  simp [h]
+  rw [Finset.prod_eq_one]
+  intros
+  rw [dif_neg]
+  rintro rfl
+  contradiction
 
 @[to_additive (attr := simp)]
 theorem prod_dite_eq' [DecidableEq α] (s : Finset α) (a : α) (b : ∀ x : α, x = a → β) :
     ∏ x ∈ s, (if h : x = a then b x h else 1) = ite (a ∈ s) (b a rfl) 1 := by
   split_ifs with h
-  · rw [Finset.prod_eq_single a, dif_pos rfl]
-    · intros _ _ h
-      rw [dif_neg]
-      exact h
-    · simp [h]
-  · rw [Finset.prod_eq_one]
-    intros
-    rw [dif_neg]
-    rintro rfl
-    contradiction
+  rw [Finset.prod_eq_single a, dif_pos rfl]
+  intros _ _ h
+  rw [dif_neg]
+  exact h
+  simp [h]
+  rw [Finset.prod_eq_one]
+  intros
+  rw [dif_neg]
+  rintro rfl
+  contradiction
 
 @[to_additive (attr := simp)]
 theorem prod_ite_eq [DecidableEq α] (s : Finset α) (a : α) (b : α → β) :
@@ -1214,8 +1214,8 @@ lemma prod_mulIndicator_eq_prod_filter (s : Finset ι) (f : ι → κ → β) (t
     ∏ i ∈ s, mulIndicator (t i) (f i) (g i) = ∏ i ∈ s.filter fun i ↦ g i ∈ t i, f i (g i) := by
   refine (prod_filter_mul_prod_filter_not s (fun i ↦ g i ∈ t i) _).symm.trans <|
      Eq.trans (congr_arg₂ (· * ·) ?_ ?_) (mul_one _)
-  · exact prod_congr rfl fun x hx ↦ mulIndicator_of_mem (mem_filter.1 hx).2 _
-  · exact prod_eq_one fun x hx ↦ mulIndicator_of_not_mem (mem_filter.1 hx).2 _
+  exact prod_congr rfl fun x hx ↦ mulIndicator_of_mem (mem_filter.1 hx).2 _
+  exact prod_eq_one fun x hx ↦ mulIndicator_of_not_mem (mem_filter.1 hx).2 _
 
 @[to_additive]
 lemma prod_mulIndicator_eq_prod_inter [DecidableEq ι] (s t : Finset ι) (f : ι → β) :
@@ -1261,22 +1261,22 @@ theorem prod_bij_ne_one {s : Finset α} {t : Finset γ} {f : α → β} {g : γ 
       prod_bij (fun a ha => i a (mem_filter.mp ha).1 <| by simpa using (mem_filter.mp ha).2)
         ?_ ?_ ?_ ?_
     _ = ∏ x ∈ t, g x := prod_filter_ne_one _
-  · intros a ha
-    refine (mem_filter.mp ha).elim ?_
-    intros h₁ h₂
-    refine (mem_filter.mpr ⟨hi a h₁ _, ?_⟩)
-    specialize h a h₁ fun H ↦ by rw [H] at h₂; simp at h₂
-    rwa [← h]
-  · intros a₁ ha₁ a₂ ha₂
-    refine (mem_filter.mp ha₁).elim fun _ha₁₁ _ha₁₂ ↦ ?_
-    refine (mem_filter.mp ha₂).elim fun _ha₂₁ _ha₂₂ ↦ ?_
-    apply i_inj
-  · intros b hb
-    refine (mem_filter.mp hb).elim fun h₁ h₂ ↦ ?_
-    obtain ⟨a, ha₁, ha₂, eq⟩ := i_surj b h₁ fun H ↦ by rw [H] at h₂; simp at h₂
-    exact ⟨a, mem_filter.mpr ⟨ha₁, ha₂⟩, eq⟩
-  · refine (fun a ha => (mem_filter.mp ha).elim fun h₁ h₂ ↦ ?_)
-    exact h a h₁ fun H ↦ by rw [H] at h₂; simp at h₂
+  intros a ha
+  refine (mem_filter.mp ha).elim ?_
+  intros h₁ h₂
+  refine (mem_filter.mpr ⟨hi a h₁ _, ?_⟩)
+  specialize h a h₁ fun H ↦ by rw [H] at h₂; simp at h₂
+  rwa [← h]
+  intros a₁ ha₁ a₂ ha₂
+  refine (mem_filter.mp ha₁).elim fun _ha₁₁ _ha₁₂ ↦ ?_
+  refine (mem_filter.mp ha₂).elim fun _ha₂₁ _ha₂₂ ↦ ?_
+  apply i_inj
+  intros b hb
+  refine (mem_filter.mp hb).elim fun h₁ h₂ ↦ ?_
+  obtain ⟨a, ha₁, ha₂, eq⟩ := i_surj b h₁ fun H ↦ by rw [H] at h₂; simp at h₂
+  exact ⟨a, mem_filter.mpr ⟨ha₁, ha₂⟩, eq⟩
+  refine (fun a ha => (mem_filter.mp ha).elim fun h₁ h₂ ↦ ?_)
+  exact h a h₁ fun H ↦ by rw [H] at h₂; simp at h₂
 
 @[to_additive]
 theorem nonempty_of_prod_ne_one (h : ∏ x ∈ s, f x ≠ 1) : s.Nonempty :=
@@ -1311,15 +1311,15 @@ theorem eventually_constant_prod {u : ℕ → β} {N : ℕ} (hu : ∀ n ≥ N, u
   obtain ⟨m, rfl : n = N + m⟩ := Nat.exists_eq_add_of_le hn
   clear hn
   induction' m with m hm
-  · simp
-  · simp [← add_assoc, prod_range_succ, hm, hu]
+  simp
+  simp [← add_assoc, prod_range_succ, hm, hu]
 
 @[to_additive]
 theorem prod_range_add (f : ℕ → β) (n m : ℕ) :
     (∏ x ∈ range (n + m), f x) = (∏ x ∈ range n, f x) * ∏ x ∈ range m, f (n + x) := by
   induction' m with m hm
-  · simp
-  · erw [Nat.add_succ, prod_range_succ, prod_range_succ, hm, mul_assoc]
+  simp
+  erw [Nat.add_succ, prod_range_succ, prod_range_succ, hm, mul_assoc]
 
 @[to_additive]
 theorem prod_range_add_div_prod_range {α : Type*} [CommGroup α] (f : ℕ → α) (n m : ℕ) :
@@ -1341,11 +1341,11 @@ theorem prod_list_map_count [DecidableEq α] (l : List α) {M : Type*} [CommMono
   induction' l with a s IH; · simp only [map_nil, prod_nil, count_nil, pow_zero, prod_const_one]
   simp only [List.map, List.prod_cons, toFinset_cons, IH]
   by_cases has : a ∈ s.toFinset
-  · rw [insert_eq_of_mem has, ← insert_erase has, prod_insert (not_mem_erase _ _),
-      prod_insert (not_mem_erase _ _), ← mul_assoc, count_cons_self, pow_succ']
-    congr 1
-    refine prod_congr rfl fun x hx => ?_
-    rw [count_cons_of_ne (ne_of_mem_erase hx)]
+  rw [insert_eq_of_mem has, ← insert_erase has, prod_insert (not_mem_erase _ _),
+    prod_insert (not_mem_erase _ _), ← mul_assoc, count_cons_self, pow_succ']
+  congr 1
+  refine prod_congr rfl fun x hx => ?_
+  rw [count_cons_of_ne (ne_of_mem_erase hx)]
   rw [prod_insert has, count_cons_self, count_eq_zero_of_not_mem (mt mem_toFinset.2 has), pow_one]
   congr 1
   refine prod_congr rfl fun x hx => ?_
@@ -1428,8 +1428,8 @@ theorem prod_range_induction (f s : ℕ → β) (base : s 0 = 1)
     (step : ∀ n, s (n + 1) = s n * f n) (n : ℕ) :
     ∏ k ∈ Finset.range n, f k = s n := by
   induction' n with k hk
-  · rw [Finset.prod_range_zero, base]
-  · simp only [hk, Finset.prod_range_succ, step, mul_comm]
+  rw [Finset.prod_range_zero, base]
+  simp only [hk, Finset.prod_range_succ, step, mul_comm]
 
 /-- A telescoping product along `{0, ..., n - 1}` of a commutative group valued function reduces to
 the ratio of the last and first factors. -/
@@ -1506,9 +1506,9 @@ lemma prod_powersetCard (n : ℕ) (s : Finset α) (f : ℕ → β) :
 theorem prod_flip {n : ℕ} (f : ℕ → β) :
     (∏ r ∈ range (n + 1), f (n - r)) = ∏ k ∈ range (n + 1), f k := by
   induction' n with n ih
-  · rw [prod_range_one, prod_range_one]
-  · rw [prod_range_succ', prod_range_succ _ (Nat.succ n)]
-    simp [← ih]
+  rw [prod_range_one, prod_range_one]
+  rw [prod_range_succ', prod_range_succ _ (Nat.succ n)]
+  simp [← ih]
 
 @[to_additive]
 theorem prod_involution {s : Finset α} {f : α → β} :
@@ -1636,15 +1636,15 @@ theorem eq_of_card_le_one_of_prod_eq {s : Finset α} (hc : s.card ≤ 1) {f : α
     (h : ∏ x ∈ s, f x = b) : ∀ x ∈ s, f x = b := by
   intro x hx
   by_cases hc0 : s.card = 0
-  · exact False.elim (card_ne_zero_of_mem hx hc0)
-  · have h1 : s.card = 1 := le_antisymm hc (Nat.one_le_of_lt (Nat.pos_of_ne_zero hc0))
-    rw [card_eq_one] at h1
-    cases' h1 with x2 hx2
-    rw [hx2, mem_singleton] at hx
-    simp_rw [hx2] at h
-    rw [hx]
-    rw [prod_singleton] at h
-    exact h
+  exact False.elim (card_ne_zero_of_mem hx hc0)
+  have h1 : s.card = 1 := le_antisymm hc (Nat.one_le_of_lt (Nat.pos_of_ne_zero hc0))
+  rw [card_eq_one] at h1
+  cases' h1 with x2 hx2
+  rw [hx2, mem_singleton] at hx
+  simp_rw [hx2] at h
+  rw [hx]
+  rw [prod_singleton] at h
+  exact h
 
 /-- Taking a product over `s : Finset α` is the same as multiplying the value on a single element
 `f a` by the product of `s.erase a`.
@@ -1680,12 +1680,12 @@ theorem prod_ite_one (s : Finset α) (p : α → Prop) [DecidablePred p]
     (h : ∀ i ∈ s, ∀ j ∈ s, p i → p j → i = j) (a : β) :
     ∏ i ∈ s, ite (p i) a 1 = ite (∃ i ∈ s, p i) a 1 := by
   split_ifs with h
-  · obtain ⟨i, hi, hpi⟩ := h
-    rw [prod_eq_single_of_mem _ hi, if_pos hpi]
-    exact fun j hj hji ↦ if_neg fun hpj ↦ hji <| h _ hj _ hi hpj hpi
-  · push_neg at h
-    rw [prod_eq_one]
-    exact fun i hi => if_neg (h i hi)
+  obtain ⟨i, hi, hpi⟩ := h
+  rw [prod_eq_single_of_mem _ hi, if_pos hpi]
+  exact fun j hj hji ↦ if_neg fun hpj ↦ hji <| h _ hj _ hi hpj hpi
+  push_neg at h
+  rw [prod_eq_one]
+  exact fun i hi => if_neg (h i hi)
 
 @[to_additive]
 theorem prod_erase_lt_of_one_lt {γ : Type*} [DecidableEq α] [OrderedCommMonoid γ]
@@ -1704,12 +1704,12 @@ theorem eq_one_of_prod_eq_one {s : Finset α} {f : α → β} {a : α} (hp : ∏
     (h1 : ∀ x ∈ s, x ≠ a → f x = 1) : ∀ x ∈ s, f x = 1 := by
   intro x hx
   by_cases h : x = a
-  · rw [h]
-    rw [h] at hx
-    rw [← prod_subset (singleton_subset_iff.2 hx) fun t ht ha => h1 t ht (not_mem_singleton.1 ha),
-      prod_singleton] at hp
-    exact hp
-  · exact h1 x hx h
+  rw [h]
+  rw [h] at hx
+  rw [← prod_subset (singleton_subset_iff.2 hx) fun t ht ha => h1 t ht (not_mem_singleton.1 ha),
+    prod_singleton] at hp
+  exact hp
+  exact h1 x hx h
 
 @[to_additive sum_boole_nsmul]
 theorem prod_pow_boole [DecidableEq α] (s : Finset α) (f : α → β) (a : α) :
@@ -1719,9 +1719,9 @@ open Classical in
 theorem prod_dvd_prod_of_dvd {S : Finset α} (g1 g2 : α → β) (h : ∀ a ∈ S, g1 a ∣ g2 a) :
     S.prod g1 ∣ S.prod g2 := by
     induction' S using Finset.induction_on' with a T _haS _hTS haT IH
-    · simp
-    · rw [Finset.prod_insert haT, prod_insert haT]
-      exact mul_dvd_mul (h a <| T.mem_insert_self a) <| IH fun b hb ↦ h b <| mem_insert_of_mem hb
+    simp
+    rw [Finset.prod_insert haT, prod_insert haT]
+    exact mul_dvd_mul (h a <| T.mem_insert_self a) <| IH fun b hb ↦ h b <| mem_insert_of_mem hb
 
 theorem prod_dvd_prod_of_subset {ι M : Type*} [CommMonoid M] (s t : Finset ι) (f : ι → M)
     (h : s ⊆ t) : (∏ i ∈ s, f i) ∣ ∏ i ∈ t, f i :=
@@ -1983,9 +1983,9 @@ theorem prod_subtype_mul_prod_subtype {α β : Type*} [Fintype α] [CommMonoid �
     (∏ i : { x // p x }, f i) * ∏ i : { x // ¬p x }, f i = ∏ i, f i := by
     let s := { x | p x }.toFinset
     rw [← Finset.prod_subtype s, ← Finset.prod_subtype sᶜ]
-    · exact Finset.prod_mul_prod_compl _ _
-    · simp [s]
-    · simp [s]
+    exact Finset.prod_mul_prod_compl _ _
+    simp [s]
+    simp [s]
 
 @[to_additive] lemma prod_subset {s : Finset ι} {f : ι → α} (h : ∀ i, f i ≠ 1 → i ∈ s) :
     ∏ i ∈ s, f i = ∏ i, f i :=
@@ -2068,9 +2068,9 @@ namespace Multiset
 theorem disjoint_list_sum_left {a : Multiset α} {l : List (Multiset α)} :
     Multiset.Disjoint l.sum a ↔ ∀ b ∈ l, Multiset.Disjoint b a := by
   induction' l with b bs ih
-  · simp only [zero_disjoint, List.not_mem_nil, IsEmpty.forall_iff, forall_const, List.sum_nil]
-  · simp_rw [List.sum_cons, disjoint_add_left, List.mem_cons, forall_eq_or_imp]
-    simp [and_congr_left_iff, iff_self_iff, ih]
+  simp only [zero_disjoint, List.not_mem_nil, IsEmpty.forall_iff, forall_const, List.sum_nil]
+  simp_rw [List.sum_cons, disjoint_add_left, List.mem_cons, forall_eq_or_imp]
+  simp [and_congr_left_iff, iff_self_iff, ih]
 
 theorem disjoint_list_sum_right {a : Multiset α} {l : List (Multiset α)} :
     Multiset.Disjoint a l.sum ↔ ∀ b ∈ l, Multiset.Disjoint a b := by
@@ -2144,8 +2144,8 @@ open Classical in
 theorem prod_sum {α : Type*} {ι : Type*} [CommMonoid α] (f : ι → Multiset α) (s : Finset ι) :
     (∑ x ∈ s, f x).prod = ∏ x ∈ s, (f x).prod := by
     induction' s using Finset.induction_on with a t hat ih
-    · rw [Finset.sum_empty, Finset.prod_empty, Multiset.prod_zero]
-    · rw [Finset.sum_insert hat, Finset.prod_insert hat, Multiset.prod_add, ih]
+    rw [Finset.sum_empty, Finset.prod_empty, Multiset.prod_zero]
+    rw [Finset.sum_insert hat, Finset.prod_insert hat, Multiset.prod_add, ih]
 
 end Multiset
 
@@ -2158,9 +2158,9 @@ open Classical in
 theorem nat_abs_sum_le {ι : Type*} (s : Finset ι) (f : ι → ℤ) :
     (∑ i ∈ s, f i).natAbs ≤ ∑ i ∈ s, (f i).natAbs := by
     induction' s using Finset.induction_on with i s his IH
-    · simp only [Finset.sum_empty, Int.natAbs_zero, le_refl]
-    · simp only [his, Finset.sum_insert, not_false_iff]
-      exact (Int.natAbs_add_le _ _).trans (Nat.add_le_add_left IH _)
+    simp only [Finset.sum_empty, Int.natAbs_zero, le_refl]
+    simp only [his, Finset.sum_insert, not_false_iff]
+    exact (Int.natAbs_add_le _ _).trans (Nat.add_le_add_left IH _)
 
 /-! ### `Additive`, `Multiplicative` -/
 
@@ -2250,7 +2250,7 @@ theorem Finset.sum_sym2_filter_not_isDiag {ι α} [LinearOrder ι] [AddCommMonoi
   rw [Finset.offDiag_filter_lt_eq_filter_le]
   conv_rhs => rw [← Finset.sum_subtype_eq_sum_filter]
   refine (Finset.sum_equiv Sym2.sortEquiv.symm ?_ ?_).symm
-  · rintro ⟨⟨i₁, j₁⟩, hij₁⟩
-    simp [and_assoc]
-  · rintro ⟨⟨i₁, j₁⟩, hij₁⟩
-    simp
+  rintro ⟨⟨i₁, j₁⟩, hij₁⟩
+  simp [and_assoc]
+  rintro ⟨⟨i₁, j₁⟩, hij₁⟩
+  simp

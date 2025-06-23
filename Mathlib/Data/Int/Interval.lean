@@ -33,46 +33,46 @@ instance instLocallyFiniteOrder : LocallyFiniteOrder ℤ where
     simp_rw [mem_map, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
       Nat.castEmbedding_apply, addLeftEmbedding_apply]
     constructor
-    · rintro ⟨a, h, rfl⟩
-      rw [lt_sub_iff_add_lt, Int.lt_add_one_iff, add_comm] at h
-      exact ⟨Int.le.intro a rfl, h⟩
-    · rintro ⟨ha, hb⟩
-      use (x - a).toNat
-      rw [← lt_add_one_iff] at hb
-      rw [toNat_sub_of_le ha]
-      exact ⟨sub_lt_sub_right hb _, add_sub_cancel _ _⟩
+    rintro ⟨a, h, rfl⟩
+    rw [lt_sub_iff_add_lt, Int.lt_add_one_iff, add_comm] at h
+    exact ⟨Int.le.intro a rfl, h⟩
+    rintro ⟨ha, hb⟩
+    use (x - a).toNat
+    rw [← lt_add_one_iff] at hb
+    rw [toNat_sub_of_le ha]
+    exact ⟨sub_lt_sub_right hb _, add_sub_cancel _ _⟩
   finset_mem_Ico a b x := by
     simp_rw [mem_map, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
       Nat.castEmbedding_apply, addLeftEmbedding_apply]
     constructor
-    · rintro ⟨a, h, rfl⟩
-      exact ⟨Int.le.intro a rfl, lt_sub_iff_add_lt'.mp h⟩
-    · rintro ⟨ha, hb⟩
-      use (x - a).toNat
-      rw [toNat_sub_of_le ha]
-      exact ⟨sub_lt_sub_right hb _, add_sub_cancel _ _⟩
+    rintro ⟨a, h, rfl⟩
+    exact ⟨Int.le.intro a rfl, lt_sub_iff_add_lt'.mp h⟩
+    rintro ⟨ha, hb⟩
+    use (x - a).toNat
+    rw [toNat_sub_of_le ha]
+    exact ⟨sub_lt_sub_right hb _, add_sub_cancel _ _⟩
   finset_mem_Ioc a b x := by
     simp_rw [mem_map, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
       Nat.castEmbedding_apply, addLeftEmbedding_apply]
     constructor
-    · rintro ⟨a, h, rfl⟩
-      rw [← add_one_le_iff, le_sub_iff_add_le', add_comm _ (1 : ℤ), ← add_assoc] at h
-      exact ⟨Int.le.intro a rfl, h⟩
-    · rintro ⟨ha, hb⟩
-      use (x - (a + 1)).toNat
-      rw [toNat_sub_of_le ha, ← add_one_le_iff, sub_add, add_sub_cancel_right]
-      exact ⟨sub_le_sub_right hb _, add_sub_cancel _ _⟩
+    rintro ⟨a, h, rfl⟩
+    rw [← add_one_le_iff, le_sub_iff_add_le', add_comm _ (1 : ℤ), ← add_assoc] at h
+    exact ⟨Int.le.intro a rfl, h⟩
+    rintro ⟨ha, hb⟩
+    use (x - (a + 1)).toNat
+    rw [toNat_sub_of_le ha, ← add_one_le_iff, sub_add, add_sub_cancel_right]
+    exact ⟨sub_le_sub_right hb _, add_sub_cancel _ _⟩
   finset_mem_Ioo a b x := by
     simp_rw [mem_map, mem_range, Int.lt_toNat, Function.Embedding.trans_apply,
       Nat.castEmbedding_apply, addLeftEmbedding_apply]
     constructor
-    · rintro ⟨a, h, rfl⟩
-      rw [sub_sub, lt_sub_iff_add_lt'] at h
-      exact ⟨Int.le.intro a rfl, h⟩
-    · rintro ⟨ha, hb⟩
-      use (x - (a + 1)).toNat
-      rw [toNat_sub_of_le ha, sub_sub]
-      exact ⟨sub_lt_sub_right hb _, add_sub_cancel _ _⟩
+    rintro ⟨a, h, rfl⟩
+    rw [sub_sub, lt_sub_iff_add_lt'] at h
+    exact ⟨Int.le.intro a rfl, h⟩
+    rintro ⟨ha, hb⟩
+    use (x - (a + 1)).toNat
+    rw [toNat_sub_of_le ha, sub_sub]
+    exact ⟨sub_lt_sub_right hb _, add_sub_cancel _ _⟩
 
 variable (a b : ℤ)
 
@@ -166,28 +166,28 @@ theorem card_fintype_Ioo_of_lt (h : a < b) : (Fintype.card (Set.Ioo a b) : ℤ) 
 
 theorem image_Ico_emod (n a : ℤ) (h : 0 ≤ a) : (Ico n (n + a)).image (· % a) = Ico 0 a := by
   obtain rfl | ha := eq_or_lt_of_le h
-  · simp
+  simp
   ext i
   simp only [mem_image, mem_range, mem_Ico]
   constructor
-  · rintro ⟨i, _, rfl⟩
-    exact ⟨emod_nonneg i ha.ne', emod_lt_of_pos i ha⟩
+  rintro ⟨i, _, rfl⟩
+  exact ⟨emod_nonneg i ha.ne', emod_lt_of_pos i ha⟩
   intro hia
   have hn := Int.emod_add_ediv n a
   obtain hi | hi := lt_or_le i (n % a)
-  · refine ⟨i + a * (n / a + 1), ⟨?_, ?_⟩, ?_⟩
-    · rw [add_comm (n / a), mul_add, mul_one, ← add_assoc]
-      refine hn.symm.le.trans (add_le_add_right ?_ _)
-      simpa only [zero_add] using add_le_add hia.left (Int.emod_lt_of_pos n ha).le
-    · refine lt_of_lt_of_le (add_lt_add_right hi (a * (n / a + 1))) ?_
-      rw [mul_add, mul_one, ← add_assoc, hn]
-    · rw [Int.add_mul_emod_self_left, Int.emod_eq_of_lt hia.left hia.right]
-  · refine ⟨i + a * (n / a), ⟨?_, ?_⟩, ?_⟩
-    · exact hn.symm.le.trans (add_le_add_right hi _)
-    · rw [add_comm n a]
-      refine add_lt_add_of_lt_of_le hia.right (le_trans ?_ hn.le)
-      simp only [zero_le, le_add_iff_nonneg_left]
-      exact Int.emod_nonneg n (ne_of_gt ha)
-    · rw [Int.add_mul_emod_self_left, Int.emod_eq_of_lt hia.left hia.right]
+  refine ⟨i + a * (n / a + 1), ⟨?_, ?_⟩, ?_⟩
+  rw [add_comm (n / a), mul_add, mul_one, ← add_assoc]
+  refine hn.symm.le.trans (add_le_add_right ?_ _)
+  simpa only [zero_add] using add_le_add hia.left (Int.emod_lt_of_pos n ha).le
+  refine lt_of_lt_of_le (add_lt_add_right hi (a * (n / a + 1))) ?_
+  rw [mul_add, mul_one, ← add_assoc, hn]
+  rw [Int.add_mul_emod_self_left, Int.emod_eq_of_lt hia.left hia.right]
+  refine ⟨i + a * (n / a), ⟨?_, ?_⟩, ?_⟩
+  exact hn.symm.le.trans (add_le_add_right hi _)
+  rw [add_comm n a]
+  refine add_lt_add_of_lt_of_le hia.right (le_trans ?_ hn.le)
+  simp only [zero_le, le_add_iff_nonneg_left]
+  exact Int.emod_nonneg n (ne_of_gt ha)
+  rw [Int.add_mul_emod_self_left, Int.emod_eq_of_lt hia.left hia.right]
 
 end Int

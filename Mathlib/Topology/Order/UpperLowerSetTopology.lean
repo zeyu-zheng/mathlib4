@@ -238,9 +238,9 @@ lemma isClosed_iff_isLower : IsClosed s ↔ IsLowerSet s := by
 lemma closure_eq_lowerClosure {s : Set α} : closure s = lowerClosure s := by
   rw [subset_antisymm_iff]
   refine ⟨?_, lowerClosure_min subset_closure (isClosed_iff_isLower.1 isClosed_closure)⟩
-  · apply closure_minimal subset_lowerClosure _
-    rw [isClosed_iff_isLower]
-    exact LowerSet.lower (lowerClosure s)
+  apply closure_minimal subset_lowerClosure _
+  rw [isClosed_iff_isLower]
+  exact LowerSet.lower (lowerClosure s)
 
 /--
 The closure of a singleton `{a}` in the upper set topology is the right-closed left-infinite
@@ -261,15 +261,15 @@ open Topology
 protected lemma monotone_iff_continuous [TopologicalSpace α] [TopologicalSpace β]
     [Topology.IsUpperSet α] [Topology.IsUpperSet β] {f : α → β} : Monotone f ↔ Continuous f := by
   constructor
-  · intro hf
-    simp_rw [continuous_def, isOpen_iff_isUpperSet]
-    exact fun _ hs ↦ IsUpperSet.preimage hs hf
-  · intro hf a b hab
-    rw [← mem_Iic, ← closure_singleton] at hab ⊢
-    apply Continuous.closure_preimage_subset hf {f b}
-    apply mem_of_mem_of_subset hab
-    apply closure_mono
-    rw [singleton_subset_iff, mem_preimage, mem_singleton_iff]
+  intro hf
+  simp_rw [continuous_def, isOpen_iff_isUpperSet]
+  exact fun _ hs ↦ IsUpperSet.preimage hs hf
+  intro hf a b hab
+  rw [← mem_Iic, ← closure_singleton] at hab ⊢
+  apply Continuous.closure_preimage_subset hf {f b}
+  apply mem_of_mem_of_subset hab
+  apply closure_mono
+  rw [singleton_subset_iff, mem_preimage, mem_singleton_iff]
 
 lemma monotone_to_upperTopology_continuous [TopologicalSpace α] [TopologicalSpace β]
     [Topology.IsUpperSet α] [IsUpper β] {f : α → β} (hf : Monotone f) : Continuous f := by
@@ -354,8 +354,8 @@ end IsLowerSet
 lemma isUpperSet_orderDual [Preorder α] [TopologicalSpace α] :
     Topology.IsUpperSet αᵒᵈ ↔ Topology.IsLowerSet α := by
   constructor
-  · apply OrderDual.instIsLowerSet
-  · apply OrderDual.instIsUpperSet
+  apply OrderDual.instIsLowerSet
+  apply OrderDual.instIsUpperSet
 
 lemma isLowerSet_orderDual [Preorder α] [TopologicalSpace α] :
     Topology.IsLowerSet αᵒᵈ ↔ Topology.IsUpperSet α := isUpperSet_orderDual.symm

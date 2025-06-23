@@ -635,22 +635,22 @@ lemma singleton_subset_coe : {a} ⊆ (s : Set α) ↔ {a} ⊆ s := by rw [← co
 
 theorem eq_singleton_iff_unique_mem {s : Finset α} {a : α} : s = {a} ↔ a ∈ s ∧ ∀ x ∈ s, x = a := by
   constructor <;> intro t
-  · rw [t]
-    exact ⟨Finset.mem_singleton_self _, fun _ => Finset.mem_singleton.1⟩
-  · ext
-    rw [Finset.mem_singleton]
-    exact ⟨t.right _, fun r => r.symm ▸ t.left⟩
+  rw [t]
+  exact ⟨Finset.mem_singleton_self _, fun _ => Finset.mem_singleton.1⟩
+  ext
+  rw [Finset.mem_singleton]
+  exact ⟨t.right _, fun r => r.symm ▸ t.left⟩
 
 theorem eq_singleton_iff_nonempty_unique_mem {s : Finset α} {a : α} :
     s = {a} ↔ s.Nonempty ∧ ∀ x ∈ s, x = a := by
   constructor
-  · rintro rfl
-    simp
-  · rintro ⟨hne, h_uniq⟩
-    rw [eq_singleton_iff_unique_mem]
-    refine ⟨?_, h_uniq⟩
-    rw [← h_uniq hne.choose hne.choose_spec]
-    exact hne.choose_spec
+  rintro rfl
+  simp
+  rintro ⟨hne, h_uniq⟩
+  rw [eq_singleton_iff_unique_mem]
+  refine ⟨?_, h_uniq⟩
+  rw [← h_uniq hne.choose hne.choose_spec]
+  exact hne.choose_spec
 
 theorem nonempty_iff_eq_singleton_default [Unique α] {s : Finset α} :
     s.Nonempty ↔ s = {default} := by
@@ -1104,8 +1104,8 @@ theorem Nonempty.cons_induction {α : Type*} {p : ∀ s : Finset α, s.Nonempty 
   | empty => exact (not_nonempty_empty hs).elim
   | cons a t ha h =>
     obtain rfl | ht := t.eq_empty_or_nonempty
-    · exact singleton a
-    · exact cons a t ha ht (h ht)
+    exact singleton a
+    exact cons a t ha ht (h ht)
 
 -- We use a fresh `α` here to exclude the unneeded `DecidableEq α` instance from the section.
 lemma Nonempty.exists_cons_eq {α} {s : Finset α} (hs : s.Nonempty) : ∃ t a ha, cons a t ha = s :=
@@ -2286,12 +2286,12 @@ theorem filter_cons {a : α} (s : Finset α) (ha : a ∉ s) :
       (if p a then {a} else ∅ : Finset α).disjUnion (filter p s)
         (by
           split_ifs
-          · rw [disjoint_singleton_left]
-            exact mem_filter.not.mpr <| mt And.left ha
-          · exact disjoint_empty_left _) := by
+          rw [disjoint_singleton_left]
+          exact mem_filter.not.mpr <| mt And.left ha
+          exact disjoint_empty_left _) := by
   split_ifs with h
-  · rw [filter_cons_of_pos _ _ _ ha h, singleton_disjUnion]
-  · rw [filter_cons_of_neg _ _ _ ha h, empty_disjUnion]
+  rw [filter_cons_of_pos _ _ _ ha h, singleton_disjUnion]
+  rw [filter_cons_of_neg _ _ _ ha h, empty_disjUnion]
 
 variable [DecidableEq α]
 
@@ -2350,13 +2350,13 @@ theorem subset_union_elim {s : Finset α} {t₁ t₂ : Set α} (h : ↑s ⊆ t�
     ∃ s₁ s₂ : Finset α, s₁ ∪ s₂ = s ∧ ↑s₁ ⊆ t₁ ∧ ↑s₂ ⊆ t₂ \ t₁ := by
     classical
     refine ⟨s.filter (· ∈ t₁), s.filter (· ∉ t₁), ?_, ?_, ?_⟩
-    · simp [filter_union_right, em]
-    · intro x
-      simp
-    · intro x
-      simp only [not_not, coe_filter, Set.mem_setOf_eq, Set.mem_diff, and_imp]
-      intro hx hx₂
-      exact ⟨Or.resolve_left (h hx) hx₂, hx₂⟩
+    simp [filter_union_right, em]
+    intro x
+    simp
+    intro x
+    simp only [not_not, coe_filter, Set.mem_setOf_eq, Set.mem_diff, and_imp]
+    intro hx hx₂
+    exact ⟨Or.resolve_left (h hx) hx₂, hx₂⟩
 
 section Classical
 
@@ -2387,15 +2387,15 @@ end Classical
 theorem filter_eq [DecidableEq β] (s : Finset β) (b : β) :
     s.filter (Eq b) = ite (b ∈ s) {b} ∅ := by
   split_ifs with h
-  · ext
-    simp only [mem_filter, mem_singleton, decide_eq_true_eq]
-    refine ⟨fun h => h.2.symm, ?_⟩
-    rintro rfl
-    exact ⟨h, rfl⟩
-  · ext
-    simp only [mem_filter, not_and, iff_false_iff, not_mem_empty, decide_eq_true_eq]
-    rintro m rfl
-    exact h m
+  ext
+  simp only [mem_filter, mem_singleton, decide_eq_true_eq]
+  refine ⟨fun h => h.2.symm, ?_⟩
+  rintro rfl
+  exact ⟨h, rfl⟩
+  ext
+  simp only [mem_filter, not_and, iff_false_iff, not_mem_empty, decide_eq_true_eq]
+  rintro m rfl
+  exact h m
 
 /-- After filtering out everything that does not equal a given value, at most that value remains.
 
@@ -2509,9 +2509,9 @@ theorem nonempty_range_succ : (range <| n + 1).Nonempty :=
 @[simp]
 theorem range_filter_eq {n m : ℕ} : (range n).filter (· = m) = if m < n then {m} else ∅ := by
   convert filter_eq (range n) m using 2
-  · ext
-    rw [eq_comm]
-  · simp
+  ext
+  rw [eq_comm]
+  simp
 
 lemma range_nontrivial {n : ℕ} (hn : 1 < n) : (Finset.range n).Nontrivial := by
   rw [Finset.Nontrivial, Finset.coe_range]
@@ -2608,22 +2608,22 @@ theorem toFinset_nsmul (s : Multiset α) : ∀ n ≠ 0, (n • s).toFinset = s.t
   | 0, h => by contradiction
   | n + 1, _ => by
     by_cases h : n = 0
-    · rw [h, zero_add, one_nsmul]
-    · rw [add_nsmul, toFinset_add, one_nsmul, toFinset_nsmul s n h, Finset.union_idempotent]
+    rw [h, zero_add, one_nsmul]
+    rw [add_nsmul, toFinset_add, one_nsmul, toFinset_nsmul s n h, Finset.union_idempotent]
 
 theorem toFinset_eq_singleton_iff (s : Multiset α) (a : α) :
     s.toFinset = {a} ↔ card s ≠ 0 ∧ s = card s • {a} := by
   refine ⟨fun H ↦ ⟨fun h ↦ ?_, ext' fun x ↦ ?_⟩, fun H ↦ ?_⟩
-  · rw [card_eq_zero.1 h, toFinset_zero] at H
-    exact Finset.singleton_ne_empty _ H.symm
-  · rw [count_nsmul, count_singleton]
-    by_cases hx : x = a
-    · simp_rw [hx, ite_true, mul_one, count_eq_card]
-      intro y hy
-      rw [← mem_toFinset, H, Finset.mem_singleton] at hy
-      exact hy.symm
-    have hx' : x ∉ s := fun h' ↦ hx <| by rwa [← mem_toFinset, H, Finset.mem_singleton] at h'
-    simp_rw [count_eq_zero_of_not_mem hx', hx, ite_false, Nat.mul_zero]
+  rw [card_eq_zero.1 h, toFinset_zero] at H
+  exact Finset.singleton_ne_empty _ H.symm
+  rw [count_nsmul, count_singleton]
+  by_cases hx : x = a
+  simp_rw [hx, ite_true, mul_one, count_eq_card]
+  intro y hy
+  rw [← mem_toFinset, H, Finset.mem_singleton] at hy
+  exact hy.symm
+  have hx' : x ∉ s := fun h' ↦ hx <| by rwa [← mem_toFinset, H, Finset.mem_singleton] at h'
+  simp_rw [count_eq_zero_of_not_mem hx', hx, ite_false, Nat.mul_zero]
   simpa only [toFinset_nsmul _ _ H.1, toFinset_singleton] using congr($(H.2).toFinset)
 
 @[simp]
@@ -2745,8 +2745,8 @@ theorem perm_of_nodup_nodup_toFinset_eq (hl : Nodup l) (hl' : Nodup l')
 @[simp]
 theorem toFinset_append : toFinset (l ++ l') = l.toFinset ∪ l'.toFinset := by
   induction' l with hd tl hl
-  · simp
-  · simp [hl]
+  simp
+  simp [hl]
 
 @[simp]
 theorem toFinset_reverse {l : List α} : toFinset l.reverse = l.toFinset :=
@@ -2948,11 +2948,11 @@ theorem disjoint_toFinset {m1 m2 : Multiset α} :
     _root_.Disjoint m1.toFinset m2.toFinset ↔ m1.Disjoint m2 := by
   rw [Finset.disjoint_iff_ne]
   refine ⟨fun h a ha1 ha2 => ?_, ?_⟩
-  · rw [← Multiset.mem_toFinset] at ha1 ha2
-    exact h _ ha1 _ ha2 rfl
-  · rintro h a ha b hb rfl
-    rw [Multiset.mem_toFinset] at ha hb
-    exact h ha hb
+  rw [← Multiset.mem_toFinset] at ha1 ha2
+  exact h _ ha1 _ ha2 rfl
+  rintro h a ha b hb rfl
+  rw [Multiset.mem_toFinset] at ha hb
+  exact h ha hb
 
 end Multiset
 

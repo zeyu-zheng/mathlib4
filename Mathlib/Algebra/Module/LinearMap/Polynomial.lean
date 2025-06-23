@@ -115,11 +115,11 @@ lemma toMvPolynomial_zero : (0 : Matrix m n R).toMvPolynomial = 0 := by
 lemma toMvPolynomial_one [DecidableEq n] : (1 : Matrix n n R).toMvPolynomial = X := by
   ext i : 1
   rw [toMvPolynomial, Finset.sum_eq_single i]
-  · simp only [one_apply_eq, ← C_mul_X_eq_monomial, C_1, one_mul]
-  · rintro j - hj
-    simp only [one_apply_ne hj.symm, map_zero]
-  · intro h
-    exact (h (Finset.mem_univ _)).elim
+  simp only [one_apply_eq, ← C_mul_X_eq_monomial, C_1, one_mul]
+  rintro j - hj
+  simp only [one_apply_ne hj.symm, map_zero]
+  intro h
+  exact (h (Finset.mem_univ _)).elim
 
 lemma toMvPolynomial_add (M N : Matrix m n R) :
     (M + N).toMvPolynomial = M.toMvPolynomial + N.toMvPolynomial := by
@@ -248,34 +248,34 @@ lemma polyCharpolyAux_baseChange (A : Type*) [CommRing A] [Algebra R A] :
   simp only [Polynomial.map_map]
   congr 1
   apply ringHom_ext
-  · intro r
-    simp only [RingHom.coe_comp, RingHom.coe_coe, Function.comp_apply, map_C, bind₁_C_right]
-  · rintro ij
-    simp only [RingHom.coe_comp, RingHom.coe_coe, Function.comp_apply, map_X, bind₁_X_right]
-    rw [toMvPolynomial_comp _ (basis A (Basis.end bₘ)), ← toMvPolynomial_baseChange]
-    #adaptation_note
-    /--
-    After https://github.com/leanprover/lean4/pull/4119 we either need to specify the `M₂` argument,
-    or use `set_option maxSynthPendingDepth 2 in`.
-    -/
-    suffices toMvPolynomial (M₂ := (Module.End A (TensorProduct R A M)))
-        (basis A bₘ.end) (basis A bₘ).end (tensorProduct R A M M) ij = X ij by
-      rw [this, bind₁_X_right]
-    simp only [toMvPolynomial, Matrix.toMvPolynomial]
-    suffices ∀ kl,
-        (toMatrix (basis A bₘ.end) (basis A bₘ).end) (tensorProduct R A M M) ij kl =
-        if kl = ij then 1 else 0 by
-      rw [Finset.sum_eq_single ij]
-      · rw [this, if_pos rfl, X]
-      · rintro kl - H
-        rw [this, if_neg H, map_zero]
-      · intro h
-        exact (h (Finset.mem_univ _)).elim
-    intro kl
-    rw [toMatrix_apply, tensorProduct, TensorProduct.AlgebraTensorModule.lift_apply,
-      basis_apply, TensorProduct.lift.tmul, coe_restrictScalars]
-    dsimp only [coe_mk, AddHom.coe_mk, smul_apply, baseChangeHom_apply]
-    rw [one_smul, Basis.baseChange_end, Basis.repr_self_apply]
+  intro r
+  simp only [RingHom.coe_comp, RingHom.coe_coe, Function.comp_apply, map_C, bind₁_C_right]
+  rintro ij
+  simp only [RingHom.coe_comp, RingHom.coe_coe, Function.comp_apply, map_X, bind₁_X_right]
+  rw [toMvPolynomial_comp _ (basis A (Basis.end bₘ)), ← toMvPolynomial_baseChange]
+  #adaptation_note
+  /--
+  After https://github.com/leanprover/lean4/pull/4119 we either need to specify the `M₂` argument,
+  or use `set_option maxSynthPendingDepth 2 in`.
+  -/
+  suffices toMvPolynomial (M₂ := (Module.End A (TensorProduct R A M)))
+      (basis A bₘ.end) (basis A bₘ).end (tensorProduct R A M M) ij = X ij by
+    rw [this, bind₁_X_right]
+  simp only [toMvPolynomial, Matrix.toMvPolynomial]
+  suffices ∀ kl,
+      (toMatrix (basis A bₘ.end) (basis A bₘ).end) (tensorProduct R A M M) ij kl =
+      if kl = ij then 1 else 0 by
+    rw [Finset.sum_eq_single ij]
+    rw [this, if_pos rfl, X]
+    rintro kl - H
+    rw [this, if_neg H, map_zero]
+    intro h
+    exact (h (Finset.mem_univ _)).elim
+  intro kl
+  rw [toMatrix_apply, tensorProduct, TensorProduct.AlgebraTensorModule.lift_apply,
+    basis_apply, TensorProduct.lift.tmul, coe_restrictScalars]
+  dsimp only [coe_mk, AddHom.coe_mk, smul_apply, baseChangeHom_apply]
+  rw [one_smul, Basis.baseChange_end, Basis.repr_self_apply]
 
 open LinearMap in
 lemma polyCharpolyAux_map_eq_toMatrix_charpoly (x : L) :
@@ -387,8 +387,8 @@ lemma polyCharpoly_coeff_isHomogeneous (i j : ℕ) (hij : i + j = finrank R M) [
   rw [finrank_eq_card_chooseBasisIndex] at hij
   rw [polyCharpoly, polyCharpolyAux, Polynomial.coeff_map, ← one_mul j]
   apply (charpoly.univ_coeff_isHomogeneous _ _ _ _ hij).eval₂
-  · exact fun r ↦ MvPolynomial.isHomogeneous_C _ _
-  · exact LinearMap.toMvPolynomial_isHomogeneous _ _ _
+  exact fun r ↦ MvPolynomial.isHomogeneous_C _ _
+  exact LinearMap.toMvPolynomial_isHomogeneous _ _ _
 
 open Algebra.TensorProduct MvPolynomial in
 lemma polyCharpoly_baseChange (A : Type*) [CommRing A] [Algebra R A] :
@@ -522,14 +522,14 @@ lemma isNilRegular_iff_natTrailingDegree_charpoly_eq_nilRank :
     IsNilRegular φ x ↔ (φ x).charpoly.natTrailingDegree = nilRank φ := by
   rw [isNilRegular_def]
   constructor
-  · intro h
-    exact le_antisymm
-      (Polynomial.natTrailingDegree_le_of_ne_zero h)
-      (nilRank_le_natTrailingDegree_charpoly φ x)
-  · intro h
-    rw [← h]
-    apply Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr
-    apply (LinearMap.charpoly_monic _).ne_zero
+  intro h
+  exact le_antisymm
+    (Polynomial.natTrailingDegree_le_of_ne_zero h)
+    (nilRank_le_natTrailingDegree_charpoly φ x)
+  intro h
+  rw [← h]
+  apply Polynomial.trailingCoeff_nonzero_iff_nonzero.mpr
+  apply (LinearMap.charpoly_monic _).ne_zero
 
 section IsDomain
 

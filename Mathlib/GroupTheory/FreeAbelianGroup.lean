@@ -154,13 +154,13 @@ protected theorem induction_on {C : FreeAbelianGroup α → Prop} (z : FreeAbeli
 theorem lift.add' {α β} [AddCommGroup β] (a : FreeAbelianGroup α) (f g : α → β) :
     lift (f + g) a = lift f a + lift g a := by
   refine FreeAbelianGroup.induction_on a ?_ ?_ ?_ ?_
-  · simp only [(lift _).map_zero, zero_add]
-  · intro x
-    simp only [lift.of, Pi.add_apply]
-  · intro x _
-    simp only [map_neg, lift.of, Pi.add_apply, neg_add]
-  · intro x y hx hy
-    simp only [(lift _).map_add, hx, hy, add_add_add_comm]
+  simp only [(lift _).map_zero, zero_add]
+  intro x
+  simp only [lift.of, Pi.add_apply]
+  intro x _
+  simp only [map_neg, lift.of, Pi.add_apply, neg_add]
+  intro x y hx hy
+  simp only [(lift _).map_add, hx, hy, add_add_add_comm]
 
 /-- If `g : FreeAbelianGroup X` and `A` is an abelian group then `liftAddGroupHom g`
 is the additive group homomorphism sending a function `X → A` to the term of type `A`
@@ -294,19 +294,19 @@ instance : LawfulMonad FreeAbelianGroup.{u} := LawfulMonad.mk'
 instance : CommApplicative FreeAbelianGroup.{u} where
   commutative_prod x y := by
     refine FreeAbelianGroup.induction_on' x ?_ ?_ ?_ ?_
-    · rw [FreeAbelianGroup.map_zero, zero_seq, seq_zero]
-    · intro p
-      rw [map_pure, pure_seq]
-      exact FreeAbelianGroup.induction_on' y
-        (by rw [FreeAbelianGroup.map_zero, FreeAbelianGroup.map_zero, zero_seq])
-        (fun q ↦ by rw [map_pure, map_pure, pure_seq, map_pure])
-        (fun q ih ↦ by rw [FreeAbelianGroup.map_neg, FreeAbelianGroup.map_neg, neg_seq, ih])
-        fun y₁ y₂ ih1 ih2 ↦ by
-          rw [FreeAbelianGroup.map_add, FreeAbelianGroup.map_add, add_seq, ih1, ih2]
-    · intro p ih
-      rw [FreeAbelianGroup.map_neg, neg_seq, seq_neg, ih]
-    · intro x₁ x₂ ih1 ih2
-      rw [FreeAbelianGroup.map_add, add_seq, seq_add, ih1, ih2]
+    rw [FreeAbelianGroup.map_zero, zero_seq, seq_zero]
+    intro p
+    rw [map_pure, pure_seq]
+    exact FreeAbelianGroup.induction_on' y
+      (by rw [FreeAbelianGroup.map_zero, FreeAbelianGroup.map_zero, zero_seq])
+      (fun q ↦ by rw [map_pure, map_pure, pure_seq, map_pure])
+      (fun q ih ↦ by rw [FreeAbelianGroup.map_neg, FreeAbelianGroup.map_neg, neg_seq, ih])
+      fun y₁ y₂ ih1 ih2 ↦ by
+        rw [FreeAbelianGroup.map_add, FreeAbelianGroup.map_add, add_seq, ih1, ih2]
+    intro p ih
+    rw [FreeAbelianGroup.map_neg, neg_seq, seq_neg, ih]
+    intro x₁ x₂ ih1 ih2
+    rw [FreeAbelianGroup.map_add, add_seq, seq_add, ih1, ih2]
 
 end Monad
 
@@ -323,13 +323,13 @@ theorem lift_comp {α} {β} {γ} [AddCommGroup γ] (f : α → β) (g : β → �
     lift (g ∘ f) x = lift g (map f x) := by
   -- Porting note: Added motive.
   apply FreeAbelianGroup.induction_on (C := fun x ↦ lift (g ∘ f) x = lift g (map f x)) x
-  · simp only [map_zero]
-  · intro _
-    simp only [lift.of, map, Function.comp]
-  · intro _ h
-    simp only [h, AddMonoidHom.map_neg]
-  · intro _ _ h₁ h₂
-    simp only [h₁, h₂, AddMonoidHom.map_add]
+  simp only [map_zero]
+  intro _
+  simp only [lift.of, map, Function.comp]
+  intro _ h
+  simp only [h, AddMonoidHom.map_neg]
+  intro _ _ h₁ h₂
+  simp only [h₁, h₂, AddMonoidHom.map_add]
 
 theorem map_id : map id = AddMonoidHom.id (FreeAbelianGroup α) :=
   Eq.symm <|
@@ -397,17 +397,17 @@ instance nonUnitalRing [Semigroup α] : NonUnitalRing (FreeAbelianGroup α) :=
     mul_assoc := fun x y z ↦ by
       refine FreeAbelianGroup.induction_on z (by simp only [mul_zero])
           (fun L3 ↦ ?_) (fun L3 ih ↦ ?_) fun z₁ z₂ ih₁ ih₂ ↦ ?_
-      · refine FreeAbelianGroup.induction_on y (by simp only [mul_zero, zero_mul])
-            (fun L2 ↦ ?_) (fun L2 ih ↦ ?_) fun y₁ y₂ ih₁ ih₂ ↦ ?_
-        · refine FreeAbelianGroup.induction_on x (by simp only [zero_mul])
-              (fun L1 ↦ ?_) (fun L1 ih ↦ ?_) fun x₁ x₂ ih₁ ih₂ ↦ ?_
-          · rw [of_mul_of, of_mul_of, of_mul_of, of_mul_of, mul_assoc]
-          · rw [neg_mul, neg_mul, neg_mul, ih]
-          · rw [add_mul, add_mul, add_mul, ih₁, ih₂]
-        · rw [neg_mul, mul_neg, mul_neg, neg_mul, ih]
-        · rw [add_mul, mul_add, mul_add, add_mul, ih₁, ih₂]
-      · rw [mul_neg, mul_neg, mul_neg, ih]
-      · rw [mul_add, mul_add, mul_add, ih₁, ih₂] }
+      refine FreeAbelianGroup.induction_on y (by simp only [mul_zero, zero_mul])
+          (fun L2 ↦ ?_) (fun L2 ih ↦ ?_) fun y₁ y₂ ih₁ ih₂ ↦ ?_
+      refine FreeAbelianGroup.induction_on x (by simp only [zero_mul])
+          (fun L1 ↦ ?_) (fun L1 ih ↦ ?_) fun x₁ x₂ ih₁ ih₂ ↦ ?_
+      rw [of_mul_of, of_mul_of, of_mul_of, of_mul_of, mul_assoc]
+      rw [neg_mul, neg_mul, neg_mul, ih]
+      rw [add_mul, add_mul, add_mul, ih₁, ih₂]
+      rw [neg_mul, mul_neg, mul_neg, neg_mul, ih]
+      rw [add_mul, mul_add, mul_add, add_mul, ih₁, ih₂]
+      rw [mul_neg, mul_neg, mul_neg, ih]
+      rw [mul_add, mul_add, mul_add, ih₁, ih₂] }
 
 section Monoid
 
@@ -420,22 +420,22 @@ instance ring : Ring (FreeAbelianGroup α) :=
       dsimp only [(· * ·), Mul.mul, OfNat.ofNat, One.one]
       rw [lift.of]
       refine FreeAbelianGroup.induction_on x rfl (fun L ↦ ?_) (fun L ih ↦ ?_) fun x1 x2 ih1 ih2 ↦ ?_
-      · erw [lift.of]
-        congr 1
-        exact mul_one L
-      · rw [map_neg, ih]
-      · rw [map_add, ih1, ih2]
+      erw [lift.of]
+      congr 1
+      exact mul_one L
+      rw [map_neg, ih]
+      rw [map_add, ih1, ih2]
     one_mul := fun x ↦ by
       dsimp only [(· * ·), Mul.mul, OfNat.ofNat, One.one]
       refine FreeAbelianGroup.induction_on x rfl ?_ ?_ ?_
-      · intro L
-        rw [lift.of, lift.of]
-        congr 1
-        exact one_mul L
-      · intro L ih
-        rw [map_neg, ih]
-      · intro x1 x2 ih1 ih2
-        rw [map_add, ih1, ih2] }
+      intro L
+      rw [lift.of, lift.of]
+      congr 1
+      exact one_mul L
+      intro L ih
+      rw [map_neg, ih]
+      intro x1 x2 ih1 ih2
+      rw [map_add, ih1, ih2] }
 
 variable {α}
 
@@ -504,21 +504,21 @@ instance [CommMonoid α] : CommRing (FreeAbelianGroup α) :=
   { FreeAbelianGroup.ring α with
     mul_comm := fun x y ↦ by
       refine FreeAbelianGroup.induction_on x (zero_mul y) ?_ ?_ ?_
-      · intro s
-        refine FreeAbelianGroup.induction_on y (zero_mul _).symm ?_ ?_ ?_
-        · intro t
-          dsimp only [(· * ·), Mul.mul]
-          iterate 4 rw [lift.of]
-          congr 1
-          exact mul_comm _ _
-        · intro t ih
-          rw [mul_neg, ih, neg_mul_eq_neg_mul]
-        · intro y1 y2 ih1 ih2
-          rw [mul_add, add_mul, ih1, ih2]
-      · intro s ih
-        rw [neg_mul, ih, neg_mul_eq_mul_neg]
-      · intro x1 x2 ih1 ih2
-        rw [add_mul, mul_add, ih1, ih2] }
+      intro s
+      refine FreeAbelianGroup.induction_on y (zero_mul _).symm ?_ ?_ ?_
+      intro t
+      dsimp only [(· * ·), Mul.mul]
+      iterate 4 rw [lift.of]
+      congr 1
+      exact mul_comm _ _
+      intro t ih
+      rw [mul_neg, ih, neg_mul_eq_neg_mul]
+      intro y1 y2 ih1 ih2
+      rw [mul_add, add_mul, ih1, ih2]
+      intro s ih
+      rw [neg_mul, ih, neg_mul_eq_mul_neg]
+      intro x1 x2 ih1 ih2
+      rw [add_mul, mul_add, ih1, ih2] }
 
 instance pemptyUnique : Unique (FreeAbelianGroup PEmpty) where
   default := 0

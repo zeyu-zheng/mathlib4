@@ -115,9 +115,9 @@ theorem hasPDF_of_map_eq_withDensity {X : Ω → E} {ℙ : Measure Ω} {μ : Mea
     (hX : AEMeasurable X ℙ) (f : E → ℝ≥0∞) (hf : AEMeasurable f μ) (h : map X ℙ = μ.withDensity f) :
     HasPDF X ℙ μ := by
   refine ⟨hX, ?_, ?_⟩ <;> rw [h]
-  · rw [withDensity_congr_ae hf.ae_eq_mk]
-    exact haveLebesgueDecomposition_withDensity μ hf.measurable_mk
-  · exact withDensity_absolutelyContinuous μ f
+  rw [withDensity_congr_ae hf.ae_eq_mk]
+  exact haveLebesgueDecomposition_withDensity μ hf.measurable_mk
+  exact withDensity_absolutelyContinuous μ f
 
 end HasPDF
 
@@ -147,10 +147,10 @@ theorem aemeasurable_of_pdf_ne_zero {m : MeasurableSpace Ω} {ℙ : Measure Ω} 
 theorem hasPDF_of_pdf_ne_zero {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E} {X : Ω → E}
     (hac : map X ℙ ≪ μ) (hpdf : ¬pdf X ℙ μ =ᵐ[μ] 0) : HasPDF X ℙ μ := by
   refine ⟨?_, ?_, hac⟩
-  · exact aemeasurable_of_pdf_ne_zero X hpdf
-  · contrapose! hpdf
-    have := pdf_of_not_haveLebesgueDecomposition hpdf
-    filter_upwards using congrFun this
+  exact aemeasurable_of_pdf_ne_zero X hpdf
+  contrapose! hpdf
+  have := pdf_of_not_haveLebesgueDecomposition hpdf
+  filter_upwards using congrFun this
 
 @[measurability]
 theorem measurable_pdf {m : MeasurableSpace Ω} (X : Ω → E) (ℙ : Measure Ω)
@@ -260,10 +260,10 @@ theorem quasiMeasurePreserving_hasPDF {X : Ω → E} [HasPDF X ℙ μ] (hX : AEM
     (hg : QuasiMeasurePreserving g μ ν) (hmap : (map g (map X ℙ)).HaveLebesgueDecomposition ν) :
     HasPDF (g ∘ X) ℙ ν := by
   wlog hmX : Measurable X
-  · have hae : g ∘ X =ᵐ[ℙ] g ∘ hX.mk := hX.ae_eq_mk.mono fun x h ↦ by dsimp; rw [h]
-    have hXmk : HasPDF hX.mk ℙ μ := HasPDF.congr hX.ae_eq_mk
-    apply (HasPDF.congr' hae).mpr
-    exact this hX.measurable_mk.aemeasurable hg (map_congr hX.ae_eq_mk ▸ hmap) hX.measurable_mk
+  have hae : g ∘ X =ᵐ[ℙ] g ∘ hX.mk := hX.ae_eq_mk.mono fun x h ↦ by dsimp; rw [h]
+  have hXmk : HasPDF hX.mk ℙ μ := HasPDF.congr hX.ae_eq_mk
+  apply (HasPDF.congr' hae).mpr
+  exact this hX.measurable_mk.aemeasurable hg (map_congr hX.ae_eq_mk ▸ hmap) hX.measurable_mk
   rw [hasPDF_iff, ← map_map hg.measurable hmX]
   refine ⟨(hg.measurable.comp hmX).aemeasurable, hmap, ?_⟩
   rw [map_eq_withDensity_pdf X ℙ μ]
@@ -293,9 +293,9 @@ nonrec theorem _root_.Real.hasPDF_iff_of_aemeasurable (hX : AEMeasurable X ℙ) 
 
 theorem _root_.Real.hasPDF_iff : HasPDF X ℙ ↔ AEMeasurable X ℙ ∧ map X ℙ ≪ volume := by
   by_cases hX : AEMeasurable X ℙ
-  · rw [Real.hasPDF_iff_of_aemeasurable hX, iff_and_self]
-    exact fun _ => hX
-  · exact ⟨fun h => False.elim (hX h.pdf'.1), fun h => False.elim (hX h.1)⟩
+  rw [Real.hasPDF_iff_of_aemeasurable hX, iff_and_self]
+  exact fun _ => hX
+  exact ⟨fun h => False.elim (hX h.pdf'.1), fun h => False.elim (hX h.1)⟩
 
 /-- If `X` is a real-valued random variable that has pdf `f`, then the expectation of `X` equals
 `∫ x, x * f x ∂λ` where `λ` is the Lebesgue measure. -/

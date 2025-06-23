@@ -107,12 +107,12 @@ theorem nhds_mkOfNhds_of_hasBasis {n : α → Filter α} {ι : α → Sort*} {p 
     @nhds α (.mkOfNhds n) a = n a := by
   let t : TopologicalSpace α := .mkOfNhds n
   apply le_antisymm
-  · intro U hU
-    replace hpure : pure ≤ n := fun x ↦ (hb x).ge_iff.2 (hpure x)
-    refine mem_nhds_iff.2 ⟨{x | U ∈ n x}, fun x hx ↦ hpure x hx, fun x hx ↦ ?_, hU⟩
-    rcases (hb x).mem_iff.1 hx with ⟨i, hpi, hi⟩
-    exact (hopen x i hpi).mono fun y hy ↦ mem_of_superset hy hi
-  · exact (nhds_basis_opens a).ge_iff.2 fun U ⟨haU, hUo⟩ ↦ hUo a haU
+  intro U hU
+  replace hpure : pure ≤ n := fun x ↦ (hb x).ge_iff.2 (hpure x)
+  refine mem_nhds_iff.2 ⟨{x | U ∈ n x}, fun x hx ↦ hpure x hx, fun x hx ↦ ?_, hU⟩
+  rcases (hb x).mem_iff.1 hx with ⟨i, hpi, hi⟩
+  exact (hopen x i hpi).mono fun y hy ↦ mem_of_superset hy hi
+  exact (nhds_basis_opens a).ge_iff.2 fun U ⟨haU, hUo⟩ ↦ hUo a haU
 
 theorem nhds_mkOfNhds (n : α → Filter α) (a : α) (h₀ : pure ≤ n)
     (h₁ : ∀ a, ∀ s ∈ n a, ∀ᶠ y in n a, s ∈ n y) :
@@ -124,11 +124,11 @@ theorem nhds_mkOfNhds_single [DecidableEq α] {a₀ : α} {l : Filter α} (h : p
       (update pure a₀ l : α → Filter α) b := by
   refine nhds_mkOfNhds _ _ (le_update_iff.mpr ⟨h, fun _ _ => le_rfl⟩) fun a s hs => ?_
   rcases eq_or_ne a a₀ with (rfl | ha)
-  · filter_upwards [hs] with b hb
-    rcases eq_or_ne b a with (rfl | hb)
-    · exact hs
-    · rwa [update_noteq hb]
-  · simpa only [update_noteq ha, mem_pure, eventually_pure] using hs
+  filter_upwards [hs] with b hb
+  rcases eq_or_ne b a with (rfl | hb)
+  exact hs
+  rwa [update_noteq hb]
+  simpa only [update_noteq ha, mem_pure, eventually_pure] using hs
 
 theorem nhds_mkOfNhds_filterBasis (B : α → FilterBasis α) (a : α) (h₀ : ∀ x, ∀ n ∈ B x, x ∈ n)
     (h₁ : ∀ x, ∀ n ∈ B x, ∃ n₁ ∈ B x, ∀ x' ∈ n₁, ∃ n₂ ∈ B x', n₂ ⊆ n) :
@@ -513,8 +513,8 @@ lemma generateFrom_insert_of_generateOpen {α : Type*} {s : Set (Set α)} {t : S
     (ht : GenerateOpen s t) : generateFrom (insert t s) = generateFrom s := by
   refine le_antisymm (generateFrom_anti <| subset_insert t s) (le_generateFrom ?_)
   rintro t (rfl | h)
-  · exact ht
-  · exact isOpen_generateFrom_of_mem h
+  exact ht
+  exact isOpen_generateFrom_of_mem h
 
 @[simp]
 lemma generateFrom_insert_univ {α : Type*} {s : Set (Set α)} :
@@ -549,9 +549,9 @@ theorem nhds_nhdsAdjoint_same (a : α) (f : Filter α) :
     @nhds α (nhdsAdjoint a f) a = pure a ⊔ f := by
   let _ := nhdsAdjoint a f
   apply le_antisymm
-  · rintro t ⟨hat : a ∈ t, htf : t ∈ f⟩
-    exact IsOpen.mem_nhds (fun _ ↦ htf) hat
-  · exact sup_le (pure_le_nhds _) ((gc_nhds a).le_u_l f)
+  rintro t ⟨hat : a ∈ t, htf : t ∈ f⟩
+  exact IsOpen.mem_nhds (fun _ ↦ htf) hat
+  exact sup_le (pure_le_nhds _) ((gc_nhds a).le_u_l f)
 
 @[deprecated (since := "2024-02-10")]
 alias nhdsAdjoint_nhds := nhds_nhdsAdjoint_same
@@ -723,10 +723,10 @@ theorem mem_nhds_induced [T : TopologicalSpace α] (f : β → α) (a : β) (s :
   letI := T.induced f
   simp_rw [mem_nhds_iff, isOpen_induced_iff]
   constructor
-  · rintro ⟨u, usub, ⟨v, openv, rfl⟩, au⟩
-    exact ⟨v, ⟨v, Subset.rfl, openv, au⟩, usub⟩
-  · rintro ⟨u, ⟨v, vsubu, openv, amem⟩, finvsub⟩
-    exact ⟨f ⁻¹' v, (Set.preimage_mono vsubu).trans finvsub, ⟨⟨v, openv, rfl⟩, amem⟩⟩
+  rintro ⟨u, usub, ⟨v, openv, rfl⟩, au⟩
+  exact ⟨v, ⟨v, Subset.rfl, openv, au⟩, usub⟩
+  rintro ⟨u, ⟨v, vsubu, openv, amem⟩, finvsub⟩
+  exact ⟨f ⁻¹' v, (Set.preimage_mono vsubu).trans finvsub, ⟨⟨v, openv, rfl⟩, amem⟩⟩
 
 theorem nhds_induced [T : TopologicalSpace α] (f : β → α) (a : β) :
     @nhds β (TopologicalSpace.induced f T) a = comap f (𝓝 (f a)) := by

@@ -118,9 +118,9 @@ theorem enum_singleton (x : α) : enum [x] = [(0, x)] :=
 theorem enumFrom_append (xs ys : List α) (n : ℕ) :
     enumFrom n (xs ++ ys) = enumFrom n xs ++ enumFrom (n + xs.length) ys := by
   induction' xs with x xs IH generalizing ys n
-  · simp
-  · rw [cons_append, enumFrom_cons, IH, ← cons_append, ← enumFrom_cons, length, Nat.add_right_comm,
-      Nat.add_assoc]
+  simp
+  rw [cons_append, enumFrom_cons, IH, ← cons_append, ← enumFrom_cons, length, Nat.add_right_comm,
+    Nat.add_assoc]
 
 theorem enum_append (xs ys : List α) : enum (xs ++ ys) = enum xs ++ enumFrom xs.length ys := by
   simp [enum, enumFrom_append]
@@ -144,9 +144,9 @@ theorem enum_cons' (x : α) (xs : List α) :
 theorem enumFrom_map (n : ℕ) (l : List α) (f : α → β) :
     enumFrom n (l.map f) = (enumFrom n l).map (Prod.map id f) := by
   induction' l with hd tl IH
-  · rfl
-  · rw [map_cons, enumFrom_cons', enumFrom_cons', map_cons, map_map, IH, map_map]
-    rfl
+  rfl
+  rw [map_cons, enumFrom_cons', enumFrom_cons', map_cons, map_map, IH, map_map]
+  rfl
 
 theorem enum_map (l : List α) (f : α → β) : (l.map f).enum = l.enum.map (Prod.map id f) :=
   enumFrom_map _ _ _

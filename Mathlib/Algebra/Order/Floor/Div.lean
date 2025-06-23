@@ -124,8 +124,8 @@ variable [LinearOrderedAddCommMonoid α] [OrderedAddCommMonoid β] [SMulZeroClas
 
 lemma floorDiv_le_ceilDiv : b ⌊/⌋ a ≤ b ⌈/⌉ a := by
   obtain ha | ha := le_or_lt a 0
-  · simp [ha]
-  · exact le_of_smul_le_smul_left ((smul_floorDiv_le ha).trans $ le_smul_ceilDiv ha) ha
+  simp [ha]
+  exact le_of_smul_le_smul_left ((smul_floorDiv_le ha).trans $ le_smul_ceilDiv ha) ha
 
 end LinearOrderedAddCommMonoid
 

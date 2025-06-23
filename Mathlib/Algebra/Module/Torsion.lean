@@ -94,10 +94,10 @@ theorem torsionOf_eq_top_iff (m : M) : torsionOf R M m = ⊤ ↔ m = 0 := by
 theorem torsionOf_eq_bot_iff_of_noZeroSMulDivisors [Nontrivial R] [NoZeroSMulDivisors R M] (m : M) :
     torsionOf R M m = ⊥ ↔ m ≠ 0 := by
   refine ⟨fun h contra => ?_, fun h => (Submodule.eq_bot_iff _).mpr fun r hr => ?_⟩
-  · rw [contra, torsionOf_zero] at h
-    exact bot_ne_top.symm h
-  · rw [mem_torsionOf_iff, smul_eq_zero] at hr
-    tauto
+  rw [contra, torsionOf_zero] at h
+  exact bot_ne_top.symm h
+  rw [mem_torsionOf_iff, smul_eq_zero] at hr
+  tauto
 
 /-- See also `CompleteLattice.Independent.linearIndependent` which provides the same conclusion
 but requires the stronger hypothesis `NoZeroSMulDivisors R M`. -/
@@ -364,37 +364,37 @@ variable (hp : (S : Set ι).Pairwise fun i j => p i ⊔ p j = ⊤)
 theorem iSup_torsionBySet_ideal_eq_torsionBySet_iInf :
     ⨆ i ∈ S, torsionBySet R M (p i) = torsionBySet R M ↑(⨅ i ∈ S, p i) := by
   rcases S.eq_empty_or_nonempty with h | h
-  · simp only [h]
-    -- Porting note: converts were not cooperating
-    convert iSup_emptyset (f := fun i => torsionBySet R M (p i)) <;> simp
+  simp only [h]
+  -- Porting note: converts were not cooperating
+  convert iSup_emptyset (f := fun i => torsionBySet R M (p i)) <;> simp
   apply le_antisymm
-  · apply iSup_le _
-    intro i
-    apply iSup_le _
-    intro is
-    apply torsionBySet_le_torsionBySet_of_subset
-    exact (iInf_le (fun i => ⨅ _ : i ∈ S, p i) i).trans (iInf_le _ is)
-  · intro x hx
-    rw [mem_iSup_finset_iff_exists_sum]
-    obtain ⟨μ, hμ⟩ :=
-      (mem_iSup_finset_iff_exists_sum _ _).mp
-        ((Ideal.eq_top_iff_one _).mp <| (Ideal.iSup_iInf_eq_top_iff_pairwise h _).mpr hp)
-    refine ⟨fun i => ⟨(μ i : R) • x, ?_⟩, ?_⟩
-    · rw [mem_torsionBySet_iff] at hx ⊢
-      rintro ⟨a, ha⟩
-      rw [smul_smul]
-      suffices a * μ i ∈ ⨅ i ∈ S, p i from hx ⟨_, this⟩
-      rw [mem_iInf]
-      intro j
-      rw [mem_iInf]
-      intro hj
-      by_cases ij : j = i
-      · rw [ij]
-        exact Ideal.mul_mem_right _ _ ha
-      · have := coe_mem (μ i)
-        simp only [mem_iInf] at this
-        exact Ideal.mul_mem_left _ _ (this j hj ij)
-    · rw [← Finset.sum_smul, hμ, one_smul]
+  apply iSup_le _
+  intro i
+  apply iSup_le _
+  intro is
+  apply torsionBySet_le_torsionBySet_of_subset
+  exact (iInf_le (fun i => ⨅ _ : i ∈ S, p i) i).trans (iInf_le _ is)
+  intro x hx
+  rw [mem_iSup_finset_iff_exists_sum]
+  obtain ⟨μ, hμ⟩ :=
+    (mem_iSup_finset_iff_exists_sum _ _).mp
+      ((Ideal.eq_top_iff_one _).mp <| (Ideal.iSup_iInf_eq_top_iff_pairwise h _).mpr hp)
+  refine ⟨fun i => ⟨(μ i : R) • x, ?_⟩, ?_⟩
+  rw [mem_torsionBySet_iff] at hx ⊢
+  rintro ⟨a, ha⟩
+  rw [smul_smul]
+  suffices a * μ i ∈ ⨅ i ∈ S, p i from hx ⟨_, this⟩
+  rw [mem_iInf]
+  intro j
+  rw [mem_iInf]
+  intro hj
+  by_cases ij : j = i
+  rw [ij]
+  exact Ideal.mul_mem_right _ _ ha
+  have := coe_mem (μ i)
+  simp only [mem_iInf] at this
+  exact Ideal.mul_mem_left _ _ (this j hj ij)
+  rw [← Finset.sum_smul, hμ, one_smul]
 
 -- Porting note: iSup_torsionBySet_ideal_eq_torsionBySet_iInf now requires DecidableEq ι
 theorem supIndep_torsionBySet_ideal : S.SupIndep fun i => torsionBySet R M <| p i :=
@@ -414,11 +414,11 @@ theorem iSup_torsionBy_eq_torsionBy_prod :
   rw [← torsionBySet_span_singleton_eq, Ideal.submodule_span_eq, ←
     Ideal.finset_inf_span_singleton _ _ hq, Finset.inf_eq_iInf, ←
     iSup_torsionBySet_ideal_eq_torsionBySet_iInf]
-  · congr
-    ext : 1
-    congr
-    ext : 1
-    exact (torsionBySet_span_singleton_eq _).symm
+  congr
+  ext : 1
+  congr
+  ext : 1
+  exact (torsionBySet_span_singleton_eq _).symm
   exact fun i hi j hj ij => (Ideal.sup_eq_top_iff_isCoprime _ _).mpr (hq hi hj ij)
 
 theorem supIndep_torsionBy : S.SupIndep fun i => torsionBy R M <| q i := by
@@ -715,22 +715,22 @@ theorem coe_torsion_eq_annihilator_ne_bot :
 /-- A module over a domain has `NoZeroSMulDivisors` iff its torsion submodule is trivial. -/
 theorem noZeroSMulDivisors_iff_torsion_eq_bot : NoZeroSMulDivisors R M ↔ torsion R M = ⊥ := by
   constructor <;> intro h
-  · haveI : NoZeroSMulDivisors R M := h
-    rw [eq_bot_iff]
-    rintro x ⟨a, hax⟩
-    change (a : R) • x = 0 at hax
-    cases' eq_zero_or_eq_zero_of_smul_eq_zero hax with h0 h0
-    · exfalso
-      exact nonZeroDivisors.coe_ne_zero a h0
-    · exact h0
-  · exact
-      { eq_zero_or_eq_zero_of_smul_eq_zero := fun {a} {x} hax => by
-          by_cases ha : a = 0
-          · left
-            exact ha
-          · right
-            rw [← mem_bot R, ← h]
-            exact ⟨⟨a, mem_nonZeroDivisors_of_ne_zero ha⟩, hax⟩ }
+  haveI : NoZeroSMulDivisors R M := h
+  rw [eq_bot_iff]
+  rintro x ⟨a, hax⟩
+  change (a : R) • x = 0 at hax
+  cases' eq_zero_or_eq_zero_of_smul_eq_zero hax with h0 h0
+  exfalso
+  exact nonZeroDivisors.coe_ne_zero a h0
+  exact h0
+  exact
+    { eq_zero_or_eq_zero_of_smul_eq_zero := fun {a} {x} hax => by
+        by_cases ha : a = 0
+        left
+        exact ha
+        right
+        rw [← mem_bot R, ← h]
+        exact ⟨⟨a, mem_nonZeroDivisors_of_ne_zero ha⟩, hax⟩ }
 
 lemma torsion_int {G} [AddCommGroup G] :
     (torsion ℤ G).toAddSubgroup = AddCommGroup.torsion G := by
@@ -771,15 +771,15 @@ theorem isTorsion'_powers_iff (p : R) :
     IsTorsion' M (Submonoid.powers p) ↔ ∀ x : M, ∃ n : ℕ, p ^ n • x = 0 := by
   -- Porting note: previous term proof was having trouble elaborating
   constructor
-  · intro h x
-    let ⟨⟨a, ⟨n, hn⟩⟩, hx⟩ := @h x
-    dsimp at hn
-    use n
-    rw [hn]
-    apply hx
-  · intro h x
-    let ⟨n, hn⟩ := h x
-    exact ⟨⟨_, ⟨n, rfl⟩⟩, hn⟩
+  intro h x
+  let ⟨⟨a, ⟨n, hn⟩⟩, hx⟩ := @h x
+  dsimp at hn
+  use n
+  rw [hn]
+  apply hx
+  intro h x
+  let ⟨n, hn⟩ := h x
+  exact ⟨⟨_, ⟨n, rfl⟩⟩, hn⟩
 
 /-- In a `p ^ ∞`-torsion module (that is, a module where all elements are cancelled by scalar
 multiplication by some power of `p`), the smallest `n` such that `p ^ n • x = 0`. -/
@@ -824,15 +824,15 @@ theorem torsionBy_eq_span_singleton {R : Type w} [CommRing R] (a b : R) (ha : a 
     torsionBy R (R ⧸ R ∙ a * b) a = R ∙ mk (R ∙ a * b) b := by
   ext x; rw [mem_torsionBy_iff, Submodule.mem_span_singleton]
   obtain ⟨x, rfl⟩ := mk_surjective x; constructor <;> intro h
-  · rw [← mk_eq_mk, ← Quotient.mk_smul, Quotient.mk_eq_zero, Submodule.mem_span_singleton] at h
-    obtain ⟨c, h⟩ := h
-    rw [smul_eq_mul, smul_eq_mul, mul_comm, mul_assoc, mul_cancel_left_mem_nonZeroDivisors ha,
-      mul_comm] at h
-    use c
-    rw [← h, ← mk_eq_mk, ← Quotient.mk_smul, smul_eq_mul, mk_eq_mk]
-  · obtain ⟨c, h⟩ := h
-    rw [← h, smul_comm, ← mk_eq_mk, ← Quotient.mk_smul,
-      (Quotient.mk_eq_zero _).mpr <| mem_span_singleton_self _, smul_zero]
+  rw [← mk_eq_mk, ← Quotient.mk_smul, Quotient.mk_eq_zero, Submodule.mem_span_singleton] at h
+  obtain ⟨c, h⟩ := h
+  rw [smul_eq_mul, smul_eq_mul, mul_comm, mul_assoc, mul_cancel_left_mem_nonZeroDivisors ha,
+    mul_comm] at h
+  use c
+  rw [← h, ← mk_eq_mk, ← Quotient.mk_smul, smul_eq_mul, mk_eq_mk]
+  obtain ⟨c, h⟩ := h
+  rw [← h, smul_comm, ← mk_eq_mk, ← Quotient.mk_smul,
+    (Quotient.mk_eq_zero _).mpr <| mem_span_singleton_self _, smul_zero]
 
 end Ideal.Quotient
 
@@ -841,21 +841,21 @@ namespace AddMonoid
 theorem isTorsion_iff_isTorsion_nat [AddCommMonoid M] :
     AddMonoid.IsTorsion M ↔ Module.IsTorsion ℕ M := by
   refine ⟨fun h x => ?_, fun h x => ?_⟩
-  · obtain ⟨n, h0, hn⟩ := (h x).exists_nsmul_eq_zero
-    exact ⟨⟨n, mem_nonZeroDivisors_of_ne_zero <| ne_of_gt h0⟩, hn⟩
-  · rw [isOfFinAddOrder_iff_nsmul_eq_zero]
-    obtain ⟨n, hn⟩ := @h x
-    exact ⟨n, Nat.pos_of_ne_zero (nonZeroDivisors.coe_ne_zero _), hn⟩
+  obtain ⟨n, h0, hn⟩ := (h x).exists_nsmul_eq_zero
+  exact ⟨⟨n, mem_nonZeroDivisors_of_ne_zero <| ne_of_gt h0⟩, hn⟩
+  rw [isOfFinAddOrder_iff_nsmul_eq_zero]
+  obtain ⟨n, hn⟩ := @h x
+  exact ⟨n, Nat.pos_of_ne_zero (nonZeroDivisors.coe_ne_zero _), hn⟩
 
 theorem isTorsion_iff_isTorsion_int [AddCommGroup M] :
     AddMonoid.IsTorsion M ↔ Module.IsTorsion ℤ M := by
   refine ⟨fun h x => ?_, fun h x => ?_⟩
-  · obtain ⟨n, h0, hn⟩ := (h x).exists_nsmul_eq_zero
-    exact
-      ⟨⟨n, mem_nonZeroDivisors_of_ne_zero <| ne_of_gt <| Int.natCast_pos.mpr h0⟩,
-        (natCast_zsmul _ _).trans hn⟩
-  · rw [isOfFinAddOrder_iff_nsmul_eq_zero]
-    obtain ⟨n, hn⟩ := @h x
-    exact ⟨_, Int.natAbs_pos.2 (nonZeroDivisors.coe_ne_zero n), natAbs_nsmul_eq_zero.2 hn⟩
+  obtain ⟨n, h0, hn⟩ := (h x).exists_nsmul_eq_zero
+  exact
+    ⟨⟨n, mem_nonZeroDivisors_of_ne_zero <| ne_of_gt <| Int.natCast_pos.mpr h0⟩,
+      (natCast_zsmul _ _).trans hn⟩
+  rw [isOfFinAddOrder_iff_nsmul_eq_zero]
+  obtain ⟨n, hn⟩ := @h x
+  exact ⟨_, Int.natAbs_pos.2 (nonZeroDivisors.coe_ne_zero n), natAbs_nsmul_eq_zero.2 hn⟩
 
 end AddMonoid

@@ -120,9 +120,9 @@ theorem toFinsupp_cons_eq_single_add_embDomain {R : Type*} [AddZeroClass R] (x :
     toFinsupp (x::xs) =
       Finsupp.single 0 x + (toFinsupp xs).embDomain ⟨Nat.succ, Nat.succ_injective⟩ := by
     convert toFinsupp_append [x] xs using 3
-    · exact (toFinsupp_singleton x).symm
-    · ext n
-      exact add_comm n 1
+    exact (toFinsupp_singleton x).symm
+    ext n
+    exact add_comm n 1
 
 theorem toFinsupp_concat_eq_toFinsupp_add_single {R : Type*} [AddZeroClass R] (x : R) (xs : List R)
     [DecidablePred fun i => getD (xs ++ [x]) i 0 ≠ 0] [DecidablePred fun i => getD xs i 0 ≠ 0] :

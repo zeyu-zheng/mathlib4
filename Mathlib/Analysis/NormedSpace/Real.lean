@@ -59,14 +59,14 @@ theorem closure_ball (x : E) {r : ℝ} (hr : r ≠ 0) : closure (ball x r) = clo
   have : ContinuousWithinAt (fun c : ℝ => c • (y - x) + x) (Ico 0 1) 1 :=
     ((continuous_id.smul continuous_const).add continuous_const).continuousWithinAt
   convert this.mem_closure _ _
-  · rw [one_smul, sub_add_cancel]
-  · simp [closure_Ico zero_ne_one, zero_le_one]
-  · rintro c ⟨hc0, hc1⟩
-    rw [mem_ball, dist_eq_norm, add_sub_cancel_right, norm_smul, Real.norm_eq_abs,
-      abs_of_nonneg hc0, mul_comm, ← mul_one r]
-    rw [mem_closedBall, dist_eq_norm] at hy
-    replace hr : 0 < r := ((norm_nonneg _).trans hy).lt_of_ne hr.symm
-    apply mul_lt_mul' <;> assumption
+  rw [one_smul, sub_add_cancel]
+  simp [closure_Ico zero_ne_one, zero_le_one]
+  rintro c ⟨hc0, hc1⟩
+  rw [mem_ball, dist_eq_norm, add_sub_cancel_right, norm_smul, Real.norm_eq_abs,
+    abs_of_nonneg hc0, mul_comm, ← mul_one r]
+  rw [mem_closedBall, dist_eq_norm] at hy
+  replace hr : 0 < r := ((norm_nonneg _).trans hy).lt_of_ne hr.symm
+  apply mul_lt_mul' <;> assumption
 
 theorem frontier_ball (x : E) {r : ℝ} (hr : r ≠ 0) :
     frontier (ball x r) = sphere x r := by
@@ -75,11 +75,11 @@ theorem frontier_ball (x : E) {r : ℝ} (hr : r ≠ 0) :
 theorem interior_closedBall (x : E) {r : ℝ} (hr : r ≠ 0) :
     interior (closedBall x r) = ball x r := by
   cases' hr.lt_or_lt with hr hr
-  · rw [closedBall_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty]
+  rw [closedBall_eq_empty.2 hr, ball_eq_empty.2 hr.le, interior_empty]
   refine Subset.antisymm ?_ ball_subset_interior_closedBall
   intro y hy
   rcases (mem_closedBall.1 <| interior_subset hy).lt_or_eq with (hr | rfl)
-  · exact hr
+  exact hr
   set f : ℝ → E := fun c : ℝ => c • (y - x) + x
   suffices f ⁻¹' closedBall x (dist y x) ⊆ Icc (-1) 1 by
     have hfc : Continuous f := (continuous_id.smul continuous_const).add continuous_const
@@ -133,8 +133,8 @@ end Surj
 
 theorem interior_closedBall' (x : E) (r : ℝ) : interior (closedBall x r) = ball x r := by
   rcases eq_or_ne r 0 with (rfl | hr)
-  · rw [closedBall_zero, ball_zero, interior_singleton]
-  · exact interior_closedBall x hr
+  rw [closedBall_zero, ball_zero, interior_singleton]
+  exact interior_closedBall x hr
 
 theorem frontier_closedBall' (x : E) (r : ℝ) : frontier (closedBall x r) = sphere x r := by
   rw [frontier, closure_closedBall, interior_closedBall' x r, closedBall_diff_ball]

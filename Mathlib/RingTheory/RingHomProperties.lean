@@ -105,9 +105,9 @@ theorem StableUnderComposition.respectsIso (hP : RingHom.StableUnderComposition 
   · introv H
     apply hP
     exacts [H, hP' e]
-  · introv H
-    apply hP
-    exacts [hP' e, H]
+  introv H
+  apply hP
+  exacts [hP' e, H]
 
 end StableUnderComposition
 
@@ -145,14 +145,14 @@ theorem StableUnderBaseChange.mk (h₁ : RespectsIso @P)
   convert h₁.1 (_ : R' →+* TensorProduct R R' S) (_ : TensorProduct R R' S ≃+* S')
       (h₂ H : P (_ : R' →+* TensorProduct R R' S))
   swap
-  · refine { e with map_mul' := fun x y => ?_ }
-    change e (x * y) = e x * e y
-    simp_rw [this]
-    exact map_mul f' _ _
-  · ext x
-    change _ = e (x ⊗ₜ[R] 1)
-    -- Porting note: Had `dsimp only [e]` here, which didn't work anymore
-    rw [h.symm.1.equiv_tmul, Algebra.smul_def, AlgHom.toLinearMap_apply, map_one, mul_one]
+  refine { e with map_mul' := fun x y => ?_ }
+  change e (x * y) = e x * e y
+  simp_rw [this]
+  exact map_mul f' _ _
+  ext x
+  change _ = e (x ⊗ₜ[R] 1)
+  -- Porting note: Had `dsimp only [e]` here, which didn't work anymore
+  rw [h.symm.1.equiv_tmul, Algebra.smul_def, AlgHom.toLinearMap_apply, map_one, mul_one]
 
 attribute [local instance] Algebra.TensorProduct.rightAlgebra
 
@@ -181,14 +181,14 @@ variable {P}
 lemma toMorphismProperty_respectsIso_iff :
     RespectsIso P ↔ (toMorphismProperty P).RespectsIso := by
   refine ⟨fun h ↦ ⟨?_, ?_⟩, fun h ↦ ⟨?_, ?_⟩⟩
-  · intro X Y Z e f hf
-    exact h.right f e.commRingCatIsoToRingEquiv hf
-  · intro X Y Z e f hf
-    exact h.left f e.commRingCatIsoToRingEquiv hf
-  · intro X Y Z _ _ _ f e
-    exact h.postcomp e.toCommRingCatIso (CommRingCat.ofHom f)
-  · intro X Y Z _ _ _ f e
-    exact h.precomp e.toCommRingCatIso (CommRingCat.ofHom f)
+  intro X Y Z e f hf
+  exact h.right f e.commRingCatIsoToRingEquiv hf
+  intro X Y Z e f hf
+  exact h.left f e.commRingCatIsoToRingEquiv hf
+  intro X Y Z _ _ _ f e
+  exact h.postcomp e.toCommRingCatIso (CommRingCat.ofHom f)
+  intro X Y Z _ _ _ f e
+  exact h.precomp e.toCommRingCatIso (CommRingCat.ofHom f)
 
 end ToMorphismProperty
 

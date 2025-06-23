@@ -94,12 +94,12 @@ lemma optionEquivLeft_symm_univ_isHomogeneous :
   apply IsHomogeneous.sum
   rintro i -
   apply IsHomogeneous.mul
-  · apply isHomogeneous_C
-  · apply IsHomogeneous.prod
-    rintro j -
-    by_cases h : i j = j
-    · simp only [h, ↓reduceIte, Polynomial.aevalTower_X, IsHomogeneous.sub, isHomogeneous_X]
-    · simp only [h, ↓reduceIte, map_zero, zero_sub, (isHomogeneous_X _ _).neg]
+  apply isHomogeneous_C
+  apply IsHomogeneous.prod
+  rintro j -
+  by_cases h : i j = j
+  simp only [h, ↓reduceIte, Polynomial.aevalTower_X, IsHomogeneous.sub, isHomogeneous_X]
+  simp only [h, ↓reduceIte, map_zero, zero_sub, (isHomogeneous_X _ _).neg]
 
 lemma univ_coeff_isHomogeneous (i j : ℕ) (h : i + j = Fintype.card n) :
     ((univ R n).coeff i).IsHomogeneous j :=

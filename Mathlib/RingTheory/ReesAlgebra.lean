@@ -77,29 +77,29 @@ theorem reesAlgebra.monomial_mem {I : Ideal R} {i : ℕ} {r : R} :
 theorem monomial_mem_adjoin_monomial {I : Ideal R} {n : ℕ} {r : R} (hr : r ∈ I ^ n) :
     monomial n r ∈ Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) I : Set R[X]) := by
   induction' n with n hn generalizing r
-  · exact Subalgebra.algebraMap_mem _ _
-  · rw [pow_succ'] at hr
-    apply Submodule.smul_induction_on
-      -- Porting note: did not need help with motive previously
-      (p := fun r => (monomial (Nat.succ n)) r ∈ Algebra.adjoin R (Submodule.map (monomial 1) I)) hr
-    · intro r hr s hs
-      rw [Nat.succ_eq_one_add, smul_eq_mul, ← monomial_mul_monomial]
-      exact Subalgebra.mul_mem _ (Algebra.subset_adjoin (Set.mem_image_of_mem _ hr)) (hn hs)
-    · intro x y hx hy
-      rw [monomial_add]
-      exact Subalgebra.add_mem _ hx hy
+  exact Subalgebra.algebraMap_mem _ _
+  rw [pow_succ'] at hr
+  apply Submodule.smul_induction_on
+    -- Porting note: did not need help with motive previously
+    (p := fun r => (monomial (Nat.succ n)) r ∈ Algebra.adjoin R (Submodule.map (monomial 1) I)) hr
+  intro r hr s hs
+  rw [Nat.succ_eq_one_add, smul_eq_mul, ← monomial_mul_monomial]
+  exact Subalgebra.mul_mem _ (Algebra.subset_adjoin (Set.mem_image_of_mem _ hr)) (hn hs)
+  intro x y hx hy
+  rw [monomial_add]
+  exact Subalgebra.add_mem _ hx hy
 
 theorem adjoin_monomial_eq_reesAlgebra :
     Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) I : Set R[X]) = reesAlgebra I := by
   apply le_antisymm
-  · apply Algebra.adjoin_le _
-    rintro _ ⟨r, hr, rfl⟩
-    exact reesAlgebra.monomial_mem.mpr (by rwa [pow_one])
-  · intro p hp
-    rw [p.as_sum_support]
-    apply Subalgebra.sum_mem _ _
-    rintro i -
-    exact monomial_mem_adjoin_monomial (hp i)
+  apply Algebra.adjoin_le _
+  rintro _ ⟨r, hr, rfl⟩
+  exact reesAlgebra.monomial_mem.mpr (by rwa [pow_one])
+  intro p hp
+  rw [p.as_sum_support]
+  apply Subalgebra.sum_mem _ _
+  rintro i -
+  exact monomial_mem_adjoin_monomial (hp i)
 
 variable {I}
 

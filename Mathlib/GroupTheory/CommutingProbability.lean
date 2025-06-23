@@ -79,16 +79,16 @@ theorem commProb_eq_one_iff [h : Nonempty M] :
   rw [commProb, ← Set.coe_setOf, Nat.card_eq_fintype_card, Nat.card_eq_fintype_card]
   rw [div_eq_one_iff_eq, ← Nat.cast_pow, Nat.cast_inj, sq, ← card_prod,
     set_fintype_card_eq_univ_iff, Set.eq_univ_iff_forall]
-  · exact ⟨fun h x y ↦ h (x, y), fun h x ↦ h x.1 x.2⟩
-  · exact pow_ne_zero 2 (Nat.cast_ne_zero.mpr card_ne_zero)
+  exact ⟨fun h x y ↦ h (x, y), fun h x ↦ h x.1 x.2⟩
+  exact pow_ne_zero 2 (Nat.cast_ne_zero.mpr card_ne_zero)
 
 variable (G : Type*) [Group G]
 
 theorem commProb_def' : commProb G = Nat.card (ConjClasses G) / Nat.card G := by
   rw [commProb, card_comm_eq_card_conjClasses_mul_card, Nat.cast_mul, sq]
   by_cases h : (Nat.card G : ℚ) = 0
-  · rw [h, zero_mul, div_zero, div_zero]
-  · exact mul_div_mul_right _ _ h
+  rw [h, zero_mul, div_zero, div_zero]
+  exact mul_div_mul_right _ _ h
 
 variable {G}
 variable [Finite G] (H : Subgroup G)
@@ -98,21 +98,21 @@ theorem Subgroup.commProb_subgroup_le : commProb H ≤ commProb G * (H.index : �
       commuting pairs as `H`. -/
   rw [commProb_def, commProb_def, div_le_iff, mul_assoc, ← mul_pow, ← Nat.cast_mul,
     mul_comm H.index, H.card_mul_index, div_mul_cancel₀, Nat.cast_le]
-  · refine Finite.card_le_of_injective (fun p ↦ ⟨⟨p.1.1, p.1.2⟩, Subtype.ext_iff.mp p.2⟩) ?_
-    exact fun p q h ↦ by simpa only [Subtype.ext_iff, Prod.ext_iff] using h
-  · exact pow_ne_zero 2 (Nat.cast_ne_zero.mpr Finite.card_pos.ne')
-  · exact pow_pos (Nat.cast_pos.mpr Finite.card_pos) 2
+  refine Finite.card_le_of_injective (fun p ↦ ⟨⟨p.1.1, p.1.2⟩, Subtype.ext_iff.mp p.2⟩) ?_
+  exact fun p q h ↦ by simpa only [Subtype.ext_iff, Prod.ext_iff] using h
+  exact pow_ne_zero 2 (Nat.cast_ne_zero.mpr Finite.card_pos.ne')
+  exact pow_pos (Nat.cast_pos.mpr Finite.card_pos) 2
 
 theorem Subgroup.commProb_quotient_le [H.Normal] : commProb (G ⧸ H) ≤ commProb G * Nat.card H := by
   /- After rewriting with `commProb_def'`, we reduce to showing that `G` has at least as many
       conjugacy classes as `G ⧸ H`. -/
   rw [commProb_def', commProb_def', div_le_iff, mul_assoc, ← Nat.cast_mul, ← Subgroup.index,
     H.card_mul_index, div_mul_cancel₀, Nat.cast_le]
-  · apply Finite.card_le_of_surjective
-    show Function.Surjective (ConjClasses.map (QuotientGroup.mk' H))
-    exact ConjClasses.map_surjective Quotient.surjective_Quotient_mk''
-  · exact Nat.cast_ne_zero.mpr Finite.card_pos.ne'
-  · exact Nat.cast_pos.mpr Finite.card_pos
+  apply Finite.card_le_of_surjective
+  show Function.Surjective (ConjClasses.map (QuotientGroup.mk' H))
+  exact ConjClasses.map_surjective Quotient.surjective_Quotient_mk''
+  exact Nat.cast_ne_zero.mpr Finite.card_pos.ne'
+  exact Nat.cast_pos.mpr Finite.card_pos
 
 variable (G)
 
@@ -182,27 +182,27 @@ lemma commProb_cons (n : ℕ) (l : List ℕ) :
 theorem commProb_reciprocal (n : ℕ) :
     commProb (Product (reciprocalFactors n)) = 1 / n := by
   by_cases h0 : n = 0
-  · rw [h0, reciprocalFactors_zero, commProb_cons, commProb_nil, mul_one, Nat.cast_zero, div_zero]
-    apply commProb_eq_zero_of_infinite
+  rw [h0, reciprocalFactors_zero, commProb_cons, commProb_nil, mul_one, Nat.cast_zero, div_zero]
+  apply commProb_eq_zero_of_infinite
   by_cases h1 : n = 1
-  · rw [h1, reciprocalFactors_one, commProb_nil, Nat.cast_one, div_one]
+  rw [h1, reciprocalFactors_one, commProb_nil, Nat.cast_one, div_one]
   rcases Nat.even_or_odd n with h2 | h2
-  · have := div_two_lt h0
-    rw [reciprocalFactors_even h0 h2, commProb_cons, commProb_reciprocal (n / 2),
-        commProb_odd (by decide)]
-    field_simp [h0, h2.two_dvd]
-    norm_num
-  · have := div_four_lt h0 h1
-    rw [reciprocalFactors_odd h1 h2, commProb_cons, commProb_reciprocal (n / 4 + 1)]
-    have key : n % 4 = 1 ∨ n % 4 = 3 := Nat.odd_mod_four_iff.mp (Nat.odd_iff.mp h2)
-    have hn : Odd (n % 4)
-    rcases key with h | h <;> rw [h] <;> decide
-    rw [commProb_odd (hn.mul h2), div_mul_div_comm, mul_one, div_eq_div_iff, one_mul] <;> norm_cast
-    · have h0 : (n % 4) ^ 2 + 3 = n % 4 * 4 := by rcases key with h | h <;> rw [h] <;> norm_num
-      have h1 := (Nat.div_add_mod n 4).symm
-      zify at h0 h1 ⊢
-      linear_combination (h0 + h1 * (n % 4)) * n
-    · have := hn.pos.ne'
-      positivity
+  have := div_two_lt h0
+  rw [reciprocalFactors_even h0 h2, commProb_cons, commProb_reciprocal (n / 2),
+      commProb_odd (by decide)]
+  field_simp [h0, h2.two_dvd]
+  norm_num
+  have := div_four_lt h0 h1
+  rw [reciprocalFactors_odd h1 h2, commProb_cons, commProb_reciprocal (n / 4 + 1)]
+  have key : n % 4 = 1 ∨ n % 4 = 3 := Nat.odd_mod_four_iff.mp (Nat.odd_iff.mp h2)
+  have hn : Odd (n % 4)
+  rcases key with h | h <;> rw [h] <;> decide
+  rw [commProb_odd (hn.mul h2), div_mul_div_comm, mul_one, div_eq_div_iff, one_mul] <;> norm_cast
+  have h0 : (n % 4) ^ 2 + 3 = n % 4 * 4 := by rcases key with h | h <;> rw [h] <;> norm_num
+  have h1 := (Nat.div_add_mod n 4).symm
+  zify at h0 h1 ⊢
+  linear_combination (h0 + h1 * (n % 4)) * n
+  have := hn.pos.ne'
+  positivity
 
 end DihedralGroup

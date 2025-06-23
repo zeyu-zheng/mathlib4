@@ -41,17 +41,17 @@ theorem deriv_gaussian_eq_hermite_mul_gaussian (n : ℕ) (x : ℝ) :
     (-1 : ℝ) ^ n * aeval x (hermite n) * Real.exp (-(x ^ 2 / 2)) := by
   rw [mul_assoc]
   induction' n with n ih generalizing x
-  · rw [Function.iterate_zero_apply, pow_zero, one_mul, hermite_zero, C_1, map_one, one_mul]
-  · replace ih : deriv^[n] _ = _ := _root_.funext ih
-    have deriv_gaussian :
-      deriv (fun y => Real.exp (-(y ^ 2 / 2))) x = -x * Real.exp (-(x ^ 2 / 2)) := by
-      -- porting note (#10745): was `simp [mul_comm, ← neg_mul]`
-      rw [deriv_exp (by simp)]; simp; ring
-    rw [Function.iterate_succ_apply', ih, deriv_const_mul_field, deriv_mul, pow_succ (-1 : ℝ),
-      deriv_gaussian, hermite_succ, map_sub, map_mul, aeval_X, Polynomial.deriv_aeval]
-    · ring
-    · apply Polynomial.differentiable_aeval
-    · apply DifferentiableAt.exp; simp -- Porting note: was just `simp`
+  rw [Function.iterate_zero_apply, pow_zero, one_mul, hermite_zero, C_1, map_one, one_mul]
+  replace ih : deriv^[n] _ = _ := _root_.funext ih
+  have deriv_gaussian :
+    deriv (fun y => Real.exp (-(y ^ 2 / 2))) x = -x * Real.exp (-(x ^ 2 / 2)) := by
+    -- porting note (#10745): was `simp [mul_comm, ← neg_mul]`
+    rw [deriv_exp (by simp)]; simp; ring
+  rw [Function.iterate_succ_apply', ih, deriv_const_mul_field, deriv_mul, pow_succ (-1 : ℝ),
+    deriv_gaussian, hermite_succ, map_sub, map_mul, aeval_X, Polynomial.deriv_aeval]
+  ring
+  apply Polynomial.differentiable_aeval
+  apply DifferentiableAt.exp; simp -- Porting note: was just `simp`
 
 theorem hermite_eq_deriv_gaussian (n : ℕ) (x : ℝ) : aeval x (hermite n) =
     (-1 : ℝ) ^ n * deriv^[n] (fun y => Real.exp (-(y ^ 2 / 2))) x / Real.exp (-(x ^ 2 / 2)) := by

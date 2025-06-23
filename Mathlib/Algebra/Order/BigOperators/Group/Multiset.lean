@@ -49,9 +49,9 @@ lemma all_one_of_le_one_le_of_prod_eq_one :
 @[to_additive]
 lemma prod_le_prod_of_rel_le (h : s.Rel (· ≤ ·) t) : s.prod ≤ t.prod := by
   induction' h with _ _ _ _ rh _ rt
-  · rfl
-  · rw [prod_cons, prod_cons]
-    exact mul_le_mul' rh rt
+  rfl
+  rw [prod_cons, prod_cons]
+  exact mul_le_mul' rh rt
 
 @[to_additive]
 lemma prod_map_le_prod_map {s : Multiset ι} (f : ι → α) (g : ι → α) (h : ∀ i, i ∈ s → f i ≤ g i) :
@@ -83,7 +83,7 @@ lemma le_prod_of_submultiplicative_on_pred (f : α → β)
     (s : Multiset α) (hps : ∀ a, a ∈ s → p a) : f s.prod ≤ (s.map f).prod := by
   revert s
   refine Multiset.induction ?_ ?_
-  · simp [le_of_eq h_one]
+  simp [le_of_eq h_one]
   intro a s hs hpsa
   have hps : ∀ x, x ∈ s → p x := fun x hx => hpsa x (mem_cons_of_mem hx)
   have hp_prod : p s.prod := prod_induction p s hp_mul hp_one hps
@@ -102,11 +102,11 @@ lemma le_prod_nonempty_of_submultiplicative_on_pred (f : α → β) (p : α → 
     (s : Multiset α) (hs_nonempty : s ≠ ∅) (hs : ∀ a, a ∈ s → p a) : f s.prod ≤ (s.map f).prod := by
   revert s
   refine Multiset.induction ?_ ?_
-  · simp
+  simp
   rintro a s hs - hsa_prop
   rw [prod_cons, map_cons, prod_cons]
   by_cases hs_empty : s = ∅
-  · simp [hs_empty]
+  simp [hs_empty]
   have hsa_restrict : ∀ x, x ∈ s → p x := fun x hx => hsa_prop x (mem_cons_of_mem hx)
   have hp_sup : p s.prod := prod_induction_nonempty p hp_mul hs_empty hsa_restrict
   have hp_a : p a := hsa_prop a (mem_cons_self a s)

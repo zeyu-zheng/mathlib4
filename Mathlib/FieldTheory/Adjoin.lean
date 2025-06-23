@@ -357,22 +357,22 @@ theorem adjoin_adjoin_left (T : Set E) :
   rw [SetLike.ext'_iff]
   change (↑(adjoin (adjoin F S) T) : Set E) = _
   apply Set.eq_of_subset_of_subset <;> rw [adjoin_subset_adjoin_iff] <;> constructor
-  · rintro _ ⟨⟨x, hx⟩, rfl⟩; exact adjoin.mono _ _ _ Set.subset_union_left hx
-  · exact subset_adjoin_of_subset_right _ _ Set.subset_union_right
+  rintro _ ⟨⟨x, hx⟩, rfl⟩; exact adjoin.mono _ _ _ Set.subset_union_left hx
+  exact subset_adjoin_of_subset_right _ _ Set.subset_union_right
 -- Porting note: orginal proof times out
-  · rintro x ⟨f, rfl⟩
-    refine Subfield.subset_closure ?_
-    left
-    exact ⟨f, rfl⟩
+  rintro x ⟨f, rfl⟩
+  refine Subfield.subset_closure ?_
+  left
+  exact ⟨f, rfl⟩
 -- Porting note: orginal proof times out
-  · refine Set.union_subset (fun x hx => Subfield.subset_closure ?_)
-      (fun x hx => Subfield.subset_closure ?_)
-    · left
-      refine ⟨⟨x, Subfield.subset_closure ?_⟩, rfl⟩
-      right
-      exact hx
-    · right
-      exact hx
+  refine Set.union_subset (fun x hx => Subfield.subset_closure ?_)
+    (fun x hx => Subfield.subset_closure ?_)
+  left
+  refine ⟨⟨x, Subfield.subset_closure ?_⟩, rfl⟩
+  right
+  exact hx
+  right
+  exact hx
 
 @[simp]
 theorem adjoin_insert_adjoin (x : E) :
@@ -653,8 +653,8 @@ theorem coe_iSup_of_directed [Nonempty ι] (dir : Directed (· ≤ ·) t) :
 theorem toSubalgebra_iSup_of_directed (dir : Directed (· ≤ ·) t) :
     (iSup t).toSubalgebra = ⨆ i, (t i).toSubalgebra := by
   cases isEmpty_or_nonempty ι
-  · simp_rw [iSup_of_empty, bot_toSubalgebra]
-  · exact SetLike.ext' ((coe_iSup_of_directed dir).trans (Subalgebra.coe_iSup_of_directed dir).symm)
+  simp_rw [iSup_of_empty, bot_toSubalgebra]
+  exact SetLike.ext' ((coe_iSup_of_directed dir).trans (Subalgebra.coe_iSup_of_directed dir).symm)
 
 instance finiteDimensional_iSup_of_finite [h : Finite ι] [∀ i, FiniteDimensional K (t i)] :
     FiniteDimensional K (⨆ i, t i : IntermediateField K L) := by
@@ -663,12 +663,12 @@ instance finiteDimensional_iSup_of_finite [h : Finite ι] [∀ i, FiniteDimensio
   change P Set.univ
   apply Set.Finite.induction_on
   all_goals dsimp only [P]
-  · exact Set.finite_univ
-  · rw [iSup_emptyset]
-    exact (botEquiv K L).symm.toLinearEquiv.finiteDimensional
-  · intro _ s _ _ hs
-    rw [iSup_insert]
-    exact IntermediateField.finiteDimensional_sup _ _
+  exact Set.finite_univ
+  rw [iSup_emptyset]
+  exact (botEquiv K L).symm.toLinearEquiv.finiteDimensional
+  intro _ s _ _ hs
+  rw [iSup_insert]
+  exact IntermediateField.finiteDimensional_sup _ _
 
 instance finiteDimensional_iSup_of_finset
     /- Porting note: changed `h` from `∀ i ∈ s, FiniteDimensional K (t i)` because this caused an
@@ -816,9 +816,9 @@ theorem exists_finset_of_mem_supr'' {ι : Type*} {f : ι → IntermediateField F
   intro x1 hx1
   refine SetLike.le_def.mp (le_iSup_of_le ⟨i, x1, hx1⟩ ?_)
     (subset_adjoin F (rootSet (minpoly F x1) E) ?_)
-  · rw [IntermediateField.minpoly_eq, Subtype.coe_mk]
-  · rw [mem_rootSet_of_ne, minpoly.aeval]
-    exact minpoly.ne_zero (isIntegral_iff.mp (Algebra.IsIntegral.isIntegral (⟨x1, hx1⟩ : f i)))
+  rw [IntermediateField.minpoly_eq, Subtype.coe_mk]
+  rw [mem_rootSet_of_ne, minpoly.aeval]
+  exact minpoly.ne_zero (isIntegral_iff.mp (Algebra.IsIntegral.isIntegral (⟨x1, hx1⟩ : f i)))
 
 theorem exists_finset_of_mem_adjoin {S : Set E} {x : E} (hx : x ∈ adjoin F S) :
     ∃ T : Finset E, (T : Set E) ⊆ S ∧ x ∈ adjoin F (T : Set E) := by
@@ -1079,7 +1079,7 @@ theorem exists_lt_finrank_of_infinite_dimensional
     [Algebra.IsAlgebraic F E] (hnfd : ¬ FiniteDimensional F E) (n : ℕ) :
     ∃ L : IntermediateField F E, FiniteDimensional F L ∧ n < finrank F L := by
   induction' n with n ih
-  · exact ⟨⊥, Subalgebra.finite_bot, finrank_pos⟩
+  exact ⟨⊥, Subalgebra.finite_bot, finrank_pos⟩
   obtain ⟨L, fin, hn⟩ := ih
   obtain ⟨x, hx⟩ : ∃ x : E, x ∉ L := by
     contrapose! hnfd
@@ -1196,14 +1196,14 @@ theorem _root_.Polynomial.irreducible_comp {f g : K[X]} (hfm : f.Monic) (hgm : g
       (Monic.sub_of_left (hgm.map _) (degree_lt_degree (by simpa [Nat.pos_iff_ne_zero] using hg')))
   have key₂' : finrank K⟮aeval (root p) g⟯ Kx = natDegree g := by
     trans natDegree (minpoly K⟮aeval (root p) g⟯ (root p))
-    · have : K⟮aeval (root p) g⟯⟮root p⟯ = ⊤ := by
-        apply restrictScalars_injective K
-        rw [restrictScalars_top, adjoin_adjoin_left, Set.union_comm, ← adjoin_adjoin_left,
-          adjoin_root_eq_top p, restrictScalars_adjoin]
-        simp
-      rw [← finrank_top', ← this, adjoin.finrank]
-      exact IsIntegral.of_finite _ _
-    · simp [← key₂]
+    have : K⟮aeval (root p) g⟯⟮root p⟯ = ⊤ := by
+      apply restrictScalars_injective K
+      rw [restrictScalars_top, adjoin_adjoin_left, Set.union_comm, ← adjoin_adjoin_left,
+        adjoin_root_eq_top p, restrictScalars_adjoin]
+      simp
+    rw [← finrank_top', ← this, adjoin.finrank]
+    exact IsIntegral.of_finite _ _
+    simp [← key₂]
   have := FiniteDimensional.finrank_mul_finrank K K⟮aeval (root p) g⟯ Kx
   rwa [key₁', key₂', (AdjoinRoot.powerBasis hp₁.ne_zero).finrank, powerBasis_dim, eq_comm] at this
 
@@ -1239,9 +1239,9 @@ theorem induction_on_adjoin_finset (S : Finset E) (P : IntermediateField F E →
     (ih : ∀ (K : IntermediateField F E), ∀ x ∈ S, P K → P (K⟮x⟯.restrictScalars F)) :
     P (adjoin F S) := by
   refine Finset.induction_on' S ?_ (fun ha _ _ h => ?_)
-  · simp [base]
-  · rw [Finset.coe_insert, Set.insert_eq, Set.union_comm, ← adjoin_adjoin_left]
-    exact ih (adjoin F _) _ ha h
+  simp [base]
+  rw [Finset.coe_insert, Set.insert_eq, Set.union_comm, ← adjoin_adjoin_left]
+  exact ih (adjoin F _) _ ha h
 
 theorem induction_on_adjoin_fg (P : IntermediateField F E → Prop) (base : P ⊥)
     (ih : ∀ (K : IntermediateField F E) (x : E), P K → P (K⟮x⟯.restrictScalars F))

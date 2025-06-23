@@ -94,8 +94,8 @@ theorem iteratedDeriv_const_smul {n : ℕ} {f : 𝕜 → F} (h : ContDiff 𝕜 n
     have h₁ : DifferentiableAt 𝕜 (fun x => iteratedDeriv n f (c * x)) x := by
       rw [← Function.comp_def]
       apply DifferentiableAt.comp
-      · exact h.differentiable_iteratedDeriv n (Nat.cast_lt.mpr n.lt_succ_self) |>.differentiableAt
-      · exact differentiableAt_id'.const_mul _
+      exact h.differentiable_iteratedDeriv n (Nat.cast_lt.mpr n.lt_succ_self) |>.differentiableAt
+      exact differentiableAt_id'.const_mul _
     rw [iteratedDeriv_succ, ih h.of_succ, deriv_const_smul _ h₁, iteratedDeriv_succ,
       ← Function.comp_def, deriv.scomp x h₀ (differentiableAt_id'.const_mul _),
       deriv_const_mul _ differentiableAt_id', deriv_id'', smul_smul, mul_one, pow_succ]
@@ -111,9 +111,9 @@ lemma iteratedDeriv_neg (n : ℕ) (f : 𝕜 → F) (a : 𝕜) :
 lemma iteratedDeriv_comp_neg (n : ℕ) (f : 𝕜 → F) (a : 𝕜) :
     iteratedDeriv n (fun x ↦ f (-x)) a = (-1 : 𝕜) ^ n • iteratedDeriv n f (-a) := by
   induction' n with n ih generalizing a
-  · simp only [Nat.zero_eq, iteratedDeriv_zero, pow_zero, one_smul]
-  · have ih' : iteratedDeriv n (fun x ↦ f (-x)) = fun x ↦ (-1 : 𝕜) ^ n • iteratedDeriv n f (-x) :=
-      funext ih
-    rw [iteratedDeriv_succ, iteratedDeriv_succ, ih', pow_succ', neg_mul, one_mul,
-      deriv_comp_neg (f := fun x ↦ (-1 : 𝕜) ^ n • iteratedDeriv n f x), deriv_const_smul',
-      neg_smul]
+  simp only [Nat.zero_eq, iteratedDeriv_zero, pow_zero, one_smul]
+  have ih' : iteratedDeriv n (fun x ↦ f (-x)) = fun x ↦ (-1 : 𝕜) ^ n • iteratedDeriv n f (-x) :=
+    funext ih
+  rw [iteratedDeriv_succ, iteratedDeriv_succ, ih', pow_succ', neg_mul, one_mul,
+    deriv_comp_neg (f := fun x ↦ (-1 : 𝕜) ^ n • iteratedDeriv n f x), deriv_const_smul',
+    neg_smul]

@@ -75,31 +75,31 @@ instance [SeminormedRing A] : NormedRing (Completion A) :=
     Completion.instMetricSpace with
     dist_eq := fun x y => by
       refine Completion.induction_on₂ x y ?_ ?_ <;> clear x y
-      · refine isClosed_eq (Completion.uniformContinuous_extension₂ _).continuous ?_
-        exact Continuous.comp Completion.continuous_extension continuous_sub
-      · intro x y
-        rw [← Completion.coe_sub, norm_coe, Completion.dist_eq, dist_eq_norm]
+      refine isClosed_eq (Completion.uniformContinuous_extension₂ _).continuous ?_
+      exact Continuous.comp Completion.continuous_extension continuous_sub
+      intro x y
+      rw [← Completion.coe_sub, norm_coe, Completion.dist_eq, dist_eq_norm]
     norm_mul := fun x y => by
       refine Completion.induction_on₂ x y ?_ ?_ <;> clear x y
-      · exact
-          isClosed_le (Continuous.comp continuous_norm continuous_mul)
-            (Continuous.comp _root_.continuous_mul
-              (Continuous.prod_map continuous_norm continuous_norm))
-      · intro x y
-        simp only [← coe_mul, norm_coe]
-        exact norm_mul_le x y }
+      exact
+        isClosed_le (Continuous.comp continuous_norm continuous_mul)
+          (Continuous.comp _root_.continuous_mul
+            (Continuous.prod_map continuous_norm continuous_norm))
+      intro x y
+      simp only [← coe_mul, norm_coe]
+      exact norm_mul_le x y }
 
 instance [SeminormedCommRing A] [NormedAlgebra 𝕜 A] [UniformContinuousConstSMul 𝕜 A] :
     NormedAlgebra 𝕜 (Completion A) :=
   { Completion.algebra A 𝕜 with
     norm_smul_le := fun r x => by
       refine Completion.induction_on x ?_ ?_ <;> clear x
-      · exact
-          isClosed_le (Continuous.comp continuous_norm (continuous_const_smul r))
-            (Continuous.comp (continuous_mul_left _) continuous_norm)
-      · intro x
-        simp only [← coe_smul, norm_coe]
-        exact norm_smul_le r x }
+      exact
+        isClosed_le (Continuous.comp continuous_norm (continuous_const_smul r))
+          (Continuous.comp (continuous_mul_left _) continuous_norm)
+      intro x
+      simp only [← coe_smul, norm_coe]
+      exact norm_smul_le r x }
 
 end Algebra
 

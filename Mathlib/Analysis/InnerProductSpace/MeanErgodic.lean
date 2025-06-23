@@ -90,15 +90,15 @@ theorem ContinuousLinearMap.tendsto_birkhoffAverage_orthogonalProjection (f : E 
   that the range of `f - 1` is dense in the orthogonal complement
   to the submodule of fixed points of `f`. -/
   apply (f : E →ₗ[𝕜] E).tendsto_birkhoffAverage_of_ker_subset_closure (f.lipschitz.weaken hf)
-  · exact orthogonalProjection_mem_subspace_eq_self (K := LinearMap.eqLocus f 1)
-  · clear x
-    /- In other words, we need to verify that any vector that is orthogonal to the range of `f - 1`
-    is a fixed point of `f`. -/
-    rw [ker_orthogonalProjection, ← Submodule.topologicalClosure_coe, SetLike.coe_subset_coe,
-      ← Submodule.orthogonal_orthogonal_eq_closure]
-    /- To verify this, we verify `‖f x‖ ≤ ‖x‖` (because `‖f‖ ≤ 1`) and `⟪f x, x⟫ = ‖x‖²`. -/
-    refine Submodule.orthogonal_le fun x hx ↦ eq_of_norm_le_re_inner_eq_norm_sq (𝕜 := 𝕜) ?_ ?_
-    · simpa using f.le_of_opNorm_le hf x
-    · have : ∀ y, ⟪f y, x⟫ = ⟪y, x⟫ := by
-        simpa [Submodule.mem_orthogonal, inner_sub_left, sub_eq_zero] using hx
-      simp [this, ← norm_sq_eq_inner]
+  exact orthogonalProjection_mem_subspace_eq_self (K := LinearMap.eqLocus f 1)
+  clear x
+  /- In other words, we need to verify that any vector that is orthogonal to the range of `f - 1`
+  is a fixed point of `f`. -/
+  rw [ker_orthogonalProjection, ← Submodule.topologicalClosure_coe, SetLike.coe_subset_coe,
+    ← Submodule.orthogonal_orthogonal_eq_closure]
+  /- To verify this, we verify `‖f x‖ ≤ ‖x‖` (because `‖f‖ ≤ 1`) and `⟪f x, x⟫ = ‖x‖²`. -/
+  refine Submodule.orthogonal_le fun x hx ↦ eq_of_norm_le_re_inner_eq_norm_sq (𝕜 := 𝕜) ?_ ?_
+  simpa using f.le_of_opNorm_le hf x
+  have : ∀ y, ⟪f y, x⟫ = ⟪y, x⟫ := by
+    simpa [Submodule.mem_orthogonal, inner_sub_left, sub_eq_zero] using hx
+  simp [this, ← norm_sq_eq_inner]

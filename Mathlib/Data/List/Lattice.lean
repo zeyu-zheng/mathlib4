@@ -168,8 +168,8 @@ theorem bagInter_nil (l : List α) : l.bagInter [] = [] := by cases l <;> rfl
 theorem cons_bagInter_of_pos (l₁ : List α) (h : a ∈ l₂) :
     (a :: l₁).bagInter l₂ = a :: l₁.bagInter (l₂.erase a) := by
   cases l₂
-  · exact if_pos h
-  · simp only [List.bagInter, if_pos (elem_eq_true_of_mem h)]
+  exact if_pos h
+  simp only [List.bagInter, if_pos (elem_eq_true_of_mem h)]
 
 @[simp]
 theorem cons_bagInter_of_neg (l₁ : List α) (h : a ∉ l₂) :
@@ -182,15 +182,15 @@ theorem mem_bagInter {a : α} : ∀ {l₁ l₂ : List α}, a ∈ l₁.bagInter l
   | [], l₂ => by simp only [nil_bagInter, not_mem_nil, false_and_iff]
   | b :: l₁, l₂ => by
     by_cases h : b ∈ l₂
-    · rw [cons_bagInter_of_pos _ h, mem_cons, mem_cons, mem_bagInter]
-      by_cases ba : a = b
-      · simp only [ba, h, eq_self_iff_true, true_or_iff, true_and_iff]
-      · simp only [mem_erase_of_ne ba, ba, false_or_iff]
-    · rw [cons_bagInter_of_neg _ h, mem_bagInter, mem_cons, or_and_right]
-      symm
-      apply or_iff_right_of_imp
-      rintro ⟨rfl, h'⟩
-      exact h.elim h'
+    rw [cons_bagInter_of_pos _ h, mem_cons, mem_cons, mem_bagInter]
+    by_cases ba : a = b
+    simp only [ba, h, eq_self_iff_true, true_or_iff, true_and_iff]
+    simp only [mem_erase_of_ne ba, ba, false_or_iff]
+    rw [cons_bagInter_of_neg _ h, mem_bagInter, mem_cons, or_and_right]
+    symm
+    apply or_iff_right_of_imp
+    rintro ⟨rfl, h'⟩
+    exact h.elim h'
 
 @[simp]
 theorem count_bagInter {a : α} :
@@ -199,32 +199,32 @@ theorem count_bagInter {a : α} :
   | l₁, [] => by simp
   | b :: l₁, l₂ => by
     by_cases hb : b ∈ l₂
-    · rw [cons_bagInter_of_pos _ hb, count_cons, count_cons, count_bagInter, count_erase,
-        ← Nat.add_min_add_right]
-      by_cases ab : a = b
-      · rw [if_pos ab, Nat.sub_add_cancel]
-        rwa [succ_le_iff, count_pos_iff_mem, ab]
-      · rw [if_neg ab, Nat.sub_zero, Nat.add_zero, Nat.add_zero]
-    · rw [cons_bagInter_of_neg _ hb, count_bagInter]
-      by_cases ab : a = b
-      · rw [← ab] at hb
-        rw [count_eq_zero.2 hb, Nat.min_zero, Nat.min_zero]
-      · rw [count_cons_of_ne ab]
+    rw [cons_bagInter_of_pos _ hb, count_cons, count_cons, count_bagInter, count_erase,
+      ← Nat.add_min_add_right]
+    by_cases ab : a = b
+    rw [if_pos ab, Nat.sub_add_cancel]
+    rwa [succ_le_iff, count_pos_iff_mem, ab]
+    rw [if_neg ab, Nat.sub_zero, Nat.add_zero, Nat.add_zero]
+    rw [cons_bagInter_of_neg _ hb, count_bagInter]
+    by_cases ab : a = b
+    rw [← ab] at hb
+    rw [count_eq_zero.2 hb, Nat.min_zero, Nat.min_zero]
+    rw [count_cons_of_ne ab]
 
 theorem bagInter_sublist_left : ∀ l₁ l₂ : List α, l₁.bagInter l₂ <+ l₁
   | [], l₂ => by simp
   | b :: l₁, l₂ => by
     by_cases h : b ∈ l₂ <;> simp only [h, cons_bagInter_of_pos, cons_bagInter_of_neg, not_false_iff]
-    · exact (bagInter_sublist_left _ _).cons_cons _
-    · apply sublist_cons_of_sublist
-      apply bagInter_sublist_left
+    exact (bagInter_sublist_left _ _).cons_cons _
+    apply sublist_cons_of_sublist
+    apply bagInter_sublist_left
 
 theorem bagInter_nil_iff_inter_nil : ∀ l₁ l₂ : List α, l₁.bagInter l₂ = [] ↔ l₁ ∩ l₂ = []
   | [], l₂ => by simp
   | b :: l₁, l₂ => by
     by_cases h : b ∈ l₂
-    · simp [h]
-    · simpa [h] using bagInter_nil_iff_inter_nil l₁ l₂
+    simp [h]
+    simpa [h] using bagInter_nil_iff_inter_nil l₁ l₂
 
 end BagInter
 

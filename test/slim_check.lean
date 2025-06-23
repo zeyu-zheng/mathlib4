@@ -116,18 +116,18 @@ issue: [0, 0, -1] = [-1, 0, 0] does not hold
 
 example : true := by
   have _this : ∀ x ∈ [1,2,3], x < 4
-  · slim_check (config := { randomSeed := some 257, quiet := true })
-    -- success
+  slim_check (config := { randomSeed := some 257, quiet := true })
+  -- success
   trivial
 
 -- Making sure that the context is used
 example : true := by
   have _this : ∀ n : ℕ, n = n
-  · intro n
-    cases n
-    · slim_check (config := { randomSeed := some 257, quiet := true })
-    · rfl
-    -- success
+  intro n
+  cases n
+  slim_check (config := { randomSeed := some 257, quiet := true })
+  rfl
+  -- success
   trivial
 
 open Function SlimCheck

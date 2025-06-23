@@ -204,11 +204,11 @@ lemma comp_id (C : VariableChange R) : comp C id = C := by
 lemma comp_left_inv (C : VariableChange R) : comp (inv C) C = id := by
   rw [comp, id, inv]
   ext <;> dsimp only
-  · exact C.u.inv_mul
-  · linear_combination (norm := ring1) -C.r * pow_mul_pow_eq_one 2 C.u.inv_mul
-  · linear_combination (norm := ring1) -C.s * C.u.inv_mul
-  · linear_combination (norm := ring1) (C.r * C.s - C.t) * pow_mul_pow_eq_one 3 C.u.inv_mul
-      + -C.r * C.s * pow_mul_pow_eq_one 2 C.u.inv_mul
+  exact C.u.inv_mul
+  linear_combination (norm := ring1) -C.r * pow_mul_pow_eq_one 2 C.u.inv_mul
+  linear_combination (norm := ring1) -C.s * C.u.inv_mul
+  linear_combination (norm := ring1) (C.r * C.s - C.t) * pow_mul_pow_eq_one 3 C.u.inv_mul
+    + -C.r * C.s * pow_mul_pow_eq_one 2 C.u.inv_mul
 
 lemma comp_assoc (C C' C'' : VariableChange R) : comp (comp C C') C'' = comp C (comp C' C'') := by
   ext <;> simp only [comp, Units.val_mul] <;> ring1
@@ -246,29 +246,29 @@ lemma variableChange_comp (C C' : VariableChange R) (W : WeierstrassCurve R) :
     W.variableChange (C.comp C') = (W.variableChange C').variableChange C := by
   simp only [VariableChange.comp, variableChange]
   ext <;> simp only [mul_inv, Units.val_mul]
-  · linear_combination (norm := ring1) C.u⁻¹ * C.s * 2 * C'.u.inv_mul
-  · linear_combination (norm := ring1)
-      C.s * (-C'.s * 2 - W.a₁) * C.u⁻¹ ^ 2 * C'.u⁻¹ * C'.u.inv_mul
-        + (C.r * 3 - C.s ^ 2) * C.u⁻¹ ^ 2 * pow_mul_pow_eq_one 2 C'.u.inv_mul
-  · linear_combination (norm := ring1)
-      C.r * (C'.s * 2 + W.a₁) * C.u⁻¹ ^ 3 * C'.u⁻¹ * pow_mul_pow_eq_one 2 C'.u.inv_mul
-        + C.t * 2 * C.u⁻¹ ^ 3 * pow_mul_pow_eq_one 3 C'.u.inv_mul
-  · linear_combination (norm := ring1)
-      C.s * (-W.a₃ - C'.r * W.a₁ - C'.t * 2) * C.u⁻¹ ^ 4 * C'.u⁻¹ ^ 3 * C'.u.inv_mul
-        + C.u⁻¹ ^ 4 * C'.u⁻¹ ^ 2 * (C.r * C'.r * 6 + C.r * W.a₂ * 2 - C'.s * C.r * W.a₁ * 2
-          - C'.s ^ 2 * C.r * 2) * pow_mul_pow_eq_one 2 C'.u.inv_mul
-        - C.u⁻¹ ^ 4 * C'.u⁻¹ * (C.s * C'.s * C.r * 2 + C.s * C.r * W.a₁ + C'.s * C.t * 2
-          + C.t * W.a₁) * pow_mul_pow_eq_one 3 C'.u.inv_mul
-        + C.u⁻¹ ^ 4 * (C.r ^ 2 * 3 - C.s * C.t * 2) * pow_mul_pow_eq_one 4 C'.u.inv_mul
-  · linear_combination (norm := ring1)
-      C.r * C.u⁻¹ ^ 6 * C'.u⁻¹ ^ 4 * (C'.r * W.a₂ * 2 - C'.r * C'.s * W.a₁ + C'.r ^ 2 * 3 + W.a₄
-          - C'.s * C'.t * 2 - C'.s * W.a₃ - C'.t * W.a₁) * pow_mul_pow_eq_one 2 C'.u.inv_mul
-        - C.u⁻¹ ^ 6 * C'.u⁻¹ ^ 3 * C.t * (C'.r * W.a₁ + C'.t * 2 + W.a₃)
-          * pow_mul_pow_eq_one 3 C'.u.inv_mul
-        + C.r ^ 2 * C.u⁻¹ ^ 6 * C'.u⁻¹ ^ 2 * (C'.r * 3 + W.a₂ - C'.s * W.a₁ - C'.s ^ 2)
-          * pow_mul_pow_eq_one 4 C'.u.inv_mul
-        - C.r * C.t * C.u⁻¹ ^ 6 * C'.u⁻¹ * (C'.s * 2 + W.a₁) * pow_mul_pow_eq_one 5 C'.u.inv_mul
-        + C.u⁻¹ ^ 6 * (C.r ^ 3 - C.t ^ 2) * pow_mul_pow_eq_one 6 C'.u.inv_mul
+  linear_combination (norm := ring1) C.u⁻¹ * C.s * 2 * C'.u.inv_mul
+  linear_combination (norm := ring1)
+    C.s * (-C'.s * 2 - W.a₁) * C.u⁻¹ ^ 2 * C'.u⁻¹ * C'.u.inv_mul
+      + (C.r * 3 - C.s ^ 2) * C.u⁻¹ ^ 2 * pow_mul_pow_eq_one 2 C'.u.inv_mul
+  linear_combination (norm := ring1)
+    C.r * (C'.s * 2 + W.a₁) * C.u⁻¹ ^ 3 * C'.u⁻¹ * pow_mul_pow_eq_one 2 C'.u.inv_mul
+      + C.t * 2 * C.u⁻¹ ^ 3 * pow_mul_pow_eq_one 3 C'.u.inv_mul
+  linear_combination (norm := ring1)
+    C.s * (-W.a₃ - C'.r * W.a₁ - C'.t * 2) * C.u⁻¹ ^ 4 * C'.u⁻¹ ^ 3 * C'.u.inv_mul
+      + C.u⁻¹ ^ 4 * C'.u⁻¹ ^ 2 * (C.r * C'.r * 6 + C.r * W.a₂ * 2 - C'.s * C.r * W.a₁ * 2
+        - C'.s ^ 2 * C.r * 2) * pow_mul_pow_eq_one 2 C'.u.inv_mul
+      - C.u⁻¹ ^ 4 * C'.u⁻¹ * (C.s * C'.s * C.r * 2 + C.s * C.r * W.a₁ + C'.s * C.t * 2
+        + C.t * W.a₁) * pow_mul_pow_eq_one 3 C'.u.inv_mul
+      + C.u⁻¹ ^ 4 * (C.r ^ 2 * 3 - C.s * C.t * 2) * pow_mul_pow_eq_one 4 C'.u.inv_mul
+  linear_combination (norm := ring1)
+    C.r * C.u⁻¹ ^ 6 * C'.u⁻¹ ^ 4 * (C'.r * W.a₂ * 2 - C'.r * C'.s * W.a₁ + C'.r ^ 2 * 3 + W.a₄
+        - C'.s * C'.t * 2 - C'.s * W.a₃ - C'.t * W.a₁) * pow_mul_pow_eq_one 2 C'.u.inv_mul
+      - C.u⁻¹ ^ 6 * C'.u⁻¹ ^ 3 * C.t * (C'.r * W.a₁ + C'.t * 2 + W.a₃)
+        * pow_mul_pow_eq_one 3 C'.u.inv_mul
+      + C.r ^ 2 * C.u⁻¹ ^ 6 * C'.u⁻¹ ^ 2 * (C'.r * 3 + W.a₂ - C'.s * W.a₁ - C'.s ^ 2)
+        * pow_mul_pow_eq_one 4 C'.u.inv_mul
+      - C.r * C.t * C.u⁻¹ ^ 6 * C'.u⁻¹ * (C'.s * 2 + W.a₁) * pow_mul_pow_eq_one 5 C'.u.inv_mul
+      + C.u⁻¹ ^ 6 * (C.r ^ 3 - C.t ^ 2) * pow_mul_pow_eq_one 6 C'.u.inv_mul
 
 instance instMulActionVariableChange : MulAction (VariableChange R) (WeierstrassCurve R) where
   smul := fun C W => W.variableChange C
@@ -717,11 +717,11 @@ lemma ofJ_1728_of_three_eq_zero (h3 : (3 : F) = 0) :
 lemma ofJ_1728_of_two_ne_zero [h2 : NeZero (2 : F)] :
     ofJ 1728 = @ofJ1728 _ _ (invertibleOfNonzero h2.out) := by
   by_cases h3 : (3 : F) = 0
-  · exact ofJ_1728_of_three_eq_zero h3
-  · have h : (1728 : F) ≠ 0 := fun h => or_iff_not_and_not.mp
-      (mul_eq_zero.mp <| by rwa [show 2 ^ 6 * 3 ^ 3 = (1728 : F) by norm_num1])
-      ⟨pow_ne_zero 6 h2.out, pow_ne_zero 3 h3⟩
-    rw [ofJ, dif_neg h, dif_pos rfl]
+  exact ofJ_1728_of_three_eq_zero h3
+  have h : (1728 : F) ≠ 0 := fun h => or_iff_not_and_not.mp
+    (mul_eq_zero.mp <| by rwa [show 2 ^ 6 * 3 ^ 3 = (1728 : F) by norm_num1])
+    ⟨pow_ne_zero 6 h2.out, pow_ne_zero 3 h3⟩
+  rw [ofJ, dif_neg h, dif_pos rfl]
 
 lemma ofJ_1728_of_two_eq_zero (h2 : (2 : F) = 0) :
     ofJ 1728 = @ofJ0 _ _ (invertibleOfNonzero <| two_or_three_ne_zero.neg_resolve_left h2) := by
@@ -733,18 +733,18 @@ lemma ofJ_ne_0_ne_1728 (h0 : j ≠ 0) (h1728 : j ≠ 1728) : ofJ j =
 
 lemma ofJ_j : (ofJ j).j = j := by
   by_cases h0 : j = 0
-  · by_cases h3 : (3 : F) = 0
-    · rw [h0, ofJ_0_of_three_eq_zero h3,
-        @ofJ1728_j _ _ <| invertibleOfNonzero <| two_or_three_ne_zero.neg_resolve_right h3,
-        show (1728 : F) = 3 * 576 by norm_num1, h3, zero_mul]
-    · rw [h0, ofJ_0_of_three_ne_zero (h3 := neZero_iff.2 h3), @ofJ0_j _ _ <| invertibleOfNonzero h3]
-  · by_cases h1728 : j = 1728
-    · have h2 : (2 : F) ≠ 0 :=
-        fun h => h0 <| by rw [h1728, show (1728 : F) = 2 * 864 by norm_num1, h, zero_mul]
-      rw [h1728, ofJ_1728_of_two_ne_zero (h2 := neZero_iff.2 h2),
-        @ofJ1728_j _ _ <| invertibleOfNonzero h2]
-    · rw [ofJ_ne_0_ne_1728 j h0 h1728,
-        @ofJ'_j _ _ _ (invertibleOfNonzero h0) (invertibleOfNonzero <| sub_ne_zero_of_ne h1728)]
+  by_cases h3 : (3 : F) = 0
+  rw [h0, ofJ_0_of_three_eq_zero h3,
+    @ofJ1728_j _ _ <| invertibleOfNonzero <| two_or_three_ne_zero.neg_resolve_right h3,
+    show (1728 : F) = 3 * 576 by norm_num1, h3, zero_mul]
+  rw [h0, ofJ_0_of_three_ne_zero (h3 := neZero_iff.2 h3), @ofJ0_j _ _ <| invertibleOfNonzero h3]
+  by_cases h1728 : j = 1728
+  have h2 : (2 : F) ≠ 0 :=
+    fun h => h0 <| by rw [h1728, show (1728 : F) = 2 * 864 by norm_num1, h, zero_mul]
+  rw [h1728, ofJ_1728_of_two_ne_zero (h2 := neZero_iff.2 h2),
+    @ofJ1728_j _ _ <| invertibleOfNonzero h2]
+  rw [ofJ_ne_0_ne_1728 j h0 h1728,
+    @ofJ'_j _ _ _ (invertibleOfNonzero h0) (invertibleOfNonzero <| sub_ne_zero_of_ne h1728)]
 
 instance instInhabitedEllipticCurve : Inhabited <| EllipticCurve F :=
   ⟨ofJ 37⟩

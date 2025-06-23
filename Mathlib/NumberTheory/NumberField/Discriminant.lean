@@ -117,8 +117,8 @@ theorem exists_ne_zero_mem_ideal_of_norm_le_mul_sqrt_discr (I : (FractionalIdeal
     ← Real.rpow_mul toReal_nonneg, div_mul_cancel₀, Real.rpow_one, ofReal_toReal, mul_comm,
     mul_assoc, ← coe_mul, inv_mul_cancel (convexBodySumFactor_ne_zero K), ENNReal.coe_one,
     mul_one]
-  · exact mul_ne_top (ne_of_lt (minkowskiBound_lt_top K I)) coe_ne_top
-  · exact (Nat.cast_ne_zero.mpr (ne_of_gt finrank_pos))
+  exact mul_ne_top (ne_of_lt (minkowskiBound_lt_top K I)) coe_ne_top
+  exact (Nat.cast_ne_zero.mpr (ne_of_gt finrank_pos))
   convert exists_ne_zero_mem_ideal_of_norm_le K I h_le
   rw [div_pow B, ← Real.rpow_natCast B, ← Real.rpow_mul (by positivity), div_mul_cancel₀ _
     (Nat.cast_ne_zero.mpr <| ne_of_gt finrank_pos), Real.rpow_one, mul_comm_div, mul_div_assoc']
@@ -185,20 +185,20 @@ theorem abs_discr_ge (h : 1 < finrank ℚ K) :
     refine le_trans (this (finrank ℚ K) h) ?_
     simp only [a]
     gcongr
-    · exact (one_le_div Real.pi_pos).2 Real.pi_le_four
-    · rw [← card_add_two_mul_card_eq_rank, mul_comm]
-      exact Nat.le_add_left _ _
+    exact (one_le_div Real.pi_pos).2 Real.pi_le_four
+    rw [← card_add_two_mul_card_eq_rank, mul_comm]
+    exact Nat.le_add_left _ _
   intro n hn
   induction n, hn using Nat.le_induction with
   | base => exact le_of_eq <| by norm_num [a, Nat.factorial_two]; field_simp; ring
   | succ m _ h_m =>
       suffices (3 : ℝ) ≤ (1 + 1 / m : ℝ) ^ (2 * m) by
         convert_to _ ≤ (a m) * (1 + 1 / m : ℝ) ^ (2 * m) / (4 / π)
-        · simp_rw [a, add_mul, one_mul, pow_succ, Nat.factorial_succ]
-          field_simp; ring
-        · rw [_root_.le_div_iff (by positivity), pow_succ]
-          convert (mul_le_mul h_m this (by positivity) (by positivity)) using 1
-          field_simp; ring
+        simp_rw [a, add_mul, one_mul, pow_succ, Nat.factorial_succ]
+        field_simp; ring
+        rw [_root_.le_div_iff (by positivity), pow_succ]
+        convert (mul_le_mul h_m this (by positivity) (by positivity)) using 1
+        field_simp; ring
       refine le_trans (le_of_eq (by field_simp; norm_num)) (one_add_mul_le_pow ?_ (2 * m))
       exact le_trans (by norm_num : (-2 : ℝ) ≤ 0) (by positivity)
 
@@ -281,21 +281,21 @@ theorem rank_le_rankOfDiscrBdd :
   rw [_root_.lt_div_iff (by positivity), ← _root_.div_lt_iff' (by positivity), one_mul]
   linarith [Real.pi_gt_three]
   obtain h | h := lt_or_le 1 (finrank ℚ K)
-  · apply le_max_of_le_right
-    rw [Nat.le_floor_iff]
-    · have h := le_trans (abs_discr_ge h) (Int.cast_le.mpr hK)
-      contrapose! h
-      rw [← Real.rpow_natCast]
-      rw [Real.log_div_log] at h
-      refine lt_of_le_of_lt ?_ (mul_lt_mul_of_pos_left
-        (Real.rpow_lt_rpow_of_exponent_lt h₂ h) (by positivity : (0 : ℝ) < 4 / 9))
-      rw [Real.rpow_logb (lt_trans zero_lt_one h₂) (ne_of_gt h₂) (by positivity), ← mul_assoc,
-            ← inv_div, inv_mul_cancel (by norm_num), one_mul, Int.cast_natCast]
-    · refine div_nonneg (Real.log_nonneg ?_) (Real.log_nonneg (le_of_lt h₂))
-      rw [mul_comm, ← mul_div_assoc, _root_.le_div_iff (by positivity), one_mul,
-        ← _root_.div_le_iff (by positivity)]
-      exact le_trans (by norm_num) (Nat.one_le_cast.mpr (Nat.one_le_iff_ne_zero.mpr h_nz))
-  · exact le_max_of_le_left h
+  apply le_max_of_le_right
+  rw [Nat.le_floor_iff]
+  have h := le_trans (abs_discr_ge h) (Int.cast_le.mpr hK)
+  contrapose! h
+  rw [← Real.rpow_natCast]
+  rw [Real.log_div_log] at h
+  refine lt_of_le_of_lt ?_ (mul_lt_mul_of_pos_left
+    (Real.rpow_lt_rpow_of_exponent_lt h₂ h) (by positivity : (0 : ℝ) < 4 / 9))
+  rw [Real.rpow_logb (lt_trans zero_lt_one h₂) (ne_of_gt h₂) (by positivity), ← mul_assoc,
+        ← inv_div, inv_mul_cancel (by norm_num), one_mul, Int.cast_natCast]
+  refine div_nonneg (Real.log_nonneg ?_) (Real.log_nonneg (le_of_lt h₂))
+  rw [mul_comm, ← mul_div_assoc, _root_.le_div_iff (by positivity), one_mul,
+    ← _root_.div_le_iff (by positivity)]
+  exact le_trans (by norm_num) (Nat.one_le_cast.mpr (Nat.one_le_iff_ne_zero.mpr h_nz))
+  exact le_max_of_le_left h
 
 /-- If `|discr K| ≤ N` then the Minkowski bound of `K` is less than `boundOfDiscrBdd`. -/
 theorem minkowskiBound_lt_boundOfDiscBdd : minkowskiBound K ↑1 < boundOfDiscBdd N := by
@@ -307,11 +307,11 @@ theorem minkowskiBound_lt_boundOfDiscBdd : minkowskiBound K ↑1 < boundOfDiscBd
     ENNReal.ofReal_one, one_mul, mixedEmbedding.finrank, volume_fundamentalDomain_latticeBasis,
     coe_mul, ENNReal.coe_pow, coe_ofNat, show sqrt N = (1 : ℝ≥0∞) * sqrt N by rw [one_mul]]
   gcongr
-  · exact pow_le_one _ (by positivity) (by norm_num)
-  · rwa [sqrt_le_sqrt, ← NNReal.coe_le_coe, coe_nnnorm, Int.norm_eq_abs, ← Int.cast_abs,
-      NNReal.coe_natCast, ← Int.cast_natCast, Int.cast_le]
-  · exact one_le_two
-  · exact rank_le_rankOfDiscrBdd hK
+  exact pow_le_one _ (by positivity) (by norm_num)
+  rwa [sqrt_le_sqrt, ← NNReal.coe_le_coe, coe_nnnorm, Int.norm_eq_abs, ← Int.cast_abs,
+    NNReal.coe_natCast, ← Int.cast_natCast, Int.cast_le]
+  exact one_le_two
+  exact rank_le_rankOfDiscrBdd hK
 
 theorem natDegree_le_rankOfDiscrBdd (a : 𝓞 K) (h : ℚ⟮(a : K)⟯ = ⊤) :
     natDegree (minpoly ℤ (a : K)) ≤ rankOfDiscrBdd N := by
@@ -342,24 +342,24 @@ theorem finite_of_discr_bdd_of_isReal :
     obtain ⟨x, hx₁, hx₂⟩ := exists_primitive_element_lt_of_isReal K hw₀ this
     have hx := x.isIntegral_coe
     refine ⟨x, ⟨⟨minpoly ℤ (x : K), ⟨?_, fun i ↦ ?_⟩, ?_⟩, ?_⟩⟩
-    · exact natDegree_le_rankOfDiscrBdd hK₂ x hx₁
-    · rw [Set.mem_Icc, ← abs_le, ← @Int.cast_le ℝ]
-      refine (Eq.trans_le ?_ <| Embeddings.coeff_bdd_of_norm_le
-          ((le_iff_le (x : K) _).mp (fun w ↦ le_of_lt (hx₂ w))) i).trans ?_
-      · rw [minpoly.isIntegrallyClosed_eq_field_fractions' ℚ hx, coeff_map, eq_intCast,
-          Int.norm_cast_rat, Int.norm_eq_abs, Int.cast_abs]
-      · refine le_trans ?_ (Nat.le_ceil _)
-        rw [show max ↑(max (B : ℝ≥0) 1) (1 : ℝ) = max (B : ℝ) 1 by simp, val_eq_coe, NNReal.coe_mul,
-          NNReal.coe_pow, NNReal.coe_max, NNReal.coe_one, NNReal.coe_natCast]
-        gcongr
-        · exact le_max_right _ 1
-        · exact rank_le_rankOfDiscrBdd hK₂
-        · exact (Nat.choose_le_choose _ (rank_le_rankOfDiscrBdd hK₂)).trans
-            (Nat.choose_le_middle _ _)
-    · refine mem_rootSet.mpr ⟨minpoly.ne_zero hx, ?_⟩
-      exact (aeval_algebraMap_eq_zero_iff _ _ _).mpr (minpoly.aeval ℤ (x : K))
-    · rw [← (IntermediateField.lift_injective _).eq_iff, eq_comm] at hx₁
-      convert hx₁ <;> simp
+    exact natDegree_le_rankOfDiscrBdd hK₂ x hx₁
+    rw [Set.mem_Icc, ← abs_le, ← @Int.cast_le ℝ]
+    refine (Eq.trans_le ?_ <| Embeddings.coeff_bdd_of_norm_le
+        ((le_iff_le (x : K) _).mp (fun w ↦ le_of_lt (hx₂ w))) i).trans ?_
+    rw [minpoly.isIntegrallyClosed_eq_field_fractions' ℚ hx, coeff_map, eq_intCast,
+      Int.norm_cast_rat, Int.norm_eq_abs, Int.cast_abs]
+    refine le_trans ?_ (Nat.le_ceil _)
+    rw [show max ↑(max (B : ℝ≥0) 1) (1 : ℝ) = max (B : ℝ) 1 by simp, val_eq_coe, NNReal.coe_mul,
+      NNReal.coe_pow, NNReal.coe_max, NNReal.coe_one, NNReal.coe_natCast]
+    gcongr
+    exact le_max_right _ 1
+    exact rank_le_rankOfDiscrBdd hK₂
+    exact (Nat.choose_le_choose _ (rank_le_rankOfDiscrBdd hK₂)).trans
+      (Nat.choose_le_middle _ _)
+    refine mem_rootSet.mpr ⟨minpoly.ne_zero hx, ?_⟩
+    exact (aeval_algebraMap_eq_zero_iff _ _ _).mpr (minpoly.aeval ℤ (x : K))
+    rw [← (IntermediateField.lift_injective _).eq_iff, eq_comm] at hx₁
+    convert hx₁ <;> simp
   have := one_le_convexBodyLTFactor K
   convert lt_of_le_of_lt (mul_right_mono (coe_le_coe.mpr this))
     (ENNReal.mul_lt_mul_left' (by positivity) coe_ne_top (minkowskiBound_lt_boundOfDiscBdd hK₂))
@@ -385,25 +385,25 @@ theorem finite_of_discr_bdd_of_isComplex :
     obtain ⟨x, hx₁, hx₂⟩ := exists_primitive_element_lt_of_isComplex K hw₀ this
     have hx := x.isIntegral_coe
     refine ⟨x, ⟨⟨minpoly ℤ (x : K), ⟨?_, fun i ↦ ?_⟩, ?_⟩, ?_⟩⟩
-    · exact natDegree_le_rankOfDiscrBdd hK₂ x hx₁
-    · rw [Set.mem_Icc, ← abs_le, ← @Int.cast_le ℝ]
-      refine (Eq.trans_le ?_ <| Embeddings.coeff_bdd_of_norm_le
-          ((le_iff_le (x : K) _).mp (fun w ↦ le_of_lt (hx₂ w))) i).trans ?_
-      · rw [minpoly.isIntegrallyClosed_eq_field_fractions' ℚ hx, coeff_map, eq_intCast,
-          Int.norm_cast_rat, Int.norm_eq_abs, Int.cast_abs]
-      · refine le_trans ?_ (Nat.le_ceil _)
-        rw [val_eq_coe, NNReal.coe_mul, NNReal.coe_pow, NNReal.coe_max, NNReal.coe_one,
-          Real.coe_sqrt, NNReal.coe_add 1, NNReal.coe_one, NNReal.coe_pow]
-        gcongr
-        · exact le_max_right _ 1
-        · exact rank_le_rankOfDiscrBdd hK₂
-        · rw [NNReal.coe_natCast, Nat.cast_le]
-          exact (Nat.choose_le_choose _ (rank_le_rankOfDiscrBdd hK₂)).trans
-            (Nat.choose_le_middle _ _)
-    · refine mem_rootSet.mpr ⟨minpoly.ne_zero hx, ?_⟩
-      exact (aeval_algebraMap_eq_zero_iff _ _ _).mpr (minpoly.aeval ℤ (x : K))
-    · rw [← (IntermediateField.lift_injective _).eq_iff, eq_comm] at hx₁
-      convert hx₁ <;> simp
+    exact natDegree_le_rankOfDiscrBdd hK₂ x hx₁
+    rw [Set.mem_Icc, ← abs_le, ← @Int.cast_le ℝ]
+    refine (Eq.trans_le ?_ <| Embeddings.coeff_bdd_of_norm_le
+        ((le_iff_le (x : K) _).mp (fun w ↦ le_of_lt (hx₂ w))) i).trans ?_
+    rw [minpoly.isIntegrallyClosed_eq_field_fractions' ℚ hx, coeff_map, eq_intCast,
+      Int.norm_cast_rat, Int.norm_eq_abs, Int.cast_abs]
+    refine le_trans ?_ (Nat.le_ceil _)
+    rw [val_eq_coe, NNReal.coe_mul, NNReal.coe_pow, NNReal.coe_max, NNReal.coe_one,
+      Real.coe_sqrt, NNReal.coe_add 1, NNReal.coe_one, NNReal.coe_pow]
+    gcongr
+    exact le_max_right _ 1
+    exact rank_le_rankOfDiscrBdd hK₂
+    rw [NNReal.coe_natCast, Nat.cast_le]
+    exact (Nat.choose_le_choose _ (rank_le_rankOfDiscrBdd hK₂)).trans
+      (Nat.choose_le_middle _ _)
+    refine mem_rootSet.mpr ⟨minpoly.ne_zero hx, ?_⟩
+    exact (aeval_algebraMap_eq_zero_iff _ _ _).mpr (minpoly.aeval ℤ (x : K))
+    rw [← (IntermediateField.lift_injective _).eq_iff, eq_comm] at hx₁
+    convert hx₁ <;> simp
   have := one_le_convexBodyLT'Factor K
   convert lt_of_le_of_lt (mul_right_mono (coe_le_coe.mpr this))
     (ENNReal.mul_lt_mul_left' (by positivity) coe_ne_top (minkowskiBound_lt_boundOfDiscBdd hK₂))
@@ -421,10 +421,10 @@ theorem _root_.NumberField.finite_of_discr_bdd :
   haveI : NumberField K := @NumberField.mk _ _ inferInstance hK₀
   obtain ⟨w₀⟩ := (inferInstance : Nonempty (InfinitePlace K))
   by_cases hw₀ : IsReal w₀
-  · apply Set.mem_union_left
-    exact ⟨⟨w₀, hw₀⟩, hK₁⟩
-  · apply Set.mem_union_right
-    exact ⟨⟨w₀, not_isReal_iff_isComplex.mp hw₀⟩, hK₁⟩
+  apply Set.mem_union_left
+  exact ⟨⟨w₀, hw₀⟩, hK₁⟩
+  apply Set.mem_union_right
+  exact ⟨⟨w₀, not_isReal_iff_isComplex.mp hw₀⟩, hK₁⟩
 
 end hermiteTheorem
 
@@ -485,5 +485,5 @@ theorem Algebra.discr_eq_discr_of_toMatrix_coeff_isIntegral [NumberField K]
     Basis.toMatrix_mul_toMatrix_flip, Matrix.det_one]
   rw [← RingHom.map_one (algebraMap ℤ ℚ), ← hr]
   cases' Int.isUnit_iff.1 hunit with hp hm
-  · simp [hp]
-  · simp [hm]
+  simp [hp]
+  simp [hm]

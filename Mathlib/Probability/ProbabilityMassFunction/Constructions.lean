@@ -270,9 +270,9 @@ theorem bernoulli_apply : bernoulli p h b = cond b p (1 - p) := rfl
 theorem support_bernoulli : (bernoulli p h).support = { b | cond b (p ≠ 0) (p ≠ 1) } := by
   refine Set.ext fun b => ?_
   induction b
-  · simp_rw [mem_support_iff, bernoulli_apply, Bool.cond_false, Ne, tsub_eq_zero_iff_le, not_le]
-    exact ⟨ne_of_lt, lt_of_le_of_ne h⟩
-  · simp only [mem_support_iff, bernoulli_apply, Bool.cond_true, Set.mem_setOf_eq]
+  simp_rw [mem_support_iff, bernoulli_apply, Bool.cond_false, Ne, tsub_eq_zero_iff_le, not_le]
+  exact ⟨ne_of_lt, lt_of_le_of_ne h⟩
+  simp only [mem_support_iff, bernoulli_apply, Bool.cond_true, Set.mem_setOf_eq]
 
 theorem mem_support_bernoulli_iff : b ∈ (bernoulli p h).support ↔ cond b (p ≠ 0) (p ≠ 1) := by simp
 

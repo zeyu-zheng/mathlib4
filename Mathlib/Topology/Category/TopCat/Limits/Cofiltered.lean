@@ -56,67 +56,67 @@ theorem isTopologicalBasis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
     convert this.inducing hE
     ext U0
     constructor
-    · rintro ⟨j, V, hV, rfl⟩
-      exact ⟨D.π.app j ⁻¹' V, ⟨j, V, hV, rfl⟩, rfl⟩
-    · rintro ⟨W, ⟨j, V, hV, rfl⟩, rfl⟩
-      exact ⟨j, V, hV, rfl⟩
+    rintro ⟨j, V, hV, rfl⟩
+    exact ⟨D.π.app j ⁻¹' V, ⟨j, V, hV, rfl⟩, rfl⟩
+    rintro ⟨W, ⟨j, V, hV, rfl⟩, rfl⟩
+    exact ⟨j, V, hV, rfl⟩
   -- Using `D`, we can apply the characterization of the topological basis of a
   -- topology defined as an infimum...
   convert IsTopologicalBasis.iInf_induced hT fun j (x : D.pt) => D.π.app j x using 1
   ext U0
   constructor
-  · rintro ⟨j, V, hV, rfl⟩
-    let U : ∀ i, Set (F.obj i) := fun i => if h : i = j then by rw [h]; exact V else Set.univ
-    refine ⟨U, {j}, ?_, ?_⟩
-    · simp only [Finset.mem_singleton]
-      rintro i rfl
-      simpa [U]
-    · simp [U]
-  · rintro ⟨U, G, h1, h2⟩
-    obtain ⟨j, hj⟩ := IsCofiltered.inf_objs_exists G
-    let g : ∀ e ∈ G, j ⟶ e := fun _ he => (hj he).some
-    let Vs : J → Set (F.obj j) := fun e => if h : e ∈ G then F.map (g e h) ⁻¹' U e else Set.univ
-    let V : Set (F.obj j) := ⋂ (e : J) (_he : e ∈ G), Vs e
-    refine ⟨j, V, ?_, ?_⟩
-    · -- An intermediate claim used to apply induction along `G : Finset J` later on.
-      have :
-        ∀ (S : Set (Set (F.obj j))) (E : Finset J) (P : J → Set (F.obj j)) (_univ : Set.univ ∈ S)
-          (_inter : ∀ A B : Set (F.obj j), A ∈ S → B ∈ S → A ∩ B ∈ S)
-          (_cond : ∀ (e : J) (_he : e ∈ E), P e ∈ S), (⋂ (e) (_he : e ∈ E), P e) ∈ S := by
-        intro S E
-        induction E using Finset.induction_on with
-        | empty =>
-          intro P he _hh
-          simpa
-        | @insert a E _ha hh1 =>
-          intro hh2 hh3 hh4 hh5
-          rw [Finset.set_biInter_insert]
-          refine hh4 _ _ (hh5 _ (Finset.mem_insert_self _ _)) (hh1 _ hh3 hh4 ?_)
-          intro e he
-          exact hh5 e (Finset.mem_insert_of_mem he)
-      -- use the intermediate claim to finish off the goal using `univ` and `inter`.
-      refine this _ _ _ (univ _) (inter _) ?_
+  rintro ⟨j, V, hV, rfl⟩
+  let U : ∀ i, Set (F.obj i) := fun i => if h : i = j then by rw [h]; exact V else Set.univ
+  refine ⟨U, {j}, ?_, ?_⟩
+  simp only [Finset.mem_singleton]
+  rintro i rfl
+  simpa [U]
+  simp [U]
+  rintro ⟨U, G, h1, h2⟩
+  obtain ⟨j, hj⟩ := IsCofiltered.inf_objs_exists G
+  let g : ∀ e ∈ G, j ⟶ e := fun _ he => (hj he).some
+  let Vs : J → Set (F.obj j) := fun e => if h : e ∈ G then F.map (g e h) ⁻¹' U e else Set.univ
+  let V : Set (F.obj j) := ⋂ (e : J) (_he : e ∈ G), Vs e
+  refine ⟨j, V, ?_, ?_⟩
+  -- An intermediate claim used to apply induction along `G : Finset J` later on.
+  have :
+    ∀ (S : Set (Set (F.obj j))) (E : Finset J) (P : J → Set (F.obj j)) (_univ : Set.univ ∈ S)
+      (_inter : ∀ A B : Set (F.obj j), A ∈ S → B ∈ S → A ∩ B ∈ S)
+      (_cond : ∀ (e : J) (_he : e ∈ E), P e ∈ S), (⋂ (e) (_he : e ∈ E), P e) ∈ S := by
+    intro S E
+    induction E using Finset.induction_on with
+    | empty =>
+      intro P he _hh
+      simpa
+    | @insert a E _ha hh1 =>
+      intro hh2 hh3 hh4 hh5
+      rw [Finset.set_biInter_insert]
+      refine hh4 _ _ (hh5 _ (Finset.mem_insert_self _ _)) (hh1 _ hh3 hh4 ?_)
       intro e he
-      dsimp [Vs]
-      rw [dif_pos he]
-      exact compat j e (g e he) (U e) (h1 e he)
-    · -- conclude...
-      rw [h2]
-      change _ = (D.π.app j)⁻¹' ⋂ (e : J) (_ : e ∈ G), Vs e
-      rw [Set.preimage_iInter]
-      apply congrArg
-      ext1 e
-      erw [Set.preimage_iInter]
-      apply congrArg
-      ext1 he
-      -- Porting note: needed more hand holding here
-      change (D.π.app e)⁻¹' U e =
-        (D.π.app j) ⁻¹' if h : e ∈ G then F.map (g e h) ⁻¹' U e else Set.univ
-      rw [dif_pos he, ← Set.preimage_comp]
-      apply congrFun
-      apply congrArg
-      erw [← coe_comp, D.w] -- now `erw` after #13170
-      rfl
+      exact hh5 e (Finset.mem_insert_of_mem he)
+  -- use the intermediate claim to finish off the goal using `univ` and `inter`.
+  refine this _ _ _ (univ _) (inter _) ?_
+  intro e he
+  dsimp [Vs]
+  rw [dif_pos he]
+  exact compat j e (g e he) (U e) (h1 e he)
+  -- conclude...
+  rw [h2]
+  change _ = (D.π.app j)⁻¹' ⋂ (e : J) (_ : e ∈ G), Vs e
+  rw [Set.preimage_iInter]
+  apply congrArg
+  ext1 e
+  erw [Set.preimage_iInter]
+  apply congrArg
+  ext1 he
+  -- Porting note: needed more hand holding here
+  change (D.π.app e)⁻¹' U e =
+    (D.π.app j) ⁻¹' if h : e ∈ G then F.map (g e h) ⁻¹' U e else Set.univ
+  rw [dif_pos he, ← Set.preimage_comp]
+  apply congrFun
+  apply congrArg
+  erw [← coe_comp, D.w] -- now `erw` after #13170
+  rfl
 
 end CofilteredLimit
 

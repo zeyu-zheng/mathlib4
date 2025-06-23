@@ -163,15 +163,15 @@ theorem SurjectiveOnWith.mono {f : NormedAddGroupHom V₁ V₂} {K : AddSubgroup
   rcases h k k_in with ⟨g, rfl, hg⟩
   use g, rfl
   by_cases Hg : ‖f g‖ = 0
-  · simpa [Hg] using hg
-  · exact hg.trans (by gcongr)
+  simpa [Hg] using hg
+  exact hg.trans (by gcongr)
 
 theorem SurjectiveOnWith.exists_pos {f : NormedAddGroupHom V₁ V₂} {K : AddSubgroup V₂} {C : ℝ}
     (h : f.SurjectiveOnWith K C) : ∃ C' > 0, f.SurjectiveOnWith K C' := by
   refine ⟨|C| + 1, ?_, ?_⟩
-  · linarith [abs_nonneg C]
-  · apply h.mono
-    linarith [le_abs_self C]
+  linarith [abs_nonneg C]
+  apply h.mono
+  linarith [le_abs_self C]
 
 theorem SurjectiveOnWith.surjOn {f : NormedAddGroupHom V₁ V₂} {K : AddSubgroup V₂} {C : ℝ}
     (h : f.SurjectiveOnWith K C) : Set.SurjOn f Set.univ K := fun x hx =>
@@ -209,7 +209,7 @@ theorem le_opNorm (x : V₁) : ‖f x‖ ≤ ‖f‖ * ‖x‖ := by
   obtain ⟨C, _Cpos, hC⟩ := f.bound
   replace hC := hC x
   by_cases h : ‖x‖ = 0
-  · rwa [h, mul_zero] at hC ⊢
+  rwa [h, mul_zero] at hC ⊢
   have hlt : 0 < ‖x‖ := lt_of_le_of_ne (norm_nonneg x) (Ne.symm h)
   exact
     (div_le_iff hlt).mp
@@ -724,9 +724,9 @@ namespace NormNoninc
 
 theorem normNoninc_iff_norm_le_one : f.NormNoninc ↔ ‖f‖ ≤ 1 := by
   refine ⟨fun h => ?_, fun h => fun v => ?_⟩
-  · refine opNorm_le_bound _ zero_le_one fun v => ?_
-    simpa [one_mul] using h v
-  · simpa using le_of_opNorm_le f h v
+  refine opNorm_le_bound _ zero_le_one fun v => ?_
+  simpa [one_mul] using h v
+  simpa using le_of_opNorm_le f h v
 
 theorem zero : (0 : NormedAddGroupHom V₁ V₂).NormNoninc := fun v => by simp
 

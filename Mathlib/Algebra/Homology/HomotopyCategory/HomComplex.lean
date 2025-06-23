@@ -468,9 +468,9 @@ variable {F G R}
 
 lemma δ_δ (n₀ n₁ n₂ : ℤ) (z : Cochain F G n₀) : δ n₁ n₂ (δ n₀ n₁ z) = 0 := by
   by_cases h₁₂ : n₁ + 1 = n₂; swap
-  · rw [δ_shape _ _ h₁₂]
+  rw [δ_shape _ _ h₁₂]
   by_cases h₀₁ : n₀ + 1 = n₁; swap
-  · rw [δ_shape _ _ h₀₁, δ_zero]
+  rw [δ_shape _ _ h₀₁, δ_zero]
   ext p q hpq
   dsimp
   simp only [δ_v n₁ n₂ h₁₂ _ p q hpq _ _ rfl rfl,
@@ -526,12 +526,12 @@ lemma δ_zero_cochain_v (z : Cochain F G 0) (p q : ℤ) (hpq : p + 1 = q) :
 @[simp]
 lemma δ_ofHom {p : ℤ} (φ : F ⟶ G) : δ 0 p (Cochain.ofHom φ) = 0 := by
   by_cases h : p = 1
-  · subst h
-    ext
-    simp
-  · rw [δ_shape]
-    intro
-    exact h (by omega)
+  subst h
+  ext
+  simp
+  rw [δ_shape]
+  intro
+  exact h (by omega)
 
 @[simp]
 lemma δ_ofHomotopy {φ₁ φ₂ : F ⟶ G} (h : Homotopy φ₁ φ₂) :
@@ -658,9 +658,9 @@ def mk (z : Cochain F G n) (m : ℤ) (hnm : n + 1 = m) (h : δ n m z = 0) : Cocy
 @[simp]
 lemma δ_eq_zero {n : ℤ} (z : Cocycle F G n) (m : ℤ) : δ n m (z : Cochain F G n) = 0 := by
   by_cases h : n + 1 = m
-  · rw [← mem_iff n m h]
-    exact z.2
-  · exact δ_shape n m h _
+  rw [← mem_iff n m h]
+  exact z.2
+  exact δ_shape n m h _
 
 /-- The `0`-cocycle associated to a morphism in `CochainComplex C ℤ`. -/
 @[simps!]
@@ -719,8 +719,8 @@ lemma δ_comp_zero_cocycle {n : ℤ} (z₁ : Cochain F G n) (z₂ : Cocycle G K 
     δ n m (z₁.comp z₂.1 (add_zero n)) =
       (δ n m z₁).comp z₂.1 (add_zero m) := by
   by_cases hnm : n + 1 = m
-  · simp [δ_comp_zero_cochain _ _ _ hnm]
-  · simp [δ_shape _ _ hnm]
+  simp [δ_comp_zero_cochain _ _ _ hnm]
+  simp [δ_shape _ _ hnm]
 
 @[simp]
 lemma δ_comp_ofHom {n : ℤ} (z₁ : Cochain F G n) (f : G ⟶ K) (m : ℤ) :
@@ -734,8 +734,8 @@ lemma δ_zero_cocycle_comp {n : ℤ} (z₁ : Cocycle F G 0) (z₂ : Cochain G K 
     δ n m (z₁.1.comp z₂ (zero_add n)) =
       z₁.1.comp (δ n m z₂) (zero_add m) := by
   by_cases hnm : n + 1 = m
-  · simp [δ_zero_cochain_comp _ _ _ hnm]
-  · simp [δ_shape _ _ hnm]
+  simp [δ_zero_cochain_comp _ _ _ hnm]
+  simp [δ_shape _ _ hnm]
 
 @[simp]
 lemma δ_ofHom_comp {n : ℤ} (f : F ⟶ G) (z : Cochain G K n) (m : ℤ) :
@@ -835,12 +835,12 @@ variable (n)
 @[simp]
 lemma δ_map : δ n m (z.map Φ) = (δ n m z).map Φ := by
   by_cases hnm : n + 1 = m
-  · ext p q hpq
-    dsimp
-    simp only [δ_v n m hnm _ p q hpq (q-1) (p+1) rfl rfl,
-      Functor.map_add, Functor.map_comp, Functor.map_units_smul,
-      Cochain.map_v, Functor.mapHomologicalComplex_obj_d]
-  · simp only [δ_shape _ _ hnm, Cochain.map_zero]
+  ext p q hpq
+  dsimp
+  simp only [δ_v n m hnm _ p q hpq (q-1) (p+1) rfl rfl,
+    Functor.map_add, Functor.map_comp, Functor.map_units_smul,
+    Cochain.map_v, Functor.mapHomologicalComplex_obj_d]
+  simp only [δ_shape _ _ hnm, Cochain.map_zero]
 
 end
 

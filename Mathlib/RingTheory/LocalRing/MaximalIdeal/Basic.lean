@@ -29,13 +29,13 @@ variable (R)
 instance maximalIdeal.isMaximal : (maximalIdeal R).IsMaximal := by
   rw [Ideal.isMaximal_iff]
   constructor
-  · intro h
-    apply h
-    exact isUnit_one
-  · intro I x _ hx H
-    erw [Classical.not_not] at hx
-    rcases hx with ⟨u, rfl⟩
-    simpa using I.mul_mem_left (↑u⁻¹) H
+  intro h
+  apply h
+  exact isUnit_one
+  intro I x _ hx H
+  erw [Classical.not_not] at hx
+  rcases hx with ⟨u, rfl⟩
+  simpa using I.mul_mem_left (↑u⁻¹) H
 
 theorem maximal_ideal_unique : ∃! I : Ideal R, I.IsMaximal :=
   ⟨maximalIdeal R, maximalIdeal.isMaximal R, fun I hI =>

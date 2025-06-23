@@ -190,16 +190,16 @@ theorem inv_fromBlocks_zero₂₁_of_isUnit_iff (A : Matrix m m α) (B : Matrix 
     (hAD : IsUnit A ↔ IsUnit D) :
     (fromBlocks A B 0 D)⁻¹ = fromBlocks A⁻¹ (-(A⁻¹ * B * D⁻¹)) 0 D⁻¹ := by
   by_cases hA : IsUnit A
-  · have hD := hAD.mp hA
-    cases hA.nonempty_invertible
-    cases hD.nonempty_invertible
-    letI := fromBlocksZero₂₁Invertible A B D
-    simp_rw [← invOf_eq_nonsing_inv, invOf_fromBlocks_zero₂₁_eq]
-  · have hD := hAD.not.mp hA
-    have : ¬IsUnit (fromBlocks A B 0 D) :=
-      isUnit_fromBlocks_zero₂₁.not.mpr (not_and'.mpr fun _ => hA)
-    simp_rw [nonsing_inv_eq_ring_inverse, Ring.inverse_non_unit _ hA, Ring.inverse_non_unit _ hD,
-      Ring.inverse_non_unit _ this, Matrix.zero_mul, neg_zero, fromBlocks_zero]
+  have hD := hAD.mp hA
+  cases hA.nonempty_invertible
+  cases hD.nonempty_invertible
+  letI := fromBlocksZero₂₁Invertible A B D
+  simp_rw [← invOf_eq_nonsing_inv, invOf_fromBlocks_zero₂₁_eq]
+  have hD := hAD.not.mp hA
+  have : ¬IsUnit (fromBlocks A B 0 D) :=
+    isUnit_fromBlocks_zero₂₁.not.mpr (not_and'.mpr fun _ => hA)
+  simp_rw [nonsing_inv_eq_ring_inverse, Ring.inverse_non_unit _ hA, Ring.inverse_non_unit _ hD,
+    Ring.inverse_non_unit _ this, Matrix.zero_mul, neg_zero, fromBlocks_zero]
 
 /-- An expression for the inverse of a lower block-triangular matrix, when either both elements of
 diagonal are invertible, or both are not. -/
@@ -207,16 +207,16 @@ theorem inv_fromBlocks_zero₁₂_of_isUnit_iff (A : Matrix m m α) (C : Matrix 
     (hAD : IsUnit A ↔ IsUnit D) :
     (fromBlocks A 0 C D)⁻¹ = fromBlocks A⁻¹ 0 (-(D⁻¹ * C * A⁻¹)) D⁻¹ := by
   by_cases hA : IsUnit A
-  · have hD := hAD.mp hA
-    cases hA.nonempty_invertible
-    cases hD.nonempty_invertible
-    letI := fromBlocksZero₁₂Invertible A C D
-    simp_rw [← invOf_eq_nonsing_inv, invOf_fromBlocks_zero₁₂_eq]
-  · have hD := hAD.not.mp hA
-    have : ¬IsUnit (fromBlocks A 0 C D) :=
-      isUnit_fromBlocks_zero₁₂.not.mpr (not_and'.mpr fun _ => hA)
-    simp_rw [nonsing_inv_eq_ring_inverse, Ring.inverse_non_unit _ hA, Ring.inverse_non_unit _ hD,
-      Ring.inverse_non_unit _ this, Matrix.zero_mul, neg_zero, fromBlocks_zero]
+  have hD := hAD.mp hA
+  cases hA.nonempty_invertible
+  cases hD.nonempty_invertible
+  letI := fromBlocksZero₁₂Invertible A C D
+  simp_rw [← invOf_eq_nonsing_inv, invOf_fromBlocks_zero₁₂_eq]
+  have hD := hAD.not.mp hA
+  have : ¬IsUnit (fromBlocks A 0 C D) :=
+    isUnit_fromBlocks_zero₁₂.not.mpr (not_and'.mpr fun _ => hA)
+  simp_rw [nonsing_inv_eq_ring_inverse, Ring.inverse_non_unit _ hA, Ring.inverse_non_unit _ hD,
+    Ring.inverse_non_unit _ this, Matrix.zero_mul, neg_zero, fromBlocks_zero]
 
 end Triangular
 
@@ -478,12 +478,12 @@ theorem IsHermitian.fromBlocks₁₁ [Fintype m] [DecidableEq m] {A : Matrix m m
   apply hA.inv
   rw [isHermitian_fromBlocks_iff]
   constructor
-  · intro h
-    apply IsHermitian.sub h.2.2.2 hBAB
-  · intro h
-    refine ⟨hA, rfl, conjTranspose_conjTranspose B, ?_⟩
-    rw [← sub_add_cancel D]
-    apply IsHermitian.add h hBAB
+  intro h
+  apply IsHermitian.sub h.2.2.2 hBAB
+  intro h
+  refine ⟨hA, rfl, conjTranspose_conjTranspose B, ?_⟩
+  rw [← sub_add_cancel D]
+  apply IsHermitian.add h hBAB
 
 theorem IsHermitian.fromBlocks₂₂ [Fintype n] [DecidableEq n] (A : Matrix m m 𝕜) (B : Matrix m n 𝕜)
     {D : Matrix n n 𝕜} (hD : D.IsHermitian) :

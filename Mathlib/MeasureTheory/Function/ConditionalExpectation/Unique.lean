@@ -55,14 +55,14 @@ theorem lpMeas.ae_eq_zero_of_forall_setIntegral_eq_zero (hm : m ≤ m0) (f : lpM
   -- Porting note: added
   unfold Filter.EventuallyEq at hfg
   refine ae_eq_zero_of_forall_setIntegral_eq_of_finStronglyMeasurable_trim hm ?_ ?_ hg_sm
-  · intro s hs hμs
-    have hfg_restrict : f =ᵐ[μ.restrict s] g := ae_restrict_of_ae hfg
-    rw [IntegrableOn, integrable_congr hfg_restrict.symm]
-    exact hf_int_finite s hs hμs
-  · intro s hs hμs
-    have hfg_restrict : f =ᵐ[μ.restrict s] g := ae_restrict_of_ae hfg
-    rw [integral_congr_ae hfg_restrict.symm]
-    exact hf_zero s hs hμs
+  intro s hs hμs
+  have hfg_restrict : f =ᵐ[μ.restrict s] g := ae_restrict_of_ae hfg
+  rw [IntegrableOn, integrable_congr hfg_restrict.symm]
+  exact hf_int_finite s hs hμs
+  intro s hs hμs
+  have hfg_restrict : f =ᵐ[μ.restrict s] g := ae_restrict_of_ae hfg
+  rw [integral_congr_ae hfg_restrict.symm]
+  exact hf_zero s hs hμs
 
 @[deprecated (since := "2024-04-17")]
 alias lpMeas.ae_eq_zero_of_forall_set_integral_eq_zero :=
@@ -81,14 +81,14 @@ theorem Lp.ae_eq_zero_of_forall_setIntegral_eq_zero' (hm : m ≤ m0) (f : Lp E' 
   simp only [Subtype.coe_mk]; rfl
   refine hf_f_meas.trans ?_
   refine lpMeas.ae_eq_zero_of_forall_setIntegral_eq_zero hm f_meas hp_ne_zero hp_ne_top ?_ ?_
-  · intro s hs hμs
-    have hfg_restrict : f =ᵐ[μ.restrict s] f_meas := ae_restrict_of_ae hf_f_meas
-    rw [IntegrableOn, integrable_congr hfg_restrict.symm]
-    exact hf_int_finite s hs hμs
-  · intro s hs hμs
-    have hfg_restrict : f =ᵐ[μ.restrict s] f_meas := ae_restrict_of_ae hf_f_meas
-    rw [integral_congr_ae hfg_restrict.symm]
-    exact hf_zero s hs hμs
+  intro s hs hμs
+  have hfg_restrict : f =ᵐ[μ.restrict s] f_meas := ae_restrict_of_ae hf_f_meas
+  rw [IntegrableOn, integrable_congr hfg_restrict.symm]
+  exact hf_int_finite s hs hμs
+  intro s hs hμs
+  have hfg_restrict : f =ᵐ[μ.restrict s] f_meas := ae_restrict_of_ae hf_f_meas
+  rw [integral_congr_ae hfg_restrict.symm]
+  exact hf_zero s hs hμs
 
 @[deprecated (since := "2024-04-17")]
 alias Lp.ae_eq_zero_of_forall_set_integral_eq_zero' :=
@@ -192,18 +192,18 @@ theorem integral_norm_le_of_forall_fin_meas_integral_eq (hm : m ≤ m0) {f g : �
   have h_meas_nonpos_f : MeasurableSet {x | f x ≤ 0} :=
     hf.measurableSet_le stronglyMeasurable_const
   refine sub_le_sub ?_ ?_
-  · rw [Measure.restrict_restrict (hm _ h_meas_nonneg_g), Measure.restrict_restrict h_meas_nonneg_f,
-      hgf _ (@MeasurableSet.inter α m _ _ h_meas_nonneg_g hs)
-        ((measure_mono Set.inter_subset_right).trans_lt (lt_top_iff_ne_top.mpr hμs)),
-      ← Measure.restrict_restrict (hm _ h_meas_nonneg_g), ←
-      Measure.restrict_restrict h_meas_nonneg_f]
-    exact setIntegral_le_nonneg (hm _ h_meas_nonneg_g) hf hfi
-  · rw [Measure.restrict_restrict (hm _ h_meas_nonpos_g), Measure.restrict_restrict h_meas_nonpos_f,
-      hgf _ (@MeasurableSet.inter α m _ _ h_meas_nonpos_g hs)
-        ((measure_mono Set.inter_subset_right).trans_lt (lt_top_iff_ne_top.mpr hμs)),
-      ← Measure.restrict_restrict (hm _ h_meas_nonpos_g), ←
-      Measure.restrict_restrict h_meas_nonpos_f]
-    exact setIntegral_nonpos_le (hm _ h_meas_nonpos_g) hf hfi
+  rw [Measure.restrict_restrict (hm _ h_meas_nonneg_g), Measure.restrict_restrict h_meas_nonneg_f,
+    hgf _ (@MeasurableSet.inter α m _ _ h_meas_nonneg_g hs)
+      ((measure_mono Set.inter_subset_right).trans_lt (lt_top_iff_ne_top.mpr hμs)),
+    ← Measure.restrict_restrict (hm _ h_meas_nonneg_g), ←
+    Measure.restrict_restrict h_meas_nonneg_f]
+  exact setIntegral_le_nonneg (hm _ h_meas_nonneg_g) hf hfi
+  rw [Measure.restrict_restrict (hm _ h_meas_nonpos_g), Measure.restrict_restrict h_meas_nonpos_f,
+    hgf _ (@MeasurableSet.inter α m _ _ h_meas_nonpos_g hs)
+      ((measure_mono Set.inter_subset_right).trans_lt (lt_top_iff_ne_top.mpr hμs)),
+    ← Measure.restrict_restrict (hm _ h_meas_nonpos_g), ←
+    Measure.restrict_restrict h_meas_nonpos_f]
+  exact setIntegral_nonpos_le (hm _ h_meas_nonpos_g) hf hfi
 
 /-- Let `m` be a sub-σ-algebra of `m0`, `f` an `m0`-measurable function and `g` an `m`-measurable
 function, such that their integrals coincide on `m`-measurable sets with finite measure.
@@ -216,8 +216,8 @@ theorem lintegral_nnnorm_le_of_forall_fin_meas_integral_eq (hm : m ≤ m0) {f g 
     (hs : MeasurableSet[m] s) (hμs : μ s ≠ ∞) : (∫⁻ x in s, ‖g x‖₊ ∂μ) ≤ ∫⁻ x in s, ‖f x‖₊ ∂μ := by
   rw [← ofReal_integral_norm_eq_lintegral_nnnorm hfi, ←
     ofReal_integral_norm_eq_lintegral_nnnorm hgi, ENNReal.ofReal_le_ofReal_iff]
-  · exact integral_norm_le_of_forall_fin_meas_integral_eq hm hf hfi hg hgi hgf hs hμs
-  · positivity
+  exact integral_norm_le_of_forall_fin_meas_integral_eq hm hf hfi hg hgi hgf hs hμs
+  positivity
 
 end IntegralNormLE
 

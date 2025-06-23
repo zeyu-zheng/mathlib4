@@ -77,7 +77,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.toCompactIccSpace (�
   refine .mk'' fun {a b} hlt => ?_
   rcases le_or_lt a b with hab | hab
   swap
-  · simp [hab]
+  simp [hab]
   refine isCompact_iff_ultrafilter_le_nhds.2 fun f hf => ?_
   contrapose! hf
   rw [le_principal_iff]
@@ -88,7 +88,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.toCompactIccSpace (�
   have sbd : BddAbove s := ⟨b, hsb⟩
   have ha : a ∈ s := by simp [s, hpt, hab]
   rcases hab.eq_or_lt with (rfl | _hlt)
-  · exact ha.2
+  exact ha.2
   -- Porting note: the `obtain` below was instead
   -- `set c := Sup s`
   -- `have hsc : IsLUB s c := isLUB_csSup ⟨a, ha⟩ sbd`
@@ -107,7 +107,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.toCompactIccSpace (�
     exact Subset.trans Icc_subset_Icc_union_Ioc <| union_subset_union Subset.rfl <|
       Ioc_subset_Ioc_left hy.1.le
   rcases hc.2.eq_or_lt with (rfl | hlt)
-  · exact hcs.2
+  exact hcs.2
   exfalso
   refine hf fun U hU => ?_
   rcases (mem_nhdsWithin_Ici_iff_exists_mem_Ioc_Ico_subset hlt).1
@@ -116,10 +116,10 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.toCompactIccSpace (�
   refine mem_of_superset ?_ hyU; clear! U
   have hy : y ∈ Icc a b := ⟨hc.1.trans hxy.1.le, hxy.2⟩
   by_cases hay : Icc a y ∈ f
-  · refine mem_of_superset (f.diff_mem_iff.2 ⟨f.diff_mem_iff.2 ⟨hay, hcs.2⟩, hpt y hy⟩) ?_
-    rw [diff_subset_iff, union_comm, Ico_union_right hxy.1.le, diff_subset_iff]
-    exact Icc_subset_Icc_union_Icc
-  · exact ((hsc.1 ⟨hy, hay⟩).not_lt hxy.1).elim
+  refine mem_of_superset (f.diff_mem_iff.2 ⟨f.diff_mem_iff.2 ⟨hay, hcs.2⟩, hpt y hy⟩) ?_
+  rw [diff_subset_iff, union_comm, Ico_union_right hxy.1.le, diff_subset_iff]
+  exact Icc_subset_Icc_union_Icc
+  exact ((hsc.1 ⟨hy, hay⟩).not_lt hxy.1).elim
 
 instance {ι : Type*} {α : ι → Type*} [∀ i, Preorder (α i)] [∀ i, TopologicalSpace (α i)]
     [∀ i, CompactIccSpace (α i)] : CompactIccSpace (∀ i, α i) :=
@@ -193,19 +193,19 @@ theorem IsCompact.exists_isLUB [ClosedIciTopology α] {s : Set α} (hs : IsCompa
 theorem cocompact_le_atBot_atTop [CompactIccSpace α] :
     cocompact α ≤ atBot ⊔ atTop := by
   refine fun s hs ↦ mem_cocompact.mpr <| (isEmpty_or_nonempty α).casesOn ?_ ?_ <;> intro
-  · exact ⟨∅, isCompact_empty, fun x _ ↦ (IsEmpty.false x).elim⟩
-  · obtain ⟨t, ht⟩ := mem_atBot_sets.mp hs.1
-    obtain ⟨u, hu⟩ := mem_atTop_sets.mp hs.2
-    refine ⟨Icc t u, isCompact_Icc, fun x hx ↦ ?_⟩
-    exact (not_and_or.mp hx).casesOn (fun h ↦ ht x (le_of_not_le h)) fun h ↦ hu x (le_of_not_le h)
+  exact ⟨∅, isCompact_empty, fun x _ ↦ (IsEmpty.false x).elim⟩
+  obtain ⟨t, ht⟩ := mem_atBot_sets.mp hs.1
+  obtain ⟨u, hu⟩ := mem_atTop_sets.mp hs.2
+  refine ⟨Icc t u, isCompact_Icc, fun x hx ↦ ?_⟩
+  exact (not_and_or.mp hx).casesOn (fun h ↦ ht x (le_of_not_le h)) fun h ↦ hu x (le_of_not_le h)
 
 theorem cocompact_le_atBot [OrderTop α] [CompactIccSpace α] :
     cocompact α ≤ atBot := by
   refine fun _ hs ↦ mem_cocompact.mpr <| (isEmpty_or_nonempty α).casesOn ?_ ?_ <;> intro
-  · exact ⟨∅, isCompact_empty, fun x _ ↦ (IsEmpty.false x).elim⟩
-  · obtain ⟨t, ht⟩ := mem_atBot_sets.mp hs
-    refine ⟨Icc t ⊤, isCompact_Icc, fun _ hx ↦ ?_⟩
-    exact (not_and_or.mp hx).casesOn (fun h ↦ ht _ (le_of_not_le h)) (fun h ↦ (h le_top).elim)
+  exact ⟨∅, isCompact_empty, fun x _ ↦ (IsEmpty.false x).elim⟩
+  obtain ⟨t, ht⟩ := mem_atBot_sets.mp hs
+  refine ⟨Icc t ⊤, isCompact_Icc, fun _ hx ↦ ?_⟩
+  exact (not_and_or.mp hx).casesOn (fun h ↦ ht _ (le_of_not_le h)) (fun h ↦ (h le_top).elim)
 
 theorem cocompact_le_atTop [OrderBot α] [CompactIccSpace α] :
     cocompact α ≤ atTop :=
@@ -216,13 +216,13 @@ theorem atBot_le_cocompact [NoMinOrder α] [ClosedIicTopology α] :
   refine fun s hs ↦ ?_
   obtain ⟨t, ht, hts⟩ := mem_cocompact.mp hs
   refine (Set.eq_empty_or_nonempty t).casesOn (fun h_empty ↦ ?_) (fun h_nonempty ↦ ?_)
-  · rewrite [compl_univ_iff.mpr h_empty, univ_subset_iff] at hts
-    convert univ_mem
-  · haveI := h_nonempty.nonempty
-    obtain ⟨a, ha⟩ := ht.exists_isLeast h_nonempty
-    obtain ⟨b, hb⟩ := exists_lt a
-    exact Filter.mem_atBot_sets.mpr ⟨b, fun b' hb' ↦ hts <| Classical.byContradiction
-      fun hc ↦ LT.lt.false <| hb'.trans_lt <| hb.trans_le <| ha.2 (not_not_mem.mp hc)⟩
+  rewrite [compl_univ_iff.mpr h_empty, univ_subset_iff] at hts
+  convert univ_mem
+  haveI := h_nonempty.nonempty
+  obtain ⟨a, ha⟩ := ht.exists_isLeast h_nonempty
+  obtain ⟨b, hb⟩ := exists_lt a
+  exact Filter.mem_atBot_sets.mpr ⟨b, fun b' hb' ↦ hts <| Classical.byContradiction
+    fun hc ↦ LT.lt.false <| hb'.trans_lt <| hb.trans_le <| ha.2 (not_not_mem.mp hc)⟩
 
 theorem atTop_le_cocompact [NoMaxOrder α] [ClosedIciTopology α] :
     atTop ≤ cocompact α :=
@@ -259,10 +259,10 @@ theorem IsCompact.exists_forall_le' [ClosedIicTopology α] [NoMaxOrder α] {f : 
     {s : Set β} (hs : IsCompact s) (hf : ContinuousOn f s) {a : α} (hf' : ∀ b ∈ s, a < f b) :
     ∃ a', a < a' ∧ ∀ b ∈ s, a' ≤ f b := by
   rcases s.eq_empty_or_nonempty with (rfl | hs')
-  · obtain ⟨a', ha'⟩ := exists_gt a
-    exact ⟨a', ha', fun _ a ↦ a.elim⟩
-  · obtain ⟨x, hx, hx'⟩ := hs.exists_isMinOn hs' hf
-    exact ⟨f x, hf' x hx, hx'⟩
+  obtain ⟨a', ha'⟩ := exists_gt a
+  exact ⟨a', ha', fun _ a ↦ a.elim⟩
+  obtain ⟨x, hx, hx'⟩ := hs.exists_isMinOn hs' hf
+  exact ⟨f x, hf' x hx, hx'⟩
 
 /-- The **extreme value theorem**: a continuous function realizes its minimum on a compact set. -/
 @[deprecated IsCompact.exists_isMinOn (since := "2023-02-06")]
@@ -364,9 +364,9 @@ theorem Continuous.exists_forall_ge_of_hasCompactMulSupport [ClosedIciTopology �
 theorem IsCompact.bddBelow [ClosedIicTopology α] [Nonempty α] {s : Set α} (hs : IsCompact s) :
     BddBelow s := by
   rcases s.eq_empty_or_nonempty with rfl | hne
-  · exact bddBelow_empty
-  · obtain ⟨a, -, has⟩ := hs.exists_isLeast hne
-    exact ⟨a, has⟩
+  exact bddBelow_empty
+  obtain ⟨a, -, has⟩ := hs.exists_isLeast hne
+  exact ⟨a, has⟩
 
 /-- A compact set is bounded above -/
 theorem IsCompact.bddAbove [ClosedIciTopology α] [Nonempty α] {s : Set α} (hs : IsCompact s) :
@@ -535,8 +535,8 @@ Moreover, it seems that `hgc` follows from `hf` (Yury Kudryashov). -/
 theorem IsCompact.continuous_sSup {f : γ → β → α} {K : Set β} (hK : IsCompact K)
     (hf : Continuous ↿f) : Continuous fun x => sSup (f x '' K) := by
   rcases eq_empty_or_nonempty K with (rfl | h0K)
-  · simp_rw [image_empty]
-    exact continuous_const
+  simp_rw [image_empty]
+  exact continuous_const
   rw [continuous_iff_continuousAt]
   intro x
   obtain ⟨y, hyK, h2y, hy⟩ :=
@@ -546,18 +546,18 @@ theorem IsCompact.continuous_sSup {f : γ → β → α} {K : Set β} (hK : IsCo
   have := tendsto_order.mp ((show Continuous fun x => f x y
     from hf.comp <| continuous_id.prod_mk continuous_const).tendsto x)
   refine ⟨fun z hz => ?_, fun z hz => ?_⟩
-  · refine (this.1 z hz).mono fun x' hx' =>
-      hx'.trans_le <| le_csSup ?_ <| mem_image_of_mem (f x') hyK
-    exact hK.bddAbove_image (hf.comp <| Continuous.Prod.mk x').continuousOn
-  · have h : ({x} : Set γ) ×ˢ K ⊆ ↿f ⁻¹' Iio z := by
-      rintro ⟨x', y'⟩ ⟨(rfl : x' = x), hy'⟩
-      exact (hy y' hy').trans_lt hz
-    obtain ⟨u, v, hu, _, hxu, hKv, huv⟩ :=
-      generalized_tube_lemma isCompact_singleton hK (isOpen_Iio.preimage hf) h
-    refine eventually_of_mem (hu.mem_nhds (singleton_subset_iff.mp hxu)) fun x' hx' => ?_
-    rw [hK.sSup_lt_iff_of_continuous h0K
-        (show Continuous (f x') from hf.comp <| Continuous.Prod.mk x').continuousOn]
-    exact fun y' hy' => huv (mk_mem_prod hx' (hKv hy'))
+  refine (this.1 z hz).mono fun x' hx' =>
+    hx'.trans_le <| le_csSup ?_ <| mem_image_of_mem (f x') hyK
+  exact hK.bddAbove_image (hf.comp <| Continuous.Prod.mk x').continuousOn
+  have h : ({x} : Set γ) ×ˢ K ⊆ ↿f ⁻¹' Iio z := by
+    rintro ⟨x', y'⟩ ⟨(rfl : x' = x), hy'⟩
+    exact (hy y' hy').trans_lt hz
+  obtain ⟨u, v, hu, _, hxu, hKv, huv⟩ :=
+    generalized_tube_lemma isCompact_singleton hK (isOpen_Iio.preimage hf) h
+  refine eventually_of_mem (hu.mem_nhds (singleton_subset_iff.mp hxu)) fun x' hx' => ?_
+  rw [hK.sSup_lt_iff_of_continuous h0K
+      (show Continuous (f x') from hf.comp <| Continuous.Prod.mk x').continuousOn]
+  exact fun y' hy' => huv (mk_mem_prod hx' (hKv hy'))
 
 theorem IsCompact.continuous_sInf {f : γ → β → α} {K : Set β} (hK : IsCompact K)
     (hf : Continuous ↿f) : Continuous fun x => sInf (f x '' K) :=

@@ -259,11 +259,11 @@ theorem mem_center_iff {A : SpecialLinearGroup n R} :
     A ∈ center (SpecialLinearGroup n R) ↔ ∃ (r : R), r ^ (Fintype.card n) = 1 ∧ scalar n r = A := by
   rcases isEmpty_or_nonempty n with hn | ⟨⟨i⟩⟩; · exact ⟨by aesop, by simp [Subsingleton.elim A 1]⟩
   refine ⟨fun h ↦ ⟨A i i, ?_, ?_⟩, fun ⟨r, _, hr⟩ ↦ Subgroup.mem_center_iff.mpr fun B ↦ ?_⟩
-  · have : det ((scalar n) (A i i)) = 1 := (scalar_eq_self_of_mem_center h i).symm ▸ A.property
-    simpa using this
-  · exact scalar_eq_self_of_mem_center h i
-  · suffices ↑ₘ(B * A) = ↑ₘ(A * B) from Subtype.val_injective this
-    simpa only [coe_mul, ← hr] using (scalar_commute (n := n) r (Commute.all r) B).symm
+  have : det ((scalar n) (A i i)) = 1 := (scalar_eq_self_of_mem_center h i).symm ▸ A.property
+  simpa using this
+  exact scalar_eq_self_of_mem_center h i
+  suffices ↑ₘ(B * A) = ↑ₘ(A * B) from Subtype.val_injective this
+  simpa only [coe_mul, ← hr] using (scalar_commute (n := n) r (Commute.all r) B).symm
 
 /-- An equivalence of groups, from the center of the special linear group to the roots of unity. -/
 @[simps]
@@ -472,12 +472,12 @@ theorem coe_T_inv : ↑ₘT⁻¹ = !![1, -1; 0, 1] := by simp [coe_inv, coe_T, a
 
 theorem coe_T_zpow (n : ℤ) : ↑ₘ(T ^ n) = !![1, n; 0, 1] := by
   induction' n using Int.induction_on with n h n h
-  · rw [zpow_zero, coe_one, Matrix.one_fin_two]
-  · simp_rw [zpow_add, zpow_one, coe_mul, h, coe_T, Matrix.mul_fin_two]
-    congrm !![_, ?_; _, _]
-    rw [mul_one, mul_one, add_comm]
-  · simp_rw [zpow_sub, zpow_one, coe_mul, h, coe_T_inv, Matrix.mul_fin_two]
-    congrm !![?_, ?_; _, _] <;> ring
+  rw [zpow_zero, coe_one, Matrix.one_fin_two]
+  simp_rw [zpow_add, zpow_one, coe_mul, h, coe_T, Matrix.mul_fin_two]
+  congrm !![_, ?_; _, _]
+  rw [mul_one, mul_one, add_comm]
+  simp_rw [zpow_sub, zpow_one, coe_mul, h, coe_T_inv, Matrix.mul_fin_two]
+  congrm !![?_, ?_; _, _] <;> ring
 
 @[simp]
 theorem T_pow_mul_apply_one (n : ℤ) (g : SL(2, ℤ)) : ↑ₘ(T ^ n * g) 1 = ↑ₘg 1 := by

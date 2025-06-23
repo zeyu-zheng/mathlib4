@@ -40,10 +40,10 @@ theorem hasStrictDerivAt_log_of_pos (hx : 0 < x) : HasStrictDerivAt log x⁻¹ x
 
 theorem hasStrictDerivAt_log (hx : x ≠ 0) : HasStrictDerivAt log x⁻¹ x := by
   cases' hx.lt_or_lt with hx hx
-  · convert (hasStrictDerivAt_log_of_pos (neg_pos.mpr hx)).comp x (hasStrictDerivAt_neg x) using 1
-    · ext y; exact (log_neg_eq_log y).symm
-    · field_simp [hx.ne]
-  · exact hasStrictDerivAt_log_of_pos hx
+  convert (hasStrictDerivAt_log_of_pos (neg_pos.mpr hx)).comp x (hasStrictDerivAt_neg x) using 1
+  ext y; exact (log_neg_eq_log y).symm
+  field_simp [hx.ne]
+  exact hasStrictDerivAt_log_of_pos hx
 
 theorem hasDerivAt_log (hx : x ≠ 0) : HasDerivAt log x⁻¹ x :=
   (hasStrictDerivAt_log hx).hasDerivAt
@@ -235,9 +235,9 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
   have C : ‖F x - F 0‖ ≤ |x| ^ n / (1 - |x|) * ‖x - 0‖ := by
     refine Convex.norm_image_sub_le_of_norm_hasDerivWithin_le
       (fun y hy ↦ (A _ ?_).hasDerivWithinAt) B (convex_Icc _ _) ?_ ?_
-    · exact Icc_subset_Ioo (neg_lt_neg h) h hy
-    · simp
-    · simp [le_abs_self x, neg_le.mp (neg_le_abs x)]
+    exact Icc_subset_Ioo (neg_lt_neg h) h hy
+    simp
+    simp [le_abs_self x, neg_le.mp (neg_le_abs x)]
   -- fourth step: conclude by massaging the inequality of the third step
   simpa [F, div_mul_eq_mul_div, pow_succ] using C
 
@@ -245,15 +245,15 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
 theorem hasSum_pow_div_log_of_abs_lt_one {x : ℝ} (h : |x| < 1) :
     HasSum (fun n : ℕ => x ^ (n + 1) / (n + 1)) (-log (1 - x)) := by
   rw [Summable.hasSum_iff_tendsto_nat]
-  · show Tendsto (fun n : ℕ => ∑ i ∈ range n, x ^ (i + 1) / (i + 1)) atTop (𝓝 (-log (1 - x)))
-    rw [tendsto_iff_norm_sub_tendsto_zero]
-    simp only [norm_eq_abs, sub_neg_eq_add]
-    refine squeeze_zero (fun n => abs_nonneg _) (abs_log_sub_add_sum_range_le h) ?_
-    suffices Tendsto (fun t : ℕ => |x| ^ (t + 1) / (1 - |x|)) atTop (𝓝 (|x| * 0 / (1 - |x|))) by
-      simpa
-    simp only [pow_succ']
-    refine (tendsto_const_nhds.mul ?_).div_const _
-    exact tendsto_pow_atTop_nhds_zero_of_lt_one (abs_nonneg _) h
+  show Tendsto (fun n : ℕ => ∑ i ∈ range n, x ^ (i + 1) / (i + 1)) atTop (𝓝 (-log (1 - x)))
+  rw [tendsto_iff_norm_sub_tendsto_zero]
+  simp only [norm_eq_abs, sub_neg_eq_add]
+  refine squeeze_zero (fun n => abs_nonneg _) (abs_log_sub_add_sum_range_le h) ?_
+  suffices Tendsto (fun t : ℕ => |x| ^ (t + 1) / (1 - |x|)) atTop (𝓝 (|x| * 0 / (1 - |x|))) by
+    simpa
+  simp only [pow_succ']
+  refine (tendsto_const_nhds.mul ?_).div_const _
+  exact tendsto_pow_atTop_nhds_zero_of_lt_one (abs_nonneg _) h
   show Summable fun n : ℕ => x ^ (n + 1) / (n + 1)
   refine .of_norm_bounded _ (summable_geometric_of_lt_one (abs_nonneg _) h) fun i => ?_
   calc
@@ -282,13 +282,13 @@ theorem hasSum_log_sub_log_of_abs_lt_one {x : ℝ} (h : |x| < 1) :
     push_cast
     ring_nf
   rw [← h_term_eq_goal, (mul_right_injective₀ (two_ne_zero' ℕ)).hasSum_iff]
-  · have h₁ := (hasSum_pow_div_log_of_abs_lt_one (Eq.trans_lt (abs_neg x) h)).mul_left (-1)
-    convert h₁.add (hasSum_pow_div_log_of_abs_lt_one h) using 1
-    ring_nf
-  · intro m hm
-    rw [range_two_mul, Set.mem_setOf_eq, ← Nat.even_add_one] at hm
-    dsimp [term]
-    rw [Even.neg_pow hm, neg_one_mul, neg_add_self]
+  have h₁ := (hasSum_pow_div_log_of_abs_lt_one (Eq.trans_lt (abs_neg x) h)).mul_left (-1)
+  convert h₁.add (hasSum_pow_div_log_of_abs_lt_one h) using 1
+  ring_nf
+  intro m hm
+  rw [range_two_mul, Set.mem_setOf_eq, ← Nat.even_add_one] at hm
+  dsimp [term]
+  rw [Even.neg_pow hm, neg_one_mul, neg_add_self]
 
 @[deprecated (since := "2024-01-31")]
 alias hasSum_log_sub_log_of_abs_lt_1 := hasSum_log_sub_log_of_abs_lt_one
@@ -303,19 +303,19 @@ theorem hasSum_log_one_add_inv {a : ℝ} (h : 0 < a) :
       (log (1 + a⁻¹)) := by
   have h₁ : |1 / (2 * a + 1)| < 1
   rw [abs_of_pos, div_lt_one]
-  · linarith
-  · linarith
-  · exact div_pos one_pos (by linarith)
+  linarith
+  linarith
+  exact div_pos one_pos (by linarith)
   convert hasSum_log_sub_log_of_abs_lt_one h₁ using 1
   have h₂ : (2 : ℝ) * a + 1 ≠ 0
   linarith
   have h₃ := h.ne'
   rw [← log_div]
-  · congr
-    field_simp
-    linarith
-  · field_simp
-    linarith
-  · field_simp
+  congr
+  field_simp
+  linarith
+  field_simp
+  linarith
+  field_simp
 
 end Real

@@ -128,8 +128,8 @@ theorem transfer_eq_pow_aux (g : G)
     (key : ∀ (k : ℕ) (g₀ : G), g₀⁻¹ * g ^ k * g₀ ∈ H → g₀⁻¹ * g ^ k * g₀ = g ^ k) :
     g ^ H.index ∈ H := by
   by_cases hH : H.index = 0
-  · rw [hH, pow_zero]
-    exact H.one_mem
+  rw [hH, pow_zero]
+  exact H.one_mem
   letI := fintypeOfIndexNeZero hH
   replace key : ∀ (k : ℕ) (g₀ : G), g₀⁻¹ * g ^ k * g₀ ∈ H → g ^ k ∈ H := fun k g₀ hk =>
     (congr_arg (· ∈ H) (key k g₀ hk)).mp hk

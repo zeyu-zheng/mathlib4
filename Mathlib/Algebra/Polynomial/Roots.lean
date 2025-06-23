@@ -70,7 +70,7 @@ theorem card_roots (hp0 : p ≠ 0) : (Multiset.card (roots p) : WithBot ℕ) ≤
 
 theorem card_roots' (p : R[X]) : Multiset.card p.roots ≤ natDegree p := by
   by_cases hp0 : p = 0
-  · simp [hp0]
+  simp [hp0]
   exact WithBot.coe_le_coe.1 (le_trans (card_roots hp0) (le_of_eq <| degree_eq_natDegree hp0))
 
 theorem card_roots_sub_C {p : R[X]} {a : R} (hp0 : 0 < degree p) :
@@ -90,7 +90,7 @@ open Classical in
 @[simp]
 theorem count_roots [DecidableEq R] (p : R[X]) : p.roots.count a = rootMultiplicity a p := by
   by_cases hp : p = 0
-  · simp [hp]
+  simp [hp]
   rw [roots_def, dif_neg hp]
   exact (Classical.choose_spec (exists_multiset_roots hp)).2 a
 
@@ -207,10 +207,10 @@ theorem roots_prod {ι : Type*} (f : ι → R[X]) (s : Finset ι) :
 @[simp]
 theorem roots_pow (p : R[X]) (n : ℕ) : (p ^ n).roots = n • p.roots := by
   induction' n with n ihn
-  · rw [pow_zero, roots_one, zero_smul, empty_eq_zero]
-  · rcases eq_or_ne p 0 with (rfl | hp)
-    · rw [zero_pow n.succ_ne_zero, roots_zero, smul_zero]
-    · rw [pow_succ, roots_mul (mul_ne_zero (pow_ne_zero _ hp) hp), ihn, add_smul, one_smul]
+  rw [pow_zero, roots_one, zero_smul, empty_eq_zero]
+  rcases eq_or_ne p 0 with (rfl | hp)
+  rw [zero_pow n.succ_ne_zero, roots_zero, smul_zero]
+  rw [pow_succ, roots_mul (mul_ne_zero (pow_ne_zero _ hp) hp), ihn, add_smul, one_smul]
 
 theorem roots_X_pow (n : ℕ) : (X ^ n : R[X]).roots = n • ({0} : Multiset R) := by
   rw [roots_pow, roots_X]
@@ -225,18 +225,18 @@ theorem roots_monomial (ha : a ≠ 0) (n : ℕ) : (monomial n a).roots = n • (
 
 theorem roots_prod_X_sub_C (s : Finset R) : (s.prod fun a => X - C a).roots = s.val := by
   apply (roots_prod (fun a => X - C a) s ?_).trans
-  · simp_rw [roots_X_sub_C]
-    rw [Multiset.bind_singleton, Multiset.map_id']
-  · refine prod_ne_zero_iff.mpr (fun a _ => X_sub_C_ne_zero a)
+  simp_rw [roots_X_sub_C]
+  rw [Multiset.bind_singleton, Multiset.map_id']
+  refine prod_ne_zero_iff.mpr (fun a _ => X_sub_C_ne_zero a)
 
 @[simp]
 theorem roots_multiset_prod_X_sub_C (s : Multiset R) : (s.map fun a => X - C a).prod.roots = s := by
   rw [roots_multiset_prod, Multiset.bind_map]
-  · simp_rw [roots_X_sub_C]
-    rw [Multiset.bind_singleton, Multiset.map_id']
-  · rw [Multiset.mem_map]
-    rintro ⟨a, -, h⟩
-    exact X_sub_C_ne_zero a h
+  simp_rw [roots_X_sub_C]
+  rw [Multiset.bind_singleton, Multiset.map_id']
+  rw [Multiset.mem_map]
+  rintro ⟨a, -, h⟩
+  exact X_sub_C_ne_zero a h
 
 theorem card_roots_X_pow_sub_C {n : ℕ} (hn : 0 < n) (a : R) :
     Multiset.card (roots ((X : R[X]) ^ n - C a)) ≤ n :=
@@ -484,9 +484,9 @@ theorem bUnion_roots_finite {R S : Type*} [Semiring R] [CommRing S] [IsDomain S]
       -- image by the injective map `π` is finite
       let π : R[X] → Fin (d + 1) → R := fun f i => f.coeff i
       refine ((Set.Finite.pi fun _ => h).subset <| ?_).of_finite_image (?_ : Set.InjOn π _)
-      · exact Set.image_subset_iff.2 fun f hf i _ => hf.2 i
-      · refine fun x hx y hy hxy => (ext_iff_natDegree_le hx.1 hy.1).2 fun i hi => ?_
-        exact id congr_fun hxy ⟨i, Nat.lt_succ_of_le hi⟩)
+      exact Set.image_subset_iff.2 fun f hf i _ => hf.2 i
+      refine fun x hx y hy hxy => (ext_iff_natDegree_le hx.1 hy.1).2 fun i hi => ?_
+      exact id congr_fun hxy ⟨i, Nat.lt_succ_of_le hi⟩)
     fun i _ => Finset.finite_toSet _
 
 open Classical in
@@ -555,10 +555,10 @@ open Cardinal in
 lemma eq_zero_of_forall_eval_zero_of_natDegree_lt_card
     (f : R[X]) (hf : ∀ r, f.eval r = 0) (hfR : f.natDegree < #R) : f = 0 := by
   obtain hR|hR := finite_or_infinite R
-  · have := Fintype.ofFinite R
-    apply eq_zero_of_natDegree_lt_card_of_eval_eq_zero f Function.injective_id hf
-    simpa only [mk_fintype, Nat.cast_lt] using hfR
-  · exact zero_of_eval_zero _ hf
+  have := Fintype.ofFinite R
+  apply eq_zero_of_natDegree_lt_card_of_eval_eq_zero f Function.injective_id hf
+  simpa only [mk_fintype, Nat.cast_lt] using hfR
+  exact zero_of_eval_zero _ hf
 
 open Cardinal in
 lemma exists_eval_ne_zero_of_natDegree_lt_card (f : R[X]) (hf : f ≠ 0) (hfR : f.natDegree < #R) :
@@ -580,9 +580,9 @@ theorem prod_multiset_X_sub_C_dvd (p : R[X]) : (p.roots.map fun a => X - C a).pr
   rw [← map_dvd_map _ (IsFractionRing.injective R <| FractionRing R) monic_prod_multiset_X_sub_C]
   rw [prod_multiset_root_eq_finset_root, Polynomial.map_prod]
   refine Finset.prod_dvd_of_coprime (fun a _ b _ h => ?_) fun a _ => ?_
-  · simp_rw [Polynomial.map_pow, Polynomial.map_sub, map_C, map_X]
-    exact (pairwise_coprime_X_sub_C (IsFractionRing.injective R <| FractionRing R) h).pow
-  · exact Polynomial.map_dvd _ (pow_rootMultiplicity_dvd p a)
+  simp_rw [Polynomial.map_pow, Polynomial.map_sub, map_C, map_X]
+  exact (pairwise_coprime_X_sub_C (IsFractionRing.injective R <| FractionRing R) h).pow
+  exact Polynomial.map_dvd _ (pow_rootMultiplicity_dvd p a)
 
 /-- A Galois connection. -/
 theorem _root_.Multiset.prod_X_sub_C_dvd_iff_le_roots {p : R[X]} (hp : p ≠ 0) (s : Multiset R) :
@@ -603,15 +603,15 @@ theorem exists_prod_multiset_X_sub_C_mul (p : R[X]) :
   obtain ⟨q, he⟩ := p.prod_multiset_X_sub_C_dvd
   use q, he.symm
   obtain rfl | hq := eq_or_ne q 0
-  · rw [mul_zero] at he
-    subst he
-    simp
+  rw [mul_zero] at he
+  subst he
+  simp
   constructor
-  · conv_rhs => rw [he]
-    rw [monic_prod_multiset_X_sub_C.natDegree_mul' hq, natDegree_multiset_prod_X_sub_C_eq_card]
-  · replace he := congr_arg roots he.symm
-    rw [roots_mul, roots_multiset_prod_X_sub_C] at he
-    exacts [add_right_eq_self.1 he, mul_ne_zero monic_prod_multiset_X_sub_C.ne_zero hq]
+  conv_rhs => rw [he]
+  rw [monic_prod_multiset_X_sub_C.natDegree_mul' hq, natDegree_multiset_prod_X_sub_C_eq_card]
+  replace he := congr_arg roots he.symm
+  rw [roots_mul, roots_multiset_prod_X_sub_C] at he
+  exacts [add_right_eq_self.1 he, mul_ne_zero monic_prod_multiset_X_sub_C.ne_zero hq]
 
 /-- A polynomial `p` that has as many roots as its degree
 can be written `p = p.leadingCoeff * ∏(X - a)`, for `a` in `p.roots`. -/
@@ -642,16 +642,16 @@ theorem Monic.irreducible_iff_degree_lt {p : R[X]} (p_monic : Monic p) (p_1 : p 
   simp only [p_monic.irreducible_iff_lt_natDegree_lt p_1, Finset.mem_Ioc, and_imp,
     natDegree_pos_iff_degree_pos, natDegree_le_iff_degree_le]
   constructor
-  · rintro h q deg_le dvd
-    by_contra q_unit
-    have := degree_pos_of_not_isUnit_of_dvd_monic p_monic q_unit dvd
-    have hu := p_monic.isUnit_leadingCoeff_of_dvd dvd
-    refine (h _ (monic_of_isUnit_leadingCoeff_inv_smul hu) ?_ ?_ (dvd_trans ?_ dvd)).elim
-    · rwa [degree_smul_of_smul_regular _ (isSMulRegular_of_group _)]
-    · rwa [degree_smul_of_smul_regular _ (isSMulRegular_of_group _)]
-    · rw [Units.smul_def, Polynomial.smul_eq_C_mul, (isUnit_C.mpr (Units.isUnit _)).mul_left_dvd]
-  · rintro h q _ deg_pos deg_le dvd
-    exact deg_pos.ne' <| degree_eq_zero_of_isUnit (h q deg_le dvd)
+  rintro h q deg_le dvd
+  by_contra q_unit
+  have := degree_pos_of_not_isUnit_of_dvd_monic p_monic q_unit dvd
+  have hu := p_monic.isUnit_leadingCoeff_of_dvd dvd
+  refine (h _ (monic_of_isUnit_leadingCoeff_inv_smul hu) ?_ ?_ (dvd_trans ?_ dvd)).elim
+  rwa [degree_smul_of_smul_regular _ (isSMulRegular_of_group _)]
+  rwa [degree_smul_of_smul_regular _ (isSMulRegular_of_group _)]
+  rw [Units.smul_def, Polynomial.smul_eq_C_mul, (isUnit_C.mpr (Units.isUnit _)).mul_left_dvd]
+  rintro h q _ deg_pos deg_le dvd
+  exact deg_pos.ne' <| degree_eq_zero_of_isUnit (h q deg_le dvd)
 
 end CommRing
 
@@ -690,9 +690,9 @@ theorem count_map_roots_of_injective [IsDomain A] [DecidableEq B] (p : A[X]) {f 
     (hf : Function.Injective f) (b : B) :
     (p.roots.map f).count b ≤ rootMultiplicity b (p.map f) := by
   by_cases hp0 : p = 0
-  · simp only [hp0, roots_zero, Multiset.map_zero, Multiset.count_zero, Polynomial.map_zero,
-      rootMultiplicity_zero, le_refl]
-  · exact count_map_roots ((Polynomial.map_ne_zero_iff hf).mpr hp0) b
+  simp only [hp0, roots_zero, Multiset.map_zero, Multiset.count_zero, Polynomial.map_zero,
+    rootMultiplicity_zero, le_refl]
+  exact count_map_roots ((Polynomial.map_ne_zero_iff hf).mpr hp0) b
 
 open Classical in
 theorem map_roots_le [IsDomain A] [IsDomain B] {p : A[X]} {f : A →+* B} (h : p.map f ≠ 0) :
@@ -704,7 +704,7 @@ theorem map_roots_le [IsDomain A] [IsDomain B] {p : A[X]} {f : A →+* B} (h : p
 theorem map_roots_le_of_injective [IsDomain A] [IsDomain B] (p : A[X]) {f : A →+* B}
     (hf : Function.Injective f) : p.roots.map f ≤ (p.map f).roots := by
   by_cases hp0 : p = 0
-  · simp only [hp0, roots_zero, Multiset.map_zero, Polynomial.map_zero, le_rfl]
+  simp only [hp0, roots_zero, Multiset.map_zero, Polynomial.map_zero, le_rfl]
   exact map_roots_le ((Polynomial.map_ne_zero_iff hf).mpr hp0)
 
 theorem card_roots_le_map [IsDomain A] [IsDomain B] {p : A[X]} {f : A →+* B} (h : p.map f ≠ 0) :
@@ -715,7 +715,7 @@ theorem card_roots_le_map [IsDomain A] [IsDomain B] {p : A[X]} {f : A →+* B} (
 theorem card_roots_le_map_of_injective [IsDomain A] [IsDomain B] {p : A[X]} {f : A →+* B}
     (hf : Function.Injective f) : Multiset.card p.roots ≤ Multiset.card (p.map f).roots := by
   by_cases hp0 : p = 0
-  · simp only [hp0, roots_zero, Polynomial.map_zero, Multiset.card_zero, le_rfl]
+  simp only [hp0, roots_zero, Polynomial.map_zero, Multiset.card_zero, le_rfl]
   exact card_roots_le_map ((Polynomial.map_ne_zero_iff hf).mpr hp0)
 
 theorem roots_map_of_injective_of_card_eq_natDegree [IsDomain A] [IsDomain B] {p : A[X]}

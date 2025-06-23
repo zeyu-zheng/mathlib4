@@ -219,15 +219,15 @@ theorem orderTop_of_ne {x : HahnSeries Γ R} (hx : x ≠ 0) :
 @[simp]
 theorem ne_zero_iff_orderTop {x : HahnSeries Γ R} : x ≠ 0 ↔ orderTop x ≠ ⊤ := by
   constructor
-  · exact fun hx => Eq.mpr (congrArg (fun h ↦ h ≠ ⊤) (orderTop_of_ne hx)) WithTop.coe_ne_top
-  · contrapose!
-    simp_all only [orderTop_zero, implies_true]
+  exact fun hx => Eq.mpr (congrArg (fun h ↦ h ≠ ⊤) (orderTop_of_ne hx)) WithTop.coe_ne_top
+  contrapose!
+  simp_all only [orderTop_zero, implies_true]
 
 theorem orderTop_eq_top_iff {x : HahnSeries Γ R} : orderTop x = ⊤ ↔ x = 0 := by
   constructor
-  · contrapose!
-    exact ne_zero_iff_orderTop.mp
-  · simp_all only [orderTop_zero, implies_true]
+  contrapose!
+  exact ne_zero_iff_orderTop.mp
+  simp_all only [orderTop_zero, implies_true]
 
 theorem untop_orderTop_of_ne_zero {x : HahnSeries Γ R} (hx : x ≠ 0) :
     WithTop.untop x.orderTop (ne_zero_iff_orderTop.mp hx) =
@@ -257,8 +257,8 @@ theorem orderTop_single (h : r ≠ 0) : (single a r).orderTop = a :=
 
 theorem orderTop_single_le : a ≤ (single a r).orderTop := by
   by_cases hr : r = 0
-  · simp only [hr, map_zero, orderTop_zero, le_top]
-  · rw [orderTop_single hr]
+  simp only [hr, map_zero, orderTop_zero, le_top]
+  rw [orderTop_single hr]
 
 theorem lt_orderTop_single {g g' : Γ} (hgg' : g < g') : g < (single g' r).orderTop :=
   lt_of_lt_of_le (WithTop.coe_lt_coe.mpr hgg') orderTop_single_le
@@ -266,7 +266,7 @@ theorem lt_orderTop_single {g g' : Γ} (hgg' : g < g') : g < (single g' r).order
 theorem coeff_eq_zero_of_lt_orderTop {x : HahnSeries Γ R} {i : Γ} (hi : i < x.orderTop) :
     x.coeff i = 0 := by
   rcases eq_or_ne x 0 with (rfl | hx)
-  · exact zero_coeff
+  exact zero_coeff
   contrapose! hi
   rw [← mem_support] at hi
   rw [orderTop_of_ne hx, WithTop.coe_lt_coe]
@@ -333,7 +333,7 @@ theorem order_single (h : r ≠ 0) : (single a r).order = a :=
 theorem coeff_eq_zero_of_lt_order {x : HahnSeries Γ R} {i : Γ} (hi : i < x.order) :
     x.coeff i = 0 := by
   rcases eq_or_ne x 0 with (rfl | hx)
-  · simp
+  simp
   contrapose! hi
   rw [← mem_support] at hi
   rw [order_of_ne hx]
@@ -345,18 +345,18 @@ theorem zero_lt_orderTop_iff {x : HahnSeries Γ R} (hx : x ≠ 0) :
 
 theorem zero_lt_orderTop_of_order {x : HahnSeries Γ R} (hx : 0 < x.order) : 0 < x.orderTop := by
   by_cases h : x = 0
-  · simp_all only [order_zero, lt_self_iff_false]
-  · exact (zero_lt_orderTop_iff h).mpr hx
+  simp_all only [order_zero, lt_self_iff_false]
+  exact (zero_lt_orderTop_iff h).mpr hx
 
 theorem zero_le_orderTop_iff {x : HahnSeries Γ R} : 0 ≤ x.orderTop ↔ 0 ≤ x.order := by
   by_cases h : x = 0
-  · simp_all
-  · simp_all [order_of_ne h, orderTop_of_ne h, zero_lt_orderTop_iff]
+  simp_all
+  simp_all [order_of_ne h, orderTop_of_ne h, zero_lt_orderTop_iff]
 
 theorem leadingCoeff_eq [Zero Γ] {x : HahnSeries Γ R} : x.leadingCoeff = x.coeff x.order := by
   by_cases h : x = 0
-  · rw [h, leadingCoeff_zero, zero_coeff]
-  · rw [leadingCoeff_of_ne h, order_of_ne h]
+  rw [h, leadingCoeff_zero, zero_coeff]
+  rw [leadingCoeff_of_ne h, order_of_ne h]
 
 end Order
 
@@ -378,12 +378,12 @@ theorem embDomain_coeff {f : Γ ↪o Γ'} {x : HahnSeries Γ R} {a : Γ} :
   rw [embDomain]
   dsimp only
   by_cases ha : a ∈ x.support
-  · rw [dif_pos (Set.mem_image_of_mem f ha)]
-    exact congr rfl (f.injective (Classical.choose_spec (Set.mem_image_of_mem f ha)).2)
-  · rw [dif_neg, Classical.not_not.1 fun c => ha ((mem_support _ _).2 c)]
-    contrapose! ha
-    obtain ⟨b, hb1, hb2⟩ := (Set.mem_image _ _ _).1 ha
-    rwa [f.injective hb2] at hb1
+  rw [dif_pos (Set.mem_image_of_mem f ha)]
+  exact congr rfl (f.injective (Classical.choose_spec (Set.mem_image_of_mem f ha)).2)
+  rw [dif_neg, Classical.not_not.1 fun c => ha ((mem_support _ _).2 c)]
+  contrapose! ha
+  obtain ⟨b, hb1, hb2⟩ := (Set.mem_image _ _ _).1 ha
+  rwa [f.injective hb2] at hb1
 
 @[simp]
 theorem embDomain_mk_coeff {f : Γ → Γ'} (hfi : Function.Injective f)
@@ -415,10 +415,10 @@ theorem embDomain_single {f : Γ ↪o Γ'} {g : Γ} {r : R} :
     embDomain f (single g r) = single (f g) r := by
   ext g'
   by_cases h : g' = f g
-  · simp [h]
+  simp [h]
   rw [embDomain_notin_image_support, single_coeff_of_ne h]
   by_cases hr : r = 0
-  · simp [hr]
+  simp [hr]
   rwa [support_single_of_ne hr, Set.image_singleton, Set.mem_singleton_iff]
 
 theorem embDomain_injective {f : Γ ↪o Γ'} :
@@ -466,7 +466,7 @@ theorem order_ofForallLtEqZero [Zero Γ] (f : Γ → R) (hf : f ≠ 0) (n : Γ)
   dsimp only [order]
   by_cases h : ofSuppBddBelow f (forallLTEqZero_supp_BddBelow f n hn) = 0
   cases h
-  · exact (hf rfl).elim
+  exact (hf rfl).elim
   simp_all only [dite_false]
   rw [Set.IsWF.le_min_iff]
   intro m hm

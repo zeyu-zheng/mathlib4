@@ -34,7 +34,7 @@ theorem IsMinOn.of_isLocalMinOn_of_convexOn_Icc {f : ℝ → β} {a b : ℝ} (a_
   dsimp only [mem_setOf_eq]
   rw [IsLocalMinOn, nhdsWithin_Icc_eq_nhdsWithin_Ici a_lt_b] at h_local_min
   rcases hc.1.eq_or_lt with (rfl | a_lt_c)
-  · exact le_rfl
+  exact le_rfl
   have H₁ : ∀ᶠ y in 𝓝[>] a, f a ≤ f y :=
     h_local_min.filter_mono (nhdsWithin_mono _ Ioi_subset_Ici_self)
   have H₂ : ∀ᶠ y in 𝓝[>] a, y ∈ Ioc a c := Ioc_mem_nhdsWithin_Ioi (left_mem_Ico.2 a_lt_c)

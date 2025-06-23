@@ -141,8 +141,8 @@ variable (S : Subgroup Rˣ) [Finite S]
 instance subgroup_units_cyclic : IsCyclic S := by
   -- Porting note: the original proof used a `coe`, but I was not able to get it to work.
   apply isCyclic_of_subgroup_isDomain (R := R) (G := S) _ _
-  · exact MonoidHom.mk (OneHom.mk (fun s => ↑s.val) rfl) (by simp)
-  · exact Units.ext.comp Subtype.val_injective
+  exact MonoidHom.mk (OneHom.mk (fun s => ↑s.val) rfl) (by simp)
+  exact Units.ext.comp Subtype.val_injective
 
 end
 
@@ -159,13 +159,13 @@ theorem div_eq_quo_add_rem_div (f : R[X]) {g : R[X]} (hg : g.Monic) :
       (algebraMap R[X] K f) / (algebraMap R[X] K g) =
         algebraMap R[X] K q + (algebraMap R[X] K r) / (algebraMap R[X] K g) := by
   refine ⟨f /ₘ g, f %ₘ g, ?_, ?_⟩
-  · exact degree_modByMonic_lt _ hg
-  · have hg' : algebraMap R[X] K g ≠ 0 :=
-      -- Porting note: the proof was `by exact_mod_cast Monic.ne_zero hg`
-      (map_ne_zero_iff _ (IsFractionRing.injective R[X] K)).mpr (Monic.ne_zero hg)
-    field_simp [hg']
-    -- Porting note: `norm_cast` was here, but does nothing.
-    rw [add_comm, mul_comm, ← map_mul, ← map_add, modByMonic_add_div f hg]
+  exact degree_modByMonic_lt _ hg
+  have hg' : algebraMap R[X] K g ≠ 0 :=
+    -- Porting note: the proof was `by exact_mod_cast Monic.ne_zero hg`
+    (map_ne_zero_iff _ (IsFractionRing.injective R[X] K)).mpr (Monic.ne_zero hg)
+  field_simp [hg']
+  -- Porting note: `norm_cast` was here, but does nothing.
+  rw [add_comm, mul_comm, ← map_mul, ← map_add, modByMonic_add_div f hg]
 
 end Polynomial
 
@@ -209,11 +209,11 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : ∑ g : G, f g = 0
       _ = c • (0 : R) := congr_arg₂ _ rfl ?_
       -- remaining goal 2, proven below
       _ = (0 : R) := smul_zero _
-    · -- remaining goal 1
-      show (univ.filter fun g : G => f.toHomUnits g = u).card = c
-      apply MonoidHom.card_fiber_eq_of_mem_range f.toHomUnits
-      · simpa only [mem_image, mem_univ, true_and, Set.mem_range] using hu
-      · exact ⟨1, f.toHomUnits.map_one⟩
+    -- remaining goal 1
+    show (univ.filter fun g : G => f.toHomUnits g = u).card = c
+    apply MonoidHom.card_fiber_eq_of_mem_range f.toHomUnits
+    simpa only [mem_image, mem_univ, true_and, Set.mem_range] using hu
+    exact ⟨1, f.toHomUnits.map_one⟩
     -- remaining goal 2
     show (∑ b : MonoidHom.range f.toHomUnits, ((b : Rˣ) : R)) = 0
     calc
@@ -240,8 +240,8 @@ unless the homomorphism is trivial, in which case the sum is equal to the cardin
 theorem sum_hom_units (f : G →* R) [Decidable (f = 1)] :
     ∑ g : G, f g = if f = 1 then Fintype.card G else 0 := by
   split_ifs with h
-  · simp [h, card_univ]
-  · rw [cast_zero] -- Porting note: added
-    exact sum_hom_units_eq_zero f h
+  simp [h, card_univ]
+  rw [cast_zero] -- Porting note: added
+  exact sum_hom_units_eq_zero f h
 
 end

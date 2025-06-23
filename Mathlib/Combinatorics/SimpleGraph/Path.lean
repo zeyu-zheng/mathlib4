@@ -157,9 +157,9 @@ theorem IsTrail.reverse {u v : V} (p : G.Walk u v) (h : p.IsTrail) : p.reverse.I
 @[simp]
 theorem reverse_isTrail_iff {u v : V} (p : G.Walk u v) : p.reverse.IsTrail ↔ p.IsTrail := by
   constructor <;>
-    · intro h
-      convert h.reverse _
-      try rw [reverse_reverse]
+  · intro h
+    convert h.reverse _
+    try rw [reverse_reverse]
 
 theorem IsTrail.of_append_left {u v w : V} {p : G.Walk u v} {q : G.Walk v w}
     (h : (p.append q).IsTrail) : p.IsTrail := by
@@ -285,11 +285,11 @@ protected theorem IsCircuit.rotate {u v : V} {c : G.Walk v v} (hc : c.IsCircuit)
     (h : u ∈ c.support) : (c.rotate h).IsCircuit := by
   refine ⟨hc.isTrail.rotate _, ?_⟩
   cases c
-  · exact (hc.ne_nil rfl).elim
-  · intro hn
-    have hn' := congr_arg length hn
-    rw [rotate, length_append, add_comm, ← length_append, take_spec] at hn'
-    simp at hn'
+  exact (hc.ne_nil rfl).elim
+  intro hn
+  have hn' := congr_arg length hn
+  rw [rotate, length_append, add_comm, ← length_append, take_spec] at hn'
+  simp at hn'
 
 protected theorem IsCycle.rotate {u v : V} {c : G.Walk v v} (hc : c.IsCycle) (h : u ∈ c.support) :
     (c.rotate h).IsCycle := by
@@ -349,8 +349,8 @@ theorem nodup_support {u v : V} (p : G.Path u v) : (p : G.Walk u v).support.Nodu
 
 theorem loop_eq {v : V} (p : G.Path v v) : p = Path.nil := by
   obtain ⟨_ | _, h⟩ := p
-  · rfl
-  · simp at h
+  rfl
+  simp at h
 
 theorem not_mem_edges_of_loop {v : V} {e : Sym2 V} {p : G.Path v v} :
     ¬e ∈ (p : G.Walk v v).edges := by simp [p.loop_eq]
@@ -392,8 +392,8 @@ theorem bypass_isPath {u v : V} (p : G.Walk u v) : p.bypass.IsPath := by
   | cons _ p' ih =>
     simp only [bypass]
     split_ifs with hs
-    · exact ih.dropUntil hs
-    · simp [*, cons_isPath_iff]
+    exact ih.dropUntil hs
+    simp [*, cons_isPath_iff]
 
 theorem length_bypass_le {u v : V} (p : G.Walk u v) : p.bypass.length ≤ p.length := by
   induction p with
@@ -401,12 +401,12 @@ theorem length_bypass_le {u v : V} (p : G.Walk u v) : p.bypass.length ≤ p.leng
   | cons _ _ ih =>
     simp only [bypass]
     split_ifs
-    · trans
-      · apply length_dropUntil_le
-      rw [length_cons]
-      omega
-    · rw [length_cons, length_cons]
-      exact Nat.add_le_add_right ih 1
+    trans
+    apply length_dropUntil_le
+    rw [length_cons]
+    omega
+    rw [length_cons, length_cons]
+    exact Nat.add_le_add_right ih 1
 
 lemma bypass_eq_self_of_length_le {u v : V} (p : G.Walk u v) (h : p.length ≤ p.bypass.length) :
     p.bypass = p := by
@@ -415,16 +415,16 @@ lemma bypass_eq_self_of_length_le {u v : V} (p : G.Walk u v) (h : p.length ≤ p
   | cons h p ih =>
     simp only [Walk.bypass]
     split_ifs with hb
-    · exfalso
-      simp only [hb, Walk.bypass, Walk.length_cons, dif_pos] at h
-      apply Nat.not_succ_le_self p.length
-      calc p.length + 1
-        _ ≤ (p.bypass.dropUntil _ _).length := h
-        _ ≤ p.bypass.length := Walk.length_dropUntil_le p.bypass hb
-        _ ≤ p.length := Walk.length_bypass_le _
-    · simp only [hb, Walk.bypass, Walk.length_cons, not_false_iff, dif_neg,
-        Nat.add_le_add_iff_right] at h
-      rw [ih h]
+    exfalso
+    simp only [hb, Walk.bypass, Walk.length_cons, dif_pos] at h
+    apply Nat.not_succ_le_self p.length
+    calc p.length + 1
+      _ ≤ (p.bypass.dropUntil _ _).length := h
+      _ ≤ p.bypass.length := Walk.length_dropUntil_le p.bypass hb
+      _ ≤ p.length := Walk.length_bypass_le _
+    simp only [hb, Walk.bypass, Walk.length_cons, not_false_iff, dif_neg,
+      Nat.add_le_add_iff_right] at h
+    rw [ih h]
 
 /-- Given a walk, produces a path with the same endpoints using `SimpleGraph.Walk.bypass`. -/
 def toPath {u v : V} (p : G.Walk u v) : G.Path u v :=
@@ -436,12 +436,12 @@ theorem support_bypass_subset {u v : V} (p : G.Walk u v) : p.bypass.support ⊆ 
   | cons _ _ ih =>
     simp! only
     split_ifs
-    · apply List.Subset.trans (support_dropUntil_subset _ _)
-      apply List.subset_cons_of_subset
-      assumption
-    · rw [support_cons]
-      apply List.cons_subset_cons
-      assumption
+    apply List.Subset.trans (support_dropUntil_subset _ _)
+    apply List.subset_cons_of_subset
+    assumption
+    rw [support_cons]
+    apply List.cons_subset_cons
+    assumption
 
 theorem support_toPath_subset {u v : V} (p : G.Walk u v) :
     (p.toPath : G.Walk u v).support ⊆ p.support :=
@@ -453,10 +453,10 @@ theorem darts_bypass_subset {u v : V} (p : G.Walk u v) : p.bypass.darts ⊆ p.da
   | cons _ _ ih =>
     simp! only
     split_ifs
-    · apply List.Subset.trans (darts_dropUntil_subset _ _)
-      apply List.subset_cons_of_subset _ ih
-    · rw [darts_cons]
-      exact List.cons_subset_cons _ ih
+    apply List.Subset.trans (darts_dropUntil_subset _ _)
+    apply List.subset_cons_of_subset _ ih
+    rw [darts_cons]
+    exact List.cons_subset_cons _ ih
 
 theorem edges_bypass_subset {u v : V} (p : G.Walk u v) : p.bypass.edges ⊆ p.edges :=
   List.map_subset _ p.darts_bypass_subset
@@ -670,14 +670,14 @@ protected theorem Reachable.trans {u v w : V} (huv : G.Reachable u v) (hvw : G.R
 theorem reachable_iff_reflTransGen (u v : V) :
     G.Reachable u v ↔ Relation.ReflTransGen G.Adj u v := by
   constructor
-  · rintro ⟨h⟩
-    induction h with
-    | nil => rfl
-    | cons h' _ ih => exact (Relation.ReflTransGen.single h').trans ih
-  · intro h
-    induction h with
-    | refl => rfl
-    | tail _ ha hr => exact Reachable.trans hr ⟨Walk.cons ha Walk.nil⟩
+  rintro ⟨h⟩
+  induction h with
+  | nil => rfl
+  | cons h' _ ih => exact (Relation.ReflTransGen.single h').trans ih
+  intro h
+  induction h with
+  | refl => rfl
+  | tail _ ha hr => exact Reachable.trans hr ⟨Walk.cons ha Walk.nil⟩
 
 protected theorem Reachable.map {u v : V} {G : SimpleGraph V} {G' : SimpleGraph V'} (f : G →g G')
     (h : G.Reachable u v) : G'.Reachable (f u) (f v) :=
@@ -736,10 +736,10 @@ structure Connected : Prop where
 lemma connected_iff_exists_forall_reachable : G.Connected ↔ ∃ v, ∀ w, G.Reachable v w := by
   rw [connected_iff]
   constructor
-  · rintro ⟨hp, ⟨v⟩⟩
-    exact ⟨v, fun w => hp v w⟩
-  · rintro ⟨v, h⟩
-    exact ⟨fun u w => (h u).symm.trans (h w), ⟨v⟩⟩
+  rintro ⟨hp, ⟨v⟩⟩
+  exact ⟨v, fun w => hp v w⟩
+  rintro ⟨v, h⟩
+  exact ⟨fun u w => (h u).symm.trans (h w), ⟨v⟩⟩
 
 instance : CoeFun G.Connected fun _ => ∀ u v : V, G.Reachable u v := ⟨fun h => h.preconnected⟩
 
@@ -1005,16 +1005,16 @@ theorem isBridge_iff {u v : V} :
 theorem reachable_delete_edges_iff_exists_walk {v w : V} :
     (G \ fromEdgeSet {s(v, w)}).Reachable v w ↔ ∃ p : G.Walk v w, ¬s(v, w) ∈ p.edges := by
   constructor
-  · rintro ⟨p⟩
-    use p.map (Hom.mapSpanningSubgraphs (by simp))
-    simp_rw [Walk.edges_map, List.mem_map, Hom.mapSpanningSubgraphs_apply, Sym2.map_id', id]
-    rintro ⟨e, h, rfl⟩
-    simpa using p.edges_subset_edgeSet h
-  · rintro ⟨p, h⟩
-    refine ⟨p.transfer _ fun e ep => ?_⟩
-    simp only [edgeSet_sdiff, edgeSet_fromEdgeSet, edgeSet_sdiff_sdiff_isDiag, Set.mem_diff,
-      Set.mem_singleton_iff]
-    exact ⟨p.edges_subset_edgeSet ep, fun h' => h (h' ▸ ep)⟩
+  rintro ⟨p⟩
+  use p.map (Hom.mapSpanningSubgraphs (by simp))
+  simp_rw [Walk.edges_map, List.mem_map, Hom.mapSpanningSubgraphs_apply, Sym2.map_id', id]
+  rintro ⟨e, h, rfl⟩
+  simpa using p.edges_subset_edgeSet h
+  rintro ⟨p, h⟩
+  refine ⟨p.transfer _ fun e ep => ?_⟩
+  simp only [edgeSet_sdiff, edgeSet_fromEdgeSet, edgeSet_sdiff_sdiff_isDiag, Set.mem_diff,
+    Set.mem_singleton_iff]
+  exact ⟨p.edges_subset_edgeSet ep, fun h' => h (h' ▸ ep)⟩
 
 theorem isBridge_iff_adj_and_forall_walk_mem_edges {v w : V} :
     G.IsBridge s(v, w) ↔ G.Adj v w ∧ ∀ p : G.Walk v w, s(v, w) ∈ p.edges := by
@@ -1055,23 +1055,23 @@ theorem adj_and_reachable_delete_edges_iff_exists_cycle {v w : V} :
       ∃ (u : V) (p : G.Walk u u), p.IsCycle ∧ s(v, w) ∈ p.edges := by
   rw [reachable_delete_edges_iff_exists_walk]
   constructor
-  · rintro ⟨h, p, hp⟩
-    refine ⟨w, Walk.cons h.symm p.toPath, ?_, ?_⟩
-    · apply Path.cons_isCycle
-      rw [Sym2.eq_swap]
-      intro h
-      cases hp (Walk.edges_toPath_subset p h)
-    · simp only [Sym2.eq_swap, Walk.edges_cons, List.mem_cons, eq_self_iff_true, true_or_iff]
-  · rintro ⟨u, c, hc, he⟩
-    refine ⟨c.adj_of_mem_edges he, ?_⟩
-    by_contra! hb
-    have hb' : ∀ p : G.Walk w v, s(w, v) ∈ p.edges
-    intro p
-    simpa [Sym2.eq_swap] using hb p.reverse
-    have hvc : v ∈ c.support := Walk.fst_mem_support_of_mem_edges c he
-    refine reachable_deleteEdges_iff_exists_cycle.aux hb' (c.rotate hvc) (hc.isTrail.rotate hvc)
-      ?_ (Walk.start_mem_support _)
-    rwa [(Walk.rotate_edges c hvc).mem_iff, Sym2.eq_swap]
+  rintro ⟨h, p, hp⟩
+  refine ⟨w, Walk.cons h.symm p.toPath, ?_, ?_⟩
+  apply Path.cons_isCycle
+  rw [Sym2.eq_swap]
+  intro h
+  cases hp (Walk.edges_toPath_subset p h)
+  simp only [Sym2.eq_swap, Walk.edges_cons, List.mem_cons, eq_self_iff_true, true_or_iff]
+  rintro ⟨u, c, hc, he⟩
+  refine ⟨c.adj_of_mem_edges he, ?_⟩
+  by_contra! hb
+  have hb' : ∀ p : G.Walk w v, s(w, v) ∈ p.edges
+  intro p
+  simpa [Sym2.eq_swap] using hb p.reverse
+  have hvc : v ∈ c.support := Walk.fst_mem_support_of_mem_edges c he
+  refine reachable_deleteEdges_iff_exists_cycle.aux hb' (c.rotate hvc) (hc.isTrail.rotate hvc)
+    ?_ (Walk.start_mem_support _)
+  rwa [(Walk.rotate_edges c hvc).mem_iff, Sym2.eq_swap]
 
 theorem isBridge_iff_adj_and_forall_cycle_not_mem {v w : V} : G.IsBridge s(v, w) ↔
     G.Adj v w ∧ ∀ ⦃u : V⦄ (p : G.Walk u u), p.IsCycle → s(v, w) ∉ p.edges := by

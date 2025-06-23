@@ -31,8 +31,8 @@ namespace Counterexample
 
 theorem mem_zmod_2 (a : ZMod 2) : a = 0 ∨ a = 1 := by
   rcases a with ⟨_ | _, _ | _ | _ | _⟩
-  · exact Or.inl rfl
-  · exact Or.inr rfl
+  exact Or.inl rfl
+  exact Or.inr rfl
 
 theorem add_self_zmod_2 (a : ZMod 2) : a + a = 0 := by rcases mem_zmod_2 a with (rfl | rfl) <;> rfl
 
@@ -49,17 +49,17 @@ instance preN2 : PartialOrder (ℕ × ZMod 2) where
   le_refl a := Or.inl rfl
   le_trans x y z xy yz := by
     rcases xy with (rfl | xy)
-    · exact yz
-    · rcases yz with (rfl | yz)
-      · exact Or.inr xy
-      · exact Or.inr (xy.trans yz)
+    exact yz
+    rcases yz with (rfl | yz)
+    exact Or.inr xy
+    exact Or.inr (xy.trans yz)
   le_antisymm := by
     intro a b ab ba
     cases' ab with ab ab
-    · exact ab
-    · cases' ba with ba ba
-      · exact ba.symm
-      · exact (Nat.lt_asymm ab ba).elim
+    exact ab
+    cases' ba with ba ba
+    exact ba.symm
+    exact (Nat.lt_asymm ab ba).elim
 
 instance csrN2 : CommSemiring (ℕ × ZMod 2) := by infer_instance
 
@@ -82,13 +82,13 @@ theorem add_left_cancel : ∀ a b c : ℕ × ZMod 2, a + b = a + c → b = c := 
 
 theorem add_le_add_left : ∀ a b : ℕ × ZMod 2, a ≤ b → ∀ c : ℕ × ZMod 2, c + a ≤ c + b := by
   rintro a b (rfl | ab) c
-  · rfl
-  · exact Or.inr (by simpa)
+  rfl
+  exact Or.inr (by simpa)
 
 theorem le_of_add_le_add_left : ∀ a b c : ℕ × ZMod 2, a + b ≤ a + c → b ≤ c := by
   rintro a b c (bc | bc)
-  · exact le_of_eq ((add_right_inj a).mp bc)
-  · exact Or.inr (by simpa using bc)
+  exact le_of_eq ((add_right_inj a).mp bc)
+  exact Or.inr (by simpa using bc)
 
 instance : ZeroLEOneClass (ℕ × ZMod 2) :=
   ⟨by dsimp only [LE.le]; decide⟩
@@ -126,8 +126,8 @@ theorem add_L {a b : ℕ × ZMod 2} (ha : a ≠ (0, 1)) (hb : b ≠ (0, 1)) : a 
   match b with
   | 0 =>
     rcases mem_zmod_2 b2 with (rfl | rfl)
-    · simp [ha, -Prod.mk.injEq]
-    · cases hb rfl
+    simp [ha, -Prod.mk.injEq]
+    cases hb rfl
   | b + 1 =>
     simp [(a + b).succ_ne_zero]
 
@@ -135,16 +135,16 @@ theorem mul_L {a b : ℕ × ZMod 2} (ha : a ≠ (0, 1)) (hb : b ≠ (0, 1)) : a 
   rcases a with ⟨a, a2⟩
   rcases b with ⟨b, b2⟩
   cases b
-  · rcases mem_zmod_2 b2 with (rfl | rfl) <;> rcases mem_zmod_2 a2 with (rfl | rfl) <;> simp
-    -- while this looks like a non-terminal `simp`, it (almost) isn't: there is only one goal where
-    -- it does not finish the proof and on that goal it asks to prove `false`
-    exact hb rfl
+  rcases mem_zmod_2 b2 with (rfl | rfl) <;> rcases mem_zmod_2 a2 with (rfl | rfl) <;> simp
+  -- while this looks like a non-terminal `simp`, it (almost) isn't: there is only one goal where
+  -- it does not finish the proof and on that goal it asks to prove `false`
+  exact hb rfl
   cases a
-  · rcases mem_zmod_2 b2 with (rfl | rfl) <;> rcases mem_zmod_2 a2 with (rfl | rfl) <;> simp
-    -- while this looks like a non-terminal `simp`, it (almost) isn't: there is only one goal where
-    -- it does not finish the proof and on that goal it asks to prove `false`
-    exact ha rfl
-  · simp [mul_ne_zero _ _, Nat.succ_ne_zero _]
+  rcases mem_zmod_2 b2 with (rfl | rfl) <;> rcases mem_zmod_2 a2 with (rfl | rfl) <;> simp
+  -- while this looks like a non-terminal `simp`, it (almost) isn't: there is only one goal where
+  -- it does not finish the proof and on that goal it asks to prove `false`
+  exact ha rfl
+  simp [mul_ne_zero _ _, Nat.succ_ne_zero _]
 
 /-- The subsemiring corresponding to the elements of `L`, used to transfer instances. -/
 def lSubsemiring : Subsemiring (ℕ × ZMod 2) where
@@ -163,11 +163,11 @@ instance inhabited : Inhabited L :=
 theorem bot_le : ∀ a : L, 0 ≤ a := by
   rintro ⟨⟨an, a2⟩, ha⟩
   cases an
-  · rcases mem_zmod_2 a2 with (rfl | rfl)
-    · rfl
-    · exact (ha rfl).elim
-  · refine Or.inr ?_
-    exact Nat.succ_pos _
+  rcases mem_zmod_2 a2 with (rfl | rfl)
+  rfl
+  exact (ha rfl).elim
+  refine Or.inr ?_
+  exact Nat.succ_pos _
 
 instance orderBot : OrderBot L where
   bot := 0
@@ -175,18 +175,18 @@ instance orderBot : OrderBot L where
 
 theorem exists_add_of_le : ∀ a b : L, a ≤ b → ∃ c, b = a + c := by
   rintro a ⟨b, _⟩ (⟨rfl, rfl⟩ | h)
-  · exact ⟨0, (add_zero _).symm⟩
-  · exact
-      ⟨⟨b - a.1, fun H => (tsub_pos_of_lt h).ne' (Prod.mk.inj_iff.1 H).1⟩,
-        Subtype.ext <| Prod.ext (add_tsub_cancel_of_le h.le).symm (add_sub_cancel _ _).symm⟩
+  exact ⟨0, (add_zero _).symm⟩
+  exact
+    ⟨⟨b - a.1, fun H => (tsub_pos_of_lt h).ne' (Prod.mk.inj_iff.1 H).1⟩,
+      Subtype.ext <| Prod.ext (add_tsub_cancel_of_le h.le).symm (add_sub_cancel _ _).symm⟩
 
 theorem le_self_add : ∀ a b : L, a ≤ a + b := by
   rintro a ⟨⟨bn, b2⟩, hb⟩
   obtain rfl | h := Nat.eq_zero_or_pos bn
-  · obtain rfl | rfl := mem_zmod_2 b2
-    · exact Or.inl (Prod.ext (add_zero _).symm (add_zero _).symm)
-    · exact (hb rfl).elim
-  · exact Or.inr ((lt_add_iff_pos_right _).mpr h)
+  obtain rfl | rfl := mem_zmod_2 b2
+  exact Or.inl (Prod.ext (add_zero _).symm (add_zero _).symm)
+  exact (hb rfl).elim
+  exact Or.inr ((lt_add_iff_pos_right _).mpr h)
 
 theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ a b : L, a * b = 0 → a = 0 ∨ b = 0 := by
   rintro ⟨⟨a, a2⟩, ha⟩ ⟨⟨b, b2⟩, hb⟩ ab1
@@ -194,14 +194,14 @@ theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ a b : L, a * b = 0 → a = 0 ∨
   injection ab with abn ab2
   rw [mul_eq_zero] at abn
   rcases abn with (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)
-  · refine Or.inl ?_
-    rcases mem_zmod_2 a2 with (rfl | rfl)
-    · rfl
-    · exact (ha rfl).elim
-  · refine Or.inr ?_
-    rcases mem_zmod_2 b2 with (rfl | rfl)
-    · rfl
-    · exact (hb rfl).elim
+  refine Or.inl ?_
+  rcases mem_zmod_2 a2 with (rfl | rfl)
+  rfl
+  exact (ha rfl).elim
+  refine Or.inr ?_
+  rcases mem_zmod_2 b2 with (rfl | rfl)
+  rfl
+  exact (hb rfl).elim
 
 instance can : CanonicallyOrderedCommSemiring L :=
   { (inferInstance : OrderBot L),

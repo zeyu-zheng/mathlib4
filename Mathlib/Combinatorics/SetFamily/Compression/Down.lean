@@ -82,22 +82,22 @@ theorem memberSubfamily_union (a : α) (𝒜 ℬ : Finset (Finset α)) :
 theorem card_memberSubfamily_add_card_nonMemberSubfamily (a : α) (𝒜 : Finset (Finset α)) :
     (𝒜.memberSubfamily a).card + (𝒜.nonMemberSubfamily a).card = 𝒜.card := by
   rw [memberSubfamily, nonMemberSubfamily, card_image_of_injOn]
-  · conv_rhs => rw [← filter_card_add_filter_neg_card_eq_card (fun s => (a ∈ s))]
-  · apply (erase_injOn' _).mono
-    simp
+  conv_rhs => rw [← filter_card_add_filter_neg_card_eq_card (fun s => (a ∈ s))]
+  apply (erase_injOn' _).mono
+  simp
 
 theorem memberSubfamily_union_nonMemberSubfamily (a : α) (𝒜 : Finset (Finset α)) :
     𝒜.memberSubfamily a ∪ 𝒜.nonMemberSubfamily a = 𝒜.image fun s => s.erase a := by
   ext s
   simp only [mem_union, mem_memberSubfamily, mem_nonMemberSubfamily, mem_image, exists_prop]
   constructor
-  · rintro (h | h)
-    · exact ⟨_, h.1, erase_insert h.2⟩
-    · exact ⟨_, h.1, erase_eq_of_not_mem h.2⟩
-  · rintro ⟨s, hs, rfl⟩
-    by_cases ha : a ∈ s
-    · exact Or.inl ⟨by rwa [insert_erase ha], not_mem_erase _ _⟩
-    · exact Or.inr ⟨by rwa [erase_eq_of_not_mem ha], not_mem_erase _ _⟩
+  rintro (h | h)
+  exact ⟨_, h.1, erase_insert h.2⟩
+  exact ⟨_, h.1, erase_eq_of_not_mem h.2⟩
+  rintro ⟨s, hs, rfl⟩
+  by_cases ha : a ∈ s
+  exact Or.inl ⟨by rwa [insert_erase ha], not_mem_erase _ _⟩
+  exact Or.inr ⟨by rwa [erase_eq_of_not_mem ha], not_mem_erase _ _⟩
 
 @[simp]
 theorem memberSubfamily_memberSubfamily : (𝒜.memberSubfamily a).memberSubfamily a = ∅ := by
@@ -141,9 +141,9 @@ lemma image_insert_memberSubfamily (𝒜 : Finset (Finset α)) (a : α) :
   ext s
   simp only [mem_memberSubfamily, mem_image, mem_filter]
   refine ⟨?_, fun ⟨hs, ha⟩ ↦ ⟨erase s a, ⟨?_, not_mem_erase _ _⟩, insert_erase ha⟩⟩
-  · rintro ⟨s, ⟨hs, -⟩, rfl⟩
-    exact ⟨hs, mem_insert_self _ _⟩
-  · rwa [insert_erase ha]
+  rintro ⟨s, ⟨hs, -⟩, rfl⟩
+  exact ⟨hs, mem_insert_self _ _⟩
+  rwa [insert_erase ha]
 
 /-- Induction principle for finset families. To prove a statement for every finset family,
 it suffices to prove it for
@@ -166,14 +166,14 @@ lemma memberFamily_induction_on {p : Finset (Finset α) → Prop}
   have hu : ∀ s ∈ 𝒜, s ⊆ u := fun s ↦ le_sup (f := id)
   clear_value u
   induction' u using Finset.induction with a u _ ih generalizing 𝒜
-  · simp_rw [subset_empty] at hu
-    rw [← subset_singleton_iff', subset_singleton_iff] at hu
-    obtain rfl | rfl := hu <;> assumption
+  simp_rw [subset_empty] at hu
+  rw [← subset_singleton_iff', subset_singleton_iff] at hu
+  obtain rfl | rfl := hu <;> assumption
   refine subfamily a (ih _ ?_) (ih _ ?_)
-  · simp only [mem_nonMemberSubfamily, and_imp]
-    exact fun s hs has ↦ (subset_insert_iff_of_not_mem has).1 <| hu _ hs
-  · simp only [mem_memberSubfamily, and_imp]
-    exact fun s hs ha ↦ (insert_subset_insert_iff ha).1 <| hu _ hs
+  simp only [mem_nonMemberSubfamily, and_imp]
+  exact fun s hs has ↦ (subset_insert_iff_of_not_mem has).1 <| hu _ hs
+  simp only [mem_memberSubfamily, and_imp]
+  exact fun s hs ha ↦ (insert_subset_insert_iff ha).1 <| hu _ hs
 
 /-- Induction principle for finset families. To prove a statement for every finset family,
 it suffices to prove it for
@@ -244,9 +244,9 @@ theorem erase_mem_compression_of_mem_compression : s ∈ 𝓓 a 𝒜 → s.erase
 
 theorem mem_compression_of_insert_mem_compression (h : insert a s ∈ 𝓓 a 𝒜) : s ∈ 𝓓 a 𝒜 := by
   by_cases ha : a ∈ s
-  · rwa [insert_eq_of_mem ha] at h
-  · rw [← erase_insert ha]
-    exact erase_mem_compression_of_mem_compression h
+  rwa [insert_eq_of_mem ha] at h
+  rw [← erase_insert ha]
+  exact erase_mem_compression_of_mem_compression h
 
 /-- Down-compressing a family is idempotent. -/
 @[simp]
@@ -254,16 +254,16 @@ theorem compression_idem (a : α) (𝒜 : Finset (Finset α)) : 𝓓 a (𝓓 a �
   ext s
   refine mem_compression.trans ⟨?_, fun h => Or.inl ⟨h, erase_mem_compression_of_mem_compression h⟩⟩
   rintro (h | h)
-  · exact h.1
-  · cases h.1 (mem_compression_of_insert_mem_compression h.2)
+  exact h.1
+  cases h.1 (mem_compression_of_insert_mem_compression h.2)
 
 /-- Down-compressing a family doesn't change its size. -/
 @[simp]
 theorem card_compression (a : α) (𝒜 : Finset (Finset α)) : (𝓓 a 𝒜).card = 𝒜.card := by
   rw [compression, card_disjUnion, filter_image,
     card_image_of_injOn ((erase_injOn' _).mono fun s hs => _), ← card_union_of_disjoint]
-  · conv_rhs => rw [← filter_union_filter_neg_eq (fun s => (erase s a ∈ 𝒜)) 𝒜]
-  · exact disjoint_filter_filter_neg 𝒜 𝒜 (fun s => (erase s a ∈ 𝒜))
+  conv_rhs => rw [← filter_union_filter_neg_eq (fun s => (erase s a ∈ 𝒜)) 𝒜]
+  exact disjoint_filter_filter_neg 𝒜 𝒜 (fun s => (erase s a ∈ 𝒜))
   intro s hs
   rw [mem_coe, mem_filter] at hs
   exact not_imp_comm.1 erase_eq_of_not_mem (ne_of_mem_of_not_mem hs.1 hs.2).symm

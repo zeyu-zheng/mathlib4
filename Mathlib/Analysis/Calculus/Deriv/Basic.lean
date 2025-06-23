@@ -481,12 +481,12 @@ theorem differentiableWithinAt_Ioi_iff_Ici [PartialOrder 𝕜] :
 theorem derivWithin_Ioi_eq_Ici {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E] (f : ℝ → E)
     (x : ℝ) : derivWithin f (Ioi x) x = derivWithin f (Ici x) x := by
   by_cases H : DifferentiableWithinAt ℝ f (Ioi x) x
-  · have A := H.hasDerivWithinAt.Ici_of_Ioi
-    have B := (differentiableWithinAt_Ioi_iff_Ici.1 H).hasDerivWithinAt
-    simpa using (uniqueDiffOn_Ici x).eq left_mem_Ici A B
-  · rw [derivWithin_zero_of_not_differentiableWithinAt H,
-      derivWithin_zero_of_not_differentiableWithinAt]
-    rwa [differentiableWithinAt_Ioi_iff_Ici] at H
+  have A := H.hasDerivWithinAt.Ici_of_Ioi
+  have B := (differentiableWithinAt_Ioi_iff_Ici.1 H).hasDerivWithinAt
+  simpa using (uniqueDiffOn_Ici x).eq left_mem_Ici A B
+  rw [derivWithin_zero_of_not_differentiableWithinAt H,
+    derivWithin_zero_of_not_differentiableWithinAt]
+  rwa [differentiableWithinAt_Ioi_iff_Ici] at H
 
 section congr
 

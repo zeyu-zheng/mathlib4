@@ -29,9 +29,9 @@ namespace DirichletCharacter
 /-- The values of a Dirichlet character with target a normed field have norm bounded by `1`. -/
 lemma norm_le_one (a : ZMod n) : ‖χ a‖ ≤ 1 := by
   by_cases h : IsUnit a
-  · exact (χ.unit_norm_eq_one h.unit).le
-  · rw [χ.map_nonunit h, norm_zero]
-    exact zero_le_one
+  exact (χ.unit_norm_eq_one h.unit).le
+  rw [χ.map_nonunit h, norm_zero]
+  exact zero_le_one
 
 
 end DirichletCharacter

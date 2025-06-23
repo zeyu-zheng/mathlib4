@@ -265,8 +265,8 @@ theorem preimage_image (s : Set H) : I ⁻¹' (I '' s) = s :=
 
 protected theorem image_eq (s : Set H) : I '' s = I.symm ⁻¹' s ∩ range I := by
   refine (I.toPartialEquiv.image_eq_target_inter_inv_preimage ?_).trans ?_
-  · rw [I.source_eq]; exact subset_univ _
-  · rw [inter_comm, I.target_eq, I.toPartialEquiv_coe_symm]
+  rw [I.source_eq]; exact subset_univ _
+  rw [inter_comm, I.target_eq, I.toPartialEquiv_coe_symm]
 
 protected theorem closedEmbedding : ClosedEmbedding I :=
   I.leftInverse.closedEmbedding I.continuous_symm I.continuous
@@ -307,11 +307,11 @@ theorem symm_continuousWithinAt_comp_right_iff {X} [TopologicalSpace X] {f : H �
     {x : H} :
     ContinuousWithinAt (f ∘ I.symm) (I.symm ⁻¹' s ∩ range I) (I x) ↔ ContinuousWithinAt f s x := by
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · have := h.comp I.continuousWithinAt (mapsTo_preimage _ _)
-    simp_rw [preimage_inter, preimage_preimage, I.left_inv, preimage_id', preimage_range,
-      inter_univ] at this
-    rwa [Function.comp.assoc, I.symm_comp_self] at this
-  · rw [← I.left_inv x] at h; exact h.comp I.continuousWithinAt_symm inter_subset_left
+  have := h.comp I.continuousWithinAt (mapsTo_preimage _ _)
+  simp_rw [preimage_inter, preimage_preimage, I.left_inv, preimage_id', preimage_range,
+    inter_univ] at this
+  rwa [Function.comp.assoc, I.symm_comp_self] at this
+  rw [← I.left_inv x] at h; exact h.comp I.continuousWithinAt_symm inter_subset_left
 
 protected theorem locallyCompactSpace [LocallyCompactSpace E] (I : ModelWithCorners 𝕜 E H) :
     LocallyCompactSpace H := by
@@ -541,10 +541,10 @@ theorem contDiffGroupoid_zero_eq : contDiffGroupoid 0 I = continuousGroupoid H :
   rw [contDiffGroupoid, mem_groupoid_of_pregroupoid, contDiffPregroupoid]
   simp only [contDiffOn_zero]
   constructor
-  · refine I.continuous.comp_continuousOn (u.continuousOn.comp I.continuousOn_symm ?_)
-    exact (mapsTo_preimage _ _).mono_left inter_subset_left
-  · refine I.continuous.comp_continuousOn (u.symm.continuousOn.comp I.continuousOn_symm ?_)
-    exact (mapsTo_preimage _ _).mono_left inter_subset_left
+  refine I.continuous.comp_continuousOn (u.continuousOn.comp I.continuousOn_symm ?_)
+  exact (mapsTo_preimage _ _).mono_left inter_subset_left
+  refine I.continuous.comp_continuousOn (u.symm.continuousOn.comp I.continuousOn_symm ?_)
+  exact (mapsTo_preimage _ _).mono_left inter_subset_left
 
 variable (n)
 
@@ -576,14 +576,14 @@ theorem contDiffGroupoid_prod {I : ModelWithCorners 𝕜 E H} {I' : ModelWithCor
   simp only at he he_symm he' he'_symm
   constructor <;> simp only [PartialEquiv.prod_source, PartialHomeomorph.prod_toPartialEquiv,
     contDiffPregroupoid]
-  · have h3 := ContDiffOn.prod_map he he'
-    rw [← I.image_eq, ← I'.image_eq, prod_image_image_eq] at h3
-    rw [← (I.prod I').image_eq]
-    exact h3
-  · have h3 := ContDiffOn.prod_map he_symm he'_symm
-    rw [← I.image_eq, ← I'.image_eq, prod_image_image_eq] at h3
-    rw [← (I.prod I').image_eq]
-    exact h3
+  have h3 := ContDiffOn.prod_map he he'
+  rw [← I.image_eq, ← I'.image_eq, prod_image_image_eq] at h3
+  rw [← (I.prod I').image_eq]
+  exact h3
+  have h3 := ContDiffOn.prod_map he_symm he'_symm
+  rw [← I.image_eq, ← I'.image_eq, prod_image_image_eq] at h3
+  rw [← (I.prod I').image_eq]
+  exact h3
 
 /-- The `C^n` groupoid is closed under restriction. -/
 instance : ClosedUnderRestriction (contDiffGroupoid n I) :=

@@ -217,8 +217,8 @@ instance : Pow (NumDenSameDeg 𝒜 x) ℕ where
     ⟨n • c.deg, @GradedMonoid.GMonoid.gnpow _ (fun i => ↥(𝒜 i)) _ _ n _ c.num,
       @GradedMonoid.GMonoid.gnpow _ (fun i => ↥(𝒜 i)) _ _ n _ c.den, by
         induction' n with n ih
-        · simpa only [Nat.zero_eq, coe_gnpow, pow_zero] using Submonoid.one_mem _
-        · simpa only [pow_succ, coe_gnpow] using x.mul_mem ih c.den_mem⟩
+        simpa only [Nat.zero_eq, coe_gnpow, pow_zero] using Submonoid.one_mem _
+        simpa only [pow_succ, coe_gnpow] using x.mul_mem ih c.den_mem⟩
 
 @[simp]
 theorem deg_pow (c : NumDenSameDeg 𝒜 x) (n : ℕ) : (c ^ n).deg = n • c.deg :=
@@ -554,8 +554,8 @@ theorem Away.eventually_smul_mem {m} (hf : f ∈ 𝒜 m) (z : Away 𝒜 f) :
   rintro k' (hk' : k ≤ k')
   simp only [Set.mem_image, SetLike.mem_coe, Set.mem_setOf_eq]
   by_cases hfk : f ^ k = 0
-  · refine ⟨0, zero_mem _, ?_⟩
-    rw [← tsub_add_cancel_of_le hk', map_zero, pow_add, hfk, mul_zero, zero_smul]
+  refine ⟨0, zero_mem _, ?_⟩
+  rw [← tsub_add_cancel_of_le hk', map_zero, pow_add, hfk, mul_zero, zero_smul]
   rw [← tsub_add_cancel_of_le hk', pow_add, mul_smul, hk, den_smul_val,
     Algebra.smul_def, ← _root_.map_mul]
   rw [← smul_eq_mul, add_smul,

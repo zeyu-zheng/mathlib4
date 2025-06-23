@@ -159,13 +159,13 @@ theorem tendsto_const_mul_zpow_atTop_zero {n : ℤ} {c : 𝕜} (hn : n < 0) :
 theorem tendsto_const_mul_pow_nhds_iff' {n : ℕ} {c d : 𝕜} :
     Tendsto (fun x : 𝕜 => c * x ^ n) atTop (𝓝 d) ↔ (c = 0 ∨ n = 0) ∧ c = d := by
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp [tendsto_const_nhds_iff]
+  simp [tendsto_const_nhds_iff]
   rcases lt_trichotomy c 0 with (hc | rfl | hc)
-  · have := tendsto_const_mul_pow_atBot_iff.2 ⟨hn, hc⟩
-    simp [not_tendsto_nhds_of_tendsto_atBot this, hc.ne, hn]
-  · simp [tendsto_const_nhds_iff]
-  · have := tendsto_const_mul_pow_atTop_iff.2 ⟨hn, hc⟩
-    simp [not_tendsto_nhds_of_tendsto_atTop this, hc.ne', hn]
+  have := tendsto_const_mul_pow_atBot_iff.2 ⟨hn, hc⟩
+  simp [not_tendsto_nhds_of_tendsto_atBot this, hc.ne, hn]
+  simp [tendsto_const_nhds_iff]
+  have := tendsto_const_mul_pow_atTop_iff.2 ⟨hn, hc⟩
+  simp [not_tendsto_nhds_of_tendsto_atTop this, hc.ne', hn]
 
 theorem tendsto_const_mul_pow_nhds_iff {n : ℕ} {c d : 𝕜} (hc : c ≠ 0) :
     Tendsto (fun x : 𝕜 => c * x ^ n) atTop (𝓝 d) ↔ n = 0 ∧ c = d := by
@@ -174,30 +174,30 @@ theorem tendsto_const_mul_pow_nhds_iff {n : ℕ} {c d : 𝕜} (hc : c ≠ 0) :
 theorem tendsto_const_mul_zpow_atTop_nhds_iff {n : ℤ} {c d : 𝕜} (hc : c ≠ 0) :
     Tendsto (fun x : 𝕜 => c * x ^ n) atTop (𝓝 d) ↔ n = 0 ∧ c = d ∨ n < 0 ∧ d = 0 := by
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · cases n with -- Porting note: Lean 3 proof used `by_cases`, then `lift` but `lift` failed
-    | ofNat n =>
-      left
-      simpa [tendsto_const_mul_pow_nhds_iff hc] using h
-    | negSucc n =>
-      have hn := Int.negSucc_lt_zero n
-      exact Or.inr ⟨hn, tendsto_nhds_unique h (tendsto_const_mul_zpow_atTop_zero hn)⟩
-  · cases' h with h h
-    · simp only [h.left, h.right, zpow_zero, mul_one]
-      exact tendsto_const_nhds
-    · exact h.2.symm ▸ tendsto_const_mul_zpow_atTop_zero h.1
+  cases n with -- Porting note: Lean 3 proof used `by_cases`, then `lift` but `lift` failed
+  | ofNat n =>
+    left
+    simpa [tendsto_const_mul_pow_nhds_iff hc] using h
+  | negSucc n =>
+    have hn := Int.negSucc_lt_zero n
+    exact Or.inr ⟨hn, tendsto_nhds_unique h (tendsto_const_mul_zpow_atTop_zero hn)⟩
+  cases' h with h h
+  simp only [h.left, h.right, zpow_zero, mul_one]
+  exact tendsto_const_nhds
+  exact h.2.symm ▸ tendsto_const_mul_zpow_atTop_zero h.1
 
 -- see Note [lower instance priority]
 instance (priority := 100) LinearOrderedSemifield.toHasContinuousInv₀ {𝕜}
     [LinearOrderedSemifield 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] [ContinuousMul 𝕜] :
     HasContinuousInv₀ 𝕜 := .of_nhds_one <| tendsto_order.2 <| by
   refine ⟨fun x hx => ?_, fun x hx => ?_⟩
-  · obtain ⟨x', h₀, hxx', h₁⟩ : ∃ x', 0 < x' ∧ x ≤ x' ∧ x' < 1 :=
-      ⟨max x (1 / 2), one_half_pos.trans_le (le_max_right _ _), le_max_left _ _,
-        max_lt hx one_half_lt_one⟩
-    filter_upwards [Ioo_mem_nhds one_pos (one_lt_inv h₀ h₁)] with y hy
-    exact hxx'.trans_lt <| inv_inv x' ▸ inv_lt_inv_of_lt hy.1 hy.2
-  · filter_upwards [Ioi_mem_nhds (inv_lt_one hx)] with y hy
-    simpa only [inv_inv] using inv_lt_inv_of_lt (inv_pos.2 <| one_pos.trans hx) hy
+  obtain ⟨x', h₀, hxx', h₁⟩ : ∃ x', 0 < x' ∧ x ≤ x' ∧ x' < 1 :=
+    ⟨max x (1 / 2), one_half_pos.trans_le (le_max_right _ _), le_max_left _ _,
+      max_lt hx one_half_lt_one⟩
+  filter_upwards [Ioo_mem_nhds one_pos (one_lt_inv h₀ h₁)] with y hy
+  exact hxx'.trans_lt <| inv_inv x' ▸ inv_lt_inv_of_lt hy.1 hy.2
+  filter_upwards [Ioi_mem_nhds (inv_lt_one hx)] with y hy
+  simpa only [inv_inv] using inv_lt_inv_of_lt (inv_pos.2 <| one_pos.trans hx) hy
 
 instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing :
     TopologicalDivisionRing 𝕜 := ⟨⟩

@@ -147,16 +147,16 @@ theorem isLimit_iff_isSheafFor :
   dsimp [IsSheafFor]; simp_rw [compatible_iff_sieveCompatible]
   rw [((Cone.isLimitEquivIsTerminal _).trans (isTerminalEquivUnique _ _)).nonempty_congr]
   rw [Classical.nonempty_pi]; constructor
-  · intro hu E x hx
-    specialize hu hx.cone
-    erw [(homEquivAmalgamation hx).uniqueCongr.nonempty_congr] at hu
-    exact (unique_subtype_iff_exists_unique _).1 hu
-  · rintro h ⟨E, π⟩
-    let eqv := conesEquivSieveCompatibleFamily P S (op E)
-    rw [← eqv.left_inv π]
-    erw [(homEquivAmalgamation (eqv π).2).uniqueCongr.nonempty_congr]
-    rw [unique_subtype_iff_exists_unique]
-    exact h _ _ (eqv π).2
+  intro hu E x hx
+  specialize hu hx.cone
+  erw [(homEquivAmalgamation hx).uniqueCongr.nonempty_congr] at hu
+  exact (unique_subtype_iff_exists_unique _).1 hu
+  rintro h ⟨E, π⟩
+  let eqv := conesEquivSieveCompatibleFamily P S (op E)
+  rw [← eqv.left_inv π]
+  erw [(homEquivAmalgamation (eqv π).2).uniqueCongr.nonempty_congr]
+  rw [unique_subtype_iff_exists_unique]
+  exact h _ _ (eqv π).2
 
 /-- Given sieve `S` and presheaf `P : Cᵒᵖ ⥤ A`, their natural associated cone admits at most one
     morphism from every cone in the same category (i.e. over the same diagram),
@@ -165,22 +165,22 @@ theorem subsingleton_iff_isSeparatedFor :
     (∀ c, Subsingleton (c ⟶ P.mapCone S.arrows.cocone.op)) ↔
       ∀ E : Aᵒᵖ, IsSeparatedFor (P ⋙ coyoneda.obj E) S.arrows := by
   constructor
-  · intro hs E x t₁ t₂ h₁ h₂
-    have hx := is_compatible_of_exists_amalgamation x ⟨t₁, h₁⟩
-    rw [compatible_iff_sieveCompatible] at hx
-    specialize hs hx.cone
-    rcases hs with ⟨hs⟩
-    simpa only [Subtype.mk.injEq] using (show Subtype.mk t₁ h₁ = ⟨t₂, h₂⟩ from
-      (homEquivAmalgamation hx).symm.injective (hs _ _))
-  · rintro h ⟨E, π⟩
-    let eqv := conesEquivSieveCompatibleFamily P S (op E)
-    constructor
-    rw [← eqv.left_inv π]
-    intro f₁ f₂
-    let eqv' := homEquivAmalgamation (eqv π).2
-    apply eqv'.injective
-    ext
-    apply h _ (eqv π).1 <;> exact (eqv' _).2
+  intro hs E x t₁ t₂ h₁ h₂
+  have hx := is_compatible_of_exists_amalgamation x ⟨t₁, h₁⟩
+  rw [compatible_iff_sieveCompatible] at hx
+  specialize hs hx.cone
+  rcases hs with ⟨hs⟩
+  simpa only [Subtype.mk.injEq] using (show Subtype.mk t₁ h₁ = ⟨t₂, h₂⟩ from
+    (homEquivAmalgamation hx).symm.injective (hs _ _))
+  rintro h ⟨E, π⟩
+  let eqv := conesEquivSieveCompatibleFamily P S (op E)
+  constructor
+  rw [← eqv.left_inv π]
+  intro f₁ f₂
+  let eqv' := homEquivAmalgamation (eqv π).2
+  apply eqv'.injective
+  ext
+  apply h _ (eqv π).1 <;> exact (eqv' _).2
 
 /-- A presheaf `P` is a sheaf for the Grothendieck topology `J` iff for every covering sieve
     `S` of `J`, the natural cone associated to `P` and `S` is a limit cone. -/
@@ -386,22 +386,22 @@ def sheafOver {A : Type u₂} [Category.{v₂} A] {J : GrothendieckTopology C} (
 theorem isSheaf_iff_isSheaf_of_type (P : Cᵒᵖ ⥤ Type w) :
     Presheaf.IsSheaf J P ↔ Presieve.IsSheaf J P := by
   constructor
-  · intro hP
-    refine Presieve.isSheaf_iso J ?_ (hP PUnit)
-    exact isoWhiskerLeft _ Coyoneda.punitIso ≪≫ P.rightUnitor
-  · intro hP X Y S hS z hz
-    refine ⟨fun x => (hP S hS).amalgamate (fun Z f hf => z f hf x) ?_, ?_, ?_⟩
-    · intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ hf₁ hf₂ h
-      exact congr_fun (hz g₁ g₂ hf₁ hf₂ h) x
-    · intro Z f hf
-      funext x
-      apply Presieve.IsSheafFor.valid_glue
-    · intro y hy
-      funext x
-      apply (hP S hS).isSeparatedFor.ext
-      intro Y' f hf
-      rw [Presieve.IsSheafFor.valid_glue _ _ _ hf, ← hy _ hf]
-      rfl
+  intro hP
+  refine Presieve.isSheaf_iso J ?_ (hP PUnit)
+  exact isoWhiskerLeft _ Coyoneda.punitIso ≪≫ P.rightUnitor
+  intro hP X Y S hS z hz
+  refine ⟨fun x => (hP S hS).amalgamate (fun Z f hf => z f hf x) ?_, ?_, ?_⟩
+  intro Y₁ Y₂ Z g₁ g₂ f₁ f₂ hf₁ hf₂ h
+  exact congr_fun (hz g₁ g₂ hf₁ hf₂ h) x
+  intro Z f hf
+  funext x
+  apply Presieve.IsSheafFor.valid_glue
+  intro y hy
+  funext x
+  apply (hP S hS).isSeparatedFor.ext
+  intro Y' f hf
+  rw [Presieve.IsSheafFor.valid_glue _ _ _ hf, ← hy _ hf]
+  rfl
 
 variable {J} in
 lemma Presheaf.IsSheaf.isSheafFor {P : Cᵒᵖ ⥤ Type w} (hP : Presheaf.IsSheaf J P)
@@ -447,11 +447,11 @@ instance sheafHomHasZSMul : SMul ℤ (P ⟶ Q) where
       { app := fun U => n • f.1.app U
         naturality := fun U V i => by
           induction' n using Int.induction_on with n ih n ih
-          · simp only [zero_smul, comp_zero, zero_comp]
-          · simpa only [add_zsmul, one_zsmul, comp_add, NatTrans.naturality, add_comp,
-              add_left_inj]
-          · simpa only [sub_smul, one_zsmul, comp_sub, NatTrans.naturality, sub_comp,
-              sub_left_inj] using ih }
+          simp only [zero_smul, comp_zero, zero_comp]
+          simpa only [add_zsmul, one_zsmul, comp_add, NatTrans.naturality, add_comp,
+            add_left_inj]
+          simpa only [sub_smul, one_zsmul, comp_sub, NatTrans.naturality, sub_comp,
+            sub_left_inj] using ih }
 
 instance : Sub (P ⟶ Q) where sub f g := Sheaf.Hom.mk <| f.1 - g.1
 
@@ -463,9 +463,9 @@ instance sheafHomHasNSMul : SMul ℕ (P ⟶ Q) where
       { app := fun U => n • f.1.app U
         naturality := fun U V i => by
           induction' n with n ih
-          · simp only [zero_smul, comp_zero, zero_comp, Nat.zero_eq]
-          · simp only [Nat.succ_eq_add_one, add_smul, ih, one_nsmul, comp_add,
-              NatTrans.naturality, add_comp] }
+          simp only [zero_smul, comp_zero, zero_comp, Nat.zero_eq]
+          simp only [Nat.succ_eq_add_one, add_smul, ih, one_nsmul, comp_add,
+            NatTrans.naturality, add_comp] }
 
 instance : Zero (P ⟶ Q) where zero := Sheaf.Hom.mk 0
 
@@ -542,16 +542,16 @@ theorem isSheaf_iff_multifork :
     (fun I => hx _ _ _ _ I.r.w)
   use hh.lift K
   dsimp; constructor
-  · intro Y f hf
-    apply hh.fac K (WalkingMulticospan.left ⟨Y, f, hf⟩)
-  · intro e he
-    apply hh.uniq K
-    rintro (a | b)
-    · apply he
-    · rw [← K.w (WalkingMulticospan.Hom.fst b), ←
-        (T.multifork P).w (WalkingMulticospan.Hom.fst b), ← assoc]
-      congr 1
-      apply he
+  intro Y f hf
+  apply hh.fac K (WalkingMulticospan.left ⟨Y, f, hf⟩)
+  intro e he
+  apply hh.uniq K
+  rintro (a | b)
+  apply he
+  rw [← K.w (WalkingMulticospan.Hom.fst b), ←
+    (T.multifork P).w (WalkingMulticospan.Hom.fst b), ← assoc]
+  congr 1
+  apply he
 
 variable {J P} in
 /-- If `F : Cᵒᵖ ⥤ A` is a sheaf for a Grothendieck topology `J` on `C`,
@@ -565,18 +565,18 @@ theorem isSheaf_iff_multiequalizer [∀ (X : C) (S : J.Cover X), HasMultiequaliz
     IsSheaf J P ↔ ∀ (X : C) (S : J.Cover X), IsIso (S.toMultiequalizer P) := by
   rw [isSheaf_iff_multifork]
   refine forall₂_congr fun X S => ⟨?_, ?_⟩
-  · rintro ⟨h⟩
-    let e : P.obj (op X) ≅ multiequalizer (S.index P) :=
-      h.conePointUniqueUpToIso (limit.isLimit _)
-    exact (inferInstance : IsIso e.hom)
-  · intro h
-    refine ⟨IsLimit.ofIsoLimit (limit.isLimit _) (Cones.ext ?_ ?_)⟩
-    · apply (@asIso _ _ _ _ _ h).symm
-    · intro a
-      symm
-      erw [IsIso.inv_comp_eq]
-      dsimp
-      simp
+  rintro ⟨h⟩
+  let e : P.obj (op X) ≅ multiequalizer (S.index P) :=
+    h.conePointUniqueUpToIso (limit.isLimit _)
+  exact (inferInstance : IsIso e.hom)
+  intro h
+  refine ⟨IsLimit.ofIsoLimit (limit.isLimit _) (Cones.ext ?_ ?_)⟩
+  apply (@asIso _ _ _ _ _ h).symm
+  intro a
+  symm
+  erw [IsIso.inv_comp_eq]
+  dsimp
+  simp
 
 end MultiequalizerConditions
 
@@ -663,23 +663,23 @@ def isSheafForIsSheafFor' (P : Cᵒᵖ ⥤ A) (s : A ⥤ Type max v₁ u₁)
 /-- The equalizer definition of a sheaf given by `isSheaf'` is equivalent to `isSheaf`. -/
 theorem isSheaf_iff_isSheaf' : IsSheaf J P' ↔ IsSheaf' J P' := by
   constructor
-  · intro h U R hR
-    refine ⟨?_⟩
-    apply coyonedaJointlyReflectsLimits
-    intro X
-    have q : Presieve.IsSheafFor (P' ⋙ coyoneda.obj X) _ := h X.unop _ hR
-    rw [← Presieve.isSheafFor_iff_generate] at q
-    rw [Equalizer.Presieve.sheaf_condition] at q
-    replace q := Classical.choice q
-    apply (isSheafForIsSheafFor' _ _ _ _).symm q
-  · intro h U X S hS
-    rw [Equalizer.Presieve.sheaf_condition]
-    refine ⟨?_⟩
-    refine isSheafForIsSheafFor' _ _ _ _ ?_
-    letI := preservesSmallestLimitsOfPreservesLimits (coyoneda.obj (op U))
-    apply isLimitOfPreserves
-    apply Classical.choice (h _ S.arrows _)
-    simpa
+  intro h U R hR
+  refine ⟨?_⟩
+  apply coyonedaJointlyReflectsLimits
+  intro X
+  have q : Presieve.IsSheafFor (P' ⋙ coyoneda.obj X) _ := h X.unop _ hR
+  rw [← Presieve.isSheafFor_iff_generate] at q
+  rw [Equalizer.Presieve.sheaf_condition] at q
+  replace q := Classical.choice q
+  apply (isSheafForIsSheafFor' _ _ _ _).symm q
+  intro h U X S hS
+  rw [Equalizer.Presieve.sheaf_condition]
+  refine ⟨?_⟩
+  refine isSheafForIsSheafFor' _ _ _ _ ?_
+  letI := preservesSmallestLimitsOfPreservesLimits (coyoneda.obj (op U))
+  apply isLimitOfPreserves
+  apply Classical.choice (h _ S.arrows _)
+  simpa
 
 end
 

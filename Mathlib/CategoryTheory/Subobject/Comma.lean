@@ -82,10 +82,10 @@ theorem lift_projectSubobject [HasLimits C] [PreservesLimits T] {A : StructuredA
     (by
       intro P f hf q hq
       fapply Subobject.mk_eq_mk_of_comm
-      · fapply isoMk
-        · exact Subobject.underlyingIso _
-        · exact (cancel_mono (T.map f.right)).1 (by dsimp; simpa [← T.map_comp] using hq)
-      · exact ext _ _ (by dsimp; simp))
+      fapply isoMk
+      exact Subobject.underlyingIso _
+      exact (cancel_mono (T.map f.right)).1 (by dsimp; simpa [← T.map_comp] using hq)
+      exact ext _ _ (by dsimp; simp))
 
 /-- If `A : S → T.obj B` is a structured arrow for `S : D` and `T : C ⥤ D`, then we can explicitly
     describe the subobjects of `A` as the subobjects `P` of `B` in `C` for which `A.hom` factors
@@ -176,11 +176,11 @@ theorem lift_projectQuotient [HasColimits C] [PreservesColimits S] {A : Costruct
     (by
       intro P f hf q hq
       fapply Subobject.mk_eq_mk_of_comm
-      · refine (Iso.op (isoMk ?_ ?_) : _ ≅ op (unop P))
-        · exact (Subobject.underlyingIso f.unop.left.op).unop
-        · refine (cancel_epi (S.map f.unop.left)).1 ?_
-          simpa [← Category.assoc, ← S.map_comp] using hq
-      · exact Quiver.Hom.unop_inj (by aesop_cat))
+      refine (Iso.op (isoMk ?_ ?_) : _ ≅ op (unop P))
+      exact (Subobject.underlyingIso f.unop.left.op).unop
+      refine (cancel_epi (S.map f.unop.left)).1 ?_
+      simpa [← Category.assoc, ← S.map_comp] using hq
+      exact Quiver.Hom.unop_inj (by aesop_cat))
 
 /-- Technical lemma for `quotientEquiv`. -/
 theorem unop_left_comp_ofMkLEMk_unop {A : CostructuredArrow S T} {P Q : (CostructuredArrow S T)ᵒᵖ}

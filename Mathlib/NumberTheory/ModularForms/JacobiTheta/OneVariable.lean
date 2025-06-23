@@ -53,16 +53,16 @@ theorem norm_exp_mul_sq_le {τ : ℂ} (hτ : 0 < τ.im) (n : ℤ) :
   let y := rexp (-π * τ.im)
   have h : y < 1 := exp_lt_one_iff.mpr (mul_neg_of_neg_of_pos (neg_lt_zero.mpr pi_pos) hτ)
   refine (le_of_eq ?_).trans (?_ : y ^ n ^ 2 ≤ _)
-  · rw [Complex.norm_eq_abs, Complex.abs_exp]
-    have : (π * I * n ^ 2 * τ : ℂ).re = -π * τ.im * (n : ℝ) ^ 2
-    rw [(by push_cast; ring : (π * I * n ^ 2 * τ : ℂ) = (π * n ^ 2 : ℝ) * (τ * I)),
-      re_ofReal_mul, mul_I_re]
-    ring
-    obtain ⟨m, hm⟩ := Int.eq_ofNat_of_zero_le (sq_nonneg n)
-    rw [this, exp_mul, ← Int.cast_pow, rpow_intCast, hm, zpow_natCast]
-  · have : n ^ 2 = (n.natAbs ^ 2 :) := by rw [Nat.cast_pow, Int.natAbs_sq]
-    rw [this, zpow_natCast]
-    exact pow_le_pow_of_le_one (exp_pos _).le h.le ((sq n.natAbs).symm ▸ n.natAbs.le_mul_self)
+  rw [Complex.norm_eq_abs, Complex.abs_exp]
+  have : (π * I * n ^ 2 * τ : ℂ).re = -π * τ.im * (n : ℝ) ^ 2
+  rw [(by push_cast; ring : (π * I * n ^ 2 * τ : ℂ) = (π * n ^ 2 : ℝ) * (τ * I)),
+    re_ofReal_mul, mul_I_re]
+  ring
+  obtain ⟨m, hm⟩ := Int.eq_ofNat_of_zero_le (sq_nonneg n)
+  rw [this, exp_mul, ← Int.cast_pow, rpow_intCast, hm, zpow_natCast]
+  have : n ^ 2 = (n.natAbs ^ 2 :) := by rw [Nat.cast_pow, Int.natAbs_sq]
+  rw [this, zpow_natCast]
+  exact pow_le_pow_of_le_one (exp_pos _).le h.le ((sq n.natAbs).symm ▸ n.natAbs.le_mul_self)
 
 theorem hasSum_nat_jacobiTheta {τ : ℂ} (hτ : 0 < im τ) :
     HasSum (fun n : ℕ => cexp (π * I * ((n : ℂ) + 1) ^ 2 * τ)) ((jacobiTheta τ - 1) / 2) := by
@@ -114,10 +114,10 @@ theorem isBigO_at_im_infty_jacobiTheta_sub_one :
   rw [Real.norm_eq_abs, Real.abs_exp]
   refine mul_le_mul_of_nonneg_right ?_ (exp_pos _).le
   rw [div_le_div_left (zero_lt_two' ℝ), sub_le_sub_iff_left, exp_le_exp, neg_mul, neg_le_neg_iff]
-  · exact le_mul_of_one_le_right pi_pos.le (hτ.symm ▸ hy)
-  · rw [sub_pos, exp_lt_one_iff, neg_mul, neg_lt_zero]
-    exact mul_pos pi_pos (hτ.symm ▸ zero_lt_one.trans_le hy)
-  · rw [sub_pos, exp_lt_one_iff, neg_lt_zero]; exact pi_pos
+  exact le_mul_of_one_le_right pi_pos.le (hτ.symm ▸ hy)
+  rw [sub_pos, exp_lt_one_iff, neg_mul, neg_lt_zero]
+  exact mul_pos pi_pos (hτ.symm ▸ zero_lt_one.trans_le hy)
+  rw [sub_pos, exp_lt_one_iff, neg_lt_zero]; exact pi_pos
 
 theorem differentiableAt_jacobiTheta {τ : ℂ} (hτ : 0 < im τ) :
     DifferentiableAt ℂ jacobiTheta τ := by

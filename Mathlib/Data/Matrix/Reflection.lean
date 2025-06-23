@@ -101,10 +101,10 @@ theorem transposeᵣ_eq : ∀ {m n} (A : Matrix (Fin m) (Fin n) α), transpose�
     Matrix.ext fun i j => by
       simp_rw [transposeᵣ, transposeᵣ_eq]
       refine i.cases ?_ fun i => ?_
-      · dsimp
-        rw [FinVec.map_eq, Function.comp_apply]
-      · simp only [of_apply, Matrix.cons_val_succ]
-        rfl
+      dsimp
+      rw [FinVec.map_eq, Function.comp_apply]
+      simp only [of_apply, Matrix.cons_val_succ]
+      rfl
 
 example (a b c d : α) : transpose !![a, b; c, d] = !![a, c; b, d] :=
   (transposeᵣ_eq _).symm

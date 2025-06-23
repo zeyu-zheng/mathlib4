@@ -63,13 +63,13 @@ theorem cutExpand_le_invImage_lex [DecidableEq α] [IsIrrefl α r] :
   rintro s t ⟨u, a, hr, he⟩
   replace hr := fun a' ↦ mt (hr a')
   refine ⟨a, fun b h ↦ ?_, ?_⟩ <;> simp_rw [toFinsupp_apply]
-  · apply_fun count b at he
-    simpa only [count_add, count_singleton, if_neg h.2, add_zero, count_eq_zero.2 (hr b h.1)]
-      using he
-  · apply_fun count a at he
-    simp only [count_add, count_singleton_self, count_eq_zero.2 (hr _ (irrefl_of r a)),
-      add_zero] at he
-    exact he ▸ Nat.lt_succ_self _
+  apply_fun count b at he
+  simpa only [count_add, count_singleton, if_neg h.2, add_zero, count_eq_zero.2 (hr b h.1)]
+    using he
+  apply_fun count a at he
+  simp only [count_add, count_singleton_self, count_eq_zero.2 (hr _ (irrefl_of r a)),
+    add_zero] at he
+  exact he ▸ Nat.lt_succ_self _
 
 theorem cutExpand_singleton {s x} (h : ∀ x' ∈ s, r x' x) : CutExpand r s {x} :=
   ⟨s, x, h, add_comm s _⟩
@@ -91,8 +91,8 @@ theorem cutExpand_iff [DecidableEq α] [IsIrrefl α r] {s' s : Multiset α} :
   · rintro ⟨ht, ha, rfl⟩
     obtain h | h := mem_add.1 ha
     exacts [⟨ht, h, erase_add_left_pos t h⟩, (@irrefl α r _ a (ht a h)).elim]
-  · rintro ⟨ht, h, rfl⟩
-    exact ⟨ht, mem_add.2 (Or.inl h), (erase_add_left_pos t h).symm⟩
+  rintro ⟨ht, h, rfl⟩
+  exact ⟨ht, mem_add.2 (Or.inl h), (erase_add_left_pos t h).symm⟩
 
 open Classical in
 theorem not_cutExpand_zero [IsIrrefl α r] (s) : ¬CutExpand r s 0 := by
@@ -110,12 +110,12 @@ theorem cutExpand_fibration (r : α → α → Prop) :
   obtain ⟨ha, rfl⟩ := add_singleton_eq_iff.1 he
   rw [add_assoc, mem_add] at ha
   obtain h | h := ha
-  · refine ⟨(s₁.erase a + t, s₂), GameAdd.fst ⟨t, a, hr, ?_⟩, ?_⟩
-    · rw [add_comm, ← add_assoc, singleton_add, cons_erase h]
-    · rw [add_assoc s₁, erase_add_left_pos _ h, add_right_comm, add_assoc]
-  · refine ⟨(s₁, (s₂ + t).erase a), GameAdd.snd ⟨t, a, hr, ?_⟩, ?_⟩
-    · rw [add_comm, singleton_add, cons_erase h]
-    · rw [add_assoc, erase_add_right_pos _ h]
+  refine ⟨(s₁.erase a + t, s₂), GameAdd.fst ⟨t, a, hr, ?_⟩, ?_⟩
+  rw [add_comm, ← add_assoc, singleton_add, cons_erase h]
+  rw [add_assoc s₁, erase_add_left_pos _ h, add_right_comm, add_assoc]
+  refine ⟨(s₁, (s₂ + t).erase a), GameAdd.snd ⟨t, a, hr, ?_⟩, ?_⟩
+  rw [add_comm, singleton_add, cons_erase h]
+  rw [add_assoc, erase_add_right_pos _ h]
 
 open Classical in
 /-- `CutExpand` preserves leftward-closedness under a relation. -/

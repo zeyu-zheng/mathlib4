@@ -48,9 +48,9 @@ theorem dense_iInter_of_isOpen_nat {f : ℕ → Set X} (ho : ∀ n, IsOpen (f n)
 theorem dense_sInter_of_isOpen {S : Set (Set X)} (ho : ∀ s ∈ S, IsOpen s) (hS : S.Countable)
     (hd : ∀ s ∈ S, Dense s) : Dense (⋂₀ S) := by
   rcases S.eq_empty_or_nonempty with h | h
-  · simp [h]
-  · rcases hS.exists_eq_range h with ⟨f, rfl⟩
-    exact dense_iInter_of_isOpen_nat (forall_mem_range.1 ho) (forall_mem_range.1 hd)
+  simp [h]
+  rcases hS.exists_eq_range h with ⟨f, rfl⟩
+  exact dense_iInter_of_isOpen_nat (forall_mem_range.1 ho) (forall_mem_range.1 hd)
 
 /-- Baire theorem: a countable intersection of dense open sets is dense. Formulated here with
 an index set which is a countable set in any type. -/
@@ -68,10 +68,10 @@ theorem dense_iInter_of_isOpen [Countable ι] {f : ι → Set X} (ho : ∀ i, Is
 /-- A set is residual (comeagre) if and only if it includes a dense `Gδ` set. -/
 theorem mem_residual {s : Set X} : s ∈ residual X ↔ ∃ t ⊆ s, IsGδ t ∧ Dense t := by
   constructor
-  · rw [mem_residual_iff]
-    rintro ⟨S, hSo, hSd, Sct, Ss⟩
-    refine ⟨_, Ss, ⟨_, fun t ht => hSo _ ht, Sct, rfl⟩, ?_⟩
-    exact dense_sInter_of_isOpen hSo Sct hSd
+  rw [mem_residual_iff]
+  rintro ⟨S, hSo, hSd, Sct, Ss⟩
+  refine ⟨_, Ss, ⟨_, fun t ht => hSo _ ht, Sct, rfl⟩, ?_⟩
+  exact dense_sInter_of_isOpen hSo Sct hSd
   rintro ⟨t, ts, ho, hd⟩
   exact mem_of_superset (residual_of_dense_Gδ ho hd) ts
 

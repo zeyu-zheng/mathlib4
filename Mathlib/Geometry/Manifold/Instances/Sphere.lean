@@ -96,9 +96,9 @@ theorem contDiffOn_stereoToFun :
     ContDiffOn ℝ ⊤ (stereoToFun v) {x : E | innerSL _ v x ≠ (1 : ℝ)} := by
   refine ContDiffOn.smul ?_ (orthogonalProjection (ℝ ∙ v)ᗮ).contDiff.contDiffOn
   refine contDiff_const.contDiffOn.div ?_ ?_
-  · exact (contDiff_const.sub (innerSL ℝ v).contDiff).contDiffOn
-  · intro x h h'
-    exact h (sub_eq_zero.mp h').symm
+  exact (contDiff_const.sub (innerSL ℝ v).contDiff).contDiffOn
+  intro x h h'
+  exact h (sub_eq_zero.mp h').symm
 
 theorem continuousOn_stereoToFun :
     ContinuousOn (stereoToFun v) {x : E | innerSL _ v x ≠ (1 : ℝ)} :=
@@ -183,14 +183,14 @@ theorem stereoInvFun_ne_north_pole (hv : ‖v‖ = 1) (w : (ℝ ∙ v)ᗮ) :
     stereoInvFun hv w ≠ (⟨v, by simp [hv]⟩ : sphere (0 : E) 1) := by
   refine Subtype.coe_ne_coe.1 ?_
   rw [← inner_lt_one_iff_real_of_norm_one _ hv]
-  · have hw : ⟪v, w⟫_ℝ = 0 := Submodule.mem_orthogonal_singleton_iff_inner_right.mp w.2
-    have hw' : (‖(w : E)‖ ^ 2 + 4)⁻¹ * (‖(w : E)‖ ^ 2 - 4) < 1
-    refine (inv_mul_lt_iff' ?_).mpr ?_
-    · nlinarith
-    linarith
-    simpa [real_inner_comm, inner_add_right, inner_smul_right, real_inner_self_eq_norm_mul_norm, hw,
-      hv] using hw'
-  · simpa using stereoInvFunAux_mem hv w.2
+  have hw : ⟪v, w⟫_ℝ = 0 := Submodule.mem_orthogonal_singleton_iff_inner_right.mp w.2
+  have hw' : (‖(w : E)‖ ^ 2 + 4)⁻¹ * (‖(w : E)‖ ^ 2 - 4) < 1
+  refine (inv_mul_lt_iff' ?_).mpr ?_
+  nlinarith
+  linarith
+  simpa [real_inner_comm, inner_add_right, inner_smul_right, real_inner_self_eq_norm_mul_norm, hw,
+    hv] using hw'
+  simpa using stereoInvFunAux_mem hv w.2
 
 theorem continuous_stereoInvFun (hv : ‖v‖ = 1) : Continuous (stereoInvFun hv) :=
   continuous_induced_rng.2 (contDiff_stereoInvFunAux.continuous.comp continuous_subtype_val)
@@ -210,9 +210,9 @@ theorem stereo_left_inv (hv : ‖v‖ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
   have hvy' : ⟪a • v, y⟫_ℝ = 0
   simp only [inner_smul_left, hvy, mul_zero]
   convert norm_add_sq_eq_norm_sq_add_norm_sq_of_inner_eq_zero _ _ hvy' using 2
-  · simp [← split]
-  · simp [norm_smul, hv, ← sq, sq_abs]
-  · exact sq _
+  simp [← split]
+  simp [norm_smul, hv, ← sq, sq_abs]
+  exact sq _
   -- two facts which will be helpful for clearing denominators in the main calculation
   have ha : 1 - a ≠ 0
   have : a < 1 := (inner_lt_one_iff_real_of_norm_one hv (by simp)).mpr hx.symm
@@ -223,35 +223,35 @@ theorem stereo_left_inv (hv : ‖v‖ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
   have h₂ : (2 ^ 2 / (1 - a) ^ 2 * ‖y‖ ^ 2 + 4)⁻¹ * (2 ^ 2 / (1 - a) ^ 2 * ‖y‖ ^ 2 - 4) = a
   field_simp
   transitivity (1 - a) ^ 2 * (a * (2 ^ 2 * ‖y‖ ^ 2 + 4 * (1 - a) ^ 2))
-  · congr
-    simp only [Submodule.coe_norm] at *
-    nlinarith
+  congr
+  simp only [Submodule.coe_norm] at *
+  nlinarith
   ring!
   convert
     congr_arg₂ Add.add (congr_arg (fun t => t • (y : E)) h₁) (congr_arg (fun t => t • v) h₂) using 1
-  · simp only [innerSL_apply, norm_smul, norm_div, RCLike.norm_ofNat, Real.norm_eq_abs,
-      AddSubgroupClass.coe_norm, mul_pow, div_pow, sq_abs, SetLike.val_smul, mul_smul, a]
-    -- Porting note: used to be simp only [split, add_comm] but get maxRec errors
-    rw [split, add_comm]
-    ac_rfl
+  simp only [innerSL_apply, norm_smul, norm_div, RCLike.norm_ofNat, Real.norm_eq_abs,
+    AddSubgroupClass.coe_norm, mul_pow, div_pow, sq_abs, SetLike.val_smul, mul_smul, a]
+  -- Porting note: used to be simp only [split, add_comm] but get maxRec errors
+  rw [split, add_comm]
+  ac_rfl
   -- Porting note: this branch did not exit in ml3
-  · rw [split, add_comm]
-    congr!
-    dsimp
-    rw [one_smul]
+  rw [split, add_comm]
+  congr!
+  dsimp
+  rw [one_smul]
 
 theorem stereo_right_inv (hv : ‖v‖ = 1) (w : (ℝ ∙ v)ᗮ) : stereoToFun v (stereoInvFun hv w) = w := by
   have : 2 / (1 - (‖(w : E)‖ ^ 2 + 4)⁻¹ * (‖(w : E)‖ ^ 2 - 4)) * (‖(w : E)‖ ^ 2 + 4)⁻¹ * 4 = 1
   field_simp; ring
   convert congr_arg (· • w) this
-  · have h₁ : orthogonalProjection (ℝ ∙ v)ᗮ v = 0 :=
-      orthogonalProjection_orthogonalComplement_singleton_eq_zero v
-    -- Porting note: was innerSL _ and now just inner
-    have h₃ : inner v w = (0 : ℝ) := Submodule.mem_orthogonal_singleton_iff_inner_right.mp w.2
-    -- Porting note: was innerSL _ and now just inner
-    have h₄ : inner v v = (1 : ℝ) := by simp [real_inner_self_eq_norm_mul_norm, hv]
-    simp [h₁, h₃, h₄, ContinuousLinearMap.map_add, ContinuousLinearMap.map_smul, mul_smul]
-  · simp
+  have h₁ : orthogonalProjection (ℝ ∙ v)ᗮ v = 0 :=
+    orthogonalProjection_orthogonalComplement_singleton_eq_zero v
+  -- Porting note: was innerSL _ and now just inner
+  have h₃ : inner v w = (0 : ℝ) := Submodule.mem_orthogonal_singleton_iff_inner_right.mp w.2
+  -- Porting note: was innerSL _ and now just inner
+  have h₄ : inner v v = (1 : ℝ) := by simp [real_inner_self_eq_norm_mul_norm, hv]
+  simp [h₁, h₃, h₄, ContinuousLinearMap.map_add, ContinuousLinearMap.map_smul, mul_smul]
+  simp
 
 /-- Stereographic projection from the unit sphere in `E`, centred at a unit vector `v` in `E`;
 this is the version as a partial homeomorphism. -/
@@ -419,15 +419,15 @@ theorem contMDiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
   have := EuclideanSpace.instSmoothManifoldWithCornersSphere (E := E) (n := n)
   rw [contMDiff_iff]
   constructor
-  · exact continuous_subtype_val
-  · intro v _
-    let U : _ ≃ₗᵢ[ℝ] _ :=
-      (-- Again, partially removing type ascription...
-          OrthonormalBasis.fromOrthogonalSpanSingleton
-          n (ne_zero_of_mem_unit_sphere (-v))).repr
-    exact
-      ((contDiff_stereoInvFunAux.comp (ℝ ∙ (-v : E))ᗮ.subtypeL.contDiff).comp
-          U.symm.contDiff).contDiffOn
+  exact continuous_subtype_val
+  intro v _
+  let U : _ ≃ₗᵢ[ℝ] _ :=
+    (-- Again, partially removing type ascription...
+        OrthonormalBasis.fromOrthogonalSpanSingleton
+        n (ne_zero_of_mem_unit_sphere (-v))).repr
+  exact
+    ((contDiff_stereoInvFunAux.comp (ℝ ∙ (-v : E))ᗮ.subtypeL.contDiff).comp
+        U.symm.contDiff).contDiffOn
 
 variable {F : Type*} [NormedAddCommGroup F] [NormedSpace ℝ F]
 variable {H : Type*} [TopologicalSpace H] {I : ModelWithCorners ℝ F H}
@@ -507,12 +507,12 @@ theorem range_mfderiv_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : s
   congr 1
   -- we must show `Submodule.span ℝ {v} = Submodule.span ℝ {-v}`
   apply Submodule.span_eq_span
-  · simp only [Set.singleton_subset_iff, SetLike.mem_coe]
-    rw [← Submodule.neg_mem_iff]
-    exact Submodule.mem_span_singleton_self (-v : E)
-  · simp only [Set.singleton_subset_iff, SetLike.mem_coe]
-    rw [Submodule.neg_mem_iff]
-    exact Submodule.mem_span_singleton_self (v : E)
+  simp only [Set.singleton_subset_iff, SetLike.mem_coe]
+  rw [← Submodule.neg_mem_iff]
+  exact Submodule.mem_span_singleton_self (-v : E)
+  simp only [Set.singleton_subset_iff, SetLike.mem_coe]
+  rw [Submodule.neg_mem_iff]
+  exact Submodule.mem_span_singleton_self (v : E)
 
 /-- Consider the differential of the inclusion of the sphere in `E` at the point `v` as a continuous
 linear map from `TangentSpace (𝓡 n) v` to `E`.  This map is injective. -/

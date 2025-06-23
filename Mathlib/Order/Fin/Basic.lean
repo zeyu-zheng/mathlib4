@@ -150,21 +150,21 @@ lemma predAbove_right_monotone (p : Fin n) : Monotone p.predAbove := fun a b H =
   dsimp [predAbove]
   split_ifs with ha hb hb
   all_goals simp only [le_iff_val_le_val, coe_pred]
-  · exact pred_le_pred H
-  · calc
-      _ ≤ _ := Nat.pred_le _
-      _ ≤ _ := H
-  · exact le_pred_of_lt ((not_lt.mp ha).trans_lt hb)
-  · exact H
+  exact pred_le_pred H
+  calc
+    _ ≤ _ := Nat.pred_le _
+    _ ≤ _ := H
+  exact le_pred_of_lt ((not_lt.mp ha).trans_lt hb)
+  exact H
 
 lemma predAbove_left_monotone (i : Fin (n + 1)) : Monotone fun p ↦ predAbove p i := fun a b H ↦ by
   dsimp [predAbove]
   split_ifs with ha hb hb
-  · rfl
-  · exact pred_le _
-  · have : b < a := castSucc_lt_castSucc_iff.mpr (hb.trans_le (le_of_not_gt ha))
-    exact absurd H this.not_le
-  · rfl
+  rfl
+  exact pred_le _
+  have : b < a := castSucc_lt_castSucc_iff.mpr (hb.trans_le (le_of_not_gt ha))
+  exact absurd H this.not_le
+  rfl
 
 /--  `Fin.predAbove p` as an `OrderHom`. -/
 @[simps!] def predAboveOrderHom (p : Fin n) : Fin (n + 1) →o Fin n :=
@@ -271,13 +271,13 @@ map. In this lemma we state that for each `i : Fin n` we have `(e i : ℕ) = (i 
   dsimp only
   induction' i using Nat.strong_induction_on with i h
   refine le_antisymm (forall_lt_iff_le.1 fun j hj => ?_) (forall_lt_iff_le.1 fun j hj => ?_)
-  · have := e.symm.lt_iff_lt.2 (mk_lt_of_lt_val hj)
-    rw [e.symm_apply_apply] at this
-    -- Porting note: convert was abusing definitional equality
-    have : _ < i := this
-    convert this
-    simpa using h _ this (e.symm _).is_lt
-  · rwa [← h j hj (hj.trans hi), ← lt_iff_val_lt_val, e.lt_iff_lt]
+  have := e.symm.lt_iff_lt.2 (mk_lt_of_lt_val hj)
+  rw [e.symm_apply_apply] at this
+  -- Porting note: convert was abusing definitional equality
+  have : _ < i := this
+  convert this
+  simpa using h _ this (e.symm _).is_lt
+  rwa [← h j hj (hj.trans hi), ← lt_iff_val_lt_val, e.lt_iff_lt]
 
 instance orderIso_subsingleton : Subsingleton (Fin n ≃o α) :=
   ⟨fun e e' => by

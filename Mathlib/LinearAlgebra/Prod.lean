@@ -133,10 +133,10 @@ theorem range_inl : range (inl R M M₂) = ker (snd R M M₂) := by
   ext x
   simp only [mem_ker, mem_range]
   constructor
-  · rintro ⟨y, rfl⟩
-    rfl
-  · intro h
-    exact ⟨x.fst, Prod.ext rfl h.symm⟩
+  rintro ⟨y, rfl⟩
+  rfl
+  intro h
+  exact ⟨x.fst, Prod.ext rfl h.symm⟩
 
 theorem ker_snd : ker (snd R M M₂) = range (inl R M M₂) :=
   Eq.symm <| range_inl R M M₂
@@ -145,10 +145,10 @@ theorem range_inr : range (inr R M M₂) = ker (fst R M M₂) := by
   ext x
   simp only [mem_ker, mem_range]
   constructor
-  · rintro ⟨y, rfl⟩
-    rfl
-  · intro h
-    exact ⟨x.snd, Prod.ext h.symm rfl⟩
+  rintro ⟨y, rfl⟩
+  rfl
+  intro h
+  exact ⟨x.snd, Prod.ext h.symm rfl⟩
 
 theorem ker_fst : ker (fst R M M₂) = range (inr R M M₂) :=
   Eq.symm <| range_inr R M M₂
@@ -386,15 +386,15 @@ theorem range_coprod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) : range (f
 
 theorem isCompl_range_inl_inr : IsCompl (range <| inl R M M₂) (range <| inr R M M₂) := by
   constructor
-  · rw [disjoint_def]
-    rintro ⟨_, _⟩ ⟨x, hx⟩ ⟨y, hy⟩
-    simp only [Prod.ext_iff, inl_apply, inr_apply, mem_bot] at hx hy ⊢
-    exact ⟨hy.1.symm, hx.2.symm⟩
-  · rw [codisjoint_iff_le_sup]
-    rintro ⟨x, y⟩ -
-    simp only [mem_sup, mem_range, exists_prop]
-    refine ⟨(x, 0), ⟨x, rfl⟩, (0, y), ⟨y, rfl⟩, ?_⟩
-    simp
+  rw [disjoint_def]
+  rintro ⟨_, _⟩ ⟨x, hx⟩ ⟨y, hy⟩
+  simp only [Prod.ext_iff, inl_apply, inr_apply, mem_bot] at hx hy ⊢
+  exact ⟨hy.1.symm, hx.2.symm⟩
+  rw [codisjoint_iff_le_sup]
+  rintro ⟨x, y⟩ -
+  simp only [mem_sup, mem_range, exists_prop]
+  refine ⟨(x, 0), ⟨x, rfl⟩, (0, y), ⟨y, rfl⟩, ?_⟩
+  simp
 
 theorem sup_range_inl_inr : (range <| inl R M M₂) ⊔ (range <| inr R M M₂) = ⊤ :=
   IsCompl.sup_eq_top isCompl_range_inl_inr
@@ -405,11 +405,11 @@ theorem disjoint_inl_inr : Disjoint (range <| inl R M M₂) (range <| inr R M M�
 theorem map_coprod_prod (f : M →ₗ[R] M₃) (g : M₂ →ₗ[R] M₃) (p : Submodule R M)
     (q : Submodule R M₂) : map (coprod f g) (p.prod q) = map f p ⊔ map g q := by
   refine le_antisymm ?_ (sup_le (map_le_iff_le_comap.2 ?_) (map_le_iff_le_comap.2 ?_))
-  · rw [SetLike.le_def]
-    rintro _ ⟨x, ⟨h₁, h₂⟩, rfl⟩
-    exact mem_sup.2 ⟨_, ⟨_, h₁, rfl⟩, _, ⟨_, h₂, rfl⟩, rfl⟩
-  · exact fun x hx => ⟨(x, 0), by simp [hx]⟩
-  · exact fun x hx => ⟨(0, x), by simp [hx]⟩
+  rw [SetLike.le_def]
+  rintro _ ⟨x, ⟨h₁, h₂⟩, rfl⟩
+  exact mem_sup.2 ⟨_, ⟨_, h₁, rfl⟩, _, ⟨_, h₂, rfl⟩, rfl⟩
+  exact fun x hx => ⟨(x, 0), by simp [hx]⟩
+  exact fun x hx => ⟨(0, x), by simp [hx]⟩
 
 theorem comap_prod_prod (f : M →ₗ[R] M₂) (g : M →ₗ[R] M₃) (p : Submodule R M₂)
     (q : Submodule R M₃) : comap (prod f g) (p.prod q) = comap f p ⊓ comap g q :=
@@ -585,8 +585,8 @@ theorem fst_sup_snd : Submodule.fst R M M₂ ⊔ Submodule.snd R M M₂ = ⊤ :=
   rintro ⟨m, n⟩ -
   rw [show (m, n) = (m, 0) + (0, n) by simp]
   apply Submodule.add_mem (Submodule.fst R M M₂ ⊔ Submodule.snd R M M₂)
-  · exact Submodule.mem_sup_left (Submodule.mem_comap.mpr (by simp))
-  · exact Submodule.mem_sup_right (Submodule.mem_comap.mpr (by simp))
+  exact Submodule.mem_sup_left (Submodule.mem_comap.mpr (by simp))
+  exact Submodule.mem_sup_right (Submodule.mem_comap.mpr (by simp))
 
 theorem fst_inf_snd : Submodule.fst R M M₂ ⊓ Submodule.snd R M M₂ = ⊥ := by
   -- Porting note (#10936): was `tidy`
@@ -597,34 +597,34 @@ theorem fst_inf_snd : Submodule.fst R M M₂ ⊓ Submodule.snd R M M₂ = ⊥ :=
 theorem le_prod_iff {p₁ : Submodule R M} {p₂ : Submodule R M₂} {q : Submodule R (M × M₂)} :
     q ≤ p₁.prod p₂ ↔ map (LinearMap.fst R M M₂) q ≤ p₁ ∧ map (LinearMap.snd R M M₂) q ≤ p₂ := by
   constructor
-  · intro h
-    constructor
-    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
-      exact (h hy1).1
-    · rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
-      exact (h hy1).2
-  · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ h
-    exact ⟨hH ⟨_, h, rfl⟩, hK ⟨_, h, rfl⟩⟩
+  intro h
+  constructor
+  rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
+  exact (h hy1).1
+  rintro x ⟨⟨y1, y2⟩, ⟨hy1, rfl⟩⟩
+  exact (h hy1).2
+  rintro ⟨hH, hK⟩ ⟨x1, x2⟩ h
+  exact ⟨hH ⟨_, h, rfl⟩, hK ⟨_, h, rfl⟩⟩
 
 theorem prod_le_iff {p₁ : Submodule R M} {p₂ : Submodule R M₂} {q : Submodule R (M × M₂)} :
     p₁.prod p₂ ≤ q ↔ map (LinearMap.inl R M M₂) p₁ ≤ q ∧ map (LinearMap.inr R M M₂) p₂ ≤ q := by
   constructor
-  · intro h
-    constructor
-    · rintro _ ⟨x, hx, rfl⟩
-      apply h
-      exact ⟨hx, zero_mem p₂⟩
-    · rintro _ ⟨x, hx, rfl⟩
-      apply h
-      exact ⟨zero_mem p₁, hx⟩
-  · rintro ⟨hH, hK⟩ ⟨x1, x2⟩ ⟨h1, h2⟩
-    have h1' : (LinearMap.inl R _ _) x1 ∈ q
-    apply hH
-    simpa using h1
-    have h2' : (LinearMap.inr R _ _) x2 ∈ q
-    apply hK
-    simpa using h2
-    simpa using add_mem h1' h2'
+  intro h
+  constructor
+  rintro _ ⟨x, hx, rfl⟩
+  apply h
+  exact ⟨hx, zero_mem p₂⟩
+  rintro _ ⟨x, hx, rfl⟩
+  apply h
+  exact ⟨zero_mem p₁, hx⟩
+  rintro ⟨hH, hK⟩ ⟨x1, x2⟩ ⟨h1, h2⟩
+  have h1' : (LinearMap.inl R _ _) x1 ∈ q
+  apply hH
+  simpa using h1
+  have h2' : (LinearMap.inr R _ _) x2 ∈ q
+  apply hK
+  simpa using h2
+  simpa using add_mem h1' h2'
 
 theorem prod_eq_bot_iff {p₁ : Submodule R M} {p₂ : Submodule R M₂} :
     p₁.prod p₂ = ⊥ ↔ p₁ = ⊥ ∧ p₂ = ⊥ := by
@@ -767,8 +767,8 @@ theorem range_prod_eq {f : M →ₗ[R] M₂} {g : M →ₗ[R] M₃} (h : ker f �
   simp only [h, mem_top]
   rcases mem_sup.1 this with ⟨x', hx', y', hy', H⟩
   refine ⟨x' + x, ?_, ?_⟩
-  · rwa [add_sub_cancel_right]
-  · simp [← eq_sub_iff_add_eq.1 H, map_add, add_left_inj, self_eq_add_right, mem_ker.mp hy']
+  rwa [add_sub_cancel_right]
+  simp [← eq_sub_iff_add_eq.1 H, map_add, add_left_inj, self_eq_add_right, mem_ker.mp hy']
 
 end LinearMap
 
@@ -896,13 +896,13 @@ theorem tailings_succ (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) :
 theorem tailings_disjoint_tunnel (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) :
     Disjoint (tailings f i n) (OrderDual.ofDual (α := Submodule R M) <| tunnel f i (n + 1)) := by
   induction' n with n ih
-  · simp only [tailings_zero]
-    apply tailing_disjoint_tunnel_succ
-  · simp only [tailings_succ]
-    refine Disjoint.disjoint_sup_left_of_disjoint_sup_right ?_ ?_
-    · apply tailing_disjoint_tunnel_succ
-    · apply Disjoint.mono_right _ ih
-      apply tailing_sup_tunnel_succ_le_tunnel
+  simp only [tailings_zero]
+  apply tailing_disjoint_tunnel_succ
+  simp only [tailings_succ]
+  refine Disjoint.disjoint_sup_left_of_disjoint_sup_right ?_ ?_
+  apply tailing_disjoint_tunnel_succ
+  apply Disjoint.mono_right _ ih
+  apply tailing_sup_tunnel_succ_le_tunnel
 
 @[deprecated (since := "2024-06-05")]
 theorem tailings_disjoint_tailing (f : M × N →ₗ[R] M) (i : Injective f) (n : ℕ) :

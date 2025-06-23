@@ -70,8 +70,8 @@ abbrev insertAt (i : N) : (I × I^{ j // j ≠ i }) ≃ₜ I^N :=
 theorem insertAt_boundary (i : N) {t₀ : I} {t}
     (H : (t₀ = 0 ∨ t₀ = 1) ∨ t ∈ boundary { j // j ≠ i }) : insertAt i ⟨t₀, t⟩ ∈ boundary N := by
   obtain H | ⟨j, H⟩ := H
-  · use i; rwa [funSplitAt_symm_apply, dif_pos rfl]
-  · use j; rwa [funSplitAt_symm_apply, dif_neg j.prop, Subtype.coe_eta]
+  use i; rwa [funSplitAt_symm_apply, dif_pos rfl]
+  use j; rwa [funSplitAt_symm_apply, dif_neg j.prop, Subtype.coe_eta]
 
 end Cube
 
@@ -258,13 +258,13 @@ theorem homotopyTo_apply (i : N) {p q : Ω^ N X x} (H : p.1.HomotopyRel q.1 <| C
 theorem homotopicTo (i : N) {p q : Ω^ N X x} :
     Homotopic p q → (toLoop i p).Homotopic (toLoop i q) := by
   refine Nonempty.map fun H => ⟨⟨⟨fun t => ⟨homotopyTo i H t, ?_⟩, ?_⟩, ?_, ?_⟩, ?_⟩
-  · rintro y ⟨i, iH⟩
-    rw [homotopyTo_apply, H.eq_fst, p.2]
-    all_goals apply Cube.insertAt_boundary; right; exact ⟨i, iH⟩
-  · continuity
+  rintro y ⟨i, iH⟩
+  rw [homotopyTo_apply, H.eq_fst, p.2]
+  all_goals try apply Cube.insertAt_boundary; right; exact ⟨i, iH⟩
+  continuity
   iterate 2 intro; ext; erw [homotopyTo_apply, toLoop_apply]; swap
-  · apply H.apply_zero
-  · apply H.apply_one
+  apply H.apply_zero
+  apply H.apply_one
   intro t y yH
   ext; erw [homotopyTo_apply]
   apply H.eq_fst; use i
@@ -283,25 +283,25 @@ theorem homotopicFrom (i : N) {p q : Ω^ N X x} :
     (toLoop i p).Homotopic (toLoop i q) → Homotopic p q := by
   refine Nonempty.map fun H => ⟨⟨homotopyFrom i H, ?_, ?_⟩, ?_⟩
   pick_goal 3
-  · rintro t y ⟨j, jH⟩
-    erw [homotopyFrom_apply]
-    obtain rfl | h := eq_or_ne j i
-    · simp only [Prod.map_apply, id_eq, toContinuousMap_apply, funSplitAt_apply,
-        Function.uncurry_apply_pair]
-      rw [H.eq_fst]
-      exacts [congr_arg p ((Cube.splitAt j).left_inv _), jH]
-    · rw [p.2 _ ⟨j, jH⟩]; apply boundary; exact ⟨⟨j, h⟩, jH⟩
+  rintro t y ⟨j, jH⟩
+  erw [homotopyFrom_apply]
+  obtain rfl | h := eq_or_ne j i
+  · simp only [Prod.map_apply, id_eq, toContinuousMap_apply, funSplitAt_apply,
+      Function.uncurry_apply_pair]
+    rw [H.eq_fst]
+    exacts [congr_arg p ((Cube.splitAt j).left_inv _), jH]
+  rw [p.2 _ ⟨j, jH⟩]; apply boundary; exact ⟨⟨j, h⟩, jH⟩
   all_goals
-    intro
-    apply (homotopyFrom_apply _ _ _).trans
-    simp only [Prod.map_apply, id_eq, toContinuousMap_apply, funSplitAt_apply,
-      Function.uncurry_apply_pair, ContinuousMap.HomotopyWith.apply_zero,
-      ContinuousMap.HomotopyWith.apply_one, ne_eq, Path.coe_toContinuousMap, toLoop_apply_coe,
-      ContinuousMap.curry_apply, ContinuousMap.comp_apply]
-    first
-    | apply congr_arg p
-    | apply congr_arg q
-    apply (Cube.splitAt i).left_inv
+  intro
+  apply (homotopyFrom_apply _ _ _).trans
+  simp only [Prod.map_apply, id_eq, toContinuousMap_apply, funSplitAt_apply,
+    Function.uncurry_apply_pair, ContinuousMap.HomotopyWith.apply_zero,
+    ContinuousMap.HomotopyWith.apply_one, ne_eq, Path.coe_toContinuousMap, toLoop_apply_coe,
+    ContinuousMap.curry_apply, ContinuousMap.comp_apply]
+  first
+  | apply congr_arg p
+  | apply congr_arg q
+  apply (Cube.splitAt i).left_inv
 
 /-- Concatenation of two `GenLoop`s along the `i`th coordinate. -/
 def transAt (i : N) (f g : Ω^ N X x) : Ω^ N X x :=
@@ -327,8 +327,8 @@ theorem transAt_distrib {i j : N} (h : i ≠ j) (a b c d : Ω^ N X x) :
     transAt i (transAt j a b) (transAt j c d) = transAt j (transAt i a c) (transAt i b d) := by
   ext; simp_rw [transAt, coe_copy, Function.update_apply, if_neg h, if_neg h.symm]
   split_ifs <;>
-    · congr 1; ext1; simp only [Function.update, eq_rec_constant, dite_eq_ite]
-      apply ite_ite_comm; rintro rfl; exact h.symm
+  · congr 1; ext1; simp only [Function.update, eq_rec_constant, dite_eq_ite]
+    apply ite_ite_comm; rintro rfl; exact h.symm
 
 theorem fromLoop_trans_toLoop {i : N} {p q : Ω^ N X x} :
     fromLoop i ((toLoop i p).trans <| toLoop i q) = transAt i p q :=

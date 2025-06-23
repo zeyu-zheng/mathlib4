@@ -159,12 +159,12 @@ theorem lt_iff_exists_mul [CovariantClass α α (· * ·) (· < ·)] : a < b ↔
   rw [and_comm, and_congr_left_iff, gt_iff_lt]
   rintro rfl
   constructor
-  · rw [one_lt_iff_ne_one]
-    apply mt
-    rintro rfl
-    rw [mul_one]
-  · rw [← (self_le_mul_right a c).lt_iff_ne]
-    apply lt_mul_of_one_lt_right'
+  rw [one_lt_iff_ne_one]
+  apply mt
+  rintro rfl
+  rw [mul_one]
+  rw [← (self_le_mul_right a c).lt_iff_ne]
+  apply lt_mul_of_one_lt_right'
 
 end CanonicallyOrderedCommMonoid
 
@@ -213,10 +213,10 @@ instance (priority := 100) CanonicallyLinearOrderedCommMonoid.semilatticeSup : S
 @[to_additive]
 theorem min_mul_distrib (a b c : α) : min a (b * c) = min a (min a b * min a c) := by
   rcases le_total a b with hb | hb
-  · simp [hb, le_mul_right]
-  · rcases le_total a c with hc | hc
-    · simp [hc, le_mul_left]
-    · simp [hb, hc]
+  simp [hb, le_mul_right]
+  rcases le_total a c with hc | hc
+  simp [hc, le_mul_left]
+  simp [hb, hc]
 
 @[to_additive]
 theorem min_mul_distrib' (a b c : α) : min (a * b) c = min (min a c * min b c) c := by

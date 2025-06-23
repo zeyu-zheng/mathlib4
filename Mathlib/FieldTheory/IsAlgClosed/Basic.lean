@@ -98,10 +98,10 @@ theorem roots_eq_zero_iff [IsAlgClosed k] {p : k[X]} :
     p.roots = 0 ↔ p = Polynomial.C (p.coeff 0) := by
   refine ⟨fun h => ?_, fun hp => by rw [hp, roots_C]⟩
   rcases le_or_lt (degree p) 0 with hd | hd
-  · exact eq_C_of_degree_le_zero hd
-  · obtain ⟨z, hz⟩ := IsAlgClosed.exists_root p hd.ne'
-    rw [← mem_roots (ne_zero_of_degree_gt hd), h] at hz
-    simp at hz
+  exact eq_C_of_degree_le_zero hd
+  obtain ⟨z, hz⟩ := IsAlgClosed.exists_root p hd.ne'
+  rw [← mem_roots (ne_zero_of_degree_gt hd), h] at hz
+  simp at hz
 
 theorem exists_eval₂_eq_zero_of_injective {R : Type*} [Ring R] [IsAlgClosed k] (f : R →+* k)
     (hf : Function.Injective f) (p : R[X]) (hp : p.degree ≠ 0) : ∃ x, p.eval₂ f x = 0 :=
@@ -194,13 +194,13 @@ theorem IntermediateField.eq_bot_of_isAlgClosed_of_isAlgebraic {k K : Type*} [Fi
 lemma Polynomial.isCoprime_iff_aeval_ne_zero_of_isAlgClosed (K : Type v) [Field K] [IsAlgClosed K]
     [Algebra k K] (p q : k[X]) : IsCoprime p q ↔ ∀ a : K, aeval a p ≠ 0 ∨ aeval a q ≠ 0 := by
   refine ⟨fun h => aeval_ne_zero_of_isCoprime h, fun h => isCoprime_of_dvd _ _ ?_ fun x hu h0 => ?_⟩
-  · replace h := h 0
-    contrapose! h
-    rw [h.left, h.right, map_zero, and_self]
-  · rintro ⟨_, rfl⟩ ⟨_, rfl⟩
-    obtain ⟨a, ha : _ = _⟩ := IsAlgClosed.exists_root (x.map <| algebraMap k K) <| by
-      simpa only [degree_map] using (ne_of_lt <| degree_pos_of_ne_zero_of_nonunit h0 hu).symm
-    exact not_and_or.mpr (h a) (by simp_rw [map_mul, ← eval_map_algebraMap, ha, zero_mul, true_and])
+  replace h := h 0
+  contrapose! h
+  rw [h.left, h.right, map_zero, and_self]
+  rintro ⟨_, rfl⟩ ⟨_, rfl⟩
+  obtain ⟨a, ha : _ = _⟩ := IsAlgClosed.exists_root (x.map <| algebraMap k K) <| by
+    simpa only [degree_map] using (ne_of_lt <| degree_pos_of_ne_zero_of_nonunit h0 hu).symm
+  exact not_and_or.mpr (h a) (by simp_rw [map_mul, ← eval_map_algebraMap, ha, zero_mul, true_and])
 
 /-- Typeclass for an extension being an algebraic closure. -/
 class IsAlgClosure (R : Type u) (K : Type v) [CommRing R] [Field K] [Algebra R K]

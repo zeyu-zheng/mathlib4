@@ -143,13 +143,13 @@ protected alias ⟨_, BddAbove.closure⟩ := bddAbove_closure
 @[simp]
 theorem disjoint_nhds_atBot_iff : Disjoint (𝓝 a) atBot ↔ ¬IsBot a := by
   constructor
-  · intro hd hbot
-    rw [hbot.atBot_eq, disjoint_principal_right] at hd
-    exact mem_of_mem_nhds hd le_rfl
-  · simp only [IsBot, not_forall]
-    rintro ⟨b, hb⟩
-    refine disjoint_of_disjoint_of_mem disjoint_compl_left ?_ (Iic_mem_atBot b)
-    exact isClosed_Iic.isOpen_compl.mem_nhds hb
+  intro hd hbot
+  rw [hbot.atBot_eq, disjoint_principal_right] at hd
+  exact mem_of_mem_nhds hd le_rfl
+  simp only [IsBot, not_forall]
+  rintro ⟨b, hb⟩
+  refine disjoint_of_disjoint_of_mem disjoint_compl_left ?_ (Iic_mem_atBot b)
+  exact isClosed_Iic.isOpen_compl.mem_nhds hb
 
 end Preorder
 
@@ -212,10 +212,10 @@ protected theorem Dense.exists_ge [NoMaxOrder α] {s : Set α} (hs : Dense s) (x
 theorem Dense.exists_ge' {s : Set α} (hs : Dense s) (htop : ∀ x, IsTop x → x ∈ s) (x : α) :
     ∃ y ∈ s, x ≤ y := by
   by_cases hx : IsTop x
-  · exact ⟨x, htop x hx, le_rfl⟩
-  · simp only [IsTop, not_forall, not_le] at hx
-    rcases hs.exists_mem_open isOpen_Ioi hx with ⟨y, hys, hy : x < y⟩
-    exact ⟨y, hys, hy.le⟩
+  exact ⟨x, htop x hx, le_rfl⟩
+  simp only [IsTop, not_forall, not_le] at hx
+  rcases hs.exists_mem_open isOpen_Ioi hx with ⟨y, hys, hy : x < y⟩
+  exact ⟨y, hys, hy.le⟩
 
 /-!
 ### Left neighborhoods on a `ClosedIicTopology`
@@ -705,9 +705,9 @@ theorem continuous_if_le [TopologicalSpace γ] [∀ x, Decidable (f x ≤ g x)] 
     (hg' : ContinuousOn g' { x | g x ≤ f x }) (hfg : ∀ x, f x = g x → f' x = g' x) :
     Continuous fun x => if f x ≤ g x then f' x else g' x := by
   refine continuous_if (fun a ha => hfg _ (frontier_le_subset_eq hf hg ha)) ?_ (hg'.mono ?_)
-  · rwa [(isClosed_le hf hg).closure_eq]
-  · simp only [not_le]
-    exact closure_lt_subset_le hg hf
+  rwa [(isClosed_le hf hg).closure_eq]
+  simp only [not_le]
+  exact closure_lt_subset_le hg hf
 
 theorem Continuous.if_le [TopologicalSpace γ] [∀ x, Decidable (f x ≤ g x)] {f' g' : β → γ}
     (hf' : Continuous f') (hg' : Continuous g') (hf : Continuous f) (hg : Continuous g)

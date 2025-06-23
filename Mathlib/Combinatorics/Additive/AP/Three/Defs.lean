@@ -172,15 +172,15 @@ lemma ThreeGPFree.eq_right (hs : ThreeGPFree s) :
   rintro ⟨hs, ha, ha'⟩ b hb c hc d hd h
   rw [mem_insert_iff] at hb hc hd
   obtain rfl | hb := hb <;> obtain rfl | hc := hc
-  · rfl
+  rfl
   all_goals obtain rfl | hd := hd
-  · exact (ha' hc hc h.symm).symm
-  · exact ha hc hd h
-  · exact mul_right_cancel h
-  · exact ha' hb hd h
-  · obtain rfl := ha hc hb ((mul_comm _ _).trans h)
-    exact ha' hb hc h
-  · exact hs hb hc hd h
+  exact (ha' hc hc h.symm).symm
+  exact ha hc hd h
+  exact mul_right_cancel h
+  exact ha' hb hd h
+  obtain rfl := ha hc hb ((mul_comm _ _).trans h)
+  exact ha' hb hc h
+  exact hs hb hc hd h
 
 @[to_additive]
 theorem ThreeGPFree.smul_set (hs : ThreeGPFree s) : ThreeGPFree (a • s) := by
@@ -231,11 +231,11 @@ section Nat
 theorem threeAPFree_iff_eq_right {s : Set ℕ} :
     ThreeAPFree s ↔ ∀ ⦃a⦄, a ∈ s → ∀ ⦃b⦄, b ∈ s → ∀ ⦃c⦄, c ∈ s → a + c = b + b → a = c := by
   refine forall₄_congr fun a _ha b hb => forall₃_congr fun c hc habc => ⟨?_, ?_⟩
-  · rintro rfl
-    exact (add_left_cancel habc).symm
-  · rintro rfl
-    simp_rw [← two_mul] at habc
-    exact mul_left_cancel₀ two_ne_zero habc
+  rintro rfl
+  exact (add_left_cancel habc).symm
+  rintro rfl
+  simp_rw [← two_mul] at habc
+  exact mul_left_cancel₀ two_ne_zero habc
 
 end Nat
 end ThreeAPFree
@@ -369,17 +369,17 @@ variable [CancelCommMonoid α] (s : Finset α) (a : α)
 theorem mulRothNumber_map_mul_left :
     mulRothNumber (s.map <| mulLeftEmbedding a) = mulRothNumber s := by
   refine le_antisymm ?_ ?_
-  · obtain ⟨u, hus, hcard, hu⟩ := mulRothNumber_spec (s.map <| mulLeftEmbedding a)
-    rw [subset_map_iff] at hus
-    obtain ⟨u, hus, rfl⟩ := hus
-    rw [coe_map] at hu
-    rw [← hcard, card_map]
-    exact (threeGPFree_smul_set.1 hu).le_mulRothNumber hus
-  · obtain ⟨u, hus, hcard, hu⟩ := mulRothNumber_spec s
-    have h : ThreeGPFree (u.map <| mulLeftEmbedding a : Set α)
-    rw [coe_map]; exact hu.smul_set
-    convert h.le_mulRothNumber (map_subset_map.2 hus) using 1
-    rw [card_map, hcard]
+  obtain ⟨u, hus, hcard, hu⟩ := mulRothNumber_spec (s.map <| mulLeftEmbedding a)
+  rw [subset_map_iff] at hus
+  obtain ⟨u, hus, rfl⟩ := hus
+  rw [coe_map] at hu
+  rw [← hcard, card_map]
+  exact (threeGPFree_smul_set.1 hu).le_mulRothNumber hus
+  obtain ⟨u, hus, hcard, hu⟩ := mulRothNumber_spec s
+  have h : ThreeGPFree (u.map <| mulLeftEmbedding a : Set α)
+  rw [coe_map]; exact hu.smul_set
+  convert h.le_mulRothNumber (map_subset_map.2 hus) using 1
+  rw [card_map, hcard]
 
 @[to_additive (attr := simp)]
 theorem mulRothNumber_map_mul_right :
@@ -435,7 +435,7 @@ theorem rothNumberNat_zero : rothNumberNat 0 = 0 :=
 
 theorem addRothNumber_Ico (a b : ℕ) : addRothNumber (Ico a b) = rothNumberNat (b - a) := by
   obtain h | h := le_total b a
-  · rw [tsub_eq_zero_of_le h, Ico_eq_empty_of_le h, rothNumberNat_zero, addRothNumber_empty]
+  rw [tsub_eq_zero_of_le h, Ico_eq_empty_of_le h, rothNumberNat_zero, addRothNumber_empty]
   convert addRothNumber_map_add_left _ a
   rw [range_eq_Ico, map_eq_image]
   convert (image_add_left_Ico 0 (b - a) _).symm
@@ -450,7 +450,7 @@ lemma Fin.addRothNumber_le_rothNumberNat (k n : ℕ) (hkn : k ≤ n) :
   suffices h : Set.BijOn (Nat.cast : ℕ → Fin n.succ) (range k) (Iio k : Finset (Fin n.succ)) by
     exact (AddMonoidHomClass.isAddFreimanHom (Nat.castRingHom _) h.mapsTo).addRothNumber_mono h
   refine ⟨?_, (CharP.natCast_injOn_Iio _ n.succ).mono (by simp; omega), ?_⟩
-  · simpa using fun x ↦ natCast_strictMono hkn
+  simpa using fun x ↦ natCast_strictMono hkn
   simp only [Set.SurjOn, coe_Iio, Set.subset_def, Set.mem_Iio, Set.mem_image, lt_iff_val_lt_val,
     val_cast_of_lt, Nat.lt_succ_iff.2 hkn, coe_range]
   exact fun x hx ↦ ⟨x, hx, by simp⟩

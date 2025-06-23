@@ -47,17 +47,17 @@ theorem choose_modEq_choose_mod_mul_choose_div :
     intro ⟨x₁, x₂⟩ hx
     rw [Prod.mk.injEq]
     constructor <;> intro h
-    · simp only [mem_product, mem_range] at hx
-      have h' : x₁ < p := lt_of_lt_of_le hx.left $ mod_lt _ Fin.size_pos'
-      rw [h, add_mul_mod_self_left, add_mul_div_left _ _ Fin.size_pos', eq_comm (b := x₂)]
-      exact ⟨mod_eq_of_lt h', self_eq_add_left.mpr (div_eq_of_lt h')⟩
-    · rw [← h.left, ← h.right, mod_add_div]
+    simp only [mem_product, mem_range] at hx
+    have h' : x₁ < p := lt_of_lt_of_le hx.left $ mod_lt _ Fin.size_pos'
+    rw [h, add_mul_mod_self_left, add_mul_div_left _ _ Fin.size_pos', eq_comm (b := x₂)]
+    exact ⟨mod_eq_of_lt h', self_eq_add_left.mpr (div_eq_of_lt h')⟩
+    rw [← h.left, ← h.right, mod_add_div]
   simp only [finset_sum_coeff, coeff_mul_natCast, coeff_X_pow, ite_mul, zero_mul, ← cast_mul]
   rw [← sum_product', sum_congr rfl (fun a ha ↦ if_congr (h_iff a ha) rfl rfl), sum_ite_eq]
   split_ifs with h
-  · simp
-  · rw [mem_product, mem_range, mem_range, not_and_or, lt_succ, not_le, not_lt] at h
-    cases h <;> simp [choose_eq_zero_of_lt (by tauto)]
+  simp
+  rw [mem_product, mem_range, mem_range, not_and_or, lt_succ, not_le, not_lt] at h
+  cases h <;> simp [choose_eq_zero_of_lt (by tauto)]
 
 /-- For primes `p`, `choose n k` is congruent to `choose (n % p) (k % p) * choose (n / p) (k / p)`
 modulo `p`. Also see `choose_modEq_choose_mod_mul_choose_div` for the version with `ZMOD`. -/

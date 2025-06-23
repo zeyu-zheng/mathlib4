@@ -100,16 +100,16 @@ instance haveLebesgueDecomposition_smul (s : SignedMeasure α) (μ : Measure α)
 instance haveLebesgueDecomposition_smul_real (s : SignedMeasure α) (μ : Measure α)
     [s.HaveLebesgueDecomposition μ] (r : ℝ) : (r • s).HaveLebesgueDecomposition μ := by
   by_cases hr : 0 ≤ r
-  · lift r to ℝ≥0 using hr
-    exact s.haveLebesgueDecomposition_smul μ _
-  · rw [not_le] at hr
-    refine
-      { posPart := by
-          rw [toJordanDecomposition_smul_real, JordanDecomposition.real_smul_posPart_neg _ _ hr]
-          infer_instance
-        negPart := by
-          rw [toJordanDecomposition_smul_real, JordanDecomposition.real_smul_negPart_neg _ _ hr]
-          infer_instance }
+  lift r to ℝ≥0 using hr
+  exact s.haveLebesgueDecomposition_smul μ _
+  rw [not_le] at hr
+  refine
+    { posPart := by
+        rw [toJordanDecomposition_smul_real, JordanDecomposition.real_smul_posPart_neg _ _ hr]
+        infer_instance
+      negPart := by
+        rw [toJordanDecomposition_smul_real, JordanDecomposition.real_smul_negPart_neg _ _ hr]
+        infer_instance }
 
 /-- Given a signed measure `s` and a measure `μ`, `s.singularPart μ` is the signed measure
 such that `s.singularPart μ + μ.withDensityᵥ (s.rnDeriv μ) = s` and
@@ -124,17 +124,17 @@ theorem singularPart_mutuallySingular (s : SignedMeasure α) (μ : Measure α) :
     s.toJordanDecomposition.posPart.singularPart μ ⟂ₘ
       s.toJordanDecomposition.negPart.singularPart μ := by
   by_cases hl : s.HaveLebesgueDecomposition μ
-  · obtain ⟨i, hi, hpos, hneg⟩ := s.toJordanDecomposition.mutuallySingular
-    rw [s.toJordanDecomposition.posPart.haveLebesgueDecomposition_add μ] at hpos
-    rw [s.toJordanDecomposition.negPart.haveLebesgueDecomposition_add μ] at hneg
-    rw [add_apply, add_eq_zero_iff] at hpos hneg
-    exact ⟨i, hi, hpos.1, hneg.1⟩
-  · rw [not_haveLebesgueDecomposition_iff] at hl
-    cases' hl with hp hn
-    · rw [Measure.singularPart, dif_neg hp]
-      exact MutuallySingular.zero_left
-    · rw [Measure.singularPart, Measure.singularPart, dif_neg hn]
-      exact MutuallySingular.zero_right
+  obtain ⟨i, hi, hpos, hneg⟩ := s.toJordanDecomposition.mutuallySingular
+  rw [s.toJordanDecomposition.posPart.haveLebesgueDecomposition_add μ] at hpos
+  rw [s.toJordanDecomposition.negPart.haveLebesgueDecomposition_add μ] at hneg
+  rw [add_apply, add_eq_zero_iff] at hpos hneg
+  exact ⟨i, hi, hpos.1, hneg.1⟩
+  rw [not_haveLebesgueDecomposition_iff] at hl
+  cases' hl with hp hn
+  rw [Measure.singularPart, dif_neg hp]
+  exact MutuallySingular.zero_left
+  rw [Measure.singularPart, Measure.singularPart, dif_neg hn]
+  exact MutuallySingular.zero_right
 
 theorem singularPart_totalVariation (s : SignedMeasure α) (μ : Measure α) :
     (s.singularPart μ).totalVariation =
@@ -182,8 +182,8 @@ theorem measurable_rnDeriv (s : SignedMeasure α) (μ : Measure α) : Measurable
 theorem integrable_rnDeriv (s : SignedMeasure α) (μ : Measure α) : Integrable (rnDeriv s μ) μ := by
   refine Integrable.sub ?_ ?_ <;>
     · constructor
-      · apply Measurable.aestronglyMeasurable
-        fun_prop
+      apply Measurable.aestronglyMeasurable
+      fun_prop
       exact hasFiniteIntegral_toReal_of_lintegral_ne_top (lintegral_rnDeriv_lt_top _ μ).ne
 
 variable (s μ)
@@ -205,11 +205,11 @@ theorem singularPart_add_withDensity_rnDeriv_eq [s.HaveLebesgueDecomposition μ]
     add_assoc (-(s.toJordanDecomposition.negPart.singularPart μ).toSignedMeasure),
     ← toSignedMeasure_add, add_comm, ← add_assoc, ← neg_add, ← toSignedMeasure_add, add_comm,
     ← sub_eq_add_neg]
-  · convert rfl
-    -- `convert rfl` much faster than `congr`
-    · exact s.toJordanDecomposition.posPart.haveLebesgueDecomposition_add μ
-    · rw [add_comm]
-      exact s.toJordanDecomposition.negPart.haveLebesgueDecomposition_add μ
+  convert rfl
+  -- `convert rfl` much faster than `congr`
+  exact s.toJordanDecomposition.posPart.haveLebesgueDecomposition_add μ
+  rw [add_comm]
+  exact s.toJordanDecomposition.negPart.haveLebesgueDecomposition_add μ
   all_goals
     first
     | exact (lintegral_rnDeriv_lt_top _ _).ne
@@ -275,10 +275,10 @@ theorem haveLebesgueDecomposition_mk (μ : Measure α) {f : α → ℝ} (hf : Me
     (htμ : t ⟂ᵥ μ.toENNRealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) :
     s.HaveLebesgueDecomposition μ := by
   by_cases hfi : Integrable f μ
-  · exact haveLebesgueDecomposition_mk' μ hf hfi htμ hadd
-  · rw [withDensityᵥ, dif_neg hfi, add_zero] at hadd
-    refine haveLebesgueDecomposition_mk' μ measurable_zero (integrable_zero _ _ μ) htμ ?_
-    rwa [withDensityᵥ_zero, add_zero]
+  exact haveLebesgueDecomposition_mk' μ hf hfi htμ hadd
+  rw [withDensityᵥ, dif_neg hfi, add_zero] at hadd
+  refine haveLebesgueDecomposition_mk' μ measurable_zero (integrable_zero _ _ μ) htμ ?_
+  rwa [withDensityᵥ_zero, add_zero]
 
 private theorem eq_singularPart' (t : SignedMeasure α) {f : α → ℝ} (hf : Measurable f)
     (hfi : Integrable f μ) (htμ : t ⟂ᵥ μ.toENNRealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) :
@@ -291,15 +291,15 @@ private theorem eq_singularPart' (t : SignedMeasure α) {f : α → ℝ} (hf : M
   congr
   -- NB: `measurability` proves this `have`, but is slow.
   -- TODO: make `fun_prop` able to handle this
-  · have hfpos : Measurable fun x => ENNReal.ofReal (f x) := hf.real_toNNReal.coe_nnreal_ennreal
-    refine eq_singularPart hfpos htμ.1 ?_
-    rw [toJordanDecomposition_eq_of_eq_add_withDensity hf hfi htμ' hadd]
-  · have hfneg : Measurable fun x => ENNReal.ofReal (-f x) :=
-      -- NB: `measurability` proves this, but is slow.
-      -- XXX: `fun_prop` doesn't work here yet
-      (measurable_neg_iff.mpr hf).real_toNNReal.coe_nnreal_ennreal
-    refine eq_singularPart hfneg htμ.2 ?_
-    rw [toJordanDecomposition_eq_of_eq_add_withDensity hf hfi htμ' hadd]
+  have hfpos : Measurable fun x => ENNReal.ofReal (f x) := hf.real_toNNReal.coe_nnreal_ennreal
+  refine eq_singularPart hfpos htμ.1 ?_
+  rw [toJordanDecomposition_eq_of_eq_add_withDensity hf hfi htμ' hadd]
+  have hfneg : Measurable fun x => ENNReal.ofReal (-f x) :=
+    -- NB: `measurability` proves this, but is slow.
+    -- XXX: `fun_prop` doesn't work here yet
+    (measurable_neg_iff.mpr hf).real_toNNReal.coe_nnreal_ennreal
+  refine eq_singularPart hfneg htμ.2 ?_
+  rw [toJordanDecomposition_eq_of_eq_add_withDensity hf hfi htμ' hadd]
 
 /-- Given a measure `μ`, signed measures `s` and `t`, and a function `f` such that `t` is
 mutually singular with respect to `μ` and `s = t + μ.withDensityᵥ f`, we have
@@ -308,12 +308,12 @@ mutually singular with respect to `μ` and `s = t + μ.withDensityᵥ f`, we hav
 theorem eq_singularPart (t : SignedMeasure α) (f : α → ℝ) (htμ : t ⟂ᵥ μ.toENNRealVectorMeasure)
     (hadd : s = t + μ.withDensityᵥ f) : t = s.singularPart μ := by
   by_cases hfi : Integrable f μ
-  · refine eq_singularPart' t hfi.1.measurable_mk (hfi.congr hfi.1.ae_eq_mk) htμ ?_
-    convert hadd using 2
-    exact WithDensityᵥEq.congr_ae hfi.1.ae_eq_mk.symm
-  · rw [withDensityᵥ, dif_neg hfi, add_zero] at hadd
-    refine eq_singularPart' t measurable_zero (integrable_zero _ _ μ) htμ ?_
-    rwa [withDensityᵥ_zero, add_zero]
+  refine eq_singularPart' t hfi.1.measurable_mk (hfi.congr hfi.1.ae_eq_mk) htμ ?_
+  convert hadd using 2
+  exact WithDensityᵥEq.congr_ae hfi.1.ae_eq_mk.symm
+  rw [withDensityᵥ, dif_neg hfi, add_zero] at hadd
+  refine eq_singularPart' t measurable_zero (integrable_zero _ _ μ) htμ ?_
+  rwa [withDensityᵥ_zero, add_zero]
 
 theorem singularPart_zero (μ : Measure α) : (0 : SignedMeasure α).singularPart μ = 0 := by
   refine (eq_singularPart 0 0 VectorMeasure.MutuallySingular.zero_left ?_).symm
@@ -339,9 +339,9 @@ theorem singularPart_smul_nnreal (s : SignedMeasure α) (μ : Measure α) (r : �
   conv_lhs =>
     congr
     · congr
-      · rw [toJordanDecomposition_smul, JordanDecomposition.smul_posPart, singularPart_smul]
-    · congr
-      rw [toJordanDecomposition_smul, JordanDecomposition.smul_negPart, singularPart_smul]
+      rw [toJordanDecomposition_smul, JordanDecomposition.smul_posPart, singularPart_smul]
+    congr
+    rw [toJordanDecomposition_smul, JordanDecomposition.smul_negPart, singularPart_smul]
 
 nonrec theorem singularPart_smul (s : SignedMeasure α) (μ : Measure α) (r : ℝ) :
     (r • s).singularPart μ = r • s.singularPart μ := by
@@ -354,11 +354,11 @@ nonrec theorem singularPart_smul (s : SignedMeasure α) (μ : Measure α) (r : �
     conv_lhs =>
       congr
       · congr
-        · rw [toJordanDecomposition_smul_real,
-            JordanDecomposition.real_smul_posPart_neg _ _ hr, singularPart_smul]
-      · congr
-        · rw [toJordanDecomposition_smul_real,
-            JordanDecomposition.real_smul_negPart_neg _ _ hr, singularPart_smul]
+        rw [toJordanDecomposition_smul_real,
+          JordanDecomposition.real_smul_posPart_neg _ _ hr, singularPart_smul]
+      congr
+      rw [toJordanDecomposition_smul_real,
+        JordanDecomposition.real_smul_negPart_neg _ _ hr, singularPart_smul]
     rw [toSignedMeasure_smul, toSignedMeasure_smul, ← neg_sub, ← smul_sub, NNReal.smul_def,
       ← neg_smul, Real.coe_toNNReal _ (le_of_lt (neg_pos.mpr hr)), neg_neg]
 
@@ -468,18 +468,18 @@ theorem singularPart_add_withDensity_rnDeriv_eq [c.HaveLebesgueDecomposition μ]
   ext i hi : 1
   rw [VectorMeasure.add_apply, SignedMeasure.toComplexMeasure_apply]
   apply Complex.ext
-  · rw [Complex.add_re, withDensityᵥ_apply (c.integrable_rnDeriv μ) hi, ← RCLike.re_eq_complex_re,
-      ← integral_re (c.integrable_rnDeriv μ).integrableOn, RCLike.re_eq_complex_re,
-      ← withDensityᵥ_apply _ hi]
-    · change (c.re.singularPart μ + μ.withDensityᵥ (c.re.rnDeriv μ)) i = _
-      rw [c.re.singularPart_add_withDensity_rnDeriv_eq μ]
-    · exact SignedMeasure.integrable_rnDeriv _ _
-  · rw [Complex.add_im, withDensityᵥ_apply (c.integrable_rnDeriv μ) hi, ← RCLike.im_eq_complex_im,
-      ← integral_im (c.integrable_rnDeriv μ).integrableOn, RCLike.im_eq_complex_im,
-      ← withDensityᵥ_apply _ hi]
-    · change (c.im.singularPart μ + μ.withDensityᵥ (c.im.rnDeriv μ)) i = _
-      rw [c.im.singularPart_add_withDensity_rnDeriv_eq μ]
-    · exact SignedMeasure.integrable_rnDeriv _ _
+  rw [Complex.add_re, withDensityᵥ_apply (c.integrable_rnDeriv μ) hi, ← RCLike.re_eq_complex_re,
+    ← integral_re (c.integrable_rnDeriv μ).integrableOn, RCLike.re_eq_complex_re,
+    ← withDensityᵥ_apply _ hi]
+  change (c.re.singularPart μ + μ.withDensityᵥ (c.re.rnDeriv μ)) i = _
+  rw [c.re.singularPart_add_withDensity_rnDeriv_eq μ]
+  exact SignedMeasure.integrable_rnDeriv _ _
+  rw [Complex.add_im, withDensityᵥ_apply (c.integrable_rnDeriv μ) hi, ← RCLike.im_eq_complex_im,
+    ← integral_im (c.integrable_rnDeriv μ).integrableOn, RCLike.im_eq_complex_im,
+    ← withDensityᵥ_apply _ hi]
+  change (c.im.singularPart μ + μ.withDensityᵥ (c.im.rnDeriv μ)) i = _
+  rw [c.im.singularPart_add_withDensity_rnDeriv_eq μ]
+  exact SignedMeasure.integrable_rnDeriv _ _
 
 end ComplexMeasure
 

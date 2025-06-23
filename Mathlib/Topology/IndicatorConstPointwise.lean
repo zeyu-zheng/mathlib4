@@ -41,30 +41,30 @@ lemma tendsto_ite {β : Type*} {p : ι → Prop} [DecidablePred p] {q : Prop} [D
     (haG : {a}ᶜ ∈ G) (hbF : {b}ᶜ ∈ F) (haF : principal {a} ≤ F) (hbG : principal {b} ≤ G) :
     Tendsto (fun i ↦ if p i then a else b) L (if q then F else G) ↔ ∀ᶠ i in L, p i ↔ q := by
   constructor <;> intro h
-  · by_cases hq : q
-    · simp only [hq, ite_true] at h
-      filter_upwards [mem_map.mp (h hbF)] with i hi
-      simp only [Set.preimage_compl, Set.mem_compl_iff, Set.mem_preimage, Set.mem_singleton_iff,
-        ite_eq_right_iff, not_forall, exists_prop] at hi
-      tauto
-    · simp only [hq, ite_false] at h
-      filter_upwards [mem_map.mp (h haG)] with i hi
-      simp only [Set.preimage_compl, Set.mem_compl_iff, Set.mem_preimage, Set.mem_singleton_iff,
-        ite_eq_left_iff, not_forall, exists_prop] at hi
-      tauto
-  · have obs : (fun _ ↦ if q then a else b) =ᶠ[L] (fun i ↦ if p i then a else b) := by
-      filter_upwards [h] with i hi
-      simp only [hi]
-    apply Tendsto.congr' obs
-    by_cases hq : q
-    · simp only [hq, iff_true, ite_true]
-      apply le_trans _ haF
-      simp only [principal_singleton, le_pure_iff, mem_map, Set.mem_singleton_iff,
-        Set.preimage_const_of_mem, univ_mem]
-    · simp only [hq, ite_false]
-      apply le_trans _ hbG
-      simp only [principal_singleton, le_pure_iff, mem_map, Set.mem_singleton_iff,
-        Set.preimage_const_of_mem, univ_mem]
+  by_cases hq : q
+  simp only [hq, ite_true] at h
+  filter_upwards [mem_map.mp (h hbF)] with i hi
+  simp only [Set.preimage_compl, Set.mem_compl_iff, Set.mem_preimage, Set.mem_singleton_iff,
+    ite_eq_right_iff, not_forall, exists_prop] at hi
+  tauto
+  simp only [hq, ite_false] at h
+  filter_upwards [mem_map.mp (h haG)] with i hi
+  simp only [Set.preimage_compl, Set.mem_compl_iff, Set.mem_preimage, Set.mem_singleton_iff,
+    ite_eq_left_iff, not_forall, exists_prop] at hi
+  tauto
+  have obs : (fun _ ↦ if q then a else b) =ᶠ[L] (fun i ↦ if p i then a else b) := by
+    filter_upwards [h] with i hi
+    simp only [hi]
+  apply Tendsto.congr' obs
+  by_cases hq : q
+  simp only [hq, iff_true, ite_true]
+  apply le_trans _ haF
+  simp only [principal_singleton, le_pure_iff, mem_map, Set.mem_singleton_iff,
+    Set.preimage_const_of_mem, univ_mem]
+  simp only [hq, ite_false]
+  apply le_trans _ hbG
+  simp only [principal_singleton, le_pure_iff, mem_map, Set.mem_singleton_iff,
+    Set.preimage_const_of_mem, univ_mem]
 
 open Classical in
 lemma tendsto_indicator_const_apply_iff_eventually' (b : β)
@@ -73,12 +73,12 @@ lemma tendsto_indicator_const_apply_iff_eventually' (b : β)
       ↔ ∀ᶠ i in L, (x ∈ As i ↔ x ∈ A) := by
   have heart := @tendsto_ite ι L β (fun i ↦ x ∈ As i) _ (x ∈ A) _ b 0 (𝓝 b) (𝓝 (0 : β))
                 nhd_o nhd_b ?_ ?_
-  · convert heart
-    by_cases hxA : x ∈ A <;> simp [hxA]
-  · simp only [principal_singleton, le_def, mem_pure]
-    exact fun s s_nhd ↦ mem_of_mem_nhds s_nhd
-  · simp only [principal_singleton, le_def, mem_pure]
-    exact fun s s_nhd ↦ mem_of_mem_nhds s_nhd
+  convert heart
+  by_cases hxA : x ∈ A <;> simp [hxA]
+  simp only [principal_singleton, le_def, mem_pure]
+  exact fun s s_nhd ↦ mem_of_mem_nhds s_nhd
+  simp only [principal_singleton, le_def, mem_pure]
+  exact fun s s_nhd ↦ mem_of_mem_nhds s_nhd
 
 lemma tendsto_indicator_const_iff_forall_eventually'
     (b : β) (nhd_b : {0}ᶜ ∈ 𝓝 b) (nhd_o : {b}ᶜ ∈ 𝓝 0) :
@@ -95,8 +95,8 @@ evaluated at `x` if and only if we eventually have the equivalence `x ∈ Asᵢ 
     Tendsto (fun i ↦ (As i).indicator (fun (_ : α) ↦ b) x) L (𝓝 (A.indicator (fun (_ : α) ↦ b) x))
       ↔ ∀ᶠ i in L, (x ∈ As i ↔ x ∈ A) := by
   apply tendsto_indicator_const_apply_iff_eventually' _ b
-  · simp only [compl_singleton_mem_nhds_iff, ne_eq, NeZero.ne, not_false_eq_true]
-  · simp only [compl_singleton_mem_nhds_iff, ne_eq, (NeZero.ne b).symm, not_false_eq_true]
+  simp only [compl_singleton_mem_nhds_iff, ne_eq, NeZero.ne, not_false_eq_true]
+  simp only [compl_singleton_mem_nhds_iff, ne_eq, (NeZero.ne b).symm, not_false_eq_true]
 
 /-- The indicator functions of `Asᵢ` tend to the indicator function of `A` pointwise if and only if
 for every `x`, we eventually have the equivalence `x ∈ Asᵢ ↔ x ∈ A`. -/
@@ -104,8 +104,8 @@ for every `x`, we eventually have the equivalence `x ∈ Asᵢ ↔ x ∈ A`. -/
     Tendsto (fun i ↦ (As i).indicator (fun (_ : α) ↦ b)) L (𝓝 (A.indicator (fun (_ : α) ↦ b)))
       ↔ ∀ x, ∀ᶠ i in L, (x ∈ As i ↔ x ∈ A) := by
   apply tendsto_indicator_const_iff_forall_eventually' _ b
-  · simp only [compl_singleton_mem_nhds_iff, ne_eq, NeZero.ne, not_false_eq_true]
-  · simp only [compl_singleton_mem_nhds_iff, ne_eq, (NeZero.ne b).symm, not_false_eq_true]
+  simp only [compl_singleton_mem_nhds_iff, ne_eq, NeZero.ne, not_false_eq_true]
+  simp only [compl_singleton_mem_nhds_iff, ne_eq, (NeZero.ne b).symm, not_false_eq_true]
 
 lemma tendsto_indicator_const_iff_tendsto_pi_pure'
     (b : β) (nhd_b : {0}ᶜ ∈ 𝓝 b) (nhd_o : {b}ᶜ ∈ 𝓝 0) :

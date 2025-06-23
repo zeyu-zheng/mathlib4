@@ -183,8 +183,8 @@ theorem Fmla.reify_or {f₁ : Fmla} {a : Prop} {f₂ : Fmla} {b : Prop}
     (h₁ : Fmla.reify v f₁ a) (h₂ : Fmla.reify v f₂ b) : Fmla.reify v (f₁.and f₂) (a ∨ b) := by
   refine ⟨fun H ↦ by_contra fun hn ↦ H ⟨fun c h ↦ by_contra fun hn' ↦ ?_⟩⟩
   rcases List.mem_append.1 h with h | h
-  · exact hn <| Or.inl <| h₁.1 fun Hc ↦ hn' <| Hc.1 _ h
-  · exact hn <| Or.inr <| h₂.1 fun Hc ↦ hn' <| Hc.1 _ h
+  exact hn <| Or.inl <| h₁.1 fun Hc ↦ hn' <| Hc.1 _ h
+  exact hn <| Or.inr <| h₂.1 fun Hc ↦ hn' <| Hc.1 _ h
 
 /-- Asserts that `¬⟦c⟧_v` implies `p`. -/
 structure Clause.reify (v : Valuation) (c : Clause) (p : Prop) : Prop where

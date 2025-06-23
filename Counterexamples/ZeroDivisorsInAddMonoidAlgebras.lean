@@ -60,9 +60,9 @@ theorem zero_divisors_of_periodic {R A} [Nontrivial R] [Ring R] [AddMonoid A] {n
     (n2 : 2 ≤ n) (na : n • a = a) (na1 : (n - 1) • a ≠ 0) :
     ∃ f g : R[A], f ≠ 0 ∧ g ≠ 0 ∧ f * g = 0 := by
   refine ⟨single a 1, single ((n - 1) • a) 1 - single 0 1, by simp, ?_, ?_⟩
-  · exact sub_ne_zero.mpr (by simpa [single, AddMonoidAlgebra, single_eq_single_iff])
-  · rw [mul_sub, AddMonoidAlgebra.single_mul_single, AddMonoidAlgebra.single_mul_single,
-      sub_eq_zero, add_zero, ← succ_nsmul', Nat.sub_add_cancel (one_le_two.trans n2), na]
+  exact sub_ne_zero.mpr (by simpa [single, AddMonoidAlgebra, single_eq_single_iff])
+  rw [mul_sub, AddMonoidAlgebra.single_mul_single, AddMonoidAlgebra.single_mul_single,
+    sub_eq_zero, add_zero, ← succ_nsmul', Nat.sub_add_cancel (one_le_two.trans n2), na]
 
 theorem single_zero_one {R A} [Semiring R] [Zero A] :
     single (0 : A) (1 : R) = (1 : R[A]) :=
@@ -81,27 +81,27 @@ theorem zero_divisors_of_torsion {R A} [Nontrivial R] [Ring R] [AddMonoid A] (a 
   refine
     ⟨(Finset.range (addOrderOf a)).sum fun i : ℕ => single a 1 ^ i, single a 1 - single 0 1, ?_, ?_,
       ?_⟩
-  · apply_fun fun x : R[A] => x 0
-    refine ne_of_eq_of_ne (?_ : (_ : R) = 1) one_ne_zero
-    dsimp only; rw [Finset.sum_apply']
-    refine (Finset.sum_eq_single 0 ?_ ?_).trans ?_
-    · intro b hb b0
-      rw [single_pow, one_pow, single_eq_of_ne]
-      exact nsmul_ne_zero_of_lt_addOrderOf b0 (Finset.mem_range.mp hb)
-    · simp only [(zero_lt_two.trans_le o2).ne', Finset.mem_range, not_lt, Nat.le_zero,
-        false_imp_iff]
-    · rw [single_pow, one_pow, zero_smul, single_eq_same]
-  · apply_fun fun x : R[A] => x 0
-    refine sub_ne_zero.mpr (ne_of_eq_of_ne (?_ : (_ : R) = 0) ?_)
-    · have a0 : a ≠ 0 :=
-        ne_of_eq_of_ne (one_nsmul a).symm
-          (nsmul_ne_zero_of_lt_addOrderOf one_ne_zero (Nat.succ_le_iff.mp o2))
-      simp only [a0, single_eq_of_ne, Ne, not_false_iff]
-    · simpa only [single_eq_same] using zero_ne_one
-  · convert Commute.geom_sum₂_mul (α := AddMonoidAlgebra R A) _ (addOrderOf a) using 3
-    · rw [single_zero_one, one_pow, mul_one]
-    · rw [single_pow, one_pow, addOrderOf_nsmul_eq_zero, single_zero_one, one_pow, sub_self]
-    · simp only [single_zero_one, Commute.one_right]
+  apply_fun fun x : R[A] => x 0
+  refine ne_of_eq_of_ne (?_ : (_ : R) = 1) one_ne_zero
+  dsimp only; rw [Finset.sum_apply']
+  refine (Finset.sum_eq_single 0 ?_ ?_).trans ?_
+  intro b hb b0
+  rw [single_pow, one_pow, single_eq_of_ne]
+  exact nsmul_ne_zero_of_lt_addOrderOf b0 (Finset.mem_range.mp hb)
+  simp only [(zero_lt_two.trans_le o2).ne', Finset.mem_range, not_lt, Nat.le_zero,
+    false_imp_iff]
+  rw [single_pow, one_pow, zero_smul, single_eq_same]
+  apply_fun fun x : R[A] => x 0
+  refine sub_ne_zero.mpr (ne_of_eq_of_ne (?_ : (_ : R) = 0) ?_)
+  have a0 : a ≠ 0 :=
+    ne_of_eq_of_ne (one_nsmul a).symm
+      (nsmul_ne_zero_of_lt_addOrderOf one_ne_zero (Nat.succ_le_iff.mp o2))
+  simp only [a0, single_eq_of_ne, Ne, not_false_iff]
+  simpa only [single_eq_same] using zero_ne_one
+  convert Commute.geom_sum₂_mul (α := AddMonoidAlgebra R A) _ (addOrderOf a) using 3
+  rw [single_zero_one, one_pow, mul_one]
+  rw [single_pow, one_pow, addOrderOf_nsmul_eq_zero, single_zero_one, one_pow, sub_self]
+  simp only [single_zero_one, Commute.one_right]
 
 example {R} [Ring R] [Nontrivial R] (n : ℕ) (n0 : 2 ≤ n) :
     ∃ f g : AddMonoidAlgebra R (ZMod n), f ≠ 0 ∧ g ≠ 0 ∧ f * g = 0 :=
@@ -226,9 +226,9 @@ example : ¬CovariantClass (Lex (F →₀ F)) (Lex (F →₀ F)) (· + ·) (· �
   rintro ⟨h⟩
   refine (not_lt (α := Lex (F →₀ F))).mpr (@h (Finsupp.single (0 : F) (1 : F))
     (Finsupp.single 1 1) (Finsupp.single 0 1) ?_) ⟨1, ?_⟩
-  · exact Or.inr ⟨0, by simp [(by boom : ∀ j : F, j < 0 ↔ False)]⟩
-  · simp only [(by boom : ∀ j : F, j < 1 ↔ j = 0), ofLex_add, coe_add, Pi.add_apply, forall_eq,
-      f010, f1, f110, add_zero, f011, f111, zero_add, and_self]
+  exact Or.inr ⟨0, by simp [(by boom : ∀ j : F, j < 0 ↔ False)]⟩
+  simp only [(by boom : ∀ j : F, j < 1 ↔ j = 0), ofLex_add, coe_add, Pi.add_apply, forall_eq,
+    f010, f1, f110, add_zero, f011, f111, zero_add, and_self]
 
 example {α} [Ring α] [Nontrivial α] : ∃ f g : AddMonoidAlgebra α F, f ≠ 0 ∧ g ≠ 0 ∧ f * g = 0 :=
   zero_divisors_of_periodic (1 : F) le_rfl (by simp [two_smul]) z01.ne'

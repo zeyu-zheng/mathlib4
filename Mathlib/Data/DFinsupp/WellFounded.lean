@@ -71,30 +71,30 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
   rintro ⟨p, x₁, x₂⟩ x ⟨i, hr, hs⟩
   simp_rw [piecewise_apply] at hs hr
   split_ifs at hs with hp
-  · refine ⟨⟨{ j | r j i → j ∈ p }, piecewise x₁ x { j | r j i }, x₂⟩,
-      .fst ⟨i, fun j hj ↦ ?_, ?_⟩, ?_⟩ <;> simp only [piecewise_apply, Set.mem_setOf_eq]
-    · simp only [if_pos hj]
-    · split_ifs with hi
-      · rwa [hr i hi, if_pos hp] at hs
-      · assumption
-    · ext1 j
-      simp only [piecewise_apply, Set.mem_setOf_eq]
-      split_ifs with h₁ h₂ <;> try rfl
-      · rw [hr j h₂, if_pos (h₁ h₂)]
-      · rw [Classical.not_imp] at h₁
-        rw [hr j h₁.1, if_neg h₁.2]
-  · refine ⟨⟨{ j | r j i ∧ j ∈ p }, x₁, piecewise x₂ x { j | r j i }⟩,
-      .snd ⟨i, fun j hj ↦ ?_, ?_⟩, ?_⟩ <;> simp only [piecewise_apply, Set.mem_setOf_eq]
-    · exact if_pos hj
-    · split_ifs with hi
-      · rwa [hr i hi, if_neg hp] at hs
-      · assumption
-    · ext1 j
-      simp only [piecewise_apply, Set.mem_setOf_eq]
-      split_ifs with h₁ h₂ <;> try rfl
-      · rw [hr j h₁.1, if_pos h₁.2]
-      · rw [hr j h₂, if_neg]
-        simpa [h₂] using h₁
+  refine ⟨⟨{ j | r j i → j ∈ p }, piecewise x₁ x { j | r j i }, x₂⟩,
+    .fst ⟨i, fun j hj ↦ ?_, ?_⟩, ?_⟩ <;> simp only [piecewise_apply, Set.mem_setOf_eq]
+  simp only [if_pos hj]
+  split_ifs with hi
+  rwa [hr i hi, if_pos hp] at hs
+  assumption
+  ext1 j
+  simp only [piecewise_apply, Set.mem_setOf_eq]
+  split_ifs with h₁ h₂ <;> try rfl
+  rw [hr j h₂, if_pos (h₁ h₂)]
+  rw [Classical.not_imp] at h₁
+  rw [hr j h₁.1, if_neg h₁.2]
+  refine ⟨⟨{ j | r j i ∧ j ∈ p }, x₁, piecewise x₂ x { j | r j i }⟩,
+    .snd ⟨i, fun j hj ↦ ?_, ?_⟩, ?_⟩ <;> simp only [piecewise_apply, Set.mem_setOf_eq]
+  exact if_pos hj
+  split_ifs with hi
+  rwa [hr i hi, if_neg hp] at hs
+  assumption
+  ext1 j
+  simp only [piecewise_apply, Set.mem_setOf_eq]
+  split_ifs with h₁ h₂ <;> try rfl
+  rw [hr j h₁.1, if_pos h₁.2]
+  rw [hr j h₂, if_neg]
+  simpa [h₂] using h₁
 
 variable {r s}
 
@@ -116,9 +116,9 @@ theorem Lex.acc_of_single (hbot : ∀ ⦃i a⦄, ¬s i a 0) [DecidableEq ι]
     (∀ i ∈ x.support, Acc (DFinsupp.Lex r s) <| single i (x i)) → Acc (DFinsupp.Lex r s) x := by
   generalize ht : x.support = t; revert x
   induction' t using Finset.induction with b t hb ih
-  · intro x ht
-    rw [support_eq_empty.1 ht]
-    exact fun _ => Lex.acc_zero hbot
+  intro x ht
+  rw [support_eq_empty.1 ht]
+  exact fun _ => Lex.acc_zero hbot
   refine fun x ht h => Lex.acc_of_single_erase b (h b <| t.mem_insert_self b) ?_
   refine ih _ (by rw [support_erase, ht, Finset.erase_insert hb]) fun a ha => ?_
   rw [erase_ne (ha.ne_of_not_mem hb)]
@@ -136,15 +136,15 @@ theorem Lex.acc_single (hbot : ∀ ⦃i a⦄, ¬s i a 0) (hs : ∀ i, WellFounde
   rw [single_apply] at hs
   split_ifs at hs with hik
   swap
-  · exact (hbot hs).elim
+  exact (hbot hs).elim
   subst hik
   refine Lex.acc_of_single hbot x fun j hj ↦ ?_
   obtain rfl | hij := eq_or_ne i j
-  · exact ha _ hs
+  exact ha _ hs
   by_cases h : r j i
-  · rw [hr j h, single_eq_of_ne hij, single_zero]
-    exact Lex.acc_zero hbot
-  · exact ih _ ⟨h, hij.symm⟩ _
+  rw [hr j h, single_eq_of_ne hij, single_zero]
+  exact Lex.acc_zero hbot
+  exact ih _ ⟨h, hij.symm⟩ _
 
 theorem Lex.acc (hbot : ∀ ⦃i a⦄, ¬s i a 0) (hs : ∀ i, WellFounded (s i))
     [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : Π₀ i, α i)
@@ -177,7 +177,7 @@ variable (r : ι → ι → Prop) {s : ∀ i, α i → α i → Prop}
 theorem Pi.Lex.wellFounded [IsStrictTotalOrder ι r] [Finite ι] (hs : ∀ i, WellFounded (s i)) :
     WellFounded (Pi.Lex r (fun {i} ↦ s i)) := by
   obtain h | ⟨⟨x⟩⟩ := isEmpty_or_nonempty (∀ i, α i)
-  · convert emptyWf.wf
+  convert emptyWf.wf
   letI : ∀ i, Zero (α i) := fun i => ⟨(hs i).min ⊤ ⟨x i, trivial⟩⟩
   haveI := IsTrans.swap r; haveI := IsIrrefl.swap r; haveI := Fintype.ofFinite ι
   refine InvImage.wf equivFunOnFintype.symm (Lex.wellFounded' (fun i a => ?_) hs ?_)
@@ -210,12 +210,12 @@ protected theorem DFinsupp.wellFoundedLT [∀ i, Zero (α i)] [∀ i, Preorder (
         (fun _ ↦ (· < ·) : (i : ι) → β i → β i → Prop)) := by
       have := IsTrichotomous.swap (@WellOrderingRel ι)
       refine Lex.wellFounded' ?_ (fun i ↦ IsWellFounded.wf) ?_
-      · rintro i ⟨a⟩
-        apply hbot
-      · #adaptation_note /-- nightly-2024-03-16: simp was
-        simp (config := { unfoldPartialApp := true }) only [Function.swap] -/
-        simp only [Function.swap_def]
-        exact IsWellFounded.wf
+      rintro i ⟨a⟩
+      apply hbot
+      #adaptation_note /-- nightly-2024-03-16: simp was
+      simp (config := { unfoldPartialApp := true }) only [Function.swap] -/
+      simp only [Function.swap_def]
+      exact IsWellFounded.wf
     refine Subrelation.wf (fun h => ?_) <| InvImage.wf (mapRange (fun i ↦ e i) fun _ ↦ rfl) this
     have := IsStrictOrder.swap (@WellOrderingRel ι)
     obtain ⟨i, he, hl⟩ := lex_lt_of_lt_of_preorder (Function.swap WellOrderingRel) h
@@ -229,7 +229,7 @@ instance Pi.wellFoundedLT [Finite ι] [∀ i, Preorder (α i)] [hw : ∀ i, Well
     WellFoundedLT (∀ i, α i) :=
   ⟨by
     obtain h | ⟨⟨x⟩⟩ := isEmpty_or_nonempty (∀ i, α i)
-    · convert emptyWf.wf
+    convert emptyWf.wf
     letI : ∀ i, Zero (α i) := fun i => ⟨(hw i).wf.min ⊤ ⟨x i, trivial⟩⟩
     haveI := Fintype.ofFinite ι
     refine InvImage.wf equivFunOnFintype.symm (DFinsupp.wellFoundedLT fun i a => ?_).wf

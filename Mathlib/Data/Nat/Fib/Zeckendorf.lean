@@ -105,9 +105,9 @@ lemma greatestFib_sub_fib_greatestFib_le_greatestFib (hn : n ≠ 0) :
     greatestFib (n - fib (greatestFib n)) ≤ greatestFib n - 2 := by
   rw [← Nat.lt_succ_iff, greatestFib_lt, tsub_lt_iff_right n.fib_greatestFib_le, Nat.sub_succ,
     succ_pred, ← fib_add_one]
-  · exact n.lt_fib_greatestFib_add_one
-  · simpa
-  · simpa [← succ_le_iff, tsub_eq_zero_iff_le] using hn.bot_lt
+  exact n.lt_fib_greatestFib_add_one
+  simpa
+  simpa [← succ_le_iff, tsub_eq_zero_iff_le] using hn.bot_lt
 
 private lemma zeckendorf_aux (hm : 0 < m) : m - fib (greatestFib m) < m :=
 tsub_lt_self hm <| fib_pos.2 <| findGreatest_pos.2 ⟨1, zero_lt_one, le_add_self, hm⟩
@@ -140,9 +140,9 @@ lemma isZeckendorfRep_zeckendorf : ∀ n, (zeckendorf n).IsZeckendorfRep
     rw [zeckendorf_succ, IsZeckendorfRep, List.cons_append]
     refine (isZeckendorfRep_zeckendorf _).cons' (fun a ha ↦ ?_)
     obtain h | h := eq_zero_or_pos (n + 1 - fib (greatestFib (n + 1)))
-    · simp only [h, zeckendorf_zero, nil_append, head?_cons, Option.mem_some_iff] at ha
-      subst ha
-      exact le_greatestFib.2 le_add_self
+    simp only [h, zeckendorf_zero, nil_append, head?_cons, Option.mem_some_iff] at ha
+    subst ha
+    exact le_greatestFib.2 le_add_self
     rw [zeckendorf_of_pos h, cons_append, head?_cons, Option.mem_some_iff] at ha
     subst a
     exact add_le_of_le_tsub_right_of_le (le_greatestFib.2 le_add_self)

@@ -64,13 +64,13 @@ instance : LE (ValueGroup A K) :=
       (by
         rintro _ _ a b ⟨c, rfl⟩ ⟨d, rfl⟩; ext
         constructor
-        · rintro ⟨e, he⟩; use (c⁻¹ : Aˣ) * e * d
-          apply_fun fun t => c⁻¹ • t at he
-          simpa [mul_smul] using he
-        · rintro ⟨e, he⟩; dsimp
-          use c * e * (d⁻¹ : Aˣ)
-          simp_rw [Units.smul_def, ← he, mul_smul]
-          rw [← mul_smul _ _ b, Units.inv_mul, one_smul])
+        rintro ⟨e, he⟩; use (c⁻¹ : Aˣ) * e * d
+        apply_fun fun t => c⁻¹ • t at he
+        simpa [mul_smul] using he
+        rintro ⟨e, he⟩; dsimp
+        use c * e * (d⁻¹ : Aˣ)
+        simp_rw [Units.smul_def, ← he, mul_smul]
+        rw [← mul_smul _ _ b, Units.inv_mul, one_smul])
 
 instance : Zero (ValueGroup A K) := ⟨Quotient.mk'' 0⟩
 
@@ -107,16 +107,16 @@ protected theorem le_total (a b : ValueGroup A K) : a ≤ b ∨ b ≤ a := by
   have : (algebraMap A K) ya ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hya
   have : (algebraMap A K) yb ≠ 0 := IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hyb
   obtain ⟨c, h | h⟩ := ValuationRing.cond (xa * yb) (xb * ya)
-  · right
-    use c
-    rw [Algebra.smul_def]
-    field_simp
-    simp only [← RingHom.map_mul, ← h]; congr 1; ring
-  · left
-    use c
-    rw [Algebra.smul_def]
-    field_simp
-    simp only [← RingHom.map_mul, ← h]; congr 1; ring
+  right
+  use c
+  rw [Algebra.smul_def]
+  field_simp
+  simp only [← RingHom.map_mul, ← h]; congr 1; ring
+  left
+  use c
+  rw [Algebra.smul_def]
+  field_simp
+  simp only [← RingHom.map_mul, ← h]; congr 1; ring
 
 -- Porting note: it is much faster to split the instance `LinearOrderedCommGroupWithZero`
 -- into two parts
@@ -198,12 +198,12 @@ def valuation : Valuation K (ValueGroup A K) where
 
 theorem mem_integer_iff (x : K) : x ∈ (valuation A K).integer ↔ ∃ a : A, algebraMap A K a = x := by
   constructor
-  · rintro ⟨c, rfl⟩
-    use c
-    rw [Algebra.smul_def, mul_one]
-  · rintro ⟨c, rfl⟩
-    use c
-    rw [Algebra.smul_def, mul_one]
+  rintro ⟨c, rfl⟩
+  use c
+  rw [Algebra.smul_def, mul_one]
+  rintro ⟨c, rfl⟩
+  use c
+  rw [Algebra.smul_def, mul_one]
 
 /-- The valuation ring `A` is isomorphic to the ring of integers of its associated valuation. -/
 noncomputable def equivInteger : A ≃+* (valuation A K).integer :=
@@ -240,12 +240,12 @@ instance (priority := 100) localRing : LocalRing A :=
     (by
       intro a
       obtain ⟨c, h | h⟩ := ValuationRing.cond a (1 - a)
-      · left
-        apply isUnit_of_mul_eq_one _ (c + 1)
-        simp [mul_add, h]
-      · right
-        apply isUnit_of_mul_eq_one _ (c + 1)
-        simp [mul_add, h])
+      left
+      apply isUnit_of_mul_eq_one _ (c + 1)
+      simp [mul_add, h]
+      right
+      apply isUnit_of_mul_eq_one _ (c + 1)
+      simp [mul_add, h])
 
 instance [DecidableRel ((· ≤ ·) : Ideal A → Ideal A → Prop)] : LinearOrder (Ideal A) :=
   { (inferInstance : CompleteLattice (Ideal A)) with
@@ -258,10 +258,10 @@ instance [DecidableRel ((· ≤ ·) : Ideal A → Ideal A → Prop)] : LinearOrd
       right
       intro b hb
       obtain ⟨c, h | h⟩ := ValuationRing.cond a b
-      · rw [← h]
-        exact Ideal.mul_mem_right _ _ h₁
-      · exfalso; apply h₂; rw [← h]
-        apply Ideal.mul_mem_right _ _ hb
+      rw [← h]
+      exact Ideal.mul_mem_right _ _ h₁
+      exfalso; apply h₂; rw [← h]
+      apply Ideal.mul_mem_right _ _ hb
     decidableLE := inferInstance }
 
 end
@@ -274,8 +274,8 @@ variable [Field K] [Algebra R K] [IsFractionRing R K]
 open Classical in
 theorem iff_dvd_total : ValuationRing R ↔ IsTotal R (· ∣ ·) := by
   refine ⟨fun H => ⟨fun a b => ?_⟩, fun H => ⟨fun a b => ?_⟩⟩
-  · obtain ⟨c, rfl | rfl⟩ := ValuationRing.cond a b <;> simp
-  · obtain ⟨c, rfl⟩ | ⟨c, rfl⟩ := @IsTotal.total _ _ H a b <;> use c <;> simp
+  obtain ⟨c, rfl | rfl⟩ := ValuationRing.cond a b <;> simp
+  obtain ⟨c, rfl⟩ | ⟨c, rfl⟩ := @IsTotal.total _ _ H a b <;> use c <;> simp
 
 open Classical in
 theorem iff_ideal_total : ValuationRing R ↔ IsTotal (Ideal R) (· ≤ ·) := by
@@ -300,25 +300,25 @@ variable (R)
 theorem iff_isInteger_or_isInteger :
     ValuationRing R ↔ ∀ x : K, IsLocalization.IsInteger R x ∨ IsLocalization.IsInteger R x⁻¹ := by
   constructor
-  · intro H x
-    obtain ⟨x : R, y, hy, rfl⟩ := IsFractionRing.div_surjective (A := R) x
-    have := (map_ne_zero_iff _ (IsFractionRing.injective R K)).mpr (nonZeroDivisors.ne_zero hy)
-    obtain ⟨s, rfl | rfl⟩ := ValuationRing.cond x y
-    · exact Or.inr
-        ⟨s, eq_inv_of_mul_eq_one_left <| by rwa [mul_div, div_eq_one_iff_eq, map_mul, mul_comm]⟩
-    · exact Or.inl ⟨s, by rwa [eq_div_iff, map_mul, mul_comm]⟩
-  · intro H
-    constructor
-    intro a b
-    by_cases ha : a = 0; · subst ha; exact ⟨0, Or.inr <| mul_zero b⟩
-    by_cases hb : b = 0; · subst hb; exact ⟨0, Or.inl <| mul_zero a⟩
-    replace ha := (map_ne_zero_iff _ (IsFractionRing.injective R K)).mpr ha
-    replace hb := (map_ne_zero_iff _ (IsFractionRing.injective R K)).mpr hb
-    obtain ⟨c, e⟩ | ⟨c, e⟩ := H (algebraMap R K a / algebraMap R K b)
-    · rw [eq_div_iff hb, ← map_mul, (IsFractionRing.injective R K).eq_iff, mul_comm] at e
-      exact ⟨c, Or.inr e⟩
-    · rw [inv_div, eq_div_iff ha, ← map_mul, (IsFractionRing.injective R K).eq_iff, mul_comm c] at e
-      exact ⟨c, Or.inl e⟩
+  intro H x
+  obtain ⟨x : R, y, hy, rfl⟩ := IsFractionRing.div_surjective (A := R) x
+  have := (map_ne_zero_iff _ (IsFractionRing.injective R K)).mpr (nonZeroDivisors.ne_zero hy)
+  obtain ⟨s, rfl | rfl⟩ := ValuationRing.cond x y
+  exact Or.inr
+    ⟨s, eq_inv_of_mul_eq_one_left <| by rwa [mul_div, div_eq_one_iff_eq, map_mul, mul_comm]⟩
+  exact Or.inl ⟨s, by rwa [eq_div_iff, map_mul, mul_comm]⟩
+  intro H
+  constructor
+  intro a b
+  by_cases ha : a = 0; · subst ha; exact ⟨0, Or.inr <| mul_zero b⟩
+  by_cases hb : b = 0; · subst hb; exact ⟨0, Or.inl <| mul_zero a⟩
+  replace ha := (map_ne_zero_iff _ (IsFractionRing.injective R K)).mpr ha
+  replace hb := (map_ne_zero_iff _ (IsFractionRing.injective R K)).mpr hb
+  obtain ⟨c, e⟩ | ⟨c, e⟩ := H (algebraMap R K a / algebraMap R K b)
+  rw [eq_div_iff hb, ← map_mul, (IsFractionRing.injective R K).eq_iff, mul_comm] at e
+  exact ⟨c, Or.inr e⟩
+  rw [inv_div, eq_div_iff ha, ← map_mul, (IsFractionRing.injective R K).eq_iff, mul_comm c] at e
+  exact ⟨c, Or.inl e⟩
 
 variable {K}
 
@@ -335,8 +335,8 @@ instance (priority := 100) [ValuationRing R] : IsBezout R := by
   intro x y
   rw [Ideal.span_insert]
   rcases le_total (Ideal.span {x} : Ideal R) (Ideal.span {y}) with h | h
-  · erw [sup_eq_right.mpr h]; exact ⟨⟨_, rfl⟩⟩
-  · erw [sup_eq_left.mpr h]; exact ⟨⟨_, rfl⟩⟩
+  erw [sup_eq_right.mpr h]; exact ⟨⟨_, rfl⟩⟩
+  erw [sup_eq_left.mpr h]; exact ⟨⟨_, rfl⟩⟩
 
 open Classical in
 instance (priority := 100) [LocalRing R] [IsBezout R] : ValuationRing R := by
@@ -349,7 +349,7 @@ instance (priority := 100) [LocalRing R] [IsBezout R] : ValuationRing R := by
   obtain ⟨x, y, e'⟩ := Ideal.mem_span_pair.mp
       (show g ∈ Ideal.span {a * g, b * g} by rw [e]; exact Ideal.subset_span (by simp))
   rcases eq_or_ne g 0 with h | h
-  · simp [h]
+  simp [h]
   have : x * a + y * b = 1
   apply mul_left_injective₀ h; convert e' using 1 <;> ring
   cases' LocalRing.isUnit_or_isUnit_of_add_one this with h' h' <;> [left; right]
@@ -390,10 +390,10 @@ theorem of_integers : ValuationRing 𝒪 := by
   constructor
   intro a b
   rcases le_total (v (algebraMap 𝒪 K a)) (v (algebraMap 𝒪 K b)) with h | h
-  · obtain ⟨c, hc⟩ := Valuation.Integers.dvd_of_le hh h
-    use c; exact Or.inr hc.symm
-  · obtain ⟨c, hc⟩ := Valuation.Integers.dvd_of_le hh h
-    use c; exact Or.inl hc.symm
+  obtain ⟨c, hc⟩ := Valuation.Integers.dvd_of_le hh h
+  use c; exact Or.inr hc.symm
+  obtain ⟨c, hc⟩ := Valuation.Integers.dvd_of_le hh h
+  use c; exact Or.inl hc.symm
 
 instance instValuationRingInteger : ValuationRing v.integer :=
   of_integers (v := v) (Valuation.integer.integers v)
@@ -405,20 +405,20 @@ theorem isFractionRing_iff [ValuationRing 𝒪] :
   refine ⟨fun h ↦ ⟨fun x ↦ ?_, IsFractionRing.injective _ _⟩, fun h ↦ ?_⟩
   · obtain (⟨a, e⟩ | ⟨a, e⟩) := isInteger_or_isInteger 𝒪 x
     exacts [⟨a, .inl e.symm⟩, ⟨a, .inr e.symm⟩]
-  · constructor
-    · intro a
-      simpa using h.2.ne_iff.mpr (nonZeroDivisors.ne_zero a.2)
-    · intro x
-      obtain ⟨a, ha⟩ := h.1 x
-      by_cases h0 : a = 0
-      · exact ⟨⟨0, 1⟩, by simpa [h0] using ha⟩
-      · have : algebraMap 𝒪 K a ≠ 0 := by simpa using h.2.ne_iff.mpr h0
-        rw [inv_eq_iff_eq_inv, ← one_div, eq_div_iff this] at ha
-        cases ha with
-        | inl ha => exact ⟨⟨a, 1⟩, by simpa⟩
-        | inr ha => exact ⟨⟨1, ⟨a, mem_nonZeroDivisors_of_ne_zero h0⟩⟩, by simpa using ha⟩
-    · intro _ _ hab
-      exact ⟨1, by simp only [OneMemClass.coe_one, h.2 hab, one_mul]⟩
+  constructor
+  intro a
+  simpa using h.2.ne_iff.mpr (nonZeroDivisors.ne_zero a.2)
+  intro x
+  obtain ⟨a, ha⟩ := h.1 x
+  by_cases h0 : a = 0
+  exact ⟨⟨0, 1⟩, by simpa [h0] using ha⟩
+  have : algebraMap 𝒪 K a ≠ 0 := by simpa using h.2.ne_iff.mpr h0
+  rw [inv_eq_iff_eq_inv, ← one_div, eq_div_iff this] at ha
+  cases ha with
+  | inl ha => exact ⟨⟨a, 1⟩, by simpa⟩
+  | inr ha => exact ⟨⟨1, ⟨a, mem_nonZeroDivisors_of_ne_zero h0⟩⟩, by simpa using ha⟩
+  intro _ _ hab
+  exact ⟨1, by simp only [OneMemClass.coe_one, h.2 hab, one_mul]⟩
 
 instance instIsFractionRingInteger : IsFractionRing v.integer K :=
   ValuationRing.isFractionRing_iff.mpr
@@ -436,8 +436,8 @@ instance (priority := 100) of_field : ValuationRing K := by
   constructor
   intro a b
   by_cases h : b = 0
-  · use 0; left; simp [h]
-  · use a * b⁻¹; right; field_simp
+  use 0; left; simp [h]
+  use a * b⁻¹; right; field_simp
 
 end
 
@@ -455,16 +455,16 @@ instance (priority := 100) of_discreteValuationRing : ValuationRing A := by
   obtain ⟨m, u, rfl⟩ := DiscreteValuationRing.eq_unit_mul_pow_irreducible ha hϖ
   obtain ⟨n, v, rfl⟩ := DiscreteValuationRing.eq_unit_mul_pow_irreducible hb hϖ
   rcases le_total m n with h | h
-  · use (u⁻¹ * v : Aˣ) * ϖ ^ (n - m); left
-    simp_rw [mul_comm (u : A), Units.val_mul, ← mul_assoc, mul_assoc _ (u : A)]
-    simp only [Units.mul_inv, mul_one, mul_comm _ (v : A), mul_assoc, ← pow_add]
-    congr 2
-    exact Nat.add_sub_of_le h
-  · use (v⁻¹ * u : Aˣ) * ϖ ^ (m - n); right
-    simp_rw [mul_comm (v : A), Units.val_mul, ← mul_assoc, mul_assoc _ (v : A)]
-    simp only [Units.mul_inv, mul_one, mul_comm _ (u : A), mul_assoc, ← pow_add]
-    congr 2
-    exact Nat.add_sub_of_le h
+  use (u⁻¹ * v : Aˣ) * ϖ ^ (n - m); left
+  simp_rw [mul_comm (u : A), Units.val_mul, ← mul_assoc, mul_assoc _ (u : A)]
+  simp only [Units.mul_inv, mul_one, mul_comm _ (v : A), mul_assoc, ← pow_add]
+  congr 2
+  exact Nat.add_sub_of_le h
+  use (v⁻¹ * u : Aˣ) * ϖ ^ (m - n); right
+  simp_rw [mul_comm (v : A), Units.val_mul, ← mul_assoc, mul_assoc _ (v : A)]
+  simp only [Units.mul_inv, mul_one, mul_comm _ (u : A), mul_assoc, ← pow_add]
+  congr 2
+  exact Nat.add_sub_of_le h
 
 end
 

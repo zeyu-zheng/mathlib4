@@ -65,31 +65,31 @@ orthogonal to the radius vector. -/
 theorem Sphere.secondInter_eq_self_iff {s : Sphere P} {p : P} {v : V} :
     s.secondInter p v = p ↔ ⟪v, p -ᵥ s.center⟫ = 0 := by
   refine ⟨fun hp => ?_, fun hp => ?_⟩
-  · by_cases hv : v = 0
-    · simp [hv]
-    rwa [Sphere.secondInter, eq_comm, eq_vadd_iff_vsub_eq, vsub_self, eq_comm, smul_eq_zero,
-      or_iff_left hv, div_eq_zero_iff, inner_self_eq_zero, or_iff_left hv, mul_eq_zero,
-      or_iff_right (by norm_num : (-2 : ℝ) ≠ 0)] at hp
-  · rw [Sphere.secondInter, hp, mul_zero, zero_div, zero_smul, zero_vadd]
+  by_cases hv : v = 0
+  simp [hv]
+  rwa [Sphere.secondInter, eq_comm, eq_vadd_iff_vsub_eq, vsub_self, eq_comm, smul_eq_zero,
+    or_iff_left hv, div_eq_zero_iff, inner_self_eq_zero, or_iff_left hv, mul_eq_zero,
+    or_iff_right (by norm_num : (-2 : ℝ) ≠ 0)] at hp
+  rw [Sphere.secondInter, hp, mul_zero, zero_div, zero_smul, zero_vadd]
 
 /-- A point on a line through a point on a sphere equals that point or `secondInter`. -/
 theorem Sphere.eq_or_eq_secondInter_of_mem_mk'_span_singleton_iff_mem {s : Sphere P} {p : P}
     (hp : p ∈ s) {v : V} {p' : P} (hp' : p' ∈ AffineSubspace.mk' p (ℝ ∙ v)) :
     p' = p ∨ p' = s.secondInter p v ↔ p' ∈ s := by
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · rcases h with (h | h)
-    · rwa [h]
-    · rwa [h, Sphere.secondInter_mem]
-  · rw [AffineSubspace.mem_mk'_iff_vsub_mem, Submodule.mem_span_singleton] at hp'
-    rcases hp' with ⟨r, hr⟩
-    rw [eq_comm, ← eq_vadd_iff_vsub_eq] at hr
-    subst hr
-    by_cases hv : v = 0
-    · simp [hv]
-    rw [Sphere.secondInter]
-    rw [mem_sphere] at h hp
-    rw [← hp, dist_smul_vadd_eq_dist _ _ hv] at h
-    rcases h with (h | h) <;> simp [h]
+  rcases h with (h | h)
+  rwa [h]
+  rwa [h, Sphere.secondInter_mem]
+  rw [AffineSubspace.mem_mk'_iff_vsub_mem, Submodule.mem_span_singleton] at hp'
+  rcases hp' with ⟨r, hr⟩
+  rw [eq_comm, ← eq_vadd_iff_vsub_eq] at hr
+  subst hr
+  by_cases hv : v = 0
+  simp [hv]
+  rw [Sphere.secondInter]
+  rw [mem_sphere] at h hp
+  rw [← hp, dist_smul_vadd_eq_dist _ _ hv] at h
+  rcases h with (h | h) <;> simp [h]
 
 /-- `secondInter` is unchanged by multiplying the vector by a nonzero real. -/
 @[simp]
@@ -161,11 +161,11 @@ the first point and the result of `secondInter`. -/
 theorem Sphere.sbtw_secondInter {s : Sphere P} {p p' : P} (hp : p ∈ s)
     (hp' : dist p' s.center < s.radius) : Sbtw ℝ p p' (s.secondInter p (p' -ᵥ p)) := by
   refine ⟨Sphere.wbtw_secondInter hp hp'.le, ?_, ?_⟩
-  · rintro rfl
-    rw [mem_sphere] at hp
-    simp [hp] at hp'
-  · rintro h
-    rw [h, mem_sphere.1 ((Sphere.secondInter_mem _).2 hp)] at hp'
-    exact lt_irrefl _ hp'
+  rintro rfl
+  rw [mem_sphere] at hp
+  simp [hp] at hp'
+  rintro h
+  rw [h, mem_sphere.1 ((Sphere.secondInter_mem _).2 hp)] at hp'
+  exact lt_irrefl _ hp'
 
 end EuclideanGeometry

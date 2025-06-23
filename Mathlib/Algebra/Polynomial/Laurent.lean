@@ -246,16 +246,16 @@ protected theorem induction_on {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_C
   have A : ∀ {n : ℤ} {a : R}, M (C a * T n)
   intro n a
   refine Int.induction_on n ?_ ?_ ?_
-  · simpa only [T_zero, mul_one] using h_C a
-  · exact fun m => h_C_mul_T m a
-  · exact fun m => h_C_mul_T_Z m a
+  simpa only [T_zero, mul_one] using h_C a
+  exact fun m => h_C_mul_T m a
+  exact fun m => h_C_mul_T_Z m a
   have B : ∀ s : Finset ℤ, M (s.sum fun n : ℤ => C (p.toFun n) * T n)
   apply Finset.induction
-  · convert h_C 0
-    simp only [Finset.sum_empty, _root_.map_zero]
-  · intro n s ns ih
-    rw [Finset.sum_insert ns]
-    exact h_add A ih
+  convert h_C 0
+  simp only [Finset.sum_empty, _root_.map_zero]
+  intro n s ns ih
+  rw [Finset.sum_insert ns]
+  exact h_add A ih
   convert B p.support
   ext a
   simp_rw [← single_eq_C_mul_T]
@@ -263,8 +263,8 @@ protected theorem induction_on {M : R[T;T⁻¹] → Prop} (p : R[T;T⁻¹]) (h_C
   rw [Finset.sum_apply']
   simp_rw [Finsupp.single_apply, Finset.sum_ite_eq']
   split_ifs with h
-  · rfl
-  · exact Finsupp.not_mem_support_iff.mp h
+  rfl
+  exact Finsupp.not_mem_support_iff.mp h
 
 /-- To prove something about Laurent polynomials, it suffices to show that
 * the condition is closed under taking sums, and
@@ -304,25 +304,25 @@ theorem trunc_C_mul_T (n : ℤ) (r : R) : trunc (C r * T n) = ite (0 ≤ n) (mon
   rw [toFinsuppIso_apply]
   -- Porting note: rewrote proof below relative to mathlib3.
   by_cases n0 : 0 ≤ n
-  · lift n to ℕ using n0
-    erw [comapDomain_single]
-    simp only [Nat.cast_nonneg, Int.toNat_ofNat, ite_true, toFinsupp_monomial]
-  · lift -n to ℕ using (neg_pos.mpr (not_le.mp n0)).le with m
-    rw [toFinsupp_inj, if_neg n0]
-    ext a
-    have := ((not_le.mp n0).trans_le (Int.ofNat_zero_le a)).ne
-    simp only [coeff_ofFinsupp, comapDomain_apply, Int.ofNat_eq_coe, coeff_zero,
-      single_eq_of_ne this]
+  lift n to ℕ using n0
+  erw [comapDomain_single]
+  simp only [Nat.cast_nonneg, Int.toNat_ofNat, ite_true, toFinsupp_monomial]
+  lift -n to ℕ using (neg_pos.mpr (not_le.mp n0)).le with m
+  rw [toFinsupp_inj, if_neg n0]
+  ext a
+  have := ((not_le.mp n0).trans_le (Int.ofNat_zero_le a)).ne
+  simp only [coeff_ofFinsupp, comapDomain_apply, Int.ofNat_eq_coe, coeff_zero,
+    single_eq_of_ne this]
 
 @[simp]
 theorem leftInverse_trunc_toLaurent :
     Function.LeftInverse (trunc : R[T;T⁻¹] → R[X]) Polynomial.toLaurent := by
   refine fun f => f.induction_on' ?_ ?_
-  · intro f g hf hg
-    simp only [hf, hg, _root_.map_add]
-  · intro n r
-    simp only [Polynomial.toLaurent_C_mul_T, trunc_C_mul_T, Int.natCast_nonneg, Int.toNat_natCast,
-      if_true]
+  intro f g hf hg
+  simp only [hf, hg, _root_.map_add]
+  intro n r
+  simp only [Polynomial.toLaurent_C_mul_T, trunc_C_mul_T, Int.natCast_nonneg, Int.toNat_natCast,
+    if_true]
 
 @[simp]
 theorem _root_.Polynomial.trunc_toLaurent (f : R[X]) : trunc (toLaurent f) = f :=
@@ -341,15 +341,15 @@ theorem _root_.Polynomial.toLaurent_ne_zero {f : R[X]} : f ≠ 0 ↔ toLaurent f
 
 theorem exists_T_pow (f : R[T;T⁻¹]) : ∃ (n : ℕ) (f' : R[X]), toLaurent f' = f * T n := by
   refine f.induction_on' ?_ fun n a => ?_ <;> clear f
-  · rintro f g ⟨m, fn, hf⟩ ⟨n, gn, hg⟩
-    refine ⟨m + n, fn * X ^ n + gn * X ^ m, ?_⟩
-    simp only [hf, hg, add_mul, add_comm (n : ℤ), map_add, map_mul, Polynomial.toLaurent_X_pow,
-      mul_T_assoc, Int.ofNat_add]
-  · cases' n with n n
-    · exact ⟨0, Polynomial.C a * X ^ n, by simp⟩
-    · refine ⟨n + 1, Polynomial.C a, ?_⟩
-      simp only [Int.negSucc_eq, Polynomial.toLaurent_C, Int.ofNat_succ, mul_T_assoc, add_left_neg,
-        T_zero, mul_one]
+  rintro f g ⟨m, fn, hf⟩ ⟨n, gn, hg⟩
+  refine ⟨m + n, fn * X ^ n + gn * X ^ m, ?_⟩
+  simp only [hf, hg, add_mul, add_comm (n : ℤ), map_add, map_mul, Polynomial.toLaurent_X_pow,
+    mul_T_assoc, Int.ofNat_add]
+  cases' n with n n
+  exact ⟨0, Polynomial.C a * X ^ n, by simp⟩
+  refine ⟨n + 1, Polynomial.C a, ?_⟩
+  simp only [Int.negSucc_eq, Polynomial.toLaurent_C, Int.ofNat_succ, mul_T_assoc, add_left_neg,
+    T_zero, mul_one]
 
 /-- This is a version of `exists_T_pow` stated as an induction principle. -/
 @[elab_as_elim]
@@ -368,9 +368,9 @@ theorem reduce_to_polynomial_of_mul_T (f : R[T;T⁻¹]) {Q : R[T;T⁻¹] → Pro
     (Qf : ∀ f : R[X], Q (toLaurent f)) (QT : ∀ f, Q (f * T 1) → Q f) : Q f := by
   induction' f using LaurentPolynomial.induction_on_mul_T with f n
   induction' n with n hn
-  · simpa only [Nat.zero_eq, Nat.cast_zero, neg_zero, T_zero, mul_one] using Qf _
-  · convert QT _ _
-    simpa using hn
+  simpa only [Nat.zero_eq, Nat.cast_zero, neg_zero, T_zero, mul_one] using Qf _
+  convert QT _ _
+  simpa using hn
 
 section Support
 
@@ -392,20 +392,20 @@ theorem toLaurent_support (f : R[X]) : f.toLaurent.support = f.support.map Nat.c
   generalize hd : f.support = s
   revert f
   refine Finset.induction_on s ?_ ?_ <;> clear s
-  · simp (config := { contextual := true }) only [Polynomial.support_eq_empty, map_zero,
-      Finsupp.support_zero, eq_self_iff_true, imp_true_iff, Finset.map_empty,
-      Finsupp.support_eq_empty]
-  · intro a s as hf f fs
-    have : (erase a f).toLaurent.support = s.map Nat.castEmbedding
-    refine hf (f.erase a) ?_
-    simp only [fs, Finset.erase_eq_of_not_mem as, Polynomial.support_erase,
-      Finset.erase_insert_eq_erase]
-    rw [← monomial_add_erase f a, Finset.map_insert, ← this, map_add, Polynomial.toLaurent_C_mul_T,
-      support_add_eq, Finset.insert_eq]
-    · congr
-      exact support_C_mul_T_of_ne_zero (Polynomial.mem_support_iff.mp (by simp [fs])) _
-    · rw [this]
-      exact Disjoint.mono_left (support_C_mul_T _ _) (by simpa)
+  simp (config := { contextual := true }) only [Polynomial.support_eq_empty, map_zero,
+    Finsupp.support_zero, eq_self_iff_true, imp_true_iff, Finset.map_empty,
+    Finsupp.support_eq_empty]
+  intro a s as hf f fs
+  have : (erase a f).toLaurent.support = s.map Nat.castEmbedding
+  refine hf (f.erase a) ?_
+  simp only [fs, Finset.erase_eq_of_not_mem as, Polynomial.support_erase,
+    Finset.erase_insert_eq_erase]
+  rw [← monomial_add_erase f a, Finset.map_insert, ← this, map_add, Polynomial.toLaurent_C_mul_T,
+    support_add_eq, Finset.insert_eq]
+  congr
+  exact support_C_mul_T_of_ne_zero (Polynomial.mem_support_iff.mp (by simp [fs])) _
+  rw [this]
+  exact Disjoint.mono_left (support_C_mul_T _ _) (by simpa)
 
 end Support
 
@@ -467,8 +467,8 @@ section DegreeBounds
 
 theorem degree_C_mul_T_le (n : ℤ) (a : R) : degree (C a * T n) ≤ n := by
   by_cases a0 : a = 0
-  · simp only [a0, map_zero, zero_mul, degree_zero, bot_le]
-  · exact (degree_C_mul_T n a a0).le
+  simp only [a0, map_zero, zero_mul, degree_zero, bot_le]
+  exact (degree_C_mul_T n a a0).le
 
 theorem degree_T_le (n : ℤ) : (T n : R[T;T⁻¹]).degree ≤ n :=
   (le_of_eq (by rw [map_one, one_mul])).trans (degree_C_mul_T_le n (1 : R))
@@ -546,9 +546,9 @@ lemma toLaurent_reverse (p : R[X]) :
     toLaurent p.reverse = invert (toLaurent p) * (T p.natDegree) := by
   nontriviality R
   induction' p using Polynomial.recOnHorner with p t _ _ ih p hp ih
-  · simp
-  · simp [add_mul, ← ih]
-  · simpa [natDegree_mul_X hp]
+  simp
+  simp [add_mul, ← ih]
+  simpa [natDegree_mul_X hp]
 
 end Inversion
 

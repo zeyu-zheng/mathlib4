@@ -77,9 +77,9 @@ theorem verschiebungPoly_zero : verschiebungPoly 0 = 0 :=
 theorem aeval_verschiebung_poly' (x : 𝕎 R) (n : ℕ) :
     aeval x.coeff (verschiebungPoly n) = (verschiebungFun x).coeff n := by
   cases' n with n
-  · simp only [verschiebungPoly, ite_true, map_zero, verschiebungFun_coeff_zero]
-  · rw [verschiebungPoly, verschiebungFun_coeff_succ, if_neg n.succ_ne_zero, aeval_X,
-      add_tsub_cancel_right]
+  simp only [verschiebungPoly, ite_true, map_zero, verschiebungFun_coeff_zero]
+  rw [verschiebungPoly, verschiebungFun_coeff_succ, if_neg n.succ_ne_zero, aeval_X,
+    add_tsub_cancel_right]
 
 variable (p)
 
@@ -125,8 +125,8 @@ theorem verschiebung_isPoly : IsPoly p fun R _Rcr => @verschiebung p R hp _Rcr :
 theorem map_verschiebung (f : R →+* S) (x : 𝕎 R) :
     map f (verschiebung x) = verschiebung (map f x) := by
   ext ⟨-, -⟩
-  · exact f.map_zero
-  · rfl
+  exact f.map_zero
+  rfl
 
 @[ghost_simps]
 theorem ghostComponent_zero_verschiebung (x : 𝕎 R) : ghostComponent 0 (verschiebung x) = 0 :=
@@ -161,18 +161,18 @@ theorem bind₁_verschiebungPoly_wittPolynomial (n : ℕ) :
   apply MvPolynomial.funext
   intro x
   split_ifs with hn
-  · simp only [hn, wittPolynomial_zero, bind₁_X_right, verschiebungPoly_zero, map_zero, ite_true]
-  · obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn
-    rw [Nat.succ_eq_add_one, add_tsub_cancel_right]
-    simp only [add_eq_zero, and_false, ite_false, map_mul]
-    rw [map_natCast, hom_bind₁]
-    calc
-      _ = ghostComponent (n + 1) (verschiebung <| mk p x) := by
-       apply eval₂Hom_congr (RingHom.ext_int _ _) _ rfl
-       funext k
-       simp only [← aeval_verschiebungPoly]
-       exact eval₂Hom_congr (RingHom.ext_int _ _) rfl rfl
-      _ = _ := by rw [ghostComponent_verschiebung]; rfl
+  simp only [hn, wittPolynomial_zero, bind₁_X_right, verschiebungPoly_zero, map_zero, ite_true]
+  obtain ⟨n, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hn
+  rw [Nat.succ_eq_add_one, add_tsub_cancel_right]
+  simp only [add_eq_zero, and_false, ite_false, map_mul]
+  rw [map_natCast, hom_bind₁]
+  calc
+    _ = ghostComponent (n + 1) (verschiebung <| mk p x) := by
+     apply eval₂Hom_congr (RingHom.ext_int _ _) _ rfl
+     funext k
+     simp only [← aeval_verschiebungPoly]
+     exact eval₂Hom_congr (RingHom.ext_int _ _) rfl rfl
+    _ = _ := by rw [ghostComponent_verschiebung]; rfl
 
 end
 

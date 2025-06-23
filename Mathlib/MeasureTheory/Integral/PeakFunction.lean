@@ -75,12 +75,12 @@ theorem integrableOn_peak_smul_of_integrableOn_of_tendsto
   simpa only [Pi.zero_apply, dist_zero_left] using (hi x hx).le
   have B : IntegrableOn (fun x => φ i x • g x) (s ∩ u) μ
   apply Integrable.smul_of_top_left
-  · exact IntegrableOn.mono_set I ut
-  · apply
-      memℒp_top_of_bound (hmg.mono_set inter_subset_left).aestronglyMeasurable (‖a‖ + 1)
-    filter_upwards [self_mem_ae_restrict (hs.inter u_open.measurableSet)] with x hx
-    rw [inter_comm] at hx
-    exact (norm_lt_of_mem_ball (hu x hx)).le
+  exact IntegrableOn.mono_set I ut
+  apply
+    memℒp_top_of_bound (hmg.mono_set inter_subset_left).aestronglyMeasurable (‖a‖ + 1)
+  filter_upwards [self_mem_ae_restrict (hs.inter u_open.measurableSet)] with x hx
+  rw [inter_comm] at hx
+  exact (norm_lt_of_mem_ball (hu x hx)).le
   convert A.union B
   simp only [diff_union_inter]
 
@@ -138,17 +138,17 @@ theorem tendsto_setIntegral_peak_smul_of_integrableOn_of_tendsto_aux
         norm_integral_le_integral_norm _
       _ ≤ ∫ x in s ∩ u, ‖φ i x‖ * δ ∂μ := by
         refine setIntegral_mono_on ?_ ?_ (hs.inter u_open.measurableSet) fun x hx => ?_
-        · exact IntegrableOn.mono_set h''i.norm inter_subset_left
-        · exact IntegrableOn.mono_set (I.norm.mul_const _) ut
+        exact IntegrableOn.mono_set h''i.norm inter_subset_left
+        exact IntegrableOn.mono_set (I.norm.mul_const _) ut
         rw [norm_smul]
         apply mul_le_mul_of_nonneg_left _ (norm_nonneg _)
         rw [inter_comm] at hu
         exact (mem_ball_zero_iff.1 (hu x hx)).le
       _ ≤ ∫ x in t, ‖φ i x‖ * δ ∂μ := by
         apply setIntegral_mono_set
-        · exact I.norm.mul_const _
-        · exact eventually_of_forall fun x => mul_nonneg (norm_nonneg _) δpos.le
-        · exact eventually_of_forall ut
+        exact I.norm.mul_const _
+        exact eventually_of_forall fun x => mul_nonneg (norm_nonneg _) δpos.le
+        exact eventually_of_forall ut
       _ = ∫ x in t, φ i x * δ ∂μ := by
         apply setIntegral_congr ht fun x hx => ?_
         rw [Real.norm_of_nonneg (hφpos _ (hts hx))]
@@ -160,16 +160,16 @@ theorem tendsto_setIntegral_peak_smul_of_integrableOn_of_tendsto_aux
         norm_integral_le_integral_norm _
       _ ≤ ∫ x in s \ u, δ * ‖g x‖ ∂μ := by
         refine setIntegral_mono_on ?_ ?_ (hs.diff u_open.measurableSet) fun x hx => ?_
-        · exact IntegrableOn.mono_set h''i.norm diff_subset
-        · exact IntegrableOn.mono_set (hmg.norm.const_mul _) diff_subset
+        exact IntegrableOn.mono_set h''i.norm diff_subset
+        exact IntegrableOn.mono_set (hmg.norm.const_mul _) diff_subset
         rw [norm_smul]
         apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
         simpa only [Pi.zero_apply, dist_zero_left] using (hi x hx).le
       _ ≤ δ * ∫ x in s, ‖g x‖ ∂μ := by
         rw [integral_mul_left]
         apply mul_le_mul_of_nonneg_left (setIntegral_mono_set hmg.norm _ _) δpos.le
-        · filter_upwards with x using norm_nonneg _
-        · filter_upwards using diff_subset (s := s) (t := u)
+        filter_upwards with x using norm_nonneg _
+        filter_upwards using diff_subset (s := s) (t := u)
   calc
     ‖∫ x in s, φ i x • g x ∂μ‖ =
       ‖(∫ x in s \ u, φ i x • g x ∂μ) + ∫ x in s ∩ u, φ i x • g x ∂μ‖ := by
@@ -200,14 +200,14 @@ theorem tendsto_setIntegral_peak_smul_of_integrableOn_of_tendsto
     refine Tendsto.add ?_ (Tendsto.smul hiφ tendsto_const_nhds)
     apply tendsto_setIntegral_peak_smul_of_integrableOn_of_tendsto_aux hs ht hts h'ts
         hnφ hlφ hiφ h'iφ
-    · apply hmg.sub
-      simp only [integrable_indicator_iff ht, integrableOn_const, ht, Measure.restrict_apply]
-      right
-      exact lt_of_le_of_lt (measure_mono inter_subset_left) (h't.lt_top)
-    · rw [← sub_self a]
-      apply Tendsto.sub hcg
-      apply tendsto_const_nhds.congr'
-      filter_upwards [h'ts] with x hx using by simp [hx]
+    apply hmg.sub
+    simp only [integrable_indicator_iff ht, integrableOn_const, ht, Measure.restrict_apply]
+    right
+    exact lt_of_le_of_lt (measure_mono inter_subset_left) (h't.lt_top)
+    rw [← sub_self a]
+    apply Tendsto.sub hcg
+    apply tendsto_const_nhds.congr'
+    filter_upwards [h'ts] with x hx using by simp [hx]
   simp only [one_smul, zero_add] at A
   refine Tendsto.congr' ?_ A
   filter_upwards [integrableOn_peak_smul_of_integrableOn_of_tendsto hs h'ts
@@ -294,8 +294,8 @@ theorem tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_measure_n
     intro u u_open x₀u
     obtain ⟨t, t_pos, tx₀, ht⟩ : ∃ t, 0 ≤ t ∧ t < c x₀ ∧ ∀ x ∈ s \ u, c x ≤ t := by
       rcases eq_empty_or_nonempty (s \ u) with (h | h)
-      · exact
-          ⟨0, le_rfl, hnc₀, by simp only [h, mem_empty_iff_false, IsEmpty.forall_iff, imp_true_iff]⟩
+      exact
+        ⟨0, le_rfl, hnc₀, by simp only [h, mem_empty_iff_false, IsEmpty.forall_iff, imp_true_iff]⟩
       obtain ⟨x, hx, h'x⟩ : ∃ x ∈ s \ u, ∀ y ∈ s \ u, c y ≤ c x :=
         IsCompact.exists_isMaxOn (hs.diff u_open) h (hc.mono diff_subset)
       refine ⟨c x, hnc x hx.1, h'c x hx.1 ?_, h'x⟩
@@ -314,19 +314,19 @@ theorem tendsto_setIntegral_pow_smul_of_unique_maximum_of_isCompact_of_measure_n
               Algebra.id.smul_eq_mul, mul_comm]
           _ ≤ ∫ y in v ∩ s, c y ^ n ∂μ := by
             apply setIntegral_mono_on _ _ (v_open.measurableSet.inter hs.measurableSet) _
-            · apply integrableOn_const.2 (Or.inr _)
-              exact lt_of_le_of_lt (measure_mono inter_subset_right) hs.measure_lt_top
-            · exact (I n).mono inter_subset_right le_rfl
-            · intro x hx
-              exact pow_le_pow_left t'_pos.le (le_of_lt (hv hx)) _
+            apply integrableOn_const.2 (Or.inr _)
+            exact lt_of_le_of_lt (measure_mono inter_subset_right) hs.measure_lt_top
+            exact (I n).mono inter_subset_right le_rfl
+            intro x hx
+            exact pow_le_pow_left t'_pos.le (le_of_lt (hv hx)) _
           _ ≤ ∫ y in s, c y ^ n ∂μ :=
             setIntegral_mono_set (I n) (J n) (eventually_of_forall inter_subset_right)
       simp_rw [φ, ← div_eq_inv_mul, div_pow, div_div]
       apply div_le_div (pow_nonneg t_pos n) _ _ B
-      · exact pow_le_pow_left (hnc _ hx.1) (ht x hx) _
-      · apply mul_pos (pow_pos (t_pos.trans_lt tt') _) (ENNReal.toReal_pos (hμ v v_open x₀_v).ne' _)
-        have : μ (v ∩ s) ≤ μ s := measure_mono inter_subset_right
-        exact ne_of_lt (lt_of_le_of_lt this hs.measure_lt_top)
+      exact pow_le_pow_left (hnc _ hx.1) (ht x hx) _
+      apply mul_pos (pow_pos (t_pos.trans_lt tt') _) (ENNReal.toReal_pos (hμ v v_open x₀_v).ne' _)
+      have : μ (v ∩ s) ≤ μ s := measure_mono inter_subset_right
+      exact ne_of_lt (lt_of_le_of_lt this hs.measure_lt_top)
     have N :
       Tendsto (fun n => (μ (v ∩ s)).toReal⁻¹ * (t / t') ^ n) atTop
         (𝓝 ((μ (v ∩ s)).toReal⁻¹ * 0)) := by
@@ -410,52 +410,52 @@ theorem tendsto_integral_comp_smul_smul_of_integrable
     Tendsto (fun (c : ℝ) ↦ ∫ x, (c ^ (finrank ℝ F) * φ (c • x)) • g x ∂μ) atTop (𝓝 (g 0)) := by
   have I : Integrable φ μ := integrable_of_integral_eq_one h'φ
   apply tendsto_integral_peak_smul_of_integrable_of_tendsto (t := closedBall 0 1) (x₀ := 0)
-  · exact isClosed_ball.measurableSet
-  · exact closedBall_mem_nhds _ zero_lt_one
-  · exact (isCompact_closedBall 0 1).measure_ne_top
-  · filter_upwards [Ici_mem_atTop 0] with c (hc : 0 ≤ c) x using mul_nonneg (by positivity) (hφ _)
-  · intro u u_open hu
-    apply tendstoUniformlyOn_iff.2 (fun ε εpos ↦ ?_)
-    obtain ⟨δ, δpos, h'u⟩ : ∃ δ > 0, ball 0 δ ⊆ u := Metric.isOpen_iff.1 u_open _ hu
-    obtain ⟨M, Mpos, hM⟩ : ∃ M > 0, ∀ ⦃x : F⦄, x ∈ (closedBall 0 M)ᶜ →
-        ‖x‖ ^ finrank ℝ F * φ x < δ ^ finrank ℝ F * ε := by
-      rcases (hasBasis_cobounded_compl_closedBall (0 : F)).eventually_iff.1
-        ((tendsto_order.1 h).2 (δ ^ finrank ℝ F * ε) (by positivity)) with ⟨M, -, hM⟩
-      refine ⟨max M 1, zero_lt_one.trans_le (le_max_right _ _), fun x hx ↦ hM ?_⟩
-      simp only [mem_compl_iff, mem_closedBall, dist_zero_right, le_max_iff, not_or, not_le] at hx
-      simpa using hx.1
-    filter_upwards [Ioi_mem_atTop (M / δ)] with c (hc : M / δ < c) x hx
-    have cpos : 0 < c := lt_trans (by positivity) hc
-    suffices c ^ finrank ℝ F * φ (c • x) < ε by simpa [abs_of_nonneg (hφ _), abs_of_nonneg cpos.le]
-    have hδx : δ ≤ ‖x‖ := by
-      have : x ∈ (ball 0 δ)ᶜ := fun h ↦ hx (h'u h)
-      simpa only [mem_compl_iff, mem_ball, dist_zero_right, not_lt]
-    suffices δ ^ finrank ℝ F * (c ^ finrank ℝ F * φ (c • x)) < δ ^ finrank ℝ F * ε by
-      rwa [mul_lt_mul_iff_of_pos_left (by positivity)] at this
-    calc
-      δ ^ finrank ℝ F * (c ^ finrank ℝ F * φ (c • x))
-      _ ≤ ‖x‖ ^ finrank ℝ F * (c ^ finrank ℝ F * φ (c • x)) := by
-        gcongr; exact mul_nonneg (by positivity) (hφ _)
-      _ = ‖c • x‖ ^ finrank ℝ F * φ (c • x) := by
-        simp [norm_smul, abs_of_pos cpos, mul_pow]; ring
-      _ < δ ^ finrank ℝ F * ε := by
-        apply hM
-        rw [div_lt_iff δpos] at hc
-        simp only [mem_compl_iff, mem_closedBall, dist_zero_right, norm_smul, Real.norm_eq_abs,
-          abs_of_nonneg cpos.le, not_le, gt_iff_lt]
-        exact hc.trans_le (by gcongr)
-  · have : Tendsto (fun c ↦ ∫ (x : F) in closedBall 0 c, φ x ∂μ) atTop (𝓝 1) := by
-      rw [← h'φ]
-      exact (aecover_closedBall tendsto_id).integral_tendsto_of_countably_generated I
-    apply this.congr'
-    filter_upwards [Ioi_mem_atTop 0] with c (hc : 0 < c)
-    rw [integral_mul_left, setIntegral_comp_smul_of_pos _ _ _ hc, smul_eq_mul, ← mul_assoc,
-      mul_inv_cancel (by positivity), _root_.smul_closedBall _ _ zero_le_one]
-    simp [abs_of_nonneg hc.le]
-  · filter_upwards [Ioi_mem_atTop 0] with c (hc : 0 < c)
-    exact (I.comp_smul hc.ne').aestronglyMeasurable.const_mul _
-  · exact hg
-  · exact h'g
+  exact isClosed_ball.measurableSet
+  exact closedBall_mem_nhds _ zero_lt_one
+  exact (isCompact_closedBall 0 1).measure_ne_top
+  filter_upwards [Ici_mem_atTop 0] with c (hc : 0 ≤ c) x using mul_nonneg (by positivity) (hφ _)
+  intro u u_open hu
+  apply tendstoUniformlyOn_iff.2 (fun ε εpos ↦ ?_)
+  obtain ⟨δ, δpos, h'u⟩ : ∃ δ > 0, ball 0 δ ⊆ u := Metric.isOpen_iff.1 u_open _ hu
+  obtain ⟨M, Mpos, hM⟩ : ∃ M > 0, ∀ ⦃x : F⦄, x ∈ (closedBall 0 M)ᶜ →
+      ‖x‖ ^ finrank ℝ F * φ x < δ ^ finrank ℝ F * ε := by
+    rcases (hasBasis_cobounded_compl_closedBall (0 : F)).eventually_iff.1
+      ((tendsto_order.1 h).2 (δ ^ finrank ℝ F * ε) (by positivity)) with ⟨M, -, hM⟩
+    refine ⟨max M 1, zero_lt_one.trans_le (le_max_right _ _), fun x hx ↦ hM ?_⟩
+    simp only [mem_compl_iff, mem_closedBall, dist_zero_right, le_max_iff, not_or, not_le] at hx
+    simpa using hx.1
+  filter_upwards [Ioi_mem_atTop (M / δ)] with c (hc : M / δ < c) x hx
+  have cpos : 0 < c := lt_trans (by positivity) hc
+  suffices c ^ finrank ℝ F * φ (c • x) < ε by simpa [abs_of_nonneg (hφ _), abs_of_nonneg cpos.le]
+  have hδx : δ ≤ ‖x‖ := by
+    have : x ∈ (ball 0 δ)ᶜ := fun h ↦ hx (h'u h)
+    simpa only [mem_compl_iff, mem_ball, dist_zero_right, not_lt]
+  suffices δ ^ finrank ℝ F * (c ^ finrank ℝ F * φ (c • x)) < δ ^ finrank ℝ F * ε by
+    rwa [mul_lt_mul_iff_of_pos_left (by positivity)] at this
+  calc
+    δ ^ finrank ℝ F * (c ^ finrank ℝ F * φ (c • x))
+    _ ≤ ‖x‖ ^ finrank ℝ F * (c ^ finrank ℝ F * φ (c • x)) := by
+      gcongr; exact mul_nonneg (by positivity) (hφ _)
+    _ = ‖c • x‖ ^ finrank ℝ F * φ (c • x) := by
+      simp [norm_smul, abs_of_pos cpos, mul_pow]; ring
+    _ < δ ^ finrank ℝ F * ε := by
+      apply hM
+      rw [div_lt_iff δpos] at hc
+      simp only [mem_compl_iff, mem_closedBall, dist_zero_right, norm_smul, Real.norm_eq_abs,
+        abs_of_nonneg cpos.le, not_le, gt_iff_lt]
+      exact hc.trans_le (by gcongr)
+  have : Tendsto (fun c ↦ ∫ (x : F) in closedBall 0 c, φ x ∂μ) atTop (𝓝 1) := by
+    rw [← h'φ]
+    exact (aecover_closedBall tendsto_id).integral_tendsto_of_countably_generated I
+  apply this.congr'
+  filter_upwards [Ioi_mem_atTop 0] with c (hc : 0 < c)
+  rw [integral_mul_left, setIntegral_comp_smul_of_pos _ _ _ hc, smul_eq_mul, ← mul_assoc,
+    mul_inv_cancel (by positivity), _root_.smul_closedBall _ _ zero_le_one]
+  simp [abs_of_nonneg hc.le]
+  filter_upwards [Ioi_mem_atTop 0] with c (hc : 0 < c)
+  exact (I.comp_smul hc.ne').aestronglyMeasurable.const_mul _
+  exact hg
+  exact h'g
 
 /-- Consider a nonnegative function `φ` with integral one, decaying quickly enough at infinity.
 Then suitable renormalizations of `φ` form a sequence of peak functions around any point:

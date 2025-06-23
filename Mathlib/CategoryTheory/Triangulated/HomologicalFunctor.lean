@@ -244,13 +244,13 @@ lemma mem_homologicalKernel_W_iff {X Y : C} (f : X ⟶ Y) :
   dsimp at h₁ h₂ h₃ ⊢
   simp only [mem_homologicalKernel_iff, h₁, ← h₂, ← h₃]
   constructor
-  · intro h n
-    obtain ⟨m, rfl⟩ : ∃ (m : ℤ), n = m + 1 := ⟨n - 1, by simp⟩
-    have := (h (m + 1)).1
-    have := (h m).2
-    apply isIso_of_mono_of_epi
-  · intros
-    constructor <;> infer_instance
+  intro h n
+  obtain ⟨m, rfl⟩ : ∃ (m : ℤ), n = m + 1 := ⟨n - 1, by simp⟩
+  have := (h (m + 1)).1
+  have := (h m).2
+  apply isIso_of_mono_of_epi
+  intros
+  constructor <;> infer_instance
 
 open ComposableArrows
 

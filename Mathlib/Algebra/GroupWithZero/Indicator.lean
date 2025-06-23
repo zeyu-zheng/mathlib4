@@ -24,22 +24,22 @@ lemma indicator_mul (s : Set ι) (f g : ι → M₀) :
   funext
   simp only [indicator]
   split_ifs
-  · rfl
+  rfl
   rw [mul_zero]
 
 lemma indicator_mul_left (s : Set ι) (f g : ι → M₀) :
     indicator s (fun j ↦ f j * g j) i = indicator s f i * g i := by
   simp only [indicator]
   split_ifs
-  · rfl
-  · rw [zero_mul]
+  rfl
+  rw [zero_mul]
 
 lemma indicator_mul_right (s : Set ι) (f g : ι → M₀) :
     indicator s (fun j ↦ f j * g j) i = f i * indicator s g i := by
   simp only [indicator]
   split_ifs
-  · rfl
-  · rw [mul_zero]
+  rfl
+  rw [mul_zero]
 
 lemma inter_indicator_mul (f g : ι → M₀) (i : ι) :
     (s ∩ t).indicator (fun j ↦ f j * g j) i = s.indicator f i * t.indicator g i := by

@@ -39,7 +39,7 @@ variable {R : Type*} [CommRing R] {n : ℕ}
 theorem isRoot_of_unity_of_root_cyclotomic {ζ : R} {i : ℕ} (hi : i ∈ n.divisors)
     (h : (cyclotomic i R).IsRoot ζ) : ζ ^ n = 1 := by
   rcases n.eq_zero_or_pos with (rfl | hn)
-  · exact pow_zero _
+  exact pow_zero _
   have := congr_arg (eval ζ) (prod_cyclotomic_eq_X_pow_sub_one hn R).symm
   rw [eval_sub, eval_pow, eval_X, eval_one] at this
   convert eq_add_of_sub_eq' this
@@ -102,7 +102,7 @@ theorem isRoot_cyclotomic_iff [NeZero (n : R)] {μ : R} :
 
 theorem roots_cyclotomic_nodup [NeZero (n : R)] : (cyclotomic n R).roots.Nodup := by
   obtain h | ⟨ζ, hζ⟩ := (cyclotomic n R).roots.empty_or_exists_mem
-  · exact h.symm ▸ Multiset.nodup_zero
+  exact h.symm ▸ Multiset.nodup_zero
   rw [mem_roots <| cyclotomic_ne_zero n R, isRoot_cyclotomic_iff] at hζ
   refine Multiset.nodup_of_le
     (roots.le_of_dvd (X_pow_sub_C_ne_zero (NeZero.pos_of_neZero_natCast R) 1) <|
@@ -136,21 +136,21 @@ theorem cyclotomic_injective [CharZero R] : Function.Injective fun n => cyclotom
   intro n m hnm
   simp only at hnm
   rcases eq_or_ne n 0 with (rfl | hzero)
-  · rw [cyclotomic_zero] at hnm
-    replace hnm := congr_arg natDegree hnm
-    rwa [natDegree_one, natDegree_cyclotomic, eq_comm, Nat.totient_eq_zero, eq_comm] at hnm
-  · haveI := NeZero.mk hzero
-    rw [← map_cyclotomic_int _ R, ← map_cyclotomic_int _ R] at hnm
-    replace hnm := map_injective (Int.castRingHom R) Int.cast_injective hnm
-    replace hnm := congr_arg (map (Int.castRingHom ℂ)) hnm
-    rw [map_cyclotomic_int, map_cyclotomic_int] at hnm
-    have hprim := Complex.isPrimitiveRoot_exp _ hzero
-    have hroot := isRoot_cyclotomic_iff (R := ℂ).2 hprim
-    rw [hnm] at hroot
-    haveI hmzero : NeZero m := ⟨fun h => by simp [h] at hroot⟩
-    rw [isRoot_cyclotomic_iff (R := ℂ)] at hroot
-    replace hprim := hprim.eq_orderOf
-    rwa [← IsPrimitiveRoot.eq_orderOf hroot] at hprim
+  rw [cyclotomic_zero] at hnm
+  replace hnm := congr_arg natDegree hnm
+  rwa [natDegree_one, natDegree_cyclotomic, eq_comm, Nat.totient_eq_zero, eq_comm] at hnm
+  haveI := NeZero.mk hzero
+  rw [← map_cyclotomic_int _ R, ← map_cyclotomic_int _ R] at hnm
+  replace hnm := map_injective (Int.castRingHom R) Int.cast_injective hnm
+  replace hnm := congr_arg (map (Int.castRingHom ℂ)) hnm
+  rw [map_cyclotomic_int, map_cyclotomic_int] at hnm
+  have hprim := Complex.isPrimitiveRoot_exp _ hzero
+  have hroot := isRoot_cyclotomic_iff (R := ℂ).2 hprim
+  rw [hnm] at hroot
+  haveI hmzero : NeZero m := ⟨fun h => by simp [h] at hroot⟩
+  rw [isRoot_cyclotomic_iff (R := ℂ)] at hroot
+  replace hprim := hprim.eq_orderOf
+  rwa [← IsPrimitiveRoot.eq_orderOf hroot] at hprim
 
 /-- The minimal polynomial of a primitive `n`-th root of unity `μ` divides `cyclotomic n ℤ`. -/
 theorem _root_.IsPrimitiveRoot.minpoly_dvd_cyclotomic {n : ℕ} {K : Type*} [Field K] {μ : K}
@@ -198,9 +198,9 @@ theorem cyclotomic.irreducible_rat {n : ℕ} (hpos : 0 < n) : Irreducible (cyclo
 theorem cyclotomic.isCoprime_rat {n m : ℕ} (h : n ≠ m) :
     IsCoprime (cyclotomic n ℚ) (cyclotomic m ℚ) := by
   rcases n.eq_zero_or_pos with (rfl | hnzero)
-  · exact isCoprime_one_left
+  exact isCoprime_one_left
   rcases m.eq_zero_or_pos with (rfl | hmzero)
-  · exact isCoprime_one_right
+  exact isCoprime_one_right
   rw [Irreducible.coprime_iff_not_dvd <| cyclotomic.irreducible_rat <| hnzero]
   exact fun hdiv => h <| cyclotomic_injective <|
     eq_of_monic_of_associated (cyclotomic.monic n ℚ) (cyclotomic.monic m ℚ) <|

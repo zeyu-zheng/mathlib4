@@ -42,10 +42,10 @@ lemma isLocallyInjective_of_whisker (hH : CoverPreserving J K H)
     refine K.superset_covering (Sieve.functorPushforward_monotone H _ ?_)
       (hH.cover_preserve <| equalizerSieve_mem J (whiskerLeft H.op f)
         ((forget A).map (F.map map.op) a) ((forget A).map (F.map map.op) b) ?_)
-    · intro W q hq
-      simpa using hq
-    · simp only [comp_obj, op_obj, whiskerLeft_app, Opposite.op_unop]
-      erw [NatTrans.naturality_apply, NatTrans.naturality_apply, h]
+    intro W q hq
+    simpa using hq
+    simp only [comp_obj, op_obj, whiskerLeft_app, Opposite.op_unop]
+    erw [NatTrans.naturality_apply, NatTrans.naturality_apply, h]
 
 lemma isLocallyInjective_whisker_iff (hH : CoverPreserving J K H) [H.IsCocontinuous J K]
     [H.IsCoverDense K] : IsLocallyInjective J (whiskerLeft H.op f) ↔ IsLocallyInjective K f :=

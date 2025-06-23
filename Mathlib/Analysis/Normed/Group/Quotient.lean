@@ -357,10 +357,10 @@ theorem IsQuotient.norm_le {f : NormedAddGroupHom M N} (hquot : IsQuotient f) (m
     ‖f m‖ ≤ ‖m‖ := by
   rw [hquot.norm]
   apply csInf_le
-  · use 0
-    rintro _ ⟨m', -, rfl⟩
-    apply norm_nonneg
-  · exact ⟨0, f.ker.zero_mem, by simp⟩
+  use 0
+  rintro _ ⟨m', -, rfl⟩
+  apply norm_nonneg
+  exact ⟨0, f.ker.zero_mem, by simp⟩
 
 theorem norm_lift_le {N : Type*} [SeminormedAddCommGroup N] (S : AddSubgroup M)
     (f : NormedAddGroupHom M N) (hf : ∀ s ∈ S, f s = 0) :

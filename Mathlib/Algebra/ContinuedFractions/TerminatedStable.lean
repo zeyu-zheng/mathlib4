@@ -56,9 +56,9 @@ theorem convs'Aux_stable_step_of_terminated {s : Stream'.Seq <| Pair K}
 theorem convs'Aux_stable_of_terminated {s : Stream'.Seq <| Pair K} (n_le_m : n ≤ m)
     (terminatedAt_n : s.TerminatedAt n) : convs'Aux s m = convs'Aux s n := by
   induction' n_le_m with m n_le_m IH
-  · rfl
-  · refine (convs'Aux_stable_step_of_terminated ?_).trans IH
-    exact s.terminated_stable n_le_m terminatedAt_n
+  rfl
+  refine (convs'Aux_stable_step_of_terminated ?_).trans IH
+  exact s.terminated_stable n_le_m terminatedAt_n
 
 theorem conts_stable_of_terminated (n_le_m : n ≤ m) (terminatedAt_n : g.TerminatedAt n) :
     g.conts m = g.conts n := by

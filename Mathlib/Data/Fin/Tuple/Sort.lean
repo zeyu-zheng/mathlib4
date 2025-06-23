@@ -46,12 +46,12 @@ def graph.proj {f : Fin n → α} : graph f → α := fun p => p.1.1
 @[simp]
 theorem graph.card (f : Fin n → α) : (graph f).card = n := by
   rw [graph, Finset.card_image_of_injective]
-  · exact Finset.card_fin _
-  · intro _ _
-    -- porting note (#10745): was `simp`
-    dsimp only
-    rw [Prod.ext_iff]
-    simp
+  exact Finset.card_fin _
+  intro _ _
+  -- porting note (#10745): was `simp`
+  dsimp only
+  rw [Prod.ext_iff]
+  simp
 
 /-- `graphEquiv₁ f` is the natural equivalence between `Fin n` and `graph f`,
 mapping `i` to `(f i, i)`. -/
@@ -88,8 +88,8 @@ theorem self_comp_sort (f : Fin n → α) : f ∘ sort f = graph.proj ∘ graphE
 
 theorem monotone_proj (f : Fin n → α) : Monotone (graph.proj : graph f → α) := by
   rintro ⟨⟨x, i⟩, hx⟩ ⟨⟨y, j⟩, hy⟩ (_ | h)
-  · exact le_of_lt ‹_›
-  · simp [graph.proj]
+  exact le_of_lt ‹_›
+  simp [graph.proj]
 
 theorem monotone_sort (f : Fin n → α) : Monotone (f ∘ sort f) := by
   rw [self_comp_sort]
@@ -150,11 +150,11 @@ variable [LinearOrder α] {f : Fin n → α} {σ : Equiv.Perm (Fin n)}
 strictly monotone (w.r.t. the lexicographic ordering on the target). -/
 theorem eq_sort_iff' : σ = sort f ↔ StrictMono (σ.trans <| graphEquiv₁ f) := by
   constructor <;> intro h
-  · rw [h, sort, Equiv.trans_assoc, Equiv.symm_trans_self]
-    exact (graphEquiv₂ f).strictMono
-  · have := Subsingleton.elim (graphEquiv₂ f) (h.orderIsoOfSurjective _ <| Equiv.surjective _)
-    ext1 x
-    exact (graphEquiv₁ f).apply_eq_iff_eq_symm_apply.1 (DFunLike.congr_fun this x).symm
+  rw [h, sort, Equiv.trans_assoc, Equiv.symm_trans_self]
+  exact (graphEquiv₂ f).strictMono
+  have := Subsingleton.elim (graphEquiv₂ f) (h.orderIsoOfSurjective _ <| Equiv.surjective _)
+  ext1 x
+  exact (graphEquiv₁ f).apply_eq_iff_eq_symm_apply.1 (DFunLike.congr_fun this x).symm
 
 /-- A permutation `σ` equals `sort f` if and only if `f ∘ σ` is monotone and whenever `i < j`
 and `f (σ i) = f (σ j)`, then `σ i < σ j`. This means that `sort f` is the lexicographically
@@ -163,9 +163,9 @@ theorem eq_sort_iff :
     σ = sort f ↔ Monotone (f ∘ σ) ∧ ∀ i j, i < j → f (σ i) = f (σ j) → σ i < σ j := by
   rw [eq_sort_iff']
   refine ⟨fun h => ⟨(monotone_proj f).comp h.monotone, fun i j hij hfij => ?_⟩, fun h i j hij => ?_⟩
-  · exact (((Prod.Lex.lt_iff _ _).1 <| h hij).resolve_left hfij.not_lt).2
-  · obtain he | hl := (h.1 hij.le).eq_or_lt <;> apply (Prod.Lex.lt_iff _ _).2
-    exacts [Or.inr ⟨he, h.2 i j hij he⟩, Or.inl hl]
+  exact (((Prod.Lex.lt_iff _ _).1 <| h hij).resolve_left hfij.not_lt).2
+  obtain he | hl := (h.1 hij.le).eq_or_lt <;> apply (Prod.Lex.lt_iff _ _).2
+  exacts [Or.inr ⟨he, h.2 i j hij he⟩, Or.inl hl]
 
 /-- The permutation that sorts `f` is the identity if and only if `f` is monotone. -/
 theorem sort_eq_refl_iff_monotone : sort f = Equiv.refl _ ↔ Monotone f := by

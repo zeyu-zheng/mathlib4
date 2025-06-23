@@ -44,8 +44,8 @@ private lemma totalDegree_f₁_add_totalDegree_f₂ {a : ι → ZMod p} :
   calc
     _ ≤ (p - 1) + (p - 1) := by
       gcongr <;> apply totalDegree_finsetSum_le <;> rintro i _
-      · exact (totalDegree_X_pow ..).le
-      · exact (totalDegree_smul_le ..).trans (totalDegree_X_pow ..).le
+      exact (totalDegree_X_pow ..).le
+      exact (totalDegree_smul_le ..).trans (totalDegree_X_pow ..).le
     _ < 2 * p - 1 := by have := (Fact.out : p.Prime).two_le; omega
 
 open Classical in
@@ -72,21 +72,21 @@ private theorem ZMod.erdos_ginzburg_ziv_prime (a : ι → ZMod p) (hs : s.card =
     Nat.le_of_dvd hN₀ hpN) zero_sol
   -- This common root gives us the required subsequence, namely the `i ∈ s` such that `x i ≠ 0`.
   refine ⟨(s.attach.filter fun a ↦ x.1 a ≠ 0).map ⟨(↑), Subtype.val_injective⟩, ?_, ?_, ?_⟩
-  · simp (config := { contextual := true }) [subset_iff]
+  simp (config := { contextual := true }) [subset_iff]
   -- From `f₁ x = 0`, we get that `p` divides the number of `a` such that `x a ≠ 0`.
-  · rw [card_map]
-    refine Nat.eq_of_dvd_of_lt_two_mul (Finset.card_pos.2 ?_).ne' ?_ $
-      (Finset.card_filter_le _ _).trans_lt ?_
-    -- This number is nonzero because `x ≠ 0`.
-    · rw [← Subtype.coe_ne_coe, Function.ne_iff] at hx
-      exact hx.imp (fun a ha ↦ mem_filter.2 ⟨Finset.mem_attach _ _, ha⟩)
-    · rw [← CharP.cast_eq_zero_iff (ZMod p), ← Finset.sum_boole]
-      simpa only [f₁, map_sum, ZMod.pow_card_sub_one, map_pow, eval_X] using x.2.1
-    -- And it is at most `2 * p - 1`, so it must be `p`.
-    · rw [Finset.card_attach, hs]
-      exact tsub_lt_self (mul_pos zero_lt_two (Fact.out : p.Prime).pos) zero_lt_one
+  rw [card_map]
+  refine Nat.eq_of_dvd_of_lt_two_mul (Finset.card_pos.2 ?_).ne' ?_ $
+    (Finset.card_filter_le _ _).trans_lt ?_
+  -- This number is nonzero because `x ≠ 0`.
+  rw [← Subtype.coe_ne_coe, Function.ne_iff] at hx
+  exact hx.imp (fun a ha ↦ mem_filter.2 ⟨Finset.mem_attach _ _, ha⟩)
+  rw [← CharP.cast_eq_zero_iff (ZMod p), ← Finset.sum_boole]
+  simpa only [f₁, map_sum, ZMod.pow_card_sub_one, map_pow, eval_X] using x.2.1
+  -- And it is at most `2 * p - 1`, so it must be `p`.
+  rw [Finset.card_attach, hs]
+  exact tsub_lt_self (mul_pos zero_lt_two (Fact.out : p.Prime).pos) zero_lt_one
   -- From `f₂ x = 0`, we get that `p` divides the sum of the `a ∈ s` such that `x a ≠ 0`.
-  · simpa [f₂, ZMod.pow_card_sub_one, Finset.sum_filter] using x.2.2
+  simpa [f₂, ZMod.pow_card_sub_one, Finset.sum_filter] using x.2.2
 
 /-- The prime case of the **Erdős–Ginzburg–Ziv theorem** for `ℤ`.
 
@@ -137,17 +137,17 @@ theorem Int.erdos_ginzburg_ziv (a : ι → ℤ) (hs : 2 * n - 1 ≤ s.card) :
       obtain ⟨ℬ, hℬ𝒜, hℬcard, hℬ⟩ := ihm (fun t ↦ (∑ i ∈ t, a i) / n) h𝒜card.ge
       -- We are done.
       refine ⟨ℬ.biUnion fun x ↦ x, biUnion_subset.2 fun t ht ↦ (h𝒜 $ hℬ𝒜 ht).1, ?_, ?_⟩
-      · rw [card_biUnion (h𝒜disj.mono hℬ𝒜), sum_const_nat fun t ht ↦ (h𝒜 $ hℬ𝒜 ht).2.1, hℬcard]
+      rw [card_biUnion (h𝒜disj.mono hℬ𝒜), sum_const_nat fun t ht ↦ (h𝒜 $ hℬ𝒜 ht).2.1, hℬcard]
       rwa [sum_biUnion, natCast_mul, mul_comm, ← Int.dvd_div_iff_mul_dvd, Int.sum_div]
-      · exact fun t ht ↦ (h𝒜 $ hℬ𝒜 ht).2.2
-      · exact dvd_sum fun t ht ↦ (h𝒜 $ hℬ𝒜 ht).2.2
-      · exact h𝒜disj.mono hℬ𝒜
+      exact fun t ht ↦ (h𝒜 $ hℬ𝒜 ht).2.2
+      exact dvd_sum fun t ht ↦ (h𝒜 $ hℬ𝒜 ht).2.2
+      exact h𝒜disj.mono hℬ𝒜
     -- Now, let's find those `2 * m - 1` sets.
     rintro k hk
     -- We induct on the size `k ≤ 2 * m - 1` of the family we are constructing.
     induction' k with k ih
     -- For `k = 0`, the empty family trivially works.
-    · exact ⟨∅, by simp⟩
+    exact ⟨∅, by simp⟩
     -- At `k + 1`, call `𝒜` the existing family of size `k ≤ 2 * m - 2`.
     obtain ⟨𝒜, h𝒜card, h𝒜disj, h𝒜⟩ := ih (Nat.le_of_succ_le hk)
     -- There are at least `2 * (m * n) - 1 - k * n ≥ 2 * m - 1` elements in `s` that have not been
@@ -169,11 +169,11 @@ theorem Int.erdos_ginzburg_ziv (a : ι → ℤ) (hs : 2 * n - 1 ≤ s.card) :
         simpa [← card_eq_zero, ht₀card] using sdiff_disjoint.mono ht₀ $ subset_biUnion_of_mem id h
       omega
     refine ⟨𝒜.cons t₀ this, by rw [card_cons, h𝒜card], ?_, ?_⟩
-    · simp only [cons_eq_insert, coe_insert, Set.pairwise_insert_of_symmetric symmetric_disjoint,
-        mem_coe, ne_eq]
-      exact ⟨h𝒜disj, fun t ht _ ↦ sdiff_disjoint.mono ht₀ $ subset_biUnion_of_mem id ht⟩
-    · simp only [cons_eq_insert, mem_insert, forall_eq_or_imp, and_assoc]
-      exact ⟨ht₀.trans sdiff_subset, ht₀card, ht₀sum, h𝒜⟩
+    simp only [cons_eq_insert, coe_insert, Set.pairwise_insert_of_symmetric symmetric_disjoint,
+      mem_coe, ne_eq]
+    exact ⟨h𝒜disj, fun t ht _ ↦ sdiff_disjoint.mono ht₀ $ subset_biUnion_of_mem id ht⟩
+    simp only [cons_eq_insert, mem_insert, forall_eq_or_imp, and_assoc]
+    exact ⟨ht₀.trans sdiff_subset, ht₀card, ht₀sum, h𝒜⟩
 
 /-- The **Erdős–Ginzburg–Ziv theorem** for `ℤ/nℤ`.
 

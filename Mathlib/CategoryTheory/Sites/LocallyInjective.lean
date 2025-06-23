@@ -55,10 +55,10 @@ lemma equalizerSieve_self_eq_top {F : Cᵒᵖ ⥤ D} {X : Cᵒᵖ} (x : F.obj X)
 lemma equalizerSieve_eq_top_iff {F : Cᵒᵖ ⥤ D} {X : Cᵒᵖ} (x y : F.obj X) :
     equalizerSieve x y = ⊤ ↔ x = y := by
   constructor
-  · intro h
-    simpa using (show equalizerSieve x y (𝟙 _) by simp [h])
-  · rintro rfl
-    apply equalizerSieve_self_eq_top
+  intro h
+  simpa using (show equalizerSieve x y (𝟙 _) by simp [h])
+  rintro rfl
+  apply equalizerSieve_self_eq_top
 
 variable {F₁ F₂ F₃ : Cᵒᵖ ⥤ D} (φ : F₁ ⟶ F₂) (ψ : F₂ ⟶ F₃)
 
@@ -97,29 +97,29 @@ instance isLocallyInjective_forget [IsLocallyInjective J φ] :
 lemma isLocallyInjective_forget_iff :
     IsLocallyInjective J (whiskerRight φ (forget D)) ↔ IsLocallyInjective J φ := by
   constructor
-  · intro
-    exact ⟨fun x y h => equalizerSieve_mem J (whiskerRight φ (forget D)) x y h⟩
-  · intro
-    infer_instance
+  intro
+  exact ⟨fun x y h => equalizerSieve_mem J (whiskerRight φ (forget D)) x y h⟩
+  intro
+  infer_instance
 
 lemma isLocallyInjective_iff_equalizerSieve_mem_imp :
     IsLocallyInjective J φ ↔ ∀ ⦃X : Cᵒᵖ⦄ (x y : F₁.obj X),
       equalizerSieve (φ.app _ x) (φ.app _ y) ∈ J X.unop → equalizerSieve x y ∈ J X.unop := by
   constructor
-  · intro _ X x y h
-    let S := equalizerSieve (φ.app _ x) (φ.app _ y)
-    let T : ∀ ⦃Y : C⦄ ⦃f : Y ⟶ X.unop⦄ (_ : S f), Sieve Y := fun Y f _ =>
-      equalizerSieve (F₁.map f.op x) ((F₁.map f.op y))
-    refine J.superset_covering ?_ (J.transitive h (Sieve.bind S.1 T) ?_)
-    · rintro Y f ⟨Z, a, g, hg, ha, rfl⟩
-      simpa using ha
-    · intro Y f hf
-      refine J.superset_covering (Sieve.le_pullback_bind S.1 T _ hf)
-        (equalizerSieve_mem J φ _ _ ?_)
-      erw [NatTrans.naturality_apply, NatTrans.naturality_apply]
-      exact hf
-  · intro hφ
-    exact ⟨fun {X} x y h => hφ x y (by simp [h])⟩
+  intro _ X x y h
+  let S := equalizerSieve (φ.app _ x) (φ.app _ y)
+  let T : ∀ ⦃Y : C⦄ ⦃f : Y ⟶ X.unop⦄ (_ : S f), Sieve Y := fun Y f _ =>
+    equalizerSieve (F₁.map f.op x) ((F₁.map f.op y))
+  refine J.superset_covering ?_ (J.transitive h (Sieve.bind S.1 T) ?_)
+  rintro Y f ⟨Z, a, g, hg, ha, rfl⟩
+  simpa using ha
+  intro Y f hf
+  refine J.superset_covering (Sieve.le_pullback_bind S.1 T _ hf)
+    (equalizerSieve_mem J φ _ _ ?_)
+  erw [NatTrans.naturality_apply, NatTrans.naturality_apply]
+  exact hf
+  intro hφ
+  exact ⟨fun {X} x y h => hφ x y (by simp [h])⟩
 
 lemma equalizerSieve_mem_of_equalizerSieve_app_mem
     {X : Cᵒᵖ} (x y : F₁.obj X) (h : equalizerSieve (φ.app _ x) (φ.app _ y) ∈ J X.unop)
@@ -147,11 +147,11 @@ lemma isLocallyInjective_of_isLocallyInjective_fac {φψ : F₁ ⟶ F₃} (fac :
 lemma isLocallyInjective_iff_of_fac {φψ : F₁ ⟶ F₃} (fac : φ ≫ ψ = φψ) [IsLocallyInjective J ψ] :
     IsLocallyInjective J φψ ↔ IsLocallyInjective J φ := by
   constructor
-  · intro
-    exact isLocallyInjective_of_isLocallyInjective_fac J fac
-  · intro
-    rw [← fac]
-    infer_instance
+  intro
+  exact isLocallyInjective_of_isLocallyInjective_fac J fac
+  intro
+  rw [← fac]
+  infer_instance
 
 variable (φ ψ)
 
@@ -163,9 +163,9 @@ lemma isLocallyInjective_iff_injective_of_separated
     (hsep : Presieve.IsSeparated J (F₁ ⋙ forget D)) :
     IsLocallyInjective J φ ↔ ∀ (X : Cᵒᵖ), Function.Injective (φ.app X) := by
   constructor
-  · intro _ X x y h
-    exact (hsep _ (equalizerSieve_mem J φ x y h)).ext (fun _ _ hf => hf)
-  · apply isLocallyInjective_of_injective
+  intro _ X x y h
+  exact (hsep _ (equalizerSieve_mem J φ x y h)).ext (fun _ _ hf => hf)
+  apply isLocallyInjective_of_injective
 
 instance (F : Cᵒᵖ ⥤ Type w) (G : GrothendieckTopology.Subpresheaf F) :
     IsLocallyInjective J G.ι :=

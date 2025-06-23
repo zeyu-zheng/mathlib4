@@ -140,8 +140,8 @@ theorem mapAccumr_snoc :
       let r := mapAccumr f xs q.1
       (r.1, r.2.snoc q.2) := by
   induction xs
-  · rfl
-  · simp [*]
+  rfl
+  simp [*]
 
 variable (ys : Vector β n)
 

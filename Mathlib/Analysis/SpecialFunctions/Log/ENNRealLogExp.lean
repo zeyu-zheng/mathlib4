@@ -36,15 +36,15 @@ section LogExp
 
 @[simp] lemma EReal.log_exp (x : EReal) : log (exp x) = x := by
   induction x
-  · simp
-  · rw [exp_coe, log_ofReal, if_neg (not_le.mpr (Real.exp_pos _)), Real.log_exp]
-  · simp
+  simp
+  rw [exp_coe, log_ofReal, if_neg (not_le.mpr (Real.exp_pos _)), Real.log_exp]
+  simp
 
 @[simp] lemma ENNReal.exp_log (x : ℝ≥0∞) : exp (log x) = x := by
   by_cases hx_top : x = ∞
-  · simp [hx_top]
+  simp [hx_top]
   by_cases hx_zero : x = 0
-  · simp [hx_zero]
+  simp [hx_zero]
   have hx_pos : 0 < x.toReal := ENNReal.toReal_pos hx_zero hx_top
   rw [← ENNReal.ofReal_toReal hx_top, log_ofReal_of_pos hx_pos, exp_coe, Real.exp_log hx_pos]
 

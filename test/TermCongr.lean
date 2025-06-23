@@ -58,8 +58,8 @@ example [Decidable p] (x y : Nat) (h : x = y) : True := by
 
 example (x y z w : Nat) (h : x = y) (h' : z = w) : 1 + x * z^2 = 1 + y * w^2 := by
   refine congr(1 + $(?_) * $(?_)^2)
-  · exact h
-  · exact h'
+  exact h
+  exact h'
 
 example (x y z w : Nat) (h : x = y) (h' : z = w) : 1 + x * z^2 = 1 + y * w^2 := by
   refine congr(1 + $(?foo) * $(?bar)^2)

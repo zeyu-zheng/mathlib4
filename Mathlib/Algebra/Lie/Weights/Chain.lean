@@ -80,10 +80,10 @@ lemma exists₂_weightSpace_smul_add_eq_bot :
   obtain ⟨q, hq₀, hq⟩ := exists_weightSpace_smul_add_eq_bot M χ₁ χ₂ hχ₁
   obtain ⟨p, hp₀, hp⟩ := exists_weightSpace_smul_add_eq_bot M (-χ₁) χ₂ (neg_ne_zero.mpr hχ₁)
   refine ⟨-(p : ℤ), by simpa, q, by simpa, ?_, ?_⟩
-  · rw [neg_smul, ← smul_neg, natCast_zsmul]
-    exact hp
-  · rw [natCast_zsmul]
-    exact hq
+  rw [neg_smul, ← smul_neg, natCast_zsmul]
+  exact hp
+  rw [natCast_zsmul]
+  exact hq
 
 end
 
@@ -129,18 +129,18 @@ lemma lie_mem_weightSpaceChain_of_weightSpace_eq_bot_right [LieAlgebra.IsNilpote
     ⁅x, y⁆ ∈ weightSpaceChain M α χ p q := by
   rw [weightSpaceChain, iSup_subtype'] at hy
   induction' hy using LieSubmodule.iSup_induction' with k z hz z₁ z₂ _ _ hz₁ hz₂
-  · obtain ⟨k, hk⟩ := k
-    suffices weightSpace M ((k + 1) • α + χ) ≤ weightSpaceChain M α χ p q by
-      apply this
-      simpa using (rootSpaceWeightSpaceProduct R L H M α (k • α + χ) ((k + 1) • α + χ)
-        (by rw [add_smul]; abel) (⟨x, hx⟩ ⊗ₜ ⟨z, hz⟩)).property
-    rw [weightSpaceChain]
-    rcases eq_or_ne (k + 1) q with rfl | hk'; · simp only [hq, bot_le]
-    replace hk' : k + 1 ∈ Ioo p q := ⟨by linarith [hk.1], lt_of_le_of_ne hk.2 hk'⟩
-    exact le_biSup (fun k ↦ weightSpace M (k • α + χ)) hk'
-  · simp
-  · rw [lie_add]
-    exact add_mem hz₁ hz₂
+  obtain ⟨k, hk⟩ := k
+  suffices weightSpace M ((k + 1) • α + χ) ≤ weightSpaceChain M α χ p q by
+    apply this
+    simpa using (rootSpaceWeightSpaceProduct R L H M α (k • α + χ) ((k + 1) • α + χ)
+      (by rw [add_smul]; abel) (⟨x, hx⟩ ⊗ₜ ⟨z, hz⟩)).property
+  rw [weightSpaceChain]
+  rcases eq_or_ne (k + 1) q with rfl | hk'; · simp only [hq, bot_le]
+  replace hk' : k + 1 ∈ Ioo p q := ⟨by linarith [hk.1], lt_of_le_of_ne hk.2 hk'⟩
+  exact le_biSup (fun k ↦ weightSpace M (k • α + χ)) hk'
+  simp
+  rw [lie_add]
+  exact add_mem hz₁ hz₂
 
 lemma lie_mem_weightSpaceChain_of_weightSpace_eq_bot_left [LieAlgebra.IsNilpotent R H]
     (hp : weightSpace M (p • α + χ) = ⊥)
@@ -162,7 +162,7 @@ lemma trace_toEnd_weightSpaceChain_eq_zero
     LinearMap.trace R _ (toEnd R H (weightSpaceChain M α χ p q) x) = 0 := by
   rw [LieAlgebra.mem_corootSpace'] at hx
   induction hx using Submodule.span_induction'
-  · next u hu =>
+  next u hu =>
     obtain ⟨y, hy, z, hz, hyz⟩ := hu
     let f : Module.End R (weightSpaceChain M α χ p q) :=
       { toFun := fun ⟨m, hm⟩ ↦ ⟨⁅(y : L), m⁆,
@@ -177,9 +177,9 @@ lemma trace_toEnd_weightSpaceChain_eq_zero
     have hfg : toEnd R H _ u = ⁅f, g⁆
     ext; simp [f, g, ← hyz]
     simp [hfg]
-  · simp
-  · simp_all
-  · simp_all
+  simp
+  simp_all
+  simp_all
 
 /-- Given a (potential) root `α` relative to a Cartan subalgebra `H`, if we restrict to the ideal
 `I = corootSpace α` of `H` (informally, `I = ⁅H(α), H(-α)⁆`), we may find an
@@ -275,7 +275,7 @@ open Classical in
 lemma weightSpace_nsmul_add_ne_bot_of_le {n} (hn : n ≤ chainTopCoeff α β) :
     weightSpace M (n • α + β : L → R) ≠ ⊥ := by
   by_cases hα : α = 0
-  · rw [hα, smul_zero, zero_add]; exact β.weightSpace_ne_bot
+  rw [hα, smul_zero, zero_add]; exact β.weightSpace_ne_bot
   rw [← Nat.lt_succ, Nat.succ_eq_add_one, chainTopCoeff_add_one _ _ hα] at hn
   exact Nat.find_min (eventually_weightSpace_smul_add_eq_bot M α β hα).exists hn
 
@@ -288,11 +288,11 @@ lemma weightSpace_zsmul_add_ne_bot {n : ℤ}
     (hn : -chainBotCoeff α β ≤ n) (hn' : n ≤ chainTopCoeff α β) :
       weightSpace M (n • α + β : L → R) ≠ ⊥ := by
   rcases n with (n | n)
-  · simp only [Int.ofNat_eq_coe, Nat.cast_le, Nat.cast_smul_eq_nsmul] at hn' ⊢
-    exact weightSpace_nsmul_add_ne_bot_of_le α β hn'
-  · simp only [Int.negSucc_eq, ← Nat.cast_succ, neg_le_neg_iff, Nat.cast_le] at hn ⊢
-    rw [neg_smul, ← smul_neg, Nat.cast_smul_eq_nsmul]
-    exact weightSpace_nsmul_add_ne_bot_of_le (-α) β hn
+  simp only [Int.ofNat_eq_coe, Nat.cast_le, Nat.cast_smul_eq_nsmul] at hn' ⊢
+  exact weightSpace_nsmul_add_ne_bot_of_le α β hn'
+  simp only [Int.negSucc_eq, ← Nat.cast_succ, neg_le_neg_iff, Nat.cast_le] at hn ⊢
+  rw [neg_smul, ← smul_neg, Nat.cast_smul_eq_nsmul]
+  exact weightSpace_nsmul_add_ne_bot_of_le (-α) β hn
 
 lemma weightSpace_neg_zsmul_add_ne_bot {n : ℕ} (hn : n ≤ chainBotCoeff α β) :
     weightSpace M ((-n : ℤ) • α + β : L → R) ≠ ⊥ := by

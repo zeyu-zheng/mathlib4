@@ -113,8 +113,8 @@ theorem sigmaFiniteTrim_mono {m m₂ m0 : MeasurableSpace α} {μ : Measure α} 
 theorem sigmaFinite_trim_bot_iff : SigmaFinite (μ.trim bot_le) ↔ IsFiniteMeasure μ := by
   rw [sigmaFinite_bot_iff]
   refine ⟨fun h => ⟨?_⟩, fun h => ⟨?_⟩⟩ <;> have h_univ := h.measure_univ_lt_top
-  · rwa [trim_measurableSet_eq bot_le MeasurableSet.univ] at h_univ
-  · rwa [trim_measurableSet_eq bot_le MeasurableSet.univ]
+  rwa [trim_measurableSet_eq bot_le MeasurableSet.univ] at h_univ
+  rwa [trim_measurableSet_eq bot_le MeasurableSet.univ]
 
 lemma Measure.AbsolutelyContinuous.trim {ν : Measure α} (hμν : μ ≪ ν) (hm : m ≤ m0) :
     μ.trim hm ≪ ν.trim hm := by

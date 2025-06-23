@@ -532,34 +532,34 @@ theorem smn :
 `eval` is a **universal partial recursive function**. -/
 theorem exists_code {f : ℕ →. ℕ} : Nat.Partrec f ↔ ∃ c : Code, eval c = f := by
   refine ⟨fun h => ?_, ?_⟩
-  · induction h with
-    | zero => exact ⟨zero, rfl⟩
-    | succ => exact ⟨succ, rfl⟩
-    | left => exact ⟨left, rfl⟩
-    | right => exact ⟨right, rfl⟩
-    | pair pf pg hf hg =>
-      rcases hf with ⟨cf, rfl⟩; rcases hg with ⟨cg, rfl⟩
-      exact ⟨pair cf cg, rfl⟩
-    | comp pf pg hf hg =>
-      rcases hf with ⟨cf, rfl⟩; rcases hg with ⟨cg, rfl⟩
-      exact ⟨comp cf cg, rfl⟩
-    | prec pf pg hf hg =>
-      rcases hf with ⟨cf, rfl⟩; rcases hg with ⟨cg, rfl⟩
-      exact ⟨prec cf cg, rfl⟩
-    | rfind pf hf =>
-      rcases hf with ⟨cf, rfl⟩
-      refine ⟨comp (rfind' cf) (pair Code.id zero), ?_⟩
-      simp [eval, Seq.seq, pure, PFun.pure, Part.map_id']
-  · rintro ⟨c, rfl⟩
-    induction c with
-    | zero => exact Nat.Partrec.zero
-    | succ => exact Nat.Partrec.succ
-    | left => exact Nat.Partrec.left
-    | right => exact Nat.Partrec.right
-    | pair cf cg pf pg => exact pf.pair pg
-    | comp cf cg pf pg => exact pf.comp pg
-    | prec cf cg pf pg => exact pf.prec pg
-    | rfind' cf pf => exact pf.rfind'
+  induction h with
+  | zero => exact ⟨zero, rfl⟩
+  | succ => exact ⟨succ, rfl⟩
+  | left => exact ⟨left, rfl⟩
+  | right => exact ⟨right, rfl⟩
+  | pair pf pg hf hg =>
+    rcases hf with ⟨cf, rfl⟩; rcases hg with ⟨cg, rfl⟩
+    exact ⟨pair cf cg, rfl⟩
+  | comp pf pg hf hg =>
+    rcases hf with ⟨cf, rfl⟩; rcases hg with ⟨cg, rfl⟩
+    exact ⟨comp cf cg, rfl⟩
+  | prec pf pg hf hg =>
+    rcases hf with ⟨cf, rfl⟩; rcases hg with ⟨cg, rfl⟩
+    exact ⟨prec cf cg, rfl⟩
+  | rfind pf hf =>
+    rcases hf with ⟨cf, rfl⟩
+    refine ⟨comp (rfind' cf) (pair Code.id zero), ?_⟩
+    simp [eval, Seq.seq, pure, PFun.pure, Part.map_id']
+  rintro ⟨c, rfl⟩
+  induction c with
+  | zero => exact Nat.Partrec.zero
+  | succ => exact Nat.Partrec.succ
+  | left => exact Nat.Partrec.left
+  | right => exact Nat.Partrec.right
+  | pair cf cg pf pg => exact pf.pair pg
+  | comp cf cg pf pg => exact pf.comp pg
+  | prec cf cg pf pg => exact pf.prec pg
+  | rfind' cf pf => exact pf.rfind'
 
 -- Porting note: `>>`s in `evaln` are now `>>=` because `>>`s are not elaborated well in Lean4.
 /-- A modified evaluation for the code which returns an `Option ℕ` instead of a `Part ℕ`. To avoid
@@ -625,28 +625,28 @@ theorem evaln_mono : ∀ {k₁ k₂ c n x}, k₁ ≤ k₂ → x ∈ evaln k₁ c
     induction' c with cf cg hf hg cf cg hf hg cf cg hf hg cf hf generalizing x n <;>
       rw [evaln] at h ⊢ <;> refine this hl' (fun h => ?_) h
     iterate 4 exact h
-    · -- pair cf cg
-      simp? [Seq.seq, Option.bind_eq_some] at h ⊢ says
-        simp only [Seq.seq, Option.map_eq_map, Option.mem_def, Option.bind_eq_some,
-          Option.map_eq_some', exists_exists_and_eq_and] at h ⊢
-      exact h.imp fun a => And.imp (hf _ _) <| Exists.imp fun b => And.imp_left (hg _ _)
-    · -- comp cf cg
-      simp? [Bind.bind, Option.bind_eq_some] at h ⊢ says
-        simp only [bind, Option.mem_def, Option.bind_eq_some] at h ⊢
-      exact h.imp fun a => And.imp (hg _ _) (hf _ _)
-    · -- prec cf cg
-      revert h
-      simp only [unpaired, bind, Option.mem_def]
-      induction n.unpair.2 <;> simp [Option.bind_eq_some]
-      · apply hf
-      · exact fun y h₁ h₂ => ⟨y, evaln_mono hl' h₁, hg _ _ h₂⟩
-    · -- rfind' cf
-      simp? [Bind.bind, Option.bind_eq_some] at h ⊢ says
-        simp only [unpaired, bind, pair_unpair, Option.pure_def, Option.mem_def,
-          Option.bind_eq_some] at h ⊢
-      refine h.imp fun x => And.imp (hf _ _) ?_
-      by_cases x0 : x = 0 <;> simp [x0]
-      exact evaln_mono hl'
+    -- pair cf cg
+    simp? [Seq.seq, Option.bind_eq_some] at h ⊢ says
+      simp only [Seq.seq, Option.map_eq_map, Option.mem_def, Option.bind_eq_some,
+        Option.map_eq_some', exists_exists_and_eq_and] at h ⊢
+    exact h.imp fun a => And.imp (hf _ _) <| Exists.imp fun b => And.imp_left (hg _ _)
+    -- comp cf cg
+    simp? [Bind.bind, Option.bind_eq_some] at h ⊢ says
+      simp only [bind, Option.mem_def, Option.bind_eq_some] at h ⊢
+    exact h.imp fun a => And.imp (hg _ _) (hf _ _)
+    -- prec cf cg
+    revert h
+    simp only [unpaired, bind, Option.mem_def]
+    induction n.unpair.2 <;> simp [Option.bind_eq_some]
+    apply hf
+    exact fun y h₁ h₂ => ⟨y, evaln_mono hl' h₁, hg _ _ h₂⟩
+    -- rfind' cf
+    simp? [Bind.bind, Option.bind_eq_some] at h ⊢ says
+      simp only [unpaired, bind, pair_unpair, Option.pure_def, Option.mem_def,
+        Option.bind_eq_some] at h ⊢
+    refine h.imp fun x => And.imp (hf _ _) ?_
+    by_cases x0 : x = 0 <;> simp [x0]
+    exact evaln_mono hl'
 
 theorem evaln_sound : ∀ {k c n x}, x ∈ evaln k c n → x ∈ eval c n
   | 0, _, n, x, h => by simp [evaln] at h
@@ -655,41 +655,41 @@ theorem evaln_sound : ∀ {k c n x}, x ∈ evaln k c n → x ∈ eval c n
         simp [eval, evaln, Option.bind_eq_some, Seq.seq] at h ⊢ <;>
       cases' h with _ h
     iterate 4 simpa [pure, PFun.pure, eq_comm] using h
-    · -- pair cf cg
-      rcases h with ⟨y, ef, z, eg, rfl⟩
-      exact ⟨_, hf _ _ ef, _, hg _ _ eg, rfl⟩
-    · --comp hf hg
-      rcases h with ⟨y, eg, ef⟩
-      exact ⟨_, hg _ _ eg, hf _ _ ef⟩
-    · -- prec cf cg
-      revert h
-      induction' n.unpair.2 with m IH generalizing x <;> simp [Option.bind_eq_some]
-      · apply hf
-      · refine fun y h₁ h₂ => ⟨y, IH _ ?_, ?_⟩
-        · have := evaln_mono k.le_succ h₁
-          simp [evaln, Option.bind_eq_some] at this
-          exact this.2
-        · exact hg _ _ h₂
-    · -- rfind' cf
-      rcases h with ⟨m, h₁, h₂⟩
-      by_cases m0 : m = 0 <;> simp [m0] at h₂
-      · exact
-          ⟨0, ⟨by simpa [m0] using hf _ _ h₁, fun {m} => (Nat.not_lt_zero _).elim⟩, by simp [h₂]⟩
-      · have := evaln_sound h₂
-        simp [eval] at this
-        rcases this with ⟨y, ⟨hy₁, hy₂⟩, rfl⟩
-        refine
-          ⟨y + 1, ⟨by simpa [add_comm, add_left_comm] using hy₁, fun {i} im => ?_⟩, by
-            simp [add_comm, add_left_comm]⟩
-        cases' i with i
-        · exact ⟨m, by simpa using hf _ _ h₁, m0⟩
-        · rcases hy₂ (Nat.lt_of_succ_lt_succ im) with ⟨z, hz, z0⟩
-          exact ⟨z, by simpa [add_comm, add_left_comm] using hz, z0⟩
+    -- pair cf cg
+    rcases h with ⟨y, ef, z, eg, rfl⟩
+    exact ⟨_, hf _ _ ef, _, hg _ _ eg, rfl⟩
+    --comp hf hg
+    rcases h with ⟨y, eg, ef⟩
+    exact ⟨_, hg _ _ eg, hf _ _ ef⟩
+    -- prec cf cg
+    revert h
+    induction' n.unpair.2 with m IH generalizing x <;> simp [Option.bind_eq_some]
+    apply hf
+    refine fun y h₁ h₂ => ⟨y, IH _ ?_, ?_⟩
+    have := evaln_mono k.le_succ h₁
+    simp [evaln, Option.bind_eq_some] at this
+    exact this.2
+    exact hg _ _ h₂
+    -- rfind' cf
+    rcases h with ⟨m, h₁, h₂⟩
+    by_cases m0 : m = 0 <;> simp [m0] at h₂
+    exact
+      ⟨0, ⟨by simpa [m0] using hf _ _ h₁, fun {m} => (Nat.not_lt_zero _).elim⟩, by simp [h₂]⟩
+    have := evaln_sound h₂
+    simp [eval] at this
+    rcases this with ⟨y, ⟨hy₁, hy₂⟩, rfl⟩
+    refine
+      ⟨y + 1, ⟨by simpa [add_comm, add_left_comm] using hy₁, fun {i} im => ?_⟩, by
+        simp [add_comm, add_left_comm]⟩
+    cases' i with i
+    exact ⟨m, by simpa using hf _ _ h₁, m0⟩
+    rcases hy₂ (Nat.lt_of_succ_lt_succ im) with ⟨z, hz, z0⟩
+    exact ⟨z, by simpa [add_comm, add_left_comm] using hz, z0⟩
 
 theorem evaln_complete {c n x} : x ∈ eval c n ↔ ∃ k, x ∈ evaln k c n := by
   refine ⟨fun h => ?_, fun ⟨k, h⟩ => evaln_sound h⟩
   rsuffices ⟨k, h⟩ : ∃ k, x ∈ evaln (k + 1) c n
-  · exact ⟨k + 1, h⟩
+  exact ⟨k + 1, h⟩
   induction c generalizing n x with
       simp [eval, evaln, pure, PFun.pure, Seq.seq, Option.bind_eq_some] at h ⊢
   | pair cf cg hf hg =>
@@ -712,21 +712,21 @@ theorem evaln_complete {c n x} : x ∈ eval c n ↔ ∃ k, x ∈ evaln k c n := 
     revert h
     generalize n.unpair.1 = n₁; generalize n.unpair.2 = n₂
     induction' n₂ with m IH generalizing x n <;> simp [Option.bind_eq_some]
-    · intro h
-      rcases hf h with ⟨k, hk⟩
-      exact ⟨_, le_max_left _ _, evaln_mono (Nat.succ_le_succ <| le_max_right _ _) hk⟩
-    · intro y hy hx
-      rcases IH hy with ⟨k₁, nk₁, hk₁⟩
-      rcases hg hx with ⟨k₂, hk₂⟩
-      refine
-        ⟨(max k₁ k₂).succ,
-          Nat.le_succ_of_le <| le_max_of_le_left <|
-            le_trans (le_max_left _ (Nat.pair n₁ m)) nk₁, y,
-          evaln_mono (Nat.succ_le_succ <| le_max_left _ _) ?_,
-          evaln_mono (Nat.succ_le_succ <| Nat.le_succ_of_le <| le_max_right _ _) hk₂⟩
-      simp only [evaln.eq_8, bind, unpaired, unpair_pair, Option.mem_def, Option.bind_eq_some,
-        Option.guard_eq_some', exists_and_left, exists_const]
-      exact ⟨le_trans (le_max_right _ _) nk₁, hk₁⟩
+    intro h
+    rcases hf h with ⟨k, hk⟩
+    exact ⟨_, le_max_left _ _, evaln_mono (Nat.succ_le_succ <| le_max_right _ _) hk⟩
+    intro y hy hx
+    rcases IH hy with ⟨k₁, nk₁, hk₁⟩
+    rcases hg hx with ⟨k₂, hk₂⟩
+    refine
+      ⟨(max k₁ k₂).succ,
+        Nat.le_succ_of_le <| le_max_of_le_left <|
+          le_trans (le_max_left _ (Nat.pair n₁ m)) nk₁, y,
+        evaln_mono (Nat.succ_le_succ <| le_max_left _ _) ?_,
+        evaln_mono (Nat.succ_le_succ <| Nat.le_succ_of_le <| le_max_right _ _) hk₂⟩
+    simp only [evaln.eq_8, bind, unpaired, unpair_pair, Option.mem_def, Option.bind_eq_some,
+      Option.guard_eq_some', exists_and_left, exists_const]
+    exact ⟨le_trans (le_max_right _ _) nk₁, hk₁⟩
   | rfind' cf hf =>
     rcases h with ⟨y, ⟨hy₁, hy₂⟩, rfl⟩
     suffices ∃ k, y + n.unpair.2 ∈ evaln (k + 1) (rfind' cf) (Nat.pair n.unpair.1 n.unpair.2) by
@@ -735,23 +735,23 @@ theorem evaln_complete {c n x} : x ∈ eval c n ↔ ∃ k, x ∈ evaln k c n := 
     generalize n.unpair.2 = m
     intro hy₁ hy₂
     induction' y with y IH generalizing m <;> simp [evaln, Option.bind_eq_some]
-    · simp at hy₁
-      rcases hf hy₁ with ⟨k, hk⟩
-      exact ⟨_, Nat.le_of_lt_succ <| evaln_bound hk, _, hk, by simp⟩
-    · rcases hy₂ (Nat.succ_pos _) with ⟨a, ha, a0⟩
-      rcases hf ha with ⟨k₁, hk₁⟩
-      rcases IH m.succ (by simpa [Nat.succ_eq_add_one, add_comm, add_left_comm] using hy₁)
-          fun {i} hi => by
-          simpa [Nat.succ_eq_add_one, add_comm, add_left_comm] using
-            hy₂ (Nat.succ_lt_succ hi) with
-        ⟨k₂, hk₂⟩
-      use (max k₁ k₂).succ
-      rw [zero_add] at hk₁
-      use Nat.le_succ_of_le <| le_max_of_le_left <| Nat.le_of_lt_succ <| evaln_bound hk₁
-      use a
-      use evaln_mono (Nat.succ_le_succ <| Nat.le_succ_of_le <| le_max_left _ _) hk₁
-      simpa [Nat.succ_eq_add_one, a0, -max_eq_left, -max_eq_right, add_comm, add_left_comm] using
-        evaln_mono (Nat.succ_le_succ <| le_max_right _ _) hk₂
+    simp at hy₁
+    rcases hf hy₁ with ⟨k, hk⟩
+    exact ⟨_, Nat.le_of_lt_succ <| evaln_bound hk, _, hk, by simp⟩
+    rcases hy₂ (Nat.succ_pos _) with ⟨a, ha, a0⟩
+    rcases hf ha with ⟨k₁, hk₁⟩
+    rcases IH m.succ (by simpa [Nat.succ_eq_add_one, add_comm, add_left_comm] using hy₁)
+        fun {i} hi => by
+        simpa [Nat.succ_eq_add_one, add_comm, add_left_comm] using
+          hy₂ (Nat.succ_lt_succ hi) with
+      ⟨k₂, hk₂⟩
+    use (max k₁ k₂).succ
+    rw [zero_add] at hk₁
+    use Nat.le_succ_of_le <| le_max_of_le_left <| Nat.le_of_lt_succ <| evaln_bound hk₁
+    use a
+    use evaln_mono (Nat.succ_le_succ <| Nat.le_succ_of_le <| le_max_left _ _) hk₁
+    simpa [Nat.succ_eq_add_one, a0, -max_eq_left, -max_eq_right, add_comm, add_left_comm] using
+      evaln_mono (Nat.succ_le_succ <| le_max_right _ _) hk₂
   | _ => exact ⟨⟨_, le_rfl⟩, h.symm⟩
 
 section
@@ -817,100 +817,100 @@ private theorem hG : Primrec G := by
       (Primrec.option_some.comp (_root_.Primrec.succ.comp n))
       (Primrec.option_some.comp (Primrec.fst.comp <| Primrec.unpair.comp n))
       (Primrec.option_some.comp (Primrec.snd.comp <| Primrec.unpair.comp n))
-  · have L := (Primrec.fst.comp Primrec.fst).comp
-      (Primrec.fst (α := (List (List (Option ℕ)) × ℕ) × ℕ)
-        (β := Code × Code × Option ℕ × Option ℕ))
-    have k := k.comp (Primrec.fst (β := Code × Code × Option ℕ × Option ℕ))
-    have n := n.comp (Primrec.fst (β := Code × Code × Option ℕ × Option ℕ))
-    have cf := Primrec.fst.comp (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
-        (β := Code × Code × Option ℕ × Option ℕ))
-    have cg := (Primrec.fst.comp Primrec.snd).comp
-      (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
-        (β := Code × Code × Option ℕ × Option ℕ))
-    refine Primrec.option_bind (hlup.comp <| L.pair <| (k.pair cf).pair n) ?_
-    unfold Primrec₂
-    conv =>
-      congr
-      · ext p
-        dsimp only []
-        erw [Option.bind_eq_bind, ← Option.map_eq_bind]
-    refine Primrec.option_map ((hlup.comp <| L.pair <| (k.pair cg).pair n).comp Primrec.fst) ?_
-    unfold Primrec₂
-    exact Primrec₂.natPair.comp (Primrec.snd.comp Primrec.fst) Primrec.snd
-  · have L := (Primrec.fst.comp Primrec.fst).comp
-      (Primrec.fst (α := (List (List (Option ℕ)) × ℕ) × ℕ)
-        (β := Code × Code × Option ℕ × Option ℕ))
-    have k := k.comp (Primrec.fst (β := Code × Code × Option ℕ × Option ℕ))
-    have n := n.comp (Primrec.fst (β := Code × Code × Option ℕ × Option ℕ))
-    have cf := Primrec.fst.comp (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
-        (β := Code × Code × Option ℕ × Option ℕ))
-    have cg := (Primrec.fst.comp Primrec.snd).comp
-      (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
-        (β := Code × Code × Option ℕ × Option ℕ))
-    refine Primrec.option_bind (hlup.comp <| L.pair <| (k.pair cg).pair n) ?_
-    unfold Primrec₂
-    have h :=
-      hlup.comp ((L.comp Primrec.fst).pair <| ((k.pair cf).comp Primrec.fst).pair Primrec.snd)
-    exact h
-  · have L := (Primrec.fst.comp Primrec.fst).comp
-      (Primrec.fst (α := (List (List (Option ℕ)) × ℕ) × ℕ)
-        (β := Code × Code × Option ℕ × Option ℕ))
-    have k := k.comp (Primrec.fst (β := Code × Code × Option ℕ × Option ℕ))
-    have n := n.comp (Primrec.fst (β := Code × Code × Option ℕ × Option ℕ))
-    have cf := Primrec.fst.comp (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
-        (β := Code × Code × Option ℕ × Option ℕ))
-    have cg := (Primrec.fst.comp Primrec.snd).comp
-      (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
-        (β := Code × Code × Option ℕ × Option ℕ))
-    have z := Primrec.fst.comp (Primrec.unpair.comp n)
-    refine
-      Primrec.nat_casesOn (Primrec.snd.comp (Primrec.unpair.comp n))
-        (hlup.comp <| L.pair <| (k.pair cf).pair z)
-        (?_ : Primrec _)
-    have L := L.comp (Primrec.fst (β := ℕ))
-    have z := z.comp (Primrec.fst (β := ℕ))
-    have y := Primrec.snd
-      (α := ((List (List (Option ℕ)) × ℕ) × ℕ) × Code × Code × Option ℕ × Option ℕ) (β := ℕ)
-    have h₁ := hlup.comp <| L.pair <| (((k'.pair c).comp Primrec.fst).comp Primrec.fst).pair
-      (Primrec₂.natPair.comp z y)
-    refine Primrec.option_bind h₁ (?_ : Primrec _)
-    have z := z.comp (Primrec.fst (β := ℕ))
-    have y := y.comp (Primrec.fst (β := ℕ))
-    have i := Primrec.snd
-      (α := (((List (List (Option ℕ)) × ℕ) × ℕ) × Code × Code × Option ℕ × Option ℕ) × ℕ)
-      (β := ℕ)
-    have h₂ := hlup.comp ((L.comp Primrec.fst).pair <|
-      ((k.pair cg).comp <| Primrec.fst.comp Primrec.fst).pair <|
-        Primrec₂.natPair.comp z <| Primrec₂.natPair.comp y i)
-    exact h₂
-  · have L := (Primrec.fst.comp Primrec.fst).comp
-      (Primrec.fst (α := (List (List (Option ℕ)) × ℕ) × ℕ)
-        (β := Code × Option ℕ))
-    have k := k.comp (Primrec.fst (β := Code × Option ℕ))
-    have n := n.comp (Primrec.fst (β := Code × Option ℕ))
-    have cf := Primrec.fst.comp (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
-        (β := Code × Option ℕ))
-    have z := Primrec.fst.comp (Primrec.unpair.comp n)
-    have m := Primrec.snd.comp (Primrec.unpair.comp n)
-    have h₁ := hlup.comp <| L.pair <| (k.pair cf).pair (Primrec₂.natPair.comp z m)
-    refine Primrec.option_bind h₁ (?_ : Primrec _)
-    have m := m.comp (Primrec.fst (β := ℕ))
-    refine Primrec.nat_casesOn Primrec.snd (Primrec.option_some.comp m) ?_
-    unfold Primrec₂
-    exact (hlup.comp ((L.comp Primrec.fst).pair <|
-      ((k'.pair c).comp <| Primrec.fst.comp Primrec.fst).pair
-        (Primrec₂.natPair.comp (z.comp Primrec.fst) (_root_.Primrec.succ.comp m)))).comp
-      Primrec.fst
+  have L := (Primrec.fst.comp Primrec.fst).comp
+    (Primrec.fst (α := (List (List (Option ℕ)) × ℕ) × ℕ)
+      (β := Code × Code × Option ℕ × Option ℕ))
+  have k := k.comp (Primrec.fst (β := Code × Code × Option ℕ × Option ℕ))
+  have n := n.comp (Primrec.fst (β := Code × Code × Option ℕ × Option ℕ))
+  have cf := Primrec.fst.comp (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
+      (β := Code × Code × Option ℕ × Option ℕ))
+  have cg := (Primrec.fst.comp Primrec.snd).comp
+    (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
+      (β := Code × Code × Option ℕ × Option ℕ))
+  refine Primrec.option_bind (hlup.comp <| L.pair <| (k.pair cf).pair n) ?_
+  unfold Primrec₂
+  conv =>
+    congr
+    ext p
+    dsimp only []
+    erw [Option.bind_eq_bind, ← Option.map_eq_bind]
+  refine Primrec.option_map ((hlup.comp <| L.pair <| (k.pair cg).pair n).comp Primrec.fst) ?_
+  unfold Primrec₂
+  exact Primrec₂.natPair.comp (Primrec.snd.comp Primrec.fst) Primrec.snd
+  have L := (Primrec.fst.comp Primrec.fst).comp
+    (Primrec.fst (α := (List (List (Option ℕ)) × ℕ) × ℕ)
+      (β := Code × Code × Option ℕ × Option ℕ))
+  have k := k.comp (Primrec.fst (β := Code × Code × Option ℕ × Option ℕ))
+  have n := n.comp (Primrec.fst (β := Code × Code × Option ℕ × Option ℕ))
+  have cf := Primrec.fst.comp (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
+      (β := Code × Code × Option ℕ × Option ℕ))
+  have cg := (Primrec.fst.comp Primrec.snd).comp
+    (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
+      (β := Code × Code × Option ℕ × Option ℕ))
+  refine Primrec.option_bind (hlup.comp <| L.pair <| (k.pair cg).pair n) ?_
+  unfold Primrec₂
+  have h :=
+    hlup.comp ((L.comp Primrec.fst).pair <| ((k.pair cf).comp Primrec.fst).pair Primrec.snd)
+  exact h
+  have L := (Primrec.fst.comp Primrec.fst).comp
+    (Primrec.fst (α := (List (List (Option ℕ)) × ℕ) × ℕ)
+      (β := Code × Code × Option ℕ × Option ℕ))
+  have k := k.comp (Primrec.fst (β := Code × Code × Option ℕ × Option ℕ))
+  have n := n.comp (Primrec.fst (β := Code × Code × Option ℕ × Option ℕ))
+  have cf := Primrec.fst.comp (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
+      (β := Code × Code × Option ℕ × Option ℕ))
+  have cg := (Primrec.fst.comp Primrec.snd).comp
+    (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
+      (β := Code × Code × Option ℕ × Option ℕ))
+  have z := Primrec.fst.comp (Primrec.unpair.comp n)
+  refine
+    Primrec.nat_casesOn (Primrec.snd.comp (Primrec.unpair.comp n))
+      (hlup.comp <| L.pair <| (k.pair cf).pair z)
+      (?_ : Primrec _)
+  have L := L.comp (Primrec.fst (β := ℕ))
+  have z := z.comp (Primrec.fst (β := ℕ))
+  have y := Primrec.snd
+    (α := ((List (List (Option ℕ)) × ℕ) × ℕ) × Code × Code × Option ℕ × Option ℕ) (β := ℕ)
+  have h₁ := hlup.comp <| L.pair <| (((k'.pair c).comp Primrec.fst).comp Primrec.fst).pair
+    (Primrec₂.natPair.comp z y)
+  refine Primrec.option_bind h₁ (?_ : Primrec _)
+  have z := z.comp (Primrec.fst (β := ℕ))
+  have y := y.comp (Primrec.fst (β := ℕ))
+  have i := Primrec.snd
+    (α := (((List (List (Option ℕ)) × ℕ) × ℕ) × Code × Code × Option ℕ × Option ℕ) × ℕ)
+    (β := ℕ)
+  have h₂ := hlup.comp ((L.comp Primrec.fst).pair <|
+    ((k.pair cg).comp <| Primrec.fst.comp Primrec.fst).pair <|
+      Primrec₂.natPair.comp z <| Primrec₂.natPair.comp y i)
+  exact h₂
+  have L := (Primrec.fst.comp Primrec.fst).comp
+    (Primrec.fst (α := (List (List (Option ℕ)) × ℕ) × ℕ)
+      (β := Code × Option ℕ))
+  have k := k.comp (Primrec.fst (β := Code × Option ℕ))
+  have n := n.comp (Primrec.fst (β := Code × Option ℕ))
+  have cf := Primrec.fst.comp (Primrec.snd (α := (List (List (Option ℕ)) × ℕ) × ℕ)
+      (β := Code × Option ℕ))
+  have z := Primrec.fst.comp (Primrec.unpair.comp n)
+  have m := Primrec.snd.comp (Primrec.unpair.comp n)
+  have h₁ := hlup.comp <| L.pair <| (k.pair cf).pair (Primrec₂.natPair.comp z m)
+  refine Primrec.option_bind h₁ (?_ : Primrec _)
+  have m := m.comp (Primrec.fst (β := ℕ))
+  refine Primrec.nat_casesOn Primrec.snd (Primrec.option_some.comp m) ?_
+  unfold Primrec₂
+  exact (hlup.comp ((L.comp Primrec.fst).pair <|
+    ((k'.pair c).comp <| Primrec.fst.comp Primrec.fst).pair
+      (Primrec₂.natPair.comp (z.comp Primrec.fst) (_root_.Primrec.succ.comp m)))).comp
+    Primrec.fst
 
 private theorem evaln_map (k c n) :
     ((((List.range k)[n]?).map (evaln k c)).bind fun b => b) = evaln k c n := by
   by_cases kn : n < k
-  · simp [List.getElem?_range kn]
-  · rw [List.getElem?_len_le]
-    · cases e : evaln k c n
-      · rfl
-      exact kn.elim (evaln_bound e)
-    simpa using kn
+  simp [List.getElem?_range kn]
+  rw [List.getElem?_len_le]
+  cases e : evaln k c n
+  rfl
+  exact kn.elim (evaln_bound e)
+  simpa using kn
 
 /-- The `Nat.Partrec.Code.evaln` function is primitive recursive. -/
 theorem evaln_prim : Primrec fun a : (ℕ × Code) × ℕ => evaln a.1.1 a.1.2 a.2 :=
@@ -929,7 +929,7 @@ theorem evaln_prim : Primrec fun a : (ℕ × Code) × ℕ => evaln a.1.1 a.1.2 a
       generalize ofNat Code p.unpair.2 = c
       intro nk
       cases' k with k'
-      · simp [evaln]
+      simp [evaln]
       let k := k' + 1
       simp only [show k'.succ = k from rfl]
       simp? [Nat.lt_succ_iff] at nk says simp only [List.mem_range, Nat.lt_succ_iff] at nk
@@ -943,32 +943,32 @@ theorem evaln_prim : Primrec fun a : (ℕ × Code) × ℕ => evaln a.1.1 a.1.2 a
         simp [lup, List.getElem?_range hl, evaln_map, Bind.bind]
       cases' c with cf cg cf cg cf cg cf <;>
         simp [evaln, nk, Bind.bind, Functor.map, Seq.seq, pure]
-      · cases' encode_lt_pair cf cg with lf lg
-        rw [hg (Nat.pair_lt_pair_right _ lf), hg (Nat.pair_lt_pair_right _ lg)]
-        cases evaln k cf n
-        · rfl
-        cases evaln k cg n <;> rfl
-      · cases' encode_lt_comp cf cg with lf lg
-        rw [hg (Nat.pair_lt_pair_right _ lg)]
-        cases evaln k cg n
-        · rfl
-        simp [hg (Nat.pair_lt_pair_right _ lf)]
-      · cases' encode_lt_prec cf cg with lf lg
-        rw [hg (Nat.pair_lt_pair_right _ lf)]
-        cases n.unpair.2
-        · rfl
-        simp only [decode_eq_ofNat, Option.some.injEq]
-        rw [hg (Nat.pair_lt_pair_left _ k'.lt_succ_self)]
-        cases evaln k' _ _
-        · rfl
-        simp [hg (Nat.pair_lt_pair_right _ lg)]
-      · have lf := encode_lt_rfind' cf
-        rw [hg (Nat.pair_lt_pair_right _ lf)]
-        cases' evaln k cf n with x
-        · rfl
-        simp only [decode_eq_ofNat, Option.some.injEq, Option.some_bind]
-        cases x <;> simp [Nat.succ_ne_zero]
-        rw [hg (Nat.pair_lt_pair_left _ k'.lt_succ_self)]
+      cases' encode_lt_pair cf cg with lf lg
+      rw [hg (Nat.pair_lt_pair_right _ lf), hg (Nat.pair_lt_pair_right _ lg)]
+      cases evaln k cf n
+      rfl
+      cases evaln k cg n <;> rfl
+      cases' encode_lt_comp cf cg with lf lg
+      rw [hg (Nat.pair_lt_pair_right _ lg)]
+      cases evaln k cg n
+      rfl
+      simp [hg (Nat.pair_lt_pair_right _ lf)]
+      cases' encode_lt_prec cf cg with lf lg
+      rw [hg (Nat.pair_lt_pair_right _ lf)]
+      cases n.unpair.2
+      rfl
+      simp only [decode_eq_ofNat, Option.some.injEq]
+      rw [hg (Nat.pair_lt_pair_left _ k'.lt_succ_self)]
+      cases evaln k' _ _
+      rfl
+      simp [hg (Nat.pair_lt_pair_right _ lg)]
+      have lf := encode_lt_rfind' cf
+      rw [hg (Nat.pair_lt_pair_right _ lf)]
+      cases' evaln k cf n with x
+      rfl
+      simp only [decode_eq_ofNat, Option.some.injEq, Option.some_bind]
+      cases x <;> simp [Nat.succ_ne_zero]
+      rw [hg (Nat.pair_lt_pair_left _ k'.lt_succ_self)]
   (Primrec.option_bind
     (Primrec.list_get?.comp (this.comp (_root_.Primrec.const ())
       (Primrec.encode_iff.2 Primrec.fst)) Primrec.snd) Primrec.snd.to₂).of_eq

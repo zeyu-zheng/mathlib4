@@ -252,10 +252,10 @@ instance tendsto_uIcc_of_Icc {l : Filter α} [TendstoIxxClass Icc l l] :
     mem_prod_self_iff.1 (mem_map.1 (tendsto_fst.Icc tendsto_snd hs))
   refine ⟨t, htl, fun p hp => ?_⟩
   rcases le_total p.1 p.2 with h | h
-  · rw [mem_preimage, uIcc_of_le h]
-    exact hts p hp
-  · rw [mem_preimage, uIcc_of_ge h]
-    exact hts ⟨p.2, p.1⟩ ⟨hp.2, hp.1⟩
+  rw [mem_preimage, uIcc_of_le h]
+  exact hts p hp
+  rw [mem_preimage, uIcc_of_ge h]
+  exact hts ⟨p.2, p.1⟩ ⟨hp.2, hp.1⟩
 
 protected theorem Tendsto.uIcc {l : Filter α} [TendstoIxxClass Icc l l] {f g : β → α}
     {lb : Filter β} (hf : Tendsto f lb l) (hg : Tendsto g lb l) :

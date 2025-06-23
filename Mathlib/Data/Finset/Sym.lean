@@ -57,9 +57,9 @@ theorem sym2_cons (a : α) (s : Finset α) (ha : a ∉ s) :
 theorem sym2_insert [DecidableEq α] (a : α) (s : Finset α) :
     (insert a s).sym2 = ((insert a s).image fun b => s(a, b)) ∪ s.sym2 := by
   obtain ha | ha := Decidable.em (a ∈ s)
-  · simp only [insert_eq_of_mem ha, right_eq_union, image_subset_iff]
-    aesop
-  · simpa [map_eq_image] using sym2_cons a s ha
+  simp only [insert_eq_of_mem ha, right_eq_union, image_subset_iff]
+  aesop
+  simpa [map_eq_image] using sym2_cons a s ha
 
 theorem sym2_map (f : α ↪ β) (s : Finset α) : (s.map f).sym2 = s.sym2.map (.sym2Map f) :=
   val_injective <| s.val.sym2_map _
@@ -133,13 +133,13 @@ theorem sym2_eq_image : s.sym2 = (s ×ˢ s).image Sym2.mk := by
   refine z.ind fun x y ↦ ?_
   rw [mk_mem_sym2_iff, mem_image]
   constructor
-  · intro h
-    use (x, y)
-    simp only [mem_product, h, and_self, true_and]
-  · rintro ⟨⟨a, b⟩, h⟩
-    simp only [mem_product, Sym2.eq_iff] at h
-    obtain ⟨h, (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)⟩ := h
-      <;> simp [h]
+  intro h
+  use (x, y)
+  simp only [mem_product, h, and_self, true_and]
+  rintro ⟨⟨a, b⟩, h⟩
+  simp only [mem_product, Sym2.eq_iff] at h
+  obtain ⟨h, (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩)⟩ := h
+    <;> simp [h]
 
 theorem isDiag_mk_of_mem_diag {a : α × α} (h : a ∈ s.diag) : (Sym2.mk a).IsDiag :=
   (Sym2.isDiag_iff_proj_eq _).2 (mem_diag.1 h).2
@@ -191,21 +191,21 @@ theorem sym_succ : s.sym (n + 1) = s.sup fun a ↦ (s.sym n).image <| Sym.cons a
 @[simp]
 theorem mem_sym_iff {m : Sym α n} : m ∈ s.sym n ↔ ∀ a ∈ m, a ∈ s := by
   induction' n with n ih
-  · refine mem_singleton.trans ⟨?_, fun _ ↦ Sym.eq_nil_of_card_zero _⟩
-    rintro rfl
-    exact fun a ha ↦ (Finset.not_mem_empty _ ha).elim
+  refine mem_singleton.trans ⟨?_, fun _ ↦ Sym.eq_nil_of_card_zero _⟩
+  rintro rfl
+  exact fun a ha ↦ (Finset.not_mem_empty _ ha).elim
   refine mem_sup.trans ⟨?_, fun h ↦ ?_⟩
-  · rintro ⟨a, ha, he⟩ b hb
-    rw [mem_image] at he
-    obtain ⟨m, he, rfl⟩ := he
-    rw [Sym.mem_cons] at hb
-    obtain rfl | hb := hb
-    · exact ha
-    · exact ih.1 he _ hb
-  · obtain ⟨a, m, rfl⟩ := m.exists_eq_cons_of_succ
-    exact
-      ⟨a, h _ <| Sym.mem_cons_self _ _,
-        mem_image_of_mem _ <| ih.2 fun b hb ↦ h _ <| Sym.mem_cons_of_mem hb⟩
+  rintro ⟨a, ha, he⟩ b hb
+  rw [mem_image] at he
+  obtain ⟨m, he, rfl⟩ := he
+  rw [Sym.mem_cons] at hb
+  obtain rfl | hb := hb
+  exact ha
+  exact ih.1 he _ hb
+  obtain ⟨a, m, rfl⟩ := m.exists_eq_cons_of_succ
+  exact
+    ⟨a, h _ <| Sym.mem_cons_self _ _,
+      mem_image_of_mem _ <| ih.2 fun b hb ↦ h _ <| Sym.mem_cons_of_mem hb⟩
 
 @[simp]
 theorem sym_empty (n : ℕ) : (∅ : Finset α).sym (n + 1) = ∅ := rfl
@@ -230,10 +230,10 @@ theorem eq_empty_of_sym_eq_empty (h : s.sym n = ∅) : s = ∅ := by
 @[simp]
 theorem sym_eq_empty : s.sym n = ∅ ↔ n ≠ 0 ∧ s = ∅ := by
   cases n
-  · exact iff_of_false (singleton_ne_empty _) fun h ↦ (h.1 rfl).elim
-  · refine ⟨fun h ↦ ⟨Nat.succ_ne_zero _, eq_empty_of_sym_eq_empty h⟩, ?_⟩
-    rintro ⟨_, rfl⟩
-    exact sym_empty _
+  exact iff_of_false (singleton_ne_empty _) fun h ↦ (h.1 rfl).elim
+  refine ⟨fun h ↦ ⟨Nat.succ_ne_zero _, eq_empty_of_sym_eq_empty h⟩, ?_⟩
+  rintro ⟨_, rfl⟩
+  exact sym_empty _
 
 @[simp]
 theorem sym_nonempty : (s.sym n).Nonempty ↔ n = 0 ∨ s.Nonempty := by

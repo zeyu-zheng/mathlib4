@@ -25,19 +25,19 @@ theorem Equiv.optionCongr_one {α : Type*} : (1 : Perm α).optionCongr = 1 :=
 theorem Equiv.optionCongr_swap {α : Type*} [DecidableEq α] (x y : α) :
     optionCongr (swap x y) = swap (some x) (some y) := by
   ext (_ | i)
-  · simp [swap_apply_of_ne_of_ne]
-  · by_cases hx : i = x
-    · simp only [hx, optionCongr_apply, Option.map_some', swap_apply_left, Option.mem_def,
-             Option.some.injEq]
-    by_cases hy : i = y <;> simp [hx, hy, swap_apply_of_ne_of_ne]
+  simp [swap_apply_of_ne_of_ne]
+  by_cases hx : i = x
+  simp only [hx, optionCongr_apply, Option.map_some', swap_apply_left, Option.mem_def,
+         Option.some.injEq]
+  by_cases hy : i = y <;> simp [hx, hy, swap_apply_of_ne_of_ne]
 
 @[simp]
 theorem Equiv.optionCongr_sign {α : Type*} [DecidableEq α] [Fintype α] (e : Perm α) :
     Perm.sign e.optionCongr = Perm.sign e := by
   refine Perm.swap_induction_on e ?_ ?_
-  · simp [Perm.one_def]
-  · intro f x y hne h
-    simp [h, hne, Perm.mul_def, ← Equiv.optionCongr_trans]
+  simp [Perm.one_def]
+  intro f x y hne h
+  simp [h, hne, Perm.mul_def, ← Equiv.optionCongr_trans]
 
 @[simp]
 theorem map_equiv_removeNone {α : Type*} [DecidableEq α] (σ : Perm (Option α)) :
@@ -45,12 +45,12 @@ theorem map_equiv_removeNone {α : Type*} [DecidableEq α] (σ : Perm (Option α
   ext1 x
   have : Option.map (⇑(removeNone σ)) x = (swap none (σ none)) (σ x)
   cases' x with x
-  · simp
-  · cases h : σ (some _)
-    · simp [removeNone_none _ h]
-    · have hn : σ (some x) ≠ none := by simp [h]
-      have hσn : σ (some x) ≠ σ none := σ.injective.ne (by simp)
-      simp [removeNone_some _ ⟨_, h⟩, ← h, swap_apply_of_ne_of_ne hn hσn]
+  simp
+  cases h : σ (some _)
+  simp [removeNone_none _ h]
+  have hn : σ (some x) ≠ none := by simp [h]
+  have hσn : σ (some x) ≠ σ none := σ.injective.ne (by simp)
+  simp [removeNone_some _ ⟨_, h⟩, ← h, swap_apply_of_ne_of_ne hn hσn]
   simpa using this
 
 /-- Permutations of `Option α` are equivalent to fixing an

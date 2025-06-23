@@ -80,26 +80,26 @@ lemma summable_and_hasSum_factoredNumbers_prod_filter_prime_tsum
       HasSum (fun m : factoredNumbers s ↦ f m)
         (∏ p ∈ s.filter Nat.Prime, ∑' n : ℕ, f (p ^ n)) := by
   induction' s using Finset.induction with p s hp ih
-  · rw [factoredNumbers_empty]
-    simp only [not_mem_empty, IsEmpty.forall_iff, forall_const, filter_true_of_mem, prod_empty]
-    exact ⟨(Set.finite_singleton 1).summable (‖f ·‖), hf₁ ▸ hasSum_singleton 1 f⟩
-  · rw [filter_insert]
-    split_ifs with hpp
-    · constructor
-      · simp only [← (equivProdNatFactoredNumbers hpp hp).summable_iff, Function.comp_def,
-          equivProdNatFactoredNumbers_apply', factoredNumbers.map_prime_pow_mul hmul hpp hp]
-        refine Summable.of_nonneg_of_le (fun _ ↦ norm_nonneg _) (fun _ ↦ norm_mul_le ..) ?_
-        apply Summable.mul_of_nonneg (hsum hpp) ih.1 <;> exact fun n ↦ norm_nonneg _
-      · have hp' : p ∉ s.filter Nat.Prime := mt (mem_of_mem_filter p) hp
-        rw [prod_insert hp', ← (equivProdNatFactoredNumbers hpp hp).hasSum_iff, Function.comp_def]
-        conv =>
-          enter [1, x]
-          rw [equivProdNatFactoredNumbers_apply', factoredNumbers.map_prime_pow_mul hmul hpp hp]
-        have : T3Space R := instT3Space -- speeds up the following
-        apply (hsum hpp).of_norm.hasSum.mul ih.2
-        -- `exact summable_mul_of_summable_norm (hsum hpp) ih.1` gives a time-out
-        apply summable_mul_of_summable_norm (hsum hpp) ih.1
-    · rwa [factoredNumbers_insert s hpp]
+  rw [factoredNumbers_empty]
+  simp only [not_mem_empty, IsEmpty.forall_iff, forall_const, filter_true_of_mem, prod_empty]
+  exact ⟨(Set.finite_singleton 1).summable (‖f ·‖), hf₁ ▸ hasSum_singleton 1 f⟩
+  rw [filter_insert]
+  split_ifs with hpp
+  constructor
+  simp only [← (equivProdNatFactoredNumbers hpp hp).summable_iff, Function.comp_def,
+    equivProdNatFactoredNumbers_apply', factoredNumbers.map_prime_pow_mul hmul hpp hp]
+  refine Summable.of_nonneg_of_le (fun _ ↦ norm_nonneg _) (fun _ ↦ norm_mul_le ..) ?_
+  apply Summable.mul_of_nonneg (hsum hpp) ih.1 <;> exact fun n ↦ norm_nonneg _
+  have hp' : p ∉ s.filter Nat.Prime := mt (mem_of_mem_filter p) hp
+  rw [prod_insert hp', ← (equivProdNatFactoredNumbers hpp hp).hasSum_iff, Function.comp_def]
+  conv =>
+    enter [1, x]
+    rw [equivProdNatFactoredNumbers_apply', factoredNumbers.map_prime_pow_mul hmul hpp hp]
+  have : T3Space R := instT3Space -- speeds up the following
+  apply (hsum hpp).of_norm.hasSum.mul ih.2
+  -- `exact summable_mul_of_summable_norm (hsum hpp) ih.1` gives a time-out
+  apply summable_mul_of_summable_norm (hsum hpp) ih.1
+  rwa [factoredNumbers_insert s hpp]
 
 /-- A version of `EulerProduct.summable_and_hasSum_factoredNumbers_prod_filter_prime_tsum`
 in terms of the value of the series. -/

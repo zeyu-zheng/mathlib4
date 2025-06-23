@@ -64,14 +64,14 @@ lemma hasExt_iff [HasDerivedCategory.{w'} C] :
   dsimp [HasExt]
   simp only [hasSmallLocalizedShiftedHom_iff _ _ DerivedCategory.Q]
   constructor
-  · intro h X Y n
-    exact (small_congr ((shiftFunctorZero _ ℤ).app
-      ((DerivedCategory.singleFunctor C 0).obj X)).homFromEquiv).1 (h X Y 0 n)
-  · intro h X Y a b
-    refine (small_congr ?_).1 (h X Y (b - a))
-    exact (Functor.FullyFaithful.ofFullyFaithful
-      (shiftFunctor _ a)).homEquiv.trans
-      ((shiftFunctorAdd' _ _ _ _ (Int.sub_add_cancel b a)).symm.app _).homToEquiv
+  intro h X Y n
+  exact (small_congr ((shiftFunctorZero _ ℤ).app
+    ((DerivedCategory.singleFunctor C 0).obj X)).homFromEquiv).1 (h X Y 0 n)
+  intro h X Y a b
+  refine (small_congr ?_).1 (h X Y (b - a))
+  exact (Functor.FullyFaithful.ofFullyFaithful
+    (shiftFunctor _ a)).homEquiv.trans
+    ((shiftFunctorAdd' _ _ _ _ (Int.sub_add_cancel b a)).symm.app _).homToEquiv
 
 lemma hasExt_of_hasDerivedCategory [HasDerivedCategory.{w} C] : HasExt.{w} C := by
   rw [hasExt_iff.{w}]
@@ -280,16 +280,16 @@ lemma add_hom (α β : Ext X Y n) : (α + β).hom = α.hom + β.hom := by
   ext; simp [α', β', ← Functor.map_comp]
   simp only [eq₁, eq₂, comp_hom, Equiv.apply_symm_apply, ShiftedHom.comp_add]
   congr
-  · dsimp [α']
-    rw [comp_hom, mk₀_hom, mk₀_hom]
-    dsimp
-    rw [ShiftedHom.mk₀_comp_mk₀_assoc, ← Functor.map_comp,
-      biprod.lift_fst, Functor.map_id, ShiftedHom.mk₀_id_comp]
-  · dsimp [β']
-    rw [comp_hom, mk₀_hom, mk₀_hom]
-    dsimp
-    rw [ShiftedHom.mk₀_comp_mk₀_assoc, ← Functor.map_comp,
-      biprod.lift_snd, Functor.map_id, ShiftedHom.mk₀_id_comp]
+  dsimp [α']
+  rw [comp_hom, mk₀_hom, mk₀_hom]
+  dsimp
+  rw [ShiftedHom.mk₀_comp_mk₀_assoc, ← Functor.map_comp,
+    biprod.lift_fst, Functor.map_id, ShiftedHom.mk₀_id_comp]
+  dsimp [β']
+  rw [comp_hom, mk₀_hom, mk₀_hom]
+  dsimp
+  rw [ShiftedHom.mk₀_comp_mk₀_assoc, ← Functor.map_comp,
+    biprod.lift_snd, Functor.map_id, ShiftedHom.mk₀_id_comp]
 
 lemma neg_hom (α : Ext X Y n) : (-α).hom = -α.hom := by
   rw [← add_right_inj α.hom, ← add_hom, add_right_neg, add_right_neg, zero_hom]

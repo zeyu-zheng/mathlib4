@@ -133,13 +133,13 @@ lemma isSheaf_iff :
     Presheaf.IsSheaf J P ↔ ∀ ⦃X : C⦄ (E : J.OneHypercover X)
       (_ : H E), Nonempty (IsLimit (E.multifork P)) := by
   constructor
-  · intro hP X E _
-    exact ⟨E.isLimitMultifork ⟨_, hP⟩⟩
-  · intro hP
-    rw [Presheaf.isSheaf_iff_multifork]
-    rintro X ⟨S, hS⟩
-    obtain ⟨E, hE, le⟩ := H.exists_oneHypercover S hS
-    exact ⟨IsSheafIff.isLimit hP hE le⟩
+  intro hP X E _
+  exact ⟨E.isLimitMultifork ⟨_, hP⟩⟩
+  intro hP
+  rw [Presheaf.isSheaf_iff_multifork]
+  rintro X ⟨S, hS⟩
+  obtain ⟨E, hE, le⟩ := H.exists_oneHypercover S hS
+  exact ⟨IsSheafIff.isLimit hP hE le⟩
 
 end OneHypercoverFamily
 

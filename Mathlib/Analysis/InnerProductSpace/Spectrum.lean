@@ -82,7 +82,7 @@ theorem orthogonalFamily_eigenspaces :
     OrthogonalFamily 𝕜 (fun μ => eigenspace T μ) fun μ => (eigenspace T μ).subtypeₗᵢ := by
   rintro μ ν hμν ⟨v, hv⟩ ⟨w, hw⟩
   by_cases hv' : v = 0
-  · simp [hv']
+  simp [hv']
   have H := hT.conj_eigenvalue_eq_self (hasEigenvalue_of_hasEigenvector ⟨hv, hv'⟩)
   rw [mem_eigenspace_iff] at hv hw
   refine Or.resolve_left ?_ hμν.symm

@@ -63,19 +63,19 @@ theorem coeff_inv_aux (n : ℕ) (a : R) (φ : R⟦X⟧) :
   symm
   apply Finset.sum_nbij' (fun (a, b) ↦ (single () a, single () b))
     fun (f, g) ↦ (f (), g ())
-  · aesop
-  · aesop
-  · aesop
-  · aesop
-  · rintro ⟨i, j⟩ _hij
-    obtain H | H := le_or_lt n j
-    · aesop
-    rw [if_pos H, if_pos]
-    · rfl
-    refine ⟨?_, fun hh ↦ H.not_le ?_⟩
-    · rintro ⟨⟩
-      simpa [Finsupp.single_eq_same] using le_of_lt H
-    · simpa [Finsupp.single_eq_same] using hh ()
+  aesop
+  aesop
+  aesop
+  aesop
+  rintro ⟨i, j⟩ _hij
+  obtain H | H := le_or_lt n j
+  aesop
+  rw [if_pos H, if_pos]
+  rfl
+  refine ⟨?_, fun hh ↦ H.not_le ?_⟩
+  rintro ⟨⟩
+  simpa [Finsupp.single_eq_same] using le_of_lt H
+  simpa [Finsupp.single_eq_same] using hh ()
 
 /-- A formal power series is invertible if the constant coefficient is invertible. -/
 def invOfUnit (φ : R⟦X⟧) (u : Rˣ) : R⟦X⟧ :=
@@ -311,21 +311,21 @@ theorem maximalIdeal_eq_span_X : LocalRing.maximalIdeal (k⟦X⟧) = Ideal.span 
   have hX : (Ideal.span {(X : k⟦X⟧)}).IsMaximal
   rw [Ideal.isMaximal_iff]
   constructor
-  · rw [Ideal.mem_span_singleton]
-    exact Prime.not_dvd_one X_prime
-  · intro I f hI hfX hfI
-    rw [Ideal.mem_span_singleton, X_dvd_iff] at hfX
-    have hfI0 : C k (f 0) ∈ I
-    have : C k (f 0) = f - (f - C k (f 0))
-    rw [sub_sub_cancel]
-    rw [this]
-    apply Ideal.sub_mem I hfI
-    apply hI
-    rw [Ideal.mem_span_singleton, X_dvd_iff, map_sub, constantCoeff_C, ←
-      coeff_zero_eq_constantCoeff_apply, sub_eq_zero, coeff_zero_eq_constantCoeff]
-    rfl
-    rw [← Ideal.eq_top_iff_one]
-    apply Ideal.eq_top_of_isUnit_mem I hfI0 (IsUnit.map (C k) (Ne.isUnit hfX))
+  rw [Ideal.mem_span_singleton]
+  exact Prime.not_dvd_one X_prime
+  intro I f hI hfX hfI
+  rw [Ideal.mem_span_singleton, X_dvd_iff] at hfX
+  have hfI0 : C k (f 0) ∈ I
+  have : C k (f 0) = f - (f - C k (f 0))
+  rw [sub_sub_cancel]
+  rw [this]
+  apply Ideal.sub_mem I hfI
+  apply hI
+  rw [Ideal.mem_span_singleton, X_dvd_iff, map_sub, constantCoeff_C, ←
+    coeff_zero_eq_constantCoeff_apply, sub_eq_zero, coeff_zero_eq_constantCoeff]
+  rfl
+  rw [← Ideal.eq_top_iff_one]
+  apply Ideal.eq_top_of_isUnit_mem I hfI0 (IsUnit.map (C k) (Ne.isUnit hfX))
   rw [LocalRing.eq_maximalIdeal hX]
 
 instance : NormalizationMonoid k⟦X⟧ where

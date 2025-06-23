@@ -55,22 +55,22 @@ theorem specializes_TFAE (x y : X) :
       closure ({ y } : Set X) ⊆ closure { x },
       ClusterPt y (pure x)] := by
   tfae_have 1 → 2
-  · exact (pure_le_nhds _).trans
+  exact (pure_le_nhds _).trans
   tfae_have 2 → 3
-  · exact fun h s hso hy => h (hso.mem_nhds hy)
+  exact fun h s hso hy => h (hso.mem_nhds hy)
   tfae_have 3 → 4
-  · exact fun h s hsc hx => of_not_not fun hy => h sᶜ hsc.isOpen_compl hy hx
+  exact fun h s hsc hx => of_not_not fun hy => h sᶜ hsc.isOpen_compl hy hx
   tfae_have 4 → 5
-  · exact fun h => h _ isClosed_closure (subset_closure <| mem_singleton _)
+  exact fun h => h _ isClosed_closure (subset_closure <| mem_singleton _)
   tfae_have 6 ↔ 5
-  · exact isClosed_closure.closure_subset_iff.trans singleton_subset_iff
+  exact isClosed_closure.closure_subset_iff.trans singleton_subset_iff
   tfae_have 5 ↔ 7
-  · rw [mem_closure_iff_clusterPt, principal_singleton]
+  rw [mem_closure_iff_clusterPt, principal_singleton]
   tfae_have 5 → 1
-  · refine fun h => (nhds_basis_opens _).ge_iff.2 ?_
-    rintro s ⟨hy, ho⟩
-    rcases mem_closure_iff.1 h s ho hy with ⟨z, hxs, rfl : z = x⟩
-    exact ho.mem_nhds hxs
+  refine fun h => (nhds_basis_opens _).ge_iff.2 ?_
+  rintro s ⟨hy, ho⟩
+  rcases mem_closure_iff.1 h s ho hy with ⟨z, hxs, rfl : z = x⟩
+  exact ho.mem_nhds hxs
   tfae_finish
 
 theorem specializes_iff_nhds : x ⤳ y ↔ 𝓝 x ≤ 𝓝 y :=
@@ -293,9 +293,9 @@ lemma stableUnderSpecialization_iff_exists_sUnion_eq {s : Set X} :
     StableUnderSpecialization s ↔ ∃ (S : Set (Set X)), (∀ s ∈ S, IsClosed s) ∧ ⋃₀ S = s := by
   refine ⟨fun H ↦ ⟨(fun x : X ↦ closure {x}) '' s, ?_, ?_⟩, fun ⟨S, hS, e⟩ ↦ e ▸
     stableUnderSpecialization_sUnion S (fun x hx ↦ (hS x hx).stableUnderSpecialization)⟩
-  · rintro _ ⟨_, _, rfl⟩; exact isClosed_closure
-  · conv_rhs => rw [← H.Union_eq]
-    simp
+  rintro _ ⟨_, _, rfl⟩; exact isClosed_closure
+  conv_rhs => rw [← H.Union_eq]
+  simp
 
 /-- A set is stable under generalization iff it is an intersection of open sets. -/
 lemma stableUnderGeneralization_iff_exists_sInter_eq {s : Set X} :

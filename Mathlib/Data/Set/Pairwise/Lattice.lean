@@ -26,13 +26,13 @@ namespace Set
 theorem pairwise_iUnion {f : κ → Set α} (h : Directed (· ⊆ ·) f) :
     (⋃ n, f n).Pairwise r ↔ ∀ n, (f n).Pairwise r := by
   constructor
-  · intro H n
-    exact Pairwise.mono (subset_iUnion _ _) H
-  · intro H i hi j hj hij
-    rcases mem_iUnion.1 hi with ⟨m, hm⟩
-    rcases mem_iUnion.1 hj with ⟨n, hn⟩
-    rcases h m n with ⟨p, mp, np⟩
-    exact H p (mp hm) (np hn) hij
+  intro H n
+  exact Pairwise.mono (subset_iUnion _ _) H
+  intro H i hi j hj hij
+  rcases mem_iUnion.1 hi with ⟨m, hm⟩
+  rcases mem_iUnion.1 hj with ⟨n, hn⟩
+  rcases h m n with ⟨p, mp, np⟩
+  exact H p (mp hm) (np hn) hij
 
 theorem pairwise_sUnion {r : α → α → Prop} {s : Set (Set α)} (h : DirectedOn (· ⊆ ·) s) :
     (⋃₀ s).Pairwise r ↔ ∀ a ∈ s, Set.Pairwise a r := by
@@ -72,11 +72,11 @@ theorem PairwiseDisjoint.biUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → 
   obtain ⟨c, hc, ha⟩ := ha
   obtain ⟨d, hd, hb⟩ := hb
   obtain hcd | hcd := eq_or_ne (g c) (g d)
-  · exact hg d hd (hcd.subst ha) hb hab
+  exact hg d hd (hcd.subst ha) hb hab
   -- Porting note: the elaborator couldn't figure out `f` here.
-  · exact (hs hc hd <| ne_of_apply_ne _ hcd).mono
-      (le_iSup₂ (f := fun i (_ : i ∈ g c) => f i) a ha)
-      (le_iSup₂ (f := fun i (_ : i ∈ g d) => f i) b hb)
+  exact (hs hc hd <| ne_of_apply_ne _ hcd).mono
+    (le_iSup₂ (f := fun i (_ : i ∈ g c) => f i) a ha)
+    (le_iSup₂ (f := fun i (_ : i ∈ g d) => f i) b hb)
 
 /-- If the suprema of columns are pairwise disjoint and suprema of rows as well, then everything is
 pairwise disjoint. Not to be confused with `Set.PairwiseDisjoint.prod`. -/
@@ -87,12 +87,12 @@ theorem PairwiseDisjoint.prod_left {f : ι × ι' → α}
   rintro ⟨i, i'⟩ hi ⟨j, j'⟩ hj h
   rw [mem_prod] at hi hj
   obtain rfl | hij := eq_or_ne i j
-  · refine (ht hi.2 hj.2 <| (Prod.mk.inj_left _).ne_iff.1 h).mono ?_ ?_
-    · convert le_iSup₂ (α := α) i hi.1; rfl
-    · convert le_iSup₂ (α := α) i hj.1; rfl
-  · refine (hs hi.1 hj.1 hij).mono ?_ ?_
-    · convert le_iSup₂ (α := α) i' hi.2; rfl
-    · convert le_iSup₂ (α := α) j' hj.2; rfl
+  refine (ht hi.2 hj.2 <| (Prod.mk.inj_left _).ne_iff.1 h).mono ?_ ?_
+  convert le_iSup₂ (α := α) i hi.1; rfl
+  convert le_iSup₂ (α := α) i hj.1; rfl
+  refine (hs hi.1 hj.1 hij).mono ?_ ?_
+  convert le_iSup₂ (α := α) i' hi.2; rfl
+  convert le_iSup₂ (α := α) j' hj.2; rfl
 
 end CompleteLattice
 
@@ -108,8 +108,8 @@ theorem pairwiseDisjoint_prod_left {s : Set ι} {t : Set ι'} {f : ι × ι' →
       ⟨fun h => ⟨fun i hi j hj hij => ?_, fun i hi j hj hij => ?_⟩, fun h => h.1.prod_left h.2⟩ <;>
     simp_rw [Function.onFun, iSup_disjoint_iff, disjoint_iSup_iff] <;>
     intro i' hi' j' hj'
-  · exact h (mk_mem_prod hi hi') (mk_mem_prod hj hj') (ne_of_apply_ne Prod.fst hij)
-  · exact h (mk_mem_prod hi' hi) (mk_mem_prod hj' hj) (ne_of_apply_ne Prod.snd hij)
+  exact h (mk_mem_prod hi hi') (mk_mem_prod hj hj') (ne_of_apply_ne Prod.fst hij)
+  exact h (mk_mem_prod hi' hi) (mk_mem_prod hj' hj) (ne_of_apply_ne Prod.snd hij)
 
 end Frame
 
@@ -156,8 +156,8 @@ theorem pairwiseDisjoint_unique {y : α}
     (h_disjoint : PairwiseDisjoint s f)
     (hy : y ∈ (⋃ i ∈ s, f i)) : ∃! i, i ∈ s ∧ y ∈ f i := by
   refine exists_unique_of_exists_of_unique ?ex ?unique
-  · simpa only [mem_iUnion, exists_prop] using hy
-  · rintro i j ⟨his, hi⟩ ⟨hjs, hj⟩
-    exact h_disjoint.elim his hjs <| not_disjoint_iff.mpr ⟨y, ⟨hi, hj⟩⟩
+  simpa only [mem_iUnion, exists_prop] using hy
+  rintro i j ⟨his, hi⟩ ⟨hjs, hj⟩
+  exact h_disjoint.elim his hjs <| not_disjoint_iff.mpr ⟨y, ⟨hi, hj⟩⟩
 
 end

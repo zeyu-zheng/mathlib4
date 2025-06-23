@@ -182,8 +182,8 @@ theorem length_Ioc (a b : ℝ) : f.length (Ioc a b) = ofReal (f b - f a) := by
     le_antisymm (iInf_le_of_le a <| iInf₂_le b Subset.rfl)
       (le_iInf fun a' => le_iInf fun b' => le_iInf fun h => ENNReal.coe_le_coe.2 ?_)
   rcases le_or_lt b a with ab | ab
-  · rw [Real.toNNReal_of_nonpos (sub_nonpos.2 (f.mono ab))]
-    apply zero_le
+  rw [Real.toNNReal_of_nonpos (sub_nonpos.2 (f.mono ab))]
+  apply zero_le
   cases' (Ioc_subset_Ioc_iff ab).1 h with h₁ h₂
   exact Real.toNNReal_le_toNNReal (sub_le_sub (f.mono h₁) (f.mono h₂))
 
@@ -220,8 +220,8 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b
   clear ss b
   refine fun s => Finset.strongInductionOn s fun s IH b cv => ?_
   rcases le_total b a with ab | ab
-  · rw [ENNReal.ofReal_eq_zero.2 (sub_nonpos.2 (f.mono ab))]
-    exact zero_le _
+  rw [ENNReal.ofReal_eq_zero.2 (sub_nonpos.2 (f.mono ab))]
+  exact zero_le _
   have := cv ⟨ab, le_rfl⟩
   simp only [Finset.mem_coe, gt_iff_lt, not_lt, mem_iUnion, mem_Ioo, exists_and_left,
     exists_prop] at this
@@ -230,11 +230,11 @@ theorem length_subadditive_Icc_Ioo {a b : ℝ} {c d : ℕ → ℝ} (ss : Icc a b
   rw [Finset.coe_insert, biUnion_insert] at cv
   rw [Finset.sum_insert (Finset.not_mem_erase _ _)]
   refine le_trans ?_ (add_le_add_left (IH _ (Finset.erase_ssubset is) (c i) ?_) _)
-  · refine le_trans (ENNReal.ofReal_le_ofReal ?_) ENNReal.ofReal_add_le
-    rw [sub_add_sub_cancel]
-    exact sub_le_sub_right (f.mono bd.le) _
-  · rintro x ⟨h₁, h₂⟩
-    exact (cv ⟨h₁, le_trans h₂ (le_of_lt cb)⟩).resolve_left (mt And.left (not_lt_of_le h₂))
+  refine le_trans (ENNReal.ofReal_le_ofReal ?_) ENNReal.ofReal_add_le
+  rw [sub_add_sub_cancel]
+  exact sub_le_sub_right (f.mono bd.le) _
+  rintro x ⟨h₁, h₂⟩
+  exact (cv ⟨h₁, le_trans h₂ (le_of_lt cb)⟩).resolve_left (mt And.left (not_lt_of_le h₂))
 
 @[simp]
 theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) := by
@@ -309,16 +309,16 @@ theorem measurableSet_Ioi {c : ℝ} : MeasurableSet[f.outer.caratheodory] (Ioi c
       (add_le_add (f.length_mono <| inter_subset_inter_left _ h)
         (f.length_mono <| diff_subset_diff_left h)) ?_
   rcases le_total a c with hac | hac <;> rcases le_total b c with hbc | hbc
-  · simp only [Ioc_inter_Ioi, f.length_Ioc, hac, _root_.sup_eq_max, hbc, le_refl, Ioc_eq_empty,
-      max_eq_right, min_eq_left, Ioc_diff_Ioi, f.length_empty, zero_add, not_lt]
-  · simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right,
-      _root_.sup_eq_max, ← ENNReal.ofReal_add, f.mono hac, f.mono hbc, sub_nonneg,
-      sub_add_sub_cancel, le_refl,
-      max_eq_right]
-  · simp only [hbc, le_refl, Ioc_eq_empty, Ioc_inter_Ioi, min_eq_left, Ioc_diff_Ioi, f.length_empty,
-      zero_add, or_true_iff, le_sup_iff, f.length_Ioc, not_lt]
-  · simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right, _root_.sup_eq_max,
-      le_refl, Ioc_eq_empty, add_zero, max_eq_left, f.length_empty, not_lt]
+  simp only [Ioc_inter_Ioi, f.length_Ioc, hac, _root_.sup_eq_max, hbc, le_refl, Ioc_eq_empty,
+    max_eq_right, min_eq_left, Ioc_diff_Ioi, f.length_empty, zero_add, not_lt]
+  simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right,
+    _root_.sup_eq_max, ← ENNReal.ofReal_add, f.mono hac, f.mono hbc, sub_nonneg,
+    sub_add_sub_cancel, le_refl,
+    max_eq_right]
+  simp only [hbc, le_refl, Ioc_eq_empty, Ioc_inter_Ioi, min_eq_left, Ioc_diff_Ioi, f.length_empty,
+    zero_add, or_true_iff, le_sup_iff, f.length_Ioc, not_lt]
+  simp only [hac, hbc, Ioc_inter_Ioi, Ioc_diff_Ioi, f.length_Ioc, min_eq_right, _root_.sup_eq_max,
+    le_refl, Ioc_eq_empty, add_zero, max_eq_left, f.length_empty, not_lt]
 
 theorem outer_trim : f.outer.trim = f.outer := by
   refine le_antisymm (fun s => ?_) (OuterMeasure.le_trim _)
@@ -378,8 +378,8 @@ theorem measure_singleton (a : ℝ) : f.measure {a} = ofReal (f a - leftLim f a)
   have L1 : Tendsto (fun n => f.measure (Ioc (u n) a)) atTop (𝓝 (f.measure {a})) := by
     rw [A]
     refine tendsto_measure_iInter (fun n => measurableSet_Ioc) (fun m n hmn => ?_) ?_
-    · exact Ioc_subset_Ioc (u_mono.monotone hmn) le_rfl
-    · exact ⟨0, by simpa only [measure_Ioc] using ENNReal.ofReal_ne_top⟩
+    exact Ioc_subset_Ioc (u_mono.monotone hmn) le_rfl
+    exact ⟨0, by simpa only [measure_Ioc] using ENNReal.ofReal_ne_top⟩
   have L2 :
       Tendsto (fun n => f.measure (Ioc (u n) a)) atTop (𝓝 (ofReal (f a - leftLim f a))) := by
     simp only [measure_Ioc]
@@ -394,39 +394,39 @@ theorem measure_singleton (a : ℝ) : f.measure {a} = ofReal (f a - leftLim f a)
 @[simp]
 theorem measure_Icc (a b : ℝ) : f.measure (Icc a b) = ofReal (f b - leftLim f a) := by
   rcases le_or_lt a b with (hab | hab)
-  · have A : Disjoint {a} (Ioc a b) := by simp
-    simp [← Icc_union_Ioc_eq_Icc le_rfl hab, -singleton_union, ← ENNReal.ofReal_add,
-      f.mono.leftLim_le, measure_union A measurableSet_Ioc, f.mono hab]
-  · simp only [hab, measure_empty, Icc_eq_empty, not_le]
-    symm
-    simp [ENNReal.ofReal_eq_zero, f.mono.le_leftLim hab]
+  have A : Disjoint {a} (Ioc a b) := by simp
+  simp [← Icc_union_Ioc_eq_Icc le_rfl hab, -singleton_union, ← ENNReal.ofReal_add,
+    f.mono.leftLim_le, measure_union A measurableSet_Ioc, f.mono hab]
+  simp only [hab, measure_empty, Icc_eq_empty, not_le]
+  symm
+  simp [ENNReal.ofReal_eq_zero, f.mono.le_leftLim hab]
 
 @[simp]
 theorem measure_Ioo {a b : ℝ} : f.measure (Ioo a b) = ofReal (leftLim f b - f a) := by
   rcases le_or_lt b a with (hab | hab)
-  · simp only [hab, measure_empty, Ioo_eq_empty, not_lt]
-    symm
-    simp [ENNReal.ofReal_eq_zero, f.mono.leftLim_le hab]
-  · have A : Disjoint (Ioo a b) {b} := by simp
-    have D : f b - f a = f b - leftLim f b + (leftLim f b - f a)
-    abel
-    have := f.measure_Ioc a b
-    simp only [← Ioo_union_Icc_eq_Ioc hab le_rfl, measure_singleton,
-      measure_union A (measurableSet_singleton b), Icc_self] at this
-    rw [D, ENNReal.ofReal_add, add_comm] at this
-    · simpa only [ENNReal.add_right_inj ENNReal.ofReal_ne_top]
-    · simp only [f.mono.leftLim_le le_rfl, sub_nonneg]
-    · simp only [f.mono.le_leftLim hab, sub_nonneg]
+  simp only [hab, measure_empty, Ioo_eq_empty, not_lt]
+  symm
+  simp [ENNReal.ofReal_eq_zero, f.mono.leftLim_le hab]
+  have A : Disjoint (Ioo a b) {b} := by simp
+  have D : f b - f a = f b - leftLim f b + (leftLim f b - f a)
+  abel
+  have := f.measure_Ioc a b
+  simp only [← Ioo_union_Icc_eq_Ioc hab le_rfl, measure_singleton,
+    measure_union A (measurableSet_singleton b), Icc_self] at this
+  rw [D, ENNReal.ofReal_add, add_comm] at this
+  simpa only [ENNReal.add_right_inj ENNReal.ofReal_ne_top]
+  simp only [f.mono.leftLim_le le_rfl, sub_nonneg]
+  simp only [f.mono.le_leftLim hab, sub_nonneg]
 
 @[simp]
 theorem measure_Ico (a b : ℝ) : f.measure (Ico a b) = ofReal (leftLim f b - leftLim f a) := by
   rcases le_or_lt b a with (hab | hab)
-  · simp only [hab, measure_empty, Ico_eq_empty, not_lt]
-    symm
-    simp [ENNReal.ofReal_eq_zero, f.mono.leftLim hab]
-  · have A : Disjoint {a} (Ioo a b) := by simp
-    simp [← Icc_union_Ioo_eq_Ico le_rfl hab, -singleton_union, hab.ne, f.mono.leftLim_le,
-      measure_union A measurableSet_Ioo, f.mono.le_leftLim hab, ← ENNReal.ofReal_add]
+  simp only [hab, measure_empty, Ico_eq_empty, not_lt]
+  symm
+  simp [ENNReal.ofReal_eq_zero, f.mono.leftLim hab]
+  have A : Disjoint {a} (Ioo a b) := by simp
+  simp [← Icc_union_Ioo_eq_Ico le_rfl hab, -singleton_union, hab.ne, f.mono.leftLim_le,
+    measure_union A measurableSet_Ioo, f.mono.le_leftLim hab, ← ENNReal.ofReal_add]
 
 theorem measure_Iic {l : ℝ} (hf : Tendsto f atBot (𝓝 l)) (x : ℝ) :
     f.measure (Iic x) = ofReal (f x - l) := by
@@ -466,11 +466,11 @@ lemma eq_of_measure_of_tendsto_atBot (g : StieltjesFunction) {l : ℝ}
   ext x
   have hf := measure_Iic f hfl x
   rw [hfg, measure_Iic g hgl x, ENNReal.ofReal_eq_ofReal_iff, eq_comm] at hf
-  · simpa using hf
-  · rw [sub_nonneg]
-    exact Monotone.le_of_tendsto g.mono hgl x
-  · rw [sub_nonneg]
-    exact Monotone.le_of_tendsto f.mono hfl x
+  simpa using hf
+  rw [sub_nonneg]
+  exact Monotone.le_of_tendsto g.mono hgl x
+  rw [sub_nonneg]
+  exact Monotone.le_of_tendsto f.mono hfl x
 
 lemma eq_of_measure_of_eq (g : StieltjesFunction) {y : ℝ}
     (hfg : f.measure = g.measure) (hy : f y = g y) :
@@ -480,19 +480,19 @@ lemma eq_of_measure_of_eq (g : StieltjesFunction) {y : ℝ}
   | inl hxy =>
     have hf := measure_Ioc f x y
     rw [hfg, measure_Ioc g x y, ENNReal.ofReal_eq_ofReal_iff, eq_comm, hy] at hf
-    · simpa using hf
-    · rw [sub_nonneg]
-      exact g.mono hxy
-    · rw [sub_nonneg]
-      exact f.mono hxy
+    simpa using hf
+    rw [sub_nonneg]
+    exact g.mono hxy
+    rw [sub_nonneg]
+    exact f.mono hxy
   | inr hxy =>
     have hf := measure_Ioc f y x
     rw [hfg, measure_Ioc g y x, ENNReal.ofReal_eq_ofReal_iff, eq_comm, hy] at hf
-    · simpa using hf
-    · rw [sub_nonneg]
-      exact g.mono hxy
-    · rw [sub_nonneg]
-      exact f.mono hxy
+    simpa using hf
+    rw [sub_nonneg]
+    exact g.mono hxy
+    rw [sub_nonneg]
+    exact f.mono hxy
 
 @[simp]
 lemma measure_const (c : ℝ) : (StieltjesFunction.const c).measure = 0 :=

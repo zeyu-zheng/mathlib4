@@ -406,8 +406,8 @@ theorem of_inverse {f' : Y → X} (h : Continuous f') (l_inv : LeftInverse f f')
 theorem of_nonempty (h : ∀ s, IsClosed s → s.Nonempty → IsClosed (f '' s)) :
     IsClosedMap f := by
   intro s hs; rcases eq_empty_or_nonempty s with h2s | h2s
-  · simp_rw [h2s, image_empty, isClosed_empty]
-  · exact h s hs h2s
+  simp_rw [h2s, image_empty, isClosed_empty]
+  exact h s hs h2s
 
 theorem isClosed_range (hf : IsClosedMap f) : IsClosed (range f) :=
   @image_univ _ _ f ▸ hf _ isClosed_univ

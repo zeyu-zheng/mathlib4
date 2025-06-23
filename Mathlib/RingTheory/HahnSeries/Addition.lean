@@ -182,11 +182,11 @@ theorem leadingCoeff_add_eq_left {Γ} [LinearOrder Γ] {x y : HahnSeries Γ R}
   have hx : x ≠ 0 := ne_zero_iff_orderTop.mpr hxy.ne_top
   have ho : (x + y).orderTop = x.orderTop := orderTop_add_eq_left hxy
   by_cases h : x + y = 0
-  · rw [h, orderTop_zero] at ho
-    rw [h, orderTop_eq_top_iff.mp ho.symm]
-  · rw [orderTop_of_ne h, orderTop_of_ne hx, WithTop.coe_eq_coe] at ho
-    rw [leadingCoeff_of_ne h, leadingCoeff_of_ne hx, ho, add_coeff,
-      coeff_eq_zero_of_lt_orderTop (lt_of_eq_of_lt (orderTop_of_ne hx).symm hxy), add_zero]
+  rw [h, orderTop_zero] at ho
+  rw [h, orderTop_eq_top_iff.mp ho.symm]
+  rw [orderTop_of_ne h, orderTop_of_ne hx, WithTop.coe_eq_coe] at ho
+  rw [leadingCoeff_of_ne h, leadingCoeff_of_ne hx, ho, add_coeff,
+    coeff_eq_zero_of_lt_orderTop (lt_of_eq_of_lt (orderTop_of_ne hx).symm hxy), add_zero]
 
 theorem leadingCoeff_add_eq_right {Γ} [LinearOrder Γ] {x y : HahnSeries Γ R}
     (hxy : y.orderTop < x.orderTop) : (x + y).leadingCoeff = y.leadingCoeff := by
@@ -217,9 +217,9 @@ theorem embDomain_add (f : Γ ↪o Γ') (x y : HahnSeries Γ R) :
     embDomain f (x + y) = embDomain f x + embDomain f y := by
   ext g
   by_cases hg : g ∈ Set.range f
-  · obtain ⟨a, rfl⟩ := hg
-    simp
-  · simp [embDomain_notin_range hg]
+  obtain ⟨a, rfl⟩ := hg
+  simp
+  simp [embDomain_notin_range hg]
 
 end Domain
 
@@ -275,7 +275,7 @@ theorem orderTop_neg {x : HahnSeries Γ R} : (-x).orderTop = x.orderTop := by
 @[simp]
 theorem order_neg [Zero Γ] {f : HahnSeries Γ R} : (-f).order = f.order := by
   by_cases hf : f = 0
-  · simp only [hf, neg_zero]
+  simp only [hf, neg_zero]
   simp only [order, support_neg, neg_eq_zero]
 
 theorem min_orderTop_le_orderTop_sub {Γ} [LinearOrder Γ] {x y : HahnSeries Γ R} :
@@ -325,11 +325,11 @@ instance : SMulZeroClass R (HahnSeries Γ V) :=
 
 theorem orderTop_smul_not_lt (r : R) (x : HahnSeries Γ V) : ¬ (r • x).orderTop < x.orderTop := by
   by_cases hrx : r • x = 0
-  · rw [hrx, orderTop_zero]
-    exact not_top_lt
-  · simp only [orderTop_of_ne hrx, orderTop_of_ne <| right_ne_zero_of_smul hrx, WithTop.coe_lt_coe]
-    exact Set.IsWF.min_of_subset_not_lt_min
-      (Function.support_smul_subset_right (fun _ => r) x.coeff)
+  rw [hrx, orderTop_zero]
+  exact not_top_lt
+  simp only [orderTop_of_ne hrx, orderTop_of_ne <| right_ne_zero_of_smul hrx, WithTop.coe_lt_coe]
+  exact Set.IsWF.min_of_subset_not_lt_min
+    (Function.support_smul_subset_right (fun _ => r) x.coeff)
 
 theorem order_smul_not_lt [Zero Γ] (r : R) (x : HahnSeries Γ V) (h : r • x ≠ 0) :
     ¬ (r • x).order < x.order := by
@@ -410,9 +410,9 @@ theorem embDomain_smul (f : Γ ↪o Γ') (r : R) (x : HahnSeries Γ R) :
     embDomain f (r • x) = r • embDomain f x := by
   ext g
   by_cases hg : g ∈ Set.range f
-  · obtain ⟨a, rfl⟩ := hg
-    simp
-  · simp [embDomain_notin_range hg]
+  obtain ⟨a, rfl⟩ := hg
+  simp
+  simp [embDomain_notin_range hg]
 
 /-- Extending the domain of Hahn series is a linear map. -/
 @[simps]

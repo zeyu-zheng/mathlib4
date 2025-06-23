@@ -213,10 +213,10 @@ theorem skyscraperPresheaf_isSheaf : (skyscraperPresheaf p₀ A).IsSheaf := by
         (Presheaf.isSheaf_on_punit_of_isTerminal _ (by
           dsimp [skyscraperPresheaf]
           rw [if_neg]
-          · exact terminalIsTerminal
-          · #adaptation_note /-- 2024-03-24
-            Previously the universe annotation was not needed here. -/
-            exact Set.not_mem_empty PUnit.unit.{u+1})))
+          exact terminalIsTerminal
+          #adaptation_note /-- 2024-03-24
+          Previously the universe annotation was not needed here. -/
+          exact Set.not_mem_empty PUnit.unit.{u+1})))
 
 /--
 The skyscraper presheaf supported at `p₀` with value `A` is the sheaf that assigns `A` to all opens
@@ -284,9 +284,9 @@ theorem to_skyscraper_fromStalk {𝓕 : Presheaf C X} {c : C} (f : 𝓕 ⟶ skys
   ext U
   dsimp
   split_ifs with h
-  · erw [← Category.assoc, colimit.ι_desc, Category.assoc, eqToHom_trans, eqToHom_refl,
-      Category.comp_id]
-  · exact ((if_neg h).symm.ndrec terminalIsTerminal).hom_ext ..
+  erw [← Category.assoc, colimit.ι_desc, Category.assoc, eqToHom_trans, eqToHom_refl,
+    Category.comp_id]
+  exact ((if_neg h).symm.ndrec terminalIsTerminal).hom_ext ..
 
 theorem fromStalk_to_skyscraper {𝓕 : Presheaf C X} {c : C} (f : 𝓕.stalk p₀ ⟶ c) :
     fromStalk p₀ (toSkyscraperPresheaf _ f) = f :=

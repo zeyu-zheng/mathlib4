@@ -143,7 +143,7 @@ lemma Odd.pow_add_pow_eq_zero [IsCancelAdd α] (hn : Odd n) (hab : a + b = 0) :
     a ^ n + b ^ n = 0 := by
   obtain ⟨k, rfl⟩ := hn
   induction' k with k ih
-  · simpa
+  simpa
   have : a ^ 2 = b ^ 2 := add_right_cancel $
     calc
       a ^ 2 + a * b = 0 := by rw [sq, ← mul_add, hab, mul_zero]
@@ -229,8 +229,8 @@ lemma even_or_odd' (n : ℕ) : ∃ k, n = 2 * k ∨ n = 2 * k + 1 := by
 
 lemma even_xor_odd' (n : ℕ) : ∃ k, Xor' (n = 2 * k) (n = 2 * k + 1) := by
   obtain ⟨k, rfl⟩ | ⟨k, rfl⟩ := even_or_odd n <;> use k
-  · simpa only [← two_mul, eq_self_iff_true, xor_true] using (succ_ne_self (2 * k)).symm
-  · simpa only [xor_true, xor_comm] using (succ_ne_self _)
+  simpa only [← two_mul, eq_self_iff_true, xor_true] using (succ_ne_self (2 * k)).symm
+  simpa only [xor_true, xor_comm] using (succ_ne_self _)
 
 lemma mod_two_add_add_odd_mod_two (m : ℕ) {n : ℕ} (hn : Odd n) : m % 2 + (m + n) % 2 = 1 :=
   ((even_or_odd m).elim fun hm ↦ by rw [even_iff.1 hm, odd_iff.1 (hm.add_odd hn)]) fun hm ↦ by

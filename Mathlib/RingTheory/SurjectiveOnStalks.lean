@@ -42,25 +42,25 @@ lemma surjective_localRingHom_iff (P : Ideal S) [P.IsPrime] :
     Function.Surjective (Localization.localRingHom _ P f rfl) ↔
       ∀ s : S, ∃ x r : R, ∃ c ∉ P, f r ∉ P ∧ c * f r * s = c * f x := by
   constructor
-  · intro H y
-    obtain ⟨a, ha⟩ := H (IsLocalization.mk' _ y (1 : P.primeCompl))
-    obtain ⟨a, t, rfl⟩ := IsLocalization.mk'_surjective (P.comap f).primeCompl a
-    rw [Localization.localRingHom_mk', IsLocalization.mk'_eq_iff_eq,
-      Submonoid.coe_one, one_mul, IsLocalization.eq_iff_exists P.primeCompl] at ha
-    obtain ⟨c, hc⟩ := ha
-    simp only [← mul_assoc] at hc
-    exact ⟨_, _, _, c.2, t.2, hc.symm⟩
-  · refine fun H y ↦ Localization.ind (fun ⟨y, t, h⟩ ↦ ?_) y
-    simp only
-    obtain ⟨yx, ys, yc, hyc, hy, ey⟩ := H y
-    obtain ⟨tx, ts, yt, hyt, ht, et⟩ := H t
-    refine ⟨Localization.mk (yx * ts) ⟨ys * tx, Submonoid.mul_mem _ hy ?_⟩, ?_⟩
-    · exact fun H ↦ mul_mem (P.primeCompl.mul_mem hyt ht) h (et ▸ Ideal.mul_mem_left _ yt H)
-    · simp only [Localization.mk_eq_mk', Localization.localRingHom_mk', map_mul f,
-        IsLocalization.mk'_eq_iff_eq, IsLocalization.eq_iff_exists P.primeCompl]
-      refine ⟨⟨yc, hyc⟩ * ⟨yt, hyt⟩, ?_⟩
-      simp only [Submonoid.coe_mul]
-      convert congr($(ey.symm) * $(et)) using 1 <;> ring
+  intro H y
+  obtain ⟨a, ha⟩ := H (IsLocalization.mk' _ y (1 : P.primeCompl))
+  obtain ⟨a, t, rfl⟩ := IsLocalization.mk'_surjective (P.comap f).primeCompl a
+  rw [Localization.localRingHom_mk', IsLocalization.mk'_eq_iff_eq,
+    Submonoid.coe_one, one_mul, IsLocalization.eq_iff_exists P.primeCompl] at ha
+  obtain ⟨c, hc⟩ := ha
+  simp only [← mul_assoc] at hc
+  exact ⟨_, _, _, c.2, t.2, hc.symm⟩
+  refine fun H y ↦ Localization.ind (fun ⟨y, t, h⟩ ↦ ?_) y
+  simp only
+  obtain ⟨yx, ys, yc, hyc, hy, ey⟩ := H y
+  obtain ⟨tx, ts, yt, hyt, ht, et⟩ := H t
+  refine ⟨Localization.mk (yx * ts) ⟨ys * tx, Submonoid.mul_mem _ hy ?_⟩, ?_⟩
+  exact fun H ↦ mul_mem (P.primeCompl.mul_mem hyt ht) h (et ▸ Ideal.mul_mem_left _ yt H)
+  simp only [Localization.mk_eq_mk', Localization.localRingHom_mk', map_mul f,
+    IsLocalization.mk'_eq_iff_eq, IsLocalization.eq_iff_exists P.primeCompl]
+  refine ⟨⟨yc, hyc⟩ * ⟨yt, hyt⟩, ?_⟩
+  simp only [Submonoid.coe_mul]
+  convert congr($(ey.symm) * $(et)) using 1 <;> ring
 
 lemma surjectiveOnStalks_iff_forall_ideal :
     f.SurjectiveOnStalks ↔
@@ -162,15 +162,15 @@ lemma SurjectiveOnStalks.baseChange
   intro x
   obtain ⟨t, r, a, ht, e⟩ := hf.exists_mul_eq_tmul x (J.comap g) inferInstance
   refine ⟨a, algebraMap _ _ r, 1 ⊗ₜ (r • t), ht, ?_, ?_⟩
-  · intro H
-    simp only [Algebra.algebraMap_eq_smul_one (A := S), Algebra.TensorProduct.algebraMap_apply,
-      Algebra.id.map_eq_id, id_apply, smul_tmul, ← Algebra.algebraMap_eq_smul_one (A := T)] at H
-    rw [Ideal.mem_comap, Algebra.smul_def, g.map_mul] at ht
-    exact ht (J.mul_mem_right _ H)
-  · simp only [tmul_smul, Algebra.TensorProduct.algebraMap_apply, Algebra.id.map_eq_id,
-      RingHomCompTriple.comp_apply, Algebra.smul_mul_assoc, Algebra.TensorProduct.tmul_mul_tmul,
-      one_mul, mul_one, id_apply, ← e]
-    rw [Algebra.algebraMap_eq_smul_one, ← smul_tmul', smul_mul_assoc]
+  intro H
+  simp only [Algebra.algebraMap_eq_smul_one (A := S), Algebra.TensorProduct.algebraMap_apply,
+    Algebra.id.map_eq_id, id_apply, smul_tmul, ← Algebra.algebraMap_eq_smul_one (A := T)] at H
+  rw [Ideal.mem_comap, Algebra.smul_def, g.map_mul] at ht
+  exact ht (J.mul_mem_right _ H)
+  simp only [tmul_smul, Algebra.TensorProduct.algebraMap_apply, Algebra.id.map_eq_id,
+    RingHomCompTriple.comp_apply, Algebra.smul_mul_assoc, Algebra.TensorProduct.tmul_mul_tmul,
+    one_mul, mul_one, id_apply, ← e]
+  rw [Algebra.algebraMap_eq_smul_one, ← smul_tmul', smul_mul_assoc]
 
 lemma surjectiveOnStalks_iff_of_isLocalRingHom [LocalRing S] [IsLocalRingHom f] :
     f.SurjectiveOnStalks ↔ Function.Surjective f := by

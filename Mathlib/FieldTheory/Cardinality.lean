@@ -43,7 +43,7 @@ theorem Fintype.isPrimePow_card_of_field {α} [Fintype α] [Field α] : IsPrimeP
   letI : Algebra (ZMod p) α := ZMod.algebra _ _
   let b := IsNoetherian.finsetBasis (ZMod p) α
   rw [Module.card_fintype b, ZMod.card, isPrimePow_pow_iff]
-  · exact hp.1.isPrimePow
+  exact hp.1.isPrimePow
   rw [← FiniteDimensional.finrank_eq_card_basis b]
   exact FiniteDimensional.finrank_pos.ne'
 
@@ -66,15 +66,15 @@ theorem Infinite.nonempty_field {α : Type u} [Infinite α] : Nonempty (Field α
     exact ⟨e.field⟩
   rw [← IsLocalization.card (MvPolynomial α <| ULift.{u} ℚ)⁰ K le_rfl]
   apply le_antisymm
-  · refine
-      ⟨⟨fun a => MvPolynomial.monomial (Finsupp.single a 1) (1 : ULift.{u} ℚ), fun x y h => ?_⟩⟩
-    simpa [MvPolynomial.monomial_eq_monomial_iff, Finsupp.single_eq_single_iff] using h
-  · simp
+  refine
+    ⟨⟨fun a => MvPolynomial.monomial (Finsupp.single a 1) (1 : ULift.{u} ℚ), fun x y h => ?_⟩⟩
+  simpa [MvPolynomial.monomial_eq_monomial_iff, Finsupp.single_eq_single_iff] using h
+  simp
 
 /-- There is a field structure on type if and only if its cardinality is a prime power. -/
 theorem Field.nonempty_iff {α : Type u} : Nonempty (Field α) ↔ IsPrimePow #α := by
   rw [Cardinal.isPrimePow_iff]
   cases' fintypeOrInfinite α with h h
-  · simpa only [Cardinal.mk_fintype, Nat.cast_inj, exists_eq_left',
-      (Cardinal.nat_lt_aleph0 _).not_le, false_or_iff] using Fintype.nonempty_field_iff
-  · simpa only [← Cardinal.infinite_iff, h, true_or_iff, iff_true_iff] using Infinite.nonempty_field
+  simpa only [Cardinal.mk_fintype, Nat.cast_inj, exists_eq_left',
+    (Cardinal.nat_lt_aleph0 _).not_le, false_or_iff] using Fintype.nonempty_field_iff
+  simpa only [← Cardinal.infinite_iff, h, true_or_iff, iff_true_iff] using Infinite.nonempty_field

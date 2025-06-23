@@ -224,19 +224,19 @@ theorem Colorable.of_embedding {V' : Type*} {G' : SimpleGraph V'} (f : G ↪g G'
 theorem colorable_iff_exists_bdd_nat_coloring (n : ℕ) :
     G.Colorable n ↔ ∃ C : G.Coloring ℕ, ∀ v, C v < n := by
   constructor
-  · rintro hc
-    have C : G.Coloring (Fin n) := hc.toColoring (by simp)
-    let f := Embedding.completeGraph (@Fin.valEmbedding n)
-    use f.toHom.comp C
-    intro v
-    cases' C with color valid
-    exact Fin.is_lt (color v)
-  · rintro ⟨C, Cf⟩
-    refine ⟨Coloring.mk ?_ ?_⟩
-    · exact fun v => ⟨C v, Cf v⟩
-    · rintro v w hvw
-      simp only [Fin.mk_eq_mk, Ne]
-      exact C.valid hvw
+  rintro hc
+  have C : G.Coloring (Fin n) := hc.toColoring (by simp)
+  let f := Embedding.completeGraph (@Fin.valEmbedding n)
+  use f.toHom.comp C
+  intro v
+  cases' C with color valid
+  exact Fin.is_lt (color v)
+  rintro ⟨C, Cf⟩
+  refine ⟨Coloring.mk ?_ ?_⟩
+  exact fun v => ⟨C v, Cf v⟩
+  rintro v w hvw
+  simp only [Fin.mk_eq_mk, Ne]
+  exact C.valid hvw
 
 theorem colorable_set_nonempty_of_colorable {n : ℕ} (hc : G.Colorable n) :
     { n : ℕ | G.Colorable n }.Nonempty :=
@@ -254,7 +254,7 @@ theorem Colorable.chromaticNumber_le {n : ℕ} (hc : G.Colorable n) : G.chromati
 theorem chromaticNumber_ne_top_iff_exists : G.chromaticNumber ≠ ⊤ ↔ ∃ n, G.Colorable n := by
   rw [chromaticNumber]
   convert_to ⨅ n : {m | G.Colorable m}, (n : ℕ∞) ≠ ⊤ ↔ _
-  · rw [iInf_subtype]
+  rw [iInf_subtype]
   rw [← lt_top_iff_ne_top, ENat.iInf_coe_lt_top]
   simp
 
@@ -276,8 +276,8 @@ open Classical in
 theorem colorable_chromaticNumber {m : ℕ} (hc : G.Colorable m) :
     G.Colorable (ENat.toNat G.chromaticNumber) := by
   rw [hc.chromaticNumber_eq_sInf, Nat.sInf_def]
-  · apply Nat.find_spec
-  · exact colorable_set_nonempty_of_colorable hc
+  apply Nat.find_spec
+  exact colorable_set_nonempty_of_colorable hc
 
 theorem colorable_chromaticNumber_of_fintype (G : SimpleGraph V) [Finite V] :
     G.Colorable (ENat.toNat G.chromaticNumber) := by
@@ -345,18 +345,18 @@ open Classical in
 lemma card_le_chromaticNumber_iff_forall_surjective [Fintype α] :
     card α ≤ G.chromaticNumber ↔ ∀ C : G.Coloring α, Surjective C := by
   refine ⟨fun h C ↦ ?_, fun h ↦ ?_⟩
-  · rw [C.colorable.chromaticNumber_eq_sInf, Nat.cast_le] at h
-    intro i
-    by_contra! hi
-    let D : G.Coloring {a // a ≠ i} := ⟨fun v ↦ ⟨C v, hi v⟩, (C.valid · <| congr_arg Subtype.val ·)⟩
-    exact Nat.not_mem_of_lt_sInf ((Nat.sub_one_lt_of_lt <| card_pos_iff.2 ⟨i⟩).trans_le h)
-      ⟨G.recolorOfEquiv (equivOfCardEq <| by simp [Nat.pred_eq_sub_one]) D⟩
-  · simp only [chromaticNumber, Set.mem_setOf_eq, le_iInf_iff, Nat.cast_le, exists_prop]
-    rintro i ⟨C⟩
-    contrapose! h
-    refine ⟨G.recolorOfCardLE (by simpa using h.le) C, fun hC ↦ ?_⟩
-    dsimp at hC
-    simpa [h.not_le] using Fintype.card_le_of_surjective _ hC.of_comp
+  rw [C.colorable.chromaticNumber_eq_sInf, Nat.cast_le] at h
+  intro i
+  by_contra! hi
+  let D : G.Coloring {a // a ≠ i} := ⟨fun v ↦ ⟨C v, hi v⟩, (C.valid · <| congr_arg Subtype.val ·)⟩
+  exact Nat.not_mem_of_lt_sInf ((Nat.sub_one_lt_of_lt <| card_pos_iff.2 ⟨i⟩).trans_le h)
+    ⟨G.recolorOfEquiv (equivOfCardEq <| by simp [Nat.pred_eq_sub_one]) D⟩
+  simp only [chromaticNumber, Set.mem_setOf_eq, le_iInf_iff, Nat.cast_le, exists_prop]
+  rintro i ⟨C⟩
+  contrapose! h
+  refine ⟨G.recolorOfCardLE (by simpa using h.le) C, fun hC ↦ ?_⟩
+  dsimp at hC
+  simpa [h.not_le] using Fintype.card_le_of_surjective _ hC.of_comp
 
 lemma le_chromaticNumber_iff_forall_surjective :
     n ≤ G.chromaticNumber ↔ ∀ C : G.Coloring (Fin n), Surjective C := by
@@ -409,10 +409,10 @@ theorem CompleteBipartiteGraph.chromaticNumber {V W : Type*} [Nonempty V] [Nonem
   have h : (completeBipartiteGraph V W).Adj (Sum.inl v) (Sum.inr w)
   simp
   by_cases he : C (Sum.inl v) = b
-  · exact ⟨_, he⟩
+  exact ⟨_, he⟩
   by_cases he' : C (Sum.inr w) = b
-  · exact ⟨_, he'⟩
-  · simpa using two_lt_card_iff.2 ⟨_, _, _, C.valid h, he, he'⟩
+  exact ⟨_, he'⟩
+  simpa using two_lt_card_iff.2 ⟨_, _, _, C.valid h, he, he'⟩
 
 /-! ### Cliques -/
 
@@ -433,14 +433,14 @@ theorem IsClique.card_le_of_colorable {s : Finset V} (h : G.IsClique s) {n : ℕ
 theorem IsClique.card_le_chromaticNumber {s : Finset V} (h : G.IsClique s) :
     s.card ≤ G.chromaticNumber := by
   obtain (hc | hc) := eq_or_ne G.chromaticNumber ⊤
-  · rw [hc]
-    exact le_top
-  · have hc' := hc
-    rw [chromaticNumber_ne_top_iff_exists] at hc'
-    obtain ⟨n, c⟩ := hc'
-    rw [← ENat.coe_toNat_eq_self] at hc
-    rw [← hc, Nat.cast_le]
-    exact h.card_le_of_colorable (colorable_chromaticNumber c)
+  rw [hc]
+  exact le_top
+  have hc' := hc
+  rw [chromaticNumber_ne_top_iff_exists] at hc'
+  obtain ⟨n, c⟩ := hc'
+  rw [← ENat.coe_toNat_eq_self] at hc
+  rw [← hc, Nat.cast_le]
+  exact h.card_le_of_colorable (colorable_chromaticNumber c)
 
 protected theorem Colorable.cliqueFree {n m : ℕ} (hc : G.Colorable n) (hm : n < m) :
     G.CliqueFree m := by

@@ -438,18 +438,18 @@ theorem ModuleCat.eq_range_of_pseudoequal {R : Type*} [CommRing R] {G : ModuleCa
     (h : PseudoEqual G x y) : LinearMap.range x.hom = LinearMap.range y.hom := by
   obtain ⟨P, p, q, hp, hq, H⟩ := h
   refine Submodule.ext fun a => ⟨fun ha => ?_, fun ha => ?_⟩
-  · obtain ⟨a', ha'⟩ := ha
-    obtain ⟨a'', ha''⟩ := (ModuleCat.epi_iff_surjective p).1 hp a'
-    refine ⟨q a'', ?_⟩
-    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [← LinearMap.comp_apply, ← ModuleCat.comp_def, ← H,
-      ModuleCat.comp_def, LinearMap.comp_apply, ha'', ha']
-  · obtain ⟨a', ha'⟩ := ha
-    obtain ⟨a'', ha''⟩ := (ModuleCat.epi_iff_surjective q).1 hq a'
-    refine ⟨p a'', ?_⟩
-    -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
-    erw [← LinearMap.comp_apply, ← ModuleCat.comp_def, H, ModuleCat.comp_def, LinearMap.comp_apply,
-      ha'', ha']
+  obtain ⟨a', ha'⟩ := ha
+  obtain ⟨a'', ha''⟩ := (ModuleCat.epi_iff_surjective p).1 hp a'
+  refine ⟨q a'', ?_⟩
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [← LinearMap.comp_apply, ← ModuleCat.comp_def, ← H,
+    ModuleCat.comp_def, LinearMap.comp_apply, ha'', ha']
+  obtain ⟨a', ha'⟩ := ha
+  obtain ⟨a'', ha''⟩ := (ModuleCat.epi_iff_surjective q).1 hq a'
+  refine ⟨p a'', ?_⟩
+  -- This used to be `rw`, but we need `erw` after leanprover/lean4#2644
+  erw [← LinearMap.comp_apply, ← ModuleCat.comp_def, H, ModuleCat.comp_def, LinearMap.comp_apply,
+    ha'', ha']
 
 end Module
 

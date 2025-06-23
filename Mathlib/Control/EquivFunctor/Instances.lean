@@ -33,10 +33,10 @@ instance EquivFunctorFinset : EquivFunctor Finset where
   map_refl' α := by ext; simp
   map_trans' k h := by
     ext _ a; simp; constructor <;> intro h'
-    · let ⟨a, ha₁, ha₂⟩ := h'
-      rw [← ha₂]; simp; apply ha₁
-    · exists (Equiv.symm k) ((Equiv.symm h) a)
-      simp [h']
+    let ⟨a, ha₁, ha₂⟩ := h'
+    rw [← ha₂]; simp; apply ha₁
+    exists (Equiv.symm k) ((Equiv.symm h) a)
+    simp [h']
 
 instance EquivFunctorFintype : EquivFunctor Fintype where
   map e s := Fintype.ofBijective e e.bijective

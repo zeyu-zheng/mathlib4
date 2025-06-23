@@ -84,8 +84,8 @@ theorem realize_func (v : α → M) {n} (f : L.Functions n) (ts) :
 theorem realize_relabel {t : L.Term α} {g : α → β} {v : β → M} :
     (t.relabel g).realize v = t.realize (v ∘ g) := by
   induction' t with _ n f ts ih
-  · rfl
-  · simp [ih]
+  rfl
+  simp [ih]
 
 @[simp]
 theorem realize_liftAt {n n' m : ℕ} {t : L.Term (α ⊕ (Fin n))} {v : α ⊕ (Fin (n + n')) → M} :
@@ -110,8 +110,8 @@ theorem realize_functions_apply₂ {f : L.Functions 2} {t₁ t₂ : L.Term α} {
     (f.apply₂ t₁ t₂).realize v = funMap f ![t₁.realize v, t₂.realize v] := by
   rw [Functions.apply₂, Term.realize]
   refine congr rfl (funext (Fin.cases ?_ ?_))
-  · simp only [Matrix.cons_val_zero]
-  · simp only [Matrix.cons_val_succ, Matrix.cons_val_fin_one, forall_const]
+  simp only [Matrix.cons_val_zero]
+  simp only [Matrix.cons_val_succ, Matrix.cons_val_fin_one, forall_const]
 
 theorem realize_con {A : Set M} {a : A} {v : α → M} : (L.con a).term.realize v = a :=
   rfl
@@ -120,16 +120,16 @@ theorem realize_con {A : Set M} {a : A} {v : α → M} : (L.con a).term.realize 
 theorem realize_subst {t : L.Term α} {tf : α → L.Term β} {v : β → M} :
     (t.subst tf).realize v = t.realize fun a => (tf a).realize v := by
   induction' t with _ _ _ _ ih
-  · rfl
-  · simp [ih]
+  rfl
+  simp [ih]
 
 @[simp]
 theorem realize_restrictVar [DecidableEq α] {t : L.Term α} {s : Set α} (h : ↑t.varFinset ⊆ s)
     {v : α → M} : (t.restrictVar (Set.inclusion h)).realize (v ∘ (↑)) = t.realize v := by
   induction' t with _ _ _ _ ih
-  · rfl
-  · simp_rw [varFinset, Finset.coe_biUnion, Set.iUnion_subset_iff] at h
-    exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
+  rfl
+  simp_rw [varFinset, Finset.coe_biUnion, Set.iUnion_subset_iff] at h
+  exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
 
 @[simp]
 theorem realize_restrictVarLeft [DecidableEq α] {γ : Type*} {t : L.Term (α ⊕ γ)} {s : Set α}
@@ -137,41 +137,41 @@ theorem realize_restrictVarLeft [DecidableEq α] {γ : Type*} {t : L.Term (α �
     (t.restrictVarLeft (Set.inclusion h)).realize (Sum.elim (v ∘ (↑)) xs) =
       t.realize (Sum.elim v xs) := by
   induction' t with a _ _ _ ih
-  · cases a <;> rfl
-  · simp_rw [varFinsetLeft, Finset.coe_biUnion, Set.iUnion_subset_iff] at h
-    exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
+  cases a <;> rfl
+  simp_rw [varFinsetLeft, Finset.coe_biUnion, Set.iUnion_subset_iff] at h
+  exact congr rfl (funext fun i => ih i (h i (Finset.mem_univ i)))
 
 @[simp]
 theorem realize_constantsToVars [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M]
     {t : L[[α]].Term β} {v : β → M} :
     t.constantsToVars.realize (Sum.elim (fun a => ↑(L.con a)) v) = t.realize v := by
   induction' t with _ n f ts ih
-  · simp
-  · cases n
-    · cases f
-      · simp only [realize, ih, Nat.zero_eq, constantsOn, mk₂_Functions]
-        -- Porting note: below lemma does not work with simp for some reason
-        rw [withConstants_funMap_sum_inl]
-      · simp only [realize, constantsToVars, Sum.elim_inl, funMap_eq_coe_constants]
-        rfl
-    · cases' f with _ f
-      · simp only [realize, ih, constantsOn, mk₂_Functions]
-        -- Porting note: below lemma does not work with simp for some reason
-        rw [withConstants_funMap_sum_inl]
-      · exact isEmptyElim f
+  simp
+  cases n
+  cases f
+  simp only [realize, ih, Nat.zero_eq, constantsOn, mk₂_Functions]
+  -- Porting note: below lemma does not work with simp for some reason
+  rw [withConstants_funMap_sum_inl]
+  simp only [realize, constantsToVars, Sum.elim_inl, funMap_eq_coe_constants]
+  rfl
+  cases' f with _ f
+  simp only [realize, ih, constantsOn, mk₂_Functions]
+  -- Porting note: below lemma does not work with simp for some reason
+  rw [withConstants_funMap_sum_inl]
+  exact isEmptyElim f
 
 @[simp]
 theorem realize_varsToConstants [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M]
     {t : L.Term (α ⊕ β)} {v : β → M} :
     t.varsToConstants.realize v = t.realize (Sum.elim (fun a => ↑(L.con a)) v) := by
   induction' t with ab n f ts ih
-  · cases' ab with a b
-    -- Porting note: both cases were `simp [Language.con]`
-    · simp [Language.con, realize, funMap_eq_coe_constants]
-    · simp [realize, constantMap]
-  · simp only [realize, constantsOn, mk₂_Functions, ih]
-    -- Porting note: below lemma does not work with simp for some reason
-    rw [withConstants_funMap_sum_inl]
+  cases' ab with a b
+  -- Porting note: both cases were `simp [Language.con]`
+  simp [Language.con, realize, funMap_eq_coe_constants]
+  simp [realize, constantMap]
+  simp only [realize, constantsOn, mk₂_Functions, ih]
+  -- Porting note: below lemma does not work with simp for some reason
+  rw [withConstants_funMap_sum_inl]
 
 theorem realize_constantsVarsEquivLeft [L[[α]].Structure M]
     [(lhomWithConstants L α).IsExpansionOn M] {n} {t : L[[α]].Term (β ⊕ (Fin n))} {v : β → M}
@@ -192,8 +192,8 @@ namespace LHom
 theorem realize_onTerm [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpansionOn M] (t : L.Term α)
     (v : α → M) : (φ.onTerm t).realize v = t.realize v := by
   induction' t with _ n f ts ih
-  · rfl
-  · simp only [Term.realize, LHom.onTerm, LHom.map_onFunction, ih]
+  rfl
+  simp only [Term.realize, LHom.onTerm, LHom.map_onFunction, ih]
 
 end LHom
 
@@ -201,11 +201,11 @@ end LHom
 theorem Hom.realize_term (g : M →[L] N) {t : L.Term α} {v : α → M} :
     t.realize (g ∘ v) = g (t.realize v) := by
   induction t
-  · rfl
-  · rw [Term.realize, Term.realize, g.map_fun]
-    refine congr rfl ?_
-    ext x
-    simp [*]
+  rfl
+  rw [Term.realize, Term.realize, g.map_fun]
+  refine congr rfl ?_
+  ext x
+  simp [*]
 
 @[simp]
 theorem Embedding.realize_term {v : α → M} (t : L.Term α) (g : M ↪[L] N) :
@@ -259,8 +259,8 @@ theorem realize_inf : (φ ⊓ ψ).Realize v xs ↔ φ.Realize v xs ∧ ψ.Realiz
 theorem realize_foldr_inf (l : List (L.BoundedFormula α n)) (v : α → M) (xs : Fin n → M) :
     (l.foldr (· ⊓ ·) ⊤).Realize v xs ↔ ∀ φ ∈ l, BoundedFormula.Realize φ v xs := by
   induction' l with φ l ih
-  · simp
-  · simp [ih]
+  simp
+  simp [ih]
 
 @[simp]
 theorem realize_imp : (φ.imp ψ).Realize v xs ↔ φ.Realize v xs → ψ.Realize v xs := by
@@ -284,8 +284,8 @@ theorem realize_rel₂ {R : L.Relations 2} {t₁ t₂ : L.Term _} :
       RelMap R ![t₁.realize (Sum.elim v xs), t₂.realize (Sum.elim v xs)] := by
   rw [Relations.boundedFormula₂, realize_rel, iff_eq_eq]
   refine congr rfl (funext (Fin.cases ?_ ?_))
-  · simp only [Matrix.cons_val_zero]
-  · simp only [Matrix.cons_val_succ, Matrix.cons_val_fin_one, forall_const]
+  simp only [Matrix.cons_val_zero]
+  simp only [Matrix.cons_val_succ, Matrix.cons_val_fin_one, forall_const]
 
 @[simp]
 theorem realize_sup : (φ ⊔ ψ).Realize v xs ↔ φ.Realize v xs ∨ ψ.Realize v xs := by
@@ -296,9 +296,9 @@ theorem realize_sup : (φ ⊔ ψ).Realize v xs ↔ φ.Realize v xs ∨ ψ.Realiz
 theorem realize_foldr_sup (l : List (L.BoundedFormula α n)) (v : α → M) (xs : Fin n → M) :
     (l.foldr (· ⊔ ·) ⊥).Realize v xs ↔ ∃ φ ∈ l, BoundedFormula.Realize φ v xs := by
   induction' l with φ l ih
-  · simp
-  · simp_rw [List.foldr_cons, realize_sup, ih, List.mem_cons, or_and_right, exists_or,
-      exists_eq_left]
+  simp
+  simp_rw [List.foldr_cons, realize_sup, ih, List.mem_cons, or_and_right, exists_or,
+    exists_eq_left]
 
 @[simp]
 theorem realize_all : (all θ).Realize v xs ↔ ∀ a : M, θ.Realize v (Fin.snoc xs a) :=
@@ -328,11 +328,11 @@ theorem realize_mapTermRel_id [L'.Structure M]
     (h2 : ∀ (n) (R : L.Relations n) (x : Fin n → M), RelMap (fr n R) x = RelMap R x) :
     (φ.mapTermRel ft fr fun _ => id).Realize v' xs ↔ φ.Realize v xs := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih
-  · rfl
-  · simp [mapTermRel, Realize, h1]
-  · simp [mapTermRel, Realize, h1, h2]
-  · simp [mapTermRel, Realize, ih1, ih2]
-  · simp only [mapTermRel, Realize, ih, id]
+  rfl
+  simp [mapTermRel, Realize, h1]
+  simp [mapTermRel, Realize, h1, h2]
+  simp [mapTermRel, Realize, ih1, ih2]
+  simp only [mapTermRel, Realize, ih, id]
 
 theorem realize_mapTermRel_add_castLe [L'.Structure M] {k : ℕ}
     {ft : ∀ n, L.Term (α ⊕ (Fin n)) → L'.Term (β ⊕ (Fin (k + n)))}
@@ -346,11 +346,11 @@ theorem realize_mapTermRel_add_castLe [L'.Structure M] {k : ℕ}
     (φ.mapTermRel ft fr fun n => castLE (add_assoc _ _ _).symm.le).Realize v' xs ↔
       φ.Realize (v xs) (xs ∘ Fin.natAdd _) := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih
-  · rfl
-  · simp [mapTermRel, Realize, h1]
-  · simp [mapTermRel, Realize, h1, h2]
-  · simp [mapTermRel, Realize, ih1, ih2]
-  · simp [mapTermRel, Realize, ih, hv]
+  rfl
+  simp [mapTermRel, Realize, h1]
+  simp [mapTermRel, Realize, h1, h2]
+  simp [mapTermRel, Realize, ih1, ih2]
+  simp [mapTermRel, Realize, ih, hv]
 
 @[simp]
 theorem realize_relabel {m n : ℕ} {φ : L.BoundedFormula α n} {g : α → β ⊕ (Fin m)} {v : β → M}
@@ -365,28 +365,28 @@ theorem realize_liftAt {n n' m : ℕ} {φ : L.BoundedFormula α n} {v : α → M
       φ.Realize v (xs ∘ fun i => if ↑i < m then Fin.castAdd n' i else Fin.addNat i n') := by
   rw [liftAt]
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 k _ ih3
-  · simp [mapTermRel, Realize]
-  · simp [mapTermRel, Realize, realize_rel, realize_liftAt, Sum.elim_comp_map]
-  · simp [mapTermRel, Realize, realize_rel, realize_liftAt, Sum.elim_comp_map]
-  · simp only [mapTermRel, Realize, ih1 hmn, ih2 hmn]
-  · have h : k + 1 + n' = k + n' + 1 := by rw [add_assoc, add_comm 1 n', ← add_assoc]
-    simp only [mapTermRel, Realize, realize_castLE_of_eq h, ih3 (hmn.trans k.succ.le_succ)]
-    refine forall_congr' fun x => iff_eq_eq.mpr (congr rfl (funext (Fin.lastCases ?_ fun i => ?_)))
-    · simp only [Function.comp_apply, val_last, snoc_last]
-      by_cases h : k < m
-      · rw [if_pos h]
-        refine (congr rfl (Fin.ext ?_)).trans (snoc_last _ _)
-        simp only [coe_cast, coe_castAdd, val_last, self_eq_add_right]
-        refine le_antisymm
-          (le_of_add_le_add_left ((hmn.trans (Nat.succ_le_of_lt h)).trans ?_)) n'.zero_le
-        rw [add_zero]
-      · rw [if_neg h]
-        refine (congr rfl (Fin.ext ?_)).trans (snoc_last _ _)
-        simp
-    · simp only [Function.comp_apply, Fin.snoc_castSucc]
-      refine (congr rfl (Fin.ext ?_)).trans (snoc_castSucc _ _ _)
-      simp only [coe_castSucc, coe_cast]
-      split_ifs <;> simp
+  simp [mapTermRel, Realize]
+  simp [mapTermRel, Realize, realize_rel, realize_liftAt, Sum.elim_comp_map]
+  simp [mapTermRel, Realize, realize_rel, realize_liftAt, Sum.elim_comp_map]
+  simp only [mapTermRel, Realize, ih1 hmn, ih2 hmn]
+  have h : k + 1 + n' = k + n' + 1 := by rw [add_assoc, add_comm 1 n', ← add_assoc]
+  simp only [mapTermRel, Realize, realize_castLE_of_eq h, ih3 (hmn.trans k.succ.le_succ)]
+  refine forall_congr' fun x => iff_eq_eq.mpr (congr rfl (funext (Fin.lastCases ?_ fun i => ?_)))
+  simp only [Function.comp_apply, val_last, snoc_last]
+  by_cases h : k < m
+  rw [if_pos h]
+  refine (congr rfl (Fin.ext ?_)).trans (snoc_last _ _)
+  simp only [coe_cast, coe_castAdd, val_last, self_eq_add_right]
+  refine le_antisymm
+    (le_of_add_le_add_left ((hmn.trans (Nat.succ_le_of_lt h)).trans ?_)) n'.zero_le
+  rw [add_zero]
+  rw [if_neg h]
+  refine (congr rfl (Fin.ext ?_)).trans (snoc_last _ _)
+  simp
+  simp only [Function.comp_apply, Fin.snoc_castSucc]
+  refine (congr rfl (Fin.ext ?_)).trans (snoc_castSucc _ _ _)
+  simp only [coe_castSucc, coe_cast]
+  split_ifs <;> simp
 
 theorem realize_liftAt_one {n m : ℕ} {φ : L.BoundedFormula α n} {v : α → M} {xs : Fin (n + 1) → M}
     (hmn : m ≤ n) :
@@ -409,8 +409,8 @@ theorem realize_subst {φ : L.BoundedFormula α n} {tf : α → L.Term β} {v : 
       rw [Term.realize_subst]
       rcongr a
       cases a
-      · simp only [Sum.elim_inl, Function.comp_apply, Term.realize_relabel, Sum.elim_comp_inl]
-      · rfl)
+      simp only [Sum.elim_inl, Function.comp_apply, Term.realize_relabel, Sum.elim_comp_inl]
+      rfl)
     (by simp)
 
 @[simp]
@@ -418,11 +418,11 @@ theorem realize_restrictFreeVar [DecidableEq α] {n : ℕ} {φ : L.BoundedFormul
     (h : ↑φ.freeVarFinset ⊆ s) {v : α → M} {xs : Fin n → M} :
     (φ.restrictFreeVar (Set.inclusion h)).Realize (v ∘ (↑)) xs ↔ φ.Realize v xs := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
-  · rfl
-  · simp [restrictFreeVar, Realize]
-  · simp [restrictFreeVar, Realize]
-  · simp [restrictFreeVar, Realize, ih1, ih2]
-  · simp [restrictFreeVar, Realize, ih3]
+  rfl
+  simp [restrictFreeVar, Realize]
+  simp [restrictFreeVar, Realize]
+  simp [restrictFreeVar, Realize, ih1, ih2]
+  simp [restrictFreeVar, Realize, ih3]
 
 theorem realize_constantsVarsEquiv [L[[α]].Structure M] [(lhomWithConstants L α).IsExpansionOn M]
     {n} {φ : L[[α]].BoundedFormula β n} {v : β → M} {xs : Fin n → M} :
@@ -433,8 +433,8 @@ theorem realize_constantsVarsEquiv [L[[α]].Structure M] [(lhomWithConstants L �
       (Equiv.sumEmpty (L.Relations n) ((constantsOn α).Relations n) R) xs]
   rcongr
   cases' R with R R
-  · simp
-  · exact isEmptyElim R
+  simp
+  exact isEmptyElim R
 
 @[simp]
 theorem realize_relabelEquiv {g : α ≃ β} {k} {φ : L.BoundedFormula α k} {v : β → M}
@@ -452,10 +452,10 @@ theorem realize_all_liftAt_one_self {n : ℕ} {φ : L.BoundedFormula α n} {v : 
   inhabit M
   simp only [realize_all, realize_liftAt_one_self]
   refine ⟨fun h => ?_, fun h a => ?_⟩
-  · refine (congr rfl (funext fun i => ?_)).mp (h default)
-    simp
-  · refine (congr rfl (funext fun i => ?_)).mp h
-    simp
+  refine (congr rfl (funext fun i => ?_)).mp (h default)
+  simp
+  refine (congr rfl (funext fun i => ?_)).mp h
+  simp
 
 end BoundedFormula
 
@@ -474,14 +474,14 @@ theorem realize_onBoundedFormula [L'.Structure M] (φ : L →ᴸ L') [φ.IsExpan
     (ψ : L.BoundedFormula α n) {v : α → M} {xs : Fin n → M} :
     (φ.onBoundedFormula ψ).Realize v xs ↔ ψ.Realize v xs := by
   induction' ψ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
-  · rfl
-  · simp only [onBoundedFormula, realize_bdEqual, realize_onTerm]
-    rfl
-  · simp only [onBoundedFormula, realize_rel, LHom.map_onRelation,
-      Function.comp_apply, realize_onTerm]
-    rfl
-  · simp only [onBoundedFormula, ih1, ih2, realize_imp]
-  · simp only [onBoundedFormula, ih3, realize_all]
+  rfl
+  simp only [onBoundedFormula, realize_bdEqual, realize_onTerm]
+  rfl
+  simp only [onBoundedFormula, realize_rel, LHom.map_onRelation,
+    Function.comp_apply, realize_onTerm]
+  rfl
+  simp only [onBoundedFormula, ih1, ih2, realize_imp]
+  simp only [onBoundedFormula, ih3, realize_all]
 
 end LHom
 
@@ -535,8 +535,8 @@ theorem realize_rel₂ {R : L.Relations 2} {t₁ t₂ : L.Term _} :
     (R.formula₂ t₁ t₂).Realize v ↔ RelMap R ![t₁.realize v, t₂.realize v] := by
   rw [Relations.formula₂, realize_rel, iff_eq_eq]
   refine congr rfl (funext (Fin.cases ?_ ?_))
-  · simp only [Matrix.cons_val_zero]
-  · simp only [Matrix.cons_val_succ, Matrix.cons_val_fin_one, forall_const]
+  simp only [Matrix.cons_val_zero]
+  simp only [Matrix.cons_val_succ, Matrix.cons_val_fin_one, forall_const]
 
 @[simp]
 theorem realize_sup : (φ ⊔ ψ).Realize v ↔ φ.Realize v ∨ ψ.Realize v :=
@@ -606,8 +606,8 @@ theorem realize_equivSentence_symm_con [L[[α]].Structure M]
   refine _root_.trans ?_ BoundedFormula.realize_constantsVarsEquiv
   rw [iff_iff_eq]
   congr with (_ | a)
-  · simp
-  · cases a
+  simp
+  cases a
 
 @[simp]
 theorem realize_equivSentence [L[[α]].Structure M] [(L.lhomWithConstants α).IsExpansionOn M]
@@ -725,22 +725,22 @@ namespace BoundedFormula
 theorem realize_alls {φ : L.BoundedFormula α n} {v : α → M} :
     φ.alls.Realize v ↔ ∀ xs : Fin n → M, φ.Realize v xs := by
   induction' n with n ih
-  · exact Unique.forall_iff.symm
-  · simp only [alls, ih, Realize]
-    exact ⟨fun h xs => Fin.snoc_init_self xs ▸ h _ _, fun h xs x => h (Fin.snoc xs x)⟩
+  exact Unique.forall_iff.symm
+  simp only [alls, ih, Realize]
+  exact ⟨fun h xs => Fin.snoc_init_self xs ▸ h _ _, fun h xs x => h (Fin.snoc xs x)⟩
 
 @[simp]
 theorem realize_exs {φ : L.BoundedFormula α n} {v : α → M} :
     φ.exs.Realize v ↔ ∃ xs : Fin n → M, φ.Realize v xs := by
   induction' n with n ih
-  · exact Unique.exists_iff.symm
-  · simp only [BoundedFormula.exs, ih, realize_ex]
-    constructor
-    · rintro ⟨xs, x, h⟩
-      exact ⟨_, h⟩
-    · rintro ⟨xs, h⟩
-      rw [← Fin.snoc_init_self xs] at h
-      exact ⟨_, _, h⟩
+  exact Unique.exists_iff.symm
+  simp only [BoundedFormula.exs, ih, realize_ex]
+  constructor
+  rintro ⟨xs, x, h⟩
+  exact ⟨_, h⟩
+  rintro ⟨xs, h⟩
+  rw [← Fin.snoc_init_self xs] at h
+  exact ⟨_, _, h⟩
 
 @[simp]
 theorem _root_.FirstOrder.Language.Formula.realize_iAlls
@@ -752,14 +752,14 @@ theorem _root_.FirstOrder.Language.Formula.realize_iAlls
   simp only [Nat.add_zero, realize_alls, realize_relabel, Function.comp,
     castAdd_zero, finCongr_refl, OrderIso.refl_apply, Sum.elim_map, id_eq]
   refine Equiv.forall_congr ?_ ?_
-  · exact ⟨fun v => v ∘ e, fun v => v ∘ e.symm,
-      fun _ => by simp [Function.comp],
-      fun _ => by simp [Function.comp]⟩
-  · intro x
-    rw [Formula.Realize, iff_iff_eq]
-    congr
-    funext i
-    exact i.elim0
+  exact ⟨fun v => v ∘ e, fun v => v ∘ e.symm,
+    fun _ => by simp [Function.comp],
+    fun _ => by simp [Function.comp]⟩
+  intro x
+  rw [Formula.Realize, iff_iff_eq]
+  congr
+  funext i
+  exact i.elim0
 
 @[simp]
 theorem realize_iAlls [Finite γ] {f : α → β ⊕ γ}
@@ -779,14 +779,14 @@ theorem _root_.FirstOrder.Language.Formula.realize_iExs
     castAdd_zero, finCongr_refl, OrderIso.refl_apply, Sum.elim_map, id_eq]
   rw [← not_iff_not, not_exists, not_exists]
   refine Equiv.forall_congr ?_ ?_
-  · exact ⟨fun v => v ∘ e, fun v => v ∘ e.symm,
-      fun _ => by simp [Function.comp],
-      fun _ => by simp [Function.comp]⟩
-  · intro x
-    rw [Formula.Realize, iff_iff_eq]
-    congr
-    funext i
-    exact i.elim0
+  exact ⟨fun v => v ∘ e, fun v => v ∘ e.symm,
+    fun _ => by simp [Function.comp],
+    fun _ => by simp [Function.comp]⟩
+  intro x
+  rw [Formula.Realize, iff_iff_eq]
+  congr
+  funext i
+  exact i.elim0
 
 @[simp]
 theorem realize_iExs [Finite γ] {f : α → β ⊕ γ}
@@ -799,29 +799,29 @@ theorem realize_iExs [Finite γ] {f : α → β ⊕ γ}
 theorem realize_toFormula (φ : L.BoundedFormula α n) (v : α ⊕ (Fin n) → M) :
     φ.toFormula.Realize v ↔ φ.Realize (v ∘ Sum.inl) (v ∘ Sum.inr) := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3 a8 a9 a0
-  · rfl
-  · simp [BoundedFormula.Realize]
-  · simp [BoundedFormula.Realize]
-  · rw [toFormula, Formula.Realize, realize_imp, ← Formula.Realize, ih1, ← Formula.Realize, ih2,
-      realize_imp]
-  · rw [toFormula, Formula.Realize, realize_all, realize_all]
-    refine forall_congr' fun a => ?_
-    have h := ih3 (Sum.elim (v ∘ Sum.inl) (snoc (v ∘ Sum.inr) a))
-    simp only [Sum.elim_comp_inl, Sum.elim_comp_inr] at h
-    rw [← h, realize_relabel, Formula.Realize, iff_iff_eq]
-    simp only [Function.comp]
-    congr with x
-    · cases' x with _ x
-      · simp
-      · refine Fin.lastCases ?_ ?_ x
-        · rw [Sum.elim_inr, Sum.elim_inr,
-            finSumFinEquiv_symm_last, Sum.map_inr, Sum.elim_inr]
-          simp [Fin.snoc]
-        · simp only [castSucc, Function.comp_apply, Sum.elim_inr,
-            finSumFinEquiv_symm_apply_castAdd, Sum.map_inl, Sum.elim_inl]
-          rw [← castSucc]
-          simp
-    · exact Fin.elim0 x
+  rfl
+  simp [BoundedFormula.Realize]
+  simp [BoundedFormula.Realize]
+  rw [toFormula, Formula.Realize, realize_imp, ← Formula.Realize, ih1, ← Formula.Realize, ih2,
+    realize_imp]
+  rw [toFormula, Formula.Realize, realize_all, realize_all]
+  refine forall_congr' fun a => ?_
+  have h := ih3 (Sum.elim (v ∘ Sum.inl) (snoc (v ∘ Sum.inr) a))
+  simp only [Sum.elim_comp_inl, Sum.elim_comp_inr] at h
+  rw [← h, realize_relabel, Formula.Realize, iff_iff_eq]
+  simp only [Function.comp]
+  congr with x
+  cases' x with _ x
+  simp
+  refine Fin.lastCases ?_ ?_ x
+  rw [Sum.elim_inr, Sum.elim_inr,
+    finSumFinEquiv_symm_last, Sum.map_inr, Sum.elim_inr]
+  simp [Fin.snoc]
+  simp only [castSucc, Function.comp_apply, Sum.elim_inr,
+    finSumFinEquiv_symm_apply_castAdd, Sum.map_inl, Sum.elim_inl]
+  rw [← castSucc]
+  simp
+  exact Fin.elim0 x
 
 @[simp]
 theorem realize_iSup (s : Finset β) (f : β → L.BoundedFormula α n)
@@ -845,21 +845,21 @@ namespace Equiv
 theorem realize_boundedFormula (g : M ≃[L] N) (φ : L.BoundedFormula α n) {v : α → M}
     {xs : Fin n → M} : φ.Realize (g ∘ v) (g ∘ xs) ↔ φ.Realize v xs := by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih3
-  · rfl
-  · simp only [BoundedFormula.Realize, ← Sum.comp_elim, Equiv.realize_term, g.injective.eq_iff]
-  · simp only [BoundedFormula.Realize, ← Sum.comp_elim, Equiv.realize_term]
-    exact g.map_rel _ _
-  · rw [BoundedFormula.Realize, ih1, ih2, BoundedFormula.Realize]
-  · rw [BoundedFormula.Realize, BoundedFormula.Realize]
-    constructor
-    · intro h a
-      have h' := h (g a)
-      rw [← Fin.comp_snoc, ih3] at h'
-      exact h'
-    · intro h a
-      have h' := h (g.symm a)
-      rw [← ih3, Fin.comp_snoc, g.apply_symm_apply] at h'
-      exact h'
+  rfl
+  simp only [BoundedFormula.Realize, ← Sum.comp_elim, Equiv.realize_term, g.injective.eq_iff]
+  simp only [BoundedFormula.Realize, ← Sum.comp_elim, Equiv.realize_term]
+  exact g.map_rel _ _
+  rw [BoundedFormula.Realize, ih1, ih2, BoundedFormula.Realize]
+  rw [BoundedFormula.Realize, BoundedFormula.Realize]
+  constructor
+  intro h a
+  have h' := h (g a)
+  rw [← Fin.comp_snoc, ih3] at h'
+  exact h'
+  intro h a
+  have h' := h (g.symm a)
+  rw [← ih3, Fin.comp_snoc, g.apply_symm_apply] at h'
+  exact h'
 
 @[simp]
 theorem realize_formula (g : M ≃[L] N) (φ : L.Formula α) {v : α → M} :
@@ -926,15 +926,15 @@ theorem Sentence.realize_cardGe (n) : M ⊨ Sentence.cardGe L n ↔ ↑n ≤ #M 
   simp only [Function.comp_apply, List.mem_map, Prod.exists, Ne, List.mem_product,
     List.mem_finRange, forall_exists_index, and_imp, List.mem_filter, true_and_iff]
   refine ⟨?_, fun xs => ⟨xs.some, ?_⟩⟩
-  · rintro ⟨xs, h⟩
-    refine ⟨⟨xs, fun i j ij => ?_⟩⟩
-    contrapose! ij
-    have hij := h _ i j (by simpa using ij) rfl
-    simp only [BoundedFormula.realize_not, Term.realize, BoundedFormula.realize_bdEqual,
-      Sum.elim_inr] at hij
-    exact hij
-  · rintro _ i j ij rfl
-    simpa using ij
+  rintro ⟨xs, h⟩
+  refine ⟨⟨xs, fun i j ij => ?_⟩⟩
+  contrapose! ij
+  have hij := h _ i j (by simpa using ij) rfl
+  simp only [BoundedFormula.realize_not, Term.realize, BoundedFormula.realize_bdEqual,
+    Sum.elim_inr] at hij
+  exact hij
+  rintro _ i j ij rfl
+  simpa using ij
 
 @[simp]
 theorem model_infiniteTheory_iff : M ⊨ L.infiniteTheory ↔ Infinite M := by
@@ -956,14 +956,14 @@ theorem model_distinctConstantsTheory {M : Type w} [L[[α]].Structure M] (s : Se
   simp only [distinctConstantsTheory, Theory.model_iff, Set.mem_image, Set.mem_inter,
     Set.mem_prod, Set.mem_compl, Prod.exists, forall_exists_index, and_imp]
   refine ⟨fun h a as b bs ab => ?_, ?_⟩
-  · contrapose! ab
-    have h' := h _ a b ⟨⟨as, bs⟩, ab⟩ rfl
-    simp only [Sentence.Realize, Formula.realize_not, Formula.realize_equal,
-      Term.realize_constants] at h'
-    exact h'
-  · rintro h φ a b ⟨⟨as, bs⟩, ab⟩ rfl
-    simp only [Sentence.Realize, Formula.realize_not, Formula.realize_equal, Term.realize_constants]
-    exact fun contra => ab (h as bs contra)
+  contrapose! ab
+  have h' := h _ a b ⟨⟨as, bs⟩, ab⟩ rfl
+  simp only [Sentence.Realize, Formula.realize_not, Formula.realize_equal,
+    Term.realize_constants] at h'
+  exact h'
+  rintro h φ a b ⟨⟨as, bs⟩, ab⟩ rfl
+  simp only [Sentence.Realize, Formula.realize_not, Formula.realize_equal, Term.realize_constants]
+  exact fun contra => ab (h as bs contra)
 
 theorem card_le_of_model_distinctConstantsTheory (s : Set α) (M : Type w) [L[[α]].Structure M]
     [h : M ⊨ L.distinctConstantsTheory s] : Cardinal.lift.{w} #s ≤ Cardinal.lift.{u'} #M :=

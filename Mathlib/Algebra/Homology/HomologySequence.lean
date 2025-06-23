@@ -145,8 +145,8 @@ lemma composableArrows₃_exact [CategoryWithHomology C] :
     rw [← ShortComplex.exact_iff_of_epi_of_isIso_of_mono π]
     exact T'.exact_of_g_is_cokernel (K.homologyIsCokernel i j (c.prev_eq' hij))
   apply ComposableArrows.exact_of_δ₀
-  · exact hS.exact_toComposableArrows
-  · exact hT.exact_toComposableArrows
+  exact hS.exact_toComposableArrows
+  exact hT.exact_toComposableArrows
 
 variable (C)
 
@@ -194,9 +194,9 @@ lemma opcycles_right_exact (S : ShortComplex (HomologicalComplex C c)) (hS : S.E
       rw [← p_opcyclesMap_assoc, hk, comp_zero])
     dsimp at H
     refine ⟨S.X₃.descOpcycles H.1 _ rfl ?_, ?_⟩
-    · rw [← cancel_epi (S.g.f (c.prev i)), comp_zero, Hom.comm_assoc, H.2,
-        d_pOpcycles_assoc, zero_comp]
-    · rw [← cancel_epi (S.X₂.pOpcycles i), opcyclesMap_comp_descOpcycles, p_descOpcycles, H.2])
+    rw [← cancel_epi (S.g.f (c.prev i)), comp_zero, Hom.comm_assoc, H.2,
+      d_pOpcycles_assoc, zero_comp]
+    rw [← cancel_epi (S.X₂.pOpcycles i), opcyclesMap_comp_descOpcycles, p_descOpcycles, H.2])
 
 /-- If `0 ⟶ X₁ ⟶ X₂ ⟶ X₃` is an exact sequence of homological complex, then
 `0 ⟶ X₁.cycles i ⟶ X₂.cycles i ⟶ X₃.cycles i` is exact. This lemma states
@@ -217,9 +217,9 @@ lemma cycles_left_exact (S : ShortComplex (HomologicalComplex C c)) (hS : S.Exac
       rw [assoc, ← cyclesMap_i, reassoc_of% hk, zero_comp])
     dsimp at H
     refine ⟨S.X₁.liftCycles H.1 _ rfl ?_, ?_⟩
-    · rw [← cancel_mono (S.f.f _), assoc, zero_comp, ← Hom.comm, reassoc_of% H.2,
-        iCycles_d, comp_zero]
-    · rw [← cancel_mono (S.X₂.iCycles i), liftCycles_comp_cyclesMap, liftCycles_i, H.2])
+    rw [← cancel_mono (S.f.f _), assoc, zero_comp, ← Hom.comm, reassoc_of% H.2,
+      iCycles_d, comp_zero]
+    rw [← cancel_mono (S.X₂.iCycles i), liftCycles_comp_cyclesMap, liftCycles_i, H.2])
 
 variable  {S : ShortComplex (HomologicalComplex C c)}
   (hS : S.ShortExact) (i j : ι) (hij : c.Rel i j)
@@ -304,15 +304,15 @@ lemma homology_exact₂ : (ShortComplex.mk (HomologicalComplex.homologyMap S.f i
     (HomologicalComplex.homologyMap S.g i) (by rw [← HomologicalComplex.homologyMap_comp,
       S.zero, HomologicalComplex.homologyMap_zero])).Exact := by
   by_cases h : c.Rel i (c.next i)
-  · exact (snakeInput hS i _ h).L₀_exact
-  · have := hS.epi_g
-    have : ∀ (K : HomologicalComplex C c), IsIso (K.homologyι i) :=
-      fun K => ShortComplex.isIso_homologyι (K.sc i) (K.shape _ _ h)
-    have e : S.map (HomologicalComplex.homologyFunctor C c i) ≅
-        S.map (HomologicalComplex.opcyclesFunctor C c i) :=
-      ShortComplex.isoMk (asIso (S.X₁.homologyι i))
-        (asIso (S.X₂.homologyι i)) (asIso (S.X₃.homologyι i)) (by aesop_cat) (by aesop_cat)
-    exact ShortComplex.exact_of_iso e.symm (opcycles_right_exact S hS.exact i)
+  exact (snakeInput hS i _ h).L₀_exact
+  have := hS.epi_g
+  have : ∀ (K : HomologicalComplex C c), IsIso (K.homologyι i) :=
+    fun K => ShortComplex.isIso_homologyι (K.sc i) (K.shape _ _ h)
+  have e : S.map (HomologicalComplex.homologyFunctor C c i) ≅
+      S.map (HomologicalComplex.opcyclesFunctor C c i) :=
+    ShortComplex.isoMk (asIso (S.X₁.homologyι i))
+      (asIso (S.X₂.homologyι i)) (asIso (S.X₃.homologyι i)) (by aesop_cat) (by aesop_cat)
+  exact ShortComplex.exact_of_iso e.symm (opcycles_right_exact S hS.exact i)
 
 /-- Exactness of `S.X₂.homology i ⟶ S.X₃.homology i ⟶ S.X₁.homology j`. -/
 lemma homology_exact₃ : (ShortComplex.mk _ _ (comp_δ hS i j hij)).Exact :=

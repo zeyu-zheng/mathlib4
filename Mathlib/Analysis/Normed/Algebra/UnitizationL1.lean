@@ -113,14 +113,14 @@ noncomputable instance instUnitizationNormedRing : NormedRing (WithLp 1 (Unitiza
     simp_rw [unitization_norm_def, add_mul, mul_add, unitization_mul, fst_mul, snd_mul]
     rw [add_assoc, add_assoc]
     gcongr
-    · exact norm_mul_le _ _
-    · apply (norm_add_le _ _).trans
-      gcongr
-      · simp [norm_smul]
-      · apply (norm_add_le _ _).trans
-        gcongr
-        · simp [norm_smul, mul_comm]
-        · exact norm_mul_le _ _
+    exact norm_mul_le _ _
+    apply (norm_add_le _ _).trans
+    gcongr
+    simp [norm_smul]
+    apply (norm_add_le _ _).trans
+    gcongr
+    simp [norm_smul, mul_comm]
+    exact norm_mul_le _ _
 
 noncomputable instance instUnitizationNormedAlgebra :
     NormedAlgebra 𝕜 (WithLp 1 (Unitization 𝕜 A)) where

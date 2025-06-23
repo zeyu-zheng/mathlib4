@@ -76,8 +76,8 @@ attribute [instance] Int.add in
 instance : Inhabited Nat where
   default := by
     . have := 0
-      · have : Nat → Nat → Nat := (· + .)
-        . exact 0
+      have : Nat → Nat → Nat := (· + .)
+      . exact 0
 
 set_option linter.cdot false in
 /--

@@ -36,9 +36,9 @@ theorem irreducible_of_coprime' (hp : IsUnitTrinomial p)
   cases' Complex.exists_root hq'' with z hz
   rw [IsRoot, eval_map, ← aeval_def] at hz
   refine h z ⟨?_, ?_⟩
-  · cases' hq with g' hg'
-    rw [hg', aeval_mul, hz, zero_mul]
-  · cases' hq' with g' hg'
-    rw [hg', aeval_mul, hz, zero_mul]
+  cases' hq with g' hg'
+  rw [hg', aeval_mul, hz, zero_mul]
+  cases' hq' with g' hg'
+  rw [hg', aeval_mul, hz, zero_mul]
 
 end Polynomial.IsUnitTrinomial

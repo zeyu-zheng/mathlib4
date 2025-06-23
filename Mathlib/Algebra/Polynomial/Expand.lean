@@ -87,19 +87,19 @@ theorem coeff_expand {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) :
   simp only [expand_eq_sum]
   simp_rw [coeff_sum, ← pow_mul, C_mul_X_pow_eq_monomial, coeff_monomial, sum]
   split_ifs with h
-  · rw [Finset.sum_eq_single (n / p), Nat.mul_div_cancel' h, if_pos rfl]
-    · intro b _ hb2
-      rw [if_neg]
-      intro hb3
-      apply hb2
-      rw [← hb3, Nat.mul_div_cancel_left b hp]
-    · intro hn
-      rw [not_mem_support_iff.1 hn]
-      split_ifs <;> rfl
-  · rw [Finset.sum_eq_zero]
-    intro k _
-    rw [if_neg]
-    exact fun hkn => h ⟨k, hkn.symm⟩
+  rw [Finset.sum_eq_single (n / p), Nat.mul_div_cancel' h, if_pos rfl]
+  intro b _ hb2
+  rw [if_neg]
+  intro hb3
+  apply hb2
+  rw [← hb3, Nat.mul_div_cancel_left b hp]
+  intro hn
+  rw [not_mem_support_iff.1 hn]
+  split_ifs <;> rfl
+  rw [Finset.sum_eq_zero]
+  intro k _
+  rw [if_neg]
+  exact fun hkn => h ⟨k, hkn.symm⟩
 
 @[simp]
 theorem coeff_expand_mul {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) :
@@ -128,24 +128,24 @@ theorem expand_eq_C {p : ℕ} (hp : 0 < p) {f : R[X]} {r : R} : expand R p f = C
 
 theorem natDegree_expand (p : ℕ) (f : R[X]) : (expand R p f).natDegree = f.natDegree * p := by
   rcases p.eq_zero_or_pos with hp | hp
-  · rw [hp, coe_expand, pow_zero, mul_zero, ← C_1, eval₂_hom, natDegree_C]
+  rw [hp, coe_expand, pow_zero, mul_zero, ← C_1, eval₂_hom, natDegree_C]
   by_cases hf : f = 0
-  · rw [hf, map_zero, natDegree_zero, zero_mul]
+  rw [hf, map_zero, natDegree_zero, zero_mul]
   have hf1 : expand R p f ≠ 0 := mt (expand_eq_zero hp).1 hf
   rw [← WithBot.coe_eq_coe]
   convert (degree_eq_natDegree hf1).symm -- Porting note: was `rw [degree_eq_natDegree hf1]`
   symm
   refine le_antisymm ((degree_le_iff_coeff_zero _ _).2 fun n hn => ?_) ?_
-  · rw [coeff_expand hp]
-    split_ifs with hpn
-    · rw [coeff_eq_zero_of_natDegree_lt]
-      contrapose! hn
-      erw [WithBot.coe_le_coe, ← Nat.div_mul_cancel hpn]
-      exact Nat.mul_le_mul_right p hn
-    · rfl
-  · refine le_degree_of_ne_zero ?_
-    erw [coeff_expand_mul hp, ← leadingCoeff]
-    exact mt leadingCoeff_eq_zero.1 hf
+  rw [coeff_expand hp]
+  split_ifs with hpn
+  rw [coeff_eq_zero_of_natDegree_lt]
+  contrapose! hn
+  erw [WithBot.coe_le_coe, ← Nat.div_mul_cancel hpn]
+  exact Nat.mul_le_mul_right p hn
+  rfl
+  refine le_degree_of_ne_zero ?_
+  erw [coeff_expand_mul hp, ← leadingCoeff]
+  exact mt leadingCoeff_eq_zero.1 hf
 
 theorem leadingCoeff_expand {p : ℕ} {f : R[X]} (hp : 0 < p) :
     (expand R p f).leadingCoeff = f.leadingCoeff := by
@@ -159,7 +159,7 @@ alias ⟨_, Monic.expand⟩ := monic_expand_iff
 theorem map_expand {p : ℕ} {f : R →+* S} {q : R[X]} :
     map f (expand R p q) = expand S p (map f q) := by
   by_cases hp : p = 0
-  · simp [hp]
+  simp [hp]
   ext
   rw [coeff_map, coeff_expand (Nat.pos_of_ne_zero hp), coeff_expand (Nat.pos_of_ne_zero hp)]
   split_ifs <;> simp_all
@@ -208,36 +208,36 @@ theorem expand_contract [CharP R p] [NoZeroDivisors R] {f : R[X]} (hf : Polynomi
   ext n
   rw [coeff_expand hp.bot_lt, coeff_contract hp]
   split_ifs with h
-  · rw [Nat.div_mul_cancel h]
-  · cases' n with n
-    · exact absurd (dvd_zero p) h
-    have := coeff_derivative f n
-    rw [hf, coeff_zero, zero_eq_mul] at this
-    cases' this with h'
-    · rw [h']
-    rename_i _ _ _ _ h'
-    rw [← Nat.cast_succ, CharP.cast_eq_zero_iff R p] at h'
-    exact absurd h' h
+  rw [Nat.div_mul_cancel h]
+  cases' n with n
+  exact absurd (dvd_zero p) h
+  have := coeff_derivative f n
+  rw [hf, coeff_zero, zero_eq_mul] at this
+  cases' this with h'
+  rw [h']
+  rename_i _ _ _ _ h'
+  rw [← Nat.cast_succ, CharP.cast_eq_zero_iff R p] at h'
+  exact absurd h' h
 
 variable [ExpChar R p]
 
 theorem expand_contract' [NoZeroDivisors R] {f : R[X]} (hf : Polynomial.derivative f = 0) :
     expand R p (contract p f) = f := by
   obtain _ | @⟨_, hprime, hchar⟩ := ‹ExpChar R p›
-  · rw [expand_one, contract_one]
-  · haveI := Fact.mk hchar; exact expand_contract p hf hprime.ne_zero
+  rw [expand_one, contract_one]
+  haveI := Fact.mk hchar; exact expand_contract p hf hprime.ne_zero
 
 theorem expand_char (f : R[X]) : map (frobenius R p) (expand R p f) = f ^ p := by
   refine f.induction_on' (fun a b ha hb => ?_) fun n a => ?_
-  · rw [map_add, Polynomial.map_add, ha, hb, add_pow_expChar]
-  · rw [expand_monomial, map_monomial, ← C_mul_X_pow_eq_monomial, ← C_mul_X_pow_eq_monomial,
-      mul_pow, ← C.map_pow, frobenius_def]
-    ring
+  rw [map_add, Polynomial.map_add, ha, hb, add_pow_expChar]
+  rw [expand_monomial, map_monomial, ← C_mul_X_pow_eq_monomial, ← C_mul_X_pow_eq_monomial,
+    mul_pow, ← C.map_pow, frobenius_def]
+  ring
 
 theorem map_expand_pow_char (f : R[X]) (n : ℕ) :
     map (frobenius R p ^ n) (expand R (p ^ n) f) = f ^ p ^ n := by
   induction' n with _ n_ih
-  · simp [RingHom.one_def]
+  simp [RingHom.one_def]
   symm
   rw [pow_succ, pow_mul, ← n_ih, ← expand_char, pow_succ', RingHom.mul_def, ← map_map, mul_comm,
     expand_mul, ← map_expand]

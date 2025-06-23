@@ -87,16 +87,16 @@ instance NormedSpace.discreteTopology_zmultiples
     {E : Type*} [NormedAddCommGroup E] [NormedSpace ℚ E] (e : E) :
     DiscreteTopology <| AddSubgroup.zmultiples e := by
   rcases eq_or_ne e 0 with (rfl | he)
-  · rw [AddSubgroup.zmultiples_zero_eq_bot]
-    exact Subsingleton.discreteTopology (α := ↑(⊥ : Subspace ℚ E))
-  · rw [discreteTopology_iff_isOpen_singleton_zero, isOpen_induced_iff]
-    refine ⟨Metric.ball 0 ‖e‖, Metric.isOpen_ball, ?_⟩
-    ext ⟨x, hx⟩
-    obtain ⟨k, rfl⟩ := AddSubgroup.mem_zmultiples_iff.mp hx
-    rw [mem_preimage, mem_ball_zero_iff, AddSubgroup.coe_mk, mem_singleton_iff, Subtype.ext_iff,
-      AddSubgroup.coe_mk, AddSubgroup.coe_zero, norm_zsmul ℚ k e, Int.norm_cast_rat,
-      Int.norm_eq_abs, mul_lt_iff_lt_one_left (norm_pos_iff.mpr he), ← @Int.cast_one ℝ _,
-      ← Int.cast_abs, Int.cast_lt, Int.abs_lt_one_iff, smul_eq_zero, or_iff_left he]
+  rw [AddSubgroup.zmultiples_zero_eq_bot]
+  exact Subsingleton.discreteTopology (α := ↑(⊥ : Subspace ℚ E))
+  rw [discreteTopology_iff_isOpen_singleton_zero, isOpen_induced_iff]
+  refine ⟨Metric.ball 0 ‖e‖, Metric.isOpen_ball, ?_⟩
+  ext ⟨x, hx⟩
+  obtain ⟨k, rfl⟩ := AddSubgroup.mem_zmultiples_iff.mp hx
+  rw [mem_preimage, mem_ball_zero_iff, AddSubgroup.coe_mk, mem_singleton_iff, Subtype.ext_iff,
+    AddSubgroup.coe_mk, AddSubgroup.coe_zero, norm_zsmul ℚ k e, Int.norm_cast_rat,
+    Int.norm_eq_abs, mul_lt_iff_lt_one_left (norm_pos_iff.mpr he), ← @Int.cast_one ℝ _,
+    ← Int.cast_abs, Int.cast_lt, Int.abs_lt_one_iff, smul_eq_zero, or_iff_left he]
 
 open NormedField
 
@@ -220,15 +220,15 @@ Lean would have to search for `NormedSpace 𝕜 E` with unknown `𝕜`.
 We register this as an instance in two cases: `𝕜 = E` and `𝕜 = ℝ`. -/
 protected theorem NormedSpace.noncompactSpace : NoncompactSpace E := by
   by_cases H : ∃ c : 𝕜, c ≠ 0 ∧ ‖c‖ ≠ 1
-  · letI := NontriviallyNormedField.ofNormNeOne H
-    exact ⟨fun h ↦ NormedSpace.unbounded_univ 𝕜 E h.isBounded⟩
-  · push_neg at H
-    rcases exists_ne (0 : E) with ⟨x, hx⟩
-    suffices ClosedEmbedding (Infinite.natEmbedding 𝕜 · • x) from this.noncompactSpace
-    refine closedEmbedding_of_pairwise_le_dist (norm_pos_iff.2 hx) fun k n hne ↦ ?_
-    simp only [dist_eq_norm, ← sub_smul, norm_smul]
-    rw [H, one_mul]
-    rwa [sub_ne_zero, (Embedding.injective _).ne_iff]
+  letI := NontriviallyNormedField.ofNormNeOne H
+  exact ⟨fun h ↦ NormedSpace.unbounded_univ 𝕜 E h.isBounded⟩
+  push_neg at H
+  rcases exists_ne (0 : E) with ⟨x, hx⟩
+  suffices ClosedEmbedding (Infinite.natEmbedding 𝕜 · • x) from this.noncompactSpace
+  refine closedEmbedding_of_pairwise_le_dist (norm_pos_iff.2 hx) fun k n hne ↦ ?_
+  simp only [dist_eq_norm, ← sub_smul, norm_smul]
+  rw [H, one_mul]
+  rwa [sub_ne_zero, (Embedding.injective _).ne_iff]
 
 instance (priority := 100) NormedField.noncompactSpace : NoncompactSpace 𝕜 :=
   NormedSpace.noncompactSpace 𝕜 𝕜

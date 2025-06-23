@@ -50,14 +50,14 @@ theorem set_walk_length_succ_eq (u v : V) (n : ℕ) :
       ⋃ (w : V) (h : G.Adj u w), Walk.cons h '' {p' : G.Walk w v | p'.length = n} := by
   ext p
   cases' p with _ _ w _ huw pwv
-  · simp [eq_comm]
-  · simp only [Nat.succ_eq_add_one, Set.mem_setOf_eq, Walk.length_cons, add_left_inj,
-      Set.mem_iUnion, Set.mem_image, exists_prop]
-    constructor
-    · rintro rfl
-      exact ⟨w, huw, pwv, rfl, rfl⟩
-    · rintro ⟨w, huw, pwv, rfl, rfl, rfl⟩
-      rfl
+  simp [eq_comm]
+  simp only [Nat.succ_eq_add_one, Set.mem_setOf_eq, Walk.length_cons, add_left_inj,
+    Set.mem_iUnion, Set.mem_image, exists_prop]
+  constructor
+  rintro rfl
+  exact ⟨w, huw, pwv, rfl, rfl⟩
+  rintro ⟨w, huw, pwv, rfl, rfl, rfl⟩
+  rfl
 
 variable [DecidableEq V]
 
@@ -96,17 +96,17 @@ def finsetWalkLength (n : ℕ) (u v : V) : Finset (G.Walk u v) :=
 theorem coe_finsetWalkLength_eq (n : ℕ) (u v : V) :
     (G.finsetWalkLength n u v : Set (G.Walk u v)) = {p : G.Walk u v | p.length = n} := by
   induction' n with n ih generalizing u v
-  · obtain rfl | huv := eq_or_ne u v <;> simp [finsetWalkLength, set_walk_length_zero_eq_of_ne, *]
-  · simp only [finsetWalkLength, set_walk_length_succ_eq, Finset.coe_biUnion, Finset.mem_coe,
-      Finset.mem_univ, Set.iUnion_true]
-    ext p
-    simp only [mem_neighborSet, Finset.coe_map, Embedding.coeFn_mk, Set.iUnion_coe_set,
-      Set.mem_iUnion, Set.mem_image, Finset.mem_coe, Set.mem_setOf_eq]
-    congr!
-    rename_i w _ q
-    have := Set.ext_iff.mp (ih w v) q
-    simp only [Finset.mem_coe, Set.mem_setOf_eq] at this
-    rw [← this]
+  obtain rfl | huv := eq_or_ne u v <;> simp [finsetWalkLength, set_walk_length_zero_eq_of_ne, *]
+  simp only [finsetWalkLength, set_walk_length_succ_eq, Finset.coe_biUnion, Finset.mem_coe,
+    Finset.mem_univ, Set.iUnion_true]
+  ext p
+  simp only [mem_neighborSet, Finset.coe_map, Embedding.coeFn_mk, Set.iUnion_coe_set,
+    Set.mem_iUnion, Set.mem_image, Finset.mem_coe, Set.mem_setOf_eq]
+  congr!
+  rename_i w _ q
+  have := Set.ext_iff.mp (ih w v) q
+  simp only [Finset.mem_coe, Set.mem_setOf_eq] at this
+  rw [← this]
 
 variable {G}
 
@@ -149,12 +149,12 @@ variable [Fintype V] [DecidableRel G.Adj]
 theorem reachable_iff_exists_finsetWalkLength_nonempty (u v : V) :
     G.Reachable u v ↔ ∃ n : Fin (Fintype.card V), (G.finsetWalkLength n u v).Nonempty := by
   constructor
-  · intro r
-    refine r.elim_path fun p => ?_
-    refine ⟨⟨_, p.isPath.length_lt⟩, p, ?_⟩
-    simp [Walk.mem_finsetWalkLength_iff_length_eq]
-  · rintro ⟨_, p, _⟩
-    exact ⟨p⟩
+  intro r
+  refine r.elim_path fun p => ?_
+  refine ⟨⟨_, p.isPath.length_lt⟩, p, ?_⟩
+  simp [Walk.mem_finsetWalkLength_iff_length_eq]
+  rintro ⟨_, p, _⟩
+  exact ⟨p⟩
 
 instance : DecidableRel G.Reachable := fun u v =>
   decidable_of_iff' _ (reachable_iff_exists_finsetWalkLength_nonempty G u v)

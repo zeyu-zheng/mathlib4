@@ -252,8 +252,8 @@ lemma LinearMap.range_dualMap_dual_eq_span_singleton (f : Dual R M₁) :
   ext m
   rw [Submodule.mem_span_singleton]
   refine ⟨fun ⟨r, hr⟩ ↦ ⟨r 1, ?_⟩, fun ⟨r, hr⟩ ↦ ⟨r • LinearMap.id, ?_⟩⟩
-  · ext; simp [dualMap_apply', ← hr]
-  · ext; simp [dualMap_apply', ← hr]
+  ext; simp [dualMap_apply', ← hr]
+  ext; simp [dualMap_apply', ← hr]
 
 end DualMap
 
@@ -287,8 +287,8 @@ theorem toDual_total_left (f : ι →₀ R) (i : ι) :
   simp_rw [LinearMap.map_smul, LinearMap.smul_apply, toDual_apply, smul_eq_mul, mul_boole,
     Finset.sum_ite_eq']
   split_ifs with h
-  · rfl
-  · rw [Finsupp.not_mem_support_iff.mp h]
+  rfl
+  rw [Finsupp.not_mem_support_iff.mp h]
 
 @[simp]
 theorem toDual_total_right (f : ι →₀ R) (i : ι) :
@@ -296,8 +296,8 @@ theorem toDual_total_right (f : ι →₀ R) (i : ι) :
   rw [Finsupp.total_apply, Finsupp.sum, _root_.map_sum]
   simp_rw [LinearMap.map_smul, toDual_apply, smul_eq_mul, mul_boole, Finset.sum_ite_eq]
   split_ifs with h
-  · rfl
-  · rw [Finsupp.not_mem_support_iff.mp h]
+  rfl
+  rw [Finsupp.not_mem_support_iff.mp h]
 
 theorem toDual_apply_left (m : M) (i : ι) : b.toDual m (b i) = b.repr m i := by
   rw [← b.toDual_total_left, b.total_repr]
@@ -400,10 +400,10 @@ theorem total_dualBasis (f : ι →₀ R) (i : ι) :
     Finsupp.total ι (Dual R M) R b.dualBasis f (b i) = f i := by
   cases nonempty_fintype ι
   rw [Finsupp.total_apply, Finsupp.sum_fintype, LinearMap.sum_apply]
-  · simp_rw [LinearMap.smul_apply, smul_eq_mul, dualBasis_apply_self, mul_boole,
-    Finset.sum_ite_eq, if_pos (Finset.mem_univ i)]
-  · intro
-    rw [zero_smul]
+  simp_rw [LinearMap.smul_apply, smul_eq_mul, dualBasis_apply_self, mul_boole,
+  Finset.sum_ite_eq, if_pos (Finset.mem_univ i)]
+  intro
+  rw [zero_smul]
 
 theorem dualBasis_repr (l : Dual R M) (i : ι) : b.dualBasis.repr l i = l (b i) := by
   rw [← total_dualBasis b, Basis.total_repr b.dualBasis l]
@@ -514,11 +514,11 @@ theorem forall_dual_apply_eq_zero_iff (v : V) : (∀ φ : Module.Dual K V, φ v 
 theorem subsingleton_dual_iff :
     Subsingleton (Dual K V) ↔ Subsingleton V := by
   refine ⟨fun h ↦ ⟨fun v w ↦ ?_⟩, fun h ↦ ⟨fun f g ↦ ?_⟩⟩
-  · rw [← sub_eq_zero, ← forall_dual_apply_eq_zero_iff K (v - w)]
-    intros f
-    simp [Subsingleton.elim f 0]
-  · ext v
-    simp [Subsingleton.elim v 0]
+  rw [← sub_eq_zero, ← forall_dual_apply_eq_zero_iff K (v - w)]
+  intros f
+  simp [Subsingleton.elim f 0]
+  ext v
+  simp [Subsingleton.elim v 0]
 
 instance instSubsingletonDual [Subsingleton V] : Subsingleton (Dual K V) :=
   (subsingleton_dual_iff K).mp inferInstance
@@ -535,13 +535,13 @@ instance instNontrivialDual [Nontrivial V] : Nontrivial (Dual K V) :=
 open Classical in
 theorem finite_dual_iff : Finite K (Dual K V) ↔ Finite K V := by
   constructor <;> intro h
-  · obtain ⟨⟨ι, b⟩⟩ := Module.Free.exists_basis (R := K) (M := V)
-    nontriviality K
-    obtain ⟨⟨s, span_s⟩⟩ := h
-    haveI := (b.linearIndependent.map' _ b.toDual_ker).finite_of_le_span_finite _ s ?_
-    · exact Finite.of_basis b
-    · rw [span_s]; apply le_top
-  · infer_instance
+  obtain ⟨⟨ι, b⟩⟩ := Module.Free.exists_basis (R := K) (M := V)
+  nontriviality K
+  obtain ⟨⟨s, span_s⟩⟩ := h
+  haveI := (b.linearIndependent.map' _ b.toDual_ker).finite_of_le_span_finite _ s ?_
+  exact Finite.of_basis b
+  rw [span_s]; apply le_top
+  infer_instance
 
 end
 
@@ -724,10 +724,10 @@ theorem dual_lc (l : ι →₀ R) (i : ι) : ε i (DualBases.lc e l) = l i := by
   rw [lc, _root_.map_finsupp_sum, Finsupp.sum_eq_single i (g := fun a b ↦ (ε i) (b • e a))]
   -- Porting note: cannot get at •
   -- simp only [h.eval, map_smul, smul_eq_mul]
-  · simp [h.eval, smul_eq_mul]
-  · intro q _ q_ne
-    simp [q_ne.symm, h.eval, smul_eq_mul]
-  · simp
+  simp [h.eval, smul_eq_mul]
+  intro q _ q_ne
+  simp [q_ne.symm, h.eval, smul_eq_mul]
+  simp
 
 @[simp]
 theorem coeffs_lc (l : ι →₀ R) : h.coeffs (DualBases.lc e l) = l := by
@@ -849,12 +849,12 @@ theorem dualAnnihilator_gc :
   induction b using OrderDual.rec
   simp only [Function.comp_apply, OrderDual.toDual_le_toDual, OrderDual.ofDual_toDual]
   constructor <;>
-    · intro h x hx
-      simp only [mem_dualAnnihilator, mem_dualCoannihilator]
-      intro y hy
-      have := h hy
-      simp only [mem_dualAnnihilator, mem_dualCoannihilator] at this
-      exact this x hx
+  · intro h x hx
+    simp only [mem_dualAnnihilator, mem_dualCoannihilator]
+    intro y hy
+    have := h hy
+    simp only [mem_dualAnnihilator, mem_dualCoannihilator] at this
+    exact this x hx
 
 theorem le_dualAnnihilator_iff_le_dualCoannihilator {U : Submodule R (Module.Dual R M)}
     {V : Submodule R M} : U ≤ V.dualAnnihilator ↔ V ≤ U.dualCoannihilator :=
@@ -1063,10 +1063,10 @@ instance instModuleDualFiniteDimensional [FiniteDimensional K V] :
 @[simp]
 theorem dual_finrank_eq : finrank K (Module.Dual K V) = finrank K V := by
   by_cases h : FiniteDimensional K V
-  · classical exact LinearEquiv.finrank_eq (Basis.ofVectorSpace K V).toDualEquiv.symm
+  classical exact LinearEquiv.finrank_eq (Basis.ofVectorSpace K V).toDualEquiv.symm
   rw [finrank_eq_zero_of_basis_imp_false, finrank_eq_zero_of_basis_imp_false]
-  · exact fun _ b ↦ h (Module.Finite.of_basis b)
-  · exact fun _ b ↦ h ((Module.finite_dual_iff K).mp <| Module.Finite.of_basis b)
+  exact fun _ b ↦ h (Module.Finite.of_basis b)
+  exact fun _ b ↦ h ((Module.finite_dual_iff K).mp <| Module.Finite.of_basis b)
 
 variable [FiniteDimensional K V]
 
@@ -1194,11 +1194,11 @@ theorem range_dualMap_mkQ_eq (W : Submodule R M) :
   ext φ
   rw [LinearMap.mem_range]
   constructor
-  · rintro ⟨ψ, rfl⟩
-    have := LinearMap.mem_range_self W.mkQ.dualMap ψ
-    simpa only [ker_mkQ] using W.mkQ.range_dualMap_le_dualAnnihilator_ker this
-  · intro hφ
-    exists W.dualCopairing ⟨φ, hφ⟩
+  rintro ⟨ψ, rfl⟩
+  have := LinearMap.mem_range_self W.mkQ.dualMap ψ
+  simpa only [ker_mkQ] using W.mkQ.range_dualMap_le_dualAnnihilator_ker this
+  intro hφ
+  exists W.dualCopairing ⟨φ, hφ⟩
 
 /-- Equivalence $(M/W)^* \cong \operatorname{ann}(W)$. That is, there is a one-to-one
 correspondence between the dual of `M ⧸ W` and those elements of the dual of `M` that
@@ -1279,13 +1279,13 @@ theorem range_dualMap_eq_dualAnnihilator_ker_of_subtype_range_surjective (f : M 
   have := range_dualMap_eq_dualAnnihilator_ker_of_surjective f.rangeRestrict rr_surj
   convert this using 1
   -- Porting note (#11036): broken dot notation lean4#1910
-  · calc
-      _ = range ((range f).subtype.comp f.rangeRestrict).dualMap := by simp
-      _ = _ := ?_
-    rw [← dualMap_comp_dualMap, range_comp_of_range_eq_top]
-    rwa [range_eq_top]
-  · apply congr_arg
-    exact (ker_rangeRestrict f).symm
+  calc
+    _ = range ((range f).subtype.comp f.rangeRestrict).dualMap := by simp
+    _ = _ := ?_
+  rw [← dualMap_comp_dualMap, range_comp_of_range_eq_top]
+  rwa [range_eq_top]
+  apply congr_arg
+  exact (ker_rangeRestrict f).symm
 
 theorem ker_dualMap_eq_dualCoannihilator_range (f : M →ₗ[R] M') :
     LinearMap.ker f.dualMap = (Dual.eval R M' ∘ₗ f).range.dualCoannihilator := by
@@ -1401,22 +1401,22 @@ theorem dualPairing_eq (W : Subspace K V₁) :
 
 theorem dualPairing_nondegenerate (W : Subspace K V₁) : W.dualPairing.Nondegenerate := by
   constructor
-  · rw [LinearMap.separatingLeft_iff_ker_eq_bot, dualPairing_eq]
-    apply LinearEquiv.ker
-  · intro x h
-    rw [← forall_dual_apply_eq_zero_iff K x]
-    intro φ
-    simpa only [Submodule.dualPairing_apply, dualLift_of_subtype] using
-      h (Submodule.Quotient.mk (W.dualLift φ))
+  rw [LinearMap.separatingLeft_iff_ker_eq_bot, dualPairing_eq]
+  apply LinearEquiv.ker
+  intro x h
+  rw [← forall_dual_apply_eq_zero_iff K x]
+  intro φ
+  simpa only [Submodule.dualPairing_apply, dualLift_of_subtype] using
+    h (Submodule.Quotient.mk (W.dualLift φ))
 
 theorem dualCopairing_nondegenerate (W : Subspace K V₁) : W.dualCopairing.Nondegenerate := by
   constructor
-  · rw [LinearMap.separatingLeft_iff_ker_eq_bot, dualCopairing_eq]
-    apply LinearEquiv.ker
-  · rintro ⟨x⟩
-    simp only [Quotient.quot_mk_eq_mk, dualCopairing_apply, Quotient.mk_eq_zero]
-    rw [← forall_mem_dualAnnihilator_apply_eq_zero_iff, SetLike.forall]
-    exact id
+  rw [LinearMap.separatingLeft_iff_ker_eq_bot, dualCopairing_eq]
+  apply LinearEquiv.ker
+  rintro ⟨x⟩
+  simp only [Quotient.quot_mk_eq_mk, dualCopairing_apply, Quotient.mk_eq_zero]
+  rw [← forall_mem_dualAnnihilator_apply_eq_zero_iff, SetLike.forall]
+  exact id
 
 -- Argument from https://math.stackexchange.com/a/2423263/172988
 theorem dualAnnihilator_inf_eq (W W' : Subspace K V₁) :
@@ -1448,12 +1448,12 @@ theorem dualAnnihilator_iInf_eq {ι : Type*} [Finite ι] (W : ι → Subspace K 
     (⨅ i : ι, W i).dualAnnihilator = ⨆ i : ι, (W i).dualAnnihilator := by
   revert ι
   apply Finite.induction_empty_option
-  · intro α β h hyp W
-    rw [← h.iInf_comp, hyp _, ← h.iSup_comp]
-  · intro W
-    rw [iSup_of_empty', iInf_of_isEmpty, sInf_empty, sSup_empty, dualAnnihilator_top]
-  · intro α _ h W
-    rw [iInf_option, iSup_option, dualAnnihilator_inf_eq, h]
+  intro α β h hyp W
+  rw [← h.iInf_comp, hyp _, ← h.iSup_comp]
+  intro W
+  rw [iSup_of_empty', iInf_of_isEmpty, sInf_empty, sSup_empty, dualAnnihilator_top]
+  intro α _ h W
+  rw [iInf_option, iSup_option, dualAnnihilator_inf_eq, h]
 
 /-- For vector spaces, dual annihilators carry direct sum decompositions
 to direct sum decompositions. -/
@@ -1703,7 +1703,7 @@ theorem dualDistrib_dualDistribInvOfBasis_left_inverse (b : Basis ι R M) (c : B
     Basis.tensorProduct_apply, coeFn_sum, Finset.sum_apply, smul_apply, LinearEquiv.coe_coe,
     map_tmul, lid_tmul, smul_eq_mul, id_coe, id_eq]
   rw [Finset.sum_eq_single i, Finset.sum_eq_single j]
-  · simpa using mul_comm _ _
+  simpa using mul_comm _ _
   all_goals { intros; simp [*] at * }
 
 -- Porting note: introduced to help with timeout in dualDistribEquivOfBasis
@@ -1715,7 +1715,7 @@ theorem dualDistrib_dualDistribInvOfBasis_right_inverse (b : Basis ι R M) (c : 
     dualDistribInvOfBasis_apply, dualDistrib_apply, Basis.coord_apply, Basis.repr_self,
     ne_eq, id_coe, id_eq]
   rw [Finset.sum_eq_single i, Finset.sum_eq_single j]
-  · simp
+  simp
   all_goals { intros; simp [*] at * }
 
 /-- A linear equivalence between `Dual M ⊗ Dual N` and `Dual (M ⊗ N)` given bases for `M` and `N`.

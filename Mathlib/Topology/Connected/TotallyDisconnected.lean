@@ -70,16 +70,16 @@ instance [TopologicalSpace β] [TotallyDisconnectedSpace α] [TotallyDisconnecte
     TotallyDisconnectedSpace (α ⊕ β) := by
   refine ⟨fun s _ hs => ?_⟩
   obtain ⟨t, ht, rfl⟩ | ⟨t, ht, rfl⟩ := Sum.isPreconnected_iff.1 hs
-  · exact ht.subsingleton.image _
-  · exact ht.subsingleton.image _
+  exact ht.subsingleton.image _
+  exact ht.subsingleton.image _
 
 instance [∀ i, TopologicalSpace (π i)] [∀ i, TotallyDisconnectedSpace (π i)] :
     TotallyDisconnectedSpace (Σi, π i) := by
   refine ⟨fun s _ hs => ?_⟩
   obtain rfl | h := s.eq_empty_or_nonempty
-  · exact subsingleton_empty
-  · obtain ⟨a, t, ht, rfl⟩ := Sigma.isConnected_iff.1 ⟨h, hs⟩
-    exact ht.isPreconnected.subsingleton.image _
+  exact subsingleton_empty
+  obtain ⟨a, t, ht, rfl⟩ := Sigma.isConnected_iff.1 ⟨h, hs⟩
+  exact ht.isPreconnected.subsingleton.image _
 
 -- Porting note: reformulated using `Pairwise`
 /-- Let `X` be a topological space, and suppose that for all distinct `x,y ∈ X`, there
@@ -101,15 +101,15 @@ theorem isTotallyDisconnected_of_isClopen_set {X : Type*} [TopologicalSpace X]
 theorem totallyDisconnectedSpace_iff_connectedComponent_subsingleton :
     TotallyDisconnectedSpace α ↔ ∀ x : α, (connectedComponent x).Subsingleton := by
   constructor
-  · intro h x
-    apply h.1
-    · exact subset_univ _
-    exact isPreconnected_connectedComponent
+  intro h x
+  apply h.1
+  exact subset_univ _
+  exact isPreconnected_connectedComponent
   intro h; constructor
   intro s s_sub hs
   rcases eq_empty_or_nonempty s with (rfl | ⟨x, x_in⟩)
-  · exact subsingleton_empty
-  · exact (h x).anti (hs.subset_connectedComponent x_in)
+  exact subsingleton_empty
+  exact (h x).anti (hs.subset_connectedComponent x_in)
 
 /-- A space is totally disconnected iff its connected components are singletons. -/
 theorem totallyDisconnectedSpace_iff_connectedComponent_singleton :
@@ -308,5 +308,5 @@ theorem IsPreconnected.eqOn_const_of_mapsTo {S : Set α} (hS : IsPreconnected S)
     {T : Set β} [DiscreteTopology T] {f : α → β} (hc : ContinuousOn f S) (hTm : MapsTo f S T)
     (hne : T.Nonempty) : ∃ y ∈ T, EqOn f (const α y) S := by
   rcases S.eq_empty_or_nonempty with (rfl | ⟨x, hx⟩)
-  · exact hne.imp fun _ hy => ⟨hy, eqOn_empty _ _⟩
-  · exact ⟨f x, hTm hx, fun x' hx' => hS.constant_of_mapsTo hc hTm hx' hx⟩
+  exact hne.imp fun _ hy => ⟨hy, eqOn_empty _ _⟩
+  exact ⟨f x, hTm hx, fun x' hx' => hS.constant_of_mapsTo hc hTm hx' hx⟩

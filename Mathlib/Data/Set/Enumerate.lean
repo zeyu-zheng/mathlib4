@@ -46,14 +46,14 @@ theorem enumerate_eq_none :
   | s, 0, m => fun h _ ↦ enumerate_eq_none_of_sel sel h
   | s, n + 1, m => fun h hm ↦ by
     cases hs : sel s
-    · exact enumerate_eq_none_of_sel sel hs
-    · cases m with
-      | zero => contradiction
-      | succ m' =>
-        simp? [hs, enumerate] at h ⊢ says
-          simp only [enumerate, hs, Option.bind_eq_bind, Option.some_bind] at h ⊢
-        have hm : n ≤ m' := Nat.le_of_succ_le_succ hm
-        exact enumerate_eq_none h hm
+    exact enumerate_eq_none_of_sel sel hs
+    cases m with
+    | zero => contradiction
+    | succ m' =>
+      simp? [hs, enumerate] at h ⊢ says
+        simp only [enumerate, hs, Option.bind_eq_bind, Option.some_bind] at h ⊢
+      have hm : n ≤ m' := Nat.le_of_succ_le_succ hm
+      exact enumerate_eq_none h hm
 
 theorem enumerate_mem (h_sel : ∀ s a, sel s = some a → a ∈ s) :
     ∀ {s n a}, enumerate sel s n = some a → a ∈ s

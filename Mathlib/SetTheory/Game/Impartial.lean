@@ -82,26 +82,26 @@ instance impartial_add : ∀ (G H : PGame) [G.Impartial] [H.Impartial], (G + H).
     rw [impartial_def]
     refine ⟨Equiv.trans (add_congr (neg_equiv_self G) (neg_equiv_self _))
         (Equiv.symm (negAddRelabelling _ _).equiv), fun k => ?_, fun k => ?_⟩
-    · apply leftMoves_add_cases k
-      all_goals
-        intro i; simp only [add_moveLeft_inl, add_moveLeft_inr]
-        apply impartial_add
-    · apply rightMoves_add_cases k
-      all_goals
-        intro i; simp only [add_moveRight_inl, add_moveRight_inr]
-        apply impartial_add
+    apply leftMoves_add_cases k
+    all_goals try
+      intro i; simp only [add_moveLeft_inl, add_moveLeft_inr]
+      apply impartial_add
+    apply rightMoves_add_cases k
+    all_goals
+      intro i; simp only [add_moveRight_inl, add_moveRight_inr]
+      apply impartial_add
 termination_by G H => (G, H)
 
 instance impartial_neg : ∀ (G : PGame) [G.Impartial], (-G).Impartial
   | G, _ => by
     rw [impartial_def]
     refine ⟨?_, fun i => ?_, fun i => ?_⟩
-    · rw [neg_neg]
-      exact Equiv.symm (neg_equiv_self G)
-    · rw [moveLeft_neg']
-      apply impartial_neg
-    · rw [moveRight_neg']
-      apply impartial_neg
+    rw [neg_neg]
+    exact Equiv.symm (neg_equiv_self G)
+    rw [moveLeft_neg']
+    apply impartial_neg
+    rw [moveRight_neg']
+    apply impartial_neg
 termination_by G => G
 
 variable (G : PGame) [Impartial G]
@@ -119,10 +119,10 @@ theorem nonneg : ¬G < 0 := fun h => by
 /-- In an impartial game, either the first player always wins, or the second player always wins. -/
 theorem equiv_or_fuzzy_zero : (G ≈ 0) ∨ G ‖ 0 := by
   rcases lt_or_equiv_or_gt_or_fuzzy G 0 with (h | h | h | h)
-  · exact ((nonneg G) h).elim
-  · exact Or.inl h
-  · exact ((nonpos G) h).elim
-  · exact Or.inr h
+  exact ((nonneg G) h).elim
+  exact Or.inl h
+  exact ((nonpos G) h).elim
+  exact Or.inr h
 
 @[simp]
 theorem not_equiv_zero_iff : ¬(G ≈ 0) ↔ G ‖ 0 :=
@@ -172,17 +172,17 @@ theorem fuzzy_zero_iff_gf : G ‖ 0 ↔ 0 ⧏ G :=
 
 theorem forall_leftMoves_fuzzy_iff_equiv_zero : (∀ i, G.moveLeft i ‖ 0) ↔ (G ≈ 0) := by
   refine ⟨fun hb => ?_, fun hp i => ?_⟩
-  · rw [equiv_zero_iff_le G, le_zero_lf]
-    exact fun i => (hb i).1
-  · rw [fuzzy_zero_iff_lf]
-    exact hp.1.moveLeft_lf i
+  rw [equiv_zero_iff_le G, le_zero_lf]
+  exact fun i => (hb i).1
+  rw [fuzzy_zero_iff_lf]
+  exact hp.1.moveLeft_lf i
 
 theorem forall_rightMoves_fuzzy_iff_equiv_zero : (∀ j, G.moveRight j ‖ 0) ↔ (G ≈ 0) := by
   refine ⟨fun hb => ?_, fun hp i => ?_⟩
-  · rw [equiv_zero_iff_ge G, zero_le_lf]
-    exact fun i => (hb i).2
-  · rw [fuzzy_zero_iff_gf]
-    exact hp.2.lf_moveRight i
+  rw [equiv_zero_iff_ge G, zero_le_lf]
+  exact fun i => (hb i).2
+  rw [fuzzy_zero_iff_gf]
+  exact hp.2.lf_moveRight i
 
 theorem exists_left_move_equiv_iff_fuzzy_zero : (∃ i, G.moveLeft i ≈ 0) ↔ G ‖ 0 := by
   refine ⟨fun ⟨i, hi⟩ => (fuzzy_zero_iff_gf G).2 (lf_of_le_moveLeft hi.2), fun hn => ?_⟩

@@ -42,13 +42,13 @@ theorem toQuadraticMap_toBilin (Q : QuadraticMap R M N) (bm : Basis ι R M) :
     smul_ite, smul_zero, ← Finset.sum_product', ← Finset.diag_union_offDiag,
     Finset.sum_union (Finset.disjoint_diag_offDiag _), Finset.sum_diag, if_true]
   rw [Finset.sum_ite_of_false, QuadraticMap.map_sum, ← Finset.sum_filter]
-  · simp_rw [← polar_smul_right _ (bm.repr x <| Prod.snd _),
-      ← polar_smul_left _ (bm.repr x <| Prod.fst _)]
-    simp_rw [QuadraticMap.map_smul, mul_smul, Finset.sum_sym2_filter_not_isDiag]
-    rfl
-  · intro x hx
-    rw [Finset.mem_offDiag] at hx
-    simpa using hx.2.2
+  simp_rw [← polar_smul_right _ (bm.repr x <| Prod.snd _),
+    ← polar_smul_left _ (bm.repr x <| Prod.fst _)]
+  simp_rw [QuadraticMap.map_smul, mul_smul, Finset.sum_sym2_filter_not_isDiag]
+  rfl
+  intro x hx
+  rw [Finset.mem_offDiag] at hx
+  simpa using hx.2.2
 
 /-- From a free module, every quadratic map can be built from a bilinear form.
 

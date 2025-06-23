@@ -62,8 +62,8 @@ instance instMeasurableAdd₂ {α : Type*} {m : MeasurableSpace α} : Measurable
   refine ⟨Measure.measurable_of_measurable_coe _ fun s hs => ?_⟩
   simp_rw [Measure.coe_add, Pi.add_apply]
   refine Measurable.add ?_ ?_
-  · exact (Measure.measurable_coe hs).comp measurable_fst
-  · exact (Measure.measurable_coe hs).comp measurable_snd
+  exact (Measure.measurable_coe hs).comp measurable_fst
+  exact (Measure.measurable_coe hs).comp measurable_snd
 
 theorem measurable_measure {μ : α → Measure β} :
     Measurable μ ↔ ∀ (s : Set β), MeasurableSet s → Measurable fun b => μ b s :=
@@ -123,17 +123,17 @@ theorem lintegral_join {m : Measure (Measure α)} {f : α → ℝ≥0∞} (hf : 
     refine
       this (fun n => SimpleFunc.range (SimpleFunc.eapprox f n))
         (fun n r μ => μ (SimpleFunc.eapprox f n ⁻¹' {r})) ?_ ?_
-    · exact fun n r => measurable_coe (SimpleFunc.measurableSet_preimage _ _)
-    · exact fun n m h μ => SimpleFunc.lintegral_mono (SimpleFunc.monotone_eapprox _ h) le_rfl
+    exact fun n r => measurable_coe (SimpleFunc.measurableSet_preimage _ _)
+    exact fun n m h μ => SimpleFunc.lintegral_mono (SimpleFunc.monotone_eapprox _ h) le_rfl
   intro s f hf hm
   rw [lintegral_iSup _ hm]
   swap
-  · exact fun n => Finset.measurable_sum _ fun r _ => (hf _ _).const_mul _
+  exact fun n => Finset.measurable_sum _ fun r _ => (hf _ _).const_mul _
   congr
   funext n
   rw [lintegral_finset_sum (s n)]
-  · simp_rw [lintegral_const_mul _ (hf _ _)]
-  · exact fun r _ => (hf _ _).const_mul _
+  simp_rw [lintegral_const_mul _ (hf _ _)]
+  exact fun r _ => (hf _ _).const_mul _
 
 /-- Monadic bind on `Measure`, only works in the category of measurable spaces and measurable
 functions. When the function `f` is not measurable the result is not well defined. -/

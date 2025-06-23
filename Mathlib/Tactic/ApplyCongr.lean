@@ -54,8 +54,8 @@ example (f g : ℤ → ℤ) (S : Finset ℤ) (h : ∀ m ∈ S, f m = g m) :
     -- However `apply_congr` uses the appropriate `@[congr]` lemma,
     -- so we get to rewrite `f x`, in the presence of the crucial `H : x ∈ S` hypothesis.
     apply_congr
-    · skip
-    · simp [*]
+    skip
+    simp [*]
 ```
 
 In the above example, when the `apply_congr` tactic is called it gives the hypothesis `H : x ∈ S`

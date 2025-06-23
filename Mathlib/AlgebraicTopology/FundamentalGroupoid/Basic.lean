@@ -43,37 +43,37 @@ def reflTransSymmAux (x : I × I) : ℝ :=
 @[continuity]
 theorem continuous_reflTransSymmAux : Continuous reflTransSymmAux := by
   refine continuous_if_le ?_ ?_ (Continuous.continuousOn ?_) (Continuous.continuousOn ?_) ?_
-  · continuity
-  · continuity
-  · continuity
-  · continuity
+  continuity
+  continuity
+  continuity
+  continuity
   intro x hx
   norm_num [hx, mul_assoc]
 
 theorem reflTransSymmAux_mem_I (x : I × I) : reflTransSymmAux x ∈ I := by
   dsimp only [reflTransSymmAux]
   split_ifs
-  · constructor
-    · apply mul_nonneg
-      · apply mul_nonneg
-        · unit_interval
-        · norm_num
-      · unit_interval
-    · rw [mul_assoc]
-      apply mul_le_one
-      · unit_interval
-      · apply mul_nonneg
-        · norm_num
-        · unit_interval
-      · linarith
-  · constructor
-    · apply mul_nonneg
-      · unit_interval
-      linarith [unitInterval.nonneg x.2, unitInterval.le_one x.2]
-    · apply mul_le_one
-      · unit_interval
-      · linarith [unitInterval.nonneg x.2, unitInterval.le_one x.2]
-      · linarith [unitInterval.nonneg x.2, unitInterval.le_one x.2]
+  constructor
+  apply mul_nonneg
+  apply mul_nonneg
+  unit_interval
+  norm_num
+  unit_interval
+  rw [mul_assoc]
+  apply mul_le_one
+  unit_interval
+  apply mul_nonneg
+  norm_num
+  unit_interval
+  linarith
+  constructor
+  apply mul_nonneg
+  unit_interval
+  linarith [unitInterval.nonneg x.2, unitInterval.le_one x.2]
+  apply mul_le_one
+  unit_interval
+  linarith [unitInterval.nonneg x.2, unitInterval.le_one x.2]
+  linarith [unitInterval.nonneg x.2, unitInterval.le_one x.2]
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from the constant path based at `x₀` to
   `p.trans p.symm`. -/
@@ -143,10 +143,10 @@ theorem trans_refl_reparam (p : Path x₀ x₁) :
   unfold transReflReparamAux
   simp only [Path.trans_apply, not_le, coe_reparam, Function.comp_apply, one_div, Path.refl_apply]
   split_ifs
-  · rfl
-  · rfl
-  · simp
-  · simp
+  rfl
+  rfl
+  simp
+  simp
 
 /-- For any path `p` from `x₀` to `x₁`, we have a homotopy from `p.trans (Path.refl x₁)` to `p`. -/
 def transRefl (p : Path x₀ x₁) : Homotopy (p.trans (Path.refl x₁)) p :=
@@ -199,35 +199,35 @@ theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : 
     Path.coe_reparam]
   -- TODO: why does split_ifs not reduce the ifs??????
   split_ifs with h₁ h₂ h₃ h₄ h₅
-  · rfl
-  · exfalso
-    linarith
-  · exfalso
-    linarith
-  · exfalso
-    linarith
-  · exfalso
-    linarith
-  · exfalso
-    linarith
-  · exfalso
-    linarith
-  · have h : 2 * (2 * (x : ℝ)) - 1 = 2 * (2 * (↑x + 1 / 4) - 1) := by linarith
-    simp [h₂, h₁, h, dif_neg (show ¬False from id), dif_pos True.intro, if_false, if_true]
-  · exfalso
-    linarith
-  · exfalso
-    linarith
-  · exfalso
-    linarith
-  · exfalso
-    linarith
-  · exfalso
-    linarith
-  · exfalso
-    linarith
-  · congr
-    ring
+  rfl
+  exfalso
+  linarith
+  exfalso
+  linarith
+  exfalso
+  linarith
+  exfalso
+  linarith
+  exfalso
+  linarith
+  exfalso
+  linarith
+  have h : 2 * (2 * (x : ℝ)) - 1 = 2 * (2 * (↑x + 1 / 4) - 1) := by linarith
+  simp [h₂, h₁, h, dif_neg (show ¬False from id), dif_pos True.intro, if_false, if_true]
+  exfalso
+  linarith
+  exfalso
+  linarith
+  exfalso
+  linarith
+  exfalso
+  linarith
+  exfalso
+  linarith
+  exfalso
+  linarith
+  congr
+  ring
 
 /-- For paths `p q r`, we have a homotopy from `(p.trans q).trans r` to `p.trans (q.trans r)`. -/
 def transAssoc {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : Path x₁ x₂) (r : Path x₂ x₃) :

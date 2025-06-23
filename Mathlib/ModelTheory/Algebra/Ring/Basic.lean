@@ -132,8 +132,8 @@ instance : Fintype Language.ring.Symbols :=
     intro x
     dsimp [Language.Symbols]
     rcases x with ⟨_, f⟩ | ⟨_, f⟩
-    · cases f <;> decide
-    · cases f ⟩
+    cases f <;> decide
+    cases f ⟩
 
 @[simp]
 theorem card_ring : card Language.ring = 5 := by

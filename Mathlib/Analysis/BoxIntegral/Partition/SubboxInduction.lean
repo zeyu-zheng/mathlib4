@@ -104,29 +104,29 @@ theorem exists_taggedPartition_isHenstock_isSubordinate_homothetic (I : Box ι)
       (∀ J ∈ π, ∃ m : ℕ, ∀ i, (J : _).upper i - J.lower i = (I.upper i - I.lower i) / 2 ^ m) ∧
         π.distortion = I.distortion := by
   refine subbox_induction_on I (fun J _ hJ => ?_) fun z _ => ?_
-  · choose! πi hP hHen hr Hn _ using hJ
-    choose! n hn using Hn
-    have hP : ((splitCenter J).biUnionTagged πi).IsPartition :=
-      (isPartition_splitCenter _).biUnionTagged hP
-    have hsub : ∀ J' ∈ (splitCenter J).biUnionTagged πi, ∃ n : ℕ, ∀ i,
-        (J' : _).upper i - J'.lower i = (J.upper i - J.lower i) / 2 ^ n := by
-      intro J' hJ'
-      rcases (splitCenter J).mem_biUnionTagged.1 hJ' with ⟨J₁, h₁, h₂⟩
-      refine ⟨n J₁ J' + 1, fun i => ?_⟩
-      simp only [hn J₁ h₁ J' h₂, upper_sub_lower_of_mem_splitCenter h₁, pow_succ', div_div]
-    refine ⟨_, hP, isHenstock_biUnionTagged.2 hHen, isSubordinate_biUnionTagged.2 hr, hsub, ?_⟩
-    refine TaggedPrepartition.distortion_of_const _ hP.nonempty_boxes fun J' h' => ?_
-    rcases hsub J' h' with ⟨n, hn⟩
-    exact Box.distortion_eq_of_sub_eq_div hn
-  · refine ⟨Box.Icc I ∩ closedBall z (r z),
-      inter_mem_nhdsWithin _ (closedBall_mem_nhds _ (r z).coe_prop), ?_⟩
-    intro J _ n Hmem HIcc Hsub
-    rw [Set.subset_inter_iff] at HIcc
-    refine ⟨single _ _ le_rfl _ Hmem, isPartition_single _, isHenstock_single _,
-      (isSubordinate_single _ _).2 HIcc.2, ?_, distortion_single _ _⟩
-    simp only [TaggedPrepartition.mem_single, forall_eq]
-    refine ⟨0, fun i => ?_⟩
-    simp
+  choose! πi hP hHen hr Hn _ using hJ
+  choose! n hn using Hn
+  have hP : ((splitCenter J).biUnionTagged πi).IsPartition :=
+    (isPartition_splitCenter _).biUnionTagged hP
+  have hsub : ∀ J' ∈ (splitCenter J).biUnionTagged πi, ∃ n : ℕ, ∀ i,
+      (J' : _).upper i - J'.lower i = (J.upper i - J.lower i) / 2 ^ n := by
+    intro J' hJ'
+    rcases (splitCenter J).mem_biUnionTagged.1 hJ' with ⟨J₁, h₁, h₂⟩
+    refine ⟨n J₁ J' + 1, fun i => ?_⟩
+    simp only [hn J₁ h₁ J' h₂, upper_sub_lower_of_mem_splitCenter h₁, pow_succ', div_div]
+  refine ⟨_, hP, isHenstock_biUnionTagged.2 hHen, isSubordinate_biUnionTagged.2 hr, hsub, ?_⟩
+  refine TaggedPrepartition.distortion_of_const _ hP.nonempty_boxes fun J' h' => ?_
+  rcases hsub J' h' with ⟨n, hn⟩
+  exact Box.distortion_eq_of_sub_eq_div hn
+  refine ⟨Box.Icc I ∩ closedBall z (r z),
+    inter_mem_nhdsWithin _ (closedBall_mem_nhds _ (r z).coe_prop), ?_⟩
+  intro J _ n Hmem HIcc Hsub
+  rw [Set.subset_inter_iff] at HIcc
+  refine ⟨single _ _ le_rfl _ Hmem, isPartition_single _, isHenstock_single _,
+    (isSubordinate_single _ _).2 HIcc.2, ?_, distortion_single _ _⟩
+  simp only [TaggedPrepartition.mem_single, forall_eq]
+  refine ⟨0, fun i => ?_⟩
+  simp
 
 end Box
 

@@ -174,20 +174,20 @@ theorem floor_of_nonpos (ha : a ≤ 0) : ⌊a⌋₊ = 0 :=
 
 theorem floor_mono : Monotone (floor : α → ℕ) := fun a b h => by
   obtain ha | ha := le_total a 0
-  · rw [floor_of_nonpos ha]
-    exact Nat.zero_le _
-  · exact le_floor ((floor_le ha).trans h)
+  rw [floor_of_nonpos ha]
+  exact Nat.zero_le _
+  exact le_floor ((floor_le ha).trans h)
 
 @[gcongr]
 theorem floor_le_floor : ∀ x y : α, x ≤ y → ⌊x⌋₊ ≤ ⌊y⌋₊ := floor_mono
 
 theorem le_floor_iff' (hn : n ≠ 0) : n ≤ ⌊a⌋₊ ↔ (n : α) ≤ a := by
   obtain ha | ha := le_total a 0
-  · rw [floor_of_nonpos ha]
-    exact
-      iff_of_false (Nat.pos_of_ne_zero hn).not_le
-        (not_le_of_lt <| ha.trans_lt <| cast_pos.2 <| Nat.pos_of_ne_zero hn)
-  · exact le_floor_iff ha
+  rw [floor_of_nonpos ha]
+  exact
+    iff_of_false (Nat.pos_of_ne_zero hn).not_le
+      (not_le_of_lt <| ha.trans_lt <| cast_pos.2 <| Nat.pos_of_ne_zero hn)
+  exact le_floor_iff ha
 
 @[simp]
 theorem one_le_floor_iff (x : α) : 1 ≤ ⌊x⌋₊ ↔ 1 ≤ x :=
@@ -311,15 +311,15 @@ theorem le_of_ceil_le (h : ⌈a⌉₊ ≤ n) : a ≤ n :=
 
 theorem floor_le_ceil (a : α) : ⌊a⌋₊ ≤ ⌈a⌉₊ := by
   obtain ha | ha := le_total a 0
-  · rw [floor_of_nonpos ha]
-    exact Nat.zero_le _
-  · exact cast_le.1 ((floor_le ha).trans <| le_ceil _)
+  rw [floor_of_nonpos ha]
+  exact Nat.zero_le _
+  exact cast_le.1 ((floor_le ha).trans <| le_ceil _)
 
 theorem floor_lt_ceil_of_lt_of_pos {a b : α} (h : a < b) (h' : 0 < b) : ⌊a⌋₊ < ⌈b⌉₊ := by
   rcases le_or_lt 0 a with (ha | ha)
-  · rw [floor_lt ha]
-    exact h.trans_le (le_ceil _)
-  · rwa [floor_of_nonpos ha.le, lt_ceil, Nat.cast_zero]
+  rw [floor_lt ha]
+  exact h.trans_le (le_ceil _)
+  rwa [floor_of_nonpos ha.le, lt_ceil, Nat.cast_zero]
 
 theorem ceil_eq_iff (hn : n ≠ 0) : ⌈a⌉₊ = n ↔ ↑(n - 1) < a ∧ a ≤ n := by
   rw [← ceil_le, ← not_le, ← ceil_le, not_le,
@@ -391,13 +391,13 @@ theorem floor_add_nat (ha : 0 ≤ a) (n : ℕ) : ⌊a + n⌋₊ = ⌊a⌋₊ + n
   eq_of_forall_le_iff fun b => by
     rw [le_floor_iff (add_nonneg ha n.cast_nonneg)]
     obtain hb | hb := le_total n b
-    · obtain ⟨d, rfl⟩ := exists_add_of_le hb
-      rw [Nat.cast_add, add_comm n, add_comm (n : α), add_le_add_iff_right, add_le_add_iff_right,
-        le_floor_iff ha]
-    · obtain ⟨d, rfl⟩ := exists_add_of_le hb
-      rw [Nat.cast_add, add_left_comm _ b, add_left_comm _ (b : α)]
-      refine iff_of_true ?_ le_self_add
-      exact le_add_of_nonneg_right <| ha.trans <| le_add_of_nonneg_right d.cast_nonneg
+    obtain ⟨d, rfl⟩ := exists_add_of_le hb
+    rw [Nat.cast_add, add_comm n, add_comm (n : α), add_le_add_iff_right, add_le_add_iff_right,
+      le_floor_iff ha]
+    obtain ⟨d, rfl⟩ := exists_add_of_le hb
+    rw [Nat.cast_add, add_left_comm _ b, add_left_comm _ (b : α)]
+    refine iff_of_true ?_ le_self_add
+    exact le_add_of_nonneg_right <| ha.trans <| le_add_of_nonneg_right d.cast_nonneg
 
 theorem floor_add_one (ha : 0 ≤ a) : ⌊a + 1⌋₊ = ⌊a⌋₊ + 1 := by
   -- Porting note: broken `convert floor_add_nat ha 1`
@@ -412,12 +412,12 @@ theorem floor_add_ofNat (ha : 0 ≤ a) (n : ℕ) [n.AtLeastTwo] :
 theorem floor_sub_nat [Sub α] [OrderedSub α] [ExistsAddOfLE α] (a : α) (n : ℕ) :
     ⌊a - n⌋₊ = ⌊a⌋₊ - n := by
   obtain ha | ha := le_total a 0
-  · rw [floor_of_nonpos ha, floor_of_nonpos (tsub_nonpos_of_le (ha.trans n.cast_nonneg)), zero_tsub]
+  rw [floor_of_nonpos ha, floor_of_nonpos (tsub_nonpos_of_le (ha.trans n.cast_nonneg)), zero_tsub]
   rcases le_total a n with h | h
-  · rw [floor_of_nonpos (tsub_nonpos_of_le h), eq_comm, tsub_eq_zero_iff_le]
-    exact Nat.cast_le.1 ((Nat.floor_le ha).trans h)
-  · rw [eq_tsub_iff_add_eq_of_le (le_floor h), ← floor_add_nat _, tsub_add_cancel_of_le h]
-    exact le_tsub_of_add_le_left ((add_zero _).trans_le h)
+  rw [floor_of_nonpos (tsub_nonpos_of_le h), eq_comm, tsub_eq_zero_iff_le]
+  exact Nat.cast_le.1 ((Nat.floor_le ha).trans h)
+  rw [eq_tsub_iff_add_eq_of_le (le_floor h), ← floor_add_nat _, tsub_add_cancel_of_le h]
+  exact le_tsub_of_add_le_left ((add_zero _).trans_le h)
 
 @[simp]
 theorem floor_sub_one [Sub α] [OrderedSub α] [ExistsAddOfLE α] (a : α) : ⌊a - 1⌋₊ = ⌊a⌋₊ - 1 :=
@@ -433,10 +433,10 @@ theorem ceil_add_nat (ha : 0 ≤ a) (n : ℕ) : ⌈a + n⌉₊ = ⌈a⌉₊ + n 
   eq_of_forall_ge_iff fun b => by
     rw [← not_lt, ← not_lt, not_iff_not, lt_ceil]
     obtain hb | hb := le_or_lt n b
-    · obtain ⟨d, rfl⟩ := exists_add_of_le hb
-      rw [Nat.cast_add, add_comm n, add_comm (n : α), add_lt_add_iff_right, add_lt_add_iff_right,
-        lt_ceil]
-    · exact iff_of_true (lt_add_of_nonneg_of_lt ha <| cast_lt.2 hb) (Nat.lt_add_left _ hb)
+    obtain ⟨d, rfl⟩ := exists_add_of_le hb
+    rw [Nat.cast_add, add_comm n, add_comm (n : α), add_lt_add_iff_right, add_lt_add_iff_right,
+      lt_ceil]
+    exact iff_of_true (lt_add_of_nonneg_of_lt ha <| cast_lt.2 hb) (Nat.lt_add_left _ hb)
 
 theorem ceil_add_one (ha : 0 ≤ a) : ⌈a + 1⌉₊ = ⌈a⌉₊ + 1 := by
   -- Porting note: broken `convert ceil_add_nat ha 1`
@@ -473,18 +473,18 @@ variable [LinearOrderedSemifield α] [FloorSemiring α]
 
 theorem floor_div_nat (a : α) (n : ℕ) : ⌊a / n⌋₊ = ⌊a⌋₊ / n := by
   rcases le_total a 0 with ha | ha
-  · rw [floor_of_nonpos, floor_of_nonpos ha]
-    · simp
-    apply div_nonpos_of_nonpos_of_nonneg ha n.cast_nonneg
+  rw [floor_of_nonpos, floor_of_nonpos ha]
+  simp
+  apply div_nonpos_of_nonpos_of_nonneg ha n.cast_nonneg
   obtain rfl | hn := n.eq_zero_or_pos
-  · rw [cast_zero, div_zero, Nat.div_zero, floor_zero]
+  rw [cast_zero, div_zero, Nat.div_zero, floor_zero]
   refine (floor_eq_iff ?_).2 ?_
-  · exact div_nonneg ha n.cast_nonneg
+  exact div_nonneg ha n.cast_nonneg
   constructor
-  · exact cast_div_le.trans (div_le_div_of_nonneg_right (floor_le ha) n.cast_nonneg)
+  exact cast_div_le.trans (div_le_div_of_nonneg_right (floor_le ha) n.cast_nonneg)
   rw [div_lt_iff, add_mul, one_mul, ← cast_mul, ← cast_add, ← floor_lt ha]
-  · exact lt_div_mul_add hn
-  · exact cast_pos.2 hn
+  exact lt_div_mul_add hn
+  exact cast_pos.2 hn
 
 -- See note [no_index around OfNat.ofNat]
 theorem floor_div_ofNat (a : α) (n : ℕ) [n.AtLeastTwo] :
@@ -508,9 +508,9 @@ theorem subsingleton_floorSemiring {α} [LinearOrderedSemiring α] :
   have : H₁.floor = H₂.floor
   ext a
   cases' lt_or_le a 0 with h h
-  · rw [H₁.floor_of_neg, H₂.floor_of_neg] <;> exact h
-  · refine eq_of_forall_le_iff fun n => ?_
-    rw [H₁.gc_floor, H₂.gc_floor] <;> exact h
+  rw [H₁.floor_of_neg, H₂.floor_of_neg] <;> exact h
+  refine eq_of_forall_le_iff fun n => ?_
+  rw [H₁.gc_floor, H₂.gc_floor] <;> exact h
   cases H₁
   cases H₂
   congr
@@ -923,8 +923,8 @@ theorem fract_add (a b : α) : ∃ z : ℤ, fract (a + b) - fract a - fract b = 
 theorem fract_neg {x : α} (hx : fract x ≠ 0) : fract (-x) = 1 - fract x := by
   rw [fract_eq_iff]
   constructor
-  · rw [le_sub_iff_add_le, zero_add]
-    exact (fract_lt_one x).le
+  rw [le_sub_iff_add_le, zero_add]
+  exact (fract_lt_one x).le
   refine ⟨sub_lt_self _ (lt_of_le_of_ne' (fract_nonneg x) hx), -⌊x⌋ - 1, ?_⟩
   simp only [sub_sub_eq_add_sub, cast_sub, cast_neg, cast_one, sub_left_inj]
   conv in -x => rw [← floor_add_fract x]
@@ -937,13 +937,13 @@ theorem fract_neg_eq_zero {x : α} : fract (-x) = 0 ↔ fract x = 0 := by
 
 theorem fract_mul_nat (a : α) (b : ℕ) : ∃ z : ℤ, fract a * b - fract (a * b) = z := by
   induction' b with c hc
-  · use 0; simp
-  · rcases hc with ⟨z, hz⟩
-    rw [Nat.cast_add, mul_add, mul_add, Nat.cast_one, mul_one, mul_one]
-    rcases fract_add (a * c) a with ⟨y, hy⟩
-    use z - y
-    rw [Int.cast_sub, ← hz, ← hy]
-    abel
+  use 0; simp
+  rcases hc with ⟨z, hz⟩
+  rw [Nat.cast_add, mul_add, mul_add, Nat.cast_one, mul_one, mul_one]
+  rcases fract_add (a * c) a with ⟨y, hy⟩
+  use z - y
+  rw [Int.cast_sub, ← hz, ← hy]
+  abel
 
 -- Porting note: in mathlib3 there was no need for the type annotation in `(m:α)`
 theorem preimage_fract (s : Set α) :
@@ -958,11 +958,11 @@ theorem preimage_fract (s : Set α) :
 theorem image_fract (s : Set α) : fract '' s = ⋃ m : ℤ, (fun x : α => x - m) '' s ∩ Ico 0 1 := by
   ext x
   simp only [mem_image, mem_inter_iff, mem_iUnion]; constructor
-  · rintro ⟨y, hy, rfl⟩
-    exact ⟨⌊y⌋, ⟨y, hy, rfl⟩, fract_nonneg y, fract_lt_one y⟩
-  · rintro ⟨m, ⟨y, hys, rfl⟩, h0, h1⟩
-    obtain rfl : ⌊y⌋ = m := floor_eq_iff.2 ⟨sub_nonneg.1 h0, sub_lt_iff_lt_add'.1 h1⟩
-    exact ⟨y, hys, rfl⟩
+  rintro ⟨y, hy, rfl⟩
+  exact ⟨⌊y⌋, ⟨y, hy, rfl⟩, fract_nonneg y, fract_lt_one y⟩
+  rintro ⟨m, ⟨y, hys, rfl⟩, h0, h1⟩
+  obtain rfl : ⌊y⌋ = m := floor_eq_iff.2 ⟨sub_nonneg.1 h0, sub_lt_iff_lt_add'.1 h1⟩
+  exact ⟨y, hys, rfl⟩
 
 section LinearOrderedField
 
@@ -987,31 +987,31 @@ theorem sub_floor_div_mul_lt (a : k) (hb : 0 < b) : a - ⌊a / b⌋ * b < b :=
 
 theorem fract_div_natCast_eq_div_natCast_mod {m n : ℕ} : fract ((m : k) / n) = ↑(m % n) / n := by
   rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp
+  simp
   have hn' : 0 < (n : k)
   norm_cast
   refine fract_eq_iff.mpr ⟨?_, ?_, m / n, ?_⟩
-  · positivity
-  · simpa only [div_lt_one hn', Nat.cast_lt] using m.mod_lt hn
-  · rw [sub_eq_iff_eq_add', ← mul_right_inj' hn'.ne', mul_div_cancel₀ _ hn'.ne', mul_add,
-      mul_div_cancel₀ _ hn'.ne']
-    norm_cast
-    rw [← Nat.cast_add, Nat.mod_add_div m n]
+  positivity
+  simpa only [div_lt_one hn', Nat.cast_lt] using m.mod_lt hn
+  rw [sub_eq_iff_eq_add', ← mul_right_inj' hn'.ne', mul_div_cancel₀ _ hn'.ne', mul_add,
+    mul_div_cancel₀ _ hn'.ne']
+  norm_cast
+  rw [← Nat.cast_add, Nat.mod_add_div m n]
 
 -- TODO Generalise this to allow `n : ℤ` using `Int.fmod` instead of `Int.mod`.
 theorem fract_div_intCast_eq_div_intCast_mod {m : ℤ} {n : ℕ} :
     fract ((m : k) / n) = ↑(m % n) / n := by
   rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp
+  simp
   replace hn : 0 < (n : k) := by norm_cast
   have : ∀ {l : ℤ}, 0 ≤ l → fract ((l : k) / n) = ↑(l % n) / n
   intros l hl
   obtain ⟨l₀, rfl | rfl⟩ := l.eq_nat_or_neg
-  · rw [cast_natCast, ← natCast_mod, cast_natCast, fract_div_natCast_eq_div_natCast_mod]
-  · rw [Right.nonneg_neg_iff, natCast_nonpos_iff] at hl
-    simp [hl, zero_mod]
+  rw [cast_natCast, ← natCast_mod, cast_natCast, fract_div_natCast_eq_div_natCast_mod]
+  rw [Right.nonneg_neg_iff, natCast_nonpos_iff] at hl
+  simp [hl, zero_mod]
   obtain ⟨m₀, rfl | rfl⟩ := m.eq_nat_or_neg
-  · exact this (ofNat_nonneg m₀)
+  exact this (ofNat_nonneg m₀)
   let q := ⌈↑m₀ / (n : k)⌉
   let m₁ := q * ↑n - (↑m₀ : ℤ)
   have hm₁ : 0 ≤ m₁
@@ -1024,12 +1024,12 @@ theorem fract_div_intCast_eq_div_intCast_mod {m : ℤ} {n : ℕ} :
     _ = Int.cast (m₁ % (n : ℤ)) / Nat.cast n := this hm₁
     _ = Int.cast (-(↑m₀ : ℤ) % ↑n) / Nat.cast n := ?_
 
-  · rw [← fract_int_add q, ← mul_div_cancel_right₀ (q : k) hn.ne', ← add_div, ← sub_eq_add_neg]
-    -- Porting note: the `simp` was `push_cast`
-    simp [m₁]
-  · congr 2
-    change (q * ↑n - (↑m₀ : ℤ)) % ↑n = _
-    rw [sub_eq_add_neg, add_comm (q * ↑n), add_mul_emod_self]
+  rw [← fract_int_add q, ← mul_div_cancel_right₀ (q : k) hn.ne', ← add_div, ← sub_eq_add_neg]
+  -- Porting note: the `simp` was `push_cast`
+  simp [m₁]
+  congr 2
+  change (q * ↑n - (↑m₀ : ℤ)) % ↑n = _
+  rw [sub_eq_add_neg, add_comm (q * ↑n), add_mul_emod_self]
 
 end LinearOrderedField
 
@@ -1170,7 +1170,7 @@ theorem preimage_ceil_singleton (m : ℤ) : (ceil : α → ℤ) ⁻¹' {m} = Ioc
 
 theorem fract_eq_zero_or_add_one_sub_ceil (a : α) : fract a = 0 ∨ fract a = a + 1 - (⌈a⌉ : α) := by
   rcases eq_or_ne (fract a) 0 with ha | ha
-  · exact Or.inl ha
+  exact Or.inl ha
   right
   suffices (⌈a⌉ : α) = ⌊a⌋ + 1 by
     rw [this, ← self_sub_fract]
@@ -1322,24 +1322,24 @@ theorem round_ofNat_add (n : ℕ) [n.AtLeastTwo] (x : α) :
 theorem abs_sub_round_eq_min (x : α) : |x - round x| = min (fract x) (1 - fract x) := by
   simp_rw [round, min_def_lt, two_mul, ← lt_tsub_iff_left]
   cases' lt_or_ge (fract x) (1 - fract x) with hx hx
-  · rw [if_pos hx, if_pos hx, self_sub_floor, abs_fract]
-  · have : 0 < fract x := by
-      replace hx : 0 < fract x + fract x := lt_of_lt_of_le zero_lt_one (tsub_le_iff_left.mp hx)
-      simpa only [← two_mul, mul_pos_iff_of_pos_left, zero_lt_two] using hx
-    rw [if_neg (not_lt.mpr hx), if_neg (not_lt.mpr hx), abs_sub_comm, ceil_sub_self_eq this.ne.symm,
-      abs_one_sub_fract]
+  rw [if_pos hx, if_pos hx, self_sub_floor, abs_fract]
+  have : 0 < fract x := by
+    replace hx : 0 < fract x + fract x := lt_of_lt_of_le zero_lt_one (tsub_le_iff_left.mp hx)
+    simpa only [← two_mul, mul_pos_iff_of_pos_left, zero_lt_two] using hx
+  rw [if_neg (not_lt.mpr hx), if_neg (not_lt.mpr hx), abs_sub_comm, ceil_sub_self_eq this.ne.symm,
+    abs_one_sub_fract]
 
 theorem round_le (x : α) (z : ℤ) : |x - round x| ≤ |x - z| := by
   rw [abs_sub_round_eq_min, min_le_iff]
   rcases le_or_lt (z : α) x with (hx | hx) <;> [left; right]
-  · conv_rhs => rw [abs_eq_self.mpr (sub_nonneg.mpr hx), ← fract_add_floor x, add_sub_assoc]
-    simpa only [le_add_iff_nonneg_right, sub_nonneg, cast_le] using le_floor.mpr hx
-  · rw [abs_eq_neg_self.mpr (sub_neg.mpr hx).le]
-    conv_rhs => rw [← fract_add_floor x]
-    rw [add_sub_assoc, add_comm, neg_add, neg_sub, le_add_neg_iff_add_le, sub_add_cancel,
-      le_sub_comm]
-    norm_cast
-    exact floor_le_sub_one_iff.mpr hx
+  conv_rhs => rw [abs_eq_self.mpr (sub_nonneg.mpr hx), ← fract_add_floor x, add_sub_assoc]
+  simpa only [le_add_iff_nonneg_right, sub_nonneg, cast_le] using le_floor.mpr hx
+  rw [abs_eq_neg_self.mpr (sub_neg.mpr hx).le]
+  conv_rhs => rw [← fract_add_floor x]
+  rw [add_sub_assoc, add_comm, neg_add, neg_sub, le_add_neg_iff_add_le, sub_add_cancel,
+    le_sub_comm]
+  norm_cast
+  exact floor_le_sub_one_iff.mpr hx
 
 end LinearOrderedRing
 
@@ -1350,23 +1350,23 @@ variable [LinearOrderedField α] [FloorRing α]
 theorem round_eq (x : α) : round x = ⌊x + 1 / 2⌋ := by
   simp_rw [round, (by simp only [lt_div_iff', two_pos] : 2 * fract x < 1 ↔ fract x < 1 / 2)]
   cases' lt_or_le (fract x) (1 / 2) with hx hx
-  · conv_rhs => rw [← fract_add_floor x, add_assoc, add_left_comm, floor_int_add]
-    rw [if_pos hx, self_eq_add_right, floor_eq_iff, cast_zero, zero_add]
+  conv_rhs => rw [← fract_add_floor x, add_assoc, add_left_comm, floor_int_add]
+  rw [if_pos hx, self_eq_add_right, floor_eq_iff, cast_zero, zero_add]
+  constructor
+  linarith [fract_nonneg x]
+  linarith
+  have : ⌊fract x + 1 / 2⌋ = 1 := by
+    rw [floor_eq_iff]
     constructor
-    · linarith [fract_nonneg x]
-    · linarith
-  · have : ⌊fract x + 1 / 2⌋ = 1 := by
-      rw [floor_eq_iff]
-      constructor
-      · norm_num
-        linarith
-      · norm_num
-        linarith [fract_lt_one x]
-    rw [if_neg (not_lt.mpr hx), ← fract_add_floor x, add_assoc, add_left_comm, floor_int_add,
-      ceil_add_int, add_comm _ ⌊x⌋, add_right_inj, ceil_eq_iff, this, cast_one, sub_self]
-    constructor
-    · linarith
-    · linarith [fract_lt_one x]
+    norm_num
+    linarith
+    norm_num
+    linarith [fract_lt_one x]
+  rw [if_neg (not_lt.mpr hx), ← fract_add_floor x, add_assoc, add_left_comm, floor_int_add,
+    ceil_add_int, add_comm _ ⌊x⌋, add_right_inj, ceil_eq_iff, this, cast_one, sub_self]
+  constructor
+  linarith
+  linarith [fract_lt_one x]
 
 @[simp]
 theorem round_two_inv : round (2⁻¹ : α) = 1 := by
@@ -1390,7 +1390,7 @@ theorem abs_sub_round (x : α) : |x - round x| ≤ 1 / 2 := by
 theorem abs_sub_round_div_natCast_eq {m n : ℕ} :
     |(m : α) / n - round ((m : α) / n)| = ↑(min (m % n) (n - m % n)) / n := by
   rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp
+  simp
   have hn' : 0 < (n : α)
   norm_cast
   rw [abs_sub_round_eq_min, Nat.cast_min, ← min_div_div_right hn'.le,
@@ -1417,7 +1417,7 @@ theorem floor_congr (h : ∀ n : ℕ, (n : α) ≤ a ↔ (n : β) ≤ b) : ⌊a�
   have h₀ : 0 ≤ a ↔ 0 ≤ b
   simpa only [cast_zero] using h 0
   obtain ha | ha := lt_or_le a 0
-  · rw [floor_of_nonpos ha.le, floor_of_nonpos (le_of_not_le <| h₀.not.mp ha.not_le)]
+  rw [floor_of_nonpos ha.le, floor_of_nonpos (le_of_not_le <| h₀.not.mp ha.not_le)]
   exact (le_floor <| (h _).1 <| floor_le ha).antisymm (le_floor <| (h _).2 <| floor_le <| h₀.1 ha)
 
 theorem ceil_congr (h : ∀ n : ℕ, a ≤ n ↔ b ≤ n) : ⌈a⌉₊ = ⌈b⌉₊ :=

@@ -472,7 +472,7 @@ instance OrderRingHom.subsingleton [LinearOrderedField α] [LinearOrderedField �
     wlog h : f x < g x generalizing α β with h₂
     -- Porting note: had to add the `generalizing` as there are random variables
     -- `F γ δ` flying around in context.
-    · exact h₂ g f x (Ne.symm h') (h'.lt_or_lt.resolve_left h)
+    exact h₂ g f x (Ne.symm h') (h'.lt_or_lt.resolve_left h)
     obtain ⟨q, hf, hg⟩ := exists_rat_btwn h
     rw [← map_ratCast f] at hf
     rw [← map_ratCast g] at hg

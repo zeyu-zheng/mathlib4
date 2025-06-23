@@ -345,8 +345,8 @@ lemma map_one_succ (j : ℕ) (hj : j + 1 < n + 1 + 1) :
 lemma map_id (i : Fin (n + 1 + 1)) : map F f i i (by simp) = 𝟙 _ := by
   obtain ⟨i, hi⟩ := i
   cases i
-  · rfl
-  · apply F.map_id
+  rfl
+  apply F.map_id
 
 lemma map_comp {i j k : Fin (n + 1 + 1)} (hij : i ≤ j) (hjk : j ≤ k) :
     map F f i k (hij.trans hjk) = map F f i j hij ≫ map F f j k hjk := by
@@ -354,25 +354,25 @@ lemma map_comp {i j k : Fin (n + 1 + 1)} (hij : i ≤ j) (hjk : j ≤ k) :
   obtain ⟨j, hj⟩ := j
   obtain ⟨k, hk⟩ := k
   cases i
-  · obtain _ | _ | j := j
-    · dsimp
-      rw [id_comp]
-    · obtain _ | _ | k := k
-      · simp [Nat.succ.injEq] at hjk
-      · simp
-      · rfl
-    · obtain _ | _ | k := k
-      · simp [Fin.ext_iff] at hjk
-      · simp [Fin.le_def] at hjk
-        omega
-      · dsimp
-        rw [assoc, ← F.map_comp, homOfLE_comp]
-  · obtain _ | j := j
-    · simp [Fin.ext_iff] at hij
-    · obtain _ | k := k
-      · simp [Fin.ext_iff] at hjk
-      · dsimp
-        rw [← F.map_comp, homOfLE_comp]
+  obtain _ | _ | j := j
+  dsimp
+  rw [id_comp]
+  obtain _ | _ | k := k
+  simp [Nat.succ.injEq] at hjk
+  simp
+  rfl
+  obtain _ | _ | k := k
+  simp [Fin.ext_iff] at hjk
+  simp [Fin.le_def] at hjk
+  omega
+  dsimp
+  rw [assoc, ← F.map_comp, homOfLE_comp]
+  obtain _ | j := j
+  simp [Fin.ext_iff] at hij
+  obtain _ | k := k
+  simp [Fin.ext_iff] at hjk
+  dsimp
+  rw [← F.map_comp, homOfLE_comp]
 
 end Precomp
 
@@ -514,8 +514,8 @@ lemma hom_ext_succ {F G : ComposableArrows C (n + 1)} {f g : F ⟶ G}
     (h₀ : app' f 0 = app' g 0) (h₁ : δ₀Functor.map f = δ₀Functor.map g) : f = g := by
   ext ⟨i, hi⟩
   obtain _ | i := i
-  · exact h₀
-  · exact congr_app h₁ ⟨i, by valid⟩
+  exact h₀
+  exact congr_app h₁ ⟨i, by valid⟩
 
 /-- Inductive construction of isomorphisms in `ComposableArrows C (n + 1)`: in order to
 construct an isomorphism `F ≅ G`, it suffices to provide `α : F.obj' 0 ≅ G.obj' 0` and
@@ -545,8 +545,8 @@ lemma ext_succ {F G : ComposableArrows C (n + 1)} (h₀ : F.obj' 0 = G.obj' 0)
   have : ∀ i, F.obj i = G.obj i
   intro ⟨i, hi⟩
   cases' i with i
-  · exact h₀
-  · exact Functor.congr_obj h ⟨i, by valid⟩
+  exact h₀
+  exact Functor.congr_obj h ⟨i, by valid⟩
   exact Functor.ext_of_iso (isoMkSucc (eqToIso h₀) (eqToIso h) (by
       rw [w]
       dsimp [app']
@@ -554,10 +554,10 @@ lemma ext_succ {F G : ComposableArrows C (n + 1)} (h₀ : F.obj' 0 = G.obj' 0)
     rintro ⟨i, hi⟩
     dsimp
     cases' i with i
-    · erw [homMkSucc_app_zero]
-    · erw [homMkSucc_app_succ]
-      dsimp [app']
-      erw [eqToHom_app])
+    erw [homMkSucc_app_zero]
+    erw [homMkSucc_app_succ]
+    dsimp [app']
+    erw [eqToHom_app])
 
 lemma precomp_surjective (F : ComposableArrows C (n + 1)) :
     ∃ (F₀ : ComposableArrows C n) (X₀ : C) (f₀ : X₀ ⟶ F₀.left), F = F₀.precomp f₀ :=
@@ -856,18 +856,18 @@ lemma mkOfObjOfMapSucc_exists : ∃ (F : ComposableArrows C n) (e : ∀ i, F.obj
   clear F G
   revert obj mapSucc
   induction' n with n hn
-  · intro obj _
-    exact ⟨mk₀ (obj 0), fun 0 => Iso.refl _, fun i hi => by simp at hi⟩
-  · intro obj mapSucc
-    obtain ⟨F, e, h⟩ := hn (fun i => obj i.succ) (fun i => mapSucc i.succ)
-    refine ⟨F.precomp (mapSucc 0 ≫ (e 0).inv), fun i => match i with
-      | 0 => Iso.refl _
-      | ⟨i + 1, hi⟩ => e _, fun i hi => ?_⟩
-    obtain _ | i := i
-    · dsimp
-      rw [assoc, Iso.inv_hom_id, comp_id]
-      erw [id_comp]
-    · exact h i (by valid)
+  intro obj _
+  exact ⟨mk₀ (obj 0), fun 0 => Iso.refl _, fun i hi => by simp at hi⟩
+  intro obj mapSucc
+  obtain ⟨F, e, h⟩ := hn (fun i => obj i.succ) (fun i => mapSucc i.succ)
+  refine ⟨F.precomp (mapSucc 0 ≫ (e 0).inv), fun i => match i with
+    | 0 => Iso.refl _
+    | ⟨i + 1, hi⟩ => e _, fun i hi => ?_⟩
+  obtain _ | i := i
+  dsimp
+  rw [assoc, Iso.inv_hom_id, comp_id]
+  erw [id_comp]
+  exact h i (by valid)
 
 /-- Given `obj : Fin (n + 1) → C` and `mapSucc i : obj i.castSucc ⟶ obj i.succ`
 for all `i : Fin n`, this is `F : ComposableArrows C n` such that `F.obj i` is

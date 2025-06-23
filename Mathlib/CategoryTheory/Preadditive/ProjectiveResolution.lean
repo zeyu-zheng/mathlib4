@@ -115,8 +115,8 @@ noncomputable def isColimitCokernelCofork : IsColimit (P.cokernelCofork) := by
 
 instance (n : ℕ) : Epi (P.π.f n) := by
   cases n
-  · exact epi_of_isColimit_cofork P.isColimitCokernelCofork
-  · rw [π_f_succ]; infer_instance
+  exact epi_of_isColimit_cofork P.isColimitCokernelCofork
+  rw [π_f_succ]; infer_instance
 
 variable (Z)
 

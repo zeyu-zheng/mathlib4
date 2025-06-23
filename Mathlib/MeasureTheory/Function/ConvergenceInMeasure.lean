@@ -102,7 +102,7 @@ theorem tendstoInMeasure_of_tendsto_ae_of_stronglyMeasurable [IsFiniteMeasure μ
     (hfg : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) : TendstoInMeasure μ f atTop g := by
   refine fun ε hε => ENNReal.tendsto_atTop_zero.mpr fun δ hδ => ?_
   by_cases hδi : δ = ∞
-  · simp only [hδi, imp_true_iff, le_top, exists_const]
+  simp only [hδi, imp_true_iff, le_top, exists_const]
   lift δ to ℝ≥0 using hδi
   rw [gt_iff_lt, ENNReal.coe_pos, ← NNReal.coe_pos] at hδ
   obtain ⟨t, _, ht, hunif⟩ := tendstoUniformlyOn_of_ae_tendsto' hf hg hfg hδ
@@ -157,9 +157,9 @@ theorem seqTendstoAeSeq_spec (hfg : TendstoInMeasure μ f atTop g) (n k : ℕ)
     (hn : seqTendstoAeSeq hfg n ≤ k) :
     μ { x | (2 : ℝ)⁻¹ ^ n ≤ dist (f k x) (g x) } ≤ (2 : ℝ≥0∞)⁻¹ ^ n := by
   cases n
-  · exact Classical.choose_spec (exists_nat_measure_lt_two_inv hfg 0) k hn
-  · exact Classical.choose_spec
-      (exists_nat_measure_lt_two_inv hfg _) _ (le_trans (le_max_left _ _) hn)
+  exact Classical.choose_spec (exists_nat_measure_lt_two_inv hfg 0) k hn
+  exact Classical.choose_spec
+    (exists_nat_measure_lt_two_inv hfg _) _ (le_trans (le_max_left _ _) hn)
 
 theorem seqTendstoAeSeq_strictMono (hfg : TendstoInMeasure μ f atTop g) :
     StrictMono (seqTendstoAeSeq hfg) := by
@@ -267,13 +267,13 @@ theorem tendstoInMeasure_of_tendsto_eLpNorm_of_stronglyMeasurable (hp_ne_zero : 
   refine le_trans ?_ hn
   rw [ENNReal.ofReal_div_of_pos (Real.rpow_pos_of_pos hε _), ENNReal.ofReal_one, mul_comm,
     mul_one_div, ENNReal.le_div_iff_mul_le _ (Or.inl ENNReal.ofReal_ne_top), mul_comm]
-  · rw [← ENNReal.ofReal_rpow_of_pos hε]
-    convert mul_meas_ge_le_pow_eLpNorm' μ hp_ne_zero hp_ne_top ((hf n).sub hg).aestronglyMeasurable
-        (ENNReal.ofReal ε)
-    rw [dist_eq_norm, ← ENNReal.ofReal_le_ofReal_iff (norm_nonneg _), ofReal_norm_eq_coe_nnnorm]
-    exact Iff.rfl
-  · rw [Ne, ENNReal.ofReal_eq_zero, not_le]
-    exact Or.inl (Real.rpow_pos_of_pos hε _)
+  rw [← ENNReal.ofReal_rpow_of_pos hε]
+  convert mul_meas_ge_le_pow_eLpNorm' μ hp_ne_zero hp_ne_top ((hf n).sub hg).aestronglyMeasurable
+      (ENNReal.ofReal ε)
+  rw [dist_eq_norm, ← ENNReal.ofReal_le_ofReal_iff (norm_nonneg _), ofReal_norm_eq_coe_nnnorm]
+  exact Iff.rfl
+  rw [Ne, ENNReal.ofReal_eq_zero, not_le]
+  exact Or.inl (Real.rpow_pos_of_pos hε _)
 
 @[deprecated (since := "2024-07-27")]
 alias tendstoInMeasure_of_tendsto_snorm_of_stronglyMeasurable :=
@@ -326,9 +326,9 @@ theorem tendstoInMeasure_of_tendsto_eLpNorm {l : Filter ι} (hp_ne_zero : p ≠ 
     (hf : ∀ n, AEStronglyMeasurable (f n) μ) (hg : AEStronglyMeasurable g μ)
     (hfg : Tendsto (fun n => eLpNorm (f n - g) p μ) l (𝓝 0)) : TendstoInMeasure μ f l g := by
   by_cases hp_ne_top : p = ∞
-  · subst hp_ne_top
-    exact tendstoInMeasure_of_tendsto_eLpNorm_top hfg
-  · exact tendstoInMeasure_of_tendsto_eLpNorm_of_ne_top hp_ne_zero hp_ne_top hf hg hfg
+  subst hp_ne_top
+  exact tendstoInMeasure_of_tendsto_eLpNorm_top hfg
+  exact tendstoInMeasure_of_tendsto_eLpNorm_of_ne_top hp_ne_zero hp_ne_top hf hg hfg
 
 @[deprecated (since := "2024-07-27")]
 alias tendstoInMeasure_of_tendsto_snorm := tendstoInMeasure_of_tendsto_eLpNorm

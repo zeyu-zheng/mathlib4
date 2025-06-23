@@ -60,7 +60,7 @@ of `p` in the factorization of `n`: we declare the former to be the simp-normal 
 @[simp]
 theorem primeFactorsList_count_eq {n p : ℕ} : n.primeFactorsList.count p = n.factorization p := by
   rcases n.eq_zero_or_pos with (rfl | hn0)
-  · simp [factorization, count]
+  simp [factorization, count]
   if pp : p.Prime then ?_ else
     rw [count_eq_zero_of_not_mem (mt prime_of_mem_primeFactorsList pp)]
     simp [factorization, pp]
@@ -151,14 +151,14 @@ theorem factorization_mul {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
 theorem factorization_le_iff_dvd {d n : ℕ} (hd : d ≠ 0) (hn : n ≠ 0) :
     d.factorization ≤ n.factorization ↔ d ∣ n := by
   constructor
-  · intro hdn
-    set K := n.factorization - d.factorization with hK
-    use K.prod (· ^ ·)
-    rw [← factorization_prod_pow_eq_self hn, ← factorization_prod_pow_eq_self hd,
-        ← Finsupp.prod_add_index' pow_zero pow_add, hK, add_tsub_cancel_of_le hdn]
-  · rintro ⟨c, rfl⟩
-    rw [factorization_mul hd (right_ne_zero_of_mul hn)]
-    simp
+  intro hdn
+  set K := n.factorization - d.factorization with hK
+  use K.prod (· ^ ·)
+  rw [← factorization_prod_pow_eq_self hn, ← factorization_prod_pow_eq_self hd,
+      ← Finsupp.prod_add_index' pow_zero pow_add, hK, add_tsub_cancel_of_le hdn]
+  rintro ⟨c, rfl⟩
+  rw [factorization_mul hd (right_ne_zero_of_mul hn)]
+  simp
 
 open Classical in
 /-- For any `p : ℕ` and any function `g : α → ℕ` that's non-zero on `S : Finset α`,
@@ -168,17 +168,17 @@ theorem factorization_prod {α : Type*} {S : Finset α} {g : α → ℕ} (hS : �
     (S.prod g).factorization = S.sum fun x => (g x).factorization := by
     ext p
     refine Finset.induction_on' S ?_ ?_
-    · simp
-    · intro x T hxS hTS hxT IH
-      have hT : T.prod g ≠ 0 := prod_ne_zero_iff.mpr fun x hx => hS x (hTS hx)
-      simp [prod_insert hxT, sum_insert hxT, ← IH, factorization_mul (hS x hxS) hT]
+    simp
+    intro x T hxS hTS hxT IH
+    have hT : T.prod g ≠ 0 := prod_ne_zero_iff.mpr fun x hx => hS x (hTS hx)
+    simp [prod_insert hxT, sum_insert hxT, ← IH, factorization_mul (hS x hxS) hT]
 
 /-- For any `p`, the power of `p` in `n^k` is `k` times the power in `n` -/
 @[simp]
 theorem factorization_pow (n k : ℕ) : factorization (n ^ k) = k • n.factorization := by
   induction' k with k ih; · simp
   rcases eq_or_ne n 0 with (rfl | hn)
-  · simp
+  simp
   rw [Nat.pow_succ, mul_comm, factorization_mul hn (pow_ne_zero _ hn), ih,
     add_smul, one_smul, add_comm]
 

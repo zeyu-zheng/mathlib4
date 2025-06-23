@@ -43,30 +43,30 @@ def fintypeOfFintypeNe (a : α) (h : Fintype { b // b ≠ a }) : Fintype α :=
 theorem image_subtype_ne_univ_eq_image_erase [Fintype α] [DecidableEq β] (k : β) (b : α → β) :
     image (fun i : { a // b a ≠ k } => b ↑i) univ = (image b univ).erase k := by
   apply subset_antisymm
-  · rw [image_subset_iff]
-    intro i _
-    apply mem_erase_of_ne_of_mem i.2 (mem_image_of_mem _ (mem_univ _))
-  · intro i hi
-    rw [mem_image]
-    rcases mem_image.1 (erase_subset _ _ hi) with ⟨a, _, ha⟩
-    subst ha
-    exact ⟨⟨a, ne_of_mem_erase hi⟩, mem_univ _, rfl⟩
+  rw [image_subset_iff]
+  intro i _
+  apply mem_erase_of_ne_of_mem i.2 (mem_image_of_mem _ (mem_univ _))
+  intro i hi
+  rw [mem_image]
+  rcases mem_image.1 (erase_subset _ _ hi) with ⟨a, _, ha⟩
+  subst ha
+  exact ⟨⟨a, ne_of_mem_erase hi⟩, mem_univ _, rfl⟩
 
 theorem image_subtype_univ_ssubset_image_univ [Fintype α] [DecidableEq β] (k : β) (b : α → β)
     (hk : k ∈ Finset.image b univ) (p : β → Prop) [DecidablePred p] (hp : ¬p k) :
     image (fun i : { a // p (b a) } => b ↑i) univ ⊂ image b univ := by
   constructor
-  · intro x hx
-    rcases mem_image.1 hx with ⟨y, _, hy⟩
-    exact hy ▸ mem_image_of_mem b (mem_univ (y : α))
-  · intro h
-    rw [mem_image] at hk
-    rcases hk with ⟨k', _, hk'⟩
-    subst hk'
-    have := h (mem_image_of_mem b (mem_univ k'))
-    rw [mem_image] at this
-    rcases this with ⟨j, _, hj'⟩
-    exact hp (hj' ▸ j.2)
+  intro x hx
+  rcases mem_image.1 hx with ⟨y, _, hy⟩
+  exact hy ▸ mem_image_of_mem b (mem_univ (y : α))
+  intro h
+  rw [mem_image] at hk
+  rcases hk with ⟨k', _, hk'⟩
+  subst hk'
+  have := h (mem_image_of_mem b (mem_univ k'))
+  rw [mem_image] at this
+  rcases this with ⟨j, _, hj'⟩
+  exact hp (hj' ▸ j.2)
 
 open Classical in
 /-- Any injection from a finset `s` in a fintype `α` to a finset `t` of the same cardinality as `α`
@@ -75,9 +75,9 @@ theorem Finset.exists_equiv_extend_of_card_eq [Fintype α] [DecidableEq β] {t :
     (hαt : Fintype.card α = t.card) {s : Finset α} {f : α → β} (hfst : Finset.image f s ⊆ t)
     (hfs : Set.InjOn f s) : ∃ g : α ≃ t, ∀ i ∈ s, (g i : β) = f i := by
     induction' s using Finset.induction with a s has H generalizing f
-    · obtain ⟨e⟩ : Nonempty (α ≃ ↥t) := by rwa [← Fintype.card_eq, Fintype.card_coe]
-      use e
-      simp
+    obtain ⟨e⟩ : Nonempty (α ≃ ↥t) := by rwa [← Fintype.card_eq, Fintype.card_coe]
+    use e
+    simp
     have hfst' : Finset.image f s ⊆ t := (Finset.image_mono _ (s.subset_insert a)).trans hfst
     have hfs' : Set.InjOn f s := hfs.mono (s.subset_insert a)
     obtain ⟨g', hg'⟩ := H hfst' hfs'
@@ -85,13 +85,13 @@ theorem Finset.exists_equiv_extend_of_card_eq [Fintype α] [DecidableEq β] {t :
     use g'.trans (Equiv.swap (⟨f a, hfat⟩ : t) (g' a))
     simp_rw [mem_insert]
     rintro i (rfl | hi)
-    · simp
+    simp
     rw [Equiv.trans_apply, Equiv.swap_apply_of_ne_of_ne, hg' _ hi]
-    · exact
-        ne_of_apply_ne Subtype.val
-          (ne_of_eq_of_ne (hg' _ hi) <|
-            hfs.ne (subset_insert _ _ hi) (mem_insert_self _ _) <| ne_of_mem_of_not_mem hi has)
-    · exact g'.injective.ne (ne_of_mem_of_not_mem hi has)
+    exact
+      ne_of_apply_ne Subtype.val
+        (ne_of_eq_of_ne (hg' _ hi) <|
+          hfs.ne (subset_insert _ _ hi) (mem_insert_self _ _) <| ne_of_mem_of_not_mem hi has)
+    exact g'.injective.ne (ne_of_mem_of_not_mem hi has)
 
 open Classical in
 /-- Any injection from a set `s` in a fintype `α` to a finset `t` of the same cardinality as `α`

@@ -124,14 +124,14 @@ theorem edgeDensity_nonneg (s : Finset α) (t : Finset β) : 0 ≤ edgeDensity r
 
 theorem edgeDensity_le_one (s : Finset α) (t : Finset β) : edgeDensity r s t ≤ 1 := by
   apply div_le_one_of_le
-  · exact mod_cast card_interedges_le_mul r s t
-  · exact mod_cast Nat.zero_le _
+  exact mod_cast card_interedges_le_mul r s t
+  exact mod_cast Nat.zero_le _
 
 theorem edgeDensity_add_edgeDensity_compl (hs : s.Nonempty) (ht : t.Nonempty) :
     edgeDensity r s t + edgeDensity (fun x y ↦ ¬r x y) s t = 1 := by
   rw [edgeDensity, edgeDensity, div_add_div_same, div_eq_one_iff_eq]
-  · exact mod_cast card_interedges_add_card_interedges_compl r s t
-  · exact mod_cast (mul_pos hs.card_pos ht.card_pos).ne'
+  exact mod_cast card_interedges_add_card_interedges_compl r s t
+  exact mod_cast (mul_pos hs.card_pos ht.card_pos).ne'
 
 @[simp]
 theorem edgeDensity_empty_left (t : Finset β) : edgeDensity r ∅ t = 0 := by
@@ -176,11 +176,11 @@ theorem edgeDensity_sub_edgeDensity_le_one_sub_mul (hs : s₂ ⊆ s₁) (ht : t�
     edgeDensity r s₂ t₂ - edgeDensity r s₁ t₁ ≤ 1 - s₂.card / s₁.card * (t₂.card / t₁.card) := by
   refine (sub_le_sub_left (mul_edgeDensity_le_edgeDensity r hs ht hs₂ ht₂) _).trans ?_
   refine le_trans ?_ (mul_le_of_le_one_right ?_ (edgeDensity_le_one r s₂ t₂))
-  · rw [sub_mul, one_mul]
+  rw [sub_mul, one_mul]
   refine sub_nonneg_of_le (mul_le_one ?_ ?_ ?_)
-  · exact div_le_one_of_le ((@Nat.cast_le ℚ).2 (card_le_card hs)) (Nat.cast_nonneg _)
-  · apply div_nonneg <;> exact mod_cast Nat.zero_le _
-  · exact div_le_one_of_le ((@Nat.cast_le ℚ).2 (card_le_card ht)) (Nat.cast_nonneg _)
+  exact div_le_one_of_le ((@Nat.cast_le ℚ).2 (card_le_card hs)) (Nat.cast_nonneg _)
+  apply div_nonneg <;> exact mod_cast Nat.zero_le _
+  exact div_le_one_of_le ((@Nat.cast_le ℚ).2 (card_le_card ht)) (Nat.cast_nonneg _)
 
 theorem abs_edgeDensity_sub_edgeDensity_le_one_sub_mul (hs : s₂ ⊆ s₁) (ht : t₂ ⊆ t₁)
     (hs₂ : s₂.Nonempty) (ht₂ : t₂.Nonempty) :
@@ -202,11 +202,11 @@ theorem abs_edgeDensity_sub_edgeDensity_le_two_mul_sub_sq (hs : s₂ ⊆ s₁) (
   exact hδ₁.le.trans (by norm_num)
   rw [← sub_pos] at hδ₁
   obtain rfl | hs₂' := s₂.eq_empty_or_nonempty
-  · rw [Finset.card_empty, Nat.cast_zero] at hs₂
-    simpa [edgeDensity, (nonpos_of_mul_nonpos_right hs₂ hδ₁).antisymm (Nat.cast_nonneg _)] using hδ'
+  rw [Finset.card_empty, Nat.cast_zero] at hs₂
+  simpa [edgeDensity, (nonpos_of_mul_nonpos_right hs₂ hδ₁).antisymm (Nat.cast_nonneg _)] using hδ'
   obtain rfl | ht₂' := t₂.eq_empty_or_nonempty
-  · rw [Finset.card_empty, Nat.cast_zero] at ht₂
-    simpa [edgeDensity, (nonpos_of_mul_nonpos_right ht₂ hδ₁).antisymm (Nat.cast_nonneg _)] using hδ'
+  rw [Finset.card_empty, Nat.cast_zero] at ht₂
+  simpa [edgeDensity, (nonpos_of_mul_nonpos_right ht₂ hδ₁).antisymm (Nat.cast_nonneg _)] using hδ'
   have hr : 2 * δ - δ ^ 2 = 1 - (1 - δ) * (1 - δ)
   ring
   rw [hr]
@@ -217,10 +217,10 @@ theorem abs_edgeDensity_sub_edgeDensity_le_two_mul_sub_sq (hs : s₂ ⊆ s₁) (
   have h₁ := hs₂'.mono hs
   have h₂ := ht₂'.mono ht
   gcongr
-  · refine (le_div_iff ?_).2 hs₂
-    exact mod_cast h₁.card_pos
-  · refine (le_div_iff ?_).2 ht₂
-    exact mod_cast h₂.card_pos
+  refine (le_div_iff ?_).2 hs₂
+  exact mod_cast h₁.card_pos
+  refine (le_div_iff ?_).2 ht₂
+  exact mod_cast h₂.card_pos
 
 /-- If `s₂ ⊆ s₁`, `t₂ ⊆ t₁` and they take up all but a `δ`-proportion, then the difference in edge
 densities is at most `2 * δ`. -/
@@ -228,13 +228,13 @@ theorem abs_edgeDensity_sub_edgeDensity_le_two_mul (hs : s₂ ⊆ s₁) (ht : t�
     (hscard : (1 - δ) * s₁.card ≤ s₂.card) (htcard : (1 - δ) * t₁.card ≤ t₂.card) :
     |(edgeDensity r s₂ t₂ : 𝕜) - edgeDensity r s₁ t₁| ≤ 2 * δ := by
   cases' lt_or_le δ 1 with h h
-  · exact (abs_edgeDensity_sub_edgeDensity_le_two_mul_sub_sq r hs ht hδ h hscard htcard).trans
-      ((sub_le_self_iff _).2 <| sq_nonneg δ)
+  exact (abs_edgeDensity_sub_edgeDensity_le_two_mul_sub_sq r hs ht hδ h hscard htcard).trans
+    ((sub_le_self_iff _).2 <| sq_nonneg δ)
   rw [two_mul]
   refine (abs_sub _ _).trans (add_le_add (le_trans ?_ h) (le_trans ?_ h)) <;>
-    · rw [abs_of_nonneg]
-      · exact mod_cast edgeDensity_le_one r _ _
-      · exact mod_cast edgeDensity_nonneg r _ _
+  · rw [abs_of_nonneg]
+    exact mod_cast edgeDensity_le_one r _ _
+    exact mod_cast edgeDensity_nonneg r _ _
 
 end Asymmetric
 
@@ -346,9 +346,9 @@ theorem card_interedges_add_card_interedges_compl (h : Disjoint s t) :
 theorem edgeDensity_add_edgeDensity_compl (hs : s.Nonempty) (ht : t.Nonempty) (h : Disjoint s t) :
     G.edgeDensity s t + Gᶜ.edgeDensity s t = 1 := by
   rw [edgeDensity_def, edgeDensity_def, div_add_div_same, div_eq_one_iff_eq]
-  · exact mod_cast card_interedges_add_card_interedges_compl _ h
+  exact mod_cast card_interedges_add_card_interedges_compl _ h
   -- Porting note: Wrote a workaround for `positivity` tactic.
-  · apply mul_ne_zero <;> exact mod_cast Nat.pos_iff_ne_zero.1 (Nonempty.card_pos ‹_›)
+  apply mul_ne_zero <;> exact mod_cast Nat.pos_iff_ne_zero.1 (Nonempty.card_pos ‹_›)
 
 end DecidableEq
 

@@ -169,12 +169,12 @@ instance : Functor.Faithful typeToCat.{u} where
 instance : Functor.Full typeToCat.{u} where
   map_surjective F := ⟨Discrete.as ∘ F.obj ∘ Discrete.mk, by
     apply Functor.ext
-    · intro x y f
-      dsimp
-      apply ULift.ext
-      aesop_cat
-    · rintro ⟨x⟩
-      apply Discrete.ext
-      rfl⟩
+    intro x y f
+    dsimp
+    apply ULift.ext
+    aesop_cat
+    rintro ⟨x⟩
+    apply Discrete.ext
+    rfl⟩
 
 end CategoryTheory

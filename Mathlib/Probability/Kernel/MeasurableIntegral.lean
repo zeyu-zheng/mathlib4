@@ -47,56 +47,56 @@ theorem measurable_kernel_prod_mk_left_of_finite {t : Set (α × β)} (ht : Meas
   refine MeasurableSpace.induction_on_inter
     (C := fun t => Measurable fun a => κ a (Prod.mk a ⁻¹' t))
     generateFrom_prod.symm isPiSystem_prod ?_ ?_ ?_ ?_ ht
-  ·-- case `t = ∅`
-    simp only [preimage_empty, measure_empty, measurable_const]
-  · -- case of a box: `t = t₁ ×ˢ t₂` for measurable sets `t₁` and `t₂`
-    intro t' ht'
-    simp only [Set.mem_image2, Set.mem_setOf_eq, exists_and_left] at ht'
-    obtain ⟨t₁, ht₁, t₂, ht₂, rfl⟩ := ht'
-    simp_rw [mk_preimage_prod_right_eq_if]
-    have h_eq_ite : (fun a => κ a (ite (a ∈ t₁) t₂ ∅)) = fun a => ite (a ∈ t₁) (κ a t₂) 0
+  -- case `t = ∅`
+  simp only [preimage_empty, measure_empty, measurable_const]
+  -- case of a box: `t = t₁ ×ˢ t₂` for measurable sets `t₁` and `t₂`
+  intro t' ht'
+  simp only [Set.mem_image2, Set.mem_setOf_eq, exists_and_left] at ht'
+  obtain ⟨t₁, ht₁, t₂, ht₂, rfl⟩ := ht'
+  simp_rw [mk_preimage_prod_right_eq_if]
+  have h_eq_ite : (fun a => κ a (ite (a ∈ t₁) t₂ ∅)) = fun a => ite (a ∈ t₁) (κ a t₂) 0
+  ext1 a
+  split_ifs
+  apply rfl
+  apply measure_empty
+  rw [h_eq_ite]
+  exact Measurable.ite ht₁ (Kernel.measurable_coe κ ht₂) measurable_const
+  -- we assume that the result is true for `t` and we prove it for `tᶜ`
+  intro t' ht' h_meas
+  have h_eq_sdiff : ∀ a, Prod.mk a ⁻¹' t'ᶜ = Set.univ \ Prod.mk a ⁻¹' t'
+  intro a
+  ext1 b
+  simp only [mem_compl_iff, mem_preimage, mem_diff, mem_univ, true_and_iff]
+  simp_rw [h_eq_sdiff]
+  have :
+    (fun a => κ a (Set.univ \ Prod.mk a ⁻¹' t')) = fun a =>
+      κ a Set.univ - κ a (Prod.mk a ⁻¹' t') := by
     ext1 a
-    split_ifs
-    apply rfl
-    apply measure_empty
-    rw [h_eq_ite]
-    exact Measurable.ite ht₁ (Kernel.measurable_coe κ ht₂) measurable_const
-  · -- we assume that the result is true for `t` and we prove it for `tᶜ`
-    intro t' ht' h_meas
-    have h_eq_sdiff : ∀ a, Prod.mk a ⁻¹' t'ᶜ = Set.univ \ Prod.mk a ⁻¹' t'
-    intro a
-    ext1 b
-    simp only [mem_compl_iff, mem_preimage, mem_diff, mem_univ, true_and_iff]
-    simp_rw [h_eq_sdiff]
-    have :
-      (fun a => κ a (Set.univ \ Prod.mk a ⁻¹' t')) = fun a =>
-        κ a Set.univ - κ a (Prod.mk a ⁻¹' t') := by
-      ext1 a
-      rw [← Set.diff_inter_self_eq_diff, Set.inter_univ, measure_diff (Set.subset_univ _)]
-      · exact (@measurable_prod_mk_left α β _ _ a) ht'
-      · exact measure_ne_top _ _
-    rw [this]
-    exact Measurable.sub (Kernel.measurable_coe κ MeasurableSet.univ) h_meas
-  · -- we assume that the result is true for a family of disjoint sets and prove it for their union
-    intro f h_disj hf_meas hf
-    have h_Union :
-      (fun a => κ a (Prod.mk a ⁻¹' ⋃ i, f i)) = fun a => κ a (⋃ i, Prod.mk a ⁻¹' f i)
-    ext1 a
-    congr with b
-    simp only [mem_iUnion, mem_preimage]
-    rw [h_Union]
-    have h_tsum :
-      (fun a => κ a (⋃ i, Prod.mk a ⁻¹' f i)) = fun a => ∑' i, κ a (Prod.mk a ⁻¹' f i)
-    ext1 a
-    rw [measure_iUnion]
-    · intro i j hij s hsi hsj b hbs
-      have habi : {(a, b)} ⊆ f i := by rw [Set.singleton_subset_iff]; exact hsi hbs
-      have habj : {(a, b)} ⊆ f j := by rw [Set.singleton_subset_iff]; exact hsj hbs
-      simpa only [Set.bot_eq_empty, Set.le_eq_subset, Set.singleton_subset_iff,
-        Set.mem_empty_iff_false] using h_disj hij habi habj
-    · exact fun i => (@measurable_prod_mk_left α β _ _ a) (hf_meas i)
-    rw [h_tsum]
-    exact Measurable.ennreal_tsum hf
+    rw [← Set.diff_inter_self_eq_diff, Set.inter_univ, measure_diff (Set.subset_univ _)]
+    exact (@measurable_prod_mk_left α β _ _ a) ht'
+    exact measure_ne_top _ _
+  rw [this]
+  exact Measurable.sub (Kernel.measurable_coe κ MeasurableSet.univ) h_meas
+  -- we assume that the result is true for a family of disjoint sets and prove it for their union
+  intro f h_disj hf_meas hf
+  have h_Union :
+    (fun a => κ a (Prod.mk a ⁻¹' ⋃ i, f i)) = fun a => κ a (⋃ i, Prod.mk a ⁻¹' f i)
+  ext1 a
+  congr with b
+  simp only [mem_iUnion, mem_preimage]
+  rw [h_Union]
+  have h_tsum :
+    (fun a => κ a (⋃ i, Prod.mk a ⁻¹' f i)) = fun a => ∑' i, κ a (Prod.mk a ⁻¹' f i)
+  ext1 a
+  rw [measure_iUnion]
+  intro i j hij s hsi hsj b hbs
+  have habi : {(a, b)} ⊆ f i := by rw [Set.singleton_subset_iff]; exact hsi hbs
+  have habj : {(a, b)} ⊆ f j := by rw [Set.singleton_subset_iff]; exact hsj hbs
+  simpa only [Set.bot_eq_empty, Set.le_eq_subset, Set.singleton_subset_iff,
+    Set.mem_empty_iff_false] using h_disj hij habi habj
+  exact fun i => (@measurable_prod_mk_left α β _ _ a) (hf_meas i)
+  rw [h_tsum]
+  exact Measurable.ennreal_tsum hf
 
 theorem measurable_kernel_prod_mk_left [IsSFiniteKernel κ] {t : Set (α × β)}
     (ht : MeasurableSet t) : Measurable fun a => κ a (Prod.mk a ⁻¹' t) := by
@@ -152,28 +152,28 @@ theorem _root_.Measurable.lintegral_kernel_prod_right {f : α → β → ℝ≥0
   have : ∀ a, (∫⁻ b, ⨆ n, F n (a, b) ∂κ a) = ⨆ n, ∫⁻ b, F n (a, b) ∂κ a
   intro a
   rw [lintegral_iSup]
-  · exact fun n => (F n).measurable.comp measurable_prod_mk_left
-  · exact fun i j hij b => SimpleFunc.monotone_eapprox (uncurry f) hij _
+  exact fun n => (F n).measurable.comp measurable_prod_mk_left
+  exact fun i j hij b => SimpleFunc.monotone_eapprox (uncurry f) hij _
   simp_rw [this]
   refine measurable_iSup fun n => ?_
   refine SimpleFunc.induction
     (P := fun f => Measurable (fun (a : α) => ∫⁻ (b : β), f (a, b) ∂κ a)) ?_ ?_ (F n)
-  · intro c t ht
-    simp only [SimpleFunc.const_zero, SimpleFunc.coe_piecewise, SimpleFunc.coe_const,
-      SimpleFunc.coe_zero, Set.piecewise_eq_indicator]
-    exact Kernel.measurable_lintegral_indicator_const (κ := κ) ht c
-  · intro g₁ g₂ _ hm₁ hm₂
-    simp only [SimpleFunc.coe_add, Pi.add_apply]
-    have h_add :
-      (fun a => ∫⁻ b, g₁ (a, b) + g₂ (a, b) ∂κ a) =
-        (fun a => ∫⁻ b, g₁ (a, b) ∂κ a) + fun a => ∫⁻ b, g₂ (a, b) ∂κ a := by
-      ext1 a
-      rw [Pi.add_apply]
-      -- Porting note (#10691): was `rw` (`Function.comp` reducibility)
-      erw [lintegral_add_left (g₁.measurable.comp measurable_prod_mk_left)]
-      simp_rw [Function.comp_apply]
-    rw [h_add]
-    exact Measurable.add hm₁ hm₂
+  intro c t ht
+  simp only [SimpleFunc.const_zero, SimpleFunc.coe_piecewise, SimpleFunc.coe_const,
+    SimpleFunc.coe_zero, Set.piecewise_eq_indicator]
+  exact Kernel.measurable_lintegral_indicator_const (κ := κ) ht c
+  intro g₁ g₂ _ hm₁ hm₂
+  simp only [SimpleFunc.coe_add, Pi.add_apply]
+  have h_add :
+    (fun a => ∫⁻ b, g₁ (a, b) + g₂ (a, b) ∂κ a) =
+      (fun a => ∫⁻ b, g₁ (a, b) ∂κ a) + fun a => ∫⁻ b, g₂ (a, b) ∂κ a := by
+    ext1 a
+    rw [Pi.add_apply]
+    -- Porting note (#10691): was `rw` (`Function.comp` reducibility)
+    erw [lintegral_add_left (g₁.measurable.comp measurable_prod_mk_left)]
+    simp_rw [Function.comp_apply]
+  rw [h_add]
+  exact Measurable.add hm₁ hm₂
 
 theorem _root_.Measurable.lintegral_kernel_prod_right' {f : α × β → ℝ≥0∞} (hf : Measurable f) :
     Measurable fun a => ∫⁻ b, f (a, b) ∂κ a := by
@@ -254,7 +254,7 @@ open Classical in
 theorem StronglyMeasurable.integral_kernel_prod_right ⦃f : α → β → E⦄
     (hf : StronglyMeasurable (uncurry f)) : StronglyMeasurable fun x => ∫ y, f x y ∂κ x := by
   by_cases hE : CompleteSpace E; swap
-  · simp [integral, hE, stronglyMeasurable_const]
+  simp [integral, hE, stronglyMeasurable_const]
   borelize E
   haveI : TopologicalSpace.SeparableSpace (range (uncurry f) ∪ {0} : Set E) :=
     hf.separableSpace_range_union_singleton
@@ -277,24 +277,24 @@ theorem StronglyMeasurable.integral_kernel_prod_right ⦃f : α → β → E⦄
   have h2f' : Tendsto f' atTop (𝓝 fun x : α => ∫ y : β, f x y ∂κ x)
   rw [tendsto_pi_nhds]; intro x
   by_cases hfx : Integrable (f x) (κ x)
-  · have (n) : Integrable (s' n x) (κ x)
-    apply (hfx.norm.add hfx.norm).mono' (s' n x).aestronglyMeasurable
-    filter_upwards with y
-    simp_rw [s', SimpleFunc.coe_comp]; exact SimpleFunc.norm_approxOn_zero_le _ _ (x, y) n
-    simp only [f',  hfx, SimpleFunc.integral_eq_integral _ (this _), indicator_of_mem,
-      mem_setOf_eq]
-    refine
-      tendsto_integral_of_dominated_convergence (fun y => ‖f x y‖ + ‖f x y‖)
-        (fun n => (s' n x).aestronglyMeasurable) (hfx.norm.add hfx.norm) ?_ ?_
-    · -- Porting note: was
-      -- exact fun n => eventually_of_forall fun y =>
-      --   SimpleFunc.norm_approxOn_zero_le _ _ (x, y) n
-      exact fun n => eventually_of_forall fun y =>
-        SimpleFunc.norm_approxOn_zero_le hf.measurable (by simp) (x, y) n
-    · refine eventually_of_forall fun y => SimpleFunc.tendsto_approxOn hf.measurable (by simp) ?_
-      apply subset_closure
-      simp [-uncurry_apply_pair]
-  · simp [f', hfx, integral_undef]
+  have (n) : Integrable (s' n x) (κ x)
+  apply (hfx.norm.add hfx.norm).mono' (s' n x).aestronglyMeasurable
+  filter_upwards with y
+  simp_rw [s', SimpleFunc.coe_comp]; exact SimpleFunc.norm_approxOn_zero_le _ _ (x, y) n
+  simp only [f',  hfx, SimpleFunc.integral_eq_integral _ (this _), indicator_of_mem,
+    mem_setOf_eq]
+  refine
+    tendsto_integral_of_dominated_convergence (fun y => ‖f x y‖ + ‖f x y‖)
+      (fun n => (s' n x).aestronglyMeasurable) (hfx.norm.add hfx.norm) ?_ ?_
+  -- Porting note: was
+  -- exact fun n => eventually_of_forall fun y =>
+  --   SimpleFunc.norm_approxOn_zero_le _ _ (x, y) n
+  exact fun n => eventually_of_forall fun y =>
+    SimpleFunc.norm_approxOn_zero_le hf.measurable (by simp) (x, y) n
+  refine eventually_of_forall fun y => SimpleFunc.tendsto_approxOn hf.measurable (by simp) ?_
+  apply subset_closure
+  simp [-uncurry_apply_pair]
+  simp [f', hfx, integral_undef]
   exact stronglyMeasurable_of_tendsto _ hf' h2f'
 
 theorem StronglyMeasurable.integral_kernel_prod_right' ⦃f : α × β → E⦄ (hf : StronglyMeasurable f) :
@@ -308,9 +308,9 @@ theorem StronglyMeasurable.integral_kernel_prod_right'' {f : β × γ → E}
     StronglyMeasurable
       ((fun x => ∫ y, (fun u : (α × β) × γ => f (u.1.2, u.2)) (x, y) ∂η x) ∘ fun x => (a, x))
   apply StronglyMeasurable.comp_measurable _ (measurable_prod_mk_left (m := mα))
-  · have := MeasureTheory.StronglyMeasurable.integral_kernel_prod_right' (κ := η)
-      (hf.comp_measurable (measurable_fst.snd.prod_mk measurable_snd))
-    simpa using this
+  have := MeasureTheory.StronglyMeasurable.integral_kernel_prod_right' (κ := η)
+    (hf.comp_measurable (measurable_fst.snd.prod_mk measurable_snd))
+  simpa using this
 
 theorem StronglyMeasurable.integral_kernel_prod_left ⦃f : β → α → E⦄
     (hf : StronglyMeasurable (uncurry f)) : StronglyMeasurable fun y => ∫ x, f x y ∂κ y :=
@@ -326,8 +326,8 @@ theorem StronglyMeasurable.integral_kernel_prod_left'' {f : γ × β → E} (hf 
     StronglyMeasurable
       ((fun y => ∫ x, (fun u : γ × α × β => f (u.1, u.2.2)) (x, y) ∂η y) ∘ fun x => (a, x))
   apply StronglyMeasurable.comp_measurable _ (measurable_prod_mk_left (m := mα))
-  · have := MeasureTheory.StronglyMeasurable.integral_kernel_prod_left' (κ := η)
-      (hf.comp_measurable (measurable_fst.prod_mk measurable_snd.snd))
-    simpa using this
+  have := MeasureTheory.StronglyMeasurable.integral_kernel_prod_left' (κ := η)
+    (hf.comp_measurable (measurable_fst.prod_mk measurable_snd.snd))
+  simpa using this
 
 end MeasureTheory

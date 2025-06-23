@@ -107,22 +107,22 @@ theorem isConj_of {σ τ : alternatingGroup α} (hc : IsConj (σ : Perm α) (τ 
   obtain ⟨π, hπ⟩ := isConj_iff.1 hc
   rw [Subtype.coe_mk, Subtype.coe_mk] at hπ
   cases' Int.units_eq_one_or (Perm.sign π) with h h
-  · rw [isConj_iff]
-    refine ⟨⟨π, mem_alternatingGroup.mp h⟩, Subtype.val_injective ?_⟩
-    simpa only [Subtype.val, Subgroup.coe_mul, coe_inv, coe_mk] using hπ
-  · have h2 : 2 ≤ σ.supportᶜ.card := by
-      rw [Finset.card_compl, le_tsub_iff_left σ.support.card_le_univ]
-      exact hσ
-    obtain ⟨a, ha, b, hb, ab⟩ := Finset.one_lt_card.1 h2
-    refine isConj_iff.2 ⟨⟨π * swap a b, ?_⟩, Subtype.val_injective ?_⟩
-    · rw [mem_alternatingGroup, MonoidHom.map_mul, h, sign_swap ab, Int.units_mul_self]
-    · simp only [← hπ, coe_mk, Subgroup.coe_mul, Subtype.val]
-      have hd : Disjoint (swap a b) σ
-      rw [disjoint_iff_disjoint_support, support_swap ab, Finset.disjoint_insert_left,
-        Finset.disjoint_singleton_left]
-      exact ⟨Finset.mem_compl.1 ha, Finset.mem_compl.1 hb⟩
-      rw [mul_assoc π _ σ, hd.commute.eq, coe_inv, coe_mk]
-      simp [mul_assoc]
+  rw [isConj_iff]
+  refine ⟨⟨π, mem_alternatingGroup.mp h⟩, Subtype.val_injective ?_⟩
+  simpa only [Subtype.val, Subgroup.coe_mul, coe_inv, coe_mk] using hπ
+  have h2 : 2 ≤ σ.supportᶜ.card := by
+    rw [Finset.card_compl, le_tsub_iff_left σ.support.card_le_univ]
+    exact hσ
+  obtain ⟨a, ha, b, hb, ab⟩ := Finset.one_lt_card.1 h2
+  refine isConj_iff.2 ⟨⟨π * swap a b, ?_⟩, Subtype.val_injective ?_⟩
+  rw [mem_alternatingGroup, MonoidHom.map_mul, h, sign_swap ab, Int.units_mul_self]
+  simp only [← hπ, coe_mk, Subgroup.coe_mul, Subtype.val]
+  have hd : Disjoint (swap a b) σ
+  rw [disjoint_iff_disjoint_support, support_swap ab, Finset.disjoint_insert_left,
+    Finset.disjoint_singleton_left]
+  exact ⟨Finset.mem_compl.1 ha, Finset.mem_compl.1 hb⟩
+  rw [mul_assoc π _ σ, hd.commute.eq, coe_inv, coe_mk]
+  simp [mul_assoc]
 
 theorem isThreeCycle_isConj (h5 : 5 ≤ Fintype.card α) {σ τ : alternatingGroup α}
     (hσ : IsThreeCycle (σ : Perm α)) (hτ : IsThreeCycle (τ : Perm α)) : IsConj σ τ :=
@@ -148,7 +148,7 @@ theorem closure_three_cycles_eq_alternating :
       exact hind n l hl hn
     intro n
     induction' n with n ih <;> intro l hl hn
-    · simp [List.length_eq_zero.1 hn, one_mem]
+    simp [List.length_eq_zero.1 hn, one_mem]
     rw [Nat.mul_succ] at hn
     obtain ⟨a, l, rfl⟩ := l.exists_of_length_succ hn
     rw [List.length_cons, Nat.succ_inj'] at hn
@@ -274,16 +274,16 @@ theorem isConj_swap_mul_swap_of_cycleType_two {g : Perm (Fin 5)} (ha : g ∈ alt
   swap; · decide
   rw [isConj_iff_cycleType_eq, h2]
   interval_cases h_1 : Multiset.card g.cycleType
-  · exact (h1 (card_cycleType_eq_zero.1 h_1)).elim
-  · simp at ha
-  · have h04 : (0 : Fin 5) ≠ 4 := by decide
-    have h13 : (1 : Fin 5) ≠ 3 := by decide
-    rw [Disjoint.cycleType, (isCycle_swap h04).cycleType, (isCycle_swap h13).cycleType,
-      card_support_swap h04, card_support_swap h13]
-    · rfl
-    · rw [disjoint_iff_disjoint_support, support_swap h04, support_swap h13]
-      decide
-  · contradiction
+  exact (h1 (card_cycleType_eq_zero.1 h_1)).elim
+  simp at ha
+  have h04 : (0 : Fin 5) ≠ 4 := by decide
+  have h13 : (1 : Fin 5) ≠ 3 := by decide
+  rw [Disjoint.cycleType, (isCycle_swap h04).cycleType, (isCycle_swap h13).cycleType,
+    card_support_swap h04, card_support_swap h13]
+  rfl
+  rw [disjoint_iff_disjoint_support, support_swap h04, support_swap h13]
+  decide
+  contradiction
 
 /-- Shows that $A_5$ is simple by taking an arbitrary non-identity element and showing by casework
   on its cycle type that its normal closure is all of $A_5$. -/
@@ -301,10 +301,10 @@ instance isSimpleGroup_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
     by_cases h2 : ∀ n ∈ g.cycleType, n = 2
     -- If the cycle decomposition of `g` consists entirely of swaps, then the cycle type is $(2,2)$.
     -- This means that it is conjugate to $(04)(13)$, whose normal closure is $A_5$.
-    · rw [Ne, Subtype.ext_iff] at g1
-      exact
-        (isConj_swap_mul_swap_of_cycleType_two gA g1 h2).normalClosure_eq_top_of
-          normalClosure_swap_mul_swap_five
+    rw [Ne, Subtype.ext_iff] at g1
+    exact
+      (isConj_swap_mul_swap_of_cycleType_two gA g1 h2).normalClosure_eq_top_of
+        normalClosure_swap_mul_swap_five
     push_neg at h2
     obtain ⟨n, ng, n2⟩ : ∃ n : ℕ, n ∈ g.cycleType ∧ n ≠ 2 := h2
     -- `n` is the size of a non-swap cycle in the decomposition of `g`.
@@ -312,27 +312,27 @@ instance isSimpleGroup_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
     have n5 : n ≤ 5 := le_trans ?_ g.support.card_le_univ
     -- We check that `2 < n ≤ 5`, so that `interval_cases` has a precise range to check.
     swap
-    · obtain ⟨m, hm⟩ := Multiset.exists_cons_of_mem ng
-      rw [← sum_cycleType, hm, Multiset.sum_cons]
-      exact le_add_right le_rfl
+    obtain ⟨m, hm⟩ := Multiset.exists_cons_of_mem ng
+    rw [← sum_cycleType, hm, Multiset.sum_cons]
+    exact le_add_right le_rfl
     interval_cases n
     -- This breaks into cases `n = 3`, `n = 4`, `n = 5`.
     -- If `n = 3`, then `g` has a 3-cycle in its decomposition, so `g^2` is a 3-cycle.
     -- `g^2` is in the normal closure of `g`, so that normal closure must be $A_5$.
-    · rw [eq_top_iff, ← (isThreeCycle_sq_of_three_mem_cycleType_five ng).alternating_normalClosure
-        (by rw [card_fin])]
-      refine normalClosure_le_normal ?_
-      rw [Set.singleton_subset_iff, SetLike.mem_coe]
-      have h := SetLike.mem_coe.1 (subset_normalClosure
-        (G := alternatingGroup (Fin 5)) (Set.mem_singleton ⟨g, gA⟩))
-      exact mul_mem h h
-    · -- The case `n = 4` leads to contradiction, as no element of $A_5$ includes a 4-cycle.
-      have con := mem_alternatingGroup.1 gA
-      rw [sign_of_cycleType, cycleType_of_card_le_mem_cycleType_add_two (by decide) ng] at con
-      have : Odd 5 := by decide
-      simp [this] at con
-    · -- If `n = 5`, then `g` is itself a 5-cycle, conjugate to `finRotate 5`.
-      refine (isConj_iff_cycleType_eq.2 ?_).normalClosure_eq_top_of normalClosure_finRotate_five
-      rw [cycleType_of_card_le_mem_cycleType_add_two (by decide) ng, cycleType_finRotate]⟩
+    rw [eq_top_iff, ← (isThreeCycle_sq_of_three_mem_cycleType_five ng).alternating_normalClosure
+      (by rw [card_fin])]
+    refine normalClosure_le_normal ?_
+    rw [Set.singleton_subset_iff, SetLike.mem_coe]
+    have h := SetLike.mem_coe.1 (subset_normalClosure
+      (G := alternatingGroup (Fin 5)) (Set.mem_singleton ⟨g, gA⟩))
+    exact mul_mem h h
+    -- The case `n = 4` leads to contradiction, as no element of $A_5$ includes a 4-cycle.
+    have con := mem_alternatingGroup.1 gA
+    rw [sign_of_cycleType, cycleType_of_card_le_mem_cycleType_add_two (by decide) ng] at con
+    have : Odd 5 := by decide
+    simp [this] at con
+    -- If `n = 5`, then `g` is itself a 5-cycle, conjugate to `finRotate 5`.
+    refine (isConj_iff_cycleType_eq.2 ?_).normalClosure_eq_top_of normalClosure_finRotate_five
+    rw [cycleType_of_card_le_mem_cycleType_add_two (by decide) ng, cycleType_finRotate]⟩
 
 end alternatingGroup

@@ -89,26 +89,26 @@ theorem congr_comp_reverse {X Y : Paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
       Quot.mk (@Quotient.CompClosure _ _ redStep _ _) (𝟙 X) := by
   apply Quot.EqvGen_sound
   induction' p with a b q f ih
-  · apply EqvGen.refl
-  · simp only [Quiver.Path.reverse]
-    fapply EqvGen.trans
-    -- Porting note: `Quiver.Path.*` and `Quiver.Hom.*` notation not working
-    · exact q ≫ Quiver.Path.reverse q
-    · apply EqvGen.symm
-      apply EqvGen.rel
-      have : Quotient.CompClosure redStep (q ≫ 𝟙 _ ≫ Quiver.Path.reverse q)
-          (q ≫ (Quiver.Hom.toPath f ≫ Quiver.Hom.toPath (Quiver.reverse f)) ≫
-            Quiver.Path.reverse q) := by
-        apply Quotient.CompClosure.intro
-        apply redStep.step
-      simp only [Category.assoc, Category.id_comp] at this ⊢
-      -- Porting note: `simp` cannot see how `Quiver.Path.comp_assoc` is relevant, so change to
-      -- category notation
-      change Quotient.CompClosure redStep (q ≫ Quiver.Path.reverse q)
-        (Quiver.Path.cons q f ≫ (Quiver.Hom.toPath (Quiver.reverse f)) ≫ (Quiver.Path.reverse q))
-      simp only [← Category.assoc] at this ⊢
-      exact this
-    · exact ih
+  apply EqvGen.refl
+  simp only [Quiver.Path.reverse]
+  fapply EqvGen.trans
+  -- Porting note: `Quiver.Path.*` and `Quiver.Hom.*` notation not working
+  exact q ≫ Quiver.Path.reverse q
+  apply EqvGen.symm
+  apply EqvGen.rel
+  have : Quotient.CompClosure redStep (q ≫ 𝟙 _ ≫ Quiver.Path.reverse q)
+      (q ≫ (Quiver.Hom.toPath f ≫ Quiver.Hom.toPath (Quiver.reverse f)) ≫
+        Quiver.Path.reverse q) := by
+    apply Quotient.CompClosure.intro
+    apply redStep.step
+  simp only [Category.assoc, Category.id_comp] at this ⊢
+  -- Porting note: `simp` cannot see how `Quiver.Path.comp_assoc` is relevant, so change to
+  -- category notation
+  change Quotient.CompClosure redStep (q ≫ Quiver.Path.reverse q)
+    (Quiver.Path.cons q f ≫ (Quiver.Hom.toPath (Quiver.reverse f)) ≫ (Quiver.Path.reverse q))
+  simp only [← Category.assoc] at this ⊢
+  exact this
+  exact ih
 
 theorem congr_reverse_comp {X Y : Paths <| Quiver.Symmetrify V} (p : X ⟶ Y) :
     Quot.mk (@Quotient.CompClosure _ _ redStep _ _) (p.reverse ≫ p) =
@@ -162,14 +162,14 @@ theorem lift_unique (φ : V ⥤q V') (Φ : FreeGroupoid V ⥤ V') (hΦ : of V �
   apply Quotient.lift_unique
   apply Paths.lift_unique
   fapply @Quiver.Symmetrify.lift_unique _ _ _ _ _ _ _ _ _
-  · rw [← Functor.toPrefunctor_comp]
-    exact hΦ
-  · rintro X Y f
-    simp only [← Functor.toPrefunctor_comp, Prefunctor.comp_map, Paths.of_map, inv_eq_inv]
-    change Φ.map (inv ((Quotient.functor redStep).toPrefunctor.map f.toPath)) =
-      inv (Φ.map ((Quotient.functor redStep).toPrefunctor.map f.toPath))
-    have := Functor.map_inv Φ ((Quotient.functor redStep).toPrefunctor.map f.toPath)
-    convert this <;> simp only [inv_eq_inv]
+  rw [← Functor.toPrefunctor_comp]
+  exact hΦ
+  rintro X Y f
+  simp only [← Functor.toPrefunctor_comp, Prefunctor.comp_map, Paths.of_map, inv_eq_inv]
+  change Φ.map (inv ((Quotient.functor redStep).toPrefunctor.map f.toPath)) =
+    inv (Φ.map ((Quotient.functor redStep).toPrefunctor.map f.toPath))
+  have := Functor.map_inv Φ ((Quotient.functor redStep).toPrefunctor.map f.toPath)
+  convert this <;> simp only [inv_eq_inv]
 
 end UniversalProperty
 

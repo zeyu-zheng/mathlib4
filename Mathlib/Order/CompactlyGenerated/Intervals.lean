@@ -31,13 +31,13 @@ instance instIsCompactlyGenerated [IsCompactlyGenerated α] {a : α} :
   rw [sSup_le_iff] at hx
   let f : s → Iic a := fun y ↦ ⟨y, hx _ y.property⟩
   refine ⟨range f, ?_, ?_⟩
-  · rintro - ⟨⟨y, hy⟩, hy', rfl⟩
-    exact isCompactElement (hs _ hy)
-  · rw [Subtype.ext_iff]
-    change sSup (((↑) : Iic a → α) '' (range f)) = sSup s
-    congr
-    ext b
-    simpa [f] using hx b
+  rintro - ⟨⟨y, hy⟩, hy', rfl⟩
+  exact isCompactElement (hs _ hy)
+  rw [Subtype.ext_iff]
+  change sSup (((↑) : Iic a → α) '' (range f)) = sSup s
+  congr
+  ext b
+  simpa [f] using hx b
 
 end Set.Iic
 
@@ -54,10 +54,10 @@ theorem complementedLattice_of_complementedLattice_Iic
     replace h := complementedLattice_iff_isAtomistic.mp (h i hi)
     obtain ⟨u, hu, hu'⟩ := eq_sSup_atoms (⊤ : Iic (f i))
     refine ⟨(↑) '' u, ?_, ?_⟩
-    · replace hu : f i = ↑(sSup u) := Subtype.ext_iff.mp hu
-      simp_rw [hu, Iic.coe_sSup]
-    · rintro b ⟨⟨a, ha'⟩, ha, rfl⟩
-      exact IsAtom.of_isAtom_coe_Iic (hu' _ ha)
+    replace hu : f i = ↑(sSup u) := Subtype.ext_iff.mp hu
+    simp_rw [hu, Iic.coe_sSup]
+    rintro b ⟨⟨a, ha'⟩, ha, rfl⟩
+    exact IsAtom.of_isAtom_coe_Iic (hu' _ ha)
   choose t ht ht' using this
   let u : Set α := ⋃ i, ⋃ hi : i ∈ s, t i hi
   have hu₁ : u ⊆ {a | IsAtom a}

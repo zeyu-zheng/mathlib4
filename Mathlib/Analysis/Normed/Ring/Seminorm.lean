@@ -115,13 +115,13 @@ instance [DecidableEq R] : One (RingSeminorm R) :=
   ⟨{ (1 : AddGroupSeminorm R) with
       mul_le' := fun x y => by
         by_cases h : x * y = 0
-        · refine (if_pos h).trans_le (mul_nonneg ?_ ?_) <;>
-            · change _ ≤ ite _ _ _
-              split_ifs
-              exacts [le_rfl, zero_le_one]
-        · change ite _ _ _ ≤ ite _ _ _ * ite _ _ _
-          simp only [if_false, h, left_ne_zero_of_mul h, right_ne_zero_of_mul h, mul_one,
-            le_refl] }⟩
+        refine (if_pos h).trans_le (mul_nonneg ?_ ?_) <;>
+        · change _ ≤ ite _ _ _
+          split_ifs
+          exacts [le_rfl, zero_le_one]
+        change ite _ _ _ ≤ ite _ _ _ * ite _ _ _
+        simp only [if_false, h, left_ne_zero_of_mul h, right_ne_zero_of_mul h, mul_one,
+          le_refl] }⟩
 
 @[simp]
 theorem apply_one [DecidableEq R] (x : R) : (1 : RingSeminorm R) x = if x = 0 then 0 else 1 :=
@@ -142,11 +142,11 @@ theorem seminorm_one_eq_one_iff_ne_zero (hp : p 1 ≤ 1) : p 1 = 1 ↔ p ≠ 0 :
           exact one_ne_zero⟩,
       fun h => ?_⟩
   obtain hp0 | hp0 := (apply_nonneg p (1 : R)).eq_or_gt
-  · exfalso
-    refine h (ext fun x => (apply_nonneg _ _).antisymm' ?_)
-    simpa only [hp0, mul_one, mul_zero] using map_mul_le_mul p x 1
-  · refine hp.antisymm ((le_mul_iff_one_le_left hp0).1 ?_)
-    simpa only [one_mul] using map_mul_le_mul p (1 : R) _
+  exfalso
+  refine h (ext fun x => (apply_nonneg _ _).antisymm' ?_)
+  simpa only [hp0, mul_one, mul_zero] using map_mul_le_mul p x 1
+  refine hp.antisymm ((le_mul_iff_one_le_left hp0).1 ?_)
+  simpa only [one_mul] using map_mul_le_mul p (1 : R) _
 
 end Ring
 
@@ -238,10 +238,10 @@ instance : One (MulRingSeminorm R) :=
       map_one' := if_neg one_ne_zero
       map_mul' := fun x y => by
         obtain rfl | hx := eq_or_ne x 0
-        · simp
+        simp
         obtain rfl | hy := eq_or_ne y 0
-        · simp
-        · simp [hx, hy] }⟩
+        simp
+        simp [hx, hy] }⟩
 
 @[simp]
 theorem apply_one (x : R) : (1 : MulRingSeminorm R) x = if x = 0 then 0 else 1 :=
@@ -313,7 +313,7 @@ lemma equiv_symm {f g : MulRingNorm R} (hfg : equiv f g) : equiv g f := by
   rcases hfg with ⟨c, hcpos, h⟩
   use 1/c
   constructor
-  · simp only [one_div, inv_pos, hcpos]
+  simp only [one_div, inv_pos, hcpos]
   ext x
   simpa [← congr_fun h x] using Real.rpow_rpow_inv (apply_nonneg f x) (ne_of_lt hcpos).symm
 

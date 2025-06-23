@@ -112,8 +112,8 @@ theorem exists_mem_adjoin_mul_eq_pow_natDegree_le {x : S} (hx : aeval x f = 0) (
   rw [hk, pow_add]
   obtain ⟨y, hy, H⟩ := exists_mem_adjoin_mul_eq_pow_natDegree hx hmo hf
   refine ⟨y * x ^ k, ?_, ?_⟩
-  · exact Subalgebra.mul_mem _ hy (Subalgebra.pow_mem _ (subset_adjoin (Set.mem_singleton x)) _)
-  · rw [← mul_assoc _ y, H]
+  exact Subalgebra.mul_mem _ hy (Subalgebra.pow_mem _ (subset_adjoin (Set.mem_singleton x)) _)
+  rw [← mul_assoc _ y, H]
 
 end Principal
 
@@ -198,9 +198,9 @@ theorem isWeaklyEisensteinAt : IsWeaklyEisensteinAt f 𝓟 :=
 
 theorem coeff_mem {n : ℕ} (hn : n ≠ f.natDegree) : f.coeff n ∈ 𝓟 := by
   cases' ne_iff_lt_or_gt.1 hn with h₁ h₂
-  · exact hf.mem h₁
-  · rw [coeff_eq_zero_of_natDegree_lt h₂]
-    exact Ideal.zero_mem _
+  exact hf.mem h₁
+  rw [coeff_eq_zero_of_natDegree_lt h₂]
+  exact Ideal.zero_mem _
 
 end CommSemiring
 

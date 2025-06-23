@@ -148,8 +148,8 @@ theorem cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt [Nontrivial R]
       #K ≤ max (max #R #ι) ℵ₀ := cardinal_le_max_transcendence_basis v hv
       _ = #ι := by
         rw [max_eq_left, max_eq_right]
-        · exact le_trans hR this
-        · exact le_max_of_le_right this)
+        exact le_trans hR this
+        exact le_max_of_le_right this)
     (mk_le_of_injective (show Function.Injective v from hv.1.injective))
 
 end Cardinal
@@ -193,11 +193,11 @@ if they have the same cardinality and the same characteristic. -/
 theorem ringEquivOfCardinalEqOfCharEq (p : ℕ) [CharP K p] [CharP L p] (hK : ℵ₀ < #K)
     (hKL : #K = #L) : Nonempty (K ≃+* L) := by
   rcases CharP.char_is_prime_or_zero K p with (hp | hp)
-  · haveI : Fact p.Prime := ⟨hp⟩
-    exact ringEquivOfCardinalEqOfCharP p hK hKL
-  · simp only [hp] at *
-    letI : CharZero K := CharP.charP_to_charZero K
-    letI : CharZero L := CharP.charP_to_charZero L
-    exact ringEquivOfCardinalEqOfCharZero hK hKL
+  haveI : Fact p.Prime := ⟨hp⟩
+  exact ringEquivOfCardinalEqOfCharP p hK hKL
+  simp only [hp] at *
+  letI : CharZero K := CharP.charP_to_charZero K
+  letI : CharZero L := CharP.charP_to_charZero L
+  exact ringEquivOfCardinalEqOfCharZero hK hKL
 
 end IsAlgClosed

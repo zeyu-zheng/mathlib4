@@ -135,8 +135,8 @@ theorem trace_eq_contract_of_basis [Finite ι] (b : Basis ι R M) :
     simp only [Function.comp_apply, Basis.tensorProduct_apply, Basis.coe_dualBasis, coe_comp]
     rw [trace_eq_matrix_trace R b, toMatrix_dualTensorHom]
     by_cases hij : i = j
-    · rw [hij]
-      simp
+    rw [hij]
+    simp
     rw [Matrix.StdBasisMatrix.trace_zero j i (1 : R) hij]
     simp [Finsupp.single_eq_pi_single, hij]
 
@@ -171,7 +171,7 @@ theorem trace_eq_contract' :
 @[simp]
 theorem trace_one : trace R M 1 = (finrank R M : R) := by
   cases subsingleton_or_nontrivial R
-  · simp [eq_iff_true_of_subsingleton]
+  simp [eq_iff_true_of_subsingleton]
   have b := Module.Free.chooseBasis R M
   rw [trace_eq_matrix_trace R b, toMatrix_one, finrank_eq_card_chooseBasisIndex]
   simp
@@ -194,14 +194,14 @@ theorem trace_prodMap :
   have h : Function.Surjective e.toLinearMap := e.surjective
   refine (cancel_right h).1 ?_
   ext
-  · simp only [e, dualTensorHomEquiv, LinearEquiv.coe_prod, dualTensorHomEquivOfBasis_toLinearMap,
-      AlgebraTensorModule.curry_apply, curry_apply, coe_restrictScalars, coe_comp, coe_inl,
-      Function.comp_apply, prodMap_apply, map_zero, prodMapLinear_apply, dualTensorHom_prodMap_zero,
-      trace_eq_contract_apply, contractLeft_apply, fst_apply, coprod_apply, id_coe, id_eq, add_zero]
-  · simp only [e, dualTensorHomEquiv, LinearEquiv.coe_prod, dualTensorHomEquivOfBasis_toLinearMap,
-      AlgebraTensorModule.curry_apply, curry_apply, coe_restrictScalars, coe_comp, coe_inr,
-      Function.comp_apply, prodMap_apply, map_zero, prodMapLinear_apply, zero_prodMap_dualTensorHom,
-      trace_eq_contract_apply, contractLeft_apply, snd_apply, coprod_apply, id_coe, id_eq, zero_add]
+  simp only [e, dualTensorHomEquiv, LinearEquiv.coe_prod, dualTensorHomEquivOfBasis_toLinearMap,
+    AlgebraTensorModule.curry_apply, curry_apply, coe_restrictScalars, coe_comp, coe_inl,
+    Function.comp_apply, prodMap_apply, map_zero, prodMapLinear_apply, dualTensorHom_prodMap_zero,
+    trace_eq_contract_apply, contractLeft_apply, fst_apply, coprod_apply, id_coe, id_eq, add_zero]
+  simp only [e, dualTensorHomEquiv, LinearEquiv.coe_prod, dualTensorHomEquivOfBasis_toLinearMap,
+    AlgebraTensorModule.curry_apply, curry_apply, coe_restrictScalars, coe_comp, coe_inr,
+    Function.comp_apply, prodMap_apply, map_zero, prodMapLinear_apply, zero_prodMap_dualTensorHom,
+    trace_eq_contract_apply, contractLeft_apply, snd_apply, coprod_apply, id_coe, id_eq, zero_add]
 
 variable {R M N P}
 
@@ -270,17 +270,17 @@ open Classical in
 @[simp]
 theorem trace_conj' (f : M →ₗ[R] M) (e : M ≃ₗ[R] N) : trace R N (e.conj f) = trace R M f := by
   by_cases hM : ∃ s : Finset M, Nonempty (Basis s R M)
-  · obtain ⟨s, ⟨b⟩⟩ := hM
-    haveI := Module.Finite.of_basis b
-    haveI := (Module.free_def R M).mpr ⟨_, ⟨b⟩⟩
-    haveI := Module.Finite.of_basis (b.map e)
-    haveI := (Module.free_def R N).mpr ⟨_, ⟨(b.map e).reindex (e.toEquiv.image _)⟩⟩
-    rw [e.conj_apply, trace_comp_comm', ← comp_assoc, LinearEquiv.comp_coe,
-      LinearEquiv.self_trans_symm, LinearEquiv.refl_toLinearMap, id_comp]
-  · rw [trace, trace, dif_neg hM, dif_neg ?_, zero_apply, zero_apply]
-    rintro ⟨s, ⟨b⟩⟩
-    exact hM ⟨s.image e.symm, ⟨(b.map e.symm).reindex
-      ((e.symm.toEquiv.image s).trans (Equiv.Set.ofEq Finset.coe_image.symm))⟩⟩
+  obtain ⟨s, ⟨b⟩⟩ := hM
+  haveI := Module.Finite.of_basis b
+  haveI := (Module.free_def R M).mpr ⟨_, ⟨b⟩⟩
+  haveI := Module.Finite.of_basis (b.map e)
+  haveI := (Module.free_def R N).mpr ⟨_, ⟨(b.map e).reindex (e.toEquiv.image _)⟩⟩
+  rw [e.conj_apply, trace_comp_comm', ← comp_assoc, LinearEquiv.comp_coe,
+    LinearEquiv.self_trans_symm, LinearEquiv.refl_toLinearMap, id_comp]
+  rw [trace, trace, dif_neg hM, dif_neg ?_, zero_apply, zero_apply]
+  rintro ⟨s, ⟨b⟩⟩
+  exact hM ⟨s.image e.symm, ⟨(b.map e.symm).reindex
+    ((e.symm.toEquiv.image s).trans (Equiv.Set.ofEq Finset.coe_image.symm))⟩⟩
 
 theorem IsProj.trace {p : Submodule R M} {f : M →ₗ[R] M} (h : IsProj p f) [Module.Free R p]
     [Module.Finite R p] [Module.Free R (ker f)] [Module.Finite R (ker f)] :

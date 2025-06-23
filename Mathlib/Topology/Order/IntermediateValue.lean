@@ -256,26 +256,26 @@ theorem IsPreconnected.mem_intervals {s : Set α} (hs : IsPreconnected s) :
       ({Icc (sInf s) (sSup s), Ico (sInf s) (sSup s), Ioc (sInf s) (sSup s), Ioo (sInf s) (sSup s),
           Ici (sInf s), Ioi (sInf s), Iic (sSup s), Iio (sSup s), univ, ∅} : Set (Set α)) := by
   rcases s.eq_empty_or_nonempty with (rfl | hne)
-  · apply_rules [Or.inr, mem_singleton]
+  apply_rules [Or.inr, mem_singleton]
   have hs' : IsConnected s := ⟨hne, hs⟩
   by_cases hb : BddBelow s <;> by_cases ha : BddAbove s
-  · refine mem_of_subset_of_mem ?_ <| mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset
-      (hs'.Ioo_csInf_csSup_subset hb ha) (subset_Icc_csInf_csSup hb ha)
-    simp only [insert_subset_iff, mem_insert_iff, mem_singleton_iff, true_or, or_true,
-      singleton_subset_iff, and_self]
-  · refine Or.inr <| Or.inr <| Or.inr <| Or.inr ?_
-    cases'
-      mem_Ici_Ioi_of_subset_of_subset (hs.Ioi_csInf_subset hb ha) fun x hx => csInf_le hb hx with
-      hs hs
-    · exact Or.inl hs
-    · exact Or.inr (Or.inl hs)
-  · iterate 6 apply Or.inr
-    cases' mem_Iic_Iio_of_subset_of_subset (hs.Iio_csSup_subset hb ha) fun x hx => le_csSup ha hx
-      with hs hs
-    · exact Or.inl hs
-    · exact Or.inr (Or.inl hs)
-  · iterate 8 apply Or.inr
-    exact Or.inl (hs.eq_univ_of_unbounded hb ha)
+  refine mem_of_subset_of_mem ?_ <| mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset
+    (hs'.Ioo_csInf_csSup_subset hb ha) (subset_Icc_csInf_csSup hb ha)
+  simp only [insert_subset_iff, mem_insert_iff, mem_singleton_iff, true_or, or_true,
+    singleton_subset_iff, and_self]
+  refine Or.inr <| Or.inr <| Or.inr <| Or.inr ?_
+  cases'
+    mem_Ici_Ioi_of_subset_of_subset (hs.Ioi_csInf_subset hb ha) fun x hx => csInf_le hb hx with
+    hs hs
+  exact Or.inl hs
+  exact Or.inr (Or.inl hs)
+  iterate 6 apply Or.inr
+  cases' mem_Iic_Iio_of_subset_of_subset (hs.Iio_csSup_subset hb ha) fun x hx => le_csSup ha hx
+    with hs hs
+  exact Or.inl hs
+  exact Or.inr (Or.inl hs)
+  iterate 8 apply Or.inr
+  exact Or.inl (hs.eq_univ_of_unbounded hb ha)
 
 /-- A preconnected set is either one of the intervals `Icc`, `Ico`, `Ioc`, `Ioo`, `Ici`, `Ioi`,
 `Iic`, `Iio`, or `univ`, or `∅`. The converse statement requires `α` to be densely ordered. Though
@@ -311,7 +311,7 @@ theorem IsClosed.mem_of_ge_of_forall_exists_gt {a b : α} {s : Set α} (hs : IsC
   have c_mem : c ∈ S := hs.csSup_mem ⟨_, ha⟩ Sbd
   have c_le : c ≤ b := csSup_le ⟨_, ha⟩ fun x hx => hx.2.2
   cases' eq_or_lt_of_le c_le with hc hc
-  · exact hc ▸ c_mem.1
+  exact hc ▸ c_mem.1
   exfalso
   rcases hgt c ⟨c_mem.1, c_mem.2.1, hc⟩ with ⟨x, xs, cx, xb⟩
   exact not_lt_of_le (le_csSup Sbd ⟨xs, le_trans (le_csSup Sbd ha) (le_of_lt cx), xb⟩) cx
@@ -371,10 +371,10 @@ theorem isPreconnected_Icc : IsPreconnected (Icc a b) :=
       rintro s t hs ht hab ⟨x, hx⟩ ⟨y, hy⟩
       -- This used to use `wlog`, but it was causing timeouts.
       rcases le_total x y with h | h
-      · exact isPreconnected_Icc_aux x y s t h hs ht hab hx hy
-      · rw [inter_comm s t]
-        rw [union_comm s t] at hab
-        exact isPreconnected_Icc_aux y x t s h ht hs hab hy hx)
+      exact isPreconnected_Icc_aux x y s t h hs ht hab hx hy
+      rw [inter_comm s t]
+      rw [union_comm s t] at hab
+      exact isPreconnected_Icc_aux y x t s h ht hs hab hy hx)
 
 theorem isPreconnected_uIcc : IsPreconnected (uIcc a b) :=
   isPreconnected_Icc
@@ -459,10 +459,10 @@ lemma isTotallyDisconnected_iff_lt {s : Set α} :
   simp only [IsTotallyDisconnected, isPreconnected_iff_ordConnected, ← not_nontrivial_iff,
     nontrivial_iff_exists_lt, not_exists, not_and]
   refine ⟨fun h x hx y hy hxy ↦ ?_, fun h t hts ht x hx y hy hxy ↦ ?_⟩
-  · simp_rw [← not_ordConnected_inter_Icc_iff hx hy]
-    exact fun hs ↦ h _ inter_subset_left hs _ ⟨hx, le_rfl, hxy.le⟩ _ ⟨hy, hxy.le, le_rfl⟩ hxy
-  · obtain ⟨z, h1z, h2z⟩ := h x (hts hx) y (hts hy) hxy
-    exact h1z <| hts <| ht.1 hx hy ⟨h2z.1.le, h2z.2.le⟩
+  simp_rw [← not_ordConnected_inter_Icc_iff hx hy]
+  exact fun hs ↦ h _ inter_subset_left hs _ ⟨hx, le_rfl, hxy.le⟩ _ ⟨hy, hxy.le, le_rfl⟩ hxy
+  obtain ⟨z, h1z, h2z⟩ := h x (hts hx) y (hts hy) hxy
+  exact h1z <| hts <| ht.1 hx hy ⟨h2z.1.le, h2z.2.le⟩
 
 /-!
 ### Intermediate Value Theorem on an interval
@@ -588,18 +588,18 @@ theorem Continuous.strictMono_of_inj_boundedOrder [BoundedOrder α] {f : α → 
   by_contra! h
   have H : f b < f a := lt_of_le_of_ne h <| hf_i.ne hab.ne'
   by_cases ha : f a ≤ f ⊥
-  · obtain ⟨u, hu⟩ := intermediate_value_Ioc le_top hf_c.continuousOn ⟨H.trans_le ha, hf⟩
-    have : u = ⊥ := hf_i hu.2
-    aesop
-  · by_cases hb : f ⊥ < f b
-    · obtain ⟨u, hu⟩ := intermediate_value_Ioo bot_le hf_c.continuousOn ⟨hb, H⟩
-      rw [hf_i hu.2] at hu
-      exact (hab.trans hu.1.2).false
-    · push_neg at ha hb
-      replace hb : f b < f ⊥ := lt_of_le_of_ne hb <| hf_i.ne (lt_of_lt_of_le' hab bot_le).ne'
-      obtain ⟨u, hu⟩ := intermediate_value_Ioo' hab.le hf_c.continuousOn ⟨hb, ha⟩
-      have : u = ⊥ := hf_i hu.2
-      aesop
+  obtain ⟨u, hu⟩ := intermediate_value_Ioc le_top hf_c.continuousOn ⟨H.trans_le ha, hf⟩
+  have : u = ⊥ := hf_i hu.2
+  aesop
+  by_cases hb : f ⊥ < f b
+  obtain ⟨u, hu⟩ := intermediate_value_Ioo bot_le hf_c.continuousOn ⟨hb, H⟩
+  rw [hf_i hu.2] at hu
+  exact (hab.trans hu.1.2).false
+  push_neg at ha hb
+  replace hb : f b < f ⊥ := lt_of_le_of_ne hb <| hf_i.ne (lt_of_lt_of_le' hab bot_le).ne'
+  obtain ⟨u, hu⟩ := intermediate_value_Ioo' hab.le hf_c.continuousOn ⟨hb, ha⟩
+  have : u = ⊥ := hf_i hu.2
+  aesop
 
 theorem Continuous.strictAnti_of_inj_boundedOrder [BoundedOrder α] {f : α → δ}
     (hf_c : Continuous f) (hf : f ⊤ ≤ f ⊥) (hf_i : Injective f) : StrictAnti f :=
@@ -679,18 +679,18 @@ theorem Continuous.strictMono_of_inj {f : α → δ}
       (hf_c.strictMonoOn_of_inj_rigidity hf_i hcd)
       (hf_c.strictMonoOn_of_inj_rigidity (δ := δᵒᵈ) hf_i hcd)
   by_cases hn : Nonempty α
-  · let a : α := Classical.choice ‹_›
-    by_cases h : ∃ b : α, a ≠ b
-    · choose b hb using h
-      by_cases hab : a < b
-      · exact H hab
-      · push_neg at hab
-        have : b < a := by exact Ne.lt_of_le (id (Ne.symm hb)) hab
-        exact H this
-    · push_neg at h
-      haveI : Subsingleton α := ⟨fun c d => Trans.trans (h c).symm (h d)⟩
-      exact Or.inl <| Subsingleton.strictMono f
-  · aesop
+  let a : α := Classical.choice ‹_›
+  by_cases h : ∃ b : α, a ≠ b
+  choose b hb using h
+  by_cases hab : a < b
+  exact H hab
+  push_neg at hab
+  have : b < a := by exact Ne.lt_of_le (id (Ne.symm hb)) hab
+  exact H this
+  push_neg at h
+  haveI : Subsingleton α := ⟨fun c d => Trans.trans (h c).symm (h d)⟩
+  exact Or.inl <| Subsingleton.strictMono f
+  aesop
 
 /-- Every continuous injective `f : (a, b) → δ` is strictly monotone
 or antitone (increasing or decreasing). -/

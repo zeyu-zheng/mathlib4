@@ -163,25 +163,25 @@ theorem nonempty_hom_of_forall_finite_subgraph_hom [Finite W]
   -- Use compactness to obtain a section.
   obtain ⟨u, hu⟩ := nonempty_sections_of_finite_inverse_system (finsubgraphHomFunctor G F)
   refine ⟨⟨fun v => ?_, ?_⟩⟩
-  · -- Map each vertex using the homomorphism provided for its singleton subgraph.
-    exact
-      (u (Opposite.op (singletonFinsubgraph v))).toFun
-        ⟨v, by
-          unfold singletonFinsubgraph
-          simp⟩
-  · -- Prove that the above mapping preserves adjacency.
-    intro v v' e
-    simp only
-    /- The homomorphism for each edge's singleton subgraph agrees with those for its source and
-        target vertices. -/
-    have hv : Opposite.op (finsubgraphOfAdj e) ⟶ Opposite.op (singletonFinsubgraph v) :=
-      Quiver.Hom.op (CategoryTheory.homOfLE singletonFinsubgraph_le_adj_left)
-    have hv' : Opposite.op (finsubgraphOfAdj e) ⟶ Opposite.op (singletonFinsubgraph v') :=
-      Quiver.Hom.op (CategoryTheory.homOfLE singletonFinsubgraph_le_adj_right)
-    rw [← hu hv, ← hu hv']
-    -- Porting note: was `apply Hom.map_adj`
-    refine Hom.map_adj (u (Opposite.op (finsubgraphOfAdj e))) ?_
-    -- `v` and `v'` are definitionally adjacent in `finsubgraphOfAdj e`
-    simp [finsubgraphOfAdj]
+  -- Map each vertex using the homomorphism provided for its singleton subgraph.
+  exact
+    (u (Opposite.op (singletonFinsubgraph v))).toFun
+      ⟨v, by
+        unfold singletonFinsubgraph
+        simp⟩
+  -- Prove that the above mapping preserves adjacency.
+  intro v v' e
+  simp only
+  /- The homomorphism for each edge's singleton subgraph agrees with those for its source and
+      target vertices. -/
+  have hv : Opposite.op (finsubgraphOfAdj e) ⟶ Opposite.op (singletonFinsubgraph v) :=
+    Quiver.Hom.op (CategoryTheory.homOfLE singletonFinsubgraph_le_adj_left)
+  have hv' : Opposite.op (finsubgraphOfAdj e) ⟶ Opposite.op (singletonFinsubgraph v') :=
+    Quiver.Hom.op (CategoryTheory.homOfLE singletonFinsubgraph_le_adj_right)
+  rw [← hu hv, ← hu hv']
+  -- Porting note: was `apply Hom.map_adj`
+  refine Hom.map_adj (u (Opposite.op (finsubgraphOfAdj e))) ?_
+  -- `v` and `v'` are definitionally adjacent in `finsubgraphOfAdj e`
+  simp [finsubgraphOfAdj]
 
 end SimpleGraph

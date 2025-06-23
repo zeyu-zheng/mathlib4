@@ -156,10 +156,10 @@ theorem filter_fst_eq_antidiagonal (n m : A) [DecidablePred (· = m)] [Decidable
     simpa [← and_assoc, @and_right_comm _ (a = _), and_congr_left_iff]
   rintro rfl
   constructor
-  · rintro rfl
-    exact ⟨le_add_right le_rfl, (add_tsub_cancel_left _ _).symm⟩
-  · rintro ⟨h, rfl⟩
-    exact add_tsub_cancel_of_le h
+  rintro rfl
+  exact ⟨le_add_right le_rfl, (add_tsub_cancel_left _ _).symm⟩
+  rintro ⟨h, rfl⟩
+  exact add_tsub_cancel_of_le h
 
 theorem filter_snd_eq_antidiagonal (n m : A) [DecidablePred (· = m)] [Decidable (m ≤ n)] :
     filter (fun x : A × A ↦ x.snd = m) (antidiagonal n) = if m ≤ n then {(n - m, m)} else ∅ := by

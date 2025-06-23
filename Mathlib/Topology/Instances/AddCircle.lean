@@ -71,11 +71,11 @@ theorem continuous_right_toIcoMod : ContinuousWithinAt (toIcoMod hp a) (Ici x) x
   simp_rw [subset_def, mem_inter_iff]
   refine ⟨_, ⟨l + d, min (a + p) u + d, ?_, fun x => id⟩, fun y => ?_⟩ <;>
     simp_rw [← sub_mem_Ioo_iff_left, mem_Ioo, lt_min_iff]
-  · exact ⟨hxI.1, hd.2, hxI.2⟩
-  · rintro ⟨h, h'⟩
-    apply hIs
-    rw [← toIcoMod_sub_zsmul, (toIcoMod_eq_self _).2]
-    exacts [⟨h.1, h.2.2⟩, ⟨hd.1.trans (sub_le_sub_right h' _), h.2.1⟩]
+  exact ⟨hxI.1, hd.2, hxI.2⟩
+  rintro ⟨h, h'⟩
+  apply hIs
+  rw [← toIcoMod_sub_zsmul, (toIcoMod_eq_self _).2]
+  exacts [⟨h.1, h.2.2⟩, ⟨hd.1.trans (sub_le_sub_right h' _), h.2.1⟩]
 
 theorem continuous_left_toIocMod : ContinuousWithinAt (toIocMod hp a) (Iic x) x := by
   rw [(funext fun y => Eq.trans (by rw [neg_neg]) <| toIocMod_neg _ _ _ :
@@ -144,11 +144,11 @@ theorem coe_eq_zero_of_pos_iff (hp : 0 < p) {x : 𝕜} (hx : 0 < x) :
     (x : AddCircle p) = 0 ↔ ∃ n : ℕ, n • p = x := by
   rw [coe_eq_zero_iff]
   constructor <;> rintro ⟨n, rfl⟩
-  · replace hx : 0 < n := by
-      contrapose! hx
-      simpa only [← neg_nonneg, ← zsmul_neg, zsmul_neg'] using zsmul_nonneg hp.le (neg_nonneg.2 hx)
-    exact ⟨n.toNat, by rw [← natCast_zsmul, Int.toNat_of_nonneg hx.le]⟩
-  · exact ⟨(n : ℤ), by simp⟩
+  replace hx : 0 < n := by
+    contrapose! hx
+    simpa only [← neg_nonneg, ← zsmul_neg, zsmul_neg'] using zsmul_nonneg hp.le (neg_nonneg.2 hx)
+  exact ⟨n.toNat, by rw [← natCast_zsmul, Int.toNat_of_nonneg hx.le]⟩
+  exact ⟨(n : ℤ), by simp⟩
 
 theorem coe_period : (p : AddCircle p) = 0 :=
   (QuotientAddGroup.eq_zero_iff p).2 <| mem_zmultiples p
@@ -372,7 +372,7 @@ theorem addOrderOf_period_div {n : ℕ} (h : 0 < n) : addOrderOf ((p / n : 𝕜)
   rw [addOrderOf_eq_iff h]
   replace h : 0 < (n : 𝕜) := Nat.cast_pos.2 h
   refine ⟨?_, fun m hn h0 => ?_⟩ <;> simp only [Ne, ← coe_nsmul, nsmul_eq_mul]
-  · rw [mul_div_cancel₀ _ h.ne', coe_period]
+  rw [mul_div_cancel₀ _ h.ne', coe_period]
   rw [coe_eq_zero_of_pos_iff p hp.out (mul_pos (Nat.cast_pos.2 h0) <| div_pos hp.out h)]
   rintro ⟨k, hk⟩
   rw [mul_div, eq_div_iff h.ne', nsmul_eq_mul, mul_right_comm, ← Nat.cast_mul,
@@ -384,9 +384,9 @@ variable (p)
 theorem gcd_mul_addOrderOf_div_eq {n : ℕ} (m : ℕ) (hn : 0 < n) :
     m.gcd n * addOrderOf (↑(↑m / ↑n * p) : AddCircle p) = n := by
   rw [mul_comm_div, ← nsmul_eq_mul, coe_nsmul, IsOfFinAddOrder.addOrderOf_nsmul]
-  · rw [addOrderOf_period_div hn, Nat.gcd_comm, Nat.mul_div_cancel']
-    exact n.gcd_dvd_left m
-  · rwa [← addOrderOf_pos_iff, addOrderOf_period_div hn]
+  rw [addOrderOf_period_div hn, Nat.gcd_comm, Nat.mul_div_cancel']
+  exact n.gcd_dvd_left m
+  rwa [← addOrderOf_pos_iff, addOrderOf_period_div hn]
 
 variable {p}
 
@@ -398,10 +398,10 @@ theorem addOrderOf_div_of_gcd_eq_one {m n : ℕ} (hn : 0 < n) (h : m.gcd n = 1) 
 theorem addOrderOf_div_of_gcd_eq_one' {m : ℤ} {n : ℕ} (hn : 0 < n) (h : m.natAbs.gcd n = 1) :
     addOrderOf (↑(↑m / ↑n * p) : AddCircle p) = n := by
   induction m
-  · simp only [Int.ofNat_eq_coe, Int.cast_natCast, Int.natAbs_ofNat] at h ⊢
-    exact addOrderOf_div_of_gcd_eq_one hn h
-  · simp only [Int.cast_negSucc, neg_div, neg_mul, coe_neg, addOrderOf_neg]
-    exact addOrderOf_div_of_gcd_eq_one hn h
+  simp only [Int.ofNat_eq_coe, Int.cast_natCast, Int.natAbs_ofNat] at h ⊢
+  exact addOrderOf_div_of_gcd_eq_one hn h
+  simp only [Int.cast_negSucc, neg_div, neg_mul, coe_neg, addOrderOf_neg]
+  exact addOrderOf_div_of_gcd_eq_one hn h
 
 theorem addOrderOf_coe_rat {q : ℚ} : addOrderOf (↑(↑q * p) : AddCircle p) = q.den := by
   have : (↑(q.den : ℤ) : 𝕜) ≠ 0
@@ -413,8 +413,8 @@ theorem addOrderOf_coe_rat {q : ℚ} : addOrderOf (↑(↑q * p) : AddCircle p) 
 theorem addOrderOf_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
     addOrderOf u = n ↔ ∃ m < n, m.gcd n = 1 ∧ ↑(↑m / ↑n * p) = u := by
   refine ⟨QuotientAddGroup.induction_on' u fun k hk => ?_, ?_⟩
-  · rintro ⟨m, _, h₁, rfl⟩
-    exact addOrderOf_div_of_gcd_eq_one h h₁
+  rintro ⟨m, _, h₁, rfl⟩
+  exact addOrderOf_div_of_gcd_eq_one h h₁
   have h0 := addOrderOf_nsmul_eq_zero (k : AddCircle p)
   rw [hk, ← coe_nsmul, coe_eq_zero_iff] at h0
   obtain ⟨a, ha⟩ := h0
@@ -428,13 +428,13 @@ theorem addOrderOf_eq_pos_iff {u : AddCircle p} {n : ℕ} (h : 0 < n) :
   rw [coe_add, ← Int.cast_natCast, han, zsmul_eq_mul, mul_div_right_comm, eq_comm,
     add_left_eq_self, ← zsmul_eq_mul, coe_zsmul, coe_period, smul_zero]
   refine ⟨(a % n).toNat, ?_, ?_, he⟩
-  · rw [← Int.ofNat_lt, han]
-    exact Int.emod_lt_of_pos _ (Int.ofNat_lt.2 h)
-  · have := (gcd_mul_addOrderOf_div_eq p (Int.toNat (a % ↑n)) h).trans
-      ((congr_arg addOrderOf he).trans hk).symm
-    rw [he, Nat.mul_left_eq_self_iff] at this
-    · exact this
-    · rwa [hk]
+  rw [← Int.ofNat_lt, han]
+  exact Int.emod_lt_of_pos _ (Int.ofNat_lt.2 h)
+  have := (gcd_mul_addOrderOf_div_eq p (Int.toNat (a % ↑n)) h).trans
+    ((congr_arg addOrderOf he).trans hk).symm
+  rw [he, Nat.mul_left_eq_self_iff] at this
+  exact this
+  rwa [hk]
 
 theorem exists_gcd_eq_one_of_isOfFinAddOrder {u : AddCircle p} (h : IsOfFinAddOrder u) :
     ∃ m : ℕ, m.gcd (addOrderOf u) = 1 ∧ m < addOrderOf u ∧ ↑((m : 𝕜) / addOrderOf u * p) = u :=
@@ -472,17 +472,17 @@ def setAddOrderOfEquiv {n : ℕ} (hn : 0 < n) :
 theorem card_addOrderOf_eq_totient {n : ℕ} :
     Nat.card { u : AddCircle p // addOrderOf u = n } = n.totient := by
   rcases n.eq_zero_or_pos with (rfl | hn)
-  · simp only [Nat.totient_zero, addOrderOf_eq_zero_iff]
-    rcases em (∃ u : AddCircle p, ¬IsOfFinAddOrder u) with (⟨u, hu⟩ | h)
-    · have : Infinite { u : AddCircle p // ¬IsOfFinAddOrder u } := by
-        erw [infinite_coe_iff]
-        exact infinite_not_isOfFinAddOrder hu
-      exact Nat.card_eq_zero_of_infinite
-    · have : IsEmpty { u : AddCircle p // ¬IsOfFinAddOrder u } := by simpa using h
-      exact Nat.card_of_isEmpty
-  · rw [← coe_setOf, Nat.card_congr (setAddOrderOfEquiv p hn),
-      n.totient_eq_card_lt_and_coprime]
-    simp only [Nat.gcd_comm]
+  simp only [Nat.totient_zero, addOrderOf_eq_zero_iff]
+  rcases em (∃ u : AddCircle p, ¬IsOfFinAddOrder u) with (⟨u, hu⟩ | h)
+  have : Infinite { u : AddCircle p // ¬IsOfFinAddOrder u } := by
+    erw [infinite_coe_iff]
+    exact infinite_not_isOfFinAddOrder hu
+  exact Nat.card_eq_zero_of_infinite
+  have : IsEmpty { u : AddCircle p // ¬IsOfFinAddOrder u } := by simpa using h
+  exact Nat.card_of_isEmpty
+  rw [← coe_setOf, Nat.card_congr (setAddOrderOfEquiv p hn),
+    n.totient_eq_card_lt_and_coprime]
+  simp only [Nat.gcd_comm]
 
 theorem finite_setOf_add_order_eq {n : ℕ} (hn : 0 < n) :
     { u : AddCircle p | addOrderOf u = n }.Finite :=
@@ -579,9 +579,9 @@ theorem equivIccQuot_comp_mk_eq_toIocMod :
   rw [equivIccQuot_comp_mk_eq_toIcoMod]
   funext x
   by_cases h : a ≡ x [PMOD p]
-  · simp_rw [(modEq_iff_toIcoMod_eq_left hp.out).1 h, (modEq_iff_toIocMod_eq_right hp.out).1 h]
-    exact Quot.sound EndpointIdent.mk
-  · simp_rw [(not_modEq_iff_toIcoMod_eq_toIocMod hp.out).1 h]
+  simp_rw [(modEq_iff_toIcoMod_eq_left hp.out).1 h, (modEq_iff_toIocMod_eq_right hp.out).1 h]
+  exact Quot.sound EndpointIdent.mk
+  simp_rw [(not_modEq_iff_toIcoMod_eq_toIocMod hp.out).1 h]
 
 /-- The natural map from `[a, a + p] ⊂ 𝕜` with endpoints identified to `𝕜 / ℤ • p`, as a
 homeomorphism of topological spaces. -/

@@ -119,14 +119,14 @@ theorem powerSeriesPart_zero : powerSeriesPart (0 : LaurentSeries R) = 0 := by
 @[simp]
 theorem powerSeriesPart_eq_zero (x : LaurentSeries R) : x.powerSeriesPart = 0 ↔ x = 0 := by
   constructor
-  · contrapose!
-    simp only [ne_eq]
-    intro h
-    rw [PowerSeries.ext_iff, not_forall]
-    refine ⟨0, ?_⟩
-    simp [coeff_order_ne_zero h]
-  · rintro rfl
-    simp
+  contrapose!
+  simp only [ne_eq]
+  intro h
+  rw [PowerSeries.ext_iff, not_forall]
+  refine ⟨0, ?_⟩
+  simp [coeff_order_ne_zero h]
+  rintro rfl
+  simp
 
 @[simp]
 theorem single_order_mul_powerSeriesPart (x : LaurentSeries R) :
@@ -134,17 +134,17 @@ theorem single_order_mul_powerSeriesPart (x : LaurentSeries R) :
   ext n
   rw [← sub_add_cancel n x.order, single_mul_coeff_add, sub_add_cancel, one_mul]
   by_cases h : x.order ≤ n
-  · rw [Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h), coeff_coe_powerSeries,
-      powerSeriesPart_coeff, ← Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h),
-      add_sub_cancel]
-  · rw [ofPowerSeries_apply, embDomain_notin_range]
-    · contrapose! h
-      exact order_le_of_coeff_ne_zero h.symm
-    · contrapose! h
-      simp only [Set.mem_range, RelEmbedding.coe_mk, Function.Embedding.coeFn_mk] at h
-      obtain ⟨m, hm⟩ := h
-      rw [← sub_nonneg, ← hm]
-      simp only [Nat.cast_nonneg]
+  rw [Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h), coeff_coe_powerSeries,
+    powerSeriesPart_coeff, ← Int.eq_natAbs_of_zero_le (sub_nonneg_of_le h),
+    add_sub_cancel]
+  rw [ofPowerSeries_apply, embDomain_notin_range]
+  contrapose! h
+  exact order_le_of_coeff_ne_zero h.symm
+  contrapose! h
+  simp only [Set.mem_range, RelEmbedding.coe_mk, Function.Embedding.coeFn_mk] at h
+  obtain ⟨m, hm⟩ := h
+  rw [← sub_nonneg, ← hm]
+  simp only [Nat.cast_nonneg]
 
 theorem ofPowerSeries_powerSeriesPart (x : LaurentSeries R) :
     ofPowerSeries ℤ R x.powerSeriesPart = single (-x.order) 1 * x := by
@@ -168,21 +168,21 @@ instance of_powerSeries_localization [CommRing R] :
   map_units' := by
     rintro ⟨_, n, rfl⟩
     refine ⟨⟨single (n : ℤ) 1, single (-n : ℤ) 1, ?_, ?_⟩, ?_⟩
-    · simp
-    · simp
-    · dsimp; rw [ofPowerSeries_X_pow]
+    simp
+    simp
+    dsimp; rw [ofPowerSeries_X_pow]
   surj' z := by
     by_cases h : 0 ≤ z.order
-    · refine ⟨⟨PowerSeries.X ^ Int.natAbs z.order * powerSeriesPart z, 1⟩, ?_⟩
-      simp only [RingHom.map_one, mul_one, RingHom.map_mul, coe_algebraMap, ofPowerSeries_X_pow,
-        Submonoid.coe_one]
-      rw [Int.natAbs_of_nonneg h, single_order_mul_powerSeriesPart]
-    · refine ⟨⟨powerSeriesPart z, PowerSeries.X ^ Int.natAbs z.order, ⟨_, rfl⟩⟩, ?_⟩
-      simp only [coe_algebraMap, ofPowerSeries_powerSeriesPart]
-      rw [mul_comm _ z]
-      refine congr rfl ?_
-      rw [ofPowerSeries_X_pow, Int.ofNat_natAbs_of_nonpos]
-      exact le_of_not_ge h
+    refine ⟨⟨PowerSeries.X ^ Int.natAbs z.order * powerSeriesPart z, 1⟩, ?_⟩
+    simp only [RingHom.map_one, mul_one, RingHom.map_mul, coe_algebraMap, ofPowerSeries_X_pow,
+      Submonoid.coe_one]
+    rw [Int.natAbs_of_nonneg h, single_order_mul_powerSeriesPart]
+    refine ⟨⟨powerSeriesPart z, PowerSeries.X ^ Int.natAbs z.order, ⟨_, rfl⟩⟩, ?_⟩
+    simp only [coe_algebraMap, ofPowerSeries_powerSeriesPart]
+    rw [mul_comm _ z]
+    refine congr rfl ?_
+    rw [ofPowerSeries_X_pow, Int.ofNat_natAbs_of_nonpos]
+    exact le_of_not_ge h
   exists_of_eq {x y} := by
     rw [coe_algebraMap, ofPowerSeries_injective.eq_iff]
     rintro rfl
@@ -229,12 +229,12 @@ theorem coeff_coe (i : ℤ) :
     ((f : PowerSeries R) : LaurentSeries R).coeff i =
       if i < 0 then 0 else PowerSeries.coeff R i.natAbs f := by
   cases i
-  · rw [Int.ofNat_eq_coe, coeff_coe_powerSeries, if_neg (Int.natCast_nonneg _).not_lt,
-      Int.natAbs_ofNat]
-  · rw [ofPowerSeries_apply, embDomain_notin_image_support, if_pos (Int.negSucc_lt_zero _)]
-    simp only [not_exists, RelEmbedding.coe_mk, Set.mem_image, not_and, Function.Embedding.coeFn_mk,
-      Ne, toPowerSeries_symm_apply_coeff, mem_support, imp_true_iff,
-      not_false_iff]
+  rw [Int.ofNat_eq_coe, coeff_coe_powerSeries, if_neg (Int.natCast_nonneg _).not_lt,
+    Int.natAbs_ofNat]
+  rw [ofPowerSeries_apply, embDomain_notin_image_support, if_pos (Int.negSucc_lt_zero _)]
+  simp only [not_exists, RelEmbedding.coe_mk, Set.mem_image, not_and, Function.Embedding.coeFn_mk,
+    Ne, toPowerSeries_symm_apply_coeff, mem_support, imp_true_iff,
+    not_false_iff]
 
 -- Porting note (#10618): simp can prove this
 -- Porting note: removed norm_cast attribute
@@ -361,9 +361,9 @@ theorem coe_X : ((X : RatFunc F) : LaurentSeries F) = single 1 1 := by
 theorem single_one_eq_pow {R : Type _} [Ring R] (n : ℕ) :
     single (n : ℤ) (1 : R) = single (1 : ℤ) 1 ^ n := by
   induction' n with n h_ind
-  · simp
-  · rw [← Int.ofNat_add_one_out, pow_succ', ← h_ind, HahnSeries.single_mul_single, one_mul,
-      add_comm]
+  simp
+  rw [← Int.ofNat_add_one_out, pow_succ', ← h_ind, HahnSeries.single_mul_single, one_mul,
+    add_comm]
 
 theorem single_inv (d : ℤ) {α : F} (hα : α ≠ 0) :
     single (-d) (α⁻¹ : F) = (single (d : ℤ) (α : F))⁻¹ := by
@@ -373,10 +373,10 @@ theorem single_inv (d : ℤ) {α : F} (hα : α ≠ 0) :
 theorem single_zpow (n : ℤ) :
     single (n : ℤ) (1 : F) = single (1 : ℤ) 1 ^ n := by
   induction' n with n_pos n_neg
-  · apply single_one_eq_pow
-  · rw [Int.negSucc_coe, Int.ofNat_add, Nat.cast_one, ← inv_one,
-      single_inv (n_neg + 1 : ℤ) one_ne_zero, zpow_neg, ← Nat.cast_one, ← Int.ofNat_add,
-      Nat.cast_one, inv_inj, zpow_natCast, single_one_eq_pow, inv_one]
+  apply single_one_eq_pow
+  rw [Int.negSucc_coe, Int.ofNat_add, Nat.cast_one, ← inv_one,
+    single_inv (n_neg + 1 : ℤ) one_ne_zero, zpow_neg, ← Nat.cast_one, ← Int.ofNat_add,
+    Nat.cast_one, inv_inj, zpow_natCast, single_one_eq_pow, inv_one]
 
 instance : Algebra (RatFunc F) (LaurentSeries F) :=
   RingHom.toAlgebra (coeAlgHom F).toRingHom
@@ -417,7 +417,7 @@ variable {K}
 theorem intValuation_eq_of_coe (P : K[X]) :
     (Polynomial.idealX K).intValuation P = (idealX K).intValuation (P : K⟦X⟧) := by
   by_cases hP : P = 0
-  · rw [hP, Valuation.map_zero, Polynomial.coe_zero, Valuation.map_zero]
+  rw [hP, Valuation.map_zero, Polynomial.coe_zero, Valuation.map_zero]
   simp only [intValuation_apply]
   rw [intValuationDef_if_neg _ hP, intValuationDef_if_neg _ <| coe_ne_zero hP]
   simp only [idealX_span, ofAdd_neg, inv_inj, WithZero.coe_inj, EmbeddingLike.apply_eq_iff_eq,
@@ -457,8 +457,8 @@ theorem valuation_eq_LaurentSeries_valuation (P : RatFunc K) :
   rw [Polynomial.valuation_of_mk K f h, RatFunc.mk_eq_mk' f h, Eq.comm]
   convert @valuation_of_mk' (PowerSeries K) _ _ (LaurentSeries K) _ _ _ (PowerSeries.idealX K) f
         ⟨g, mem_nonZeroDivisors_iff_ne_zero.2 <| coe_ne_zero h⟩
-  · simp only [IsFractionRing.mk'_eq_div, coe_div, LaurentSeries.coe_algebraMap, coe_coe]
-    rfl
+  simp only [IsFractionRing.mk'_eq_div, coe_div, LaurentSeries.coe_algebraMap, coe_coe]
+  rfl
   exacts [intValuation_eq_of_coe _, intValuation_eq_of_coe _]
 
 end RatFunc
@@ -481,13 +481,13 @@ theorem valuation_single_zpow (s : ℤ) :
   have : Valued.v (1 : LaurentSeries K) = (1 : ℤₘ₀) := Valued.v.map_one
   rw [← single_zero_one, ← add_right_neg s, ← mul_one 1, ← single_mul_single, map_mul,
     mul_eq_one_iff_eq_inv₀] at this
-  · rw [this]
-    induction' s with s s
-    · rw [Int.ofNat_eq_coe, ← HahnSeries.ofPowerSeries_X_pow] at this
-      rw [Int.ofNat_eq_coe, ← this, PowerSeries.coe_pow, valuation_X_pow]
-    · simp only [Int.negSucc_coe, neg_neg, ← HahnSeries.ofPowerSeries_X_pow, PowerSeries.coe_pow,
-        valuation_X_pow, ofAdd_neg, WithZero.coe_inv, inv_inv]
-  · simp only [Valuation.ne_zero_iff, ne_eq, one_ne_zero, not_false_iff, HahnSeries.single_ne_zero]
+  rw [this]
+  induction' s with s s
+  rw [Int.ofNat_eq_coe, ← HahnSeries.ofPowerSeries_X_pow] at this
+  rw [Int.ofNat_eq_coe, ← this, PowerSeries.coe_pow, valuation_X_pow]
+  simp only [Int.negSucc_coe, neg_neg, ← HahnSeries.ofPowerSeries_X_pow, PowerSeries.coe_pow,
+    valuation_X_pow, ofAdd_neg, WithZero.coe_inv, inv_inv]
+  simp only [Valuation.ne_zero_iff, ne_eq, one_ne_zero, not_false_iff, HahnSeries.single_ne_zero]
 
 /- The coefficients of a power series vanish in degree strictly less than its valuation. -/
 theorem coeff_zero_of_lt_intValuation {n d : ℕ} {f : K⟦X⟧}
@@ -515,28 +515,28 @@ theorem coeff_zero_of_lt_valuation {n D : ℤ} {f : LaurentSeries K}
     (H : Valued.v f ≤ Multiplicative.ofAdd (-D)) : n < D → f.coeff n = 0 := by
   intro hnd
   by_cases h_n_ord : n < f.order
-  · exact coeff_eq_zero_of_lt_order h_n_ord
+  exact coeff_eq_zero_of_lt_order h_n_ord
   rw [not_lt] at h_n_ord
   set F := powerSeriesPart f with hF
   by_cases ord_nonpos : f.order ≤ 0
-  · obtain ⟨s, hs⟩ := Int.exists_eq_neg_ofNat ord_nonpos
-    obtain ⟨m, hm⟩ := Int.eq_ofNat_of_zero_le (neg_le_iff_add_nonneg.mp (hs ▸ h_n_ord))
-    obtain ⟨d, hd⟩ := Int.eq_ofNat_of_zero_le (a := D + s) (by linarith)
-    rw [eq_add_neg_of_add_eq hm, add_comm, ← hs, ← powerSeriesPart_coeff]
-    apply (intValuation_le_iff_coeff_lt_eq_zero K F).mp _ m (by linarith)
-    rwa [hF, ofPowerSeries_powerSeriesPart f, hs, neg_neg, ← hd, neg_add_rev, ofAdd_add, map_mul,
-      ← ofPowerSeries_X_pow s, PowerSeries.coe_pow,  WithZero.coe_mul, valuation_X_pow K s,
-      mul_le_mul_left₀ (by simp only [ne_eq, WithZero.coe_ne_zero, not_false_iff])]
-  · rw [not_le] at ord_nonpos
-    obtain ⟨s, hs⟩ := Int.exists_eq_neg_ofNat (Int.neg_nonpos_of_nonneg (le_of_lt ord_nonpos))
-    obtain ⟨m, hm⟩ := Int.eq_ofNat_of_zero_le (a := n - s) (by linarith)
-    obtain ⟨d, hd⟩ := Int.eq_ofNat_of_zero_le (a := D - s) (by linarith)
-    rw [(sub_eq_iff_eq_add).mp hm, add_comm, ← neg_neg (s : ℤ), ← hs, neg_neg,
-      ← powerSeriesPart_coeff]
-    apply (intValuation_le_iff_coeff_lt_eq_zero K F).mp _ m (by linarith)
-    rwa [hF, ofPowerSeries_powerSeriesPart f, map_mul, ← hd, hs, neg_sub, sub_eq_add_neg,
-      ofAdd_add, valuation_single_zpow, neg_neg, WithZero.coe_mul,
-      mul_le_mul_left₀ (by simp only [ne_eq, WithZero.coe_ne_zero, not_false_iff])]
+  obtain ⟨s, hs⟩ := Int.exists_eq_neg_ofNat ord_nonpos
+  obtain ⟨m, hm⟩ := Int.eq_ofNat_of_zero_le (neg_le_iff_add_nonneg.mp (hs ▸ h_n_ord))
+  obtain ⟨d, hd⟩ := Int.eq_ofNat_of_zero_le (a := D + s) (by linarith)
+  rw [eq_add_neg_of_add_eq hm, add_comm, ← hs, ← powerSeriesPart_coeff]
+  apply (intValuation_le_iff_coeff_lt_eq_zero K F).mp _ m (by linarith)
+  rwa [hF, ofPowerSeries_powerSeriesPart f, hs, neg_neg, ← hd, neg_add_rev, ofAdd_add, map_mul,
+    ← ofPowerSeries_X_pow s, PowerSeries.coe_pow,  WithZero.coe_mul, valuation_X_pow K s,
+    mul_le_mul_left₀ (by simp only [ne_eq, WithZero.coe_ne_zero, not_false_iff])]
+  rw [not_le] at ord_nonpos
+  obtain ⟨s, hs⟩ := Int.exists_eq_neg_ofNat (Int.neg_nonpos_of_nonneg (le_of_lt ord_nonpos))
+  obtain ⟨m, hm⟩ := Int.eq_ofNat_of_zero_le (a := n - s) (by linarith)
+  obtain ⟨d, hd⟩ := Int.eq_ofNat_of_zero_le (a := D - s) (by linarith)
+  rw [(sub_eq_iff_eq_add).mp hm, add_comm, ← neg_neg (s : ℤ), ← hs, neg_neg,
+    ← powerSeriesPart_coeff]
+  apply (intValuation_le_iff_coeff_lt_eq_zero K F).mp _ m (by linarith)
+  rwa [hF, ofPowerSeries_powerSeriesPart f, map_mul, ← hd, hs, neg_sub, sub_eq_add_neg,
+    ofAdd_add, valuation_single_zpow, neg_neg, WithZero.coe_mul,
+    mul_le_mul_left₀ (by simp only [ne_eq, WithZero.coe_ne_zero, not_false_iff])]
 
 /- The valuation of a Laurent series is the order of the first non-zero coefficient. -/
 theorem valuation_le_iff_coeff_lt_eq_zero {D : ℤ} {f : LaurentSeries K} :
@@ -544,51 +544,51 @@ theorem valuation_le_iff_coeff_lt_eq_zero {D : ℤ} {f : LaurentSeries K} :
   refine ⟨fun hnD n hn => coeff_zero_of_lt_valuation K hnD hn, fun h_val_f => ?_⟩
   let F := powerSeriesPart f
   by_cases ord_nonpos : f.order ≤ 0
-  · obtain ⟨s, hs⟩ := Int.exists_eq_neg_ofNat ord_nonpos
-    rw [← f.single_order_mul_powerSeriesPart, hs, map_mul, valuation_single_zpow, neg_neg, mul_comm,
-      ← le_mul_inv_iff₀, ofAdd_neg, WithZero.coe_inv, ← mul_inv, ← WithZero.coe_mul, ← ofAdd_add,
-      ← WithZero.coe_inv, ← ofAdd_neg]
-    · by_cases hDs : D + s ≤ 0
-      · apply le_trans ((PowerSeries.idealX K).valuation_le_one F)
-        rwa [← WithZero.coe_one, ← ofAdd_zero, WithZero.coe_le_coe, Multiplicative.ofAdd_le,
-          Left.nonneg_neg_iff]
-      · obtain ⟨d, hd⟩ := Int.eq_ofNat_of_zero_le (le_of_lt <| not_le.mp hDs)
-        rw [hd]
-        apply (intValuation_le_iff_coeff_lt_eq_zero K F).mpr
-        intro n hn
-        rw [powerSeriesPart_coeff f n, hs]
-        apply h_val_f
-        linarith
-    · simp only [ne_eq, WithZero.coe_ne_zero, not_false_iff]
-  · obtain ⟨s, hs⟩ := Int.exists_eq_neg_ofNat
-      <| neg_nonpos_of_nonneg <| le_of_lt <| not_le.mp ord_nonpos
-    rw [neg_inj] at hs
-    rw [← f.single_order_mul_powerSeriesPart, hs, map_mul, valuation_single_zpow, mul_comm,
-      ← le_mul_inv_iff₀, ofAdd_neg, WithZero.coe_inv, ← mul_inv, ← WithZero.coe_mul, ← ofAdd_add,
-      ← WithZero.coe_inv, ← ofAdd_neg, neg_add, neg_neg]
-    · by_cases hDs : D - s ≤ 0
-      · apply le_trans ((PowerSeries.idealX K).valuation_le_one F)
-        rw [← WithZero.coe_one, ← ofAdd_zero, WithZero.coe_le_coe, Multiplicative.ofAdd_le]
-        linarith
-      · obtain ⟨d, hd⟩ := Int.eq_ofNat_of_zero_le (le_of_lt <| not_le.mp hDs)
-        rw [← neg_neg (-D + ↑s), ← sub_eq_neg_add, neg_sub, hd]
-        apply (intValuation_le_iff_coeff_lt_eq_zero K F).mpr
-        intro n hn
-        rw [powerSeriesPart_coeff f n, hs]
-        apply h_val_f (s + n)
-        linarith
-    · simp only [ne_eq, WithZero.coe_ne_zero, not_false_iff]
+  obtain ⟨s, hs⟩ := Int.exists_eq_neg_ofNat ord_nonpos
+  rw [← f.single_order_mul_powerSeriesPart, hs, map_mul, valuation_single_zpow, neg_neg, mul_comm,
+    ← le_mul_inv_iff₀, ofAdd_neg, WithZero.coe_inv, ← mul_inv, ← WithZero.coe_mul, ← ofAdd_add,
+    ← WithZero.coe_inv, ← ofAdd_neg]
+  by_cases hDs : D + s ≤ 0
+  apply le_trans ((PowerSeries.idealX K).valuation_le_one F)
+  rwa [← WithZero.coe_one, ← ofAdd_zero, WithZero.coe_le_coe, Multiplicative.ofAdd_le,
+    Left.nonneg_neg_iff]
+  obtain ⟨d, hd⟩ := Int.eq_ofNat_of_zero_le (le_of_lt <| not_le.mp hDs)
+  rw [hd]
+  apply (intValuation_le_iff_coeff_lt_eq_zero K F).mpr
+  intro n hn
+  rw [powerSeriesPart_coeff f n, hs]
+  apply h_val_f
+  linarith
+  simp only [ne_eq, WithZero.coe_ne_zero, not_false_iff]
+  obtain ⟨s, hs⟩ := Int.exists_eq_neg_ofNat
+    <| neg_nonpos_of_nonneg <| le_of_lt <| not_le.mp ord_nonpos
+  rw [neg_inj] at hs
+  rw [← f.single_order_mul_powerSeriesPart, hs, map_mul, valuation_single_zpow, mul_comm,
+    ← le_mul_inv_iff₀, ofAdd_neg, WithZero.coe_inv, ← mul_inv, ← WithZero.coe_mul, ← ofAdd_add,
+    ← WithZero.coe_inv, ← ofAdd_neg, neg_add, neg_neg]
+  by_cases hDs : D - s ≤ 0
+  apply le_trans ((PowerSeries.idealX K).valuation_le_one F)
+  rw [← WithZero.coe_one, ← ofAdd_zero, WithZero.coe_le_coe, Multiplicative.ofAdd_le]
+  linarith
+  obtain ⟨d, hd⟩ := Int.eq_ofNat_of_zero_le (le_of_lt <| not_le.mp hDs)
+  rw [← neg_neg (-D + ↑s), ← sub_eq_neg_add, neg_sub, hd]
+  apply (intValuation_le_iff_coeff_lt_eq_zero K F).mpr
+  intro n hn
+  rw [powerSeriesPart_coeff f n, hs]
+  apply h_val_f (s + n)
+  linarith
+  simp only [ne_eq, WithZero.coe_ne_zero, not_false_iff]
 
 /- Two Laurent series whose difference has small valuation have the same coefficients for
 small enough indices. -/
 theorem eq_coeff_of_valuation_sub_lt {d n : ℤ} {f g : LaurentSeries K}
     (H : Valued.v (g - f) ≤ ↑(Multiplicative.ofAdd (-d))) : n < d → g.coeff n = f.coeff n := by
   by_cases triv : g = f
-  · exact fun _ => by rw [triv]
-  · intro hn
-    apply eq_of_sub_eq_zero
-    erw [← HahnSeries.sub_coeff]
-    apply coeff_zero_of_lt_valuation K H hn
+  exact fun _ => by rw [triv]
+  intro hn
+  apply eq_of_sub_eq_zero
+  erw [← HahnSeries.sub_coeff]
+  apply coeff_zero_of_lt_valuation K H hn
 
 /- Every Laurent series of valuation less than `(1 : ℤₘ₀)` comes from a power series. -/
 theorem val_le_one_iff_eq_coe (f : LaurentSeries K) : Valued.v f ≤ (1 : ℤₘ₀) ↔
@@ -596,7 +596,7 @@ theorem val_le_one_iff_eq_coe (f : LaurentSeries K) : Valued.v f ≤ (1 : ℤₘ
   rw [← WithZero.coe_one, ← ofAdd_zero, ← neg_zero, valuation_le_iff_coeff_lt_eq_zero]
   refine ⟨fun h => ⟨PowerSeries.mk fun n => f.coeff n, ?_⟩, ?_⟩
   on_goal 1 => ext (_ | n)
-  · simp only [Int.ofNat_eq_coe, coeff_coe_powerSeries, coeff_mk]
+  simp only [Int.ofNat_eq_coe, coeff_coe_powerSeries, coeff_mk]
   on_goal 1 => simp only [h (Int.negSucc n) (Int.negSucc_lt_zero n)]
   on_goal 2 => rintro ⟨F, rfl⟩ _ _
   all_goals
@@ -604,8 +604,8 @@ theorem val_le_one_iff_eq_coe (f : LaurentSeries K) : Valued.v f ≤ (1 : ℤₘ
     simp only [Nat.coe_castAddMonoidHom, RelEmbedding.coe_mk, Function.Embedding.coeFn_mk,
       Set.mem_range, not_exists, Int.negSucc_lt_zero,]
     intro
-  · simp only [not_false_eq_true]
-  · linarith
+  simp only [not_false_eq_true]
+  linarith
 
 end LaurentSeries
 

@@ -179,13 +179,13 @@ developing the theory of Beck-Chevalley transformations.
 /-- Mapping by the identity morphism is just the identity functor. -/
 theorem mapId_eq (Y : T) : map (𝟙 Y) = 𝟭 _ := by
   fapply Functor.ext
-  · intro x
-    dsimp [Over, Over.map, Comma.mapRight]
-    simp only [Category.comp_id]
-    exact rfl
-  · intros x y u
-    dsimp [Over, Over.map, Comma.mapRight]
-    simp
+  intro x
+  dsimp [Over, Over.map, Comma.mapRight]
+  simp only [Category.comp_id]
+  exact rfl
+  intros x y u
+  dsimp [Over, Over.map, Comma.mapRight]
+  simp
 
 /-- The natural isomorphism arising from `mapForget_eq`. -/
 def mapId (Y : T) : map (𝟙 Y) ≅ 𝟭 _ := eqToIso (mapId_eq Y)
@@ -195,8 +195,8 @@ def mapId (Y : T) : map (𝟙 Y) ≅ 𝟭 _ := eqToIso (mapId_eq Y)
 theorem mapForget_eq {X Y : T} (f : X ⟶ Y) :
     (map f) ⋙ (forget Y) = (forget X) := by
   fapply Functor.ext
-  · dsimp [Over, Over.map]; intro x; exact rfl
-  · intros x y u; simp
+  dsimp [Over, Over.map]; intro x; exact rfl
+  intros x y u; simp
 
 /-- The natural isomorphism arising from `mapForget_eq`. -/
 def mapForget {X Y : T} (f : X ⟶ Y) :
@@ -211,10 +211,10 @@ theorem eqToHom_left {X : T} {U V : Over X} (e : U = V) :
 theorem mapComp_eq {X Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) :
     map (f ≫ g) = (map f) ⋙ (map g) := by
   fapply Functor.ext
-  · simp [Over.map, Comma.mapRight]
-  · intro U V k
-    ext
-    simp
+  simp [Over.map, Comma.mapRight]
+  intro U V k
+  ext
+  simp
 
 /-- The natural isomorphism arising from `mapComp_eq`. -/
 def mapComp {X Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) :
@@ -477,13 +477,13 @@ functor `mapFunctor : Tᵒᵖ ⥤ Cat`.
 /-- Mapping by the identity morphism is just the identity functor. -/
 theorem mapId_eq (Y : T) : map (𝟙 Y) = 𝟭 _ := by
   fapply Functor.ext
-  · intro x
-    dsimp [Under, Under.map, Comma.mapLeft]
-    simp only [Category.id_comp]
-    exact rfl
-  · intros x y u
-    dsimp [Under, Under.map, Comma.mapLeft]
-    simp
+  intro x
+  dsimp [Under, Under.map, Comma.mapLeft]
+  simp only [Category.id_comp]
+  exact rfl
+  intros x y u
+  dsimp [Under, Under.map, Comma.mapLeft]
+  simp
 
 /-- Mapping by the identity morphism is just the identity functor. -/
 def mapId (Y : T) : map (𝟙 Y) ≅ 𝟭 _ := eqToIso (mapId_eq Y)
@@ -492,8 +492,8 @@ def mapId (Y : T) : map (𝟙 Y) ≅ 𝟭 _ := eqToIso (mapId_eq Y)
 theorem mapForget_eq {X Y : T} (f : X ⟶ Y) :
     (map f) ⋙ (forget X) = (forget Y) := by
   fapply Functor.ext
-  · dsimp [Under, Under.map]; intro x; exact rfl
-  · intros x y u; simp
+  dsimp [Under, Under.map]; intro x; exact rfl
+  intros x y u; simp
 
 /-- The natural isomorphism arising from `mapForget_eq`. -/
 def mapForget {X Y : T} (f : X ⟶ Y) :
@@ -508,10 +508,10 @@ theorem eqToHom_right {X : T} {U V : Under X} (e : U = V) :
 theorem mapComp_eq {X Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) :
     map (f ≫ g) = (map g) ⋙ (map f) := by
   fapply Functor.ext
-  · simp [Under.map, Comma.mapLeft]
-  · intro U V k
-    ext
-    simp
+  simp [Under.map, Comma.mapLeft]
+  intro U V k
+  ext
+  simp
 
 /-- The natural isomorphism arising from `mapComp_eq`. -/
 def mapComp {Y Z : T} (f : X ⟶ Y) (g : Y ⟶ Z) : map (f ≫ g) ≅ map g ⋙ map f :=

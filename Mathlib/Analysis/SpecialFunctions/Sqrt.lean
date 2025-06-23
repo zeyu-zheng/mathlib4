@@ -44,16 +44,16 @@ noncomputable def sqPartialHomeomorph : PartialHomeomorph ℝ ℝ where
 theorem deriv_sqrt_aux {x : ℝ} (hx : x ≠ 0) :
     HasStrictDerivAt (√·) (1 / (2 * √x)) x ∧ ∀ n, ContDiffAt ℝ n (√·) x := by
   cases' hx.lt_or_lt with hx hx
-  · rw [sqrt_eq_zero_of_nonpos hx.le, mul_zero, div_zero]
-    have : (√·) =ᶠ[𝓝 x] fun _ => 0 := (gt_mem_nhds hx).mono fun x hx => sqrt_eq_zero_of_nonpos hx.le
-    exact
-      ⟨(hasStrictDerivAt_const x (0 : ℝ)).congr_of_eventuallyEq this.symm, fun n =>
-        contDiffAt_const.congr_of_eventuallyEq this⟩
-  · have : ↑2 * √x ^ (2 - 1) ≠ 0 := by simp [(sqrt_pos.2 hx).ne', @two_ne_zero ℝ]
-    constructor
-    · simpa using sqPartialHomeomorph.hasStrictDerivAt_symm hx this (hasStrictDerivAt_pow 2 _)
-    · exact fun n => sqPartialHomeomorph.contDiffAt_symm_deriv this hx (hasDerivAt_pow 2 (√x))
-        (contDiffAt_id.pow 2)
+  rw [sqrt_eq_zero_of_nonpos hx.le, mul_zero, div_zero]
+  have : (√·) =ᶠ[𝓝 x] fun _ => 0 := (gt_mem_nhds hx).mono fun x hx => sqrt_eq_zero_of_nonpos hx.le
+  exact
+    ⟨(hasStrictDerivAt_const x (0 : ℝ)).congr_of_eventuallyEq this.symm, fun n =>
+      contDiffAt_const.congr_of_eventuallyEq this⟩
+  have : ↑2 * √x ^ (2 - 1) ≠ 0 := by simp [(sqrt_pos.2 hx).ne', @two_ne_zero ℝ]
+  constructor
+  simpa using sqPartialHomeomorph.hasStrictDerivAt_symm hx this (hasStrictDerivAt_pow 2 _)
+  exact fun n => sqPartialHomeomorph.contDiffAt_symm_deriv this hx (hasDerivAt_pow 2 (√x))
+    (contDiffAt_id.pow 2)
 
 theorem hasStrictDerivAt_sqrt {x : ℝ} (hx : x ≠ 0) : HasStrictDerivAt (√·) (1 / (2 * √x)) x :=
   (deriv_sqrt_aux hx).1

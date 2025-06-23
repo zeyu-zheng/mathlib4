@@ -145,19 +145,19 @@ theorem mem_sigmaLift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (a : Si
     x ∈ sigmaLift f a b ↔ ∃ (ha : a.1 = x.1) (hb : b.1 = x.1), x.2 ∈ f (ha ▸ a.2) (hb ▸ b.2) := by
   obtain ⟨⟨i, a⟩, j, b⟩ := a, b
   obtain rfl | h := Decidable.eq_or_ne i j
-  · constructor
-    · simp_rw [sigmaLift]
-      simp only [dite_eq_ite, ite_true, mem_map, Embedding.sigmaMk_apply, forall_exists_index,
-        and_imp]
-      rintro x hx rfl
-      exact ⟨rfl, rfl, hx⟩
-    · rintro ⟨⟨⟩, ⟨⟩, hx⟩
-      rw [sigmaLift, dif_pos rfl, mem_map]
-      exact ⟨_, hx, by simp [Sigma.ext_iff]⟩
-  · rw [sigmaLift, dif_neg h]
-    refine iff_of_false (not_mem_empty _) ?_
-    rintro ⟨⟨⟩, ⟨⟩, _⟩
-    exact h rfl
+  constructor
+  simp_rw [sigmaLift]
+  simp only [dite_eq_ite, ite_true, mem_map, Embedding.sigmaMk_apply, forall_exists_index,
+    and_imp]
+  rintro x hx rfl
+  exact ⟨rfl, rfl, hx⟩
+  rintro ⟨⟨⟩, ⟨⟩, hx⟩
+  rw [sigmaLift, dif_pos rfl, mem_map]
+  exact ⟨_, hx, by simp [Sigma.ext_iff]⟩
+  rw [sigmaLift, dif_neg h]
+  refine iff_of_false (not_mem_empty _) ?_
+  rintro ⟨⟨⟩, ⟨⟩, _⟩
+  exact h rfl
 
 theorem mk_mem_sigmaLift (f : ∀ ⦃i⦄, α i → β i → Finset (γ i)) (i : ι) (a : α i) (b : β i)
     (x : γ i) : (⟨i, x⟩ : Sigma γ) ∈ sigmaLift f ⟨i, a⟩ ⟨i, b⟩ ↔ x ∈ f a b := by
@@ -186,8 +186,8 @@ theorem sigmaLift_nonempty :
 theorem sigmaLift_eq_empty : sigmaLift f a b = ∅ ↔ ∀ h : a.1 = b.1, f (h ▸ a.2) b.2 = ∅ := by
   simp_rw [sigmaLift]
   split_ifs with h
-  · simp [h, forall_prop_of_true h]
-  · simp [h, forall_prop_of_false h]
+  simp [h, forall_prop_of_true h]
+  simp [h, forall_prop_of_false h]
 
 theorem sigmaLift_mono (h : ∀ ⦃i⦄ ⦃a : α i⦄ ⦃b : β i⦄, f a b ⊆ g a b) (a : Σi, α i) (b : Σi, β i) :
     sigmaLift f a b ⊆ sigmaLift g a b := by

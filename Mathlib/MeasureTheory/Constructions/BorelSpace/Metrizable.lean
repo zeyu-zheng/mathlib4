@@ -65,14 +65,14 @@ theorem aemeasurable_of_tendsto_metrizable_ae {ι} {μ : Measure α} {f : ι →
       measurable_of_tendsto_metrizable' atTop (aeSeq.measurable h'f p)
         (tendsto_pi_nhds.mpr fun x => ?_),
       ?_⟩
-  · simp_rw [aeSeqLim, aeSeq]
-    split_ifs with hx
-    · simp_rw [aeSeq.mk_eq_fun_of_mem_aeSeqSet h'f hx]
-      exact @aeSeq.fun_prop_of_mem_aeSeqSet _ α β _ _ _ _ _ h'f x hx
-    · exact tendsto_const_nhds
-  · exact
-      (ite_ae_eq_of_measure_compl_zero g (fun x => (⟨f (v 0) x⟩ : Nonempty β).some) (aeSeqSet h'f p)
-          (aeSeq.measure_compl_aeSeqSet_eq_zero h'f hp)).symm
+  simp_rw [aeSeqLim, aeSeq]
+  split_ifs with hx
+  simp_rw [aeSeq.mk_eq_fun_of_mem_aeSeqSet h'f hx]
+  exact @aeSeq.fun_prop_of_mem_aeSeqSet _ α β _ _ _ _ _ h'f x hx
+  exact tendsto_const_nhds
+  exact
+    (ite_ae_eq_of_measure_compl_zero g (fun x => (⟨f (v 0) x⟩ : Nonempty β).some) (aeSeqSet h'f p)
+        (aeSeq.measure_compl_aeSeqSet_eq_zero h'f hp)).symm
 
 theorem aemeasurable_of_tendsto_metrizable_ae' {μ : Measure α} {f : ℕ → α → β} {g : α → β}
     (hf : ∀ n, AEMeasurable (f n) μ)
@@ -107,7 +107,7 @@ theorem measurable_limit_of_tendsto_metrizable_ae {ι} [Countable ι] [Nonempty 
     ∃ f_lim : α → β, Measurable f_lim ∧ ∀ᵐ x ∂μ, Tendsto (fun n => f n x) L (𝓝 (f_lim x)) := by
   inhabit ι
   rcases eq_or_neBot L with (rfl | hL)
-  · exact ⟨(hf default).mk _, (hf default).measurable_mk, eventually_of_forall fun x => tendsto_bot⟩
+  exact ⟨(hf default).mk _, (hf default).measurable_mk, eventually_of_forall fun x => tendsto_bot⟩
   let p : α → (ι → β) → Prop := fun x f' => ∃ l : β, Tendsto (fun n => f' n) L (𝓝 l)
   have hp_mem : ∀ x ∈ aeSeqSet hf p, p x fun n => f n x := fun x hx =>
     aeSeq.fun_prop_of_mem_aeSeqSet hf hx
@@ -118,9 +118,9 @@ theorem measurable_limit_of_tendsto_metrizable_ae {ι} [Countable ι] [Nonempty 
     intro x
     simp only [aeSeq, f_lim]
     split_ifs with h
-    · refine (hp_mem x h).choose_spec.congr fun n => ?_
-      exact (aeSeq.mk_eq_fun_of_mem_aeSeqSet hf h n).symm
-    · exact tendsto_const_nhds
+    refine (hp_mem x h).choose_spec.congr fun n => ?_
+    exact (aeSeq.mk_eq_fun_of_mem_aeSeqSet hf h n).symm
+    exact tendsto_const_nhds
   have h_ae_tendsto_f_lim : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) L (𝓝 (f_lim x)) :=
     h_ae_eq.mono fun x hx => (hf_lim x).congr hx
   have h_f_lim_meas : Measurable f_lim :=

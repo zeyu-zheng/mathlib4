@@ -77,10 +77,10 @@ theorem measure_notConvergentSeq_tendsto_zero [SemilatticeSup ι] [Countable ι]
     (hs : μ s ≠ ∞) (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) (n : ℕ) :
     Tendsto (fun j => μ (s ∩ notConvergentSeq f g n j)) atTop (𝓝 0) := by
   cases' isEmpty_or_nonempty ι with h h
-  · have : (fun j => μ (s ∩ notConvergentSeq f g n j)) = fun j => 0 := by
-      simp only [eq_iff_true_of_subsingleton]
-    rw [this]
-    exact tendsto_const_nhds
+  have : (fun j => μ (s ∩ notConvergentSeq f g n j)) = fun j => 0 := by
+    simp only [eq_iff_true_of_subsingleton]
+  rw [this]
+  exact tendsto_const_nhds
   rw [← measure_inter_notConvergentSeq_eq_zero hfg n, Set.inter_iInter]
   refine tendsto_measure_iInter (fun n => hsm.inter <| notConvergentSeq_measurableSet hf hg)
     (fun k l hkl => Set.inter_subset_inter_right _ <| notConvergentSeq_antitone hkl)
@@ -140,9 +140,9 @@ theorem measure_iUnionNotConvergentSeq (hε : 0 < ε) (hf : ∀ n, StronglyMeasu
   simp_rw [ENNReal.ofReal_mul (half_pos hε).le]
   rw [ENNReal.tsum_mul_left, ← ENNReal.ofReal_tsum_of_nonneg, inv_eq_one_div, tsum_geometric_two,
     ← ENNReal.ofReal_mul (half_pos hε).le, div_mul_cancel₀ ε two_ne_zero]
-  · intro n; positivity
-  · rw [inv_eq_one_div]
-    exact summable_geometric_two
+  intro n; positivity
+  rw [inv_eq_one_div]
+  exact summable_geometric_two
 
 theorem iUnionNotConvergentSeq_subset (hε : 0 < ε) (hf : ∀ n, StronglyMeasurable (f n))
     (hg : StronglyMeasurable g) (hsm : MeasurableSet s) (hs : μ s ≠ ∞)

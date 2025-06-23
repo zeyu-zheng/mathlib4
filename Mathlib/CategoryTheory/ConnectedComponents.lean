@@ -83,15 +83,15 @@ instance (j : ConnectedComponents J) : IsConnected (Component j) := by
   have hf : ∀ a : J, a ∈ l → Zigzag a j₂
   intro i hi
   apply List.Chain.induction (fun t => Zigzag t j₂) _ hl₁ hl₂ _ _ _ (List.mem_of_mem_tail hi)
-  · intro j k
-    apply Relation.ReflTransGen.head
-  · apply Relation.ReflTransGen.refl
+  intro j k
+  apply Relation.ReflTransGen.head
+  apply Relation.ReflTransGen.refl
   -- Now lift the zigzag from `j₁` to `j₂` in `J` to the same thing in `component j`.
   refine ⟨l.pmap f hf, ?_, ?_⟩
-  · refine @List.chain_pmap_of_chain _ _ _ _ _ f (fun x y _ _ h => ?_) _ _ hl₁ h₁₂ _
-    exact zag_of_zag_obj (Component.ι _) h
-  · erw [List.getLast_pmap _ f (j₁ :: l) (by simpa [h₁₂] using hf) (List.cons_ne_nil _ _)]
-    exact FullSubcategory.ext _ _ hl₂
+  refine @List.chain_pmap_of_chain _ _ _ _ _ f (fun x y _ _ h => ?_) _ _ hl₁ h₁₂ _
+  exact zag_of_zag_obj (Component.ι _) h
+  erw [List.getLast_pmap _ f (j₁ :: l) (by simpa [h₁₂] using hf) (List.cons_ne_nil _ _)]
+  exact FullSubcategory.ext _ _ hl₂
 
 /-- The disjoint union of `J`s connected components, written explicitly as a sigma-type with the
 category structure.

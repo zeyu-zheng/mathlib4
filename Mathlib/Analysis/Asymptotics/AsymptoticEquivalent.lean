@@ -126,25 +126,25 @@ theorem isEquivalent_const_iff_tendsto {c : β} (h : c ≠ 0) :
     u ~[l] const _ c ↔ Tendsto u l (𝓝 c) := by
   simp (config := { unfoldPartialApp := true }) only [IsEquivalent, const, isLittleO_const_iff h]
   constructor <;> intro h
-  · have := h.sub (tendsto_const_nhds (x := -c))
-    simp only [Pi.sub_apply, sub_neg_eq_add, sub_add_cancel, zero_add] at this
-    exact this
-  · have := h.sub (tendsto_const_nhds (x := c))
-    rwa [sub_self] at this
+  have := h.sub (tendsto_const_nhds (x := -c))
+  simp only [Pi.sub_apply, sub_neg_eq_add, sub_add_cancel, zero_add] at this
+  exact this
+  have := h.sub (tendsto_const_nhds (x := c))
+  rwa [sub_self] at this
 
 theorem IsEquivalent.tendsto_const {c : β} (hu : u ~[l] const _ c) : Tendsto u l (𝓝 c) := by
   rcases em <| c = 0 with rfl | h
-  · exact (tendsto_congr' <| isEquivalent_zero_iff_eventually_zero.mp hu).mpr tendsto_const_nhds
-  · exact (isEquivalent_const_iff_tendsto h).mp hu
+  exact (tendsto_congr' <| isEquivalent_zero_iff_eventually_zero.mp hu).mpr tendsto_const_nhds
+  exact (isEquivalent_const_iff_tendsto h).mp hu
 
 theorem IsEquivalent.tendsto_nhds {c : β} (huv : u ~[l] v) (hu : Tendsto u l (𝓝 c)) :
     Tendsto v l (𝓝 c) := by
   by_cases h : c = 0
-  · subst c
-    rw [← isLittleO_one_iff ℝ] at hu ⊢
-    simpa using (huv.symm.isLittleO.trans hu).add hu
-  · rw [← isEquivalent_const_iff_tendsto h] at hu ⊢
-    exact huv.symm.trans hu
+  subst c
+  rw [← isLittleO_one_iff ℝ] at hu ⊢
+  simpa using (huv.symm.isLittleO.trans hu).add hu
+  rw [← isEquivalent_const_iff_tendsto h] at hu ⊢
+  exact huv.symm.trans hu
 
 theorem IsEquivalent.tendsto_nhds_iff {c : β} (huv : u ~[l] v) :
     Tendsto u l (𝓝 c) ↔ Tendsto v l (𝓝 c) :=
@@ -178,12 +178,12 @@ theorem isEquivalent_iff_exists_eq_mul :
     u ~[l] v ↔ ∃ (φ : α → β) (_ : Tendsto φ l (𝓝 1)), u =ᶠ[l] φ * v := by
   rw [IsEquivalent, isLittleO_iff_exists_eq_mul]
   constructor <;> rintro ⟨φ, hφ, h⟩ <;> [refine ⟨φ + 1, ?_, ?_⟩; refine ⟨φ - 1, ?_, ?_⟩]
-  · conv in 𝓝 _ => rw [← zero_add (1 : β)]
-    exact hφ.add tendsto_const_nhds
-  · convert h.add (EventuallyEq.refl l v) <;> simp [add_mul]
-  · conv in 𝓝 _ => rw [← sub_self (1 : β)]
-    exact hφ.sub tendsto_const_nhds
-  · convert h.sub (EventuallyEq.refl l v); simp [sub_mul]
+  conv in 𝓝 _ => rw [← zero_add (1 : β)]
+  exact hφ.add tendsto_const_nhds
+  convert h.add (EventuallyEq.refl l v) <;> simp [add_mul]
+  conv in 𝓝 _ => rw [← sub_self (1 : β)]
+  exact hφ.sub tendsto_const_nhds
+  convert h.sub (EventuallyEq.refl l v); simp [sub_mul]
 
 theorem IsEquivalent.exists_eq_mul (huv : u ~[l] v) :
     ∃ (φ : α → β) (_ : Tendsto φ l (𝓝 1)), u =ᶠ[l] φ * v :=
@@ -201,15 +201,15 @@ theorem isEquivalent_of_tendsto_one' (hz : ∀ x, v x = 0 → u x = 0) (huv : Te
 theorem isEquivalent_iff_tendsto_one (hz : ∀ᶠ x in l, v x ≠ 0) :
     u ~[l] v ↔ Tendsto (u / v) l (𝓝 1) := by
   constructor
-  · intro hequiv
-    have := hequiv.isLittleO.tendsto_div_nhds_zero
-    simp only [Pi.sub_apply, sub_div] at this
-    have key : Tendsto (fun x ↦ v x / v x) l (𝓝 1) :=
-      (tendsto_congr' <| hz.mono fun x hnz ↦ @div_self _ _ (v x) hnz).mpr tendsto_const_nhds
-    convert this.add key
-    · simp
-    · norm_num
-  · exact isEquivalent_of_tendsto_one (hz.mono fun x hnvz hz ↦ (hnvz hz).elim)
+  intro hequiv
+  have := hequiv.isLittleO.tendsto_div_nhds_zero
+  simp only [Pi.sub_apply, sub_div] at this
+  have key : Tendsto (fun x ↦ v x / v x) l (𝓝 1) :=
+    (tendsto_congr' <| hz.mono fun x hnz ↦ @div_self _ _ (v x) hnz).mpr tendsto_const_nhds
+  convert this.add key
+  simp
+  norm_num
+  exact isEquivalent_of_tendsto_one (hz.mono fun x hnvz hz ↦ (hnvz hz).elim)
 
 end NormedField
 

@@ -186,22 +186,22 @@ open Classical in
 theorem monomial_dvd_monomial {r s : R} {i j : σ →₀ ℕ} :
     monomial i r ∣ monomial j s ↔ (s = 0 ∨ i ≤ j) ∧ r ∣ s := by
   constructor
-  · rintro ⟨x, hx⟩
-    rw [MvPolynomial.ext_iff] at hx
-    have hj := hx j
-    have hi := hx i
-    simp_rw [coeff_monomial, if_pos] at hj hi
-    simp_rw [coeff_monomial_mul'] at hi hj
-    split_ifs at hi hj with hi hi
-    · exact ⟨Or.inr hi, _, hj⟩
-    · exact ⟨Or.inl hj, hj.symm ▸ dvd_zero _⟩
-    -- Porting note: two goals remain at this point in Lean 4
-    · simp_all only [or_true, dvd_mul_right, and_self]
-    · simp_all only [ite_self, le_refl, ite_true, dvd_mul_right, or_false, and_self]
-  · rintro ⟨h | hij, d, rfl⟩
-    · simp_rw [h, monomial_zero, dvd_zero]
-    · refine ⟨monomial (j - i) d, ?_⟩
-      rw [monomial_mul, add_tsub_cancel_of_le hij]
+  rintro ⟨x, hx⟩
+  rw [MvPolynomial.ext_iff] at hx
+  have hj := hx j
+  have hi := hx i
+  simp_rw [coeff_monomial, if_pos] at hj hi
+  simp_rw [coeff_monomial_mul'] at hi hj
+  split_ifs at hi hj with hi hi
+  exact ⟨Or.inr hi, _, hj⟩
+  exact ⟨Or.inl hj, hj.symm ▸ dvd_zero _⟩
+  -- Porting note: two goals remain at this point in Lean 4
+  simp_all only [or_true, dvd_mul_right, and_self]
+  simp_all only [ite_self, le_refl, ite_true, dvd_mul_right, or_false, and_self]
+  rintro ⟨h | hij, d, rfl⟩
+  simp_rw [h, monomial_zero, dvd_zero]
+  refine ⟨monomial (j - i) d, ?_⟩
+  rw [monomial_mul, add_tsub_cancel_of_le hij]
 
 @[simp]
 theorem monomial_one_dvd_monomial_one [Nontrivial R] {i j : σ →₀ ℕ} :

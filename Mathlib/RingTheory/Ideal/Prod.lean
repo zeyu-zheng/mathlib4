@@ -97,14 +97,14 @@ theorem prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} :
 theorem isPrime_of_isPrime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)).IsPrime) :
     I.IsPrime := by
   constructor
-  · contrapose! h
-    rw [h, prod_top_top, isPrime_iff]
-    simp [isPrime_iff, h]
-  · intro x y hxy
-    have : (⟨x, 1⟩ : R × S) * ⟨y, 1⟩ ∈ prod I ⊤
-    rw [Prod.mk_mul_mk, mul_one, mem_prod]
-    exact ⟨hxy, trivial⟩
-    simpa using h.mem_or_mem this
+  contrapose! h
+  rw [h, prod_top_top, isPrime_iff]
+  simp [isPrime_iff, h]
+  intro x y hxy
+  have : (⟨x, 1⟩ : R × S) * ⟨y, 1⟩ ∈ prod I ⊤
+  rw [Prod.mk_mul_mk, mul_one, mem_prod]
+  exact ⟨hxy, trivial⟩
+  simpa using h.mem_or_mem this
 
 theorem isPrime_of_isPrime_prod_top' {I : Ideal S} (h : (Ideal.prod (⊤ : Ideal R) I).IsPrime) :
     I.IsPrime := by
@@ -115,14 +115,14 @@ theorem isPrime_of_isPrime_prod_top' {I : Ideal S} (h : (Ideal.prod (⊤ : Ideal
 
 theorem isPrime_ideal_prod_top {I : Ideal R} [h : I.IsPrime] : (prod I (⊤ : Ideal S)).IsPrime := by
   constructor
-  · rcases h with ⟨h, -⟩
-    contrapose! h
-    rw [← prod_top_top, prod.ext_iff] at h
-    exact h.1
+  rcases h with ⟨h, -⟩
+  contrapose! h
+  rw [← prod_top_top, prod.ext_iff] at h
+  exact h.1
   rintro ⟨r₁, s₁⟩ ⟨r₂, s₂⟩ ⟨h₁, _⟩
   cases' h.mem_or_mem h₁ with h h
-  · exact Or.inl ⟨h, trivial⟩
-  · exact Or.inr ⟨h, trivial⟩
+  exact Or.inl ⟨h, trivial⟩
+  exact Or.inr ⟨h, trivial⟩
 
 theorem isPrime_ideal_prod_top' {I : Ideal S} [h : I.IsPrime] : (prod (⊤ : Ideal R) I).IsPrime := by
   letI : IsPrime (prod I (⊤ : Ideal R)) := isPrime_ideal_prod_top
@@ -143,17 +143,17 @@ theorem ideal_prod_prime (I : Ideal (R × S)) :
       (∃ p : Ideal R, p.IsPrime ∧ I = Ideal.prod p ⊤) ∨
         ∃ p : Ideal S, p.IsPrime ∧ I = Ideal.prod ⊤ p := by
   constructor
-  · rw [ideal_prod_eq I]
-    intro hI
-    rcases ideal_prod_prime_aux hI with (h | h)
-    · right
-      rw [h] at hI ⊢
-      exact ⟨_, ⟨isPrime_of_isPrime_prod_top' hI, rfl⟩⟩
-    · left
-      rw [h] at hI ⊢
-      exact ⟨_, ⟨isPrime_of_isPrime_prod_top hI, rfl⟩⟩
-  · rintro (⟨p, ⟨h, rfl⟩⟩ | ⟨p, ⟨h, rfl⟩⟩)
-    · exact isPrime_ideal_prod_top
-    · exact isPrime_ideal_prod_top'
+  rw [ideal_prod_eq I]
+  intro hI
+  rcases ideal_prod_prime_aux hI with (h | h)
+  right
+  rw [h] at hI ⊢
+  exact ⟨_, ⟨isPrime_of_isPrime_prod_top' hI, rfl⟩⟩
+  left
+  rw [h] at hI ⊢
+  exact ⟨_, ⟨isPrime_of_isPrime_prod_top hI, rfl⟩⟩
+  rintro (⟨p, ⟨h, rfl⟩⟩ | ⟨p, ⟨h, rfl⟩⟩)
+  exact isPrime_ideal_prod_top
+  exact isPrime_ideal_prod_top'
 
 end Ideal

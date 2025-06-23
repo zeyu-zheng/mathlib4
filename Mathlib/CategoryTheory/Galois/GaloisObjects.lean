@@ -128,12 +128,12 @@ lemma exists_autMap {A B : C} (f : A ⟶ B) [IsConnected A] [IsGalois B] (σ : A
   let F := GaloisCategory.getFiberFunctor C
   obtain ⟨a⟩ := nonempty_fiber_of_isConnected F A
   refine ⟨?_, ?_, ?_⟩
-  · exact (evaluationEquivOfIsGalois F B (F.map f a)).symm (F.map (σ.hom ≫ f) a)
-  · apply evaluation_injective_of_isConnected F A B a
-    simp
-  · intro τ hτ
-    apply evaluation_aut_injective_of_isConnected F B (F.map f a)
-    simpa using congr_fun (F.congr_map hτ) a
+  exact (evaluationEquivOfIsGalois F B (F.map f a)).symm (F.map (σ.hom ≫ f) a)
+  apply evaluation_injective_of_isConnected F A B a
+  simp
+  intro τ hτ
+  apply evaluation_aut_injective_of_isConnected F B (F.map f a)
+  simpa using congr_fun (F.congr_map hτ) a
 
 /-- A morphism from a connected object to a Galois object induces a map on automorphism
 groups. This is a group homomorphism (see `autMapHom`). -/

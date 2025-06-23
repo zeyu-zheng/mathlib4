@@ -58,28 +58,28 @@ theorem iff_exists_tensorProduct [EssFiniteType R S] :
     sub_eq_zero, @eq_comm S 1]
   simp_rw [this, ← KaehlerDifferential.span_range_eq_ideal]
   constructor
-  · rintro ⟨e, he₁, he₂ : _ = Ideal.span _⟩
-    refine ⟨1 - e, ?_, ?_⟩
-    · intro s
-      obtain ⟨x, hx⟩ : e ∣ 1 ⊗ₜ[R] s - s ⊗ₜ[R] 1 := by
-        rw [← Ideal.mem_span_singleton, ← he₂]
-        exact Ideal.subset_span ⟨s, rfl⟩
-      rw [hx, mul_comm, ← mul_assoc, sub_mul, one_mul, he₁.eq, sub_self, zero_mul]
-    · rw [sub_sub_cancel, he₂, Ideal.mem_span_singleton]
-  · rintro ⟨t, ht₁, ht₂⟩
-    use 1 - t
-    rw [← sub_sub_self 1 t] at ht₁; generalize 1 - t = e at *
-    constructor
-    · suffices e ∈ (Submodule.span (S ⊗[R] S) {1 - e}).annihilator by
-        simpa [IsIdempotentElem, mul_sub, sub_eq_zero, eq_comm, -Ideal.submodule_span_eq,
-          Submodule.mem_annihilator_span_singleton] using this
-      exact (show Ideal.span _ ≤ _ by simpa only [Ideal.span_le, Set.range_subset_iff,
-        Submodule.mem_annihilator_span_singleton, SetLike.mem_coe]) ht₂
-    · apply le_antisymm <;> simp only [Ideal.submodule_span_eq, Ideal.mem_span_singleton, ht₂,
-        Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, Set.range_subset_iff]
-      intro s
-      use 1 ⊗ₜ[R] s - s ⊗ₜ[R] 1
-      linear_combination ht₁ s
+  rintro ⟨e, he₁, he₂ : _ = Ideal.span _⟩
+  refine ⟨1 - e, ?_, ?_⟩
+  intro s
+  obtain ⟨x, hx⟩ : e ∣ 1 ⊗ₜ[R] s - s ⊗ₜ[R] 1 := by
+    rw [← Ideal.mem_span_singleton, ← he₂]
+    exact Ideal.subset_span ⟨s, rfl⟩
+  rw [hx, mul_comm, ← mul_assoc, sub_mul, one_mul, he₁.eq, sub_self, zero_mul]
+  rw [sub_sub_cancel, he₂, Ideal.mem_span_singleton]
+  rintro ⟨t, ht₁, ht₂⟩
+  use 1 - t
+  rw [← sub_sub_self 1 t] at ht₁; generalize 1 - t = e at *
+  constructor
+  suffices e ∈ (Submodule.span (S ⊗[R] S) {1 - e}).annihilator by
+    simpa [IsIdempotentElem, mul_sub, sub_eq_zero, eq_comm, -Ideal.submodule_span_eq,
+      Submodule.mem_annihilator_span_singleton] using this
+  exact (show Ideal.span _ ≤ _ by simpa only [Ideal.span_le, Set.range_subset_iff,
+    Submodule.mem_annihilator_span_singleton, SetLike.mem_coe]) ht₂
+  apply le_antisymm <;> simp only [Ideal.submodule_span_eq, Ideal.mem_span_singleton, ht₂,
+    Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, Set.range_subset_iff]
+  intro s
+  use 1 ⊗ₜ[R] s - s ⊗ₜ[R] 1
+  linear_combination ht₁ s
 
 variable [FormallyUnramified R S] [EssFiniteType R S]
 
@@ -130,9 +130,9 @@ lemma finite_of_free_aux (I) [DecidableEq I] (b : Basis I R S)
     ext j s
     rw [Finsupp.sum_smul_index]
     simp only [mul_smul, Finsupp.sum, ← Finset.smul_sum]
-    · intro; simp only [zero_smul]
-    · intro; simp only [zero_smul]
-    · intros; simp only [add_smul]
+    intro; simp only [zero_smul]
+    intro; simp only [zero_smul]
+    intros; simp only [add_smul]
   have h₂ : ∀ (x : S), ((b.repr x).support.sum fun a ↦ b.repr x a • b a) = x := by
     simpa only [Finsupp.total_apply, Finsupp.sum] using b.total_repr
   simp_rw [map_finsupp_sum, map_smul, h₁, Finsupp.sum, Finset.sum_comm (t := f.support),
@@ -140,11 +140,11 @@ lemma finite_of_free_aux (I) [DecidableEq I] (b : Basis I R S)
   apply Finset.sum_congr rfl
   intros i hi
   apply Finset.sum_subset_zero_on_sdiff
-  · exact Finset.subset_biUnion_of_mem (fun i ↦ (a i).support) hi
-  · simp only [Finset.mem_sdiff, Finset.mem_biUnion, Finsupp.mem_support_iff, ne_eq, not_not,
-      and_imp, forall_exists_index]
-    simp (config := {contextual := true})
-  · exact fun _ _ ↦ rfl
+  exact Finset.subset_biUnion_of_mem (fun i ↦ (a i).support) hi
+  simp only [Finset.mem_sdiff, Finset.mem_biUnion, Finsupp.mem_support_iff, ne_eq, not_not,
+    and_imp, forall_exists_index]
+  simp (config := {contextual := true})
+  exact fun _ _ ↦ rfl
 
 variable (R S)
 
@@ -179,11 +179,11 @@ lemma finite_of_free [Module.Free R S] : Module.Finite R S := by
     not_not] at hj
   simp only [Finsupp.sum]
   trans b.repr (f.support.sum (fun _ ↦ 0))
-  · refine congr_arg b.repr (Finset.sum_congr rfl ?_)
-    simp only [Finsupp.mem_support_iff]
-    intro i hi
-    rw [hj i hi, zero_smul]
-  · simp only [Finset.sum_const_zero, map_zero]
+  refine congr_arg b.repr (Finset.sum_congr rfl ?_)
+  simp only [Finsupp.mem_support_iff]
+  intro i hi
+  rw [hj i hi, zero_smul]
+  simp only [Finset.sum_const_zero, map_zero]
   -- And `G` such that `∑ₛ aᵢⱼfᵢ = ∑ Gᵢⱼbⱼ`, where `aᵢⱼ` are the coefficients `bᵢx = ∑ aᵢⱼbⱼ`.
   let G : I →₀ I →₀ R := Finsupp.onFinset (Finset.biUnion f.support (fun i ↦ (a i).support))
     (fun j ↦ b.repr (f.sum (fun i y ↦ a i j • y)))
@@ -207,11 +207,11 @@ lemma finite_of_free [Module.Free R S] : Module.Finite R S := by
   congr 1
   exact b.total_repr _
   trans (x ⊗ₜ 1) * elem R S
-  · simp_rw [this, hf, Finsupp.sum, Finset.mul_sum, TensorProduct.tmul_mul_tmul, one_mul]
-  · rw [← one_tmul_mul_elem, hf, finite_of_free_aux]
-    rfl
-  · intro; simp
-  · intro; simp
+  simp_rw [this, hf, Finsupp.sum, Finset.mul_sum, TensorProduct.tmul_mul_tmul, one_mul]
+  rw [← one_tmul_mul_elem, hf, finite_of_free_aux]
+  rfl
+  intro; simp
+  intro; simp
   -- In particular, `fⱼx = ∑ Fᵢⱼbⱼ = ∑ Gᵢⱼbⱼ = ∑ₛ aᵢⱼfᵢ` for all `j`.
   have : ∀ j, x * f j = f.sum fun i y ↦ a i j • y
   intro j
@@ -262,11 +262,11 @@ lemma comp_sec :
     Function.comp_apply, LinearMap.flip_apply, TensorProduct.AlgebraTensorModule.mapBilinear_apply,
     TensorProduct.AlgebraTensorModule.lift_apply, LinearMap.id_coe, id_eq]
   trans (TensorProduct.lmul' R (elem R S)) • x
-  · induction' elem R S using TensorProduct.induction_on with r s y z hy hz
-    · simp
-    · simp [mul_smul, smul_comm r s]
-    · simp [hy, hz, add_smul]
-  · rw [lmul_elem, one_smul]
+  induction' elem R S using TensorProduct.induction_on with r s y z hy hz
+  simp
+  simp [mul_smul, smul_comm r s]
+  simp [hy, hz, add_smul]
+  rw [lmul_elem, one_smul]
 
 /-- If `S` is an unramified `R`-algebra, then `R`-flat implies `S`-flat. Iversen I.2.7 -/
 lemma flat_of_restrictScalars [Module.Flat R M] : Module.Flat S M :=

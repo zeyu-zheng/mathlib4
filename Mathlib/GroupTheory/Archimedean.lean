@@ -45,8 +45,8 @@ theorem AddSubgroup.cyclic_of_min {H : AddSubgroup G} {a : G}
   by_contra h
   have h : a ≤ g - k • a
   refine a_min ⟨?_, ?_⟩
-  · exact AddSubgroup.sub_mem H g_in (AddSubgroup.zsmul_mem H a_in k)
-  · exact lt_of_le_of_ne nonneg (Ne.symm h)
+  exact AddSubgroup.sub_mem H g_in (AddSubgroup.zsmul_mem H a_in k)
+  exact lt_of_le_of_ne nonneg (Ne.symm h)
   have h' : ¬a ≤ g - k • a := not_le.mpr lt
   contradiction
   simp [sub_eq_zero.mp h_zero, AddSubgroup.mem_closure_singleton]
@@ -61,10 +61,10 @@ theorem AddSubgroup.exists_isLeast_pos {H : AddSubgroup G} (hbot : H ≠ ⊥) {a
     rcases existsUnique_add_zsmul_mem_Ico h₀ 0 (g - a) with ⟨m, ⟨hm, hm'⟩, -⟩
     simp only [zero_add, sub_le_iff_le_add, sub_add_cancel, ← add_one_zsmul] at hm hm'
     lift m to ℕ
-    · rw [← Int.lt_add_one_iff, ← zsmul_lt_zsmul_iff h₀, zero_zsmul]
-      exact hg.trans_le hm
-    · simp only [← Nat.cast_succ, natCast_zsmul] at hm hm'
-      exact ⟨m, hm', hm⟩
+    rw [← Int.lt_add_one_iff, ← zsmul_lt_zsmul_iff h₀, zero_zsmul]
+    exact hg.trans_le hm
+    simp only [← Nat.cast_succ, natCast_zsmul] at hm hm'
+    exact ⟨m, hm', hm⟩
   have : ∃ n : ℕ, Set.Nonempty (H ∩ Ioc (n • a) ((n + 1) • a))
   rcases (bot_or_exists_ne_zero H).resolve_left hbot with ⟨g, hgH, hg₀⟩
   rcases hex |g| (abs_pos.2 hg₀) with ⟨n, hn⟩
@@ -76,20 +76,20 @@ theorem AddSubgroup.exists_isLeast_pos {H : AddSubgroup G} (hbot : H ≠ ⊥) {a
   rcases hxmin x ⟨hxH, (nsmul_nonneg h₀.le _).trans_lt hnx⟩ with ⟨y, ⟨hyH, hy₀⟩, hxy⟩
   rcases hex y hy₀ with ⟨m, hm⟩
   cases' lt_or_le m n with hmn hnm
-  · exact hmin m hmn ⟨y, hyH, hm⟩
-  · refine disjoint_left.1 hd (sub_mem hxH hyH) ⟨sub_pos.2 hxy, sub_lt_iff_lt_add'.2 ?_⟩
-    calc x ≤ (n + 1) • a := hxn
-    _ ≤ (m + 1) • a := nsmul_le_nsmul_left h₀.le (add_le_add_right hnm _)
-    _ = m • a + a := succ_nsmul _ _
-    _ < y + a := add_lt_add_right hm.1 _
+  exact hmin m hmn ⟨y, hyH, hm⟩
+  refine disjoint_left.1 hd (sub_mem hxH hyH) ⟨sub_pos.2 hxy, sub_lt_iff_lt_add'.2 ?_⟩
+  calc x ≤ (n + 1) • a := hxn
+  _ ≤ (m + 1) • a := nsmul_le_nsmul_left h₀.le (add_le_add_right hnm _)
+  _ = m • a + a := succ_nsmul _ _
+  _ < y + a := add_lt_add_right hm.1 _
 
 /-- If an additive subgroup of a linear ordered additive commutative group is disjoint with the
 interval `Set.Ioo 0 a` for some positive `a`, then this is a cyclic subgroup. -/
 theorem AddSubgroup.cyclic_of_isolated_zero {H : AddSubgroup G} {a : G} (h₀ : 0 < a)
     (hd : Disjoint (H : Set G) (Ioo 0 a)) : ∃ b, H = closure {b} := by
   rcases eq_or_ne H ⊥ with rfl | hbot
-  · exact ⟨0, closure_singleton_zero.symm⟩
-  · exact (exists_isLeast_pos hbot h₀ hd).imp fun _ => cyclic_of_min
+  exact ⟨0, closure_singleton_zero.symm⟩
+  exact (exists_isLeast_pos hbot h₀ hd).imp fun _ => cyclic_of_min
 
 /-- Every subgroup of `ℤ` is cyclic. -/
 theorem Int.subgroup_cyclic (H : AddSubgroup ℤ) : ∃ a, H = AddSubgroup.closure {a} :=

@@ -115,13 +115,13 @@ instance : IsIso (Subpresheaf.ι (⊤ : Subpresheaf F)) := by
 
 theorem Subpresheaf.eq_top_iff_isIso : G = ⊤ ↔ IsIso G.ι := by
   constructor
-  · rintro rfl
-    infer_instance
-  · intro H
-    ext U x
-    apply iff_true_iff.mpr
-    rw [← IsIso.inv_hom_id_apply (G.ι.app U) x]
-    exact ((inv (G.ι.app U)) x).2
+  rintro rfl
+  infer_instance
+  intro H
+  ext U x
+  apply iff_true_iff.mpr
+  rw [← IsIso.inv_hom_id_apply (G.ι.app U) x]
+  exact ((inv (G.ι.app U)) x).2
 
 /-- If the image of a morphism falls in a subpresheaf, then the morphism factors through it. -/
 @[simps!]
@@ -210,19 +210,19 @@ theorem Subpresheaf.sheafify_isSheaf (hF : Presieve.IsSheaf J F) :
   have H : ∀ s, x.IsAmalgamation s ↔ x''.IsAmalgamation s.1
   intro s
   constructor
-  · intro H V i hi
-    dsimp only [x'']
-    conv_lhs => rw [← h₂ _ _ hi]
-    rw [← H _ (hi₂ _ _ hi)]
-    exact FunctorToTypes.map_comp_apply F (i₂ _ _ hi).op (i₁ _ _ hi).op _
-  · intro H V i hi
-    refine Subtype.ext ?_
-    apply (hF _ (x i hi).2).isSeparatedFor.ext
-    intro V' i' hi'
-    have hi'' : S' (i' ≫ i) := ⟨_, _, _, hi, hi', rfl⟩
-    have := H _ hi''
-    rw [op_comp, F.map_comp] at this
-    exact this.trans (congr_arg Subtype.val (hx _ _ (hi₂ _ _ hi'') hi (h₂ _ _ hi'')))
+  intro H V i hi
+  dsimp only [x'']
+  conv_lhs => rw [← h₂ _ _ hi]
+  rw [← H _ (hi₂ _ _ hi)]
+  exact FunctorToTypes.map_comp_apply F (i₂ _ _ hi).op (i₁ _ _ hi).op _
+  intro H V i hi
+  refine Subtype.ext ?_
+  apply (hF _ (x i hi).2).isSeparatedFor.ext
+  intro V' i' hi'
+  have hi'' : S' (i' ≫ i) := ⟨_, _, _, hi, hi', rfl⟩
+  have := H _ hi''
+  rw [op_comp, F.map_comp] at this
+  exact this.trans (congr_arg Subtype.val (hx _ _ (hi₂ _ _ hi'') hi (h₂ _ _ hi'')))
   have : x''.Compatible
   intro V₁ V₂ V₃ g₁ g₂ g₃ g₄ S₁ S₂ e
   rw [← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply]
@@ -358,12 +358,12 @@ instance isIso_toImagePresheaf {F F' : Cᵒᵖ ⥤ TypeMax.{v, w}} (f : F ⟶ F'
   intro X
   rw [isIso_iff_bijective]
   constructor
-  · intro x y e
-    have := (NatTrans.mono_iff_mono_app _ _).mp hf X
-    rw [mono_iff_injective] at this
-    exact this (congr_arg Subtype.val e : _)
-  · rintro ⟨_, ⟨x, rfl⟩⟩
-    exact ⟨x, rfl⟩
+  intro x y e
+  have := (NatTrans.mono_iff_mono_app _ _).mp hf X
+  rw [mono_iff_injective] at this
+  exact this (congr_arg Subtype.val e : _)
+  rintro ⟨_, ⟨x, rfl⟩⟩
+  exact ⟨x, rfl⟩
   apply NatIso.isIso_of_isIso_app
 
 /-- The image sheaf of a morphism between sheaves, defined to be the sheafification of

@@ -67,7 +67,7 @@ open Classical in
 theorem partialSections.nonempty [IsCofilteredOrEmpty J] [h : ∀ j : J, Nonempty (F.obj j)]
     {G : Finset J} (H : Finset (FiniteDiagramArrow G)) : (partialSections F H).Nonempty := by
   cases isEmpty_or_nonempty J
-  · exact ⟨isEmptyElim, fun {j} => IsEmpty.elim' inferInstance j.1⟩
+  exact ⟨isEmptyElim, fun {j} => IsEmpty.elim' inferInstance j.1⟩
   haveI : IsCofiltered J := ⟨⟩
   use fun j : J =>
     if hj : j ∈ G then F.map (IsCofiltered.infTo G H hj) (h (IsCofiltered.inf G H)).some
@@ -85,18 +85,18 @@ theorem partialSections.directed :
   let ιB : FiniteDiagramArrow B.1 → FiniteDiagramArrow (A.1 ⊔ B.1) := fun f =>
     ⟨f.1, f.2.1, Finset.mem_union_right _ f.2.2.1, Finset.mem_union_right _ f.2.2.2.1, f.2.2.2.2⟩
   refine ⟨⟨A.1 ⊔ B.1, A.2.image ιA ⊔ B.2.image ιB⟩, ?_, ?_⟩
-  · rintro u hu f hf
-    have : ιA f ∈ A.2.image ιA ⊔ B.2.image ιB := by
-      apply Finset.mem_union_left
-      rw [Finset.mem_image]
-      exact ⟨f, hf, rfl⟩
-    exact hu this
-  · rintro u hu f hf
-    have : ιB f ∈ A.2.image ιA ⊔ B.2.image ιB := by
-      apply Finset.mem_union_right
-      rw [Finset.mem_image]
-      exact ⟨f, hf, rfl⟩
-    exact hu this
+  rintro u hu f hf
+  have : ιA f ∈ A.2.image ιA ⊔ B.2.image ιB := by
+    apply Finset.mem_union_left
+    rw [Finset.mem_image]
+    exact ⟨f, hf, rfl⟩
+  exact hu this
+  rintro u hu f hf
+  have : ιB f ∈ A.2.image ιA ⊔ B.2.image ιB := by
+    apply Finset.mem_union_right
+    rw [Finset.mem_image]
+    exact ⟨f, hf, rfl⟩
+  exact hu this
 
 theorem partialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J}
     (H : Finset (FiniteDiagramArrow G)) : IsClosed (partialSections F H) := by
@@ -114,8 +114,8 @@ theorem partialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J}
     inferInstanceAs (T2Space (F.obj f.snd.fst))
   apply isClosed_eq
   -- Porting note: used to be a single `continuity` that closed both goals
-  · exact (F.map f.snd.snd.snd.snd).continuous.comp (continuous_apply f.fst)
-  · continuity
+  exact (F.map f.snd.snd.snd.snd).continuous.comp (continuous_apply f.fst)
+  continuity
 
 open Classical in
 /-- Cofiltered limits of nonempty compact Hausdorff spaces are nonempty topological spaces.

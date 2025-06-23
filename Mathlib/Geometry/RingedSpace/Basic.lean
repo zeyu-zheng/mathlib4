@@ -143,8 +143,8 @@ def basicOpen {U : Opens X} (f : X.presheaf.obj (op U)) : Opens X where
 theorem mem_basicOpen {U : Opens X} (f : X.presheaf.obj (op U)) (x : U) :
     ↑x ∈ X.basicOpen f ↔ IsUnit (X.presheaf.germ x f) := by
   constructor
-  · rintro ⟨x, hx, a⟩; cases Subtype.eq a; exact hx
-  · intro h; exact ⟨x, h, rfl⟩
+  rintro ⟨x, hx, a⟩; cases Subtype.eq a; exact hx
+  intro h; exact ⟨x, h, rfl⟩
 
 @[simp]
 theorem mem_top_basicOpen (f : X.presheaf.obj (op ⊤)) (x : X) :
@@ -169,13 +169,13 @@ theorem basicOpen_res {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (f : X.presheaf.obj 
   induction V using Opposite.rec'
   let g := i.unop; have : i = g.op := rfl; clear_value g; subst this
   ext; constructor
-  · rintro ⟨x, hx : IsUnit _, rfl⟩
-    erw [X.presheaf.germ_res_apply _ _ _] at hx
-    exact ⟨x.2, g x, hx, rfl⟩
-  · rintro ⟨hxV, x, hx, rfl⟩
-    refine ⟨⟨x, hxV⟩, (?_ : IsUnit _), rfl⟩
-    erw [X.presheaf.germ_res_apply _ _ _]
-    exact hx
+  rintro ⟨x, hx : IsUnit _, rfl⟩
+  erw [X.presheaf.germ_res_apply _ _ _] at hx
+  exact ⟨x.2, g x, hx, rfl⟩
+  rintro ⟨hxV, x, hx, rfl⟩
+  refine ⟨⟨x, hxV⟩, (?_ : IsUnit _), rfl⟩
+  erw [X.presheaf.germ_res_apply _ _ _]
+  exact hx
 
 -- This should fire before `basicOpen_res`.
 -- Porting note: this lemma is not in simple normal form because of `basicOpen_res`, as in Lean3
@@ -185,11 +185,11 @@ theorem basicOpen_res {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) (f : X.presheaf.obj 
 theorem basicOpen_res_eq {U V : (Opens X)ᵒᵖ} (i : U ⟶ V) [IsIso i] (f : X.presheaf.obj U) :
     @basicOpen X (unop V) (X.presheaf.map i f) = @RingedSpace.basicOpen X (unop U) f := by
   apply le_antisymm
-  · rw [X.basicOpen_res i f]; exact inf_le_right
-  · have := X.basicOpen_res (inv i) (X.presheaf.map i f)
-    rw [← comp_apply, ← X.presheaf.map_comp, IsIso.hom_inv_id, X.presheaf.map_id, id_apply] at this
-    rw [this]
-    exact inf_le_right
+  rw [X.basicOpen_res i f]; exact inf_le_right
+  have := X.basicOpen_res (inv i) (X.presheaf.map i f)
+  rw [← comp_apply, ← X.presheaf.map_comp, IsIso.hom_inv_id, X.presheaf.map_id, id_apply] at this
+  rw [this]
+  exact inf_le_right
 
 @[simp]
 theorem basicOpen_mul {U : Opens X} (f g : X.presheaf.obj (op U)) :
@@ -211,7 +211,7 @@ lemma basicOpen_pow {U : Opens X} (f : X.presheaf.obj (op U)) (n : ℕ) (h : 0 <
 theorem basicOpen_of_isUnit {U : Opens X} {f : X.presheaf.obj (op U)} (hf : IsUnit f) :
     X.basicOpen f = U := by
   apply le_antisymm
-  · exact X.basicOpen_le f
+  exact X.basicOpen_le f
   intro x hx
   erw [X.mem_basicOpen f (⟨x, hx⟩ : U)]
   exact RingHom.isUnit_map _ hf

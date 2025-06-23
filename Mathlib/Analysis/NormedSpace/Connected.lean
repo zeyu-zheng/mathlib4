@@ -42,7 +42,7 @@ theorem Set.Countable.isPathConnected_compl_of_one_lt_rank
   refine ⟨a, ha, ?_⟩
   intro b hb
   rcases eq_or_ne a b with rfl|hab
-  · exact JoinedIn.refl ha
+  exact JoinedIn.refl ha
   /- Assume `b ≠ a`. Write `a = c - x` and `b = c + x` for some nonzero `x`. Choose `y` which
   is linearly independent from `x`. Then the segments joining `a = c - x` to `c + ty` are pairwise
   disjoint for varying `t` (except for the endpoint `a`) so only countably many of them can
@@ -134,7 +134,7 @@ theorem isPathConnected_sphere (h : 1 < Module.rank ℝ E) (x : E) {r : ℝ} (hr
   `y ↦ x + (r * ‖y‖⁻¹) • y`. Since the image under a continuous map of a path connected set
   is path connected, this concludes the proof. -/
   rcases hr.eq_or_lt with rfl|rpos
-  · simpa using isPathConnected_singleton x
+  simpa using isPathConnected_singleton x
   let f : E → E := fun y ↦ x + (r * ‖y‖⁻¹) • y
   have A : ContinuousOn f {0}ᶜ
   intro y hy
@@ -145,17 +145,17 @@ theorem isPathConnected_sphere (h : 1 < Module.rank ℝ E) (x : E) {r : ℝ} (hr
   have C : IsPathConnected (f '' {0}ᶜ) := B.image' A
   have : f '' {0}ᶜ = sphere x r
   apply Subset.antisymm
-  · rintro - ⟨y, hy, rfl⟩
-    have : ‖y‖ ≠ 0
-    simpa using hy
-    simp [f, norm_smul, abs_of_nonneg hr, mul_assoc, inv_mul_cancel this]
-  · intro y hy
-    refine ⟨y - x, ?_, ?_⟩
-    · intro H
-      simp only [mem_singleton_iff, sub_eq_zero] at H
-      simp only [H, mem_sphere_iff_norm, sub_self, norm_zero] at hy
-      exact rpos.ne hy
-    · simp [f, mem_sphere_iff_norm.1 hy, mul_inv_cancel rpos.ne']
+  rintro - ⟨y, hy, rfl⟩
+  have : ‖y‖ ≠ 0
+  simpa using hy
+  simp [f, norm_smul, abs_of_nonneg hr, mul_assoc, inv_mul_cancel this]
+  intro y hy
+  refine ⟨y - x, ?_, ?_⟩
+  intro H
+  simp only [mem_singleton_iff, sub_eq_zero] at H
+  simp only [H, mem_sphere_iff_norm, sub_self, norm_zero] at hy
+  exact rpos.ne hy
+  simp [f, mem_sphere_iff_norm.1 hy, mul_inv_cancel rpos.ne']
   rwa [this] at C
 
 /-- In a real vector space of dimension `> 1`, any sphere of nonnegative radius is connected. -/
@@ -167,8 +167,8 @@ theorem isConnected_sphere (h : 1 < Module.rank ℝ E) (x : E) {r : ℝ} (hr : 0
 theorem isPreconnected_sphere (h : 1 < Module.rank ℝ E) (x : E) (r : ℝ) :
     IsPreconnected (sphere x r) := by
   rcases le_or_lt 0 r with hr|hr
-  · exact (isConnected_sphere h x hr).isPreconnected
-  · simpa [hr] using isPreconnected_empty
+  exact (isConnected_sphere h x hr).isPreconnected
+  simpa [hr] using isPreconnected_empty
 
 end NormedSpace
 

@@ -145,8 +145,8 @@ theorem IsPreconnected.eq_of_sq_eq [Field 𝕜] [HasContinuousInv₀ 𝕜] [Cont
     (hsq : EqOn (f ^ 2) (g ^ 2) S) (hg_ne : ∀ {x : α}, x ∈ S → g x ≠ 0) {y : α} (hy : y ∈ S)
     (hy' : f y = g y) : EqOn f g S := fun x hx => by
   rcases hS.eq_or_eq_neg_of_sq_eq hf hg @hsq @hg_ne with (h | h)
-  · exact h hx
-  · rw [h _, Pi.neg_apply, neg_eq_iff_add_eq_zero, ← two_mul, mul_eq_zero,
-      iff_false_iff.2 (hg_ne _)] at hy' ⊢ <;> assumption
+  exact h hx
+  rw [h _, Pi.neg_apply, neg_eq_iff_add_eq_zero, ← two_mul, mul_eq_zero,
+    iff_false_iff.2 (hg_ne _)] at hy' ⊢ <;> assumption
 
 end Preconnected

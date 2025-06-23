@@ -244,15 +244,15 @@ theorem comp_id_id (B : BilinForm R M) : B.comp LinearMap.id LinearMap.id = B :=
 theorem comp_inj (B₁ B₂ : BilinForm R M') {l r : M →ₗ[R] M'} (hₗ : Function.Surjective l)
     (hᵣ : Function.Surjective r) : B₁.comp l r = B₂.comp l r ↔ B₁ = B₂ := by
   constructor <;> intro h
-  · -- B₁.comp l r = B₂.comp l r → B₁ = B₂
-    ext x y
-    cases' hₗ x with x' hx
-    subst hx
-    cases' hᵣ y with y' hy
-    subst hy
-    rw [← comp_apply, ← comp_apply, h]
-  · -- B₁ = B₂ → B₁.comp l r = B₂.comp l r
-    rw [h]
+  -- B₁.comp l r = B₂.comp l r → B₁ = B₂
+  ext x y
+  cases' hₗ x with x' hx
+  subst hx
+  cases' hᵣ y with y' hy
+  subst hy
+  rw [← comp_apply, ← comp_apply, h]
+  -- B₁ = B₂ → B₁.comp l r = B₂.comp l r
+  rw [h]
 
 end Comp
 

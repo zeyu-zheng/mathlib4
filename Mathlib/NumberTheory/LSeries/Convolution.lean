@@ -42,9 +42,9 @@ lemma toArithmeticFunction_congr {R : Type*} [Zero R] {f f' : ℕ → R}
     (h : ∀ {n}, n ≠ 0 → f n = f' n) :
     toArithmeticFunction f = toArithmeticFunction f' := by
   ext ⟨- | _⟩
-  · simp only [zero_eq, ArithmeticFunction.map_zero]
-  · simp only [toArithmeticFunction, ArithmeticFunction.coe_mk, succ_ne_zero, ↓reduceIte,
-      ne_eq, not_false_eq_true, h]
+  simp only [zero_eq, ArithmeticFunction.map_zero]
+  simp only [toArithmeticFunction, ArithmeticFunction.coe_mk, succ_ne_zero, ↓reduceIte,
+    ne_eq, not_false_eq_true, h]
 
 /-- If we consider an arithmetic function just as a function and turn it back into an
 arithmetic function, it is the same as before. -/
@@ -100,7 +100,7 @@ in terms of a sum over `Nat.divisorsAntidiagonal`. -/
 lemma term_convolution (f g : ℕ → ℂ) (s : ℂ) (n : ℕ) :
     term (f ⍟ g) s n = ∑ p ∈ n.divisorsAntidiagonal, term f s p.1 * term g s p.2 := by
   rcases eq_or_ne n 0 with rfl | hn
-  · simp only [term_zero, divisorsAntidiagonal_zero, Finset.sum_empty]
+  simp only [term_zero, divisorsAntidiagonal_zero, Finset.sum_empty]
   -- now `n ≠ 0`
   rw [term_of_ne_zero hn, convolution_def, Finset.sum_div]
   refine Finset.sum_congr rfl fun p hp ↦ ?_
@@ -118,17 +118,17 @@ lemma term_convolution' (f g : ℕ → ℂ) (s : ℂ) :
       ∑' (b : (fun p : ℕ × ℕ ↦ p.1 * p.2) ⁻¹' {n}), term f s b.val.1 * term g s b.val.2 := by
   ext n
   rcases eq_or_ne n 0 with rfl | hn
-  · -- show that both sides vanish when `n = 0`; this is the hardest part of the proof!
-    refine (term_zero ..).trans ?_
-    -- the right hand sum is over the union below, but in each term, one factor is always zero
-    have hS : (fun p ↦ p.1 * p.2) ⁻¹' {0} = {0} ×ˢ univ ∪ univ ×ˢ {0}
-    ext
-    simp only [mem_preimage, mem_singleton_iff, Nat.mul_eq_zero, mem_union, mem_prod, mem_univ,
-      and_true, true_and]
-    have : ∀ p : (fun p : ℕ × ℕ ↦ p.1 * p.2) ⁻¹' {0}, term f s p.val.1 * term g s p.val.2 = 0
-    rintro ⟨⟨p₁, p₂⟩, hp⟩
-    rcases hS ▸ hp with ⟨rfl, -⟩ | ⟨-, rfl⟩ <;> simp only [term_zero, zero_mul, mul_zero]
-    simp only [this, tsum_zero]
+  -- show that both sides vanish when `n = 0`; this is the hardest part of the proof!
+  refine (term_zero ..).trans ?_
+  -- the right hand sum is over the union below, but in each term, one factor is always zero
+  have hS : (fun p ↦ p.1 * p.2) ⁻¹' {0} = {0} ×ˢ univ ∪ univ ×ˢ {0}
+  ext
+  simp only [mem_preimage, mem_singleton_iff, Nat.mul_eq_zero, mem_union, mem_prod, mem_univ,
+    and_true, true_and]
+  have : ∀ p : (fun p : ℕ × ℕ ↦ p.1 * p.2) ⁻¹' {0}, term f s p.val.1 * term g s p.val.2 = 0
+  rintro ⟨⟨p₁, p₂⟩, hp⟩
+  rcases hS ▸ hp with ⟨rfl, -⟩ | ⟨-, rfl⟩ <;> simp only [term_zero, zero_mul, mul_zero]
+  simp only [this, tsum_zero]
   -- now `n ≠ 0`
   rw [show (fun p : ℕ × ℕ ↦ p.1 * p.2) ⁻¹' {n} = n.divisorsAntidiagonal by ext; simp [hn],
     Finset.tsum_subtype' n.divisorsAntidiagonal fun p ↦ term f s p.1 * term g s p.2,

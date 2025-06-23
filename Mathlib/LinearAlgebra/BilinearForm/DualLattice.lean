@@ -91,24 +91,24 @@ lemma dualSubmodule_span_of_basis {ι} [Finite ι] [DecidableEq ι]
       Submodule.span R (Set.range <| B.dualBasis hB b) := by
   cases nonempty_fintype ι
   apply le_antisymm
-  · intro x hx
-    rw [← (B.dualBasis hB b).sum_repr x]
-    apply sum_mem
-    rintro i -
-    obtain ⟨r, hr⟩ := hx (b i) (Submodule.subset_span ⟨_, rfl⟩)
-    simp only [dualBasis_repr_apply, ← hr, Algebra.linearMap_apply, algebraMap_smul]
-    apply Submodule.smul_mem
-    exact Submodule.subset_span ⟨_, rfl⟩
-  · rw [Submodule.span_le]
-    rintro _ ⟨i, rfl⟩ y hy
-    obtain ⟨f, rfl⟩ := (mem_span_range_iff_exists_fun _).mp hy
-    simp only [map_sum, map_smul]
-    apply sum_mem
-    rintro j -
-    rw [← IsScalarTower.algebraMap_smul S (f j), map_smul]
-    simp_rw [apply_dualBasis_left]
-    rw [smul_eq_mul, mul_ite, mul_one, mul_zero, ← (algebraMap R S).map_zero, ← apply_ite]
-    exact ⟨_, rfl⟩
+  intro x hx
+  rw [← (B.dualBasis hB b).sum_repr x]
+  apply sum_mem
+  rintro i -
+  obtain ⟨r, hr⟩ := hx (b i) (Submodule.subset_span ⟨_, rfl⟩)
+  simp only [dualBasis_repr_apply, ← hr, Algebra.linearMap_apply, algebraMap_smul]
+  apply Submodule.smul_mem
+  exact Submodule.subset_span ⟨_, rfl⟩
+  rw [Submodule.span_le]
+  rintro _ ⟨i, rfl⟩ y hy
+  obtain ⟨f, rfl⟩ := (mem_span_range_iff_exists_fun _).mp hy
+  simp only [map_sum, map_smul]
+  apply sum_mem
+  rintro j -
+  rw [← IsScalarTower.algebraMap_smul S (f j), map_smul]
+  simp_rw [apply_dualBasis_left]
+  rw [smul_eq_mul, mul_ite, mul_one, mul_zero, ← (algebraMap R S).map_zero, ← apply_ite]
+  exact ⟨_, rfl⟩
 
 open Classical in
 lemma dualSubmodule_dualSubmodule_flip_of_basis {ι : Type*} [Finite ι]

@@ -22,32 +22,32 @@ namespace List
 theorem injOn_insertNth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l) :
     Set.InjOn (fun k => insertNth k x l) { n | n ≤ l.length } := by
   induction' l with hd tl IH
-  · intro n hn m hm _
-    simp only [Set.mem_singleton_iff, Set.setOf_eq_eq_singleton,
-      length] at hn hm
-    simp_all [hn, hm]
-  · intro n hn m hm h
-    simp only [length, Set.mem_setOf_eq] at hn hm
-    simp only [mem_cons, not_or] at hx
-    cases n <;> cases m
-    · rfl
-    · simp [hx.left] at h
-    · simp [Ne.symm hx.left] at h
-    · simp only [true_and_iff, eq_self_iff_true, insertNth_succ_cons] at h
-      rw [Nat.succ_inj']
-      refine IH hx.right ?_ ?_ (by injection h)
-      · simpa [Nat.succ_le_succ_iff] using hn
-      · simpa [Nat.succ_le_succ_iff] using hm
+  intro n hn m hm _
+  simp only [Set.mem_singleton_iff, Set.setOf_eq_eq_singleton,
+    length] at hn hm
+  simp_all [hn, hm]
+  intro n hn m hm h
+  simp only [length, Set.mem_setOf_eq] at hn hm
+  simp only [mem_cons, not_or] at hx
+  cases n <;> cases m
+  rfl
+  simp [hx.left] at h
+  simp [Ne.symm hx.left] at h
+  simp only [true_and_iff, eq_self_iff_true, insertNth_succ_cons] at h
+  rw [Nat.succ_inj']
+  refine IH hx.right ?_ ?_ (by injection h)
+  simpa [Nat.succ_le_succ_iff] using hn
+  simpa [Nat.succ_le_succ_iff] using hm
 
 theorem foldr_range_subset_of_range_subset {f : β → α → α} {g : γ → α → α}
     (hfg : Set.range f ⊆ Set.range g) (a : α) : Set.range (foldr f a) ⊆ Set.range (foldr g a) := by
   rintro _ ⟨l, rfl⟩
   induction' l with b l H
-  · exact ⟨[], rfl⟩
-  · cases' hfg (Set.mem_range_self b) with c hgf
-    cases' H with m hgf'
-    rw [foldr_cons, ← hgf, ← hgf']
-    exact ⟨c :: m, rfl⟩
+  exact ⟨[], rfl⟩
+  cases' hfg (Set.mem_range_self b) with c hgf
+  cases' H with m hgf'
+  rw [foldr_cons, ← hgf, ← hgf']
+  exact ⟨c :: m, rfl⟩
 
 theorem foldl_range_subset_of_range_subset {f : α → β → α} {g : α → γ → α}
     (hfg : (Set.range fun a c => f c a) ⊆ Set.range fun b c => g c b) (a : α) :

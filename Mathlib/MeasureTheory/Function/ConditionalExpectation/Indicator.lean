@@ -95,18 +95,18 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : MeasurableSet[m] s) :
       refine Filter.EventuallyEq.rfl.add ?_
       have : sᶜ.indicator (μ[sᶜ.indicator f|m]) =ᵐ[μ] μ[sᶜ.indicator f|m] := by
         refine (condexp_indicator_aux hs.compl ?_).symm.trans ?_
-        · exact indicator_ae_eq_restrict_compl (hm _ hs.compl)
-        · rw [Set.indicator_indicator, Set.inter_self]
+        exact indicator_ae_eq_restrict_compl (hm _ hs.compl)
+        rw [Set.indicator_indicator, Set.inter_self]
       filter_upwards [this] with x hx
       by_cases hxs : x ∈ s
-      · simp only [hx, hxs, Set.indicator_of_mem]
-      · simp only [hxs, Set.indicator_of_not_mem, not_false_iff]
+      simp only [hx, hxs, Set.indicator_of_mem]
+      simp only [hxs, Set.indicator_of_not_mem, not_false_iff]
     _ =ᵐ[μ] s.indicator (μ[s.indicator f|m]) := by
       rw [Set.indicator_indicator, Set.inter_compl_self, Set.indicator_empty', add_zero]
     _ =ᵐ[μ] μ[s.indicator f|m] := by
       refine (condexp_indicator_aux hs ?_).symm.trans ?_
-      · exact indicator_ae_eq_restrict_compl (hm _ hs)
-      · rw [Set.indicator_indicator, Set.inter_self]
+      exact indicator_ae_eq_restrict_compl (hm _ hs)
+      rw [Set.indicator_indicator, Set.inter_self]
 
 theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
     (hs_m : MeasurableSet[m] s) (hf_int : Integrable f μ) :
@@ -116,25 +116,25 @@ theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm
   rw [ae_eq_restrict_iff_indicator_ae_eq (hm _ hs_m)]
   refine EventuallyEq.trans ?_ (condexp_indicator hf_int hs_m)
   refine ae_eq_condexp_of_forall_setIntegral_eq hm (hf_int.indicator (hm _ hs_m)) ?_ ?_ ?_
-  · intro t ht _
-    rw [← integrable_indicator_iff (hm _ ht), Set.indicator_indicator, Set.inter_comm, ←
-      Set.indicator_indicator]
-    suffices h_int_restrict : Integrable (t.indicator ((μ.restrict s)[f|m])) (μ.restrict s) by
-      rw [integrable_indicator_iff (hm _ hs_m), IntegrableOn]
-      rw [integrable_indicator_iff (hm _ ht), IntegrableOn] at h_int_restrict ⊢
-      exact h_int_restrict
-    exact integrable_condexp.indicator (hm _ ht)
-  · intro t ht _
-    calc
-      ∫ x in t, s.indicator ((μ.restrict s)[f|m]) x ∂μ =
-          ∫ x in t, ((μ.restrict s)[f|m]) x ∂μ.restrict s := by
-        rw [integral_indicator (hm _ hs_m), Measure.restrict_restrict (hm _ hs_m),
-          Measure.restrict_restrict (hm _ ht), Set.inter_comm]
-      _ = ∫ x in t, f x ∂μ.restrict s := setIntegral_condexp hm hf_int.integrableOn ht
-      _ = ∫ x in t, s.indicator f x ∂μ := by
-        rw [integral_indicator (hm _ hs_m), Measure.restrict_restrict (hm _ hs_m),
-          Measure.restrict_restrict (hm _ ht), Set.inter_comm]
-  · exact (stronglyMeasurable_condexp.indicator hs_m).aeStronglyMeasurable'
+  intro t ht _
+  rw [← integrable_indicator_iff (hm _ ht), Set.indicator_indicator, Set.inter_comm, ←
+    Set.indicator_indicator]
+  suffices h_int_restrict : Integrable (t.indicator ((μ.restrict s)[f|m])) (μ.restrict s) by
+    rw [integrable_indicator_iff (hm _ hs_m), IntegrableOn]
+    rw [integrable_indicator_iff (hm _ ht), IntegrableOn] at h_int_restrict ⊢
+    exact h_int_restrict
+  exact integrable_condexp.indicator (hm _ ht)
+  intro t ht _
+  calc
+    ∫ x in t, s.indicator ((μ.restrict s)[f|m]) x ∂μ =
+        ∫ x in t, ((μ.restrict s)[f|m]) x ∂μ.restrict s := by
+      rw [integral_indicator (hm _ hs_m), Measure.restrict_restrict (hm _ hs_m),
+        Measure.restrict_restrict (hm _ ht), Set.inter_comm]
+    _ = ∫ x in t, f x ∂μ.restrict s := setIntegral_condexp hm hf_int.integrableOn ht
+    _ = ∫ x in t, s.indicator f x ∂μ := by
+      rw [integral_indicator (hm _ hs_m), Measure.restrict_restrict (hm _ hs_m),
+        Measure.restrict_restrict (hm _ ht), Set.inter_comm]
+  exact (stronglyMeasurable_condexp.indicator hs_m).aeStronglyMeasurable'
 
 /-- If the restriction to an `m`-measurable set `s` of a σ-algebra `m` is equal to the restriction
 to `s` of another σ-algebra `m₂` (hypothesis `hs`), then `μ[f | m] =ᵐ[μ.restrict s] μ[f | m₂]`. -/

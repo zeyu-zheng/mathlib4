@@ -87,17 +87,17 @@ open Real
 
 theorem rpow_def_of_neg {x : ℝ} (hx : x < 0) (y : ℝ) : x ^ y = exp (log x * y) * cos (y * π) := by
   rw [rpow_def, Complex.cpow_def, if_neg]
-  · have : Complex.log x * y = ↑(log (-x) * y) + ↑(y * π) * Complex.I := by
-      simp only [Complex.log, abs_of_neg hx, Complex.arg_ofReal_of_neg hx, Complex.abs_ofReal,
-        Complex.ofReal_mul]
-      ring
-    rw [this, Complex.exp_add_mul_I, ← Complex.ofReal_exp, ← Complex.ofReal_cos, ←
-      Complex.ofReal_sin, mul_add, ← Complex.ofReal_mul, ← mul_assoc, ← Complex.ofReal_mul,
-      Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.I_re, Complex.ofReal_im,
-      Real.log_neg_eq_log]
+  have : Complex.log x * y = ↑(log (-x) * y) + ↑(y * π) * Complex.I := by
+    simp only [Complex.log, abs_of_neg hx, Complex.arg_ofReal_of_neg hx, Complex.abs_ofReal,
+      Complex.ofReal_mul]
     ring
-  · rw [Complex.ofReal_eq_zero]
-    exact ne_of_lt hx
+  rw [this, Complex.exp_add_mul_I, ← Complex.ofReal_exp, ← Complex.ofReal_cos, ←
+    Complex.ofReal_sin, mul_add, ← Complex.ofReal_mul, ← mul_assoc, ← Complex.ofReal_mul,
+    Complex.add_re, Complex.ofReal_re, Complex.mul_re, Complex.I_re, Complex.ofReal_im,
+    Real.log_neg_eq_log]
+  ring
+  rw [Complex.ofReal_eq_zero]
+  exact ne_of_lt hx
 
 theorem rpow_def_of_nonpos {x : ℝ} (hx : x ≤ 0) (y : ℝ) :
     x ^ y = if x = 0 then if y = 0 then 1 else 0 else exp (log x * y) * cos (y * π) := by
@@ -116,17 +116,17 @@ theorem zero_rpow {x : ℝ} (h : x ≠ 0) : (0 : ℝ) ^ x = 0 := by simp [rpow_d
 
 theorem zero_rpow_eq_iff {x : ℝ} {a : ℝ} : 0 ^ x = a ↔ x ≠ 0 ∧ a = 0 ∨ x = 0 ∧ a = 1 := by
   constructor
-  · intro hyp
-    simp only [rpow_def, Complex.ofReal_zero] at hyp
-    by_cases h : x = 0
-    · subst h
-      simp only [Complex.one_re, Complex.ofReal_zero, Complex.cpow_zero] at hyp
-      exact Or.inr ⟨rfl, hyp.symm⟩
-    · rw [Complex.zero_cpow (Complex.ofReal_ne_zero.mpr h)] at hyp
-      exact Or.inl ⟨h, hyp.symm⟩
-  · rintro (⟨h, rfl⟩ | ⟨rfl, rfl⟩)
-    · exact zero_rpow h
-    · exact rpow_zero _
+  intro hyp
+  simp only [rpow_def, Complex.ofReal_zero] at hyp
+  by_cases h : x = 0
+  subst h
+  simp only [Complex.one_re, Complex.ofReal_zero, Complex.cpow_zero] at hyp
+  exact Or.inr ⟨rfl, hyp.symm⟩
+  rw [Complex.zero_cpow (Complex.ofReal_ne_zero.mpr h)] at hyp
+  exact Or.inl ⟨h, hyp.symm⟩
+  rintro (⟨h, rfl⟩ | ⟨rfl, rfl⟩)
+  exact zero_rpow h
+  exact rpow_zero _
 
 theorem eq_zero_rpow_iff {x : ℝ} {a : ℝ} : a = 0 ^ x ↔ x ≠ 0 ∧ a = 0 ∨ x = 0 ∧ a = 1 := by
   rw [← zero_rpow_eq_iff, eq_comm]
@@ -153,16 +153,16 @@ theorem abs_rpow_of_nonneg {x y : ℝ} (hx_nonneg : 0 ≤ x) : |x ^ y| = |x| ^ y
 
 theorem abs_rpow_le_abs_rpow (x y : ℝ) : |x ^ y| ≤ |x| ^ y := by
   rcases le_or_lt 0 x with hx | hx
-  · rw [abs_rpow_of_nonneg hx]
-  · rw [abs_of_neg hx, rpow_def_of_neg hx, rpow_def_of_pos (neg_pos.2 hx), log_neg_eq_log, abs_mul,
-      abs_of_pos (exp_pos _)]
-    exact mul_le_of_le_one_right (exp_pos _).le (abs_cos_le_one _)
+  rw [abs_rpow_of_nonneg hx]
+  rw [abs_of_neg hx, rpow_def_of_neg hx, rpow_def_of_pos (neg_pos.2 hx), log_neg_eq_log, abs_mul,
+    abs_of_pos (exp_pos _)]
+  exact mul_le_of_le_one_right (exp_pos _).le (abs_cos_le_one _)
 
 theorem abs_rpow_le_exp_log_mul (x y : ℝ) : |x ^ y| ≤ exp (log x * y) := by
   refine (abs_rpow_le_abs_rpow x y).trans ?_
   by_cases hx : x = 0
-  · by_cases hy : y = 0 <;> simp [hx, hy, zero_le_one]
-  · rw [rpow_def_of_pos (abs_pos.2 hx), log_abs]
+  by_cases hy : y = 0 <;> simp [hx, hy, zero_le_one]
+  rw [rpow_def_of_pos (abs_pos.2 hx), log_abs]
 
 theorem norm_rpow_of_nonneg {x y : ℝ} (hx_nonneg : 0 ≤ x) : ‖x ^ y‖ = ‖x‖ ^ y := by
   simp_rw [Real.norm_eq_abs]
@@ -175,10 +175,10 @@ theorem rpow_add (hx : 0 < x) (y z : ℝ) : x ^ (y + z) = x ^ y * x ^ z := by
 
 theorem rpow_add' (hx : 0 ≤ x) (h : y + z ≠ 0) : x ^ (y + z) = x ^ y * x ^ z := by
   rcases hx.eq_or_lt with (rfl | pos)
-  · rw [zero_rpow h, zero_eq_mul]
-    have : y ≠ 0 ∨ z ≠ 0 := not_and_or.1 fun ⟨hy, hz⟩ => h <| hy.symm ▸ hz.symm ▸ zero_add 0
-    exact this.imp zero_rpow zero_rpow
-  · exact rpow_add pos _ _
+  rw [zero_rpow h, zero_eq_mul]
+  have : y ≠ 0 ∨ z ≠ 0 := not_and_or.1 fun ⟨hy, hz⟩ => h <| hy.symm ▸ hz.symm ▸ zero_add 0
+  exact this.imp zero_rpow zero_rpow
+  exact rpow_add pos _ _
 
 /-- Variant of `Real.rpow_add'` that avoids having to prove `y + z = w` twice. -/
 lemma rpow_of_add_eq (hx : 0 ≤ x) (hw : w ≠ 0) (h : y + z = w) : x ^ w = x ^ y * x ^ z := by
@@ -187,7 +187,7 @@ lemma rpow_of_add_eq (hx : 0 ≤ x) (hw : w ≠ 0) (h : y + z = w) : x ^ w = x ^
 theorem rpow_add_of_nonneg (hx : 0 ≤ x) (hy : 0 ≤ y) (hz : 0 ≤ z) :
     x ^ (y + z) = x ^ y * x ^ z := by
   rcases hy.eq_or_lt with (rfl | hy)
-  · rw [zero_add, rpow_zero, one_mul]
+  rw [zero_add, rpow_zero, one_mul]
   exact rpow_add' hx (ne_of_gt <| add_pos_of_pos_of_nonneg hy hz)
 
 /-- For `0 ≤ x`, the only problematic case in the equality `x ^ y * x ^ z = x ^ (y + z)` is for
@@ -195,15 +195,15 @@ theorem rpow_add_of_nonneg (hx : 0 ≤ x) (hy : 0 ≤ y) (hz : 0 ≤ z) :
 The inequality is always true, though, and given in this lemma. -/
 theorem le_rpow_add {x : ℝ} (hx : 0 ≤ x) (y z : ℝ) : x ^ y * x ^ z ≤ x ^ (y + z) := by
   rcases le_iff_eq_or_lt.1 hx with (H | pos)
-  · by_cases h : y + z = 0
-    · simp only [H.symm, h, rpow_zero]
-      calc
-        (0 : ℝ) ^ y * 0 ^ z ≤ 1 * 1 :=
-          mul_le_mul (zero_rpow_le_one y) (zero_rpow_le_one z) (zero_rpow_nonneg z) zero_le_one
-        _ = 1 := by simp
+  by_cases h : y + z = 0
+  simp only [H.symm, h, rpow_zero]
+  calc
+    (0 : ℝ) ^ y * 0 ^ z ≤ 1 * 1 :=
+      mul_le_mul (zero_rpow_le_one y) (zero_rpow_le_one z) (zero_rpow_nonneg z) zero_le_one
+    _ = 1 := by simp
 
-    · simp [rpow_add', ← H, h]
-  · simp [rpow_add pos]
+  simp [rpow_add', ← H, h]
+  simp [rpow_add pos]
 
 theorem rpow_sum_of_pos {ι : Type*} {a : ℝ} (ha : 0 < a) (f : ι → ℝ) (s : Finset ι) :
     (a ^ ∑ x ∈ s, f x) = ∏ x ∈ s, a ^ f x :=
@@ -212,9 +212,9 @@ theorem rpow_sum_of_pos {ι : Type*} {a : ℝ} (ha : 0 < a) (f : ι → ℝ) (s 
 theorem rpow_sum_of_nonneg {ι : Type*} {a : ℝ} (ha : 0 ≤ a) {s : Finset ι} {f : ι → ℝ}
     (h : ∀ x ∈ s, 0 ≤ f x) : (a ^ ∑ x ∈ s, f x) = ∏ x ∈ s, a ^ f x := by
   induction' s using Finset.cons_induction with i s hi ihs
-  · rw [sum_empty, Finset.prod_empty, rpow_zero]
-  · rw [forall_mem_cons] at h
-    rw [sum_cons, prod_cons, ← ihs h.2, rpow_add_of_nonneg ha h.1 (sum_nonneg h.2)]
+  rw [sum_empty, Finset.prod_empty, rpow_zero]
+  rw [forall_mem_cons] at h
+  rw [sum_cons, prod_cons, ← ihs h.2, rpow_add_of_nonneg ha h.1 (sum_nonneg h.2)]
 
 theorem rpow_neg {x : ℝ} (hx : 0 ≤ x) (y : ℝ) : x ^ (-y) = (x ^ y)⁻¹ := by
   simp only [rpow_def_of_nonneg hx]; split_ifs <;> simp_all [exp_neg]
@@ -246,7 +246,7 @@ theorem ofReal_cpow {x : ℝ} (hx : 0 ≤ x) (y : ℝ) : ((x ^ y : ℝ) : ℂ) =
 theorem ofReal_cpow_of_nonpos {x : ℝ} (hx : x ≤ 0) (y : ℂ) :
     (x : ℂ) ^ y = (-x : ℂ) ^ y * exp (π * I * y) := by
   rcases hx.eq_or_lt with (rfl | hlt)
-  · rcases eq_or_ne y 0 with (rfl | hy) <;> simp [*]
+  rcases eq_or_ne y 0 with (rfl | hy) <;> simp [*]
   have hne : (x : ℂ) ≠ 0 := ofReal_ne_zero.mpr hlt.ne
   rw [cpow_def_of_ne_zero hne, cpow_def_of_ne_zero (neg_ne_zero.2 hne), ← exp_add, ← add_mul, log,
     log, abs.map_neg, arg_ofReal_of_neg hlt, ← ofReal_neg,
@@ -255,12 +255,12 @@ theorem ofReal_cpow_of_nonpos {x : ℝ} (hx : x ≤ 0) (y : ℂ) :
 lemma cpow_ofReal (x : ℂ) (y : ℝ) :
     x ^ (y : ℂ) = ↑(abs x ^ y) * (Real.cos (arg x * y) + Real.sin (arg x * y) * I) := by
   rcases eq_or_ne x 0 with rfl | hx
-  · simp [ofReal_cpow le_rfl]
-  · rw [cpow_def_of_ne_zero hx, exp_eq_exp_re_mul_sin_add_cos, mul_comm (log x)]
-    norm_cast
-    rw [re_ofReal_mul, im_ofReal_mul, log_re, log_im, mul_comm y, mul_comm y, Real.exp_mul,
-      Real.exp_log]
-    rwa [abs.pos_iff]
+  simp [ofReal_cpow le_rfl]
+  rw [cpow_def_of_ne_zero hx, exp_eq_exp_re_mul_sin_add_cos, mul_comm (log x)]
+  norm_cast
+  rw [re_ofReal_mul, im_ofReal_mul, log_re, log_im, mul_comm y, mul_comm y, Real.exp_mul,
+    Real.exp_log]
+  rwa [abs.pos_iff]
 
 lemma cpow_ofReal_re (x : ℂ) (y : ℝ) : (x ^ (y : ℂ)).re = (abs x) ^ y * Real.cos (arg x * y) := by
   rw [cpow_ofReal]; generalize arg x * y = z; simp [Real.cos]
@@ -277,15 +277,15 @@ theorem abs_cpow_of_imp {z w : ℂ} (h : z = 0 → w.re = 0 → w = 0) :
     abs (z ^ w) = abs z ^ w.re / Real.exp (arg z * im w) := by
   rcases ne_or_eq z 0 with (hz | rfl) <;> [exact abs_cpow_of_ne_zero hz w; rw [map_zero]]
   rcases eq_or_ne w.re 0 with hw | hw
-  · simp [hw, h rfl hw]
-  · rw [Real.zero_rpow hw, zero_div, zero_cpow, map_zero]
-    exact ne_of_apply_ne re hw
+  simp [hw, h rfl hw]
+  rw [Real.zero_rpow hw, zero_div, zero_cpow, map_zero]
+  exact ne_of_apply_ne re hw
 
 theorem abs_cpow_le (z w : ℂ) : abs (z ^ w) ≤ abs z ^ w.re / Real.exp (arg z * im w) := by
   by_cases h : z = 0 → w.re = 0 → w = 0
-  · exact (abs_cpow_of_imp h).le
-  · push_neg at h
-    simp [h]
+  exact (abs_cpow_of_imp h).le
+  push_neg at h
+  simp [h]
 
 @[simp]
 theorem abs_cpow_real (x : ℂ) (y : ℝ) : abs (x ^ (y : ℂ)) = Complex.abs x ^ y := by
@@ -317,8 +317,8 @@ lemma norm_natCast_cpow_pos_of_pos {n : ℕ} (hn : 0 < n) (s : ℂ) : 0 < ‖(n 
 theorem cpow_mul_ofReal_nonneg {x : ℝ} (hx : 0 ≤ x) (y : ℝ) (z : ℂ) :
     (x : ℂ) ^ (↑y * z) = (↑(x ^ y) : ℂ) ^ z := by
   rw [cpow_mul, ofReal_cpow hx]
-  · rw [← ofReal_log hx, ← ofReal_mul, ofReal_im, neg_lt_zero]; exact Real.pi_pos
-  · rw [← ofReal_log hx, ← ofReal_mul, ofReal_im]; exact Real.pi_pos.le
+  rw [← ofReal_log hx, ← ofReal_mul, ofReal_im, neg_lt_zero]; exact Real.pi_pos
+  rw [← ofReal_log hx, ← ofReal_mul, ofReal_im]; exact Real.pi_pos.le
 
 end Complex
 
@@ -425,7 +425,7 @@ theorem rpow_neg_one (x : ℝ) : x ^ (-1 : ℝ) = x⁻¹ := by
 
 theorem mul_rpow (hx : 0 ≤ x) (hy : 0 ≤ y) : (x * y) ^ z = x ^ z * y ^ z := by
   iterate 2 rw [Real.rpow_def_of_nonneg]; split_ifs with h_ifs <;> simp_all
-  · rw [log_mul ‹_› ‹_›, add_mul, exp_add, rpow_def_of_pos (hy.lt_of_ne' ‹_›)]
+  rw [log_mul ‹_› ‹_›, add_mul, exp_add, rpow_def_of_pos (hy.lt_of_ne' ‹_›)]
   all_goals positivity
 
 theorem inv_rpow (hx : 0 ≤ x) (y : ℝ) : x⁻¹ ^ y = (x ^ y)⁻¹ := by
@@ -480,10 +480,10 @@ in `Mathlib/Analysis/SpecialFunctions/Pow/NNReal.lean` instead. -/
 @[gcongr]
 theorem rpow_lt_rpow (hx : 0 ≤ x) (hxy : x < y) (hz : 0 < z) : x ^ z < y ^ z := by
   rw [le_iff_eq_or_lt] at hx; cases' hx with hx hx
-  · rw [← hx, zero_rpow (ne_of_gt hz)]
-    exact rpow_pos_of_pos (by rwa [← hx] at hxy) _
-  · rw [rpow_def_of_pos hx, rpow_def_of_pos (lt_trans hx hxy), exp_lt_exp]
-    exact mul_lt_mul_of_pos_right (log_lt_log hx hxy) hz
+  rw [← hx, zero_rpow (ne_of_gt hz)]
+  exact rpow_pos_of_pos (by rwa [← hx] at hxy) _
+  rw [rpow_def_of_pos hx, rpow_def_of_pos (lt_trans hx hxy), exp_lt_exp]
+  exact mul_lt_mul_of_pos_right (log_lt_log hx hxy) hz
 
 theorem strictMonoOn_rpow_Ici_of_exponent_pos {r : ℝ} (hr : 0 < r) :
     StrictMonoOn (fun (x : ℝ) => x ^ r) (Set.Ici 0) :=
@@ -656,8 +656,8 @@ theorem rpow_lt_one_iff_of_pos (hx : 0 < x) : x ^ y < 1 ↔ 1 < x ∧ y < 0 ∨ 
 theorem rpow_lt_one_iff (hx : 0 ≤ x) :
     x ^ y < 1 ↔ x = 0 ∧ y ≠ 0 ∨ 1 < x ∧ y < 0 ∨ x < 1 ∧ 0 < y := by
   rcases hx.eq_or_lt with (rfl | hx)
-  · rcases _root_.em (y = 0) with (rfl | hy) <;> simp [*, lt_irrefl, zero_lt_one]
-  · simp [rpow_lt_one_iff_of_pos hx, hx.ne.symm]
+  rcases _root_.em (y = 0) with (rfl | hy) <;> simp [*, lt_irrefl, zero_lt_one]
+  simp [rpow_lt_one_iff_of_pos hx, hx.ne.symm]
 
 theorem rpow_lt_one_iff' {x y : ℝ} (hx : 0 ≤ x) (hy : 0 < y) :
     x ^ y < 1 ↔ x < 1 := by
@@ -668,16 +668,16 @@ theorem one_lt_rpow_iff_of_pos (hx : 0 < x) : 1 < x ^ y ↔ 1 < x ∧ 0 < y ∨ 
 
 theorem one_lt_rpow_iff (hx : 0 ≤ x) : 1 < x ^ y ↔ 1 < x ∧ 0 < y ∨ 0 < x ∧ x < 1 ∧ y < 0 := by
   rcases hx.eq_or_lt with (rfl | hx)
-  · rcases _root_.em (y = 0) with (rfl | hy) <;> simp [*, lt_irrefl, (zero_lt_one' ℝ).not_lt]
-  · simp [one_lt_rpow_iff_of_pos hx, hx]
+  rcases _root_.em (y = 0) with (rfl | hy) <;> simp [*, lt_irrefl, (zero_lt_one' ℝ).not_lt]
+  simp [one_lt_rpow_iff_of_pos hx, hx]
 
 theorem rpow_le_rpow_of_exponent_ge' (hx0 : 0 ≤ x) (hx1 : x ≤ 1) (hz : 0 ≤ z) (hyz : z ≤ y) :
     x ^ y ≤ x ^ z := by
   rcases eq_or_lt_of_le hx0 with (rfl | hx0')
-  · rcases eq_or_lt_of_le hz with (rfl | hz')
-    · exact (rpow_zero 0).symm ▸ rpow_le_one hx0 hx1 hyz
-    rw [zero_rpow, zero_rpow] <;> linarith
-  · exact rpow_le_rpow_of_exponent_ge hx0' hx1 hyz
+  rcases eq_or_lt_of_le hz with (rfl | hz')
+  exact (rpow_zero 0).symm ▸ rpow_le_one hx0 hx1 hyz
+  rw [zero_rpow, zero_rpow] <;> linarith
+  exact rpow_le_rpow_of_exponent_ge hx0' hx1 hyz
 
 theorem rpow_left_injOn {x : ℝ} (hx : x ≠ 0) : InjOn (fun y : ℝ => y ^ x) { y : ℝ | 0 ≤ y } := by
   rintro y hy z hz (hyz : y ^ x = z ^ x)
@@ -698,7 +698,7 @@ theorem le_rpow_iff_log_le (hx : 0 < x) (hy : 0 < y) : x ≤ y ^ z ↔ Real.log 
 theorem le_rpow_of_log_le (hx : 0 ≤ x) (hy : 0 < y) (h : Real.log x ≤ z * Real.log y) :
     x ≤ y ^ z := by
   obtain hx | rfl := hx.lt_or_eq
-  · exact (le_rpow_iff_log_le hx hy).2 h
+  exact (le_rpow_iff_log_le hx hy).2 h
   exact (Real.rpow_pos_of_pos hy z).le
 
 theorem lt_rpow_iff_log_lt (hx : 0 < x) (hy : 0 < y) : x < y ^ z ↔ Real.log x < z * Real.log y := by
@@ -707,7 +707,7 @@ theorem lt_rpow_iff_log_lt (hx : 0 < x) (hy : 0 < y) : x < y ^ z ↔ Real.log x 
 theorem lt_rpow_of_log_lt (hx : 0 ≤ x) (hy : 0 < y) (h : Real.log x < z * Real.log y) :
     x < y ^ z := by
   obtain hx | rfl := hx.lt_or_eq
-  · exact (lt_rpow_iff_log_lt hx hy).2 h
+  exact (lt_rpow_iff_log_lt hx hy).2 h
   exact Real.rpow_pos_of_pos hy z
 
 theorem rpow_le_one_iff_of_pos (hx : 0 < x) : x ^ y ≤ 1 ↔ 1 ≤ x ∧ y ≤ 0 ∨ x ≤ 1 ∧ 0 ≤ y := by
@@ -723,7 +723,7 @@ theorem abs_log_mul_self_rpow_lt (x t : ℝ) (h1 : 0 < x) (h2 : x ≤ 1) (ht : 0
 /-- `log x` is bounded above by a multiple of every power of `x` with positive exponent. -/
 lemma log_le_rpow_div {x ε : ℝ} (hx : 0 ≤ x) (hε : 0 < ε) : log x ≤ x ^ ε / ε := by
   rcases hx.eq_or_lt with rfl | h
-  · rw [log_zero, zero_rpow hε.ne', zero_div]
+  rw [log_zero, zero_rpow hε.ne', zero_div]
   rw [le_div_iff' hε]
   exact (log_rpow h ε).symm.trans_le <| (log_le_sub_one_of_pos <| rpow_pos_of_pos h ε).trans
     (sub_one_lt _).le
@@ -789,7 +789,7 @@ lemma norm_natCast_cpow_le_norm_natCast_cpow_iff {n : ℕ} (hn : 1 < n) {w z : �
 
 lemma norm_log_natCast_le_rpow_div (n : ℕ) {ε : ℝ} (hε : 0 < ε) : ‖log n‖ ≤ n ^ ε / ε := by
   rcases n.eq_zero_or_pos with rfl | h
-  · rw [Nat.cast_zero, Nat.cast_zero, log_zero, norm_zero, Real.zero_rpow hε.ne', zero_div]
+  rw [Nat.cast_zero, Nat.cast_zero, log_zero, norm_zero, Real.zero_rpow hε.ne', zero_div]
   rw [norm_eq_abs, ← natCast_log, abs_ofReal,
     _root_.abs_of_nonneg <| Real.log_nonneg <| by exact_mod_cast Nat.one_le_of_lt h.lt]
   exact Real.log_natCast_le_rpow_div n hε
@@ -809,11 +809,11 @@ section Sqrt
 
 theorem sqrt_eq_rpow (x : ℝ) : √x = x ^ (1 / (2 : ℝ)) := by
   obtain h | h := le_or_lt 0 x
-  · rw [← mul_self_inj_of_nonneg (sqrt_nonneg _) (rpow_nonneg h _), mul_self_sqrt h, ← sq,
-      ← rpow_natCast, ← rpow_mul h]
-    norm_num
-  · have : 1 / (2 : ℝ) * π = π / (2 : ℝ) := by ring
-    rw [sqrt_eq_zero_of_nonpos h.le, rpow_def_of_neg h, this, cos_pi_div_two, mul_zero]
+  rw [← mul_self_inj_of_nonneg (sqrt_nonneg _) (rpow_nonneg h _), mul_self_sqrt h, ← sq,
+    ← rpow_natCast, ← rpow_mul h]
+  norm_num
+  have : 1 / (2 : ℝ) * π = π / (2 : ℝ) := by ring
+  rw [sqrt_eq_zero_of_nonpos h.le, rpow_def_of_neg h, this, cos_pi_div_two, mul_zero]
 
 theorem rpow_div_two_eq_sqrt {x : ℝ} (r : ℝ) (hx : 0 ≤ x) : x ^ (r / 2) = √x ^ r := by
   rw [sqrt_eq_rpow, ← rpow_mul hx]
@@ -834,9 +834,9 @@ theorem exists_rat_pow_btwn_rat_aux (hn : n ≠ 0) (x y : ℝ) (h : x < y) (hy :
   replace hxq := rpow_lt_rpow this hxq hn'
   replace hqy := rpow_lt_rpow hq.le hqy hn'
   rw [rpow_natCast, rpow_natCast, rpow_inv_natCast_pow _ hn] at hxq hqy
-  · exact ⟨q, mod_cast hq, (le_max_right _ _).trans_lt hxq, hqy⟩
-  · exact hy.le
-  · exact le_max_left _ _
+  exact ⟨q, mod_cast hq, (le_max_right _ _).trans_lt hxq, hqy⟩
+  exact hy.le
+  exact le_max_left _ _
 
 theorem exists_rat_pow_btwn_rat (hn : n ≠ 0) {x y : ℚ} (h : x < y) (hy : 0 < y) :
     ∃ q : ℚ, 0 < q ∧ x < q ^ n ∧ q ^ n < y := by
@@ -866,16 +866,16 @@ lemma cpow_inv_two_im_eq_sqrt {x : ℂ} (hx : 0 ≤ x.im) :
   rw [← ofReal_ofNat, ← ofReal_inv, cpow_ofReal_im, ← div_eq_mul_inv, ← one_div,
     ← Real.sqrt_eq_rpow, sin_half_eq_sqrt, ← sqrt_mul (abs.nonneg _), ← mul_div_assoc, mul_sub,
     mul_one, abs_mul_cos_arg]
-  · rwa [arg_nonneg_iff]
-  · linarith [pi_pos, arg_le_pi x]
+  rwa [arg_nonneg_iff]
+  linarith [pi_pos, arg_le_pi x]
 
 lemma cpow_inv_two_im_eq_neg_sqrt {x : ℂ} (hx : x.im < 0) :
     (x ^ (2⁻¹ : ℂ)).im = -sqrt ((abs x - x.re) / 2) := by
   rw [← ofReal_ofNat, ← ofReal_inv, cpow_ofReal_im, ← div_eq_mul_inv, ← one_div,
     ← Real.sqrt_eq_rpow, sin_half_eq_neg_sqrt, mul_neg, ← sqrt_mul (abs.nonneg _),
     ← mul_div_assoc, mul_sub, mul_one, abs_mul_cos_arg]
-  · linarith [pi_pos, neg_pi_lt_arg x]
-  · exact (arg_neg_iff.2 hx).le
+  linarith [pi_pos, neg_pi_lt_arg x]
+  exact (arg_neg_iff.2 hx).le
 
 lemma abs_cpow_inv_two_im (x : ℂ) : |(x ^ (2⁻¹ : ℂ)).im| = sqrt ((abs x - x.re) / 2) := by
   rw [← ofReal_ofNat, ← ofReal_inv, cpow_ofReal_im, ← div_eq_mul_inv, ← one_div,

@@ -85,10 +85,10 @@ lemma isCorner_image (hf : IsAddFreimanIso 2 s t f) (hAs : A ⊆ s ×ˢ s)
   have hf' := hf.bijOn.injOn.prodMap hf.bijOn.injOn
   rw [isCorner_iff, isCorner_iff]
   congr!
-  · exact hf'.mem_image_iff hAs (mk_mem_prod hx₁ hy₁)
-  · exact hf'.mem_image_iff hAs (mk_mem_prod hx₁ hy₂)
-  · exact hf'.mem_image_iff hAs (mk_mem_prod hx₂ hy₁)
-  · exact hf.add_eq_add hx₁ hy₂ hx₂ hy₁
+  exact hf'.mem_image_iff hAs (mk_mem_prod hx₁ hy₁)
+  exact hf'.mem_image_iff hAs (mk_mem_prod hx₁ hy₂)
+  exact hf'.mem_image_iff hAs (mk_mem_prod hx₂ hy₁)
+  exact hf.add_eq_add hx₁ hy₂ hx₂ hy₁
 
 lemma isCornerFree_image (hf : IsAddFreimanIso 2 s t f) (hAs : A ⊆ s ×ˢ s) :
     IsCornerFree (Prod.map f f '' A) ↔ IsCornerFree A := by

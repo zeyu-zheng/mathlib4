@@ -72,11 +72,11 @@ lemma traceForm_apply_lie_apply (x y z : L) :
     _ = trace R _ (φ x * (φ y * φ z)) - trace R _ (φ y * (φ x * φ z)) := ?_
     _ = trace R _ (φ x * (φ y * φ z)) - trace R _ (φ x * (φ z * φ y)) := ?_
     _ = traceForm R L M x ⁅y, z⁆ := ?_
-  · simp only [LieHom.map_lie, Ring.lie_def, ← LinearMap.mul_eq_comp]
-  · simp only [sub_mul, mul_sub, map_sub, mul_assoc]
-  · simp only [LinearMap.trace_mul_cycle' R (φ x) (φ z) (φ y)]
-  · simp only [traceForm_apply_apply, LieHom.map_lie, Ring.lie_def, mul_sub, map_sub,
-      ← LinearMap.mul_eq_comp]
+  simp only [LieHom.map_lie, Ring.lie_def, ← LinearMap.mul_eq_comp]
+  simp only [sub_mul, mul_sub, map_sub, mul_assoc]
+  simp only [LinearMap.trace_mul_cycle' R (φ x) (φ z) (φ y)]
+  simp only [traceForm_apply_apply, LieHom.map_lie, Ring.lie_def, mul_sub, map_sub,
+    ← LinearMap.mul_eq_comp]
 
 /-- Given a representation `M` of a Lie algebra `L`, the action of any `x : L` is skew-adjoint wrt
 the trace form. -/
@@ -129,25 +129,25 @@ lemma traceForm_eq_zero_if_mem_lcs_of_mem_ucs {x y : L} (k : ℕ)
     (hx : x ∈ (⊤ : LieIdeal R L).lcs L k) (hy : y ∈ (⊥ : LieIdeal R L).ucs k) :
     traceForm R L M x y = 0 := by
   induction' k with k ih generalizing x y
-  · replace hy : y = 0 := by simpa using hy
-    simp [hy]
-  · rw [LieSubmodule.ucs_succ, LieSubmodule.mem_normalizer] at hy
-    simp_rw [LieIdeal.lcs_succ, ← LieSubmodule.mem_coeSubmodule,
-      LieSubmodule.lieIdeal_oper_eq_linear_span', LieSubmodule.mem_top, true_and] at hx
-    refine Submodule.span_induction hx ?_ ?_ (fun z w hz hw ↦ ?_) (fun t z hz ↦ ?_)
-    · rintro - ⟨z, w, hw, rfl⟩
-      rw [← lie_skew, map_neg, LinearMap.neg_apply, neg_eq_zero, traceForm_apply_lie_apply]
-      exact ih hw (hy _)
-    · simp
-    · simp [hz, hw]
-    · simp [hz]
+  replace hy : y = 0 := by simpa using hy
+  simp [hy]
+  rw [LieSubmodule.ucs_succ, LieSubmodule.mem_normalizer] at hy
+  simp_rw [LieIdeal.lcs_succ, ← LieSubmodule.mem_coeSubmodule,
+    LieSubmodule.lieIdeal_oper_eq_linear_span', LieSubmodule.mem_top, true_and] at hx
+  refine Submodule.span_induction hx ?_ ?_ (fun z w hz hw ↦ ?_) (fun t z hz ↦ ?_)
+  rintro - ⟨z, w, hw, rfl⟩
+  rw [← lie_skew, map_neg, LinearMap.neg_apply, neg_eq_zero, traceForm_apply_lie_apply]
+  exact ih hw (hy _)
+  simp
+  simp [hz, hw]
+  simp [hz]
 
 lemma traceForm_apply_eq_zero_of_mem_lcs_of_mem_center {x y : L}
     (hx : x ∈ lowerCentralSeries R L L 1) (hy : y ∈ LieAlgebra.center R L) :
     traceForm R L M x y = 0 := by
   apply traceForm_eq_zero_if_mem_lcs_of_mem_ucs R L M 1
-  · simpa using hx
-  · simpa using hy
+  simpa using hx
+  simpa using hy
 
 -- This is barely worth having: it usually follows from `LieModule.traceForm_eq_zero_of_isNilpotent`
 @[simp] lemma traceForm_eq_zero_of_isTrivial [IsTrivial L M] :
@@ -193,10 +193,10 @@ lemma trace_toEnd_eq_zero_of_mem_lcs
     simpa using hx
   refine Submodule.span_induction (p := fun x ↦ trace R _ (toEnd R L M x) = 0) hx
     (fun y ⟨u, v, huv⟩ ↦ ?_) ?_ (fun u v hu hv ↦ ?_) (fun t u hu ↦ ?_)
-  · simp [← huv]
-  · simp
-  · simp [hu, hv]
-  · simp [hu]
+  simp [← huv]
+  simp
+  simp [hu, hv]
+  simp [hu]
 
 @[simp]
 lemma traceForm_lieSubalgebra_mk_left (L' : LieSubalgebra R L) {x : L} (hx : x ∈ L') (y : L') :
@@ -273,10 +273,10 @@ lemma lowerCentralSeries_one_inf_center_le_ker_traceForm :
     intro y
     exact y.induction_on rfl (fun a u ↦ by simp [hzc u]) (fun u v hu hv ↦ by simp [hu, hv])
   apply LinearMap.trace_comp_eq_zero_of_commute_of_trace_restrict_eq_zero
-  · exact IsTriangularizable.iSup_eq_top (1 ⊗ₜ[R] x)
-  · exact fun μ ↦ trace_toEnd_eq_zero_of_mem_lcs A (A ⊗[R] L)
-      (weightSpaceOf (A ⊗[R] M) μ (1 ⊗ₜ x)) (le_refl 1) hz
-  · exact commute_toEnd_of_mem_center_right (A ⊗[R] M) hzc (1 ⊗ₜ x)
+  exact IsTriangularizable.iSup_eq_top (1 ⊗ₜ[R] x)
+  exact fun μ ↦ trace_toEnd_eq_zero_of_mem_lcs A (A ⊗[R] L)
+    (weightSpaceOf (A ⊗[R] M) μ (1 ⊗ₜ x)) (le_refl 1) hz
+  exact commute_toEnd_of_mem_center_right (A ⊗[R] M) hzc (1 ⊗ₜ x)
 
 /-- A nilpotent Lie algebra with a representation whose trace form is non-singular is Abelian. -/
 lemma isLieAbelian_of_ker_traceForm_eq_bot (h : LinearMap.ker (traceForm R L M) = ⊥) :

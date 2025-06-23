@@ -323,7 +323,7 @@ instance comparison_essSurj [Reflective R] :
   refine ⟨fun X => ⟨(reflector R).obj X.A, ⟨?_⟩⟩⟩
   symm
   refine Monad.Algebra.isoMk ?_ ?_
-  · exact asIso ((reflectorAdjunction R).unit.app X.A)
+  exact asIso ((reflectorAdjunction R).unit.app X.A)
   dsimp only [Functor.comp_map, Monad.comparison_obj_a, asIso_hom, Functor.comp_obj,
     Monad.comparison_obj_A, Adjunction.toMonad_coe]
   rw [← cancel_epi ((reflectorAdjunction R).unit.app X.A)]
@@ -355,7 +355,7 @@ instance comparison_essSurj [Coreflective R] :
     (Comonad.comparison (coreflectorAdjunction R)).EssSurj := by
   refine ⟨fun X => ⟨(coreflector R).obj X.A, ⟨?_⟩⟩⟩
   refine Comonad.Coalgebra.isoMk ?_ ?_
-  · exact (asIso ((coreflectorAdjunction R).counit.app X.A))
+  exact (asIso ((coreflectorAdjunction R).counit.app X.A))
   rw [← cancel_mono ((coreflectorAdjunction R).counit.app X.A)]
   simp only [Adjunction.counit_naturality, Functor.comp_obj, Functor.id_obj,
     Adjunction.left_triangle_components_assoc, assoc]

@@ -75,10 +75,10 @@ instance mulOneClass : MulOneClass (SubMulAction R M) where
     ext x
     simp only [mem_mul, mem_one, mul_smul_comm, exists_exists_eq_and, mul_one]
     constructor
-    · rintro ⟨y, hy, r, rfl⟩
-      exact smul_mem _ _ hy
-    · intro hx
-      exact ⟨x, hx, 1, one_smul _ _⟩
+    rintro ⟨y, hy, r, rfl⟩
+    exact smul_mem _ _ hy
+    intro hx
+    exact ⟨x, hx, 1, one_smul _ _⟩
   one_mul a := by
     ext x
     simp only [mem_mul, mem_one, smul_mul_assoc, exists_exists_eq_and, one_mul]

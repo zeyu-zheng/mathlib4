@@ -82,10 +82,10 @@ theorem isSeparatedMap_iff_isClosed_diagonal {f : X → Y} :
   simp_rw [isSeparatedMap_iff_nhds, ← isOpen_compl_iff, isOpen_iff_mem_nhds,
     Subtype.forall, Prod.forall, nhds_induced, nhds_prod_eq]
   refine forall₄_congr fun x₁ x₂ _ _ ↦ ⟨fun h ↦ ?_, fun ⟨t, ht, t_sub⟩ ↦ ?_⟩
-  · simp_rw [← Filter.disjoint_iff, ← compl_diagonal_mem_prod] at h
-    exact ⟨_, h, subset_rfl⟩
-  · obtain ⟨s₁, h₁, s₂, h₂, s_sub⟩ := mem_prod_iff.mp ht
-    exact ⟨s₁, h₁, s₂, h₂, disjoint_left.2 fun x h₁ h₂ ↦ @t_sub ⟨(x, x), rfl⟩ (s_sub ⟨h₁, h₂⟩) rfl⟩
+  simp_rw [← Filter.disjoint_iff, ← compl_diagonal_mem_prod] at h
+  exact ⟨_, h, subset_rfl⟩
+  obtain ⟨s₁, h₁, s₂, h₂, s_sub⟩ := mem_prod_iff.mp ht
+  exact ⟨s₁, h₁, s₂, h₂, disjoint_left.2 fun x h₁ h₂ ↦ @t_sub ⟨(x, x), rfl⟩ (s_sub ⟨h₁, h₂⟩) rfl⟩
 
 theorem isSeparatedMap_iff_closedEmbedding {f : X → Y} :
     IsSeparatedMap f ↔ ClosedEmbedding (toPullbackDiag f) := by
@@ -125,22 +125,22 @@ lemma Function.Injective.IsLocallyInjective {f : X → Y} (inj : f.Injective) :
 lemma isLocallyInjective_iff_nhds {f : X → Y} :
     IsLocallyInjective f ↔ ∀ x : X, ∃ U ∈ 𝓝 x, U.InjOn f := by
   constructor <;> intro h x
-  · obtain ⟨U, ho, hm, hi⟩ := h x; exact ⟨U, ho.mem_nhds hm, hi⟩
-  · obtain ⟨U, hn, hi⟩ := h x
-    exact ⟨interior U, isOpen_interior, mem_interior_iff_mem_nhds.mpr hn, hi.mono interior_subset⟩
+  obtain ⟨U, ho, hm, hi⟩ := h x; exact ⟨U, ho.mem_nhds hm, hi⟩
+  obtain ⟨U, hn, hi⟩ := h x
+  exact ⟨interior U, isOpen_interior, mem_interior_iff_mem_nhds.mpr hn, hi.mono interior_subset⟩
 
 theorem isLocallyInjective_iff_isOpen_diagonal {f : X → Y} :
     IsLocallyInjective f ↔ IsOpen f.pullbackDiagonal := by
   simp_rw [isLocallyInjective_iff_nhds, isOpen_iff_mem_nhds,
     Subtype.forall, Prod.forall, nhds_induced, nhds_prod_eq, Filter.mem_comap]
   refine ⟨?_, fun h x ↦ ?_⟩
-  · rintro h x x' hx (rfl : x = x')
-    obtain ⟨U, hn, hi⟩ := h x
-    exact ⟨_, Filter.prod_mem_prod hn hn, fun {p} hp ↦ hi hp.1 hp.2 p.2⟩
-  · obtain ⟨t, ht, t_sub⟩ := h x x rfl rfl
-    obtain ⟨t₁, h₁, t₂, h₂, prod_sub⟩ := Filter.mem_prod_iff.mp ht
-    exact ⟨t₁ ∩ t₂, Filter.inter_mem h₁ h₂,
-      fun x₁ h₁ x₂ h₂ he ↦ @t_sub ⟨(x₁, x₂), he⟩ (prod_sub ⟨h₁.1, h₂.2⟩)⟩
+  rintro h x x' hx (rfl : x = x')
+  obtain ⟨U, hn, hi⟩ := h x
+  exact ⟨_, Filter.prod_mem_prod hn hn, fun {p} hp ↦ hi hp.1 hp.2 p.2⟩
+  obtain ⟨t, ht, t_sub⟩ := h x x rfl rfl
+  obtain ⟨t₁, h₁, t₂, h₂, prod_sub⟩ := Filter.mem_prod_iff.mp ht
+  exact ⟨t₁ ∩ t₂, Filter.inter_mem h₁ h₂,
+    fun x₁ h₁ x₂ h₂ he ↦ @t_sub ⟨(x₁, x₂), he⟩ (prod_sub ⟨h₁.1, h₂.2⟩)⟩
 
 theorem IsLocallyInjective_iff_openEmbedding {f : X → Y} :
     IsLocallyInjective f ↔ OpenEmbedding (toPullbackDiag f) := by

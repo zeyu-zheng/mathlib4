@@ -187,10 +187,10 @@ variable {Q}
 /-- This is [grinberg_clifford_2016][] Theorem 7 -/
 theorem contractLeft_contractLeft (x : CliffordAlgebra Q) : d⌋(d⌋x) = 0 := by
   induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
-  · simp_rw [contractLeft_algebraMap, map_zero]
-  · rw [map_add, map_add, hx, hy, add_zero]
-  · rw [contractLeft_ι_mul, map_sub, contractLeft_ι_mul, hx, LinearMap.map_smul,
-      mul_zero, sub_zero, sub_self]
+  simp_rw [contractLeft_algebraMap, map_zero]
+  rw [map_add, map_add, hx, hy, add_zero]
+  rw [contractLeft_ι_mul, map_sub, contractLeft_ι_mul, hx, LinearMap.map_smul,
+    mul_zero, sub_zero, sub_self]
 
 /-- This is [grinberg_clifford_2016][] Theorem 13 -/
 theorem contractRight_contractRight (x : CliffordAlgebra Q) : x⌊d⌊d = 0 := by
@@ -199,10 +199,10 @@ theorem contractRight_contractRight (x : CliffordAlgebra Q) : x⌊d⌊d = 0 := b
 /-- This is [grinberg_clifford_2016][] Theorem 8 -/
 theorem contractLeft_comm (x : CliffordAlgebra Q) : d⌋(d'⌋x) = -(d'⌋(d⌋x)) := by
   induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
-  · simp_rw [contractLeft_algebraMap, map_zero, neg_zero]
-  · rw [map_add, map_add, map_add, map_add, hx, hy, neg_add]
-  · simp only [contractLeft_ι_mul, map_sub, LinearMap.map_smul]
-    rw [neg_sub, sub_sub_eq_add_sub, hx, mul_neg, ← sub_eq_add_neg]
+  simp_rw [contractLeft_algebraMap, map_zero, neg_zero]
+  rw [map_add, map_add, map_add, map_add, hx, hy, neg_add]
+  simp only [contractLeft_ι_mul, map_sub, LinearMap.map_smul]
+  rw [neg_sub, sub_sub_eq_add_sub, hx, mul_neg, ← sub_eq_add_neg]
 
 /-- This is [grinberg_clifford_2016][] Theorem 14 -/
 theorem contractRight_comm (x : CliffordAlgebra Q) : x⌊d⌊d' = -(x⌊d'⌊d) := by
@@ -292,18 +292,18 @@ theorem changeForm_contractLeft (d : Module.Dual R M) (x : CliffordAlgebra Q) :
     --    changeForm h (d⌋x) = d⌋changeForm h x := by
     changeForm h (contractLeft (Q := Q) d x) = contractLeft (Q := Q') d (changeForm h x) := by
   induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
-  · simp only [contractLeft_algebraMap, changeForm_algebraMap, map_zero]
-  · rw [map_add, map_add, map_add, map_add, hx, hy]
-  · simp only [contractLeft_ι_mul, changeForm_ι_mul, map_sub, LinearMap.map_smul]
-    rw [← hx, contractLeft_comm, ← sub_add, sub_neg_eq_add, ← hx]
+  simp only [contractLeft_algebraMap, changeForm_algebraMap, map_zero]
+  rw [map_add, map_add, map_add, map_add, hx, hy]
+  simp only [contractLeft_ι_mul, changeForm_ι_mul, map_sub, LinearMap.map_smul]
+  rw [← hx, contractLeft_comm, ← sub_add, sub_neg_eq_add, ← hx]
 
 theorem changeForm_self_apply (x : CliffordAlgebra Q) : changeForm (Q' := Q)
     changeForm.zero_proof x = x := by
   induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
-  · simp_rw [changeForm_algebraMap]
-  · rw [map_add, hx, hy]
-  · rw [changeForm_ι_mul, hx, LinearMap.zero_apply, map_zero, LinearMap.zero_apply,
-      sub_zero]
+  simp_rw [changeForm_algebraMap]
+  rw [map_add, hx, hy]
+  rw [changeForm_ι_mul, hx, LinearMap.zero_apply, map_zero, LinearMap.zero_apply,
+    sub_zero]
 
 @[simp]
 theorem changeForm_self :
@@ -314,11 +314,11 @@ theorem changeForm_self :
 theorem changeForm_changeForm (x : CliffordAlgebra Q) :
     changeForm h' (changeForm h x) = changeForm (changeForm.add_proof h h') x := by
   induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
-  · simp_rw [changeForm_algebraMap]
-  · rw [map_add, map_add, map_add, hx, hy]
-  · rw [changeForm_ι_mul, map_sub, changeForm_ι_mul, changeForm_ι_mul, hx, sub_sub,
-      LinearMap.add_apply, map_add, LinearMap.add_apply, changeForm_contractLeft, hx,
-      add_comm (_ : CliffordAlgebra Q'')]
+  simp_rw [changeForm_algebraMap]
+  rw [map_add, map_add, map_add, hx, hy]
+  rw [changeForm_ι_mul, map_sub, changeForm_ι_mul, changeForm_ι_mul, hx, sub_sub,
+    LinearMap.add_apply, map_add, LinearMap.add_apply, changeForm_contractLeft, hx,
+    add_comm (_ : CliffordAlgebra Q'')]
 
 theorem changeForm_comp_changeForm :
     (changeForm h').comp (changeForm h) = changeForm (changeForm.add_proof h h') :=

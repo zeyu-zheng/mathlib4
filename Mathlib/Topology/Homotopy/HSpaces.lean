@@ -94,13 +94,13 @@ instance HSpace.prod (X : Type u) (Y : Type v) [TopologicalSpace X] [Topological
         (Continuous.comp HSpace.eHmul.1.1.2
           (continuous_fst.prod_mk (continuous_snd.comp continuous_snd)))
     use! ⟨G, hG⟩
-    · rintro ⟨x, y⟩
-      exact Prod.ext (HSpace.eHmul.1.2 x) (HSpace.eHmul.1.2 y)
-    · rintro ⟨x, y⟩
-      exact Prod.ext (HSpace.eHmul.1.3 x) (HSpace.eHmul.1.3 y)
-    · rintro t ⟨x, y⟩ h
-      replace h := Prod.mk.inj_iff.mp h
-      exact Prod.ext (HSpace.eHmul.2 t x h.1) (HSpace.eHmul.2 t y h.2)
+    rintro ⟨x, y⟩
+    exact Prod.ext (HSpace.eHmul.1.2 x) (HSpace.eHmul.1.2 y)
+    rintro ⟨x, y⟩
+    exact Prod.ext (HSpace.eHmul.1.3 x) (HSpace.eHmul.1.3 y)
+    rintro t ⟨x, y⟩ h
+    replace h := Prod.mk.inj_iff.mp h
+    exact Prod.ext (HSpace.eHmul.2 t x h.1) (HSpace.eHmul.2 t y h.2)
   hmulE := by
     let G : I × X × Y → X × Y := fun p => (HSpace.hmulE (p.1, p.2.1), HSpace.hmulE (p.1, p.2.2))
     have hG : Continuous G :=
@@ -109,13 +109,13 @@ instance HSpace.prod (X : Type u) (Y : Type v) [TopologicalSpace X] [Topological
         (Continuous.comp HSpace.hmulE.1.1.2
           (continuous_fst.prod_mk (continuous_snd.comp continuous_snd)))
     use! ⟨G, hG⟩
-    · rintro ⟨x, y⟩
-      exact Prod.ext (HSpace.hmulE.1.2 x) (HSpace.hmulE.1.2 y)
-    · rintro ⟨x, y⟩
-      exact Prod.ext (HSpace.hmulE.1.3 x) (HSpace.hmulE.1.3 y)
-    · rintro t ⟨x, y⟩ h
-      replace h := Prod.mk.inj_iff.mp h
-      exact Prod.ext (HSpace.hmulE.2 t x h.1) (HSpace.hmulE.2 t y h.2)
+    rintro ⟨x, y⟩
+    exact Prod.ext (HSpace.hmulE.1.2 x) (HSpace.hmulE.1.2 y)
+    rintro ⟨x, y⟩
+    exact Prod.ext (HSpace.hmulE.1.3 x) (HSpace.hmulE.1.3 y)
+    rintro t ⟨x, y⟩ h
+    replace h := Prod.mk.inj_iff.mp h
+    exact Prod.ext (HSpace.hmulE.2 t x h.1) (HSpace.hmulE.2 t y h.2)
 
 
 namespace TopologicalGroup
@@ -181,12 +181,12 @@ theorem qRight_zero_right (t : I) :
     (qRight (t, 0) : ℝ) = if (t : ℝ) ≤ 1 / 2 then (2 : ℝ) * t else 1 := by
   simp only [qRight, coe_zero, add_zero, div_one]
   split_ifs
-  · rw [Set.projIcc_of_mem _ ((mul_pos_mem_iff zero_lt_two).2 _)]
-    refine ⟨t.2.1, ?_⟩
-    tauto
-  · rw [(Set.projIcc_eq_right _).2]
-    · linarith
-    · exact zero_lt_one
+  rw [Set.projIcc_of_mem _ ((mul_pos_mem_iff zero_lt_two).2 _)]
+  refine ⟨t.2.1, ?_⟩
+  tauto
+  rw [(Set.projIcc_eq_right _).2]
+  linarith
+  exact zero_lt_one
 
 theorem qRight_one_right (t : I) : qRight (t, 1) = t :=
   Eq.trans (by rw [qRight]; norm_num) <| Set.projIcc_val zero_le_one _

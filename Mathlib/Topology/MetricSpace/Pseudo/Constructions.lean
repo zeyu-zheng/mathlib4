@@ -108,8 +108,8 @@ lemma NNReal.ball_zero_eq_Ico' (c : ℝ≥0) :
 lemma NNReal.ball_zero_eq_Ico (c : ℝ) :
     Metric.ball (0 : ℝ≥0) c = Set.Ico 0 c.toNNReal := by
   by_cases c_pos : 0 < c
-  · convert NNReal.ball_zero_eq_Ico' ⟨c, c_pos.le⟩
-    simp [Real.toNNReal, c_pos.le]
+  convert NNReal.ball_zero_eq_Ico' ⟨c, c_pos.le⟩
+  simp [Real.toNNReal, c_pos.le]
   simp [not_lt.mp c_pos]
 
 lemma NNReal.closedBall_zero_eq_Icc' (c : ℝ≥0) :
@@ -171,14 +171,14 @@ lemma closedBall_prod_same (x : α) (y : β) (r : ℝ) :
 lemma sphere_prod (x : α × β) (r : ℝ) :
     sphere x r = sphere x.1 r ×ˢ closedBall x.2 r ∪ closedBall x.1 r ×ˢ sphere x.2 r := by
   obtain hr | rfl | hr := lt_trichotomy r 0
-  · simp [hr]
-  · cases x
-    simp_rw [← closedBall_eq_sphere_of_nonpos le_rfl, union_self, closedBall_prod_same]
-  · ext ⟨x', y'⟩
-    simp_rw [Set.mem_union, Set.mem_prod, Metric.mem_closedBall, Metric.mem_sphere, Prod.dist_eq,
-      max_eq_iff]
-    refine or_congr (and_congr_right ?_) (and_comm.trans (and_congr_left ?_))
-    all_goals rintro rfl; rfl
+  simp [hr]
+  cases x
+  simp_rw [← closedBall_eq_sphere_of_nonpos le_rfl, union_self, closedBall_prod_same]
+  ext ⟨x', y'⟩
+  simp_rw [Set.mem_union, Set.mem_prod, Metric.mem_closedBall, Metric.mem_sphere, Prod.dist_eq,
+    max_eq_iff]
+  refine or_congr (and_congr_right ?_) (and_comm.trans (and_congr_left ?_))
+  all_goals rintro rfl; rfl
 
 end Prod
 
@@ -297,9 +297,9 @@ lemma dist_pi_eq_iff {f g : ∀ b, π b} {r : ℝ} (hr : 0 < r) :
 lemma dist_pi_le_iff' [Nonempty β] {f g : ∀ b, π b} {r : ℝ} :
     dist f g ≤ r ↔ ∀ b, dist (f b) (g b) ≤ r := by
   by_cases hr : 0 ≤ r
-  · exact dist_pi_le_iff hr
-  · exact iff_of_false (fun h => hr <| dist_nonneg.trans h) fun h =>
-      hr <| dist_nonneg.trans <| h <| Classical.arbitrary _
+  exact dist_pi_le_iff hr
+  exact iff_of_false (fun h => hr <| dist_nonneg.trans h) fun h =>
+    hr <| dist_nonneg.trans <| h <| Classical.arbitrary _
 
 lemma dist_pi_const_le (a b : α) : (dist (fun _ : β => a) fun _ => b) ≤ dist a b :=
   (dist_pi_le_iff dist_nonneg).2 fun _ => le_rfl
@@ -353,17 +353,17 @@ ball. -/
 lemma sphere_pi (x : ∀ b, π b) {r : ℝ} (h : 0 < r ∨ Nonempty β) :
     sphere x r = (⋃ i : β, Function.eval i ⁻¹' sphere (x i) r) ∩ closedBall x r := by
   obtain hr | rfl | hr := lt_trichotomy r 0
-  · simp [hr]
-  · rw [closedBall_eq_sphere_of_nonpos le_rfl, eq_comm, Set.inter_eq_right]
-    letI := h.resolve_left (lt_irrefl _)
-    inhabit β
-    refine subset_iUnion_of_subset default ?_
-    intro x hx
-    replace hx := hx.le
-    rw [dist_pi_le_iff le_rfl] at hx
-    exact le_antisymm (hx default) dist_nonneg
-  · ext
-    simp [dist_pi_eq_iff hr, dist_pi_le_iff hr.le]
+  simp [hr]
+  rw [closedBall_eq_sphere_of_nonpos le_rfl, eq_comm, Set.inter_eq_right]
+  letI := h.resolve_left (lt_irrefl _)
+  inhabit β
+  refine subset_iUnion_of_subset default ?_
+  intro x hx
+  replace hx := hx.le
+  rw [dist_pi_le_iff le_rfl] at hx
+  exact le_antisymm (hx default) dist_nonneg
+  ext
+  simp [dist_pi_eq_iff hr, dist_pi_le_iff hr.le]
 
 @[simp]
 lemma Fin.nndist_insertNth_insertNth {n : ℕ} {α : Fin (n + 1) → Type*}

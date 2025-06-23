@@ -186,9 +186,9 @@ theorem sum_Ico_Ico_comm' {M : Type*} [AddCommMonoid M] (a b : ℕ) (f : ℕ →
 theorem prod_Ico_eq_prod_range (f : ℕ → M) (m n : ℕ) :
     ∏ k ∈ Ico m n, f k = ∏ k ∈ range (n - m), f (m + k) := by
   by_cases h : m ≤ n
-  · rw [← Nat.Ico_zero_eq_range, prod_Ico_add, zero_add, tsub_add_cancel_of_le h]
-  · replace h : n ≤ m := le_of_not_ge h
-    rw [Ico_eq_empty_of_le h, tsub_eq_zero_iff_le.mpr h, range_zero, prod_empty, prod_empty]
+  rw [← Nat.Ico_zero_eq_range, prod_Ico_add, zero_add, tsub_add_cancel_of_le h]
+  replace h : n ≤ m := le_of_not_ge h
+  rw [Ico_eq_empty_of_le h, tsub_eq_zero_iff_le.mpr h, range_zero, prod_empty, prod_empty]
 
 theorem prod_Ico_reflect (f : ℕ → M) (k : ℕ) {m n : ℕ} (h : m ≤ n + 1) :
     (∏ j ∈ Ico k m, f (n - j)) = ∏ j ∈ Ico (n + 1 - m) (n + 1 - k), f j := by
@@ -196,16 +196,16 @@ theorem prod_Ico_reflect (f : ℕ → M) (k : ℕ) {m n : ℕ} (h : m ≤ n + 1)
   intro i hi
   exact (add_le_add_iff_right 1).1 (le_trans (Nat.lt_iff_add_one_le.1 hi) h)
   cases' lt_or_le k m with hkm hkm
-  · rw [← Nat.Ico_image_const_sub_eq_Ico (this _ hkm)]
-    refine (prod_image ?_).symm
-    simp only [mem_Ico]
-    rintro i ⟨_, im⟩ j ⟨_, jm⟩ Hij
-    rw [← tsub_tsub_cancel_of_le (this _ im), Hij, tsub_tsub_cancel_of_le (this _ jm)]
-  · have : n + 1 - k ≤ n + 1 - m := by
-      rw [tsub_le_tsub_iff_left h]
-      exact hkm
-    simp only [hkm, Ico_eq_empty_of_le, prod_empty, tsub_le_iff_right, Ico_eq_empty_of_le
-      this]
+  rw [← Nat.Ico_image_const_sub_eq_Ico (this _ hkm)]
+  refine (prod_image ?_).symm
+  simp only [mem_Ico]
+  rintro i ⟨_, im⟩ j ⟨_, jm⟩ Hij
+  rw [← tsub_tsub_cancel_of_le (this _ im), Hij, tsub_tsub_cancel_of_le (this _ jm)]
+  have : n + 1 - k ≤ n + 1 - m := by
+    rw [tsub_le_tsub_iff_left h]
+    exact hkm
+  simp only [hkm, Ico_eq_empty_of_le, prod_empty, tsub_le_iff_right, Ico_eq_empty_of_le
+    this]
 
 theorem sum_Ico_reflect {δ : Type*} [AddCommMonoid δ] (f : ℕ → δ) (k : ℕ) {m n : ℕ}
     (h : m ≤ n + 1) : (∑ j ∈ Ico k m, f (n - j)) = ∑ j ∈ Ico (n + 1 - m) (n + 1 - k), f j :=
@@ -214,10 +214,10 @@ theorem sum_Ico_reflect {δ : Type*} [AddCommMonoid δ] (f : ℕ → δ) (k : �
 theorem prod_range_reflect (f : ℕ → M) (n : ℕ) :
     (∏ j ∈ range n, f (n - 1 - j)) = ∏ j ∈ range n, f j := by
   cases n
-  · simp
-  · simp only [← Nat.Ico_zero_eq_range, Nat.succ_sub_succ_eq_sub, tsub_zero]
-    rw [prod_Ico_reflect _ _ le_rfl]
-    simp
+  simp
+  simp only [← Nat.Ico_zero_eq_range, Nat.succ_sub_succ_eq_sub, tsub_zero]
+  rw [prod_Ico_reflect _ _ le_rfl]
+  simp
 
 theorem sum_range_reflect {δ : Type*} [AddCommMonoid δ] (f : ℕ → δ) (n : ℕ) :
     (∑ j ∈ range n, f (n - 1 - j)) = ∑ j ∈ range n, f j :=

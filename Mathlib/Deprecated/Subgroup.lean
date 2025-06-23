@@ -526,12 +526,12 @@ theorem mem_closure_union_iff {G : Type*} [CommGroup G] {s t : Set G} {x : G} :
     x ∈ closure (s ∪ t) ↔ ∃ y ∈ closure s, ∃ z ∈ closure t, y * z = x := by
   simp only [closure_eq_mclosure, Monoid.mem_closure_union_iff, exists_prop, preimage_union]
   constructor
-  · rintro ⟨_, ⟨ys, hys, yt, hyt, rfl⟩, _, ⟨zs, hzs, zt, hzt, rfl⟩, rfl⟩
-    refine ⟨_, ⟨_, hys, _, hzs, rfl⟩, _, ⟨_, hyt, _, hzt, rfl⟩, ?_⟩
-    rw [mul_assoc, mul_assoc, mul_left_comm zs]
-  · rintro ⟨_, ⟨ys, hys, zs, hzs, rfl⟩, _, ⟨yt, hyt, zt, hzt, rfl⟩, rfl⟩
-    refine ⟨_, ⟨ys, hys, yt, hyt, rfl⟩, _, ⟨zs, hzs, zt, hzt, rfl⟩, ?_⟩
-    rw [mul_assoc, mul_assoc, mul_left_comm yt]
+  rintro ⟨_, ⟨ys, hys, yt, hyt, rfl⟩, _, ⟨zs, hzs, zt, hzt, rfl⟩, rfl⟩
+  refine ⟨_, ⟨_, hys, _, hzs, rfl⟩, _, ⟨_, hyt, _, hzt, rfl⟩, ?_⟩
+  rw [mul_assoc, mul_assoc, mul_left_comm zs]
+  rintro ⟨_, ⟨ys, hys, zs, hzs, rfl⟩, _, ⟨yt, hyt, zt, hzt, rfl⟩, rfl⟩
+  refine ⟨_, ⟨ys, hys, yt, hyt, rfl⟩, _, ⟨zs, hzs, zt, hzt, rfl⟩, ?_⟩
+  rw [mul_assoc, mul_assoc, mul_left_comm yt]
 
 end Group
 
@@ -582,21 +582,21 @@ theorem normalClosure.is_normal : IsNormalSubgroup (normalClosure s) :=
   { normalClosure.isSubgroup _ with
     normal := fun n h g => by
       induction' h with x hx x hx ihx x y hx hy ihx ihy
-      · exact conjugatesOfSet_subset_normalClosure (conj_mem_conjugatesOfSet hx)
-      · simpa using (normalClosure.isSubgroup s).one_mem
-      · rw [← conj_inv]
-        exact (normalClosure.isSubgroup _).inv_mem ihx
-      · rw [← conj_mul]
-        exact (normalClosure.isSubgroup _).toIsSubmonoid.mul_mem ihx ihy }
+      exact conjugatesOfSet_subset_normalClosure (conj_mem_conjugatesOfSet hx)
+      simpa using (normalClosure.isSubgroup s).one_mem
+      rw [← conj_inv]
+      exact (normalClosure.isSubgroup _).inv_mem ihx
+      rw [← conj_mul]
+      exact (normalClosure.isSubgroup _).toIsSubmonoid.mul_mem ihx ihy }
 
 /-- The normal closure of s is the smallest normal subgroup containing s. -/
 theorem normalClosure_subset {s t : Set G} (ht : IsNormalSubgroup t) (h : s ⊆ t) :
     normalClosure s ⊆ t := fun a w => by
   induction' w with x hx x _ ihx x y _ _ ihx ihy
-  · exact conjugatesOfSet_subset' ht h <| hx
-  · exact ht.toIsSubgroup.toIsSubmonoid.one_mem
-  · exact ht.toIsSubgroup.inv_mem ihx
-  · exact ht.toIsSubgroup.toIsSubmonoid.mul_mem ihx ihy
+  exact conjugatesOfSet_subset' ht h <| hx
+  exact ht.toIsSubgroup.toIsSubmonoid.one_mem
+  exact ht.toIsSubgroup.inv_mem ihx
+  exact ht.toIsSubgroup.toIsSubmonoid.mul_mem ihx ihy
 
 theorem normalClosure_subset_iff {s t : Set G} (ht : IsNormalSubgroup t) :
     s ⊆ t ↔ normalClosure s ⊆ t :=

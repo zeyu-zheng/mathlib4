@@ -216,28 +216,28 @@ theorem exists_rep {X : C} {P : Cᵒᵖ ⥤ D} (x : (J.plusObj P).obj (op X)) :
 theorem eq_mk_iff_exists {X : C} {P : Cᵒᵖ ⥤ D} {S T : J.Cover X} (x : Meq P S) (y : Meq P T) :
     mk x = mk y ↔ ∃ (W : J.Cover X) (h1 : W ⟶ S) (h2 : W ⟶ T), x.refine h1 = y.refine h2 := by
   constructor
-  · intro h
-    obtain ⟨W, h1, h2, hh⟩ := Concrete.colimit_exists_of_rep_eq.{u} _ _ _ h
-    use W.unop, h1.unop, h2.unop
-    ext I
-    apply_fun Multiequalizer.ι (W.unop.index P) I at hh
-    convert hh
-    all_goals
-      dsimp [diagram]
-      erw [← comp_apply, Multiequalizer.lift_ι, Meq.equiv_symm_eq_apply]
-      cases I; rfl
-  · rintro ⟨S, h1, h2, e⟩
-    apply Concrete.colimit_rep_eq_of_exists
-    use op S, h1.op, h2.op
-    apply Concrete.multiequalizer_ext
-    intro i
-    apply_fun fun ee => ee i at e
-    convert e
-    all_goals
-      dsimp
-      erw [← comp_apply, Multiequalizer.lift_ι]
-      erw [Meq.equiv_symm_eq_apply]
-      cases i; rfl
+  intro h
+  obtain ⟨W, h1, h2, hh⟩ := Concrete.colimit_exists_of_rep_eq.{u} _ _ _ h
+  use W.unop, h1.unop, h2.unop
+  ext I
+  apply_fun Multiequalizer.ι (W.unop.index P) I at hh
+  convert hh
+  all_goals try
+    dsimp [diagram]
+    erw [← comp_apply, Multiequalizer.lift_ι, Meq.equiv_symm_eq_apply]
+    cases I; rfl
+  rintro ⟨S, h1, h2, e⟩
+  apply Concrete.colimit_rep_eq_of_exists
+  use op S, h1.op, h2.op
+  apply Concrete.multiequalizer_ext
+  intro i
+  apply_fun fun ee => ee i at e
+  convert e
+  all_goals
+    dsimp
+    erw [← comp_apply, Multiequalizer.lift_ι]
+    erw [Meq.equiv_symm_eq_apply]
+    cases i; rfl
 
 /-- `P⁺` is always separated. -/
 theorem sep {X : C} (P : Cᵒᵖ ⥤ D) (S : J.Cover X) (x y : (J.plusObj P).obj (op X))
@@ -282,8 +282,8 @@ theorem sep {X : C} (P : Cᵒᵖ ⥤ D) (S : J.Cover X) (x y : (J.plusObj P).obj
   let IW : (W IS).Arrow := I.toMiddle
   apply_fun fun e => e IW at hh
   convert hh using 1
-  · exact x.congr_apply I.middle_spec.symm _
-  · exact y.congr_apply I.middle_spec.symm _
+  exact x.congr_apply I.middle_spec.symm _
+  exact y.congr_apply I.middle_spec.symm _
 
 theorem inj_of_sep (P : Cᵒᵖ ⥤ D)
     (hsep :
@@ -362,8 +362,8 @@ theorem exists_of_sep (P : Cᵒᵖ ⥤ D)
       (by
         intro Y f hf
         apply Sieve.le_pullback_bind _ _ _ I.hf
-        · cases I
-          exact hf)
+        cases I
+        exact hf)
   use e0, 𝟙 _
   ext IV
   let IA : B.Arrow := ⟨_, (IV.f ≫ II.f) ≫ I.f,
@@ -391,22 +391,22 @@ theorem isSheaf_of_sep (P : Cᵒᵖ ⥤ D)
   apply @isIso_of_reflects_iso _ _ _ _ _ _ _ (forget D) ?_
   rw [isIso_iff_bijective]
   constructor
-  · intro x y h
-    apply sep P S _ _
-    intro I
-    apply_fun Meq.equiv _ _ at h
-    apply_fun fun e => e I at h
-    convert h <;> erw [Meq.equiv_apply, ← comp_apply, Multiequalizer.lift_ι] <;> rfl
-  · rintro (x : (multiequalizer (S.index _) : D))
-    obtain ⟨t, ht⟩ := exists_of_sep P hsep X S (Meq.equiv _ _ x)
-    use t
-    apply (Meq.equiv _ _).injective
-    rw [← ht]
-    ext i
-    dsimp
-    erw [← comp_apply]
-    rw [Multiequalizer.lift_ι]
-    rfl
+  intro x y h
+  apply sep P S _ _
+  intro I
+  apply_fun Meq.equiv _ _ at h
+  apply_fun fun e => e I at h
+  convert h <;> erw [Meq.equiv_apply, ← comp_apply, Multiequalizer.lift_ι] <;> rfl
+  rintro (x : (multiequalizer (S.index _) : D))
+  obtain ⟨t, ht⟩ := exists_of_sep P hsep X S (Meq.equiv _ _ x)
+  use t
+  apply (Meq.equiv _ _).injective
+  rw [← ht]
+  ext i
+  dsimp
+  erw [← comp_apply]
+  rw [Multiequalizer.lift_ι]
+  rfl
 
 variable (J)
 

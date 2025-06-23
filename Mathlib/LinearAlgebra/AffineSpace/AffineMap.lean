@@ -184,12 +184,12 @@ variable {k P1}
 theorem linear_eq_zero_iff_exists_const (f : P1 →ᵃ[k] P2) :
     f.linear = 0 ↔ ∃ q, f = const k P1 q := by
   refine ⟨fun h => ?_, fun h => ?_⟩
-  · use f (Classical.arbitrary P1)
-    ext
-    rw [coe_const, Function.const_apply, ← @vsub_eq_zero_iff_eq V2, ← f.linearMap_vsub, h,
-      LinearMap.zero_apply]
-  · rcases h with ⟨q, rfl⟩
-    exact const_linear k P1 q
+  use f (Classical.arbitrary P1)
+  ext
+  rw [coe_const, Function.const_apply, ← @vsub_eq_zero_iff_eq V2, ← f.linearMap_vsub, h,
+    LinearMap.zero_apply]
+  rcases h with ⟨q, rfl⟩
+  exact const_linear k P1 q
 
 instance nonempty : Nonempty (P1 →ᵃ[k] P2) :=
   (AddTorsor.nonempty : Nonempty P2).map <| const k P1
@@ -442,10 +442,10 @@ theorem image_vsub_image {s t : Set P1} (f : P1 →ᵃ[k] P2) :
   simp only [(Set.mem_vsub), Set.mem_image,
     exists_exists_and_eq_and, exists_and_left, ← f.linearMap_vsub]
   constructor
-  · rintro ⟨x, hx, y, hy, hv⟩
-    exact ⟨x -ᵥ y, ⟨x, hx, y, hy, rfl⟩, hv⟩
-  · rintro ⟨-, ⟨x, hx, y, hy, rfl⟩, rfl⟩
-    exact ⟨x, hx, y, hy, rfl⟩
+  rintro ⟨x, hx, y, hy, hv⟩
+  exact ⟨x -ᵥ y, ⟨x, hx, y, hy, rfl⟩, hv⟩
+  rintro ⟨-, ⟨x, hx, y, hy, rfl⟩, rfl⟩
+  exact ⟨x, hx, y, hy, rfl⟩
 
 /-! ### Definition of `AffineMap.lineMap` and lemmas about it -/
 
@@ -719,16 +719,16 @@ variable [Finite ι] [DecidableEq ι] {f g : ((i : ι) → φv i) →ᵃ[k] P2}
 theorem pi_ext_zero (h : ∀ i x, f (Pi.single i x) = g (Pi.single i x)) (h₂ : f 0 = g 0) :
     f = g := by
   apply ext_linear
-  · apply LinearMap.pi_ext
-    intro i x
-    have s₁ := h i x
-    have s₂ := f.map_vadd 0 (Pi.single i x)
-    have s₃ := g.map_vadd 0 (Pi.single i x)
-    rw [vadd_eq_add, add_zero] at s₂ s₃
-    replace h₂ := h i 0
-    simp only [Pi.single_zero] at h₂
-    rwa [s₂, s₃, h₂, vadd_right_cancel_iff] at s₁
-  · exact h₂
+  apply LinearMap.pi_ext
+  intro i x
+  have s₁ := h i x
+  have s₂ := f.map_vadd 0 (Pi.single i x)
+  have s₃ := g.map_vadd 0 (Pi.single i x)
+  rw [vadd_eq_add, add_zero] at s₂ s₃
+  replace h₂ := h i 0
+  simp only [Pi.single_zero] at h₂
+  rwa [s₂, s₃, h₂, vadd_right_cancel_iff] at s₁
+  exact h₂
 
 /-- Two affine maps from a Pi-tyoe of modules `(i : ι) → φv i` are equal if they are equal in their
   operation on `Pi.single` and `ι` is nonempty.  Analogous to `LinearMap.pi_ext`. See also

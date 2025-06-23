@@ -38,36 +38,36 @@ variable {F G : Sheaf J (Type w)} (f : F ⟶ G)
 private lemma isLocallyBijective_iff_isIso' :
     IsLocallyInjective f ∧ IsLocallySurjective f ↔ IsIso f := by
   constructor
-  · rintro ⟨h₁, _⟩
-    rw [isLocallyInjective_iff_injective] at h₁
-    suffices ∀ (X : Cᵒᵖ), Function.Surjective (f.val.app X) by
-      rw [← isIso_iff_of_reflects_iso _ (sheafToPresheaf _ _), NatTrans.isIso_iff_isIso_app]
-      intro X
-      rw [isIso_iff_bijective]
-      exact ⟨h₁ X, this X⟩
-    intro X s
-    have H := (isSheaf_iff_isSheaf_of_type J F.val).1 F.cond _ (Presheaf.imageSieve_mem J f.val s)
-    let t : Presieve.FamilyOfElements F.val (Presheaf.imageSieve f.val s).arrows :=
-      fun Y g hg => Presheaf.localPreimage f.val s g hg
-    have ht : t.Compatible := by
-      intro Y₁ Y₂ W g₁ g₂ f₁ f₂ hf₁ hf₂ w
-      apply h₁
-      have eq₁ := FunctorToTypes.naturality _ _ f.val g₁.op (t f₁ hf₁)
-      have eq₂ := FunctorToTypes.naturality _ _ f.val g₂.op (t f₂ hf₂)
-      have eq₃ := congr_arg (G.val.map g₁.op) (Presheaf.app_localPreimage f.val s _ hf₁)
-      have eq₄ := congr_arg (G.val.map g₂.op) (Presheaf.app_localPreimage f.val s _ hf₂)
-      refine eq₁.trans (eq₃.trans (Eq.trans ?_ (eq₄.symm.trans eq₂.symm)))
-      erw [← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply]
-      simp only [← op_comp, w]
-    refine ⟨H.amalgamate t ht, ?_⟩
-    · apply (Presieve.isSeparated_of_isSheaf _ _
-        ((isSheaf_iff_isSheaf_of_type J G.val).1 G.cond) _
-        (Presheaf.imageSieve_mem J f.val s)).ext
-      intro Y g hg
-      rw [← FunctorToTypes.naturality, H.valid_glue ht]
-      exact Presheaf.app_localPreimage f.val s g hg
-  · intro
-    constructor <;> infer_instance
+  rintro ⟨h₁, _⟩
+  rw [isLocallyInjective_iff_injective] at h₁
+  suffices ∀ (X : Cᵒᵖ), Function.Surjective (f.val.app X) by
+    rw [← isIso_iff_of_reflects_iso _ (sheafToPresheaf _ _), NatTrans.isIso_iff_isIso_app]
+    intro X
+    rw [isIso_iff_bijective]
+    exact ⟨h₁ X, this X⟩
+  intro X s
+  have H := (isSheaf_iff_isSheaf_of_type J F.val).1 F.cond _ (Presheaf.imageSieve_mem J f.val s)
+  let t : Presieve.FamilyOfElements F.val (Presheaf.imageSieve f.val s).arrows :=
+    fun Y g hg => Presheaf.localPreimage f.val s g hg
+  have ht : t.Compatible := by
+    intro Y₁ Y₂ W g₁ g₂ f₁ f₂ hf₁ hf₂ w
+    apply h₁
+    have eq₁ := FunctorToTypes.naturality _ _ f.val g₁.op (t f₁ hf₁)
+    have eq₂ := FunctorToTypes.naturality _ _ f.val g₂.op (t f₂ hf₂)
+    have eq₃ := congr_arg (G.val.map g₁.op) (Presheaf.app_localPreimage f.val s _ hf₁)
+    have eq₄ := congr_arg (G.val.map g₂.op) (Presheaf.app_localPreimage f.val s _ hf₂)
+    refine eq₁.trans (eq₃.trans (Eq.trans ?_ (eq₄.symm.trans eq₂.symm)))
+    erw [← FunctorToTypes.map_comp_apply, ← FunctorToTypes.map_comp_apply]
+    simp only [← op_comp, w]
+  refine ⟨H.amalgamate t ht, ?_⟩
+  apply (Presieve.isSeparated_of_isSheaf _ _
+    ((isSheaf_iff_isSheaf_of_type J G.val).1 G.cond) _
+    (Presheaf.imageSieve_mem J f.val s)).ext
+  intro Y g hg
+  rw [← FunctorToTypes.naturality, H.valid_glue ht]
+  exact Presheaf.app_localPreimage f.val s g hg
+  intro
+  constructor <;> infer_instance
 
 end
 
@@ -79,12 +79,12 @@ variable {F G : Sheaf J A} (f : F ⟶ G) [(forget A).ReflectsIsomorphisms]
 lemma isLocallyBijective_iff_isIso :
     IsLocallyInjective f ∧ IsLocallySurjective f ↔ IsIso f := by
   constructor
-  · rintro ⟨_, _⟩
-    rw [← isIso_iff_of_reflects_iso f (sheafCompose J (forget A)),
-      ← isLocallyBijective_iff_isIso']
-    constructor <;> infer_instance
-  · intro
-    constructor <;> infer_instance
+  rintro ⟨_, _⟩
+  rw [← isIso_iff_of_reflects_iso f (sheafCompose J (forget A)),
+    ← isLocallyBijective_iff_isIso']
+  constructor <;> infer_instance
+  intro
+  constructor <;> infer_instance
 
 end
 

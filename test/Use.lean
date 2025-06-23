@@ -197,7 +197,7 @@ example (α : Type u) : Embedding α α × Unit := by
   constructor
   -- testing that `use` actually focuses on the main goal
   use id
-  · simp
+  simp
   constructor
 
 

@@ -695,11 +695,11 @@ theorem normal_of_all_max_subgroups_normal [Finite G]
   normalizer_eq_top.mp
     (by
       rcases eq_top_or_exists_le_coatom (↑P : Subgroup G).normalizer with (heq | ⟨K, hK, hNK⟩)
-      · exact heq
-      · haveI := hnc _ hK
-        have hPK : ↑P ≤ K := le_trans le_normalizer hNK
-        refine (hK.1 ?_).elim
-        rw [← sup_of_le_right hNK, P.normalizer_sup_eq_top' hPK])
+      exact heq
+      haveI := hnc _ hK
+      have hPK : ↑P ≤ K := le_trans le_normalizer hNK
+      refine (hK.1 ?_).elim
+      rw [← sup_of_le_right hNK, P.normalizer_sup_eq_top' hPK])
 
 theorem normal_of_normalizerCondition (hnc : NormalizerCondition G) {p : ℕ} [Fact p.Prime]
     [Finite (Sylow p G)] (P : Sylow p G) : (↑P : Subgroup G).Normal :=

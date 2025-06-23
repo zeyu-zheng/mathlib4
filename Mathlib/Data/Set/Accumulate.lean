@@ -43,14 +43,14 @@ theorem accumulate_subset_accumulate [Preorder α] {x y} (h : x ≤ y) :
 
 theorem biUnion_accumulate [Preorder α] (x : α) : ⋃ y ≤ x, Accumulate s y = ⋃ y ≤ x, s y := by
   apply Subset.antisymm
-  · exact iUnion₂_subset fun y hy => monotone_accumulate hy
-  · exact iUnion₂_mono fun y _ => subset_accumulate
+  exact iUnion₂_subset fun y hy => monotone_accumulate hy
+  exact iUnion₂_mono fun y _ => subset_accumulate
 
 theorem iUnion_accumulate [Preorder α] : ⋃ x, Accumulate s x = ⋃ x, s x := by
   apply Subset.antisymm
-  · simp only [subset_def, mem_iUnion, exists_imp, mem_accumulate]
-    intro z x x' ⟨_, hz⟩
-    exact ⟨x', hz⟩
-  · exact iUnion_mono fun i => subset_accumulate
+  simp only [subset_def, mem_iUnion, exists_imp, mem_accumulate]
+  intro z x x' ⟨_, hz⟩
+  exact ⟨x', hz⟩
+  exact iUnion_mono fun i => subset_accumulate
 
 end Set

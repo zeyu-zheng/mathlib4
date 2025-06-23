@@ -170,18 +170,18 @@ theorem exists_seq_iSup_eq_top_iff_countable [CompleteLattice α] {p : α → Pr
     (∃ s : ℕ → α, (∀ n, p (s n)) ∧ ⨆ n, s n = ⊤) ↔
       ∃ S : Set α, S.Countable ∧ (∀ s ∈ S, p s) ∧ sSup S = ⊤ := by
   constructor
-  · rintro ⟨s, hps, hs⟩
-    refine ⟨range s, countable_range s, forall_mem_range.2 hps, ?_⟩
-    rwa [sSup_range]
-  · rintro ⟨S, hSc, hps, hS⟩
-    rcases eq_empty_or_nonempty S with (rfl | hne)
-    · rw [sSup_empty] at hS
-      haveI := subsingleton_of_bot_eq_top hS
-      rcases h with ⟨x, hx⟩
-      exact ⟨fun _ => x, fun _ => hx, Subsingleton.elim _ _⟩
-    · rcases (Set.countable_iff_exists_surjective hne).1 hSc with ⟨s, hs⟩
-      refine ⟨fun n => s n, fun n => hps _ (s n).coe_prop, ?_⟩
-      rwa [hs.iSup_comp, ← sSup_eq_iSup']
+  rintro ⟨s, hps, hs⟩
+  refine ⟨range s, countable_range s, forall_mem_range.2 hps, ?_⟩
+  rwa [sSup_range]
+  rintro ⟨S, hSc, hps, hS⟩
+  rcases eq_empty_or_nonempty S with (rfl | hne)
+  rw [sSup_empty] at hS
+  haveI := subsingleton_of_bot_eq_top hS
+  rcases h with ⟨x, hx⟩
+  exact ⟨fun _ => x, fun _ => hx, Subsingleton.elim _ _⟩
+  rcases (Set.countable_iff_exists_surjective hne).1 hSc with ⟨s, hs⟩
+  refine ⟨fun n => s n, fun n => hps _ (s n).coe_prop, ?_⟩
+  rwa [hs.iSup_comp, ← sSup_eq_iSup']
 
 theorem exists_seq_cover_iff_countable {p : Set α → Prop} (h : ∃ s, p s) :
     (∃ s : ℕ → Set α, (∀ n, p (s n)) ∧ ⋃ n, s n = univ) ↔

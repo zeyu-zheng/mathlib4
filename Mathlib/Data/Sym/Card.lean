@@ -127,9 +127,9 @@ theorem card_image_diag (s : Finset α) : (s.diag.image Sym2.mk).card = s.card :
   rw [card_image_of_injOn, diag_card]
   rintro ⟨x₀, x₁⟩ hx _ _ h
   cases Sym2.eq.1 h
-  · rfl
-  · simp only [mem_coe, mem_diag] at hx
-    rw [hx.2]
+  rfl
+  simp only [mem_coe, mem_diag] at hx
+  rw [hx.2]
 
 theorem two_mul_card_image_offDiag (s : Finset α) :
     2 * (s.offDiag.image Sym2.mk).card = s.offDiag.card := by

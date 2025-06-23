@@ -868,16 +868,16 @@ theorem SeminormedGroup.uniformCauchySeqOnFilter_iff_tendstoUniformlyOnFilter_on
     UniformCauchySeqOnFilter f l l' ↔
       TendstoUniformlyOnFilter (fun n : ι × ι => fun z => f n.fst z / f n.snd z) 1 (l ×ˢ l) l' := by
   refine ⟨fun hf u hu => ?_, fun hf u hu => ?_⟩
-  · obtain ⟨ε, hε, H⟩ := uniformity_basis_dist.mem_uniformity_iff.mp hu
-    refine
-      (hf { p : G × G | dist p.fst p.snd < ε } <| dist_mem_uniformity hε).mono fun x hx =>
-        H 1 (f x.fst.fst x.snd / f x.fst.snd x.snd) ?_
-    simpa [dist_eq_norm_div, norm_div_rev] using hx
-  · obtain ⟨ε, hε, H⟩ := uniformity_basis_dist.mem_uniformity_iff.mp hu
-    refine
-      (hf { p : G × G | dist p.fst p.snd < ε } <| dist_mem_uniformity hε).mono fun x hx =>
-        H (f x.fst.fst x.snd) (f x.fst.snd x.snd) ?_
-    simpa [dist_eq_norm_div, norm_div_rev] using hx
+  obtain ⟨ε, hε, H⟩ := uniformity_basis_dist.mem_uniformity_iff.mp hu
+  refine
+    (hf { p : G × G | dist p.fst p.snd < ε } <| dist_mem_uniformity hε).mono fun x hx =>
+      H 1 (f x.fst.fst x.snd / f x.fst.snd x.snd) ?_
+  simpa [dist_eq_norm_div, norm_div_rev] using hx
+  obtain ⟨ε, hε, H⟩ := uniformity_basis_dist.mem_uniformity_iff.mp hu
+  refine
+    (hf { p : G × G | dist p.fst p.snd < ε } <| dist_mem_uniformity hε).mono fun x hx =>
+      H (f x.fst.fst x.snd) (f x.fst.snd x.snd) ?_
+  simpa [dist_eq_norm_div, norm_div_rev] using hx
 
 @[to_additive]
 theorem SeminormedGroup.uniformCauchySeqOn_iff_tendstoUniformlyOn_one {f : ι → κ → G} {s : Set κ}
@@ -956,8 +956,8 @@ theorem norm_multiset_sum_le {E} [SeminormedAddCommGroup E] (m : Multiset E) :
 theorem norm_multiset_prod_le (m : Multiset E) : ‖m.prod‖ ≤ (m.map fun x => ‖x‖).sum := by
   rw [← Multiplicative.ofAdd_le, ofAdd_multiset_prod, Multiset.map_map]
   refine Multiset.le_prod_of_submultiplicative (Multiplicative.ofAdd ∘ norm) ?_ (fun x y => ?_) _
-  · simp only [comp_apply, norm_one', ofAdd_zero]
-  · exact norm_mul_le' x y
+  simp only [comp_apply, norm_one', ofAdd_zero]
+  exact norm_mul_le' x y
 
 -- Porting note: had to add `ι` here because otherwise the universe order gets switched compared to
 -- `norm_prod_le` below
@@ -969,8 +969,8 @@ theorem norm_sum_le {ι E} [SeminormedAddCommGroup E] (s : Finset ι) (f : ι �
 theorem norm_prod_le (s : Finset ι) (f : ι → E) : ‖∏ i ∈ s, f i‖ ≤ ∑ i ∈ s, ‖f i‖ := by
   rw [← Multiplicative.ofAdd_le, ofAdd_sum]
   refine Finset.le_prod_of_submultiplicative (Multiplicative.ofAdd ∘ norm) ?_ (fun x y => ?_) _ _
-  · simp only [comp_apply, norm_one', ofAdd_zero]
-  · exact norm_mul_le' x y
+  simp only [comp_apply, norm_one', ofAdd_zero]
+  exact norm_mul_le' x y
 
 @[to_additive]
 theorem norm_prod_le_of_le (s : Finset ι) {f : ι → E} {n : ι → ℝ} (h : ∀ b ∈ s, ‖f b‖ ≤ n b) :
@@ -1086,13 +1086,13 @@ theorem controlled_prod_of_mem_closure {s : Subgroup E} (hg : a ∈ closure (s :
   have hw : Tendsto w atTop (𝓝 a) := lim_z.comp φ_extr.tendsto_atTop
   set v : ℕ → E := fun i => if i = 0 then w 0 else w i / w (i - 1)
   refine ⟨v, Tendsto.congr (Finset.eq_prod_range_div' w) hw, ?_, hn₀ _ (n₀.le_add_left _), ?_⟩
-  · rintro ⟨⟩
-    · change w 0 ∈ s
-      apply u_in
-    · apply s.div_mem <;> apply u_in
-  · intro l hl
-    obtain ⟨k, rfl⟩ : ∃ k, l = k + 1 := Nat.exists_eq_succ_of_ne_zero hl.ne'
-    apply hφ
+  rintro ⟨⟩
+  change w 0 ∈ s
+  apply u_in
+  apply s.div_mem <;> apply u_in
+  intro l hl
+  obtain ⟨k, rfl⟩ : ∃ k, l = k + 1 := Nat.exists_eq_succ_of_ne_zero hl.ne'
+  apply hφ
 
 @[to_additive]
 theorem controlled_prod_of_mem_closure_range {j : E →* F} {b : F}
@@ -1184,9 +1184,9 @@ theorem toNNReal_eq_nnnorm_of_nonneg (hr : 0 ≤ r) : r.toNNReal = ‖r‖₊ :=
 
 theorem ofReal_le_ennnorm (r : ℝ) : ENNReal.ofReal r ≤ ‖r‖₊ := by
   obtain hr | hr := le_total 0 r
-  · exact (Real.ennnorm_eq_ofReal hr).ge
-  · rw [ENNReal.ofReal_eq_zero.2 hr]
-    exact bot_le
+  exact (Real.ennnorm_eq_ofReal hr).ge
+  rw [ENNReal.ofReal_eq_zero.2 hr]
+  exact bot_le
 -- Porting note: should this be renamed to `Real.ofReal_le_nnnorm`?
 
 end Real

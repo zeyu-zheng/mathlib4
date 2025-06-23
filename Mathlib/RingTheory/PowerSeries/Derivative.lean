@@ -63,10 +63,10 @@ theorem trunc_derivativeFun (f : R⟦X⟧) (n : ℕ) :
   ext d
   rw [coeff_trunc]
   split_ifs with h
-  · have : d + 1 < n + 1 := succ_lt_succ_iff.2 h
-    rw [coeff_derivativeFun, coeff_derivative, coeff_trunc, if_pos this]
-  · have : ¬d + 1 < n + 1 := by rwa [succ_lt_succ_iff]
-    rw [coeff_derivative, coeff_trunc, if_neg this, zero_mul]
+  have : d + 1 < n + 1 := succ_lt_succ_iff.2 h
+  rw [coeff_derivativeFun, coeff_derivative, coeff_trunc, if_pos this]
+  have : ¬d + 1 < n + 1 := by rwa [succ_lt_succ_iff]
+  rw [coeff_derivative, coeff_trunc, if_neg this, zero_mul]
 
 --A special case of `derivativeFun_mul`, used in its proof.
 private theorem derivativeFun_coe_mul_coe (f g : R[X]) : derivativeFun (f * g : R⟦X⟧) =
@@ -118,8 +118,8 @@ theorem derivative_coe (f : R[X]) : d⁄dX R f = Polynomial.derivative f := deri
   rw [coeff_derivative, coeff_one, coeff_X, boole_mul]
   simp_rw [add_left_eq_self]
   split_ifs with h
-  · rw [h, cast_zero, zero_add]
-  · rfl
+  rw [h, cast_zero, zero_add]
+  rfl
 
 theorem trunc_derivative (f : R⟦X⟧) (n : ℕ) :
     trunc n (d⁄dX R f) = Polynomial.derivative (trunc (n + 1) f) :=
@@ -166,9 +166,9 @@ there is currently no instance of `Inv R⟦X⟧` for more general base rings `R`
 -/
 @[simp] theorem derivative_inv' {R} [Field R] (f : R⟦X⟧) : d⁄dX R f⁻¹ = -f⁻¹ ^ 2 * d⁄dX R f := by
   by_cases h : constantCoeff R f = 0
-  · suffices f⁻¹ = 0 by
-      rw [this, pow_two, zero_mul, neg_zero, zero_mul, map_zero]
-    rwa [MvPowerSeries.inv_eq_zero]
+  suffices f⁻¹ = 0 by
+    rw [this, pow_two, zero_mul, neg_zero, zero_mul, map_zero]
+  rwa [MvPowerSeries.inv_eq_zero]
   apply Derivation.leibniz_of_mul_eq_one
   exact PowerSeries.inv_mul_cancel (h := h)
 

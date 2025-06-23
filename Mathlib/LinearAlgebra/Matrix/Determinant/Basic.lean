@@ -68,13 +68,13 @@ theorem det_apply' (M : Matrix n n R) : M.det = ∑ σ : Perm n, ε σ * ∏ i, 
 theorem det_diagonal {d : n → R} : det (diagonal d) = ∏ i, d i := by
   rw [det_apply']
   refine (Finset.sum_eq_single 1 ?_ ?_).trans ?_
-  · rintro σ - h2
-    cases' not_forall.1 (mt Equiv.ext h2) with x h3
-    convert mul_zero (ε σ)
-    apply Finset.prod_eq_zero (mem_univ x)
-    exact if_neg h3
-  · simp
-  · simp
+  rintro σ - h2
+  cases' not_forall.1 (mt Equiv.ext h2) with x h3
+  convert mul_zero (ε σ)
+  apply Finset.prod_eq_zero (mem_univ x)
+  exact if_neg h3
+  simp
+  simp
 
 -- @[simp] -- Porting note (#10618): simp can prove this
 theorem det_zero (_ : Nonempty n) : det (0 : Matrix n n R) = 0 :=
@@ -455,19 +455,19 @@ theorem det_eq_of_forall_row_eq_smul_add_const_aux {A B : Matrix n n R} {s : Fin
     intro c hs k hk A_eq
     have hAi : A i = B i + c i • B k := funext (A_eq i)
     rw [@ih (updateRow B i (A i)) (Function.update c i 0), hAi, det_updateRow_add_smul_self]
-    · exact mt (fun h => show k ∈ insert i s from h ▸ Finset.mem_insert_self _ _) hk
-    · intro i' hi'
-      rw [Function.update_apply]
-      split_ifs with hi'i
-      · rfl
-      · exact hs i' fun h => hi' ((Finset.mem_insert.mp h).resolve_left hi'i)
-    · exact k
-    · exact fun h => hk (Finset.mem_insert_of_mem h)
-    · intro i' j'
-      rw [updateRow_apply, Function.update_apply]
-      split_ifs with hi'i
-      · simp [hi'i]
-      rw [A_eq, updateRow_ne fun h : k = i => hk <| h ▸ Finset.mem_insert_self k s]
+    exact mt (fun h => show k ∈ insert i s from h ▸ Finset.mem_insert_self _ _) hk
+    intro i' hi'
+    rw [Function.update_apply]
+    split_ifs with hi'i
+    rfl
+    exact hs i' fun h => hi' ((Finset.mem_insert.mp h).resolve_left hi'i)
+    exact k
+    exact fun h => hk (Finset.mem_insert_of_mem h)
+    intro i' j'
+    rw [updateRow_apply, Function.update_apply]
+    split_ifs with hi'i
+    simp [hi'i]
+    rw [A_eq, updateRow_ne fun h : k = i => hk <| h ▸ Finset.mem_insert_self k s]
 
 /-- If you add multiples of row `B k` to other rows, the determinant doesn't change. -/
 theorem det_eq_of_forall_row_eq_smul_add_const {A B : Matrix n n R} (c : n → R) (k : n)
@@ -485,33 +485,33 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Fin (n + 1)) :
       (_hsucc : ∀ (i : Fin n) (j), M i.succ j = N i.succ j + c i * M (Fin.castSucc i) j),
       det M = det N := by
   refine Fin.induction ?_ (fun k ih => ?_) k <;> intro c hc M N h0 hsucc
-  · congr
-    ext i j
-    refine Fin.cases (h0 j) (fun i => ?_) i
-    rw [hsucc, hc i (Fin.succ_pos _), zero_mul, add_zero]
+  congr
+  ext i j
+  refine Fin.cases (h0 j) (fun i => ?_) i
+  rw [hsucc, hc i (Fin.succ_pos _), zero_mul, add_zero]
   set M' := updateRow M k.succ (N k.succ) with hM'
   have hM : M = updateRow M' k.succ (M' k.succ + c k • M (Fin.castSucc k))
   ext i j
   by_cases hi : i = k.succ
-  · simp [hi, hM', hsucc, updateRow_self]
+  simp [hi, hM', hsucc, updateRow_self]
   rw [updateRow_ne hi, hM', updateRow_ne hi]
   have k_ne_succ : (Fin.castSucc k) ≠ k.succ := (Fin.castSucc_lt_succ k).ne
   have M_k : M (Fin.castSucc k) = M' (Fin.castSucc k) := (updateRow_ne k_ne_succ).symm
   rw [hM, M_k, det_updateRow_add_smul_self M' k_ne_succ.symm, ih (Function.update c k 0)]
-  · intro i hi
-    rw [Fin.lt_iff_val_lt_val, Fin.coe_castSucc, Fin.val_succ, Nat.lt_succ_iff] at hi
-    rw [Function.update_apply]
-    split_ifs with hik
-    · rfl
-    exact hc _ (Fin.succ_lt_succ_iff.mpr (lt_of_le_of_ne hi (Ne.symm hik)))
-  · rwa [hM', updateRow_ne (Fin.succ_ne_zero _).symm]
+  intro i hi
+  rw [Fin.lt_iff_val_lt_val, Fin.coe_castSucc, Fin.val_succ, Nat.lt_succ_iff] at hi
+  rw [Function.update_apply]
+  split_ifs with hik
+  rfl
+  exact hc _ (Fin.succ_lt_succ_iff.mpr (lt_of_le_of_ne hi (Ne.symm hik)))
+  rwa [hM', updateRow_ne (Fin.succ_ne_zero _).symm]
   intro i j
   rw [Function.update_apply]
   split_ifs with hik
-  · rw [zero_mul, add_zero, hM', hik, updateRow_self]
+  rw [zero_mul, add_zero, hM', hik, updateRow_self]
   rw [hM', updateRow_ne ((Fin.succ_injective _).ne hik), hsucc]
   by_cases hik2 : k < i
-  · simp [hc i (Fin.succ_lt_succ_iff.mpr hik2)]
+  simp [hc i (Fin.succ_lt_succ_iff.mpr hik2)]
   rw [updateRow_ne]
   apply ne_of_lt
   rwa [Fin.lt_iff_val_lt_val, Fin.coe_castSucc, Fin.val_succ, Nat.lt_succ_iff, ← not_lt]
@@ -551,56 +551,56 @@ theorem det_blockDiagonal {o : Type*} [Fintype o] [DecidableEq o] (M : o → Mat
     Finset.mem_filter.trans ⟨fun h => h.2, fun h => ⟨Finset.mem_univ _, h⟩⟩
   rw [← Finset.sum_subset (Finset.subset_univ preserving_snd) _]
   -- And that these are in bijection with `o → Equiv.Perm m`.
-  · refine (Finset.sum_bij (fun σ _ => prodCongrLeft fun k ↦ σ k (mem_univ k)) ?_ ?_ ?_ ?_).symm
-    · intro σ _
-      rw [mem_preserving_snd]
-      rintro ⟨-, x⟩
-      simp only [prodCongrLeft_apply]
-    · intro σ _ σ' _ eq
-      ext x hx k
-      simp only at eq
-      have :
-        ∀ k x,
-          prodCongrLeft (fun k => σ k (Finset.mem_univ _)) (k, x) =
-            prodCongrLeft (fun k => σ' k (Finset.mem_univ _)) (k, x) :=
-        fun k x => by rw [eq]
-      simp only [prodCongrLeft_apply, Prod.mk.inj_iff] at this
-      exact (this k x).1
-    · intro σ hσ
-      rw [mem_preserving_snd] at hσ
-      have hσ' : ∀ x, (σ⁻¹ x).snd = x.snd := by
-        intro x
-        conv_rhs => rw [← Perm.apply_inv_self σ x, hσ]
-      have mk_apply_eq : ∀ k x, ((σ (x, k)).fst, k) = σ (x, k) := by
-        intro k x
-        ext
-        · simp only
-        · simp only [hσ]
-      have mk_inv_apply_eq : ∀ k x, ((σ⁻¹ (x, k)).fst, k) = σ⁻¹ (x, k) := by
-        intro k x
-        conv_lhs => rw [← Perm.apply_inv_self σ (x, k)]
-        ext
-        · simp only [apply_inv_self]
-        · simp only [hσ']
-      refine ⟨fun k _ => ⟨fun x => (σ (x, k)).fst, fun x => (σ⁻¹ (x, k)).fst, ?_, ?_⟩, ?_, ?_⟩
-      · intro x
-        simp only [mk_apply_eq, inv_apply_self]
-      · intro x
-        simp only [mk_inv_apply_eq, apply_inv_self]
-      · apply Finset.mem_univ
-      · ext ⟨k, x⟩
-        · simp only [coe_fn_mk, prodCongrLeft_apply]
-        · simp only [prodCongrLeft_apply, hσ]
-    · intro σ _
-      rw [Finset.prod_mul_distrib, ← Finset.univ_product_univ, Finset.prod_product_right]
-      simp only [sign_prodCongrLeft, Units.coe_prod, Int.cast_prod, blockDiagonal_apply_eq,
-        prodCongrLeft_apply]
-  · intro σ _ hσ
-    rw [mem_preserving_snd] at hσ
-    obtain ⟨⟨k, x⟩, hkx⟩ := not_forall.mp hσ
-    rw [Finset.prod_eq_zero (Finset.mem_univ (k, x)), mul_zero]
-    rw [blockDiagonal_apply_ne]
-    exact hkx
+  refine (Finset.sum_bij (fun σ _ => prodCongrLeft fun k ↦ σ k (mem_univ k)) ?_ ?_ ?_ ?_).symm
+  intro σ _
+  rw [mem_preserving_snd]
+  rintro ⟨-, x⟩
+  simp only [prodCongrLeft_apply]
+  intro σ _ σ' _ eq
+  ext x hx k
+  simp only at eq
+  have :
+    ∀ k x,
+      prodCongrLeft (fun k => σ k (Finset.mem_univ _)) (k, x) =
+        prodCongrLeft (fun k => σ' k (Finset.mem_univ _)) (k, x) :=
+    fun k x => by rw [eq]
+  simp only [prodCongrLeft_apply, Prod.mk.inj_iff] at this
+  exact (this k x).1
+  intro σ hσ
+  rw [mem_preserving_snd] at hσ
+  have hσ' : ∀ x, (σ⁻¹ x).snd = x.snd := by
+    intro x
+    conv_rhs => rw [← Perm.apply_inv_self σ x, hσ]
+  have mk_apply_eq : ∀ k x, ((σ (x, k)).fst, k) = σ (x, k) := by
+    intro k x
+    ext
+    simp only
+    simp only [hσ]
+  have mk_inv_apply_eq : ∀ k x, ((σ⁻¹ (x, k)).fst, k) = σ⁻¹ (x, k) := by
+    intro k x
+    conv_lhs => rw [← Perm.apply_inv_self σ (x, k)]
+    ext
+    simp only [apply_inv_self]
+    simp only [hσ']
+  refine ⟨fun k _ => ⟨fun x => (σ (x, k)).fst, fun x => (σ⁻¹ (x, k)).fst, ?_, ?_⟩, ?_, ?_⟩
+  intro x
+  simp only [mk_apply_eq, inv_apply_self]
+  intro x
+  simp only [mk_inv_apply_eq, apply_inv_self]
+  apply Finset.mem_univ
+  ext ⟨k, x⟩
+  simp only [coe_fn_mk, prodCongrLeft_apply]
+  simp only [prodCongrLeft_apply, hσ]
+  intro σ _
+  rw [Finset.prod_mul_distrib, ← Finset.univ_product_univ, Finset.prod_product_right]
+  simp only [sign_prodCongrLeft, Units.coe_prod, Int.cast_prod, blockDiagonal_apply_eq,
+    prodCongrLeft_apply]
+  intro σ _ hσ
+  rw [mem_preserving_snd] at hσ
+  obtain ⟨⟨k, x⟩, hkx⟩ := not_forall.mp hσ
+  rw [Finset.prod_eq_zero (Finset.mem_univ (k, x)), mul_zero]
+  rw [blockDiagonal_apply_ne]
+  exact hkx
 
 open Classical in
 /-- The determinant of a 2×2 block matrix with the lower-left block equal to zero is the product of
@@ -612,49 +612,49 @@ theorem det_fromBlocks_zero₂₁ (A : Matrix m m R) (B : Matrix m n R) (D : Mat
     simp_rw [det_apply']
     convert Eq.symm <|
       sum_subset (β := R) (subset_univ ((sumCongrHom m n).range : Set (Perm (m ⊕ n))).toFinset) ?_
-    · simp_rw [sum_mul_sum, ← sum_product', univ_product_univ]
-      refine sum_nbij (fun σ ↦ σ.fst.sumCongr σ.snd) ?_ ?_ ?_ ?_
-      · intro σ₁₂ _
-        simp only
-        erw [Set.mem_toFinset, MonoidHom.mem_range]
-        use σ₁₂
-        simp only [sumCongrHom_apply]
-      · intro σ₁ _ σ₂ _
-        dsimp only
-        intro h
-        have h2 : ∀ x, Perm.sumCongr σ₁.fst σ₁.snd x = Perm.sumCongr σ₂.fst σ₂.snd x :=
-          DFunLike.congr_fun h
-        simp only [Sum.map_inr, Sum.map_inl, Perm.sumCongr_apply, Sum.forall, Sum.inl.injEq,
-          Sum.inr.injEq] at h2
-        ext x
-        · exact h2.left x
-        · exact h2.right x
-      · intro σ hσ
-        erw [Set.mem_toFinset, MonoidHom.mem_range] at hσ
-        obtain ⟨σ₁₂, hσ₁₂⟩ := hσ
-        use σ₁₂
-        rw [← hσ₁₂]
-        simp
-      · simp only [forall_prop_of_true, Prod.forall, mem_univ]
-        intro σ₁ σ₂
-        rw [Fintype.prod_sum_type]
-        simp_rw [Equiv.sumCongr_apply, Sum.map_inr, Sum.map_inl, fromBlocks_apply₁₁,
-          fromBlocks_apply₂₂]
-        rw [mul_mul_mul_comm]
-        congr
-        rw [sign_sumCongr, Units.val_mul, Int.cast_mul]
-    · rintro σ - hσn
-      have h1 : ¬∀ x, ∃ y, Sum.inl y = σ (Sum.inl x) := by
-        rw [Set.mem_toFinset] at hσn
-        -- Porting note: golfed
-        simpa only [Set.MapsTo, Set.mem_range, forall_exists_index, forall_apply_eq_imp_iff] using
-          mt mem_sumCongrHom_range_of_perm_mapsTo_inl hσn
-      obtain ⟨a, ha⟩ := not_forall.mp h1
-      cases' hx : σ (Sum.inl a) with a2 b
-      · have hn := (not_exists.mp ha) a2
-        exact absurd hx.symm hn
-      · rw [Finset.prod_eq_zero (Finset.mem_univ (Sum.inl a)), mul_zero]
-        rw [hx, fromBlocks_apply₂₁, zero_apply]
+    simp_rw [sum_mul_sum, ← sum_product', univ_product_univ]
+    refine sum_nbij (fun σ ↦ σ.fst.sumCongr σ.snd) ?_ ?_ ?_ ?_
+    intro σ₁₂ _
+    simp only
+    erw [Set.mem_toFinset, MonoidHom.mem_range]
+    use σ₁₂
+    simp only [sumCongrHom_apply]
+    intro σ₁ _ σ₂ _
+    dsimp only
+    intro h
+    have h2 : ∀ x, Perm.sumCongr σ₁.fst σ₁.snd x = Perm.sumCongr σ₂.fst σ₂.snd x :=
+      DFunLike.congr_fun h
+    simp only [Sum.map_inr, Sum.map_inl, Perm.sumCongr_apply, Sum.forall, Sum.inl.injEq,
+      Sum.inr.injEq] at h2
+    ext x
+    exact h2.left x
+    exact h2.right x
+    intro σ hσ
+    erw [Set.mem_toFinset, MonoidHom.mem_range] at hσ
+    obtain ⟨σ₁₂, hσ₁₂⟩ := hσ
+    use σ₁₂
+    rw [← hσ₁₂]
+    simp
+    simp only [forall_prop_of_true, Prod.forall, mem_univ]
+    intro σ₁ σ₂
+    rw [Fintype.prod_sum_type]
+    simp_rw [Equiv.sumCongr_apply, Sum.map_inr, Sum.map_inl, fromBlocks_apply₁₁,
+      fromBlocks_apply₂₂]
+    rw [mul_mul_mul_comm]
+    congr
+    rw [sign_sumCongr, Units.val_mul, Int.cast_mul]
+    rintro σ - hσn
+    have h1 : ¬∀ x, ∃ y, Sum.inl y = σ (Sum.inl x) := by
+      rw [Set.mem_toFinset] at hσn
+      -- Porting note: golfed
+      simpa only [Set.MapsTo, Set.mem_range, forall_exists_index, forall_apply_eq_imp_iff] using
+        mt mem_sumCongrHom_range_of_perm_mapsTo_inl hσn
+    obtain ⟨a, ha⟩ := not_forall.mp h1
+    cases' hx : σ (Sum.inl a) with a2 b
+    have hn := (not_exists.mp ha) a2
+    exact absurd hx.symm hn
+    rw [Finset.prod_eq_zero (Finset.mem_univ (Sum.inl a)), mul_zero]
+    rw [hx, fromBlocks_apply₂₁, zero_apply]
 
 /-- The determinant of a 2×2 block matrix with the upper-right block equal to zero is the product of
 the determinants of the diagonal blocks. For the generalization to any number of blocks, see
@@ -671,11 +671,11 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) 
   rw [Matrix.det_apply, Finset.univ_perm_fin_succ, ← Finset.univ_product_univ]
   simp only [Finset.sum_map, Equiv.toEmbedding_apply, Finset.sum_product, Matrix.submatrix]
   refine Finset.sum_congr rfl fun i _ => Fin.cases ?_ (fun i => ?_) i
-  · simp only [Fin.prod_univ_succ, Matrix.det_apply, Finset.mul_sum,
-      Equiv.Perm.decomposeFin_symm_apply_zero, Fin.val_zero, one_mul,
-      Equiv.Perm.decomposeFin.symm_sign, Equiv.swap_self, if_true, id, eq_self_iff_true,
-      Equiv.Perm.decomposeFin_symm_apply_succ, Fin.succAbove_zero, Equiv.coe_refl, pow_zero,
-      mul_smul_comm, of_apply]
+  simp only [Fin.prod_univ_succ, Matrix.det_apply, Finset.mul_sum,
+    Equiv.Perm.decomposeFin_symm_apply_zero, Fin.val_zero, one_mul,
+    Equiv.Perm.decomposeFin.symm_sign, Equiv.swap_self, if_true, id, eq_self_iff_true,
+    Equiv.Perm.decomposeFin_symm_apply_succ, Fin.succAbove_zero, Equiv.coe_refl, pow_zero,
+    mul_smul_comm, of_apply]
   -- `univ_perm_fin_succ` gives a different embedding of `Perm (Fin n)` into
   -- `Perm (Fin n.succ)` than the determinant of the submatrix we want,
   -- permute `A` so that we get the correct one.
@@ -720,10 +720,10 @@ theorem det_succ_row {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) (i : Fin
   refine Finset.sum_congr rfl fun j _ => ?_
   rw [mul_assoc, Matrix.submatrix_apply, submatrix_submatrix, id_comp, Function.comp_def, id]
   congr
-  · rw [Equiv.Perm.inv_def, Fin.cycleRange_symm_zero]
-  · ext i' j'
-    rw [Equiv.Perm.inv_def, Matrix.submatrix_apply, Matrix.submatrix_apply,
-      Fin.cycleRange_symm_succ]
+  rw [Equiv.Perm.inv_def, Fin.cycleRange_symm_zero]
+  ext i' j'
+  rw [Equiv.Perm.inv_def, Matrix.submatrix_apply, Matrix.submatrix_apply,
+    Fin.cycleRange_symm_succ]
 
 /-- Laplacian expansion of the determinant of an `n+1 × n+1` matrix along column `j`. -/
 theorem det_succ_column {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) (j : Fin n.succ) :

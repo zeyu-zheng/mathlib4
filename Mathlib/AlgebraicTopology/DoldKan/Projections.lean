@@ -57,9 +57,9 @@ lemma P_succ (q : ℕ) : (P (q+1) : K[X] ⟶ K[X]) = P q ≫ (𝟙 _ + Hσ q) :=
 @[simp]
 theorem P_f_0_eq (q : ℕ) : ((P q).f 0 : X _[0] ⟶ X _[0]) = 𝟙 _ := by
   induction' q with q hq
-  · rfl
-  · simp only [P_succ, HomologicalComplex.add_f_apply, HomologicalComplex.comp_f,
-      HomologicalComplex.id_f, id_comp, hq, Hσ_eq_zero, add_zero]
+  rfl
+  simp only [P_succ, HomologicalComplex.add_f_apply, HomologicalComplex.comp_f,
+    HomologicalComplex.id_f, id_comp, hq, Hσ_eq_zero, add_zero]
 
 /-- `Q q` is the complement projection associated to `P q` -/
 def Q (q : ℕ) : K[X] ⟶ K[X] :=
@@ -99,38 +99,38 @@ theorem of_P : ∀ q n : ℕ, HigherFacesVanish q ((P q).f (n + 1) : X _[n + 1] 
 theorem comp_P_eq_self {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFacesVanish q φ) :
     φ ≫ (P q).f (n + 1) = φ := by
   induction' q with q hq
-  · simp only [P_zero]
-    apply comp_id
-  · simp only [P_succ, comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply,
-      comp_id, ← assoc, hq v.of_succ, add_right_eq_self]
-    by_cases hqn : n < q
-    · exact v.of_succ.comp_Hσ_eq_zero hqn
-    · obtain ⟨a, ha⟩ := Nat.le.dest (not_lt.mp hqn)
-      have hnaq : n = a + q
-      omega
-      simp only [v.of_succ.comp_Hσ_eq hnaq, neg_eq_zero, ← assoc]
-      have eq := v ⟨a, by omega⟩ (by
-        simp only [hnaq, Nat.succ_eq_add_one, add_assoc]
-        rfl)
-      simp only [Fin.succ_mk] at eq
-      simp only [eq, zero_comp]
+  simp only [P_zero]
+  apply comp_id
+  simp only [P_succ, comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply,
+    comp_id, ← assoc, hq v.of_succ, add_right_eq_self]
+  by_cases hqn : n < q
+  exact v.of_succ.comp_Hσ_eq_zero hqn
+  obtain ⟨a, ha⟩ := Nat.le.dest (not_lt.mp hqn)
+  have hnaq : n = a + q
+  omega
+  simp only [v.of_succ.comp_Hσ_eq hnaq, neg_eq_zero, ← assoc]
+  have eq := v ⟨a, by omega⟩ (by
+    simp only [hnaq, Nat.succ_eq_add_one, add_assoc]
+    rfl)
+  simp only [Fin.succ_mk] at eq
+  simp only [eq, zero_comp]
 
 end HigherFacesVanish
 
 theorem comp_P_eq_self_iff {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} :
     φ ≫ (P q).f (n + 1) = φ ↔ HigherFacesVanish q φ := by
   constructor
-  · intro hφ
-    rw [← hφ]
-    apply HigherFacesVanish.of_comp
-    apply HigherFacesVanish.of_P
-  · exact HigherFacesVanish.comp_P_eq_self
+  intro hφ
+  rw [← hφ]
+  apply HigherFacesVanish.of_comp
+  apply HigherFacesVanish.of_P
+  exact HigherFacesVanish.comp_P_eq_self
 
 @[reassoc (attr := simp)]
 theorem P_f_idem (q n : ℕ) : ((P q).f n : X _[n] ⟶ _) ≫ (P q).f n = (P q).f n := by
   rcases n with (_|n)
-  · rw [P_f_0_eq q, comp_id]
-  · exact (HigherFacesVanish.of_P q n).comp_P_eq_self
+  rw [P_f_0_eq q, comp_id]
+  exact (HigherFacesVanish.of_P q n).comp_P_eq_self
 
 @[reassoc (attr := simp)]
 theorem Q_f_idem (q n : ℕ) : ((Q q).f n : X _[n] ⟶ _) ≫ (Q q).f n = (Q q).f n :=
@@ -180,10 +180,10 @@ theorem map_P {D : Type*} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive
     (X : SimplicialObject C) (q n : ℕ) :
     G.map ((P q : K[X] ⟶ _).f n) = (P q : K[((whiskering C D).obj G).obj X] ⟶ _).f n := by
   induction' q with q hq
-  · simp only [P_zero]
-    apply G.map_id
-  · simp only [P_succ, comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply,
-      comp_id, Functor.map_add, Functor.map_comp, hq, map_Hσ]
+  simp only [P_zero]
+  apply G.map_id
+  simp only [P_succ, comp_add, HomologicalComplex.comp_f, HomologicalComplex.add_f_apply,
+    comp_id, Functor.map_add, Functor.map_comp, hq, map_Hσ]
 
 theorem map_Q {D : Type*} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive]
     (X : SimplicialObject C) (q n : ℕ) :

@@ -312,24 +312,24 @@ theorem ae_eq_of_subset_of_measure_ge (h₁ : s ⊆ t) (h₂ : μ t ≤ μ s) (h
 theorem measure_iUnion_congr_of_subset [Countable β] {s : β → Set α} {t : β → Set α}
     (hsub : ∀ b, s b ⊆ t b) (h_le : ∀ b, μ (t b) ≤ μ (s b)) : μ (⋃ b, s b) = μ (⋃ b, t b) := by
   rcases Classical.em (∃ b, μ (t b) = ∞) with (⟨b, hb⟩ | htop)
-  · calc
-      μ (⋃ b, s b) = ∞ := top_unique (hb ▸ (h_le b).trans <| measure_mono <| subset_iUnion _ _)
-      _ = μ (⋃ b, t b) := Eq.symm <| top_unique <| hb ▸ measure_mono (subset_iUnion _ _)
+  calc
+    μ (⋃ b, s b) = ∞ := top_unique (hb ▸ (h_le b).trans <| measure_mono <| subset_iUnion _ _)
+    _ = μ (⋃ b, t b) := Eq.symm <| top_unique <| hb ▸ measure_mono (subset_iUnion _ _)
   push_neg at htop
   refine le_antisymm (measure_mono (iUnion_mono hsub)) ?_
   set M := toMeasurable μ
   have H : ∀ b, (M (t b) ∩ M (⋃ b, s b) : Set α) =ᵐ[μ] M (t b)
   refine fun b => ae_eq_of_subset_of_measure_ge inter_subset_left ?_ ?_ ?_
-  · calc
-      μ (M (t b)) = μ (t b) := measure_toMeasurable _
-      _ ≤ μ (s b) := h_le b
-      _ ≤ μ (M (t b) ∩ M (⋃ b, s b)) :=
-        measure_mono <|
-          subset_inter ((hsub b).trans <| subset_toMeasurable _ _)
-            ((subset_iUnion _ _).trans <| subset_toMeasurable _ _)
-  · exact (measurableSet_toMeasurable _ _).inter (measurableSet_toMeasurable _ _)
-  · rw [measure_toMeasurable]
-    exact htop b
+  calc
+    μ (M (t b)) = μ (t b) := measure_toMeasurable _
+    _ ≤ μ (s b) := h_le b
+    _ ≤ μ (M (t b) ∩ M (⋃ b, s b)) :=
+      measure_mono <|
+        subset_inter ((hsub b).trans <| subset_toMeasurable _ _)
+          ((subset_iUnion _ _).trans <| subset_toMeasurable _ _)
+  exact (measurableSet_toMeasurable _ _).inter (measurableSet_toMeasurable _ _)
+  rw [measure_toMeasurable]
+  exact htop b
   calc
     μ (⋃ b, t b) ≤ μ (⋃ b, M (t b)) := measure_mono (iUnion_mono fun b => subset_toMeasurable _ _)
     _ = μ (⋃ b, M (t b) ∩ M (⋃ b, s b)) := measure_congr (EventuallyEq.countable_iUnion H).symm
@@ -482,17 +482,17 @@ theorem measure_iInter_eq_iInf [Countable ι] {s : ι → Set α} (h : ∀ i, Me
     ENNReal.sub_sub_cancel hk (measure_mono (iInter_subset _ k)), ←
     measure_diff (iInter_subset _ k) (MeasurableSet.iInter h) (this _ (iInter_subset _ k)),
     diff_iInter, measure_iUnion_eq_iSup]
-  · congr 1
-    refine le_antisymm (iSup_mono' fun i => ?_) (iSup_mono fun i => ?_)
-    · rcases hd i k with ⟨j, hji, hjk⟩
-      use j
-      rw [← measure_diff hjk (h _) (this _ hjk)]
-      gcongr
-    · rw [tsub_le_iff_right, ← measure_union, Set.union_comm]
-      · exact measure_mono (diff_subset_iff.1 Subset.rfl)
-      · apply disjoint_sdiff_left
-      · apply h i
-  · exact hd.mono_comp _ fun _ _ => diff_subset_diff_right
+  congr 1
+  refine le_antisymm (iSup_mono' fun i => ?_) (iSup_mono fun i => ?_)
+  rcases hd i k with ⟨j, hji, hjk⟩
+  use j
+  rw [← measure_diff hjk (h _) (this _ hjk)]
+  gcongr
+  rw [tsub_le_iff_right, ← measure_union, Set.union_comm]
+  exact measure_mono (diff_subset_iff.1 Subset.rfl)
+  apply disjoint_sdiff_left
+  apply h i
+  exact hd.mono_comp _ fun _ _ => diff_subset_diff_right
 
 /-- Continuity from above: the measure of the intersection of a sequence of
 measurable sets is the infimum of the measures of the partial intersections. -/
@@ -503,10 +503,10 @@ theorem measure_iInter_eq_iInf' {α ι : Type*} [MeasurableSpace α] {μ : Measu
   let s := fun i ↦ ⋂ j ≤ i, f j
   have iInter_eq : ⋂ i, f i = ⋂ i, s i
   ext x; simp [s]; constructor
-  · exact fun h _ j _ ↦ h j
-  · intro h i
-    rcases directed_of (· ≤ ·) i i with ⟨j, rij, -⟩
-    exact h j i rij
+  exact fun h _ j _ ↦ h j
+  intro h i
+  rcases directed_of (· ≤ ·) i i with ⟨j, rij, -⟩
+  exact h j i rij
   have ms : ∀ i, MeasurableSet (s i) :=
     fun i ↦ MeasurableSet.biInter (countable_univ.mono <| subset_univ _) fun i _ ↦ h i
   have hd : Directed (· ⊇ ·) s := by
@@ -560,8 +560,8 @@ theorem tendsto_measure_biInter_gt {ι : Type*} [LinearOrder ι] [TopologicalSpa
     {a : ι} (hs : ∀ r > a, MeasurableSet (s r)) (hm : ∀ i j, a < i → i ≤ j → s i ⊆ s j)
     (hf : ∃ r > a, μ (s r) ≠ ∞) : Tendsto (μ ∘ s) (𝓝[Ioi a] a) (𝓝 (μ (⋂ r > a, s r))) := by
   refine tendsto_order.2 ⟨fun l hl => ?_, fun L hL => ?_⟩
-  · filter_upwards [self_mem_nhdsWithin (s := Ioi a)] with r hr using hl.trans_le
-        (measure_mono (biInter_subset_of_mem hr))
+  filter_upwards [self_mem_nhdsWithin (s := Ioi a)] with r hr using hl.trans_le
+      (measure_mono (biInter_subset_of_mem hr))
   obtain ⟨u, u_anti, u_pos, u_lim⟩ :
     ∃ u : ℕ → ι, StrictAnti u ∧ (∀ n : ℕ, a < u n) ∧ Tendsto u atTop (𝓝 a) := by
     rcases hf with ⟨r, ar, _⟩
@@ -569,22 +569,22 @@ theorem tendsto_measure_biInter_gt {ι : Type*} [LinearOrder ι] [TopologicalSpa
     exact ⟨w, w_anti, fun n => (w_mem n).1, w_lim⟩
   have A : Tendsto (μ ∘ s ∘ u) atTop (𝓝 (μ (⋂ n, s (u n))))
   refine tendsto_measure_iInter (fun n => hs _ (u_pos n)) ?_ ?_
-  · intro m n hmn
-    exact hm _ _ (u_pos n) (u_anti.antitone hmn)
-  · rcases hf with ⟨r, rpos, hr⟩
-    obtain ⟨n, hn⟩ : ∃ n : ℕ, u n < r := ((tendsto_order.1 u_lim).2 r rpos).exists
-    refine ⟨n, ne_of_lt (lt_of_le_of_lt ?_ hr.lt_top)⟩
-    exact measure_mono (hm _ _ (u_pos n) hn.le)
+  intro m n hmn
+  exact hm _ _ (u_pos n) (u_anti.antitone hmn)
+  rcases hf with ⟨r, rpos, hr⟩
+  obtain ⟨n, hn⟩ : ∃ n : ℕ, u n < r := ((tendsto_order.1 u_lim).2 r rpos).exists
+  refine ⟨n, ne_of_lt (lt_of_le_of_lt ?_ hr.lt_top)⟩
+  exact measure_mono (hm _ _ (u_pos n) hn.le)
   have B : ⋂ n, s (u n) = ⋂ r > a, s r
   apply Subset.antisymm
-  · simp only [subset_iInter_iff, gt_iff_lt]
-    intro r rpos
-    obtain ⟨n, hn⟩ : ∃ n, u n < r := ((tendsto_order.1 u_lim).2 _ rpos).exists
-    exact Subset.trans (iInter_subset _ n) (hm (u n) r (u_pos n) hn.le)
-  · simp only [subset_iInter_iff, gt_iff_lt]
-    intro n
-    apply biInter_subset_of_mem
-    exact u_pos n
+  simp only [subset_iInter_iff, gt_iff_lt]
+  intro r rpos
+  obtain ⟨n, hn⟩ : ∃ n, u n < r := ((tendsto_order.1 u_lim).2 _ rpos).exists
+  exact Subset.trans (iInter_subset _ n) (hm (u n) r (u_pos n) hn.le)
+  simp only [subset_iInter_iff, gt_iff_lt]
+  intro n
+  apply biInter_subset_of_mem
+  exact u_pos n
   rw [B] at A
   obtain ⟨n, hn⟩ : ∃ n, μ (s (u n)) < L := ((tendsto_order.1 A).2 _ hL).exists
   have : Ioc a (u n) ∈ 𝓝[>] a := Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, u_pos n⟩
@@ -632,24 +632,24 @@ theorem limsup_ae_eq_of_forall_ae_eq (s : ℕ → Set α) {t : Set α}
     (h : ∀ n, s n =ᵐ[μ] t) : limsup (α := Set α) s atTop =ᵐ[μ] t := by
   simp_rw [ae_eq_set] at h ⊢
   constructor
-  · rw [atTop.limsup_sdiff s t]
-    apply measure_limsup_eq_zero
-    simp [h]
-  · rw [atTop.sdiff_limsup s t]
-    apply measure_liminf_eq_zero
-    simp [h]
+  rw [atTop.limsup_sdiff s t]
+  apply measure_limsup_eq_zero
+  simp [h]
+  rw [atTop.sdiff_limsup s t]
+  apply measure_liminf_eq_zero
+  simp [h]
 
 -- Need to specify `α := Set α` above because of diamond; see #19041
 theorem liminf_ae_eq_of_forall_ae_eq (s : ℕ → Set α) {t : Set α}
     (h : ∀ n, s n =ᵐ[μ] t) : liminf (α := Set α) s atTop =ᵐ[μ] t := by
   simp_rw [ae_eq_set] at h ⊢
   constructor
-  · rw [atTop.liminf_sdiff s t]
-    apply measure_liminf_eq_zero
-    simp [h]
-  · rw [atTop.sdiff_liminf s t]
-    apply measure_limsup_eq_zero
-    simp [h]
+  rw [atTop.liminf_sdiff s t]
+  apply measure_liminf_eq_zero
+  simp [h]
+  rw [atTop.sdiff_liminf s t]
+  apply measure_limsup_eq_zero
+  simp [h]
 
 theorem measure_if {x : β} {t : Set β} {s : Set α} :
     μ (if x ∈ t then s else ∅) = indicator t (fun _ => μ s) x := by split_ifs with h <;> simp [h]
@@ -900,12 +900,12 @@ theorem measure_eq_right_of_subset_of_measure_add_eq {s t : Set α} (h : (μ + �
 theorem measure_toMeasurable_add_inter_left {s t : Set α} (hs : MeasurableSet s)
     (ht : (μ + ν) t ≠ ∞) : μ (toMeasurable (μ + ν) t ∩ s) = μ (t ∩ s) := by
   refine (measure_inter_eq_of_measure_eq hs ?_ (subset_toMeasurable _ _) ?_).symm
-  · refine
-      measure_eq_left_of_subset_of_measure_add_eq ?_ (subset_toMeasurable _ _)
-        (measure_toMeasurable t).symm
-    rwa [measure_toMeasurable t]
-  · simp only [not_or, ENNReal.add_eq_top, Pi.add_apply, Ne, coe_add] at ht
-    exact ht.1
+  refine
+    measure_eq_left_of_subset_of_measure_add_eq ?_ (subset_toMeasurable _ _)
+      (measure_toMeasurable t).symm
+  rwa [measure_toMeasurable t]
+  simp only [not_or, ENNReal.add_eq_top, Pi.add_apply, Ne, coe_add] at ht
+  exact ht.1
 
 theorem measure_toMeasurable_add_inter_right {s t : Set α} (hs : MeasurableSet s)
     (ht : (μ + ν) t ≠ ∞) : ν (toMeasurable (μ + ν) t ∩ s) = ν (t ∩ s) := by
@@ -1114,29 +1114,29 @@ theorem map_of_not_aemeasurable {f : α → β} {μ : Measure α} (hf : ¬AEMeas
 
 theorem map_congr {f g : α → β} (h : f =ᵐ[μ] g) : Measure.map f μ = Measure.map g μ := by
   by_cases hf : AEMeasurable f μ
-  · have hg : AEMeasurable g μ := hf.congr h
-    simp only [← mapₗ_mk_apply_of_aemeasurable hf, ← mapₗ_mk_apply_of_aemeasurable hg]
-    exact
-      mapₗ_congr hf.measurable_mk hg.measurable_mk (hf.ae_eq_mk.symm.trans (h.trans hg.ae_eq_mk))
-  · have hg : ¬AEMeasurable g μ := by simpa [← aemeasurable_congr h] using hf
-    simp [map_of_not_aemeasurable, hf, hg]
+  have hg : AEMeasurable g μ := hf.congr h
+  simp only [← mapₗ_mk_apply_of_aemeasurable hf, ← mapₗ_mk_apply_of_aemeasurable hg]
+  exact
+    mapₗ_congr hf.measurable_mk hg.measurable_mk (hf.ae_eq_mk.symm.trans (h.trans hg.ae_eq_mk))
+  have hg : ¬AEMeasurable g μ := by simpa [← aemeasurable_congr h] using hf
+  simp [map_of_not_aemeasurable, hf, hg]
 
 @[simp]
 protected theorem map_smul (c : ℝ≥0∞) (μ : Measure α) (f : α → β) :
     (c • μ).map f = c • μ.map f := by
   rcases eq_or_ne c 0 with (rfl | hc); · simp
   by_cases hf : AEMeasurable f μ
-  · have hfc : AEMeasurable f (c • μ) :=
-      ⟨hf.mk f, hf.measurable_mk, (ae_smul_measure_iff hc).2 hf.ae_eq_mk⟩
-    simp only [← mapₗ_mk_apply_of_aemeasurable hf, ← mapₗ_mk_apply_of_aemeasurable hfc,
-      LinearMap.map_smulₛₗ, RingHom.id_apply]
-    congr 1
-    apply mapₗ_congr hfc.measurable_mk hf.measurable_mk
-    exact EventuallyEq.trans ((ae_smul_measure_iff hc).1 hfc.ae_eq_mk.symm) hf.ae_eq_mk
-  · have hfc : ¬AEMeasurable f (c • μ) := by
-      intro hfc
-      exact hf ⟨hfc.mk f, hfc.measurable_mk, (ae_smul_measure_iff hc).1 hfc.ae_eq_mk⟩
-    simp [map_of_not_aemeasurable hf, map_of_not_aemeasurable hfc]
+  have hfc : AEMeasurable f (c • μ) :=
+    ⟨hf.mk f, hf.measurable_mk, (ae_smul_measure_iff hc).2 hf.ae_eq_mk⟩
+  simp only [← mapₗ_mk_apply_of_aemeasurable hf, ← mapₗ_mk_apply_of_aemeasurable hfc,
+    LinearMap.map_smulₛₗ, RingHom.id_apply]
+  congr 1
+  apply mapₗ_congr hfc.measurable_mk hf.measurable_mk
+  exact EventuallyEq.trans ((ae_smul_measure_iff hc).1 hfc.ae_eq_mk.symm) hf.ae_eq_mk
+  have hfc : ¬AEMeasurable f (c • μ) := by
+    intro hfc
+    exact hf ⟨hfc.mk f, hfc.measurable_mk, (ae_smul_measure_iff hc).1 hfc.ae_eq_mk⟩
+  simp [map_of_not_aemeasurable hf, map_of_not_aemeasurable hfc]
 
 @[simp]
 protected theorem map_smul_nnreal (c : ℝ≥0) (μ : Measure α) (f : α → β) :
@@ -1310,7 +1310,7 @@ theorem NullMeasurableSet.image {β} [MeasurableSpace α] {mβ : MeasurableSpace
   refine ⟨toMeasurable μ (f '' toMeasurable (μ.comap f) s), measurableSet_toMeasurable _ _, ?_⟩
   refine EventuallyEq.trans ?_ (NullMeasurableSet.toMeasurable_ae_eq ?_).symm
   swap
-  · exact hf _ (measurableSet_toMeasurable _ _)
+  exact hf _ (measurableSet_toMeasurable _ _)
   have h : toMeasurable (comap f μ) s =ᵐ[comap f μ] s :=
     NullMeasurableSet.toMeasurable_ae_eq hs
   exact ae_eq_image_of_ae_eq_comap f μ hfi hf h.symm
@@ -1505,11 +1505,11 @@ protected lemma add (h1 : μ₁ ≪ ν) (h2 : μ₂ ≪ ν') : μ₁ + μ₂ ≪
 lemma add_left_iff {μ₁ μ₂ ν : Measure α} :
     μ₁ + μ₂ ≪ ν ↔ μ₁ ≪ ν ∧ μ₂ ≪ ν := by
   refine ⟨fun h ↦ ?_, fun h ↦ (h.1.add h.2).trans ?_⟩
-  · have : ∀ s, ν s = 0 → μ₁ s = 0 ∧ μ₂ s = 0 := by intro s hs0; simpa using h hs0
-    exact ⟨fun s hs0 ↦ (this s hs0).1, fun s hs0 ↦ (this s hs0).2⟩
-  · have : ν + ν = 2 • ν := by ext; simp [two_mul]
-    rw [this]
-    exact AbsolutelyContinuous.rfl.smul 2
+  have : ∀ s, ν s = 0 → μ₁ s = 0 ∧ μ₂ s = 0 := by intro s hs0; simpa using h hs0
+  exact ⟨fun s hs0 ↦ (this s hs0).1, fun s hs0 ↦ (this s hs0).2⟩
+  have : ν + ν = 2 • ν := by ext; simp [two_mul]
+  rw [this]
+  exact AbsolutelyContinuous.rfl.smul 2
 
 lemma add_left {μ₁ μ₂ ν : Measure α} (h₁ : μ₁ ≪ ν) (h₂ : μ₂ ≪ ν) : μ₁ + μ₂ ≪ ν :=
   Measure.AbsolutelyContinuous.add_left_iff.mpr ⟨h₁, h₂⟩
@@ -1657,15 +1657,15 @@ theorem image_zpow_ae_eq {s : Set α} {e : α ≃ α} (he : QuasiMeasurePreservi
     (⇑(e ^ k)) '' s =ᵐ[μ] s := by
   rw [Equiv.image_eq_preimage]
   obtain ⟨k, rfl | rfl⟩ := k.eq_nat_or_neg
-  · replace hs : (⇑e⁻¹) ⁻¹' s =ᵐ[μ] s := by rwa [Equiv.image_eq_preimage] at hs
-    replace he' : (⇑e⁻¹)^[k] ⁻¹' s =ᵐ[μ] s := he'.preimage_iterate_ae_eq k hs
-    rwa [Equiv.Perm.iterate_eq_pow e⁻¹ k, inv_pow e k] at he'
-  · rw [zpow_neg, zpow_natCast]
-    replace hs : e ⁻¹' s =ᵐ[μ] s := by
-      convert he.preimage_ae_eq hs.symm
-      rw [Equiv.preimage_image]
-    replace he : (⇑e)^[k] ⁻¹' s =ᵐ[μ] s := he.preimage_iterate_ae_eq k hs
-    rwa [Equiv.Perm.iterate_eq_pow e k] at he
+  replace hs : (⇑e⁻¹) ⁻¹' s =ᵐ[μ] s := by rwa [Equiv.image_eq_preimage] at hs
+  replace he' : (⇑e⁻¹)^[k] ⁻¹' s =ᵐ[μ] s := he'.preimage_iterate_ae_eq k hs
+  rwa [Equiv.Perm.iterate_eq_pow e⁻¹ k, inv_pow e k] at he'
+  rw [zpow_neg, zpow_natCast]
+  replace hs : e ⁻¹' s =ᵐ[μ] s := by
+    convert he.preimage_ae_eq hs.symm
+    rw [Equiv.preimage_image]
+  replace he : (⇑e)^[k] ⁻¹' s =ᵐ[μ] s := he.preimage_iterate_ae_eq k hs
+  rwa [Equiv.Perm.iterate_eq_pow e k] at he
 
 -- Need to specify `α := Set α` below because of diamond; see #19041
 theorem limsup_preimage_iterate_ae_eq {f : α → α} (hf : QuasiMeasurePreserving f μ μ)
@@ -1673,7 +1673,7 @@ theorem limsup_preimage_iterate_ae_eq {f : α → α} (hf : QuasiMeasurePreservi
   haveI : ∀ n, (preimage f)^[n] s =ᵐ[μ] s := by
     intro n
     induction' n with n ih
-    · rfl
+    rfl
     simpa only [iterate_succ', comp_apply] using ae_eq_trans (hf.ae_eq ih) hs
   (limsup_ae_eq_of_forall_ae_eq (fun n => (preimage f)^[n] s) this).trans (ae_eq_refl _)
 
@@ -1751,9 +1751,9 @@ theorem eventually_cofinite {p : α → Prop} : (∀ᶠ x in μ.cofinite, p x) �
 instance cofinite.instIsMeasurablyGenerated : IsMeasurablyGenerated μ.cofinite where
   exists_measurable_subset s hs := by
     refine ⟨(toMeasurable μ sᶜ)ᶜ, ?_, (measurableSet_toMeasurable _ _).compl, ?_⟩
-    · rwa [compl_mem_cofinite, measure_toMeasurable]
-    · rw [compl_subset_comm]
-      apply subset_toMeasurable
+    rwa [compl_mem_cofinite, measure_toMeasurable]
+    rw [compl_subset_comm]
+    apply subset_toMeasurable
 
 end Measure
 
@@ -1825,10 +1825,10 @@ theorem ae_of_ae_map {f : α → β} (hf : AEMeasurable f μ) {p : β → Prop} 
 theorem ae_map_mem_range {m0 : MeasurableSpace α} (f : α → β) (hf : MeasurableSet (range f))
     (μ : Measure α) : ∀ᵐ x ∂μ.map f, x ∈ range f := by
   by_cases h : AEMeasurable f μ
-  · change range f ∈ ae (μ.map f)
-    rw [mem_ae_map_iff h hf]
-    filter_upwards using mem_range_self
-  · simp [map_of_not_aemeasurable h]
+  change range f ∈ ae (μ.map f)
+  rw [mem_ae_map_iff h hf]
+  filter_upwards using mem_range_self
+  simp [map_of_not_aemeasurable h]
 
 
 section Intervals
@@ -1837,10 +1837,10 @@ theorem biSup_measure_Iic [Preorder α] {s : Set α} (hsc : s.Countable)
     (hst : ∀ x : α, ∃ y ∈ s, x ≤ y) (hdir : DirectedOn (· ≤ ·) s) :
     ⨆ x ∈ s, μ (Iic x) = μ univ := by
   rw [← measure_biUnion_eq_iSup hsc]
-  · congr
-    simp only [← bex_def] at hst
-    exact iUnion₂_eq_univ_iff.2 hst
-  · exact directedOn_iff_directed.2 (hdir.directed_val.mono_comp _ fun x y => Iic_subset_Iic.2)
+  congr
+  simp only [← bex_def] at hst
+  exact iUnion₂_eq_univ_iff.2 hst
+  exact directedOn_iff_directed.2 (hdir.directed_val.mono_comp _ fun x y => Iic_subset_Iic.2)
 
 theorem tendsto_measure_Ico_atTop [SemilatticeSup α] [NoMaxOrder α]
     [(atTop : Filter α).IsCountablyGenerated] (μ : Measure α) (a : α) :
@@ -1879,10 +1879,10 @@ theorem tendsto_measure_Ioc_atBot [SemilatticeInf α] [NoMinOrder α]
 theorem tendsto_measure_Iic_atTop [SemilatticeSup α] [(atTop : Filter α).IsCountablyGenerated]
     (μ : Measure α) : Tendsto (fun x => μ (Iic x)) atTop (𝓝 (μ univ)) := by
   cases isEmpty_or_nonempty α
-  · have h1 : ∀ x : α, Iic x = ∅ := fun x => Subsingleton.elim _ _
-    have h2 : (univ : Set α) = ∅ := Subsingleton.elim _ _
-    simp_rw [h1, h2]
-    exact tendsto_const_nhds
+  have h1 : ∀ x : α, Iic x = ∅ := fun x => Subsingleton.elim _ _
+  have h2 : (univ : Set α) = ∅ := Subsingleton.elim _ _
+  simp_rw [h1, h2]
+  exact tendsto_const_nhds
   have h_mono : Monotone fun x => μ (Iic x) := fun i j hij => by simp only; gcongr
   convert tendsto_atTop_iSup h_mono
   obtain ⟨xs, hxs_mono, hxs_tendsto⟩ := exists_seq_monotone_tendsto_atTop_atTop α

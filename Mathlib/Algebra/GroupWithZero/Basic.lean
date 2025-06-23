@@ -145,8 +145,8 @@ variable [MonoidWithZero M₀] {a : M₀} {m n : ℕ}
 
 lemma zero_pow_eq (n : ℕ) : (0 : M₀) ^ n = if n = 0 then 1 else 0 := by
   split_ifs with h
-  · rw [h, pow_zero]
-  · rw [zero_pow h]
+  rw [h, pow_zero]
+  rw [zero_pow h]
 
 lemma pow_eq_zero_of_le : ∀ {m n} (hmn : m ≤ n) (ha : a ^ m = 0), a ^ n = 0
   | _, _, Nat.le.refl, ha => ha
@@ -269,14 +269,14 @@ instance (priority := 100) GroupWithZero.toDivisionMonoid : DivisionMonoid G₀ 
     inv := Inv.inv,
     inv_inv := fun a => by
       by_cases h : a = 0
-      · simp [h]
-      · exact left_inv_eq_right_inv (inv_mul_cancel <| inv_ne_zero h) (inv_mul_cancel h)
-        ,
+      simp [h]
+      exact left_inv_eq_right_inv (inv_mul_cancel <| inv_ne_zero h) (inv_mul_cancel h)
+      ,
     mul_inv_rev := fun a b => by
       by_cases ha : a = 0
-      · simp [ha]
+      simp [ha]
       by_cases hb : b = 0
-      · simp [hb]
+      simp [hb]
       apply inv_eq_of_mul
       simp [mul_assoc, ha, hb],
     inv_eq_of_mul := fun _ _ => inv_eq_of_mul }
@@ -306,8 +306,8 @@ theorem div_zero (a : G₀) : a / 0 = 0 := by rw [div_eq_mul_inv, inv_zero, mul_
 @[simp]
 theorem mul_self_mul_inv (a : G₀) : a * a * a⁻¹ = a := by
   by_cases h : a = 0
-  · rw [h, inv_zero, mul_zero]
-  · rw [mul_assoc, mul_inv_cancel h, mul_one]
+  rw [h, inv_zero, mul_zero]
+  rw [mul_assoc, mul_inv_cancel h, mul_one]
 
 
 /-- Multiplying `a` by its inverse and then by itself results in `a`
@@ -315,8 +315,8 @@ theorem mul_self_mul_inv (a : G₀) : a * a * a⁻¹ = a := by
 @[simp]
 theorem mul_inv_mul_self (a : G₀) : a * a⁻¹ * a = a := by
   by_cases h : a = 0
-  · rw [h, inv_zero, mul_zero]
-  · rw [mul_inv_cancel h, one_mul]
+  rw [h, inv_zero, mul_zero]
+  rw [mul_inv_cancel h, one_mul]
 
 
 /-- Multiplying `a⁻¹` by `a` twice results in `a` (whether or not `a`
@@ -324,8 +324,8 @@ is zero). -/
 @[simp]
 theorem inv_mul_mul_self (a : G₀) : a⁻¹ * a * a = a := by
   by_cases h : a = 0
-  · rw [h, inv_zero, mul_zero]
-  · rw [inv_mul_cancel h, one_mul]
+  rw [h, inv_zero, mul_zero]
+  rw [inv_mul_cancel h, one_mul]
 
 
 /-- Multiplying `a` by itself and then dividing by itself results in `a`, whether or not `a` is
@@ -383,8 +383,8 @@ lemma zero_zpow : ∀ n : ℤ, n ≠ 0 → (0 : G₀) ^ n = 0
 
 lemma zero_zpow_eq (n : ℤ) : (0 : G₀) ^ n = if n = 0 then 1 else 0 := by
   split_ifs with h
-  · rw [h, zpow_zero]
-  · rw [zero_zpow _ h]
+  rw [h, zpow_zero]
+  rw [zero_zpow _ h]
 
 lemma zpow_add_one₀ (ha : a ≠ 0) : ∀ n : ℤ, a ^ (n + 1) = a ^ n * a
   | (n : ℕ) => by simp only [← Int.ofNat_succ, zpow_natCast, pow_succ]
@@ -401,22 +401,22 @@ lemma zpow_sub_one₀ (ha : a ≠ 0) (n : ℤ) : a ^ (n - 1) = a ^ n * a⁻¹ :=
 
 lemma zpow_add₀ (ha : a ≠ 0) (m n : ℤ) : a ^ (m + n) = a ^ m * a ^ n := by
   induction' n using Int.induction_on with n ihn n ihn
-  · simp
-  · simp only [← Int.add_assoc, zpow_add_one₀ ha, ihn, mul_assoc]
-  · rw [zpow_sub_one₀ ha, ← mul_assoc, ← ihn, ← zpow_sub_one₀ ha, Int.add_sub_assoc]
+  simp
+  simp only [← Int.add_assoc, zpow_add_one₀ ha, ihn, mul_assoc]
+  rw [zpow_sub_one₀ ha, ← mul_assoc, ← ihn, ← zpow_sub_one₀ ha, Int.add_sub_assoc]
 
 lemma zpow_add' {m n : ℤ} (h : a ≠ 0 ∨ m + n ≠ 0 ∨ m = 0 ∧ n = 0) :
     a ^ (m + n) = a ^ m * a ^ n := by
   by_cases hm : m = 0
-  · simp [hm]
+  simp [hm]
   by_cases hn : n = 0
-  · simp [hn]
+  simp [hn]
   by_cases ha : a = 0
-  · subst a
-    simp only [false_or_iff, eq_self_iff_true, not_true, Ne, hm, hn, false_and_iff,
-      or_false_iff] at h
-    rw [zero_zpow _ h, zero_zpow _ hm, zero_mul]
-  · exact zpow_add₀ ha m n
+  subst a
+  simp only [false_or_iff, eq_self_iff_true, not_true, Ne, hm, hn, false_and_iff,
+    or_false_iff] at h
+  rw [zero_zpow _ h, zero_zpow _ hm, zero_mul]
+  exact zpow_add₀ ha m n
 
 lemma zpow_one_add₀ (h : a ≠ 0) (i : ℤ) : a ^ (1 + i) = a * a ^ i := by rw [zpow_add₀ h, zpow_one]
 
@@ -431,7 +431,7 @@ theorem div_mul_eq_mul_div₀ (a b c : G₀) : a / c * b = a * b / c := by
 
 lemma div_sq_cancel (a b : G₀) : a ^ 2 * b / a = a * b := by
   obtain rfl | ha := eq_or_ne a 0
-  · simp
-  · rw [sq, mul_assoc, mul_div_cancel_left₀ _ ha]
+  simp
+  rw [sq, mul_assoc, mul_div_cancel_left₀ _ ha]
 
 end CommGroupWithZero

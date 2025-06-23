@@ -66,10 +66,10 @@ lemma Gammaℂ_add_one {s : ℂ} (hs : s ≠ 0) : Gammaℂ (s + 1) = Gammaℂ s 
 
 lemma Gammaℝ_ne_zero_of_re_pos {s : ℂ} (hs : 0 < re s) : Gammaℝ s ≠ 0 := by
   apply mul_ne_zero
-  · simp [pi_ne_zero]
-  · apply Gamma_ne_zero_of_re_pos
-    rw [div_ofNat_re]
-    exact div_pos hs two_pos
+  simp [pi_ne_zero]
+  apply Gamma_ne_zero_of_re_pos
+  rw [div_ofNat_re]
+  exact div_pos hs two_pos
 
 lemma Gammaℝ_eq_zero_iff {s : ℂ} : Gammaℝ s = 0 ↔ ∃ n : ℕ, s = -(2 * n) := by
   simp [Gammaℝ_def, Complex.Gamma_eq_zero_iff, pi_ne_zero, div_eq_iff (two_ne_zero' ℂ), mul_comm]
@@ -89,9 +89,9 @@ section analyticity
 lemma differentiable_Gammaℝ_inv : Differentiable ℂ (fun s ↦ (Gammaℝ s)⁻¹) := by
   conv => enter [2, s]; rw [Gammaℝ, mul_inv]
   refine Differentiable.mul (fun s ↦ .inv ?_ (by simp [pi_ne_zero])) ?_
-  · refine ((differentiableAt_id.neg.div_const (2 : ℂ)).const_cpow ?_)
-    exact Or.inl (ofReal_ne_zero.mpr pi_ne_zero)
-  · exact differentiable_one_div_Gamma.comp (differentiable_id.div_const _)
+  refine ((differentiableAt_id.neg.div_const (2 : ℂ)).const_cpow ?_)
+  exact Or.inl (ofReal_ne_zero.mpr pi_ne_zero)
+  exact differentiable_one_div_Gamma.comp (differentiable_id.div_const _)
 
 lemma Gammaℝ_residue_zero : Tendsto (fun s ↦ s * Gammaℝ s) (𝓝[≠] 0) (𝓝 2) := by
   have h : Tendsto (fun z : ℂ ↦ z / 2 * Gamma (z / 2)) (𝓝[≠] 0) (𝓝 1)
@@ -179,18 +179,18 @@ Dirichlet characters. -/
 lemma inv_Gammaℝ_two_sub {s : ℂ} (hs : ∀ (n : ℕ), s ≠ -n) :
     (Gammaℝ (2 - s))⁻¹ = Gammaℂ s * sin (π * s / 2) * (Gammaℝ (s + 1))⁻¹ := by
   by_cases h : s = 1
-  · rw [h, (by ring : 2 - 1 = (1 : ℂ)), Gammaℝ_one, Gammaℝ,
-    neg_div, (by norm_num : (1 + 1) / 2 = (1 : ℂ)), Complex.Gamma_one, Gammaℂ_one,
-    mul_one, Complex.sin_pi_div_two, mul_one, cpow_neg_one, mul_one, inv_inv,
-    div_mul_cancel₀ _ (ofReal_ne_zero.mpr pi_ne_zero), inv_one]
+  rw [h, (by ring : 2 - 1 = (1 : ℂ)), Gammaℝ_one, Gammaℝ,
+  neg_div, (by norm_num : (1 + 1) / 2 = (1 : ℂ)), Complex.Gamma_one, Gammaℂ_one,
+  mul_one, Complex.sin_pi_div_two, mul_one, cpow_neg_one, mul_one, inv_inv,
+  div_mul_cancel₀ _ (ofReal_ne_zero.mpr pi_ne_zero), inv_one]
   rw [← Ne, ← sub_ne_zero] at h
   have h' (n : ℕ) : s - 1 ≠ -n
   cases' n with m
-  · rwa [Nat.cast_zero, neg_zero]
-  · rw [Ne, sub_eq_iff_eq_add]
-    convert hs m using 2
-    push_cast
-    ring
+  rwa [Nat.cast_zero, neg_zero]
+  rw [Ne, sub_eq_iff_eq_add]
+  convert hs m using 2
+  push_cast
+  ring
   rw [(by ring : 2 - s = 1 - (s - 1)), inv_Gammaℝ_one_sub h',
     (by rw [sub_add_cancel] : Gammaℂ s = Gammaℂ (s - 1 + 1)), Gammaℂ_add_one h,
     (by ring : s + 1 = (s - 1) + 2), Gammaℝ_add_two h, mul_sub, sub_div, mul_one,

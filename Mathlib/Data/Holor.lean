@@ -134,7 +134,7 @@ theorem mul_assoc0 [Semigroup α] (x : Holor α ds₁) (y : Holor α ds₂) (z :
     unfold mul
     rw [mul_assoc, ← HolorIndex.take_take, ← HolorIndex.drop_take, ← HolorIndex.drop_drop,
       cast_type]
-    · rfl
+    rfl
     rw [append_assoc]
 
 theorem mul_assoc [Semigroup α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
@@ -203,9 +203,9 @@ theorem slice_sum [AddCommMonoid α] {β : Type} (i : ℕ) (hid : i < d) (s : Fi
     (f : β → Holor α (d :: ds)) : (∑ x ∈ s, slice (f x) i hid) = slice (∑ x ∈ s, f x) i hid := by
   letI := Classical.decEq β
   refine Finset.induction_on s ?_ ?_
-  · simp [slice_zero]
-  · intro _ _ h_not_in ih
-    rw [Finset.sum_insert h_not_in, ih, slice_add, Finset.sum_insert h_not_in]
+  simp [slice_zero]
+  intro _ _ h_not_in ih
+  rw [Finset.sum_insert h_not_in, ih, slice_add, Finset.sum_insert h_not_in]
 
 /-- The original holor can be recovered from its slices by multiplying with unit vectors and
 summing up. -/
@@ -219,14 +219,14 @@ theorem sum_unitVec_mul_slice [Ring α] (x : Holor α (d :: ds)) :
   rw [← slice_sum]
   simp only [slice_unitVec_mul hid]
   rw [Finset.sum_eq_single (Subtype.mk i <| Finset.mem_range.2 hid)]
-  · simp
-  · intro (b : { x // x ∈ Finset.range d }) (_ : b ∈ (Finset.range d).attach) (hbi : b ≠ ⟨i, _⟩)
-    have hbi' : i ≠ b
-    simpa only [Ne, Subtype.ext_iff, Subtype.coe_mk] using hbi.symm
-    simp [hbi']
-  · intro (hid' : Subtype.mk i _ ∉ Finset.attach (Finset.range d))
-    exfalso
-    exact absurd (Finset.mem_attach _ _) hid'
+  simp
+  intro (b : { x // x ∈ Finset.range d }) (_ : b ∈ (Finset.range d).attach) (hbi : b ≠ ⟨i, _⟩)
+  have hbi' : i ≠ b
+  simpa only [Ne, Subtype.ext_iff, Subtype.coe_mk] using hbi.symm
+  simp [hbi']
+  intro (hid' : Subtype.mk i _ ∉ Finset.attach (Finset.range d))
+  exfalso
+  exact absurd (Finset.mem_attach _ _) hid'
 
 -- CP rank
 /-- `CPRankMax1 x` means `x` has CP rank at most 1, that is,
@@ -260,10 +260,10 @@ theorem cprankMax_add [Monoid α] [AddMonoid α] :
   | m + 1, n, _, y, CPRankMax.succ _ x₁ x₂ hx₁ hx₂, hy => by
     simp only [add_comm, add_assoc]
     apply CPRankMax.succ
-    · assumption
-    · -- Porting note: Single line is added.
-      simp only [Nat.add_eq, add_zero, add_comm n m]
-      exact cprankMax_add hx₂ hy
+    assumption
+    -- Porting note: Single line is added.
+    simp only [Nat.add_eq, add_zero, add_comm n m]
+    exact cprankMax_add hx₂ hy
 
 theorem cprankMax_mul [Ring α] :
     ∀ (n : ℕ) (x : Holor α [d]) (y : Holor α ds), CPRankMax n y → CPRankMax n (x ⊗ y)
@@ -272,8 +272,8 @@ theorem cprankMax_mul [Ring α] :
     rw [mul_left_distrib]
     rw [Nat.add_comm]
     apply cprankMax_add
-    · exact cprankMax_1 (CPRankMax1.cons _ _ hy₁)
-    · exact cprankMax_mul _ x y₂ hy₂
+    exact cprankMax_1 (CPRankMax1.cons _ _ hy₁)
+    exact cprankMax_mul _ x y₂ hy₂
 
 theorem cprankMax_sum [Ring α] {β} {n : ℕ} (s : Finset β) (f : β → Holor α ds) :
     (∀ x ∈ s, CPRankMax n (f x)) → CPRankMax (s.card * n) (∑ x ∈ s, f x) :=

@@ -110,8 +110,8 @@ instance lieQuotientHasBracket : Bracket (L ⧸ I) (L ⧸ I) :=
       simp [-lie_skew, sub_eq_add_neg, add_assoc]
     rw [h]
     apply Submodule.add_mem
-    · apply lie_mem_right R L I x₁ (x₂ - y₂) h₂
-    · apply lie_mem_left R L I (x₁ - y₁) y₂ h₁⟩
+    apply lie_mem_right R L I x₁ (x₂ - y₂) h₂
+    apply lie_mem_left R L I (x₁ - y₁) y₂ h₁⟩
 
 @[simp]
 theorem mk_bracket (x y : L) : mk ⁅x, y⁆ = ⁅(mk x : L ⧸ I), (mk y : L ⧸ I)⁆ :=

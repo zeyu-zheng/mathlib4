@@ -64,11 +64,11 @@ theorem ascPochhammer_succ_left (n : ℕ) :
 theorem monic_ascPochhammer (n : ℕ) [Nontrivial S] [NoZeroDivisors S] :
     Monic <| ascPochhammer S n := by
   induction' n with n hn
-  · simp
-  · have : leadingCoeff (X + 1 : S[X]) = 1 := leadingCoeff_X_add_C 1
-    rw [ascPochhammer_succ_left, Monic.def, leadingCoeff_mul,
-      leadingCoeff_comp (ne_zero_of_eq_one <| natDegree_X_add_C 1 : natDegree (X + 1) ≠ 0), hn,
-      monic_X, one_mul, one_mul, this, one_pow]
+  simp
+  have : leadingCoeff (X + 1 : S[X]) = 1 := leadingCoeff_X_add_C 1
+  rw [ascPochhammer_succ_left, Monic.def, leadingCoeff_mul,
+    leadingCoeff_comp (ne_zero_of_eq_one <| natDegree_X_add_C 1 : natDegree (X + 1) ≠ 0), hn,
+    monic_X, one_mul, one_mul, this, one_pow]
 
 section
 
@@ -78,8 +78,8 @@ variable {S} {T : Type v} [Semiring T]
 theorem ascPochhammer_map (f : S →+* T) (n : ℕ) :
     (ascPochhammer S n).map f = ascPochhammer T n := by
   induction' n with n ih
-  · simp
-  · simp [ih, ascPochhammer_succ_left, map_comp]
+  simp
+  simp [ih, ascPochhammer_succ_left, map_comp]
 
 theorem ascPochhammer_eval₂ (f : S →+* T) (n : ℕ) (t : T) :
     (ascPochhammer T n).eval t = (ascPochhammer S n).eval₂ f t := by
@@ -102,8 +102,8 @@ theorem ascPochhammer_eval_cast (n k : ℕ) :
 
 theorem ascPochhammer_eval_zero {n : ℕ} : (ascPochhammer S n).eval 0 = if n = 0 then 1 else 0 := by
   cases n
-  · simp
-  · simp [X_mul, Nat.succ_ne_zero, ascPochhammer_succ_left]
+  simp
+  simp [X_mul, Nat.succ_ne_zero, ascPochhammer_succ_left]
 
 theorem ascPochhammer_zero_eval_zero : (ascPochhammer S 0).eval 0 = 1 := by simp
 
@@ -118,10 +118,10 @@ theorem ascPochhammer_succ_right (n : ℕ) :
     simpa only [ascPochhammer_map, Polynomial.map_mul, Polynomial.map_add, map_X,
       Polynomial.map_natCast] using h
   induction' n with n ih
-  · simp
-  · conv_lhs =>
-      rw [ascPochhammer_succ_left, ih, mul_comp, ← mul_assoc, ← ascPochhammer_succ_left, add_comp,
-          X_comp, natCast_comp, add_assoc, add_comm (1 : ℕ[X]), ← Nat.cast_succ]
+  simp
+  conv_lhs =>
+    rw [ascPochhammer_succ_left, ih, mul_comp, ← mul_assoc, ← ascPochhammer_succ_left, add_comp,
+        X_comp, natCast_comp, add_assoc, add_comm (1 : ℕ[X]), ← Nat.cast_succ]
 
 theorem ascPochhammer_succ_eval {S : Type*} [Semiring S] (n : ℕ) (k : S) :
     (ascPochhammer S (n + 1)).eval k = (ascPochhammer S n).eval k * (k + n) := by
@@ -142,9 +142,9 @@ theorem ascPochhammer_succ_comp_X_add_one (n : ℕ) :
 theorem ascPochhammer_mul (n m : ℕ) :
     ascPochhammer S n * (ascPochhammer S m).comp (X + (n : S[X])) = ascPochhammer S (n + m) := by
   induction' m with m ih
-  · simp
-  · rw [ascPochhammer_succ_right, Polynomial.mul_X_add_natCast_comp, ← mul_assoc, ih,
-      ← add_assoc, ascPochhammer_succ_right, Nat.cast_add, add_assoc]
+  simp
+  rw [ascPochhammer_succ_right, Polynomial.mul_X_add_natCast_comp, ← mul_assoc, ih,
+    ← add_assoc, ascPochhammer_succ_right, Nat.cast_add, add_assoc]
 
 theorem ascPochhammer_nat_eq_ascFactorial (n : ℕ) :
     ∀ k, (ascPochhammer ℕ k).eval n = n.ascFactorial k
@@ -161,13 +161,13 @@ theorem ascPochhammer_nat_eq_descFactorial (a b : ℕ) :
 theorem ascPochhammer_natDegree (n : ℕ) [NoZeroDivisors S] [Nontrivial S] :
     (ascPochhammer S n).natDegree = n := by
   induction' n with n hn
-  · simp
-  · have : natDegree (X + (n : S[X])) = 1 := natDegree_X_add_C (n : S)
-    rw [ascPochhammer_succ_right,
-        natDegree_mul _ (ne_zero_of_natDegree_gt <| this.symm ▸ Nat.zero_lt_one), hn, this]
-    cases n
-    · simp
-    · refine ne_zero_of_natDegree_gt <| hn.symm ▸ Nat.add_one_pos _
+  simp
+  have : natDegree (X + (n : S[X])) = 1 := natDegree_X_add_C (n : S)
+  rw [ascPochhammer_succ_right,
+      natDegree_mul _ (ne_zero_of_natDegree_gt <| this.symm ▸ Nat.zero_lt_one), hn, this]
+  cases n
+  simp
+  refine ne_zero_of_natDegree_gt <| hn.symm ▸ Nat.add_one_pos _
 
 end Semiring
 
@@ -177,11 +177,11 @@ variable {S : Type*} [StrictOrderedSemiring S]
 
 theorem ascPochhammer_pos (n : ℕ) (s : S) (h : 0 < s) : 0 < (ascPochhammer S n).eval s := by
   induction' n with n ih
-  · simp only [Nat.zero_eq, ascPochhammer_zero, eval_one]
-    exact zero_lt_one
-  · rw [ascPochhammer_succ_right, mul_add, eval_add, ← Nat.cast_comm, eval_natCast_mul, eval_mul_X,
-      Nat.cast_comm, ← mul_add]
-    exact mul_pos ih (lt_of_lt_of_le h (le_add_of_nonneg_right (Nat.cast_nonneg n)))
+  simp only [Nat.zero_eq, ascPochhammer_zero, eval_one]
+  exact zero_lt_one
+  rw [ascPochhammer_succ_right, mul_add, eval_add, ← Nat.cast_comm, eval_natCast_mul, eval_mul_X,
+    Nat.cast_comm, ← mul_add]
+  exact mul_pos ih (lt_of_lt_of_le h (le_add_of_nonneg_right (Nat.cast_nonneg n)))
 
 end StrictOrderedSemiring
 
@@ -204,8 +204,8 @@ theorem ascPochhammer_nat_eval_succ (r : ℕ) :
     ∀ n : ℕ, n * (ascPochhammer ℕ r).eval (n + 1) = (n + r) * (ascPochhammer ℕ r).eval n
   | 0 => by
     by_cases h : r = 0
-    · simp only [h, zero_mul, zero_add]
-    · simp only [ascPochhammer_eval_zero, zero_mul, if_neg h, mul_zero]
+    simp only [h, zero_mul, zero_add]
+    simp only [ascPochhammer_eval_zero, zero_mul, if_neg h, mul_zero]
   | k + 1 => by simp only [ascPochhammer_nat_eq_ascFactorial, Nat.succ_ascFactorial, add_right_comm]
 
 theorem ascPochhammer_eval_succ (r n : ℕ) :
@@ -240,11 +240,11 @@ theorem descPochhammer_succ_left (n : ℕ) :
 theorem monic_descPochhammer (n : ℕ) [Nontrivial R] [NoZeroDivisors R] :
     Monic <| descPochhammer R n := by
   induction' n with n hn
-  · simp
-  · have h : leadingCoeff (X - 1 : R[X]) = 1 := leadingCoeff_X_sub_C 1
-    have : natDegree (X - (1 : R[X])) ≠ 0 := ne_zero_of_eq_one <| natDegree_X_sub_C (1 : R)
-    rw [descPochhammer_succ_left, Monic.def, leadingCoeff_mul, leadingCoeff_comp this, hn, monic_X,
-        one_mul, one_mul, h, one_pow]
+  simp
+  have h : leadingCoeff (X - 1 : R[X]) = 1 := leadingCoeff_X_sub_C 1
+  have : natDegree (X - (1 : R[X])) ≠ 0 := ne_zero_of_eq_one <| natDegree_X_sub_C (1 : R)
+  rw [descPochhammer_succ_left, Monic.def, leadingCoeff_mul, leadingCoeff_comp this, hn, monic_X,
+      one_mul, one_mul, h, one_pow]
 
 section
 
@@ -254,8 +254,8 @@ variable {R} {T : Type v} [Ring T]
 theorem descPochhammer_map (f : R →+* T) (n : ℕ) :
     (descPochhammer R n).map f = descPochhammer T n := by
   induction' n with n ih
-  · simp
-  · simp [ih, descPochhammer_succ_left, map_comp]
+  simp
+  simp [ih, descPochhammer_succ_left, map_comp]
 end
 
 @[simp, norm_cast]
@@ -267,8 +267,8 @@ theorem descPochhammer_eval_cast (n : ℕ) (k : ℤ) :
 theorem descPochhammer_eval_zero {n : ℕ} :
     (descPochhammer R n).eval 0 = if n = 0 then 1 else 0 := by
   cases n
-  · simp
-  · simp [X_mul, Nat.succ_ne_zero, descPochhammer_succ_left]
+  simp
+  simp [X_mul, Nat.succ_ne_zero, descPochhammer_succ_left]
 
 theorem descPochhammer_zero_eval_zero : (descPochhammer R 0).eval 0 = 1 := by simp
 
@@ -283,23 +283,23 @@ theorem descPochhammer_succ_right (n : ℕ) :
     simpa [descPochhammer_map, Polynomial.map_mul, Polynomial.map_add, map_X,
       Polynomial.map_intCast] using h
   induction' n with n ih
-  · simp [descPochhammer]
-  · conv_lhs =>
-      rw [descPochhammer_succ_left, ih, mul_comp, ← mul_assoc, ← descPochhammer_succ_left, sub_comp,
-          X_comp, natCast_comp]
-    rw [Nat.cast_add, Nat.cast_one, sub_add_eq_sub_sub_swap]
+  simp [descPochhammer]
+  conv_lhs =>
+    rw [descPochhammer_succ_left, ih, mul_comp, ← mul_assoc, ← descPochhammer_succ_left, sub_comp,
+        X_comp, natCast_comp]
+  rw [Nat.cast_add, Nat.cast_one, sub_add_eq_sub_sub_swap]
 
 @[simp]
 theorem descPochhammer_natDegree (n : ℕ) [NoZeroDivisors R] [Nontrivial R] :
     (descPochhammer R n).natDegree = n := by
   induction' n with n hn
-  · simp
-  · have : natDegree (X - (n : R[X])) = 1 := natDegree_X_sub_C (n : R)
-    rw [descPochhammer_succ_right,
-        natDegree_mul _ (ne_zero_of_natDegree_gt <| this.symm ▸ Nat.zero_lt_one), hn, this]
-    cases n
-    · simp
-    · refine ne_zero_of_natDegree_gt <| hn.symm ▸ Nat.add_one_pos _
+  simp
+  have : natDegree (X - (n : R[X])) = 1 := natDegree_X_sub_C (n : R)
+  rw [descPochhammer_succ_right,
+      natDegree_mul _ (ne_zero_of_natDegree_gt <| this.symm ▸ Nat.zero_lt_one), hn, this]
+  cases n
+  simp
+  refine ne_zero_of_natDegree_gt <| hn.symm ▸ Nat.add_one_pos _
 
 theorem descPochhammer_succ_eval {S : Type*} [Ring S] (n : ℕ) (k : S) :
     (descPochhammer S (n + 1)).eval k = (descPochhammer S n).eval k * (k - n) := by
@@ -337,9 +337,9 @@ theorem descPochhammer_eval_eq_ascPochhammer (r : R) (n : ℕ) :
 theorem descPochhammer_mul (n m : ℕ) :
     descPochhammer R n * (descPochhammer R m).comp (X - (n : R[X])) = descPochhammer R (n + m) := by
   induction' m with m ih
-  · simp
-  · rw [descPochhammer_succ_right, Polynomial.mul_X_sub_intCast_comp, ← mul_assoc, ih,
-      ← add_assoc, descPochhammer_succ_right, Nat.cast_add, sub_add_eq_sub_sub]
+  simp
+  rw [descPochhammer_succ_right, Polynomial.mul_X_sub_intCast_comp, ← mul_assoc, ih,
+    ← add_assoc, descPochhammer_succ_right, Nat.cast_add, sub_add_eq_sub_sub]
 
 theorem ascPochhammer_eval_neg_eq_descPochhammer (r : R) : ∀ (k : ℕ),
     (ascPochhammer R k).eval (-r) = (-1)^k * (descPochhammer R k).eval r
@@ -361,8 +361,8 @@ theorem descPochhammer_eval_eq_descFactorial (n k : ℕ) :
     rw [descPochhammer_succ_right, Nat.descFactorial_succ, mul_sub, eval_sub, eval_mul_X,
       ← Nat.cast_comm k, eval_natCast_mul, ← Nat.cast_comm n, ← sub_mul, ih]
     by_cases h : n < k
-    · rw [Nat.descFactorial_eq_zero_iff_lt.mpr h, Nat.cast_zero, mul_zero, mul_zero, Nat.cast_zero]
-    · rw [Nat.cast_mul, Nat.cast_sub <| not_lt.mp h]
+    rw [Nat.descFactorial_eq_zero_iff_lt.mpr h, Nat.cast_zero, mul_zero, mul_zero, Nat.cast_zero]
+    rw [Nat.cast_mul, Nat.cast_sub <| not_lt.mp h]
 
 theorem descPochhammer_int_eq_ascFactorial (a b : ℕ) :
     (descPochhammer ℤ b).eval (a + b : ℤ) = (a + 1).ascFactorial b := by

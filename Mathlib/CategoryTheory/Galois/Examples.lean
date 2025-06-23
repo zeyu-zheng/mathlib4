@@ -135,14 +135,14 @@ theorem Action.isConnected_of_transitive (X : FintypeCat) [MulAction G X]
     obtain ⟨(y : Y.V)⟩ := (not_initial_iff_fiber_nonempty (Action.forget _ _) Y).mp hni
     have : IsIso i.hom
     refine (ConcreteCategory.isIso_iff_bijective i.hom).mpr ⟨?_, fun x' ↦ ?_⟩
-    · haveI : Mono i.hom := map_mono (forget₂ _ _) i
-      exact ConcreteCategory.injective_of_mono_of_preservesPullback i.hom
-    · letI x : X := i.hom y
-      obtain ⟨σ, hσ⟩ := MulAction.exists_smul_eq G x x'
-      use σ • y
-      show (Y.ρ σ ≫ i.hom) y = x'
-      rw [i.comm, FintypeCat.comp_apply]
-      exact hσ
+    haveI : Mono i.hom := map_mono (forget₂ _ _) i
+    exact ConcreteCategory.injective_of_mono_of_preservesPullback i.hom
+    letI x : X := i.hom y
+    obtain ⟨σ, hσ⟩ := MulAction.exists_smul_eq G x x'
+    use σ • y
+    show (Y.ρ σ ≫ i.hom) y = x'
+    rw [i.comm, FintypeCat.comp_apply]
+    exact hσ
     apply isIso_of_reflects_iso i (Action.forget _ _)
 
 /-- A nonempty finite `G`-set is connected if and only if the `G`-action is transitive. -/

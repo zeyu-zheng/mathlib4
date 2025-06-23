@@ -189,14 +189,14 @@ instance : CompletelyNormalSpace ℝₗ := by
   simp only [disjoint_iUnion_left, disjoint_iUnion_right, Ico_disjoint_Ico]
   intro y hy x hx
   rcases le_total x y with hle | hle
-  · calc
-      min (X x) (Y y) ≤ X x := min_le_left _ _
-      _ ≤ y := (not_lt.1 fun hyx => (hXd x hx).le_bot ⟨⟨hle, hyx⟩, subset_closure hy⟩)
-      _ ≤ max x y := le_max_right _ _
-  · calc
-      min (X x) (Y y) ≤ Y y := min_le_right _ _
-      _ ≤ x := (not_lt.1 fun hxy => (hYd y hy).le_bot ⟨⟨hle, hxy⟩, subset_closure hx⟩)
-      _ ≤ max x y := le_max_left _ _
+  calc
+    min (X x) (Y y) ≤ X x := min_le_left _ _
+    _ ≤ y := (not_lt.1 fun hyx => (hXd x hx).le_bot ⟨⟨hle, hyx⟩, subset_closure hy⟩)
+    _ ≤ max x y := le_max_right _ _
+  calc
+    min (X x) (Y y) ≤ Y y := min_le_right _ _
+    _ ≤ x := (not_lt.1 fun hxy => (hYd y hy).le_bot ⟨⟨hle, hxy⟩, subset_closure hx⟩)
+    _ ≤ max x y := le_max_left _ _
 
 theorem denseRange_ratCast : DenseRange ((↑) : ℚ → ℝₗ) := by
   refine dense_iff_inter_open.2 ?_
@@ -231,10 +231,10 @@ theorem isClosed_of_subset_antidiagonal {s : Set (ℝₗ × ℝₗ)} {c : ℝₗ
   rcases mem_closure_iff.1 H (Ici (x, y)) (isClopen_Ici_prod _).2 left_mem_Ici with
     ⟨⟨x', y'⟩, ⟨hx : x ≤ x', hy : y ≤ y'⟩, H⟩
   convert H
-  · refine hx.antisymm ?_
-    rwa [← add_le_add_iff_right, hs _ H, add_le_add_iff_left]
-  · refine hy.antisymm ?_
-    rwa [← add_le_add_iff_left, hs _ H, add_le_add_iff_right]
+  refine hx.antisymm ?_
+  rwa [← add_le_add_iff_right, hs _ H, add_le_add_iff_left]
+  refine hy.antisymm ?_
+  rwa [← add_le_add_iff_left, hs _ H, add_le_add_iff_right]
 
 open Subtype in
 instance (c : ℝₗ) : DiscreteTopology {x : ℝₗ × ℝₗ | x.1 + x.2 = c} :=
@@ -310,12 +310,12 @@ theorem not_separatedNhds_rat_irrational_antidiag :
     exact mem_closure_iff.1 hx' _ isOpen_Ioo hx'ε
   refine UV.le_bot (?_ : (toReal.symm x, -(r : ℝₗ)) ∈ _)
   refine ⟨hn ⟨?_, ?_⟩, hkV (toReal.symm x) hx_irr ⟨?_, ?_⟩⟩
-  · exact Ioo_subset_Ico_self hxn
-  · exact left_mem_Ico.2 h₀'
-  · exact left_mem_Ico.2 h₀'
-  · refine (nhds_antitone_basis_Ico_inv_pnat (-x)).2 hnN ⟨neg_le_neg hxn.1.le, ?_⟩
-    simp only [add_neg_lt_iff_le_add', lt_neg_add_iff_add_lt]
-    exact hxn.2
+  exact Ioo_subset_Ico_self hxn
+  exact left_mem_Ico.2 h₀'
+  exact left_mem_Ico.2 h₀'
+  refine (nhds_antitone_basis_Ico_inv_pnat (-x)).2 hnN ⟨neg_le_neg hxn.1.le, ?_⟩
+  simp only [add_neg_lt_iff_le_add', lt_neg_add_iff_add_lt]
+  exact hxn.2
 
 /-- Topology on the Sorgenfrey line is not metrizable. -/
 theorem not_metrizableSpace : ¬MetrizableSpace ℝₗ := by

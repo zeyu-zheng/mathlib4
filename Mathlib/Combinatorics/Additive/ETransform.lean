@@ -68,10 +68,10 @@ theorem mulDysonETransform.card :
 theorem mulDysonETransform_idem :
     mulDysonETransform e (mulDysonETransform e x) = mulDysonETransform e x := by
   ext : 1 <;> dsimp
-  · rw [smul_finset_inter, smul_inv_smul, inter_comm, union_eq_left]
-    exact inter_subset_union
-  · rw [smul_finset_union, inv_smul_smul, union_comm, inter_eq_left]
-    exact inter_subset_union
+  rw [smul_finset_inter, smul_inv_smul, inter_comm, union_eq_left]
+  exact inter_subset_union
+  rw [smul_finset_union, inv_smul_smul, union_comm, inter_eq_left]
+  exact inter_subset_union
 
 variable {e x}
 

@@ -34,20 +34,20 @@ theorem extend_partialOrder {α : Type u} (r : α → α → Prop) [IsPartialOrd
         trans := ?_
         antisymm := ?_ } <;>
     simp_rw [binary_relation_sSup_iff]
-  · intro x
-    exact ⟨s, hs, refl x⟩
-  · rintro x y z ⟨s₁, h₁s₁, h₂s₁⟩ ⟨s₂, h₁s₂, h₂s₂⟩
-    haveI : IsPartialOrder _ _ := hc₁ h₁s₁
-    haveI : IsPartialOrder _ _ := hc₁ h₁s₂
-    cases' hc₂.total h₁s₁ h₁s₂ with h h
-    · exact ⟨s₂, h₁s₂, _root_.trans (h _ _ h₂s₁) h₂s₂⟩
-    · exact ⟨s₁, h₁s₁, _root_.trans h₂s₁ (h _ _ h₂s₂)⟩
-  · rintro x y ⟨s₁, h₁s₁, h₂s₁⟩ ⟨s₂, h₁s₂, h₂s₂⟩
-    haveI : IsPartialOrder _ _ := hc₁ h₁s₁
-    haveI : IsPartialOrder _ _ := hc₁ h₁s₂
-    cases' hc₂.total h₁s₁ h₁s₂ with h h
-    · exact antisymm (h _ _ h₂s₁) h₂s₂
-    · apply antisymm h₂s₁ (h _ _ h₂s₂)
+  intro x
+  exact ⟨s, hs, refl x⟩
+  rintro x y z ⟨s₁, h₁s₁, h₂s₁⟩ ⟨s₂, h₁s₂, h₂s₂⟩
+  haveI : IsPartialOrder _ _ := hc₁ h₁s₁
+  haveI : IsPartialOrder _ _ := hc₁ h₁s₂
+  cases' hc₂.total h₁s₁ h₁s₂ with h h
+  exact ⟨s₂, h₁s₂, _root_.trans (h _ _ h₂s₁) h₂s₂⟩
+  exact ⟨s₁, h₁s₁, _root_.trans h₂s₁ (h _ _ h₂s₂)⟩
+  rintro x y ⟨s₁, h₁s₁, h₂s₁⟩ ⟨s₂, h₁s₂, h₂s₂⟩
+  haveI : IsPartialOrder _ _ := hc₁ h₁s₁
+  haveI : IsPartialOrder _ _ := hc₁ h₁s₂
+  cases' hc₂.total h₁s₁ h₁s₂ with h h
+  exact antisymm (h _ _ h₂s₁) h₂s₂
+  apply antisymm h₂s₁ (h _ _ h₂s₂)
   obtain ⟨s, hs₁ : IsPartialOrder _ _, rs, hs₂⟩ := zorn_nonempty_partialOrder₀ S hS r ‹_›
   haveI : IsPartialOrder α s := hs₁
   refine ⟨s, { total := ?_, refl := hs₁.refl, trans := hs₁.trans, antisymm := hs₁.antisymm } , rs⟩
@@ -55,21 +55,21 @@ theorem extend_partialOrder {α : Type u} (r : α → α → Prop) [IsPartialOrd
   by_contra! h
   let s' x' y' := s x' y' ∨ s x' x ∧ s y y'
   rw [← hs₂ s' _ fun _ _ ↦ Or.inl] at h
-  · apply h.1 (Or.inr ⟨refl _, refl _⟩)
-  · refine
-    { refl := fun x ↦ Or.inl (refl _)
-      trans := ?_
-      antisymm := ?_ }
-    · rintro a b c (ab | ⟨ax : s a x, yb : s y b⟩) (bc | ⟨bx : s b x, yc : s y c⟩)
-      · exact Or.inl (_root_.trans ab bc)
-      · exact Or.inr ⟨_root_.trans ab bx, yc⟩
-      · exact Or.inr ⟨ax, _root_.trans yb bc⟩
-      · exact Or.inr ⟨ax, yc⟩
-    rintro a b (ab | ⟨ax : s a x, yb : s y b⟩) (ba | ⟨bx : s b x, ya : s y a⟩)
-    · exact antisymm ab ba
-    · exact (h.2 (_root_.trans ya (_root_.trans ab bx))).elim
-    · exact (h.2 (_root_.trans yb (_root_.trans ba ax))).elim
-    · exact (h.2 (_root_.trans yb bx)).elim
+  apply h.1 (Or.inr ⟨refl _, refl _⟩)
+  refine
+  { refl := fun x ↦ Or.inl (refl _)
+    trans := ?_
+    antisymm := ?_ }
+  rintro a b c (ab | ⟨ax : s a x, yb : s y b⟩) (bc | ⟨bx : s b x, yc : s y c⟩)
+  exact Or.inl (_root_.trans ab bc)
+  exact Or.inr ⟨_root_.trans ab bx, yc⟩
+  exact Or.inr ⟨ax, _root_.trans yb bc⟩
+  exact Or.inr ⟨ax, yc⟩
+  rintro a b (ab | ⟨ax : s a x, yb : s y b⟩) (ba | ⟨bx : s b x, ya : s y a⟩)
+  exact antisymm ab ba
+  exact (h.2 (_root_.trans ya (_root_.trans ab bx))).elim
+  exact (h.2 (_root_.trans yb (_root_.trans ba ax))).elim
+  exact (h.2 (_root_.trans yb bx)).elim
 
 /-- A type alias for `α`, intended to extend a partial order on `α` to a linear order. -/
 def LinearExtension (α : Type u) : Type u :=

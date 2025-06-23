@@ -170,13 +170,13 @@ theorem hom_eq_iff_not_disjoint (C : G.ComponentCompl L) (h : K ⊆ L) (D : G.Co
     C.hom h = D ↔ ¬Disjoint (C : Set V) (D : Set V) := by
   rw [Set.not_disjoint_iff]
   constructor
-  · rintro rfl
-    refine C.ind fun x xnL => ?_
-    exact ⟨x, ⟨xnL, rfl⟩, ⟨fun xK => xnL (h xK), rfl⟩⟩
-  · refine C.ind fun x xnL => ?_
-    rintro ⟨x, ⟨_, e₁⟩, _, rfl⟩
-    rw [← e₁]
-    rfl
+  rintro rfl
+  refine C.ind fun x xnL => ?_
+  exact ⟨x, ⟨xnL, rfl⟩, ⟨fun xK => xnL (h xK), rfl⟩⟩
+  refine C.ind fun x xnL => ?_
+  rintro ⟨x, ⟨_, e₁⟩, _, rfl⟩
+  rw [← e₁]
+  rfl
 
 theorem hom_refl (C : G.ComponentCompl L) : C.hom (subset_refl L) = C := by
   change C.map _ = C
@@ -200,16 +200,16 @@ open Classical in
 theorem infinite_iff_in_all_ranges {K : Finset V} (C : G.ComponentCompl K) :
     C.supp.Infinite ↔ ∀ (L) (h : K ⊆ L), ∃ D : G.ComponentCompl L, D.hom h = C := by
     constructor
-    · rintro Cinf L h
-      obtain ⟨v, ⟨vK, rfl⟩, vL⟩ := Set.Infinite.nonempty (Set.Infinite.diff Cinf L.finite_toSet)
-      exact ⟨componentComplMk _ vL, rfl⟩
-    · rintro h Cfin
-      obtain ⟨D, e⟩ := h (K ∪ Cfin.toFinset) Finset.subset_union_left
-      obtain ⟨v, vD⟩ := D.nonempty
-      let Ddis := D.disjoint_right
-      simp_rw [Finset.coe_union, Set.Finite.coe_toFinset, Set.disjoint_union_left,
-        Set.disjoint_iff] at Ddis
-      exact Ddis.right ⟨(ComponentCompl.hom_eq_iff_le _ _ _).mp e vD, vD⟩
+    rintro Cinf L h
+    obtain ⟨v, ⟨vK, rfl⟩, vL⟩ := Set.Infinite.nonempty (Set.Infinite.diff Cinf L.finite_toSet)
+    exact ⟨componentComplMk _ vL, rfl⟩
+    rintro h Cfin
+    obtain ⟨D, e⟩ := h (K ∪ Cfin.toFinset) Finset.subset_union_left
+    obtain ⟨v, vD⟩ := D.nonempty
+    let Ddis := D.disjoint_right
+    simp_rw [Finset.coe_union, Set.Finite.coe_toFinset, Set.disjoint_union_left,
+      Set.disjoint_iff] at Ddis
+    exact Ddis.right ⟨(ComponentCompl.hom_eq_iff_le _ _ _).mp e vD, vD⟩
 
 end ComponentCompl
 
@@ -221,26 +221,26 @@ instance componentCompl_finite [LocallyFinite G] [Gpc : Fact G.Preconnected] (K 
   rcases K.eq_empty_or_nonempty with rfl | h
   -- If K is empty, then removing K doesn't change the graph, which is connected, hence has a
   -- single connected component
-  · dsimp [ComponentCompl]
-    rw [Finset.coe_empty, Set.compl_empty]
-    have := Gpc.out.subsingleton_connectedComponent
-    exact Finite.of_equiv _ (induceUnivIso G).connectedComponentEquiv.symm
+  dsimp [ComponentCompl]
+  rw [Finset.coe_empty, Set.compl_empty]
+  have := Gpc.out.subsingleton_connectedComponent
+  exact Finite.of_equiv _ (induceUnivIso G).connectedComponentEquiv.symm
   -- Otherwise, we consider the function `touch` mapping a connected component to one of its
   -- vertices adjacent to `K`.
-  · let touch (C : G.ComponentCompl K) : {v : V | ∃ k : V, k ∈ K ∧ G.Adj k v} :=
-      let p := C.exists_adj_boundary_pair Gpc.out h
-      ⟨p.choose.1, p.choose.2, p.choose_spec.2.1, p.choose_spec.2.2.symm⟩
-    -- `touch` is injective
-    have touch_inj : touch.Injective := fun C D h' => ComponentCompl.pairwise_disjoint.eq
-      (Set.not_disjoint_iff.mpr ⟨touch C, (C.exists_adj_boundary_pair Gpc.out h).choose_spec.1,
-                                 h'.symm ▸ (D.exists_adj_boundary_pair Gpc.out h).choose_spec.1⟩)
-    -- `touch` has finite range
-    have : Finite (Set.range touch) := by
-      refine @Subtype.finite _ (Set.Finite.to_subtype ?_) _
-      apply Set.Finite.ofFinset (K.biUnion (fun v => G.neighborFinset v))
-      simp only [Finset.mem_biUnion, mem_neighborFinset, Set.mem_setOf_eq, implies_true]
-    -- hence `touch` has a finite domain
-    apply Finite.of_injective_finite_range touch_inj
+  let touch (C : G.ComponentCompl K) : {v : V | ∃ k : V, k ∈ K ∧ G.Adj k v} :=
+    let p := C.exists_adj_boundary_pair Gpc.out h
+    ⟨p.choose.1, p.choose.2, p.choose_spec.2.1, p.choose_spec.2.2.symm⟩
+  -- `touch` is injective
+  have touch_inj : touch.Injective := fun C D h' => ComponentCompl.pairwise_disjoint.eq
+    (Set.not_disjoint_iff.mpr ⟨touch C, (C.exists_adj_boundary_pair Gpc.out h).choose_spec.1,
+                               h'.symm ▸ (D.exists_adj_boundary_pair Gpc.out h).choose_spec.1⟩)
+  -- `touch` has finite range
+  have : Finite (Set.range touch) := by
+    refine @Subtype.finite _ (Set.Finite.to_subtype ?_) _
+    apply Set.Finite.ofFinset (K.biUnion (fun v => G.neighborFinset v))
+    simp only [Finset.mem_biUnion, mem_neighborFinset, Set.mem_setOf_eq, implies_true]
+  -- hence `touch` has a finite domain
+  apply Finite.of_injective_finite_range touch_inj
 
 section Ends
 

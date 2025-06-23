@@ -46,18 +46,18 @@ theorem hasSum_at_zero (a : ℕ → E) : HasSum (fun n => (0 : 𝕜) ^ n • a n
 theorem exists_hasSum_smul_of_apply_eq_zero (hs : HasSum (fun m => z ^ m • a m) s)
     (ha : ∀ k < n, a k = 0) : ∃ t : E, z ^ n • t = s ∧ HasSum (fun m => z ^ m • a (m + n)) t := by
   obtain rfl | hn := n.eq_zero_or_pos
-  · simpa
+  simpa
   by_cases h : z = 0
-  · have : s = 0 := hs.unique (by simpa [ha 0 hn, h] using hasSum_at_zero a)
-    exact ⟨a n, by simp [h, hn.ne', this], by simpa [h] using hasSum_at_zero fun m => a (m + n)⟩
-  · refine ⟨(z ^ n)⁻¹ • s, by field_simp [smul_smul], ?_⟩
-    have h1 : ∑ i ∈ Finset.range n, z ^ i • a i = 0 :=
-      Finset.sum_eq_zero fun k hk => by simp [ha k (Finset.mem_range.mp hk)]
-    have h2 : HasSum (fun m => z ^ (m + n) • a (m + n)) s := by
-      simpa [h1] using (hasSum_nat_add_iff' n).mpr hs
-    convert h2.const_smul (z⁻¹ ^ n) using 1
-    · field_simp [pow_add, smul_smul]
-    · simp only [inv_pow]
+  have : s = 0 := hs.unique (by simpa [ha 0 hn, h] using hasSum_at_zero a)
+  exact ⟨a n, by simp [h, hn.ne', this], by simpa [h] using hasSum_at_zero fun m => a (m + n)⟩
+  refine ⟨(z ^ n)⁻¹ • s, by field_simp [smul_smul], ?_⟩
+  have h1 : ∑ i ∈ Finset.range n, z ^ i • a i = 0 :=
+    Finset.sum_eq_zero fun k hk => by simp [ha k (Finset.mem_range.mp hk)]
+  have h2 : HasSum (fun m => z ^ (m + n) • a (m + n)) s := by
+    simpa [h1] using (hasSum_nat_add_iff' n).mpr hs
+  convert h2.const_smul (z⁻¹ ^ n) using 1
+  field_simp [pow_add, smul_smul]
+  simp only [inv_pow]
 
 end HasSum
 
@@ -70,17 +70,17 @@ theorem has_fpower_series_dslope_fslope (hp : HasFPowerSeriesAt f p z₀) :
   simp only [hasFPowerSeriesAt_iff, apply_eq_pow_smul_coeff, coeff_fslope] at hp ⊢
   refine hp.mono fun x hx => ?_
   by_cases h : x = 0
-  · convert hasSum_single (α := E) 0 _ <;> intros <;> simp [*]
-  · have hxx : ∀ n : ℕ, x⁻¹ * x ^ (n + 1) = x ^ n := fun n => by field_simp [h, _root_.pow_succ]
-    suffices HasSum (fun n => x⁻¹ • x ^ (n + 1) • p.coeff (n + 1)) (x⁻¹ • (f (z₀ + x) - f z₀)) by
-      simpa [dslope, slope, h, smul_smul, hxx] using this
-    simpa [hp0] using ((hasSum_nat_add_iff' 1).mpr hx).const_smul x⁻¹
+  convert hasSum_single (α := E) 0 _ <;> intros <;> simp [*]
+  have hxx : ∀ n : ℕ, x⁻¹ * x ^ (n + 1) = x ^ n := fun n => by field_simp [h, _root_.pow_succ]
+  suffices HasSum (fun n => x⁻¹ • x ^ (n + 1) • p.coeff (n + 1)) (x⁻¹ • (f (z₀ + x) - f z₀)) by
+    simpa [dslope, slope, h, smul_smul, hxx] using this
+  simpa [hp0] using ((hasSum_nat_add_iff' 1).mpr hx).const_smul x⁻¹
 
 theorem has_fpower_series_iterate_dslope_fslope (n : ℕ) (hp : HasFPowerSeriesAt f p z₀) :
     HasFPowerSeriesAt ((swap dslope z₀)^[n] f) (fslope^[n] p) z₀ := by
   induction' n with n ih generalizing f p
-  · exact hp
-  · simpa using ih (has_fpower_series_dslope_fslope hp)
+  exact hp
+  simpa using ih (has_fpower_series_dslope_fslope hp)
 
 theorem iterate_dslope_fslope_ne_zero (hp : HasFPowerSeriesAt f p z₀) (h : p ≠ 0) :
     (swap dslope z₀)^[p.order] f z₀ ≠ 0 := by
@@ -119,8 +119,8 @@ theorem eventually_eq_zero_or_eventually_ne_zero (hf : AnalyticAt 𝕜 f z₀) :
     (∀ᶠ z in 𝓝 z₀, f z = 0) ∨ ∀ᶠ z in 𝓝[≠] z₀, f z ≠ 0 := by
   rcases hf with ⟨p, hp⟩
   by_cases h : p = 0
-  · exact Or.inl (HasFPowerSeriesAt.eventually_eq_zero (by rwa [h] at hp))
-  · exact Or.inr (hp.locally_ne_zero h)
+  exact Or.inl (HasFPowerSeriesAt.eventually_eq_zero (by rwa [h] at hp))
+  exact Or.inr (hp.locally_ne_zero h)
 
 theorem eventually_eq_or_eventually_ne (hf : AnalyticAt 𝕜 f z₀) (hg : AnalyticAt 𝕜 g z₀) :
     (∀ᶠ z in 𝓝 z₀, f z = g z) ∨ ∀ᶠ z in 𝓝[≠] z₀, f z ≠ g z := by
@@ -144,7 +144,7 @@ lemma unique_eventuallyEq_zpow_smul_nonzero {m n : ℤ}
     (hn : ∃ g, AnalyticAt 𝕜 g z₀ ∧ g z₀ ≠ 0 ∧ ∀ᶠ z in 𝓝[≠] z₀, f z = (z - z₀) ^ n • g z) :
     m = n := by
   wlog h_le : n ≤ m generalizing m n
-  · exact ((this hn hm) (not_le.mp h_le).le).symm
+  exact ((this hn hm) (not_le.mp h_le).le).symm
   let ⟨g, hg_an, _, hg_eq⟩ := hm
   let ⟨j, hj_an, hj_ne, hj_eq⟩ := hn
   contrapose! hj_ne
@@ -156,7 +156,7 @@ lemma unique_eventuallyEq_zpow_smul_nonzero {m n : ℤ}
     hfz' hz, smul_right_inj <| zpow_ne_zero _ <| sub_ne_zero.mpr hz] at hfz
   exact hfz hz
   rw [frequently_eq_iff_eventually_eq hj_an] at this
-  · rw [EventuallyEq.eq_of_nhds this, sub_self, zero_zpow _ (sub_ne_zero.mpr hj_ne), zero_smul]
+  rw [EventuallyEq.eq_of_nhds this, sub_self, zero_zpow _ (sub_ne_zero.mpr hj_ne), zero_smul]
   conv => enter [2, z, 1]; rw [← Int.toNat_sub_of_le h_le, zpow_natCast]
   exact (((analyticAt_id _ _).sub analyticAt_const).pow _).smul hg_an
 
@@ -179,19 +179,19 @@ theorem exists_eventuallyEq_pow_smul_nonzero_iff (hf : AnalyticAt 𝕜 f z₀) :
     (∃ (n : ℕ), ∃ (g : 𝕜 → E), AnalyticAt 𝕜 g z₀ ∧ g z₀ ≠ 0 ∧
     ∀ᶠ z in 𝓝 z₀, f z = (z - z₀) ^ n • g z) ↔ (¬∀ᶠ z in 𝓝 z₀, f z = 0) := by
   constructor
-  · rintro ⟨n, g, hg_an, hg_ne, hg_eq⟩
-    contrapose! hg_ne
-    apply EventuallyEq.eq_of_nhds
-    rw [EventuallyEq, ← AnalyticAt.frequently_eq_iff_eventually_eq hg_an analyticAt_const]
-    refine (eventually_nhdsWithin_iff.mpr ?_).frequently
-    filter_upwards [hg_eq, hg_ne] with z hf_eq hf0 hz
-    rwa [hf0, eq_comm, smul_eq_zero_iff_right] at hf_eq
-    exact pow_ne_zero _ (sub_ne_zero.mpr hz)
-  · intro hf_ne
-    rcases hf with ⟨p, hp⟩
-    exact ⟨p.order, _, ⟨_, hp.has_fpower_series_iterate_dslope_fslope p.order⟩,
-      hp.iterate_dslope_fslope_ne_zero (hf_ne.imp hp.locally_zero_iff.mpr),
-      hp.eq_pow_order_mul_iterate_dslope⟩
+  rintro ⟨n, g, hg_an, hg_ne, hg_eq⟩
+  contrapose! hg_ne
+  apply EventuallyEq.eq_of_nhds
+  rw [EventuallyEq, ← AnalyticAt.frequently_eq_iff_eventually_eq hg_an analyticAt_const]
+  refine (eventually_nhdsWithin_iff.mpr ?_).frequently
+  filter_upwards [hg_eq, hg_ne] with z hf_eq hf0 hz
+  rwa [hf0, eq_comm, smul_eq_zero_iff_right] at hf_eq
+  exact pow_ne_zero _ (sub_ne_zero.mpr hz)
+  intro hf_ne
+  rcases hf with ⟨p, hp⟩
+  exact ⟨p.order, _, ⟨_, hp.has_fpower_series_iterate_dslope_fslope p.order⟩,
+    hp.iterate_dslope_fslope_ne_zero (hf_ne.imp hp.locally_zero_iff.mpr),
+    hp.eq_pow_order_mul_iterate_dslope⟩
 
 /-- The order of vanishing of `f` at `z₀`, as an element of `ℕ∞`.
 
@@ -205,20 +205,20 @@ noncomputable def order (hf : AnalyticAt 𝕜 f z₀) : ENat :=
 lemma order_eq_top_iff (hf : AnalyticAt 𝕜 f z₀) : hf.order = ⊤ ↔ ∀ᶠ z in 𝓝 z₀, f z = 0 := by
   unfold order
   split_ifs with h
-  · rwa [eq_self, true_iff]
-  · simpa only [ne_eq, ENat.coe_ne_top, false_iff] using h
+  rwa [eq_self, true_iff]
+  simpa only [ne_eq, ENat.coe_ne_top, false_iff] using h
 
 lemma order_eq_nat_iff (hf : AnalyticAt 𝕜 f z₀) (n : ℕ) : hf.order = ↑n ↔
     ∃ (g : 𝕜 → E), AnalyticAt 𝕜 g z₀ ∧ g z₀ ≠ 0 ∧ ∀ᶠ z in 𝓝 z₀, f z = (z - z₀) ^ n • g z := by
   unfold order
   split_ifs with h
-  · simp only [ENat.top_ne_coe, false_iff]
-    contrapose! h
-    rw [← hf.exists_eventuallyEq_pow_smul_nonzero_iff]
-    exact ⟨n, h⟩
-  · rw [← hf.exists_eventuallyEq_pow_smul_nonzero_iff] at h
-    refine ⟨fun hn ↦ (WithTop.coe_inj.mp hn : h.choose = n) ▸ h.choose_spec, fun h' ↦ ?_⟩
-    rw [unique_eventuallyEq_pow_smul_nonzero h.choose_spec h']
+  simp only [ENat.top_ne_coe, false_iff]
+  contrapose! h
+  rw [← hf.exists_eventuallyEq_pow_smul_nonzero_iff]
+  exact ⟨n, h⟩
+  rw [← hf.exists_eventuallyEq_pow_smul_nonzero_iff] at h
+  refine ⟨fun hn ↦ (WithTop.coe_inj.mp hn : h.choose = n) ▸ h.choose_spec, fun h' ↦ ?_⟩
+  rw [unique_eventuallyEq_pow_smul_nonzero h.choose_spec h']
 
 end AnalyticAt
 

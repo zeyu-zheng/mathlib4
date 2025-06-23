@@ -97,11 +97,11 @@ lemma sieve₁_eq_pullback_sieve₁' {W : C} (p₁ : W ⟶ E.X i₁) (p₂ : W �
     E.sieve₁ p₁ p₂ = (E.sieve₁' i₁ i₂).pullback (pullback.lift _ _ w) := by
   ext Z g
   constructor
-  · rintro ⟨j, h, fac₁, fac₂⟩
-    exact ⟨_, h, _, ⟨j⟩, by aesop_cat⟩
-  · rintro ⟨_, h, w, ⟨j⟩, fac⟩
-    exact ⟨j, h, by simpa using fac.symm =≫ pullback.fst _ _,
-      by simpa using fac.symm =≫ pullback.snd _ _⟩
+  rintro ⟨j, h, fac₁, fac₂⟩
+  exact ⟨_, h, _, ⟨j⟩, by aesop_cat⟩
+  rintro ⟨_, h, w, ⟨j⟩, fac⟩
+  exact ⟨j, h, by simpa using fac.symm =≫ pullback.fst _ _,
+    by simpa using fac.symm =≫ pullback.snd _ _⟩
 
 variable (i₁ i₂) in
 lemma sieve₁'_eq_sieve₁ : E.sieve₁' i₁ i₂ = E.sieve₁ (pullback.fst _ _) (pullback.snd _ _) := by
@@ -235,10 +235,10 @@ def preOneHypercover : PreOneHypercover.{max u v} X where
 lemma preOneHypercover_sieve₀ : S.preOneHypercover.sieve₀ = S.1 := by
   ext Y f
   constructor
-  · rintro ⟨_, _, _, ⟨g⟩, rfl⟩
-    exact S.1.downward_closed g.hf _
-  · intro hf
-    exact Sieve.ofArrows_mk _ _ ({ hf := hf } : S.Arrow)
+  rintro ⟨_, _, _, ⟨g⟩, rfl⟩
+  exact S.1.downward_closed g.hf _
+  intro hf
+  exact Sieve.ofArrows_mk _ _ ({ hf := hf } : S.Arrow)
 
 lemma preOneHypercover_sieve₁ (f₁ f₂ : S.Arrow) {W : C} (p₁ : W ⟶ f₁.Y) (p₂ : W ⟶ f₂.Y)
     (w : p₁ ≫ f₁.f = p₂ ≫ f₂.f) :

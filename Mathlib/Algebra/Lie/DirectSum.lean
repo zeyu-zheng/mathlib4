@@ -125,15 +125,15 @@ theorem lie_of_of_ne [DecidableEq ι] {i j : ι} (hij : i ≠ j) (x : L i) (y : 
   refine DFinsupp.ext fun k => ?_
   rw [bracket_apply]
   obtain rfl | hik := Decidable.eq_or_ne i k
-  · rw [of_eq_of_ne _ _ _ hij.symm, lie_zero, zero_apply]
-  · rw [of_eq_of_ne _ _ _ hik, zero_lie, zero_apply]
+  rw [of_eq_of_ne _ _ _ hij.symm, lie_zero, zero_apply]
+  rw [of_eq_of_ne _ _ _ hik, zero_lie, zero_apply]
 
 @[simp]
 theorem lie_of [DecidableEq ι] {i j : ι} (x : L i) (y : L j) :
     ⁅of L i x, of L j y⁆ = if hij : i = j then of L i ⁅x, hij.symm.recOn y⁆ else 0 := by
   obtain rfl | hij := Decidable.eq_or_ne i j
-  · simp only [lie_of_same L x y, dif_pos]
-  · simp only [lie_of_of_ne L hij x y, hij, dif_neg, dite_false]
+  simp only [lie_of_same L x y, dif_pos]
+  simp only [lie_of_of_ne L hij x y, hij, dif_neg, dite_false]
 
 instance lieAlgebra : LieAlgebra R (⨁ i, L i) :=
   { (inferInstance : Module R _) with

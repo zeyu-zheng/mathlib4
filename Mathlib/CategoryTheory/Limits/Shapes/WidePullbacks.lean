@@ -65,7 +65,7 @@ instance struct : CategoryStruct (WidePullbackShape J) where
   id j := Hom.id j
   comp f g := by
     cases f
-    · exact g
+    exact g
     cases g
     apply Hom.term _
 
@@ -87,9 +87,9 @@ instance subsingleton_hom : Quiver.IsThin (WidePullbackShape J) := fun _ _ => by
   constructor
   intro a b
   casesm* WidePullbackShape _, (_ : WidePullbackShape _) ⟶ (_ : WidePullbackShape _)
-  · rfl
-  · rfl
-  · rfl
+  rfl
+  rfl
+  rfl
 
 instance category : SmallCategory (WidePullbackShape J) :=
   thin_category
@@ -169,7 +169,7 @@ instance struct : CategoryStruct (WidePushoutShape J) where
   id j := Hom.id j
   comp f g := by
     cases f
-    · exact g
+    exact g
     cases g
     apply Hom.init _
 
@@ -329,14 +329,14 @@ theorem eq_lift_of_comp_eq (g : X ⟶ widePullback _ _ arrows) :
     (limit.isLimit (WidePullbackShape.wideCospan B objs arrows)).uniq
       (WidePullbackShape.mkCone f fs <| w)
   rintro (_ | _)
-  · apply h2
-  · apply h1
+  apply h2
+  apply h1
 
 theorem hom_eq_lift (g : X ⟶ widePullback _ _ arrows) :
     g = lift (g ≫ base arrows) (fun j => g ≫ π arrows j) (by aesop_cat) := by
   apply eq_lift_of_comp_eq
-  · aesop_cat
-  · rfl  -- Porting note: quite a few missing refl's in aesop_cat now
+  aesop_cat
+  rfl  -- Porting note: quite a few missing refl's in aesop_cat now
 
 @[ext 1100]
 theorem hom_ext (g1 g2 : X ⟶ widePullback _ _ arrows) : (∀ j : J,
@@ -344,8 +344,8 @@ theorem hom_ext (g1 g2 : X ⟶ widePullback _ _ arrows) : (∀ j : J,
   intro h1 h2
   apply limit.hom_ext
   rintro (_ | _)
-  · apply h2
-  · apply h1
+  apply h2
+  apply h1
 
 end WidePullback
 
@@ -396,8 +396,8 @@ theorem eq_desc_of_comp_eq (g : widePushout _ _ arrows ⟶ X) :
     (colimit.isColimit (WidePushoutShape.wideSpan B objs arrows)).uniq
       (WidePushoutShape.mkCocone f fs <| w)
   rintro (_ | _)
-  · apply h2
-  · apply h1
+  apply h2
+  apply h1
 
 theorem hom_eq_desc (g : widePushout _ _ arrows ⟶ X) :
     g =
@@ -405,8 +405,8 @@ theorem hom_eq_desc (g : widePushout _ _ arrows ⟶ X) :
         rw [← Category.assoc]
         simp := by
   apply eq_desc_of_comp_eq
-  · aesop_cat
-  · rfl -- Porting note: another missing rfl
+  aesop_cat
+  rfl -- Porting note: another missing rfl
 
 @[ext 1100]
 theorem hom_ext (g1 g2 : widePushout _ _ arrows ⟶ X) : (∀ j : J,
@@ -414,8 +414,8 @@ theorem hom_ext (g1 g2 : widePushout _ _ arrows ⟶ X) : (∀ j : J,
   intro h1 h2
   apply colimit.hom_ext
   rintro (_ | _)
-  · apply h2
-  · apply h1
+  apply h2
+  apply h1
 
 end WidePushout
 

@@ -289,7 +289,7 @@ theorem mem_iff' {a b c : α} : Sym2.Mem a s(b, c) ↔ a = b ∨ a = c :=
       aesop
     mpr := by
       rintro (rfl | rfl)
-      · exact ⟨_, rfl⟩
+      exact ⟨_, rfl⟩
       rw [eq_swap]
       exact ⟨_, rfl⟩ }
 
@@ -334,8 +334,8 @@ theorem out_snd_mem (e : Sym2 α) : e.out.2 ∈ e :=
 theorem ball {p : α → Prop} {a b : α} : (∀ c ∈ s(a, b), p c) ↔ p a ∧ p b := by
   refine ⟨fun h => ⟨h _ <| mem_mk_left _ _, h _ <| mem_mk_right _ _⟩, fun h c hc => ?_⟩
   obtain rfl | rfl := Sym2.mem_iff.1 hc
-  · exact h.1
-  · exact h.2
+  exact h.1
+  exact h.2
 
 /-- Given an element of the unordered pair, give the other element using `Classical.choose`.
 See also `Mem.other'` for the computable version.
@@ -353,11 +353,11 @@ theorem other_mem {a : α} {z : Sym2 α} (h : a ∈ z) : Mem.other h ∈ z := by
 
 theorem mem_and_mem_iff {x y : α} {z : Sym2 α} (hne : x ≠ y) : x ∈ z ∧ y ∈ z ↔ z = s(x, y) := by
   constructor
-  · induction' z with x' y'
-    rw [mem_iff, mem_iff]
-    aesop
-  · rintro rfl
-    simp
+  induction' z with x' y'
+  rw [mem_iff, mem_iff]
+  aesop
+  rintro rfl
+  simp
 
 theorem eq_of_ne_mem {x y : α} {z z' : Sym2 α} (h : x ≠ y) (h1 : x ∈ z) (h2 : y ∈ z) (h3 : x ∈ z')
     (h4 : y ∈ z') : z = z' :=
@@ -379,8 +379,8 @@ theorem map_congr {f g : α → β} {s : Sym2 α} (h : ∀ x ∈ s, f x = g x) :
   ext y
   simp only [mem_map]
   constructor <;>
-    · rintro ⟨w, hw, rfl⟩
-      exact ⟨w, hw, by simp [hw, h]⟩
+  · rintro ⟨w, hw, rfl⟩
+    exact ⟨w, hw, by simp [hw, h]⟩
 
 /-- Note: `Sym2.map_id` will not simplify `Sym2.map id z` due to `Sym2.map_congr`. -/
 @[simp]
@@ -654,12 +654,12 @@ theorem filter_image_mk_isDiag [DecidableEq α] (s : Finset α) :
   induction' z
   simp only [mem_image, mem_diag, exists_prop, mem_filter, Prod.exists, mem_product]
   constructor
-  · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
-    rw [← h, Sym2.mk_isDiag_iff] at hab
-    exact ⟨a, b, ⟨ha, hab⟩, h⟩
-  · rintro ⟨a, b, ⟨ha, rfl⟩, h⟩
-    rw [← h]
-    exact ⟨⟨a, a, ⟨ha, ha⟩, rfl⟩, rfl⟩
+  rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
+  rw [← h, Sym2.mk_isDiag_iff] at hab
+  exact ⟨a, b, ⟨ha, hab⟩, h⟩
+  rintro ⟨a, b, ⟨ha, rfl⟩, h⟩
+  rw [← h]
+  exact ⟨⟨a, a, ⟨ha, ha⟩, rfl⟩, rfl⟩
 
 theorem filter_image_mk_not_isDiag [DecidableEq α] (s : Finset α) :
     (((s ×ˢ s).image Sym2.mk).filter fun a : Sym2 α => ¬a.IsDiag) =
@@ -668,12 +668,12 @@ theorem filter_image_mk_not_isDiag [DecidableEq α] (s : Finset α) :
   induction z
   simp only [mem_image, mem_offDiag, mem_filter, Prod.exists, mem_product]
   constructor
-  · rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
-    rw [← h, Sym2.mk_isDiag_iff] at hab
-    exact ⟨a, b, ⟨ha, hb, hab⟩, h⟩
-  · rintro ⟨a, b, ⟨ha, hb, hab⟩, h⟩
-    rw [Ne, ← Sym2.mk_isDiag_iff, h] at hab
-    exact ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
+  rintro ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
+  rw [← h, Sym2.mk_isDiag_iff] at hab
+  exact ⟨a, b, ⟨ha, hb, hab⟩, h⟩
+  rintro ⟨a, b, ⟨ha, hb, hab⟩, h⟩
+  rw [Ne, ← Sym2.mk_isDiag_iff, h] at hab
+  exact ⟨⟨a, b, ⟨ha, hb⟩, h⟩, hab⟩
 
 end Decidable
 

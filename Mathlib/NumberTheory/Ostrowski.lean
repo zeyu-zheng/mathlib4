@@ -94,8 +94,8 @@ lemma exists_minimal_nat_zero_lt_mulRingNorm_lt_one : ∃ p : ℕ, (0 < f p ∧ 
     rw [← eq_on_nat_iff_eq]
     intro n
     rcases eq_or_ne n 0 with rfl | hn0
-    · simp only [Nat.cast_zero, map_zero]
-    · simp only [MulRingNorm.apply_one, Nat.cast_eq_zero, hn0, ↓reduceIte, hf_nontriv n hn0]
+    simp only [Nat.cast_zero, map_zero]
+    simp only [MulRingNorm.apply_one, Nat.cast_eq_zero, hn0, ↓reduceIte, hf_nontriv n hn0]
   set P := {m : ℕ | 0 < f ↑m ∧ f ↑m < 1} -- p is going to be the minimum of this set.
   have hP : P.Nonempty :=
     ⟨n, map_pos_of_ne_zero f (Nat.cast_ne_zero.mpr hn1), lt_of_le_of_ne (bdd n) hn2⟩
@@ -109,24 +109,24 @@ variable {p : ℕ} (hp0 : 0 < f p) (hp1 : f p < 1) (hmin : ∀ m : ℕ, 0 < f m 
 lemma is_prime_of_minimal_nat_zero_lt_mulRingNorm_lt_one : p.Prime := by
   rw [← Nat.irreducible_iff_nat_prime]
   constructor -- Two goals: p is not a unit and any product giving p must contain a unit.
-  · rw [Nat.isUnit_iff]
-    rintro rfl
-    simp only [Nat.cast_one, map_one, lt_self_iff_false] at hp1
-  · rintro a b rfl
-    rw [Nat.isUnit_iff, Nat.isUnit_iff]
-    by_contra! con
-    obtain ⟨ha₁, hb₁⟩ := con
-    obtain ⟨ha₀, hb₀⟩ : a ≠ 0 ∧ b ≠ 0 := by
-      refine mul_ne_zero_iff.1 fun h ↦ ?_
-      rwa [h, Nat.cast_zero, map_zero, lt_self_iff_false] at hp0
-    have hap : a < a * b := lt_mul_of_one_lt_right (by omega) (by omega)
-    have hbp : b < a * b := lt_mul_of_one_lt_left (by omega) (by omega)
-    have ha :=
-      le_of_not_lt <| not_and.1 ((hmin a).mt hap.not_le) (map_pos_of_ne_zero f (mod_cast ha₀))
-    have hb :=
-      le_of_not_lt <| not_and.1 ((hmin b).mt hbp.not_le) (map_pos_of_ne_zero f (mod_cast hb₀))
-    rw [Nat.cast_mul, map_mul] at hp1
-    exact ((one_le_mul_of_one_le_of_one_le ha hb).trans_lt hp1).false
+  rw [Nat.isUnit_iff]
+  rintro rfl
+  simp only [Nat.cast_one, map_one, lt_self_iff_false] at hp1
+  rintro a b rfl
+  rw [Nat.isUnit_iff, Nat.isUnit_iff]
+  by_contra! con
+  obtain ⟨ha₁, hb₁⟩ := con
+  obtain ⟨ha₀, hb₀⟩ : a ≠ 0 ∧ b ≠ 0 := by
+    refine mul_ne_zero_iff.1 fun h ↦ ?_
+    rwa [h, Nat.cast_zero, map_zero, lt_self_iff_false] at hp0
+  have hap : a < a * b := lt_mul_of_one_lt_right (by omega) (by omega)
+  have hbp : b < a * b := lt_mul_of_one_lt_left (by omega) (by omega)
+  have ha :=
+    le_of_not_lt <| not_and.1 ((hmin a).mt hap.not_le) (map_pos_of_ne_zero f (mod_cast ha₀))
+  have hb :=
+    le_of_not_lt <| not_and.1 ((hmin b).mt hbp.not_le) (map_pos_of_ne_zero f (mod_cast hb₀))
+  rw [Nat.cast_mul, map_mul] at hp1
+  exact ((one_le_mul_of_one_le_of_one_le ha hb).trans_lt hp1).false
 
 -- ## Step 3: if p does not divide m, then f m = 1
 
@@ -194,33 +194,33 @@ theorem mulRingNorm_equiv_padic_of_bounded :
   simp_rw [← equiv_on_nat_iff_equiv]
   use p
   constructor -- 2 goals: MulRingNorm.equiv f (mulRingNorm_padic p) and p is unique.
-  · use hprime_fact
-    refine ⟨t⁻¹, by simp only [inv_pos, h.1], fun n ↦ ?_⟩
-    have ht : t⁻¹ ≠ 0 := inv_ne_zero h.1.ne'
-    rcases eq_or_ne n 0 with rfl | hn -- Separate cases n=0 and n ≠ 0
-    · simp only [Nat.cast_zero, map_zero, ne_eq, ht, not_false_eq_true, zero_rpow]
-    · /- Any natural number can be written as a power of p times a natural number not divisible
-      by p  -/
-      rcases Nat.exists_eq_pow_mul_and_not_dvd hn p hprime.ne_one with ⟨e, m, hpm, rfl⟩
-      simp only [Nat.cast_mul, Nat.cast_pow, map_mul, map_pow, mulRingNorm_eq_padic_norm,
-        padicNorm.padicNorm_p_of_prime, Rat.cast_inv, Rat.cast_natCast, inv_pow,
-        mulRingNorm_eq_one_of_not_dvd bdd hfp.1 hfp.2 hmin hpm, h.2]
-      rw [← padicNorm.nat_eq_one_iff] at hpm
-      simp only [← rpow_natCast, p.cast_nonneg, ← rpow_mul, mul_one, ← rpow_neg, hpm, cast_one]
-      congr
-      field_simp [h.1.ne']
-      ring
-  · intro q ⟨hq_prime, h_equiv⟩
-    by_contra! hne
-    apply Prime.ne_one (Nat.Prime.prime (Fact.elim hq_prime))
-    rw [ne_comm, ← Nat.coprime_primes hprime (Fact.elim hq_prime),
-      Nat.Prime.coprime_iff_not_dvd hprime] at hne
-    rcases h_equiv with ⟨c, _, h_eq⟩
-    have h_eq' := h_eq q
-    simp only [mulRingNorm_eq_one_of_not_dvd bdd hfp.1 hfp.2 hmin hne, one_rpow,
-      mulRingNorm_eq_padic_norm, padicNorm.padicNorm_p_of_prime, cast_inv, cast_natCast, eq_comm,
-      inv_eq_one] at h_eq'
-    norm_cast at h_eq'
+  use hprime_fact
+  refine ⟨t⁻¹, by simp only [inv_pos, h.1], fun n ↦ ?_⟩
+  have ht : t⁻¹ ≠ 0 := inv_ne_zero h.1.ne'
+  rcases eq_or_ne n 0 with rfl | hn -- Separate cases n=0 and n ≠ 0
+  simp only [Nat.cast_zero, map_zero, ne_eq, ht, not_false_eq_true, zero_rpow]
+  /- Any natural number can be written as a power of p times a natural number not divisible
+  by p  -/
+  rcases Nat.exists_eq_pow_mul_and_not_dvd hn p hprime.ne_one with ⟨e, m, hpm, rfl⟩
+  simp only [Nat.cast_mul, Nat.cast_pow, map_mul, map_pow, mulRingNorm_eq_padic_norm,
+    padicNorm.padicNorm_p_of_prime, Rat.cast_inv, Rat.cast_natCast, inv_pow,
+    mulRingNorm_eq_one_of_not_dvd bdd hfp.1 hfp.2 hmin hpm, h.2]
+  rw [← padicNorm.nat_eq_one_iff] at hpm
+  simp only [← rpow_natCast, p.cast_nonneg, ← rpow_mul, mul_one, ← rpow_neg, hpm, cast_one]
+  congr
+  field_simp [h.1.ne']
+  ring
+  intro q ⟨hq_prime, h_equiv⟩
+  by_contra! hne
+  apply Prime.ne_one (Nat.Prime.prime (Fact.elim hq_prime))
+  rw [ne_comm, ← Nat.coprime_primes hprime (Fact.elim hq_prime),
+    Nat.Prime.coprime_iff_not_dvd hprime] at hne
+  rcases h_equiv with ⟨c, _, h_eq⟩
+  have h_eq' := h_eq q
+  simp only [mulRingNorm_eq_one_of_not_dvd bdd hfp.1 hfp.2 hmin hne, one_rpow,
+    mulRingNorm_eq_padic_norm, padicNorm.padicNorm_p_of_prime, cast_inv, cast_natCast, eq_comm,
+    inv_eq_one] at h_eq'
+  norm_cast at h_eq'
 
 end Non_archimedean
 

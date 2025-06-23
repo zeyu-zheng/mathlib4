@@ -34,15 +34,15 @@ theorem tsum_const_smul [T2Space α] (b : γ) (hf : Summable f) : ∑' i, b • 
 lemma tsum_const_smul' {γ : Type*} [Group γ] [DistribMulAction γ α] [ContinuousConstSMul γ α]
     [T2Space α] (g : γ) : ∑' (i : β), g • f i = g • ∑' (i : β), f i := by
   by_cases hf : Summable f
-  · exact tsum_const_smul g hf
+  exact tsum_const_smul g hf
   rw [tsum_eq_zero_of_not_summable hf]
   simp only [smul_zero]
   let mul_g : α ≃+ α := DistribMulAction.toAddEquiv α g
   apply tsum_eq_zero_of_not_summable
   change ¬ Summable (mul_g ∘ f)
   rwa [Summable.map_iff_of_equiv mul_g]
-  · apply continuous_const_smul
-  · apply continuous_const_smul
+  apply continuous_const_smul
+  apply continuous_const_smul
 
 /-- Infinite sums commute with scalar multiplication. Version for scalars living in a
   `DivisionRing`; no summability hypothesis. This could be made to work for a
@@ -50,8 +50,8 @@ lemma tsum_const_smul' {γ : Type*} [Group γ] [DistribMulAction γ α] [Continu
 lemma tsum_const_smul'' {γ : Type*} [DivisionRing γ] [Module γ α] [ContinuousConstSMul γ α]
     [T2Space α] (g : γ) : ∑' (i : β), g • f i = g • ∑' (i : β), f i := by
   rcases eq_or_ne g 0 with rfl | hg
-  · simp
-  · exact tsum_const_smul' (Units.mk0 g hg)
+  simp
+  exact tsum_const_smul' (Units.mk0 g hg)
 
 end ConstSMul
 
@@ -150,15 +150,15 @@ protected theorem ContinuousLinearEquiv.summable {f : ι → M} (e : M ≃SL[σ]
 theorem ContinuousLinearEquiv.tsum_eq_iff [T2Space M] [T2Space M₂] {f : ι → M} (e : M ≃SL[σ] M₂)
     {y : M₂} : (∑' z, e (f z)) = y ↔ ∑' z, f z = e.symm y := by
   by_cases hf : Summable f
-  · exact
-      ⟨fun h ↦ (e.hasSum.mp ((e.summable.mpr hf).hasSum_iff.mpr h)).tsum_eq, fun h ↦
-        (e.hasSum.mpr (hf.hasSum_iff.mpr h)).tsum_eq⟩
-  · have hf' : ¬Summable fun z ↦ e (f z) := fun h ↦ hf (e.summable.mp h)
-    rw [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable hf']
-    refine ⟨?_, fun H ↦ ?_⟩
-    · rintro rfl
-      simp
-    · simpa using congr_arg (fun z ↦ e z) H
+  exact
+    ⟨fun h ↦ (e.hasSum.mp ((e.summable.mpr hf).hasSum_iff.mpr h)).tsum_eq, fun h ↦
+      (e.hasSum.mpr (hf.hasSum_iff.mpr h)).tsum_eq⟩
+  have hf' : ¬Summable fun z ↦ e (f z) := fun h ↦ hf (e.summable.mp h)
+  rw [tsum_eq_zero_of_not_summable hf, tsum_eq_zero_of_not_summable hf']
+  refine ⟨?_, fun H ↦ ?_⟩
+  rintro rfl
+  simp
+  simpa using congr_arg (fun z ↦ e z) H
 
 protected theorem ContinuousLinearEquiv.map_tsum [T2Space M] [T2Space M₂] {f : ι → M}
     (e : M ≃SL[σ] M₂) : e (∑' z, f z) = ∑' z, e (f z) := by

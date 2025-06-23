@@ -200,11 +200,11 @@ theorem fourierSubalgebra_coe :
   refine Subset.trans ?_ Submodule.subset_span
   intro x hx
   refine Submonoid.closure_induction hx (fun _ => id) ⟨0, ?_⟩ ?_
-  · ext1 z; exact fourier_zero
-  · rintro _ _ ⟨m, rfl⟩ ⟨n, rfl⟩
-    refine ⟨m + n, ?_⟩
-    ext1 z
-    exact fourier_add
+  ext1 z; exact fourier_zero
+  rintro _ _ ⟨m, rfl⟩ ⟨n, rfl⟩
+  refine ⟨m + n, ?_⟩
+  ext1 z
+  exact fourier_add
 
 /- a post-port refactor made `fourierSubalgebra` into a `StarSubalgebra`, and eliminated
 `conjInvariantSubalgebra` entirely, making this lemma irrelevant. -/
@@ -258,11 +258,11 @@ theorem orthonormal_fourier : Orthonormal ℂ (@fourierLp T _ 2 _) := by
   rw [ContinuousMap.inner_toLp (@haarAddCircle T hT) (fourier i) (fourier j)]
   simp_rw [← fourier_neg, ← fourier_add]
   split_ifs with h
-  · simp_rw [h, neg_add_self]
-    have : ⇑(@fourier T 0) = (fun _ => 1 : AddCircle T → ℂ)
-    ext1; exact fourier_zero
-    rw [this, integral_const, measure_univ, ENNReal.one_toReal, Complex.real_smul,
-      Complex.ofReal_one, mul_one]
+  simp_rw [h, neg_add_self]
+  have : ⇑(@fourier T 0) = (fun _ => 1 : AddCircle T → ℂ)
+  ext1; exact fourier_zero
+  rw [this, integral_const, measure_univ, ENNReal.one_toReal, Complex.real_smul,
+    Complex.ofReal_one, mul_one]
   have hij : -i + j ≠ 0
   rw [add_comm]
   exact sub_ne_zero.mpr (Ne.symm h)
@@ -336,10 +336,10 @@ theorem fourierCoeff_liftIoc_eq {a : ℝ} (f : ℝ → ℂ) (n : ℤ) :
     fourierCoeff (AddCircle.liftIoc T a f) n =
     fourierCoeffOn (lt_add_of_pos_right a hT.out) f n := by
   rw [fourierCoeffOn_eq_integral, fourierCoeff_eq_intervalIntegral, add_sub_cancel_left a T]
-  · congr 1
-    refine intervalIntegral.integral_congr_ae (ae_of_all _ fun x hx => ?_)
-    rw [liftIoc_coe_apply]
-    rwa [uIoc_of_le (lt_add_of_pos_right a hT.out).le] at hx
+  congr 1
+  refine intervalIntegral.integral_congr_ae (ae_of_all _ fun x hx => ?_)
+  rw [liftIoc_coe_apply]
+  rwa [uIoc_of_le (lt_add_of_pos_right a hT.out).le] at hx
 
 theorem fourierCoeff_liftIco_eq {a : ℝ} (f : ℝ → ℂ) (n : ℤ) :
     fourierCoeff (AddCircle.liftIco T a f) n =
@@ -372,11 +372,11 @@ theorem coe_fourierBasis : ⇑(@fourierBasis T hT) = @fourierLp T hT 2 _ :=
 theorem fourierBasis_repr (f : Lp ℂ 2 <| @haarAddCircle T hT) (i : ℤ) :
     fourierBasis.repr f i = fourierCoeff f i := by
   trans ∫ t : AddCircle T, conj ((@fourierLp T hT 2 _ i : AddCircle T → ℂ) t) * f t ∂haarAddCircle
-  · rw [fourierBasis.repr_apply_apply f i, MeasureTheory.L2.inner_def, coe_fourierBasis]
-    simp only [RCLike.inner_apply]
-  · apply integral_congr_ae
-    filter_upwards [coeFn_fourierLp 2 i] with _ ht
-    rw [ht, ← fourier_neg, smul_eq_mul]
+  rw [fourierBasis.repr_apply_apply f i, MeasureTheory.L2.inner_def, coe_fourierBasis]
+  simp only [RCLike.inner_apply]
+  apply integral_congr_ae
+  filter_upwards [coeFn_fourierLp 2 i] with _ ht
+  rw [ht, ← fourier_neg, smul_eq_mul]
 
 /-- The Fourier series of an `L2` function `f` sums to `f`, in the `L²` space of `AddCircle T`. -/
 theorem hasSum_fourier_series_L2 (f : Lp ℂ 2 <| @haarAddCircle T hT) :
@@ -462,8 +462,8 @@ theorem has_antideriv_at_fourier_neg (hT : Fact (0 < T)) {n : ℤ} (hn : n ≠ 0
     HasDerivAt (fun y : ℝ => (T : ℂ) / (-2 * π * I * n) * fourier (-n) (y : AddCircle T))
       (fourier (-n) (x : AddCircle T)) x := by
   convert (hasDerivAt_fourier_neg T n x).div_const (-2 * π * I * n / T) using 1
-  · ext1 y; rw [div_div_eq_mul_div]; ring
-  · simp [mul_div_cancel_left₀, hn, (Fact.out : 0 < T).ne', Real.pi_pos.ne']
+  ext1 y; rw [div_div_eq_mul_div]; ring
+  simp [mul_div_cancel_left₀, hn, (Fact.out : 0 < T).ne', Real.pi_pos.ne']
 
 /-- Express Fourier coefficients of `f` on an interval in terms of those of its derivative. -/
 theorem fourierCoeffOn_of_hasDeriv_right {a b : ℝ} (hab : a < b) {f f' : ℝ → ℂ}
@@ -489,10 +489,10 @@ theorem fourierCoeffOn_of_hasDeriv_right {a b : ℝ} (hab : a < b) {f f' : ℝ �
   simpa using coe_add_period (b - a) a
   rw [s2, integral_const_mul, ← sub_mul, mul_sub, mul_sub]
   congr 1
-  · conv_lhs => rw [mul_comm, mul_div, mul_one]
-    rw [div_eq_iff (ofReal_ne_zero.mpr hT.out.ne')]
-    ring
-  · ring
+  conv_lhs => rw [mul_comm, mul_div, mul_one]
+  rw [div_eq_iff (ofReal_ne_zero.mpr hT.out.ne')]
+  ring
+  ring
 
 /-- Express Fourier coefficients of `f` on an interval in terms of those of its derivative. -/
 theorem fourierCoeffOn_of_hasDerivAt_Ioo {a b : ℝ} (hab : a < b) {f f' : ℝ → ℂ}

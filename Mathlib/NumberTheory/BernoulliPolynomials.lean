@@ -83,8 +83,8 @@ theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n := by
   simp only [← succ_eq_add_one, sum_range_succ, mul_one, cast_one, choose_self,
     (_root_.bernoulli _).mul_comm, sum_bernoulli, one_pow, mul_one, eval_C, eval_monomial, one_mul]
   by_cases h : n = 1
-  · norm_num [h]
-  · simp [h, bernoulli_eq_bernoulli'_of_ne_one h]
+  norm_num [h]
+  simp [h, bernoulli_eq_bernoulli'_of_ne_one h]
 
 end Examples
 
@@ -117,13 +117,13 @@ nonrec theorem sum_bernoulli (n : ℕ) :
   conv_lhs =>
     apply_congr
     · skip
-    · conv =>
-      apply_congr
-      · skip
-      · rw [← Nat.cast_mul, choose_mul ((le_tsub_iff_left <| mem_range_le (by assumption)).1 <|
-            mem_range_le (by assumption)) (le.intro rfl),
-          Nat.cast_mul, add_tsub_cancel_left, mul_assoc, mul_comm, ← smul_eq_mul, ←
-          smul_monomial]
+    conv =>
+    apply_congr
+    · skip
+    rw [← Nat.cast_mul, choose_mul ((le_tsub_iff_left <| mem_range_le (by assumption)).1 <|
+        mem_range_le (by assumption)) (le.intro rfl),
+      Nat.cast_mul, add_tsub_cancel_left, mul_assoc, mul_comm, ← smul_eq_mul, ←
+      smul_monomial]
   simp_rw [← sum_smul]
   rw [sum_range_succ_comm]
   simp only [add_right_eq_self, mul_one, cast_one, cast_add, add_tsub_cancel_left,
@@ -155,17 +155,17 @@ theorem sum_range_pow_eq_bernoulli_sub (n p : ℕ) :
     ((p + 1 : ℚ) * ∑ k ∈ range n, (k : ℚ) ^ p) = (bernoulli p.succ).eval (n : ℚ) -
     _root_.bernoulli p.succ := by
   rw [sum_range_pow, bernoulli_def, eval_finset_sum, ← sum_div, mul_div_cancel₀ _ _]
-  · simp_rw [eval_monomial]
-    symm
-    rw [← sum_flip _, sum_range_succ]
-    simp only [tsub_self, tsub_zero, choose_zero_right, cast_one, mul_one, _root_.pow_zero,
-      add_tsub_cancel_right]
-    apply sum_congr rfl fun x hx => _
-    intro x hx
-    apply congr_arg₂ _ (congr_arg₂ _ _ _) rfl
-    · rw [Nat.sub_sub_self (mem_range_le hx)]
-    · rw [← choose_symm (mem_range_le hx)]
-  · norm_cast
+  simp_rw [eval_monomial]
+  symm
+  rw [← sum_flip _, sum_range_succ]
+  simp only [tsub_self, tsub_zero, choose_zero_right, cast_one, mul_one, _root_.pow_zero,
+    add_tsub_cancel_right]
+  apply sum_congr rfl fun x hx => _
+  intro x hx
+  apply congr_arg₂ _ (congr_arg₂ _ _ _) rfl
+  rw [Nat.sub_sub_self (mem_range_le hx)]
+  rw [← choose_symm (mem_range_le hx)]
+  norm_cast
 
 /-- Rearrangement of `Polynomial.sum_range_pow_eq_bernoulli_sub`. -/
 theorem bernoulli_succ_eval (n p : ℕ) : (bernoulli p.succ).eval (n : ℚ) =
@@ -184,17 +184,17 @@ theorem bernoulli_eval_one_add (n : ℕ) (x : ℚ) :
   conv_lhs =>
     congr
     · skip
-    · apply_congr
-      · skip
-      · rw [eval_smul, hd _ (mem_range.1 (by assumption))]
+    apply_congr
+    · skip
+    rw [eval_smul, hd _ (mem_range.1 (by assumption))]
   rw [eval_sub, eval_finset_sum]
   simp_rw [eval_smul, smul_add]
   rw [sum_add_distrib, sub_add, sub_eq_sub_iff_sub_eq_sub, _root_.add_sub_sub_cancel]
   conv_rhs =>
     congr
     · skip
-    · congr
-      rw [succ_eq_add_one, ← choose_succ_self_right d]
+    congr
+    rw [succ_eq_add_one, ← choose_succ_self_right d]
   rw [Nat.cast_succ, ← smul_eq_mul, ← sum_range_succ _ d, eval_monomial_one_add_sub]
   simp_rw [smul_eq_mul]
 
@@ -212,7 +212,7 @@ theorem bernoulli_generating_function (t : A) :
   ext n
   -- n = 0 case solved by `simp`
   cases' n with n
-  · simp
+  simp
   -- n ≥ 1, the coefficients is a sum to n+2, so use `sum_range_succ` to write as
   -- last term plus sum to n+1
   rw [coeff_succ_X_mul, coeff_rescale, coeff_exp, PowerSeries.coeff_mul,

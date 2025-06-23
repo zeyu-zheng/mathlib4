@@ -103,12 +103,12 @@ theorem orthogonal_disjoint : Disjoint K Kᗮ := by simp [disjoint_iff, K.inf_or
 inner product with each of the elements of `K`. -/
 theorem orthogonal_eq_inter : Kᗮ = ⨅ v : K, LinearMap.ker (innerSL 𝕜 (v : E)) := by
   apply le_antisymm
-  · rw [le_iInf_iff]
-    rintro ⟨v, hv⟩ w hw
-    simpa using hw _ hv
-  · intro v hv w hw
-    simp only [mem_iInf] at hv
-    exact hv ⟨w, hw⟩
+  rw [le_iInf_iff]
+  rintro ⟨v, hv⟩ w hw
+  simpa using hw _ hv
+  intro v hv w hw
+  simp only [mem_iInf] at hv
+  exact hv ⟨w, hw⟩
 
 /-- The orthogonal complement of any submodule `K` is closed. -/
 theorem isClosed_orthogonal : IsClosed (Kᗮ : Set E) := by

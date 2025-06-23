@@ -163,15 +163,15 @@ numbers where the denominator is `m ^ k!`. -/
 theorem partialSum_eq_rat {m : ℕ} (hm : 0 < m) (k : ℕ) :
     ∃ p : ℕ, partialSum m k = p / ((m ^ k ! :) : ℝ) := by
   induction' k with k h
-  · exact ⟨1, by rw [partialSum, range_one, sum_singleton, Nat.cast_one, Nat.factorial,
-      pow_one, pow_one]⟩
-  · rcases h with ⟨p_k, h_k⟩
-    use p_k * m ^ ((k + 1)! - k !) + 1
-    rw [partialSum_succ, h_k, div_add_div, div_eq_div_iff, add_mul]
-    · norm_cast
-      rw [add_mul, one_mul, Nat.factorial_succ, add_mul, one_mul, add_tsub_cancel_right, pow_add]
-      simp [mul_assoc]
-    all_goals positivity
+  exact ⟨1, by rw [partialSum, range_one, sum_singleton, Nat.cast_one, Nat.factorial,
+    pow_one, pow_one]⟩
+  rcases h with ⟨p_k, h_k⟩
+  use p_k * m ^ ((k + 1)! - k !) + 1
+  rw [partialSum_succ, h_k, div_add_div, div_eq_div_iff, add_mul]
+  norm_cast
+  rw [add_mul, one_mul, Nat.factorial_succ, add_mul, one_mul, add_tsub_cancel_right, pow_add]
+  simp [mul_assoc]
+  all_goals positivity
 
 end LiouvilleNumber
 

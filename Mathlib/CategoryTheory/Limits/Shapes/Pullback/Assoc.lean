@@ -169,10 +169,10 @@ theorem pullbackAssoc_inv_fst_fst [HasPullback ((pullback.snd _ _ : Z₁ ⟶ X�
     [HasPullback f₁ ((pullback.fst _ _ : Z₂ ⟶ X₂) ≫ f₂)] :
     (pullbackAssoc f₁ f₂ f₃ f₄).inv ≫ pullback.fst _ _ ≫ pullback.fst _ _ = pullback.fst _ _ := by
   trans l₁' ≫ pullback.fst _ _
-  · rw [← Category.assoc]
-    congr 1
-    exact IsLimit.conePointUniqueUpToIso_inv_comp _ _ WalkingCospan.left
-  · exact pullback.lift_fst _ _ _
+  rw [← Category.assoc]
+  congr 1
+  exact IsLimit.conePointUniqueUpToIso_inv_comp _ _ WalkingCospan.left
+  exact pullback.lift_fst _ _ _
 
 @[reassoc (attr := simp)]
 theorem pullbackAssoc_hom_fst [HasPullback ((pullback.snd _ _ : Z₁ ⟶ X₂) ≫ f₃) f₄]
@@ -185,20 +185,20 @@ theorem pullbackAssoc_hom_snd_fst [HasPullback ((pullback.snd _ _ : Z₁ ⟶ X�
     [HasPullback f₁ ((pullback.fst _ _ : Z₂ ⟶ X₂) ≫ f₂)] : (pullbackAssoc f₁ f₂ f₃ f₄).hom ≫
     pullback.snd _ _ ≫ pullback.fst _ _ = pullback.fst _ _ ≫ pullback.snd _ _ := by
   trans l₂ ≫ pullback.fst _ _
-  · rw [← Category.assoc]
-    congr 1
-    exact IsLimit.conePointUniqueUpToIso_hom_comp _ _ WalkingCospan.right
-  · exact pullback.lift_fst _ _ _
+  rw [← Category.assoc]
+  congr 1
+  exact IsLimit.conePointUniqueUpToIso_hom_comp _ _ WalkingCospan.right
+  exact pullback.lift_fst _ _ _
 
 @[reassoc (attr := simp)]
 theorem pullbackAssoc_hom_snd_snd [HasPullback ((pullback.snd _ _ : Z₁ ⟶ X₂) ≫ f₃) f₄]
     [HasPullback f₁ ((pullback.fst _ _ : Z₂ ⟶ X₂) ≫ f₂)] :
     (pullbackAssoc f₁ f₂ f₃ f₄).hom ≫ pullback.snd _ _ ≫ pullback.snd _ _ = pullback.snd _ _ := by
   trans l₂ ≫ pullback.snd _ _
-  · rw [← Category.assoc]
-    congr 1
-    exact IsLimit.conePointUniqueUpToIso_hom_comp _ _ WalkingCospan.right
-  · exact pullback.lift_snd _ _ _
+  rw [← Category.assoc]
+  congr 1
+  exact IsLimit.conePointUniqueUpToIso_hom_comp _ _ WalkingCospan.right
+  exact pullback.lift_snd _ _ _
 
 @[reassoc (attr := simp)]
 theorem pullbackAssoc_inv_fst_snd [HasPullback ((pullback.snd _ _ : Z₁ ⟶ X₂) ≫ f₃) f₄]
@@ -356,11 +356,11 @@ theorem inl_inl_pushoutAssoc_hom [HasPushout (g₃ ≫ (pushout.inr _ _ : X₂ �
     [HasPushout g₁ (g₂ ≫ (pushout.inl _ _ : X₂ ⟶ Y₂))] :
     pushout.inl _ _ ≫ pushout.inl _ _ ≫ (pushoutAssoc g₁ g₂ g₃ g₄).hom = pushout.inl _ _ := by
   trans f₁ ≫ l₁
-  · congr 1
-    exact
-      (pushoutPushoutLeftIsPushout g₁ g₂ g₃ g₄).comp_coconePointUniqueUpToIso_hom _
-        WalkingCospan.left
-  · exact pushout.inl_desc _ _ _
+  congr 1
+  exact
+    (pushoutPushoutLeftIsPushout g₁ g₂ g₃ g₄).comp_coconePointUniqueUpToIso_hom _
+      WalkingCospan.left
+  exact pushout.inl_desc _ _ _
 
 @[reassoc (attr := simp)]
 theorem inr_inl_pushoutAssoc_hom [HasPushout (g₃ ≫ (pushout.inr _ _ : X₂ ⟶ Y₁)) g₄]
@@ -368,22 +368,22 @@ theorem inr_inl_pushoutAssoc_hom [HasPushout (g₃ ≫ (pushout.inr _ _ : X₂ �
     pushout.inr _ _ ≫ pushout.inl _ _ ≫ (pushoutAssoc g₁ g₂ g₃ g₄).hom =
       pushout.inl _ _ ≫ pushout.inr _ _ := by
   trans f₂ ≫ l₁
-  · congr 1
-    exact
-      (pushoutPushoutLeftIsPushout g₁ g₂ g₃ g₄).comp_coconePointUniqueUpToIso_hom _
-        WalkingCospan.left
-  · exact pushout.inr_desc _ _ _
+  congr 1
+  exact
+    (pushoutPushoutLeftIsPushout g₁ g₂ g₃ g₄).comp_coconePointUniqueUpToIso_hom _
+      WalkingCospan.left
+  exact pushout.inr_desc _ _ _
 
 @[reassoc (attr := simp)]
 theorem inr_inr_pushoutAssoc_inv [HasPushout (g₃ ≫ (pushout.inr _ _ : X₂ ⟶ Y₁)) g₄]
     [HasPushout g₁ (g₂ ≫ (pushout.inl _ _ : X₂ ⟶ Y₂))] :
     pushout.inr _ _ ≫ pushout.inr _ _ ≫ (pushoutAssoc g₁ g₂ g₃ g₄).inv = pushout.inr _ _ := by
   trans f₄ ≫ l₂'
-  · congr 1
-    exact
-      (pushoutPushoutLeftIsPushout g₁ g₂ g₃ g₄).comp_coconePointUniqueUpToIso_inv
-        (pushoutPushoutRightIsPushout g₁ g₂ g₃ g₄) WalkingCospan.right
-  · exact pushout.inr_desc _ _ _
+  congr 1
+  exact
+    (pushoutPushoutLeftIsPushout g₁ g₂ g₃ g₄).comp_coconePointUniqueUpToIso_inv
+      (pushoutPushoutRightIsPushout g₁ g₂ g₃ g₄) WalkingCospan.right
+  exact pushout.inr_desc _ _ _
 
 @[reassoc (attr := simp)]
 theorem inl_pushoutAssoc_inv [HasPushout (g₃ ≫ (pushout.inr _ _ : X₂ ⟶ Y₁)) g₄]

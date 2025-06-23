@@ -114,9 +114,9 @@ theorem cancel_right {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} (comm : a ≫ f₁ = b �
           big_k.isLimit.fac _ WalkingCospan.right, fun m₁ m₂ => ?_⟩
         apply big_k.isLimit.hom_ext
         refine (PullbackCone.mk a b ?_ : PullbackCone (f₁ ≫ f₂) _).equalizer_ext ?_ ?_
-        · apply reassoc_of% comm
-        · apply m₁.trans (big_k.isLimit.fac s' WalkingCospan.left).symm
-        · apply m₂.trans (big_k.isLimit.fac s' WalkingCospan.right).symm⟩ }
+        apply reassoc_of% comm
+        apply m₁.trans (big_k.isLimit.fac s' WalkingCospan.left).symm
+        apply m₂.trans (big_k.isLimit.fac s' WalkingCospan.right).symm⟩ }
 
 /-- If `(a,b)` is a kernel pair for `f₁ ≫ f₂` and `f₂` is mono, then `(a,b)` is a kernel pair for
 just `f₁`.
@@ -140,8 +140,8 @@ theorem comp_of_mono {f₁ : X ⟶ Y} {f₂ : Y ⟶ Z} [Mono f₂] (small_k : Is
       intro s m hm
       apply small_k.isLimit.hom_ext
       apply PullbackCone.equalizer_ext small_k.cone _ _
-      · exact (hm WalkingCospan.left).trans (by simp)
-      · exact (hm WalkingCospan.right).trans (by simp)⟩ }
+      exact (hm WalkingCospan.left).trans (by simp)
+      exact (hm WalkingCospan.right).trans (by simp)⟩ }
 
 /--
 If `(a,b)` is the kernel pair of `f`, and `f` is a coequalizer morphism for some parallel pair, then
@@ -170,22 +170,22 @@ protected theorem pullback {X Y Z A : C} {g : Y ⟶ Z} {a₁ a₂ : A ⟶ Y} (h 
     (fun s => pullback.lift (s.fst ≫ pullback.fst _ _)
       (h.lift (s.fst ≫ pullback.snd _ _) (s.snd ≫ pullback.snd _ _) ?_ ) ?_) (fun s => ?_)
         (fun s => ?_) (fun s m hm => ?_)⟩⟩
-  · simp_rw [Category.assoc, ← pullback.condition, ← Category.assoc, s.condition]
-  · simp only [assoc, lift_fst_assoc, pullback.condition]
-  · ext <;> simp
-  · ext
-    · simp [s.condition]
-    · simp
-  · #adaptation_note /-- nightly-2024-04-01
-    This `symm` (or the following ones that undo it) wasn't previously necessary. -/
-    symm
-    apply pullback.hom_ext
-    · symm
-      simpa using hm WalkingCospan.left =≫ pullback.fst f g
-    · symm
-      apply PullbackCone.IsLimit.hom_ext h.isLimit
-      · simpa using hm WalkingCospan.left =≫ pullback.snd f g
-      · simpa using hm WalkingCospan.right =≫ pullback.snd f g
+  simp_rw [Category.assoc, ← pullback.condition, ← Category.assoc, s.condition]
+  simp only [assoc, lift_fst_assoc, pullback.condition]
+  ext <;> simp
+  ext
+  simp [s.condition]
+  simp
+  #adaptation_note /-- nightly-2024-04-01
+  This `symm` (or the following ones that undo it) wasn't previously necessary. -/
+  symm
+  apply pullback.hom_ext
+  symm
+  simpa using hm WalkingCospan.left =≫ pullback.fst f g
+  symm
+  apply PullbackCone.IsLimit.hom_ext h.isLimit
+  simpa using hm WalkingCospan.left =≫ pullback.snd f g
+  simpa using hm WalkingCospan.right =≫ pullback.snd f g
 
 theorem mono_of_isIso_fst (h : IsKernelPair f a b) [IsIso a] : Mono f := by
   obtain ⟨l, h₁, h₂⟩ := Limits.PullbackCone.IsLimit.lift' h.isLimit (𝟙 _) (𝟙 _) (by simp [h.w])

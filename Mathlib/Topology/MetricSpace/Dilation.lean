@@ -145,7 +145,7 @@ theorem ratio_of_subsingleton [Subsingleton α] [DilationClass F α β] (f : F) 
 
 theorem ratio_ne_zero [DilationClass F α β] (f : F) : ratio f ≠ 0 := by
   rw [ratio]; split_ifs
-  · exact one_ne_zero
+  exact one_ne_zero
   exact (DilationClass.edist_eq' f).choose_spec.1
 
 theorem ratio_pos [DilationClass F α β] (f : F) : 0 < ratio f :=
@@ -155,11 +155,11 @@ theorem ratio_pos [DilationClass F α β] (f : F) : 0 < ratio f :=
 theorem edist_eq [DilationClass F α β] (f : F) (x y : α) :
     edist (f x) (f y) = ratio f * edist x y := by
   rw [ratio]; split_ifs with key
-  · rcases DilationClass.edist_eq' f with ⟨r, hne, hr⟩
-    replace hr := hr x y
-    cases' key x y with h h
-    · simp only [hr, h, mul_zero]
-    · simp [hr, h, hne]
+  rcases DilationClass.edist_eq' f with ⟨r, hne, hr⟩
+  replace hr := hr x y
+  cases' key x y with h h
+  simp only [hr, h, mul_zero]
+  simp [hr, h, hne]
   exact (DilationClass.edist_eq' f).choose_spec.2 x y
 
 @[simp]
@@ -249,10 +249,10 @@ def _root_.Isometry.toDilation (f : α → β) (hf : Isometry f) : α →ᵈ β 
 @[simp]
 lemma _root_.Isometry.toDilation_ratio {f : α → β} {hf : Isometry f} : ratio hf.toDilation = 1 := by
   by_cases h : ∀ x y : α, edist x y = 0 ∨ edist x y = ⊤
-  · exact ratio_of_trivial hf.toDilation h
-  · push_neg at h
-    obtain ⟨x, y, h₁, h₂⟩ := h
-    exact ratio_unique h₁ h₂ (by simp [hf x y]) |>.symm
+  exact ratio_of_trivial hf.toDilation h
+  push_neg at h
+  obtain ⟨x, y, h₁, h₂⟩ := h
+  exact ratio_unique h₁ h₂ (by simp [hf x y]) |>.symm
 
 theorem lipschitz : LipschitzWith (ratio f) (f : α → β) := fun x y => (edist_eq f x y).le
 
@@ -281,11 +281,11 @@ theorem coe_id : ⇑(Dilation.id α) = id :=
 
 theorem ratio_id : ratio (Dilation.id α) = 1 := by
   by_cases h : ∀ x y : α, edist x y = 0 ∨ edist x y = ∞
-  · rw [ratio, if_pos h]
-  · push_neg at h
-    rcases h with ⟨x, y, hne⟩
-    refine (ratio_unique hne.1 hne.2 ?_).symm
-    simp
+  rw [ratio, if_pos h]
+  push_neg at h
+  rcases h with ⟨x, y, hne⟩
+  refine (ratio_unique hne.1 hne.2 ?_).symm
+  simp
 
 /-- The composition of dilations is a dilation -/
 def comp (g : β →ᵈ γ) (f : α →ᵈ β) : α →ᵈ γ where
@@ -352,7 +352,7 @@ theorem coe_mul (f g : α →ᵈ α) : ⇑(f * g) = f ∘ g :=
 @[simp]
 theorem ratio_mul (f g : α →ᵈ α) : ratio (f * g) = ratio f * ratio g := by
   by_cases h : ∀ x y : α, edist x y = 0 ∨ edist x y = ∞
-  · simp [ratio_of_trivial, h]
+  simp [ratio_of_trivial, h]
   push_neg at h
   exact ratio_comp' h
 

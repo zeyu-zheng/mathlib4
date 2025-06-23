@@ -47,10 +47,10 @@ theorem sinh_half_dist (z w : ℍ) :
 theorem cosh_half_dist (z w : ℍ) :
     cosh (dist z w / 2) = dist (z : ℂ) (conj (w : ℂ)) / (2 * √(z.im * w.im)) := by
   rw [← sq_eq_sq, cosh_sq', sinh_half_dist, div_pow, div_pow, one_add_div, mul_pow, sq_sqrt]
-  · congr 1
-    simp only [Complex.dist_eq, Complex.sq_abs, Complex.normSq_sub, Complex.normSq_conj,
-      Complex.conj_conj, Complex.mul_re, Complex.conj_re, Complex.conj_im, coe_im]
-    ring
+  congr 1
+  simp only [Complex.dist_eq, Complex.sq_abs, Complex.normSq_sub, Complex.normSq_conj,
+    Complex.conj_conj, Complex.mul_re, Complex.conj_re, Complex.conj_im, coe_im]
+  ring
   all_goals positivity
 
 theorem tanh_half_dist (z w : ℍ) :
@@ -90,16 +90,16 @@ theorem dist_eq_iff_eq_sinh :
 theorem dist_eq_iff_eq_sq_sinh (hr : 0 ≤ r) :
     dist z w = r ↔ dist (z : ℂ) w ^ 2 / (4 * z.im * w.im) = sinh (r / 2) ^ 2 := by
   rw [dist_eq_iff_eq_sinh, ← sq_eq_sq, div_pow, mul_pow, sq_sqrt, mul_assoc]
-  · norm_num
+  norm_num
   all_goals positivity
 
 protected theorem dist_triangle (a b c : ℍ) : dist a c ≤ dist a b + dist b c := by
   rw [dist_le_iff_le_sinh, sinh_half_dist_add_dist, div_mul_eq_div_div _ _ (dist _ _), le_div_iff,
     div_mul_eq_mul_div]
-  · gcongr
-    exact EuclideanGeometry.mul_dist_le_mul_dist_add_mul_dist (a : ℂ) b c (conj (b : ℂ))
-  · rw [dist_comm, dist_pos, Ne, Complex.conj_eq_iff_im]
-    exact b.im_ne_zero
+  gcongr
+  exact EuclideanGeometry.mul_dist_le_mul_dist_add_mul_dist (a : ℂ) b c (conj (b : ℂ))
+  rw [dist_comm, dist_pos, Ne, Complex.conj_eq_iff_im]
+  exact b.im_ne_zero
 
 theorem dist_le_dist_coe_div_sqrt (z w : ℍ) : dist z w ≤ dist (z : ℂ) w / √(z.im * w.im) := by
   rw [dist_le_iff_le_sinh, ← div_mul_eq_div_div_swap, self_le_sinh_iff]
@@ -252,21 +252,21 @@ theorem le_dist_coe (z w : ℍ) : w.im * (1 - Real.exp (-dist z w)) ≤ dist (z 
 instance : MetricSpace ℍ :=
   metricSpaceAux.replaceTopology <| by
     refine le_antisymm (continuous_id_iff_le.1 ?_) ?_
-    · refine (@continuous_iff_continuous_dist ℍ ℍ metricSpaceAux.toPseudoMetricSpace _ _).2 ?_
-      have : ∀ x : ℍ × ℍ, 2 * √(x.1.im * x.2.im) ≠ 0 := fun x => by positivity
-      -- `continuity` fails to apply `Continuous.div`
-      apply_rules [Continuous.div, Continuous.mul, continuous_const, Continuous.arsinh,
-        Continuous.dist, continuous_coe.comp, continuous_fst, continuous_snd,
-        Real.continuous_sqrt.comp, continuous_im.comp]
-    · letI : MetricSpace ℍ := metricSpaceAux
-      refine le_of_nhds_le_nhds fun z => ?_
-      rw [nhds_induced]
-      refine (nhds_basis_ball.le_basis_iff (nhds_basis_ball.comap _)).2 fun R hR => ?_
-      have h₁ : 1 < R / im z + 1 := lt_add_of_pos_left _ (div_pos hR z.im_pos)
-      have h₀ : 0 < R / im z + 1 := one_pos.trans h₁
-      refine ⟨log (R / im z + 1), Real.log_pos h₁, ?_⟩
-      refine fun w hw => (dist_coe_le w z).trans_lt ?_
-      rwa [← lt_div_iff' z.im_pos, sub_lt_iff_lt_add, ← Real.lt_log_iff_exp_lt h₀]
+    refine (@continuous_iff_continuous_dist ℍ ℍ metricSpaceAux.toPseudoMetricSpace _ _).2 ?_
+    have : ∀ x : ℍ × ℍ, 2 * √(x.1.im * x.2.im) ≠ 0 := fun x => by positivity
+    -- `continuity` fails to apply `Continuous.div`
+    apply_rules [Continuous.div, Continuous.mul, continuous_const, Continuous.arsinh,
+      Continuous.dist, continuous_coe.comp, continuous_fst, continuous_snd,
+      Real.continuous_sqrt.comp, continuous_im.comp]
+    letI : MetricSpace ℍ := metricSpaceAux
+    refine le_of_nhds_le_nhds fun z => ?_
+    rw [nhds_induced]
+    refine (nhds_basis_ball.le_basis_iff (nhds_basis_ball.comap _)).2 fun R hR => ?_
+    have h₁ : 1 < R / im z + 1 := lt_add_of_pos_left _ (div_pos hR z.im_pos)
+    have h₀ : 0 < R / im z + 1 := one_pos.trans h₁
+    refine ⟨log (R / im z + 1), Real.log_pos h₁, ?_⟩
+    refine fun w hw => (dist_coe_le w z).trans_lt ?_
+    rwa [← lt_div_iff' z.im_pos, sub_lt_iff_lt_add, ← Real.lt_log_iff_exp_lt h₀]
 
 theorem im_pos_of_dist_center_le {z : ℍ} {r : ℝ} {w : ℂ}
     (h : dist w (center z r) ≤ z.im * Real.sinh r) : 0 < w.im :=
@@ -279,29 +279,29 @@ theorem im_pos_of_dist_center_le {z : ℍ} {r : ℝ} {w : ℂ}
 theorem image_coe_closedBall (z : ℍ) (r : ℝ) :
     ((↑) : ℍ → ℂ) '' closedBall (α := ℍ) z r = closedBall ↑(z.center r) (z.im * Real.sinh r) := by
   ext w; constructor
-  · rintro ⟨w, hw, rfl⟩
-    exact dist_le_iff_dist_coe_center_le.1 hw
-  · intro hw
-    lift w to ℍ using im_pos_of_dist_center_le hw
-    exact mem_image_of_mem _ (dist_le_iff_dist_coe_center_le.2 hw)
+  rintro ⟨w, hw, rfl⟩
+  exact dist_le_iff_dist_coe_center_le.1 hw
+  intro hw
+  lift w to ℍ using im_pos_of_dist_center_le hw
+  exact mem_image_of_mem _ (dist_le_iff_dist_coe_center_le.2 hw)
 
 theorem image_coe_ball (z : ℍ) (r : ℝ) :
     ((↑) : ℍ → ℂ) '' ball (α := ℍ) z r = ball ↑(z.center r) (z.im * Real.sinh r) := by
   ext w; constructor
-  · rintro ⟨w, hw, rfl⟩
-    exact dist_lt_iff_dist_coe_center_lt.1 hw
-  · intro hw
-    lift w to ℍ using im_pos_of_dist_center_le (ball_subset_closedBall hw)
-    exact mem_image_of_mem _ (dist_lt_iff_dist_coe_center_lt.2 hw)
+  rintro ⟨w, hw, rfl⟩
+  exact dist_lt_iff_dist_coe_center_lt.1 hw
+  intro hw
+  lift w to ℍ using im_pos_of_dist_center_le (ball_subset_closedBall hw)
+  exact mem_image_of_mem _ (dist_lt_iff_dist_coe_center_lt.2 hw)
 
 theorem image_coe_sphere (z : ℍ) (r : ℝ) :
     ((↑) : ℍ → ℂ) '' sphere (α := ℍ) z r = sphere ↑(z.center r) (z.im * Real.sinh r) := by
   ext w; constructor
-  · rintro ⟨w, hw, rfl⟩
-    exact dist_eq_iff_dist_coe_center_eq.1 hw
-  · intro hw
-    lift w to ℍ using im_pos_of_dist_center_le (sphere_subset_closedBall hw)
-    exact mem_image_of_mem _ (dist_eq_iff_dist_coe_center_eq.2 hw)
+  rintro ⟨w, hw, rfl⟩
+  exact dist_eq_iff_dist_coe_center_eq.1 hw
+  intro hw
+  lift w to ℍ using im_pos_of_dist_center_le (sphere_subset_closedBall hw)
+  exact mem_image_of_mem _ (dist_eq_iff_dist_coe_center_eq.2 hw)
 
 instance : ProperSpace ℍ := by
   refine ⟨fun z r => ?_⟩
@@ -337,12 +337,12 @@ instance : IsometricSMul SL(2, ℝ) ℍ :=
           AbsoluteValue.map_mul, ← Complex.normSq_mul, Real.sqrt_div h₁, ← Complex.abs_apply,
           mul_div (2 : ℝ), div_div_div_comm, div_self h₂, Complex.norm_eq_abs]
     by_cases hc : g 1 0 = 0
-    · obtain ⟨u, v, h⟩ := exists_SL2_smul_eq_of_apply_zero_one_eq_zero g hc
-      rw [h]
-      exact (isometry_real_vadd v).comp (isometry_pos_mul u)
-    · obtain ⟨u, v, w, h⟩ := exists_SL2_smul_eq_of_apply_zero_one_ne_zero g hc
-      rw [h]
-      exact
-        (isometry_real_vadd w).comp (h₀.comp <| (isometry_real_vadd v).comp <| isometry_pos_mul u)⟩
+    obtain ⟨u, v, h⟩ := exists_SL2_smul_eq_of_apply_zero_one_eq_zero g hc
+    rw [h]
+    exact (isometry_real_vadd v).comp (isometry_pos_mul u)
+    obtain ⟨u, v, w, h⟩ := exists_SL2_smul_eq_of_apply_zero_one_ne_zero g hc
+    rw [h]
+    exact
+      (isometry_real_vadd w).comp (h₀.comp <| (isometry_real_vadd v).comp <| isometry_pos_mul u)⟩
 
 end UpperHalfPlane

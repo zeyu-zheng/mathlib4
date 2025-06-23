@@ -135,17 +135,17 @@ theorem not_step_nil : ¬Step [] L := by
 theorem Step.cons_left_iff {a : α} {b : Bool} :
     Step ((a, b) :: L₁) L₂ ↔ (∃ L, Step L₁ L ∧ L₂ = (a, b) :: L) ∨ L₁ = (a, ! b) :: L₂ := by
   constructor
-  · generalize hL : ((a, b) :: L₁ : List _) = L
-    rintro @⟨_ | ⟨p, s'⟩, e, a', b'⟩
-    · simp at hL
-      simp [*]
-    · simp at hL
-      rcases hL with ⟨rfl, rfl⟩
-      refine Or.inl ⟨s' ++ e, Step.not, ?_⟩
-      simp
-  · rintro (⟨L, h, rfl⟩ | rfl)
-    · exact Step.cons h
-    · exact Step.cons_not
+  generalize hL : ((a, b) :: L₁ : List _) = L
+  rintro @⟨_ | ⟨p, s'⟩, e, a', b'⟩
+  simp at hL
+  simp [*]
+  simp at hL
+  rcases hL with ⟨rfl, rfl⟩
+  refine Or.inl ⟨s' ++ e, Step.not, ?_⟩
+  simp
+  rintro (⟨L, h, rfl⟩ | rfl)
+  exact Step.cons h
+  exact Step.cons_not
 
 @[to_additive]
 theorem not_step_singleton : ∀ {p : α × Bool}, ¬Step [p] L
@@ -215,15 +215,15 @@ theorem cons_cons_iff (p) : Red (p :: L₁) (p :: L₂) ↔ Red L₁ L₂ :=
       induction' h using Relation.ReflTransGen.head_induction_on
         with L₁ L₂ h₁₂ h ih
         generalizing L₁ L₂
-      · subst_vars
-        cases eq₂
-        constructor
-      · subst_vars
-        cases' p with a b
-        rw [Step.cons_left_iff] at h₁₂
-        rcases h₁₂ with (⟨L, h₁₂, rfl⟩ | rfl)
-        · exact (ih rfl rfl).head h₁₂
-        · exact (cons_cons h).tail Step.cons_not_rev)
+      subst_vars
+      cases eq₂
+      constructor
+      subst_vars
+      cases' p with a b
+      rw [Step.cons_left_iff] at h₁₂
+      rcases h₁₂ with (⟨L, h₁₂, rfl⟩ | rfl)
+      exact (ih rfl rfl).head h₁₂
+      exact (cons_cons h).tail Step.cons_not_rev)
     cons_cons
 
 @[to_additive]
@@ -242,17 +242,17 @@ theorem to_append_iff : Red L (L₁ ++ L₂) ↔ ∃ L₃ L₄, L = L₃ ++ L₄
       generalize eq : L₁ ++ L₂ = L₁₂
       intro h
       induction' h with L' L₁₂ hLL' h ih generalizing L₁ L₂
-      · exact ⟨_, _, eq.symm, by rfl, by rfl⟩
-      · cases' h with s e a b
-        rcases List.append_eq_append_iff.1 eq with (⟨s', rfl, rfl⟩ | ⟨e', rfl, rfl⟩)
-        · have : L₁ ++ (s' ++ (a, b) :: (a, not b) :: e) = L₁ ++ s' ++ (a, b) :: (a, not b) :: e :=
-            by simp
-          rcases ih this with ⟨w₁, w₂, rfl, h₁, h₂⟩
-          exact ⟨w₁, w₂, rfl, h₁, h₂.tail Step.not⟩
-        · have : s ++ (a, b) :: (a, not b) :: e' ++ L₂ = s ++ (a, b) :: (a, not b) :: (e' ++ L₂) :=
-            by simp
-          rcases ih this with ⟨w₁, w₂, rfl, h₁, h₂⟩
-          exact ⟨w₁, w₂, rfl, h₁.tail Step.not, h₂⟩)
+      exact ⟨_, _, eq.symm, by rfl, by rfl⟩
+      cases' h with s e a b
+      rcases List.append_eq_append_iff.1 eq with (⟨s', rfl, rfl⟩ | ⟨e', rfl, rfl⟩)
+      have : L₁ ++ (s' ++ (a, b) :: (a, not b) :: e) = L₁ ++ s' ++ (a, b) :: (a, not b) :: e :=
+        by simp
+      rcases ih this with ⟨w₁, w₂, rfl, h₁, h₂⟩
+      exact ⟨w₁, w₂, rfl, h₁, h₂.tail Step.not⟩
+      have : s ++ (a, b) :: (a, not b) :: e' ++ L₂ = s ++ (a, b) :: (a, not b) :: (e' ++ L₂) :=
+        by simp
+      rcases ih this with ⟨w₁, w₂, rfl, h₁, h₂⟩
+      exact ⟨w₁, w₂, rfl, h₁.tail Step.not, h₂⟩)
     fun ⟨L₃, L₄, Eq, h₃, h₄⟩ => Eq.symm ▸ append_append h₃ h₄
 
 /-- The empty word `[]` only reduces to itself. -/
@@ -300,15 +300,15 @@ theorem inv_of_red_of_ne {x1 b1 x2 b2} (H1 : (x1, b1) ≠ (x2, b2))
     (H2 : Red ((x1, b1) :: L₁) ((x2, b2) :: L₂)) : Red L₁ ((x1, not b1) :: (x2, b2) :: L₂) := by
   have : Red ((x1, b1) :: L₁) ([(x2, b2)] ++ L₂) := H2
   rcases to_append_iff.1 this with ⟨_ | ⟨p, L₃⟩, L₄, eq, h₁, h₂⟩
-  · simp [nil_iff] at h₁
-  · cases eq
-    show Red (L₃ ++ L₄) ([(x1, not b1), (x2, b2)] ++ L₂)
-    apply append_append _ h₂
-    have h₁ : Red ((x1, not b1) :: (x1, b1) :: L₃) [(x1, not b1), (x2, b2)] := cons_cons h₁
-    have h₂ : Red ((x1, not b1) :: (x1, b1) :: L₃) L₃ := Step.cons_not_rev.to_red
-    rcases church_rosser h₁ h₂ with ⟨L', h₁, h₂⟩
-    rw [red_iff_irreducible H1] at h₁
-    rwa [h₁] at h₂
+  simp [nil_iff] at h₁
+  cases eq
+  show Red (L₃ ++ L₄) ([(x1, not b1), (x2, b2)] ++ L₂)
+  apply append_append _ h₂
+  have h₁ : Red ((x1, not b1) :: (x1, b1) :: L₃) [(x1, not b1), (x2, b2)] := cons_cons h₁
+  have h₂ : Red ((x1, not b1) :: (x1, b1) :: L₃) L₃ := Step.cons_not_rev.to_red
+  rcases church_rosser h₁ h₂ with ⟨L', h₁, h₂⟩
+  rw [red_iff_irreducible H1] at h₁
+  rwa [h₁] at h₂
 
 open List -- for <+ notation
 
@@ -356,10 +356,10 @@ theorem sizeof_of_step : ∀ {L₁ L₂ : List (α × Bool)},
 @[to_additive]
 theorem length (h : Red L₁ L₂) : ∃ n, L₁.length = L₂.length + 2 * n := by
   induction' h with L₂ L₃ _h₁₂ h₂₃ ih
-  · exact ⟨0, rfl⟩
-  · rcases ih with ⟨n, eq⟩
-    exists 1 + n
-    simp [Nat.mul_add, eq, (Step.length h₂₃).symm, add_assoc]
+  exact ⟨0, rfl⟩
+  rcases ih with ⟨n, eq⟩
+  exists 1 + n
+  simp [Nat.mul_add, eq, (Step.length h₂₃).symm, add_assoc]
 
 @[to_additive]
 theorem antisymm (h₁₂ : Red L₁ L₂) (h₂₁ : Red L₂ L₁) : L₁ = L₂ :=
@@ -752,8 +752,8 @@ end Prod
 @[to_additive]
 theorem lift_eq_prod_map {β : Type v} [Group β] {f : α → β} {x} : lift f x = prod (map f x) := by
   rw [← lift.unique (prod.comp (map f))]
-  · rfl
-  · simp
+  rfl
+  simp
 
 section Sum
 
@@ -928,14 +928,14 @@ theorem reduce.red : Red L (reduce L) := by
     | cons hd2 tl2 =>
       dsimp only
       split_ifs with h
-      · cases hd1
-        cases hd2
-        cases h
-        dsimp at *
-        subst_vars
-        apply Red.trans (Red.cons_cons ih)
-        exact Red.Step.cons_not_rev.to_red
-      · exact Red.cons_cons ih
+      cases hd1
+      cases hd2
+      cases h
+      dsimp at *
+      subst_vars
+      apply Red.trans (Red.cons_cons ih)
+      exact Red.Step.cons_not_rev.to_red
+      exact Red.cons_cons ih
 
 @[to_additive]
 theorem reduce.not {p : Prop} :
@@ -956,14 +956,14 @@ theorem reduce.not {p : Prop} :
       cases' hd with y c
       dsimp only
       split_ifs with h <;> intro H
-      · rw [H] at r
-        exact @reduce.not _ L1 ((y, c) :: L2) L3 x' b' r
+      rw [H] at r
+      exact @reduce.not _ L1 ((y, c) :: L2) L3 x' b' r
       rcases L2 with (_ | ⟨a, L2⟩)
-      · injections; subst_vars
-        simp at h
-      · refine @reduce.not _ L1 L2 L3 x' b' ?_
-        injection H with _ H
-        rw [r, H]; rfl
+      injections; subst_vars
+      simp at h
+      refine @reduce.not _ L1 L2 L3 x' b' ?_
+      injection H with _ H
+      rw [r, H]; rfl
 
 /-- The second theorem that characterises the function `reduce`: the maximal reduction of a word
 only reduces to itself. -/
@@ -971,9 +971,9 @@ only reduces to itself. -/
   a word only reduces to itself."]
 theorem reduce.min (H : Red (reduce L₁) L₂) : reduce L₁ = L₂ := by
   induction' H with L1 L' L2 H1 H2 ih
-  · rfl
-  · cases' H1 with L4 L5 x b
-    exact reduce.not H2
+  rfl
+  cases' H1 with L4 L5 x b
+  exact reduce.not H2
 
 /-- `reduce` is idempotent, i.e. the maximal reduction of the maximal reduction of a word is the
   maximal reduction of the word. -/

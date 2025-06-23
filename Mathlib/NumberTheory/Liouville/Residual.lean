@@ -42,29 +42,29 @@ theorem setOf_liouville_eq_irrational_inter_iInter_iUnion :
       { x | Irrational x } ∩ ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b),
       ball (a / b) (1 / (b : ℝ) ^ n) := by
   refine Subset.antisymm ?_ ?_
-  · refine subset_inter (fun x hx => hx.irrational) ?_
-    rw [setOf_liouville_eq_iInter_iUnion]
-    exact iInter_mono fun n => iUnion₂_mono fun a b => iUnion_mono fun _hb => diff_subset
-  · simp only [inter_iInter, inter_iUnion, setOf_liouville_eq_iInter_iUnion]
-    refine iInter_mono fun n => iUnion₂_mono fun a b => iUnion_mono fun hb => ?_
-    rw [inter_comm]
-    exact diff_subset_diff Subset.rfl (singleton_subset_iff.2 ⟨a / b, by norm_cast⟩)
+  refine subset_inter (fun x hx => hx.irrational) ?_
+  rw [setOf_liouville_eq_iInter_iUnion]
+  exact iInter_mono fun n => iUnion₂_mono fun a b => iUnion_mono fun _hb => diff_subset
+  simp only [inter_iInter, inter_iUnion, setOf_liouville_eq_iInter_iUnion]
+  refine iInter_mono fun n => iUnion₂_mono fun a b => iUnion_mono fun hb => ?_
+  rw [inter_comm]
+  exact diff_subset_diff Subset.rfl (singleton_subset_iff.2 ⟨a / b, by norm_cast⟩)
 
 /-- The set of Liouville numbers is a residual set. -/
 theorem eventually_residual_liouville : ∀ᶠ x in residual ℝ, Liouville x := by
   rw [Filter.Eventually, setOf_liouville_eq_irrational_inter_iInter_iUnion]
   refine eventually_residual_irrational.and ?_
   refine residual_of_dense_Gδ ?_ (Rat.denseEmbedding_coe_real.dense.mono ?_)
-  · exact .iInter fun n => IsOpen.isGδ <|
-          isOpen_iUnion fun a => isOpen_iUnion fun b => isOpen_iUnion fun _hb => isOpen_ball
-  · rintro _ ⟨r, rfl⟩
-    simp only [mem_iInter, mem_iUnion]
-    refine fun n => ⟨r.num * 2, r.den * 2, ?_, ?_⟩
-    · have := Int.ofNat_le.2 r.pos; rw [Int.ofNat_one] at this; omega
-    · convert @mem_ball_self ℝ _ (r : ℝ) _ _
-      · push_cast; norm_cast; simp [Rat.divInt_mul_right (two_ne_zero), Rat.mkRat_self]
-      · refine one_div_pos.2 (pow_pos (Int.cast_pos.2 ?_) _)
-        exact mul_pos (Int.natCast_pos.2 r.pos) zero_lt_two
+  exact .iInter fun n => IsOpen.isGδ <|
+        isOpen_iUnion fun a => isOpen_iUnion fun b => isOpen_iUnion fun _hb => isOpen_ball
+  rintro _ ⟨r, rfl⟩
+  simp only [mem_iInter, mem_iUnion]
+  refine fun n => ⟨r.num * 2, r.den * 2, ?_, ?_⟩
+  have := Int.ofNat_le.2 r.pos; rw [Int.ofNat_one] at this; omega
+  convert @mem_ball_self ℝ _ (r : ℝ) _ _
+  push_cast; norm_cast; simp [Rat.divInt_mul_right (two_ne_zero), Rat.mkRat_self]
+  refine one_div_pos.2 (pow_pos (Int.cast_pos.2 ?_) _)
+  exact mul_pos (Int.natCast_pos.2 r.pos) zero_lt_two
 
 /-- The set of Liouville numbers in dense. -/
 theorem dense_liouville : Dense { x | Liouville x } :=

@@ -169,19 +169,19 @@ theorem ContinuousOn.comp_fract' {f : β → α → γ} (h : ContinuousOn (uncur
   rw [continuous_iff_continuousAt]
   rintro ⟨s, t⟩
   rcases em (∃ n : ℤ, t = n) with (⟨n, rfl⟩ | ht)
-  · rw [ContinuousAt, nhds_prod_eq, ← nhds_left'_sup_nhds_right (n : α), prod_sup, tendsto_sup]
-    constructor
-    · refine (((h (s, 1) ⟨trivial, zero_le_one, le_rfl⟩).tendsto.mono_left ?_).comp
-        (tendsto_id.prod_map (tendsto_fract_left _))).mono_right (le_of_eq ?_)
-      · rw [nhdsWithin_prod_eq, nhdsWithin_univ, ← nhdsWithin_Ico_eq_nhdsWithin_Iio one_pos]
-        exact Filter.prod_mono le_rfl (nhdsWithin_mono _ Ico_subset_Icc_self)
-      · simp [hf]
-    · refine (((h (s, 0) ⟨trivial, le_rfl, zero_le_one⟩).tendsto.mono_left <| le_of_eq ?_).comp
-        (tendsto_id.prod_map (tendsto_fract_right _))).mono_right (le_of_eq ?_) <;>
-        simp [nhdsWithin_prod_eq, nhdsWithin_univ]
-  · replace ht : t ≠ ⌊t⌋ := fun ht' => ht ⟨_, ht'⟩
-    refine (h.continuousAt ?_).comp (continuousAt_id.prod_map (continuousAt_fract ht))
-    exact prod_mem_nhds univ_mem (Icc_mem_nhds (fract_pos.2 ht) (fract_lt_one _))
+  rw [ContinuousAt, nhds_prod_eq, ← nhds_left'_sup_nhds_right (n : α), prod_sup, tendsto_sup]
+  constructor
+  refine (((h (s, 1) ⟨trivial, zero_le_one, le_rfl⟩).tendsto.mono_left ?_).comp
+    (tendsto_id.prod_map (tendsto_fract_left _))).mono_right (le_of_eq ?_)
+  rw [nhdsWithin_prod_eq, nhdsWithin_univ, ← nhdsWithin_Ico_eq_nhdsWithin_Iio one_pos]
+  exact Filter.prod_mono le_rfl (nhdsWithin_mono _ Ico_subset_Icc_self)
+  simp [hf]
+  refine (((h (s, 0) ⟨trivial, le_rfl, zero_le_one⟩).tendsto.mono_left <| le_of_eq ?_).comp
+    (tendsto_id.prod_map (tendsto_fract_right _))).mono_right (le_of_eq ?_) <;>
+    simp [nhdsWithin_prod_eq, nhdsWithin_univ]
+  replace ht : t ≠ ⌊t⌋ := fun ht' => ht ⟨_, ht'⟩
+  refine (h.continuousAt ?_).comp (continuousAt_id.prod_map (continuousAt_fract ht))
+  exact prod_mem_nhds univ_mem (Icc_mem_nhds (fract_pos.2 ht) (fract_lt_one _))
 
 theorem ContinuousOn.comp_fract {s : β → α} {f : β → α → γ}
     (h : ContinuousOn (uncurry f) <| univ ×ˢ Icc 0 1) (hs : Continuous s)

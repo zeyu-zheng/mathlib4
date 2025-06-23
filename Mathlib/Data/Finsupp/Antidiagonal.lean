@@ -56,17 +56,17 @@ theorem antidiagonal_single (a : α) (n : ℕ) :
   simp only [mem_antidiagonal, mem_map, mem_antidiagonal, Function.Embedding.coe_prodMap,
     Function.Embedding.coeFn_mk, Prod.map_apply, Prod.mk.injEq, Prod.exists]
   constructor
-  · intro h
-    refine ⟨x a, y a, DFunLike.congr_fun h a |>.trans single_eq_same, ?_⟩
-    simp_rw [DFunLike.ext_iff, ← forall_and]
-    intro i
-    replace h := DFunLike.congr_fun h i
-    simp_rw [single_apply, Finsupp.add_apply] at h ⊢
-    obtain rfl | hai := Decidable.eq_or_ne a i
-    · exact ⟨if_pos rfl, if_pos rfl⟩
-    · simp_rw [if_neg hai, _root_.add_eq_zero_iff] at h ⊢
-      exact h.imp Eq.symm Eq.symm
-  · rintro ⟨a, b, rfl, rfl, rfl⟩
-    exact (single_add _ _ _).symm
+  intro h
+  refine ⟨x a, y a, DFunLike.congr_fun h a |>.trans single_eq_same, ?_⟩
+  simp_rw [DFunLike.ext_iff, ← forall_and]
+  intro i
+  replace h := DFunLike.congr_fun h i
+  simp_rw [single_apply, Finsupp.add_apply] at h ⊢
+  obtain rfl | hai := Decidable.eq_or_ne a i
+  exact ⟨if_pos rfl, if_pos rfl⟩
+  simp_rw [if_neg hai, _root_.add_eq_zero_iff] at h ⊢
+  exact h.imp Eq.symm Eq.symm
+  rintro ⟨a, b, rfl, rfl, rfl⟩
+  exact (single_add _ _ _).symm
 
 end Finsupp

@@ -34,9 +34,9 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
   rintro (h : H) (h_in : h ∈ K.topologicalClosure)
   -- We first get rid of the easy case where `h = 0`.
   by_cases hyp_h : h = 0
-  · rw [hyp_h]
-    use 0
-    simp
+  rw [hyp_h]
+  use 0
+  simp
   /- The desired preimage will be constructed as the sum of a series. Convergence of
     the series will be guaranteed by completeness of `G`. We first write `h` as the sum
     of a sequence `v` of elements of `K` which starts close to `h` and then quickly goes to zero.
@@ -57,53 +57,53 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
   set s : ℕ → G := fun n => ∑ k ∈ range (n + 1), u k
   have : CauchySeq s := by
     apply NormedAddCommGroup.cauchy_series_of_le_geometric'' (by norm_num) one_half_lt_one
-    · rintro n (hn : n ≥ 1)
-      calc
-        ‖u n‖ ≤ C * ‖v n‖ := hnorm_u n
-        _ ≤ C * b n := by gcongr; exact (hv _ <| Nat.succ_le_iff.mp hn).le
-        _ = (1 / 2) ^ n * (ε * ‖h‖ / 2) := by simp [mul_div_cancel₀ _ hC.ne.symm]
-        _ = ε * ‖h‖ / 2 * (1 / 2) ^ n := mul_comm _ _
+    rintro n (hn : n ≥ 1)
+    calc
+      ‖u n‖ ≤ C * ‖v n‖ := hnorm_u n
+      _ ≤ C * b n := by gcongr; exact (hv _ <| Nat.succ_le_iff.mp hn).le
+      _ = (1 / 2) ^ n * (ε * ‖h‖ / 2) := by simp [mul_div_cancel₀ _ hC.ne.symm]
+      _ = ε * ‖h‖ / 2 * (1 / 2) ^ n := mul_comm _ _
   -- We now show that the limit `g` of `s` is the desired preimage.
   obtain ⟨g : G, hg⟩ := cauchySeq_tendsto_of_complete this
   refine ⟨g, ?_, ?_⟩
-  · -- We indeed get a preimage. First note:
-    have : f ∘ s = fun n => ∑ k ∈ range (n + 1), v k := by
-      ext n
-      simp [s, map_sum, hu]
-    /- In the above equality, the left-hand-side converges to `f g` by continuity of `f` and
-      definition of `g` while the right-hand-side converges to `h` by construction of `v` so
-      `g` is indeed a preimage of `h`. -/
-    rw [← this] at lim_v
-    exact tendsto_nhds_unique ((f.continuous.tendsto g).comp hg) lim_v
-  · -- Then we need to estimate the norm of `g`, using our careful choice of `b`.
-    suffices ∀ n, ‖s n‖ ≤ (C + ε) * ‖h‖ from
-      le_of_tendsto' (continuous_norm.continuousAt.tendsto.comp hg) this
-    intro n
-    have hnorm₀ : ‖u 0‖ ≤ C * b 0 + C * ‖h‖ := by
-      have :=
-        calc
-          ‖v 0‖ ≤ ‖h‖ + ‖v 0 - h‖ := norm_le_insert' _ _
-          _ ≤ ‖h‖ + b 0 := by gcongr
+  -- We indeed get a preimage. First note:
+  have : f ∘ s = fun n => ∑ k ∈ range (n + 1), v k := by
+    ext n
+    simp [s, map_sum, hu]
+  /- In the above equality, the left-hand-side converges to `f g` by continuity of `f` and
+    definition of `g` while the right-hand-side converges to `h` by construction of `v` so
+    `g` is indeed a preimage of `h`. -/
+  rw [← this] at lim_v
+  exact tendsto_nhds_unique ((f.continuous.tendsto g).comp hg) lim_v
+  -- Then we need to estimate the norm of `g`, using our careful choice of `b`.
+  suffices ∀ n, ‖s n‖ ≤ (C + ε) * ‖h‖ from
+    le_of_tendsto' (continuous_norm.continuousAt.tendsto.comp hg) this
+  intro n
+  have hnorm₀ : ‖u 0‖ ≤ C * b 0 + C * ‖h‖ := by
+    have :=
       calc
-        ‖u 0‖ ≤ C * ‖v 0‖ := hnorm_u 0
-        _ ≤ C * (‖h‖ + b 0) := by gcongr
-        _ = C * b 0 + C * ‖h‖ := by rw [add_comm, mul_add]
-    have : (∑ k ∈ range (n + 1), C * b k) ≤ ε * ‖h‖ :=
-      calc (∑ k ∈ range (n + 1), C * b k)
-        _ = (∑ k ∈ range (n + 1), (1 / 2 : ℝ) ^ k) * (ε * ‖h‖ / 2) := by
-          simp only [mul_div_cancel₀ _ hC.ne.symm, ← sum_mul]
-        _ ≤ 2 * (ε * ‖h‖ / 2) := by gcongr; apply sum_geometric_two_le
-        _ = ε * ‖h‖ := mul_div_cancel₀ _ two_ne_zero
+        ‖v 0‖ ≤ ‖h‖ + ‖v 0 - h‖ := norm_le_insert' _ _
+        _ ≤ ‖h‖ + b 0 := by gcongr
     calc
-      ‖s n‖ ≤ ∑ k ∈ range (n + 1), ‖u k‖ := norm_sum_le _ _
-      _ = (∑ k ∈ range n, ‖u (k + 1)‖) + ‖u 0‖ := sum_range_succ' _ _
-      _ ≤ (∑ k ∈ range n, C * ‖v (k + 1)‖) + ‖u 0‖ := by gcongr; apply hnorm_u
-      _ ≤ (∑ k ∈ range n, C * b (k + 1)) + (C * b 0 + C * ‖h‖) := by
-        gcongr with k; exact (hv _ k.succ_pos).le
-      _ = (∑ k ∈ range (n + 1), C * b k) + C * ‖h‖ := by rw [← add_assoc, sum_range_succ']
-      _ ≤ (C + ε) * ‖h‖ := by
-        rw [add_comm, add_mul]
-        apply add_le_add_left this
+      ‖u 0‖ ≤ C * ‖v 0‖ := hnorm_u 0
+      _ ≤ C * (‖h‖ + b 0) := by gcongr
+      _ = C * b 0 + C * ‖h‖ := by rw [add_comm, mul_add]
+  have : (∑ k ∈ range (n + 1), C * b k) ≤ ε * ‖h‖ :=
+    calc (∑ k ∈ range (n + 1), C * b k)
+      _ = (∑ k ∈ range (n + 1), (1 / 2 : ℝ) ^ k) * (ε * ‖h‖ / 2) := by
+        simp only [mul_div_cancel₀ _ hC.ne.symm, ← sum_mul]
+      _ ≤ 2 * (ε * ‖h‖ / 2) := by gcongr; apply sum_geometric_two_le
+      _ = ε * ‖h‖ := mul_div_cancel₀ _ two_ne_zero
+  calc
+    ‖s n‖ ≤ ∑ k ∈ range (n + 1), ‖u k‖ := norm_sum_le _ _
+    _ = (∑ k ∈ range n, ‖u (k + 1)‖) + ‖u 0‖ := sum_range_succ' _ _
+    _ ≤ (∑ k ∈ range n, C * ‖v (k + 1)‖) + ‖u 0‖ := by gcongr; apply hnorm_u
+    _ ≤ (∑ k ∈ range n, C * b (k + 1)) + (C * b 0 + C * ‖h‖) := by
+      gcongr with k; exact (hv _ k.succ_pos).le
+    _ = (∑ k ∈ range (n + 1), C * b k) + C * ‖h‖ := by rw [← add_assoc, sum_range_succ']
+    _ ≤ (C + ε) * ‖h‖ := by
+      rw [add_comm, add_mul]
+      apply add_le_add_left this
 
 /-- Given `f : NormedAddGroupHom G H` for some complete `G`, if every element `x` of the image of
 an isometric immersion `j : NormedAddGroupHom K H` has a preimage under `f` whose norm is at most

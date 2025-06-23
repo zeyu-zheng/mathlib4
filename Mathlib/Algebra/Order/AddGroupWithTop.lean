@@ -111,8 +111,8 @@ instance : LinearOrderedAddCommGroupWithTop (WithTop α) where
   zsmul := zsmulRec
   add_neg_cancel := by
     rintro (a | a) ha
-    · exact (ha rfl).elim
-    · exact (WithTop.coe_add ..).symm.trans (WithTop.coe_eq_coe.2 (add_neg_self a))
+    exact (ha rfl).elim
+    exact (WithTop.coe_add ..).symm.trans (WithTop.coe_eq_coe.2 (add_neg_self a))
 
 end LinearOrderedAddCommGroup
 

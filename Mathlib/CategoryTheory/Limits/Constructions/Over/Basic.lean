@@ -44,16 +44,16 @@ instance {B : C} [HasEqualizers C] : HasEqualizers (Over B) := by
 
 instance hasFiniteLimits {B : C} [HasFiniteWidePullbacks C] : HasFiniteLimits (Over B) := by
   apply @hasFiniteLimits_of_hasEqualizers_and_finite_products _ _ ?_ ?_
-  · exact ConstructProducts.over_finiteProducts_of_finiteWidePullbacks
-  · apply @hasEqualizers_of_hasPullbacks_and_binary_products _ _ ?_ _
-    haveI : HasPullbacks C := ⟨inferInstance⟩
-    exact ConstructProducts.over_binaryProduct_of_pullback
+  exact ConstructProducts.over_finiteProducts_of_finiteWidePullbacks
+  apply @hasEqualizers_of_hasPullbacks_and_binary_products _ _ ?_ _
+  haveI : HasPullbacks C := ⟨inferInstance⟩
+  exact ConstructProducts.over_binaryProduct_of_pullback
 
 instance hasLimits {B : C} [HasWidePullbacks.{w} C] : HasLimitsOfSize.{w, w} (Over B) := by
   apply @has_limits_of_hasEqualizers_and_products _ _ ?_ ?_
-  · exact ConstructProducts.over_products_of_widePullbacks
-  · apply @hasEqualizers_of_hasPullbacks_and_binary_products _ _ ?_ _
-    haveI : HasPullbacks C := ⟨inferInstance⟩
-    exact ConstructProducts.over_binaryProduct_of_pullback
+  exact ConstructProducts.over_products_of_widePullbacks
+  apply @hasEqualizers_of_hasPullbacks_and_binary_products _ _ ?_ _
+  haveI : HasPullbacks C := ⟨inferInstance⟩
+  exact ConstructProducts.over_binaryProduct_of_pullback
 
 end CategoryTheory.Over

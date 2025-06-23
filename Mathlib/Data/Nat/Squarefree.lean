@@ -49,15 +49,15 @@ theorem squarefree_iff_prime_squarefree {n : ℕ} : Squarefree n ↔ ∀ x, Prim
 theorem _root_.Squarefree.natFactorization_le_one {n : ℕ} (p : ℕ) (hn : Squarefree n) :
     n.factorization p ≤ 1 := by
   rcases eq_or_ne n 0 with (rfl | hn')
-  · simp
+  simp
   rw [multiplicity.squarefree_iff_multiplicity_le_one] at hn
   by_cases hp : p.Prime
-  · have := hn p
-    simp only [multiplicity_eq_factorization hp hn', Nat.isUnit_iff, hp.ne_one, or_false_iff]
-      at this
-    exact mod_cast this
-  · rw [factorization_eq_zero_of_non_prime _ hp]
-    exact zero_le_one
+  have := hn p
+  simp only [multiplicity_eq_factorization hp hn', Nat.isUnit_iff, hp.ne_one, or_false_iff]
+    at this
+  exact mod_cast this
+  rw [factorization_eq_zero_of_non_prime _ hp]
+  exact zero_le_one
 
 lemma factorization_eq_one_of_squarefree (hn : Squarefree n) (hp : p.Prime) (hpn : p ∣ n) :
     factorization n p = 1 :=
@@ -78,24 +78,24 @@ theorem Squarefree.ext_iff {n m : ℕ} (hn : Squarefree n) (hm : Squarefree m) :
     n = m ↔ ∀ p, Prime p → (p ∣ n ↔ p ∣ m) := by
   refine ⟨by rintro rfl; simp, fun h => eq_of_factorization_eq hn.ne_zero hm.ne_zero fun p => ?_⟩
   by_cases hp : p.Prime
-  · have h₁ := h _ hp
-    rw [← not_iff_not, hp.dvd_iff_one_le_factorization hn.ne_zero, not_le, lt_one_iff,
-      hp.dvd_iff_one_le_factorization hm.ne_zero, not_le, lt_one_iff] at h₁
-    have h₂ := hn.natFactorization_le_one p
-    have h₃ := hm.natFactorization_le_one p
-    rw [Nat.le_add_one_iff, Nat.le_zero] at h₂ h₃
-    cases' h₂ with h₂ h₂
-    · rwa [h₂, eq_comm, ← h₁]
-    · rw [h₂, h₃.resolve_left]
-      rw [← h₁, h₂]
-      simp only [Nat.one_ne_zero, not_false_iff]
+  have h₁ := h _ hp
+  rw [← not_iff_not, hp.dvd_iff_one_le_factorization hn.ne_zero, not_le, lt_one_iff,
+    hp.dvd_iff_one_le_factorization hm.ne_zero, not_le, lt_one_iff] at h₁
+  have h₂ := hn.natFactorization_le_one p
+  have h₃ := hm.natFactorization_le_one p
+  rw [Nat.le_add_one_iff, Nat.le_zero] at h₂ h₃
+  cases' h₂ with h₂ h₂
+  rwa [h₂, eq_comm, ← h₁]
+  rw [h₂, h₃.resolve_left]
+  rw [← h₁, h₂]
+  simp only [Nat.one_ne_zero, not_false_iff]
   rw [factorization_eq_zero_of_non_prime _ hp, factorization_eq_zero_of_non_prime _ hp]
 
 theorem squarefree_pow_iff {n k : ℕ} (hn : n ≠ 1) (hk : k ≠ 0) :
     Squarefree (n ^ k) ↔ Squarefree n ∧ k = 1 := by
   refine ⟨fun h => ?_, by rintro ⟨hn, rfl⟩; simpa⟩
   rcases eq_or_ne n 0 with (rfl | -)
-  · simp [zero_pow hk] at h
+  simp [zero_pow hk] at h
   refine ⟨h.squarefree_of_dvd (dvd_pow_self _ hk), by_contradiction fun h₁ => ?_⟩
   have : 2 ≤ k := k.two_le_iff.mpr ⟨hk, h₁⟩
   apply hn (Nat.isUnit_iff.1 (h _ _))
@@ -149,20 +149,20 @@ theorem minSqFacProp_div (n) {k} (pk : Prime k) (dk : k ∣ n) (dkk : ¬k * k �
         contradiction
     (coprime_mul_iff_right.2 ⟨this, this⟩).mul_dvd_of_dvd_of_dvd dk dp
   cases' o with d
-  · rw [MinSqFacProp, squarefree_iff_prime_squarefree] at H ⊢
-    exact fun p pp dp => H p pp ((dvd_div_iff_mul_dvd dk).2 (this _ pp dp))
-  · obtain ⟨H1, H2, H3⟩ := H
-    simp only [dvd_div_iff_mul_dvd dk] at H2 H3
-    exact ⟨H1, dvd_trans (dvd_mul_left _ _) H2, fun p pp dp => H3 _ pp (this _ pp dp)⟩
+  rw [MinSqFacProp, squarefree_iff_prime_squarefree] at H ⊢
+  exact fun p pp dp => H p pp ((dvd_div_iff_mul_dvd dk).2 (this _ pp dp))
+  obtain ⟨H1, H2, H3⟩ := H
+  simp only [dvd_div_iff_mul_dvd dk] at H2 H3
+  exact ⟨H1, dvd_trans (dvd_mul_left _ _) H2, fun p pp dp => H3 _ pp (this _ pp dp)⟩
 
 theorem minSqFacAux_has_prop {n : ℕ} (k) (n0 : 0 < n) (i) (e : k = 2 * i + 3)
     (ih : ∀ m, Prime m → m ∣ n → k ≤ m) : MinSqFacProp n (minSqFacAux n k) := by
   rw [minSqFacAux]
   by_cases h : n < k * k <;> simp only [h, ↓reduceDIte]
-  · refine squarefree_iff_prime_squarefree.2 fun p pp d => ?_
-    have := ih p pp (dvd_trans ⟨_, rfl⟩ d)
-    have := Nat.mul_le_mul this this
-    exact not_le_of_lt h (le_trans this (le_of_dvd n0 d))
+  refine squarefree_iff_prime_squarefree.2 fun p pp d => ?_
+  have := ih p pp (dvd_trans ⟨_, rfl⟩ d)
+  have := Nat.mul_le_mul this this
+  exact not_le_of_lt h (le_trans this (le_of_dvd n0 d))
   have k2 : 2 ≤ k
   omega
   have k0 : 0 < k := lt_of_lt_of_le (by decide) k2
@@ -175,8 +175,8 @@ theorem minSqFacAux_has_prop {n : ℕ} (k) (n0 : 0 < n) (i) (e : k = 2 * i + 3)
     @minSqFacAux_has_prop n' (k + 2) (pos_of_dvd_of_pos nd' n0) (i + 1)
       (by simp [e, left_distrib]) fun m m2 d => ?_
   rcases Nat.eq_or_lt_of_le (ih m m2 (dvd_trans d nd')) with me | ml
-  · subst me
-    contradiction
+  subst me
+  contradiction
   apply (Nat.eq_or_lt_of_le ml).resolve_left
   intro me
   rw [← me, e] at d
@@ -188,30 +188,30 @@ theorem minSqFacAux_has_prop {n : ℕ} (k) (n0 : 0 < n) (i) (e : k = 2 * i + 3)
   refine fun dk => prime_def_minFac.2 ⟨k2, le_antisymm (minFac_le k0) ?_⟩
   exact ih _ (minFac_prime (ne_of_gt k2)) (dvd_trans (minFac_dvd _) dk)
   split_ifs with dk dkk
-  · exact ⟨pk dk, (Nat.dvd_div_iff_mul_dvd dk).1 dkk, fun p pp d => ih p pp (dvd_trans ⟨_, rfl⟩ d)⟩
-  · specialize IH (n / k) (div_dvd_of_dvd dk) dkk
-    exact minSqFacProp_div _ (pk dk) dk (mt (Nat.dvd_div_iff_mul_dvd dk).2 dkk) IH
-  · exact IH n (dvd_refl _) dk
+  exact ⟨pk dk, (Nat.dvd_div_iff_mul_dvd dk).1 dkk, fun p pp d => ih p pp (dvd_trans ⟨_, rfl⟩ d)⟩
+  specialize IH (n / k) (div_dvd_of_dvd dk) dkk
+  exact minSqFacProp_div _ (pk dk) dk (mt (Nat.dvd_div_iff_mul_dvd dk).2 dkk) IH
+  exact IH n (dvd_refl _) dk
 termination_by n.sqrt + 2 - k
 
 theorem minSqFac_has_prop (n : ℕ) : MinSqFacProp n (minSqFac n) := by
   dsimp only [minSqFac]; split_ifs with d2 d4
-  · exact ⟨prime_two, (dvd_div_iff_mul_dvd d2).1 d4, fun p pp _ => pp.two_le⟩
-  · rcases Nat.eq_zero_or_pos n with n0 | n0
-    · subst n0
-      cases d4 (by decide)
-    refine minSqFacProp_div _ prime_two d2 (mt (dvd_div_iff_mul_dvd d2).2 d4) ?_
-    refine minSqFacAux_has_prop 3 (Nat.div_pos (le_of_dvd n0 d2) (by decide)) 0 rfl ?_
-    refine fun p pp dp => succ_le_of_lt (lt_of_le_of_ne pp.two_le ?_)
-    rintro rfl
-    contradiction
-  · rcases Nat.eq_zero_or_pos n with n0 | n0
-    · subst n0
-      cases d2 (by decide)
-    refine minSqFacAux_has_prop _ n0 0 rfl ?_
-    refine fun p pp dp => succ_le_of_lt (lt_of_le_of_ne pp.two_le ?_)
-    rintro rfl
-    contradiction
+  exact ⟨prime_two, (dvd_div_iff_mul_dvd d2).1 d4, fun p pp _ => pp.two_le⟩
+  rcases Nat.eq_zero_or_pos n with n0 | n0
+  subst n0
+  cases d4 (by decide)
+  refine minSqFacProp_div _ prime_two d2 (mt (dvd_div_iff_mul_dvd d2).2 d4) ?_
+  refine minSqFacAux_has_prop 3 (Nat.div_pos (le_of_dvd n0 d2) (by decide)) 0 rfl ?_
+  refine fun p pp dp => succ_le_of_lt (lt_of_le_of_ne pp.two_le ?_)
+  rintro rfl
+  contradiction
+  rcases Nat.eq_zero_or_pos n with n0 | n0
+  subst n0
+  cases d2 (by decide)
+  refine minSqFacAux_has_prop _ n0 0 rfl ?_
+  refine fun p pp dp => succ_le_of_lt (lt_of_le_of_ne pp.two_le ?_)
+  rintro rfl
+  contradiction
 
 theorem minSqFac_prime {n d : ℕ} (h : n.minSqFac = some d) : Prime d := by
   have := minSqFac_has_prop n
@@ -234,11 +234,11 @@ theorem minSqFac_le_of_dvd {n d : ℕ} (h : n.minSqFac = some d) {m} (m2 : 2 ≤
 theorem squarefree_iff_minSqFac {n : ℕ} : Squarefree n ↔ n.minSqFac = none := by
   have := minSqFac_has_prop n
   constructor <;> intro H
-  · cases' e : n.minSqFac with d
-    · rfl
-    rw [e] at this
-    cases squarefree_iff_prime_squarefree.1 H _ this.1 this.2.1
-  · rwa [H] at this
+  cases' e : n.minSqFac with d
+  rfl
+  rw [e] at this
+  cases squarefree_iff_prime_squarefree.1 H _ this.1 this.2.1
+  rwa [H] at this
 
 instance : DecidablePred (Squarefree : ℕ → Prop) := fun _ =>
   decidable_of_iff' _ squarefree_iff_minSqFac
@@ -258,50 +258,50 @@ theorem divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) :
       (UniqueFactorizationMonoid.normalizedFactors n).toFinset.powerset.val.map fun x =>
         x.val.prod := by
   rw [(Finset.nodup _).ext ((Finset.nodup _).map_on _)]
-  · intro a
-    simp only [Multiset.mem_filter, id, Multiset.mem_map, Finset.filter_val, ← Finset.mem_def,
-      mem_divisors]
-    constructor
-    · rintro ⟨⟨an, h0⟩, hsq⟩
-      use (UniqueFactorizationMonoid.normalizedFactors a).toFinset
-      simp only [id, Finset.mem_powerset]
-      rcases an with ⟨b, rfl⟩
-      rw [mul_ne_zero_iff] at h0
-      rw [UniqueFactorizationMonoid.squarefree_iff_nodup_normalizedFactors h0.1] at hsq
-      rw [Multiset.toFinset_subset, Multiset.toFinset_val, hsq.dedup, ← associated_iff_eq,
-        normalizedFactors_mul h0.1 h0.2]
-      exact ⟨Multiset.subset_of_le (Multiset.le_add_right _ _), normalizedFactors_prod h0.1⟩
-    · rintro ⟨s, hs, rfl⟩
-      rw [Finset.mem_powerset, ← Finset.val_le_iff, Multiset.toFinset_val] at hs
-      have hs0 : s.val.prod ≠ 0 := by
-        rw [Ne, Multiset.prod_eq_zero_iff]
-        intro con
-        apply
-          not_irreducible_zero
-            (irreducible_of_normalized_factor 0 (Multiset.mem_dedup.1 (Multiset.mem_of_le hs con)))
-      rw [(normalizedFactors_prod h0).symm.dvd_iff_dvd_right]
-      refine ⟨⟨Multiset.prod_dvd_prod_of_le (le_trans hs (Multiset.dedup_le _)), h0⟩, ?_⟩
-      have h :=
-        UniqueFactorizationMonoid.factors_unique irreducible_of_normalized_factor
-          (fun x hx =>
-            irreducible_of_normalized_factor x
-              (Multiset.mem_of_le (le_trans hs (Multiset.dedup_le _)) hx))
-          (normalizedFactors_prod hs0)
-      rw [associated_eq_eq, Multiset.rel_eq] at h
-      rw [UniqueFactorizationMonoid.squarefree_iff_nodup_normalizedFactors hs0, h]
-      apply s.nodup
-  · intro x hx y hy h
-    rw [← Finset.val_inj, ← Multiset.rel_eq, ← associated_eq_eq]
-    rw [← Finset.mem_def, Finset.mem_powerset] at hx hy
-    apply UniqueFactorizationMonoid.factors_unique _ _ (associated_iff_eq.2 h)
-    · intro z hz
-      apply irreducible_of_normalized_factor z
-      · rw [← Multiset.mem_toFinset]
-        apply hx hz
-    · intro z hz
-      apply irreducible_of_normalized_factor z
-      · rw [← Multiset.mem_toFinset]
-        apply hy hz
+  intro a
+  simp only [Multiset.mem_filter, id, Multiset.mem_map, Finset.filter_val, ← Finset.mem_def,
+    mem_divisors]
+  constructor
+  rintro ⟨⟨an, h0⟩, hsq⟩
+  use (UniqueFactorizationMonoid.normalizedFactors a).toFinset
+  simp only [id, Finset.mem_powerset]
+  rcases an with ⟨b, rfl⟩
+  rw [mul_ne_zero_iff] at h0
+  rw [UniqueFactorizationMonoid.squarefree_iff_nodup_normalizedFactors h0.1] at hsq
+  rw [Multiset.toFinset_subset, Multiset.toFinset_val, hsq.dedup, ← associated_iff_eq,
+    normalizedFactors_mul h0.1 h0.2]
+  exact ⟨Multiset.subset_of_le (Multiset.le_add_right _ _), normalizedFactors_prod h0.1⟩
+  rintro ⟨s, hs, rfl⟩
+  rw [Finset.mem_powerset, ← Finset.val_le_iff, Multiset.toFinset_val] at hs
+  have hs0 : s.val.prod ≠ 0 := by
+    rw [Ne, Multiset.prod_eq_zero_iff]
+    intro con
+    apply
+      not_irreducible_zero
+        (irreducible_of_normalized_factor 0 (Multiset.mem_dedup.1 (Multiset.mem_of_le hs con)))
+  rw [(normalizedFactors_prod h0).symm.dvd_iff_dvd_right]
+  refine ⟨⟨Multiset.prod_dvd_prod_of_le (le_trans hs (Multiset.dedup_le _)), h0⟩, ?_⟩
+  have h :=
+    UniqueFactorizationMonoid.factors_unique irreducible_of_normalized_factor
+      (fun x hx =>
+        irreducible_of_normalized_factor x
+          (Multiset.mem_of_le (le_trans hs (Multiset.dedup_le _)) hx))
+      (normalizedFactors_prod hs0)
+  rw [associated_eq_eq, Multiset.rel_eq] at h
+  rw [UniqueFactorizationMonoid.squarefree_iff_nodup_normalizedFactors hs0, h]
+  apply s.nodup
+  intro x hx y hy h
+  rw [← Finset.val_inj, ← Multiset.rel_eq, ← associated_eq_eq]
+  rw [← Finset.mem_def, Finset.mem_powerset] at hx hy
+  apply UniqueFactorizationMonoid.factors_unique _ _ (associated_iff_eq.2 h)
+  intro z hz
+  apply irreducible_of_normalized_factor z
+  rw [← Multiset.mem_toFinset]
+  apply hx hz
+  intro z hz
+  apply irreducible_of_normalized_factor z
+  rw [← Multiset.mem_toFinset]
+  apply hy hz
 
 theorem sum_divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) {α : Type*} [AddCommMonoid α]
     {f : ℕ → α} :
@@ -332,12 +332,12 @@ theorem sq_mul_squarefree_of_pos {n : ℕ} (hn : 0 < n) :
   by_contra hx
   refine Nat.lt_le_asymm ?_ (Finset.le_max' S ((b * x) ^ 2) ?_)
   -- Porting note: these two goals were in the opposite order in Lean 3
-  · convert lt_mul_of_one_lt_right hlts
-      (one_lt_pow two_ne_zero (one_lt_iff_ne_zero_and_ne_one.mpr ⟨fun h => by simp_all, hx⟩))
-      using 1
-    rw [mul_pow]
-  · simp_rw [S, hsa, Finset.mem_filter, Finset.mem_range]
-    refine ⟨Nat.lt_succ_iff.mpr (le_of_dvd hn ?_), ?_, ⟨b * x, rfl⟩⟩ <;> use y <;> rw [hy] <;> ring
+  convert lt_mul_of_one_lt_right hlts
+    (one_lt_pow two_ne_zero (one_lt_iff_ne_zero_and_ne_one.mpr ⟨fun h => by simp_all, hx⟩))
+    using 1
+  rw [mul_pow]
+  simp_rw [S, hsa, Finset.mem_filter, Finset.mem_range]
+  refine ⟨Nat.lt_succ_iff.mpr (le_of_dvd hn ?_), ?_, ⟨b * x, rfl⟩⟩ <;> use y <;> rw [hy] <;> ring
 
 theorem sq_mul_squarefree_of_pos' {n : ℕ} (h : 0 < n) :
     ∃ a b : ℕ, (b + 1) ^ 2 * (a + 1) = n ∧ Squarefree (a + 1) := by
@@ -346,9 +346,9 @@ theorem sq_mul_squarefree_of_pos' {n : ℕ} (h : 0 < n) :
 
 theorem sq_mul_squarefree (n : ℕ) : ∃ a b : ℕ, b ^ 2 * a = n ∧ Squarefree a := by
   cases' n with n
-  · exact ⟨1, 0, by simp, squarefree_one⟩
-  · obtain ⟨a, b, -, -, h₁, h₂⟩ := sq_mul_squarefree_of_pos (succ_pos n)
-    exact ⟨a, b, h₁, h₂⟩
+  exact ⟨1, 0, by simp, squarefree_one⟩
+  obtain ⟨a, b, -, -, h₁, h₂⟩ := sq_mul_squarefree_of_pos (succ_pos n)
+  exact ⟨a, b, h₁, h₂⟩
 
 /-- `Squarefree` is multiplicative. Note that the → direction does not require `hmn`
 and generalizes to arbitrary commutative monoids. See `Squarefree.of_mul_left` and
@@ -430,12 +430,12 @@ def SquarefreeHelper (n k : ℕ) : Prop :=
 
 theorem squarefree_bit10 (n : ℕ) (h : SquarefreeHelper n 1) : Squarefree (bit0 (bit1 n)) := by
   refine' @Nat.minSqFacProp_div _ _ Nat.prime_two two_dvd_bit0 _ none _
-  · rw [bit0_eq_two_mul (bit1 n), mul_dvd_mul_iff_left (two_ne_zero' ℕ)]
-    exact Nat.not_two_dvd_bit1 _
-  · rw [bit0_eq_two_mul, Nat.mul_div_right _ (by decide : 0 < 2)]
-    refine' h (by decide) fun p pp dp => Nat.succ_le_of_lt (lt_of_le_of_ne pp.two_le _)
-    rintro rfl
-    exact Nat.not_two_dvd_bit1 _ dp
+  rw [bit0_eq_two_mul (bit1 n), mul_dvd_mul_iff_left (two_ne_zero' ℕ)]
+  exact Nat.not_two_dvd_bit1 _
+  rw [bit0_eq_two_mul, Nat.mul_div_right _ (by decide : 0 < 2)]
+  refine' h (by decide) fun p pp dp => Nat.succ_le_of_lt (lt_of_le_of_ne pp.two_le _)
+  rintro rfl
+  exact Nat.not_two_dvd_bit1 _ dp
 
 theorem squarefree_bit1 (n : ℕ) (h : SquarefreeHelper n 1) : Squarefree (bit1 n) := by
   refine' h (by decide) fun p pp dp => Nat.succ_le_of_lt (lt_of_le_of_ne pp.two_le _)
@@ -444,13 +444,13 @@ theorem squarefree_bit1 (n : ℕ) (h : SquarefreeHelper n 1) : Squarefree (bit1 
 theorem squarefree_helper_0 {k} (k0 : 0 < k) {p : ℕ} (pp : Nat.Prime p) (h : bit1 k ≤ p) :
     bit1 (k + 1) ≤ p ∨ bit1 k = p := by
   rcases lt_or_eq_of_le h with ((hp : _ + 1 ≤ _) | hp)
-  · rw [bit1, bit0_eq_two_mul] at hp
-    change 2 * (_ + 1) ≤ _ at hp
-    rw [bit1, bit0_eq_two_mul]
-    refine' Or.inl (lt_of_le_of_ne hp _)
-    rintro rfl
-    exact Nat.not_prime_mul (by decide) (lt_add_of_pos_left _ k0) pp
-  · exact Or.inr hp
+  rw [bit1, bit0_eq_two_mul] at hp
+  change 2 * (_ + 1) ≤ _ at hp
+  rw [bit1, bit0_eq_two_mul]
+  refine' Or.inl (lt_of_le_of_ne hp _)
+  rintro rfl
+  exact Nat.not_prime_mul (by decide) (lt_add_of_pos_left _ k0) pp
+  exact Or.inr hp
 
 theorem squarefreeHelper_1 (n k k' : ℕ) (e : k + 1 = k')
     (hk : Nat.Prime (bit1 k) → ¬bit1 k ∣ bit1 n) (H : SquarefreeHelper n k') :
@@ -492,8 +492,8 @@ theorem squarefreeHelper_3 (n n' k k' c : ℕ) (e : k + 1 = k') (hn' : bit1 n' *
 theorem squarefreeHelper_4 (n k k' : ℕ) (e : bit1 k * bit1 k = k') (hd : bit1 n < k') :
     SquarefreeHelper n k := by
   rcases Nat.eq_zero_or_pos n with h | h
-  · subst n
-    exact fun _ _ => squarefree_one
+  subst n
+  exact fun _ _ => squarefree_one
   subst e
   refine' fun k0 ih => Irreducible.squarefree (Nat.prime_def_le_sqrt.2 ⟨bit1_lt_bit1.2 h, _⟩)
   intro m m2 hm md

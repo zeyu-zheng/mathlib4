@@ -47,7 +47,7 @@ variable (α β : Weight K H L) (hα : α.IsNonZero)
 private lemma chainLength_aux {x} (hx : x ∈ rootSpace H (chainTop α β)) :
     ∃ n : ℕ, n • x = ⁅coroot α, x⁆ := by
   by_cases hx' : x = 0
-  · exact ⟨0, by simp [hx']⟩
+  exact ⟨0, by simp [hx']⟩
   obtain ⟨h, e, f, isSl2, he, hf⟩ := exists_isSl2Triple_of_weight_isNonZero hα
   obtain rfl := isSl2.h_eq_coroot hα he hf
   have : isSl2.HasPrimitiveVectorWith x (chainTop α β (coroot α)) :=
@@ -68,7 +68,7 @@ lemma chainLength_of_isZero (hα : α.IsZero) : chainLength α β = 0 := dif_pos
 lemma chainLength_nsmul {x} (hx : x ∈ rootSpace H (chainTop α β)) :
     chainLength α β • x = ⁅coroot α, x⁆ := by
   by_cases hα : α.IsZero
-  · rw [coroot_eq_zero_iff.mpr hα, chainLength_of_isZero _ _ hα, zero_smul, zero_lie]
+  rw [coroot_eq_zero_iff.mpr hα, chainLength_of_isZero _ _ hα, zero_smul, zero_lie]
   let x' := (chainTop α β).exists_ne_zero.choose
   have h : x' ∈ rootSpace H (chainTop α β) ∧ x' ≠ 0 :=
     (chainTop α β).exists_ne_zero.choose_spec
@@ -84,8 +84,8 @@ lemma chainLength_smul {x} (hx : x ∈ rootSpace H (chainTop α β)) :
 lemma apply_coroot_eq_cast' :
     β (coroot α) = ↑(chainLength α β - 2 * chainTopCoeff α β : ℤ) := by
   by_cases hα : α.IsZero
-  · rw [coroot_eq_zero_iff.mpr hα, chainLength, dif_pos hα, hα.eq, chainTopCoeff_zero, map_zero,
-      CharP.cast_eq_zero, mul_zero, sub_self, Int.cast_zero]
+  rw [coroot_eq_zero_iff.mpr hα, chainLength, dif_pos hα, hα.eq, chainTopCoeff_zero, map_zero,
+    CharP.cast_eq_zero, mul_zero, sub_self, Int.cast_zero]
   obtain ⟨x, hx, x_ne0⟩ := (chainTop α β).exists_ne_zero
   have := chainLength_smul _ _ hx
   rw [lie_eq_smul_of_mem_rootSpace hx, ← sub_eq_zero, ← sub_smul,
@@ -97,7 +97,7 @@ lemma apply_coroot_eq_cast' :
 lemma rootSpace_neg_nsmul_add_chainTop_of_le {n : ℕ} (hn : n ≤ chainLength α β) :
     rootSpace H (- (n • α) + chainTop α β) ≠ ⊥ := by
   by_cases hα : α.IsZero
-  · simpa only [hα.eq, smul_zero, neg_zero, chainTop_zero, zero_add, ne_eq] using β.2
+  simpa only [hα.eq, smul_zero, neg_zero, chainTop_zero, zero_add, ne_eq] using β.2
   obtain ⟨x, hx, x_ne0⟩ := (chainTop α β).exists_ne_zero
   obtain ⟨h, e, f, isSl2, he, hf⟩ := exists_isSl2Triple_of_weight_isNonZero hα
   obtain rfl := isSl2.h_eq_coroot hα he hf
@@ -132,7 +132,7 @@ lemma rootSpace_neg_nsmul_add_chainTop_of_lt {n : ℕ} (hn : chainLength α β <
 
 lemma chainTopCoeff_le_chainLength : chainTopCoeff α β ≤ chainLength α β := by
   by_cases hα : α.IsZero
-  · simp only [hα.eq, chainTopCoeff_zero, zero_le]
+  simp only [hα.eq, chainTopCoeff_zero, zero_le]
   rw [← not_lt, ← Nat.succ_le]
   intro e
   apply weightSpace_nsmul_add_ne_bot_of_le α β
@@ -144,24 +144,24 @@ lemma chainTopCoeff_le_chainLength : chainTopCoeff α β ≤ chainLength α β :
 lemma chainBotCoeff_add_chainTopCoeff :
     chainBotCoeff α β + chainTopCoeff α β = chainLength α β := by
   by_cases hα : α.IsZero
-  · rw [hα.eq, chainTopCoeff_zero, chainBotCoeff_zero, zero_add, chainLength_of_isZero α β hα]
+  rw [hα.eq, chainTopCoeff_zero, chainBotCoeff_zero, zero_add, chainLength_of_isZero α β hα]
   apply le_antisymm
-  · rw [← Nat.le_sub_iff_add_le (chainTopCoeff_le_chainLength α β),
-      ← not_lt, ← Nat.succ_le, chainBotCoeff, ← Weight.coe_neg]
-    intro e
-    apply weightSpace_nsmul_add_ne_bot_of_le _ _ e
-    rw [← Nat.cast_smul_eq_nsmul ℤ, Nat.cast_succ, Nat.cast_sub (chainTopCoeff_le_chainLength α β),
-      LieModule.Weight.coe_neg, smul_neg, ← neg_smul, neg_add_rev, neg_sub, sub_eq_neg_add,
-      ← add_assoc, ← neg_add_rev, add_smul, add_assoc, ← coe_chainTop, neg_smul,
-      ← @Nat.cast_one ℤ, ← Nat.cast_add, Nat.cast_smul_eq_nsmul]
-    exact rootSpace_neg_nsmul_add_chainTop_of_lt α β hα (Nat.lt_succ_self _)
-  · rw [← not_lt]
-    intro e
-    apply rootSpace_neg_nsmul_add_chainTop_of_le α β e
-    rw [← Nat.succ_add, ← Nat.cast_smul_eq_nsmul ℤ, ← neg_smul, coe_chainTop, ← add_assoc,
-      ← add_smul, Nat.cast_add, neg_add, add_assoc, neg_add_self, add_zero, neg_smul, ← smul_neg,
-      Nat.cast_smul_eq_nsmul]
-    exact weightSpace_chainTopCoeff_add_one_nsmul_add (-α) β (Weight.IsNonZero.neg hα)
+  rw [← Nat.le_sub_iff_add_le (chainTopCoeff_le_chainLength α β),
+    ← not_lt, ← Nat.succ_le, chainBotCoeff, ← Weight.coe_neg]
+  intro e
+  apply weightSpace_nsmul_add_ne_bot_of_le _ _ e
+  rw [← Nat.cast_smul_eq_nsmul ℤ, Nat.cast_succ, Nat.cast_sub (chainTopCoeff_le_chainLength α β),
+    LieModule.Weight.coe_neg, smul_neg, ← neg_smul, neg_add_rev, neg_sub, sub_eq_neg_add,
+    ← add_assoc, ← neg_add_rev, add_smul, add_assoc, ← coe_chainTop, neg_smul,
+    ← @Nat.cast_one ℤ, ← Nat.cast_add, Nat.cast_smul_eq_nsmul]
+  exact rootSpace_neg_nsmul_add_chainTop_of_lt α β hα (Nat.lt_succ_self _)
+  rw [← not_lt]
+  intro e
+  apply rootSpace_neg_nsmul_add_chainTop_of_le α β e
+  rw [← Nat.succ_add, ← Nat.cast_smul_eq_nsmul ℤ, ← neg_smul, coe_chainTop, ← add_assoc,
+    ← add_smul, Nat.cast_add, neg_add, add_assoc, neg_add_self, add_zero, neg_smul, ← smul_neg,
+    Nat.cast_smul_eq_nsmul]
+  exact weightSpace_chainTopCoeff_add_one_nsmul_add (-α) β (Weight.IsNonZero.neg hα)
 
 lemma chainTopCoeff_add_chainBotCoeff :
     chainTopCoeff α β + chainBotCoeff α β = chainLength α β := by
@@ -200,20 +200,20 @@ lemma le_chainBotCoeff_of_rootSpace_ne_top (n : ℤ) (hn : rootSpace H (-n • �
 lemma rootSpace_zsmul_add_ne_bot_iff (n : ℤ) :
     rootSpace H (n • α + β) ≠ ⊥ ↔ n ≤ chainTopCoeff α β ∧ -n ≤ chainBotCoeff α β := by
   constructor
-  · refine (fun hn ↦ ⟨?_, le_chainBotCoeff_of_rootSpace_ne_top α β hα _ (by rwa [neg_neg])⟩)
-    rw [← chainBotCoeff_neg, ← Weight.coe_neg]
-    apply le_chainBotCoeff_of_rootSpace_ne_top _ _ hα.neg
-    rwa [neg_smul, Weight.coe_neg, smul_neg, neg_neg]
-  · rintro ⟨h₁, h₂⟩
-    set k := chainTopCoeff α β - n with hk; clear_value k
-    lift k to ℕ using (by rw [hk, le_sub_iff_add_le, zero_add]; exact h₁)
-    rw [eq_sub_iff_add_eq, ← eq_sub_iff_add_eq'] at hk
-    subst hk
-    simp only [neg_sub, tsub_le_iff_right, ← Nat.cast_add, Nat.cast_le,
-      chainBotCoeff_add_chainTopCoeff] at h₂
-    have := rootSpace_neg_nsmul_add_chainTop_of_le α β h₂
-    rwa [coe_chainTop, ← Nat.cast_smul_eq_nsmul ℤ, ← neg_smul,
-      ← add_assoc, ← add_smul, ← sub_eq_neg_add] at this
+  refine (fun hn ↦ ⟨?_, le_chainBotCoeff_of_rootSpace_ne_top α β hα _ (by rwa [neg_neg])⟩)
+  rw [← chainBotCoeff_neg, ← Weight.coe_neg]
+  apply le_chainBotCoeff_of_rootSpace_ne_top _ _ hα.neg
+  rwa [neg_smul, Weight.coe_neg, smul_neg, neg_neg]
+  rintro ⟨h₁, h₂⟩
+  set k := chainTopCoeff α β - n with hk; clear_value k
+  lift k to ℕ using (by rw [hk, le_sub_iff_add_le, zero_add]; exact h₁)
+  rw [eq_sub_iff_add_eq, ← eq_sub_iff_add_eq'] at hk
+  subst hk
+  simp only [neg_sub, tsub_le_iff_right, ← Nat.cast_add, Nat.cast_le,
+    chainBotCoeff_add_chainTopCoeff] at h₂
+  have := rootSpace_neg_nsmul_add_chainTop_of_le α β h₂
+  rwa [coe_chainTop, ← Nat.cast_smul_eq_nsmul ℤ, ← neg_smul,
+    ← add_assoc, ← add_smul, ← sub_eq_neg_add] at this
 
 lemma rootSpace_zsmul_add_ne_bot_iff_mem (n : ℤ) :
     rootSpace H (n • α + β) ≠ ⊥ ↔ n ∈ Finset.Icc (-chainBotCoeff α β : ℤ) (chainTopCoeff α β) := by
@@ -222,12 +222,12 @@ lemma rootSpace_zsmul_add_ne_bot_iff_mem (n : ℤ) :
 lemma chainTopCoeff_of_eq_zsmul_add (β' : Weight K H L) (n : ℤ) (hβ' : (β' : H → K) = n • α + β) :
     chainTopCoeff α β' = chainTopCoeff α β - n := by
   apply le_antisymm
-  · refine le_sub_iff_add_le.mpr ((rootSpace_zsmul_add_ne_bot_iff α β hα _).mp ?_).1
-    rw [add_smul, add_assoc, ← hβ', ← coe_chainTop]
-    exact (chainTop α β').2
-  · refine ((rootSpace_zsmul_add_ne_bot_iff α β' hα _).mp ?_).1
-    rw [hβ', ← add_assoc, ← add_smul, sub_add_cancel, ← coe_chainTop]
-    exact (chainTop α β).2
+  refine le_sub_iff_add_le.mpr ((rootSpace_zsmul_add_ne_bot_iff α β hα _).mp ?_).1
+  rw [add_smul, add_assoc, ← hβ', ← coe_chainTop]
+  exact (chainTop α β').2
+  refine ((rootSpace_zsmul_add_ne_bot_iff α β' hα _).mp ?_).1
+  rw [hβ', ← add_assoc, ← add_smul, sub_add_cancel, ← coe_chainTop]
+  exact (chainTop α β).2
 
 lemma chainBotCoeff_of_eq_zsmul_add (β' : Weight K H L) (n : ℤ) (hβ' : (β' : H → K) = n • α + β) :
     chainBotCoeff α β' = chainBotCoeff α β + n := by
@@ -239,21 +239,21 @@ lemma chainBotCoeff_of_eq_zsmul_add (β' : Weight K H L) (n : ℤ) (hβ' : (β' 
 lemma chainLength_of_eq_zsmul_add (β' : Weight K H L) (n : ℤ) (hβ' : (β' : H → K) = n • α + β) :
     chainLength α β' = chainLength α β := by
   by_cases hα : α.IsZero
-  · rw [chainLength_of_isZero _ _ hα, chainLength_of_isZero _ _ hα]
-  · apply Nat.cast_injective (R := ℤ)
-    rw [← chainTopCoeff_add_chainBotCoeff, ← chainTopCoeff_add_chainBotCoeff,
-      Nat.cast_add, Nat.cast_add, chainTopCoeff_of_eq_zsmul_add α β hα β' n hβ',
-      chainBotCoeff_of_eq_zsmul_add α β hα β' n hβ', sub_eq_add_neg, add_add_add_comm,
-      neg_add_self, add_zero]
+  rw [chainLength_of_isZero _ _ hα, chainLength_of_isZero _ _ hα]
+  apply Nat.cast_injective (R := ℤ)
+  rw [← chainTopCoeff_add_chainBotCoeff, ← chainTopCoeff_add_chainBotCoeff,
+    Nat.cast_add, Nat.cast_add, chainTopCoeff_of_eq_zsmul_add α β hα β' n hβ',
+    chainBotCoeff_of_eq_zsmul_add α β hα β' n hβ', sub_eq_add_neg, add_add_add_comm,
+    neg_add_self, add_zero]
 
 lemma chainTopCoeff_zero_right [Nontrivial L] :
     chainTopCoeff α (0 : Weight K H L) = 1 := by
   symm
   apply eq_of_le_of_not_lt
-  · rw [Nat.one_le_iff_ne_zero]
-    intro e
-    exact α.2 (by simpa [e, Weight.coe_zero] using
-      weightSpace_chainTopCoeff_add_one_nsmul_add α (0 : Weight K H L) hα)
+  rw [Nat.one_le_iff_ne_zero]
+  intro e
+  exact α.2 (by simpa [e, Weight.coe_zero] using
+    weightSpace_chainTopCoeff_add_one_nsmul_add α (0 : Weight K H L) hα)
   obtain ⟨x, hx, x_ne0⟩ := (chainTop α (0 : Weight K H L)).exists_ne_zero
   obtain ⟨h, e, f, isSl2, he, hf⟩ := exists_isSl2Triple_of_weight_isNonZero hα
   obtain rfl := isSl2.h_eq_coroot hα he hf
@@ -286,7 +286,7 @@ lemma chainLength_zero_right [Nontrivial L] : chainLength α 0 = 2 := by
 
 lemma rootSpace_two_smul : rootSpace H (2 • α) = ⊥ := by
   cases subsingleton_or_nontrivial L
-  · exact IsEmpty.elim inferInstance α
+  exact IsEmpty.elim inferInstance α
   simpa [chainTopCoeff_zero_right α hα] using
     weightSpace_chainTopCoeff_add_one_nsmul_add α (0 : Weight K H L) hα
 
@@ -304,49 +304,49 @@ lemma rootSpace_one_div_two_smul : rootSpace H ((2⁻¹ : K) • α) = ⊥ := by
 lemma eq_neg_one_or_eq_zero_or_eq_one_of_eq_smul (k : K) (h : (β : H → K) = k • α) :
     k = -1 ∨ k = 0 ∨ k = 1 := by
   cases subsingleton_or_nontrivial L
-  · exact IsEmpty.elim inferInstance α
+  exact IsEmpty.elim inferInstance α
   have H := apply_coroot_eq_cast' α β
   rw [h] at H
   simp only [Pi.smul_apply, root_apply_coroot hα] at H
   rcases (chainLength α β).even_or_odd with (⟨n, hn⟩|⟨n, hn⟩)
-  · rw [hn, ← two_mul] at H
-    simp only [smul_eq_mul, Nat.cast_mul, Nat.cast_ofNat, ← mul_sub, ← mul_comm (2 : K),
-      Int.cast_sub, Int.cast_mul, Int.cast_ofNat, Int.cast_natCast,
-      mul_eq_mul_left_iff, OfNat.ofNat_ne_zero, or_false] at H
-    rw [← Int.cast_natCast, ← Int.cast_natCast (chainTopCoeff α β), ← Int.cast_sub] at H
-    have := (rootSpace_zsmul_add_ne_bot_iff_mem α 0 hα (n - chainTopCoeff α β)).mp
-      (by rw [← Int.cast_smul_eq_nsmul K, ← H, ← h, Weight.coe_zero, add_zero]; exact β.2)
-    rw [chainTopCoeff_zero_right α hα, chainBotCoeff_zero_right α hα, Nat.cast_one] at this
-    set k' : ℤ := n - chainTopCoeff α β
-    subst H
-    have : k' ∈ ({-1, 0, 1} : Finset ℤ)
-    show k' ∈ Finset.Icc (-1 : ℤ) (1 : ℤ)
-    exact this
-    simpa only [Int.reduceNeg, Finset.mem_insert, Finset.mem_singleton, ← @Int.cast_inj K,
-      Int.cast_zero, Int.cast_neg, Int.cast_one] using this
-  · apply_fun (· / 2) at H
-    rw [hn, smul_eq_mul] at H
-    have hk : k = n + 2⁻¹ - chainTopCoeff α β
-    simpa [sub_div, add_div] using H
-    have := (rootSpace_zsmul_add_ne_bot_iff α β hα (chainTopCoeff α β - n)).mpr ?_
-    swap
-    · simp only [tsub_le_iff_right, le_add_iff_nonneg_right, Nat.cast_nonneg, neg_sub, true_and]
-      rw [← Nat.cast_add, chainBotCoeff_add_chainTopCoeff, hn]
-      omega
-    rw [h, hk, ← Int.cast_smul_eq_nsmul K, ← add_smul] at this
-    simp only [Int.cast_sub, Int.cast_natCast,
-      sub_add_sub_cancel', add_sub_cancel_left, ne_eq] at this
-    cases this (rootSpace_one_div_two_smul α hα)
+  rw [hn, ← two_mul] at H
+  simp only [smul_eq_mul, Nat.cast_mul, Nat.cast_ofNat, ← mul_sub, ← mul_comm (2 : K),
+    Int.cast_sub, Int.cast_mul, Int.cast_ofNat, Int.cast_natCast,
+    mul_eq_mul_left_iff, OfNat.ofNat_ne_zero, or_false] at H
+  rw [← Int.cast_natCast, ← Int.cast_natCast (chainTopCoeff α β), ← Int.cast_sub] at H
+  have := (rootSpace_zsmul_add_ne_bot_iff_mem α 0 hα (n - chainTopCoeff α β)).mp
+    (by rw [← Int.cast_smul_eq_nsmul K, ← H, ← h, Weight.coe_zero, add_zero]; exact β.2)
+  rw [chainTopCoeff_zero_right α hα, chainBotCoeff_zero_right α hα, Nat.cast_one] at this
+  set k' : ℤ := n - chainTopCoeff α β
+  subst H
+  have : k' ∈ ({-1, 0, 1} : Finset ℤ)
+  show k' ∈ Finset.Icc (-1 : ℤ) (1 : ℤ)
+  exact this
+  simpa only [Int.reduceNeg, Finset.mem_insert, Finset.mem_singleton, ← @Int.cast_inj K,
+    Int.cast_zero, Int.cast_neg, Int.cast_one] using this
+  apply_fun (· / 2) at H
+  rw [hn, smul_eq_mul] at H
+  have hk : k = n + 2⁻¹ - chainTopCoeff α β
+  simpa [sub_div, add_div] using H
+  have := (rootSpace_zsmul_add_ne_bot_iff α β hα (chainTopCoeff α β - n)).mpr ?_
+  swap
+  simp only [tsub_le_iff_right, le_add_iff_nonneg_right, Nat.cast_nonneg, neg_sub, true_and]
+  rw [← Nat.cast_add, chainBotCoeff_add_chainTopCoeff, hn]
+  omega
+  rw [h, hk, ← Int.cast_smul_eq_nsmul K, ← add_smul] at this
+  simp only [Int.cast_sub, Int.cast_natCast,
+    sub_add_sub_cancel', add_sub_cancel_left, ne_eq] at this
+  cases this (rootSpace_one_div_two_smul α hα)
 
 /-- `±α` are the only `K`-multiples of a root `α` that are also (non-zero) roots. -/
 lemma eq_neg_or_eq_of_eq_smul (hβ : β.IsNonZero) (k : K) (h : (β : H → K) = k • α) :
     β = -α ∨ β = α := by
   by_cases hα : α.IsZero
-  · rw [hα, smul_zero] at h; cases hβ h
+  rw [hα, smul_zero] at h; cases hβ h
   rcases eq_neg_one_or_eq_zero_or_eq_one_of_eq_smul α β hα k h with (rfl | rfl | rfl)
-  · exact .inl (by ext; rw [h, neg_one_smul]; rfl)
-  · cases hβ (by rwa [zero_smul] at h)
-  · exact .inr (by ext; rw [h, one_smul])
+  exact .inl (by ext; rw [h, neg_one_smul]; rfl)
+  cases hβ (by rwa [zero_smul] at h)
+  exact .inr (by ext; rw [h, one_smul])
 
 /-- The reflection of a root along another. -/
 def reflectRoot (α β : Weight K H L) : Weight K H L where
@@ -363,7 +363,7 @@ lemma reflectRoot_isNonZero (α β : Weight K H L) (hβ : β.IsNonZero) :
   intro e
   have : β (coroot α) = 0
   by_cases hα : α.IsZero
-  · simp [coroot_eq_zero_iff.mpr hα]
+  simp [coroot_eq_zero_iff.mpr hα]
   apply add_left_injective (β (coroot α))
   simpa [root_apply_coroot hα, mul_two] using congr_fun (sub_eq_zero.mp e) (coroot α)
   have : reflectRoot α β = β
@@ -407,7 +407,7 @@ theorem isReduced_rootSystem : (rootSystem H).IsReduced := by
   obtain ⟨u, hu⟩ := e
   obtain (h | h) :=
     eq_neg_or_eq_of_eq_smul α.1 β.1 β.2 u (by ext x; exact DFunLike.congr_fun hu.symm x)
-  · right; ext x; simpa [neg_eq_iff_eq_neg] using DFunLike.congr_fun h.symm x
-  · left; ext x; simpa using DFunLike.congr_fun h.symm x
+  right; ext x; simpa [neg_eq_iff_eq_neg] using DFunLike.congr_fun h.symm x
+  left; ext x; simpa using DFunLike.congr_fun h.symm x
 
 end LieAlgebra.IsKilling

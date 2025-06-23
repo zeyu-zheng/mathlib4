@@ -87,13 +87,13 @@ theorem sup_eq_closure_mul (H K : Submonoid M) : H ⊔ K = closure ((H : Set M) 
 theorem pow_smul_mem_closure_smul {N : Type*} [CommMonoid N] [MulAction M N] [IsScalarTower M N N]
     (r : M) (s : Set N) {x : N} (hx : x ∈ closure s) : ∃ n : ℕ, r ^ n • x ∈ closure (r • s) := by
   refine @closure_induction N _ s (fun x : N => ∃ n : ℕ, r ^ n • x ∈ closure (r • s)) _ hx ?_ ?_ ?_
-  · intro x hx
-    exact ⟨1, subset_closure ⟨_, hx, by rw [pow_one]⟩⟩
-  · exact ⟨0, by simpa using one_mem _⟩
-  · rintro x y ⟨nx, hx⟩ ⟨ny, hy⟩
-    use ny + nx
-    rw [pow_add, mul_smul, ← smul_mul_assoc, mul_comm, ← smul_mul_assoc]
-    exact mul_mem hy hx
+  intro x hx
+  exact ⟨1, subset_closure ⟨_, hx, by rw [pow_one]⟩⟩
+  exact ⟨0, by simpa using one_mem _⟩
+  rintro x y ⟨nx, hx⟩ ⟨ny, hy⟩
+  use ny + nx
+  rw [pow_add, mul_smul, ← smul_mul_assoc, mul_comm, ← smul_mul_assoc]
+  exact mul_mem hy hx
 
 variable [Group G]
 
@@ -139,10 +139,10 @@ def invOrderIso : Submonoid G ≃o Submonoid G where
 @[to_additive]
 theorem closure_inv (s : Set G) : closure s⁻¹ = (closure s)⁻¹ := by
   apply le_antisymm
-  · rw [closure_le, coe_inv, ← Set.inv_subset, inv_inv]
-    exact subset_closure
-  · rw [inv_le, closure_le, coe_inv, ← Set.inv_subset]
-    exact subset_closure
+  rw [closure_le, coe_inv, ← Set.inv_subset, inv_inv]
+  exact subset_closure
+  rw [inv_le, closure_le, coe_inv, ← Set.inv_subset]
+  exact subset_closure
 
 @[to_additive (attr := simp)]
 theorem inv_inf (S T : Submonoid G) : (S ⊓ T)⁻¹ = S⁻¹ ⊓ T⁻¹ :=
@@ -463,16 +463,16 @@ protected theorem mul_induction_on {M N : AddSubmonoid R} {C : R → Prop} {r : 
 -- Porting note: proof rewritten
 theorem closure_mul_closure (S T : Set R) : closure S * closure T = closure (S * T) := by
   apply le_antisymm
-  · refine mul_le.2 fun a ha b hb => ?_
-    rw [← AddMonoidHom.mulRight_apply, ← AddSubmonoid.mem_comap]
-    refine (closure_le.2 fun a' ha' => ?_) ha
-    change b ∈ (closure (S * T)).comap (AddMonoidHom.mulLeft a')
-    refine (closure_le.2 fun b' hb' => ?_) hb
-    change a' * b' ∈ closure (S * T)
-    exact subset_closure (Set.mul_mem_mul ha' hb')
-  · rw [closure_le]
-    rintro _ ⟨a, ha, b, hb, rfl⟩
-    exact mul_mem_mul (subset_closure ha) (subset_closure hb)
+  refine mul_le.2 fun a ha b hb => ?_
+  rw [← AddMonoidHom.mulRight_apply, ← AddSubmonoid.mem_comap]
+  refine (closure_le.2 fun a' ha' => ?_) ha
+  change b ∈ (closure (S * T)).comap (AddMonoidHom.mulLeft a')
+  refine (closure_le.2 fun b' hb' => ?_) hb
+  change a' * b' ∈ closure (S * T)
+  exact subset_closure (Set.mul_mem_mul ha' hb')
+  rw [closure_le]
+  rintro _ ⟨a, ha, b, hb, rfl⟩
+  exact mul_mem_mul (subset_closure ha) (subset_closure hb)
 
 theorem mul_eq_closure_mul_set (M N : AddSubmonoid R) :
     M * N = closure ((M : Set R) * (N : Set R)) := by

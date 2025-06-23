@@ -71,12 +71,12 @@ instance Submodule.isLocalizedModule : IsLocalizedModule p (M'.toLocalized' S p 
   map_units x := by
     simp_rw [Module.End_isUnit_iff]
     constructor
-    · exact fun _ _ e ↦ Subtype.ext
-        (IsLocalizedModule.smul_injective f x (congr_arg Subtype.val e))
-    · rintro m
-      use (IsLocalization.mk' S 1 x) • m
-      rw [Module.algebraMap_end_apply, ← smul_assoc, IsLocalization.smul_mk'_one,
-        IsLocalization.mk'_self', one_smul]
+    exact fun _ _ e ↦ Subtype.ext
+      (IsLocalizedModule.smul_injective f x (congr_arg Subtype.val e))
+    rintro m
+    use (IsLocalization.mk' S 1 x) • m
+    rw [Module.algebraMap_end_apply, ← smul_assoc, IsLocalization.smul_mk'_one,
+      IsLocalization.mk'_self', one_smul]
   surj' := by
     rintro ⟨y, x, hx, s, rfl⟩
     exact ⟨⟨⟨x, hx⟩, s⟩, by ext; simp⟩
@@ -132,15 +132,15 @@ lemma LinearMap.localized'_ker_eq_ker_localizedMap (g : M →ₗ[R] P) :
   ext x
   simp only [Submodule.mem_localized', mem_ker, extendScalarsOfIsLocalization_apply']
   constructor
-  · rintro ⟨m, hm, a, ha, rfl⟩
-    rw [IsLocalizedModule.map_mk', hm]
-    simp
-  · intro h
-    obtain ⟨⟨a, b⟩, rfl⟩ := IsLocalizedModule.mk'_surjective p f x
-    simp only [Function.uncurry_apply_pair, IsLocalizedModule.map_mk',
-      IsLocalizedModule.mk'_eq_zero, IsLocalizedModule.eq_zero_iff p f'] at h
-    obtain ⟨c, hc⟩ := h
-    refine ⟨c • a, by simpa, c * b, by simp⟩
+  rintro ⟨m, hm, a, ha, rfl⟩
+  rw [IsLocalizedModule.map_mk', hm]
+  simp
+  intro h
+  obtain ⟨⟨a, b⟩, rfl⟩ := IsLocalizedModule.mk'_surjective p f x
+  simp only [Function.uncurry_apply_pair, IsLocalizedModule.map_mk',
+    IsLocalizedModule.mk'_eq_zero, IsLocalizedModule.eq_zero_iff p f'] at h
+  obtain ⟨c, hc⟩ := h
+  refine ⟨c • a, by simpa, c * b, by simp⟩
 
 lemma LinearMap.ker_localizedMap_eq_localized'_ker (g : M →ₗ[R] P) :
     LinearMap.ker (IsLocalizedModule.map p f f' g) =

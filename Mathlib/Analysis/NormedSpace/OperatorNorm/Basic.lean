@@ -262,12 +262,12 @@ theorem opNorm_le_of_nhds_zero {f : E →SL[σ₁₂] F} {C : ℝ} (hC : 0 ≤ C
 theorem opNorm_le_of_shell' {f : E →SL[σ₁₂] F} {ε C : ℝ} (ε_pos : 0 < ε) (hC : 0 ≤ C) {c : 𝕜}
     (hc : ‖c‖ < 1) (hf : ∀ x, ε * ‖c‖ ≤ ‖x‖ → ‖x‖ < ε → ‖f x‖ ≤ C * ‖x‖) : ‖f‖ ≤ C := by
   by_cases h0 : c = 0
-  · refine opNorm_le_of_ball ε_pos hC fun x hx => hf x ?_ ?_
-    · simp [h0]
-    · rwa [ball_zero_eq] at hx
-  · rw [← inv_inv c, norm_inv, inv_lt_one_iff_of_pos (norm_pos_iff.2 <| inv_ne_zero h0)] at hc
-    refine opNorm_le_of_shell ε_pos hC hc ?_
-    rwa [norm_inv, div_eq_mul_inv, inv_inv]
+  refine opNorm_le_of_ball ε_pos hC fun x hx => hf x ?_ ?_
+  simp [h0]
+  rwa [ball_zero_eq] at hx
+  rw [← inv_inv c, norm_inv, inv_lt_one_iff_of_pos (norm_pos_iff.2 <| inv_ne_zero h0)] at hc
+  refine opNorm_le_of_shell ε_pos hC hc ?_
+  rwa [norm_inv, div_eq_mul_inv, inv_inv]
 
 @[deprecated (since := "2024-02-02")] alias op_norm_le_of_shell' := opNorm_le_of_shell'
 
@@ -320,20 +320,20 @@ private lemma uniformity_eq_seminorm :
   refine ContinuousLinearMap.seminorm (σ₁₂ := σ₁₂) (E := E) (F := F) |>.uniformity_eq_of_hasBasis
     (ContinuousLinearMap.hasBasis_nhds_zero_of_basis Metric.nhds_basis_closedBall)
     ?_ fun (s, r) ⟨hs, hr⟩ ↦ ?_
-  · rcases NormedField.exists_lt_norm 𝕜 1 with ⟨c, hc⟩
-    refine ⟨‖c‖, ContinuousLinearMap.hasBasis_nhds_zero.mem_iff.2
-      ⟨(closedBall 0 1, closedBall 0 1), ?_⟩⟩
-    suffices ∀ f : E →SL[σ₁₂] F, (∀ x, ‖x‖ ≤ 1 → ‖f x‖ ≤ 1) → ‖f‖ ≤ ‖c‖ by
-      simpa [NormedSpace.isVonNBounded_closedBall, closedBall_mem_nhds, subset_def] using this
-    intro f hf
-    refine opNorm_le_of_shell (f := f) one_pos (norm_nonneg c) hc fun x hcx hx ↦ ?_
-    exact (hf x hx.le).trans ((div_le_iff' <| one_pos.trans hc).1 hcx)
-  · rcases (NormedSpace.isVonNBounded_iff' _).1 hs with ⟨ε, hε⟩
-    rcases exists_pos_mul_lt hr ε with ⟨δ, hδ₀, hδ⟩
-    refine ⟨δ, hδ₀, fun f hf x hx ↦ ?_⟩
-    simp only [Seminorm.mem_ball_zero, mem_closedBall_zero_iff] at hf ⊢
-    rw [mul_comm] at hδ
-    exact le_trans (le_of_opNorm_le_of_le _ hf.le (hε _ hx)) hδ.le
+  rcases NormedField.exists_lt_norm 𝕜 1 with ⟨c, hc⟩
+  refine ⟨‖c‖, ContinuousLinearMap.hasBasis_nhds_zero.mem_iff.2
+    ⟨(closedBall 0 1, closedBall 0 1), ?_⟩⟩
+  suffices ∀ f : E →SL[σ₁₂] F, (∀ x, ‖x‖ ≤ 1 → ‖f x‖ ≤ 1) → ‖f‖ ≤ ‖c‖ by
+    simpa [NormedSpace.isVonNBounded_closedBall, closedBall_mem_nhds, subset_def] using this
+  intro f hf
+  refine opNorm_le_of_shell (f := f) one_pos (norm_nonneg c) hc fun x hcx hx ↦ ?_
+  exact (hf x hx.le).trans ((div_le_iff' <| one_pos.trans hc).1 hcx)
+  rcases (NormedSpace.isVonNBounded_iff' _).1 hs with ⟨ε, hε⟩
+  rcases exists_pos_mul_lt hr ε with ⟨δ, hδ₀, hδ⟩
+  refine ⟨δ, hδ₀, fun f hf x hx ↦ ?_⟩
+  simp only [Seminorm.mem_ball_zero, mem_closedBall_zero_iff] at hf ⊢
+  rw [mul_comm] at hδ
+  exact le_trans (le_of_opNorm_le_of_le _ hf.le (hε _ hx)) hδ.le
 
 instance toPseudoMetricSpace : PseudoMetricSpace (E →SL[σ₁₂] F) := .replaceUniformity
   ContinuousLinearMap.seminorm.toSeminormedAddCommGroup.toPseudoMetricSpace uniformity_eq_seminorm

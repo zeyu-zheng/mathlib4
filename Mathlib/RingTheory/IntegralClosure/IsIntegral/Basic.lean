@@ -67,8 +67,8 @@ theorem Submodule.span_range_natDegree_eq_adjoin {R A} [CommRing R] [Semiring A]
   have hf1 : f ≠ 1
   rintro rfl; simp [one_ne_zero' A] at hfx
   refine (span_le.mpr fun s hs ↦ ?_).antisymm fun r hr ↦ ?_
-  · rcases Finset.mem_image.1 hs with ⟨k, -, rfl⟩
-    exact (Algebra.adjoin R {x}).pow_mem (Algebra.subset_adjoin rfl) k
+  rcases Finset.mem_image.1 hs with ⟨k, -, rfl⟩
+  exact (Algebra.adjoin R {x}).pow_mem (Algebra.subset_adjoin rfl) k
   rw [Subalgebra.mem_toSubmodule, Algebra.adjoin_singleton_eq_range_aeval] at hr
   rcases (aeval x).mem_range.mp hr with ⟨p, rfl⟩
   rw [← modByMonic_add_div p hf, map_add, map_mul, hfx,

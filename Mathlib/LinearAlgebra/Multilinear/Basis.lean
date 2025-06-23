@@ -32,20 +32,20 @@ theorem Basis.ext_multilinear_fin {f g : MultilinearMap R M M₂} {ι₁ : Fin n
     (e : ∀ i, Basis (ι₁ i) R (M i))
     (h : ∀ v : ∀ i, ι₁ i, (f fun i => e i (v i)) = g fun i => e i (v i)) : f = g := by
   induction' n with m hm
-  · ext x
-    convert h finZeroElim
-  · apply Function.LeftInverse.injective uncurry_curryLeft
-    refine Basis.ext (e 0) ?_
-    intro i
-    apply hm (Fin.tail e)
-    intro j
-    convert h (Fin.cons i j)
-    iterate 2
-      rw [curryLeft_apply]
-      congr 1 with x
-      refine Fin.cases rfl (fun x => ?_) x
-      dsimp [Fin.tail]
-      rw [Fin.cons_succ, Fin.cons_succ]
+  ext x
+  convert h finZeroElim
+  apply Function.LeftInverse.injective uncurry_curryLeft
+  refine Basis.ext (e 0) ?_
+  intro i
+  apply hm (Fin.tail e)
+  intro j
+  convert h (Fin.cons i j)
+  iterate 2
+    rw [curryLeft_apply]
+    congr 1 with x
+    refine Fin.cases rfl (fun x => ?_) x
+    dsimp [Fin.tail]
+    rw [Fin.cons_succ, Fin.cons_succ]
 
 /-- Two multilinear maps indexed by a `Fintype` are equal if they are equal when all arguments
 are basis vectors. Unlike `Basis.ext_multilinear_fin`, this only uses a single basis; a

@@ -654,8 +654,8 @@ lemma adjoin_induction' {s : Set A} {p : ∀ x, x ∈ adjoin R s → Prop} {a : 
   refine NonUnitalAlgebra.adjoin_induction' (fun x hx ↦ ?_) add zero mul smul ha
   simp only [Set.mem_union, Set.mem_star] at hx
   obtain (hx | hx) := hx
-  · exact mem x hx
-  · simpa using star _ (NonUnitalAlgebra.subset_adjoin R (by simpa using Or.inl hx)) (mem _ hx)
+  exact mem x hx
+  simpa using star _ (NonUnitalAlgebra.subset_adjoin R (by simpa using Or.inl hx)) (mem _ hx)
 
 variable {R}
 

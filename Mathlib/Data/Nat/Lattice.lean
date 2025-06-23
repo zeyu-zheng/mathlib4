@@ -97,14 +97,14 @@ theorem eq_Ici_of_nonempty_of_upward_closed {s : Set ℕ} (hs : s.Nonempty)
 theorem sInf_upward_closed_eq_succ_iff {s : Set ℕ} (hs : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s)
     (k : ℕ) : sInf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s := by
   constructor
-  · intro H
-    rw [eq_Ici_of_nonempty_of_upward_closed (nonempty_of_sInf_eq_succ _) hs, H, mem_Ici, mem_Ici]
-    · exact ⟨le_rfl, k.not_succ_le_self⟩
-    · exact k
-    · assumption
-  · rintro ⟨H, H'⟩
-    rw [sInf_def (⟨_, H⟩ : s.Nonempty), find_eq_iff]
-    exact ⟨H, fun n hnk hns ↦ H' <| hs n k (Nat.lt_succ_iff.mp hnk) hns⟩
+  intro H
+  rw [eq_Ici_of_nonempty_of_upward_closed (nonempty_of_sInf_eq_succ _) hs, H, mem_Ici, mem_Ici]
+  exact ⟨le_rfl, k.not_succ_le_self⟩
+  exact k
+  assumption
+  rintro ⟨H, H'⟩
+  rw [sInf_def (⟨_, H⟩ : s.Nonempty), find_eq_iff]
+  exact ⟨H, fun n hnk hns ↦ H' <| hs n k (Nat.lt_succ_iff.mp hnk) hns⟩
 
 /-- This instance is necessary, otherwise the lattice operations would be derived via
 `ConditionallyCompleteLinearOrderBot` and marked as noncomputable. -/
@@ -142,16 +142,16 @@ theorem sSup_mem {s : Set ℕ} (h₁ : s.Nonempty) (h₂ : BddAbove s) : sSup s 
 theorem sInf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ sInf { m | p m }) :
     sInf { m | p (m + n) } + n = sInf { m | p m } := by
   obtain h | ⟨m, hm⟩ := { m | p (m + n) }.eq_empty_or_nonempty
-  · rw [h, Nat.sInf_empty, zero_add]
-    obtain hnp | hnp := hn.eq_or_lt
-    · exact hnp
-    suffices hp : p (sInf { m | p m } - n + n) from (h.subset hp).elim
-    rw [Nat.sub_add_cancel hn]
-    exact csInf_mem (nonempty_of_pos_sInf <| n.zero_le.trans_lt hnp)
-  · have hp : ∃ n, n ∈ { m | p m } := ⟨_, hm⟩
-    rw [Nat.sInf_def ⟨m, hm⟩, Nat.sInf_def hp]
-    rw [Nat.sInf_def hp] at hn
-    exact find_add hn
+  rw [h, Nat.sInf_empty, zero_add]
+  obtain hnp | hnp := hn.eq_or_lt
+  exact hnp
+  suffices hp : p (sInf { m | p m } - n + n) from (h.subset hp).elim
+  rw [Nat.sub_add_cancel hn]
+  exact csInf_mem (nonempty_of_pos_sInf <| n.zero_le.trans_lt hnp)
+  have hp : ∃ n, n ∈ { m | p m } := ⟨_, hm⟩
+  rw [Nat.sInf_def ⟨m, hm⟩, Nat.sInf_def hp]
+  rw [Nat.sInf_def hp] at hn
+  exact find_add hn
 
 theorem sInf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < sInf { m | p m }) :
     sInf { m | p m } + n = sInf { m | p (m - n) } := by
@@ -163,9 +163,9 @@ theorem sInf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < sInf { m | p m }) :
     le_csInf ⟨m + n, ?_⟩ fun b hb ↦
       le_of_not_lt fun hbn ↦
         ne_of_mem_of_not_mem ?_ (not_mem_of_lt_sInf h) (Nat.sub_eq_zero_of_le hbn.le)
-  · dsimp
-    rwa [Nat.add_sub_cancel_right]
-  · exact hb
+  dsimp
+  rwa [Nat.add_sub_cancel_right]
+  exact hb
 
 section
 

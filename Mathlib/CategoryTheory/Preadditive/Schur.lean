@@ -155,29 +155,29 @@ for the refinements when we know whether or not the simples are isomorphic.
 theorem finrank_hom_simple_simple_le_one (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)] [Simple X]
     [Simple Y] : finrank 𝕜 (X ⟶ Y) ≤ 1 := by
   obtain (h|h) := subsingleton_or_nontrivial (X ⟶ Y)
-  · rw [finrank_zero_of_subsingleton]
-    exact zero_le_one
-  · obtain ⟨f, nz⟩ := (nontrivial_iff_exists_ne 0).mp h
-    haveI fi := (isIso_iff_nonzero f).mpr nz
-    refine finrank_le_one f ?_
-    intro g
-    obtain ⟨c, w⟩ := endomorphism_simple_eq_smul_id 𝕜 (g ≫ inv f)
-    exact ⟨c, by simpa using w =≫ f⟩
+  rw [finrank_zero_of_subsingleton]
+  exact zero_le_one
+  obtain ⟨f, nz⟩ := (nontrivial_iff_exists_ne 0).mp h
+  haveI fi := (isIso_iff_nonzero f).mpr nz
+  refine finrank_le_one f ?_
+  intro g
+  obtain ⟨c, w⟩ := endomorphism_simple_eq_smul_id 𝕜 (g ≫ inv f)
+  exact ⟨c, by simpa using w =≫ f⟩
 
 theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)]
     [FiniteDimensional 𝕜 (X ⟶ Y)] [Simple X] [Simple Y] :
     finrank 𝕜 (X ⟶ Y) = 1 ↔ Nonempty (X ≅ Y) := by
   fconstructor
-  · intro h
-    rw [finrank_eq_one_iff'] at h
-    obtain ⟨f, nz, -⟩ := h
-    rw [← isIso_iff_nonzero] at nz
-    exact ⟨asIso f⟩
-  · rintro ⟨f⟩
-    have le_one := finrank_hom_simple_simple_le_one 𝕜 X Y
-    have zero_lt : 0 < finrank 𝕜 (X ⟶ Y) :=
-      finrank_pos_iff_exists_ne_zero.mpr ⟨f.hom, (isIso_iff_nonzero f.hom).mp inferInstance⟩
-    omega
+  intro h
+  rw [finrank_eq_one_iff'] at h
+  obtain ⟨f, nz, -⟩ := h
+  rw [← isIso_iff_nonzero] at nz
+  exact ⟨asIso f⟩
+  rintro ⟨f⟩
+  have le_one := finrank_hom_simple_simple_le_one 𝕜 X Y
+  have zero_lt : 0 < finrank 𝕜 (X ⟶ Y) :=
+    finrank_pos_iff_exists_ne_zero.mpr ⟨f.hom, (isIso_iff_nonzero f.hom).mp inferInstance⟩
+  omega
 
 theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)]
     [FiniteDimensional 𝕜 (X ⟶ Y)] [Simple X] [Simple Y] :
@@ -186,15 +186,15 @@ theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [FiniteDimensional 𝕜 
   refine ⟨fun h => by rw [h]; simp, fun h => ?_⟩
   have := finrank_hom_simple_simple_le_one 𝕜 X Y
   interval_cases finrank 𝕜 (X ⟶ Y)
-  · rfl
-  · exact False.elim (h rfl)
+  rfl
+  exact False.elim (h rfl)
 
 open scoped Classical
 
 theorem finrank_hom_simple_simple (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [Simple X]
     [Simple Y] : finrank 𝕜 (X ⟶ Y) = if Nonempty (X ≅ Y) then 1 else 0 := by
   split_ifs with h
-  · exact (finrank_hom_simple_simple_eq_one_iff 𝕜 X Y).2 h
-  · exact (finrank_hom_simple_simple_eq_zero_iff 𝕜 X Y).2 (not_nonempty_iff.mp h)
+  exact (finrank_hom_simple_simple_eq_one_iff 𝕜 X Y).2 h
+  exact (finrank_hom_simple_simple_eq_zero_iff 𝕜 X Y).2 (not_nonempty_iff.mp h)
 
 end CategoryTheory

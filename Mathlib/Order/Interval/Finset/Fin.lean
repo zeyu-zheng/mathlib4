@@ -150,11 +150,11 @@ theorem map_valEmbedding_Ici : (Ici a).map Fin.valEmbedding = Icc ↑a (n - 1) :
   ext x
   simp only [exists_prop, Embedding.coe_subtype, mem_Ici, mem_map, mem_Icc]
   constructor
-  · rintro ⟨x, hx, rfl⟩
-    exact ⟨hx, Nat.le_sub_of_add_le <| x.2⟩
+  rintro ⟨x, hx, rfl⟩
+  exact ⟨hx, Nat.le_sub_of_add_le <| x.2⟩
   cases n
-  · exact Fin.elim0 a
-  · exact fun hx => ⟨⟨x, Nat.lt_succ_iff.2 hx.2⟩, hx.1, rfl⟩
+  exact Fin.elim0 a
+  exact fun hx => ⟨⟨x, Nat.lt_succ_iff.2 hx.2⟩, hx.1, rfl⟩
 
 @[simp]
 theorem map_valEmbedding_Ioi : (Ioi a).map Fin.valEmbedding = Ioc ↑a (n - 1) := by
@@ -164,11 +164,11 @@ theorem map_valEmbedding_Ioi : (Ioi a).map Fin.valEmbedding = Ioc ↑a (n - 1) :
   ext x
   simp only [exists_prop, Embedding.coe_subtype, mem_Ioi, mem_map, mem_Ioc]
   constructor
-  · rintro ⟨x, hx, rfl⟩
-    exact ⟨hx, Nat.le_sub_of_add_le <| x.2⟩
+  rintro ⟨x, hx, rfl⟩
+  exact ⟨hx, Nat.le_sub_of_add_le <| x.2⟩
   cases n
-  · exact Fin.elim0 a
-  · exact fun hx => ⟨⟨x, Nat.lt_succ_iff.2 hx.2⟩, hx.1, rfl⟩
+  exact Fin.elim0 a
+  exact fun hx => ⟨⟨x, Nat.lt_succ_iff.2 hx.2⟩, hx.1, rfl⟩
 
 @[simp]
 theorem map_valEmbedding_Iic : (Iic b).map Fin.valEmbedding = Iic ↑b := by

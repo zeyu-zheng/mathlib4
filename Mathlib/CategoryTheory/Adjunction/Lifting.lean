@@ -184,11 +184,11 @@ lemma monadicAdjointTriangleLift (U : B ⥤ C) [MonadicRightAdjoint U] {R : A �
     [HasReflexiveCoequalizers A] [(R ⋙ U).IsRightAdjoint] : R.IsRightAdjoint := by
   let R' : A ⥤ _ := R ⋙ Monad.comparison (monadicAdjunction U)
   rsuffices : R'.IsRightAdjoint
-  · let this : (R' ⋙ (Monad.comparison (monadicAdjunction U)).inv).IsRightAdjoint := by
-      infer_instance
-    refine ((Adjunction.ofIsRightAdjoint
-      (R' ⋙ (Monad.comparison (monadicAdjunction U)).inv)).ofNatIsoRight ?_).isRightAdjoint
-    exact isoWhiskerLeft R (Monad.comparison _).asEquivalence.unitIso.symm ≪≫ R.rightUnitor
+  let this : (R' ⋙ (Monad.comparison (monadicAdjunction U)).inv).IsRightAdjoint := by
+    infer_instance
+  refine ((Adjunction.ofIsRightAdjoint
+    (R' ⋙ (Monad.comparison (monadicAdjunction U)).inv)).ofNatIsoRight ?_).isRightAdjoint
+  exact isoWhiskerLeft R (Monad.comparison _).asEquivalence.unitIso.symm ≪≫ R.rightUnitor
   let this : (R' ⋙ Monad.forget (monadicAdjunction U).toMonad).IsRightAdjoint := by
     refine ((Adjunction.ofIsRightAdjoint (R ⋙ U)).ofNatIsoRight ?_).isRightAdjoint
     exact isoWhiskerLeft R (Monad.comparisonForget (monadicAdjunction U)).symm

@@ -61,12 +61,12 @@ theorem conj_apply {x : ((K →+* ℂ) → ℂ)} (φ : K →+* ℂ)
     (hx : x ∈ Submodule.span ℝ (Set.range (canonicalEmbedding K))) :
     conj (x φ) = x (ComplexEmbedding.conjugate φ) := by
   refine Submodule.span_induction hx ?_ ?_ (fun _ _ hx hy => ?_) (fun a _ hx => ?_)
-  · rintro _ ⟨x, rfl⟩
-    rw [apply_at, apply_at, ComplexEmbedding.conjugate_coe_eq]
-  · rw [Pi.zero_apply, Pi.zero_apply, map_zero]
-  · rw [Pi.add_apply, Pi.add_apply, map_add, hx, hy]
-  · rw [Pi.smul_apply, Complex.real_smul, map_mul, Complex.conj_ofReal]
-    exact congrArg ((a : ℂ) * ·) hx
+  rintro _ ⟨x, rfl⟩
+  rw [apply_at, apply_at, ComplexEmbedding.conjugate_coe_eq]
+  rw [Pi.zero_apply, Pi.zero_apply, map_zero]
+  rw [Pi.add_apply, Pi.add_apply, map_add, hx, hy]
+  rw [Pi.smul_apply, Complex.real_smul, map_mul, Complex.conj_ofReal]
+  exact congrArg ((a : ℂ) * ·) hx
 
 theorem nnnorm_eq [NumberField K] (x : K) :
     ‖canonicalEmbedding K x‖₊ = Finset.univ.sup (fun φ : K →+* ℂ => ‖φ x‖₊) := by
@@ -75,13 +75,13 @@ theorem nnnorm_eq [NumberField K] (x : K) :
 theorem norm_le_iff [NumberField K] (x : K) (r : ℝ) :
     ‖canonicalEmbedding K x‖ ≤ r ↔ ∀ φ : K →+* ℂ, ‖φ x‖ ≤ r := by
   obtain hr | hr := lt_or_le r 0
-  · obtain ⟨φ⟩ := (inferInstance : Nonempty (K →+* ℂ))
-    refine iff_of_false ?_ ?_
-    · exact (hr.trans_le (norm_nonneg _)).not_le
-    · exact fun h => hr.not_le (le_trans (norm_nonneg _) (h φ))
-  · lift r to NNReal using hr
-    simp_rw [← coe_nnnorm, nnnorm_eq, NNReal.coe_le_coe, Finset.sup_le_iff, Finset.mem_univ,
-      forall_true_left]
+  obtain ⟨φ⟩ := (inferInstance : Nonempty (K →+* ℂ))
+  refine iff_of_false ?_ ?_
+  exact (hr.trans_le (norm_nonneg _)).not_le
+  exact fun h => hr.not_le (le_trans (norm_nonneg _) (h φ))
+  lift r to NNReal using hr
+  simp_rw [← coe_nnnorm, nnnorm_eq, NNReal.coe_le_coe, Finset.sup_le_iff, Finset.mem_univ,
+    forall_true_left]
 
 variable (K)
 
@@ -92,16 +92,16 @@ def integerLattice : Subring ((K →+* ℂ) → ℂ) :=
 theorem integerLattice.inter_ball_finite [NumberField K] (r : ℝ) :
     ((integerLattice K : Set ((K →+* ℂ) → ℂ)) ∩ Metric.closedBall 0 r).Finite := by
   obtain hr | _ := lt_or_le r 0
-  · simp [Metric.closedBall_eq_empty.2 hr]
-  · have heq : ∀ x, canonicalEmbedding K x ∈ Metric.closedBall 0 r ↔
-        ∀ φ : K →+* ℂ, ‖φ x‖ ≤ r := by
-      intro x; rw [← norm_le_iff, mem_closedBall_zero_iff]
-    convert (Embeddings.finite_of_norm_le K ℂ r).image (canonicalEmbedding K)
-    ext; constructor
-    · rintro ⟨⟨_, ⟨x, rfl⟩, rfl⟩, hx⟩
-      exact ⟨x, ⟨SetLike.coe_mem x, fun φ => (heq _).mp hx φ⟩, rfl⟩
-    · rintro ⟨x, ⟨hx1, hx2⟩, rfl⟩
-      exact ⟨⟨x, ⟨⟨x, hx1⟩, rfl⟩, rfl⟩, (heq x).mpr hx2⟩
+  simp [Metric.closedBall_eq_empty.2 hr]
+  have heq : ∀ x, canonicalEmbedding K x ∈ Metric.closedBall 0 r ↔
+      ∀ φ : K →+* ℂ, ‖φ x‖ ≤ r := by
+    intro x; rw [← norm_le_iff, mem_closedBall_zero_iff]
+  convert (Embeddings.finite_of_norm_le K ℂ r).image (canonicalEmbedding K)
+  ext; constructor
+  rintro ⟨⟨_, ⟨x, rfl⟩, rfl⟩, hx⟩
+  exact ⟨x, ⟨SetLike.coe_mem x, fun φ => (heq _).mp hx φ⟩, rfl⟩
+  rintro ⟨x, ⟨hx1, hx2⟩, rfl⟩
+  exact ⟨⟨x, ⟨⟨x, hx1⟩, rfl⟩, rfl⟩, (heq x).mpr hx2⟩
 
 open Module Fintype FiniteDimensional
 
@@ -193,10 +193,10 @@ noncomputable def _root_.NumberField.mixedEmbedding : K →+* (E K) :=
 instance [NumberField K] : Nontrivial (E K) := by
   obtain ⟨w⟩ := (inferInstance : Nonempty (InfinitePlace K))
   obtain hw | hw := w.isReal_or_isComplex
-  · have : Nonempty {w : InfinitePlace K // IsReal w} := ⟨⟨w, hw⟩⟩
-    exact nontrivial_prod_left
-  · have : Nonempty {w : InfinitePlace K // IsComplex w} := ⟨⟨w, hw⟩⟩
-    exact nontrivial_prod_right
+  have : Nonempty {w : InfinitePlace K // IsReal w} := ⟨⟨w, hw⟩⟩
+  exact nontrivial_prod_left
+  have : Nonempty {w : InfinitePlace K // IsComplex w} := ⟨⟨w, hw⟩⟩
+  exact nontrivial_prod_right
 
 open Classical in
 protected theorem finrank [NumberField K] : finrank ℝ (E K) = finrank ℚ K := by
@@ -250,18 +250,18 @@ theorem disjoint_span_commMap_ker [NumberField K] :
   ext1 φ
   rw [Pi.zero_apply]
   by_cases hφ : ComplexEmbedding.IsReal φ
-  · apply Complex.ext
-    · rw [← embedding_mk_eq_of_isReal hφ, ← commMap_apply_of_isReal K x ⟨φ, hφ, rfl⟩]
-      exact congrFun (congrArg (fun x => x.1) h_zero) ⟨InfinitePlace.mk φ, _⟩
-    · rw [Complex.zero_im, ← Complex.conj_eq_iff_im, canonicalEmbedding.conj_apply _ h_mem,
-        ComplexEmbedding.isReal_iff.mp hφ]
-  · have := congrFun (congrArg (fun x => x.2) h_zero) ⟨InfinitePlace.mk φ, ⟨φ, hφ, rfl⟩⟩
-    cases embedding_mk_eq φ with
-    | inl h => rwa [← h, ← commMap_apply_of_isComplex K x ⟨φ, hφ, rfl⟩]
-    | inr h =>
-        apply RingHom.injective (starRingEnd ℂ)
-        rwa [canonicalEmbedding.conj_apply _ h_mem, ← h, map_zero,
-          ← commMap_apply_of_isComplex K x ⟨φ, hφ, rfl⟩]
+  apply Complex.ext
+  rw [← embedding_mk_eq_of_isReal hφ, ← commMap_apply_of_isReal K x ⟨φ, hφ, rfl⟩]
+  exact congrFun (congrArg (fun x => x.1) h_zero) ⟨InfinitePlace.mk φ, _⟩
+  rw [Complex.zero_im, ← Complex.conj_eq_iff_im, canonicalEmbedding.conj_apply _ h_mem,
+    ComplexEmbedding.isReal_iff.mp hφ]
+  have := congrFun (congrArg (fun x => x.2) h_zero) ⟨InfinitePlace.mk φ, ⟨φ, hφ, rfl⟩⟩
+  cases embedding_mk_eq φ with
+  | inl h => rwa [← h, ← commMap_apply_of_isComplex K x ⟨φ, hφ, rfl⟩]
+  | inr h =>
+      apply RingHom.injective (starRingEnd ℂ)
+      rwa [canonicalEmbedding.conj_apply _ h_mem, ← h, map_zero,
+        ← commMap_apply_of_isComplex K x ⟨φ, hφ, rfl⟩]
 
 end commMap
 
@@ -298,8 +298,8 @@ theorem normAtPlace_smul (w : InfinitePlace K) (x : E K) (c : ℝ) :
     normAtPlace w (c • x) = |c| * normAtPlace w x := by
   rw [normAtPlace, MonoidWithZeroHom.coe_mk, ZeroHom.coe_mk]
   split_ifs
-  · rw [Prod.smul_fst, Pi.smul_apply, norm_smul, Real.norm_eq_abs]
-  · rw [Prod.smul_snd, Pi.smul_apply, norm_smul, Real.norm_eq_abs, Complex.norm_eq_abs]
+  rw [Prod.smul_fst, Pi.smul_apply, norm_smul, Real.norm_eq_abs]
+  rw [Prod.smul_snd, Pi.smul_apply, norm_smul, Real.norm_eq_abs, Complex.norm_eq_abs]
 
 theorem normAtPlace_real (w : InfinitePlace K) (c : ℝ) :
     normAtPlace w ((fun _ ↦ c, fun _ ↦ c) : (E K)) = |c| := by
@@ -325,10 +325,10 @@ theorem normAtPlace_apply (w : InfinitePlace K) (x : K) :
 theorem normAtPlace_eq_zero {x : E K} :
     (∀ w, normAtPlace w x = 0) ↔ x = 0 := by
   refine ⟨fun h ↦ ?_, fun h ↦ ?_⟩
-  · ext w
-    · exact norm_eq_zero'.mp (normAtPlace_apply_isReal w.prop _ ▸ h w.1)
-    · exact norm_eq_zero'.mp (normAtPlace_apply_isComplex w.prop _ ▸ h w.1)
-  · simp_rw [h, map_zero, implies_true]
+  ext w
+  exact norm_eq_zero'.mp (normAtPlace_apply_isReal w.prop _ ▸ h w.1)
+  exact norm_eq_zero'.mp (normAtPlace_apply_isComplex w.prop _ ▸ h w.1)
+  simp_rw [h, map_zero, implies_true]
 
 variable [NumberField K]
 
@@ -342,10 +342,10 @@ theorem nnnorm_eq_sup_normAtPlace (x : E K) :
   rw [this, sup_union, univ.sup_image, univ.sup_image, sup_eq_max,
     Prod.nnnorm_def', Pi.nnnorm_def, Pi.nnnorm_def]
   congr
-  · ext w
-    simp [normAtPlace_apply_isReal w.prop]
-  · ext w
-    simp [normAtPlace_apply_isComplex w.prop]
+  ext w
+  simp [normAtPlace_apply_isReal w.prop]
+  ext w
+  simp [normAtPlace_apply_isComplex w.prop]
 
 theorem norm_eq_sup'_normAtPlace (x : E K) :
     ‖x‖ = univ.sup' univ_nonempty fun w ↦ normAtPlace w x := by
@@ -525,18 +525,18 @@ theorem stdBasis_repr_eq_matrixToStdBasis_mul (x : (K →+* ℂ) → ℂ)
   | inr c =>
     rcases c with ⟨w, j⟩
     fin_cases j
-    · simp_rw [Fin.mk_zero, stdBasis_apply_ofIsComplex_fst, fromBlocks_apply₂₁,
-        fromBlocks_apply₂₂, Matrix.zero_apply, submatrix_apply,
-        blockDiagonal_apply, Prod.swap_prod_mk, ite_mul, zero_mul, sum_const_zero, zero_add,
-        sum_add_distrib, sum_ite_eq, mem_univ, ite_true, of_apply, cons_val', cons_val_zero,
-        cons_val_one, head_cons, ← hx (embedding w), re_eq_add_conj]
-      field_simp
-    · simp_rw [Fin.mk_one, stdBasis_apply_ofIsComplex_snd, fromBlocks_apply₂₁,
-        fromBlocks_apply₂₂, Matrix.zero_apply, submatrix_apply, blockDiagonal_apply,
-        Prod.swap_prod_mk, ite_mul, zero_mul, sum_const_zero, zero_add, sum_add_distrib, sum_ite_eq,
-        mem_univ, ite_true, of_apply, cons_val', cons_val_zero, cons_val_one, head_cons,
-        ← hx (embedding w), im_eq_sub_conj]
-      ring_nf; field_simp
+    simp_rw [Fin.mk_zero, stdBasis_apply_ofIsComplex_fst, fromBlocks_apply₂₁,
+      fromBlocks_apply₂₂, Matrix.zero_apply, submatrix_apply,
+      blockDiagonal_apply, Prod.swap_prod_mk, ite_mul, zero_mul, sum_const_zero, zero_add,
+      sum_add_distrib, sum_ite_eq, mem_univ, ite_true, of_apply, cons_val', cons_val_zero,
+      cons_val_one, head_cons, ← hx (embedding w), re_eq_add_conj]
+    field_simp
+    simp_rw [Fin.mk_one, stdBasis_apply_ofIsComplex_snd, fromBlocks_apply₂₁,
+      fromBlocks_apply₂₂, Matrix.zero_apply, submatrix_apply, blockDiagonal_apply,
+      Prod.swap_prod_mk, ite_mul, zero_mul, sum_const_zero, zero_add, sum_add_distrib, sum_ite_eq,
+      mem_univ, ite_true, of_apply, cons_val', cons_val_zero, cons_val_one, head_cons,
+      ← hx (embedding w), im_eq_sub_conj]
+    ring_nf; field_simp
 
 end stdBasis
 

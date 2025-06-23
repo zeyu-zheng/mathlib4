@@ -97,17 +97,17 @@ presieves only.
 theorem isSheaf_pretopology [HasPullbacks C] (K : Pretopology C) :
     IsSheaf (K.toGrothendieck C) P ↔ ∀ {X : C} (R : Presieve X), R ∈ K X → IsSheafFor P R := by
   constructor
-  · intro PJ X R hR
-    rw [isSheafFor_iff_generate]
-    apply PJ (Sieve.generate R) ⟨_, hR, le_generate R⟩
-  · rintro PK X S ⟨R, hR, RS⟩
-    have gRS : ⇑(generate R) ≤ S
-    apply giGenerate.gc.monotone_u
-    rwa [generate_le_iff]
-    apply isSheafFor_subsieve P gRS _
-    intro Y f
-    rw [← pullbackArrows_comm, ← isSheafFor_iff_generate]
-    exact PK (pullbackArrows f R) (K.pullbacks f R hR)
+  intro PJ X R hR
+  rw [isSheafFor_iff_generate]
+  apply PJ (Sieve.generate R) ⟨_, hR, le_generate R⟩
+  rintro PK X S ⟨R, hR, RS⟩
+  have gRS : ⇑(generate R) ≤ S
+  apply giGenerate.gc.monotone_u
+  rwa [generate_le_iff]
+  apply isSheafFor_subsieve P gRS _
+  intro Y f
+  rw [← pullbackArrows_comm, ← isSheafFor_iff_generate]
+  exact PK (pullbackArrows f R) (K.pullbacks f R hR)
 
 /-- Any presheaf is a sheaf for the bottom (trivial) grothendieck topology. -/
 theorem isSheaf_bot : IsSheaf (⊥ : GrothendieckTopology C) P := fun X => by
@@ -174,30 +174,30 @@ theorem forallYonedaIsSheaf_iff_colimit (S : Sieve X) :
     (∀ W : C, Presieve.IsSheafFor (yoneda.obj W) (S : Presieve X)) ↔
       Nonempty (IsColimit S.arrows.cocone) := by
   constructor
-  · intro H
-    refine Nonempty.intro ?_
-    exact
-    { desc := fun s => H s.pt (yonedaFamilyOfElements_fromCocone S.arrows s)
-        (yonedaFamily_fromCocone_compatible S s) |>.choose
-      fac := by
-        intro s f
-        replace H := H s.pt (yonedaFamilyOfElements_fromCocone S.arrows s)
-          (yonedaFamily_fromCocone_compatible S s)
-        have ht := H.choose_spec.1 f.obj.hom f.property
-        aesop_cat
-      uniq := by
-        intro s Fs HFs
-        replace H := H s.pt (yonedaFamilyOfElements_fromCocone S.arrows s)
-          (yonedaFamily_fromCocone_compatible S s)
-        apply H.choose_spec.2 Fs
-        exact fun _ f hf => HFs ⟨Over.mk f, hf⟩ }
-  · intro H W x hx
-    replace H := Classical.choice H
-    let s := compatibleYonedaFamily_toCocone S W x hx
-    use H.desc s
-    constructor
-    · exact fun _ f hf => (H.fac s) ⟨Over.mk f, hf⟩
-    · exact fun g hg => H.uniq s g (fun ⟨⟨f, _, hom⟩, hf⟩ => hg hom hf)
+  intro H
+  refine Nonempty.intro ?_
+  exact
+  { desc := fun s => H s.pt (yonedaFamilyOfElements_fromCocone S.arrows s)
+      (yonedaFamily_fromCocone_compatible S s) |>.choose
+    fac := by
+      intro s f
+      replace H := H s.pt (yonedaFamilyOfElements_fromCocone S.arrows s)
+        (yonedaFamily_fromCocone_compatible S s)
+      have ht := H.choose_spec.1 f.obj.hom f.property
+      aesop_cat
+    uniq := by
+      intro s Fs HFs
+      replace H := H s.pt (yonedaFamilyOfElements_fromCocone S.arrows s)
+        (yonedaFamily_fromCocone_compatible S s)
+      apply H.choose_spec.2 Fs
+      exact fun _ f hf => HFs ⟨Over.mk f, hf⟩ }
+  intro H W x hx
+  replace H := Classical.choice H
+  let s := compatibleYonedaFamily_toCocone S W x hx
+  use H.desc s
+  constructor
+  exact fun _ f hf => (H.fac s) ⟨Over.mk f, hf⟩
+  exact fun g hg => H.uniq s g (fun ⟨⟨f, _, hom⟩, hf⟩ => hg hom hf)
 
 end Sieve
 

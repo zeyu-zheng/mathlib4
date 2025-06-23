@@ -100,9 +100,9 @@ theorem ExponentExists.orderOf_pos (h : ExponentExists G) (g : G) : 0 < orderOf 
 theorem exponent_ne_zero : exponent G ≠ 0 ↔ ExponentExists G := by
   rw [exponent]
   split_ifs with h
-  · simp [h, @not_lt_zero' ℕ]
+  simp [h, @not_lt_zero' ℕ]
   --if this isn't done this way, `to_additive` freaks
-  · tauto
+  tauto
 
 @[to_additive]
 protected alias ⟨_, ExponentExists.exponent_ne_zero⟩ := exponent_ne_zero
@@ -136,9 +136,9 @@ theorem exponent_eq_zero_iff_forall : exponent G = 0 ↔ ∀ n > 0, ∃ g : G, g
 @[to_additive exponent_nsmul_eq_zero]
 theorem pow_exponent_eq_one (g : G) : g ^ exponent G = 1 := by
   by_cases h : ExponentExists G
-  · simp_rw [exponent, dif_pos h]
-    exact (Nat.find_spec h).2 g
-  · simp_rw [exponent, dif_neg h, pow_zero]
+  simp_rw [exponent, dif_pos h]
+  exact (Nat.find_spec h).2 g
+  simp_rw [exponent, dif_neg h, pow_zero]
 
 @[to_additive]
 theorem pow_eq_mod_exponent {n : ℕ} (g : G) : g ^ n = g ^ (n % exponent G) :=
@@ -154,9 +154,9 @@ theorem exponent_pos_of_exists (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n =
 @[to_additive]
 theorem exponent_min' (n : ℕ) (hpos : 0 < n) (hG : ∀ g : G, g ^ n = 1) : exponent G ≤ n := by
   rw [exponent, dif_pos]
-  · apply Nat.find_min'
-    exact ⟨hpos, hG⟩
-  · exact ⟨n, hpos, hG⟩
+  apply Nat.find_min'
+  exact ⟨hpos, hG⟩
+  exact ⟨n, hpos, hG⟩
 
 @[to_additive]
 theorem exponent_min (m : ℕ) (hpos : 0 < m) (hm : m < exponent G) : ∃ g : G, g ^ m ≠ 1 := by
@@ -167,12 +167,12 @@ theorem exponent_min (m : ℕ) (hpos : 0 < m) (hm : m < exponent G) : ∃ g : G,
 @[to_additive AddMonoid.exp_eq_one_iff]
 theorem exp_eq_one_iff : exponent G = 1 ↔ Subsingleton G := by
   refine ⟨fun eq_one => ⟨fun a b => ?a_eq_b⟩, fun h => le_antisymm ?le ?ge⟩
-  · rw [← pow_one a, ← pow_one b, ← eq_one, Monoid.pow_exponent_eq_one, Monoid.pow_exponent_eq_one]
-  · apply exponent_min' _ Nat.one_pos
-    simp [eq_iff_true_of_subsingleton]
-  · apply Nat.succ_le_of_lt
-    apply exponent_pos_of_exists 1 Nat.one_pos
-    simp [eq_iff_true_of_subsingleton]
+  rw [← pow_one a, ← pow_one b, ← eq_one, Monoid.pow_exponent_eq_one, Monoid.pow_exponent_eq_one]
+  apply exponent_min' _ Nat.one_pos
+  simp [eq_iff_true_of_subsingleton]
+  apply Nat.succ_le_of_lt
+  apply exponent_pos_of_exists 1 Nat.one_pos
+  simp [eq_iff_true_of_subsingleton]
 
 @[to_additive (attr := simp) AddMonoid.exp_eq_one_of_subsingleton]
 theorem exp_eq_one_of_subsingleton [hs : Subsingleton G] : exponent G = 1 :=
@@ -189,20 +189,20 @@ theorem orderOf_le_exponent (h : ExponentExists G) (g : G) : orderOf g ≤ expon
 @[to_additive]
 theorem exponent_dvd_iff_forall_pow_eq_one {n : ℕ} : exponent G ∣ n ↔ ∀ g : G, g ^ n = 1 := by
   rcases n.eq_zero_or_pos with (rfl | hpos)
-  · simp
+  simp
   constructor
-  · intro h g
-    rw [Nat.dvd_iff_mod_eq_zero] at h
-    rw [pow_eq_mod_exponent, h, pow_zero]
-  · intro hG
-    by_contra h
-    rw [Nat.dvd_iff_mod_eq_zero, ← Ne, ← pos_iff_ne_zero] at h
-    have h₂ : n % exponent G < exponent G := Nat.mod_lt _ (exponent_pos_of_exists n hpos hG)
-    have h₃ : exponent G ≤ n % exponent G
-    apply exponent_min' _ h
-    simp_rw [← pow_eq_mod_exponent]
-    exact hG
-    exact h₂.not_le h₃
+  intro h g
+  rw [Nat.dvd_iff_mod_eq_zero] at h
+  rw [pow_eq_mod_exponent, h, pow_zero]
+  intro hG
+  by_contra h
+  rw [Nat.dvd_iff_mod_eq_zero, ← Ne, ← pos_iff_ne_zero] at h
+  have h₂ : n % exponent G < exponent G := Nat.mod_lt _ (exponent_pos_of_exists n hpos hG)
+  have h₃ : exponent G ≤ n % exponent G
+  apply exponent_min' _ h
+  simp_rw [← pow_eq_mod_exponent]
+  exact hG
+  exact h₂.not_le h₃
 
 @[to_additive]
 alias ⟨_, exponent_dvd_of_forall_pow_eq_one⟩ := exponent_dvd_iff_forall_pow_eq_one
@@ -229,7 +229,7 @@ theorem _root_.Nat.Prime.exists_orderOf_eq_pow_factorization_exponent {p : ℕ} 
     ∃ g : G, orderOf g = p ^ (exponent G).factorization p := by
   haveI := Fact.mk hp
   rcases eq_or_ne ((exponent G).factorization p) 0 with (h | h)
-  · refine ⟨1, by rw [h, pow_zero, orderOf_one]⟩
+  refine ⟨1, by rw [h, pow_zero, orderOf_one]⟩
   have he : 0 < exponent G :=
     Ne.bot_lt fun ht => by
       rw [ht] at h
@@ -248,9 +248,9 @@ theorem _root_.Nat.Prime.exists_orderOf_eq_pow_factorization_exponent {p : ℕ} 
   refine ⟨g ^ k, ?_⟩
   rw [ht]
   apply orderOf_eq_prime_pow
-  · rwa [hk, mul_comm, ht, pow_succ, ← mul_assoc, Nat.mul_div_cancel _ hp.pos, pow_mul] at hg
-  · rw [← Nat.succ_eq_add_one, ← ht, ← pow_mul, mul_comm, ← hk]
-    exact pow_exponent_eq_one g
+  rwa [hk, mul_comm, ht, pow_succ, ← mul_assoc, Nat.mul_div_cancel _ hp.pos, pow_mul] at hg
+  rw [← Nat.succ_eq_add_one, ← ht, ← pow_mul, mul_comm, ← hk]
+  exact pow_exponent_eq_one g
 
 variable {G} in
 open Nat in
@@ -281,11 +281,11 @@ and `y`."]
 theorem _root_.Commute.exists_orderOf_eq_lcm {x y : G} (h : Commute x y) :
     ∃ z ∈ closure {x, y}, orderOf z = Nat.lcm (orderOf x) (orderOf y) := by
   by_cases hx : orderOf x = 0 <;> by_cases hy : orderOf y = 0
-  · exact ⟨x, subset_closure (by simp), by simp [hx]⟩
-  · exact ⟨x, subset_closure (by simp), by simp [hx]⟩
-  · exact ⟨y, subset_closure (by simp), by simp [hy]⟩
-  · exact ⟨_, mul_mem (pow_mem (subset_closure (by simp)) _) (pow_mem (subset_closure (by simp)) _),
-      h.orderOf_mul_pow_eq_lcm hx hy⟩
+  exact ⟨x, subset_closure (by simp), by simp [hx]⟩
+  exact ⟨x, subset_closure (by simp), by simp [hx]⟩
+  exact ⟨y, subset_closure (by simp), by simp [hy]⟩
+  exact ⟨_, mul_mem (pow_mem (subset_closure (by simp)) _) (pow_mem (subset_closure (by simp)) _),
+    h.orderOf_mul_pow_eq_lcm hx hy⟩
 
 /-- A nontrivial monoid has prime exponent `p` if and only if every non-identity element has
 order `p`. -/
@@ -293,15 +293,15 @@ order `p`. -/
 lemma exponent_eq_prime_iff {G : Type*} [Monoid G] [Nontrivial G] {p : ℕ} (hp : p.Prime) :
     Monoid.exponent G = p ↔ ∀ g : G, g ≠ 1 → orderOf g = p := by
   refine ⟨fun hG g hg ↦ ?_, fun h ↦ dvd_antisymm ?_ ?_⟩
-  · rw [Ne, ← orderOf_eq_one_iff] at hg
-    exact Eq.symm <| (hp.dvd_iff_eq hg).mp <| hG ▸ Monoid.order_dvd_exponent g
-  · rw [exponent_dvd]
-    intro g
-    by_cases hg : g = 1
-    · simp [hg]
-    · rw [h g hg]
-  · obtain ⟨g, hg⟩ := exists_ne (1 : G)
-    simpa [h g hg] using Monoid.order_dvd_exponent g
+  rw [Ne, ← orderOf_eq_one_iff] at hg
+  exact Eq.symm <| (hp.dvd_iff_eq hg).mp <| hG ▸ Monoid.order_dvd_exponent g
+  rw [exponent_dvd]
+  intro g
+  by_cases hg : g = 1
+  simp [hg]
+  rw [h g hg]
+  obtain ⟨g, hg⟩ := exists_ne (1 : G)
+  simpa [h g hg] using Monoid.order_dvd_exponent g
 
 variable {G}
 
@@ -309,24 +309,24 @@ variable {G}
 theorem exponent_ne_zero_iff_range_orderOf_finite (h : ∀ g : G, 0 < orderOf g) :
     exponent G ≠ 0 ↔ (Set.range (orderOf : G → ℕ)).Finite := by
   refine ⟨fun he => ?_, fun he => ?_⟩
-  · by_contra h
-    obtain ⟨m, ⟨t, rfl⟩, het⟩ := Set.Infinite.exists_gt h (exponent G)
-    exact pow_ne_one_of_lt_orderOf he het (pow_exponent_eq_one t)
-  · lift Set.range (orderOf (G := G)) to Finset ℕ using he with t ht
-    have htpos : 0 < t.prod id
-    refine Finset.prod_pos fun a ha => ?_
-    rw [← Finset.mem_coe, ht] at ha
-    obtain ⟨k, rfl⟩ := ha
-    exact h k
-    suffices exponent G ∣ t.prod id by
-      intro h
-      rw [h, zero_dvd_iff] at this
-      exact htpos.ne' this
-    rw [exponent_dvd]
-    intro g
-    apply Finset.dvd_prod_of_mem id (?_ : orderOf g ∈ _)
-    rw [← Finset.mem_coe, ht]
-    exact Set.mem_range_self g
+  by_contra h
+  obtain ⟨m, ⟨t, rfl⟩, het⟩ := Set.Infinite.exists_gt h (exponent G)
+  exact pow_ne_one_of_lt_orderOf he het (pow_exponent_eq_one t)
+  lift Set.range (orderOf (G := G)) to Finset ℕ using he with t ht
+  have htpos : 0 < t.prod id
+  refine Finset.prod_pos fun a ha => ?_
+  rw [← Finset.mem_coe, ht] at ha
+  obtain ⟨k, rfl⟩ := ha
+  exact h k
+  suffices exponent G ∣ t.prod id by
+    intro h
+    rw [h, zero_dvd_iff] at this
+    exact htpos.ne' this
+  rw [exponent_dvd]
+  intro g
+  apply Finset.dvd_prod_of_mem id (?_ : orderOf g ∈ _)
+  rw [← Finset.mem_coe, ht]
+  exact Set.mem_range_self g
 
 @[to_additive]
 theorem exponent_eq_zero_iff_range_orderOf_infinite (h : ∀ g : G, 0 < orderOf g) :
@@ -396,9 +396,9 @@ theorem ExponentExists.of_finite : ExponentExists G := by
   let _inst := Fintype.ofFinite G
   simp only [Monoid.ExponentExists]
   refine ⟨(Finset.univ : Finset G).lcm orderOf, ?_, fun g => ?_⟩
-  · simpa [pos_iff_ne_zero, Finset.lcm_eq_zero_iff] using fun x => (_root_.orderOf_pos x).ne'
-  · rw [← orderOf_dvd_iff_pow_eq_one, lcm_orderOf_eq_exponent]
-    exact order_dvd_exponent g
+  simpa [pos_iff_ne_zero, Finset.lcm_eq_zero_iff] using fun x => (_root_.orderOf_pos x).ne'
+  rw [← orderOf_dvd_iff_pow_eq_one, lcm_orderOf_eq_exponent]
+  exact order_dvd_exponent g
 
 @[to_additive]
 theorem exponent_ne_zero_of_finite : exponent G ≠ 0 :=
@@ -452,8 +452,8 @@ theorem exists_orderOf_eq_exponent (hG : ExponentExists G) : ∃ g : G, orderOf 
   rw [(Commute.all _ g).orderOf_mul_eq_mul_orderOf_of_coprime hcoprime, hpk',
     hg, ha, hk, pow_add, pow_add, pow_one, ← mul_assoc, ← mul_assoc,
     Nat.div_mul_cancel, mul_assoc, lt_mul_iff_one_lt_right <| hG.orderOf_pos t, ← pow_succ]
-  · exact one_lt_pow hp.one_lt a.succ_ne_zero
-  · exact hpk
+  exact one_lt_pow hp.one_lt a.succ_ne_zero
+  exact hpk
 
 @[to_additive]
 theorem exponent_eq_iSup_orderOf (h : ∀ g : G, 0 < orderOf g) :
@@ -465,8 +465,8 @@ theorem exponent_eq_iSup_orderOf (h : ∀ g : G, 0 < orderOf g) :
     rw [he, Set.Infinite.Nat.sSup_eq_zero <| (exponent_eq_zero_iff_range_orderOf_infinite h).1 he]
   case pos he =>
     rw [csSup_eq_of_forall_le_of_forall_lt_exists_gt (Set.range_nonempty _)]
-    · simp_rw [Set.mem_range, forall_exists_index, forall_apply_eq_imp_iff]
-      exact orderOf_le_exponent he
+    simp_rw [Set.mem_range, forall_exists_index, forall_apply_eq_imp_iff]
+    exact orderOf_le_exponent he
     intro x hx
     obtain ⟨g, hg⟩ := exists_orderOf_eq_exponent he
     rw [← hg] at hx
@@ -477,10 +477,10 @@ theorem exponent_eq_iSup_orderOf (h : ∀ g : G, 0 < orderOf g) :
 theorem exponent_eq_iSup_orderOf' :
     exponent G = if ∃ g : G, orderOf g = 0 then 0 else ⨆ g : G, orderOf g := by
   split_ifs with h
-  · obtain ⟨g, hg⟩ := h
-    exact exponent_eq_zero_of_order_zero hg
-  · have := not_exists.mp h
-    exact exponent_eq_iSup_orderOf fun g => Ne.bot_lt <| this g
+  obtain ⟨g, hg⟩ := h
+  exact exponent_eq_zero_of_order_zero hg
+  have := not_exists.mp h
+  exact exponent_eq_iSup_orderOf fun g => Ne.bot_lt <| this g
 
 end CommMonoid
 
@@ -558,13 +558,13 @@ exponents of the constituent additive monoids."]
 theorem Monoid.exponent_pi {ι : Type*} [Fintype ι] {M : ι → Type*} [∀ i, Monoid (M i)] :
     exponent ((i : ι) → M i) = lcm univ (exponent <| M ·) := by
   refine dvd_antisymm ?_ ?_
-  · refine exponent_dvd_of_forall_pow_eq_one fun m ↦ ?_
-    ext i
-    rw [Pi.pow_apply, Pi.one_apply, ← orderOf_dvd_iff_pow_eq_one]
-    apply dvd_trans (Monoid.order_dvd_exponent (m i))
-    exact Finset.dvd_lcm (mem_univ i)
-  · apply Finset.lcm_dvd fun i _ ↦ ?_
-    exact MonoidHom.exponent_dvd (f := Pi.evalMonoidHom (M ·) i) (Function.surjective_eval i)
+  refine exponent_dvd_of_forall_pow_eq_one fun m ↦ ?_
+  ext i
+  rw [Pi.pow_apply, Pi.one_apply, ← orderOf_dvd_iff_pow_eq_one]
+  apply dvd_trans (Monoid.order_dvd_exponent (m i))
+  exact Finset.dvd_lcm (mem_univ i)
+  apply Finset.lcm_dvd fun i _ ↦ ?_
+  exact MonoidHom.exponent_dvd (f := Pi.evalMonoidHom (M ·) i) (Function.surjective_eval i)
 
 /-- The exponent of product of two monoids is the `lcm` of the exponents of the
 individuaul monoids. -/
@@ -573,14 +573,14 @@ of the exponents of the individuaul additive monoids."]
 theorem Monoid.exponent_prod {M₁ M₂ : Type*} [Monoid M₁] [Monoid M₂] :
     exponent (M₁ × M₂) = lcm (exponent M₁) (exponent M₂) := by
   refine dvd_antisymm ?_ (lcm_dvd ?_ ?_)
-  · refine exponent_dvd_of_forall_pow_eq_one fun g ↦ ?_
-    ext1
-    · rw [Prod.pow_fst, Prod.fst_one, ← orderOf_dvd_iff_pow_eq_one]
-      exact dvd_trans (Monoid.order_dvd_exponent (g.1)) <| dvd_lcm_left _ _
-    · rw [Prod.pow_snd, Prod.snd_one, ← orderOf_dvd_iff_pow_eq_one]
-      exact dvd_trans (Monoid.order_dvd_exponent (g.2)) <| dvd_lcm_right _ _
-  · exact MonoidHom.exponent_dvd (f := MonoidHom.fst M₁ M₂) Prod.fst_surjective
-  · exact MonoidHom.exponent_dvd (f := MonoidHom.snd M₁ M₂) Prod.snd_surjective
+  refine exponent_dvd_of_forall_pow_eq_one fun g ↦ ?_
+  ext1
+  rw [Prod.pow_fst, Prod.fst_one, ← orderOf_dvd_iff_pow_eq_one]
+  exact dvd_trans (Monoid.order_dvd_exponent (g.1)) <| dvd_lcm_left _ _
+  rw [Prod.pow_snd, Prod.snd_one, ← orderOf_dvd_iff_pow_eq_one]
+  exact dvd_trans (Monoid.order_dvd_exponent (g.2)) <| dvd_lcm_right _ _
+  exact MonoidHom.exponent_dvd (f := MonoidHom.fst M₁ M₂) Prod.fst_surjective
+  exact MonoidHom.exponent_dvd (f := MonoidHom.snd M₁ M₂) Prod.snd_surjective
 
 end PiProd
 

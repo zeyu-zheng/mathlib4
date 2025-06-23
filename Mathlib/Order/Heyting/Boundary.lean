@@ -86,8 +86,8 @@ logic and duality between Heyting and co-Heyting algebras. It is crucial that th
 intuitionistic. -/
 example (a b : Prop) : (a ∧ b ∨ ¬(a ∧ b)) ∧ ((a ∨ b) ∨ ¬(a ∨ b)) → a ∨ ¬a := by
   rintro ⟨⟨ha, _⟩ | hnab, (ha | hb) | hnab⟩ <;> try exact Or.inl ha
-  · exact Or.inr fun ha => hnab ⟨ha, hb⟩
-  · exact Or.inr fun ha => hnab <| Or.inl ha
+  exact Or.inr fun ha => hnab ⟨ha, hb⟩
+  exact Or.inr fun ha => hnab <| Or.inl ha
 
 theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) := by
   -- Porting note: the following simp generates the same term as mathlib3 if you remove
@@ -97,11 +97,11 @@ theorem boundary_le_boundary_sup_sup_boundary_inf_left : ∂ a ≤ ∂ (a ⊔ b)
     sup_comm _ a]
   refine ⟨⟨⟨?_, ?_⟩, ⟨?_, ?_⟩⟩, ?_, ?_⟩ <;> try { exact le_sup_of_le_left inf_le_left } <;>
     refine inf_le_of_right_le ?_
-  · rw [hnot_le_iff_codisjoint_right, codisjoint_left_comm]
-    exact codisjoint_hnot_left
-  · refine le_sup_of_le_right ?_
-    rw [hnot_le_iff_codisjoint_right]
-    exact codisjoint_hnot_right.mono_right (hnot_anti inf_le_left)
+  rw [hnot_le_iff_codisjoint_right, codisjoint_left_comm]
+  exact codisjoint_hnot_left
+  refine le_sup_of_le_right ?_
+  rw [hnot_le_iff_codisjoint_right]
+  exact codisjoint_hnot_right.mono_right (hnot_anti inf_le_left)
 
 theorem boundary_le_boundary_sup_sup_boundary_inf_right : ∂ b ≤ ∂ (a ⊔ b) ⊔ ∂ (a ⊓ b) := by
   rw [sup_comm a, inf_comm]

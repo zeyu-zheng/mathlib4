@@ -84,30 +84,30 @@ theorem lift_toPath {C} [Category C] (φ : V ⥤q C) {X Y : V} (f : X ⟶ Y) :
 
 theorem lift_spec {C} [Category C] (φ : V ⥤q C) : of ⋙q (lift φ).toPrefunctor = φ := by
   fapply Prefunctor.ext
-  · rintro X
-    rfl
-  · rintro X Y f
-    rcases φ with ⟨φo, φm⟩
-    dsimp [lift, Quiver.Hom.toPath]
-    simp only [Category.id_comp]
+  rintro X
+  rfl
+  rintro X Y f
+  rcases φ with ⟨φo, φm⟩
+  dsimp [lift, Quiver.Hom.toPath]
+  simp only [Category.id_comp]
 
 theorem lift_unique {C} [Category C] (φ : V ⥤q C) (Φ : Paths V ⥤ C)
     (hΦ : of ⋙q Φ.toPrefunctor = φ) : Φ = lift φ := by
   subst_vars
   fapply Functor.ext
-  · rintro X
-    rfl
-  · rintro X Y f
-    dsimp [lift]
-    induction' f with _ _ p f' ih
-    · simp only [Category.comp_id]
-      apply Functor.map_id
-    · simp only [Category.comp_id, Category.id_comp] at ih ⊢
-      -- Porting note: Had to do substitute `p.cons f'` and `f'.toPath` by their fully qualified
-      -- versions in this `have` clause (elsewhere too).
-      have : Φ.map (Quiver.Path.cons p f') = Φ.map p ≫ Φ.map (Quiver.Hom.toPath f')
-      convert Functor.map_comp Φ p (Quiver.Hom.toPath f')
-      rw [this, ih]
+  rintro X
+  rfl
+  rintro X Y f
+  dsimp [lift]
+  induction' f with _ _ p f' ih
+  simp only [Category.comp_id]
+  apply Functor.map_id
+  simp only [Category.comp_id, Category.id_comp] at ih ⊢
+  -- Porting note: Had to do substitute `p.cons f'` and `f'.toPath` by their fully qualified
+  -- versions in this `have` clause (elsewhere too).
+  have : Φ.map (Quiver.Path.cons p f') = Φ.map p ≫ Φ.map (Quiver.Hom.toPath f')
+  convert Functor.map_comp Φ p (Quiver.Hom.toPath f')
+  rw [this, ih]
 
 /-- Two functors out of a path category are equal when they agree on singleton paths. -/
 @[ext]
@@ -116,13 +116,13 @@ theorem ext_functor {C} [Category C] {F G : Paths V ⥤ C} (h_obj : F.obj = G.ob
         eqToHom (congr_fun h_obj a) ≫ G.map e.toPath ≫ eqToHom (congr_fun h_obj.symm b)) :
     F = G := by
   fapply Functor.ext
-  · intro X
-    rw [h_obj]
-  · intro X Y f
-    induction' f with Y' Z' g e ih
-    · erw [F.map_id, G.map_id, Category.id_comp, eqToHom_trans, eqToHom_refl]
-    · erw [F.map_comp g (Quiver.Hom.toPath e), G.map_comp g (Quiver.Hom.toPath e), ih, h]
-      simp only [Category.id_comp, eqToHom_refl, eqToHom_trans_assoc, Category.assoc]
+  intro X
+  rw [h_obj]
+  intro X Y f
+  induction' f with Y' Z' g e ih
+  erw [F.map_id, G.map_id, Category.id_comp, eqToHom_trans, eqToHom_refl]
+  erw [F.map_comp g (Quiver.Hom.toPath e), G.map_comp g (Quiver.Hom.toPath e), ih, h]
+  simp only [Category.id_comp, eqToHom_refl, eqToHom_trans_assoc, Category.assoc]
 
 end Paths
 
@@ -162,8 +162,8 @@ theorem composePath_toPath {X Y : C} (f : X ⟶ Y) : composePath f.toPath = f :=
 theorem composePath_comp {X Y Z : C} (f : Path X Y) (g : Path Y Z) :
     composePath (f.comp g) = composePath f ≫ composePath g := by
   induction' g with Y' Z' g e ih
-  · simp
-  · simp [ih]
+  simp
+  simp [ih]
 
 @[simp]
 -- Porting note (#11215): TODO get rid of `(id X : C)` somehow?

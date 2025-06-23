@@ -530,8 +530,8 @@ lemma PosSMulMono.of_pos (h₀ : ∀ a : α, 0 < a → ∀ b₁ b₂ : β, b₁ 
     PosSMulMono α β where
   elim a ha b₁ b₂ h := by
     obtain ha | ha := ha.eq_or_lt
-    · simp [← ha]
-    · exact h₀ _ ha _ _ h
+    simp [← ha]
+    exact h₀ _ ha _ _ h
 
 /-- A constructor for `PosSMulReflectLT` requiring you to prove `a • b₁ < a • b₂ → b₁ < b₂` only
 when `0 < a`-/
@@ -539,8 +539,8 @@ lemma PosSMulReflectLT.of_pos (h₀ : ∀ a : α, 0 < a → ∀ b₁ b₂ : β, 
     PosSMulReflectLT α β where
   elim a ha b₁ b₂ h := by
     obtain ha | ha := ha.eq_or_lt
-    · simp [← ha] at h
-    · exact h₀ _ ha _ _ h
+    simp [← ha] at h
+    exact h₀ _ ha _ _ h
 
 end PartialOrder
 
@@ -553,8 +553,8 @@ lemma SMulPosMono.of_pos (h₀ : ∀ b : β, 0 < b → ∀ a₁ a₂ : α, a₁ 
     SMulPosMono α β where
   elim b hb a₁ a₂ h := by
     obtain hb | hb := hb.eq_or_lt
-    · simp [← hb]
-    · exact h₀ _ hb _ _ h
+    simp [← hb]
+    exact h₀ _ hb _ _ h
 
 /-- A constructor for `SMulPosReflectLT` requiring you to prove `a₁ • b < a₂ • b → a₁ < a₂` only
 when `0 < b`-/
@@ -562,8 +562,8 @@ lemma SMulPosReflectLT.of_pos (h₀ : ∀ b : β, 0 < b → ∀ a₁ a₂ : α, 
     SMulPosReflectLT α β where
   elim b hb a₁ a₂ h := by
     obtain hb | hb := hb.eq_or_lt
-    · simp [← hb] at h
-    · exact h₀ _ hb _ _ h
+    simp [← hb] at h
+    exact h₀ _ hb _ _ h
 
 end PartialOrder
 
@@ -598,8 +598,8 @@ lemma smul_eq_smul_iff_eq_and_eq_of_pos [PosSMulStrictMono α β] [SMulPosStrict
   refine ⟨fun h ↦ ?_, by rintro ⟨rfl, rfl⟩; rfl⟩
   simp only [eq_iff_le_not_lt, ha, hb, true_and]
   refine ⟨fun ha ↦ h.not_lt ?_, fun hb ↦ h.not_lt ?_⟩
-  · exact (smul_le_smul_of_nonneg_left hb h₁.le).trans_lt (smul_lt_smul_of_pos_right ha h₂)
-  · exact (smul_lt_smul_of_pos_left hb h₁).trans_le (smul_le_smul_of_nonneg_right ha h₂.le)
+  exact (smul_le_smul_of_nonneg_left hb h₁.le).trans_lt (smul_lt_smul_of_pos_right ha h₂)
+  exact (smul_lt_smul_of_pos_left hb h₁).trans_le (smul_le_smul_of_nonneg_right ha h₂.le)
 
 lemma smul_eq_smul_iff_eq_and_eq_of_pos' [PosSMulStrictMono α β] [SMulPosStrictMono α β]
     (ha : a₁ ≤ a₂) (hb : b₁ ≤ b₂) (h₂ : 0 < a₂) (h₁ : 0 < b₁) :
@@ -607,8 +607,8 @@ lemma smul_eq_smul_iff_eq_and_eq_of_pos' [PosSMulStrictMono α β] [SMulPosStric
   refine ⟨fun h ↦ ?_, by rintro ⟨rfl, rfl⟩; rfl⟩
   simp only [eq_iff_le_not_lt, ha, hb, true_and]
   refine ⟨fun ha ↦ h.not_lt ?_, fun hb ↦ h.not_lt ?_⟩
-  · exact (smul_lt_smul_of_pos_right ha h₁).trans_le (smul_le_smul_of_nonneg_left hb h₂.le)
-  · exact (smul_le_smul_of_nonneg_right ha h₁.le).trans_lt (smul_lt_smul_of_pos_left hb h₂)
+  exact (smul_lt_smul_of_pos_right ha h₁).trans_le (smul_le_smul_of_nonneg_left hb h₂.le)
+  exact (smul_le_smul_of_nonneg_right ha h₁.le).trans_lt (smul_lt_smul_of_pos_left hb h₂)
 
 end PartialOrder
 
@@ -618,12 +618,12 @@ variable [LinearOrder α] [LinearOrder β]
 lemma pos_and_pos_or_neg_and_neg_of_smul_pos [PosSMulMono α β] [SMulPosMono α β] (hab : 0 < a • b) :
     0 < a ∧ 0 < b ∨ a < 0 ∧ b < 0 := by
   obtain ha | rfl | ha := lt_trichotomy a 0
-  · refine Or.inr ⟨ha, lt_imp_lt_of_le_imp_le (fun hb ↦ ?_) hab⟩
-    exact smul_nonpos_of_nonpos_of_nonneg ha.le hb
-  · rw [zero_smul] at hab
-    exact hab.false.elim
-  · refine Or.inl ⟨ha, lt_imp_lt_of_le_imp_le (fun hb ↦ ?_) hab⟩
-    exact smul_nonpos_of_nonneg_of_nonpos ha.le hb
+  refine Or.inr ⟨ha, lt_imp_lt_of_le_imp_le (fun hb ↦ ?_) hab⟩
+  exact smul_nonpos_of_nonpos_of_nonneg ha.le hb
+  rw [zero_smul] at hab
+  exact hab.false.elim
+  refine Or.inl ⟨ha, lt_imp_lt_of_le_imp_le (fun hb ↦ ?_) hab⟩
+  exact smul_nonpos_of_nonneg_of_nonpos ha.le hb
 
 lemma neg_of_smul_pos_right [PosSMulMono α β] [SMulPosMono α β] (h : 0 < a • b) (ha : a ≤ 0) :
     b < 0 := ((pos_and_pos_or_neg_and_neg_of_smul_pos h).resolve_left fun h ↦ h.1.not_le ha).2

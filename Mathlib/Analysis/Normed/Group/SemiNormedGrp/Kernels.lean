@@ -244,9 +244,9 @@ theorem explicitCokernelDesc_unique {X Y Z : SemiNormedGrp.{u}} {f : X ⟶ Y} {g
     e = explicitCokernelDesc w := by
   apply (isColimitCokernelCocone f).uniq (Cofork.ofπ g (by simp [w]))
   rintro (_ | _)
-  · convert w.symm
-    simp
-  · exact he
+  convert w.symm
+  simp
+  exact he
 
 theorem explicitCokernelDesc_comp_eq_desc {X Y Z W : SemiNormedGrp.{u}} {f : X ⟶ Y} {g : Y ⟶ Z}
     -- Porting note: renamed `cond` to `cond'` to avoid

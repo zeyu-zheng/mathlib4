@@ -114,12 +114,12 @@ theorem arcsin_of_le_neg_one {x : ℝ} (hx : x ≤ -1) : arcsin x = -(π / 2) :=
 @[simp]
 theorem arcsin_neg (x : ℝ) : arcsin (-x) = -arcsin x := by
   rcases le_total x (-1) with hx₁ | hx₁
-  · rw [arcsin_of_le_neg_one hx₁, neg_neg, arcsin_of_one_le (le_neg.2 hx₁)]
+  rw [arcsin_of_le_neg_one hx₁, neg_neg, arcsin_of_one_le (le_neg.2 hx₁)]
   rcases le_total 1 x with hx₂ | hx₂
-  · rw [arcsin_of_one_le hx₂, arcsin_of_le_neg_one (neg_le_neg hx₂)]
+  rw [arcsin_of_one_le hx₂, arcsin_of_le_neg_one (neg_le_neg hx₂)]
   refine arcsin_eq_of_sin_eq ?_ ?_
-  · rw [sin_neg, sin_arcsin hx₁ hx₂]
-  · exact ⟨neg_le_neg (arcsin_le_pi_div_two _), neg_le.2 (neg_pi_div_two_le_arcsin _)⟩
+  rw [sin_neg, sin_arcsin hx₁ hx₂]
+  exact ⟨neg_le_neg (arcsin_le_pi_div_two _), neg_le.2 (neg_pi_div_two_le_arcsin _)⟩
 
 theorem arcsin_le_iff_le_sin {x y : ℝ} (hx : x ∈ Icc (-1 : ℝ) 1) (hy : y ∈ Icc (-(π / 2)) (π / 2)) :
     arcsin x ≤ y ↔ x ≤ sin y := by
@@ -128,9 +128,9 @@ theorem arcsin_le_iff_le_sin {x y : ℝ} (hx : x ∈ Icc (-1 : ℝ) 1) (hy : y �
 theorem arcsin_le_iff_le_sin' {x y : ℝ} (hy : y ∈ Ico (-(π / 2)) (π / 2)) :
     arcsin x ≤ y ↔ x ≤ sin y := by
   rcases le_total x (-1) with hx₁ | hx₁
-  · simp [arcsin_of_le_neg_one hx₁, hy.1, hx₁.trans (neg_one_le_sin _)]
+  simp [arcsin_of_le_neg_one hx₁, hy.1, hx₁.trans (neg_one_le_sin _)]
   cases' lt_or_le 1 x with hx₂ hx₂
-  · simp [arcsin_of_one_le hx₂.le, hy.2.not_le, (sin_le_one y).trans_lt hx₂]
+  simp [arcsin_of_one_le hx₂.le, hy.2.not_le, (sin_le_one y).trans_lt hx₂]
   exact arcsin_le_iff_le_sin ⟨hx₁, hx₂⟩ (mem_Icc_of_Ico hy)
 
 theorem le_arcsin_iff_sin_le {x y : ℝ} (hx : x ∈ Icc (-(π / 2)) (π / 2)) (hy : y ∈ Icc (-1 : ℝ) 1) :
@@ -254,13 +254,13 @@ theorem cos_arcsin_nonneg (x : ℝ) : 0 ≤ cos (arcsin x) :=
 -- The junk values for `arcsin` and `sqrt` make this true even outside `[-1, 1]`.
 theorem cos_arcsin (x : ℝ) : cos (arcsin x) = √(1 - x ^ 2) := by
   by_cases hx₁ : -1 ≤ x; swap
-  · rw [not_le] at hx₁
-    rw [arcsin_of_le_neg_one hx₁.le, cos_neg, cos_pi_div_two, sqrt_eq_zero_of_nonpos]
-    nlinarith
+  rw [not_le] at hx₁
+  rw [arcsin_of_le_neg_one hx₁.le, cos_neg, cos_pi_div_two, sqrt_eq_zero_of_nonpos]
+  nlinarith
   by_cases hx₂ : x ≤ 1; swap
-  · rw [not_le] at hx₂
-    rw [arcsin_of_one_le hx₂.le, cos_pi_div_two, sqrt_eq_zero_of_nonpos]
-    nlinarith
+  rw [not_le] at hx₂
+  rw [arcsin_of_one_le hx₂.le, cos_pi_div_two, sqrt_eq_zero_of_nonpos]
+  nlinarith
   have : sin (arcsin x) ^ 2 + cos (arcsin x) ^ 2 = 1 := sin_sq_add_cos_sq (arcsin x)
   rw [← eq_sub_iff_add_eq', ← sqrt_inj (sq_nonneg _) (sub_nonneg.2 (sin_sq_le_one (arcsin x))), sq,
     sqrt_mul_self (cos_arcsin_nonneg _)] at this
@@ -270,13 +270,13 @@ theorem cos_arcsin (x : ℝ) : cos (arcsin x) = √(1 - x ^ 2) := by
 theorem tan_arcsin (x : ℝ) : tan (arcsin x) = x / √(1 - x ^ 2) := by
   rw [tan_eq_sin_div_cos, cos_arcsin]
   by_cases hx₁ : -1 ≤ x; swap
-  · have h : √(1 - x ^ 2) = 0 := sqrt_eq_zero_of_nonpos (by nlinarith)
-    rw [h]
-    simp
+  have h : √(1 - x ^ 2) = 0 := sqrt_eq_zero_of_nonpos (by nlinarith)
+  rw [h]
+  simp
   by_cases hx₂ : x ≤ 1; swap
-  · have h : √(1 - x ^ 2) = 0 := sqrt_eq_zero_of_nonpos (by nlinarith)
-    rw [h]
-    simp
+  have h : √(1 - x ^ 2) = 0 := sqrt_eq_zero_of_nonpos (by nlinarith)
+  rw [h]
+  simp
   rw [sin_arcsin hx₁ hx₂]
 
 /-- Inverse of the `cos` function, returns values in the range `0 ≤ arccos x` and `arccos x ≤ π`.
@@ -349,13 +349,13 @@ theorem arccos_of_le_neg_one {x : ℝ} (hx : x ≤ -1) : arccos x = π := by
 -- The junk values for `arccos` and `sqrt` make this true even outside `[-1, 1]`.
 theorem sin_arccos (x : ℝ) : sin (arccos x) = √(1 - x ^ 2) := by
   by_cases hx₁ : -1 ≤ x; swap
-  · rw [not_le] at hx₁
-    rw [arccos_of_le_neg_one hx₁.le, sin_pi, sqrt_eq_zero_of_nonpos]
-    nlinarith
+  rw [not_le] at hx₁
+  rw [arccos_of_le_neg_one hx₁.le, sin_pi, sqrt_eq_zero_of_nonpos]
+  nlinarith
   by_cases hx₂ : x ≤ 1; swap
-  · rw [not_le] at hx₂
-    rw [arccos_of_one_le hx₂.le, sin_zero, sqrt_eq_zero_of_nonpos]
-    nlinarith
+  rw [not_le] at hx₂
+  rw [arccos_of_one_le hx₂.le, sin_zero, sqrt_eq_zero_of_nonpos]
+  nlinarith
   rw [arccos_eq_pi_div_two_sub_arcsin, sin_pi_div_two_sub, cos_arcsin]
 
 @[simp]
@@ -368,8 +368,8 @@ theorem arccos_lt_pi_div_two {x : ℝ} : arccos x < π / 2 ↔ 0 < x := by simp 
 theorem arccos_le_pi_div_four {x} : arccos x ≤ π / 4 ↔ √2 / 2 ≤ x := by
   rw [arccos, ← pi_div_four_le_arcsin]
   constructor <;>
-    · intro
-      linarith
+  · intro
+    linarith
 
 @[continuity]
 theorem continuous_arccos : Continuous arccos :=

@@ -59,16 +59,16 @@ isomorphic functors. -/
 lemma whiskerVertical_iff (α : L ≅ L') (β : R ≅ R') :
     (w.whiskerVertical α.hom β.inv).GuitartExact ↔ w.GuitartExact := by
   constructor
-  · intro h
-    have : w = TwoSquare.whiskerVertical
-        (TwoSquare.whiskerVertical w α.hom β.inv) α.inv β.hom := by
-      ext X₁
-      simp only [Functor.comp_obj, whiskerVertical_app, assoc, Iso.hom_inv_id_app_assoc,
-        ← B.map_comp, Iso.hom_inv_id_app, B.map_id, comp_id]
-    rw [this]
-    exact whiskerVertical (w.whiskerVertical α.hom β.inv) α.symm β.symm
-  · intro h
-    exact whiskerVertical w α β
+  intro h
+  have : w = TwoSquare.whiskerVertical
+      (TwoSquare.whiskerVertical w α.hom β.inv) α.inv β.hom := by
+    ext X₁
+    simp only [Functor.comp_obj, whiskerVertical_app, assoc, Iso.hom_inv_id_app_assoc,
+      ← B.map_comp, Iso.hom_inv_id_app, B.map_id, comp_id]
+  rw [this]
+  exact whiskerVertical (w.whiskerVertical α.hom β.inv) α.symm β.symm
+  intro h
+  exact whiskerVertical w α β
 
 instance [w.GuitartExact] (α : L ⟶ L') (β : R' ⟶ R)
     [IsIso α] [IsIso β] : (w.whiskerVertical α β).GuitartExact :=
@@ -125,34 +125,34 @@ lemma vComp_iff_of_equivalences (eL : C₂ ≌ C₃) (eR : D₂ ≌ D₃)
     (w' : H₂ ⋙ eR.functor ≅ eL.functor ⋙ H₃) :
     (w.vComp w'.hom).GuitartExact ↔ w.GuitartExact := by
   constructor
-  · intro hww'
-    letI : CatCommSq H₂ eL.functor eR.functor H₃ := ⟨w'⟩
-    have hw' : CatCommSq.iso H₂ eL.functor eR.functor H₃ = w' := rfl
-    letI : CatCommSq H₃ eL.inverse eR.inverse H₂ := CatCommSq.vInvEquiv _ _ _ _ inferInstance
-    let w'' := CatCommSq.iso H₃ eL.inverse eR.inverse H₂
-    let α : (L₁ ⋙ eL.functor) ⋙ eL.inverse ≅ L₁ :=
-      Functor.associator _ _ _ ≪≫ isoWhiskerLeft L₁ eL.unitIso.symm ≪≫ L₁.rightUnitor
-    let β : (R₁ ⋙ eR.functor) ⋙ eR.inverse ≅ R₁ :=
-      Functor.associator _ _ _ ≪≫ isoWhiskerLeft R₁ eR.unitIso.symm ≪≫ R₁.rightUnitor
-    have : w = (w.vComp w'.hom).vComp' w''.hom α β := by
-      ext X₁
-      dsimp
-      simp? [w'', β, α] says
-        simp only [vComp'_app, Functor.comp_obj, Iso.trans_inv, isoWhiskerLeft_inv, Iso.symm_inv,
-          assoc, NatTrans.comp_app, Functor.id_obj, Functor.rightUnitor_inv_app, whiskerLeft_app,
-          Functor.associator_inv_app, comp_id, id_comp, vComp_app, Functor.map_comp,
-          Equivalence.inv_fun_map, Iso.trans_hom, isoWhiskerLeft_hom, Iso.symm_hom,
-          Functor.associator_hom_app, Functor.rightUnitor_hom_app, Iso.hom_inv_id_app_assoc,
-          w'', α, β]
-      erw [CatCommSq.vInv_iso'_hom_app]
-      simp only [hw', assoc, ← eR.inverse.map_comp_assoc]
-      rw [Equivalence.counitInv_app_functor]
-      erw [← NatTrans.naturality_assoc]
-      simp [← H₂.map_comp]
-    rw [this]
-    infer_instance
-  · intro
-    exact vComp w w'.hom
+  intro hww'
+  letI : CatCommSq H₂ eL.functor eR.functor H₃ := ⟨w'⟩
+  have hw' : CatCommSq.iso H₂ eL.functor eR.functor H₃ = w' := rfl
+  letI : CatCommSq H₃ eL.inverse eR.inverse H₂ := CatCommSq.vInvEquiv _ _ _ _ inferInstance
+  let w'' := CatCommSq.iso H₃ eL.inverse eR.inverse H₂
+  let α : (L₁ ⋙ eL.functor) ⋙ eL.inverse ≅ L₁ :=
+    Functor.associator _ _ _ ≪≫ isoWhiskerLeft L₁ eL.unitIso.symm ≪≫ L₁.rightUnitor
+  let β : (R₁ ⋙ eR.functor) ⋙ eR.inverse ≅ R₁ :=
+    Functor.associator _ _ _ ≪≫ isoWhiskerLeft R₁ eR.unitIso.symm ≪≫ R₁.rightUnitor
+  have : w = (w.vComp w'.hom).vComp' w''.hom α β := by
+    ext X₁
+    dsimp
+    simp? [w'', β, α] says
+      simp only [vComp'_app, Functor.comp_obj, Iso.trans_inv, isoWhiskerLeft_inv, Iso.symm_inv,
+        assoc, NatTrans.comp_app, Functor.id_obj, Functor.rightUnitor_inv_app, whiskerLeft_app,
+        Functor.associator_inv_app, comp_id, id_comp, vComp_app, Functor.map_comp,
+        Equivalence.inv_fun_map, Iso.trans_hom, isoWhiskerLeft_hom, Iso.symm_hom,
+        Functor.associator_hom_app, Functor.rightUnitor_hom_app, Iso.hom_inv_id_app_assoc,
+        w'', α, β]
+    erw [CatCommSq.vInv_iso'_hom_app]
+    simp only [hw', assoc, ← eR.inverse.map_comp_assoc]
+    rw [Equivalence.counitInv_app_functor]
+    erw [← NatTrans.naturality_assoc]
+    simp [← H₂.map_comp]
+  rw [this]
+  infer_instance
+  intro
+  exact vComp w w'.hom
 
 lemma vComp'_iff_of_equivalences (E : C₂ ≌ C₃) (E' : D₂ ≌ D₃)
     (w' : H₂ ⋙ E'.functor ≅ E.functor ⋙ H₃) {L₁₂ : C₁ ⥤ C₃}

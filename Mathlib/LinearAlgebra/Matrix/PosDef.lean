@@ -394,8 +394,8 @@ noncomputable abbrev NormedAddCommGroup.ofMatrix {M : Matrix n n 𝕜} (hM : M.P
           hM.isHermitian.eq]
       nonneg_re := fun x => by
         by_cases h : x = 0
-        · simp [h]
-        · exact le_of_lt (hM.re_dotProduct_pos h)
+        simp [h]
+        exact le_of_lt (hM.re_dotProduct_pos h)
       definite := fun x (hx : dotProduct _ _ = 0) => by
         by_contra! h
         simpa [hx, lt_irrefl] using hM.re_dotProduct_pos h

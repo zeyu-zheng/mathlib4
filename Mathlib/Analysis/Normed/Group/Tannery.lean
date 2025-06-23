@@ -42,10 +42,10 @@ lemma tendsto_tsum_of_dominated_convergence {α β G : Type*} {𝓕 : Filter α}
     Tendsto (∑' k, f · k) 𝓕 (𝓝 (∑' k, g k)) := by
   -- WLOG β is nonempty
   rcases isEmpty_or_nonempty β
-  · simpa only [tsum_empty] using tendsto_const_nhds
+  simpa only [tsum_empty] using tendsto_const_nhds
   -- WLOG 𝓕 ≠ ⊥
   rcases 𝓕.eq_or_neBot with rfl | _
-  · simp only [tendsto_bot]
+  simp only [tendsto_bot]
   -- Auxiliary lemmas
   have h_g_le (k : β) : ‖g k‖ ≤ bound k :=
     le_of_tendsto (tendsto_norm.comp (hab k)) <| h_bound.mono (fun n h => h k)
@@ -73,10 +73,10 @@ lemma tendsto_tsum_of_dominated_convergence {α β G : Type*} {𝓕 : Filter α}
     ← sum_add_tsum_compl (s := T) (h_suma.of_norm.sub h_sumg.of_norm),
     (by ring : ε = ε / 3 + (ε / 3 + ε / 3))]
   refine (norm_add_le _ _).trans_lt (add_lt_add ?_ ?_)
-  · simpa only [dist_eq_norm, Finset.sum_sub_distrib] using hn
-  · rw [tsum_sub (h_suma.subtype _).of_norm (h_sumg.subtype _).of_norm]
-    refine (norm_sub_le _ _).trans_lt (add_lt_add ?_ ?_)
-    · refine ((norm_tsum_le_tsum_norm (h_suma.subtype _)).trans ?_).trans_lt h1
-      exact tsum_le_tsum (h_bound ·) (h_suma.subtype _) (h_sum.subtype _)
-    · refine ((norm_tsum_le_tsum_norm <| h_sumg.subtype _).trans ?_).trans_lt h1
-      exact tsum_le_tsum (h_g_le ·) (h_sumg.subtype _) (h_sum.subtype _)
+  simpa only [dist_eq_norm, Finset.sum_sub_distrib] using hn
+  rw [tsum_sub (h_suma.subtype _).of_norm (h_sumg.subtype _).of_norm]
+  refine (norm_sub_le _ _).trans_lt (add_lt_add ?_ ?_)
+  refine ((norm_tsum_le_tsum_norm (h_suma.subtype _)).trans ?_).trans_lt h1
+  exact tsum_le_tsum (h_bound ·) (h_suma.subtype _) (h_sum.subtype _)
+  refine ((norm_tsum_le_tsum_norm <| h_sumg.subtype _).trans ?_).trans_lt h1
+  exact tsum_le_tsum (h_g_le ·) (h_sumg.subtype _) (h_sum.subtype _)

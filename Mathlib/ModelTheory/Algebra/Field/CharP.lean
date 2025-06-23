@@ -66,17 +66,17 @@ theorem charP_iff_model_fieldOfChar [Field K] [CompatibleRing K] :
   simp only [Theory.fieldOfChar, Theory.model_union_iff,
     (show (Theory.field.Model K) by infer_instance), true_and]
   split_ifs with hp0 hp
-  · subst hp0
-    simp only [Theory.model_iff, Set.mem_image, Set.mem_setOf_eq, Sentence.Realize,
-      forall_exists_index, and_imp, forall_apply_eq_imp_iff₂, Formula.realize_not,
-      realize_eqZero, ← CharZero.charZero_iff_forall_prime_ne_zero]
-    exact ⟨fun _ => CharP.ofCharZero _, fun _ => CharP.charP_to_charZero K⟩
-  · simp only [Theory.model_iff, Set.mem_singleton_iff, Sentence.Realize, forall_eq,
-      realize_eqZero, ← CharP.charP_iff_prime_eq_zero hp]
-  · simp only [Theory.model_iff, Set.mem_singleton_iff, Sentence.Realize,
-      forall_eq, Formula.realize_bot, false_iff]
-    intro H
-    cases (CharP.char_is_prime_or_zero K p) <;> simp_all
+  subst hp0
+  simp only [Theory.model_iff, Set.mem_image, Set.mem_setOf_eq, Sentence.Realize,
+    forall_exists_index, and_imp, forall_apply_eq_imp_iff₂, Formula.realize_not,
+    realize_eqZero, ← CharZero.charZero_iff_forall_prime_ne_zero]
+  exact ⟨fun _ => CharP.ofCharZero _, fun _ => CharP.charP_to_charZero K⟩
+  simp only [Theory.model_iff, Set.mem_singleton_iff, Sentence.Realize, forall_eq,
+    realize_eqZero, ← CharP.charP_iff_prime_eq_zero hp]
+  simp only [Theory.model_iff, Set.mem_singleton_iff, Sentence.Realize,
+    forall_eq, Formula.realize_bot, false_iff]
+  intro H
+  cases (CharP.char_is_prime_or_zero K p) <;> simp_all
 
 instance model_fieldOfChar_of_charP [Field K] [CompatibleRing K]
     [CharP K p] : (Theory.fieldOfChar p).Model K :=

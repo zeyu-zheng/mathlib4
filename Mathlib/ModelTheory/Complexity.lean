@@ -99,8 +99,8 @@ theorem not_all_isQF (φ : L.BoundedFormula α (n + 1)) : ¬φ.all.IsQF := fun c
 
 theorem not_ex_isQF (φ : L.BoundedFormula α (n + 1)) : ¬φ.ex.IsQF := fun con => by
   cases' con with _ con _ _ con
-  · exact φ.not_ex_isAtomic con
-  · exact not_all_isQF _ con
+  exact φ.not_ex_isAtomic con
+  exact not_all_isQF _ con
 
 /-- Indicates that a bounded formula is in prenex normal form - that is, it consists of quantifiers
   applied to a quantifier-free formula. -/
@@ -159,10 +159,10 @@ theorem IsQF.toPrenexImpRight {φ : L.BoundedFormula α n} :
 theorem isPrenex_toPrenexImpRight {φ ψ : L.BoundedFormula α n} (hφ : IsQF φ) (hψ : IsPrenex ψ) :
     IsPrenex (φ.toPrenexImpRight ψ) := by
   induction' hψ with _ _ hψ _ _ _ ih1 _ _ _ ih2
-  · rw [hψ.toPrenexImpRight]
-    exact (hφ.imp hψ).isPrenex
-  · exact (ih1 hφ.liftAt).all
-  · exact (ih2 hφ.liftAt).ex
+  rw [hψ.toPrenexImpRight]
+  exact (hφ.imp hψ).isPrenex
+  exact (ih1 hφ.liftAt).all
+  exact (ih2 hφ.liftAt).ex
 
 -- Porting note: universes in different order
 /-- An auxiliary operation to `FirstOrder.Language.BoundedFormula.toPrenex`.
@@ -186,10 +186,10 @@ theorem IsQF.toPrenexImp :
 theorem isPrenex_toPrenexImp {φ ψ : L.BoundedFormula α n} (hφ : IsPrenex φ) (hψ : IsPrenex ψ) :
     IsPrenex (φ.toPrenexImp ψ) := by
   induction' hφ with _ _ hφ _ _ _ ih1 _ _ _ ih2
-  · rw [hφ.toPrenexImp]
-    exact isPrenex_toPrenexImpRight hφ hψ
-  · exact (ih1 hψ.liftAt).ex
-  · exact (ih2 hψ.liftAt).all
+  rw [hφ.toPrenexImp]
+  exact isPrenex_toPrenexImpRight hφ hψ
+  exact (ih1 hψ.liftAt).ex
+  exact (ih2 hψ.liftAt).all
 
 -- Porting note: universes in different order
 /-- For any bounded formula `φ`, `φ.toPrenex` is a semantically-equivalent formula in prenex normal
@@ -212,57 +212,57 @@ theorem realize_toPrenexImpRight {φ ψ : L.BoundedFormula α n} (hφ : IsQF φ)
     {v : α → M} {xs : Fin n → M} :
     (φ.toPrenexImpRight ψ).Realize v xs ↔ (φ.imp ψ).Realize v xs := by
   induction' hψ with _ _ hψ _ _ _hψ ih _ _ _hψ ih
-  · rw [hψ.toPrenexImpRight]
-  · refine _root_.trans (forall_congr' fun _ => ih hφ.liftAt) ?_
-    simp only [realize_imp, realize_liftAt_one_self, snoc_comp_castSucc, realize_all]
-    exact ⟨fun h1 a h2 => h1 h2 a, fun h1 h2 a => h1 a h2⟩
-  · unfold toPrenexImpRight
-    rw [realize_ex]
-    refine _root_.trans (exists_congr fun _ => ih hφ.liftAt) ?_
-    simp only [realize_imp, realize_liftAt_one_self, snoc_comp_castSucc, realize_ex]
-    refine ⟨?_, fun h' => ?_⟩
-    · rintro ⟨a, ha⟩ h
-      exact ⟨a, ha h⟩
-    · by_cases h : φ.Realize v xs
-      · obtain ⟨a, ha⟩ := h' h
-        exact ⟨a, fun _ => ha⟩
-      · inhabit M
-        exact ⟨default, fun h'' => (h h'').elim⟩
+  rw [hψ.toPrenexImpRight]
+  refine _root_.trans (forall_congr' fun _ => ih hφ.liftAt) ?_
+  simp only [realize_imp, realize_liftAt_one_self, snoc_comp_castSucc, realize_all]
+  exact ⟨fun h1 a h2 => h1 h2 a, fun h1 h2 a => h1 a h2⟩
+  unfold toPrenexImpRight
+  rw [realize_ex]
+  refine _root_.trans (exists_congr fun _ => ih hφ.liftAt) ?_
+  simp only [realize_imp, realize_liftAt_one_self, snoc_comp_castSucc, realize_ex]
+  refine ⟨?_, fun h' => ?_⟩
+  rintro ⟨a, ha⟩ h
+  exact ⟨a, ha h⟩
+  by_cases h : φ.Realize v xs
+  obtain ⟨a, ha⟩ := h' h
+  exact ⟨a, fun _ => ha⟩
+  inhabit M
+  exact ⟨default, fun h'' => (h h'').elim⟩
 
 theorem realize_toPrenexImp {φ ψ : L.BoundedFormula α n} (hφ : IsPrenex φ) (hψ : IsPrenex ψ)
     {v : α → M} {xs : Fin n → M} : (φ.toPrenexImp ψ).Realize v xs ↔ (φ.imp ψ).Realize v xs := by
   revert ψ
   induction' hφ with _ _ hφ _ _ _hφ ih _ _ _hφ ih <;> intro ψ hψ
-  · rw [hφ.toPrenexImp]
-    exact realize_toPrenexImpRight hφ hψ
-  · unfold toPrenexImp
-    rw [realize_ex]
-    refine _root_.trans (exists_congr fun _ => ih hψ.liftAt) ?_
-    simp only [realize_imp, realize_liftAt_one_self, snoc_comp_castSucc, realize_all]
-    refine ⟨?_, fun h' => ?_⟩
-    · rintro ⟨a, ha⟩ h
-      exact ha (h a)
-    · by_cases h : ψ.Realize v xs
-      · inhabit M
-        exact ⟨default, fun _h'' => h⟩
-      · obtain ⟨a, ha⟩ := not_forall.1 (h ∘ h')
-        exact ⟨a, fun h => (ha h).elim⟩
-  · refine _root_.trans (forall_congr' fun _ => ih hψ.liftAt) ?_
-    simp
+  rw [hφ.toPrenexImp]
+  exact realize_toPrenexImpRight hφ hψ
+  unfold toPrenexImp
+  rw [realize_ex]
+  refine _root_.trans (exists_congr fun _ => ih hψ.liftAt) ?_
+  simp only [realize_imp, realize_liftAt_one_self, snoc_comp_castSucc, realize_all]
+  refine ⟨?_, fun h' => ?_⟩
+  rintro ⟨a, ha⟩ h
+  exact ha (h a)
+  by_cases h : ψ.Realize v xs
+  inhabit M
+  exact ⟨default, fun _h'' => h⟩
+  obtain ⟨a, ha⟩ := not_forall.1 (h ∘ h')
+  exact ⟨a, fun h => (ha h).elim⟩
+  refine _root_.trans (forall_congr' fun _ => ih hψ.liftAt) ?_
+  simp
 
 @[simp]
 theorem realize_toPrenex (φ : L.BoundedFormula α n) {v : α → M} :
     ∀ {xs : Fin n → M}, φ.toPrenex.Realize v xs ↔ φ.Realize v xs := by
   induction' φ with _ _ _ _ _ _ _ _ _ f1 f2 h1 h2 _ _ h
-  · exact Iff.rfl
-  · exact Iff.rfl
-  · exact Iff.rfl
-  · intros
-    rw [toPrenex, realize_toPrenexImp f1.toPrenex_isPrenex f2.toPrenex_isPrenex, realize_imp,
-      realize_imp, h1, h2]
-  · intros
-    rw [realize_all, toPrenex, realize_all]
-    exact forall_congr' fun a => h
+  exact Iff.rfl
+  exact Iff.rfl
+  exact Iff.rfl
+  intros
+  rw [toPrenex, realize_toPrenexImp f1.toPrenex_isPrenex f2.toPrenex_isPrenex, realize_imp,
+    realize_imp, h1, h2]
+  intros
+  rw [realize_all, toPrenex, realize_all]
+  exact forall_congr' fun a => h
 
 theorem IsQF.induction_on_sup_not {P : L.BoundedFormula α n → Prop} {φ : L.BoundedFormula α n}
     (h : IsQF φ) (hf : P (⊥ : L.BoundedFormula α n))
@@ -301,9 +301,9 @@ theorem induction_on_all_ex {P : ∀ {m}, L.BoundedFormula α m → Prop} (φ : 
     (hse φ.semanticallyEquivalent_toPrenex).2 (h' φ.toPrenex_isPrenex)
   intro m φ hφ
   induction' hφ with _ _ hφ _ _ _ hφ _ _ _ hφ
-  · exact hqf hφ
-  · exact hall hφ
-  · exact hex hφ
+  exact hqf hφ
+  exact hall hφ
+  exact hex hφ
 
 theorem induction_on_exists_not {P : ∀ {m}, L.BoundedFormula α m → Prop} (φ : L.BoundedFormula α n)
     (hqf : ∀ {m} {ψ : L.BoundedFormula α m}, IsQF ψ → P ψ)

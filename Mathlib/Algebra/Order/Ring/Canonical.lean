@@ -79,9 +79,9 @@ protected lemma mul_lt_mul_of_lt_of_lt [PosMulStrictMono α] (hab : a < b) (hcd 
   -- TODO: This should be an instance but it currently times out
   have := posMulStrictMono_iff_mulPosStrictMono.1 ‹_›
   obtain rfl | hc := eq_zero_or_pos c
-  · rw [mul_zero]
-    exact mul_pos ((zero_le _).trans_lt hab) hcd
-  · exact mul_lt_mul_of_pos' hab hcd hc ((zero_le _).trans_lt hab)
+  rw [mul_zero]
+  exact mul_pos ((zero_le _).trans_lt hab) hcd
+  exact mul_lt_mul_of_pos' hab hcd hc ((zero_le _).trans_lt hab)
 
 end CanonicallyOrderedCommSemiring
 end CanonicallyOrderedCommSemiring
@@ -96,9 +96,9 @@ namespace AddLECancellable
 
 protected theorem mul_tsub (h : AddLECancellable (a * c)) : a * (b - c) = a * b - a * c := by
   cases' total_of (· ≤ ·) b c with hbc hcb
-  · rw [tsub_eq_zero_iff_le.2 hbc, mul_zero, tsub_eq_zero_iff_le.2 (mul_le_mul_left' hbc a)]
-  · apply h.eq_tsub_of_add_eq
-    rw [← mul_add, tsub_add_cancel_of_le hcb]
+  rw [tsub_eq_zero_iff_le.2 hbc, mul_zero, tsub_eq_zero_iff_le.2 (mul_le_mul_left' hbc a)]
+  apply h.eq_tsub_of_add_eq
+  rw [← mul_add, tsub_add_cancel_of_le hcb]
 
 protected theorem tsub_mul (h : AddLECancellable (b * c)) : (a - b) * c = a * c - b * c := by
   simp only [mul_comm _ c] at *

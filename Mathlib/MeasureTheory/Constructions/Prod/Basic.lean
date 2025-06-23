@@ -101,27 +101,27 @@ theorem generateFrom_prod_eq {α β} {C : Set (Set α)} {D : Set (Set β)} (hC :
     @Prod.instMeasurableSpace _ _ (generateFrom C) (generateFrom D) =
       generateFrom (image2 (· ×ˢ ·) C D) := by
   apply le_antisymm
-  · refine sup_le ?_ ?_ <;> rw [comap_generateFrom] <;> apply generateFrom_le <;>
-      rintro _ ⟨s, hs, rfl⟩
-    · rcases hD with ⟨t, h1t, h2t⟩
-      rw [← prod_univ, ← h2t, prod_iUnion]
-      apply MeasurableSet.iUnion
-      intro n
-      apply measurableSet_generateFrom
-      exact ⟨s, hs, t n, h1t n, rfl⟩
-    · rcases hC with ⟨t, h1t, h2t⟩
-      rw [← univ_prod, ← h2t, iUnion_prod_const]
-      apply MeasurableSet.iUnion
-      rintro n
-      apply measurableSet_generateFrom
-      exact mem_image2_of_mem (h1t n) hs
-  · apply generateFrom_le
-    rintro _ ⟨s, hs, t, ht, rfl⟩
-    dsimp only
-    rw [prod_eq]
-    apply (measurable_fst _).inter (measurable_snd _)
-    · exact measurableSet_generateFrom hs
-    · exact measurableSet_generateFrom ht
+  refine sup_le ?_ ?_ <;> rw [comap_generateFrom] <;> apply generateFrom_le <;>
+    rintro _ ⟨s, hs, rfl⟩
+  rcases hD with ⟨t, h1t, h2t⟩
+  rw [← prod_univ, ← h2t, prod_iUnion]
+  apply MeasurableSet.iUnion
+  intro n
+  apply measurableSet_generateFrom
+  exact ⟨s, hs, t n, h1t n, rfl⟩
+  rcases hC with ⟨t, h1t, h2t⟩
+  rw [← univ_prod, ← h2t, iUnion_prod_const]
+  apply MeasurableSet.iUnion
+  rintro n
+  apply measurableSet_generateFrom
+  exact mem_image2_of_mem (h1t n) hs
+  apply generateFrom_le
+  rintro _ ⟨s, hs, t, ht, rfl⟩
+  dsimp only
+  rw [prod_eq]
+  apply (measurable_fst _).inter (measurable_snd _)
+  exact measurableSet_generateFrom hs
+  exact measurableSet_generateFrom ht
 
 /-- If `C` and `D` generate the σ-algebras on `α` resp. `β`, then rectangles formed by `C` and `D`
   generate the σ-algebra on `α × β`. -/
@@ -149,20 +149,20 @@ theorem measurable_measure_prod_mk_left_finite [IsFiniteMeasure ν] {s : Set (α
     (hs : MeasurableSet s) : Measurable fun x => ν (Prod.mk x ⁻¹' s) := by
   refine induction_on_inter (C := fun s => Measurable fun x => ν (Prod.mk x ⁻¹' s))
     generateFrom_prod.symm isPiSystem_prod ?_ ?_ ?_ ?_ hs
-  · simp
-  · rintro _ ⟨s, hs, t, _, rfl⟩
-    simp only [mk_preimage_prod_right_eq_if, measure_if]
-    exact measurable_const.indicator hs
-  · intro t ht h2t
-    simp_rw [preimage_compl, measure_compl (measurable_prod_mk_left ht) (measure_ne_top ν _)]
-    exact h2t.const_sub _
-  · intro f h1f h2f h3f
-    simp_rw [preimage_iUnion]
-    have : ∀ b, ν (⋃ i, Prod.mk b ⁻¹' f i) = ∑' i, ν (Prod.mk b ⁻¹' f i) := fun b =>
-      measure_iUnion (fun i j hij => Disjoint.preimage _ (h1f hij)) fun i =>
-        measurable_prod_mk_left (h2f i)
-    simp_rw [this]
-    apply Measurable.ennreal_tsum h3f
+  simp
+  rintro _ ⟨s, hs, t, _, rfl⟩
+  simp only [mk_preimage_prod_right_eq_if, measure_if]
+  exact measurable_const.indicator hs
+  intro t ht h2t
+  simp_rw [preimage_compl, measure_compl (measurable_prod_mk_left ht) (measure_ne_top ν _)]
+  exact h2t.const_sub _
+  intro f h1f h2f h3f
+  simp_rw [preimage_iUnion]
+  have : ∀ b, ν (⋃ i, Prod.mk b ⁻¹' f i) = ∑' i, ν (Prod.mk b ⁻¹' f i) := fun b =>
+    measure_iUnion (fun i j hij => Disjoint.preimage _ (h1f hij)) fun i =>
+      measurable_prod_mk_left (h2f i)
+  simp_rw [this]
+  apply Measurable.ennreal_tsum h3f
 
 /-- If `ν` is an s-finite measure, and `s ⊆ α × β` is measurable, then `x ↦ ν { y | (x, y) ∈ s }`
   is a measurable function. -/
@@ -200,23 +200,23 @@ theorem MeasurableEmbedding.prod_mk {α β γ δ : Type*} {mα : MeasurableSpace
   simp only [Prod.mk.inj_iff] at hxy ⊢
   exact ⟨hg.injective hxy.1, hf.injective hxy.2⟩
   refine ⟨h_inj, ?_, ?_⟩
-  · exact (hg.measurable.comp measurable_fst).prod_mk (hf.measurable.comp measurable_snd)
-  · -- Induction using the π-system of rectangles
-    refine fun s hs =>
-      @MeasurableSpace.induction_on_inter _
-        (fun s => MeasurableSet ((fun x : γ × α => (g x.fst, f x.snd)) '' s)) _ _
-        generateFrom_prod.symm isPiSystem_prod ?_ ?_ ?_ ?_ _ hs
-    · simp only [Set.image_empty, MeasurableSet.empty]
-    · rintro t ⟨t₁, ht₁, t₂, ht₂, rfl⟩
-      rw [← Set.prod_image_image_eq]
-      exact (hg.measurableSet_image.mpr ht₁).prod (hf.measurableSet_image.mpr ht₂)
-    · intro t _ ht_m
-      rw [← Set.range_diff_image h_inj, ← Set.prod_range_range_eq]
-      exact
-        MeasurableSet.diff (MeasurableSet.prod hg.measurableSet_range hf.measurableSet_range) ht_m
-    · intro g _ _ hg
-      simp_rw [Set.image_iUnion]
-      exact MeasurableSet.iUnion hg
+  exact (hg.measurable.comp measurable_fst).prod_mk (hf.measurable.comp measurable_snd)
+  -- Induction using the π-system of rectangles
+  refine fun s hs =>
+    @MeasurableSpace.induction_on_inter _
+      (fun s => MeasurableSet ((fun x : γ × α => (g x.fst, f x.snd)) '' s)) _ _
+      generateFrom_prod.symm isPiSystem_prod ?_ ?_ ?_ ?_ _ hs
+  simp only [Set.image_empty, MeasurableSet.empty]
+  rintro t ⟨t₁, ht₁, t₂, ht₂, rfl⟩
+  rw [← Set.prod_image_image_eq]
+  exact (hg.measurableSet_image.mpr ht₁).prod (hf.measurableSet_image.mpr ht₂)
+  intro t _ ht_m
+  rw [← Set.range_diff_image h_inj, ← Set.prod_range_range_eq]
+  exact
+    MeasurableSet.diff (MeasurableSet.prod hg.measurableSet_range hf.measurableSet_range) ht_m
+  intro g _ _ hg
+  simp_rw [Set.image_iUnion]
+  exact MeasurableSet.iUnion hg
 
 lemma MeasurableEmbedding.prod_mk_left {β γ : Type*} [MeasurableSingletonClass α]
     {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ}
@@ -263,19 +263,19 @@ theorem Measurable.lintegral_prod_right' [SFinite ν] :
   have m := @measurable_prod_mk_left
   refine Measurable.ennreal_induction (P := fun f => Measurable fun (x : α) => ∫⁻ y, f (x, y) ∂ν)
     ?_ ?_ ?_
-  · intro c s hs
-    simp only [← indicator_comp_right]
-    suffices Measurable fun x => c * ν (Prod.mk x ⁻¹' s) by simpa [lintegral_indicator _ (m hs)]
-    exact (measurable_measure_prod_mk_left hs).const_mul _
-  · rintro f g - hf - h2f h2g
-    simp only [Pi.add_apply]
-    conv => enter [1, x]; erw [lintegral_add_left (hf.comp m)]
-    exact h2f.add h2g
-  · intro f hf h2f h3f
-    have := measurable_iSup h3f
-    have : ∀ x, Monotone fun n y => f n (x, y) := fun x i j hij y => h2f hij (x, y)
-    conv => enter [1, x]; erw [lintegral_iSup (fun n => (hf n).comp m) (this x)]
-    assumption
+  intro c s hs
+  simp only [← indicator_comp_right]
+  suffices Measurable fun x => c * ν (Prod.mk x ⁻¹' s) by simpa [lintegral_indicator _ (m hs)]
+  exact (measurable_measure_prod_mk_left hs).const_mul _
+  rintro f g - hf - h2f h2g
+  simp only [Pi.add_apply]
+  conv => enter [1, x]; erw [lintegral_add_left (hf.comp m)]
+  exact h2f.add h2g
+  intro f hf h2f h3f
+  have := measurable_iSup h3f
+  have : ∀ x, Monotone fun n y => f n (x, y) := fun x i j hij y => h2f hij (x, y)
+  conv => enter [1, x]; erw [lintegral_iSup (fun n => (hf n).comp m) (this x)]
+  assumption
 
 /-- The Lebesgue integral is measurable. This shows that the integrand of (the right-hand-side of)
   Tonelli's theorem is measurable.
@@ -328,33 +328,33 @@ do not need the sets to be measurable. -/
 @[simp]
 theorem prod_prod (s : Set α) (t : Set β) : μ.prod ν (s ×ˢ t) = μ s * ν t := by
   apply le_antisymm
-  · set S := toMeasurable μ s
-    set T := toMeasurable ν t
-    have hSTm : MeasurableSet (S ×ˢ T) :=
-      (measurableSet_toMeasurable _ _).prod (measurableSet_toMeasurable _ _)
-    calc
-      μ.prod ν (s ×ˢ t) ≤ μ.prod ν (S ×ˢ T) := by gcongr <;> apply subset_toMeasurable
-      _ = μ S * ν T := by
-        rw [prod_apply hSTm]
-        simp_rw [mk_preimage_prod_right_eq_if, measure_if,
-          lintegral_indicator _ (measurableSet_toMeasurable _ _), lintegral_const,
-          restrict_apply_univ, mul_comm]
-      _ = μ s * ν t := by rw [measure_toMeasurable, measure_toMeasurable]
-  · -- Formalization is based on https://mathoverflow.net/a/254134/136589
-    set ST := toMeasurable (μ.prod ν) (s ×ˢ t)
-    have hSTm : MeasurableSet ST := measurableSet_toMeasurable _ _
-    have hST : s ×ˢ t ⊆ ST := subset_toMeasurable _ _
-    set f : α → ℝ≥0∞ := fun x => ν (Prod.mk x ⁻¹' ST)
-    have hfm : Measurable f := measurable_measure_prod_mk_left hSTm
-    set s' : Set α := { x | ν t ≤ f x }
-    have hss' : s ⊆ s' := fun x hx => measure_mono fun y hy => hST <| mk_mem_prod hx hy
-    calc
-      μ s * ν t ≤ μ s' * ν t := by gcongr
-      _ = ∫⁻ _ in s', ν t ∂μ := by rw [setLIntegral_const, mul_comm]
-      _ ≤ ∫⁻ x in s', f x ∂μ := setLIntegral_mono hfm fun x => id
-      _ ≤ ∫⁻ x, f x ∂μ := lintegral_mono' restrict_le_self le_rfl
-      _ = μ.prod ν ST := (prod_apply hSTm).symm
-      _ = μ.prod ν (s ×ˢ t) := measure_toMeasurable _
+  set S := toMeasurable μ s
+  set T := toMeasurable ν t
+  have hSTm : MeasurableSet (S ×ˢ T) :=
+    (measurableSet_toMeasurable _ _).prod (measurableSet_toMeasurable _ _)
+  calc
+    μ.prod ν (s ×ˢ t) ≤ μ.prod ν (S ×ˢ T) := by gcongr <;> apply subset_toMeasurable
+    _ = μ S * ν T := by
+      rw [prod_apply hSTm]
+      simp_rw [mk_preimage_prod_right_eq_if, measure_if,
+        lintegral_indicator _ (measurableSet_toMeasurable _ _), lintegral_const,
+        restrict_apply_univ, mul_comm]
+    _ = μ s * ν t := by rw [measure_toMeasurable, measure_toMeasurable]
+  -- Formalization is based on https://mathoverflow.net/a/254134/136589
+  set ST := toMeasurable (μ.prod ν) (s ×ˢ t)
+  have hSTm : MeasurableSet ST := measurableSet_toMeasurable _ _
+  have hST : s ×ˢ t ⊆ ST := subset_toMeasurable _ _
+  set f : α → ℝ≥0∞ := fun x => ν (Prod.mk x ⁻¹' ST)
+  have hfm : Measurable f := measurable_measure_prod_mk_left hSTm
+  set s' : Set α := { x | ν t ≤ f x }
+  have hss' : s ⊆ s' := fun x hx => measure_mono fun y hy => hST <| mk_mem_prod hx hy
+  calc
+    μ s * ν t ≤ μ s' * ν t := by gcongr
+    _ = ∫⁻ _ in s', ν t ∂μ := by rw [setLIntegral_const, mul_comm]
+    _ ≤ ∫⁻ x in s', f x ∂μ := setLIntegral_mono hfm fun x => id
+    _ ≤ ∫⁻ x, f x ∂μ := lintegral_mono' restrict_le_self le_rfl
+    _ = μ.prod ν ST := (prod_apply hSTm).symm
+    _ = μ.prod ν (s ×ˢ t) := measure_toMeasurable _
 
 @[simp] lemma map_fst_prod : Measure.map Prod.fst (μ.prod ν) = (ν univ) • μ := by
   ext s hs
@@ -373,8 +373,8 @@ instance prod.instIsOpenPosMeasure {X Y : Type*} [TopologicalSpace X] [Topologic
   refine ne_of_gt (lt_of_lt_of_le ?_ (measure_mono huv))
   simp only [prod_prod, CanonicallyOrderedCommSemiring.mul_pos]
   constructor
-  · exact u_open.measure_pos μ ⟨x, xu⟩
-  · exact v_open.measure_pos ν ⟨y, yv⟩
+  exact u_open.measure_pos μ ⟨x, xu⟩
+  exact v_open.measure_pos ν ⟨y, yv⟩
 
 instance {X Y : Type*}
     [TopologicalSpace X] [MeasureSpace X] [IsOpenPosMeasure (volume : Measure X)]
@@ -788,8 +788,8 @@ theorem skew_product [SFinite μa] [SFinite μc] {f : α → β} (hf : MeasurePr
   /- if `μa = 0`, then the lemma is trivial, otherwise we can use `hg`
     to deduce `SFinite μd`. -/
   rcases eq_or_ne μa 0 with (rfl | ha)
-  · rw [← hf.map_eq, zero_prod, Measure.map_zero, zero_prod]
-    exact ⟨this, by simp only [Measure.map_zero]⟩
+  rw [← hf.map_eq, zero_prod, Measure.map_zero, zero_prod]
+  exact ⟨this, by simp only [Measure.map_zero]⟩
   have sf : SFinite μd
   rcases (ae_neBot.2 ha).nonempty_of_mem hg with ⟨x, hx : map (g x) μc = μd⟩
   rw [← hx]
@@ -878,27 +878,27 @@ theorem lintegral_prod_of_measurable :
   have m := @measurable_prod_mk_left
   refine Measurable.ennreal_induction
     (P := fun f => ∫⁻ z, f z ∂μ.prod ν = ∫⁻ x, ∫⁻ y, f (x, y) ∂ν ∂μ) ?_ ?_ ?_
-  · intro c s hs
-    conv_rhs =>
-      enter [2, x, 2, y]
-      rw [← indicator_comp_right, const_def, const_comp, ← const_def]
-    conv_rhs =>
-      enter [2, x]
-      rw [lintegral_indicator _ (m (x := x) hs), lintegral_const,
-        Measure.restrict_apply MeasurableSet.univ, univ_inter]
-    simp [hs, lintegral_const_mul, measurable_measure_prod_mk_left (ν := ν) hs, prod_apply]
-  · rintro f g - hf _ h2f h2g
-    simp only [Pi.add_apply]
-    conv_lhs => rw [lintegral_add_left hf]
-    conv_rhs => enter [2, x]; erw [lintegral_add_left (hf.comp (m (x := x)))]
-    simp [lintegral_add_left, Measurable.lintegral_prod_right', hf, h2f, h2g]
-  · intro f hf h2f h3f
-    have kf : ∀ x n, Measurable fun y => f n (x, y) := fun x n => (hf n).comp m
-    have k2f : ∀ x, Monotone fun n y => f n (x, y) := fun x i j hij y => h2f hij (x, y)
-    have lf : ∀ n, Measurable fun x => ∫⁻ y, f n (x, y) ∂ν := fun n => (hf n).lintegral_prod_right'
-    have l2f : Monotone fun n x => ∫⁻ y, f n (x, y) ∂ν := fun i j hij x =>
-      lintegral_mono (k2f x hij)
-    simp only [lintegral_iSup hf h2f, lintegral_iSup (kf _), k2f, lintegral_iSup lf l2f, h3f]
+  intro c s hs
+  conv_rhs =>
+    enter [2, x, 2, y]
+    rw [← indicator_comp_right, const_def, const_comp, ← const_def]
+  conv_rhs =>
+    enter [2, x]
+    rw [lintegral_indicator _ (m (x := x) hs), lintegral_const,
+      Measure.restrict_apply MeasurableSet.univ, univ_inter]
+  simp [hs, lintegral_const_mul, measurable_measure_prod_mk_left (ν := ν) hs, prod_apply]
+  rintro f g - hf _ h2f h2g
+  simp only [Pi.add_apply]
+  conv_lhs => rw [lintegral_add_left hf]
+  conv_rhs => enter [2, x]; erw [lintegral_add_left (hf.comp (m (x := x)))]
+  simp [lintegral_add_left, Measurable.lintegral_prod_right', hf, h2f, h2g]
+  intro f hf h2f h3f
+  have kf : ∀ x n, Measurable fun y => f n (x, y) := fun x n => (hf n).comp m
+  have k2f : ∀ x, Monotone fun n y => f n (x, y) := fun x i j hij y => h2f hij (x, y)
+  have lf : ∀ n, Measurable fun x => ∫⁻ y, f n (x, y) ∂ν := fun n => (hf n).lintegral_prod_right'
+  have l2f : Monotone fun n x => ∫⁻ y, f n (x, y) ∂ν := fun i j hij x =>
+    lintegral_mono (k2f x hij)
+  simp only [lintegral_iSup hf h2f, lintegral_iSup (kf _), k2f, lintegral_iSup lf l2f, h3f]
 
 /-- **Tonelli's Theorem**: For `ℝ≥0∞`-valued almost everywhere measurable functions on `α × β`,
   the integral of `f` is equal to the iterated integral. -/
@@ -985,13 +985,13 @@ lemma fst_prod [IsProbabilityMeasure ν] : (μ.prod ν).fst = μ := by
 theorem fst_map_prod_mk₀ {X : α → β} {Y : α → γ} {μ : Measure α}
     (hY : AEMeasurable Y μ) : (μ.map fun a => (X a, Y a)).fst = μ.map X := by
   by_cases hX : AEMeasurable X μ
-  · ext1 s hs
-    rw [Measure.fst_apply hs, Measure.map_apply_of_aemeasurable (hX.prod_mk hY) (measurable_fst hs),
-      Measure.map_apply_of_aemeasurable hX hs, ← prod_univ, mk_preimage_prod, preimage_univ,
-      inter_univ]
-  · have : ¬AEMeasurable (fun x ↦ (X x, Y x)) μ := by
-      contrapose! hX; exact measurable_fst.comp_aemeasurable hX
-    simp [map_of_not_aemeasurable, hX, this]
+  ext1 s hs
+  rw [Measure.fst_apply hs, Measure.map_apply_of_aemeasurable (hX.prod_mk hY) (measurable_fst hs),
+    Measure.map_apply_of_aemeasurable hX hs, ← prod_univ, mk_preimage_prod, preimage_univ,
+    inter_univ]
+  have : ¬AEMeasurable (fun x ↦ (X x, Y x)) μ := by
+    contrapose! hX; exact measurable_fst.comp_aemeasurable hX
+  simp [map_of_not_aemeasurable, hX, this]
 
 theorem fst_map_prod_mk {X : α → β} {Y : α → γ} {μ : Measure α}
     (hY : Measurable Y) : (μ.map fun a => (X a, Y a)).fst = μ.map X :=
@@ -1029,13 +1029,13 @@ lemma snd_prod [IsProbabilityMeasure μ] : (μ.prod ν).snd = ν := by
 theorem snd_map_prod_mk₀ {X : α → β} {Y : α → γ} {μ : Measure α} (hX : AEMeasurable X μ) :
     (μ.map fun a => (X a, Y a)).snd = μ.map Y := by
   by_cases hY : AEMeasurable Y μ
-  · ext1 s hs
-    rw [Measure.snd_apply hs, Measure.map_apply_of_aemeasurable (hX.prod_mk hY) (measurable_snd hs),
-      Measure.map_apply_of_aemeasurable hY hs, ← univ_prod, mk_preimage_prod, preimage_univ,
-      univ_inter]
-  · have : ¬AEMeasurable (fun x ↦ (X x, Y x)) μ := by
-      contrapose! hY; exact measurable_snd.comp_aemeasurable hY
-    simp [map_of_not_aemeasurable, hY, this]
+  ext1 s hs
+  rw [Measure.snd_apply hs, Measure.map_apply_of_aemeasurable (hX.prod_mk hY) (measurable_snd hs),
+    Measure.map_apply_of_aemeasurable hY hs, ← univ_prod, mk_preimage_prod, preimage_univ,
+    univ_inter]
+  have : ¬AEMeasurable (fun x ↦ (X x, Y x)) μ := by
+    contrapose! hY; exact measurable_snd.comp_aemeasurable hY
+  simp [map_of_not_aemeasurable, hY, this]
 
 theorem snd_map_prod_mk {X : α → β} {Y : α → γ} {μ : Measure α} (hX : Measurable X) :
     (μ.map fun a => (X a, Y a)).snd = μ.map Y :=

@@ -200,12 +200,12 @@ theorem finrank_sup_le_of_free [Module.Free R A] [Module.Free R B] :
     finrank R ↥(A ⊔ B) ≤ finrank R A * finrank R B := by
   nontriviality R using finrank
   by_cases h : Module.Finite R A ∧ Module.Finite R B
-  · obtain ⟨_, _⟩ := h
-    rw [← finrank_tensorProduct, ← mulMap_range]
-    exact (A.mulMap B).toLinearMap.finrank_range_le
+  obtain ⟨_, _⟩ := h
+  rw [← finrank_tensorProduct, ← mulMap_range]
+  exact (A.mulMap B).toLinearMap.finrank_range_le
   wlog hA : ¬ Module.Finite R A generalizing A B
-  · have := this B A (fun h' ↦ h h'.symm) (not_and.1 h (of_not_not hA))
-    rwa [sup_comm, mul_comm] at this
+  have := this B A (fun h' ↦ h h'.symm) (not_and.1 h (of_not_not hA))
+  rwa [sup_comm, mul_comm] at this
   rw [← Module.rank_lt_alpeh0_iff, not_lt] at hA
   have := LinearMap.rank_le_of_injective _ <| Submodule.inclusion_injective <|
     show toSubmodule A ≤ toSubmodule (A ⊔ B) by simp

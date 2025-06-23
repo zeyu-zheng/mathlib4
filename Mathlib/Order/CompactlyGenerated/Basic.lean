@@ -81,24 +81,24 @@ theorem isCompactElement_iff.{u} {α : Type u} [CompleteLattice α] (k : α) :
     CompleteLattice.IsCompactElement k ↔
       ∀ (ι : Type u) (s : ι → α), k ≤ iSup s → ∃ t : Finset ι, k ≤ t.sup s := by
     constructor
-    · intro H ι s hs
-      obtain ⟨t, ht, ht'⟩ := H (Set.range s) hs
-      have : ∀ x : t, ∃ i, s i = x := fun x => ht x.prop
-      choose f hf using this
-      refine ⟨Finset.univ.image f, ht'.trans ?_⟩
-      rw [Finset.sup_le_iff]
-      intro b hb
-      rw [← show s (f ⟨b, hb⟩) = id b from hf _]
-      exact Finset.le_sup (Finset.mem_image_of_mem f <| Finset.mem_univ (Subtype.mk b hb))
-    · intro H s hs
-      obtain ⟨t, ht⟩ :=
-        H s Subtype.val
-          (by
-            delta iSup
-            rwa [Subtype.range_coe])
-      refine ⟨t.image Subtype.val, by simp, ht.trans ?_⟩
-      rw [Finset.sup_le_iff]
-      exact fun x hx => @Finset.le_sup _ _ _ _ _ id _ (Finset.mem_image_of_mem Subtype.val hx)
+    intro H ι s hs
+    obtain ⟨t, ht, ht'⟩ := H (Set.range s) hs
+    have : ∀ x : t, ∃ i, s i = x := fun x => ht x.prop
+    choose f hf using this
+    refine ⟨Finset.univ.image f, ht'.trans ?_⟩
+    rw [Finset.sup_le_iff]
+    intro b hb
+    rw [← show s (f ⟨b, hb⟩) = id b from hf _]
+    exact Finset.le_sup (Finset.mem_image_of_mem f <| Finset.mem_univ (Subtype.mk b hb))
+    intro H s hs
+    obtain ⟨t, ht⟩ :=
+      H s Subtype.val
+        (by
+          delta iSup
+          rwa [Subtype.range_coe])
+    refine ⟨t.image Subtype.val, by simp, ht.trans ?_⟩
+    rw [Finset.sup_le_iff]
+    exact fun x hx => @Finset.le_sup _ _ _ _ _ id _ (Finset.mem_image_of_mem Subtype.val hx)
 
 open Classical in
 /-- An element `k` is compact if and only if any directed set with `sSup` above
@@ -107,41 +107,41 @@ theorem isCompactElement_iff_le_of_directed_sSup_le (k : α) :
     IsCompactElement k ↔
       ∀ s : Set α, s.Nonempty → DirectedOn (· ≤ ·) s → k ≤ sSup s → ∃ x : α, x ∈ s ∧ k ≤ x := by
     constructor
-    · intro hk s hne hdir hsup
-      obtain ⟨t, ht⟩ := hk s hsup
-      -- certainly every element of t is below something in s, since ↑t ⊆ s.
-      have t_below_s : ∀ x ∈ t, ∃ y ∈ s, x ≤ y := fun x hxt => ⟨x, ht.left hxt, le_rfl⟩
-      obtain ⟨x, ⟨hxs, hsupx⟩⟩ := Finset.sup_le_of_le_directed s hne hdir t t_below_s
-      exact ⟨x, ⟨hxs, le_trans ht.right hsupx⟩⟩
-    · intro hk s hsup
-      -- Consider the set of finite joins of elements of the (plain) set s.
-      let S : Set α := { x | ∃ t : Finset α, ↑t ⊆ s ∧ x = t.sup id }
-      -- S is directed, nonempty, and still has sup above k.
-      have dir_US : DirectedOn (· ≤ ·) S
-      rintro x ⟨c, hc⟩ y ⟨d, hd⟩
-      use x ⊔ y
-      constructor
-      · use c ∪ d
-        constructor
-        · simp only [hc.left, hd.left, Set.union_subset_iff, Finset.coe_union, and_self_iff]
-        · simp only [hc.right, hd.right, Finset.sup_union]
-      simp only [and_self_iff, le_sup_left, le_sup_right]
-      have sup_S : sSup s ≤ sSup S
-      apply sSup_le_sSup
-      intro x hx
-      use {x}
-      simpa only [and_true_iff, id, Finset.coe_singleton, eq_self_iff_true,
-        Finset.sup_singleton, Set.singleton_subset_iff]
-      have Sne : S.Nonempty
-      suffices ⊥ ∈ S from Set.nonempty_of_mem this
-      use ∅
-      simp only [Set.empty_subset, Finset.coe_empty, Finset.sup_empty, eq_self_iff_true,
-        and_self_iff]
-      -- Now apply the defn of compact and finish.
-      obtain ⟨j, ⟨hjS, hjk⟩⟩ := hk S Sne dir_US (le_trans hsup sup_S)
-      obtain ⟨t, ⟨htS, htsup⟩⟩ := hjS
-      use t
-      exact ⟨htS, by rwa [← htsup]⟩
+    intro hk s hne hdir hsup
+    obtain ⟨t, ht⟩ := hk s hsup
+    -- certainly every element of t is below something in s, since ↑t ⊆ s.
+    have t_below_s : ∀ x ∈ t, ∃ y ∈ s, x ≤ y := fun x hxt => ⟨x, ht.left hxt, le_rfl⟩
+    obtain ⟨x, ⟨hxs, hsupx⟩⟩ := Finset.sup_le_of_le_directed s hne hdir t t_below_s
+    exact ⟨x, ⟨hxs, le_trans ht.right hsupx⟩⟩
+    intro hk s hsup
+    -- Consider the set of finite joins of elements of the (plain) set s.
+    let S : Set α := { x | ∃ t : Finset α, ↑t ⊆ s ∧ x = t.sup id }
+    -- S is directed, nonempty, and still has sup above k.
+    have dir_US : DirectedOn (· ≤ ·) S
+    rintro x ⟨c, hc⟩ y ⟨d, hd⟩
+    use x ⊔ y
+    constructor
+    use c ∪ d
+    constructor
+    simp only [hc.left, hd.left, Set.union_subset_iff, Finset.coe_union, and_self_iff]
+    simp only [hc.right, hd.right, Finset.sup_union]
+    simp only [and_self_iff, le_sup_left, le_sup_right]
+    have sup_S : sSup s ≤ sSup S
+    apply sSup_le_sSup
+    intro x hx
+    use {x}
+    simpa only [and_true_iff, id, Finset.coe_singleton, eq_self_iff_true,
+      Finset.sup_singleton, Set.singleton_subset_iff]
+    have Sne : S.Nonempty
+    suffices ⊥ ∈ S from Set.nonempty_of_mem this
+    use ∅
+    simp only [Set.empty_subset, Finset.coe_empty, Finset.sup_empty, eq_self_iff_true,
+      and_self_iff]
+    -- Now apply the defn of compact and finish.
+    obtain ⟨j, ⟨hjS, hjk⟩⟩ := hk S Sne dir_US (le_trans hsup sup_S)
+    obtain ⟨t, ⟨htS, htsup⟩⟩ := hjS
+    use t
+    exact ⟨htS, by rwa [← htsup]⟩
 
 open Classical in
 theorem IsCompactElement.exists_finset_of_le_iSup {k : α} (hk : IsCompactElement k) {ι : Type*}
@@ -196,22 +196,22 @@ theorem WellFounded.isSupFiniteCompact (h : WellFounded ((· > ·) : α → α �
   let S := { x | ∃ t : Finset α, ↑t ⊆ s ∧ t.sup id = x }
   obtain ⟨m, ⟨t, ⟨ht₁, rfl⟩⟩, hm⟩ := h.has_min S ⟨⊥, ∅, by simp⟩
   refine ⟨t, ht₁, (sSup_le _ _ fun y hy => ?_).antisymm ?_⟩
-  · rw [eq_of_le_of_not_lt (Finset.sup_mono (t.subset_insert y))
-        (hm _ ⟨insert y t, by simp [Set.insert_subset_iff, hy, ht₁]⟩)]
-    simp
-  · rw [Finset.sup_id_eq_sSup]
-    exact sSup_le_sSup ht₁
+  rw [eq_of_le_of_not_lt (Finset.sup_mono (t.subset_insert y))
+      (hm _ ⟨insert y t, by simp [Set.insert_subset_iff, hy, ht₁]⟩)]
+  simp
+  rw [Finset.sup_id_eq_sSup]
+  exact sSup_le_sSup ht₁
 
 theorem IsSupFiniteCompact.isSupClosedCompact (h : IsSupFiniteCompact α) :
     IsSupClosedCompact α := by
   intro s hne hsc; obtain ⟨t, ht₁, ht₂⟩ := h s; clear h
   rcases t.eq_empty_or_nonempty with h | h
-  · subst h
-    rw [Finset.sup_empty] at ht₂
-    rw [ht₂]
-    simp [eq_singleton_bot_of_sSup_eq_bot_of_nonempty ht₂ hne]
-  · rw [ht₂]
-    exact hsc.finsetSup_mem h ht₁
+  subst h
+  rw [Finset.sup_empty] at ht₂
+  rw [ht₂]
+  simp [eq_singleton_bot_of_sSup_eq_bot_of_nonempty ht₂ hne]
+  rw [ht₂]
+  exact hsc.finsetSup_mem h ht₁
 
 theorem IsSupClosedCompact.wellFounded (h : IsSupClosedCompact α) :
     WellFounded ((· > ·) : α → α → Prop) := by
@@ -226,39 +226,39 @@ theorem IsSupClosedCompact.wellFounded (h : IsSupClosedCompact α) :
     apply le_sSup
     apply Set.mem_range_self
   apply h (Set.range a)
-  · use a 37
-    apply Set.mem_range_self
-  · rintro x ⟨m, hm⟩ y ⟨n, hn⟩
-    use m ⊔ n
-    rw [← hm, ← hn]
-    apply RelHomClass.map_sup a
+  use a 37
+  apply Set.mem_range_self
+  rintro x ⟨m, hm⟩ y ⟨n, hn⟩
+  use m ⊔ n
+  rw [← hm, ← hn]
+  apply RelHomClass.map_sup a
 
 theorem isSupFiniteCompact_iff_all_elements_compact :
     IsSupFiniteCompact α ↔ ∀ k : α, IsCompactElement k := by
   refine ⟨fun h k s hs => ?_, fun h s => ?_⟩
-  · obtain ⟨t, ⟨hts, htsup⟩⟩ := h s
-    use t, hts
-    rwa [← htsup]
-  · obtain ⟨t, ⟨hts, htsup⟩⟩ := h (sSup s) s (by rfl)
-    have : sSup s = t.sup id
-    suffices t.sup id ≤ sSup s by apply le_antisymm <;> assumption
-    simp only [id, Finset.sup_le_iff]
-    intro x hx
-    exact le_sSup _ _ (hts hx)
-    exact ⟨t, hts, this⟩
+  obtain ⟨t, ⟨hts, htsup⟩⟩ := h s
+  use t, hts
+  rwa [← htsup]
+  obtain ⟨t, ⟨hts, htsup⟩⟩ := h (sSup s) s (by rfl)
+  have : sSup s = t.sup id
+  suffices t.sup id ≤ sSup s by apply le_antisymm <;> assumption
+  simp only [id, Finset.sup_le_iff]
+  intro x hx
+  exact le_sSup _ _ (hts hx)
+  exact ⟨t, hts, this⟩
 
 open List in
 theorem wellFounded_characterisations : List.TFAE
     [WellFounded ((· > ·) : α → α → Prop),
       IsSupFiniteCompact α, IsSupClosedCompact α, ∀ k : α, IsCompactElement k] := by
   tfae_have 1 → 2
-  · exact WellFounded.isSupFiniteCompact α
+  exact WellFounded.isSupFiniteCompact α
   tfae_have 2 → 3
-  · exact IsSupFiniteCompact.isSupClosedCompact α
+  exact IsSupFiniteCompact.isSupClosedCompact α
   tfae_have 3 → 1
-  · exact IsSupClosedCompact.wellFounded α
+  exact IsSupClosedCompact.wellFounded α
   tfae_have 2 ↔ 4
-  · exact isSupFiniteCompact_iff_all_elements_compact α
+  exact isSupFiniteCompact_iff_all_elements_compact α
   tfae_finish
 
 theorem wellFounded_iff_isSupFiniteCompact :
@@ -343,14 +343,14 @@ theorem DirectedOn.inf_sSup_eq (h : DirectedOn (· ≤ ·) s) : a ⊓ sSup s = �
     (by
       rw [le_iff_compact_le_imp]
       by_cases hs : s.Nonempty
-      · intro c hc hcinf
-        rw [le_inf_iff] at hcinf
-        rw [CompleteLattice.isCompactElement_iff_le_of_directed_sSup_le] at hc
-        rcases hc s hs h hcinf.2 with ⟨d, ds, cd⟩
-        refine (le_inf hcinf.1 cd).trans (le_trans ?_ (le_iSup₂ d ds))
-        rfl
-      · rw [Set.not_nonempty_iff_eq_empty] at hs
-        simp [hs])
+      intro c hc hcinf
+      rw [le_inf_iff] at hcinf
+      rw [CompleteLattice.isCompactElement_iff_le_of_directed_sSup_le] at hc
+      rcases hc s hs h hcinf.2 with ⟨d, ds, cd⟩
+      refine (le_inf hcinf.1 cd).trans (le_trans ?_ (le_iSup₂ d ds))
+      rfl
+      rw [Set.not_nonempty_iff_eq_empty] at hs
+      simp [hs])
     iSup_inf_le_inf_sSup
 
 /-- This property is sometimes referred to as `α` being upper continuous. -/
@@ -406,10 +406,10 @@ theorem CompleteLattice.setIndependent_iff_finite {s : Set α} :
     rw [iSup_eq_bot, Finset.sup_id_eq_sSup]
     intro ht
     have h' := (h (insert a t) ?_ (t.mem_insert_self a)).eq_bot
-    · rwa [Finset.coe_insert, Set.insert_diff_self_of_not_mem] at h'
-      exact fun con => ((Set.mem_diff a).1 (ht con)).2 (Set.mem_singleton a)
-    · rw [Finset.coe_insert, Set.insert_subset_iff]
-      exact ⟨ha, Set.Subset.trans ht diff_subset⟩⟩
+    rwa [Finset.coe_insert, Set.insert_diff_self_of_not_mem] at h'
+    exact fun con => ((Set.mem_diff a).1 (ht con)).2 (Set.mem_singleton a)
+    rw [Finset.coe_insert, Set.insert_subset_iff]
+    exact ⟨ha, Set.Subset.trans ht diff_subset⟩⟩
 
 open Classical in
 lemma CompleteLattice.independent_iff_supIndep_of_injOn {ι : Type*} {f : ι → α}
@@ -438,15 +438,15 @@ theorem CompleteLattice.setIndependent_iUnion_of_directed {η : Type*} {s : η �
     (hs : Directed (· ⊆ ·) s) (h : ∀ i, CompleteLattice.SetIndependent (s i)) :
     CompleteLattice.SetIndependent (⋃ i, s i) := by
   by_cases hη : Nonempty η
-  · rw [CompleteLattice.setIndependent_iff_finite]
-    intro t ht
-    obtain ⟨I, fi, hI⟩ := Set.finite_subset_iUnion t.finite_toSet ht
-    obtain ⟨i, hi⟩ := hs.finset_le fi.toFinset
-    exact (h i).mono
-        (Set.Subset.trans hI <| Set.iUnion₂_subset fun j hj => hi j (fi.mem_toFinset.2 hj))
-  · rintro a ⟨_, ⟨i, _⟩, _⟩
-    exfalso
-    exact hη ⟨i⟩
+  rw [CompleteLattice.setIndependent_iff_finite]
+  intro t ht
+  obtain ⟨I, fi, hI⟩ := Set.finite_subset_iUnion t.finite_toSet ht
+  obtain ⟨i, hi⟩ := hs.finset_le fi.toFinset
+  exact (h i).mono
+      (Set.Subset.trans hI <| Set.iUnion₂_subset fun j hj => hi j (fi.mem_toFinset.2 hj))
+  rintro a ⟨_, ⟨i, _⟩, _⟩
+  exfalso
+  exact hη ⟨i⟩
 
 theorem CompleteLattice.independent_sUnion_of_directed {s : Set (Set α)} (hs : DirectedOn (· ⊆ ·) s)
     (h : ∀ a ∈ s, CompleteLattice.SetIndependent a) : CompleteLattice.SetIndependent (⋃₀ s) := by
@@ -470,20 +470,20 @@ theorem Iic_coatomic_of_compact_element {k : α} (h : IsCompactElement k) :
   constructor
   rintro ⟨b, hbk⟩
   obtain rfl | H := eq_or_ne b k
-  · left; ext; simp only [Set.Iic.coe_top, Subtype.coe_mk]
+  left; ext; simp only [Set.Iic.coe_top, Subtype.coe_mk]
   right
   have ⟨a, a₀, ba, h⟩ := zorn_nonempty_partialOrder₀ (Set.Iio k) ?_ b (lt_of_le_of_ne hbk H)
-  · refine ⟨⟨a, le_of_lt a₀⟩, ⟨ne_of_lt a₀, fun c hck => by_contradiction fun c₀ => ?_⟩, ba⟩
-    cases h c.1 (lt_of_le_of_ne c.2 fun con => c₀ (Subtype.ext con)) hck.le
-    exact lt_irrefl _ hck
-  · intro S SC cC I _
-    by_cases hS : S.Nonempty
-    · refine ⟨sSup S, h.directed_sSup_lt_of_lt hS cC.directedOn SC, ?_⟩
-      intro; apply le_sSup
-    exact
-      ⟨b, lt_of_le_of_ne hbk H, by
-        simp only [Set.not_nonempty_iff_eq_empty.mp hS, Set.mem_empty_iff_false, forall_const,
-          forall_prop_of_false, not_false_iff]⟩
+  refine ⟨⟨a, le_of_lt a₀⟩, ⟨ne_of_lt a₀, fun c hck => by_contradiction fun c₀ => ?_⟩, ba⟩
+  cases h c.1 (lt_of_le_of_ne c.2 fun con => c₀ (Subtype.ext con)) hck.le
+  exact lt_irrefl _ hck
+  intro S SC cC I _
+  by_cases hS : S.Nonempty
+  refine ⟨sSup S, h.directed_sSup_lt_of_lt hS cC.directedOn SC, ?_⟩
+  intro; apply le_sSup
+  exact
+    ⟨b, lt_of_le_of_ne hbk H, by
+      simp only [Set.not_nonempty_iff_eq_empty.mp hS, Set.mem_empty_iff_false, forall_const,
+        forall_prop_of_false, not_false_iff]⟩
 
 theorem coatomic_of_top_compact (h : IsCompactElement (⊤ : α)) : IsCoatomic α :=
   (@OrderIso.IicTop α _ _).isCoatomic_iff.mp (Iic_coatomic_of_compact_element h)
@@ -497,21 +497,21 @@ variable [IsModularLattice α] [IsCompactlyGenerated α]
 instance (priority := 100) isAtomic_of_complementedLattice [ComplementedLattice α] : IsAtomic α :=
   ⟨fun b => by
     by_cases h : { c : α | CompleteLattice.IsCompactElement c ∧ c ≤ b } ⊆ {⊥}
-    · left
-      rw [← sSup_compact_le_eq b, sSup_eq_bot]
-      exact h
-    · rcases Set.not_subset.1 h with ⟨c, ⟨hc, hcb⟩, hcbot⟩
-      right
-      have hc' := CompleteLattice.Iic_coatomic_of_compact_element hc
-      rw [← isAtomic_iff_isCoatomic] at hc'
-      haveI := hc'
-      obtain con | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le (⟨c, le_refl c⟩ : Set.Iic c)
-      · exfalso
-        apply hcbot
-        simp only [Subtype.ext_iff, Set.Iic.coe_bot, Subtype.coe_mk] at con
-        exact con
-      rw [← Subtype.coe_le_coe, Subtype.coe_mk] at hac
-      exact ⟨a, ha.of_isAtom_coe_Iic, hac.trans hcb⟩⟩
+    left
+    rw [← sSup_compact_le_eq b, sSup_eq_bot]
+    exact h
+    rcases Set.not_subset.1 h with ⟨c, ⟨hc, hcb⟩, hcbot⟩
+    right
+    have hc' := CompleteLattice.Iic_coatomic_of_compact_element hc
+    rw [← isAtomic_iff_isCoatomic] at hc'
+    haveI := hc'
+    obtain con | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le (⟨c, le_refl c⟩ : Set.Iic c)
+    exfalso
+    apply hcbot
+    simp only [Subtype.ext_iff, Set.Iic.coe_bot, Subtype.coe_mk] at con
+    exact con
+    rw [← Subtype.coe_le_coe, Subtype.coe_mk] at hac
+    exact ⟨a, ha.of_isAtom_coe_Iic, hac.trans hcb⟩⟩
 
 /-- See [Lemma 5.1][calugareanu]. -/
 instance (priority := 100) isAtomistic_of_complementedLattice [ComplementedLattice α] :
@@ -524,12 +524,12 @@ instance (priority := 100) isAtomistic_of_complementedLattice [ComplementedLatti
       intro con
       obtain ⟨c, hc⟩ := exists_isCompl (⟨sSup { a : α | IsAtom a ∧ a ≤ b }, hle⟩ : Set.Iic b)
       obtain rfl | ⟨a, ha, hac⟩ := eq_bot_or_exists_atom_le c
-      · exact ne_of_lt con (Subtype.ext_iff.1 (eq_top_of_isCompl_bot hc))
-      · apply ha.1
-        rw [eq_bot_iff]
-        apply le_trans (le_inf _ hac) hc.disjoint.le_bot
-        rw [← Subtype.coe_le_coe, Subtype.coe_mk]
-        exact le_sSup ⟨ha.of_isAtom_coe_Iic, a.2⟩, fun _ => And.left⟩⟩
+      exact ne_of_lt con (Subtype.ext_iff.1 (eq_top_of_isCompl_bot hc))
+      apply ha.1
+      rw [eq_bot_iff]
+      apply le_trans (le_inf _ hac) hc.disjoint.le_bot
+      rw [← Subtype.coe_le_coe, Subtype.coe_mk]
+      exact le_sSup ⟨ha.of_isAtom_coe_Iic, a.2⟩, fun _ => And.left⟩⟩
 
 /-!
 Now we will prove that a compactly generated modular atomistic lattice is a complemented lattice.
@@ -551,11 +551,11 @@ theorem exists_setIndependent_isCompl_sSup_atoms (h : sSup { a : α | IsAtom a }
           fun a ⟨s, sc, as⟩ => (hc1 sc).2.2 a as⟩,
         fun _ => Set.subset_sUnion_of_mem⟩
   swap
-  · rw [sSup_sUnion, ← sSup_image, DirectedOn.disjoint_sSup_right]
-    · rintro _ ⟨s, hs, rfl⟩
-      exact (hc1 hs).2.1
-    · rw [directedOn_image]
-      exact hc2.directedOn.mono @fun s t => sSup_le_sSup
+  rw [sSup_sUnion, ← sSup_image, DirectedOn.disjoint_sSup_right]
+  rintro _ ⟨s, hs, rfl⟩
+  exact (hc1 hs).2.1
+  rw [directedOn_image]
+  exact hc2.directedOn.mono @fun s t => sSup_le_sSup
   obtain ⟨s, ⟨s_ind, b_inf_Sup_s, s_atoms⟩, s_max⟩ := this
   refine ⟨s, s_ind, ⟨b_inf_Sup_s, ?_⟩, s_atoms⟩
   rw [codisjoint_iff_le_sup, ← h, sSup_le_iff]
@@ -568,29 +568,29 @@ theorem exists_setIndependent_isCompl_sSup_atoms (h : sSup { a : α | IsAtom a }
   have a_dis_Sup_s : Disjoint a (sSup s) := con.mono_right le_sup_right
   -- Porting note: The two following `fun x hx => _` are no-op
   rw [← s_max (s ∪ {a}) ⟨fun x hx => _, _, fun x hx => _⟩ Set.subset_union_left]
-  · exact Set.mem_union_right _ (Set.mem_singleton _)
-  · intro x hx
-    rw [Set.mem_union, Set.mem_singleton_iff] at hx
-    obtain rfl | xa := eq_or_ne x a
-    · simp only [Set.mem_singleton, Set.insert_diff_of_mem, Set.union_singleton]
-      exact con.mono_right ((sSup_le_sSup Set.diff_subset).trans le_sup_right)
-    · have h : (s ∪ {a}) \ {x} = s \ {x} ∪ {a} := by
-        simp only [Set.union_singleton]
-        rw [Set.insert_diff_of_not_mem]
-        rw [Set.mem_singleton_iff]
-        exact Ne.symm xa
-      rw [h, sSup_union, sSup_singleton]
-      apply
-        (s_ind (hx.resolve_right xa)).disjoint_sup_right_of_disjoint_sup_left
-          (a_dis_Sup_s.mono_right _).symm
-      rw [← sSup_insert, Set.insert_diff_singleton, Set.insert_eq_of_mem (hx.resolve_right xa)]
-  · rw [sSup_union, sSup_singleton]
-    exact b_inf_Sup_s.disjoint_sup_right_of_disjoint_sup_left con.symm
-  · intro x hx
-    rw [Set.mem_union, Set.mem_singleton_iff] at hx
-    obtain hx | rfl := hx
-    · exact s_atoms x hx
-    · exact ha
+  exact Set.mem_union_right _ (Set.mem_singleton _)
+  intro x hx
+  rw [Set.mem_union, Set.mem_singleton_iff] at hx
+  obtain rfl | xa := eq_or_ne x a
+  simp only [Set.mem_singleton, Set.insert_diff_of_mem, Set.union_singleton]
+  exact con.mono_right ((sSup_le_sSup Set.diff_subset).trans le_sup_right)
+  have h : (s ∪ {a}) \ {x} = s \ {x} ∪ {a} := by
+    simp only [Set.union_singleton]
+    rw [Set.insert_diff_of_not_mem]
+    rw [Set.mem_singleton_iff]
+    exact Ne.symm xa
+  rw [h, sSup_union, sSup_singleton]
+  apply
+    (s_ind (hx.resolve_right xa)).disjoint_sup_right_of_disjoint_sup_left
+      (a_dis_Sup_s.mono_right _).symm
+  rw [← sSup_insert, Set.insert_diff_singleton, Set.insert_eq_of_mem (hx.resolve_right xa)]
+  rw [sSup_union, sSup_singleton]
+  exact b_inf_Sup_s.disjoint_sup_right_of_disjoint_sup_left con.symm
+  intro x hx
+  rw [Set.mem_union, Set.mem_singleton_iff] at hx
+  obtain hx | rfl := hx
+  exact s_atoms x hx
+  exact ha
 
 theorem exists_setIndependent_of_sSup_atoms_eq_top (h : sSup { a : α | IsAtom a } = ⊤) :
     ∃ s : Set α, CompleteLattice.SetIndependent s ∧ sSup s = ⊤ ∧ ∀ ⦃a⦄, a ∈ s → IsAtom a :=
@@ -610,7 +610,7 @@ theorem complementedLattice_of_isAtomistic [IsAtomistic α] : ComplementedLattic
 
 theorem complementedLattice_iff_isAtomistic : ComplementedLattice α ↔ IsAtomistic α := by
   constructor <;> intros
-  · exact isAtomistic_of_complementedLattice
-  · exact complementedLattice_of_isAtomistic
+  exact isAtomistic_of_complementedLattice
+  exact complementedLattice_of_isAtomistic
 
 end

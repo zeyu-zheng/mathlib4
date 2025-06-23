@@ -73,10 +73,10 @@ theorem constant_descent_vieta_jumping (x y : ℕ) {claim : Prop} {H : ℕ → �
   -- First of all, we may assume that x ≤ y.
   -- We justify this using H_symm.
   wlog hxy : x ≤ y
-  · rw [H_symm] at h₀; apply this y x h₀ B C base _ _ _ _ _ _ (le_of_not_le hxy); assumption'
+  rw [H_symm] at h₀; apply this y x h₀ B C base _ _ _ _ _ _ (le_of_not_le hxy); assumption'
   -- In fact, we can easily deal with the case x = y.
   by_cases x_eq_y : x = y
-  · subst x_eq_y; exact H_diag h₀
+  subst x_eq_y; exact H_diag h₀
   -- Hence we may assume that x < y.
   replace hxy : x < y := lt_of_le_of_ne hxy x_eq_y
   clear x_eq_y
@@ -102,9 +102,9 @@ theorem constant_descent_vieta_jumping (x y : ℕ) {claim : Prop} {H : ℕ → �
     rcases exc with ⟨a, b, hH, hb⟩
     rcases hb with (_ | rfl | rfl | hB | hB)
     -- The first three cases are rather easy to solve.
-    · solve_by_elim
-    · rw [H_symm] at hH; solve_by_elim
-    · solve_by_elim
+    solve_by_elim
+    rw [H_symm] at hH; solve_by_elim
+    solve_by_elim
     -- The final two cases are very similar.
     all_goals
       -- Consider the quadratic equation that (a,b) satisfies.
@@ -136,7 +136,7 @@ theorem constant_descent_vieta_jumping (x y : ℕ) {claim : Prop} {H : ℕ → �
   have m_min : ∀ k ∈ S, ¬k < m := fun k hk => WellFounded.not_lt_min Nat.lt_wfRel.wf S S_nonempty hk
   -- It suffices to show that there is point (a,b) with b ∈ S and b < m.
   rsuffices ⟨p', p'_mem, p'_small⟩ : ∃ p' : ℕ × ℕ, p'.2 ∈ S ∧ p'.2 < m
-  · solve_by_elim
+  solve_by_elim
   -- Let (m_x, m_y) be a point on the upper branch that projects to m ∈ S
   -- and that does not lie in the exceptional locus.
   rcases m_mem with ⟨⟨mx, my⟩, ⟨⟨hHm, mx_lt_my⟩, h_base⟩, m_eq⟩
@@ -168,7 +168,7 @@ theorem constant_descent_vieta_jumping (x y : ℕ) {claim : Prop} {H : ℕ → �
   use p'
   -- The second condition is rather easy to check, so we do that first.
   constructor; swap
-  · rwa [m_eq] at mx_lt_my
+  rwa [m_eq] at mx_lt_my
   -- Now we need to show that p' projects onto S. In other words, that c ∈ S.
   -- We do that, by showing that it lies in the upper branch
   -- (which is sufficient, because we assumed that the exceptional locus is empty).
@@ -177,17 +177,17 @@ theorem constant_descent_vieta_jumping (x y : ℕ) {claim : Prop} {H : ℕ → �
   -- Now we are ready to prove that p' = (c, m_x) lies on the upper branch.
   -- We need to check two conditions: H(c, m_x) and c < m_x.
   constructor <;> dsimp only
-  · -- The first condition is not so hard. After all, c is the other root of the quadratic equation.
-    rw [H_symm, H_quad]
-    simpa using h_root
-  · -- For the second condition, we note that it suffices to check that c ≠ m_x.
-    suffices hc : c ≠ mx from lt_of_le_of_ne (mod_cast c_lt) hc
-    -- However, recall that B(m_x) ≠ m_x + m_y.
-    -- If c = m_x, we can prove B(m_x) = m_x + m_y.
-    contrapose! hm_B₂
-    subst c
-    simp [hV₁]
-    -- Hence p' = (c, m_x) lies on the upper branch, and we are done.
+  -- The first condition is not so hard. After all, c is the other root of the quadratic equation.
+  rw [H_symm, H_quad]
+  simpa using h_root
+  -- For the second condition, we note that it suffices to check that c ≠ m_x.
+  suffices hc : c ≠ mx from lt_of_le_of_ne (mod_cast c_lt) hc
+  -- However, recall that B(m_x) ≠ m_x + m_y.
+  -- If c = m_x, we can prove B(m_x) = m_x + m_y.
+  contrapose! hm_B₂
+  subst c
+  simp [hV₁]
+  -- Hence p' = (c, m_x) lies on the upper branch, and we are done.
 
 end Imo1988Q6
 
@@ -203,51 +203,51 @@ theorem imo1988_q6 {a b : ℕ} (h : a * b + 1 ∣ a ^ 2 + b ^ 2) :
   apply constant_descent_vieta_jumping a b (H := fun a b => a * a + b * b = (a * b + 1) * k)
       hk (fun x => k * x) (fun x => x * x - k) fun _ _ => False <;>
     clear hk a b
-  · -- We will now show that the fibers of the solution set are described by a quadratic equation.
-    intro x y
-    rw [← Int.natCast_inj, ← sub_eq_zero]
-    apply eq_iff_eq_cancel_right.2
-    simp; ring
-  · -- Show that the solution set is symmetric in a and b.
-    intro x y
-    simp [add_comm (x * x), mul_comm x]
-  · -- Show that the claim is true if b = 0.
-    suffices ∀ a, a * a = k → ∃ d, d * d = k by simpa
-    rintro x rfl; use x
-  · -- Show that the claim is true if a = b.
-    intro x hx
-    suffices k ≤ 1 by
-      rw [Nat.le_add_one_iff, Nat.le_zero] at this
-      rcases this with (rfl | rfl)
-      · use 0; simp
-      · use 1; simp
-    contrapose! hx with k_lt_one
-    apply ne_of_lt
-    calc
-      x * x + x * x = x * x * 2 := by rw [mul_two]
-      _ ≤ x * x * k := Nat.mul_le_mul_left (x * x) k_lt_one
-      _ < (x * x + 1) * k := by linarith
-  · -- Show the descent step.
-    intro x y hx x_lt_y _ _ z h_root _ hV₀
-    constructor
-    · have hpos : z * z + x * x > 0 := by
-        apply add_pos_of_nonneg_of_pos
-        · apply mul_self_nonneg
-        · apply mul_pos <;> exact mod_cast hx
-      have hzx : z * z + x * x = (z * x + 1) * k
-      rw [← sub_eq_zero, ← h_root]
-      ring
-      rw [hzx] at hpos
-      replace hpos : z * x + 1 > 0 := pos_of_mul_pos_left hpos (Int.ofNat_zero_le k)
-      replace hpos : z * x ≥ 0 := Int.le_of_lt_add_one hpos
-      apply nonneg_of_mul_nonneg_left hpos (mod_cast hx)
-    · contrapose! hV₀ with x_lt_z
-      apply ne_of_gt
-      calc
-        z * y > x * x := by apply mul_lt_mul' <;> linarith
-        _ ≥ x * x - k := sub_le_self _ (Int.ofNat_zero_le k)
-  · -- There is no base case in this application of Vieta jumping.
-    simp
+  -- We will now show that the fibers of the solution set are described by a quadratic equation.
+  intro x y
+  rw [← Int.natCast_inj, ← sub_eq_zero]
+  apply eq_iff_eq_cancel_right.2
+  simp; ring
+  -- Show that the solution set is symmetric in a and b.
+  intro x y
+  simp [add_comm (x * x), mul_comm x]
+  -- Show that the claim is true if b = 0.
+  suffices ∀ a, a * a = k → ∃ d, d * d = k by simpa
+  rintro x rfl; use x
+  -- Show that the claim is true if a = b.
+  intro x hx
+  suffices k ≤ 1 by
+    rw [Nat.le_add_one_iff, Nat.le_zero] at this
+    rcases this with (rfl | rfl)
+    use 0; simp
+    use 1; simp
+  contrapose! hx with k_lt_one
+  apply ne_of_lt
+  calc
+    x * x + x * x = x * x * 2 := by rw [mul_two]
+    _ ≤ x * x * k := Nat.mul_le_mul_left (x * x) k_lt_one
+    _ < (x * x + 1) * k := by linarith
+  -- Show the descent step.
+  intro x y hx x_lt_y _ _ z h_root _ hV₀
+  constructor
+  have hpos : z * z + x * x > 0 := by
+    apply add_pos_of_nonneg_of_pos
+    apply mul_self_nonneg
+    apply mul_pos <;> exact mod_cast hx
+  have hzx : z * z + x * x = (z * x + 1) * k
+  rw [← sub_eq_zero, ← h_root]
+  ring
+  rw [hzx] at hpos
+  replace hpos : z * x + 1 > 0 := pos_of_mul_pos_left hpos (Int.ofNat_zero_le k)
+  replace hpos : z * x ≥ 0 := Int.le_of_lt_add_one hpos
+  apply nonneg_of_mul_nonneg_left hpos (mod_cast hx)
+  contrapose! hV₀ with x_lt_z
+  apply ne_of_gt
+  calc
+    z * y > x * x := by apply mul_lt_mul' <;> linarith
+    _ ≥ x * x - k := sub_le_self _ (Int.ofNat_zero_le k)
+  -- There is no base case in this application of Vieta jumping.
+  simp
 
 /-
 The following example illustrates the use of constant descent Vieta jumping
@@ -260,44 +260,44 @@ example {a b : ℕ} (h : a * b ∣ a ^ 2 + b ^ 2 + 1) : 3 * a * b = a ^ 2 + b ^ 
   apply constant_descent_vieta_jumping a b (H := fun a b => a * a + b * b + 1 = a * b * k)
       hk (fun x => k * x) (fun x => x * x + 1) fun x _ => x ≤ 1 <;>
     clear hk a b
-  · -- We will now show that the fibers of the solution set are described by a quadratic equation.
-    intro x y
-    rw [← Int.natCast_inj, ← sub_eq_zero]
-    apply eq_iff_eq_cancel_right.2
-    simp; ring
-  · -- Show that the solution set is symmetric in a and b.
-    intro x y; ring_nf
-  · -- Show that the claim is true if b = 0.
-    simp
-  · -- Show that the claim is true if a = b.
-    intro x hx
-    have x_sq_dvd : x * x ∣ x * x * k := dvd_mul_right (x * x) k
-    rw [← hx] at x_sq_dvd
-    obtain ⟨y, hy⟩ : x * x ∣ 1 := by simpa only [Nat.dvd_add_self_left, add_assoc] using x_sq_dvd
-    obtain ⟨rfl, rfl⟩ : x = 1 ∧ y = 1 := by simpa [mul_eq_one] using hy.symm
-    simpa using hx.symm
-  · -- Show the descent step.
-    intro x y _ hx h_base _ z _ _ hV₀
-    constructor
-    · have zy_pos : z * y ≥ 0 := by rw [hV₀]; exact mod_cast Nat.zero_le _
-      apply nonneg_of_mul_nonneg_left zy_pos
-      linarith
-    · contrapose! hV₀ with x_lt_z
-      apply ne_of_gt
-      push_neg at h_base
-      calc
-        z * y > x * y := by apply mul_lt_mul_of_pos_right <;> linarith
-        _ ≥ x * (x + 1) := by apply mul_le_mul <;> linarith
-        _ > x * x + 1 := by
-          rw [mul_add, mul_one]
-          apply add_lt_add_left
-          assumption_mod_cast
-  · -- Show the base case.
-    intro x y h h_base
-    obtain rfl | rfl : x = 0 ∨ x = 1 := by rwa [Nat.le_add_one_iff, Nat.le_zero] at h_base
-    · simp at h
-    · rw [mul_one, one_mul, add_right_comm] at h
-      have y_dvd : y ∣ y * k := dvd_mul_right y k
-      rw [← h, Nat.dvd_add_left (dvd_mul_left y y)] at y_dvd
-      obtain rfl | rfl := (Nat.dvd_prime Nat.prime_two).mp y_dvd <;> apply mul_left_cancel₀
-      exacts [one_ne_zero, h.symm, two_ne_zero, h.symm]
+  -- We will now show that the fibers of the solution set are described by a quadratic equation.
+  intro x y
+  rw [← Int.natCast_inj, ← sub_eq_zero]
+  apply eq_iff_eq_cancel_right.2
+  simp; ring
+  -- Show that the solution set is symmetric in a and b.
+  intro x y; ring_nf
+  -- Show that the claim is true if b = 0.
+  simp
+  -- Show that the claim is true if a = b.
+  intro x hx
+  have x_sq_dvd : x * x ∣ x * x * k := dvd_mul_right (x * x) k
+  rw [← hx] at x_sq_dvd
+  obtain ⟨y, hy⟩ : x * x ∣ 1 := by simpa only [Nat.dvd_add_self_left, add_assoc] using x_sq_dvd
+  obtain ⟨rfl, rfl⟩ : x = 1 ∧ y = 1 := by simpa [mul_eq_one] using hy.symm
+  simpa using hx.symm
+  -- Show the descent step.
+  intro x y _ hx h_base _ z _ _ hV₀
+  constructor
+  have zy_pos : z * y ≥ 0 := by rw [hV₀]; exact mod_cast Nat.zero_le _
+  apply nonneg_of_mul_nonneg_left zy_pos
+  linarith
+  contrapose! hV₀ with x_lt_z
+  apply ne_of_gt
+  push_neg at h_base
+  calc
+    z * y > x * y := by apply mul_lt_mul_of_pos_right <;> linarith
+    _ ≥ x * (x + 1) := by apply mul_le_mul <;> linarith
+    _ > x * x + 1 := by
+      rw [mul_add, mul_one]
+      apply add_lt_add_left
+      assumption_mod_cast
+  -- Show the base case.
+  intro x y h h_base
+  obtain rfl | rfl : x = 0 ∨ x = 1 := by rwa [Nat.le_add_one_iff, Nat.le_zero] at h_base
+  simp at h
+  rw [mul_one, one_mul, add_right_comm] at h
+  have y_dvd : y ∣ y * k := dvd_mul_right y k
+  rw [← h, Nat.dvd_add_left (dvd_mul_left y y)] at y_dvd
+  obtain rfl | rfl := (Nat.dvd_prime Nat.prime_two).mp y_dvd <;> apply mul_left_cancel₀
+  exacts [one_ne_zero, h.symm, two_ne_zero, h.symm]

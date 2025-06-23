@@ -142,19 +142,19 @@ theorem inner_.conj_symm (x y : E) : conj (inner_ 𝕜 y x) = inner_ 𝕜 x y :=
   simp only [map_sub, map_add, conj_ofReal, map_mul, conj_I]
   rw [add_comm y x, norm_sub_rev]
   by_cases hI : (I : 𝕜) = 0
-  · simp only [hI, neg_zero, zero_mul]
+  simp only [hI, neg_zero, zero_mul]
   -- Porting note: this replaces `norm_I_of_ne_zero` which does not exist in Lean 4
   have : ‖(I : 𝕜)‖ = 1
   rw [← mul_self_inj_of_nonneg (norm_nonneg I) zero_le_one, one_mul, ← norm_mul,
     I_mul_I_of_nonzero hI, norm_neg, norm_one]
   have h₁ : ‖(I : 𝕜) • y - x‖ = ‖(I : 𝕜) • x + y‖
   trans ‖(I : 𝕜) • ((I : 𝕜) • y - x)‖
-  · rw [norm_smul, this, one_mul]
-  · rw [smul_sub, smul_smul, I_mul_I_of_nonzero hI, neg_one_smul, ← neg_add', add_comm, norm_neg]
+  rw [norm_smul, this, one_mul]
+  rw [smul_sub, smul_smul, I_mul_I_of_nonzero hI, neg_one_smul, ← neg_add', add_comm, norm_neg]
   have h₂ : ‖(I : 𝕜) • y + x‖ = ‖(I : 𝕜) • x - y‖
   trans ‖(I : 𝕜) • ((I : 𝕜) • y + x)‖
-  · rw [norm_smul, this, one_mul]
-  · rw [smul_add, smul_smul, I_mul_I_of_nonzero hI, neg_one_smul, ← neg_add_eq_sub]
+  rw [norm_smul, this, one_mul]
+  rw [smul_add, smul_smul, I_mul_I_of_nonzero hI, neg_one_smul, ← neg_add_eq_sub]
   rw [h₁, h₂, ← sub_add_eq_add_sub]
   simp only [neg_mul, sub_eq_add_neg, neg_neg]
 
@@ -232,17 +232,17 @@ theorem add_left (x y z : E) : inner_ 𝕜 (x + y) z = inner_ 𝕜 x z + inner_ 
   rw [add_add_add_comm]
   simp only [← map_add, ← mul_add]
   congr
-  · rw [← add_sub_assoc, add_left_aux2', add_left_aux4']
-  · rw [add_left_aux5, add_left_aux6, add_left_aux7, add_left_aux8]
-    simp only [map_sub, map_mul, map_add, div_eq_mul_inv]
-    ring
+  rw [← add_sub_assoc, add_left_aux2', add_left_aux4']
+  rw [add_left_aux5, add_left_aux6, add_left_aux7, add_left_aux8]
+  simp only [map_sub, map_mul, map_add, div_eq_mul_inv]
+  ring
 
 theorem nat (n : ℕ) (x y : E) : inner_ 𝕜 ((n : 𝕜) • x) y = (n : 𝕜) * inner_ 𝕜 x y := by
   induction' n with n ih
-  · simp only [inner_, Nat.zero_eq, zero_sub, Nat.cast_zero, zero_mul,
-      eq_self_iff_true, zero_smul, zero_add, mul_zero, sub_self, norm_neg, smul_zero]
-  · simp only [Nat.cast_succ, add_smul, one_smul]
-    rw [add_left, ih, add_mul, one_mul]
+  simp only [inner_, Nat.zero_eq, zero_sub, Nat.cast_zero, zero_mul,
+    eq_self_iff_true, zero_smul, zero_add, mul_zero, sub_self, norm_neg, smul_zero]
+  simp only [Nat.cast_succ, add_smul, one_smul]
+  rw [add_left, ih, add_mul, one_mul]
 
 private theorem nat_prop (r : ℕ) : innerProp' E (r : 𝕜) := fun x y => by
   simp only [map_natCast]; exact nat r x y
@@ -252,15 +252,15 @@ private theorem int_prop (n : ℤ) : innerProp' E (n : 𝕜) := by
   rw [← n.sign_mul_natAbs]
   simp only [Int.cast_natCast, map_natCast, map_intCast, Int.cast_mul, map_mul, mul_smul]
   obtain hn | rfl | hn := lt_trichotomy n 0
-  · rw [Int.sign_eq_neg_one_of_neg hn, innerProp_neg_one ((n.natAbs : 𝕜) • x), nat]
-    simp only [map_neg, neg_mul, one_mul, mul_eq_mul_left_iff, true_or_iff, Int.natAbs_eq_zero,
-      eq_self_iff_true, Int.cast_one, map_one, neg_inj, Nat.cast_eq_zero, Int.cast_neg]
-  · simp only [inner_, Int.cast_zero, zero_sub, Nat.cast_zero, zero_mul,
-      eq_self_iff_true, Int.sign_zero, zero_smul, zero_add, mul_zero, smul_zero,
-      sub_self, norm_neg, Int.natAbs_zero]
-  · rw [Int.sign_eq_one_of_pos hn]
-    simp only [one_mul, mul_eq_mul_left_iff, true_or_iff, Int.natAbs_eq_zero, eq_self_iff_true,
-      Int.cast_one, one_smul, Nat.cast_eq_zero, nat]
+  rw [Int.sign_eq_neg_one_of_neg hn, innerProp_neg_one ((n.natAbs : 𝕜) • x), nat]
+  simp only [map_neg, neg_mul, one_mul, mul_eq_mul_left_iff, true_or_iff, Int.natAbs_eq_zero,
+    eq_self_iff_true, Int.cast_one, map_one, neg_inj, Nat.cast_eq_zero, Int.cast_neg]
+  simp only [inner_, Int.cast_zero, zero_sub, Nat.cast_zero, zero_mul,
+    eq_self_iff_true, Int.sign_zero, zero_smul, zero_add, mul_zero, smul_zero,
+    sub_self, norm_neg, Int.natAbs_zero]
+  rw [Int.sign_eq_one_of_pos hn]
+  simp only [one_mul, mul_eq_mul_left_iff, true_or_iff, Int.natAbs_eq_zero, eq_self_iff_true,
+    Int.cast_one, one_smul, Nat.cast_eq_zero, nat]
 
 private theorem rat_prop (r : ℚ) : innerProp' E (r : 𝕜) := by
   intro x y
@@ -276,13 +276,13 @@ private theorem real_prop (r : ℝ) : innerProp' E (r : 𝕜) := by
   revert r
   rw [← Function.funext_iff]
   refine Rat.denseEmbedding_coe_real.dense.equalizer ?_ ?_ (funext fun X => ?_)
-  · exact (continuous_ofReal.smul continuous_const).inner_ continuous_const
-  · exact (continuous_conj.comp continuous_ofReal).mul continuous_const
-  · simp only [Function.comp_apply, RCLike.ofReal_ratCast, rat_prop _ _]
+  exact (continuous_ofReal.smul continuous_const).inner_ continuous_const
+  exact (continuous_conj.comp continuous_ofReal).mul continuous_const
+  simp only [Function.comp_apply, RCLike.ofReal_ratCast, rat_prop _ _]
 
 private theorem I_prop : innerProp' E (I : 𝕜) := by
   by_cases hI : (I : 𝕜) = 0
-  · rw [hI, ← Nat.cast_zero]; exact nat_prop _
+  rw [hI, ← Nat.cast_zero]; exact nat_prop _
   intro x y
   have hI' : (-I : 𝕜) * I = 1
   rw [← inv_I, inv_mul_cancel hI]

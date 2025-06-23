@@ -37,18 +37,18 @@ theorem saturated_iff_npow {H : Subgroup G} :
 theorem saturated_iff_zpow {H : Subgroup G} :
     Saturated H ↔ ∀ (n : ℤ) (g : G), g ^ n ∈ H → n = 0 ∨ g ∈ H := by
   constructor
-  · intros hH n g hgn
-    induction' n with n n
-    · simp only [Int.natCast_eq_zero, Int.ofNat_eq_coe, zpow_natCast] at hgn ⊢
-      exact hH hgn
-    · suffices g ^ (n + 1) ∈ H by
-        refine (hH this).imp ?_ id
-        simp only [IsEmpty.forall_iff, Nat.succ_ne_zero]
-      simpa only [inv_mem_iff, zpow_negSucc] using hgn
-  · intro h n g hgn
-    specialize h n g
-    simp only [Int.natCast_eq_zero, zpow_natCast] at h
-    apply h hgn
+  intros hH n g hgn
+  induction' n with n n
+  simp only [Int.natCast_eq_zero, Int.ofNat_eq_coe, zpow_natCast] at hgn ⊢
+  exact hH hgn
+  suffices g ^ (n + 1) ∈ H by
+    refine (hH this).imp ?_ id
+    simp only [IsEmpty.forall_iff, Nat.succ_ne_zero]
+  simpa only [inv_mem_iff, zpow_negSucc] using hgn
+  intro h n g hgn
+  specialize h n g
+  simp only [Int.natCast_eq_zero, zpow_natCast] at h
+  apply h hgn
 
 end Subgroup
 

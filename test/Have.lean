@@ -13,36 +13,36 @@ example : Nat := by
 
 example : Nat := by
   have : Nat
-  · exact 5
+  exact 5
   exact this
 
 example {a : Nat} : a = a := by
   have h : a = a
-  · rfl
+  rfl
   exact h
 
 example {a : Nat} : a = a := by
   have : a = a
-  · rfl
+  rfl
   exact this
 
 example : True := by
   let _N; -- FIXME: lean4#1670
   exact Nat
   have
-  · exact 0
+  exact 0
   have _h : Nat
-  · exact this
+  exact this
   have _h' x : x < x + 1
-  · exact Nat.lt.base x
+  exact Nat.lt.base x
   have _h'' (x : Nat) : x < x + 1
-  · exact Nat.lt.base x
+  exact Nat.lt.base x
   let _m
-  · exact 6
+  exact 6
   let _m' x (y : Nat) : x + y = y + x
   rw [Nat.add_comm]
   have _q
-  · exact 6
+  exact 6
   simp
 
 /--

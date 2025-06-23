@@ -136,8 +136,8 @@ theorem isSpecial_iff : u.IsSpecial ↔ u.IsSpecial' := by
   let ⟨wp, x, y, zp, ap, bp⟩ := u
   constructor <;> intro h <;> simp [w, z, succPNat] at * <;>
     simp only [← coe_inj, mul_coe, mk_coe] at *
-  · simp_all [← h]; ring
-  · simp [Nat.mul_add, Nat.add_mul, ← Nat.add_assoc] at h; rw [← h]; ring
+  simp_all [← h]; ring
+  simp [Nat.mul_add, Nat.add_mul, ← Nat.add_assoc] at h; rw [← h]; ring
   -- Porting note: Old code has been removed as it was much more longer.
 
 /-- `IsReduced` holds if the two entries in the vector are the
@@ -198,10 +198,10 @@ theorem flip_isSpecial : (flip u).IsSpecial ↔ u.IsSpecial := by
 theorem flip_v : (flip u).v = u.v.swap := by
   dsimp [v]
   ext
-  · simp only
-    ring
-  · simp only
-    ring
+  simp only
+  ring
+  simp only
+  ring
 
 /-- Properties of division with remainder for a / b.  -/
 theorem rq_eq : u.r + (u.bp + 1) * u.q = u.ap + 1 :=
@@ -209,10 +209,10 @@ theorem rq_eq : u.r + (u.bp + 1) * u.q = u.ap + 1 :=
 
 theorem qp_eq (hr : u.r = 0) : u.q = u.qp + 1 := by
   by_cases hq : u.q = 0
-  · let h := u.rq_eq
-    rw [hr, hq, mul_zero, add_zero] at h
-    cases h
-  · exact (Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero hq)).symm
+  let h := u.rq_eq
+  rw [hr, hq, mul_zero, add_zero] at h
+  cases h
+  exact (Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero hq)).symm
 
 /-- The following function provides the starting point for
  our algorithm.  We will apply an iterative reduction process
@@ -249,13 +249,13 @@ theorem finish_v (hr : u.r = 0) : u.finish.v = u.v := by
   let ha : u.r + u.b * u.q = u.a := u.rq_eq
   rw [hr, zero_add] at ha
   ext
-  · change (u.wp + 1) * u.b + ((u.wp + 1) * u.qp + u.x) * u.b = u.w * u.a + u.x * u.b
-    have : u.wp + 1 = u.w := rfl
-    rw [this, ← ha, u.qp_eq hr]
-    ring
-  · change u.y * u.b + (u.y * u.qp + u.z) * u.b = u.y * u.a + u.z * u.b
-    rw [← ha, u.qp_eq hr]
-    ring
+  change (u.wp + 1) * u.b + ((u.wp + 1) * u.qp + u.x) * u.b = u.w * u.a + u.x * u.b
+  have : u.wp + 1 = u.w := rfl
+  rw [this, ← ha, u.qp_eq hr]
+  ring
+  change u.y * u.b + (u.y * u.qp + u.z) * u.b = u.y * u.a + u.z * u.b
+  rw [← ha, u.qp_eq hr]
+  ring
 
 /-- This is the main reduction step, which is used when u.r ≠ 0, or
  equivalently b does not divide a. -/
@@ -281,12 +281,12 @@ theorem step_v (hr : u.r ≠ 0) : u.step.v = u.v.swap := by
   let ha : u.r + u.b * u.q = u.a := u.rq_eq
   let hr : u.r - 1 + 1 = u.r := (add_comm _ 1).trans (add_tsub_cancel_of_le (Nat.pos_of_ne_zero hr))
   ext
-  · change ((u.y * u.q + u.z) * u.b + u.y * (u.r - 1 + 1) : ℕ) = u.y * u.a + u.z * u.b
-    rw [← ha, hr]
-    ring
-  · change ((u.w * u.q + u.x) * u.b + u.w * (u.r - 1 + 1) : ℕ) = u.w * u.a + u.x * u.b
-    rw [← ha, hr]
-    ring
+  change ((u.y * u.q + u.z) * u.b + u.y * (u.r - 1 + 1) : ℕ) = u.y * u.a + u.z * u.b
+  rw [← ha, hr]
+  ring
+  change ((u.w * u.q + u.x) * u.b + u.w * (u.r - 1 + 1) : ℕ) = u.w * u.a + u.x * u.b
+  rw [← ha, hr]
+  ring
 
 -- Porting note: removed 'have' and added decreasing_by to avoid lint errors
 /-- We can now define the full reduction function, which applies
@@ -412,7 +412,7 @@ theorem gcd_props :
   have hb' : (b' : ℕ) = y + z := gcdB'_coe a b
   have hdet : w * z = succPNat (x * y) := u.reduce_isSpecial' rfl
   constructor
-  · exact hdet
+  exact hdet
   have hdet' : (w * z : ℕ) = x * y + 1
   rw [← mul_coe, hdet, succPNat_coe]
   have _ : u.v = ⟨a, b⟩ := XgcdType.start_v a b
@@ -422,9 +422,9 @@ theorem gcd_props :
   have ha'' : (a : ℕ) = a' * d := (congr_arg Prod.fst hv).symm
   have hb'' : (b : ℕ) = b' * d := (congr_arg Prod.snd hv).symm
   constructor
-  · exact eq ha''
+  exact eq ha''
   constructor
-  · exact eq hb''
+  exact eq hb''
   have hza' : (z * a' : ℕ) = x * b' + 1 := by
     rw [ha', hb', mul_add, mul_add, mul_comm (z : ℕ), hdet']
     ring
@@ -432,11 +432,11 @@ theorem gcd_props :
     rw [ha', hb', mul_add, mul_add, hdet']
     ring
   constructor
-  · apply eq
-    rw [succPNat_coe, Nat.succ_eq_add_one, mul_coe, hza']
+  apply eq
+  rw [succPNat_coe, Nat.succ_eq_add_one, mul_coe, hza']
   constructor
-  · apply eq
-    rw [succPNat_coe, Nat.succ_eq_add_one, mul_coe, hwb']
+  apply eq
+  rw [succPNat_coe, Nat.succ_eq_add_one, mul_coe, hwb']
   rw [ha'', hb'']
   repeat rw [← @mul_assoc]
   rw [hza', hwb']
@@ -445,14 +445,14 @@ theorem gcd_props :
 theorem gcd_eq : gcdD a b = gcd a b := by
   rcases gcd_props a b with ⟨_, h₁, h₂, _, _, h₅, _⟩
   apply dvd_antisymm
-  · apply dvd_gcd
-    · exact Dvd.intro (gcdA' a b) (h₁.trans (mul_comm _ _)).symm
-    · exact Dvd.intro (gcdB' a b) (h₂.trans (mul_comm _ _)).symm
-  · have h₇ : (gcd a b : ℕ) ∣ gcdZ a b * a := (Nat.gcd_dvd_left a b).trans (dvd_mul_left _ _)
-    have h₈ : (gcd a b : ℕ) ∣ gcdX a b * b := (Nat.gcd_dvd_right a b).trans (dvd_mul_left _ _)
-    rw [h₅] at h₇
-    rw [dvd_iff]
-    exact (Nat.dvd_add_iff_right h₈).mpr h₇
+  apply dvd_gcd
+  exact Dvd.intro (gcdA' a b) (h₁.trans (mul_comm _ _)).symm
+  exact Dvd.intro (gcdB' a b) (h₂.trans (mul_comm _ _)).symm
+  have h₇ : (gcd a b : ℕ) ∣ gcdZ a b * a := (Nat.gcd_dvd_left a b).trans (dvd_mul_left _ _)
+  have h₈ : (gcd a b : ℕ) ∣ gcdX a b * b := (Nat.gcd_dvd_right a b).trans (dvd_mul_left _ _)
+  rw [h₅] at h₇
+  rw [dvd_iff]
+  exact (Nat.dvd_add_iff_right h₈).mpr h₇
 
 theorem gcd_det_eq : gcdW a b * gcdZ a b = succPNat (gcdX a b * gcdY a b) :=
   (gcd_props a b).1

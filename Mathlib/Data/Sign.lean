@@ -357,16 +357,16 @@ theorem sign_ne_zero : sign a ≠ 0 ↔ a ≠ 0 :=
 @[simp]
 theorem sign_nonneg_iff : 0 ≤ sign a ↔ 0 ≤ a := by
   rcases lt_trichotomy 0 a with (h | h | h)
-  · simp [h, h.le]
-  · simp [← h]
-  · simp [h, h.not_le]
+  simp [h, h.le]
+  simp [← h]
+  simp [h, h.not_le]
 
 @[simp]
 theorem sign_nonpos_iff : sign a ≤ 0 ↔ a ≤ 0 := by
   rcases lt_trichotomy 0 a with (h | h | h)
-  · simp [h, h.not_le]
-  · simp [← h]
-  · simp [h, h.le]
+  simp [h, h.not_le]
+  simp [← h]
+  simp [h, h.le]
 
 end LinearOrder
 
@@ -434,19 +434,19 @@ variable [AddGroup α] [Preorder α] [DecidableRel ((· < ·) : α → α → Pr
 theorem Left.sign_neg [CovariantClass α α (· + ·) (· < ·)] (a : α) : sign (-a) = -sign a := by
   simp_rw [sign_apply, Left.neg_pos_iff, Left.neg_neg_iff]
   split_ifs with h h'
-  · exact False.elim (lt_asymm h h')
-  · simp
-  · simp
-  · simp
+  exact False.elim (lt_asymm h h')
+  simp
+  simp
+  simp
 
 theorem Right.sign_neg [CovariantClass α α (Function.swap (· + ·)) (· < ·)] (a : α) :
     sign (-a) = -sign a := by
   simp_rw [sign_apply, Right.neg_pos_iff, Right.neg_neg_iff]
   split_ifs with h h'
-  · exact False.elim (lt_asymm h h')
-  · simp
-  · simp
-  · simp
+  exact False.elim (lt_asymm h h')
+  simp
+  simp
+  simp
 
 end AddGroup
 
@@ -462,12 +462,12 @@ attribute [local instance] LinearOrderedAddCommGroup.decidableLT
 theorem sign_sum {ι : Type*} {s : Finset ι} {f : ι → α} (hs : s.Nonempty) (t : SignType)
     (h : ∀ i ∈ s, sign (f i) = t) : sign (∑ i ∈ s, f i) = t := by
   cases t
-  · simp_rw [zero_eq_zero, sign_eq_zero_iff] at h ⊢
-    exact Finset.sum_eq_zero h
-  · simp_rw [neg_eq_neg_one, sign_eq_neg_one_iff] at h ⊢
-    exact Finset.sum_neg h hs
-  · simp_rw [pos_eq_one, sign_eq_one_iff] at h ⊢
-    exact Finset.sum_pos h hs
+  simp_rw [zero_eq_zero, sign_eq_zero_iff] at h ⊢
+  exact Finset.sum_eq_zero h
+  simp_rw [neg_eq_neg_one, sign_eq_neg_one_iff] at h ⊢
+  exact Finset.sum_neg h hs
+  simp_rw [pos_eq_one, sign_eq_one_iff] at h ⊢
+  exact Finset.sum_pos h hs
 
 end LinearOrderedAddCommGroup
 
@@ -490,10 +490,10 @@ private theorem exists_signed_sum_aux {α : Type u_1} [DecidableEq α] (s : Fins
   refine
     ⟨(Σ _ : { x // x ∈ s }, ℕ), Finset.univ.sigma fun a => range (f a).natAbs,
       fun a => sign (f a.1), fun a => a.1, fun a => a.1.2, ?_, ?_⟩
-  · simp [sum_attach (f := fun a => (f a).natAbs)]
-  · intro x hx
-    simp [sum_sigma, hx, ← Int.sign_eq_sign, Int.sign_mul_abs, mul_comm |f _|,
-      sum_attach (s := s) (f := fun y => if y = x then f y else 0)]
+  simp [sum_attach (f := fun a => (f a).natAbs)]
+  intro x hx
+  simp [sum_sigma, hx, ← Int.sign_eq_sign, Int.sign_mul_abs, mul_comm |f _|,
+    sum_attach (s := s) (f := fun y => if y = x then f y else 0)]
 
 /-- We can decompose a sum of absolute value `n` into a sum of `n` signs. -/
 theorem exists_signed_sum {α : Type u_1} [DecidableEq α] (s : Finset α) (f : α → ℤ) :
@@ -517,5 +517,5 @@ theorem exists_signed_sum' {α : Type u_1} [Nonempty α] [DecidableEq α] (s : F
       Sum.elim g (Classical.arbitrary (Fin (n - Finset.sum s fun i => Int.natAbs (f i)) → α)),
         ?_, by simp [hβ, h], fun a ha => by simp [hf _ ha]⟩
   rintro (b | b) hb
-  · cases hb (hg _)
-  · rfl
+  cases hb (hg _)
+  rfl

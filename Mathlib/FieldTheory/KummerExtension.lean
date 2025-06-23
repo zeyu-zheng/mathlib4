@@ -64,13 +64,13 @@ lemma root_X_pow_sub_C_ne_zero {n : ℕ} (hn : 1 < n) (a : K) :
 lemma root_X_pow_sub_C_ne_zero' {n : ℕ} {a : K} (hn : 0 < n) (ha : a ≠ 0) :
     (AdjoinRoot.root (X ^ n - C a)) ≠ 0 := by
   obtain (rfl|hn) := (Nat.succ_le_iff.mpr hn).eq_or_lt
-  · rw [← Nat.one_eq_succ_zero, pow_one]
-    intro e
-    refine mk_ne_zero_of_natDegree_lt (monic_X_sub_C a) (C_ne_zero.mpr ha) (by simp) ?_
-    trans AdjoinRoot.mk (X - C a) (X - (X - C a))
-    · rw [sub_sub_cancel]
-    · rw [map_sub, mk_self, sub_zero, mk_X, e]
-  · exact root_X_pow_sub_C_ne_zero hn a
+  rw [← Nat.one_eq_succ_zero, pow_one]
+  intro e
+  refine mk_ne_zero_of_natDegree_lt (monic_X_sub_C a) (C_ne_zero.mpr ha) (by simp) ?_
+  trans AdjoinRoot.mk (X - C a) (X - (X - C a))
+  rw [sub_sub_cancel]
+  rw [map_sub, mk_self, sub_zero, mk_X, e]
+  exact root_X_pow_sub_C_ne_zero hn a
 
 theorem X_pow_sub_C_splits_of_isPrimitiveRoot
     {n : ℕ} {ζ : K} (hζ : IsPrimitiveRoot ζ n) {α a : K} (e : α ^ n = a) :
@@ -168,8 +168,8 @@ theorem X_pow_sub_C_irreducible_of_prime {p : ℕ} (hp : p.Prime) {a : K} (ha : 
     ← finrank_top', ← IntermediateField.adjoin_root_eq_top g,
     IntermediateField.adjoin.finrank,
     AdjoinRoot.minpoly_root hg.ne_zero, natDegree_mul_C]
-  · simpa using hg.ne_zero
-  · exact AdjoinRoot.isIntegral_root hg.ne_zero
+  simpa using hg.ne_zero
+  exact AdjoinRoot.isIntegral_root hg.ne_zero
   -- Since `a ^ (deg g)` is a `p`-power, and `p` is coprime to `deg g`, we conclude that `a` is
   -- also a `p`-power, contradicting the hypothesis
   have : p.Coprime (natDegree g) := hp.coprime_iff_not_dvd.mpr (fun e ↦ h (((natDegree_le_of_dvd hg'
@@ -265,7 +265,7 @@ theorem Polynomial.separable_X_pow_sub_C_of_irreducible : (X ^ n - C a).Separabl
   letI : Algebra K K[n√a] := inferInstance
   have hn := Nat.pos_iff_ne_zero.mpr (ne_zero_of_irreducible_X_pow_sub_C H)
   by_cases hn' : n = 1
-  · rw [hn', pow_one]; exact separable_X_sub_C
+  rw [hn', pow_one]; exact separable_X_sub_C
   have ⟨ζ, hζ⟩ := hζ
   rw [mem_primitiveRoots (Nat.pos_of_ne_zero <| ne_zero_of_irreducible_X_pow_sub_C H)] at hζ
   rw [← separable_map (algebraMap K K[n√a]), Polynomial.map_sub, Polynomial.map_pow, map_C, map_X,
@@ -375,8 +375,8 @@ lemma autAdjoinRootXPowSubCEquiv_symm_smul (σ) :
     Units.val_ofPowEqOne, ite_mul, one_mul, ne_eq]
   simp_rw [← root_X_pow_sub_C_eq_zero_iff H]
   split_ifs with h
-  · rw [h, mul_zero, map_zero]
-  · rw [div_mul_cancel₀ _ h]
+  rw [h, mul_zero, map_zero]
+  rw [div_mul_cancel₀ _ h]
 
 end AdjoinRoot
 
@@ -394,17 +394,17 @@ lemma isSplittingField_AdjoinRoot_X_pow_sub_C :
   have := Fact.mk H
   letI : Algebra K K[n√a] := inferInstance
   constructor
-  · rw [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_pow, Polynomial.map_C,
-      Polynomial.map_X]
-    have ⟨_, hζ⟩ := hζ
-    rw [mem_primitiveRoots (Nat.pos_of_ne_zero <| ne_zero_of_irreducible_X_pow_sub_C H)] at hζ
-    exact X_pow_sub_C_splits_of_isPrimitiveRoot (hζ.map_of_injective (algebraMap K _).injective)
-      (root_X_pow_sub_C_pow n a)
-  · rw [eq_top_iff, ← AdjoinRoot.adjoinRoot_eq_top]
-    apply Algebra.adjoin_mono
-    have := ne_zero_of_irreducible_X_pow_sub_C H
-    rw [Set.singleton_subset_iff, mem_rootSet_of_ne (X_pow_sub_C_ne_zero
-      (Nat.pos_of_ne_zero this) a), aeval_def, AdjoinRoot.algebraMap_eq, AdjoinRoot.eval₂_root]
+  rw [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_pow, Polynomial.map_C,
+    Polynomial.map_X]
+  have ⟨_, hζ⟩ := hζ
+  rw [mem_primitiveRoots (Nat.pos_of_ne_zero <| ne_zero_of_irreducible_X_pow_sub_C H)] at hζ
+  exact X_pow_sub_C_splits_of_isPrimitiveRoot (hζ.map_of_injective (algebraMap K _).injective)
+    (root_X_pow_sub_C_pow n a)
+  rw [eq_top_iff, ← AdjoinRoot.adjoinRoot_eq_top]
+  apply Algebra.adjoin_mono
+  have := ne_zero_of_irreducible_X_pow_sub_C H
+  rw [Set.singleton_subset_iff, mem_rootSet_of_ne (X_pow_sub_C_ne_zero
+    (Nat.pos_of_ne_zero this) a), aeval_def, AdjoinRoot.algebraMap_eq, AdjoinRoot.eval₂_root]
 
 variable {α : L} (hα : α ^ n = algebraMap K L a)
 
@@ -559,24 +559,24 @@ lemma exists_root_adjoin_eq_top_of_isCyclic :
   simp_rw [← AlgEquiv.pow_toLinearMap, AlgEquiv.toLinearMap_apply] at hv'
   -- We claim that `v` is the desired root.
   refine ⟨v, ?_, ?_⟩
-  · -- Since `v ^ n` is fixed by `σ` (`σ (v ^ n) = ζ ^ n • v ^ n = v ^ n`), it is in `K`.
-    rw [← IntermediateField.mem_bot,
-      ← OrderIso.map_bot IsGalois.intermediateFieldEquivSubgroup.symm]
-    intro ⟨σ', hσ'⟩
-    obtain ⟨n, rfl : σ ^ n = σ'⟩ := mem_powers_iff_mem_zpowers.mpr (hσ σ')
-    rw [smul_pow', Submonoid.smul_def, AlgEquiv.smul_def, hv', smul_pow, ← pow_mul,
-      mul_comm, pow_mul, hζ.pow_eq_one, one_pow, one_smul]
-  · -- Since `σ` does not fix `K⟮α⟯`, `K⟮α⟯` is `L`.
-    apply IsGalois.intermediateFieldEquivSubgroup.injective
-    rw [map_top, eq_top_iff]
-    intros σ' hσ'
-    obtain ⟨n, rfl : σ ^ n = σ'⟩ := mem_powers_iff_mem_zpowers.mpr (hσ σ')
-    have := hσ' ⟨v, IntermediateField.mem_adjoin_simple_self K v⟩
-    simp only [AlgEquiv.smul_def, hv'] at this
-    conv_rhs at this => rw [← one_smul K v]
-    obtain ⟨k, rfl⟩ := hζ.dvd_of_pow_eq_one n (smul_left_injective K hv.2 this)
-    rw [pow_mul, ← IsGalois.card_aut_eq_finrank, pow_card_eq_one, one_pow]
-    exact one_mem _
+  -- Since `v ^ n` is fixed by `σ` (`σ (v ^ n) = ζ ^ n • v ^ n = v ^ n`), it is in `K`.
+  rw [← IntermediateField.mem_bot,
+    ← OrderIso.map_bot IsGalois.intermediateFieldEquivSubgroup.symm]
+  intro ⟨σ', hσ'⟩
+  obtain ⟨n, rfl : σ ^ n = σ'⟩ := mem_powers_iff_mem_zpowers.mpr (hσ σ')
+  rw [smul_pow', Submonoid.smul_def, AlgEquiv.smul_def, hv', smul_pow, ← pow_mul,
+    mul_comm, pow_mul, hζ.pow_eq_one, one_pow, one_smul]
+  -- Since `σ` does not fix `K⟮α⟯`, `K⟮α⟯` is `L`.
+  apply IsGalois.intermediateFieldEquivSubgroup.injective
+  rw [map_top, eq_top_iff]
+  intros σ' hσ'
+  obtain ⟨n, rfl : σ ^ n = σ'⟩ := mem_powers_iff_mem_zpowers.mpr (hσ σ')
+  have := hσ' ⟨v, IntermediateField.mem_adjoin_simple_self K v⟩
+  simp only [AlgEquiv.smul_def, hv'] at this
+  conv_rhs at this => rw [← one_smul K v]
+  obtain ⟨k, rfl⟩ := hζ.dvd_of_pow_eq_one n (smul_left_injective K hv.2 this)
+  rw [pow_mul, ← IsGalois.card_aut_eq_finrank, pow_card_eq_one, one_pow]
+  exact one_mem _
 
 variable {K L}
 
@@ -585,29 +585,29 @@ lemma irreducible_X_pow_sub_C_of_root_adjoin_eq_top
     Irreducible (X ^ (finrank K L) - C a) := by
   have : X ^ (finrank K L) - C a = minpoly K α
   refine minpoly.unique _ _ (monic_X_pow_sub_C _ finrank_pos.ne.symm) ?_ ?_
-  · simp only [aeval_def, eval₂_sub, eval₂_X_pow, ha, eval₂_C, sub_self]
-  · intros q hq hq'
-    refine le_trans ?_ (degree_le_of_dvd (minpoly.dvd _ _ hq') hq.ne_zero)
-    rw [degree_X_pow_sub_C finrank_pos,
-      degree_eq_natDegree (minpoly.ne_zero (IsIntegral.of_finite K α)),
-      ← IntermediateField.adjoin.finrank (IsIntegral.of_finite K α), hα, Nat.cast_le]
-    exact (finrank_top K L).ge
+  simp only [aeval_def, eval₂_sub, eval₂_X_pow, ha, eval₂_C, sub_self]
+  intros q hq hq'
+  refine le_trans ?_ (degree_le_of_dvd (minpoly.dvd _ _ hq') hq.ne_zero)
+  rw [degree_X_pow_sub_C finrank_pos,
+    degree_eq_natDegree (minpoly.ne_zero (IsIntegral.of_finite K α)),
+    ← IntermediateField.adjoin.finrank (IsIntegral.of_finite K α), hα, Nat.cast_le]
+  exact (finrank_top K L).ge
   exact this ▸ minpoly.irreducible (IsIntegral.of_finite K α)
 
 lemma isSplittingField_X_pow_sub_C_of_root_adjoin_eq_top
     {a : K} {α : L} (ha : α ^ (finrank K L) = algebraMap K L a) (hα : K⟮α⟯ = ⊤) :
     IsSplittingField K L (X ^ (finrank K L) - C a) := by
   constructor
-  · rw [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_pow, Polynomial.map_C,
-      Polynomial.map_X]
-    have ⟨_, hζ⟩ := hK
-    rw [mem_primitiveRoots finrank_pos] at hζ
-    exact X_pow_sub_C_splits_of_isPrimitiveRoot (hζ.map_of_injective (algebraMap K _).injective) ha
-  · rw [eq_top_iff, ← IntermediateField.top_toSubalgebra, ← hα,
-      IntermediateField.adjoin_simple_toSubalgebra_of_integral (IsIntegral.of_finite K α)]
-    apply Algebra.adjoin_mono
-    rw [Set.singleton_subset_iff, mem_rootSet_of_ne (X_pow_sub_C_ne_zero finrank_pos a),
-      aeval_def, eval₂_sub, eval₂_X_pow, eval₂_C, ha, sub_self]
+  rw [← splits_id_iff_splits, Polynomial.map_sub, Polynomial.map_pow, Polynomial.map_C,
+    Polynomial.map_X]
+  have ⟨_, hζ⟩ := hK
+  rw [mem_primitiveRoots finrank_pos] at hζ
+  exact X_pow_sub_C_splits_of_isPrimitiveRoot (hζ.map_of_injective (algebraMap K _).injective) ha
+  rw [eq_top_iff, ← IntermediateField.top_toSubalgebra, ← hα,
+    IntermediateField.adjoin_simple_toSubalgebra_of_integral (IsIntegral.of_finite K α)]
+  apply Algebra.adjoin_mono
+  rw [Set.singleton_subset_iff, mem_rootSet_of_ne (X_pow_sub_C_ne_zero finrank_pos a),
+    aeval_def, eval₂_sub, eval₂_X_pow, eval₂_C, ha, sub_self]
 
 end IsCyclic
 
@@ -626,14 +626,14 @@ lemma isCyclic_tfae (K L) [Field K] [Field L] [Algebra K L] [FiniteDimensional K
         IsSplittingField K L (X ^ (finrank K L) - C a),
       ∃ (α : L), α ^ (finrank K L) ∈ Set.range (algebraMap K L) ∧ K⟮α⟯ = ⊤] := by
   tfae_have 1 → 3
-  · intro ⟨inst₁, inst₂⟩
-    exact exists_root_adjoin_eq_top_of_isCyclic K L hK
+  intro ⟨inst₁, inst₂⟩
+  exact exists_root_adjoin_eq_top_of_isCyclic K L hK
   tfae_have 3 → 2
-  · intro ⟨α, ⟨a, ha⟩, hα⟩
-    exact ⟨a, irreducible_X_pow_sub_C_of_root_adjoin_eq_top ha.symm hα,
-      isSplittingField_X_pow_sub_C_of_root_adjoin_eq_top hK ha.symm hα⟩
+  intro ⟨α, ⟨a, ha⟩, hα⟩
+  exact ⟨a, irreducible_X_pow_sub_C_of_root_adjoin_eq_top ha.symm hα,
+    isSplittingField_X_pow_sub_C_of_root_adjoin_eq_top hK ha.symm hα⟩
   tfae_have 2 → 1
-  · intro ⟨a, H, inst⟩
-    exact ⟨isGalois_of_isSplittingField_X_pow_sub_C hK H L,
-      isCyclic_of_isSplittingField_X_pow_sub_C hK H L⟩
+  intro ⟨a, H, inst⟩
+  exact ⟨isGalois_of_isSplittingField_X_pow_sub_C hK H L,
+    isCyclic_of_isSplittingField_X_pow_sub_C hK H L⟩
   tfae_finish

@@ -112,11 +112,11 @@ theorem jacobiSymNat.odd_even (a b c : ℕ) (r : ℤ) (ha : a % 2 = 1) (hb : b %
   simp only [legendreSym.mod 2 a, Int.ofNat_mod_ofNat, ha]
   decide
   rcases eq_or_ne c 0 with (rfl | hc')
-  · rw [← hr, Nat.eq_zero_of_dvd_of_div_eq_zero (Nat.dvd_of_mod_eq_zero hb) hc]
-  · haveI : NeZero c := ⟨hc'⟩
-    -- for `jacobiSym.mul_right`
-    rwa [← Nat.mod_add_div b 2, hb, hc, Nat.zero_add, jacobiSymNat, jacobiSym.mul_right,
-      ← jacobiSym.legendreSym.to_jacobiSym, ha', one_mul]
+  rw [← hr, Nat.eq_zero_of_dvd_of_div_eq_zero (Nat.dvd_of_mod_eq_zero hb) hc]
+  haveI : NeZero c := ⟨hc'⟩
+  -- for `jacobiSym.mul_right`
+  rwa [← Nat.mod_add_div b 2, hb, hc, Nat.zero_add, jacobiSymNat, jacobiSym.mul_right,
+    ← jacobiSym.legendreSym.to_jacobiSym, ha', one_mul]
 
 /-- If `a` is divisible by `4` and `b` is odd, then we can remove the factor `4` from `a`. -/
 theorem jacobiSymNat.double_even (a b c : ℕ) (r : ℤ) (ha : a % 4 = 0) (hb : b % 2 = 1)

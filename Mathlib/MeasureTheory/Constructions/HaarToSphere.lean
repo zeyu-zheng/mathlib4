@@ -87,9 +87,9 @@ lemma volumeIoiPow_apply_Iio (n : ℕ) (x : Ioi (0 : ℝ)) :
     setLIntegral_subtype measurableSet_Ioi _ fun a : ℝ ↦ .ofReal (a ^ n),
     image_subtype_val_Ioi_Iio, restrict_congr_set Ioo_ae_eq_Ioc,
     ← ofReal_integral_eq_lintegral_ofReal (intervalIntegrable_pow _).1, ← integral_of_le hr₀]
-  · simp
-  · filter_upwards [ae_restrict_mem measurableSet_Ioc] with y hy
-    exact pow_nonneg hy.1.le _
+  simp
+  filter_upwards [ae_restrict_mem measurableSet_Ioc] with y hy
+  exact pow_nonneg hy.1.le _
 
 /-- The intervals `(0, k + 1)` have finite measure `MeasureTheory.Measure.volumeIoiPow _`
 and cover the whole open ray `(0, +∞)`. -/
@@ -147,7 +147,7 @@ lemma integral_fun_norm_addHaar (f : ℝ → F) :
         ENNReal.toReal_mul, ENNReal.toReal_nat, ← nsmul_eq_mul, smul_assoc,
         integral_subtype_comap measurableSet_Ioi fun a ↦ Real.toNNReal (a ^ (dim E - 1)) • f a,
         setIntegral_congr measurableSet_Ioi fun x hx ↦ ?_]
-      · rw [NNReal.smul_def, Real.coe_toNNReal _ (pow_nonneg hx.out.le _)]
-      · exact (measurable_subtype_coe.pow_const _).real_toNNReal
+      rw [NNReal.smul_def, Real.coe_toNNReal _ (pow_nonneg hx.out.le _)]
+      exact (measurable_subtype_coe.pow_const _).real_toNNReal
 
 end MeasureTheory

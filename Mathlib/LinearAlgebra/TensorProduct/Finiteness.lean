@@ -103,18 +103,18 @@ theorem exists_finite_submodule_of_finite (s : Set (M ⊗[R] N)) (hs : s.Finite)
   refine hs.induction_on ⟨_, _, fg_bot, fg_bot, Set.empty_subset _⟩ ?_
   rintro a s - - ⟨M', N', hM', hN', h⟩
   refine TensorProduct.induction_on a ?_ (fun x y ↦ ?_) fun x y hx hy ↦ ?_
-  · exact ⟨M', N', hM', hN', Set.insert_subset (zero_mem _) h⟩
-  · refine ⟨_, _, hM'.sup (fg_span_singleton x),
-      hN'.sup (fg_span_singleton y), Set.insert_subset ?_ fun z hz ↦ ?_⟩
-    · exact ⟨⟨x, mem_sup_right (mem_span_singleton_self x)⟩ ⊗ₜ
-        ⟨y, mem_sup_right (mem_span_singleton_self y)⟩, rfl⟩
-    · exact range_mapIncl_mono le_sup_left le_sup_left (h hz)
-  · obtain ⟨M₁', N₁', hM₁', hN₁', h₁⟩ := hx
-    obtain ⟨M₂', N₂', hM₂', hN₂', h₂⟩ := hy
-    refine ⟨_, _, hM₁'.sup hM₂', hN₁'.sup hN₂', Set.insert_subset (add_mem ?_ ?_) fun z hz ↦ ?_⟩
-    · exact range_mapIncl_mono le_sup_left le_sup_left (h₁ (Set.mem_insert x s))
-    · exact range_mapIncl_mono le_sup_right le_sup_right (h₂ (Set.mem_insert y s))
-    · exact range_mapIncl_mono le_sup_left le_sup_left (h₁ (Set.subset_insert x s hz))
+  exact ⟨M', N', hM', hN', Set.insert_subset (zero_mem _) h⟩
+  refine ⟨_, _, hM'.sup (fg_span_singleton x),
+    hN'.sup (fg_span_singleton y), Set.insert_subset ?_ fun z hz ↦ ?_⟩
+  exact ⟨⟨x, mem_sup_right (mem_span_singleton_self x)⟩ ⊗ₜ
+    ⟨y, mem_sup_right (mem_span_singleton_self y)⟩, rfl⟩
+  exact range_mapIncl_mono le_sup_left le_sup_left (h hz)
+  obtain ⟨M₁', N₁', hM₁', hN₁', h₁⟩ := hx
+  obtain ⟨M₂', N₂', hM₂', hN₂', h₂⟩ := hy
+  refine ⟨_, _, hM₁'.sup hM₂', hN₁'.sup hN₂', Set.insert_subset (add_mem ?_ ?_) fun z hz ↦ ?_⟩
+  exact range_mapIncl_mono le_sup_left le_sup_left (h₁ (Set.mem_insert x s))
+  exact range_mapIncl_mono le_sup_right le_sup_right (h₂ (Set.mem_insert y s))
+  exact range_mapIncl_mono le_sup_left le_sup_left (h₁ (Set.subset_insert x s hz))
 
 /-- For a finite subset `s` of `M ⊗[R] N`, there exists a finitely generated
 submodule `M'` of `M`, such that `s` is contained in the image

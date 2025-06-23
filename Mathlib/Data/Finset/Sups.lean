@@ -361,17 +361,17 @@ variable {𝒜 ℬ : Finset (Finset α)} {s t : Finset α} {a : α}
   ext u
   simp only [mem_sups, mem_powerset, le_eq_subset, sup_eq_union]
   refine ⟨fun h ↦ ⟨_, inter_subset_left (s₂ := u), _, inter_subset_left (s₂ := u), ?_⟩, ?_⟩
-  · rwa [← union_inter_distrib_right, inter_eq_right]
-  · rintro ⟨v, hv, w, hw, rfl⟩
-    exact union_subset_union hv hw
+  rwa [← union_inter_distrib_right, inter_eq_right]
+  rintro ⟨v, hv, w, hw, rfl⟩
+  exact union_subset_union hv hw
 
 @[simp] lemma powerset_inter (s t : Finset α) : (s ∩ t).powerset = s.powerset ⊼ t.powerset := by
   ext u
   simp only [mem_infs, mem_powerset, le_eq_subset, inf_eq_inter]
   refine ⟨fun h ↦ ⟨_, inter_subset_left (s₂ := u), _, inter_subset_left (s₂ := u), ?_⟩, ?_⟩
-  · rwa [← inter_inter_distrib_right, inter_eq_right]
-  · rintro ⟨v, hv, w, hw, rfl⟩
-    exact inter_subset_inter hv hw
+  rwa [← inter_inter_distrib_right, inter_eq_right]
+  rintro ⟨v, hv, w, hw, rfl⟩
+  exact inter_subset_inter hv hw
 
 @[simp] lemma powerset_sups_powerset_self (s : Finset α) :
     s.powerset ⊻ s.powerset = s.powerset := by simp [← powerset_union]

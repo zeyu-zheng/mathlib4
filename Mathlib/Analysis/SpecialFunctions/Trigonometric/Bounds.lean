@@ -37,7 +37,7 @@ variable {x : ℝ}
 /-- For 0 < x, we have sin x < x. -/
 theorem sin_lt (h : 0 < x) : sin x < x := by
   cases' lt_or_le 1 x with h' h'
-  · exact (sin_le_one x).trans_lt h'
+  exact (sin_le_one x).trans_lt h'
   have hx : |x| = x := abs_of_nonneg h.le
   have := le_of_abs_le (sin_bound <| show |x| ≤ 1 by rwa [hx])
   rw [sub_le_iff_le_add', hx] at this
@@ -49,15 +49,15 @@ theorem sin_lt (h : 0 < x) : sin x < x := by
 
 lemma sin_le (hx : 0 ≤ x) : sin x ≤ x := by
   obtain rfl | hx := hx.eq_or_lt
-  · simp
-  · exact (sin_lt hx).le
+  simp
+  exact (sin_lt hx).le
 
 lemma lt_sin (hx : x < 0) : x < sin x := by simpa using sin_lt <| neg_pos.2 hx
 lemma le_sin (hx : x ≤ 0) : x ≤ sin x := by simpa using sin_le <| neg_nonneg.2 hx
 
 lemma one_sub_sq_div_two_le_cos : 1 - x ^ 2 / 2 ≤ cos x := by
   wlog hx₀ : 0 ≤ x
-  · simpa using this $ neg_nonneg.2 $ le_of_not_le hx₀
+  simpa using this $ neg_nonneg.2 $ le_of_not_le hx₀
   suffices MonotoneOn (fun x ↦ cos x + x ^ 2 / 2) (Ici 0) by
     simpa using this left_mem_Ici hx₀ hx₀
   refine monotoneOn_of_hasDerivWithinAt_nonneg
@@ -89,7 +89,7 @@ lemma one_sub_two_div_pi_mul_le_cos (hx₀ : 0 ≤ x) (hx : x ≤ π / 2) : 1 - 
 
 lemma cos_quadratic_upper_bound (hx : |x| ≤ π) : cos x ≤ 1 - 2 / π ^ 2 * x ^ 2 := by
   wlog hx₀ : 0 ≤ x
-  · simpa using this (by rwa [abs_neg]) $ neg_nonneg.2 $ le_of_not_le hx₀
+  simpa using this (by rwa [abs_neg]) $ neg_nonneg.2 $ le_of_not_le hx₀
   rw [abs_of_nonneg hx₀] at hx
   -- TODO: `compute_deriv` tactic?
   have hderiv (x) : HasDerivAt (fun x ↦ 1 - 2 / π ^ 2 * x ^ 2 - cos x) _ x :=
@@ -121,13 +121,13 @@ lemma cos_quadratic_upper_bound (hx : |x| ≤ π) : cos x ≤ 1 - 2 / π ^ 2 * x
     calc
       _ ≤ (0 : ℝ) - 0 := by
           gcongr
-          · exact cos_nonpos_of_pi_div_two_le_of_le hx $ hx'.trans $ by linarith
-          · positivity
+          exact cos_nonpos_of_pi_div_two_le_of_le hx $ hx'.trans $ by linarith
+          positivity
       _ = 0 := sub_zero _
   rw [← sub_nonneg]
   obtain hx' | hx' := le_total x (π / 2)
-  · simpa using hmono (left_mem_Icc.2 $ by positivity) ⟨hx₀, hx'⟩ hx₀
-  · refine (le_min ?_ ?_).trans $ hconc.min_le_of_mem_Icc ⟨hx', hx⟩ <;> field_simp <;> norm_num
+  simpa using hmono (left_mem_Icc.2 $ by positivity) ⟨hx₀, hx'⟩ hx₀
+  refine (le_min ?_ ?_).trans $ hconc.min_le_of_mem_Icc ⟨hx', hx⟩ <;> field_simp <;> norm_num
 
 /-- For 0 < x ≤ 1 we have x - x ^ 3 / 4 < sin x.
 
@@ -182,7 +182,7 @@ theorem lt_tan {x : ℝ} (h1 : 0 < x) (h2 : x < π / 2) : x < tan x := by
   rw [cos_sq']
   simpa only [Ne, sub_eq_self, sq_eq_zero_iff] using (sin_pos hy).ne'
   rwa [lt_inv, inv_one]
-  · exact zero_lt_one
+  exact zero_lt_one
   simpa only [sq, mul_self_pos] using this.ne'
   have mono := strictMonoOn_of_deriv_pos (convex_Ico 0 (π / 2)) tan_minus_id_cts deriv_pos
   have zero_in_U : (0 : ℝ) ∈ U
@@ -192,37 +192,37 @@ theorem lt_tan {x : ℝ} (h1 : 0 < x) (h2 : x < π / 2) : x < tan x := by
 
 theorem le_tan {x : ℝ} (h1 : 0 ≤ x) (h2 : x < π / 2) : x ≤ tan x := by
   rcases eq_or_lt_of_le h1 with (rfl | h1')
-  · rw [tan_zero]
-  · exact le_of_lt (lt_tan h1' h2)
+  rw [tan_zero]
+  exact le_of_lt (lt_tan h1' h2)
 
 theorem cos_lt_one_div_sqrt_sq_add_one {x : ℝ} (hx1 : -(3 * π / 2) ≤ x) (hx2 : x ≤ 3 * π / 2)
     (hx3 : x ≠ 0) : cos x < (1 / √(x ^ 2 + 1) : ℝ) := by
   suffices ∀ {y : ℝ}, 0 < y → y ≤ 3 * π / 2 → cos y < 1 / sqrt (y ^ 2 + 1) by
     rcases lt_or_lt_iff_ne.mpr hx3.symm with ⟨h⟩
-    · exact this h hx2
-    · convert this (by linarith : 0 < -x) (by linarith) using 1
-      · rw [cos_neg]
-      · rw [neg_sq]
+    exact this h hx2
+    convert this (by linarith : 0 < -x) (by linarith) using 1
+    rw [cos_neg]
+    rw [neg_sq]
   intro y hy1 hy2
   have hy3 : ↑0 < y ^ 2 + 1
   linarith [sq_nonneg y]
   rcases lt_or_le y (π / 2) with (hy2' | hy1')
-  · -- Main case : `0 < y < π / 2`
-    have hy4 : 0 < cos y := cos_pos_of_mem_Ioo ⟨by linarith, hy2'⟩
-    rw [← abs_of_nonneg (cos_nonneg_of_mem_Icc ⟨by linarith, hy2'.le⟩), ←
-      abs_of_nonneg (one_div_nonneg.mpr (sqrt_nonneg _)), ← sq_lt_sq, div_pow, one_pow,
-      sq_sqrt hy3.le, lt_one_div (pow_pos hy4 _) hy3, ← inv_one_add_tan_sq hy4.ne', one_div,
-      inv_inv, add_comm, add_lt_add_iff_left, sq_lt_sq, abs_of_pos hy1,
-      abs_of_nonneg (tan_nonneg_of_nonneg_of_le_pi_div_two hy1.le hy2'.le)]
-    exact Real.lt_tan hy1 hy2'
-  · -- Easy case : `π / 2 ≤ y ≤ 3 * π / 2`
-    refine lt_of_le_of_lt ?_ (one_div_pos.mpr <| sqrt_pos_of_pos hy3)
-    exact cos_nonpos_of_pi_div_two_le_of_le hy1' (by linarith [pi_pos])
+  -- Main case : `0 < y < π / 2`
+  have hy4 : 0 < cos y := cos_pos_of_mem_Ioo ⟨by linarith, hy2'⟩
+  rw [← abs_of_nonneg (cos_nonneg_of_mem_Icc ⟨by linarith, hy2'.le⟩), ←
+    abs_of_nonneg (one_div_nonneg.mpr (sqrt_nonneg _)), ← sq_lt_sq, div_pow, one_pow,
+    sq_sqrt hy3.le, lt_one_div (pow_pos hy4 _) hy3, ← inv_one_add_tan_sq hy4.ne', one_div,
+    inv_inv, add_comm, add_lt_add_iff_left, sq_lt_sq, abs_of_pos hy1,
+    abs_of_nonneg (tan_nonneg_of_nonneg_of_le_pi_div_two hy1.le hy2'.le)]
+  exact Real.lt_tan hy1 hy2'
+  -- Easy case : `π / 2 ≤ y ≤ 3 * π / 2`
+  refine lt_of_le_of_lt ?_ (one_div_pos.mpr <| sqrt_pos_of_pos hy3)
+  exact cos_nonpos_of_pi_div_two_le_of_le hy1' (by linarith [pi_pos])
 
 theorem cos_le_one_div_sqrt_sq_add_one {x : ℝ} (hx1 : -(3 * π / 2) ≤ x) (hx2 : x ≤ 3 * π / 2) :
     cos x ≤ (1 : ℝ) / √(x ^ 2 + 1) := by
   rcases eq_or_ne x 0 with (rfl | hx3)
-  · simp
-  · exact (cos_lt_one_div_sqrt_sq_add_one hx1 hx2 hx3).le
+  simp
+  exact (cos_lt_one_div_sqrt_sq_add_one hx1 hx2 hx3).le
 
 end Real

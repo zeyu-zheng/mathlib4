@@ -49,9 +49,9 @@ polynomial over the fraction field. See `minpoly.isIntegrallyClosed_eq_field_fra
 theorem isIntegrallyClosed_eq_field_fractions [IsDomain S] {s : S} (hs : IsIntegral R s) :
     minpoly K (algebraMap S L s) = (minpoly R s).map (algebraMap R K) := by
   refine (eq_of_irreducible_of_monic ?_ ?_ ?_).symm
-  · exact ((monic hs).irreducible_iff_irreducible_map_fraction_map).1 (irreducible hs)
-  · rw [aeval_map_algebraMap, aeval_algebraMap_apply, aeval, map_zero]
-  · exact (monic hs).map _
+  exact ((monic hs).irreducible_iff_irreducible_map_fraction_map).1 (irreducible hs)
+  rw [aeval_map_algebraMap, aeval_algebraMap_apply, aeval, map_zero]
+  exact (monic hs).map _
 
 /-- For integrally closed domains, the minimal polynomial over the ring is the same as the minimal
 polynomial over the fraction field. Compared to `minpoly.isIntegrallyClosed_eq_field_fractions`,
@@ -77,11 +77,11 @@ theorem isIntegrallyClosed_dvd {s : S} (hs : IsIntegral R s) {p : R[X]}
   have := FractionRing.isScalarTower_liftAlgebra R L
   have : minpoly K (algebraMap S L s) ∣ map (algebraMap R K) (p %ₘ minpoly R s)
   rw [map_modByMonic _ (minpoly.monic hs), modByMonic_eq_sub_mul_div]
-  · refine dvd_sub (minpoly.dvd K (algebraMap S L s) ?_) ?_
-    · rw [← map_aeval_eq_aeval_map, hp, map_zero]
-      rw [← IsScalarTower.algebraMap_eq, ← IsScalarTower.algebraMap_eq]
-    apply dvd_mul_of_dvd_left
-    rw [isIntegrallyClosed_eq_field_fractions K L hs]
+  refine dvd_sub (minpoly.dvd K (algebraMap S L s) ?_) ?_
+  rw [← map_aeval_eq_aeval_map, hp, map_zero]
+  rw [← IsScalarTower.algebraMap_eq, ← IsScalarTower.algebraMap_eq]
+  apply dvd_mul_of_dvd_left
+  rw [isIntegrallyClosed_eq_field_fractions K L hs]
   exact Monic.map _ (minpoly.monic hs)
   rw [isIntegrallyClosed_eq_field_fractions _ _ hs,
     map_dvd_map (algebraMap R K) (IsFractionRing.injective R K) (minpoly.monic hs)] at this
@@ -124,8 +124,8 @@ theorem _root_.IsIntegrallyClosed.minpoly.unique {s : S} {P : R[X]} (hmo : P.Mon
   by_contra hnz
   refine IsIntegrallyClosed.degree_le_of_ne_zero hs hnz (by simp [hP]) |>.not_lt ?_
   refine degree_sub_lt ?_ (ne_zero hs) ?_
-  · exact le_antisymm (min R s hmo hP) (Pmin (minpoly R s) (monic hs) (aeval R s))
-  · rw [(monic hs).leadingCoeff, hmo.leadingCoeff]
+  exact le_antisymm (min R s hmo hP) (Pmin (minpoly R s) (monic hs) (aeval R s))
+  rw [(monic hs).leadingCoeff, hmo.leadingCoeff]
 
 theorem prime_of_isIntegrallyClosed {x : S} (hx : IsIntegral R x) : Prime (minpoly R x) := by
   refine

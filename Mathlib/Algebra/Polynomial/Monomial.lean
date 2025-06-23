@@ -36,21 +36,21 @@ instance infinite [Nontrivial R] : Infinite R[X] :=
 theorem card_support_le_one_iff_monomial {f : R[X]} :
     Finset.card f.support ≤ 1 ↔ ∃ n a, f = monomial n a := by
   constructor
-  · intro H
-    rw [Finset.card_le_one_iff_subset_singleton] at H
-    rcases H with ⟨n, hn⟩
-    refine ⟨n, f.coeff n, ?_⟩
-    ext i
-    by_cases hi : i = n
-    · simp [hi, coeff_monomial]
-    · have : f.coeff i = 0 := by
-        rw [← not_mem_support_iff]
-        exact fun hi' => hi (Finset.mem_singleton.1 (hn hi'))
-      simp [this, Ne.symm hi, coeff_monomial]
-  · rintro ⟨n, a, rfl⟩
-    rw [← Finset.card_singleton n]
-    apply Finset.card_le_card
-    exact support_monomial' _ _
+  intro H
+  rw [Finset.card_le_one_iff_subset_singleton] at H
+  rcases H with ⟨n, hn⟩
+  refine ⟨n, f.coeff n, ?_⟩
+  ext i
+  by_cases hi : i = n
+  simp [hi, coeff_monomial]
+  have : f.coeff i = 0 := by
+    rw [← not_mem_support_iff]
+    exact fun hi' => hi (Finset.mem_singleton.1 (hn hi'))
+  simp [this, Ne.symm hi, coeff_monomial]
+  rintro ⟨n, a, rfl⟩
+  rw [← Finset.card_singleton n]
+  apply Finset.card_le_card
+  exact support_monomial' _ _
 
 theorem ringHom_ext {S} [Semiring S] {f g : R[X] →+* S} (h₁ : ∀ a, f (C a) = g (C a))
     (h₂ : f X = g X) : f = g := by
@@ -59,10 +59,10 @@ theorem ringHom_ext {S} [Semiring S] {f g : R[X] →+* S} (h₁ : ∀ a, f (C a)
   have A : f' = g'
   -- Porting note: Was `ext; simp [..]; simpa [..] using h₂`.
   ext : 1
-  · ext
-    simp [f', g', h₁, RingEquiv.toRingHom_eq_coe]
-  · refine MonoidHom.ext_mnat ?_
-    simpa [RingEquiv.toRingHom_eq_coe] using h₂
+  ext
+  simp [f', g', h₁, RingEquiv.toRingHom_eq_coe]
+  refine MonoidHom.ext_mnat ?_
+  simpa [RingEquiv.toRingHom_eq_coe] using h₂
   have B : f = f'.comp (toFinsuppIso R)
   rw [hf', RingHom.comp_assoc]
   ext x

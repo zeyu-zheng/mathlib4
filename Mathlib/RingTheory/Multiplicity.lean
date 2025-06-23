@@ -334,21 +334,21 @@ theorem multiplicity_mk_eq_multiplicity
     [DecidableRel ((· ∣ ·) : Associates α → Associates α → Prop)] {a b : α} :
     multiplicity (Associates.mk a) (Associates.mk b) = multiplicity a b := by
   by_cases h : Finite a b
-  · rw [← PartENat.natCast_get (finite_iff_dom.mp h)]
-    refine
-        (multiplicity.unique
-            (show Associates.mk a ^ (multiplicity a b).get h ∣ Associates.mk b from ?_) ?_).symm <;>
+  rw [← PartENat.natCast_get (finite_iff_dom.mp h)]
+  refine
+      (multiplicity.unique
+          (show Associates.mk a ^ (multiplicity a b).get h ∣ Associates.mk b from ?_) ?_).symm <;>
+    rw [← Associates.mk_pow, Associates.mk_dvd_mk]
+  exact pow_multiplicity_dvd h
+  exact is_greatest
+      ((PartENat.lt_coe_iff _ _).mpr (Exists.intro (finite_iff_dom.mp h) (Nat.lt_succ_self _)))
+  suffices ¬Finite (Associates.mk a) (Associates.mk b) by
+    rw [finite_iff_dom, PartENat.not_dom_iff_eq_top] at h this
+    rw [h, this]
+  refine
+    not_finite_iff_forall.mpr fun n => by
       rw [← Associates.mk_pow, Associates.mk_dvd_mk]
-    · exact pow_multiplicity_dvd h
-    · exact is_greatest
-          ((PartENat.lt_coe_iff _ _).mpr (Exists.intro (finite_iff_dom.mp h) (Nat.lt_succ_self _)))
-  · suffices ¬Finite (Associates.mk a) (Associates.mk b) by
-      rw [finite_iff_dom, PartENat.not_dom_iff_eq_top] at h this
-      rw [h, this]
-    refine
-      not_finite_iff_forall.mpr fun n => by
-        rw [← Associates.mk_pow, Associates.mk_dvd_mk]
-        exact not_finite_iff_forall.mp h n
+      exact not_finite_iff_forall.mp h n
 
 end CommMonoidWithZero
 
@@ -383,25 +383,25 @@ protected theorem neg (a b : α) : multiplicity a (-b) = multiplicity a b :=
 
 theorem Int.natAbs (a : ℕ) (b : ℤ) : multiplicity a b.natAbs = multiplicity (a : ℤ) b := by
   cases' Int.natAbs_eq b with h h <;> conv_rhs => rw [h]
-  · rw [Int.natCast_multiplicity]
-  · rw [multiplicity.neg, Int.natCast_multiplicity]
+  rw [Int.natCast_multiplicity]
+  rw [multiplicity.neg, Int.natCast_multiplicity]
 
 theorem multiplicity_add_of_gt {p a b : α} (h : multiplicity p b < multiplicity p a) :
     multiplicity p (a + b) = multiplicity p b := by
   apply le_antisymm
-  · apply PartENat.le_of_lt_add_one
-    cases' PartENat.ne_top_iff.mp (PartENat.ne_top_of_lt h) with k hk
-    rw [hk]
-    rw_mod_cast [multiplicity_lt_iff_not_dvd, dvd_add_right]
-    · intro h_dvd
-      apply multiplicity.is_greatest _ h_dvd
-      rw [hk, ← Nat.succ_eq_add_one]
-      norm_cast
-      apply Nat.lt_succ_self k
-    · rw [pow_dvd_iff_le_multiplicity, Nat.cast_add, ← hk, Nat.cast_one]
-      exact PartENat.add_one_le_of_lt h
-  · have := @min_le_multiplicity_add α _ _ p a b
-    rwa [← min_eq_right (le_of_lt h)]
+  apply PartENat.le_of_lt_add_one
+  cases' PartENat.ne_top_iff.mp (PartENat.ne_top_of_lt h) with k hk
+  rw [hk]
+  rw_mod_cast [multiplicity_lt_iff_not_dvd, dvd_add_right]
+  intro h_dvd
+  apply multiplicity.is_greatest _ h_dvd
+  rw [hk, ← Nat.succ_eq_add_one]
+  norm_cast
+  apply Nat.lt_succ_self k
+  rw [pow_dvd_iff_le_multiplicity, Nat.cast_add, ← hk, Nat.cast_one]
+  exact PartENat.add_one_le_of_lt h
+  have := @min_le_multiplicity_add α _ _ p a b
+  rwa [← min_eq_right (le_of_lt h)]
 
 theorem multiplicity_sub_of_gt {p a b : α} (h : multiplicity p b < multiplicity p a) :
     multiplicity p (a - b) = multiplicity p b := by
@@ -410,11 +410,11 @@ theorem multiplicity_sub_of_gt {p a b : α} (h : multiplicity p b < multiplicity
 theorem multiplicity_add_eq_min {p a b : α} (h : multiplicity p a ≠ multiplicity p b) :
     multiplicity p (a + b) = min (multiplicity p a) (multiplicity p b) := by
   rcases lt_trichotomy (multiplicity p a) (multiplicity p b) with (hab | hab | hab)
-  · rw [add_comm, multiplicity_add_of_gt hab, min_eq_left]
-    exact le_of_lt hab
-  · contradiction
-  · rw [multiplicity_add_of_gt hab, min_eq_right]
-    exact le_of_lt hab
+  rw [add_comm, multiplicity_add_of_gt hab, min_eq_left]
+  exact le_of_lt hab
+  contradiction
+  rw [multiplicity_add_of_gt hab, min_eq_right]
+  exact le_of_lt hab
 
 end Ring
 
@@ -528,20 +528,20 @@ open Classical in
 theorem Finset.prod {β : Type*} {p : α} (hp : Prime p) (s : Finset β) (f : β → α) :
     multiplicity p (∏ x ∈ s, f x) = ∑ x ∈ s, multiplicity p (f x) := by
     induction' s using Finset.induction with a s has ih h
-    · simp only [Finset.sum_empty, Finset.prod_empty]
-      convert one_right hp.not_unit
-    · simp [has, ← ih]
-      convert multiplicity.mul hp
+    simp only [Finset.sum_empty, Finset.prod_empty]
+    convert one_right hp.not_unit
+    simp [has, ← ih]
+    convert multiplicity.mul hp
 
 -- Porting note: with protected could not use pow' k in the succ branch
 protected theorem pow' {p a : α} (hp : Prime p) (ha : Finite p a) :
     ∀ {k : ℕ}, get (multiplicity p (a ^ k)) (finite_pow hp ha) = k * get (multiplicity p a) ha := by
   intro k
   induction' k with k hk
-  · simp [one_right hp.not_unit]
-  · have : multiplicity p (a ^ (k + 1)) = multiplicity p (a * a ^ k) := by rw [_root_.pow_succ']
-    rw [get_eq_get_of_eq _ _ this,
-      multiplicity.mul' hp, hk, add_mul, one_mul, add_comm]
+  simp [one_right hp.not_unit]
+  have : multiplicity p (a ^ (k + 1)) = multiplicity p (a * a ^ k) := by rw [_root_.pow_succ']
+  rw [get_eq_get_of_eq _ _ this,
+    multiplicity.mul' hp, hk, add_mul, one_mul, add_comm]
 
 theorem pow {p a : α} (hp : Prime p) : ∀ {k : ℕ}, multiplicity p (a ^ k) = k • multiplicity p a
   | 0 => by simp [one_right hp.not_unit]

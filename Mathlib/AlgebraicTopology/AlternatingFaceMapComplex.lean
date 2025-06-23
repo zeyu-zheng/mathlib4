@@ -79,35 +79,35 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 := by
   let φ : ∀ ij : P, ij ∈ S → P := fun ij hij =>
     (Fin.castLT ij.2 (lt_of_le_of_lt (Finset.mem_filter.mp hij).right (Fin.is_lt ij.1)), ij.1.succ)
   apply Finset.sum_bij φ
-  · -- φ(S) is contained in Sᶜ
-    intro ij hij
-    simp only [S, Finset.mem_univ, Finset.compl_filter, Finset.mem_filter, true_and_iff,
-      Fin.val_succ, Fin.coe_castLT] at hij ⊢
-    linarith
-  · -- φ : S → Sᶜ is injective
-    rintro ⟨i, j⟩ hij ⟨i', j'⟩ hij' h
-    rw [Prod.mk.inj_iff]
-    exact ⟨by simpa using congr_arg Prod.snd h,
-      by simpa [Fin.castSucc_castLT] using congr_arg Fin.castSucc (congr_arg Prod.fst h)⟩
-  · -- φ : S → Sᶜ is surjective
-    rintro ⟨i', j'⟩ hij'
-    simp only [S, Finset.mem_univ, forall_true_left, Prod.forall, Finset.compl_filter,
-      not_le, Finset.mem_filter, true_and] at hij'
-    refine ⟨(j'.pred <| ?_, Fin.castSucc i'), ?_, ?_⟩
-    · rintro rfl
-      simp only [Fin.val_zero, not_lt_zero'] at hij'
-    · simpa only [S, Finset.mem_univ, forall_true_left, Prod.forall, Finset.mem_filter,
-        Fin.coe_castSucc, Fin.coe_pred, true_and] using Nat.le_sub_one_of_lt hij'
-    · simp only [φ, Fin.castLT_castSucc, Fin.succ_pred]
-  · -- identification of corresponding terms in both sums
-    rintro ⟨i, j⟩ hij
-    dsimp
-    simp only [zsmul_comp, comp_zsmul, smul_smul, ← neg_smul]
-    congr 1
-    · simp only [Fin.val_succ, pow_add, pow_one, mul_neg, neg_neg, mul_one]
-      apply mul_comm
-    · rw [CategoryTheory.SimplicialObject.δ_comp_δ'']
-      simpa [S] using hij
+  -- φ(S) is contained in Sᶜ
+  intro ij hij
+  simp only [S, Finset.mem_univ, Finset.compl_filter, Finset.mem_filter, true_and_iff,
+    Fin.val_succ, Fin.coe_castLT] at hij ⊢
+  linarith
+  -- φ : S → Sᶜ is injective
+  rintro ⟨i, j⟩ hij ⟨i', j'⟩ hij' h
+  rw [Prod.mk.inj_iff]
+  exact ⟨by simpa using congr_arg Prod.snd h,
+    by simpa [Fin.castSucc_castLT] using congr_arg Fin.castSucc (congr_arg Prod.fst h)⟩
+  -- φ : S → Sᶜ is surjective
+  rintro ⟨i', j'⟩ hij'
+  simp only [S, Finset.mem_univ, forall_true_left, Prod.forall, Finset.compl_filter,
+    not_le, Finset.mem_filter, true_and] at hij'
+  refine ⟨(j'.pred <| ?_, Fin.castSucc i'), ?_, ?_⟩
+  rintro rfl
+  simp only [Fin.val_zero, not_lt_zero'] at hij'
+  simpa only [S, Finset.mem_univ, forall_true_left, Prod.forall, Finset.mem_filter,
+    Fin.coe_castSucc, Fin.coe_pred, true_and] using Nat.le_sub_one_of_lt hij'
+  simp only [φ, Fin.castLT_castSucc, Fin.succ_pred]
+  -- identification of corresponding terms in both sums
+  rintro ⟨i, j⟩ hij
+  dsimp
+  simp only [zsmul_comp, comp_zsmul, smul_smul, ← neg_smul]
+  congr 1
+  simp only [Fin.val_succ, pow_add, pow_one, mul_neg, neg_neg, mul_one]
+  apply mul_comm
+  rw [CategoryTheory.SimplicialObject.δ_comp_δ'']
+  simpa [S] using hij
 
 /-!
 ## Construction of the alternating face map complex functor
@@ -177,21 +177,21 @@ theorem map_alternatingFaceMapComplex {D : Type*} [Category D] [Preadditive D] (
     alternatingFaceMapComplex C ⋙ F.mapHomologicalComplex _ =
       (SimplicialObject.whiskering C D).obj F ⋙ alternatingFaceMapComplex D := by
   apply CategoryTheory.Functor.ext
-  · intro X Y f
-    ext n
-    simp only [Functor.comp_map, HomologicalComplex.comp_f, alternatingFaceMapComplex_map_f,
-      Functor.mapHomologicalComplex_map_f, HomologicalComplex.eqToHom_f, eqToHom_refl, comp_id,
-      id_comp, SimplicialObject.whiskering_obj_map_app]
-  · intro X
-    apply HomologicalComplex.ext
-    · rintro i j (rfl : j + 1 = i)
-      dsimp only [Functor.comp_obj]
-      simp only [Functor.mapHomologicalComplex_obj_d, alternatingFaceMapComplex_obj_d,
-        eqToHom_refl, id_comp, comp_id, AlternatingFaceMapComplex.objD, Functor.map_sum,
-        Functor.map_zsmul]
-      rfl
-    · ext n
-      rfl
+  intro X Y f
+  ext n
+  simp only [Functor.comp_map, HomologicalComplex.comp_f, alternatingFaceMapComplex_map_f,
+    Functor.mapHomologicalComplex_map_f, HomologicalComplex.eqToHom_f, eqToHom_refl, comp_id,
+    id_comp, SimplicialObject.whiskering_obj_map_app]
+  intro X
+  apply HomologicalComplex.ext
+  rintro i j (rfl : j + 1 = i)
+  dsimp only [Functor.comp_obj]
+  simp only [Functor.mapHomologicalComplex_obj_d, alternatingFaceMapComplex_obj_d,
+    eqToHom_refl, id_comp, comp_id, AlternatingFaceMapComplex.objD, Functor.map_sum,
+    Functor.map_zsmul]
+  rfl
+  ext n
+  rfl
 
 theorem karoubi_alternatingFaceMapComplex_d (P : Karoubi (SimplicialObject C)) (n : ℕ) :
     ((AlternatingFaceMapComplex.obj (KaroubiFunctorCategoryEmbedding.obj P)).d (n + 1) n).f =

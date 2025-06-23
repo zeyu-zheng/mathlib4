@@ -43,8 +43,8 @@ variable {C}
 
 @[simp] theorem comul_eq_diag (A : Comon_ C) : A.comul = diag A.X := by
   ext
-  · simpa using A.comul_counit =≫ prod.fst
-  · simpa using A.counit_comul =≫ prod.snd
+  simpa using A.comul_counit =≫ prod.fst
+  simpa using A.counit_comul =≫ prod.snd
 
 /--
 Every comonoid object in a cartesian monoidal category is equivalent to

@@ -66,10 +66,10 @@ theorem Convex.thickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (thickenin
 
 theorem Convex.cthickening (hs : Convex ℝ s) (δ : ℝ) : Convex ℝ (cthickening δ s) := by
   obtain hδ | hδ := le_total 0 δ
-  · rw [cthickening_eq_iInter_thickening hδ]
-    exact convex_iInter₂ fun _ _ => hs.thickening _
-  · rw [cthickening_of_nonpos hδ]
-    exact hs.closure
+  rw [cthickening_eq_iInter_thickening hδ]
+  exact convex_iInter₂ fun _ _ => hs.thickening _
+  rw [cthickening_of_nonpos hδ]
+  exact hs.closure
 
 /-- Given a point `x` in the convex hull of `s` and a point `y`, there exists a point
 of `s` at distance at least `dist x y` from `y`. -/

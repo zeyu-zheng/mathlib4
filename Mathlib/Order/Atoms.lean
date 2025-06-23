@@ -493,8 +493,8 @@ instance (priority := 100) : IsAtomic α :=
   ⟨fun b => by
     rcases eq_sSup_atoms b with ⟨s, rfl, hs⟩
     rcases s.eq_empty_or_nonempty with h | h
-    · simp [h]
-    · exact Or.intro_right _ ⟨h.some, hs _ h.choose_spec, le_sSup h.choose_spec⟩⟩
+    simp [h]
+    exact Or.intro_right _ ⟨h.some, hs _ h.choose_spec, le_sSup h.choose_spec⟩⟩
 
 end IsAtomistic
 
@@ -535,8 +535,8 @@ instance (priority := 100) : IsCoatomic α :=
   ⟨fun b => by
     rcases eq_sInf_coatoms b with ⟨s, rfl, hs⟩
     rcases s.eq_empty_or_nonempty with h | h
-    · simp [h]
-    · exact Or.intro_right _ ⟨h.some, hs _ h.choose_spec, sInf_le h.choose_spec⟩⟩
+    simp [h]
+    exact Or.intro_right _ ⟨h.some, hs _ h.choose_spec, sInf_le h.choose_spec⟩⟩
 
 end IsCoatomistic
 
@@ -575,12 +575,12 @@ export IsSimpleOrder (eq_bot_or_eq_top)
 theorem isSimpleOrder_iff_isSimpleOrder_orderDual [LE α] [BoundedOrder α] :
     IsSimpleOrder α ↔ IsSimpleOrder αᵒᵈ := by
   constructor <;> intro i <;> haveI := i
-  · exact
-      { exists_pair_ne := @exists_pair_ne α _
-        eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.ofDual a) : _ ∨ _) }
-  · exact
-      { exists_pair_ne := @exists_pair_ne αᵒᵈ _
-        eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.toDual a)) }
+  exact
+    { exists_pair_ne := @exists_pair_ne α _
+      eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.ofDual a) : _ ∨ _) }
+  exact
+    { exists_pair_ne := @exists_pair_ne αᵒᵈ _
+      eq_bot_or_eq_top := fun a => Or.symm (eq_bot_or_eq_top (OrderDual.toDual a)) }
 
 theorem IsSimpleOrder.bot_ne_top [LE α] [BoundedOrder α] [IsSimpleOrder α] : (⊥ : α) ≠ (⊤ : α) := by
   obtain ⟨a, b, h⟩ := exists_pair_ne α
@@ -953,8 +953,8 @@ theorem CompleteLattice.isStronglyAtomic [IsUpperModularLattice α] [IsAtomistic
     simp_rw [not_exists, and_comm (b := _ ≤ _), not_and] at hcon
     specialize hcon (x ⊔ a) (sup_le (le_sSup _ _ hx) hab.le)
     obtain (hbot | h_inf) := (h x hx).bot_covBy.eq_or_eq (c := x ⊓ a) (by simp) (by simp)
-    · exact False.elim <| hcon <|
-        (hbot ▸ IsUpperModularLattice.covBy_sup_of_inf_covBy) (h x hx).bot_covBy
+    exact False.elim <| hcon <|
+      (hbot ▸ IsUpperModularLattice.covBy_sup_of_inf_covBy) (h x hx).bot_covBy
     rwa [inf_eq_left] at h_inf
 
 /-- A complete lower-modular lattice that is coatomistic is strongly coatomic.
@@ -990,13 +990,13 @@ theorem isCoatomic_of_isAtomic_of_complementedLattice_of_isModular [IsAtomic α]
   ⟨fun x => by
     rcases exists_isCompl x with ⟨y, xy⟩
     apply (eq_bot_or_exists_atom_le y).imp _ _
-    · rintro rfl
-      exact eq_top_of_isCompl_bot xy
-    · rintro ⟨a, ha, ay⟩
-      rcases exists_isCompl (xy.symm.IicOrderIsoIci ⟨a, ay⟩) with ⟨⟨b, xb⟩, hb⟩
-      refine ⟨↑(⟨b, xb⟩ : Set.Ici x), IsCoatom.of_isCoatom_coe_Ici ?_, xb⟩
-      rw [← hb.isAtom_iff_isCoatom, OrderIso.isAtom_iff]
-      apply ha.Iic⟩
+    rintro rfl
+    exact eq_top_of_isCompl_bot xy
+    rintro ⟨a, ha, ay⟩
+    rcases exists_isCompl (xy.symm.IicOrderIsoIci ⟨a, ay⟩) with ⟨⟨b, xb⟩, hb⟩
+    refine ⟨↑(⟨b, xb⟩ : Set.Ici x), IsCoatom.of_isCoatom_coe_Ici ?_, xb⟩
+    rw [← hb.isAtom_iff_isCoatom, OrderIso.isAtom_iff]
+    apply ha.Iic⟩
 
 theorem isAtomic_of_isCoatomic_of_complementedLattice_of_isModular [IsCoatomic α] :
     IsAtomic α :=
@@ -1012,8 +1012,8 @@ theorem ComplementedLattice.isStronglyAtomic [IsAtomic α] : IsStronglyAtomic α
   exists_covBy_le_of_lt a b hab := by
     obtain ⟨⟨a', ha'b : a' ≤ b⟩, ha'⟩ := exists_isCompl (α := Set.Iic b) ⟨a, hab.le⟩
     obtain (rfl | ⟨d, hd⟩) := eq_bot_or_exists_atom_le a'
-    · obtain rfl : a = b := by simpa [codisjoint_bot, ← Subtype.coe_inj] using ha'.codisjoint
-      exact False.elim <| hab.ne rfl
+    obtain rfl : a = b := by simpa [codisjoint_bot, ← Subtype.coe_inj] using ha'.codisjoint
+    exact False.elim <| hab.ne rfl
     refine ⟨d ⊔ a, IsUpperModularLattice.covBy_sup_of_inf_covBy ?_, sup_le (hd.2.trans ha'b) hab.le⟩
     convert hd.1.bot_covBy
     rw [← le_bot_iff, ← show a ⊓ a' = ⊥ by simpa using Subtype.coe_inj.2 ha'.inf_eq_bot, inf_comm]

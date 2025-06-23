@@ -420,8 +420,8 @@ theorem basis_apply (h : IsAdjoinRootMonic S f) (i) : h.basis i = h.root ^ (i : 
           Fin.val_injective.injOn = Finsupp.single _ _ by
       ext j
       rw [Finsupp.comapDomain_apply, modByMonicHom_root_pow]
-      · rw [X_pow_eq_monomial, toFinsupp_monomial, Finsupp.single_apply_left Fin.val_injective]
-      · exact i.is_lt
+      rw [X_pow_eq_monomial, toFinsupp_monomial, Finsupp.single_apply_left Fin.val_injective]
+      exact i.is_lt
 
 theorem deg_pos [Nontrivial S] (h : IsAdjoinRootMonic S f) : 0 < natDegree f := by
   rcases h.basis.index_nonempty with ⟨⟨i, hi⟩⟩
@@ -482,25 +482,25 @@ theorem coeff_apply_le (h : IsAdjoinRootMonic S f) (z : S) (i : ℕ) (hi : natDe
 theorem coeff_apply (h : IsAdjoinRootMonic S f) (z : S) (i : ℕ) :
     h.coeff z i = if hi : i < natDegree f then h.basis.repr z ⟨i, hi⟩ else 0 := by
   split_ifs with hi
-  · exact h.coeff_apply_lt z i hi
-  · exact h.coeff_apply_le z i (le_of_not_lt hi)
+  exact h.coeff_apply_lt z i hi
+  exact h.coeff_apply_le z i (le_of_not_lt hi)
 
 theorem coeff_root_pow (h : IsAdjoinRootMonic S f) {n} (hn : n < natDegree f) :
     h.coeff (h.root ^ n) = Pi.single n 1 := by
   ext i
   rw [coeff_apply]
   split_ifs with hi
-  · calc
-      h.basis.repr (h.root ^ n) ⟨i, _⟩ = h.basis.repr (h.basis ⟨n, hn⟩) ⟨i, hi⟩ := by
-        rw [h.basis_apply, Fin.val_mk]
-      _ = Pi.single (f := fun _ => R) ((⟨n, hn⟩ : Fin _) : ℕ) (1 : (fun _ => R) n)
-        ↑(⟨i, _⟩ : Fin _) := by
-        rw [h.basis.repr_self, ← Finsupp.single_eq_pi_single,
-          Finsupp.single_apply_left Fin.val_injective]
-      _ = Pi.single (f := fun _ => R) n 1 i := by rw [Fin.val_mk, Fin.val_mk]
-  · refine (Pi.single_eq_of_ne (f := fun _ => R) ?_ (1 : (fun _ => R) n)).symm
-    rintro rfl
-    simp [hi] at hn
+  calc
+    h.basis.repr (h.root ^ n) ⟨i, _⟩ = h.basis.repr (h.basis ⟨n, hn⟩) ⟨i, hi⟩ := by
+      rw [h.basis_apply, Fin.val_mk]
+    _ = Pi.single (f := fun _ => R) ((⟨n, hn⟩ : Fin _) : ℕ) (1 : (fun _ => R) n)
+      ↑(⟨i, _⟩ : Fin _) := by
+      rw [h.basis.repr_self, ← Finsupp.single_eq_pi_single,
+        Finsupp.single_apply_left Fin.val_injective]
+    _ = Pi.single (f := fun _ => R) n 1 i := by rw [Fin.val_mk, Fin.val_mk]
+  refine (Pi.single_eq_of_ne (f := fun _ => R) ?_ (1 : (fun _ => R) n)).symm
+  rintro rfl
+  simp [hi] at hn
 
 theorem coeff_one [Nontrivial S] (h : IsAdjoinRootMonic S f) : h.coeff 1 = Pi.single 0 1 := by
   rw [← h.coeff_root_pow h.deg_pos, pow_zero]

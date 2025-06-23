@@ -171,33 +171,33 @@ lemma exists_disjoint_finset_diff_eq (hC : IsSetSemiring C) (hs : s ∈ C) (hI :
     intro v hv huvt
     exact hJu_subset v (h_ss hv) huvt
   refine ⟨J', hJ'_subset, ?_, ?_⟩
-  · rw [Finset.coe_biUnion]
-    refine PairwiseDisjoint.biUnion ?_ ?_
-    · simp only [univ_eq_attach, mem_coe, id, iSup_eq_iUnion]
-      simp_rw [PairwiseDisjoint, Set.Pairwise]
-      intro x _ y _ hxy
-      have hxy_disj : Disjoint (x : Set α) y := by
-        by_contra h_contra
-        refine hxy ?_
-        refine Subtype.ext ?_
-        exact h_dis.elim x.prop y.prop h_contra
-      convert hJu_disj' (x : Set α) (h_ss x.prop) y (h_ss y.prop) hxy_disj
-      · rw [sUnion_eq_biUnion]
-        congr
-      · rw [sUnion_eq_biUnion]
-        congr
-    · exact fun u _ ↦ hJu_disj _ _
-  · rw [coe_insert, sUnion_insert, Set.union_comm, ← Set.diff_diff, h_eq]
-    simp_rw [J', sUnion_eq_biUnion, Set.iUnion_diff]
-    simp only [Subtype.coe_mk, mem_coe, Finset.mem_biUnion, Finset.mem_univ, exists_true_left,
-      Finset.exists_coe, iUnion_exists, true_and]
-    rw [iUnion_comm]
-    refine iUnion_congr fun i ↦ ?_
-    by_cases hi : i ∈ J
-    · simp only [hi, iUnion_true, exists_prop]
-      rw [← hJu_sUnion i (h_ss hi), sUnion_eq_biUnion]
-      simp only [mem_coe]
-    · simp only [hi, iUnion_of_empty, iUnion_empty]
+  rw [Finset.coe_biUnion]
+  refine PairwiseDisjoint.biUnion ?_ ?_
+  simp only [univ_eq_attach, mem_coe, id, iSup_eq_iUnion]
+  simp_rw [PairwiseDisjoint, Set.Pairwise]
+  intro x _ y _ hxy
+  have hxy_disj : Disjoint (x : Set α) y := by
+    by_contra h_contra
+    refine hxy ?_
+    refine Subtype.ext ?_
+    exact h_dis.elim x.prop y.prop h_contra
+  convert hJu_disj' (x : Set α) (h_ss x.prop) y (h_ss y.prop) hxy_disj
+  rw [sUnion_eq_biUnion]
+  congr
+  rw [sUnion_eq_biUnion]
+  congr
+  exact fun u _ ↦ hJu_disj _ _
+  rw [coe_insert, sUnion_insert, Set.union_comm, ← Set.diff_diff, h_eq]
+  simp_rw [J', sUnion_eq_biUnion, Set.iUnion_diff]
+  simp only [Subtype.coe_mk, mem_coe, Finset.mem_biUnion, Finset.mem_univ, exists_true_left,
+    Finset.exists_coe, iUnion_exists, true_and]
+  rw [iUnion_comm]
+  refine iUnion_congr fun i ↦ ?_
+  by_cases hi : i ∈ J
+  simp only [hi, iUnion_true, exists_prop]
+  rw [← hJu_sUnion i (h_ss hi), sUnion_eq_biUnion]
+  simp only [mem_coe]
+  simp only [hi, iUnion_of_empty, iUnion_empty]
 
 open scoped Classical in
 /-- In a semiring of sets `C`, for all set `s ∈ C` and finite set of sets `I ⊆ C`,
@@ -295,31 +295,31 @@ lemma isSetSemiring (hC : IsSetRing C) : IsSetSemiring C where
   inter_mem := fun s hs t ht => hC.inter_mem hs ht
   diff_eq_sUnion' := by
     refine fun s hs t ht => ⟨{s \ t}, ?_, ?_, ?_⟩
-    · simp only [coe_singleton, Set.singleton_subset_iff]
-      exact hC.diff_mem hs ht
-    · simp only [coe_singleton, pairwiseDisjoint_singleton]
-    · simp only [coe_singleton, sUnion_singleton]
+    simp only [coe_singleton, Set.singleton_subset_iff]
+    exact hC.diff_mem hs ht
+    simp only [coe_singleton, pairwiseDisjoint_singleton]
+    simp only [coe_singleton, sUnion_singleton]
 
 open Classical in
 lemma biUnion_mem {ι : Type*} (hC : IsSetRing C) {s : ι → Set α}
     (S : Finset ι) (hs : ∀ n ∈ S, s n ∈ C) :
     ⋃ i ∈ S, s i ∈ C := by
   induction' S using Finset.induction with i S _ h hs
-  · simp [hC.empty_mem]
-  · simp_rw [← Finset.mem_coe, Finset.coe_insert, Set.biUnion_insert]
-    refine hC.union_mem (hs i (mem_insert_self i S)) ?_
-    exact h (fun n hnS ↦ hs n (mem_insert_of_mem hnS))
+  simp [hC.empty_mem]
+  simp_rw [← Finset.mem_coe, Finset.coe_insert, Set.biUnion_insert]
+  refine hC.union_mem (hs i (mem_insert_self i S)) ?_
+  exact h (fun n hnS ↦ hs n (mem_insert_of_mem hnS))
 
 open Classical in
 lemma biInter_mem {ι : Type*} (hC : IsSetRing C) {s : ι → Set α}
     (S : Finset ι) (hS : S.Nonempty) (hs : ∀ n ∈ S, s n ∈ C) :
     ⋂ i ∈ S, s i ∈ C := by
   induction' hS using Finset.Nonempty.cons_induction with _ i S hiS _ h hs
-  · simpa using hs
-  · simp_rw [← Finset.mem_coe, Finset.coe_cons, Set.biInter_insert]
-    simp only [cons_eq_insert, Finset.mem_insert, forall_eq_or_imp] at hs
-    refine hC.inter_mem hs.1 ?_
-    exact h (fun n hnS ↦ hs.2 n hnS)
+  simpa using hs
+  simp_rw [← Finset.mem_coe, Finset.coe_cons, Set.biInter_insert]
+  simp only [cons_eq_insert, Finset.mem_insert, forall_eq_or_imp] at hs
+  refine hC.inter_mem hs.1 ?_
+  exact h (fun n hnS ↦ hs.2 n hnS)
 
 end IsSetRing
 

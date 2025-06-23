@@ -75,9 +75,9 @@ instance isOrderConnected (r : α → α → Prop) [IsOrderConnected α r] [IsTr
     | a :: l₁, b :: l₂, c :: l₃, rel h => (IsOrderConnected.conn _ b _ h).imp rel rel
     | a :: l₁, b :: l₂, _ :: l₃, cons h => by
       rcases trichotomous_of r a b with (ab | rfl | ab)
-      · exact Or.inl (rel ab)
-      · exact (aux _ l₂ _ h).imp cons cons
-      · exact Or.inr (rel ab)
+      exact Or.inl (rel ab)
+      exact (aux _ l₂ _ h).imp cons cons
+      exact Or.inr (rel ab)
 
 instance isTrichotomous (r : α → α → Prop) [IsTrichotomous α r] :
     IsTrichotomous (List α) (Lex r) where
@@ -88,9 +88,9 @@ instance isTrichotomous (r : α → α → Prop) [IsTrichotomous α r] :
     | a :: l₁, [] => Or.inr (Or.inr nil)
     | a :: l₁, b :: l₂ => by
       rcases trichotomous_of r a b with (ab | rfl | ab)
-      · exact Or.inl (rel ab)
-      · exact (aux l₁ l₂).imp cons (Or.imp (congr_arg _) cons)
-      · exact Or.inr (Or.inr (rel ab))
+      exact Or.inl (rel ab)
+      exact (aux l₁ l₂).imp cons (Or.imp (congr_arg _) cons)
+      exact Or.inr (Or.inr (rel ab))
 
 instance isAsymm (r : α → α → Prop) [IsAsymm α r] : IsAsymm (List α) (Lex r) where
   asymm := aux where
@@ -110,12 +110,12 @@ instance decidableRel [DecidableEq α] (r : α → α → Prop) [DecidableRel r]
   | a :: l₁, b :: l₂ => by
     haveI := decidableRel r l₁ l₂
     refine decidable_of_iff (r a b ∨ a = b ∧ Lex r l₁ l₂) ⟨fun h => ?_, fun h => ?_⟩
-    · rcases h with (h | ⟨rfl, h⟩)
-      · exact Lex.rel h
-      · exact Lex.cons h
-    · rcases h with (_ | h | h)
-      · exact Or.inr ⟨rfl, h⟩
-      · exact Or.inl h
+    rcases h with (h | ⟨rfl, h⟩)
+    exact Lex.rel h
+    exact Lex.cons h
+    rcases h with (_ | h | h)
+    exact Or.inr ⟨rfl, h⟩
+    exact Or.inl h
 
 theorem append_right (r : α → α → Prop) : ∀ {s₁ s₂} (t), Lex r s₁ s₂ → Lex r s₁ (s₂ ++ t)
   | _, _, _, nil => nil
@@ -139,14 +139,14 @@ theorem _root_.Decidable.List.Lex.ne_iff [DecidableEq α] {l₁ l₂ : List α}
     (H : length l₁ ≤ length l₂) : Lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ :=
   ⟨to_ne, fun h => by
     induction' l₁ with a l₁ IH generalizing l₂ <;> cases' l₂ with b l₂
-    · contradiction
-    · apply nil
-    · exact (not_lt_of_ge H).elim (succ_pos _)
-    · by_cases ab : a = b
-      · subst b
-        apply cons
-        exact IH (le_of_succ_le_succ H) (mt (congr_arg _) h)
-      · exact rel ab ⟩
+    contradiction
+    apply nil
+    exact (not_lt_of_ge H).elim (succ_pos _)
+    by_cases ab : a = b
+    subst b
+    apply cons
+    exact IH (le_of_succ_le_succ H) (mt (congr_arg _) h)
+    exact rel ab ⟩
 
 open Classical in
 theorem ne_iff {l₁ l₂ : List α} (H : length l₁ ≤ length l₂) : Lex (· ≠ ·) l₁ l₂ ↔ l₁ ≠ l₂ := by
@@ -171,16 +171,16 @@ instance LE' [LinearOrder α] : LE (List α) :=
 theorem lt_iff_lex_lt [LinearOrder α] (l l' : List α) : lt l l' ↔ Lex (· < ·) l l' := by
   constructor <;>
   intro h
-  · induction h with
-    | nil b bs => exact Lex.nil
-    | @head a as b bs hab => apply Lex.rel; assumption
-    | @tail a as b bs hab hba _ ih =>
-      have heq : a = b := _root_.le_antisymm (le_of_not_lt hba) (le_of_not_lt hab)
-      subst b; apply Lex.cons; assumption
-  · induction h with
-    | @nil a as => apply lt.nil
-    | @cons a as bs _ ih => apply lt.tail <;> simp [ih]
-    | @rel a as b bs h => apply lt.head; assumption
+  induction h with
+  | nil b bs => exact Lex.nil
+  | @head a as b bs hab => apply Lex.rel; assumption
+  | @tail a as b bs hab hba _ ih =>
+    have heq : a = b := _root_.le_antisymm (le_of_not_lt hba) (le_of_not_lt hab)
+    subst b; apply Lex.cons; assumption
+  induction h with
+  | @nil a as => apply lt.nil
+  | @cons a as bs _ ih => apply lt.tail <;> simp [ih]
+  | @rel a as b bs h => apply lt.head; assumption
 
 @[simp]
 theorem nil_le {α} [LinearOrder α] {l : List α} : [] ≤ l :=
@@ -198,9 +198,9 @@ theorem head!_le_of_lt [Preorder α] [Inhabited α] (l l' : List α) (h : l' < l
     l'.head! ≤ l.head! := by
   replace h : List.Lex (· < ·) l' l := h
   by_cases hl : l = []
-  · simp [hl] at h
-  · rw [← List.cons_head!_tail hl', ← List.cons_head!_tail hl] at h
-    exact head_le_of_lt h
+  simp [hl] at h
+  rw [← List.cons_head!_tail hl', ← List.cons_head!_tail hl] at h
+  exact head_le_of_lt h
 
 theorem cons_le_cons [LinearOrder α] (a : α) {l l' : List α} (h : l' ≤ l) :
     a :: l' ≤ a :: l := by

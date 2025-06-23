@@ -13,17 +13,17 @@ open Function
 
 example (f : ℕ → ℕ) (h : f x = f y) : x = y := by
   apply_fun f
-  · guard_target = f x = f y
-    assumption
-  · guard_target = Injective f
-    exact test_sorry
+  guard_target = f x = f y
+  assumption
+  guard_target = Injective f
+  exact test_sorry
 
 example (f : ℕ → ℕ → ℕ) (h : f 1 x = f 1 y) (hinj : ∀ n, Injective (f n)) : x = y := by
   apply_fun f ?foo
   guard_target = f ?foo x = f ?foo y
   case foo => exact 1
-  · exact h
-  · apply hinj
+  exact h
+  apply hinj
 
 -- Uses `refine`-style rules for placeholders:
 example (f : ℕ → ℕ → ℕ) : x = y := by
@@ -83,8 +83,8 @@ example (f : ℕ → ℕ) (a b : ℕ) (monof : Monotone f) (h : a ≤ b) : f a �
 
 example (f : ℕ → ℕ) (a b : ℕ) (monof : Monotone f) (h : a ≤ b) : f a ≤ f b := by
   apply_fun f at h
-  · assumption
-  · assumption
+  assumption
+  assumption
 
 example (n m : ℕ) (f : ℕ → ℕ) (h : f n ≠ f m) : n ≠ m := by
   apply_fun f
@@ -124,22 +124,22 @@ example (a b : List α) (P : a = b) : True := by
 
 example (a b : ℕ) (h : a ≤ b) : a + 1 ≤ b + 1 := by
   apply_fun (· + 1 : ℕ → ℕ) at h -- TODO shouldn't need type ascription here
-  · exact h
-  · exact Monotone.add_const monotone_id 1
+  exact h
+  exact Monotone.add_const monotone_id 1
 
 example (a b : ℕ) (h : a < b) : a + 1 < b + 1 := by
   apply_fun (· + 1 : ℕ → ℕ) at h
-  · exact h
-  · exact StrictMono.add_const strictMono_id 1
+  exact h
+  exact StrictMono.add_const strictMono_id 1
 
 example (a b : ℕ) (h : a < b) : a + 1 < b + 1 := by
   apply_fun (· + 1 : ℕ → ℕ) at h using StrictMono.add_const strictMono_id 1
-  · exact h
+  exact h
 
 example (a b : ℕ) (h : a ≠ b) : a + 1 ≠ b + 1 := by
   apply_fun (· + 1 : ℕ → ℕ) at h
-  · exact h
-  · exact add_left_injective 1
+  exact h
+  exact add_left_injective 1
 
 -- TODO
 -- -- monotonicity will be proved by `mono` in the next example
@@ -223,8 +223,8 @@ example (f : (p : Prop) → [Decidable p] → Nat) (p q : Prop) (h : p = q)
 
 example (a b : ℕ) (h : a = b) : True := by
   apply_fun (fun i => i + ?_) at h
-  · trivial
-  · exact 37
+  trivial
+  exact 37
 
 -- Check that it can solve congruence (needs Subsingleton.elim for the fintype instances)
 example (α β : Type u) [Fintype α] [Fintype β] (h : α = β) : True := by

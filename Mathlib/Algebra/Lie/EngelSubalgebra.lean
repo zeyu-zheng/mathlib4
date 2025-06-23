@@ -119,24 +119,24 @@ lemma normalizer_eq_self_of_engel_le [IsArtinian R L]
   specialize hk (k+1) (Nat.le_add_right k 1)
   rw [← Submodule.map_subtype_top N.toSubmodule, Submodule.map_le_iff_le_comap]
   apply hk
-  · rw [← Submodule.map_le_iff_le_comap]
-    apply le_sup_of_le_left
-    rw [Submodule.map_le_iff_le_comap]
-    intro y hy
-    simp only [Submodule.mem_comap, mem_engel_iff, mem_coe_submodule]
-    use k+1
-    clear hk; revert hy
-    generalize k+1 = k
-    induction k generalizing y with
-    | zero => cases y; intro hy; simpa using hy
-    | succ k ih => simp only [pow_succ, LinearMap.mem_ker, LinearMap.mul_apply] at ih ⊢; apply ih
-  · rw [← Submodule.map_le_iff_le_comap]
-    apply le_sup_of_le_right
-    rw [Submodule.map_le_iff_le_comap]
-    rintro _ ⟨y, rfl⟩
-    simp only [pow_succ', LinearMap.mul_apply, Submodule.mem_comap, mem_coe_submodule]
-    apply aux₁
-    simp only [Submodule.coeSubtype, SetLike.coe_mem]
+  rw [← Submodule.map_le_iff_le_comap]
+  apply le_sup_of_le_left
+  rw [Submodule.map_le_iff_le_comap]
+  intro y hy
+  simp only [Submodule.mem_comap, mem_engel_iff, mem_coe_submodule]
+  use k+1
+  clear hk; revert hy
+  generalize k+1 = k
+  induction k generalizing y with
+  | zero => cases y; intro hy; simpa using hy
+  | succ k ih => simp only [pow_succ, LinearMap.mem_ker, LinearMap.mul_apply] at ih ⊢; apply ih
+  rw [← Submodule.map_le_iff_le_comap]
+  apply le_sup_of_le_right
+  rw [Submodule.map_le_iff_le_comap]
+  rintro _ ⟨y, rfl⟩
+  simp only [pow_succ', LinearMap.mul_apply, Submodule.mem_comap, mem_coe_submodule]
+  apply aux₁
+  simp only [Submodule.coeSubtype, SetLike.coe_mem]
 
 /-- A Lie subalgebra of a Noetherian Lie algebra is nilpotent
 if it is contained in the Engel subalgebra of all its elements. -/
@@ -159,8 +159,8 @@ lemma isNilpotent_of_forall_le_engel [IsNoetherian R L]
   rw [mem_engel_iff] at h
   obtain ⟨m, hm⟩ := h
   obtain (hmn|hmn) : m ≤ n ∨ n ≤ m := le_total m n
-  · exact LinearMap.pow_map_zero_of_le hmn hm
-  · have : ∀ k : ℕ, ((ad R L) x ^ k) y = 0 ↔ y ∈ K k := by simp [K, Subtype.ext_iff, coe_ad_pow]
-    rwa [this, ← hn m hmn, ← this] at hm
+  exact LinearMap.pow_map_zero_of_le hmn hm
+  have : ∀ k : ℕ, ((ad R L) x ^ k) y = 0 ↔ y ∈ K k := by simp [K, Subtype.ext_iff, coe_ad_pow]
+  rwa [this, ← hn m hmn, ← this] at hm
 
 end LieSubalgebra

@@ -298,11 +298,11 @@ theorem image_closure {A : Type*} [Monoid A] {f : M → A} (hf : IsMonoidHom f) 
     (by
       rintro _ ⟨x, hx, rfl⟩
       induction' hx with z hz
-      · solve_by_elim [subset_closure, Set.mem_image_of_mem]
-      · rw [hf.map_one]
-        apply IsSubmonoid.one_mem (closure.isSubmonoid (f '' s))
-      · rw [hf.map_mul]
-        solve_by_elim [(closure.isSubmonoid _).mul_mem] )
+      solve_by_elim [subset_closure, Set.mem_image_of_mem]
+      rw [hf.map_one]
+      apply IsSubmonoid.one_mem (closure.isSubmonoid (f '' s))
+      rw [hf.map_mul]
+      solve_by_elim [(closure.isSubmonoid _).mul_mem] )
     (closure_subset (IsSubmonoid.image hf (closure.isSubmonoid _)) <|
       Set.image_subset _ subset_closure)
 

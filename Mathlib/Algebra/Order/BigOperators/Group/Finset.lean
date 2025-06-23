@@ -37,8 +37,8 @@ theorem le_prod_nonempty_of_submultiplicative_on_pred (f : M → N) (p : M → P
     f (∏ i ∈ s, g i) ≤ ∏ i ∈ s, f (g i) := by
   refine le_trans
     (Multiset.le_prod_nonempty_of_submultiplicative_on_pred f p h_mul hp_mul _ ?_ ?_) ?_
-  · simp [hs_nonempty.ne_empty]
-  · exact Multiset.forall_mem_map_iff.mpr hs
+  simp [hs_nonempty.ne_empty]
+  exact Multiset.forall_mem_map_iff.mpr hs
   rw [Multiset.map_map]
   rfl
 
@@ -69,8 +69,8 @@ theorem le_prod_of_submultiplicative_on_pred (f : M → N) (p : M → Prop) (h_o
     (h_mul : ∀ x y, p x → p y → f (x * y) ≤ f x * f y) (hp_mul : ∀ x y, p x → p y → p (x * y))
     (g : ι → M) {s : Finset ι} (hs : ∀ i ∈ s, p (g i)) : f (∏ i ∈ s, g i) ≤ ∏ i ∈ s, f (g i) := by
   rcases eq_empty_or_nonempty s with (rfl | hs_nonempty)
-  · simp [h_one]
-  · exact le_prod_nonempty_of_submultiplicative_on_pred f p h_mul hp_mul g s hs_nonempty hs
+  simp [h_one]
+  exact le_prod_nonempty_of_submultiplicative_on_pred f p h_mul hp_mul g s hs_nonempty hs
 
 /-- Let `{x | p x}` be a subsemigroup of a commutative additive monoid `M`. Let `f : M → N` be a map
 such that `f 0 = 0` and `f` is subadditive on `{x | p x}`, i.e. `p x → p y → f (x + y) ≤ f x + f y`.
@@ -189,8 +189,8 @@ lemma mul_le_prod {i j : ι} (hf : ∀ i ∈ s, 1 ≤ f i) (hi : i ∈ s) (hj : 
 theorem prod_le_pow_card (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s, f x ≤ n) :
     s.prod f ≤ n ^ s.card := by
   refine (Multiset.prod_le_pow_card (s.val.map f) n ?_).trans ?_
-  · simpa using h
-  · simp
+  simpa using h
+  simp
 
 @[to_additive card_nsmul_le_sum]
 theorem pow_card_le_prod (s : Finset ι) (f : ι → N) (n : N) (h : ∀ x ∈ s, n ≤ f x) :
@@ -420,10 +420,10 @@ theorem prod_lt_prod_of_subset' (h : s ⊆ t) {i : ι} (ht : i ∈ t) (hs : i �
       exact lt_mul_of_one_lt_left' (∏ j ∈ s, f j) hlt
     _ ≤ ∏ j ∈ t, f j := by
       apply prod_le_prod_of_subset_of_one_le'
-      · simp [Finset.insert_subset_iff, h, ht]
-      · intro x hx h'x
-        simp only [mem_insert, not_or] at h'x
-        exact hle x hx h'x.2
+      simp [Finset.insert_subset_iff, h, ht]
+      intro x hx h'x
+      simp only [mem_insert, not_or] at h'x
+      exact hle x hx h'x.2
 
 @[to_additive single_lt_sum]
 theorem single_lt_prod' {i j : ι} (hij : j ≠ i) (hi : i ∈ s) (hj : j ∈ s) (hlt : 1 < f j)
@@ -566,16 +566,16 @@ theorem finset_sum_eq_sup_iff_disjoint [DecidableEq α] {β : Type*} {i : Finset
     i.sum f = i.sup f ↔
       ∀ᵉ (x ∈ i) (y ∈ i), x ≠ y → Multiset.Disjoint (f x) (f y) := by
   induction' i using Finset.cons_induction_on with z i hz hr
-  · simp only [Finset.not_mem_empty, IsEmpty.forall_iff, imp_true_iff, Finset.sum_empty,
-      Finset.sup_empty, bot_eq_zero, eq_self_iff_true]
-  · simp_rw [Finset.sum_cons hz, Finset.sup_cons, Finset.mem_cons, Multiset.sup_eq_union,
-      forall_eq_or_imp, Ne, not_true_eq_false, IsEmpty.forall_iff, true_and_iff,
-      imp_and, forall_and, ← hr, @eq_comm _ z]
-    have := fun x (H : x ∈ i) => ne_of_mem_of_not_mem H hz
-    simp (config := { contextual := true }) only [this, not_false_iff, true_imp_iff]
-    simp_rw [← disjoint_finset_sum_left, ← disjoint_finset_sum_right, disjoint_comm, ← and_assoc,
-      and_self_iff]
-    exact add_eq_union_left_of_le (Finset.sup_le fun x hx => le_sum_of_mem (mem_map_of_mem f hx))
+  simp only [Finset.not_mem_empty, IsEmpty.forall_iff, imp_true_iff, Finset.sum_empty,
+    Finset.sup_empty, bot_eq_zero, eq_self_iff_true]
+  simp_rw [Finset.sum_cons hz, Finset.sup_cons, Finset.mem_cons, Multiset.sup_eq_union,
+    forall_eq_or_imp, Ne, not_true_eq_false, IsEmpty.forall_iff, true_and_iff,
+    imp_and, forall_and, ← hr, @eq_comm _ z]
+  have := fun x (H : x ∈ i) => ne_of_mem_of_not_mem H hz
+  simp (config := { contextual := true }) only [this, not_false_iff, true_imp_iff]
+  simp_rw [← disjoint_finset_sum_left, ← disjoint_finset_sum_right, disjoint_comm, ← and_assoc,
+    and_self_iff]
+  exact add_eq_union_left_of_le (Finset.sup_le fun x hx => le_sum_of_mem (mem_map_of_mem f hx))
 
 theorem sup_powerset_len {α : Type*} [DecidableEq α] (x : Multiset α) :
     (Finset.sup (Finset.range (card x + 1)) fun k => x.powersetCard k) = x.powerset := by

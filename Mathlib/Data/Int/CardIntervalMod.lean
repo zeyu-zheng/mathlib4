@@ -84,16 +84,16 @@ lemma Ico_filter_modEq_cast {v : ℕ} : ((Ico a b).filter (· ≡ v [MOD r])).ma
   ext x
   simp only [mem_map, mem_filter, mem_Ico, castEmbedding_apply]
   constructor
-  · simp_rw [forall_exists_index, ← natCast_modEq_iff]; intro y ⟨h, c⟩; subst c; exact_mod_cast h
-  · intro h; lift x to ℕ using (by linarith); exact ⟨x, by simp_all [natCast_modEq_iff]⟩
+  simp_rw [forall_exists_index, ← natCast_modEq_iff]; intro y ⟨h, c⟩; subst c; exact_mod_cast h
+  intro h; lift x to ℕ using (by linarith); exact ⟨x, by simp_all [natCast_modEq_iff]⟩
 
 lemma Ioc_filter_modEq_cast {v : ℕ} : ((Ioc a b).filter (· ≡ v [MOD r])).map castEmbedding =
     (Ioc (a : ℤ) (b : ℤ)).filter (· ≡ v [ZMOD r]) := by
   ext x
   simp only [mem_map, mem_filter, mem_Ioc, castEmbedding_apply]
   constructor
-  · simp_rw [forall_exists_index, ← natCast_modEq_iff]; intro y ⟨h, c⟩; subst c; exact_mod_cast h
-  · intro h; lift x to ℕ using (by linarith); exact ⟨x, by simp_all [natCast_modEq_iff]⟩
+  simp_rw [forall_exists_index, ← natCast_modEq_iff]; intro y ⟨h, c⟩; subst c; exact_mod_cast h
+  intro h; lift x to ℕ using (by linarith); exact ⟨x, by simp_all [natCast_modEq_iff]⟩
 
 /-- There are `⌈(b - v) / r⌉ - ⌈(a - v) / r⌉` numbers congruent to `v` mod `r` in `[a, b)`,
 if `a ≤ b`. `Nat` version of `Int.Ico_filter_modEq_card`. -/
@@ -135,11 +135,11 @@ theorem count_modEq_card (v : ℕ) :
     mul_div_cancel_left₀ _ hr'.ne', add_comm, Int.ceil_add_nat, add_comm]
   rw [add_right_inj]
   split_ifs with h
-  · rw [← cast_sub h.le, Int.ceil_eq_iff, div_le_iff hr', lt_div_iff hr', cast_one, Int.cast_one,
-      sub_self, zero_mul, cast_pos, tsub_pos_iff_lt, one_mul, cast_le, tsub_le_iff_right]
-    exact ⟨h, ((mod_lt _ hr).trans_le (by simp)).le⟩
-  · rw [cast_zero, ceil_eq_zero_iff, Set.mem_Ioc, div_le_iff hr', lt_div_iff hr', zero_mul,
-      tsub_nonpos, ← neg_eq_neg_one_mul, neg_lt_sub_iff_lt_add, ← cast_add, cast_lt, cast_le]
-    exact ⟨(mod_lt _ hr).trans_le (by simp), not_lt.mp h⟩
+  rw [← cast_sub h.le, Int.ceil_eq_iff, div_le_iff hr', lt_div_iff hr', cast_one, Int.cast_one,
+    sub_self, zero_mul, cast_pos, tsub_pos_iff_lt, one_mul, cast_le, tsub_le_iff_right]
+  exact ⟨h, ((mod_lt _ hr).trans_le (by simp)).le⟩
+  rw [cast_zero, ceil_eq_zero_iff, Set.mem_Ioc, div_le_iff hr', lt_div_iff hr', zero_mul,
+    tsub_nonpos, ← neg_eq_neg_one_mul, neg_lt_sub_iff_lt_add, ← cast_add, cast_lt, cast_le]
+  exact ⟨(mod_lt _ hr).trans_le (by simp), not_lt.mp h⟩
 
 end Nat

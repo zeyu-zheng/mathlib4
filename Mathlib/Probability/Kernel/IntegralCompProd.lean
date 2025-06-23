@@ -61,8 +61,8 @@ theorem hasFiniteIntegral_prod_mk_left (a : α) {s : Set (β × γ)} (h2s : (κ 
 theorem integrable_kernel_prod_mk_left (a : α) {s : Set (β × γ)} (hs : MeasurableSet s)
     (h2s : (κ ⊗ₖ η) a s ≠ ∞) : Integrable (fun b => (η (a, b) (Prod.mk b ⁻¹' s)).toReal) (κ a) := by
   constructor
-  · exact (measurable_kernel_prod_mk_left' hs a).ennreal_toReal.aestronglyMeasurable
-  · exact hasFiniteIntegral_prod_mk_left a h2s
+  exact (measurable_kernel_prod_mk_left' hs a).ennreal_toReal.aestronglyMeasurable
+  exact hasFiniteIntegral_prod_mk_left a h2s
 
 theorem _root_.MeasureTheory.AEStronglyMeasurable.integral_kernel_compProd [NormedSpace ℝ E]
     ⦃f : β × γ → E⦄ (hf : AEStronglyMeasurable f ((κ ⊗ₖ η) a)) :
@@ -92,10 +92,10 @@ theorem hasFiniteIntegral_compProd_iff ⦃f : β × γ → E⦄ (h1f : StronglyM
   have : ∀ {p q r : Prop} (_ : r → p), (r ↔ p ∧ q) ↔ p → (r ↔ q) := fun {p q r} h1 => by
     rw [← and_congr_right_iff, and_iff_right_of_imp h1]
   rw [this]
-  · intro h2f; rw [lintegral_congr_ae]
-    filter_upwards [h2f] with x hx
-    rw [ofReal_toReal]; rw [← lt_top_iff_ne_top]; exact hx
-  · intro h2f; refine ae_lt_top ?_ h2f.ne; exact h1f.ennnorm.lintegral_kernel_prod_right''
+  intro h2f; rw [lintegral_congr_ae]
+  filter_upwards [h2f] with x hx
+  rw [ofReal_toReal]; rw [← lt_top_iff_ne_top]; exact hx
+  intro h2f; refine ae_lt_top ?_ h2f.ne; exact h1f.ennnorm.lintegral_kernel_prod_right''
 
 theorem hasFiniteIntegral_compProd_iff' ⦃f : β × γ → E⦄
     (h1f : AEStronglyMeasurable f ((κ ⊗ₖ η) a)) :
@@ -105,12 +105,12 @@ theorem hasFiniteIntegral_compProd_iff' ⦃f : β × γ → E⦄
   rw [hasFiniteIntegral_congr h1f.ae_eq_mk,
     hasFiniteIntegral_compProd_iff h1f.stronglyMeasurable_mk]
   apply and_congr
-  · apply eventually_congr
-    filter_upwards [ae_ae_of_ae_compProd h1f.ae_eq_mk.symm] with x hx using
-      hasFiniteIntegral_congr hx
-  · apply hasFiniteIntegral_congr
-    filter_upwards [ae_ae_of_ae_compProd h1f.ae_eq_mk.symm] with _ hx using
-      integral_congr_ae (EventuallyEq.fun_comp hx _)
+  apply eventually_congr
+  filter_upwards [ae_ae_of_ae_compProd h1f.ae_eq_mk.symm] with x hx using
+    hasFiniteIntegral_congr hx
+  apply hasFiniteIntegral_congr
+  filter_upwards [ae_ae_of_ae_compProd h1f.ae_eq_mk.symm] with _ hx using
+    integral_congr_ae (EventuallyEq.fun_comp hx _)
 
 theorem integrable_compProd_iff ⦃f : β × γ → E⦄ (hf : AEStronglyMeasurable f ((κ ⊗ₖ η) a)) :
     Integrable f ((κ ⊗ₖ η) a) ↔
@@ -206,7 +206,7 @@ theorem Kernel.continuous_integral_integral :
     Kernel.lintegral_fn_integral_sub (fun x => (‖x‖₊ : ℝ≥0∞)) (L1.integrable_coeFn _)
       (L1.integrable_coeFn g)]
   apply tendsto_of_tendsto_of_tendsto_of_le_of_le tendsto_const_nhds _ (fun i => zero_le _) _
-  · exact fun i => ∫⁻ x, ∫⁻ y, ‖i (x, y) - g (x, y)‖₊ ∂η (a, x) ∂κ a
+  exact fun i => ∫⁻ x, ∫⁻ y, ‖i (x, y) - g (x, y)‖₊ ∂η (a, x) ∂κ a
   swap; · exact fun i => lintegral_mono fun x => ennnorm_integral_le_lintegral_ennnorm _
   show
     Tendsto
@@ -225,7 +225,7 @@ theorem integral_compProd :
     ∀ {f : β × γ → E} (_ : Integrable f ((κ ⊗ₖ η) a)),
       ∫ z, f z ∂(κ ⊗ₖ η) a = ∫ x, ∫ y, f (x, y) ∂η (a, x) ∂κ a := by
   by_cases hE : CompleteSpace E; swap
-  · simp [integral, hE]
+  simp [integral, hE]
   apply Integrable.induction
   · intro c s hs h2s
     simp_rw [integral_indicator hs, ← indicator_comp_right, Function.comp,
@@ -234,27 +234,27 @@ theorem integral_compProd :
     congr 1
     rw [integral_toReal]
     rotate_left
-    · exact (Kernel.measurable_kernel_prod_mk_left' hs _).aemeasurable
-    · exact ae_kernel_lt_top a h2s.ne
+    exact (Kernel.measurable_kernel_prod_mk_left' hs _).aemeasurable
+    exact ae_kernel_lt_top a h2s.ne
     rw [Kernel.compProd_apply _ _ _ hs]
     rfl
-  · intro f g _ i_f i_g hf hg
-    simp_rw [integral_add' i_f i_g, Kernel.integral_integral_add' i_f i_g, hf, hg]
-  · exact isClosed_eq continuous_integral Kernel.continuous_integral_integral
-  · intro f g hfg _ hf
-    convert hf using 1
-    · exact integral_congr_ae hfg.symm
-    · apply integral_congr_ae
-      filter_upwards [ae_ae_of_ae_compProd hfg] with x hfgx using
-        integral_congr_ae (ae_eq_symm hfgx)
+  intro f g _ i_f i_g hf hg
+  simp_rw [integral_add' i_f i_g, Kernel.integral_integral_add' i_f i_g, hf, hg]
+  exact isClosed_eq continuous_integral Kernel.continuous_integral_integral
+  intro f g hfg _ hf
+  convert hf using 1
+  exact integral_congr_ae hfg.symm
+  apply integral_congr_ae
+  filter_upwards [ae_ae_of_ae_compProd hfg] with x hfgx using
+    integral_congr_ae (ae_eq_symm hfgx)
 
 theorem setIntegral_compProd {f : β × γ → E} {s : Set β} {t : Set γ} (hs : MeasurableSet s)
     (ht : MeasurableSet t) (hf : IntegrableOn f (s ×ˢ t) ((κ ⊗ₖ η) a)) :
     ∫ z in s ×ˢ t, f z ∂(κ ⊗ₖ η) a = ∫ x in s, ∫ y in t, f (x, y) ∂η (a, x) ∂κ a := by
   -- Porting note: `compProd_restrict` needed some explicit argumnts
   rw [← Kernel.restrict_apply (κ ⊗ₖ η) (hs.prod ht), ← compProd_restrict hs ht, integral_compProd]
-  · simp_rw [Kernel.restrict_apply]
-  · rw [compProd_restrict, Kernel.restrict_apply]; exact hf
+  simp_rw [Kernel.restrict_apply]
+  rw [compProd_restrict, Kernel.restrict_apply]; exact hf
 
 @[deprecated (since := "2024-04-17")]
 alias set_integral_compProd := setIntegral_compProd
